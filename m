@@ -2,120 +2,84 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5748DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 13:10:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3CB1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 13:10:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E12F206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 13:10:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o6Whz9sE"
+	by mail.kernel.org (Postfix) with ESMTP id 9C864206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 13:10:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726657AbgHJNKw (ORCPT
+        id S1726797AbgHJNKz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 09:10:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43350 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726462AbgHJNKv (ORCPT
+        Mon, 10 Aug 2020 09:10:55 -0400
+Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:42891 "EHLO
+        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726330AbgHJNKw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 09:10:51 -0400
-Received: from mail-qk1-x730.google.com (mail-qk1-x730.google.com [IPv6:2607:f8b0:4864:20::730])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F20BC061756;
-        Mon, 10 Aug 2020 06:10:51 -0700 (PDT)
-Received: by mail-qk1-x730.google.com with SMTP id n129so2535141qkd.6;
-        Mon, 10 Aug 2020 06:10:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:message-id:in-reply-to:references:subject
-         :mime-version:content-transfer-encoding:content-disposition;
-        bh=ujiAdgT+/a8lkUEdLHIcLIc1M7AMlHOeXKUBIZSN4YU=;
-        b=o6Whz9sEOU24iSepBzhEUAwpb1491mF7wazNBqguAhSXidNblShAUmjT0ULKRkdxcC
-         CfNSPrBbSH3yqO8MRsc1x5hSqDvpzd3A29aprp9/xqFg9YlGt9VpOtl+h9PeF3oenLYN
-         JbYAI73pZUcD2MK4TpsESV5uOE4QgE6o4HbijFIxnm68JtexOnRXvW2mLhB7X/R6tap+
-         SaeML+LcJ30+yaUYveXBAMejOEvcrAebWZRGy1SN7IB1ZHJKUuDy/41ABAltlbkmXZL5
-         rq+KHqqju8U63UEaXGVnV6HL1FTcwGck6WjCb8aD4Mfjoa5ZSToaMvhEanWoo6IHaGxM
-         BCVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:message-id:in-reply-to
-         :references:subject:mime-version:content-transfer-encoding
-         :content-disposition;
-        bh=ujiAdgT+/a8lkUEdLHIcLIc1M7AMlHOeXKUBIZSN4YU=;
-        b=kfrrG9HeA1/2aSKf7jOdsgFTUxn61yJL55RT/ODDVy/LqMrHBVpGERnLqloFuCwZud
-         UhUJRyQwP4H99/QlQzvR4UNiOHxZMBXKriAcxDfYK8LX5EayF5kzLubkOTKgIkiWEgCV
-         8C/8hOY3lc7xo1yRb+l/m555L9l4hCXveuDnnO2hYHvW2OQFk2IGP2JLT23tOsk76I0+
-         UoNnQDy/PK9UN5nFl4XwXYomlAxXy7ovPyGIo4UVxdUFenxMbcrjwrq6w2DqRXThGerW
-         V8Xa5ReAlxRYCSCP5FthLKTAchBA7EvjRJAn6ffreNEEJneYYvcZ0v0sbE02TsY4Kcz/
-         Nx1Q==
-X-Gm-Message-State: AOAM531/8dJrMT1kemlzvnL5oOBGsU3LNbqtbvnUfV7PMjRkwnV2Jb1U
-        LKyoWbblcyNNFrdgNmSpkAE=
-X-Google-Smtp-Source: ABdhPJyebrqHyf2sIFVLFzm8DaF3vOf/GUcosAoNFNy94psyps5t6cMgWC/xXwFlnC4NhKF8yG+KqQ==
-X-Received: by 2002:a37:b787:: with SMTP id h129mr24913657qkf.402.1597065049358;
-        Mon, 10 Aug 2020 06:10:49 -0700 (PDT)
-Received: from dwls-dell ([2804:14d:72b1:8920:a2ce:f815:f14d:bfac])
-        by smtp.gmail.com with ESMTPSA id l1sm15388418qtp.96.2020.08.10.06.10.47
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 10 Aug 2020 06:10:48 -0700 (PDT)
-Date:   Mon, 10 Aug 2020 10:10:45 -0300
-From:   "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     "=?utf-8?Q?skhan=40linuxfoundation.org?=" <skhan@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "=?utf-8?Q?linux-media=40vger.kernel.org?=" 
-        <linux-media@vger.kernel.org>,
-        "=?utf-8?Q?linux-kernel=40vger.kernel.org?=" 
-        <linux-kernel@vger.kernel.org>
-Message-ID: <6FF983D6-F754-42CB-8745-EF1DFA76B12F@getmailspring.com>
-In-Reply-To: <20200808204517.GJ6186@pendragon.ideasonboard.com>
-References: <20200808204517.GJ6186@pendragon.ideasonboard.com>
-Subject: Re: [PATCH 04/20] media: uvc: uvc_v4l2.c: add temp variable for
- list iteration
-X-Mailer: Mailspring
+        Mon, 10 Aug 2020 09:10:52 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R871e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01358;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0U5Mm29u_1597065044;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U5Mm29u_1597065044)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 10 Aug 2020 21:10:46 +0800
+Subject: Re: [PATCH v17 14/21] mm/compaction: do page isolation first in
+ compaction
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        kbuild test robot <lkp@intel.com>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
+        Shakeel Butt <shakeelb@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Rong Chen <rong.a.chen@intel.com>
+References: <1595681998-19193-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1595681998-19193-15-git-send-email-alex.shi@linux.alibaba.com>
+ <CAKgT0UcbBv=QBK9ErqLKXoNLYxFz52L4fiiHy4h6zKdBs=YPOg@mail.gmail.com>
+ <241ca157-104f-4f0d-7d5b-de394443788d@linux.alibaba.com>
+ <CAKgT0UdSrarC8j+G=LYRSadcaG6yNCoCfeVpFjEiHRJb4A77-g@mail.gmail.com>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <8dbd004e-8eba-f1ec-a5eb-5dc551978936@linux.alibaba.com>
+Date:   Mon, 10 Aug 2020 21:10:17 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+In-Reply-To: <CAKgT0UdSrarC8j+G=LYRSadcaG6yNCoCfeVpFjEiHRJb4A77-g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurent, thanks for reviewing!
-
-> If no entity is found by this loop the next line will dereference a NULL
-> pointer. There's a similar issue below.
-
-You mean this line, right?
->		pin = iterm->id;
-
-In which case, yes I missed it!
-
-> I think the issues reported by coccinelle are false positives, as every
-> chain is guaranteed to have the proper input terminals (ITERM). This is
-> verified when constructing the chain at probe time.
-
-I thought so too, but I thought it would be nice to get rid of the
-warning anyways. Probably other people will send patches for this same
-issue in the future too, i.e. until this warning is not there anymore.
-
-Do you have any suggestions or should we just leave this alone? :)
-
-Maybe:
-
-if (iterm)
-  pin = iterm->id
 
 
-This line will return an error if the iterm is not found anyway:
+在 2020/8/7 下午10:51, Alexander Duyck 写道:
+> I wonder if this entire section shouldn't be restructured. This is the
+> only spot I can see where we are resetting the LRU flag instead of
+> pulling the page from the LRU list with the lock held. Looking over
+> the code it seems like something like that should be possible. I am
+> not sure the LRU lock is really protecting us in either the
+> PageCompound check nor the skip bits. It seems like holding a
+> reference on the page should prevent it from switching between
+> compound or not, and the skip bits are per pageblock with the LRU bits
+> being per node/memcg which I would think implies that we could have
+> multiple LRU locks that could apply to a single skip bit.
 
-	if (iterm == NULL || iterm->id != pin)
-		return -EINVAL
+Hi Alexander,
 
+I don't find problem yet on compound or skip bit usage. Would you clarify the
+issue do you concerned? 
 
-Let me know what you think
-
-- Daniel
+Thanks!
