@@ -2,123 +2,110 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F23C8C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 279ADC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:37:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0C402312D
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:37:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tkk84ivl"
+	by mail.kernel.org (Postfix) with ESMTP id E7C732311A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:37:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597073831;
+	bh=pinV51YlJNoqr7xZ+tkxP0ZQ4Hxuq8N44utPAr/N1H0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=rIONTm7iwT+HIwQqvehc/6QGvvJzy1yP52i+izNXQw4ojZESmKtqtWA/kxN+pgkh5
+	 7N3pHoHoZMVl64kEzGhRsfuP29gyN6/r3omIlTBFxMUOJ0cV1eqjJhuQxOgNCLWDl9
+	 U8yBvoXEWWKbh7EuB7wLfdG5V8YvfOigqzIi7/PY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728676AbgHJPhF (ORCPT
+        id S1728669AbgHJP0t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:37:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37538 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728920AbgHJPg4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:36:56 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6B4BC061756
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 08:36:56 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id ha11so5505825pjb.1
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 08:36:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gmOTjgEuP1ZDu0lZKWX+naqfKXyKychFcrx1gAlT9Lc=;
-        b=Tkk84ivltV8WGDKFoFwOH+NZtYh1evX0QmqDPBNLQLUEeT28EyPX7VQV8jAuFb93q0
-         1A4cdiXoRqLdCfs86HfPq6Hf2iMj4r6QrdiChQni0zUZUf478TFUAUkAEumfS/Po0fOT
-         BvY/kuKLIl4jH855lu8XkSI4VTK3GdTWEzyZ6vKKoR98w0zTGdUezXuzbBnARq2lAFAb
-         vlYAinFhkVcYxqwYv/3bysPdeUAj2at5b03KGLR04+fevgL5zpWbGZoR84yZpLAomVj8
-         NftvQG9yatd7F2grivNLlTnq4Q5KL5JHayH4GhcCK+ebn7IamFGPEdNINRCZgoXKgTgj
-         aHGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gmOTjgEuP1ZDu0lZKWX+naqfKXyKychFcrx1gAlT9Lc=;
-        b=uF+FbsJb8Kn09dHRUqQW7tT636V76pIRuglTNZgTCy9OWlAPtx3hoqzRqEMZKlNgrC
-         xRCvfy3MCM9VIfelTacZVQx7UnDA/Eir1k8nbs4G/xGrF/v5qSfB0mGlGiT81mJnYB13
-         TEuePZOGopP0UPyZQvAh+oy1AbBJvt7WTpWWDlWVQEv6nxjN7cCrOE5aqCL2E4Cs3e0b
-         QGvEiS+rOu1Vh5l+tD8Z6Umta63aTjWxoXGv7k4zX1XdVw8XlNsOuSAoxSJsjRYnOAAE
-         FFhc8lcrXyRxlsmc7dZKr/ZtfSdCR7iOK6XJUO9eiBWRIbKYZwA96+bVqjDOvzWZXGHG
-         8p7w==
-X-Gm-Message-State: AOAM530JxbWG0Px7vXIJgyFsly/nmqjEZDo4RIZdKE1KyTOSSup1uUon
-        mBUjJq0HGAJJLrW3P32uoV7vJZa9AI6jTQ==
-X-Google-Smtp-Source: ABdhPJyG56EbPfeYubySGMgW9m+HaJgfNwHfH7QG9bdcSuS735m7MQBr1YVN5srLDSm0VDOQAMO1Kg==
-X-Received: by 2002:a17:90a:e94c:: with SMTP id kp12mr23504278pjb.115.1597073815953;
-        Mon, 10 Aug 2020 08:36:55 -0700 (PDT)
-Received: from thinkpad.teksavvy.com ([69.172.171.109])
-        by smtp.gmail.com with ESMTPSA id n3sm22020688pfq.131.2020.08.10.08.36.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Aug 2020 08:36:55 -0700 (PDT)
-From:   Rustam Kovhaev <rkovhaev@gmail.com>
-To:     masahiroy@kernel.org, gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-        corbet@lwn.net, xujialu@vimux.org,
-        Rustam Kovhaev <rkovhaev@gmail.com>
-Subject: [PATCH] scripts/tags.sh: exclude tools directory from tags generation
-Date:   Mon, 10 Aug 2020 08:36:50 -0700
-Message-Id: <20200810153650.1822316-1-rkovhaev@gmail.com>
+        Mon, 10 Aug 2020 11:26:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60754 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728659AbgHJP0o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:26:44 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4944D22D06;
+        Mon, 10 Aug 2020 15:26:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597073204;
+        bh=pinV51YlJNoqr7xZ+tkxP0ZQ4Hxuq8N44utPAr/N1H0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=pI92HgLvLeoihZItC9van0+YnIMk+19SNYNVsYjARA99rhXves86vOjbt1ZnGzCwL
+         ZqJ9AY5LS23e80jovKQRqQ+eVyVU52KRnCY6EMKexlJci8SKqJBCeWBgxzPmPwRdRi
+         0xxFYTpsCLEGf+RTENytZY+ch5UqG9nmF/+Evx+A=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Forest Crossman <cyrozap@gmail.com>
+Subject: [PATCH 5.4 04/67] usb: xhci: define IDs for various ASMedia host controllers
+Date:   Mon, 10 Aug 2020 17:20:51 +0200
+Message-Id: <20200810151809.650225665@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200810151809.438685785@linuxfoundation.org>
+References: <20200810151809.438685785@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-when COMPILED_SOURCE is set, running 'make ARCH=x86_64 COMPILED_SOURCE=1
-cscope tags' in KBUILD_OUTPUT directory produces lots of "No such file
-or directory" warnings:
-...
-realpath: sigchain.h: No such file or directory
-realpath: orc_gen.c: No such file or directory
-realpath: objtool.c: No such file or directory
-...
-let's exclude tools directory from tags generation
+From: Forest Crossman <cyrozap@gmail.com>
 
-Fixes: 4f491bb6ea2a ("scripts/tags.sh: collect compiled source precisely")
-Link: https://lore.kernel.org/lkml/20200809210056.GA1344537@thinkpad
-Signed-off-by: Rustam Kovhaev <rkovhaev@gmail.com>
+commit 1841cb255da41e87bed9573915891d056f80e2e7 upstream.
+
+Not all ASMedia host controllers have a device ID that matches its part
+number. #define some of these IDs to make it clearer at a glance which
+chips require what quirks.
+
+Acked-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Signed-off-by: Forest Crossman <cyrozap@gmail.com>
+Link: https://lore.kernel.org/r/20200728042408.180529-2-cyrozap@gmail.com
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- scripts/tags.sh | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/usb/host/xhci-pci.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/scripts/tags.sh b/scripts/tags.sh
-index 32d3f53af10b..850f4ccb6afc 100755
---- a/scripts/tags.sh
-+++ b/scripts/tags.sh
-@@ -26,7 +26,11 @@ else
- fi
+--- a/drivers/usb/host/xhci-pci.c
++++ b/drivers/usb/host/xhci-pci.c
+@@ -55,7 +55,9 @@
+ #define PCI_DEVICE_ID_AMD_PROMONTORYA_3			0x43ba
+ #define PCI_DEVICE_ID_AMD_PROMONTORYA_2			0x43bb
+ #define PCI_DEVICE_ID_AMD_PROMONTORYA_1			0x43bc
++#define PCI_DEVICE_ID_ASMEDIA_1042_XHCI			0x1042
+ #define PCI_DEVICE_ID_ASMEDIA_1042A_XHCI		0x1142
++#define PCI_DEVICE_ID_ASMEDIA_2142_XHCI			0x2142
  
- # ignore userspace tools
--ignore="$ignore ( -path ${tree}tools ) -prune -o"
-+if [ -n "$COMPILED_SOURCE" ]; then
-+	ignore="$ignore ( -path ./tools ) -prune -o"
-+else
-+	ignore="$ignore ( -path ${tree}tools ) -prune -o"
-+fi
+ static const char hcd_name[] = "xhci_hcd";
  
- # Detect if ALLSOURCE_ARCHS is set. If not, we assume SRCARCH
- if [ "${ALLSOURCE_ARCHS}" = "" ]; then
-@@ -92,7 +96,7 @@ all_sources()
- all_compiled_sources()
- {
- 	realpath -es $([ -z "$KBUILD_ABS_SRCTREE" ] && echo --relative-to=.) \
--		include/generated/autoconf.h $(find -name "*.cmd" -exec \
-+		include/generated/autoconf.h $(find $ignore -name "*.cmd" -exec \
- 		grep -Poh '(?(?=^source_.* \K).*|(?=^  \K\S).*(?= \\))' {} \+ |
- 		awk '!a[$0]++') | sort -u
- }
--- 
-2.28.0
+@@ -245,13 +247,13 @@ static void xhci_pci_quirks(struct devic
+ 		xhci->quirks |= XHCI_BROKEN_STREAMS;
+ 
+ 	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
+-			pdev->device == 0x1042)
++		pdev->device == PCI_DEVICE_ID_ASMEDIA_1042_XHCI)
+ 		xhci->quirks |= XHCI_BROKEN_STREAMS;
+ 	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
+-			pdev->device == 0x1142)
++		pdev->device == PCI_DEVICE_ID_ASMEDIA_1042A_XHCI)
+ 		xhci->quirks |= XHCI_TRUST_TX_LENGTH;
+ 	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
+-			pdev->device == 0x2142)
++		pdev->device == PCI_DEVICE_ID_ASMEDIA_2142_XHCI)
+ 		xhci->quirks |= XHCI_NO_64BIT_SUPPORT;
+ 
+ 	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
+
 
