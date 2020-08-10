@@ -2,136 +2,142 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 458C8C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:33:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75408C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:33:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E834207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:33:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073580;
-	bh=l/JSZWTrxiPgtyVy4G9PmA8sZJAzsemOFxyR3InUXEA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P0ZZZDLoGj2byz3R4ZljU6Ee3sHfFUKiYitZBZW+Qpy0xiHbsl4pksQwaN/1GsQYY
-	 8GTxk3fjcYDEKszLzjWnIbD6Oi7cL6eNauWcJORX52W1/pUJypEQfwRr3bseyFmnGq
-	 U6SjpAngfusr0fctwaQa6e20r+KdbcV6uAWPEhJs=
+	by mail.kernel.org (Postfix) with ESMTP id 5464A22CAE
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:33:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="TkriTn3v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729126AbgHJPc7 (ORCPT
+        id S1729248AbgHJPdM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:32:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36744 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729042AbgHJPaC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:30:02 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1039E22D02;
-        Mon, 10 Aug 2020 15:30:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073402;
-        bh=l/JSZWTrxiPgtyVy4G9PmA8sZJAzsemOFxyR3InUXEA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l/3Q5MR3MWAko1g4X3YJmIJk4N1jZ2meLxcb8EdwIA6jVZ+ca9Qpb83S2nUSzCPYO
-         PKxNXnAABC7jHQBwqr7v4KFklaZ+2V/5y3wdFSBL+TL3Aw1G1+nl8jc5wq+rPbuJWr
-         8OapwX/16ECTEgH6476zqKOiDpjFHfoZF8WreTtA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+7a0d9d0b26efefe61780@syzkaller.appspotmail.com,
-        Suren Baghdasaryan <surenb@google.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Subject: [PATCH 4.19 07/48] staging: android: ashmem: Fix lockdep warning for write operation
-Date:   Mon, 10 Aug 2020 17:21:29 +0200
-Message-Id: <20200810151804.577411967@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200810151804.199494191@linuxfoundation.org>
-References: <20200810151804.199494191@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Mon, 10 Aug 2020 11:33:12 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:42692 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729143AbgHJPdF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:33:05 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200810153301euoutp02e9d152a74074f733705f277e938a1d02~p8fYI4koN1821818218euoutp02d
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 15:33:01 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200810153301euoutp02e9d152a74074f733705f277e938a1d02~p8fYI4koN1821818218euoutp02d
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1597073581;
+        bh=xGW/Eb8TLGr6LjioWPTb6swHWqJ0i4j0PwmnzrrwdBk=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=TkriTn3vTmgATouWrcg4S2R0Bji7ANOe0LxUlgs5QpGNiRKF+Xds1v1+iIY3Ls7G7
+         6OlH1dpwRw99iEDhqcZehvmMHIqEN+1APlH+2EU2JvmewJdxK4uLTFVrZ0EaHn6l9R
+         s4v524jG5cFkDpfBXy6BRt3hOzLzqZm6TSY6A2HQ=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200810153301eucas1p1514acd8de8ac631d4431bda243638f2c~p8fX1rjTU2756927569eucas1p1Z;
+        Mon, 10 Aug 2020 15:33:01 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 13.4D.05997.DA8613F5; Mon, 10
+        Aug 2020 16:33:01 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200810153301eucas1p2684476145e627ba124ba4740ef204712~p8fXYl1XF0867608676eucas1p2G;
+        Mon, 10 Aug 2020 15:33:01 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200810153301eusmtrp2b3a126ce1cd7e02421bff081eb9eef19~p8fXX6rRk0085100851eusmtrp2L;
+        Mon, 10 Aug 2020 15:33:01 +0000 (GMT)
+X-AuditID: cbfec7f4-65dff7000000176d-a3-5f3168ad24a3
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id BC.C2.06314.CA8613F5; Mon, 10
+        Aug 2020 16:33:00 +0100 (BST)
+Received: from AMDC3061.digital.local (unknown [106.120.51.75]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200810153300eusmtip29723c347483cb5ac7b9a1c407d0ee3ee~p8fW3v-uZ3149731497eusmtip2T;
+        Mon, 10 Aug 2020 15:33:00 +0000 (GMT)
+From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
+To:     linux-media@vger.kernel.org
+Cc:     hslester96@gmail.com, krzk@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        b.zolnierkie@samsung.com, m.szyprowski@samsung.com,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: [PATCH 1/2] media: Revert
+ "media: exynos4-is: Add missed check for pinctrl_lookup_state()"
+Date:   Mon, 10 Aug 2020 17:32:39 +0200
+Message-Id: <20200810153240.23827-1-s.nawrocki@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrBIsWRmVeSWpSXmKPExsWy7djPc7prMwzjDR5Ok7XYOGM9q8XsQy+Z
+        Lc6f38BusenxNVaLy7vmsFn0bNjKajHj/D4mi7VH7rJbHH7TzurA6bFz1l12j02rOtk8Ni+p
+        9+jbsorR4/MmuQDWKC6blNSczLLUIn27BK6MHQ+mshRM4ay4MukhUwPjU/YuRk4OCQETiZev
+        GsBsIYEVjBKt99W7GLmA7C+MEguPLGWCcD4zShxdsh2u43XbOlaIxHJGiUnTJ7LBtXxbuJ4R
+        pIpNwFCi92gfmC0iIC/xpPcGWBGzwHdGiZ3nfrOAJIQFUiXmv+hgBbFZBFQlnjyYDWRzcPAK
+        WEt0fMmD2CYvsXrDAWaQXgmB52wSm75eZIZIuEg8PTKdBcIWlnh1fAvUeTIS/3fOZ4JoaGaU
+        6Nl9mx3CmcAocf/4AkaIKmuJO+d+sYFsYxbQlFi/Sx8i7CixqPEY2BESAnwSN94KgoSZgcxJ
+        26YzQ4R5JTrahCCqVSR+r5rOBGFLSXQ/+Q91jofEl7/HGSFhGisx7dMitgmMcrMQdi1gZFzF
+        KJ5aWpybnlpslJdarlecmFtcmpeul5yfu4kRmB5O/zv+ZQfjrj9JhxgFOBiVeHgLrA3jhVgT
+        y4orcw8xSnAwK4nwOp09HSfEm5JYWZValB9fVJqTWnyIUZqDRUmc13jRy1ghgfTEktTs1NSC
+        1CKYLBMHp1QDI/+pCcucju0p5GE4vDg8LpbJ/FPaLSvRBT/kfm+bzOy7d8W8zEvfNHj1NL9c
+        8f74c8rEF2yMwtXFEqW/WbI45epnTJj9ef5ZvzMxwTffGv+87uV4Q2sjo6nDxS29kc43rjyp
+        eXs3pf6YU6n6x28+Dcc/PL55dHUK66LJS08asi2cwGfXU/GJ+5cSS3FGoqEWc1FxIgA9j6I7
+        CwMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrDLMWRmVeSWpSXmKPExsVy+t/xe7prMgzjDXqvWFlsnLGe1WL2oZfM
+        FufPb2C32PT4GqvF5V1z2Cx6NmxltZhxfh+Txdojd9ktDr9pZ3Xg9Ng56y67x6ZVnWwem5fU
+        e/RtWcXo8XmTXABrlJ5NUX5pSapCRn5xia1StKGFkZ6hpYWekYmlnqGxeayVkamSvp1NSmpO
+        Zllqkb5dgl7GjgdTWQqmcFZcmfSQqYHxKXsXIyeHhICJxOu2daxdjFwcQgJLGSWaX91k6WLk
+        AEpIScxvUYKoEZb4c62LDaLmE6PE3WP/mEESbAKGEr1H+xhBbBEBeYknvTfAipgF/jNKbJx5
+        gxlkkLBAssT7VxUgNSwCqhJPHsxmBQnzClhLdHzJg5gvL7F6wwHmCYw8CxgZVjGKpJYW56bn
+        FhvqFSfmFpfmpesl5+duYgSG5LZjPzfvYLy0MfgQowAHoxIPb4G1YbwQa2JZcWXuIUYJDmYl
+        EV6ns6fjhHhTEiurUovy44tKc1KLDzGaAu2eyCwlmpwPjJe8knhDU0NzC0tDc2NzYzMLJXHe
+        DoGDMUIC6YklqdmpqQWpRTB9TBycUg2M8Twx07Z09ayJcC72twth5rh56X+re+jxFmsHpmfK
+        k1uL/2wW6Xv4wlc36EO1yA4tJea48r+y3qIbmNqPCxTszrG0c59XlG7i/dMhpOns6+97D3AG
+        KWlz7Jhw+tcke/6eTs3E6J2dIWfYk8Je/0ve8q7ge2xW1p5OhbTO/WuPeO6f2ZI0I0yJpTgj
+        0VCLuag4EQDAswvbXwIAAA==
+X-CMS-MailID: 20200810153301eucas1p2684476145e627ba124ba4740ef204712
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200810153301eucas1p2684476145e627ba124ba4740ef204712
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200810153301eucas1p2684476145e627ba124ba4740ef204712
+References: <CGME20200810153301eucas1p2684476145e627ba124ba4740ef204712@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suren Baghdasaryan <surenb@google.com>
+The "idle" pinctrl state is optional as documented in the DT binding.
+The change introduced by the commit being reverted makes that pinctrl state
+mandatory and breaks initialization of the whole media driver, since the
+"idle" state is not specified in any mainline dts.
 
-commit 3e338d3c95c735dc3265a86016bb4c022ec7cadc upstream.
+This reverts commit 18ffec750578f7447c288647d7282c7d12b1d969 to fix
+the regression.
 
-syzbot report [1] describes a deadlock when write operation against an
-ashmem fd executed at the time when ashmem is shrinking its cache results
-in the following lock sequence:
-
-Possible unsafe locking scenario:
-
-        CPU0                    CPU1
-        ----                    ----
-   lock(fs_reclaim);
-                                lock(&sb->s_type->i_mutex_key#13);
-                                lock(fs_reclaim);
-   lock(&sb->s_type->i_mutex_key#13);
-
-kswapd takes fs_reclaim and then inode_lock while generic_perform_write
-takes inode_lock and then fs_reclaim. However ashmem does not support
-writing into backing shmem with a write syscall. The only way to change
-its content is to mmap it and operate on mapped memory. Therefore the race
-that lockdep is warning about is not valid. Resolve this by introducing a
-separate lockdep class for the backing shmem inodes.
-
-[1]: https://lkml.kernel.org/lkml/0000000000000b5f9d059aa2037f@google.com/
-
-Reported-by: syzbot+7a0d9d0b26efefe61780@syzkaller.appspotmail.com
-Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-Cc: stable <stable@vger.kernel.org>
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Link: https://lore.kernel.org/r/20200730192632.3088194-1-surenb@google.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 ---
- drivers/staging/android/ashmem.c |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/media/platform/exynos4-is/media-dev.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/drivers/staging/android/ashmem.c
-+++ b/drivers/staging/android/ashmem.c
-@@ -95,6 +95,15 @@ static DEFINE_MUTEX(ashmem_mutex);
- static struct kmem_cache *ashmem_area_cachep __read_mostly;
- static struct kmem_cache *ashmem_range_cachep __read_mostly;
+diff --git a/drivers/media/platform/exynos4-is/media-dev.c b/drivers/media/platform/exynos4-is/media-dev.c
+index 16dd660..9a57523 100644
+--- a/drivers/media/platform/exynos4-is/media-dev.c
++++ b/drivers/media/platform/exynos4-is/media-dev.c
+@@ -1268,11 +1268,9 @@ static int fimc_md_get_pinctrl(struct fimc_md *fmd)
+ 	if (IS_ERR(pctl->state_default))
+ 		return PTR_ERR(pctl->state_default);
  
-+/*
-+ * A separate lockdep class for the backing shmem inodes to resolve the lockdep
-+ * warning about the race between kswapd taking fs_reclaim before inode_lock
-+ * and write syscall taking inode_lock and then fs_reclaim.
-+ * Note that such race is impossible because ashmem does not support write
-+ * syscalls operating on the backing shmem.
-+ */
-+static struct lock_class_key backing_shmem_inode_class;
-+
- static inline unsigned long range_size(struct ashmem_range *range)
- {
- 	return range->pgend - range->pgstart + 1;
-@@ -395,6 +404,7 @@ static int ashmem_mmap(struct file *file
- 	if (!asma->file) {
- 		char *name = ASHMEM_NAME_DEF;
- 		struct file *vmfile;
-+		struct inode *inode;
++	/* PINCTRL_STATE_IDLE is optional */
+ 	pctl->state_idle = pinctrl_lookup_state(pctl->pinctrl,
+ 					PINCTRL_STATE_IDLE);
+-	if (IS_ERR(pctl->state_idle))
+-		return PTR_ERR(pctl->state_idle);
+-
+ 	return 0;
+ }
  
- 		if (asma->name[ASHMEM_NAME_PREFIX_LEN] != '\0')
- 			name = asma->name;
-@@ -406,6 +416,8 @@ static int ashmem_mmap(struct file *file
- 			goto out;
- 		}
- 		vmfile->f_mode |= FMODE_LSEEK;
-+		inode = file_inode(vmfile);
-+		lockdep_set_class(&inode->i_rwsem, &backing_shmem_inode_class);
- 		asma->file = vmfile;
- 		/*
- 		 * override mmap operation of the vmfile so that it can't be
-
+-- 
+2.7.4
 
