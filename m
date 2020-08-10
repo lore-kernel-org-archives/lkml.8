@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C83DFC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:24:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 552C4C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:25:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A67D20855
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:24:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E57F2177B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:25:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073091;
-	bh=Tf+p7CMS4ZrtDpkrLIlQSvDm2KJ149qhlFy25X70m1Q=;
+	s=default; t=1597073100;
+	bh=aWstDw6tpK8rDkiBLoy6HKkipa0ShtkivQnsQDJMl90=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=byREW3lNGdqiXZPy1+NCbjx2zYXLlfPMyaO9mqb4gUG7FuVdeLqXk6xtMipNdodrD
-	 E2CbSj91FpEJWBm9s4VqCbMYEaOnWsxgmmzY0OIesIsqdTn7phLeYe3nHnwSQqDBrT
-	 ln0dx2Lkh57CFY+VJwZmjzTTXRK/Z1xIr6QUTG8g=
+	b=ncqWLgNTir5VVkflvcNL1QoZM3kyp3UY7UVp4E3HlcjBrSPPxCdW8Z7D7JFuCyX7b
+	 0En0fpHSX+Fm9ZXS/41dq0jJ+8e29bbYrQ2/zGp66S7Ra0rZ4HlSfqpR/gbq9Yuizb
+	 y/xE8gLK0IIfqsu8pvgOs6ep1uMCbBJmCcaejKG4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728448AbgHJPYu (ORCPT
+        id S1728478AbgHJPY6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:24:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58142 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:24:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728444AbgHJPYs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:24:48 -0400
+        id S1728441AbgHJPYn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:24:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DA7920772;
-        Mon, 10 Aug 2020 15:24:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61D0E21775;
+        Mon, 10 Aug 2020 15:24:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073085;
-        bh=Tf+p7CMS4ZrtDpkrLIlQSvDm2KJ149qhlFy25X70m1Q=;
+        s=default; t=1597073082;
+        bh=aWstDw6tpK8rDkiBLoy6HKkipa0ShtkivQnsQDJMl90=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tqG0ugWsATFQBkmk99/Rqf0ZQZK4UDGZ6w40Hn21SlggC/X7atBB87t3zcjbtSU+k
-         nHa4dqStOvYDrn3yt1c10adVZ6uy4j+F3ArbNJcPzj1Os0p/IVilg83J6weDMRijWb
-         oVRZhm94ZePfmxNVn5iAbnLHI3OAZFtHiuQcPvOU=
+        b=x72wnb5mzskeLR4i0/m9/Utb7Q+jsiIZ1BsaL9iNkGwq1zAB8bu4pVvJMc5+zmvfp
+         co5fjeW9CyCeyVUuMvfnPnsAGnfPgAfIsDW1vEneOH04aY+nRsua5ig6OqGpM457dh
+         x/gRB7PVyAWdMTNjYfmrGRoDyhIqZ+5EvVXPhx1I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.7 61/79] rhashtable: Restore RCU marking on rhash_lock_head
-Date:   Mon, 10 Aug 2020 17:21:20 +0200
-Message-Id: <20200810151815.252920533@linuxfoundation.org>
+Subject: [PATCH 5.7 60/79] net: lan78xx: replace bogus endpoint lookup
+Date:   Mon, 10 Aug 2020 17:21:19 +0200
+Message-Id: <20200810151815.205005917@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151812.114485777@linuxfoundation.org>
 References: <20200810151812.114485777@linuxfoundation.org>
@@ -59,297 +59,189 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Herbert Xu <herbert@gondor.apana.org.au>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit ce9b362bf6db51a083c4221ef0f93c16cfb1facf ]
+[ Upstream commit ea060b352654a8de1e070140d25fe1b7e4d50310 ]
 
-This patch restores the RCU marking on bucket_table->buckets as
-it really does need RCU protection.  Its removal had led to a fatal
-bug.
+Drop the bogus endpoint-lookup helper which could end up accepting
+interfaces based on endpoints belonging to unrelated altsettings.
 
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Note that the returned bulk pipes and interrupt endpoint descriptor
+were never actually used. Instead the bulk-endpoint numbers are
+hardcoded to 1 and 2 (matching the specification), while the interrupt-
+endpoint descriptor was assumed to be the third descriptor created by
+USB core.
+
+Try to bring some order to this by dropping the bogus lookup helper and
+adding the missing endpoint sanity checks while keeping the interrupt-
+descriptor assumption for now.
+
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/linux/rhashtable.h |   56 +++++++++++++++++++--------------------------
- lib/rhashtable.c           |   35 ++++++++++++----------------
- 2 files changed, 40 insertions(+), 51 deletions(-)
+ drivers/net/usb/lan78xx.c |  117 +++++++++++-----------------------------------
+ 1 file changed, 30 insertions(+), 87 deletions(-)
 
---- a/include/linux/rhashtable.h
-+++ b/include/linux/rhashtable.h
-@@ -84,7 +84,7 @@ struct bucket_table {
+--- a/drivers/net/usb/lan78xx.c
++++ b/drivers/net/usb/lan78xx.c
+@@ -377,10 +377,6 @@ struct lan78xx_net {
+ 	struct tasklet_struct	bh;
+ 	struct delayed_work	wq;
  
- 	struct lockdep_map	dep_map;
- 
--	struct rhash_lock_head *buckets[] ____cacheline_aligned_in_smp;
-+	struct rhash_lock_head __rcu *buckets[] ____cacheline_aligned_in_smp;
- };
- 
- /*
-@@ -261,13 +261,12 @@ void rhashtable_free_and_destroy(struct
- 				 void *arg);
- void rhashtable_destroy(struct rhashtable *ht);
- 
--struct rhash_lock_head **rht_bucket_nested(const struct bucket_table *tbl,
--					   unsigned int hash);
--struct rhash_lock_head **__rht_bucket_nested(const struct bucket_table *tbl,
--					     unsigned int hash);
--struct rhash_lock_head **rht_bucket_nested_insert(struct rhashtable *ht,
--						  struct bucket_table *tbl,
--						  unsigned int hash);
-+struct rhash_lock_head __rcu **rht_bucket_nested(
-+	const struct bucket_table *tbl, unsigned int hash);
-+struct rhash_lock_head __rcu **__rht_bucket_nested(
-+	const struct bucket_table *tbl, unsigned int hash);
-+struct rhash_lock_head __rcu **rht_bucket_nested_insert(
-+	struct rhashtable *ht, struct bucket_table *tbl, unsigned int hash);
- 
- #define rht_dereference(p, ht) \
- 	rcu_dereference_protected(p, lockdep_rht_mutex_is_held(ht))
-@@ -284,21 +283,21 @@ struct rhash_lock_head **rht_bucket_nest
- #define rht_entry(tpos, pos, member) \
- 	({ tpos = container_of(pos, typeof(*tpos), member); 1; })
- 
--static inline struct rhash_lock_head *const *rht_bucket(
-+static inline struct rhash_lock_head __rcu *const *rht_bucket(
- 	const struct bucket_table *tbl, unsigned int hash)
- {
- 	return unlikely(tbl->nest) ? rht_bucket_nested(tbl, hash) :
- 				     &tbl->buckets[hash];
- }
- 
--static inline struct rhash_lock_head **rht_bucket_var(
-+static inline struct rhash_lock_head __rcu **rht_bucket_var(
- 	struct bucket_table *tbl, unsigned int hash)
- {
- 	return unlikely(tbl->nest) ? __rht_bucket_nested(tbl, hash) :
- 				     &tbl->buckets[hash];
- }
- 
--static inline struct rhash_lock_head **rht_bucket_insert(
-+static inline struct rhash_lock_head __rcu **rht_bucket_insert(
- 	struct rhashtable *ht, struct bucket_table *tbl, unsigned int hash)
- {
- 	return unlikely(tbl->nest) ? rht_bucket_nested_insert(ht, tbl, hash) :
-@@ -325,7 +324,7 @@ static inline struct rhash_lock_head **r
-  */
- 
- static inline void rht_lock(struct bucket_table *tbl,
--			    struct rhash_lock_head **bkt)
-+			    struct rhash_lock_head __rcu **bkt)
- {
- 	local_bh_disable();
- 	bit_spin_lock(0, (unsigned long *)bkt);
-@@ -333,7 +332,7 @@ static inline void rht_lock(struct bucke
- }
- 
- static inline void rht_lock_nested(struct bucket_table *tbl,
--				   struct rhash_lock_head **bucket,
-+				   struct rhash_lock_head __rcu **bucket,
- 				   unsigned int subclass)
- {
- 	local_bh_disable();
-@@ -342,7 +341,7 @@ static inline void rht_lock_nested(struc
- }
- 
- static inline void rht_unlock(struct bucket_table *tbl,
--			      struct rhash_lock_head **bkt)
-+			      struct rhash_lock_head __rcu **bkt)
- {
- 	lock_map_release(&tbl->dep_map);
- 	bit_spin_unlock(0, (unsigned long *)bkt);
-@@ -365,48 +364,41 @@ static inline struct rhash_head *__rht_p
-  *            access is guaranteed, such as when destroying the table.
-  */
- static inline struct rhash_head *rht_ptr_rcu(
--	struct rhash_lock_head *const *p)
-+	struct rhash_lock_head __rcu *const *bkt)
- {
--	struct rhash_lock_head __rcu *const *bkt = (void *)p;
- 	return __rht_ptr(rcu_dereference(*bkt), bkt);
- }
- 
- static inline struct rhash_head *rht_ptr(
--	struct rhash_lock_head *const *p,
-+	struct rhash_lock_head __rcu *const *bkt,
- 	struct bucket_table *tbl,
- 	unsigned int hash)
- {
--	struct rhash_lock_head __rcu *const *bkt = (void *)p;
- 	return __rht_ptr(rht_dereference_bucket(*bkt, tbl, hash), bkt);
- }
- 
- static inline struct rhash_head *rht_ptr_exclusive(
--	struct rhash_lock_head *const *p)
-+	struct rhash_lock_head __rcu *const *bkt)
- {
--	struct rhash_lock_head __rcu *const *bkt = (void *)p;
- 	return __rht_ptr(rcu_dereference_protected(*bkt, 1), bkt);
- }
- 
--static inline void rht_assign_locked(struct rhash_lock_head **bkt,
-+static inline void rht_assign_locked(struct rhash_lock_head __rcu **bkt,
- 				     struct rhash_head *obj)
- {
--	struct rhash_head __rcu **p = (struct rhash_head __rcu **)bkt;
+-	struct usb_host_endpoint *ep_blkin;
+-	struct usb_host_endpoint *ep_blkout;
+-	struct usb_host_endpoint *ep_intr;
 -
- 	if (rht_is_a_nulls(obj))
- 		obj = NULL;
--	rcu_assign_pointer(*p, (void *)((unsigned long)obj | BIT(0)));
-+	rcu_assign_pointer(*bkt, (void *)((unsigned long)obj | BIT(0)));
+ 	int			msg_enable;
+ 
+ 	struct urb		*urb_intr;
+@@ -2860,78 +2856,12 @@ lan78xx_start_xmit(struct sk_buff *skb,
+ 	return NETDEV_TX_OK;
  }
  
- static inline void rht_assign_unlock(struct bucket_table *tbl,
--				     struct rhash_lock_head **bkt,
-+				     struct rhash_lock_head __rcu **bkt,
- 				     struct rhash_head *obj)
- {
--	struct rhash_head __rcu **p = (struct rhash_head __rcu **)bkt;
+-static int
+-lan78xx_get_endpoints(struct lan78xx_net *dev, struct usb_interface *intf)
+-{
+-	int tmp;
+-	struct usb_host_interface *alt = NULL;
+-	struct usb_host_endpoint *in = NULL, *out = NULL;
+-	struct usb_host_endpoint *status = NULL;
 -
- 	if (rht_is_a_nulls(obj))
- 		obj = NULL;
- 	lock_map_release(&tbl->dep_map);
--	rcu_assign_pointer(*p, obj);
-+	rcu_assign_pointer(*bkt, (void *)obj);
- 	preempt_enable();
- 	__release(bitlock);
- 	local_bh_enable();
-@@ -594,7 +586,7 @@ static inline struct rhash_head *__rhash
- 		.ht = ht,
- 		.key = key,
- 	};
--	struct rhash_lock_head *const *bkt;
-+	struct rhash_lock_head __rcu *const *bkt;
- 	struct bucket_table *tbl;
- 	struct rhash_head *he;
- 	unsigned int hash;
-@@ -710,7 +702,7 @@ static inline void *__rhashtable_insert_
- 		.ht = ht,
- 		.key = key,
- 	};
--	struct rhash_lock_head **bkt;
-+	struct rhash_lock_head __rcu **bkt;
- 	struct rhash_head __rcu **pprev;
- 	struct bucket_table *tbl;
- 	struct rhash_head *head;
-@@ -996,7 +988,7 @@ static inline int __rhashtable_remove_fa
- 	struct rhash_head *obj, const struct rhashtable_params params,
- 	bool rhlist)
+-	for (tmp = 0; tmp < intf->num_altsetting; tmp++) {
+-		unsigned ep;
+-
+-		in = NULL;
+-		out = NULL;
+-		status = NULL;
+-		alt = intf->altsetting + tmp;
+-
+-		for (ep = 0; ep < alt->desc.bNumEndpoints; ep++) {
+-			struct usb_host_endpoint *e;
+-			int intr = 0;
+-
+-			e = alt->endpoint + ep;
+-			switch (e->desc.bmAttributes) {
+-			case USB_ENDPOINT_XFER_INT:
+-				if (!usb_endpoint_dir_in(&e->desc))
+-					continue;
+-				intr = 1;
+-				/* FALLTHROUGH */
+-			case USB_ENDPOINT_XFER_BULK:
+-				break;
+-			default:
+-				continue;
+-			}
+-			if (usb_endpoint_dir_in(&e->desc)) {
+-				if (!intr && !in)
+-					in = e;
+-				else if (intr && !status)
+-					status = e;
+-			} else {
+-				if (!out)
+-					out = e;
+-			}
+-		}
+-		if (in && out)
+-			break;
+-	}
+-	if (!alt || !in || !out)
+-		return -EINVAL;
+-
+-	dev->pipe_in = usb_rcvbulkpipe(dev->udev,
+-				       in->desc.bEndpointAddress &
+-				       USB_ENDPOINT_NUMBER_MASK);
+-	dev->pipe_out = usb_sndbulkpipe(dev->udev,
+-					out->desc.bEndpointAddress &
+-					USB_ENDPOINT_NUMBER_MASK);
+-	dev->ep_intr = status;
+-
+-	return 0;
+-}
+-
+ static int lan78xx_bind(struct lan78xx_net *dev, struct usb_interface *intf)
  {
--	struct rhash_lock_head **bkt;
-+	struct rhash_lock_head __rcu **bkt;
- 	struct rhash_head __rcu **pprev;
- 	struct rhash_head *he;
- 	unsigned int hash;
-@@ -1148,7 +1140,7 @@ static inline int __rhashtable_replace_f
- 	struct rhash_head *obj_old, struct rhash_head *obj_new,
- 	const struct rhashtable_params params)
+ 	struct lan78xx_priv *pdata = NULL;
+ 	int ret;
+ 	int i;
+ 
+-	ret = lan78xx_get_endpoints(dev, intf);
+-	if (ret) {
+-		netdev_warn(dev->net, "lan78xx_get_endpoints failed: %d\n",
+-			    ret);
+-		return ret;
+-	}
+-
+ 	dev->data[0] = (unsigned long)kzalloc(sizeof(*pdata), GFP_KERNEL);
+ 
+ 	pdata = (struct lan78xx_priv *)(dev->data[0]);
+@@ -3700,6 +3630,7 @@ static void lan78xx_stat_monitor(struct
+ static int lan78xx_probe(struct usb_interface *intf,
+ 			 const struct usb_device_id *id)
  {
--	struct rhash_lock_head **bkt;
-+	struct rhash_lock_head __rcu **bkt;
- 	struct rhash_head __rcu **pprev;
- 	struct rhash_head *he;
- 	unsigned int hash;
---- a/lib/rhashtable.c
-+++ b/lib/rhashtable.c
-@@ -31,7 +31,7 @@
++	struct usb_host_endpoint *ep_blkin, *ep_blkout, *ep_intr;
+ 	struct lan78xx_net *dev;
+ 	struct net_device *netdev;
+ 	struct usb_device *udev;
+@@ -3748,6 +3679,34 @@ static int lan78xx_probe(struct usb_inte
  
- union nested_table {
- 	union nested_table __rcu *table;
--	struct rhash_lock_head *bucket;
-+	struct rhash_lock_head __rcu *bucket;
- };
+ 	mutex_init(&dev->stats.access_lock);
  
- static u32 head_hashfn(struct rhashtable *ht,
-@@ -213,7 +213,7 @@ static struct bucket_table *rhashtable_l
- }
++	if (intf->cur_altsetting->desc.bNumEndpoints < 3) {
++		ret = -ENODEV;
++		goto out2;
++	}
++
++	dev->pipe_in = usb_rcvbulkpipe(udev, BULK_IN_PIPE);
++	ep_blkin = usb_pipe_endpoint(udev, dev->pipe_in);
++	if (!ep_blkin || !usb_endpoint_is_bulk_in(&ep_blkin->desc)) {
++		ret = -ENODEV;
++		goto out2;
++	}
++
++	dev->pipe_out = usb_sndbulkpipe(udev, BULK_OUT_PIPE);
++	ep_blkout = usb_pipe_endpoint(udev, dev->pipe_out);
++	if (!ep_blkout || !usb_endpoint_is_bulk_out(&ep_blkout->desc)) {
++		ret = -ENODEV;
++		goto out2;
++	}
++
++	ep_intr = &intf->cur_altsetting->endpoint[2];
++	if (!usb_endpoint_is_int_in(&ep_intr->desc)) {
++		ret = -ENODEV;
++		goto out2;
++	}
++
++	dev->pipe_intr = usb_rcvintpipe(dev->udev,
++					usb_endpoint_num(&ep_intr->desc));
++
+ 	ret = lan78xx_bind(dev, intf);
+ 	if (ret < 0)
+ 		goto out2;
+@@ -3759,23 +3718,7 @@ static int lan78xx_probe(struct usb_inte
+ 	netdev->max_mtu = MAX_SINGLE_PACKET_SIZE;
+ 	netif_set_gso_max_size(netdev, MAX_SINGLE_PACKET_SIZE - MAX_HEADER);
  
- static int rhashtable_rehash_one(struct rhashtable *ht,
--				 struct rhash_lock_head **bkt,
-+				 struct rhash_lock_head __rcu **bkt,
- 				 unsigned int old_hash)
- {
- 	struct bucket_table *old_tbl = rht_dereference(ht->tbl, ht);
-@@ -266,7 +266,7 @@ static int rhashtable_rehash_chain(struc
- 				    unsigned int old_hash)
- {
- 	struct bucket_table *old_tbl = rht_dereference(ht->tbl, ht);
--	struct rhash_lock_head **bkt = rht_bucket_var(old_tbl, old_hash);
-+	struct rhash_lock_head __rcu **bkt = rht_bucket_var(old_tbl, old_hash);
- 	int err;
- 
- 	if (!bkt)
-@@ -476,7 +476,7 @@ fail:
- }
- 
- static void *rhashtable_lookup_one(struct rhashtable *ht,
--				   struct rhash_lock_head **bkt,
-+				   struct rhash_lock_head __rcu **bkt,
- 				   struct bucket_table *tbl, unsigned int hash,
- 				   const void *key, struct rhash_head *obj)
- {
-@@ -526,12 +526,10 @@ static void *rhashtable_lookup_one(struc
- 	return ERR_PTR(-ENOENT);
- }
- 
--static struct bucket_table *rhashtable_insert_one(struct rhashtable *ht,
--						  struct rhash_lock_head **bkt,
--						  struct bucket_table *tbl,
--						  unsigned int hash,
--						  struct rhash_head *obj,
--						  void *data)
-+static struct bucket_table *rhashtable_insert_one(
-+	struct rhashtable *ht, struct rhash_lock_head __rcu **bkt,
-+	struct bucket_table *tbl, unsigned int hash, struct rhash_head *obj,
-+	void *data)
- {
- 	struct bucket_table *new_tbl;
- 	struct rhash_head *head;
-@@ -582,7 +580,7 @@ static void *rhashtable_try_insert(struc
- {
- 	struct bucket_table *new_tbl;
- 	struct bucket_table *tbl;
--	struct rhash_lock_head **bkt;
-+	struct rhash_lock_head __rcu **bkt;
- 	unsigned int hash;
- 	void *data;
- 
-@@ -1164,8 +1162,8 @@ void rhashtable_destroy(struct rhashtabl
- }
- EXPORT_SYMBOL_GPL(rhashtable_destroy);
- 
--struct rhash_lock_head **__rht_bucket_nested(const struct bucket_table *tbl,
--					     unsigned int hash)
-+struct rhash_lock_head __rcu **__rht_bucket_nested(
-+	const struct bucket_table *tbl, unsigned int hash)
- {
- 	const unsigned int shift = PAGE_SHIFT - ilog2(sizeof(void *));
- 	unsigned int index = hash & ((1 << tbl->nest) - 1);
-@@ -1193,10 +1191,10 @@ struct rhash_lock_head **__rht_bucket_ne
- }
- EXPORT_SYMBOL_GPL(__rht_bucket_nested);
- 
--struct rhash_lock_head **rht_bucket_nested(const struct bucket_table *tbl,
--					   unsigned int hash)
-+struct rhash_lock_head __rcu **rht_bucket_nested(
-+	const struct bucket_table *tbl, unsigned int hash)
- {
--	static struct rhash_lock_head *rhnull;
-+	static struct rhash_lock_head __rcu *rhnull;
- 
- 	if (!rhnull)
- 		INIT_RHT_NULLS_HEAD(rhnull);
-@@ -1204,9 +1202,8 @@ struct rhash_lock_head **rht_bucket_nest
- }
- EXPORT_SYMBOL_GPL(rht_bucket_nested);
- 
--struct rhash_lock_head **rht_bucket_nested_insert(struct rhashtable *ht,
--						  struct bucket_table *tbl,
--						  unsigned int hash)
-+struct rhash_lock_head __rcu **rht_bucket_nested_insert(
-+	struct rhashtable *ht, struct bucket_table *tbl, unsigned int hash)
- {
- 	const unsigned int shift = PAGE_SHIFT - ilog2(sizeof(void *));
- 	unsigned int index = hash & ((1 << tbl->nest) - 1);
+-	if (intf->cur_altsetting->desc.bNumEndpoints < 3) {
+-		ret = -ENODEV;
+-		goto out3;
+-	}
+-
+-	dev->ep_blkin = (intf->cur_altsetting)->endpoint + 0;
+-	dev->ep_blkout = (intf->cur_altsetting)->endpoint + 1;
+-	dev->ep_intr = (intf->cur_altsetting)->endpoint + 2;
+-
+-	dev->pipe_in = usb_rcvbulkpipe(udev, BULK_IN_PIPE);
+-	dev->pipe_out = usb_sndbulkpipe(udev, BULK_OUT_PIPE);
+-
+-	dev->pipe_intr = usb_rcvintpipe(dev->udev,
+-					dev->ep_intr->desc.bEndpointAddress &
+-					USB_ENDPOINT_NUMBER_MASK);
+-	period = dev->ep_intr->desc.bInterval;
+-
++	period = ep_intr->desc.bInterval;
+ 	maxp = usb_maxpacket(dev->udev, dev->pipe_intr, 0);
+ 	buf = kmalloc(maxp, GFP_KERNEL);
+ 	if (buf) {
 
 
