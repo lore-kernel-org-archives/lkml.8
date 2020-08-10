@@ -2,143 +2,92 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC162C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:08:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA20C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:13:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92E25206B5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:08:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E8B9206B5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:13:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zcKtsfc8"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="031LNKZb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726219AbgHJHIs (ORCPT
+        id S1726310AbgHJHNE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 03:08:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44426 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725846AbgHJHIr (ORCPT
+        Mon, 10 Aug 2020 03:13:04 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:55338 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725857AbgHJHND (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 03:08:47 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9410C061756
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 00:08:46 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id c80so6709557wme.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 00:08:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=47Gs9F1F8d09vZAc729o4HZeuw/VZH9JG+bx1Ajssig=;
-        b=zcKtsfc8/Kleb9yRFPedZRukZN5BBfo337spqmdbUq9GEygQLbhq2BJ4pzaTY0/jUo
-         91w5WkpjQW5DWV6jefPAnIRJvmGRiwiJcMfFNoOeDvuYJEa4PNoh36UhmSwof/MQAsGR
-         m2xJsQK9B/9RZimDRm5uYXPUQq58wChaHdgj7XJYw6L6cMig5+QJ0+Wgg7VLEwzrU3DU
-         fuRLexZM8n86RWBdX+vcqa9boVH8K2D3ntwLzct/OLmqy7m1Yy5+7NR2s0Qj1AER3+BE
-         HFEDUEbuI0RitlAe4uPcyWkF19VwDo7tD381Uy/kh964R5Znw1VCtPGix9HAT4eUIFKZ
-         kz8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=47Gs9F1F8d09vZAc729o4HZeuw/VZH9JG+bx1Ajssig=;
-        b=rpTL7TcjPtHntqmQUh6EhoWGdIaiHFOOkA31/dZ90Bm7tNMfygvKgp7QJsPGEeFfzm
-         XOUINMCUPW5VK8NR4qyFGeCLiaTq4grL0aS0FR8/VMKyJPYqiJYF30Yq8DEQdj7+SSOZ
-         rsGt81c6fKZg61u73mCPy1mezdaQERVddgSkRngv/wM6N27pczDR7ibkXkwM3/L2CmIW
-         zEIZsf+/YMzqnhVxw17y+nhbsvPfhd4tvSCwunfFy7K7EOl2OVMQRSg8e94zVZRBEbBt
-         eqIQ0UUJIV7tsxYe1cBEgxJjMWtjO9h+jCuUyQRgOwRzkym32Whg38eud1n3KD4Djj3q
-         L4gg==
-X-Gm-Message-State: AOAM531v0jJgGe7jloAR2xnpriX+UbLU3SiBZ3v9XgBnWBINpzwSl4xk
-        a7lb5OBurBCRF3nYCsNr1HNybA==
-X-Google-Smtp-Source: ABdhPJzaszzYjiz41rjzxkM5loaOj5BIe+vF8wU0E97WRWint16E9KsV5ipy0b3/vzW4w2iwnkZh7Q==
-X-Received: by 2002:a7b:c4d5:: with SMTP id g21mr25757680wmk.185.1597043325510;
-        Mon, 10 Aug 2020 00:08:45 -0700 (PDT)
-Received: from dell ([2.27.167.73])
-        by smtp.gmail.com with ESMTPSA id w10sm20031948wmk.0.2020.08.10.00.08.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Aug 2020 00:08:44 -0700 (PDT)
-Date:   Mon, 10 Aug 2020 08:08:43 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Gene Chen <gene.chen.richtek@gmail.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>, rafael@kernel.org,
-        gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Gene Chen <gene_chen@richtek.com>, benjamin.chao@mediatek.com,
-        shufan_lee@richtek.com, cy_huang@richtek.com
-Subject: Re: [PATCH 9/9] mfd: mt6360: Merge different sub-devices I2C
- read/write
-Message-ID: <20200810070843.GA4411@dell>
-References: <1596558782-3415-1-git-send-email-gene.chen.richtek@gmail.com>
- <1596558782-3415-11-git-send-email-gene.chen.richtek@gmail.com>
- <20200805161021.GK5556@sirena.org.uk>
- <CAE+NS360iKLoGxiiz8NmQqCp2Uge98Eehe4g2sn_N0e-E3DgyQ@mail.gmail.com>
- <20200806121332.GB6442@sirena.org.uk>
- <CAE+NS37tr65GnTue89wJkPvJzddahKj__KPgzmjzwkOfWQnc8g@mail.gmail.com>
+        Mon, 10 Aug 2020 03:13:03 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07A7CHet019964;
+        Mon, 10 Aug 2020 09:12:53 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=qm/UhnNoPRT6rrgGe5Cf7nTn4YU+1HJV6FfP2NxbMts=;
+ b=031LNKZbZuOC7Rqtj+h9X4VhHt+2x0thwmZ1AhD3vP7liVxIkYsip6EfU6UTmmbzDqg4
+ Nhi1Sgb78sohJbpjSyX4n9HLgqPv4VRzDM9vSqa3LxvAWMuuVIyd1Syypy9BQTThhRgq
+ +ghlmRcEj7Ms9Sry1XvwkxuPhaBT+cJHZVi7rZWLvAqnwG05ZhdWRV1WaHA4g4CB2Rys
+ /C19ydAsoET/Ok8tp+EsW0aibLIXsLVqxEUDLn/nqSvLJThWVilvAsnVTCyxummGL0QF
+ Zbf4vptjO3bU2YsURKetmNANZqetltUZ5G3dEtAPWossKUx15T7Op/GanDi71UNdmMF+ Cw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 32sma16n88-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 10 Aug 2020 09:12:53 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 5BD0E100034;
+        Mon, 10 Aug 2020 09:12:50 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 4C72C2AD9EA;
+        Mon, 10 Aug 2020 09:12:50 +0200 (CEST)
+Received: from localhost (10.75.127.45) by SFHDAG3NODE2.st.com (10.75.127.8)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 10 Aug 2020 09:12:49
+ +0200
+From:   Alain Volmat <alain.volmat@st.com>
+To:     <broonie@kernel.org>, <amelie.delaunay@st.com>
+CC:     <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
+        <linux-spi@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>,
+        <alain.volmat@st.com>
+Subject: [PATCH v2 0/5] spi: stm32: various driver fixes
+Date:   Mon, 10 Aug 2020 09:12:33 +0200
+Message-ID: <1597043558-29668-1-git-send-email-alain.volmat@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAE+NS37tr65GnTue89wJkPvJzddahKj__KPgzmjzwkOfWQnc8g@mail.gmail.com>
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG3NODE1.st.com (10.75.127.7) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-10_03:2020-08-06,2020-08-10 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 07 Aug 2020, Gene Chen wrote:
+This serie is a reduced version of the serie
+[spi: stm32: various driver enhancements] previously sent.
 
-> Mark Brown <broonie@kernel.org> 於 2020年8月6日 週四 下午8:13寫道：
-> >
-> > On Thu, Aug 06, 2020 at 11:30:56AM +0800, Gene Chen wrote:
-> > > Mark Brown <broonie@kernel.org> 於 2020年8月6日 週四 上午12:10寫道：
-> >
-> > > > It's not clear why this isn't just done in the device regmap, there's
-> > > > exactly one user?
-> >
-> > > because I use one regmap to access 4 I2C devices,
-> >
-> > There appears to be only one device here?
-> >
-> > > I need change the regmap_bus struct to fit I2C read/write with CRC bit
-> > > Therefore, MFD reviewer suggests I can move the regmap api to regmap
-> > > folder such as regmap-ac97.c
-> >
-> > AC'97 is an industry standard bus used by a range of devices in
-> > different subsystems.  You can already have custom operations for a
-> > device just in a regular regmap using the reg_read() and reg_write()
-> > operations which are there so devices that individual device support
-> > doesn't need to be added to the regmap core.
-> >
-> 
-> I need use regmap_raw_read to access MT6360 TYPEC part, so we need
-> implement bus read control
-> 
-> > You really also need to write a much clearer changelog, I would be hard
-> > pressed to tell from the changelog that this was moving things to the
-> > regmap core rather than shuffling regmaps within the device.
-> 
-> MT6360 has 4 I2C worker devices
-> First, I increase reg_bits from 8 to 16 bits.
-> Higher 8 bits, bank, indicated which worker device I want access
-> Then, if worker devices is PMIC or LDO part, I need calculate or check
-> CRC8 bits when we write or read data.
-> CRC8 bits is calculated by 3 parts.
-> 1'st part include 1 byte is worker address and R/W in LSB.
-> 2'nd part include 1 byte is register address
-> 3'nd part include written data or read data from MT6360
-> I also need 1 dummy byte when write data
-> 
-> @Lee Jones,
-> I found out drivers/iio/chemical/bme680_spi.c implement their own
-> regmap_bus too.
-> Can I move regmap control back to mt6360-core.c?
+Alain Volmat (1):
+  spi: stm32: always perform registers configuration prior to transfer
 
-Yes, if that is the 'done thing'.
+Amelie Delaunay (3):
+  spi: stm32: fix fifo threshold level in case of short transfer
+  spi: stm32: fix stm32_spi_prepare_mbr in case of odd clk_rate
+  spi: stm32: fixes suspend/resume management
+
+Antonio Borneo (1):
+  spi: stm32h7: fix race condition at end of transfer
+
+ drivers/spi/spi-stm32.c | 98 ++++++++++++++++++++++++++++++-------------------
+ 1 file changed, 61 insertions(+), 37 deletions(-)
 
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+v2: fix conditional statement within [spi: stm32: fix fifo threshold level in case of short transfer]
+
