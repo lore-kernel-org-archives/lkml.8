@@ -2,99 +2,74 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A43C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8425DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:42:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E2EF2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:41:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5616F2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:42:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727042AbgHJOl5 (ORCPT
+        id S1727062AbgHJOmL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 10:41:57 -0400
-Received: from foss.arm.com ([217.140.110.172]:56762 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726392AbgHJOl4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 10:41:56 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C24F81063;
-        Mon, 10 Aug 2020 07:41:55 -0700 (PDT)
-Received: from bogus (unknown [10.37.12.40])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3002A3F22E;
-        Mon, 10 Aug 2020 07:41:51 -0700 (PDT)
-Date:   Mon, 10 Aug 2020 15:41:48 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     linux-i2c@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-acpi@vger.kernel.org, Bingbu Cao <bingbu.cao@intel.com>,
-        linux-media@vger.kernel.org,
-        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
-        Hyungwoo Yang <hyungwoo.yang@intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        rajmohan.mani@intel.com, Tomasz Figa <tfiga@chromium.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        "Qiu, Tian Shu" <tian.shu.qiu@intel.com>
-Subject: Re: [PATCH v5 1/6] i2c: Allow driver to manage the device's power
- state during probe
-Message-ID: <20200810144148.GD31434@bogus>
-References: <20200810142747.12400-1-sakari.ailus@linux.intel.com>
- <20200810142747.12400-2-sakari.ailus@linux.intel.com>
+        Mon, 10 Aug 2020 10:42:11 -0400
+Received: from mail-il1-f198.google.com ([209.85.166.198]:48971 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726392AbgHJOmK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 10:42:10 -0400
+Received: by mail-il1-f198.google.com with SMTP id w8so2808888ilg.15
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 07:42:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=OzRqCxKFuIBYd6uAIlx4xZOrodkSUu/+cChTzUG+OTk=;
+        b=VDkZFQFKKwGXV4066sOwC8Y/8bUrMTE5Z5QH/EAKi70uPx9gEmo5A2zgNl6RggIKN7
+         HxJbwpDLj46Ocw5ktn6Ug+I5l9IKaUKMug4aAIGv8vr4kB7EKLr/ftOF4uZQ8IcUo6T7
+         pDhEj6ZSj3trCQQyRnHdClpBdQ4JLPVTeV6KayiZJRxZBJnQHsceupFith5elvB30mo5
+         2GsUdQKW6LlGrXhmDZrwesBLi+GslanQbrJb5MSi60NyhDE/fa14GbkcKwsc3H4dvz6D
+         +ROF4J8tnjkO5y2vGHkk0xatghlfIVs8UT4bEfhZSWyiBv1hI+68CB13Pm0QDWlZ46A7
+         aVkg==
+X-Gm-Message-State: AOAM532hlRSo3vHxX93+CfeqFARmmXfS8EbKC6L0caKWWtISl8B5ZrHu
+        W+xFrZ9QZYShju2qMrfUXac/Ytib1ioNWJp/Z5VsY7HXoC9Y
+X-Google-Smtp-Source: ABdhPJxXFLShve5fwsxHgj+zHfvKDZxlj0s2XHM3ReDwNCMkS1tJ8mZ5yZkigLmULrkVBmjKY8LGwZ7Q9j1yKl+G27H/VtFlxZ3A
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200810142747.12400-2-sakari.ailus@linux.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Received: by 2002:a5e:a607:: with SMTP id q7mr17629684ioi.16.1597070529854;
+ Mon, 10 Aug 2020 07:42:09 -0700 (PDT)
+Date:   Mon, 10 Aug 2020 07:42:09 -0700
+In-Reply-To: <20200810142441.GB299045@rowland.harvard.edu>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000009d004605ac86f57b@google.com>
+Subject: Re: WARNING in slab_pre_alloc_hook
+From:   syzbot <syzbot+c2c3302f9c601a4b1be2@syzkaller.appspotmail.com>
+To:     andreyknvl@gmail.com, andreyknvl@google.com, balbi@kernel.org,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, stern@rowland.harvard.edu,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 05:27:42PM +0300, Sakari Ailus wrote:
-> Enable drivers to tell ACPI that there's no need to power on a device for
-> probe. Drivers should still perform this by themselves if there's a need
-> to. In some cases powering on the device during probe is undesirable, and
-> this change enables a driver to choose what fits best for it.
->
-> Add a field called "flags" into struct i2c_driver for driver flags, and a
-> flag I2C_DRV_FL_ALLOW_LOW_POWER_PROBE to tell a driver supports probe in
-> low power state.
->
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> ---
->  drivers/i2c/i2c-core-base.c | 17 ++++++++++++++---
->  include/linux/i2c.h         | 14 ++++++++++++++
->  2 files changed, 28 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-> index 34a9609f256da..cde9cf49a07e6 100644
-> --- a/drivers/i2c/i2c-core-base.c
-> +++ b/drivers/i2c/i2c-core-base.c
-> @@ -436,6 +436,14 @@ static int i2c_smbus_host_notify_to_irq(const struct i2c_client *client)
->  	return irq > 0 ? irq : -ENXIO;
->  }
->
-> +static bool allow_low_power_probe(struct device *dev)
-> +{
-> +	struct i2c_driver *driver = to_i2c_driver(dev->driver);
-> +
-> +	return driver->flags & I2C_DRV_FL_ALLOW_LOW_POWER_PROBE &&
-> +		device_property_present(dev, "allow-low-power-probe");
+Hello,
 
-I assume this change makes even the DT property "allow-low-power-probe"
-work in the same way. Should we have proper DT binding for that ?
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-This comment applies for any property using device_property_* but has
-no explicit DT binding ? Just asking the question to know the strategy
-followed. Sorry if this is redundant question, feel free to point me
-to the past discussions.
+Reported-and-tested-by: syzbot+c2c3302f9c601a4b1be2@syzkaller.appspotmail.com
 
---
-Regards,
-Sudeep
+Tested on:
+
+commit:         449dc8c9 Merge tag 'for-v5.9' of git://git.kernel.org/pub/..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6ef84fa8ee48e528
+dashboard link: https://syzkaller.appspot.com/bug?extid=c2c3302f9c601a4b1be2
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=14ef8e52900000
+
+Note: testing is done by a robot and is best-effort only.
