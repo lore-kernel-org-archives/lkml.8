@@ -2,68 +2,138 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00428C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ABE8C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:26:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDE6E2073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:25:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 073822075D
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:26:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OG+MeLJS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbgHJHZz convert rfc822-to-8bit (ORCPT
+        id S1726577AbgHJH02 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 03:25:55 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:52587 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726025AbgHJHZy (ORCPT
+        Mon, 10 Aug 2020 03:26:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47146 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726025AbgHJH00 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 03:25:54 -0400
-X-Originating-IP: 91.224.148.103
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 8FB46FF802;
-        Mon, 10 Aug 2020 07:25:49 +0000 (UTC)
-Date:   Mon, 10 Aug 2020 09:25:48 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-mtd <linux-mtd@lists.infradead.org>,
-        Richard Weinberger <richard@nod.at>,
-        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Frieder Schrempf <frieder.schrempf@kontron.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] mtd: Changes for 5.9
-Message-ID: <20200810092548.415bcab7@xps13>
-In-Reply-To: <CAHk-=whJ0SQjLeMiVvMXayxvxCmAMdROxyb-Pzs=kr4-Ba5BCA@mail.gmail.com>
-References: <20200809003453.79673eb3@xps13>
-        <CAHk-=whJ0SQjLeMiVvMXayxvxCmAMdROxyb-Pzs=kr4-Ba5BCA@mail.gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 10 Aug 2020 03:26:26 -0400
+Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A90AC061756;
+        Mon, 10 Aug 2020 00:26:25 -0700 (PDT)
+Received: by mail-yb1-xb41.google.com with SMTP id m200so4640926ybf.10;
+        Mon, 10 Aug 2020 00:26:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=a/yQjIpGQ9bwN19T0c8h1wga/yLfPYyGvmAA4RpqO9o=;
+        b=OG+MeLJSksMXQYnng3ZOq6fUtWnCYdY5dR1M1xCP2OB9ND+9+4gTccvtg9esOBO8aY
+         gtirQoqKkpqoqmrbG7tGO0qdLyMXyV0NJ/xJER24xixIb67EJa8RmSQF2Ff7aIr2wYAG
+         bAoeaXl/I2YDiY3TlR4Q8dzk+t2YsYj46MLrVBciwEz2H7kh6AorllAny6O+UFnqdWsF
+         oVAqzKJFAsREVEASyYves69+s+Y/hLecF33Xiz/Gck+5vGk2HL4Ngq/msOKp+arz7rHV
+         sjHchbSuQbUBIppXohuffpkxb3UsDyddlDTDs+IACcu8BNO6GDRwD0PhZpPHJkJj0axg
+         39Lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=a/yQjIpGQ9bwN19T0c8h1wga/yLfPYyGvmAA4RpqO9o=;
+        b=nku+gK88rrPf6TCNq7PmCU4m+fGk6qquKezO60dXXYaLUd2mnncLJY6taH+eahrGMM
+         pJVOboJK1nRwZzyGNj1SUTxQd4L8v5J1dutJLVSbWo7pGWdWLYUpe8KiSC/AIv4gK+j3
+         6/oiVAaTnY/UDljhEQt5cdPfYa8Yx2pO/vt99S9SBhFhUrAQNkVa4o8umkOD/37OFYyw
+         3QwDpUuIftvgT1oCEoIBlRxz5WJmE7huXVWLlg5+Bp37Q2MxZ/KfBwQms52hlvNcp2Tu
+         WJ5AsQdSMytmcvxFtgYOe1gfzB/VHibFQR5oF82X0Q+nv5KDcaHt7O1Rbg0UbNoMkff7
+         gBBA==
+X-Gm-Message-State: AOAM531T2GleVWjQet8F1kX8dndv8rVswAN7m+4irktcJHRH/UewRpTq
+        BmcDNcJ12iODtC0zWlC1985CxTpTjSn1tQ4lRwE=
+X-Google-Smtp-Source: ABdhPJx5ZqLguTnboxWSbfqbxWq6Zi7lwEzwh50vnLLZ5b7sQaMUmIrC4FfDLxZUtT0lEp3C6ZVNHYQi/QODDA9MeYY=
+X-Received: by 2002:a25:b74b:: with SMTP id e11mr3088014ybm.395.1597044384816;
+ Mon, 10 Aug 2020 00:26:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+References: <1596465107-14251-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200806144828.bflbpla2x4sjfsbp@uno.localdomain>
+In-Reply-To: <20200806144828.bflbpla2x4sjfsbp@uno.localdomain>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Mon, 10 Aug 2020 08:25:58 +0100
+Message-ID: <CA+V-a8tmU2OVg8L8qsySG1CtpMw08BmjeyYBiakXdAh8vgxuNQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] media: i2c: ov5640 feature enhancement and fixes
+To:     Jacopo Mondi <jacopo@jmondi.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Steve Longerbeam <slongerbeam@gmail.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Hugues Fruchet <hugues.fruchet@st.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Hi Jacopo,
 
-Linus Torvalds <torvalds@linux-foundation.org> wrote on Sun, 9 Aug 2020
-12:47:01 -0700:
 
-> On Sat, Aug 8, 2020 at 3:35 PM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+On Thu, Aug 6, 2020 at 3:44 PM Jacopo Mondi <jacopo@jmondi.org> wrote:
+>
+> Hello,
+>
+> On Mon, Aug 03, 2020 at 03:31:43PM +0100, Lad Prabhakar wrote:
+> > Hi All,
 > >
-> > MTD core changes:  
-> ..
-> 
-> You didn't even mention the stm32 controller change, which seems to be
-> the biggest individual thing in here..
+> > This patch series fixes DVP support and enables BT656 mode in
+> > the driver.
+> >
+> > @Jacopo Mondi - patch 1/4 will collide with your patch series [1],
+> > feel free to merge it as part of your v2.
+>
+> This would actually make my life simpler, as one of the issues I had
+> was trying to make bus-type required to be able to differentiate
+> between different properties.
+>
+Thank you for taking care of it.
 
-Oh sorry, I put it aside and then forgot it when writing the changelog :/
-I'll try to be more careful.
+Cheers,
+Prabhakar
 
-Thanks,
-Miquèl
+> >
+> > [1] https://www.spinics.net/lists/linux-renesas-soc/msg51236.html
+> >
+> > Cheers,
+> > Prabhakar
+> >
+> > Changes for v2:
+> > * Added support to fallback in parallel mode
+> > * Documented bus-type property
+> > * Added descriptive commit message for patch 2/4 as pointed
+> >   by Sakari
+> > * Fixed review comments pointed by Laurent to have separate functions
+> >   for mipi and dvp setup
+> > * Made sure the sensor is in power down mode during startup too for
+> >   DVP mode
+> >
+> > Lad Prabhakar (4):
+> >   dt-bindings: media: i2c: ov5640: Document bus-type property
+> >   media: i2c: ov5640: Enable data pins on poweron for DVP mode
+> >   media: i2c: ov5640: Add support for BT656 mode
+> >   media: i2c: ov5640: Fallback to parallel mode
+> >
+> >  .../devicetree/bindings/media/i2c/ov5640.txt  |   9 +-
+> >  drivers/media/i2c/ov5640.c                    | 333 ++++++++++--------
+> >  2 files changed, 198 insertions(+), 144 deletions(-)
+> >
+> > --
+> > 2.17.1
+> >
