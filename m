@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AEFAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:36:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C665AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:36:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 305382078E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:36:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95FA42078E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:36:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073764;
-	bh=uxoQtPfN28/+cTLXSlYzNdbe8bpEfzHVnhTtZgL1ynI=;
+	s=default; t=1597073772;
+	bh=8DpZJzOA2XOE6mKbWrjqeDu4/W69O4cH8yppwCZN43w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T9azSsyHIZ522fmmGvLgNd46ase6pBDKhAQ1nwjyOjJp8XmPVtFRT4yyo9eHexbKs
-	 mZF9O6YvrJzqAk4y8F6uBu5LwLPf/8r2f4wzh7VsQjqtAV3C9ehsfiE+rYrWUX1Qbp
-	 tqLGjrQOFTJVaJ3Q4zjjmI7HM5SaAkfXlMZA8LCg=
+	b=kb3iMfWKpATbys0pkkC38TCUq5HSrrwNFT6qUXZNWEq6YY8cRVOSEuYnYUYJ9dQwd
+	 16SO5zw5fI3NdKzJgwNIpUZqBxhwVTz1tKx9quLvj/au8h6Su0QNjd6Q6YBHrcTvfa
+	 juQZVm5Eq50LuzoXaZnsHuYHSMOrNWhid0llQJlE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728763AbgHJP1e (ORCPT
+        id S1728966AbgHJPgK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:27:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33400 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:36:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33442 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727821AbgHJP1a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:27:30 -0400
+        id S1728757AbgHJP1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:27:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FA9922B47;
-        Mon, 10 Aug 2020 15:27:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 630CA22BF3;
+        Mon, 10 Aug 2020 15:27:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073249;
-        bh=uxoQtPfN28/+cTLXSlYzNdbe8bpEfzHVnhTtZgL1ynI=;
+        s=default; t=1597073252;
+        bh=8DpZJzOA2XOE6mKbWrjqeDu4/W69O4cH8yppwCZN43w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0Rdtb8YBVrKmNhytRfhcQsj2SBVB7seghlbjWRSy7i4acMeJVuFytWi7X1lRVd9DN
-         aITWy45tw6v+wfMdCKhb/Y2gqfU9sKG1k6gFB+3qSbMQgXC3OE6WNC2SwhuO7PVmyK
-         gRAHStitklEAoj9XP7Vx5RG/c+LpungVdUGiDRWs=
+        b=dWd8yXT2IImxw0fRlr4IWyWFkzXotEbpsPSkgHt3a2SXB5asQ2sfv2Jk3iBDf2Lt0
+         C4WLUAIF7VnjLzzoI3+JyeharsY03Q8awFTi9szU6YqTXrspoKyxe+5u+cRwTFeOUQ
+         wGbZ+DTGBymJyJSepZb8sHKxkSV9srR+Dz0o5sCM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Ren=C3=A9=20van=20Dorst?= <opensource@vdorst.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 39/67] net: ethernet: mtk_eth_soc: Always call mtk_gmac0_rgmii_adjust() for mt7623
-Date:   Mon, 10 Aug 2020 17:21:26 +0200
-Message-Id: <20200810151811.364767874@linuxfoundation.org>
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 40/67] ALSA: hda: fix NULL pointer dereference during suspend
+Date:   Mon, 10 Aug 2020 17:21:27 +0200
+Message-Id: <20200810151811.413584797@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151809.438685785@linuxfoundation.org>
 References: <20200810151809.438685785@linuxfoundation.org>
@@ -63,63 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: René van Dorst <opensource@vdorst.com>
+From: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
 
-[ Upstream commit 19016d93bfc335f0c158c0d9e3b9d06c4dd53d39 ]
+[ Upstream commit 7fcd9bb5acd01250bcae1ecc0cb8b8d4bb5b7e63 ]
 
-Modify mtk_gmac0_rgmii_adjust() so it can always be called.
-mtk_gmac0_rgmii_adjust() sets-up the TRGMII clocks.
+When the ASoC card registration fails and the codec component driver
+never probes, the codec device is not initialized and therefore
+memory for codec->wcaps is not allocated. This results in a NULL pointer
+dereference when the codec driver suspend callback is invoked during
+system suspend. Fix this by returning without performing any actions
+during codec suspend/resume if the card was not registered successfully.
 
-Signed-off-by: René van Dorst <opensource@vdorst.com>
-Signed-off-By: David Woodhouse <dwmw2@infradead.org>
-Tested-by: Frank Wunderlich <frank-w@public-files.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+Link: https://lore.kernel.org/r/20200728231011.1454066-1-ranjani.sridharan@linux.intel.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mediatek/mtk_eth_soc.c | 19 ++++++++++++++-----
- 1 file changed, 14 insertions(+), 5 deletions(-)
+ sound/pci/hda/hda_codec.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-index 997dc811382a4..be390c7e43b2f 100644
---- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-+++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-@@ -171,11 +171,21 @@ static int mt7621_gmac0_rgmii_adjust(struct mtk_eth *eth,
- 	return 0;
- }
+diff --git a/sound/pci/hda/hda_codec.c b/sound/pci/hda/hda_codec.c
+index 07c03c32715a9..801abf0fc98b3 100644
+--- a/sound/pci/hda/hda_codec.c
++++ b/sound/pci/hda/hda_codec.c
+@@ -2924,6 +2924,10 @@ static int hda_codec_runtime_suspend(struct device *dev)
+ 	struct hda_codec *codec = dev_to_hda_codec(dev);
+ 	unsigned int state;
  
--static void mtk_gmac0_rgmii_adjust(struct mtk_eth *eth, int speed)
-+static void mtk_gmac0_rgmii_adjust(struct mtk_eth *eth,
-+				   phy_interface_t interface, int speed)
- {
- 	u32 val;
- 	int ret;
- 
-+	if (interface == PHY_INTERFACE_MODE_TRGMII) {
-+		mtk_w32(eth, TRGMII_MODE, INTF_MODE);
-+		val = 500000000;
-+		ret = clk_set_rate(eth->clks[MTK_CLK_TRGPLL], val);
-+		if (ret)
-+			dev_err(eth->dev, "Failed to set trgmii pll: %d\n", ret);
-+		return;
-+	}
++	/* Nothing to do if card registration fails and the component driver never probes */
++	if (!codec->card)
++		return 0;
 +
- 	val = (speed == SPEED_1000) ?
- 		INTF_MODE_RGMII_1000 : INTF_MODE_RGMII_10_100;
- 	mtk_w32(eth, val, INTF_MODE);
-@@ -262,10 +272,9 @@ static void mtk_mac_config(struct phylink_config *config, unsigned int mode,
- 							      state->interface))
- 					goto err_phy;
- 			} else {
--				if (state->interface !=
--				    PHY_INTERFACE_MODE_TRGMII)
--					mtk_gmac0_rgmii_adjust(mac->hw,
--							       state->speed);
-+				mtk_gmac0_rgmii_adjust(mac->hw,
-+						       state->interface,
-+						       state->speed);
+ 	cancel_delayed_work_sync(&codec->jackpoll_work);
+ 	state = hda_call_codec_suspend(codec);
+ 	if (codec->link_down_at_suspend ||
+@@ -2938,6 +2942,10 @@ static int hda_codec_runtime_resume(struct device *dev)
+ {
+ 	struct hda_codec *codec = dev_to_hda_codec(dev);
  
- 				/* mt7623_pad_clk_setup */
- 				for (i = 0 ; i < NUM_TRGMII_CTRL; i++)
++	/* Nothing to do if card registration fails and the component driver never probes */
++	if (!codec->card)
++		return 0;
++
+ 	codec_display_power(codec, true);
+ 	snd_hdac_codec_link_up(&codec->core);
+ 	hda_call_codec_resume(codec);
 -- 
 2.25.1
 
