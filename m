@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 262C3C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:41:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D255BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:42:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE56D20774
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:41:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A477620774
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:42:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597074119;
-	bh=Itc7IHb08ZGOHTDJBJwZojMpWgF91q1faBxQtgBUtgk=;
+	s=default; t=1597074123;
+	bh=RF1YYZcrR8jAOi1ZJRiN7u4xbfpSyq4rjhuxrTj5BHc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qltvzgVzD6+ZcUTaVjbXQk/8O4OL18bfFqPzYz0bLIj2OzVHjNKG3qttazWlhOJux
-	 VbjGZmOnvKOtrCmtbBz41tctiG6bfiqDZpOI0b6nSz0ipwyGk4LcZk+P53TRDDYhku
-	 dmks/mWKij3dyOhqDJiKc4mUYV6Kt/cqiqP5zato=
+	b=2bK6UU9CVuy7gaNNifzrosV8fGHXuj6UYJ8CafLfkcoN2RtHYcDgOtUJtOoZXrj69
+	 uLDypEykI4WhrnPLSa+mAOwmJibX0pdTugLWKmL5xSdpF4CbI/EdEF/mwdXiVJYhbR
+	 jC80/YDR04Xt5O0cYxoG6w5a6SS7ejF/MBosrhr0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728705AbgHJPl5 (ORCPT
+        id S1729289AbgHJPmC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:41:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53710 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:42:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728244AbgHJPWs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:22:48 -0400
+        id S1728231AbgHJPWj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:22:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D2B520782;
-        Mon, 10 Aug 2020 15:22:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB00D20782;
+        Mon, 10 Aug 2020 15:22:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597072967;
-        bh=Itc7IHb08ZGOHTDJBJwZojMpWgF91q1faBxQtgBUtgk=;
+        s=default; t=1597072959;
+        bh=RF1YYZcrR8jAOi1ZJRiN7u4xbfpSyq4rjhuxrTj5BHc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m/KNBIQd4PrbMp8WrO7drnHJYkq/93fM+BWFGArpZAFGvXE4RjpbamqNznFSHdWv7
-         6PXk+ZBNSQHQsN4+powt2I5/acka3shE+QlY6KZxQnjaRPieG+l/O/bAJPHb2Zjpgi
-         wQGp5XGMX7bWL6Bn65FdhKRhI6Y+B7I+tYg7AVPM=
+        b=i4GPy6dNNwTyIqf24ReY2LCfOfTmbDzFJ72UW8QCWzki7obJIQ/xi93UJLRzYD8s/
+         DVSFmF4jHpqOIk2iW2ofzqO+fq4+QzWjkzZiiuCO2uMANql/RdaS8tdSXDa30Y39qm
+         d55DU49WMIxt6BVTtflc+TDZ6vReK7se62NVaK5Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julia Lawall <julia.lawall@inria.fr>,
-        YueHaibing <yuehaibing@huawei.com>, jeyu@kernel.org,
-        cocci@systeme.lip6.fr, Matthias Maennich <maennich@google.com>,
-        Shuah Khan <skhan@linuxfoundation.org>
-Subject: [PATCH 5.7 21/79] scripts: add dummy report mode to add_namespace.cocci
-Date:   Mon, 10 Aug 2020 17:20:40 +0200
-Message-Id: <20200810151813.224449988@linuxfoundation.org>
+        stable@vger.kernel.org, Adam Ford <aford173@gmail.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Dave Airlie <airlied@gmail.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: [PATCH 5.7 18/79] omapfb: dss: Fix max fclk divider for omap36xx
+Date:   Mon, 10 Aug 2020 17:20:37 +0200
+Message-Id: <20200810151813.015689378@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151812.114485777@linuxfoundation.org>
 References: <20200810151812.114485777@linuxfoundation.org>
@@ -61,80 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthias Maennich <maennich@google.com>
+From: Adam Ford <aford173@gmail.com>
 
-commit 55c7549819e438f40a3ef1d8ac5c38b73390bcb7 upstream.
+commit 254503a2b186caa668a188dbbd7ab0d25149c0a5 upstream.
 
-When running `make coccicheck` in report mode using the
-add_namespace.cocci file, it will fail for files that contain
-MODULE_LICENSE. Those match the replacement precondition, but spatch
-errors out as virtual.ns is not set.
+The drm/omap driver was fixed to correct an issue where using a
+divider of 32 breaks the DSS despite the TRM stating 32 is a valid
+number.  Through experimentation, it appears that 31 works, and
+it is consistent with the value used by the drm/omap driver.
 
-In order to fix that, add the virtual rule nsdeps and only do search and
-replace if that rule has been explicitly requested.
+This patch fixes the divider for fbdev driver instead of the drm.
 
-In order to make spatch happy in report mode, we also need a dummy rule,
-as otherwise it errors out with "No rules apply". Using a script:python
-rule appears unrelated and odd, but this is the shortest I could come up
-with.
-
-Adjust scripts/nsdeps accordingly to set the nsdeps rule when run trough
-`make nsdeps`.
-
-Suggested-by: Julia Lawall <julia.lawall@inria.fr>
-Fixes: c7c4e29fb5a4 ("scripts: add_namespace: Fix coccicheck failed")
-Cc: YueHaibing <yuehaibing@huawei.com>
-Cc: jeyu@kernel.org
-Cc: cocci@systeme.lip6.fr
-Cc: stable@vger.kernel.org
-Signed-off-by: Matthias Maennich <maennich@google.com>
-Reported-by: Shuah Khan <skhan@linuxfoundation.org>
-Acked-by: Julia Lawall <julia.lawall@inria.fr>
-Link: https://lore.kernel.org/r/20200604164145.173925-1-maennich@google.com
+Fixes: f76ee892a99e ("omapfb: copy omapdss & displays for omapfb")
+Cc: <stable@vger.kernel.org> #4.5+
+Signed-off-by: Adam Ford <aford173@gmail.com>
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Dave Airlie <airlied@gmail.com>
+Cc: Rob Clark <robdclark@gmail.com>
+[b.zolnierkie: mark patch as applicable to stable 4.5+ (was 4.9+)]
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200630182636.439015-1-aford173@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- scripts/coccinelle/misc/add_namespace.cocci |    8 +++++++-
- scripts/nsdeps                              |    2 +-
- 2 files changed, 8 insertions(+), 2 deletions(-)
+ drivers/video/fbdev/omap2/omapfb/dss/dss.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/scripts/coccinelle/misc/add_namespace.cocci
-+++ b/scripts/coccinelle/misc/add_namespace.cocci
-@@ -6,6 +6,7 @@
- /// add a missing namespace tag to a module source file.
- ///
+--- a/drivers/video/fbdev/omap2/omapfb/dss/dss.c
++++ b/drivers/video/fbdev/omap2/omapfb/dss/dss.c
+@@ -833,7 +833,7 @@ static const struct dss_features omap34x
+ };
  
-+virtual nsdeps
- virtual report
- 
- @has_ns_import@
-@@ -16,10 +17,15 @@ MODULE_IMPORT_NS(ns);
- 
- // Add missing imports, but only adjacent to a MODULE_LICENSE statement.
- // That ensures we are adding it only to the main module source file.
--@do_import depends on !has_ns_import@
-+@do_import depends on !has_ns_import && nsdeps@
- declarer name MODULE_LICENSE;
- expression license;
- identifier virtual.ns;
- @@
- MODULE_LICENSE(license);
- + MODULE_IMPORT_NS(ns);
-+
-+// Dummy rule for report mode that would otherwise be empty and make spatch
-+// fail ("No rules apply.")
-+@script:python depends on report@
-+@@
---- a/scripts/nsdeps
-+++ b/scripts/nsdeps
-@@ -29,7 +29,7 @@ fi
- 
- generate_deps_for_ns() {
- 	$SPATCH --very-quiet --in-place --sp-file \
--		$srctree/scripts/coccinelle/misc/add_namespace.cocci -D ns=$1 $2
-+		$srctree/scripts/coccinelle/misc/add_namespace.cocci -D nsdeps -D ns=$1 $2
- }
- 
- generate_deps() {
+ static const struct dss_features omap3630_dss_feats = {
+-	.fck_div_max		=	32,
++	.fck_div_max		=	31,
+ 	.dss_fck_multiplier	=	1,
+ 	.parent_clk_name	=	"dpll4_ck",
+ 	.dpi_select_source	=	&dss_dpi_select_source_omap2_omap3,
 
 
