@@ -2,117 +2,89 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B814FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 16:36:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F5BCC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 16:37:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 853DF2076B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 16:36:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YV9tEoXX"
+	by mail.kernel.org (Postfix) with ESMTP id 269302076B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 16:37:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727897AbgHJQgg (ORCPT
+        id S1727949AbgHJQhV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 12:36:36 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:42998 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727839AbgHJQge (ORCPT
+        Mon, 10 Aug 2020 12:37:21 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:47400 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726934AbgHJQhV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 12:36:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597077392;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=E7cstcAHVFGfhscj0UF342G+MM1KSXqD/P1R9pHujqc=;
-        b=YV9tEoXXLoSBTdBZfXyA4yI1CoocsTaPyuKoLd5zCJ0+APuQJlyDbVBinKQLjQOHIsgaCy
-        YwVjaGHPW0pAJTzPozfHWeeJqNQTgHxss/MW0KgigVlofmtWgVKU0IrmCQDvwxSzmO2weR
-        kfF5B3rFnRRY7GQF5XnvvZNabRkZfmU=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-385-Sq-M4Bg2M1mPnjETs7vvTg-1; Mon, 10 Aug 2020 12:36:30 -0400
-X-MC-Unique: Sq-M4Bg2M1mPnjETs7vvTg-1
-Received: by mail-ed1-f71.google.com with SMTP id j14so3467410edk.1
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 09:36:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=E7cstcAHVFGfhscj0UF342G+MM1KSXqD/P1R9pHujqc=;
-        b=Z101AUzuR86kOxCnwpFXIEdSUw7+eGImzlPJukdho9EIghYCO1axNKMUVTarNn9unt
-         SLxtNmFXWKjyq/SeQcNRFYOHrLm9vNnN3lbIvkNThuNu0i8JrW29VWsVjMzaa7E6Df/c
-         KrmhXGAlTwSxd1v2hJ7+Yg7rNZVm6pS4K0bS0w/9fxLXfWc2mfYUegSp3bRzqrfKHuMw
-         9jZoln/Q2qx/EOdYqWjOyMBTrNWVBjTrLB+a9Iq3louY9yk8zWz0q8vAtEmKvERy4POs
-         iNl97YvH9Z6UwCQ5KBGvqRFqQrARgTSJTHUVsxndFXivJ0n+cmk9M6tjRaNO2kyFqz0r
-         JX/Q==
-X-Gm-Message-State: AOAM532b3ISrNQubF3fRfUxHiaMSYsZU1xFlNaFYhmQ+fPEBFeotWFip
-        0W3WuVNT53vFlh4JGDUoUDu30cm+BpGIyHJsIMInVWBG39DX8MCCcEytsXCpF41hhycl2JrBcrP
-        uw6xUFlk7HtK/BgWf4zfzNbLk3ZzIAFP+SXOKWSCz
-X-Received: by 2002:a17:906:a4b:: with SMTP id x11mr23475886ejf.83.1597077389409;
-        Mon, 10 Aug 2020 09:36:29 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxxf3SVX6ZuISdp8oMWj+mkcjWbaPxLFNRh9thEVecTra/0s+AaKG5bkamyJTprqlXgn7eVTDeevbLYmrbh9t0=
-X-Received: by 2002:a17:906:a4b:: with SMTP id x11mr23475853ejf.83.1597077389176;
- Mon, 10 Aug 2020 09:36:29 -0700 (PDT)
+        Mon, 10 Aug 2020 12:37:21 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 6737A1C0BD6; Mon, 10 Aug 2020 18:37:18 +0200 (CEST)
+Date:   Mon, 10 Aug 2020 18:37:17 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        syzbot+1a54a94bd32716796edd@syzkaller.appspotmail.com,
+        syzbot+9d2abfef257f3e2d4713@syzkaller.appspotmail.com,
+        Hillf Danton <hdanton@sina.com>, Takashi Iwai <tiwai@suse.de>
+Subject: Re: [PATCH 4.19 06/48] ALSA: seq: oss: Serialize ioctls
+Message-ID: <20200810163717.GA24408@amd>
+References: <20200810151804.199494191@linuxfoundation.org>
+ <20200810151804.528955642@linuxfoundation.org>
 MIME-Version: 1.0
-References: <447452.1596109876@warthog.procyon.org.uk> <1851200.1596472222@warthog.procyon.org.uk>
- <667820.1597072619@warthog.procyon.org.uk> <CAH2r5msKipj1exNUDaSUN7h0pjanOenhSg2=EWYMv_h15yKtxg@mail.gmail.com>
- <672169.1597074488@warthog.procyon.org.uk>
-In-Reply-To: <672169.1597074488@warthog.procyon.org.uk>
-From:   David Wysochanski <dwysocha@redhat.com>
-Date:   Mon, 10 Aug 2020 12:35:53 -0400
-Message-ID: <CALF+zO=DkGmNDrrr-WxU6L1Xw8MA4+NrqVbvNMctwSKjy0Yh_w@mail.gmail.com>
-Subject: Re: [GIT PULL] fscache rewrite -- please drop for now
-To:     David Howells <dhowells@redhat.com>
-Cc:     Steve French <smfrench@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Jeff Layton <jlayton@redhat.com>,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Steve French <sfrench@samba.org>,
-        Eric Van Hensbergen <ericvh@gmail.com>,
-        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
-        linux-nfs <linux-nfs@vger.kernel.org>,
-        CIFS <linux-cifs@vger.kernel.org>, ceph-devel@vger.kernel.org,
-        v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="HlL+5n6rz5pIUxbD"
+Content-Disposition: inline
+In-Reply-To: <20200810151804.528955642@linuxfoundation.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 11:48 AM David Howells <dhowells@redhat.com> wrote:
->
-> Steve French <smfrench@gmail.com> wrote:
->
-> > cifs.ko also can set rsize quite small (even 1K for example, although
-> > that will be more than 10x slower than the default 4MB so hopefully no
-> > one is crazy enough to do that).
->
-> You can set rsize < PAGE_SIZE?
->
-> > I can't imagine an SMB3 server negotiating an rsize or wsize smaller than
-> > 64K in today's world (and typical is 1MB to 8MB) but the user can specify a
-> > much smaller rsize on mount.  If 64K is an adequate minimum, we could change
-> > the cifs mount option parsing to require a certain minimum rsize if fscache
-> > is selected.
->
-> I've borrowed the 256K granule size used by various AFS implementations for
-> the moment.  A 512-byte xattr can thus hold a bitmap covering 1G of file
-> space.
->
->
 
-Is it possible to make the granule size configurable, then reject a
-registration if the size is too small or not a power of 2?  Then a
-netfs using the API could try to set equal to rsize, and then error
-out with a message if the registration was rejected.
+--HlL+5n6rz5pIUxbD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+Hi!
+
+> commit 80982c7e834e5d4e325b6ce33757012ecafdf0bb upstream.
+>=20
+> Some ioctls via OSS sequencer API may race and lead to UAF when the
+> port create and delete are performed concurrently, as spotted by a
+> couple of syzkaller cases.  This patch is an attempt to address it by
+> serializing the ioctls with the existing register_mutex.
+>=20
+> Basically OSS sequencer API is an obsoleted interface and was designed
+> without much consideration of the concurrency.  There are very few
+> applications with it, and the concurrent performance isn't asked,
+> hence this "big hammer" approach should be good enough.
+
+That really is a "big hammer". And I believe it is too big.
+
+In particular, do we need to drop the lock while sleeping in
+SNDCTL_SEQ_SYNC: =3D> snd_seq_oss_writeq_sync ?
+
+Best regards,
+								Pavel
+--=20
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+
+--HlL+5n6rz5pIUxbD
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl8xd70ACgkQMOfwapXb+vI+owCfQmddRMmcmzR8eZPLBZ+wUZ4E
+LJMAoIUocqpHQx1an8GYl2ZNOkFDfd8G
+=cdfu
+-----END PGP SIGNATURE-----
+
+--HlL+5n6rz5pIUxbD--
