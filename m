@@ -2,149 +2,146 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75952C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:31:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A94FBC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:31:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3901F22B4B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:31:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597087866;
-	bh=E5VFAU4pKlcc7oy2AktMdjxV68dwiIrYRVznhcynNiY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GbVj2Ar8FPwEv6Ft2/YuzrOwYRYQlBzhEHsbgCphPRde35y6RbfcmtHNBzGa3qGnC
-	 50B4JK/h6om8hQzhBkeMr9WTJFURVvxLOTtJuXEnuwPR5ULIcMG7omIGZbQUANxtxy
-	 JM925hbBlriljEedL2AmgPMJztVqG+gMwHlBDPA8=
+	by mail.kernel.org (Postfix) with ESMTP id 7390B22BEA
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:31:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Z+nr3IVd";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="9BcfJBxO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730112AbgHJTbE (ORCPT
+        id S1729694AbgHJTbJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:31:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37310 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728868AbgHJTKN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:10:13 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FED322B49;
-        Mon, 10 Aug 2020 19:10:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086612;
-        bh=E5VFAU4pKlcc7oy2AktMdjxV68dwiIrYRVznhcynNiY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G7OO0XK/jQYrfGF+OBnsdya21GmeIWavFb3PBsF/NHqSlgId7J3qLh3EFffMQXogT
-         upMqq6vK4h9BjIVgnialLUusq58VYBFVbo2Ger00g1Y+d/ag+r80YyKStPS1Xh5jKY
-         7IgsqR3UK+Q9rrDusp6wQH42VUc+CREzMd5moA2Q=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sasi Kumar <sasi.kumar@broadcom.com>,
-        Al Cooper <alcooperx@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 53/64] bdc: Fix bug causing crash after multiple disconnects
-Date:   Mon, 10 Aug 2020 15:08:48 -0400
-Message-Id: <20200810190859.3793319-53-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200810190859.3793319-1-sashal@kernel.org>
-References: <20200810190859.3793319-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+        Mon, 10 Aug 2020 15:31:09 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:52980 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728868AbgHJTbH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:31:07 -0400
+Date:   Mon, 10 Aug 2020 19:01:34 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1597087864;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=6Jywy7lqllPTFMJ6o5Tm1gkuwwbnzeHH9S4UC1Euep4=;
+        b=Z+nr3IVdFq/vEDkoDCbCzPI/qcTHf2tClNSLYklPib/395MnaoQGa/7fq1nkCHswYD2cB9
+        sYtn1xIqLk0mgIfvFCsM03EuCDslESW+IVntEElhB04f6lZ4s4Lhpdl9GgM7Rz2Im2+Zfu
+        f52Uvwriy9px1ozdoTM5DLgWYQiull6Srmc2B2smBxUn1TjRA1hqyk9YDMTOh59SgWPvuB
+        Angx6TUgRgFvOOB6ru4zGXYzIOznKs21UgXNoKTH5oE7lO0MooVcWybwf6130UUMEIQ9NV
+        n7GWkL/yT9oJoNNq0H3J0lS2gdYAUd02BdI1LnCvSFwsKLZddtalssGSjFjnKg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1597087864;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=6Jywy7lqllPTFMJ6o5Tm1gkuwwbnzeHH9S4UC1Euep4=;
+        b=9BcfJBxONyEb7sGKihmbXN/0UYXAjhIQLTnW+5lfgMWZNQpQkPRpKbHuPs6r7UU/XzWa24
+        rjfKC169qfhpP7Dw==
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: [GIT pull] locking/urgent for 5.9-rc1
+Message-ID: <159708609435.2571.13948681727529247231.tglx@nanos>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sasi Kumar <sasi.kumar@broadcom.com>
+Linus,
 
-[ Upstream commit a95bdfd22076497288868c028619bc5995f5cc7f ]
+please pull the latest locking/urgent branch from:
 
-Multiple connects/disconnects can cause a crash on the second
-disconnect. The driver had a problem where it would try to send
-endpoint commands after it was disconnected which is not allowed
-by the hardware. The fix is to only allow the endpoint commands
-when the endpoint is connected. This will also fix issues that
-showed up when using configfs to create gadgets.
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git locking-urgent-2020-08-10
 
-Signed-off-by: Sasi Kumar <sasi.kumar@broadcom.com>
-Signed-off-by: Al Cooper <alcooperx@gmail.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/usb/gadget/udc/bdc/bdc_core.c |  4 ++++
- drivers/usb/gadget/udc/bdc/bdc_ep.c   | 16 ++++++++++------
- 2 files changed, 14 insertions(+), 6 deletions(-)
+up to:  0cd39f4600ed: locking/seqlock, headers: Untangle the spaghetti monster
 
-diff --git a/drivers/usb/gadget/udc/bdc/bdc_core.c b/drivers/usb/gadget/udc/bdc/bdc_core.c
-index 02a3a774670b1..5fde5a8b065c1 100644
---- a/drivers/usb/gadget/udc/bdc/bdc_core.c
-+++ b/drivers/usb/gadget/udc/bdc/bdc_core.c
-@@ -282,6 +282,7 @@ static void bdc_mem_init(struct bdc *bdc, bool reinit)
- 	 * in that case reinit is passed as 1
- 	 */
- 	if (reinit) {
-+		int i;
- 		/* Enable interrupts */
- 		temp = bdc_readl(bdc->regs, BDC_BDCSC);
- 		temp |= BDC_GIE;
-@@ -291,6 +292,9 @@ static void bdc_mem_init(struct bdc *bdc, bool reinit)
- 		/* Initialize SRR to 0 */
- 		memset(bdc->srr.sr_bds, 0,
- 					NUM_SR_ENTRIES * sizeof(struct bdc_bd));
-+		/* clear ep flags to avoid post disconnect stops/deconfigs */
-+		for (i = 1; i < bdc->num_eps; ++i)
-+			bdc->bdc_ep_array[i]->flags = 0;
- 	} else {
- 		/* One time initiaization only */
- 		/* Enable status report function pointers */
-diff --git a/drivers/usb/gadget/udc/bdc/bdc_ep.c b/drivers/usb/gadget/udc/bdc/bdc_ep.c
-index d49c6dc1082dc..9ddc0b4e92c9c 100644
---- a/drivers/usb/gadget/udc/bdc/bdc_ep.c
-+++ b/drivers/usb/gadget/udc/bdc/bdc_ep.c
-@@ -615,7 +615,6 @@ int bdc_ep_enable(struct bdc_ep *ep)
- 	}
- 	bdc_dbg_bd_list(bdc, ep);
- 	/* only for ep0: config ep is called for ep0 from connect event */
--	ep->flags |= BDC_EP_ENABLED;
- 	if (ep->ep_num == 1)
- 		return ret;
- 
-@@ -759,10 +758,13 @@ static int ep_dequeue(struct bdc_ep *ep, struct bdc_req *req)
- 					__func__, ep->name, start_bdi, end_bdi);
- 	dev_dbg(bdc->dev, "ep_dequeue ep=%p ep->desc=%p\n",
- 						ep, (void *)ep->usb_ep.desc);
--	/* Stop the ep to see where the HW is ? */
--	ret = bdc_stop_ep(bdc, ep->ep_num);
--	/* if there is an issue with stopping ep, then no need to go further */
--	if (ret)
-+	/* if still connected, stop the ep to see where the HW is ? */
-+	if (!(bdc_readl(bdc->regs, BDC_USPC) & BDC_PST_MASK)) {
-+		ret = bdc_stop_ep(bdc, ep->ep_num);
-+		/* if there is an issue, then no need to go further */
-+		if (ret)
-+			return 0;
-+	} else
- 		return 0;
- 
- 	/*
-@@ -1911,7 +1913,9 @@ static int bdc_gadget_ep_disable(struct usb_ep *_ep)
- 		__func__, ep->name, ep->flags);
- 
- 	if (!(ep->flags & BDC_EP_ENABLED)) {
--		dev_warn(bdc->dev, "%s is already disabled\n", ep->name);
-+		if (bdc->gadget.speed != USB_SPEED_UNKNOWN)
-+			dev_warn(bdc->dev, "%s is already disabled\n",
-+				 ep->name);
- 		return 0;
- 	}
- 	spin_lock_irqsave(&bdc->lock, flags);
--- 
-2.25.1
+A set of locking fixes and updates:
+
+  - Untangle the header spaghetti which causes build failures in various
+    situations caused by the lockdep additions to seqcount to validate that
+    the write side critical sections are non-preemptible.
+
+  - The seqcount associated lock debug addons which were blocked by the
+    above fallout.
+
+    seqcount writers contrary to seqlock writers must be externally
+    serialized, which usually happens via locking - except for strict per
+    CPU seqcounts. As the lock is not part of the seqcount, lockdep cannot
+    validate that the lock is held.
+
+    This new debug mechanism adds the concept of associated locks.
+    sequence count has now lock type variants and corresponding
+    initializers which take a pointer to the associated lock used for
+    writer serialization. If lockdep is enabled the pointer is stored and
+    write_seqcount_begin() has a lockdep assertion to validate that the
+    lock is held.
+
+    Aside of the type and the initializer no other code changes are
+    required at the seqcount usage sites. The rest of the seqcount API is
+    unchanged and determines the type at compile time with the help of
+    _Generic which is possible now that the minimal GCC version has been
+    moved up.
+
+    Adding this lockdep coverage unearthed a handful of seqcount bugs which
+    have been addressed already independent of this.
+
+    While generaly useful this comes with a Trojan Horse twist: On RT
+    kernels the write side critical section can become preemtible if the
+    writers are serialized by an associated lock, which leads to the well
+    known reader preempts writer livelock. RT prevents this by storing the
+    associated lock pointer independent of lockdep in the seqcount and
+    changing the reader side to block on the lock when a reader detects
+    that a writer is in the write side critical section.
+
+ - Conversion of seqcount usage sites to associated types and initializers.
+
+Thanks,
+
+	tglx
+
+------------------>
+Ahmed S. Darwish (16):
+      seqlock: Extend seqcount API with associated locks
+      seqlock: Align multi-line macros newline escapes at 72 columns
+      dma-buf: Remove custom seqcount lockdep class key
+      dma-buf: Use sequence counter with associated wound/wait mutex
+      sched: tasks: Use sequence counter with associated spinlock
+      netfilter: conntrack: Use sequence counter with associated spinlock
+      netfilter: nft_set_rbtree: Use sequence counter with associated rwlock
+      xfrm: policy: Use sequence counters with associated lock
+      timekeeping: Use sequence counter with associated raw spinlock
+      vfs: Use sequence counter with associated spinlock
+      raid5: Use sequence counter with associated spinlock
+      iocost: Use sequence counter with associated spinlock
+      NFSv4: Use sequence counter with associated spinlock
+      userfaultfd: Use sequence counter with associated spinlock
+      kvm/eventfd: Use sequence counter with associated spinlock
+      hrtimer: Use sequence counter with associated raw spinlock
+
+Chris Wilson (1):
+      locking/lockdep: Fix overflow in presentation of average lock-time
+
+Ingo Molnar (1):
+      x86/headers: Remove APIC headers from <asm/smp.h>
+
+Peter Zijlstra (7):
+      seqlock: s/__SEQ_LOCKDEP/__SEQ_LOCK/g
+      seqlock: Fold seqcount_LOCKNAME_t definition
+      seqlock: Fold seqcount_LOCKNAME_init() definition
+      seqcount: Compress SEQCNT_LOCKNAME_ZERO()
+      seqcount: More consistent seqprop names
+      locking, arch/ia64: Reduce <asm/smp.h> header dependencies by moving XTP bits into the new <asm/xtp.h> header
+      locking/seqlock, headers: Untangle the spaghetti monster
+
+
 
