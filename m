@@ -5,49 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95721C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBDDAC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:20:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 586812065D
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:20:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A97232075F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:20:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597072845;
-	bh=rrwU+IeLgHsbPSg+A1OKnWuzb6x6ildPNCaamZLKvhg=;
+	s=default; t=1597072848;
+	bh=t9H3WW3HSu9TxPPbh+BJneKjwG8jK5KJoQmUWWF9c+Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qcgLSewITWl09xFXF6xr1gPtzvXzfTPt4MLjbZ0XXZKxplOh+SCnXfUJ1UryMjdkD
-	 I6LVn/KJaCSA/PNkpVqwkyqZvVzDfJqDnf71apQryaQlOzG6oh+cxnBRAR+FjeL5UX
-	 Y+UUsXGZkGOOZpenRcNXtaw9CW3e+v13VErfvUxE=
+	b=JdCbIyFo/zmrdZ5SRynyThhgDnKWA7Y+sE7hpH50T6fXd0ViP6pI1lXUTSycojvQP
+	 9cL4vuCm8me340oO14+8/SacM7j7b8Ra+f+Ni1fl2EKGX+2AGJPZx6c5/t1MHGpL5O
+	 tkyx/u/8eaVhqPmv4iDv7gGfEUrzjeKsLkWeHWcI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728045AbgHJPUo (ORCPT
+        id S1728056AbgHJPUr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:20:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51206 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:20:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728032AbgHJPUk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:20:40 -0400
+        id S1728040AbgHJPUm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:20:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E1F62075D;
-        Mon, 10 Aug 2020 15:20:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 598D92075F;
+        Mon, 10 Aug 2020 15:20:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597072839;
-        bh=rrwU+IeLgHsbPSg+A1OKnWuzb6x6ildPNCaamZLKvhg=;
+        s=default; t=1597072841;
+        bh=t9H3WW3HSu9TxPPbh+BJneKjwG8jK5KJoQmUWWF9c+Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=viJJMzlg9DvFQTdAt/D4IOencYav2y/ooa9dCaxMRV6wwsQm7ff+767zmg/QEY1o1
-         JT/3Sf6TFfJmCq0ly7Ka9M4eZq8iRB5UvYVEYGhdDKTuI7/93YK2o4VfgSVg20ZJeS
-         9e5J65hICizjfIut8SZeByPJi/KCVHumpErzHMPk=
+        b=2C1lahIhXdb8KMuVh8YH4nEv2sq953DNSFVb1kI6wVPIkGRf5ufjeF+fJRpxc+Gd4
+         SBgEevB+ykudsLrwV3XSB98mOG91W6rJEkEqTErGUPmKm4YrE1ErcEcGP7BhkxcfS+
+         d/8LAQU4sNh6mnzbGCXRlMHwzxeEHMPPZwz7CQkA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        Willy Tarreau <w@1wt.eu>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.8 36/38] random32: move the pseudo-random 32-bit definitions to prandom.h
-Date:   Mon, 10 Aug 2020 17:19:26 +0200
-Message-Id: <20200810151805.698209293@linuxfoundation.org>
+        stable@vger.kernel.org, Todd Kjos <tkjos@google.com>,
+        Jann Horn <jannh@google.com>, Martijn Coenen <maco@android.com>
+Subject: [PATCH 5.8 19/38] binder: Prevent context manager from incrementing ref 0
+Date:   Mon, 10 Aug 2020 17:19:09 +0200
+Message-Id: <20200810151804.840050319@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151803.920113428@linuxfoundation.org>
 References: <20200810151803.920113428@linuxfoundation.org>
@@ -60,213 +59,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Jann Horn <jannh@google.com>
 
-commit c0842fbc1b18c7a044e6ff3e8fa78bfa822c7d1a upstream.
+commit 4b836a1426cb0f1ef2a6e211d7e553221594f8fc upstream.
 
-The addition of percpu.h to the list of includes in random.h revealed
-some circular dependencies on arm64 and possibly other platforms.  This
-include was added solely for the pseudo-random definitions, which have
-nothing to do with the rest of the definitions in this file but are
-still there for legacy reasons.
+Binder is designed such that a binder_proc never has references to
+itself. If this rule is violated, memory corruption can occur when a
+process sends a transaction to itself; see e.g.
+<https://syzkaller.appspot.com/bug?extid=09e05aba06723a94d43d>.
 
-This patch moves the pseudo-random parts to linux/prandom.h and the
-percpu.h include with it, which is now guarded by _LINUX_PRANDOM_H and
-protected against recursive inclusion.
+There is a remaining edgecase through which such a transaction-to-self
+can still occur from the context of a task with BINDER_SET_CONTEXT_MGR
+access:
 
-A further cleanup step would be to remove this from <linux/random.h>
-entirely, and make people who use the prandom infrastructure include
-just the new header file.  That's a bit of a churn patch, but grepping
-for "prandom_" and "next_pseudo_random32" "struct rnd_state" should
-catch most users.
+ - task A opens /dev/binder twice, creating binder_proc instances P1
+   and P2
+ - P1 becomes context manager
+ - P2 calls ACQUIRE on the magic handle 0, allocating index 0 in its
+   handle table
+ - P1 dies (by closing the /dev/binder fd and waiting a bit)
+ - P2 becomes context manager
+ - P2 calls ACQUIRE on the magic handle 0, allocating index 1 in its
+   handle table
+   [this triggers a warning: "binder: 1974:1974 tried to acquire
+   reference to desc 0, got 1 instead"]
+ - task B opens /dev/binder once, creating binder_proc instance P3
+ - P3 calls P2 (via magic handle 0) with (void*)1 as argument (two-way
+   transaction)
+ - P2 receives the handle and uses it to call P3 (two-way transaction)
+ - P3 calls P2 (via magic handle 0) (two-way transaction)
+ - P2 calls P2 (via handle 1) (two-way transaction)
 
-But it turns out that that nice cleanup step is fairly painful, because
-a _lot_ of code currently seems to depend on the implicit include of
-<linux/random.h>, which can currently come in a lot of ways, including
-such fairly core headfers as <linux/net.h>.
+And then, if P2 does *NOT* accept the incoming transaction work, but
+instead closes the binder fd, we get a crash.
 
-So the "nice cleanup" part may or may never happen.
+Solve it by preventing the context manager from using ACQUIRE on ref 0.
+There shouldn't be any legitimate reason for the context manager to do
+that.
 
-Fixes: 1c9df907da83 ("random: fix circular include dependency on arm64 after addition of percpu.h")
-Tested-by: Guenter Roeck <linux@roeck-us.net>
-Acked-by: Willy Tarreau <w@1wt.eu>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Additionally, print a warning if someone manages to find another way to
+trigger a transaction-to-self bug in the future.
+
+Cc: stable@vger.kernel.org
+Fixes: 457b9a6f09f0 ("Staging: android: add binder driver")
+Acked-by: Todd Kjos <tkjos@google.com>
+Signed-off-by: Jann Horn <jannh@google.com>
+Reviewed-by: Martijn Coenen <maco@android.com>
+Link: https://lore.kernel.org/r/20200727120424.1627555-1-jannh@google.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/prandom.h |   78 ++++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/random.h  |   66 ++--------------------------------------
- 2 files changed, 82 insertions(+), 62 deletions(-)
+ drivers/android/binder.c |   15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
---- /dev/null
-+++ b/include/linux/prandom.h
-@@ -0,0 +1,78 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * include/linux/prandom.h
-+ *
-+ * Include file for the fast pseudo-random 32-bit
-+ * generation.
-+ */
-+#ifndef _LINUX_PRANDOM_H
-+#define _LINUX_PRANDOM_H
-+
-+#include <linux/types.h>
-+#include <linux/percpu.h>
-+
-+u32 prandom_u32(void);
-+void prandom_bytes(void *buf, size_t nbytes);
-+void prandom_seed(u32 seed);
-+void prandom_reseed_late(void);
-+
-+struct rnd_state {
-+	__u32 s1, s2, s3, s4;
-+};
-+
-+DECLARE_PER_CPU(struct rnd_state, net_rand_state);
-+
-+u32 prandom_u32_state(struct rnd_state *state);
-+void prandom_bytes_state(struct rnd_state *state, void *buf, size_t nbytes);
-+void prandom_seed_full_state(struct rnd_state __percpu *pcpu_state);
-+
-+#define prandom_init_once(pcpu_state)			\
-+	DO_ONCE(prandom_seed_full_state, (pcpu_state))
-+
-+/**
-+ * prandom_u32_max - returns a pseudo-random number in interval [0, ep_ro)
-+ * @ep_ro: right open interval endpoint
-+ *
-+ * Returns a pseudo-random number that is in interval [0, ep_ro). Note
-+ * that the result depends on PRNG being well distributed in [0, ~0U]
-+ * u32 space. Here we use maximally equidistributed combined Tausworthe
-+ * generator, that is, prandom_u32(). This is useful when requesting a
-+ * random index of an array containing ep_ro elements, for example.
-+ *
-+ * Returns: pseudo-random number in interval [0, ep_ro)
-+ */
-+static inline u32 prandom_u32_max(u32 ep_ro)
-+{
-+	return (u32)(((u64) prandom_u32() * ep_ro) >> 32);
-+}
-+
-+/*
-+ * Handle minimum values for seeds
-+ */
-+static inline u32 __seed(u32 x, u32 m)
-+{
-+	return (x < m) ? x + m : x;
-+}
-+
-+/**
-+ * prandom_seed_state - set seed for prandom_u32_state().
-+ * @state: pointer to state structure to receive the seed.
-+ * @seed: arbitrary 64-bit value to use as a seed.
-+ */
-+static inline void prandom_seed_state(struct rnd_state *state, u64 seed)
-+{
-+	u32 i = (seed >> 32) ^ (seed << 10) ^ seed;
-+
-+	state->s1 = __seed(i,   2U);
-+	state->s2 = __seed(i,   8U);
-+	state->s3 = __seed(i,  16U);
-+	state->s4 = __seed(i, 128U);
-+}
-+
-+/* Pseudo random number generator from numerical recipes. */
-+static inline u32 next_pseudo_random32(u32 seed)
-+{
-+	return seed * 1664525 + 1013904223;
-+}
-+
-+#endif
---- a/include/linux/random.h
-+++ b/include/linux/random.h
-@@ -11,7 +11,6 @@
- #include <linux/kernel.h>
- #include <linux/list.h>
- #include <linux/once.h>
--#include <asm/percpu.h>
- 
- #include <uapi/linux/random.h>
- 
-@@ -111,63 +110,12 @@ declare_get_random_var_wait(long)
- 
- unsigned long randomize_page(unsigned long start, unsigned long range);
- 
--u32 prandom_u32(void);
--void prandom_bytes(void *buf, size_t nbytes);
--void prandom_seed(u32 seed);
--void prandom_reseed_late(void);
--
--struct rnd_state {
--	__u32 s1, s2, s3, s4;
--};
--
--DECLARE_PER_CPU(struct rnd_state, net_rand_state);
--
--u32 prandom_u32_state(struct rnd_state *state);
--void prandom_bytes_state(struct rnd_state *state, void *buf, size_t nbytes);
--void prandom_seed_full_state(struct rnd_state __percpu *pcpu_state);
--
--#define prandom_init_once(pcpu_state)			\
--	DO_ONCE(prandom_seed_full_state, (pcpu_state))
--
--/**
-- * prandom_u32_max - returns a pseudo-random number in interval [0, ep_ro)
-- * @ep_ro: right open interval endpoint
-- *
-- * Returns a pseudo-random number that is in interval [0, ep_ro). Note
-- * that the result depends on PRNG being well distributed in [0, ~0U]
-- * u32 space. Here we use maximally equidistributed combined Tausworthe
-- * generator, that is, prandom_u32(). This is useful when requesting a
-- * random index of an array containing ep_ro elements, for example.
-- *
-- * Returns: pseudo-random number in interval [0, ep_ro)
-- */
--static inline u32 prandom_u32_max(u32 ep_ro)
--{
--	return (u32)(((u64) prandom_u32() * ep_ro) >> 32);
--}
--
- /*
-- * Handle minimum values for seeds
-- */
--static inline u32 __seed(u32 x, u32 m)
--{
--	return (x < m) ? x + m : x;
--}
--
--/**
-- * prandom_seed_state - set seed for prandom_u32_state().
-- * @state: pointer to state structure to receive the seed.
-- * @seed: arbitrary 64-bit value to use as a seed.
-+ * This is designed to be standalone for just prandom
-+ * users, but for now we include it from <linux/random.h>
-+ * for legacy reasons.
-  */
--static inline void prandom_seed_state(struct rnd_state *state, u64 seed)
--{
--	u32 i = (seed >> 32) ^ (seed << 10) ^ seed;
--
--	state->s1 = __seed(i,   2U);
--	state->s2 = __seed(i,   8U);
--	state->s3 = __seed(i,  16U);
--	state->s4 = __seed(i, 128U);
--}
-+#include <linux/prandom.h>
- 
- #ifdef CONFIG_ARCH_RANDOM
- # include <asm/archrandom.h>
-@@ -210,10 +158,4 @@ static inline bool __init arch_get_rando
- }
- #endif
- 
--/* Pseudo random number generator from numerical recipes. */
--static inline u32 next_pseudo_random32(u32 seed)
--{
--	return seed * 1664525 + 1013904223;
--}
--
- #endif /* _LINUX_RANDOM_H */
+--- a/drivers/android/binder.c
++++ b/drivers/android/binder.c
+@@ -2982,6 +2982,12 @@ static void binder_transaction(struct bi
+ 			goto err_dead_binder;
+ 		}
+ 		e->to_node = target_node->debug_id;
++		if (WARN_ON(proc == target_proc)) {
++			return_error = BR_FAILED_REPLY;
++			return_error_param = -EINVAL;
++			return_error_line = __LINE__;
++			goto err_invalid_target_handle;
++		}
+ 		if (security_binder_transaction(proc->tsk,
+ 						target_proc->tsk) < 0) {
+ 			return_error = BR_FAILED_REPLY;
+@@ -3635,10 +3641,17 @@ static int binder_thread_write(struct bi
+ 				struct binder_node *ctx_mgr_node;
+ 				mutex_lock(&context->context_mgr_node_lock);
+ 				ctx_mgr_node = context->binder_context_mgr_node;
+-				if (ctx_mgr_node)
++				if (ctx_mgr_node) {
++					if (ctx_mgr_node->proc == proc) {
++						binder_user_error("%d:%d context manager tried to acquire desc 0\n",
++								  proc->pid, thread->pid);
++						mutex_unlock(&context->context_mgr_node_lock);
++						return -EINVAL;
++					}
+ 					ret = binder_inc_ref_for_node(
+ 							proc, ctx_mgr_node,
+ 							strong, NULL, &rdata);
++				}
+ 				mutex_unlock(&context->context_mgr_node_lock);
+ 			}
+ 			if (ret)
 
 
