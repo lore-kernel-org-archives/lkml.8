@@ -2,149 +2,138 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF31C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:37:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1D3AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:37:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DB7123332
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:37:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 966DB22D6F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:37:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597073876;
+	bh=PvXo4XK8AZRqUTr2CoG0DPYsgX5nyXoeG9ZFRmeqqhI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=avssue7hgMYbsYnxZFhHXg1266GlD1bWMEOsxy/WY82zRNOIFEZmn1KrO9mfQaKx7
+	 M4kS2gkH/BihOVWo/bF7ui/R4bObl6uEubYaYlndPJ1e16LQCOUl1FH8xXctkmv46x
+	 YZHenYjkK+zq6VHAkfqw8VbJTpO18gJ2RCI8prnY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728860AbgHJPhp (ORCPT
+        id S1728899AbgHJPhz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:37:45 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:43856 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728747AbgHJPhT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:37:19 -0400
-Received: by mail-io1-f70.google.com with SMTP id f19so7321580iol.10
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 08:37:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=mwA0VxfKC9y1ldI67xR8GxayzqreYluyj2U7Ecr/ZxE=;
-        b=RfhkInX5TsnWirKsA6zD10IK558hvEIL9aaoqlXghf23dZ3gUQHF0rHu7ftlJ6jQUW
-         Uft1HEkMPjV/HdZIyFVIf8TMdC+sG+82KFidw+5aqJ0cRIGYVdbIoJM+1PBZTibqROGd
-         XlZwq3nuRUyWiTItkUUD1DluqGxO5zk4OVkomcQRhf1c4R8kWg+EOMnfgNYxcUaUoP6X
-         kppNr+NC8Ni8ru87GRFkQNMaMl0KHvjmAwwwLL7X8bg0T+zs3iwR4uPzUqFcHGeJyDSo
-         IwF6KSsfBZJXbmNl+JiKZbtRWhtq/0kn5UEYSIMK4ZWQQSIPwuGKwuxMKYQWYynUwdJG
-         yBWQ==
-X-Gm-Message-State: AOAM532FX22TewgFxJcis0/bxZOJHLKUACBr4Hfq0QUYA1POyuUiAeFM
-        y+TjBF7Q47GHh6dRhDRMobZ7P5miw040zVOovfYrMX/YUS2W
-X-Google-Smtp-Source: ABdhPJyE6YD/UF3JeesR4M8V3eeWNcRlU/BoaOUyj//sfBL8naXLYfJwRAQYZPJ4ploP62y5lKzHhSKJlVBTW63XgXdgQE1ZrUxF
+        Mon, 10 Aug 2020 11:37:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60234 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728466AbgHJP0W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:26:22 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B130F208A9;
+        Mon, 10 Aug 2020 15:26:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597073181;
+        bh=PvXo4XK8AZRqUTr2CoG0DPYsgX5nyXoeG9ZFRmeqqhI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=liRr2yVHVOUvjbthHnVqamC5XQFQsZA9QdPe6E6mWz8w4xW0nNmn3uSi7HuR8EiPR
+         YC7EFRkjT3A+f6osmxYHgLC0UOxqeXHNIiLwZNKENCnFxjQYFM4K7RyceD/7tOQO2u
+         PBFRMNw49Josve8M/MiBiLHeohhZk36lTWEFHYvo=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        syzbot+80899a8a8efe8968cde7@syzkaller.appspotmail.com,
+        Rustam Kovhaev <rkovhaev@gmail.com>
+Subject: [PATCH 5.4 15/67] staging: rtl8712: handle firmware load failure
+Date:   Mon, 10 Aug 2020 17:21:02 +0200
+Message-Id: <20200810151810.180199211@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200810151809.438685785@linuxfoundation.org>
+References: <20200810151809.438685785@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-Received: by 2002:a92:4403:: with SMTP id r3mr17862137ila.17.1597073838611;
- Mon, 10 Aug 2020 08:37:18 -0700 (PDT)
-Date:   Mon, 10 Aug 2020 08:37:18 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000d4adc705ac87ba8e@google.com>
-Subject: general protection fault in sctp_ulpevent_notify_peer_addr_change
-From:   syzbot <syzbot+8f2165a7b1f2820feffc@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        linux-sctp@vger.kernel.org, marcelo.leitner@gmail.com,
-        netdev@vger.kernel.org, nhorman@tuxdriver.com,
-        syzkaller-bugs@googlegroups.com, vyasevich@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+From: Rustam Kovhaev <rkovhaev@gmail.com>
 
-syzbot found the following issue on:
+commit b4383c971bc5263efe2b0915ba67ebf2bf3f1ee5 upstream.
 
-HEAD commit:    fffe3ae0 Merge tag 'for-linus-hmm' of git://git.kernel.org..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=12f34d3a900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=50463ec6729f9706
-dashboard link: https://syzkaller.appspot.com/bug?extid=8f2165a7b1f2820feffc
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1517701c900000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11b7e0e2900000
+when firmware fails to load we should not call unregister_netdev()
+this patch fixes a race condition between rtl871x_load_fw_cb() and
+r871xu_dev_remove() and fixes the bug reported by syzbot
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+8f2165a7b1f2820feffc@syzkaller.appspotmail.com
-
-general protection fault, probably for non-canonical address 0xdffffc000000004c: 0000 [#1] PREEMPT SMP KASAN
-KASAN: null-ptr-deref in range [0x0000000000000260-0x0000000000000267]
-CPU: 0 PID: 12765 Comm: syz-executor391 Not tainted 5.8.0-syzkaller #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
-RIP: 0010:sctp_ulpevent_notify_peer_addr_change+0xa9/0xad0 net/sctp/ulpevent.c:346
-Code: 03 80 3c 18 00 0f 85 9f 08 00 00 48 8b 9d b0 00 00 00 48 b8 00 00 00 00 00 fc ff df 48 8d bb 60 02 00 00 48 89 fa 48 c1 ea 03 <0f> b6 04 02 84 c0 74 08 3c 03 0f 8e 3a 08 00 00 44 8b a3 60 02 00
-RSP: 0018:ffffc90000d27380 EFLAGS: 00010202
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 000000000000004c RSI: ffffffff875c9422 RDI: 0000000000000260
-RBP: ffff8880235da158 R08: 0000000000000001 R09: ffff8880234cdd48
-R10: fffffbfff155f111 R11: 0000000000000000 R12: 0000000000000001
-R13: 1ffff920001a4e76 R14: 0000000000000004 R15: 0000000000000000
-FS:  00007fdd571b7700(0000) GS:ffff88802ce00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffffffff600400 CR3: 000000001c9d0000 CR4: 0000000000350ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- sctp_assoc_set_primary+0x6c/0x300 net/sctp/associola.c:435
- sctp_assoc_rm_peer+0x6f7/0x950 net/sctp/associola.c:508
- sctp_assoc_update+0x588/0xfd0 net/sctp/associola.c:1116
- sctp_cmd_assoc_update net/sctp/sm_sideeffect.c:836 [inline]
- sctp_cmd_interpreter net/sctp/sm_sideeffect.c:1305 [inline]
- sctp_side_effects net/sctp/sm_sideeffect.c:1185 [inline]
- sctp_do_sm+0x27f8/0x4d80 net/sctp/sm_sideeffect.c:1156
- sctp_assoc_bh_rcv+0x386/0x6c0 net/sctp/associola.c:1044
- sctp_inq_push+0x1da/0x270 net/sctp/inqueue.c:80
- sctp_backlog_rcv+0x19e/0x5c0 net/sctp/input.c:344
- sk_backlog_rcv include/net/sock.h:1001 [inline]
- __release_sock+0x134/0x3a0 net/core/sock.c:2550
- release_sock+0x54/0x1b0 net/core/sock.c:3087
- sctp_wait_for_connect+0x30f/0x540 net/sctp/socket.c:9302
- __sctp_connect+0x96b/0xc00 net/sctp/socket.c:1247
- __sctp_setsockopt_connectx+0x12d/0x180 net/sctp/socket.c:1343
- sctp_setsockopt_connectx net/sctp/socket.c:1375 [inline]
- sctp_setsockopt net/sctp/socket.c:4720 [inline]
- sctp_setsockopt+0x1642/0x70d0 net/sctp/socket.c:4677
- __sys_setsockopt+0x24a/0x480 net/socket.c:2127
- __do_sys_setsockopt net/socket.c:2143 [inline]
- __se_sys_setsockopt net/socket.c:2140 [inline]
- __x64_sys_setsockopt+0xba/0x150 net/socket.c:2140
- do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x43e119
-Code: e8 4c b5 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 bb d0 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fdd571b6ce8 EFLAGS: 00000246 ORIG_RAX: 0000000000000036
-RAX: ffffffffffffffda RBX: 00000000006c7c58 RCX: 000000000043e119
-RDX: 000000000000006e RSI: 0000000000000084 RDI: 0000000000000003
-RBP: 00000000006c7c50 R08: 0000000000000020 R09: 0000000000000000
-R10: 0000000020000000 R11: 0000000000000246 R12: 00000000006c7c5c
-R13: 00007ffdb7fcef0f R14: 00007fdd57197000 R15: 0000000000000003
-Modules linked in:
----[ end trace 49c057cb66761ca9 ]---
-RIP: 0010:sctp_ulpevent_notify_peer_addr_change+0xa9/0xad0 net/sctp/ulpevent.c:346
-Code: 03 80 3c 18 00 0f 85 9f 08 00 00 48 8b 9d b0 00 00 00 48 b8 00 00 00 00 00 fc ff df 48 8d bb 60 02 00 00 48 89 fa 48 c1 ea 03 <0f> b6 04 02 84 c0 74 08 3c 03 0f 8e 3a 08 00 00 44 8b a3 60 02 00
-RSP: 0018:ffffc90000d27380 EFLAGS: 00010202
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 000000000000004c RSI: ffffffff875c9422 RDI: 0000000000000260
-RBP: ffff8880235da158 R08: 0000000000000001 R09: ffff8880234cdd48
-R10: fffffbfff155f111 R11: 0000000000000000 R12: 0000000000000001
-R13: 1ffff920001a4e76 R14: 0000000000000004 R15: 0000000000000000
-FS:  00007fdd571b7700(0000) GS:ffff88802cf00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffffffff600400 CR3: 000000001c9d0000 CR4: 0000000000350ee0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
+Reported-by: syzbot+80899a8a8efe8968cde7@syzkaller.appspotmail.com
+Link: https://syzkaller.appspot.com/bug?extid=80899a8a8efe8968cde7
+Signed-off-by: Rustam Kovhaev <rkovhaev@gmail.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200716151324.1036204-1-rkovhaev@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ drivers/staging/rtl8712/hal_init.c |    3 ++-
+ drivers/staging/rtl8712/usb_intf.c |   11 ++++++++---
+ 2 files changed, 10 insertions(+), 4 deletions(-)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this issue, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+--- a/drivers/staging/rtl8712/hal_init.c
++++ b/drivers/staging/rtl8712/hal_init.c
+@@ -33,7 +33,6 @@ static void rtl871x_load_fw_cb(const str
+ {
+ 	struct _adapter *adapter = context;
+ 
+-	complete(&adapter->rtl8712_fw_ready);
+ 	if (!firmware) {
+ 		struct usb_device *udev = adapter->dvobjpriv.pusbdev;
+ 		struct usb_interface *usb_intf = adapter->pusb_intf;
+@@ -41,11 +40,13 @@ static void rtl871x_load_fw_cb(const str
+ 		dev_err(&udev->dev, "r8712u: Firmware request failed\n");
+ 		usb_put_dev(udev);
+ 		usb_set_intfdata(usb_intf, NULL);
++		complete(&adapter->rtl8712_fw_ready);
+ 		return;
+ 	}
+ 	adapter->fw = firmware;
+ 	/* firmware available - start netdev */
+ 	register_netdev(adapter->pnetdev);
++	complete(&adapter->rtl8712_fw_ready);
+ }
+ 
+ static const char firmware_file[] = "rtlwifi/rtl8712u.bin";
+--- a/drivers/staging/rtl8712/usb_intf.c
++++ b/drivers/staging/rtl8712/usb_intf.c
+@@ -595,13 +595,17 @@ static void r871xu_dev_remove(struct usb
+ 	if (pnetdev) {
+ 		struct _adapter *padapter = netdev_priv(pnetdev);
+ 
+-		usb_set_intfdata(pusb_intf, NULL);
+-		release_firmware(padapter->fw);
+ 		/* never exit with a firmware callback pending */
+ 		wait_for_completion(&padapter->rtl8712_fw_ready);
++		pnetdev = usb_get_intfdata(pusb_intf);
++		usb_set_intfdata(pusb_intf, NULL);
++		if (!pnetdev)
++			goto firmware_load_fail;
++		release_firmware(padapter->fw);
+ 		if (drvpriv.drv_registered)
+ 			padapter->surprise_removed = true;
+-		unregister_netdev(pnetdev); /* will call netdev_close() */
++		if (pnetdev->reg_state != NETREG_UNINITIALIZED)
++			unregister_netdev(pnetdev); /* will call netdev_close() */
+ 		flush_scheduled_work();
+ 		udelay(1);
+ 		/* Stop driver mlme relation timer */
+@@ -614,6 +618,7 @@ static void r871xu_dev_remove(struct usb
+ 		 */
+ 		usb_put_dev(udev);
+ 	}
++firmware_load_fail:
+ 	/* If we didn't unplug usb dongle and remove/insert module, driver
+ 	 * fails on sitesurvey for the first time when device is up.
+ 	 * Reset usb port for sitesurvey fail issue.
+
+
