@@ -2,52 +2,51 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D02CC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:13:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1DE7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:13:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61669206B5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:13:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9CCD20734
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:13:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="EhtGbDs3"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="GxbelMg7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726430AbgHJHNQ (ORCPT
+        id S1726453AbgHJHNS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 03:13:16 -0400
-Received: from mx07-00178001.pphosted.com ([185.132.182.106]:17856 "EHLO
+        Mon, 10 Aug 2020 03:13:18 -0400
+Received: from mx07-00178001.pphosted.com ([185.132.182.106]:23244 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726022AbgHJHNE (ORCPT
+        by vger.kernel.org with ESMTP id S1726010AbgHJHNE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Aug 2020 03:13:04 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07A73MKB000844;
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07A71xAU026940;
         Mon, 10 Aug 2020 09:12:52 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=jKSSmeCBUayW+bgxcIgwdEOJaCdevskwirZ5mZRYfhE=;
- b=EhtGbDs3UzXi9CVKnWpOhP79qgf/cahKJcMduDD5QJ29GumOaXOlwxopzB6vlOnOo0w9
- qphPrNArKJuQLhd4Z6b6/hL/3sTqk4FCYhkJuFZD8oAO/SAi4gjBwtYRS1Ns3vds62V2
- t1K0nNyW7lexXEGog+6Q/DH+XhfCmq5A7tPgooJ/yAokzBjh1VaOcwr/n/XDhchWyQe3
- 7e957cikAFzf1pud//QStfJqxEhY/zgnzhYdBNWWCX4CQmhBEEFL4o5PMYTQPj3vdxJa
- C0zBdJFt2SOkMAf9BXPtXbBkloxueXR5mk1qa4OrnoKXUuoGqzUpo70qzyC4xoSmbkzu 6A== 
+ bh=OzGXro9iLMCh57TZ72fiBMjYtaaITfNfK4CpTLhCHL8=;
+ b=GxbelMg77eE+iGw57FqJ0I3/VGoj4sif7HFku7TxpIfnfVKfo47AXy6UXMTVQDTduHJv
+ FiFA8PGYelUB3PP+puiYf7TZh1ECpyC+dvt2cWCXK+NiOV0J4FCZU6eODQREfSU2zOvZ
+ oba/aNuY8LfCV4PA618qumws20PcK82+mTlo7Y4AOmY3nrFUAa/G8G90W3ofQNsQ7ZnA
+ 9+bohqOpCstnCv5SoOc48Ue/ajLmMb3o683hJ6wJqkPj9nw7v8gMbnc1Iry+NfumIwua
+ gYGXtv2JlZXBL4eZPnaydaq+vNQCo++LIxnk3h8AonJiFm7AH0r2jyOL9UyzqWhmFFnR FA== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 32sm6f69v8-1
+        by mx07-00178001.pphosted.com with ESMTP id 32smf968j4-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
         Mon, 10 Aug 2020 09:12:52 +0200
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 09FAC10003A;
-        Mon, 10 Aug 2020 09:12:52 +0200 (CEST)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id CC9AB10002A;
+        Mon, 10 Aug 2020 09:12:50 +0200 (CEST)
 Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id F1BF52AD9EB;
-        Mon, 10 Aug 2020 09:12:51 +0200 (CEST)
-Received: from localhost (10.75.127.47) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 10 Aug 2020 09:12:51
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id BB8872AD9EB;
+        Mon, 10 Aug 2020 09:12:50 +0200 (CEST)
+Received: from localhost (10.75.127.46) by SFHDAG3NODE2.st.com (10.75.127.8)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 10 Aug 2020 09:12:50
  +0200
 From:   Alain Volmat <alain.volmat@st.com>
 To:     <broonie@kernel.org>, <amelie.delaunay@st.com>
@@ -57,15 +56,15 @@ CC:     <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>,
         <alain.volmat@st.com>
-Subject: [PATCH v2 4/5] spi: stm32: fixes suspend/resume management
-Date:   Mon, 10 Aug 2020 09:12:37 +0200
-Message-ID: <1597043558-29668-5-git-send-email-alain.volmat@st.com>
+Subject: [PATCH v2 1/5] spi: stm32h7: fix race condition at end of transfer
+Date:   Mon, 10 Aug 2020 09:12:34 +0200
+Message-ID: <1597043558-29668-2-git-send-email-alain.volmat@st.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1597043558-29668-1-git-send-email-alain.volmat@st.com>
 References: <1597043558-29668-1-git-send-email-alain.volmat@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.75.127.47]
+X-Originating-IP: [10.75.127.46]
 X-ClientProxiedBy: SFHDAG2NODE2.st.com (10.75.127.5) To SFHDAG3NODE2.st.com
  (10.75.127.8)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
@@ -75,88 +74,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amelie Delaunay <amelie.delaunay@st.com>
+From: Antonio Borneo <antonio.borneo@st.com>
 
-This patch adds pinctrl power management, and reconfigure spi controller
-in case of resume.
+The caller of stm32_spi_transfer_one(), spi_transfer_one_message(),
+is waiting for us to call spi_finalize_current_transfer() and will
+eventually schedule a new transfer, if available.
+We should guarantee that the spi controller is really available
+before calling spi_finalize_current_transfer().
 
-Fixes: 038ac869c9d2 ("spi: stm32: add runtime PM support")
+Move the call to spi_finalize_current_transfer() _after_ the call
+to stm32_spi_disable().
 
-Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+Signed-off-by: Antonio Borneo <antonio.borneo@st.com>
 Signed-off-by: Alain Volmat <alain.volmat@st.com>
 ---
 v2: identical to v1
 
- drivers/spi/spi-stm32.c | 27 ++++++++++++++++++++++++---
- 1 file changed, 24 insertions(+), 3 deletions(-)
+ drivers/spi/spi-stm32.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
-index 571dea72bf7e..9b90a22543fd 100644
+index 4a21feae0103..814a3ec3b8ad 100644
 --- a/drivers/spi/spi-stm32.c
 +++ b/drivers/spi/spi-stm32.c
-@@ -13,6 +13,7 @@
- #include <linux/iopoll.h>
- #include <linux/module.h>
- #include <linux/of_platform.h>
-+#include <linux/pinctrl/consumer.h>
- #include <linux/pm_runtime.h>
- #include <linux/reset.h>
- #include <linux/spi/spi.h>
-@@ -2007,6 +2008,8 @@ static int stm32_spi_remove(struct platform_device *pdev)
+@@ -971,8 +971,8 @@ static irqreturn_t stm32h7_spi_irq_thread(int irq, void *dev_id)
+ 	spin_unlock_irqrestore(&spi->lock, flags);
  
- 	pm_runtime_disable(&pdev->dev);
+ 	if (end) {
+-		spi_finalize_current_transfer(master);
+ 		stm32h7_spi_disable(spi);
++		spi_finalize_current_transfer(master);
+ 	}
  
-+	pinctrl_pm_select_sleep_state(&pdev->dev);
-+
- 	return 0;
- }
- 
-@@ -2018,13 +2021,18 @@ static int stm32_spi_runtime_suspend(struct device *dev)
- 
- 	clk_disable_unprepare(spi->clk);
- 
--	return 0;
-+	return pinctrl_pm_select_sleep_state(dev);
- }
- 
- static int stm32_spi_runtime_resume(struct device *dev)
- {
- 	struct spi_master *master = dev_get_drvdata(dev);
- 	struct stm32_spi *spi = spi_master_get_devdata(master);
-+	int ret;
-+
-+	ret = pinctrl_pm_select_default_state(dev);
-+	if (ret)
-+		return ret;
- 
- 	return clk_prepare_enable(spi->clk);
- }
-@@ -2054,10 +2062,23 @@ static int stm32_spi_resume(struct device *dev)
- 		return ret;
- 
- 	ret = spi_master_resume(master);
--	if (ret)
-+	if (ret) {
- 		clk_disable_unprepare(spi->clk);
-+		return ret;
-+	}
- 
--	return ret;
-+	ret = pm_runtime_get_sync(dev);
-+	if (ret) {
-+		dev_err(dev, "Unable to power device:%d\n", ret);
-+		return ret;
-+	}
-+
-+	spi->cfg->config(spi);
-+
-+	pm_runtime_mark_last_busy(dev);
-+	pm_runtime_put_autosuspend(dev);
-+
-+	return 0;
- }
- #endif
- 
+ 	return IRQ_HANDLED;
 -- 
 2.7.4
 
