@@ -2,104 +2,92 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C091C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 11:17:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4E1FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 11:17:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BED62070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 11:17:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8830A2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 11:17:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Gt73EGD1"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OCNWmeSi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726511AbgHJLRF (ORCPT
+        id S1726430AbgHJLRK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 07:17:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54106 "EHLO
+        Mon, 10 Aug 2020 07:17:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726355AbgHJLQ7 (ORCPT
+        with ESMTP id S1726368AbgHJLRB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 07:16:59 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A549C061786;
-        Mon, 10 Aug 2020 04:16:52 -0700 (PDT)
+        Mon, 10 Aug 2020 07:17:01 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94C8EC061756;
+        Mon, 10 Aug 2020 04:17:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=3igqfKE7wm2QUrHPRQNhxnr922Z1BD0XrDzIpjrIz1c=; b=Gt73EGD1FnQwHG+2qD6EIyFJs5
-        IVYOWpzDBS3ugNneUzf3K7vpNGONIJ6avirkC9b6JEcGipUvj5vmrH67i314h7CA3lRFBWFTKYFnp
-        ppLgFjP8gATQ0HzkogSbFpTdA2Ouz8ZXL4Tgisctr7ZIiYxEhhTnTF2TQQYa7lcUhVnLjXRspAnud
-        mJ1djHdcR2wn6qdL89oqaVtosKHnbTnLIDafjOUCamSIzgFKeAPCeeTxwrLDEWig6nutGOk6LZm7F
-        8r5ZhpqXmf6IguozDxyBmBoi2QNOis8HWteKWyd9KW160Xa+pu5pzysGsQi9bBSDm5RCMyZQFd8z9
-        w+uZlu2Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k55nK-0003sh-I5; Mon, 10 Aug 2020 11:16:46 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 42F2A301A7A;
-        Mon, 10 Aug 2020 13:16:44 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 30F9B2B491BED; Mon, 10 Aug 2020 13:16:44 +0200 (CEST)
-Date:   Mon, 10 Aug 2020 13:16:44 +0200
-From:   peterz@infradead.org
-To:     Anatoly Pugachev <matorola@gmail.com>
-Cc:     Sparc kernel list <sparclinux@vger.kernel.org>,
-        Linux Kernel list <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: Re: [sparc64] enabling CONFIG_PROVE_LOCKING makes kernel unable to
- build
-Message-ID: <20200810111644.GP2674@hirez.programming.kicks-ass.net>
-References: <CADxRZqybxFr5reVmYM2_h+KUzqL3PU5Qo9nrZSieQPYq+gWWCg@mail.gmail.com>
- <20200804133438.GK2674@hirez.programming.kicks-ass.net>
- <CADxRZqy+PcHrMu1a6VZp_SNEybVUax88eqO09Sbq7v3yjivVKw@mail.gmail.com>
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=LF7J00zPGvE5+TvNb+kSZ/mLnQ6lmd1ykbbcKN0G5P0=; b=OCNWmeSiZDDpjF5Hgiofx6N6ON
+        mkqo524ZrkTmjYeAH/LOzFSErW1eK+WyzkAZsFnVA34VOuSVBXoSGM7MZ+/9KklSyZN05mfuOyT0s
+        2YhgWUkFXY+JSuAnnaw4NmrKz7wA57V3jBIlZHPNkZdhVqDXFnmhvk2JKjby9cP7BlVaWDfAzs53N
+        lkQLlrm4o/LDXG8+jPi57WYiSsbgy1qMRGEEL8mYfBJh/Cz0n3tZebBXT9ZPwoMDjAhbgQ2MQPDaJ
+        U4AvMZQcyGTR2UWCtkSXx4VKMEPJLjTvF5HALWCUljf51bkVR9AU8RSTIPChGPGHGBS0dNqkiVmpQ
+        /ZGi0Vig==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k55nV-0002Ra-ET; Mon, 10 Aug 2020 11:16:57 +0000
+Date:   Mon, 10 Aug 2020 12:16:57 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Ruan Shiyang <ruansy.fnst@cn.fujitsu.com>
+Cc:     linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, darrick.wong@oracle.com,
+        dan.j.williams@intel.com, david@fromorbit.com, hch@lst.de,
+        rgoldwyn@suse.de, qi.fuli@fujitsu.com, y-goto@fujitsu.com
+Subject: Re: [RFC PATCH 0/8] fsdax: introduce FS query interface to support
+ reflink
+Message-ID: <20200810111657.GL17456@casper.infradead.org>
+References: <20200807131336.318774-1-ruansy.fnst@cn.fujitsu.com>
+ <20200807133857.GC17456@casper.infradead.org>
+ <9673ed3c-9e42-3d01-000b-b01cda9832ce@cn.fujitsu.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CADxRZqy+PcHrMu1a6VZp_SNEybVUax88eqO09Sbq7v3yjivVKw@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9673ed3c-9e42-3d01-000b-b01cda9832ce@cn.fujitsu.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 12:23:48PM +0300, Anatoly Pugachev wrote:
-> On Tue, Aug 4, 2020 at 4:34 PM <peterz@infradead.org> wrote:
-> >
-> > On Tue, Aug 04, 2020 at 04:17:16PM +0300, Anatoly Pugachev wrote:
-> > > Hello!
-> > >
-> > > Linus git master sources:
-> > >
-> > > $ git desc
-> > > v5.8-2483-gc0842fbc1b18
-> > >
-> >
-> > Ooh, it looks like that series wasn't cut back far enough :/
-> >
-> > 859247d39fb0 ("seqlock: lockdep assert non-preemptibility on seqcount_t
-> > write") does indeed also introduce problems.
-> >
-> > I've been working on untangling the header mess for the full series and
-> > the below patch is what I currently have.
-> >
-> > ---
-> > Subject: seqlock,headers: Untangle the spaghetti monster
-> > From: Peter Zijlstra <peterz@infradead.org>
-> > Date: Thu Jul 30 13:20:47 CEST 2020
-> >
-> > By using lockdep_assert_*() from seqlock.h, the spaghetti monster
-> > attacked.
+On Mon, Aug 10, 2020 at 04:15:50PM +0800, Ruan Shiyang wrote:
 > 
-> Thanks Peter!
 > 
-> It doesn't apply cleanly over master git, but it least makes kernel
-> compilable / bootable on sparc64:
+> On 2020/8/7 下午9:38, Matthew Wilcox wrote:
+> > On Fri, Aug 07, 2020 at 09:13:28PM +0800, Shiyang Ruan wrote:
+> > > This patchset is a try to resolve the problem of tracking shared page
+> > > for fsdax.
+> > > 
+> > > Instead of per-page tracking method, this patchset introduces a query
+> > > interface: get_shared_files(), which is implemented by each FS, to
+> > > obtain the owners of a shared page.  It returns an owner list of this
+> > > shared page.  Then, the memory-failure() iterates the list to be able
+> > > to notify each process using files that sharing this page.
+> > > 
+> > > The design of the tracking method is as follow:
+> > > 1. dax_assocaite_entry() associates the owner's info to this page
+> > 
+> > I think that's the first problem with this design.  dax_associate_entry is
+> > a horrendous idea which needs to be ripped out, not made more important.
+> > It's all part of the general problem of trying to do something on a
+> > per-page basis instead of per-extent basis.
+> > 
+> 
+> The memory-failure needs to track owners info from a dax page, so I should
+> associate the owner with this page.  In this version, I associate the block
+> device to the dax page, so that the memory-failure is able to iterate the
+> owners by the query interface provided by filesystem.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git locking/urgent
-
-Should contain an updated version.
+No, it doesn't need to track owner info from a DAX page.  What it needs to
+do is ask the filesystem.
