@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4AC1C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:38:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B90C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:38:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9157D23117
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:38:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44E4F22EBE
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:38:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073906;
-	bh=LoCBf9smeqKX90IxjUKH7UtGhuBKcdKjGFseDosWpvs=;
+	s=default; t=1597073915;
+	bh=Rz7iaYAsvM6wCeSLHRNbTUW22QBpt6gfuRDeVPmYiNU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f+8sAr2RVSWQHmdOKLipaTwwERKLr/WxtCiV1MyZO2TED2l+DC+j8d+ywOSyCjyvy
-	 kOYR7aes8evoUgbq52OBpQSBSsbvCzvOuFvuBQoJK+hprLeGZc2x+gBwwnYppfOM2z
-	 m7RXyh8jJDCVOtg/Y/ATTi6BmZ7eHUeX9YXxNN9I=
+	b=fNHeNgr9NLqozvTr6aVsMHsiUqz6Dv/Sf50YemW1QJaBvubP2QHsgSlQH0f6FIE/F
+	 zyPzCp/fiC+qSvnmaCas9N5XB5jU7r5Jv3Mnw2UKpjSvBzo2rMSecGEs5mXG/erSbH
+	 HBx9N4nbOtFwrkC9gyBCVmTtHU6o18hu7jdXK/+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729144AbgHJPiZ (ORCPT
+        id S1728576AbgHJPZr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:38:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59930 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:25:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728613AbgHJPZ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:25:58 -0400
+        id S1728561AbgHJPZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:25:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E01DA20658;
-        Mon, 10 Aug 2020 15:25:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D42862078E;
+        Mon, 10 Aug 2020 15:25:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073157;
-        bh=LoCBf9smeqKX90IxjUKH7UtGhuBKcdKjGFseDosWpvs=;
+        s=default; t=1597073140;
+        bh=Rz7iaYAsvM6wCeSLHRNbTUW22QBpt6gfuRDeVPmYiNU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RdCZFuWycpAmThkbxzZE4jOO3I8WqZXDjRRdZW7OL7+3Q6rptxFyrBSi5Z7JMER9I
-         dJwykivaK8xiwr4DLcbnwuAuSJcpKTlIHYRrr/Guzv2t+vp+jK7VP3ZTE5QMNIfh5X
-         F9W5GHmBZzq/7TGp2PK3+6XeYM8gYXlbEb4XYr3Q=
+        b=Uzlb7AKT2/cu7jHRFmujRLKKVr4c/2jHuZVnE3Dd+QBlVewfF+w2SOwwwRQCUgtm3
+         fuC49qlgaWrSgGGF0SDSMeVERY0ETwyHciybAy4nE3dGhwTba+Cn+MFP3X0N0S1BsX
+         WnJpOy1PCu8xu+n5w9J3kpLe9O5X3+aoB3Depd24=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Matthieu Baerts <matthieu.baerts@tessares.net>,
-        Paolo Abeni <pabeni@redhat.com>,
+        stable@vger.kernel.org, "Rafael P." <rparrazo@redhat.com>,
+        Dean Nelson <dnelson@redhat.com>,
+        Xin Long <lucien.xin@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.7 77/79] mptcp: fix bogus sendmsg() return code under pressure
-Date:   Mon, 10 Aug 2020 17:21:36 +0200
-Message-Id: <20200810151816.018579465@linuxfoundation.org>
+Subject: [PATCH 5.7 71/79] net: thunderx: use spin_lock_bh in nicvf_set_rx_mode_task()
+Date:   Mon, 10 Aug 2020 17:21:30 +0200
+Message-Id: <20200810151815.735215655@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151812.114485777@linuxfoundation.org>
 References: <20200810151812.114485777@linuxfoundation.org>
@@ -61,45 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Abeni <pabeni@redhat.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-[ Upstream commit 8555c6bfd5fddb1cf363d3cd157d70a1bb27f718 ]
+[ Upstream commit bab9693a9a8c6dd19f670408ec1e78e12a320682 ]
 
-In case of memory pressure, mptcp_sendmsg() may call
-sk_stream_wait_memory() after succesfully xmitting some
-bytes. If the latter fails we currently return to the
-user-space the error code, ignoring the succeful xmit.
+A dead lock was triggered on thunderx driver:
 
-Address the issue always checking for the xmitted bytes
-before mptcp_sendmsg() completes.
+        CPU0                    CPU1
+        ----                    ----
+   [01] lock(&(&nic->rx_mode_wq_lock)->rlock);
+                           [11] lock(&(&mc->mca_lock)->rlock);
+                           [12] lock(&(&nic->rx_mode_wq_lock)->rlock);
+   [02] <Interrupt> lock(&(&mc->mca_lock)->rlock);
 
-Fixes: f296234c98a8 ("mptcp: Add handling of incoming MP_JOIN requests")
-Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+The path for each is:
+
+  [01] worker_thread() -> process_one_work() -> nicvf_set_rx_mode_task()
+  [02] mld_ifc_timer_expire()
+  [11] ipv6_add_dev() -> ipv6_dev_mc_inc() -> igmp6_group_added() ->
+  [12] dev_mc_add() -> __dev_set_rx_mode() -> nicvf_set_rx_mode()
+
+To fix it, it needs to disable bh on [1], so that the timer on [2]
+wouldn't be triggered until rx_mode_wq_lock is released. So change
+to use spin_lock_bh() instead of spin_lock().
+
+Thanks to Paolo for helping with this.
+
+v1->v2:
+  - post to netdev.
+
+Reported-by: Rafael P. <rparrazo@redhat.com>
+Tested-by: Dean Nelson <dnelson@redhat.com>
+Fixes: 469998c861fa ("net: thunderx: prevent concurrent data re-writing by nicvf_set_rx_mode")
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/mptcp/protocol.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/ethernet/cavium/thunder/nicvf_main.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -802,7 +802,6 @@ fallback:
+--- a/drivers/net/ethernet/cavium/thunder/nicvf_main.c
++++ b/drivers/net/ethernet/cavium/thunder/nicvf_main.c
+@@ -2041,11 +2041,11 @@ static void nicvf_set_rx_mode_task(struc
+ 	/* Save message data locally to prevent them from
+ 	 * being overwritten by next ndo_set_rx_mode call().
+ 	 */
+-	spin_lock(&nic->rx_mode_wq_lock);
++	spin_lock_bh(&nic->rx_mode_wq_lock);
+ 	mode = vf_work->mode;
+ 	mc = vf_work->mc;
+ 	vf_work->mc = NULL;
+-	spin_unlock(&nic->rx_mode_wq_lock);
++	spin_unlock_bh(&nic->rx_mode_wq_lock);
  
- 	mptcp_set_timeout(sk, ssk);
- 	if (copied) {
--		ret = copied;
- 		tcp_push(ssk, msg->msg_flags, mss_now, tcp_sk(ssk)->nonagle,
- 			 size_goal);
- 
-@@ -815,7 +814,7 @@ fallback:
- 	release_sock(ssk);
- out:
- 	release_sock(sk);
--	return ret;
-+	return copied ? : ret;
+ 	__nicvf_set_rx_mode_task(mode, mc, nic);
  }
- 
- static void mptcp_wait_data(struct sock *sk, long *timeo)
 
 
