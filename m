@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F380C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE6B3C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:20:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7559E22B47
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:20:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9569C206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:20:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597087219;
-	bh=2V8O/8NIypxvZs/NebqPdpo3C9WCOWyFh1QBb239wzo=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=nWCwJ25eEN+VV3Z1gnr/bXkMfKmPwGsiBTrCB1zLCQz3O3GG5FMFtgH4FswJVzE1f
-	 CdmefoZpshY24UlALj/ngKmqwaCnsuk7Fb2EUC9Sd1MlybN1yp26WPopVPMQoW5Kpu
-	 n88oPCZYCZFbTPdBssajh8TlhdlYp1kjhjTVVImA=
+	s=default; t=1597087225;
+	bh=ViljuQSUBMMS87DdQO2cmP6a8sHOqnJUa5dXv1gAFO4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=0jMOfJqNZQgVF6jFl6RtYJ3mjjKCfIlum2LaW2tYk/A9s/eBx7xHJMbCiQ/+oTlV5
+	 lGvUWJJZjJEj07hJq/t1guRKACodkPe3sNIH27GQHBfbDB1WH6T8FyJhQjmWSwMEb3
+	 GFz7Ict5M+gsJa+rf46HtYJGDYSd4+agcHjtBJV0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729899AbgHJTN4 (ORCPT
+        id S1729555AbgHJTUX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:13:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45134 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:20:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728318AbgHJTNr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:13:47 -0400
+        id S1729887AbgHJTNy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:13:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40BF4207FF;
-        Mon, 10 Aug 2020 19:13:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47FBE207FF;
+        Mon, 10 Aug 2020 19:13:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086827;
-        bh=2V8O/8NIypxvZs/NebqPdpo3C9WCOWyFh1QBb239wzo=;
-        h=From:To:Cc:Subject:Date:From;
-        b=obZDsGWIBsx3/SIR7TA3etrWWpfQs91cNl9urPtTEeJSVcNbJfw4K1kht8ir4AI6x
-         mc+c/ftA/L+M8+3XnuY/7zTy7dC7ybcLQXNerRu2TzrcOL8qW9hyAxglyRTgI/ExAG
-         LYj33Ifb/aKsBB/+J3LirmVQogRHKshjPmhKtn2g=
+        s=default; t=1597086834;
+        bh=ViljuQSUBMMS87DdQO2cmP6a8sHOqnJUa5dXv1gAFO4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=RSmaxlwhkFOGAPb59ayY/RJ2KS9nlfxhLFCfU4yPSouDymXZBJVO/OFFRXcmSGaKV
+         wgmkBiVChT6bQyYklWZktuxKci1Lo0a7rO96NvhRkAJw1EmjzH0gDuXzV2CHYqrQVE
+         f6fTAGxJqoCEHgiK8yeNAoTH2MFKtQA13dfKkMlM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tomi Valkeinen <tomi.valkeinen@ti.com>, Jyri Sarha <jsarha@ti.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.14 01/22] drm/tilcdc: fix leak & null ref in panel_connector_get_modes
-Date:   Mon, 10 Aug 2020 15:13:23 -0400
-Message-Id: <20200810191345.3795166-1-sashal@kernel.org>
+Cc:     Zhao Heming <heming.zhao@suse.com>,
+        Song Liu <songliubraving@fb.com>,
+        Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 06/22] md-cluster: fix wild pointer of unlock_all_bitmaps()
+Date:   Mon, 10 Aug 2020 15:13:28 -0400
+Message-Id: <20200810191345.3795166-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200810191345.3795166-1-sashal@kernel.org>
+References: <20200810191345.3795166-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,49 +59,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+From: Zhao Heming <heming.zhao@suse.com>
 
-[ Upstream commit 3f9c1c872cc97875ddc8d63bc9fe6ee13652b933 ]
+[ Upstream commit 60f80d6f2d07a6d8aee485a1d1252327eeee0c81 ]
 
-If videomode_from_timings() returns true, the mode allocated with
-drm_mode_create will be leaked.
+reproduction steps:
+```
+node1 # mdadm -C /dev/md0 -b clustered -e 1.2 -n 2 -l mirror /dev/sda
+/dev/sdb
+node2 # mdadm -A /dev/md0 /dev/sda /dev/sdb
+node1 # mdadm -G /dev/md0 -b none
+mdadm: failed to remove clustered bitmap.
+node1 # mdadm -S --scan
+^C  <==== mdadm hung & kernel crash
+```
 
-Also, the return value of drm_mode_create() is never checked, and thus
-could cause NULL deref.
+kernel stack:
+```
+[  335.230657] general protection fault: 0000 [#1] SMP NOPTI
+[...]
+[  335.230848] Call Trace:
+[  335.230873]  ? unlock_all_bitmaps+0x5/0x70 [md_cluster]
+[  335.230886]  unlock_all_bitmaps+0x3d/0x70 [md_cluster]
+[  335.230899]  leave+0x10f/0x190 [md_cluster]
+[  335.230932]  ? md_super_wait+0x93/0xa0 [md_mod]
+[  335.230947]  ? leave+0x5/0x190 [md_cluster]
+[  335.230973]  md_cluster_stop+0x1a/0x30 [md_mod]
+[  335.230999]  md_bitmap_free+0x142/0x150 [md_mod]
+[  335.231013]  ? _cond_resched+0x15/0x40
+[  335.231025]  ? mutex_lock+0xe/0x30
+[  335.231056]  __md_stop+0x1c/0xa0 [md_mod]
+[  335.231083]  do_md_stop+0x160/0x580 [md_mod]
+[  335.231119]  ? 0xffffffffc05fb078
+[  335.231148]  md_ioctl+0xa04/0x1930 [md_mod]
+[  335.231165]  ? filename_lookup+0xf2/0x190
+[  335.231179]  blkdev_ioctl+0x93c/0xa10
+[  335.231205]  ? _cond_resched+0x15/0x40
+[  335.231214]  ? __check_object_size+0xd4/0x1a0
+[  335.231224]  block_ioctl+0x39/0x40
+[  335.231243]  do_vfs_ioctl+0xa0/0x680
+[  335.231253]  ksys_ioctl+0x70/0x80
+[  335.231261]  __x64_sys_ioctl+0x16/0x20
+[  335.231271]  do_syscall_64+0x65/0x1f0
+[  335.231278]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+```
 
-Fix these two issues.
-
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200429104234.18910-1-tomi.valkeinen@ti.com
-Reviewed-by: Jyri Sarha <jsarha@ti.com>
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
+Signed-off-by: Zhao Heming <heming.zhao@suse.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/tilcdc/tilcdc_panel.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/md/md-cluster.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/tilcdc/tilcdc_panel.c b/drivers/gpu/drm/tilcdc/tilcdc_panel.c
-index 1813a3623ce60..0484b2cf0e2b5 100644
---- a/drivers/gpu/drm/tilcdc/tilcdc_panel.c
-+++ b/drivers/gpu/drm/tilcdc/tilcdc_panel.c
-@@ -152,12 +152,16 @@ static int panel_connector_get_modes(struct drm_connector *connector)
- 	int i;
+diff --git a/drivers/md/md-cluster.c b/drivers/md/md-cluster.c
+index 10057ac85476e..035d5ec8e677f 100644
+--- a/drivers/md/md-cluster.c
++++ b/drivers/md/md-cluster.c
+@@ -1423,6 +1423,7 @@ static void unlock_all_bitmaps(struct mddev *mddev)
+ 			}
+ 		}
+ 		kfree(cinfo->other_bitmap_lockres);
++		cinfo->other_bitmap_lockres = NULL;
+ 	}
+ }
  
- 	for (i = 0; i < timings->num_timings; i++) {
--		struct drm_display_mode *mode = drm_mode_create(dev);
-+		struct drm_display_mode *mode;
- 		struct videomode vm;
- 
- 		if (videomode_from_timings(timings, &vm, i))
- 			break;
- 
-+		mode = drm_mode_create(dev);
-+		if (!mode)
-+			break;
-+
- 		drm_display_mode_from_videomode(&vm, mode);
- 
- 		mode->type = DRM_MODE_TYPE_DRIVER;
 -- 
 2.25.1
 
