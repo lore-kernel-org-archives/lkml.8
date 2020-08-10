@@ -2,138 +2,107 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB40DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:39:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C72CCC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:40:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE28222EBE
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:39:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A262E22D6F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:40:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073996;
-	bh=FbtP47wd6gzV5EuJoa/g18rqPUV+zFw4F8vtAMVqD6g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wSPQcUDou7YEwatqVqKJ73Y+H/7NGzxRVkUK+pZtMBp9gY1X9Ls/+nc7hskU7gKFQ
-	 onGQgvP+KjsirXGDNFM9HrZWVdsP21meXa8GuPbulC2ia5+YZLlxBhhgyYuXSZs7Kc
-	 yb1JZ5vBk4rlCDn20vATIOJgoHvjN0H7/RXd0i2U=
+	s=default; t=1597074001;
+	bh=YOM+g/TR562Qnqd9mjPiiw/B/53j8zLV2C2vybC4Y3A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=V7VHBXGVcfT11mQuVWWglN48/iBu+KNlf0IOzcAGcGsD2a8JQkt4J0SBSjt5w/s3S
+	 xGcWUeJccwemaw/obwn35Bdfs3moXcKmoWOdS/1N7ZSxUEHe1I7l0zpI4+oUJctLTT
+	 QQ5Z6xJKN+srYm8dZrTQOHnSftlhriNGcdN5dQoc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729249AbgHJPjz (ORCPT
+        id S1728872AbgHJPj7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:39:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57342 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:39:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727975AbgHJPYU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:24:20 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1728869AbgHJPj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:39:56 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6285422D0B;
-        Mon, 10 Aug 2020 15:24:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C4B022D6F;
+        Mon, 10 Aug 2020 15:39:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073059;
-        bh=FbtP47wd6gzV5EuJoa/g18rqPUV+zFw4F8vtAMVqD6g=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nCxDf6NXCaDI3ECig9NPLXSFk5pzTuBkTioDJzUA8LXTHNu3PyY/CiTrYdm2jGRLN
-         JEWqHULXg0jsRhwWxMM5EpYK2dS4o744Cy9bhNIyDbgGdU6hZl4+A4BKI8ROkSuvCH
-         /3Q3R13Oqe4V2C3eePalv8AkD9sLTpXM3z777dSM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Erhard F." <erhard_f@mailbox.org>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.7 53/79] Revert "powerpc/kasan: Fix shadow pages allocation failure"
-Date:   Mon, 10 Aug 2020 17:21:12 +0200
-Message-Id: <20200810151814.869408006@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200810151812.114485777@linuxfoundation.org>
-References: <20200810151812.114485777@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1597073995;
+        bh=YOM+g/TR562Qnqd9mjPiiw/B/53j8zLV2C2vybC4Y3A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=eesmhdwrQECMSX9NuYuFlxIep7RfnnDf/qDMe8aSjXl/LMrf2xCxCGXH7j00wCKMF
+         7NOXfKahT5R1UMzZvwNllwJv6n4hF1rCjZlTOXz2t3fpatBC2a3U9eY/fmlzxYg90R
+         doF7JwzAYFgNCJ8lbhzMwAqyI6bye5iRXRRASkDI=
+Date:   Mon, 10 Aug 2020 16:39:28 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: regulator: deadlock vs memory reclaim
+Message-ID: <20200810153928.GD6438@sirena.org.uk>
+References: <20200809222537.GA5522@qmqm.qmqm.pl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="OaZoDhBhXzo6bW1J"
+Content-Disposition: inline
+In-Reply-To: <20200809222537.GA5522@qmqm.qmqm.pl>
+X-Cookie: Walk softly and carry a megawatt laser.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
 
-commit b506923ee44ae87fc9f4de16b53feb313623e146 upstream.
+--OaZoDhBhXzo6bW1J
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This reverts commit d2a91cef9bbdeb87b7449fdab1a6be6000930210.
+On Mon, Aug 10, 2020 at 12:25:37AM +0200, Micha=C5=82 Miros=C5=82aw wrote:
 
-This commit moved too much work in kasan_init(). The allocation
-of shadow pages has to be moved for the reason explained in that
-patch, but the allocation of page tables still need to be done
-before switching to the final hash table.
+> regulator_lock_dependent() starts by taking regulator_list_mutex, The
+> same mutex covers eg. regulator initialization, including memory allocati=
+ons
+> that happen there. This will deadlock when you have filesystem on eg. eMMC
+> (which uses a regulator to control module voltages) and you register
+> a new regulator (hotplug a device?) when under memory pressure.
 
-First revert the incorrect commit, following patch redoes it
-properly.
+OK, that's very much a corner case, it only applies in the case of
+coupled regulators.  The most obvious thing here would be to move the
+allocations on registration out of the locked region, we really only
+need this in the regulator_find_coupler() call I think.  If the
+regulator isn't coupled we don't need to take the lock at all.
 
-Fixes: d2a91cef9bbd ("powerpc/kasan: Fix shadow pages allocation failure")
-Cc: stable@vger.kernel.org
-Reported-by: Erhard F. <erhard_f@mailbox.org>
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=208181
-Link: https://lore.kernel.org/r/3667deb0911affbf999b99f87c31c77d5e870cd2.1593690707.git.christophe.leroy@csgroup.eu
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Basically, we have a BKL for regulator_enable() and we're using ww_mutex
+> as a recursive mutex with no deadlock prevention whatsoever. The locks
+> also seem to cover way to much (eg. initialization even before making the
+> regulator visible to the system).
 
----
- arch/powerpc/include/asm/kasan.h      |    2 ++
- arch/powerpc/mm/init_32.c             |    2 ++
- arch/powerpc/mm/kasan/kasan_init_32.c |    4 +---
- 3 files changed, 5 insertions(+), 3 deletions(-)
+Could you be more specific about what you're looking at here?  There's
+nothing too obvious jumping out from the code here other than the bit
+around the coupling allocation, otherwise it looks like we're locking
+list walks.
 
---- a/arch/powerpc/include/asm/kasan.h
-+++ b/arch/powerpc/include/asm/kasan.h
-@@ -27,10 +27,12 @@
- 
- #ifdef CONFIG_KASAN
- void kasan_early_init(void);
-+void kasan_mmu_init(void);
- void kasan_init(void);
- void kasan_late_init(void);
- #else
- static inline void kasan_init(void) { }
-+static inline void kasan_mmu_init(void) { }
- static inline void kasan_late_init(void) { }
- #endif
- 
---- a/arch/powerpc/mm/init_32.c
-+++ b/arch/powerpc/mm/init_32.c
-@@ -170,6 +170,8 @@ void __init MMU_init(void)
- 	btext_unmap();
- #endif
- 
-+	kasan_mmu_init();
-+
- 	setup_kup();
- 
- 	/* Shortly after that, the entire linear mapping will be available */
---- a/arch/powerpc/mm/kasan/kasan_init_32.c
-+++ b/arch/powerpc/mm/kasan/kasan_init_32.c
-@@ -131,7 +131,7 @@ static void __init kasan_unmap_early_sha
- 	flush_tlb_kernel_range(k_start, k_end);
- }
- 
--static void __init kasan_mmu_init(void)
-+void __init kasan_mmu_init(void)
- {
- 	int ret;
- 	struct memblock_region *reg;
-@@ -159,8 +159,6 @@ static void __init kasan_mmu_init(void)
- 
- void __init kasan_init(void)
- {
--	kasan_mmu_init();
--
- 	kasan_remap_early_shadow_ro();
- 
- 	clear_page(kasan_early_shadow_page);
+--OaZoDhBhXzo6bW1J
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8xajAACgkQJNaLcl1U
+h9BNnQf/VnLzsKZ8MKsJKrUcITrwjL4Ty5NlAVZt14rULY5df4rpXxQ97YKGkwjD
+GK0sP3nSmNHte2WUXjPfP86H+JuWk0tpOv6g06miuuFeC0bdrSZ17dchZikGM7n+
+cGQHJ7x50NRtIRjjLE01h+huS61aYd/XBGZPcTpPgx8r724FoNGUWq7Ufyw0vc5f
+tZFVl0F5BvDmwwgtsFBkv16VtPyDMoZp7W/oEBaECcH1myFmOMdyZ/NYQ4TfEEgt
+NADH2+Z6wFJGEH4B6nkXkxAY2lY3Ya5eq8UiE9TuQru6qre59l5rC7lQTKRcRNcf
+/O6+7aYsRw36Ij/2ViyNCV929Hn6tQ==
+=oiI0
+-----END PGP SIGNATURE-----
+
+--OaZoDhBhXzo6bW1J--
