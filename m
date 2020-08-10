@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF4ABC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:33:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2BF6C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:33:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEB6B22DFA
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:33:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE87522B47
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:33:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597087997;
-	bh=IrAB639UAKx9IYrqPN6bRvJi7xgcjbmhHNB/MD8pKFQ=;
+	s=default; t=1597088007;
+	bh=Z6K4uvy4C7W23CznrC/gasZ1erGhoQ4x23h6wbcUX98=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0e8RCcyzpFzjipD5MK7uf9VQXo6YBdr1nFb+cWyd3GVXwQLHa6Ctnfu19wq1SYGRC
-	 j6RgMETHbkZefRFKm4VJn8QIsQS3YmhX63guT6Q1pC7746X6Gh716RF+sAQMyH6t7o
-	 FVKcUa1ynYcGml8BLWp+zytNsuvuGzCtoAM9KMRY=
+	b=wL/5cz/TPp3cDR0gjEw0oKU0Ku4LJBvbO4397Htk1JZ43EzDHX0NKmfmTcyoHrK4p
+	 cSDhBVcpVtDPqzl0fZqznjbW7nyusWeRuleeUML4tOKCnAupyjkun0M/khiCFubZNG
+	 062lLGTv9yCMetyV+9wKQd2D8xj1IBzXGbXwgwgU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728475AbgHJTJX (ORCPT
+        id S1728891AbgHJTd0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:09:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35450 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:33:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728412AbgHJTJS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:09:18 -0400
+        id S1728471AbgHJTJX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:09:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D06E420885;
-        Mon, 10 Aug 2020 19:09:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4372B22B49;
+        Mon, 10 Aug 2020 19:09:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086558;
-        bh=IrAB639UAKx9IYrqPN6bRvJi7xgcjbmhHNB/MD8pKFQ=;
+        s=default; t=1597086563;
+        bh=Z6K4uvy4C7W23CznrC/gasZ1erGhoQ4x23h6wbcUX98=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tCR/apvBXp+ferGZQLkzzwfwqeCk+Xx6hyALnr0lCOwD2ej7xRVUYdQtulnL4F/YP
-         fhHPDzt60x55DMIJxMjAY178/HLnigeN5LRaVCe7E4Z19180YoPR4m5YINq/tJiWol
-         qhmr2xmurC5ECfU8aLah2VslstTC0gD1K4e4oLqs=
+        b=Jf7Q2dzHhdFCZMsThE3Y6aMHd55nuHrVl7QGk3+1ljqgoahosDQm1TmnF8F7wiXvN
+         Nmmda7Djm+Ag2vL7gAOuNc2xerryx0Jf7DRe5O3Li7FGNkL5aLpcC5QNcj/y2lziDp
+         boNLtoefnWVmw+0WBeG2xWU2HsM7rr7e7fWoTRMU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Evgeny Novikov <novikov@ispras.ru>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+Cc:     Lyude Paul <lyude@redhat.com>, Ben Skeggs <bskeggs@redhat.com>,
+        Dave Airlie <airlied@gmail.com>,
         Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 13/64] video: fbdev: neofb: fix memory leak in neo_scan_monitor()
-Date:   Mon, 10 Aug 2020 15:08:08 -0400
-Message-Id: <20200810190859.3793319-13-sashal@kernel.org>
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.8 17/64] drm/nouveau/kms/nv50-: Fix disabling dithering
+Date:   Mon, 10 Aug 2020 15:08:12 -0400
+Message-Id: <20200810190859.3793319-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810190859.3793319-1-sashal@kernel.org>
 References: <20200810190859.3793319-1-sashal@kernel.org>
@@ -64,44 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evgeny Novikov <novikov@ispras.ru>
+From: Lyude Paul <lyude@redhat.com>
 
-[ Upstream commit edcb3895a751c762a18d25c8d9846ce9759ed7e1 ]
+[ Upstream commit fb2420b701edbf96c2b6d557f0139902f455dc2b ]
 
-neofb_probe() calls neo_scan_monitor() that can successfully allocate a
-memory for info->monspecs.modedb and proceed to case 0x03. There it does
-not free the memory and returns -1. neofb_probe() goes to label
-err_scan_monitor, thus, it does not free this memory through calling
-fb_destroy_modedb() as well. We can not go to label err_init_hw since
-neo_scan_monitor() can fail during memory allocation. So, the patch frees
-the memory directly for case 0x03.
+While we expose the ability to turn off hardware dithering for nouveau,
+we actually make the mistake of turning it on anyway, due to
+dithering_depth containing a non-zero value if our dithering depth isn't
+also set to 6 bpc.
 
-Found by Linux Driver Verification project (linuxtesting.org).
+So, fix it by never enabling dithering when it's disabled.
 
-Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
-Cc: Jani Nikula <jani.nikula@intel.com>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200630195451.18675-1-novikov@ispras.ru
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Reviewed-by: Ben Skeggs <bskeggs@redhat.com>
+Acked-by: Dave Airlie <airlied@gmail.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200627194657.156514-6-lyude@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/neofb.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/nouveau/dispnv50/head.c | 24 +++++++++++++-----------
+ 1 file changed, 13 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/video/fbdev/neofb.c b/drivers/video/fbdev/neofb.c
-index f5a676bfd67ad..09a20d4ab35f2 100644
---- a/drivers/video/fbdev/neofb.c
-+++ b/drivers/video/fbdev/neofb.c
-@@ -1819,6 +1819,7 @@ static int neo_scan_monitor(struct fb_info *info)
- #else
- 		printk(KERN_ERR
- 		       "neofb: Only 640x480, 800x600/480 and 1024x768 panels are currently supported\n");
-+		kfree(info->monspecs.modedb);
- 		return -1;
- #endif
- 	default:
+diff --git a/drivers/gpu/drm/nouveau/dispnv50/head.c b/drivers/gpu/drm/nouveau/dispnv50/head.c
+index 8f6455697ba72..ed6819519f6d8 100644
+--- a/drivers/gpu/drm/nouveau/dispnv50/head.c
++++ b/drivers/gpu/drm/nouveau/dispnv50/head.c
+@@ -84,18 +84,20 @@ nv50_head_atomic_check_dither(struct nv50_head_atom *armh,
+ {
+ 	u32 mode = 0x00;
+ 
+-	if (asyc->dither.mode == DITHERING_MODE_AUTO) {
+-		if (asyh->base.depth > asyh->or.bpc * 3)
+-			mode = DITHERING_MODE_DYNAMIC2X2;
+-	} else {
+-		mode = asyc->dither.mode;
+-	}
++	if (asyc->dither.mode) {
++		if (asyc->dither.mode == DITHERING_MODE_AUTO) {
++			if (asyh->base.depth > asyh->or.bpc * 3)
++				mode = DITHERING_MODE_DYNAMIC2X2;
++		} else {
++			mode = asyc->dither.mode;
++		}
+ 
+-	if (asyc->dither.depth == DITHERING_DEPTH_AUTO) {
+-		if (asyh->or.bpc >= 8)
+-			mode |= DITHERING_DEPTH_8BPC;
+-	} else {
+-		mode |= asyc->dither.depth;
++		if (asyc->dither.depth == DITHERING_DEPTH_AUTO) {
++			if (asyh->or.bpc >= 8)
++				mode |= DITHERING_DEPTH_8BPC;
++		} else {
++			mode |= asyc->dither.depth;
++		}
+ 	}
+ 
+ 	asyh->dither.enable = mode;
 -- 
 2.25.1
 
