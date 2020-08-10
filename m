@@ -2,164 +2,129 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 821E7C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:22:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0645C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:22:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 630D32073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:22:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97B952073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:22:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="O8T0wGas"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbgHJWWp (ORCPT
+        id S1726913AbgHJWWu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 18:22:45 -0400
-Received: from mail107.syd.optusnet.com.au ([211.29.132.53]:36133 "EHLO
-        mail107.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726500AbgHJWWo (ORCPT
+        Mon, 10 Aug 2020 18:22:50 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:37136 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726500AbgHJWWu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 18:22:44 -0400
-Received: from dread.disaster.area (pa49-180-53-24.pa.nsw.optusnet.com.au [49.180.53.24])
-        by mail107.syd.optusnet.com.au (Postfix) with ESMTPS id E7389D5AFD7;
-        Tue, 11 Aug 2020 08:22:40 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1k5GBi-0007nF-LK; Tue, 11 Aug 2020 08:22:38 +1000
-Date:   Tue, 11 Aug 2020 08:22:38 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Vivek Goyal <vgoyal@redhat.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        virtio-fs@redhat.com, miklos@szeredi.hu, stefanha@redhat.com,
-        dgilbert@redhat.com
-Subject: Re: [PATCH v2 15/20] fuse, dax: Take ->i_mmap_sem lock during dax
- page fault
-Message-ID: <20200810222238.GD2079@dread.disaster.area>
-References: <20200807195526.426056-1-vgoyal@redhat.com>
- <20200807195526.426056-16-vgoyal@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200807195526.426056-16-vgoyal@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=QIgWuTDL c=1 sm=1 tr=0
-        a=moVtWZxmCkf3aAMJKIb/8g==:117 a=moVtWZxmCkf3aAMJKIb/8g==:17
-        a=kj9zAlcOel0A:10 a=y4yBn9ojGxQA:10 a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8
-        a=rPINo3o76Op-SQJf9JMA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+        Mon, 10 Aug 2020 18:22:50 -0400
+Received: by linux.microsoft.com (Postfix, from userid 1046)
+        id A0D7120B4908; Mon, 10 Aug 2020 15:22:49 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A0D7120B4908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1597098169;
+        bh=YX6zs56mpB20F9QGhA/q409LzILhsnF/rVT8T07hRsY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=O8T0wGasaG3HSifLjhj90V7WehHpntMviC1004hcoJ6e4/eqHddnq6YgCwAgPDSYr
+         LDARm3g8IB+uzhDgcKugFPxAEOtJ1oMcKAY7Cclp0zICxF1vf1aJwEDgDSvgLMLwTp
+         Pfa+YRKerd2bUX4ERXSfNaICF/YKo3sPhQ1bQ3lc=
+From:   Dhananjay Phadke <dphadke@linux.microsoft.com>
+To:     ray.jui@broadcom.com
+Cc:     bcm-kernel-feedback-list@broadcom.com, dphadke@linux.microsoft.com,
+        f.fainelli@gmail.com, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, rayagonda.kokatanur@broadcom.com,
+        rjui@broadcom.com, wsa@kernel.org
+Subject: Re: [PATCH v2] i2c: iproc: fix race between client unreg and isr
+Date:   Mon, 10 Aug 2020 15:22:49 -0700
+Message-ID: <18cf439a-8fde-02b0-31b6-9ac42f7e972c@broadcom.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <18cf439a-8fde-02b0-31b6-9ac42f7e972c@broadcom.com>
+References: <18cf439a-8fde-02b0-31b6-9ac42f7e972c@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-
-On Fri, Aug 07, 2020 at 03:55:21PM -0400, Vivek Goyal wrote:
-> We need some kind of locking mechanism here. Normal file systems like
-> ext4 and xfs seems to take their own semaphore to protect agains
-> truncate while fault is going on.
-> 
-> We have additional requirement to protect against fuse dax memory range
-> reclaim. When a range has been selected for reclaim, we need to make sure
-> no other read/write/fault can try to access that memory range while
-> reclaim is in progress. Once reclaim is complete, lock will be released
-> and read/write/fault will trigger allocation of fresh dax range.
-> 
-> Taking inode_lock() is not an option in fault path as lockdep complains
-> about circular dependencies. So define a new fuse_inode->i_mmap_sem.
-
-That's precisely why filesystems like ext4 and XFS define their own
-rwsem.
-
-Note that this isn't a DAX requirement - the page fault
-serialisation is actually a requirement of hole punching...
-
-> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
-> ---
->  fs/fuse/dir.c    |  2 ++
->  fs/fuse/file.c   | 15 ++++++++++++---
->  fs/fuse/fuse_i.h |  7 +++++++
->  fs/fuse/inode.c  |  1 +
->  4 files changed, 22 insertions(+), 3 deletions(-)
-> 
-> diff --git a/fs/fuse/dir.c b/fs/fuse/dir.c
-> index 26f028bc760b..f40766c0693b 100644
-> --- a/fs/fuse/dir.c
-> +++ b/fs/fuse/dir.c
-> @@ -1609,8 +1609,10 @@ int fuse_do_setattr(struct dentry *dentry, struct iattr *attr,
->  	 */
->  	if ((is_truncate || !is_wb) &&
->  	    S_ISREG(inode->i_mode) && oldsize != outarg.attr.size) {
-> +		down_write(&fi->i_mmap_sem);
->  		truncate_pagecache(inode, outarg.attr.size);
->  		invalidate_inode_pages2(inode->i_mapping);
-> +		up_write(&fi->i_mmap_sem);
->  	}
->  
->  	clear_bit(FUSE_I_SIZE_UNSTABLE, &fi->state);
-> diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-> index be7d90eb5b41..00ad27216cc3 100644
-> --- a/fs/fuse/file.c
-> +++ b/fs/fuse/file.c
-> @@ -2878,11 +2878,18 @@ static vm_fault_t __fuse_dax_fault(struct vm_fault *vmf,
->  
->  	if (write)
->  		sb_start_pagefault(sb);
-> -
-> +	/*
-> +	 * We need to serialize against not only truncate but also against
-> +	 * fuse dax memory range reclaim. While a range is being reclaimed,
-> +	 * we do not want any read/write/mmap to make progress and try
-> +	 * to populate page cache or access memory we are trying to free.
-> +	 */
-> +	down_read(&get_fuse_inode(inode)->i_mmap_sem);
->  	ret = dax_iomap_fault(vmf, pe_size, &pfn, NULL, &fuse_iomap_ops);
->  
->  	if (ret & VM_FAULT_NEEDDSYNC)
->  		ret = dax_finish_sync_fault(vmf, pe_size, pfn);
-> +	up_read(&get_fuse_inode(inode)->i_mmap_sem);
->  
->  	if (write)
->  		sb_end_pagefault(sb);
-> @@ -3849,9 +3856,11 @@ static long fuse_file_fallocate(struct file *file, int mode, loff_t offset,
->  			file_update_time(file);
->  	}
->  
-> -	if (mode & FALLOC_FL_PUNCH_HOLE)
-> +	if (mode & FALLOC_FL_PUNCH_HOLE) {
-> +		down_write(&fi->i_mmap_sem);
->  		truncate_pagecache_range(inode, offset, offset + length - 1);
-> -
-> +		up_write(&fi->i_mmap_sem);
-> +	}
->  	fuse_invalidate_attr(inode);
+Message-ID: <20200810222249.dZQZX7pyiXG5RZFqyy80demODX3lsQt0neK4GV55JB8@z>
 
 
-I'm not sure this is sufficient. You have to lock page faults out
-for the entire time the hole punch is being performed, not just while
-the mapping is being invalidated.
+On 8/10/2020 02:17 PM, Ray Jui wrote:
+>> On 8/7/2020 8:55 PM, Dhananjay Phadke wrote:
+>>> On 8/7/2020, Florian Fainelli wrote:
+>>>>> When i2c client unregisters, synchronize irq before setting
+>>>>> iproc_i2c->slave to NULL.
+>>>>>
+>>>>> (1) disable_irq()
+>>>>> (2) Mask event enable bits in control reg
+>>>>> (3) Erase slave address (avoid further writes to rx fifo)
+>>>>> (4) Flush tx and rx FIFOs
+>>>>> (5) Clear pending event (interrupt) bits in status reg
+>>>>> (6) enable_irq()
+>>>>> (7) Set client pointer to NULL
+>>>>>
+>>>>
+>>>>> @@ -1091,6 +1091,17 @@ static int bcm_iproc_i2c_unreg_slave(struct i2c_client *slave)
+>>>>>  	tmp &= ~BIT(S_CFG_EN_NIC_SMB_ADDR3_SHIFT);
+>>>>>  	iproc_i2c_wr_reg(iproc_i2c, S_CFG_SMBUS_ADDR_OFFSET, tmp);
+>>>>>  
+>>>>> +	/* flush TX/RX FIFOs */
+>>>>> +	tmp = (BIT(S_FIFO_RX_FLUSH_SHIFT) | BIT(S_FIFO_TX_FLUSH_SHIFT));
+>>>>> +	iproc_i2c_wr_reg(iproc_i2c, S_FIFO_CTRL_OFFSET, tmp);
+>>>>> +
+>>>>> +	/* clear all pending slave interrupts */
+>>>>> +	iproc_i2c_wr_reg(iproc_i2c, IS_OFFSET, ISR_MASK_SLAVE);
+>>>>> +
+>>>>> +	enable_irq(iproc_i2c->irq);
+>>>>> +
+>>>>> +	iproc_i2c->slave = NULL;
+>>>>
+>>>> There is nothing that checks on iproc_i2c->slave being valid within the
+>>>> interrupt handler, we assume that the pointer is valid which is fin,
+>>>> however non functional it may be, it may feel more natural to move the
+>>>> assignment before the enable_irq()?
+>>>
+>>> As far as the teardown sequence ensures no more interrupts arrive after
+>>> enable_irq() and they are enabled only after setting pointer during
+>>> client register(); checking for NULL in ISR isn't necessary. 
+>> 
+>> Agreed.
+>> 
+>
+>Okay I think we all agree that this teardown sequence will guarantee
+>that no further "slave" interrupts will be fired after it.
+>
+>>>
+>>> If The teardown sequence doesn't guarantee quiescing of interrupts,
+>>> setting NULL before or after enable_irq() is equally vulnerable.
+>> 
+>> The teardown sequence is sort of a critical section if we may say, so
+>> ensuring that everything happens within it and that enable_irq() is the
+>> last operation would seem more natural to me at least. Thanks
+>> 
+>
+>I tend to agree with Florian here.
+>
+>1. Enable/Disable IRQ is done on the interrupt line for both master and
+>slave (or even other peripherals that share the same interrupt line,
+>although that is not the case here since this interrupt is dedicated to
+>I2C in all iProc based SoCs).
+>
+>2. The tear down sequence here wrapped by disable/enable_irq is slave
+>specific
+>
+>The effect of 1. is temporary, and the purpose of it is to ensure slave
+>interrupts are quiesced properly at the end of the sequence.
+>
+>If we consider both 1. and 2., I agree with Florian that while the end
+>result is the same, it is indeed more natural to wrap the entire slave
+>tear down sequence within disable/enable irq.
 
-That is, once you've taken the inode lock and written back the dirty
-data over the range being punched, you can then take a page fault
-and dirty the page again. Then after you punch the hole out,
-you have a dirty page with non-zero data in it, and that can get
-written out before the page cache is truncated.
+Ok, will send v3 with this change.
 
-IOWs, to do a hole punch safely, you have to both lock the inode
-and lock out page faults *before* you write back dirty data. Then
-you can invalidate the page cache so you know there is no cached
-data over the range about to be punched. Once the punch is done,
-then you can drop all locks....
+Thanks,
+Dhananjay
 
-The same goes for any other operation that manipulates extents
-directly (other fallocate ops, truncate, etc).
-
-/me also wonders if there can be racing AIO+DIO in progress over the
-range that is being punched and whether fuse needs to call
-inode_dio_wait() before punching holes, running truncates, etc...
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
