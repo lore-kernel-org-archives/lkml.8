@@ -2,88 +2,148 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A669C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 16:12:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 381F1C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 16:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11E3D20838
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 16:12:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10C41207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 16:13:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="IGbycisR"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SW2mucNb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727800AbgHJQMU (ORCPT
+        id S1727915AbgHJQNN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 12:12:20 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:36957 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726486AbgHJQMT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 12:12:19 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 4BQLZp0gclz2d;
-        Mon, 10 Aug 2020 18:12:18 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1597075938; bh=GTkOzh/b40VK8cnJiaBx/bKeY6XCllkdkCv/kZijaTk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IGbycisRi00k4XbjQq/9Qbuee4G2tBPYlKe2WVuq29MG/lpTWYYPQDsxb/edAF8rJ
-         1LvALCOX2dnYdewz/5YLEortK16n19WQgixwqoFhRJR/PlYSS8k3AzyphVGn454wX7
-         saoKmCL1saXFihjdUS0Kq11bO0/6ZZQdwtAq00FB5vDmYIRR1EE4LpRbXwohzhvsYh
-         sGLYySCXD9g4/9bWXn5qlotNSbDXNY7+23p0XNV2oplvkqXw9P0q2UuvwhUCttjND1
-         Euq9wHlejZMMxAv9tSTyBlFwgCc7KI7c4nPxisLuOFcD+FUoiSkjBykTFefYbS50Hm
-         0k8ueBTkxdfxA==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.4 at mail
-Date:   Mon, 10 Aug 2020 18:12:16 +0200
-From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] regulator: simplify locking
-Message-ID: <20200810161216.GB1100@qmqm.qmqm.pl>
-References: <b22fadc413fd7a1f4018c2c9dc261abf837731cb.1597007683.git.mirq-linux@rere.qmqm.pl>
- <40871bc7-2d6c-10d4-53b3-0aded21edf3b@gmail.com>
- <20200809223030.GB5522@qmqm.qmqm.pl>
- <8850c09f-4b24-7ab2-a0f7-e0d752f5a404@gmail.com>
- <20200810005927.GA13107@qmqm.qmqm.pl>
- <dc398754-f31e-9703-01b1-fec2d3a381cf@gmail.com>
+        Mon, 10 Aug 2020 12:13:13 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:24900 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727014AbgHJQNN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 12:13:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597075991;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=H9NbL7BuOVY7OV2uG0JjWXUOXiSDqCAAra8i3Kyx9ys=;
+        b=SW2mucNbpEQz86Sfu1EoNGcVhkWN3YqJF+OoML3NMtrKWTCH1usam12MPHgewOD6aBzVEQ
+        mad1Vx2/jqaENtPBs5UqPalOk+q12lgpIYcgqRwOMxI39sg+s2N+XQsfMTJsGS3OLBqGYs
+        6Z31mkrseoDovQ5DmYFOmEfr4yOJDV0=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-277-0aVkbPlZO2GsVG7aTCx_QA-1; Mon, 10 Aug 2020 12:13:09 -0400
+X-MC-Unique: 0aVkbPlZO2GsVG7aTCx_QA-1
+Received: by mail-ed1-f70.google.com with SMTP id c16so3447639edt.2
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 09:13:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=H9NbL7BuOVY7OV2uG0JjWXUOXiSDqCAAra8i3Kyx9ys=;
+        b=qF2T4VVSt8hRh0cpaSG5BTyPIFHLcpxj0DJ0DkfmKH5zpxjgjUfKmbpBi7dD2LuNEA
+         S7VooRh8WFlORgA5LWNWkD8bVIskFNdRgjiMBjXC4fA0qqVuenEEpyVi3QMsY+5b1aYD
+         d1re00143XZwiZLh4cJajnjvCYBrppfuYdCcmyEnAQKMRdwyb93RRqokUdexLgcTP3jd
+         tfqv867GNsbEdkyI37lmIg9hgqF6vbCVUYtelbJpnzKg/mBCo0lRO8p9EDQn5E9IpX6l
+         /YeilOZqjqBYrWjWI6THU03npdGbkW3aYz6ce2y21kmfPkK/Hm+PPKonb2k0jG1CrndH
+         IdFA==
+X-Gm-Message-State: AOAM532s5vHqEKkyLOpCpSBRfFhHKOgnb2MVLvWlRSn50p3xcT+d9J5Q
+        xWee/tuu1LCLD4KhcivKiG82IEz8Qi/ZNOftXmxDinBMbgMZSeJ8UxmGiRaMEWj9bdcUw2AgkgB
+        14VyWHiQz3kzl5pNryFb+eFxb
+X-Received: by 2002:a17:906:4e4f:: with SMTP id g15mr7668515ejw.443.1597075988270;
+        Mon, 10 Aug 2020 09:13:08 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJw634rxLv7uP3URuVlm7vJgMhPNE4cdFwiw2cBnrRPTlgtvrBBFPpyRdyAxr3RSb4I585qyYw==
+X-Received: by 2002:a17:906:4e4f:: with SMTP id g15mr7668474ejw.443.1597075987952;
+        Mon, 10 Aug 2020 09:13:07 -0700 (PDT)
+Received: from shalem.localdomain (2001-1c00-0c0c-fe00-7e79-4dac-39d0-9c14.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:7e79:4dac:39d0:9c14])
+        by smtp.gmail.com with ESMTPSA id i26sm12462532edv.70.2020.08.10.09.13.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Aug 2020 09:13:07 -0700 (PDT)
+Subject: Re: [PATCH] HID: i2c-hid: Add 60ms delay after SET_POWER ON
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>, jikos@kernel.org,
+        benjamin.tissoires@redhat.com
+Cc:     Pavel Balan <admin@kryma.net>,
+        Daniel Playfair Cal <daniel.playfair.cal@gmail.com>,
+        HungNien Chen <hn.chen@weidahitech.com>,
+        You-Sheng Yang <vicamo.yang@canonical.com>,
+        Aaron Ma <aaron.ma@canonical.com>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200810142928.12552-1-kai.heng.feng@canonical.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <bbe5fde3-e0df-053e-a30a-a55c780b1f69@redhat.com>
+Date:   Mon, 10 Aug 2020 18:13:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <dc398754-f31e-9703-01b1-fec2d3a381cf@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200810142928.12552-1-kai.heng.feng@canonical.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 08:14:20AM +0300, Dmitry Osipenko wrote:
-> 10.08.2020 03:59, Michał Mirosław пишет:
-> > On Mon, Aug 10, 2020 at 03:21:47AM +0300, Dmitry Osipenko wrote:
-> >> 10.08.2020 01:30, Michał Mirosław пишет:
-> >>> On Mon, Aug 10, 2020 at 12:40:04AM +0300, Dmitry Osipenko wrote:
-> >>>> 10.08.2020 00:16, Michał Mirosław пишет:
-[...]
-> >>>>> -	mutex_lock(&regulator_nesting_mutex);
-> >>>>> +	if (ww_ctx || !mutex_trylock_recursive(&rdev->mutex.base))
-[...]
-> >>> I think that reimplementing the function just to not use it is not the
-> >>> right solution. The whole locking protocol is problematic and this patch
-> >>> just uncovers one side of it.
-> >>
-> >> It's not clear to me what is uncovered, the ref_cnt was always accessed
-> >> under lock. Could you please explain in a more details?
-[...]
-> The nested locking usage is discouraged in general because it is a
-> source of bugs. I guess it should be possible to get rid of all nested
-> lockings in the regulator core and use a pure ww_mutex, but somebody
-> should dedicate time to work on it.
+Hi,
 
-So using a deprecated function for deprecated functionality sounds just
-appropriate, doesn't it? :-)
+On 10-08-2020 16:29, Kai-Heng Feng wrote:
+> Goodix touchpad fails to operate in I2C mode after system suspend.
+> 
+> According to the vendor, Windows is more forgiving and there's a 60ms
+> delay after SET_POWER ON command.
+> 
+> So let's do the same here, to workaround for the touchpads that depend
+> on the delay.
+> 
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-Best Regards,
-Michał Mirosław
+Interesting I send a very similar patch a couple of days ago,
+after debugging some touchpads issues on a BMAX Y13 laptop:
+
+https://patchwork.kernel.org/patch/11701541/
+
+If you look at that patch you will see that if we add a
+sleep on power-on to i2c_hid_set_power(), we can remove
+an existing sleep after power-on from i2c_hid_hwreset().
+
+And there is an interesting comment there which should
+probably be moved (as my patch does) and corrected for the
+new knowledge so that people reading the code in the future
+now why the sleep is there.
+
+Other then that we've come to the same conclusion, but
+your sleep is much longer. I guess that is ok though,
+are you sure we need 60ms as a minimum? Is that what goodix
+said?
+
+Regards,
+
+Hans
+
+
+> ---
+>   drivers/hid/i2c-hid/i2c-hid-core.c | 3 +++
+>   1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c b/drivers/hid/i2c-hid/i2c-hid-core.c
+> index 294c84e136d7..7b24a27fad95 100644
+> --- a/drivers/hid/i2c-hid/i2c-hid-core.c
+> +++ b/drivers/hid/i2c-hid/i2c-hid-core.c
+> @@ -419,6 +419,9 @@ static int i2c_hid_set_power(struct i2c_client *client, int power_state)
+>   	if (ret)
+>   		dev_err(&client->dev, "failed to change power setting.\n");
+>   
+> +	if (!ret && power_state == I2C_HID_PWR_ON)
+> +		msleep(60);
+> +
+>   set_pwr_exit:
+>   	return ret;
+>   }
+> 
+
