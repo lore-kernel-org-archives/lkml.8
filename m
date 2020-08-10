@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93924C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:31:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30BB7C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:31:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FC5920774
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:31:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E962B221E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:31:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073497;
-	bh=VCAkQ5r2rnuDI6uNYWHrI0r6F4ZcZ/JGkAfuIZiijZw=;
+	s=default; t=1597073503;
+	bh=2PCh6oLuxOyKaB0b/W2A72/vMsTCi5EUt/McGv1HIXY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K9ApGoOqJf5od/bhR8fF0VJCC34hKVPFV4fxuSDPDMiP6Kaj7E8pHTLVWFlO2Y5hW
-	 4tx88+U+9Que+jRAjJHxGBk1/WgXmYRIi+dyINAkguZ0SAWf9lVr4MoM3F7JCOSLRN
-	 T7rEP//RHP53lMdnG3BGHjzt9uItLcq823C9flbo=
+	b=rSBcLNHQvkQo1CB+990khAYAJgKrHkgeL1t7cNIv7pVnMcRGp+uajsfy/6pZdps9t
+	 mnS02mvR1jSR8fDHaQJ6n1t5gVeyWSLU/hiIMGbcP3twCSBCeXmywFVbpjq3j6cBrD
+	 Yoz/8qpmCE/2quLUBSNcgfiLotm8A0sZFZYlEBFQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728192AbgHJPbe (ORCPT
+        id S1728770AbgHJPbl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:31:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38754 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:31:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729197AbgHJPbY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:31:24 -0400
+        id S1728723AbgHJPb3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:31:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9134520774;
-        Mon, 10 Aug 2020 15:31:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2316320774;
+        Mon, 10 Aug 2020 15:31:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073483;
-        bh=VCAkQ5r2rnuDI6uNYWHrI0r6F4ZcZ/JGkAfuIZiijZw=;
+        s=default; t=1597073488;
+        bh=2PCh6oLuxOyKaB0b/W2A72/vMsTCi5EUt/McGv1HIXY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iK2j0qNlDGg/JchMEYdoWNJ4XgJYvF6yxgypekTTCxmlFwskmSychgWkjDj4gnim9
-         dT7mz7vmxaOxsImu0ZKc+VeYQtxyr1U6XEUvKry3A/qBon9hj1oE2+skDG4dVah3WM
-         0OXe6wJsQhPve+kV2LMAvtjVoHjeNs6wvYA/PdH8=
+        b=q2LXODy7++fog29JxXbUe8nPJCnH5lMLxIiCzSSYfvpEG3/xBbWe+hb61IjBaygLe
+         YDxyfin/jua6BB5FKggTm3h0/1U7ym8395OJy/Q4PBK9Mr7WsEakIEN6NhbKcJML9s
+         4UitCrb/9bvNcMigEmCE6lGnAQC2ArL9TTJ/8RVo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 30/48] Drivers: hv: vmbus: Ignore CHANNELMSG_TL_CONNECT_RESULT(23)
-Date:   Mon, 10 Aug 2020 17:21:52 +0200
-Message-Id: <20200810151805.690165060@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Alain Volmat <alain.volmat@st.com>,
+        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 22/48] i2c: slave: improve sanity check when registering
+Date:   Mon, 10 Aug 2020 17:21:44 +0200
+Message-Id: <20200810151805.310493685@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151804.199494191@linuxfoundation.org>
 References: <20200810151804.199494191@linuxfoundation.org>
@@ -60,107 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dexuan Cui <decui@microsoft.com>
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-[ Upstream commit ddc9d357b991838c2d975e8d7e4e9db26f37a7ff ]
+[ Upstream commit 1b1be3bf27b62f5abcf85c6f3214bdb9c7526685 ]
 
-When a Linux hv_sock app tries to connect to a Service GUID on which no
-host app is listening, a recent host (RS3+) sends a
-CHANNELMSG_TL_CONNECT_RESULT (23) message to Linux and this triggers such
-a warning:
+Add check for ERR_PTR and simplify code while here.
 
-unknown msgtype=23
-WARNING: CPU: 2 PID: 0 at drivers/hv/vmbus_drv.c:1031 vmbus_on_msg_dpc
-
-Actually Linux can safely ignore the message because the Linux app's
-connect() will time out in 2 seconds: see VSOCK_DEFAULT_CONNECT_TIMEOUT
-and vsock_stream_connect(). We don't bother to make use of the message
-because: 1) it's only supported on recent hosts; 2) a non-trivial effort
-is required to use the message in Linux, but the benefit is small.
-
-So, let's not see the warning by silently ignoring the message.
-
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Reviewed-by: Alain Volmat <alain.volmat@st.com>
+Signed-off-by: Wolfram Sang <wsa@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hv/channel_mgmt.c | 21 +++++++--------------
- drivers/hv/vmbus_drv.c    |  4 ++++
- include/linux/hyperv.h    |  2 ++
- 3 files changed, 13 insertions(+), 14 deletions(-)
+ drivers/i2c/i2c-core-slave.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
-index 3bf1f9ef8ea25..c83361a8e2033 100644
---- a/drivers/hv/channel_mgmt.c
-+++ b/drivers/hv/channel_mgmt.c
-@@ -1249,6 +1249,8 @@ channel_message_table[CHANNELMSG_COUNT] = {
- 	{ CHANNELMSG_19,			0, NULL },
- 	{ CHANNELMSG_20,			0, NULL },
- 	{ CHANNELMSG_TL_CONNECT_REQUEST,	0, NULL },
-+	{ CHANNELMSG_22,			0, NULL },
-+	{ CHANNELMSG_TL_CONNECT_RESULT,		0, NULL },
- };
- 
- /*
-@@ -1260,25 +1262,16 @@ void vmbus_onmessage(void *context)
+diff --git a/drivers/i2c/i2c-core-slave.c b/drivers/i2c/i2c-core-slave.c
+index 47a9f70a24a97..88959c8580ce0 100644
+--- a/drivers/i2c/i2c-core-slave.c
++++ b/drivers/i2c/i2c-core-slave.c
+@@ -22,10 +22,8 @@ int i2c_slave_register(struct i2c_client *client, i2c_slave_cb_t slave_cb)
  {
- 	struct hv_message *msg = context;
- 	struct vmbus_channel_message_header *hdr;
--	int size;
+ 	int ret;
  
- 	hdr = (struct vmbus_channel_message_header *)msg->u.payload;
--	size = msg->header.payload_size;
- 
- 	trace_vmbus_on_message(hdr);
- 
--	if (hdr->msgtype >= CHANNELMSG_COUNT) {
--		pr_err("Received invalid channel message type %d size %d\n",
--			   hdr->msgtype, size);
--		print_hex_dump_bytes("", DUMP_PREFIX_NONE,
--				     (unsigned char *)msg->u.payload, size);
--		return;
+-	if (!client || !slave_cb) {
+-		WARN(1, "insufficient data\n");
++	if (WARN(IS_ERR_OR_NULL(client) || !slave_cb, "insufficient data\n"))
+ 		return -EINVAL;
 -	}
--
--	if (channel_message_table[hdr->msgtype].message_handler)
--		channel_message_table[hdr->msgtype].message_handler(hdr);
--	else
--		pr_err("Unhandled channel message type %d\n", hdr->msgtype);
-+	/*
-+	 * vmbus_on_msg_dpc() makes sure the hdr->msgtype here can not go
-+	 * out of bound and the message_handler pointer can not be NULL.
-+	 */
-+	channel_message_table[hdr->msgtype].message_handler(hdr);
- }
  
- /*
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index fb22b72fd535a..0699c60188895 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -939,6 +939,10 @@ void vmbus_on_msg_dpc(unsigned long data)
- 	}
- 
- 	entry = &channel_message_table[hdr->msgtype];
-+
-+	if (!entry->message_handler)
-+		goto msg_handled;
-+
- 	if (entry->handler_type	== VMHT_BLOCKING) {
- 		ctx = kmalloc(sizeof(*ctx), GFP_ATOMIC);
- 		if (ctx == NULL)
-diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-index c43e694fef7dd..35461d49d3aee 100644
---- a/include/linux/hyperv.h
-+++ b/include/linux/hyperv.h
-@@ -428,6 +428,8 @@ enum vmbus_channel_message_type {
- 	CHANNELMSG_19				= 19,
- 	CHANNELMSG_20				= 20,
- 	CHANNELMSG_TL_CONNECT_REQUEST		= 21,
-+	CHANNELMSG_22				= 22,
-+	CHANNELMSG_TL_CONNECT_RESULT		= 23,
- 	CHANNELMSG_COUNT
- };
- 
+ 	if (!(client->flags & I2C_CLIENT_SLAVE))
+ 		dev_warn(&client->dev, "%s: client slave flag not set. You might see address collisions\n",
 -- 
 2.25.1
 
