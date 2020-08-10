@@ -7,44 +7,45 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26720C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 11:23:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C1D3C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 11:24:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9A62206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 11:23:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03174206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 11:24:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Jbo0hkAS"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="IB4lmdI0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726564AbgHJLXr (ORCPT
+        id S1726626AbgHJLX7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 07:23:47 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:57698 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726578AbgHJLVs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 07:21:48 -0400
+        Mon, 10 Aug 2020 07:23:59 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:17110 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726577AbgHJLVq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 07:21:46 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597058507; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1597058504; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=AxvoBcWG8EXvjruIo9s4TgmENSIrz3k6NXBlzZX8t80=; b=Jbo0hkAS126aPMcdvnqhuOGjs6ckP0um9lmOFSnai/lvoXe2siHQDlVryo4qLjrsqnHpdK+d
- 2LZeT1YYkPxPNQR0zOOEJb95WFsz6nuLSVGegkeoTDp/ut3F8U74/3Wbg3cGlI14hQNGwXC6
- M5/nybf/d+3/V6GNRI6Yb9GEoIE=
-X-Mailgun-Sending-Ip: 69.72.43.7
+ bh=mqnn1tcO31+McILWR4pyqetsbXKoTzHXqLT8TDtPAjM=; b=IB4lmdI0qhVf3Ku+tBYukCkWi5BQS5/5pILIn5xoiaX+7lpjTzgDdistxtvmpC4/6+1hD+y7
+ J3BKg9Mv4aQoLV8w6IT+Xsr3vSjkUGwKmPcs4kcS4qLKardAsk055Tl5+Kfm6MAI2tNDu2A7
+ aYFujx+b3sThbVKhcj0H1AEynNU=
+X-Mailgun-Sending-Ip: 104.130.122.29
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n06.prod.us-west-2.postgun.com with SMTP id
- 5f312dc3d96d28d61e00cb64 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 10 Aug 2020 11:21:39
+ smtp-out-n11.prod.us-west-2.postgun.com with SMTP id
+ 5f312dc72889723bf8070753 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 10 Aug 2020 11:21:43
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E2524C433CA; Mon, 10 Aug 2020 11:21:39 +0000 (UTC)
+        id B9B69C433CA; Mon, 10 Aug 2020 11:21:43 +0000 (UTC)
 Received: from mkshah-linux.qualcomm.com (unknown [202.46.22.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3B33EC433C6;
-        Mon, 10 Aug 2020 11:21:32 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3B33EC433C6
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 75A96C433C9;
+        Mon, 10 Aug 2020 11:21:38 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 75A96C433C9
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
 From:   Maulik Shah <mkshah@codeaurora.org>
@@ -56,9 +57,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
         ilina@codeaurora.org, lsrao@codeaurora.org,
         Maulik Shah <mkshah@codeaurora.org>
-Subject: [PATCH v4 4/7] genirq: introduce irq_suspend_parent() and irq_resume_parent()
-Date:   Mon, 10 Aug 2020 16:50:57 +0530
-Message-Id: <1597058460-16211-5-git-send-email-mkshah@codeaurora.org>
+Subject: [PATCH v4 5/7] pinctrl: qcom: Call our parent for irq_suspend_one / irq_resume_one
+Date:   Mon, 10 Aug 2020 16:50:58 +0530
+Message-Id: <1597058460-16211-6-git-send-email-mkshah@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1597058460-16211-1-git-send-email-mkshah@codeaurora.org>
 References: <1597058460-16211-1-git-send-email-mkshah@codeaurora.org>
@@ -69,68 +70,27 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Douglas Anderson <dianders@chromium.org>
 
-This goes with the new irq_suspend_one() and irq_resume_one()
-callbacks and allow us to easily pass things up to our parent.
+The parent (PDC) needs to handle this.  Call it.
 
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
 ---
- include/linux/irq.h |  2 ++
- kernel/irq/chip.c   | 28 ++++++++++++++++++++++++++++
- 2 files changed, 30 insertions(+)
+ drivers/pinctrl/qcom/pinctrl-msm.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/include/linux/irq.h b/include/linux/irq.h
-index 8d37b32..4188f50 100644
---- a/include/linux/irq.h
-+++ b/include/linux/irq.h
-@@ -679,6 +679,8 @@ extern int irq_chip_set_affinity_parent(struct irq_data *data,
- 					const struct cpumask *dest,
- 					bool force);
- extern int irq_chip_set_wake_parent(struct irq_data *data, unsigned int on);
-+extern void irq_chip_suspend_one_parent(struct irq_data *data);
-+extern void irq_chip_resume_one_parent(struct irq_data *data);
- extern int irq_chip_set_vcpu_affinity_parent(struct irq_data *data,
- 					     void *vcpu_info);
- extern int irq_chip_set_type_parent(struct irq_data *data, unsigned int type);
-diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
-index caf80c1..5039311 100644
---- a/kernel/irq/chip.c
-+++ b/kernel/irq/chip.c
-@@ -1519,6 +1519,34 @@ int irq_chip_set_wake_parent(struct irq_data *data, unsigned int on)
- EXPORT_SYMBOL_GPL(irq_chip_set_wake_parent);
- 
- /**
-+ * irq_chip_suspend_one_parent - Call irq_suspend_one() on our parent.
-+ * @data:	Pointer to interrupt specific data
-+ *
-+ * Conditional, as the underlying parent chip might not implement it.
-+ */
-+void irq_chip_suspend_one_parent(struct irq_data *data)
-+{
-+	data = data->parent_data;
-+	if (data->chip->irq_suspend_one)
-+		data->chip->irq_suspend_one(data);
-+}
-+EXPORT_SYMBOL_GPL(irq_chip_suspend_one_parent);
-+
-+/**
-+ * irq_chip_resume_one_parent - Call irq_resume_one() on our parent.
-+ * @data:	Pointer to interrupt specific data
-+ *
-+ * Conditional, as the underlying parent chip might not implement it.
-+ */
-+void irq_chip_resume_one_parent(struct irq_data *data)
-+{
-+	data = data->parent_data;
-+	if (data->chip->irq_resume_one)
-+		data->chip->irq_resume_one(data);
-+}
-+EXPORT_SYMBOL_GPL(irq_chip_resume_one_parent);
-+
-+/**
-  * irq_chip_request_resources_parent - Request resources on the parent interrupt
-  * @data:	Pointer to interrupt specific data
-  */
+diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+index c264561..eaad229 100644
+--- a/drivers/pinctrl/qcom/pinctrl-msm.c
++++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+@@ -1237,6 +1237,8 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
+ 	pctrl->irq_chip.irq_ack = msm_gpio_irq_ack;
+ 	pctrl->irq_chip.irq_set_type = msm_gpio_irq_set_type;
+ 	pctrl->irq_chip.irq_set_wake = msm_gpio_irq_set_wake;
++	pctrl->irq_chip.irq_suspend_one = irq_chip_suspend_one_parent;
++	pctrl->irq_chip.irq_resume_one = irq_chip_resume_one_parent;
+ 	pctrl->irq_chip.irq_request_resources = msm_gpio_irq_reqres;
+ 	pctrl->irq_chip.irq_release_resources = msm_gpio_irq_relres;
+ 	pctrl->irq_chip.irq_set_affinity = msm_gpio_irq_set_affinity;
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
