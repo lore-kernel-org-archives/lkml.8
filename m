@@ -2,199 +2,174 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB6FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 330FCC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:29:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB78A2080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:29:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597087784;
-	bh=hUo21oQW7nz+fD4ACNrbY5Chug6U6GeExSjug/QP+IE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MK5sLEIsGlZ3WWin1n+F9B2JMdPI7c+XprjGeosjmt/Ph7LTIDO0tOPdukhgr3SwI
-	 1f7EOYmvES2ytzMUk8USHvjHbZOJYiqgDhmO43KSuPLq/FU+aDsmXF6L1iI1DNshuz
-	 RLSnz34/NVneeoZkMtM/5bbaebuljmkgEN/s3Yfc=
+	by mail.kernel.org (Postfix) with ESMTP id 06C3F22BF3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:29:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZUzulfR9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728597AbgHJT3n (ORCPT
+        id S1730398AbgHJT3t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:29:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38002 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729009AbgHJTKh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:10:37 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Mon, 10 Aug 2020 15:29:49 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20618 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729009AbgHJT3r (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:29:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597087786;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=dcoyHjjvNSHTFrWcUCA+seEOF/h9/vEn94GBe2ClYh8=;
+        b=ZUzulfR91tr0WipNQPH8rxkcrtPfxCf6P3/JEzwcLXnZf77aE5mkYWwQ8fSZvM+5KkklMS
+        ZUrzpDTswp9cp3cf3HAdZW7wnMiTH2A/MaTy9UF5n3/JctevCuvpZNPXpNQDTSvrBo0BFi
+        sqRxaSfXdLuXyodih/t62imJh3+fShk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-131-KsQG-zhgNkmoQQ5-o649Rw-1; Mon, 10 Aug 2020 15:29:43 -0400
+X-MC-Unique: KsQG-zhgNkmoQQ5-o649Rw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 175B720639;
-        Mon, 10 Aug 2020 19:10:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086636;
-        bh=hUo21oQW7nz+fD4ACNrbY5Chug6U6GeExSjug/QP+IE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0gYgeByaiD2XHhyVmQ5ZKQJDM5hnsZRVdjzybvYx1ZBgkP1oC6EkBHcu/pNnlabtG
-         K8MPfAbIqGykNLICV/93mDngH59V75jz2UMFYxtO1IuClenY5O1MLJ/PuVea7rFaU1
-         Ea+6Hft3W/zvO/gMoHw42J9WsxxNf/6aSHPebbMQ=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lihong Kou <koulihong@huawei.com>,
-        syzbot+96414aa0033c363d8458@syzkaller.appspotmail.com,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 05/60] Bluetooth: add a mutex lock to avoid UAF in do_enale_set
-Date:   Mon, 10 Aug 2020 15:09:33 -0400
-Message-Id: <20200810191028.3793884-5-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200810191028.3793884-1-sashal@kernel.org>
-References: <20200810191028.3793884-1-sashal@kernel.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 24B951902EA7;
+        Mon, 10 Aug 2020 19:29:42 +0000 (UTC)
+Received: from mail (ovpn-114-184.rdu2.redhat.com [10.10.114.184])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id BDF6B6111F;
+        Mon, 10 Aug 2020 19:29:41 +0000 (UTC)
+Date:   Mon, 10 Aug 2020 15:29:41 -0400
+From:   Andrea Arcangeli <aarcange@redhat.com>
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        syzbot <syzbot+96cc7aba7e969b1d305c@syzkaller.appspotmail.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: INFO: task hung in pipe_read (2)
+Message-ID: <20200810192941.GA16925@redhat.com>
+References: <00000000000045b3fe05abcced2f@google.com>
+ <fc097a54-0384-9d21-323f-c3ca52cdb956@I-love.SAKURA.ne.jp>
+ <CAHk-=wj15SDiHjP2wPiC=Ru-RrUjOuT4AoULj6N_9pVvSXaWiw@mail.gmail.com>
+ <20200807053148.GA10409@redhat.com>
+ <e673cccb-1b67-802a-84e3-6aeea4513a09@i-love.sakura.ne.jp>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e673cccb-1b67-802a-84e3-6aeea4513a09@i-love.sakura.ne.jp>
+User-Agent: Mutt/1.14.5 (2020-06-23)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lihong Kou <koulihong@huawei.com>
+Hello Tetsuo,
 
-[ Upstream commit f9c70bdc279b191da8d60777c627702c06e4a37d ]
+On Sat, Aug 08, 2020 at 10:01:21AM +0900, Tetsuo Handa wrote:
+> use of killable waits disables ability to detect possibility of deadlock (because
+> lockdep can't check possibility of deadlock which involves actions in userspace), for
+> syzkaller process is SIGKILLed after 5 seconds while khungtaskd's timeout is 140 seconds.
+> 
+> If we encounter a deadlock in an unattended operation (e.g. some server process),
+> we don't have a method for resolving the deadlock. Therefore, I consider that
+> t->state == TASK_UNINTERRUPTIBLE check is a bad choice. Unless a sleep is neutral
+> (e.g. no lock is held, or obviously safe to sleep with that specific lock held),
+> sleeping for 140 seconds inside the kernel is a bad sign even if interruptible/killable.
 
-In the case we set or free the global value listen_chan in
-different threads, we can encounter the UAF problems because
-the method is not protected by any lock, add one to avoid
-this bug.
+Task in killable state for seconds as result of another task taking
+too long to do something in kernel sounds bad, if the other task had a
+legitimate reason to take a long time in normal operations, i.e. like
+if the other task was just doing an getdents of a large directory.
 
-BUG: KASAN: use-after-free in l2cap_chan_close+0x48/0x990
-net/bluetooth/l2cap_core.c:730
-Read of size 8 at addr ffff888096950000 by task kworker/1:102/2868
+Nobody force any app to use userfaultfd, if an app uses it and the
+other side of the pipe trusts to read from it, and it gets stuck for
+seconds in uninterruptible and killable state, it's either an app bug
+resolvable with kill -9. We also can't enforce all signals to run in
+presence of other bugs, for example if the task that won't respond to
+any signal other than CONT and KILL was blocked in stopped state by a
+buggy SIGSTOP. The pipe also can get stuck if the network is down and
+it's swapping in from NFS and nobody is forced to take the risk of
+using network attached storage as swap device either.
 
-CPU: 1 PID: 2868 Comm: kworker/1:102 Not tainted 5.5.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine,
-BIOS Google 01/01/2011
-Workqueue: events do_enable_set
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1fb/0x318 lib/dump_stack.c:118
- print_address_description+0x74/0x5c0 mm/kasan/report.c:374
- __kasan_report+0x149/0x1c0 mm/kasan/report.c:506
- kasan_report+0x26/0x50 mm/kasan/common.c:641
- __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:135
- l2cap_chan_close+0x48/0x990 net/bluetooth/l2cap_core.c:730
- do_enable_set+0x660/0x900 net/bluetooth/6lowpan.c:1074
- process_one_work+0x7f5/0x10f0 kernel/workqueue.c:2264
- worker_thread+0xbbc/0x1630 kernel/workqueue.c:2410
- kthread+0x332/0x350 kernel/kthread.c:255
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+The hangcheck is currently correct to report a concern, because the
+other side of the pipe may be another process of another user that
+cannot SIGKILL the task blocked in the userfault. That sounds far
+fetched and it's not particular concerning anyway, but it's not
+technically impossible so I agree with the hangcheck timer reporting
+an issue that needs correction.
 
-Allocated by task 2870:
- save_stack mm/kasan/common.c:72 [inline]
- set_track mm/kasan/common.c:80 [inline]
- __kasan_kmalloc+0x118/0x1c0 mm/kasan/common.c:515
- kasan_kmalloc+0x9/0x10 mm/kasan/common.c:529
- kmem_cache_alloc_trace+0x221/0x2f0 mm/slab.c:3551
- kmalloc include/linux/slab.h:555 [inline]
- kzalloc include/linux/slab.h:669 [inline]
- l2cap_chan_create+0x50/0x320 net/bluetooth/l2cap_core.c:446
- chan_create net/bluetooth/6lowpan.c:640 [inline]
- bt_6lowpan_listen net/bluetooth/6lowpan.c:959 [inline]
- do_enable_set+0x6a4/0x900 net/bluetooth/6lowpan.c:1078
- process_one_work+0x7f5/0x10f0 kernel/workqueue.c:2264
- worker_thread+0xbbc/0x1630 kernel/workqueue.c:2410
- kthread+0x332/0x350 kernel/kthread.c:255
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+However once the mutex is killable there's no concern anymore and the
+hangcheck timer is correct also not reporting any misbehavior anymore.
 
-Freed by task 2870:
- save_stack mm/kasan/common.c:72 [inline]
- set_track mm/kasan/common.c:80 [inline]
- kasan_set_free_info mm/kasan/common.c:337 [inline]
- __kasan_slab_free+0x12e/0x1e0 mm/kasan/common.c:476
- kasan_slab_free+0xe/0x10 mm/kasan/common.c:485
- __cache_free mm/slab.c:3426 [inline]
- kfree+0x10d/0x220 mm/slab.c:3757
- l2cap_chan_destroy net/bluetooth/l2cap_core.c:484 [inline]
- kref_put include/linux/kref.h:65 [inline]
- l2cap_chan_put+0x170/0x190 net/bluetooth/l2cap_core.c:498
- do_enable_set+0x66c/0x900 net/bluetooth/6lowpan.c:1075
- process_one_work+0x7f5/0x10f0 kernel/workqueue.c:2264
- worker_thread+0xbbc/0x1630 kernel/workqueue.c:2410
- kthread+0x332/0x350 kernel/kthread.c:255
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Instead of userfaultfd, you can think at 100% kernel faults backed by
+swapin from NFS or swaping from attached network storage or swapin
+from scsi with a scsi fibre channel accidentally pulled out of a few
+seconds. It's nice if uffd can survive as well as nfs or scsi would by
+retrying and waiting more than 1sec.
 
-The buggy address belongs to the object at ffff888096950000
- which belongs to the cache kmalloc-2k of size 2048
-The buggy address is located 0 bytes inside of
- 2048-byte region [ffff888096950000, ffff888096950800)
-The buggy address belongs to the page:
-page:ffffea00025a5400 refcount:1 mapcount:0 mapping:ffff8880aa400e00 index:0x0
-flags: 0xfffe0000000200(slab)
-raw: 00fffe0000000200 ffffea00027d1548 ffffea0002397808 ffff8880aa400e00
-raw: 0000000000000000 ffff888096950000 0000000100000001 0000000000000000
-page dumped because: kasan: bad access detected
+> Can we do something like this?
+> 
+>   bool retried = false;
+> retry:
+>   lock();
+>   disable_fault();
+>   ret = access_memory_that_might_fault();
+>   enable_fault();
+>   if (ret == -EWOULDFAULT && !retried)
+>     goto retry_without_lock;
+>   if (ret == 0)
+>     ret = do_something();
+>   unlock();
+>   return ret;
+> retry_without_lock:
+>   unlock();
+>   ret = access_memory_that_might_fault();
+>   retried = true;
+>   goto retry;
 
-Memory state around the buggy address:
- ffff88809694ff00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- ffff88809694ff80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->ffff888096950000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                   ^
- ffff888096950080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff888096950100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
+This would work, but it'll make the kernel more complex than using a
+killable mutex.
 
-Reported-by: syzbot+96414aa0033c363d8458@syzkaller.appspotmail.com
-Signed-off-by: Lihong Kou <koulihong@huawei.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/bluetooth/6lowpan.c | 5 +++++
- 1 file changed, 5 insertions(+)
+It'd also give a worse runtime than the killable mutex, if the only
+source of blocking events while holding the mutex wouldn't be the page
+fault.
 
-diff --git a/net/bluetooth/6lowpan.c b/net/bluetooth/6lowpan.c
-index 4febc82a7c761..52fb6d6d6d585 100644
---- a/net/bluetooth/6lowpan.c
-+++ b/net/bluetooth/6lowpan.c
-@@ -50,6 +50,7 @@ static bool enable_6lowpan;
- /* We are listening incoming connections via this channel
-  */
- static struct l2cap_chan *listen_chan;
-+static DEFINE_MUTEX(set_lock);
- 
- struct lowpan_peer {
- 	struct list_head list;
-@@ -1070,12 +1071,14 @@ static void do_enable_set(struct work_struct *work)
- 
- 	enable_6lowpan = set_enable->flag;
- 
-+	mutex_lock(&set_lock);
- 	if (listen_chan) {
- 		l2cap_chan_close(listen_chan, 0);
- 		l2cap_chan_put(listen_chan);
- 	}
- 
- 	listen_chan = bt_6lowpan_listen();
-+	mutex_unlock(&set_lock);
- 
- 	kfree(set_enable);
- }
-@@ -1127,11 +1130,13 @@ static ssize_t lowpan_control_write(struct file *fp,
- 		if (ret == -EINVAL)
- 			return ret;
- 
-+		mutex_lock(&set_lock);
- 		if (listen_chan) {
- 			l2cap_chan_close(listen_chan, 0);
- 			l2cap_chan_put(listen_chan);
- 			listen_chan = NULL;
- 		}
-+		mutex_unlock(&set_lock);
- 
- 		if (conn) {
- 			struct lowpan_peer *peer;
--- 
-2.25.1
+With just 2 processes in this case probably it would be fine and there
+are likely won't be other sources of contention, so the main cons is
+just the code complexity to be maintained and the fact it won't
+provide any measurable practical benefit, if something it'll run
+slower by having to repeat the same fault in blocking and non blocking
+mode.
+
+With regard to the reporting of the hangcheck timer most modern paging
+code uses killable mutex because unlike the pipe code, there can be
+other sources of blockage and you don't want to wait for shared
+resources to unblock a process that is waiting on a mutex. I think
+trying to reduce the usage of killable mutex overall is a ship that
+has sailed, it won't move the needle to just avoid it in pipe code
+since it'll remain everywhere else.
+
+So I'm certainly not against your proposal, but if we increase the
+complexity like above then I'd find it more attractive if it was for
+some other benefit unrelated to userfaultfd, or swapin from NFS or
+network attached storage for that matter, and I don't see a big enough
+benefit to justify it.
+
+Thanks!
+Andrea
+
+PS. I'll be busy until Wed sorry if I don't answer promptly to
+    followups. If somebody could give a try to add the killable mutex
+    bailout failure paths that return to userland direct, or your more
+    complex alternative it'd be great.
 
