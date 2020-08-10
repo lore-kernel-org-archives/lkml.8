@@ -2,78 +2,110 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 382F1C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:38:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF44DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:38:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D75B22D6F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:38:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF20E22D6F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:38:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597073888;
+	bh=zn1+86pPO0MeKxVnkura4kzFBwLZ2uBgm92quMahL+U=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=jZRy0KMpKhPtb4W5UkAfYMFvvm1ogLYXinvcCX4lpKvrHnfzMgn8R8MrLzfOUdyor
+	 hKD/lfJ5xKgY8yetS/8X1r+ztQvYejXj0fys5STPafrQZwn48BQpxugq5EvIa/WOrX
+	 YbW2mMhLRGEYfUk9w73KTiaX0AWw5GoFY07YbF08=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729011AbgHJPh7 (ORCPT
+        id S1728968AbgHJPiH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:37:59 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58402 "EHLO mx2.suse.de"
+        Mon, 10 Aug 2020 11:38:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60170 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728926AbgHJPh5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:37:57 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 8B80AACA2;
-        Mon, 10 Aug 2020 15:38:16 +0000 (UTC)
-Message-ID: <1899fe01e1eb5c23270541e1833b12365818c150.camel@suse.com>
-Subject: Re: [PATCH AUTOSEL 5.8 70/72] nvme-multipath: do not fall back to
- __nvme_find_path() for non-optimized paths
-From:   Martin Wilck <mwilck@suse.com>
-To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Cc:     Hannes Reinecke <hare@suse.de>, Sagi Grimberg <sagi@grimberg.me>,
-        Christoph Hellwig <hch@lst.de>, linux-nvme@lists.infradead.org
-Date:   Mon, 10 Aug 2020 17:37:54 +0200
-In-Reply-To: <20200808233542.3617339-70-sashal@kernel.org>
-References: <20200808233542.3617339-1-sashal@kernel.org>
-         <20200808233542.3617339-70-sashal@kernel.org>
-Content-Type: text/plain; charset="ISO-8859-15"
-User-Agent: Evolution 3.36.4 
+        id S1728513AbgHJP0Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:26:16 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A633520658;
+        Mon, 10 Aug 2020 15:26:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597073175;
+        bh=zn1+86pPO0MeKxVnkura4kzFBwLZ2uBgm92quMahL+U=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=xiRcf4xYT7BiD6YplR7z6trVKxNHQjl66fz4OIFBneB0+aNwQIwCIoR6B7D6VXkwb
+         F5yR9XVJNS8M75XdSMlWgbp8FaE/ztd/UYmZJvFjZ7HqlledP7td368kyNlyzsynE8
+         MFj0HDE6nVtq28fTgEjjqg7Dmy+0suXwTvU8sHHo=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        syzbot+1a54a94bd32716796edd@syzkaller.appspotmail.com,
+        syzbot+9d2abfef257f3e2d4713@syzkaller.appspotmail.com,
+        Hillf Danton <hdanton@sina.com>, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.4 13/67] ALSA: seq: oss: Serialize ioctls
+Date:   Mon, 10 Aug 2020 17:21:00 +0200
+Message-Id: <20200810151810.080801939@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200810151809.438685785@linuxfoundation.org>
+References: <20200810151809.438685785@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2020-08-08 at 19:35 -0400, Sasha Levin wrote:
-> From: Hannes Reinecke <hare@suse.de>
-> 
-> [ Upstream commit fbd6a42d8932e172921c7de10468a2e12c34846b ]
-> 
-> When nvme_round_robin_path() finds a valid namespace we should be
-> using it;
-> falling back to __nvme_find_path() for non-optimized paths will cause
-> the
-> result from nvme_round_robin_path() to be ignored for non-optimized
-> paths.
-> 
-> Fixes: 75c10e732724 ("nvme-multipath: round-robin I/O policy")
-> Signed-off-by: Martin Wilck <mwilck@suse.com>
-> Signed-off-by: Hannes Reinecke <hare@suse.de>
-> Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  drivers/nvme/host/multipath.c | 11 +++++++----
->  1 file changed, 7 insertions(+), 4 deletions(-)
+From: Takashi Iwai <tiwai@suse.de>
 
-Hello Sasha,
+commit 80982c7e834e5d4e325b6ce33757012ecafdf0bb upstream.
 
-this patch needs a fix that I recently submitted to linux-nvme.
-The same holds for the respective 5.7 and 5.4 AUTOSEL patches.
+Some ioctls via OSS sequencer API may race and lead to UAF when the
+port create and delete are performed concurrently, as spotted by a
+couple of syzkaller cases.  This patch is an attempt to address it by
+serializing the ioctls with the existing register_mutex.
 
-http://lists.infradead.org/pipermail/linux-nvme/2020-August/018570.html
+Basically OSS sequencer API is an obsoleted interface and was designed
+without much consideration of the concurrency.  There are very few
+applications with it, and the concurrent performance isn't asked,
+hence this "big hammer" approach should be good enough.
 
-Regards,
-Martin
+Reported-by: syzbot+1a54a94bd32716796edd@syzkaller.appspotmail.com
+Reported-by: syzbot+9d2abfef257f3e2d4713@syzkaller.appspotmail.com
+Suggested-by: Hillf Danton <hdanton@sina.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200804185815.2453-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ sound/core/seq/oss/seq_oss.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+--- a/sound/core/seq/oss/seq_oss.c
++++ b/sound/core/seq/oss/seq_oss.c
+@@ -168,10 +168,16 @@ static long
+ odev_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+ {
+ 	struct seq_oss_devinfo *dp;
++	long rc;
++
+ 	dp = file->private_data;
+ 	if (snd_BUG_ON(!dp))
+ 		return -ENXIO;
+-	return snd_seq_oss_ioctl(dp, cmd, arg);
++
++	mutex_lock(&register_mutex);
++	rc = snd_seq_oss_ioctl(dp, cmd, arg);
++	mutex_unlock(&register_mutex);
++	return rc;
+ }
+ 
+ #ifdef CONFIG_COMPAT
 
 
