@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8533C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61AA7C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:28:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 751CC22CF7
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:28:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34D8922CF7
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:28:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073327;
-	bh=yDP87lINzHFiLkOkm6RlyKNPAAeN6uTzlS7Nkl4gNvc=;
+	s=default; t=1597073331;
+	bh=/WDC1K6IwjpeqrSiEcyEoHJxhvNKb6efaSsBjR82Dj8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UbnoZvq9NSDKTK1rc65pAP6bxsnEn9xjwUAVJn+TLy8oGaEwC7neRXx7BFSsooafu
-	 gB7X9Y2+JCfuNBD0/aPw1jQvEHs8gw7i8VwUHHwrwZZfbWoRR77RDTFW57VS0CBpY7
-	 UwJE0Q5mjhiSNEy855ul1jAchMVKnMAzd2seHMlg=
+	b=wCEChY6BomQSSVnOL31/dp7rF9zTlNuVuFsfaQDFBTbOl5Ggb+O2zzhTUKB1hqO/F
+	 Qwq5wqjmaDBaNuCFtaGkl7hWroJC7D11LR8Fwr3xn3O97vIQdEPdLVKsajo3hNQcXA
+	 X9ureuUotmF+YPO6hbRLXr69hyrosoZQitMBCDro=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728901AbgHJP2q (ORCPT
+        id S1728473AbgHJP2u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:28:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34848 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:28:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728888AbgHJP2m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:28:42 -0400
+        id S1728899AbgHJP2p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:28:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CCA722CF7;
-        Mon, 10 Aug 2020 15:28:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FE9F22B47;
+        Mon, 10 Aug 2020 15:28:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073322;
-        bh=yDP87lINzHFiLkOkm6RlyKNPAAeN6uTzlS7Nkl4gNvc=;
+        s=default; t=1597073324;
+        bh=/WDC1K6IwjpeqrSiEcyEoHJxhvNKb6efaSsBjR82Dj8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aIA3di7NEdtsnYewQdH0VKFI3A+rEyPd+oIzKg56gSSkp12ICg++3XzyVtMQ0NtAJ
-         q3AbjNSWPNbcRSQtBprqnokyEGeoQQ2rnYZcUFQ8OIgb4U28Z9yhhDege+Ll408bBf
-         WLvVx/Qr1qpdcoFReAoHcO9y4YqX1iSp4fz0emc8=
+        b=a94mm2W6eFdEaUMQCfjyZKAm14l9SfZQqdr1sCxlbZoAEHVUka4ZGZBUBoi+vOKwP
+         AzsPc45xjHE5t4lHxapg5cJvDdRKnCNbG3CYnhMa5UE5fEMjwy4HRRhsmsJs2IHb04
+         BjzxnaXmE+EoJ+KfpbBexzxhXDEJNEjJtF9dthMc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Willem de Bruijn <willemb@google.com>,
+        stable@vger.kernel.org, Jianfeng Wang <jfwang@google.com>,
+        Neal Cardwell <ncardwell@google.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Kevin Yang <yyd@google.com>, Yuchung Cheng <ycheng@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 64/67] selftests/net: relax cpu affinity requirement in msg_zerocopy test
-Date:   Mon, 10 Aug 2020 17:21:51 +0200
-Message-Id: <20200810151812.655218208@linuxfoundation.org>
+Subject: [PATCH 5.4 65/67] tcp: apply a floor of 1 for RTT samples from TCP timestamps
+Date:   Mon, 10 Aug 2020 17:21:52 +0200
+Message-Id: <20200810151812.702529304@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151809.438685785@linuxfoundation.org>
 References: <20200810151809.438685785@linuxfoundation.org>
@@ -60,46 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Willem de Bruijn <willemb@google.com>
+From: Jianfeng Wang <jfwang@google.com>
 
-[ Upstream commit 16f6458f2478b55e2b628797bc81a4455045c74e ]
+[ Upstream commit 730e700e2c19d87e578ff0e7d8cb1d4a02b036d2 ]
 
-The msg_zerocopy test pins the sender and receiver threads to separate
-cores to reduce variance between runs.
+For retransmitted packets, TCP needs to resort to using TCP timestamps
+for computing RTT samples. In the common case where the data and ACK
+fall in the same 1-millisecond interval, TCP senders with millisecond-
+granularity TCP timestamps compute a ca_rtt_us of 0. This ca_rtt_us
+of 0 propagates to rs->rtt_us.
 
-But it hardcodes the cores and skips core 0, so it fails on machines
-with the selected cores offline, or simply fewer cores.
+This value of 0 can cause performance problems for congestion control
+modules. For example, in BBR, the zero min_rtt sample can bring the
+min_rtt and BDP estimate down to 0, reduce snd_cwnd and result in a
+low throughput. It would be hard to mitigate this with filtering in
+the congestion control module, because the proper floor to apply would
+depend on the method of RTT sampling (using timestamp options or
+internally-saved transmission timestamps).
 
-The test mainly gives code coverage in automated runs. The throughput
-of zerocopy ('-z') and non-zerocopy runs is logged for manual
-inspection.
+This fix applies a floor of 1 for the RTT sample delta from TCP
+timestamps, so that seq_rtt_us, ca_rtt_us, and rs->rtt_us will be at
+least 1 * (USEC_PER_SEC / TCP_TS_HZ).
 
-Continue even when sched_setaffinity fails. Just log to warn anyone
-interpreting the data.
+Note that the receiver RTT computation in tcp_rcv_rtt_measure() and
+min_rtt computation in tcp_update_rtt_min() both already apply a floor
+of 1 timestamp tick, so this commit makes the code more consistent in
+avoiding this edge case of a value of 0.
 
-Fixes: 07b65c5b31ce ("test: add msg_zerocopy test")
-Reported-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Willem de Bruijn <willemb@google.com>
-Acked-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Jianfeng Wang <jfwang@google.com>
+Signed-off-by: Neal Cardwell <ncardwell@google.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Acked-by: Kevin Yang <yyd@google.com>
+Acked-by: Yuchung Cheng <ycheng@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- tools/testing/selftests/net/msg_zerocopy.c |    5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ net/ipv4/tcp_input.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/tools/testing/selftests/net/msg_zerocopy.c
-+++ b/tools/testing/selftests/net/msg_zerocopy.c
-@@ -125,9 +125,8 @@ static int do_setcpu(int cpu)
- 	CPU_ZERO(&mask);
- 	CPU_SET(cpu, &mask);
- 	if (sched_setaffinity(0, sizeof(mask), &mask))
--		error(1, 0, "setaffinity %d", cpu);
--
--	if (cfg_verbose)
-+		fprintf(stderr, "cpu: unable to pin, may increase variance.\n");
-+	else if (cfg_verbose)
- 		fprintf(stderr, "cpu: %u\n", cpu);
+--- a/net/ipv4/tcp_input.c
++++ b/net/ipv4/tcp_input.c
+@@ -2944,6 +2944,8 @@ static bool tcp_ack_update_rtt(struct so
+ 		u32 delta = tcp_time_stamp(tp) - tp->rx_opt.rcv_tsecr;
  
- 	return 0;
+ 		if (likely(delta < INT_MAX / (USEC_PER_SEC / TCP_TS_HZ))) {
++			if (!delta)
++				delta = 1;
+ 			seq_rtt_us = delta * (USEC_PER_SEC / TCP_TS_HZ);
+ 			ca_rtt_us = seq_rtt_us;
+ 		}
 
 
