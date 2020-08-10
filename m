@@ -2,203 +2,114 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05576C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:19:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 115F9C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:21:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8C7120709
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:19:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ax7gqxfG"
+	by mail.kernel.org (Postfix) with ESMTP id EEE2520734
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:21:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726654AbgHJJTy (ORCPT
+        id S1726675AbgHJJVo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 05:19:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36240 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725846AbgHJJTx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 05:19:53 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 682E5C061756;
-        Mon, 10 Aug 2020 02:19:53 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id k13so4447983plk.13;
-        Mon, 10 Aug 2020 02:19:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=LG+fIp5OZ25It71Wra3d8yfu2prbPEMG5KpZ0CWWGCc=;
-        b=Ax7gqxfGIMFUTMwsQKBmRknt4QVEZlySJYJG1TRzYusE6XvTmcOEpv8tKf3kBk00cX
-         ElKMU+sWP7NxGBs4dvW8mIRqLwbUtKRX8tsgz+Qt/3N0vKNZ2cqqW0W4fiReomKI9khn
-         RKk8brgclZZsgdpuvH9NCvFkSy90nsuhWs/maKtp9738zFm47LNjKZmdDuOjxnDi6m4c
-         5jNvE+Z45Iqj9ky3pLQpBzps3ZU5/6Yfg7MBZL1yshWFIXSjeUolc+B+NytARzbwpdhC
-         8wyxvA6qwoJXixTxoyeBMnT+MZ8r+4pvM8u1uo3KJH6hj/+oa8hNfZaQX56qIBx/wNZ/
-         xi0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=LG+fIp5OZ25It71Wra3d8yfu2prbPEMG5KpZ0CWWGCc=;
-        b=erNu6tuQZPM6o7Bk8rW4KkuLe6yP/tFva4pCwmW0AL/oh2A4Odhd4o1M37GDpyxPj6
-         VFxzf2hJQEXpmTDB7QR9xBsWCv68vAiUPblMk3NrX3rYi7q/P7ffZHs1U4Es73Ah8Zxc
-         2s3fUghDsYRm3BNUO2+XuXqosCromFsvvfTPCPxOC1U7zM4RF/6Q63DoRbSI4KZTGwxd
-         4TdwemoqbATXgPeDP9HYQEdCNojq7ZMx0znJvJEyMFHCXCrkmC2nQeaYG/EoaiooOW0q
-         Ud+ewB9fok/T3zqXaVvx2vbr3bQop0dWVKXuMGRL/U9gRbNocM2WPWtSebLwMAVKwHUL
-         +QLQ==
-X-Gm-Message-State: AOAM5325Mdu60tOlNt1tJLT2nvUfZgz8bA1aITiX1EL2x60vfyFCHeP+
-        FosnMjclhkKvKFXrCbcbqZA=
-X-Google-Smtp-Source: ABdhPJx7x4fvEeZF1zvMGSiHBSqpbplJv6jIiVbs9RahcOYpDup1KSq1TWn/T1OM81CeqnCBgD6+oA==
-X-Received: by 2002:a17:90b:a45:: with SMTP id gw5mr25112629pjb.80.1597051192832;
-        Mon, 10 Aug 2020 02:19:52 -0700 (PDT)
-Received: from gmail.com ([103.105.152.86])
-        by smtp.gmail.com with ESMTPSA id x12sm7776750pff.48.2020.08.10.02.19.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Aug 2020 02:19:52 -0700 (PDT)
-Date:   Mon, 10 Aug 2020 14:48:19 +0530
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        Tomoya MORINAGA <tomoya-linux@dsn.okisemi.com>,
-        Tomoya MORINAGA <tomoya.rohm@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Jean Delvare <jdelvare@suse.com>
-Subject: Re: [PATCH v2 2/2] i2c: eg20t: use generic power management
-Message-ID: <20200810091819.GA6615@gmail.com>
-References: <20200805193616.384313-3-vaibhavgupta40@gmail.com>
- <20200807202321.GA753887@bjorn-Precision-5520>
+        Mon, 10 Aug 2020 05:21:44 -0400
+Received: from mga04.intel.com ([192.55.52.120]:63148 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726310AbgHJJVo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 05:21:44 -0400
+IronPort-SDR: LHhCCIJDB02ky4uH86BEvz5/7W3PxAjBDTFkgEdNjLCD9mVV8ag97fRTGQHej1QspmrYMPQREg
+ uqRfugsq7yuw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9708"; a="150936645"
+X-IronPort-AV: E=Sophos;i="5.75,457,1589266800"; 
+   d="scan'208";a="150936645"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2020 02:21:43 -0700
+IronPort-SDR: lJ+AjjmZNrGkYBBEqN0szbQUT5QLSC5pVmEPD1kdHBqJMGBjM67IVNuWfxfkP+ZhJVnsBz1mL7
+ plRqJJF01Myw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,457,1589266800"; 
+   d="scan'208";a="294327539"
+Received: from lkp-server02.sh.intel.com (HELO 5ad9e2f13e37) ([10.239.97.151])
+  by orsmga006.jf.intel.com with ESMTP; 10 Aug 2020 02:21:40 -0700
+Received: from kbuild by 5ad9e2f13e37 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1k53zv-0000U1-FC; Mon, 10 Aug 2020 09:21:39 +0000
+Date:   Mon, 10 Aug 2020 17:21:00 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Denis Efremov <efremov@linux.com>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        Julia Lawall <Julia.Lawall@lip6.fr>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Qiujun Huang <hqjagain@gmail.com>,
+        Peter Rosin <peda@axentia.se>, dri-devel@lists.freedesktop.org
+Subject: [PATCH] coccinelle: api: fix device_attr_show.cocci warnings
+Message-ID: <20200810092100.GA42813@2f5448a72a42>
+References: <202008101736.EtK0s7BQ%lkp@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200807202321.GA753887@bjorn-Precision-5520>
+In-Reply-To: <202008101736.EtK0s7BQ%lkp@intel.com>
+X-Patchwork-Hint: ignore
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 07, 2020 at 03:23:21PM -0500, Bjorn Helgaas wrote:
-> [+cc Jean for i801 question below]
-> 
-> On Thu, Aug 06, 2020 at 01:06:16AM +0530, Vaibhav Gupta wrote:
-> > Drivers using legacy power management .suspen()/.resume() callbacks
-> > have to manage PCI states and device's PM states themselves. They also
-> > need to take care of standard configuration registers.
-> > 
-> > Switch to generic power management framework using a single
-> > "struct dev_pm_ops" variable to take the unnecessary load from the driver.
-> > This also avoids the need for the driver to directly call most of the PCI
-> > helper functions and device power state control functions, as through
-> > the generic framework PCI Core takes care of the necessary operations,
-> > and drivers are required to do only device-specific jobs.
-> > 
-> > Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
-> 
-> s/.suspen/.suspend/ above
-> 
-> These both look right to me.
-> 
-> Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> Looking at neighboring drivers, it looks like some already use generic
-> PM but have unnecessary PCI code, e.g., amd_mp2_pci_suspend().
-> Probably already on your list.
-Yes :)
-> 
-> Also, i801_suspend() looks suspicious because it writes SMBHSTCFG, but
-> I don't see anything corresponding in i801_resume().
-I will look into it.
+From: kernel test robot <lkp@intel.com>
 
-Thanks
-Vaibhav Gupta
-> 
-> > ---
-> >  drivers/i2c/busses/i2c-eg20t.c | 36 +++++++---------------------------
-> >  1 file changed, 7 insertions(+), 29 deletions(-)
-> > 
-> > diff --git a/drivers/i2c/busses/i2c-eg20t.c b/drivers/i2c/busses/i2c-eg20t.c
-> > index eb41de22d461..843b31a0f752 100644
-> > --- a/drivers/i2c/busses/i2c-eg20t.c
-> > +++ b/drivers/i2c/busses/i2c-eg20t.c
-> > @@ -846,11 +846,10 @@ static void pch_i2c_remove(struct pci_dev *pdev)
-> >  	kfree(adap_info);
-> >  }
-> >  
-> > -#ifdef CONFIG_PM
-> > -static int pch_i2c_suspend(struct pci_dev *pdev, pm_message_t state)
-> > +static int __maybe_unused pch_i2c_suspend(struct device *dev)
-> >  {
-> > -	int ret;
-> >  	int i;
-> > +	struct pci_dev *pdev = to_pci_dev(dev);
-> >  	struct adapter_info *adap_info = pci_get_drvdata(pdev);
-> >  	void __iomem *p = adap_info->pch_data[0].pch_base_address;
-> >  
-> > @@ -872,31 +871,13 @@ static int pch_i2c_suspend(struct pci_dev *pdev, pm_message_t state)
-> >  		ioread32(p + PCH_I2CSR), ioread32(p + PCH_I2CBUFSTA),
-> >  		ioread32(p + PCH_I2CESRSTA));
-> >  
-> > -	ret = pci_save_state(pdev);
-> > -
-> > -	if (ret) {
-> > -		pch_pci_err(pdev, "pci_save_state\n");
-> > -		return ret;
-> > -	}
-> > -
-> > -	pci_disable_device(pdev);
-> > -	pci_set_power_state(pdev, pci_choose_state(pdev, state));
-> > -
-> >  	return 0;
-> >  }
-> >  
-> > -static int pch_i2c_resume(struct pci_dev *pdev)
-> > +static int __maybe_unused pch_i2c_resume(struct device *dev)
-> >  {
-> >  	int i;
-> > -	struct adapter_info *adap_info = pci_get_drvdata(pdev);
-> > -
-> > -	pci_set_power_state(pdev, PCI_D0);
-> > -	pci_restore_state(pdev);
-> > -
-> > -	if (pci_enable_device(pdev) < 0) {
-> > -		pch_pci_err(pdev, "pch_i2c_resume:pci_enable_device FAILED\n");
-> > -		return -EIO;
-> > -	}
-> > +	struct adapter_info *adap_info = dev_get_drvdata(dev);
-> >  
-> >  	for (i = 0; i < adap_info->ch_num; i++)
-> >  		pch_i2c_init(&adap_info->pch_data[i]);
-> > @@ -905,18 +886,15 @@ static int pch_i2c_resume(struct pci_dev *pdev)
-> >  
-> >  	return 0;
-> >  }
-> > -#else
-> > -#define pch_i2c_suspend NULL
-> > -#define pch_i2c_resume NULL
-> > -#endif
-> > +
-> > +static SIMPLE_DEV_PM_OPS(pch_i2c_pm_ops, pch_i2c_suspend, pch_i2c_resume);
-> >  
-> >  static struct pci_driver pch_pcidriver = {
-> >  	.name = KBUILD_MODNAME,
-> >  	.id_table = pch_pcidev_id,
-> >  	.probe = pch_i2c_probe,
-> >  	.remove = pch_i2c_remove,
-> > -	.suspend = pch_i2c_suspend,
-> > -	.resume = pch_i2c_resume
-> > +	.driver.pm = &pch_i2c_pm_ops,
-> >  };
-> >  
-> >  module_pci_driver(pch_pcidriver);
-> > -- 
-> > 2.27.0
-> > 
+drivers/video/fbdev/core/fbcon.c:3509:8-16: WARNING: use scnprintf or sprintf
+drivers/video/fbdev/core/fbcon.c:3484:8-16: WARNING: use scnprintf or sprintf
+
+
+ From Documentation/filesystems/sysfs.txt:
+  show() must not use snprintf() when formatting the value to be
+  returned to user space. If you can guarantee that an overflow
+  will never happen you can use sprintf() otherwise you must use
+  scnprintf().
+
+Generated by: scripts/coccinelle/api/device_attr_show.cocci
+
+Fixes: abfc19ff202d ("coccinelle: api: add device_attr_show script")
+CC: Denis Efremov <efremov@linux.com>
+Signed-off-by: kernel test robot <lkp@intel.com>
+---
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   fc80c51fd4b23ec007e88d4c688f2cac1b8648e7
+commit: abfc19ff202d287742483e15fd478ddd6ada2187 coccinelle: api: add device_attr_show script
+
+Please take the patch only if it's a positive warning. Thanks!
+
+ fbcon.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- a/drivers/video/fbdev/core/fbcon.c
++++ b/drivers/video/fbdev/core/fbcon.c
+@@ -3481,7 +3481,7 @@ static ssize_t show_rotate(struct device
+ 	rotate = fbcon_get_rotate(info);
+ err:
+ 	console_unlock();
+-	return snprintf(buf, PAGE_SIZE, "%d\n", rotate);
++	return scnprintf(buf, PAGE_SIZE, "%d\n", rotate);
+ }
+ 
+ static ssize_t show_cursor_blink(struct device *device,
+@@ -3506,7 +3506,7 @@ static ssize_t show_cursor_blink(struct
+ 	blink = (ops->flags & FBCON_FLAGS_CURSOR_TIMER) ? 1 : 0;
+ err:
+ 	console_unlock();
+-	return snprintf(buf, PAGE_SIZE, "%d\n", blink);
++	return scnprintf(buf, PAGE_SIZE, "%d\n", blink);
+ }
+ 
+ static ssize_t store_cursor_blink(struct device *device,
