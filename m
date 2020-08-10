@@ -2,52 +2,107 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5497C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 16:00:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C002C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 16:01:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C557B2078E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 16:00:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5587F2078E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 16:01:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="q3B7YgUm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727852AbgHJQAs (ORCPT
+        id S1727887AbgHJQBN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 12:00:48 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44186 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726284AbgHJQAs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 12:00:48 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 3B957B5F1;
-        Mon, 10 Aug 2020 16:01:07 +0000 (UTC)
-Date:   Mon, 10 Aug 2020 18:00:46 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Subject: Re: [PATCH] kernel: printk: delete repeated words in comments
-Message-ID: <20200810160046.GC6215@alley>
-References: <20200807033227.8349-1-rdunlap@infradead.org>
+        Mon, 10 Aug 2020 12:01:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41284 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727079AbgHJQBD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 12:01:03 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D1D0C061788
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 09:01:02 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id f10so5134014plj.8
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 09:01:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=LY7XDlS+r9xqSatoqcPSl1dicDyGmLyMn5WxXWX4PDo=;
+        b=q3B7YgUm7VMx2mfLqu9k9cVpHrzROCKYAwlYzSD/aBGusdfTe2CDC8f4xuA+QLnSjk
+         ROghRiUkxSqgQLgFylgQs+dM1CPaMIXcC9GDsmSUs2N6ioYrKF7MkdEVFDupc3/wSysi
+         WnbLT1x6VqiBI2LM2ByCbE/h+1SRYXpBhLMj/7M1CBmRKw/gm/5iVqeoBNZzsuCkoX8C
+         JgolzwJ+hdHXK7BMoNHLUxfDoSp3N6Dyg9AvvDT8pzdEwxTCSvtvu6pD+PK3KTVhnSs5
+         92iZ3VUnfTrYkKUX3UdtcLW9QcDvUQhj6SqzT3kHJh2mc/Bf4EKsB/tyIA+wcTIUZY6a
+         NkGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=LY7XDlS+r9xqSatoqcPSl1dicDyGmLyMn5WxXWX4PDo=;
+        b=DOV2UOJ1GoicryGycWagrI2US3V1XaF8MmCrfOhISXHl77vvVWSkw0HtPJ1DPODDe4
+         Y5BLOA1LgRk96/HwDvTkaS+5KvbbIqYFftrOb7SUAzNBKPtIxIjKoEb/pvbmgqLzaSaX
+         VRkItVOJgMzIURKv0vDPUlXmM7ZbjW42dFePXC+Cx+daFhreI/lCXE6JKyoEkZKFmFlV
+         eUq3Nlrpcvk+M0seBGXdqBrHigCuGU1edgSIPlIS2XoZgViugdx1NiHtlS5r0fTdIsZ7
+         o8yqgDDZaeSqUGb1Uh7mTQ4ftIdogezsSsNANyVjglaCXlvoefp60yQNODmStyIZtPBT
+         Y0Pg==
+X-Gm-Message-State: AOAM532i/VWe++bRnXMNIiSzP2iqcUefUoiR7AtwgXR0dNGULmZx4+TY
+        OocrxyiyZLVh1FZNHk3RDtzKsg==
+X-Google-Smtp-Source: ABdhPJz8Y5b+PyT3yZofeU3N4BVvdvRUm8Izs7MwOkG4AnMVxYZEFqAM2ncdP19AMntvbbrQhA2z6Q==
+X-Received: by 2002:a17:90a:6b07:: with SMTP id v7mr17920pjj.138.1597075261076;
+        Mon, 10 Aug 2020 09:01:01 -0700 (PDT)
+Received: from [192.168.1.182] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id c10sm21937840pfc.62.2020.08.10.09.01.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Aug 2020 09:01:00 -0700 (PDT)
+Subject: Re: BUG: unable to handle kernel NULL pointer dereference in
+ loop_rw_iter
+To:     syzbot <syzbot+1abbd16e49910f6bbe45@syzkaller.appspotmail.com>,
+        io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        viro@zeniv.linux.org.uk
+References: <00000000000066583105ac87dbf4@google.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <f81cc90f-1d09-4a05-1619-02d44189f03a@kernel.dk>
+Date:   Mon, 10 Aug 2020 10:00:59 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200807033227.8349-1-rdunlap@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <00000000000066583105ac87dbf4@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 2020-08-06 20:32:27, Randy Dunlap wrote:
-> Drop repeated words "the" in kernel/printk/.
+On 8/10/20 9:46 AM, syzbot wrote:
+> Hello,
 > 
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> syzbot found the following issue on:
+> 
+> HEAD commit:    9420f1ce Merge tag 'pinctrl-v5.9-1' of git://git.kernel.or..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=13662f62900000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=72cf85e4237850c8
+> dashboard link: https://syzkaller.appspot.com/bug?extid=1abbd16e49910f6bbe45
+> compiler:       gcc (GCC) 10.1.0-syz 20200507
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15929006900000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15e196aa900000
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+1abbd16e49910f6bbe45@syzkaller.appspotmail.com
 
-The patch is committed in printk/linux.git, branch for-5.10.
+Already fixed, just not upstream yet:
 
-Best Regards,
-Petr
+https://git.kernel.dk/cgit/linux-block/commit/?h=io_uring-5.9&id=2dd2111d0d383df104b144e0d1f6b5a00cb7cd88
+
+-- 
+Jens Axboe
+
