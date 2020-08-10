@@ -2,52 +2,54 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F5E6C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 08:34:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 471F5C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 08:34:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B1E620709
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 08:34:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2116020716
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 08:34:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597048478;
-	bh=wewKwc4xUwr9h/bb9kd7UBaLlXoMikQvARf5mWKr0dM=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=S14ukLjs3m+hed8JiNQQdpdWCljz7tfHmxQXgM8/2XNEkQ74q7E+ApsPaotgPguaV
-	 C4pqXqYBUuiJrIG1RUHqg25bkLTdFnOqrKFnppPm+10Zs5FjJGzt/kSWm6LBlBmxWq
-	 Wm/kpyI3Ca/zu7psJmIHiJkes0U3LzmVa11zSkTw=
+	s=default; t=1597048488;
+	bh=nVJ1YOeSYsEtBFDu1yB6K6Mup+VVhxZPIANp/vQT/Q4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=yIGgFWLX36Z5u0AMk6cUMzF7V18vtaGAqzdZw3HxHLKcSZnxGSdBTxak4il/ekCzv
+	 Xci/cKbHXt++4LY6n4CZuMSx/pL6sQkU2+gAk7v0fQ/eFBQaE9eft5Y8RuvIZ+ZRDM
+	 XjKk18y1Tbh+R4CZkvRTkav4QxbDSd0ia4PMMVK4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726379AbgHJIeh (ORCPT
+        id S1726472AbgHJIeq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 04:34:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50100 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 04:34:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725857AbgHJIeg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 04:34:36 -0400
+        id S1725857AbgHJIeq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 04:34:46 -0400
 Received: from localhost.localdomain (unknown [180.22.250.62])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE14F2065C;
-        Mon, 10 Aug 2020 08:34:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D7D520709;
+        Mon, 10 Aug 2020 08:34:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597048476;
-        bh=wewKwc4xUwr9h/bb9kd7UBaLlXoMikQvARf5mWKr0dM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Pth+6cBlLEHUqy8C8GAIZP1v2wxbT5pcqyzClgw4bu1lPqw886umU8d8zsNuv0Muw
-         nVfcnBRgA0g6wu5RRxiRDxk1MbD0hwGTKtRa40BaJjFYe1P3FKT/vFtbFF6lgR1N4e
-         0XdDajTScWsocu+ZzNCcJDnZnU+8m9ndbcu/Up6o=
+        s=default; t=1597048485;
+        bh=nVJ1YOeSYsEtBFDu1yB6K6Mup+VVhxZPIANp/vQT/Q4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=O02gKiYo5TXVpEVAcWF0egLqgHUbk36XfKoHPje/0IB4Xl1emuVQ+51AK7yjk9LmS
+         3K423tJLIq33uVzaAFDXXm2Q13FD8RmmnA7tyIGI+Pl4mUSUkV8XucW9JsyuYen4OA
+         2vq7j9o/d0P4bTU57/nTx0jPpem1XZvshQHnE8bw=
 From:   Masami Hiramatsu <mhiramat@kernel.org>
 To:     Steven Rostedt <rostedt@goodmis.org>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
         Ingo Molnar <mingo@redhat.com>,
         Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [PATCH 0/6] tools/bootconfig: Add boot-time tracing script
-Date:   Mon, 10 Aug 2020 17:34:30 +0900
-Message-Id: <159704847064.175360.3292152056631660862.stgit@devnote2>
+Subject: [PATCH 1/6] tools/bootconfig: Show bootconfig compact tree from bootconfig file
+Date:   Mon, 10 Aug 2020 17:34:41 +0900
+Message-Id: <159704848156.175360.6621139371000789360.stgit@devnote2>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <159704847064.175360.3292152056631660862.stgit@devnote2>
+References: <159704847064.175360.3292152056631660862.stgit@devnote2>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -57,52 +59,144 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Show the bootconfig compact tree from the bootconfig file
+instead of an initrd if the given file has no magic number
+and is smaller than 32KB.
 
-This is a series of patches to introduce scripts for the boot-time tracing.
+User can use this for checking the syntax error or output
+checking before applying the bootconfig to initrd.
 
-- bconf2ftrace.sh generates a shell script from a bootconfig file which
-  setup ftrace via tracefs. This is useful for checking whether your
-  boot-time tracing bootconfig is working as you expected.
-
-- ftrace2bconf.sh generates a bootconfig file from current ftrace setting.
-  You can set up the ftrace manually and run a test on it before dump it
-  to a bootconfig file.
-  Note that some function-tracer/fgraph-tracer options are not supported
-  by ftrace2bconf.sh, because the original wildcard expression has been
-  lost during setup ftrace.
-
-Also, this series improve the bootconfig command to increase usability.
-
-- The bootconfig can format the bootconfig file without initrd. You don't
-  need a dummy initrd anymore :)
-- The bootconfig command supports -l (format as a list) option which
-  outputs the bootconfig as a key-value list, as same as /proc/bootconfig.
-
-
-Thank you,
-
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
+ tools/bootconfig/main.c |   81 ++++++++++++++++++++++++++++++++++-------------
+ 1 file changed, 58 insertions(+), 23 deletions(-)
 
-Masami Hiramatsu (6):
-      tools/bootconfig: Show bootconfig compact tree from bootconfig file
-      tools/bootconfig: Add list option
-      tools/bootconfig: Make all functions static
-      tools/bootconfig: Add a script to generate ftrace shell-command from bootconfig
-      tools/bootconfig: Add a script to generates bootconfig from ftrace
-      tools/bootconfig: Add --init option for bconf2ftrace.sh
+diff --git a/tools/bootconfig/main.c b/tools/bootconfig/main.c
+index e0878f5f74b1..d165e63b5d5a 100644
+--- a/tools/bootconfig/main.c
++++ b/tools/bootconfig/main.c
+@@ -195,10 +195,55 @@ int load_xbc_from_initrd(int fd, char **buf)
+ 	return size;
+ }
+ 
++static void show_xbc_error(const char *data, const char *msg, int pos)
++{
++	int lin = 1, col, i;
++
++	if (pos < 0) {
++		pr_err("Error: %s.\n", msg);
++		return;
++	}
++
++	/* Note that pos starts from 0 but lin and col should start from 1. */
++	col = pos + 1;
++	for (i = 0; i < pos; i++) {
++		if (data[i] == '\n') {
++			lin++;
++			col = pos - i;
++		}
++	}
++	pr_err("Parse Error: %s at %d:%d\n", msg, lin, col);
++
++}
++
++static int init_xbc_with_error(char *buf, int len)
++{
++	char *copy = strdup(buf);
++	const char *msg;
++	int ret, pos;
++
++	if (!copy)
++		return -ENOMEM;
++
++	ret = xbc_init(buf, &msg, &pos);
++	if (ret < 0)
++		show_xbc_error(copy, msg, pos);
++	free(copy);
++
++	return ret;
++}
++
+ int show_xbc(const char *path)
+ {
+ 	int ret, fd;
+ 	char *buf = NULL;
++	struct stat st;
++
++	ret = stat(path, &st);
++	if (ret < 0) {
++		pr_err("Failed to stat %s: %d\n", path, -errno);
++		return -errno;
++	}
+ 
+ 	fd = open(path, O_RDONLY);
+ 	if (fd < 0) {
+@@ -207,14 +252,24 @@ int show_xbc(const char *path)
+ 	}
+ 
+ 	ret = load_xbc_from_initrd(fd, &buf);
++	close(fd);
+ 	if (ret < 0) {
+ 		pr_err("Failed to load a boot config from initrd: %d\n", ret);
+ 		goto out;
+ 	}
++	/* Assume a bootconfig file if it is enough small */
++	if (ret == 0 && st.st_size <= XBC_DATA_MAX) {
++		ret = load_xbc_file(path, &buf);
++		if (ret < 0) {
++			pr_err("Failed to load a boot config: %d\n", ret);
++			goto out;
++		}
++		if (init_xbc_with_error(buf, ret) < 0)
++			goto out;
++	}
+ 	xbc_show_compact_tree();
+ 	ret = 0;
+ out:
+-	close(fd);
+ 	free(buf);
+ 
+ 	return ret;
+@@ -251,27 +306,6 @@ int delete_xbc(const char *path)
+ 	return ret;
+ }
+ 
+-static void show_xbc_error(const char *data, const char *msg, int pos)
+-{
+-	int lin = 1, col, i;
+-
+-	if (pos < 0) {
+-		pr_err("Error: %s.\n", msg);
+-		return;
+-	}
+-
+-	/* Note that pos starts from 0 but lin and col should start from 1. */
+-	col = pos + 1;
+-	for (i = 0; i < pos; i++) {
+-		if (data[i] == '\n') {
+-			lin++;
+-			col = pos - i;
+-		}
+-	}
+-	pr_err("Parse Error: %s at %d:%d\n", msg, lin, col);
+-
+-}
+-
+ int apply_xbc(const char *path, const char *xbc_path)
+ {
+ 	u32 size, csum;
+@@ -352,11 +386,12 @@ int apply_xbc(const char *path, const char *xbc_path)
+ int usage(void)
+ {
+ 	printf("Usage: bootconfig [OPTIONS] <INITRD>\n"
++		"Or     bootconfig <CONFIG>\n"
+ 		" Apply, delete or show boot config to initrd.\n"
+ 		" Options:\n"
+ 		"		-a <config>: Apply boot config to initrd\n"
+ 		"		-d : Delete boot config file from initrd\n\n"
+-		" If no option is given, show current applied boot config.\n");
++		" If no option is given, show the bootconfig in the given file.\n");
+ 	return -1;
+ }
+ 
 
-
- tools/bootconfig/main.c                  |  147 +++++++++++++-----
- tools/bootconfig/scripts/bconf2ftrace.sh |  199 ++++++++++++++++++++++++
- tools/bootconfig/scripts/ftrace.sh       |  109 +++++++++++++
- tools/bootconfig/scripts/ftrace2bconf.sh |  244 ++++++++++++++++++++++++++++++
- tools/bootconfig/scripts/xbc.sh          |   56 +++++++
- 5 files changed, 713 insertions(+), 42 deletions(-)
- create mode 100755 tools/bootconfig/scripts/bconf2ftrace.sh
- create mode 100644 tools/bootconfig/scripts/ftrace.sh
- create mode 100755 tools/bootconfig/scripts/ftrace2bconf.sh
- create mode 100644 tools/bootconfig/scripts/xbc.sh
-
---
-Masami Hiramatsu (Linaro) <mhiramat@kernel.org>
