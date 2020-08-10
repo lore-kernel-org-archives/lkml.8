@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84AE0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:29:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32DF2C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:29:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5923222CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:29:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0076822BF3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:29:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597087760;
-	bh=QEuPLD1HFICe5Me7VJga6gs3ZjqUmsBZRqF24c5m6FA=;
+	s=default; t=1597087768;
+	bh=55zPMrOyzs+dc28APjjiaBiOGfinJF0QO6Cjsln7vf4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YZ1/Eql6KU7/YNNhld8aKfZhMLbxithR+TJHp9wP9ihSVVk30yZDrGW4SBn4NTBO1
-	 TBr/jVstRPY5zioP3ZTezInYyrJ8/5Jn64AJKzYceNosqGWcJ0Ao610++NEm/iUJgG
-	 h/g7t6TnayZTKwfdkNewXYvNwANQGydTzRfBucUw=
+	b=xiX1RenK8dqZ8vIm7kcFmlSfSZgbTtzPo8M7JxuNSWXDpQAV7ffv7ShErzQZIdUrT
+	 vFA0GKpGCEZoelRDoNqG4D4Pi8szZFPNM9owvpN3jHMLlk0subVjfCP7kxdkTrO6dV
+	 MrwnSQda7xRjOjl0PKM/OIc6VPOUgaM9HMggeuCM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729809AbgHJT3P (ORCPT
+        id S1729849AbgHJT30 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:29:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38444 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:29:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729054AbgHJTKt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:10:49 -0400
+        id S1729041AbgHJTKq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:10:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2B3A22B47;
-        Mon, 10 Aug 2020 19:10:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2D1D22B49;
+        Mon, 10 Aug 2020 19:10:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086648;
-        bh=QEuPLD1HFICe5Me7VJga6gs3ZjqUmsBZRqF24c5m6FA=;
+        s=default; t=1597086645;
+        bh=55zPMrOyzs+dc28APjjiaBiOGfinJF0QO6Cjsln7vf4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hQ8qZxXCqWLZYGOmEVLeBlLoaMEiqm1x1YJy8zeGhBdFay+GSNeCfR9xp2V4+xn2O
-         CcdyPA/ZwG22r6or3WKJUz36FrwDdh8UOUuu/7O7qSDLUFlpRNL+2xrilogeEORmlt
-         G3AcpQByTFmUsR8+0pURVEXM0mtGSo94yb2nwpI8=
+        b=KNe1hdTidsx7r+IxSWsxlnOPixcXejlrPwWlyHp8wXrkHDmL9RXJRxmcm5qW2Z8Hr
+         Y43vLi8kWhayRj8/6BVXQD4DgeAqg4EHG6oof/0u7UFmHbS2lLjnqLt+RQ86ItptZK
+         srul0avwJN22s17dIkFbPpoPIp97Fk+JxdFVd3Ps=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Lindgren <tony@atomide.com>, Sasha Levin <sashal@kernel.org>,
-        linux-omap@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 14/60] bus: ti-sysc: Add missing quirk flags for usb_host_hs
-Date:   Mon, 10 Aug 2020 15:09:42 -0400
-Message-Id: <20200810191028.3793884-14-sashal@kernel.org>
+Cc:     Evgeny Novikov <novikov@ispras.ru>,
+        Antonino Daplas <adaplas@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sasha Levin <sashal@kernel.org>, linux-fbdev@vger.kernel.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.7 12/60] video: fbdev: savage: fix memory leak on error handling path in probe
+Date:   Mon, 10 Aug 2020 15:09:40 -0400
+Message-Id: <20200810191028.3793884-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810191028.3793884-1-sashal@kernel.org>
 References: <20200810191028.3793884-1-sashal@kernel.org>
@@ -58,45 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Evgeny Novikov <novikov@ispras.ru>
 
-[ Upstream commit 4254632dba27271f6de66efd87e444ee405dee29 ]
+[ Upstream commit e8d35898a78e34fc854ed9680bc3f9caedab08cd ]
 
-Similar to what we have for the legacy platform data, we need to
-configure SWSUP_SIDLE and SWSUP_MSTANDBY quirks for usb_host_hs.
+savagefb_probe() calls savage_init_fb_info() that can successfully
+allocate memory for info->pixmap.addr but then fail when
+fb_alloc_cmap() fails. savagefb_probe() goes to label failed_init and
+does not free allocated memory. It is not valid to go to label
+failed_mmio since savage_init_fb_info() can fail during memory
+allocation as well. So, the patch free allocated memory on the error
+handling path in savage_init_fb_info() itself.
 
-These are needed to drop the legacy platform data for usb_host_hs.
+Found by Linux Driver Verification project (linuxtesting.org).
 
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
+Cc: Antonino Daplas <adaplas@gmail.com>
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200619162136.9010-1-novikov@ispras.ru
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bus/ti-sysc.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/video/fbdev/savage/savagefb_driver.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
-index 3b0417a014946..ae4cf4667633f 100644
---- a/drivers/bus/ti-sysc.c
-+++ b/drivers/bus/ti-sysc.c
-@@ -1402,6 +1402,10 @@ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
- 		   SYSC_QUIRK_SWSUP_SIDLE | SYSC_QUIRK_SWSUP_MSTANDBY),
- 	SYSC_QUIRK("tptc", 0, 0, -ENODEV, -ENODEV, 0x40007c00, 0xffffffff,
- 		   SYSC_QUIRK_SWSUP_SIDLE | SYSC_QUIRK_SWSUP_MSTANDBY),
-+	SYSC_QUIRK("usb_host_hs", 0, 0, 0x10, 0x14, 0x50700100, 0xffffffff,
-+		   SYSC_QUIRK_SWSUP_SIDLE | SYSC_QUIRK_SWSUP_MSTANDBY),
-+	SYSC_QUIRK("usb_host_hs", 0, 0, 0x10, -ENODEV, 0x50700101, 0xffffffff,
-+		   SYSC_QUIRK_SWSUP_SIDLE | SYSC_QUIRK_SWSUP_MSTANDBY),
- 	SYSC_QUIRK("usb_otg_hs", 0, 0x400, 0x404, 0x408, 0x00000050,
- 		   0xffffffff, SYSC_QUIRK_SWSUP_SIDLE | SYSC_QUIRK_SWSUP_MSTANDBY),
- 	SYSC_QUIRK("usb_otg_hs", 0, 0, 0x10, -ENODEV, 0x4ea2080d, 0xffffffff,
-@@ -1473,8 +1477,6 @@ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
- 	SYSC_QUIRK("tpcc", 0, 0, -ENODEV, -ENODEV, 0x40014c00, 0xffffffff, 0),
- 	SYSC_QUIRK("usbhstll", 0, 0, 0x10, 0x14, 0x00000004, 0xffffffff, 0),
- 	SYSC_QUIRK("usbhstll", 0, 0, 0x10, 0x14, 0x00000008, 0xffffffff, 0),
--	SYSC_QUIRK("usb_host_hs", 0, 0, 0x10, 0x14, 0x50700100, 0xffffffff, 0),
--	SYSC_QUIRK("usb_host_hs", 0, 0, 0x10, -ENODEV, 0x50700101, 0xffffffff, 0),
- 	SYSC_QUIRK("venc", 0x58003000, 0, -ENODEV, -ENODEV, 0x00000002, 0xffffffff, 0),
- 	SYSC_QUIRK("vfpe", 0, 0, 0x104, -ENODEV, 0x4d001200, 0xffffffff, 0),
+diff --git a/drivers/video/fbdev/savage/savagefb_driver.c b/drivers/video/fbdev/savage/savagefb_driver.c
+index aab312a7d9da3..a542c33f20828 100644
+--- a/drivers/video/fbdev/savage/savagefb_driver.c
++++ b/drivers/video/fbdev/savage/savagefb_driver.c
+@@ -2158,6 +2158,8 @@ static int savage_init_fb_info(struct fb_info *info, struct pci_dev *dev,
+ 			info->flags |= FBINFO_HWACCEL_COPYAREA |
+ 				       FBINFO_HWACCEL_FILLRECT |
+ 				       FBINFO_HWACCEL_IMAGEBLIT;
++		else
++			kfree(info->pixmap.addr);
+ 	}
  #endif
+ 	return err;
 -- 
 2.25.1
 
