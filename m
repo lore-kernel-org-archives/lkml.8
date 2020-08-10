@@ -2,126 +2,222 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05F74C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 23:35:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C5EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 23:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7D8820658
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 23:35:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597102526;
-	bh=mUFFmkou94l0+oI7TalaQjtTqBSFTvrCHtwnmz6LL0A=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=IDnLzedr4dnvBK/VGnN63L008A+8U7pt/Y+eAzgdQQEfCvh+lz8nnj8iBayXwmnR5
-	 AdG/NurJg7Ife/MsOi7Kt/rnltlhSbCQKKJD0itJ3/wPrhmFj35PsNjrEBEFkMlaW3
-	 LURK/D6kRBYa5mHzQnuNGQhkQDOKh6N8EgwsH2is=
+	by mail.kernel.org (Postfix) with ESMTP id 7A12A206DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 23:37:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JlpYrwH8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbgHJXfZ (ORCPT
+        id S1727837AbgHJXhA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 19:35:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57472 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726859AbgHJXfZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 19:35:25 -0400
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8014E2075D;
-        Mon, 10 Aug 2020 23:35:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597102524;
-        bh=mUFFmkou94l0+oI7TalaQjtTqBSFTvrCHtwnmz6LL0A=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=vBW9u2mlbk5HoC5arbS7XOKaq/n3mNVP07JZtF9T6scT1DVVIeBJqU1VYp5xuk/Yn
-         4FBVO3aOU5SVhzZLb1x+ovVr9CuYnZuaAJAbppWuHOUphiM+H4QnI3UuYWb5JrcMPm
-         L/7l50z+giBwjQtpb4bayVeukl18kzJK9afq3cWY=
-Received: by mail-ej1-f43.google.com with SMTP id a26so11151962ejc.2;
-        Mon, 10 Aug 2020 16:35:24 -0700 (PDT)
-X-Gm-Message-State: AOAM533ooCUsnP8767vqt83ho+APFWpB77Ot4DJTW9IrKp6BFUSzPqw2
-        L22nHiKVfxPmP8Cz1IQuYA1J32PbQfiCb+oDlQ==
-X-Google-Smtp-Source: ABdhPJwBk2x2WfFrL8VJcib6l0+cEkseFLtLxcww+LQRp8tRkSoMlZaGe/disJzE6QbWTXApPzJSvByWzdkYXp0Lx7g=
-X-Received: by 2002:a17:906:2356:: with SMTP id m22mr23377263eja.124.1597102523075;
- Mon, 10 Aug 2020 16:35:23 -0700 (PDT)
-MIME-Version: 1.0
-References: <1596855231-5782-1-git-send-email-yongqiang.niu@mediatek.com> <1596855231-5782-4-git-send-email-yongqiang.niu@mediatek.com>
-In-Reply-To: <1596855231-5782-4-git-send-email-yongqiang.niu@mediatek.com>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Tue, 11 Aug 2020 07:35:10 +0800
-X-Gmail-Original-Message-ID: <CAAOTY____7Yd1Gh-22oiOxsvftBjOHQ0T9CmKtGw6XLjw11gcQ@mail.gmail.com>
-Message-ID: <CAAOTY____7Yd1Gh-22oiOxsvftBjOHQ0T9CmKtGw6XLjw11gcQ@mail.gmail.com>
-Subject: Re: [RESEND v7, PATCH 3/7] mtk-mmsys: add mmsys private data
-To:     Yongqiang Niu <yongqiang.niu@mediatek.com>
-Cc:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 10 Aug 2020 19:37:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54912 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726859AbgHJXg6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 19:36:58 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8065CC06174A;
+        Mon, 10 Aug 2020 16:36:53 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id y18so9039393ilp.10;
+        Mon, 10 Aug 2020 16:36:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=LKyAC8SmzXgvrrYpq/s/3TsU/WRs+a9c0PUjRq1OPBQ=;
+        b=JlpYrwH8LuYxS/kUo816+90tW0+/ylAfqYVP9WkSSIXWKS3+fXoIPBSsPTXz2V3n+V
+         zfZjMbVssR/VpKiSgjUnAf/P3DOv2eNyNduLJeu4owJi5tGfGWS5Ew4ooZigMhEA5VxR
+         3maepQLkw6Gz7N+bsh46aLUgeLKvPqrQxXsZ/VInB84fAR/q3ofXK7vWEerCetXXYW0r
+         BB+wUPLUssFy9WzQaaMgPg+DFTUtT6PrMdo+buwwPVDSbcB0TqzV0zsdl8KTpwJ9m4hf
+         EwgGlp/joouyPXwhKZaHTR2Fekur8oaosXQK9E/BnvFHhfwtmh8JARTWM1TDRtQNrIJ5
+         0atA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=LKyAC8SmzXgvrrYpq/s/3TsU/WRs+a9c0PUjRq1OPBQ=;
+        b=cNwLScCUv+Q3pkO31O18CFnOVi8hKXXb1UXG0eZaQyNTXLIKL+9B1bUI18czvgcEEf
+         OE3rrr1wQcGV/KNoTICMRX2ffSfLTlvg5Vak8ooFjQxcIZPHp9nbLYqx7FvtQq6cjf0c
+         0UWtmf26eQ0VdZYxbGj0gvSmvGNyG2OZh5PatmC1RtTITj5g+JTqJJGx2IjS85Lee1wO
+         rnTWHBx5Lrvp2flg8C4IaYAb5BuwQI6q5fQunHUi16yU+EVB9MVFWEEFNlZfwI12unA/
+         FCk2Qp1f5vH+SL09Tv8nh/j61BbLaVDPlChWje3RdxxYJnmEznLyLWoGFuxPvYhKQdxY
+         CfeQ==
+X-Gm-Message-State: AOAM533/KfXHfMAOc/wMFlSqUoevVSyXO+27lABqCtsMVcLEql/6VUbH
+        UVH6OjGbAEUBIlvk8G0tYgo=
+X-Google-Smtp-Source: ABdhPJy1S3g3p98Xi9EcsXNS6CmJzbt5rxJnpB8itBPIozhsJmELv5fUbjHEUzglUQlam96oFkStKA==
+X-Received: by 2002:a92:8b11:: with SMTP id i17mr19417396ild.212.1597102610889;
+        Mon, 10 Aug 2020 16:36:50 -0700 (PDT)
+Received: from anon-dhcp-152.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
+        by smtp.gmail.com with ESMTPSA id o11sm11353713iom.25.2020.08.10.16.36.48
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 10 Aug 2020 16:36:49 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [dm-devel] [RFC PATCH v5 00/11] Integrity Policy Enforcement LSM
+ (IPE)
+From:   Chuck Lever <chucklever@gmail.com>
+In-Reply-To: <1597073737.3966.12.camel@HansenPartnership.com>
+Date:   Mon, 10 Aug 2020 19:36:47 -0400
+Cc:     Mimi Zohar <zohar@linux.ibm.com>, James Morris <jmorris@namei.org>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>,
+        snitzer@redhat.com, dm-devel@redhat.com,
+        tyhicks@linux.microsoft.com, agk@redhat.com,
+        Paul Moore <paul@paul-moore.com>,
+        Jonathan Corbet <corbet@lwn.net>, nramas@linux.microsoft.com,
+        serge@hallyn.com, pasha.tatashin@soleen.com,
+        Jann Horn <jannh@google.com>, linux-block@vger.kernel.org,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jens Axboe <axboe@kernel.dk>, mdsakib@microsoft.com,
+        open list <linux-kernel@vger.kernel.org>, eparis@redhat.com,
+        linux-security-module@vger.kernel.org, linux-audit@redhat.com,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-integrity@vger.kernel.org,
+        jaskarankhurana@linux.microsoft.com
 Content-Transfer-Encoding: quoted-printable
+Message-Id: <6E907A22-02CC-42DD-B3CD-11D304F3A1A8@gmail.com>
+References: <20200728213614.586312-1-deven.desai@linux.microsoft.com>
+ <20200802115545.GA1162@bug> <20200802140300.GA2975990@sasha-vm>
+ <20200802143143.GB20261@amd> <1596386606.4087.20.camel@HansenPartnership.com>
+ <fb35a1f7-7633-a678-3f0f-17cf83032d2b@linux.microsoft.com>
+ <1596639689.3457.17.camel@HansenPartnership.com>
+ <alpine.LRH.2.21.2008050934060.28225@namei.org>
+ <b08ae82102f35936427bf138085484f75532cff1.camel@linux.ibm.com>
+ <329E8DBA-049E-4959-AFD4-9D118DEB176E@gmail.com>
+ <da6f54d0438ee3d3903b2c75fcfbeb0afdf92dc2.camel@linux.ibm.com>
+ <1597073737.3966.12.camel@HansenPartnership.com>
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Yongqiang:
 
-Yongqiang Niu <yongqiang.niu@mediatek.com> =E6=96=BC 2020=E5=B9=B48=E6=9C=
-=888=E6=97=A5 =E9=80=B1=E5=85=AD =E4=B8=8A=E5=8D=8810:56=E5=AF=AB=E9=81=93=
-=EF=BC=9A
->
-> the reason why split out display connection function:
-> 1. there will more and more Mediatek Soc upstream, and the display path
-> connection function mtk_mmsys_ddp_mout_en, mtk_mmsys_ddp_sel_in and
-> mtk_mmsys_ddp_sout_sel will complicated more and more
-> 2. many of the connection are only used in some SoC, and useless for
-> other SoC and not readable,
-> 3. if we add a new SoC connection, we need check is this affect other
-> Soc
->
-> the reason why not apply the previous series method:
-> this version is more readable and clear
-> if go on use v6, except mt2701/mt8173/mt2712, we need add two more
-> private data array for mt6779 and mt6797, and the connect function
-> will add more if/else usecase
->
-> move current display connection function into mt2701-mmsys.c
-> keep mt2701/mt8173/mt2712/mt6779/mt6797 with original version
-> connection function
-> the corresponded SoC upstream member will coding these and test it
-> on the SoC if it is need.
->
 
-For this patch, I prefer [1]'s implementation. In [1], for each SoC,
-the only difference is an array for routing register setting. In this
-patch, the difference are three function which is more complicated
-than [1]. If you like, you could pick [1] to upstream.
+> On Aug 10, 2020, at 11:35 AM, James Bottomley =
+<James.Bottomley@HansenPartnership.com> wrote:
+>=20
+> On Sun, 2020-08-09 at 13:16 -0400, Mimi Zohar wrote:
+>> On Sat, 2020-08-08 at 13:47 -0400, Chuck Lever wrote:
+>>>> On Aug 5, 2020, at 2:15 PM, Mimi Zohar <zohar@linux.ibm.com>
+>>>> wrote:
+>>=20
+>> <snip>
+>>=20
+>>>> If block layer integrity was enough, there wouldn't have been a
+>>>> need for fs-verity.   Even fs-verity is limited to read only
+>>>> filesystems, which makes validating file integrity so much
+>>>> easier.  =46rom the beginning, we've said that fs-verity signatures
+>>>> should be included in the measurement list.  (I thought someone
+>>>> signed on to add that support to IMA, but have not yet seen
+>>>> anything.)
+>>>=20
+>>> Mimi, when you and I discussed this during LSS NA 2019, I didn't
+>>> fully understand that you expected me to implement signed Merkle
+>>> trees for all filesystems. At the time, it sounded to me like you
+>>> wanted signed Merkle trees only for NFS files. Is that still the
+>>> case?
+>>=20
+>> I definitely do not expect you to support signed Merkle trees for all
+>> filesystems.  My interested is from an IMA perspective of measuring
+>> and verifying the fs-verity Merkle tree root (and header info)
+>> signature. This is independent of which filesystems support it.
+>>=20
+>>>=20
+>>> The first priority (for me, anyway) therefore is getting the
+>>> ability to move IMA metadata between NFS clients and servers
+>>> shoveled into the NFS protocol, but that's been blocked for various
+>>> legal reasons.
+>>=20
+>> Up to now, verifying remote filesystem file integrity has been out of
+>> scope for IMA.   With fs-verity file signatures I can at least grasp
+>> how remote file integrity could possibly work.  I don't understand
+>> how remote file integrity with existing IMA formats could be
+>> supported. You might want to consider writing a whitepaper, which
+>> could later be used as the basis for a patch set cover letter.
+>=20
+> I think, before this, we can help with the basics (and perhaps we
+> should sort them out before we start documenting what we'll do).
 
-[1] https://chromium-review.googlesource.com/c/chromiumos/third_party/kerne=
-l/+/2345186
+Thanks for the help! I just want to emphasize that documentation
+(eg, a specification) will be critical for remote filesystems.
 
-Regards,
-Chun-Kuang.
+If any of this is to be supported by a remote filesystem, then we
+need an unencumbered description of the new metadata format rather
+than code. GPL-encumbered formats cannot be contributed to the NFS
+standard, and are probably difficult for other filesystems that are
+not Linux-native, like SMB, as well.
 
-> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> ---
->  drivers/soc/mediatek/Makefile             |   1 +
->  drivers/soc/mediatek/mmsys/Makefile       |   2 +
->  drivers/soc/mediatek/mmsys/mt2701-mmsys.c | 250 ++++++++++++++++++++++++=
-+++
->  drivers/soc/mediatek/mtk-mmsys.c          | 271 +++++-------------------=
-------
->  include/linux/soc/mediatek/mtk-mmsys.h    |  15 ++
->  5 files changed, 314 insertions(+), 225 deletions(-)
->  create mode 100644 drivers/soc/mediatek/mmsys/Makefile
->  create mode 100644 drivers/soc/mediatek/mmsys/mt2701-mmsys.c
->
+
+> The
+> first basic is that a merkle tree allows unit at a time verification.=20=
+
+> First of all we should agree on the unit.  Since we always fault a =
+page
+> at a time, I think our merkle tree unit should be a page not a block.
+
+Remote filesystems will need to agree that the size of that unit is
+the same everywhere, or the unit size could be stored in the per-file
+metadata.
+
+
+> Next, we should agree where the check gates for the per page accesses
+> should be ... definitely somewhere in readpage, I suspect and finally
+> we should agree how the merkle tree is presented at the gate.  I think
+> there are three ways:
+>=20
+>   1. Ahead of time transfer:  The merkle tree is transferred and =
+verified
+>      at some time before the accesses begin, so we already have a
+>      verified copy and can compare against the lower leaf.
+>   2. Async transfer:  We provide an async mechanism to transfer the
+>      necessary components, so when presented with a unit, we check the
+>      log n components required to get to the root
+>   3. The protocol actually provides the capability of 2 (like the SCSI
+>      DIF/DIX), so to IMA all the pieces get presented instead of IMA
+>      having to manage the tree
+
+A Merkle tree is potentially large enough that it cannot be stored in
+an extended attribute. In addition, an extended attribute is not a
+byte stream that you can seek into or read small parts of, it is
+retrieved in a single shot.
+
+For this reason, the idea was to save only the signature of the tree's
+root on durable storage. The client would retrieve that signature
+possibly at open time, and reconstruct the tree at that time.
+
+Or the tree could be partially constructed on-demand at the time each
+unit is to be checked (say, as part of 2. above).
+
+The client would have to reconstruct that tree again if memory pressure
+caused some or all of the tree to be evicted, so perhaps an on-demand
+mechanism is preferable.
+
+
+> There are also a load of minor things like how we get the head hash,
+> which must be presented and verified ahead of time for each of the
+> above 3.
+
+Also, changes to a file's content and its tree signature are not
+atomic. If a file is mutable, then there is the period between when
+the file content has changed and when the signature is updated.
+Some discussion of how a client is to behave in those situations will
+be necessary.
+
+
+--
+Chuck Lever
+chucklever@gmail.com
+
+
+
