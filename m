@@ -2,160 +2,142 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 282E2C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:09:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADAB1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:11:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2F592073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:09:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597061363;
-	bh=ulzg4XSN8hmnySzA/cm1GK1DRA+dsU1xkBqs4jiywVU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=vIrO110GjPy6STHbxUL9w9uI5eBBAh6A2YXOMRQutTlFpDfVUuc3QN5sle9Jl/dEr
-	 e68IrNK+nhqUbVKOr6yBRmZLybu7wVDyQXdUlhsI8JcAFOW0uSBOUIyoSGVn94e3LW
-	 MBqcF4rj2yb7bA0xpfAKAo8XEVeFPOpRbeGMpFaA=
+	by mail.kernel.org (Postfix) with ESMTP id 90A14206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:11:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbgHJMJV (ORCPT
+        id S1726654AbgHJMLt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 08:09:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33866 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726550AbgHJMJU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 08:09:20 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD688C061756;
-        Mon, 10 Aug 2020 05:09:17 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id g6so9237740ljn.11;
-        Mon, 10 Aug 2020 05:09:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=oMBvems1BGpH6GI9xJVHleaO1t7Rgz/V70ULHJgIFaM=;
-        b=Vzvcj9Fs+Dv6VULXjWSOlYNPSPrKGmJ+eEXF+LWwH+pZsdqPH/KY4W5WJBH5JI63Uj
-         yBuNa5tZySK6Rsuan+sN8q7WgK9Js6rVjYkjtlPNvOFUqZkaUh05hrcA5khvJyfMgfvO
-         FVVMH3ADZvoVDWOKFkOCBZvvh+MTP+e0N0orOKWLj1DJ2zH7ylZqTeurTmcQmgyx/oxR
-         jsNjE4diuNLnfRcUJof2hS2qJ0fOuw9Ai971TKPShYAXP51Lq69JPy/0U0qcc9KjXxbM
-         JaMFjPjYFrfXhUGEyUsOsUR6GLgliDHSWcpZXXOSqIoOnmO6PGI8T6dmf95XUdLiSwMc
-         ql0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :date:message-id:mime-version;
-        bh=oMBvems1BGpH6GI9xJVHleaO1t7Rgz/V70ULHJgIFaM=;
-        b=rQ988D0X5AeB930WKRiKzU0SPL8UJW54Bw7ysbTjTdrtzdYY/+a174goency6vq8yT
-         sTTc6tTl4/vTk81/MCfilItMWHyAqHHuHeMDulxhco9R5nKJHW2zLmUx2Lwnphjwzqmp
-         f0munwzm5/Ls5wlwpZyusYjwPo/KYknfxO6EFzLum/ybMSfBP8ip3tzB83LqllL7l5pc
-         fT9lAzKUOCZy0BeEyfrnbUD0rjFqeCdAMSimBCV3KRPuhazYlyMAsgIlx2vOT1GsBpMM
-         t0otp5/R+MHxSbZ9WPrS5dZAEwLVrT/cRXZ32mxMxSbnljrIsZQOJkuP4tiBV3066Jua
-         czRw==
-X-Gm-Message-State: AOAM532Er51880RIW8XYWuVgcOh9iVJn2DdYfops/lDjSdzELP+A1LoN
-        Dmz7sLTLeBeOYY4X9z30Cac=
-X-Google-Smtp-Source: ABdhPJwaDWxR0aZPAD+mdtRsWa6zXkLg8uAwd451CmgPgwp3S2j5FYtstvBTqfeYY2+vFrhG8VIKPg==
-X-Received: by 2002:a2e:b689:: with SMTP id l9mr368612ljo.393.1597061354261;
-        Mon, 10 Aug 2020 05:09:14 -0700 (PDT)
-Received: from saruman ([194.34.132.58])
-        by smtp.gmail.com with ESMTPSA id m20sm11443764lfb.72.2020.08.10.05.09.11
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 10 Aug 2020 05:09:13 -0700 (PDT)
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Maulik Shah <mkshah@codeaurora.org>, bjorn.andersson@linaro.org,
-        maz@kernel.org, linus.walleij@linaro.org, swboyd@chromium.org,
-        evgreen@chromium.org, mka@chromium.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
-        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org,
-        Maulik Shah <mkshah@codeaurora.org>
-Subject: Re: [PATCH v4 7/7] irqchip: qcom-pdc: Reset all pdc interrupts during init
-In-Reply-To: <1597058460-16211-8-git-send-email-mkshah@codeaurora.org>
-References: <1597058460-16211-1-git-send-email-mkshah@codeaurora.org> <1597058460-16211-8-git-send-email-mkshah@codeaurora.org>
-Date:   Mon, 10 Aug 2020 15:09:01 +0300
-Message-ID: <87imdqpusi.fsf@kernel.org>
+        Mon, 10 Aug 2020 08:11:49 -0400
+Received: from foss.arm.com ([217.140.110.172]:55570 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726611AbgHJMLm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 08:11:42 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A7FC411B3;
+        Mon, 10 Aug 2020 05:11:41 -0700 (PDT)
+Received: from bogus (unknown [10.37.12.40])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 33AB93F718;
+        Mon, 10 Aug 2020 05:11:39 -0700 (PDT)
+Date:   Mon, 10 Aug 2020 13:11:36 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Sumit Gupta <sumitg@nvidia.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mikko Perttunen <mperttunen@nvidia.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Hulk Robot <hulkci@huawei.com>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Bibek Basu <bbasu@nvidia.com>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH -next] arm64: Export __cpu_logical_map
+Message-ID: <20200810121136.GB31434@bogus>
+References: <20200724030433.22287-1-wangkefeng.wang@huawei.com>
+ <82f750c4-d423-1ed8-a158-e75153745e07@huawei.com>
+ <20200724131059.GB6521@bogus>
+ <00cf6e67-16ed-872d-2c16-0ceea6b6f514@nvidia.com>
+ <20200727160515.GA8003@bogus>
+ <e3a4bc21-c334-4d48-90b5-aab8d187939e@nvidia.com>
+ <20200810074956.GB28091@bogus>
+ <20200810101954.GA9480@gaia>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200810101954.GA9480@gaia>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On Mon, Aug 10, 2020 at 11:19:55AM +0100, Catalin Marinas wrote:
+> On Mon, Aug 10, 2020 at 08:49:56AM +0100, Sudeep Holla wrote:
+> > On Sat, Aug 01, 2020 at 05:46:43PM +0530, Sumit Gupta wrote:
+> > > > > > > > ERROR: modpost: "__cpu_logical_map" [drivers/cpufreq/tegra194-cpufreq.ko] undefined!
+> > > > > > > >
+> > > > > > > > ARM64 tegra194-cpufreq driver use cpu_logical_map, export
+> > > > > > > > __cpu_logical_map to fix build issue.
+> > > > > > > >
+> > > > > >
+> > > > > > I wonder why like other instances in the drivers, the mpidr is not get
+> > > > > > directly from the cpu. The cpufreq_driver->init call happens when the cpu
+> > > > > > is being brought online and is executed on the required cpu IIUC.
+> > > > >
+> > > > > Yes, this occurs during hotplug case.
+> > > > > But in the case of system boot, 'cpufreq_driver->init' is called later
+> > > > > during cpufreq platform driver's probe. The value of CPU in 'policy->cpu'
+> > > > > can be different from the current CPU. That's why read_cpuid_mpidr() can't
+> > > > > be used.
+> > > >
+> > > > Fair enough, why not do cross call like in set_target ? Since it is one-off
+> > > > in init, I don't see any issue when you are doing it runtime for set_target.
+> > > >
+> > > > > > read_cpuid_mpidr() is inline and avoids having to export the logical_cpu_map.
+> > > > > > Though we may not add physical hotplug anytime soon, less dependency
+> > > > > > on this cpu_logical_map is better given that we can resolve this without
+> > > > > > the need to access the map.
+> > > >
+> > > > To be honest, we have tried to remove all the dependency on cluster id
+> > > > in generic code as it is not well defined. This one is tegra specific
+> > > > driver so should be fine. But I am still bit nervous to export
+> > > > cpu_logical_map as we have no clue what that would mean for physical
+> > > > hotplug.
+> > >
+> > > As suggested, I have done below change to get the cluster number using
+> > > read_cpuid_mpidr(). Please review and suggest if this looks ok?
+> > > I will send formal patch if the change is fine.
+> > >
+> > > diff --git a/drivers/cpufreq/tegra194-cpufreq.c
+> > > b/drivers/cpufreq/tegra194-cpufreq.c
+> > > index bae527e..06f5ccf 100644
+> > > --- a/drivers/cpufreq/tegra194-cpufreq.c
+> > > +++ b/drivers/cpufreq/tegra194-cpufreq.c
+> > > @@ -56,9 +56,11 @@ struct read_counters_work {
+> > >
+> > >  static struct workqueue_struct *read_counters_wq;
+> > >
+> > > -static enum cluster get_cpu_cluster(u8 cpu)
+> > > +static void get_cpu_cluster(void *cluster)
+> > >  {
+> > > -       return MPIDR_AFFINITY_LEVEL(cpu_logical_map(cpu), 1);
+> > > +       u64 mpidr = read_cpuid_mpidr() & MPIDR_HWID_BITMASK;
+> > > +
+> > > +       *((uint32_t *) cluster) = MPIDR_AFFINITY_LEVEL(mpidr, 1);
+> > >  }
+> > >
+> > >  /*
+> > > @@ -186,8 +188,10 @@ static unsigned int tegra194_get_speed(u32 cpu)
+> > >  static int tegra194_cpufreq_init(struct cpufreq_policy *policy)
+> > >  {
+> > >         struct tegra194_cpufreq_data *data = cpufreq_get_driver_data();
+> > > -       int cl = get_cpu_cluster(policy->cpu);
+> > >         u32 cpu;
+> > > +       u32 cl;
+> > > +
+> > > +       smp_call_function_single(policy->cpu, get_cpu_cluster, &cl, true);
+> > 
+> > Thanks for this, looks good to me. You can add:
+> > 
+> > Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+> 
+> I already merged Kefeng's __cpu_logical_map fix (commit eaecca9e7710)
+> but if the above goes in, I can drop the EXPORT_SYMBOL part (and keep
+> the rest as it's a good refactoring).
+> 
 
-Maulik Shah <mkshah@codeaurora.org> writes:
+OK, I will keep an eye on this and we can drop export once this is merged.
 
-> Clear previous kernel's configuration during init by resetting
-> interrupts in enable bank to zero.
->
-> Suggested-by: Stephen Boyd <swboyd@chromium.org>
-> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-> ---
->  drivers/irqchip/qcom-pdc.c | 12 +++++++++++-
->  1 file changed, 11 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
-> index dfcdfc5..80e0dfb 100644
-> --- a/drivers/irqchip/qcom-pdc.c
-> +++ b/drivers/irqchip/qcom-pdc.c
-> @@ -389,7 +389,8 @@ static const struct irq_domain_ops qcom_pdc_gpio_ops =
-=3D {
->=20=20
->  static int pdc_setup_pin_mapping(struct device_node *np)
->  {
-> -	int ret, n;
-> +	int ret, n, i;
-> +	u32 irq_index, reg_index, val;
->=20=20
->  	n =3D of_property_count_elems_of_size(np, "qcom,pdc-ranges", sizeof(u32=
-));
->  	if (n <=3D 0 || n % 3)
-> @@ -418,6 +419,15 @@ static int pdc_setup_pin_mapping(struct device_node =
-*np)
->  						 &pdc_region[n].cnt);
->  		if (ret)
->  			return ret;
-> +
-> +		for (i =3D pdc_region[n].pin_base; i < pdc_region[n].pin_base +
-> +						 pdc_region[n].cnt; i++) {
-
-how about making the for loop slightly easier to read by moving pin_base
-inside the loop?
-
-	for (i =3D 0; i < pdc_region[n].cnt; i++) {
-        	reg_index =3D (i + pdc_region[n].pin_base) >> 5;
-        	irq_index =3D (i + pdc_region[n].pin_base) & 0x1f;
-
-		[...]
-        }
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl8xON0ACgkQzL64meEa
-mQYWmhAAoPMQrU9MnIAYOqNNzNtawl7woFD3U3/hWPKR9Ec+eg/mAnzUQn9WkCeZ
-iwF4bNfzAj3WR+oOm5zAR4rjqfy4nGRsgxabtD7ESAUsoDt5UEJv2upOjhLbyFwS
-PmYYg/2hl1/cDtmz2FtN9hd5EGcQpM/Cm09wgbI+PWWVb61IdFPE2zlUPZr4jKYS
-zhoqOgTxoZmsWwfVPsY6EpMWpGdnvQIOLvTg8/Xm55hGhNQPQt6lNrgY0olzHnxv
-Z92vaAYjbJSCtuc36DwyM2bfY49cYeYpxRkKQm8POZr3s5I6QF3GAc2GSV3e9dnq
-p6tLIZoGMOm25FJDHxuU7uDD7shQOWwWZf4zYTxIUxnKwlHgUqB3tR8Xch2zibW0
-+UZdNLMqsB5OIHBblKaq11YAlIvmgaN0elnL3WQrZTaY1MvjGvTf7e8aQYSPelJz
-piZ9XP7uvt5y/WV6E4NCKIsAB0VRPeOLS2qoAUFuWHzcLN+YxPOtdRj1KASZElQJ
-AHKfuOkg6VWn+q6bb/OtHQ179dzoWNhMESZcapAbx72UIU2abtS8LQdXL7pIdCnt
-bEif9TrxTtGT5lkAgS5B5fMUrPRrxMdxFBDJy6pjDg6y+Y8MfhZRmnYhCJTB0+6v
-lqvrgJWBAzO1dR9zJYe5d5vAeRNBGFvvl9AFEOjuZU9mhCoNdYU=
-=O4o+
------END PGP SIGNATURE-----
---=-=-=--
+-- 
+Regards,
+Sudeep
