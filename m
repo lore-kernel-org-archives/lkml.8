@@ -2,136 +2,100 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B35EEC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:13:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4715C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:15:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 912172076B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:13:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B801B2076B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:15:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597068933;
+	bh=vy8eBB2//IvDtBt60/3I4yq6JaPvKDrnYi5TwhfDlK4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qGRDLFhIJ5ztqZV8aboD2W/DS5QFkUiX4ZX6quo4c1t3EfwYGySZkHm5YT+6xXsqb
+	 xfIELLy3dkHqfA4dzb7lQwnQhbIJimEbi7HKVxPMf8vKtLg4+5grnBEYhg6x/HLJjl
+	 6RkLWnwyq5yQ2jcRjXUupHsz4pVDIslyHM+jSv2k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727004AbgHJONp (ORCPT
+        id S1726996AbgHJOPc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 10:13:45 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:59613 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726814AbgHJONp (ORCPT
+        Mon, 10 Aug 2020 10:15:32 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:45980 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726900AbgHJOPb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 10:13:45 -0400
-Received: (qmail 300172 invoked by uid 1000); 10 Aug 2020 10:13:43 -0400
-Date:   Mon, 10 Aug 2020 10:13:43 -0400
-From:   Alan Stern <stern@rowland.harvard.edu>
-To:     Martin Kepplinger <martin.kepplinger@puri.sm>
-Cc:     James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Can Guo <cang@codeaurora.org>, martin.petersen@oracle.com,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@puri.sm
-Subject: Re: [PATCH] scsi: sd: add runtime pm to open / release
-Message-ID: <20200810141343.GA299045@rowland.harvard.edu>
-References: <d3fe36a9-b785-a5c4-c90d-b8fa10f4272f@puri.sm>
- <20200730151030.GB6332@rowland.harvard.edu>
- <9b80ca7c-39f8-e52d-2535-8b0baf93c7d1@puri.sm>
- <425990b3-4b0b-4dcf-24dc-4e7e60d5869d@puri.sm>
- <20200807143002.GE226516@rowland.harvard.edu>
- <b0abab28-880e-4b88-eb3c-9ffd927d1ed9@puri.sm>
- <20200808150542.GB256751@rowland.harvard.edu>
- <d3b6f7b8-5345-1ae1-4f79-5dde226e74f1@puri.sm>
- <20200809152643.GA277165@rowland.harvard.edu>
- <60150284-be13-d373-5448-651b72a7c4c9@puri.sm>
+        Mon, 10 Aug 2020 10:15:31 -0400
+Received: by mail-ed1-f67.google.com with SMTP id di22so6484044edb.12;
+        Mon, 10 Aug 2020 07:15:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/9w3jeHQu0tGGSbBjCL27CGFJj/E1cqCv8uax1z96uE=;
+        b=sCwCZoU5iE+LkzhKQKQVtAzw0dpsVHJyBgau7259ONYpybq/COBujwDPfLpFp8VzzZ
+         2CwapVL1bPGvqNplTpFTx5Bt5RZgj5l0lIr8CiEiJZDFXv+wi1bMYqIszCUd1ya93wRt
+         3Vloy5aP8SW5L1q16yzlypAUEM8l4vnMucM2wzsGPi3SduIMMyiBU9QDIEHMJJv9Wv8k
+         1O6dRYg4llCWv2GqzyNWqYD2AI/SwPUH0XC0NgJ3QTsSumeeFgRRKMwUXgx+zJjBT2tf
+         6wPIvSLKOYAgKq4ToQY/QsOYllhxnuChYBEA2ShV7qfv4quCDoCZKSGDBFsOlI1oSeTT
+         wSlA==
+X-Gm-Message-State: AOAM530V2yZT8A1rIUrvwdom7E0FcjNOaMLipeu02mD3/7WS2kwzB1Ax
+        bMReJFEPtB8vdtWRWnkQbZc=
+X-Google-Smtp-Source: ABdhPJwln4xOfhbOSKOZ+8uP/TEgLEw/XTopL0JiulzbP60CYhCX+ZiXbmfrXBY/H9XrTHJk0GskSg==
+X-Received: by 2002:a05:6402:1504:: with SMTP id f4mr21756997edw.163.1597068929268;
+        Mon, 10 Aug 2020 07:15:29 -0700 (PDT)
+Received: from pi3 ([194.230.155.117])
+        by smtp.googlemail.com with ESMTPSA id t18sm13397113ejf.38.2020.08.10.07.15.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Aug 2020 07:15:28 -0700 (PDT)
+Date:   Mon, 10 Aug 2020 16:15:26 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Tamseel Shams <m.shams@samsung.com>
+Cc:     kgene@kernel.org, gregkh@linuxfoundation.org, jslaby@suse.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org, alim.akhtar@samsung.com
+Subject: Re: [RFT PATCH v5] serial: samsung: Removes the IRQ not found warning
+Message-ID: <20200810141526.GA12448@pi3>
+References: <CGME20200810032514epcas5p1140fe0e44f3727953480ff0531c76b0c@epcas5p1.samsung.com>
+ <20200810030021.45348-1-m.shams@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <60150284-be13-d373-5448-651b72a7c4c9@puri.sm>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200810030021.45348-1-m.shams@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 02:03:17PM +0200, Martin Kepplinger wrote:
-> On 09.08.20 17:26, Alan Stern wrote:
-> > This is a somewhat fragile approach.  You don't know for certain that 
-> > scsi_noretry_cmd will be called.  Also, scsi_noretry_cmd can be called 
-> > from other places.
-> > 
-> > It would be better to clear the expecting_media_change flag just before 
-> > returning from scsi_decide_disposition.  That way its use is localized 
-> > to one routine, not spread out between two.
-> > 
-> > Alan Stern
-> > 
+On Mon, Aug 10, 2020 at 08:30:21AM +0530, Tamseel Shams wrote:
+> In few older Samsung SoCs like s3c2410, s3c2412
+> and s3c2440, UART IP is having 2 interrupt lines.
+> However, in other SoCs like s3c6400, s5pv210,
+> exynos5433, and exynos4210 UART is having only 1
+> interrupt line. Due to this, "platform_get_irq(platdev, 1)"
+> call in the driver gives the following false-positive error:
+> "IRQ index 1 not found" on newer SoC's.
 > 
-> Hi Alan,
+> This patch adds the condition to check for Tx interrupt
+> only for the those SoC's which have 2 interrupt lines.
 > 
-> maybe you're right. I initially just thought that I'd allow for specific
-> error codes in scsi_noretry_cmd() to return non-NULL (BUS_BUSY, PARITY,
-> ERROR) despite having the flag set.
+> Signed-off-by: Tamseel Shams <m.shams@samsung.com>
+> ---
+> Commit message is changed.
 > 
-> The below version works equally fine for me but I'm not sure if it's
-> actually more safe.
+> Added RFT, for older platform.
+>  
+> Addressed Krzysztof's review comments [1]
+> [1] -> https://lkml.org/lkml/2020/7/21/150
 > 
-> James, when exposing a new writable sysfs option like
-> "suspend_no_media_change"(?) that drivers can check before setting the
-> new "expecting_media_change" flag (during resume), would this addition
-> make sense to you?
+>  drivers/tty/serial/samsung_tty.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
 > 
-> thanks,
-> 
->                       martin
-> 
-> 
-> 
-> --- a/drivers/scsi/scsi_error.c
-> +++ b/drivers/scsi/scsi_error.c
-> @@ -565,6 +565,18 @@ int scsi_check_sense(struct scsi_cmnd *scmd)
->  				return NEEDS_RETRY;
->  			}
->  		}
-> +		if (scmd->device->expecting_media_change) {
-> +			if (sshdr.asc == 0x28 && sshdr.ascq == 0x00) {
-> +				/*
-> +				 * clear the expecting_media_change in
-> +				 * scsi_decide_disposition() because we
-> +				 * need to catch possible "fail fast" overrides
-> +				 * that block readahead can cause.
-> +				 */
-> +				return NEEDS_RETRY;
-> +			}
-> +		}
-> +
->  		/*
->  		 * we might also expect a cc/ua if another LUN on the target
->  		 * reported a UA with an ASC/ASCQ of 3F 0E -
-> @@ -1944,9 +1956,19 @@ int scsi_decide_disposition(struct scsi_cmnd *scmd)
->  	 * the request was not marked fast fail.  Note that above,
->  	 * even if the request is marked fast fail, we still requeue
->  	 * for queue congestion conditions (QUEUE_FULL or BUSY) */
-> -	if ((++scmd->retries) <= scmd->allowed
-> -	    && !scsi_noretry_cmd(scmd)) {
-> -		return NEEDS_RETRY;
-> +	if ((++scmd->retries) <= scmd->allowed) {
-> +		/*
-> +		 * but scsi_noretry_cmd() cannot override the
-> +		 * expecting_media_change flag.
-> +		 */
-> +		if (!scsi_noretry_cmd(scmd) ||
-> +		    scmd->device->expecting_media_change) {
-> +			scmd->device->expecting_media_change = 0;
-> +			return NEEDS_RETRY;
-> +		} else {
-> +			/* marked fast fail and not expected. */
-> +			return SUCCESS;
-> +		}
->  	} else {
 
-This may not matter...  but it's worth pointing out that 
-expecting_media_change doesn't get cleared if ++scmd->retries > 
-scmd->allowed.
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-It also doesn't get cleared in cases where the device _doesn't_ 
-report a Unit Attention.
-
-Alan Stern
+Best regards,
+Krzysztof
