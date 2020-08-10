@@ -2,193 +2,587 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B69EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:32:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CCE9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:33:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 459332073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:32:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 575DB2073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:33:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mysnt.onmicrosoft.com header.i=@mysnt.onmicrosoft.com header.b="MWIH91Xe"
+	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="SMTUZ1+3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbgHJHcy (ORCPT
+        id S1726505AbgHJHd4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 03:32:54 -0400
-Received: from mail-eopbgr40127.outbound.protection.outlook.com ([40.107.4.127]:25251
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726569AbgHJHcv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 03:32:51 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kqAY2JlfC5JMQiXQy72prOfoc7OWoJBLeZsiPUXW7DLTmqd5M5+98bFpVtANC5450BKw6UxQcSqSsMaCt177xv8hZRzRjlgOdRAl1J4IShodub9XMdrvIMom7KZdQTDVy0uldM3OvA/rbUVVQojMqbmYeRW93QPHApPMtF3ZIqf192Pxn8E8Gc0cD1sR6wkJDMYgVbb49VNzDKQ1GsvhzR4Fx56R3HuLrK7TuDZff23R5gBFkoFUz145oS1rMmodHv09b0ws/umJjvU7UzS1ZREy3UjZVRkdYEu9ubhYt1X2WY77RQz4wt98S9UYkNruBFTesGkhci/mSHZEF7ZR4A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tc9IW4hoT1tZkhIMEzBBVRF1zUZ/g9YJQLse3mLtcdw=;
- b=CtynKHPbyYjsGhPrZALL8UX24MHRvDJXb4dwPefbstAGiLnEiX4SI8ULnwHFfeQ0GGKtwWX3+TwZRtmVaXuYwneRAvVB5Kw8U7F2jDXrEv3FcKT7es2Ee9MgNiCdVkC+8YxruuTEV6NYaG7ea1vRg2Kpr7PPHF3wqCeBfEFKhCt7Owp+HEpJBeLyxCPgJ4tNGKfANQ8FWjC9rv3xu4Z82ofr/8iU6qllN4qbUuzJFgSzhghag1XsrIGq5gIL/zPm6cWuXuyi4uEqjQeE7sjnqin9Q38Sibhf8rQW5i7LiSRlJ8mD4PAhCMz3AFRMKz/zYULONUQAIy3epyQjuAG4AQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=kontron.de; dmarc=pass action=none header.from=kontron.de;
- dkim=pass header.d=kontron.de; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mysnt.onmicrosoft.com;
- s=selector2-mysnt-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tc9IW4hoT1tZkhIMEzBBVRF1zUZ/g9YJQLse3mLtcdw=;
- b=MWIH91XeuqHc4pa2tNQAwlWxvaV6BHlLz0WmpxzWpWEUc9j0y1TD0KN0XpAC1hFA/+pKdmqSmWvuBPk269MNvGo/p25/XEG9J1zhqgnSO+uW5Q4bkYN+3+sh37iz2vXZj+p0lFIbEVHPvvPqdjgS2CBd1zZ6Sr7ZJuA4YjRd7MY=
-Authentication-Results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=kontron.de;
-Received: from AM0PR10MB2963.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:208:157::14)
- by AM0PR10MB3617.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:15f::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.19; Mon, 10 Aug
- 2020 07:32:46 +0000
-Received: from AM0PR10MB2963.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::51f5:dfc0:24bb:309c]) by AM0PR10MB2963.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::51f5:dfc0:24bb:309c%7]) with mapi id 15.20.3261.024; Mon, 10 Aug 2020
- 07:32:46 +0000
-Subject: Re: [PATCH v11 12/12] dmaengine: imx-sdma: add uart rom script
-To:     Robin Gong <yibin.gong@nxp.com>, mark.rutland@arm.com,
-        broonie@kernel.org, robh+dt@kernel.org, catalin.marinas@arm.com,
-        vkoul@kernel.org, will.deacon@arm.com, shawnguo@kernel.org,
-        festevam@gmail.com, s.hauer@pengutronix.de,
-        martin.fuzzey@flowbird.group, u.kleine-koenig@pengutronix.de,
-        dan.j.williams@intel.com, matthias.schiffer@ew.tq-group.com
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kernel@pengutronix.de, dmaengine@vger.kernel.org, linux-imx@nxp.com
-References: <1595616685-9987-1-git-send-email-yibin.gong@nxp.com>
- <1595616685-9987-13-git-send-email-yibin.gong@nxp.com>
-From:   Frieder Schrempf <frieder.schrempf@kontron.de>
-Message-ID: <89946dc6-6c0f-b3d5-9c9a-517f1ed7b5e1@kontron.de>
-Date:   Mon, 10 Aug 2020 09:32:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-In-Reply-To: <1595616685-9987-13-git-send-email-yibin.gong@nxp.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AM0PR02CA0107.eurprd02.prod.outlook.com
- (2603:10a6:208:154::48) To AM0PR10MB2963.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:208:157::14)
+        Mon, 10 Aug 2020 03:33:56 -0400
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:47495 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725857AbgHJHdz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 03:33:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
+  t=1597044833; x=1628580833;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=eCgB2W22TGCZO9ooLJBWNFJ+E1VjpX14MX4RdY4mJkM=;
+  b=SMTUZ1+303m2UjjjTwPFrtR6MaDcPkETNVLS43kam13iRxz6q507qa/3
+   TLtl5y77woTkBtKe+wyFsK91gTit9Y9SnaRw9q+CPyeip/wkZRJUVSsA+
+   RW1b1vZXpAdWTr58oGPyyHbiomKYMRtHrmPi0i+YF7Mi13XyWUzzLEoc+
+   8=;
+IronPort-SDR: 8Qri4v2os+FFIH4e35fZx2ODaSShAXVXkTV/UQwQghlNQy+WjyaSBGjnCSI5Nlpa1s0Rvs5evf
+ v49gVO9O5ezA==
+X-IronPort-AV: E=Sophos;i="5.75,456,1589241600"; 
+   d="scan'208";a="47010645"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2c-6f38efd9.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 10 Aug 2020 07:33:51 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2c-6f38efd9.us-west-2.amazon.com (Postfix) with ESMTPS id 43885A1FB9;
+        Mon, 10 Aug 2020 07:33:50 +0000 (UTC)
+Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 10 Aug 2020 07:33:49 +0000
+Received: from 38f9d3867b82.ant.amazon.com (10.43.162.140) by
+ EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 10 Aug 2020 07:33:43 +0000
+Subject: Re: [PATCH v6 09/18] nitro_enclaves: Add logic for setting an enclave
+ vCPU
+To:     Andra Paraschiv <andraprs@amazon.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+CC:     Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        "David Duncan" <davdunc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        "David Woodhouse" <dwmw@amazon.co.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Karen Noel <knoel@redhat.com>,
+        "Martin Pohlack" <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Stewart Smith <trawets@amazon.com>,
+        Uwe Dannowski <uwed@amazon.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        kvm <kvm@vger.kernel.org>,
+        ne-devel-upstream <ne-devel-upstream@amazon.com>
+References: <20200805091017.86203-1-andraprs@amazon.com>
+ <20200805091017.86203-10-andraprs@amazon.com>
+From:   Alexander Graf <graf@amazon.de>
+Message-ID: <7adb6707-4101-8f47-6497-fe086dcc11f3@amazon.de>
+Date:   Mon, 10 Aug 2020 09:33:42 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.11.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.99.60] (80.147.118.32) by AM0PR02CA0107.eurprd02.prod.outlook.com (2603:10a6:208:154::48) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.20 via Frontend Transport; Mon, 10 Aug 2020 07:32:45 +0000
-X-Originating-IP: [80.147.118.32]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: f572f286-5146-40aa-ac3d-08d83cff938a
-X-MS-TrafficTypeDiagnostic: AM0PR10MB3617:
-X-Microsoft-Antispam-PRVS: <AM0PR10MB36173BDE7887CDE9797D8B92E9440@AM0PR10MB3617.EURPRD10.PROD.OUTLOOK.COM>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: wEAWs8wDhczFWLmu7VdEtJ/7MA+VhMJ9oFWoyN9A2yxZr2lt4BGaRe6Bn6PFCLrgNtizyiKVweulvbynMH0/7iHrnPEa3C/YqWwEXdthErSwF41Xqd7zu8nnWfRNSGbj2Ers5GGtt7yRHnJqomOPAPCLGZwGpfb2bPldSVgS29cZekeT3re+cdokJKLwyQWGDlhssfUSFJAioB8E0oQv9nuJkhc25z+Inw60Spfbq5LpI1ffW1ge8H8x9mQ11Ux2h7WHeSd2rKFAFpMh1H2FZxjLa4U4dj7DhzLYDdfJmo1bAwnesbbSp3viTN3D1T4XRv88dAJFK/eukTEob5qkIs45C2kfjeqBgEv0qn2YE3BMNcOXHx6U1+iMPiU6Dy2FzMMIyXspMeMM4PFxtVOAKHk8epTtvVUS0vf/54ipaAVu99QWGgMvr/LlxpB9jEBhbqY1Su161NBh+0IiZNjnYbBD2EvEhUu6Eb5L2IrVWZE=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR10MB2963.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(136003)(396003)(366004)(376002)(39850400004)(36756003)(53546011)(2906002)(44832011)(8936002)(8676002)(66556008)(66476007)(45080400002)(26005)(31696002)(86362001)(16576012)(316002)(66946007)(7416002)(4326008)(186003)(16526019)(5660300002)(52116002)(31686004)(6486002)(956004)(2616005)(966005)(478600001)(83380400001)(921003)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: CWnfoRRrz/r7n29kvET7xMZW6VdI50yOMevZMWDc2RDu6lZdIkWE/KMQi91rj+8KHaADqltL9phu01wFY2BxsOJaIpXXqoI2Wm3KZ9+a6K14eJz2NU+0CFJslWJ0UkEyZyUoemkosIkTzOgloiFsIXv9wWb73FyybsAfYUqdEGE3iDJyz3B2lVzY6xkr9RDza/04+PCGtcIvz9bX3J2hXNnClw156GHRMxWVh8vz53IByQWlfqZ0qGRj0NYnD0dEdJwVpo2MWtGHQ4ntYByIBVr9KkrVqiZHctoQ7pYbkrfJNXq8sJYtWb3ajIvKgq1p3R0w39BUoYMmxdVpKDlN4tt7kpCi29r6ITVrKIXRkz6LXAevRA33Q5d9uaMBEsi9bVZj/1Em0Lat1MqvGBIDKO9TP+9RtnGT+fDe3r5Aj0gP4Egadaw6cswlet7sfS7ds+YI+UQvDWhQFNzLyj68KNrbbb0zqL2gRpq5cBKT9JU4rKfwRrx/UNyVQyLEFxTeikdYLZwPRkunnEJWryGpvepK3C1bh+bkFq06VY89Uub+R1FjChDnjL6qoV2hOQv8CgSKU2T1ca0tLwy7nWUaZhCnKC8FygU/CPlN9gMpKH43DkkwWkzT5nwM8x+bexLlJyqb4J5Oy4QIkZ2TpIYffQ==
-X-OriginatorOrg: kontron.de
-X-MS-Exchange-CrossTenant-Network-Message-Id: f572f286-5146-40aa-ac3d-08d83cff938a
-X-MS-Exchange-CrossTenant-AuthSource: AM0PR10MB2963.EURPRD10.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Aug 2020 07:32:46.5639
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8c9d3c97-3fd9-41c8-a2b1-646f3942daf1
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Kpo2hEXZdm4VIj5PxBTSRhyO+LvCXwtG6Z5l2VQFtz7UphUI++Boi8Z4GyTdTdFybELyMoKlWgJEuOx/DpOlPUrOOXiC/GpIfIyv4iYvOXg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR10MB3617
+In-Reply-To: <20200805091017.86203-10-andraprs@amazon.com>
+Content-Language: en-US
+X-Originating-IP: [10.43.162.140]
+X-ClientProxiedBy: EX13D18UWA002.ant.amazon.com (10.43.160.199) To
+ EX13D20UWC001.ant.amazon.com (10.43.162.244)
+Content-Type: text/plain; charset="windows-1252"; format="flowed"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robin,
 
-On 24.07.20 20:51, Robin Gong wrote:
-> For the compatibility of NXP internal legacy kernel before 4.19 which
-> is based on uart ram script and upstreaming kernel based on uart rom
-> script, add both uart ram/rom script in latest sdma firmware. By default
-> uart rom script used.
-> Besides, add two multi-fifo scripts for SAI/PDM on i.mx8m/8mm and add
-> back qspi script miss for v4(i.mx7d/8m/8mm family, but v3 is for i.mx6).
-> 
-> rom script:
->          uart_2_mcu_addr
-> 	uartsh_2_mcu_addr /* through spba bus */
-> am script:
-> 	uart_2_mcu_ram_addr
-> 	uartsh_2_mcu_ram_addr /* through spba bus */
-> 
-> Please get latest sdma firmware from the below and put them into the path
-> (/lib/firmware/imx/sdma/):
-> https://eur04.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgit.kernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Ffirmware%2Flinux-firmware.git&amp;data=02%7C01%7Cfrieder.schrempf%40kontron.de%7Caa98331fadca476ca15c08d82fbdaf32%7C8c9d3c973fd941c8a2b1646f3942daf1%7C0%7C0%7C637311839017457806&amp;sdata=cbM33k4fdr0IAni1njQWgIrzxbEJ%2BQBkxN10fnagO6k%3D&amp;reserved=0
-> /tree/imx/sdma
-> 
-> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-> Acked-by: Vinod Koul <vkoul@kernel.org>
 
-This patch seems to break UART DMA in case the ROM firmware is used. In 
-that case sdma->script_number is set to SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V1, 
-so the ROM scripts at uart_2_mcu_addr and uartsh_2_mcu_addr will never 
-be added in sdma_add_scripts() as they are now moved beyond the V1 max 
-index.
+On 05.08.20 11:10, Andra Paraschiv wrote:
+> An enclave, before being started, has its resources set. One of its
+> resources is CPU.
+> =
 
-Reverting this patch fixes UART DMA with ROM firmware.
-Can you please find a way to fix this or just drop this change?
+> A NE CPU pool is set and enclave CPUs are chosen from it. Offline the
+> CPUs from the NE CPU pool during the pool setup and online them back
+> during the NE CPU pool teardown. The CPU offline is necessary so that
+> there would not be more vCPUs than physical CPUs available to the
+> primary / parent VM. In that case the CPUs would be overcommitted and
+> would change the initial configuration of the primary / parent VM of
+> having dedicated vCPUs to physical CPUs.
+> =
 
-Thanks,
-Frieder
+> The enclave CPUs need to be full cores and from the same NUMA node. CPU
+> 0 and its siblings have to remain available to the primary / parent VM.
+> =
 
+> Add ioctl command logic for setting an enclave vCPU.
+> =
+
+> Signed-off-by: Alexandru Vasile <lexnv@amazon.com>
+> Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
 > ---
->   drivers/dma/imx-sdma.c                     | 4 ++--
->   include/linux/platform_data/dma-imx-sdma.h | 8 ++++++--
->   2 files changed, 8 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-> index 8735606..5900e32 100644
-> --- a/drivers/dma/imx-sdma.c
-> +++ b/drivers/dma/imx-sdma.c
-> @@ -1729,8 +1729,8 @@ static void sdma_issue_pending(struct dma_chan *chan)
->   
->   #define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V1	34
->   #define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V2	38
-> -#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V3	41
-> -#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V4	42
-> +#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V3	45
-> +#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V4	46
->   
->   static void sdma_add_scripts(struct sdma_engine *sdma,
->   		const struct sdma_script_start_addrs *addr)
-> diff --git a/include/linux/platform_data/dma-imx-sdma.h b/include/linux/platform_data/dma-imx-sdma.h
-> index 30e676b..e12d2e8 100644
-> --- a/include/linux/platform_data/dma-imx-sdma.h
-> +++ b/include/linux/platform_data/dma-imx-sdma.h
-> @@ -20,12 +20,12 @@ struct sdma_script_start_addrs {
->   	s32 per_2_firi_addr;
->   	s32 mcu_2_firi_addr;
->   	s32 uart_2_per_addr;
-> -	s32 uart_2_mcu_addr;
-> +	s32 uart_2_mcu_ram_addr;
->   	s32 per_2_app_addr;
->   	s32 mcu_2_app_addr;
->   	s32 per_2_per_addr;
->   	s32 uartsh_2_per_addr;
-> -	s32 uartsh_2_mcu_addr;
-> +	s32 uartsh_2_mcu_ram_addr;
->   	s32 per_2_shp_addr;
->   	s32 mcu_2_shp_addr;
->   	s32 ata_2_mcu_addr;
-> @@ -52,6 +52,10 @@ struct sdma_script_start_addrs {
->   	s32 zcanfd_2_mcu_addr;
->   	s32 zqspi_2_mcu_addr;
->   	s32 mcu_2_ecspi_addr;
-> +	s32 mcu_2_sai_addr;
-> +	s32 sai_2_mcu_addr;
-> +	s32 uart_2_mcu_addr;
-> +	s32 uartsh_2_mcu_addr;
->   	/* End of v3 array */
->   	s32 mcu_2_zqspi_addr;
->   	/* End of v4 array */
-> 
+> Changelog
+> =
+
+> v5 -> v6
+> =
+
+> * Check CPUs are from the same NUMA node before going through CPU
+>    siblings during the NE CPU pool setup.
+> * Update documentation to kernel-doc format.
+> =
+
+> v4 -> v5
+> =
+
+> * Set empty string in case of invalid NE CPU pool.
+> * Clear NE CPU pool mask on pool setup failure.
+> * Setup NE CPU cores out of the NE CPU pool.
+> * Early exit on NE CPU pool setup if enclave(s) already running.
+> * Remove sanity checks for situations that shouldn't happen, only if
+>    buggy system or broken logic at all.
+> * Add check for maximum vCPU id possible before looking into the CPU
+>    pool.
+> * Remove log on copy_from_user() / copy_to_user() failure and on admin
+>    capability check for setting the NE CPU pool.
+> * Update the ioctl call to not create a file descriptor for the vCPU.
+> * Split the CPU pool usage logic in 2 separate functions - one to get a
+>    CPU from the pool and the other to check the given CPU is available in
+>    the pool.
+> =
+
+> v3 -> v4
+> =
+
+> * Setup the NE CPU pool at runtime via a sysfs file for the kernel
+>    parameter.
+> * Check enclave CPUs to be from the same NUMA node.
+> * Use dev_err instead of custom NE log pattern.
+> * Update the NE ioctl call to match the decoupling from the KVM API.
+> =
+
+> v2 -> v3
+> =
+
+> * Remove the WARN_ON calls.
+> * Update static calls sanity checks.
+> * Update kzfree() calls to kfree().
+> * Remove file ops that do nothing for now - open, ioctl and release.
+> =
+
+> v1 -> v2
+> =
+
+> * Add log pattern for NE.
+> * Update goto labels to match their purpose.
+> * Remove the BUG_ON calls.
+> * Check if enclave state is init when setting enclave vCPU.
+> ---
+>   drivers/virt/nitro_enclaves/ne_misc_dev.c | 575 ++++++++++++++++++++++
+>   1 file changed, 575 insertions(+)
+> =
+
+> diff --git a/drivers/virt/nitro_enclaves/ne_misc_dev.c b/drivers/virt/nit=
+ro_enclaves/ne_misc_dev.c
+> index 6c8c12f65666..4787bc59d39d 100644
+> --- a/drivers/virt/nitro_enclaves/ne_misc_dev.c
+> +++ b/drivers/virt/nitro_enclaves/ne_misc_dev.c
+> @@ -57,8 +57,11 @@
+>    * TODO: Update logic to create new sysfs entries instead of using
+>    * a kernel parameter e.g. if multiple sysfs files needed.
+>    */
+> +static int ne_set_kernel_param(const char *val, const struct kernel_para=
+m *kp);
+> +
+>   static const struct kernel_param_ops ne_cpu_pool_ops =3D {
+>   	.get	=3D param_get_string,
+> +	.set	=3D ne_set_kernel_param,
+>   };
+>   =
+
+>   static char ne_cpus[NE_CPUS_SIZE];
+> @@ -87,6 +90,575 @@ struct ne_cpu_pool {
+>   =
+
+>   static struct ne_cpu_pool ne_cpu_pool;
+>   =
+
+> +/**
+> + * ne_check_enclaves_created() - Verify if at least one enclave has been=
+ created.
+> + * @void:	No parameters provided.
+> + *
+> + * Context: Process context.
+> + * Return:
+> + * * True if at least one enclave is created.
+> + * * False otherwise.
+> + */
+> +static bool ne_check_enclaves_created(void)
+> +{
+> +	struct ne_pci_dev *ne_pci_dev =3D NULL;
+> +	/* TODO: Find another way to get the NE PCI device reference. */
+> +	struct pci_dev *pdev =3D pci_get_device(PCI_VENDOR_ID_AMAZON, PCI_DEVIC=
+E_ID_NE, NULL);
+
+Can we just make this a global ref count instead?
+
+> +	bool ret =3D false;
+> +
+> +	if (!pdev)
+> +		return ret;
+> +
+> +	ne_pci_dev =3D pci_get_drvdata(pdev);
+> +	if (!ne_pci_dev) {
+> +		pci_dev_put(pdev);
+> +
+> +		return ret;
+> +	}
+> +
+> +	mutex_lock(&ne_pci_dev->enclaves_list_mutex);
+> +
+> +	if (!list_empty(&ne_pci_dev->enclaves_list))
+> +		ret =3D true;
+> +
+> +	mutex_unlock(&ne_pci_dev->enclaves_list_mutex);
+> +
+> +	pci_dev_put(pdev);
+> +
+> +	return ret;
+> +}
+> +
+> +/**
+> + * ne_setup_cpu_pool() - Set the NE CPU pool after handling sanity check=
+s such
+> + *			 as not sharing CPU cores with the primary / parent VM
+> + *			 or not using CPU 0, which should remain available for
+> + *			 the primary / parent VM. Offline the CPUs from the
+> + *			 pool after the checks passed.
+> + * @ne_cpu_list:	The CPU list used for setting NE CPU pool.
+> + *
+> + * Context: Process context.
+> + * Return:
+> + * * 0 on success.
+> + * * Negative return value on failure.
+> + */
+> +static int ne_setup_cpu_pool(const char *ne_cpu_list)
+> +{
+> +	int core_id =3D -1;
+> +	unsigned int cpu =3D 0;
+> +	cpumask_var_t cpu_pool =3D NULL;
+> +	unsigned int cpu_sibling =3D 0;
+> +	unsigned int i =3D 0;
+> +	int numa_node =3D -1;
+> +	int rc =3D -EINVAL;
+> +
+> +	if (!ne_cpu_list)
+> +		return 0;
+> +
+> +	if (!zalloc_cpumask_var(&cpu_pool, GFP_KERNEL))
+> +		return -ENOMEM;
+> +
+> +	mutex_lock(&ne_cpu_pool.mutex);
+> +
+> +	rc =3D cpulist_parse(ne_cpu_list, cpu_pool);
+> +	if (rc < 0) {
+> +		pr_err("%s: Error in cpulist parse [rc=3D%d]\n", ne_misc_dev.name, rc);
+> +
+> +		goto free_pool_cpumask;
+> +	}
+> +
+> +	cpu =3D cpumask_any(cpu_pool);
+> +	if (cpu >=3D nr_cpu_ids) {
+> +		pr_err("%s: No CPUs available in CPU pool\n", ne_misc_dev.name);
+> +
+> +		rc =3D -EINVAL;
+> +
+> +		goto free_pool_cpumask;
+> +	}
+> +
+> +	/*
+> +	 * Check if the CPUs from the NE CPU pool are from the same NUMA node.
+> +	 */
+> +	for_each_cpu(cpu, cpu_pool) {
+> +		if (numa_node < 0) {
+> +			numa_node =3D cpu_to_node(cpu);
+> +			if (numa_node < 0) {
+> +				pr_err("%s: Invalid NUMA node %d\n",
+> +				       ne_misc_dev.name, numa_node);
+> +
+> +				rc =3D -EINVAL;
+> +
+> +				goto free_pool_cpumask;
+> +			}
+> +		} else {
+> +			if (numa_node !=3D cpu_to_node(cpu)) {
+> +				pr_err("%s: CPUs with different NUMA nodes\n",
+> +				       ne_misc_dev.name);
+> +
+> +				rc =3D -EINVAL;
+> +
+> +				goto free_pool_cpumask;
+> +			}
+> +		}
+> +	}
+> +
+> +	/*
+> +	 * Check if CPU 0 and its siblings are included in the provided CPU pool
+> +	 * They should remain available for the primary / parent VM.
+> +	 */
+> +	if (cpumask_test_cpu(0, cpu_pool)) {
+> +		pr_err("%s: CPU 0 has to remain available\n", ne_misc_dev.name);
+> +
+> +		rc =3D -EINVAL;
+> +
+> +		goto free_pool_cpumask;
+> +	}
+> +
+> +	for_each_cpu(cpu_sibling, topology_sibling_cpumask(0)) {
+> +		if (cpumask_test_cpu(cpu_sibling, cpu_pool)) {
+> +			pr_err("%s: CPU sibling %d for CPU 0 is in CPU pool\n",
+> +			       ne_misc_dev.name, cpu_sibling);
+> +
+> +			rc =3D -EINVAL;
+> +
+> +			goto free_pool_cpumask;
+> +		}
+> +	}
+> +
+> +	/*
+> +	 * Check if CPU siblings are included in the provided CPU pool. The
+> +	 * expectation is that CPU cores are made available in the CPU pool for
+> +	 * enclaves.
+> +	 */
+> +	for_each_cpu(cpu, cpu_pool) {
+> +		for_each_cpu(cpu_sibling, topology_sibling_cpumask(cpu)) {
+> +			if (!cpumask_test_cpu(cpu_sibling, cpu_pool)) {
+> +				pr_err("%s: CPU %d is not in CPU pool\n",
+> +				       ne_misc_dev.name, cpu_sibling);
+> +
+> +				rc =3D -EINVAL;
+> +
+> +				goto free_pool_cpumask;
+> +			}
+> +		}
+> +	}
+> +
+> +	ne_cpu_pool.avail_cores_size =3D nr_cpu_ids / smp_num_siblings;
+> +
+> +	ne_cpu_pool.avail_cores =3D kcalloc(ne_cpu_pool.avail_cores_size,
+> +					  sizeof(*ne_cpu_pool.avail_cores),
+> +					  GFP_KERNEL);
+> +	if (!ne_cpu_pool.avail_cores) {
+> +		rc =3D -ENOMEM;
+> +
+> +		goto free_pool_cpumask;
+> +	}
+> +
+> +	for (i =3D 0; i < ne_cpu_pool.avail_cores_size; i++)
+> +		if (!zalloc_cpumask_var(&ne_cpu_pool.avail_cores[i], GFP_KERNEL)) {
+> +			rc =3D -ENOMEM;
+> +
+> +			goto free_cores_cpumask;
+> +		}
+> +
+> +	/* Split the NE CPU pool in CPU cores. */
+> +	for_each_cpu(cpu, cpu_pool) {
+> +		core_id =3D topology_core_id(cpu);
+> +		if (core_id < 0 || core_id >=3D ne_cpu_pool.avail_cores_size) {
+> +			pr_err("%s: Invalid core id  %d\n",
+> +			       ne_misc_dev.name, core_id);
+> +
+> +			rc =3D -EINVAL;
+> +
+> +			goto clear_cpumask;
+> +		}
+> +
+> +		cpumask_set_cpu(cpu, ne_cpu_pool.avail_cores[core_id]);
+> +	}
+> +
+> +	/*
+> +	 * CPUs that are given to enclave(s) should not be considered online
+> +	 * by Linux anymore, as the hypervisor will degrade them to floating.
+> +	 * The physical CPUs (full cores) are carved out of the primary / parent
+> +	 * VM and given to the enclave VM. The same number of vCPUs would run
+> +	 * on less pCPUs for the primary / parent VM.
+> +	 *
+> +	 * We offline them here, to not degrade performance and expose correct
+> +	 * topology to Linux and user space.
+> +	 */
+> +	for_each_cpu(cpu, cpu_pool) {
+> +		rc =3D remove_cpu(cpu);
+> +		if (rc !=3D 0) {
+> +			pr_err("%s: CPU %d is not offlined [rc=3D%d]\n",
+> +			       ne_misc_dev.name, cpu, rc);
+> +
+> +			goto online_cpus;
+> +		}
+> +	}
+> +
+> +	free_cpumask_var(cpu_pool);
+> +
+> +	ne_cpu_pool.numa_node =3D numa_node;
+> +
+> +	mutex_unlock(&ne_cpu_pool.mutex);
+> +
+> +	return 0;
+> +
+> +online_cpus:
+> +	for_each_cpu(cpu, cpu_pool)
+> +		add_cpu(cpu);
+> +clear_cpumask:
+> +	for (i =3D 0; i < ne_cpu_pool.avail_cores_size; i++)
+> +		cpumask_clear(ne_cpu_pool.avail_cores[i]);
+> +free_cores_cpumask:
+> +	for (i =3D 0; i < ne_cpu_pool.avail_cores_size; i++)
+> +		free_cpumask_var(ne_cpu_pool.avail_cores[i]);
+> +	kfree(ne_cpu_pool.avail_cores);
+> +	ne_cpu_pool.avail_cores_size =3D 0;
+> +free_pool_cpumask:
+> +	free_cpumask_var(cpu_pool);
+> +	mutex_unlock(&ne_cpu_pool.mutex);
+> +
+> +	return rc;
+> +}
+> +
+> +/**
+> + * ne_teardown_cpu_pool() - Online the CPUs from the NE CPU pool and cle=
+anup the
+> + *			    CPU pool.
+> + * @void:	No parameters provided.
+> + *
+> + * Context: Process context.
+> + */
+> +static void ne_teardown_cpu_pool(void)
+> +{
+> +	unsigned int cpu =3D 0;
+> +	unsigned int i =3D 0;
+> +	int rc =3D -EINVAL;
+> +
+> +	mutex_lock(&ne_cpu_pool.mutex);
+> +
+> +	if (!ne_cpu_pool.avail_cores_size) {
+> +		mutex_unlock(&ne_cpu_pool.mutex);
+> +
+> +		return;
+> +	}
+> +
+> +	for (i =3D 0; i < ne_cpu_pool.avail_cores_size; i++) {
+> +		for_each_cpu(cpu, ne_cpu_pool.avail_cores[i]) {
+> +			rc =3D add_cpu(cpu);
+> +			if (rc !=3D 0)
+> +				pr_err("%s: CPU %d is not onlined [rc=3D%d]\n",
+> +				       ne_misc_dev.name, cpu, rc);
+> +		}
+> +
+> +		cpumask_clear(ne_cpu_pool.avail_cores[i]);
+> +
+> +		free_cpumask_var(ne_cpu_pool.avail_cores[i]);
+> +	}
+> +
+> +	kfree(ne_cpu_pool.avail_cores);
+> +	ne_cpu_pool.avail_cores_size =3D 0;
+> +
+> +	mutex_unlock(&ne_cpu_pool.mutex);
+> +}
+> +
+> +/**
+> + * ne_set_kernel_param() - Set the NE CPU pool value via the NE kernel p=
+arameter.
+> + * @val:	NE CPU pool string value.
+> + * @kp :	NE kernel parameter associated with the NE CPU pool.
+> + *
+> + * Context: Process context.
+> + * Return:
+> + * * 0 on success.
+> + * * Negative return value on failure.
+> + */
+> +static int ne_set_kernel_param(const char *val, const struct kernel_para=
+m *kp)
+> +{
+> +	char error_val[] =3D "";
+> +	int rc =3D -EINVAL;
+> +
+> +	if (!capable(CAP_SYS_ADMIN))
+> +		return -EPERM;
+> +
+> +	if (ne_check_enclaves_created()) {
+> +		pr_err("%s: The CPU pool is used by enclave(s)\n", ne_misc_dev.name);
+> +
+> +		return -EPERM;
+> +	}
+> +
+> +	ne_teardown_cpu_pool();
+> +
+> +	rc =3D ne_setup_cpu_pool(val);
+> +	if (rc < 0) {
+> +		pr_err("%s: Error in setup CPU pool [rc=3D%d]\n", ne_misc_dev.name, rc=
+);
+> +
+> +		param_set_copystring(error_val, kp);
+> +
+> +		return rc;
+> +	}
+> +
+> +	return param_set_copystring(val, kp);
+> +}
+> +
+> +/**
+> + * ne_get_cpu_from_cpu_pool() - Get a CPU from the NE CPU pool, either f=
+rom the
+> + *				remaining sibling(s) of a CPU core or the first
+> + *				sibling of a new CPU core.
+> + * @ne_enclave :	Private data associated with the current enclave.
+> + *
+> + * Context: Process context. This function is called with the ne_enclave=
+ mutex held.
+> + * Return:
+> + * * vCPU id.
+> + * * 0, if no CPU available in the pool.
+> + */
+> +static unsigned int ne_get_cpu_from_cpu_pool(struct ne_enclave *ne_encla=
+ve)
+> +{
+> +	int core_id =3D -1;
+> +	unsigned int cpu =3D 0;
+> +	unsigned int i =3D 0;
+> +	unsigned int vcpu_id =3D 0;
+> +
+> +	/* There are CPU siblings available to choose from. */
+> +	for (i =3D 0; i < ne_enclave->avail_cpu_cores_size; i++)
+> +		for_each_cpu(cpu, ne_enclave->avail_cpu_cores[i])
+
+This is really hard to read. I think what you want to say here is =
+
+something along these lines:
+
+/*
+  * If previously allocated a thread of a core to this enclave, we first
+  * return its sibling(s) for new allocations, so that we can donate a
+  * full core.
+  */
+for (i =3D 0; i < ne_enclave->nr_parent_cores; i++) {
+     for_each_cpu(cpu, ne->enclave->parent_cores[i].reserved_siblings) {
+         if (!ne_cpu_donated(cpu)) {
+             [...]
+         }
+     }
+}
+
+Similarly for other places in this file where you do cpu mask logic. It =
+
+always needs to be very obvious what the respective mask is for, because =
+
+you have ~3 semantically different ones.
+
+
+Alex
+
+
+
+Amazon Development Center Germany GmbH
+Krausenstr. 38
+10117 Berlin
+Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
+Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
+Sitz: Berlin
+Ust-ID: DE 289 237 879
+
+
+
