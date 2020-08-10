@@ -2,91 +2,95 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 527CDC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D58C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:41:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18A22208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:40:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F1E622D6F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:41:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728156AbgHJSku convert rfc822-to-8bit (ORCPT
+        id S1728194AbgHJSlZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 14:40:50 -0400
-Received: from lithops.sigma-star.at ([195.201.40.130]:57076 "EHLO
-        lithops.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728071AbgHJSku (ORCPT
+        Mon, 10 Aug 2020 14:41:25 -0400
+Received: from smtp06.smtpout.orange.fr ([80.12.242.128]:17232 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728163AbgHJSlY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 14:40:50 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id CD01161D8ABB;
-        Mon, 10 Aug 2020 20:40:47 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id hU8bXeKPAT8V; Mon, 10 Aug 2020 20:40:47 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id 6AAEC61D8ABC;
-        Mon, 10 Aug 2020 20:40:47 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id aOzKDsZ6vDg5; Mon, 10 Aug 2020 20:40:47 +0200 (CEST)
-Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
-        by lithops.sigma-star.at (Postfix) with ESMTP id 425DD61D8ABB;
-        Mon, 10 Aug 2020 20:40:47 +0200 (CEST)
-Date:   Mon, 10 Aug 2020 20:40:47 +0200 (CEST)
-From:   Richard Weinberger <richard@nod.at>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        stable <stable@kernel.org>
-Message-ID: <1475688016.229129.1597084847149.JavaMail.zimbra@nod.at>
-In-Reply-To: <20200810163851.GB24408@amd>
-References: <20200810151804.199494191@linuxfoundation.org> <20200810151804.911709325@linuxfoundation.org> <20200810163851.GB24408@amd>
-Subject: Re: [PATCH 4.19 14/48] mtd: properly check all write ioctls for
- permissions
+        Mon, 10 Aug 2020 14:41:24 -0400
+Received: from [192.168.42.210] ([93.22.133.151])
+        by mwinf5d63 with ME
+        id DuhF2300D3G8tn903uhF7e; Mon, 10 Aug 2020 20:41:22 +0200
+X-ME-Helo: [192.168.42.210]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Mon, 10 Aug 2020 20:41:22 +0200
+X-ME-IP: 93.22.133.151
+Subject: Re: [PATCH] drm: amdgpu: Use the correct size when allocating memory
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     alexander.deucher@amd.com, christian.koenig@amd.com,
+        airlied@linux.ie, daniel@ffwll.ch, sumit.semwal@linaro.org,
+        colton.w.lewis@protonmail.com, Ori.Messinger@amd.com,
+        m.szyprowski@samsung.com, bernard@vivo.com,
+        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+References: <20200809203406.751971-1-christophe.jaillet@wanadoo.fr>
+ <20200810154213.GM1793@kadam>
+From:   Marion & Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Message-ID: <8c414dd7-4a80-6ff2-03de-5340fb0d9c61@wanadoo.fr>
+Date:   Mon, 10 Aug 2020 20:41:14 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [195.201.40.130]
-X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF78 (Linux)/8.8.12_GA_3809)
-Thread-Topic: properly check all write ioctls for permissions
-Thread-Index: SPuvyTwnFDc3qnA8Gvg/tEw1EZFuYQ==
+In-Reply-To: <20200810154213.GM1793@kadam>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ Ursprüngliche Mail -----
-> Von: "Pavel Machek" <pavel@denx.de>
->> When doing a "write" ioctl call, properly check that we have permissions
->> to do so before copying anything from userspace or anything else so we
->> can "fail fast".  This includes also covering the MEMWRITE ioctl which
->> previously missed checking for this.
-> 
->> +	/* "safe" commands */
->> +	case MEMGETREGIONCOUNT:
-> 
-> I wonder if MEMSETBADBLOCK, MEMLOCK/MEMUNLOCK, BLKPG, OTPLOCK and
-> MTDFILEMODE should be in the list of "safe" commands? Sounds like they
-> can do at least as much damage as average MEMWRITE...
 
-Most of the ioctls you listed are not write-exclusive because existing
-user space applications (such as mtd-utils) issue them on a read-only fd.
-So, we didn't want to break them.
-Before we move such an ioctl to the "non-safe" list, common user space needs to
-be inspected. This includes, android, openwrt, mtd-utils, etc...
+Le 10/08/2020 à 17:42, Dan Carpenter a écrit :
+> On Sun, Aug 09, 2020 at 10:34:06PM +0200, Christophe JAILLET wrote:
+>> When '*sgt' is allocated, we must allocated 'sizeof(**sgt)' bytes instead
+>> of 'sizeof(*sg)'. 'sg' (i.e. struct scatterlist) is smaller than
+>> 'sgt' (i.e struct sg_table), so this could lead to memory corruption.
+> The sizeof(*sg) is bigger than sizeof(**sgt) so this wastes memory but
+> it won't lead to corruption.
+>
+>      11  struct scatterlist {
+>      12          unsigned long   page_link;
+>      13          unsigned int    offset;
+>      14          unsigned int    length;
+>      15          dma_addr_t      dma_address;
+>      16  #ifdef CONFIG_NEED_SG_DMA_LENGTH
+>      17          unsigned int    dma_length;
+>      18  #endif
+>      19  };
+>
+>      42  struct sg_table {
+>      43          struct scatterlist *sgl;        /* the list */
+>      44          unsigned int nents;             /* number of mapped entries */
+>      45          unsigned int orig_nents;        /* original size of list */
+>      46  };
+>
+> regards,
+> dan carpenter
 
-On the other hand, this is a raw mtd, it is hard to draw the line.
-For NAND even reading allows an attacker doing harm, she can trigger read-distrurb
-super efficiently using the read ioctl...
 
-So passing an mtdchar fd (no matter whether read or write mode) to untrusted
-entities is a bad idea.
+My bad. I read 'struct scatterlist sgl' (without the *)
+Thanks for the follow-up, Dan.
 
-Thanks,
-//richard
+Doesn't smatch catch such mismatch?
+(I've not run smatch for a while, so it is maybe reported)
+
+Well, the proposal is still valid, even if it has less impact as 
+initially thought.
+
+Thx for the review.
+
+CJ
+
