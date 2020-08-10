@@ -2,199 +2,112 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E59EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:25:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48741C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:25:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26E9D22CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:25:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597087554;
-	bh=hUo21oQW7nz+fD4ACNrbY5Chug6U6GeExSjug/QP+IE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YK8rgaVVeQ2CuMvNqT10dJ9KUhPDN0Tz2h/kVt5zk0xHTN9kvN46KoSZY25RyuoAz
-	 75t7+U6Y1IrAB2KTJ8yVLT+9vyuDLiTHW6LpWuLTP3D6kR1+Tv48sHl2Uo/3kUOihG
-	 v53Lq2VWenEBbbEn4jb+NWkfkZ6M3k2y+Xs5mBGs=
+	by mail.kernel.org (Postfix) with ESMTP id 23CA322CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:25:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="VhGKPDGz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729864AbgHJTZw (ORCPT
+        id S1730354AbgHJTZy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:25:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40958 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:25:54 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:40562 "EHLO rere.qmqm.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729357AbgHJTL7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:11:59 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40FFF2078D;
-        Mon, 10 Aug 2020 19:11:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086718;
-        bh=hUo21oQW7nz+fD4ACNrbY5Chug6U6GeExSjug/QP+IE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1zhb274SvmlNVFV3p5AjAu5UQXMxyraGthm7OLaIshYerVXr6gtZS68u5Sds5VmBt
-         1dVPsvJrb3K/h+1GJuNbJp76Y7Nm8fTXGyh7TxvNOLwgvQMWPIEPieoKukJox/8rbG
-         IzgeiJzmMgceb8cZeTArLFdKvHhBRTizuiu6w0a0=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lihong Kou <koulihong@huawei.com>,
-        syzbot+96414aa0033c363d8458@syzkaller.appspotmail.com,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 03/45] Bluetooth: add a mutex lock to avoid UAF in do_enale_set
-Date:   Mon, 10 Aug 2020 15:11:11 -0400
-Message-Id: <20200810191153.3794446-3-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200810191153.3794446-1-sashal@kernel.org>
-References: <20200810191153.3794446-1-sashal@kernel.org>
+        id S1729397AbgHJTZu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:25:50 -0400
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 4BQQt43t5Lz2d;
+        Mon, 10 Aug 2020 21:25:48 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1597087548; bh=96ltwqbn2GOc+mKdVGQPN+AplT8W3CJs2uYbud2i7c8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VhGKPDGz3aEeFZK4MWHoiuExtTuAckut/jzZEPfujlMdVn+U4jBEjjOpgIy9YWKd2
+         zx2vLgzWAVnwsEe8apeH5xdsH2JnPY4couOheSd5F+p5VUn4Li+tCJ28Y7IgeK3eh/
+         FW0vMD6grmZhH+rVB1bkGDYkKUwLrZU3xwvfmUoXnIE7AFSbdG8HWXO975v3lX8aeR
+         f7WZvgKywYDO+FhkZLSjv3a0iAchFQHazYB8oyH0booMqmt85z2DAlgtucKt8+fqMy
+         jlMwAtJ/vcNaUqAhE2PGEKfW0lkbZ0EzhTjO9mwqpTmFZmzkB/JyTYF2MD63leYTj/
+         2Ax7UAVwhyCiQ==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.4 at mail
+Date:   Mon, 10 Aug 2020 21:25:47 +0200
+From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: regulator: deadlock vs memory reclaim
+Message-ID: <20200810192547.GB26750@qmqm.qmqm.pl>
+References: <20200809222537.GA5522@qmqm.qmqm.pl>
+ <20200810153928.GD6438@sirena.org.uk>
+ <20200810160936.GA1100@qmqm.qmqm.pl>
+ <20200810173136.GF6438@sirena.org.uk>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=iso-8859-2
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200810173136.GF6438@sirena.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lihong Kou <koulihong@huawei.com>
+On Mon, Aug 10, 2020 at 06:31:36PM +0100, Mark Brown wrote:
+> On Mon, Aug 10, 2020 at 06:09:36PM +0200, Micha³ Miros³aw wrote:
+> > On Mon, Aug 10, 2020 at 04:39:28PM +0100, Mark Brown wrote:
+> > > On Mon, Aug 10, 2020 at 12:25:37AM +0200, Micha³ Miros³aw wrote:
+> > > > regulator_lock_dependent() starts by taking regulator_list_mutex, The
+> > > > same mutex covers eg. regulator initialization, including memory allocations
+> > > > that happen there. This will deadlock when you have filesystem on eg. eMMC
+> > > > (which uses a regulator to control module voltages) and you register
+> > > > a new regulator (hotplug a device?) when under memory pressure.
+> > > OK, that's very much a corner case, it only applies in the case of
+> > > coupled regulators.  The most obvious thing here would be to move the
+> > > allocations on registration out of the locked region, we really only
+> > > need this in the regulator_find_coupler() call I think.  If the
+> > > regulator isn't coupled we don't need to take the lock at all.
+> > Currently, regulator_lock_dependent() is called by eg. regulator_enable() and
+> > regulator_get_voltage(), so actually any regulator can deadlock this way.
+> The initialization cases that are the trigger are only done for coupled
+> regulators though AFAICT, otherwise we're not doing allocations with the
+> lock held and should be able to progress.
 
-[ Upstream commit f9c70bdc279b191da8d60777c627702c06e4a37d ]
+I caught a few lockdep complaints that suggest otherwise, but I'm still
+looking into that.
 
-In the case we set or free the global value listen_chan in
-different threads, we can encounter the UAF problems because
-the method is not protected by any lock, add one to avoid
-this bug.
+> > > > Basically, we have a BKL for regulator_enable() and we're using ww_mutex
+> > > > as a recursive mutex with no deadlock prevention whatsoever. The locks
+> > > > also seem to cover way to much (eg. initialization even before making the
+> > > > regulator visible to the system).
+> > > Could you be more specific about what you're looking at here?  There's
+> > > nothing too obvious jumping out from the code here other than the bit
+> > > around the coupling allocation, otherwise it looks like we're locking
+> > > list walks.
+> > When you look at the regulator API (regulator_enable() and friends),
+> > then in their implementation we always start by .._lock_dependent(),
+> > which takes regulator_list_mutex around its work. This mutex is what
+> > makes the code deadlock-prone vs memory allocations. I have a feeling
+> > that this lock is a workaround for historical requirements (recursive
+> > locking of regulator_dev) that might be no longer needed or is just
+> > too defensive programming. Hence my other patches and this inquiry.
+> We need to both walk up the tree for operations that involve the parent
+> and rope in any peers that are coupled, the idea is basically to avoid
+> changes to the coupling while we're trying to figure that out.
 
-BUG: KASAN: use-after-free in l2cap_chan_close+0x48/0x990
-net/bluetooth/l2cap_core.c:730
-Read of size 8 at addr ffff888096950000 by task kworker/1:102/2868
+This part I understand and this is what ww_mutex should take care of.
+But there is another lock that's taken around ww_mutex locking transaction
+that causes the trouble. I would expect that the rdev->mutex should be
+enough to guard against changes in coupled regulators list, but this
+might need a fix in the registration phase to guarantee that (it
+probably should do the same ww_mutex locking dance as .._lock_dependent()
+does now).
 
-CPU: 1 PID: 2868 Comm: kworker/1:102 Not tainted 5.5.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine,
-BIOS Google 01/01/2011
-Workqueue: events do_enable_set
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1fb/0x318 lib/dump_stack.c:118
- print_address_description+0x74/0x5c0 mm/kasan/report.c:374
- __kasan_report+0x149/0x1c0 mm/kasan/report.c:506
- kasan_report+0x26/0x50 mm/kasan/common.c:641
- __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:135
- l2cap_chan_close+0x48/0x990 net/bluetooth/l2cap_core.c:730
- do_enable_set+0x660/0x900 net/bluetooth/6lowpan.c:1074
- process_one_work+0x7f5/0x10f0 kernel/workqueue.c:2264
- worker_thread+0xbbc/0x1630 kernel/workqueue.c:2410
- kthread+0x332/0x350 kernel/kthread.c:255
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-Allocated by task 2870:
- save_stack mm/kasan/common.c:72 [inline]
- set_track mm/kasan/common.c:80 [inline]
- __kasan_kmalloc+0x118/0x1c0 mm/kasan/common.c:515
- kasan_kmalloc+0x9/0x10 mm/kasan/common.c:529
- kmem_cache_alloc_trace+0x221/0x2f0 mm/slab.c:3551
- kmalloc include/linux/slab.h:555 [inline]
- kzalloc include/linux/slab.h:669 [inline]
- l2cap_chan_create+0x50/0x320 net/bluetooth/l2cap_core.c:446
- chan_create net/bluetooth/6lowpan.c:640 [inline]
- bt_6lowpan_listen net/bluetooth/6lowpan.c:959 [inline]
- do_enable_set+0x6a4/0x900 net/bluetooth/6lowpan.c:1078
- process_one_work+0x7f5/0x10f0 kernel/workqueue.c:2264
- worker_thread+0xbbc/0x1630 kernel/workqueue.c:2410
- kthread+0x332/0x350 kernel/kthread.c:255
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-Freed by task 2870:
- save_stack mm/kasan/common.c:72 [inline]
- set_track mm/kasan/common.c:80 [inline]
- kasan_set_free_info mm/kasan/common.c:337 [inline]
- __kasan_slab_free+0x12e/0x1e0 mm/kasan/common.c:476
- kasan_slab_free+0xe/0x10 mm/kasan/common.c:485
- __cache_free mm/slab.c:3426 [inline]
- kfree+0x10d/0x220 mm/slab.c:3757
- l2cap_chan_destroy net/bluetooth/l2cap_core.c:484 [inline]
- kref_put include/linux/kref.h:65 [inline]
- l2cap_chan_put+0x170/0x190 net/bluetooth/l2cap_core.c:498
- do_enable_set+0x66c/0x900 net/bluetooth/6lowpan.c:1075
- process_one_work+0x7f5/0x10f0 kernel/workqueue.c:2264
- worker_thread+0xbbc/0x1630 kernel/workqueue.c:2410
- kthread+0x332/0x350 kernel/kthread.c:255
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-The buggy address belongs to the object at ffff888096950000
- which belongs to the cache kmalloc-2k of size 2048
-The buggy address is located 0 bytes inside of
- 2048-byte region [ffff888096950000, ffff888096950800)
-The buggy address belongs to the page:
-page:ffffea00025a5400 refcount:1 mapcount:0 mapping:ffff8880aa400e00 index:0x0
-flags: 0xfffe0000000200(slab)
-raw: 00fffe0000000200 ffffea00027d1548 ffffea0002397808 ffff8880aa400e00
-raw: 0000000000000000 ffff888096950000 0000000100000001 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff88809694ff00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- ffff88809694ff80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->ffff888096950000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                   ^
- ffff888096950080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff888096950100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-Reported-by: syzbot+96414aa0033c363d8458@syzkaller.appspotmail.com
-Signed-off-by: Lihong Kou <koulihong@huawei.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/bluetooth/6lowpan.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/net/bluetooth/6lowpan.c b/net/bluetooth/6lowpan.c
-index 4febc82a7c761..52fb6d6d6d585 100644
---- a/net/bluetooth/6lowpan.c
-+++ b/net/bluetooth/6lowpan.c
-@@ -50,6 +50,7 @@ static bool enable_6lowpan;
- /* We are listening incoming connections via this channel
-  */
- static struct l2cap_chan *listen_chan;
-+static DEFINE_MUTEX(set_lock);
- 
- struct lowpan_peer {
- 	struct list_head list;
-@@ -1070,12 +1071,14 @@ static void do_enable_set(struct work_struct *work)
- 
- 	enable_6lowpan = set_enable->flag;
- 
-+	mutex_lock(&set_lock);
- 	if (listen_chan) {
- 		l2cap_chan_close(listen_chan, 0);
- 		l2cap_chan_put(listen_chan);
- 	}
- 
- 	listen_chan = bt_6lowpan_listen();
-+	mutex_unlock(&set_lock);
- 
- 	kfree(set_enable);
- }
-@@ -1127,11 +1130,13 @@ static ssize_t lowpan_control_write(struct file *fp,
- 		if (ret == -EINVAL)
- 			return ret;
- 
-+		mutex_lock(&set_lock);
- 		if (listen_chan) {
- 			l2cap_chan_close(listen_chan, 0);
- 			l2cap_chan_put(listen_chan);
- 			listen_chan = NULL;
- 		}
-+		mutex_unlock(&set_lock);
- 
- 		if (conn) {
- 			struct lowpan_peer *peer;
--- 
-2.25.1
-
+Best Regards,
+Micha³ Miros³aw
