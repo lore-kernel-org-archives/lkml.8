@@ -2,142 +2,96 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25A2FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 08:03:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDCB3C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 08:04:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEB112073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 08:03:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7F2B2075D
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 08:04:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BLFDPlRa"
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="atzowz9S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726511AbgHJIDD (ORCPT
+        id S1726518AbgHJIET (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 04:03:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52734 "EHLO
+        Mon, 10 Aug 2020 04:04:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725846AbgHJIDC (ORCPT
+        with ESMTP id S1726029AbgHJIES (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 04:03:02 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EC83C061756;
-        Mon, 10 Aug 2020 01:03:02 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id f10so4356801plj.8;
-        Mon, 10 Aug 2020 01:03:02 -0700 (PDT)
+        Mon, 10 Aug 2020 04:04:18 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 385AAC061756
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 01:04:18 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id v4so8555822ljd.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 01:04:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=android.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=EIVYbfl60/LCAXTYgKZTMLflQoCrjmA+x5UQf4DHC8U=;
-        b=BLFDPlRaEIp2bEVswqI1V3rY6FhRvyvhrKzRCgp8XtqofWcIO+R2xg8xsxH+g2ewCL
-         rKZodlVz6vEJ7jlUQlvTofVSMkNZbEA2ofzmZ3Ll51KfOTeZiFe05PYW7MLdHw6hegtL
-         rxNbcrLM8whucUuOnBpyL91evVA3dVoD9m2ZX2Up7xDYXIxhnUaip/iP3x8LFfm9+he/
-         LSEPg3VY2l/QFnbByOpMMZoPEPResMdy6KsbmIVNE2HHBDDMBLllUuZnvn4c5AQjGgY4
-         9Om+TeqtZnUgAeaRCIX3vxbJR8Jbq45fYYcREg5j3DGJ0cSHEUJGr+YdBHyMl5AIBY5E
-         nEaA==
+        bh=t2rGage70Jk5h0hvfFUtPxz+GuGpMqZrJcGzTBL46E8=;
+        b=atzowz9SOphxx0a37O51EcGyBxaCNxJK5KNT8YE/hy6R/h3FcDTmlnk7ANBzGyJt1D
+         WjG02Ed5JdaJ+PVsWHeFbPNl5dy6z72+8K/CJVaCVS9CgWqjF3cSi4HeCpDxbwBf42K0
+         wShtwdqUlQG14UC7OhgJkXC+nUSBWM9/kBKGl/HUsfz+1WKZjaRCY0RWDLmpq+hoIbZq
+         ARPgAGAOf32u/B9ILg4YHZBEnh3huWTJ9QYZ7eLiSGlVJUjI2rg0wA+/toCFJbC6bSsB
+         ii1PERAazUQeO2OfLaFFpfvGNm4hzRg3DnMqh7qg7Zgp3jwTu/yiBJHFxcH0aVmMIEPd
+         TbJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=EIVYbfl60/LCAXTYgKZTMLflQoCrjmA+x5UQf4DHC8U=;
-        b=tvES0O1BfZT5pDr/3/k2ynTMYbwwnl9k02PRazNFak+OMGxpHzwB7z7P8N5TLGIpZ1
-         Rm5TDDo6swmd2XpCJohFFLTGXX/c6V5K+aBZhh3oZ3w1y7iWdozyhrI84/StGwBkwojq
-         VNeFhCbdKy8Fw6aOJaJzWFbFUybLvD71oJjNtudMZVII3czkHBoUuGcPEnHpSlYAWGCa
-         fwyvVd9NxpnBWDbzgMSk9ELANqVdZdONnBwBioPvVhor9FZBdm9JahFRFSfZxJTih/4P
-         OD/1dIbDRe9984Klv9x2gEN2wLk4aKjQvy+O21ywm2Hw8LoxH1JCW+5NFPZF3+Ge6zto
-         0qow==
-X-Gm-Message-State: AOAM531yfB1xKFn013vqTQZWY+K3YJHqepLSHgdz283097+CVJgmsJp5
-        7Ry1sP66KxRap74jI6mwcQdF6WfEz+be2viIcWTi97f4kdLi5A==
-X-Google-Smtp-Source: ABdhPJwHVCVP7tW6XE3VLpw262gbkqCVMj2TlQmrMSM9cSxkzFlBa9Yn9IC/QE5FWG2bR7VFa1pw8Jie3rkVmrEHBQo=
-X-Received: by 2002:a17:902:8491:: with SMTP id c17mr22749650plo.262.1597046581567;
- Mon, 10 Aug 2020 01:03:01 -0700 (PDT)
+        bh=t2rGage70Jk5h0hvfFUtPxz+GuGpMqZrJcGzTBL46E8=;
+        b=MWAN2qTP7dgkQsX1emSYymHMMF79r5p0w+qVCL4NFS/afxtiZlNS7CwlXPE5uE8vhN
+         nhKRgK/OdwlIB4L6JwOI5dIMDJS5CEfxibihBRv6S0Inr7O2MNcm56hX6z3kToICqfMZ
+         q25gDHOjaueGXqsEzmrPBN1O9sQu/H8iAY/gW5eHauW3Q4T/u4JwNFQCw2+qZYbUs0+S
+         PwaRVl5xcODdUWikYvYrbk/pJq6SrYJbRiz5OyAHsLAIMf6Dj/++rL0DuAMICQC3vMrM
+         mYNLCqnaq1njMTfjRSc2k/eyRNwc/5gy6CzRvI2eAE8opJVmYNzgX5KgM64C2hbhTJAv
+         X6VQ==
+X-Gm-Message-State: AOAM532EFCoscYtZsxvTB8smkTMPI8Ueozgja3vcUAA4H+V8w1TknDdM
+        FWzvRu9Cf5DqeQhFPwJ2t/XUBc+vY2gnyNTKYIw2Zw==
+X-Google-Smtp-Source: ABdhPJyers0WzewoH8+10vmN5DZUr86ob+cLHqutbtp3jkGybBSDFsktjvhIBCpkC2iaIFZU2u1mTfZxtrZNW38+MSw=
+X-Received: by 2002:a05:651c:1350:: with SMTP id j16mr11206533ljb.227.1597046656643;
+ Mon, 10 Aug 2020 01:04:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200809155936.16898-1-trix@redhat.com>
-In-Reply-To: <20200809155936.16898-1-trix@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 10 Aug 2020 11:02:45 +0300
-Message-ID: <CAHp75VdEBjxYS_4g2j=ofjFWuGyTK5Me=9mMNcy5ienUUs67Ag@mail.gmail.com>
-Subject: Re: [PATCH] iio: imu: inv_mpu6050: check for temp_fifo_enable
-To:     trix@redhat.com
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Lee Jones <lee.jones@linaro.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200806073221.GA219724@gardel-login> <CAB0TPYEsRPxiVLS7ieBLJprje_avAo49n7QWExpovuLBJHkOGw@mail.gmail.com>
+ <20200807153134.GA222272@gardel-login>
+In-Reply-To: <20200807153134.GA222272@gardel-login>
+From:   Martijn Coenen <maco@android.com>
+Date:   Mon, 10 Aug 2020 10:04:05 +0200
+Message-ID: <CAB0TPYGz=GN4x2-Msh4Ras6EgRTkGET6iALnp_v9pGSrGr1KgA@mail.gmail.com>
+Subject: Re: [PATCH] loop: unset GENHD_FL_NO_PART_SCAN on LOOP_CONFIGURE
+To:     Lennart Poettering <mzxreary@0pointer.de>
+Cc:     linux-block <linux-block@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+        Yang Xu <xuyang2018.jy@cn.fujitsu.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 9, 2020 at 7:00 PM <trix@redhat.com> wrote:
->
-> From: Tom Rix <trix@redhat.com>
->
-> clang static analysis reports this problem
->
-> inv_mpu_ring.c:181:18: warning: Division by zero
->         nb = fifo_count / bytes_per_datum;
->              ~~~~~~~~~~~^~~~~~~~~~~~~~~~~
->
-> This is a false positive.
-> Dividing by 0 is protected by this check
->
->         if (!(st->chip_config.accl_fifo_enable |
->                 st->chip_config.gyro_fifo_enable |
->                 st->chip_config.magn_fifo_enable))
->                 goto end_session;
->         bytes_per_datum = 0;
->
-> But there is another fifo, temp_fifo
->
->         if (st->chip_config.temp_fifo_enable)
->                 bytes_per_datum += INV_MPU6050_BYTES_PER_TEMP_SENSOR;
->
-> Which would be skipped if it was the only enabled fifo.
-> So add to the check.
->
+On Fri, Aug 7, 2020 at 5:31 PM Lennart Poettering <mzxreary@0pointer.de> wrote:
+> Thanks for the review. I'll fix this up and send a v2. Are you OK with
+> me adding your Ack to the patch?
 
-> Fixes: 2e4c0a5e2576 ("iio: imu: inv_mpu6050: add fifo temperature data support")
+Yeah, sure!
+
+> And also should this geta cc for stable?
+
+LOOP_CONFIGURE was just added in v5.8, and stable is v5.7 now, so I
+don't think that's needed.
+
+Thanks,
+Martijn
+
 >
-> Signed-off-by: Tom Rix <trix@redhat.com>
-
-There shouldn't be a blank line in between.
-
-Other than that,
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-
-
-> ---
->  drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c | 1 +
->  1 file changed, 1 insertion(+)
+> Thanks,
 >
-> diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c
-> index b533fa2dad0a..5240a400dcb4 100644
-> --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c
-> +++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c
-> @@ -141,6 +141,7 @@ irqreturn_t inv_mpu6050_read_fifo(int irq, void *p)
+> Lennart
 >
->         if (!(st->chip_config.accl_fifo_enable |
->                 st->chip_config.gyro_fifo_enable |
-> +               st->chip_config.temp_fifo_enable |
->                 st->chip_config.magn_fifo_enable))
->                 goto end_session;
->         bytes_per_datum = 0;
 > --
-> 2.18.1
->
-
-
---
-With Best Regards,
-Andy Shevchenko
+> Lennart Poettering, Berlin
