@@ -2,85 +2,69 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE29C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 20:48:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97DE4C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 20:51:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1EB720656
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 20:48:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597092517;
-	bh=CJxHJyYPh4sd8+xKF1x/GCeV4gWwpq1v2JRe8PQjKxI=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=RwXyVerfDF+5ypVX7CHdrORKtCUK3SNP9YVJEupzpZmeq+caO44Jk4L23mv3+5V3y
-	 MZLbRliGjGYwPJClgZsFQoRVzuQqAXgSYzd13SJPgq4ZNcrh1iWHY+IElw3y2DZXg6
-	 A6Ky4sSSAO7DwnaxgsqYJdSANYV2YcexFQKG+11U=
+	by mail.kernel.org (Postfix) with ESMTP id 603D8206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 20:51:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="qEue+ZWD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726596AbgHJUsg (ORCPT
+        id S1726637AbgHJUvv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 16:48:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57116 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726422AbgHJUsg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 16:48:36 -0400
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0C98C061787
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 13:48:35 -0700 (PDT)
-Received: by mail-oi1-x244.google.com with SMTP id z22so10214438oid.1
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 13:48:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=HCy6i5v2uQPcGgYPgbWpEYC90RU3lqb1roEUwPBfbUA=;
-        b=fZW+MG/wCF4Bnlk4iWk+xw22uu4WXXDFRJQpuKQjSUmw9DPTF+y+coS9v4tFOfi6aI
-         wHx8Nkrz9Hv1pV2ZxvuM6CGEH5kb52yV2Mcga8tbMKujSsXmve3xLmfiWmd3KWAuZ8x1
-         IdkYIU/eB/zhAIDEnXzrQIbvMqfjK7dGCfgUw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=HCy6i5v2uQPcGgYPgbWpEYC90RU3lqb1roEUwPBfbUA=;
-        b=FSVF9D6RiCeUIalXoYEwPSiotccqL1dQ7/aZGJMZsTcxlaAdQ3KztO4hocccxYKTz3
-         EfXuGj4uJEUw8Qgz7WqpG07zlZnyeHbzWKmgRAxJuH1C6p6h6Ym8MwoheVJEeVwnPCSD
-         DKv+LS/5BcnWa5DlyFoUvVOG/yfvjNyBgbcUix3RSK0iQ0HOlz/++pJuDBVMWXwZtqnu
-         WSAZeQKuLgAfsvbs9Tn75fqhzdFXwUZ5iTUl4klYTlFmbyROLJPpctwk9p8jDqmJnPab
-         v4O17GAhjEPGYMnFEnliwPlGBFEH4Kmc1lDMxMPxwk4rqS6o/VFnJHZhSbH3mmYfiC1N
-         7OVQ==
-X-Gm-Message-State: AOAM533sYSwVRFgiOBa9kt72kAKXV7OEJTQXP0ySRTHFzl3btdGpzCQ0
-        gyb5k9kPWxmfqv5uoEMUutexjQ==
-X-Google-Smtp-Source: ABdhPJy2B9YVgRyfunUoFHeDPYYOPWC97qorZyFNJmxDPPI3Bm5etCnyi2XAKhl+VMe2WO9nucQ5SQ==
-X-Received: by 2002:aca:e144:: with SMTP id y65mr848801oig.101.1597092515295;
-        Mon, 10 Aug 2020 13:48:35 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id m8sm2190593oim.23.2020.08.10.13.48.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Aug 2020 13:48:34 -0700 (PDT)
-Subject: Re: [PATCHv3] selftests/timers: Turn off timeout setting
-To:     John Stultz <john.stultz@linaro.org>,
-        Po-Hsu Lin <po-hsu.lin@canonical.com>
-Cc:     linux-kselftest@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, joe.lawrence@redhat.com,
-        lkml <linux-kernel@vger.kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <20200318024215.5270-1-po-hsu.lin@canonical.com>
- <CALAqxLVyjj23S2Wm2XFAvCJph58_rVb4iteq3TFC14jYR_88Gw@mail.gmail.com>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <0c635a95-0762-9026-edba-bcbf4835f42f@linuxfoundation.org>
-Date:   Mon, 10 Aug 2020 14:48:33 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 10 Aug 2020 16:51:51 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:29298 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726474AbgHJUvu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 16:51:50 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597092709; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=v2bPcIhJzgNJjDaAtjyj+VEpCVRojqaWUChwZ3DzC8U=; b=qEue+ZWDT++8X5tSzxQ1chG2yqQIMKC9YXfdtr7E5NKTCvLzjpWNRyMbqLn0bO9fAcJAzwDy
+ lTWkkYK/HzDQqyx9KFtkPtb3wfepOgkGChuOV53kseSVXZH+nJU9w1iWKGc06kfEIAvrtUD2
+ jjfgvz6ZMvjtiSVe6NIj19IQpfA=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n10.prod.us-east-1.postgun.com with SMTP id
+ 5f31b357440a07969aac07d5 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 10 Aug 2020 20:51:35
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id DA650C43391; Mon, 10 Aug 2020 20:51:34 +0000 (UTC)
+Received: from [10.110.5.78] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: wcheng)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6F1E1C433CA;
+        Mon, 10 Aug 2020 20:51:33 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6F1E1C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
+Subject: Re: [PATCH 3/3] usb: dwc3: dwc3-qcom: Find USB connector and register
+ role switch
+To:     Felipe Balbi <balbi@kernel.org>, bjorn.andersson@linaro.org,
+        kishon@ti.com, vkoul@kernel.org, agross@kernel.org,
+        gregkh@linuxfoundation.org, robh+dt@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        jackp@codeaurora.org
+References: <20200731045712.28495-1-wcheng@codeaurora.org>
+ <20200731045712.28495-4-wcheng@codeaurora.org> <87ft8upukf.fsf@kernel.org>
+From:   Wesley Cheng <wcheng@codeaurora.org>
+Message-ID: <e46edf7a-04b8-35fb-df6c-0379dfb63a6b@codeaurora.org>
+Date:   Mon, 10 Aug 2020 13:51:32 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <CALAqxLVyjj23S2Wm2XFAvCJph58_rVb4iteq3TFC14jYR_88Gw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <87ft8upukf.fsf@kernel.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -88,69 +72,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/4/20 3:38 PM, John Stultz wrote:
-> On Tue, Mar 17, 2020 at 7:42 PM Po-Hsu Lin <po-hsu.lin@canonical.com> wrote:
->>
->> The following 4 tests in timers can take longer than the default 45
->> seconds that added in commit 852c8cbf34d3 ("selftests/kselftest/runner.sh:
->> Add 45 second timeout per test") to run:
->>    * nsleep-lat - 2m7.350s
->>    * set-timer-lat - 2m0.66s
->>    * inconsistency-check - 1m45.074s
->>    * raw_skew - 2m0.013s
->>
->> Thus they will be marked as failed with the current 45s setting:
->>    not ok 3 selftests: timers: nsleep-lat # TIMEOUT
->>    not ok 4 selftests: timers: set-timer-lat # TIMEOUT
->>    not ok 6 selftests: timers: inconsistency-check # TIMEOUT
->>    not ok 7 selftests: timers: raw_skew # TIMEOUT
->>
->> Disable the timeout setting for timers can make these tests finish
->> properly:
->>    ok 3 selftests: timers: nsleep-lat
->>    ok 4 selftests: timers: set-timer-lat
->>    ok 6 selftests: timers: inconsistency-check
->>    ok 7 selftests: timers: raw_skew
->>
->> https://bugs.launchpad.net/bugs/1864626
->> Fixes: 852c8cbf34d3 ("selftests/kselftest/runner.sh: Add 45 second timeout per test")
->> Signed-off-by: Po-Hsu Lin <po-hsu.lin@canonical.com>
->> ---
->>   tools/testing/selftests/timers/Makefile | 1 +
->>   tools/testing/selftests/timers/settings | 1 +
->>   2 files changed, 2 insertions(+)
->>   create mode 100644 tools/testing/selftests/timers/settings
->>
->> diff --git a/tools/testing/selftests/timers/Makefile b/tools/testing/selftests/timers/Makefile
->> index 7656c7c..0e73a16 100644
->> --- a/tools/testing/selftests/timers/Makefile
->> +++ b/tools/testing/selftests/timers/Makefile
->> @@ -13,6 +13,7 @@ DESTRUCTIVE_TESTS = alarmtimer-suspend valid-adjtimex adjtick change_skew \
->>
->>   TEST_GEN_PROGS_EXTENDED = $(DESTRUCTIVE_TESTS)
->>
->> +TEST_FILES := settings
->>
->>   include ../lib.mk
->>
->> diff --git a/tools/testing/selftests/timers/settings b/tools/testing/selftests/timers/settings
->> new file mode 100644
->> index 0000000..e7b9417
->> --- /dev/null
->> +++ b/tools/testing/selftests/timers/settings
->> @@ -0,0 +1 @@
->> +timeout=0
->> --
-> 
-> Apologies for missing this before.  I've not tested with this, but it
-> sounds sane to me. A number of the timekeeping tests do take a while
-> to run.
-> 
-> Acked-by: John Stultz <john.stultz@linaro.org>
-> 
 
-Thanks. I will get this in for 5.9-rc2 fixes update.
 
-thanks,
--- Shuah
+On 8/10/2020 5:13 AM, Felipe Balbi wrote:
+> 
+> Hi,
+> 
+> Wesley Cheng <wcheng@codeaurora.org> writes:
+>> @@ -190,6 +195,73 @@ static int dwc3_qcom_register_extcon(struct dwc3_qcom *qcom)
+>>  	return 0;
+>>  }
+>>  
+>> +static int dwc3_qcom_usb_role_switch_set(struct usb_role_switch *sw,
+>> +					 enum usb_role role)
+>> +{
+>> +	struct dwc3_qcom *qcom = usb_role_switch_get_drvdata(sw);
+>> +	struct fwnode_handle *child;
+>> +	bool enable = false;
+>> +
+>> +	if (!qcom->dwc3_drd_sw) {
+>> +		child = device_get_next_child_node(qcom->dev, NULL);
+>> +		if (child) {
+>> +			qcom->dwc3_drd_sw = usb_role_switch_find_by_fwnode(child);
+>> +			fwnode_handle_put(child);
+>> +			if (IS_ERR(qcom->dwc3_drd_sw)) {
+>> +				qcom->dwc3_drd_sw = NULL;
+>> +				return 0;
+>> +			}
+>> +		}
+>> +	}
+>> +
+>> +	usb_role_switch_set_role(qcom->dwc3_drd_sw, role);
+> 
+> why is this done at the glue layer instead of core.c?
+> 
+Hi Felipe,
 
+Thanks for the feedback.  So the DWC3 DRD driver already registers a
+role switch device for receiving external events.  However, the DWC3
+glue (dwc3-qcom) needs to also know of the role changes, so that it can
+set the override bits accordingly in the controller.  I've seen a few
+implementations, ie using a notifier block to notify the glue of these
+events, but that placed a dependency on the DWC3 core being available to
+the DWC3 glue at probe time.  If the DWC3 core was not available at that
+time, the dwc3-qcom driver will finish its probing routine, and since
+the notifier was never registered, the role change events would not be
+received.
+
+By registering another role switch device in the DWC3 glue, this gives
+us a place to attempt initializing a channel w/ the DWC3 core if it
+wasn't ready during probe().  For example...
+
+usb_conn_detect_cable(role=USB_ROLE_DEVICE)
+-->usb_role_switch_set_role(sw=dwc3-qcom)
+  -->dwc3_qcom_usb_role_switch_set()
+    -- IF DWC3 core role switch available
+	-->usb_role_switch_set_role(sw=drd)
+    -- ELSE
+	--> do nothing.
+
+So basically, the goal is to just propagate the role change event down
+to the DWC3 core, while breaking the dependency of it being available at
+probe.
+>> +	if (role == USB_ROLE_DEVICE)
+>> +		enable = true;
+>> +	else
+>> +		enable = false;
+>> +
+>> +	qcom->mode = (role == USB_ROLE_HOST) ? USB_DR_MODE_HOST :
+>> +					       USB_DR_MODE_PERIPHERAL;
+>> +	dwc3_qcom_vbus_overrride_enable(qcom, enable);
+> 
+> could you add a patch fixing this typo?
+> 
+Sure, I'll submit a separate patch to remove that extra 'r'
+
+Thanks
+Wesley
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
