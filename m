@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A59C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1900BC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:12:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15A4322BEB
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:12:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB4DA22BEA
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:12:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597086760;
-	bh=Nt89UCIAMnGmAbLwKElLJHQuRa2Rs0pdKFbBiIE+piY=;
+	s=default; t=1597086770;
+	bh=lKuZlK3cGDBnz/UmpJbdWU1Dq2Z9F6gf9uSTeiD+aeU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N7gghenS3vTaLaRHqMO1eg+bBrXLqFOjagh99+ye9iDR53TCcsKwz69RWUJCC52Nv
-	 qfLtHSDsSLikrX+S6iEOYmHrkU1xvrebCO54Xir8v/HKqYL2BWHKzpyAm655odwmbe
-	 b7/QrVqL6rNKGvjHzT4kcttFQoquuWHgZMM80jR4=
+	b=t8CTJc5HFg+wj4RpHcUwmiwYoPk4zZ8cNEf01PO54AWaTQS09Vjj4Xg+WM3ADb6N2
+	 4tT/7oXpuiHmvpt3k2ynwKuhvM0qS7+r6pmj11RwKXxdJ54oqbsnXhJ0ZRY7j5lShL
+	 BB6ivrM5GHUbheObEDydayl8XnP6Mnd0nuvm/Zx0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729591AbgHJTMj (ORCPT
+        id S1728745AbgHJTMs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:12:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42258 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:12:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728472AbgHJTMb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:12:31 -0400
+        id S1729574AbgHJTMh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:12:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58FD022BEA;
-        Mon, 10 Aug 2020 19:12:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DFD62224D;
+        Mon, 10 Aug 2020 19:12:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086750;
-        bh=Nt89UCIAMnGmAbLwKElLJHQuRa2Rs0pdKFbBiIE+piY=;
+        s=default; t=1597086756;
+        bh=lKuZlK3cGDBnz/UmpJbdWU1Dq2Z9F6gf9uSTeiD+aeU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dRHHHusq7nAfz+pfPI3F8/ht54VSlOf+5LuDcfjl9n9Y7kXSOsYbZmSuoXwtlJtXD
-         EIAzVugNAXSldKQU14gXYCFt8oW0EiZYKyuUgZtqVjF9X4dnKUH/ktsd9uNMyCFuz6
-         Xsp6CbPMtzZwtsRmlxsoPUjEzsIriHdyKW/E1MSI=
+        b=Pa4FdOYn0MnE7Ye8r3nQtaOcaeKXDpcU7NAtl+AV2EhkpV0U/t3oPh211xPG+0bX5
+         hqk/EOjWXAKvsgVTGN8lBpXDRZrf9L1IfseB7wOqwkMmtz3c3JfP6HwNVFnTe8rC6I
+         0+xrErWnkIUQ9nlup2oFyojz8iDTnRZH8w8QUofU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        Shakeel Butt <shakeelb@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 26/45] mm/mmap.c: Add cond_resched() for exit_mmap() CPU stalls
-Date:   Mon, 10 Aug 2020 15:11:34 -0400
-Message-Id: <20200810191153.3794446-26-sashal@kernel.org>
+Cc:     Wright Feng <wright.feng@cypress.com>,
+        Chi-hsien Lin <chi-hsien.lin@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 30/45] brcmfmac: keep SDIO watchdog running when console_interval is non-zero
+Date:   Mon, 10 Aug 2020 15:11:38 -0400
+Message-Id: <20200810191153.3794446-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810191153.3794446-1-sashal@kernel.org>
 References: <20200810191153.3794446-1-sashal@kernel.org>
@@ -61,81 +63,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Paul E. McKenney" <paulmck@kernel.org>
+From: Wright Feng <wright.feng@cypress.com>
 
-[ Upstream commit 0a3b3c253a1eb2c7fe7f34086d46660c909abeb3 ]
+[ Upstream commit eccbf46b15bb3e35d004148f7c3a8fa8e9b26c1e ]
 
-A large process running on a heavily loaded system can encounter the
-following RCU CPU stall warning:
+brcmfmac host driver makes SDIO bus sleep and stops SDIO watchdog if no
+pending event or data. As a result, host driver does not poll firmware
+console buffer before buffer overflow, which leads to missing firmware
+logs. We should not stop SDIO watchdog if console_interval is non-zero
+in debug build.
 
-  rcu: INFO: rcu_sched self-detected stall on CPU
-  rcu: 	3-....: (20998 ticks this GP) idle=4ea/1/0x4000000000000002 softirq=556558/556558 fqs=5190
-  	(t=21013 jiffies g=1005461 q=132576)
-  NMI backtrace for cpu 3
-  CPU: 3 PID: 501900 Comm: aio-free-ring-w Kdump: loaded Not tainted 5.2.9-108_fbk12_rc3_3858_gb83b75af7909 #1
-  Hardware name: Wiwynn   HoneyBadger/PantherPlus, BIOS HBM6.71 02/03/2016
-  Call Trace:
-   <IRQ>
-   dump_stack+0x46/0x60
-   nmi_cpu_backtrace.cold.3+0x13/0x50
-   ? lapic_can_unplug_cpu.cold.27+0x34/0x34
-   nmi_trigger_cpumask_backtrace+0xba/0xca
-   rcu_dump_cpu_stacks+0x99/0xc7
-   rcu_sched_clock_irq.cold.87+0x1aa/0x397
-   ? tick_sched_do_timer+0x60/0x60
-   update_process_times+0x28/0x60
-   tick_sched_timer+0x37/0x70
-   __hrtimer_run_queues+0xfe/0x270
-   hrtimer_interrupt+0xf4/0x210
-   smp_apic_timer_interrupt+0x5e/0x120
-   apic_timer_interrupt+0xf/0x20
-   </IRQ>
-  RIP: 0010:kmem_cache_free+0x223/0x300
-  Code: 88 00 00 00 0f 85 ca 00 00 00 41 8b 55 18 31 f6 f7 da 41 f6 45 0a 02 40 0f 94 c6 83 c6 05 9c 41 5e fa e8 a0 a7 01 00 41 56 9d <49> 8b 47 08 a8 03 0f 85 87 00 00 00 65 48 ff 08 e9 3d fe ff ff 65
-  RSP: 0018:ffffc9000e8e3da8 EFLAGS: 00000206 ORIG_RAX: ffffffffffffff13
-  RAX: 0000000000020000 RBX: ffff88861b9de960 RCX: 0000000000000030
-  RDX: fffffffffffe41e8 RSI: 000060777fe3a100 RDI: 000000000001be18
-  RBP: ffffea00186e7780 R08: ffffffffffffffff R09: ffffffffffffffff
-  R10: ffff88861b9dea28 R11: ffff88887ffde000 R12: ffffffff81230a1f
-  R13: ffff888854684dc0 R14: 0000000000000206 R15: ffff8888547dbc00
-   ? remove_vma+0x4f/0x60
-   remove_vma+0x4f/0x60
-   exit_mmap+0xd6/0x160
-   mmput+0x4a/0x110
-   do_exit+0x278/0xae0
-   ? syscall_trace_enter+0x1d3/0x2b0
-   ? handle_mm_fault+0xaa/0x1c0
-   do_group_exit+0x3a/0xa0
-   __x64_sys_exit_group+0x14/0x20
-   do_syscall_64+0x42/0x100
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-And on a PREEMPT=n kernel, the "while (vma)" loop in exit_mmap() can run
-for a very long time given a large process.  This commit therefore adds
-a cond_resched() to this loop, providing RCU any needed quiescent states.
-
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: <linux-mm@kvack.org>
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Signed-off-by: Wright Feng <wright.feng@cypress.com>
+Signed-off-by: Chi-hsien Lin <chi-hsien.lin@cypress.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200604071835.3842-4-wright.feng@cypress.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/mmap.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/mm/mmap.c b/mm/mmap.c
-index ea1ba2db4f4fe..a3584a90c55c2 100644
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -3172,6 +3172,7 @@ void exit_mmap(struct mm_struct *mm)
- 		if (vma->vm_flags & VM_ACCOUNT)
- 			nr_accounted += vma_pages(vma);
- 		vma = remove_vma(vma);
-+		cond_resched();
- 	}
- 	vm_unacct_memory(nr_accounted);
- }
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+index d43247a95ce53..38e6809f16c75 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+@@ -3685,7 +3685,11 @@ static void brcmf_sdio_bus_watchdog(struct brcmf_sdio *bus)
+ 			if (bus->idlecount > bus->idletime) {
+ 				brcmf_dbg(SDIO, "idle\n");
+ 				sdio_claim_host(bus->sdiodev->func1);
+-				brcmf_sdio_wd_timer(bus, false);
++#ifdef DEBUG
++				if (!BRCMF_FWCON_ON() ||
++				    bus->console_interval == 0)
++#endif
++					brcmf_sdio_wd_timer(bus, false);
+ 				bus->idlecount = 0;
+ 				brcmf_sdio_bus_sleep(bus, true, false);
+ 				sdio_release_host(bus->sdiodev->func1);
 -- 
 2.25.1
 
