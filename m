@@ -5,50 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CAEBC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:09:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF96EC433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:09:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E033E22CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:09:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6B7622B45
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:09:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597086589;
-	bh=CaGu3jCShAi6zK9n0jAB+MVmHli5uXnzyL5xTif5KX8=;
+	s=default; t=1597086593;
+	bh=F31uPowNJjNMfFMctdd2MXIKeA3ecNKO28u5QHm02Fg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yFE2h9rxWP0dpdfYLBQi+OwUO1Hk9+DqVlAbmfazZXSKbk/U8ktzbGPqali/sxAzZ
-	 xftx8p5/5H3zUqDe5P09Xww0WOBVAqAkEZAJPSupS1E9HxYqYwFbGcaqepkSGbJWCU
-	 k9GlADLZ3Xl+B4FCVuIcu/HCF7FHVxJ6eAFezQoM=
+	b=xZ55CrvwoUlIRjA4Adcr51nnyJkVfNlwvUEScnN0cTTBI+ui5nEItwiu73aFIi137
+	 m3ehMuU+FqBMmnVqtLwDZldlWq6j/4OkyHwSzxK2NHKQGzcO2919aQocfQoKzODxRx
+	 6DuTcfUGceylrShwYXaSnIfvIv6FvAsRDhUxk7C4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728639AbgHJTJr (ORCPT
+        id S1728670AbgHJTJw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:09:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36170 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:09:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728600AbgHJTJj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:09:39 -0400
+        id S1728613AbgHJTJm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:09:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DE2D2224D;
-        Mon, 10 Aug 2020 19:09:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25A8821775;
+        Mon, 10 Aug 2020 19:09:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086579;
-        bh=CaGu3jCShAi6zK9n0jAB+MVmHli5uXnzyL5xTif5KX8=;
+        s=default; t=1597086581;
+        bh=F31uPowNJjNMfFMctdd2MXIKeA3ecNKO28u5QHm02Fg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kRPK5HfMhmgjyJPuHWZq4XjNYUfRjZwaZZrS1ElDpv73KRpjULYZvP4UAj3cJDXuQ
-         Z8PeULWe5LQSLuKq0F8LlhzAMKD1ypbmYn0t+UzdmhW0eMJk8c4Q+Fu19N7uPtDyBZ
-         HzZEJfZMpMNC8VzBLG1QlhassuUQHf7Y5PkmDYcs=
+        b=0JC5oDXRUUsbxy8nPGVQYqdSevENv0OcMenER7Ero9fNbnH2yomiHOXreEq+jUcyh
+         K27dW5ypNDFxpYELYYCqWQ5kxHo2sL3boz0p5ivBJPfip1E5ufMJUq2Xm4d/8WeuDa
+         4nxEjpIHFxIb+ge016FzV7ogDcxIOr3IsFw+OrAs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Tretter <m.tretter@pengutronix.de>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.8 29/64] drm/debugfs: fix plain echo to connector "force" attribute
-Date:   Mon, 10 Aug 2020 15:08:24 -0400
-Message-Id: <20200810190859.3793319-29-sashal@kernel.org>
+Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 31/64] net: phy: mscc: restore the base page in vsc8514/8584_config_init
+Date:   Mon, 10 Aug 2020 15:08:26 -0400
+Message-Id: <20200810190859.3793319-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810190859.3793319-1-sashal@kernel.org>
 References: <20200810190859.3793319-1-sashal@kernel.org>
@@ -61,49 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Tretter <m.tretter@pengutronix.de>
+From: Antoine Tenart <antoine.tenart@bootlin.com>
 
-[ Upstream commit c704b17071c4dc571dca3af4e4151dac51de081a ]
+[ Upstream commit 6119dda34e5d0821959e37641b287576826b6378 ]
 
-Using plain echo to set the "force" connector attribute fails with
--EINVAL, because echo appends a newline to the output.
+In the vsc8584_config_init and vsc8514_config_init, the base page is set
+to 'GPIO', configuration is done, and the page is never explicitly
+restored to the standard page. No bug was triggered as it turns out
+helpers called in those config_init functions do modify the base page,
+and set it back to standard. But that is dangerous and any modification
+to those functions would introduce bugs. This patch fixes this, to
+improve maintenance, by restoring the base page to 'standard' once
+'GPIO' accesses are completed.
 
-Replace strcmp with sysfs_streq to also accept strings that end with a
-newline.
-
-v2: use sysfs_streq instead of stripping trailing whitespace
-
-Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
-Reviewed-by: Jani Nikula <jani.nikula@intel.com>
-Signed-off-by: Emil Velikov <emil.l.velikov@gmail.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20170817104307.17124-1-m.tretter@pengutronix.de
+Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_debugfs.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/phy/mscc/mscc_main.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/gpu/drm/drm_debugfs.c b/drivers/gpu/drm/drm_debugfs.c
-index 2bea221307037..bfe4602f206b4 100644
---- a/drivers/gpu/drm/drm_debugfs.c
-+++ b/drivers/gpu/drm/drm_debugfs.c
-@@ -311,13 +311,13 @@ static ssize_t connector_write(struct file *file, const char __user *ubuf,
+diff --git a/drivers/net/phy/mscc/mscc_main.c b/drivers/net/phy/mscc/mscc_main.c
+index 5ddc44f87eaf0..8f5f2586e7849 100644
+--- a/drivers/net/phy/mscc/mscc_main.c
++++ b/drivers/net/phy/mscc/mscc_main.c
+@@ -1379,6 +1379,11 @@ static int vsc8584_config_init(struct phy_device *phydev)
+ 	if (ret)
+ 		goto err;
  
- 	buf[len] = '\0';
++	ret = phy_base_write(phydev, MSCC_EXT_PAGE_ACCESS,
++			     MSCC_PHY_PAGE_STANDARD);
++	if (ret)
++		goto err;
++
+ 	if (!phy_interface_is_rgmii(phydev)) {
+ 		val = PROC_CMD_MCB_ACCESS_MAC_CONF | PROC_CMD_RST_CONF_PORT |
+ 			PROC_CMD_READ_MOD_WRITE_PORT;
+@@ -1751,7 +1756,11 @@ static int vsc8514_config_init(struct phy_device *phydev)
+ 	val &= ~MAC_CFG_MASK;
+ 	val |= MAC_CFG_QSGMII;
+ 	ret = phy_base_write(phydev, MSCC_PHY_MAC_CFG_FASTLINK, val);
++	if (ret)
++		goto err;
  
--	if (!strcmp(buf, "on"))
-+	if (sysfs_streq(buf, "on"))
- 		connector->force = DRM_FORCE_ON;
--	else if (!strcmp(buf, "digital"))
-+	else if (sysfs_streq(buf, "digital"))
- 		connector->force = DRM_FORCE_ON_DIGITAL;
--	else if (!strcmp(buf, "off"))
-+	else if (sysfs_streq(buf, "off"))
- 		connector->force = DRM_FORCE_OFF;
--	else if (!strcmp(buf, "unspecified"))
-+	else if (sysfs_streq(buf, "unspecified"))
- 		connector->force = DRM_FORCE_UNSPECIFIED;
- 	else
- 		return -EINVAL;
++	ret = phy_base_write(phydev, MSCC_EXT_PAGE_ACCESS,
++			     MSCC_PHY_PAGE_STANDARD);
+ 	if (ret)
+ 		goto err;
+ 
 -- 
 2.25.1
 
