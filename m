@@ -5,53 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9C34C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:12:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00090C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:12:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8865D21775
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:12:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3E2822B49
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:12:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597086751;
-	bh=r4elqKQnb6YYUYMvbfF91hB7MJxprC0syNxNYhmkhQo=;
+	s=default; t=1597086754;
+	bh=JWAfkfYeNpyvQQn7ChNaZq+27MlhnSQL1lGDK0L33lA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GJViNvSRkyN0u/XCleMYfnJm4S/QXv4vcRXTgAZ/OmVTwps8IGJrSUNZQhSpPgwO3
-	 xcJxC9RlDMrPgJEhmTJEIf9vO/7UZhuoNzqnJ5ydLZhi6Y1uDM1Yy22NEgRgwhsamW
-	 +HhiwFnW3ZZBKREWQqrpa/AGuitTFqGQGDr+9H3U=
+	b=mCvLloUjlOCVuFpZoi0NBIufCby0zpctuJ/r7vfWfzLl1NiGHFMFgLqStnzQx8x8c
+	 EiS1v+gpeZJvcF181TjvlNuHKGc5evMBDybonGyDFbQLpHCpQghdxmp9TjQO1N1CzA
+	 TnGba34ia8ZH/rGpBFdTYsLa3Zf21Lkip5V1md3E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729554AbgHJTMa (ORCPT
+        id S1729563AbgHJTMd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:12:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41986 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:12:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729529AbgHJTMZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:12:25 -0400
+        id S1729540AbgHJTM2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:12:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2046207FF;
-        Mon, 10 Aug 2020 19:12:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A978622BEB;
+        Mon, 10 Aug 2020 19:12:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086744;
-        bh=r4elqKQnb6YYUYMvbfF91hB7MJxprC0syNxNYhmkhQo=;
+        s=default; t=1597086747;
+        bh=JWAfkfYeNpyvQQn7ChNaZq+27MlhnSQL1lGDK0L33lA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KT2yE5XRCqcVVjaq7cC69FCeI9JQeB3YN2CNbeUPtF7GqAOquNM29s7Ozjwuzk2Fk
-         jzG+qU8ymh5BU/P395BeHqRrukVs/zQVphFj7+DXp1+zzhjcvkYIRjMPoVlVMLXQ0I
-         hjyczHgv1aEGYIJiUdTlhVQ/mKHOiD/yWJSn8Bgw=
+        b=2OfpuA7NmEcRyguChjnyxac5e5FkyjJ8wc3S2/0v5O7eCeBipMRzTm1Nq4GYNuojk
+         NpWVRcnBLKeWPfkl8Ti1AJVqHuAn5HbrDXd6I0Y3XZFi4bc/x1woHeWDqgNtLomBZB
+         l712GNrqUkLKprYTw+WesY3ubQprHL+S1TlUz8Eo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Akhil P Oommen <akhilpo@codeaurora.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 22/45] drm/msm: Fix a null pointer access in msm_gem_shrinker_count()
-Date:   Mon, 10 Aug 2020 15:11:30 -0400
-Message-Id: <20200810191153.3794446-22-sashal@kernel.org>
+Cc:     =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 24/45] drm/radeon: disable AGP by default
+Date:   Mon, 10 Aug 2020 15:11:32 -0400
+Message-Id: <20200810191153.3794446-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810191153.3794446-1-sashal@kernel.org>
 References: <20200810191153.3794446-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,171 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Akhil P Oommen <akhilpo@codeaurora.org>
+From: Christian König <christian.koenig@amd.com>
 
-[ Upstream commit 3cbdc8d8b7f39a7af3ea7b8dfa75caaebfda4e56 ]
+[ Upstream commit ba806f98f868ce107aa9c453fef751de9980e4af ]
 
-Adding an msm_gem_object object to the inactive_list before completing
-its initialization is a bad idea because shrinker may pick it up from the
-inactive_list. Fix this by making sure that the initialization is complete
-before moving the msm_obj object to the inactive list.
+Always use the PCI GART instead. We just have to many cases
+where AGP still causes problems. This means a performance
+regression for some GPUs, but also a bug fix for some others.
 
-This patch fixes the below error:
-[10027.553044] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000068
-[10027.573305] Mem abort info:
-[10027.590160]   ESR = 0x96000006
-[10027.597905]   EC = 0x25: DABT (current EL), IL = 32 bits
-[10027.614430]   SET = 0, FnV = 0
-[10027.624427]   EA = 0, S1PTW = 0
-[10027.632722] Data abort info:
-[10027.638039]   ISV = 0, ISS = 0x00000006
-[10027.647459]   CM = 0, WnR = 0
-[10027.654345] user pgtable: 4k pages, 39-bit VAs, pgdp=00000001e3a6a000
-[10027.672681] [0000000000000068] pgd=0000000198c31003, pud=0000000198c31003, pmd=0000000000000000
-[10027.693900] Internal error: Oops: 96000006 [#1] PREEMPT SMP
-[10027.738261] CPU: 3 PID: 214 Comm: kswapd0 Tainted: G S                5.4.40 #1
-[10027.745766] Hardware name: Qualcomm Technologies, Inc. SC7180 IDP (DT)
-[10027.752472] pstate: 80c00009 (Nzcv daif +PAN +UAO)
-[10027.757409] pc : mutex_is_locked+0x14/0x2c
-[10027.761626] lr : msm_gem_shrinker_count+0x70/0xec
-[10027.766454] sp : ffffffc011323ad0
-[10027.769867] x29: ffffffc011323ad0 x28: ffffffe677e4b878
-[10027.775324] x27: 0000000000000cc0 x26: 0000000000000000
-[10027.780783] x25: ffffff817114a708 x24: 0000000000000008
-[10027.786242] x23: ffffff8023ab7170 x22: 0000000000000001
-[10027.791701] x21: ffffff817114a080 x20: 0000000000000119
-[10027.797160] x19: 0000000000000068 x18: 00000000000003bc
-[10027.802621] x17: 0000000004a34210 x16: 00000000000000c0
-[10027.808083] x15: 0000000000000000 x14: 0000000000000000
-[10027.813542] x13: ffffffe677e0a3c0 x12: 0000000000000000
-[10027.819000] x11: 0000000000000000 x10: ffffff8174b94340
-[10027.824461] x9 : 0000000000000000 x8 : 0000000000000000
-[10027.829919] x7 : 00000000000001fc x6 : ffffffc011323c88
-[10027.835373] x5 : 0000000000000001 x4 : ffffffc011323d80
-[10027.840832] x3 : ffffffff0477b348 x2 : 0000000000000000
-[10027.846290] x1 : ffffffc011323b68 x0 : 0000000000000068
-[10027.851748] Call trace:
-[10027.854264]  mutex_is_locked+0x14/0x2c
-[10027.858121]  msm_gem_shrinker_count+0x70/0xec
-[10027.862603]  shrink_slab+0xc0/0x4b4
-[10027.866187]  shrink_node+0x4a8/0x818
-[10027.869860]  kswapd+0x624/0x890
-[10027.873097]  kthread+0x11c/0x12c
-[10027.876424]  ret_from_fork+0x10/0x18
-[10027.880102] Code: f9000bf3 910003fd aa0003f3 d503201f (f9400268)
-[10027.886362] ---[ end trace df5849a1a3543251 ]---
-[10027.891518] Kernel panic - not syncing: Fatal exception
-
-Signed-off-by: Akhil P Oommen <akhilpo@codeaurora.org>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+Signed-off-by: Christian König <christian.koenig@amd.com>
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/msm_gem.c | 36 ++++++++++++++++++++---------------
- 1 file changed, 21 insertions(+), 15 deletions(-)
+ drivers/gpu/drm/radeon/radeon_drv.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/msm_gem.c b/drivers/gpu/drm/msm/msm_gem.c
-index 5a6a79fbc9d6e..d92a0ffe2a767 100644
---- a/drivers/gpu/drm/msm/msm_gem.c
-+++ b/drivers/gpu/drm/msm/msm_gem.c
-@@ -977,10 +977,8 @@ int msm_gem_new_handle(struct drm_device *dev, struct drm_file *file,
- 
- static int msm_gem_new_impl(struct drm_device *dev,
- 		uint32_t size, uint32_t flags,
--		struct drm_gem_object **obj,
--		bool struct_mutex_locked)
-+		struct drm_gem_object **obj)
- {
--	struct msm_drm_private *priv = dev->dev_private;
- 	struct msm_gem_object *msm_obj;
- 
- 	switch (flags & MSM_BO_CACHE_MASK) {
-@@ -1006,15 +1004,6 @@ static int msm_gem_new_impl(struct drm_device *dev,
- 	INIT_LIST_HEAD(&msm_obj->submit_entry);
- 	INIT_LIST_HEAD(&msm_obj->vmas);
- 
--	if (struct_mutex_locked) {
--		WARN_ON(!mutex_is_locked(&dev->struct_mutex));
--		list_add_tail(&msm_obj->mm_list, &priv->inactive_list);
--	} else {
--		mutex_lock(&dev->struct_mutex);
--		list_add_tail(&msm_obj->mm_list, &priv->inactive_list);
--		mutex_unlock(&dev->struct_mutex);
--	}
--
- 	*obj = &msm_obj->base;
- 
- 	return 0;
-@@ -1024,6 +1013,7 @@ static struct drm_gem_object *_msm_gem_new(struct drm_device *dev,
- 		uint32_t size, uint32_t flags, bool struct_mutex_locked)
- {
- 	struct msm_drm_private *priv = dev->dev_private;
-+	struct msm_gem_object *msm_obj;
- 	struct drm_gem_object *obj = NULL;
- 	bool use_vram = false;
- 	int ret;
-@@ -1044,14 +1034,15 @@ static struct drm_gem_object *_msm_gem_new(struct drm_device *dev,
- 	if (size == 0)
- 		return ERR_PTR(-EINVAL);
- 
--	ret = msm_gem_new_impl(dev, size, flags, &obj, struct_mutex_locked);
-+	ret = msm_gem_new_impl(dev, size, flags, &obj);
- 	if (ret)
- 		goto fail;
- 
-+	msm_obj = to_msm_bo(obj);
-+
- 	if (use_vram) {
- 		struct msm_gem_vma *vma;
- 		struct page **pages;
--		struct msm_gem_object *msm_obj = to_msm_bo(obj);
- 
- 		mutex_lock(&msm_obj->lock);
- 
-@@ -1086,6 +1077,15 @@ static struct drm_gem_object *_msm_gem_new(struct drm_device *dev,
- 		mapping_set_gfp_mask(obj->filp->f_mapping, GFP_HIGHUSER);
- 	}
- 
-+	if (struct_mutex_locked) {
-+		WARN_ON(!mutex_is_locked(&dev->struct_mutex));
-+		list_add_tail(&msm_obj->mm_list, &priv->inactive_list);
-+	} else {
-+		mutex_lock(&dev->struct_mutex);
-+		list_add_tail(&msm_obj->mm_list, &priv->inactive_list);
-+		mutex_unlock(&dev->struct_mutex);
-+	}
-+
- 	return obj;
- 
- fail:
-@@ -1108,6 +1108,7 @@ struct drm_gem_object *msm_gem_new(struct drm_device *dev,
- struct drm_gem_object *msm_gem_import(struct drm_device *dev,
- 		struct dma_buf *dmabuf, struct sg_table *sgt)
- {
-+	struct msm_drm_private *priv = dev->dev_private;
- 	struct msm_gem_object *msm_obj;
- 	struct drm_gem_object *obj;
- 	uint32_t size;
-@@ -1121,7 +1122,7 @@ struct drm_gem_object *msm_gem_import(struct drm_device *dev,
- 
- 	size = PAGE_ALIGN(dmabuf->size);
- 
--	ret = msm_gem_new_impl(dev, size, MSM_BO_WC, &obj, false);
-+	ret = msm_gem_new_impl(dev, size, MSM_BO_WC, &obj);
- 	if (ret)
- 		goto fail;
- 
-@@ -1146,6 +1147,11 @@ struct drm_gem_object *msm_gem_import(struct drm_device *dev,
- 	}
- 
- 	mutex_unlock(&msm_obj->lock);
-+
-+	mutex_lock(&dev->struct_mutex);
-+	list_add_tail(&msm_obj->mm_list, &priv->inactive_list);
-+	mutex_unlock(&dev->struct_mutex);
-+
- 	return obj;
- 
- fail:
+diff --git a/drivers/gpu/drm/radeon/radeon_drv.c b/drivers/gpu/drm/radeon/radeon_drv.c
+index 7d417b9a52501..c2573096d43c0 100644
+--- a/drivers/gpu/drm/radeon/radeon_drv.c
++++ b/drivers/gpu/drm/radeon/radeon_drv.c
+@@ -174,12 +174,7 @@ int radeon_no_wb;
+ int radeon_modeset = -1;
+ int radeon_dynclks = -1;
+ int radeon_r4xx_atom = 0;
+-#ifdef __powerpc__
+-/* Default to PCI on PowerPC (fdo #95017) */
+ int radeon_agpmode = -1;
+-#else
+-int radeon_agpmode = 0;
+-#endif
+ int radeon_vram_limit = 0;
+ int radeon_gart_size = -1; /* auto */
+ int radeon_benchmarking = 0;
 -- 
 2.25.1
 
