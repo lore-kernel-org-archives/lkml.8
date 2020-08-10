@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE178C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:25:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E59EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:25:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 927F522CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:25:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26E9D22CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:25:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597087549;
-	bh=qCjkvgmmU7mm/aDr1MGFWcs+iVYgV6a/xKFymDiO9U4=;
+	s=default; t=1597087554;
+	bh=hUo21oQW7nz+fD4ACNrbY5Chug6U6GeExSjug/QP+IE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AZQHbpQzUblfKSG6O4NHE7Bq8jTjJHqTBl4Lf6hGW2IdlN7YiEP+nUCJ3vG/mKy4i
-	 2UWeBVWwF7XRT8e6MP2ylmR7Cd62omUtMz5Mfq876uoy3pFZ66/pE+CTikR/V+jhan
-	 MMZnczed6kIGVrGLQumj2fLVr0FET/tJZIJuEtRU=
+	b=YK8rgaVVeQ2CuMvNqT10dJ9KUhPDN0Tz2h/kVt5zk0xHTN9kvN46KoSZY25RyuoAz
+	 75t7+U6Y1IrAB2KTJ8yVLT+9vyuDLiTHW6LpWuLTP3D6kR1+Tv48sHl2Uo/3kUOihG
+	 v53Lq2VWenEBbbEn4jb+NWkfkZ6M3k2y+Xs5mBGs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728177AbgHJTL6 (ORCPT
+        id S1729864AbgHJTZw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:11:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40396 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:25:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729357AbgHJTLj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:11:39 -0400
+        id S1729357AbgHJTL7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:11:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57DDC22BF3;
-        Mon, 10 Aug 2020 19:11:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40FFF2078D;
+        Mon, 10 Aug 2020 19:11:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086698;
-        bh=qCjkvgmmU7mm/aDr1MGFWcs+iVYgV6a/xKFymDiO9U4=;
+        s=default; t=1597086718;
+        bh=hUo21oQW7nz+fD4ACNrbY5Chug6U6GeExSjug/QP+IE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z5gQ4mtMeThAJkq44ywL4DT2mxhpQenEWD+8MYPFTrDgQ1eSbu7itmiN/M8lJG/x7
-         n1Jn8zqRubRUROW/ARuIHdzulxq13Fc4ymC8mvPpfEKFIDboCjZZ1eIqqWbmPP7Rb4
-         YfuCQxyfRYGNkzMBKUqtna6G86shQK74LnAhd98I=
+        b=1zhb274SvmlNVFV3p5AjAu5UQXMxyraGthm7OLaIshYerVXr6gtZS68u5Sds5VmBt
+         1dVPsvJrb3K/h+1GJuNbJp76Y7Nm8fTXGyh7TxvNOLwgvQMWPIEPieoKukJox/8rbG
+         IzgeiJzmMgceb8cZeTArLFdKvHhBRTizuiu6w0a0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Danesh Petigara <danesh.petigara@broadcom.com>,
-        Al Cooper <alcooperx@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 50/60] usb: bdc: Halt controller on suspend
-Date:   Mon, 10 Aug 2020 15:10:18 -0400
-Message-Id: <20200810191028.3793884-50-sashal@kernel.org>
+Cc:     Lihong Kou <koulihong@huawei.com>,
+        syzbot+96414aa0033c363d8458@syzkaller.appspotmail.com,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 03/45] Bluetooth: add a mutex lock to avoid UAF in do_enale_set
+Date:   Mon, 10 Aug 2020 15:11:11 -0400
+Message-Id: <20200810191153.3794446-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200810191028.3793884-1-sashal@kernel.org>
-References: <20200810191028.3793884-1-sashal@kernel.org>
+In-Reply-To: <20200810191153.3794446-1-sashal@kernel.org>
+References: <20200810191153.3794446-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,49 +61,140 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Danesh Petigara <danesh.petigara@broadcom.com>
+From: Lihong Kou <koulihong@huawei.com>
 
-[ Upstream commit 5fc453d7de3d0c345812453823a3a56783c5f82c ]
+[ Upstream commit f9c70bdc279b191da8d60777c627702c06e4a37d ]
 
-GISB bus error kernel panics have been observed during S2 transition
-tests on the 7271t platform. The errors are a result of the BDC
-interrupt handler trying to access BDC register space after the
-system's suspend callbacks have completed.
+In the case we set or free the global value listen_chan in
+different threads, we can encounter the UAF problems because
+the method is not protected by any lock, add one to avoid
+this bug.
 
-Adding a suspend hook to the BDC driver that halts the controller before
-S2 entry thus preventing unwanted access to the BDC register space during
-this transition.
+BUG: KASAN: use-after-free in l2cap_chan_close+0x48/0x990
+net/bluetooth/l2cap_core.c:730
+Read of size 8 at addr ffff888096950000 by task kworker/1:102/2868
 
-Signed-off-by: Danesh Petigara <danesh.petigara@broadcom.com>
-Signed-off-by: Al Cooper <alcooperx@gmail.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+CPU: 1 PID: 2868 Comm: kworker/1:102 Not tainted 5.5.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine,
+BIOS Google 01/01/2011
+Workqueue: events do_enable_set
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1fb/0x318 lib/dump_stack.c:118
+ print_address_description+0x74/0x5c0 mm/kasan/report.c:374
+ __kasan_report+0x149/0x1c0 mm/kasan/report.c:506
+ kasan_report+0x26/0x50 mm/kasan/common.c:641
+ __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:135
+ l2cap_chan_close+0x48/0x990 net/bluetooth/l2cap_core.c:730
+ do_enable_set+0x660/0x900 net/bluetooth/6lowpan.c:1074
+ process_one_work+0x7f5/0x10f0 kernel/workqueue.c:2264
+ worker_thread+0xbbc/0x1630 kernel/workqueue.c:2410
+ kthread+0x332/0x350 kernel/kthread.c:255
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+Allocated by task 2870:
+ save_stack mm/kasan/common.c:72 [inline]
+ set_track mm/kasan/common.c:80 [inline]
+ __kasan_kmalloc+0x118/0x1c0 mm/kasan/common.c:515
+ kasan_kmalloc+0x9/0x10 mm/kasan/common.c:529
+ kmem_cache_alloc_trace+0x221/0x2f0 mm/slab.c:3551
+ kmalloc include/linux/slab.h:555 [inline]
+ kzalloc include/linux/slab.h:669 [inline]
+ l2cap_chan_create+0x50/0x320 net/bluetooth/l2cap_core.c:446
+ chan_create net/bluetooth/6lowpan.c:640 [inline]
+ bt_6lowpan_listen net/bluetooth/6lowpan.c:959 [inline]
+ do_enable_set+0x6a4/0x900 net/bluetooth/6lowpan.c:1078
+ process_one_work+0x7f5/0x10f0 kernel/workqueue.c:2264
+ worker_thread+0xbbc/0x1630 kernel/workqueue.c:2410
+ kthread+0x332/0x350 kernel/kthread.c:255
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+Freed by task 2870:
+ save_stack mm/kasan/common.c:72 [inline]
+ set_track mm/kasan/common.c:80 [inline]
+ kasan_set_free_info mm/kasan/common.c:337 [inline]
+ __kasan_slab_free+0x12e/0x1e0 mm/kasan/common.c:476
+ kasan_slab_free+0xe/0x10 mm/kasan/common.c:485
+ __cache_free mm/slab.c:3426 [inline]
+ kfree+0x10d/0x220 mm/slab.c:3757
+ l2cap_chan_destroy net/bluetooth/l2cap_core.c:484 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ l2cap_chan_put+0x170/0x190 net/bluetooth/l2cap_core.c:498
+ do_enable_set+0x66c/0x900 net/bluetooth/6lowpan.c:1075
+ process_one_work+0x7f5/0x10f0 kernel/workqueue.c:2264
+ worker_thread+0xbbc/0x1630 kernel/workqueue.c:2410
+ kthread+0x332/0x350 kernel/kthread.c:255
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+The buggy address belongs to the object at ffff888096950000
+ which belongs to the cache kmalloc-2k of size 2048
+The buggy address is located 0 bytes inside of
+ 2048-byte region [ffff888096950000, ffff888096950800)
+The buggy address belongs to the page:
+page:ffffea00025a5400 refcount:1 mapcount:0 mapping:ffff8880aa400e00 index:0x0
+flags: 0xfffe0000000200(slab)
+raw: 00fffe0000000200 ffffea00027d1548 ffffea0002397808 ffff8880aa400e00
+raw: 0000000000000000 ffff888096950000 0000000100000001 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff88809694ff00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ ffff88809694ff80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+>ffff888096950000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                   ^
+ ffff888096950080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888096950100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+Reported-by: syzbot+96414aa0033c363d8458@syzkaller.appspotmail.com
+Signed-off-by: Lihong Kou <koulihong@huawei.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/udc/bdc/bdc_core.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ net/bluetooth/6lowpan.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/usb/gadget/udc/bdc/bdc_core.c b/drivers/usb/gadget/udc/bdc/bdc_core.c
-index 5fde5a8b065c1..2dca11f0a7444 100644
---- a/drivers/usb/gadget/udc/bdc/bdc_core.c
-+++ b/drivers/usb/gadget/udc/bdc/bdc_core.c
-@@ -603,9 +603,14 @@ static int bdc_remove(struct platform_device *pdev)
- static int bdc_suspend(struct device *dev)
- {
- 	struct bdc *bdc = dev_get_drvdata(dev);
-+	int ret;
+diff --git a/net/bluetooth/6lowpan.c b/net/bluetooth/6lowpan.c
+index 4febc82a7c761..52fb6d6d6d585 100644
+--- a/net/bluetooth/6lowpan.c
++++ b/net/bluetooth/6lowpan.c
+@@ -50,6 +50,7 @@ static bool enable_6lowpan;
+ /* We are listening incoming connections via this channel
+  */
+ static struct l2cap_chan *listen_chan;
++static DEFINE_MUTEX(set_lock);
  
--	clk_disable_unprepare(bdc->clk);
--	return 0;
-+	/* Halt the controller */
-+	ret = bdc_stop(bdc);
-+	if (!ret)
-+		clk_disable_unprepare(bdc->clk);
-+
-+	return ret;
+ struct lowpan_peer {
+ 	struct list_head list;
+@@ -1070,12 +1071,14 @@ static void do_enable_set(struct work_struct *work)
+ 
+ 	enable_6lowpan = set_enable->flag;
+ 
++	mutex_lock(&set_lock);
+ 	if (listen_chan) {
+ 		l2cap_chan_close(listen_chan, 0);
+ 		l2cap_chan_put(listen_chan);
+ 	}
+ 
+ 	listen_chan = bt_6lowpan_listen();
++	mutex_unlock(&set_lock);
+ 
+ 	kfree(set_enable);
  }
+@@ -1127,11 +1130,13 @@ static ssize_t lowpan_control_write(struct file *fp,
+ 		if (ret == -EINVAL)
+ 			return ret;
  
- static int bdc_resume(struct device *dev)
++		mutex_lock(&set_lock);
+ 		if (listen_chan) {
+ 			l2cap_chan_close(listen_chan, 0);
+ 			l2cap_chan_put(listen_chan);
+ 			listen_chan = NULL;
+ 		}
++		mutex_unlock(&set_lock);
+ 
+ 		if (conn) {
+ 			struct lowpan_peer *peer;
 -- 
 2.25.1
 
