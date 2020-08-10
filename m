@@ -2,101 +2,113 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5382FC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 08:53:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA908C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 08:53:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B7BB20729
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 08:53:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83D7820729
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 08:53:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d7Aa9uvk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726457AbgHJIx3 (ORCPT
+        id S1726515AbgHJIxo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 04:53:29 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:36791 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725857AbgHJIx2 (ORCPT
+        Mon, 10 Aug 2020 04:53:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60454 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725857AbgHJIxn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 04:53:28 -0400
-Received: by mail-ot1-f68.google.com with SMTP id x24so6711887otp.3;
-        Mon, 10 Aug 2020 01:53:28 -0700 (PDT)
+        Mon, 10 Aug 2020 04:53:43 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77E3FC061756
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 01:53:43 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id g26so7650922qka.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 01:53:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hn/uvI5guaY3D0G4/sdlh6Gx/KpGc+PN8jIJlWv4gfw=;
+        b=d7Aa9uvkgM7oBz+js2KgV6ryeTcBKg1+nuyabNAVpCSEqUIVRt494wY2baViHTGqKZ
+         aF8nGJPx0RtjOgE/N1sdXrZ5LC0r/EHlwHUFetfeuk2Shc5Vgs2rX7/rFOfAJ9fOSvZX
+         c03EyDruLop4NtSphCrDRGpVngIJMJJhzgRS8dseZLs8U/scj0te95vbIW8mYJqoro1t
+         cIgFamiIKdggQQ8iXVxxwWkmWuXVpJkxyQRerU5lir3AWhL1OVYlRUkI5PFHFweMQssu
+         f5lmFSUmVMWE08JFuNHHPBbwf+uMCMnNuki5SkOm8ov4A5AFAwy2zcaornwwpbm+zdOD
+         5hng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Xmzp7fk+vIO5KhMWu8O9IbD4bDIyRfJdP7iP0tIOvno=;
-        b=mOGdM88vJfUe0IjTNtwfTexNlHHBK7uHOmlybBGz/g4R6k9oPggbECbVtj36holqsR
-         k7QT3oL0xY024giKb/YQz19mQwhXMijoQ3jCCiQriglgjCMnq+A01BCHpFFV6TBrpOM5
-         YRQgmMjrTYZW1FFfUHDs42CoQeDXilaYx224qLxDWVpv1DOzxtbUB5r3kacDHqczXZ5F
-         7oz5GoV0wVaqT4/AWscfe5H191gRSDBawxGDhGcamMlOUBwqjVrxqITyC2m1fSInP5Q3
-         MR96+3GP7yrI+8brGHXae4KWNTutrLX0DAA39eHpsiTdzMXSSDhjnb5EFLaMQTiThzMx
-         2Xcw==
-X-Gm-Message-State: AOAM530BcwnSm6BBTRwh6JMSFf1uC8LvedlajFTy+OeRn7HwWCCWwMQ0
-        4sJILOivXhjQ0LYCA2ktr0Z40YJWrvtX9CBaE/c=
-X-Google-Smtp-Source: ABdhPJzSt76d0ygTKVbbokZXs04MvcLY5RinH8EKwMctMbjh/IruKDAr8twMrh9yrF5whd8fFKWBPfGLT5IiuTy66Aw=
-X-Received: by 2002:a9d:7d8c:: with SMTP id j12mr3284otn.250.1597049607701;
- Mon, 10 Aug 2020 01:53:27 -0700 (PDT)
+        bh=hn/uvI5guaY3D0G4/sdlh6Gx/KpGc+PN8jIJlWv4gfw=;
+        b=e1MygrkKJuv9TIyxEShyGI3MSKNvVnO1uVtSTs5xSfq2GE/22AtMtFIwcpeKXvIoFf
+         GWIqY2izdC24VMJBHdEwuXnyJ2b1dzeExXCmY3vn7MdtRy0txwM2lwK42VisZG779gR1
+         Gc5/MDfxCzgbHF1eobXvcflES/svxT/56m5CKfakmKkdU3YrDSS6qQPs2skVfd3OwcCb
+         3BfNWzT773O6Uji/ka1E73zbFOW7yJCdDlV9AC/oLESQf90e+37OgNkPWIYh888sdY3Z
+         O462AeKr+EjfwLEAGmiKIqDK1m2iOKzZ5LHcxDUlePojRv6StaZjcBiIqvD1oPsc+i0a
+         2iqA==
+X-Gm-Message-State: AOAM531FhNyrDiUwEZfVPyRLVrRQwuSZBZ6tLQ4McVuYeaQqX1uMr0ik
+        u8euTypgCv774pDoHR3tvEuQuJwohUTzG1VNKcc=
+X-Google-Smtp-Source: ABdhPJw4PLTjbhjwDy6EiKaJ7HTrl8YRVLWi1NAyqs9jnrxv1KPWBcnGXX4x7q7HcmegO6cIZyeDvkpZWdqQjLRd+WU=
+X-Received: by 2002:a37:e92:: with SMTP id 140mr24720492qko.121.1597049622701;
+ Mon, 10 Aug 2020 01:53:42 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200807174954.14448-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200807174954.14448-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <e67a94e8-c9ed-dc9e-cab8-453a09441bcb@gmail.com> <CA+V-a8snp3EUFRuMHLxVhnc=zPq-LaQL8du7LgGcswi+6NthLQ@mail.gmail.com>
-In-Reply-To: <CA+V-a8snp3EUFRuMHLxVhnc=zPq-LaQL8du7LgGcswi+6NthLQ@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 10 Aug 2020 10:53:16 +0200
-Message-ID: <CAMuHMdVEqc1JVeZrLdDfRo1EwyzaVq-ORStO39NyTqwwkh8YLQ@mail.gmail.com>
-Subject: Re: [PATCH 5/7] ARM: dts: r8a7742: Add DU support
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc:     Sergei Shtylyov <sergei.shtylyov@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Rob Herring <robh+dt@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
+References: <1596791682-4311-1-git-send-email-shengjiu.wang@nxp.com> <20200810080018.GA13408@Asurada-Nvidia>
+In-Reply-To: <20200810080018.GA13408@Asurada-Nvidia>
+From:   Shengjiu Wang <shengjiu.wang@gmail.com>
+Date:   Mon, 10 Aug 2020 16:53:31 +0800
+Message-ID: <CAA+D8AP6thymUXN_OTGMxz6Xun0c8Ep0s1-LKj6b0odoBQ0K=g@mail.gmail.com>
+Subject: Re: [PATCH] ASoC: fsl_sai: Add -EPROBE_DEFER check for regmap init
+To:     Nicolin Chen <nicoleotsuka@gmail.com>
+Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org, Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 7, 2020 at 10:22 PM Lad, Prabhakar
-<prabhakar.csengg@gmail.com> wrote:
-> On Fri, Aug 7, 2020 at 8:48 PM Sergei Shtylyov
-> <sergei.shtylyov@gmail.com> wrote:
-> > On 8/7/20 8:49 PM, Lad Prabhakar wrote:
-> > > Add du node to r8a7742 SoC DT. Boards that want to enable the DU
+On Mon, Aug 10, 2020 at 4:02 PM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
+>
+> On Fri, Aug 07, 2020 at 05:14:42PM +0800, Shengjiu Wang wrote:
+> > Regmap initialization may return -EPROBE_DEFER for clock
+> > may not be ready, so check -EPROBE_DEFER error type before
+> > start another Regmap initialization.
 > >
-> >   Both "du" and "DU" on a single line? :-)
+> > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> > ---
+> >  sound/soc/fsl/fsl_sai.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
 > >
-> Argh my bad.
+> > diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
+> > index a22562f2df47..eb933fe9b6d1 100644
+> > --- a/sound/soc/fsl/fsl_sai.c
+> > +++ b/sound/soc/fsl/fsl_sai.c
+> > @@ -927,7 +927,7 @@ static int fsl_sai_probe(struct platform_device *pdev)
+> >                       "bus", base, &fsl_sai_regmap_config);
+> >
+> >       /* Compatible with old DTB cases */
+> > -     if (IS_ERR(sai->regmap))
+> > +     if (IS_ERR(sai->regmap) && PTR_ERR(sai->regmap) != -EPROBE_DEFER)
+> >               sai->regmap = devm_regmap_init_mmio_clk(&pdev->dev,
+> >                               "sai", base, &fsl_sai_regmap_config);
+> >       if (IS_ERR(sai->regmap)) {
+>
+> In that case, might need a !EPROBE_DEFER check for this
+> fallback devm_regmap_init_mmio_clk at "sai" clock too?
 
-No worries, I can replace the former one by "Display Unit (DU)" while
-applying.
+No, I think it is ok for this fallback to return directly with
+EPROBE_DEFER.
 
-> > > need to specify the output topology.
-> > >
-> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v5.10, with the above fixed.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+best regards
+wang shengjiu
