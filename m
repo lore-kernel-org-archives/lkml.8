@@ -2,110 +2,101 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C67C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:42:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01EFDC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:44:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB6BF20825
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:42:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597074160;
-	bh=zn1+86pPO0MeKxVnkura4kzFBwLZ2uBgm92quMahL+U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HBHZCnxP9axY2D1Tkru3fLwI79y321bnyKwVpJjV8bnHcV+x3xnGPj6W72lYCFp/8
-	 QA8GEJOaExUv4UPqSWzf2MsYZWcfpSpBCPslMmId9mdsliFNMcOcOrv6WtDvaE/XVk
-	 PVSHsiIsFarxrfkY4mrfRcTc807jB9ZS1VInMf+8=
+	by mail.kernel.org (Postfix) with ESMTP id CFF3C20774
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:44:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PtZVxNAQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbgHJPTe (ORCPT
+        id S1728196AbgHJPoa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:19:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49436 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725869AbgHJPT3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:19:29 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CFAC2075F;
-        Mon, 10 Aug 2020 15:19:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597072768;
-        bh=zn1+86pPO0MeKxVnkura4kzFBwLZ2uBgm92quMahL+U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QrnCZwk+EdjgayOpUfkazEUdBC9PIv/H4tDbD7GiNexh4Xk8dprOYzwi+jjrZIG1b
-         EDFZVBS9yi48ErFaC+5e0si9o2Rkq1GGZEtAp1OCflSTNGmxvMTMMOIr5XdJRXo6WU
-         X4gO6l3R0B+jPUNZMiY6T20MdlaU1jlv5cJ2Dxuw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+1a54a94bd32716796edd@syzkaller.appspotmail.com,
-        syzbot+9d2abfef257f3e2d4713@syzkaller.appspotmail.com,
-        Hillf Danton <hdanton@sina.com>, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.8 11/38] ALSA: seq: oss: Serialize ioctls
-Date:   Mon, 10 Aug 2020 17:19:01 +0200
-Message-Id: <20200810151804.447913452@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200810151803.920113428@linuxfoundation.org>
-References: <20200810151803.920113428@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 10 Aug 2020 11:44:30 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:54910 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726406AbgHJPo3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:44:29 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07AFhw58086078;
+        Mon, 10 Aug 2020 10:43:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1597074238;
+        bh=WkEloO0vK6rOToy94HdrGPp6kcZXQrZulDOI3ozBGjM=;
+        h=Subject:From:To:References:Date:In-Reply-To;
+        b=PtZVxNAQS7tKESdGPbarT6BJ5ycfc83vXrzaWBsBUdO/7iewL22Wc/pcXl0GnEBlO
+         7HKhaDnbgTyhNCS2NpY3+bGNHkNwHqTjqKRjmWlcMzWkO4lbFI6ia1i0I2tOrTif+e
+         lxsGVAd4Zk4KrL8/tmleZb46SqDgnXz1bNWuqplI=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07AFhwu0038934;
+        Mon, 10 Aug 2020 10:43:58 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 10
+ Aug 2020 10:43:58 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 10 Aug 2020 10:43:58 -0500
+Received: from [10.250.227.175] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07AFhuQg012659;
+        Mon, 10 Aug 2020 10:43:56 -0500
+Subject: Re: [net-next iproute2 PATCH v4 0/2] iplink: hsr: add support for
+ creating PRP device
+From:   Murali Karicheri <m-karicheri2@ti.com>
+To:     <davem@davemloft.net>, <kuba@kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-api@vger.kernel.org>,
+        <nsekhar@ti.com>, <vinicius.gomes@intel.com>,
+        <stephen@networkplumber.org>, <kuznet@ms2.inr.ac.ru>
+References: <20200806203712.2712-1-m-karicheri2@ti.com>
+Message-ID: <8be17fb1-7ffc-aab4-aec2-b3b4bacf26d8@ti.com>
+Date:   Mon, 10 Aug 2020 11:43:55 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200806203712.2712-1-m-karicheri2@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+iproute2 maintainers,
 
-commit 80982c7e834e5d4e325b6ce33757012ecafdf0bb upstream.
+On 8/6/20 4:37 PM, Murali Karicheri wrote:
+> This series enhances the iproute2 iplink module to add support
+> for creating PRP device similar to HSR. The kernel part of this
+> is already merged to net-next and the same can be referenced
+> at https://www.spinics.net/lists/linux-api/msg42615.html
+> 
+> v3 of the series is rebased to iproute2-next/master at
+> git://git.kernel.org/pub/scm/network/iproute2/iproute2-next
+> and send as v4.
+> 
+> Please apply this if looks good.
+> 
+> Murali Karicheri (2):
+>    iplink: hsr: add support for creating PRP device similar to HSR
+>    ip: iplink: prp: update man page for new parameter
+> 
+>   ip/iplink_hsr.c       | 19 +++++++++++++++++--
+>   man/man8/ip-link.8.in |  9 ++++++++-
+>   2 files changed, 25 insertions(+), 3 deletions(-)
+> 
+Please merge this series to iproute2 as it is the missing piece
+needed to fully support PRP protocol support in netdev subsystem. Kernel
+part is already merged and expected to be in v5.9.x kernel.
 
-Some ioctls via OSS sequencer API may race and lead to UAF when the
-port create and delete are performed concurrently, as spotted by a
-couple of syzkaller cases.  This patch is an attempt to address it by
-serializing the ioctls with the existing register_mutex.
-
-Basically OSS sequencer API is an obsoleted interface and was designed
-without much consideration of the concurrency.  There are very few
-applications with it, and the concurrent performance isn't asked,
-hence this "big hammer" approach should be good enough.
-
-Reported-by: syzbot+1a54a94bd32716796edd@syzkaller.appspotmail.com
-Reported-by: syzbot+9d2abfef257f3e2d4713@syzkaller.appspotmail.com
-Suggested-by: Hillf Danton <hdanton@sina.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200804185815.2453-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- sound/core/seq/oss/seq_oss.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
---- a/sound/core/seq/oss/seq_oss.c
-+++ b/sound/core/seq/oss/seq_oss.c
-@@ -168,10 +168,16 @@ static long
- odev_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- {
- 	struct seq_oss_devinfo *dp;
-+	long rc;
-+
- 	dp = file->private_data;
- 	if (snd_BUG_ON(!dp))
- 		return -ENXIO;
--	return snd_seq_oss_ioctl(dp, cmd, arg);
-+
-+	mutex_lock(&register_mutex);
-+	rc = snd_seq_oss_ioctl(dp, cmd, arg);
-+	mutex_unlock(&register_mutex);
-+	return rc;
- }
- 
- #ifdef CONFIG_COMPAT
-
-
+Thanks
+-- 
+Murali Karicheri
+Texas Instruments
