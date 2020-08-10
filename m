@@ -2,90 +2,145 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12DCAC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6FEAC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:25:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBBBF2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:25:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC1E72070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:25:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbgHJOZC (ORCPT
+        id S1727051AbgHJOYw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 10:25:02 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:25596 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726888AbgHJOY5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 10:24:57 -0400
-X-IronPort-AV: E=Sophos;i="5.75,457,1589234400"; 
-   d="scan'208";a="463038467"
-Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Aug 2020 16:24:54 +0200
-Date:   Mon, 10 Aug 2020 16:24:54 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To:     Jonathan Corbet <corbet@lwn.net>
-cc:     Markus Elfring <Markus.Elfring@web.de>,
-        Sumera Priyadarsini <sylphrenadin@gmail.com>,
-        Coccinelle <cocci@systeme.lip6.fr>, linux-doc@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mon, 10 Aug 2020 10:24:52 -0400
+Received: from mga05.intel.com ([192.55.52.43]:5304 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726897AbgHJOYs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 10:24:48 -0400
+IronPort-SDR: W6DyI0fS2XxlYkJaglwXzF7uqVXGVze2ajKL6b8rklgjoaAlORi+dxr6jEgAkpZVSAK5gcdMNk
+ UYl6+JFqcQcw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9708"; a="238371926"
+X-IronPort-AV: E=Sophos;i="5.75,457,1589266800"; 
+   d="scan'208";a="238371926"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2020 07:24:46 -0700
+IronPort-SDR: 52m5sVXupHSldNjkls906YBK8xA0kbrQeZ5AX59IHpMo+rS4hYsYQRa2rKzREw1s9Lushq1iYD
+ pAD0Y7os7POQ==
+X-IronPort-AV: E=Sophos;i="5.75,457,1589266800"; 
+   d="scan'208";a="277292106"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2020 07:24:43 -0700
+Received: from punajuuri.localdomain (punajuuri.localdomain [192.168.240.130])
+        by paasikivi.fi.intel.com (Postfix) with ESMTP id B48DF20AC3;
+        Mon, 10 Aug 2020 17:24:41 +0300 (EEST)
+Received: from sailus by punajuuri.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@linux.intel.com>)
+        id 1k58mC-0003F0-9I; Mon, 10 Aug 2020 17:27:48 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     linux-i2c@vger.kernel.org
+Cc:     Wolfram Sang <wsa@the-dreams.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-acpi@vger.kernel.org, Bingbu Cao <bingbu.cao@intel.com>,
+        linux-media@vger.kernel.org,
+        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
+        Hyungwoo Yang <hyungwoo.yang@intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Subject: Re: [PATCH v2] documentation: coccinelle: Improve command example
- for make C={1, 2}
-In-Reply-To: <20200810081914.37224551@lwn.net>
-Message-ID: <alpine.DEB.2.22.394.2008101624380.2466@hadrien>
-References: <ffe8c50d-0bb5-9477-a20c-96aa7bb45067@web.de> <20200810081914.37224551@lwn.net>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+        rajmohan.mani@intel.com, Tomasz Figa <tfiga@chromium.org>,
+        "Qiu, Tian Shu" <tian.shu.qiu@intel.com>
+Subject: [PATCH v5 4/6] media: i2c: imx319: Support probe while the device is off
+Date:   Mon, 10 Aug 2020 17:27:45 +0300
+Message-Id: <20200810142747.12400-5-sakari.ailus@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200810142747.12400-1-sakari.ailus@linux.intel.com>
+References: <20200810142747.12400-1-sakari.ailus@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1836737229-1597069495=:2466"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+From: Rajmohan Mani <rajmohan.mani@intel.com>
 
---8323329-1836737229-1597069495=:2466
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Tell ACPI device PM code that the driver supports the device being powered
+off when the driver's probe function is entered.
 
+Signed-off-by: Rajmohan Mani <rajmohan.mani@intel.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+---
+ drivers/media/i2c/imx319.c | 23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
 
+diff --git a/drivers/media/i2c/imx319.c b/drivers/media/i2c/imx319.c
+index 17c2e4b41221e..dc5ebff6a85a3 100644
+--- a/drivers/media/i2c/imx319.c
++++ b/drivers/media/i2c/imx319.c
+@@ -2424,6 +2424,7 @@ static struct imx319_hwcfg *imx319_get_hwcfg(struct device *dev)
+ static int imx319_probe(struct i2c_client *client)
+ {
+ 	struct imx319 *imx319;
++	bool low_power;
+ 	int ret;
+ 	u32 i;
+ 
+@@ -2436,11 +2437,14 @@ static int imx319_probe(struct i2c_client *client)
+ 	/* Initialize subdev */
+ 	v4l2_i2c_subdev_init(&imx319->sd, client, &imx319_subdev_ops);
+ 
+-	/* Check module identity */
+-	ret = imx319_identify_module(imx319);
+-	if (ret) {
+-		dev_err(&client->dev, "failed to find sensor: %d", ret);
+-		goto error_probe;
++	low_power = acpi_dev_state_low_power(&client->dev);
++	if (!low_power) {
++		/* Check module identity */
++		ret = imx319_identify_module(imx319);
++		if (ret) {
++			dev_err(&client->dev, "failed to find sensor: %d", ret);
++			goto error_probe;
++		}
+ 	}
+ 
+ 	imx319->hwcfg = imx319_get_hwcfg(&client->dev);
+@@ -2493,10 +2497,10 @@ static int imx319_probe(struct i2c_client *client)
+ 		goto error_media_entity;
+ 
+ 	/*
+-	 * Device is already turned on by i2c-core with ACPI domain PM.
+-	 * Enable runtime PM and turn off the device.
++	 * Don't set the device's state to active if it's in a low power state.
+ 	 */
+-	pm_runtime_set_active(&client->dev);
++	if (!low_power)
++		pm_runtime_set_active(&client->dev);
+ 	pm_runtime_enable(&client->dev);
+ 	pm_runtime_idle(&client->dev);
+ 
+@@ -2536,7 +2540,7 @@ static const struct dev_pm_ops imx319_pm_ops = {
+ };
+ 
+ static const struct acpi_device_id imx319_acpi_ids[] = {
+-	{ "SONY319A" },
++	{ "SONY319A", },
+ 	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(acpi, imx319_acpi_ids);
+@@ -2549,6 +2553,7 @@ static struct i2c_driver imx319_i2c_driver = {
+ 	},
+ 	.probe_new = imx319_probe,
+ 	.remove = imx319_remove,
++	.flags = I2C_DRV_FL_ALLOW_LOW_POWER_PROBE,
+ };
+ module_i2c_driver(imx319_i2c_driver);
+ 
+-- 
+2.20.1
 
-On Mon, 10 Aug 2020, Jonathan Corbet wrote:
-
-> On Mon, 10 Aug 2020 09:30:18 +0200
-> Markus Elfring <Markus.Elfring@web.de> wrote:
->
-> > > Modify coccinelle documentation to further clarify
-> > > the usage of the makefile C variable flag by coccicheck.
-> >
-> > How do you think about a wording variant like the following
-> > for the change description?
-> >
-> >    Clarify the usage of the make variable “C” for coccicheck.
-> >
-> >
-> > > +C flag is used. The C flag is a variable used by the makefile
-> >
-> > Can such a wording approach trigger understanding difficulties?
-> > [...]
->
-> Markus, please don't harass our contributors.  This patch is an
-> improvement and, unless Julia disagrees, I am happy to apply it.
-
-There will be a V3.  Thanks.
-
-julia
---8323329-1836737229-1597069495=:2466--
