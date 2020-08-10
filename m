@@ -2,52 +2,53 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5912FC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:39:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD3DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:39:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A77B22D6F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:39:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A20D722EBE
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:39:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073953;
-	bh=Q6Pgy7o0Afz1Zbw9ftExXRtrFW699yUW2rEsF5uilYA=;
+	s=default; t=1597073958;
+	bh=gl2VZf/cDSSMmXY2jlPcJsO32Owg/kdwLHGKRgA07rA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Jniy+6jUxX2nZucAxvHRn+T78qCVD+ikXnXTX8MLKyKjSaOfjz37pdE2qdGru7TMh
-	 b5WXA6jM4odPWU3ryp9UUxv3bXPmD81BZ4MmmMGnZFbtICSBHLpDdUVe1SVp/bcsk0
-	 pAyUYWpi3sjpMknnwGM1DfdBXDqSJbSBpzA/by8M=
+	b=1FqyvWrKcNBJe+AvZN52t2P8ke5oGPx0dBtzQxwqOvuNLgFcxjPH4wiSdy2N8wZYd
+	 T5hhMbfs+0uYYUwChvwaEclSNxYykWshk5k4n/k2ClUAzmW4Wn9Z+xNc0kKqWHGVXq
+	 qhYKMQPOwAXGt8stBtLCFj8YDROcMP5tFMmFYbLg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726331AbgHJPjM (ORCPT
+        id S1728488AbgHJPZD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:39:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58732 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:25:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728194AbgHJPZG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:25:06 -0400
+        id S1728472AbgHJPY5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:24:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E81420772;
-        Mon, 10 Aug 2020 15:25:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2AD021775;
+        Mon, 10 Aug 2020 15:24:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073105;
-        bh=Q6Pgy7o0Afz1Zbw9ftExXRtrFW699yUW2rEsF5uilYA=;
+        s=default; t=1597073097;
+        bh=gl2VZf/cDSSMmXY2jlPcJsO32Owg/kdwLHGKRgA07rA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zbeYac/uAk2TW0qNLZHOUugT6go16j7S37YIK8B8c1aLrr5WTif1NGq8uHGxNdMo/
-         GQ6g5e0NukNWGs67lFcru4A5osxZEwXANKwjobfT4bDO7kRKrmZ4QfJs/seS2KCOLK
-         U03zFy4SAtjMx/sxdPl+yZiu6hLyNj+HZAV1EBD0=
+        b=LGijGqmmJE1Ldy0qS+HecwRiXKU+ypw/rCzC5WDkJUuJI0fvO7Kje7FAZyZ9T+pzU
+         4QmDbslLoirBtGCSLm8jLBNGa5TxLdi+tFUJ28JOL5gcviEHv648LJ4jlbVWV21AtK
+         z0UWFWxYT01iGXERylbgp+xNSEDpE4TmSQEiH2O0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lorenzo Bianconi <lorenzo@kernel.org>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.7 67/79] net: gre: recompute gre csum for sctp over gre tunnels
-Date:   Mon, 10 Aug 2020 17:21:26 +0200
-Message-Id: <20200810151815.541035723@linuxfoundation.org>
+        stable@vger.kernel.org, Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Vinod Koul <vkoul@kernel.org>, Sam Ravnborg <sam@ravnborg.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 38/79] drm/bridge/adv7511: set the bridge type properly
+Date:   Mon, 10 Aug 2020 17:20:57 +0200
+Message-Id: <20200810151814.159951433@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151812.114485777@linuxfoundation.org>
 References: <20200810151812.114485777@linuxfoundation.org>
@@ -60,69 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lorenzo Bianconi <lorenzo@kernel.org>
+From: Laurentiu Palcu <laurentiu.palcu@nxp.com>
 
-[ Upstream commit 622e32b7d4a6492cf5c1f759ef833f817418f7b3 ]
+[ Upstream commit f10761c9df96a882438faa09dcd25261281d69ca ]
 
-The GRE tunnel can be used to transport traffic that does not rely on a
-Internet checksum (e.g. SCTP). The issue can be triggered creating a GRE
-or GRETAP tunnel and transmitting SCTP traffic ontop of it where CRC
-offload has been disabled. In order to fix the issue we need to
-recompute the GRE csum in gre_gso_segment() not relying on the inner
-checksum.
-The issue is still present when we have the CRC offload enabled.
-In this case we need to disable the CRC offload if we require GRE
-checksum since otherwise skb_checksum() will report a wrong value.
+After the drm_bridge_connector_init() helper function has been added,
+the ADV driver has been changed accordingly. However, the 'type'
+field of the bridge structure was left unset, which makes the helper
+function always return -EINVAL.
 
-Fixes: 90017accff61 ("sctp: Add GSO support")
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-Reviewed-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Laurentiu Palcu <laurentiu.palcu@nxp.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
+Tested-by: Vinod Koul <vkoul@kernel.org> # tested on DragonBoard 410c
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200720124228.12552-1-laurentiu.palcu@oss.nxp.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/gre_offload.c |   13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/bridge/adv7511/adv7511_drv.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/ipv4/gre_offload.c
-+++ b/net/ipv4/gre_offload.c
-@@ -15,12 +15,12 @@ static struct sk_buff *gre_gso_segment(s
- 				       netdev_features_t features)
- {
- 	int tnl_hlen = skb_inner_mac_header(skb) - skb_transport_header(skb);
-+	bool need_csum, need_recompute_csum, gso_partial;
- 	struct sk_buff *segs = ERR_PTR(-EINVAL);
- 	u16 mac_offset = skb->mac_header;
- 	__be16 protocol = skb->protocol;
- 	u16 mac_len = skb->mac_len;
- 	int gre_offset, outer_hlen;
--	bool need_csum, gso_partial;
+diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
+index 87b58c1acff4a..648eb23d07848 100644
+--- a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
++++ b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
+@@ -1224,6 +1224,7 @@ static int adv7511_probe(struct i2c_client *i2c, const struct i2c_device_id *id)
  
- 	if (!skb->encapsulation)
- 		goto out;
-@@ -41,6 +41,7 @@ static struct sk_buff *gre_gso_segment(s
- 	skb->protocol = skb->inner_protocol;
+ 	adv7511->bridge.funcs = &adv7511_bridge_funcs;
+ 	adv7511->bridge.of_node = dev->of_node;
++	adv7511->bridge.type = DRM_MODE_CONNECTOR_HDMIA;
  
- 	need_csum = !!(skb_shinfo(skb)->gso_type & SKB_GSO_GRE_CSUM);
-+	need_recompute_csum = skb->csum_not_inet;
- 	skb->encap_hdr_csum = need_csum;
+ 	drm_bridge_add(&adv7511->bridge);
  
- 	features &= skb->dev->hw_enc_features;
-@@ -98,7 +99,15 @@ static struct sk_buff *gre_gso_segment(s
- 		}
- 
- 		*(pcsum + 1) = 0;
--		*pcsum = gso_make_checksum(skb, 0);
-+		if (need_recompute_csum && !skb_is_gso(skb)) {
-+			__wsum csum;
-+
-+			csum = skb_checksum(skb, gre_offset,
-+					    skb->len - gre_offset, 0);
-+			*pcsum = csum_fold(csum);
-+		} else {
-+			*pcsum = gso_make_checksum(skb, 0);
-+		}
- 	} while ((skb = skb->next));
- out:
- 	return segs;
+-- 
+2.25.1
+
 
 
