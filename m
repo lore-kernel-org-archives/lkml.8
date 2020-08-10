@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A38CEC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:24:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C83DFC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:24:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5901B22CF7
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:24:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A67D20855
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:24:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073089;
-	bh=68W1lrHON+mnXteN5uH5KydswQjNoHEBArDwS/NNm4g=;
+	s=default; t=1597073091;
+	bh=Tf+p7CMS4ZrtDpkrLIlQSvDm2KJ149qhlFy25X70m1Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qc5VZNAEfEGuQ0kKnW0Ow5xeLvCQ6KOTeJb0um6uUAx6O27W4tZ1Xw22RxNor0M2S
-	 3xn8yg9vzO0nbQcVMRZToi+OrEtImHQ79GSAK9A6VvEjgV9o75Te6EMdVaHfa+JEyB
-	 XeRXHpWSS/hoBngNZXTlUFF502SgnDXegaYWU11Q=
+	b=byREW3lNGdqiXZPy1+NCbjx2zYXLlfPMyaO9mqb4gUG7FuVdeLqXk6xtMipNdodrD
+	 E2CbSj91FpEJWBm9s4VqCbMYEaOnWsxgmmzY0OIesIsqdTn7phLeYe3nHnwSQqDBrT
+	 ln0dx2Lkh57CFY+VJwZmjzTTXRK/Z1xIr6QUTG8g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727983AbgHJPYs (ORCPT
+        id S1728448AbgHJPYu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:24:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57944 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:24:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727997AbgHJPYi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:24:38 -0400
+        id S1728444AbgHJPYs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:24:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF41E208A9;
-        Mon, 10 Aug 2020 15:24:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DA7920772;
+        Mon, 10 Aug 2020 15:24:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073077;
-        bh=68W1lrHON+mnXteN5uH5KydswQjNoHEBArDwS/NNm4g=;
+        s=default; t=1597073085;
+        bh=Tf+p7CMS4ZrtDpkrLIlQSvDm2KJ149qhlFy25X70m1Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=or6eJ8yfGd6WbMkpCDTcimH1sTg825OVZxBCxLNaAS9iJdmGwFZHwFBFN5H4bmZhp
-         fYYbbOmkqEeOhhgyMncH3eHsIDOIDhzFbHoxNh3uRKLGEBVOJ6ZJdx0ZzZzUX+Pe/w
-         gvq9CKBGHhFNELOX9f5aKAzCA2hFZacU1axECnvM=
+        b=tqG0ugWsATFQBkmk99/Rqf0ZQZK4UDGZ6w40Hn21SlggC/X7atBB87t3zcjbtSU+k
+         nHa4dqStOvYDrn3yt1c10adVZ6uy4j+F3ArbNJcPzj1Os0p/IVilg83J6weDMRijWb
+         oVRZhm94ZePfmxNVn5iAbnLHI3OAZFtHiuQcPvOU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+b54969381df354936d96@syzkaller.appspotmail.com,
-        David Howells <dhowells@redhat.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
+        stable@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.7 58/79] rxrpc: Fix race between recvmsg and sendmsg on immediate call failure
-Date:   Mon, 10 Aug 2020 17:21:17 +0200
-Message-Id: <20200810151815.116370289@linuxfoundation.org>
+Subject: [PATCH 5.7 61/79] rhashtable: Restore RCU marking on rhash_lock_head
+Date:   Mon, 10 Aug 2020 17:21:20 +0200
+Message-Id: <20200810151815.252920533@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151812.114485777@linuxfoundation.org>
 References: <20200810151812.114485777@linuxfoundation.org>
@@ -62,166 +59,297 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
 
-[ Upstream commit 65550098c1c4db528400c73acf3e46bfa78d9264 ]
+[ Upstream commit ce9b362bf6db51a083c4221ef0f93c16cfb1facf ]
 
-There's a race between rxrpc_sendmsg setting up a call, but then failing to
-send anything on it due to an error, and recvmsg() seeing the call
-completion occur and trying to return the state to the user.
+This patch restores the RCU marking on bucket_table->buckets as
+it really does need RCU protection.  Its removal had led to a fatal
+bug.
 
-An assertion fails in rxrpc_recvmsg() because the call has already been
-released from the socket and is about to be released again as recvmsg deals
-with it.  (The recvmsg_q queue on the socket holds a ref, so there's no
-problem with use-after-free.)
-
-We also have to be careful not to end up reporting an error twice, in such
-a way that both returns indicate to userspace that the user ID supplied
-with the call is no longer in use - which could cause the client to
-malfunction if it recycles the user ID fast enough.
-
-Fix this by the following means:
-
- (1) When sendmsg() creates a call after the point that the call has been
-     successfully added to the socket, don't return any errors through
-     sendmsg(), but rather complete the call and let recvmsg() retrieve
-     them.  Make sendmsg() return 0 at this point.  Further calls to
-     sendmsg() for that call will fail with ESHUTDOWN.
-
-     Note that at this point, we haven't send any packets yet, so the
-     server doesn't yet know about the call.
-
- (2) If sendmsg() returns an error when it was expected to create a new
-     call, it means that the user ID wasn't used.
-
- (3) Mark the call disconnected before marking it completed to prevent an
-     oops in rxrpc_release_call().
-
- (4) recvmsg() will then retrieve the error and set MSG_EOR to indicate
-     that the user ID is no longer known by the kernel.
-
-An oops like the following is produced:
-
-	kernel BUG at net/rxrpc/recvmsg.c:605!
-	...
-	RIP: 0010:rxrpc_recvmsg+0x256/0x5ae
-	...
-	Call Trace:
-	 ? __init_waitqueue_head+0x2f/0x2f
-	 ____sys_recvmsg+0x8a/0x148
-	 ? import_iovec+0x69/0x9c
-	 ? copy_msghdr_from_user+0x5c/0x86
-	 ___sys_recvmsg+0x72/0xaa
-	 ? __fget_files+0x22/0x57
-	 ? __fget_light+0x46/0x51
-	 ? fdget+0x9/0x1b
-	 do_recvmmsg+0x15e/0x232
-	 ? _raw_spin_unlock+0xa/0xb
-	 ? vtime_delta+0xf/0x25
-	 __x64_sys_recvmmsg+0x2c/0x2f
-	 do_syscall_64+0x4c/0x78
-	 entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Fixes: 357f5ef64628 ("rxrpc: Call rxrpc_release_call() on error in rxrpc_new_client_call()")
-Reported-by: syzbot+b54969381df354936d96@syzkaller.appspotmail.com
-Signed-off-by: David Howells <dhowells@redhat.com>
-Reviewed-by: Marc Dionne <marc.dionne@auristor.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/rxrpc/call_object.c |   27 +++++++++++++++++++--------
- net/rxrpc/conn_object.c |    8 +++++---
- net/rxrpc/recvmsg.c     |    2 +-
- net/rxrpc/sendmsg.c     |    3 +++
- 4 files changed, 28 insertions(+), 12 deletions(-)
+ include/linux/rhashtable.h |   56 +++++++++++++++++++--------------------------
+ lib/rhashtable.c           |   35 ++++++++++++----------------
+ 2 files changed, 40 insertions(+), 51 deletions(-)
 
---- a/net/rxrpc/call_object.c
-+++ b/net/rxrpc/call_object.c
-@@ -288,7 +288,7 @@ struct rxrpc_call *rxrpc_new_client_call
- 	 */
- 	ret = rxrpc_connect_call(rx, call, cp, srx, gfp);
- 	if (ret < 0)
--		goto error;
-+		goto error_attached_to_socket;
+--- a/include/linux/rhashtable.h
++++ b/include/linux/rhashtable.h
+@@ -84,7 +84,7 @@ struct bucket_table {
  
- 	trace_rxrpc_call(call->debug_id, rxrpc_call_connected,
- 			 atomic_read(&call->usage), here, NULL);
-@@ -308,18 +308,29 @@ struct rxrpc_call *rxrpc_new_client_call
- error_dup_user_ID:
- 	write_unlock(&rx->call_lock);
- 	release_sock(&rx->sk);
--	ret = -EEXIST;
--
--error:
- 	__rxrpc_set_call_completion(call, RXRPC_CALL_LOCAL_ERROR,
--				    RX_CALL_DEAD, ret);
-+				    RX_CALL_DEAD, -EEXIST);
- 	trace_rxrpc_call(call->debug_id, rxrpc_call_error,
--			 atomic_read(&call->usage), here, ERR_PTR(ret));
-+			 atomic_read(&call->usage), here, ERR_PTR(-EEXIST));
- 	rxrpc_release_call(rx, call);
- 	mutex_unlock(&call->user_mutex);
- 	rxrpc_put_call(call, rxrpc_call_put);
--	_leave(" = %d", ret);
--	return ERR_PTR(ret);
-+	_leave(" = -EEXIST");
-+	return ERR_PTR(-EEXIST);
-+
-+	/* We got an error, but the call is attached to the socket and is in
-+	 * need of release.  However, we might now race with recvmsg() when
-+	 * completing the call queues it.  Return 0 from sys_sendmsg() and
-+	 * leave the error to recvmsg() to deal with.
-+	 */
-+error_attached_to_socket:
-+	trace_rxrpc_call(call->debug_id, rxrpc_call_error,
-+			 atomic_read(&call->usage), here, ERR_PTR(ret));
-+	set_bit(RXRPC_CALL_DISCONNECTED, &call->flags);
-+	__rxrpc_set_call_completion(call, RXRPC_CALL_LOCAL_ERROR,
-+				    RX_CALL_DEAD, ret);
-+	_leave(" = c=%08x [err]", call->debug_id);
-+	return call;
- }
+ 	struct lockdep_map	dep_map;
+ 
+-	struct rhash_lock_head *buckets[] ____cacheline_aligned_in_smp;
++	struct rhash_lock_head __rcu *buckets[] ____cacheline_aligned_in_smp;
+ };
  
  /*
---- a/net/rxrpc/conn_object.c
-+++ b/net/rxrpc/conn_object.c
-@@ -212,9 +212,11 @@ void rxrpc_disconnect_call(struct rxrpc_
+@@ -261,13 +261,12 @@ void rhashtable_free_and_destroy(struct
+ 				 void *arg);
+ void rhashtable_destroy(struct rhashtable *ht);
  
- 	call->peer->cong_cwnd = call->cong_cwnd;
+-struct rhash_lock_head **rht_bucket_nested(const struct bucket_table *tbl,
+-					   unsigned int hash);
+-struct rhash_lock_head **__rht_bucket_nested(const struct bucket_table *tbl,
+-					     unsigned int hash);
+-struct rhash_lock_head **rht_bucket_nested_insert(struct rhashtable *ht,
+-						  struct bucket_table *tbl,
+-						  unsigned int hash);
++struct rhash_lock_head __rcu **rht_bucket_nested(
++	const struct bucket_table *tbl, unsigned int hash);
++struct rhash_lock_head __rcu **__rht_bucket_nested(
++	const struct bucket_table *tbl, unsigned int hash);
++struct rhash_lock_head __rcu **rht_bucket_nested_insert(
++	struct rhashtable *ht, struct bucket_table *tbl, unsigned int hash);
  
--	spin_lock_bh(&conn->params.peer->lock);
--	hlist_del_rcu(&call->error_link);
--	spin_unlock_bh(&conn->params.peer->lock);
-+	if (!hlist_unhashed(&call->error_link)) {
-+		spin_lock_bh(&call->peer->lock);
-+		hlist_del_rcu(&call->error_link);
-+		spin_unlock_bh(&call->peer->lock);
-+	}
+ #define rht_dereference(p, ht) \
+ 	rcu_dereference_protected(p, lockdep_rht_mutex_is_held(ht))
+@@ -284,21 +283,21 @@ struct rhash_lock_head **rht_bucket_nest
+ #define rht_entry(tpos, pos, member) \
+ 	({ tpos = container_of(pos, typeof(*tpos), member); 1; })
  
- 	if (rxrpc_is_client_call(call))
- 		return rxrpc_disconnect_client_call(call);
---- a/net/rxrpc/recvmsg.c
-+++ b/net/rxrpc/recvmsg.c
-@@ -541,7 +541,7 @@ try_again:
- 			goto error_unlock_call;
- 	}
+-static inline struct rhash_lock_head *const *rht_bucket(
++static inline struct rhash_lock_head __rcu *const *rht_bucket(
+ 	const struct bucket_table *tbl, unsigned int hash)
+ {
+ 	return unlikely(tbl->nest) ? rht_bucket_nested(tbl, hash) :
+ 				     &tbl->buckets[hash];
+ }
  
--	if (msg->msg_name) {
-+	if (msg->msg_name && call->peer) {
- 		struct sockaddr_rxrpc *srx = msg->msg_name;
- 		size_t len = sizeof(call->peer->srx);
+-static inline struct rhash_lock_head **rht_bucket_var(
++static inline struct rhash_lock_head __rcu **rht_bucket_var(
+ 	struct bucket_table *tbl, unsigned int hash)
+ {
+ 	return unlikely(tbl->nest) ? __rht_bucket_nested(tbl, hash) :
+ 				     &tbl->buckets[hash];
+ }
  
---- a/net/rxrpc/sendmsg.c
-+++ b/net/rxrpc/sendmsg.c
-@@ -683,6 +683,9 @@ int rxrpc_do_sendmsg(struct rxrpc_sock *
- 		if (IS_ERR(call))
- 			return PTR_ERR(call);
- 		/* ... and we have the call lock. */
-+		ret = 0;
-+		if (READ_ONCE(call->state) == RXRPC_CALL_COMPLETE)
-+			goto out_put_unlock;
- 	} else {
- 		switch (READ_ONCE(call->state)) {
- 		case RXRPC_CALL_UNINITIALISED:
+-static inline struct rhash_lock_head **rht_bucket_insert(
++static inline struct rhash_lock_head __rcu **rht_bucket_insert(
+ 	struct rhashtable *ht, struct bucket_table *tbl, unsigned int hash)
+ {
+ 	return unlikely(tbl->nest) ? rht_bucket_nested_insert(ht, tbl, hash) :
+@@ -325,7 +324,7 @@ static inline struct rhash_lock_head **r
+  */
+ 
+ static inline void rht_lock(struct bucket_table *tbl,
+-			    struct rhash_lock_head **bkt)
++			    struct rhash_lock_head __rcu **bkt)
+ {
+ 	local_bh_disable();
+ 	bit_spin_lock(0, (unsigned long *)bkt);
+@@ -333,7 +332,7 @@ static inline void rht_lock(struct bucke
+ }
+ 
+ static inline void rht_lock_nested(struct bucket_table *tbl,
+-				   struct rhash_lock_head **bucket,
++				   struct rhash_lock_head __rcu **bucket,
+ 				   unsigned int subclass)
+ {
+ 	local_bh_disable();
+@@ -342,7 +341,7 @@ static inline void rht_lock_nested(struc
+ }
+ 
+ static inline void rht_unlock(struct bucket_table *tbl,
+-			      struct rhash_lock_head **bkt)
++			      struct rhash_lock_head __rcu **bkt)
+ {
+ 	lock_map_release(&tbl->dep_map);
+ 	bit_spin_unlock(0, (unsigned long *)bkt);
+@@ -365,48 +364,41 @@ static inline struct rhash_head *__rht_p
+  *            access is guaranteed, such as when destroying the table.
+  */
+ static inline struct rhash_head *rht_ptr_rcu(
+-	struct rhash_lock_head *const *p)
++	struct rhash_lock_head __rcu *const *bkt)
+ {
+-	struct rhash_lock_head __rcu *const *bkt = (void *)p;
+ 	return __rht_ptr(rcu_dereference(*bkt), bkt);
+ }
+ 
+ static inline struct rhash_head *rht_ptr(
+-	struct rhash_lock_head *const *p,
++	struct rhash_lock_head __rcu *const *bkt,
+ 	struct bucket_table *tbl,
+ 	unsigned int hash)
+ {
+-	struct rhash_lock_head __rcu *const *bkt = (void *)p;
+ 	return __rht_ptr(rht_dereference_bucket(*bkt, tbl, hash), bkt);
+ }
+ 
+ static inline struct rhash_head *rht_ptr_exclusive(
+-	struct rhash_lock_head *const *p)
++	struct rhash_lock_head __rcu *const *bkt)
+ {
+-	struct rhash_lock_head __rcu *const *bkt = (void *)p;
+ 	return __rht_ptr(rcu_dereference_protected(*bkt, 1), bkt);
+ }
+ 
+-static inline void rht_assign_locked(struct rhash_lock_head **bkt,
++static inline void rht_assign_locked(struct rhash_lock_head __rcu **bkt,
+ 				     struct rhash_head *obj)
+ {
+-	struct rhash_head __rcu **p = (struct rhash_head __rcu **)bkt;
+-
+ 	if (rht_is_a_nulls(obj))
+ 		obj = NULL;
+-	rcu_assign_pointer(*p, (void *)((unsigned long)obj | BIT(0)));
++	rcu_assign_pointer(*bkt, (void *)((unsigned long)obj | BIT(0)));
+ }
+ 
+ static inline void rht_assign_unlock(struct bucket_table *tbl,
+-				     struct rhash_lock_head **bkt,
++				     struct rhash_lock_head __rcu **bkt,
+ 				     struct rhash_head *obj)
+ {
+-	struct rhash_head __rcu **p = (struct rhash_head __rcu **)bkt;
+-
+ 	if (rht_is_a_nulls(obj))
+ 		obj = NULL;
+ 	lock_map_release(&tbl->dep_map);
+-	rcu_assign_pointer(*p, obj);
++	rcu_assign_pointer(*bkt, (void *)obj);
+ 	preempt_enable();
+ 	__release(bitlock);
+ 	local_bh_enable();
+@@ -594,7 +586,7 @@ static inline struct rhash_head *__rhash
+ 		.ht = ht,
+ 		.key = key,
+ 	};
+-	struct rhash_lock_head *const *bkt;
++	struct rhash_lock_head __rcu *const *bkt;
+ 	struct bucket_table *tbl;
+ 	struct rhash_head *he;
+ 	unsigned int hash;
+@@ -710,7 +702,7 @@ static inline void *__rhashtable_insert_
+ 		.ht = ht,
+ 		.key = key,
+ 	};
+-	struct rhash_lock_head **bkt;
++	struct rhash_lock_head __rcu **bkt;
+ 	struct rhash_head __rcu **pprev;
+ 	struct bucket_table *tbl;
+ 	struct rhash_head *head;
+@@ -996,7 +988,7 @@ static inline int __rhashtable_remove_fa
+ 	struct rhash_head *obj, const struct rhashtable_params params,
+ 	bool rhlist)
+ {
+-	struct rhash_lock_head **bkt;
++	struct rhash_lock_head __rcu **bkt;
+ 	struct rhash_head __rcu **pprev;
+ 	struct rhash_head *he;
+ 	unsigned int hash;
+@@ -1148,7 +1140,7 @@ static inline int __rhashtable_replace_f
+ 	struct rhash_head *obj_old, struct rhash_head *obj_new,
+ 	const struct rhashtable_params params)
+ {
+-	struct rhash_lock_head **bkt;
++	struct rhash_lock_head __rcu **bkt;
+ 	struct rhash_head __rcu **pprev;
+ 	struct rhash_head *he;
+ 	unsigned int hash;
+--- a/lib/rhashtable.c
++++ b/lib/rhashtable.c
+@@ -31,7 +31,7 @@
+ 
+ union nested_table {
+ 	union nested_table __rcu *table;
+-	struct rhash_lock_head *bucket;
++	struct rhash_lock_head __rcu *bucket;
+ };
+ 
+ static u32 head_hashfn(struct rhashtable *ht,
+@@ -213,7 +213,7 @@ static struct bucket_table *rhashtable_l
+ }
+ 
+ static int rhashtable_rehash_one(struct rhashtable *ht,
+-				 struct rhash_lock_head **bkt,
++				 struct rhash_lock_head __rcu **bkt,
+ 				 unsigned int old_hash)
+ {
+ 	struct bucket_table *old_tbl = rht_dereference(ht->tbl, ht);
+@@ -266,7 +266,7 @@ static int rhashtable_rehash_chain(struc
+ 				    unsigned int old_hash)
+ {
+ 	struct bucket_table *old_tbl = rht_dereference(ht->tbl, ht);
+-	struct rhash_lock_head **bkt = rht_bucket_var(old_tbl, old_hash);
++	struct rhash_lock_head __rcu **bkt = rht_bucket_var(old_tbl, old_hash);
+ 	int err;
+ 
+ 	if (!bkt)
+@@ -476,7 +476,7 @@ fail:
+ }
+ 
+ static void *rhashtable_lookup_one(struct rhashtable *ht,
+-				   struct rhash_lock_head **bkt,
++				   struct rhash_lock_head __rcu **bkt,
+ 				   struct bucket_table *tbl, unsigned int hash,
+ 				   const void *key, struct rhash_head *obj)
+ {
+@@ -526,12 +526,10 @@ static void *rhashtable_lookup_one(struc
+ 	return ERR_PTR(-ENOENT);
+ }
+ 
+-static struct bucket_table *rhashtable_insert_one(struct rhashtable *ht,
+-						  struct rhash_lock_head **bkt,
+-						  struct bucket_table *tbl,
+-						  unsigned int hash,
+-						  struct rhash_head *obj,
+-						  void *data)
++static struct bucket_table *rhashtable_insert_one(
++	struct rhashtable *ht, struct rhash_lock_head __rcu **bkt,
++	struct bucket_table *tbl, unsigned int hash, struct rhash_head *obj,
++	void *data)
+ {
+ 	struct bucket_table *new_tbl;
+ 	struct rhash_head *head;
+@@ -582,7 +580,7 @@ static void *rhashtable_try_insert(struc
+ {
+ 	struct bucket_table *new_tbl;
+ 	struct bucket_table *tbl;
+-	struct rhash_lock_head **bkt;
++	struct rhash_lock_head __rcu **bkt;
+ 	unsigned int hash;
+ 	void *data;
+ 
+@@ -1164,8 +1162,8 @@ void rhashtable_destroy(struct rhashtabl
+ }
+ EXPORT_SYMBOL_GPL(rhashtable_destroy);
+ 
+-struct rhash_lock_head **__rht_bucket_nested(const struct bucket_table *tbl,
+-					     unsigned int hash)
++struct rhash_lock_head __rcu **__rht_bucket_nested(
++	const struct bucket_table *tbl, unsigned int hash)
+ {
+ 	const unsigned int shift = PAGE_SHIFT - ilog2(sizeof(void *));
+ 	unsigned int index = hash & ((1 << tbl->nest) - 1);
+@@ -1193,10 +1191,10 @@ struct rhash_lock_head **__rht_bucket_ne
+ }
+ EXPORT_SYMBOL_GPL(__rht_bucket_nested);
+ 
+-struct rhash_lock_head **rht_bucket_nested(const struct bucket_table *tbl,
+-					   unsigned int hash)
++struct rhash_lock_head __rcu **rht_bucket_nested(
++	const struct bucket_table *tbl, unsigned int hash)
+ {
+-	static struct rhash_lock_head *rhnull;
++	static struct rhash_lock_head __rcu *rhnull;
+ 
+ 	if (!rhnull)
+ 		INIT_RHT_NULLS_HEAD(rhnull);
+@@ -1204,9 +1202,8 @@ struct rhash_lock_head **rht_bucket_nest
+ }
+ EXPORT_SYMBOL_GPL(rht_bucket_nested);
+ 
+-struct rhash_lock_head **rht_bucket_nested_insert(struct rhashtable *ht,
+-						  struct bucket_table *tbl,
+-						  unsigned int hash)
++struct rhash_lock_head __rcu **rht_bucket_nested_insert(
++	struct rhashtable *ht, struct bucket_table *tbl, unsigned int hash)
+ {
+ 	const unsigned int shift = PAGE_SHIFT - ilog2(sizeof(void *));
+ 	unsigned int index = hash & ((1 << tbl->nest) - 1);
 
 
