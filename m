@@ -2,98 +2,97 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B20A8C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 08:15:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69F98C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 08:16:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D3E2207DE
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 08:15:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FDAB206B5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 08:16:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726468AbgHJIPx (ORCPT
+        id S1726542AbgHJIQH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 04:15:53 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:35356 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726021AbgHJIPx (ORCPT
+        Mon, 10 Aug 2020 04:16:07 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:54452 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726021AbgHJIQH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 04:15:53 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-197-nvd0HwJXOMeNqVEmqPMuVw-1; Mon, 10 Aug 2020 09:15:49 +0100
-X-MC-Unique: nvd0HwJXOMeNqVEmqPMuVw-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Mon, 10 Aug 2020 09:15:48 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 10 Aug 2020 09:15:48 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     "'luobin (L)'" <luobin9@huawei.com>,
-        Kees Cook <keescook@chromium.org>
-CC:     David Miller <davem@davemloft.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "luoxianjun@huawei.com" <luoxianjun@huawei.com>,
-        "yin.yinshi@huawei.com" <yin.yinshi@huawei.com>,
-        "cloud.wangxiaoyun@huawei.com" <cloud.wangxiaoyun@huawei.com>,
-        "chiqijun@huawei.com" <chiqijun@huawei.com>
-Subject: RE: [PATCH net-next v1] hinic: fix strncpy output truncated compile
- warnings
-Thread-Topic: [PATCH net-next v1] hinic: fix strncpy output truncated compile
- warnings
-Thread-Index: AQHWbF+/LM1G8mFmIkykQEWb0Xuu7aksYh5wgAK89iyAAeG0UA==
-Date:   Mon, 10 Aug 2020 08:15:48 +0000
-Message-ID: <fad888cb3cdc4a05b091bf22711479b0@AcuMS.aculab.com>
-References: <20200807020914.3123-1-luobin9@huawei.com>
- <e7a4fcf12a4e4d179e2fae8ffb44f992@AcuMS.aculab.com>
- <b886a6ff-8ed8-c857-f190-e99f8f735e02@huawei.com>
- <20200807.204243.696618708291045170.davem@davemloft.net>
- <202008072320.03879DAC@keescook>
- <493cae67-6346-1a57-5cca-65a2b6d2aeba@huawei.com>
-In-Reply-To: <493cae67-6346-1a57-5cca-65a2b6d2aeba@huawei.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 10 Aug 2020 04:16:07 -0400
+X-IronPort-AV: E=Sophos;i="5.75,456,1589212800"; 
+   d="scan'208";a="97927751"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 10 Aug 2020 16:16:05 +0800
+Received: from G08CNEXMBPEKD05.g08.fujitsu.local (unknown [10.167.33.204])
+        by cn.fujitsu.com (Postfix) with ESMTP id 1A5144CE34E6;
+        Mon, 10 Aug 2020 16:16:00 +0800 (CST)
+Received: from irides.mr (10.167.225.141) by G08CNEXMBPEKD05.g08.fujitsu.local
+ (10.167.33.204) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 10 Aug
+ 2020 16:16:02 +0800
+Subject: Re: [RFC PATCH 0/8] fsdax: introduce FS query interface to support
+ reflink
+To:     Matthew Wilcox <willy@infradead.org>
+CC:     <linux-kernel@vger.kernel.org>, <linux-xfs@vger.kernel.org>,
+        <linux-nvdimm@lists.01.org>, <linux-mm@kvack.org>,
+        <linux-fsdevel@vger.kernel.org>, <darrick.wong@oracle.com>,
+        <dan.j.williams@intel.com>, <david@fromorbit.com>, <hch@lst.de>,
+        <rgoldwyn@suse.de>, <qi.fuli@fujitsu.com>, <y-goto@fujitsu.com>
+References: <20200807131336.318774-1-ruansy.fnst@cn.fujitsu.com>
+ <20200807133857.GC17456@casper.infradead.org>
+From:   Ruan Shiyang <ruansy.fnst@cn.fujitsu.com>
+Message-ID: <9673ed3c-9e42-3d01-000b-b01cda9832ce@cn.fujitsu.com>
+Date:   Mon, 10 Aug 2020 16:15:50 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200807133857.GC17456@casper.infradead.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.167.225.141]
+X-ClientProxiedBy: G08CNEXCHPEKD06.g08.fujitsu.local (10.167.33.205) To
+ G08CNEXMBPEKD05.g08.fujitsu.local (10.167.33.204)
+X-yoursite-MailScanner-ID: 1A5144CE34E6.AAE60
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: ruansy.fnst@cn.fujitsu.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBUaGFua3MgZm9yIHlvdXIgZXhwbGFuYXRpb24gYW5kIHJldmlldy4gSSBoYXZlbid0IHJlYWxp
-emVkIHVzaW5nIHN0cm5jcHkoKSBvbiBOVUwtdGVybWluYXRlZCBzdHJpbmdzDQo+IGlzIGRlcHJl
-Y2F0ZWQNCj4gYW5kIGp1c3QgdHJ5aW5nIHRvIGF2b2lkIHRoZSBjb21waWxlIHdhcm5pbmdzLiBU
-aGUgd2Vic2l0ZSB5b3UgcHJvdmlkZSBoZWxwcyBtZSBhIGxvdC4gVGhhbmsgeW91IHZlcnkNCj4g
-bXVjaCENCg0KTmV2ZXIgdHJ5IHRvIHJlbW92ZSBjb21waWxlLXRpbWUgd2FybmluZ3Mgd2l0aG91
-dCB1bmRlcnN0YW5kaW5nDQp3aGF0ICB0aGUgY29kZSBpdCBkb2luZy4NCg0KVGhlIGJhc2ljIHBy
-b2JsZW0gaXMgdGhhdCBzdHJuY3B5KCkgYWxtb3N0IFsxXSBuZXZlciBkb2VzIHdoYXQgeW91IHdh
-bnQuDQpJdCByZWFsbHkgZXhwZWN0cyBpdCdzIGlucHV0IHN0cmluZyB0byBiZSAnXDAnIHRlcm1p
-bmF0ZWQgYnV0DQpkb2Vzbid0IGd1YXJhbnRlZSB0aGUgb3V0cHV0IHdpbGwgYmUsIGFuZCBhbHNv
-ICh0eXBpY2FsbHkpIHdhc3Rlcw0KY3B1IGN5Y2xlcyB6ZXJvIGZpbGxpbmcgdGhlIG91dHB1dCBi
-dWZmZXIuDQoNClNvbWVvbmUgdGhlbiBkZWZpbmVkIHN0cnNjcHkoKSBhcyBhbiBhbHRlcm5hdGl2
-ZSwgaXQgZ3VhcmFudGVlcw0KdG8gJ1wwJyB0aGUgb3V0cHV0IGFuZCBkb2Vzbid0IHplcm8gZmls
-bCAtIHdoaWNoIGNhbiBiZSBhbiBpc3N1ZS4NCkhvd2V2ZXIgc3Ryc2NweSgpIGhhcyBpdCdzIG93
-biBwcm9ibGVtcywgdGhlIHJldHVybiB2YWx1ZSBpcw0KZGVmaW5lZCB0byBiZSB0aGUgbGVuZ3Ro
-IG9mIHRoZSBpbnB1dCBzdHJpbmcgLSB3aGljaCBhYnNvbHV0ZWx5DQpyZXF1aXJlcyBpdCBiZSAn
-XDAnIHRlcm1pbmF0ZWQuIFdpdGggJ3Vua25vd24nIGlucHV0IHRoaXMgY2FuDQpwYWdlIGZhdWx0
-IQ0KDQpbMV0gVGhpcyBmcmFnbWVudCBsb29rZWQgd3JvbmcsIGJ1dCB3YXMgcmlnaHQhDQoJc3Ry
-bmNweShkZXN0LCBzcmMsIHNpemVvZiBzcmMpOw0KTmFpdmUgY29udmVyc2lvbiB0byByZW1vdmUg
-dGhlIHN0cm5jcHkoKSBicm9rZSBpdC4NCkluIGZhY3QgJ2Rlc3QnIHdhcyAxIGJ5dGUgbG9uZ2Vy
-IHRoYW4gJ3NyYycgYW5kIGFscmVhZHkNCnplcm8gZmlsbGVkLCAnc3JjJyBtaWdodCBub3QgaGF2
-ZSBiZWVuICdcMCcgdGVybWluYXRlZC4NCkl0IGlzIGFib3V0IHRoZSBvbmx5IHRpbWUgc3RybmNw
-eSgpIGlzIHdoYXQgeW91IHdhbnQhDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3Mg
-TGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQ
-VCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
+
+
+On 2020/8/7 下午9:38, Matthew Wilcox wrote:
+> On Fri, Aug 07, 2020 at 09:13:28PM +0800, Shiyang Ruan wrote:
+>> This patchset is a try to resolve the problem of tracking shared page
+>> for fsdax.
+>>
+>> Instead of per-page tracking method, this patchset introduces a query
+>> interface: get_shared_files(), which is implemented by each FS, to
+>> obtain the owners of a shared page.  It returns an owner list of this
+>> shared page.  Then, the memory-failure() iterates the list to be able
+>> to notify each process using files that sharing this page.
+>>
+>> The design of the tracking method is as follow:
+>> 1. dax_assocaite_entry() associates the owner's info to this page
+> 
+> I think that's the first problem with this design.  dax_associate_entry is
+> a horrendous idea which needs to be ripped out, not made more important.
+> It's all part of the general problem of trying to do something on a
+> per-page basis instead of per-extent basis.
+> 
+
+The memory-failure needs to track owners info from a dax page, so I 
+should associate the owner with this page.  In this version, I associate 
+the block device to the dax page, so that the memory-failure is able to 
+iterate the owners by the query interface provided by filesystem.
+
+
+--
+Thanks,
+Ruan Shiyang.
+> 
+> 
+
 
