@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DBB3C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30D5DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:33:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F4ED22B4B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:33:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 022B722B47
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:33:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597088035;
-	bh=hA1h9wZ8IJcr0MIhQYceFwDgSJwUNP7M6s/QAIjJbUk=;
+	s=default; t=1597088038;
+	bh=OdHc3TpTodZcYWa1ujKdHv8kQMFXbYu9aQK6xFMXxDs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d6E88FVv6CjWhmX8tAUwn7lPkVeoM37siSvUQVjzznZvUp/7SwKhZH+uW6xZAaPJR
-	 bTEC5CVYfaGqh+Nt+/JNwNS/juH7Cd4GRO73raUOAC6zjmc0GxLh3hN2XBS1y+XR7C
-	 wj2Yu6xpfGVU/V0r8gOvGuEKDGP2PdLHa33+UuvI=
+	b=QbY6kNhm4E15LE1TPB6kwhI31TieUCbZTve/dDOVHbOw9b7+wxSVJlra+eBl1ecF9
+	 3kMI/+kt/DQLthhE9JnMHPYpJGAVdNJFv9/QuFsNu60tp4yv4ZN6XsJFMRd61d0YNt
+	 6C6aUuR0DFFTLIhAPN36IMdYTRzb6drVkma2/kg8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728338AbgHJTJK (ORCPT
+        id S1729766AbgHJTd4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:09:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35126 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:33:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728284AbgHJTJF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:09:05 -0400
+        id S1728320AbgHJTJK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:09:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D4DD21775;
-        Mon, 10 Aug 2020 19:09:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BCE8C20885;
+        Mon, 10 Aug 2020 19:09:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086543;
-        bh=hA1h9wZ8IJcr0MIhQYceFwDgSJwUNP7M6s/QAIjJbUk=;
+        s=default; t=1597086549;
+        bh=OdHc3TpTodZcYWa1ujKdHv8kQMFXbYu9aQK6xFMXxDs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kYgzz++5/7lNhRBaX61dpYAB0fgZgmhA1trxGxbCZB6UWGm5Hg3zBPs0Q2IBEtg8M
-         Q+JnExD88XuYIY6TDLfuU2SKP1Kxxqy/qNNv5DjVOxDRH2xfOE+x0KNFdYDrg3zyu7
-         sA2Rtvppgmnc+utynhf8RZQyiujp4Gmc27xCKvU4=
+        b=V4vkeR9FJ/ID0EGj9W2XrIAxjzvDBnae8ClyIqs5qJMvkAnLtakvdiXcoS/tRsrTd
+         bq/Q0OWr2v+CJP/h0HQtICergJ56jWjh3G6gx887f8sfjzrhm9y8DgizjP4jpw9XxB
+         J6GuJHVaKGipriePzqpV+WMeYwv+j6mEiGK9cZQY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vladimir Oltean <vladimir.oltean@nxp.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 03/64] net: mscc: ocelot: fix encoding destination ports into multicast IPv4 address
-Date:   Mon, 10 Aug 2020 15:07:58 -0400
-Message-Id: <20200810190859.3793319-3-sashal@kernel.org>
+Cc:     Pavel Begunkov <asml.silence@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 07/64] io_uring: fix req->work corruption
+Date:   Mon, 10 Aug 2020 15:08:02 -0400
+Message-Id: <20200810190859.3793319-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810190859.3793319-1-sashal@kernel.org>
 References: <20200810190859.3793319-1-sashal@kernel.org>
@@ -59,115 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
+From: Pavel Begunkov <asml.silence@gmail.com>
 
-[ Upstream commit 0897ecf7532577bda3dbcb043ce046a96948889d ]
+[ Upstream commit 8ef77766ba8694968ed4ba24311b4bacee14f235 ]
 
-The ocelot hardware designers have made some hacks to support multicast
-IPv4 and IPv6 addresses. Normally, the MAC table matches on MAC
-addresses and the destination ports are selected through the DEST_IDX
-field of the respective MAC table entry. The DEST_IDX points to a Port
-Group ID (PGID) which contains the bit mask of ports that frames should
-be forwarded to. But there aren't a lot of PGIDs (only 80 or so) and
-there are clearly many more IP multicast addresses than that, so it
-doesn't scale to use this PGID mechanism, so something else was done.
-Since the first portion of the MAC address is known, the hack they did
-was to use a single PGID for _flooding_ unknown IPv4 multicast
-(PGID_MCIPV4 == 62), but for known IP multicast, embed the destination
-ports into the first 3 bytes of the MAC address recorded in the MAC
-table.
+req->work and req->task_work are in a union, so io_req_task_queue() screws
+everything that was in work. De-union them for now.
 
-The VSC7514 datasheet explains it like this:
+[  704.367253] BUG: unable to handle page fault for address:
+	ffffffffaf7330d0
+[  704.367256] #PF: supervisor write access in kernel mode
+[  704.367256] #PF: error_code(0x0003) - permissions violation
+[  704.367261] CPU: 6 PID: 1654 Comm: io_wqe_worker-0 Tainted: G
+I       5.8.0-rc2-00038-ge28d0bdc4863-dirty #498
+[  704.367265] RIP: 0010:_raw_spin_lock+0x1e/0x36
+...
+[  704.367276]  __alloc_fd+0x35/0x150
+[  704.367279]  __get_unused_fd_flags+0x25/0x30
+[  704.367280]  io_openat2+0xcb/0x1b0
+[  704.367283]  io_issue_sqe+0x36a/0x1320
+[  704.367294]  io_wq_submit_work+0x58/0x160
+[  704.367295]  io_worker_handle_work+0x2a3/0x430
+[  704.367296]  io_wqe_worker+0x2a0/0x350
+[  704.367301]  kthread+0x136/0x180
+[  704.367304]  ret_from_fork+0x22/0x30
 
-    3.9.1.5 IPv4 Multicast Entries
-
-    MAC table entries with the ENTRY_TYPE = 2 settings are interpreted
-    as IPv4 multicast entries.
-    IPv4 multicasts entries match IPv4 frames, which are classified to
-    the specified VID, and which have DMAC = 0x01005Exxxxxx, where
-    xxxxxx is the lower 24 bits of the MAC address in the entry.
-    Instead of a lookup in the destination mask table (PGID), the
-    destination set is programmed as part of the entry MAC address. This
-    is shown in the following table.
-
-    Table 78: IPv4 Multicast Destination Mask
-
-        Destination Ports            Record Bit Field
-        ---------------------------------------------
-        Ports 10-0                   MAC[34-24]
-
-    Example: All IPv4 multicast frames in VLAN 12 with MAC 01005E112233 are
-    to be forwarded to ports 3, 8, and 9. This is done by inserting the
-    following entry in the MAC table entry:
-    VALID = 1
-    VID = 12
-    MAC = 0x000308112233
-    ENTRY_TYPE = 2
-    DEST_IDX = 0
-
-But this procedure is not at all what's going on in the driver. In fact,
-the code that embeds the ports into the MAC address looks like it hasn't
-actually been tested. This patch applies the procedure described in the
-datasheet.
-
-Since there are many other fixes to be made around multicast forwarding
-until it works properly, there is no real reason for this patch to be
-backported to stable trees, or considered a real fix of something that
-should have worked.
-
-Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mscc/ocelot.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ fs/io_uring.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/mscc/ocelot.c b/drivers/net/ethernet/mscc/ocelot.c
-index f17da67a4622e..d0b79cca51840 100644
---- a/drivers/net/ethernet/mscc/ocelot.c
-+++ b/drivers/net/ethernet/mscc/ocelot.c
-@@ -1605,14 +1605,14 @@ static int ocelot_port_obj_add_mdb(struct net_device *dev,
- 	addr[0] = 0;
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 493e5047e67c9..acd98df1f7d44 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -669,12 +669,12 @@ struct io_kiocb {
+ 		 * restore the work, if needed.
+ 		 */
+ 		struct {
+-			struct callback_head	task_work;
+ 			struct hlist_node	hash_node;
+ 			struct async_poll	*apoll;
+ 		};
+ 		struct io_wq_work	work;
+ 	};
++	struct callback_head	task_work;
+ };
  
- 	if (!new) {
--		addr[2] = mc->ports << 0;
--		addr[1] = mc->ports << 8;
-+		addr[1] = mc->ports >> 8;
-+		addr[2] = mc->ports & 0xff;
- 		ocelot_mact_forget(ocelot, addr, vid);
- 	}
- 
- 	mc->ports |= BIT(port);
--	addr[2] = mc->ports << 0;
--	addr[1] = mc->ports << 8;
-+	addr[1] = mc->ports >> 8;
-+	addr[2] = mc->ports & 0xff;
- 
- 	return ocelot_mact_learn(ocelot, 0, addr, vid, ENTRYTYPE_MACv4);
- }
-@@ -1636,9 +1636,9 @@ static int ocelot_port_obj_del_mdb(struct net_device *dev,
- 		return -ENOENT;
- 
- 	memcpy(addr, mc->addr, ETH_ALEN);
--	addr[2] = mc->ports << 0;
--	addr[1] = mc->ports << 8;
- 	addr[0] = 0;
-+	addr[1] = mc->ports >> 8;
-+	addr[2] = mc->ports & 0xff;
- 	ocelot_mact_forget(ocelot, addr, vid);
- 
- 	mc->ports &= ~BIT(port);
-@@ -1648,8 +1648,8 @@ static int ocelot_port_obj_del_mdb(struct net_device *dev,
- 		return 0;
- 	}
- 
--	addr[2] = mc->ports << 0;
--	addr[1] = mc->ports << 8;
-+	addr[1] = mc->ports >> 8;
-+	addr[2] = mc->ports & 0xff;
- 
- 	return ocelot_mact_learn(ocelot, 0, addr, vid, ENTRYTYPE_MACv4);
- }
+ #define IO_PLUG_THRESHOLD		2
 -- 
 2.25.1
 
