@@ -2,153 +2,116 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D8CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9008CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:15:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 178252073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:11:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69A3620709
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:15:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597050932;
+	bh=smvATPrkA9cVoK/6b0awysZIlKaEosKpKu7koIrCUME=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=11PvZOAV1P4eQ0h6cJqPIIMrVKK4zqB+61zpQlmzGnjxp/9gExnr/VFqktG3Tpig1
+	 J5QO34aErRPOtR6tAyi9WVmLMy26L+1kwGEZzA1G8zLEmV9K7GLzmTt1VHXdPTRf3M
+	 1sXfd26ZLdECSfi7QtzMPVMj9/+234lAueXK+uWs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726641AbgHJJLO (ORCPT
+        id S1726460AbgHJJP3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 05:11:14 -0400
-Received: from www1102.sakura.ne.jp ([219.94.129.142]:14963 "EHLO
-        www1102.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726361AbgHJJLL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 05:11:11 -0400
-Received: from fsav401.sakura.ne.jp (fsav401.sakura.ne.jp [133.242.250.100])
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 07A9AsHE097759;
-        Mon, 10 Aug 2020 18:10:54 +0900 (JST)
-        (envelope-from katsuhiro@katsuster.net)
-Received: from www1102.sakura.ne.jp (219.94.129.142)
- by fsav401.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav401.sakura.ne.jp);
- Mon, 10 Aug 2020 18:10:54 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav401.sakura.ne.jp)
-Received: from [192.168.1.2] (121.252.232.153.ap.dti.ne.jp [153.232.252.121])
-        (authenticated bits=0)
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 07A9ArbS097750
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Mon, 10 Aug 2020 18:10:54 +0900 (JST)
-        (envelope-from katsuhiro@katsuster.net)
-Subject: Re: [PATCH] arm64: dts: rockchip: add SPDIF node for rk3399-rockpro64
-To:     Johan Jonker <jbx6244@gmail.com>, Heiko Stuebner <heiko@sntech.de>
-Cc:     linux-rockchip@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20200801174950.2309273-1-katsuhiro@katsuster.net>
- <1e16b653-3820-7944-2254-a99627f9eeb0@gmail.com>
-From:   Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Message-ID: <14a2f659-675d-a530-eef5-9c965f3743b6@katsuster.net>
-Date:   Mon, 10 Aug 2020 18:10:53 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Mon, 10 Aug 2020 05:15:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34936 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725984AbgHJJP3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 05:15:29 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07DC220709;
+        Mon, 10 Aug 2020 09:15:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597050928;
+        bh=smvATPrkA9cVoK/6b0awysZIlKaEosKpKu7koIrCUME=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WkbEoDMdY+UZuUN7tf1nCkEc1z5ImR7ikGJNLQLeP3SMPl4uX79cGyMNqIYfshLNs
+         X7i1RiW5I1q7ygYSLrcbHF+EFLZRp4F1illaSTRuEKxN9zSUt0sYRahgY3C/sEkv5B
+         JBDmyTpZ6hrpDnEQ8Cv2tqhxY6LuIg4IlseD+PG0=
+Date:   Mon, 10 Aug 2020 11:15:38 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     syzbot <syzbot+a7e220df5a81d1ab400e@syzkaller.appspotmail.com>,
+        Andrey Konovalov <andreyknvl@google.com>, balbi@kernel.org,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Alexander Potapenko <glider@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Subject: Re: KMSAN: kernel-infoleak in raw_ioctl
+Message-ID: <20200810091538.GA2273701@kroah.com>
+References: <000000000000ce85c405ac744ff6@google.com>
+ <20200810074706.GD1529187@kroah.com>
+ <CACT4Y+aS6oangE4BzhCfx3gs9guAW=zQpwN1LP+yB3kza68xFw@mail.gmail.com>
+ <20200810090833.GA2271719@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <1e16b653-3820-7944-2254-a99627f9eeb0@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200810090833.GA2271719@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Johan,
-
-Sorry for late and thanks for your comment!
-
-On 2020/08/03 2:52, Johan Jonker wrote:
-> Hi Katsuhiro,
+On Mon, Aug 10, 2020 at 11:08:33AM +0200, Greg KH wrote:
+> On Mon, Aug 10, 2020 at 11:00:07AM +0200, Dmitry Vyukov wrote:
+> > On Mon, Aug 10, 2020 at 9:46 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > On Sun, Aug 09, 2020 at 09:27:18AM -0700, syzbot wrote:
+> > > > Hello,
+> > > >
+> > > > syzbot found the following issue on:
+> > > >
+> > > > HEAD commit:    ce8056d1 wip: changed copy_from_user where instrumented
+> > > > git tree:       https://github.com/google/kmsan.git master
+> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=141eb8b2900000
+> > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=3afe005fb99591f
+> > > > dashboard link: https://syzkaller.appspot.com/bug?extid=a7e220df5a81d1ab400e
+> > > > compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+> > > > userspace arch: i386
+> > > >
+> > > > Unfortunately, I don't have any reproducer for this issue yet.
+> > >
+> > > The irony of a kernel module written for syzbot testing, causing syzbot
+> > > reports....
+> > 
+> > The raw gadget and KCOV are also kernel code and subject to all the
+> > same rules as any other kernel code from syzkaller point of view.
+> > 
+> > But I think the root cause of this bug is the origin of the uninitialized-ness:
+> > 
+> > Local variable ----buf.i@asix_get_phy_addr created at:
+> >  asix_read_cmd drivers/net/usb/asix_common.c:312 [inline]
+> >  asix_read_phy_addr drivers/net/usb/asix_common.c:295 [inline]
+> >  asix_get_phy_addr+0x4d/0x290 drivers/net/usb/asix_common.c:314
+> >  asix_read_cmd drivers/net/usb/asix_common.c:312 [inline]
+> >  asix_read_phy_addr drivers/net/usb/asix_common.c:295 [inline]
+> >  asix_get_phy_addr+0x4d/0x290 drivers/net/usb/asix_common.c:314
 > 
-> On 8/1/20 7:49 PM, Katsuhiro Suzuki wrote:
->> This patch adds 'disabled' SPDIF sound node and related settings
->> for rk3399-rockpro64.
->>
->> There are 2 reasons:
->>    - All RK3399 dma-bus channels have been already used by I2S0/1/2
->>    - RockPro64 does not have SPDIF optical nor coaxial connector,
->>      just have 3pins
->>
->> Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
->> ---
->>   .../boot/dts/rockchip/rk3399-rockpro64.dtsi   | 28 +++++++++++++++++++
->>   1 file changed, 28 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtsi
->> index 6e553ff47534..e35b30f8a46e 100644
->> --- a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtsi
->> +++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtsi
->> @@ -76,6 +76,23 @@ sound {
->>   		dais = <&i2s1_p0>;
->>   	};
->>   
->> +	sound-dit {
->> +		compatible = "audio-graph-card";
->> +		label = "rockchip,rk3399";
->> +		dais = <&spdif_p0>;
->> +	};
->> +
->> +	spdif-dit {
->> +		compatible = "linux,spdif-dit";
->> +		#sound-dai-cells = <0>;
->> +
->> +		port {
->> +			dit_p0_0: endpoint {
->> +				remote-endpoint = <&spdif_p0_0>;
->> +			};
->> +		};
->> +	};
->> +
->>   	vcc12v_dcin: vcc12v-dcin {
->>   		compatible = "regulator-fixed";
->>   		regulator-name = "vcc12v_dcin";
->> @@ -698,6 +715,17 @@ &sdhci {
->>   	status = "okay";
->>   };
->>   
->> +&spdif {
->> +	pinctrl-0 = <&spdif_bus_1>;
+> read buffers sent to USB hardware are ment to be filled in by the
+> hardware with the data received from it, we do not zero-out those
+> buffers before passing the pointer there.
 > 
->> +	status = "disabled";
-> 
-> The status is already disabled.
-> Adding more unused nodes and properties doesn't make sense here.
->> 	spdif: spdif@ff870000 {
-> 		compatible = "rockchip,rk3399-spdif";
-> 		reg = <0x0 0xff870000 0x0 0x1000>;
-> 		interrupts = <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH 0>;
-> 		dmas = <&dmac_bus 7>;
-> 		dma-names = "tx";
-> 		clock-names = "mclk", "hclk";
-> 		clocks = <&cru SCLK_SPDIF_8CH>, <&cru HCLK_SPDIF>;
-> 		pinctrl-names = "default";
-> 		pinctrl-0 = <&spdif_bus>;
-> 		power-domains = <&power RK3399_PD_SDIOAUDIO>;
-> 		#sound-dai-cells = <0>;
-> 		status = "disabled";
-> 	};
-> 
+> Perhaps with testing frameworks like the raw usb controller, that might
+> cause a number of false-positives to happen?
 
-I see, I will remove this line and send V2 patch.
+Ah, wait, that buffer is coming from the stack, which isn't allowed in
+the first place :(
 
-Best Regards,
-Katsuhiro Suzuki
+So that should be changed anyway to a dynamic allocation, I'll go write
+up a patch...
 
+thanks,
 
->> +
->> +	spdif_p0: port {
->> +		spdif_p0_0: endpoint {
->> +			remote-endpoint = <&dit_p0_0>;
->> +		};
->> +	};
->> +};
->> +
->>   &spi1 {
->>   	status = "okay";
->>   
->>
-> 
-
+greg k-h
