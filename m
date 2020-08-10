@@ -2,53 +2,51 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86EC2C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:32:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E75C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:32:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58926207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:32:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BD7C207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:32:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073573;
-	bh=O8uxpY19oMyTmj5VGnKGFEp+hLgqpN7HCtchkQbSam4=;
+	s=default; t=1597073577;
+	bh=PZcRqQCNsNEq1ZS0iX1apEtdikPbEajs+XFzXYEZ6VM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cJaD1l4X6HsY8s7vwQChwmPSH/e0o/GXZINRie2jegcv+VwW8WZeaTU2ng9IJbOZL
-	 VqB6ab63V5iVhUkboDVCVKbVevm7x9WCYyQRzW5+6CBa5H6Df1RhQUK+/GdiqQwTKs
-	 UnVggpCj1zL6qoMETbGSdNNEcx8Oug+rq6q73z98=
+	b=r5qGcfIgC5MZA6Qsu97zrLF/1vbsxgSY2jwzia6PPStmhruwGr6daSomg7edqDI5T
+	 rfn+ImwP/YCshL8j3pBWysS0ahMM/f1PVaW5zBsQeQuYsDNfNuJoGgViknd3n04zPV
+	 +QGylJ9SjMk7Wsi5nljUOBGq6D9x/DBywaeOWw/8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729109AbgHJPcw (ORCPT
+        id S1728386AbgHJPaG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:32:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36954 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:30:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728678AbgHJPaN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:30:13 -0400
+        id S1729033AbgHJP36 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:29:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03B8522D74;
-        Mon, 10 Aug 2020 15:30:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BF0622D02;
+        Mon, 10 Aug 2020 15:29:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073413;
-        bh=O8uxpY19oMyTmj5VGnKGFEp+hLgqpN7HCtchkQbSam4=;
+        s=default; t=1597073397;
+        bh=PZcRqQCNsNEq1ZS0iX1apEtdikPbEajs+XFzXYEZ6VM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jiiBHXRXWpzBWbFQ7OJVPm5UgI6i58IiYUAVpp3hl01zHk8BjPbRV/mL+wSYnQb5Q
-         4ItqS639oOzZNMjqKhAD3OTM5c+hphFKszxk8zT3Y6FiVC5uabRHdM3ZoHl1Vx32YG
-         U7oKuV4W2jlIgcC6FpaCDPVm3gPt7NQtsiPjL0ts=
+        b=CJyY/hDz5ge29JKa5430OqgN+RSleU8wioh6yBfZeoPlSWDEDQe838mIoY0hgyjPd
+         6+uOG/ahZgH+A4Jn6gODWGjYAh1xwYMweemNf4ToUSzqNK3kIPQhv8EsNXxc0HjvKx
+         kL5/sjdJe3nJ3uR7pX2DLRXFYzc/zcxjvjoT+SPI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Alain Volmat <alain.volmat@st.com>,
-        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 23/48] i2c: slave: add sanity check when unregistering
-Date:   Mon, 10 Aug 2020 17:21:45 +0200
-Message-Id: <20200810151805.359915557@linuxfoundation.org>
+        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 05/48] Revert "ALSA: hda: call runtime_allow() for all hda controllers"
+Date:   Mon, 10 Aug 2020 17:21:27 +0200
+Message-Id: <20200810151804.483653043@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151804.199494191@linuxfoundation.org>
 References: <20200810151804.199494191@linuxfoundation.org>
@@ -61,34 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+From: Hui Wang <hui.wang@canonical.com>
 
-[ Upstream commit 8808981baf96e1b3dea1f08461e4d958aa0dbde1 ]
+commit 07c9983b567d0ef33aefc063299de95a987e12a8 upstream.
 
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Reviewed-by: Alain Volmat <alain.volmat@st.com>
-Signed-off-by: Wolfram Sang <wsa@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This reverts commit 9a6418487b56 ("ALSA: hda: call runtime_allow()
+for all hda controllers").
+
+The reverted patch already introduced some regressions on some
+machines:
+ - on gemini-lake machines, the error of "azx_get_response timeout"
+   happens in the hda driver.
+ - on the machines with alc662 codec, the audio jack detection doesn't
+   work anymore.
+
+Fixes: 9a6418487b56 ("ALSA: hda: call runtime_allow() for all hda controllers")
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=208511
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+Link: https://lore.kernel.org/r/20200803064638.6139-1-hui.wang@canonical.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/i2c/i2c-core-slave.c | 3 +++
- 1 file changed, 3 insertions(+)
+ sound/pci/hda/hda_intel.c |    1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/i2c/i2c-core-slave.c b/drivers/i2c/i2c-core-slave.c
-index 88959c8580ce0..f2e7e373ee478 100644
---- a/drivers/i2c/i2c-core-slave.c
-+++ b/drivers/i2c/i2c-core-slave.c
-@@ -62,6 +62,9 @@ int i2c_slave_unregister(struct i2c_client *client)
- {
- 	int ret;
+--- a/sound/pci/hda/hda_intel.c
++++ b/sound/pci/hda/hda_intel.c
+@@ -2478,7 +2478,6 @@ static int azx_probe_continue(struct azx
  
-+	if (IS_ERR_OR_NULL(client))
-+		return -EINVAL;
-+
- 	if (!client->adapter->algo->unreg_slave) {
- 		dev_err(&client->dev, "%s: not supported by adapter\n", __func__);
- 		return -EOPNOTSUPP;
--- 
-2.25.1
-
+ 	if (azx_has_pm_runtime(chip)) {
+ 		pm_runtime_use_autosuspend(&pci->dev);
+-		pm_runtime_allow(&pci->dev);
+ 		pm_runtime_put_autosuspend(&pci->dev);
+ 	}
+ 
 
 
