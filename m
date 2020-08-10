@@ -2,139 +2,149 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7285C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:38:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20BFAC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:38:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B86F22EBE
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:38:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE0EF23117
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:38:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073919;
-	bh=97QJhoJYDeam/oMbkKOnP6nfbKvfx2kmikgCEsZvy+k=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AOPVZ/SKDTMo9B1N64OitCf7HXubfowMrR3bJ1QcvPdAHc7CA8vnovPYecBqogqsB
-	 P76nZoampHkUxjJ20VzVDq9Q4hpyGR26fmPHG7COhuu4V+Mv7Ro257SGJsEbM1KKau
-	 cGFyhEdpCxY770k6j7TEvfl/id78r/5zvNrt+OUc=
+	s=default; t=1597073928;
+	bh=ymggXvQMYTuMlvb7REMGaGjoHB0LOXnlg1VMPd0fUPA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hmACaTT+zukmK+hOrDatcjVFx0celyUJcoWAMM+OKDVhT5SGvb7GoeOOESqqiaAq6
+	 K2ImsqnLXGeQWmbbeTVINtVJhDwF1Zd9Iz0T4zVwrNmyNoY4ZvltwCAMv/f2bDSrV/
+	 +UFiKs8NsurSMvzbA6IuXZJxXYwNxu3xqbrGl/3w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726966AbgHJPih (ORCPT
+        id S1728721AbgHJPiq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:38:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59644 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:38:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728107AbgHJPZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:25:44 -0400
+        id S1728101AbgHJPin (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:38:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE57921775;
-        Mon, 10 Aug 2020 15:25:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FA4D22D6F;
+        Mon, 10 Aug 2020 15:38:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073143;
-        bh=97QJhoJYDeam/oMbkKOnP6nfbKvfx2kmikgCEsZvy+k=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g6b18B9kLWzA18qwbu+RM0vdp6wFFlQoNfQXwanPyN4mZKJB+U4XUBbmsAajAW+8d
-         knpdFYDsQ0McTd9rDNAiufKlPmQetYP4pO7986hIVI9wr4mUgNwTKhbbs5OAiwOsf6
-         Xgb9RpD07dyycDi+GfHwGXvxmqS1JQFoiPnXeOX8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Peilin Ye <yepeilin.cs@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.7 72/79] openvswitch: Prevent kernel-infoleak in ovs_ct_put_key()
-Date:   Mon, 10 Aug 2020 17:21:31 +0200
-Message-Id: <20200810151815.775500473@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200810151812.114485777@linuxfoundation.org>
-References: <20200810151812.114485777@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1597073923;
+        bh=ymggXvQMYTuMlvb7REMGaGjoHB0LOXnlg1VMPd0fUPA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gqSdXHM81gwbzXzR3XVYr5Cv+R1XKxsB0Haq0sLcU11okQ/SfDFLepmttZBjNBRI2
+         sJqCnW2gXGPrpEQeQ4uA6hzCEITw02Wz/B5xg8mRxj58Gcj49fcoo4GoZDCWd6aA+G
+         RTRqaZuEkc70RUANlwkxqSbzHWGUoSIzKPAJXLxE=
+Date:   Mon, 10 Aug 2020 17:38:35 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Avi Shchislowski <Avi.Shchislowski@wdc.com>
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        "daejun7.park@samsung.com" <daejun7.park@samsung.com>,
+        Avri Altman <Avri.Altman@wdc.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
+        ALIM AKHTAR <alim.akhtar@samsung.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sang-yoon Oh <sangyoon.oh@samsung.com>,
+        Sung-Jun Park <sungjun07.park@samsung.com>,
+        yongmyung lee <ymhungry.lee@samsung.com>,
+        Jinyoung CHOI <j-young.choi@samsung.com>,
+        Adel Choi <adel.choi@samsung.com>,
+        BoRam Shin <boram.shin@samsung.com>
+Subject: Re: [PATCH v6 0/5] scsi: ufs: Add Host Performance Booster Support
+Message-ID: <20200810153835.GA4169109@kroah.com>
+References: <CGME20200713103423epcms2p8442ee7cc22395e4a4cedf224f95c45e8@epcms2p8>
+ <963815509.21594636682161.JavaMail.epsvc@epcpadp2>
+ <SN6PR04MB38720C3D8FC176C3C7FB51B89A7E0@SN6PR04MB3872.namprd04.prod.outlook.com>
+ <4174fcf4-73ec-8e3f-90a5-1e7584e3e2d0@acm.org>
+ <SN6PR04MB3872FBE1EAE3578BFD2601189A7F0@SN6PR04MB3872.namprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SN6PR04MB3872FBE1EAE3578BFD2601189A7F0@SN6PR04MB3872.namprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peilin Ye <yepeilin.cs@gmail.com>
+On Thu, Jul 16, 2020 at 10:00:57AM +0000, Avi Shchislowski wrote:
+> 
+> 
+> > -----Original Message-----
+> > From: Bart Van Assche <bvanassche@acm.org>
+> > Sent: Thursday, July 16, 2020 4:42 AM
+> > To: Avi Shchislowski <Avi.Shchislowski@wdc.com>;
+> > daejun7.park@samsung.com; Avri Altman <Avri.Altman@wdc.com>;
+> > jejb@linux.ibm.com; martin.petersen@oracle.com; asutoshd@codeaurora.org;
+> > beanhuo@micron.com; stanley.chu@mediatek.com; cang@codeaurora.org;
+> > tomas.winkler@intel.com; ALIM AKHTAR <alim.akhtar@samsung.com>
+> > Cc: linux-scsi@vger.kernel.org; linux-kernel@vger.kernel.org; Sang-yoon Oh
+> > <sangyoon.oh@samsung.com>; Sung-Jun Park
+> > <sungjun07.park@samsung.com>; yongmyung lee
+> > <ymhungry.lee@samsung.com>; Jinyoung CHOI <j-
+> > young.choi@samsung.com>; Adel Choi <adel.choi@samsung.com>; BoRam
+> > Shin <boram.shin@samsung.com>
+> > Subject: Re: [PATCH v6 0/5] scsi: ufs: Add Host Performance Booster Support
+> > 
+> > CAUTION: This email originated from outside of Western Digital. Do not click on
+> > links or open attachments unless you recognize the sender and know that the
+> > content is safe.
+> > 
+> > 
+> > On 2020-07-15 11:34, Avi Shchislowski wrote:
+> > > My name is Avi Shchislowski, I am managing the WDC's Linux Host R&D team
+> > in which Avri is a member of.
+> > > As the review process of HPB is progressing very constructively, we are getting
+> > more and more requests from OEMs, Inquiring about HPB in general, and host
+> > control mode in particular.
+> > >
+> > > Their main concern is that HPB will make it to 5.9 merge window, but the host
+> > control mode patches will not.
+> > > Thus, because of recent Google's GKI, the next Android LTS might not include
+> > HPB with host control mode.
+> > >
+> > > Aside of those requests, initial host control mode testing are showing
+> > promising prospective with respect of performance gain.
+> > >
+> > > What would be, in your opinion, the best policy that host control mode is
+> > included in next Android LTS?
+> > 
+> > Hi Avi,
+> > 
+> > Are you perhaps referring to the HPB patch series that has already been posted?
+> > Although I'm not sure of this, I think that the SCSI maintainer expects more
+> > Reviewed-by: and Tested-by: tags. Has anyone from WDC already taken the
+> > time to review and/or test this patch series?
+> > 
+> > Thanks,
+> > 
+> > Bart.
+> 
+> Yes, I am referring to the current proposal which I am replying to:
+> [PATCH v6 0/5] scsi: ufs: Add Host Performance Booster Support This proposal does not contains host mode, hence our customers concern.
+> What would be, in your opinion, the best policy that host control mode is included in next Android LTS  assuming it will be based on kernel v5.9 ?
 
-[ Upstream commit 9aba6c5b49254d5bee927d81593ed4429e91d4ae ]
+To come back to this statement, as I keep seeing it in odd places...
 
-ovs_ct_put_key() is potentially copying uninitialized kernel stack memory
-into socket buffers, since the compiler may leave a 3-byte hole at the end
-of `struct ovs_key_ct_tuple_ipv4` and `struct ovs_key_ct_tuple_ipv6`. Fix
-it by initializing `orig` with memset().
+I have never said that the next LTS kernel would be 5.9, where did you
+get that from?  I am pretty sure that Google is also not saying that
+either.
 
-Fixes: 9dd7f8907c37 ("openvswitch: Add original direction conntrack tuple to sw_flow_key.")
-Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/openvswitch/conntrack.c |   38 ++++++++++++++++++++------------------
- 1 file changed, 20 insertions(+), 18 deletions(-)
+Work to get the feature accepted properly, do not worry about cramming
+anything into any kernel just because it might be a LTS release.  That
+causes problems that we have had in the past, and one would hope that we
+would have learned from our mistakes.
 
---- a/net/openvswitch/conntrack.c
-+++ b/net/openvswitch/conntrack.c
-@@ -276,10 +276,6 @@ void ovs_ct_fill_key(const struct sk_buf
- 	ovs_ct_update_key(skb, NULL, key, false, false);
- }
- 
--#define IN6_ADDR_INITIALIZER(ADDR) \
--	{ (ADDR).s6_addr32[0], (ADDR).s6_addr32[1], \
--	  (ADDR).s6_addr32[2], (ADDR).s6_addr32[3] }
--
- int ovs_ct_put_key(const struct sw_flow_key *swkey,
- 		   const struct sw_flow_key *output, struct sk_buff *skb)
- {
-@@ -301,24 +297,30 @@ int ovs_ct_put_key(const struct sw_flow_
- 
- 	if (swkey->ct_orig_proto) {
- 		if (swkey->eth.type == htons(ETH_P_IP)) {
--			struct ovs_key_ct_tuple_ipv4 orig = {
--				output->ipv4.ct_orig.src,
--				output->ipv4.ct_orig.dst,
--				output->ct.orig_tp.src,
--				output->ct.orig_tp.dst,
--				output->ct_orig_proto,
--			};
-+			struct ovs_key_ct_tuple_ipv4 orig;
-+
-+			memset(&orig, 0, sizeof(orig));
-+			orig.ipv4_src = output->ipv4.ct_orig.src;
-+			orig.ipv4_dst = output->ipv4.ct_orig.dst;
-+			orig.src_port = output->ct.orig_tp.src;
-+			orig.dst_port = output->ct.orig_tp.dst;
-+			orig.ipv4_proto = output->ct_orig_proto;
-+
- 			if (nla_put(skb, OVS_KEY_ATTR_CT_ORIG_TUPLE_IPV4,
- 				    sizeof(orig), &orig))
- 				return -EMSGSIZE;
- 		} else if (swkey->eth.type == htons(ETH_P_IPV6)) {
--			struct ovs_key_ct_tuple_ipv6 orig = {
--				IN6_ADDR_INITIALIZER(output->ipv6.ct_orig.src),
--				IN6_ADDR_INITIALIZER(output->ipv6.ct_orig.dst),
--				output->ct.orig_tp.src,
--				output->ct.orig_tp.dst,
--				output->ct_orig_proto,
--			};
-+			struct ovs_key_ct_tuple_ipv6 orig;
-+
-+			memset(&orig, 0, sizeof(orig));
-+			memcpy(orig.ipv6_src, output->ipv6.ct_orig.src.s6_addr32,
-+			       sizeof(orig.ipv6_src));
-+			memcpy(orig.ipv6_dst, output->ipv6.ct_orig.dst.s6_addr32,
-+			       sizeof(orig.ipv6_dst));
-+			orig.src_port = output->ct.orig_tp.src;
-+			orig.dst_port = output->ct.orig_tp.dst;
-+			orig.ipv6_proto = output->ct_orig_proto;
-+
- 			if (nla_put(skb, OVS_KEY_ATTR_CT_ORIG_TUPLE_IPV6,
- 				    sizeof(orig), &orig))
- 				return -EMSGSIZE;
+thanks,
 
-
+greg k-h
