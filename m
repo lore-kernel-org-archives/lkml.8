@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98A65C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:11:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D9C0C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 691A8207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:11:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1498922B4B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:11:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597086689;
-	bh=4WTP4Ogj32dlekRkN0sF2w84Av0Agk7t6IC5sMNZfM8=;
+	s=default; t=1597086695;
+	bh=4atO9yVMgJ17YnbD6VFtB6McPjIh2o7LSlKJaMp2yVA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gi+CIZcn+mO3PORsRNC5inJetcBRZ6AfNg051FkojLAdjCEqtOu70uwbzxzuCXAX4
-	 cByJotKJ2MK3c2Hz/njSqTAf/TBZxsXzBYHZs4f4xrXsq6OSR9EaRyleFNuR3fcE3S
-	 oJhcwNrheXPB8rlEEfx84iniyPLDs0tKt9c91a8c=
+	b=DYC3qc1mbQ0LRfeukN9F258dVFQAWrG8TlDGep+XklRIy6p8GJcHxhi2zDeweUSsF
+	 avXTAiGRO6B6QqjizJbO4ZO100b9kco0LbYxOZylYduvhBU4CdYIJuXw8ygvWyWVXf
+	 HgiuBPfjIXphu1jZLVvg2dFaySPBRQjn1//D8yNA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729313AbgHJTL2 (ORCPT
+        id S1729023AbgHJTLc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:11:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39358 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:11:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39500 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729178AbgHJTLN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:11:13 -0400
+        id S1728288AbgHJTLR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:11:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 788AB22CBE;
-        Mon, 10 Aug 2020 19:11:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF19D21775;
+        Mon, 10 Aug 2020 19:11:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086672;
-        bh=4WTP4Ogj32dlekRkN0sF2w84Av0Agk7t6IC5sMNZfM8=;
+        s=default; t=1597086676;
+        bh=4atO9yVMgJ17YnbD6VFtB6McPjIh2o7LSlKJaMp2yVA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fh6AGZ3VDVMQtxADFGVv7JbZUN8arSTF+BP6V2GFWLtN/EdFWbg3zVyHTzv1fjLP0
-         OvnCbn38N8jgvI1k0nB6WkgqHV4n6IbK1LuOmh1ZktbNGVNuIcYB4rx5V02YB2+vFl
-         9js4lChX9+XqeEbVp2Y80QvUqq8Hdh9i4F0Wv/yM=
+        b=sxJH9MUMx5RBJunMNE7TRSP/L0FOX2gwK0nHh5M+I5YhBbOVBalNx5XobuBQ6lvLq
+         wuZxe1pQn1kYai2DtTJsjf/YVay5BG4qpy1aSpyaw55u+eKOzYvljSUzu2xqOjt3IT
+         0YHoZwdBhaDrDG4BOrkr5nntnBJ+YsMDazR4CqEg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aric Cyr <aric.cyr@amd.com>, Wenjing Liu <Wenjing.Liu@amd.com>,
-        Qingqing Zhuo <qingqing.zhuo@amd.com>,
-        Tony Cheng <Tony.Cheng@amd.com>,
+Cc:     Evan Quan <evan.quan@amd.com>, kernel test robot <lkp@intel.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.7 32/60] drm/amd/display: Improve DisplayPort monitor interop
-Date:   Mon, 10 Aug 2020 15:10:00 -0400
-Message-Id: <20200810191028.3793884-32-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 35/60] drm/amd/powerplay: fix compile error with ARCH=arc
+Date:   Mon, 10 Aug 2020 15:10:03 -0400
+Message-Id: <20200810191028.3793884-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810191028.3793884-1-sashal@kernel.org>
 References: <20200810191028.3793884-1-sashal@kernel.org>
@@ -62,114 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aric Cyr <aric.cyr@amd.com>
+From: Evan Quan <evan.quan@amd.com>
 
-[ Upstream commit eec3303de3378cdfaa0bb86f43546dbbd88f94e2 ]
+[ Upstream commit 9822ba2ead1baa3de4860ad9472f652c4cc78c9c ]
 
-[Why]
-DC is very fast at link training and stream enablement
-which causes issues such as blackscreens for non-compliant
-monitors.
+Fix the compile error below:
+drivers/gpu/drm/amd/amdgpu/../powerplay/smu_v11_0.c: In function 'smu_v11_0_init_microcode':
+>> arch/arc/include/asm/bug.h:22:2: error: implicit declaration of function 'pr_warn'; did you mean 'pci_warn'? [-Werror=implicit-function-declaration]
+      22 |  pr_warn("BUG: failure at %s:%d/%s()!\n", __FILE__, __LINE__, __func__); \
+         |  ^~~~~~~
+drivers/gpu/drm/amd/amdgpu/../powerplay/smu_v11_0.c:176:3: note: in expansion of macro 'BUG'
+     176 |   BUG();
 
-[How]
-After debugging with scaler vendors we implement the
-minimum delays at the necessary locations to ensure
-the monitor does not hang.  Delays are generic due to
-lack of IEEE OUI information on the failing displays.
-
-Signed-off-by: Aric Cyr <aric.cyr@amd.com>
-Reviewed-by: Wenjing Liu <Wenjing.Liu@amd.com>
-Acked-by: Qingqing Zhuo <qingqing.zhuo@amd.com>
-Acked-by: Tony Cheng <Tony.Cheng@amd.com>
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Evan Quan <evan.quan@amd.com>
+Acked-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/core/dc_link.c    |  4 +++-
- drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c | 16 ++++++++++------
- .../amd/display/dc/dce110/dce110_hw_sequencer.c  | 11 ++++++++++-
- 3 files changed, 23 insertions(+), 8 deletions(-)
+ drivers/gpu/drm/amd/powerplay/smu_v11_0.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link.c b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-index 67cfff1586e9f..3f157bcc174b9 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-@@ -3146,9 +3146,11 @@ void core_link_disable_stream(struct pipe_ctx *pipe_ctx)
- 			write_i2c_redriver_setting(pipe_ctx, false);
- 		}
- 	}
--	dc->hwss.disable_stream(pipe_ctx);
- 
- 	disable_link(pipe_ctx->stream->link, pipe_ctx->stream->signal);
-+
-+	dc->hwss.disable_stream(pipe_ctx);
-+
- 	if (pipe_ctx->stream->timing.flags.DSC) {
- 		if (dc_is_dp_signal(pipe_ctx->stream->signal))
- 			dp_set_dsc_enable(pipe_ctx, false);
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-index caa090d0b6acc..1ada01322cd2c 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-@@ -1103,6 +1103,10 @@ static inline enum link_training_result perform_link_training_int(
- 	dpcd_pattern.v1_4.TRAINING_PATTERN_SET = DPCD_TRAINING_PATTERN_VIDEOIDLE;
- 	dpcd_set_training_pattern(link, dpcd_pattern);
- 
-+	/* delay 5ms after notifying sink of idle pattern before switching output */
-+	if (link->connector_signal != SIGNAL_TYPE_EDP)
-+		msleep(5);
-+
- 	/* 4. mainlink output idle pattern*/
- 	dp_set_hw_test_pattern(link, DP_TEST_PATTERN_VIDEO_MODE, NULL, 0);
- 
-@@ -1552,6 +1556,12 @@ bool perform_link_training_with_retries(
- 	struct dc_link *link = stream->link;
- 	enum dp_panel_mode panel_mode = dp_get_panel_mode(link);
- 
-+	/* We need to do this before the link training to ensure the idle pattern in SST
-+	 * mode will be sent right after the link training
-+	 */
-+	link->link_enc->funcs->connect_dig_be_to_fe(link->link_enc,
-+							pipe_ctx->stream_res.stream_enc->id, true);
-+
- 	for (j = 0; j < attempts; ++j) {
- 
- 		dp_enable_link_phy(
-@@ -1568,12 +1578,6 @@ bool perform_link_training_with_retries(
- 
- 		dp_set_panel_mode(link, panel_mode);
- 
--		/* We need to do this before the link training to ensure the idle pattern in SST
--		 * mode will be sent right after the link training
--		 */
--		link->link_enc->funcs->connect_dig_be_to_fe(link->link_enc,
--								pipe_ctx->stream_res.stream_enc->id, true);
--
- 		if (link->aux_access_disabled) {
- 			dc_link_dp_perform_link_training_skip_aux(link, link_setting);
- 			return true;
-diff --git a/drivers/gpu/drm/amd/display/dc/dce110/dce110_hw_sequencer.c b/drivers/gpu/drm/amd/display/dc/dce110/dce110_hw_sequencer.c
-index 10527593868cc..24ca592c90df5 100644
---- a/drivers/gpu/drm/amd/display/dc/dce110/dce110_hw_sequencer.c
-+++ b/drivers/gpu/drm/amd/display/dc/dce110/dce110_hw_sequencer.c
-@@ -1090,8 +1090,17 @@ void dce110_blank_stream(struct pipe_ctx *pipe_ctx)
- 		dc_link_set_abm_disable(link);
+diff --git a/drivers/gpu/drm/amd/powerplay/smu_v11_0.c b/drivers/gpu/drm/amd/powerplay/smu_v11_0.c
+index 655ba4fb05dcd..48af305d42d54 100644
+--- a/drivers/gpu/drm/amd/powerplay/smu_v11_0.c
++++ b/drivers/gpu/drm/amd/powerplay/smu_v11_0.c
+@@ -159,7 +159,8 @@ int smu_v11_0_init_microcode(struct smu_context *smu)
+ 		chip_name = "navi12";
+ 		break;
+ 	default:
+-		BUG();
++		dev_err(adev->dev, "Unsupported ASIC type %d\n", adev->asic_type);
++		return -EINVAL;
  	}
  
--	if (dc_is_dp_signal(pipe_ctx->stream->signal))
-+	if (dc_is_dp_signal(pipe_ctx->stream->signal)) {
- 		pipe_ctx->stream_res.stream_enc->funcs->dp_blank(pipe_ctx->stream_res.stream_enc);
-+
-+		/*
-+		 * After output is idle pattern some sinks need time to recognize the stream
-+		 * has changed or they enter protection state and hang.
-+		 */
-+		if (!dc_is_embedded_signal(pipe_ctx->stream->signal))
-+			msleep(60);
-+	}
-+
- }
- 
- 
+ 	snprintf(fw_name, sizeof(fw_name), "amdgpu/%s_smc.bin", chip_name);
 -- 
 2.25.1
 
