@@ -2,124 +2,98 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7E61C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 08:14:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B20A8C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 08:15:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9AC4C2073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 08:14:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597047281;
-	bh=Okbfz0WpSqIQi8HvxpVtBK3YOt6ETA6kWdjGngL/7Is=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=qBNqBDyuMvmIdny3NlcUE5RgF2N+yfGMfLO3+9LQfzsUUFej8078WG1NB03F3n9hy
-	 Xl/mWB4FPENGa22PXisS9bX3nDVG6U5XSB1sx6olRz4GcT+WcLHb2T+W9Yd3yqG5Hc
-	 7GzyQCvx1j+lD0b6JzWaO9kxGtdaSpzWDobDFIKc=
+	by mail.kernel.org (Postfix) with ESMTP id 8D3E2207DE
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 08:15:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726405AbgHJIOk (ORCPT
+        id S1726468AbgHJIPx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 04:14:40 -0400
-Received: from mail-ej1-f68.google.com ([209.85.218.68]:37291 "EHLO
-        mail-ej1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726219AbgHJIOj (ORCPT
+        Mon, 10 Aug 2020 04:15:53 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:35356 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726021AbgHJIPx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 04:14:39 -0400
-Received: by mail-ej1-f68.google.com with SMTP id qc22so8456937ejb.4
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 01:14:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=9uVZ6+5aRdc8qnC70xmBcJ8VxXcAa7s7AfoeJd4mvUw=;
-        b=dU7cM6uEWxq7TZBIOL75r0Y+NFAUinb0Sezq3Ber185rtKR8+ppoeh5NsFiaWoL3HG
-         aLwnPet284EYO7D6/PfrlYXr2LAEq5vMAiU/2LbvK1x4oH7nen+5wgKANCuFmFP6fJ4T
-         8Q0gQY2GZCigFNAwbGZdBFQQfoMuTM6QjAjc3ELndww3f1UkKhvfUMtobdbxSytVaCFN
-         GZrRMIxRt/KkIjm82UlkCS4gdNWdoDVt1Y3DTV805wK3GqoVncE5w8tj/uJd+z49NHRV
-         aV5uQU+cz8xzPKMWBFDd6kkPfSkHaS1LApDZmp3o4W4UoJHnswwh3jk7lgn6c/KPzuGN
-         UWwg==
-X-Gm-Message-State: AOAM533IvpQcgBmFPK7rvYJvxNO7SrBLPSTPcnrutTOYUtSTHVi3FVel
-        PNuIYV/JITllJvkVv4xvgVw=
-X-Google-Smtp-Source: ABdhPJy7yMjZm/pgzhWqnlGGL2d+icsnZ1DsKNpxfPp4ZGUoYRXqcEAt46z3bBDafimyox9wk6IsGg==
-X-Received: by 2002:a17:906:868d:: with SMTP id g13mr20116224ejx.242.1597047277275;
-        Mon, 10 Aug 2020 01:14:37 -0700 (PDT)
-Received: from ?IPv6:2a0b:e7c0:0:107::49? ([2a0b:e7c0:0:107::49])
-        by smtp.gmail.com with ESMTPSA id o14sm11923185edi.27.2020.08.10.01.14.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Aug 2020 01:14:36 -0700 (PDT)
-Subject: Re: [PATCH] tty/vt: fix a memory leak in con_insert_unipair
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        James Bond <jameslouisebond@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Michel Lespinasse <walken@google.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Denis Efremov <efremov@linux.com>,
-        linux-kernel@vger.kernel.org, Ben Hutchings <ben@decadent.org.uk>
-References: <20200809221453.10235-1-jameslouisebond@gmail.com>
- <dd4ac5db-9ae7-fbf7-535b-c0d3fa098942@kernel.org>
- <20200810075122.GA1531406@kroah.com>
-From:   Jiri Slaby <jirislaby@kernel.org>
-Message-ID: <08df63cd-c4b9-c16b-2e27-5d86580eebf2@kernel.org>
-Date:   Mon, 10 Aug 2020 10:14:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200810075122.GA1531406@kroah.com>
-Content-Type: text/plain; charset=iso-8859-2
+        Mon, 10 Aug 2020 04:15:53 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-197-nvd0HwJXOMeNqVEmqPMuVw-1; Mon, 10 Aug 2020 09:15:49 +0100
+X-MC-Unique: nvd0HwJXOMeNqVEmqPMuVw-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Mon, 10 Aug 2020 09:15:48 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Mon, 10 Aug 2020 09:15:48 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     "'luobin (L)'" <luobin9@huawei.com>,
+        Kees Cook <keescook@chromium.org>
+CC:     David Miller <davem@davemloft.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "luoxianjun@huawei.com" <luoxianjun@huawei.com>,
+        "yin.yinshi@huawei.com" <yin.yinshi@huawei.com>,
+        "cloud.wangxiaoyun@huawei.com" <cloud.wangxiaoyun@huawei.com>,
+        "chiqijun@huawei.com" <chiqijun@huawei.com>
+Subject: RE: [PATCH net-next v1] hinic: fix strncpy output truncated compile
+ warnings
+Thread-Topic: [PATCH net-next v1] hinic: fix strncpy output truncated compile
+ warnings
+Thread-Index: AQHWbF+/LM1G8mFmIkykQEWb0Xuu7aksYh5wgAK89iyAAeG0UA==
+Date:   Mon, 10 Aug 2020 08:15:48 +0000
+Message-ID: <fad888cb3cdc4a05b091bf22711479b0@AcuMS.aculab.com>
+References: <20200807020914.3123-1-luobin9@huawei.com>
+ <e7a4fcf12a4e4d179e2fae8ffb44f992@AcuMS.aculab.com>
+ <b886a6ff-8ed8-c857-f190-e99f8f735e02@huawei.com>
+ <20200807.204243.696618708291045170.davem@davemloft.net>
+ <202008072320.03879DAC@keescook>
+ <493cae67-6346-1a57-5cca-65a2b6d2aeba@huawei.com>
+In-Reply-To: <493cae67-6346-1a57-5cca-65a2b6d2aeba@huawei.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10. 08. 20, 9:51, Greg Kroah-Hartman wrote:
-> On Mon, Aug 10, 2020 at 07:16:48AM +0200, Jiri Slaby wrote:
->> On 10. 08. 20, 0:14, James Bond wrote:
->>> Syzkaller find a memory leak in con_insert_unipair:
->>>     BUG: memory leak
->>>     unreferenced object 0xffff88804893d100 (size 256):
->>>     comm "syz-executor.3", pid 16154, jiffies 4295043307 (age 2392.340s)
->>>     hex dump (first 32 bytes):
->>>     80 af 88 4e 80 88 ff ff 00 a8 88 4e 80 88 ff ff  ...N.......N....
->>>     80 ad 88 4e 80 88 ff ff 00 aa 88 4e 80 88 ff ff  ...N.......N....
->>>     backtrace:
->>>     [<00000000f76ff1de>] kmalloc include/linux/slab.h:555 [inline]
->>>     [<00000000f76ff1de>] kmalloc_array include/linux/slab.h:596 [inline]
->>>     [<00000000f76ff1de>] con_insert_unipair+0x9e/0x1a0 drivers/tty/vt/consolemap.c:482
->>>     [<000000002f1ad7da>] con_set_unimap+0x244/0x2a0 drivers/tty/vt/consolemap.c:595
->>>     [<0000000046ccb106>] do_unimap_ioctl drivers/tty/vt/vt_ioctl.c:297 [inline]
->>>     [<0000000046ccb106>] vt_ioctl+0x863/0x12f0 drivers/tty/vt/vt_ioctl.c:1018
->>>     [<00000000db1577ff>] tty_ioctl+0x4cd/0xa30 drivers/tty/tty_io.c:2656
->>>     [<00000000e5cdf5ed>] vfs_ioctl fs/ioctl.c:48 [inline]
->>>     [<00000000e5cdf5ed>] ksys_ioctl+0xa6/0xd0 fs/ioctl.c:753
->>>     [<00000000fb4aa12c>] __do_sys_ioctl fs/ioctl.c:762 [inline]
->>>     [<00000000fb4aa12c>] __se_sys_ioctl fs/ioctl.c:760 [inline]
->>>     [<00000000fb4aa12c>] __x64_sys_ioctl+0x1a/0x20 fs/ioctl.c:760
->>>     [<00000000f561f260>] do_syscall_64+0x4c/0xe0 arch/x86/entry/common.c:384
->>>     [<0000000056206928>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
->>>     BUG: leak checking failed
->>>
->>> To fix this issue, we need to release the pointer p1 when the call of
->>> the function kmalloc_array fail.
-...
->> Do we have some annotations for this instead?
-> 
-> We need something there, a comment saying "this is fine, don't touch
-> it!" or something like that?  We need that in a few other places in the
-> vt code as well.
+PiBUaGFua3MgZm9yIHlvdXIgZXhwbGFuYXRpb24gYW5kIHJldmlldy4gSSBoYXZlbid0IHJlYWxp
+emVkIHVzaW5nIHN0cm5jcHkoKSBvbiBOVUwtdGVybWluYXRlZCBzdHJpbmdzDQo+IGlzIGRlcHJl
+Y2F0ZWQNCj4gYW5kIGp1c3QgdHJ5aW5nIHRvIGF2b2lkIHRoZSBjb21waWxlIHdhcm5pbmdzLiBU
+aGUgd2Vic2l0ZSB5b3UgcHJvdmlkZSBoZWxwcyBtZSBhIGxvdC4gVGhhbmsgeW91IHZlcnkNCj4g
+bXVjaCENCg0KTmV2ZXIgdHJ5IHRvIHJlbW92ZSBjb21waWxlLXRpbWUgd2FybmluZ3Mgd2l0aG91
+dCB1bmRlcnN0YW5kaW5nDQp3aGF0ICB0aGUgY29kZSBpdCBkb2luZy4NCg0KVGhlIGJhc2ljIHBy
+b2JsZW0gaXMgdGhhdCBzdHJuY3B5KCkgYWxtb3N0IFsxXSBuZXZlciBkb2VzIHdoYXQgeW91IHdh
+bnQuDQpJdCByZWFsbHkgZXhwZWN0cyBpdCdzIGlucHV0IHN0cmluZyB0byBiZSAnXDAnIHRlcm1p
+bmF0ZWQgYnV0DQpkb2Vzbid0IGd1YXJhbnRlZSB0aGUgb3V0cHV0IHdpbGwgYmUsIGFuZCBhbHNv
+ICh0eXBpY2FsbHkpIHdhc3Rlcw0KY3B1IGN5Y2xlcyB6ZXJvIGZpbGxpbmcgdGhlIG91dHB1dCBi
+dWZmZXIuDQoNClNvbWVvbmUgdGhlbiBkZWZpbmVkIHN0cnNjcHkoKSBhcyBhbiBhbHRlcm5hdGl2
+ZSwgaXQgZ3VhcmFudGVlcw0KdG8gJ1wwJyB0aGUgb3V0cHV0IGFuZCBkb2Vzbid0IHplcm8gZmls
+bCAtIHdoaWNoIGNhbiBiZSBhbiBpc3N1ZS4NCkhvd2V2ZXIgc3Ryc2NweSgpIGhhcyBpdCdzIG93
+biBwcm9ibGVtcywgdGhlIHJldHVybiB2YWx1ZSBpcw0KZGVmaW5lZCB0byBiZSB0aGUgbGVuZ3Ro
+IG9mIHRoZSBpbnB1dCBzdHJpbmcgLSB3aGljaCBhYnNvbHV0ZWx5DQpyZXF1aXJlcyBpdCBiZSAn
+XDAnIHRlcm1pbmF0ZWQuIFdpdGggJ3Vua25vd24nIGlucHV0IHRoaXMgY2FuDQpwYWdlIGZhdWx0
+IQ0KDQpbMV0gVGhpcyBmcmFnbWVudCBsb29rZWQgd3JvbmcsIGJ1dCB3YXMgcmlnaHQhDQoJc3Ry
+bmNweShkZXN0LCBzcmMsIHNpemVvZiBzcmMpOw0KTmFpdmUgY29udmVyc2lvbiB0byByZW1vdmUg
+dGhlIHN0cm5jcHkoKSBicm9rZSBpdC4NCkluIGZhY3QgJ2Rlc3QnIHdhcyAxIGJ5dGUgbG9uZ2Vy
+IHRoYW4gJ3NyYycgYW5kIGFscmVhZHkNCnplcm8gZmlsbGVkLCAnc3JjJyBtaWdodCBub3QgaGF2
+ZSBiZWVuICdcMCcgdGVybWluYXRlZC4NCkl0IGlzIGFib3V0IHRoZSBvbmx5IHRpbWUgc3RybmNw
+eSgpIGlzIHdoYXQgeW91IHdhbnQhDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3Mg
+TGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQ
+VCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
 
-Sure, comment as the last resort (to silence patch writers). But I had
-some kmemleak annotation (to silence the warning) in mind.
-
-Or better fix/tune kmemleak: why it dares to think it's a mem leak in
-the first place?
-
-thanks,
--- 
-js
