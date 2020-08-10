@@ -2,52 +2,55 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6488C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:35:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AEFAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:36:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 844132078E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:35:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 305382078E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:36:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073757;
-	bh=VE657nM3zy/+C8d4MAdF14nfrfA9aHxutmuYfYCwHuk=;
+	s=default; t=1597073764;
+	bh=uxoQtPfN28/+cTLXSlYzNdbe8bpEfzHVnhTtZgL1ynI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rWFKg5b08FslDZIiogkeRtNZsbnsN8RHk6dioO377vhxlECh4yt5YSCFlXdFm3TJP
-	 vL9PsFhhpvGrI9is96yhxpVU88Hx9ilx2lKeYVFDppi2LLV0EBZQAqDDd/Jvnw5j8G
-	 LTI3XQb4i5TiAp05U5JwSt4aN0BkXUFMzaP2xU/c=
+	b=T9azSsyHIZ522fmmGvLgNd46ase6pBDKhAQ1nwjyOjJp8XmPVtFRT4yyo9eHexbKs
+	 mZF9O6YvrJzqAk4y8F6uBu5LwLPf/8r2f4wzh7VsQjqtAV3C9ehsfiE+rYrWUX1Qbp
+	 tqLGjrQOFTJVaJ3Q4zjjmI7HM5SaAkfXlMZA8LCg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729092AbgHJPff (ORCPT
+        id S1728763AbgHJP1e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:35:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34010 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:27:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728812AbgHJP17 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:27:59 -0400
+        id S1727821AbgHJP1a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:27:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1965222B47;
-        Mon, 10 Aug 2020 15:27:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FA9922B47;
+        Mon, 10 Aug 2020 15:27:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073278;
-        bh=VE657nM3zy/+C8d4MAdF14nfrfA9aHxutmuYfYCwHuk=;
+        s=default; t=1597073249;
+        bh=uxoQtPfN28/+cTLXSlYzNdbe8bpEfzHVnhTtZgL1ynI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AK+AEaoBexncMCz28XxUAhnqI8E6hle2solRwE+CW/VbKvzuBNC2QJosNkJvVsFNW
-         4Zl3DZkJO1wi5GwaG3RcgNqxcUd3yW1bPHSXjADbN6Gw4xjbhuu5kDTro8v/ZMfcXU
-         Ug/cSSSoGqDV3SVGN15Sp5smM1C5zrXxMJtkPJ9I=
+        b=0Rdtb8YBVrKmNhytRfhcQsj2SBVB7seghlbjWRSy7i4acMeJVuFytWi7X1lRVd9DN
+         aITWy45tw6v+wfMdCKhb/Y2gqfU9sKG1k6gFB+3qSbMQgXC3OE6WNC2SwhuO7PVmyK
+         gRAHStitklEAoj9XP7Vx5RG/c+LpungVdUGiDRWs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Erhard F." <erhard_f@mailbox.org>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.4 48/67] Revert "powerpc/kasan: Fix shadow pages allocation failure"
-Date:   Mon, 10 Aug 2020 17:21:35 +0200
-Message-Id: <20200810151811.836690507@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Ren=C3=A9=20van=20Dorst?= <opensource@vdorst.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 39/67] net: ethernet: mtk_eth_soc: Always call mtk_gmac0_rgmii_adjust() for mt7623
+Date:   Mon, 10 Aug 2020 17:21:26 +0200
+Message-Id: <20200810151811.364767874@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151809.438685785@linuxfoundation.org>
 References: <20200810151809.438685785@linuxfoundation.org>
@@ -60,79 +63,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
+From: René van Dorst <opensource@vdorst.com>
 
-commit b506923ee44ae87fc9f4de16b53feb313623e146 upstream.
+[ Upstream commit 19016d93bfc335f0c158c0d9e3b9d06c4dd53d39 ]
 
-This reverts commit d2a91cef9bbdeb87b7449fdab1a6be6000930210.
+Modify mtk_gmac0_rgmii_adjust() so it can always be called.
+mtk_gmac0_rgmii_adjust() sets-up the TRGMII clocks.
 
-This commit moved too much work in kasan_init(). The allocation
-of shadow pages has to be moved for the reason explained in that
-patch, but the allocation of page tables still need to be done
-before switching to the final hash table.
-
-First revert the incorrect commit, following patch redoes it
-properly.
-
-Fixes: d2a91cef9bbd ("powerpc/kasan: Fix shadow pages allocation failure")
-Cc: stable@vger.kernel.org
-Reported-by: Erhard F. <erhard_f@mailbox.org>
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=208181
-Link: https://lore.kernel.org/r/3667deb0911affbf999b99f87c31c77d5e870cd2.1593690707.git.christophe.leroy@csgroup.eu
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: René van Dorst <opensource@vdorst.com>
+Signed-off-By: David Woodhouse <dwmw2@infradead.org>
+Tested-by: Frank Wunderlich <frank-w@public-files.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/include/asm/kasan.h      |    2 ++
- arch/powerpc/mm/init_32.c             |    2 ++
- arch/powerpc/mm/kasan/kasan_init_32.c |    4 +---
- 3 files changed, 5 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/mediatek/mtk_eth_soc.c | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
 
---- a/arch/powerpc/include/asm/kasan.h
-+++ b/arch/powerpc/include/asm/kasan.h
-@@ -27,9 +27,11 @@
- 
- #ifdef CONFIG_KASAN
- void kasan_early_init(void);
-+void kasan_mmu_init(void);
- void kasan_init(void);
- #else
- static inline void kasan_init(void) { }
-+static inline void kasan_mmu_init(void) { }
- #endif
- 
- #endif /* __ASSEMBLY */
---- a/arch/powerpc/mm/init_32.c
-+++ b/arch/powerpc/mm/init_32.c
-@@ -175,6 +175,8 @@ void __init MMU_init(void)
- 	btext_unmap();
- #endif
- 
-+	kasan_mmu_init();
-+
- 	setup_kup();
- 
- 	/* Shortly after that, the entire linear mapping will be available */
---- a/arch/powerpc/mm/kasan/kasan_init_32.c
-+++ b/arch/powerpc/mm/kasan/kasan_init_32.c
-@@ -129,7 +129,7 @@ static void __init kasan_remap_early_sha
- 	flush_tlb_kernel_range(KASAN_SHADOW_START, KASAN_SHADOW_END);
+diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+index 997dc811382a4..be390c7e43b2f 100644
+--- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
++++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+@@ -171,11 +171,21 @@ static int mt7621_gmac0_rgmii_adjust(struct mtk_eth *eth,
+ 	return 0;
  }
  
--static void __init kasan_mmu_init(void)
-+void __init kasan_mmu_init(void)
+-static void mtk_gmac0_rgmii_adjust(struct mtk_eth *eth, int speed)
++static void mtk_gmac0_rgmii_adjust(struct mtk_eth *eth,
++				   phy_interface_t interface, int speed)
  {
+ 	u32 val;
  	int ret;
- 	struct memblock_region *reg;
-@@ -156,8 +156,6 @@ static void __init kasan_mmu_init(void)
  
- void __init kasan_init(void)
- {
--	kasan_mmu_init();
--
- 	kasan_remap_early_shadow_ro();
++	if (interface == PHY_INTERFACE_MODE_TRGMII) {
++		mtk_w32(eth, TRGMII_MODE, INTF_MODE);
++		val = 500000000;
++		ret = clk_set_rate(eth->clks[MTK_CLK_TRGPLL], val);
++		if (ret)
++			dev_err(eth->dev, "Failed to set trgmii pll: %d\n", ret);
++		return;
++	}
++
+ 	val = (speed == SPEED_1000) ?
+ 		INTF_MODE_RGMII_1000 : INTF_MODE_RGMII_10_100;
+ 	mtk_w32(eth, val, INTF_MODE);
+@@ -262,10 +272,9 @@ static void mtk_mac_config(struct phylink_config *config, unsigned int mode,
+ 							      state->interface))
+ 					goto err_phy;
+ 			} else {
+-				if (state->interface !=
+-				    PHY_INTERFACE_MODE_TRGMII)
+-					mtk_gmac0_rgmii_adjust(mac->hw,
+-							       state->speed);
++				mtk_gmac0_rgmii_adjust(mac->hw,
++						       state->interface,
++						       state->speed);
  
- 	clear_page(kasan_early_shadow_page);
+ 				/* mt7623_pad_clk_setup */
+ 				for (i = 0 ; i < NUM_TRGMII_CTRL; i++)
+-- 
+2.25.1
+
 
 
