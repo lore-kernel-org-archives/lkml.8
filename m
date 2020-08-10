@@ -2,180 +2,100 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE503C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 20:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2014C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 20:21:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8766720658
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 20:20:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597090819;
-	bh=zStD0Ma2sox2ds2PXG9lXBJ/Wp5K8aGvyuFrZzMWEnQ=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=JUhAQbBrzlCN7KVEtHc5gbphyCXEAl6EfJnZlLOl4ivIWeEBbyyZCc9+Srxu1jUvj
-	 DeYdbcrYHiGyuEll8f+WIn8GrKuRqwfsvq5qBiJS5yKlnLzR9UGzarafJ+CcHQKNY/
-	 sufX7b1S/2SE1fmcmRHsQsttjqKeBFR5fVYMRNv0=
+	by mail.kernel.org (Postfix) with ESMTP id 84C9620656
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 20:21:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A1rXdbYy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbgHJUUS (ORCPT
+        id S1726634AbgHJUVN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 16:20:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57624 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726143AbgHJUUR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 16:20:17 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF2B220656;
-        Mon, 10 Aug 2020 20:20:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597090815;
-        bh=zStD0Ma2sox2ds2PXG9lXBJ/Wp5K8aGvyuFrZzMWEnQ=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=NZP11AXPrUr/9gAkM2DS8ENG7N6YCK+aIJqT9mQ4UkTQKHnkkeaCNZ2gPO07OOWKS
-         PX9Ur1Ep/LCWu06Ce0yw/VF+gRnjOgjOfL4pQlqQj4yJ7OFvX5kzldTCFY09SkR83M
-         senAaW1lpoSWhJmjaShzPXXxtm+V5k+74YBfH/xU=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 6BE8335228C7; Mon, 10 Aug 2020 13:20:15 -0700 (PDT)
-Date:   Mon, 10 Aug 2020 13:20:15 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Neeraj Upadhyay <neeraju@codeaurora.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        linux-doc@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        peterz@infradead.org, Randy Dunlap <rdunlap@infradead.org>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        tglx@linutronix.de, vineethrp@gmail.com
-Subject: Re: [PATCH v4 1/5] rcu/tree: Add a warning if CPU being onlined did
- not report QS already
-Message-ID: <20200810202015.GO4295@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200807170722.2897328-1-joel@joelfernandes.org>
- <20200807170722.2897328-2-joel@joelfernandes.org>
- <20200810154654.GJ4295@paulmck-ThinkPad-P72>
- <20200810173931.GB2253395@google.com>
- <20200810175717.GM4295@paulmck-ThinkPad-P72>
- <20200810192554.GD2865655@google.com>
+        Mon, 10 Aug 2020 16:21:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52910 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726143AbgHJUVM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 16:21:12 -0400
+Received: from mail-lj1-x22d.google.com (mail-lj1-x22d.google.com [IPv6:2a00:1450:4864:20::22d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 655F5C061756
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 13:21:12 -0700 (PDT)
+Received: by mail-lj1-x22d.google.com with SMTP id t6so11040188ljk.9
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 13:21:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=c6pBI5MxnpEnuKghhV5aUeX0ikCMORE+D9KtpC4PopE=;
+        b=A1rXdbYy1kXnW/tuHp39B8KffjUxifEmL9Qu6yjTyt6goBHyod8D0PlStOGnhPUVyo
+         tdtP2tJuZfX87pflPW51ULFOYWEK7s7Hw6KaPPzrilRkge9mNUan12XJQulg/xM3TND+
+         6r11y7ISHDPFn4rYeCD++ekNXS2yq+fGhn5V2UEW91FsjvOJUgLmXrqLbz1M3bMViyQy
+         qnWrl4rLOV7FrKFEJmOwyHtL4aPqnOgbF/s9DNoLEr0CwxkMO0qg0Z4k5/+aWUsMN6z9
+         911wvcQtKqWmP9NC0pVVqE2sA2PdeSZ0xD7IHBOFPTJu/5dQFmyxpoLVQ9a3xqyNwu9u
+         Fz6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=c6pBI5MxnpEnuKghhV5aUeX0ikCMORE+D9KtpC4PopE=;
+        b=iMTUsRPoV0qYlA2dwkNHwbxryxsDsRHabNsKIWywSDd4MTGRAUlvoVjJlwyWlR22k0
+         4cNTaJAoXjvZ9vk0cPZ8J3vnMKUKPleiFjycjRazFY2S3bWITmlyrZjMi7W74MF+Pmnh
+         L0jvJ8pgfrJgnx87va154nTw+CAknE4VoP5g5swf43MlHhg4eXiEbyUKv8whFT8Evh62
+         y/ExLlUnpNzEtft6gpB2JoV66H3vBZt4s+nh+LUx/HgjGAdmj5mzqR1T6aVQc8+RKkJs
+         1pN4NftzzF6Nek8G3Pm2bX9xxLkd67XEFlSyciKVnXOBbYhXGMfLQALqGaUhFE9OKNF6
+         Wfpg==
+X-Gm-Message-State: AOAM533E3HR5sNzXr6FkzSpg9C8scRs6fG45Kj5MDgEdrCSgDVj2mKK4
+        UE8ACLURgmcZll7OsFVIhn7MhHUG
+X-Google-Smtp-Source: ABdhPJz1tYB1BL/08O4TtcbTxN7dvYB5B5s0KlZy+GCj64qNYoBaOcFO4h5Tk9svhqOODSSiuZ7+mg==
+X-Received: by 2002:a2e:b056:: with SMTP id d22mr1336821ljl.248.1597090869388;
+        Mon, 10 Aug 2020 13:21:09 -0700 (PDT)
+Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.googlemail.com with ESMTPSA id a24sm8230066lji.36.2020.08.10.13.21.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Aug 2020 13:21:08 -0700 (PDT)
+Subject: Re: regulator: deadlock vs memory reclaim
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org
+References: <cover.1597089543.git.mirq-linux@rere.qmqm.pl>
+ <9a5c8ca6-2027-4d89-e290-6db564b99962@gmail.com>
+ <20200810201846.GA12091@qmqm.qmqm.pl>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <d9c3f307-e124-ea5e-c036-71138f9232f4@gmail.com>
+Date:   Mon, 10 Aug 2020 23:21:08 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200810192554.GD2865655@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200810201846.GA12091@qmqm.qmqm.pl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 03:25:54PM -0400, Joel Fernandes wrote:
-> On Mon, Aug 10, 2020 at 10:57:17AM -0700, Paul E. McKenney wrote:
-> > On Mon, Aug 10, 2020 at 01:39:31PM -0400, Joel Fernandes wrote:
-> > > On Mon, Aug 10, 2020 at 08:46:54AM -0700, Paul E. McKenney wrote:
-> > > > On Fri, Aug 07, 2020 at 01:07:18PM -0400, Joel Fernandes (Google) wrote:
-> > > > > Currently, rcu_cpu_starting() checks to see if the RCU core expects a
-> > > > > quiescent state from the incoming CPU.  However, the current interaction
-> > > > > between RCU quiescent-state reporting and CPU-hotplug operations should
-> > > > > mean that the incoming CPU never needs to report a quiescent state.
-> > > > > First, the outgoing CPU reports a quiescent state if needed.  Second,
-> > > > > the race where the CPU is leaving just as RCU is initializing a new
-> > > > > grace period is handled by an explicit check for this condition.  Third,
-> > > > > the CPU's leaf rcu_node structure's ->lock serializes these checks.
-> > > > > 
-> > > > > This means that if rcu_cpu_starting() ever feels the need to report
-> > > > > a quiescent state, then there is a bug somewhere in the CPU hotplug
-> > > > > code or the RCU grace-period handling code.  This commit therefore
-> > > > > adds a WARN_ON_ONCE() to bring that bug to everyone's attention.
-> > > > > 
-> > > > > Cc: Paul E. McKenney <paulmck@kernel.org>
-> > > > > Cc: Neeraj Upadhyay <neeraju@codeaurora.org>
-> > > > > Suggested-by: Paul E. McKenney <paulmck@kernel.org>
-> > > > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > > > > ---
-> > > > >  kernel/rcu/tree.c | 9 ++++++++-
-> > > > >  1 file changed, 8 insertions(+), 1 deletion(-)
-> > > > > 
-> > > > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > > > > index 65e1b5e92319..a49fa3b60faa 100644
-> > > > > --- a/kernel/rcu/tree.c
-> > > > > +++ b/kernel/rcu/tree.c
-> > > > > @@ -3996,7 +3996,14 @@ void rcu_cpu_starting(unsigned int cpu)
-> > > > >  	rcu_gpnum_ovf(rnp, rdp); /* Offline-induced counter wrap? */
-> > > > >  	rdp->rcu_onl_gp_seq = READ_ONCE(rcu_state.gp_seq);
-> > > > >  	rdp->rcu_onl_gp_flags = READ_ONCE(rcu_state.gp_flags);
-> > > > > -	if (rnp->qsmask & mask) { /* RCU waiting on incoming CPU? */
-> > > > > +
-> > > > > +	/*
-> > > > > +	 * XXX: The following rcu_report_qs_rnp() is redundant. If the below
-> > > > > +	 * warning does not fire, consider replacing it with the "else" block,
-> > > > > +	 * by June 2021 or so (while keeping the warning). Refer to RCU's
-> > > > > +	 * Requirements documentation for the rationale.
-> > > > 
-> > > > Let's suppose that this change is made, and further that in a year or
-> > > > two the "if" statement below is replaced with its "else" block.
-> > > > 
-> > > > Now let's suppose that (some years after that) a hard-to-trigger bug
-> > > > makes its way into RCU's CPU-hotplug code that would have resulted in
-> > > > the WARN_ON_ONCE() triggering, but that this bug turns out to be not so
-> > > > hard to trigger in certain large production environments.
-> > > > 
-> > > > Let's suppose further that you have moved on to where you are responsible
-> > > > for one of these large production environments.  How would this
-> > > > hypothetical RCU/CPU-hotplug bug manifest?
-> > > 
-> > > It could manifest as an RCU stall (after the warning triggers) since RCU
-> > > would wait forever.
-> > > 
-> > > Were you thinking it is not worth doing this? I thought we wanted to remove
-> > > the reundant rcu_report_qs_rnp here to solidify everyone's understanding of
-> > > the code and fail early if there's something misunderstood (since such
-> > > misunderstanding could mean there are other hidden bugs somewhere). The
-> > > counter-argument to that being, making the code robust is more important for
-> > > the large production failure scenario where failures are costly.
-> > 
-> > The benefits of removing code that is in theory redundant was my thought
-> > at one point, but sleeping on this several times since has made me much
-> > less favorable to this change.  And perhaps my experiences with my new
-> > employer have affected my views on this as well.  You never know!  ;-)
+10.08.2020 23:18, Michał Mirosław пишет:
+> On Mon, Aug 10, 2020 at 11:15:28PM +0300, Dmitry Osipenko wrote:
+>> 10.08.2020 23:09, Michał Mirosław пишет:
+>>> At first I also thought so, but there's more. Below is a lockdep
+>>> complaint with your patch applied. I did a similar patch and then two more
+>>> (following) and that is still not enough (sysfs/debugfs do allocations,
+>>> too).
+>> Then it should be good to move the locking for init_coupling() like I
+>> suggested and use GFP_NOWAIT for the two other cases. It all could be a
+>> single small patch. Could you please check whether GFP_NOWAIT helps?
 > 
-> Can we just keep the warning then, and delete the comments to revisit?
-> 
-> IMHO a comment saying this rcu_report_qs_rnp() is not necessary here but is
-> done anyway, would be quite useful to a code reader, (with appropriate
-> comments to point to RCU requirements section and the added warning) :-)
+> This would be equivalent to my patches. Problem with sysfs and debugfs
+> remains as they don't have the option of GFP_NOWAIT. This needs to be
+> moved outside of the locks.
 
-Agreed, the warning does make sense.
-
-							Thanx, Paul
-
-> thanks,
-> 
->  - Joel
-> 
-> > 
-> > 							Thanx, Paul
-> > 
-> > > thanks,
-> > > 
-> > >  - Joel
-> > > 
-> > > 
-> > > > 							Thanx, Paul
-> > > > 
-> > > > > +	 */
-> > > > > +	if (WARN_ON_ONCE(rnp->qsmask & mask)) { /* RCU waiting on incoming CPU? */
-> > > > >  		rcu_disable_urgency_upon_qs(rdp);
-> > > > >  		/* Report QS -after- changing ->qsmaskinitnext! */
-> > > > >  		rcu_report_qs_rnp(mask, rnp, rnp->gp_seq, flags);
-> > > > > -- 
-> > > > > 2.28.0.236.gb10cc79966-goog
-> > > > > 
+Ah okay, you meant the debugfs core. I see now, thanks.
