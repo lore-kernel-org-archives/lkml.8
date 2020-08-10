@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B33AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27651C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:22:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D44820656
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:22:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6A7720782
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:22:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597072952;
-	bh=hBv+4okY+0hf3Z7WylDYYaK3Po0ZNDGgpxry0OId4UI=;
+	s=default; t=1597072956;
+	bh=Hns2620sbqqNyni5Z9lVnZ2JRNc+J2QgzHh2lcjrtjM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IJkROs9xnV4pMt0Q6ZkNtnOZ5mhBnZWuxfgnooTRLjEGHmQPMnsre3aYFaxIVJ/qB
-	 u6MOsWMEM15HKeyUw8q6ypz1LlGR4ma9SY1Q2ZeW75G2wkSaxss+BdF/48uRoGNWDp
-	 fNiQG75qqrbcWHv41W8KLCj1d7KRwHp0kVxX/i8g=
+	b=NyZBB/ndq4cbTgu4reBPq8Wqt9RkajMU7xnq8kIu4jRtBb1IJ+ZD+gdqcIFpFacxz
+	 PIsICCcPOkoCuic8WJ1vD0EeaCMx3xV306nkBdXBym7vwf9HhdsKRpBsNUQ4j2PwyR
+	 Fchh+nESjZYMBM8S9ZZvI5+dZDl3bGRqqiy2tLpU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728211AbgHJPWb (ORCPT
+        id S1728219AbgHJPWe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:22:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53262 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:22:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727841AbgHJPW2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:22:28 -0400
+        id S1728209AbgHJPWa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:22:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8ED0820656;
-        Mon, 10 Aug 2020 15:22:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FE4F2075D;
+        Mon, 10 Aug 2020 15:22:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597072948;
-        bh=hBv+4okY+0hf3Z7WylDYYaK3Po0ZNDGgpxry0OId4UI=;
+        s=default; t=1597072950;
+        bh=Hns2620sbqqNyni5Z9lVnZ2JRNc+J2QgzHh2lcjrtjM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hHthycf28azbwSyXDPL41uZbvymEXFFQTZHTiqwNCAyJ91t1ae7tjoxB0vcRx8hIV
-         qJuCIsV/lDg6DwZWKg0pYkZ56NA8sIgnuPQqyNanCRIPnlGUclhugBH7sbQXN6m9mu
-         HSpQiEVZjP3vgX7IqtBHxVIIN5Mwg/avR109sQRY=
+        b=ZaRw9q49F5xgj9RMOMQJryJjzTYD5YDAZq++80z9gi1/vPLNfsOTH10a++d6xqB3L
+         Eq1QK1+vJz0z2gJnrSxw9bj+w93qQO+yZ7vFJFJjD0oLbGuAgrYHR8u6L6c96HOY0G
+         Nv6AWA9O0DfJWdCvM+bqYybY5WX6ECRLUIZI+soE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Dinghao Liu <dinghao.liu@zju.edu.cn>
-Subject: [PATCH 5.7 14/79] Staging: rtl8188eu: rtw_mlme: Fix uninitialized variable authmode
-Date:   Mon, 10 Aug 2020 17:20:33 +0200
-Message-Id: <20200810151812.824675593@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+d8489a79b781849b9c46@syzkaller.appspotmail.com,
+        Peilin Ye <yepeilin.cs@gmail.com>,
+        Marcel Holtmann <marcel@holtmann.org>
+Subject: [PATCH 5.7 15/79] Bluetooth: Fix slab-out-of-bounds read in hci_extended_inquiry_result_evt()
+Date:   Mon, 10 Aug 2020 17:20:34 +0200
+Message-Id: <20200810151812.874601147@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151812.114485777@linuxfoundation.org>
 References: <20200810151812.114485777@linuxfoundation.org>
@@ -59,41 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dinghao Liu <dinghao.liu@zju.edu.cn>
+From: Peilin Ye <yepeilin.cs@gmail.com>
 
-commit 11536442a3b4e1de6890ea5e805908debb74f94a upstream.
+commit 51c19bf3d5cfaa66571e4b88ba2a6f6295311101 upstream.
 
-The variable authmode can be uninitialized. The danger would be if
-it equals to _WPA_IE_ID_ (0xdd) or _WPA2_IE_ID_ (0x33). We can avoid
-this by setting it to zero instead. This is the approach that was
-used in the rtl8723bs driver.
+Check upon `num_rsp` is insufficient. A malformed event packet with a
+large `num_rsp` number makes hci_extended_inquiry_result_evt() go out
+of bounds. Fix it.
 
-Fixes: 7b464c9fa5cc ("staging: r8188eu: Add files for new driver - part 4")
-Co-developed-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200728072153.9202-1-dinghao.liu@zju.edu.cn
+This patch fixes the following syzbot bug:
+
+    https://syzkaller.appspot.com/bug?id=4bf11aa05c4ca51ce0df86e500fce486552dc8d2
+
+Reported-by: syzbot+d8489a79b781849b9c46@syzkaller.appspotmail.com
+Cc: stable@vger.kernel.org
+Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/rtl8188eu/core/rtw_mlme.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ net/bluetooth/hci_event.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/staging/rtl8188eu/core/rtw_mlme.c
-+++ b/drivers/staging/rtl8188eu/core/rtw_mlme.c
-@@ -1729,9 +1729,11 @@ int rtw_restruct_sec_ie(struct adapter *
- 	if ((ndisauthmode == Ndis802_11AuthModeWPA) ||
- 	    (ndisauthmode == Ndis802_11AuthModeWPAPSK))
- 		authmode = _WPA_IE_ID_;
--	if ((ndisauthmode == Ndis802_11AuthModeWPA2) ||
-+	else if ((ndisauthmode == Ndis802_11AuthModeWPA2) ||
- 	    (ndisauthmode == Ndis802_11AuthModeWPA2PSK))
- 		authmode = _WPA2_IE_ID_;
-+	else
-+		authmode = 0x0;
+--- a/net/bluetooth/hci_event.c
++++ b/net/bluetooth/hci_event.c
+@@ -4346,7 +4346,7 @@ static void hci_extended_inquiry_result_
  
- 	if (check_fwstate(pmlmepriv, WIFI_UNDER_WPS)) {
- 		memcpy(out_ie + ielength, psecuritypriv->wps_ie, psecuritypriv->wps_ie_len);
+ 	BT_DBG("%s num_rsp %d", hdev->name, num_rsp);
+ 
+-	if (!num_rsp)
++	if (!num_rsp || skb->len < num_rsp * sizeof(*info) + 1)
+ 		return;
+ 
+ 	if (hci_dev_test_flag(hdev, HCI_PERIODIC_INQ))
 
 
