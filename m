@@ -2,170 +2,134 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3C4FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:54:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9B64C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:54:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE100206B5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:54:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0FC2206B5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:54:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TOqxMiqr";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="seX6A356"
+	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="ji1CLJdb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726705AbgHJJyd (ORCPT
+        id S1726827AbgHJJym (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 05:54:33 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:50114 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725809AbgHJJyd (ORCPT
+        Mon, 10 Aug 2020 05:54:42 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:40361 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725809AbgHJJyi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 05:54:33 -0400
-From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597053270;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=OwTf2rcMfOzqkyJabkT5LAdFYDC9N6p5znlTc4VlJfo=;
-        b=TOqxMiqrdBOYvVJCtkD1vuf1GzOtVkMyfS9IjcH1oFq8FD7mTb8YdAQPgwsOLjg6tIk0eQ
-        gzyISfEYnO4ZlpOuWVoH4WKQyP6XGoqKq/YqoqsH0NLsPVi4NgkqZS1HKTuFZxTSRcgqzy
-        8ZPLeGb0g4OGd4GmEbPO9qJ9MEDGWI2MfWsHUwky0tuHd1BeRHlVlvyTri/J3fb/4WB1qd
-        ZdoS851886IFzE7mcRRFBZqX/gczYIeN7cGYtj5v8B0Wp4NxnBfHiQAt6UdweByaUWtvCY
-        lbOH6CLRgiDWa4h6VmfvvXF/TmSKvM61zWdNOTNK652+11ZVI8Wc04jSEISHRw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597053270;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=OwTf2rcMfOzqkyJabkT5LAdFYDC9N6p5znlTc4VlJfo=;
-        b=seX6A356Ojp1aDK+1HrbrYb+bpzAH8XIC2z/ZK1v4vA5qBw96z/S27tPrEODaCksMDwSpr
-        0urQ3T89eHokGSDg==
-To:     gregkh@linuxfoundation.org
-Cc:     a.darwish@linutronix.de, bigeasy@linutronix.de,
-        linux-kernel@vger.kernel.org, linux@roeck-us.net, mingo@redhat.com,
-        paulmck@kernel.org, peterz@infradead.org, rostedt@goodmis.org,
-        tglx@linutronix.de, will@kernel.org
-Subject: [PATCH] Revert "seqlock: lockdep assert non-preemptibility on seqcount_t write"
-Date:   Mon, 10 Aug 2020 11:54:28 +0200
-Message-Id: <20200810095428.2602276-1-a.darwish@linutronix.de>
-In-Reply-To: <20200810085954.GA1591892@kroah.com>
-References: <20200810085954.GA1591892@kroah.com>
+        Mon, 10 Aug 2020 05:54:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
+  t=1597053279; x=1628589279;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=8aroeKp+TU0h9KbgQNdJ0GlbSrv/KIjPx49wzwoNgdY=;
+  b=ji1CLJdbfca7/lbvfrDGxIlsK0jhjFtjc6eYhya2SDWRuIpj+G3WjLzz
+   /LXlEbvuHhv87xAZ3cf4PRMa9sh4DU1O1I2AkiEr9JRSGG0kAPGIC8WZD
+   CwSmxGPIkNS2adTqCqCH6XWeTNh74R6DPnAJHQVmWiE0l/F5WcQ+r4s1j
+   s=;
+IronPort-SDR: 6jHd86C88g8LHIGDVrhLjCMXAO1W3rp71sqL2wpipWlBI0Buwu/tC04mxFQxhB7seKMpQSucxe
+ sgL+Q1oyUorQ==
+X-IronPort-AV: E=Sophos;i="5.75,457,1589241600"; 
+   d="scan'208";a="58615007"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-81e76b79.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 10 Aug 2020 09:54:36 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2b-81e76b79.us-west-2.amazon.com (Postfix) with ESMTPS id 1B171A1C89;
+        Mon, 10 Aug 2020 09:54:35 +0000 (UTC)
+Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 10 Aug 2020 09:54:34 +0000
+Received: from 38f9d3867b82.ant.amazon.com (10.43.161.71) by
+ EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 10 Aug 2020 09:54:29 +0000
+Subject: Re: [PATCH v6 11/18] nitro_enclaves: Add logic for setting an enclave
+ memory region
+To:     Andra Paraschiv <andraprs@amazon.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+CC:     Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        "David Duncan" <davdunc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        "David Woodhouse" <dwmw@amazon.co.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Karen Noel <knoel@redhat.com>,
+        "Martin Pohlack" <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Stewart Smith <trawets@amazon.com>,
+        Uwe Dannowski <uwed@amazon.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        kvm <kvm@vger.kernel.org>,
+        ne-devel-upstream <ne-devel-upstream@amazon.com>
+References: <20200805091017.86203-1-andraprs@amazon.com>
+ <20200805091017.86203-12-andraprs@amazon.com>
+From:   Alexander Graf <graf@amazon.de>
+Message-ID: <76b87d46-88b6-4c00-4ac7-27e5be020a57@amazon.de>
+Date:   Mon, 10 Aug 2020 11:54:27 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200805091017.86203-12-andraprs@amazon.com>
+Content-Language: en-US
+X-Originating-IP: [10.43.161.71]
+X-ClientProxiedBy: EX13d09UWC004.ant.amazon.com (10.43.162.114) To
+ EX13D20UWC001.ant.amazon.com (10.43.162.244)
+Content-Type: text/plain; charset="windows-1252"; format="flowed"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit 859247d39fb008ea812e8f0c398a58a20c12899e.
 
-Current implementation of lockdep_assert_preemption_disabled() uses
-per-CPU variables, which was done to untangle the existing
-seqlock.h<=>sched.h 'current->' task_struct circular dependency.
 
-Using per-CPU variables did not fully untangle the dependency for
-various non-x86 architectures though, resulting in multiple broken
-builds. For the affected architectures, raw_smp_processor_id() led
-back to 'current->', thus having the original seqlock.h<=>sched.h
-dependency in full-effect.
+On 05.08.20 11:10, Andra Paraschiv wrote:
+> Another resource that is being set for an enclave is memory. User space
+> memory regions, that need to be backed by contiguous memory regions,
+> are associated with the enclave.
+> =
 
-For now, revert adding lockdep_assert_preemption_disabled() to
-seqlock.h.
+> One solution for allocating / reserving contiguous memory regions, that
+> is used for integration, is hugetlbfs. The user space process that is
+> associated with the enclave passes to the driver these memory regions.
+> =
 
-Reported-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lkml.kernel.org/r/20200808232122.GA176509@roeck-us.net
-Link: https://lkml.kernel.org/r/20200810085954.GA1591892@kroah.com
-References: Commit a21ee6055c30 ("lockdep: Change hardirq{s_enabled,_context} to per-cpu variables")
-Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
----
+> The enclave memory regions need to be from the same NUMA node as the
+> enclave CPUs.
+> =
 
-Notes:
-    My apologies for the mess on this one :-(
+> Add ioctl command logic for setting user space memory region for an
+> enclave.
+> =
 
- include/linux/seqlock.h | 29 ++++++-----------------------
- 1 file changed, 6 insertions(+), 23 deletions(-)
+> Signed-off-by: Alexandru Vasile <lexnv@amazon.com>
+> Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
 
-diff --git a/include/linux/seqlock.h b/include/linux/seqlock.h
-index 54bc20496392..e885702d8b82 100644
---- a/include/linux/seqlock.h
-+++ b/include/linux/seqlock.h
-@@ -266,12 +266,6 @@ static inline void raw_write_seqcount_end(seqcount_t *s)
- 	kcsan_nestable_atomic_end();
- }
- 
--static inline void __write_seqcount_begin_nested(seqcount_t *s, int subclass)
--{
--	raw_write_seqcount_begin(s);
--	seqcount_acquire(&s->dep_map, subclass, 0, _RET_IP_);
--}
--
- /**
-  * write_seqcount_begin_nested() - start a seqcount_t write section with
-  *                                 custom lockdep nesting level
-@@ -282,19 +276,8 @@ static inline void __write_seqcount_begin_nested(seqcount_t *s, int subclass)
-  */
- static inline void write_seqcount_begin_nested(seqcount_t *s, int subclass)
- {
--	lockdep_assert_preemption_disabled();
--	__write_seqcount_begin_nested(s, subclass);
--}
--
--/*
-- * A write_seqcount_begin() variant w/o lockdep non-preemptibility checks.
-- *
-- * Use for internal seqlock.h code where it's known that preemption is
-- * already disabled. For example, seqlock_t write side functions.
-- */
--static inline void __write_seqcount_begin(seqcount_t *s)
--{
--	__write_seqcount_begin_nested(s, 0);
-+	raw_write_seqcount_begin(s);
-+	seqcount_acquire(&s->dep_map, subclass, 0, _RET_IP_);
- }
- 
- /**
-@@ -592,7 +575,7 @@ static inline unsigned read_seqretry(const seqlock_t *sl, unsigned start)
- static inline void write_seqlock(seqlock_t *sl)
- {
- 	spin_lock(&sl->lock);
--	__write_seqcount_begin(&sl->seqcount);
-+	write_seqcount_begin(&sl->seqcount);
- }
- 
- /**
-@@ -618,7 +601,7 @@ static inline void write_sequnlock(seqlock_t *sl)
- static inline void write_seqlock_bh(seqlock_t *sl)
- {
- 	spin_lock_bh(&sl->lock);
--	__write_seqcount_begin(&sl->seqcount);
-+	write_seqcount_begin(&sl->seqcount);
- }
- 
- /**
-@@ -645,7 +628,7 @@ static inline void write_sequnlock_bh(seqlock_t *sl)
- static inline void write_seqlock_irq(seqlock_t *sl)
- {
- 	spin_lock_irq(&sl->lock);
--	__write_seqcount_begin(&sl->seqcount);
-+	write_seqcount_begin(&sl->seqcount);
- }
- 
- /**
-@@ -666,7 +649,7 @@ static inline unsigned long __write_seqlock_irqsave(seqlock_t *sl)
- 	unsigned long flags;
- 
- 	spin_lock_irqsave(&sl->lock, flags);
--	__write_seqcount_begin(&sl->seqcount);
-+	write_seqcount_begin(&sl->seqcount);
- 	return flags;
- }
- 
--- 
-2.28.0
+Reviewed-by: Alexander Graf <graf@amazon.com>
+
+
+Alex
+
+
+
+Amazon Development Center Germany GmbH
+Krausenstr. 38
+10117 Berlin
+Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
+Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
+Sitz: Berlin
+Ust-ID: DE 289 237 879
+
+
 
