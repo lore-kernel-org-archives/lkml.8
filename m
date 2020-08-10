@@ -2,162 +2,94 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F39C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 20:37:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50BB7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 20:37:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59C9A20658
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 20:37:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F85020658
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 20:37:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eM4E+WeB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726726AbgHJUhT (ORCPT
+        id S1726756AbgHJUho (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 16:37:19 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:47592 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726501AbgHJUhS (ORCPT
+        Mon, 10 Aug 2020 16:37:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55454 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726578AbgHJUho (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 16:37:18 -0400
-Received: by mail-il1-f197.google.com with SMTP id e12so8763949ile.14
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 13:37:17 -0700 (PDT)
+        Mon, 10 Aug 2020 16:37:44 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 378D4C061756
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 13:37:44 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id t6so5604944pgq.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 13:37:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dRuWkhrpmAmcdHS/RSpOjVe+mnrE0qLuVyBAgROKiXA=;
+        b=eM4E+WeBerf5fSAzchaYTrGpGpDKQKDWHN6PAYU+UFvSjnPMdqlztCS1sdBJCbZbWy
+         UxMV3gEQACxBIwho9amuG2UQjwcNFmTfXQoaKvF6hGkTEBhXO35Q+VqVummT6bz8Gz/c
+         FWMekgdrOooXKBIgHiHsozjnXgasmXw+Xd8lwlXgTHNqNEHFwBwE4Cbt0bsFKMPj1Cq6
+         N0tKFCuewUeu+B51Rh+9kV2BUOGmRBUr1g21GA2SvhBfoj8mSgk4DA5Fjiq/eDBRLF2c
+         xoN9JVf4ZYQP7FNUjISyxFVWIU8FU7g9dBC1NkEs6HSX/En2QXv5Zmzp43NO7Tm8lmXc
+         GlCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=jS1QhIpDWAybN3/rlAubKTo0kERuNQcJeBNxwDNaJb8=;
-        b=qpG3oCeWkaHD8VD934MEQ4fZoZMW1cpBqNuR6pV/8/8BPTuIMXoZgvBagp17IZdYb3
-         0PbDh6xRJMr63xsliIZWAMECui7O00eLo2NOVUfCg7oX40yjswDHoZhfGz1WWnbndAir
-         1pPZeeyhIZQX5mpfu1xcCQxIbY8LdyQtCMSO7Lhfy7fH1s9TgiEHoPyqE91rXcab6sUM
-         YkW0Gszyr4M6K4EdLdm45OrDKfaJYnkHn+sEaIKeOXvi0Yzm2+OOXFc+3tZuaI0zNQka
-         srHfkMNGmB3Hnzp/5BEE2SXOWznzc1VhgM9rDdI5MVTwAsFriOel62cDx1kLMUDZdALq
-         WQKQ==
-X-Gm-Message-State: AOAM532Rd0+AScBWO37WtuRCbjuQY40SoH6rzpc3HwfqE+8x+QuXRH6t
-        6m8ge7ZX6aaOA1uBKDduCHzx3bohsRkN5p/Jj8n3FdaR5sjx
-X-Google-Smtp-Source: ABdhPJyptFFiDVTYZlHIWIwqGQHG79vYSxw25ZonY4cvb285CFWWMwIlkFh+k/k6io3NjMnXY1r0mXFG9AbRdjdLviLJGz9y1bpL
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dRuWkhrpmAmcdHS/RSpOjVe+mnrE0qLuVyBAgROKiXA=;
+        b=XuPsoWZIQLTx3NujZK475MZscC55OWPL0juVnU4txR3hFTmEtt5XBSkv1g7YjExf+P
+         6Cthq8TVu/G05oJ6geOU77/spayrE9+h0LTuHs5UduGWWBIgja1LXrgFfuIsYa2vhFFK
+         fvuDAMZmU1bEE7uY7sTiCqHb622o5DOSUo9Yug3vPCzH5kJo9yHyDFqBNj11Br4N23dc
+         aDV6yVoQo2c1ytZ+Yn0oMmEZd80uGFAXGTyaDfjP4yDMiBDNu3wETtlspsY7UZO5KG8P
+         ywp0DjkdcXWMdY5QjzBJ2JKUKfIJyoZGgy6Y2dU1Q/xINMB0hYrLEJsUGU0JpkWu26k6
+         ug1A==
+X-Gm-Message-State: AOAM530KF9W38G9DOq3I4W/SL4luKxHSRgZxnzbf4/5GDC9LnGaiL9Ja
+        QqNT+mnfXXOcGz9uG0PRLn02uTpAJWmfHy0ZWD2CQE7WEgY=
+X-Google-Smtp-Source: ABdhPJzdSfAqA/j0q/YYNpuGb0tpTIDII2+HAUBc9ozroDpARVr5Zu6I3gO7aiqbyi08i7motFMnChXVW7jUbJRl5+c=
+X-Received: by 2002:a62:1b4a:: with SMTP id b71mr2760943pfb.106.1597091863550;
+ Mon, 10 Aug 2020 13:37:43 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a92:d590:: with SMTP id a16mr6513877iln.87.1597091836660;
- Mon, 10 Aug 2020 13:37:16 -0700 (PDT)
-Date:   Mon, 10 Aug 2020 13:37:16 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000991ae405ac8beb12@google.com>
-Subject: INFO: task can't die in io_uring_flush
-From:   syzbot <syzbot+6d70b15b0d106c3450c5@syzkaller.appspotmail.com>
-To:     axboe@kernel.dk, io-uring@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+References: <20200806174326.3577537-1-urielguajardojr@gmail.com>
+In-Reply-To: <20200806174326.3577537-1-urielguajardojr@gmail.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Mon, 10 Aug 2020 13:37:32 -0700
+Message-ID: <CAFd5g45D9xFCYGHhZfCNVeg1qJfe7X=9JB5-LSW79Qf6XPp+0w@mail.gmail.com>
+Subject: Re: [PATCH 1/2] kunit: support failure from dynamic analysis tools
+To:     Uriel Guajardo <urielguajardojr@gmail.com>
+Cc:     Uriel Guajardo <urielguajardo@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Thu, Aug 6, 2020 at 10:43 AM Uriel Guajardo
+<urielguajardojr@gmail.com> wrote:
+>
+> Adds an API to allow dynamic analysis tools to fail the currently
+> running KUnit test case.
+>
+> - Always places the kunit test in the task_struct to allow other tools
+> to access the currently running KUnit test.
+>
+> - Creates a new header file to avoid circular dependencies that could be
+> created from the test.h file.
+>
+> Requires KASAN-KUnit integration patch to access the kunit test from
+> task_struct:
+> https://lore.kernel.org/linux-kselftest/20200606040349.246780-2-davidgow@google.com/
+>
+> Signed-off-by: Uriel Guajardo <urielguajardo@google.com>
 
-syzbot found the following issue on:
-
-HEAD commit:    f80535b9 Add linux-next specific files for 20200810
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=11df00d6900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=2055bd0d83d5ee16
-dashboard link: https://syzkaller.appspot.com/bug?extid=6d70b15b0d106c3450c5
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+6d70b15b0d106c3450c5@syzkaller.appspotmail.com
-
-INFO: task syz-executor.5:31048 can't die for more than 143 seconds.
-syz-executor.5  D28360 31048   7448 0x00000004
-Call Trace:
- context_switch kernel/sched/core.c:3778 [inline]
- __schedule+0x8e5/0x21e0 kernel/sched/core.c:4527
- schedule+0xd0/0x2a0 kernel/sched/core.c:4602
- io_uring_cancel_files fs/io_uring.c:7897 [inline]
- io_uring_flush+0x740/0xa90 fs/io_uring.c:7914
- filp_close+0xb4/0x170 fs/open.c:1276
- __close_fd+0x2f/0x50 fs/file.c:671
- __do_sys_close fs/open.c:1295 [inline]
- __se_sys_close fs/open.c:1293 [inline]
- __x64_sys_close+0x69/0x100 fs/open.c:1293
- do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x416981
-Code: Bad RIP value.
-RSP: 002b:00007ffe164f4ff0 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
-RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 0000000000416981
-RDX: 0000000000000000 RSI: 00000000000010bc RDI: 0000000000000003
-RBP: 0000000000000001 R08: 00000000102b50bc R09: 00000000102b50c0
-R10: 00007ffe164f50e0 R11: 0000000000000293 R12: 0000000001191d50
-R13: 0000000000126257 R14: ffffffffffffffff R15: 000000000118bf2c
-INFO: task syz-executor.5:31048 blocked for more than 143 seconds.
-      Not tainted 5.8.0-next-20200810-syzkaller #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor.5  D28360 31048   7448 0x00000004
-Call Trace:
- context_switch kernel/sched/core.c:3778 [inline]
- __schedule+0x8e5/0x21e0 kernel/sched/core.c:4527
- schedule+0xd0/0x2a0 kernel/sched/core.c:4602
- io_uring_cancel_files fs/io_uring.c:7897 [inline]
- io_uring_flush+0x740/0xa90 fs/io_uring.c:7914
- filp_close+0xb4/0x170 fs/open.c:1276
- __close_fd+0x2f/0x50 fs/file.c:671
- __do_sys_close fs/open.c:1295 [inline]
- __se_sys_close fs/open.c:1293 [inline]
- __x64_sys_close+0x69/0x100 fs/open.c:1293
- do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x416981
-Code: Bad RIP value.
-RSP: 002b:00007ffe164f4ff0 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
-RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 0000000000416981
-RDX: 0000000000000000 RSI: 00000000000010bc RDI: 0000000000000003
-RBP: 0000000000000001 R08: 00000000102b50bc R09: 00000000102b50c0
-R10: 00007ffe164f50e0 R11: 0000000000000293 R12: 0000000001191d50
-R13: 0000000000126257 R14: ffffffffffffffff R15: 000000000118bf2c
-
-Showing all locks held in the system:
-1 lock held by khungtaskd/1170:
- #0: ffffffff89c66c40 (rcu_read_lock){....}-{1:2}, at: debug_show_all_locks+0x53/0x260 kernel/locking/lockdep.c:5825
-1 lock held by in:imklog/6542:
- #0: ffff88809e544630 (&f->f_pos_lock){+.+.}-{3:3}, at: __fdget_pos+0xe9/0x100 fs/file.c:930
-
-=============================================
-
-NMI backtrace for cpu 1
-CPU: 1 PID: 1170 Comm: khungtaskd Not tainted 5.8.0-next-20200810-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- nmi_cpu_backtrace.cold+0x70/0xb1 lib/nmi_backtrace.c:101
- nmi_trigger_cpumask_backtrace+0x1b3/0x223 lib/nmi_backtrace.c:62
- trigger_all_cpu_backtrace include/linux/nmi.h:147 [inline]
- check_hung_uninterruptible_tasks kernel/hung_task.c:253 [inline]
- watchdog+0xd89/0xf30 kernel/hung_task.c:339
- kthread+0x3b5/0x4a0 kernel/kthread.c:292
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
-Sending NMI from CPU 1 to CPUs 0:
-NMI backtrace for cpu 0
-CPU: 0 PID: 6543 Comm: rs:main Q:Reg Not tainted 5.8.0-next-20200810-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0033:0x55c2017dc011
-Code: e7 e8 03 5d fc ff 4c 89 e7 48 89 c5 e8 d8 5c fc ff 48 63 54 24 2c 4c 63 e0 89 44 24 1c 48 89 d8 4c 01 e0 48 01 d0 80 7d 00 20 <41> 0f 95 c5 4d 8d 6c 05 13 41 8b 47 08 49 39 c5 72 13 4c 89 ee 4c
-RSP: 002b:00007faa8110e810 EFLAGS: 00000202
-RAX: 0000000000000032 RBX: 0000000000000009 RCX: 0000000000000000
-RDX: 0000000000000007 RSI: 00007faa8110e840 RDI: 00007faa7401fb70
-RBP: 00007faa7401fcb0 R08: 0000000000000000 R09: 0000000000000000
-R10: 000055c201a19280 R11: 0000000000000000 R12: 0000000000000022
-R13: 0000000000000000 R14: 00007faa7401fd68 R15: 00007faa78019c00
-FS:  00007faa8110f700 GS:  0000000000000000
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
