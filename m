@@ -2,148 +2,178 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A9E4C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:36:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F543C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:36:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04FBB23117
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:36:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8D6D23107
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:36:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597073801;
+	bh=OEBUnwPDQFvaeUZp01qeNkT2HHlvDwLzUY81pbDigtg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ZLdmJ4UN9rswogvdyjdfj+xD2t8HpBK1jWy1ztTdb3Fuz8d0pshpaKLAxVyj55xcw
+	 n40EVgqSWvRMnv4D0lBy46mUkGwgCDhz4FsrlMNp2WgQYFWnqj8MRS/0/5t3O1Mu3r
+	 T20TsVPtryO55q8JqfyqRh824SME/ldooNwueVq8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729293AbgHJPg0 (ORCPT
+        id S1729057AbgHJPgl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:36:26 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:40821 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728265AbgHJPgS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:36:18 -0400
-Received: by mail-il1-f199.google.com with SMTP id z16so8126750ill.7
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 08:36:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=+fLG61A9eCuOJ+VN2LjNHXpvQaE3FxmNy9hu4vih70E=;
-        b=L7TrJ7mfkTlqTWkPbfVJkpobwPEpGESLvwSX63PQGxkGWoJwBTNUxnGgLLYaI6gPJr
-         t3Y1EL1uY84K08Iq0LYLGPbkg0WxSnTFpnXRRfjPT7KwBX13eIOd5dup1xZPtOvyww4a
-         Rxaro2a8WuJXIERJjtHEjQlK9Xt2RwtebJ/DyfplVxjWOnmouCqmTOZ1/P8oflFACcPo
-         /0USwz3yfK6zY/DSVEzIRphwD4kChaxdmy5gnjIMMqTmWAdv913bfocPgd6GISWbBYmT
-         fgVFarodt8bk9slgTJlEG5WGgKOFs6X7nV2SPS0uM8SISOKS1wkAiobVdROwN1f9frLj
-         pWFw==
-X-Gm-Message-State: AOAM533SeXHrhEMuSxkEwqn54SrvdyPs7jjV0x/I+9esJJGGM3ePXXZW
-        AiiucNZ+gEf2RERFhxqpf3eN+XPETnXkoKWKa5Vf941Hz2tu
-X-Google-Smtp-Source: ABdhPJzYXIlBeC+R4RDnKBaNfmN2JJ/gZN5P6MU7QoI6eYkWFRcVYHLqmdYgOwfGhfnHJjMQcH+a7yBMG/toC3fMYHxfGlqgwSrk
+        Mon, 10 Aug 2020 11:36:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33172 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728718AbgHJP1S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:27:18 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E49722BF3;
+        Mon, 10 Aug 2020 15:27:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597073238;
+        bh=OEBUnwPDQFvaeUZp01qeNkT2HHlvDwLzUY81pbDigtg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=TmKUCHCm5Yhu2wXcr/88E8oK7WdGJYnulrGeWDM9FQag66gGBKlEIe1v7o3luRgtE
+         YJmkPUzk45cl+xgOe/N9pH1Z/dqR2ooeUMLLNzSA9V5s74F0TZyPVoN5D8RmrCQREV
+         L2wqltEOz6pa4dPlqd2R/acycIvgVwUUmilNasAg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
+        Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>,
+        kernel test robot <lkp@intel.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        sparclinux@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 35/67] drm/drm_fb_helper: fix fbdev with sparc64
+Date:   Mon, 10 Aug 2020 17:21:22 +0200
+Message-Id: <20200810151811.171538668@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200810151809.438685785@linuxfoundation.org>
+References: <20200810151809.438685785@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:1129:: with SMTP id f9mr20086051jar.35.1597073777883;
- Mon, 10 Aug 2020 08:36:17 -0700 (PDT)
-Date:   Mon, 10 Aug 2020 08:36:17 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000035fdf505ac87b7f9@google.com>
-Subject: possible deadlock in __io_queue_deferred
-From:   syzbot <syzbot+996f91b6ec3812c48042@syzkaller.appspotmail.com>
-To:     axboe@kernel.dk, io-uring@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+From: Sam Ravnborg <sam@ravnborg.org>
 
-syzbot found the following issue on:
+[ Upstream commit 2a1658bf922ffd9b7907e270a7d9cdc9643fc45d ]
 
-HEAD commit:    449dc8c9 Merge tag 'for-v5.9' of git://git.kernel.org/pub/..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=14d41e02900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9d25235bf0162fbc
-dashboard link: https://syzkaller.appspot.com/bug?extid=996f91b6ec3812c48042
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=133c9006900000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1191cb1a900000
+Recent kernels have been reported to panic using the bochs_drm
+framebuffer under qemu-system-sparc64 which was bisected to
+commit 7a0483ac4ffc ("drm/bochs: switch to generic drm fbdev emulation").
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+996f91b6ec3812c48042@syzkaller.appspotmail.com
+The backtrace indicates that the shadow framebuffer copy in
+drm_fb_helper_dirty_blit_real() is trying to access the real
+framebuffer using a virtual address rather than use an IO access
+typically implemented using a physical (ASI_PHYS) access on SPARC.
 
-============================================
-WARNING: possible recursive locking detected
-5.8.0-syzkaller #0 Not tainted
---------------------------------------------
-syz-executor287/6816 is trying to acquire lock:
-ffff888093cdb4d8 (&ctx->completion_lock){....}-{2:2}, at: spin_lock_irq include/linux/spinlock.h:379 [inline]
-ffff888093cdb4d8 (&ctx->completion_lock){....}-{2:2}, at: io_queue_linked_timeout fs/io_uring.c:5928 [inline]
-ffff888093cdb4d8 (&ctx->completion_lock){....}-{2:2}, at: __io_queue_async_work fs/io_uring.c:1192 [inline]
-ffff888093cdb4d8 (&ctx->completion_lock){....}-{2:2}, at: __io_queue_deferred+0x36a/0x790 fs/io_uring.c:1237
+The fix is to replace the memcpy with memcpy_toio() from io.h.
 
-but task is already holding lock:
-ffff888093cdb4d8 (&ctx->completion_lock){....}-{2:2}, at: io_cqring_overflow_flush+0xc6/0xab0 fs/io_uring.c:1333
+memcpy_toio() uses writeb() where the original fbdev code
+used sbus_memcpy_toio(). The latter uses sbus_writeb().
 
-other info that might help us debug this:
- Possible unsafe locking scenario:
+The difference between writeb() and sbus_memcpy_toio() is
+that writeb() writes bytes in little-endian, where sbus_writeb() writes
+bytes in big-endian. As endian does not matter for byte writes they are
+the same. So we can safely use memcpy_toio() here.
 
-       CPU0
-       ----
-  lock(&ctx->completion_lock);
-  lock(&ctx->completion_lock);
+Note that this only fixes bochs, in general fbdev helpers still have
+issues with mixing up system memory and __iomem space. Fixing that will
+require a lot more work.
 
- *** DEADLOCK ***
+v3:
+  - Improved changelog (Daniel)
+  - Added FIXME to fbdev_use_iomem (Daniel)
 
- May be due to missing lock nesting notation
+v2:
+  - Added missing __iomem cast (kernel test robot)
+  - Made changelog readable and fix typos (Mark)
+  - Add flag to select iomem - and set it in the bochs driver
 
-1 lock held by syz-executor287/6816:
- #0: ffff888093cdb4d8 (&ctx->completion_lock){....}-{2:2}, at: io_cqring_overflow_flush+0xc6/0xab0 fs/io_uring.c:1333
-
-stack backtrace:
-CPU: 1 PID: 6816 Comm: syz-executor287 Not tainted 5.8.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1f0/0x31e lib/dump_stack.c:118
- print_deadlock_bug kernel/locking/lockdep.c:2391 [inline]
- check_deadlock kernel/locking/lockdep.c:2432 [inline]
- validate_chain+0x69a4/0x88a0 kernel/locking/lockdep.c:3202
- __lock_acquire+0x1161/0x2ab0 kernel/locking/lockdep.c:4426
- lock_acquire+0x160/0x730 kernel/locking/lockdep.c:5005
- __raw_spin_lock_irq include/linux/spinlock_api_smp.h:128 [inline]
- _raw_spin_lock_irq+0x67/0x80 kernel/locking/spinlock.c:167
- spin_lock_irq include/linux/spinlock.h:379 [inline]
- io_queue_linked_timeout fs/io_uring.c:5928 [inline]
- __io_queue_async_work fs/io_uring.c:1192 [inline]
- __io_queue_deferred+0x36a/0x790 fs/io_uring.c:1237
- io_cqring_overflow_flush+0x774/0xab0 fs/io_uring.c:1359
- io_ring_ctx_wait_and_kill+0x2a1/0x570 fs/io_uring.c:7808
- io_uring_release+0x59/0x70 fs/io_uring.c:7829
- __fput+0x34f/0x7b0 fs/file_table.c:281
- task_work_run+0x137/0x1c0 kernel/task_work.c:135
- exit_task_work include/linux/task_work.h:25 [inline]
- do_exit+0x5f3/0x1f20 kernel/exit.c:806
- do_group_exit+0x161/0x2d0 kernel/exit.c:903
- __do_sys_exit_group+0x13/0x20 kernel/exit.c:914
- __se_sys_exit_group+0x10/0x10 kernel/exit.c:912
- __x64_sys_exit_group+0x37/0x40 kernel/exit.c:912
- do_syscall_64+0x31/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x43f598
-Code: Bad RIP value.
-RSP: 002b:00007fffdac2bf58 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 000000000043f598
-RDX: 0000000000000000 RSI: 000000000000003c RDI: 0000000000000000
-RBP: 00000000004beda8 R08: 00000000000000e7 R09: ffffffffffffffd0
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
-R13: 00000000006d11a0 R14: 0000000000000000 R15: 0000000000000000
-
-
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Reported-by: Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>
+Reported-by: kernel test robot <lkp@intel.com>
+Tested-by: Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>
+Cc: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: Gerd Hoffmann <kraxel@redhat.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: sparclinux@vger.kernel.org
+Link: https://patchwork.freedesktop.org/patch/msgid/20200709193016.291267-1-sam@ravnborg.org
+Link: https://patchwork.freedesktop.org/patch/msgid/20200725191012.GA434957@ravnborg.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ drivers/gpu/drm/bochs/bochs_kms.c |  1 +
+ drivers/gpu/drm/drm_fb_helper.c   |  6 +++++-
+ include/drm/drm_mode_config.h     | 12 ++++++++++++
+ 3 files changed, 18 insertions(+), 1 deletion(-)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this issue, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+diff --git a/drivers/gpu/drm/bochs/bochs_kms.c b/drivers/gpu/drm/bochs/bochs_kms.c
+index 02a9c1ed165bb..fa50ab2523d4b 100644
+--- a/drivers/gpu/drm/bochs/bochs_kms.c
++++ b/drivers/gpu/drm/bochs/bochs_kms.c
+@@ -194,6 +194,7 @@ int bochs_kms_init(struct bochs_device *bochs)
+ 	bochs->dev->mode_config.preferred_depth = 24;
+ 	bochs->dev->mode_config.prefer_shadow = 0;
+ 	bochs->dev->mode_config.prefer_shadow_fbdev = 1;
++	bochs->dev->mode_config.fbdev_use_iomem = true;
+ 	bochs->dev->mode_config.quirk_addfb_prefer_host_byte_order = true;
+ 
+ 	bochs->dev->mode_config.funcs = &bochs_mode_funcs;
+diff --git a/drivers/gpu/drm/drm_fb_helper.c b/drivers/gpu/drm/drm_fb_helper.c
+index 8d193a58363d4..6b8502bcf0fd3 100644
+--- a/drivers/gpu/drm/drm_fb_helper.c
++++ b/drivers/gpu/drm/drm_fb_helper.c
+@@ -390,7 +390,11 @@ static void drm_fb_helper_dirty_blit_real(struct drm_fb_helper *fb_helper,
+ 	unsigned int y;
+ 
+ 	for (y = clip->y1; y < clip->y2; y++) {
+-		memcpy(dst, src, len);
++		if (!fb_helper->dev->mode_config.fbdev_use_iomem)
++			memcpy(dst, src, len);
++		else
++			memcpy_toio((void __iomem *)dst, src, len);
++
+ 		src += fb->pitches[0];
+ 		dst += fb->pitches[0];
+ 	}
+diff --git a/include/drm/drm_mode_config.h b/include/drm/drm_mode_config.h
+index 3bcbe30339f04..198b9d0600081 100644
+--- a/include/drm/drm_mode_config.h
++++ b/include/drm/drm_mode_config.h
+@@ -865,6 +865,18 @@ struct drm_mode_config {
+ 	 */
+ 	bool prefer_shadow_fbdev;
+ 
++	/**
++	 * @fbdev_use_iomem:
++	 *
++	 * Set to true if framebuffer reside in iomem.
++	 * When set to true memcpy_toio() is used when copying the framebuffer in
++	 * drm_fb_helper.drm_fb_helper_dirty_blit_real().
++	 *
++	 * FIXME: This should be replaced with a per-mapping is_iomem
++	 * flag (like ttm does), and then used everywhere in fbdev code.
++	 */
++	bool fbdev_use_iomem;
++
+ 	/**
+ 	 * @quirk_addfb_prefer_xbgr_30bpp:
+ 	 *
+-- 
+2.25.1
+
+
+
