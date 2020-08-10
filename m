@@ -2,68 +2,88 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 720DEC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1CDEC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:40:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46284206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:39:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DE5B206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:40:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726764AbgHJJje (ORCPT
+        id S1726802AbgHJJky (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 05:39:34 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:53726 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726473AbgHJJjd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 05:39:33 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1k54HD-0004Nd-Fa; Mon, 10 Aug 2020 09:39:31 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] regulator: fix spelling mistake "Cant" -> "Can't"
-Date:   Mon, 10 Aug 2020 10:39:31 +0100
-Message-Id: <20200810093931.50624-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.27.0
+        Mon, 10 Aug 2020 05:40:54 -0400
+Received: from sauhun.de ([88.99.104.3]:57146 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726633AbgHJJkx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 05:40:53 -0400
+Received: from localhost (p54b3345b.dip0.t-ipconnect.de [84.179.52.91])
+        by pokefinder.org (Postfix) with ESMTPSA id 74B342C0505;
+        Mon, 10 Aug 2020 11:40:51 +0200 (CEST)
+Date:   Mon, 10 Aug 2020 11:40:47 +0200
+From:   wsa@the-dreams.de
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     qii.wang@mediatek.com, yingjoe.chen@mediatek.com,
+        linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Matthias Brugger <mbrugger@suse.com>
+Subject: Re: [PATCH] i2c: mediatek: Fix i2c_spec_values description
+Message-ID: <20200810094047.GE1290@kunai>
+Mail-Followup-To: wsa@the-dreams.de,
+        Matthias Brugger <matthias.bgg@gmail.com>, qii.wang@mediatek.com,
+        yingjoe.chen@mediatek.com, linux-i2c@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Matthias Brugger <mbrugger@suse.com>
+References: <c410f784-7b51-0d65-7a41-3845214dd273@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="dFWYt1i2NyOo1oI9"
+Content-Disposition: inline
+In-Reply-To: <c410f784-7b51-0d65-7a41-3845214dd273@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
 
-There is a spelling mistake in a dev_err message. Fix it.
+--dFWYt1i2NyOo1oI9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/regulator/fixed.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Thu, Aug 06, 2020 at 11:48:37AM +0200, Matthias Brugger wrote:
+> The struct i2c_spec_values have it's members documented but is missing the
+> starting '@', which leads to warings like:
+>=20
+> drivers/i2c/busses/i2c-mt65xx.c:267: warning: Function parameter or member
+> 'min_low_ns' not described in 'i2c_spec_values'
+>=20
+> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
 
-diff --git a/drivers/regulator/fixed.c b/drivers/regulator/fixed.c
-index d54830e48b8d..142a70a89153 100644
---- a/drivers/regulator/fixed.c
-+++ b/drivers/regulator/fixed.c
-@@ -182,7 +182,7 @@ static int reg_fixed_voltage_probe(struct platform_device *pdev)
- 
- 		drvdata->enable_clock = devm_clk_get(dev, NULL);
- 		if (IS_ERR(drvdata->enable_clock)) {
--			dev_err(dev, "Cant get enable-clock from devicetree\n");
-+			dev_err(dev, "Can't get enable-clock from devicetree\n");
- 			return -ENOENT;
- 		}
- 	} else {
--- 
-2.27.0
+Applied to for-next, thanks!
 
+
+--dFWYt1i2NyOo1oI9
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8xFh8ACgkQFA3kzBSg
+KbYgHhAAq9H+auUH5FyFYrBR04XS/pPIsK7MAVECu+xkSqyKjOh9KUMWty4Olepo
+2vkYDm24/Q9qGMshcaEnNKT67saeD/dprFWcz/pI1zlXXUHWT9s55UZFMFlJ73ui
+By+eoOcqW/rVD/tO/aR0KRXevq4C9ddQXellwczhPpQCm/oZ8q+YoBhCgRPV6rn5
+nZc8nfqyl+CCIpqpdBQD96kLokwILVElm0o2+oJB+9nohmH3BPPjh+TlDNV8HwpU
+CIJmvUHy8rHBBvOhG7ETrFSopu56nNJQO9IiuFdVe9oWpCHhLhL9tMiMRbRiY1lI
+q0ehOQL2JCGynZNFz0SrCg5lTEIFZTIZ4LcwBhKsbkut3Pqgab4ja/CUEJwjWeak
+972aXFX+YpYpoKhcJ9YA3j0ClM2uiDZWnPqHC57PS37O1HV9ZEkyQITZXBzWSAvf
+1oLUy0+jHD8OCFy+SnHVd0PSOEcSQS1UFRdbXEu/+VEnhfnB5axcDUMk3Q60/QXg
+Tfz12jzXLpnYlQ8IPKXJki1nzKVkiCry7e9wcLZoJLZ81DZjndMi0LydYkZRcs6M
+8NQjXuAzd/GaUj4CizQRGeTVKg36IPpWWQCu8oTSomzQv6VHXKxfLemz1FvAJiuI
+pJLkFFyWKf6dY7dsqEyeEw0iVZn0vsyl8HCBJoavP8HkQnizwa0=
+=eJXK
+-----END PGP SIGNATURE-----
+
+--dFWYt1i2NyOo1oI9--
