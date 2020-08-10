@@ -2,182 +2,101 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D364FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 21:17:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1219EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 21:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A622E20716
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 21:17:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC60D20716
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 21:18:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YwVxAf9E"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q7NvJSKt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726806AbgHJVR4 (ORCPT
+        id S1726821AbgHJVSu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 17:17:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33370 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726654AbgHJVRz (ORCPT
+        Mon, 10 Aug 2020 17:18:50 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:29167 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726695AbgHJVSu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 17:17:55 -0400
-Received: from mail-oo1-xc42.google.com (mail-oo1-xc42.google.com [IPv6:2607:f8b0:4864:20::c42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91323C061756
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 14:17:55 -0700 (PDT)
-Received: by mail-oo1-xc42.google.com with SMTP id j16so2192636ooc.7
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 14:17:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8GBCeeTPIAs1vqUkzRTPXsfrx2cgCSPgccIBR3gAYiM=;
-        b=YwVxAf9ERd4NAgz/iv74mmhNe+RAXg6chRDIyAeaYYRlCmWNGbR8BirN0ldW84u1U6
-         cSpF2BdqRyuFhjeWnuigySpcmnXkJianTvoEnYFvC92ziAo86ZXbrzlpUvdIiEXFo8wp
-         N6bOwOepauIwC6qjZs0bjOeCNDZV+0wCbn+R+OifZSNds/eh0KSUgNYpKXcYqhd/82Mn
-         iNoethuJvVwm86k/hPDhnY2blkQcN5HL+q3qfjpK/AWaYuKQfo8ZTCrP/QqLpmYYZISQ
-         e93nJEL83o8hEd6G4P24Rz4sRWb5R1u2yEdmL5R/qLnFl1ewOuabrlFqD0T2rzWMOagi
-         habg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8GBCeeTPIAs1vqUkzRTPXsfrx2cgCSPgccIBR3gAYiM=;
-        b=FEjCvWPc4XEu8mWoVklYEfo99HHvXEFA7kh+4sLD1p8it6mqQMCQSSouS3Y34ypUF1
-         k1btNpocY8qdob/y1IKwQ1gWkK4az890zxbs6dTyyPVpYmYcl0+EUas+xb9w+yRwLwn7
-         PCVFdOWHB+UeTmCaCcYLwFtUnGdRD0otWqS9CYGnv+x+qIEqPp1amDdQ86+lX09dEnlT
-         g21jWZxOKeo8MHFhkuW0cfA8ssfFlZIT8Gdt8e+iWlEsd0CaHM9xi3HzHEwdhTIz4yoL
-         LrHALC6ixRHw18FUmM0kV96vE9tfkBHDNe7HLyLNSfBuYAkX/YMRtdTM0uKOFlx/gZhq
-         GgYQ==
-X-Gm-Message-State: AOAM5338M3QrGAxcr2h2G5nKhyS9mpW+9c4LUy5O1bkvrnb4w7P/SLsU
-        EHVNmrYDxbPx8Td/kghJ72Uzh0BR6DveEGe2oH5XYQ==
-X-Google-Smtp-Source: ABdhPJxXkpHFF2U46lA8Sr5XEnEOEijV7VeFTbAVhQpK/iA4yeeZSPUsJWxQ2yqfY0fvcMn3EmXFJA8V16fFe5EBNQM=
-X-Received: by 2002:a4a:2f4b:: with SMTP id p72mr2448256oop.39.1597094273806;
- Mon, 10 Aug 2020 14:17:53 -0700 (PDT)
+        Mon, 10 Aug 2020 17:18:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597094328;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/2lrokUfoGQAhbbN5B0q4Eo9DnItokSH8gIcb/T1Xy8=;
+        b=Q7NvJSKtrzht3ue4p/CybZnz5ntTs+P9xUZfVSlILpJHMKepGJC+7U/DoxX6jvAHoVSm/7
+        7U0FTJrJg9hlNJwVoKwb6bVAb+TOdL3T79sVCiNVJ3WoLC0lZwxMa2+Qk4owD02OW74+C5
+        hlS0vpqaTQL+IOJQrIZ8AN2Gr2jRDdY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-561-OUZDo_1aPkmYw61eUWUvDw-1; Mon, 10 Aug 2020 17:18:47 -0400
+X-MC-Unique: OUZDo_1aPkmYw61eUWUvDw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A7D351005510;
+        Mon, 10 Aug 2020 21:18:45 +0000 (UTC)
+Received: from Ruby.redhat.com (ovpn-114-28.rdu2.redhat.com [10.10.114.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5645779CF3;
+        Mon, 10 Aug 2020 21:18:44 +0000 (UTC)
+From:   Lyude Paul <lyude@redhat.com>
+To:     nouveau@lists.freedesktop.org
+Cc:     Ben Skeggs <bskeggs@redhat.com>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Airlie <airlied@gmail.com>,
+        dri-devel@lists.freedesktop.org (open list:DRM DRIVER FOR NVIDIA
+        GEFORCE/QUADRO GPUS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 1/2] drm/nouveau/kms/nv140-: Include correct push header in crcc37d.c
+Date:   Mon, 10 Aug 2020 17:18:37 -0400
+Message-Id: <20200810211838.37862-2-lyude@redhat.com>
+In-Reply-To: <20200810211838.37862-1-lyude@redhat.com>
+References: <20200810211838.37862-1-lyude@redhat.com>
 MIME-Version: 1.0
-References: <20200806203737.3636830-1-urielguajardojr@gmail.com>
- <CAG30EedgwNJMCXX6Eo3b8heMa228N4=RLd=BgAQhS8AZ51bU0A@mail.gmail.com> <CAFd5g46=zgY_+jawXMS+yTx6MhRGa_4-WVmer-BwoL_c2QPcrg@mail.gmail.com>
-In-Reply-To: <CAFd5g46=zgY_+jawXMS+yTx6MhRGa_4-WVmer-BwoL_c2QPcrg@mail.gmail.com>
-From:   Uriel Guajardo <urielguajardo@google.com>
-Date:   Mon, 10 Aug 2020 16:17:42 -0500
-Message-ID: <CAG30EefjgzOMePHA2tQ-UmAw5_mnLDoS2hJH6z3nidNC8n8+Lg@mail.gmail.com>
-Subject: Re: [PATCH] kunit: added lockdep support
-To:     Brendan Higgins <brendanhiggins@google.com>, peterz@infradead.org,
-        mingo@redhat.com, will@kernel.org
-Cc:     Uriel Guajardo <urielguajardojr@gmail.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 3:35 PM Brendan Higgins
-<brendanhiggins@google.com> wrote:
->
-> On Thu, Aug 6, 2020 at 1:43 PM Uriel Guajardo <urielguajardo@google.com> wrote:
-> >
-> > On Thu, Aug 6, 2020 at 3:37 PM Uriel Guajardo <urielguajardojr@gmail.com> wrote:
-> > >
-> > > From: Uriel Guajardo <urielguajardo@google.com>
-> > >
-> > > KUnit tests will now fail if lockdep detects an error during a test
-> > > case.
-> > >
-> > > The idea comes from how lib/locking-selftest [1] checks for lock errors: we
-> > > first if lock debugging is turned on. If not, an error must have
-> > > occurred, so we fail the test and restart lockdep for the next test case.
-> > >
-> > > Like the locking selftests, we also fix possible preemption count
-> > > corruption from lock bugs.
->
-> Sorry, just noticed: You probably want to send this to some of the
-> lockdep maintainers or the maintainers of the kselftest for lockdep.
->
+Looks like when we converted everything over to Nvidia's class headers,
+we mistakenly included the nvif/push507b.h instead of nvif/pushc37b.h,
+which resulted in breaking CRC reporting for volta+:
 
-Thanks for the reminder. CC'ed lockdep maintainers.
+nouveau 0000:1f:00.0: disp: chid 0 stat 10003361 reason 3
+[RESERVED_METHOD] mthd 0d84 data 00000000 code 00000000
+nouveau 0000:1f:00.0: disp: chid 0 stat 10003360 reason 3
+[RESERVED_METHOD] mthd 0d80 data 00000000 code 00000000
+nouveau 0000:1f:00.0: DRM: CRC notifier ctx for head 3 not finished
+after 50ms
 
+So, fix that.
 
-> > > Depends on kunit: support failure from dynamic analysis tools [2]
-> > >
-> > > [1] https://elixir.bootlin.com/linux/v5.7.12/source/lib/locking-selftest.c#L1137
-> > >
-> > > [2] https://lore.kernel.org/linux-kselftest/20200806174326.3577537-1-urielguajardojr@gmail.com/
-> > >
-> > > Signed-off-by: Uriel Guajardo <urielguajardo@google.com>
-> > > ---
-> > >  lib/kunit/test.c | 26 +++++++++++++++++++++++++-
-> > >  1 file changed, 25 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/lib/kunit/test.c b/lib/kunit/test.c
-> > > index d8189d827368..0838ececa005 100644
-> > > --- a/lib/kunit/test.c
-> > > +++ b/lib/kunit/test.c
-> > > @@ -11,6 +11,8 @@
-> > >  #include <linux/kref.h>
-> > >  #include <linux/sched/debug.h>
-> > >  #include <linux/sched.h>
-> > > +#include <linux/lockdep.h>
-> > > +#include <linux/debug_locks.h>
-> > >
-> > >  #include "debugfs.h"
-> > >  #include "string-stream.h"
-> > > @@ -22,6 +24,26 @@ void kunit_fail_current_test(void)
-> > >                 kunit_set_failure(current->kunit_test);
-> > >  }
-> > >
-> > > +static inline void kunit_check_locking_bugs(struct kunit *test,
-> > > +                                           unsigned long saved_preempt_count)
-> > > +{
-> > > +       preempt_count_set(saved_preempt_count);
-> > > +#ifdef CONFIG_TRACE_IRQFLAGS
-> > > +       if (softirq_count())
-> > > +               current->softirqs_enabled = 0;
-> > > +       else
-> > > +               current->softirqs_enabled = 1;
-> > > +#endif
-> >
-> > I am not entirely sure why lib/locking-selftests enables/disables
-> > softirqs, but I suspect it has to do with the fact that preempt_count
-> > became corrupted, and somehow softirqs became incorrectly
-> > enabled/disabled as a result. The resetting of the preemption count
-> > will undo the enabling/disabling accordingly. Any insight on this
-> > would be appreciated!
-> >
-> > > +#if IS_ENABLED(CONFIG_LOCKDEP)
-> > > +       local_irq_disable();
-> > > +       if (!debug_locks) {
-> > > +               kunit_set_failure(test);
-> > > +               lockdep_reset();
-> > > +       }
-> > > +       local_irq_enable();
-> > > +#endif
-> > > +}
-> > > +
-> > >  static void kunit_print_tap_version(void)
-> > >  {
-> > >         static bool kunit_has_printed_tap_version;
-> > > @@ -289,6 +311,7 @@ static void kunit_try_run_case(void *data)
-> > >         struct kunit *test = ctx->test;
-> > >         struct kunit_suite *suite = ctx->suite;
-> > >         struct kunit_case *test_case = ctx->test_case;
-> > > +       unsigned long saved_preempt_count = preempt_count();
-> > >
-> > >         current->kunit_test = test;
-> > >
-> > > @@ -298,7 +321,8 @@ static void kunit_try_run_case(void *data)
-> > >          * thread will resume control and handle any necessary clean up.
-> > >          */
-> > >         kunit_run_case_internal(test, suite, test_case);
-> > > -       /* This line may never be reached. */
-> > > +       /* These lines may never be reached. */
-> > > +       kunit_check_locking_bugs(test, saved_preempt_count);
-> > >         kunit_run_case_cleanup(test, suite);
-> > >  }
-> > >
-> > > --
-> > > 2.28.0.236.gb10cc79966-goog
-> > >
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Fixes: c4b27bc8682c ("drm/nouveau/kms/nv50-: convert core crc_set_src() to new push macros")
+---
+ drivers/gpu/drm/nouveau/dispnv50/crcc37d.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/nouveau/dispnv50/crcc37d.c b/drivers/gpu/drm/nouveau/dispnv50/crcc37d.c
+index 9afe9a87bde0c..814e5bd974460 100644
+--- a/drivers/gpu/drm/nouveau/dispnv50/crcc37d.c
++++ b/drivers/gpu/drm/nouveau/dispnv50/crcc37d.c
+@@ -6,7 +6,7 @@
+ #include "disp.h"
+ #include "head.h"
+ 
+-#include <nvif/push507c.h>
++#include <nvif/pushc37b.h>
+ 
+ #include <nvhw/class/clc37d.h>
+ 
+-- 
+2.26.2
+
