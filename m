@@ -5,52 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2581EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:21:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F21FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:21:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3BE122BF3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:21:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D3C522BF3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:21:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597087290;
-	bh=6jWR+thM07VhRcoLYcxTKLz/g2Xk4OkymWZ1u4O3P4Q=;
+	s=default; t=1597087297;
+	bh=yzqgOeGUuulbsB4LN8mlMYgkUV39h4cYOiRjSlgDeqE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0g0PVK7JrwJrzp3MzZ8+n6j5Pd6Sv5iZ4We0v9tzitVHqwRqEqyInnYhHU8rT/E4l
-	 P9DEQbEAQCPtDCGgHmXKDt2EM9WUPUhSOi8aJ0PO6+h3Pd1nZZM5Cdp7AacUAj3M06
-	 h8+5FJpgAI/42tr5/dFlyKU7QkW7aqYV4BUNWZIg=
+	b=KI+3QVJ2rCa6xdAa/MStAFJ9818OoJ555Hxhf0e1ui/zRlGTcuZc45zsPnL4J5L/s
+	 XttvenvcTrkI6DPxa7llx3Q1sR3XKJvhrVr8cX2jOg0+/+AmUkKmkzyoYrdvG1mpUC
+	 6cUCxSAgj0ji0eAzgnowP1/RwDYi8nrBJeM3XUw0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728216AbgHJTV2 (ORCPT
+        id S1730118AbgHJTVg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:21:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44446 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:21:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44194 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729757AbgHJTN1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:13:27 -0400
+        id S1729710AbgHJTNW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:13:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11BF022CAF;
-        Mon, 10 Aug 2020 19:13:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E499F22BEA;
+        Mon, 10 Aug 2020 19:13:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086807;
-        bh=6jWR+thM07VhRcoLYcxTKLz/g2Xk4OkymWZ1u4O3P4Q=;
+        s=default; t=1597086801;
+        bh=yzqgOeGUuulbsB4LN8mlMYgkUV39h4cYOiRjSlgDeqE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SNESTmp0VGMcUS55974K+rT5MRgS+ExPELUcuCeA3A85TqKWN8J71TIODgY8EHo5c
-         0XBXW+On+1aTDbUUM3FCijdXEYYFqrbPS8L4QcWBLwdAOiICEkowOVFrlgB070X/vL
-         hkbldqdO1u8JYCnFGoWNDFOba3yB5ppAXwUPXiiU=
+        b=hDIY3MDKeLt62jvl5Bzanpa3EC3h7t8V55vBR9V3gb9nEOYsgRBdJDCwdIAofyfpN
+         g6XuaMmZuOh29XZcutJfk/SUg1LQi/Gf3kSwIsx15z9oIcleQaEEIxVO8hQWtnWlp/
+         TY6sJjB0JvX5/KDMyaqxeQsiZWV6Qm1VIeFDVDk0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wright Feng <wright.feng@cypress.com>,
-        Chi-hsien Lin <chi-hsien.lin@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+Cc:     Michael Tretter <m.tretter@pengutronix.de>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Emil Velikov <emil.l.velikov@gmail.com>,
         Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 19/31] brcmfmac: keep SDIO watchdog running when console_interval is non-zero
-Date:   Mon, 10 Aug 2020 15:12:47 -0400
-Message-Id: <20200810191259.3794858-19-sashal@kernel.org>
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 15/31] drm/debugfs: fix plain echo to connector "force" attribute
+Date:   Mon, 10 Aug 2020 15:12:43 -0400
+Message-Id: <20200810191259.3794858-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810191259.3794858-1-sashal@kernel.org>
 References: <20200810191259.3794858-1-sashal@kernel.org>
@@ -63,42 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wright Feng <wright.feng@cypress.com>
+From: Michael Tretter <m.tretter@pengutronix.de>
 
-[ Upstream commit eccbf46b15bb3e35d004148f7c3a8fa8e9b26c1e ]
+[ Upstream commit c704b17071c4dc571dca3af4e4151dac51de081a ]
 
-brcmfmac host driver makes SDIO bus sleep and stops SDIO watchdog if no
-pending event or data. As a result, host driver does not poll firmware
-console buffer before buffer overflow, which leads to missing firmware
-logs. We should not stop SDIO watchdog if console_interval is non-zero
-in debug build.
+Using plain echo to set the "force" connector attribute fails with
+-EINVAL, because echo appends a newline to the output.
 
-Signed-off-by: Wright Feng <wright.feng@cypress.com>
-Signed-off-by: Chi-hsien Lin <chi-hsien.lin@cypress.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200604071835.3842-4-wright.feng@cypress.com
+Replace strcmp with sysfs_streq to also accept strings that end with a
+newline.
+
+v2: use sysfs_streq instead of stripping trailing whitespace
+
+Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
+Reviewed-by: Jani Nikula <jani.nikula@intel.com>
+Signed-off-by: Emil Velikov <emil.l.velikov@gmail.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20170817104307.17124-1-m.tretter@pengutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/drm_debugfs.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-index 96870d1b3b73b..a5195bdb4d9bd 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-@@ -3633,7 +3633,11 @@ static void brcmf_sdio_bus_watchdog(struct brcmf_sdio *bus)
- 			if (bus->idlecount > bus->idletime) {
- 				brcmf_dbg(SDIO, "idle\n");
- 				sdio_claim_host(bus->sdiodev->func1);
--				brcmf_sdio_wd_timer(bus, false);
-+#ifdef DEBUG
-+				if (!BRCMF_FWCON_ON() ||
-+				    bus->console_interval == 0)
-+#endif
-+					brcmf_sdio_wd_timer(bus, false);
- 				bus->idlecount = 0;
- 				brcmf_sdio_bus_sleep(bus, true, false);
- 				sdio_release_host(bus->sdiodev->func1);
+diff --git a/drivers/gpu/drm/drm_debugfs.c b/drivers/gpu/drm/drm_debugfs.c
+index 373bd4c2b698b..84b7b22a9590a 100644
+--- a/drivers/gpu/drm/drm_debugfs.c
++++ b/drivers/gpu/drm/drm_debugfs.c
+@@ -265,13 +265,13 @@ static ssize_t connector_write(struct file *file, const char __user *ubuf,
+ 
+ 	buf[len] = '\0';
+ 
+-	if (!strcmp(buf, "on"))
++	if (sysfs_streq(buf, "on"))
+ 		connector->force = DRM_FORCE_ON;
+-	else if (!strcmp(buf, "digital"))
++	else if (sysfs_streq(buf, "digital"))
+ 		connector->force = DRM_FORCE_ON_DIGITAL;
+-	else if (!strcmp(buf, "off"))
++	else if (sysfs_streq(buf, "off"))
+ 		connector->force = DRM_FORCE_OFF;
+-	else if (!strcmp(buf, "unspecified"))
++	else if (sysfs_streq(buf, "unspecified"))
+ 		connector->force = DRM_FORCE_UNSPECIFIED;
+ 	else
+ 		return -EINVAL;
 -- 
 2.25.1
 
