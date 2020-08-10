@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78152C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD53FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:12:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3915222B47
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:12:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8590C22D2B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:12:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597086725;
-	bh=5YK53QyrZe61Fi3EOiVKr+EVL03o7jNCj4h9lKRxGYc=;
+	s=default; t=1597086726;
+	bh=deoFFvs+lYOA3NhbnLW7aKfmT9nZI/YTcIyEDI6w7XU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OXLVTrVC5sH5s/bjO5wsYSJ8O80TOZAxhQp2rTweyZ1Bz/HfBwaxNE+urYCp1FDdl
-	 QKH1x7gJYngVCS75CaEtTrxM8tXWvPNFy6PubOZ8o1fC8fBafYFySc0zG5p/Hi5L5O
-	 msiwT7QVVn9ja2d0rpK2dVMMOMNX0RofE+Y0RtOs=
+	b=YjbAh12TXmyHSpaSHsUgyuOBnyvCxrEQmET+r31EfSo6h3i0gBLMCCRUohFDm37mA
+	 lOqJSrznCOmMp/7I6m3PPA1f67kIFIPxHKKGdO8EQz80VtH7axhspm8oOmYZrOOu1y
+	 zSxMu7Mgl1b9avrdLDZBsXcud8SpguaCESNBBs2c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729463AbgHJTMD (ORCPT
+        id S1729472AbgHJTMF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:12:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40624 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:12:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729403AbgHJTLt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:11:49 -0400
+        id S1728507AbgHJTLw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:11:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3B3022BEB;
-        Mon, 10 Aug 2020 19:11:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 771F4207FF;
+        Mon, 10 Aug 2020 19:11:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086708;
-        bh=5YK53QyrZe61Fi3EOiVKr+EVL03o7jNCj4h9lKRxGYc=;
+        s=default; t=1597086711;
+        bh=deoFFvs+lYOA3NhbnLW7aKfmT9nZI/YTcIyEDI6w7XU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2Hsxc/Lzu4+geJyhTQTKs9tFSNNFdhSXtQ9c8YIKJMtedK2naKy+cboyFo+qX2NYw
-         NuRqrN2j0j3R62TWwOEvcnLJDpn0kUPSrh53YnTIo7rokYXRWuT/P0YiGaHcmIIZFA
-         KBZFUKg+Yo9SOw5ehqV7XtA/sK/fio0L14qi9n1o=
+        b=zqe7Jc+XdrquCBQhYeAl5iqOtX4XoQM2BzZpbh8hUn19KklvCkpRi8X5d0uJWQBy2
+         4DhqJuJNQxNhLEobRimCdr2Ilm9RO6mGIaV9fkZNnw9ncvdQ/DAGbCqdvRQP7tlrkk
+         NHJ0Na4jomG2/LQeI70ynHMKijBE9pngBA04/FC0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pavel Begunkov <asml.silence@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 58/60] io_uring: fix stalled deferred requests
-Date:   Mon, 10 Aug 2020 15:10:26 -0400
-Message-Id: <20200810191028.3793884-58-sashal@kernel.org>
+Cc:     Rob Clark <robdclark@chromium.org>,
+        Abhinav Kumar <abhinavk@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.7 60/60] drm/msm: ratelimit crtc event overflow error
+Date:   Mon, 10 Aug 2020 15:10:28 -0400
+Message-Id: <20200810191028.3793884-60-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810191028.3793884-1-sashal@kernel.org>
 References: <20200810191028.3793884-1-sashal@kernel.org>
@@ -59,34 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Begunkov <asml.silence@gmail.com>
+From: Rob Clark <robdclark@chromium.org>
 
-[ Upstream commit dd9dfcdf5a603680458f5e7b0d2273c66e5417db ]
+[ Upstream commit 5e16372b5940b1fecc3cc887fc02a50ba148d373 ]
 
-Always do io_commit_cqring() after completing a request, even if it was
-accounted as overflowed on the CQ side. Failing to do that may lead to
-not to pushing deferred requests when needed, and so stalling the whole
-ring.
+This can happen a lot when things go pear shaped.  Lets not flood dmesg
+when this happens.
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+Reviewed-by: Abhinav Kumar <abhinavk@codeaurora.org>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/io_uring.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index d04fede20acb8..5d33c05de02e5 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -7575,6 +7575,7 @@ static void io_uring_cancel_files(struct io_ring_ctx *ctx,
- 			}
- 			WRITE_ONCE(ctx->rings->cq_overflow,
- 				atomic_inc_return(&ctx->cached_cq_overflow));
-+			io_commit_cqring(ctx);
- 			spin_unlock_irq(&ctx->completion_lock);
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+index 17448505a9b5f..d263d6e69bf12 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+@@ -386,7 +386,7 @@ static void dpu_crtc_frame_event_cb(void *data, u32 event)
+ 	spin_unlock_irqrestore(&dpu_crtc->spin_lock, flags);
  
- 			/*
+ 	if (!fevent) {
+-		DRM_ERROR("crtc%d event %d overflow\n", crtc->base.id, event);
++		DRM_ERROR_RATELIMITED("crtc%d event %d overflow\n", crtc->base.id, event);
+ 		return;
+ 	}
+ 
 -- 
 2.25.1
 
