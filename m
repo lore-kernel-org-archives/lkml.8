@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2BF6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:33:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73078C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE87522B47
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:33:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49CF822B47
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:33:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597088007;
-	bh=Z6K4uvy4C7W23CznrC/gasZ1erGhoQ4x23h6wbcUX98=;
+	s=default; t=1597088011;
+	bh=xVNJuHkAildX0xCTS4AHRtF9UgkFpucBy56ZAeDRSXo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wL/5cz/TPp3cDR0gjEw0oKU0Ku4LJBvbO4397Htk1JZ43EzDHX0NKmfmTcyoHrK4p
-	 cSDhBVcpVtDPqzl0fZqznjbW7nyusWeRuleeUML4tOKCnAupyjkun0M/khiCFubZNG
-	 062lLGTv9yCMetyV+9wKQd2D8xj1IBzXGbXwgwgU=
+	b=tHH3FTNvgcgHvAeWCpw/P9cCeUMX6mayN7VH1bVk3Z457m/tkNaraOnEDz2MVK/61
+	 kGJYuD9E3ggVsgmpYw4yjXrXp6WpuYIEHuF3hZsq/jrkVIKW+szryLXXWOw8paYfWr
+	 v7alm7B8BVtqyucjrcyWT7odM1UcXg0MQCPbd4fY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728891AbgHJTd0 (ORCPT
+        id S1728437AbgHJTJT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:33:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35640 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:09:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728471AbgHJTJX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:09:23 -0400
+        id S1728400AbgHJTJR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:09:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4372B22B49;
-        Mon, 10 Aug 2020 19:09:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 804F322B45;
+        Mon, 10 Aug 2020 19:09:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086563;
-        bh=Z6K4uvy4C7W23CznrC/gasZ1erGhoQ4x23h6wbcUX98=;
+        s=default; t=1597086556;
+        bh=xVNJuHkAildX0xCTS4AHRtF9UgkFpucBy56ZAeDRSXo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jf7Q2dzHhdFCZMsThE3Y6aMHd55nuHrVl7QGk3+1ljqgoahosDQm1TmnF8F7wiXvN
-         Nmmda7Djm+Ag2vL7gAOuNc2xerryx0Jf7DRe5O3Li7FGNkL5aLpcC5QNcj/y2lziDp
-         boNLtoefnWVmw+0WBeG2xWU2HsM7rr7e7fWoTRMU=
+        b=jjBweOYd+EOcNdn1G1er77BjvKtiexXiz8uU3doAIPh17Yi15c4qTG+GQQ4eprb6W
+         284mz00Q68UpeeGJXHIbn8cJN4MBel+GHWnNlqiCAAnfJxq5v/HCM1v0ynKclETtH9
+         AhrLKpIhvt2ioZOnoy5FLYdr/WyzWOUJZeED29B4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lyude Paul <lyude@redhat.com>, Ben Skeggs <bskeggs@redhat.com>,
-        Dave Airlie <airlied@gmail.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.8 17/64] drm/nouveau/kms/nv50-: Fix disabling dithering
-Date:   Mon, 10 Aug 2020 15:08:12 -0400
-Message-Id: <20200810190859.3793319-17-sashal@kernel.org>
+Cc:     Evgeny Novikov <novikov@ispras.ru>,
+        Antonino Daplas <adaplas@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sasha Levin <sashal@kernel.org>, linux-fbdev@vger.kernel.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.8 12/64] video: fbdev: savage: fix memory leak on error handling path in probe
+Date:   Mon, 10 Aug 2020 15:08:07 -0400
+Message-Id: <20200810190859.3793319-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810190859.3793319-1-sashal@kernel.org>
 References: <20200810190859.3793319-1-sashal@kernel.org>
@@ -60,62 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lyude Paul <lyude@redhat.com>
+From: Evgeny Novikov <novikov@ispras.ru>
 
-[ Upstream commit fb2420b701edbf96c2b6d557f0139902f455dc2b ]
+[ Upstream commit e8d35898a78e34fc854ed9680bc3f9caedab08cd ]
 
-While we expose the ability to turn off hardware dithering for nouveau,
-we actually make the mistake of turning it on anyway, due to
-dithering_depth containing a non-zero value if our dithering depth isn't
-also set to 6 bpc.
+savagefb_probe() calls savage_init_fb_info() that can successfully
+allocate memory for info->pixmap.addr but then fail when
+fb_alloc_cmap() fails. savagefb_probe() goes to label failed_init and
+does not free allocated memory. It is not valid to go to label
+failed_mmio since savage_init_fb_info() can fail during memory
+allocation as well. So, the patch free allocated memory on the error
+handling path in savage_init_fb_info() itself.
 
-So, fix it by never enabling dithering when it's disabled.
+Found by Linux Driver Verification project (linuxtesting.org).
 
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Reviewed-by: Ben Skeggs <bskeggs@redhat.com>
-Acked-by: Dave Airlie <airlied@gmail.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200627194657.156514-6-lyude@redhat.com
+Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
+Cc: Antonino Daplas <adaplas@gmail.com>
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200619162136.9010-1-novikov@ispras.ru
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/dispnv50/head.c | 24 +++++++++++++-----------
- 1 file changed, 13 insertions(+), 11 deletions(-)
+ drivers/video/fbdev/savage/savagefb_driver.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/nouveau/dispnv50/head.c b/drivers/gpu/drm/nouveau/dispnv50/head.c
-index 8f6455697ba72..ed6819519f6d8 100644
---- a/drivers/gpu/drm/nouveau/dispnv50/head.c
-+++ b/drivers/gpu/drm/nouveau/dispnv50/head.c
-@@ -84,18 +84,20 @@ nv50_head_atomic_check_dither(struct nv50_head_atom *armh,
- {
- 	u32 mode = 0x00;
- 
--	if (asyc->dither.mode == DITHERING_MODE_AUTO) {
--		if (asyh->base.depth > asyh->or.bpc * 3)
--			mode = DITHERING_MODE_DYNAMIC2X2;
--	} else {
--		mode = asyc->dither.mode;
--	}
-+	if (asyc->dither.mode) {
-+		if (asyc->dither.mode == DITHERING_MODE_AUTO) {
-+			if (asyh->base.depth > asyh->or.bpc * 3)
-+				mode = DITHERING_MODE_DYNAMIC2X2;
-+		} else {
-+			mode = asyc->dither.mode;
-+		}
- 
--	if (asyc->dither.depth == DITHERING_DEPTH_AUTO) {
--		if (asyh->or.bpc >= 8)
--			mode |= DITHERING_DEPTH_8BPC;
--	} else {
--		mode |= asyc->dither.depth;
-+		if (asyc->dither.depth == DITHERING_DEPTH_AUTO) {
-+			if (asyh->or.bpc >= 8)
-+				mode |= DITHERING_DEPTH_8BPC;
-+		} else {
-+			mode |= asyc->dither.depth;
-+		}
+diff --git a/drivers/video/fbdev/savage/savagefb_driver.c b/drivers/video/fbdev/savage/savagefb_driver.c
+index 3c8ae87f0ea7d..3fd87aeb6c798 100644
+--- a/drivers/video/fbdev/savage/savagefb_driver.c
++++ b/drivers/video/fbdev/savage/savagefb_driver.c
+@@ -2157,6 +2157,8 @@ static int savage_init_fb_info(struct fb_info *info, struct pci_dev *dev,
+ 			info->flags |= FBINFO_HWACCEL_COPYAREA |
+ 				       FBINFO_HWACCEL_FILLRECT |
+ 				       FBINFO_HWACCEL_IMAGEBLIT;
++		else
++			kfree(info->pixmap.addr);
  	}
- 
- 	asyh->dither.enable = mode;
+ #endif
+ 	return err;
 -- 
 2.25.1
 
