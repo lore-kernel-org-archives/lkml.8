@@ -2,94 +2,134 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50BB7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 20:37:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 318DCC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 20:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F85020658
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 20:37:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0847820658
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 20:41:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eM4E+WeB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HNAmfy/S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726756AbgHJUho (ORCPT
+        id S1726558AbgHJUlO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 16:37:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55454 "EHLO
+        Mon, 10 Aug 2020 16:41:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55986 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726578AbgHJUho (ORCPT
+        with ESMTP id S1726412AbgHJUlN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 16:37:44 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 378D4C061756
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 13:37:44 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id t6so5604944pgq.1
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 13:37:44 -0700 (PDT)
+        Mon, 10 Aug 2020 16:41:13 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86645C061756
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 13:41:13 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id a5so9440950wrm.6
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 13:41:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=dRuWkhrpmAmcdHS/RSpOjVe+mnrE0qLuVyBAgROKiXA=;
-        b=eM4E+WeBerf5fSAzchaYTrGpGpDKQKDWHN6PAYU+UFvSjnPMdqlztCS1sdBJCbZbWy
-         UxMV3gEQACxBIwho9amuG2UQjwcNFmTfXQoaKvF6hGkTEBhXO35Q+VqVummT6bz8Gz/c
-         FWMekgdrOooXKBIgHiHsozjnXgasmXw+Xd8lwlXgTHNqNEHFwBwE4Cbt0bsFKMPj1Cq6
-         N0tKFCuewUeu+B51Rh+9kV2BUOGmRBUr1g21GA2SvhBfoj8mSgk4DA5Fjiq/eDBRLF2c
-         xoN9JVf4ZYQP7FNUjISyxFVWIU8FU7g9dBC1NkEs6HSX/En2QXv5Zmzp43NO7Tm8lmXc
-         GlCw==
+        bh=j5EMGvKq/QSX5Nimp/54WIo9VIgueJVLDNTbT/YFCVY=;
+        b=HNAmfy/Sdw56Fk4HXbA5HK6MYGqBTOc2AiPdgnLx5JtcUuh68tZ6Tx1iKnBrXpZh6G
+         5qiF697ztbHxs49Rlt7PhputKn0uB+xYoVhJqP5n/uiaPEUWURIiCNlyt6xQqllxW8bD
+         xlzXLHwtGbs3iuwy4MIoIMpDPfmNYfYFQP/r3DAVGUVS4Mcwp1Eir7Rxg9ZlYxYO3hcF
+         K7UY+xDks8E04zhwdP4KHcLSvFq75GqOZdSb/nWg1H6TuAlHUKHMgk4h8S8dRELbBisv
+         kQZdyXeOm0uKHhGUmLymXvT3NrgY3FY3HrkXlNO9yc6qYWcD5mcKi4jhEy5ajNvmeTwQ
+         f65g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=dRuWkhrpmAmcdHS/RSpOjVe+mnrE0qLuVyBAgROKiXA=;
-        b=XuPsoWZIQLTx3NujZK475MZscC55OWPL0juVnU4txR3hFTmEtt5XBSkv1g7YjExf+P
-         6Cthq8TVu/G05oJ6geOU77/spayrE9+h0LTuHs5UduGWWBIgja1LXrgFfuIsYa2vhFFK
-         fvuDAMZmU1bEE7uY7sTiCqHb622o5DOSUo9Yug3vPCzH5kJo9yHyDFqBNj11Br4N23dc
-         aDV6yVoQo2c1ytZ+Yn0oMmEZd80uGFAXGTyaDfjP4yDMiBDNu3wETtlspsY7UZO5KG8P
-         ywp0DjkdcXWMdY5QjzBJ2JKUKfIJyoZGgy6Y2dU1Q/xINMB0hYrLEJsUGU0JpkWu26k6
-         ug1A==
-X-Gm-Message-State: AOAM530KF9W38G9DOq3I4W/SL4luKxHSRgZxnzbf4/5GDC9LnGaiL9Ja
-        QqNT+mnfXXOcGz9uG0PRLn02uTpAJWmfHy0ZWD2CQE7WEgY=
-X-Google-Smtp-Source: ABdhPJzdSfAqA/j0q/YYNpuGb0tpTIDII2+HAUBc9ozroDpARVr5Zu6I3gO7aiqbyi08i7motFMnChXVW7jUbJRl5+c=
-X-Received: by 2002:a62:1b4a:: with SMTP id b71mr2760943pfb.106.1597091863550;
- Mon, 10 Aug 2020 13:37:43 -0700 (PDT)
+        bh=j5EMGvKq/QSX5Nimp/54WIo9VIgueJVLDNTbT/YFCVY=;
+        b=neC2FKbnn+AhwKMkRZLg1CBpMAxlmSUF7tyCtjfMtEtHgGDSDcLGNaIrR4VJav3Utb
+         kJE94SRMZHuicgknBz7SJ6LxR4OtDeRY27FO3hoLh+I00Uhrme6vQAN3+DZw9uSd6KWr
+         +gl7uvH8hM26VmqSpCSDlt9JsrrqH2k2ugs+4AH2k1Z5FjO3O/3/LEiQQBjevyjsRHTy
+         fJHoLRZXCi1WRc/kIw07OI2Al/aSTwmDYpEoOUm/jREAe8OGMnYrwp2QQMFbVqP5tDp+
+         O0bpPnblRA7KNK+SceJyAhEfap5KkweuIgvmapp0IPL7uA0OTLzE+N1rtR48pK0d6B0W
+         QbTg==
+X-Gm-Message-State: AOAM532ChsrkaIpOGUkvvz/7AW8PKehXUN8MKzPavPo1hzYi7NIhUHO9
+        pwXOvoWBTVBc/7RSkZHrR0HNPd9MgktEREeXNVA=
+X-Google-Smtp-Source: ABdhPJzOmgYQCKeWOO9uF9gzi1K9AZ4CcZsAsbDF7u1GYgArYAoq9f8y7HNIy/6aGB8LTYBu9CAicrnWnsBweA0NmWs=
+X-Received: by 2002:a5d:618e:: with SMTP id j14mr27138572wru.374.1597092070897;
+ Mon, 10 Aug 2020 13:41:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200806174326.3577537-1-urielguajardojr@gmail.com>
-In-Reply-To: <20200806174326.3577537-1-urielguajardojr@gmail.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Mon, 10 Aug 2020 13:37:32 -0700
-Message-ID: <CAFd5g45D9xFCYGHhZfCNVeg1qJfe7X=9JB5-LSW79Qf6XPp+0w@mail.gmail.com>
-Subject: Re: [PATCH 1/2] kunit: support failure from dynamic analysis tools
-To:     Uriel Guajardo <urielguajardojr@gmail.com>
-Cc:     Uriel Guajardo <urielguajardo@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>
+References: <20200810125919.185312-1-miaoqinglang@huawei.com>
+In-Reply-To: <20200810125919.185312-1-miaoqinglang@huawei.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Mon, 10 Aug 2020 16:40:59 -0400
+Message-ID: <CADnq5_PunHA1VHHj7VtEHG6o2Z_Z1WS325y_R9xO+gsV_JCOXw@mail.gmail.com>
+Subject: Re: [PATCH] drm/amd/display: convert to use le16_add_cpu()
+To:     Qinglang Miao <miaoqinglang@huawei.com>
+Cc:     Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Airlie <airlied@linux.ie>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 6, 2020 at 10:43 AM Uriel Guajardo
-<urielguajardojr@gmail.com> wrote:
->
-> Adds an API to allow dynamic analysis tools to fail the currently
-> running KUnit test case.
->
-> - Always places the kunit test in the task_struct to allow other tools
-> to access the currently running KUnit test.
->
-> - Creates a new header file to avoid circular dependencies that could be
-> created from the test.h file.
->
-> Requires KASAN-KUnit integration patch to access the kunit test from
-> task_struct:
-> https://lore.kernel.org/linux-kselftest/20200606040349.246780-2-davidgow@google.com/
->
-> Signed-off-by: Uriel Guajardo <urielguajardo@google.com>
+Applied.  Thanks!
 
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+Alex
+
+On Mon, Aug 10, 2020 at 9:05 AM Qinglang Miao <miaoqinglang@huawei.com> wrote:
+>
+> Convert cpu_to_le16(le16_to_cpu(E1) + E2) to use le16_add_cpu().
+>
+> Signed-off-by: Qinglang Miao <miaoqinglang@huawei.com>
+> ---
+>  drivers/gpu/drm/amd/display/dc/bios/command_table.c  | 4 +---
+>  drivers/gpu/drm/amd/display/dc/bios/command_table2.c | 5 +----
+>  2 files changed, 2 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/amd/display/dc/bios/command_table.c b/drivers/gpu/drm/amd/display/dc/bios/command_table.c
+> index 5815983ca..070459e3e 100644
+> --- a/drivers/gpu/drm/amd/display/dc/bios/command_table.c
+> +++ b/drivers/gpu/drm/amd/display/dc/bios/command_table.c
+> @@ -1877,9 +1877,7 @@ static enum bp_result set_crtc_using_dtd_timing_v3(
+>                          * but it is 4 either from Edid data (spec CEA 861)
+>                          * or CEA timing table.
+>                          */
+> -                       params.usV_SyncOffset =
+> -                                       cpu_to_le16(le16_to_cpu(params.usV_SyncOffset) + 1);
+> -
+> +                       le16_add_cpu(&params.usV_SyncOffset, 1);
+>                 }
+>         }
+>
+> diff --git a/drivers/gpu/drm/amd/display/dc/bios/command_table2.c b/drivers/gpu/drm/amd/display/dc/bios/command_table2.c
+> index bed91572f..e8f52eb8e 100644
+> --- a/drivers/gpu/drm/amd/display/dc/bios/command_table2.c
+> +++ b/drivers/gpu/drm/amd/display/dc/bios/command_table2.c
+> @@ -569,10 +569,7 @@ static enum bp_result set_crtc_using_dtd_timing_v3(
+>                          * but it is 4 either from Edid data (spec CEA 861)
+>                          * or CEA timing table.
+>                          */
+> -                       params.v_syncoffset =
+> -                               cpu_to_le16(le16_to_cpu(params.v_syncoffset) +
+> -                                               1);
+> -
+> +                       le16_add_cpu(&params.v_syncoffset, 1);
+>                 }
+>         }
+>
+> --
+> 2.25.1
+>
+> _______________________________________________
+> amd-gfx mailing list
+> amd-gfx@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
