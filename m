@@ -2,208 +2,111 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4C64C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:59:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 683FAC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:03:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94E8720B1F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:59:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m+7zEMrC"
+	by mail.kernel.org (Postfix) with ESMTP id 4155A20772
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:03:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727814AbgHJO7X (ORCPT
+        id S1727768AbgHJPDL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 10:59:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59966 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727123AbgHJO7K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 10:59:10 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44E5DC061756;
-        Mon, 10 Aug 2020 07:59:10 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id u20so5527252pfn.0;
-        Mon, 10 Aug 2020 07:59:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Cha7rnpRi4xpgmDPF7CsOih8am/jsjcB9lLAioEKTb0=;
-        b=m+7zEMrCxnOsC5MPGuxT74CMpXZuPQWPmkQVqiLheycGqhlGH8oQga5z7vS2SaU7QY
-         D2Qzuensekq1rbTUBI7WmvlC+dLL4OX8/n6Lhq0VqhbtWRY6Pl2pxA5tX+n2DxRlHrjT
-         xV6nDFcRP1+ilSfclFpZ+tPtMyUuNfDTn0f9P0qqXi7eEf+Tby/kxmwU3JGZZV9uLV57
-         a6LdKyDmMULgOCJ8vzozktQjUkdI8sboYmAMWUob2V4s+QZW8qNqVbsvpiyBuxLJt6K9
-         KQjsEefcu1Rlr6rKIt5V8TzmVKTJU+ybrBrJonjr62hTdWWWhi04OMLswn6jdotS3u2h
-         Eibg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Cha7rnpRi4xpgmDPF7CsOih8am/jsjcB9lLAioEKTb0=;
-        b=dduVOj3i+0XQOyenoGNV9pUmpBqIu+0dhBuJ8axCrEugHaxds3l0VXK2ylZIw4xjOF
-         W7QxDtN6X6IoncP8+hlNlxthuX7hsf+tCukzEQ9b0wmtT7RfaKifkuWR46EVtnCFa+lD
-         CLDz6GpxXKGx6scbfGHcMBcS5zD/78ekpg5jk0pfw1vQtMoSRgG/7dJnsgAtAwWp8J11
-         DRKbfmzGOVfOVac28/iczzxPd+uWKoEraDVRwQPXs6y+0BdyLDoMXntKQn+EUZEFN5Q1
-         2DuoaZ1mIEQpMKDsnF6P7y6K6033W5Iuv65SzrD+V3PFEN2yMhrFyxMSXFeC+na9ExD4
-         uEqg==
-X-Gm-Message-State: AOAM533YVl63Vuc1/ETVZcfQtvLdvQfgNtvqUtWeEbVgmd3j7XS6EOyn
-        qtGDHVlWiiZg0SJ2Kpu/c2XfTXu8uUk=
-X-Google-Smtp-Source: ABdhPJwyxBHCJCppYNb7kqBboZFk0vxRlQinVRMMd6rHHY87o7D0qdVNYm/yv98gngKpHYLG2Y7IYA==
-X-Received: by 2002:a63:4c5f:: with SMTP id m31mr18445720pgl.403.1597071549666;
-        Mon, 10 Aug 2020 07:59:09 -0700 (PDT)
-Received: from localhost.localdomain ([124.170.227.101])
-        by smtp.gmail.com with ESMTPSA id o192sm25631162pfg.81.2020.08.10.07.59.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Aug 2020 07:59:09 -0700 (PDT)
-From:   Eugene Lubarsky <elubarsky.linux@gmail.com>
-To:     linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, adobriyan@gmail.com,
-        avagin@gmail.com, dsahern@gmail.com
-Subject: [RFC PATCH 4/5] fs/proc: Introduce /proc/all/io
-Date:   Tue, 11 Aug 2020 00:58:51 +1000
-Message-Id: <20200810145852.9330-5-elubarsky.linux@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200810145852.9330-1-elubarsky.linux@gmail.com>
-References: <20200810145852.9330-1-elubarsky.linux@gmail.com>
+        Mon, 10 Aug 2020 11:03:11 -0400
+Received: from mga14.intel.com ([192.55.52.115]:38032 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726499AbgHJPDK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:03:10 -0400
+IronPort-SDR: wWHoqf6ltRmFMz3QjQMdD1POQtu2tal+juHHNOJfckx7BgmxbCBEruqYTZJQXP9Bdc/PkIjjm6
+ Pp5FyHYZYilw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9708"; a="152760447"
+X-IronPort-AV: E=Sophos;i="5.75,457,1589266800"; 
+   d="scan'208";a="152760447"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2020 08:03:09 -0700
+IronPort-SDR: 12GPmA8BCeQKGz3X7oWrHdalm2jYaMpo7RLVvb4zhfL6Ek6UshgXWdDmlDGRZyMjLYfytOv4Ny
+ v8l1ys7ZGACg==
+X-IronPort-AV: E=Sophos;i="5.75,457,1589266800"; 
+   d="scan'208";a="438722426"
+Received: from schen8-mobl.amr.corp.intel.com (HELO [10.212.235.58]) ([10.212.235.58])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2020 08:03:07 -0700
+Subject: Re: [PATCH v3 2/2] ASoC: Intel: Add period size constraint on strago
+ board
+To:     "Lu, Brent" <brent.lu@intel.com>, Takashi Iwai <tiwai@suse.de>
+Cc:     Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        "Rojewski, Cezary" <cezary.rojewski@intel.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "yuhsuan@google.com" <yuhsuan@google.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Sam McNally <sammc@chromium.org>,
+        Mark Brown <broonie@kernel.org>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Daniel Stuart <daniel.stuart14@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Yu-Hsuan Hsu <yuhsuan@chromium.org>,
+        Damian van Soelen <dj.vsoelen@gmail.com>
+References: <1596020585-11517-1-git-send-email-brent.lu@intel.com>
+ <1596198365-10105-1-git-send-email-brent.lu@intel.com>
+ <1596198365-10105-3-git-send-email-brent.lu@intel.com>
+ <s5h5za3ajvb.wl-tiwai@suse.de>
+ <DM6PR11MB3642AE90DF98956CCEDE6C2F974F0@DM6PR11MB3642.namprd11.prod.outlook.com>
+ <s5hd04a90o4.wl-tiwai@suse.de>
+ <DM6PR11MB3642B5BC2E1E0708088526D8974D0@DM6PR11MB3642.namprd11.prod.outlook.com>
+ <63bca214-3434-16c6-1b60-adf323aec554@linux.intel.com>
+ <DM6PR11MB3642D9BE1E5DAAB8B78B84B0974D0@DM6PR11MB3642.namprd11.prod.outlook.com>
+ <s5hpn873by6.wl-tiwai@suse.de>
+ <DM6PR11MB36423A9D28134811AD5A911F974A0@DM6PR11MB3642.namprd11.prod.outlook.com>
+ <6466847a-8aae-24f7-d727-36ba75e95f98@linux.intel.com>
+ <DM6PR11MB364259049769F6EF3B84AABD97480@DM6PR11MB3642.namprd11.prod.outlook.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <3f3baf5e-f73d-9cd6-cbfb-36746071e126@linux.intel.com>
+Date:   Mon, 10 Aug 2020 10:03:06 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <DM6PR11MB364259049769F6EF3B84AABD97480@DM6PR11MB3642.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Returns io info for all visible processes.
 
-The data is the same as /proc/[pid]/io but formatted as a series
-of numbers on a single line. A PID column is also prepended.
 
-Signed-off-by: Eugene Lubarsky <elubarsky.linux@gmail.com>
----
- fs/proc/base.c | 66 ++++++++++++++++++++++++++++++++++++++++++++------
- 1 file changed, 59 insertions(+), 7 deletions(-)
+On 8/6/20 11:41 AM, Lu, Brent wrote:
+>>
+>> I don't get this. If the platform driver already stated 240 and 960 samples why
+>> would 432 be chosen? Doesn't this mean the constraint is not applied?
+> 
+> Hi Pierre,
+> 
+> Sorry for late reply. I used following constraints in V3 patch so any period which
+> aligns 1ms would be accepted.
+> 
+> +	/*
+> +	 * Make sure the period to be multiple of 1ms to align the
+> +	 * design of firmware. Apply same rule to buffer size to make
+> +	 * sure alsa could always find a value for period size
+> +	 * regardless the buffer size given by user space.
+> +	 */
+> +	snd_pcm_hw_constraint_step(substream->runtime, 0,
+> +			   SNDRV_PCM_HW_PARAM_PERIOD_SIZE, 48);
+> +	snd_pcm_hw_constraint_step(substream->runtime, 0,
+> +			   SNDRV_PCM_HW_PARAM_BUFFER_SIZE, 48);
 
-diff --git a/fs/proc/base.c b/fs/proc/base.c
-index 5982fd43dd21..03d48225b6d1 100644
---- a/fs/proc/base.c
-+++ b/fs/proc/base.c
-@@ -2910,9 +2910,8 @@ static const struct file_operations proc_coredump_filter_operations = {
- #endif
- 
- #ifdef CONFIG_TASK_IO_ACCOUNTING
--static int do_io_accounting(struct task_struct *task, struct seq_file *m, int whole)
-+static int calc_io_accounting(struct task_struct *task, struct task_io_accounting *acct, int whole)
- {
--	struct task_io_accounting acct = task->ioac;
- 	unsigned long flags;
- 	int result;
- 
-@@ -2928,12 +2927,27 @@ static int do_io_accounting(struct task_struct *task, struct seq_file *m, int wh
- 	if (whole && lock_task_sighand(task, &flags)) {
- 		struct task_struct *t = task;
- 
--		task_io_accounting_add(&acct, &task->signal->ioac);
-+		task_io_accounting_add(acct, &task->signal->ioac);
- 		while_each_thread(task, t)
--			task_io_accounting_add(&acct, &t->ioac);
-+			task_io_accounting_add(acct, &t->ioac);
- 
- 		unlock_task_sighand(task, &flags);
- 	}
-+	result = 0;
-+
-+out_unlock:
-+	mutex_unlock(&task->signal->exec_update_mutex);
-+	return result;
-+}
-+static int do_io_accounting(struct task_struct *task, struct seq_file *m, int whole)
-+{
-+	struct task_io_accounting acct = task->ioac;
-+	int result;
-+
-+	result = calc_io_accounting(task, &acct, whole);
-+	if (result)
-+		return result;
-+
- 	seq_printf(m,
- 		   "rchar: %llu\n"
- 		   "wchar: %llu\n"
-@@ -2949,10 +2963,7 @@ static int do_io_accounting(struct task_struct *task, struct seq_file *m, int wh
- 		   (unsigned long long)acct.read_bytes,
- 		   (unsigned long long)acct.write_bytes,
- 		   (unsigned long long)acct.cancelled_write_bytes);
--	result = 0;
- 
--out_unlock:
--	mutex_unlock(&task->signal->exec_update_mutex);
- 	return result;
- }
- 
-@@ -3896,7 +3907,42 @@ static int proc_all_statm(struct seq_file *m, void *v)
- 	return proc_pid_statm(m, ns, pid, task);
- }
- 
-+#ifdef CONFIG_TASK_IO_ACCOUNTING
-+static int proc_all_io_print_one(struct seq_file *m, struct task_struct *task)
-+{
-+	struct task_io_accounting acct = task->ioac;
-+	int result;
- 
-+	result = calc_io_accounting(task, &acct, 1);
-+	if (result)
-+		return result;
-+
-+	seq_printf(m,
-+		   "%llu %llu %llu %llu %llu %llu %llu\n",
-+		   (unsigned long long)acct.rchar,
-+		   (unsigned long long)acct.wchar,
-+		   (unsigned long long)acct.syscr,
-+		   (unsigned long long)acct.syscw,
-+		   (unsigned long long)acct.read_bytes,
-+		   (unsigned long long)acct.write_bytes,
-+		   (unsigned long long)acct.cancelled_write_bytes);
-+
-+	return result;
-+}
-+
-+static int proc_all_io(struct seq_file *m, void *v)
-+{
-+	struct all_iter *iter = (struct all_iter *) v;
-+	struct pid_namespace *ns = iter->ns;
-+	struct task_struct *task = iter->tgid_iter.task;
-+	struct pid *pid = task->thread_pid;
-+
-+	seq_put_decimal_ull(m, "", pid_nr_ns(pid, ns));
-+	seq_puts(m, " ");
-+
-+	return proc_all_io_print_one(m, task);
-+}
-+#endif
- 
- static int proc_all_status(struct seq_file *m, void *v)
- {
-@@ -3915,6 +3961,9 @@ static int proc_all_status(struct seq_file *m, void *v)
- PROC_ALL_OPS(stat);
- PROC_ALL_OPS(statm);
- PROC_ALL_OPS(status);
-+#ifdef CONFIG_TASK_IO_ACCOUNTING
-+	PROC_ALL_OPS(io);
-+#endif
- 
- #define PROC_ALL_CREATE(NAME) \
- 	do { \
-@@ -3932,4 +3981,7 @@ void __init proc_all_init(void)
- 	PROC_ALL_CREATE(stat);
- 	PROC_ALL_CREATE(statm);
- 	PROC_ALL_CREATE(status);
-+#ifdef CONFIG_TASK_IO_ACCOUNTING
-+	PROC_ALL_CREATE(io);
-+#endif
- }
--- 
-2.25.1
+432 samples is 9ms, I don't have a clue why/how CRAS might ask for this 
+value.
 
+It'd be a bit odd to add constraints just for the purpose of letting 
+userspace select a sensible value.
