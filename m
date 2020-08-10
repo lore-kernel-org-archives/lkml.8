@@ -5,46 +5,47 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80702C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:27:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C3A7C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:27:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 530022078B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:27:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52EE72073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:27:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="pc9oCyPV"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="VbX5gGaQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727100AbgHJW1k (ORCPT
+        id S1727775AbgHJW1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 18:27:40 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:57638 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727010AbgHJW1X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 18:27:23 -0400
+        Mon, 10 Aug 2020 18:27:45 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:14937 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727109AbgHJW1l (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 18:27:41 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597098442; h=Content-Transfer-Encoding: MIME-Version:
+ s=smtp; t=1597098461; h=Content-Transfer-Encoding: MIME-Version:
  References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=J+r2IuMCdiQpFZk2LJ7Mue1k3xmchWvzAhnGNLaZ568=; b=pc9oCyPVaVV1pGJ+KUat2cTdeobJRHj+0QIVBvrQwDJD2yI4CftFFZ7mrzupbVwj6AIk35Di
- zqmivNicf2s2iDqr6kVnm7cxqO96izblQaWwFGwvAR+djaXuFuJb9L/ic0OsXT7lGwEdjFUW
- y4Tw8ZaVI8CSCPPK6ZrG1CElf3I=
-X-Mailgun-Sending-Ip: 69.72.43.7
+ Sender; bh=iq9TuxnwB5kGxb5cTMsU0LE5bIkRcWS49YoceQPqScU=; b=VbX5gGaQvMT7un0M/uXuMD1DyfCsSUy0JLZNTIdy7iJqtQgHHGRkSj5IZVreZEZjWzGNxgVc
+ 7DD8/25H9J+v/9cIUb8RdPNHK8UeMriN5yFrWXd72YjTxgFaaFyvo12Okq+9Lsce4A05Yarx
+ 94HByZgEpBYHM8kC1ww1SASxoXE=
+X-Mailgun-Sending-Ip: 104.130.122.29
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n17.prod.us-west-2.postgun.com with SMTP id
- 5f31c9c03f2ce110209d59d6 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 10 Aug 2020 22:27:12
+ smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
+ 5f31c9ddc85a1092b0fb1673 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 10 Aug 2020 22:27:41
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B56FEC433AD; Mon, 10 Aug 2020 22:27:12 +0000 (UTC)
+        id 03826C433A1; Mon, 10 Aug 2020 22:27:34 +0000 (UTC)
 Received: from jordan-laptop.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B22D5C433C6;
-        Mon, 10 Aug 2020 22:27:09 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B22D5C433C6
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1DFF9C433AF;
+        Mon, 10 Aug 2020 22:27:28 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1DFF9C433AF
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
 From:   Jordan Crouse <jcrouse@codeaurora.org>
@@ -53,15 +54,13 @@ Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         iommu@lists.linux-foundation.org, freedreno@lists.freedesktop.org,
         Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Krishna Reddy <vdumpa@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v12 02/13] iommu/arm-smmu: Add support for split pagetables
-Date:   Mon, 10 Aug 2020 16:26:46 -0600
-Message-Id: <20200810222657.1841322-3-jcrouse@codeaurora.org>
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v12 09/13] drm/msm: Add support to create a local pagetable
+Date:   Mon, 10 Aug 2020 16:26:53 -0600
+Message-Id: <20200810222657.1841322-10-jcrouse@codeaurora.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810222657.1841322-1-jcrouse@codeaurora.org>
 References: <20200810222657.1841322-1-jcrouse@codeaurora.org>
@@ -72,103 +71,297 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable TTBR1 for a context bank if IO_PGTABLE_QUIRK_ARM_TTBR1 is selected
-by the io-pgtable configuration.
+Add support to create a io-pgtable for use by targets that support
+per-instance pagetables. In order to support per-instance pagetables the
+GPU SMMU device needs to have the qcom,adreno-smmu compatible string and
+split pagetables enabled.
 
 Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
 ---
 
- drivers/iommu/arm/arm-smmu/arm-smmu.c | 21 ++++++++++++++++-----
- drivers/iommu/arm/arm-smmu/arm-smmu.h | 25 +++++++++++++++++++------
- 2 files changed, 35 insertions(+), 11 deletions(-)
+ drivers/gpu/drm/msm/msm_gpummu.c |   2 +-
+ drivers/gpu/drm/msm/msm_iommu.c  | 190 ++++++++++++++++++++++++++++++-
+ drivers/gpu/drm/msm/msm_mmu.h    |  16 ++-
+ 3 files changed, 205 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu.c b/drivers/iommu/arm/arm-smmu/arm-smmu.c
-index 37d8d49299b4..976d43a7f2ff 100644
---- a/drivers/iommu/arm/arm-smmu/arm-smmu.c
-+++ b/drivers/iommu/arm/arm-smmu/arm-smmu.c
-@@ -552,11 +552,15 @@ static void arm_smmu_init_context_bank(struct arm_smmu_domain *smmu_domain,
- 			cb->ttbr[0] = pgtbl_cfg->arm_v7s_cfg.ttbr;
- 			cb->ttbr[1] = 0;
- 		} else {
--			cb->ttbr[0] = pgtbl_cfg->arm_lpae_s1_cfg.ttbr;
--			cb->ttbr[0] |= FIELD_PREP(ARM_SMMU_TTBRn_ASID,
--						  cfg->asid);
-+			cb->ttbr[0] = FIELD_PREP(ARM_SMMU_TTBRn_ASID,
-+				cfg->asid);
- 			cb->ttbr[1] = FIELD_PREP(ARM_SMMU_TTBRn_ASID,
--						 cfg->asid);
-+				cfg->asid);
-+
-+			if (pgtbl_cfg->quirks & IO_PGTABLE_QUIRK_ARM_TTBR1)
-+				cb->ttbr[1] |= pgtbl_cfg->arm_lpae_s1_cfg.ttbr;
-+			else
-+				cb->ttbr[0] |= pgtbl_cfg->arm_lpae_s1_cfg.ttbr;
- 		}
- 	} else {
- 		cb->ttbr[0] = pgtbl_cfg->arm_lpae_s2_cfg.vttbr;
-@@ -822,7 +826,14 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+diff --git a/drivers/gpu/drm/msm/msm_gpummu.c b/drivers/gpu/drm/msm/msm_gpummu.c
+index 310a31b05faa..aab121f4beb7 100644
+--- a/drivers/gpu/drm/msm/msm_gpummu.c
++++ b/drivers/gpu/drm/msm/msm_gpummu.c
+@@ -102,7 +102,7 @@ struct msm_mmu *msm_gpummu_new(struct device *dev, struct msm_gpu *gpu)
+ 	}
  
- 	/* Update the domain's page sizes to reflect the page table format */
- 	domain->pgsize_bitmap = pgtbl_cfg.pgsize_bitmap;
--	domain->geometry.aperture_end = (1UL << ias) - 1;
+ 	gpummu->gpu = gpu;
+-	msm_mmu_init(&gpummu->base, dev, &funcs);
++	msm_mmu_init(&gpummu->base, dev, &funcs, MSM_MMU_GPUMMU);
+ 
+ 	return &gpummu->base;
+ }
+diff --git a/drivers/gpu/drm/msm/msm_iommu.c b/drivers/gpu/drm/msm/msm_iommu.c
+index 1b6635504069..bc04dda8a198 100644
+--- a/drivers/gpu/drm/msm/msm_iommu.c
++++ b/drivers/gpu/drm/msm/msm_iommu.c
+@@ -4,15 +4,201 @@
+  * Author: Rob Clark <robdclark@gmail.com>
+  */
+ 
++#include <linux/io-pgtable.h>
+ #include "msm_drv.h"
+ #include "msm_mmu.h"
+ 
+ struct msm_iommu {
+ 	struct msm_mmu base;
+ 	struct iommu_domain *domain;
++	atomic_t pagetables;
+ };
 +
-+	if (pgtbl_cfg.quirks & IO_PGTABLE_QUIRK_ARM_TTBR1) {
-+		domain->geometry.aperture_start = ~0UL << ias;
-+		domain->geometry.aperture_end = ~0UL;
-+	} else {
-+		domain->geometry.aperture_end = (1UL << ias) - 1;
+ #define to_msm_iommu(x) container_of(x, struct msm_iommu, base)
+ 
++struct msm_iommu_pagetable {
++	struct msm_mmu base;
++	struct msm_mmu *parent;
++	struct io_pgtable_ops *pgtbl_ops;
++	phys_addr_t ttbr;
++	u32 asid;
++};
++static struct msm_iommu_pagetable *to_pagetable(struct msm_mmu *mmu)
++{
++	return container_of(mmu, struct msm_iommu_pagetable, base);
++}
++
++static int msm_iommu_pagetable_unmap(struct msm_mmu *mmu, u64 iova,
++		size_t size)
++{
++	struct msm_iommu_pagetable *pagetable = to_pagetable(mmu);
++	struct io_pgtable_ops *ops = pagetable->pgtbl_ops;
++	size_t unmapped = 0;
++
++	/* Unmap the block one page at a time */
++	while (size) {
++		unmapped += ops->unmap(ops, iova, 4096, NULL);
++		iova += 4096;
++		size -= 4096;
 +	}
 +
- 	domain->geometry.force_aperture = true;
- 
- 	/* Initialise the context bank with our page table cfg */
-diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu.h b/drivers/iommu/arm/arm-smmu/arm-smmu.h
-index 83294516ac08..f3e456893f28 100644
---- a/drivers/iommu/arm/arm-smmu/arm-smmu.h
-+++ b/drivers/iommu/arm/arm-smmu/arm-smmu.h
-@@ -169,10 +169,12 @@ enum arm_smmu_cbar_type {
- #define ARM_SMMU_CB_TCR			0x30
- #define ARM_SMMU_TCR_EAE		BIT(31)
- #define ARM_SMMU_TCR_EPD1		BIT(23)
-+#define ARM_SMMU_TCR_A1			BIT(22)
- #define ARM_SMMU_TCR_TG0		GENMASK(15, 14)
- #define ARM_SMMU_TCR_SH0		GENMASK(13, 12)
- #define ARM_SMMU_TCR_ORGN0		GENMASK(11, 10)
- #define ARM_SMMU_TCR_IRGN0		GENMASK(9, 8)
-+#define ARM_SMMU_TCR_EPD0		BIT(7)
- #define ARM_SMMU_TCR_T0SZ		GENMASK(5, 0)
- 
- #define ARM_SMMU_VTCR_RES1		BIT(31)
-@@ -350,12 +352,23 @@ struct arm_smmu_domain {
- 
- static inline u32 arm_smmu_lpae_tcr(struct io_pgtable_cfg *cfg)
++	iommu_flush_tlb_all(to_msm_iommu(pagetable->parent)->domain);
++
++	return (unmapped == size) ? 0 : -EINVAL;
++}
++
++static int msm_iommu_pagetable_map(struct msm_mmu *mmu, u64 iova,
++		struct sg_table *sgt, size_t len, int prot)
++{
++	struct msm_iommu_pagetable *pagetable = to_pagetable(mmu);
++	struct io_pgtable_ops *ops = pagetable->pgtbl_ops;
++	struct scatterlist *sg;
++	size_t mapped = 0;
++	u64 addr = iova;
++	unsigned int i;
++
++	for_each_sg(sgt->sgl, sg, sgt->nents, i) {
++		size_t size = sg->length;
++		phys_addr_t phys = sg_phys(sg);
++
++		/* Map the block one page at a time */
++		while (size) {
++			if (ops->map(ops, addr, phys, 4096, prot, GFP_KERNEL)) {
++				msm_iommu_pagetable_unmap(mmu, iova, mapped);
++				return -EINVAL;
++			}
++
++			phys += 4096;
++			addr += 4096;
++			size -= 4096;
++			mapped += 4096;
++		}
++	}
++
++	return 0;
++}
++
++static void msm_iommu_pagetable_destroy(struct msm_mmu *mmu)
++{
++	struct msm_iommu_pagetable *pagetable = to_pagetable(mmu);
++	struct msm_iommu *iommu = to_msm_iommu(pagetable->parent);
++
++	/*
++	 * If this is the last attached pagetable for the parent,
++	 * disable TTBR0 in the arm-smmu driver
++	 */
++	if (atomic_dec_return(&iommu->pagetables) == 0)
++		iommu_domain_set_attr(iommu->domain,
++			DOMAIN_ATTR_PGTABLE_CFG, NULL);
++
++	free_io_pgtable_ops(pagetable->pgtbl_ops);
++	kfree(pagetable);
++}
++
++int msm_iommu_pagetable_params(struct msm_mmu *mmu,
++		phys_addr_t *ttbr, int *asid)
++{
++	struct msm_iommu_pagetable *pagetable;
++
++	if (mmu->type != MSM_MMU_IOMMU_PAGETABLE)
++		return -EINVAL;
++
++	pagetable = to_pagetable(mmu);
++
++	if (ttbr)
++		*ttbr = pagetable->ttbr;
++
++	if (asid)
++		*asid = pagetable->asid;
++
++	return 0;
++}
++
++static const struct msm_mmu_funcs pagetable_funcs = {
++		.map = msm_iommu_pagetable_map,
++		.unmap = msm_iommu_pagetable_unmap,
++		.destroy = msm_iommu_pagetable_destroy,
++};
++
++static void msm_iommu_tlb_flush_all(void *cookie)
++{
++}
++
++static void msm_iommu_tlb_flush_walk(unsigned long iova, size_t size,
++		size_t granule, void *cookie)
++{
++}
++
++static void msm_iommu_tlb_add_page(struct iommu_iotlb_gather *gather,
++		unsigned long iova, size_t granule, void *cookie)
++{
++}
++
++static const struct iommu_flush_ops null_tlb_ops = {
++	.tlb_flush_all = msm_iommu_tlb_flush_all,
++	.tlb_flush_walk = msm_iommu_tlb_flush_walk,
++	.tlb_flush_leaf = msm_iommu_tlb_flush_walk,
++	.tlb_add_page = msm_iommu_tlb_add_page,
++};
++
++struct msm_mmu *msm_iommu_pagetable_create(struct msm_mmu *parent)
++{
++	struct msm_iommu *iommu = to_msm_iommu(parent);
++	static int next_asid = 16;
++	struct msm_iommu_pagetable *pagetable;
++	struct io_pgtable_cfg cfg;
++	int ret;
++
++	/* Get the pagetable configuration from the domain */
++	ret = iommu_domain_get_attr(iommu->domain,
++		DOMAIN_ATTR_PGTABLE_CFG, &cfg);
++	if (ret)
++		return ERR_PTR(ret);
++
++	pagetable = kzalloc(sizeof(*pagetable), GFP_KERNEL);
++	if (!pagetable)
++		return ERR_PTR(-ENOMEM);
++
++	msm_mmu_init(&pagetable->base, parent->dev, &pagetable_funcs,
++		MSM_MMU_IOMMU_PAGETABLE);
++
++	/* The incoming cfg will have the TTBR1 quirk enabled */
++	cfg.quirks &= ~IO_PGTABLE_QUIRK_ARM_TTBR1;
++	cfg.tlb = &null_tlb_ops;
++
++	pagetable->pgtbl_ops = alloc_io_pgtable_ops(ARM_64_LPAE_S1,
++		&cfg, iommu->domain);
++
++	if (!pagetable->pgtbl_ops) {
++		kfree(pagetable);
++		return ERR_PTR(-ENOMEM);
++	}
++
++	/*
++	 * If this is the first pagetable that we've allocated, send it back to
++	 * the arm-smmu driver as a trigger to set up TTBR0
++	 */
++	if (atomic_inc_return(&iommu->pagetables) == 1) {
++		ret = iommu_domain_set_attr(iommu->domain,
++			DOMAIN_ATTR_PGTABLE_CFG, &cfg);
++		if (ret) {
++			free_io_pgtable_ops(pagetable->pgtbl_ops);
++			kfree(pagetable);
++			return ERR_PTR(ret);
++		}
++	}
++
++	/* Needed later for TLB flush */
++	pagetable->parent = parent;
++	pagetable->ttbr = cfg.arm_lpae_s1_cfg.ttbr;
++
++	pagetable->asid = next_asid;
++	next_asid = (next_asid + 1) % 255;
++	next_asid = min(16, next_asid);
++
++	return &pagetable->base;
++}
++
+ static int msm_fault_handler(struct iommu_domain *domain, struct device *dev,
+ 		unsigned long iova, int flags, void *arg)
  {
--	return ARM_SMMU_TCR_EPD1 |
--	       FIELD_PREP(ARM_SMMU_TCR_TG0, cfg->arm_lpae_s1_cfg.tcr.tg) |
--	       FIELD_PREP(ARM_SMMU_TCR_SH0, cfg->arm_lpae_s1_cfg.tcr.sh) |
--	       FIELD_PREP(ARM_SMMU_TCR_ORGN0, cfg->arm_lpae_s1_cfg.tcr.orgn) |
--	       FIELD_PREP(ARM_SMMU_TCR_IRGN0, cfg->arm_lpae_s1_cfg.tcr.irgn) |
--	       FIELD_PREP(ARM_SMMU_TCR_T0SZ, cfg->arm_lpae_s1_cfg.tcr.tsz);
-+	u32 tcr = FIELD_PREP(ARM_SMMU_TCR_TG0, cfg->arm_lpae_s1_cfg.tcr.tg) |
-+		FIELD_PREP(ARM_SMMU_TCR_SH0, cfg->arm_lpae_s1_cfg.tcr.sh) |
-+		FIELD_PREP(ARM_SMMU_TCR_ORGN0, cfg->arm_lpae_s1_cfg.tcr.orgn) |
-+		FIELD_PREP(ARM_SMMU_TCR_IRGN0, cfg->arm_lpae_s1_cfg.tcr.irgn) |
-+		FIELD_PREP(ARM_SMMU_TCR_T0SZ, cfg->arm_lpae_s1_cfg.tcr.tsz);
+@@ -85,9 +271,11 @@ struct msm_mmu *msm_iommu_new(struct device *dev, struct iommu_domain *domain)
+ 		return ERR_PTR(-ENOMEM);
+ 
+ 	iommu->domain = domain;
+-	msm_mmu_init(&iommu->base, dev, &funcs);
++	msm_mmu_init(&iommu->base, dev, &funcs, MSM_MMU_IOMMU);
+ 	iommu_set_fault_handler(domain, msm_fault_handler, iommu);
+ 
++	atomic_set(&iommu->pagetables, 0);
 +
-+       /*
-+	* When TTBR1 is selected shift the TCR fields by 16 bits and disable
-+	* translation in TTBR0
-+	*/
-+	if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_TTBR1) {
-+		tcr = (tcr << 16) & ~ARM_SMMU_TCR_A1;
-+		tcr |= ARM_SMMU_TCR_EPD0;
-+	} else
-+		tcr |= ARM_SMMU_TCR_EPD1;
+ 	ret = iommu_attach_device(iommu->domain, dev);
+ 	if (ret) {
+ 		kfree(iommu);
+diff --git a/drivers/gpu/drm/msm/msm_mmu.h b/drivers/gpu/drm/msm/msm_mmu.h
+index 3a534ee59bf6..61ade89d9e48 100644
+--- a/drivers/gpu/drm/msm/msm_mmu.h
++++ b/drivers/gpu/drm/msm/msm_mmu.h
+@@ -17,18 +17,26 @@ struct msm_mmu_funcs {
+ 	void (*destroy)(struct msm_mmu *mmu);
+ };
+ 
++enum msm_mmu_type {
++	MSM_MMU_GPUMMU,
++	MSM_MMU_IOMMU,
++	MSM_MMU_IOMMU_PAGETABLE,
++};
 +
-+	return tcr;
+ struct msm_mmu {
+ 	const struct msm_mmu_funcs *funcs;
+ 	struct device *dev;
+ 	int (*handler)(void *arg, unsigned long iova, int flags);
+ 	void *arg;
++	enum msm_mmu_type type;
+ };
+ 
+ static inline void msm_mmu_init(struct msm_mmu *mmu, struct device *dev,
+-		const struct msm_mmu_funcs *funcs)
++		const struct msm_mmu_funcs *funcs, enum msm_mmu_type type)
+ {
+ 	mmu->dev = dev;
+ 	mmu->funcs = funcs;
++	mmu->type = type;
  }
  
- static inline u32 arm_smmu_lpae_tcr2(struct io_pgtable_cfg *cfg)
+ struct msm_mmu *msm_iommu_new(struct device *dev, struct iommu_domain *domain);
+@@ -41,7 +49,13 @@ static inline void msm_mmu_set_fault_handler(struct msm_mmu *mmu, void *arg,
+ 	mmu->handler = handler;
+ }
+ 
++struct msm_mmu *msm_iommu_pagetable_create(struct msm_mmu *parent);
++
+ void msm_gpummu_params(struct msm_mmu *mmu, dma_addr_t *pt_base,
+ 		dma_addr_t *tran_error);
+ 
++
++int msm_iommu_pagetable_params(struct msm_mmu *mmu, phys_addr_t *ttbr,
++		int *asid);
++
+ #endif /* __MSM_MMU_H__ */
 -- 
 2.25.1
 
