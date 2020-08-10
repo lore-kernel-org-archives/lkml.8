@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF90C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4D5FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEEF3207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:16:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA25C207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:16:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597086967;
-	bh=IdDf2kmFCiCQlkr/H7Pdocwg/VRbq2e14AGXX+tSwAk=;
+	s=default; t=1597086980;
+	bh=rkIkLFMimB7x9/DIDpwBmJitV76NacxY2sxEGNkNxco=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PH43TXDE3lYCgLyDz3spWh36nhgQmW41A6yf3M7g1dCOQtSElTq+Kbq7a7LE6kGg9
-	 H67oyzrWA6CSC35Ea/PbDa83kVioJQPGBkFKWNLRP9FNpa/TPeOFj4v0Kn3M9g6Jwh
-	 /fP2TwKMylWbJAfe37LhVA3KUSDb9hN6HVU1sTrc=
+	b=jWOqmukA0V9vedqiJoRmBFhtO3T8j/LYukV02vRGE6CWk17tqa/Do6t6HSuFllNOm
+	 SUkZK+/I2O529B5EKUmpZR1eubPxrie7cgaCzD4CR83qI5NNgmFcoO5Z0iMK4jB6Y6
+	 XHxvqmDQZHxu3jMU35l+u0FjFzYx3nSh6F0TQNmM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729479AbgHJTQG (ORCPT
+        id S1730111AbgHJTQT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:16:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47498 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:16:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728819AbgHJTOy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:14:54 -0400
+        id S1730092AbgHJTOt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:14:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AEE2D22CAF;
-        Mon, 10 Aug 2020 19:14:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A56222BEB;
+        Mon, 10 Aug 2020 19:14:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086893;
-        bh=IdDf2kmFCiCQlkr/H7Pdocwg/VRbq2e14AGXX+tSwAk=;
+        s=default; t=1597086888;
+        bh=rkIkLFMimB7x9/DIDpwBmJitV76NacxY2sxEGNkNxco=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wNL1hyFu507UJtsXe5+C+1lijbs3UFboHYoKNp+xyqpZf5jNxWu6S5/QFRD6gOfqM
-         pJpIKkog0vu3niv33NLlHVQ/6zYlDTZbEEAcAyJMoNawv1L8wo10hx6k/acv4MM/3W
-         p4yEFkTfYPrDj+GW3yW5adLLAuNqhrYu/LqVZD8Y=
+        b=ReJM0dCDh3ScUBEc1PJ21OmHM8rFsNyTl6zAwYSuc06miZMFcTo9SuDmFU71VbNBQ
+         VwZZ8clKzUcl85g6zIEO9qNYyOQp+/ZrJmhR0DnvkSOTI32i8tSXcONGemy8qK3a6B
+         MVTsGOIQ0kxyL8qTqjZcFRPXTfAuebChh6+MHXF8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aditya Pakki <pakki001@umn.edu>, Ben Skeggs <bskeggs@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.4 06/16] drm/nouveau: fix multiple instances of reference count leaks
-Date:   Mon, 10 Aug 2020 15:14:33 -0400
-Message-Id: <20200810191443.3795581-6-sashal@kernel.org>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 03/16] fs/btrfs: Add cond_resched() for try_release_extent_mapping() stalls
+Date:   Mon, 10 Aug 2020 15:14:30 -0400
+Message-Id: <20200810191443.3795581-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810191443.3795581-1-sashal@kernel.org>
 References: <20200810191443.3795581-1-sashal@kernel.org>
@@ -59,66 +58,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: "Paul E. McKenney" <paulmck@kernel.org>
 
-[ Upstream commit 659fb5f154c3434c90a34586f3b7aa1c39cf6062 ]
+[ Upstream commit 9f47eb5461aaeb6cb8696f9d11503ae90e4d5cb0 ]
 
-On calling pm_runtime_get_sync() the reference count of the device
-is incremented. In case of failure, decrement the
-ref count before returning the error.
+Very large I/Os can cause the following RCU CPU stall warning:
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+RIP: 0010:rb_prev+0x8/0x50
+Code: 49 89 c0 49 89 d1 48 89 c2 48 89 f8 e9 e5 fd ff ff 4c 89 48 10 c3 4c =
+89 06 c3 4c 89 40 10 c3 0f 1f 00 48 8b 0f 48 39 cf 74 38 <48> 8b 47 10 48 85 c0 74 22 48 8b 50 08 48 85 d2 74 0c 48 89 d0 48
+RSP: 0018:ffffc9002212bab0 EFLAGS: 00000287 ORIG_RAX: ffffffffffffff13
+RAX: ffff888821f93630 RBX: ffff888821f93630 RCX: ffff888821f937e0
+RDX: 0000000000000000 RSI: 0000000000102000 RDI: ffff888821f93630
+RBP: 0000000000103000 R08: 000000000006c000 R09: 0000000000000238
+R10: 0000000000102fff R11: ffffc9002212bac8 R12: 0000000000000001
+R13: ffffffffffffffff R14: 0000000000102000 R15: ffff888821f937e0
+ __lookup_extent_mapping+0xa0/0x110
+ try_release_extent_mapping+0xdc/0x220
+ btrfs_releasepage+0x45/0x70
+ shrink_page_list+0xa39/0xb30
+ shrink_inactive_list+0x18f/0x3b0
+ shrink_lruvec+0x38e/0x6b0
+ shrink_node+0x14d/0x690
+ do_try_to_free_pages+0xc6/0x3e0
+ try_to_free_mem_cgroup_pages+0xe6/0x1e0
+ reclaim_high.constprop.73+0x87/0xc0
+ mem_cgroup_handle_over_high+0x66/0x150
+ exit_to_usermode_loop+0x82/0xd0
+ do_syscall_64+0xd4/0x100
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+On a PREEMPT=n kernel, the try_release_extent_mapping() function's
+"while" loop might run for a very long time on a large I/O.  This commit
+therefore adds a cond_resched() to this loop, providing RCU any needed
+quiescent states.
+
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nouveau_drm.c | 8 ++++++--
- drivers/gpu/drm/nouveau/nouveau_gem.c | 4 +++-
- 2 files changed, 9 insertions(+), 3 deletions(-)
+ fs/btrfs/extent_io.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_drm.c b/drivers/gpu/drm/nouveau/nouveau_drm.c
-index 91a61d2cca889..a90840e391100 100644
---- a/drivers/gpu/drm/nouveau/nouveau_drm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
-@@ -805,8 +805,10 @@ nouveau_drm_open(struct drm_device *dev, struct drm_file *fpriv)
+diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+index 42b7409d4cc55..2f9f738ecf84a 100644
+--- a/fs/btrfs/extent_io.c
++++ b/fs/btrfs/extent_io.c
+@@ -4437,6 +4437,8 @@ int try_release_extent_mapping(struct extent_map_tree *map,
  
- 	/* need to bring up power immediately if opening device */
- 	ret = pm_runtime_get_sync(dev->dev);
--	if (ret < 0 && ret != -EACCES)
-+	if (ret < 0 && ret != -EACCES) {
-+		pm_runtime_put_autosuspend(dev->dev);
- 		return ret;
-+	}
- 
- 	get_task_comm(tmpname, current);
- 	snprintf(name, sizeof(name), "%s[%d]", tmpname, pid_nr(fpriv->pid));
-@@ -894,8 +896,10 @@ nouveau_drm_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 	long ret;
- 
- 	ret = pm_runtime_get_sync(dev->dev);
--	if (ret < 0 && ret != -EACCES)
-+	if (ret < 0 && ret != -EACCES) {
-+		pm_runtime_put_autosuspend(dev->dev);
- 		return ret;
-+	}
- 
- 	switch (_IOC_NR(cmd) - DRM_COMMAND_BASE) {
- 	case DRM_NOUVEAU_NVIF:
-diff --git a/drivers/gpu/drm/nouveau/nouveau_gem.c b/drivers/gpu/drm/nouveau/nouveau_gem.c
-index ae560f5977fca..e5db2a385cb65 100644
---- a/drivers/gpu/drm/nouveau/nouveau_gem.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_gem.c
-@@ -42,8 +42,10 @@ nouveau_gem_object_del(struct drm_gem_object *gem)
- 	int ret;
- 
- 	ret = pm_runtime_get_sync(dev);
--	if (WARN_ON(ret < 0 && ret != -EACCES))
-+	if (WARN_ON(ret < 0 && ret != -EACCES)) {
-+		pm_runtime_put_autosuspend(dev);
- 		return;
-+	}
- 
- 	if (gem->import_attach)
- 		drm_prime_gem_destroy(gem, nvbo->bo.sg);
+ 			/* once for us */
+ 			free_extent_map(em);
++
++			cond_resched(); /* Allow large-extent preemption. */
+ 		}
+ 	}
+ 	return try_release_extent_state(map, tree, page, mask);
 -- 
 2.25.1
 
