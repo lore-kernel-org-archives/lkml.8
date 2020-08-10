@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C90AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C1B2C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:21:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E72C020734
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:21:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B6B42075D
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:21:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597072892;
-	bh=3XyBT8qm/Hn65XwcVEVyAbRbtgSY0hvyPErs0wZummM=;
+	s=default; t=1597072899;
+	bh=tXAco+/hJuVY5Hoz8JSM+n9qDLrtNpmiQ6NZFbHlv64=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GPZu6g9+fU3hLj3XPPM7WYApmByQotH+eHp8RR7+PSG8ekPqzeWlF3+TETCrJ6AZH
-	 Z6FdItcg5d9VCuEmkiLmhfyL86J7I+Z9hMVims5gp2yt7FLxVMfxjXEq4/CAfiOq7g
-	 MT5WGs6HtKQY6OsFq6tyYmu8wfQrhqnHO0aHHFzs=
+	b=W/WoX1kJwlxSoUjZtlVWjGFsZF8JPN0SHye1bqlQCabvzdhjusL0O+fg4jvlwNUoO
+	 ZhLK0f6Re55qxKM6/9/8lF7RopjI2JUDaQKq21l9XkkMWeQyZEaG7wiGi/cd+hKSj4
+	 0E0lPf+7wWaH1M/lnkATwCOcDvsN2jmxi5Ey6ygw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728085AbgHJPUz (ORCPT
+        id S1726595AbgHJPVh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:20:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51496 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:21:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728071AbgHJPUv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:20:51 -0400
+        id S1728032AbgHJPUp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:20:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED0E120772;
-        Mon, 10 Aug 2020 15:20:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FB0220656;
+        Mon, 10 Aug 2020 15:20:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597072850;
-        bh=3XyBT8qm/Hn65XwcVEVyAbRbtgSY0hvyPErs0wZummM=;
+        s=default; t=1597072844;
+        bh=tXAco+/hJuVY5Hoz8JSM+n9qDLrtNpmiQ6NZFbHlv64=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iy2YDdm4I6BIXcEQSJTV7LydIF9Em961dJNaTSQYSVC/cTevVNPvB7XCY5cbcLtxS
-         JLvaOD6mwlMcmizPuPoVW8Clboj96NhRQ4lLrNHGhsoJTyLR/OvJQiiqRmucviU2yX
-         KYHfQm9yDauVv6o1rX6vXxdwNQs7CSCZc+qbtRAY=
+        b=enE62gD+mp9pcW2BNWdMesytF7So6QucNm8eqnqAvmnXN+OLWmfE61Uj9P8K17wNq
+         58vRYRaetpoVKBcdifxgtJe37GSIVYBdFbtR7NTEzodkUG1o+it41XPt6W5M5GKUdz
+         OO9CI/YByWWYXAKXHrX1X8rBjHEE2yX6zeITf0h0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+e6416dabb497a650da40@syzkaller.appspotmail.com,
-        Eric Biggers <ebiggers@google.com>,
-        Casey Schaufler <casey@schaufler-ca.com>
-Subject: [PATCH 5.8 20/38] Smack: fix use-after-free in smk_write_relabel_self()
-Date:   Mon, 10 Aug 2020 17:19:10 +0200
-Message-Id: <20200810151804.884669703@linuxfoundation.org>
+        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        =?UTF-8?q?Daniel=20D=C3=ADaz?= <daniel.diaz@linaro.org>
+Subject: [PATCH 5.8 37/38] random: random.h should include archrandom.h, not the other way around
+Date:   Mon, 10 Aug 2020 17:19:27 +0200
+Message-Id: <20200810151805.749334782@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151803.920113428@linuxfoundation.org>
 References: <20200810151803.920113428@linuxfoundation.org>
@@ -61,79 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-commit beb4ee6770a89646659e6a2178538d2b13e2654e upstream.
+commit 585524081ecdcde1c719e63916c514866d898217 upstream.
 
-smk_write_relabel_self() frees memory from the task's credentials with
-no locking, which can easily cause a use-after-free because multiple
-tasks can share the same credentials structure.
+This is hopefully the final piece of the crazy puzzle with random.h
+dependencies.
 
-Fix this by using prepare_creds() and commit_creds() to correctly modify
-the task's credentials.
+And by "hopefully" I obviously mean "Linus is a hopeless optimist".
 
-Reproducer for "BUG: KASAN: use-after-free in smk_write_relabel_self":
-
-	#include <fcntl.h>
-	#include <pthread.h>
-	#include <unistd.h>
-
-	static void *thrproc(void *arg)
-	{
-		int fd = open("/sys/fs/smackfs/relabel-self", O_WRONLY);
-		for (;;) write(fd, "foo", 3);
-	}
-
-	int main()
-	{
-		pthread_t t;
-		pthread_create(&t, NULL, thrproc, NULL);
-		thrproc(NULL);
-	}
-
-Reported-by: syzbot+e6416dabb497a650da40@syzkaller.appspotmail.com
-Fixes: 38416e53936e ("Smack: limited capability for changing process label")
-Cc: <stable@vger.kernel.org> # v4.4+
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
+Reported-and-tested-by: Daniel Díaz <daniel.diaz@linaro.org>
+Acked-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- security/smack/smackfs.c |   13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ arch/arm64/include/asm/archrandom.h |    1 -
+ arch/arm64/kernel/kaslr.c           |    2 +-
+ 2 files changed, 1 insertion(+), 2 deletions(-)
 
---- a/security/smack/smackfs.c
-+++ b/security/smack/smackfs.c
-@@ -2720,7 +2720,6 @@ static int smk_open_relabel_self(struct
- static ssize_t smk_write_relabel_self(struct file *file, const char __user *buf,
- 				size_t count, loff_t *ppos)
- {
--	struct task_smack *tsp = smack_cred(current_cred());
- 	char *data;
- 	int rc;
- 	LIST_HEAD(list_tmp);
-@@ -2745,11 +2744,21 @@ static ssize_t smk_write_relabel_self(st
- 	kfree(data);
+--- a/arch/arm64/include/asm/archrandom.h
++++ b/arch/arm64/include/asm/archrandom.h
+@@ -6,7 +6,6 @@
  
- 	if (!rc || (rc == -EINVAL && list_empty(&list_tmp))) {
-+		struct cred *new;
-+		struct task_smack *tsp;
-+
-+		new = prepare_creds();
-+		if (!new) {
-+			rc = -ENOMEM;
-+			goto out;
-+		}
-+		tsp = smack_cred(new);
- 		smk_destroy_label_list(&tsp->smk_relabel);
- 		list_splice(&list_tmp, &tsp->smk_relabel);
-+		commit_creds(new);
- 		return count;
- 	}
--
-+out:
- 	smk_destroy_label_list(&list_tmp);
- 	return rc;
- }
+ #include <linux/bug.h>
+ #include <linux/kernel.h>
+-#include <linux/random.h>
+ #include <asm/cpufeature.h>
+ 
+ static inline bool __arm64_rndr(unsigned long *v)
+--- a/arch/arm64/kernel/kaslr.c
++++ b/arch/arm64/kernel/kaslr.c
+@@ -11,8 +11,8 @@
+ #include <linux/sched.h>
+ #include <linux/types.h>
+ #include <linux/pgtable.h>
++#include <linux/random.h>
+ 
+-#include <asm/archrandom.h>
+ #include <asm/cacheflush.h>
+ #include <asm/fixmap.h>
+ #include <asm/kernel-pgtable.h>
 
 
