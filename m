@@ -2,225 +2,138 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDEF2C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 21:26:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A88C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 21:27:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9911D20716
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 21:26:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iPtviNy9"
+	by mail.kernel.org (Postfix) with ESMTP id 4B72020716
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 21:27:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbgHJV02 (ORCPT
+        id S1726891AbgHJV1k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 17:26:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34778 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726825AbgHJV01 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 17:26:27 -0400
-Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E17DAC061788
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 14:26:26 -0700 (PDT)
-Received: by mail-vk1-xa44.google.com with SMTP id x142so2187903vke.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 14:26:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hXASfmqoUl3o8zN6MXHewh7vS0xl4tHelH9X4EiAPTg=;
-        b=iPtviNy9RShsJFpYsrUv4+ItQVmKuSBZAs+NqagKy930sVZjRWUTkUxZacbU9KMJ9x
-         CldemxPziILP/Xm4LSWsQAELyezydtv5sifKft2/LSVyc4/58JoPG6k5BIxVVvNHjwp4
-         uWlD8l3v+F7WMtJqUFLtCaENMe7W0y16GGvzg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hXASfmqoUl3o8zN6MXHewh7vS0xl4tHelH9X4EiAPTg=;
-        b=a36OFObiBh16XGljF9L48nVbSVoWXWhl58NL0Uchdo3hkuEWS0UuOXiL2o9rZTtB5A
-         i8LJtGqG5F8/+2fjfmKRPgKnEZVnjGICDx3LyWjRpNwnTsSLUeEXZ3aokNL2FwMEQGZ5
-         IRMMDBQeQkoS1hI7MvTzNfJFMrW+EKnWiFVjvCoGeF+tqVLH9U3CIeLmjSVfw3KzNorL
-         Imz2eaC8s/9YifJbhEp5WUEV2Apy8UVX+N5TIBs+/MPwIFVpd8ULck/yZnb5JQY+qTOF
-         jztLPzLdHYDTsuHiIR9gq36tYGlZhAnBGK3F1+sdj9bItqjco8tIwT87Co+cZ1Z8b3hT
-         nATw==
-X-Gm-Message-State: AOAM531PrPqkckAn1KiSdkuSMgLKk57+WAA71jZWDhNqEu6EHfE+x8js
-        raVFMmDQ5ou9yc6e0fR+K/D10fqBikk=
-X-Google-Smtp-Source: ABdhPJyr2b6mxZFpkZ2sCqd07Xv6CW650/jZJZsa7tR2/vuNEZlfT+U5ci7ljvIby7i9kTYt5gx3JA==
-X-Received: by 2002:a1f:3d97:: with SMTP id k145mr22560204vka.8.1597094785604;
-        Mon, 10 Aug 2020 14:26:25 -0700 (PDT)
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com. [209.85.217.47])
-        by smtp.gmail.com with ESMTPSA id m62sm5614445vsd.21.2020.08.10.14.26.23
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Aug 2020 14:26:24 -0700 (PDT)
-Received: by mail-vs1-f47.google.com with SMTP id y8so4952739vsq.8
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 14:26:23 -0700 (PDT)
-X-Received: by 2002:a67:2c4f:: with SMTP id s76mr20074899vss.213.1597094783404;
- Mon, 10 Aug 2020 14:26:23 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200806221904.1.I4455ff86f0ef5281c2a0cd0a4712db614548a5ca@changeid>
- <adaef6bf-7887-feea-fedf-d3bc5566bb9d@codeaurora.org>
-In-Reply-To: <adaef6bf-7887-feea-fedf-d3bc5566bb9d@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 10 Aug 2020 14:26:11 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=X8tNpmkSrEjXgKPKsBOZfjt8aVQe47gzi5FvPqdOQN+A@mail.gmail.com>
-Message-ID: <CAD=FV=X8tNpmkSrEjXgKPKsBOZfjt8aVQe47gzi5FvPqdOQN+A@mail.gmail.com>
-Subject: Re: [PATCH] serial: qcom_geni_serial: Fix recent kdb hang
-To:     Akash Asthana <akashast@codeaurora.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Mukesh Savaliya <msavaliy@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Evan Green <evgreen@chromium.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-serial@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 10 Aug 2020 17:27:40 -0400
+Received: from mga01.intel.com ([192.55.52.88]:25814 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726586AbgHJV1j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 17:27:39 -0400
+IronPort-SDR: xWqzrHjQfyaJ3UQD1STO34T5JyWSmqm4MF799f5u7xlELm4mU497JXVP8NWVBwMxpwSNt09fzU
+ m4NBvLYgP+wQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9709"; a="171665936"
+X-IronPort-AV: E=Sophos;i="5.75,458,1589266800"; 
+   d="scan'208";a="171665936"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2020 14:27:38 -0700
+IronPort-SDR: GIRAI6kTPcPJZvpa+qKrwI9IqHTjDQbz9ZDNYOXaLEzAsFe96UZRHBJDpiw5KXQ8Xxb4PZFGsA
+ zJPmXoPnWVzw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,458,1589266800"; 
+   d="scan'208";a="469196745"
+Received: from ssp-icl-u-210.jf.intel.com ([10.54.55.52])
+  by orsmga005.jf.intel.com with ESMTP; 10 Aug 2020 14:27:38 -0700
+From:   Kan Liang <kan.liang@linux.intel.com>
+To:     peterz@infradead.org, acme@kernel.org, mingo@redhat.com,
+        linux-kernel@vger.kernel.org
+Cc:     mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, eranian@google.com, ak@linux.intel.com,
+        dave.hansen@intel.com, kirill.shutemov@linux.intel.com,
+        Kan Liang <kan.liang@linux.intel.com>
+Subject: [PATCH V6 00/16] Add the page size in the perf record
+Date:   Mon, 10 Aug 2020 14:24:20 -0700
+Message-Id: <20200810212436.8026-1-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Changes since V5
+- Introduce a new universal page walker for the page size in the perf
+  subsystem.
+- Rebased on Peter's tree.
 
-On Mon, Aug 10, 2020 at 5:32 AM Akash Asthana <akashast@codeaurora.org> wrote:
->
-> Hi Doug,
->
-> On 8/7/2020 10:49 AM, Douglas Anderson wrote:
-> > The commit e42d6c3ec0c7 ("serial: qcom_geni_serial: Make kgdb work
-> > even if UART isn't console") worked pretty well and I've been doing a
-> > lot of debugging with it.  However, recently I typed "dmesg" in kdb
-> > and then held the space key down to scroll through the pagination.  My
-> > device hung.  This was repeatable and I found that it was introduced
-> > with the aforementioned commit.
-> >
-> > It turns out that there are some strange boundary cases in geni where
-> > in some weird situations it will signal RX_LAST but then will put 0 in
-> > RX_LAST_BYTE.  This means that the entire last FIFO entry is valid.
->
-> IMO that means we received a word in RX_FIFO and it is the last word
-> hence RX_LAST bit is set.
+Current perf can report both virtual addresses and physical addresses,
+but not the page size. Without the page size information of the utilized
+page, users cannot decide whether to promote/demote large pages to
+optimize memory usage.
 
-What you say would make logical sense, but it's not how I have
-observed geni to work.  See below.
+The patch set was submitted a year ago.
+https://lkml.kernel.org/r/1549648509-12704-1-git-send-email-kan.liang@linux.intel.com
+It introduced a __weak function, perf_get_page_size(), aim to retrieve
+the page size via a given virtual address in the generic code, and
+implemented a x86 specific version of perf_get_page_size().
+However, the proposal was rejected, because it's a pure x86
+implementation.
+https://lkml.kernel.org/r/20190208200731.GN32511@hirez.programming.kicks-ass.net
 
+At that time, it's not easy to support perf_get_page_size() universally,
+because some key functions, e.g., p?d_large, are not supported by some
+architectures.
 
-> RX_LAST_BYTE is 0 means none of the bytes are valid in the last word.
+Now, the generic p?d_leaf() functions are added in the latest kernel.
+https://lkml.kernel.org/r/20191218162402.45610-2-steven.price@arm.com
+Starts from V6, a new universal perf_get_page_size() function is
+implemented based on the generic p?d_leaf() functions.
 
-This would imply that qcom_geni_serial_handle_rx() is also broken
-though, wouldn't it?  Specifically imagine that WORD_CNT is 1 and
-RX_LAST is set and RX_LAST_BYTE_VALID is true.  Here's the logic from
-that function:
+On some platforms, e.g., X86, the page walker is invoked in an NMI
+handler. So the page walker must be IRQ-safe and low overhead. Besides,
+the page walker should work for both user and kernel virtual address.
+The existing generic page walker, e.g., walk_page_range_novma(), is a
+little bit complex and doesn't guarantee the IRQ-safe. The follow_page()
+is only for the user-virtual address. So a simpler page walk function is
+implemented here.
 
-  total_bytes = BYTES_PER_FIFO_WORD * (word_cnt - 1);
-  if (last_word_partial && last_word_byte_cnt)
-    total_bytes += last_word_byte_cnt;
-  else
-    total_bytes += BYTES_PER_FIFO_WORD;
-  port->handle_rx(uport, total_bytes, drop);
+Kan Liang (11):
+  perf/core: Add PERF_SAMPLE_DATA_PAGE_SIZE
+  perf/x86/intel: Support PERF_SAMPLE_DATA_PAGE_SIZE
+  tools headers UAPI: Update tools's copy of linux/perf_event.h
+  perf record: Support new sample type for data page size
+  perf script: Use ULL for enum perf_output_field
+  perf script: Support data page size
+  perf sort: Add sort option for data page size
+  perf mem: Factor out a function to generate sort order
+  perf mem: Clean up output format
+  perf mem: Support data page size
+  perf test: Add test case for PERF_SAMPLE_DATA_PAGE_SIZE
 
-As you can see that logic will set "total_bytes" to 4 in the case I'm
-talking about.
+Stephane Eranian (5):
+  perf/core: Add support for PERF_SAMPLE_CODE_PAGE_SIZE
+  perf tools: Add support for PERF_SAMPLE_CODE_PAGE_SIZE
+  perf script: Add support for PERF_SAMPLE_CODE_PAGE_SIZE
+  perf report: Add support for PERF_SAMPLE_CODE_PAGE_SIZE
+  perf test: Add test case for PERF_SAMPLE_CODE_PAGE_SIZE
 
+ arch/x86/events/intel/ds.c                |  11 +-
+ include/linux/perf_event.h                |   2 +
+ include/uapi/linux/perf_event.h           |   6 +-
+ kernel/events/core.c                      | 132 ++++++++++++++++++-
+ tools/include/uapi/linux/perf_event.h     |   6 +-
+ tools/perf/Documentation/perf-mem.txt     |   3 +
+ tools/perf/Documentation/perf-record.txt  |   6 +
+ tools/perf/Documentation/perf-report.txt  |   2 +
+ tools/perf/Documentation/perf-script.txt  |   5 +-
+ tools/perf/builtin-mem.c                  | 150 ++++++++++++----------
+ tools/perf/builtin-record.c               |   4 +
+ tools/perf/builtin-script.c               |  90 ++++++++-----
+ tools/perf/tests/sample-parsing.c         |  10 +-
+ tools/perf/util/event.h                   |   5 +
+ tools/perf/util/evsel.c                   |  18 +++
+ tools/perf/util/hist.c                    |   5 +
+ tools/perf/util/hist.h                    |   2 +
+ tools/perf/util/machine.c                 |   7 +-
+ tools/perf/util/map_symbol.h              |   1 +
+ tools/perf/util/perf_event_attr_fprintf.c |   2 +-
+ tools/perf/util/record.h                  |   2 +
+ tools/perf/util/session.c                 |  26 ++++
+ tools/perf/util/sort.c                    |  56 ++++++++
+ tools/perf/util/sort.h                    |   3 +
+ tools/perf/util/synthetic-events.c        |  16 +++
+ 25 files changed, 456 insertions(+), 114 deletions(-)
 
-> In such scenario we should just read RX_FIFO buffer (to empty it),
-> discard the word and return NO_POLL_CHAR. Something like below.
->
-> ---------------------------------------------------------------------------------------------------------------------------------------------------------
->
->                  else
->                          private_data->poll_cached_bytes_cnt = 4;
->
->                  private_data->poll_cached_bytes =
->                          readl(uport->membase + SE_GENI_RX_FIFOn);
->          }
->
-> +        if (!private_data->poll_cached_bytes_cnt)
-> +              return NO_POLL_CHAR;
->          private_data->poll_cached_bytes_cnt--;
->          ret = private_data->poll_cached_bytes & 0xff;
-> -------------------------------------------------------------------------------------------------------------------------------------------------------------
->
-> Please let me know whether above code helps.
+-- 
+2.17.1
 
-Your code will avoid the hang.  Yes.  ...but it will drop bytes.  I
-devised a quick-n-dirty test.  Here's a test of your code:
-
-https://crrev.com/c/2346886
-
-...and here's a test of my code:
-
-https://crrev.com/c/2346884
-
-I had to keep a buffer around since it's hard to debug the serial
-driver.  In both cases I put "DOUG" into the buffer when I detect this
-case.  If my theory about how geni worked was wrong then we should
-expect to see some garbage in the buffer right after the DOUG, right?
-...but my code gets the alphabet in nice sequence.  Your code drops 4
-bytes.
-
-
-NOTE: while poking around with the above two test patches I found it
-was pretty easy to get geni to drop bytes / hit overflow cases and
-also to insert bogus 0 bytes in the stream (I believe these are
-related).  I was able to reproduce this:
-* With ${SUBJECT} patch in place.
-* With your proposed patch.
-* With the recent "geni" patches reverted (in other words back to 1
-byte per FIFO entry).
-
-It's not terribly surprising that we're overflowing since I believe
-kgdb isn't too keen to read characters at the same time it's writing.
-That doesn't explain the weird 0-bytes that geni seemed to be
-inserting, but at least it would explain the overflows.  However, even
-after I fixed this I _still_ was getting problems.  Specifically geni
-seemed to be hiding bytes from me until it was too late.  I put
-logging in and would see this:
-
-1 word in FIFO - wxyz
-1 word in FIFO (last set, last FIFO has 1 byte) - \n
-Check again, still 0 bytes in FIFO
-Suddenly 16 bytes are in FIFO and S_RX_FIFO_WR_ERR_EN is set.
-
-I spent a whole bunch of time poking at this and couldn't find any
-sort of workaround.  Presumably geni is taking some time between me
-reading the last word out of the FIFO from the "previous" packet and
-then transitioning to the new packet.  I found a lot of references to
-this process in the hardware register description (see GENI_CFG_REG69,
-for instance), but I couldn't manage to make the kick to happen any
-faster.  Presumably this isn't a problem for things like Bluetooth
-since flow control saves them.  ...and I guess this isn't a problem in
-practice because we usually _send_ a lot of data to the host for
-console/kgdb and it's only the host => DUT path that has problems.
-
-
-> I am not sure about what all scenario can leads to this behavior from
-> hardware, I will try to get an answer from hardware team.
->
-> Any error bit was set for SE_GENI_S_IRQ_STATUS & SE_GENI_M_IRQ_STATUS
-> registers?
-
-As per above I can see overflows in my test case and geni seems to be
-behaving pretty badly.  If you have ideas on how to fix this I'd love
-it.  However, it still seems like my patch is right because (at least
-in the cases I tested) it avoids dropping bytes in some cases.  It
-also matches how qcom_geni_serial_handle_rx() works and if that was
-broken we'd have noticed by now.
-
-
-> I guess the hang was seen because *poll_cached_bytes_cnt* is unsigned
-> int and it's value was 0, when it's decremented by 1 it's value become
-> '4294967295' (very large) and dummy RX (0x00) would happen that
->
-> many times before reading any actual RX transfers/bytes.
-
-Right.  That would be why it was hanging.
-
-
--Doug
