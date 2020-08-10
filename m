@@ -5,52 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55F7CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:13:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FA99C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25B6C207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:13:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D362322BEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:13:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597086787;
-	bh=SKGMe+AprkijJRliWRr1iYnN8WQZPb7T8w0+0v5Nv6g=;
+	s=default; t=1597086794;
+	bh=cVwW3JpkPI2yvj2GLbXy1z9Bl6AxSIj5FTixz3QA3ms=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sKdxsRF5m7tsAKN6aRGOsj6nJFJjdVtTVcWiU0SzsNlDgTdtHRpqmcaL69KLYS4/V
-	 CjgGEbrv9ZkvTcdltXYMK3rks7G3EWTBEitpr+JryTtup3rEODJqQbhN2AEbkp4xk3
-	 E44c2Y1b8dPm8qfIl9eibLh98n27MYU+CvJpbx44=
+	b=2XeR+mUBDquXFMn3Hji2G7PklxZ7gbFZukt/6+321h9R/lOoi6AHS/H/dVoP83x9R
+	 gMaXeJVF9OvMqg1gFQbxohL2bhWZoxgbSrMTD1g93u455jpKIlqz69niTdIfSs8NmZ
+	 d1K5uLSb8zzkmL2IdHUgTx50qEUncXz8AFhIuG4g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729693AbgHJTNG (ORCPT
+        id S1729714AbgHJTNN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:13:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43310 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:13:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728776AbgHJTM5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:12:57 -0400
+        id S1729692AbgHJTNG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:13:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CF062224D;
-        Mon, 10 Aug 2020 19:12:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB0252224D;
+        Mon, 10 Aug 2020 19:13:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086777;
-        bh=SKGMe+AprkijJRliWRr1iYnN8WQZPb7T8w0+0v5Nv6g=;
+        s=default; t=1597086785;
+        bh=cVwW3JpkPI2yvj2GLbXy1z9Bl6AxSIj5FTixz3QA3ms=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w/+FSGAtPzg8/bs986RncAKfjeMh1AfSIcZpX8Cad5itJjVQQSTutoExkzsIn+2h3
-         rdHbqQ1IEFFDVaj2u+aeZziLXFY4LhOmquLsjPDcW691avJtjmonlw0Q9WXruyE3zn
-         9YS3i77QIRucZCE6mqVoTGL45HyCiiMv0j4ZjY54=
+        b=L1WhpnkTm+mmNhEYdv2/RdldDSJ5wdTjV0eDGEvPv6805vnkg8rqonA6cMSBIsZAQ
+         zVdC1hsWgZyIVXzSogUkzuLafKoQqXEjMZT7Wd8TezxRNUi5fSRhvkYVLtA/l/uF86
+         Njms0PQR0jyD+m8jHDLjYsRU8JOZtjK2wGsIRYSk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rob Clark <robdclark@chromium.org>,
-        Abhinav Kumar <abhinavk@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 45/45] drm/msm: ratelimit crtc event overflow error
-Date:   Mon, 10 Aug 2020 15:11:53 -0400
-Message-Id: <20200810191153.3794446-45-sashal@kernel.org>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Ming Lei <ming.lei@redhat.com>, Christoph Hellwig <hch@lst.de>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 04/31] loop: be paranoid on exit and prevent new additions / removals
+Date:   Mon, 10 Aug 2020 15:12:32 -0400
+Message-Id: <20200810191259.3794858-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200810191153.3794446-1-sashal@kernel.org>
-References: <20200810191153.3794446-1-sashal@kernel.org>
+In-Reply-To: <20200810191259.3794858-1-sashal@kernel.org>
+References: <20200810191259.3794858-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,34 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+From: Luis Chamberlain <mcgrof@kernel.org>
 
-[ Upstream commit 5e16372b5940b1fecc3cc887fc02a50ba148d373 ]
+[ Upstream commit 200f93377220504c5e56754823e7adfea6037f1a ]
 
-This can happen a lot when things go pear shaped.  Lets not flood dmesg
-when this happens.
+Be pedantic on removal as well and hold the mutex.
+This should prevent uses of addition while we exit.
 
-Signed-off-by: Rob Clark <robdclark@chromium.org>
-Reviewed-by: Abhinav Kumar <abhinavk@codeaurora.org>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/block/loop.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-index ce59adff06aa1..36c85c05b7cf7 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-@@ -381,7 +381,7 @@ static void dpu_crtc_frame_event_cb(void *data, u32 event)
- 	spin_unlock_irqrestore(&dpu_crtc->spin_lock, flags);
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index 728681a20b7f4..da68c42aed682 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -2279,6 +2279,8 @@ static void __exit loop_exit(void)
  
- 	if (!fevent) {
--		DRM_ERROR("crtc%d event %d overflow\n", crtc->base.id, event);
-+		DRM_ERROR_RATELIMITED("crtc%d event %d overflow\n", crtc->base.id, event);
- 		return;
- 	}
+ 	range = max_loop ? max_loop << part_shift : 1UL << MINORBITS;
  
++	mutex_lock(&loop_ctl_mutex);
++
+ 	idr_for_each(&loop_index_idr, &loop_exit_cb, NULL);
+ 	idr_destroy(&loop_index_idr);
+ 
+@@ -2286,6 +2288,8 @@ static void __exit loop_exit(void)
+ 	unregister_blkdev(LOOP_MAJOR, "loop");
+ 
+ 	misc_deregister(&loop_misc);
++
++	mutex_unlock(&loop_ctl_mutex);
+ }
+ 
+ module_init(loop_init);
 -- 
 2.25.1
 
