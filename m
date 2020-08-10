@@ -2,91 +2,102 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01EFCC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:11:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E08C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:11:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5AE320838
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:11:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597083098;
-	bh=g/t91faDycY4mseqjHu9BMl29MuRrgmwUh+bEg6Hgsg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ou6TgHLU0t+0BZUJrJWebd/gRr1GYrI6+PW5bh6vX6TyKLfzOxW6oPC9n0sWgcKUb
-	 KRubShyi+5vw1IdgmEMrVsK2jg1zBZjqg3cGaEQB2MTBHWnQqRVs5wK3EYCwvvMYaG
-	 +vOIcIXvzS2TlMI4Tr0/6Wz2110ICOMyn8Pf5NP4=
+	by mail.kernel.org (Postfix) with ESMTP id 5F7312080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:11:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="BsvJhtuE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728111AbgHJSLh (ORCPT
+        id S1728134AbgHJSLm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 14:11:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51886 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727972AbgHJSLg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 14:11:36 -0400
-Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0184220838
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 18:11:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597083096;
-        bh=g/t91faDycY4mseqjHu9BMl29MuRrgmwUh+bEg6Hgsg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=spkSqZBpZi71Ys9ESVPWib9QM4a0+dUXn8Lcfqpqglpbs4m3Y2UCV5kdVpl+y9WFi
-         F8EmYeN7eiWwiIXOanNvMDkHZIBZAWoQJ7AkWKzh/A7IPBGW6pLT7VMNIfvgAM/vvF
-         Mh2Yzj0GVGlJ/NOBZQK5/wsgHdONLJgdNsHDylPE=
-Received: by mail-ot1-f52.google.com with SMTP id v6so8002942ota.13
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 11:11:35 -0700 (PDT)
-X-Gm-Message-State: AOAM533itX/x4tLjlebKw6mAv/4zwXt04+X5GowpleFyubF+6coKpGTE
-        Bhu3WUmVyaas4qY4tonjKK+rTXTr5ViLhmk+YA==
-X-Google-Smtp-Source: ABdhPJyIcpMR1q6VzAeE/qkvttTnUF6tMclUZpugrbOgbjhBSTkQcM3zw3f5rc5dQEF2DOUXdRFuMPxOcEW5p+HQ2VQ=
-X-Received: by 2002:a9d:7f84:: with SMTP id t4mr1798410otp.192.1597083095312;
- Mon, 10 Aug 2020 11:11:35 -0700 (PDT)
+        Mon, 10 Aug 2020 14:11:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32976 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728062AbgHJSLl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 14:11:41 -0400
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9D62C061787
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 11:11:40 -0700 (PDT)
+Received: by mail-pj1-x102d.google.com with SMTP id i92so316111pje.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 11:11:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=S0kQGL1Z8bJks/onFWo7b2UmOXKnEogpEFfQxSaoZZQ=;
+        b=BsvJhtuEB8EnVSkDyBpqlM4lWzlhc+vAlB1NwoCjyNXrKrgAN1esgAeHIAVIzUOGCu
+         hdUl6g9dyqfXgvf8pTL5Ju2D8gHYWrp8bUmyJ1OkI0p8QaUPYIdfnUOVT/GGtEG0dx5y
+         PKCxFkUlHUGzIkX12nGr0dHUhV1NsxIJ+QEaENSRd2DS/K1+OLrS3FuH0EcKEBsdrXPE
+         xjW6ljsHTsqw3n7wY4DbRyDBw71glTLQBWPRF1KmeftWOj2gP0rJZq7zxO0I9byJVfi/
+         qyqwsO3e0HDCIk4B7p0oArS+W0O0fA+2Z27NCRatQtuucoQtd69/4Xk6iy3L8YrCiYiM
+         5asQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=S0kQGL1Z8bJks/onFWo7b2UmOXKnEogpEFfQxSaoZZQ=;
+        b=oECRUFXXjnbiVWsV1R1xg5O7/595jc9vten57XN/zUFC3ygJWiDTDZDLIh/lCYUH69
+         ZlIMQoxZaCw7gh/Oz4peAMEAfI/drW2I9dqBkmhZI6s7KNMl2oPjgbrsSOQDB9abE8Qz
+         EIeXlZguAri8GOhL/2VgVNFmdT4BUCiqqiXSJ80ZYDJaA21us6SJA8Umb4YK3Vtogo2/
+         w4/DpjwBeTiPMpIgIyXI8vmRYWAATQdKr9rzlsSuCsKzCQ+lNPFtMFPYW9imST5wnP5L
+         UbfNfge6yeJQrGwpwQ7dFhAqxqx2u85eiF+eK2adDfd6Rp39BwKWITiu2UQCvwg5ZS+8
+         IGgQ==
+X-Gm-Message-State: AOAM531TiA1TqMCLGGHFfAyRJcZIWA9tQ6Z/cLnJVAMGaEJnG8LuLWK+
+        CYer7+0/0bZe8UB52uN1Jk14FA==
+X-Google-Smtp-Source: ABdhPJzCCoxLw6D751mh3seWnzIzGBBgYKolOyGsKXgliby4JAVq7FQ2IASxq3IaDwl0pEMwyd5ZWw==
+X-Received: by 2002:a17:902:7291:: with SMTP id d17mr6460922pll.141.1597083098512;
+        Mon, 10 Aug 2020 11:11:38 -0700 (PDT)
+Received: from [192.168.1.182] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id r15sm24531992pfq.189.2020.08.10.11.11.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Aug 2020 11:11:37 -0700 (PDT)
+Subject: Re: INFO: task hung in io_uring_flush
+To:     Pavel Begunkov <asml.silence@gmail.com>,
+        syzbot <syzbot+6338dcebf269a590b668@syzkaller.appspotmail.com>,
+        io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        viro@zeniv.linux.org.uk
+References: <00000000000099566305ac881a16@google.com>
+ <bff14407-8ad7-fdda-e5cf-0dabc1acbb0d@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <a7e6d4a4-71f8-2a87-324e-31826b728902@kernel.dk>
+Date:   Mon, 10 Aug 2020 12:11:36 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200807230517.57114-1-robh@kernel.org> <20200808102208.GA619980@krava>
-In-Reply-To: <20200808102208.GA619980@krava>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 10 Aug 2020 12:11:23 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+gfqyqCx3Yuc6TsbXjYSLfJQhhPUnwRVjpJgwL24v1Qg@mail.gmail.com>
-Message-ID: <CAL_Jsq+gfqyqCx3Yuc6TsbXjYSLfJQhhPUnwRVjpJgwL24v1Qg@mail.gmail.com>
-Subject: Re: [RFC] libperf: Add support for user space counter access
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <bff14407-8ad7-fdda-e5cf-0dabc1acbb0d@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 8, 2020 at 4:22 AM Jiri Olsa <jolsa@redhat.com> wrote:
->
-> On Fri, Aug 07, 2020 at 05:05:17PM -0600, Rob Herring wrote:
-> > x86 and arm64 can both support direct access of event counters in
-> > userspace. The access sequence is less than trivial and currently exists
-> > in perf test code (tools/perf/arch/x86/tests/rdpmc.c) with copies in
-> > projects such as PAPI and libpfm4.
-> >
-> > Patches to add arm64 userspace support are pending[1].
-> >
-> > For this RFC, looking for a yes, seems like a good idea, or no, go away we
-> > don't want this in libperf.
->
-> hi,
-> looks great!
->
-> I wanted to add this for very long time.. so yes, we want this ;-)
+On 8/10/20 10:08 AM, Pavel Begunkov wrote:
+> On 10/08/2020 19:04, syzbot wrote:
+>> syzbot has bisected this issue to:
+>>
+>> commit f86cd20c9454847a524ddbdcdec32c0380ed7c9b
+>> Author: Jens Axboe <axboe@kernel.dk>
+>> Date:   Wed Jan 29 20:46:44 2020 +0000
+>>
+>>     io_uring: fix linked command file table usage
+> 
+> There are several known problems with io_uring_cancel_files() including
+> races and hangs. I had some drafts and going to patch it in a week or so.
 
-Thanks for the quick feedback. Would this be better implemented as a
-fast path for perf_evsel__read()? If so, how to get the mmap data
-which is associated with a evlist rather than a evsel?
+I'll let you deal with this one, thanks.
 
-Rob
+-- 
+Jens Axboe
+
