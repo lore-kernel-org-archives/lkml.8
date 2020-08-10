@@ -2,237 +2,158 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A52C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:07:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97AC9C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:07:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4DD020678
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:07:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 740E920678
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:07:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PT8BHvAl"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Dpho1qU1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbgHJOHZ (ORCPT
+        id S1727073AbgHJOHw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 10:07:25 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:25445 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726998AbgHJOHZ (ORCPT
+        Mon, 10 Aug 2020 10:07:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52106 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726633AbgHJOHv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 10:07:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597068442;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=9cNBeZMSVeP3DVGga0IkO789cQ/tXxxwecdgwFI3/0c=;
-        b=PT8BHvAlY3N+VUpvFOPkGghVSA0rzJ7MLmUJDPCJLjjGzfATwyRxQ2ZXORdy1MeVPkRKup
-        vjBDsWwluljadhpyZsJoduWu57gUsYjJULDnLf4tFBFnV43rSEX9swj3LQQ6oflX0i7yMs
-        1vj7T8QYLSyWKyfDEdCVEQltyXos9S0=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-61-gDwIzR9oN-yCc2riN39fBg-1; Mon, 10 Aug 2020 10:07:18 -0400
-X-MC-Unique: gDwIzR9oN-yCc2riN39fBg-1
-Received: by mail-qv1-f70.google.com with SMTP id c4so7309534qvq.15
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 07:07:18 -0700 (PDT)
+        Mon, 10 Aug 2020 10:07:51 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E652C061787
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 07:07:51 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id d22so5405988pfn.5
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 07:07:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OLUN7yzaJjWoVmWHoIQUorknRQRx0+Y1VLFiuVxKXZE=;
+        b=Dpho1qU1RLdNfqLhCLelmgInMzDJHQBp0jLpVj5SckMaZQyrKgl+jmndVd0rZbhwLY
+         h/FuIr1dSHqOgfFng4dubYhhakXkFBf8jJ1eBTA4RE43Q3JEXTr7quDhKbLxfdf3ZDUf
+         nhdaDHNcADUXGW1JtmRTJlt4izjMKmb4/yHpiUw3ByRYZ5HTDtaX/xFiPkGYJpefPsdy
+         yt2sWcg9XXgY/XD1ykXA+1Pl0tF4Cr/Gu0CAcDTxrm0xFJ9Wpo1YbTAdtlDig4RbWxzq
+         /vb0XVYvRSBZyKzccjNjyAK3c/HELNdT2LoteL8eVL2VyZk6PWT6RV6C+kBYDW68D3zO
+         n8Dw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=9cNBeZMSVeP3DVGga0IkO789cQ/tXxxwecdgwFI3/0c=;
-        b=HqxNeQMMo5Wkzonq7+877TEXLMyf7WqABehB9lp/1u+dNGbfa6d49x+JFQ9UJf84a1
-         N/Pc2xmBmwD4H/7NA4JxdPAIpF/ow5l4nnEdYK2FIeGorOeEPTEjsfMOypF3OgSGmwPa
-         o4CNiH0AQgciD10tHMR1OUoJVUIjLTAJVuSmuG9dEn8JZwEXaqyl9hCE/Fs1wXi6kQJ4
-         uZC3gu6n5+diq8eoTzgcEYloy7qgtjzAq1WX1mQSfi+C1HJ2EUkJ028c7y07VQHxuRDu
-         3ADbyl7vxuC6JdXcI1yvtcf1wsY/BnMb7u1vC54yV4aNshM6KxYkPXzb6C2vodGX1WsU
-         b21w==
-X-Gm-Message-State: AOAM532fZtJ1ZFtV376s3y5DjRlB7FgE98QbgaDlXFrFOOgTQHzQPumb
-        5LK7NkDBikPnonISHDGA7X2aZoeMnuPwPi7sq+PycBIslbzTtBkATRkowZJe+ukSjKDiqLUd8gU
-        T46sVR0Qi0mFBJ8vEGYi+yvfS
-X-Received: by 2002:a37:a655:: with SMTP id p82mr25881929qke.92.1597068437839;
-        Mon, 10 Aug 2020 07:07:17 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyAhtpzC6B/AHUomREfdW5p+0revbNMjcYgvVSCxlQ/BOs8KbalMx56oktoq4uHLJOpSG1XQQ==
-X-Received: by 2002:a37:a655:: with SMTP id p82mr25881912qke.92.1597068437536;
-        Mon, 10 Aug 2020 07:07:17 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id x57sm15834702qtc.61.2020.08.10.07.07.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Aug 2020 07:07:16 -0700 (PDT)
-Subject: Re: [PATCH v2 5/6] include: fpga: adi-axi-common.h: add definitions
- for supported FPGAs
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        linux-clk@vger.kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, mdf@kernel.org,
-        ardeleanalex@gmail.com,
-        Mircea Caprioru <mircea.caprioru@analog.com>
-References: <20200810134252.68614-1-alexandru.ardelean@analog.com>
- <20200810134252.68614-6-alexandru.ardelean@analog.com>
-From:   Tom Rix <trix@redhat.com>
-Message-ID: <0f9aa0ed-11a2-cf49-6c5d-ff36ba8ff9eb@redhat.com>
-Date:   Mon, 10 Aug 2020 07:07:14 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OLUN7yzaJjWoVmWHoIQUorknRQRx0+Y1VLFiuVxKXZE=;
+        b=dbTqkYvDFm5fKyZSMtbU/EMQuuLM1pzzb9LzIHCbBtT5m2v9/jjxdnWifRjzgc/rBT
+         ntNJlZlI79lzN5UJ9HDxImuF7nkXceKBBwCmV/pUj6YRxIoypgMAQmNRIXvUrvoOyf+N
+         uGoO5UTDCYzJZZFPOo7YO64maKXWZaY/p1ZLxFGlll/on1az7vIJFLpC6caOMN5e9L05
+         WMzBRubP5qQR+yGblWMOVAv/CvHqGCHkaJ1/l20fezAKwUx5E9UkQldPrJpxCXEK5agM
+         uXsSU7qSteq90MEECyFArkYvE+0G4wUbicR9GhsGROGdrT5K89FCgyHhxz1CS4uiPuQO
+         H3Pg==
+X-Gm-Message-State: AOAM5313mwDFmWTDrD0wmK3oUncCrH4piXTar+EONuAB8z6QsvhL+/CI
+        5TvK/BDb37XgooqMMnqk2Gvh84rUX+WyHClV7AxMlQ==
+X-Google-Smtp-Source: ABdhPJwa8ANYWls5D1ZzUqXv+dm6c9jFr+cX/1Wf9Qz2AgHllUAJnGydKsSmlskVi+7e9tHG6bISyosgU3GWhWtHhVM=
+X-Received: by 2002:a65:4bc7:: with SMTP id p7mr21992591pgr.440.1597068470553;
+ Mon, 10 Aug 2020 07:07:50 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200810134252.68614-6-alexandru.ardelean@analog.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <000000000000ce85c405ac744ff6@google.com> <20200810074706.GD1529187@kroah.com>
+ <CACT4Y+aS6oangE4BzhCfx3gs9guAW=zQpwN1LP+yB3kza68xFw@mail.gmail.com>
+ <20200810090833.GA2271719@kroah.com> <20200810091538.GA2273701@kroah.com>
+ <20200810095754.GA2404978@kroah.com> <CACT4Y+badWwK8L3HjYrv2nu-W+WnUfj5Pi2JsLTUMU3o2tJL9g@mail.gmail.com>
+In-Reply-To: <CACT4Y+badWwK8L3HjYrv2nu-W+WnUfj5Pi2JsLTUMU3o2tJL9g@mail.gmail.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Mon, 10 Aug 2020 16:07:39 +0200
+Message-ID: <CAAeHK+wjkbuGenK+wwMPvU=jJ7JRQ14HsQhU3sWrsUQ2QK6RYQ@mail.gmail.com>
+Subject: Re: KMSAN: kernel-infoleak in raw_ioctl
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        syzbot <syzbot+a7e220df5a81d1ab400e@syzkaller.appspotmail.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Alexander Potapenko <glider@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 8/10/20 6:42 AM, Alexandru Ardelean wrote:
-> From: Mircea Caprioru <mircea.caprioru@analog.com>
+On Mon, Aug 10, 2020 at 12:22 PM Dmitry Vyukov <dvyukov@google.com> wrote:
 >
-> All (newer) FPGA IP cores supported by Analog Devices, store information in
-> the synthesized designs. This information describes various parameters,
-> including the family of boards on which this is deployed, speed-grade, and
-> so on.
+> On Mon, Aug 10, 2020 at 11:57 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Mon, Aug 10, 2020 at 11:15:38AM +0200, Greg KH wrote:
+> > > On Mon, Aug 10, 2020 at 11:08:33AM +0200, Greg KH wrote:
+> > > > On Mon, Aug 10, 2020 at 11:00:07AM +0200, Dmitry Vyukov wrote:
+> > > > > On Mon, Aug 10, 2020 at 9:46 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > > > > >
+> > > > > > On Sun, Aug 09, 2020 at 09:27:18AM -0700, syzbot wrote:
+> > > > > > > Hello,
+> > > > > > >
+> > > > > > > syzbot found the following issue on:
+> > > > > > >
+> > > > > > > HEAD commit:    ce8056d1 wip: changed copy_from_user where instrumented
+> > > > > > > git tree:       https://github.com/google/kmsan.git master
+> > > > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=141eb8b2900000
+> > > > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=3afe005fb99591f
+> > > > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=a7e220df5a81d1ab400e
+> > > > > > > compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+> > > > > > > userspace arch: i386
+> > > > > > >
+> > > > > > > Unfortunately, I don't have any reproducer for this issue yet.
+> > > > > >
+> > > > > > The irony of a kernel module written for syzbot testing, causing syzbot
+> > > > > > reports....
+> > > > >
+> > > > > The raw gadget and KCOV are also kernel code and subject to all the
+> > > > > same rules as any other kernel code from syzkaller point of view.
+> > > > >
+> > > > > But I think the root cause of this bug is the origin of the uninitialized-ness:
+> > > > >
+> > > > > Local variable ----buf.i@asix_get_phy_addr created at:
+> > > > >  asix_read_cmd drivers/net/usb/asix_common.c:312 [inline]
+> > > > >  asix_read_phy_addr drivers/net/usb/asix_common.c:295 [inline]
+> > > > >  asix_get_phy_addr+0x4d/0x290 drivers/net/usb/asix_common.c:314
+> > > > >  asix_read_cmd drivers/net/usb/asix_common.c:312 [inline]
+> > > > >  asix_read_phy_addr drivers/net/usb/asix_common.c:295 [inline]
+> > > > >  asix_get_phy_addr+0x4d/0x290 drivers/net/usb/asix_common.c:314
+> > > >
+> > > > read buffers sent to USB hardware are ment to be filled in by the
+> > > > hardware with the data received from it, we do not zero-out those
+> > > > buffers before passing the pointer there.
+> > > >
+> > > > Perhaps with testing frameworks like the raw usb controller, that might
+> > > > cause a number of false-positives to happen?
+> > >
+> > > Ah, wait, that buffer is coming from the stack, which isn't allowed in
+> > > the first place :(
+> > >
+> > > So that should be changed anyway to a dynamic allocation, I'll go write
+> > > up a patch...
+> >
+> > Nope, my fault, the data is not coming from the stack, so all is good.
 >
-> Currently, some of these definitions are deployed mostly on Xilinx boards,
-> but they have been considered also for FPGA boards from other vendors.
+> My reading of the code is that asix_read_cmd returns the number of
+> bytes actually read, which may be less than requested.
+> This happens in __usbnet_read_cmd:
+> https://elixir.bootlin.com/linux/latest/source/drivers/net/usb/usbnet.c#L2002
+> So this code in asix_read_phy_addr will need produce an uninit value
+> for result if <2 bytes read:
 >
-> The register definitions are described at this link:
->   https://wiki.analog.com/resources/fpga/docs/hdl/regmap
-> (the 'Base (common to all cores)' section).
+>     u8 buf[2];
+>     int ret = asix_read_cmd(dev, AX_CMD_READ_PHY_ID, 0, 0, 2, buf, 0);
+>     if (ret < 0)
+>         netdev_err(dev->net, "Error reading PHYID register: %02x\n", ret);
+>     ret = buf[offset];
+>     return ret;
 >
-> Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> And it looks like all of 13 uses of asix_read_cmd in
+> drivers/net/usb/asix_common.c are subject to this bug as well.
 
-Thanks for changes.
-
-Reviewed-by: Tom Rix <trix@redhat.com>
-
-> ---
->  include/linux/fpga/adi-axi-common.h | 103 ++++++++++++++++++++++++++++
->  1 file changed, 103 insertions(+)
->
-> diff --git a/include/linux/fpga/adi-axi-common.h b/include/linux/fpga/adi-axi-common.h
-> index 141ac3f251e6..5c7d212a5d4a 100644
-> --- a/include/linux/fpga/adi-axi-common.h
-> +++ b/include/linux/fpga/adi-axi-common.h
-> @@ -13,6 +13,9 @@
->  
->  #define ADI_AXI_REG_VERSION			0x0000
->  
-> +#define ADI_AXI_REG_FPGA_INFO			0x001C
-> +#define ADI_AXI_REG_FPGA_VOLTAGE		0x0140
-> +
->  #define ADI_AXI_PCORE_VER(major, minor, patch)	\
->  	(((major) << 16) | ((minor) << 8) | (patch))
->  
-> @@ -20,4 +23,104 @@
->  #define ADI_AXI_PCORE_VER_MINOR(version)	(((version) >> 8) & 0xff)
->  #define ADI_AXI_PCORE_VER_PATCH(version)	((version) & 0xff)
->  
-> +#define ADI_AXI_INFO_FPGA_VOLTAGE(val)		((val) & 0xffff)
-> +
-> +#define ADI_AXI_INFO_FPGA_TECH(info)		(((info) >> 24) & 0xff)
-> +#define ADI_AXI_INFO_FPGA_FAMILY(info)		(((info) >> 16) & 0xff)
-> +#define ADI_AXI_INFO_FPGA_SPEED_GRADE(info)	(((info) >> 8) & 0xff)
-> +#define ADI_AXI_INFO_FPGA_DEV_PACKAGE(info)	((info) & 0xff)
-> +
-> +/**
-> + * FPGA Technology definitions
-> + */
-> +#define ADI_AXI_FPGA_TECH_XILINX_UNKNOWN 		0
-> +#define ADI_AXI_FPGA_TECH_XILINS_SERIES7		1
-> +#define ADI_AXI_FPGA_TECH_XILINX_ULTRASCALE		2
-> +#define ADI_AXI_FPGA_TECH_XILINX_ULTRASCALE_PLUS	3
-> +
-> +#define ADI_AXI_FPGA_TECH_INTEL_UNKNOWN			100
-> +#define ADI_AXI_FPGA_TECH_INTEL_CYCLONE_5		101
-> +#define ADI_AXI_FPGA_TECH_INTEL_CYCLONE_10		102
-> +#define ADI_AXI_FPGA_TECH_INTEL_ARRIA_10		103
-> +#define ADI_AXI_FPGA_TECH_INTEL_STRATIX_10		104
-> +
-> +/**
-> + * FPGA Family definitions
-> + */
-> +#define ADI_AXI_FPGA_FAMILY_UNKNOWN			0
-> +
-> +#define ADI_AXI_FPGA_FAMILY_XILINX_ARTIX		1
-> +#define ADI_AXI_FPGA_FAMILY_XILINX_KINTEX		2
-> +#define ADI_AXI_FPGA_FAMILY_XILINX_VIRTEX		3
-> +#define ADI_AXI_FPGA_FAMILY_XILINX_ZYNQ			4
-> +
-> +#define ADI_AXI_FPGA_FAMILY_INTEL_SX			1
-> +#define ADI_AXI_FPGA_FAMILY_INTEL_GX			2
-> +#define ADI_AXI_FPGA_FAMILY_INTEL_GT			3
-> +#define ADI_AXI_FPGA_FAMILY_INTEL_GZ			4
-> +
-> +/**
-> + * FPGA Speed-grade definitions
-> + */
-> +#define ADI_AXI_FPGA_SPEED_GRADE_UNKNOWN		0
-> +
-> +#define ADI_AXI_FPGA_SPEED_GRADE_XILINX_1		10
-> +#define ADI_AXI_FPGA_SPEED_GRADE_XILINX_1L		11
-> +#define ADI_AXI_FPGA_SPEED_GRADE_XILINX_1H		12
-> +#define ADI_AXI_FPGA_SPEED_GRADE_XILINX_1HV		13
-> +#define ADI_AXI_FPGA_SPEED_GRADE_XILINX_1LV		14
-> +#define ADI_AXI_FPGA_SPEED_GRADE_XILINX_2		20
-> +#define ADI_AXI_FPGA_SPEED_GRADE_XILINX_2L		21
-> +#define ADI_AXI_FPGA_SPEED_GRADE_XILINX_2LV		22
-> +#define ADI_AXI_FPGA_SPEED_GRADE_XILINX_3		30
-> +
-> +#define ADI_AXI_FPGA_SPEED_GRADE_INTEL_1		1
-> +#define ADI_AXI_FPGA_SPEED_GRADE_INTEL_2		2
-> +#define ADI_AXI_FPGA_SPEED_GRADE_INTEL_3		3
-> +#define ADI_AXI_FPGA_SPEED_GRADE_INTEL_4		4
-> +#define ADI_AXI_FPGA_SPEED_GRADE_INTEL_5		5
-> +#define ADI_AXI_FPGA_SPEED_GRADE_INTEL_6		6
-> +#define ADI_AXI_FPGA_SPEED_GRADE_INTEL_7		7
-> +#define ADI_AXI_FPGA_SPEED_GRADE_INTEL_8		8
-> +#define ADI_AXI_FPGA_SPEED_GRADE_INTEL_9		9
-> +
-> +/**
-> + * FPGA Device Package definitions
-> + */
-> +#define ADI_AXI_FPGA_DEV_PACKAGE_UNKNOWN		0
-> +
-> +#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_RF		1
-> +#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_FL		2
-> +#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_FF		3
-> +#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_FB		4
-> +#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_HC		5
-> +#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_FH		6
-> +#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_CS		7
-> +#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_CP		8
-> +#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_FT		9
-> +#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_FG		10
-> +#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_SB		11
-> +#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_RB		12
-> +#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_RS		13
-> +#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_CL		14
-> +#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_SF		15
-> +#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_BA		16
-> +#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_FA		17
-> +#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_FS		18
-> +#define ADI_AXI_FPGA_DEV_PACKAGE_XILINX_FI		19
-> +
-> +#define ADI_AXI_FPGA_DEV_PACKAGE_INTEL_BGA		1
-> +#define ADI_AXI_FPGA_DEV_PACKAGE_INTEL_PGA		2
-> +#define ADI_AXI_FPGA_DEV_PACKAGE_INTEL_FBGA		3
-> +#define ADI_AXI_FPGA_DEV_PACKAGE_INTEL_HBGA		4
-> +#define ADI_AXI_FPGA_DEV_PACKAGE_INTEL_PDIP		5
-> +#define ADI_AXI_FPGA_DEV_PACKAGE_INTEL_EQFP		6
-> +#define ADI_AXI_FPGA_DEV_PACKAGE_INTEL_PLCC		7
-> +#define ADI_AXI_FPGA_DEV_PACKAGE_INTEL_PQFP		8
-> +#define ADI_AXI_FPGA_DEV_PACKAGE_INTEL_RQFP		9
-> +#define ADI_AXI_FPGA_DEV_PACKAGE_INTEL_TQFP		10
-> +#define ADI_AXI_FPGA_DEV_PACKAGE_INTEL_UBGA		11
-> +#define ADI_AXI_FPGA_DEV_PACKAGE_INTEL_UFBGA		12
-> +#define ADI_AXI_FPGA_DEV_PACKAGE_INTEL_MBGA		13
-> +
->  #endif /* ADI_AXI_COMMON_H_ */
-
+Yeah, such issues are unfortunately currently getting attributed to
+raw-gadget. I wonder if we can improve crash parsing code to cover
+this kind of cases... We would need to skip the first few
+raw-gadget/USB-related stack traces, and only take one of the "Uninit
+was stored to memory at" ones.
