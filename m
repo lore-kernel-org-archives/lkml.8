@@ -7,68 +7,68 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 537D4C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 636DCC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:18:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1754E206DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:18:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FBB72073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:18:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="gpgI9nME"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="adOmvN9N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbgHJWSJ (ORCPT
+        id S1726933AbgHJWSL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 18:18:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42812 "EHLO
+        Mon, 10 Aug 2020 18:18:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726615AbgHJWSE (ORCPT
+        with ESMTP id S1726841AbgHJWSF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 18:18:04 -0400
-Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56D42C061756
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 15:18:03 -0700 (PDT)
-Received: by mail-pf1-x42b.google.com with SMTP id m8so6506314pfh.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 15:18:03 -0700 (PDT)
+        Mon, 10 Aug 2020 18:18:05 -0400
+Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89FAFC061787
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 15:18:04 -0700 (PDT)
+Received: by mail-pg1-x536.google.com with SMTP id o13so5733442pgf.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 15:18:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=JTpNTLZEF1YuYGMjvco22c5p9oj/9YQ3/7+kfvmutjo=;
-        b=gpgI9nME6ebeu07iGuAbt98CnW9J3B4iRK7Mj6+5t3/n4TRwduP2BFOEfbdabewJrv
-         vFBtqSEG773dbf0Im8KIRLjn6bFhIfdRl4kJ1bC9rY4hXRNtMZ8Qmg2/zDkoJ2RloT0q
-         WnuqhWpQDC66pBsO/t9ub9tZKMDxZHCfepGlgybh7SePt1dPo/W5qGny9DAfblLjQF3N
-         8htKX3/bP4ITeARNNi1SLNkujUvPMwVl631hDidyijKdWZ/INg/Ziks+zb+skyeZKRtT
-         5U4FS0vb3o0T0ofCRgQABAxOPKXhLud3HhuBnyYVVFnkfqx+UJmX0Y+mk6cSbV22wcy6
-         guGQ==
+        bh=9g8qtC2V4GxzmzZnkUZiLYQpHL1EZPwlKyzwefOemH0=;
+        b=adOmvN9Nh5Suu6Rr0ep559QiIFKSh6WVwTDWFA3E5IPQ8JTo6c6V1S2hhqTL5YhKq6
+         Fe1vLM4FdGV5u9+AJCiOEAJD/CSxl6aCXYP8Eee04JbdVZDFEIMPq3ax4n8SC8ngwA8S
+         QfyOD8iUtD9AEPfY7GNfGTzbl8JmSHfWdaJmrtHbNoVuGd2A8GoyuZNM2kc/FcoUv2Tv
+         ou2axvuOdArvKWxvENZ7Yhsad2M0LnkJ8/D0XMgxdoWsZAUJG6akoHYp37UZdovcSLAR
+         BUU8LfAgcvd6j748HEVdAQriBB4tGKw2Ols9mMChzbTx0tBAoYt3E37Xvrivt9G+Dbbr
+         RK0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=JTpNTLZEF1YuYGMjvco22c5p9oj/9YQ3/7+kfvmutjo=;
-        b=qhK8Q6G14iSsRQThHtdsoceLlJM/D6UAIQ/9Gbb8g9sGudjBlDxSJrLLggT/icIThr
-         2M7khrhYHKuz4tkjGjMbX/B+/MYeHQEYZjRV03b9z5mqlTzAH2k/l4YwSVfBfaw00u0s
-         mySv1pJN6eN63fZJuNyWka/3uuLp+lexyHm63oW71zPA0x3TJ0JHoUwsl0Trs4pw/tRZ
-         SIwck8BUW4IDtNe3/YZ7zlSoPuRJQ8ugKP/cUy879/y8uAgb59L3svcd4Sdd45W+aC3E
-         H6bzQHCQ3DmXkenJeL45tltND9i2ucZlULX4Np3WOmiiUiq4RqZg/yzFKIuwJRtnlKGz
-         Ebyw==
-X-Gm-Message-State: AOAM533nr+I0lklesAKQsDCJpDRosAFERukEn/k3GMgvC+8TurN4/UgM
-        YvLHrLZvetxw7d326j1gMUfnbg==
-X-Google-Smtp-Source: ABdhPJxBm7Zw256hy2vVGlHoSSzO0FkytWwFgr+sWfiGGyL+LjW9MEiZs0vZqABHDrIEDhVlZO9Jcg==
-X-Received: by 2002:a63:485f:: with SMTP id x31mr23694566pgk.49.1597097882636;
-        Mon, 10 Aug 2020 15:18:02 -0700 (PDT)
+        bh=9g8qtC2V4GxzmzZnkUZiLYQpHL1EZPwlKyzwefOemH0=;
+        b=m16jgsoc2onSg2Q20zWyCY3u6mFpS1sWrjRzKemsSLx1vRN/KiJWVaSA0ggB2HUUnX
+         FAqejZ99oKP1sevkxBqmHwy8e5xuLSRRncglZ8Ut67CUcBw3atQtEoMlj4QW3YP086qc
+         mDTv7x5nm3otqF/rZgIwdI+ogydPM+VMfd4HmD0BT5dVEhpab8omjWEdTwnoihD6mM0L
+         yJeX0MNoeesHF0f7IrwG/7XcU51w9VzfV/9qFA2lhPGIED7ghmR/+JTBl/kqoPLLqMq1
+         X22ojz6cPtDN+YtylqpuqgS4mGWgssxPMKzsWEf0B7wPllKgerVigCEiQ8U+DSEDRi6L
+         u1Ug==
+X-Gm-Message-State: AOAM531n3chj2339Ph9q3YvR7KBg4aQgnRnfEnG4UigrepI6uGufFqyI
+        AZsZo3uOE89MJT8OywxMLUIlCg==
+X-Google-Smtp-Source: ABdhPJx9lnuS7+qH12wiV7U1ngctEYmUJ4OoiBcArJNsL5iYq+ebYnx24jafb/3FYN+x5XD96Z5mXA==
+X-Received: by 2002:a62:768e:: with SMTP id r136mr3295501pfc.187.1597097884004;
+        Mon, 10 Aug 2020 15:18:04 -0700 (PDT)
 Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.gmail.com with ESMTPSA id l63sm19147230pgl.24.2020.08.10.15.18.01
+        by smtp.gmail.com with ESMTPSA id r134sm23791051pfc.1.2020.08.10.15.18.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Aug 2020 15:18:02 -0700 (PDT)
+        Mon, 10 Aug 2020 15:18:03 -0700 (PDT)
 From:   Kevin Hilman <khilman@baylibre.com>
 To:     Jerome Brunet <jbrunet@baylibre.com>
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-amlogic@lists.infradead.org
-Subject: Re: [PATCH] arm64: dts: meson: vim3: correct led polarity
-Date:   Mon, 10 Aug 2020 15:17:59 -0700
-Message-Id: <159709786936.10576.18026946638295707275.b4-ty@baylibre.com>
+Subject: Re: [PATCH] arm64: dts: meson: vim3: make sound card common to all variants
+Date:   Mon, 10 Aug 2020 15:18:00 -0700
+Message-Id: <159709786936.10576.5338765095406106083.b4-ty@baylibre.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200803141850.172704-1-jbrunet@baylibre.com>
-References: <20200803141850.172704-1-jbrunet@baylibre.com>
+In-Reply-To: <20200803142158.173402-1-jbrunet@baylibre.com>
+References: <20200803142158.173402-1-jbrunet@baylibre.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,12 +76,13 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 3 Aug 2020 16:18:50 +0200, Jerome Brunet wrote:
-> The LEDs on the vim3 are active when the gpio is high, not low.
+On Mon, 3 Aug 2020 16:21:58 +0200, Jerome Brunet wrote:
+> The vim3 sound card definition should be same all the vim3 variants
+> Move the definition to the appropriate device tree file.
 
 Applied, thanks!
 
-[1/1] arm64: dts: meson: vim3: correct led polarity
+[1/1] arm64: dts: meson: vim3: make sound card common to all variants
       (no commit info)
 
 Best regards,
