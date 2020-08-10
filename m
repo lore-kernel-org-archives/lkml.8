@@ -2,110 +2,106 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4FB2C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 13:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 032F3C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 13:52:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DDF820734
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 13:49:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="L5sjTPbB"
+	by mail.kernel.org (Postfix) with ESMTP id CEBBD20734
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 13:52:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726898AbgHJNtv (ORCPT
+        id S1726903AbgHJNwk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 09:49:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49342 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726633AbgHJNtv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 09:49:51 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0263DC061756
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 06:49:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=zHfLH2pg1OucUn05ZnXEsdKjOpibB6QAf/23JPd8gx8=; b=L5sjTPbBcez16YM9CU6ZatApuG
-        MyJ6o+zuEQaLRWikiixj3Bf96THLkt/zNXBiojRaQBSBJHM2hM3woVS2knARsAsBB+mZbX6Qy8InP
-        CNACxce0PQb3a3i5k949TLiNBOkrDKmLawK6kkEopahePmtV6L4mEsYqJYbwbp6Ru7MhC7p4kpeaQ
-        ue1uVxFU5I4JhYxpa/8EvvwYUT5YWK29LptypMjAzTBfCGYzJBjVMGu18a5UAeQN5DbDTmTslVEnx
-        aLjnYETxMmDavK20kO0oT8W/ABS/voGVs/RbN4m0B7rMy8jGatx7eLERyfdWpDxpHEE2WdZj9mKvK
-        Q0eDF7PQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k58BJ-00030R-Cp; Mon, 10 Aug 2020 13:49:41 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1C3EE30015A;
-        Mon, 10 Aug 2020 15:49:38 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id CCD5A200D415D; Mon, 10 Aug 2020 15:49:38 +0200 (CEST)
-Date:   Mon, 10 Aug 2020 15:49:38 +0200
-From:   peterz@infradead.org
-To:     tglx@linutronix.de, mingo@kernel.org, will@kernel.org
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, elver@google.com,
-        paulmck@kernel.org, rostedt@goodmis.org, rjw@rjwysocki.net
-Subject: Re: [RFC][PATCH 2/3] locking,entry: #PF vs TRACE_IRQFLAGS
-Message-ID: <20200810134938.GX2674@hirez.programming.kicks-ass.net>
-References: <20200807192336.405068898@infradead.org>
- <20200807193018.060388629@infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200807193018.060388629@infradead.org>
+        Mon, 10 Aug 2020 09:52:40 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34104 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726845AbgHJNwk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 09:52:40 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id DC036AC2F;
+        Mon, 10 Aug 2020 13:52:58 +0000 (UTC)
+Date:   Mon, 10 Aug 2020 15:52:38 +0200
+Message-ID: <s5hmu324nh5.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Amit Pundir <amit.pundir@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>
+Subject: Re: [GIT PULL] sound updates for 5.9
+In-Reply-To: <20200810122254.GA6438@sirena.org.uk>
+References: <s5hbljocbxl.wl-tiwai@suse.de>
+        <CANcMJZCPPOOmKyRMKYRe5sRsqf-rrO6wXK5BPVwFrAPLZOEyMg@mail.gmail.com>
+        <s5hv9ht7hz9.wl-tiwai@suse.de>
+        <s5ho8nl7e7r.wl-tiwai@suse.de>
+        <20200810122254.GA6438@sirena.org.uk>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 07, 2020 at 09:23:38PM +0200, Peter Zijlstra wrote:
-> Much of the complexity in irqenter_{enter,exit}() is due to #PF being
-> the sole exception that can schedule from kernel context.
+On Mon, 10 Aug 2020 14:22:54 +0200,
+Mark Brown wrote:
 > 
-> One additional wrinkle with #PF is that it is non-maskable, it can
-> happen _anywhere_. Due to this, and the wonders of tracing, we can get
-> the 'normal' NMI nesting vs TRACE_IRQFLAGS:
+> On Sat, Aug 08, 2020 at 10:07:36AM +0200, Takashi Iwai wrote:
+> > Takashi Iwai wrote:
 > 
-> 	local_irq_disable()
-> 	  raw_local_irq_disable();
-> 	  trace_hardirqs_off();
+> > > Does the patch below fix the bug?  If so, it's rather a bug in the
+> > > commit cf6e26c71bfd ("ASoC: soc-component: merge
+> > > snd_soc_component_read() and snd_soc_component_read32()").
 > 
-> 	local_irq_enable();
-> 	  trace_hardirqs_on();
-> 	  <#PF>
-> 	    trace_hardirqs_off()
-> 	    ...
-> 	    if (!regs_irqs_disabled(regs)
-> 	      trace_hardirqs_on();
-> 	  </#PF>
-> 	  // WHOOPS -- lockdep thinks IRQs are disabled again!
-> 	  raw_local_irqs_enable();
+> > That said, the commit cf6e26c71bfd dropped the capability of returning
+> > an error code from snd_soc_component_read() completely, while many
+> > code still expect an error gets returned.  The assumption mentioned in
+> > the patch (the error can be ignored) looks too naive.
 > 
-> Rework irqenter_{enter,exit}() to save/restore the software state.
+> I did an audit of the users when the series was posted and wasn't able
+> to turn up any code doing anything constructive with the return values,
+> but then once you're past probe error handling often makes things worse
+> if you try.  This is the first one which actually seems to have had an
+> impact.
+> 
+> > Morimoto-san, Mark, could you address it?  IMO, we may still need two
+> > variants in the end again: the former snd_soc_component_read32() that
+> > returns the value directly and snd_soc_component_read() that returns 0
+> > or an error.  Only once after we deal with the error handling in each
+> > caller side, we can unify the read functions.
+> 
+> I'm not sure if that specifically is what we need but yeah we should do
+> something, if it fixes things your change is certainly good for the
+> immediate problem so could you send it with a signoff please?  
 
-So with #3 v1.1, we can maybe do away with this patch.
+OK, will do soon later.
 
-So the actual case that triggered the above was:
+> With the new code we do now have the core code printing an error message
+> if the I/O fails, before they were just being ignored more often than
+> not.  This did turn up a couple of cases where drivers were relying on
+> being able to do things like silently read from registers that just
+> don't exist or aren't currently accessible without any diagnostics which
+> is it's own problem :/ (especially the volatile cases).
 
-
-	raw_local_irq_disable();
-	trace_lock_acquire()
-	  ... tracing ...
-	  <#PF/>
-
-Now, as Marco spotted, DEBUG_LOCKDEP would trigger in this case, because
-'... tracing ...' includes rcu_dereference(), and that in turn calls
-lock_is_held()/check_flags() and goes *boom*, because we did
-raw_local_irq_disable().
-
-Now, the new patch, moves the tracepoint out from under the
-raw_local_irq_disable() too, and given RCU-lockdep complains in this
-situation, I'm thinking we're actually free of such cases... fingers
-crossed.
+Yeah, we may need some raw access helper for such a case...
 
 
+thanks,
+
+Takashi
+
+
+
+	
+
+		
