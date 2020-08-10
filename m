@@ -2,53 +2,53 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C9CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8017C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:32:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33BA522D2B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:32:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9356822D74
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:32:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073531;
-	bh=GdpXVV8DMlKmH9TVZ8I3srjFaDu0mJ60QwCti/S4+20=;
+	s=default; t=1597073534;
+	bh=HQuKcHKaMPUKXcAswKyAx8FwNMuuuNSyoqwuF+jeTs8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mMMoNiqTe6o2BgZ/WBbNAw6/jQloPYUI/JcLGVqOa54dTDhPRoSbtbZzsbC+pSW8P
-	 W5qMEhERcgvmzPPCXvQGHaO1/3B8YUyzS5akUHMTjgA6cS/NxU0ACEwTKw6BTIWcaM
-	 wTk+Z/v8AfGgI7xRccmFXMxfOzVH4CtcYHsZP+3Q=
+	b=EeU/TG0cnEySQbsArZBhReo0FENJU+W5hVBjiMWyP6P12E66EasYv0VuB4iYibYTK
+	 4kGERmOfOe/zPOP+c2sAqURVVrJnO9F+ZZYhCISaI6PFA4XelNpndBJ/7S5pEhHMyz
+	 uzK7KkBNf5AFn/38yeofxfwe+kYI/D98Tj5kCoco=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729035AbgHJPcJ (ORCPT
+        id S1729133AbgHJPax (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:32:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38012 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:30:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728906AbgHJPay (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:30:54 -0400
+        id S1729125AbgHJPap (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:30:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E24B020791;
-        Mon, 10 Aug 2020 15:30:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5CF920791;
+        Mon, 10 Aug 2020 15:30:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073454;
-        bh=GdpXVV8DMlKmH9TVZ8I3srjFaDu0mJ60QwCti/S4+20=;
+        s=default; t=1597073445;
+        bh=HQuKcHKaMPUKXcAswKyAx8FwNMuuuNSyoqwuF+jeTs8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KHBQ6lp/t61vspWIyPtRIcwL0xCP9SIrYw2XdBXbfUSxnA9irHdZ5pH/Xk8B7/qKR
-         vIF3N4ZHrtPfp1PrsTJY12CqCpezGDXRoK/l7yPlVLg7SpN7ivXL5BwCFQLqJkDyDw
-         pBOUDEcc8sYNCHcoaxTkxkviavTGgmlSRkvs6am4=
+        b=CK1Blwm0V3tYI+1np2632NwTYlwDLfrx42T7g8maGYXTlimNOxJMmIYv8cN0XocaZ
+         jt5/suA6XV5TuQ/beKRfskrZuWAewfw7zQH5rKjyqLfdWk5KDJIPHoDZoSCSbAQ600
+         CguVBjS60wzTxCFiKltvuWBQ2gZmJ/laNmFmbYCs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sergey Nemov <sergey.nemov@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>
-Subject: [PATCH 4.19 44/48] i40e: add num_vectors checker in iwarp handler
-Date:   Mon, 10 Aug 2020 17:22:06 +0200
-Message-Id: <20200810151806.389164727@linuxfoundation.org>
+        stable@vger.kernel.org, Rustam Kovhaev <rkovhaev@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>,
+        syzbot+67b2bd0e34f952d0321e@syzkaller.appspotmail.com
+Subject: [PATCH 4.19 24/48] usb: hso: check for return value in hso_serial_common_create()
+Date:   Mon, 10 Aug 2020 17:21:46 +0200
+Message-Id: <20200810151805.404508512@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151804.199494191@linuxfoundation.org>
 References: <20200810151804.199494191@linuxfoundation.org>
@@ -61,42 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergey Nemov <sergey.nemov@intel.com>
+From: Rustam Kovhaev <rkovhaev@gmail.com>
 
-[ Upstream commit 7015ca3df965378bcef072cca9cd63ed098665b5 ]
+[ Upstream commit e911e99a0770f760377c263bc7bac1b1593c6147 ]
 
-Field num_vectors from struct virtchnl_iwarp_qvlist_info should not be
-larger than num_msix_vectors_vf in the hw struct.  The iwarp uses the
-same set of vectors as the LAN VF driver.
+in case of an error tty_register_device_attr() returns ERR_PTR(),
+add IS_ERR() check
 
-Fixes: e3219ce6a7754 ("i40e: Add support for client interface for IWARP driver")
-Signed-off-by: Sergey Nemov <sergey.nemov@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Signed-off-by: Jesse Brandeburg <jesse.brandeburg@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reported-and-tested-by: syzbot+67b2bd0e34f952d0321e@syzkaller.appspotmail.com
+Link: https://syzkaller.appspot.com/bug?extid=67b2bd0e34f952d0321e
+Signed-off-by: Rustam Kovhaev <rkovhaev@gmail.com>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/net/usb/hso.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
-@@ -442,6 +442,16 @@ static int i40e_config_iwarp_qvlist(stru
- 	u32 next_q_idx, next_q_type;
- 	u32 msix_vf, size;
+diff --git a/drivers/net/usb/hso.c b/drivers/net/usb/hso.c
+index 61b9d33681484..bff268b4a9a46 100644
+--- a/drivers/net/usb/hso.c
++++ b/drivers/net/usb/hso.c
+@@ -2274,12 +2274,14 @@ static int hso_serial_common_create(struct hso_serial *serial, int num_urbs,
  
-+	msix_vf = pf->hw.func_caps.num_msix_vectors_vf;
-+
-+	if (qvlist_info->num_vectors > msix_vf) {
-+		dev_warn(&pf->pdev->dev,
-+			 "Incorrect number of iwarp vectors %u. Maximum %u allowed.\n",
-+			 qvlist_info->num_vectors,
-+			 msix_vf);
-+		goto err;
-+	}
-+
- 	size = sizeof(struct virtchnl_iwarp_qvlist_info) +
- 	       (sizeof(struct virtchnl_iwarp_qv_info) *
- 						(qvlist_info->num_vectors - 1));
+ 	minor = get_free_serial_index();
+ 	if (minor < 0)
+-		goto exit;
++		goto exit2;
+ 
+ 	/* register our minor number */
+ 	serial->parent->dev = tty_port_register_device_attr(&serial->port,
+ 			tty_drv, minor, &serial->parent->interface->dev,
+ 			serial->parent, hso_serial_dev_groups);
++	if (IS_ERR(serial->parent->dev))
++		goto exit2;
+ 
+ 	/* fill in specific data for later use */
+ 	serial->minor = minor;
+@@ -2324,6 +2326,7 @@ static int hso_serial_common_create(struct hso_serial *serial, int num_urbs,
+ 	return 0;
+ exit:
+ 	hso_serial_tty_unregister(serial);
++exit2:
+ 	hso_serial_common_free(serial);
+ 	return -1;
+ }
+-- 
+2.25.1
+
 
 
