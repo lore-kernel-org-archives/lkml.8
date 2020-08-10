@@ -2,134 +2,170 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9B64C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:54:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89AB4C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:55:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0FC2206B5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:54:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="ji1CLJdb"
+	by mail.kernel.org (Postfix) with ESMTP id 71AD82070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:55:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726827AbgHJJym (ORCPT
+        id S1726845AbgHJJzD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 05:54:42 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:40361 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725809AbgHJJyi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 05:54:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1597053279; x=1628589279;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=8aroeKp+TU0h9KbgQNdJ0GlbSrv/KIjPx49wzwoNgdY=;
-  b=ji1CLJdbfca7/lbvfrDGxIlsK0jhjFtjc6eYhya2SDWRuIpj+G3WjLzz
-   /LXlEbvuHhv87xAZ3cf4PRMa9sh4DU1O1I2AkiEr9JRSGG0kAPGIC8WZD
-   CwSmxGPIkNS2adTqCqCH6XWeTNh74R6DPnAJHQVmWiE0l/F5WcQ+r4s1j
-   s=;
-IronPort-SDR: 6jHd86C88g8LHIGDVrhLjCMXAO1W3rp71sqL2wpipWlBI0Buwu/tC04mxFQxhB7seKMpQSucxe
- sgL+Q1oyUorQ==
-X-IronPort-AV: E=Sophos;i="5.75,457,1589241600"; 
-   d="scan'208";a="58615007"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-81e76b79.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 10 Aug 2020 09:54:36 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2b-81e76b79.us-west-2.amazon.com (Postfix) with ESMTPS id 1B171A1C89;
-        Mon, 10 Aug 2020 09:54:35 +0000 (UTC)
-Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 10 Aug 2020 09:54:34 +0000
-Received: from 38f9d3867b82.ant.amazon.com (10.43.161.71) by
- EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 10 Aug 2020 09:54:29 +0000
-Subject: Re: [PATCH v6 11/18] nitro_enclaves: Add logic for setting an enclave
- memory region
-To:     Andra Paraschiv <andraprs@amazon.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-CC:     Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        "David Duncan" <davdunc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        "David Woodhouse" <dwmw@amazon.co.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Karen Noel <knoel@redhat.com>,
-        "Martin Pohlack" <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        Uwe Dannowski <uwed@amazon.de>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        kvm <kvm@vger.kernel.org>,
-        ne-devel-upstream <ne-devel-upstream@amazon.com>
-References: <20200805091017.86203-1-andraprs@amazon.com>
- <20200805091017.86203-12-andraprs@amazon.com>
-From:   Alexander Graf <graf@amazon.de>
-Message-ID: <76b87d46-88b6-4c00-4ac7-27e5be020a57@amazon.de>
-Date:   Mon, 10 Aug 2020 11:54:27 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.11.0
+        Mon, 10 Aug 2020 05:55:03 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53226 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725809AbgHJJzD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 05:55:03 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id B4197AC61;
+        Mon, 10 Aug 2020 09:55:20 +0000 (UTC)
+Date:   Mon, 10 Aug 2020 11:55:00 +0200
+From:   Michal Hocko <mhocko@suse.com>
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/memcg: remove useless check on page->mem_cgroup
+Message-ID: <20200810095500.GE4773@dhcp22.suse.cz>
+References: <1596166480-22814-1-git-send-email-alex.shi@linux.alibaba.com>
+ <20200731151655.GB491801@cmpxchg.org>
+ <9338716f-ca0e-057f-8d94-03e2b3f70281@linux.alibaba.com>
+ <20200803081815.GD5174@dhcp22.suse.cz>
+ <bd61e672-b997-c4cd-2047-fca9dc11cc4c@linux.alibaba.com>
+ <92dd8e68-8095-72c5-0144-2a084e4d5993@linux.alibaba.com>
 MIME-Version: 1.0
-In-Reply-To: <20200805091017.86203-12-andraprs@amazon.com>
-Content-Language: en-US
-X-Originating-IP: [10.43.161.71]
-X-ClientProxiedBy: EX13d09UWC004.ant.amazon.com (10.43.162.114) To
- EX13D20UWC001.ant.amazon.com (10.43.162.244)
-Content-Type: text/plain; charset="windows-1252"; format="flowed"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <92dd8e68-8095-72c5-0144-2a084e4d5993@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed 05-08-20 20:28:33, Alex Shi wrote:
+[...]
+> >From 2ca3e87fd3878ab729551682ad083a70f15bb3fc Mon Sep 17 00:00:00 2001
+> From: Alex Shi <alex.shi@linux.alibaba.com>
+> Date: Sat, 1 Aug 2020 10:43:55 +0800
+> Subject: [PATCH v3] mm/memcg: warning on !memcg after readahead page charged
+> 
+> Since readahead page is charged on memcg too, in theory we don't have to
+> check this exception now. Before safely remove them all, add a warning
+> for the unexpected !memcg.
+> 
+> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: cgroups@vger.kernel.org
+> Cc: linux-mm@kvack.org
+> Cc: linux-kernel@vger.kernel.org
 
+Looks good to me. I am not familiar with the section tweaks but that
+should be ok.
 
-On 05.08.20 11:10, Andra Paraschiv wrote:
-> Another resource that is being set for an enclave is memory. User space
-> memory regions, that need to be backed by contiguous memory regions,
-> are associated with the enclave.
-> =
+Acked-by: Michal Hocko <mhocko@suse.com>
 
-> One solution for allocating / reserving contiguous memory regions, that
-> is used for integration, is hugetlbfs. The user space process that is
-> associated with the enclave passes to the driver these memory regions.
-> =
+Once you collect more feedback, please send both patches so that they do
+not get lost in this thread.
 
-> The enclave memory regions need to be from the same NUMA node as the
-> enclave CPUs.
-> =
+Thanks!
 
-> Add ioctl command logic for setting user space memory region for an
-> enclave.
-> =
+> ---
+>  include/linux/mmdebug.h | 13 +++++++++++++
+>  mm/memcontrol.c         | 15 ++++++++-------
+>  2 files changed, 21 insertions(+), 7 deletions(-)
+> 
+> diff --git a/include/linux/mmdebug.h b/include/linux/mmdebug.h
+> index 2ad72d2c8cc5..4ed52879ce55 100644
+> --- a/include/linux/mmdebug.h
+> +++ b/include/linux/mmdebug.h
+> @@ -37,6 +37,18 @@
+>  			BUG();						\
+>  		}							\
+>  	} while (0)
+> +#define VM_WARN_ON_ONCE_PAGE(cond, page)	({			\
+> +	static bool __section(.data.once) __warned;			\
+> +	int __ret_warn_once = !!(cond);					\
+> +									\
+> +	if (unlikely(__ret_warn_once && !__warned)) {			\
+> +		dump_page(page, "VM_WARN_ON_ONCE_PAGE(" __stringify(cond)")");\
+> +		__warned = true;					\
+> +		WARN_ON(1);						\
+> +	}								\
+> +	unlikely(__ret_warn_once);					\
+> +})
+> +
+>  #define VM_WARN_ON(cond) (void)WARN_ON(cond)
+>  #define VM_WARN_ON_ONCE(cond) (void)WARN_ON_ONCE(cond)
+>  #define VM_WARN_ONCE(cond, format...) (void)WARN_ONCE(cond, format)
+> @@ -48,6 +60,7 @@
+>  #define VM_BUG_ON_MM(cond, mm) VM_BUG_ON(cond)
+>  #define VM_WARN_ON(cond) BUILD_BUG_ON_INVALID(cond)
+>  #define VM_WARN_ON_ONCE(cond) BUILD_BUG_ON_INVALID(cond)
+> +#define VM_WARN_ON_ONCE_PAGE(cond, page)  BUILD_BUG_ON_INVALID(cond)
+>  #define VM_WARN_ONCE(cond, format...) BUILD_BUG_ON_INVALID(cond)
+>  #define VM_WARN(cond, format...) BUILD_BUG_ON_INVALID(cond)
+>  #endif
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index 130093bdf74b..299382fc55a9 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -1322,10 +1322,8 @@ struct lruvec *mem_cgroup_page_lruvec(struct page *page, struct pglist_data *pgd
+>  	}
+>  
+>  	memcg = page->mem_cgroup;
+> -	/*
+> -	 * Swapcache readahead pages are added to the LRU - and
+> -	 * possibly migrated - before they are charged.
+> -	 */
+> +	/* Readahead page is charged too, to see if other page uncharged */
+> +	VM_WARN_ON_ONCE_PAGE(!memcg, page);
+>  	if (!memcg)
+>  		memcg = root_mem_cgroup;
+>  
+> @@ -6906,8 +6904,9 @@ void mem_cgroup_migrate(struct page *oldpage, struct page *newpage)
+>  	if (newpage->mem_cgroup)
+>  		return;
+>  
+> -	/* Swapcache readahead pages can get replaced before being charged */
+>  	memcg = oldpage->mem_cgroup;
+> +	/* Readahead page is charged too, to see if other page uncharged */
+> +	VM_WARN_ON_ONCE_PAGE(!memcg, oldpage);
+>  	if (!memcg)
+>  		return;
+>  
+> @@ -7104,7 +7103,8 @@ void mem_cgroup_swapout(struct page *page, swp_entry_t entry)
+>  
+>  	memcg = page->mem_cgroup;
+>  
+> -	/* Readahead page, never charged */
+> +	/* Readahead page is charged too, to see if other page uncharged */
+> +	VM_WARN_ON_ONCE_PAGE(!memcg, page);
+>  	if (!memcg)
+>  		return;
+>  
+> @@ -7168,7 +7168,8 @@ int mem_cgroup_try_charge_swap(struct page *page, swp_entry_t entry)
+>  
+>  	memcg = page->mem_cgroup;
+>  
+> -	/* Readahead page, never charged */
+> +	/* Readahead page is charged too, to see if other page uncharged */
+> +	VM_WARN_ON_ONCE_PAGE(!memcg, page);
+>  	if (!memcg)
+>  		return 0;
+>  
+> -- 
+> 1.8.3.1
 
-> Signed-off-by: Alexandru Vasile <lexnv@amazon.com>
-> Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
-
-Reviewed-by: Alexander Graf <graf@amazon.com>
-
-
-Alex
-
-
-
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-Sitz: Berlin
-Ust-ID: DE 289 237 879
-
-
-
+-- 
+Michal Hocko
+SUSE Labs
