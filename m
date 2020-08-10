@@ -2,133 +2,108 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 028BCC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:02:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82914C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:08:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8B8C206B5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:02:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 419C620716
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:08:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597050505;
+	bh=lJPq5ETxHPZ0RoMNhAnC8Tl6vZT66KDQarRsEygWibM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Rx2Qa520niIpYc7MuHX5O232Qd/NEcdn7K2QL7GFbKioMKewn/bT6imjn1lInbzAw
+	 j+hI4YsnyMe7gV16znIAxBv9ngqWET5Xnvnk6yOMuNSzucPpWDFdktLqOtsPpt7jvB
+	 v73a0JS+pnfJDSqSWEviFlk9j5FfpOKnxcypDD50=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726684AbgHJJC1 (ORCPT
+        id S1726450AbgHJJIY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 05:02:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33574 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726177AbgHJJC1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 05:02:27 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42476C061756
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 02:02:27 -0700 (PDT)
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=localhost)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1k53hE-0000O3-4f; Mon, 10 Aug 2020 11:02:20 +0200
-Message-ID: <c2f17d7360387bf6d93d2ac24e5b326a542a5861.camel@pengutronix.de>
-Subject: Re: [PATCH] PCI: imx6: Do not output error message when
- devm_clk_get() failed with -EPROBE_DEFER
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Anson Huang <Anson.Huang@nxp.com>, hongxing.zhu@nxp.com,
-        lorenzo.pieralisi@arm.com, robh@kernel.org, bhelgaas@google.com,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Date:   Mon, 10 Aug 2020 11:02:18 +0200
-In-Reply-To: <1596519481-28072-1-git-send-email-Anson.Huang@nxp.com>
-References: <1596519481-28072-1-git-send-email-Anson.Huang@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
+        Mon, 10 Aug 2020 05:08:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34076 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726021AbgHJJIX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 05:08:23 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 578B9206B5;
+        Mon, 10 Aug 2020 09:08:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597050502;
+        bh=lJPq5ETxHPZ0RoMNhAnC8Tl6vZT66KDQarRsEygWibM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SPNk10mhV3Z9sVkCmr79SktXZo76Dck7IItQ4xzcqZ70UuvqrAI0mz1z+ZnIzgbU8
+         X2VffCf2KC79hHcy/0SJFqlKsDaB3GBSoDEPhel6x87RuC673xH9UzPxQO4jYzfV3l
+         NKLn3qbeRcF6yAoHcy9OGOIi7Um2UTvMcgXh4BZo=
+Date:   Mon, 10 Aug 2020 11:08:33 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     syzbot <syzbot+a7e220df5a81d1ab400e@syzkaller.appspotmail.com>,
+        Andrey Konovalov <andreyknvl@google.com>, balbi@kernel.org,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Alexander Potapenko <glider@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Subject: Re: KMSAN: kernel-infoleak in raw_ioctl
+Message-ID: <20200810090833.GA2271719@kroah.com>
+References: <000000000000ce85c405ac744ff6@google.com>
+ <20200810074706.GD1529187@kroah.com>
+ <CACT4Y+aS6oangE4BzhCfx3gs9guAW=zQpwN1LP+yB3kza68xFw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACT4Y+aS6oangE4BzhCfx3gs9guAW=zQpwN1LP+yB3kza68xFw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Dienstag, den 04.08.2020, 13:38 +0800 schrieb Anson Huang:
-> When devm_clk_get() returns -EPROBE_DEFER, i.MX6 PCI driver should
-> NOT print error message, just return -EPROBE_DEFER is enough.
-
-The reasoning behind this change is fine, but I think we should use the
-recently merged dev_err_probe() helper to achieve the same goal.
-
-Regards,
-Lucas
-
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
->  drivers/pci/controller/dwc/pci-imx6.c | 30 ++++++++++++++++++++----------
->  1 file changed, 20 insertions(+), 10 deletions(-)
+On Mon, Aug 10, 2020 at 11:00:07AM +0200, Dmitry Vyukov wrote:
+> On Mon, Aug 10, 2020 at 9:46 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Sun, Aug 09, 2020 at 09:27:18AM -0700, syzbot wrote:
+> > > Hello,
+> > >
+> > > syzbot found the following issue on:
+> > >
+> > > HEAD commit:    ce8056d1 wip: changed copy_from_user where instrumented
+> > > git tree:       https://github.com/google/kmsan.git master
+> > > console output: https://syzkaller.appspot.com/x/log.txt?x=141eb8b2900000
+> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=3afe005fb99591f
+> > > dashboard link: https://syzkaller.appspot.com/bug?extid=a7e220df5a81d1ab400e
+> > > compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+> > > userspace arch: i386
+> > >
+> > > Unfortunately, I don't have any reproducer for this issue yet.
+> >
+> > The irony of a kernel module written for syzbot testing, causing syzbot
+> > reports....
 > 
-> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-> index 4e5c379..ee75d35 100644
-> --- a/drivers/pci/controller/dwc/pci-imx6.c
-> +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> @@ -1076,20 +1076,26 @@ static int imx6_pcie_probe(struct platform_device *pdev)
->  	/* Fetch clocks */
->  	imx6_pcie->pcie_phy = devm_clk_get(dev, "pcie_phy");
->  	if (IS_ERR(imx6_pcie->pcie_phy)) {
-> -		dev_err(dev, "pcie_phy clock source missing or invalid\n");
-> -		return PTR_ERR(imx6_pcie->pcie_phy);
-> +		ret = PTR_ERR(imx6_pcie->pcie_phy);
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(dev, "pcie_phy clock source missing or invalid\n");
-> +		return ret;
->  	}
->  
->  	imx6_pcie->pcie_bus = devm_clk_get(dev, "pcie_bus");
->  	if (IS_ERR(imx6_pcie->pcie_bus)) {
-> -		dev_err(dev, "pcie_bus clock source missing or invalid\n");
-> -		return PTR_ERR(imx6_pcie->pcie_bus);
-> +		ret = PTR_ERR(imx6_pcie->pcie_bus);
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(dev, "pcie_bus clock source missing or invalid\n");
-> +		return ret;
->  	}
->  
->  	imx6_pcie->pcie = devm_clk_get(dev, "pcie");
->  	if (IS_ERR(imx6_pcie->pcie)) {
-> -		dev_err(dev, "pcie clock source missing or invalid\n");
-> -		return PTR_ERR(imx6_pcie->pcie);
-> +		ret = PTR_ERR(imx6_pcie->pcie);
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(dev, "pcie clock source missing or invalid\n");
-> +		return ret;
->  	}
->  
->  	switch (imx6_pcie->drvdata->variant) {
-> @@ -1097,15 +1103,19 @@ static int imx6_pcie_probe(struct platform_device *pdev)
->  		imx6_pcie->pcie_inbound_axi = devm_clk_get(dev,
->  							   "pcie_inbound_axi");
->  		if (IS_ERR(imx6_pcie->pcie_inbound_axi)) {
-> -			dev_err(dev, "pcie_inbound_axi clock missing or invalid\n");
-> -			return PTR_ERR(imx6_pcie->pcie_inbound_axi);
-> +			ret = PTR_ERR(imx6_pcie->pcie_inbound_axi);
-> +			if (ret != -EPROBE_DEFER)
-> +				dev_err(dev, "pcie_inbound_axi clock missing or invalid\n");
-> +			return ret;
->  		}
->  		break;
->  	case IMX8MQ:
->  		imx6_pcie->pcie_aux = devm_clk_get(dev, "pcie_aux");
->  		if (IS_ERR(imx6_pcie->pcie_aux)) {
-> -			dev_err(dev, "pcie_aux clock source missing or invalid\n");
-> -			return PTR_ERR(imx6_pcie->pcie_aux);
-> +			ret = PTR_ERR(imx6_pcie->pcie_aux);
-> +			if (ret != -EPROBE_DEFER)
-> +				dev_err(dev, "pcie_aux clock source missing or invalid\n");
-> +			return ret;
->  		}
->  		/* fall through */
->  	case IMX7D:
+> The raw gadget and KCOV are also kernel code and subject to all the
+> same rules as any other kernel code from syzkaller point of view.
+> 
+> But I think the root cause of this bug is the origin of the uninitialized-ness:
+> 
+> Local variable ----buf.i@asix_get_phy_addr created at:
+>  asix_read_cmd drivers/net/usb/asix_common.c:312 [inline]
+>  asix_read_phy_addr drivers/net/usb/asix_common.c:295 [inline]
+>  asix_get_phy_addr+0x4d/0x290 drivers/net/usb/asix_common.c:314
+>  asix_read_cmd drivers/net/usb/asix_common.c:312 [inline]
+>  asix_read_phy_addr drivers/net/usb/asix_common.c:295 [inline]
+>  asix_get_phy_addr+0x4d/0x290 drivers/net/usb/asix_common.c:314
 
+read buffers sent to USB hardware are ment to be filled in by the
+hardware with the data received from it, we do not zero-out those
+buffers before passing the pointer there.
+
+Perhaps with testing frameworks like the raw usb controller, that might
+cause a number of false-positives to happen?
+
+thanks,
+
+greg k-h
