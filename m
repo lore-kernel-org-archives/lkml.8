@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60CEFC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:23:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D12C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:23:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E77C22CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:23:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A6CA22BF3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:23:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597087427;
-	bh=jWqRiW4I0WKBGrfTOQRfUOvpMlfAxLk4XnkZZTMCiq8=;
+	s=default; t=1597087433;
+	bh=Dvl4wZjTh9kZL21GzFmX/cOdrfrYvQ6it6+kPYs6ALY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O3PfZ3PJOUDZK8HASAglolDgcOupbXOQ9jznDb91Re8kozB3mQp2YmxSbJ6O6rN4c
-	 xUpuvrv4UdZWQTbA1wN8lw5iMYEhtTpOW5O/VGSMKlUUMielCj4/wuLyiMOP+oeCvx
-	 tPxvNnh3x4WVn2ViZixebLvZHsLwJz2Na5qkpafU=
+	b=sPe4Op2ok/VviSu32ho6Jv+h8sMTyFYenCxm9YW1jXLYiV0EVoxTfIYTFJSK/k6Mx
+	 Lrf3FwgDhhiYvbfkFkHRRSl8O5dfezTE2PXnEVKnqUEW7gQex2RbPYJVDtFerl8i1a
+	 O0z43Igg5blAO8WDdTShx82il+goBATlL51cAhBk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729042AbgHJTXp (ORCPT
+        id S1730026AbgHJTXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:23:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42890 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:23:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729609AbgHJTMo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:12:44 -0400
+        id S1729604AbgHJTMn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:12:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69EED22BEB;
-        Mon, 10 Aug 2020 19:12:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D79AD22BEA;
+        Mon, 10 Aug 2020 19:12:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086764;
-        bh=jWqRiW4I0WKBGrfTOQRfUOvpMlfAxLk4XnkZZTMCiq8=;
+        s=default; t=1597086762;
+        bh=Dvl4wZjTh9kZL21GzFmX/cOdrfrYvQ6it6+kPYs6ALY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e5u+v6VPBPskRM6OWpENu6NqIs4SDiWz1DCBdC11n/dcy/OSSBW7fy33ZEzH+3ioH
-         J1GsucZbF9Vnw2bwyg4lVp/WQAToEtUsLHCxmrSIC/3qv6Hy2b1wwRTQbMzb2QMAIB
-         yGTmSrsf3+jsn9R4nThB4YF2ZgWVBn8+noA7yWkE=
+        b=lLVuZGkA+mptuEM9VdwSWrNUlD68iHGEvIeGnGUgnucJeUeZ7z2zYkL4GlJhdgF9w
+         IJiQlQ+R9FiWyxuHbPuaoJ1+zOScAT1mctEaMvSdyiB++8R7qq8Xao4lNtDC4erNg7
+         tMCbSRpaTvbb1RHz+RniaVjfSxd4jUyYt3VCB5BU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
+Cc:     Bolarinwa Olayemi Saheed <refactormyself@gmail.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 35/45] gpu: host1x: debug: Fix multiple channels emitting messages simultaneously
-Date:   Mon, 10 Aug 2020 15:11:43 -0400
-Message-Id: <20200810191153.3794446-35-sashal@kernel.org>
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 34/45] iwlegacy: Check the return value of pcie_capability_read_*()
+Date:   Mon, 10 Aug 2020 15:11:42 -0400
+Message-Id: <20200810191153.3794446-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810191153.3794446-1-sashal@kernel.org>
 References: <20200810191153.3794446-1-sashal@kernel.org>
@@ -60,51 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
 
-[ Upstream commit 35681862808472a0a4b9a8817ae2789c0b5b3edc ]
+[ Upstream commit 9018fd7f2a73e9b290f48a56b421558fa31e8b75 ]
 
-Once channel's job is hung, it dumps the channel's state into KMSG before
-tearing down the offending job. If multiple channels hang at once, then
-they dump messages simultaneously, making the debug info unreadable, and
-thus, useless. This patch adds mutex which allows only one channel to emit
-debug messages at a time.
+On failure pcie_capability_read_dword() sets it's last parameter, val
+to 0. However, with Patch 14/14, it is possible that val is set to ~0 on
+failure. This would introduce a bug because (x & x) == (~0 & x).
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+This bug can be avoided without changing the function's behaviour if the
+return value of pcie_capability_read_dword is checked to confirm success.
+
+Check the return value of pcie_capability_read_dword() to ensure success.
+
+Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
+Signed-off-by: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200713175529.29715-3-refactormyself@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/host1x/debug.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/wireless/intel/iwlegacy/common.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/host1x/debug.c b/drivers/gpu/host1x/debug.c
-index c0392672a8421..1b4997bda1c79 100644
---- a/drivers/gpu/host1x/debug.c
-+++ b/drivers/gpu/host1x/debug.c
-@@ -16,6 +16,8 @@
- #include "debug.h"
- #include "channel.h"
- 
-+static DEFINE_MUTEX(debug_lock);
-+
- unsigned int host1x_debug_trace_cmdbuf;
- 
- static pid_t host1x_debug_force_timeout_pid;
-@@ -52,12 +54,14 @@ static int show_channel(struct host1x_channel *ch, void *data, bool show_fifo)
- 	struct output *o = data;
- 
- 	mutex_lock(&ch->cdma.lock);
-+	mutex_lock(&debug_lock);
- 
- 	if (show_fifo)
- 		host1x_hw_show_channel_fifo(m, ch, o);
- 
- 	host1x_hw_show_channel_cdma(m, ch, o);
- 
-+	mutex_unlock(&debug_lock);
- 	mutex_unlock(&ch->cdma.lock);
- 
- 	return 0;
+diff --git a/drivers/net/wireless/intel/iwlegacy/common.c b/drivers/net/wireless/intel/iwlegacy/common.c
+index 746749f379964..1107b96a8a880 100644
+--- a/drivers/net/wireless/intel/iwlegacy/common.c
++++ b/drivers/net/wireless/intel/iwlegacy/common.c
+@@ -4286,8 +4286,8 @@ il_apm_init(struct il_priv *il)
+ 	 *    power savings, even without L1.
+ 	 */
+ 	if (il->cfg->set_l0s) {
+-		pcie_capability_read_word(il->pci_dev, PCI_EXP_LNKCTL, &lctl);
+-		if (lctl & PCI_EXP_LNKCTL_ASPM_L1) {
++		ret = pcie_capability_read_word(il->pci_dev, PCI_EXP_LNKCTL, &lctl);
++		if (!ret && (lctl & PCI_EXP_LNKCTL_ASPM_L1)) {
+ 			/* L1-ASPM enabled; disable(!) L0S  */
+ 			il_set_bit(il, CSR_GIO_REG,
+ 				   CSR_GIO_REG_VAL_L0S_ENABLED);
 -- 
 2.25.1
 
