@@ -2,97 +2,142 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8008EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 16:09:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3577C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 16:10:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FC8C207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 16:09:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D575207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 16:10:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="Tvk+bsSC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EcS/NmAZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbgHJQJl (ORCPT
+        id S1727820AbgHJQKI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 12:09:41 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:35328 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725873AbgHJQJl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 12:09:41 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 4BQLWk65PKz2d;
-        Mon, 10 Aug 2020 18:09:38 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1597075778; bh=jnGr4D1typF3L4cvQAPzJLaKj0mF/wj4jmVrPp2Me4Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Tvk+bsSCrs6bgpYzU6KMHNABcpyYUBxMv3wZFbInjIpbRRQrPreoYIOQuNz7dt1AY
-         5/nPfhWDkN8vKhgg5hXmNXs4EbD7+cbq/Sps3eblZ8UUDSNmw+/o7u4MkblxNcnkjo
-         J/QhzjVIoMHgpn32iWa4bUIeQ5rX++EA8NaB4yem9C3D+v0jadYpZoBDSN14jlgfdL
-         tscVj2VVzczLJHN3931/3Trp+3r1LkXuETBxkf3g8d8miYAkmFXNRoCKqdAuMFF+rj
-         b9yU9sV2BWlj4iimuo8Koibr02XlMW1wWohcL+Q8TmsXAg5L244bDQyivTQkWXplrZ
-         aoO5jBesVntJw==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.4 at mail
-Date:   Mon, 10 Aug 2020 18:09:36 +0200
-From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Dmitry Osipenko <digetx@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: regulator: deadlock vs memory reclaim
-Message-ID: <20200810160936.GA1100@qmqm.qmqm.pl>
-References: <20200809222537.GA5522@qmqm.qmqm.pl>
- <20200810153928.GD6438@sirena.org.uk>
+        Mon, 10 Aug 2020 12:10:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42652 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726787AbgHJQKH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 12:10:07 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACEBAC061756;
+        Mon, 10 Aug 2020 09:10:06 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id h4so3690316ioe.5;
+        Mon, 10 Aug 2020 09:10:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MZ80cO9LgIseSA6VcNmJzpLJOqoglGp0soH8ddcaoxk=;
+        b=EcS/NmAZLLY7RIcl1zkSH3YoNOu5TYUBfe6QqC6ForXpE8Diy77syyyGuwCHiceu2A
+         UQSMSPKjBXDI9UgCB2mREaVFuyYXSISzKUWCvjknG+/u7WVvDGaspds8ll8DnLyKWa9I
+         atLadaVEYzMJaqN1yHE0J7IYgy5C2qsh/zo6r0EmXPnm6kHJBKtTISYxRYZzhT1R5W7o
+         dKZXiPgJjBmvU5RIBadNZ2EuZx/OHmI9Ftbs6agUxa+kxejtMDbGCSifUzQHFZWkUZIL
+         7sQoJswBBvwLnAz44vZNgNdSmNu0UDEo1x0sF8zPp+TdjT843E9ofRjzTut8B1feGj04
+         6VBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MZ80cO9LgIseSA6VcNmJzpLJOqoglGp0soH8ddcaoxk=;
+        b=b3yfArxgYA+yBfeyVwdLmUoCrp8XXJ48oVO7qkf8RgOCt5Jw07M+GPwl1GG5TIolBZ
+         EujyGlJeknnTjuH7XpfiZCjmFJNwjPAf8EsSVYffr3D7lCcolqPfMwIfWMIOf1QY1A/T
+         0e2MStfpD8qu1Ujym//j+gLFWs+y50/5XUZvHxmp9xAJl5JXnpyHTH5BdPgkLNb4h6Ep
+         qPrCpgH7TU0ldr2tcVkfq8EqmYEBc6TAiMz1FrzBJfgI/JsQHIJe/cDfbuvJ8FzD4k8X
+         wvyhROyIySO4Zmpj05sGEu+LLaOrJBr+ivuDyl/NnxktE20/ce8akCKwWgB9UpbFREqr
+         hRTg==
+X-Gm-Message-State: AOAM530/tGqTGCXNPKjH68kN/K9fe/T/5hWP+hyo5WCKW9CUTltAgkhR
+        W7g2vgUtf6xbHg3ld4lqx/In5bsuWf1iw0lXWOM=
+X-Google-Smtp-Source: ABdhPJyTY4QlAr8BTih462f1lgyS9bJi/R2Ew8ZaVjmxeOvg71SlD2qbh1tJxbs+xTPFWT+NxUm+fxwz6XlvyZjiHMI=
+X-Received: by 2002:a05:6638:bd1:: with SMTP id g17mr20966062jad.132.1597075803972;
+ Mon, 10 Aug 2020 09:10:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200810153928.GD6438@sirena.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <447452.1596109876@warthog.procyon.org.uk> <1851200.1596472222@warthog.procyon.org.uk>
+ <667820.1597072619@warthog.procyon.org.uk> <CAH2r5msKipj1exNUDaSUN7h0pjanOenhSg2=EWYMv_h15yKtxg@mail.gmail.com>
+ <672169.1597074488@warthog.procyon.org.uk>
+In-Reply-To: <672169.1597074488@warthog.procyon.org.uk>
+From:   Steve French <smfrench@gmail.com>
+Date:   Mon, 10 Aug 2020 11:09:53 -0500
+Message-ID: <CAH2r5msO+N9dXKtYE3p+EfXaZTtqp6r=Bsx5vKdTdxe7XBBeOw@mail.gmail.com>
+Subject: Re: [GIT PULL] fscache rewrite -- please drop for now
+To:     David Howells <dhowells@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Jeff Layton <jlayton@redhat.com>,
+        Dave Wysochanski <dwysocha@redhat.com>,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Steve French <sfrench@samba.org>,
+        Eric Van Hensbergen <ericvh@gmail.com>,
+        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
+        linux-nfs <linux-nfs@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>, ceph-devel@vger.kernel.org,
+        v9fs-developer@lists.sourceforge.net,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 04:39:28PM +0100, Mark Brown wrote:
-> On Mon, Aug 10, 2020 at 12:25:37AM +0200, Micha³ Miros³aw wrote:
-> 
-> > regulator_lock_dependent() starts by taking regulator_list_mutex, The
-> > same mutex covers eg. regulator initialization, including memory allocations
-> > that happen there. This will deadlock when you have filesystem on eg. eMMC
-> > (which uses a regulator to control module voltages) and you register
-> > a new regulator (hotplug a device?) when under memory pressure.
-> 
-> OK, that's very much a corner case, it only applies in the case of
-> coupled regulators.  The most obvious thing here would be to move the
-> allocations on registration out of the locked region, we really only
-> need this in the regulator_find_coupler() call I think.  If the
-> regulator isn't coupled we don't need to take the lock at all.
+On Mon, Aug 10, 2020 at 10:48 AM David Howells <dhowells@redhat.com> wrote:
+>
+> Steve French <smfrench@gmail.com> wrote:
+>
+> > cifs.ko also can set rsize quite small (even 1K for example, although
+> > that will be more than 10x slower than the default 4MB so hopefully no
+> > one is crazy enough to do that).
+>
+> You can set rsize < PAGE_SIZE?
 
-Currently, regulator_lock_dependent() is called by eg. regulator_enable() and
-regulator_get_voltage(), so actually any regulator can deadlock this way.
-I concur that the locking rules can (and need to) be relaxed.
+I have never seen anyone do it and it would be crazy to set it so
+small (would hurt
+performance a lot and cause extra work on client and server) but yes
+it can be set
+very small. Apparently NFS can also set rsize to 1K as well (see
+https://linux.die.net/man/5/nfs)
 
-> > Basically, we have a BKL for regulator_enable() and we're using ww_mutex
-> > as a recursive mutex with no deadlock prevention whatsoever. The locks
-> > also seem to cover way to much (eg. initialization even before making the
-> > regulator visible to the system).
-> 
-> Could you be more specific about what you're looking at here?  There's
-> nothing too obvious jumping out from the code here other than the bit
-> around the coupling allocation, otherwise it looks like we're locking
-> list walks.
+I don't mind adding a minimum rsize check for cifs.ko (preventing a
+user from setting
+rsize below page size for example) if there is a precedent for this in
+other fs or
+bug that it would cause.   In general my informal perf measurements showed
+slight advantages to all servers with larger rsizes up to 4MB (thus
+cifs client will
+negotiate 4MB by default even if server supports larger), but
+overriding rsize (larger)
+on mount by having the user setting rsize to 8MB on mount could help
+perf to some
+servers. I am hoping we can figure out a way to automatically
+determine when to negotiate
+rsize larger than 4MB but in the meantime rsize will almost always be
+4MB (or 1MB on
+mounts to some older servers) for cifs but some users will benefit
+slightly from manually
+setting it to 8MB.
 
-When you look at the regulator API (regulator_enable() and friends),
-then in their implementation we always start by .._lock_dependent(),
-which takes regulator_list_mutex around its work. This mutex is what
-makes the code deadlock-prone vs memory allocations. I have a feeling
-that this lock is a workaround for historical requirements (recursive
-locking of regulator_dev) that might be no longer needed or is just
-too defensive programming. Hence my other patches and this inquiry.
+> > I can't imagine an SMB3 server negotiating an rsize or wsize smaller than
+> > 64K in today's world (and typical is 1MB to 8MB) but the user can specify a
+> > much smaller rsize on mount.  If 64K is an adequate minimum, we could change
+> > the cifs mount option parsing to require a certain minimum rsize if fscache
+> > is selected.
+>
+> I've borrowed the 256K granule size used by various AFS implementations for
+> the moment.  A 512-byte xattr can thus hold a bitmap covering 1G of file
+> space.
+>
+> David
+>
 
-Best Regards,
-Micha³ Miros³aw
+
+-- 
+Thanks,
+
+Steve
