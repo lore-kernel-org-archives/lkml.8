@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F9FC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:27:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECCE5C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:27:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07FB32080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:27:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C98C02080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:27:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597087650;
-	bh=jWqRiW4I0WKBGrfTOQRfUOvpMlfAxLk4XnkZZTMCiq8=;
+	s=default; t=1597087658;
+	bh=oAx51FywZu/BrCEEDqn20RxNMWWE/Z1GpukJ9ydnLJg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HuZVzVu6dYi9JmWacV1Yyu3htZ5uyUMAbWcbQ5CP6S2PdQMrWOj6WExPv8o2qoma/
-	 7n4SdqZa+ndmWQW3ZH5C7MO9kEN+sKSmcCbMbE6d90aT/NVVqEq/17EkXUjwetd4F7
-	 FoU47dVlKFZkhiOe73YkPtrTm9WPfhTsCVXVHyzo=
+	b=I3fI640Z9YIgPWHj7L2IMqnI4/ftRTN02+DJKBAN1o+VleWRLiJbv3HeeZKpJvmiT
+	 IB9c+an8jJvfjYMdoQ3jjDO60IJ6gqJw2eG78lS0/APlddiyTmTYpu3Epx4PGxKdd4
+	 wTcANxVQtMkmWjrw43CPtNIEz0Zp65Er4mXz9XUQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729985AbgHJT13 (ORCPT
+        id S1729892AbgHJT1h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:27:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39956 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:27:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729319AbgHJTL3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:11:29 -0400
+        id S1729283AbgHJTL0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:11:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1A4422B4B;
-        Mon, 10 Aug 2020 19:11:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03B2E22DBF;
+        Mon, 10 Aug 2020 19:11:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086688;
-        bh=jWqRiW4I0WKBGrfTOQRfUOvpMlfAxLk4XnkZZTMCiq8=;
+        s=default; t=1597086685;
+        bh=oAx51FywZu/BrCEEDqn20RxNMWWE/Z1GpukJ9ydnLJg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eO8menNCQpuFZgPzo/ircOB0HGmMyOVhvhJJxD/Y5oxJ32lrXj7D601va8ZkUNNDt
-         mqNnCwv6wOXdNqWAmFRGrUUJMmB9dah2QHu939KRrd1QmKAVlObhILNLwzmttWLxWV
-         vpbxWbssgyeKsJ7FCUIKTqWLtLA7JCCCIGU1zd1w=
+        b=QfnUiKdJG6uIb9H915lOXaTeyYR8fwUkY0hNI3zNxCXdTxOIOqtwJHkXHZ2R9rRu/
+         YfCmSe5IUs9vmTQ0RQQ/krinS1fOZE5en3JJA4NZpdqPYJ8j7XbpQBp9O4m3b7jicv
+         jX4xzIOhYSMTKK34hjI90iCAlRJeQ7EQU2i8G4mg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
+Cc:     Armas Spann <zappel@retarded.farm>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 43/60] gpu: host1x: debug: Fix multiple channels emitting messages simultaneously
-Date:   Mon, 10 Aug 2020 15:10:11 -0400
-Message-Id: <20200810191028.3793884-43-sashal@kernel.org>
+        acpi4asus-user@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 41/60] platform/x86: asus-nb-wmi: add support for ASUS ROG Zephyrus G14 and G15
+Date:   Mon, 10 Aug 2020 15:10:09 -0400
+Message-Id: <20200810191028.3793884-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810191028.3793884-1-sashal@kernel.org>
 References: <20200810191028.3793884-1-sashal@kernel.org>
@@ -60,51 +61,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Armas Spann <zappel@retarded.farm>
 
-[ Upstream commit 35681862808472a0a4b9a8817ae2789c0b5b3edc ]
+[ Upstream commit 13bceda68fb9ef388ad40d355ab8d03ee64d14c2 ]
 
-Once channel's job is hung, it dumps the channel's state into KMSG before
-tearing down the offending job. If multiple channels hang at once, then
-they dump messages simultaneously, making the debug info unreadable, and
-thus, useless. This patch adds mutex which allows only one channel to emit
-debug messages at a time.
+Add device support for the new ASUS ROG Zephyrus G14 (GA401I) and
+G15 (GA502I) series.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+This is accomplished by two new quirk entries (one per each series),
+as well as all current available G401I/G502I DMI_PRODUCT_NAMEs to match
+the corresponding devices.
+
+Signed-off-by: Armas Spann <zappel@retarded.farm>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/host1x/debug.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/platform/x86/asus-nb-wmi.c | 82 ++++++++++++++++++++++++++++++
+ 1 file changed, 82 insertions(+)
 
-diff --git a/drivers/gpu/host1x/debug.c b/drivers/gpu/host1x/debug.c
-index c0392672a8421..1b4997bda1c79 100644
---- a/drivers/gpu/host1x/debug.c
-+++ b/drivers/gpu/host1x/debug.c
-@@ -16,6 +16,8 @@
- #include "debug.h"
- #include "channel.h"
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index c4404d9c1de4f..1bb082308c209 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -110,6 +110,16 @@ static struct quirk_entry quirk_asus_forceals = {
+ 	.wmi_force_als_set = true,
+ };
  
-+static DEFINE_MUTEX(debug_lock);
++static struct quirk_entry quirk_asus_ga401i = {
++	.wmi_backlight_power = true,
++	.wmi_backlight_set_devstate = true,
++};
 +
- unsigned int host1x_debug_trace_cmdbuf;
++static struct quirk_entry quirk_asus_ga502i = {
++	.wmi_backlight_power = true,
++	.wmi_backlight_set_devstate = true,
++};
++
+ static int dmi_matched(const struct dmi_system_id *dmi)
+ {
+ 	pr_info("Identified laptop model '%s'\n", dmi->ident);
+@@ -411,6 +421,78 @@ static const struct dmi_system_id asus_quirks[] = {
+ 		},
+ 		.driver_data = &quirk_asus_forceals,
+ 	},
++	{
++		.callback = dmi_matched,
++		.ident = "ASUSTeK COMPUTER INC. GA401IH",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "GA401IH"),
++		},
++		.driver_data = &quirk_asus_ga401i,
++	},
++	{
++		.callback = dmi_matched,
++		.ident = "ASUSTeK COMPUTER INC. GA401II",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "GA401II"),
++		},
++		.driver_data = &quirk_asus_ga401i,
++	},
++	{
++		.callback = dmi_matched,
++		.ident = "ASUSTeK COMPUTER INC. GA401IU",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "GA401IU"),
++		},
++		.driver_data = &quirk_asus_ga401i,
++	},
++	{
++		.callback = dmi_matched,
++		.ident = "ASUSTeK COMPUTER INC. GA401IV",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "GA401IV"),
++		},
++		.driver_data = &quirk_asus_ga401i,
++	},
++	{
++		.callback = dmi_matched,
++		.ident = "ASUSTeK COMPUTER INC. GA401IVC",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "GA401IVC"),
++		},
++		.driver_data = &quirk_asus_ga401i,
++	},
++		{
++		.callback = dmi_matched,
++		.ident = "ASUSTeK COMPUTER INC. GA502II",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "GA502II"),
++		},
++		.driver_data = &quirk_asus_ga502i,
++	},
++	{
++		.callback = dmi_matched,
++		.ident = "ASUSTeK COMPUTER INC. GA502IU",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "GA502IU"),
++		},
++		.driver_data = &quirk_asus_ga502i,
++	},
++	{
++		.callback = dmi_matched,
++		.ident = "ASUSTeK COMPUTER INC. GA502IV",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "GA502IV"),
++		},
++		.driver_data = &quirk_asus_ga502i,
++	},
+ 	{},
+ };
  
- static pid_t host1x_debug_force_timeout_pid;
-@@ -52,12 +54,14 @@ static int show_channel(struct host1x_channel *ch, void *data, bool show_fifo)
- 	struct output *o = data;
- 
- 	mutex_lock(&ch->cdma.lock);
-+	mutex_lock(&debug_lock);
- 
- 	if (show_fifo)
- 		host1x_hw_show_channel_fifo(m, ch, o);
- 
- 	host1x_hw_show_channel_cdma(m, ch, o);
- 
-+	mutex_unlock(&debug_lock);
- 	mutex_unlock(&ch->cdma.lock);
- 
- 	return 0;
 -- 
 2.25.1
 
