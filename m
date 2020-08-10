@@ -2,75 +2,90 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 304D7C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 02:30:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6739BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 02:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19D4E2068F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 02:30:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44B06206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 02:38:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726403AbgHJCaF (ORCPT
+        id S1726486AbgHJCie (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 22:30:05 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:47902 "EHLO huawei.com"
+        Sun, 9 Aug 2020 22:38:34 -0400
+Received: from smtp23.cstnet.cn ([159.226.251.23]:35750 "EHLO cstnet.cn"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726219AbgHJCaE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 22:30:04 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 9CA0479A9950FC35D5C4
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 10:30:02 +0800 (CST)
-Received: from [127.0.0.1] (10.174.177.157) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Mon, 10 Aug 2020
- 10:29:52 +0800
-From:   Yunfeng Ye <yeyunfeng@huawei.com>
-To:     <tglx@linutronix.de>
-CC:     <linux-kernel@vger.kernel.org>, Shiyuan Hu <hushiyuan@huawei.com>,
-        Hewenliang <hewenliang4@huawei.com>
-Subject: [PATCH] genirq/proc: Show percpu irq affinity
-Message-ID: <fcb0ae13-95b0-37d3-c1f9-44727e0f2ce8@huawei.com>
-Date:   Mon, 10 Aug 2020 10:29:50 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.177.157]
-X-CFilter-Loop: Reflected
+        id S1726219AbgHJCie (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Aug 2020 22:38:34 -0400
+Received: from localhost (unknown [159.226.5.99])
+        by APP-03 (Coremail) with SMTP id rQCowABHTxsfszBfrMpoAQ--.26273S2;
+        Mon, 10 Aug 2020 10:38:23 +0800 (CST)
+From:   Xu Wang <vulab@iscas.ac.cn>
+To:     snelson@pensando.io, drivers@pensando.io, davem@davemloft.net,
+        kuba@kernel.org, netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Xu Wang <vulab@iscas.ac.cn>
+Subject: [PATCH] ionic_lif: Use devm_kcalloc() in ionic_qcq_alloc()
+Date:   Mon, 10 Aug 2020 02:38:07 +0000
+Message-Id: <20200810023807.9260-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: rQCowABHTxsfszBfrMpoAQ--.26273S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7AF1UKw4UGFWDCw17uryfJFb_yoW8Gw1xpa
+        1xJFy2vr1UXF4I9an7Xw4kZa45X3yxGrW3Grsru3s3uwnrJFW8XF48KFW8XFW0kFZ5CF10
+        vF1qy3W3ZFs5A3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkK14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+        6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
+        1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+        6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv67AKxVW8Jr0_Cr1UMcvjeVCFs4IE7xkEbV
+        WUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK
+        6r4UMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
+        0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y
+        0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
+        WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Jr0_
+        Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbZ2-5
+        UUUUU==
+X-Originating-IP: [159.226.5.99]
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCQUEA102ZfUVcgAAsX
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the "affinity=" cmdline parameter is configured, the interrupt
-affinity displayed in the proc directory does not match with that of the
-the percu interrupt, and the percu interrupt uses desc->percu_affinity.
+A multiplication for the size determination of a memory allocation
+indicated that an array data structure should be processed.
+Thus use the corresponding function "devm_kcalloc".
 
-So show desc->percu_affinity in show_irq_affinity() for percpu
-interrupt.
-
-Signed-off-by: yeyunfeng <yeyunfeng@huawei.com>
+Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
 ---
- kernel/irq/proc.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/pensando/ionic/ionic_lif.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/irq/proc.c b/kernel/irq/proc.c
-index 32c071d7bc03..b9d0fa87b4b4 100644
---- a/kernel/irq/proc.c
-+++ b/kernel/irq/proc.c
-@@ -52,6 +52,8 @@ static int show_irq_affinity(int type, struct seq_file *m)
- 	case AFFINITY:
- 	case AFFINITY_LIST:
- 		mask = desc->irq_common_data.affinity;
-+		if (irqd_is_per_cpu(&desc->irq_data))
-+			mask = desc->percpu_affinity;
- #ifdef CONFIG_GENERIC_PENDING_IRQ
- 		if (irqd_is_setaffinity_pending(&desc->irq_data))
- 			mask = desc->pending_mask;
+diff --git a/drivers/net/ethernet/pensando/ionic/ionic_lif.c b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
+index 1944bf5264db..26988ad7ec97 100644
+--- a/drivers/net/ethernet/pensando/ionic/ionic_lif.c
++++ b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
+@@ -412,7 +412,7 @@ static int ionic_qcq_alloc(struct ionic_lif *lif, unsigned int type,
+ 
+ 	new->flags = flags;
+ 
+-	new->q.info = devm_kzalloc(dev, sizeof(*new->q.info) * num_descs,
++	new->q.info = devm_kcalloc(dev, num_descs, sizeof(*new->q.info),
+ 				   GFP_KERNEL);
+ 	if (!new->q.info) {
+ 		netdev_err(lif->netdev, "Cannot allocate queue info\n");
+@@ -462,7 +462,7 @@ static int ionic_qcq_alloc(struct ionic_lif *lif, unsigned int type,
+ 		new->intr.index = IONIC_INTR_INDEX_NOT_ASSIGNED;
+ 	}
+ 
+-	new->cq.info = devm_kzalloc(dev, sizeof(*new->cq.info) * num_descs,
++	new->cq.info = devm_kcalloc(dev, num_descs, sizeof(*new->cq.info),
+ 				    GFP_KERNEL);
+ 	if (!new->cq.info) {
+ 		netdev_err(lif->netdev, "Cannot allocate completion queue info\n");
 -- 
-1.8.3.1
+2.17.1
 
