@@ -5,48 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A218AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:11:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A21C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:11:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6841E22B4B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:11:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BE342078D
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:11:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597086708;
-	bh=Y7FLL9CrPKnGZCPGfu9yZYBPkWT6HM7M3CvL0nstTao=;
+	s=default; t=1597086711;
+	bh=uTKRhPPnKcmfJHC92QfUKaLG4UsUyfoGu+1+0sbDCPA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aWNvZzqOuU7hZOs5vchf7DTIihgLW5pNaJfXBvEoZlZht37RWqhfg1i9/CguHk57K
-	 /KBGhU0c0dYgwmeOTGUetc6LeN3zmjo5utUa440ifQ8Zpz3cUG0yWTr6e4+s3b7BUZ
-	 RpOHsCUwjLibBYvjqJk5Ue/dYGLyJt5nQST8OsuQ=
+	b=j24HAdShXWVRHNREwnhkiI3PjSz44NvA1MRPmL9LeNDUim4CEiEGB250GRXbjQ7nO
+	 tfc8p2OpWyq5+Hn2jJCEOan3KaNXEhM52b0SL0RXE1qBmpcn7tXl7JxiaIxCGPnkrP
+	 n7EnZzw8T8yAcVVKKI2b3PdZw+QWuwb35AZJPHDs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729399AbgHJTLq (ORCPT
+        id S1729413AbgHJTLu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:11:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40084 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:11:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729332AbgHJTLb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729329AbgHJTLb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Aug 2020 15:11:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B6E422B49;
-        Mon, 10 Aug 2020 19:11:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 298B22078D;
+        Mon, 10 Aug 2020 19:11:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086691;
-        bh=Y7FLL9CrPKnGZCPGfu9yZYBPkWT6HM7M3CvL0nstTao=;
+        s=default; t=1597086690;
+        bh=uTKRhPPnKcmfJHC92QfUKaLG4UsUyfoGu+1+0sbDCPA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WsTDJQuPYXQrIuqSbdtBpIo35N+uMwAtcNpD0M8q1MKTUSxaGkRpr+kH0Zbb45mPB
-         TaPKnz6Iq2huDt/7O61Gp6CgHl8uVpO2CaqICvspINtykAf8+5u7KpPUAnKwjMze8y
-         HDOO20bbvZMEJKPN/lnvtmKajg/FPM6mgmc/zGQs=
+        b=wWiNacx4XdhQyYx2KJ2nxBPdVaXsHlWvv9ZY2N0jexCZEnjj5u5/iDUJJ2EpEcxPe
+         y3PrZ4IzZasBFYdIkQHoLIXyyrOUUnLJEXmmjGkGUsrfEqF4KxQNk+mdthAmyDklvQ
+         H0TDKUVC+fmkKwqdGlnoEqLXqKRHB8nZ5UmhzxN0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shannon Nelson <snelson@pensando.io>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 45/60] ionic: update eid test for overflow
-Date:   Mon, 10 Aug 2020 15:10:13 -0400
-Message-Id: <20200810191028.3793884-45-sashal@kernel.org>
+Cc:     Evan Quan <evan.quan@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.7 44/60] drm/amd/powerplay: suppress compile error around BUG_ON
+Date:   Mon, 10 Aug 2020 15:10:12 -0400
+Message-Id: <20200810191028.3793884-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810191028.3793884-1-sashal@kernel.org>
 References: <20200810191028.3793884-1-sashal@kernel.org>
@@ -59,33 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shannon Nelson <snelson@pensando.io>
+From: Evan Quan <evan.quan@amd.com>
 
-[ Upstream commit 3fbc9bb6ca32d12d4d32a7ae32abef67ac95f889 ]
+[ Upstream commit 75bc07e2403caea9ecac69f766dfb7dc33547594 ]
 
-Fix up our comparison to better handle a potential (but largely
-unlikely) wrap around.
+To suppress the compile error below for "ARCH=arc".
+   drivers/gpu/drm/amd/amdgpu/../powerplay/arcturus_ppt.c: In function 'arcturus_fill_eeprom_i2c_req':
+>> arch/arc/include/asm/bug.h:22:2: error: implicit declaration of function 'pr_warn'; did you mean 'pci_warn'? [-Werror=implicit-function-declaration]
+      22 |  pr_warn("BUG: failure at %s:%d/%s()!\n", __FILE__, __LINE__, __func__); \
+         |  ^~~~~~~
+   include/asm-generic/bug.h:62:57: note: in expansion of macro 'BUG'
+      62 | #define BUG_ON(condition) do { if (unlikely(condition)) BUG(); } while (0)
+         |                                                         ^~~
+   drivers/gpu/drm/amd/amdgpu/../powerplay/arcturus_ppt.c:2157:2: note: in expansion of macro 'BUG_ON'
+    2157 |  BUG_ON(numbytes > MAX_SW_I2C_COMMANDS);
 
-Signed-off-by: Shannon Nelson <snelson@pensando.io>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Evan Quan <evan.quan@amd.com>
+Acked-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/pensando/ionic/ionic_lif.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/amd/powerplay/arcturus_ppt.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/pensando/ionic/ionic_lif.c b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
-index 337d971ffd92c..29f77faa808bb 100644
---- a/drivers/net/ethernet/pensando/ionic/ionic_lif.c
-+++ b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
-@@ -709,7 +709,7 @@ static bool ionic_notifyq_service(struct ionic_cq *cq,
- 	eid = le64_to_cpu(comp->event.eid);
+diff --git a/drivers/gpu/drm/amd/powerplay/arcturus_ppt.c b/drivers/gpu/drm/amd/powerplay/arcturus_ppt.c
+index 1ef0923f71906..9ad0e6f18be49 100644
+--- a/drivers/gpu/drm/amd/powerplay/arcturus_ppt.c
++++ b/drivers/gpu/drm/amd/powerplay/arcturus_ppt.c
+@@ -2035,8 +2035,6 @@ static void arcturus_fill_eeprom_i2c_req(SwI2cRequest_t  *req, bool write,
+ {
+ 	int i;
  
- 	/* Have we run out of new completions to process? */
--	if (eid <= lif->last_eid)
-+	if ((s64)(eid - lif->last_eid) <= 0)
- 		return false;
+-	BUG_ON(numbytes > MAX_SW_I2C_COMMANDS);
+-
+ 	req->I2CcontrollerPort = 0;
+ 	req->I2CSpeed = 2;
+ 	req->SlaveAddress = address;
+@@ -2074,6 +2072,12 @@ static int arcturus_i2c_eeprom_read_data(struct i2c_adapter *control,
+ 	struct smu_table_context *smu_table = &adev->smu.smu_table;
+ 	struct smu_table *table = &smu_table->driver_table;
  
- 	lif->last_eid = eid;
++	if (numbytes > MAX_SW_I2C_COMMANDS) {
++		dev_err(adev->dev, "numbytes requested %d is over max allowed %d\n",
++			numbytes, MAX_SW_I2C_COMMANDS);
++		return -EINVAL;
++	}
++
+ 	memset(&req, 0, sizeof(req));
+ 	arcturus_fill_eeprom_i2c_req(&req, false, address, numbytes, data);
+ 
+@@ -2110,6 +2114,12 @@ static int arcturus_i2c_eeprom_write_data(struct i2c_adapter *control,
+ 	SwI2cRequest_t req;
+ 	struct amdgpu_device *adev = to_amdgpu_device(control);
+ 
++	if (numbytes > MAX_SW_I2C_COMMANDS) {
++		dev_err(adev->dev, "numbytes requested %d is over max allowed %d\n",
++			numbytes, MAX_SW_I2C_COMMANDS);
++		return -EINVAL;
++	}
++
+ 	memset(&req, 0, sizeof(req));
+ 	arcturus_fill_eeprom_i2c_req(&req, true, address, numbytes, data);
+ 
 -- 
 2.25.1
 
