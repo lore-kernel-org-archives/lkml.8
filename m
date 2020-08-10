@@ -5,48 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B451C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:21:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DFF5C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:21:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CEA620656
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:21:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02DAB2075D
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:21:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597072880;
-	bh=AHMq8wBLEzqNtjrtty1SYheHzrNvr5w95CEMtXa8YW4=;
+	s=default; t=1597072884;
+	bh=wkqj1qoeprJlvfQN9/RlfNpdpvKWXthNynLbTT69KSw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mpYnQiH3k4eXrhbFF4nVuGe0Tt+xDjYc/j4/xgYh8iHAfKIGPtlb/dIcvBKTNu1ZM
-	 KHpQLNxSd8N4ZenpN2J/hgtgg2wWaT/uyLfyfl9P63zcJP41oBEk90nmFUfgYrFb0t
-	 m1hqZGeQE4RXJtw9t1V3xOlYtUGxzeRrlDO3W7H0=
+	b=VV/TyzMQuyBsg4tdZqSKOCncOqRQEb1IgSPBm10uhwZKH/AzaqkUMv/MH3k4xIwpk
+	 z//vqHfimE7OOqOZdh/C1AB4qgifNT5+dJ4ui8WmvpfGPL4mpOZ0dkimzm13dlapJH
+	 ECQPkKyAq6dfJ/fCJ51xKHXJcv9SFDnWv78HM3Ms=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728179AbgHJPVS (ORCPT
+        id S1728160AbgHJPVO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:21:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51960 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:21:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728150AbgHJPVK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:21:10 -0400
+        id S1728127AbgHJPVE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:21:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66E712065D;
-        Mon, 10 Aug 2020 15:21:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C93522065D;
+        Mon, 10 Aug 2020 15:21:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597072870;
-        bh=AHMq8wBLEzqNtjrtty1SYheHzrNvr5w95CEMtXa8YW4=;
+        s=default; t=1597072864;
+        bh=wkqj1qoeprJlvfQN9/RlfNpdpvKWXthNynLbTT69KSw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pjHCx/EL5Bym6AG9ffoN+EKaD+WEvRf2E2CY4gashTI3C/2zcJRvKr2nTn1izQUtW
-         zRpRZthKvT4AJk7GzF71UavCyvTTo65TzhoNmPViGUNw8fjHYO+zKWt9kNUIuxFdT8
-         vgy0NjB4F/wXZchvvYAk2D8ey+DV315i5HOH3PZQ=
+        b=QWDFcW8ylnkGtc9+FykMh4HI5I844QhFvC+NpIOpkjOfVywG5OVMDLOVIFWQwpBSd
+         UPfxpR6emS3TMgQmL9PgoJj3k0SjVO9CKgYCuL+VGerVQ22syNFTjVsCm7UapHMBac
+         tTYKSt4k69fEhJN0vNsCgTTC01ajoIxkCcSvaqZM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peilin Ye <yepeilin.cs@gmail.com>,
-        Marcel Holtmann <marcel@holtmann.org>
-Subject: [PATCH 5.8 17/38] Bluetooth: Prevent out-of-bounds read in hci_inquiry_result_with_rssi_evt()
-Date:   Mon, 10 Aug 2020 17:19:07 +0200
-Message-Id: <20200810151804.739117891@linuxfoundation.org>
+        stable@vger.kernel.org, Amitoj Kaur Chawla <amitoj1606@gmail.com>,
+        Johan Hovold <johan@kernel.org>, Pavel Machek <pavel@ucw.cz>
+Subject: [PATCH 5.8 25/38] leds: wm831x-status: fix use-after-free on unbind
+Date:   Mon, 10 Aug 2020 17:19:15 +0200
+Message-Id: <20200810151805.135568635@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151803.920113428@linuxfoundation.org>
 References: <20200810151803.920113428@linuxfoundation.org>
@@ -59,50 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peilin Ye <yepeilin.cs@gmail.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit 629b49c848ee71244203934347bd7730b0ddee8d upstream.
+commit 47a459ecc800a17109d0c496a4e21e478806ee40 upstream.
 
-Check `num_rsp` before using it as for-loop counter. Add `unlock` label.
+Several MFD child drivers register their class devices directly under
+the parent device. This means you cannot blindly do devres conversions
+so that deregistration ends up being tied to the parent device,
+something which leads to use-after-free on driver unbind when the class
+device is released while still being registered.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Fixes: 8d3b6a4001ce ("leds: wm831x-status: Use devm_led_classdev_register")
+Cc: stable <stable@vger.kernel.org>     # 4.6
+Cc: Amitoj Kaur Chawla <amitoj1606@gmail.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Pavel Machek <pavel@ucw.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/bluetooth/hci_event.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/leds/leds-wm831x-status.c |   14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
---- a/net/bluetooth/hci_event.c
-+++ b/net/bluetooth/hci_event.c
-@@ -4166,6 +4166,9 @@ static void hci_inquiry_result_with_rssi
- 		struct inquiry_info_with_rssi_and_pscan_mode *info;
- 		info = (void *) (skb->data + 1);
+--- a/drivers/leds/leds-wm831x-status.c
++++ b/drivers/leds/leds-wm831x-status.c
+@@ -269,12 +269,23 @@ static int wm831x_status_probe(struct pl
+ 	drvdata->cdev.blink_set = wm831x_status_blink_set;
+ 	drvdata->cdev.groups = wm831x_status_groups;
  
-+		if (skb->len < num_rsp * sizeof(*info) + 1)
-+			goto unlock;
-+
- 		for (; num_rsp; num_rsp--, info++) {
- 			u32 flags;
- 
-@@ -4187,6 +4190,9 @@ static void hci_inquiry_result_with_rssi
- 	} else {
- 		struct inquiry_info_with_rssi *info = (void *) (skb->data + 1);
- 
-+		if (skb->len < num_rsp * sizeof(*info) + 1)
-+			goto unlock;
-+
- 		for (; num_rsp; num_rsp--, info++) {
- 			u32 flags;
- 
-@@ -4207,6 +4213,7 @@ static void hci_inquiry_result_with_rssi
- 		}
+-	ret = devm_led_classdev_register(wm831x->dev, &drvdata->cdev);
++	ret = led_classdev_register(wm831x->dev, &drvdata->cdev);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "Failed to register LED: %d\n", ret);
+ 		return ret;
  	}
  
-+unlock:
- 	hci_dev_unlock(hdev);
++	platform_set_drvdata(pdev, drvdata);
++
++	return 0;
++}
++
++static int wm831x_status_remove(struct platform_device *pdev)
++{
++	struct wm831x_status *drvdata = platform_get_drvdata(pdev);
++
++	led_classdev_unregister(&drvdata->cdev);
++
+ 	return 0;
  }
  
+@@ -283,6 +294,7 @@ static struct platform_driver wm831x_sta
+ 		   .name = "wm831x-status",
+ 		   },
+ 	.probe = wm831x_status_probe,
++	.remove = wm831x_status_remove,
+ };
+ 
+ module_platform_driver(wm831x_status_driver);
 
 
