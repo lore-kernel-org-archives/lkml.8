@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E99C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B33AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:22:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FC132075D
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:22:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D44820656
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:22:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597072948;
-	bh=x7ozp1mq3C1BY63eMKEcpS3peJBmk+UfyCtDfXhOuww=;
+	s=default; t=1597072952;
+	bh=hBv+4okY+0hf3Z7WylDYYaK3Po0ZNDGgpxry0OId4UI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rV4oOozligCFL2VEmfsS9cYlXTVzTeFVWY89sb9G2aUElXgfpkAGqpVG7IGDF9NVN
-	 FnKHCtiC45QnsW9fyf0C7zzjjXpshLWs+OJFp354y1aICLn7Vp1QNi+yhMNiQWrBab
-	 FLYR15mCDZVLjFr8bdkkE72md0uHbvJhuABTdZRU=
+	b=IJkROs9xnV4pMt0Q6ZkNtnOZ5mhBnZWuxfgnooTRLjEGHmQPMnsre3aYFaxIVJ/qB
+	 u6MOsWMEM15HKeyUw8q6ypz1LlGR4ma9SY1Q2ZeW75G2wkSaxss+BdF/48uRoGNWDp
+	 fNiQG75qqrbcWHv41W8KLCj1d7KRwHp0kVxX/i8g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728057AbgHJPW0 (ORCPT
+        id S1728211AbgHJPWb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:22:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53192 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:22:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727801AbgHJPWX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:22:23 -0400
+        id S1727841AbgHJPW2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:22:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15B0F20656;
-        Mon, 10 Aug 2020 15:22:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8ED0820656;
+        Mon, 10 Aug 2020 15:22:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597072942;
-        bh=x7ozp1mq3C1BY63eMKEcpS3peJBmk+UfyCtDfXhOuww=;
+        s=default; t=1597072948;
+        bh=hBv+4okY+0hf3Z7WylDYYaK3Po0ZNDGgpxry0OId4UI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0iQivmxDb+dqWeRz1jchQx76StioTKemusTc1nY2KfF5C2txFPsI+ZSqI1NVT5bNq
-         6VXzMgwa/7GqDd9hC6hB0mvusJgcKB1Omapa/ZGoi/VwlaQVGp2Kw6a2dRKINly1yJ
-         BDy5gqVc9jkBsiHGK3wLBkO5JdFWC6oJijLVni9g=
+        b=hHthycf28azbwSyXDPL41uZbvymEXFFQTZHTiqwNCAyJ91t1ae7tjoxB0vcRx8hIV
+         qJuCIsV/lDg6DwZWKg0pYkZ56NA8sIgnuPQqyNanCRIPnlGUclhugBH7sbQXN6m9mu
+         HSpQiEVZjP3vgX7IqtBHxVIIN5Mwg/avR109sQRY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+7a0d9d0b26efefe61780@syzkaller.appspotmail.com,
-        Suren Baghdasaryan <surenb@google.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Subject: [PATCH 5.7 12/79] staging: android: ashmem: Fix lockdep warning for write operation
-Date:   Mon, 10 Aug 2020 17:20:31 +0200
-Message-Id: <20200810151812.729806559@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Dinghao Liu <dinghao.liu@zju.edu.cn>
+Subject: [PATCH 5.7 14/79] Staging: rtl8188eu: rtw_mlme: Fix uninitialized variable authmode
+Date:   Mon, 10 Aug 2020 17:20:33 +0200
+Message-Id: <20200810151812.824675593@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151812.114485777@linuxfoundation.org>
 References: <20200810151812.114485777@linuxfoundation.org>
@@ -61,77 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suren Baghdasaryan <surenb@google.com>
+From: Dinghao Liu <dinghao.liu@zju.edu.cn>
 
-commit 3e338d3c95c735dc3265a86016bb4c022ec7cadc upstream.
+commit 11536442a3b4e1de6890ea5e805908debb74f94a upstream.
 
-syzbot report [1] describes a deadlock when write operation against an
-ashmem fd executed at the time when ashmem is shrinking its cache results
-in the following lock sequence:
+The variable authmode can be uninitialized. The danger would be if
+it equals to _WPA_IE_ID_ (0xdd) or _WPA2_IE_ID_ (0x33). We can avoid
+this by setting it to zero instead. This is the approach that was
+used in the rtl8723bs driver.
 
-Possible unsafe locking scenario:
-
-        CPU0                    CPU1
-        ----                    ----
-   lock(fs_reclaim);
-                                lock(&sb->s_type->i_mutex_key#13);
-                                lock(fs_reclaim);
-   lock(&sb->s_type->i_mutex_key#13);
-
-kswapd takes fs_reclaim and then inode_lock while generic_perform_write
-takes inode_lock and then fs_reclaim. However ashmem does not support
-writing into backing shmem with a write syscall. The only way to change
-its content is to mmap it and operate on mapped memory. Therefore the race
-that lockdep is warning about is not valid. Resolve this by introducing a
-separate lockdep class for the backing shmem inodes.
-
-[1]: https://lkml.kernel.org/lkml/0000000000000b5f9d059aa2037f@google.com/
-
-Reported-by: syzbot+7a0d9d0b26efefe61780@syzkaller.appspotmail.com
-Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+Fixes: 7b464c9fa5cc ("staging: r8188eu: Add files for new driver - part 4")
+Co-developed-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
 Cc: stable <stable@vger.kernel.org>
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Link: https://lore.kernel.org/r/20200730192632.3088194-1-surenb@google.com
+Link: https://lore.kernel.org/r/20200728072153.9202-1-dinghao.liu@zju.edu.cn
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/android/ashmem.c |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/staging/rtl8188eu/core/rtw_mlme.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/staging/android/ashmem.c
-+++ b/drivers/staging/android/ashmem.c
-@@ -95,6 +95,15 @@ static DEFINE_MUTEX(ashmem_mutex);
- static struct kmem_cache *ashmem_area_cachep __read_mostly;
- static struct kmem_cache *ashmem_range_cachep __read_mostly;
+--- a/drivers/staging/rtl8188eu/core/rtw_mlme.c
++++ b/drivers/staging/rtl8188eu/core/rtw_mlme.c
+@@ -1729,9 +1729,11 @@ int rtw_restruct_sec_ie(struct adapter *
+ 	if ((ndisauthmode == Ndis802_11AuthModeWPA) ||
+ 	    (ndisauthmode == Ndis802_11AuthModeWPAPSK))
+ 		authmode = _WPA_IE_ID_;
+-	if ((ndisauthmode == Ndis802_11AuthModeWPA2) ||
++	else if ((ndisauthmode == Ndis802_11AuthModeWPA2) ||
+ 	    (ndisauthmode == Ndis802_11AuthModeWPA2PSK))
+ 		authmode = _WPA2_IE_ID_;
++	else
++		authmode = 0x0;
  
-+/*
-+ * A separate lockdep class for the backing shmem inodes to resolve the lockdep
-+ * warning about the race between kswapd taking fs_reclaim before inode_lock
-+ * and write syscall taking inode_lock and then fs_reclaim.
-+ * Note that such race is impossible because ashmem does not support write
-+ * syscalls operating on the backing shmem.
-+ */
-+static struct lock_class_key backing_shmem_inode_class;
-+
- static inline unsigned long range_size(struct ashmem_range *range)
- {
- 	return range->pgend - range->pgstart + 1;
-@@ -396,6 +405,7 @@ static int ashmem_mmap(struct file *file
- 	if (!asma->file) {
- 		char *name = ASHMEM_NAME_DEF;
- 		struct file *vmfile;
-+		struct inode *inode;
- 
- 		if (asma->name[ASHMEM_NAME_PREFIX_LEN] != '\0')
- 			name = asma->name;
-@@ -407,6 +417,8 @@ static int ashmem_mmap(struct file *file
- 			goto out;
- 		}
- 		vmfile->f_mode |= FMODE_LSEEK;
-+		inode = file_inode(vmfile);
-+		lockdep_set_class(&inode->i_rwsem, &backing_shmem_inode_class);
- 		asma->file = vmfile;
- 		/*
- 		 * override mmap operation of the vmfile so that it can't be
+ 	if (check_fwstate(pmlmepriv, WIFI_UNDER_WPS)) {
+ 		memcpy(out_ie + ielength, psecuritypriv->wps_ie, psecuritypriv->wps_ie_len);
 
 
