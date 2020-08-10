@@ -2,74 +2,88 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 905C9C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 17:16:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22413C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 17:20:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A9AE20825
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 17:16:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0227C20825
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 17:20:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728030AbgHJRQg (ORCPT
+        id S1727801AbgHJRUE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 13:16:36 -0400
-Received: from gardel.0pointer.net ([85.214.157.71]:50006 "EHLO
-        gardel.0pointer.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726720AbgHJRQf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 13:16:35 -0400
-Received: from gardel-login.0pointer.net (gardel.0pointer.net [85.214.157.71])
-        by gardel.0pointer.net (Postfix) with ESMTP id 80161E814D8;
-        Mon, 10 Aug 2020 19:16:32 +0200 (CEST)
-Received: by gardel-login.0pointer.net (Postfix, from userid 1000)
-        id 27D4F16081D; Mon, 10 Aug 2020 19:16:32 +0200 (CEST)
-Date:   Mon, 10 Aug 2020 19:16:32 +0200
-From:   Lennart Poettering <mzxreary@0pointer.de>
-To:     linux-block <linux-block@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-        Yang Xu <xuyang2018.jy@cn.fujitsu.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH v2] loop: unset GENHD_FL_NO_PART_SCAN on LOOP_CONFIGURE
-Message-ID: <20200810171632.GA226564@gardel-login>
+        Mon, 10 Aug 2020 13:20:04 -0400
+Received: from cmta16.telus.net ([209.171.16.89]:53268 "EHLO cmta16.telus.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725862AbgHJRUD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 13:20:03 -0400
+X-Greylist: delayed 488 seconds by postgrey-1.27 at vger.kernel.org; Mon, 10 Aug 2020 13:20:02 EDT
+Received: from montezuma.home ([154.5.226.127])
+        by cmsmtp with SMTP
+        id 5BKwkkXSG5b7l5BKykm83N; Mon, 10 Aug 2020 11:11:53 -0600
+X-Telus-Authed: none
+X-Authority-Analysis: v=2.3 cv=YPHhNiOx c=1 sm=1 tr=0
+ a=f8b3WT/FcTuUJCJtQO1udw==:117 a=f8b3WT/FcTuUJCJtQO1udw==:17
+ a=kj9zAlcOel0A:10 a=x7bEGLp0ZPQA:10 a=COSDN44dAAMA:10
+ a=bG9gDjmhPuXUG-eiuMMA:9 a=CjuIK1q_8ugA:10
+Date:   Mon, 10 Aug 2020 10:11:50 -0700 (PDT)
+From:   Zwane Mwaikambo <zwanem@gmail.com>
+To:     tcamuso@redhat.com
+cc:     Linux Kernel <linux-kernel@vger.kernel.org>,
+        dri-devel@lists.freedesktop.org, dkwon@redhat.com
+Subject: Re: [PATCH] drm: assure aux_dev is nonzero before using it
+Message-ID: <alpine.DEB.2.21.2008101004110.27032@montezuma.home>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
+X-CMAE-Envelope: MS4wfLXLrG61H3IewWgL14PAlsxl0Y3rkOFoECheosPcZUUND7JWnN8rPKnbtQKPrkOXCu1aPejTgwQ+X7R90J+w6fD9IdyUBsRp14+2pRNZx/kNWYggJTdX
+ 0xLa2pgKJOC23iLr8VbAmtdlcXp7oCl9+cr4ZWuCC5EQUMDbBt8V0rmF1448y9Q6MKlDSh7QNFCoPzAZAgrUHqhl+APfxkN1I6+iktMRThGoW689FGKKUnsC
+ hvLSjM46j66W8Oh7ifli8AEYTmDmtKv58sakJbGgDH3mCHUKafvaPsOcpDWN9xrS
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When LOOP_CONFIGURE is used with LO_FLAGS_PARTSCAN we need to propagate
-this into the GENHD_FL_NO_PART_SCAN. LOOP_SETSTATUS does this,
-LOOP_CONFIGURE doesn't so far. Effect is that setting up a loopback
-device with partition scanning doesn't actually work when LOOP_CONFIGURE
-is issued, though it works fine with LOOP_SETSTATUS.
+Hi Folks,
+	I know this thread eventually dropped off due to not identifying 
+the underlying issue. It's still occuring on 5.8 and in my case it 
+happened because the udev device nodes for the DP aux devices were not 
+cleaned up whereas the kernel had no association with them. I can 
+reproduce the bug just by creating a device node for a non-existent minor 
+device and calling open().
 
-Let's correct that and propagate the flag in LOOP_CONFIGURE too.
+To me it still makes sense to just check aux_dev because the chardev has 
+no way to check before calling.
 
-Fixes: 3448914e8cc5("loop: Add LOOP_CONFIGURE ioctl")
+(gdb) list *drm_dp_aux_dev_get_by_minor+0x29
+0x17b39 is in drm_dp_aux_dev_get_by_minor (drivers/gpu/drm/drm_dp_aux_dev.c:65).
+60      static struct drm_dp_aux_dev *drm_dp_aux_dev_get_by_minor(unsigned index)
+61      {
+62              struct drm_dp_aux_dev *aux_dev = NULL;
+63
+64              mutex_lock(&aux_idr_mutex);
+65              aux_dev = idr_find(&aux_idr, index);
+66              if (!kref_get_unless_zero(&aux_dev->refcount))
+67                      aux_dev = NULL;
+68              mutex_unlock(&aux_idr_mutex);
+69
+(gdb) p/x &((struct drm_dp_aux_dev *)(0x0))->refcount
+$8 = 0x18
 
-Signed-off-by: Lennart Poettering <lennart@poettering.net>
-Acked-by: Martijn Coenen <maco@android.com>
----
- drivers/block/loop.c | 2 ++
- 1 file changed, 2 insertions(+)
+static int auxdev_open(struct inode *inode, struct file *file)
+{
+    unsigned int minor = iminor(inode);
+    struct drm_dp_aux_dev *aux_dev;
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index d18160146226..2f137d6ce169 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -1171,6 +1171,8 @@ static int loop_configure(struct loop_device *lo, fmode_t mode,
- 	if (part_shift)
- 		lo->lo_flags |= LO_FLAGS_PARTSCAN;
- 	partscan = lo->lo_flags & LO_FLAGS_PARTSCAN;
-+	if (partscan)
-+		lo->lo_disk->flags &= ~GENHD_FL_NO_PART_SCAN;
+    aux_dev = drm_dp_aux_dev_get_by_minor(minor);
+    if (!aux_dev)
+        return -ENODEV;
 
- 	/* Grab the block_device to prevent its destruction after we
- 	 * put /dev/loopXX inode. Later in __loop_clr_fd() we bdput(bdev).
---
-2.26.2
+    file->private_data = aux_dev;
+    return 0;
+}
+
+
