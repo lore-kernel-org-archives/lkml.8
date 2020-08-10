@@ -5,54 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40741C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:13:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45CC9C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:13:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1650622C9E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:13:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B060207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:13:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597086808;
-	bh=gGyiXxopYlQbJ6AbtM9O7utJiQiofQ+CDLgnBBOTWdE=;
+	s=default; t=1597086817;
+	bh=5jqvCiKRJBHM6wCakwUncmndmrLuQZ6BD/yNkVWmES0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=05OxJ3KscQpHVfWdsRSH/jDIfbifv4IXvrU2Soe4XQgW9vjGIhDBnBY3hjo57/e9g
-	 IpJZuekco7b3/THBkOjPb6m/5hTJ3oIsNfygD/0gL7c1KSAN07QX77z09fAxI+Ipw8
-	 AKs0fs1vfCsq6MbiL57hcn4sqmv7a21jPxS/PjzU=
+	b=bi1FVKFdLn3TOhqkfpu+SwVkN0f/2OZDZJvbcZYXxBGIBcuBiob3RGOgFdGDOVwpw
+	 lQRzIonWreUV1VuKP5Sl41BzBP/VD8kmOsIIAYcS/BNn3YZeGb2wIMBC0pkqkCeNKn
+	 wz6dZoltGAdXMgPVmCIysiGrx3fmlvbp/N/8Mq38=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729755AbgHJTN1 (ORCPT
+        id S1729792AbgHJTNf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:13:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44274 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:13:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729742AbgHJTNX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:13:23 -0400
+        id S1729766AbgHJTN3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:13:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 301C622BEB;
-        Mon, 10 Aug 2020 19:13:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A72A222B49;
+        Mon, 10 Aug 2020 19:13:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086803;
-        bh=gGyiXxopYlQbJ6AbtM9O7utJiQiofQ+CDLgnBBOTWdE=;
+        s=default; t=1597086808;
+        bh=5jqvCiKRJBHM6wCakwUncmndmrLuQZ6BD/yNkVWmES0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d2SO/fnYmDK5OhRpw9AlDZddzAYgE5wa0UoTcQfteCfKSybKWP/MQPzz+E0mC+HZp
-         HgT/sw741M4TwpJYnsRd+FYFacXf4oa1TfWCJA/DQE1Zj4SXpEsk+Fyjdm4U+DHwmD
-         V+PBnZceVvU11kBG7I3E9B/IA80oA+nR31q4C+xY=
+        b=ehsegRjcBae06qdg0bdN9aKL8O1EhCe2V0u4S/H+i6oyYQHPy0CQJiyQz2xIVn75J
+         5xpsGJmftM1ObmKFvMiTZ2P8ACfJRdF+iF5rcBk+DvjAUfWGSnkvJlVMAwo5BbGctJ
+         G/5p3m9e8q9uUtPkGmgaphwIDfxVnpxFtj9J1tXI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 16/31] drm/radeon: disable AGP by default
-Date:   Mon, 10 Aug 2020 15:12:44 -0400
-Message-Id: <20200810191259.3794858-16-sashal@kernel.org>
+Cc:     Prasanna Kerekoppa <prasanna.kerekoppa@cypress.com>,
+        Chi-hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 20/31] brcmfmac: To fix Bss Info flag definition Bug
+Date:   Mon, 10 Aug 2020 15:12:48 -0400
+Message-Id: <20200810191259.3794858-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810191259.3794858-1-sashal@kernel.org>
 References: <20200810191259.3794858-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,39 +64,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian König <christian.koenig@amd.com>
+From: Prasanna Kerekoppa <prasanna.kerekoppa@cypress.com>
 
-[ Upstream commit ba806f98f868ce107aa9c453fef751de9980e4af ]
+[ Upstream commit fa3266541b13f390eb35bdbc38ff4a03368be004 ]
 
-Always use the PCI GART instead. We just have to many cases
-where AGP still causes problems. This means a performance
-regression for some GPUs, but also a bug fix for some others.
+Bss info flag definition need to be fixed from 0x2 to 0x4
+This flag is for rssi info received on channel.
+All Firmware branches defined as 0x4 and this is bug in brcmfmac.
 
-Signed-off-by: Christian König <christian.koenig@amd.com>
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Prasanna Kerekoppa <prasanna.kerekoppa@cypress.com>
+Signed-off-by: Chi-hsien Lin <chi-hsien.lin@cypress.com>
+Signed-off-by: Wright Feng <wright.feng@cypress.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200604071835.3842-6-wright.feng@cypress.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/radeon/radeon_drv.c | 5 -----
- 1 file changed, 5 deletions(-)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/radeon/radeon_drv.c b/drivers/gpu/drm/radeon/radeon_drv.c
-index 54729acd0d4af..0cd33289c2b63 100644
---- a/drivers/gpu/drm/radeon/radeon_drv.c
-+++ b/drivers/gpu/drm/radeon/radeon_drv.c
-@@ -168,12 +168,7 @@ int radeon_no_wb;
- int radeon_modeset = -1;
- int radeon_dynclks = -1;
- int radeon_r4xx_atom = 0;
--#ifdef __powerpc__
--/* Default to PCI on PowerPC (fdo #95017) */
- int radeon_agpmode = -1;
--#else
--int radeon_agpmode = 0;
--#endif
- int radeon_vram_limit = 0;
- int radeon_gart_size = -1; /* auto */
- int radeon_benchmarking = 0;
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h
+index d5bb81e887624..9d2367133c7c6 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h
+@@ -30,7 +30,7 @@
+ #define BRCMF_ARP_OL_PEER_AUTO_REPLY	0x00000008
+ 
+ #define	BRCMF_BSS_INFO_VERSION	109 /* curr ver of brcmf_bss_info_le struct */
+-#define BRCMF_BSS_RSSI_ON_CHANNEL	0x0002
++#define BRCMF_BSS_RSSI_ON_CHANNEL	0x0004
+ 
+ #define BRCMF_STA_BRCM			0x00000001	/* Running a Broadcom driver */
+ #define BRCMF_STA_WME			0x00000002	/* WMM association */
 -- 
 2.25.1
 
