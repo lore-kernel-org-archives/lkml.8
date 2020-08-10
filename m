@@ -2,78 +2,81 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E84CFC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 11:07:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD061C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 11:12:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C59D320729
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 11:07:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OqRn0qMi"
+	by mail.kernel.org (Postfix) with ESMTP id 94997206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 11:12:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726500AbgHJLHP (ORCPT
+        id S1726403AbgHJLL0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 07:07:15 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:55734 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726146AbgHJLHO (ORCPT
+        Mon, 10 Aug 2020 07:11:26 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:39014 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726033AbgHJLKd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 07:07:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597057633;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=oHCoGFv/slftUZpEERreHjBoBcennu4blqAk1fcTw/k=;
-        b=OqRn0qMiOPHW1hKC4xyZ5T7SSgP121SvvMMxLh8IjEMriwR7WVC5ah/IXGpaNFq2Dk6Y66
-        zhNk6HL4ijIcuVhSiPYFnmFq9Ml3Cyqib3qALbN4EtPbtcMsEBbDyyfeDe6Tka6XaWdA2a
-        cMENZlE9sbZGUYVSy4bMM/kE3zwKmXk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-348-LP0f2cGjM8KguZ-X50y43Q-1; Mon, 10 Aug 2020 07:07:11 -0400
-X-MC-Unique: LP0f2cGjM8KguZ-X50y43Q-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 865531DE0;
-        Mon, 10 Aug 2020 11:07:10 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.195.177])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 00A8710013C2;
-        Mon, 10 Aug 2020 11:06:57 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Mon, 10 Aug 2020 13:07:10 +0200 (CEST)
-Date:   Mon, 10 Aug 2020 13:06:48 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH] kernel: update callers of task_work_add() to use
- TWA_RESUME
-Message-ID: <20200810110646.GB17018@redhat.com>
-References: <10debfb3-25f2-20ed-d4f3-1d95ba4c2129@kernel.dk>
+        Mon, 10 Aug 2020 07:10:33 -0400
+Received: by mail-ot1-f68.google.com with SMTP id z18so6927250otk.6;
+        Mon, 10 Aug 2020 04:10:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=b5ZUABtlsgiBYK8fcXIjwE8+HKVtbj5bOYrBRraOXHs=;
+        b=gXoa3Ns7NOMxeoSXPJLGfUZfgzDtXuaDYmaMqvhF2XP+2xC4vm/MdirTiRo2J56zdy
+         1UOSHtVTaItKyq2zZ/8c/kTc4Yx0EneoMl94dHu9HMW7S29t/kEfMuRuM0/B3b2YtDAP
+         uMzBEAYAQOXnjIMt0XGoTaaU9kQumuvIxXJp7iNbyTeECI1YLjx9t9nCw+i49UO3MvTE
+         DT1uJjqmEUyMAgerG2U12/P7k4eimLk9gEw60ma3D4GpNFxHMUqPSMA/kJAL/3bu/GMg
+         e0g6czP3ilkivyVz+Yxa0mRXgqqPyoons7wss8kWEqpoA1Sb3tQVv2ag/cA14RY5MK1L
+         Pjcg==
+X-Gm-Message-State: AOAM531xr9L6PeonKPsUGsUrU8pmHaQFkd3jxHufuE4DBBjTGUuH0sd0
+        9FX/HWAY/k44oE55aa+V/J8ojjSnHFtHQvMvk0Y=
+X-Google-Smtp-Source: ABdhPJxB//7K+LA9FFJW2KYiVuSAsbrNpM0G6ysb09NYVMXcU13W/cnH/hWtU7X/w4lrXlqA/ttdGnf1lmq176E2BbM=
+X-Received: by 2002:a9d:7d8c:: with SMTP id j12mr306934otn.250.1597057832771;
+ Mon, 10 Aug 2020 04:10:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <10debfb3-25f2-20ed-d4f3-1d95ba4c2129@kernel.dk>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+References: <20200810092208.27320-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200810092208.27320-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20200810092208.27320-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 10 Aug 2020 13:10:21 +0200
+Message-ID: <CAMuHMdXYEyEOLaNAPL=Uf_wwrxkp4Uoyyn6_HiLSeehvDENUvg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] arm64: dts: renesas: r8a774e1: Add FCPF and FCPV instances
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/08, Jens Axboe wrote:
+On Mon, Aug 10, 2020 at 11:22 AM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 >
-> Any pre-existing caller of this function uses 'true' to signal to use
-> notifications or not, but we now also have signaled notifications.
-> Update existing callers that specify 'true' for notify to use the
-> updated TWA_RESUME instead.
+> Add FCPF and FCPV instances to the r8a774e1 dtsi.
+>
+> Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Thanks,
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v5.10.
 
-Acked-by: Oleg Nesterov <oleg@redhat.com>
+Gr{oetje,eeting}s,
 
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
