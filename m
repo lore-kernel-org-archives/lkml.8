@@ -2,82 +2,73 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B4ECC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:58:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5782CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 10:00:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A4A0206B5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:58:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B7A2206B5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 10:00:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726848AbgHJJ61 (ORCPT
+        id S1726491AbgHJKAB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 05:58:27 -0400
-Received: from mailout12.rmx.de ([94.199.88.78]:56707 "EHLO mailout12.rmx.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726304AbgHJJ60 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 05:58:26 -0400
-Received: from kdin01.retarus.com (kdin01.dmz1.retloc [172.19.17.48])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mailout12.rmx.de (Postfix) with ESMTPS id 4BQBHM3FBQzRkq5;
-        Mon, 10 Aug 2020 11:58:23 +0200 (CEST)
-Received: from mta.arri.de (unknown [217.111.95.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by kdin01.retarus.com (Postfix) with ESMTPS id 4BQBH65lWPz2xbQ;
-        Mon, 10 Aug 2020 11:58:10 +0200 (CEST)
-Received: from n95hx1g2.localnet (192.168.54.71) by mta.arri.de
- (192.168.100.104) with Microsoft SMTP Server (TLS) id 14.3.408.0; Mon, 10 Aug
- 2020 11:57:47 +0200
-From:   Christian Eggers <ceggers@arri.de>
-To:     Pavel Machek <pavel@ucw.cz>
-CC:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Hartmut Knaack" <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        "Peter Meerwald-Stadler" <pmeerw@pmeerw.net>,
-        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] iio: documentation: light: Add as73211 sysfs documentation
-Date:   Mon, 10 Aug 2020 11:57:46 +0200
-Message-ID: <4688751.agSyimv0uN@n95hx1g2>
-Organization: Arnold & Richter Cine Technik GmbH & Co. Betriebs KG
-In-Reply-To: <20200810090054.GA8495@localhost>
-References: <20200808171443.114c8e05@archlinux> <20200809074335.23734-1-ceggers@arri.de> <20200810090054.GA8495@localhost>
+        Mon, 10 Aug 2020 06:00:01 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:54204 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725846AbgHJJ77 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 05:59:59 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1k54au-0005nX-RN; Mon, 10 Aug 2020 09:59:52 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/i915/vlv_dsi_pll: fix spelling mistake "Cant" -> "Can't"
+Date:   Mon, 10 Aug 2020 10:59:52 +0100
+Message-Id: <20200810095952.60968-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-Originating-IP: [192.168.54.71]
-X-RMX-ID: 20200810-115812-4BQBH65lWPz2xbQ-0@kdin01
-X-RMX-SOURCE: 217.111.95.66
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday, 10 August 2020, 11:00:54 CEST, Pavel Machek wrote:
-> Hi!
-> 
-> > The driver for the as73211 light sensor provides the following not yet
-> > documented sysfs entries:
-> > - in_intensity_(x|y|z)_raw
-> > - in_intensity_(x|y|z)_scale
-> > - in_intensity_sampling_frequency(_available)
-> > - in_intensity_hardwaregain(_available)
-> 
-> Should that be hardware_gain ?
-drivers/iio/industrialio-core.c:
-[IIO_CHAN_INFO_HARDWAREGAIN] = "hardwaregain",
+From: Colin Ian King <colin.king@canonical.com>
 
-> 							
-Pavel
-regards
-Christian
+There is a spelling mistake in a drm_err message. Fix it.
 
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/gpu/drm/i915/display/vlv_dsi_pll.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
-
+diff --git a/drivers/gpu/drm/i915/display/vlv_dsi_pll.c b/drivers/gpu/drm/i915/display/vlv_dsi_pll.c
+index d0a514301575..4070b00c3690 100644
+--- a/drivers/gpu/drm/i915/display/vlv_dsi_pll.c
++++ b/drivers/gpu/drm/i915/display/vlv_dsi_pll.c
+@@ -483,7 +483,7 @@ int bxt_dsi_pll_compute(struct intel_encoder *encoder,
+ 
+ 	if (dsi_ratio < dsi_ratio_min || dsi_ratio > dsi_ratio_max) {
+ 		drm_err(&dev_priv->drm,
+-			"Cant get a suitable ratio from DSI PLL ratios\n");
++			"Can't get a suitable ratio from DSI PLL ratios\n");
+ 		return -ECHRNG;
+ 	} else
+ 		drm_dbg_kms(&dev_priv->drm, "DSI PLL calculation is Done!!\n");
+-- 
+2.27.0
 
