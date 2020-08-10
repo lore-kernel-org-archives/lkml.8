@@ -2,52 +2,51 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 576B8C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:23:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 693FBC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:23:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23EEF20772
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:23:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E2F720838
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:23:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073012;
-	bh=/r49fUnLffqqADpBWP3Ou/KuG0JvOEIzxkZ/qB1bVMI=;
+	s=default; t=1597073015;
+	bh=jmFDcZ8vPo5JsDA6rhoJdQuuBC/wXnUd4I/ZMyNDUAw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DpeZQutVlWufCb6YNp1lrTjSwoSGIO9xSRTBHMh8DqpiheTBTMCIE/hiHcFERpI24
-	 0+gar61K5c2lrbqAHtzX26NfUdHWv+UConMdD6KbqEZRGGdjYC6XYjc8eiqbJ1TDLH
-	 ZEJvUuXyym73UZ6cZsqvL27KqSGo7F4igIBNPZpQ=
+	b=fs2KVgo/DgM99q2VZAmhxB2Cx3L0tQ8IwSxbbT/tEsSkpBJy1QcHU2x8xSpbZQz06
+	 dnVjKZny0otrVDZe6fgTpYxKi+34K0w53t+pGV0hP/oj36Hay0ouzF96fZDp2NPjxl
+	 y1SJqu4pLNGgmewbdcYVpj4W5hWxjQthLDy7y7aI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728332AbgHJPXa (ORCPT
+        id S1728350AbgHJPXe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:23:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54638 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:23:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727850AbgHJPXW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:23:22 -0400
+        id S1728323AbgHJPX2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:23:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65FDE20838;
-        Mon, 10 Aug 2020 15:23:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6432320772;
+        Mon, 10 Aug 2020 15:23:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073001;
-        bh=/r49fUnLffqqADpBWP3Ou/KuG0JvOEIzxkZ/qB1bVMI=;
+        s=default; t=1597073008;
+        bh=jmFDcZ8vPo5JsDA6rhoJdQuuBC/wXnUd4I/ZMyNDUAw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ebziTicURFO9K5hl3GQFLT/dBCjAzbQ+KbGYy1rOVisgSjPNu/sPLQbWTp6QRJioj
-         d3hBVNuKtbn85ojMhY0vuGK20obXyPyEBdOYG8d+F2Z/Z9Sjn8No7aDmL2cHaKsjmc
-         S5KAlj7x33jUATSkTCzVzYmT4mEdCnHNMTkDjt3U=
+        b=gnFD8QyF/JUvgYvz4b14zFjc09KJQbAvAtGt6Ki7slrf5Io8dWmyQNXCV6vm7lNlm
+         S6j/y+w37SHRQsNAeaY/4gd9ToY5h3lh33EwPbmdxZ4sgfzfSWJP7djMTdI11eEfZ8
+         6/BjliDDRy6x76pvLoCkY/aNdYpJOIRlX2DLvvhM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Forest Crossman <cyrozap@gmail.com>
-Subject: [PATCH 5.7 05/79] usb: xhci: Fix ASMedia ASM1142 DMA addressing
-Date:   Mon, 10 Aug 2020 17:20:24 +0200
-Message-Id: <20200810151812.395216121@linuxfoundation.org>
+        stable@vger.kernel.org, Ben Skeggs <bskeggs@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 33/79] drm/nouveau/kms/tu102: wait for core update to complete when assigning windows
+Date:   Mon, 10 Aug 2020 17:20:52 +0200
+Message-Id: <20200810151813.925318979@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151812.114485777@linuxfoundation.org>
 References: <20200810151812.114485777@linuxfoundation.org>
@@ -60,45 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Forest Crossman <cyrozap@gmail.com>
+From: Ben Skeggs <bskeggs@redhat.com>
 
-commit ec37198acca7b4c17b96247697406e47aafe0605 upstream.
+[ Upstream commit 705d9d022949e3cdae82d89db6a8fc773eb23dad ]
 
-I've confirmed that the ASMedia ASM1142 has the same problem as the
-ASM2142/ASM3142, in that it too reports that it supports 64-bit DMA
-addresses when in fact it does not. As with the ASM2142/ASM3142, this
-can cause problems on systems where the upper bits matter, and adding
-the XHCI_NO_64BIT_SUPPORT quirk completely fixes the issue.
+Fixes a race on Turing between the core cross-channel error checks and
+the following window update.
 
-Acked-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Signed-off-by: Forest Crossman <cyrozap@gmail.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200728042408.180529-3-cyrozap@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/xhci-pci.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/nouveau/dispnv50/disp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/host/xhci-pci.c
-+++ b/drivers/usb/host/xhci-pci.c
-@@ -58,6 +58,7 @@
- #define PCI_DEVICE_ID_AMD_PROMONTORYA_1			0x43bc
- #define PCI_DEVICE_ID_ASMEDIA_1042_XHCI			0x1042
- #define PCI_DEVICE_ID_ASMEDIA_1042A_XHCI		0x1142
-+#define PCI_DEVICE_ID_ASMEDIA_1142_XHCI			0x1242
- #define PCI_DEVICE_ID_ASMEDIA_2142_XHCI			0x2142
- 
- static const char hcd_name[] = "xhci_hcd";
-@@ -258,7 +259,8 @@ static void xhci_pci_quirks(struct devic
- 		pdev->device == PCI_DEVICE_ID_ASMEDIA_1042A_XHCI)
- 		xhci->quirks |= XHCI_TRUST_TX_LENGTH;
- 	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
--		pdev->device == PCI_DEVICE_ID_ASMEDIA_2142_XHCI)
-+	    (pdev->device == PCI_DEVICE_ID_ASMEDIA_1142_XHCI ||
-+	     pdev->device == PCI_DEVICE_ID_ASMEDIA_2142_XHCI))
- 		xhci->quirks |= XHCI_NO_64BIT_SUPPORT;
- 
- 	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
+diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.c b/drivers/gpu/drm/nouveau/dispnv50/disp.c
+index 2625ed84fc44d..5835d19e1c45f 100644
+--- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
++++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
+@@ -2041,7 +2041,7 @@ nv50_disp_atomic_commit_tail(struct drm_atomic_state *state)
+ 	 */
+ 	if (core->assign_windows) {
+ 		core->func->wndw.owner(core);
+-		core->func->update(core, interlock, false);
++		nv50_disp_atomic_commit_core(state, interlock);
+ 		core->assign_windows = false;
+ 		interlock[NV50_DISP_INTERLOCK_CORE] = 0;
+ 	}
+-- 
+2.25.1
+
 
 
