@@ -2,104 +2,80 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B31F4C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:57:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D4B3C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:59:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B029206DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:57:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DIFc2zWa"
+	by mail.kernel.org (Postfix) with ESMTP id 58F65206DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:59:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727077AbgHJW55 (ORCPT
+        id S1727010AbgHJW71 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 18:57:57 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:40450 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726877AbgHJW54 (ORCPT
+        Mon, 10 Aug 2020 18:59:27 -0400
+Received: from smtprelay0192.hostedemail.com ([216.40.44.192]:56836 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726634AbgHJW70 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 18:57:56 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07AMunLj104298;
-        Mon, 10 Aug 2020 22:57:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=VoTpB/AZEZ1NyiicGCY9zKoV6jC5PySZWcVocrNfLk4=;
- b=DIFc2zWaI3Wsxa9NbUwYXjPrOILBSc25WT3SibYWVMvOPHT7qQz/dgNY/JtQI5NKy7kH
- rgKCq5KGjt6cjYPOX1zuk6aECASBwABOEc5h9bWKNcuWVLtf+CNhSNYDv9D0JWZoMGtz
- vwU/uvCp8IpcGk4fHr3Lgu4Q9F1Rr9NXfMwOsh5k9EZMcNUWQfM6RMHrQyI98aY+cMwE
- rIX81S0NINSfJtEas9X7Ycw3u/fyGCflVnQJFWPOame2WuCJAoGhjJWNtysadrQTCmij
- twZ85iSD7uqJr3l8BX15yiATtGKBjBpG6h4FaclnVqKQA2M3OVSUt/1GWvaErNeET4x+ IQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 32sm0mheg8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 10 Aug 2020 22:57:48 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07AMrTAx163802;
-        Mon, 10 Aug 2020 22:55:48 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 32t5mn9c3k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 10 Aug 2020 22:55:47 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07AMtkda028979;
-        Mon, 10 Aug 2020 22:55:46 GMT
-Received: from [192.168.2.112] (/50.38.35.18)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 10 Aug 2020 22:55:46 +0000
-Subject: Re: [PATCH 08/10] mm/hugetlb: return non-isolated page in the loop
- instead of break and check
-To:     Wei Yang <richard.weiyang@linux.alibaba.com>,
-        akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20200807091251.12129-1-richard.weiyang@linux.alibaba.com>
- <20200807091251.12129-9-richard.weiyang@linux.alibaba.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <a19c6c38-1364-018b-9bda-c86856d283c4@oracle.com>
-Date:   Mon, 10 Aug 2020 15:55:45 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 10 Aug 2020 18:59:26 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id E4A2D4DBD;
+        Mon, 10 Aug 2020 22:59:25 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: way77_1f01da226fde
+X-Filterd-Recvd-Size: 1917
+Received: from joe-laptop.perches.com (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf03.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 10 Aug 2020 22:59:24 +0000 (UTC)
+From:   Joe Perches <joe@perches.com>
+To:     linux-scsi@vger.kernel.org
+Cc:     James Smart <james.smart@broadcom.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] scsi: lpfc: Reduce logging object code size
+Date:   Mon, 10 Aug 2020 15:59:18 -0700
+Message-Id: <cover.1597100152.git.joe@perches.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-In-Reply-To: <20200807091251.12129-9-richard.weiyang@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9709 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 mlxscore=0
- adultscore=0 malwarescore=0 mlxlogscore=999 phishscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008100157
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9709 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 clxscore=1015
- suspectscore=0 mlxlogscore=999 priorityscore=1501 adultscore=0
- impostorscore=0 spamscore=0 bulkscore=0 mlxscore=0 lowpriorityscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008100157
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/7/20 2:12 AM, Wei Yang wrote:
-> Function dequeue_huge_page_node_exact() iterates the free list and
-> return the first non-isolated one.
-> 
-> Instead of break and check the loop variant, we could return in the loop
-> directly. This could reduce some redundant check.
-> 
-> Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
+The logging macros are pretty heavyweight and can be consolidated
+to reduce overall object size.
 
-I agree with Baoquan He in that this is more of a style change.  Certainly
-there is the potential to avoid an extra check and that is always good.
+Joe Perches (2):
+  scsi: lpfc: Neaten logging macro #defines
+  scsi: lpfc: Add logging functions to reduce object size
 
-The real value in this patch (IMO) is removal of the stale comment.
-
-Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
+ drivers/scsi/lpfc/Makefile       |   2 +-
+ drivers/scsi/lpfc/lpfc.h         |   5 ++
+ drivers/scsi/lpfc/lpfc_attr.h    |   5 ++
+ drivers/scsi/lpfc/lpfc_bsg.h     |   6 ++
+ drivers/scsi/lpfc/lpfc_compat.h  |   5 ++
+ drivers/scsi/lpfc/lpfc_crtn.h    |   5 ++
+ drivers/scsi/lpfc/lpfc_disc.h    |   5 ++
+ drivers/scsi/lpfc/lpfc_hw.h      |   5 ++
+ drivers/scsi/lpfc/lpfc_hw4.h     |   5 ++
+ drivers/scsi/lpfc/lpfc_ids.h     |   5 ++
+ drivers/scsi/lpfc/lpfc_logmsg.c  | 112 +++++++++++++++++++++++++++++++
+ drivers/scsi/lpfc/lpfc_logmsg.h  |  63 ++++++-----------
+ drivers/scsi/lpfc/lpfc_nl.h      |   4 ++
+ drivers/scsi/lpfc/lpfc_nvme.h    |   5 ++
+ drivers/scsi/lpfc/lpfc_scsi.h    |   4 ++
+ drivers/scsi/lpfc/lpfc_sli.h     |   5 ++
+ drivers/scsi/lpfc/lpfc_sli4.h    |   5 ++
+ drivers/scsi/lpfc/lpfc_version.h |   5 ++
+ 18 files changed, 208 insertions(+), 43 deletions(-)
+ create mode 100644 drivers/scsi/lpfc/lpfc_logmsg.c
 
 -- 
-Mike Kravetz
+2.26.0
+
