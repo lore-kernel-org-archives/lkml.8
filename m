@@ -2,92 +2,91 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4E1FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 11:17:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD15BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 11:18:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8830A2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 11:17:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OCNWmeSi"
+	by mail.kernel.org (Postfix) with ESMTP id C54D1206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 11:18:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726430AbgHJLRK (ORCPT
+        id S1726501AbgHJLSf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 07:17:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54128 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726368AbgHJLRB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 07:17:01 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94C8EC061756;
-        Mon, 10 Aug 2020 04:17:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=LF7J00zPGvE5+TvNb+kSZ/mLnQ6lmd1ykbbcKN0G5P0=; b=OCNWmeSiZDDpjF5Hgiofx6N6ON
-        mkqo524ZrkTmjYeAH/LOzFSErW1eK+WyzkAZsFnVA34VOuSVBXoSGM7MZ+/9KklSyZN05mfuOyT0s
-        2YhgWUkFXY+JSuAnnaw4NmrKz7wA57V3jBIlZHPNkZdhVqDXFnmhvk2JKjby9cP7BlVaWDfAzs53N
-        lkQLlrm4o/LDXG8+jPi57WYiSsbgy1qMRGEEL8mYfBJh/Cz0n3tZebBXT9ZPwoMDjAhbgQ2MQPDaJ
-        U4AvMZQcyGTR2UWCtkSXx4VKMEPJLjTvF5HALWCUljf51bkVR9AU8RSTIPChGPGHGBS0dNqkiVmpQ
-        /ZGi0Vig==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k55nV-0002Ra-ET; Mon, 10 Aug 2020 11:16:57 +0000
-Date:   Mon, 10 Aug 2020 12:16:57 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Ruan Shiyang <ruansy.fnst@cn.fujitsu.com>
-Cc:     linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, darrick.wong@oracle.com,
-        dan.j.williams@intel.com, david@fromorbit.com, hch@lst.de,
-        rgoldwyn@suse.de, qi.fuli@fujitsu.com, y-goto@fujitsu.com
-Subject: Re: [RFC PATCH 0/8] fsdax: introduce FS query interface to support
- reflink
-Message-ID: <20200810111657.GL17456@casper.infradead.org>
-References: <20200807131336.318774-1-ruansy.fnst@cn.fujitsu.com>
- <20200807133857.GC17456@casper.infradead.org>
- <9673ed3c-9e42-3d01-000b-b01cda9832ce@cn.fujitsu.com>
+        Mon, 10 Aug 2020 07:18:35 -0400
+Received: from foss.arm.com ([217.140.110.172]:55242 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726033AbgHJLSd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 07:18:33 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4B0BD101E;
+        Mon, 10 Aug 2020 04:18:32 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CCBC33F6CF;
+        Mon, 10 Aug 2020 04:18:30 -0700 (PDT)
+References: <20200810083004.26420-1-lukasz.luba@arm.com>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Lukasz Luba <lukasz.luba@arm.com>
+Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
+        mingo@kernel.org, vincent.guittot@linaro.org, mgorman@suse.de,
+        dietmar.eggemann@arm.com, juri.lelli@redhat.com,
+        patrick.bellasi@matbug.com, tglx@linutronix.de, rostedt@goodmis.org
+Subject: Re: [PATCH] sched/fair: Fix wrong negative conversion in find_energy_efficient_cpu()
+In-reply-to: <20200810083004.26420-1-lukasz.luba@arm.com>
+Date:   Mon, 10 Aug 2020 12:18:25 +0100
+Message-ID: <jhjy2mmhhq6.mognet@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9673ed3c-9e42-3d01-000b-b01cda9832ce@cn.fujitsu.com>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 04:15:50PM +0800, Ruan Shiyang wrote:
-> 
-> 
-> On 2020/8/7 下午9:38, Matthew Wilcox wrote:
-> > On Fri, Aug 07, 2020 at 09:13:28PM +0800, Shiyang Ruan wrote:
-> > > This patchset is a try to resolve the problem of tracking shared page
-> > > for fsdax.
-> > > 
-> > > Instead of per-page tracking method, this patchset introduces a query
-> > > interface: get_shared_files(), which is implemented by each FS, to
-> > > obtain the owners of a shared page.  It returns an owner list of this
-> > > shared page.  Then, the memory-failure() iterates the list to be able
-> > > to notify each process using files that sharing this page.
-> > > 
-> > > The design of the tracking method is as follow:
-> > > 1. dax_assocaite_entry() associates the owner's info to this page
-> > 
-> > I think that's the first problem with this design.  dax_associate_entry is
-> > a horrendous idea which needs to be ripped out, not made more important.
-> > It's all part of the general problem of trying to do something on a
-> > per-page basis instead of per-extent basis.
-> > 
-> 
-> The memory-failure needs to track owners info from a dax page, so I should
-> associate the owner with this page.  In this version, I associate the block
-> device to the dax page, so that the memory-failure is able to iterate the
-> owners by the query interface provided by filesystem.
 
-No, it doesn't need to track owner info from a DAX page.  What it needs to
-do is ask the filesystem.
+On 10/08/20 09:30, Lukasz Luba wrote:
+> In find_energy_efficient_cpu() 'cpu_cap' could be less that 'util'.
+> It might be because of RT, DL (so higher sched class than CFS), irq or
+> thermal pressure signal, which reduce the capacity value.
+> In such situation the result of 'cpu_cap - util' might be negative but
+> stored in the unsigned long. Then it might be compared with other unsigned
+> long when uclamp_rq_util_with() reduced the 'util' such that is passes the
+> fits_capacity() check.
+>
+> Prevent this situation and make the arithmetic more safe.
+>
+> Fixes: 1d42509e475cd ("sched/fair: Make EAS wakeup placement consider
+> uclamp restrictions")
+
+I was going to say that might even go as far back as:
+
+  732cd75b8c92 ("sched/fair: Select an energy-efficient CPU on task wake-up")
+
+but we had a capacity fitness check in the right place back then, which I
+screwed over with that uclamp_rq_util_with() :/
+
+LGTM, thanks for figuring that one out.
+
+Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+
+> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
+> ---
+>  kernel/sched/fair.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 1a68a0536add..51408ebd76c2 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -6594,7 +6594,8 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
+>
+>                       util = cpu_util_next(cpu, p, cpu);
+>                       cpu_cap = capacity_of(cpu);
+> -			spare_cap = cpu_cap - util;
+> +			spare_cap = cpu_cap;
+> +			lsub_positive(&spare_cap, util);
+>
+>                       /*
+>                        * Skip CPUs that cannot satisfy the capacity request.
