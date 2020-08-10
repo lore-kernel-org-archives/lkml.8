@@ -2,136 +2,99 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 092CAC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:47:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45393C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:48:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE3132080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:47:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A4D92080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:48:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726111AbgHJOrW (ORCPT
+        id S1727092AbgHJOs6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 10:47:22 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:52021 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726392AbgHJOrR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 10:47:17 -0400
-Received: by mail-il1-f197.google.com with SMTP id c84so7909019ila.18
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 07:47:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=MoaBoYYMsIB/NvMH2oTkEpq0vOb0W8e7nW7Ah/O0ZEY=;
-        b=W2MKh2uh0fjgU7u8nvPQcbrtF0uTm46hDbeiDi6TL/5avBfOWNHNf88N9Rgt2sYhYt
-         9jPDHfmYYYKcLDqCCME8zyO/fiEVbonCX7SuVtfavdEiR4bKviRphocFfU/WJ4I2FEx6
-         fkf8r4MfhprfWVroiajoVwbTJhOPTY95HcWutfoab1wxr0GpVBWiU7LvbaQMmfi4gcDh
-         bYAKcgobTI1Dewi+hnQ/NCyUPKWkVlvNkyAMcWWW5WNHpFDcTsiUCzQvWX2ZPJUYItdQ
-         ODfo3BvzWUyQay615HBjOrvlV2o2XXlNir14Q9AlYaTshlZa+8+gH+ywSeLuHV8nJLCe
-         6+NA==
-X-Gm-Message-State: AOAM533W2nD0e2GnS/iAvZYyb45VNqiU5c2tyY+LoMH1iREYeOss3gWK
-        Shbx9xI71gBemx21NHPch5mJupDY2j5IRVoXRkd+zpG9gQmJ
-X-Google-Smtp-Source: ABdhPJz0QlAh/MjSxz4qBc/xVxOVuQog3nOkrLdmY62Wny3JrPjSL/ETqGEkH03+kqY8ZxcVu4Zd9uf0epZWOC2pmeDLagIZOIYw
+        Mon, 10 Aug 2020 10:48:58 -0400
+Received: from mga09.intel.com ([134.134.136.24]:11130 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726392AbgHJOs5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 10:48:57 -0400
+IronPort-SDR: v7nJhobaerfr/GrpB9KW6+UmrcpRjOCoaJhnh5zxRVZH3aoz0v0NwEQ4M4fx9Fe4v+L8t9mY+k
+ qDaLvBczt74w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9708"; a="154670270"
+X-IronPort-AV: E=Sophos;i="5.75,457,1589266800"; 
+   d="scan'208";a="154670270"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2020 07:48:57 -0700
+IronPort-SDR: sPxhP5EIq10KFl0PorOKef3k1jAAGJ4jpy2IkSFLRG03riif2UVQ1/Ga+OCA7EnIz2IXGhUMIC
+ P/8Fz30HBmsA==
+X-IronPort-AV: E=Sophos;i="5.75,457,1589266800"; 
+   d="scan'208";a="438717754"
+Received: from schen8-mobl.amr.corp.intel.com (HELO [10.212.235.58]) ([10.212.235.58])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2020 07:48:56 -0700
+Subject: Re: [PATCH] ASoC: SOF: delete repeated words in comments
+To:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org
+Cc:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        alsa-devel@alsa-project.org
+References: <20200808012156.10827-1-rdunlap@infradead.org>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <695a40ef-c7e3-d0dd-2604-3f8a1144b0a3@linux.intel.com>
+Date:   Mon, 10 Aug 2020 09:28:35 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:bf1:: with SMTP id d17mr18219489ilu.261.1597070836515;
- Mon, 10 Aug 2020 07:47:16 -0700 (PDT)
-Date:   Mon, 10 Aug 2020 07:47:16 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000e44a6605ac8707f8@google.com>
-Subject: WARNING in send_hsr_supervision_frame
-From:   syzbot <syzbot+306c47d7ca825a3a6589@syzkaller.appspotmail.com>
-To:     ap420073@gmail.com, davem@davemloft.net, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, m-karicheri2@ti.com,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200808012156.10827-1-rdunlap@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-syzbot found the following issue on:
-
-HEAD commit:    449dc8c9 Merge tag 'for-v5.9' of git://git.kernel.org/pub/..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=11b7d71a900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=bf68a13f867fd1b4
-dashboard link: https://syzkaller.appspot.com/bug?extid=306c47d7ca825a3a6589
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+306c47d7ca825a3a6589@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-HSR: Could not send supervision frame
-WARNING: CPU: 1 PID: 32657 at net/hsr/hsr_device.c:299 send_hsr_supervision_frame+0x889/0xb40 net/hsr/hsr_device.c:299
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 32657 Comm: kworker/u4:1 Not tainted 5.8.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue:  0x0 (wg-kex-wg2)
-Call Trace:
- <IRQ>
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- panic+0x2e3/0x75c kernel/panic.c:231
- __warn.cold+0x20/0x45 kernel/panic.c:600
- report_bug+0x1bd/0x210 lib/bug.c:198
- handle_bug+0x38/0x90 arch/x86/kernel/traps.c:234
- exc_invalid_op+0x14/0x40 arch/x86/kernel/traps.c:254
- asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:536
-RIP: 0010:send_hsr_supervision_frame+0x889/0xb40 net/hsr/hsr_device.c:299
-Code: 02 31 ff 89 de e8 07 db 8c f9 84 db 0f 85 8b fd ff ff e8 ba de 8c f9 48 c7 c7 00 de 20 89 c6 05 e5 61 c5 02 01 e8 59 ea 5d f9 <0f> 0b e9 6c fd ff ff e8 9b de 8c f9 41 be 42 00 00 00 ba 01 00 00
-RSP: 0000:ffffc90000da8c48 EFLAGS: 00010286
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: ffff888095cc8280 RSI: ffffffff815db887 RDI: fffff520001b517b
-RBP: 00000000000088fb R08: 0000000000000001 R09: ffff8880ae731927
-R10: 0000000000000000 R11: 0000000000003143 R12: ffff8880a62c1400
-R13: 0000000000000000 R14: ffff8880510aece8 R15: ffff8880ae725600
- hsr_announce+0x122/0x320 net/hsr/hsr_device.c:404
- call_timer_fn+0x1ac/0x760 kernel/time/timer.c:1413
- expire_timers kernel/time/timer.c:1458 [inline]
- __run_timers.part.0+0x67c/0xaa0 kernel/time/timer.c:1755
- __run_timers kernel/time/timer.c:1736 [inline]
- run_timer_softirq+0xae/0x1a0 kernel/time/timer.c:1768
- __do_softirq+0x2de/0xa24 kernel/softirq.c:298
- asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:706
- </IRQ>
- __run_on_irqstack arch/x86/include/asm/irq_stack.h:22 [inline]
- run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:48 [inline]
- do_softirq_own_stack+0x9d/0xd0 arch/x86/kernel/irq_64.c:77
- invoke_softirq kernel/softirq.c:393 [inline]
- __irq_exit_rcu kernel/softirq.c:423 [inline]
- irq_exit_rcu+0x1f3/0x230 kernel/softirq.c:435
- sysvec_apic_timer_interrupt+0x51/0xf0 arch/x86/kernel/apic/apic.c:1090
- asm_sysvec_apic_timer_interrupt+0x12/0x20 arch/x86/include/asm/idtentry.h:581
-RIP: 0010:__raw_spin_unlock_irq include/linux/spinlock_api_smp.h:169 [inline]
-RIP: 0010:_raw_spin_unlock_irq+0x4b/0x80 kernel/locking/spinlock.c:199
-Code: c0 58 34 b6 89 48 ba 00 00 00 00 00 fc ff df 48 c1 e8 03 80 3c 10 00 75 31 48 83 3d 06 70 c3 01 00 74 25 fb 66 0f 1f 44 00 00 <bf> 01 00 00 00 e8 bb fc 5c f9 65 8b 05 54 3a 0f 78 85 c0 74 02 5d
-RSP: 0000:ffffc90005787e40 EFLAGS: 00000286
-RAX: 1ffffffff136c68b RBX: ffff888095cc8280 RCX: 1ffffffff1562d79
-RDX: dffffc0000000000 RSI: 0000000000000000 RDI: ffffffff87f2c42f
-RBP: ffff8880aa071800 R08: 0000000000000001 R09: 0000000000000001
-R10: 0000000000000000 R11: 0000000000000000 R12: ffff88803930bf00
-R13: ffff8880a0a49d00 R14: 0000000000000000 R15: ffff8880aa071800
- worker_thread+0x147/0x1120 kernel/workqueue.c:2435
- kthread+0x3b5/0x4a0 kernel/kthread.c:292
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+On 8/7/20 8:21 PM, Randy Dunlap wrote:
+> Drop the repeated words {that, the} in comments.
+> 
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Liam Girdwood <lgirdwood@gmail.com>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: alsa-devel@alsa-project.org
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+
+Thanks Randy.
+
+> ---
+>   sound/soc/sof/intel/cnl.c |    2 +-
+>   sound/soc/sof/sof-audio.c |    2 +-
+>   2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> --- linux-next-20200807.orig/sound/soc/sof/intel/cnl.c
+> +++ linux-next-20200807/sound/soc/sof/intel/cnl.c
+> @@ -202,7 +202,7 @@ static int cnl_ipc_send_msg(struct snd_s
+>   	 * IPCs are sent at a high-rate. mod_delayed_work()
+>   	 * modifies the timer if the work is pending.
+>   	 * Also, a new delayed work should not be queued after the
+> -	 * the CTX_SAVE IPC, which is sent before the DSP enters D3.
+> +	 * CTX_SAVE IPC, which is sent before the DSP enters D3.
+>   	 */
+>   	if (hdr->cmd != (SOF_IPC_GLB_PM_MSG | SOF_IPC_PM_CTX_SAVE))
+>   		mod_delayed_work(system_wq, &hdev->d0i3_work,
+> --- linux-next-20200807.orig/sound/soc/sof/sof-audio.c
+> +++ linux-next-20200807/sound/soc/sof/sof-audio.c
+> @@ -29,7 +29,7 @@ bool snd_sof_dsp_only_d0i3_compatible_st
+>   				continue;
+>   
+>   			/*
+> -			 * substream->runtime being not NULL indicates that
+> +			 * substream->runtime being not NULL indicates
+>   			 * that the stream is open. No need to check the
+>   			 * stream state.
+>   			 */
+> 
