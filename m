@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CF8FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:29:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47492C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:29:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 227EF22D74
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:29:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A3D822CF7
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:29:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073354;
-	bh=B7ub19GZPui36HK+WZ3Se0D4ppcQnLcQoBNYj1qYxO8=;
+	s=default; t=1597073357;
+	bh=mXO0aKF7BHZbwPzxquGKLwRQ1txIpnkyGKQLIEJl+oo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TTZVidJZ8pNsKKK+udRdESXaHPeDRzru2F+o1cVy/mkwFgQayUMWsQ9vFuuCDi9w4
-	 0/Zp+bn8UmPdzlZvHjJxptBJnZxgr2667qnJLinOCcATRgEoRH3IqdRTDjvS5BGYAZ
-	 2wG9TWSLSQPpkqCu0KGY3euAmotku8gzmRUbAh+M=
+	b=uNvjKDY+bxi8Ew0EUjC5ADCRX7WBr+jxhhky4r959WZKMEq0HP963A+gIhWqgJF6W
+	 6lCtrmMve9ljN2jsz3U2c1WkohM/jEPIIbleD2PNovFOk5AP8hz2leCYdPujxiHEHn
+	 Ridx6fXCn2C3vHuYDpjpkf17OEW8GCmILmMFal4k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728939AbgHJP3M (ORCPT
+        id S1728643AbgHJP3P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:29:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35212 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:29:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728929AbgHJP27 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:28:59 -0400
+        id S1728888AbgHJP3C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:29:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B081722BF3;
-        Mon, 10 Aug 2020 15:28:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40C0922E01;
+        Mon, 10 Aug 2020 15:29:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073339;
-        bh=B7ub19GZPui36HK+WZ3Se0D4ppcQnLcQoBNYj1qYxO8=;
+        s=default; t=1597073341;
+        bh=mXO0aKF7BHZbwPzxquGKLwRQ1txIpnkyGKQLIEJl+oo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t/Zse5MKWj+VgfpDutpxA465iJTU9ssCOUejMPGt5XqR3zFUvHAicsQj6jAtezeOb
-         VbjRo/ei/2OUMikKH4i2aYcV+STQZqNm/XVXrZO0iAMHRj6GuFu5xBZn4ieoH62o5s
-         hXUCidXHcMtxErbuQOeiBf192MUybCehkcmXlfxI=
+        b=aOEtW2xzd7x1iMk54QDyTTGS6mR4Thiuh1+JBc9+xLyQ7E3mQ4OnutUSch4FEV6+v
+         VFoxfm6FTQU+1SA3Xe3XWHrpzFXjhj1Ny9Kmoj4eJLtJaghEwuS2eQmPaHMVYi/YNA
+         VpkMqvQmQt4OHjn3KImlo3y15Du03oJsE1IO72EM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        stable@vger.kernel.org, "Shah, Ashish N" <ashish.n.shah@intel.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 58/67] dpaa2-eth: Fix passing zero to PTR_ERR warning
-Date:   Mon, 10 Aug 2020 17:21:45 +0200
-Message-Id: <20200810151812.374552391@linuxfoundation.org>
+Subject: [PATCH 5.4 59/67] hv_netvsc: do not use VF device if link is down
+Date:   Mon, 10 Aug 2020 17:21:46 +0200
+Message-Id: <20200810151812.422597701@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151809.438685785@linuxfoundation.org>
 References: <20200810151809.438685785@linuxfoundation.org>
@@ -59,47 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Stephen Hemminger <stephen@networkplumber.org>
 
-[ Upstream commit 02afa9c66bb954c6959877c70d9e128dcf0adce7 ]
+[ Upstream commit 7c9864bbccc23e1812ac82966555d68c13ea4006 ]
 
-Fix smatch warning:
+If the accelerated networking SRIOV VF device has lost carrier
+use the synthetic network device which is available as backup
+path. This is a rare case since if VF link goes down, normally
+the VMBus device will also loose external connectivity as well.
+But if the communication is between two VM's on the same host
+the VMBus device will still work.
 
-drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c:2419
- alloc_channel() warn: passing zero to 'ERR_PTR'
-
-setup_dpcon() should return ERR_PTR(err) instead of zero in error
-handling case.
-
-Fixes: d7f5a9d89a55 ("dpaa2-eth: defer probe on object allocate")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Reported-by: "Shah, Ashish N" <ashish.n.shah@intel.com>
+Fixes: 0c195567a8f6 ("netvsc: transparent VF management")
+Signed-off-by: Stephen Hemminger <stephen@networkplumber.org>
+Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/hyperv/netvsc_drv.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
-+++ b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
-@@ -2090,7 +2090,7 @@ close:
- free:
- 	fsl_mc_object_free(dpcon);
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -531,12 +531,13 @@ static int netvsc_start_xmit(struct sk_b
+ 	u32 hash;
+ 	struct hv_page_buffer pb[MAX_PAGE_BUFFER_COUNT];
  
--	return NULL;
-+	return ERR_PTR(err);
- }
+-	/* if VF is present and up then redirect packets
+-	 * already called with rcu_read_lock_bh
++	/* If VF is present and up then redirect packets to it.
++	 * Skip the VF if it is marked down or has no carrier.
++	 * If netpoll is in uses, then VF can not be used either.
+ 	 */
+ 	vf_netdev = rcu_dereference_bh(net_device_ctx->vf_netdev);
+ 	if (vf_netdev && netif_running(vf_netdev) &&
+-	    !netpoll_tx_running(net))
++	    netif_carrier_ok(vf_netdev) && !netpoll_tx_running(net))
+ 		return netvsc_vf_xmit(net, vf_netdev, skb);
  
- static void free_dpcon(struct dpaa2_eth_priv *priv,
-@@ -2114,8 +2114,8 @@ alloc_channel(struct dpaa2_eth_priv *pri
- 		return NULL;
- 
- 	channel->dpcon = setup_dpcon(priv);
--	if (IS_ERR_OR_NULL(channel->dpcon)) {
--		err = PTR_ERR_OR_ZERO(channel->dpcon);
-+	if (IS_ERR(channel->dpcon)) {
-+		err = PTR_ERR(channel->dpcon);
- 		goto err_setup;
- 	}
- 
+ 	/* We will atmost need two pages to describe the rndis
 
 
