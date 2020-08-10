@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37FB5C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:15:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB257C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 049EB207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:15:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94C10207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:16:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597086957;
-	bh=BfPjhQ44U9DE3oZzImTFIZQyBr/WqCe9IVpkANI4hnw=;
+	s=default; t=1597086963;
+	bh=tUvYHjtllxbZQA4qI9CH65ubKgchGIjpKsJigpM5qm0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fA98+AyZJRHzkivR737pwkw3jDjRiuUC5HeHfHwbQVa1O3rhCjoaTE31TxVVkLWk+
-	 BjoCtwnGehRrDy4ZHGHzVuBUNUDM/3+V7XvlKsPJc+aMupCSFAAvlYDxf9RBud8MKl
-	 kR9N9x0D9OFrDON5qODr3zhTV3bglykbkf9HSNHI=
+	b=EKSqPWc8gsNuaoY6h9lyuRblf+pKAvRYRSIWaqU5FlkDstfVsjCMTT91z09hgohe0
+	 hU5sIHa1kLX9atLY6pVrwt1fROFJvkTToYtRYJrbFscfHH2OtvyO7Lg3ufJDgAZuqh
+	 6FnIIuyBDVmK7Br9EVXKsDclkT3oYtmzZDp0Ne5o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730136AbgHJTPB (ORCPT
+        id S1729247AbgHJTQC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:15:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47396 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:16:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730102AbgHJTOu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:14:50 -0400
+        id S1730114AbgHJTOz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:14:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FC3322CAF;
-        Mon, 10 Aug 2020 19:14:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12A2B22CAE;
+        Mon, 10 Aug 2020 19:14:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086890;
-        bh=BfPjhQ44U9DE3oZzImTFIZQyBr/WqCe9IVpkANI4hnw=;
+        s=default; t=1597086895;
+        bh=tUvYHjtllxbZQA4qI9CH65ubKgchGIjpKsJigpM5qm0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FvmAKii1siy0HJFqwX1SFK/WzgSG5JyShXidIsvolIB+RjhfUSbyYvj6T9/aEdUq+
-         eWMt5EUuh6L5aaqj+4SHuUG8Z5XysbxyF1xu0vO262TgdJ0XwxBsnp6j9tCw1/YXF1
-         o2TRpsreYgP2X71rxdGSpDi1QYI3i8dYOe0hG8Ls=
+        b=k85Z/HIByk4fJI0ecWj97w+XuAgsAxNS3EvHM8ylrxcjZ2hnCNvP290UQcb1ekvGa
+         Czefyg5hdYNH0V3aiwDrOeKd0t8VQVpDey87Bod8XzrbN5Ngc54k3pODMgKVve4avJ
+         vFjzQXsit8fd/JXVw3KJ+dlhB2qD67kBpkoRus2A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aditya Pakki <pakki001@umn.edu>, Evan Quan <evan.quan@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+Cc:     Michael Tretter <m.tretter@pengutronix.de>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Emil Velikov <emil.l.velikov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.4 04/16] drm/radeon: Fix reference count leaks caused by pm_runtime_get_sync
-Date:   Mon, 10 Aug 2020 15:14:31 -0400
-Message-Id: <20200810191443.3795581-4-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 07/16] drm/debugfs: fix plain echo to connector "force" attribute
+Date:   Mon, 10 Aug 2020 15:14:34 -0400
+Message-Id: <20200810191443.3795581-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810191443.3795581-1-sashal@kernel.org>
 References: <20200810191443.3795581-1-sashal@kernel.org>
@@ -60,72 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: Michael Tretter <m.tretter@pengutronix.de>
 
-[ Upstream commit 9fb10671011143d15b6b40d6d5fa9c52c57e9d63 ]
+[ Upstream commit c704b17071c4dc571dca3af4e4151dac51de081a ]
 
-On calling pm_runtime_get_sync() the reference count of the device
-is incremented. In case of failure, decrement the
-reference count before returning the error.
+Using plain echo to set the "force" connector attribute fails with
+-EINVAL, because echo appends a newline to the output.
 
-Acked-by: Evan Quan <evan.quan@amd.com>
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Replace strcmp with sysfs_streq to also accept strings that end with a
+newline.
+
+v2: use sysfs_streq instead of stripping trailing whitespace
+
+Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
+Reviewed-by: Jani Nikula <jani.nikula@intel.com>
+Signed-off-by: Emil Velikov <emil.l.velikov@gmail.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20170817104307.17124-1-m.tretter@pengutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/radeon/radeon_display.c | 4 +++-
- drivers/gpu/drm/radeon/radeon_drv.c     | 4 +++-
- drivers/gpu/drm/radeon/radeon_kms.c     | 4 +++-
- 3 files changed, 9 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/drm_debugfs.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/radeon/radeon_display.c b/drivers/gpu/drm/radeon/radeon_display.c
-index 4572bfba017c5..17c73b8c90e71 100644
---- a/drivers/gpu/drm/radeon/radeon_display.c
-+++ b/drivers/gpu/drm/radeon/radeon_display.c
-@@ -660,8 +660,10 @@ radeon_crtc_set_config(struct drm_mode_set *set)
- 	dev = set->crtc->dev;
+diff --git a/drivers/gpu/drm/drm_debugfs.c b/drivers/gpu/drm/drm_debugfs.c
+index 3bcf8e6a85b35..5b0fdcd0b63fd 100644
+--- a/drivers/gpu/drm/drm_debugfs.c
++++ b/drivers/gpu/drm/drm_debugfs.c
+@@ -290,13 +290,13 @@ static ssize_t connector_write(struct file *file, const char __user *ubuf,
  
- 	ret = pm_runtime_get_sync(dev->dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put_autosuspend(dev->dev);
- 		return ret;
-+	}
+ 	buf[len] = '\0';
  
- 	ret = drm_crtc_helper_set_config(set);
- 
-diff --git a/drivers/gpu/drm/radeon/radeon_drv.c b/drivers/gpu/drm/radeon/radeon_drv.c
-index 5b6a6f5b3619e..401403a3ea50c 100644
---- a/drivers/gpu/drm/radeon/radeon_drv.c
-+++ b/drivers/gpu/drm/radeon/radeon_drv.c
-@@ -527,8 +527,10 @@ long radeon_drm_ioctl(struct file *filp,
- 	long ret;
- 	dev = file_priv->minor->dev;
- 	ret = pm_runtime_get_sync(dev->dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put_autosuspend(dev->dev);
- 		return ret;
-+	}
- 
- 	ret = drm_ioctl(filp, cmd, arg);
- 	
-diff --git a/drivers/gpu/drm/radeon/radeon_kms.c b/drivers/gpu/drm/radeon/radeon_kms.c
-index d290a8a09036e..41caf7da90548 100644
---- a/drivers/gpu/drm/radeon/radeon_kms.c
-+++ b/drivers/gpu/drm/radeon/radeon_kms.c
-@@ -631,8 +631,10 @@ int radeon_driver_open_kms(struct drm_device *dev, struct drm_file *file_priv)
- 	file_priv->driver_priv = NULL;
- 
- 	r = pm_runtime_get_sync(dev->dev);
--	if (r < 0)
-+	if (r < 0) {
-+		pm_runtime_put_autosuspend(dev->dev);
- 		return r;
-+	}
- 
- 	/* new gpu have virtual address space support */
- 	if (rdev->family >= CHIP_CAYMAN) {
+-	if (!strcmp(buf, "on"))
++	if (sysfs_streq(buf, "on"))
+ 		connector->force = DRM_FORCE_ON;
+-	else if (!strcmp(buf, "digital"))
++	else if (sysfs_streq(buf, "digital"))
+ 		connector->force = DRM_FORCE_ON_DIGITAL;
+-	else if (!strcmp(buf, "off"))
++	else if (sysfs_streq(buf, "off"))
+ 		connector->force = DRM_FORCE_OFF;
+-	else if (!strcmp(buf, "unspecified"))
++	else if (sysfs_streq(buf, "unspecified"))
+ 		connector->force = DRM_FORCE_UNSPECIFIED;
+ 	else
+ 		return -EINVAL;
 -- 
 2.25.1
 
