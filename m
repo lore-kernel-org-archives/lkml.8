@@ -2,150 +2,121 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0647AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A726C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:36:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6F6D2083B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:36:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02AAC2083B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:36:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kDXYfS9f"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iv4OmYeR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728152AbgHJSg1 (ORCPT
+        id S1728180AbgHJSgb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 14:36:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36768 "EHLO
+        Mon, 10 Aug 2020 14:36:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727982AbgHJSg0 (ORCPT
+        with ESMTP id S1727982AbgHJSga (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 14:36:26 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FF67C061756;
-        Mon, 10 Aug 2020 11:36:26 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id o1so5492127plk.1;
-        Mon, 10 Aug 2020 11:36:26 -0700 (PDT)
+        Mon, 10 Aug 2020 14:36:30 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 690F1C061756
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 11:36:30 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id l204so9851666oib.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 11:36:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=uJZO52EypTYHSYjNdKUzoiygtIPVe4OjaYIrjZLPnvQ=;
-        b=kDXYfS9f9lvRcb9iK4bZ1ZpNzK/qn3jvpOE/SaSSzxMZ+juCDxvQwiaubEU/aAU2YQ
-         KxHTGW94JEn8+r701lHRniWHK+XX5/AbQF2wJKi4f+RXyZNIOnnvPT4W4R6gegMUpNTS
-         UcfvknKFKaC6ZCne4g/5RmN7KHecOzR6lCPh9O4E3lpKtHiX71lNhHQEKOsS9NdzasxC
-         rNKSbkFRRgCep5+jo6zrbzs1HI32i1Go01OeYtKLee/BN8PXDQTMR6bpyb969BuBzwM2
-         8CSwKtfVMs6BU9jg49dFk+xYrs4YOErxBBDSzpcRL+VUvPWGHdPrV/ShVoVHWMn+A5WV
-         hZzw==
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=C7EkLyQE7IrT7P5j05a64SHNONieTyjSv8sYRL7WbRw=;
+        b=iv4OmYeRBLuu6sYIlmALa4HC3h+9+IanjNE4f1oBWJ55Au5COjHk/wpIfHhG5GcFIu
+         160pli3LPMkpVGWssVc3VjuxwafCqGRz0SDJ3slGthoZ9ydAxqjDRwsL0jKRPrxyvLCF
+         iuxFs0m0yGX8WJCpq4R08gv48Mjn6jsbjGxRZDU4ugytAQeA+GMIlkjlNz7j4GSlcHHJ
+         rxkFhzVgNnCricnOfRrc8YYW47rvtGdDK7/3qMQU6cjEfQyIDJYbgmHkWc0T6Xmd4DLi
+         SDZHfGIIDddJKrJz7SyvfZS3q8SOu0FLZdeClMRNQ1yYse+6CIaR9lHuv9QgVhWzdR26
+         0Tow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=uJZO52EypTYHSYjNdKUzoiygtIPVe4OjaYIrjZLPnvQ=;
-        b=N/+mIsSrNMJ/0fjbc0GUbd9+DNBqDk5eVf7w7/v1StUgaBqtUW0XzSQbLjvfve23rz
-         DkHtRTOL+q9+ZW0k5J8VkEVXPnk5tQm4zbaxROymnSaWrs8j6cBbbu8oeUHpY5Mwe4Qy
-         55fCs+q3BYDdjzFVY+G76xDpHGD9mviefYjmYQua48dnn3910hx4TmhZTitEBvFb4z4+
-         QenigiOOnuuSbnALvkyQojUbBq1z4dzdkkjhVkKoeSgjh2OXyxcLnt7KeucWgmIhnQCE
-         VXfsXTXFH2Q8wDttjVQRuHZI0++NimaJ+wXFLMSOEMi0l42j7KoOB/F1xc93TU92f7gy
-         1uWQ==
-X-Gm-Message-State: AOAM531lripgQ3Ki3pPF/IULhsKk7tscuItsK2zJXyj8edqUHWWonsZy
-        dNq7SzJMypSmzi2B1BkFK/4=
-X-Google-Smtp-Source: ABdhPJwfI1hSagNB50QX5v1PgFswVEskV8SeB6Dj/aUaZ/VhyTOKzAEWK+6a9BWn3002NK9boxiC+Q==
-X-Received: by 2002:a17:90b:1093:: with SMTP id gj19mr617434pjb.149.1597084585696;
-        Mon, 10 Aug 2020 11:36:25 -0700 (PDT)
-Received: from localhost.localdomain ([124.253.77.168])
-        by smtp.googlemail.com with ESMTPSA id c143sm4701092pfb.84.2020.08.10.11.36.22
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=C7EkLyQE7IrT7P5j05a64SHNONieTyjSv8sYRL7WbRw=;
+        b=beyus9uCyej4hna/+q4c4ItCdmkJCScyKkB4NV4kj6VsHaaPU978yBHa8bfVNTcObp
+         MphagAiQKaqC7WghpXcymjA0Dv+5078SsWNvARjbdtCCTF9BzU0A5U8b29Fc1ocbSsGt
+         vpnqXw7b305vQwwl8I6K4cH8MecDCUjKKImmFfJlpsi5sx5F0evd8gFhrEK4tn/dOST+
+         1RAObC46PxRCEuFDxMP3d1nEZ61+1cOIqvnKoW3hYpMBqQ+0FELFBqYCMeMgvLeiXi8T
+         CT6nPcYczqyPvh8YqFyHxAqtdh9QEFAIN0PuzfKCHVZX4MN2KRr/V0BNC6eI0ATDD2Zm
+         07oQ==
+X-Gm-Message-State: AOAM532H1ROML8xiuSRWIbDjZRoo0H475oRGI6gir2geDQLYCW7HizHq
+        kMF+jgjS9YqhHyTfIgUpxa0tmcO58j0=
+X-Google-Smtp-Source: ABdhPJyngLr36rh0bspCWgiPo/s5CZWudkeT5rQr9dhEaD6a6oKOCeJluThEcXmUpEJQ/qCpg1vddg==
+X-Received: by 2002:aca:fc52:: with SMTP id a79mr431413oii.109.1597084589910;
+        Mon, 10 Aug 2020 11:36:29 -0700 (PDT)
+Received: from raspberrypi ([2600:1700:90:4c80::23])
+        by smtp.gmail.com with ESMTPSA id e194sm3789239oib.41.2020.08.10.11.36.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Aug 2020 11:36:24 -0700 (PDT)
-From:   Puranjay Mohan <puranjay12@gmail.com>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Puranjay Mohan <puranjay12@gmail.com>, skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] Dev-tools: Documentation: Replace deprecated :c:func: Usage
-Date:   Tue, 11 Aug 2020 00:06:13 +0530
-Message-Id: <20200810183613.25643-1-puranjay12@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        Mon, 10 Aug 2020 11:36:29 -0700 (PDT)
+Date:   Mon, 10 Aug 2020 13:36:27 -0500
+From:   Grant Peltier <grantpeltier93@gmail.com>
+To:     linux@roeck-us.net
+Cc:     grant.peltier.jg@renesas.com, linux-kernel@vger.kernel.org,
+        adam.vaughn.xh@renesas.com
+Subject: [PATCH] hwmon: (pmbus/isl68137) remove READ_TEMPERATURE_1 telemetry
+ for RAA228228
+Message-ID: <20200810183627.GA5457@raspberrypi>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace :c:func: with func() as the previous usage is deprecated.
+Per the RAA228228 datasheet, READ_TEMPERATURE_1 is not a supported PMBus
+command.
 
-Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
+Signed-off-by: Grant Peltier <grantpeltier93@gmail.com>
 ---
- Documentation/dev-tools/kgdb.rst | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ drivers/hwmon/pmbus/isl68137.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/dev-tools/kgdb.rst b/Documentation/dev-tools/kgdb.rst
-index 61293f40bc6e..d756c7b1c346 100644
---- a/Documentation/dev-tools/kgdb.rst
-+++ b/Documentation/dev-tools/kgdb.rst
-@@ -316,7 +316,7 @@ driver as a loadable kernel module kgdbwait will not do anything.
- Kernel parameter: ``kgdbcon``
- -----------------------------
- 
--The ``kgdbcon`` feature allows you to see :c:func:`printk` messages inside gdb
-+The ``kgdbcon`` feature allows you to see printk() messages inside gdb
- while gdb is connected to the kernel. Kdb does not make use of the kgdbcon
- feature.
- 
-@@ -432,7 +432,7 @@ This is a quick example of how to use kdb.
-    ``ps``      Displays only the active processes
-    ``ps A``    Shows all the processes
-    ``summary`` Shows kernel version info and memory usage
--   ``bt``      Get a backtrace of the current process using :c:func:`dump_stack`
-+   ``bt``      Get a backtrace of the current process using dump_stack()
-    ``dmesg``   View the kernel syslog buffer
-    ``go``      Continue the system
-    =========== =================================================================
-@@ -724,7 +724,7 @@ The kernel debugger is organized into a number of components:
-    The arch-specific portion implements:
- 
-    -  contains an arch-specific trap catcher which invokes
--      :c:func:`kgdb_handle_exception` to start kgdb about doing its work
-+      kgdb_handle_exception() to start kgdb about doing its work
- 
-    -  translation to and from gdb specific packet format to :c:type:`pt_regs`
- 
-@@ -769,7 +769,7 @@ The kernel debugger is organized into a number of components:
-          config. Later run ``modprobe kdb_hello`` and the next time you
-          enter the kdb shell, you can run the ``hello`` command.
- 
--   -  The implementation for :c:func:`kdb_printf` which emits messages directly
-+   -  The implementation for kdb_printf() which emits messages directly
-       to I/O drivers, bypassing the kernel log.
- 
-    -  SW / HW breakpoint management for the kdb shell
-@@ -875,7 +875,7 @@ kernel when ``CONFIG_KDB_KEYBOARD=y`` is set in the kernel configuration.
- The core polled keyboard driver driver for PS/2 type keyboards is in
- ``drivers/char/kdb_keyboard.c``. This driver is hooked into the debug core
- when kgdboc populates the callback in the array called
--:c:type:`kdb_poll_funcs[]`. The :c:func:`kdb_get_kbd_char` is the top-level
-+:c:type:`kdb_poll_funcs[]`. The kdb_get_kbd_char() is the top-level
- function which polls hardware for single character input.
- 
- kgdboc and kms
-@@ -887,10 +887,10 @@ that you have a video driver which has a frame buffer console and atomic
- kernel mode setting support.
- 
- Every time the kernel debugger is entered it calls
--:c:func:`kgdboc_pre_exp_handler` which in turn calls :c:func:`con_debug_enter`
-+kgdboc_pre_exp_handler() which in turn calls con_debug_enter()
- in the virtual console layer. On resuming kernel execution, the kernel
--debugger calls :c:func:`kgdboc_post_exp_handler` which in turn calls
--:c:func:`con_debug_leave`.
-+debugger calls kgdboc_post_exp_handler() which in turn calls
-+con_debug_leave().
- 
- Any video driver that wants to be compatible with the kernel debugger
- and the atomic kms callbacks must implement the ``mode_set_base_atomic``,
+diff --git a/drivers/hwmon/pmbus/isl68137.c b/drivers/hwmon/pmbus/isl68137.c
+index 0c622711ef7e..58aa95a3c010 100644
+--- a/drivers/hwmon/pmbus/isl68137.c
++++ b/drivers/hwmon/pmbus/isl68137.c
+@@ -67,6 +67,7 @@ enum variants {
+ 	raa_dmpvr1_2rail,
+ 	raa_dmpvr2_1rail,
+ 	raa_dmpvr2_2rail,
++	raa_dmpvr2_2rail_nontc,
+ 	raa_dmpvr2_3rail,
+ 	raa_dmpvr2_hv,
+ };
+@@ -241,6 +242,10 @@ static int isl68137_probe(struct i2c_client *client,
+ 		info->pages = 1;
+ 		info->read_word_data = raa_dmpvr2_read_word_data;
+ 		break;
++	case raa_dmpvr2_2rail_nontc:
++		info->func[0] &= ~PMBUS_HAVE_TEMP;
++		info->func[1] &= ~PMBUS_HAVE_TEMP;
++		fallthrough;
+ 	case raa_dmpvr2_2rail:
+ 		info->pages = 2;
+ 		info->read_word_data = raa_dmpvr2_read_word_data;
+@@ -304,7 +309,7 @@ static const struct i2c_device_id raa_dmpvr_id[] = {
+ 	{"raa228000", raa_dmpvr2_hv},
+ 	{"raa228004", raa_dmpvr2_hv},
+ 	{"raa228006", raa_dmpvr2_hv},
+-	{"raa228228", raa_dmpvr2_2rail},
++	{"raa228228", raa_dmpvr2_2rail_nontc},
+ 	{"raa229001", raa_dmpvr2_2rail},
+ 	{"raa229004", raa_dmpvr2_2rail},
+ 	{}
 -- 
-2.27.0
+2.20.1
 
