@@ -2,149 +2,88 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46C48C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDBBFC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:10:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14F4D2083B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:06:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B86202080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:10:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597082811;
-	bh=skTlBedsUdXXwu9qhOnpSxT61c1G3PJ8Hnx8e7a0Hjs=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=NrmvpdncR2+rk6uierVMBmJcNDI9Z+KEgoTrv9QSSBVOhphrbyH2SW98SgzKfZWUa
-	 gzQ1ddv1QzaR/huqRHXnpoK1TtkvG5lLk4RT1b9U065D86/E/yi2osbqSuvtuzxcwk
-	 NwQVqwhDcbzAjKcF4Q6oTnHR24IQ6TN1tA7U85V4=
+	s=default; t=1597083018;
+	bh=A9FKcX5EBqiorEL9HLWJlxmumGSzbx6WR5Pdk4J/UiY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tZqaqklZVkmtYME/2PEwz43J0NoFozeQrWeDZbppt2jiiTDswgE2BnEZcwvuIDI4W
+	 UCY4D+3BcAgc33rjfkY5Ism7xzES11XO+bctShxOgXgudkpf6rluv/ZxHYBC7BgufK
+	 bOMwonlRBuL8b8JK9yKmEBshQ7CQTI1ZPXlVv5VQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728092AbgHJSGu (ORCPT
+        id S1728005AbgHJSKQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 14:06:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47148 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 14:10:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728050AbgHJSGt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 14:06:49 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        id S1727003AbgHJSKQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 14:10:16 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 468B82080C;
-        Mon, 10 Aug 2020 18:06:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02AAB2080C;
+        Mon, 10 Aug 2020 18:10:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597082808;
-        bh=skTlBedsUdXXwu9qhOnpSxT61c1G3PJ8Hnx8e7a0Hjs=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=0ARIYGRrgnTHwYQhxwiFRe5qenPjQcsrzk/QazsEeJ/eG8JKtZ+FwqQzdMRlr/vHK
-         VmqdD2rQBPk5aEDjGbC0sw2Gmdkafz9YXdDU9i4mGSdR2ily3vVKB3hPtzc9y1WEYT
-         M9GYTZtEq6WEEdZROLE0uhCkXFHaf+WdH/wfKm3g=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id E7BB235228C7; Mon, 10 Aug 2020 11:06:47 -0700 (PDT)
-Date:   Mon, 10 Aug 2020 11:06:47 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        linux-doc@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        neeraju@codeaurora.org, peterz@infradead.org,
-        Randy Dunlap <rdunlap@infradead.org>, rcu@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>, tglx@linutronix.de,
-        vineethrp@gmail.com
-Subject: Re: [PATCH v4 2/5] rcu/tree: Clarify comments about FQS loop
- reporting quiescent states
-Message-ID: <20200810180647.GN4295@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200807170722.2897328-1-joel@joelfernandes.org>
- <20200807170722.2897328-3-joel@joelfernandes.org>
+        s=default; t=1597083015;
+        bh=A9FKcX5EBqiorEL9HLWJlxmumGSzbx6WR5Pdk4J/UiY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UAjpnXS7+ReczNH05xDab46oCfy/sUeK6848Ko8TbPqKMI756s0agQf93zU5jOnnd
+         ApZrQdhExKtCsdWxH/ZUbbjRDBzOOt9ga+JwrMc4lADt4gCMeD0U7lZPXl+EH4p5Up
+         mgAb8bAtQq2y6Th4glB7cUeyeauFQ6m9UNU2b+3Q=
+Date:   Mon, 10 Aug 2020 19:09:49 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Pavel Machek <pavel@denx.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] regmap: debugfs: Fix comment typo malforned=>malformed
+Message-ID: <20200810180949.GA12108@sirena.org.uk>
+References: <20200806130222.1.I832b2b45244c80ba2550a5bbcef80b574e47c57e@changeid>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="xHFwDpU9dbj6ez1V"
 Content-Disposition: inline
-In-Reply-To: <20200807170722.2897328-3-joel@joelfernandes.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200806130222.1.I832b2b45244c80ba2550a5bbcef80b574e47c57e@changeid>
+X-Cookie: McDonald's -- Because you're worth it.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 07, 2020 at 01:07:19PM -0400, Joel Fernandes (Google) wrote:
-> At least since v4.19, the FQS loop no longer reports quiescent states
-> for offline CPUs unless it is an emergency.
-> 
-> This commit therefore fixes the comment in rcu_gp_init() to match the
-> current code.
-> 
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> ---
->  kernel/rcu/tree.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
-> 
-> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> index a49fa3b60faa..2fb66cdbfa25 100644
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -1701,9 +1701,11 @@ static bool rcu_gp_init(void)
->  
->  	/*
->  	 * Apply per-leaf buffered online and offline operations to the
-> -	 * rcu_node tree.  Note that this new grace period need not wait
-> -	 * for subsequent online CPUs, and that quiescent-state forcing
-> -	 * will handle subsequent offline CPUs.
-> +	 * rcu_node tree. Note that this new grace period need not wait for
-> +	 * subsequent online CPUs, and that RCU hooks in the CPU offlining
-> +	 * path, when combined with checks in this function, will handle CPUs
-> +	 * that are currently going offline or that go offline later. Refer to
-> +	 * RCU's Requirements documentation about hotplug requirements as well.
->  	 */
->  	rcu_state.gp_state = RCU_GP_ONOFF;
->  	rcu_for_each_leaf_node(rnp) {
 
-Very good!  I pulled this in with light edits as shown below.
-Please let me know if I messed something up.
+--xHFwDpU9dbj6ez1V
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-							Thanx, Paul
+On Thu, Aug 06, 2020 at 01:02:26PM -0700, Douglas Anderson wrote:
+> Silly typo.  You go squish now.  Was introduced in commit 299632e54b2e
+> ("regmap: debugfs: Don't sleep while atomic for fast_io regmaps").
 
-------------------------------------------------------------------------
+This doesn't apply against current code, please check and resend.
 
-commit a6117399840b963f90cc5322ef9ea7c52de639b2
-Author: Joel Fernandes (Google) <joel@joelfernandes.org>
-Date:   Fri Aug 7 13:07:19 2020 -0400
+--xHFwDpU9dbj6ez1V
+Content-Type: application/pgp-signature; name="signature.asc"
 
-    rcu/tree: Clarify comments about FQS loop reporting quiescent states
-    
-    Since at least v4.19, the FQS loop no longer reports quiescent states
-    for offline CPUs except in emergency situations.
-    
-    This commit therefore fixes the comment in rcu_gp_init() to match the
-    current code.
-    
-    Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+-----BEGIN PGP SIGNATURE-----
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index bcc6160..59e1943 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -1730,10 +1730,13 @@ static bool rcu_gp_init(void)
- 	raw_spin_unlock_irq_rcu_node(rnp);
- 
- 	/*
--	 * Apply per-leaf buffered online and offline operations to the
--	 * rcu_node tree.  Note that this new grace period need not wait
--	 * for subsequent online CPUs, and that quiescent-state forcing
--	 * will handle subsequent offline CPUs.
-+	 * Apply per-leaf buffered online and offline operations to
-+	 * the rcu_node tree. Note that this new grace period need not
-+	 * wait for subsequent online CPUs, and that RCU hooks in the CPU
-+	 * offlining path, when combined with checks in this function,
-+	 * will handle CPUs that are currently going offline or that will
-+	 * go offline later.  Please also refer to "Hotplug CPU" section
-+	 * of RCU's Requirements documentation.
- 	 */
- 	rcu_state.gp_state = RCU_GP_ONOFF;
- 	rcu_for_each_leaf_node(rnp) {
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8xjW0ACgkQJNaLcl1U
+h9CbVgf9FnXNEEd4gU8d9VDwA6s9w8zQp+E6EoIpFYjfBveMgxenKClxaJoA0gRC
+RgUOhsTIviGGms2iNfyaszwMuEVaLdgPOqVT9h4qMaiVbldwx0sog4sL6wiLWab0
+KbaSJp90YzYpL+sO1djLICBR94Np5y3+d273aQg+T9EjFX8KMfoAMZOw2wxLD9IX
+Kx6/4tLBvMeY274h3H7D6aLUgwhD50WnO+yCgZeZRlipyRpEYeBHtyF9rYJcQKDa
+PtAVwutaPPz8I/NNXFXmq1t7l3OoooPTRYx2LIP3lEuODvy8Reutx0mpEycPqSdJ
+8fTPOSRfM0EQbQV3af8niBmov5bybg==
+=gQpZ
+-----END PGP SIGNATURE-----
+
+--xHFwDpU9dbj6ez1V--
