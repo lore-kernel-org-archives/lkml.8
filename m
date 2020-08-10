@@ -2,60 +2,62 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED2CDC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:55:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C9B6C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C39462065C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:55:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4525F206B5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:56:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ES6CGE5U"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="caF/oSET"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726643AbgHJHzf (ORCPT
+        id S1726141AbgHJH4v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 03:55:35 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:55619 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725857AbgHJHze (ORCPT
+        Mon, 10 Aug 2020 03:56:51 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:23248 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725846AbgHJH4u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 03:55:34 -0400
+        Mon, 10 Aug 2020 03:56:50 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597046133;
+        s=mimecast20190719; t=1597046208;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=ah4Z4LGLxBl//EPyNlu/LCY5AAz6Gn4pVNbPF2LDEWc=;
-        b=ES6CGE5UhE7Yf+vXuzGlRt6SCqMVWrRDcRipIorokI2dPRZLB9x2CPk2zHKhSLP671+Fja
-        Eeh+3U7mpi/sEIEX00H34Z6z0yvohwvPoG+UvQ7g/hoxO8bIIMK6BnnvyJoXBhk+xnAbjf
-        wkywO8wrgDO8K289cGggyZ3qmUfONhs=
+        bh=3gHZrGopRj+/QtDb/9N2USnjAmR/1np+CUt5Rx5vS9w=;
+        b=caF/oSETzApJmuRC5VDdcjQAl8SK+i7GM+TUYttFanaBHLN/w6+f58MPD37O8NxvZbOIHw
+        B4fBq5By1DemO2rScyNJJhahcBT92H+ynAErH1OLU/oVYK/ZkmnV/NOvTZAI/y19NKgD6s
+        qz/GI9gKm6cumjxJ+g0CFOZJdMNFPAA=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-139-VY--bc_BPviLwciI6MXs4w-1; Mon, 10 Aug 2020 03:55:31 -0400
-X-MC-Unique: VY--bc_BPviLwciI6MXs4w-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+ us-mta-241-CWsEjFvDOfab41_2em0s8w-1; Mon, 10 Aug 2020 03:56:44 -0400
+X-MC-Unique: CWsEjFvDOfab41_2em0s8w-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E2D06101C8A7;
-        Mon, 10 Aug 2020 07:55:29 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6078B800474;
+        Mon, 10 Aug 2020 07:56:42 +0000 (UTC)
 Received: from [10.36.113.172] (ovpn-113-172.ams2.redhat.com [10.36.113.172])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B3A9190E84;
-        Mon, 10 Aug 2020 07:55:22 +0000 (UTC)
-Subject: Re: [kbuild-all] Re: drivers/virtio/virtio_mem.c:1031
- virtio_mem_mb_plug_any_sb() error: uninitialized symbol 'rc'.
-To:     Rong Chen <rong.a.chen@intel.com>,
-        David Hildenbrand <dhildenb@redhat.com>,
-        kernel test robot <lkp@intel.com>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 181075D9E7;
+        Mon, 10 Aug 2020 07:56:33 +0000 (UTC)
+Subject: Re: [PATCH v4 0/6] mm / virtio-mem: support ZONE_MOVABLE
+To:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     virtualization@lists.linux-foundation.org, linux-mm@kvack.org,
+        Baoquan He <bhe@redhat.com>, Jason Wang <jasowang@redhat.com>,
         "Michael S. Tsirkin" <mst@redhat.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-References: <202008081921.lHEnQxg2%lkp@intel.com>
- <77F03240-61B0-437C-BBC0-84E081FA92EF@redhat.com>
- <28c5b6f1-a7fb-a432-dd93-b54b0c2e47e4@intel.com>
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Qian Cai <cai@lca.pw>
+References: <20200804194142.28279-1-david@redhat.com>
 From:   David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -102,45 +104,90 @@ Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat GmbH
-Message-ID: <933b10af-79ae-b7c2-05c2-9519d5c29ec9@redhat.com>
-Date:   Mon, 10 Aug 2020 09:55:20 +0200
+Message-ID: <baaf5992-cf43-69c1-7257-a5aa0a470ab8@redhat.com>
+Date:   Mon, 10 Aug 2020 09:56:32 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <28c5b6f1-a7fb-a432-dd93-b54b0c2e47e4@intel.com>
+In-Reply-To: <20200804194142.28279-1-david@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10.08.20 04:24, Rong Chen wrote:
-> 
-> 
-> On 8/8/20 8:44 PM, David Hildenbrand wrote:
->>
->>> Am 08.08.2020 um 13:39 schrieb kernel test robot <lkp@intel.com>:
->>>
->>> ﻿tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
->>> head:   449dc8c97089a6e09fb2dac4d92b1b7ac0eb7c1e
->>> commit: 5f1f79bbc9e26fa9412fa9522f957bb8f030c442 virtio-mem: Paravirtualized memory hotplug
->>> date:   9 weeks ago
->>> config: x86_64-randconfig-m001-20200808 (attached as .config)
->>> compiler: gcc-9 (Debian 9.3.0-15) 9.3.0
->>>
->>> If you fix the issue, kindly add following tag as appropriate
->>> Reported-by: kernel test robot <lkp@intel.com>
->>>
->> Was there a delay in sending these out? The fix by Dan is long upstream: 1c3d69ab5348
-> Hi David,
+On 04.08.20 21:41, David Hildenbrand wrote:
+> @Andrew can we give this a churn and consider it for v5.9 in case there
+> are no more comments?
 
-Hi Rong,
+@Andrew, Ping, so I assume we'll target v5.10?
 
-it also says "date:   9 weeks ago", which sounded kind of late for
-"0-DAY CI" long after a kernel release, that's why I was wondering :)
+
+> 
+> Patch #1-#4,#6 have RBss or ACKs, patch #5 is virtio-mem stuff maintained
+> by me (and MST is aware).
+> 
+> ---
+> 
+> When introducing virtio-mem, the semantics of ZONE_MOVABLE were rather
+> unclear, which is why we special-cased ZONE_MOVABLE such that partially
+> plugged blocks would never end up in ZONE_MOVABLE.
+> 
+> Now that the semantics are much clearer (and are documented in patch #6),
+> let's support partially plugged memory blocks in ZONE_MOVABLE, allowing
+> partially plugged memory blocks to be online to ZONE_MOVABLE and also
+> unplugging from such memory blocks. This avoids surprises when onlining
+> of memory blocks suddenly fails, just because they are not completely
+> populated by virtio-mem (yet).
+> 
+> This is especially helpful for testing, but also paves the way for
+> virtio-mem optimizations, allowing more memory to get reliably unplugged.
+> 
+> Cleanup has_unmovable_pages() and set_migratetype_isolate(), providing
+> better documentation of how ZONE_MOVABLE interacts with different kind of
+> unmovable pages (memory offlining vs. alloc_contig_range()).
+> 
+> v3 -> v4:
+> - "mm/page_isolation: drop WARN_ON_ONCE() in set_migratetype_isolate()"
+> -- Fix typo in description
+> - "virtio-mem: don't special-case ZONE_MOVABLE"
+> -- Add more details why we initialli special-cased ZONE_MOVABLE (via MST)
+> - "mm: document semantics of ZONE_MOVABLE"
+> -- Rephrase some parts of documentation (via Mike)
+> 
+> v2 -> v3:
+> - "mm: document semantics of ZONE_MOVABLE"
+> -- Fix a typo
+> 
+> v1 -> v2:
+> - "mm/page_isolation: don't dump_page(NULL) in set_migratetype_isolate()"
+> -- Move to position 1, add Fixes: tag
+> -- Drop unused "out:" label
+> - "mm/page_isolation: drop WARN_ON_ONCE() in set_migratetype_isolate()"
+> -- Keep curly braces on "else" case
+> - Replace "[PATCH v1 5/6] mm/page_alloc: restrict ZONE_MOVABLE optimization
+>            in has_unmovable_pages() to memory offlining"
+>   by "mm: document semantics of ZONE_MOVABLE"
+> -- Brain dump of what I know about ZONE_MOVABLE
+> 
+> David Hildenbrand (6):
+>   mm/page_isolation: don't dump_page(NULL) in set_migratetype_isolate()
+>   mm/page_alloc: tweak comments in has_unmovable_pages()
+>   mm/page_isolation: drop WARN_ON_ONCE() in set_migratetype_isolate()
+>   mm/page_isolation: cleanup set_migratetype_isolate()
+>   virtio-mem: don't special-case ZONE_MOVABLE
+>   mm: document semantics of ZONE_MOVABLE
+> 
+>  drivers/virtio/virtio_mem.c | 47 +++++++------------------------------
+>  include/linux/mmzone.h      | 35 +++++++++++++++++++++++++++
+>  mm/page_alloc.c             | 22 +++++------------
+>  mm/page_isolation.c         | 39 ++++++++++++++----------------
+>  4 files changed, 66 insertions(+), 77 deletions(-)
+> 
+
 
 -- 
 Thanks,
