@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59885C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:25:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B428C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:25:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22DA320855
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:25:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CC8120855
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:25:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073102;
-	bh=Ug02kqfPGJ0/IdfnyY4yzw4nqwciixxjTmDNOcu3TVQ=;
+	s=default; t=1597073110;
+	bh=ajMsI4xUoVTgHLx3ZBH4Psl5Wd0PXJUml7ZJQggVTok=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lqL2LtCSgYoDFDVFcyxnFryUIPHtls65QDGYCSYwcSIquZ4Mq4Xtb+hUANMc+c79W
-	 dz/2xm8u1WW/gWyZbPfU+9vVoiTc+Ch38lRWoAeF5Wi1OisnKunAryQgaaPdYq9KDw
-	 6h1VkyHXYMihpmXFNhV3wNu8uBodmOY82XSR05M4=
+	b=uX6zLnGXLHpdgkPBxzSADnViROxXF2jSOacSmX7FNUQX5zUCbEIVOEvhivE5ZTpCi
+	 cp5LCBYS6TJWk5/B2Nk3l7MpbFxARXDtC5LYLHazNXKPWNGDnx6hDdeHUBnU0F+XEB
+	 sK6Mr7ZgYUkCMRnnbYnYIVbvRqScvv1nzJjHJzZM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728470AbgHJPY5 (ORCPT
+        id S1728500AbgHJPZH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:24:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58218 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:25:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728371AbgHJPYt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:24:49 -0400
+        id S1728114AbgHJPZD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:25:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D05121775;
-        Mon, 10 Aug 2020 15:24:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9021020772;
+        Mon, 10 Aug 2020 15:25:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073088;
-        bh=Ug02kqfPGJ0/IdfnyY4yzw4nqwciixxjTmDNOcu3TVQ=;
+        s=default; t=1597073103;
+        bh=ajMsI4xUoVTgHLx3ZBH4Psl5Wd0PXJUml7ZJQggVTok=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wHYfNHj9w9o/iFAS0/uYGC10j7tW4T+cswi0DpDMxcSpNXq8dy7ZXjG68zSHorNca
-         o8MqI/xd23a82ENa12DEiCTTS8UijYr0PV40DTjkbXHu5GIqg8tz08Bj440RFAYx7Q
-         5ILgvZfCXSyl2h4ojhs7fNQIs4Qrm2AmjC4/zkrs=
+        b=C4E3hVmDYwa7FFVVd6tZsZ4fGRUFleK9qQ6/Pajhaf2JX9mp3s2KRCZFufdFm7BRt
+         Vqtdbquj6o1zxPSg488TiOQCE6PQBMBZpTzJUfMrKvIFTFLdb0ynWOUOvhZ0n1tWID
+         zVTEGXKtpu7kwHY2RPm8/fGrlJSjNbhXxA+RKt1g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        Jiri Pirko <jiri@mellanox.com>,
+        stable@vger.kernel.org,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.7 62/79] devlink: ignore -EOPNOTSUPP errors on dumpit
-Date:   Mon, 10 Aug 2020 17:21:21 +0200
-Message-Id: <20200810151815.301734997@linuxfoundation.org>
+Subject: [PATCH 5.7 66/79] net: bridge: clear bridges private skb space on xmit
+Date:   Mon, 10 Aug 2020 17:21:25 +0200
+Message-Id: <20200810151815.494804698@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151812.114485777@linuxfoundation.org>
 References: <20200810151812.114485777@linuxfoundation.org>
@@ -60,101 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <kuba@kernel.org>
+From: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 
-[ Upstream commit 82274d075536322368ce710b211c41c37c4740b9 ]
+[ Upstream commit fd65e5a95d08389444e8591a20538b3edece0e15 ]
 
-Number of .dumpit functions try to ignore -EOPNOTSUPP errors.
-Recent change missed that, and started reporting all errors
-but -EMSGSIZE back from dumps. This leads to situation like
-this:
+We need to clear all of the bridge private skb variables as they can be
+stale due to the packet being recirculated through the stack and then
+transmitted through the bridge device. Similar memset is already done on
+bridge's input. We've seen cases where proxyarp_replied was 1 on routed
+multicast packets transmitted through the bridge to ports with neigh
+suppress which were getting dropped. Same thing can in theory happen with
+the port isolation bit as well.
 
-$ devlink dev info
-devlink answers: Operation not supported
-
-Dump should not report an error just because the last device
-to be queried could not provide an answer.
-
-To fix this and avoid similar confusion make sure we clear
-err properly, and not leave it set to an error if we don't
-terminate the iteration.
-
-Fixes: c62c2cfb801b ("net: devlink: don't ignore errors during dumpit")
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Reviewed-by: Jiri Pirko <jiri@mellanox.com>
+Fixes: 821f1b21cabb ("bridge: add new BR_NEIGH_SUPPRESS port flag to suppress arp and nd flood")
+Signed-off-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/core/devlink.c |   24 ++++++++++++++++++------
- 1 file changed, 18 insertions(+), 6 deletions(-)
+ net/bridge/br_device.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/net/core/devlink.c
-+++ b/net/core/devlink.c
-@@ -1065,7 +1065,9 @@ static int devlink_nl_cmd_sb_pool_get_du
- 						   devlink_sb,
- 						   NETLINK_CB(cb->skb).portid,
- 						   cb->nlh->nlmsg_seq);
--			if (err && err != -EOPNOTSUPP) {
-+			if (err == -EOPNOTSUPP) {
-+				err = 0;
-+			} else if (err) {
- 				mutex_unlock(&devlink->lock);
- 				goto out;
- 			}
-@@ -1266,7 +1268,9 @@ static int devlink_nl_cmd_sb_port_pool_g
- 							devlink, devlink_sb,
- 							NETLINK_CB(cb->skb).portid,
- 							cb->nlh->nlmsg_seq);
--			if (err && err != -EOPNOTSUPP) {
-+			if (err == -EOPNOTSUPP) {
-+				err = 0;
-+			} else if (err) {
- 				mutex_unlock(&devlink->lock);
- 				goto out;
- 			}
-@@ -1498,7 +1502,9 @@ devlink_nl_cmd_sb_tc_pool_bind_get_dumpi
- 							   devlink_sb,
- 							   NETLINK_CB(cb->skb).portid,
- 							   cb->nlh->nlmsg_seq);
--			if (err && err != -EOPNOTSUPP) {
-+			if (err == -EOPNOTSUPP) {
-+				err = 0;
-+			} else if (err) {
- 				mutex_unlock(&devlink->lock);
- 				goto out;
- 			}
-@@ -3299,7 +3305,9 @@ static int devlink_nl_cmd_param_get_dump
- 						    NETLINK_CB(cb->skb).portid,
- 						    cb->nlh->nlmsg_seq,
- 						    NLM_F_MULTI);
--			if (err && err != -EOPNOTSUPP) {
-+			if (err == -EOPNOTSUPP) {
-+				err = 0;
-+			} else if (err) {
- 				mutex_unlock(&devlink->lock);
- 				goto out;
- 			}
-@@ -3569,7 +3577,9 @@ static int devlink_nl_cmd_port_param_get
- 						NETLINK_CB(cb->skb).portid,
- 						cb->nlh->nlmsg_seq,
- 						NLM_F_MULTI);
--				if (err && err != -EOPNOTSUPP) {
-+				if (err == -EOPNOTSUPP) {
-+					err = 0;
-+				} else if (err) {
- 					mutex_unlock(&devlink->lock);
- 					goto out;
- 				}
-@@ -4479,7 +4489,9 @@ static int devlink_nl_cmd_info_get_dumpi
- 					   cb->nlh->nlmsg_seq, NLM_F_MULTI,
- 					   cb->extack);
- 		mutex_unlock(&devlink->lock);
--		if (err && err != -EOPNOTSUPP)
-+		if (err == -EOPNOTSUPP)
-+			err = 0;
-+		else if (err)
- 			break;
- 		idx++;
- 	}
+--- a/net/bridge/br_device.c
++++ b/net/bridge/br_device.c
+@@ -36,6 +36,8 @@ netdev_tx_t br_dev_xmit(struct sk_buff *
+ 	const unsigned char *dest;
+ 	u16 vid = 0;
+ 
++	memset(skb->cb, 0, sizeof(struct br_input_skb_cb));
++
+ 	rcu_read_lock();
+ 	nf_ops = rcu_dereference(nf_br_ops);
+ 	if (nf_ops && nf_ops->br_dev_xmit_hook(skb)) {
 
 
