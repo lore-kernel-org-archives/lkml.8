@@ -2,130 +2,257 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F1F2C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:57:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EFF6C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:57:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB6B5206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:57:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ZGbuyRmO"
+	by mail.kernel.org (Postfix) with ESMTP id D4BDE206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:57:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726804AbgHJM5U (ORCPT
+        id S1726848AbgHJM53 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 08:57:20 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:47430 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726446AbgHJM5T (ORCPT
+        Mon, 10 Aug 2020 08:57:29 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:46126 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726748AbgHJM52 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 08:57:19 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07ACXNxO155708;
-        Mon, 10 Aug 2020 08:57:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : subject : to : cc
- : references : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=VMwEKzoZEaQk2ASQ7NtMoW86yLosO08DxQSBN107Xss=;
- b=ZGbuyRmOuMWjJPT05GuFnKXT0pmVVT2tUXC1cfojw0WGcmcOFOZQhIZ0bcIyRNCnAVsU
- T1uLKsU+/y5U5xSLamq9dpX4U4B9B+Elz4+dC9gSFQmQBHSzhULp6lD7cqxg5NzaIO2M
- yswVtfbVC1A3cnjdLWHbZHerOkQFwhn+DyfhmoR+QztKXyR1eziav/9qSLCFh45lhEWl
- NS5yq8u75fLiRAOg4zKDuUYTI1KMCH18muEsOx9in9BamhEDgPMdXxP+S8N6CZAC3nwa
- mU6Vp3fqFGaukjbKeO255U7rHmvYpXkGxEHEcKJ60qBc1dVF1P25fCayay9+oJ23zEof 4A== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32sraqtqpw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 10 Aug 2020 08:57:09 -0400
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07ACXMIG155697;
-        Mon, 10 Aug 2020 08:57:08 -0400
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32sraqtqne-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 10 Aug 2020 08:57:08 -0400
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07ACuN4O006919;
-        Mon, 10 Aug 2020 12:57:05 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma03fra.de.ibm.com with ESMTP id 32skp81cyv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 10 Aug 2020 12:57:05 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07ACv3Vb63504762
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 10 Aug 2020 12:57:03 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 42E7211C04C;
-        Mon, 10 Aug 2020 12:57:03 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 781CD11C058;
-        Mon, 10 Aug 2020 12:57:02 +0000 (GMT)
-Received: from JAVRIS.in.ibm.com (unknown [9.85.68.156])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Mon, 10 Aug 2020 12:57:02 +0000 (GMT)
-From:   Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-Subject: Re: [PATCH] tools/objtool: Fix unnecessary jumps
-To:     Youling Tang <tangyouling@loongson.cn>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org
-References: <1597032374-7936-1-git-send-email-tangyouling@loongson.cn>
-Message-ID: <bbe25938-479d-7a84-b1ee-941ad8088a1c@linux.vnet.ibm.com>
-Date:   Mon, 10 Aug 2020 18:27:01 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 10 Aug 2020 08:57:28 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 9FC9528BDB3
+Message-ID: <8cf55169fa1dd55b5bdf746b321419f8c7988821.camel@collabora.com>
+Subject: Re: [PATCH v2 03/14] media: uapi: h264: Split prediction weight
+ parameters
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Jernej =?UTF-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>
+Cc:     linux-media <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Maxime Ripard <mripard@kernel.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Date:   Mon, 10 Aug 2020 09:57:17 -0300
+In-Reply-To: <2380739.qXQpHEDp1t@jernej-laptop>
+References: <20200806151310.98624-1-ezequiel@collabora.com>
+         <ae2ac4ba-9272-ec67-d075-3429bc8926c3@kwiboo.se>
+         <CAAEAJfAGW6M1YPQhPqdvpYugWk+RRTNOQbKfSWrnw_A8M2k=EA@mail.gmail.com>
+         <2380739.qXQpHEDp1t@jernej-laptop>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3-1 
 MIME-Version: 1.0
-In-Reply-To: <1597032374-7936-1-git-send-email-tangyouling@loongson.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-10_07:2020-08-06,2020-08-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 phishscore=0
- suspectscore=8 priorityscore=1501 impostorscore=0 bulkscore=0 adultscore=0
- malwarescore=0 spamscore=0 mlxscore=0 lowpriorityscore=0 mlxlogscore=775
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008100093
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/08/20 9:36 am, Youling Tang wrote:
-> There is no need to jump to the "out" tag when "ret < 0", just return
-> directly to "ret".
+On Sun, 2020-08-09 at 23:11 +0200, Jernej Škrabec wrote:
+> Dne nedelja, 09. avgust 2020 ob 15:55:50 CEST je Ezequiel Garcia napisal(a):
+> > On Sat, 8 Aug 2020 at 18:01, Jonas Karlman <jonas@kwiboo.se> wrote:
+> > > On 2020-08-06 17:12, Ezequiel Garcia wrote:
+> > > > The prediction weight parameters are only required under
+> > > > certain conditions, which depend on slice header parameters.
+> > > > 
+> > > > As specified in section 7.3.3 Slice header syntax, the prediction
+> > > > weight table is present if:
+> > > > 
+> > > > ((weighted_pred_flag && (slice_type == P || slice_type == SP)) || \
+> > > > (weighted_bipred_idc == 1 && slice_type == B))
+> > > 
+> > > Maybe a macro can be added to help check this contition?
+> > > 
+> > > Something like this maybe:
+> > > 
+> > > #define V4L2_H264_CTRL_PRED_WEIGHTS_REQUIRED(pps, slice) \
+> > > 
+> > >         ((((pps)->flags & V4L2_H264_PPS_FLAG_WEIGHTED_PRED) && \
+> > >         
+> > >          ((slice)->slice_type == V4L2_H264_SLICE_TYPE_P || \
+> > >          
+> > >            (slice)->slice_type == V4L2_H264_SLICE_TYPE_SP)) || \
+> > >          
+> > >          ((pps)->weighted_bipred_idc == 1 && \
+> > >          
+> > >           (slice)->slice_type == V4L2_H264_SLICE_TYPE_B))
+> > 
+> > Yeah, that could make sense.
+> > 
+> > Note that the biggest value in having the prediction weight table
+> > separated is to allow  applications to skip setting this largish control,
+> > reducing the amount of data that needs to be passed from userspace
+> > -- especially when not needed :-)
+> > 
+> > > > Given its size, it makes sense to move this table to its control,
+> > > > so applications can avoid passing it if the slice doesn't specify it.
+> > > > 
+> > > > Before this change struct v4l2_ctrl_h264_slice_params was 960 bytes.
+> > > > With this change, it's 188 bytes and struct v4l2_ctrl_h264_pred_weight
+> > > > is 772 bytes.
+> > > > 
+> > > > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> > > > ---
+> > > > v2: Fix missing Cedrus changes and mssing control declaration,
+> > > > 
+> > > >     as noted by Hans and Jernej.
+> > > > 
+> > > > ---
+> > > > 
+> > > >  .../media/v4l/ext-ctrls-codec.rst             | 19 ++++++++++++-------
+> > > >  drivers/media/v4l2-core/v4l2-ctrls.c          |  8 ++++++++
+> > > >  drivers/staging/media/sunxi/cedrus/cedrus.c   |  7 +++++++
+> > > >  drivers/staging/media/sunxi/cedrus/cedrus.h   |  1 +
+> > > >  .../staging/media/sunxi/cedrus/cedrus_dec.c   |  2 ++
+> > > >  .../staging/media/sunxi/cedrus/cedrus_h264.c  |  6 ++----
+> > > >  include/media/h264-ctrls.h                    |  5 +++--
+> > > >  include/media/v4l2-ctrls.h                    |  2 ++
+> > > >  8 files changed, 37 insertions(+), 13 deletions(-)
+> > > > 
+> > > > diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> > > > b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst index
+> > > > d1438b1e259f..c36ce5a95fc5 100644
+> > > > --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> > > > +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> > > > @@ -1879,18 +1879,23 @@ enum
+> > > > v4l2_mpeg_video_h264_hierarchical_coding_type -> > 
+> > > >        - 0x00000008
+> > > >        -
+> > > > 
+> > > > -``Prediction Weight Table``
+> > > > +``V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHTS (struct)``
+> > > > +    Prediction weight table defined according to :ref:`h264`,
+> > > > +    section 7.4.3.2 "Prediction Weight Table Semantics".
+> > > > +    The prediction weight table must be passed by applications
+> > > > +    under the conditions explained in section 7.3.3 "Slice header
+> > > > +    syntax".
+> > > > 
+> > > > -    The bitstream parameters are defined according to :ref:`h264`,
+> > > > -    section 7.4.3.2 "Prediction Weight Table Semantics". For further
+> > > > -    documentation, refer to the above specification, unless there is
+> > > > -    an explicit comment stating otherwise.
+> > > > +    .. note::
+> > > > +
+> > > > +       This compound control is not yet part of the public kernel API
+> > > > and
+> > > > +       it is expected to change.
+> > > > 
+> > > > -.. c:type:: v4l2_h264_pred_weight_table
+> > > > +.. c:type:: v4l2_ctrl_h264_pred_weights
+> > > > 
+> > > >  .. cssclass:: longtable
+> > > > 
+> > > > -.. flat-table:: struct v4l2_h264_pred_weight_table
+> > > > +.. flat-table:: struct v4l2_ctrl_h264_pred_weights
+> > > > 
+> > > >      :header-rows:  0
+> > > >      :stub-columns: 0
+> > > >      :widths:       1 1 2
+> > > > 
+> > > > diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c
+> > > > b/drivers/media/v4l2-core/v4l2-ctrls.c index 3f3fbcd60cc6..76c8dc8fb31c
+> > > > 100644
+> > > > --- a/drivers/media/v4l2-core/v4l2-ctrls.c
+> > > > +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+> > > > @@ -897,6 +897,7 @@ const char *v4l2_ctrl_get_name(u32 id)
+> > > > 
+> > > >       case V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS:            return
+> > > >       "H264 Decode Parameters"; case
+> > > >       V4L2_CID_MPEG_VIDEO_H264_DECODE_MODE:              return "H264
+> > > >       Decode Mode"; case V4L2_CID_MPEG_VIDEO_H264_START_CODE:          
+> > > >           return "H264 Start Code";> > 
+> > > > +     case V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHTS:             return
+> > > > "H264 Prediction Weight Table";> > 
+> > > >       case V4L2_CID_MPEG_VIDEO_MPEG2_LEVEL:                   return
+> > > >       "MPEG2 Level"; case V4L2_CID_MPEG_VIDEO_MPEG2_PROFILE:           
+> > > >            return "MPEG2 Profile"; case
+> > > >       V4L2_CID_MPEG_VIDEO_MPEG4_I_FRAME_QP:              return "MPEG4
+> > > >       I-Frame QP Value";> > 
+> > > > @@ -1412,6 +1413,9 @@ void v4l2_ctrl_fill(u32 id, const char **name,
+> > > > enum v4l2_ctrl_type *type,> > 
+> > > >       case V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS:
+> > > >               *type = V4L2_CTRL_TYPE_H264_DECODE_PARAMS;
+> > > >               break;
+> > > > 
+> > > > +     case V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHTS:
+> > > > +             *type = V4L2_CTRL_TYPE_H264_PRED_WEIGHTS;
+> > > > +             break;
+> > > > 
+> > > >       case V4L2_CID_MPEG_VIDEO_VP8_FRAME_HEADER:
+> > > >               *type = V4L2_CTRL_TYPE_VP8_FRAME_HEADER;
+> > > >               break;
+> > > > 
+> > > > @@ -1790,6 +1794,7 @@ static int std_validate_compound(const struct
+> > > > v4l2_ctrl *ctrl, u32 idx,> > 
+> > > >       case V4L2_CTRL_TYPE_H264_SPS:
+> > > >       case V4L2_CTRL_TYPE_H264_PPS:
+> > > > 
+> > > >       case V4L2_CTRL_TYPE_H264_SCALING_MATRIX:
+> > > > +     case V4L2_CTRL_TYPE_H264_PRED_WEIGHTS:
+> > > >       case V4L2_CTRL_TYPE_H264_SLICE_PARAMS:
+> > > >       
+> > > >       case V4L2_CTRL_TYPE_H264_DECODE_PARAMS:
+> > > >               break;
+> > > > 
+> > > > @@ -2553,6 +2558,9 @@ static struct v4l2_ctrl *v4l2_ctrl_new(struct
+> > > > v4l2_ctrl_handler *hdl,> > 
+> > > >       case V4L2_CTRL_TYPE_H264_DECODE_PARAMS:
+> > > >               elem_size = sizeof(struct v4l2_ctrl_h264_decode_params);
+> > > >               break;
+> > > > 
+> > > > +     case V4L2_CTRL_TYPE_H264_PRED_WEIGHTS:
+> > > > +             elem_size = sizeof(struct v4l2_ctrl_h264_pred_weights);
+> > > > +             break;
+> > > > 
+> > > >       case V4L2_CTRL_TYPE_VP8_FRAME_HEADER:
+> > > >               elem_size = sizeof(struct v4l2_ctrl_vp8_frame_header);
+> > > >               break;
+> > > > 
+> > > > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.c
+> > > > b/drivers/staging/media/sunxi/cedrus/cedrus.c index
+> > > > bc27f9430eeb..027cdd1be5a0 100644
+> > > > --- a/drivers/staging/media/sunxi/cedrus/cedrus.c
+> > > > +++ b/drivers/staging/media/sunxi/cedrus/cedrus.c
+> > > > @@ -78,6 +78,13 @@ static const struct cedrus_control cedrus_controls[]
+> > > > = {
+> > > > 
+> > > >               .codec          = CEDRUS_CODEC_H264,
+> > > >               .required       = true,
+> > > >       
+> > > >       },
+> > > > 
+> > > > +     {
+> > > > +             .cfg = {
+> > > > +                     .id     = V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHTS,
+> > > > +             },
+> > > > +             .codec          = CEDRUS_CODEC_H264,
+> > > > +             .required       = true,
+> > > 
+> > > This should probably be false if this control is to be optional as implied
+> > > by the commit message.
+> > 
+> > Well, the control is optional if the driver implements it as optional,
+> > which Cedrus isn't currently doing :-)
 > 
-> Signed-off-by: Youling Tang <tangyouling@loongson.cn>
-> ---
->  tools/objtool/check.c | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
+> Why do you think so? Prediction weights are filled only when they are 
+> needed:https://elixir.bootlin.com/linux/latest/source/drivers/staging/media/
+> sunxi/cedrus/cedrus_h264.c#L370
 > 
-> diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-> index e034a8f..94b166d 100644
-> --- a/tools/objtool/check.c
-> +++ b/tools/objtool/check.c
 
-[snip]
+Right, but that should be changed to be really optional.
+How does the driver reject/fail the request if the table is NULL?
 
-> 
->  	if (file.elf->changed) {
->  		ret = elf_write(file.elf);
->  		if (ret < 0)
-> -			goto out;
-> +			return ret;
->  	}
-> 
->  out:
+In any case, I don't think it's necessarily something we need
+to tackle now.
 
-the out label code is no more required with this change, so remove
-it and return 0 for warnings for now.  Previously cleanup() function
-was called under the out label for both fatal errors (ret < 0) and
-warnings.  Now that cleanup() function is removed, the out label is
-no longer required.
+Thanks,
+Ezequiel
 
--- 
-Kamalesh
