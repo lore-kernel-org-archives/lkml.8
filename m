@@ -2,53 +2,52 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D44C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:31:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B80EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:31:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AF552080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:31:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 597EB207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:31:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073470;
-	bh=N98FjzgorEjTBLATZ61u6SCyC3kXTLPSWDm1Auha4ZE=;
+	s=default; t=1597073475;
+	bh=ZTr/YgqpNPq1cmvv/g6haa7XXEQeVX52CPB5oRr7ugc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jJ1weebZ+NcysQT1uw7AY7IilfkPf46gNA0MUP5thUL6lFf2ROGriNCc+bIQFVp1t
-	 OmDomCEQASlZZUMtTptjGwG8+d+8myWR3CwZOSO57h1jawV+rWcrTe4S27+ZoUf86B
-	 bika1EfADlReb0BD4JXhKCbTEkCybyIbXr1M3SqI=
+	b=rBoJH0dz5DODeQreW8e/qc/F+fya7UbT2uqVkghpRWPROV+o1jeEGKBCh7e4yHr10
+	 Cgb0nVfrRSJhscHNE9xviPuYvVttr4gtzXze+EOdo8q9uD3j8FpCSsTzttRo8HwkwU
+	 wk8s577x6gYXgwqtpuHUgqxACoWFutnIx9sENit4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729181AbgHJPbJ (ORCPT
+        id S1728932AbgHJPbO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:31:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38292 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:31:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728622AbgHJPbG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:31:06 -0400
+        id S1729177AbgHJPbI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:31:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 507AB2080C;
-        Mon, 10 Aug 2020 15:31:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9C2520791;
+        Mon, 10 Aug 2020 15:31:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073465;
-        bh=N98FjzgorEjTBLATZ61u6SCyC3kXTLPSWDm1Auha4ZE=;
+        s=default; t=1597073468;
+        bh=ZTr/YgqpNPq1cmvv/g6haa7XXEQeVX52CPB5oRr7ugc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iLaFtAc91irn9XUuQV5MEzQjAGTWzEhubsIwDzK+1KNHNYNOEDS11smDUhR8ainoj
-         UgmYUYbVCzGaMEtPNNrzCS4S8jYa9CJAOhcYUxQM8Kx6l/GKDwtL1YhwLwZ7ow1kc6
-         QUw6Ow1rHhATiLtuD9wDF0NydvcCN8fm6M9pdNfI=
+        b=18afm+A+frvgIMSXmuRhYkcA+yBiLsnbS3H9b9rdZfOazArTQXQxWN17knDySvg1D
+         +XVXQ0xp5J5qOGev1tzIue45tthdXFcxyrpr9qt9xtnlThjznjLTWlkMsL4CW40xLh
+         BA032xGAnFVODU4VQpWbfA99AceTz5eB9QoFo0b8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+e6416dabb497a650da40@syzkaller.appspotmail.com,
-        Eric Biggers <ebiggers@google.com>,
-        Casey Schaufler <casey@schaufler-ca.com>
-Subject: [PATCH 4.19 48/48] Smack: fix use-after-free in smk_write_relabel_self()
-Date:   Mon, 10 Aug 2020 17:22:10 +0200
-Message-Id: <20200810151806.591377001@linuxfoundation.org>
+        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 25/48] firmware: Fix a reference count leak.
+Date:   Mon, 10 Aug 2020 17:21:47 +0200
+Message-Id: <20200810151805.452009812@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151804.199494191@linuxfoundation.org>
 References: <20200810151804.199494191@linuxfoundation.org>
@@ -61,79 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Qiushi Wu <wu000273@umn.edu>
 
-commit beb4ee6770a89646659e6a2178538d2b13e2654e upstream.
+[ Upstream commit fe3c60684377d5ad9b0569b87ed3e26e12c8173b ]
 
-smk_write_relabel_self() frees memory from the task's credentials with
-no locking, which can easily cause a use-after-free because multiple
-tasks can share the same credentials structure.
+kobject_init_and_add() takes reference even when it fails.
+If this function returns an error, kobject_put() must be called to
+properly clean up the memory associated with the object.
+Callback function fw_cfg_sysfs_release_entry() in kobject_put()
+can handle the pointer "entry" properly.
 
-Fix this by using prepare_creds() and commit_creds() to correctly modify
-the task's credentials.
-
-Reproducer for "BUG: KASAN: use-after-free in smk_write_relabel_self":
-
-	#include <fcntl.h>
-	#include <pthread.h>
-	#include <unistd.h>
-
-	static void *thrproc(void *arg)
-	{
-		int fd = open("/sys/fs/smackfs/relabel-self", O_WRONLY);
-		for (;;) write(fd, "foo", 3);
-	}
-
-	int main()
-	{
-		pthread_t t;
-		pthread_create(&t, NULL, thrproc, NULL);
-		thrproc(NULL);
-	}
-
-Reported-by: syzbot+e6416dabb497a650da40@syzkaller.appspotmail.com
-Fixes: 38416e53936e ("Smack: limited capability for changing process label")
-Cc: <stable@vger.kernel.org> # v4.4+
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Link: https://lore.kernel.org/r/20200613190533.15712-1-wu000273@umn.edu
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/smack/smackfs.c |   13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ drivers/firmware/qemu_fw_cfg.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/security/smack/smackfs.c
-+++ b/security/smack/smackfs.c
-@@ -2746,7 +2746,6 @@ static int smk_open_relabel_self(struct
- static ssize_t smk_write_relabel_self(struct file *file, const char __user *buf,
- 				size_t count, loff_t *ppos)
- {
--	struct task_smack *tsp = current_security();
- 	char *data;
- 	int rc;
- 	LIST_HEAD(list_tmp);
-@@ -2771,11 +2770,21 @@ static ssize_t smk_write_relabel_self(st
- 	kfree(data);
+diff --git a/drivers/firmware/qemu_fw_cfg.c b/drivers/firmware/qemu_fw_cfg.c
+index 039e0f91dba8f..6945c3c966375 100644
+--- a/drivers/firmware/qemu_fw_cfg.c
++++ b/drivers/firmware/qemu_fw_cfg.c
+@@ -605,8 +605,10 @@ static int fw_cfg_register_file(const struct fw_cfg_file *f)
+ 	/* register entry under "/sys/firmware/qemu_fw_cfg/by_key/" */
+ 	err = kobject_init_and_add(&entry->kobj, &fw_cfg_sysfs_entry_ktype,
+ 				   fw_cfg_sel_ko, "%d", entry->select);
+-	if (err)
+-		goto err_register;
++	if (err) {
++		kobject_put(&entry->kobj);
++		return err;
++	}
  
- 	if (!rc || (rc == -EINVAL && list_empty(&list_tmp))) {
-+		struct cred *new;
-+		struct task_smack *tsp;
-+
-+		new = prepare_creds();
-+		if (!new) {
-+			rc = -ENOMEM;
-+			goto out;
-+		}
-+		tsp = new->security;
- 		smk_destroy_label_list(&tsp->smk_relabel);
- 		list_splice(&list_tmp, &tsp->smk_relabel);
-+		commit_creds(new);
- 		return count;
- 	}
--
-+out:
- 	smk_destroy_label_list(&list_tmp);
- 	return rc;
+ 	/* add raw binary content access */
+ 	err = sysfs_create_bin_file(&entry->kobj, &fw_cfg_sysfs_attr_raw);
+@@ -622,7 +624,6 @@ static int fw_cfg_register_file(const struct fw_cfg_file *f)
+ 
+ err_add_raw:
+ 	kobject_del(&entry->kobj);
+-err_register:
+ 	kfree(entry);
+ 	return err;
  }
+-- 
+2.25.1
+
 
 
