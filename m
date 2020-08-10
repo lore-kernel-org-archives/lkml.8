@@ -2,177 +2,161 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C05C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 17:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBAAEC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 17:57:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C193120866
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 17:56:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="QzEP54Xz";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="Jiqk9UNV"
+	by mail.kernel.org (Postfix) with ESMTP id 83A1720885
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 17:57:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597082241;
+	bh=k3MjZ6XxaVvaOS3cbVAXkz+PUn0Cc+I/FN8m/6d5GPA=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=fSQGabkx/A7tpOdZkuwVqPU+o5lVsfT3KNo9Q6dBZxSBnxDtMFbFAYPNgzYTbkqz5
+	 EbigUmjtnrK/xOd9hjSWg/R1imWG1wbh2hVWaZMcDlvj7o9LoqtNbGCiPc2hfW61kf
+	 dJEojBmg5DzFwkYLHTwqFSsakGam9QVEJ69lDdn0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728088AbgHJR46 (ORCPT
+        id S1728093AbgHJR5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 13:56:58 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:18200 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726820AbgHJR46 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 13:56:58 -0400
-Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07AHswQM025142;
-        Mon, 10 Aug 2020 10:56:36 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
- subject : message-id : references : content-type : in-reply-to :
- mime-version; s=facebook; bh=CnUH8wFbRH3D+x8tqc+88oybqYHc36iotQkG9C3ikb0=;
- b=QzEP54XzoX92uHMBw5QAlHt2bZtjeFXUK+02D7Ojdon20PtcDPLsKecHN0MsLNZFZU1y
- TGuqbL30iRaeY+J/es9tNXKqTSI1yvEY4bja4ADt1FUCREdU3ILct49kT0PSpkiy0o6O
- 1pFYzwSgxR+M+EBwZgfp3pbWNhFcynrJp0Y= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 32ssjk8e0r-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Mon, 10 Aug 2020 10:56:36 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (100.104.98.9) by
- o365-in.thefacebook.com (100.104.94.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Mon, 10 Aug 2020 10:56:35 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aFsU39TyngPX0BrUj+rxedqHWYw1ySC+mV3pbS+Y0aTsjug/WmqhWuP/7Of0V9osLMFowD6DbJP2exF/vF3eh5I/eSmxiDsd85kfvKG+Cp8CCN8n5LnyMojqHRqveSP1eiBZeK/55GIYm4yDOZNXzXqCZ4lehiVqFP+HgeJMqc45NqLd3t3oh9fMM/O2fGyZNL5kYk4v4KF29HIqlul3fwtLcwiFiZR2sa9/MitPyYqkSSxh/3TU469BkZW2+fuzFMS9RaGJbB01sLvgpH99Z8yrzHgAOd2r2CdcKnAQwoFfZR0wCw1OtIQyXokilktktTpVYPmVIdb7wZ12RCNWaA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CnUH8wFbRH3D+x8tqc+88oybqYHc36iotQkG9C3ikb0=;
- b=gZMhdLKe61H5LdYAlpa+ZgUdcu71luHB7ntAbtKs2PgaLW9LxmqCDba4HRYkqxDgr3fY+nQa9/Ow4frMjcjo+v8JiJAdASManVjo2h/ZzRlKdW8KWsLpEhP7r97oKox+uZuI0UFpWydx/p7YKvlG+4xt10aI1yOaAQgQaIQ+A1WDVeVtqucyxj24+Yh7F7yX5/Vy+SB+QHvaGbe+eXDbNlQXmxcK7NBpA3g+8mQ2RE8bE2NLsJCkhUucZHJKPWwGivivK8Nzry9k05QpKrtOsSyKwN2Z3L8CBTfWOVQR20mmMMiOcQTmDedvHD5alTdrNIl0B3bDFamaCMLAdlnvRw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CnUH8wFbRH3D+x8tqc+88oybqYHc36iotQkG9C3ikb0=;
- b=Jiqk9UNVG8L3SeMfQTbokmxerh5A6L4AYXG8v+92UUrhNn/FSBl+gC7oZdg54RrdjepYacpOAs+MDmLB6SUdxNyj6sSiBMYW+XH65GjNuyb2c508eFA9T5fbtBYGVdwA6pyMbzeW62jKckTfTA6JK0mW0LhIpSrbPAYXtFNQ9so=
-Authentication-Results: vivo.com; dkim=none (message not signed)
- header.d=none;vivo.com; dmarc=none action=none header.from=fb.com;
-Received: from BY5PR15MB3571.namprd15.prod.outlook.com (2603:10b6:a03:1f6::32)
- by BYAPR15MB3301.namprd15.prod.outlook.com (2603:10b6:a03:101::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.19; Mon, 10 Aug
- 2020 17:56:20 +0000
-Received: from BY5PR15MB3571.namprd15.prod.outlook.com
- ([fe80::d489:8f7f:614e:1b99]) by BY5PR15MB3571.namprd15.prod.outlook.com
- ([fe80::d489:8f7f:614e:1b99%7]) with mapi id 15.20.3261.024; Mon, 10 Aug 2020
- 17:56:20 +0000
-Date:   Mon, 10 Aug 2020 10:56:14 -0700
-From:   Martin KaFai Lau <kafai@fb.com>
-To:     Jiang Yu <jyu.jiang@vivo.com>
-CC:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Sitnicki <jakub@cloudflare.com>,
-        zhanglin <zhang.lin16@zte.com.cn>,
-        Kees Cook <keescook@chromium.org>,
-        Andrey Ignatov <rdna@fb.com>,
-        Quentin Monnet <quentin@isovalent.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <bpf@vger.kernel.org>, <opensource.kernel@vivo.com>
-Subject: Re: [PATCH] bpf: Add bpf_skb_get_sock_comm() helper
-Message-ID: <20200810175529.qdsbziyoo6myw2dr@kafai-mbp.dhcp.thefacebook.com>
-References: <20200810131014.12057-1-jyu.jiang@vivo.com>
+        Mon, 10 Aug 2020 13:57:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43736 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726820AbgHJR5T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 13:57:19 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A6B620866;
+        Mon, 10 Aug 2020 17:57:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597082238;
+        bh=k3MjZ6XxaVvaOS3cbVAXkz+PUn0Cc+I/FN8m/6d5GPA=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=PX4NIdaDL9nliQXjykosBBnoC2HgYkGI2QIGSsLZaAgZRP71kueVIZPomm0JpBra/
+         d5MCf+/Cxf6n2h2WmviE/Q6RVnTaEHN+2pj5yoCxE3WLglbqhWycWs+7lX/VPDHH4Q
+         0moOWyIfb0PEzJUHFX8QiZmbdzbMh9K79CIRV4Ng=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id B277135228C7; Mon, 10 Aug 2020 10:57:17 -0700 (PDT)
+Date:   Mon, 10 Aug 2020 10:57:17 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Neeraj Upadhyay <neeraju@codeaurora.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        linux-doc@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        peterz@infradead.org, Randy Dunlap <rdunlap@infradead.org>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        tglx@linutronix.de, vineethrp@gmail.com
+Subject: Re: [PATCH v4 1/5] rcu/tree: Add a warning if CPU being onlined did
+ not report QS already
+Message-ID: <20200810175717.GM4295@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200807170722.2897328-1-joel@joelfernandes.org>
+ <20200807170722.2897328-2-joel@joelfernandes.org>
+ <20200810154654.GJ4295@paulmck-ThinkPad-P72>
+ <20200810173931.GB2253395@google.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200810131014.12057-1-jyu.jiang@vivo.com>
-X-ClientProxiedBy: BYAPR06CA0017.namprd06.prod.outlook.com
- (2603:10b6:a03:d4::30) To BY5PR15MB3571.namprd15.prod.outlook.com
- (2603:10b6:a03:1f6::32)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from kafai-mbp.dhcp.thefacebook.com (2620:10d:c090:400::5:458c) by BYAPR06CA0017.namprd06.prod.outlook.com (2603:10b6:a03:d4::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.19 via Frontend Transport; Mon, 10 Aug 2020 17:56:20 +0000
-X-Originating-IP: [2620:10d:c090:400::5:458c]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: b1879d0e-368a-437f-b12e-08d83d56b026
-X-MS-TrafficTypeDiagnostic: BYAPR15MB3301:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BYAPR15MB330177B58F4AB38DC3A629F4D5440@BYAPR15MB3301.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: L+0j7ybD4OBBmOnpwB/Dx+m1zVjnNZThkj78JVaFgyazH4xvrbcNJbA/QxMuezOdIAhYRfpBneqVWpw0xJ+lTKqQAKAuhlSkzKj4nCD8UhdFFkGQrY92XlXBKhzDaWdU2F0FPcbsDKaypa1yaPXbSTHH9HTnR2YWcLpqSf/QF/kDzXaiYJ2TSd0BbZFs3ruILAI9OhAG2Ba/R01RAP2H2L9ffFFLR4j07ajONXtQI60s49U5YXp687kJeYUSF54Zp0G1OwwkhBlWF6Ca21QLSagULRRRYr6S+j8jW87j3PiRhsmHc7LCAUI4lhYaB2azVIPF6OzBgQR+NCSn0EjQtg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR15MB3571.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(39860400002)(346002)(396003)(136003)(366004)(5660300002)(4326008)(55016002)(8676002)(6916009)(6506007)(186003)(86362001)(2906002)(16526019)(478600001)(7416002)(52116002)(7696005)(66556008)(83380400001)(66476007)(9686003)(8936002)(54906003)(66946007)(6666004)(316002)(1076003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: FSWSai3Av/zpWNzopHDWTFwyScCNNrpdDmpSh0wVCrRTaqNvOfrtMJMplV7H92XeOUwrXaGUyjLKacZmIqOcMGKxUGsq43T9f9vDCoa0Pshq7WEtClujUePbYO1ps60Dj+Y7Uktir/0B9ZCH/F8vyksKKLWbtXq8GcBa4vqEZiYCD6WRxK72pS1OGKX+jiTgXHuOT/7gXeUPtfnfT0j1jMqYxe+dipR8ejh1gdkDXfLX4moAr77mKY7ZhUV5YChA2Z0CNLDeHc6M9uheCOPS2zPNRCNjnkEGjjBR7i8Xck/ubLkEAX87P9TvokLb5gg5VhScmXwypKahR9C2E6//VeDe/q7u45uKCzFOz8XO1q+UX7SFFJvMI5Lx/XXm54cOzZYp2Aw9beL9IAPRqqUQTk0D+RLvro93dN3OmW/oaojsBwXe/kiJUPB4PntoL+cy+EGXHcD0GDz9qZvLm66IPXtbzdDkyPL6O4Xil5Kl+CWQdWgM24Orzlg7Dow+XeZTNuGVn8zSVJjjAPKdSmJRl3l2zHco2EPVtBqmZuLaZw4rOeNcJDeAdPsCrFIXzbPRJ6seMydCtJ2iQdX3rVEE09Jad2sYCYxmsowmeNI/GeGCICv56yAJxCeGbmu3RY6YIKwmU0sAFZCMM36mE6GBRU+jzBvIGKb9d8I2BTZLsKw=
-X-MS-Exchange-CrossTenant-Network-Message-Id: b1879d0e-368a-437f-b12e-08d83d56b026
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR15MB3571.namprd15.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Aug 2020 17:56:20.7321
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: wcwQKB9ataZsoRA//wUtFANEb+rPRIN8KG6+xIDaryD71o8JkOMDjuH/U3ILPeA0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3301
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-10_15:2020-08-06,2020-08-10 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 clxscore=1011
- phishscore=0 suspectscore=1 bulkscore=0 adultscore=0 priorityscore=1501
- malwarescore=0 lowpriorityscore=0 impostorscore=0 mlxscore=0 spamscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008100126
-X-FB-Internal: deliver
+In-Reply-To: <20200810173931.GB2253395@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 06:09:48AM -0700, Jiang Yu wrote:
-> skb distinguished by uid can only recorded to user who consume them.
-> in many case, skb should been recorded more specific to process who
-> consume them. E.g, the unexpected large data traffic of illegal process
-> in metered network.
+On Mon, Aug 10, 2020 at 01:39:31PM -0400, Joel Fernandes wrote:
+> On Mon, Aug 10, 2020 at 08:46:54AM -0700, Paul E. McKenney wrote:
+> > On Fri, Aug 07, 2020 at 01:07:18PM -0400, Joel Fernandes (Google) wrote:
+> > > Currently, rcu_cpu_starting() checks to see if the RCU core expects a
+> > > quiescent state from the incoming CPU.  However, the current interaction
+> > > between RCU quiescent-state reporting and CPU-hotplug operations should
+> > > mean that the incoming CPU never needs to report a quiescent state.
+> > > First, the outgoing CPU reports a quiescent state if needed.  Second,
+> > > the race where the CPU is leaving just as RCU is initializing a new
+> > > grace period is handled by an explicit check for this condition.  Third,
+> > > the CPU's leaf rcu_node structure's ->lock serializes these checks.
+> > > 
+> > > This means that if rcu_cpu_starting() ever feels the need to report
+> > > a quiescent state, then there is a bug somewhere in the CPU hotplug
+> > > code or the RCU grace-period handling code.  This commit therefore
+> > > adds a WARN_ON_ONCE() to bring that bug to everyone's attention.
+> > > 
+> > > Cc: Paul E. McKenney <paulmck@kernel.org>
+> > > Cc: Neeraj Upadhyay <neeraju@codeaurora.org>
+> > > Suggested-by: Paul E. McKenney <paulmck@kernel.org>
+> > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > > ---
+> > >  kernel/rcu/tree.c | 9 ++++++++-
+> > >  1 file changed, 8 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > > index 65e1b5e92319..a49fa3b60faa 100644
+> > > --- a/kernel/rcu/tree.c
+> > > +++ b/kernel/rcu/tree.c
+> > > @@ -3996,7 +3996,14 @@ void rcu_cpu_starting(unsigned int cpu)
+> > >  	rcu_gpnum_ovf(rnp, rdp); /* Offline-induced counter wrap? */
+> > >  	rdp->rcu_onl_gp_seq = READ_ONCE(rcu_state.gp_seq);
+> > >  	rdp->rcu_onl_gp_flags = READ_ONCE(rcu_state.gp_flags);
+> > > -	if (rnp->qsmask & mask) { /* RCU waiting on incoming CPU? */
+> > > +
+> > > +	/*
+> > > +	 * XXX: The following rcu_report_qs_rnp() is redundant. If the below
+> > > +	 * warning does not fire, consider replacing it with the "else" block,
+> > > +	 * by June 2021 or so (while keeping the warning). Refer to RCU's
+> > > +	 * Requirements documentation for the rationale.
+> > 
+> > Let's suppose that this change is made, and further that in a year or
+> > two the "if" statement below is replaced with its "else" block.
+> > 
+> > Now let's suppose that (some years after that) a hard-to-trigger bug
+> > makes its way into RCU's CPU-hotplug code that would have resulted in
+> > the WARN_ON_ONCE() triggering, but that this bug turns out to be not so
+> > hard to trigger in certain large production environments.
+> > 
+> > Let's suppose further that you have moved on to where you are responsible
+> > for one of these large production environments.  How would this
+> > hypothetical RCU/CPU-hotplug bug manifest?
 > 
-> this helper is used in tracing task comm of the sock to which a skb
-> belongs.
+> It could manifest as an RCU stall (after the warning triggers) since RCU
+> would wait forever.
 > 
-> Signed-off-by: Jiang Yu <jyu.jiang@vivo.com>
-> ---
->  include/net/sock.h             |  1 +
->  include/uapi/linux/bpf.h       |  1 +
->  net/core/filter.c              | 32 ++++++++++++++++++++++++++++++++
->  net/core/sock.c                | 20 ++++++++++++++++++++
->  tools/include/uapi/linux/bpf.h |  1 +
->  5 files changed, 55 insertions(+)
+> Were you thinking it is not worth doing this? I thought we wanted to remove
+> the reundant rcu_report_qs_rnp here to solidify everyone's understanding of
+> the code and fail early if there's something misunderstood (since such
+> misunderstanding could mean there are other hidden bugs somewhere). The
+> counter-argument to that being, making the code robust is more important for
+> the large production failure scenario where failures are costly.
+
+The benefits of removing code that is in theory redundant was my thought
+at one point, but sleeping on this several times since has made me much
+less favorable to this change.  And perhaps my experiences with my new
+employer have affected my views on this as well.  You never know!  ;-)
+
+							Thanx, Paul
+
+> thanks,
 > 
-> diff --git a/include/net/sock.h b/include/net/sock.h
-> index 064637d1ddf6..9c6e8e61940f 100644
-> --- a/include/net/sock.h
-> +++ b/include/net/sock.h
-> @@ -519,6 +519,7 @@ struct sock {
->  #ifdef CONFIG_BPF_SYSCALL
->  	struct bpf_sk_storage __rcu	*sk_bpf_storage;
->  #endif
-> +	char sk_task_com[TASK_COMM_LEN];
-One possibility is to use the "sk_bpf_storage" member immediately above
-instead of adding "sk_task_com[]".
-
-It is an extensible sk storage for bpf.  There are examples in selftests,
-e.g tools/testing/selftests/bpf/progs/udp_limits.c which creates sk storage
-at socket creation time.  Another hook point option could be "connect()"
-for tcp, i.e. "cgroup/connect[46]".
-
-Search "BPF_MAP_TYPE_SK_STORAGE" under the selftests/bpf for other examples.
-
-It seems there is already a "bpf_get_current_comm()" helper which
-could be used to initialize the task comm string in the bpf sk storage.
-
-btw, bpf-next is still closed.
+>  - Joel
+> 
+> 
+> > 							Thanx, Paul
+> > 
+> > > +	 */
+> > > +	if (WARN_ON_ONCE(rnp->qsmask & mask)) { /* RCU waiting on incoming CPU? */
+> > >  		rcu_disable_urgency_upon_qs(rdp);
+> > >  		/* Report QS -after- changing ->qsmaskinitnext! */
+> > >  		rcu_report_qs_rnp(mask, rnp, rnp->gp_seq, flags);
+> > > -- 
+> > > 2.28.0.236.gb10cc79966-goog
+> > > 
