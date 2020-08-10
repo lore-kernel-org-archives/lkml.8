@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A206C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:20:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83BEDC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:20:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D612020772
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:20:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 482FE20678
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:20:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597072824;
-	bh=lI6E/4lPK/biapph8fLlSw8m7Ev/Xq7lJP/iubY+u2o=;
+	s=default; t=1597072828;
+	bh=AGOMaizvFy9TjsAgvMYtf9C1QGamiHd6Zvyz19yNHMY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w7GGWgYEwKNsEbIdNue5nF8hluVTcd6HmA5oWcyxFX8QLzS9W7+liVmPq2WjHYqis
-	 WLQxj6uYsHBsS+otIgMixfCj+ofK7cQeFtxe5fWYJrH0i/4htk3LSyQMdzq5b0eqjh
-	 XuJ3yp7G4DFcnmrAUz3beEJQFOy1QQ6w5z1cWtiA=
+	b=R4gYxgJI3VnO/bku2L/rhi41EjJQtzz8b6efB9zeGoUAdfiAOlLMLiS6xYLiz1Pun
+	 LjUZD+bD622Hg1epTp6ZcU0/h5NcVhUr++o2eWKFkOM2GJ6qAOAnfKjpH8J2ChvQSy
+	 cWRiCVny2G7eUi20w2X/tybhMv7mfoipnzwNKwwQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727971AbgHJPUW (ORCPT
+        id S1727980AbgHJPUZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:20:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50626 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:20:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727956AbgHJPUR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:20:17 -0400
+        id S1727945AbgHJPUO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:20:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75A4220772;
-        Mon, 10 Aug 2020 15:20:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86F4522B4B;
+        Mon, 10 Aug 2020 15:20:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597072817;
-        bh=lI6E/4lPK/biapph8fLlSw8m7Ev/Xq7lJP/iubY+u2o=;
+        s=default; t=1597072814;
+        bh=AGOMaizvFy9TjsAgvMYtf9C1QGamiHd6Zvyz19yNHMY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ubfWQLs8+T+U9PbZm1nQz58vvGokOH0Dk08tC0KvU40SHdhOqXPkvIWGetPJpO8aC
-         EorS6q1wQGC8ZScaydoK+G/dcH0U4QY3oAxhVvLxl7sBvQ/hQzhO1oNgvGW9yGSN5T
-         dgok6CPO0pZhwkTpfTYCvL3cqXmV2LiAqOPp3GQ8=
+        b=UrS2M9K5wC6B+UL/lXGqC5ZYPhbwKjOQtWGLfQMaE12BtZaX6X3CmmlAHg7qMnndf
+         Noy1jh8GlB+XMRCW1/hIO6Zb1HaKfueGEmwODLR36IwLJYxHgZS7IwhbR+vzVwG5n1
+         hjVpQV4wAHoxu9A5lVIqmaIT4j5zV98VcUDB6Q6I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Amitoj Kaur Chawla <amitoj1606@gmail.com>,
         Johan Hovold <johan@kernel.org>, Pavel Machek <pavel@ucw.cz>
-Subject: [PATCH 5.8 28/38] leds: lm3533: fix use-after-free on unbind
-Date:   Mon, 10 Aug 2020 17:19:18 +0200
-Message-Id: <20200810151805.287213549@linuxfoundation.org>
+Subject: [PATCH 5.8 27/38] leds: da903x: fix use-after-free on unbind
+Date:   Mon, 10 Aug 2020 17:19:17 +0200
+Message-Id: <20200810151805.236512093@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151803.920113428@linuxfoundation.org>
 References: <20200810151803.920113428@linuxfoundation.org>
@@ -61,7 +61,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Johan Hovold <johan@kernel.org>
 
-commit d584221e683bbd173738603b83a315f27d27d043 upstream.
+commit 6f4aa35744f69ed9b0bf5a736c9ca9b44bc1dcea upstream.
 
 Several MFD child drivers register their class devices directly under
 the parent device. This means you cannot blindly do devres conversions
@@ -69,7 +69,7 @@ so that deregistration ends up being tied to the parent device,
 something which leads to use-after-free on driver unbind when the class
 device is released while still being registered.
 
-Fixes: 50154e29e5cc ("leds: lm3533: Use devm_led_classdev_register")
+Fixes: eed16255d66b ("leds: da903x: Use devm_led_classdev_register")
 Cc: stable <stable@vger.kernel.org>     # 4.6
 Cc: Amitoj Kaur Chawla <amitoj1606@gmail.com>
 Signed-off-by: Johan Hovold <johan@kernel.org>
@@ -77,48 +77,43 @@ Signed-off-by: Pavel Machek <pavel@ucw.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/leds/leds-lm3533.c |   12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/leds/leds-da903x.c |   14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
---- a/drivers/leds/leds-lm3533.c
-+++ b/drivers/leds/leds-lm3533.c
-@@ -694,7 +694,7 @@ static int lm3533_led_probe(struct platf
+--- a/drivers/leds/leds-da903x.c
++++ b/drivers/leds/leds-da903x.c
+@@ -110,12 +110,23 @@ static int da903x_led_probe(struct platf
+ 	led->flags = pdata->flags;
+ 	led->master = pdev->dev.parent;
  
- 	platform_set_drvdata(pdev, led);
- 
--	ret = devm_led_classdev_register(pdev->dev.parent, &led->cdev);
-+	ret = led_classdev_register(pdev->dev.parent, &led->cdev);
+-	ret = devm_led_classdev_register(led->master, &led->cdev);
++	ret = led_classdev_register(led->master, &led->cdev);
  	if (ret) {
- 		dev_err(&pdev->dev, "failed to register LED %d\n", pdev->id);
+ 		dev_err(&pdev->dev, "failed to register LED %d\n", id);
  		return ret;
-@@ -704,13 +704,18 @@ static int lm3533_led_probe(struct platf
+ 	}
  
- 	ret = lm3533_led_setup(led, pdata);
- 	if (ret)
--		return ret;
-+		goto err_deregister;
- 
- 	ret = lm3533_ctrlbank_enable(&led->cb);
- 	if (ret)
--		return ret;
-+		goto err_deregister;
- 
- 	return 0;
++	platform_set_drvdata(pdev, led);
 +
-+err_deregister:
++	return 0;
++}
++
++static int da903x_led_remove(struct platform_device *pdev)
++{
++	struct da903x_led *led = platform_get_drvdata(pdev);
++
 +	led_classdev_unregister(&led->cdev);
 +
-+	return ret;
- }
- 
- static int lm3533_led_remove(struct platform_device *pdev)
-@@ -720,6 +725,7 @@ static int lm3533_led_remove(struct plat
- 	dev_dbg(&pdev->dev, "%s\n", __func__);
- 
- 	lm3533_ctrlbank_disable(&led->cb);
-+	led_classdev_unregister(&led->cdev);
- 
  	return 0;
  }
+ 
+@@ -124,6 +135,7 @@ static struct platform_driver da903x_led
+ 		.name	= "da903x-led",
+ 	},
+ 	.probe		= da903x_led_probe,
++	.remove		= da903x_led_remove,
+ };
+ 
+ module_platform_driver(da903x_led_driver);
 
 
