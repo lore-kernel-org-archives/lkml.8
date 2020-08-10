@@ -5,50 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7966C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 601D5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:14:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C21B0207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:14:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39A6A207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:14:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597086854;
-	bh=ODOC8c/RMh1bxa0NKKPA6xy/sIWamsFq+wdpfcwPOu8=;
+	s=default; t=1597086861;
+	bh=bKZyCJY5tcwU9+t7Ri2QDzZnhI/88fXqAczSnav0mCs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fSDA0Fj702ePAf9wLRP5sTzVp5D2dJ+ms94qck5ZJvLr1B6OU4QLpSUZYaRSwt/XF
-	 C87HHczeTymxGXQAfIh0ZkFSpocdIIENeJwiPyoVvFCSJyyndv3enynv+K7OtqbmD9
-	 03KEP39HB+/4jG/W9VlXHIxkUEkYnf28GmJ14iIk=
+	b=CcPbx80jr5Wpl6G9Av9ESMLbjVTOkdhPTn6cNttA9FRlTtp/5dq0p5P8bpfmxLCkV
+	 9nhzKB04e5aE3KAsV7hCz8mWoJlXpLIqlBvXgen/fo160SQ/RUPl/h8Hmhx1O2X4Nd
+	 TUgi9zIKI7thYtjSfX1fT0y5ZFyJoWR26cYvC0uA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729970AbgHJTON (ORCPT
+        id S1729991AbgHJTOU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:14:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45744 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:14:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729918AbgHJTOB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:14:01 -0400
+        id S1729967AbgHJTON (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:14:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B98FD22CA1;
-        Mon, 10 Aug 2020 19:13:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6AA322BEB;
+        Mon, 10 Aug 2020 19:14:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086840;
-        bh=ODOC8c/RMh1bxa0NKKPA6xy/sIWamsFq+wdpfcwPOu8=;
+        s=default; t=1597086852;
+        bh=bKZyCJY5tcwU9+t7Ri2QDzZnhI/88fXqAczSnav0mCs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tOQFMGoZ82fGpcF9HdnFAHJqbgN1lNMRQIjprMWaU//WXHovncJSTWTv5AiT3sD3A
-         1ih0e8G8rwqCdPkeqCigBHlQfAub4pq1H22IZ+NKoyXwhQ0ARrRs1RGUViQmSe+9Vq
-         30okFsSZhqjluRXitCIh1g8fdsq7ayXxSNc2Tnps=
+        b=in/KT4qGDEnADJhB8o3L4zD2Cq/qiWE8kHqJe7AJ15AKb7iqQf++nm5mOYG+g//EW
+         04AXbJXLwZFl8FbMdLQMHfzC1kYJbj42AlABr5Dn0WnflocuiLcmvj+73t4B8B8zvv
+         bUciHEXcb+l8i8B6UiZ3DLlbDaG2eJ8B3z4+lsxk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        Shakeel Butt <shakeelb@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
+Cc:     Jim Cromie <jim.cromie@gmail.com>, jbaron@akamai.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 11/22] mm/mmap.c: Add cond_resched() for exit_mmap() CPU stalls
-Date:   Mon, 10 Aug 2020 15:13:33 -0400
-Message-Id: <20200810191345.3795166-11-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 19/22] dyndbg: fix a BUG_ON in ddebug_describe_flags
+Date:   Mon, 10 Aug 2020 15:13:41 -0400
+Message-Id: <20200810191345.3795166-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810191345.3795166-1-sashal@kernel.org>
 References: <20200810191345.3795166-1-sashal@kernel.org>
@@ -61,81 +59,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Paul E. McKenney" <paulmck@kernel.org>
+From: Jim Cromie <jim.cromie@gmail.com>
 
-[ Upstream commit 0a3b3c253a1eb2c7fe7f34086d46660c909abeb3 ]
+[ Upstream commit f678ce8cc3cb2ad29df75d8824c74f36398ba871 ]
 
-A large process running on a heavily loaded system can encounter the
-following RCU CPU stall warning:
+ddebug_describe_flags() currently fills a caller provided string buffer,
+after testing its size (also passed) in a BUG_ON.  Fix this by
+replacing them with a known-big-enough string buffer wrapped in a
+struct, and passing that instead.
 
-  rcu: INFO: rcu_sched self-detected stall on CPU
-  rcu: 	3-....: (20998 ticks this GP) idle=4ea/1/0x4000000000000002 softirq=556558/556558 fqs=5190
-  	(t=21013 jiffies g=1005461 q=132576)
-  NMI backtrace for cpu 3
-  CPU: 3 PID: 501900 Comm: aio-free-ring-w Kdump: loaded Not tainted 5.2.9-108_fbk12_rc3_3858_gb83b75af7909 #1
-  Hardware name: Wiwynn   HoneyBadger/PantherPlus, BIOS HBM6.71 02/03/2016
-  Call Trace:
-   <IRQ>
-   dump_stack+0x46/0x60
-   nmi_cpu_backtrace.cold.3+0x13/0x50
-   ? lapic_can_unplug_cpu.cold.27+0x34/0x34
-   nmi_trigger_cpumask_backtrace+0xba/0xca
-   rcu_dump_cpu_stacks+0x99/0xc7
-   rcu_sched_clock_irq.cold.87+0x1aa/0x397
-   ? tick_sched_do_timer+0x60/0x60
-   update_process_times+0x28/0x60
-   tick_sched_timer+0x37/0x70
-   __hrtimer_run_queues+0xfe/0x270
-   hrtimer_interrupt+0xf4/0x210
-   smp_apic_timer_interrupt+0x5e/0x120
-   apic_timer_interrupt+0xf/0x20
-   </IRQ>
-  RIP: 0010:kmem_cache_free+0x223/0x300
-  Code: 88 00 00 00 0f 85 ca 00 00 00 41 8b 55 18 31 f6 f7 da 41 f6 45 0a 02 40 0f 94 c6 83 c6 05 9c 41 5e fa e8 a0 a7 01 00 41 56 9d <49> 8b 47 08 a8 03 0f 85 87 00 00 00 65 48 ff 08 e9 3d fe ff ff 65
-  RSP: 0018:ffffc9000e8e3da8 EFLAGS: 00000206 ORIG_RAX: ffffffffffffff13
-  RAX: 0000000000020000 RBX: ffff88861b9de960 RCX: 0000000000000030
-  RDX: fffffffffffe41e8 RSI: 000060777fe3a100 RDI: 000000000001be18
-  RBP: ffffea00186e7780 R08: ffffffffffffffff R09: ffffffffffffffff
-  R10: ffff88861b9dea28 R11: ffff88887ffde000 R12: ffffffff81230a1f
-  R13: ffff888854684dc0 R14: 0000000000000206 R15: ffff8888547dbc00
-   ? remove_vma+0x4f/0x60
-   remove_vma+0x4f/0x60
-   exit_mmap+0xd6/0x160
-   mmput+0x4a/0x110
-   do_exit+0x278/0xae0
-   ? syscall_trace_enter+0x1d3/0x2b0
-   ? handle_mm_fault+0xaa/0x1c0
-   do_group_exit+0x3a/0xa0
-   __x64_sys_exit_group+0x14/0x20
-   do_syscall_64+0x42/0x100
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Also simplify ddebug_describe_flags() flags parameter from a struct to
+a member in that struct, and hoist the member deref up to the caller.
+This makes the function reusable (soon) where flags are unpacked.
 
-And on a PREEMPT=n kernel, the "while (vma)" loop in exit_mmap() can run
-for a very long time given a large process.  This commit therefore adds
-a cond_resched() to this loop, providing RCU any needed quiescent states.
-
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: <linux-mm@kvack.org>
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Acked-by: <jbaron@akamai.com>
+Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
+Link: https://lore.kernel.org/r/20200719231058.1586423-8-jim.cromie@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/mmap.c | 1 +
- 1 file changed, 1 insertion(+)
+ lib/dynamic_debug.c | 23 +++++++++++------------
+ 1 file changed, 11 insertions(+), 12 deletions(-)
 
-diff --git a/mm/mmap.c b/mm/mmap.c
-index 8c6ed06983f9e..724b7c4f1a5b5 100644
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -3065,6 +3065,7 @@ void exit_mmap(struct mm_struct *mm)
- 		if (vma->vm_flags & VM_ACCOUNT)
- 			nr_accounted += vma_pages(vma);
- 		vma = remove_vma(vma);
-+		cond_resched();
- 	}
- 	vm_unacct_memory(nr_accounted);
+diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
+index c7c96bc7654af..91c451e0f4741 100644
+--- a/lib/dynamic_debug.c
++++ b/lib/dynamic_debug.c
+@@ -85,22 +85,22 @@ static struct { unsigned flag:8; char opt_char; } opt_array[] = {
+ 	{ _DPRINTK_FLAGS_NONE, '_' },
+ };
+ 
++struct flagsbuf { char buf[ARRAY_SIZE(opt_array)+1]; };
++
+ /* format a string into buf[] which describes the _ddebug's flags */
+-static char *ddebug_describe_flags(struct _ddebug *dp, char *buf,
+-				    size_t maxlen)
++static char *ddebug_describe_flags(unsigned int flags, struct flagsbuf *fb)
+ {
+-	char *p = buf;
++	char *p = fb->buf;
+ 	int i;
+ 
+-	BUG_ON(maxlen < 6);
+ 	for (i = 0; i < ARRAY_SIZE(opt_array); ++i)
+-		if (dp->flags & opt_array[i].flag)
++		if (flags & opt_array[i].flag)
+ 			*p++ = opt_array[i].opt_char;
+-	if (p == buf)
++	if (p == fb->buf)
+ 		*p++ = '_';
+ 	*p = '\0';
+ 
+-	return buf;
++	return fb->buf;
  }
+ 
+ #define vpr_info(fmt, ...)					\
+@@ -142,7 +142,7 @@ static int ddebug_change(const struct ddebug_query *query,
+ 	struct ddebug_table *dt;
+ 	unsigned int newflags;
+ 	unsigned int nfound = 0;
+-	char flagbuf[10];
++	struct flagsbuf fbuf;
+ 
+ 	/* search for matching ddebugs */
+ 	mutex_lock(&ddebug_lock);
+@@ -199,8 +199,7 @@ static int ddebug_change(const struct ddebug_query *query,
+ 			vpr_info("changed %s:%d [%s]%s =%s\n",
+ 				 trim_prefix(dp->filename), dp->lineno,
+ 				 dt->mod_name, dp->function,
+-				 ddebug_describe_flags(dp, flagbuf,
+-						       sizeof(flagbuf)));
++				 ddebug_describe_flags(dp->flags, &fbuf));
+ 		}
+ 	}
+ 	mutex_unlock(&ddebug_lock);
+@@ -779,7 +778,7 @@ static int ddebug_proc_show(struct seq_file *m, void *p)
+ {
+ 	struct ddebug_iter *iter = m->private;
+ 	struct _ddebug *dp = p;
+-	char flagsbuf[10];
++	struct flagsbuf flags;
+ 
+ 	vpr_info("called m=%p p=%p\n", m, p);
+ 
+@@ -792,7 +791,7 @@ static int ddebug_proc_show(struct seq_file *m, void *p)
+ 	seq_printf(m, "%s:%u [%s]%s =%s \"",
+ 		   trim_prefix(dp->filename), dp->lineno,
+ 		   iter->table->mod_name, dp->function,
+-		   ddebug_describe_flags(dp, flagsbuf, sizeof(flagsbuf)));
++		   ddebug_describe_flags(dp->flags, &flags));
+ 	seq_escape(m, dp->format, "\t\r\n\"");
+ 	seq_puts(m, "\"\n");
+ 
 -- 
 2.25.1
 
