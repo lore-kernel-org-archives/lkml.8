@@ -2,83 +2,92 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB67C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 08:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB4B4C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 08:18:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3548B2076C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 08:16:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AF55206B5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 08:18:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="quHIMtbY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726550AbgHJIQm (ORCPT
+        id S1726334AbgHJISw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 04:16:42 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:43230 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726108AbgHJIQl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 04:16:41 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id CAFC3201779;
-        Mon, 10 Aug 2020 10:16:39 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 4E6912011A9;
-        Mon, 10 Aug 2020 10:16:35 +0200 (CEST)
-Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 7A8A0402D2;
-        Mon, 10 Aug 2020 10:16:29 +0200 (CEST)
-From:   Shengjiu Wang <shengjiu.wang@nxp.com>
-To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
-        festevam@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
-        perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] ASoC: fsl-asoc-card: Get "extal" clock rate by clk_get_rate
-Date:   Mon, 10 Aug 2020 16:11:43 +0800
-Message-Id: <1597047103-6863-1-git-send-email-shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Mon, 10 Aug 2020 04:18:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55152 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725846AbgHJISv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 04:18:51 -0400
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B839C061756;
+        Mon, 10 Aug 2020 01:18:51 -0700 (PDT)
+Received: by mail-pj1-x102b.google.com with SMTP id d4so4552301pjx.5;
+        Mon, 10 Aug 2020 01:18:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LH83fC2QSW9BmGZJWVNgK9jSjlX920xKB+0fV1urXpk=;
+        b=quHIMtbYBxFa38rabT9vCFkkcLuP/DlPjyJCkU1ofUH7NzXyAE+bGxdOm1dDllQcH2
+         tFICdDt/rbyYes6dZHptp5xbaLefiiqmBXaiK68EDIkPmpNfu0LNqC8aBRoM9ARuYGi2
+         NA7sr7YSquX09FOfVaixuaT7ULFjF2j/rqb3IDIS5P+aVJBULCqx+j2E/3yDXIMH05Vd
+         6vsV9jiC+DdcUj76KtiBendkTDSYAU62GnQaq4AoAEhQ+NabseKkrASRR37SIxuxuSTl
+         5q4h7d3XsDgOqpn8pPOIuDVCshWjWqNOIGPQMNllDyooPdWUN8fbpL+C23HDW8nkH/Yh
+         Pl7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LH83fC2QSW9BmGZJWVNgK9jSjlX920xKB+0fV1urXpk=;
+        b=TSnfyBgO0Hpb2sOj7BRhQgcY+AKHKY59wENniB9FqChxn7gGjQ2tiphghV+JJ9jpD1
+         eHlIaiB0yVPMamOGNgtdBUpIGodVJpYoBRq9cALAv7OGIHSxKyfCO00fjAsSUqnBaBIZ
+         JmI4W2t/mre7oZCxcWhUwBmFTcfsSKfh/milpdWvidWIgy5DW2vzsHkxYU2OIKVUk3BK
+         iFVvf9114ibtwsPglNMdFABOh46dqZuMXBPPcaUln1T1NbvtyHDvbNax9UpMQRuq030p
+         6vlTbYmwgoNf6iFPuSpHElNEpFNhNqBmdFe2lAQodqTTJ5x7oZjp47sil52IUyVKEvO5
+         396Q==
+X-Gm-Message-State: AOAM530P5InD5VuKo6whKEhOYvuPvWjOUUgJedWFgykeWoQhi5HYPV/6
+        EC5156J9j747FMiFgzz2nvXHnZQfdOaJGyOmEXPPs5JENlk=
+X-Google-Smtp-Source: ABdhPJzcVsVarA5dLS3rUiRWPnvwUIZlS/1VcZ0ukG7XGFKvXNjQmLGIaPZ0oyQQkNiVJZXW+jvbttQfUEWVREcJveQ=
+X-Received: by 2002:a17:902:4b:: with SMTP id 69mr23793584pla.18.1597047530767;
+ Mon, 10 Aug 2020 01:18:50 -0700 (PDT)
+MIME-Version: 1.0
+References: <CACRpkdZyVM32opVPtgPonC0Gqg7YVyCCXryvA66FQbQUELdHjg@mail.gmail.com>
+In-Reply-To: <CACRpkdZyVM32opVPtgPonC0Gqg7YVyCCXryvA66FQbQUELdHjg@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 10 Aug 2020 11:18:35 +0300
+Message-ID: <CAHp75VfhMpUW0GpzPMq=1GufAT+kZtO8AXCpyqip26W=vWNhRA@mail.gmail.com>
+Subject: Re: [GIT PULL] pin control changes for the v5.9 kernel cycle
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On some platform(.e.g. i.MX8QM MEK), the "extal" clock is different
-with the mclk of codec, then the clock rate is also different.
-So it is better to get clock rate of "extal" rate by clk_get_rate,
-don't reuse the clock rate of mclk.
+On Sun, Aug 9, 2020 at 4:07 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> Hi Linus,
+>
+> here is the big bulk of pin control changes for the v5.9
+> kernel cycle, nothing is particularly interesting.
+>
+> I expect you to see two conflicts:
+>
+> drivers/pinctrl/intel/pinctrl-baytrail.c - no idea what this
+> is about as both HEAD and mine look the same to human
+> eyes, I suppose whitespace. Take whichever version you
+> like.
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
----
-changes in v2
-- add defer probe handler
+I have also stumbled over this when back merging to one of our internal trees...
 
- sound/soc/fsl/fsl-asoc-card.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/sound/soc/fsl/fsl-asoc-card.c b/sound/soc/fsl/fsl-asoc-card.c
-index 52adedc03245..32f8f756e6bb 100644
---- a/sound/soc/fsl/fsl-asoc-card.c
-+++ b/sound/soc/fsl/fsl-asoc-card.c
-@@ -696,6 +696,17 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
- 			goto asrc_fail;
- 		}
- 	} else if (of_node_name_eq(cpu_np, "esai")) {
-+		struct clk *esai_clk = clk_get(&cpu_pdev->dev, "extal");
-+
-+		if (!IS_ERR(esai_clk)) {
-+			priv->cpu_priv.sysclk_freq[TX] = clk_get_rate(esai_clk);
-+			priv->cpu_priv.sysclk_freq[RX] = clk_get_rate(esai_clk);
-+			clk_put(esai_clk);
-+		} else if (PTR_ERR(esai_clk) == -EPROBE_DEFER) {
-+			ret = -EPROBE_DEFER;
-+			goto asrc_fail;
-+		}
-+
- 		priv->cpu_priv.sysclk_id[1] = ESAI_HCKT_EXTAL;
- 		priv->cpu_priv.sysclk_id[0] = ESAI_HCKR_EXTAL;
- 	} else if (of_node_name_eq(cpu_np, "sai")) {
 -- 
-2.27.0
-
+With Best Regards,
+Andy Shevchenko
