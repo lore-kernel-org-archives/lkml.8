@@ -2,102 +2,137 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7BA7C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 06:13:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF93C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 06:14:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A151520756
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 06:13:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE7F520773
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 06:14:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IaWQFKFZ"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="g/eCrb+l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726379AbgHJGNh (ORCPT
+        id S1726284AbgHJGOv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 02:13:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36056 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725849AbgHJGNf (ORCPT
+        Mon, 10 Aug 2020 02:14:51 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46344 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725814AbgHJGOv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 02:13:35 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11C25C061756
-        for <linux-kernel@vger.kernel.org>; Sun,  9 Aug 2020 23:13:35 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id 9so6583178wmj.5
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Aug 2020 23:13:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=dBeGb9NKFozCmuSADydRWnA8ktG5DHCOdPcf3Ab7zbk=;
-        b=IaWQFKFZ2ADDCEFn60SrAlV1GkczDvUoHXUswVAQcRSnzM3EUy6tQrrhNspEWOcKzl
-         r/x6hDdgUcDWJMEffU3YGiHm8gH11F/+obYTYCBfwyrQsjv9O8Of1tJnUKp73sku5PNZ
-         fT/VBJBm3YCgrmzGMpmThR9dF05pTxJvYghudGbBAh3hxxb9c1XQH/K2OoC2A9XKBvzl
-         ciI833LeiYD6tC8qRSG5H240pdm9h0j4J5ZVSIBUnMtgc1bfwvHkwWHuaMkEFmT2YQfp
-         wmREKcu1P+yMq39aPUMQLj9GF4JqGSpuxR1krQMdxrYatlIEztwPrs+R1adZEH5GqnO0
-         7+zA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=dBeGb9NKFozCmuSADydRWnA8ktG5DHCOdPcf3Ab7zbk=;
-        b=VZMsG2+kWTQ0Fm3R5d6mEBIoxJkGfR0D0Tmo0ZJCi81VFeL5a+VuT+gY5LnM9dFPo5
-         ZTHcRHOI77h2WOUCN9Mcn73grgrL1vEodxvd1j1FRW5sEDO6nTw0pOaB8ReGhYkRKx7X
-         ZM3oGlKUA4wCR9k5tiHR2l9a4oAVLzaFY6pdR9z0FIQ8YU4BAwX7vEcRfJh4to9Xupsr
-         uWt9jjzC5m17MbvAnS5hh/g8u3Ep4/kUiikUTYSmMMURXstr2evWIF5WoSiHUwbB1pbd
-         +kBE7+Dqv8LTyazSKMGlBx+25dNFQg7VFFoni6Cqe6m8RAjsXWW7FVjiYk0h0pW9Mrh4
-         LU7A==
-X-Gm-Message-State: AOAM533VWVp/qb19RAbVxpfrMe+lWcDAT0Lp55565s5mVduTldji5Hnh
-        nzGwKfocQucUBwW+M3DcAc8=
-X-Google-Smtp-Source: ABdhPJxyOoKihVDCn7j/AdhD2AU1CP7dqumRfftRRTs2o9STUzFq4gvZo5L+Q/csBkS1+q7Qjg4LGg==
-X-Received: by 2002:a7b:c7d5:: with SMTP id z21mr24658947wmk.145.1597040012358;
-        Sun, 09 Aug 2020 23:13:32 -0700 (PDT)
-Received: from localhost (dslb-002-207-138-002.002.207.pools.vodafone-ip.de. [2.207.138.2])
-        by smtp.gmail.com with ESMTPSA id t133sm24328936wmf.0.2020.08.09.23.13.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Aug 2020 23:13:30 -0700 (PDT)
-Date:   Mon, 10 Aug 2020 08:13:24 +0200
-From:   Oliver Graute <oliver.graute@gmail.com>
-To:     jason.hui.liu@nxp.com
-Cc:     anson.huang@nxp.com, aisheng.dong@nxp.com, catalin.marinas@arm.com,
-        will@kernel.org, linux-imx@nxp.com, linux-kernel@vger.kernel.org
-Subject: Re: arm64: imx8qm: tlb SW workaround for IMX8QM
-Message-ID: <20200810061324.GA66637@archlinux.localdomain>
-References: <20200427082348.GA98329@archlinux.localdomain>
- <20200427130328.GA101181@archlinux.localdomain>
+        Mon, 10 Aug 2020 02:14:51 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07A672hM045033;
+        Mon, 10 Aug 2020 02:14:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : reply-to : references : mime-version : content-type
+ : in-reply-to; s=pp1; bh=DC9ZVaWbhsVOdNKl7yCJVCGW/U1781tV4/G8ec3wax0=;
+ b=g/eCrb+lh+U5FMPudB/mcYbJARjzqCDXIh/45hk0paXe4+/CnTWovHUJiy8MYo3bLJN/
+ nniRtTYJ/RgjZS39rfWW0yKuu89ITZs2YJRozXxuf2PszMX9JXr6oIYsu2p+Vb4flKoB
+ FCCs0oyDnVBcQQQgxcQ64WiEetzSl3f4J8b51koX+qaVkkxUT1W2KaxqsdP61UZcK/YU
+ Ff3GnDz0f3EyVoH3ZIq2X/O/+YWGYWEhENUaaA8Bzuom7pbUdbhTwxIPZBC82lXtx65n
+ zZHmc2NcqrrszzOIyfh7D0+fGMabSGXch33vcDP4HRhr3EEDiCiKR531DPzULu9VS1J9 6g== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32sr4qt72p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 10 Aug 2020 02:14:14 -0400
+Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07A6DZJn063941;
+        Mon, 10 Aug 2020 02:14:13 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32sr4qt72a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 10 Aug 2020 02:14:13 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07A6AOBg028154;
+        Mon, 10 Aug 2020 06:14:11 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma04ams.nl.ibm.com with ESMTP id 32skp81wu6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 10 Aug 2020 06:14:11 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07A6Cgn351642786
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 10 Aug 2020 06:12:42 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7530542047;
+        Mon, 10 Aug 2020 06:14:09 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 93C0242049;
+        Mon, 10 Aug 2020 06:14:07 +0000 (GMT)
+Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Mon, 10 Aug 2020 06:14:07 +0000 (GMT)
+Date:   Mon, 10 Aug 2020 11:44:06 +0530
+From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+To:     Josh Don <joshdon@google.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] sched/fair: ignore cache hotness for SMT migration
+Message-ID: <20200810061406.GA15559@linux.vnet.ibm.com>
+Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+References: <20200804105619.GE2657@hirez.programming.kicks-ass.net>
+ <20200804193413.510651-1-joshdon@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200427130328.GA101181@archlinux.localdomain>
+In-Reply-To: <20200804193413.510651-1-joshdon@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-10_02:2020-08-06,2020-08-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
+ clxscore=1015 malwarescore=0 lowpriorityscore=0 adultscore=0
+ priorityscore=1501 mlxscore=0 suspectscore=0 impostorscore=0
+ mlxlogscore=999 phishscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2008100043
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/04/20, Oliver Graute wrote:
-> On 27/04/20, Oliver Graute wrote:
-> > Hello,
-> >=20
-> > is this nxp software workaround already proposed to linux community? can
-> > someone point me to the discussion if available.
-> >=20
-> > https://source.codeaurora.org/external/imx/linux-imx/commit/?h=3D3Dimx_=
-5.4.3_=3D
-> > 2.0.0&id=3D3D593bea4e36d8c8a4fd65ef4f07fb8144dab2de1c
->=20
-> sry for the broken link. Here the right one:
->=20
-> https://source.codeaurora.org/external/imx/linux-imx/commit/?h=3Dimx_5.4.=
-3_2.0.0&id=3D593bea4e36d8c8a4fd65ef4f07fb8144dab2de1c
+* Josh Don <joshdon@google.com> [2020-08-04 12:34:13]:
 
-this patch is not applicable anymore since next-20200713. Is there an
-updated one?
+> SMT siblings share caches, so cache hotness should be irrelevant for
+> cross-sibling migration.
+> 
+> Proposed-by: Venkatesh Pallipadi <venki@google.com>
+> Signed-off-by: Josh Don <joshdon@google.com>
+> ---
+>  kernel/sched/fair.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 1a68a0536add..abdb54e2339f 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -7402,6 +7402,10 @@ static int task_hot(struct task_struct *p, struct lb_env *env)
+>  	if (unlikely(task_has_idle_policy(p)))
+>  		return 0;
+>  
+> +	/* SMT siblings share cache */
+> +	if (env->sd->flags & SD_SHARE_CPUCAPACITY)
+> +		return 0;
+> +
 
-Best Regards,
+If this for retaining cache hotness, should we look at
+SD_SHARE_PKG_RESOURCES instead of SD_SHARE_CPUCAPACITY?
 
-Oliver
+>  	/*
+>  	 * Buddy candidates are cache hot:
+>  	 */
+> -- 
+> 2.28.0.163.g6104cc2f0b6-goog
+> 
+
+-- 
+Thanks and Regards
+Srikar Dronamraju
