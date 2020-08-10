@@ -5,50 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1039C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EFA0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:19:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A84F822B47
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:19:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC4CE22BEA
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:19:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597072783;
-	bh=VOPjOURGlZwgIah6yUjOeqwg005U9YKaz3GSlAKIVak=;
+	s=default; t=1597072787;
+	bh=ObeMnJtvuTjudlZUs723OLhFqebQrx90QRCQCLjYZbs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UQkCclc28y72cU15teGvp5beQviAbKOyyEq82M01ZYg+qYjwqiPcXUjOvfKydvcFv
-	 TUOOxeXSyPZ/BT509LZlLC3MWJIW/LLkMpqZntjLZmnqmR0eQZ+s7iN5z6xG+aN1Lf
-	 GScSNe6H/BZGnoMktIc1+OXFN7k+lySEsOqVewJs=
+	b=t8FV7ACb/jfJTg/XomykGlAp8rSm3/1SsSTZDSKD3hqHi/N1+HoK+88x0buLh3Xih
+	 qHxq3WibHSRkmRnWw213JcYVnFo8JM2rgn+ZrrUSBQR5Asem0NDjltk+BYLIDtKnku
+	 nvVcRmCZ7cOPKvA7QMvWMAgWUb8jTYshPtmu3nJE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726068AbgHJPTm (ORCPT
+        id S1727823AbgHJPTp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:19:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49742 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:19:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726888AbgHJPTk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:19:40 -0400
+        id S1726888AbgHJPTn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:19:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61286207BB;
-        Mon, 10 Aug 2020 15:19:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C0EF208B3;
+        Mon, 10 Aug 2020 15:19:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597072779;
-        bh=VOPjOURGlZwgIah6yUjOeqwg005U9YKaz3GSlAKIVak=;
+        s=default; t=1597072782;
+        bh=ObeMnJtvuTjudlZUs723OLhFqebQrx90QRCQCLjYZbs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sPw2z8GCcM0vwpggUcpRhoBPPVr/SPb0m8g9a2jZIkmSXJ2stdTGFxdbHLdh6qb0v
-         FlUQAnOvat8cMDYrrFcQ21IfDxYKgHEQnG9b4nxZASthLxYiX1FG2qsfQr8y2uRKcv
-         L8QItKavm1ezvtor9cVK3No70eOq0YZ7BMoJMASI=
+        b=y2ibPtoIOysL12xO+XtV6nw70Q3Xt+OEGaezsulNDQiLQ7YRupr99brjBdW/hGMp8
+         bBl8b3e7cZ0351Q1J+ZgWC6+LmJI+ISA38Eicyd5/WsXJ0zfIzuF0TKZ0nZd+LSb+b
+         OAIqnjJdT3IKpokHHs8VWttOrqyTWygREcPx8BxQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+d8489a79b781849b9c46@syzkaller.appspotmail.com,
-        Peilin Ye <yepeilin.cs@gmail.com>,
+        stable@vger.kernel.org, Peilin Ye <yepeilin.cs@gmail.com>,
         Marcel Holtmann <marcel@holtmann.org>
-Subject: [PATCH 5.8 15/38] Bluetooth: Fix slab-out-of-bounds read in hci_extended_inquiry_result_evt()
-Date:   Mon, 10 Aug 2020 17:19:05 +0200
-Message-Id: <20200810151804.642329635@linuxfoundation.org>
+Subject: [PATCH 5.8 16/38] Bluetooth: Prevent out-of-bounds read in hci_inquiry_result_evt()
+Date:   Mon, 10 Aug 2020 17:19:06 +0200
+Message-Id: <20200810151804.689831155@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151803.920113428@linuxfoundation.org>
 References: <20200810151803.920113428@linuxfoundation.org>
@@ -63,20 +61,12 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Peilin Ye <yepeilin.cs@gmail.com>
 
-commit 51c19bf3d5cfaa66571e4b88ba2a6f6295311101 upstream.
+commit 75bbd2ea50ba1c5d9da878a17e92eac02fe0fd3a upstream.
 
-Check upon `num_rsp` is insufficient. A malformed event packet with a
-large `num_rsp` number makes hci_extended_inquiry_result_evt() go out
-of bounds. Fix it.
+Check `num_rsp` before using it as for-loop counter.
 
-This patch fixes the following syzbot bug:
-
-    https://syzkaller.appspot.com/bug?id=4bf11aa05c4ca51ce0df86e500fce486552dc8d2
-
-Reported-by: syzbot+d8489a79b781849b9c46@syzkaller.appspotmail.com
 Cc: stable@vger.kernel.org
 Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
@@ -86,7 +76,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 --- a/net/bluetooth/hci_event.c
 +++ b/net/bluetooth/hci_event.c
-@@ -4382,7 +4382,7 @@ static void hci_extended_inquiry_result_
+@@ -2520,7 +2520,7 @@ static void hci_inquiry_result_evt(struc
  
  	BT_DBG("%s num_rsp %d", hdev->name, num_rsp);
  
