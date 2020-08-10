@@ -7,53 +7,52 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE268C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:09:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A07C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:09:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF58A2224D
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:09:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89EC622CA1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:09:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597086581;
-	bh=9FN3Q3tnh73C0rRCFPvO7ky/kSOJoa79l+EkBe8XSbc=;
+	s=default; t=1597086585;
+	bh=FAWNIdyvFpKy3gLuGZk3l1aE1ffiq5S95HtYP5TCpc4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t3WYPKBaLBtEZugk0ZL9D4YYaflQz/gb7umss580fFQ8vdM+5S7Zh3pAYqWhwhZLm
-	 lLW4vaCgb74uA2GdF3ihYMiA7jkAxVt0NLtdntgeNqxOEn8Y/eIUAyjV5V9Ngs49hq
-	 Md55FgJtWOq/tbRf4j7FmHrEqdPd8lBsWVcJFLME=
+	b=vuBNR63mR0hMvvcHBTD0xrhs+IWKFf5bnfAFVeWd/suGEad1fpUfOnaD/bmCpqpFS
+	 hfu3eS2FxHoluTfXCBrf2cia3iltiAT0ZhjhiCL4/JLJu4XYh8Wr3ODW2x4/VB56Qd
+	 2AzT56x5csPG/k+s15guJbWHMdDmthVWrLXETzt4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728605AbgHJTJk (ORCPT
+        id S1728622AbgHJTJo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:09:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36016 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:09:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728585AbgHJTJh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:09:37 -0400
+        id S1728585AbgHJTJl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:09:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4E3522B45;
-        Mon, 10 Aug 2020 19:09:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D762122CA1;
+        Mon, 10 Aug 2020 19:09:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086576;
-        bh=9FN3Q3tnh73C0rRCFPvO7ky/kSOJoa79l+EkBe8XSbc=;
+        s=default; t=1597086580;
+        bh=FAWNIdyvFpKy3gLuGZk3l1aE1ffiq5S95HtYP5TCpc4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HDxhi3gbfiB9uY1rT8bJbUMSzui+kp5WhmalXoxlItFiYAPAp8b67q9AdCzxZEp6y
-         lFJRGfcXHSHXpOaB62iGkXJtOeKlWRIEJXvyRdU8oidKn+GvZ6o4MRNH0v/6t+9j7w
-         WdYBXDkf1i7nvkHCSBlUukTbCcVqUbsA2c0J1YKU=
+        b=YHnGZAWBNdvAkXNGUyu7IlLKC2RmY5M3TMNWgNOBurd2aUL+jZUYIqMD91BA3QH7z
+         NSHv7mUVtkbn0tDjeoeQwx29LROPzxCLnHB4AeRqABxCKJPcfSBybk4KdVI9skpDMg
+         6uTDogOD12SzUro1pNGKIvDPgBHWOWqqRwRjY+5M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Akhil P Oommen <akhilpo@codeaurora.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.8 27/64] drm: msm: a6xx: fix gpu failure after system resume
-Date:   Mon, 10 Aug 2020 15:08:22 -0400
-Message-Id: <20200810190859.3793319-27-sashal@kernel.org>
+Cc:     =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.8 30/64] drm/radeon: disable AGP by default
+Date:   Mon, 10 Aug 2020 15:08:25 -0400
+Message-Id: <20200810190859.3793319-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810190859.3793319-1-sashal@kernel.org>
 References: <20200810190859.3793319-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,71 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Akhil P Oommen <akhilpo@codeaurora.org>
+From: Christian König <christian.koenig@amd.com>
 
-[ Upstream commit 57c0bd517c06b088106b0236ed604056c8e06da5 ]
+[ Upstream commit ba806f98f868ce107aa9c453fef751de9980e4af ]
 
-On targets where GMU is available, GMU takes over the ownership of GX GDSC
-during its initialization. So, move the refcount-get on GX PD before we
-initialize the GMU. This ensures that nobody can collapse the GX GDSC
-once GMU owns the GX GDSC. This patch fixes some GMU OOB errors seen
-during GPU wake up during a system resume.
+Always use the PCI GART instead. We just have to many cases
+where AGP still causes problems. This means a performance
+regression for some GPUs, but also a bug fix for some others.
 
-Reported-by: Matthias Kaehlcke <mka@chromium.org>
-Signed-off-by: Akhil P Oommen <akhilpo@codeaurora.org>
-Tested-by: Matthias Kaehlcke <mka@chromium.org>
-Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+Signed-off-by: Christian König <christian.koenig@amd.com>
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
+ drivers/gpu/drm/radeon/radeon_drv.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-index 21e77d67151f5..1d330204c465c 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-@@ -854,10 +854,19 @@ int a6xx_gmu_resume(struct a6xx_gpu *a6xx_gpu)
- 	/* Turn on the resources */
- 	pm_runtime_get_sync(gmu->dev);
- 
-+	/*
-+	 * "enable" the GX power domain which won't actually do anything but it
-+	 * will make sure that the refcounting is correct in case we need to
-+	 * bring down the GX after a GMU failure
-+	 */
-+	if (!IS_ERR_OR_NULL(gmu->gxpd))
-+		pm_runtime_get_sync(gmu->gxpd);
-+
- 	/* Use a known rate to bring up the GMU */
- 	clk_set_rate(gmu->core_clk, 200000000);
- 	ret = clk_bulk_prepare_enable(gmu->nr_clocks, gmu->clocks);
- 	if (ret) {
-+		pm_runtime_put(gmu->gxpd);
- 		pm_runtime_put(gmu->dev);
- 		return ret;
- 	}
-@@ -903,19 +912,12 @@ int a6xx_gmu_resume(struct a6xx_gpu *a6xx_gpu)
- 	else
- 		a6xx_hfi_set_freq(gmu, gmu->current_perf_index);
- 
--	/*
--	 * "enable" the GX power domain which won't actually do anything but it
--	 * will make sure that the refcounting is correct in case we need to
--	 * bring down the GX after a GMU failure
--	 */
--	if (!IS_ERR_OR_NULL(gmu->gxpd))
--		pm_runtime_get(gmu->gxpd);
--
- out:
- 	/* On failure, shut down the GMU to leave it in a good state */
- 	if (ret) {
- 		disable_irq(gmu->gmu_irq);
- 		a6xx_rpmh_stop(gmu);
-+		pm_runtime_put(gmu->gxpd);
- 		pm_runtime_put(gmu->dev);
- 	}
- 
+diff --git a/drivers/gpu/drm/radeon/radeon_drv.c b/drivers/gpu/drm/radeon/radeon_drv.c
+index 62b5069122cc4..4cd30613fa1dd 100644
+--- a/drivers/gpu/drm/radeon/radeon_drv.c
++++ b/drivers/gpu/drm/radeon/radeon_drv.c
+@@ -171,12 +171,7 @@ int radeon_no_wb;
+ int radeon_modeset = -1;
+ int radeon_dynclks = -1;
+ int radeon_r4xx_atom = 0;
+-#ifdef __powerpc__
+-/* Default to PCI on PowerPC (fdo #95017) */
+ int radeon_agpmode = -1;
+-#else
+-int radeon_agpmode = 0;
+-#endif
+ int radeon_vram_limit = 0;
+ int radeon_gart_size = -1; /* auto */
+ int radeon_benchmarking = 0;
 -- 
 2.25.1
 
