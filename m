@@ -2,161 +2,112 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65136C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:19:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A08A5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:24:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 474182070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:19:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B0262070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:24:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727037AbgHJOTs (ORCPT
+        id S1726851AbgHJOYn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 10:19:48 -0400
-Received: from canopus.corp.1gb.ru ([81.177.167.38]:22258 "EHLO
-        canopus.corp.1gb.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726845AbgHJOTr (ORCPT
+        Mon, 10 Aug 2020 10:24:43 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:37157 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726499AbgHJOYm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 10:19:47 -0400
-Received: from canopus.corp.1gb.ru (canopus.corp.1gb.ru [81.177.167.38] (may be forged))
-        by canopus.corp.1gb.ru (8.14.5/8.14.7) with ESMTP id 07ADl4S0030046
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Mon, 10 Aug 2020 16:47:04 +0300 (MSK)
-        (envelope-from renton@renton.name)
-Received: (from renton@localhost)
-        by canopus.corp.1gb.ru (8.14.5/8.14.7/Submit) id 07ADl4ZC030045;
-        Mon, 10 Aug 2020 16:47:04 +0300 (MSK)
-        (envelope-from renton@renton.name)
-X-Authentication-Warning: canopus.corp.1gb.ru: renton set sender to renton@renton.name using -f
-Date:   Mon, 10 Aug 2020 16:47:04 +0300
-From:   Alexey Vlasov <renton@renton.name>
-To:     linux-kernel@vger.kernel.org
-Cc:     kirill@shutemov.name
-Subject: Re: [REGRESSION] [BISECTED] kswapd high CPU usage
-Message-ID: <20200810134704.GO69039@canopus.corp.1gb.ru>
-References: <20200715100438.GL69039@canopus.corp.1gb.ru>
+        Mon, 10 Aug 2020 10:24:42 -0400
+Received: (qmail 300635 invoked by uid 1000); 10 Aug 2020 10:24:41 -0400
+Date:   Mon, 10 Aug 2020 10:24:41 -0400
+From:   Alan Stern <stern@rowland.harvard.edu>
+To:     syzbot <syzbot+c2c3302f9c601a4b1be2@syzkaller.appspotmail.com>
+Cc:     andreyknvl@gmail.com, andreyknvl@google.com, balbi@kernel.org,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: WARNING in slab_pre_alloc_hook
+Message-ID: <20200810142441.GB299045@rowland.harvard.edu>
+References: <000000000000589ccd05ac845d6e@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200715100438.GL69039@canopus.corp.1gb.ru>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <000000000000589ccd05ac845d6e@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I have found a workaround preventing these hangs.
-Primarily, disable THP:
+On Mon, Aug 10, 2020 at 04:36:25AM -0700, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following issue on:
+> 
+> HEAD commit:    449dc8c9 Merge tag 'for-v5.9' of git://git.kernel.org/pub/..
+> git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
+> console output: https://syzkaller.appspot.com/x/log.txt?x=16581652900000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=6ef84fa8ee48e528
+> dashboard link: https://syzkaller.appspot.com/bug?extid=c2c3302f9c601a4b1be2
+> compiler:       gcc (GCC) 10.1.0-syz 20200507
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16e8de34900000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1244eb62900000
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+c2c3302f9c601a4b1be2@syzkaller.appspotmail.com
+> 
+> ------------[ cut here ]------------
+> do not call blocking ops when !TASK_RUNNING; state=1 set at [<00000000370c7c68>] prepare_to_wait+0xb1/0x2a0 kernel/sched/wait.c:247
+> WARNING: CPU: 1 PID: 340 at kernel/sched/core.c:7253 __might_sleep+0x135/0x190 kernel/sched/core.c:7253
+> Kernel panic - not syncing: panic_on_warn set ...
+> CPU: 1 PID: 340 Comm: syz-executor677 Not tainted 5.8.0-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0xf6/0x16e lib/dump_stack.c:118
+>  panic+0x2aa/0x6e1 kernel/panic.c:231
+>  __warn.cold+0x20/0x50 kernel/panic.c:600
+>  report_bug+0x1bd/0x210 lib/bug.c:198
+>  handle_bug+0x41/0x80 arch/x86/kernel/traps.c:234
+>  exc_invalid_op+0x14/0x40 arch/x86/kernel/traps.c:254
+>  asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:536
+> RIP: 0010:__might_sleep+0x135/0x190 kernel/sched/core.c:7253
+> Code: 65 48 8b 1c 25 40 ef 01 00 48 8d 7b 10 48 89 fe 48 c1 ee 03 80 3c 06 00 75 2b 48 8b 73 10 48 c7 c7 e0 9e 06 86 e8 ed 12 f6 ff <0f> 0b e9 46 ff ff ff e8 1f b2 4b 00 e9 29 ff ff ff e8 15 b2 4b 00
+> RSP: 0018:ffff8881cdb77a28 EFLAGS: 00010282
+> RAX: 0000000000000000 RBX: ffff8881c6458000 RCX: 0000000000000000
+> RDX: ffff8881c6458000 RSI: ffffffff8129ec93 RDI: ffffed1039b6ef37
+> RBP: ffffffff86fdade2 R08: 0000000000000001 R09: ffff8881db32f54f
+> R10: 0000000000000000 R11: 0000000030343354 R12: 00000000000001f2
+> R13: 0000000000000000 R14: 0000000000000068 R15: ffffffff83c1b1aa
+>  slab_pre_alloc_hook.constprop.0+0xea/0x200 mm/slab.h:498
+>  slab_alloc_node mm/slub.c:2816 [inline]
+>  slab_alloc mm/slub.c:2900 [inline]
+>  kmem_cache_alloc_trace+0x46/0x220 mm/slub.c:2917
+>  kmalloc include/linux/slab.h:554 [inline]
+>  dummy_urb_enqueue+0x7a/0x880 drivers/usb/gadget/udc/dummy_hcd.c:1251
+>  usb_hcd_submit_urb+0x2b2/0x22d0 drivers/usb/core/hcd.c:1547
+>  usb_submit_urb+0xb4e/0x13e0 drivers/usb/core/urb.c:570
+>  yurex_write+0x3ea/0x820 drivers/usb/misc/yurex.c:495
 
-echo never > /sys/kernel/mm/transparent_hugepage/enabled
-echo never > /sys/kernel/mm/transparent_hugepage/defrag
+The yurex driver shouldn't use GFP_KERNEL in a context where the current 
+state isn't TASK_RUNNING.
 
-and next, we should increase vm.min_free_kbytes, in my case 16Gb is
-enough
+Alan Stern
 
-vm.min_free_kbytes = 16777216
+#syz test: https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git 449dc8c9
 
-On Wed, Jul 15, 2020 at 01:04:38PM +0300, Alexey Vlasov wrote:
-> Hi,
-> 
-> After upgrading from 3.14 to 4.14.173, I ran into exactly the same problem
-> that the starter topic described. Namely, sometimes kswapd starts to consume 100% 
-> of the CPU, and the system freezes for several minutes.
-> 
-> Below is an example of such an event (orange - system cpu, red - total cpu):
-> https://www.dropbox.com/s/5wr5su3p0fubq0a/kswapd_100.png?dl=0
-> 
-> Here is the top:
-> 
-> top - 23:44:16 up 9 days,  2:06, 14 users,  load average: 14.03, 12.32, 13.07
-> Tasks: 7108 total,  16 running, 6921 sleeping,   0 stopped,   9 zombie
-> %Cpu(s): 28.1 us, 18.1 sy,  0.0 ni, 51.7 id,  1.2 wa,  0.0 hi,  0.9 si,  0.0 st
-> KiB Mem : 19803248+total,   596160 free, 11094233+used, 86493992 buff/cache
-> KiB Swap: 62914556 total, 62302912 free,   611644 used. 71269504 avail Mem
-> 
->   PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND
->   134 root      20   0       0      0      0 R  86.2  0.0 383:21.35 kswapd0
->   135 root      20   0       0      0      0 R  84.9  0.0 344:00.17 kswapd1
-> 
-> this is a begin of the collapse, some minutes later the system has thousands of D
-> processes and does not answer:
-> 
-> top - 23:57:33 up 9 days,  2:19, 14 users,  load average: 1223.43, 1083.85, 662.
-> Tasks: 8356 total, 344 running, 7821 sleeping,   0 stopped,  44 zombie
-> %Cpu(s): 28.1 us, 18.2 sy,  0.0 ni, 51.6 id,  1.2 wa,  0.0 hi,  0.9 si,  0.0 st
-> KiB Mem : 19803248+total,   800516 free, 11587540+used, 81356560 buff/cache
-> KiB Swap: 62914556 total, 62130072 free,   784484 used. 62231208 avail Mem
-> 
->   PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND
-> 10704 w_defau+  20   0  393476 117160  15160 D 100.0  0.1   0:00.16 httpd
-> 16056 w_sti46+  20   0  599048  21528   9504 S 100.0  0.0   0:00.00 httpd
-> 12649 w_divan+  20   0   41764   8064   3904 D 100.0  0.0   0:06.62 menu1.pl
-> 13739 w_defau+  20   0  248696  24168  14132 S 100.0  0.0   0:00.01 httpd
->  5172 mysql     20   0 6993508 2.310g   9660 D  38.9  1.2   3866:26 mysqld_aux3
->  4683 mysql     20   0 9974.1m 4.366g   8268 D  38.7  2.3   2553:14 mysqld
->  4791 mysql     20   0 10.359g 4.180g   9784 D  28.5  2.2   1659:40 mysqld_aux1
->  5078 mysql     20   0  9.871g 3.774g   9888 D  25.4  2.0   2445:08 mysqld_aux2
->     9 root      20   0       0      0      0 I   3.4  0.0  13:56.16 rcu_sched
->   135 root      20   0       0      0      0 D   2.8  0.0 344:29.12 kswapd1
->   134 root      20   0       0      0      0 D   2.6  0.0 383:49.86 kswapd0
-> 
-> Nevertheless there is not any I/O activity before after and during this collapse.
-> 
-> I tried to use your patch about "late_initcall(set_recommended_min_free_kbytes)",
-> unfortunately it did not help.
-> 
-> In my experience this could be solved by adding RAM but unfortunately this server
-> no longer has free slots. 188 GB RAM is the maximum for it.
-> 
-> Also I cannot go back to 3.14 kernel, since one of the partitions contains xfs with
-> the superblock of the new version v5, which is not supported by 3.14 kernel.
-> 
-> If you need more information, for example, vmstat, /proc/meminfo, I can send.
-> 
-> Is there any solution to this problem?
-> 
-> > On Fri, Jan 22, 2016 at 12:28:10AM +1000, Nalorokk wrote:
-> >> It appears that kernels newer than 4.1 have kswapd-related bug resulting in
-> >> high CPU usage. CPU 100% usage could last for several minutes or several
-> >> days, with CPU being busy entirely with serving kswapd. It happens usually
-> >> after server being mostly idle, sometimes after days, sometimes after weeks
-> >> of uptime. But the issue appears much sooner if the machine is loaded with
-> >> something like building a kernel.
-> >>
-> >> Here are the graphs of CPU load: first
-> >> <http://i.piccy.info/i9/9ee6c0620c9481a974908484b2a52a0f/1453384595/44012/994698/cpu_month.png>,
-> >> second
-> >> <http://i.piccy.info/i9/7c97c2f39620bb9d7ea93096312dbbb6/1453384649/41222/994698/cpu_year.png>.
-> >> Perf top output is here <http://pastebin.com/aRzTjb2x>as well.
-> >>
-> >> To find the cause of this problem I've started with the fact that the issue
-> >> appeared after 4.1 kernel update. Then I performed longterm test of 3.18,
-> >> and discovered that 3.18 is unaffected by this bug. Then I did some tests
-> >> of 4.0 to confirm that this version behaves well too.
-> >>
-> >> Then I performed git bisect from tag v4.0 to v4.1-rc1 and found exact
-> >> commits that seem to be reason of high CPU usage.
-> >>
-> >> The first really "bad" commit is 79553da293d38d63097278de13e28a3b371f43c1.
-> >> 2 previous commits cause weird behavior as well resulting in kswapd
-> >> consuming more CPU than unaffected kernels, but not that much as the commit
-> >> pointed above. I believe those commits are related to the same mm tree
-> >> merge.
-> >>
-> >> I tried to add transparent_hugepage=never to kernel boot parameters, but it
-> >> did not change anything. Changing allocator to SLAB from SLUB alters
-> >> behavior and makes CPU load lower, but don't solve a problem at all.
-> >>
-> >> Here <https://bugzilla.kernel.org/show_bug.cgi?id=110501>is kernel bugzilla
-> >> bugreport as well.
-> >>
-> >> Ideas? â
-> >
-> > Could you try to insert "late_initcall(set_recommended_min_free_kbytes);"
-> > back and check if makes any difference.
-> >
-> >-- 
-> >Kirill A. Shutemov
+Index: usb-devel/drivers/usb/misc/yurex.c
+===================================================================
+--- usb-devel.orig/drivers/usb/misc/yurex.c
++++ usb-devel/drivers/usb/misc/yurex.c
+@@ -492,7 +492,7 @@ static ssize_t yurex_write(struct file *
+ 	prepare_to_wait(&dev->waitq, &wait, TASK_INTERRUPTIBLE);
+ 	dev_dbg(&dev->interface->dev, "%s - submit %c\n", __func__,
+ 		dev->cntl_buffer[0]);
+-	retval = usb_submit_urb(dev->cntl_urb, GFP_KERNEL);
++	retval = usb_submit_urb(dev->cntl_urb, GFP_ATOMIC);
+ 	if (retval >= 0)
+ 		timeout = schedule_timeout(YUREX_WRITE_TIMEOUT);
+ 	finish_wait(&dev->waitq, &wait);
