@@ -2,120 +2,280 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DC87C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:32:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC1F0C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:34:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CB9A2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:32:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597051938;
-	bh=rYQETMEuY/Gnmi3nPJ9bLKGcfo7ypYEaqWHmvIY24Tc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2n6HwU/N4KTf/e39PQdk0vB079OMnRG2L+LUvwS/fMG7yTriouGaN+f9T6pMGnfJV
-	 wVLeeiau19WE1n+gTAHg5/0Y7idxSJ43vIKILnc2F1h+D3R7Q5TEGK7k/JYfClmkKZ
-	 gEs6UfW4WBfZ1nixgYweUwAvvSyMWcMzpuwptKAA=
+	by mail.kernel.org (Postfix) with ESMTP id 8D1AC2063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:34:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbgHJJcR (ORCPT
+        id S1726713AbgHJJeY convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 05:32:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41800 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726029AbgHJJcP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 05:32:15 -0400
-Received: from localhost (p54b3345b.dip0.t-ipconnect.de [84.179.52.91])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A5592063A;
-        Mon, 10 Aug 2020 09:32:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597051934;
-        bh=rYQETMEuY/Gnmi3nPJ9bLKGcfo7ypYEaqWHmvIY24Tc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZI/odSDLJ46htbJHrtKOR4bSJyXdmSnl+ezLotbpkI4adzDtDDcKnlPwWNvQDfEre
-         MWW8hGpZ8+DATaSpJW9ecUCz+MsWwIBtyEpjiJPtKFJBfZ/itGxkbl/4nKiDm62+uf
-         bP4Iog99TecSpL6t6saehA78DrIR4ISeI9rL5+4w=
-Date:   Mon, 10 Aug 2020 11:32:09 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Stephen Kitt <steve@sk2.org>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5] hwmon/pmbus: use simple i2c probe function
-Message-ID: <20200810093209.GA1290@kunai>
-Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
-        Stephen Kitt <steve@sk2.org>, Guenter Roeck <linux@roeck-us.net>,
-        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200808210004.30880-1-steve@sk2.org>
+        Mon, 10 Aug 2020 05:34:24 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2586 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726304AbgHJJeY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 05:34:24 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id CACCEA4E080892432639;
+        Mon, 10 Aug 2020 10:34:21 +0100 (IST)
+Received: from localhost (10.52.123.94) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 10 Aug
+ 2020 10:34:21 +0100
+Date:   Mon, 10 Aug 2020 10:32:52 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Sean V Kelley <sean.v.kelley@intel.com>, <rjw@rjwysocki.net>
+CC:     Bjorn Helgaas <helgaas@kernel.org>, <bhelgaas@google.com>,
+        <ashok.raj@intel.com>, <tony.luck@intel.com>,
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH V2 4/9] PCI/AER: Extend AER error handling to RCECs
+Message-ID: <20200810103252.00000318@Huawei.com>
+In-Reply-To: <D24FD705-BFE3-4623-AC7B-E53FCDC06EC5@intel.com>
+References: <20200807225314.GA521346@bjorn-Precision-5520>
+        <D24FD705-BFE3-4623-AC7B-E53FCDC06EC5@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="BXVAT5kNtrzKuDFl"
-Content-Disposition: inline
-In-Reply-To: <20200808210004.30880-1-steve@sk2.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [10.52.123.94]
+X-ClientProxiedBy: lhreml733-chm.china.huawei.com (10.201.108.84) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 7 Aug 2020 17:55:17 -0700
+Sean V Kelley <sean.v.kelley@intel.com> wrote:
 
---BXVAT5kNtrzKuDFl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On 7 Aug 2020, at 15:53, Bjorn Helgaas wrote:
+> 
+> > On Tue, Aug 04, 2020 at 12:40:47PM -0700, Sean V Kelley wrote:  
+> >> From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> >>
+> >> Currently the kernel does not handle AER errors for Root Complex 
+> >> integrated
+> >> End Points (RCiEPs)[0]. These devices sit on a root bus within the 
+> >> Root Complex
+> >> (RC). AER handling is performed by a Root Complex Event Collector 
+> >> (RCEC) [1]
+> >> which is a effectively a type of RCiEP on the same root bus.
+> >>
+> >> For an RCEC (technically not a Bridge), error messages "received" 
+> >> from
+> >> associated RCiEPs must be enabled for "transmission" in order to 
+> >> cause a
+> >> System Error via the Root Control register or (when the Advanced 
+> >> Error
+> >> Reporting Capability is present) reporting via the Root Error Command
+> >> register and logging in the Root Error Status register and Error 
+> >> Source
+> >> Identification register.
+> >>
+> >> In addition to the defined OS level handling of the reset flow for 
+> >> the
+> >> associated RCiEPs of an RCEC, it is possible to also have a firmware 
+> >> first
+> >> model. In that case there is no need to take any actions on the RCEC 
+> >> because
+> >> the firmware is responsible for them. This is true where APEI [2] is 
+> >> used
+> >> to report the AER errors via a GHES[v2] HEST entry [3] and relevant
+> >> AER CPER record [4] and Firmware First handling is in use.  
+> >
+> > I don't see anything in the patch that mentions "firmware first." Do
+> > we need it in the commit log?  After
+> > https://git.kernel.org/linus/708b20003624 ("PCI/AER: Remove
+> > HEST/FIRMWARE_FIRST parsing for AER ownership"), I think we no longer
+> > know anything about firmware-first in the kernel.  
+> 
+> I’ll let Jonathan reply here.
 
-On Sat, Aug 08, 2020 at 11:00:04PM +0200, Stephen Kitt wrote:
-> pmbus_do_probe doesn't use the id information provided in its second
-> argument, so this can be removed, which then allows using the
-> single-parameter i2c probe function ("probe_new") for probes.
->=20
-> This avoids scanning the identifier tables during probes.
->=20
-> Drivers which didn't use the id are converted as-is; drivers which did
-> are modified as follows:
->=20
-> * if the information in i2c_client is sufficient, that's used instead
->   (client->name);
-> * configured v. probed comparisons are performed by comparing the
->   configured name to the detected name, instead of the ids; this
->   involves strcmp but is still cheaper than comparing all the device
->   names when scanning the tables;
-> * anything else is handled by calling i2c_match_id() with the same
->   level of error-handling (if any) as before.
->=20
-> Additionally, the mismatch message in the ltc2978 driver is adjusted
-> so that it no longer assumes that the driver_data is an index into
-> ltc2978_id.
->=20
-> Signed-off-by: Stephen Kitt <steve@sk2.org>
+This is a terminology question rather about what the distinction
+between "Firmware First" vs "non native handling" is.
 
-Still no detailed review, but I support (and even appreciate!) the
-conversion:
+Note that in ARM world, native handling tends to be referred to as
+'kernel first' and firmware based handling as 'firmware first' 
+but that isn't that relevant here other than perhaps explaining why I used
+this terminology. e.g.
+http://connect.linaro.org.s3.amazonaws.com/hkg18/presentations/hkg18-116.pdf
+The distinction is who receives the notification of the error from hardware
+and hence who sees it 'first' - basically where does the interrupt go?
 
-Acked-by: Wolfram Sang <wsa@kernel.org>
+Anyhow, if we want to avoid confusion here, we can just use the phrase
+"non native handling" which I think is unambiguous?
 
 
---BXVAT5kNtrzKuDFl
-Content-Type: application/pgp-signature; name="signature.asc"
+...
+ 
+> >  
+> >> + * including any bridged devices on buses under this bus.
+> >> + * Call the provided callback on each device found.
+> >> + *
+> >> + * If the device provided has no subordinate bus, call the provided
+> >> + * callback on the device itself.
+> >> + */
+> >> +static void pci_walk_dev_affected(struct pci_dev *dev, int 
+> >> (*cb)(struct pci_dev *, void *),  
+> >
+> > I don't understand the "affected" reference in the function name.
+> > This doesn't test anything to see whether devices are "affected".
+> > Naming is the hardest part of programming :)  
+> 
+> In earlier discussion, Cameron had suggested pci_walk_aer_affected(). 
+> But I thought perhaps that the focus should be on the devices.  Perhaps 
+> a better description would be pci_walk_aer_devices() or something along 
+> those lines.  The original incarnation was pci_walk_below_dev().
+> 
+> I’m open to anything, really.
 
------BEGIN PGP SIGNATURE-----
+Agreed. It is really hard to name this function and would be great to 
+have a better option.
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8xFBUACgkQFA3kzBSg
-KbanKg/7BAf/sKdiycBUflUoB+Aqwr8+6ECBg5faGYiLlco2Ho7OTFU5G3HbIc3+
-Ygj/5BON9feshnjbwmDu/0+Mm0T1Vr91XYHPSxq4WKTHuNZa4NiAARWfJQlZ+/h1
-a2dxBZlYrv9UT54THde7GIrJa/eScVclPa/QfQetzrEggM1D1Rjl8jlVETe7ZiuM
-AuXqLyILQwdfSvuL/sMfQ3LDPhvWmPACGhiwiJE6KuT5BKvRGYQzYVMltwHITX5a
-TqTST7AXlasj4+XBCmAbLsS8d4qodXvfSUTHnrsgAYoY6eBuV9ccnkX37TBxCDEL
-G8aG2VnEdU0glQ8EiReNZUYCswHXq7hQ9QzJz967qcounKsjchcTM+yR9Rdgj3xR
-oe71Mx37jNLozylq3mHX3MflCxR+MhuornB/r3hi76pg+VQbR3KM3o5HQxLwcmhS
-NHgUgo7E+ua0cH+/30iHrIWPJC+uVFwb/HL1ZlVOYGoexPt733EdOHRDKPRR5MQb
-EGD2WscVZwj5Gfopb+huUQmS+YsbeswH+waNIC7HFVa3lrpm78wEuFrs0rot/5Ui
-mmPx+IZBxTRGHP+RQa+dM4TTqk+KFWAul/s/puw928lvyEni5Nyv350F4F/aL8De
-Kdl75gR7rDcT/rambE4X9SJbwsqVG4ckR3FOdzu4xELKeCJnZmc=
-=P9Vd
------END PGP SIGNATURE-----
+> >>  pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+> >>  			pci_channel_state_t state,
+> >>  			pci_ers_result_t (*reset_link)(struct pci_dev *pdev))
+> >>  {
+> >>  	pci_ers_result_t 'status = PCI_ERS_RESULT_CAN_RECOVER;
+> >> -	struct pci_bus *bus;
+> >>
+> >>  	/*
+> >>  	 * Error recovery runs on all subordinates of the first downstream 
+> >> port.
+> >>  	 * If the downstream port detected the error, it is cleared at the 
+> >> end.
+> >> +	 * For RCiEPs we should reset just the RCiEP itself.
+> >>  	 */
+> >>  	if (!(pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
+> >> -	      pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM))
+> >> +	      pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
+> >> +	      pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END ||
+> >> +	      pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC))
+> >>  		dev = dev->bus->self;
+> >> -	bus = dev->subordinate;
+> >>
+> >>  	pci_dbg(dev, "broadcast error_detected message\n");
+> >>  	if (state == pci_channel_io_frozen) {
+> >> -		pci_walk_bus(bus, report_frozen_detected, &status);
+> >> +		pci_walk_dev_affected(dev, report_frozen_detected, &status);
+> >> +		if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END) {
+> >> +			pci_warn(dev, "link reset not possible for RCiEP\n");
+> >> +			status = PCI_ERS_RESULT_NONE;
+> >> +			goto failed;
+> >> +		}
+> >> +
+> >>  		status = reset_link(dev);  
+> >
+> > reset_link() might be misnamed.  IIUC "dev" is a bridge, and the point
+> > is really to reset any devices below "dev."  Whether we do that by
+> > resetting link, DPC trigger, secondary bus reset, FLR, etc, is sort of
+> > immaterial.  Some of those methods might be applicable for RCiEPs.
+> >
+> > But you didn't add that name; I'm just trying to understand this
+> > better.  
+> 
+> Yes, that’s a confusing term with the _link attached. It’s difficult 
+> to relate to the different resets that might be applicable. I was 
+> thinking about that when looking at the callback path via the 
+> “reset_link” of the RCiEP to the RCEC for the sole purpose of 
+> clearing the Root Port Error Status. It would be worth time to spend 
+> looking at better descriptive naming/methods.
 
---BXVAT5kNtrzKuDFl--
+Agreed, this caused me some some confusion as well so more descriptive
+naming would be good.
+
+> 
+> >  
+> >>  		if (status != PCI_ERS_RESULT_RECOVERED) {
+> >>  			pci_warn(dev, "link reset failed\n");
+> >>  			goto failed;
+> >>  		}
+> >>  	} else {
+> >> -		pci_walk_bus(bus, report_normal_detected, &status);
+> >> +		pci_walk_dev_affected(dev, report_normal_detected, &status);
+> >>  	}
+> >>
+> >>  	if (status == PCI_ERS_RESULT_CAN_RECOVER) {
+> >>  		status = PCI_ERS_RESULT_RECOVERED;
+> >>  		pci_dbg(dev, "broadcast mmio_enabled message\n");
+> >> -		pci_walk_bus(bus, report_mmio_enabled, &status);
+> >> +		pci_walk_dev_affected(dev, report_mmio_enabled, &status);
+> >>  	}
+> >>
+> >>  	if (status == PCI_ERS_RESULT_NEED_RESET) {
+> >> @@ -188,18 +219,22 @@ pci_ers_result_t pcie_do_recovery(struct 
+> >> pci_dev *dev,
+> >>  		 */
+> >>  		status = PCI_ERS_RESULT_RECOVERED;
+> >>  		pci_dbg(dev, "broadcast slot_reset message\n");
+> >> -		pci_walk_bus(bus, report_slot_reset, &status);
+> >> +		pci_walk_dev_affected(dev, report_slot_reset, &status);
+> >>  	}
+> >>
+> >>  	if (status != PCI_ERS_RESULT_RECOVERED)
+> >>  		goto failed;
+> >>
+> >>  	pci_dbg(dev, "broadcast resume message\n");
+> >> -	pci_walk_bus(bus, report_resume, &status);
+> >> -
+> >> -	if (pcie_aer_is_native(dev))
+> >> -		pcie_clear_device_status(dev);
+> >> -	pci_aer_clear_nonfatal_status(dev);
+> >> +	pci_walk_dev_affected(dev, report_resume, &status);
+> >> +
+> >> +	if ((pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
+> >> +	     pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
+> >> +	     pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC)) {
+> >> +		if (pcie_aer_is_native(dev))
+> >> +			pcie_clear_device_status(dev);
+> >> +		pci_aer_clear_nonfatal_status(dev);  
+> >
+> > This change (testing pci_pcie_type()) looks like it's not strictly
+> > related to the rest of this patch and maybe should be split out into
+> > its own patch?  
+> 
+> This change was also based on a commit (068c29a24) in the pci/next 
+> branch. The type testing was brought over from Jonathan’s original V2, 
+> but actually, it went full circle by adding the RC_EC type, because now 
+> it was no longer a no-op. There was an original concern about the need 
+> for those to be called on the RCEC from Jonathan’s RFC.
+
+What this is doing is ensuring that we do not call these reset functions
+if dev is an RCiEP.  This patch is introducing that possibility for the
+first time.  Breaking it out to a precursor patch might be possible but
+would seem a bit odd.  Perhaps we could invert the logic to check it
+isn't PCI_EXP_TYPE_RC_END?  That seems less intuitive than a positive
+check to me.  It might not be obvious to a future reader that we can't get
+here with most of the other types.
+
+Thanks,
+
+Jonathan
+
+
+
+> 
+> Thoughts Jonathan?
+> 
+> Thanks,
+> 
+> Sean
+> 
+> >  
+> >> +	}
+> >>  	pci_info(dev, "device recovery successful\n");
+> >>  	return status;
+> >>
+> >> -- 
+> >> 2.27.0
+> >>  
+
+
