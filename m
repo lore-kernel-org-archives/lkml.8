@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A20BBC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 11:24:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A47C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 11:25:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78FFF2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 11:24:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3735E2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 11:25:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="AutlQtwc"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="OalkkKi4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726368AbgHJLYJ (ORCPT
+        id S1726624AbgHJLY4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 07:24:09 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:38824 "EHLO
+        Mon, 10 Aug 2020 07:24:56 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:41348 "EHLO
         mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726505AbgHJLVp (ORCPT
+        by vger.kernel.org with ESMTP id S1726330AbgHJLVp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Aug 2020 07:21:45 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597058502; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1597058504; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=N7UD2Mvt7iBQIpHCuSnZLXwyg7B5AmY3wCQNnHXQzbs=; b=AutlQtwc1nxQBVgoGBjZvuQAcyZYPwT2EOffGauVWMW0LpJBlsQpDZTb0bThy/VvxTDPmFJf
- ITSbMeog+uHpCVuJ6hiln6ckXc0BDJxwgY3H2ZNH3CquJ+G2Ste3SmFz2PoqR9N21ecyymhi
- DDiJTL9Esp74X3MDhI60Jh3shuE=
+ bh=xHYEdUgnHp0JS97AmayvKH+aTXL2WxGTLHvNm3560lA=; b=OalkkKi4DvotLxHQYragLDB0beZjPWXPFuCm3RLF93FMlx6o9ocgjUs2wAZ/c+HnbN69YKRV
+ XeFootBv5n3OpIureXeEBfKGEn/aeKsXRVIusQQfLObSXZ8CV+8bp8v2ObjIdxcL5vtU2PXq
+ 9mRgzqANhxO5FnHwaU/iijtSuoQ=
 X-Mailgun-Sending-Ip: 104.130.122.29
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n18.prod.us-west-2.postgun.com with SMTP id
- 5f312dbd2f4952907d7e21b7 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 10 Aug 2020 11:21:33
+ smtp-out-n19.prod.us-west-2.postgun.com with SMTP id
+ 5f312db32f4952907d7e0bc4 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 10 Aug 2020 11:21:23
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 2378CC433C9; Mon, 10 Aug 2020 11:21:33 +0000 (UTC)
+        id C7767C433AD; Mon, 10 Aug 2020 11:21:22 +0000 (UTC)
 Received: from mkshah-linux.qualcomm.com (unknown [202.46.22.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 00C52C4339C;
-        Mon, 10 Aug 2020 11:21:27 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 00C52C4339C
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 82918C433CB;
+        Mon, 10 Aug 2020 11:21:17 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 82918C433CB
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
 From:   Maulik Shah <mkshah@codeaurora.org>
@@ -57,9 +57,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
         ilina@codeaurora.org, lsrao@codeaurora.org,
         Maulik Shah <mkshah@codeaurora.org>
-Subject: [PATCH v4 3/7] genirq: Introduce irq_suspend_one() and irq_resume_one() callbacks
-Date:   Mon, 10 Aug 2020 16:50:56 +0530
-Message-Id: <1597058460-16211-4-git-send-email-mkshah@codeaurora.org>
+Subject: [PATCH v4 1/7] pinctrl: qcom: Add msmgpio irqchip flags
+Date:   Mon, 10 Aug 2020 16:50:54 +0530
+Message-Id: <1597058460-16211-2-git-send-email-mkshah@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1597058460-16211-1-git-send-email-mkshah@codeaurora.org>
 References: <1597058460-16211-1-git-send-email-mkshah@codeaurora.org>
@@ -68,161 +68,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
+Add irqchip specific flags for msmgpio irqchip to mask non wakeirqs
+during suspend and mask before setting irq type.
 
-The "struct irq_chip" has two callbacks in it: irq_suspend() and
-irq_resume().  These two callbacks are interesting because sometimes
-an irq chip needs to know about suspend/resume, but they are a bit
-awkward because:
-1. They are called once for the whole irq_chip, not once per IRQ.
-   It's passed data for one of the IRQs enabled on that chip.  That
-   means it's up to the irq_chip driver to aggregate.
-2. They are only called if you're using "generic-chip", which not
-   everyone is.
-3. The implementation uses syscore ops, which apparently have problems
-   with s2idle.
+Masking before changing type should make sure any spurious interrupt
+is not detected during this operation.
 
-Probably the old irq_suspend() and irq_resume() callbacks should be
-deprecated.
-
-Let's introcuce a nicer API that works for all irq_chip devices.  This
-will be called by the core and is called once per IRQ.  The core will
-call the suspend callback after doing its normal suspend operations
-and the resume before its normal resume operations.
-
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Fixes: e35a6ae0eb3a ("pinctrl/msm: Setup GPIO chip in hierarchy")
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
 ---
- include/linux/irq.h    | 13 +++++++++++--
- kernel/irq/chip.c      | 16 ++++++++++++++++
- kernel/irq/internals.h |  2 ++
- kernel/irq/pm.c        | 15 ++++++++++++---
- 4 files changed, 41 insertions(+), 5 deletions(-)
+ drivers/pinctrl/qcom/pinctrl-msm.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/include/linux/irq.h b/include/linux/irq.h
-index 1b7f4df..8d37b32 100644
---- a/include/linux/irq.h
-+++ b/include/linux/irq.h
-@@ -468,10 +468,16 @@ static inline irq_hw_number_t irqd_to_hwirq(struct irq_data *d)
-  * @irq_bus_sync_unlock:function to sync and unlock slow bus (i2c) chips
-  * @irq_cpu_online:	configure an interrupt source for a secondary CPU
-  * @irq_cpu_offline:	un-configure an interrupt source for a secondary CPU
-+ * @irq_suspend_one:	called on an every irq to suspend it; called even if
-+ *			this IRQ is configured for wakeup
-+ * @irq_resume_one:	called on an every irq to resume it; called even if
-+ *			this IRQ is configured for wakeup
-  * @irq_suspend:	function called from core code on suspend once per
-- *			chip, when one or more interrupts are installed
-+ *			chip, when one or more interrupts are installed;
-+ *			only works if using irq/generic-chip
-  * @irq_resume:		function called from core code on resume once per chip,
-- *			when one ore more interrupts are installed
-+ *			when one ore more interrupts are installed;
-+ *			only works if using irq/generic-chip
-  * @irq_pm_shutdown:	function called from core code on shutdown once per chip
-  * @irq_calc_mask:	Optional function to set irq_data.mask for special cases
-  * @irq_print_chip:	optional to print special chip info in show_interrupts
-@@ -515,6 +521,9 @@ struct irq_chip {
- 	void		(*irq_cpu_online)(struct irq_data *data);
- 	void		(*irq_cpu_offline)(struct irq_data *data);
+diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+index a2567e7..90edf61 100644
+--- a/drivers/pinctrl/qcom/pinctrl-msm.c
++++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+@@ -1243,6 +1243,8 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
+ 	pctrl->irq_chip.irq_release_resources = msm_gpio_irq_relres;
+ 	pctrl->irq_chip.irq_set_affinity = msm_gpio_irq_set_affinity;
+ 	pctrl->irq_chip.irq_set_vcpu_affinity = msm_gpio_irq_set_vcpu_affinity;
++	pctrl->irq_chip.flags = IRQCHIP_MASK_ON_SUSPEND
++				| IRQCHIP_SET_TYPE_MASKED;
  
-+	void		(*irq_suspend_one)(struct irq_data *data);
-+	void		(*irq_resume_one)(struct irq_data *data);
-+
- 	void		(*irq_suspend)(struct irq_data *data);
- 	void		(*irq_resume)(struct irq_data *data);
- 	void		(*irq_pm_shutdown)(struct irq_data *data);
-diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
-index 857f5f4..caf80c1 100644
---- a/kernel/irq/chip.c
-+++ b/kernel/irq/chip.c
-@@ -447,6 +447,22 @@ void unmask_threaded_irq(struct irq_desc *desc)
- 	unmask_irq(desc);
- }
- 
-+void suspend_one_irq(struct irq_desc *desc)
-+{
-+	struct irq_chip *chip = desc->irq_data.chip;
-+
-+	if (chip->irq_suspend_one)
-+		chip->irq_suspend_one(&desc->irq_data);
-+}
-+
-+void resume_one_irq(struct irq_desc *desc)
-+{
-+	struct irq_chip *chip = desc->irq_data.chip;
-+
-+	if (chip->irq_resume_one)
-+		chip->irq_resume_one(&desc->irq_data);
-+}
-+
- /*
-  *	handle_nested_irq - Handle a nested irq from a irq thread
-  *	@irq:	the interrupt number
-diff --git a/kernel/irq/internals.h b/kernel/irq/internals.h
-index 7db284b..11c2dac 100644
---- a/kernel/irq/internals.h
-+++ b/kernel/irq/internals.h
-@@ -90,6 +90,8 @@ extern void irq_percpu_disable(struct irq_desc *desc, unsigned int cpu);
- extern void mask_irq(struct irq_desc *desc);
- extern void unmask_irq(struct irq_desc *desc);
- extern void unmask_threaded_irq(struct irq_desc *desc);
-+extern void suspend_one_irq(struct irq_desc *desc);
-+extern void resume_one_irq(struct irq_desc *desc);
- 
- #ifdef CONFIG_SPARSE_IRQ
- static inline void irq_mark_irq(unsigned int irq) { }
-diff --git a/kernel/irq/pm.c b/kernel/irq/pm.c
-index 8f557fa..b9e5338 100644
---- a/kernel/irq/pm.c
-+++ b/kernel/irq/pm.c
-@@ -69,19 +69,23 @@ void irq_pm_remove_action(struct irq_desc *desc, struct irqaction *action)
- 
- static bool suspend_device_irq(struct irq_desc *desc)
- {
-+	bool sync = false;
-+
- 	if (!desc->action || irq_desc_is_chained(desc) ||
- 	    desc->no_suspend_depth)
--		return false;
-+		goto exit;
- 
- 	if (irqd_is_wakeup_set(&desc->irq_data)) {
- 		irqd_set(&desc->irq_data, IRQD_WAKEUP_ARMED);
-+
- 		/*
- 		 * We return true here to force the caller to issue
- 		 * synchronize_irq(). We need to make sure that the
- 		 * IRQD_WAKEUP_ARMED is visible before we return from
- 		 * suspend_device_irqs().
- 		 */
--		return true;
-+		sync = true;
-+		goto exit;
- 	}
- 
- 	desc->istate |= IRQS_SUSPENDED;
-@@ -95,7 +99,10 @@ static bool suspend_device_irq(struct irq_desc *desc)
- 	 */
- 	if (irq_desc_get_chip(desc)->flags & IRQCHIP_MASK_ON_SUSPEND)
- 		mask_irq(desc);
--	return true;
-+
-+exit:
-+	suspend_one_irq(desc);
-+	return sync;
- }
- 
- /**
-@@ -137,6 +144,8 @@ EXPORT_SYMBOL_GPL(suspend_device_irqs);
- 
- static void resume_irq(struct irq_desc *desc)
- {
-+	resume_one_irq(desc);
-+
- 	irqd_clear(&desc->irq_data, IRQD_WAKEUP_ARMED);
- 
- 	if (desc->istate & IRQS_SUSPENDED)
+ 	np = of_parse_phandle(pctrl->dev->of_node, "wakeup-parent", 0);
+ 	if (np) {
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
