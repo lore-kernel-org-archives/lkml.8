@@ -2,139 +2,119 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A70C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 20:35:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05452C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 20:36:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 588D520656
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 20:35:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF5EF20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 20:36:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597091795;
+	bh=0SlTBLyruOaU9Pt5d4kuvdb9UNJa2UvWRRJfOEpGbZo=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=0GndR0NFlNmwm7SYyNzfvZ1QHHcdroprWumzSVs8/Ji2khLxt968RRx9dSaKfp/2b
+	 Q9Xy785RsS0ogVMqGxfWBWbHFNettO7e8B1HWlbEx0tXpZR/MxGYgilZvqN6R+uB6X
+	 VtfYN44o7NItrSOi5WreWWWkbDib/oJO5WIWt3k8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726654AbgHJUfz (ORCPT
+        id S1726685AbgHJUgd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 16:35:55 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:37944 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726637AbgHJUfx (ORCPT
+        Mon, 10 Aug 2020 16:36:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55266 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726468AbgHJUgc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 16:35:53 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 176D920023;
-        Mon, 10 Aug 2020 22:35:47 +0200 (CEST)
-Date:   Mon, 10 Aug 2020 22:35:46 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Xin Ji <xji@analogixsemi.com>
-Cc:     devel@driverdev.osuosl.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Nicolas Boichat <drinkcat@google.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Pi-Hsun Shih <pihsun@chromium.org>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        David Airlie <airlied@linux.ie>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Sheng Pan <span@analogixsemi.com>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: [PATCH v14 0/2] Add initial support for slimport anx7625
-Message-ID: <20200810203546.GA421906@ravnborg.org>
-References: <cover.1594283160.git.xji@analogixsemi.com>
+        Mon, 10 Aug 2020 16:36:32 -0400
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3758C061756
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 13:36:32 -0700 (PDT)
+Received: by mail-ot1-x344.google.com with SMTP id r21so8356146ota.10
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 13:36:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=HI5lYobBh5RFongYBHy3SxRT7R6Q8746klJDIeOy6qU=;
+        b=EA9XWL8ixJer6vvD9QKB92A7snrHrW1lP9KMNfKkrgDRKIm/boc70yBjqb5A3P6THW
+         /0DCP7NdG1s9AnFnaRyiNofaz8s8jhbkPYjsQ3hXZhmCDlofEAtyAneovWP2IwR8Us+D
+         cQHMHQGIzZj+AzPMHLwf8Vk6dSvpz/3omoDMU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=HI5lYobBh5RFongYBHy3SxRT7R6Q8746klJDIeOy6qU=;
+        b=F7I3qOxsRxRbFujHBdEalsn2Xgjte3NvWFodF/eH2ypcoix5Vmb3mTCD4KO38wppWw
+         M4XvkE2aKtS8yf2BIfr1BJ7sAtFrJ0mbBUWzDzXQ3n+H7w3dzFH0aVM7467JH4C35haj
+         QrGwCpD7pOz3tUzkRvW3nGKVsZ5FBPCZnSRiXlEHqRxJPxDUUAXLT04+CBeROxSXIuQF
+         JQT67MTnPsiFY+9aj5dYOTtvPjo8VNAA8RBxqTQxSbbpaf3Xq5cj+tDOi8Oc4tZHc06s
+         bECUA/2cdsWv/F5A9twymtCVImGWfMaxfhgBKgBPL+E8LNyY1yYAWiyT2LIty3/rGXO1
+         yMwg==
+X-Gm-Message-State: AOAM531fm8Cw8OGYNILlQ8N+1W5eCdz+K6wAOiJkh6cYBV5S/YkO515O
+        WY9QvbvPLBy30g1SzFOjc14YcUgKadk=
+X-Google-Smtp-Source: ABdhPJwyXOGud5mnCnLyYllZBzTKdtqelYBxOZV4q9EeZkRhIBCLgeDowbbDa/iwkcMiZ05qI2Yvlg==
+X-Received: by 2002:a9d:6d1a:: with SMTP id o26mr2140683otp.84.1597091791948;
+        Mon, 10 Aug 2020 13:36:31 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id b10sm673545oiy.7.2020.08.10.13.36.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Aug 2020 13:36:31 -0700 (PDT)
+Subject: Re: [PATCH] cpupowerutils: fix spelling mistake "dependant" ->
+ "dependent"
+To:     Colin King <colin.king@canonical.com>,
+        Thomas Renninger <trenn@suse.com>,
+        Shuah Khan <shuah@kernel.org>, linux-pm@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>, skhan@linuxfoundation.org
+References: <20200810102115.62405-1-colin.king@canonical.com>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <72e1bc33-5ac1-5719-196c-a9d8f265fbff@linuxfoundation.org>
+Date:   Mon, 10 Aug 2020 14:36:30 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1594283160.git.xji@analogixsemi.com>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=e5mUnYsNAAAA:8 a=Q7Y_AtYsOxiy2qtOLeEA:9
-        a=CjuIK1q_8ugA:10 a=Vxmtnl_E_bksehYqCbjh:22
+In-Reply-To: <20200810102115.62405-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Xin Ji.
+On 8/10/20 4:21 AM, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> There is a spelling mistake in a message. Fix it.
+> 
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>   tools/power/cpupower/debug/i386/intel_gsic.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/power/cpupower/debug/i386/intel_gsic.c b/tools/power/cpupower/debug/i386/intel_gsic.c
+> index e5e926f46d6b..befd837f07f8 100644
+> --- a/tools/power/cpupower/debug/i386/intel_gsic.c
+> +++ b/tools/power/cpupower/debug/i386/intel_gsic.c
+> @@ -71,7 +71,7 @@ int main (void)
+>   		printf("\tsmi_cmd=0x?? smi_port=0x?? smi_sig=1\n");
+>   		printf("\nUnfortunately, you have to know what exactly are "
+>   		       "smi_cmd and smi_port, and this\nis system "
+> -		       "dependant.\n");
+> +		       "dependent.\n");
+>   	}
+>   	return 1;
+>   }
+> 
 
-On Thu, Jul 09, 2020 at 04:31:09PM +0800, Xin Ji wrote:
-> Hi all,
-> 
-> The following series add support for the Slimport ANX7625 transmitter, a
-> ultra-low power Full-HD 4K MIPI to DP transmitter designed for portable device.
-> 
-> 
-> This is the v14 version, any mistakes, please let me know, I will fix it in
-> the next series.
-> 
-> Change history:
-> v14: Fix comments from Sam and Nicolas
->  - Check flags at drm_bridge_attach
->  - Use panel_bridge instead of drm_panel
->  - Fix not correct return value
+Thanks for the patch. Applied to 
+git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux.git cpupower 
+branch and will be included in
+  my next pull request to Rafael.
 
-Sorry for ignoring this for so long time.
-The patch applies but no longer builds.
-
-I could fix it locally but wanted to know if you have a later version to
-be applied?
-
-	Sam
-
-
-> 
-> v13: Fix comments from Launrent Pinchart and Rob Herring
->  - Picked up Rob's Reviewed-By
->  - Add .detect and .get_edid interface in bridge funcs.
-> 
-> v12: Fix comments from Hsin-Yi Wang
->  - Rebase the code on kernel 5.7, fix DRM interface not match issue.
-> 
-> v11: Fix comments from Rob Herring
->  - Update commit message.
->  - Remove unused label.
-> 
-> v10: Fix comments from Rob Herring, Daniel.
->  - Fix dt_binding_check warning.
->  - Update description.
-> 
-> v9: Fix comments from Sam, Nicolas, Daniel
->  - Remove extcon interface.
->  - Remove DPI support.
->  - Fix dt_binding_check complains.
->  - Code clean up and update description.
-> 
-> v8: Fix comments from Nicolas.
->  - Fix several coding format.
->  - Update description.
-> 
-> v7:
->  - Fix critical timing(eg:odd hfp/hbp) in "mode_fixup" interface,
->    enhance MIPI RX tolerance by setting register MIPI_DIGITAL_ADJ_1 to 0x3D.
-> 
-> 
-> Xin Ji (2):
->   dt-bindings: drm/bridge: anx7625: MIPI to DP transmitter DT schema
->   drm/bridge: anx7625: Add anx7625 MIPI DSI/DPI to DP
-> 
->  .../bindings/display/bridge/analogix,anx7625.yaml  |   95 +
->  drivers/gpu/drm/bridge/analogix/Kconfig            |    9 +
->  drivers/gpu/drm/bridge/analogix/Makefile           |    1 +
->  drivers/gpu/drm/bridge/analogix/anx7625.c          | 1939 ++++++++++++++++++++
->  drivers/gpu/drm/bridge/analogix/anx7625.h          |  391 ++++
->  5 files changed, 2435 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/analogix,anx7625.yaml
->  create mode 100644 drivers/gpu/drm/bridge/analogix/anx7625.c
->  create mode 100644 drivers/gpu/drm/bridge/analogix/anx7625.h
-> 
-> -- 
-> 2.7.4
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+thanks,
+-- Shuah
