@@ -2,105 +2,285 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF7FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 17:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 165E8C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 17:51:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 279A420885
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 17:50:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0370120885
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 17:51:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727985AbgHJRup (ORCPT
+        id S1728043AbgHJRvL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 13:50:45 -0400
-Received: from mga06.intel.com ([134.134.136.31]:51484 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727003AbgHJRun (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 13:50:43 -0400
-IronPort-SDR: eT9EWZ6McbmJyxUR46EEvuJf+wE83m/2qgJkKakHv6vf8j9vM9wZsLM83hwu+8azWAvoXdhNOz
- nsca1Nqq/iFw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9709"; a="215101661"
-X-IronPort-AV: E=Sophos;i="5.75,458,1589266800"; 
-   d="scan'208";a="215101661"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2020 10:50:42 -0700
-IronPort-SDR: vpzcQZYNsAW9jmuTF4kuBbii8AQLquvwRdeTooIXqtd8XQZ1yR4g0CDZCRIOZ1tG2wWtjlqdCU
- jErFZ0Bliw8Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,458,1589266800"; 
-   d="scan'208";a="324514275"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
-  by orsmga008.jf.intel.com with ESMTP; 10 Aug 2020 10:50:42 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 90B6C301CAF; Mon, 10 Aug 2020 07:45:18 -0700 (PDT)
-Date:   Mon, 10 Aug 2020 07:45:18 -0700
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc:     peterz@infradead.org, Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        Jiri Olsa <jolsa@kernel.org>, alexey.budankov@linux.intel.com,
-        adrian.hunter@intel.com
-Subject: Re: [PATCH 1/2] perf: Add closing sibling events' file descriptors
-Message-ID: <20200810144518.GB1448395@tassilo.jf.intel.com>
-References: <20200708151635.81239-1-alexander.shishkin@linux.intel.com>
- <20200708151635.81239-2-alexander.shishkin@linux.intel.com>
- <20200806083530.GV2674@hirez.programming.kicks-ass.net>
- <20200806153205.GA1448395@tassilo.jf.intel.com>
- <875z9q1u3g.fsf@ashishki-desk.ger.corp.intel.com>
+        Mon, 10 Aug 2020 13:51:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58090 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727003AbgHJRvK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 13:51:10 -0400
+X-Greylist: delayed 1763 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 10 Aug 2020 10:51:09 PDT
+Received: from mxout012.mail.hostpoint.ch (mxout012.mail.hostpoint.ch [IPv6:2a00:d70:0:e::312])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBD2AC061756;
+        Mon, 10 Aug 2020 10:51:09 -0700 (PDT)
+Received: from [10.0.2.45] (helo=asmtp012.mail.hostpoint.ch)
+        by mxout012.mail.hostpoint.ch with esmtp (Exim 4.92.3 (FreeBSD))
+        (envelope-from <code@reto-schneider.ch>)
+        id 1k5BUJ-0008Az-SP; Mon, 10 Aug 2020 19:21:31 +0200
+Received: from [2a02:168:6182:1:b8b7:9388:88c1:b332] (helo=ryzen2700.dss.husqvarnagroup.com)
+        by asmtp012.mail.hostpoint.ch with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92.3 (FreeBSD))
+        (envelope-from <code@reto-schneider.ch>)
+        id 1k5BUJ-000DaV-PN; Mon, 10 Aug 2020 19:21:31 +0200
+X-Authenticated-Sender-Id: reto-schneider@reto-schneider.ch
+From:   Reto Schneider <code@reto-schneider.ch>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Reto Schneider <reto.schneider@husqvarnagroup.com>,
+        Stefan Roese <sr@denx.de>,
+        Michael Zimmermann <michael.zimmermann@grandcentrix.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] ARM: at91: Add GARDENA smart Gateway AT91SAM board
+Date:   Mon, 10 Aug 2020 19:19:19 +0200
+Message-Id: <20200810171921.8679-1-code@reto-schneider.ch>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <875z9q1u3g.fsf@ashishki-desk.ger.corp.intel.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> It didn't. I can't figure out what to charge on the locked memory, as
-> all that memory is in kernel-side objects. It also needs to make sense
+From: Reto Schneider <reto.schneider@husqvarnagroup.com>
 
-I don't see how that makes a difference for the count. It just account
-bytes. Can you elaborate?
+This patch adds support for the GARDENA smart Gateway, which is based on
+the Atmel AT91SAM9G25. It is equipped with 128 MiB of DDR2 RAM and
+256 MiB NAND storage.
 
-> as iirc the default MLOCK_LIMIT is quite low, you'd hit it sooner than
-> the file descriptor limit.
+Please note that this gateway is not actually based on a AT91SAM9x5 EK
+board, but is close enough to allow its DT to be used.
 
-For a single process? 
+Co-developed-by: Stefan Roese <sr@denx.de>
+Signed-off-by: Stefan Roese <sr@denx.de>
+Co-developed-by: Michael Zimmermann <michael.zimmermann@grandcentrix.net>
+Signed-off-by: Michael Zimmermann <michael.zimmermann@grandcentrix.net>
+Signed-off-by: Reto Schneider <reto.schneider@husqvarnagroup.com>
+---
+ arch/arm/boot/dts/Makefile                    |   1 +
+ .../dts/at91sam9g25-gardena-smart-gateway.dts | 186 ++++++++++++++++++
+ 2 files changed, 187 insertions(+)
+ create mode 100644 arch/arm/boot/dts/at91sam9g25-gardena-smart-gateway.dts
 
-> 
-> > It has a minor issue that it might break some existing setups that rely
-> > on the mmap fitting exactly into the mmap allocation, but that could
-> > be solved by allowing a little slack, since the existing setups
-> > likely don't have that many events.
-> 
-> I don't see how to make this work in a sane way. Besides, if we have to
-> have a limit anyway, sticking with the existing one is just easier and
-> 1:1 is kind of more logical.
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 4572db3fa5ae..d38d256f59fa 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -44,6 +44,7 @@ dtb-$(CONFIG_SOC_AT91SAM9) += \
+ 	at91-wb45n.dtb \
+ 	at91sam9g15ek.dtb \
+ 	at91sam9g25ek.dtb \
++	at91sam9g25-gardena-smart-gateway.dtb \
+ 	at91sam9g35ek.dtb \
+ 	at91sam9x25ek.dtb \
+ 	at91sam9x35ek.dtb
+diff --git a/arch/arm/boot/dts/at91sam9g25-gardena-smart-gateway.dts b/arch/arm/boot/dts/at91sam9g25-gardena-smart-gateway.dts
+new file mode 100644
+index 000000000000..19b0f67a7af6
+--- /dev/null
++++ b/arch/arm/boot/dts/at91sam9g25-gardena-smart-gateway.dts
+@@ -0,0 +1,186 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Device Tree file for the GARDENA smart Gateway (AT91SAM)
++ *
++ *  Copyright (C) 2020 GARDENA GmbH
++ */
++
++/dts-v1/;
++
++#include "at91sam9g25.dtsi"
++#include "at91sam9x5ek.dtsi"
++#include <dt-bindings/input/input.h>
++
++/ {
++	model = "GARDENA smart Gateway (AT91SAM)";
++	compatible = "gardena,smart-gateway-at91sam", "atmel,at91sam9g25", "atmel,at91sam9x5", "atmel,at91sam9";
++
++	aliases {
++		serial1 = &usart3;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	memory {
++		reg = <0x20000000 0x8000000>;
++	};
++
++	gpio-keys {
++		compatible = "gpio-keys";
++
++		user_btn1 {
++			label = "USER_BTN1";
++			gpios = <&pioA 24 GPIO_ACTIVE_LOW>;
++			linux,code = <KEY_PROG1>;
++		};
++	};
++
++	1wire_cm {
++		status = "disabled";
++	};
++
++	leds {
++		compatible = "gpio-leds";
++
++		power_blue {
++			label = "smartgw:power:blue";
++			gpios = <&pioC 21 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++
++		power_green {
++			label = "smartgw:power:green";
++			gpios = <&pioC 20 GPIO_ACTIVE_HIGH>;
++			default-state = "on";
++		};
++
++		power_red {
++			label = "smartgw:power:red";
++			gpios = <&pioC 19 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++
++		radio_blue {
++			label = "smartgw:radio:blue";
++			gpios = <&pioC 18 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++
++		radio_green {
++			label = "smartgw:radio:green";
++			gpios = <&pioC 17 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++
++		radio_red {
++			label = "smartgw:radio:red";
++			gpios = <&pioC 16 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++
++		internet_blue {
++			label = "smartgw:internet:blue";
++			gpios = <&pioC 15 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++
++		internet_green {
++			label = "smartgw:internet:green";
++			gpios = <&pioC 14 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++
++		internet_red {
++			label = "smartgw:internet:red";
++			gpios = <&pioC 13 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++
++		heartbeat {
++			label = "smartgw:heartbeat";
++			gpios = <&pioB 8 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "heartbeat";
++		};
++
++		pb18 {
++			status = "disabled";
++		};
++
++		pd21 {
++			status = "disabled";
++		};
++	};
++};
++
++&dbgu {
++	status = "okay";
++};
++
++&macb0 {
++	phy-mode = "rmii";
++	status = "okay";
++};
++
++&nand_controller {
++	status = "okay";
++};
++
++&usb0 {
++	status = "okay";
++	num-ports = <3>;
++};
++
++&usb1 {
++	status = "okay";
++};
++
++&usart0 {
++	status = "disabled";
++};
++
++&usart2 {
++	status = "disabled";
++};
++
++&dbgu {
++	status = "okay";
++};
++
++&usart3 {
++	status = "okay";
++
++	pinctrl-0 = <&pinctrl_usart3
++		     &pinctrl_usart3_rts
++		     &pinctrl_usart3_cts
++		    >;
++};
++
++&watchdog {
++	status = "okay";
++};
++
++&mmc0 {
++	status = "disabled";
++};
++
++&mmc1 {
++	status = "disabled";
++};
++
++&spi0 {
++	status = "disabled";
++};
++
++&i2c0 {
++	status = "disabled";
++};
++
++&adc0 {
++	status = "disabled";
++};
++
++&ssc0 {
++	status = "disabled";
++};
+-- 
+2.27.0
 
-It's just a very wasteful way because we need an extra inode and file descriptor
-for each event*cgroup.
-
-And of course it's super user unfriendly because managing the fd limits
-is a pain, apart from them not really working that well anyways 
-(since someone who really wants to do a memory DoS can still open
-RLIMIT_NPROC*RLIMIT_NFILE fds just by forking) 
-
-Unfortunately we're kind of stuck with the old NFILE=1024 default
-even though it makes little sense on modern servers. Right now a lot
-of very reasonable perf stat command lines don't work out of the box
-on larger machines because of this (and since cores are growing all
-the time "larger machines" of today are the standard servers of
-tomorrow)
-
-Maybe an alternative would be to allow a multiplier. For each open fd
-you can have N perf events. With N being a little higher than the current
-cost of the inode + file descriptor together.
-
-But would really prefer to have some kind of limit per uid that is
-actually sane.
-
--Andi
