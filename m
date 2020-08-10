@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C1DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:34:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 031ABC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:34:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 210B1207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:34:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC4EF207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:34:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073658;
-	bh=Q6Pgy7o0Afz1Zbw9ftExXRtrFW699yUW2rEsF5uilYA=;
+	s=default; t=1597073660;
+	bh=qeZvfDHiqugdAsX3cDYN3Pb3rFFOXn3FnRXjPQcaDf4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qoodo541QRCghZwHJGgVhRe25N9gHqXATTwVm/Wq6nESgrxJkfGrWhmJjDwyllm+q
-	 vCk1kPqkri79q9omqBP0av0CphDlD6d9VVqA9dmGhBdUJiLdiZdmwEHDiSUNAPLjIR
-	 E2m5Z1gB0GF3Pg8MV0jnzFf7omzDfUXkINOi0+nY=
+	b=MzXyguX765D0Iofn04oTi99/azmEiGIyUbt6iKGfcJuoge9bmv5NYWIqk+pDpjKTv
+	 0ZGw1XI90BAERWH5fTpFA9gp78Qo66JY+QWddJ6GGjz7KnM5xSSApE2mDGr5STVple
+	 mMq7BMfj5haW6bSyEE4A/uR6sX6DAZhLYNwJ/lII=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729273AbgHJPeQ (ORCPT
+        id S1729281AbgHJPeS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:34:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35318 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:34:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728411AbgHJP3F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:29:05 -0400
+        id S1728920AbgHJP24 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:28:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5985722B47;
-        Mon, 10 Aug 2020 15:29:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7BE122B47;
+        Mon, 10 Aug 2020 15:28:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073344;
-        bh=Q6Pgy7o0Afz1Zbw9ftExXRtrFW699yUW2rEsF5uilYA=;
+        s=default; t=1597073336;
+        bh=qeZvfDHiqugdAsX3cDYN3Pb3rFFOXn3FnRXjPQcaDf4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2hYav89hGd0dR2aXKNaO4J46rScfk2Wibdi2+usK87jye+y5o1EVbhaMwjWLn+Rte
-         RqW3BPS54przlw6ORiD1dC+kd/6ygJHC0hsopwEODdwLaV3mbf4kQu0SJZjtOlSWA6
-         XEPWyTXxKlX+sHvFpbNnqepdmgnOcxA9SjkaXmtg=
+        b=Y/j2gLVt52l9u6rtDSTeiJNgVoHgZeefaLxYydk1npSzu5k8jd8uAAwDvuY3doW07
+         Fsc5I8EV6G+5DbncM9D8S7xGDw1SOmxQ8gVRf4Biay8HzIRulczTfoLiDruY0G5SdM
+         byqCbzWBmo9o5kfxrTm5MKWBn0Ur6qWuM2mz26Fw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lorenzo Bianconi <lorenzo@kernel.org>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        stable@vger.kernel.org, Christopher KOBAYASHI <chris@disavowed.jp>,
+        Doug Brown <doug@downtowndougbrown.com>,
+        Vincent Duvert <vincent.ldev@duvert.net>,
+        Lukas Wunner <lukas@wunner.de>,
+        Yue Haibing <yuehaibing@huawei.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 60/67] net: gre: recompute gre csum for sctp over gre tunnels
-Date:   Mon, 10 Aug 2020 17:21:47 +0200
-Message-Id: <20200810151812.471999373@linuxfoundation.org>
+Subject: [PATCH 5.4 57/67] appletalk: Fix atalk_proc_init() return path
+Date:   Mon, 10 Aug 2020 17:21:44 +0200
+Message-Id: <20200810151812.321216539@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151809.438685785@linuxfoundation.org>
 References: <20200810151809.438685785@linuxfoundation.org>
@@ -60,69 +63,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lorenzo Bianconi <lorenzo@kernel.org>
+From: Vincent Duvert <vincent.ldev@duvert.net>
 
-[ Upstream commit 622e32b7d4a6492cf5c1f759ef833f817418f7b3 ]
+[ Upstream commit d0f6ba2ef2c1c95069509e71402e7d6d43452512 ]
 
-The GRE tunnel can be used to transport traffic that does not rely on a
-Internet checksum (e.g. SCTP). The issue can be triggered creating a GRE
-or GRETAP tunnel and transmitting SCTP traffic ontop of it where CRC
-offload has been disabled. In order to fix the issue we need to
-recompute the GRE csum in gre_gso_segment() not relying on the inner
-checksum.
-The issue is still present when we have the CRC offload enabled.
-In this case we need to disable the CRC offload if we require GRE
-checksum since otherwise skb_checksum() will report a wrong value.
+Add a missing return statement to atalk_proc_init so it doesn't return
+-ENOMEM when successful.  This allows the appletalk module to load
+properly.
 
-Fixes: 90017accff61 ("sctp: Add GSO support")
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-Reviewed-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Fixes: e2bcd8b0ce6e ("appletalk: use remove_proc_subtree to simplify procfs code")
+Link: https://www.downtowndougbrown.com/2020/08/hacking-up-a-fix-for-the-broken-appletalk-kernel-module-in-linux-5-1-and-newer/
+Reported-by: Christopher KOBAYASHI <chris@disavowed.jp>
+Reported-by: Doug Brown <doug@downtowndougbrown.com>
+Signed-off-by: Vincent Duvert <vincent.ldev@duvert.net>
+[lukas: add missing tags]
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: stable@vger.kernel.org # v5.1+
+Cc: Yue Haibing <yuehaibing@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/gre_offload.c |   13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ net/appletalk/atalk_proc.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/net/ipv4/gre_offload.c
-+++ b/net/ipv4/gre_offload.c
-@@ -15,12 +15,12 @@ static struct sk_buff *gre_gso_segment(s
- 				       netdev_features_t features)
- {
- 	int tnl_hlen = skb_inner_mac_header(skb) - skb_transport_header(skb);
-+	bool need_csum, need_recompute_csum, gso_partial;
- 	struct sk_buff *segs = ERR_PTR(-EINVAL);
- 	u16 mac_offset = skb->mac_header;
- 	__be16 protocol = skb->protocol;
- 	u16 mac_len = skb->mac_len;
- 	int gre_offset, outer_hlen;
--	bool need_csum, gso_partial;
- 
- 	if (!skb->encapsulation)
+--- a/net/appletalk/atalk_proc.c
++++ b/net/appletalk/atalk_proc.c
+@@ -229,6 +229,8 @@ int __init atalk_proc_init(void)
+ 				     sizeof(struct aarp_iter_state), NULL))
  		goto out;
-@@ -41,6 +41,7 @@ static struct sk_buff *gre_gso_segment(s
- 	skb->protocol = skb->inner_protocol;
  
- 	need_csum = !!(skb_shinfo(skb)->gso_type & SKB_GSO_GRE_CSUM);
-+	need_recompute_csum = skb->csum_not_inet;
- 	skb->encap_hdr_csum = need_csum;
- 
- 	features &= skb->dev->hw_enc_features;
-@@ -98,7 +99,15 @@ static struct sk_buff *gre_gso_segment(s
- 		}
- 
- 		*(pcsum + 1) = 0;
--		*pcsum = gso_make_checksum(skb, 0);
-+		if (need_recompute_csum && !skb_is_gso(skb)) {
-+			__wsum csum;
++	return 0;
 +
-+			csum = skb_checksum(skb, gre_offset,
-+					    skb->len - gre_offset, 0);
-+			*pcsum = csum_fold(csum);
-+		} else {
-+			*pcsum = gso_make_checksum(skb, 0);
-+		}
- 	} while ((skb = skb->next));
  out:
- 	return segs;
+ 	remove_proc_subtree("atalk", init_net.proc_net);
+ 	return -ENOMEM;
 
 
