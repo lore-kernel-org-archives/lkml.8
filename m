@@ -2,123 +2,331 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 430A4C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 23:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 718FCC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 23:23:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BA2D206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 23:19:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597101571;
-	bh=PXyVfHqyKHShVujhgX8dPVh011ZEO/ezCdSy56XDE+8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=sGrS5fdwjVmBJmoZv5U2fH1OdMUHixIMPHZFOD+qNxnpVrKg0es3DQx2nKIbkGURb
-	 QUk7KGCGvgzgmhv8rboUQJZFaRZAEFkY/+SZfrc88wcljx8dwasaS99UzFtm337Dvr
-	 V6TTKK4uw/ds8jwdBlfstgOAmmx+z129Zr8n9sgw=
+	by mail.kernel.org (Postfix) with ESMTP id 2B1D6206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 23:23:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="k+Zx/ukw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbgHJXT3 (ORCPT
+        id S1727031AbgHJXXt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 19:19:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52248 "EHLO
+        Mon, 10 Aug 2020 19:23:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726634AbgHJXT3 (ORCPT
+        with ESMTP id S1726634AbgHJXXs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 19:19:29 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4FB5C06174A
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 16:19:28 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id g6so11424719ljn.11
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 16:19:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ah+VgQKs3kGLd4LAiDMSL98AvAsoBiO7tyrewnreXwk=;
-        b=esYya08x10kt09r0pEU6JYyN4Jrr4Dl28/5LaoSkW4HUwhcTM5CJAEWFZupbTAmaQ1
-         ZZKmXj+7iSZT6wXP76iylAVzzkhrCCKw/iBUjX/3mPKvlEBsz5hnZTCSvWHXVl0iscb1
-         aKLPgRFTDyRDP9spyUQc4L/EJcBVTMGXgMItM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ah+VgQKs3kGLd4LAiDMSL98AvAsoBiO7tyrewnreXwk=;
-        b=q5krASVIxyigDs7kqYzGhNEamC5TFskhzzJawJzrJldA47hGaNveO6egiWKK79Vu+T
-         jVRvzAHq+Wg4FOVPeUinkFRJoP8EV3OwA+k06Bwhw7yo5HeEzO/P9cW9ZSriSNYHp33V
-         5owWcGQV/BEw4wT5qbHnW/6Fa9+/KN4MqeZ7Vbi4b8hVi0I50NQJzyte3YMKO9v5KvQa
-         6mmGOoWXmCK8Iaw30N+079Rwwd3c3FxIw7gelMq2cE9jMNQil8LJIQsFgJFDf1Z+apPl
-         7IXesAdvnOhhPT0RAQ+hLOoFQldwg6R/ukpSn5+SAVfo79cmA/KVFci90jAm8DyJk9OY
-         Q6cw==
-X-Gm-Message-State: AOAM531B3fuuRpk2/nCJPJ5Lhjni/5YXSLtE09ds9L5PRPHcq12itPDp
-        vJrCfM8/rULrzrp5VwLPlogtdBacEI8=
-X-Google-Smtp-Source: ABdhPJyUyKL8cu+EArN3jistdWoRnOIxjSXO1Pqh94r6R7jkkc6Dusw7U0u4ENEfXeThJpvaMb0XeA==
-X-Received: by 2002:a2e:b306:: with SMTP id o6mr1458000lja.361.1597101566517;
-        Mon, 10 Aug 2020 16:19:26 -0700 (PDT)
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
-        by smtp.gmail.com with ESMTPSA id r11sm9672263lji.104.2020.08.10.16.19.24
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Aug 2020 16:19:24 -0700 (PDT)
-Received: by mail-lj1-f181.google.com with SMTP id w14so11467423ljj.4
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 16:19:24 -0700 (PDT)
-X-Received: by 2002:a2e:b008:: with SMTP id y8mr1446926ljk.421.1597101563687;
- Mon, 10 Aug 2020 16:19:23 -0700 (PDT)
+        Mon, 10 Aug 2020 19:23:48 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16BE4C06174A;
+        Mon, 10 Aug 2020 16:23:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=f4lfpwYP4UCLYjl7qvZm+DGVFg0hPMCP+jO/TL664x8=; b=k+Zx/ukwz+vOG+SQ4WPT1w5a3y
+        +dxqHPiHMx/q+BSh9i36y9NQHtBQqHNllp+PKk59qFDoAxhI6hZagmmR17Th7Z9b/96IcVMCJJ45O
+        X/dph0KZXqKEEtPGQXgdQLTsoNkRuNreg/wqulYBVP/Ee+GNMBvUkA+gWMBh0sv2aOJAualoMN/V4
+        k/mQXSbK+sbgPob5QzHQYr4NUekMi1O0aS8JfTD4/BGM5S3QzFRnl0PfcevDl+4Pud2q2l+rfd1Lk
+        jRnZon/Mmfp+eCtpFDnA38fnLMlqVpyiqGhXrwtpnJahVTrhA/xJatqneTPSfR3rUuHQmbgFnTm5Q
+        ZNd8/C3g==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k5H8m-0003VF-9F; Mon, 10 Aug 2020 23:23:40 +0000
+Subject: Re: [PATCH v7 1/4] SFH: Add maintainers and documentation for AMD SFH
+ based on HID framework
+To:     Sandeep Singh <Sandeep.Singh@amd.com>, jikos@kernel.org,
+        benjamin.tissoires@redhat.com, linux-kernel@vger.kernel.org,
+        linux-input@vger.kernel.org, srinivas.pandruvada@linux.intel.com,
+        jic23@kernel.org, linux-iio@vger.kernel.org, hdegoede@redhat.com,
+        Nehal-bakulchandra.Shah@amd.com, andy.shevchenko@gmail.com,
+        mail@richard-neumann.de, m.felsch@pengutronix.de
+Cc:     Shyam-sundar.S-k@amd.com
+References: <20200810213055.103962-1-Sandeep.Singh@amd.com>
+ <20200810213055.103962-2-Sandeep.Singh@amd.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <76874b28-e046-2a23-2ef2-2cbb5431ac00@infradead.org>
+Date:   Mon, 10 Aug 2020 16:23:34 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200810145701.129228-1-peterx@redhat.com> <CAHk-=wiSF+aKhDOewxQGCGUPyGnA=K7OtAczL5M7aisA5mgFzg@mail.gmail.com>
- <20200810191520.GA132381@xz-x1> <CAHk-=whUVHA-=4mwGaUA42teESc2mX1nwZjbbOMQsvPaoYxh3w@mail.gmail.com>
- <20200810215734.GB132381@xz-x1>
-In-Reply-To: <20200810215734.GB132381@xz-x1>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 10 Aug 2020 16:19:07 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whng9zK-GMM+UHsTptF=mgH164Zt_Gok3ohbcWaYee71Q@mail.gmail.com>
-Message-ID: <CAHk-=whng9zK-GMM+UHsTptF=mgH164Zt_Gok3ohbcWaYee71Q@mail.gmail.com>
-Subject: Re: [PATCH v2] mm/gup: Allow real explicit breaking of COW
-To:     Peter Xu <peterx@redhat.com>
-Cc:     Linux-MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Marty Mcfadden <mcfadden8@llnl.gov>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Jann Horn <jannh@google.com>, Christoph Hellwig <hch@lst.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Kirill Shutemov <kirill@shutemov.name>, Jan Kara <jack@suse.cz>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200810213055.103962-2-Sandeep.Singh@amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 2:57 PM Peter Xu <peterx@redhat.com> wrote:
->
-> Yeah, that's why I totally agree we need to do enforced COW even for a read gup
-> as long as the page can be further referenced (GET|PIN).  However frankly
-> speaking I didn't follow the rest on what's wrong with "Userfaultfd-wp should
-> not care about this because it's not a write operation" that I mentiond.  Is
-> that the major part of the objection?
+On 8/10/20 2:30 PM, Sandeep Singh wrote:
+> From: Sandeep Singh <sandeep.singh@amd.com>
+> 
+> Add Maintainers for AMD SFH(SENSOR FUSION HUB) Solution and work flow
+> document.
+> 
+> Signed-off-by: Nehal Shah <Nehal-bakulchandra.Shah@amd.com>
+> Signed-off-by: Sandeep Singh <sandeep.singh@amd.com>
 
-You didn't _explain_ why it's ok.
+Hi,
+Did you build the documentation?
 
-You said "it's only reading".
+Oh, I think you would need to add amd-sfh-hid to
+Documentation/hid/index.rst first in order to build the documentation.
+That change should be part of your patch set.
 
-And I told you why "only reading" is not an argument against COW.
 
-So my objection is that you haven't actually explained why it's ok for
-userfaultfd-wp.
+So please do that and then run "make htmldocs" and look for warnings or errors.
 
-I can easily believe that it is, but my whole point is that this is
-subtle, and it needs documentation and explanation.
+More below:
 
-That's also why I think the bit should be the other way: the people
-who need to explain are the ones that disable COW, and the reversed
-bit would mark that case.
+> ---
+>  Documentation/hid/amd-sfh-hid.rst | 153 ++++++++++++++++++++++++++++++
+>  MAINTAINERS                       |   8 ++
+>  2 files changed, 161 insertions(+)
+>  create mode 100644 Documentation/hid/amd-sfh-hid.rst
+> 
+> diff --git a/Documentation/hid/amd-sfh-hid.rst b/Documentation/hid/amd-sfh-hid.rst
+> new file mode 100644
+> index 000000000000..0ee9003013f2
+> --- /dev/null
+> +++ b/Documentation/hid/amd-sfh-hid.rst
+> @@ -0,0 +1,153 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +AMD Sensor Fusion Hub:-
+> +======================
 
-The people who are ok with COW don't need to explain anything, and for
-the same reason I think they shouldn't need to add that
-FAULT_FLAG_BREAK_COW.
+Underlines (like above) should be at least as long as the heading line,
+but heading lines don't need endings on them like ':' or '-', so please
+remove those ending characters on all heading lines.
 
-See what my argument is? It's entirely about documenting the special case.
 
-               Linus
+> +AMD Sensor Fusion Hub is part of a SOC starting from Ryzen based platforms.
+
+                                    an SOC
+
+> +The solution is working well on several OEM products. AMD SFH uses HID over PCIe bus.
+
+I would drop that first sentence above.
+
+> +In terms of architecture it resembles ISH .However the major difference is all
+
+                               resembles ISH. However
+
+> +The hid reports are generated as part of kernel driver.
+
+   the HID
+
+> +
+> +Block Diagram:-
+> +=============
+> +	-------------------------------
+> +	|  HID User Space Applications  |
+> +	-------------------------------
+> +---------------------------------------------
+> +	 ---------------------------------
+> +	|		HID Core          |
+> +	 ---------------------------------
+> +
+> +	 ---------------------------------
+> +	|     AMD HID Transport           |
+> +	 ---------------------------------
+> +
+> +	 --------------------------------
+> +	|             AMD HID Client     |
+> +	|	with HID Report Generator|
+> +	 --------------------------------
+> +
+> +	 --------------------------------
+> +	|     AMD MP2 PCIe Driver         |
+> +	 --------------------------------
+> +---------------------------------------------
+> +	  -------------------------------
+> +	|     SFH MP2 Processor         |
+> +	 --------------------------------
+> +
+> +
+> +AMD HID Transport Layer :-
+> +***************************
+> +AMD SFH transport is also implemented as a bus. Each client application executing in the AMD MP2
+> +is registered as a device on this bus. MP2 which is an ARM® Cortex-M4 core based co-processor to
+
+Incomplete sentence                here:  MP2 ....
+
+> +x86. The driver, which binds each device (AMD SFH HID driver) identifies the device type and
+> +registers with the hid core. Transport drivers attach a constant "struct hid_ll_driver" object with
+
+                      HID
+
+> +each device. Once a device is registered with HID core, the callbacks provided via this struct are
+> +used by HID core to communicate with the device. AMD HID Transport driver implements the synchronouscalls.
+
+                                                                              implements synchronous calls.
+
+> +
+> +AMD HID Client Layer:-
+> +**********************
+> +This layer is responsible to implement HID request and descriptors. As firmware is OS agnostic,
+> +HID client layer fills the HID request structure and descriptors. HID client layer is in complex
+
+                                                                                      is complex
+
+> +in nature as it is interface between MP2 PCIe driver and HID. HID client layer initialized
+
+                                                                                  initializes
+I would drop "in nature".
+
+> +the MP2 PCIe driver and holds the instance of MP2 driver.It identified the number of sensors
+
+                                                     driver. It identifies
+
+> +connected using MP2-PCIe driver and based on that allocate the DRAM address for each and every
+
+                                                     allocates
+
+> +sensor and pass it to MP2-PCIe driver.On enumeration of each sensor, client layer fills out the HID
+
+              passes              driver. On
+
+> +Descriptor structure and HID input report structure. HID Feature report structure can be optional.
+
+                                                                           structure is optional.
+
+> +The report descriptor structure varies sensor to sensor. Now on enumeration client layer does
+> +two major things
+
+             things:
+(at least for punctuation; I don't know if that's sufficient for ReST markup.)
+
+> +1.	Register the HID sensor client to virtual bus (Platform driver) and bind it.
+> +2.	Probes the AMD HID transport driver. Which in turns register device to the core.
+
+                                     driver, which in turn registers
+
+> +
+> +AMD MP2 PCIe layer:-
+> +********************
+> +MP2 PCIe Layer is responsible for making all transaction with the firmware over PCIe.
+
+                                                transactions
+
+> +The connection establishment between firmware and PCIe happens here.
+> +
+> +The communication between X86 and MP2 is spilt into three parts.
+
+                                            split
+
+> +1. Command Transfer => C2P Mailbox Register are used
+
+                                      Registers are used
+
+> +2. Data Transfer => DRAM
+> +3. Supported sensor info => P2C Register
+> +
+> +Commands are sent to MP2 using C2P Mail Box registers. These C2P  registers are common between x86
+
+                                      Mailbox                   C2P registers                     X86
+
+Use Mailbox and X86 as above for consistency.
+
+> +and MP2. Writing into C2P Message register generate interrupt to MP2.  The client layer allocates
+> +the physical memory and send the same to MP2 for data transfer. MP2 firmware uses HUBIF interface
+
+What is HUBIF interface?  do we care?
+
+> +to access DRAM memory. For Firmware always write minimum 32 bytes into DRAM.So it is expected that
+
+                              firmware                                    DRAM. So
+
+> +driver shall allocate minimum 32 bytes DRAM space.
+> +
+> +Enumeration and Probing flow:-
+> +*****************************
+> +       HID             AMD            AMD                       AMD -PCIe             MP2
+> +       Core         Transport      Client layer                   layer                FW
+> +	|		|	       |                           |                 |
+> +	|		|              |                 on Boot Driver Loaded       |
+> +	|		|	       |                           |                 |
+> +	|		|	       |                        MP2-PCIe Int         |
+> +	|		|              |			   |                 |
+> +	|		|	       |---Get Number of sensors-> |                 |
+> +	|		|              |                       Read P2C              |
+> +	|		|	       |			Register             |
+> +	|		|              |                           |                 |
+> +	|               |              | Loop(for No of Sensors)   |                 |
+> +	|		|	       |----------------------|    |                 |
+> +	|		|              | Create HID Descriptor|    |                 |
+> +	|		|	       | Create Input  report |    |                 |
+> +	|		|              |  Descriptor Map      |    |                 |
+> +	|		|	       |  the MP2 FW Index to |    |                 |
+> +	|		|              |   HID Index          |    |                 |
+> +	|		|	       | Allocate the DRAM    |  Enable              |
+> +        |		|	       |	address       |  Sensors             |
+> +	|		|              |----------------------|    |                 |
+> +	|		| HID transport|                           |    Enable       |
+> +	|	        |<--Probe------|                           |---Sensor CMD--> |
+> +	|		| Create the   |			   |                 |
+> +	|		| HID device   |                           |                 |
+> +	|               |    (MFD)     |                           |                 |
+> +	|		| by Populating|			   |                 |
+> +        |               |  the HID     |                           |                 |
+> +	|               |  ll_driver   |                           |                 |
+> +	| HID           |	       |			   |                 |
+> +	|  add          |              |                           |                 |
+> +	|Device         |              |                           |                 |
+> +	|<------------- |	       |			   |                 |
+> +
+> +
+> +Data Flow from Application to the AMD SFH Driver:-
+> +*************************************************
+> +
+> +	|	       |              |	  	 	          |		    |
+> +Get   	|	       |	      |			          |                 |
+> +Input 	|	       |	      |			          |                 |
+> +Report	|              |              |                           |                 |
+> +--->  	|              |              |                           |                 |
+> +	|HID_req       |              |                           |                 |
+> +	|get_report    |              |                           |                 |
+> +	|------------->|              |                           |                 |
+> +	|              | HID_get_input|                           |                 |
+> +	|              |  report      |                           |                 |
+> +	|              |------------->|------------------------|  |                 |
+> +	|              |              |  Read the DRAM data for|  |                 |
+> +	|              |              |  requested sensor and  |  |                 |
+> +	|              |              |  create the HID input  |  |                 |
+> +	|              |              |  report                |  |                 |
+> +	|              |              |------------------------|  |                 |
+> +	|              |Data received |                           |                 |
+> +	|              | in HID report|                           |                 |
+> + To	|<-------------|<-------------|                           |                 |
+> +Applications           |              |                           |                 |
+> +<-------|              |              |                           |                 |
+> +
+> +
+> +Data Flow from AMD SFH Driver to Application:-
+> +**********************************************
+> +      |		  |               |	            	          |		    |
+> +      |           |               |------------------------|      |                 |
+> +      |           |               |Periodically Read       |      |                 |
+> +      |           |               |the data for all        |      |                 |
+> +      |           |               |enumerated sensors      |      |                 |
+> +      |           |               |from the dram and create|      |                 |
+> +      |           |               | HID Input reports      |      |                 |
+> +      |           |               |------------------------|      |                 |
+> +      |           |HID Input      |                               |                 |
+> +      |           |Input report   |                               |                 |
+> +   <----submit to Application-----|                               |                 |
+> +      |           |               |                               |                 |
+
+
+thanks.
+-- 
+~Randy
+
