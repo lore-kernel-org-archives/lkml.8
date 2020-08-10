@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8CD7C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:20:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF26C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9515D22BF3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:20:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD3D522BF3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:20:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597087229;
-	bh=o4l7/CzR2RC+FJbDc3/jPbOByK3INs3SyymKtf/GbjQ=;
+	s=default; t=1597087233;
+	bh=4yLMnPaJzotJ8TahdzZXIXI6kUMopCupuwA2zHxLxVc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZZfX7/e3juIABKxxiNSnjh+IuomVnkIKkgKMzXWRazFP32kiwf4HhTeL45Zm8vsLB
-	 BYkk0vywU9YXwODMSqAYizYYtMEt2quC5estO9EbAmo/WzMTZTlfqiiJSVbz9CJfhQ
-	 +8963mTVcNO0ibTTXrJ9biVwc/mMpuXX2Wd7ZFBc=
+	b=Gjf+7QJtijuxeoHTl3QMz5TWw85P/laDYGKH64bn4YghbMgSB3ajNTXwpQiqcesNy
+	 95/uZiZCVYqNrmRUzJw3UyOpDdugoUiZmlsMmL72Rfzw+12lX7nMizjVbfEUEIcgo3
+	 AuxT+3eXgJJFVNR1ZcbfAwj7IkRwzME/+i4vpbSM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730304AbgHJTU2 (ORCPT
+        id S1730314AbgHJTUc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:20:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45298 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:20:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45226 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729881AbgHJTNv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:13:51 -0400
+        id S1729864AbgHJTNu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:13:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1199722B49;
-        Mon, 10 Aug 2020 19:13:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D75A822B47;
+        Mon, 10 Aug 2020 19:13:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086831;
-        bh=o4l7/CzR2RC+FJbDc3/jPbOByK3INs3SyymKtf/GbjQ=;
+        s=default; t=1597086829;
+        bh=4yLMnPaJzotJ8TahdzZXIXI6kUMopCupuwA2zHxLxVc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vy8Hp9BmoTbH1vL6rDbWppFgeod3Hk0azk7fT6N5UaYqKXP+QyKyjvaJ7hlmScoqL
-         IPzabJOBbC4LmiKkxdPkJUOX4eQaAj1FBwZf5umZ8OIhuh308pfShrC6+dyGs8othd
-         3VWMytucaQ2686MpgqjWurGJslUsUwInaaD0I0Ok=
+        b=EVV3y+IwRT73zwMt4R4ZeI6NE2+CAwS8vxgKm+6aRZXT9nHgiSn5uV81TasYqpl+c
+         OoQP3/Jepw4/nCdJ/hx6HN+fkqvxNByn+JLYzlwB4eyIX1hUX8cXxsPtOXLOq6KQC6
+         Bn/WhtLeeArrKZGDLzF8wXFovHIv/31UqvXYDD3M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aditya Pakki <pakki001@umn.edu>, Evan Quan <evan.quan@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.14 04/22] drm/radeon: Fix reference count leaks caused by pm_runtime_get_sync
-Date:   Mon, 10 Aug 2020 15:13:26 -0400
-Message-Id: <20200810191345.3795166-4-sashal@kernel.org>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 03/22] fs/btrfs: Add cond_resched() for try_release_extent_mapping() stalls
+Date:   Mon, 10 Aug 2020 15:13:25 -0400
+Message-Id: <20200810191345.3795166-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810191345.3795166-1-sashal@kernel.org>
 References: <20200810191345.3795166-1-sashal@kernel.org>
@@ -60,72 +58,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: "Paul E. McKenney" <paulmck@kernel.org>
 
-[ Upstream commit 9fb10671011143d15b6b40d6d5fa9c52c57e9d63 ]
+[ Upstream commit 9f47eb5461aaeb6cb8696f9d11503ae90e4d5cb0 ]
 
-On calling pm_runtime_get_sync() the reference count of the device
-is incremented. In case of failure, decrement the
-reference count before returning the error.
+Very large I/Os can cause the following RCU CPU stall warning:
 
-Acked-by: Evan Quan <evan.quan@amd.com>
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+RIP: 0010:rb_prev+0x8/0x50
+Code: 49 89 c0 49 89 d1 48 89 c2 48 89 f8 e9 e5 fd ff ff 4c 89 48 10 c3 4c =
+89 06 c3 4c 89 40 10 c3 0f 1f 00 48 8b 0f 48 39 cf 74 38 <48> 8b 47 10 48 85 c0 74 22 48 8b 50 08 48 85 d2 74 0c 48 89 d0 48
+RSP: 0018:ffffc9002212bab0 EFLAGS: 00000287 ORIG_RAX: ffffffffffffff13
+RAX: ffff888821f93630 RBX: ffff888821f93630 RCX: ffff888821f937e0
+RDX: 0000000000000000 RSI: 0000000000102000 RDI: ffff888821f93630
+RBP: 0000000000103000 R08: 000000000006c000 R09: 0000000000000238
+R10: 0000000000102fff R11: ffffc9002212bac8 R12: 0000000000000001
+R13: ffffffffffffffff R14: 0000000000102000 R15: ffff888821f937e0
+ __lookup_extent_mapping+0xa0/0x110
+ try_release_extent_mapping+0xdc/0x220
+ btrfs_releasepage+0x45/0x70
+ shrink_page_list+0xa39/0xb30
+ shrink_inactive_list+0x18f/0x3b0
+ shrink_lruvec+0x38e/0x6b0
+ shrink_node+0x14d/0x690
+ do_try_to_free_pages+0xc6/0x3e0
+ try_to_free_mem_cgroup_pages+0xe6/0x1e0
+ reclaim_high.constprop.73+0x87/0xc0
+ mem_cgroup_handle_over_high+0x66/0x150
+ exit_to_usermode_loop+0x82/0xd0
+ do_syscall_64+0xd4/0x100
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+On a PREEMPT=n kernel, the try_release_extent_mapping() function's
+"while" loop might run for a very long time on a large I/O.  This commit
+therefore adds a cond_resched() to this loop, providing RCU any needed
+quiescent states.
+
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/radeon/radeon_display.c | 4 +++-
- drivers/gpu/drm/radeon/radeon_drv.c     | 4 +++-
- drivers/gpu/drm/radeon/radeon_kms.c     | 4 +++-
- 3 files changed, 9 insertions(+), 3 deletions(-)
+ fs/btrfs/extent_io.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/radeon/radeon_display.c b/drivers/gpu/drm/radeon/radeon_display.c
-index d86110cdf0852..b2334349799d1 100644
---- a/drivers/gpu/drm/radeon/radeon_display.c
-+++ b/drivers/gpu/drm/radeon/radeon_display.c
-@@ -627,8 +627,10 @@ radeon_crtc_set_config(struct drm_mode_set *set,
- 	dev = set->crtc->dev;
+diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+index 6d2bfbb63d9ba..ef1fd6a09d8e5 100644
+--- a/fs/btrfs/extent_io.c
++++ b/fs/btrfs/extent_io.c
+@@ -4323,6 +4323,8 @@ int try_release_extent_mapping(struct extent_map_tree *map,
  
- 	ret = pm_runtime_get_sync(dev->dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put_autosuspend(dev->dev);
- 		return ret;
-+	}
- 
- 	ret = drm_crtc_helper_set_config(set, ctx);
- 
-diff --git a/drivers/gpu/drm/radeon/radeon_drv.c b/drivers/gpu/drm/radeon/radeon_drv.c
-index f6908e2f9e55a..41e8abd099784 100644
---- a/drivers/gpu/drm/radeon/radeon_drv.c
-+++ b/drivers/gpu/drm/radeon/radeon_drv.c
-@@ -496,8 +496,10 @@ long radeon_drm_ioctl(struct file *filp,
- 	long ret;
- 	dev = file_priv->minor->dev;
- 	ret = pm_runtime_get_sync(dev->dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put_autosuspend(dev->dev);
- 		return ret;
-+	}
- 
- 	ret = drm_ioctl(filp, cmd, arg);
- 	
-diff --git a/drivers/gpu/drm/radeon/radeon_kms.c b/drivers/gpu/drm/radeon/radeon_kms.c
-index dfee8f7d94ae5..2e28cf8118404 100644
---- a/drivers/gpu/drm/radeon/radeon_kms.c
-+++ b/drivers/gpu/drm/radeon/radeon_kms.c
-@@ -659,8 +659,10 @@ int radeon_driver_open_kms(struct drm_device *dev, struct drm_file *file_priv)
- 	file_priv->driver_priv = NULL;
- 
- 	r = pm_runtime_get_sync(dev->dev);
--	if (r < 0)
-+	if (r < 0) {
-+		pm_runtime_put_autosuspend(dev->dev);
- 		return r;
-+	}
- 
- 	/* new gpu have virtual address space support */
- 	if (rdev->family >= CHIP_CAYMAN) {
+ 			/* once for us */
+ 			free_extent_map(em);
++
++			cond_resched(); /* Allow large-extent preemption. */
+ 		}
+ 	}
+ 	return try_release_extent_state(map, tree, page, mask);
 -- 
 2.25.1
 
