@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08E03C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:21:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7E72C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:21:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C938522CAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:21:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 894A82080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:21:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597087271;
-	bh=eKLmI6yIRznVo57G102CPPtPPxx8TC3m3pHQ/L+bVTk=;
+	s=default; t=1597087281;
+	bh=JofIk6oQvFqzhrlxjmUogp6WOycx7i4dWB3OJkD9zYo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I3Ztp7mdqXgMrtp3178Qmk+F1I9ljmILiTJasAWsF1MAIOJHevdcX45ALp1YrgcFG
-	 TXvnuREeSmkaA6eT9nllvp7hJ21qokLlDgWIrIPq1LEjQq2ru7YnO1fQSC8aO/n7sx
-	 JdLGCbtRJHxJeXqmPumbGVBdKsXTuae+iphfcsh4=
+	b=lguwo+XTjG8zw+WGcKvhQ3WubI/+1hJ1RWx4ALCCgBtDQYN0z4xSpCo1JwmCCJzNb
+	 8FsmsUuULp4rH3IIALyvfGZoHp6YQysJRI5QDubtA2+yhKgcIjt8QpxCGMA8GI9XId
+	 zDSTF/E2ikm+JFYu5VgpC19gOZJhDc3aAecqHvyg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730333AbgHJTVI (ORCPT
+        id S1728369AbgHJTNa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:21:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44598 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:13:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729780AbgHJTNb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:13:31 -0400
+        id S1729748AbgHJTN0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:13:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 591C6207FF;
-        Mon, 10 Aug 2020 19:13:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7AF7207FF;
+        Mon, 10 Aug 2020 19:13:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086810;
-        bh=eKLmI6yIRznVo57G102CPPtPPxx8TC3m3pHQ/L+bVTk=;
+        s=default; t=1597086805;
+        bh=JofIk6oQvFqzhrlxjmUogp6WOycx7i4dWB3OJkD9zYo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NxiFglNUSFw9lENgauAN5u2osL/3U1dFnMjXmf5/SYwUXGfVcUQfCB0Jc0o9UTtYd
-         adc2xgV4Oc8fKe9xALKMgr98C3MnelEUf+TE5aedpGAtOHh+aNtIDsmVJcVZiLGVyM
-         MpQ2Y7gpO6WX820cXNCEMWpK1rd2laTqQywh0s/8=
+        b=kBPdMBiX+SYUJASqyoWJy4J+bel06S4q/thrMhWtniC0VREsnLpDhkG/58bDb8HWm
+         ax/Di8xJdYpxDuGweZK7yCu9sK80vc29RWdkwQXcw6X8klvdkMFDzZgb0ZV/XScTxL
+         nhuGp72Spp2OBs6dHjbQ0YIEpZMyZy8Tret8r4cw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wright Feng <wright.feng@cypress.com>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Chi-hsien Lin <chi-hsien.lin@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 21/31] brcmfmac: set state of hanger slot to FREE when flushing PSQ
-Date:   Mon, 10 Aug 2020 15:12:49 -0400
-Message-Id: <20200810191259.3794858-21-sashal@kernel.org>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        Shakeel Butt <shakeelb@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 18/31] mm/mmap.c: Add cond_resched() for exit_mmap() CPU stalls
+Date:   Mon, 10 Aug 2020 15:12:46 -0400
+Message-Id: <20200810191259.3794858-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810191259.3794858-1-sashal@kernel.org>
 References: <20200810191259.3794858-1-sashal@kernel.org>
@@ -64,78 +61,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wright Feng <wright.feng@cypress.com>
+From: "Paul E. McKenney" <paulmck@kernel.org>
 
-[ Upstream commit fcdd7a875def793c38d7369633af3eba6c7cf089 ]
+[ Upstream commit 0a3b3c253a1eb2c7fe7f34086d46660c909abeb3 ]
 
-When USB or SDIO device got abnormal bus disconnection, host driver
-tried to clean up the skbs in PSQ and TXQ (The skb's pointer in hanger
-slot linked to PSQ and TSQ), so we should set the state of skb hanger slot
-to BRCMF_FWS_HANGER_ITEM_STATE_FREE before freeing skb.
-In brcmf_fws_bus_txq_cleanup it already sets
-BRCMF_FWS_HANGER_ITEM_STATE_FREE before freeing skb, therefore we add the
-same thing in brcmf_fws_psq_flush to avoid following warning message.
+A large process running on a heavily loaded system can encounter the
+following RCU CPU stall warning:
 
-   [ 1580.012880] ------------   [ cut here ]------------
-   [ 1580.017550] WARNING: CPU: 3 PID: 3065 at
-drivers/net/wireless/broadcom/brcm80211/brcmutil/utils.c:49
-brcmu_pkt_buf_free_skb+0x21/0x30 [brcmutil]
-   [ 1580.184017] Call Trace:
-   [ 1580.186514]  brcmf_fws_cleanup+0x14e/0x190 [brcmfmac]
-   [ 1580.191594]  brcmf_fws_del_interface+0x70/0x90 [brcmfmac]
-   [ 1580.197029]  brcmf_proto_bcdc_del_if+0xe/0x10 [brcmfmac]
-   [ 1580.202418]  brcmf_remove_interface+0x69/0x190 [brcmfmac]
-   [ 1580.207888]  brcmf_detach+0x90/0xe0 [brcmfmac]
-   [ 1580.212385]  brcmf_usb_disconnect+0x76/0xb0 [brcmfmac]
-   [ 1580.217557]  usb_unbind_interface+0x72/0x260
-   [ 1580.221857]  device_release_driver_internal+0x141/0x200
-   [ 1580.227152]  device_release_driver+0x12/0x20
-   [ 1580.231460]  bus_remove_device+0xfd/0x170
-   [ 1580.235504]  device_del+0x1d9/0x300
-   [ 1580.239041]  usb_disable_device+0x9e/0x270
-   [ 1580.243160]  usb_disconnect+0x94/0x270
-   [ 1580.246980]  hub_event+0x76d/0x13b0
-   [ 1580.250499]  process_one_work+0x144/0x360
-   [ 1580.254564]  worker_thread+0x4d/0x3c0
-   [ 1580.258247]  kthread+0x109/0x140
-   [ 1580.261515]  ? rescuer_thread+0x340/0x340
-   [ 1580.265543]  ? kthread_park+0x60/0x60
-   [ 1580.269237]  ? SyS_exit_group+0x14/0x20
-   [ 1580.273118]  ret_from_fork+0x25/0x30
-   [ 1580.300446] ------------   [ cut here ]------------
+  rcu: INFO: rcu_sched self-detected stall on CPU
+  rcu: 	3-....: (20998 ticks this GP) idle=4ea/1/0x4000000000000002 softirq=556558/556558 fqs=5190
+  	(t=21013 jiffies g=1005461 q=132576)
+  NMI backtrace for cpu 3
+  CPU: 3 PID: 501900 Comm: aio-free-ring-w Kdump: loaded Not tainted 5.2.9-108_fbk12_rc3_3858_gb83b75af7909 #1
+  Hardware name: Wiwynn   HoneyBadger/PantherPlus, BIOS HBM6.71 02/03/2016
+  Call Trace:
+   <IRQ>
+   dump_stack+0x46/0x60
+   nmi_cpu_backtrace.cold.3+0x13/0x50
+   ? lapic_can_unplug_cpu.cold.27+0x34/0x34
+   nmi_trigger_cpumask_backtrace+0xba/0xca
+   rcu_dump_cpu_stacks+0x99/0xc7
+   rcu_sched_clock_irq.cold.87+0x1aa/0x397
+   ? tick_sched_do_timer+0x60/0x60
+   update_process_times+0x28/0x60
+   tick_sched_timer+0x37/0x70
+   __hrtimer_run_queues+0xfe/0x270
+   hrtimer_interrupt+0xf4/0x210
+   smp_apic_timer_interrupt+0x5e/0x120
+   apic_timer_interrupt+0xf/0x20
+   </IRQ>
+  RIP: 0010:kmem_cache_free+0x223/0x300
+  Code: 88 00 00 00 0f 85 ca 00 00 00 41 8b 55 18 31 f6 f7 da 41 f6 45 0a 02 40 0f 94 c6 83 c6 05 9c 41 5e fa e8 a0 a7 01 00 41 56 9d <49> 8b 47 08 a8 03 0f 85 87 00 00 00 65 48 ff 08 e9 3d fe ff ff 65
+  RSP: 0018:ffffc9000e8e3da8 EFLAGS: 00000206 ORIG_RAX: ffffffffffffff13
+  RAX: 0000000000020000 RBX: ffff88861b9de960 RCX: 0000000000000030
+  RDX: fffffffffffe41e8 RSI: 000060777fe3a100 RDI: 000000000001be18
+  RBP: ffffea00186e7780 R08: ffffffffffffffff R09: ffffffffffffffff
+  R10: ffff88861b9dea28 R11: ffff88887ffde000 R12: ffffffff81230a1f
+  R13: ffff888854684dc0 R14: 0000000000000206 R15: ffff8888547dbc00
+   ? remove_vma+0x4f/0x60
+   remove_vma+0x4f/0x60
+   exit_mmap+0xd6/0x160
+   mmput+0x4a/0x110
+   do_exit+0x278/0xae0
+   ? syscall_trace_enter+0x1d3/0x2b0
+   ? handle_mm_fault+0xaa/0x1c0
+   do_group_exit+0x3a/0xa0
+   __x64_sys_exit_group+0x14/0x20
+   do_syscall_64+0x42/0x100
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Acked-by: Arend van Spriel <arend.vanspriel@broadcom.com>
-Signed-off-by: Wright Feng <wright.feng@cypress.com>
-Signed-off-by: Chi-hsien Lin <chi-hsien.lin@cypress.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200624091608.25154-2-wright.feng@cypress.com
+And on a PREEMPT=n kernel, the "while (vma)" loop in exit_mmap() can run
+for a very long time given a large process.  This commit therefore adds
+a cond_resched() to this loop, providing RCU any needed quiescent states.
+
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: <linux-mm@kvack.org>
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ mm/mmap.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c
-index 1de8497d92b8a..dc7c970257d2f 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c
-@@ -653,6 +653,7 @@ static inline int brcmf_fws_hanger_poppkt(struct brcmf_fws_hanger *h,
- static void brcmf_fws_psq_flush(struct brcmf_fws_info *fws, struct pktq *q,
- 				int ifidx)
- {
-+	struct brcmf_fws_hanger_item *hi;
- 	bool (*matchfn)(struct sk_buff *, void *) = NULL;
- 	struct sk_buff *skb;
- 	int prec;
-@@ -664,6 +665,9 @@ static void brcmf_fws_psq_flush(struct brcmf_fws_info *fws, struct pktq *q,
- 		skb = brcmu_pktq_pdeq_match(q, prec, matchfn, &ifidx);
- 		while (skb) {
- 			hslot = brcmf_skb_htod_tag_get_field(skb, HSLOT);
-+			hi = &fws->hanger.items[hslot];
-+			WARN_ON(skb != hi->pkt);
-+			hi->state = BRCMF_FWS_HANGER_ITEM_STATE_FREE;
- 			brcmf_fws_hanger_poppkt(&fws->hanger, hslot, &skb,
- 						true);
- 			brcmu_pkt_buf_free_skb(skb);
+diff --git a/mm/mmap.c b/mm/mmap.c
+index a98f09b830197..e84fd3347a518 100644
+--- a/mm/mmap.c
++++ b/mm/mmap.c
+@@ -3100,6 +3100,7 @@ void exit_mmap(struct mm_struct *mm)
+ 		if (vma->vm_flags & VM_ACCOUNT)
+ 			nr_accounted += vma_pages(vma);
+ 		vma = remove_vma(vma);
++		cond_resched();
+ 	}
+ 	vm_unacct_memory(nr_accounted);
+ }
 -- 
 2.25.1
 
