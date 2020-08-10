@@ -2,106 +2,92 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E6C8C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D95FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:17:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8D8A2080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:17:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597087038;
-	bh=6XdUHVcTHv4Q3XUDPQswzH/xyKNtLCKSI1GvwszQ5Fc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GyrkU3sLjf5RkU+u/0PYjxYlDr4eGUzZe0294QqOWUrVWPbgDnBdLdCPG3RsyGAYL
-	 x04nM3zwPvIbOpbavkIuxqmuN4A9flqJVwIUtNP6SUlSaJRugkx8d6er/BZRT5q6p0
-	 jY7v1PihExTJijyQIpIKZ1GRyqMYeIztxd29gl9o=
+	by mail.kernel.org (Postfix) with ESMTP id 22AB32080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:17:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730257AbgHJTRQ (ORCPT
+        id S1730083AbgHJTR0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:17:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46586 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730015AbgHJTO1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:14:27 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4255C22B47;
-        Mon, 10 Aug 2020 19:14:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086866;
-        bh=6XdUHVcTHv4Q3XUDPQswzH/xyKNtLCKSI1GvwszQ5Fc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EAHsQer5KuS03YEl/ib2pBy0wChAkSzuDj7K7rzjnsl34L3lecJHplwyo5iX6sGEO
-         YdJ8b1ZBnARwra+cFSjQ+SiiYMAokXEyVvLvXFuah0tYHcu7LgIPHrcfdGaJf43nhb
-         p0dS//qlVoOCEYcgev79y7IDzk7GZsq+QodG3MQI=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Evgeny Novikov <novikov@ispras.ru>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 05/17] video: fbdev: neofb: fix memory leak in neo_scan_monitor()
-Date:   Mon, 10 Aug 2020 15:14:06 -0400
-Message-Id: <20200810191418.3795394-5-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200810191418.3795394-1-sashal@kernel.org>
-References: <20200810191418.3795394-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        Mon, 10 Aug 2020 15:17:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43058 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728618AbgHJTRY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:17:24 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35CF8C061756;
+        Mon, 10 Aug 2020 12:17:24 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 167D112753C7F;
+        Mon, 10 Aug 2020 12:00:37 -0700 (PDT)
+Date:   Mon, 10 Aug 2020 12:17:22 -0700 (PDT)
+Message-Id: <20200810.121722.482500427015958955.davem@davemloft.net>
+To:     ndesaulniers@google.com
+Cc:     samitolvanen@google.com, kuba@kernel.org, stable@vger.kernel.org,
+        masahiroy@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+        kafai@fb.com, songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
+        john.fastabend@gmail.com, kpsingh@chromium.org, elder@linaro.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: Re: [PATCH v2 net] bitfield.h: don't compile-time validate _val in
+ FIELD_FIT
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200810182112.2221964-1-ndesaulniers@google.com>
+References: <20200810182112.2221964-1-ndesaulniers@google.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 10 Aug 2020 12:00:37 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evgeny Novikov <novikov@ispras.ru>
+From: Nick Desaulniers <ndesaulniers@google.com>
+Date: Mon, 10 Aug 2020 11:21:11 -0700
 
-[ Upstream commit edcb3895a751c762a18d25c8d9846ce9759ed7e1 ]
+> From: Jakub Kicinski <kuba@kernel.org>
+> 
+> When ur_load_imm_any() is inlined into jeq_imm(), it's possible for the
+> compiler to deduce a case where _val can only have the value of -1 at
+> compile time. Specifically,
+> 
+> /* struct bpf_insn: _s32 imm */
+> u64 imm = insn->imm; /* sign extend */
+> if (imm >> 32) { /* non-zero only if insn->imm is negative */
+>   /* inlined from ur_load_imm_any */
+>   u32 __imm = imm >> 32; /* therefore, always 0xffffffff */
+>   if (__builtin_constant_p(__imm) && __imm > 255)
+>     compiletime_assert_XXX()
+> 
+> This can result in tripping a BUILD_BUG_ON() in __BF_FIELD_CHECK() that
+> checks that a given value is representable in one byte (interpreted as
+> unsigned).
+> 
+> FIELD_FIT() should return true or false at runtime for whether a value
+> can fit for not. Don't break the build over a value that's too large for
+> the mask. We'd prefer to keep the inlining and compiler optimizations
+> though we know this case will always return false.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 1697599ee301a ("bitfield.h: add FIELD_FIT() helper")
+> Link: https://lore.kernel.org/kernel-hardening/CAK7LNASvb0UDJ0U5wkYYRzTAdnEs64HjXpEUL7d=V0CXiAXcNw@mail.gmail.com/
+> Reported-by: Masahiro Yamada <masahiroy@kernel.org>
+> Debugged-by: Sami Tolvanen <samitolvanen@google.com>
+> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+> ---
+> Changes V1->V2:
+> * add Fixes tag.
 
-neofb_probe() calls neo_scan_monitor() that can successfully allocate a
-memory for info->monspecs.modedb and proceed to case 0x03. There it does
-not free the memory and returns -1. neofb_probe() goes to label
-err_scan_monitor, thus, it does not free this memory through calling
-fb_destroy_modedb() as well. We can not go to label err_init_hw since
-neo_scan_monitor() can fail during memory allocation. So, the patch frees
-the memory directly for case 0x03.
-
-Found by Linux Driver Verification project (linuxtesting.org).
-
-Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
-Cc: Jani Nikula <jani.nikula@intel.com>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200630195451.18675-1-novikov@ispras.ru
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/video/fbdev/neofb.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/video/fbdev/neofb.c b/drivers/video/fbdev/neofb.c
-index db023a97d1eae..e243254a57214 100644
---- a/drivers/video/fbdev/neofb.c
-+++ b/drivers/video/fbdev/neofb.c
-@@ -1820,6 +1820,7 @@ static int neo_scan_monitor(struct fb_info *info)
- #else
- 		printk(KERN_ERR
- 		       "neofb: Only 640x480, 800x600/480 and 1024x768 panels are currently supported\n");
-+		kfree(info->monspecs.modedb);
- 		return -1;
- #endif
- 	default:
--- 
-2.25.1
-
+Applied, thank you.
