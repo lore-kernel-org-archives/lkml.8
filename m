@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B210C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:27:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37313C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:27:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28D6A22CF7
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:27:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EED9822CF7
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:27:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073253;
-	bh=P00ThBgQLNlRPDK/22PRWiBmRKyKzX5ABwnqAtmOvHM=;
+	s=default; t=1597073257;
+	bh=/pXzfVr7apCbPukjab5pemRMWkkVRMKcBLRLG7uikaM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zsuJDXgDAaleN4MJIvhiIsOVzPLRo2P/hRycpipTcPOu5kmFAHG5c3xt9muD90rVy
-	 UpGcPbol7kkkjdjM0RRutPpa0qTRZh5m/7w4NDG3BMFTv3hJk/0mKcFlC826tosGeB
-	 TRyc8CPH1OXEprXXeNIndRPHbprduc91qMZzttIY=
+	b=Vlb9S8J3kGC0Ve9gcpGEaa0jr+218b2CpVyX9CtwpOP5z9h2y5X0dsGkT0RAZkW2M
+	 L+wZKm3ecJp1KUqGYEhs8ipVpArmlBZ5SO70kU6ZNQdDxo6YDDNzgyp8YqWMsC6g3G
+	 teTwS0wf94/IobcrfOjM9T3ceR0SAiQeZrLLtFmg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbgHJP1Z (ORCPT
+        id S1728772AbgHJP1f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:27:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33006 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:27:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728410AbgHJP1L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:27:11 -0400
+        id S1727856AbgHJP11 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:27:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E2AF22B47;
-        Mon, 10 Aug 2020 15:27:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FA9F22B47;
+        Mon, 10 Aug 2020 15:27:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073229;
-        bh=P00ThBgQLNlRPDK/22PRWiBmRKyKzX5ABwnqAtmOvHM=;
+        s=default; t=1597073247;
+        bh=/pXzfVr7apCbPukjab5pemRMWkkVRMKcBLRLG7uikaM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qjdNvqzsijnmthjP2OeytCBsH271RVXGSYwyHZgL/XH3NcR8FF4hXbh+TNnvq9VOt
-         DTU+fYnWcDl0FIeCI1jASsO7KUyDPJ3isC8nBPgWMqa/pJLnn9TmWLQ0I+ecZZzQP2
-         WILw5jm8N9/7/GebWxkv2COknqxgjJNTuepxPZFw=
+        b=YutEwiRG4whT3qnoiz9TsJpuCJcxPhGSI4ccB4ADFgC9zBmWOzyFeTWp/AJLEnxIS
+         EH7miE5i8TZAxz1OS6Bl6th5snr3UquoS1oLuAlOgiCkVArsup6VR7G3lSbP/lCyUF
+         TleKD5+tXwBM1c5wuNRg5bZLXIsAmFHNp+JW4vLo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ben Skeggs <bskeggs@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 32/67] drm/nouveau/fbcon: fix module unload when fbcon init has failed for some reason
-Date:   Mon, 10 Aug 2020 17:21:19 +0200
-Message-Id: <20200810151811.014203848@linuxfoundation.org>
+        stable@vger.kernel.org, Rustam Kovhaev <rkovhaev@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>,
+        syzbot+67b2bd0e34f952d0321e@syzkaller.appspotmail.com
+Subject: [PATCH 5.4 38/67] usb: hso: check for return value in hso_serial_common_create()
+Date:   Mon, 10 Aug 2020 17:21:25 +0200
+Message-Id: <20200810151811.316612067@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151809.438685785@linuxfoundation.org>
 References: <20200810151809.438685785@linuxfoundation.org>
@@ -59,30 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Skeggs <bskeggs@redhat.com>
+From: Rustam Kovhaev <rkovhaev@gmail.com>
 
-[ Upstream commit 498595abf5bd51f0ae074cec565d888778ea558f ]
+[ Upstream commit e911e99a0770f760377c263bc7bac1b1593c6147 ]
 
-Stale pointer was tripping up the unload path.
+in case of an error tty_register_device_attr() returns ERR_PTR(),
+add IS_ERR() check
 
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+Reported-and-tested-by: syzbot+67b2bd0e34f952d0321e@syzkaller.appspotmail.com
+Link: https://syzkaller.appspot.com/bug?extid=67b2bd0e34f952d0321e
+Signed-off-by: Rustam Kovhaev <rkovhaev@gmail.com>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nouveau_fbcon.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/usb/hso.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_fbcon.c b/drivers/gpu/drm/nouveau/nouveau_fbcon.c
-index f439f0a5b43a5..141cc89981240 100644
---- a/drivers/gpu/drm/nouveau/nouveau_fbcon.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_fbcon.c
-@@ -592,6 +592,7 @@ fini:
- 	drm_fb_helper_fini(&fbcon->helper);
- free:
- 	kfree(fbcon);
-+	drm->fbcon = NULL;
- 	return ret;
- }
+diff --git a/drivers/net/usb/hso.c b/drivers/net/usb/hso.c
+index 66a8b835aa94c..7449b97a3c89b 100644
+--- a/drivers/net/usb/hso.c
++++ b/drivers/net/usb/hso.c
+@@ -2260,12 +2260,14 @@ static int hso_serial_common_create(struct hso_serial *serial, int num_urbs,
  
+ 	minor = get_free_serial_index();
+ 	if (minor < 0)
+-		goto exit;
++		goto exit2;
+ 
+ 	/* register our minor number */
+ 	serial->parent->dev = tty_port_register_device_attr(&serial->port,
+ 			tty_drv, minor, &serial->parent->interface->dev,
+ 			serial->parent, hso_serial_dev_groups);
++	if (IS_ERR(serial->parent->dev))
++		goto exit2;
+ 
+ 	/* fill in specific data for later use */
+ 	serial->minor = minor;
+@@ -2310,6 +2312,7 @@ static int hso_serial_common_create(struct hso_serial *serial, int num_urbs,
+ 	return 0;
+ exit:
+ 	hso_serial_tty_unregister(serial);
++exit2:
+ 	hso_serial_common_free(serial);
+ 	return -1;
+ }
 -- 
 2.25.1
 
