@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B90C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:38:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C67C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44E4F22EBE
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:38:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 442CF22EBE
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:38:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073915;
-	bh=Rz7iaYAsvM6wCeSLHRNbTUW22QBpt6gfuRDeVPmYiNU=;
+	s=default; t=1597073916;
+	bh=Y7wmMwDeYET/Juzo4G/3OZOixAly9URCHID3PK/qwFU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fNHeNgr9NLqozvTr6aVsMHsiUqz6Dv/Sf50YemW1QJaBvubP2QHsgSlQH0f6FIE/F
-	 zyPzCp/fiC+qSvnmaCas9N5XB5jU7r5Jv3Mnw2UKpjSvBzo2rMSecGEs5mXG/erSbH
-	 HBx9N4nbOtFwrkC9gyBCVmTtHU6o18hu7jdXK/+4=
+	b=ILjfgmLHz1FtmTDSZGjAExn5pySqzwEiRZ336rRdYJT5k/KdonXzHjOrO70LlGigk
+	 eHFAoPAZYJfijt9DxAQTu6gy1WBDBzhL3gg0/IPY53K/7Uwzbwstzt2TA6flsyP1RL
+	 /ebjMt2KDDvpipht1BTzDDXiG7BKQjgGLEbDk544=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728576AbgHJPZr (ORCPT
+        id S1728570AbgHJPZo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:25:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59572 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:25:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728561AbgHJPZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:25:41 -0400
+        id S1728431AbgHJPZi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:25:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D42862078E;
-        Mon, 10 Aug 2020 15:25:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0813420855;
+        Mon, 10 Aug 2020 15:25:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073140;
-        bh=Rz7iaYAsvM6wCeSLHRNbTUW22QBpt6gfuRDeVPmYiNU=;
+        s=default; t=1597073137;
+        bh=Y7wmMwDeYET/Juzo4G/3OZOixAly9URCHID3PK/qwFU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Uzlb7AKT2/cu7jHRFmujRLKKVr4c/2jHuZVnE3Dd+QBlVewfF+w2SOwwwRQCUgtm3
-         fuC49qlgaWrSgGGF0SDSMeVERY0ETwyHciybAy4nE3dGhwTba+Cn+MFP3X0N0S1BsX
-         WnJpOy1PCu8xu+n5w9J3kpLe9O5X3+aoB3Depd24=
+        b=tPlI3uSIgBag5XVRGSIGyJ7QwW73WW8rm08Uw9LVJmxvAUdd5pKGlv2cxUSWaaZYH
+         UCVfwRCWUzPPM3pE0fnd1yYTE0e2aF4aFfNuRWyOP2hGx/XwABNXbYsYx27ufy5Ok7
+         bRFnjygrogPB2sLwY0jivLKLGShJM3fE9gQXtJH0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Rafael P." <rparrazo@redhat.com>,
-        Dean Nelson <dnelson@redhat.com>,
-        Xin Long <lucien.xin@gmail.com>,
+        stable@vger.kernel.org, wenxu <wenxu@ucloud.cn>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.7 71/79] net: thunderx: use spin_lock_bh in nicvf_set_rx_mode_task()
-Date:   Mon, 10 Aug 2020 17:21:30 +0200
-Message-Id: <20200810151815.735215655@linuxfoundation.org>
+Subject: [PATCH 5.7 70/79] net/sched: act_ct: fix miss set mru for ovs after defrag in act_ct
+Date:   Mon, 10 Aug 2020 17:21:29 +0200
+Message-Id: <20200810151815.687796652@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151812.114485777@linuxfoundation.org>
 References: <20200810151812.114485777@linuxfoundation.org>
@@ -61,60 +60,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: wenxu <wenxu@ucloud.cn>
 
-[ Upstream commit bab9693a9a8c6dd19f670408ec1e78e12a320682 ]
+[ Upstream commit 038ebb1a713d114d54dbf14868a73181c0c92758 ]
 
-A dead lock was triggered on thunderx driver:
+When openvswitch conntrack offload with act_ct action. Fragment packets
+defrag in the ingress tc act_ct action and miss the next chain. Then the
+packet pass to the openvswitch datapath without the mru. The over
+mtu packet will be dropped in output action in openvswitch for over mtu.
 
-        CPU0                    CPU1
-        ----                    ----
-   [01] lock(&(&nic->rx_mode_wq_lock)->rlock);
-                           [11] lock(&(&mc->mca_lock)->rlock);
-                           [12] lock(&(&nic->rx_mode_wq_lock)->rlock);
-   [02] <Interrupt> lock(&(&mc->mca_lock)->rlock);
+"kernel: net2: dropped over-mtu packet: 1528 > 1500"
 
-The path for each is:
+This patch add mru in the tc_skb_ext for adefrag and miss next chain
+situation. And also add mru in the qdisc_skb_cb. The act_ct set the mru
+to the qdisc_skb_cb when the packet defrag. And When the chain miss,
+The mru is set to tc_skb_ext which can be got by ovs datapath.
 
-  [01] worker_thread() -> process_one_work() -> nicvf_set_rx_mode_task()
-  [02] mld_ifc_timer_expire()
-  [11] ipv6_add_dev() -> ipv6_dev_mc_inc() -> igmp6_group_added() ->
-  [12] dev_mc_add() -> __dev_set_rx_mode() -> nicvf_set_rx_mode()
-
-To fix it, it needs to disable bh on [1], so that the timer on [2]
-wouldn't be triggered until rx_mode_wq_lock is released. So change
-to use spin_lock_bh() instead of spin_lock().
-
-Thanks to Paolo for helping with this.
-
-v1->v2:
-  - post to netdev.
-
-Reported-by: Rafael P. <rparrazo@redhat.com>
-Tested-by: Dean Nelson <dnelson@redhat.com>
-Fixes: 469998c861fa ("net: thunderx: prevent concurrent data re-writing by nicvf_set_rx_mode")
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Fixes: b57dc7c13ea9 ("net/sched: Introduce action ct")
+Signed-off-by: wenxu <wenxu@ucloud.cn>
+Reviewed-by: Cong Wang <xiyou.wangcong@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/cavium/thunder/nicvf_main.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/linux/skbuff.h    |    1 +
+ include/net/sch_generic.h |    3 ++-
+ net/openvswitch/flow.c    |    1 +
+ net/sched/act_ct.c        |    8 ++++++--
+ net/sched/cls_api.c       |    1 +
+ 5 files changed, 11 insertions(+), 3 deletions(-)
 
---- a/drivers/net/ethernet/cavium/thunder/nicvf_main.c
-+++ b/drivers/net/ethernet/cavium/thunder/nicvf_main.c
-@@ -2041,11 +2041,11 @@ static void nicvf_set_rx_mode_task(struc
- 	/* Save message data locally to prevent them from
- 	 * being overwritten by next ndo_set_rx_mode call().
- 	 */
--	spin_lock(&nic->rx_mode_wq_lock);
-+	spin_lock_bh(&nic->rx_mode_wq_lock);
- 	mode = vf_work->mode;
- 	mc = vf_work->mc;
- 	vf_work->mc = NULL;
--	spin_unlock(&nic->rx_mode_wq_lock);
-+	spin_unlock_bh(&nic->rx_mode_wq_lock);
+--- a/include/linux/skbuff.h
++++ b/include/linux/skbuff.h
+@@ -283,6 +283,7 @@ struct nf_bridge_info {
+  */
+ struct tc_skb_ext {
+ 	__u32 chain;
++	__u16 mru;
+ };
+ #endif
  
- 	__nicvf_set_rx_mode_task(mode, mc, nic);
+--- a/include/net/sch_generic.h
++++ b/include/net/sch_generic.h
+@@ -380,6 +380,7 @@ struct qdisc_skb_cb {
+ 	};
+ #define QDISC_CB_PRIV_LEN 20
+ 	unsigned char		data[QDISC_CB_PRIV_LEN];
++	u16			mru;
+ };
+ 
+ typedef void tcf_chain_head_change_t(struct tcf_proto *tp_head, void *priv);
+@@ -459,7 +460,7 @@ static inline void qdisc_cb_private_vali
+ {
+ 	struct qdisc_skb_cb *qcb;
+ 
+-	BUILD_BUG_ON(sizeof(skb->cb) < offsetof(struct qdisc_skb_cb, data) + sz);
++	BUILD_BUG_ON(sizeof(skb->cb) < sizeof(*qcb));
+ 	BUILD_BUG_ON(sizeof(qcb->data) < sz);
  }
+ 
+--- a/net/openvswitch/flow.c
++++ b/net/openvswitch/flow.c
+@@ -890,6 +890,7 @@ int ovs_flow_key_extract(const struct ip
+ 	if (static_branch_unlikely(&tc_recirc_sharing_support)) {
+ 		tc_ext = skb_ext_find(skb, TC_SKB_EXT);
+ 		key->recirc_id = tc_ext ? tc_ext->chain : 0;
++		OVS_CB(skb)->mru = tc_ext ? tc_ext->mru : 0;
+ 	} else {
+ 		key->recirc_id = 0;
+ 	}
+--- a/net/sched/act_ct.c
++++ b/net/sched/act_ct.c
+@@ -704,8 +704,10 @@ static int tcf_ct_handle_fragments(struc
+ 		if (err && err != -EINPROGRESS)
+ 			goto out_free;
+ 
+-		if (!err)
++		if (!err) {
+ 			*defrag = true;
++			cb.mru = IPCB(skb)->frag_max_size;
++		}
+ 	} else { /* NFPROTO_IPV6 */
+ #if IS_ENABLED(CONFIG_NF_DEFRAG_IPV6)
+ 		enum ip6_defrag_users user = IP6_DEFRAG_CONNTRACK_IN + zone;
+@@ -715,8 +717,10 @@ static int tcf_ct_handle_fragments(struc
+ 		if (err && err != -EINPROGRESS)
+ 			goto out_free;
+ 
+-		if (!err)
++		if (!err) {
+ 			*defrag = true;
++			cb.mru = IP6CB(skb)->frag_max_size;
++		}
+ #else
+ 		err = -EOPNOTSUPP;
+ 		goto out_free;
+--- a/net/sched/cls_api.c
++++ b/net/sched/cls_api.c
+@@ -1679,6 +1679,7 @@ int tcf_classify_ingress(struct sk_buff
+ 		if (WARN_ON_ONCE(!ext))
+ 			return TC_ACT_SHOT;
+ 		ext->chain = last_executed_chain;
++		ext->mru = qdisc_skb_cb(skb)->mru;
+ 	}
+ 
+ 	return ret;
 
 
