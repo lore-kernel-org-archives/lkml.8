@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F08AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:38:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4AC1C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:38:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC7CA23134
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:38:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9157D23117
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:38:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073904;
-	bh=VSEtM7KXc3vCmy6YGlDolpvvft5r9FlIcRKnYXIPviM=;
+	s=default; t=1597073906;
+	bh=LoCBf9smeqKX90IxjUKH7UtGhuBKcdKjGFseDosWpvs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rlrDDut0PbUhbI8GKurOJNUop0WiKHLKXxUuhZzeu8njizpI702jHP2pGxF/pTmci
-	 njqHMPJzZZh4T1KRuVOxCZho3OTNgobRu5JmgpLJQCbLaaxP0FGlcahJrq+Zuc8pkr
-	 Q7OYo8Y5FHSZpE5pM2Aw3TosPHKjGf9D9+BGsvYY=
+	b=f+8sAr2RVSWQHmdOKLipaTwwERKLr/WxtCiV1MyZO2TED2l+DC+j8d+ywOSyCjyvy
+	 kOYR7aes8evoUgbq52OBpQSBSsbvCzvOuFvuBQoJK+hprLeGZc2x+gBwwnYppfOM2z
+	 m7RXyh8jJDCVOtg/Y/ATTi6BmZ7eHUeX9YXxNN9I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728915AbgHJPiV (ORCPT
+        id S1729144AbgHJPiZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:38:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59968 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:38:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727985AbgHJP0C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:26:02 -0400
+        id S1728613AbgHJPZ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:25:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6613208A9;
-        Mon, 10 Aug 2020 15:25:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E01DA20658;
+        Mon, 10 Aug 2020 15:25:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073160;
-        bh=VSEtM7KXc3vCmy6YGlDolpvvft5r9FlIcRKnYXIPviM=;
+        s=default; t=1597073157;
+        bh=LoCBf9smeqKX90IxjUKH7UtGhuBKcdKjGFseDosWpvs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wK+H9PNPX7Fkq4S9T7lDCCw/1/q6jMsy6LYnpDg7mCHj8uBTD6afDS2Ph3N7GVyvH
-         z8+bhuVQ2RN61+ojWqilvpKNAPOZaYz9GMqYXnj6CLYVmVD5oskd+zYzuS5uxxP7W0
-         q6Cmmf758x9Q8cGOUJfpRmtYLrZ7AHD1hQyf+NjY=
+        b=RdCZFuWycpAmThkbxzZE4jOO3I8WqZXDjRRdZW7OL7+3Q6rptxFyrBSi5Z7JMER9I
+         dJwykivaK8xiwr4DLcbnwuAuSJcpKTlIHYRrr/Guzv2t+vp+jK7VP3ZTE5QMNIfh5X
+         F9W5GHmBZzq/7TGp2PK3+6XeYM8gYXlbEb4XYr3Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Roese <sr@denx.de>,
-        Reto Schneider <reto.schneider@husqvarnagroup.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        stable@vger.kernel.org,
+        Matthieu Baerts <matthieu.baerts@tessares.net>,
+        Paolo Abeni <pabeni@redhat.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.7 68/79] net: macb: Properly handle phylink on at91sam9x
-Date:   Mon, 10 Aug 2020 17:21:27 +0200
-Message-Id: <20200810151815.589057385@linuxfoundation.org>
+Subject: [PATCH 5.7 77/79] mptcp: fix bogus sendmsg() return code under pressure
+Date:   Mon, 10 Aug 2020 17:21:36 +0200
+Message-Id: <20200810151816.018579465@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151812.114485777@linuxfoundation.org>
 References: <20200810151812.114485777@linuxfoundation.org>
@@ -62,60 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Roese <sr@denx.de>
+From: Paolo Abeni <pabeni@redhat.com>
 
-[ Upstream commit f7ba7dbf4f7af67b5936ff1cbd40a3254b409ebf ]
+[ Upstream commit 8555c6bfd5fddb1cf363d3cd157d70a1bb27f718 ]
 
-I just recently noticed that ethernet does not work anymore since v5.5
-on the GARDENA smart Gateway, which is based on the AT91SAM9G25.
-Debugging showed that the "GEM bits" in the NCFGR register are now
-unconditionally accessed, which is incorrect for the !macb_is_gem()
-case.
+In case of memory pressure, mptcp_sendmsg() may call
+sk_stream_wait_memory() after succesfully xmitting some
+bytes. If the latter fails we currently return to the
+user-space the error code, ignoring the succeful xmit.
 
-This patch adds the macb_is_gem() checks back to the code
-(in macb_mac_config() & macb_mac_link_up()), so that the GEM register
-bits are not accessed in this case any more.
+Address the issue always checking for the xmitted bytes
+before mptcp_sendmsg() completes.
 
-Fixes: 7897b071ac3b ("net: macb: convert to phylink")
-Signed-off-by: Stefan Roese <sr@denx.de>
-Cc: Reto Schneider <reto.schneider@husqvarnagroup.com>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-Cc: David S. Miller <davem@davemloft.net>
+Fixes: f296234c98a8 ("mptcp: Add handling of incoming MP_JOIN requests")
+Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/cadence/macb_main.c |   13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ net/mptcp/protocol.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -578,7 +578,7 @@ static void macb_mac_config(struct phyli
- 	if (bp->caps & MACB_CAPS_MACB_IS_EMAC) {
- 		if (state->interface == PHY_INTERFACE_MODE_RMII)
- 			ctrl |= MACB_BIT(RM9200_RMII);
--	} else {
-+	} else if (macb_is_gem(bp)) {
- 		ctrl &= ~(GEM_BIT(SGMIIEN) | GEM_BIT(PCSSEL));
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -802,7 +802,6 @@ fallback:
  
- 		if (state->interface == PHY_INTERFACE_MODE_SGMII)
-@@ -639,10 +639,13 @@ static void macb_mac_link_up(struct phyl
- 		ctrl |= MACB_BIT(FD);
+ 	mptcp_set_timeout(sk, ssk);
+ 	if (copied) {
+-		ret = copied;
+ 		tcp_push(ssk, msg->msg_flags, mss_now, tcp_sk(ssk)->nonagle,
+ 			 size_goal);
  
- 	if (!(bp->caps & MACB_CAPS_MACB_IS_EMAC)) {
--		ctrl &= ~(GEM_BIT(GBE) | MACB_BIT(PAE));
--
--		if (speed == SPEED_1000)
--			ctrl |= GEM_BIT(GBE);
-+		ctrl &= ~MACB_BIT(PAE);
-+		if (macb_is_gem(bp)) {
-+			ctrl &= ~GEM_BIT(GBE);
-+
-+			if (speed == SPEED_1000)
-+				ctrl |= GEM_BIT(GBE);
-+		}
+@@ -815,7 +814,7 @@ fallback:
+ 	release_sock(ssk);
+ out:
+ 	release_sock(sk);
+-	return ret;
++	return copied ? : ret;
+ }
  
- 		/* We do not support MLO_PAUSE_RX yet */
- 		if (tx_pause)
+ static void mptcp_wait_data(struct sock *sk, long *timeo)
 
 
