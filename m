@@ -2,248 +2,150 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 870B1C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 17:34:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28606C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 17:38:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 543892065C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 17:34:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED36220885
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 17:38:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bo39z7Qm"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CJ32tAiB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728055AbgHJReh (ORCPT
+        id S1727944AbgHJRil (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 13:34:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55540 "EHLO
+        Mon, 10 Aug 2020 13:38:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727841AbgHJRef (ORCPT
+        with ESMTP id S1727857AbgHJRij (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 13:34:35 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75459C061756;
-        Mon, 10 Aug 2020 10:34:34 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id t10so5328281plz.10;
-        Mon, 10 Aug 2020 10:34:34 -0700 (PDT)
+        Mon, 10 Aug 2020 13:38:39 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DFC7C061756
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 10:38:39 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id k20so326405wmi.5
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 10:38:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=mWNNGRPEImrQ+jMxGRJaBTOD+o6Djl9ph4Czfnp/DXk=;
-        b=bo39z7QmTYhJ3Zo5VYxLP4trCXFs4Qm/xeLQ+e8/xQdVsL6uZiFvbrc/cszlNQ+i+G
-         61spnEUypIJFfpd/zr6eBtfrbzti/ZdWmyaCEGog6LVyk6RMCyuiSFs+ZyVYjIjStFhF
-         A84vu1nb/uAPUfZ0nyBLnAN+xgXw4XTxzTQzNW88HoyTWldy0HXjRkSGsCzbPd3UWa/L
-         NSXR7MzOY2Cdf43Q2LP8fhz5V4xH7EEaSQUE1eGaH0D+XlsYx+nOwcAUIcj1AML1KlZ/
-         CYfaP0y1JGnP5pwcipaZxc+VEozrDnEzUXNtV9xOeYqUtVh1ITCGqM96hkJIK9EN3r0J
-         EgIQ==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=EcJDg2O7xIbOjM5eLQ8gCplwOfat/XZVzxZppSuBFXA=;
+        b=CJ32tAiBMpba2lWqmucba2kWsAmrucVE+nHFEbLfe7F/yDIu8a5GsC+aKvXiXYYyjH
+         p6tY4SvZEFynuVENJxRY4zfZMk55Q8+jalMCUt5LbX15hB2LNARaGtL//JDIXpveJBnq
+         U97ZMz+k45sAX4uHdrKeocRzAh6Iaba1kKKm8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=mWNNGRPEImrQ+jMxGRJaBTOD+o6Djl9ph4Czfnp/DXk=;
-        b=ACrm0o6ucWLSVw3cYPHWzon2O7V2dYPVcyLRAY7QVDPI40Wgl8t+ZAWiwfoPItG8Nu
-         VumBLK61/uDtIb7AQ2UCTynPD4nghTHIGkFY0f1lW35cKzQl8ESJIRaNWCFGxysC6hMZ
-         vtXupU2nuw39tbUpvJYGru0vaTTe1uC6WB/6eiqcTpMvL3+XqAnsiKw1rZWVnNHpuMum
-         bO455wCKnzEAsYBoQQ0CooyrWAjHStV8pdqZ2NoHUMuRIJcHpRMcvvfSJHnw79MPZmaL
-         Ti/RIcTSpIOI6IhbQbAnQZNbpSQtLxKg8fy+rT7JTden6+GcC5p3bbOKwubDVIaUnGHY
-         XVCA==
-X-Gm-Message-State: AOAM531yiiDdzsS/hF4V+kKAHTL/LcjVZnU89TUfAdk+do7cRMnVT02x
-        xqCU543KRMELFwHBUt6i8YE=
-X-Google-Smtp-Source: ABdhPJx4L1LtxcPBz64ifBDJDQfUAH3yoKHtPIwpPBZLZcWX2HUFZctYiH6R+cxsfkayNzbkZw/rKQ==
-X-Received: by 2002:a17:90a:ce0c:: with SMTP id f12mr409160pju.44.1597080873604;
-        Mon, 10 Aug 2020 10:34:33 -0700 (PDT)
-Received: from gmail.com ([2601:600:9b7f:872e:a655:30fb:7373:c762])
-        by smtp.gmail.com with ESMTPSA id b26sm25367902pff.54.2020.08.10.10.34.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Aug 2020 10:34:32 -0700 (PDT)
-Date:   Mon, 10 Aug 2020 10:34:31 -0700
-From:   Andrei Vagin <avagin@gmail.com>
-To:     Kirill Tkhai <ktkhai@virtuozzo.com>
-Cc:     adobriyan@gmail.com, "Eric W. Biederman" <ebiederm@xmission.com>,
-        viro@zeniv.linux.org.uk, davem@davemloft.net,
-        akpm@linux-foundation.org, christian.brauner@ubuntu.com,
-        areber@redhat.com, serge@hallyn.com, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
-Subject: Re: [PATCH 00/23] proc: Introduce /proc/namespaces/ directory to
- expose namespaces lineary
-Message-ID: <20200810173431.GA68662@gmail.com>
-References: <159611007271.535980.15362304262237658692.stgit@localhost.localdomain>
- <87k0yl5axy.fsf@x220.int.ebiederm.org>
- <56928404-f194-4194-5f2a-59acb15b1a04@virtuozzo.com>
- <875za43b3w.fsf@x220.int.ebiederm.org>
- <9ceb5049-6aea-1429-e35f-d86480f10d72@virtuozzo.com>
- <20200806080540.GA18865@gmail.com>
- <2d65ca28-bcfa-b217-e201-09163640ebc2@virtuozzo.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=EcJDg2O7xIbOjM5eLQ8gCplwOfat/XZVzxZppSuBFXA=;
+        b=WO/4VOJp9+t9GHX/yAEFXpSYiIotEJOBQAXXwynl4qFKF53hisQzFzrouuIs1yg7F/
+         RA6aWBXa4CQEnC0BGXgD/0qJ7OhxbxzwGth7A/ak2QPMVVsL3tuvSQhPq7qCrI5NJIMk
+         4J3lrKZDz1EhpkFaY6SwUC+7h47AyZJ0EhRROUsKNIeNt6gwRH8BgmN8+D45590kh2H1
+         sXKhkma6ahu7i6pUyy/H/TXpiR/wr8D4Esd/f/W+lWPXSlwh4z2LeUhLGRXVvgFeIGnb
+         Hw+9bnHC/mNvEP4XBZwfbtoW7dLSj7JF7eLd95rLpu4GkXGfR5G0CM3YEocBOBql8ZNi
+         ll9w==
+X-Gm-Message-State: AOAM533RSRJ3lAEogzxSOYQKKwWCTqYynmnPVAk8hndwlcE3GzyUhS6+
+        j/7K3HRvES05++VzCro5xk6l60mFupozfJwAcPdrAw==
+X-Google-Smtp-Source: ABdhPJxWy126EoPeXn68o0RtdQ9AM8iu0r0roUOi2/tEIALG8XKSfLdRwQWvkOSSkWppyvAfQ/KenjZMRMb5iSGO57w=
+X-Received: by 2002:a05:600c:2302:: with SMTP id 2mr325053wmo.151.1597081117897;
+ Mon, 10 Aug 2020 10:38:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2d65ca28-bcfa-b217-e201-09163640ebc2@virtuozzo.com>
+References: <1596020585-11517-1-git-send-email-brent.lu@intel.com>
+ <1596198365-10105-1-git-send-email-brent.lu@intel.com> <1596198365-10105-3-git-send-email-brent.lu@intel.com>
+ <s5h5za3ajvb.wl-tiwai@suse.de> <DM6PR11MB3642AE90DF98956CCEDE6C2F974F0@DM6PR11MB3642.namprd11.prod.outlook.com>
+ <s5hd04a90o4.wl-tiwai@suse.de> <DM6PR11MB3642B5BC2E1E0708088526D8974D0@DM6PR11MB3642.namprd11.prod.outlook.com>
+ <63bca214-3434-16c6-1b60-adf323aec554@linux.intel.com> <DM6PR11MB3642D9BE1E5DAAB8B78B84B0974D0@DM6PR11MB3642.namprd11.prod.outlook.com>
+ <s5hpn873by6.wl-tiwai@suse.de> <DM6PR11MB36423A9D28134811AD5A911F974A0@DM6PR11MB3642.namprd11.prod.outlook.com>
+ <6466847a-8aae-24f7-d727-36ba75e95f98@linux.intel.com> <DM6PR11MB364259049769F6EF3B84AABD97480@DM6PR11MB3642.namprd11.prod.outlook.com>
+ <3f3baf5e-f73d-9cd6-cbfb-36746071e126@linux.intel.com>
+In-Reply-To: <3f3baf5e-f73d-9cd6-cbfb-36746071e126@linux.intel.com>
+From:   Yu-Hsuan Hsu <yuhsuan@chromium.org>
+Date:   Tue, 11 Aug 2020 01:38:26 +0800
+Message-ID: <CAGvk5PohOP0Yv22tb53EX=ZLB9_vOMb=iujTh64OvHmjC1d4mg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] ASoC: Intel: Add period size constraint on strago board
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     "Lu, Brent" <brent.lu@intel.com>, Takashi Iwai <tiwai@suse.de>,
+        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        "Rojewski, Cezary" <cezary.rojewski@intel.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "yuhsuan@google.com" <yuhsuan@google.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Sam McNally <sammc@chromium.org>,
+        Mark Brown <broonie@kernel.org>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Daniel Stuart <daniel.stuart14@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Damian van Soelen <dj.vsoelen@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 07, 2020 at 11:47:57AM +0300, Kirill Tkhai wrote:
-> On 06.08.2020 11:05, Andrei Vagin wrote:
-> > On Mon, Aug 03, 2020 at 01:03:17PM +0300, Kirill Tkhai wrote:
-> >> On 31.07.2020 01:13, Eric W. Biederman wrote:
-> >>> Kirill Tkhai <ktkhai@virtuozzo.com> writes:
-> >>>
-> >>>> On 30.07.2020 17:34, Eric W. Biederman wrote:
-> >>>>> Kirill Tkhai <ktkhai@virtuozzo.com> writes:
-> >>>>>
-> >>>>>> Currently, there is no a way to list or iterate all or subset of namespaces
-> >>>>>> in the system. Some namespaces are exposed in /proc/[pid]/ns/ directories,
-> >>>>>> but some also may be as open files, which are not attached to a process.
-> >>>>>> When a namespace open fd is sent over unix socket and then closed, it is
-> >>>>>> impossible to know whether the namespace exists or not.
-> >>>>>>
-> >>>>>> Also, even if namespace is exposed as attached to a process or as open file,
-> >>>>>> iteration over /proc/*/ns/* or /proc/*/fd/* namespaces is not fast, because
-> >>>>>> this multiplies at tasks and fds number.
-> >>>>>
-> >>>>> I am very dubious about this.
-> >>>>>
-> >>>>> I have been avoiding exactly this kind of interface because it can
-> >>>>> create rather fundamental problems with checkpoint restart.
-> >>>>
-> >>>> restart/restore :)
-> >>>>
-> >>>>> You do have some filtering and the filtering is not based on current.
-> >>>>> Which is good.
-> >>>>>
-> >>>>> A view that is relative to a user namespace might be ok.    It almost
-> >>>>> certainly does better as it's own little filesystem than as an extension
-> >>>>> to proc though.
-> >>>>>
-> >>>>> The big thing we want to ensure is that if you migrate you can restore
-> >>>>> everything.  I don't see how you will be able to restore these files
-> >>>>> after migration.  Anything like this without having a complete
-> >>>>> checkpoint/restore story is a non-starter.
-> >>>>
-> >>>> There is no difference between files in /proc/namespaces/ directory and /proc/[pid]/ns/.
-> >>>>
-> >>>> CRIU can restore open files in /proc/[pid]/ns, the same will be with /proc/namespaces/ files.
-> >>>> As a person who worked deeply for pid_ns and user_ns support in CRIU, I don't see any
-> >>>> problem here.
-> >>>
-> >>> An obvious diffference is that you are adding the inode to the inode to
-> >>> the file name.  Which means that now you really do have to preserve the
-> >>> inode numbers during process migration.
-> >>>
-> >>> Which means now we have to do all of the work to make inode number
-> >>> restoration possible.  Which means now we need to have multiple
-> >>> instances of nsfs so that we can restore inode numbers.
-> >>>
-> >>> I think this is still possible but we have been delaying figuring out
-> >>> how to restore inode numbers long enough that may be actual technical
-> >>> problems making it happen.
+Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com> =E6=96=BC
+2020=E5=B9=B48=E6=9C=8810=E6=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=8811:=
+03=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+>
+>
+> On 8/6/20 11:41 AM, Lu, Brent wrote:
 > >>
-> >> Yeah, this matters. But it looks like here is not a dead end. We just need
-> >> change the names the namespaces are exported to particular fs and to support
-> >> rename().
-> >>
-> >> Before introduction a principally new filesystem type for this, can't
-> >> this be solved in current /proc?
-> > 
-> > do you mean to introduce names for namespaces which users will be able
-> > to change? By default, this can be uuid.
-> 
-> Yes, I mean this.
-> 
-> Currently I won't give a final answer about UUID, but I planned to show some
-> default names, which based on namespace type and inode num. Completely custom
-> names for any /proc by default will waste too much memory.
-> 
-> So, I think the good way will be:
-> 
-> 1)Introduce a function, which returns a hash/uuid based on ino, ns type and some static
-> random seed, which is generated on boot;
-> 
-> 2)Use the hash/uuid as default names in newly create /proc/namespaces: pid-{hash/uuid(ino, "pid")}
-> 
-> 3)Allow rename, and allocate space only for renamed names.
-> 
-> Maybe 2 and 3 will be implemented as shrinkable dentries and non-shrinkable.
-> 
-> > And I have a suggestion about the structure of /proc/namespaces/.
-> > 
-> > Each namespace is owned by one of user namespaces. Maybe it makes sense
-> > to group namespaces by their user-namespaces?
-> > 
-> > /proc/namespaces/
-> >                  user
-> >                  mnt-X
-> >                  mnt-Y
-> >                  pid-X
-> >                  uts-Z
-> >                  user-X/
-> >                         user
-> >                         mnt-A
-> >                         mnt-B
-> >                         user-C
-> >                         user-C/
-> >                                user
-> >                  user-Y/
-> >                         user
-> 
-> Hm, I don't think that user namespace is a generic key value for everybody.
-> For generic people tasks a user namespace is just a namespace among another
-> namespace types. For me it will look a bit strage to iterate some user namespaces
-> to build container net topology.
+> >> I don't get this. If the platform driver already stated 240 and 960 sa=
+mples why
+> >> would 432 be chosen? Doesn't this mean the constraint is not applied?
+> >
+> > Hi Pierre,
+> >
+> > Sorry for late reply. I used following constraints in V3 patch so any p=
+eriod which
+> > aligns 1ms would be accepted.
+> >
+> > +     /*
+> > +      * Make sure the period to be multiple of 1ms to align the
+> > +      * design of firmware. Apply same rule to buffer size to make
+> > +      * sure alsa could always find a value for period size
+> > +      * regardless the buffer size given by user space.
+> > +      */
+> > +     snd_pcm_hw_constraint_step(substream->runtime, 0,
+> > +                        SNDRV_PCM_HW_PARAM_PERIOD_SIZE, 48);
+> > +     snd_pcm_hw_constraint_step(substream->runtime, 0,
+> > +                        SNDRV_PCM_HW_PARAM_BUFFER_SIZE, 48);
+>
+> 432 samples is 9ms, I don't have a clue why/how CRAS might ask for this
+> value.
+>
+> It'd be a bit odd to add constraints just for the purpose of letting
+> userspace select a sensible value.
 
-I can’t agree with you that the user namespace is one of others. It is
-the namespace for namespaces. It sets security boundaries in the system
-and we need to know them to understand the whole system.
+Sorry for the late reply. CRAS does not set the period size when using it.
+The default period size is 256, which consumes the samples
+quickly(about 49627 fps when the rate is 48000 fps) at the beginning
+of the playback.
+Since CRAS write samples with the fixed frequency, it triggers
+underruns immidiately.
 
-If user namespaces are not used in the system or on a container, you
-will see all namespaces in one directory. But if the system has a more
-complicated structure, you will be able to build a full picture of it.
+According to Brent, the DSP is using 240 period regardless the
+hw_param. If the period size is 256, DSP will read 256 samples each
+time but only consume 240 samples until the ring buffer of DSP is
+full. This behavior makes the samples in the ring buffer of kernel
+consumed quickly. (Not sure whether the explanation is correct. Need
+Brent to confirm it.)
 
-You said that one of the users of this feature is CRIU (the tool to
-checkpoint/restore containers)  and you said that it would be good if
-CRIU will be able to collect all container namespaces before dumping
-processes, sockets, files etc. But how will we be able to do this if we
-will list all namespaces in one directory?
+Unfortunately, we can not change the behavior of DSP. After some
+experiments, we found that the issue can be fixed if we set the period
+size to 240. With the same frequency as the DSP, the samples are
+consumed stably. Because everyone can trigger this issue when using
+the driver without setting the period size, we think it is a general
+issue that should be fixed in the kernel.
 
-Here are my thoughts why we need to the suggested structure is better
-than just a list of namespaces:
-
-* Users will be able to understand securies bondaries in the system.
-  Each namespace in the system is owned by one of user namespace and we
-  need to know these relationshipts to understand the whole system.
-
-* This is simplify collecting namespaces which belong to one container.
-
-For example, CRIU collects all namespaces before dumping file
-descriptors. Then it collects all sockets with socket-diag in network
-namespaces and collects mount points via /proc/pid/mountinfo in mount
-namesapces. Then these information is used to dump socket file
-descriptors and opened files.
-
-* We are going to assign names to namespaces. But this means that we
-need to guarantee that all names in one directory are unique. The
-initial proposal was to enumerate all namespaces in one proc directory,
-that means names of all namespaces have to be unique. This can be
-problematic in some cases. For example, we may want to dump a container
-and then restore it more than once on the same host. How are we going to
-avoid namespace name conficts in such cases?
-
-If we will have per-user-namespace directories, we will need to
-guarantee that names are unique only inside one user namespace.
-
-* With the suggested structure, for each user namepsace, we will show
-  only its subtree of namespaces. This looks more natural than
-  filltering content of one directory.
-
-
-> 
-> > Do we try to invent cgroupfs for namespaces?
-> 
-> Could you clarify your thought?
+Thanks,
+Yu-Hsuan
