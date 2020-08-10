@@ -2,154 +2,88 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C495C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:28:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C32C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:28:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B06E2073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:28:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84496207DE
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:28:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="B1+NnTce"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="qLCWArRY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726602AbgHJH2M (ORCPT
+        id S1726482AbgHJH2y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 03:28:12 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:5495 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726482AbgHJH2C (ORCPT
+        Mon, 10 Aug 2020 03:28:54 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:13530 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725894AbgHJH2x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 03:28:02 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07A71rNS159774;
-        Mon, 10 Aug 2020 03:27:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=yQLc3yHahUeL3lEZC8IxwSb+6r3T66dhXHSaWTTEynU=;
- b=B1+NnTcelsJjmqNRkDxJjW9VniN+WnrAV82OBHrJrHthdQDU+HGIzc1DkVY7/faJvUOc
- qlsWV26Ix/rSY8cA4DAGTRUKMrtjq7+ji+bRxfOetn1BoVg241M2IHn8i8mwG7JH2PC9
- JHhi038GtH5eAeER6MqYRo9Y8A3EtowPPw1k+kyR803P7UOZqpquOEiFvp1K1LVc6tCR
- 7fsdwsLF40LxhS3Z6PLZBUhNo62mkzPp4zAZrZXZ5AJWZs+kLuEFqXK+b3UFJl1e53K8
- 1L8gJxkSJKs/4k4PKQbO94TzGv0x2NCLRnQFwk4JmULwic9ZLZ/SxLfaCJJ7dDojiV3p DQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32sr7h9rk1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 10 Aug 2020 03:24:01 -0400
-Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07A7L2LQ032363;
-        Mon, 10 Aug 2020 03:22:40 -0400
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32sr7h9qu4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 10 Aug 2020 03:22:39 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07A7HgHH030568;
-        Mon, 10 Aug 2020 07:18:48 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma06ams.nl.ibm.com with ESMTP id 32skaha012-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 10 Aug 2020 07:18:48 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07A7HI5K64160096
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 10 Aug 2020 07:17:18 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CED2F11C052;
-        Mon, 10 Aug 2020 07:18:45 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 244ED11C04C;
-        Mon, 10 Aug 2020 07:18:43 +0000 (GMT)
-Received: from srikart450.in.ibm.com (unknown [9.102.18.208])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 10 Aug 2020 07:18:42 +0000 (GMT)
-From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Anton Blanchard <anton@ozlabs.org>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Michael Neuling <mikey@neuling.org>,
-        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Jordan Niethe <jniethe5@gmail.com>,
-        Vaidyanathan Srinivasan <svaidy@linux.ibm.com>
-Subject: [PATCH v5 01/10] powerpc/smp: Fix a warning under !NEED_MULTIPLE_NODES
-Date:   Mon, 10 Aug 2020 12:48:25 +0530
-Message-Id: <20200810071834.92514-2-srikar@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200810071834.92514-1-srikar@linux.vnet.ibm.com>
-References: <20200810071834.92514-1-srikar@linux.vnet.ibm.com>
+        Mon, 10 Aug 2020 03:28:53 -0400
+X-UUID: 664afc6c40cf4209a5f22d6ad54708c7-20200810
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=fNYSYPr/EUtrb5AE0HZcFt+MO/QDfADl7kGfo3uCntY=;
+        b=qLCWArRYBL/s6QmwRwC3W+F72p9XtzECtMFBScH4yYdUFvvN7ueXYRBWMcoF4CFretyV4ITarA4dV9LFynSRAuCN4ZU2AhLtYeDkwK4XxC9bF9pduJVsvFzwAjq5YBzzdLx4TvJF/uLP6pINCabHP7X22ThUj0g396i28XdQ4lg=;
+X-UUID: 664afc6c40cf4209a5f22d6ad54708c7-20200810
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
+        (envelope-from <walter-zh.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1679514413; Mon, 10 Aug 2020 15:28:49 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs06n1.mediatek.inc (172.21.101.129) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Mon, 10 Aug 2020 15:28:48 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 10 Aug 2020 15:28:46 +0800
+From:   Walter Wu <walter-zh.wu@mediatek.com>
+To:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>
+CC:     <kasan-dev@googlegroups.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        <linux-mediatek@lists.infradead.org>,
+        Walter Wu <walter-zh.wu@mediatek.com>
+Subject: [PATCH 5/5] kasan: update documentation for generic KASAN
+Date:   Mon, 10 Aug 2020 15:28:47 +0800
+Message-ID: <20200810072847.921-1-walter-zh.wu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-10_02:2020-08-06,2020-08-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
- adultscore=0 impostorscore=0 clxscore=1015 lowpriorityscore=0
- suspectscore=0 priorityscore=1501 spamscore=0 phishscore=0 mlxlogscore=999
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008100046
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix a build warning in a non CONFIG_NEED_MULTIPLE_NODES
-"error: _numa_cpu_lookup_table_ undeclared"
-
-Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Nicholas Piggin <npiggin@gmail.com>
-Cc: Anton Blanchard <anton@ozlabs.org>
-Cc: Oliver O'Halloran <oohall@gmail.com>
-Cc: Nathan Lynch <nathanl@linux.ibm.com>
-Cc: Michael Neuling <mikey@neuling.org>
-Cc: Gautham R Shenoy <ego@linux.vnet.ibm.com>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Valentin Schneider <valentin.schneider@arm.com>
-Cc: Jordan Niethe <jniethe5@gmail.com>
-Cc: Vaidyanathan Srinivasan <svaidy@linux.ibm.com>
-Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
-Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
----
-Changelog v2 -> v3:
-	Removed node caching part. Rewrote the Commit msg (Michael Ellerman)
-	Renamed to powerpc/smp: Fix a warning under !NEED_MULTIPLE_NODES
-
- arch/powerpc/kernel/smp.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/powerpc/kernel/smp.c b/arch/powerpc/kernel/smp.c
-index 73199470c265..edf94ca64eea 100644
---- a/arch/powerpc/kernel/smp.c
-+++ b/arch/powerpc/kernel/smp.c
-@@ -860,6 +860,7 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
- 					GFP_KERNEL, cpu_to_node(cpu));
- 		zalloc_cpumask_var_node(&per_cpu(cpu_core_map, cpu),
- 					GFP_KERNEL, cpu_to_node(cpu));
-+#ifdef CONFIG_NEED_MULTIPLE_NODES
- 		/*
- 		 * numa_node_id() works after this.
- 		 */
-@@ -868,6 +869,7 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
- 			set_cpu_numa_mem(cpu,
- 				local_memory_node(numa_cpu_lookup_table[cpu]));
- 		}
-+#endif
- 	}
- 
- 	/* Init the cpumasks so the boot CPU is related to itself */
--- 
-2.18.2
+R2VuZXJpYyBLQVNBTiBzdXBwb3J0IHRvIHJlY29yZCB0aGUgbGFzdCB0d28gdGltZXIgYW5kIHdv
+cmtxdWV1ZQ0Kc3RhY2tzIGFuZCBwcmludCB0aGVtIGluIEtBU0FOIHJlcG9ydC4gU28gdGhhdCBu
+ZWVkIHRvIHVwZGF0ZQ0KZG9jdW1lbnRhdGlvbi4NCg0KU2lnbmVkLW9mZi1ieTogV2FsdGVyIFd1
+IDx3YWx0ZXItemgud3VAbWVkaWF0ZWsuY29tPg0KQ2M6IEFuZHJleSBSeWFiaW5pbiA8YXJ5YWJp
+bmluQHZpcnR1b3p6by5jb20+DQpDYzogRG1pdHJ5IFZ5dWtvdiA8ZHZ5dWtvdkBnb29nbGUuY29t
+Pg0KQ2M6IEFsZXhhbmRlciBQb3RhcGVua28gPGdsaWRlckBnb29nbGUuY29tPg0KQ2M6IEpvbmF0
+aGFuIENvcmJldCA8Y29yYmV0QGx3bi5uZXQ+DQotLS0NCiBEb2N1bWVudGF0aW9uL2Rldi10b29s
+cy9rYXNhbi5yc3QgfCA0ICsrLS0NCiAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAy
+IGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXYtdG9vbHMva2Fz
+YW4ucnN0IGIvRG9jdW1lbnRhdGlvbi9kZXYtdG9vbHMva2FzYW4ucnN0DQppbmRleCBmZWRlNDJl
+NjUzNmIuLjVhNGM1ZGE4YmRhOCAxMDA2NDQNCi0tLSBhL0RvY3VtZW50YXRpb24vZGV2LXRvb2xz
+L2thc2FuLnJzdA0KKysrIGIvRG9jdW1lbnRhdGlvbi9kZXYtdG9vbHMva2FzYW4ucnN0DQpAQCAt
+MTkzLDggKzE5Myw4IEBAIGZ1bmN0aW9uIGNhbGxzIEdDQyBkaXJlY3RseSBpbnNlcnRzIHRoZSBj
+b2RlIHRvIGNoZWNrIHRoZSBzaGFkb3cgbWVtb3J5Lg0KIFRoaXMgb3B0aW9uIHNpZ25pZmljYW50
+bHkgZW5sYXJnZXMga2VybmVsIGJ1dCBpdCBnaXZlcyB4MS4xLXgyIHBlcmZvcm1hbmNlDQogYm9v
+c3Qgb3ZlciBvdXRsaW5lIGluc3RydW1lbnRlZCBrZXJuZWwuDQogDQotR2VuZXJpYyBLQVNBTiBw
+cmludHMgdXAgdG8gMiBjYWxsX3JjdSgpIGNhbGwgc3RhY2tzIGluIHJlcG9ydHMsIHRoZSBsYXN0
+IG9uZQ0KLWFuZCB0aGUgc2Vjb25kIHRvIGxhc3QuDQorR2VuZXJpYyBLQVNBTiBwcmludHMgdXAg
+dG8gMiBjYWxsX3JjdSgpIGNhbGwgc3RhY2tzLCB0aW1lciBxdWV1ZWluZyBzdGFja3MsDQorYW5k
+IHdvcmtxdWV1ZSBxdWV1ZWluZyBzdGFja3MgaW4gcmVwb3J0cywgdGhlIGxhc3Qgb25lIGFuZCB0
+aGUgc2Vjb25kIHRvIGxhc3QuDQogDQogU29mdHdhcmUgdGFnLWJhc2VkIEtBU0FODQogfn5+fn5+
+fn5+fn5+fn5+fn5+fn5+fn5+DQotLSANCjIuMTguMA0K
 
