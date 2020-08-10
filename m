@@ -2,115 +2,106 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BE99C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:37:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4036C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AF38207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:37:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BCD1207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:39:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cQ01r3Of"
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="fUXOloVb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728392AbgHJTh2 (ORCPT
+        id S1728394AbgHJTjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:37:28 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:38577 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727991AbgHJTh2 (ORCPT
+        Mon, 10 Aug 2020 15:39:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46440 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728253AbgHJTjZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:37:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597088247;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=gwOnUO3qnuP34cA5hoah52OJNOZjjOKPyNMz1o/AUDU=;
-        b=cQ01r3OfkGWgtNEX/UYakqNMAkmnytVB9efKGdxz+FaLUXNx8vs/UiAOK2T4rwmh+fSFyU
-        +3c3bhrRueq4nV4R05ba74jBrmBHgH3YB1N/jAWa4ZbFMMHCFcdQtsCOlz0aspI5guKIeC
-        b0F6PeMjLzmmMGdkIf4slNLkzcjjv30=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-250-7cwZ3q4hMfitOoj3aLxf9A-1; Mon, 10 Aug 2020 15:37:25 -0400
-X-MC-Unique: 7cwZ3q4hMfitOoj3aLxf9A-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 50A9519200C5;
-        Mon, 10 Aug 2020 19:37:24 +0000 (UTC)
-Received: from horse.redhat.com (unknown [10.10.115.251])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3D0835F1E9;
-        Mon, 10 Aug 2020 19:37:18 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id BCA4422036A; Mon, 10 Aug 2020 15:37:17 -0400 (EDT)
-Date:   Mon, 10 Aug 2020 15:37:17 -0400
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        virtio-fs-list <virtio-fs@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>
-Subject: Re: [PATCH v2 18/20] fuse: Release file in process context
-Message-ID: <20200810193717.GF455528@redhat.com>
-References: <20200807195526.426056-1-vgoyal@redhat.com>
- <20200807195526.426056-19-vgoyal@redhat.com>
- <CAJfpegs1CtPMaVmbDc__N0Fc3FkNEe=vQOkrr8RKiiS6NqTyHA@mail.gmail.com>
+        Mon, 10 Aug 2020 15:39:25 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2663C061787
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 12:39:24 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id h4so4411003ioe.5
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 12:39:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KG7HkPdgfYza0KKOehXlJf0mICZpLgyaJzR9GuUofuc=;
+        b=fUXOloVbCXuF+NPnW17bzh2jLA3H8qu/dOC7TPKOL2QUos/sBzQ5CRoxtQJFb8g3G2
+         AYIyYbs0ZfZ6aDIaEoKZNgRRcvbTvgMlsOjLIYpmuy/J3SQhbHXV5dM/VhBeVH8XellB
+         6N4elr0PMDoF7N56qBjJa5HD3724dVmbT1YCW1KovZJp2EVcKcAZIlSRmBQ0dOMRG8NV
+         gxciGLPqMXMCMBAt0FPiDJwhSVy/LDGoZp0gSnby2PTGC0UM1mVSjd/0MuGwflaH95zs
+         j03sj8mSaBzXWRfQq5lyPgMhXF45BsJug4i9aO4ErNTiuPZEXVroBiDBsJAczCMY7u9e
+         vg2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KG7HkPdgfYza0KKOehXlJf0mICZpLgyaJzR9GuUofuc=;
+        b=jXHjEsOgTz+S7YEPkdW6rpDTsfl5uGtMlEcePU+94QaYO+/kjT8qzA9NQBptXNxdBJ
+         DnW/7EJzFzQHiAHjTv/jI71eDNUWtvR9c1QzYwZ9UvOvO/4iEfibEZnd+EOwEG9Zm/Ef
+         07nI3u/Lu97q+78oiVX+Fe9QmD6aF2Y4hHvOZxMoyCn9OroTKjqF8YNdPUBL7jYEHT7L
+         ey63AvITTTgBWRajwPQV4Sfb1E5jJTJ5Vw2Z0noi2TmNCclSAzupbK0J417bzGlcL6EC
+         qKapdV1UhKv9MHr+ckSl0htQJwcdUVIm+bd20chA32FWda+c5M0UK0TiL4MbYhkBUxz3
+         b77Q==
+X-Gm-Message-State: AOAM533c9/Npz7gJqqlIuAyjx3f1cQRQyq58w3K+Wbacy2M4Vr2o0/n1
+        /DH4sb9D7yR8GcOkUHWICyotfmvcX1WBz35MwaiqpL5k
+X-Google-Smtp-Source: ABdhPJyNCjBD+ApAm5EKXSFXpNtiLnuZQXUEji/Nk9r66AH8XDVZRUMie+STAQO5PpX/pDgrcUhz8sHf1IdT/5swGmI=
+X-Received: by 2002:a6b:5c17:: with SMTP id z23mr18928874ioh.67.1597088363879;
+ Mon, 10 Aug 2020 12:39:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJfpegs1CtPMaVmbDc__N0Fc3FkNEe=vQOkrr8RKiiS6NqTyHA@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+References: <CAK8P3a2PK_bC5=3wcWm43=y5xk-Dq5-fGPExJMnOrNfGfB1m1A@mail.gmail.com>
+ <20200805172629.GA1040@bug> <CAMuHMdV20tZSu5gGsjf8h334+0xr1f=N9NvOoxHQGq42GYsj4g@mail.gmail.com>
+ <20200805193001.nebwdutcek53pnit@duo.ucw.cz>
+In-Reply-To: <20200805193001.nebwdutcek53pnit@duo.ucw.cz>
+From:   Olof Johansson <olof@lixom.net>
+Date:   Mon, 10 Aug 2020 12:39:12 -0700
+Message-ID: <CAOesGMjaJ=jcdBp7b-DfetUKKF+cC6NcJdHavBXyP49b9Bztwg@mail.gmail.com>
+Subject: Re: [Ksummit-discuss] [TECH TOPIC] Planning code obsolescence
+To:     Pavel Machek <pavel@denx.de>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        ksummit <ksummit-discuss@lists.linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 10:29:13AM +0200, Miklos Szeredi wrote:
-> On Fri, Aug 7, 2020 at 9:55 PM Vivek Goyal <vgoyal@redhat.com> wrote:
+On Wed, Aug 5, 2020 at 12:30 PM Pavel Machek <pavel@denx.de> wrote:
+>
+> On Wed 2020-08-05 20:50:43, Geert Uytterhoeven wrote:
+> > Hi Pavel,
 > >
-> > fuse_file_put(sync) can be called with sync=true/false. If sync=true,
-> > it waits for release request response and then calls iput() in the
-> > caller's context. If sync=false, it does not wait for release request
-> > response, frees the fuse_file struct immediately and req->end function
-> > does the iput().
+> > On Wed, Aug 5, 2020 at 7:26 PM Pavel Machek <pavel@ucw.cz> wrote:
+> > > > I have submitted the below as a topic for the linux/arch/* MC that Mike
+> > > > and I run, but I suppose it also makes sense to discuss it on the
+> > > > ksummit-discuss mailing list (cross-posted to linux-arch and lkml) as well
+> > > > even if we don't discuss it at the main ksummit track.
+> > >
+> > > > * Latest kernel in which it was known to have worked
+> > >
+> > > For some old hardware, I started collecting kernel version, .config and dmesg from
+> > > successful boots. github.com/pavelmachek, click on "missy".
 > >
-> > iput() can be a problem with DAX if called in req->end context. If this
-> > is last reference to inode (VFS has let go its reference already), then
-> > iput() will clean DAX mappings as well and send REMOVEMAPPING requests
-> > and wait for completion. (All the the worker thread context which is
-> > processing fuse replies from daemon on the host).
-> >
-> > That means it blocks worker thread and it stops processing further
-> > replies and system deadlocks.
-> 
-> Is this reasoning specific to DAX?  Seems to me this is a virtio-fs
-> specific issue.
+> > You mean your complete hardware collection doesn't boot v5.8? ;-)
+>
+> I need to do some pushing, and yes, maybe some more testing.
+>
+> But I was wondering if someone sees this as useful and wants to
+> contribute more devices? :-).
 
-Hi Miklos,
+There's in my opinion a big difference between "the last user of this
+device sent it to Pavel and now it will be supported forever in spite
+of no users" and "there's a whole group of people using mainline on
+these old devices and Pavel makes sure it keeps booting for them".
 
-I am looking at this patch closely and maybe we don't need it, given
-current code.
 
-Reason being that looks like for virtiofs now we set ctx->destroy=true
-and that sets fc->destroy. And if that's set, we don't schedule async req
-in fuse_release_common();
-
-fuse_release_common() {
-  fuse_file_put(ff, ff->fc->destroy, isdir);
-}
-
-And if we don't schedule async file put, we don't run the risk of
-blocking worker thread in evict_inode() with DAX enabled.
-
-I ran blogbench multiple times with this patch reverted and I can't
-reproduce the deadlock.
-
-So we can drop this patch for now. If need be I will fix it as
-post merge patch.
-
-Thanks
-Vivek
-
+-Olof
