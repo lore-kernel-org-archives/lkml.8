@@ -2,149 +2,97 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20BFAC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:38:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D3EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:38:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE0EF23117
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:38:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73A9923134
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:38:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073928;
-	bh=ymggXvQMYTuMlvb7REMGaGjoHB0LOXnlg1VMPd0fUPA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hmACaTT+zukmK+hOrDatcjVFx0celyUJcoWAMM+OKDVhT5SGvb7GoeOOESqqiaAq6
-	 K2ImsqnLXGeQWmbbeTVINtVJhDwF1Zd9Iz0T4zVwrNmyNoY4ZvltwCAMv/f2bDSrV/
-	 +UFiKs8NsurSMvzbA6IuXZJxXYwNxu3xqbrGl/3w=
+	s=default; t=1597073931;
+	bh=9MYJ4viWV0IEtWiX47EV+1kFx/B6YnfEQUrVtqU1GEY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=K7jE/Dzyz7ivPmExuXAqj1/N0TAiTdAwE5rCBh9wgKdnrv/Y8MTaEqypdXgD4dcqg
+	 v3NXzVE+rwDRtVP5GeI95YCPSG1WJBSPO/YpSnoW63T64ZT2uN3F3a9au8pCXM9NwO
+	 HwG+uyA2ZtBIe0tOhScMfb9175SiYhIM1tXFeP+s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728721AbgHJPiq (ORCPT
+        id S1727888AbgHJPZd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:38:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51074 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:25:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728101AbgHJPin (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:38:43 -0400
+        id S1728506AbgHJPZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:25:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FA4D22D6F;
-        Mon, 10 Aug 2020 15:38:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D2EB20772;
+        Mon, 10 Aug 2020 15:25:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073923;
-        bh=ymggXvQMYTuMlvb7REMGaGjoHB0LOXnlg1VMPd0fUPA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gqSdXHM81gwbzXzR3XVYr5Cv+R1XKxsB0Haq0sLcU11okQ/SfDFLepmttZBjNBRI2
-         sJqCnW2gXGPrpEQeQ4uA6hzCEITw02Wz/B5xg8mRxj58Gcj49fcoo4GoZDCWd6aA+G
-         RTRqaZuEkc70RUANlwkxqSbzHWGUoSIzKPAJXLxE=
-Date:   Mon, 10 Aug 2020 17:38:35 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Avi Shchislowski <Avi.Shchislowski@wdc.com>
-Cc:     Bart Van Assche <bvanassche@acm.org>,
-        "daejun7.park@samsung.com" <daejun7.park@samsung.com>,
-        Avri Altman <Avri.Altman@wdc.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
-        ALIM AKHTAR <alim.akhtar@samsung.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sang-yoon Oh <sangyoon.oh@samsung.com>,
-        Sung-Jun Park <sungjun07.park@samsung.com>,
-        yongmyung lee <ymhungry.lee@samsung.com>,
-        Jinyoung CHOI <j-young.choi@samsung.com>,
-        Adel Choi <adel.choi@samsung.com>,
-        BoRam Shin <boram.shin@samsung.com>
-Subject: Re: [PATCH v6 0/5] scsi: ufs: Add Host Performance Booster Support
-Message-ID: <20200810153835.GA4169109@kroah.com>
-References: <CGME20200713103423epcms2p8442ee7cc22395e4a4cedf224f95c45e8@epcms2p8>
- <963815509.21594636682161.JavaMail.epsvc@epcpadp2>
- <SN6PR04MB38720C3D8FC176C3C7FB51B89A7E0@SN6PR04MB3872.namprd04.prod.outlook.com>
- <4174fcf4-73ec-8e3f-90a5-1e7584e3e2d0@acm.org>
- <SN6PR04MB3872FBE1EAE3578BFD2601189A7F0@SN6PR04MB3872.namprd04.prod.outlook.com>
+        s=default; t=1597073117;
+        bh=9MYJ4viWV0IEtWiX47EV+1kFx/B6YnfEQUrVtqU1GEY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=K1x7tyvkWLzJ6ugYPUnIG378mc2vHt0W572RIDJxUk1cEJJzrJrJlFvC1C9B0R4F2
+         Ohj3chpIBJk/uT4ldHzUIKhO3akVzpuKleFDaURY+ZTEzKdpy24YkZEQmhNMJqJJQc
+         IhfRLPAohMKvDG1WT0DIHGKr7jaDAt6f46koYpU0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Alain Volmat <alain.volmat@st.com>,
+        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 42/79] i2c: slave: improve sanity check when registering
+Date:   Mon, 10 Aug 2020 17:21:01 +0200
+Message-Id: <20200810151814.351579726@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200810151812.114485777@linuxfoundation.org>
+References: <20200810151812.114485777@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SN6PR04MB3872FBE1EAE3578BFD2601189A7F0@SN6PR04MB3872.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 10:00:57AM +0000, Avi Shchislowski wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: Bart Van Assche <bvanassche@acm.org>
-> > Sent: Thursday, July 16, 2020 4:42 AM
-> > To: Avi Shchislowski <Avi.Shchislowski@wdc.com>;
-> > daejun7.park@samsung.com; Avri Altman <Avri.Altman@wdc.com>;
-> > jejb@linux.ibm.com; martin.petersen@oracle.com; asutoshd@codeaurora.org;
-> > beanhuo@micron.com; stanley.chu@mediatek.com; cang@codeaurora.org;
-> > tomas.winkler@intel.com; ALIM AKHTAR <alim.akhtar@samsung.com>
-> > Cc: linux-scsi@vger.kernel.org; linux-kernel@vger.kernel.org; Sang-yoon Oh
-> > <sangyoon.oh@samsung.com>; Sung-Jun Park
-> > <sungjun07.park@samsung.com>; yongmyung lee
-> > <ymhungry.lee@samsung.com>; Jinyoung CHOI <j-
-> > young.choi@samsung.com>; Adel Choi <adel.choi@samsung.com>; BoRam
-> > Shin <boram.shin@samsung.com>
-> > Subject: Re: [PATCH v6 0/5] scsi: ufs: Add Host Performance Booster Support
-> > 
-> > CAUTION: This email originated from outside of Western Digital. Do not click on
-> > links or open attachments unless you recognize the sender and know that the
-> > content is safe.
-> > 
-> > 
-> > On 2020-07-15 11:34, Avi Shchislowski wrote:
-> > > My name is Avi Shchislowski, I am managing the WDC's Linux Host R&D team
-> > in which Avri is a member of.
-> > > As the review process of HPB is progressing very constructively, we are getting
-> > more and more requests from OEMs, Inquiring about HPB in general, and host
-> > control mode in particular.
-> > >
-> > > Their main concern is that HPB will make it to 5.9 merge window, but the host
-> > control mode patches will not.
-> > > Thus, because of recent Google's GKI, the next Android LTS might not include
-> > HPB with host control mode.
-> > >
-> > > Aside of those requests, initial host control mode testing are showing
-> > promising prospective with respect of performance gain.
-> > >
-> > > What would be, in your opinion, the best policy that host control mode is
-> > included in next Android LTS?
-> > 
-> > Hi Avi,
-> > 
-> > Are you perhaps referring to the HPB patch series that has already been posted?
-> > Although I'm not sure of this, I think that the SCSI maintainer expects more
-> > Reviewed-by: and Tested-by: tags. Has anyone from WDC already taken the
-> > time to review and/or test this patch series?
-> > 
-> > Thanks,
-> > 
-> > Bart.
-> 
-> Yes, I am referring to the current proposal which I am replying to:
-> [PATCH v6 0/5] scsi: ufs: Add Host Performance Booster Support This proposal does not contains host mode, hence our customers concern.
-> What would be, in your opinion, the best policy that host control mode is included in next Android LTS  assuming it will be based on kernel v5.9 ?
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-To come back to this statement, as I keep seeing it in odd places...
+[ Upstream commit 1b1be3bf27b62f5abcf85c6f3214bdb9c7526685 ]
 
-I have never said that the next LTS kernel would be 5.9, where did you
-get that from?  I am pretty sure that Google is also not saying that
-either.
+Add check for ERR_PTR and simplify code while here.
 
-Work to get the feature accepted properly, do not worry about cramming
-anything into any kernel just because it might be a LTS release.  That
-causes problems that we have had in the past, and one would hope that we
-would have learned from our mistakes.
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Reviewed-by: Alain Volmat <alain.volmat@st.com>
+Signed-off-by: Wolfram Sang <wsa@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/i2c/i2c-core-slave.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-thanks,
+diff --git a/drivers/i2c/i2c-core-slave.c b/drivers/i2c/i2c-core-slave.c
+index 5427f047faf06..549751347e6c7 100644
+--- a/drivers/i2c/i2c-core-slave.c
++++ b/drivers/i2c/i2c-core-slave.c
+@@ -18,10 +18,8 @@ int i2c_slave_register(struct i2c_client *client, i2c_slave_cb_t slave_cb)
+ {
+ 	int ret;
+ 
+-	if (!client || !slave_cb) {
+-		WARN(1, "insufficient data\n");
++	if (WARN(IS_ERR_OR_NULL(client) || !slave_cb, "insufficient data\n"))
+ 		return -EINVAL;
+-	}
+ 
+ 	if (!(client->flags & I2C_CLIENT_SLAVE))
+ 		dev_warn(&client->dev, "%s: client slave flag not set. You might see address collisions\n",
+-- 
+2.25.1
 
-greg k-h
+
+
