@@ -2,112 +2,97 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48741C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:25:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1FF7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:26:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23CA322CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:25:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="VhGKPDGz"
+	by mail.kernel.org (Postfix) with ESMTP id 9CA482080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:26:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597087570;
+	bh=VdDv/tPrzl9Gjvzoe32tHMeY4aINAE3rMv3C+4ryWME=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=FFLWK9dFRxnsEbxHl0e7d18j1MocNe4Qjopraub0rmK7Z3vCxee2xt6kCdx+/mu50
+	 ySDI2apI3oE/ri2plcFDt4RM5olHbxBY9yW20XScjBFUs+IweRxdgHtoXHA+g54jrr
+	 CIqLSyk7Z6rpdilrEkCW8OXnrZMA06r4WYvTseDE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730354AbgHJTZy (ORCPT
+        id S1730365AbgHJT0J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:25:54 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:40562 "EHLO rere.qmqm.pl"
+        Mon, 10 Aug 2020 15:26:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40884 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729397AbgHJTZu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:25:50 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 4BQQt43t5Lz2d;
-        Mon, 10 Aug 2020 21:25:48 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1597087548; bh=96ltwqbn2GOc+mKdVGQPN+AplT8W3CJs2uYbud2i7c8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VhGKPDGz3aEeFZK4MWHoiuExtTuAckut/jzZEPfujlMdVn+U4jBEjjOpgIy9YWKd2
-         zx2vLgzWAVnwsEe8apeH5xdsH2JnPY4couOheSd5F+p5VUn4Li+tCJ28Y7IgeK3eh/
-         FW0vMD6grmZhH+rVB1bkGDYkKUwLrZU3xwvfmUoXnIE7AFSbdG8HWXO975v3lX8aeR
-         f7WZvgKywYDO+FhkZLSjv3a0iAchFQHazYB8oyH0booMqmt85z2DAlgtucKt8+fqMy
-         jlMwAtJ/vcNaUqAhE2PGEKfW0lkbZ0EzhTjO9mwqpTmFZmzkB/JyTYF2MD63leYTj/
-         2Ax7UAVwhyCiQ==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.4 at mail
-Date:   Mon, 10 Aug 2020 21:25:47 +0200
-From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Dmitry Osipenko <digetx@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: regulator: deadlock vs memory reclaim
-Message-ID: <20200810192547.GB26750@qmqm.qmqm.pl>
-References: <20200809222537.GA5522@qmqm.qmqm.pl>
- <20200810153928.GD6438@sirena.org.uk>
- <20200810160936.GA1100@qmqm.qmqm.pl>
- <20200810173136.GF6438@sirena.org.uk>
+        id S1728539AbgHJTL5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:11:57 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2F8E22B47;
+        Mon, 10 Aug 2020 19:11:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597086716;
+        bh=VdDv/tPrzl9Gjvzoe32tHMeY4aINAE3rMv3C+4ryWME=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qD+rLN+AqL+qKuz47bcWti9eVXB4aEWzje0Mi88LJ0wHDl5GkhMksu22InZscTvVL
+         NsLvxTDmvfNozvwn130LYDoWX6EywAKtigM8eunt3wFhYqTfEzIZWPGnCxbI+Ixc9Q
+         F4CM072UtlK4NWcFHxmngK4KFEbMz3u92DaDjBX4=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Maulik Shah <mkshah@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 02/45] soc: qcom: rpmh-rsc: Set suppress_bind_attrs flag
+Date:   Mon, 10 Aug 2020 15:11:10 -0400
+Message-Id: <20200810191153.3794446-2-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200810191153.3794446-1-sashal@kernel.org>
+References: <20200810191153.3794446-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2
-Content-Disposition: inline
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200810173136.GF6438@sirena.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 06:31:36PM +0100, Mark Brown wrote:
-> On Mon, Aug 10, 2020 at 06:09:36PM +0200, Micha³ Miros³aw wrote:
-> > On Mon, Aug 10, 2020 at 04:39:28PM +0100, Mark Brown wrote:
-> > > On Mon, Aug 10, 2020 at 12:25:37AM +0200, Micha³ Miros³aw wrote:
-> > > > regulator_lock_dependent() starts by taking regulator_list_mutex, The
-> > > > same mutex covers eg. regulator initialization, including memory allocations
-> > > > that happen there. This will deadlock when you have filesystem on eg. eMMC
-> > > > (which uses a regulator to control module voltages) and you register
-> > > > a new regulator (hotplug a device?) when under memory pressure.
-> > > OK, that's very much a corner case, it only applies in the case of
-> > > coupled regulators.  The most obvious thing here would be to move the
-> > > allocations on registration out of the locked region, we really only
-> > > need this in the regulator_find_coupler() call I think.  If the
-> > > regulator isn't coupled we don't need to take the lock at all.
-> > Currently, regulator_lock_dependent() is called by eg. regulator_enable() and
-> > regulator_get_voltage(), so actually any regulator can deadlock this way.
-> The initialization cases that are the trigger are only done for coupled
-> regulators though AFAICT, otherwise we're not doing allocations with the
-> lock held and should be able to progress.
+From: Maulik Shah <mkshah@codeaurora.org>
 
-I caught a few lockdep complaints that suggest otherwise, but I'm still
-looking into that.
+[ Upstream commit 1a53ce9ab4faeb841b33d62d23283dc76c0e7c5a ]
 
-> > > > Basically, we have a BKL for regulator_enable() and we're using ww_mutex
-> > > > as a recursive mutex with no deadlock prevention whatsoever. The locks
-> > > > also seem to cover way to much (eg. initialization even before making the
-> > > > regulator visible to the system).
-> > > Could you be more specific about what you're looking at here?  There's
-> > > nothing too obvious jumping out from the code here other than the bit
-> > > around the coupling allocation, otherwise it looks like we're locking
-> > > list walks.
-> > When you look at the regulator API (regulator_enable() and friends),
-> > then in their implementation we always start by .._lock_dependent(),
-> > which takes regulator_list_mutex around its work. This mutex is what
-> > makes the code deadlock-prone vs memory allocations. I have a feeling
-> > that this lock is a workaround for historical requirements (recursive
-> > locking of regulator_dev) that might be no longer needed or is just
-> > too defensive programming. Hence my other patches and this inquiry.
-> We need to both walk up the tree for operations that involve the parent
-> and rope in any peers that are coupled, the idea is basically to avoid
-> changes to the coupling while we're trying to figure that out.
+rpmh-rsc driver is fairly core to system and should not be removable
+once its probed. However it allows to unbind driver from sysfs using
+below command which results into a crash on sc7180.
 
-This part I understand and this is what ww_mutex should take care of.
-But there is another lock that's taken around ww_mutex locking transaction
-that causes the trouble. I would expect that the rdev->mutex should be
-enough to guard against changes in coupled regulators list, but this
-might need a fix in the registration phase to guarantee that (it
-probably should do the same ww_mutex locking dance as .._lock_dependent()
-does now).
+echo 18200000.rsc > /sys/bus/platform/drivers/rpmh/unbind
 
-Best Regards,
-Micha³ Miros³aw
+Lets prevent unbind at runtime by setting suppress_bind_attrs flag.
+
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+Link: https://lore.kernel.org/r/1592808805-2437-1-git-send-email-mkshah@codeaurora.org
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/soc/qcom/rpmh-rsc.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
+index 0ba1f465db122..8924fcd9f5f59 100644
+--- a/drivers/soc/qcom/rpmh-rsc.c
++++ b/drivers/soc/qcom/rpmh-rsc.c
+@@ -715,6 +715,7 @@ static struct platform_driver rpmh_driver = {
+ 	.driver = {
+ 		  .name = "rpmh",
+ 		  .of_match_table = rpmh_drv_match,
++		  .suppress_bind_attrs = true,
+ 	},
+ };
+ 
+-- 
+2.25.1
+
