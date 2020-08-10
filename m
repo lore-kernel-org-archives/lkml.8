@@ -2,114 +2,117 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD4DBC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 00:06:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 707E1C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 00:10:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D1092070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 00:06:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597018002;
-	bh=R4aysq8cb7E0lt1g+L7QoE7drym+sqAlY7Kl5ewT9W4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=QOZQ/X5EDhbM7Q9rXFyoMOYKgBfCzIkYJz2L8KEgaHbzedTyqUL9FBP6kwKW5pcRp
-	 no6zc4blax4wAAfib5OwsnxedCE6W16RD3rohlOzuFqzU0BVgZlAcjN+bfr62mbABA
-	 04qsuOLkFgSK65CT+fAc7R3Kz4sHTiJVkmGS12jc=
+	by mail.kernel.org (Postfix) with ESMTP id 4A65320716
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 00:10:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MHk1a2IN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726458AbgHJAGl (ORCPT
+        id S1726478AbgHJAKG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 20:06:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36908 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726219AbgHJAGl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 20:06:41 -0400
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FC032070B;
-        Mon, 10 Aug 2020 00:06:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597018000;
-        bh=R4aysq8cb7E0lt1g+L7QoE7drym+sqAlY7Kl5ewT9W4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=PFJUK4RboaUyQadDQQxPBwd2mWFx5eqi8vYU/1ln23GMqVDmgxMjmS8OiCE5deT3T
-         3jL6lR41OYOSmVjW7gbdLQs4YANUBtRuawMrQz6qjssK0V/MZ1bA1wI7barj0aKoPP
-         oOqZccr58IG6qLu1rgsAHBxZYdck4+UEHXlk0n0U=
-Received: by mail-ed1-f43.google.com with SMTP id a14so5143136edx.7;
-        Sun, 09 Aug 2020 17:06:40 -0700 (PDT)
-X-Gm-Message-State: AOAM531aZqzbWlvlU+JyNk3zsiWHXygUB9R8hDg4+zU9UkIS/4L+fi05
-        WNjBRDhbyVUoNJxyZQis64lJfEqumwL+mUzPlA==
-X-Google-Smtp-Source: ABdhPJzs3hNq441TdiNg5sGMfiRejhS75UfI9CWnqxJ5HqFTUExR+ocEV58lXwZry63RX+M/RRZzyTn/TlCXxBAyudU=
-X-Received: by 2002:a05:6402:38c:: with SMTP id o12mr19470902edv.271.1597017998978;
- Sun, 09 Aug 2020 17:06:38 -0700 (PDT)
+        Sun, 9 Aug 2020 20:10:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37350 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726219AbgHJAKG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Aug 2020 20:10:06 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A32EAC061756
+        for <linux-kernel@vger.kernel.org>; Sun,  9 Aug 2020 17:10:05 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id f26so6297052ljc.8
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Aug 2020 17:10:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=TWLt1k5zX2YKi6sCRPWP13aF+qGzu/CFXY17A/sQ11g=;
+        b=MHk1a2INiWDPvNxD8mHZ/HvoDvbVIdib3uHW6TtmXeogom0baOiu/jFakUQxESxr64
+         ZJXcAd2lO2tfjNh4sUWIPMeMZgFMBHlNngrZcjU/OHFUYrt/AS5KuM+zfQZIWre0EJ11
+         DwZw5Q9ayoN3QD5j1I58qEIkcKALo3DMmuidSH9Y63i4lTsDaRM2lyOl1nRgG78UjFt4
+         bY/doyDPPYRGuJLmYUNgrBxRRyVpIYS7lYFR+hC+riFnCIZ1cVyIOH9D9a1+5FbdjWsZ
+         HeCKo9kw4pYnzHWmO1TNQ1vk3jx+4txefsTjfAKJ1PvPvr8FKfPuds1t3B84Qk+iHs0J
+         ojYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=TWLt1k5zX2YKi6sCRPWP13aF+qGzu/CFXY17A/sQ11g=;
+        b=I08MT2vMZ7S6KSqe/e7wRvPnjgeLEvD8LbJ9DqnmD+G3u/ucblsL0R4Rf1MdqgDHqC
+         1RRI9Dohub7JWUDAmFK5Q50+Q8v4JUS6AV41uvspV+XVPgURJklHlUuv2n1DBaEREvUI
+         v+jf9lf6NIx++GDASJS7Ha/HMJ1g5K5D78WZVw1sF0AyjeHoiy6hA2q3o8VFQjaPskVL
+         cP8PJdEV/HLFxGwHZHd0/p9qryug2LLUPjc7StUATbcXMwdfOUsOA2bmh0bnQ683seTM
+         Ci0mIkh0dQydK1VDGJW7Ctr83RmBG0lzvxCytgDNh1bBQ5jiMLk4cr9Msp/YfzzCFjGL
+         MZ7g==
+X-Gm-Message-State: AOAM5335xudZ7PsXNPdNa2jiNL9vRZkkyxJDGEZqiMzp4PZGCp1EhifF
+        i8dwKxnNsNktIJOAIOMUyVOoi5f2
+X-Google-Smtp-Source: ABdhPJyIMdHzMfLifix963oh6/ZlNqO13wZJFZusMRXZKlbibE120BW3lyAKPop1jnN02kBpxQLOPg==
+X-Received: by 2002:a2e:9557:: with SMTP id t23mr10919201ljh.85.1597018200095;
+        Sun, 09 Aug 2020 17:10:00 -0700 (PDT)
+Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.googlemail.com with ESMTPSA id d6sm8698327ljg.25.2020.08.09.17.09.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 09 Aug 2020 17:09:59 -0700 (PDT)
+Subject: Re: regulator: deadlock vs memory reclaim
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+References: <20200809222537.GA5522@qmqm.qmqm.pl>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <dd8354c4-a116-0714-6c20-46cacfd16a54@gmail.com>
+Date:   Mon, 10 Aug 2020 03:09:58 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200807082754.6790-1-linux@fw-web.de> <20200807082754.6790-2-linux@fw-web.de>
- <trinity-f5a5deb1-c123-44d7-b7ca-1f7a8dbe1c1c-1596889651064@3c-app-gmx-bap69>
- <CAAOTY_9o_hBWxWBdDoeeJ6zuV4rb4R_yEoN5+L0uHBGMw4Kduw@mail.gmail.com> <81DFA743-B455-498F-B2F2-161DD9D51F57@public-files.de>
-In-Reply-To: <81DFA743-B455-498F-B2F2-161DD9D51F57@public-files.de>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Mon, 10 Aug 2020 08:06:27 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_-DYsbAWkdKfiGeJOwmPUOO1T+6WmOmhDQEUbzoRh+KPw@mail.gmail.com>
-Message-ID: <CAAOTY_-DYsbAWkdKfiGeJOwmPUOO1T+6WmOmhDQEUbzoRh+KPw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] arm: dts: mt7623: move more display-related nodes to mt7623n.dtsi
-To:     Frank Wunderlich <frank-w@public-files.de>
-Cc:     "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        devicetree@vger.kernel.org, Ryder Lee <ryder.lee@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Frank Wunderlich <linux@fw-web.de>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200809222537.GA5522@qmqm.qmqm.pl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Frank:
+10.08.2020 01:25, Michał Mirosław пишет:
+> Hi guys,
+> 
+> Commit f8702f9e4aa7 ("regulator: core: Use ww_mutex for regulators locking")
+> from Nov 2018 tried to fix possible deadlocks when handling coupled
+> regulators. Unfortunately it introduced another possible deadlock,
+> as discovered by lockdep (see below), instead.
+> 
+> regulator_lock_dependent() starts by taking regulator_list_mutex, The
+> same mutex covers eg. regulator initialization, including memory allocations
+> that happen there. This will deadlock when you have filesystem on eg. eMMC
+> (which uses a regulator to control module voltages) and you register
+> a new regulator (hotplug a device?) when under memory pressure.
+> 
+> There is also another problem with regulator_lock_dependent(): all the
+> w/w rollback stuff is useless: because of the outer lock, there can only
+> be one contendant doing multiple-lock-grabbing procedure. In this setup,
+> the procedure cannot detect other processes waiting on
+> regulator_lock_dependent() and it cannot signal (wound a transaction of)
+> current holders of locks taken by regulator_lock().
+> 
+> Basically, we have a BKL for regulator_enable() and we're using ww_mutex
+> as a recursive mutex with no deadlock prevention whatsoever. The locks
+> also seem to cover way to much (eg. initialization even before making the
+> regulator visible to the system).
+> 
+> To fix the regulator vs memory reclaim path I tried pushing all allocations
+> out of protected sections. After doing a few patches, though, I'm not sure
+> I'm going in the right direction. Your thoughts?
 
-Frank Wunderlich <frank-w@public-files.de> =E6=96=BC 2020=E5=B9=B48=E6=9C=
-=889=E6=97=A5 =E9=80=B1=E6=97=A5 =E4=B8=8B=E5=8D=883:22=E5=AF=AB=E9=81=93=
-=EF=BC=9A
->
->
->
-> Am 9. August 2020 02:16:59 MESZ schrieb Chun-Kuang Hu <chunkuang.hu@kerne=
-l.org>:
-> >
-> >I would like to put all device in mt7623.dtsi with some device's
-> >status is "disabled" and change its status in platform dtsi.
-> >I would like to see all device in mt7623.dtsi because of its name. If
-> >you move some device to platform dtsi, we would trace all platform
-> >dtsi to find out how many device in mt7623. One day a new platform
-> >enable different devices, you would reorganize all these platform
-> >dtsi?
->
-> Ok,then i change the dts-patch from hdmi-series to disable all nodes and =
-enabling them in bpi-r2 dts. Do they need to be in alphabetical order (or a=
-ny other)?
+IIRC, taking the regulator_list_mutex within regulator_lock_dependent()
+is needed in order to protect the case of decoupling regulators.
 
-Alphabetical order is better.
-
->
-> Is the tmds Patch ok? (because review missing) https://patchwork.kernel.o=
-rg/patch/11700679/
-
-That patch looks really like a hack patch. I would wait for a long
-time to see whether any one has comment for this. Or you could have a
-better explain for it.
-I could apply other patches first.
-
-Regards,
-Chun-Kuang.
-
->
-> Just to know before reposting series as v5 :)
-> regards Frank
+Perhaps moving out allocations or making them GFP_NOWAIT should be the
+easiest solution.
