@@ -2,90 +2,100 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42BD1C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:35:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA447C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:38:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16C2220678
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:35:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B91DD20729
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:38:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597063095;
+	bh=w6IZKvqKLF7y9Px742Kp6ZtUkscApoCbd/4wUWC9sqg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ozo6hlYuooaGYaZ3f8o64FKAauJ5LK02Wwo/pW30rlskicIFYFKfpyzd6t1dsKPFT
+	 IM4YUnyQpfDehcOt4efXlwKoVBHAy4zI0ws3GlsstlKEMqWf8jmwlazDgeXCzOzxxI
+	 A49lJYrWqKZaaTk0LpW0H3VNF1Ys6faz4MCPYKzU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbgHJMfn (ORCPT
+        id S1726712AbgHJMiO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 08:35:43 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:49352 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726536AbgHJMfn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 08:35:43 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id D562D1C0BD6; Mon, 10 Aug 2020 14:35:40 +0200 (CEST)
-Date:   Mon, 10 Aug 2020 14:35:40 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Christian Eggers <ceggers@arri.de>
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: documentation: light: Add as73211 sysfs
- documentation
-Message-ID: <20200810123540.sdzbtpgwkyqjg6ag@duo.ucw.cz>
-References: <20200808171443.114c8e05@archlinux>
- <20200809074335.23734-1-ceggers@arri.de>
- <20200810090054.GA8495@localhost>
- <4688751.agSyimv0uN@n95hx1g2>
+        Mon, 10 Aug 2020 08:38:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35244 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726536AbgHJMiN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 08:38:13 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E37E520678;
+        Mon, 10 Aug 2020 12:38:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597063093;
+        bh=w6IZKvqKLF7y9Px742Kp6ZtUkscApoCbd/4wUWC9sqg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=d/0VuUFKQ0RTEK4drzfEK+JG7k4GXBWKHtG/NeI5JrP+oZ6eUJV/PFr8mu1nssNaI
+         LrFqNZB0kXvbFoO7CVkNcmcl5MRcOLrX0OE7jhKMb5SOMIiZ3qmP5xJGYKyLjc9Lkb
+         ea5/jtBcAI/o1xLiJBpmi6VEHpNWDSIUaQNA11Vo=
+Date:   Mon, 10 Aug 2020 13:37:47 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] regulator: fix pointer table overallocation
+Message-ID: <20200810123747.GC6438@sirena.org.uk>
+References: <407fbd06a02caf038a9ba3baa51c7d6d47cd6517.1597000795.git.mirq-linux@rere.qmqm.pl>
+ <5ef51b56-c533-46c8-621d-7907129594e9@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="jvs7m357s4mlepiy"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="uXxzq0nDebZQVNAZ"
 Content-Disposition: inline
-In-Reply-To: <4688751.agSyimv0uN@n95hx1g2>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <5ef51b56-c533-46c8-621d-7907129594e9@gmail.com>
+X-Cookie: Walk softly and carry a megawatt laser.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---jvs7m357s4mlepiy
-Content-Type: text/plain; charset=us-ascii
+--uXxzq0nDebZQVNAZ
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon 2020-08-10 11:57:46, Christian Eggers wrote:
-> On Monday, 10 August 2020, 11:00:54 CEST, Pavel Machek wrote:
-> > Hi!
-> >
-> > > The driver for the as73211 light sensor provides the following not yet
-> > > documented sysfs entries:
-> > > - in_intensity_(x|y|z)_raw
-> > > - in_intensity_(x|y|z)_scale
-> > > - in_intensity_sampling_frequency(_available)
-> > > - in_intensity_hardwaregain(_available)
-> >
-> > Should that be hardware_gain ?
-> drivers/iio/industrialio-core.c:
-> [IIO_CHAN_INFO_HARDWAREGAIN] =3D "hardwaregain",
+On Sun, Aug 09, 2020 at 10:44:25PM +0300, Dmitry Osipenko wrote:
+> 09.08.2020 22:21, Micha=C5=82 Miros=C5=82aw =D0=BF=D0=B8=D1=88=D0=B5=D1=
+=82:
+> > The code allocates sizeof(regulator_dev) for a pointer. Make it less
+> > generous. Let kcalloc() calculate the size, while at it.
+> >=20
+> > Cc: stable@vger.kernel.org
+> > Fixes: d8ca7d184b33 ("regulator: core: Introduce API for regulators cou=
+pling customization")
 
-Yep. Fix that before people start to really use it.
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+> Hello, Micha=C5=82! Thank you for the patch! Not sure whether it's worthw=
+hile
+> to backport this change since it's an improvement, I'll leave it to Mark
+> to decide, otherwise looks good to me.
 
---jvs7m357s4mlepiy
+Yeah, this is more a performance improvement than a fix.
+
+--uXxzq0nDebZQVNAZ
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iF0EARECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXzE/HAAKCRAw5/Bqldv6
-8lWXAKCuSzegjhy/4xYA5ebKeC6eynYALQCfZv5D11TrJDXd6Iz2XCNGF8akEi4=
-=ViiX
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8xP5oACgkQJNaLcl1U
+h9DTewf5AZYWZdq5rIJAtK5PuXAjhHQRvCfaiElnTBPxIhBKlhjmNs7MjlDxsLdK
+iRTiXuJbBJvtZnUILDQ8MziCk57SuYU2+enrm+BtQqbMeFBnzxDs9ih67FEXponS
+UrEGz9rSNG9mtRXKr0K8fM2PgvoDvgHV/NyjyqaJhPPd5g5EL4zzBaoAy8UTlnED
+ceuWbYIxEYrFEwIsUt5+eYw+MkVwtOFNbaa6Kkk84tkmeH4eHEO6+y4j1Fn9vs/5
+Dn7+gbtRza4PoDUF7K15nC65IDS8nbWUaDVYEX9zU4YjN8iKVuPr5mjaHfAJjPHA
+3t32P2zYfVvwFbwjWdsESC2+oSjEjg==
+=Qp3A
 -----END PGP SIGNATURE-----
 
---jvs7m357s4mlepiy--
+--uXxzq0nDebZQVNAZ--
