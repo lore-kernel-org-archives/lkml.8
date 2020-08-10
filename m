@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB08CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A33C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:32:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D40F22B47
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:32:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D3CA22CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:32:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597087974;
-	bh=ZO9fULd83yDA0xysy4KCLusJehWcIcCNwGelstt64Ao=;
+	s=default; t=1597087977;
+	bh=1hUmOdoEj32TW0X8WVtmQHKVAglxkLerFvsfjtaXHtE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dxDwQUHBS2W3iBruzkDHv0LQ0QHgq/WuZF18v/wzwn34oc77vtl2vB4L8P/Zk9A9o
-	 /FRVCXTsfTrxa4Buco6pORZKi/eQGTvImTOTLvd9yZ8R6KKoIZlDWWIwVFEyJqgBjt
-	 S1K4bbtArOtlhk8PK9eY6+meeprYoGAkvB8YIpbw=
+	b=C/nR+EYIH3qN6Vik+p/88ZfrlJ75I15WEEO5EghnU6nyCecJhb5rzOMw7C7puaVnD
+	 5BKN0ztoRNB3aBzVEhftx9GxGzckK+JnkzKiUOK7UNMcY24FAwhujhvAS3/wDAakPt
+	 qN9m8MMbpawBoG5Ri6lKhkp0c6nwzs58JuVgEOis=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730053AbgHJTcx (ORCPT
+        id S1728548AbgHJTJd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:32:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35932 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:09:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728557AbgHJTJe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:09:34 -0400
+        id S1728489AbgHJTJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:09:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C21621775;
-        Mon, 10 Aug 2020 19:09:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E7CA21775;
+        Mon, 10 Aug 2020 19:09:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086573;
-        bh=ZO9fULd83yDA0xysy4KCLusJehWcIcCNwGelstt64Ao=;
+        s=default; t=1597086566;
+        bh=1hUmOdoEj32TW0X8WVtmQHKVAglxkLerFvsfjtaXHtE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FV+hM5ziQciCuPJLdl1YH6BZ4zGx2KyNkyKCoZGPw3Aikx9TXUWipQaAutQtBCYqz
-         YQzBMxp8rgoogt2HlK6L9/r0e8k+aQ8h3z2GWUne5pu/J+umQhIH8rd0kCoFkWnL1m
-         5Y5aEj3ykFaLVKDIVsvcBtb0QDQu+eEc55FoYzpg=
+        b=VVp04AFdJRnwSredpHavZgeoqHimx1ZRsbBXTuBFPKnrw6iH0mQ7+tTD01DdBXRwq
+         CChEyHxQsbW2YHnTaM6zRe0znXzC4FZ/n7NntIJ3UtbZZo/hAHUTXQCs9F/KPlimh/
+         L/COOoJbmyIJEMAqG8Rw7weoRQzB9PnFLeLx7Ijc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 25/64] btrfs: fix lockdep splat from btrfs_dump_space_info
-Date:   Mon, 10 Aug 2020 15:08:20 -0400
-Message-Id: <20200810190859.3793319-25-sashal@kernel.org>
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Sasha Levin <sashal@kernel.org>, etnaviv@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.8 19/64] drm/etnaviv: fix ref count leak via pm_runtime_get_sync
+Date:   Mon, 10 Aug 2020 15:08:14 -0400
+Message-Id: <20200810190859.3793319-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810190859.3793319-1-sashal@kernel.org>
 References: <20200810190859.3793319-1-sashal@kernel.org>
@@ -59,196 +60,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit ab0db043c35da3477e57d4d516492b2d51a5ca0f ]
+[ Upstream commit c5d5a32ead1e3a61a07a1e59eb52a53e4a6b2a7f ]
 
-When running with -o enospc_debug you can get the following splat if one
-of the dump_space_info's trip
+in etnaviv_gpu_submit, etnaviv_gpu_recover_hang, etnaviv_gpu_debugfs,
+and etnaviv_gpu_init the call to pm_runtime_get_sync increments the
+counter even in case of failure, leading to incorrect ref count.
+In case of failure, decrement the ref count before returning.
 
-  ======================================================
-  WARNING: possible circular locking dependency detected
-  5.8.0-rc5+ #20 Tainted: G           OE
-  ------------------------------------------------------
-  dd/563090 is trying to acquire lock:
-  ffff9e7dbf4f1e18 (&ctl->tree_lock){+.+.}-{2:2}, at: btrfs_dump_free_space+0x2b/0xa0 [btrfs]
-
-  but task is already holding lock:
-  ffff9e7e2284d428 (&cache->lock){+.+.}-{2:2}, at: btrfs_dump_space_info+0xaa/0x120 [btrfs]
-
-  which lock already depends on the new lock.
-
-  the existing dependency chain (in reverse order) is:
-
-  -> #3 (&cache->lock){+.+.}-{2:2}:
-	 _raw_spin_lock+0x25/0x30
-	 btrfs_add_reserved_bytes+0x3c/0x3c0 [btrfs]
-	 find_free_extent+0x7ef/0x13b0 [btrfs]
-	 btrfs_reserve_extent+0x9b/0x180 [btrfs]
-	 btrfs_alloc_tree_block+0xc1/0x340 [btrfs]
-	 alloc_tree_block_no_bg_flush+0x4a/0x60 [btrfs]
-	 __btrfs_cow_block+0x122/0x530 [btrfs]
-	 btrfs_cow_block+0x106/0x210 [btrfs]
-	 commit_cowonly_roots+0x55/0x300 [btrfs]
-	 btrfs_commit_transaction+0x4ed/0xac0 [btrfs]
-	 sync_filesystem+0x74/0x90
-	 generic_shutdown_super+0x22/0x100
-	 kill_anon_super+0x14/0x30
-	 btrfs_kill_super+0x12/0x20 [btrfs]
-	 deactivate_locked_super+0x36/0x70
-	 cleanup_mnt+0x104/0x160
-	 task_work_run+0x5f/0x90
-	 __prepare_exit_to_usermode+0x1bd/0x1c0
-	 do_syscall_64+0x5e/0xb0
-	 entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-  -> #2 (&space_info->lock){+.+.}-{2:2}:
-	 _raw_spin_lock+0x25/0x30
-	 btrfs_block_rsv_release+0x1a6/0x3f0 [btrfs]
-	 btrfs_inode_rsv_release+0x4f/0x170 [btrfs]
-	 btrfs_clear_delalloc_extent+0x155/0x480 [btrfs]
-	 clear_state_bit+0x81/0x1a0 [btrfs]
-	 __clear_extent_bit+0x25c/0x5d0 [btrfs]
-	 clear_extent_bit+0x15/0x20 [btrfs]
-	 btrfs_invalidatepage+0x2b7/0x3c0 [btrfs]
-	 truncate_cleanup_page+0x47/0xe0
-	 truncate_inode_pages_range+0x238/0x840
-	 truncate_pagecache+0x44/0x60
-	 btrfs_setattr+0x202/0x5e0 [btrfs]
-	 notify_change+0x33b/0x490
-	 do_truncate+0x76/0xd0
-	 path_openat+0x687/0xa10
-	 do_filp_open+0x91/0x100
-	 do_sys_openat2+0x215/0x2d0
-	 do_sys_open+0x44/0x80
-	 do_syscall_64+0x52/0xb0
-	 entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-  -> #1 (&tree->lock#2){+.+.}-{2:2}:
-	 _raw_spin_lock+0x25/0x30
-	 find_first_extent_bit+0x32/0x150 [btrfs]
-	 write_pinned_extent_entries.isra.0+0xc5/0x100 [btrfs]
-	 __btrfs_write_out_cache+0x172/0x480 [btrfs]
-	 btrfs_write_out_cache+0x7a/0xf0 [btrfs]
-	 btrfs_write_dirty_block_groups+0x286/0x3b0 [btrfs]
-	 commit_cowonly_roots+0x245/0x300 [btrfs]
-	 btrfs_commit_transaction+0x4ed/0xac0 [btrfs]
-	 close_ctree+0xf9/0x2f5 [btrfs]
-	 generic_shutdown_super+0x6c/0x100
-	 kill_anon_super+0x14/0x30
-	 btrfs_kill_super+0x12/0x20 [btrfs]
-	 deactivate_locked_super+0x36/0x70
-	 cleanup_mnt+0x104/0x160
-	 task_work_run+0x5f/0x90
-	 __prepare_exit_to_usermode+0x1bd/0x1c0
-	 do_syscall_64+0x5e/0xb0
-	 entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-  -> #0 (&ctl->tree_lock){+.+.}-{2:2}:
-	 __lock_acquire+0x1240/0x2460
-	 lock_acquire+0xab/0x360
-	 _raw_spin_lock+0x25/0x30
-	 btrfs_dump_free_space+0x2b/0xa0 [btrfs]
-	 btrfs_dump_space_info+0xf4/0x120 [btrfs]
-	 btrfs_reserve_extent+0x176/0x180 [btrfs]
-	 __btrfs_prealloc_file_range+0x145/0x550 [btrfs]
-	 cache_save_setup+0x28d/0x3b0 [btrfs]
-	 btrfs_start_dirty_block_groups+0x1fc/0x4f0 [btrfs]
-	 btrfs_commit_transaction+0xcc/0xac0 [btrfs]
-	 btrfs_alloc_data_chunk_ondemand+0x162/0x4c0 [btrfs]
-	 btrfs_check_data_free_space+0x4c/0xa0 [btrfs]
-	 btrfs_buffered_write.isra.0+0x19b/0x740 [btrfs]
-	 btrfs_file_write_iter+0x3cf/0x610 [btrfs]
-	 new_sync_write+0x11e/0x1b0
-	 vfs_write+0x1c9/0x200
-	 ksys_write+0x68/0xe0
-	 do_syscall_64+0x52/0xb0
-	 entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-  other info that might help us debug this:
-
-  Chain exists of:
-    &ctl->tree_lock --> &space_info->lock --> &cache->lock
-
-   Possible unsafe locking scenario:
-
-	 CPU0                    CPU1
-	 ----                    ----
-    lock(&cache->lock);
-				 lock(&space_info->lock);
-				 lock(&cache->lock);
-    lock(&ctl->tree_lock);
-
-   *** DEADLOCK ***
-
-  6 locks held by dd/563090:
-   #0: ffff9e7e21d18448 (sb_writers#14){.+.+}-{0:0}, at: vfs_write+0x195/0x200
-   #1: ffff9e7dd0410ed8 (&sb->s_type->i_mutex_key#19){++++}-{3:3}, at: btrfs_file_write_iter+0x86/0x610 [btrfs]
-   #2: ffff9e7e21d18638 (sb_internal#2){.+.+}-{0:0}, at: start_transaction+0x40b/0x5b0 [btrfs]
-   #3: ffff9e7e1f05d688 (&cur_trans->cache_write_mutex){+.+.}-{3:3}, at: btrfs_start_dirty_block_groups+0x158/0x4f0 [btrfs]
-   #4: ffff9e7e2284ddb8 (&space_info->groups_sem){++++}-{3:3}, at: btrfs_dump_space_info+0x69/0x120 [btrfs]
-   #5: ffff9e7e2284d428 (&cache->lock){+.+.}-{2:2}, at: btrfs_dump_space_info+0xaa/0x120 [btrfs]
-
-  stack backtrace:
-  CPU: 3 PID: 563090 Comm: dd Tainted: G           OE     5.8.0-rc5+ #20
-  Hardware name: To Be Filled By O.E.M. To Be Filled By O.E.M./890FX Deluxe5, BIOS P1.40 05/03/2011
-  Call Trace:
-   dump_stack+0x96/0xd0
-   check_noncircular+0x162/0x180
-   __lock_acquire+0x1240/0x2460
-   ? wake_up_klogd.part.0+0x30/0x40
-   lock_acquire+0xab/0x360
-   ? btrfs_dump_free_space+0x2b/0xa0 [btrfs]
-   _raw_spin_lock+0x25/0x30
-   ? btrfs_dump_free_space+0x2b/0xa0 [btrfs]
-   btrfs_dump_free_space+0x2b/0xa0 [btrfs]
-   btrfs_dump_space_info+0xf4/0x120 [btrfs]
-   btrfs_reserve_extent+0x176/0x180 [btrfs]
-   __btrfs_prealloc_file_range+0x145/0x550 [btrfs]
-   ? btrfs_qgroup_reserve_data+0x1d/0x60 [btrfs]
-   cache_save_setup+0x28d/0x3b0 [btrfs]
-   btrfs_start_dirty_block_groups+0x1fc/0x4f0 [btrfs]
-   btrfs_commit_transaction+0xcc/0xac0 [btrfs]
-   ? start_transaction+0xe0/0x5b0 [btrfs]
-   btrfs_alloc_data_chunk_ondemand+0x162/0x4c0 [btrfs]
-   btrfs_check_data_free_space+0x4c/0xa0 [btrfs]
-   btrfs_buffered_write.isra.0+0x19b/0x740 [btrfs]
-   ? ktime_get_coarse_real_ts64+0xa8/0xd0
-   ? trace_hardirqs_on+0x1c/0xe0
-   btrfs_file_write_iter+0x3cf/0x610 [btrfs]
-   new_sync_write+0x11e/0x1b0
-   vfs_write+0x1c9/0x200
-   ksys_write+0x68/0xe0
-   do_syscall_64+0x52/0xb0
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-This is because we're holding the block_group->lock while trying to dump
-the free space cache.  However we don't need this lock, we just need it
-to read the values for the printk, so move the free space cache dumping
-outside of the block group lock.
-
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/space-info.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/etnaviv/etnaviv_gpu.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/fs/btrfs/space-info.c b/fs/btrfs/space-info.c
-index c7bd3fdd77928..475968ccbd1d1 100644
---- a/fs/btrfs/space-info.c
-+++ b/fs/btrfs/space-info.c
-@@ -468,8 +468,8 @@ void btrfs_dump_space_info(struct btrfs_fs_info *fs_info,
- 			"block group %llu has %llu bytes, %llu used %llu pinned %llu reserved %s",
- 			cache->start, cache->length, cache->used, cache->pinned,
- 			cache->reserved, cache->ro ? "[readonly]" : "");
--		btrfs_dump_free_space(cache, bytes);
- 		spin_unlock(&cache->lock);
-+		btrfs_dump_free_space(cache, bytes);
+diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
+index a31eeff2b297a..7c9f3f9ba1235 100644
+--- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
++++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
+@@ -722,7 +722,7 @@ int etnaviv_gpu_init(struct etnaviv_gpu *gpu)
+ 	ret = pm_runtime_get_sync(gpu->dev);
+ 	if (ret < 0) {
+ 		dev_err(gpu->dev, "Failed to enable GPU power domain\n");
+-		return ret;
++		goto pm_put;
  	}
- 	if (++index < BTRFS_NR_RAID_TYPES)
- 		goto again;
+ 
+ 	etnaviv_hw_identify(gpu);
+@@ -819,6 +819,7 @@ int etnaviv_gpu_init(struct etnaviv_gpu *gpu)
+ 
+ fail:
+ 	pm_runtime_mark_last_busy(gpu->dev);
++pm_put:
+ 	pm_runtime_put_autosuspend(gpu->dev);
+ 
+ 	return ret;
+@@ -859,7 +860,7 @@ int etnaviv_gpu_debugfs(struct etnaviv_gpu *gpu, struct seq_file *m)
+ 
+ 	ret = pm_runtime_get_sync(gpu->dev);
+ 	if (ret < 0)
+-		return ret;
++		goto pm_put;
+ 
+ 	dma_lo = gpu_read(gpu, VIVS_FE_DMA_LOW);
+ 	dma_hi = gpu_read(gpu, VIVS_FE_DMA_HIGH);
+@@ -1003,6 +1004,7 @@ int etnaviv_gpu_debugfs(struct etnaviv_gpu *gpu, struct seq_file *m)
+ 	ret = 0;
+ 
+ 	pm_runtime_mark_last_busy(gpu->dev);
++pm_put:
+ 	pm_runtime_put_autosuspend(gpu->dev);
+ 
+ 	return ret;
+@@ -1016,7 +1018,7 @@ void etnaviv_gpu_recover_hang(struct etnaviv_gpu *gpu)
+ 	dev_err(gpu->dev, "recover hung GPU!\n");
+ 
+ 	if (pm_runtime_get_sync(gpu->dev) < 0)
+-		return;
++		goto pm_put;
+ 
+ 	mutex_lock(&gpu->lock);
+ 
+@@ -1035,6 +1037,7 @@ void etnaviv_gpu_recover_hang(struct etnaviv_gpu *gpu)
+ 
+ 	mutex_unlock(&gpu->lock);
+ 	pm_runtime_mark_last_busy(gpu->dev);
++pm_put:
+ 	pm_runtime_put_autosuspend(gpu->dev);
+ }
+ 
+@@ -1308,8 +1311,10 @@ struct dma_fence *etnaviv_gpu_submit(struct etnaviv_gem_submit *submit)
+ 
+ 	if (!submit->runtime_resumed) {
+ 		ret = pm_runtime_get_sync(gpu->dev);
+-		if (ret < 0)
++		if (ret < 0) {
++			pm_runtime_put_noidle(gpu->dev);
+ 			return NULL;
++		}
+ 		submit->runtime_resumed = true;
+ 	}
+ 
+@@ -1326,6 +1331,7 @@ struct dma_fence *etnaviv_gpu_submit(struct etnaviv_gem_submit *submit)
+ 	ret = event_alloc(gpu, nr_events, event);
+ 	if (ret) {
+ 		DRM_ERROR("no free events\n");
++		pm_runtime_put_noidle(gpu->dev);
+ 		return NULL;
+ 	}
+ 
 -- 
 2.25.1
 
