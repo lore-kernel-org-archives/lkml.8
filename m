@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C67C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:38:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7285C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:38:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 442CF22EBE
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:38:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B86F22EBE
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:38:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073916;
-	bh=Y7wmMwDeYET/Juzo4G/3OZOixAly9URCHID3PK/qwFU=;
+	s=default; t=1597073919;
+	bh=97QJhoJYDeam/oMbkKOnP6nfbKvfx2kmikgCEsZvy+k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ILjfgmLHz1FtmTDSZGjAExn5pySqzwEiRZ336rRdYJT5k/KdonXzHjOrO70LlGigk
-	 eHFAoPAZYJfijt9DxAQTu6gy1WBDBzhL3gg0/IPY53K/7Uwzbwstzt2TA6flsyP1RL
-	 /ebjMt2KDDvpipht1BTzDDXiG7BKQjgGLEbDk544=
+	b=AOPVZ/SKDTMo9B1N64OitCf7HXubfowMrR3bJ1QcvPdAHc7CA8vnovPYecBqogqsB
+	 P76nZoampHkUxjJ20VzVDq9Q4hpyGR26fmPHG7COhuu4V+Mv7Ro257SGJsEbM1KKau
+	 cGFyhEdpCxY770k6j7TEvfl/id78r/5zvNrt+OUc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728570AbgHJPZo (ORCPT
+        id S1726966AbgHJPih (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:25:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59492 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:38:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728431AbgHJPZi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:25:38 -0400
+        id S1728107AbgHJPZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:25:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0813420855;
-        Mon, 10 Aug 2020 15:25:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE57921775;
+        Mon, 10 Aug 2020 15:25:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073137;
-        bh=Y7wmMwDeYET/Juzo4G/3OZOixAly9URCHID3PK/qwFU=;
+        s=default; t=1597073143;
+        bh=97QJhoJYDeam/oMbkKOnP6nfbKvfx2kmikgCEsZvy+k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tPlI3uSIgBag5XVRGSIGyJ7QwW73WW8rm08Uw9LVJmxvAUdd5pKGlv2cxUSWaaZYH
-         UCVfwRCWUzPPM3pE0fnd1yYTE0e2aF4aFfNuRWyOP2hGx/XwABNXbYsYx27ufy5Ok7
-         bRFnjygrogPB2sLwY0jivLKLGShJM3fE9gQXtJH0=
+        b=g6b18B9kLWzA18qwbu+RM0vdp6wFFlQoNfQXwanPyN4mZKJB+U4XUBbmsAajAW+8d
+         knpdFYDsQ0McTd9rDNAiufKlPmQetYP4pO7986hIVI9wr4mUgNwTKhbbs5OAiwOsf6
+         Xgb9RpD07dyycDi+GfHwGXvxmqS1JQFoiPnXeOX8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, wenxu <wenxu@ucloud.cn>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Peilin Ye <yepeilin.cs@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.7 70/79] net/sched: act_ct: fix miss set mru for ovs after defrag in act_ct
-Date:   Mon, 10 Aug 2020 17:21:29 +0200
-Message-Id: <20200810151815.687796652@linuxfoundation.org>
+Subject: [PATCH 5.7 72/79] openvswitch: Prevent kernel-infoleak in ovs_ct_put_key()
+Date:   Mon, 10 Aug 2020 17:21:31 +0200
+Message-Id: <20200810151815.775500473@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151812.114485777@linuxfoundation.org>
 References: <20200810151812.114485777@linuxfoundation.org>
@@ -60,109 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: wenxu <wenxu@ucloud.cn>
+From: Peilin Ye <yepeilin.cs@gmail.com>
 
-[ Upstream commit 038ebb1a713d114d54dbf14868a73181c0c92758 ]
+[ Upstream commit 9aba6c5b49254d5bee927d81593ed4429e91d4ae ]
 
-When openvswitch conntrack offload with act_ct action. Fragment packets
-defrag in the ingress tc act_ct action and miss the next chain. Then the
-packet pass to the openvswitch datapath without the mru. The over
-mtu packet will be dropped in output action in openvswitch for over mtu.
+ovs_ct_put_key() is potentially copying uninitialized kernel stack memory
+into socket buffers, since the compiler may leave a 3-byte hole at the end
+of `struct ovs_key_ct_tuple_ipv4` and `struct ovs_key_ct_tuple_ipv6`. Fix
+it by initializing `orig` with memset().
 
-"kernel: net2: dropped over-mtu packet: 1528 > 1500"
-
-This patch add mru in the tc_skb_ext for adefrag and miss next chain
-situation. And also add mru in the qdisc_skb_cb. The act_ct set the mru
-to the qdisc_skb_cb when the packet defrag. And When the chain miss,
-The mru is set to tc_skb_ext which can be got by ovs datapath.
-
-Fixes: b57dc7c13ea9 ("net/sched: Introduce action ct")
-Signed-off-by: wenxu <wenxu@ucloud.cn>
-Reviewed-by: Cong Wang <xiyou.wangcong@gmail.com>
+Fixes: 9dd7f8907c37 ("openvswitch: Add original direction conntrack tuple to sw_flow_key.")
+Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/linux/skbuff.h    |    1 +
- include/net/sch_generic.h |    3 ++-
- net/openvswitch/flow.c    |    1 +
- net/sched/act_ct.c        |    8 ++++++--
- net/sched/cls_api.c       |    1 +
- 5 files changed, 11 insertions(+), 3 deletions(-)
+ net/openvswitch/conntrack.c |   38 ++++++++++++++++++++------------------
+ 1 file changed, 20 insertions(+), 18 deletions(-)
 
---- a/include/linux/skbuff.h
-+++ b/include/linux/skbuff.h
-@@ -283,6 +283,7 @@ struct nf_bridge_info {
-  */
- struct tc_skb_ext {
- 	__u32 chain;
-+	__u16 mru;
- };
- #endif
- 
---- a/include/net/sch_generic.h
-+++ b/include/net/sch_generic.h
-@@ -380,6 +380,7 @@ struct qdisc_skb_cb {
- 	};
- #define QDISC_CB_PRIV_LEN 20
- 	unsigned char		data[QDISC_CB_PRIV_LEN];
-+	u16			mru;
- };
- 
- typedef void tcf_chain_head_change_t(struct tcf_proto *tp_head, void *priv);
-@@ -459,7 +460,7 @@ static inline void qdisc_cb_private_vali
- {
- 	struct qdisc_skb_cb *qcb;
- 
--	BUILD_BUG_ON(sizeof(skb->cb) < offsetof(struct qdisc_skb_cb, data) + sz);
-+	BUILD_BUG_ON(sizeof(skb->cb) < sizeof(*qcb));
- 	BUILD_BUG_ON(sizeof(qcb->data) < sz);
+--- a/net/openvswitch/conntrack.c
++++ b/net/openvswitch/conntrack.c
+@@ -276,10 +276,6 @@ void ovs_ct_fill_key(const struct sk_buf
+ 	ovs_ct_update_key(skb, NULL, key, false, false);
  }
  
---- a/net/openvswitch/flow.c
-+++ b/net/openvswitch/flow.c
-@@ -890,6 +890,7 @@ int ovs_flow_key_extract(const struct ip
- 	if (static_branch_unlikely(&tc_recirc_sharing_support)) {
- 		tc_ext = skb_ext_find(skb, TC_SKB_EXT);
- 		key->recirc_id = tc_ext ? tc_ext->chain : 0;
-+		OVS_CB(skb)->mru = tc_ext ? tc_ext->mru : 0;
- 	} else {
- 		key->recirc_id = 0;
- 	}
---- a/net/sched/act_ct.c
-+++ b/net/sched/act_ct.c
-@@ -704,8 +704,10 @@ static int tcf_ct_handle_fragments(struc
- 		if (err && err != -EINPROGRESS)
- 			goto out_free;
+-#define IN6_ADDR_INITIALIZER(ADDR) \
+-	{ (ADDR).s6_addr32[0], (ADDR).s6_addr32[1], \
+-	  (ADDR).s6_addr32[2], (ADDR).s6_addr32[3] }
+-
+ int ovs_ct_put_key(const struct sw_flow_key *swkey,
+ 		   const struct sw_flow_key *output, struct sk_buff *skb)
+ {
+@@ -301,24 +297,30 @@ int ovs_ct_put_key(const struct sw_flow_
  
--		if (!err)
-+		if (!err) {
- 			*defrag = true;
-+			cb.mru = IPCB(skb)->frag_max_size;
-+		}
- 	} else { /* NFPROTO_IPV6 */
- #if IS_ENABLED(CONFIG_NF_DEFRAG_IPV6)
- 		enum ip6_defrag_users user = IP6_DEFRAG_CONNTRACK_IN + zone;
-@@ -715,8 +717,10 @@ static int tcf_ct_handle_fragments(struc
- 		if (err && err != -EINPROGRESS)
- 			goto out_free;
- 
--		if (!err)
-+		if (!err) {
- 			*defrag = true;
-+			cb.mru = IP6CB(skb)->frag_max_size;
-+		}
- #else
- 		err = -EOPNOTSUPP;
- 		goto out_free;
---- a/net/sched/cls_api.c
-+++ b/net/sched/cls_api.c
-@@ -1679,6 +1679,7 @@ int tcf_classify_ingress(struct sk_buff
- 		if (WARN_ON_ONCE(!ext))
- 			return TC_ACT_SHOT;
- 		ext->chain = last_executed_chain;
-+		ext->mru = qdisc_skb_cb(skb)->mru;
- 	}
- 
- 	return ret;
+ 	if (swkey->ct_orig_proto) {
+ 		if (swkey->eth.type == htons(ETH_P_IP)) {
+-			struct ovs_key_ct_tuple_ipv4 orig = {
+-				output->ipv4.ct_orig.src,
+-				output->ipv4.ct_orig.dst,
+-				output->ct.orig_tp.src,
+-				output->ct.orig_tp.dst,
+-				output->ct_orig_proto,
+-			};
++			struct ovs_key_ct_tuple_ipv4 orig;
++
++			memset(&orig, 0, sizeof(orig));
++			orig.ipv4_src = output->ipv4.ct_orig.src;
++			orig.ipv4_dst = output->ipv4.ct_orig.dst;
++			orig.src_port = output->ct.orig_tp.src;
++			orig.dst_port = output->ct.orig_tp.dst;
++			orig.ipv4_proto = output->ct_orig_proto;
++
+ 			if (nla_put(skb, OVS_KEY_ATTR_CT_ORIG_TUPLE_IPV4,
+ 				    sizeof(orig), &orig))
+ 				return -EMSGSIZE;
+ 		} else if (swkey->eth.type == htons(ETH_P_IPV6)) {
+-			struct ovs_key_ct_tuple_ipv6 orig = {
+-				IN6_ADDR_INITIALIZER(output->ipv6.ct_orig.src),
+-				IN6_ADDR_INITIALIZER(output->ipv6.ct_orig.dst),
+-				output->ct.orig_tp.src,
+-				output->ct.orig_tp.dst,
+-				output->ct_orig_proto,
+-			};
++			struct ovs_key_ct_tuple_ipv6 orig;
++
++			memset(&orig, 0, sizeof(orig));
++			memcpy(orig.ipv6_src, output->ipv6.ct_orig.src.s6_addr32,
++			       sizeof(orig.ipv6_src));
++			memcpy(orig.ipv6_dst, output->ipv6.ct_orig.dst.s6_addr32,
++			       sizeof(orig.ipv6_dst));
++			orig.src_port = output->ct.orig_tp.src;
++			orig.dst_port = output->ct.orig_tp.dst;
++			orig.ipv6_proto = output->ct_orig_proto;
++
+ 			if (nla_put(skb, OVS_KEY_ATTR_CT_ORIG_TUPLE_IPV6,
+ 				    sizeof(orig), &orig))
+ 				return -EMSGSIZE;
 
 
