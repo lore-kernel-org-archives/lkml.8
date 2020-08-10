@@ -3,201 +3,239 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA7FEC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:51:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 222EBC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:51:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAEFD2075F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:51:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1B4B20678
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:51:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Ynhhm1/2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fh8Py677"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726637AbgHJMvI (ORCPT
+        id S1726810AbgHJMvN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 08:51:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40288 "EHLO
+        Mon, 10 Aug 2020 08:51:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726465AbgHJMvG (ORCPT
+        with ESMTP id S1726707AbgHJMvK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 08:51:06 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1B41C061756
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 05:51:06 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id l2so8048465wrc.7
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 05:51:06 -0700 (PDT)
+        Mon, 10 Aug 2020 08:51:10 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64B0BC061756;
+        Mon, 10 Aug 2020 05:51:09 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id cq28so6100315edb.10;
+        Mon, 10 Aug 2020 05:51:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=SCk9i3sWSgkWyg6YFOJHzr++ebfH7R3kDFAt5TmtoX8=;
-        b=Ynhhm1/2yY4ztKsKdmw/j1iwW3q009I0jRUbMuq9LZANkuEOO1IXasxWYli1lB/EKU
-         Ve6EuHB/7SmgCmkYt9b3XFPNsC5LGpXARCGJqCdxHaeG8lx5BbIldQuUK8U2diul/waV
-         4IvzCdT+Jw3aV69Ut16wgePjx7pnBoXO3TTPQ=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:references:in-reply-to:subject:date:message-id
+         :mime-version:content-transfer-encoding:thread-index
+         :content-language;
+        bh=LrkS8bPL538kQ7bNdv7BnP1bghXsTc7kkI6BCl+cUtw=;
+        b=fh8Py677GNM8lDBajIebrsFFBOPP0YQsZp8PIrAMxtughKQDkP7nqfmiWPRrciKKjj
+         Zw0Wwxbc1kMlEOmHfKrTriCAqj2+gST55rnJq97sopjtJXilWd5KCggoSmJPmY6m8biB
+         91x/FWL6PCL6J1Wpjs6ZRc3f7EpToVGNa2vIOVKYh1+hlAKBBqVOjmyPYDDXi+THH9O+
+         bT8iX9M1U97ny0ZEyfqVhm9xeBht1AvbI2NhKS17O951Qjz+/58EJyv1QOt67AG8TMzQ
+         4z4FMz6DJ4AyNjkJkQ/RqQiq4rdGeT5pcEZrPhIueojHwZWViAdcB+rIOFqQQbO5414Z
+         SQqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=SCk9i3sWSgkWyg6YFOJHzr++ebfH7R3kDFAt5TmtoX8=;
-        b=ULetOQ2VVjQzBMxAZX26ZPj9pwgiW4EfbQurlB11jufO/PPXnymUMPuj7uqppvevAR
-         fyLnpreiQgf6dt9ZzQe7AQZCyENlg4EC+klGoDNrN57N/kQaZdHSKmJPDcljSCl36BiD
-         TTkvzp8vyIyLh560W/vQSoSwGgXKvMEN0GpKdc/Nj98/wAFPLxcbeYOE+NMoFztZHFu1
-         r4M68dGKu4q4to8N5tMzRUGBhqDZY86VtVpOHdBPzz3FQkNm17EBnwDsnwX66AR/TOSa
-         GZ9/LfwraWTqOPPlRZdjTGnS0z9bR3fEnPxE3fuyuuF+lZfRCGbPhuhcSQKmDDRhuFyF
-         +i/A==
-X-Gm-Message-State: AOAM533QQhl7gT89ZCjr8KbQjfc/5Jun9dE/5XphQZGHu934dVoGYLTy
-        qX6c+yiHUxTCchB/E6k/U+sZPw==
-X-Google-Smtp-Source: ABdhPJyMU0d/6EbcBph/o2e0VviOrZzAdljVt2A/AspWDgYTr8anSDL/syByK7rh0S1Q+OIlPU8tyg==
-X-Received: by 2002:adf:f8d2:: with SMTP id f18mr24134081wrq.261.1597063865196;
-        Mon, 10 Aug 2020 05:51:05 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id g70sm22140560wmg.24.2020.08.10.05.51.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Aug 2020 05:51:04 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
+         :message-id:mime-version:content-transfer-encoding:thread-index
+         :content-language;
+        bh=LrkS8bPL538kQ7bNdv7BnP1bghXsTc7kkI6BCl+cUtw=;
+        b=PcUTfioTxondRprjERHjDVWfKBwj4lPH0GooPNQ0nEmSM8vEV6wL/wzVP4o88Uk2IQ
+         ZLjFf0NvC+UvzPql9wI9xHzca+1nsq5P9pYa94X0D/fDs8t/syjlqgCIXyXSAF5cW95X
+         o/P+FC8gsjBspkxx8W2lCklhBimTj7aPoSZ0oXNd8GYPSbTnQDRfK+Pu8bRW4JLzTpIL
+         Pe0pJrYTOPTDD2LxaHAQ9abAYVXLxEviUh6QAFUfN4idRZgosfLihXUp+LooFD+vWQIA
+         wi2eoV5Kig7r9PXQkvv+tkzp4iT+TQiWkmU8gBlRL7iZ8xDaC7Xr8QObulC8OgzpZ5wi
+         PFIg==
+X-Gm-Message-State: AOAM532SKbPIsTXSmadhT8k6Wz+3sGoXIp5VWRhr/OpHJdEq9trs3TUj
+        nPpQ7W/OeaI5CUo93X7UPJgndjOi
+X-Google-Smtp-Source: ABdhPJw4m6xe0M6IfgxazF7sadfNQMuScg+4nFYyInLy7KM2wlF1Pfm6VXShZ+RDUoJZg/woWz3BDA==
+X-Received: by 2002:a50:ee0a:: with SMTP id g10mr19981370eds.289.1597063867494;
+        Mon, 10 Aug 2020 05:51:07 -0700 (PDT)
+Received: from AnsuelXPS (host-79-13-255-165.retail.telecomitalia.it. [79.13.255.165])
+        by smtp.gmail.com with ESMTPSA id gl20sm13283010ejb.86.2020.08.10.05.51.05
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 10 Aug 2020 05:51:06 -0700 (PDT)
+From:   <ansuelsmth@gmail.com>
+To:     "'Sudeep Holla'" <sudeep.holla@arm.com>
+Cc:     "'Viresh Kumar'" <viresh.kumar@linaro.org>,
+        "'Rafael J. Wysocki'" <rjw@rjwysocki.net>,
+        "'Rob Herring'" <robh+dt@kernel.org>, <linux-pm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200807234914.7341-1-ansuelsmth@gmail.com> <20200807234914.7341-3-ansuelsmth@gmail.com> <20200810080146.GA31434@bogus> <061301d66f07$8beae690$a3c0b3b0$@gmail.com> <20200810124509.GC31434@bogus>
+In-Reply-To: <20200810124509.GC31434@bogus>
+Subject: R: R: [RFC PATCH v2 2/2] dt-bindings: cpufreq: Document Krait CPU Cache scaling
 Date:   Mon, 10 Aug 2020 14:51:02 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Melissa Wen <melissa.srw@gmail.com>
-Cc:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
-        Haneen Mohammed <hamohammed.sa@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Sidong Yang <realwakka@gmail.com>, twoerner@gmail.com,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        kernel-usp@googlegroups.com
-Subject: Re: [PATCH v3] drm/vkms: guarantee vblank when capturing crc
-Message-ID: <20200810125102.GO2352366@phenom.ffwll.local>
-Mail-Followup-To: Melissa Wen <melissa.srw@gmail.com>,
-        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
-        Haneen Mohammed <hamohammed.sa@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Sidong Yang <realwakka@gmail.com>, twoerner@gmail.com,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        kernel-usp@googlegroups.com
-References: <20200808120900.pudwwrfz44g3rqx7@smtp.gmail.com>
+Message-ID: <000101d66f14$e9bc2920$bd347b60$@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200808120900.pudwwrfz44g3rqx7@smtp.gmail.com>
-X-Operating-System: Linux phenom 5.7.0-1-amd64 
+Content-Type: text/plain;
+        charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQJQ3CWQUPMUi8qrdt9OPWHZDAmorwGMMbnpAk5rSZMCKND62AGS0mSDp/++qdA=
+Content-Language: it
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 08, 2020 at 09:09:00AM -0300, Melissa Wen wrote:
-> VKMS needs vblank interrupts enabled to capture CRC. When vblank is
-> disabled, tests like kms_cursor_crc and kms_pipe_crc_basic getting stuck
-> waiting for a capture that will not occur until vkms wakes up. This patch
-> adds a helper to set composer and ensure that vblank remains enabled as
-> long as the CRC capture is needed.
-> 
-> It clears the execution of the following kms_cursor_crc subtests:
-> 1. pipe-A-cursor-[size,alpha-opaque, NxN-(on-screen, off-screen, sliding,
-> random, fast-moving])] - successful when running individually.
-> 2. pipe-A-cursor-dpms passes again
-> 3. pipe-A-cursor-suspend also passes
-> 
-> The issue was initially tracked in the sequential execution of IGT
-> kms_cursor_crc subtests: when running the test sequence or one of its
-> subtests twice, the odd execs complete and the pairs get stuck in an
-> endless wait. In the IGT code, calling a wait_for_vblank on preparing for
-> CRC capture prevented the busy-wait. But the problem persisted in the
-> pipe-A-cursor-dpms and -suspend subtests.
-> 
-> Checking the history, the pipe-A-cursor-dpms subtest was successful when,
-> in vkms_atomic_commit_tail, instead of using the flip_done op, it used
-> wait_for_vblanks. Another way to prevent blocking was wait_one_vblank when
-> enabling crtc. However, in both cases, pipe-A-cursor-suspend persisted
-> blocking in the 2nd start of CRC capture, which may indicate that
-> something got stuck in the step of CRC setup. Indeed, wait_one_vblank in
-> the crc setup was able to sync things and free all kms_cursor_crc
-> subtests. Besides, other alternatives to force enabling vblanks or prevent
-> disabling them such as calling drm_crtc_put_vblank or modeset_enables
-> before commit_planes + offdelay = 0, also unlock all subtests executions.
-> 
-> Finally, due to vkms's dependence on vblank interruptions to perform
-> tasks, this patch uses refcount to ensure that vblanks happen when
-> enabling composer and while crc capture is needed.
-> 
-> Cc: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-> Cc: Haneen Mohammed <hamohammed.sa@gmail.com>
-> 
-> Co-debugged-by: Sidong Yang <realwakka@gmail.com>
-> Signed-off-by: Sidong Yang <realwakka@gmail.com>
-> Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
-> Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-> 
-> ---
-> 
-> v2:
-> - extract a vkms_set_composer helper
-> - fix vblank refcounting for the disabling case
-> 
-> v3:
-> - make the vkms_set_composer helper static
-> - review the credit tags
 
-Thanks a lot for your work here, patch merged to drm-misc-next.
 
-I've kept the changelog in the commit message, I often find that quite
-useful. But that's a bit a drm peculiarity, most other subsystems prefer
-it like you've done it.
+> -----Messaggio originale-----
+> Da: Sudeep Holla <sudeep.holla@arm.com>
+> Inviato: luned=EC 10 agosto 2020 14:45
+> A: ansuelsmth@gmail.com
+> Cc: 'Viresh Kumar' <viresh.kumar@linaro.org>; 'Rafael J. Wysocki'
+> <rjw@rjwysocki.net>; 'Rob Herring' <robh+dt@kernel.org>; linux-
+> pm@vger.kernel.org; devicetree@vger.kernel.org; linux-
+> kernel@vger.kernel.org
+> Oggetto: Re: R: [RFC PATCH v2 2/2] dt-bindings: cpufreq: Document =
+Krait
+> CPU Cache scaling
+>=20
+> On Mon, Aug 10, 2020 at 01:15:24PM +0200, ansuelsmth@gmail.com
+> wrote:
+> >
+> >
+> > > -----Messaggio originale-----
+> > > Da: Sudeep Holla <sudeep.holla@arm.com>
+> > > Inviato: luned=EC 10 agosto 2020 10:02
+> > > A: Ansuel Smith <ansuelsmth@gmail.com>
+> > > Cc: Viresh Kumar <viresh.kumar@linaro.org>; Rafael J. Wysocki
+> > > <rjw@rjwysocki.net>; Rob Herring <robh+dt@kernel.org>; linux-
+> > > pm@vger.kernel.org; devicetree@vger.kernel.org; linux-
+> > > kernel@vger.kernel.org
+> > > Oggetto: Re: [RFC PATCH v2 2/2] dt-bindings: cpufreq: Document =
+Krait
+> CPU
+> > > Cache scaling
+> > >
+> > > On Sat, Aug 08, 2020 at 01:49:12AM +0200, Ansuel Smith wrote:
+> > > > Document dedicated Krait CPU Cache Scaling driver.
+> > > >
+> > > > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> > > > ---
+> > > >  .../bindings/cpufreq/krait-cache-scale.yaml   | 92
+> > > +++++++++++++++++++
+> > > >  1 file changed, 92 insertions(+)
+> > > >  create mode 100644
+> Documentation/devicetree/bindings/cpufreq/krait-
+> > > cache-scale.yaml
+> > > >
+> > > > diff --git =
+a/Documentation/devicetree/bindings/cpufreq/krait-cache-
+> > > scale.yaml =
+b/Documentation/devicetree/bindings/cpufreq/krait-cache-
+> > > scale.yaml
+> > > > new file mode 100644
+> > > > index 000000000000..f10b1f386a99
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/cpufreq/krait-cache-
+> > > scale.yaml
+> > > > @@ -0,0 +1,92 @@
+> > > > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> > > > +%YAML 1.2
+> > > > +---
+> > > > +$id: =
+http://devicetree.org/schemas/cpufreq/krait-cache-scale.yaml#
+> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > +
+> > > > +title: Krait Cpu Cache Frequency Scaling dedicated driver
+> > > > +
+> > > > +maintainers:
+> > > > +  - Ansuel Smith <ansuelsmth@gmail.com>
+> > > > +
+> > > > +description: |
+> > > > +  This Scale the Krait CPU Cache Frequency and optionally =
+voltage
+> > > > +  when the Cpu Frequency is changed (using the cpufreq =
+notifier).
+> > > > +
+> > > > +  Cache is scaled with the max frequency across all core and =
+the
+cache
+> > > > +  frequency will scale based on the configured threshold in the
+dts.
+> > > > +
+> > > > +  The cache is hardcoded to 3 frequency bin, idle, nominal and
+high.
+> > > > +
+> > > > +properties:
+> > > > +  compatible:
+> > > > +    const: qcom,krait-cache
+> > > > +
+> > >
+> > > How does this fit in the standard cache hierarchy nodes ? Extend =
+the
+> > > example to cover that.
+> > >
+> >
+> > I think i didn't understand this question. You mean that I should =
+put
+> > in the example how the standard l2 cache nodes are defined?
+> >
+>=20
+> I was referring to something like below which I found now in
+> arch/arm/boot/dts/qcom-msm8974.dtsi:
+> 	L2: l2-cache {
+> 		compatible =3D "cache";
+> 		cache-level =3D <2>;
+> 		qcom,saw =3D <&saw_l2>;
+> 	};
+>=20
+> > > > +  clocks:
+> > > > +    description: Phandle to the L2 CPU clock
+> > > > +
+> > > > +  clock-names:
+> > > > +    const: "l2"
+> > > > +
+> > > > +  voltage-tolerance:
+> > > > +    description: Same voltage tollerance of the Krait CPU
+> > > > +
+> > > > +  l2-rates:
+> > > > +    description: |
+> > > > +      Frequency the L2 cache will be scaled at.
+> > > > +      Value is in Hz.
+> > > > +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> > > > +    items:
+> > > > +      - description: idle
+> > > > +      - description: nominal
+> > > > +      - description: high
+> > > > +
+> > >
+> > > Why can't you re-use the standard OPP v2 bindings ?
+> > >
+> >
+> > Isn't overkill to use the OPP v2 bindings to represent the the =
+microvolt
+> > related to the le freq? Is the OPP v1 sufficient?
+>=20
+> Should be fine if it is allowed. v2 came out in the flow of my thought
+> and was not intentional.
+>=20
+> > Also I can't find a way to reflect this specific case where the l2 =
+rates
+> > are changed based on the cpu freq value? Any idea about that?
+> >
+>=20
+> OK, I am always opposed to giving such independent controls in the =
+kernel
+> as one can play around say max cpu freq and lowest cache or vice-versa
+> and create instabilities. IMO this should be completely hidden from =
+OS.
+> But I know these are old platforms, so I will shut my mouth ;)
+>=20
 
-Cheers, Daniel
+If we really want to deny this practice, I can add a check in the probe
+function to fail if the l2 freq threshold is less than the cpu freq.=20
 
-> 
-> ---
->  drivers/gpu/drm/vkms/vkms_composer.c | 20 +++++++++++++++++---
->  1 file changed, 17 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm/vkms/vkms_composer.c
-> index b8b060354667..4f3b07a32b60 100644
-> --- a/drivers/gpu/drm/vkms/vkms_composer.c
-> +++ b/drivers/gpu/drm/vkms/vkms_composer.c
-> @@ -233,6 +233,22 @@ int vkms_verify_crc_source(struct drm_crtc *crtc, const char *src_name,
->  	return 0;
->  }
->  
-> +static void vkms_set_composer(struct vkms_output *out, bool enabled)
-> +{
-> +	bool old_enabled;
-> +
-> +	if (enabled)
-> +		drm_crtc_vblank_get(&out->crtc);
-> +
-> +	spin_lock_irq(&out->lock);
-> +	old_enabled = out->composer_enabled;
-> +	out->composer_enabled = enabled;
-> +	spin_unlock_irq(&out->lock);
-> +
-> +	if (old_enabled)
-> +		drm_crtc_vblank_put(&out->crtc);
-> +}
-> +
->  int vkms_set_crc_source(struct drm_crtc *crtc, const char *src_name)
->  {
->  	struct vkms_output *out = drm_crtc_to_vkms_output(crtc);
-> @@ -241,9 +257,7 @@ int vkms_set_crc_source(struct drm_crtc *crtc, const char *src_name)
->  
->  	ret = vkms_crc_parse_source(src_name, &enabled);
->  
-> -	spin_lock_irq(&out->lock);
-> -	out->composer_enabled = enabled;
-> -	spin_unlock_irq(&out->lock);
-> +	vkms_set_composer(out, enabled);
->  
->  	return ret;
->  }
-> -- 
-> 2.27.0
-> 
+> --
+> Regards,
+> Sudeep
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
