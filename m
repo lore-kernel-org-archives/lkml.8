@@ -4,54 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C53C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:16:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF0BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:16:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18AED2080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:16:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD1222080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:16:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597087013;
-	bh=an2qDyvexFxr4rBh8yzEGHY2b5T586DGONdlqCE5QIM=;
+	s=default; t=1597087018;
+	bh=lq+XJEG3PTaPxXn1A2EbgfjJfyxd7zUhC0jjZeh9M1o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=17RDzyxT9VZ9pow0E/s9WbTsqJ/rgatKHEVXKpRAd1DzKvWbB7WP3345c9uV6bxNJ
-	 dtboTh2XXQcPqAfw03L9D6/w8mCcrE9iK8zWgYNRXLQfxxoz2GwClASAj/SZm0z3MF
-	 qFlX3TahiPFfGHgioUooTke4SEvRMH4Xpz4UIsY0=
+	b=tgcpdAeTf1ksxpO0wVvstq3AHr2THqvAtLHdJNSoebOgXxWHO2pEG4m5EFiVdxkuO
+	 V2AU7mNsIJhE2dcy6ISics8XD58vhG/XtBKkAOggcS6neDnuZHCEvKanIRydwq5/vH
+	 EKBy5qx06oOsxLAhh5juIbULkzIvB15m6nss5H2o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730239AbgHJTQw (ORCPT
+        id S1729006AbgHJTOd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:16:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46868 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:14:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730036AbgHJTOe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:14:34 -0400
+        id S1729998AbgHJTOX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:14:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A0F722C9E;
-        Mon, 10 Aug 2020 19:14:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 463DF22BEB;
+        Mon, 10 Aug 2020 19:14:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086873;
-        bh=an2qDyvexFxr4rBh8yzEGHY2b5T586DGONdlqCE5QIM=;
+        s=default; t=1597086863;
+        bh=lq+XJEG3PTaPxXn1A2EbgfjJfyxd7zUhC0jjZeh9M1o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fCA62dI73dTMum8I+wgANHDED3NCJvF7ztmYN4uV22yw23nBHJ/8cR/sS/lTWZ33N
-         Kx7mWOq5e5rwuUo23sYB4ZoOPVokYTuMeMcxF8gnB+7telbrdRUccnazbNceHt9P31
-         AyoGZzB37HqD5AiQTjPvXvK2b/EfIgQACumYc788=
+        b=YTqjS8gxuuQS23EWrqUF+DZxbF+XnCi7hGb9bwtFMx0VWQqSfXltbL9Csyw58rv5K
+         iopVNmg5X24OZgvyFtBfNGEc/6fY/GAcYlQDY210SdhVFEpkcfY2ST+EMUp+JP2lLE
+         jRly0CG0EBCYpbaKCkuGr1JPBTjdCSwr1OoiiWSA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Prasanna Kerekoppa <prasanna.kerekoppa@cypress.com>,
-        Chi-hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 10/17] brcmfmac: To fix Bss Info flag definition Bug
-Date:   Mon, 10 Aug 2020 15:14:11 -0400
-Message-Id: <20200810191418.3795394-10-sashal@kernel.org>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 03/17] fs/btrfs: Add cond_resched() for try_release_extent_mapping() stalls
+Date:   Mon, 10 Aug 2020 15:14:04 -0400
+Message-Id: <20200810191418.3795394-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810191418.3795394-1-sashal@kernel.org>
 References: <20200810191418.3795394-1-sashal@kernel.org>
@@ -64,37 +58,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Prasanna Kerekoppa <prasanna.kerekoppa@cypress.com>
+From: "Paul E. McKenney" <paulmck@kernel.org>
 
-[ Upstream commit fa3266541b13f390eb35bdbc38ff4a03368be004 ]
+[ Upstream commit 9f47eb5461aaeb6cb8696f9d11503ae90e4d5cb0 ]
 
-Bss info flag definition need to be fixed from 0x2 to 0x4
-This flag is for rssi info received on channel.
-All Firmware branches defined as 0x4 and this is bug in brcmfmac.
+Very large I/Os can cause the following RCU CPU stall warning:
 
-Signed-off-by: Prasanna Kerekoppa <prasanna.kerekoppa@cypress.com>
-Signed-off-by: Chi-hsien Lin <chi-hsien.lin@cypress.com>
-Signed-off-by: Wright Feng <wright.feng@cypress.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200604071835.3842-6-wright.feng@cypress.com
+RIP: 0010:rb_prev+0x8/0x50
+Code: 49 89 c0 49 89 d1 48 89 c2 48 89 f8 e9 e5 fd ff ff 4c 89 48 10 c3 4c =
+89 06 c3 4c 89 40 10 c3 0f 1f 00 48 8b 0f 48 39 cf 74 38 <48> 8b 47 10 48 85 c0 74 22 48 8b 50 08 48 85 d2 74 0c 48 89 d0 48
+RSP: 0018:ffffc9002212bab0 EFLAGS: 00000287 ORIG_RAX: ffffffffffffff13
+RAX: ffff888821f93630 RBX: ffff888821f93630 RCX: ffff888821f937e0
+RDX: 0000000000000000 RSI: 0000000000102000 RDI: ffff888821f93630
+RBP: 0000000000103000 R08: 000000000006c000 R09: 0000000000000238
+R10: 0000000000102fff R11: ffffc9002212bac8 R12: 0000000000000001
+R13: ffffffffffffffff R14: 0000000000102000 R15: ffff888821f937e0
+ __lookup_extent_mapping+0xa0/0x110
+ try_release_extent_mapping+0xdc/0x220
+ btrfs_releasepage+0x45/0x70
+ shrink_page_list+0xa39/0xb30
+ shrink_inactive_list+0x18f/0x3b0
+ shrink_lruvec+0x38e/0x6b0
+ shrink_node+0x14d/0x690
+ do_try_to_free_pages+0xc6/0x3e0
+ try_to_free_mem_cgroup_pages+0xe6/0x1e0
+ reclaim_high.constprop.73+0x87/0xc0
+ mem_cgroup_handle_over_high+0x66/0x150
+ exit_to_usermode_loop+0x82/0xd0
+ do_syscall_64+0xd4/0x100
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+On a PREEMPT=n kernel, the try_release_extent_mapping() function's
+"while" loop might run for a very long time on a large I/O.  This commit
+therefore adds a cond_resched() to this loop, providing RCU any needed
+quiescent states.
+
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/btrfs/extent_io.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h
-index 59013572fbe3f..d6a4a08fd3c44 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h
-@@ -30,7 +30,7 @@
- #define BRCMF_ARP_OL_PEER_AUTO_REPLY	0x00000008
+diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+index 8c0ff985c1919..fa22bb29eee6f 100644
+--- a/fs/btrfs/extent_io.c
++++ b/fs/btrfs/extent_io.c
+@@ -4340,6 +4340,8 @@ int try_release_extent_mapping(struct extent_map_tree *map,
  
- #define	BRCMF_BSS_INFO_VERSION	109 /* curr ver of brcmf_bss_info_le struct */
--#define BRCMF_BSS_RSSI_ON_CHANNEL	0x0002
-+#define BRCMF_BSS_RSSI_ON_CHANNEL	0x0004
- 
- #define BRCMF_STA_WME              0x00000002      /* WMM association */
- #define BRCMF_STA_AUTHE            0x00000008      /* Authenticated */
+ 			/* once for us */
+ 			free_extent_map(em);
++
++			cond_resched(); /* Allow large-extent preemption. */
+ 		}
+ 	}
+ 	return try_release_extent_state(map, tree, page, mask);
 -- 
 2.25.1
 
