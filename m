@@ -2,51 +2,51 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27666C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:23:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E933C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:24:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5E9520855
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:23:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E296E208A9
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:24:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073034;
-	bh=5j1N6fY856atSdd1yo4YTw/tK7vOcoJ8AervVVeA2Bk=;
+	s=default; t=1597073041;
+	bh=YPDX0crp7GERTlrl95GtvjvBnhsR8R4/6rjI44AeOc0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZDHoH5WWsyjvpBcVMvuqZxzB5ErbysxLX4JGvQe5e7o2mxOHsBu/boi7beqHMrLz9
-	 qHZ0hOtAPb5Dus1Erxjsb6Y2ab/IeQxRhDbB0dcnFwBxT8MC12IQCTW9lxsI+ggjUU
-	 Zh5/K7cRy7pUnpPnehd/SU92D7FgsA+fqq2j03z4=
+	b=loMFR2UlPYz1YbAGEIsSOU2uT/N9rlYM4NIQUDM81wyJ+k0UCEn0vqq8q7dRfWpCO
+	 zDK36jg8JPKBl2D8phv8nriC8KB7xLUnfmmxnzordCMV7iJYsfl6c8L+40upFLECFG
+	 Zu3w/U6qMT/XmUFA4vp9YJo8yVm/+jIvcME8Gzz8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728390AbgHJPXw (ORCPT
+        id S1728399AbgHJPX7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:23:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56058 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:23:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728093AbgHJPXv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:23:51 -0400
+        id S1728392AbgHJPXy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:23:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A89421775;
-        Mon, 10 Aug 2020 15:23:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BCD8020782;
+        Mon, 10 Aug 2020 15:23:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073031;
-        bh=5j1N6fY856atSdd1yo4YTw/tK7vOcoJ8AervVVeA2Bk=;
+        s=default; t=1597073034;
+        bh=YPDX0crp7GERTlrl95GtvjvBnhsR8R4/6rjI44AeOc0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RUqHfiMvkM+bTlc2yup97m6cpzChri0pXVqLJNguWGcQhgGJIRoSG8hLkCJn7fFnL
-         LtsBenOTr/mU1gPVrCmXHd7pTq6PoKRG1Jaok+THRoMka1MQYwU3cGV3iX3oBz8sBq
-         Cw6bQt1tfKwiTEXuzAXELZDTOXoHF0F/e9APQ2XQ=
+        b=WgF4qe7ZetUpdcCbeISChIHyzaWi2EcWPbBUtLCwY7qSXNHqE2RRFDomjOGCYbEcl
+         hZ/LQlPce91Us8SR/T30Bvvtm2ogPo1pisE+5ORnzpy9ZIT6e7sy6n/vSXEDkvzrHZ
+         C6P3dG3/mLJLKs86x0kQ1HzzTjc53uoLsrvwUphI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Erik Ekman <erik@kryo.se>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.7 02/79] USB: serial: qcserial: add EM7305 QDL product ID
-Date:   Mon, 10 Aug 2020 17:20:21 +0200
-Message-Id: <20200810151812.244759405@linuxfoundation.org>
+        stable@vger.kernel.org, Pavel Begunkov <asml.silence@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 36/79] io_uring: fix lockup in io_fail_links()
+Date:   Mon, 10 Aug 2020 17:20:55 +0200
+Message-Id: <20200810151814.064738321@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151812.114485777@linuxfoundation.org>
 References: <20200810151812.114485777@linuxfoundation.org>
@@ -59,44 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Erik Ekman <erik@kryo.se>
+From: Pavel Begunkov <asml.silence@gmail.com>
 
-commit d2a4309c1ab6df424b2239fe2920d6f26f808d17 upstream.
+[ Upstream commit 4ae6dbd683860b9edc254ea8acf5e04b5ae242e5 ]
 
-When running qmi-firmware-update on the Sierra Wireless EM7305 in a Toshiba
-laptop, it changed product ID to 0x9062 when entering QDL mode:
+io_fail_links() doesn't consider REQ_F_COMP_LOCKED leading to nested
+spin_lock(completion_lock) and lockup.
 
-usb 2-4: new high-speed USB device number 78 using xhci_hcd
-usb 2-4: New USB device found, idVendor=1199, idProduct=9062, bcdDevice= 0.00
-usb 2-4: New USB device strings: Mfr=1, Product=2, SerialNumber=0
-usb 2-4: Product: EM7305
-usb 2-4: Manufacturer: Sierra Wireless, Incorporated
+[  197.680409] rcu: INFO: rcu_preempt detected expedited stalls on
+	CPUs/tasks: { 6-... } 18239 jiffies s: 1421 root: 0x40/.
+[  197.680411] rcu: blocking rcu_node structures:
+[  197.680412] Task dump for CPU 6:
+[  197.680413] link-timeout    R  running task        0  1669
+	1 0x8000008a
+[  197.680414] Call Trace:
+[  197.680420]  ? io_req_find_next+0xa0/0x200
+[  197.680422]  ? io_put_req_find_next+0x2a/0x50
+[  197.680423]  ? io_poll_task_func+0xcf/0x140
+[  197.680425]  ? task_work_run+0x67/0xa0
+[  197.680426]  ? do_exit+0x35d/0xb70
+[  197.680429]  ? syscall_trace_enter+0x187/0x2c0
+[  197.680430]  ? do_group_exit+0x43/0xa0
+[  197.680448]  ? __x64_sys_exit_group+0x18/0x20
+[  197.680450]  ? do_syscall_64+0x52/0xa0
+[  197.680452]  ? entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-The upgrade could complete after running
- # echo 1199 9062 > /sys/bus/usb-serial/drivers/qcserial/new_id
-
-qcserial 2-4:1.0: Qualcomm USB modem converter detected
-usb 2-4: Qualcomm USB modem converter now attached to ttyUSB0
-
-Signed-off-by: Erik Ekman <erik@kryo.se>
-Link: https://lore.kernel.org/r/20200717185118.3640219-1-erik@kryo.se
-Cc: stable@vger.kernel.org
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/serial/qcserial.c |    1 +
- 1 file changed, 1 insertion(+)
+ fs/io_uring.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/drivers/usb/serial/qcserial.c
-+++ b/drivers/usb/serial/qcserial.c
-@@ -155,6 +155,7 @@ static const struct usb_device_id id_tab
- 	{DEVICE_SWI(0x1199, 0x9056)},	/* Sierra Wireless Modem */
- 	{DEVICE_SWI(0x1199, 0x9060)},	/* Sierra Wireless Modem */
- 	{DEVICE_SWI(0x1199, 0x9061)},	/* Sierra Wireless Modem */
-+	{DEVICE_SWI(0x1199, 0x9062)},	/* Sierra Wireless EM7305 QDL */
- 	{DEVICE_SWI(0x1199, 0x9063)},	/* Sierra Wireless EM7305 */
- 	{DEVICE_SWI(0x1199, 0x9070)},	/* Sierra Wireless MC74xx */
- 	{DEVICE_SWI(0x1199, 0x9071)},	/* Sierra Wireless MC74xx */
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 4e09af1d5d223..fb9dc865c9eaa 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -4260,10 +4260,9 @@ static void io_poll_task_handler(struct io_kiocb *req, struct io_kiocb **nxt)
+ 
+ 	hash_del(&req->hash_node);
+ 	io_poll_complete(req, req->result, 0);
+-	req->flags |= REQ_F_COMP_LOCKED;
+-	io_put_req_find_next(req, nxt);
+ 	spin_unlock_irq(&ctx->completion_lock);
+ 
++	io_put_req_find_next(req, nxt);
+ 	io_cqring_ev_posted(ctx);
+ }
+ 
+-- 
+2.25.1
+
 
 
