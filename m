@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A160C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:12:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FEA3C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:12:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48F3B207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:12:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C0E62224D
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:12:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597086741;
-	bh=F4dYMtwK5w3J8NhmlmET/YjqVLzljBMDVXmN+hu/rYk=;
+	s=default; t=1597086745;
+	bh=uVMG5b5otyl6qwqwsN/Tcmg2xmutUScQrHiyk0Y2vHk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0On0Qvxr+UH1t0q6lh1zMp5Bqo+TGzPmgdUAucK6wUtzqly7LQ96xRv3Ze/toKZeq
-	 hRGpLrnJWkH/37NrTwtBnc2DAoi4gh4tLxIiR10AAcw1BTzKf/nPmR4P+lK3S7vlaa
-	 vls20zH88qSvA/9UnazHnaIYYo5BqP5F7/tbbWI8=
+	b=cQUJU+Z0SxKSWGughiPHrEIlONLb8X6vj2oWbiV2WGlkwIoByoUk2OPyx80f1BY1q
+	 pcNc6RKP2O2VkcktLz0OMoLcyhGPPqmvhYTo8AXSkbmsJ8FxnUGaVEpZuswoYwNvz2
+	 52amigW3zD/R8vkCDXZGZ6f3L7hIGykkPYKDb2Vs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729507AbgHJTMT (ORCPT
+        id S1729524AbgHJTMY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:12:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41248 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:12:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728583AbgHJTMH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:12:07 -0400
+        id S1729504AbgHJTMU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:12:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE95F21775;
-        Mon, 10 Aug 2020 19:12:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AE6622B47;
+        Mon, 10 Aug 2020 19:12:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086726;
-        bh=F4dYMtwK5w3J8NhmlmET/YjqVLzljBMDVXmN+hu/rYk=;
+        s=default; t=1597086739;
+        bh=uVMG5b5otyl6qwqwsN/Tcmg2xmutUScQrHiyk0Y2vHk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NDhNfW7b/n8Xu2KDWWINB6bbIThSRqrklYCD13IlRUmRrwJG4Vi6FtQhWylE/wcey
-         WpJMWV1ot+DtyaDEkqBOyJtg3azPLAjzVll/eM4kq6V9hQivAg4O+oWYiYLbUhWKYe
-         u9G0JUPY2AiiftMYZV05JYmgMVY9t8+WmJmjkd3s=
+        b=PdRKzrVPAatgcsHctTrajTFqHV6SqpIJHkOxekckkify3rr6LKtkeWRptPM2TCMES
+         FTkAbpO71SiIyxnFrGmvvnM2D3os3eTlWrbSd6JtBltQwoQd0sJ8Ac3ovygfBuSkTE
+         GkZN6hdt9lQWEm+A/AY+PC04OznwofRc7RFcOxjc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Evgeny Novikov <novikov@ispras.ru>,
-        Antonino Daplas <adaplas@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sasha Levin <sashal@kernel.org>, linux-fbdev@vger.kernel.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 09/45] video: fbdev: savage: fix memory leak on error handling path in probe
-Date:   Mon, 10 Aug 2020 15:11:17 -0400
-Message-Id: <20200810191153.3794446-9-sashal@kernel.org>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 18/45] mmc: sdhci-cadence: do not use hardware tuning for SD mode
+Date:   Mon, 10 Aug 2020 15:11:26 -0400
+Message-Id: <20200810191153.3794446-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810191153.3794446-1-sashal@kernel.org>
 References: <20200810191153.3794446-1-sashal@kernel.org>
@@ -61,42 +59,193 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evgeny Novikov <novikov@ispras.ru>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-[ Upstream commit e8d35898a78e34fc854ed9680bc3f9caedab08cd ]
+[ Upstream commit adc40a5179df30421a5537bfeb4545100ab97d5e ]
 
-savagefb_probe() calls savage_init_fb_info() that can successfully
-allocate memory for info->pixmap.addr but then fail when
-fb_alloc_cmap() fails. savagefb_probe() goes to label failed_init and
-does not free allocated memory. It is not valid to go to label
-failed_mmio since savage_init_fb_info() can fail during memory
-allocation as well. So, the patch free allocated memory on the error
-handling path in savage_init_fb_info() itself.
+As commit ef6b75671b5f ("mmc: sdhci-cadence: send tune request twice to
+work around errata") stated, this IP has an errata. This commit applies
+the second workaround for the SD mode.
 
-Found by Linux Driver Verification project (linuxtesting.org).
+Due to the errata, it is not possible to use the hardware tuning provided
+by SDHCI_HOST_CONTROL2.
 
-Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
-Cc: Antonino Daplas <adaplas@gmail.com>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200619162136.9010-1-novikov@ispras.ru
+Use the software-controlled tuning like the eMMC mode.
+
+Set sdhci_host_ops::platform_execute_tuning instead of overriding
+mmc_host_ops::execute_tuning.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Link: https://lore.kernel.org/r/20200720061141.172944-1-yamada.masahiro@socionext.com
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/savage/savagefb_driver.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/mmc/host/sdhci-cadence.c | 123 ++++++++++++++++---------------
+ 1 file changed, 62 insertions(+), 61 deletions(-)
 
-diff --git a/drivers/video/fbdev/savage/savagefb_driver.c b/drivers/video/fbdev/savage/savagefb_driver.c
-index 512789f5f8848..d5d22d9c0f562 100644
---- a/drivers/video/fbdev/savage/savagefb_driver.c
-+++ b/drivers/video/fbdev/savage/savagefb_driver.c
-@@ -2158,6 +2158,8 @@ static int savage_init_fb_info(struct fb_info *info, struct pci_dev *dev,
- 			info->flags |= FBINFO_HWACCEL_COPYAREA |
- 				       FBINFO_HWACCEL_FILLRECT |
- 				       FBINFO_HWACCEL_IMAGEBLIT;
+diff --git a/drivers/mmc/host/sdhci-cadence.c b/drivers/mmc/host/sdhci-cadence.c
+index 5f2e9696ee4de..0c2489446bd73 100644
+--- a/drivers/mmc/host/sdhci-cadence.c
++++ b/drivers/mmc/host/sdhci-cadence.c
+@@ -194,57 +194,6 @@ static u32 sdhci_cdns_get_emmc_mode(struct sdhci_cdns_priv *priv)
+ 	return FIELD_GET(SDHCI_CDNS_HRS06_MODE, tmp);
+ }
+ 
+-static void sdhci_cdns_set_uhs_signaling(struct sdhci_host *host,
+-					 unsigned int timing)
+-{
+-	struct sdhci_cdns_priv *priv = sdhci_cdns_priv(host);
+-	u32 mode;
+-
+-	switch (timing) {
+-	case MMC_TIMING_MMC_HS:
+-		mode = SDHCI_CDNS_HRS06_MODE_MMC_SDR;
+-		break;
+-	case MMC_TIMING_MMC_DDR52:
+-		mode = SDHCI_CDNS_HRS06_MODE_MMC_DDR;
+-		break;
+-	case MMC_TIMING_MMC_HS200:
+-		mode = SDHCI_CDNS_HRS06_MODE_MMC_HS200;
+-		break;
+-	case MMC_TIMING_MMC_HS400:
+-		if (priv->enhanced_strobe)
+-			mode = SDHCI_CDNS_HRS06_MODE_MMC_HS400ES;
+-		else
+-			mode = SDHCI_CDNS_HRS06_MODE_MMC_HS400;
+-		break;
+-	default:
+-		mode = SDHCI_CDNS_HRS06_MODE_SD;
+-		break;
+-	}
+-
+-	sdhci_cdns_set_emmc_mode(priv, mode);
+-
+-	/* For SD, fall back to the default handler */
+-	if (mode == SDHCI_CDNS_HRS06_MODE_SD)
+-		sdhci_set_uhs_signaling(host, timing);
+-}
+-
+-static const struct sdhci_ops sdhci_cdns_ops = {
+-	.set_clock = sdhci_set_clock,
+-	.get_timeout_clock = sdhci_cdns_get_timeout_clock,
+-	.set_bus_width = sdhci_set_bus_width,
+-	.reset = sdhci_reset,
+-	.set_uhs_signaling = sdhci_cdns_set_uhs_signaling,
+-};
+-
+-static const struct sdhci_pltfm_data sdhci_cdns_uniphier_pltfm_data = {
+-	.ops = &sdhci_cdns_ops,
+-	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
+-};
+-
+-static const struct sdhci_pltfm_data sdhci_cdns_pltfm_data = {
+-	.ops = &sdhci_cdns_ops,
+-};
+-
+ static int sdhci_cdns_set_tune_val(struct sdhci_host *host, unsigned int val)
+ {
+ 	struct sdhci_cdns_priv *priv = sdhci_cdns_priv(host);
+@@ -278,23 +227,24 @@ static int sdhci_cdns_set_tune_val(struct sdhci_host *host, unsigned int val)
+ 	return 0;
+ }
+ 
+-static int sdhci_cdns_execute_tuning(struct mmc_host *mmc, u32 opcode)
++/*
++ * In SD mode, software must not use the hardware tuning and instead perform
++ * an almost identical procedure to eMMC.
++ */
++static int sdhci_cdns_execute_tuning(struct sdhci_host *host, u32 opcode)
+ {
+-	struct sdhci_host *host = mmc_priv(mmc);
+ 	int cur_streak = 0;
+ 	int max_streak = 0;
+ 	int end_of_streak = 0;
+ 	int i;
+ 
+ 	/*
+-	 * This handler only implements the eMMC tuning that is specific to
+-	 * this controller.  Fall back to the standard method for SD timing.
++	 * Do not execute tuning for UHS_SDR50 or UHS_DDR50.
++	 * The delay is set by probe, based on the DT properties.
+ 	 */
+-	if (host->timing != MMC_TIMING_MMC_HS200)
+-		return sdhci_execute_tuning(mmc, opcode);
+-
+-	if (WARN_ON(opcode != MMC_SEND_TUNING_BLOCK_HS200))
+-		return -EINVAL;
++	if (host->timing != MMC_TIMING_MMC_HS200 &&
++	    host->timing != MMC_TIMING_UHS_SDR104)
++		return 0;
+ 
+ 	for (i = 0; i < SDHCI_CDNS_MAX_TUNING_LOOP; i++) {
+ 		if (sdhci_cdns_set_tune_val(host, i) ||
+@@ -317,6 +267,58 @@ static int sdhci_cdns_execute_tuning(struct mmc_host *mmc, u32 opcode)
+ 	return sdhci_cdns_set_tune_val(host, end_of_streak - max_streak / 2);
+ }
+ 
++static void sdhci_cdns_set_uhs_signaling(struct sdhci_host *host,
++					 unsigned int timing)
++{
++	struct sdhci_cdns_priv *priv = sdhci_cdns_priv(host);
++	u32 mode;
++
++	switch (timing) {
++	case MMC_TIMING_MMC_HS:
++		mode = SDHCI_CDNS_HRS06_MODE_MMC_SDR;
++		break;
++	case MMC_TIMING_MMC_DDR52:
++		mode = SDHCI_CDNS_HRS06_MODE_MMC_DDR;
++		break;
++	case MMC_TIMING_MMC_HS200:
++		mode = SDHCI_CDNS_HRS06_MODE_MMC_HS200;
++		break;
++	case MMC_TIMING_MMC_HS400:
++		if (priv->enhanced_strobe)
++			mode = SDHCI_CDNS_HRS06_MODE_MMC_HS400ES;
 +		else
-+			kfree(info->pixmap.addr);
- 	}
- #endif
- 	return err;
++			mode = SDHCI_CDNS_HRS06_MODE_MMC_HS400;
++		break;
++	default:
++		mode = SDHCI_CDNS_HRS06_MODE_SD;
++		break;
++	}
++
++	sdhci_cdns_set_emmc_mode(priv, mode);
++
++	/* For SD, fall back to the default handler */
++	if (mode == SDHCI_CDNS_HRS06_MODE_SD)
++		sdhci_set_uhs_signaling(host, timing);
++}
++
++static const struct sdhci_ops sdhci_cdns_ops = {
++	.set_clock = sdhci_set_clock,
++	.get_timeout_clock = sdhci_cdns_get_timeout_clock,
++	.set_bus_width = sdhci_set_bus_width,
++	.reset = sdhci_reset,
++	.platform_execute_tuning = sdhci_cdns_execute_tuning,
++	.set_uhs_signaling = sdhci_cdns_set_uhs_signaling,
++};
++
++static const struct sdhci_pltfm_data sdhci_cdns_uniphier_pltfm_data = {
++	.ops = &sdhci_cdns_ops,
++	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
++};
++
++static const struct sdhci_pltfm_data sdhci_cdns_pltfm_data = {
++	.ops = &sdhci_cdns_ops,
++};
++
+ static void sdhci_cdns_hs400_enhanced_strobe(struct mmc_host *mmc,
+ 					     struct mmc_ios *ios)
+ {
+@@ -377,7 +379,6 @@ static int sdhci_cdns_probe(struct platform_device *pdev)
+ 	priv->hrs_addr = host->ioaddr;
+ 	priv->enhanced_strobe = false;
+ 	host->ioaddr += SDHCI_CDNS_SRS_BASE;
+-	host->mmc_host_ops.execute_tuning = sdhci_cdns_execute_tuning;
+ 	host->mmc_host_ops.hs400_enhanced_strobe =
+ 				sdhci_cdns_hs400_enhanced_strobe;
+ 	sdhci_enable_v4_mode(host);
 -- 
 2.25.1
 
