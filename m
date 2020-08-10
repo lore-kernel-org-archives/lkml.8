@@ -2,75 +2,98 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,FORGED_MUA_MOZILLA,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AA69C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E6CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:06:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D0B820829
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:06:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1411720678
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:06:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ioJX7Gtn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbgHJOGS (ORCPT
+        id S1727045AbgHJOGW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 10:06:18 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:33154 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726888AbgHJOGS (ORCPT
+        Mon, 10 Aug 2020 10:06:22 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:52318 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727028AbgHJOGU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 10:06:18 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1k58RL-0006k2-Lv; Mon, 10 Aug 2020 14:06:15 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] of/address: check for invalid range.cpu_addr
-Date:   Mon, 10 Aug 2020 15:06:15 +0100
-Message-Id: <20200810140615.6113-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.27.0
+        Mon, 10 Aug 2020 10:06:20 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07AE2CWx118516;
+        Mon, 10 Aug 2020 10:06:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : date : mime-version : in-reply-to : content-type :
+ content-transfer-encoding : message-id; s=pp1;
+ bh=cGyomKEAmw2m1EZIHGC0ZQNOLNl4kskrn5JxSv/w0ro=;
+ b=ioJX7GtnhRQ06f2A9OeA7f6ubv5XL7Rzen73O2RoECMWzIYkEGX4SKJJrDN/IpB4Z+aJ
+ s5s/of6i1SsfrBANf7q3bgidE515oBjSdzCtta5uEmkT/chFF96jNGHlYm+ieb7163Uh
+ yyaa/3n95yv0TP+TobJZyrhk/XoyTpjU1GKNRPyW6aKNNg/1oMq7QcmEPj7Ovhup8mIP
+ B3aehgxgM9TAiaNyC5CQ53od7NlhvLgGCVP6YCCtJ/cdFEmGVkqQ0Xa3nD6oC9VQFE5s
+ J+WKjXCgrEoFNHXQNkKmVeQUwuAtKVhUtx5yKH8YSietkdd0209LI4yIAANBpjyaQY3X zA== 
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32sravntea-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 10 Aug 2020 10:06:12 -0400
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07AE6ARU003648;
+        Mon, 10 Aug 2020 14:06:10 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma05fra.de.ibm.com with ESMTP id 32skp81edx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 10 Aug 2020 14:06:10 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07AE68PR23134718
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 10 Aug 2020 14:06:08 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1CCE6A4053;
+        Mon, 10 Aug 2020 14:06:08 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 34423A4059;
+        Mon, 10 Aug 2020 14:06:07 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.199.33.217])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 10 Aug 2020 14:06:07 +0000 (GMT)
+Subject: Re: [PATCH] mballoc: Replace seq_printf with seq_puts
+To:     Xu Wang <vulab@iscas.ac.cn>, tytso@mit.edu,
+        adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+References: <20200810022158.9167-1-vulab@iscas.ac.cn>
+From:   Ritesh Harjani <riteshh@linux.ibm.com>
+Date:   Mon, 10 Aug 2020 19:36:06 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200810022158.9167-1-vulab@iscas.ac.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Message-Id: <20200810140607.34423A4059@d06av23.portsmouth.uk.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-10_09:2020-08-06,2020-08-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=18 adultscore=0
+ malwarescore=0 mlxscore=0 priorityscore=1501 impostorscore=0 spamscore=0
+ bulkscore=0 phishscore=0 mlxlogscore=886 clxscore=1011 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008100101
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
 
-Currently invalid CPU addresses are not being sanity checked resulting in
-SATA setup failure on a SynQuacer SC2A11 development machine. The original
-check was removed by and earlier commit, so add a sanity check back in
-to avoid this regression.
 
-Fixes: 7a8b64d17e35 ("of/address: use range parser for of_dma_get_range")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/of/address.c | 5 +++++
- 1 file changed, 5 insertions(+)
+On 8/10/20 7:51 AM, Xu Wang wrote:
+> seq_puts is a lot cheaper than seq_printf, so use that to print
+> literal strings.
+> 
+> Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
 
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index 590493e04b01..764c8b94ec35 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -985,6 +985,11 @@ int of_dma_get_range(struct device_node *np, u64 *dma_addr, u64 *paddr, u64 *siz
- 			/* Don't error out as we'd break some existing DTs */
- 			continue;
- 		}
-+		if (range.cpu_addr == OF_BAD_ADDR) {
-+			pr_warn("Translation of DMA address (%llx) to CPU address failed on node (%pOF)\n",
-+				range.cpu_addr, node);
-+			continue;
-+		}
- 		dma_offset = range.cpu_addr - range.bus_addr;
- 
- 		/* Take lower and upper limits */
--- 
-2.25.1
-
+Looks good to me.
+Reviewed-by: Ritesh Harjani <riteshh@linux.ibm.com>
