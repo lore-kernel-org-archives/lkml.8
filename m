@@ -2,53 +2,53 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5442C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:31:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11F0CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:31:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D1B72087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:31:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCE1B20866
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:31:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073508;
-	bh=VmtNeDwcA6stexLMf4wzZ7iMfns6+tPogp0ojJ3LmcA=;
+	s=default; t=1597073513;
+	bh=ZyWuUtROHZf3ZDH6q3M+Ty6NXtyMPtEnfvtiWpfN87I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e7SYQv6yyDy8QfPWlGJ+dn3Xn8xUUuR0JBOcG+Z4fJ/H5l8z7rrKPqX9EmsPVly0G
-	 EC6lfRFX9WGQ7gnasdmpmyCH6qyui9SFF+c3K6LX+97tpb0e3GPiE23Wzzxu8fiJSS
-	 w5Dq8OjZzTbEaMxt7tM4auOpE1ZGBFBt546+/l5s=
+	b=aKxsit90wZj38BNgLV7pqJ1s5pbUNIqebqDy+8zxm1fFV/gpUz9lQ0qDFXnMJ3a/q
+	 5dieQ+65ZcBBiHCaGL4Gc/jFkz4hDu/h+AUGjcHF9I+XFbOc2CyrbwFlXHctgNTnli
+	 n0SdYXrmPb7gxtU217SJzDHSUjriODHW7xZIwtr0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728732AbgHJPbq (ORCPT
+        id S1729188AbgHJPbR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:31:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38790 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:31:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729205AbgHJPb1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:31:27 -0400
+        id S1729177AbgHJPbO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:31:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69F45207FF;
-        Mon, 10 Aug 2020 15:31:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D03FD20791;
+        Mon, 10 Aug 2020 15:31:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073486;
-        bh=VmtNeDwcA6stexLMf4wzZ7iMfns6+tPogp0ojJ3LmcA=;
+        s=default; t=1597073474;
+        bh=ZyWuUtROHZf3ZDH6q3M+Ty6NXtyMPtEnfvtiWpfN87I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VSUvT82kNAh1gs+D1ExWItsuMtv7AOHGMxQojqJshRUqTzM4KdBtf59IAKTSHHPI1
-         xsiJp6QmsW28Zhusf0tpUnn6p1h+EPKSCs6rTlFIG/HPZ0SDbGDWjnYnTva1X0LEZY
-         Z/BRiKWYrF22F5xabr4ziaR+ptfWuVHPIaMJL24I=
+        b=KNKFJG3pUHYmk1wMODJwco4cyFnb/99Zb9vf7VuzV5F7bSZQ+EPB/hpAVsTlM4lu2
+         QJxQJqgbXkTur1a5wwfRROCpdAwhVMY9nyugFOslWHs4+v4lvpXdtBTODamXqFeedN
+         lbGUUHiZYoYCANebxaSkxyQ6t28Kl5EoA0brWLe8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH 4.19 31/48] xattr: break delegations in {set,remove}xattr
-Date:   Mon, 10 Aug 2020 17:21:53 +0200
-Message-Id: <20200810151805.747153401@linuxfoundation.org>
+        stable@vger.kernel.org, Francesco Ruggeri <fruggeri@arista.com>,
+        Aaron Brown <aaron.f.brown@intel.com>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 27/48] igb: reinit_locked() should be called with rtnl_lock
+Date:   Mon, 10 Aug 2020 17:21:49 +0200
+Message-Id: <20200810151805.549199604@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151804.199494191@linuxfoundation.org>
 References: <20200810151804.199494191@linuxfoundation.org>
@@ -61,181 +61,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frank van der Linden <fllinden@amazon.com>
+From: Francesco Ruggeri <fruggeri@arista.com>
 
-commit 08b5d5014a27e717826999ad20e394a8811aae92 upstream.
+[ Upstream commit 024a8168b749db7a4aa40a5fbdfa04bf7e77c1c0 ]
 
-set/removexattr on an exported filesystem should break NFS delegations.
-This is true in general, but also for the upcoming support for
-RFC 8726 (NFSv4 extended attribute support). Make sure that they do.
+We observed two panics involving races with igb_reset_task.
+The first panic is caused by this race condition:
 
-Additionally, they need to grow a _locked variant, since callers might
-call this with i_rwsem held (like the NFS server code).
+	kworker			reboot -f
 
-Cc: stable@vger.kernel.org # v4.9+
-Cc: linux-fsdevel@vger.kernel.org
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Frank van der Linden <fllinden@amazon.com>
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+	igb_reset_task
+	igb_reinit_locked
+	igb_down
+	napi_synchronize
+				__igb_shutdown
+				igb_clear_interrupt_scheme
+				igb_free_q_vectors
+				igb_free_q_vector
+				adapter->q_vector[v_idx] = NULL;
+	napi_disable
+	Panics trying to access
+	adapter->q_vector[v_idx].napi_state
 
+The second panic (a divide error) is caused by this race:
+
+kworker		reboot -f	tx packet
+
+igb_reset_task
+		__igb_shutdown
+		rtnl_lock()
+		...
+		igb_clear_interrupt_scheme
+		igb_free_q_vectors
+		adapter->num_tx_queues = 0
+		...
+		rtnl_unlock()
+rtnl_lock()
+igb_reinit_locked
+igb_down
+igb_up
+netif_tx_start_all_queues
+				dev_hard_start_xmit
+				igb_xmit_frame
+				igb_tx_queue_mapping
+				Panics on
+				r_idx % adapter->num_tx_queues
+
+This commit applies to igb_reset_task the same changes that
+were applied to ixgbe in commit 2f90b8657ec9 ("ixgbe: this patch
+adds support for DCB to the kernel and ixgbe driver"),
+commit 8f4c5c9fb87a ("ixgbe: reinit_locked() should be called with
+rtnl_lock") and commit 88adce4ea8f9 ("ixgbe: fix possible race in
+reset subtask").
+
+Signed-off-by: Francesco Ruggeri <fruggeri@arista.com>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xattr.c            |   84 +++++++++++++++++++++++++++++++++++++++++++++-----
- include/linux/xattr.h |    2 +
- 2 files changed, 79 insertions(+), 7 deletions(-)
+ drivers/net/ethernet/intel/igb/igb_main.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
---- a/fs/xattr.c
-+++ b/fs/xattr.c
-@@ -203,10 +203,22 @@ int __vfs_setxattr_noperm(struct dentry
- 	return error;
- }
+diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
+index 36db874f3c928..d85eb80d82497 100644
+--- a/drivers/net/ethernet/intel/igb/igb_main.c
++++ b/drivers/net/ethernet/intel/igb/igb_main.c
+@@ -6226,9 +6226,18 @@ static void igb_reset_task(struct work_struct *work)
+ 	struct igb_adapter *adapter;
+ 	adapter = container_of(work, struct igb_adapter, reset_task);
  
--
-+/**
-+ * __vfs_setxattr_locked: set an extended attribute while holding the inode
-+ * lock
-+ *
-+ *  @dentry - object to perform setxattr on
-+ *  @name - xattr name to set
-+ *  @value - value to set @name to
-+ *  @size - size of @value
-+ *  @flags - flags to pass into filesystem operations
-+ *  @delegated_inode - on return, will contain an inode pointer that
-+ *  a delegation was broken on, NULL if none.
-+ */
- int
--vfs_setxattr(struct dentry *dentry, const char *name, const void *value,
--		size_t size, int flags)
-+__vfs_setxattr_locked(struct dentry *dentry, const char *name,
-+		const void *value, size_t size, int flags,
-+		struct inode **delegated_inode)
- {
- 	struct inode *inode = dentry->d_inode;
- 	int error;
-@@ -215,15 +227,40 @@ vfs_setxattr(struct dentry *dentry, cons
- 	if (error)
- 		return error;
- 
--	inode_lock(inode);
- 	error = security_inode_setxattr(dentry, name, value, size, flags);
- 	if (error)
- 		goto out;
- 
-+	error = try_break_deleg(inode, delegated_inode);
-+	if (error)
-+		goto out;
-+
- 	error = __vfs_setxattr_noperm(dentry, name, value, size, flags);
- 
- out:
-+	return error;
-+}
-+EXPORT_SYMBOL_GPL(__vfs_setxattr_locked);
-+
-+int
-+vfs_setxattr(struct dentry *dentry, const char *name, const void *value,
-+		size_t size, int flags)
-+{
-+	struct inode *inode = dentry->d_inode;
-+	struct inode *delegated_inode = NULL;
-+	int error;
-+
-+retry_deleg:
-+	inode_lock(inode);
-+	error = __vfs_setxattr_locked(dentry, name, value, size, flags,
-+	    &delegated_inode);
- 	inode_unlock(inode);
-+
-+	if (delegated_inode) {
-+		error = break_deleg_wait(&delegated_inode);
-+		if (!error)
-+			goto retry_deleg;
-+	}
- 	return error;
- }
- EXPORT_SYMBOL_GPL(vfs_setxattr);
-@@ -377,8 +414,18 @@ __vfs_removexattr(struct dentry *dentry,
- }
- EXPORT_SYMBOL(__vfs_removexattr);
- 
-+/**
-+ * __vfs_removexattr_locked: set an extended attribute while holding the inode
-+ * lock
-+ *
-+ *  @dentry - object to perform setxattr on
-+ *  @name - name of xattr to remove
-+ *  @delegated_inode - on return, will contain an inode pointer that
-+ *  a delegation was broken on, NULL if none.
-+ */
- int
--vfs_removexattr(struct dentry *dentry, const char *name)
-+__vfs_removexattr_locked(struct dentry *dentry, const char *name,
-+		struct inode **delegated_inode)
- {
- 	struct inode *inode = dentry->d_inode;
- 	int error;
-@@ -387,11 +434,14 @@ vfs_removexattr(struct dentry *dentry, c
- 	if (error)
- 		return error;
- 
--	inode_lock(inode);
- 	error = security_inode_removexattr(dentry, name);
- 	if (error)
- 		goto out;
- 
-+	error = try_break_deleg(inode, delegated_inode);
-+	if (error)
-+		goto out;
-+
- 	error = __vfs_removexattr(dentry, name);
- 
- 	if (!error) {
-@@ -400,12 +450,32 @@ vfs_removexattr(struct dentry *dentry, c
- 	}
- 
- out:
-+	return error;
-+}
-+EXPORT_SYMBOL_GPL(__vfs_removexattr_locked);
-+
-+int
-+vfs_removexattr(struct dentry *dentry, const char *name)
-+{
-+	struct inode *inode = dentry->d_inode;
-+	struct inode *delegated_inode = NULL;
-+	int error;
-+
-+retry_deleg:
-+	inode_lock(inode);
-+	error = __vfs_removexattr_locked(dentry, name, &delegated_inode);
- 	inode_unlock(inode);
-+
-+	if (delegated_inode) {
-+		error = break_deleg_wait(&delegated_inode);
-+		if (!error)
-+			goto retry_deleg;
++	rtnl_lock();
++	/* If we're already down or resetting, just bail */
++	if (test_bit(__IGB_DOWN, &adapter->state) ||
++	    test_bit(__IGB_RESETTING, &adapter->state)) {
++		rtnl_unlock();
++		return;
 +	}
 +
- 	return error;
+ 	igb_dump(adapter);
+ 	netdev_err(adapter->netdev, "Reset adapter\n");
+ 	igb_reinit_locked(adapter);
++	rtnl_unlock();
  }
- EXPORT_SYMBOL_GPL(vfs_removexattr);
  
--
- /*
-  * Extended attribute SET operations
-  */
---- a/include/linux/xattr.h
-+++ b/include/linux/xattr.h
-@@ -51,8 +51,10 @@ ssize_t vfs_getxattr(struct dentry *, co
- ssize_t vfs_listxattr(struct dentry *d, char *list, size_t size);
- int __vfs_setxattr(struct dentry *, struct inode *, const char *, const void *, size_t, int);
- int __vfs_setxattr_noperm(struct dentry *, const char *, const void *, size_t, int);
-+int __vfs_setxattr_locked(struct dentry *, const char *, const void *, size_t, int, struct inode **);
- int vfs_setxattr(struct dentry *, const char *, const void *, size_t, int);
- int __vfs_removexattr(struct dentry *, const char *);
-+int __vfs_removexattr_locked(struct dentry *, const char *, struct inode **);
- int vfs_removexattr(struct dentry *, const char *);
- 
- ssize_t generic_listxattr(struct dentry *dentry, char *buffer, size_t buffer_size);
+ /**
+-- 
+2.25.1
+
 
 
