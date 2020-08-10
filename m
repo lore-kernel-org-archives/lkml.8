@@ -2,273 +2,196 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A57C4C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:34:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F700C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:37:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 708962073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:34:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFB3620774
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:37:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="JIiP9egp"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Krf1qfJ9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726677AbgHJHeT (ORCPT
+        id S1726368AbgHJHhJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 03:34:19 -0400
-Received: from mail-bn8nam12on2068.outbound.protection.outlook.com ([40.107.237.68]:58465
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725857AbgHJHeT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 03:34:19 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oJMjZZQ7j18Db7Ad9OM6A1JYz0Xm+ZWbQZzcVGkCsl7HL03Tj2SG5/pFKZlbkbIdmn0ts1FjMErjHTSjZvbvnuh2BiWamZ7Jz/GBipJWU/haB8cLB/yt8BkoMUdzEJUTKtmPsL4Yy7wWh2+xqPjc6spFsNRyPxnJhIyQcllyq7fzaAYck9jwjhq3ZWytn+4Ux3wvHHi7GyYZleGt/Zla1Ad3Y4cN8hLd2CRsTkAu2cBqHjkbwebiSCUvrOETz4n76qidPKXYvrTnDLvfOUTgdlRXfZz7LaToO6mQlZp6kywM2WxJHAtiYhUlsNuEYG4mW4N5BE9rrOlxhoV67WImbA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rOFHOyDq+7MDCJdGvbNvtVYuGDUS/IBPOKJaBsLMBmk=;
- b=Hn8gWQhK2hm9aQIa08CR2wT7449tsON23SOdLyRlY4/AoGuFJHWko6lKqKLhfWkMkM/4iJEba05wTvQzm5pVVfMYXuR7v3d7fQzIHDJsziOTSaHiAL79PYci34ht5v8vVtVPiiRrTaDfc6x9TVrUahvD0NYix2zTtxfLiWkWxQQQoNs6yDQ5tu0rch9rGTXTzf8CT7gWOVb3G6gK+y081vF3wzhqTNNaNZ/ZyGm/VS6e+yujlgLNT6JcC2jqggCasAch75/pBeDg7E2fOUwxSS+Tp/7JMkbBTg6jEINHhBewikz8s+YdS32/Ecmuc8ndG1d9FLMif0A6WFkiCVbz2w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
- dkim=pass header.d=silabs.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rOFHOyDq+7MDCJdGvbNvtVYuGDUS/IBPOKJaBsLMBmk=;
- b=JIiP9egpawAos4M4iUBYC1u09SN3NXWPXEF28pJbsLTgZtSosZM4BFnJ9tMceJO3/8yj9TMELVzKadMlgabhm7C52kcflwB24EhBlh5PsbUdS8JMPVenKgwgEyctJU4MFKZc7GQR6Zz6IA623OE93YYgR+pIs8hLQ6XRdsoZh+w=
-Authentication-Results: linuxfoundation.org; dkim=none (message not signed)
- header.d=none;linuxfoundation.org; dmarc=none action=none
- header.from=silabs.com;
-Received: from SN6PR11MB2718.namprd11.prod.outlook.com (2603:10b6:805:63::18)
- by SA0PR11MB4592.namprd11.prod.outlook.com (2603:10b6:806:98::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.19; Mon, 10 Aug
- 2020 07:34:15 +0000
-Received: from SN6PR11MB2718.namprd11.prod.outlook.com
- ([fe80::85c9:1aa9:aeab:3fa6]) by SN6PR11MB2718.namprd11.prod.outlook.com
- ([fe80::85c9:1aa9:aeab:3fa6%4]) with mapi id 15.20.3261.024; Mon, 10 Aug 2020
- 07:34:15 +0000
-From:   =?ISO-8859-1?Q?J=E9r=F4me?= Pouiller <jerome.pouiller@silabs.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, Colin King <colin.king@canonical.com>
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next][V2] staging: wfx: fix a handful of spelling mistakes
-Date:   Mon, 10 Aug 2020 09:34:08 +0200
-Message-ID: <1666411.QAX1JtfOtW@pc-42>
-Organization: Silicon Labs
-In-Reply-To: <20200806104701.46123-1-colin.king@canonical.com>
-References: <20200806104701.46123-1-colin.king@canonical.com>
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
-X-ClientProxiedBy: PR1PR01CA0020.eurprd01.prod.exchangelabs.com
- (2603:10a6:102::33) To SN6PR11MB2718.namprd11.prod.outlook.com
- (2603:10b6:805:63::18)
+        Mon, 10 Aug 2020 03:37:09 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:26020 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725857AbgHJHhI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 03:37:08 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07A7aspq096541;
+        Mon, 10 Aug 2020 03:36:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=qMHGl+1t4gMfa2qMarGYbBHG6334xaEDPdjFO253suY=;
+ b=Krf1qfJ9I2CaPj+doPp4MVODycGA52WR10Ymh6f9HHZtf3YCO+k9a/nmRBBhA45fRkf9
+ VjaOpYGSv6l7IpFymfppth92RsZx8KO4URFqPtjn/cDeTQ95Z2EPcgynlHl26EteNMTu
+ Pai+CjOgIkoLKgwIEqZFGCV8wzpTw7v0+a+tNnL6bcVBfVpLvf2w/JNT9ThL4UI2oSU4
+ EGLqVzXdMBxh+uC6NPs1mlefwLv8bxA3PxCTwDkY2Ne+vdglleoFw58UmKFeejrDSGVA
+ 44t9dofTYau2Svy20RFvXdJq4Qgv+3Mb5Hzbp2v7Jw3jzoxxPZghLL7auVj4SV3Pboo6 /w== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32sr7h9sr9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 10 Aug 2020 03:36:54 -0400
+Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07A7RlMp058579;
+        Mon, 10 Aug 2020 03:27:47 -0400
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32sr7h9qun-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 10 Aug 2020 03:25:17 -0400
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07A7H9F0017736;
+        Mon, 10 Aug 2020 07:18:52 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma06fra.de.ibm.com with ESMTP id 32skah17wa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 10 Aug 2020 07:18:51 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07A7Im4t27460080
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 10 Aug 2020 07:18:49 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CFA1511C05B;
+        Mon, 10 Aug 2020 07:18:48 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 25B8311C052;
+        Mon, 10 Aug 2020 07:18:46 +0000 (GMT)
+Received: from srikart450.in.ibm.com (unknown [9.102.18.208])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 10 Aug 2020 07:18:45 +0000 (GMT)
+From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Anton Blanchard <anton@ozlabs.org>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        Michael Neuling <mikey@neuling.org>,
+        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Jordan Niethe <jniethe5@gmail.com>,
+        Vaidyanathan Srinivasan <svaidy@linux.ibm.com>
+Subject: [PATCH v5 02/10] powerpc/smp: Merge Power9 topology with Power topology
+Date:   Mon, 10 Aug 2020 12:48:26 +0530
+Message-Id: <20200810071834.92514-3-srikar@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200810071834.92514-1-srikar@linux.vnet.ibm.com>
+References: <20200810071834.92514-1-srikar@linux.vnet.ibm.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from pc-42.localnet (37.71.187.125) by PR1PR01CA0020.eurprd01.prod.exchangelabs.com (2603:10a6:102::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.19 via Frontend Transport; Mon, 10 Aug 2020 07:34:13 +0000
-X-Originating-IP: [37.71.187.125]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: b21d1d9c-1710-45db-5e6a-08d83cffc83a
-X-MS-TrafficTypeDiagnostic: SA0PR11MB4592:
-X-Microsoft-Antispam-PRVS: <SA0PR11MB4592BF7D72289B30FF84DCA093440@SA0PR11MB4592.namprd11.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:820;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: p8MX57p19I64qSfOaiQHriIZwe2M/SNXBEaDnzDjUDgTtXeqlFaftiI0wgVjW1SSXTEu/VtaKyBB+Hj0fGLqqZy7ZrioBd1yERcpweEmuWK1k81w8cSBofl/fhJZ/zP2oWt/ej9rKCQjs3bC5sw5K9OvvH2sJfanzmejuVayDrOH56mFPuM2xA8j3/vCUGUY7n+npd2KxehnOhlxbCGk67VI6ERhiml95P5Z10seoGB8fqa+EUDMT3e/2d8zEAeqX07LbBNz97j/RQ8OBQlssQ3xtxAH9zeVwiIG9w1J7OzufsV6PXNwmPLzpKRjanA/Wd+gQ/vSSa8xR+VuCfx0F/reyicMyb0D8KIit6Ryqh7G0xD8PuAgYip923TRV/bL
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR11MB2718.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39850400004)(376002)(136003)(366004)(346002)(396003)(8936002)(8676002)(478600001)(83380400001)(316002)(33716001)(66574015)(110136005)(6486002)(6666004)(66476007)(66556008)(66946007)(4326008)(36916002)(956004)(52116002)(16526019)(186003)(2906002)(6506007)(26005)(6512007)(9686003)(5660300002)(86362001)(39026012);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: /PukvFU2BNmEzSZUlOdyifa9GPIIks6XaYoQ8xyFp8eQXdCy8IQF2ZCEUn4IV+C0NmuFd67pX26C1/Vb5OMqhg93LcaI2snG2NKDsLu8FZW3mC++rbaa1o+mZm+NB2iWbP2C8fLT8Si3ENPwvqohGqpf9Cy6bz0AL7RcpZ4H/W/YZwicFTYZ+TWP4O7LiE+mKkbwBxeYFro2IbmhTiZuWqnXPMybNj+F+l8ZU8FibQ65jYTL1oqKTTmCxIp/y3QQOzxhIyTGQo6BLRqQUl7csUCK5Ie6ay04r0GMgRzqIqDM6f+aMO5G/WJkQ1pxJgbUhjel0BBD8B+orErHaz0+UbbuMMisRLLJO127KoTthKIB8347qUMZYPF3yj7AwDrc3XKMpL2GJ56sJancEMkcziu2Dl8VTYDOJ2+qGQaNJOfEi2hrxPOaAiXcVrUOa6+Ox+nJxEf9MiFgb3kwWsIzBwRC7+Ypxl7pGXR+/VKlG3cH82uM2YQuNz5KMXwC9b1wiI8yF9fWrTKZ8csDPGejNZn/FWz+0L8EKx19iTYfqIG5nyiH3AWwRRtqj/IutLqLMnhgah8mBRbJ18ikrmy0Wi5Bp8vd2hDGlZzB8O2apoAKG+OGtg/p5Sd4VoDB3DPs3TtRYXrGmNGEUfRNPtl3Zg==
-X-OriginatorOrg: silabs.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b21d1d9c-1710-45db-5e6a-08d83cffc83a
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR11MB2718.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Aug 2020 07:34:14.9109
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 54dbd822-5231-4b20-944d-6f4abcd541fb
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: O/ETLIRNdzik+jGMcJdQvHSAr4lROc45RGcSx1Iz8os/Bld/HzspO+TpxO5zScg0SkTctpbrqoKcZWv8r8ru7Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR11MB4592
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-10_02:2020-08-06,2020-08-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
+ adultscore=0 impostorscore=0 clxscore=1015 lowpriorityscore=0
+ suspectscore=0 priorityscore=1501 spamscore=0 phishscore=0 mlxlogscore=999
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008100048
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday 6 August 2020 12:47:01 CEST Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
->=20
-> There are various spelling mistakes in comments and error messages.
-> Fix these.
->=20
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->=20
-> V2: add in some more fixes as spotted by Randy Dunlap
->=20
-> ---
->  drivers/staging/wfx/data_rx.c | 2 +-
->  drivers/staging/wfx/data_tx.c | 2 +-
->  drivers/staging/wfx/debug.c   | 6 +++---
->  drivers/staging/wfx/hif_rx.c  | 2 +-
->  drivers/staging/wfx/hif_tx.c  | 4 ++--
->  drivers/staging/wfx/main.c    | 2 +-
->  drivers/staging/wfx/main.h    | 2 +-
->  drivers/staging/wfx/sta.c     | 2 +-
->  8 files changed, 11 insertions(+), 11 deletions(-)
->=20
-> diff --git a/drivers/staging/wfx/data_rx.c b/drivers/staging/wfx/data_rx.=
-c
-> index 6fb078880742..7fcbbfc53416 100644
-> --- a/drivers/staging/wfx/data_rx.c
-> +++ b/drivers/staging/wfx/data_rx.c
-> @@ -73,7 +73,7 @@ void wfx_rx_cb(struct wfx_vif *wvif,
->         if (arg->rx_flags.encryp)
->                 hdr->flag |=3D RX_FLAG_DECRYPTED;
->=20
-> -       // Block ack negociation is offloaded by the firmware. However,
-> +       // Block ack negotiation is offloaded by the firmware. However,
->         // re-ordering must be done by the mac80211.
->         if (ieee80211_is_action(frame->frame_control) &&
->             mgmt->u.action.category =3D=3D WLAN_CATEGORY_BACK &&
-> diff --git a/drivers/staging/wfx/data_tx.c b/drivers/staging/wfx/data_tx.=
-c
-> index 3acf4eb0214d..41f9afd41e14 100644
-> --- a/drivers/staging/wfx/data_tx.c
-> +++ b/drivers/staging/wfx/data_tx.c
-> @@ -234,7 +234,7 @@ static void wfx_tx_fixup_rates(struct ieee80211_tx_ra=
-te *rates)
->         int i;
->         bool finished;
->=20
-> -       // Firmware is not able to mix rates with differents flags
-> +       // Firmware is not able to mix rates with different flags
->         for (i =3D 0; i < IEEE80211_TX_MAX_RATES; i++) {
->                 if (rates[0].flags & IEEE80211_TX_RC_SHORT_GI)
->                         rates[i].flags |=3D IEEE80211_TX_RC_SHORT_GI;
-> diff --git a/drivers/staging/wfx/debug.c b/drivers/staging/wfx/debug.c
-> index 3f1712b7c919..99c53e1afece 100644
-> --- a/drivers/staging/wfx/debug.c
-> +++ b/drivers/staging/wfx/debug.c
-> @@ -267,7 +267,7 @@ static ssize_t wfx_send_hif_msg_write(struct file *fi=
-le,
->         if (count < sizeof(struct hif_msg))
->                 return -EINVAL;
->=20
-> -       // wfx_cmd_send() chekc that reply buffer is wide enough, but do =
-not
-> +       // wfx_cmd_send() checks that reply buffer is wide enough, but do=
-es not
->         // return precise length read. User have to know how many bytes s=
-hould
->         // be read. Filling reply buffer with a memory pattern may help u=
-ser.
->         memset(context->reply, 0xFF, sizeof(context->reply));
-> @@ -299,8 +299,8 @@ static ssize_t wfx_send_hif_msg_read(struct file *fil=
-e, char __user *user_buf,
->                 return ret;
->         if (context->ret < 0)
->                 return context->ret;
-> -       // Be carefull, write() is waiting for a full message while read(=
-)
-> -       // only return a payload
-> +       // Be careful, write() is waiting for a full message while read()
-> +       // only returns a payload
->         if (copy_to_user(user_buf, context->reply, count))
->                 return -EFAULT;
->=20
-> diff --git a/drivers/staging/wfx/hif_rx.c b/drivers/staging/wfx/hif_rx.c
-> index cc7c0cf226ba..1d32973d8ec1 100644
-> --- a/drivers/staging/wfx/hif_rx.c
-> +++ b/drivers/staging/wfx/hif_rx.c
-> @@ -118,7 +118,7 @@ static int hif_keys_indication(struct wfx_dev *wdev,
->=20
->         // SL_PUB_KEY_EXCHANGE_STATUS_SUCCESS is used by legacy secure li=
-nk
->         if (body->status && body->status !=3D HIF_STATUS_SLK_NEGO_SUCCESS=
-)
-> -               dev_warn(wdev->dev, "secure link negociation error\n");
-> +               dev_warn(wdev->dev, "secure link negotiation error\n");
->         memcpy(pubkey, body->ncp_pub_key, sizeof(pubkey));
->         memreverse(pubkey, sizeof(pubkey));
->         wfx_sl_check_pubkey(wdev, pubkey, body->ncp_pub_key_mac);
-> diff --git a/drivers/staging/wfx/hif_tx.c b/drivers/staging/wfx/hif_tx.c
-> index 5110f9b93762..3b5f4dcc469c 100644
-> --- a/drivers/staging/wfx/hif_tx.c
-> +++ b/drivers/staging/wfx/hif_tx.c
-> @@ -78,7 +78,7 @@ int wfx_cmd_send(struct wfx_dev *wdev, struct hif_msg *=
-request,
->=20
->         wfx_bh_request_tx(wdev);
->=20
-> -       // NOTE: no timeout is catched async is enabled
-> +       // NOTE: no timeout is caught async is enabled
->         if (async)
->                 return 0;
->=20
-> @@ -125,7 +125,7 @@ int wfx_cmd_send(struct wfx_dev *wdev, struct hif_msg=
- *request,
->=20
->  // This function is special. After HIF_REQ_ID_SHUT_DOWN, chip won't repl=
-y to any
->  // request anymore. We need to slightly hack struct wfx_hif_cmd for that=
- job. Be
-> -// carefull to only call this funcion during device unregister.
-> +// careful to only call this function during device unregister.
->  int hif_shutdown(struct wfx_dev *wdev)
->  {
->         int ret;
-> diff --git a/drivers/staging/wfx/main.c b/drivers/staging/wfx/main.c
-> index 11dfa088fc86..4263f912760b 100644
-> --- a/drivers/staging/wfx/main.c
-> +++ b/drivers/staging/wfx/main.c
-> @@ -384,7 +384,7 @@ int wfx_probe(struct wfx_dev *wdev)
->         err =3D wfx_sl_init(wdev);
->         if (err && wdev->hw_caps.capabilities.link_mode =3D=3D SEC_LINK_E=
-NFORCED) {
->                 dev_err(wdev->dev,
-> -                       "chip require secure_link, but can't negociate it=
-\n");
-> +                       "chip require secure_link, but can't negotiate it=
-\n");
->                 goto err0;
->         }
->=20
-> diff --git a/drivers/staging/wfx/main.h b/drivers/staging/wfx/main.h
-> index c59d375dd3ad..2457cb595b0f 100644
-> --- a/drivers/staging/wfx/main.h
-> +++ b/drivers/staging/wfx/main.h
-> @@ -19,7 +19,7 @@ struct wfx_dev;
->  struct hwbus_ops;
->=20
->  struct wfx_platform_data {
-> -       /* Keyset and ".sec" extention will appended to this string */
-> +       /* Keyset and ".sec" extension will be appended to this string */
->         const char *file_fw;
->         const char *file_pds;
->         struct gpio_desc *gpio_wakeup;
-> diff --git a/drivers/staging/wfx/sta.c b/drivers/staging/wfx/sta.c
-> index 4e30ab17a93d..ad63332f690c 100644
-> --- a/drivers/staging/wfx/sta.c
-> +++ b/drivers/staging/wfx/sta.c
-> @@ -214,7 +214,7 @@ static int wfx_get_ps_timeout(struct wfx_vif *wvif, b=
-ool *enable_ps)
->         if (chan0 && chan1 && chan0->hw_value !=3D chan1->hw_value &&
->             wvif->vif->type !=3D NL80211_IFTYPE_AP) {
->                 // It is necessary to enable powersave if channels
-> -               // are differents.
-> +               // are different.
->                 if (enable_ps)
->                         *enable_ps =3D true;
->                 if (wvif->wdev->force_ps_timeout > -1)
-> --
-> 2.27.0
->=20
->=20
+A new sched_domain_topology_level was added just for Power9. However the
+same can be achieved by merging powerpc_topology with power9_topology
+and makes the code more simpler especially when adding a new sched
+domain.
 
-Reviewed-by: J=E9r=F4me Pouiller <jerome.pouiller@silabs.com>
+Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Cc: LKML <linux-kernel@vger.kernel.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Nicholas Piggin <npiggin@gmail.com>
+Cc: Anton Blanchard <anton@ozlabs.org>
+Cc: Oliver O'Halloran <oohall@gmail.com>
+Cc: Nathan Lynch <nathanl@linux.ibm.com>
+Cc: Michael Neuling <mikey@neuling.org>
+Cc: Gautham R Shenoy <ego@linux.vnet.ibm.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Valentin Schneider <valentin.schneider@arm.com>
+Cc: Jordan Niethe <jniethe5@gmail.com>
+Cc: Vaidyanathan Srinivasan <svaidy@linux.ibm.com>
+Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+---
+Changelog v1 -> v2:
+	Replaced a reference to cpu_smt_mask with per_cpu(cpu_sibling_map, cpu)
+	since cpu_smt_mask is only defined under CONFIG_SCHED_SMT
 
---=20
-J=E9r=F4me Pouiller
+ arch/powerpc/kernel/smp.c | 25 +++----------------------
+ 1 file changed, 3 insertions(+), 22 deletions(-)
 
+diff --git a/arch/powerpc/kernel/smp.c b/arch/powerpc/kernel/smp.c
+index edf94ca64eea..08da765b91f1 100644
+--- a/arch/powerpc/kernel/smp.c
++++ b/arch/powerpc/kernel/smp.c
+@@ -1313,7 +1313,7 @@ int setup_profiling_timer(unsigned int multiplier)
+ }
+ 
+ #ifdef CONFIG_SCHED_SMT
+-/* cpumask of CPUs with asymetric SMT dependancy */
++/* cpumask of CPUs with asymmetric SMT dependency */
+ static int powerpc_smt_flags(void)
+ {
+ 	int flags = SD_SHARE_CPUCAPACITY | SD_SHARE_PKG_RESOURCES;
+@@ -1326,14 +1326,6 @@ static int powerpc_smt_flags(void)
+ }
+ #endif
+ 
+-static struct sched_domain_topology_level powerpc_topology[] = {
+-#ifdef CONFIG_SCHED_SMT
+-	{ cpu_smt_mask, powerpc_smt_flags, SD_INIT_NAME(SMT) },
+-#endif
+-	{ cpu_cpu_mask, SD_INIT_NAME(DIE) },
+-	{ NULL, },
+-};
+-
+ /*
+  * P9 has a slightly odd architecture where pairs of cores share an L2 cache.
+  * This topology makes it *much* cheaper to migrate tasks between adjacent cores
+@@ -1361,7 +1353,7 @@ static const struct cpumask *smallcore_smt_mask(int cpu)
+ }
+ #endif
+ 
+-static struct sched_domain_topology_level power9_topology[] = {
++static struct sched_domain_topology_level powerpc_topology[] = {
+ #ifdef CONFIG_SCHED_SMT
+ 	{ cpu_smt_mask, powerpc_smt_flags, SD_INIT_NAME(SMT) },
+ #endif
+@@ -1386,21 +1378,10 @@ void __init smp_cpus_done(unsigned int max_cpus)
+ #ifdef CONFIG_SCHED_SMT
+ 	if (has_big_cores) {
+ 		pr_info("Big cores detected but using small core scheduling\n");
+-		power9_topology[0].mask = smallcore_smt_mask;
+ 		powerpc_topology[0].mask = smallcore_smt_mask;
+ 	}
+ #endif
+-	/*
+-	 * If any CPU detects that it's sharing a cache with another CPU then
+-	 * use the deeper topology that is aware of this sharing.
+-	 */
+-	if (shared_caches) {
+-		pr_info("Using shared cache scheduler topology\n");
+-		set_sched_topology(power9_topology);
+-	} else {
+-		pr_info("Using standard scheduler topology\n");
+-		set_sched_topology(powerpc_topology);
+-	}
++	set_sched_topology(powerpc_topology);
+ }
+ 
+ #ifdef CONFIG_HOTPLUG_CPU
+-- 
+2.18.2
 
