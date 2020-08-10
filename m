@@ -2,112 +2,148 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A08A5C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6786CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:24:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B0262070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:24:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 381B32076B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:24:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbgHJOYn (ORCPT
+        id S1727068AbgHJOYy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 10:24:43 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:37157 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726499AbgHJOYm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 10:24:42 -0400
-Received: (qmail 300635 invoked by uid 1000); 10 Aug 2020 10:24:41 -0400
-Date:   Mon, 10 Aug 2020 10:24:41 -0400
-From:   Alan Stern <stern@rowland.harvard.edu>
-To:     syzbot <syzbot+c2c3302f9c601a4b1be2@syzkaller.appspotmail.com>
-Cc:     andreyknvl@gmail.com, andreyknvl@google.com, balbi@kernel.org,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: WARNING in slab_pre_alloc_hook
-Message-ID: <20200810142441.GB299045@rowland.harvard.edu>
-References: <000000000000589ccd05ac845d6e@google.com>
+        Mon, 10 Aug 2020 10:24:54 -0400
+Received: from mga03.intel.com ([134.134.136.65]:56256 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726894AbgHJOYs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 10:24:48 -0400
+IronPort-SDR: Q6qhjOhwX5w3g9Js3r/Kzd5OinMCB92ibjBfPAf7cUVPRjTHORfqVr91rbN6tjV+u3ptamZ5jG
+ WVLDbuLtS+TA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9708"; a="153507698"
+X-IronPort-AV: E=Sophos;i="5.75,457,1589266800"; 
+   d="scan'208";a="153507698"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2020 07:24:47 -0700
+IronPort-SDR: fPzusWNHyWNEmQYBc8qacLEKeHJ3SdFpLaooHQVPjcP9POizRzPhmeoroT5+BHdY9rKTcC44tt
+ OeyladIgWf5Q==
+X-IronPort-AV: E=Sophos;i="5.75,457,1589266800"; 
+   d="scan'208";a="294400874"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2020 07:24:43 -0700
+Received: from punajuuri.localdomain (punajuuri.localdomain [192.168.240.130])
+        by paasikivi.fi.intel.com (Postfix) with ESMTP id A4D4C20728;
+        Mon, 10 Aug 2020 17:24:41 +0300 (EEST)
+Received: from sailus by punajuuri.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@linux.intel.com>)
+        id 1k58mC-0003Eu-6y; Mon, 10 Aug 2020 17:27:48 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     linux-i2c@vger.kernel.org
+Cc:     Wolfram Sang <wsa@the-dreams.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-acpi@vger.kernel.org, Bingbu Cao <bingbu.cao@intel.com>,
+        linux-media@vger.kernel.org,
+        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
+        Hyungwoo Yang <hyungwoo.yang@intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        rajmohan.mani@intel.com, Tomasz Figa <tfiga@chromium.org>,
+        "Qiu, Tian Shu" <tian.shu.qiu@intel.com>
+Subject: [PATCH v5 2/6] ACPI: Add a convenience function to tell a device is in low power state
+Date:   Mon, 10 Aug 2020 17:27:43 +0300
+Message-Id: <20200810142747.12400-3-sakari.ailus@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200810142747.12400-1-sakari.ailus@linux.intel.com>
+References: <20200810142747.12400-1-sakari.ailus@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000000000000589ccd05ac845d6e@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 04:36:25AM -0700, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following issue on:
-> 
-> HEAD commit:    449dc8c9 Merge tag 'for-v5.9' of git://git.kernel.org/pub/..
-> git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
-> console output: https://syzkaller.appspot.com/x/log.txt?x=16581652900000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=6ef84fa8ee48e528
-> dashboard link: https://syzkaller.appspot.com/bug?extid=c2c3302f9c601a4b1be2
-> compiler:       gcc (GCC) 10.1.0-syz 20200507
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16e8de34900000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1244eb62900000
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+c2c3302f9c601a4b1be2@syzkaller.appspotmail.com
-> 
-> ------------[ cut here ]------------
-> do not call blocking ops when !TASK_RUNNING; state=1 set at [<00000000370c7c68>] prepare_to_wait+0xb1/0x2a0 kernel/sched/wait.c:247
-> WARNING: CPU: 1 PID: 340 at kernel/sched/core.c:7253 __might_sleep+0x135/0x190 kernel/sched/core.c:7253
-> Kernel panic - not syncing: panic_on_warn set ...
-> CPU: 1 PID: 340 Comm: syz-executor677 Not tainted 5.8.0-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> Call Trace:
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0xf6/0x16e lib/dump_stack.c:118
->  panic+0x2aa/0x6e1 kernel/panic.c:231
->  __warn.cold+0x20/0x50 kernel/panic.c:600
->  report_bug+0x1bd/0x210 lib/bug.c:198
->  handle_bug+0x41/0x80 arch/x86/kernel/traps.c:234
->  exc_invalid_op+0x14/0x40 arch/x86/kernel/traps.c:254
->  asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:536
-> RIP: 0010:__might_sleep+0x135/0x190 kernel/sched/core.c:7253
-> Code: 65 48 8b 1c 25 40 ef 01 00 48 8d 7b 10 48 89 fe 48 c1 ee 03 80 3c 06 00 75 2b 48 8b 73 10 48 c7 c7 e0 9e 06 86 e8 ed 12 f6 ff <0f> 0b e9 46 ff ff ff e8 1f b2 4b 00 e9 29 ff ff ff e8 15 b2 4b 00
-> RSP: 0018:ffff8881cdb77a28 EFLAGS: 00010282
-> RAX: 0000000000000000 RBX: ffff8881c6458000 RCX: 0000000000000000
-> RDX: ffff8881c6458000 RSI: ffffffff8129ec93 RDI: ffffed1039b6ef37
-> RBP: ffffffff86fdade2 R08: 0000000000000001 R09: ffff8881db32f54f
-> R10: 0000000000000000 R11: 0000000030343354 R12: 00000000000001f2
-> R13: 0000000000000000 R14: 0000000000000068 R15: ffffffff83c1b1aa
->  slab_pre_alloc_hook.constprop.0+0xea/0x200 mm/slab.h:498
->  slab_alloc_node mm/slub.c:2816 [inline]
->  slab_alloc mm/slub.c:2900 [inline]
->  kmem_cache_alloc_trace+0x46/0x220 mm/slub.c:2917
->  kmalloc include/linux/slab.h:554 [inline]
->  dummy_urb_enqueue+0x7a/0x880 drivers/usb/gadget/udc/dummy_hcd.c:1251
->  usb_hcd_submit_urb+0x2b2/0x22d0 drivers/usb/core/hcd.c:1547
->  usb_submit_urb+0xb4e/0x13e0 drivers/usb/core/urb.c:570
->  yurex_write+0x3ea/0x820 drivers/usb/misc/yurex.c:495
+Add a convenience function to tell whether a device is in low power state,
+primarily for use in drivers' probe or remove functions on busses where
+the custom is to power on the device for the duration of both.
 
-The yurex driver shouldn't use GFP_KERNEL in a context where the current 
-state isn't TASK_RUNNING.
+Returns false on non-ACPI systems.
 
-Alan Stern
+Suggested-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/acpi/device_pm.c | 31 +++++++++++++++++++++++++++++++
+ include/linux/acpi.h     |  5 +++++
+ 2 files changed, 36 insertions(+)
 
-#syz test: https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git 449dc8c9
+diff --git a/drivers/acpi/device_pm.c b/drivers/acpi/device_pm.c
+index 94d91c67aeaeb..e3c488d4af0d4 100644
+--- a/drivers/acpi/device_pm.c
++++ b/drivers/acpi/device_pm.c
+@@ -1344,4 +1344,35 @@ int acpi_dev_pm_attach(struct device *dev, bool power_on)
+ 	return 1;
+ }
+ EXPORT_SYMBOL_GPL(acpi_dev_pm_attach);
++
++/**
++ * acpi_dev_state_low_power - Check the current ACPI power state of a device.
++ * @dev: Physical device the ACPI power state of which to check
++ *
++ * On a system without ACPI, return false. On a system with ACPI, return true if
++ * the current ACPI power state of the device is not D0, or false otherwise.
++ *
++ * Note that the power state of a device is not well-defined after it has been
++ * passed to acpi_device_set_power() and before that function returns, so it is
++ * not valid to ask for the ACPI power state of the device in that time frame.
++ */
++bool acpi_dev_state_low_power(struct device *dev)
++{
++	struct acpi_device *adev = ACPI_COMPANION(dev);
++	int power_state;
++	int ret;
++
++	if (!adev)
++		return false;
++
++	ret = acpi_device_get_power(adev, &power_state);
++	if (ret) {
++		dev_dbg(dev, "Cannot obtain power state (%d)\n", ret);
++		return false;
++	}
++
++	return power_state != ACPI_STATE_D0;
++}
++EXPORT_SYMBOL_GPL(acpi_dev_state_low_power);
++
+ #endif /* CONFIG_PM */
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index 1e4cdc6c7ae20..276f6af99779f 100644
+--- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -976,6 +976,7 @@ int acpi_dev_resume(struct device *dev);
+ int acpi_subsys_runtime_suspend(struct device *dev);
+ int acpi_subsys_runtime_resume(struct device *dev);
+ int acpi_dev_pm_attach(struct device *dev, bool power_on);
++bool acpi_dev_state_low_power(struct device *dev);
+ #else
+ static inline int acpi_dev_runtime_suspend(struct device *dev) { return 0; }
+ static inline int acpi_dev_runtime_resume(struct device *dev) { return 0; }
+@@ -985,6 +986,10 @@ static inline int acpi_dev_pm_attach(struct device *dev, bool power_on)
+ {
+ 	return 0;
+ }
++static inline bool acpi_dev_state_low_power(struct device *dev)
++{
++	return false;
++}
+ #endif
+ 
+ #if defined(CONFIG_ACPI) && defined(CONFIG_PM_SLEEP)
+-- 
+2.20.1
 
-Index: usb-devel/drivers/usb/misc/yurex.c
-===================================================================
---- usb-devel.orig/drivers/usb/misc/yurex.c
-+++ usb-devel/drivers/usb/misc/yurex.c
-@@ -492,7 +492,7 @@ static ssize_t yurex_write(struct file *
- 	prepare_to_wait(&dev->waitq, &wait, TASK_INTERRUPTIBLE);
- 	dev_dbg(&dev->interface->dev, "%s - submit %c\n", __func__,
- 		dev->cntl_buffer[0]);
--	retval = usb_submit_urb(dev->cntl_urb, GFP_KERNEL);
-+	retval = usb_submit_urb(dev->cntl_urb, GFP_ATOMIC);
- 	if (retval >= 0)
- 		timeout = schedule_timeout(YUREX_WRITE_TIMEOUT);
- 	finish_wait(&dev->waitq, &wait);
