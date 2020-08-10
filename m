@@ -2,90 +2,154 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68375C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:32:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9993C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:32:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3451822EBD
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:32:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80E7A23103
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:32:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597073560;
+	bh=iUtBz3wDtIp/7HNgFnqlL/txe0+7TWtlKGlPE0Ita6s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=NX+hziiP7ELBYirf5tLaeVHg20TvZC54OWqwgmBYa9QRklabXSCBSAXdoJM4k2wNY
+	 +wQzeEAqi/wKjT8NzgJSb1GbhEC7XopsRjNkSpdxpJ4S5shFHZxaNX6SuL5v+yRUn2
+	 JE0SYowpeEtpR4xaML20ADmvuMFfNfMEUOq2vtYs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729224AbgHJPcg (ORCPT
+        id S1729124AbgHJPcf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:32:36 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:44195 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729078AbgHJPaZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:32:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37248 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729079AbgHJPaZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Aug 2020 11:30:25 -0400
-Received: by mail-ot1-f67.google.com with SMTP id h22so7564421otq.11
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 08:30:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EGXr1Q0HM/qo5dJWVUAaDwFLJRLFuaiaXBoFgMVJkVQ=;
-        b=ZHbqDf1Omd+MkmBmSIZZwsMe8MQlaFN1uACQ84nxk1xxwXTPgw89t6IzICqRA/7yJn
-         IrHTlAIDuvAt979oVzO6CEScnbdR9M8/HDkvBRE+GivOWn7AEVkgx1NOZcjPF1/WCbsq
-         wY5zflc8s5iZEWJegBPkwDC6jt4qhKi4D3uIK5ufDecc4C/dhrGKLC/Y0YOcMNRN5yBv
-         bWokotfXMRKrsZEwgmW4PO2hIOfn43xpCCD/uxCqdMZgiALVdkamtTGWM8WhFKfNC/hL
-         0YIF2awdadFtHW7zosWHisEDG64/JELHHGeoxqEdDqeR51seJsE7z03vrCe6qMk8zwiU
-         7N0Q==
-X-Gm-Message-State: AOAM532qhklmWkDhS0Ns5Sqj0IeT3P1QbVjCFZc1BBlGmEF8jl4EYmnb
-        1YJXsoJKXQz8GhEL4T4MoJjQpgVd9wD0HATam+c=
-X-Google-Smtp-Source: ABdhPJxkSUjUVue6l2Kb8qruxmuLEjfMHX2XY/gqPS1Y7BnQy62fmtLXDJozjrz938tbOW7O7dT8GP+A8G/V5yYCN6s=
-X-Received: by 2002:a9d:1b62:: with SMTP id l89mr1187198otl.145.1597073424726;
- Mon, 10 Aug 2020 08:30:24 -0700 (PDT)
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5AF7520791;
+        Mon, 10 Aug 2020 15:30:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597073425;
+        bh=iUtBz3wDtIp/7HNgFnqlL/txe0+7TWtlKGlPE0Ita6s=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=U+AzgNnOCSz3U8fuIb+mG1HWRSTbxJOjji3eFfXGFOiu/VCMoU5OwfSkYK0MLEHq0
+         pq8SOCjH3eU8F8yIHe0X18Sx6cUfsqAKAfaY+gjx51/4atEJBmIMU8tTqHynuc/RiB
+         5dOeD93SBkeV2udRPsTHjXNHqEhzRNl/B+R+KzcI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 35/48] vxlan: Ensure FDB dump is performed under RCU
+Date:   Mon, 10 Aug 2020 17:21:57 +0200
+Message-Id: <20200810151805.943341960@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200810151804.199494191@linuxfoundation.org>
+References: <20200810151804.199494191@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <CA+icZUUGO0__SEZ7YvuQzfSdaWfTnCHW=73-3W4X=Vz51wHd+w@mail.gmail.com>
- <CAHk-=wiR+uHUyp3=Nf1aiNjmg0ZekaQJupLRguFNZ=MreuGhfg@mail.gmail.com> <CA+icZUXRjrX+1NAZy4As_ficD4aHRAZWHRj5hrE+D6E5zEKXHw@mail.gmail.com>
-In-Reply-To: <CA+icZUXRjrX+1NAZy4As_ficD4aHRAZWHRj5hrE+D6E5zEKXHw@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 10 Aug 2020 17:30:13 +0200
-Message-ID: <CAMuHMdU-XugrkfM-9tQLrOJ_E1Of1Zf-DJZeSXJwkhw0Q9YoPA@mail.gmail.com>
-Subject: Re: Linux 5.8-rc6
-To:     Sedat Dilek <sedat.dilek@gmail.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sedat,
+From: Ido Schimmel <idosch@mellanox.com>
 
-On Tue, Jul 21, 2020 at 10:19 AM Sedat Dilek <sedat.dilek@gmail.com> wrote:
-> You happen to know if I can configure in my ~/.gitconfig to pull
-> linux-git stuff from two repositories - check first git.kernel.org
-> then GitHub.
->
-> Some days ago GitHub had some maintenance issues and I was not able to pull.
-> Means I trust more the security and integrity concept of git.kernel.org.
->
-> To pull from GitHub - saved 15-16mins of my life-time - meant
-> 15-16mins go earlier to sleep - as said I started my build 01:02a.m.
-> (German local-time).
+[ Upstream commit b5141915b5aec3b29a63db869229e3741ebce258 ]
 
-Assumed your cloned from kernel.org:
+The commit cited below removed the RCU read-side critical section from
+rtnl_fdb_dump() which means that the ndo_fdb_dump() callback is invoked
+without RCU protection.
 
-    git remote add github https://github.com/torvalds/linux
+This results in the following warning [1] in the VXLAN driver, which
+relied on the callback being invoked from an RCU read-side critical
+section.
 
-After that:
-  1. "git remote update" will fetch data from both origin and github,
-  2. "git merge $(git tag | grep -v rc | sort -n | tail -1)" will
-     merge in the latest release, if you don't have it merged already.
+Fix this by calling rcu_read_lock() in the VXLAN driver, as already done
+in the bridge driver.
 
-Gr{oetje,eeting}s,
+[1]
+WARNING: suspicious RCU usage
+5.8.0-rc4-custom-01521-g481007553ce6 #29 Not tainted
+-----------------------------
+drivers/net/vxlan.c:1379 RCU-list traversed in non-reader section!!
 
-                        Geert
+other info that might help us debug this:
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+rcu_scheduler_active = 2, debug_locks = 1
+1 lock held by bridge/166:
+ #0: ffffffff85a27850 (rtnl_mutex){+.+.}-{3:3}, at: netlink_dump+0xea/0x1090
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+stack backtrace:
+CPU: 1 PID: 166 Comm: bridge Not tainted 5.8.0-rc4-custom-01521-g481007553ce6 #29
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-2.fc32 04/01/2014
+Call Trace:
+ dump_stack+0x100/0x184
+ lockdep_rcu_suspicious+0x153/0x15d
+ vxlan_fdb_dump+0x51e/0x6d0
+ rtnl_fdb_dump+0x4dc/0xad0
+ netlink_dump+0x540/0x1090
+ __netlink_dump_start+0x695/0x950
+ rtnetlink_rcv_msg+0x802/0xbd0
+ netlink_rcv_skb+0x17a/0x480
+ rtnetlink_rcv+0x22/0x30
+ netlink_unicast+0x5ae/0x890
+ netlink_sendmsg+0x98a/0xf40
+ __sys_sendto+0x279/0x3b0
+ __x64_sys_sendto+0xe6/0x1a0
+ do_syscall_64+0x54/0xa0
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x7fe14fa2ade0
+Code: Bad RIP value.
+RSP: 002b:00007fff75bb5b88 EFLAGS: 00000246 ORIG_RAX: 000000000000002c
+RAX: ffffffffffffffda RBX: 00005614b1ba0020 RCX: 00007fe14fa2ade0
+RDX: 000000000000011c RSI: 00007fff75bb5b90 RDI: 0000000000000003
+RBP: 00007fff75bb5b90 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00005614b1b89160
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+
+Fixes: 5e6d24358799 ("bridge: netlink dump interface at par with brctl")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Reviewed-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/net/vxlan.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+--- a/drivers/net/vxlan.c
++++ b/drivers/net/vxlan.c
+@@ -975,6 +975,7 @@ static int vxlan_fdb_dump(struct sk_buff
+ 	for (h = 0; h < FDB_HASH_SIZE; ++h) {
+ 		struct vxlan_fdb *f;
+ 
++		rcu_read_lock();
+ 		hlist_for_each_entry_rcu(f, &vxlan->fdb_head[h], hlist) {
+ 			struct vxlan_rdst *rd;
+ 
+@@ -987,12 +988,15 @@ static int vxlan_fdb_dump(struct sk_buff
+ 						     cb->nlh->nlmsg_seq,
+ 						     RTM_NEWNEIGH,
+ 						     NLM_F_MULTI, rd);
+-				if (err < 0)
++				if (err < 0) {
++					rcu_read_unlock();
+ 					goto out;
++				}
+ skip:
+ 				*idx += 1;
+ 			}
+ 		}
++		rcu_read_unlock();
+ 	}
+ out:
+ 	return err;
+
+
