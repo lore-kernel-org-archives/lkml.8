@@ -2,605 +2,277 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DD03C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:59:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20F6EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 23:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED5C9206DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:59:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB3E620734
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 23:02:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="kAIN0l4m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727786AbgHJW7h (ORCPT
+        id S1727033AbgHJXCZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 18:59:37 -0400
-Received: from smtprelay0143.hostedemail.com ([216.40.44.143]:51186 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726634AbgHJW7e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 18:59:34 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay05.hostedemail.com (Postfix) with ESMTP id D04F018029D8A;
-        Mon, 10 Aug 2020 22:59:31 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: route45_251456626fde
-X-Filterd-Recvd-Size: 19104
-Received: from joe-laptop.perches.com (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf03.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 10 Aug 2020 22:59:30 +0000 (UTC)
-From:   Joe Perches <joe@perches.com>
-To:     James Smart <james.smart@broadcom.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>
-Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
-Subject: [PATCH 2/2] scsi: lpfc: Add logging functions to reduce object size
-Date:   Mon, 10 Aug 2020 15:59:20 -0700
-Message-Id: <9dc4b3349e67a225e26d2d25e261a5b24a3f92b5.1597100152.git.joe@perches.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <cover.1597100152.git.joe@perches.com>
-References: <cover.1597100152.git.joe@perches.com>
+        Mon, 10 Aug 2020 19:02:25 -0400
+Received: from vern.gendns.com ([98.142.107.122]:34202 "EHLO vern.gendns.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726898AbgHJXCX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 19:02:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=COPUQmhMmE40ax9+ruamAVXzEdZykIbuPN7Gjhr2bCY=; b=kAIN0l4m57JuWS9/SFazOs1njE
+        aMMLTE0XHi3CyiA/w8lIoGuQwYGaYlCouVS+3bYLTolOVAHZoTqdVM6ix34cS40fbHfNp9xqFfEPp
+        /t9vyq8uV92lI2gn/AoXs27nzPprvOKYZ61gpZK5M4vQOP7bf2MqUvIDH+ZWfCGVs7RuDiqllAyew
+        LFiTZ9tEnUSna02UUHxjm1XWzV57RQWNf/5eAeRFiKUEArLVMxueGdhXB/MwyEqn4aDR1TELQ9R78
+        bISUY1yGTXo7iTLKNHkHjrms0SVx56c9UGwepY4T3IKNpUE+kcVDAvKrmGrfaPQpvOjL3b614F8X2
+        AXrybHww==;
+Received: from [2600:1700:4830:165f::19e] (port=45710)
+        by vern.gendns.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <david@lechnology.com>)
+        id 1k5Go7-0006WG-Cg; Mon, 10 Aug 2020 19:02:19 -0400
+Subject: Re: [PATCH v4 3/5] counter: Add character device interface
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc:     jic23@kernel.org, kamel.bouhara@bootlin.com, gwendal@chromium.org,
+        alexandre.belloni@bootlin.com, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, syednwaris@gmail.com,
+        patrick.havelange@essensium.com, fabrice.gasnier@st.com,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com
+References: <cover.1595358237.git.vilhelm.gray@gmail.com>
+ <08b3ac7349a59ba7fa5cd438bbe78360842ccd11.1595358237.git.vilhelm.gray@gmail.com>
+ <415ee9ad-255e-cee7-22a6-ffa977999691@lechnology.com>
+ <20200809145107.GA6542@shinobu>
+From:   David Lechner <david@lechnology.com>
+Message-ID: <ddf07574-56f3-ad5f-b417-6ed9a3ba78cb@lechnology.com>
+Date:   Mon, 10 Aug 2020 18:02:16 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200809145107.GA6542@shinobu>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - vern.gendns.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lechnology.com
+X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make functions from logging macros.
+On 8/9/20 9:51 AM, William Breathitt Gray wrote:
+> On Tue, Jul 28, 2020 at 07:20:03PM -0500, David Lechner wrote:
+>> On 7/21/20 2:35 PM, William Breathitt Gray wrote:
+>>> This patch introduces a character device interface for the Counter
+>>> subsystem. Device data is exposed through standard character device read
+>>> operations. Device data is gathered when a Counter event is pushed by
+>>> the respective Counter device driver. Configuration is handled via ioctl
+>>> operations on the respective Counter character device node.
+>>
+>> This sounds similar to triggers and buffers in the iio subsystem. And
+>> I can see how it might be useful in some cases. But I think it would not
+>> give the desired results when performance is important.
+>>
+>> Thinking through a few cases here...
+>>
+>> Suppose there was a new counter device that used the I2C bus. This would
+>> either have to be periodically polled for events or it might have a
+>> separate GPIO line to notify the MCU. In any case, with the proposed
+>> implementation, there would be a separate I2C transaction for each data
+>> point for that event. So none of the data for that event would actually
+>> be from the same point in time. And with I2C, this time difference could
+>> be significant.
+>>
+>> With the TI eQEP I have been working with, there are special latched
+>> registers for some events. To make use of these with events, we would have
+>> add extensions for each one we want to use (and expose it in sysfs). But
+>> really, the fact that we are using a latched register should be an
+>> implementation detail in the driver and not something userspace should have
+>> to know about.
+>>
+>> So, I'm wondering if it would make sense to keep things simpler and have
+>> events like the input subsystem where the event value is directly tied
+>> to the event. It would probably be rare for an event to have more than
+>> one or two values. And error events probably would not have a value at
+>> all.
+>>
+>> For example, with the TI eQEP, there is a unit timer time out event.
+>> This latches the position count, the timer count and the timer period.
+>> To translate this to an event data structure, the latched time would
+>> be the event timestamp and the position count would be the event value.
+>> The timer period should already be known since we would have configured
+>> the timer ourselves. There is also a count event that works similarly.
+>> In this case, the latched time would be the event timestamp and the
+>> latched timer period would be the event value. We would know the count
+>> already since we get an event for each count (and a separate direction
+>> change event if the direction changes).
+> 
+> There are use-cases where it would be useful to have the extension reads
+> occur as close to the event trigger as possible (e.g. multiple-axes
+> positioning with boundary sensor flags) so I don't think this
+> functionality should be completely abadoned, but I think your argument
+> for standard event types makes sense.
+> 
+> We could treat those extensions reads as an optional feature that can be
+> enabled and configured by ioctls. However, the use-case you are
+> concerned with, we can redesign Counter events to return specific data
+> based on the specific event type.
+> 
+> For example, we could have a COUNTER_EVENT_INDEX which occurs when an
+> Index signal edge is detected, and the return data is the Count value
+> for that channel; we can also have a COUNTER_EVENT_TIMEOUT which occurs
+> when a unit timer times out, and returns the data you mentioned you are
+> interested in seeing.
+> 
+> These Counter event types would be standard, so user applications
+> wouldn't need to know driver/device implementation details, but instead
+> just follow the API to get the data they expect for that particular
+> event type. Would this kind of design work for your needs?
 
-Reduces overall object size ~14% (120KB) (x86-64, defconfig, with LPFC)
 
-$ size -t drivers/scsi/lpfc/built-in.a.old
- 888552	   8910	   2900	 900362	  dbd0a	(TOTALS)
-$ size -t drivers/scsi/lpfc/built-in.a.new
- 766757	   8910	   2900	 778567	  be147	(TOTALS)
+Yes. After trying (and failing) to implement my suggestions here, I
+came to the conclusion that it was not sufficient to only have one
+value per event. And it doesn't seem as obvious as I initially thought
+which should be the "standard" value for an event in some cases.
 
-Miscellanea:
+>>>
+>>> When `counter_push_event(counter, 1)` is called for example, it will go
+>>> down the list for Event 1 and execute the read callbacks for Signal 0,
+>>> Signal 0 Extension 0, and Extension 4 -- the data returned for each is
+>>> pushed to a kfifo as a `struct counter_event`, which userspace can
+>>> retrieve via a standard read operation on the respective character
+>>> device node.
+>>>
+>>> Userspace
+>>> ---------
+>>> Userspace applications can configure Counter events via ioctl operations
+>>> on the Counter character device node. There following ioctl codes are
+>>> supported and provided by the `linux/counter.h` userspace header file:
+>>>
+>>> * COUNTER_CLEAR_WATCHES_IOCTL:
+>>>     Clear all Counter watches from all events
+>>>
+>>> * COUNTER_SET_WATCH_IOCTL:
+>>>     Set a Counter watch on the specified event
+>>>
+>>> To configure events to gather Counter data, users first populate a
+>>> `struct counter_watch` with the relevant event id and the information
+>>> for the desired Counter component from which to read, and then pass it
+>>> via the `COUNTER_SET_WATCH_IOCTL` ioctl command.
+>>>
+>>> Userspace applications can then execute a `read` operation (optionally
+>>> calling `poll` first) on the Counter character device node to retrieve
+>>> `struct counter_event` elements with the desired data.
+>>>
+>>> For example, the following userspace code opens `/dev/counter0`,
+>>> configures Event 0 to gather Count 0 and Count 1, and prints out the
+>>> data as it becomes available on the character device node:
+>>>
+>>>       #include <fcntl.h>
+>>>       #include <linux/counter.h>
+>>>       #include <poll.h>
+>>>       #include <stdio.h>
+>>>       #include <sys/ioctl.h>
+>>>       #include <unistd.h>
+>>>
+>>>       struct counter_watch watches[2] = {
+>>>               {
+>>>                       .event = 0,
+>>>                       .component.owner_type = COUNTER_OWNER_TYPE_COUNT,
+>>>                       .component.owner_id = 0,
+>>>                       .component.type = COUNTER_COMPONENT_TYPE_COUNT,
+>>>               },
+>>>               {
+>>>                       .event = 0,
+>>>                       .component.owner_type = COUNTER_OWNER_TYPE_COUNT,
+>>>                       .component.owner_id = 1,
+>>>                       .component.type = COUNTER_COMPONENT_TYPE_COUNT,
+>>>               },
+>>>       };
+>>>
+>>>       int main(void)
+>>>       {
+>>>               struct pollfd pfd = { .events = POLLIN };
+>>>               struct counter_event event_data[2];
+>>>
+>>>               pfd.fd = open("/dev/counter0", O_RDWR);
+>>>
+>>>               ioctl(pfd.fd, COUNTER_SET_WATCH_IOCTL, watches);
+>>>               ioctl(pfd.fd, COUNTER_SET_WATCH_IOCTL, watches + 1);
+>>
+>> What enables events? If an event is enabled for each of these ioctls,
+>> then we have a race condition where events events from the first watch
+>> can start to be queued before the second watch is added. So we would
+>> have to flush the chardev first before polling, otherwise the assumption
+>> that event_data[0] is owner_id=0 and event_data[1] is owner_id=1 is
+>> not true.
+> 
+> That's a good point, we could theoretically have a situation where an
+> event is pushed before the configuration of watches is complete. I'm not
+> sure if the solution is to implement an enable/disable ioctl to control
+> when events are recorded, or a flush ioctl to remove the invalid events
+> in the queue.
+> 
+>> This is also racy if we want to clear watches and set up new watches
+>> at runtime. There would be a period of time where there were no watches
+>> and we could miss events.
+> 
+> I'm not sure how typical this use-case is -- would an operator ever want
+> to change watch configuration on-the-fly? I assumed watches configured
+> once at the start of a production run, and then stay essentially static
+> until the production stops.
 
-o Add header #ifdef guards where unused in .h files
+The use case I am thinking of is measuring motor speed in robotics. At
+low speed, we need an event for each count increase. But at high speed,
+this would be too many events and we instead need a periodic event based
+on the timer timeout. A maneuver may require operating at both high and
+low speeds without stopping and so we would want to be able to switch
+back and forth without interruption.
 
-Signed-off-by: Joe Perches <joe@perches.com>
----
- drivers/scsi/lpfc/Makefile       |   2 +-
- drivers/scsi/lpfc/lpfc.h         |   5 ++
- drivers/scsi/lpfc/lpfc_attr.h    |   5 ++
- drivers/scsi/lpfc/lpfc_bsg.h     |   6 ++
- drivers/scsi/lpfc/lpfc_compat.h  |   5 ++
- drivers/scsi/lpfc/lpfc_crtn.h    |   5 ++
- drivers/scsi/lpfc/lpfc_disc.h    |   5 ++
- drivers/scsi/lpfc/lpfc_hw.h      |   5 ++
- drivers/scsi/lpfc/lpfc_hw4.h     |   5 ++
- drivers/scsi/lpfc/lpfc_ids.h     |   5 ++
- drivers/scsi/lpfc/lpfc_logmsg.c  | 112 +++++++++++++++++++++++++++++++
- drivers/scsi/lpfc/lpfc_logmsg.h  |  72 ++++++--------------
- drivers/scsi/lpfc/lpfc_nl.h      |   4 ++
- drivers/scsi/lpfc/lpfc_nvme.h    |   5 ++
- drivers/scsi/lpfc/lpfc_scsi.h    |   4 ++
- drivers/scsi/lpfc/lpfc_sli.h     |   5 ++
- drivers/scsi/lpfc/lpfc_sli4.h    |   5 ++
- drivers/scsi/lpfc/lpfc_version.h |   5 ++
- 18 files changed, 207 insertions(+), 53 deletions(-)
- create mode 100644 drivers/scsi/lpfc/lpfc_logmsg.c
 
-diff --git a/drivers/scsi/lpfc/Makefile b/drivers/scsi/lpfc/Makefile
-index 092a971d066b..ebe0d3ddee27 100644
---- a/drivers/scsi/lpfc/Makefile
-+++ b/drivers/scsi/lpfc/Makefile
-@@ -33,4 +33,4 @@ obj-$(CONFIG_SCSI_LPFC) := lpfc.o
- lpfc-objs := lpfc_mem.o lpfc_sli.o lpfc_ct.o lpfc_els.o \
- 	lpfc_hbadisc.o	lpfc_init.o lpfc_mbox.o lpfc_nportdisc.o   \
- 	lpfc_scsi.o lpfc_attr.o lpfc_vport.o lpfc_debugfs.o lpfc_bsg.o \
--	lpfc_nvme.o lpfc_nvmet.o
-+	lpfc_nvme.o lpfc_nvmet.o lpfc_logmsg.o
-diff --git a/drivers/scsi/lpfc/lpfc.h b/drivers/scsi/lpfc/lpfc.h
-index 549adfaa97ce..571f35826947 100644
---- a/drivers/scsi/lpfc/lpfc.h
-+++ b/drivers/scsi/lpfc/lpfc.h
-@@ -21,6 +21,9 @@
-  * included with this package.                                     *
-  *******************************************************************/
- 
-+#ifndef _H_LPFC
-+#define _H_LPFC
-+
- #include <scsi/scsi_host.h>
- #include <linux/ktime.h>
- #include <linux/workqueue.h>
-@@ -1409,3 +1412,5 @@ static const char *routine(enum enum_name table_key)			\
- 	}								\
- 	return name;							\
- }
-+
-+#endif
-diff --git a/drivers/scsi/lpfc/lpfc_attr.h b/drivers/scsi/lpfc/lpfc_attr.h
-index 9659a8fff971..94a7e2231ec6 100644
---- a/drivers/scsi/lpfc/lpfc_attr.h
-+++ b/drivers/scsi/lpfc/lpfc_attr.h
-@@ -21,6 +21,9 @@
-  * included with this package.                                     *
-  *******************************************************************/
- 
-+#ifndef _H_LPFC_ATTR
-+#define _H_LPFC_ATTR
-+
- #define LPFC_ATTR(name, defval, minval, maxval, desc) \
- static uint lpfc_##name = defval;\
- module_param(lpfc_##name, uint, S_IRUGO);\
-@@ -126,3 +129,5 @@ lpfc_vport_param_set(name, defval, minval, maxval)\
- lpfc_vport_param_store(name)\
- static DEVICE_ATTR(lpfc_##name, S_IRUGO | S_IWUSR,\
- 		   lpfc_##name##_show, lpfc_##name##_store)
-+
-+#endif
-diff --git a/drivers/scsi/lpfc/lpfc_bsg.h b/drivers/scsi/lpfc/lpfc_bsg.h
-index 2dc71243775d..5f64584647db 100644
---- a/drivers/scsi/lpfc/lpfc_bsg.h
-+++ b/drivers/scsi/lpfc/lpfc_bsg.h
-@@ -19,6 +19,10 @@
-  * more details, a copy of which can be found in the file COPYING  *
-  * included with this package.                                     *
-  *******************************************************************/
-+
-+#ifndef _H_LPFC_BSG
-+#define _H_LPFC_BSG
-+
- /* bsg definitions
-  * No pointers to user data are allowed, all application buffers and sizes will
-  * derived through the bsg interface.
-@@ -389,3 +393,5 @@ struct get_trunk_info_req {
- /* driver only */
- #define SLI_CONFIG_NOT_HANDLED		0
- #define SLI_CONFIG_HANDLED		1
-+
-+#endif
-diff --git a/drivers/scsi/lpfc/lpfc_compat.h b/drivers/scsi/lpfc/lpfc_compat.h
-index 43cf46a3a71f..d6ccde39269a 100644
---- a/drivers/scsi/lpfc/lpfc_compat.h
-+++ b/drivers/scsi/lpfc/lpfc_compat.h
-@@ -20,6 +20,9 @@
-  * included with this package.                                     *
-  *******************************************************************/
- 
-+#ifndef _H_LPFC_COMPAT
-+#define _H_LPFC_COMPAT
-+
- /*
-  * This file provides macros to aid compilation in the Linux 2.4 kernel
-  * over various platform architectures.
-@@ -96,3 +99,5 @@ lpfc_memcpy_from_slim( void *dest, void __iomem *src, unsigned int bytes)
- }
- 
- #endif	/* __BIG_ENDIAN */
-+
-+#endif
-diff --git a/drivers/scsi/lpfc/lpfc_crtn.h b/drivers/scsi/lpfc/lpfc_crtn.h
-index 782f6f76f18a..dd8553ecf091 100644
---- a/drivers/scsi/lpfc/lpfc_crtn.h
-+++ b/drivers/scsi/lpfc/lpfc_crtn.h
-@@ -20,6 +20,9 @@
-  * included with this package.                                     *
-  *******************************************************************/
- 
-+#ifndef _H_LPFC_CRTN
-+#define _H_LPFC_CRTN
-+
- typedef int (*node_filter)(struct lpfc_nodelist *, void *);
- 
- struct fc_rport;
-@@ -600,3 +603,5 @@ extern int lpfc_enable_nvmet_cnt;
- extern unsigned long long lpfc_enable_nvmet[];
- extern int lpfc_no_hba_reset_cnt;
- extern unsigned long lpfc_no_hba_reset[];
-+
-+#endif
-diff --git a/drivers/scsi/lpfc/lpfc_disc.h b/drivers/scsi/lpfc/lpfc_disc.h
-index 482e4a888dae..9d3f49e007fa 100644
---- a/drivers/scsi/lpfc/lpfc_disc.h
-+++ b/drivers/scsi/lpfc/lpfc_disc.h
-@@ -20,6 +20,9 @@
-  * included with this package.                                     *
-  *******************************************************************/
- 
-+#ifndef _H_LPFC_DISC
-+#define _H_LPFC_DISC
-+
- #define FC_MAX_HOLD_RSCN     32	      /* max number of deferred RSCNs */
- #define FC_MAX_NS_RSP        64512    /* max size NameServer rsp */
- #define FC_MAXLOOP           126      /* max devices supported on a fc loop */
-@@ -299,3 +302,5 @@ struct lpfc_node_rrq {
- #define NLP_EVT_DEVICE_RECOVERY   0xc	/* Device existence unknown */
- #define NLP_EVT_MAX_EVENT         0xd
- #define NLP_EVT_NOTHING_PENDING   0xff
-+
-+#endif
-diff --git a/drivers/scsi/lpfc/lpfc_hw.h b/drivers/scsi/lpfc/lpfc_hw.h
-index c20034b3101c..c56a9fd0a1eb 100644
---- a/drivers/scsi/lpfc/lpfc_hw.h
-+++ b/drivers/scsi/lpfc/lpfc_hw.h
-@@ -20,6 +20,9 @@
-  * included with this package.                                     *
-  *******************************************************************/
- 
-+#ifndef _H_LPFC_HW
-+#define _H_LPFC_HW
-+
- #define FDMI_DID        0xfffffaU
- #define NameServer_DID  0xfffffcU
- #define Fabric_Cntl_DID 0xfffffdU
-@@ -4265,3 +4268,5 @@ lpfc_error_lost_link(IOCB_t *iocbp)
- #define SETVAR_MLORST 0x103007
- 
- #define BPL_ALIGN_SZ 8 /* 8 byte alignment for bpl and mbufs */
-+
-+#endif
-diff --git a/drivers/scsi/lpfc/lpfc_hw4.h b/drivers/scsi/lpfc/lpfc_hw4.h
-index c4ba8273a63f..d9e6bf53f520 100644
---- a/drivers/scsi/lpfc/lpfc_hw4.h
-+++ b/drivers/scsi/lpfc/lpfc_hw4.h
-@@ -20,6 +20,9 @@
-  * included with this package.                                     *
-  *******************************************************************/
- 
-+#ifndef _H_LPFC_HW4
-+#define _H_LPFC_HW4
-+
- #include <uapi/scsi/fc/fc_els.h>
- 
- /* Macros to deal with bit fields. Each bit field must have 3 #defines
-@@ -4912,3 +4915,5 @@ struct lpfc_grp_hdr {
- #define LPFC_FW_DUMP	1
- #define LPFC_FW_RESET	2
- #define LPFC_DV_RESET	3
-+
-+#endif
-diff --git a/drivers/scsi/lpfc/lpfc_ids.h b/drivers/scsi/lpfc/lpfc_ids.h
-index d48414e295a0..2abb7b098a3d 100644
---- a/drivers/scsi/lpfc/lpfc_ids.h
-+++ b/drivers/scsi/lpfc/lpfc_ids.h
-@@ -21,6 +21,9 @@
-  * included with this package.                                     *
-  *******************************************************************/
- 
-+#ifndef _H_LPFC_IDS
-+#define _H_LPFC_IDS
-+
- #include <linux/pci.h>
- 
- const struct pci_device_id lpfc_id_table[] = {
-@@ -124,3 +127,5 @@ const struct pci_device_id lpfc_id_table[] = {
- 		PCI_ANY_ID, PCI_ANY_ID, },
- 	{ 0 }
- };
-+
-+#endif
-diff --git a/drivers/scsi/lpfc/lpfc_logmsg.c b/drivers/scsi/lpfc/lpfc_logmsg.c
-new file mode 100644
-index 000000000000..37449fb566c4
---- /dev/null
-+++ b/drivers/scsi/lpfc/lpfc_logmsg.c
-@@ -0,0 +1,112 @@
-+#include <linux/kernel.h>
-+#include <linux/wait.h>
-+#include <linux/timer.h>
-+#include <linux/kref.h>
-+#include <linux/pci.h>
-+
-+#include <scsi/scsi_transport_fc.h>
-+
-+#include "lpfc_hw4.h"
-+#include "lpfc_hw.h"
-+#include "lpfc_sli.h"
-+#include "lpfc_sli4.h"
-+#include "lpfc_nl.h"
-+#include "lpfc_disc.h"
-+#include "lpfc.h"
-+#include "lpfc_logmsg.h"
-+
-+/* generate message by verbose log setting or severity */
-+void lpfc_vlog_msg(struct lpfc_vport *vport,
-+		   const char *level, uint32_t mask,
-+		   const char *fmt, ...)
-+{
-+	if ((mask & vport->cfg_log_verbose) || level[1] <= '4') {
-+		struct va_format vaf;
-+		va_list args;
-+
-+		va_start(args, fmt);
-+		vaf.fmt = fmt;
-+		vaf.va = &args;
-+
-+		dev_printk(level, &vport->phba->pcidev->dev,
-+			   "%d:(%d):%pV",
-+			   vport->phba->brd_no, vport->vpi, &vaf);
-+
-+		va_end(args);
-+	}
-+}
-+
-+void lpfc_printf_vlog(struct lpfc_vport *vport,
-+		      const char *level, uint32_t mask,
-+		      const char *fmt, ...)
-+{
-+	struct va_format vaf;
-+	va_list args;
-+
-+	va_start(args, fmt);
-+	vaf.fmt = fmt;
-+	vaf.va = &args;
-+
-+	if ((mask & vport->cfg_log_verbose) || level[1] <= '3') {
-+		if (mask & LOG_TRACE_EVENT)
-+			lpfc_dmp_dbg(vport->phba);
-+		dev_printk(level, &vport->phba->pcidev->dev,
-+			   "%d:(%d):%pV",
-+			   vport->phba->brd_no, vport->vpi, &vaf);
-+	} else if (!vport->cfg_log_verbose) {
-+		lpfc_dbg_print(vport->phba,
-+			       "%d:(%d):%pV",
-+			       vport->phba->brd_no, vport->vpi, &vaf);
-+	}
-+
-+	va_end(args);
-+}
-+
-+void lpfc_log_msg(struct lpfc_hba *phba,
-+		  const char *level, uint32_t mask,
-+		  const char *fmt, ...)
-+{
-+	uint32_t log_verbose = phba->pport ?
-+		phba->pport->cfg_log_verbose :
-+		phba->cfg_log_verbose;
-+
-+	if ((mask & log_verbose) || level[1] <= '4') {
-+		struct va_format vaf;
-+		va_list args;
-+
-+		va_start(args, fmt);
-+		vaf.fmt = fmt;
-+		vaf.va = &args;
-+
-+		dev_printk(level, &phba->pcidev->dev,
-+			   "%d:%pV", phba->brd_no, &vaf);
-+
-+		va_end(args);
-+	}
-+}
-+
-+void lpfc_printf_log(struct lpfc_hba *phba,
-+		     const char *level, uint32_t mask,
-+		     const char *fmt, ...)
-+{
-+	uint32_t log_verbose = phba->pport ?
-+		phba->pport->cfg_log_verbose :
-+		phba->cfg_log_verbose;
-+	struct va_format vaf;
-+	va_list args;
-+
-+	va_start(args, fmt);
-+	vaf.fmt = fmt;
-+	vaf.va = &args;
-+
-+	if ((mask & log_verbose) || level[1] <= '3') {
-+		if (mask & LOG_TRACE_EVENT)
-+			lpfc_dmp_dbg(phba);
-+		dev_printk(level, &phba->pcidev->dev,
-+			   "%d:%pV", phba->brd_no, &vaf);
-+	} else if (!phba->cfg_log_verbose) {
-+		lpfc_dbg_print(phba, "%d:%pV", phba->brd_no, &vaf);
-+	}
-+
-+	va_end(args);
-+}
-diff --git a/drivers/scsi/lpfc/lpfc_logmsg.h b/drivers/scsi/lpfc/lpfc_logmsg.h
-index c57adcdda258..2ff412cb6702 100644
---- a/drivers/scsi/lpfc/lpfc_logmsg.h
-+++ b/drivers/scsi/lpfc/lpfc_logmsg.h
-@@ -20,6 +20,9 @@
-  * included with this package.                                     *
-  *******************************************************************/
- 
-+#ifndef _H_LPFC_LOGMSG
-+#define _H_LPFC_LOGMSG
-+
- #define LOG_ELS		0x00000001	/* ELS events */
- #define LOG_DISCOVERY	0x00000002	/* Link discovery events */
- #define LOG_MBOX	0x00000004	/* Mailbox events */
-@@ -52,56 +55,21 @@ __printf(2, 3)
- void lpfc_dbg_print(struct lpfc_hba *phba, const char *fmt, ...);
- 
- /* generate message by verbose log setting or severity */
--#define lpfc_vlog_msg(vport, level, mask, fmt, ...)			\
--do {									\
--	if (((mask) & (vport)->cfg_log_verbose) || (level[1] <= '4'))	\
--		dev_printk(level, &((vport)->phba->pcidev)->dev,	\
--			   "%d:(%d):" fmt,				\
--			   (vport)->phba->brd_no, vport->vpi,		\
--			   ##__VA_ARGS__);				\
--} while (0)
--
--#define lpfc_log_msg(phba, level, mask, fmt, ...)			\
--do {									\
--	uint32_t log_verbose = (phba)->pport ?				\
--		(phba)->pport->cfg_log_verbose :			\
--		(phba)->cfg_log_verbose;				\
--	if (((mask) & log_verbose) || (level[1] <= '4'))		\
--		dev_printk(level, &((phba)->pcidev)->dev,		\
--			   "%d:" fmt,					\
--			   phba->brd_no, ##__VA_ARGS__);		\
--} while (0)
--
--#define lpfc_printf_vlog(vport, level, mask, fmt, ...)			\
--do {									\
--	if (((mask) & (vport)->cfg_log_verbose) || (level[1] <= '3')) { \
--		if ((mask) & LOG_TRACE_EVENT)				\
--			lpfc_dmp_dbg((vport)->phba);			\
--		dev_printk(level, &((vport)->phba->pcidev)->dev,	\
--			   "%d:(%d):" fmt,				\
--			   (vport)->phba->brd_no, vport->vpi,		\
--			   ##__VA_ARGS__);				\
--	} else if (!(vport)->cfg_log_verbose) {				\
--		lpfc_dbg_print((vport)->phba,				\
--			       "%d:(%d):" fmt,				\
--			       (vport)->phba->brd_no, (vport)->vpi,	\
--			       ##__VA_ARGS__);				\
--	}								\
--} while (0)
-+__printf(4, 5)
-+void lpfc_vlog_msg(struct lpfc_vport *vport,
-+		   const char *level, uint32_t mask,
-+		   const char *fmt, ...);
-+__printf(4, 5)
-+void lpfc_printf_vlog(struct lpfc_vport *vport,
-+		      const char *level, uint32_t mask,
-+		      const char *fmt, ...);
-+__printf(4, 5)
-+void lpfc_log_msg(struct lpfc_hba *phba,
-+		  const char *level, uint32_t mask,
-+		  const char *fmt, ...);
-+__printf(4, 5)
-+void lpfc_printf_log(struct lpfc_hba *phba,
-+		     const char *level, uint32_t mask,
-+		     const char *fmt, ...);
- 
--#define lpfc_printf_log(phba, level, mask, fmt, ...)			\
--do {									\
--	uint32_t log_verbose = (phba)->pport ?				\
--		(phba)->pport->cfg_log_verbose :			\
--		(phba)->cfg_log_verbose;				\
--	if (((mask) & log_verbose) || (level[1] <= '3')) {		\
--		if ((mask) & LOG_TRACE_EVENT)				\
--			lpfc_dmp_dbg(phba);				\
--		dev_printk(level, &((phba)->pcidev)->dev,		\
--			   "%d:" fmt,					\
--			   phba->brd_no, ##__VA_ARGS__);		\
--	} else if (!(phba)->cfg_log_verbose) {				\
--		lpfc_dbg_print(phba, "%d:" fmt,				\
--			       phba->brd_no, ##__VA_ARGS__);		\
--	}								\
--} while (0)
-+#endif
-diff --git a/drivers/scsi/lpfc/lpfc_nl.h b/drivers/scsi/lpfc/lpfc_nl.h
-index 95d60ab5ebf9..eefbcd032dfe 100644
---- a/drivers/scsi/lpfc/lpfc_nl.h
-+++ b/drivers/scsi/lpfc/lpfc_nl.h
-@@ -20,6 +20,9 @@
-  * included with this package.                                     *
-  *******************************************************************/
- 
-+#ifndef _H_LPFC_NL
-+#define _H_LPFC_NL
-+
- /* Event definitions for RegisterForEvent */
- #define FC_REG_LINK_EVENT		0x0001	/* link up / down events */
- #define FC_REG_RSCN_EVENT		0x0002	/* RSCN events */
-@@ -179,3 +182,4 @@ struct temp_event {
- 	uint32_t data;
- };
- 
-+#endif
-diff --git a/drivers/scsi/lpfc/lpfc_nvme.h b/drivers/scsi/lpfc/lpfc_nvme.h
-index 4a4c3f780e1f..09696510c3b3 100644
---- a/drivers/scsi/lpfc/lpfc_nvme.h
-+++ b/drivers/scsi/lpfc/lpfc_nvme.h
-@@ -21,6 +21,9 @@
-  * included with this package.                                     *
-  ********************************************************************/
- 
-+#ifndef _H_LPFC_NVME
-+#define _H_LPFC_NVME
-+
- #include <linux/nvme.h>
- #include <linux/nvme-fc-driver.h>
- #include <linux/nvme-fc.h>
-@@ -254,3 +257,5 @@ int __lpfc_nvme_xmt_ls_rsp(struct lpfc_async_xchg_ctx *axchg,
- 				struct lpfc_wcqe_complete *wcqe));
- void __lpfc_nvme_xmt_ls_rsp_cmp(struct lpfc_hba *phba,
- 		struct lpfc_iocbq *cmdwqe, struct lpfc_wcqe_complete *wcqe);
-+
-+#endif
-diff --git a/drivers/scsi/lpfc/lpfc_scsi.h b/drivers/scsi/lpfc/lpfc_scsi.h
-index f76667b7da7b..7115a3fb6acf 100644
---- a/drivers/scsi/lpfc/lpfc_scsi.h
-+++ b/drivers/scsi/lpfc/lpfc_scsi.h
-@@ -20,6 +20,9 @@
-  * included with this package.                                     *
-  *******************************************************************/
- 
-+#ifndef _H_LPFC_SCSI
-+#define _H_LPFC_SCSI
-+
- #include <asm/byteorder.h>
- 
- struct lpfc_hba;
-@@ -147,3 +150,4 @@ struct lpfc_scsicmd_bkt {
- /* For sysfs/debugfs tmp string max len */
- #define LPFC_MAX_SCSI_INFO_TMP_LEN	79
- 
-+#endif
-diff --git a/drivers/scsi/lpfc/lpfc_sli.h b/drivers/scsi/lpfc/lpfc_sli.h
-index 93d976ea8c5d..f24f875e1fe8 100644
---- a/drivers/scsi/lpfc/lpfc_sli.h
-+++ b/drivers/scsi/lpfc/lpfc_sli.h
-@@ -20,6 +20,9 @@
-  * included with this package.                                     *
-  *******************************************************************/
- 
-+#ifndef _H_LPFC_SLI
-+#define _H_LPFC_SLI
-+
- #if defined(CONFIG_DEBUG_FS) && !defined(CONFIG_SCSI_LPFC_DEBUG_FS)
- #define CONFIG_SCSI_LPFC_DEBUG_FS
- #endif
-@@ -449,3 +452,5 @@ struct lpfc_io_buf {
- 	uint64_t ts_data_io;
- #endif
- };
-+
-+#endif
-diff --git a/drivers/scsi/lpfc/lpfc_sli4.h b/drivers/scsi/lpfc/lpfc_sli4.h
-index a966cdeb52ee..9096b2c941e7 100644
---- a/drivers/scsi/lpfc/lpfc_sli4.h
-+++ b/drivers/scsi/lpfc/lpfc_sli4.h
-@@ -20,6 +20,9 @@
-  * included with this package.                                     *
-  *******************************************************************/
- 
-+#ifndef _H_LPFC_SLI4
-+#define _H_LPFC_SLI4
-+
- #include <linux/irq_poll.h>
- #include <linux/cpufreq.h>
- 
-@@ -1160,3 +1163,5 @@ static inline void *lpfc_sli4_qe(struct lpfc_queue *q, uint16_t idx)
- 	return q->q_pgs[idx / q->entry_cnt_per_pg] +
- 		(q->entry_size * (idx % q->entry_cnt_per_pg));
- }
-+
-+#endif
-diff --git a/drivers/scsi/lpfc/lpfc_version.h b/drivers/scsi/lpfc/lpfc_version.h
-index 20adec4387f0..259c4a72db74 100644
---- a/drivers/scsi/lpfc/lpfc_version.h
-+++ b/drivers/scsi/lpfc/lpfc_version.h
-@@ -20,6 +20,9 @@
-  * included with this package.                                     *
-  *******************************************************************/
- 
-+#ifndef _H_LPFC_VERSION
-+#define _H_LPFC_VERSION
-+
- #define LPFC_DRIVER_VERSION "12.8.0.3"
- #define LPFC_DRIVER_NAME		"lpfc"
- 
-@@ -35,3 +38,5 @@
- #define LPFC_COPYRIGHT "Copyright (C) 2017-2019 Broadcom. All Rights " \
- 		"Reserved. The term \"Broadcom\" refers to Broadcom Inc. " \
- 		"and/or its subsidiaries."
-+
-+#endif
--- 
-2.26.0
+> 
+> Well regardless, if we want to support this kind of functionality we
+> will need to implement a kind of atomic replacement for all watches with
+> new ones. This shouldn't be too difficult to achieve: buffer the desired
+> watches instead, and then activate them together atomically via a new
+> ioctl command.
+> 
+>> With my suggested changes of having fixed values per event and generic
+>> events, we could just have a single ioctl to enable and disable events.
+>> This would probably need to take an array of event descriptors as an
+>> argument where event descriptors contain the component type/id and the
+>> event to enable.
+> 
+> I agree with having specified data for particular event types, but I
+> think we should still be able to support general extension watches as an
+> optional functionality. In fact, I don't think we'll need to implement
+> enable/disable event ioctl commands.
+> 
+> The current implementation only records events if the user is watching
+> for them (i.e. a watch has been set); if no one is watching for these
+> events, they are just silently dropped by the counter_event_push
+> function. If we implement an ioctl to atomically set the watches, there
+> is no need to explicitly enable/disable events: events will always
+> report the specified data for those their respective type -- the watch
+> data is extra optional data and will start flowing automatically when
+> atomically activated.
+> 
 
+This sounds reasonable to me.
