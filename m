@@ -2,188 +2,193 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A583C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B69EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:32:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 619C22078D
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:32:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 459332073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:32:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aJe7NpJU"
+	dkim=pass (1024-bit key) header.d=mysnt.onmicrosoft.com header.i=@mysnt.onmicrosoft.com header.b="MWIH91Xe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726649AbgHJHct (ORCPT
+        id S1726676AbgHJHcy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 03:32:49 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39105 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726402AbgHJHcs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 03:32:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597044766;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=Pf2gnD93u5PiPmv+Ak0uYR+4wn4zwq2Nglh6AAI8C/w=;
-        b=aJe7NpJURtVk/MBRgySMF9wTxNrBECZjzdsuG5BoCQDsTC+urFLJ4byQIvliqMslEuAvQH
-        efRZqWWN+72aHE0ZPXo1QH6WXPJQ5t5FIjSlsZBPVY2nPjLwX6p88wzSCgzkvb4yW9veaY
-        k6qvqNXVxOojF7uD8xesOD8bb21yADM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-500-g7okM2B-NYy3RlJ4rDG8xA-1; Mon, 10 Aug 2020 03:32:26 -0400
-X-MC-Unique: g7okM2B-NYy3RlJ4rDG8xA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BC5FA1009440;
-        Mon, 10 Aug 2020 07:32:24 +0000 (UTC)
-Received: from [10.36.113.172] (ovpn-113-172.ams2.redhat.com [10.36.113.172])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E447619D61;
-        Mon, 10 Aug 2020 07:32:19 +0000 (UTC)
-Subject: Re: [PATCH] mm: sort freelist by rank number
-To:     Pekka Enberg <penberg@gmail.com>
-Cc:     pullip.cho@samsung.com, Andrew Morton <akpm@linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, hyesoo.yu@samsung.com,
-        janghyuck.kim@samsung.com
-References: <CGME20200803061805epcas2p20faeeff0b31b23d1bc4464972285b561@epcas2p2.samsung.com>
- <1596435031-41837-1-git-send-email-pullip.cho@samsung.com>
- <5f41af0f-4593-3441-12f4-5b0f7e6999ac@redhat.com>
- <CAOJsxLHTL__N3KE_HUhQrVR=rkri80=kU1e64-6nBgMKHZRi4g@mail.gmail.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat GmbH
-Message-ID: <c0e87116-2633-c408-455b-c00c86607491@redhat.com>
-Date:   Mon, 10 Aug 2020 09:32:18 +0200
+        Mon, 10 Aug 2020 03:32:54 -0400
+Received: from mail-eopbgr40127.outbound.protection.outlook.com ([40.107.4.127]:25251
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726569AbgHJHcv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 03:32:51 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kqAY2JlfC5JMQiXQy72prOfoc7OWoJBLeZsiPUXW7DLTmqd5M5+98bFpVtANC5450BKw6UxQcSqSsMaCt177xv8hZRzRjlgOdRAl1J4IShodub9XMdrvIMom7KZdQTDVy0uldM3OvA/rbUVVQojMqbmYeRW93QPHApPMtF3ZIqf192Pxn8E8Gc0cD1sR6wkJDMYgVbb49VNzDKQ1GsvhzR4Fx56R3HuLrK7TuDZff23R5gBFkoFUz145oS1rMmodHv09b0ws/umJjvU7UzS1ZREy3UjZVRkdYEu9ubhYt1X2WY77RQz4wt98S9UYkNruBFTesGkhci/mSHZEF7ZR4A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tc9IW4hoT1tZkhIMEzBBVRF1zUZ/g9YJQLse3mLtcdw=;
+ b=CtynKHPbyYjsGhPrZALL8UX24MHRvDJXb4dwPefbstAGiLnEiX4SI8ULnwHFfeQ0GGKtwWX3+TwZRtmVaXuYwneRAvVB5Kw8U7F2jDXrEv3FcKT7es2Ee9MgNiCdVkC+8YxruuTEV6NYaG7ea1vRg2Kpr7PPHF3wqCeBfEFKhCt7Owp+HEpJBeLyxCPgJ4tNGKfANQ8FWjC9rv3xu4Z82ofr/8iU6qllN4qbUuzJFgSzhghag1XsrIGq5gIL/zPm6cWuXuyi4uEqjQeE7sjnqin9Q38Sibhf8rQW5i7LiSRlJ8mD4PAhCMz3AFRMKz/zYULONUQAIy3epyQjuAG4AQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=kontron.de; dmarc=pass action=none header.from=kontron.de;
+ dkim=pass header.d=kontron.de; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mysnt.onmicrosoft.com;
+ s=selector2-mysnt-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tc9IW4hoT1tZkhIMEzBBVRF1zUZ/g9YJQLse3mLtcdw=;
+ b=MWIH91XeuqHc4pa2tNQAwlWxvaV6BHlLz0WmpxzWpWEUc9j0y1TD0KN0XpAC1hFA/+pKdmqSmWvuBPk269MNvGo/p25/XEG9J1zhqgnSO+uW5Q4bkYN+3+sh37iz2vXZj+p0lFIbEVHPvvPqdjgS2CBd1zZ6Sr7ZJuA4YjRd7MY=
+Authentication-Results: nxp.com; dkim=none (message not signed)
+ header.d=none;nxp.com; dmarc=none action=none header.from=kontron.de;
+Received: from AM0PR10MB2963.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:208:157::14)
+ by AM0PR10MB3617.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:15f::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.19; Mon, 10 Aug
+ 2020 07:32:46 +0000
+Received: from AM0PR10MB2963.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::51f5:dfc0:24bb:309c]) by AM0PR10MB2963.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::51f5:dfc0:24bb:309c%7]) with mapi id 15.20.3261.024; Mon, 10 Aug 2020
+ 07:32:46 +0000
+Subject: Re: [PATCH v11 12/12] dmaengine: imx-sdma: add uart rom script
+To:     Robin Gong <yibin.gong@nxp.com>, mark.rutland@arm.com,
+        broonie@kernel.org, robh+dt@kernel.org, catalin.marinas@arm.com,
+        vkoul@kernel.org, will.deacon@arm.com, shawnguo@kernel.org,
+        festevam@gmail.com, s.hauer@pengutronix.de,
+        martin.fuzzey@flowbird.group, u.kleine-koenig@pengutronix.de,
+        dan.j.williams@intel.com, matthias.schiffer@ew.tq-group.com
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kernel@pengutronix.de, dmaengine@vger.kernel.org, linux-imx@nxp.com
+References: <1595616685-9987-1-git-send-email-yibin.gong@nxp.com>
+ <1595616685-9987-13-git-send-email-yibin.gong@nxp.com>
+From:   Frieder Schrempf <frieder.schrempf@kontron.de>
+Message-ID: <89946dc6-6c0f-b3d5-9c9a-517f1ed7b5e1@kontron.de>
+Date:   Mon, 10 Aug 2020 09:32:44 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <CAOJsxLHTL__N3KE_HUhQrVR=rkri80=kU1e64-6nBgMKHZRi4g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <1595616685-9987-13-git-send-email-yibin.gong@nxp.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: AM0PR02CA0107.eurprd02.prod.outlook.com
+ (2603:10a6:208:154::48) To AM0PR10MB2963.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:208:157::14)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.99.60] (80.147.118.32) by AM0PR02CA0107.eurprd02.prod.outlook.com (2603:10a6:208:154::48) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.20 via Frontend Transport; Mon, 10 Aug 2020 07:32:45 +0000
+X-Originating-IP: [80.147.118.32]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: f572f286-5146-40aa-ac3d-08d83cff938a
+X-MS-TrafficTypeDiagnostic: AM0PR10MB3617:
+X-Microsoft-Antispam-PRVS: <AM0PR10MB36173BDE7887CDE9797D8B92E9440@AM0PR10MB3617.EURPRD10.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: wEAWs8wDhczFWLmu7VdEtJ/7MA+VhMJ9oFWoyN9A2yxZr2lt4BGaRe6Bn6PFCLrgNtizyiKVweulvbynMH0/7iHrnPEa3C/YqWwEXdthErSwF41Xqd7zu8nnWfRNSGbj2Ers5GGtt7yRHnJqomOPAPCLGZwGpfb2bPldSVgS29cZekeT3re+cdokJKLwyQWGDlhssfUSFJAioB8E0oQv9nuJkhc25z+Inw60Spfbq5LpI1ffW1ge8H8x9mQ11Ux2h7WHeSd2rKFAFpMh1H2FZxjLa4U4dj7DhzLYDdfJmo1bAwnesbbSp3viTN3D1T4XRv88dAJFK/eukTEob5qkIs45C2kfjeqBgEv0qn2YE3BMNcOXHx6U1+iMPiU6Dy2FzMMIyXspMeMM4PFxtVOAKHk8epTtvVUS0vf/54ipaAVu99QWGgMvr/LlxpB9jEBhbqY1Su161NBh+0IiZNjnYbBD2EvEhUu6Eb5L2IrVWZE=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR10MB2963.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(136003)(396003)(366004)(376002)(39850400004)(36756003)(53546011)(2906002)(44832011)(8936002)(8676002)(66556008)(66476007)(45080400002)(26005)(31696002)(86362001)(16576012)(316002)(66946007)(7416002)(4326008)(186003)(16526019)(5660300002)(52116002)(31686004)(6486002)(956004)(2616005)(966005)(478600001)(83380400001)(921003)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: CWnfoRRrz/r7n29kvET7xMZW6VdI50yOMevZMWDc2RDu6lZdIkWE/KMQi91rj+8KHaADqltL9phu01wFY2BxsOJaIpXXqoI2Wm3KZ9+a6K14eJz2NU+0CFJslWJ0UkEyZyUoemkosIkTzOgloiFsIXv9wWb73FyybsAfYUqdEGE3iDJyz3B2lVzY6xkr9RDza/04+PCGtcIvz9bX3J2hXNnClw156GHRMxWVh8vz53IByQWlfqZ0qGRj0NYnD0dEdJwVpo2MWtGHQ4ntYByIBVr9KkrVqiZHctoQ7pYbkrfJNXq8sJYtWb3ajIvKgq1p3R0w39BUoYMmxdVpKDlN4tt7kpCi29r6ITVrKIXRkz6LXAevRA33Q5d9uaMBEsi9bVZj/1Em0Lat1MqvGBIDKO9TP+9RtnGT+fDe3r5Aj0gP4Egadaw6cswlet7sfS7ds+YI+UQvDWhQFNzLyj68KNrbbb0zqL2gRpq5cBKT9JU4rKfwRrx/UNyVQyLEFxTeikdYLZwPRkunnEJWryGpvepK3C1bh+bkFq06VY89Uub+R1FjChDnjL6qoV2hOQv8CgSKU2T1ca0tLwy7nWUaZhCnKC8FygU/CPlN9gMpKH43DkkwWkzT5nwM8x+bexLlJyqb4J5Oy4QIkZ2TpIYffQ==
+X-OriginatorOrg: kontron.de
+X-MS-Exchange-CrossTenant-Network-Message-Id: f572f286-5146-40aa-ac3d-08d83cff938a
+X-MS-Exchange-CrossTenant-AuthSource: AM0PR10MB2963.EURPRD10.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Aug 2020 07:32:46.5639
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8c9d3c97-3fd9-41c8-a2b1-646f3942daf1
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Kpo2hEXZdm4VIj5PxBTSRhyO+LvCXwtG6Z5l2VQFtz7UphUI++Boi8Z4GyTdTdFybELyMoKlWgJEuOx/DpOlPUrOOXiC/GpIfIyv4iYvOXg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR10MB3617
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07.08.20 09:08, Pekka Enberg wrote:
-> Hi Cho and David,
-> 
-> On Mon, Aug 3, 2020 at 10:57 AM David Hildenbrand <david@redhat.com> wrote:
->>
->> On 03.08.20 08:10, pullip.cho@samsung.com wrote:
->>> From: Cho KyongHo <pullip.cho@samsung.com>
->>>
->>> LPDDR5 introduces rank switch delay. If three successive DRAM accesses
->>> happens and the first and the second ones access one rank and the last
->>> access happens on the other rank, the latency of the last access will
->>> be longer than the second one.
->>> To address this panelty, we can sort the freelist so that a specific
->>> rank is allocated prior to another rank. We expect the page allocator
->>> can allocate the pages from the same rank successively with this
->>> change. It will hopefully improves the proportion of the consecutive
->>> memory accesses to the same rank.
->>
->> This certainly needs performance numbers to justify ... and I am sorry,
->> "hopefully improves" is not a valid justification :)
->>
->> I can imagine that this works well initially, when there hasn't been a
->> lot of memory fragmentation going on. But quickly after your system is
->> under stress, I doubt this will be very useful. Proof me wrong. ;)
->>
->> ... I dislike this manual setting of "dram_rank_granule". Yet another mm
->> feature that can only be enabled by a magic command line parameter where
->> users have to guess the right values.
->>
->> (side note, there have been similar research approaches to improve
->> energy consumption by switching off ranks when not needed).
-> 
-> I was thinking of the exact same thing. PALLOC [1] comes to mind, but
-> perhaps there are more recent ones?
+Hi Robin,
 
-A more recent one is "Footprint-Based DIMM Hotplug"
-(https://dl.acm.org/doi/abs/10.1109/TC.2019.2945562), which triggers
-memory onlinng/offlining from the kernel to disable banks where possible
-(I don't think the approach is upstream material in that form).
-
-Also, I stumbled over "Towards Practical Page Placement for a Green
-Memory Manager" (https://ieeexplore.ieee.org/document/7397629),
-proposing an adaptive buddy allocator that tries to keep complete banks
-free in the buddy where possible. That approach sounded quite
-interesting while skimming over the paper.
+On 24.07.20 20:51, Robin Gong wrote:
+> For the compatibility of NXP internal legacy kernel before 4.19 which
+> is based on uart ram script and upstreaming kernel based on uart rom
+> script, add both uart ram/rom script in latest sdma firmware. By default
+> uart rom script used.
+> Besides, add two multi-fifo scripts for SAI/PDM on i.mx8m/8mm and add
+> back qspi script miss for v4(i.mx7d/8m/8mm family, but v3 is for i.mx6).
 > 
-> I also dislike the manual knob, but is there a way for the OS to
-> detect this by itself? My (perhaps outdated) understanding was that
-> the DRAM address mapping scheme, for example, is not exposed to the
-> OS.
-
-I guess one universal approach is by measuring access times ... not what
-we might be looking for :)
-
+> rom script:
+>          uart_2_mcu_addr
+> 	uartsh_2_mcu_addr /* through spba bus */
+> am script:
+> 	uart_2_mcu_ram_addr
+> 	uartsh_2_mcu_ram_addr /* through spba bus */
 > 
-> I think having more knowledge of DRAM controller details in the OS
-> would be potentially beneficial for better page allocation policy, so
-> maybe try come up with something more generic, even if the fallback to
-> providing this information is a kernel command line option.
+> Please get latest sdma firmware from the below and put them into the path
+> (/lib/firmware/imx/sdma/):
+> https://eur04.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgit.kernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Ffirmware%2Flinux-firmware.git&amp;data=02%7C01%7Cfrieder.schrempf%40kontron.de%7Caa98331fadca476ca15c08d82fbdaf32%7C8c9d3c973fd941c8a2b1646f3942daf1%7C0%7C0%7C637311839017457806&amp;sdata=cbM33k4fdr0IAni1njQWgIrzxbEJ%2BQBkxN10fnagO6k%3D&amp;reserved=0
+> /tree/imx/sdma
 > 
-> [1] http://cs-people.bu.edu/rmancuso/files/papers/palloc-rtas2014.pdf
-> 
-> - Pekka
-> 
+> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+> Acked-by: Vinod Koul <vkoul@kernel.org>
 
+This patch seems to break UART DMA in case the ROM firmware is used. In 
+that case sdma->script_number is set to SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V1, 
+so the ROM scripts at uart_2_mcu_addr and uartsh_2_mcu_addr will never 
+be added in sdma_add_scripts() as they are now moved beyond the V1 max 
+index.
 
--- 
+Reverting this patch fixes UART DMA with ROM firmware.
+Can you please find a way to fix this or just drop this change?
+
 Thanks,
+Frieder
 
-David / dhildenb
-
+> ---
+>   drivers/dma/imx-sdma.c                     | 4 ++--
+>   include/linux/platform_data/dma-imx-sdma.h | 8 ++++++--
+>   2 files changed, 8 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+> index 8735606..5900e32 100644
+> --- a/drivers/dma/imx-sdma.c
+> +++ b/drivers/dma/imx-sdma.c
+> @@ -1729,8 +1729,8 @@ static void sdma_issue_pending(struct dma_chan *chan)
+>   
+>   #define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V1	34
+>   #define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V2	38
+> -#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V3	41
+> -#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V4	42
+> +#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V3	45
+> +#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V4	46
+>   
+>   static void sdma_add_scripts(struct sdma_engine *sdma,
+>   		const struct sdma_script_start_addrs *addr)
+> diff --git a/include/linux/platform_data/dma-imx-sdma.h b/include/linux/platform_data/dma-imx-sdma.h
+> index 30e676b..e12d2e8 100644
+> --- a/include/linux/platform_data/dma-imx-sdma.h
+> +++ b/include/linux/platform_data/dma-imx-sdma.h
+> @@ -20,12 +20,12 @@ struct sdma_script_start_addrs {
+>   	s32 per_2_firi_addr;
+>   	s32 mcu_2_firi_addr;
+>   	s32 uart_2_per_addr;
+> -	s32 uart_2_mcu_addr;
+> +	s32 uart_2_mcu_ram_addr;
+>   	s32 per_2_app_addr;
+>   	s32 mcu_2_app_addr;
+>   	s32 per_2_per_addr;
+>   	s32 uartsh_2_per_addr;
+> -	s32 uartsh_2_mcu_addr;
+> +	s32 uartsh_2_mcu_ram_addr;
+>   	s32 per_2_shp_addr;
+>   	s32 mcu_2_shp_addr;
+>   	s32 ata_2_mcu_addr;
+> @@ -52,6 +52,10 @@ struct sdma_script_start_addrs {
+>   	s32 zcanfd_2_mcu_addr;
+>   	s32 zqspi_2_mcu_addr;
+>   	s32 mcu_2_ecspi_addr;
+> +	s32 mcu_2_sai_addr;
+> +	s32 sai_2_mcu_addr;
+> +	s32 uart_2_mcu_addr;
+> +	s32 uartsh_2_mcu_addr;
+>   	/* End of v3 array */
+>   	s32 mcu_2_zqspi_addr;
+>   	/* End of v4 array */
+> 
