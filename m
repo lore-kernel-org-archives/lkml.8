@@ -2,78 +2,74 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F12C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 17:14:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 905C9C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 17:16:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3825520866
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 17:14:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A9AE20825
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 17:16:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728082AbgHJROO (ORCPT
+        id S1728030AbgHJRQg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 13:14:14 -0400
-Received: from smtprelay0069.hostedemail.com ([216.40.44.69]:40336 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725873AbgHJROM (ORCPT
+        Mon, 10 Aug 2020 13:16:36 -0400
+Received: from gardel.0pointer.net ([85.214.157.71]:50006 "EHLO
+        gardel.0pointer.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726720AbgHJRQf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 13:14:12 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 720C2180A68C0;
-        Mon, 10 Aug 2020 17:14:11 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: pull72_170428b26fdb
-X-Filterd-Recvd-Size: 1971
-Received: from XPS-9350 (unknown [172.58.78.167])
-        (Authenticated sender: joe@perches.com)
-        by omf14.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 10 Aug 2020 17:14:09 +0000 (UTC)
-Message-ID: <ca88752c86bf8a42f9aa56b69df585542ea26622.camel@perches.com>
-Subject: Re: [PATCH] USB: storage: isd200: fix spelling mistake "removeable"
- -> "removable"
-From:   Joe Perches <joe@perches.com>
-To:     Alan Stern <stern@rowland.harvard.edu>,
-        Colin King <colin.king@canonical.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, usb-storage@lists.one-eyed-alien.net,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 10 Aug 2020 10:14:06 -0700
-In-Reply-To: <20200810142547.GC299045@rowland.harvard.edu>
-References: <20200810083211.48282-1-colin.king@canonical.com>
-         <20200810142547.GC299045@rowland.harvard.edu>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.3-0ubuntu1 
+        Mon, 10 Aug 2020 13:16:35 -0400
+Received: from gardel-login.0pointer.net (gardel.0pointer.net [85.214.157.71])
+        by gardel.0pointer.net (Postfix) with ESMTP id 80161E814D8;
+        Mon, 10 Aug 2020 19:16:32 +0200 (CEST)
+Received: by gardel-login.0pointer.net (Postfix, from userid 1000)
+        id 27D4F16081D; Mon, 10 Aug 2020 19:16:32 +0200 (CEST)
+Date:   Mon, 10 Aug 2020 19:16:32 +0200
+From:   Lennart Poettering <mzxreary@0pointer.de>
+To:     linux-block <linux-block@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+        Yang Xu <xuyang2018.jy@cn.fujitsu.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH v2] loop: unset GENHD_FL_NO_PART_SCAN on LOOP_CONFIGURE
+Message-ID: <20200810171632.GA226564@gardel-login>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-08-10 at 10:25 -0400, Alan Stern wrote:
-> On Mon, Aug 10, 2020 at 09:32:11AM +0100, Colin King wrote:
-> > From: Colin Ian King <colin.king@canonical.com>
-> > 
-> > There is a spelling mistake in a usb_stor_dbg debug message. Fix it.
+When LOOP_CONFIGURE is used with LO_FLAGS_PARTSCAN we need to propagate
+this into the GENHD_FL_NO_PART_SCAN. LOOP_SETSTATUS does this,
+LOOP_CONFIGURE doesn't so far. Effect is that setting up a loopback
+device with partition scanning doesn't actually work when LOOP_CONFIGURE
+is issued, though it works fine with LOOP_SETSTATUS.
 
-This is an alternate spelling in a few dictionaries.
-Is this an acceptable Briticism?
-If so, I suggest no change.
+Let's correct that and propagate the flag in LOOP_CONFIGURE too.
 
-> > diff --git a/drivers/usb/storage/isd200.c b/drivers/usb/storage/isd200.c
-[]
-> > @@ -1383,7 +1383,7 @@ static int isd200_scsi_to_ata(struct scsi_cmnd *srb, struct us_data *us,
-> >  				ATA_CMD_MEDIA_LOCK : ATA_CMD_MEDIA_UNLOCK;
-> >  			isd200_srb_set_bufflen(srb, 0);
-> >  		} else {
-> > -			usb_stor_dbg(us, "   Not removeable media, just report okay\n");
-> > +			usb_stor_dbg(us, "   Not removable media, just report okay\n");
-> >  			srb->result = SAM_STAT_GOOD;
-> >  			sendToTransport = 0;
-> >  		}
-> > -- 
-> 
-> Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Fixes: 3448914e8cc5("loop: Add LOOP_CONFIGURE ioctl")
 
+Signed-off-by: Lennart Poettering <lennart@poettering.net>
+Acked-by: Martijn Coenen <maco@android.com>
+---
+ drivers/block/loop.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index d18160146226..2f137d6ce169 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -1171,6 +1171,8 @@ static int loop_configure(struct loop_device *lo, fmode_t mode,
+ 	if (part_shift)
+ 		lo->lo_flags |= LO_FLAGS_PARTSCAN;
+ 	partscan = lo->lo_flags & LO_FLAGS_PARTSCAN;
++	if (partscan)
++		lo->lo_disk->flags &= ~GENHD_FL_NO_PART_SCAN;
+
+ 	/* Grab the block_device to prevent its destruction after we
+ 	 * put /dev/loopXX inode. Later in __loop_clr_fd() we bdput(bdev).
+--
+2.26.2
