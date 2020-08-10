@@ -2,100 +2,174 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA7D8C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:31:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 876BAC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:32:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A24D32073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:31:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F7C9206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:32:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="k3lBQMah"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726755AbgHJMbp (ORCPT
+        id S1726773AbgHJMcc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 08:31:45 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37814 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726450AbgHJMbo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 08:31:44 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 7C610AEF3;
-        Mon, 10 Aug 2020 12:32:02 +0000 (UTC)
-Date:   Mon, 10 Aug 2020 14:31:41 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
-Message-ID: <20200810123141.GF4773@dhcp22.suse.cz>
-References: <20200809204354.20137-1-urezki@gmail.com>
- <20200809204354.20137-2-urezki@gmail.com>
+        Mon, 10 Aug 2020 08:32:32 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:61112 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726450AbgHJMcb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 08:32:31 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597062750; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=YATn2IQenXC1AZhlnO1R/hOYwlccU9AexyRTM+qvl5Y=; b=k3lBQMahbpo0p8P3wFhF41SFJCshrNNG9XCHIFpA2GNYEEKrYC4ZPyraMd5yA5CFcZXmiO4l
+ 5ApxJ2rOU+Otg6MbHOImfLAXhOqNlQ3qJCeXTwxA1bFjJ3eBK78so7gS+CSe7BRhJ2+pEqpj
+ syuY7BH8EoT0dbD5P9yuuvmVdK8=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n09.prod.us-west-2.postgun.com with SMTP id
+ 5f313e49d96d28d61e297dee (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 10 Aug 2020 12:32:09
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id EEE58C4339C; Mon, 10 Aug 2020 12:32:08 +0000 (UTC)
+Received: from [192.168.1.100] (unknown [47.8.236.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akashast)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 04822C433C6;
+        Mon, 10 Aug 2020 12:32:03 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 04822C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
+Subject: Re: [PATCH] serial: qcom_geni_serial: Fix recent kdb hang
+To:     Douglas Anderson <dianders@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     kgdb-bugreport@lists.sourceforge.net,
+        Mukesh Savaliya <msavaliy@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Evan Green <evgreen@chromium.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-serial@vger.kernel.org
+References: <20200806221904.1.I4455ff86f0ef5281c2a0cd0a4712db614548a5ca@changeid>
+From:   Akash Asthana <akashast@codeaurora.org>
+Message-ID: <adaef6bf-7887-feea-fedf-d3bc5566bb9d@codeaurora.org>
+Date:   Mon, 10 Aug 2020 18:01:54 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200809204354.20137-2-urezki@gmail.com>
+In-Reply-To: <20200806221904.1.I4455ff86f0ef5281c2a0cd0a4712db614548a5ca@changeid>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun 09-08-20 22:43:53, Uladzislau Rezki (Sony) wrote:
-[...]
-> Limitations and concerns (Main part)
-> ====================================
-> The current memmory-allocation interface presents to following
-> difficulties that this patch is designed to overcome:
-> 
-> a) If built with CONFIG_PROVE_RAW_LOCK_NESTING, the lockdep will
->    complain about violation("BUG: Invalid wait context") of the
->    nesting rules. It does the raw_spinlock vs. spinlock nesting
->    checks, i.e. it is not legal to acquire a spinlock_t while
->    holding a raw_spinlock_t.
-> 
->    Internally the kfree_rcu() uses raw_spinlock_t(in rcu-dev branch)
->    whereas the "page allocator" internally deals with spinlock_t to
->    access to its zones. The code also can be broken from higher level
->    of view:
->    <snip>
->        raw_spin_lock(&some_lock);
->        kfree_rcu(some_pointer, some_field_offset);
->    <snip>
+Hi Doug,
 
-Is there any fundamental problem to make zone raw_spin_lock?
+On 8/7/2020 10:49 AM, Douglas Anderson wrote:
+> The commit e42d6c3ec0c7 ("serial: qcom_geni_serial: Make kgdb work
+> even if UART isn't console") worked pretty well and I've been doing a
+> lot of debugging with it.  However, recently I typed "dmesg" in kdb
+> and then held the space key down to scroll through the pagination.  My
+> device hung.  This was repeatable and I found that it was introduced
+> with the aforementioned commit.
+>
+> It turns out that there are some strange boundary cases in geni where
+> in some weird situations it will signal RX_LAST but then will put 0 in
+> RX_LAST_BYTE.  This means that the entire last FIFO entry is valid.
 
-> b) If built with CONFIG_PREEMPT_RT. Please note, in that case spinlock_t
->    is converted into sleepable variant. Invoking the page allocator from
->    atomic contexts leads to "BUG: scheduling while atomic".
+IMO that means we received a word in RX_FIFO and it is the last word 
+hence RX_LAST bit is set.
 
-[...]
+RX_LAST_BYTE is 0 means none of the bytes are valid in the last word.
 
-> Proposal
-> ========
-> 1) Make GFP_* that ensures that the allocator returns NULL rather
-> than acquire its own spinlock_t. Having such flag will address a and b
-> limitations described above. It will also make the kfree_rcu() code
-> common for RT and regular kernel, more clean, less handling corner
-> cases and reduce the code size.
+In such scenario we should just read RX_FIFO buffer (to empty it), 
+discard the word and return NO_POLL_CHAR. Something like below.
 
-I do not think this is a good idea. Single purpose gfp flags that tend
-to heavily depend on the current implementation of the page allocator
-have turned out to be problematic. Users used to misunderstand their
-meaning resulting in a lot of abuse which was not trivial to remove.
-This flag seem to fall into exactly this sort of category. If there is a
-problem in nesting then that should be addressed rather than a new flag
-exported IMHO. If that is absolutely not possible for some reason then
-we can try to figure out what to do but that really need a very strong
-justification.
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+                 else
+                         private_data->poll_cached_bytes_cnt = 4;
+
+                 private_data->poll_cached_bytes =
+                         readl(uport->membase + SE_GENI_RX_FIFOn);
+         }
+
++        if (!private_data->poll_cached_bytes_cnt)
++              return NO_POLL_CHAR;
+         private_data->poll_cached_bytes_cnt--;
+         ret = private_data->poll_cached_bytes & 0xff;
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Please let me know whether above code helps.
+
+I am not sure about what all scenario can leads to this behavior from 
+hardware, I will try to get an answer from hardware team.
+
+Any error bit was set for SE_GENI_S_IRQ_STATUS & SE_GENI_M_IRQ_STATUS 
+registers?
+
+
+I guess the hang was seen because *poll_cached_bytes_cnt* is unsigned 
+int and it's value was 0, when it's decremented by 1 it's value become 
+'4294967295' (very large) and dummy RX (0x00) would happen that
+
+many times before reading any actual RX transfers/bytes.
+
+Regards,
+
+Akash
+
+
+> This weird corner case is handled in qcom_geni_serial_handle_rx()
+> where you can see that we only honor RX_LAST_BYTE if RX_LAST is set
+> _and_ RX_LAST_BYTE is non-zero.  If either of these is not true we use
+> BYTES_PER_FIFO_WORD (4) for the size of the last FIFO word.
+>
+> Let's fix kgdb.  While at it, also use the proper #define for 4.
+>
+> Fixes: e42d6c3ec0c7 ("serial: qcom_geni_serial: Make kgdb work even if UART isn't console")
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+>
+>   drivers/tty/serial/qcom_geni_serial.c | 9 +++++++--
+>   1 file changed, 7 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
+> index 07b7b6b05b8b..e27077656939 100644
+> --- a/drivers/tty/serial/qcom_geni_serial.c
+> +++ b/drivers/tty/serial/qcom_geni_serial.c
+> @@ -361,11 +361,16 @@ static int qcom_geni_serial_get_char(struct uart_port *uport)
+>   			return NO_POLL_CHAR;
+>   
+>   		if (word_cnt == 1 && (status & RX_LAST))
+> +			/*
+> +			 * NOTE: If RX_LAST_BYTE_VALID is 0 it needs to be
+> +			 * treated as if it was BYTES_PER_FIFO_WORD.
+> +			 */
+>   			private_data->poll_cached_bytes_cnt =
+>   				(status & RX_LAST_BYTE_VALID_MSK) >>
+>   				RX_LAST_BYTE_VALID_SHFT;
+> -		else
+> -			private_data->poll_cached_bytes_cnt = 4;
+> +
+> +		if (private_data->poll_cached_bytes_cnt == 0)
+> +			private_data->poll_cached_bytes_cnt = BYTES_PER_FIFO_WORD;
+>   
+>   		private_data->poll_cached_bytes =
+>   			readl(uport->membase + SE_GENI_RX_FIFOn);
 
 -- 
-Michal Hocko
-SUSE Labs
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+
