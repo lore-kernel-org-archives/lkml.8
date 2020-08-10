@@ -2,71 +2,71 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF6DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:59:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E61C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:59:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 626CD2078D
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:59:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84E2020791
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:59:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g+tH9zFT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vmv4SoRl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727828AbgHJO71 (ORCPT
+        id S1727845AbgHJO7a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 10:59:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59978 "EHLO
+        Mon, 10 Aug 2020 10:59:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727789AbgHJO7P (ORCPT
+        with ESMTP id S1727088AbgHJO7E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 10:59:15 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FE24C061787;
-        Mon, 10 Aug 2020 07:59:13 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id t10so5006804plz.10;
-        Mon, 10 Aug 2020 07:59:13 -0700 (PDT)
+        Mon, 10 Aug 2020 10:59:04 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E2A8C061787;
+        Mon, 10 Aug 2020 07:59:04 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id d4so5398694pjx.5;
+        Mon, 10 Aug 2020 07:59:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=K9ANqD1SHthCWhjAN+oUkgPbsB9QxwwtNBqjFnceaq8=;
-        b=g+tH9zFTraAvqoYMnKdnrb7hRM0x6oGDZ9FV2iYf31Fn4qA7UVi9xR8djova0Sh1W2
-         02Q6zpC5GlKAw5+CLMgM1xTSmCXEy/3jynABl4DoqPT1qDGu6FAGwJqgjLTpXM7kIXj5
-         eMoGKsLmQnmRoQMG8rM+/Dc5ke7QJtamjx38XFBBUJ+iNQosVIFPKZdT0i50uAFFUbeN
-         YYJaRyega+Vt1Mohi0DtO1WU4SdlbUvtdscxCbRg1M0r+uKjPp9xrL1HkDpr24791Qo2
-         mT43G1ewfcIyN5zf0oAhM85vX1gY8LM1yPL/7jFhu5RY+p4Jjt2plhyaxFhukoOXkZF4
-         19eQ==
+        bh=SHSkT38oPDjdbo6Pdfg3IfSW8k0GGeohQthylBq7Wn0=;
+        b=Vmv4SoRlK/lnjdXh8GMWKAyKi9m2lK4HXA+zWWINhSGp8Y3XQmZ4R3y1ZqW5lybs0y
+         Tte/X+X5OmI4N4WUk7ro0Z7+wDelXCVEABSXreridok4vVcIc8ZHKyBOJHip4P4Ct+14
+         uQR4qtWymrwj7WYgkUkQ4tDXmPCnBmwrMPHpXeUbsFsJDprGHmr0qvfrhg+VLYBhaqj4
+         oL4/CX6tcS+wbwgqC2gT3ro4gWEbUwLWtu3PjSY6FYk361od1lv23yPs3jY166E8KfLZ
+         3K862j2OJugJ+y+bI3glgulvjLtRG3wkXdaa798tqSfSUzPRVJey0YUrHqpmkIpUvMkP
+         mWcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=K9ANqD1SHthCWhjAN+oUkgPbsB9QxwwtNBqjFnceaq8=;
-        b=A3fwVxJFoUZX8YGMZFpaK9K/J1H+voLMjv7e4TvWMqCKnLyuwiSbQ9kKJ+/pIHgj7Y
-         ut3AK64hgGIfJjDp5E6HVzCf2/IbM2FnTAJ2efOfPO4dBW5KSN5UhwpxPNBidiwUZ838
-         RwTSKdQ+PWS5VmcC5znt+MVHZhSU9xWLPPoa3YPjFQ8oyHdpHDTOte9g7xmS2J8Z4ZIp
-         BIh7PkFAHmwpQogu9EeyiKbzOHpJF/cJQaqaFOIw6SkxyQc6qjfieJ0Q7KUDlPNUGcxz
-         ntgt5/kn518MxoQtHWoHvv0NTLQmC79BQJHoQBeWlt1OuodbBnmLZK+O+AJPxkuozLIF
-         TDCQ==
-X-Gm-Message-State: AOAM533JzGRzzIb/T3f5/2RrHLGIsmeU+/wKU9OUje/Ilx6C70O3toQL
-        1qoNwpWFlYXmXJGmS8yc/vVpToMHS8Y=
-X-Google-Smtp-Source: ABdhPJyG1x70qGUPKTM3nyeJWwLc0QtgduyTRoBs995n1XWXNoigT0mWbpM2bEuLwWO9rF8ZpGX1YA==
-X-Received: by 2002:a17:90a:640b:: with SMTP id g11mr14898731pjj.176.1597071552501;
-        Mon, 10 Aug 2020 07:59:12 -0700 (PDT)
+        bh=SHSkT38oPDjdbo6Pdfg3IfSW8k0GGeohQthylBq7Wn0=;
+        b=NpC5AmDxZHPGdos5J3SwRD77WAl/V/PT0T3rCTSm56IhjPrXut7pXknHOCaUG0pWnX
+         iQ7mIxSv7TIfquH4+9ebjYer17D/lsy5/KBHAhtXD8XpTKouvhpDdTu1Ww4N0T/5YaWL
+         1kXEJ+0Mrgkj6YArErRWCX1FmgUCggEuChzUVSjlX2sEXZRuf/DtBKkER8VwUwmt4bI9
+         vLqcackx44/hL3JtGOIljsvRJdoAl/PpLxjs04PrgFiY2fVVK58+90K6TNZRSI4DvP5z
+         Hw0izWKgYBunCyLBiKZ7qm/0qc3Z6fIwp+VAsr0WZ0F6cNcXJ3Xx1dWqcO+Tj1OliaB5
+         JvcA==
+X-Gm-Message-State: AOAM531B7sxDJjmtI9oVgzKmJ0nn1QslN3hluiCSaXs3eH1ll0pIhxcY
+        0KeP4vJ2v4R8ZuSzFkada+U4uMin5uw=
+X-Google-Smtp-Source: ABdhPJwrSqQIv+MnSLjA8lx5FF9Up7X45VlVn660QsB4QWfz9tQ7cK6O/q1alWL7bU4tO54E7t7yBg==
+X-Received: by 2002:a17:90a:cc6:: with SMTP id 6mr28424689pjt.2.1597071543924;
+        Mon, 10 Aug 2020 07:59:03 -0700 (PDT)
 Received: from localhost.localdomain ([124.170.227.101])
-        by smtp.gmail.com with ESMTPSA id o192sm25631162pfg.81.2020.08.10.07.59.09
+        by smtp.gmail.com with ESMTPSA id o192sm25631162pfg.81.2020.08.10.07.59.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Aug 2020 07:59:12 -0700 (PDT)
+        Mon, 10 Aug 2020 07:59:03 -0700 (PDT)
 From:   Eugene Lubarsky <elubarsky.linux@gmail.com>
 To:     linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, adobriyan@gmail.com,
         avagin@gmail.com, dsahern@gmail.com
-Subject: [RFC PATCH 5/5] fs/proc: Introduce /proc/all/statx
-Date:   Tue, 11 Aug 2020 00:58:52 +1000
-Message-Id: <20200810145852.9330-6-elubarsky.linux@gmail.com>
+Subject: [RFC PATCH 2/5] fs/proc: Introduce /proc/all/statm
+Date:   Tue, 11 Aug 2020 00:58:49 +1000
+Message-Id: <20200810145852.9330-3-elubarsky.linux@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810145852.9330-1-elubarsky.linux@gmail.com>
 References: <20200810145852.9330-1-elubarsky.linux@gmail.com>
@@ -77,79 +77,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Gathers info from stat, statm and io files.
-
-The purpose is not so much to reduce syscall numbers but to help
-userspace not have to store data in e.g. hashtables in order to
-gather it from separate /proc/all files.
-
-The format starts with an unchanged stat line and begins the
-statm & io lines with "m" or "io", repeating these for each process.
-
-e.g.
-...
-25 (cat) R 1 1 0 0 -1 4194304 185 0 16 0 2 0 0 0 20 ...
-m 662 188 167 5 0 112 0
-io 4292 0 12 0 0 0 0
-...
+Returns statm lines for all visible processes with prepended PIDs.
 
 Signed-off-by: Eugene Lubarsky <elubarsky.linux@gmail.com>
 ---
- fs/proc/base.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ fs/proc/base.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
 diff --git a/fs/proc/base.c b/fs/proc/base.c
-index 03d48225b6d1..5c6010c2ea1c 100644
+index e0f60a1528b7..8396a38ba7d2 100644
 --- a/fs/proc/base.c
 +++ b/fs/proc/base.c
-@@ -3944,6 +3944,31 @@ static int proc_all_io(struct seq_file *m, void *v)
+@@ -3884,6 +3884,18 @@ static int proc_all_stat(struct seq_file *m, void *v)
+ 	return proc_tgid_stat(m, iter->ns, iter->tgid_iter.task->thread_pid, iter->tgid_iter.task);
  }
- #endif
  
-+static int proc_all_statx(struct seq_file *m, void *v)
++static int proc_all_statm(struct seq_file *m, void *v)
 +{
 +	struct all_iter *iter = (struct all_iter *) v;
 +	struct pid_namespace *ns = iter->ns;
-+	struct pid *pid = iter->tgid_iter.task->thread_pid;
 +	struct task_struct *task = iter->tgid_iter.task;
-+	int err;
++	struct pid *pid = task->thread_pid;
 +
-+	err = proc_tgid_stat(m, ns, pid, task);
-+	if (err)
-+		return err;
-+
-+	seq_puts(m, "m ");
-+	err = proc_pid_statm(m, ns, pid, task);
-+	if (err)
-+		return err;
-+
-+#ifdef CONFIG_TASK_IO_ACCOUNTING
-+	seq_puts(m, "io ");
-+	err = proc_all_io_print_one(m, task);
-+#endif
-+
-+	return err;
++	seq_put_decimal_ull(m, "", pid_nr_ns(pid, ns));
++	seq_puts(m, " ");
++	return proc_pid_statm(m, ns, pid, task);
 +}
 +
- static int proc_all_status(struct seq_file *m, void *v)
- {
- 	struct all_iter *iter = (struct all_iter *) v;
-@@ -3960,6 +3985,7 @@ static int proc_all_status(struct seq_file *m, void *v)
+ 
+ #define PROC_ALL_OPS(NAME) static const struct seq_operations proc_all_##NAME##_ops = { \
+ 	.start	= proc_all_start, \
+@@ -3893,6 +3905,7 @@ static int proc_all_stat(struct seq_file *m, void *v)
+ }
  
  PROC_ALL_OPS(stat);
- PROC_ALL_OPS(statm);
-+PROC_ALL_OPS(statx);
- PROC_ALL_OPS(status);
- #ifdef CONFIG_TASK_IO_ACCOUNTING
- 	PROC_ALL_OPS(io);
-@@ -3980,6 +4006,7 @@ void __init proc_all_init(void)
++PROC_ALL_OPS(statm);
+ 
+ #define PROC_ALL_CREATE(NAME) \
+ 	do { \
+@@ -3908,4 +3921,5 @@ void __init proc_all_init(void)
+ 		return;
  
  	PROC_ALL_CREATE(stat);
- 	PROC_ALL_CREATE(statm);
-+	PROC_ALL_CREATE(statx);
- 	PROC_ALL_CREATE(status);
- #ifdef CONFIG_TASK_IO_ACCOUNTING
- 	PROC_ALL_CREATE(io);
++	PROC_ALL_CREATE(statm);
+ }
 -- 
 2.25.1
 
