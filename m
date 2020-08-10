@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AEEFC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 13:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0472CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 13:42:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C5F3206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 13:42:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8169206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 13:42:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbgHJNmX (ORCPT
+        id S1726979AbgHJNmE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 09:42:23 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:7942 "EHLO
+        Mon, 10 Aug 2020 09:42:04 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:54490 "EHLO
         mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727003AbgHJNmK (ORCPT
+        by vger.kernel.org with ESMTP id S1726956AbgHJNl6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 09:42:10 -0400
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07ADdwKs004706;
-        Mon, 10 Aug 2020 09:41:57 -0400
+        Mon, 10 Aug 2020 09:41:58 -0400
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07ADc0Dk012910;
+        Mon, 10 Aug 2020 09:41:43 -0400
 Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 32snw56v37-1
+        by mx0a-00128a01.pphosted.com with ESMTP id 32sry46rgh-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 10 Aug 2020 09:41:57 -0400
+        Mon, 10 Aug 2020 09:41:43 -0400
 Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 07ADftFk061532
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 07ADffbd061471
         (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Mon, 10 Aug 2020 09:41:55 -0400
+        Mon, 10 Aug 2020 09:41:41 -0400
 Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
  SCSQMBX10.ad.analog.com (10.77.17.5) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Mon, 10 Aug 2020 06:41:54 -0700
+ 15.1.1779.2; Mon, 10 Aug 2020 06:41:40 -0700
 Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
  (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Mon, 10 Aug 2020 06:41:53 -0700
+ Transport; Mon, 10 Aug 2020 06:41:39 -0700
 Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 07ADfY3k030109;
-        Mon, 10 Aug 2020 09:41:50 -0400
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 07ADfY3d030109;
+        Mon, 10 Aug 2020 09:41:37 -0400
 From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
 To:     <linux-clk@vger.kernel.org>, <linux-fpga@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
@@ -49,8 +49,8 @@ CC:     <mturquette@baylibre.com>, <sboyd@kernel.org>, <mdf@kernel.org>,
         <ardeleanalex@gmail.com>, Lars-Peter Clausen <lars@metafoo.de>,
         Alexandru Ardelean <alexandru.ardelean@analog.com>
 Subject: [PATCH v2 1/6] clk: axi-clkgen: Add support for fractional dividers
-Date:   Mon, 10 Aug 2020 16:42:47 +0300
-Message-ID: <20200810134252.68614-9-alexandru.ardelean@analog.com>
+Date:   Mon, 10 Aug 2020 16:42:40 +0300
+Message-ID: <20200810134252.68614-2-alexandru.ardelean@analog.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200810134252.68614-1-alexandru.ardelean@analog.com>
 References: <20200810134252.68614-1-alexandru.ardelean@analog.com>
@@ -59,11 +59,11 @@ Content-Type: text/plain
 X-ADIRoutedOnPrem: True
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-08-10_09:2020-08-06,2020-08-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- clxscore=1015 impostorscore=0 mlxscore=0 adultscore=0 suspectscore=0
- priorityscore=1501 lowpriorityscore=0 mlxlogscore=999 spamscore=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 mlxscore=0
+ lowpriorityscore=0 clxscore=1015 priorityscore=1501 adultscore=0
+ phishscore=0 suspectscore=0 impostorscore=0 malwarescore=0 spamscore=0
  bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008100102
+ engine=8.12.0-2006250000 definitions=main-2008100101
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
