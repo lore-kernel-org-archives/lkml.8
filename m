@@ -5,53 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D38EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9696C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6124F2080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:20:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6C2722B47
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:20:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597087204;
-	bh=ol2mVve6eFfgKC4fO+t6H8muDmioQ64l/6eQK9evxu8=;
+	s=default; t=1597087216;
+	bh=UvyLGOZAXxTrvvSw24b2SeCrhm6Zmcnzhh3c+8qLyNs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pmyHOLzEdsUBWS3gP8Tck3OYmOvCCrdAkGRMBt95FhoeB+6602VMhRSn2iXcp8roE
-	 gtovE7YlCeZwlcTckiSvYg6Rn2ThD2jIu8dyAXf29BmuVQOxB7yNvEZf7G56bZd12y
-	 R3zXGt51vcBRfx6OeRSc+/t1sct+yvAdWEK1/u8c=
+	b=JCaH0MsA2o1XcUKLKJFVK4hMucnYMK39v4a3MAr/3ra2zxgNXzGCa7yl+29PXWoFs
+	 BfNJXEi7hkOBe4tLUV1rkKgIsUhi8PGszM6+Hf+yQpxA0tRZHCvxs/jYmWIOI03/Ct
+	 n+wTcg6A/4gE5c1WiSmrGpTQkzeCCPGZP3juxSIw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729567AbgHJTT7 (ORCPT
+        id S1730285AbgHJTUP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:19:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45774 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:20:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729928AbgHJTOC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:14:02 -0400
+        id S1729917AbgHJTOA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:14:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 143E122D04;
-        Mon, 10 Aug 2020 19:14:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B008207FF;
+        Mon, 10 Aug 2020 19:13:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086842;
-        bh=ol2mVve6eFfgKC4fO+t6H8muDmioQ64l/6eQK9evxu8=;
+        s=default; t=1597086839;
+        bh=UvyLGOZAXxTrvvSw24b2SeCrhm6Zmcnzhh3c+8qLyNs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DRmuN8G3jQ1li14w3MLpqV28+d+9UtjgXC1lFZEUYNg3fLuZ0swZyQVI3Ie0v8cZ+
-         tqKlNU3QapUjZSnTwbqjztIleyMy9BiYW0Bk63N28bBlXXQM+/D/RWyDEmCz9cqIf+
-         UCtKRfFURU1zeu4b8yFz6FJngFvMR2guqtP+wL34=
+        b=K9uYnChqkZa4jiS830cwaG3wFNI+i4vlEa4TvR5Fw4vSS/o/C2bwvhOZOE6EKK5sy
+         T1H/8BvMWvAnqPWq+eHtAdE8yFd3cklVc+87XvjYEHm5/cCDcF3yc9KYhmJYbDoG4g
+         xDYlLUFIlorClciYpb7z5o8AM3Hz/ztMKqspnNtE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Prasanna Kerekoppa <prasanna.kerekoppa@cypress.com>,
-        Chi-hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 12/22] brcmfmac: To fix Bss Info flag definition Bug
-Date:   Mon, 10 Aug 2020 15:13:34 -0400
-Message-Id: <20200810191345.3795166-12-sashal@kernel.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.14 10/22] irqchip/irq-mtk-sysirq: Replace spinlock with raw_spinlock
+Date:   Mon, 10 Aug 2020 15:13:32 -0400
+Message-Id: <20200810191345.3795166-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810191345.3795166-1-sashal@kernel.org>
 References: <20200810191345.3795166-1-sashal@kernel.org>
@@ -64,37 +60,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Prasanna Kerekoppa <prasanna.kerekoppa@cypress.com>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-[ Upstream commit fa3266541b13f390eb35bdbc38ff4a03368be004 ]
+[ Upstream commit 6eeb997ab5075e770a002c51351fa4ec2c6b5c39 ]
 
-Bss info flag definition need to be fixed from 0x2 to 0x4
-This flag is for rssi info received on channel.
-All Firmware branches defined as 0x4 and this is bug in brcmfmac.
+This driver may take a regular spinlock when a raw spinlock
+(irq_desc->lock) is already taken which results in the following
+lockdep splat:
 
-Signed-off-by: Prasanna Kerekoppa <prasanna.kerekoppa@cypress.com>
-Signed-off-by: Chi-hsien Lin <chi-hsien.lin@cypress.com>
-Signed-off-by: Wright Feng <wright.feng@cypress.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200604071835.3842-6-wright.feng@cypress.com
+=============================
+[ BUG: Invalid wait context ]
+5.7.0-rc7 #1 Not tainted
+-----------------------------
+swapper/0/0 is trying to lock:
+ffffff800303b798 (&chip_data->lock){....}-{3:3}, at: mtk_sysirq_set_type+0x48/0xc0
+other info that might help us debug this:
+context-{5:5}
+2 locks held by swapper/0/0:
+ #0: ffffff800302ee68 (&desc->request_mutex){....}-{4:4}, at: __setup_irq+0xc4/0x8a0
+ #1: ffffff800302ecf0 (&irq_desc_lock_class){....}-{2:2}, at: __setup_irq+0xe4/0x8a0
+stack backtrace:
+CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.7.0-rc7 #1
+Hardware name: Pumpkin MT8516 (DT)
+Call trace:
+ dump_backtrace+0x0/0x180
+ show_stack+0x14/0x20
+ dump_stack+0xd0/0x118
+ __lock_acquire+0x8c8/0x2270
+ lock_acquire+0xf8/0x470
+ _raw_spin_lock_irqsave+0x50/0x78
+ mtk_sysirq_set_type+0x48/0xc0
+ __irq_set_trigger+0x58/0x170
+ __setup_irq+0x420/0x8a0
+ request_threaded_irq+0xd8/0x190
+ timer_of_init+0x1e8/0x2c4
+ mtk_gpt_init+0x5c/0x1dc
+ timer_probe+0x74/0xf4
+ time_init+0x14/0x44
+ start_kernel+0x394/0x4f0
+
+Replace the spinlock_t with raw_spinlock_t to avoid this warning.
+
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Link: https://lore.kernel.org/r/20200615074445.3579-1-brgl@bgdev.pl
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/irqchip/irq-mtk-sysirq.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h
-index e0d22fedb2b45..05bd636011ec9 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h
-@@ -30,7 +30,7 @@
- #define BRCMF_ARP_OL_PEER_AUTO_REPLY	0x00000008
+diff --git a/drivers/irqchip/irq-mtk-sysirq.c b/drivers/irqchip/irq-mtk-sysirq.c
+index 90aaf190157f7..42455f31b0611 100644
+--- a/drivers/irqchip/irq-mtk-sysirq.c
++++ b/drivers/irqchip/irq-mtk-sysirq.c
+@@ -23,7 +23,7 @@
+ #include <linux/spinlock.h>
  
- #define	BRCMF_BSS_INFO_VERSION	109 /* curr ver of brcmf_bss_info_le struct */
--#define BRCMF_BSS_RSSI_ON_CHANNEL	0x0002
-+#define BRCMF_BSS_RSSI_ON_CHANNEL	0x0004
+ struct mtk_sysirq_chip_data {
+-	spinlock_t lock;
++	raw_spinlock_t lock;
+ 	u32 nr_intpol_bases;
+ 	void __iomem **intpol_bases;
+ 	u32 *intpol_words;
+@@ -45,7 +45,7 @@ static int mtk_sysirq_set_type(struct irq_data *data, unsigned int type)
+ 	reg_index = chip_data->which_word[hwirq];
+ 	offset = hwirq & 0x1f;
  
- #define BRCMF_STA_WME              0x00000002      /* WMM association */
- #define BRCMF_STA_AUTHE            0x00000008      /* Authenticated */
+-	spin_lock_irqsave(&chip_data->lock, flags);
++	raw_spin_lock_irqsave(&chip_data->lock, flags);
+ 	value = readl_relaxed(base + reg_index * 4);
+ 	if (type == IRQ_TYPE_LEVEL_LOW || type == IRQ_TYPE_EDGE_FALLING) {
+ 		if (type == IRQ_TYPE_LEVEL_LOW)
+@@ -61,7 +61,7 @@ static int mtk_sysirq_set_type(struct irq_data *data, unsigned int type)
+ 
+ 	data = data->parent_data;
+ 	ret = data->chip->irq_set_type(data, type);
+-	spin_unlock_irqrestore(&chip_data->lock, flags);
++	raw_spin_unlock_irqrestore(&chip_data->lock, flags);
+ 	return ret;
+ }
+ 
+@@ -220,7 +220,7 @@ static int __init mtk_sysirq_of_init(struct device_node *node,
+ 		ret = -ENOMEM;
+ 		goto out_free_which_word;
+ 	}
+-	spin_lock_init(&chip_data->lock);
++	raw_spin_lock_init(&chip_data->lock);
+ 
+ 	return 0;
+ 
 -- 
 2.25.1
 
