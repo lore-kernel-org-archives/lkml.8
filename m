@@ -2,104 +2,148 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B3AFC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:58:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0B8BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:59:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 495AC221E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:58:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597085924;
-	bh=24U7VqkQ+pHnnq6Bw4WtCe+NRWb+V7m3I56c0o8d7bk=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=lDaLYRvvOOHU7UZWgVCqmMoAmcACLxdE/Y6RjfuNyMyRzDbXBOthNOpnl3Goc4H58
-	 5aK6ab5lwtUIjDvvxOWx2vAGgiWHsPSxvytKtQgpInFkVgPgjQHyYHiXsJmjKxk7Xe
-	 7bUNrdt9pfnbA+YuxxlCkR3iY3hF3jUDhzd0lcx4=
+	by mail.kernel.org (Postfix) with ESMTP id 7704020774
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:59:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZZsnFz6L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728306AbgHJS6n (ORCPT
+        id S1728313AbgHJS7T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 14:58:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54282 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728071AbgHJS6m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 14:58:42 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6604120774;
-        Mon, 10 Aug 2020 18:58:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597085921;
-        bh=24U7VqkQ+pHnnq6Bw4WtCe+NRWb+V7m3I56c0o8d7bk=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=JYLRru3ojJbQ8xF0AaEov1jm87ZY8B6yICkfUwSLpMIaBVeLpqeW45krSd4yeLP2c
-         aOWU34+15Ag1eWjRzxAC31bKtHTRV0COAN6Odi65SYJchR5IGKWpmkUJMu5MP3L6II
-         xZK9cklpg0S7MtGbNFtoSnUjOox4/MGEY2lIDAVs=
-Date:   Mon, 10 Aug 2020 19:58:15 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Alain Volmat <alain.volmat@st.com>, amelie.delaunay@st.com
-Cc:     linux-kernel@vger.kernel.org, fabrice.gasnier@st.com,
-        alexandre.torgue@st.com, mcoquelin.stm32@gmail.com,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org
-In-Reply-To: <1597043558-29668-1-git-send-email-alain.volmat@st.com>
-References: <1597043558-29668-1-git-send-email-alain.volmat@st.com>
-Subject: Re: [PATCH v2 0/5] spi: stm32: various driver fixes
-Message-Id: <159708588098.21609.2579059133743645332.b4-ty@kernel.org>
+        Mon, 10 Aug 2020 14:59:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40260 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728071AbgHJS7S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 14:59:18 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 882C6C061756;
+        Mon, 10 Aug 2020 11:59:18 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id d19so5439039pgl.10;
+        Mon, 10 Aug 2020 11:59:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=x87wiamKK8IpHrYWyQZkX28BwuSCR2wXWSfYCvqc6Rg=;
+        b=ZZsnFz6L+wbM1Zgg5QA7lgADPT6oEH8/ADKOklgw32TAKsJT37pzlRTS8P3PEYEU21
+         0a5tolSF9/i6pWJzA1Ezl7Lmuroho8D9xIgHerRNXT5z2bFEzWjqeFDUNBNJ5j0CozVE
+         WVZCtUqwr5eChlEX3rtzkrtXYQRS+F/KAJJOwggs2PcBOip781/p8XMRT8WEr+s1rII0
+         nAmGLbJwKfTsy/ySJlzup63SsbjrJ727FRySv3UAg5IWXReYUSy76ylEygkQ1VnZMFE+
+         cIxdPQafbXsER2xhNcurt51yWutvFr8nD+sGheu+NIer6bZs1UbfeEq8GTYPsucTFlNl
+         cjIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=x87wiamKK8IpHrYWyQZkX28BwuSCR2wXWSfYCvqc6Rg=;
+        b=mWQFrMTxEJld5NsEeqEeLnaXd0UpJpFqFbAguRkfadGwgc282GIH71Ypr7ItCEW9nU
+         xgIF9hnqN12oTBz8jcmmMoX+Eu9u6uAqeZMlrNKEVSKkcTC0Oq1ey6NxoahBsIq8UnQI
+         vC+nhNzK7RFIZQOboCYKEgbFiiSzm6Ji79c7TnJRZuu4gLrlfkFaDpt4OEOT245aXboi
+         yMjIFdc8LqhoIek5TWSWA/wXG3bJSBwnr+fgVghw9nWg4f168E/hYSYUh6PPzl4GGJ9G
+         5khE6W8JbyhWzHRrRZVjPqWNn5cEpAXxOyKGtZJraEDkt6ZNn1BU6YTtyqP5+I16/xeA
+         YT6g==
+X-Gm-Message-State: AOAM530pN/T6+hG7fNriAVl8xfU+aMdOvxz0WQhCtrAjbLS4cQdk2DRS
+        Bx4VO/XQdDwmt39oC6oGooo=
+X-Google-Smtp-Source: ABdhPJyPqIiE4/6f56BZE0TAQHYbCJrcQ8/BTUQoQnH8DzVTNJrbgDzgOiV0zuWvmdXily+zD39Uqw==
+X-Received: by 2002:a62:cfc1:: with SMTP id b184mr2255523pfg.262.1597085957970;
+        Mon, 10 Aug 2020 11:59:17 -0700 (PDT)
+Received: from varodek.localdomain ([103.105.152.86])
+        by smtp.gmail.com with ESMTPSA id f27sm22683547pfk.217.2020.08.10.11.59.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Aug 2020 11:59:17 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Andres Salomon <dilinger@queued.net>,
+        Antonino Daplas <adaplas@gmail.com>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-geode@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+Subject: [PATCH v2 00/12] video: fbdev: use generic power management
+Date:   Tue, 11 Aug 2020 00:27:11 +0530
+Message-Id: <20200810185723.15540-1-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200810165458.GA292825@ravnborg.org>
+References: <20200810165458.GA292825@ravnborg.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 10 Aug 2020 09:12:33 +0200, Alain Volmat wrote:
-> This serie is a reduced version of the serie
-> [spi: stm32: various driver enhancements] previously sent.
-> 
-> Alain Volmat (1):
->   spi: stm32: always perform registers configuration prior to transfer
-> 
-> Amelie Delaunay (3):
->   spi: stm32: fix fifo threshold level in case of short transfer
->   spi: stm32: fix stm32_spi_prepare_mbr in case of odd clk_rate
->   spi: stm32: fixes suspend/resume management
-> 
-> [...]
+Linux Kernel Mentee: Remove Legacy Power Management.
 
-Applied to
+The purpose of this patch series is to upgrade power management in video fbdev
+drivers. This has been done by upgrading .suspend() and .resume() callbacks.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+The upgrade makes sure that the involvement of PCI Core does not change the
+order of operations executed in a driver. Thus, does not change its behavior.
 
-Thanks!
+In general, drivers with legacy PM, .suspend() and .resume() make use of PCI
+helper functions like pci_enable/disable_device_mem(), pci_set_power_state(),
+pci_save/restore_state(), pci_enable/disable_device(), etc. to complete
+their job.
 
-[1/5] spi: stm32h7: fix race condition at end of transfer
-      commit: 135dd873d3c76d812ae64c668adef3f2c59ed27f
-[2/5] spi: stm32: fix fifo threshold level in case of short transfer
-      commit: 3373e9004acc0603242622b4378c64bc01d21b5f
-[3/5] spi: stm32: fix stm32_spi_prepare_mbr in case of odd clk_rate
-      commit: 9cc61973bf9385b19ff5dda4a2a7e265fcba85e4
-[4/5] spi: stm32: fixes suspend/resume management
-      commit: db96bf976a4fc65439be0b4524c0d41427d98814
-[5/5] spi: stm32: always perform registers configuration prior to transfer
-      commit: 60ccb3515fc61a0124c70aa37317f75b67560024
+The conversion requires the removal of those function calls, change the
+callbacks' definition accordingly and make use of dev_pm_ops structure.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+All patches are compile-tested only.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Test tools:
+    - Compiler: gcc (GCC) 10.1.0
+    - allmodconfig build: make -j$(nproc) W=1 all
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+Vaibhav Gupta (12):
+  fbdev: gxfb: use generic power management
+  fbdev: lxfb: use generic power management
+  fbdev: via-core: use generic power management
+  fbdev: aty: use generic power management
+  fbdev: aty128fb: use generic power management
+  fbdev: nvidia: use generic power management
+  fbdev: savagefb: use generic power management
+  fbdev: cyber2000fb: use generic power management
+  fbdev: i740fb: use generic power management
+  fbdev: vt8623fb: use generic power management
+  fbdev: s3fb: use generic power management
+  fbdev: arkfb: use generic power management
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+ drivers/video/fbdev/arkfb.c                  | 41 ++++++-------
+ drivers/video/fbdev/aty/aty128fb.c           | 51 ++++++++++------
+ drivers/video/fbdev/aty/atyfb_base.c         | 50 ++++++++++-----
+ drivers/video/fbdev/cyber2000fb.c            | 13 ++--
+ drivers/video/fbdev/geode/gxfb.h             |  5 --
+ drivers/video/fbdev/geode/gxfb_core.c        | 36 ++++++-----
+ drivers/video/fbdev/geode/lxfb.h             |  5 --
+ drivers/video/fbdev/geode/lxfb_core.c        | 37 +++++------
+ drivers/video/fbdev/geode/lxfb_ops.c         |  4 --
+ drivers/video/fbdev/geode/suspend_gx.c       |  4 --
+ drivers/video/fbdev/i740fb.c                 | 40 +++++-------
+ drivers/video/fbdev/nvidia/nvidia.c          | 64 +++++++++++---------
+ drivers/video/fbdev/s3fb.c                   | 39 +++++-------
+ drivers/video/fbdev/savage/savagefb_driver.c | 52 ++++++++++------
+ drivers/video/fbdev/via/via-core.c           | 39 +++++-------
+ drivers/video/fbdev/vt8623fb.c               | 41 ++++++-------
+ include/linux/via-core.h                     |  2 -
+ 17 files changed, 267 insertions(+), 256 deletions(-)
 
-Thanks,
-Mark
+-- 
+2.27.0
+
