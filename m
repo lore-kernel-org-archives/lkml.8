@@ -2,121 +2,110 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A726C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:36:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57BB7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:36:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02AAC2083B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:36:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2708C2083B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:36:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iv4OmYeR"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f5ESQ2LO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728180AbgHJSgb (ORCPT
+        id S1728210AbgHJSgo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 14:36:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36782 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727982AbgHJSga (ORCPT
+        Mon, 10 Aug 2020 14:36:44 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:21000 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728155AbgHJSgo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 14:36:30 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 690F1C061756
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 11:36:30 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id l204so9851666oib.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 11:36:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=C7EkLyQE7IrT7P5j05a64SHNONieTyjSv8sYRL7WbRw=;
-        b=iv4OmYeRBLuu6sYIlmALa4HC3h+9+IanjNE4f1oBWJ55Au5COjHk/wpIfHhG5GcFIu
-         160pli3LPMkpVGWssVc3VjuxwafCqGRz0SDJ3slGthoZ9ydAxqjDRwsL0jKRPrxyvLCF
-         iuxFs0m0yGX8WJCpq4R08gv48Mjn6jsbjGxRZDU4ugytAQeA+GMIlkjlNz7j4GSlcHHJ
-         rxkFhzVgNnCricnOfRrc8YYW47rvtGdDK7/3qMQU6cjEfQyIDJYbgmHkWc0T6Xmd4DLi
-         SDZHfGIIDddJKrJz7SyvfZS3q8SOu0FLZdeClMRNQ1yYse+6CIaR9lHuv9QgVhWzdR26
-         0Tow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=C7EkLyQE7IrT7P5j05a64SHNONieTyjSv8sYRL7WbRw=;
-        b=beyus9uCyej4hna/+q4c4ItCdmkJCScyKkB4NV4kj6VsHaaPU978yBHa8bfVNTcObp
-         MphagAiQKaqC7WghpXcymjA0Dv+5078SsWNvARjbdtCCTF9BzU0A5U8b29Fc1ocbSsGt
-         vpnqXw7b305vQwwl8I6K4cH8MecDCUjKKImmFfJlpsi5sx5F0evd8gFhrEK4tn/dOST+
-         1RAObC46PxRCEuFDxMP3d1nEZ61+1cOIqvnKoW3hYpMBqQ+0FELFBqYCMeMgvLeiXi8T
-         CT6nPcYczqyPvh8YqFyHxAqtdh9QEFAIN0PuzfKCHVZX4MN2KRr/V0BNC6eI0ATDD2Zm
-         07oQ==
-X-Gm-Message-State: AOAM532H1ROML8xiuSRWIbDjZRoo0H475oRGI6gir2geDQLYCW7HizHq
-        kMF+jgjS9YqhHyTfIgUpxa0tmcO58j0=
-X-Google-Smtp-Source: ABdhPJyngLr36rh0bspCWgiPo/s5CZWudkeT5rQr9dhEaD6a6oKOCeJluThEcXmUpEJQ/qCpg1vddg==
-X-Received: by 2002:aca:fc52:: with SMTP id a79mr431413oii.109.1597084589910;
-        Mon, 10 Aug 2020 11:36:29 -0700 (PDT)
-Received: from raspberrypi ([2600:1700:90:4c80::23])
-        by smtp.gmail.com with ESMTPSA id e194sm3789239oib.41.2020.08.10.11.36.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Aug 2020 11:36:29 -0700 (PDT)
-Date:   Mon, 10 Aug 2020 13:36:27 -0500
-From:   Grant Peltier <grantpeltier93@gmail.com>
-To:     linux@roeck-us.net
-Cc:     grant.peltier.jg@renesas.com, linux-kernel@vger.kernel.org,
-        adam.vaughn.xh@renesas.com
-Subject: [PATCH] hwmon: (pmbus/isl68137) remove READ_TEMPERATURE_1 telemetry
- for RAA228228
-Message-ID: <20200810183627.GA5457@raspberrypi>
+        Mon, 10 Aug 2020 14:36:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597084603;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=QXfIGxWYHli8UViM6M93oQLb9NwlH1AHgGXp2GsD3So=;
+        b=f5ESQ2LOJY2swKAXKmbQIF2CJVOPujC9qi0dh1QFgxJ0wDBUQQpHK9S1ZBit1SxO94shCL
+        u7O05heg0y9EFyZO2Z2SAHuGC7BUn6XKZ8JX6OAVhajb6LuvBh2liOcJaCLMIl7rIzNbRF
+        JwMRT+NUag333ofS6rT+Xvo47kV54tg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-414-6YiDE5zlPemw24k8Tq1dOg-1; Mon, 10 Aug 2020 14:36:41 -0400
+X-MC-Unique: 6YiDE5zlPemw24k8Tq1dOg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 61355107ACCA;
+        Mon, 10 Aug 2020 18:36:40 +0000 (UTC)
+Received: from max.home.com (unknown [10.40.194.131])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0D0045D9E7;
+        Mon, 10 Aug 2020 18:36:35 +0000 (UTC)
+From:   Andreas Gruenbacher <agruenba@redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andreas Gruenbacher <agruenba@redhat.com>,
+        cluster-devel@redhat.com, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] GFS2 changes for 5.9
+Date:   Mon, 10 Aug 2020 20:36:34 +0200
+Message-Id: <20200810183634.617307-1-agruenba@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Per the RAA228228 datasheet, READ_TEMPERATURE_1 is not a supported PMBus
-command.
+Hi Linus,
 
-Signed-off-by: Grant Peltier <grantpeltier93@gmail.com>
----
- drivers/hwmon/pmbus/isl68137.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+please consider pulling the following gfs2 changes for 5.9.
 
-diff --git a/drivers/hwmon/pmbus/isl68137.c b/drivers/hwmon/pmbus/isl68137.c
-index 0c622711ef7e..58aa95a3c010 100644
---- a/drivers/hwmon/pmbus/isl68137.c
-+++ b/drivers/hwmon/pmbus/isl68137.c
-@@ -67,6 +67,7 @@ enum variants {
- 	raa_dmpvr1_2rail,
- 	raa_dmpvr2_1rail,
- 	raa_dmpvr2_2rail,
-+	raa_dmpvr2_2rail_nontc,
- 	raa_dmpvr2_3rail,
- 	raa_dmpvr2_hv,
- };
-@@ -241,6 +242,10 @@ static int isl68137_probe(struct i2c_client *client,
- 		info->pages = 1;
- 		info->read_word_data = raa_dmpvr2_read_word_data;
- 		break;
-+	case raa_dmpvr2_2rail_nontc:
-+		info->func[0] &= ~PMBUS_HAVE_TEMP;
-+		info->func[1] &= ~PMBUS_HAVE_TEMP;
-+		fallthrough;
- 	case raa_dmpvr2_2rail:
- 		info->pages = 2;
- 		info->read_word_data = raa_dmpvr2_read_word_data;
-@@ -304,7 +309,7 @@ static const struct i2c_device_id raa_dmpvr_id[] = {
- 	{"raa228000", raa_dmpvr2_hv},
- 	{"raa228004", raa_dmpvr2_hv},
- 	{"raa228006", raa_dmpvr2_hv},
--	{"raa228228", raa_dmpvr2_2rail},
-+	{"raa228228", raa_dmpvr2_2rail_nontc},
- 	{"raa229001", raa_dmpvr2_2rail},
- 	{"raa229004", raa_dmpvr2_2rail},
- 	{}
--- 
-2.20.1
+Thanks a lot,
+Andreas
+
+The following changes since commit 11ba468877bb23f28956a35e896356252d63c983:
+
+  Linux 5.8-rc5 (2020-07-12 16:34:50 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/gfs2/linux-gfs2.git tags/gfs2-for-5.9
+
+for you to fetch changes up to e28c02b94f9e039beeb5c75198caf6e17b66c520:
+
+  gfs2: When gfs2_dirty_inode gets a glock error, dump the glock (2020-08-07 17:26:24 +0200)
+
+----------------------------------------------------------------
+Changes in gfs2:
+
+- Make sure transactions won't be started recursively in gfs2_block_zero_range.
+  (Bug introduced in 5.4 when switching to iomap_zero_range.)
+- Fix a glock holder refcount leak introduced in the iopen glock locking
+  scheme rework merged in 5.8.
+- A few other small improvements (debugging, stack usage, comment fixes).
+
+----------------------------------------------------------------
+Andreas Gruenbacher (3):
+      gfs2: Pass glock holder to gfs2_file_direct_{read,write}
+      gfs2: Fix refcount leak in gfs2_glock_poke
+      fs: Fix typo in comment
+
+Bob Peterson (5):
+      gfs2: Add some flags missing from glock output
+      gfs2: Fix inaccurate comment
+      gfs2: print details on transactions that aren't properly ended
+      gfs2: Never call gfs2_block_zero_range with an open transaction
+      gfs2: When gfs2_dirty_inode gets a glock error, dump the glock
+
+ fs/gfs2/bmap.c     | 69 ++++++++++++++++++++++++++++++------------------------
+ fs/gfs2/file.c     | 31 ++++++++++++------------
+ fs/gfs2/glock.c    | 10 +++++++-
+ fs/gfs2/log.c      |  2 +-
+ fs/gfs2/super.c    |  1 +
+ fs/gfs2/trans.c    | 29 +++++++++++++----------
+ include/linux/fs.h |  2 +-
+ 7 files changed, 82 insertions(+), 62 deletions(-)
 
