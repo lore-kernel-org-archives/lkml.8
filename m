@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 449FEC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:12:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A160C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:12:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 053382224D
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:12:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48F3B207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:12:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597086739;
-	bh=ObVOr0DUwToaJhdgjlbAKmKkmvclQaKXZYtibH2xuso=;
+	s=default; t=1597086741;
+	bh=F4dYMtwK5w3J8NhmlmET/YjqVLzljBMDVXmN+hu/rYk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r6361tmK9TebqjdTGjFTJSrFkoM6UC05Dpv2GL0nMFu7qbil0bdsWR0fiGLr5sqd2
-	 7FO6et/Ne4Rl3T8cuwTMpqkm+9tiSPTOu9w1WnuvPoxFGj4Z0PNbgIVq8+aNMXG5Ux
-	 rm41NG8B1Bpru1ZZ2H15L11G6l60vtg/Df0Ddqjo=
+	b=0On0Qvxr+UH1t0q6lh1zMp5Bqo+TGzPmgdUAucK6wUtzqly7LQ96xRv3Ze/toKZeq
+	 hRGpLrnJWkH/37NrTwtBnc2DAoi4gh4tLxIiR10AAcw1BTzKf/nPmR4P+lK3S7vlaa
+	 vls20zH88qSvA/9UnazHnaIYYo5BqP5F7/tbbWI8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729119AbgHJTMQ (ORCPT
+        id S1729507AbgHJTMT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:12:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40992 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:12:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729450AbgHJTMB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:12:01 -0400
+        id S1728583AbgHJTMH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:12:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C4CF22B49;
-        Mon, 10 Aug 2020 19:12:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE95F21775;
+        Mon, 10 Aug 2020 19:12:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086720;
-        bh=ObVOr0DUwToaJhdgjlbAKmKkmvclQaKXZYtibH2xuso=;
+        s=default; t=1597086726;
+        bh=F4dYMtwK5w3J8NhmlmET/YjqVLzljBMDVXmN+hu/rYk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KGi1RpVWmgmfLZzkFCml/VqhbR5EBultsiByy8HFiN7+lWcFKNFHs0k5BAD6InEcS
-         S6Pf8Zn+iUMI98XqKnMJnx8tW6mptlzNYsBWDIbnPor2SXy9UQBFh0QthXgoX/wX4B
-         dv8MIDkPswafEDjIqMpAtU2V4cmPqnhO6ea6sh3M=
+        b=NDhNfW7b/n8Xu2KDWWINB6bbIThSRqrklYCD13IlRUmRrwJG4Vi6FtQhWylE/wcey
+         WpJMWV1ot+DtyaDEkqBOyJtg3azPLAjzVll/eM4kq6V9hQivAg4O+oWYiYLbUhWKYe
+         u9G0JUPY2AiiftMYZV05JYmgMVY9t8+WmJmjkd3s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 05/45] fs/btrfs: Add cond_resched() for try_release_extent_mapping() stalls
-Date:   Mon, 10 Aug 2020 15:11:13 -0400
-Message-Id: <20200810191153.3794446-5-sashal@kernel.org>
+Cc:     Evgeny Novikov <novikov@ispras.ru>,
+        Antonino Daplas <adaplas@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sasha Levin <sashal@kernel.org>, linux-fbdev@vger.kernel.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 09/45] video: fbdev: savage: fix memory leak on error handling path in probe
+Date:   Mon, 10 Aug 2020 15:11:17 -0400
+Message-Id: <20200810191153.3794446-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810191153.3794446-1-sashal@kernel.org>
 References: <20200810191153.3794446-1-sashal@kernel.org>
@@ -58,60 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Paul E. McKenney" <paulmck@kernel.org>
+From: Evgeny Novikov <novikov@ispras.ru>
 
-[ Upstream commit 9f47eb5461aaeb6cb8696f9d11503ae90e4d5cb0 ]
+[ Upstream commit e8d35898a78e34fc854ed9680bc3f9caedab08cd ]
 
-Very large I/Os can cause the following RCU CPU stall warning:
+savagefb_probe() calls savage_init_fb_info() that can successfully
+allocate memory for info->pixmap.addr but then fail when
+fb_alloc_cmap() fails. savagefb_probe() goes to label failed_init and
+does not free allocated memory. It is not valid to go to label
+failed_mmio since savage_init_fb_info() can fail during memory
+allocation as well. So, the patch free allocated memory on the error
+handling path in savage_init_fb_info() itself.
 
-RIP: 0010:rb_prev+0x8/0x50
-Code: 49 89 c0 49 89 d1 48 89 c2 48 89 f8 e9 e5 fd ff ff 4c 89 48 10 c3 4c =
-89 06 c3 4c 89 40 10 c3 0f 1f 00 48 8b 0f 48 39 cf 74 38 <48> 8b 47 10 48 85 c0 74 22 48 8b 50 08 48 85 d2 74 0c 48 89 d0 48
-RSP: 0018:ffffc9002212bab0 EFLAGS: 00000287 ORIG_RAX: ffffffffffffff13
-RAX: ffff888821f93630 RBX: ffff888821f93630 RCX: ffff888821f937e0
-RDX: 0000000000000000 RSI: 0000000000102000 RDI: ffff888821f93630
-RBP: 0000000000103000 R08: 000000000006c000 R09: 0000000000000238
-R10: 0000000000102fff R11: ffffc9002212bac8 R12: 0000000000000001
-R13: ffffffffffffffff R14: 0000000000102000 R15: ffff888821f937e0
- __lookup_extent_mapping+0xa0/0x110
- try_release_extent_mapping+0xdc/0x220
- btrfs_releasepage+0x45/0x70
- shrink_page_list+0xa39/0xb30
- shrink_inactive_list+0x18f/0x3b0
- shrink_lruvec+0x38e/0x6b0
- shrink_node+0x14d/0x690
- do_try_to_free_pages+0xc6/0x3e0
- try_to_free_mem_cgroup_pages+0xe6/0x1e0
- reclaim_high.constprop.73+0x87/0xc0
- mem_cgroup_handle_over_high+0x66/0x150
- exit_to_usermode_loop+0x82/0xd0
- do_syscall_64+0xd4/0x100
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Found by Linux Driver Verification project (linuxtesting.org).
 
-On a PREEMPT=n kernel, the try_release_extent_mapping() function's
-"while" loop might run for a very long time on a large I/O.  This commit
-therefore adds a cond_resched() to this loop, providing RCU any needed
-quiescent states.
-
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
+Cc: Antonino Daplas <adaplas@gmail.com>
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200619162136.9010-1-novikov@ispras.ru
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/extent_io.c | 2 ++
+ drivers/video/fbdev/savage/savagefb_driver.c | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
-index 1a089a6424221..99dcb38976592 100644
---- a/fs/btrfs/extent_io.c
-+++ b/fs/btrfs/extent_io.c
-@@ -4481,6 +4481,8 @@ int try_release_extent_mapping(struct page *page, gfp_t mask)
- 
- 			/* once for us */
- 			free_extent_map(em);
-+
-+			cond_resched(); /* Allow large-extent preemption. */
- 		}
+diff --git a/drivers/video/fbdev/savage/savagefb_driver.c b/drivers/video/fbdev/savage/savagefb_driver.c
+index 512789f5f8848..d5d22d9c0f562 100644
+--- a/drivers/video/fbdev/savage/savagefb_driver.c
++++ b/drivers/video/fbdev/savage/savagefb_driver.c
+@@ -2158,6 +2158,8 @@ static int savage_init_fb_info(struct fb_info *info, struct pci_dev *dev,
+ 			info->flags |= FBINFO_HWACCEL_COPYAREA |
+ 				       FBINFO_HWACCEL_FILLRECT |
+ 				       FBINFO_HWACCEL_IMAGEBLIT;
++		else
++			kfree(info->pixmap.addr);
  	}
- 	return try_release_extent_state(tree, page, mask);
+ #endif
+ 	return err;
 -- 
 2.25.1
 
