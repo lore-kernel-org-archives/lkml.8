@@ -5,48 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A83BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:35:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6777EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:35:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E0BD207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:35:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 432D422CAE
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:35:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073707;
-	bh=AGOMaizvFy9TjsAgvMYtf9C1QGamiHd6Zvyz19yNHMY=;
+	s=default; t=1597073718;
+	bh=OzsmA25owFxj0rqitKR2MBowKesqp44jQTh/7yr6E94=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=czV1EnVC2BmS2Kfi1TTW7G5ImTKPUEqNSGjHxZIGF1/R0ea/FrnxVZULNjfnrjpo2
-	 tWZP/FDBStxJ4EHGu4Onb7o/+NvVNfDoYCOHhZ3BV+TorySuxWr+GRQWEhYkSWr8RT
-	 EyfYV2GHKWYCUXGpkxSH9LLkqpDHCVf0KHJyJMlk=
+	b=S6JeUPoWk0UMS3yL2fklFZFztwj/uRy2jkX2az9/4rbOHso9wUG7GTJVV+08dC+id
+	 9XRbqcV2hw5K43350fJvb7pqKrLU/xrScKrgZ/28qZiUU2ZXeoTFtqTepelC6I4Tgh
+	 asPLYHDAU4mQWgRJ7VVL4O8B9YOZWlF/De1+QKj4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728859AbgHJPfG (ORCPT
+        id S1728038AbgHJP2V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:35:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34534 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:28:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728863AbgHJP21 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:28:27 -0400
+        id S1728835AbgHJP2H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:28:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02D6422BEA;
-        Mon, 10 Aug 2020 15:28:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DE6A22BEA;
+        Mon, 10 Aug 2020 15:28:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073307;
-        bh=AGOMaizvFy9TjsAgvMYtf9C1QGamiHd6Zvyz19yNHMY=;
+        s=default; t=1597073286;
+        bh=OzsmA25owFxj0rqitKR2MBowKesqp44jQTh/7yr6E94=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nYdDJC5hn79HH5fYUs/Ob5UIhmFopEdWlUoPUkqinYYIX8nLsaSKl+fLztDsjDqqo
-         Oel86/flHmNnDTLuBR776F1Xn0QvTjYtRlCy+nZhJs3a0+pnW03n5TRf2yz02BU+In
-         9UA2gjkdKhTOmqqa4+VRBQ43FN/TwWsldrTIc2lQ=
+        b=eBwoNjuq6kFjCIfTLv+0HHrpcGG7FzuGmdYZI95lttqJnCeQSZA+eHOawl482Jpux
+         rVxVeZR2PnJYagy7aYeyuFos6rkeyuVi0Drf35M4m014zrN/2sDovEo//4APKUNyrE
+         J9AcuLSmmih8qOwKmyAiPHbtnnVSswBHU245h2DI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Amitoj Kaur Chawla <amitoj1606@gmail.com>,
-        Johan Hovold <johan@kernel.org>, Pavel Machek <pavel@ucw.cz>
-Subject: [PATCH 5.4 28/67] leds: da903x: fix use-after-free on unbind
-Date:   Mon, 10 Aug 2020 17:21:15 +0200
-Message-Id: <20200810151810.820744761@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?=E5=BC=A0=E4=BA=91=E6=B5=B7?= <zhangyunhai@nsfocus.com>,
+        Yang Yingliang <yangyingliang@huawei.com>,
+        Kyungtae Kim <kt0755@gmail.com>, linux-fbdev@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Solar Designer <solar@openwall.com>,
+        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>,
+        Anthony Liguori <aliguori@amazon.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Jiri Slaby <jirislaby@kernel.org>
+Subject: [PATCH 5.4 24/67] vgacon: Fix for missing check in scrollback handling
+Date:   Mon, 10 Aug 2020 17:21:11 +0200
+Message-Id: <20200810151810.614334777@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151809.438685785@linuxfoundation.org>
 References: <20200810151809.438685785@linuxfoundation.org>
@@ -59,61 +67,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Yunhai Zhang <zhangyunhai@nsfocus.com>
 
-commit 6f4aa35744f69ed9b0bf5a736c9ca9b44bc1dcea upstream.
+commit ebfdfeeae8c01fcb2b3b74ffaf03876e20835d2d upstream.
 
-Several MFD child drivers register their class devices directly under
-the parent device. This means you cannot blindly do devres conversions
-so that deregistration ends up being tied to the parent device,
-something which leads to use-after-free on driver unbind when the class
-device is released while still being registered.
+vgacon_scrollback_update() always leaves enbough room in the scrollback
+buffer for the next call, but if the console size changed that room
+might not actually be enough, and so we need to re-check.
 
-Fixes: eed16255d66b ("leds: da903x: Use devm_led_classdev_register")
-Cc: stable <stable@vger.kernel.org>     # 4.6
-Cc: Amitoj Kaur Chawla <amitoj1606@gmail.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Pavel Machek <pavel@ucw.cz>
+The check should be in the loop since vgacon_scrollback_cur->tail is
+updated in the loop and count may be more than 1 when triggered by CSI M,
+as Jiri's PoC:
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/ioctl.h>
+#include <fcntl.h>
+
+int main(int argc, char** argv)
+{
+        int fd = open("/dev/tty1", O_RDWR);
+        unsigned short size[3] = {25, 200, 0};
+        ioctl(fd, 0x5609, size); // VT_RESIZE
+
+        write(fd, "\e[1;1H", 6);
+        for (int i = 0; i < 30; i++)
+                write(fd, "\e[10M", 5);
+}
+
+It leads to various crashes as vgacon_scrollback_update writes out of
+the buffer:
+ BUG: unable to handle page fault for address: ffffc900001752a0
+ #PF: supervisor write access in kernel mode
+ #PF: error_code(0x0002) - not-present page
+ RIP: 0010:mutex_unlock+0x13/0x30
+...
+ Call Trace:
+  n_tty_write+0x1a0/0x4d0
+  tty_write+0x1a0/0x2e0
+
+Or to KASAN reports:
+BUG: KASAN: slab-out-of-bounds in vgacon_scroll+0x57a/0x8ed
+
+This fixes CVE-2020-14331.
+
+Reported-by: 张云海 <zhangyunhai@nsfocus.com>
+Reported-by: Yang Yingliang <yangyingliang@huawei.com>
+Reported-by: Kyungtae Kim <kt0755@gmail.com>
+Fixes: 15bdab959c9b ([PATCH] vgacon: Add support for soft scrollback)
+Cc: stable@vger.kernel.org
+Cc: linux-fbdev@vger.kernel.org
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Solar Designer <solar@openwall.com>
+Cc: "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
+Cc: Anthony Liguori <aliguori@amazon.com>
+Cc: Yang Yingliang <yangyingliang@huawei.com>
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: Jiri Slaby <jirislaby@kernel.org>
+Signed-off-by: Yunhai Zhang <zhangyunhai@nsfocus.com>
+Link: https://lore.kernel.org/r/9fb43895-ca91-9b07-ebfd-808cf854ca95@nsfocus.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/leds/leds-da903x.c |   14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ drivers/video/console/vgacon.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/leds/leds-da903x.c
-+++ b/drivers/leds/leds-da903x.c
-@@ -110,12 +110,23 @@ static int da903x_led_probe(struct platf
- 	led->flags = pdata->flags;
- 	led->master = pdev->dev.parent;
+--- a/drivers/video/console/vgacon.c
++++ b/drivers/video/console/vgacon.c
+@@ -251,6 +251,10 @@ static void vgacon_scrollback_update(str
+ 	p = (void *) (c->vc_origin + t * c->vc_size_row);
  
--	ret = devm_led_classdev_register(led->master, &led->cdev);
-+	ret = led_classdev_register(led->master, &led->cdev);
- 	if (ret) {
- 		dev_err(&pdev->dev, "failed to register LED %d\n", id);
- 		return ret;
- 	}
- 
-+	platform_set_drvdata(pdev, led);
+ 	while (count--) {
++		if ((vgacon_scrollback_cur->tail + c->vc_size_row) >
++		    vgacon_scrollback_cur->size)
++			vgacon_scrollback_cur->tail = 0;
 +
-+	return 0;
-+}
-+
-+static int da903x_led_remove(struct platform_device *pdev)
-+{
-+	struct da903x_led *led = platform_get_drvdata(pdev);
-+
-+	led_classdev_unregister(&led->cdev);
-+
- 	return 0;
- }
- 
-@@ -124,6 +135,7 @@ static struct platform_driver da903x_led
- 		.name	= "da903x-led",
- 	},
- 	.probe		= da903x_led_probe,
-+	.remove		= da903x_led_remove,
- };
- 
- module_platform_driver(da903x_led_driver);
+ 		scr_memcpyw(vgacon_scrollback_cur->data +
+ 			    vgacon_scrollback_cur->tail,
+ 			    p, c->vc_size_row);
 
 
