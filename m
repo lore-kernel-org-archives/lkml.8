@@ -2,206 +2,173 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E5AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 13:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E201EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 13:24:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B73920729
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 13:20:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1FB620729
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 13:24:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726723AbgHJNUw (ORCPT
+        id S1726726AbgHJNYj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 09:20:52 -0400
-Received: from mail-m1271.qiye.163.com ([115.236.127.1]:58785 "EHLO
-        mail-m1271.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726465AbgHJNUv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 09:20:51 -0400
-X-Greylist: delayed 586 seconds by postgrey-1.27 at vger.kernel.org; Mon, 10 Aug 2020 09:20:50 EDT
-Received: from ubuntu.localdomain (unknown [58.251.74.227])
-        by mail-m1271.qiye.163.com (Hmail) with ESMTPA id 35E3258224D;
-        Mon, 10 Aug 2020 21:11:01 +0800 (CST)
-From:   Jiang Yu <jyu.jiang@vivo.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Sitnicki <jakub@cloudflare.com>,
-        zhanglin <zhang.lin16@zte.com.cn>,
-        Kees Cook <keescook@chromium.org>,
-        Andrey Ignatov <rdna@fb.com>,
-        Quentin Monnet <quentin@isovalent.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Cc:     opensource.kernel@vivo.com, Jiang Yu <jyu.jiang@vivo.com>
-Subject: [PATCH] bpf: Add bpf_skb_get_sock_comm() helper
-Date:   Mon, 10 Aug 2020 06:09:48 -0700
-Message-Id: <20200810131014.12057-1-jyu.jiang@vivo.com>
-X-Mailer: git-send-email 2.25.1
+        Mon, 10 Aug 2020 09:24:39 -0400
+Received: from foss.arm.com ([217.140.110.172]:56264 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726330AbgHJNYj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 09:24:39 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 597ECD6E;
+        Mon, 10 Aug 2020 06:24:38 -0700 (PDT)
+Received: from [192.168.178.2] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 525083F718;
+        Mon, 10 Aug 2020 06:24:30 -0700 (PDT)
+Subject: Re: [PATCH] sched/fair: reduce preemption with IDLE tasks
+ runable(Internet mail)
+To:     =?UTF-8?B?YmVuYmppYW5nKOiSi+W9qik=?= <benbjiang@tencent.com>
+Cc:     Jiang Biao <benbjiang@gmail.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
+        "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "bsegall@google.com" <bsegall@google.com>,
+        "mgorman@suse.de" <mgorman@suse.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200801023248.90104-1-benbjiang@gmail.com>
+ <5ed0fd46-3a3d-3c1a-5d75-03a74864e640@arm.com>
+ <592F24A7-BF43-457D-AC40-DC5E35279730@tencent.com>
+ <8bef1f94-f9bf-08a5-2ff3-3485d7796a96@arm.com>
+ <8629CB9F-AFC8-43D6-BD14-B60A0B85ADB3@tencent.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <5f870781-1648-b4ac-6026-557dfc347109@arm.com>
+Date:   Mon, 10 Aug 2020 15:24:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <8629CB9F-AFC8-43D6-BD14-B60A0B85ADB3@tencent.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZS1VLWVdZKFlBSE83V1ktWUFJV1kPCR
-        oVCBIfWUFZTE8ZGR5OT0hIH0xOVkpOQkxLTU5LTUpCTEhVEwETFhoSFyQUDg9ZV1kWGg8SFR0UWU
-        FZVUtZBg++
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6K0k6Szo*IT8vNU4dDywuDCIB
-        FAkwCT5VSlVKTkJMS01OS01JSEJNVTMWGhIXVRECDlUREhoVHDsNEg0UVRgUFkVZV1kSC1lBWU5D
-        VUlOSlVMT1VJSUxZV1kIAVlBTUlOTDcG
-X-HM-Tid: 0a73d87ee60098b6kuuu35e3258224d
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-skb distinguished by uid can only recorded to user who consume them.
-in many case, skb should been recorded more specific to process who
-consume them. E.g, the unexpected large data traffic of illegal process
-in metered network.
+On 06/08/2020 17:52, benbjiang(蒋彪) wrote:
+> Hi, 
+> 
+>> On Aug 6, 2020, at 9:29 PM, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+>>
+>> On 03/08/2020 13:26, benbjiang(蒋彪) wrote:
+>>>
+>>>
+>>>> On Aug 3, 2020, at 4:16 PM, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+>>>>
+>>>> On 01/08/2020 04:32, Jiang Biao wrote:
+>>>>> From: Jiang Biao <benbjiang@tencent.com>
 
-this helper is used in tracing task comm of the sock to which a skb
-belongs.
+[...]
 
-Signed-off-by: Jiang Yu <jyu.jiang@vivo.com>
----
- include/net/sock.h             |  1 +
- include/uapi/linux/bpf.h       |  1 +
- net/core/filter.c              | 32 ++++++++++++++++++++++++++++++++
- net/core/sock.c                | 20 ++++++++++++++++++++
- tools/include/uapi/linux/bpf.h |  1 +
- 5 files changed, 55 insertions(+)
+>> How would you deal with se's representing taskgroups which contain
+>> SCHED_IDLE and SCHED_NORMAL tasks or other taskgroups doing that?
+> I’m not sure I get the point. :) How about the following patch,
+> 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 04fa8dbcfa4d..8715f03ed6d7 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -2994,6 +2994,9 @@ account_entity_enqueue(struct cfs_rq *cfs_rq, struct sched_entity *se)
+>                 list_add(&se->group_node, &rq->cfs_tasks);
+>         }
+>  #endif
+> +       if (task_has_idle_policy(task_of(se)))
+> +               cfs_rq->idle_nr_running++;
+> +
+>         cfs_rq->nr_running++;
+>  }
+> 
+> @@ -3007,6 +3010,9 @@ account_entity_dequeue(struct cfs_rq *cfs_rq, struct sched_entity *se)
+>                 list_del_init(&se->group_node);
+>         }
+>  #endif
+> +       if (task_has_idle_policy(task_of(se)))
+> +               cfs_rq->idle_nr_running--;
+> +
+>         cfs_rq->nr_running--;
+>  }
+> 
+> @@ -4527,7 +4533,7 @@ entity_tick(struct cfs_rq *cfs_rq, struct sched_entity *curr, int queued)
+>                 return;
+>  #endif
+> 
+> -       if (cfs_rq->nr_running > 1)
+> +       if (cfs_rq->nr_running > cfs_rq->idle_nr_running + 1 &&
+> +           cfs_rq->h_nr_running - cfs_rq->idle_h_nr_running > cfs_rq->idle_nr_running + 1)
+>                 check_preempt_tick(cfs_rq, curr);
+>  }
+> 
+> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> index 877fb08eb1b0..401090393e09 100644
+> --- a/kernel/sched/sched.h
+> +++ b/kernel/sched/sched.h
+> @@ -500,6 +500,7 @@ struct cfs_bandwidth { };
+>  struct cfs_rq {
+>         struct load_weight      load;
+>         unsigned int            nr_running;
+> +       unsigned int            idle_nr_running;
+>         unsigned int            h_nr_running;      /* SCHED_{NORMAL,BATCH,IDLE} */
+>         unsigned int            idle_h_nr_running; /* SCHED_IDLE */
 
-diff --git a/include/net/sock.h b/include/net/sock.h
-index 064637d1ddf6..9c6e8e61940f 100644
---- a/include/net/sock.h
-+++ b/include/net/sock.h
-@@ -519,6 +519,7 @@ struct sock {
- #ifdef CONFIG_BPF_SYSCALL
- 	struct bpf_sk_storage __rcu	*sk_bpf_storage;
- #endif
-+	char sk_task_com[TASK_COMM_LEN];
- 	struct rcu_head		sk_rcu;
- };
- 
-diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-index b134e679e9db..c7f62215a483 100644
---- a/include/uapi/linux/bpf.h
-+++ b/include/uapi/linux/bpf.h
-@@ -3538,6 +3538,7 @@ union bpf_attr {
- 	FN(skc_to_tcp_request_sock),	\
- 	FN(skc_to_udp6_sock),		\
- 	FN(get_task_stack),		\
-+	FN(skb_get_sock_comm),		\
- 	/* */
- 
- /* integer value in 'imm' field of BPF_CALL instruction selects which helper
-diff --git a/net/core/filter.c b/net/core/filter.c
-index 7124f0fe6974..972c0bf8e7ca 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -4313,6 +4313,36 @@ static const struct bpf_func_proto bpf_get_socket_uid_proto = {
- 	.arg1_type      = ARG_PTR_TO_CTX,
- };
- 
-+BPF_CALL_3(bpf_skb_get_sock_comm,     struct sk_buff *, skb, char *, buf, u32, size)
-+{
-+	struct sock *sk;
-+
-+	if (!buf || 0 == size)
-+		return -EINVAL;
-+
-+	sk = sk_to_full_sk(skb->sk);
-+	if (!sk || !sk_fullsock(sk))
-+		goto err_clear;
-+
-+	memcpy(buf, sk->sk_task_com, size);
-+	buf[size - 1] = 0;
-+	return 0;
-+
-+err_clear:
-+	memset(buf, 0, size);
-+	buf[size - 1] = 0;
-+	return -ENOENT;
-+}
-+
-+const struct bpf_func_proto bpf_skb_get_sock_comm_proto = {
-+	.func           = bpf_skb_get_sock_comm,
-+	.gpl_only       = false,
-+	.ret_type       = RET_INTEGER,
-+	.arg1_type      = ARG_PTR_TO_CTX,
-+	.arg2_type      = ARG_PTR_TO_MEM,
-+	.arg3_type      = ARG_CONST_SIZE,
-+};
-+
- #define SOCKOPT_CC_REINIT (1 << 0)
- 
- static int _bpf_setsockopt(struct sock *sk, int level, int optname,
-@@ -6313,6 +6343,8 @@ sk_filter_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 		return &bpf_get_socket_cookie_proto;
- 	case BPF_FUNC_get_socket_uid:
- 		return &bpf_get_socket_uid_proto;
-+	case BPF_FUNC_skb_get_sock_comm:
-+		return &bpf_skb_get_sock_comm_proto;
- 	case BPF_FUNC_perf_event_output:
- 		return &bpf_skb_event_output_proto;
- 	default:
-diff --git a/net/core/sock.c b/net/core/sock.c
-index d29709e0790d..79d81afa048f 100644
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -2961,6 +2961,24 @@ void sk_stop_timer(struct sock *sk, struct timer_list* timer)
- }
- EXPORT_SYMBOL(sk_stop_timer);
- 
-+void sock_init_task_comm(struct sock *sk)
-+{
-+	struct pid *pid = NULL;
-+	struct task_struct *tgid_task = NULL;
-+
-+	pid = find_get_pid(current->tgid);
-+	if (pid) {
-+		tgid_task = get_pid_task(pid, PIDTYPE_PID);
-+
-+		if (tgid_task) {
-+			snprintf(sk->sk_task_com, TASK_COMM_LEN, tgid_task->comm);
-+			put_task_struct(tgid_task);
-+		}
-+
-+		put_pid(pid);
-+	}
-+}
-+
- void sock_init_data(struct socket *sock, struct sock *sk)
- {
- 	sk_init_common(sk);
-@@ -3031,6 +3049,8 @@ void sock_init_data(struct socket *sock, struct sock *sk)
- 	WRITE_ONCE(sk->sk_pacing_shift, 10);
- 	sk->sk_incoming_cpu = -1;
- 
-+	sock_init_task_comm(sk);
-+
- 	sk_rx_queue_clear(sk);
- 	/*
- 	 * Before updating sk_refcnt, we must commit prior changes to memory
-diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
-index b134e679e9db..c7f62215a483 100644
---- a/tools/include/uapi/linux/bpf.h
-+++ b/tools/include/uapi/linux/bpf.h
-@@ -3538,6 +3538,7 @@ union bpf_attr {
- 	FN(skc_to_tcp_request_sock),	\
- 	FN(skc_to_udp6_sock),		\
- 	FN(get_task_stack),		\
-+	FN(skb_get_sock_comm),		\
- 	/* */
- 
- /* integer value in 'imm' field of BPF_CALL instruction selects which helper
--- 
-2.25.1
+         /
+       / |  \
+      A  n0 i0
+     / \
+    n1 i1
 
+I don't think this will work. E.g. the patch would prevent tick
+preemption between 'A' and 'n0' on '/' as well
+
+(3 > 1 + 1) && (4 - 2 > 1 + 1)
+
+You also have to make sure that a SCHED_IDLE task can tick preempt
+another SCHED_IDLE task.
+
+>>> I’m not sure if it’s ok to do that, because the IDLE class seems not to be so
+>>> pure that could tolerate starving.
+>>
+>> Not sure I understand but idle_sched_class is not the same as SCHED_IDLE
+>> (policy)?
+> The case is that we need tasks(low priority, called offline tasks) to utilize the
+> spare cpu left by CFS SCHED_NORMAL tasks(called online tasks) without
+> interfering the online tasks. 
+> Offline tasks only run when there’s no runnable online tasks, and offline tasks
+> never preempt online tasks.
+> The SCHED_IDLE policy seems not to be abled to be qualified for that requirement,
+> because it has a weight(3), even though it’s small, but it can still preempt online
+> tasks considering the fairness. In that way, offline tasks of SCHED_IDLE policy
+> could interfere the online tasks.
+
+Because of this very small weight (weight=3), compared to a SCHED_NORMAL
+nice 0 task (weight=1024), a SCHED_IDLE task is penalized by a huge
+se->vruntime value (1024/3 higher than for a SCHED_NORMAL nice 0 task).
+This should make sure it doesn't tick preempt a SCHED_NORMAL nice 0 task.
+
+It's different when the SCHED_NORMAL task has nice 19 (weight=15) but
+that's part of the CFS design.
+
+> On the other hand, idle_sched_class seems not to be qualified either. It’s too
+> simple and only used for per-cpu idle task currently.
+
+Yeah, leave this for the rq->idle task (swapper/X).
+
+>>> We need an absolutely low priority class that could tolerate starving, which
+>>> could be used to co-locate offline tasks. But IDLE class seems to be not
+>>> *low* enough, if considering the fairness of CFS, and IDLE class still has a
+>>> weight.
+
+Understood. But this (tick) preemption should happen extremely rarely,
+especially if you have SCHED_NORMAL nice 0 tasks, right?
