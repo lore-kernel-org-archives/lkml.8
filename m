@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84725C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:16:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 096ACC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:16:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B3E72080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:16:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C78172080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:16:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597086997;
-	bh=aLwNQpIz+zkPVPgfGML/oL14Z+6IMWC7eDFdKkDNAdI=;
+	s=default; t=1597086999;
+	bh=kSPKCZiFxtn+L4ExtY8EoMFaBGwzpOOHMKckTYnJL6g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NUHagJJpSfIngB7oUCgdZxRW/HJtyCr+71VwdqozunhyEBFQFWzsDbxjajcb4d+p9
-	 wKv4NNtr/uWrZEd3aV1UI1WgWP4DvxklcfRGvqkMc3y33AmduILgoYuzS+IAd0/JGH
-	 qVXAG9nvdWAtAtgjQ0uG6ZGnCOriuZIYVu0NCJmc=
+	b=S5BO7CuXHt8CFJRWrMpxzfy1lTeIpPNaW80DwqN/0XlKTStWevumdzWfxEldmSmUY
+	 /o9eVXarY42N8n13DC5a1jMEuz9XaM2ERTLeWufJTnjyOJSEUki4fbHmvLDaOrtbYQ
+	 /rEyvDuM6/MuEnWCHn5rXAkx2SdvDX20UFJDvWaE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730126AbgHJTQg (ORCPT
+        id S1730225AbgHJTQj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:16:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47118 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:16:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730068AbgHJTOk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:14:40 -0400
+        id S1730052AbgHJTOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:14:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5AD42207FF;
-        Mon, 10 Aug 2020 19:14:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABED9207FF;
+        Mon, 10 Aug 2020 19:14:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086880;
-        bh=aLwNQpIz+zkPVPgfGML/oL14Z+6IMWC7eDFdKkDNAdI=;
+        s=default; t=1597086877;
+        bh=kSPKCZiFxtn+L4ExtY8EoMFaBGwzpOOHMKckTYnJL6g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G/cB3Xx1P31GoOK0BVIW+3aiw9ZsOQo6JyZZsxIE2puyW2JvU3w+bek3cm61kWjee
-         VYy9y1qcyWD7APWkNECcps8dLbSkd5IUmm0BbI3D5vm4LriyRomz7OCaAXjD2uniRg
-         oim1VsfQNoY/F+W22jAywLwoTk/qZIBvvlmjO+GU=
+        b=BeApoN8uSDweueIcAtaphH1OZWWtIMHcdLeJ2D22exLMckmfAl/RqemLbuvRXQCqc
+         5irAO83XZMJjI6Hv9x7/zwK5TrnCl1J+kaXwYRmiL0a6sPxF3yqOvlWoAZ4ClTalE3
+         jtTnMNdGUlsNQdmEs2E2ixMpyEdeTURYi6oMSBpY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jim Cromie <jim.cromie@gmail.com>, jbaron@akamai.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 15/17] dyndbg: prefer declarative init in caller, to memset in callee
-Date:   Mon, 10 Aug 2020 15:14:16 -0400
-Message-Id: <20200810191418.3795394-15-sashal@kernel.org>
+Cc:     Sasi Kumar <sasi.kumar@broadcom.com>,
+        Al Cooper <alcooperx@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 13/17] bdc: Fix bug causing crash after multiple disconnects
+Date:   Mon, 10 Aug 2020 15:14:14 -0400
+Message-Id: <20200810191418.3795394-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810191418.3795394-1-sashal@kernel.org>
 References: <20200810191418.3795394-1-sashal@kernel.org>
@@ -59,45 +61,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jim Cromie <jim.cromie@gmail.com>
+From: Sasi Kumar <sasi.kumar@broadcom.com>
 
-[ Upstream commit 9c9d0acbe2793315fa6945a19685ad2a51fb281b ]
+[ Upstream commit a95bdfd22076497288868c028619bc5995f5cc7f ]
 
-ddebug_exec_query declares an auto var, and passes it to
-ddebug_parse_query, which memsets it before using it.  Drop that
-memset, instead initialize the variable in the caller; let the
-compiler decide how to do it.
+Multiple connects/disconnects can cause a crash on the second
+disconnect. The driver had a problem where it would try to send
+endpoint commands after it was disconnected which is not allowed
+by the hardware. The fix is to only allow the endpoint commands
+when the endpoint is connected. This will also fix issues that
+showed up when using configfs to create gadgets.
 
-Acked-by: <jbaron@akamai.com>
-Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
-Link: https://lore.kernel.org/r/20200719231058.1586423-10-jim.cromie@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasi Kumar <sasi.kumar@broadcom.com>
+Signed-off-by: Al Cooper <alcooperx@gmail.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/dynamic_debug.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/usb/gadget/udc/bdc/bdc_core.c |  4 ++++
+ drivers/usb/gadget/udc/bdc/bdc_ep.c   | 16 ++++++++++------
+ 2 files changed, 14 insertions(+), 6 deletions(-)
 
-diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
-index 91c451e0f4741..a95557f9e8d55 100644
---- a/lib/dynamic_debug.c
-+++ b/lib/dynamic_debug.c
-@@ -325,7 +325,6 @@ static int ddebug_parse_query(char *words[], int nwords,
- 		pr_err("expecting pairs of match-spec <value>\n");
- 		return -EINVAL;
+diff --git a/drivers/usb/gadget/udc/bdc/bdc_core.c b/drivers/usb/gadget/udc/bdc/bdc_core.c
+index e9bd8d4abca00..f09a74d79c9eb 100644
+--- a/drivers/usb/gadget/udc/bdc/bdc_core.c
++++ b/drivers/usb/gadget/udc/bdc/bdc_core.c
+@@ -286,6 +286,7 @@ static void bdc_mem_init(struct bdc *bdc, bool reinit)
+ 	 * in that case reinit is passed as 1
+ 	 */
+ 	if (reinit) {
++		int i;
+ 		/* Enable interrupts */
+ 		temp = bdc_readl(bdc->regs, BDC_BDCSC);
+ 		temp |= BDC_GIE;
+@@ -295,6 +296,9 @@ static void bdc_mem_init(struct bdc *bdc, bool reinit)
+ 		/* Initialize SRR to 0 */
+ 		memset(bdc->srr.sr_bds, 0,
+ 					NUM_SR_ENTRIES * sizeof(struct bdc_bd));
++		/* clear ep flags to avoid post disconnect stops/deconfigs */
++		for (i = 1; i < bdc->num_eps; ++i)
++			bdc->bdc_ep_array[i]->flags = 0;
+ 	} else {
+ 		/* One time initiaization only */
+ 		/* Enable status report function pointers */
+diff --git a/drivers/usb/gadget/udc/bdc/bdc_ep.c b/drivers/usb/gadget/udc/bdc/bdc_ep.c
+index 303735c7990c8..8b1b48fa4ebfc 100644
+--- a/drivers/usb/gadget/udc/bdc/bdc_ep.c
++++ b/drivers/usb/gadget/udc/bdc/bdc_ep.c
+@@ -621,7 +621,6 @@ int bdc_ep_enable(struct bdc_ep *ep)
  	}
--	memset(query, 0, sizeof(*query));
+ 	bdc_dbg_bd_list(bdc, ep);
+ 	/* only for ep0: config ep is called for ep0 from connect event */
+-	ep->flags |= BDC_EP_ENABLED;
+ 	if (ep->ep_num == 1)
+ 		return ret;
  
- 	if (modname)
- 		/* support $modname.dyndbg=<multiple queries> */
-@@ -443,7 +442,7 @@ static int ddebug_parse_flags(const char *str, unsigned int *flagsp,
- static int ddebug_exec_query(char *query_string, const char *modname)
- {
- 	unsigned int flags = 0, mask = 0;
--	struct ddebug_query query;
-+	struct ddebug_query query = {};
- #define MAXWORDS 9
- 	int nwords, nfound;
- 	char *words[MAXWORDS];
+@@ -765,10 +764,13 @@ static int ep_dequeue(struct bdc_ep *ep, struct bdc_req *req)
+ 					__func__, ep->name, start_bdi, end_bdi);
+ 	dev_dbg(bdc->dev, "ep_dequeue ep=%p ep->desc=%p\n",
+ 						ep, (void *)ep->usb_ep.desc);
+-	/* Stop the ep to see where the HW is ? */
+-	ret = bdc_stop_ep(bdc, ep->ep_num);
+-	/* if there is an issue with stopping ep, then no need to go further */
+-	if (ret)
++	/* if still connected, stop the ep to see where the HW is ? */
++	if (!(bdc_readl(bdc->regs, BDC_USPC) & BDC_PST_MASK)) {
++		ret = bdc_stop_ep(bdc, ep->ep_num);
++		/* if there is an issue, then no need to go further */
++		if (ret)
++			return 0;
++	} else
+ 		return 0;
+ 
+ 	/*
+@@ -1917,7 +1919,9 @@ static int bdc_gadget_ep_disable(struct usb_ep *_ep)
+ 		__func__, ep->name, ep->flags);
+ 
+ 	if (!(ep->flags & BDC_EP_ENABLED)) {
+-		dev_warn(bdc->dev, "%s is already disabled\n", ep->name);
++		if (bdc->gadget.speed != USB_SPEED_UNKNOWN)
++			dev_warn(bdc->dev, "%s is already disabled\n",
++				 ep->name);
+ 		return 0;
+ 	}
+ 	spin_lock_irqsave(&bdc->lock, flags);
 -- 
 2.25.1
 
