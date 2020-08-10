@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DC53C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:31:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A865FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:31:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19F0922B47
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:31:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B8C722B47
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:31:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597087913;
-	bh=4Abc2RcV96zkWCXOb26k7nxJQ2yw3b6kMzMkLIEkKJ0=;
+	s=default; t=1597087917;
+	bh=IHXnv5gZCelNCtUHzOcPZ5aYEKPQvdmbdCnL6d6/pbQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C+LQdAMNUzmqnPkwHSed/oXQjF+FuA+8NED69WsFA2aYF+hNBhwgnyMUnoijy5dlF
-	 Gkur9BX91C8DxADnia+W9e17iTBl546yMCVeI+kVuw28wwIAca394jUzc05koWqOSz
-	 FAVV0OI/f9U62GK66AViveHBKkf/TFdvTdDM/bzc=
+	b=pQvFm6/1jMkZq9ONckJz3D+augo/ueoyDEbPuhbCjYf/sg1TBZhNFh95j1t4uRwRO
+	 A4ZPnvXTY1l4UITvW8SQT1T1mqVktBZ/+rHp0yOxeiBUNM9j5o0SLeHbS3sj5wfum1
+	 FQeqpQ6EE29R/dL93nYsk3zeNuJYYCoJ2k3lgSS4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728795AbgHJTKC (ORCPT
+        id S1729320AbgHJTb4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:10:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36448 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:31:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728652AbgHJTJw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:09:52 -0400
+        id S1728779AbgHJTKC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:10:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C2B622CF6;
-        Mon, 10 Aug 2020 19:09:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7B7B20885;
+        Mon, 10 Aug 2020 19:10:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086591;
-        bh=4Abc2RcV96zkWCXOb26k7nxJQ2yw3b6kMzMkLIEkKJ0=;
+        s=default; t=1597086601;
+        bh=IHXnv5gZCelNCtUHzOcPZ5aYEKPQvdmbdCnL6d6/pbQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2uwIo6NS4OcptriF5OXcCmOUqzmp3cEqXq0dlPH/KPYyMK7IDgVhMrzuHIs5581T9
-         ZBGcXr9FvjxBwv2u/5P0nXdYILThHhbIQC6k3waljGCAbuUhVtvpPQuy92TQFi0zYi
-         i67TjOGzvHwkR1FrMPGQETGeECAGf6BU5YmfAG+w=
+        b=To5PiDSoqwUPplyUfvXLqsLxSgD2cnbls0noEai4mIWBz7PEAOVGdCk0acv1ox5to
+         JdrRMMVfV1JEe8Knlzx2lb1+NWFQDkW5zTjvw56OBRiACkQ8+Mk7cRlj662wco30a3
+         FcDEcN+kVEsu5OrImbEaQq1BXvVc1VEfgYSmV5FI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wenjing Liu <wenjing.liu@amd.com>, Jun Lei <Jun.Lei@amd.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.8 38/64] drm/amd/display: allow query ddc data over aux to be read only operation
-Date:   Mon, 10 Aug 2020 15:08:33 -0400
-Message-Id: <20200810190859.3793319-38-sashal@kernel.org>
+Cc:     Armas Spann <zappel@retarded.farm>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        acpi4asus-user@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 45/64] platform/x86: asus-nb-wmi: add support for ASUS ROG Zephyrus G14 and G15
+Date:   Mon, 10 Aug 2020 15:08:40 -0400
+Message-Id: <20200810190859.3793319-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810190859.3793319-1-sashal@kernel.org>
 References: <20200810190859.3793319-1-sashal@kernel.org>
@@ -61,116 +61,123 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenjing Liu <wenjing.liu@amd.com>
+From: Armas Spann <zappel@retarded.farm>
 
-[ Upstream commit 26b4750d6cf84cb2b3f0a84c9b345e7b71886410 ]
+[ Upstream commit 13bceda68fb9ef388ad40d355ab8d03ee64d14c2 ]
 
-[why]
-Two issues:
-1. Add read only operation support for query ddc data over aux.
-2. Fix a bug where if read size is multiple of 16,
-mot of the last read transaction will not be set to 0.
+Add device support for the new ASUS ROG Zephyrus G14 (GA401I) and
+G15 (GA502I) series.
 
-Signed-off-by: Wenjing Liu <wenjing.liu@amd.com>
-Reviewed-by: Jun Lei <Jun.Lei@amd.com>
-Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+This is accomplished by two new quirk entries (one per each series),
+as well as all current available G401I/G502I DMI_PRODUCT_NAMEs to match
+the corresponding devices.
+
+Signed-off-by: Armas Spann <zappel@retarded.farm>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../gpu/drm/amd/display/dc/core/dc_link_ddc.c | 29 ++++++++++++-------
- 1 file changed, 18 insertions(+), 11 deletions(-)
+ drivers/platform/x86/asus-nb-wmi.c | 82 ++++++++++++++++++++++++++++++
+ 1 file changed, 82 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link_ddc.c b/drivers/gpu/drm/amd/display/dc/core/dc_link_ddc.c
-index aefd29a440b52..be8f265976b09 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_link_ddc.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_link_ddc.c
-@@ -503,7 +503,7 @@ bool dal_ddc_service_query_ddc_data(
- 	uint8_t *read_buf,
- 	uint32_t read_size)
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index 8c4d00482ef06..6c42f73c1dfd3 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -110,6 +110,16 @@ static struct quirk_entry quirk_asus_forceals = {
+ 	.wmi_force_als_set = true,
+ };
+ 
++static struct quirk_entry quirk_asus_ga401i = {
++	.wmi_backlight_power = true,
++	.wmi_backlight_set_devstate = true,
++};
++
++static struct quirk_entry quirk_asus_ga502i = {
++	.wmi_backlight_power = true,
++	.wmi_backlight_set_devstate = true,
++};
++
+ static int dmi_matched(const struct dmi_system_id *dmi)
  {
--	bool ret = false;
-+	bool success = true;
- 	uint32_t payload_size =
- 		dal_ddc_service_is_in_aux_transaction_mode(ddc) ?
- 			DEFAULT_AUX_MAX_DATA_SIZE : EDID_SEGMENT_SIZE;
-@@ -527,7 +527,6 @@ bool dal_ddc_service_query_ddc_data(
- 	 *  but we want to read 256 over i2c!!!!*/
- 	if (dal_ddc_service_is_in_aux_transaction_mode(ddc)) {
- 		struct aux_payload payload;
--		bool read_available = true;
- 
- 		payload.i2c_over_aux = true;
- 		payload.address = address;
-@@ -536,21 +535,26 @@ bool dal_ddc_service_query_ddc_data(
- 
- 		if (write_size != 0) {
- 			payload.write = true;
--			payload.mot = false;
-+			/* should not set mot (middle of transaction) to 0
-+			 * if there are pending read payloads
-+			 */
-+			payload.mot = read_size == 0 ? false : true;
- 			payload.length = write_size;
- 			payload.data = write_buf;
- 
--			ret = dal_ddc_submit_aux_command(ddc, &payload);
--			read_available = ret;
-+			success = dal_ddc_submit_aux_command(ddc, &payload);
- 		}
- 
--		if (read_size != 0 && read_available) {
-+		if (read_size != 0 && success) {
- 			payload.write = false;
-+			/* should set mot (middle of transaction) to 0
-+			 * since it is the last payload to send
-+			 */
- 			payload.mot = false;
- 			payload.length = read_size;
- 			payload.data = read_buf;
- 
--			ret = dal_ddc_submit_aux_command(ddc, &payload);
-+			success = dal_ddc_submit_aux_command(ddc, &payload);
- 		}
- 	} else {
- 		struct i2c_command command = {0};
-@@ -573,7 +577,7 @@ bool dal_ddc_service_query_ddc_data(
- 		command.number_of_payloads =
- 			dal_ddc_i2c_payloads_get_count(&payloads);
- 
--		ret = dm_helpers_submit_i2c(
-+		success = dm_helpers_submit_i2c(
- 				ddc->ctx,
- 				ddc->link,
- 				&command);
-@@ -581,7 +585,7 @@ bool dal_ddc_service_query_ddc_data(
- 		dal_ddc_i2c_payloads_destroy(&payloads);
- 	}
- 
--	return ret;
-+	return success;
- }
- 
- bool dal_ddc_submit_aux_command(struct ddc_service *ddc,
-@@ -598,7 +602,7 @@ bool dal_ddc_submit_aux_command(struct ddc_service *ddc,
- 
- 	do {
- 		struct aux_payload current_payload;
--		bool is_end_of_payload = (retrieved + DEFAULT_AUX_MAX_DATA_SIZE) >
-+		bool is_end_of_payload = (retrieved + DEFAULT_AUX_MAX_DATA_SIZE) >=
- 			payload->length;
- 
- 		current_payload.address = payload->address;
-@@ -607,7 +611,10 @@ bool dal_ddc_submit_aux_command(struct ddc_service *ddc,
- 		current_payload.i2c_over_aux = payload->i2c_over_aux;
- 		current_payload.length = is_end_of_payload ?
- 			payload->length - retrieved : DEFAULT_AUX_MAX_DATA_SIZE;
--		current_payload.mot = !is_end_of_payload;
-+		/* set mot (middle of transaction) to false
-+		 * if it is the last payload
-+		 */
-+		current_payload.mot = is_end_of_payload ? payload->mot:true;
- 		current_payload.reply = payload->reply;
- 		current_payload.write = payload->write;
+ 	pr_info("Identified laptop model '%s'\n", dmi->ident);
+@@ -411,6 +421,78 @@ static const struct dmi_system_id asus_quirks[] = {
+ 		},
+ 		.driver_data = &quirk_asus_forceals,
+ 	},
++	{
++		.callback = dmi_matched,
++		.ident = "ASUSTeK COMPUTER INC. GA401IH",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "GA401IH"),
++		},
++		.driver_data = &quirk_asus_ga401i,
++	},
++	{
++		.callback = dmi_matched,
++		.ident = "ASUSTeK COMPUTER INC. GA401II",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "GA401II"),
++		},
++		.driver_data = &quirk_asus_ga401i,
++	},
++	{
++		.callback = dmi_matched,
++		.ident = "ASUSTeK COMPUTER INC. GA401IU",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "GA401IU"),
++		},
++		.driver_data = &quirk_asus_ga401i,
++	},
++	{
++		.callback = dmi_matched,
++		.ident = "ASUSTeK COMPUTER INC. GA401IV",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "GA401IV"),
++		},
++		.driver_data = &quirk_asus_ga401i,
++	},
++	{
++		.callback = dmi_matched,
++		.ident = "ASUSTeK COMPUTER INC. GA401IVC",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "GA401IVC"),
++		},
++		.driver_data = &quirk_asus_ga401i,
++	},
++		{
++		.callback = dmi_matched,
++		.ident = "ASUSTeK COMPUTER INC. GA502II",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "GA502II"),
++		},
++		.driver_data = &quirk_asus_ga502i,
++	},
++	{
++		.callback = dmi_matched,
++		.ident = "ASUSTeK COMPUTER INC. GA502IU",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "GA502IU"),
++		},
++		.driver_data = &quirk_asus_ga502i,
++	},
++	{
++		.callback = dmi_matched,
++		.ident = "ASUSTeK COMPUTER INC. GA502IV",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "GA502IV"),
++		},
++		.driver_data = &quirk_asus_ga502i,
++	},
+ 	{},
+ };
  
 -- 
 2.25.1
