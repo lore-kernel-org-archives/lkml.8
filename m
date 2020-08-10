@@ -5,48 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5CA8C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:28:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B7DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:28:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF75222D02
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:28:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55EDC22B47
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:28:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073316;
-	bh=lI6E/4lPK/biapph8fLlSw8m7Ev/Xq7lJP/iubY+u2o=;
+	s=default; t=1597073321;
+	bh=OI8L8JHWA4I07xOnOfrugVYN6Wsn1SSxQOR6XVPL8Yc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xo2WVSDl8PUBmdJcvff5JmVQxr5PxPQ7dE9bXjutLxn040CmbQ/EimOaMCe/5H/eR
-	 0cjpKE/fvxPtlGCtFjxFQ4/aL+1u+ow+56CDf7XVt5dbcm4IThTQbdJDuGWOv4gNHF
-	 bEYa8FmCtyePaBpOR07slt8lKvxmPuso39rYAbps=
+	b=WhXXLb5XzEOO+sdxpNZ68ZlGga4KQd/do9nCZhWPmvqGo9x/ObUriVTppcaLyY9tD
+	 cCsVJcd3RVvcBbW4DlQHcKVWnnXlsZkbtRM5kVqE3CWMrNMXebl24o7E8J4ToDO+i4
+	 c9rH0phtyATcBvjPMSvEEMPsQMncQx05alRW3LMU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728295AbgHJP2f (ORCPT
+        id S1728444AbgHJP2j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:28:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34608 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:28:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728872AbgHJP2b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:28:31 -0400
+        id S1728602AbgHJP2d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:28:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB1A822B47;
-        Mon, 10 Aug 2020 15:28:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BCFFD22BF3;
+        Mon, 10 Aug 2020 15:28:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073310;
-        bh=lI6E/4lPK/biapph8fLlSw8m7Ev/Xq7lJP/iubY+u2o=;
+        s=default; t=1597073313;
+        bh=OI8L8JHWA4I07xOnOfrugVYN6Wsn1SSxQOR6XVPL8Yc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pm58t3gGRT1m+YUcG219xUmcWw8RanZLzEJx7D7LHOIfBe2T9GqNMzpIGRT9PFKEO
-         nyX5+MNPxhwvY9w1MgeBFeUCZ8IAl64r+r0nQkbADYqdHgB2/r4GI0liZMO0OXUidD
-         KQ6WIjH56e4lhkood0wzgd0LxIGDhFyog7/qeis8=
+        b=R+v4O5sszq64VkBUEbNHIzBR8BQ1gGwzNs0zijdlLdfzRyrK75Q9Zmbwa8oB1tO/Y
+         Dp9C9P1cCOLL0mCZp2k18+x6aGf6tW+ipHKklF7BcruYSM09yGqqKVP9SUkRIF9WHV
+         6pbR5OcBXFDNUEVN65jIvCYrU2vae52kcc2q58zc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Amitoj Kaur Chawla <amitoj1606@gmail.com>,
         Johan Hovold <johan@kernel.org>, Pavel Machek <pavel@ucw.cz>
-Subject: [PATCH 5.4 29/67] leds: lm3533: fix use-after-free on unbind
-Date:   Mon, 10 Aug 2020 17:21:16 +0200
-Message-Id: <20200810151810.872209269@linuxfoundation.org>
+Subject: [PATCH 5.4 30/67] leds: 88pm860x: fix use-after-free on unbind
+Date:   Mon, 10 Aug 2020 17:21:17 +0200
+Message-Id: <20200810151810.920575509@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151809.438685785@linuxfoundation.org>
 References: <20200810151809.438685785@linuxfoundation.org>
@@ -61,7 +61,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Johan Hovold <johan@kernel.org>
 
-commit d584221e683bbd173738603b83a315f27d27d043 upstream.
+commit eca21c2d8655387823d695b26e6fe78cf3975c05 upstream.
 
 Several MFD child drivers register their class devices directly under
 the parent device. This means you cannot blindly do devres conversions
@@ -69,7 +69,7 @@ so that deregistration ends up being tied to the parent device,
 something which leads to use-after-free on driver unbind when the class
 device is released while still being registered.
 
-Fixes: 50154e29e5cc ("leds: lm3533: Use devm_led_classdev_register")
+Fixes: 375446df95ee ("leds: 88pm860x: Use devm_led_classdev_register")
 Cc: stable <stable@vger.kernel.org>     # 4.6
 Cc: Amitoj Kaur Chawla <amitoj1606@gmail.com>
 Signed-off-by: Johan Hovold <johan@kernel.org>
@@ -77,48 +77,45 @@ Signed-off-by: Pavel Machek <pavel@ucw.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/leds/leds-lm3533.c |   12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/leds/leds-88pm860x.c |   14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
---- a/drivers/leds/leds-lm3533.c
-+++ b/drivers/leds/leds-lm3533.c
-@@ -694,7 +694,7 @@ static int lm3533_led_probe(struct platf
+--- a/drivers/leds/leds-88pm860x.c
++++ b/drivers/leds/leds-88pm860x.c
+@@ -203,21 +203,33 @@ static int pm860x_led_probe(struct platf
+ 	data->cdev.brightness_set_blocking = pm860x_led_set;
+ 	mutex_init(&data->lock);
  
- 	platform_set_drvdata(pdev, led);
- 
--	ret = devm_led_classdev_register(pdev->dev.parent, &led->cdev);
-+	ret = led_classdev_register(pdev->dev.parent, &led->cdev);
- 	if (ret) {
- 		dev_err(&pdev->dev, "failed to register LED %d\n", pdev->id);
+-	ret = devm_led_classdev_register(chip->dev, &data->cdev);
++	ret = led_classdev_register(chip->dev, &data->cdev);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "Failed to register LED: %d\n", ret);
  		return ret;
-@@ -704,13 +704,18 @@ static int lm3533_led_probe(struct platf
- 
- 	ret = lm3533_led_setup(led, pdata);
- 	if (ret)
--		return ret;
-+		goto err_deregister;
- 
- 	ret = lm3533_ctrlbank_enable(&led->cb);
- 	if (ret)
--		return ret;
-+		goto err_deregister;
- 
- 	return 0;
+ 	}
+ 	pm860x_led_set(&data->cdev, 0);
 +
-+err_deregister:
-+	led_classdev_unregister(&led->cdev);
++	platform_set_drvdata(pdev, data);
 +
-+	return ret;
- }
- 
- static int lm3533_led_remove(struct platform_device *pdev)
-@@ -720,6 +725,7 @@ static int lm3533_led_remove(struct plat
- 	dev_dbg(&pdev->dev, "%s\n", __func__);
- 
- 	lm3533_ctrlbank_disable(&led->cb);
-+	led_classdev_unregister(&led->cdev);
- 
  	return 0;
  }
+ 
++static int pm860x_led_remove(struct platform_device *pdev)
++{
++	struct pm860x_led *data = platform_get_drvdata(pdev);
++
++	led_classdev_unregister(&data->cdev);
++
++	return 0;
++}
+ 
+ static struct platform_driver pm860x_led_driver = {
+ 	.driver	= {
+ 		.name	= "88pm860x-led",
+ 	},
+ 	.probe	= pm860x_led_probe,
++	.remove	= pm860x_led_remove,
+ };
+ 
+ module_platform_driver(pm860x_led_driver);
 
 
