@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CA64C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:00:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF8BC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:00:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C6C6207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:00:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 788E920782
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:00:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ivA1aaBU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Juf/h3g2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728315AbgHJTA3 (ORCPT
+        id S1728430AbgHJTAg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:00:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40460 "EHLO
+        Mon, 10 Aug 2020 15:00:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728135AbgHJTA2 (ORCPT
+        with ESMTP id S1728135AbgHJTAf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:00:28 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2F17C061756;
-        Mon, 10 Aug 2020 12:00:27 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id k13so5504325plk.13;
-        Mon, 10 Aug 2020 12:00:27 -0700 (PDT)
+        Mon, 10 Aug 2020 15:00:35 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CB1CC061756;
+        Mon, 10 Aug 2020 12:00:35 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id g19so5544350plq.0;
+        Mon, 10 Aug 2020 12:00:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Z0+jOHm8rOkNKyaunCdMu5yjlq5vV0eABQayoJ0528s=;
-        b=ivA1aaBUqdfgaLxoUgpllPwcVHSBM7bdP5tm1sTOPej3S/pjrIeus2jhbAdE9ZCRop
-         gpw9DTZU6CMqhQ2FTPFyjfblMdEJxh8L03aZXKBEdOKPFbT/eAImT6/HCoVWAVeijQhb
-         wQSPdivqd9TnHrk0p1sSpE3hDkzM/sxbQ0NZSJTkVZNWjgd+kvrUhV3mdEGMmEVRyk0Y
-         cKew74EKthOegKVQ8badipz12z+tyVUExgN9P74Swhb0zjXBKnckcSS3ngLcheVdW8Jj
-         /uSJnGJqPSz+yBss5ED6Es1OvvXbxXKz1KFMi++RJhz8DlNDQdi4soe5evQc45D0yoTW
-         Z1kA==
+        bh=qwdaUknL4rdvB5HTQUho7uy432BpLxYt1hCirGV4hmw=;
+        b=Juf/h3g26+XnrEKNZVz5n2n2pGUKaCW5O6qMuYdXpvdf23cJyXEckJMPEt+gpWketC
+         rDn/Hxe/6IQYtsEILl9PY+Jr5goiPi8e9ku73qjjWiorN9MFfbja/CIPoEDSFIapfuqf
+         wD/c6i3A0ZL0IFLwRgmLXAYm+507s7O4STHpWEbbD6hCwmgkEszEWlrx/c0qkgBOXilT
+         Gnf16CtVgclX54qUUdDuhkrHrCktTBchID8s8WVIygrYCEZtQ9m2j2GgApQAqqUERgwS
+         R+I4Mxb85zRfSv47BJ8LJ3gSUVlS5/pubJGO5qzwa/CPCob1uiyoUbYi/36v5/SwaSUX
+         +1yw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Z0+jOHm8rOkNKyaunCdMu5yjlq5vV0eABQayoJ0528s=;
-        b=rYiMMY5zVE6ekdBVR/ULfsTTeAzk2WTFy0e7mOM0Y/m7Spl2b4Gzkg64XKdcXKGl5K
-         OcDpv/2t6IVzgWSciXa0mp7aTb7Ck6Nf1Sgi/686tfTiIPpPQlvHr2XxrBONv9KsEy72
-         MBjPlkL11e5MvpTGty/xbKCgKlbgFnFxvBU8pQRfSX+tVaFyCjolukYzRYEe34yg8Hm8
-         8G/bE2Oki8ej+YyD2ohtzIy/fwm9hd9xk7HUppSjn6OcxBXO2WLpwWTJkBySBrsq2lpK
-         0oAr82amoo7uQ+M6SqeRVsgd+RA+UtiBlgdkiyuNX2TytlZf9vrR7t55i/3v7KcwThqy
-         +Sbw==
-X-Gm-Message-State: AOAM533SjNyPbZxlOSSspQE49cmKaiRDHmImFAFQ0njWQ/N489CTqh8s
-        X5Lad+pxE/anjCyEpkN+cL7JPB2o4ks9TQ==
-X-Google-Smtp-Source: ABdhPJw9zh50ift33KPLF0gpYxTpUeEdaP8Jb6WeAkKvYMnGC5Fle9xVNYZuWbaiuMAmoxMIZ8b0+w==
-X-Received: by 2002:a17:902:8d94:: with SMTP id v20mr14878457plo.298.1597086027479;
-        Mon, 10 Aug 2020 12:00:27 -0700 (PDT)
+        bh=qwdaUknL4rdvB5HTQUho7uy432BpLxYt1hCirGV4hmw=;
+        b=MGCya9PKnreg8FLEIxmP1Cqlzjla3Vt3jDjx5JJY7wbMbZQo5X/N5QNrknJHlUK2lO
+         3FvgxsA1f+rSuz/0Gd6kCZMOubDxk0K4x1ypBBGap7Gxtt0wY1mR/uoazJr8W5N/w44p
+         wqHxd8ERzTrQc0d0N70vZyN0g8BFNPkrN1ie3RPDmWN/GrMavHm9qIlFqSk7bgPUcM1X
+         GBbKK2NDhwRqrBiBqChwWfI/N/6IQaJWmpfXyazUav6kNDGGQXkjmJcv15hH45jA+5Sm
+         6xD1YtceQjO6WP+KaujRyl7KeWUvZ8/V2zzY6Y4xUd/ZXq0fqL1KylVjf+gTVBzRg1bv
+         Wuwg==
+X-Gm-Message-State: AOAM532UFvFugf43cpn9aD8uwdNzMniiizaYXJBKmFwHgWyYTPdjsYD4
+        T8R3t4nxn/pZS4v3oiKNjDA=
+X-Google-Smtp-Source: ABdhPJxUZto4jhAY9RUX8TuzBPuP1R5uRzCd/R3dOVFRaOOdjRibdkKzuIEL8aM1uQvu+sRJ5sDbAg==
+X-Received: by 2002:a17:90b:23c8:: with SMTP id md8mr771000pjb.176.1597086034896;
+        Mon, 10 Aug 2020 12:00:34 -0700 (PDT)
 Received: from varodek.localdomain ([103.105.152.86])
-        by smtp.gmail.com with ESMTPSA id f27sm22683547pfk.217.2020.08.10.12.00.22
+        by smtp.gmail.com with ESMTPSA id f27sm22683547pfk.217.2020.08.10.12.00.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Aug 2020 12:00:27 -0700 (PDT)
+        Mon, 10 Aug 2020 12:00:34 -0700 (PDT)
 From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -77,9 +77,9 @@ Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
         linux-geode@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-kernel-mentees@lists.linuxfoundation.org,
         Shuah Khan <skhan@linuxfoundation.org>
-Subject: [PATCH v2 09/12] fbdev: i740fb: use generic power management
-Date:   Tue, 11 Aug 2020 00:27:20 +0530
-Message-Id: <20200810185723.15540-10-vaibhavgupta40@gmail.com>
+Subject: [PATCH v2 10/12] fbdev: vt8623fb: use generic power management
+Date:   Tue, 11 Aug 2020 00:27:21 +0530
+Message-Id: <20200810185723.15540-11-vaibhavgupta40@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200810185723.15540-1-vaibhavgupta40@gmail.com>
 References: <20200810165458.GA292825@ravnborg.org>
@@ -104,33 +104,38 @@ unnecessary calls to the PCI Helper functions along with the legacy
 
 Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
 ---
- drivers/video/fbdev/i740fb.c | 40 +++++++++++++++---------------------
- 1 file changed, 16 insertions(+), 24 deletions(-)
+ drivers/video/fbdev/vt8623fb.c | 41 ++++++++++++++--------------------
+ 1 file changed, 17 insertions(+), 24 deletions(-)
 
-diff --git a/drivers/video/fbdev/i740fb.c b/drivers/video/fbdev/i740fb.c
-index c65ec7386e87..8d7f06fc8a5a 100644
---- a/drivers/video/fbdev/i740fb.c
-+++ b/drivers/video/fbdev/i740fb.c
-@@ -1175,16 +1175,11 @@ static void i740fb_remove(struct pci_dev *dev)
- 	}
+diff --git a/drivers/video/fbdev/vt8623fb.c b/drivers/video/fbdev/vt8623fb.c
+index 7b3eef1b893f..c488e0117758 100644
+--- a/drivers/video/fbdev/vt8623fb.c
++++ b/drivers/video/fbdev/vt8623fb.c
+@@ -815,12 +815,11 @@ static void vt8623_pci_remove(struct pci_dev *dev)
  }
  
+ 
 -#ifdef CONFIG_PM
--static int i740fb_suspend(struct pci_dev *dev, pm_message_t state)
-+static int __maybe_unused i740fb_suspend(struct device *dev)
+ /* PCI suspend */
+ 
+-static int vt8623_pci_suspend(struct pci_dev* dev, pm_message_t state)
++static int __maybe_unused vt8623_pci_suspend(struct device *dev)
  {
 -	struct fb_info *info = pci_get_drvdata(dev);
 +	struct fb_info *info = dev_get_drvdata(dev);
- 	struct i740fb_par *par = info->par;
+ 	struct vt8623fb_info *par = info->par;
  
--	/* don't disable console during hibernation and wakeup from it */
--	if (state.event == PM_EVENT_FREEZE || state.event == PM_EVENT_PRETHAW)
--		return 0;
--
+ 	dev_info(info->device, "suspend\n");
+@@ -828,7 +827,7 @@ static int vt8623_pci_suspend(struct pci_dev* dev, pm_message_t state)
  	console_lock();
  	mutex_lock(&(par->open_lock));
  
-@@ -1197,19 +1192,15 @@ static int i740fb_suspend(struct pci_dev *dev, pm_message_t state)
+-	if ((state.event == PM_EVENT_FREEZE) || (par->ref_count == 0)) {
++	if (par->ref_count == 0) {
+ 		mutex_unlock(&(par->open_lock));
+ 		console_unlock();
+ 		return 0;
+@@ -836,10 +835,6 @@ static int vt8623_pci_suspend(struct pci_dev* dev, pm_message_t state)
  
  	fb_set_suspend(info, 1);
  
@@ -141,61 +146,65 @@ index c65ec7386e87..8d7f06fc8a5a 100644
  	mutex_unlock(&(par->open_lock));
  	console_unlock();
  
- 	return 0;
- }
+@@ -849,9 +844,9 @@ static int vt8623_pci_suspend(struct pci_dev* dev, pm_message_t state)
  
--static int i740fb_resume(struct pci_dev *dev)
-+static int __maybe_unused i740fb_resume(struct device *dev)
+ /* PCI resume */
+ 
+-static int vt8623_pci_resume(struct pci_dev* dev)
++static int __maybe_unused vt8623_pci_resume(struct device *dev)
  {
 -	struct fb_info *info = pci_get_drvdata(dev);
 +	struct fb_info *info = dev_get_drvdata(dev);
- 	struct i740fb_par *par = info->par;
+ 	struct vt8623fb_info *par = info->par;
  
- 	console_lock();
-@@ -1218,11 +1209,6 @@ static int i740fb_resume(struct pci_dev *dev)
+ 	dev_info(info->device, "resume\n");
+@@ -862,14 +857,6 @@ static int vt8623_pci_resume(struct pci_dev* dev)
  	if (par->ref_count == 0)
  		goto fail;
  
 -	pci_set_power_state(dev, PCI_D0);
 -	pci_restore_state(dev);
+-
 -	if (pci_enable_device(dev))
 -		goto fail;
 -
- 	i740fb_set_par(info);
+-	pci_set_master(dev);
+-
+ 	vt8623fb_set_par(info);
  	fb_set_suspend(info, 0);
  
-@@ -1231,10 +1217,17 @@ static int i740fb_resume(struct pci_dev *dev)
- 	console_unlock();
+@@ -879,10 +866,17 @@ static int vt8623_pci_resume(struct pci_dev* dev)
+ 
  	return 0;
  }
 -#else
--#define i740fb_suspend NULL
--#define i740fb_resume NULL
+-#define vt8623_pci_suspend NULL
+-#define vt8623_pci_resume NULL
 -#endif /* CONFIG_PM */
 +
-+static const struct dev_pm_ops i740fb_pm_ops = {
++static const struct dev_pm_ops vt8623_pci_pm_ops = {
 +#ifdef CONFIG_PM_SLEEP
-+	.suspend	= i740fb_suspend,
-+	.resume		= i740fb_resume,
++	.suspend	= vt8623_pci_suspend,
++	.resume		= vt8623_pci_resume,
 +	.freeze		= NULL,
-+	.thaw		= i740fb_resume,
-+	.poweroff	= i740fb_suspend,
-+	.restore	= i740fb_resume,
++	.thaw		= vt8623_pci_resume,
++	.poweroff	= vt8623_pci_suspend,
++	.restore	= vt8623_pci_resume,
 +#endif /* CONFIG_PM_SLEEP */
 +};
  
- #define I740_ID_PCI 0x00d1
- #define I740_ID_AGP 0x7800
-@@ -1251,8 +1244,7 @@ static struct pci_driver i740fb_driver = {
- 	.id_table	= i740fb_id_table,
- 	.probe		= i740fb_probe,
- 	.remove		= i740fb_remove,
--	.suspend	= i740fb_suspend,
--	.resume		= i740fb_resume,
-+	.driver.pm	= &i740fb_pm_ops,
+ /* List of boards that we are trying to support */
+ 
+@@ -898,8 +892,7 @@ static struct pci_driver vt8623fb_pci_driver = {
+ 	.id_table	= vt8623_devices,
+ 	.probe		= vt8623_pci_probe,
+ 	.remove		= vt8623_pci_remove,
+-	.suspend	= vt8623_pci_suspend,
+-	.resume		= vt8623_pci_resume,
++	.driver.pm	= &vt8623_pci_pm_ops,
  };
  
- #ifndef MODULE
+ /* Cleanup */
 -- 
 2.27.0
 
