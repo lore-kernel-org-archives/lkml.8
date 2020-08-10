@@ -2,130 +2,100 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4556BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 23:03:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E18DFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 23:04:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C06520734
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 23:03:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B70E220734
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 23:04:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BYUZamta"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AAOiPPck"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727808AbgHJXDj (ORCPT
+        id S1727823AbgHJXEN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 19:03:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49798 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727088AbgHJXDg (ORCPT
+        Mon, 10 Aug 2020 19:04:13 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:44306 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726778AbgHJXEN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 19:03:36 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F94AC06174A;
-        Mon, 10 Aug 2020 16:03:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=gnabiwdB45hFlhtdmo49Peh/hpNgEzAL3CueMw6vX4w=; b=BYUZamtad5DlKTYo+f7nvfRPRO
-        NiFxde+hX4idWHucyB89yrO1CM+lxekMOPkKfitUGdJ8qUirVRoVdZn2yAf96oDpMsGNR/ybf0JjW
-        9MtsVrgQvmAXigiCLFsulZDy310vSCIzJgjoaRf/KlFtrxwmvJzdWFTJCk+MqJeJN3xIxiBcxtBIn
-        KLbvymAGLZz/bZjY/UpDHfVD3L04YTu6Lrcu5UAaA5u03pRlPmxAewB5v/aKLELgkPy2eCv/ZxRYT
-        Xie3TNv8R9/1P9keeiOGbAbEcskC5AUGD+S98vhfyE0/gORZ1AP+k4coaiVlJAt6fHzPmRmFCy8MN
-        9sdw9c4Q==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k5GpD-00080q-23; Mon, 10 Aug 2020 23:03:27 +0000
-Subject: Re: [PATCH v7 2/4] SFH: PCIe driver to add support of AMD sensor
- fusion hub
-To:     Sandeep Singh <Sandeep.Singh@amd.com>, jikos@kernel.org,
-        benjamin.tissoires@redhat.com, linux-kernel@vger.kernel.org,
-        linux-input@vger.kernel.org, srinivas.pandruvada@linux.intel.com,
-        jic23@kernel.org, linux-iio@vger.kernel.org, hdegoede@redhat.com,
-        Nehal-bakulchandra.Shah@amd.com, andy.shevchenko@gmail.com,
-        mail@richard-neumann.de, m.felsch@pengutronix.de
-Cc:     Shyam-sundar.S-k@amd.com
-References: <20200810213055.103962-1-Sandeep.Singh@amd.com>
- <20200810213055.103962-3-Sandeep.Singh@amd.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <163a507b-1606-f37a-1733-67a06a4dc950@infradead.org>
-Date:   Mon, 10 Aug 2020 16:03:20 -0700
+        Mon, 10 Aug 2020 19:04:13 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07AN3EBd121955;
+        Mon, 10 Aug 2020 23:04:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=9CMn1duAF4QIN5cSgF1isP4zEw+F/cx7Eq1mzk3zwaM=;
+ b=AAOiPPcksAbiMAPrXXTrkUfYxxxr06/wIxgInXmCGTDhumw6hr9L8LPkcONqBbB/FDFD
+ wh72SqWBIVnQZMmkkOG5a+YLh/Gw5sKqIe/rYF2LworLvLqWeDTlsZfvhBfpBwp7Cm5u
+ 7By/okFe0O4foLNJNwXE0NbXQU3U86WZqhHR+KEEf7BvUzEQinAQZAKG1KGs0/AWFzxZ
+ 1m/sDLSu39eruJRKuO6uL60MvBWpdM2JRpDFPruGwtmRhpK94tnBwKbsT/UxKoctmk/u
+ yUMPSUfJdfBneNEu9Xpy+etWAN6vS2mS79l2vIjXfhOxASa6QuXewuRiOOdGoozUCC/t cg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 32sm0mhf83-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 10 Aug 2020 23:04:06 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07AMrTWE163715;
+        Mon, 10 Aug 2020 23:02:05 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 32t5mn9h13-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 10 Aug 2020 23:02:05 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07AN24L0031707;
+        Mon, 10 Aug 2020 23:02:05 GMT
+Received: from [192.168.2.112] (/50.38.35.18)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 10 Aug 2020 23:02:04 +0000
+Subject: Re: [PATCH 09/10] mm/hugetlb: narrow the hugetlb_lock protection area
+ during preparing huge page
+To:     Wei Yang <richard.weiyang@linux.alibaba.com>,
+        akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20200807091251.12129-1-richard.weiyang@linux.alibaba.com>
+ <20200807091251.12129-10-richard.weiyang@linux.alibaba.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <1cbb6986-4939-641a-e803-bd75e6e2cf94@oracle.com>
+Date:   Mon, 10 Aug 2020 16:02:03 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200810213055.103962-3-Sandeep.Singh@amd.com>
+In-Reply-To: <20200807091251.12129-10-richard.weiyang@linux.alibaba.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9709 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 mlxscore=0
+ adultscore=0 malwarescore=0 mlxlogscore=999 phishscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008100157
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9709 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 clxscore=1015
+ suspectscore=0 mlxlogscore=999 priorityscore=1501 adultscore=0
+ impostorscore=0 spamscore=0 bulkscore=0 mlxscore=0 lowpriorityscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008100158
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/10/20 2:30 PM, Sandeep Singh wrote:
-> From: Sandeep Singh <sandeep.singh@amd.com>
+On 8/7/20 2:12 AM, Wei Yang wrote:
+> set_hugetlb_cgroup_[rsvd] just manipulate page local data, which is not
+> necessary to be protected by hugetlb_lock.
 > 
-> AMD SFH uses HID over PCIe bus.SFH fw is part of MP2 processor
-> (MP2 which is an ARM® Cortex-M4 core based co-processor to x86) and
-> it runs on MP2 where in driver resides on X86. This part of module
-> will communicate with MP2 Firmware and provide that data into DRAM
+> Let's take this out.
 > 
-> Signed-off-by: Nehal Shah <Nehal-bakulchandra.Shah@amd.com>
-> Signed-off-by: Sandeep Singh <sandeep.singh@amd.com>
-> ---
->  drivers/hid/Kconfig                    |   2 +
->  drivers/hid/Makefile                   |   2 +
->  drivers/hid/amd-sfh-hid/Kconfig        |  21 ++++
->  drivers/hid/amd-sfh-hid/Makefile       |  15 +++
->  drivers/hid/amd-sfh-hid/amd_mp2_pcie.c | 164 +++++++++++++++++++++++++
->  drivers/hid/amd-sfh-hid/amd_mp2_pcie.h |  83 +++++++++++++
->  6 files changed, 287 insertions(+)
->  create mode 100644 drivers/hid/amd-sfh-hid/Kconfig
->  create mode 100644 drivers/hid/amd-sfh-hid/Makefile
->  create mode 100644 drivers/hid/amd-sfh-hid/amd_mp2_pcie.c
->  create mode 100644 drivers/hid/amd-sfh-hid/amd_mp2_pcie.h
-> 
+> Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
 
-Hi,
-Thanks for the update.
+Thanks!
 
-> diff --git a/drivers/hid/amd-sfh-hid/Kconfig b/drivers/hid/amd-sfh-hid/Kconfig
-> new file mode 100644
-> index 000000000000..a042048e8dd4
-> --- /dev/null
-> +++ b/drivers/hid/amd-sfh-hid/Kconfig
-> @@ -0,0 +1,21 @@
-> +# SPDX-License-Identifier: GPL-2.0-or-later
-> +menu "AMD SFH HID support"
-> +	depends on X86_64 || COMPILE_TEST
-> +	depends on PCI
-> +	depends on HID
-> +
-> +config AMD_SFH_HID
-> +	tristate "AMD Sensor Fusion Hub"
-> +	help
-
-Sorry I missed this in v6:
-
-help text should be indented with one tab + 2 spaces, so all of this
-should be indented an additional 2 spaces.
-
-> +	If you say yes to this option, support will be included for the AMD
-> +	Sensor Fusion Hub.
-> +	This driver will enable sensors functionality to user through HID
-> +	framework. Basically this driver will get data from MP2 Firmware
-> +	and provide that data to HID framework.
-> +	MP2 which is an ARM® Cortex-M4 core based co-processor to x86.
-> +
-> +	This driver can also be built as a module. If so, the module will
-> +	be  called amd-sfhtp-hid.
-> +	Say Y or M here if you want to support AMD SFH. If unsure, say N.
-> +
-> +endmenu
+Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
 
 -- 
-~Randy
-
+Mike Kravetz
