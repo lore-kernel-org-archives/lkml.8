@@ -5,54 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F543C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:36:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFBCAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:36:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8D6D23107
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:36:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C58CD23110
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:36:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073801;
-	bh=OEBUnwPDQFvaeUZp01qeNkT2HHlvDwLzUY81pbDigtg=;
+	s=default; t=1597073809;
+	bh=1fgeCoTwmpji+1gz0ECi45OvDJ5prtYx5oK3gPIZZ2Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZLdmJ4UN9rswogvdyjdfj+xD2t8HpBK1jWy1ztTdb3Fuz8d0pshpaKLAxVyj55xcw
-	 n40EVgqSWvRMnv4D0lBy46mUkGwgCDhz4FsrlMNp2WgQYFWnqj8MRS/0/5t3O1Mu3r
-	 T20TsVPtryO55q8JqfyqRh824SME/ldooNwueVq8=
+	b=qpEJ9lCL6yRmqZi/IrIE36iqCeWm0Vv90GODja9UWtf0AFvzO+/Ffm7HM2vKX/m0b
+	 Sy6YSBNHYpc6Y389BWAcSSWNVWkoPiQBpCCxutaJpacbOAH2vwbGUIoJX1ajo4JQOu
+	 cYdHmRfEILdiGEuUSIDCB08fAh1uuchFwhLIH424=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729057AbgHJPgl (ORCPT
+        id S1729077AbgHJPgs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:36:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33172 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:36:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728718AbgHJP1S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:27:18 -0400
+        id S1728165AbgHJP1H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:27:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E49722BF3;
-        Mon, 10 Aug 2020 15:27:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F0DD22CF7;
+        Mon, 10 Aug 2020 15:27:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073238;
-        bh=OEBUnwPDQFvaeUZp01qeNkT2HHlvDwLzUY81pbDigtg=;
+        s=default; t=1597073226;
+        bh=1fgeCoTwmpji+1gz0ECi45OvDJ5prtYx5oK3gPIZZ2Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TmKUCHCm5Yhu2wXcr/88E8oK7WdGJYnulrGeWDM9FQag66gGBKlEIe1v7o3luRgtE
-         YJmkPUzk45cl+xgOe/N9pH1Z/dqR2ooeUMLLNzSA9V5s74F0TZyPVoN5D8RmrCQREV
-         L2wqltEOz6pa4dPlqd2R/acycIvgVwUUmilNasAg=
+        b=z7rNJHLY4v+mR+P205pwVzz3j9w3NCGD7eokn7Fml+nlQJY0xpgHAwCT6kLN0XGPj
+         ift+DPMWtAgTpp5IU88WrbOn6y7EdKqbkrpcJXuFb3DHiZ8oRZDZSyacBp3oR0YA4r
+         WgRJm/XX1DFL2dztz0S8vNY+O3eVmZlkEuvJ5Bmw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
-        Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>,
-        kernel test robot <lkp@intel.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        sparclinux@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 35/67] drm/drm_fb_helper: fix fbdev with sparc64
-Date:   Mon, 10 Aug 2020 17:21:22 +0200
-Message-Id: <20200810151811.171538668@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+e6f77e16ff68b2434a2c@syzkaller.appspotmail.com,
+        Christoph Hellwig <hch@lst.de>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 31/67] net/9p: validate fds in p9_fd_open
+Date:   Mon, 10 Aug 2020 17:21:18 +0200
+Message-Id: <20200810151810.966885622@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151809.438685785@linuxfoundation.org>
 References: <20200810151809.438685785@linuxfoundation.org>
@@ -65,113 +62,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sam Ravnborg <sam@ravnborg.org>
+From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit 2a1658bf922ffd9b7907e270a7d9cdc9643fc45d ]
+[ Upstream commit a39c46067c845a8a2d7144836e9468b7f072343e ]
 
-Recent kernels have been reported to panic using the bochs_drm
-framebuffer under qemu-system-sparc64 which was bisected to
-commit 7a0483ac4ffc ("drm/bochs: switch to generic drm fbdev emulation").
+p9_fd_open just fgets file descriptors passed in from userspace, but
+doesn't verify that they are valid for read or writing.  This gets
+cought down in the VFS when actually attempting a read or write, but
+a new warning added in linux-next upsets syzcaller.
 
-The backtrace indicates that the shadow framebuffer copy in
-drm_fb_helper_dirty_blit_real() is trying to access the real
-framebuffer using a virtual address rather than use an IO access
-typically implemented using a physical (ASI_PHYS) access on SPARC.
+Fix this by just verifying the fds early on.
 
-The fix is to replace the memcpy with memcpy_toio() from io.h.
-
-memcpy_toio() uses writeb() where the original fbdev code
-used sbus_memcpy_toio(). The latter uses sbus_writeb().
-
-The difference between writeb() and sbus_memcpy_toio() is
-that writeb() writes bytes in little-endian, where sbus_writeb() writes
-bytes in big-endian. As endian does not matter for byte writes they are
-the same. So we can safely use memcpy_toio() here.
-
-Note that this only fixes bochs, in general fbdev helpers still have
-issues with mixing up system memory and __iomem space. Fixing that will
-require a lot more work.
-
-v3:
-  - Improved changelog (Daniel)
-  - Added FIXME to fbdev_use_iomem (Daniel)
-
-v2:
-  - Added missing __iomem cast (kernel test robot)
-  - Made changelog readable and fix typos (Mark)
-  - Add flag to select iomem - and set it in the bochs driver
-
-Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Reported-by: Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>
-Reported-by: kernel test robot <lkp@intel.com>
-Tested-by: Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>
-Cc: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: Gerd Hoffmann <kraxel@redhat.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: sparclinux@vger.kernel.org
-Link: https://patchwork.freedesktop.org/patch/msgid/20200709193016.291267-1-sam@ravnborg.org
-Link: https://patchwork.freedesktop.org/patch/msgid/20200725191012.GA434957@ravnborg.org
+Link: http://lkml.kernel.org/r/20200710085722.435850-1-hch@lst.de
+Reported-by: syzbot+e6f77e16ff68b2434a2c@syzkaller.appspotmail.com
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+[Dominique: amend goto as per Doug Nazar's review]
+Signed-off-by: Dominique Martinet <asmadeus@codewreck.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/bochs/bochs_kms.c |  1 +
- drivers/gpu/drm/drm_fb_helper.c   |  6 +++++-
- include/drm/drm_mode_config.h     | 12 ++++++++++++
- 3 files changed, 18 insertions(+), 1 deletion(-)
+ net/9p/trans_fd.c | 24 ++++++++++++++++--------
+ 1 file changed, 16 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/gpu/drm/bochs/bochs_kms.c b/drivers/gpu/drm/bochs/bochs_kms.c
-index 02a9c1ed165bb..fa50ab2523d4b 100644
---- a/drivers/gpu/drm/bochs/bochs_kms.c
-+++ b/drivers/gpu/drm/bochs/bochs_kms.c
-@@ -194,6 +194,7 @@ int bochs_kms_init(struct bochs_device *bochs)
- 	bochs->dev->mode_config.preferred_depth = 24;
- 	bochs->dev->mode_config.prefer_shadow = 0;
- 	bochs->dev->mode_config.prefer_shadow_fbdev = 1;
-+	bochs->dev->mode_config.fbdev_use_iomem = true;
- 	bochs->dev->mode_config.quirk_addfb_prefer_host_byte_order = true;
+diff --git a/net/9p/trans_fd.c b/net/9p/trans_fd.c
+index 3f67803123be2..12ecacf0c55fb 100644
+--- a/net/9p/trans_fd.c
++++ b/net/9p/trans_fd.c
+@@ -816,20 +816,28 @@ static int p9_fd_open(struct p9_client *client, int rfd, int wfd)
+ 		return -ENOMEM;
  
- 	bochs->dev->mode_config.funcs = &bochs_mode_funcs;
-diff --git a/drivers/gpu/drm/drm_fb_helper.c b/drivers/gpu/drm/drm_fb_helper.c
-index 8d193a58363d4..6b8502bcf0fd3 100644
---- a/drivers/gpu/drm/drm_fb_helper.c
-+++ b/drivers/gpu/drm/drm_fb_helper.c
-@@ -390,7 +390,11 @@ static void drm_fb_helper_dirty_blit_real(struct drm_fb_helper *fb_helper,
- 	unsigned int y;
+ 	ts->rd = fget(rfd);
++	if (!ts->rd)
++		goto out_free_ts;
++	if (!(ts->rd->f_mode & FMODE_READ))
++		goto out_put_rd;
+ 	ts->wr = fget(wfd);
+-	if (!ts->rd || !ts->wr) {
+-		if (ts->rd)
+-			fput(ts->rd);
+-		if (ts->wr)
+-			fput(ts->wr);
+-		kfree(ts);
+-		return -EIO;
+-	}
++	if (!ts->wr)
++		goto out_put_rd;
++	if (!(ts->wr->f_mode & FMODE_WRITE))
++		goto out_put_wr;
  
- 	for (y = clip->y1; y < clip->y2; y++) {
--		memcpy(dst, src, len);
-+		if (!fb_helper->dev->mode_config.fbdev_use_iomem)
-+			memcpy(dst, src, len);
-+		else
-+			memcpy_toio((void __iomem *)dst, src, len);
+ 	client->trans = ts;
+ 	client->status = Connected;
+ 
+ 	return 0;
 +
- 		src += fb->pitches[0];
- 		dst += fb->pitches[0];
- 	}
-diff --git a/include/drm/drm_mode_config.h b/include/drm/drm_mode_config.h
-index 3bcbe30339f04..198b9d0600081 100644
---- a/include/drm/drm_mode_config.h
-+++ b/include/drm/drm_mode_config.h
-@@ -865,6 +865,18 @@ struct drm_mode_config {
- 	 */
- 	bool prefer_shadow_fbdev;
++out_put_wr:
++	fput(ts->wr);
++out_put_rd:
++	fput(ts->rd);
++out_free_ts:
++	kfree(ts);
++	return -EIO;
+ }
  
-+	/**
-+	 * @fbdev_use_iomem:
-+	 *
-+	 * Set to true if framebuffer reside in iomem.
-+	 * When set to true memcpy_toio() is used when copying the framebuffer in
-+	 * drm_fb_helper.drm_fb_helper_dirty_blit_real().
-+	 *
-+	 * FIXME: This should be replaced with a per-mapping is_iomem
-+	 * flag (like ttm does), and then used everywhere in fbdev code.
-+	 */
-+	bool fbdev_use_iomem;
-+
- 	/**
- 	 * @quirk_addfb_prefer_xbgr_30bpp:
- 	 *
+ static int p9_socket_open(struct p9_client *client, struct socket *csocket)
 -- 
 2.25.1
 
