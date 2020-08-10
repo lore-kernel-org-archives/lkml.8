@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C50FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:18:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF12C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:18:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B94022B47
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:18:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DF302080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:18:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597087086;
-	bh=WomFmjj1uULt2FAPYNU8E1ci3xeQ1BiIwIHIHeGx9qM=;
+	s=default; t=1597087094;
+	bh=uRyO4yW0oWApsXVUw1zk0cQsJJLPndkA72/KstVeyrY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=imqaN3zgP/pdPheQmWaKr/rJCHP02xwJRNA41UFaxTgO59VJ3ESRSg4WoBikgdEYi
-	 0C1ZkEcgwSTEfmX5/yw1fP/7jqYPSr5KmABAcecnQc87h0Ae18NZvajm8ooNOr3KJU
-	 pqkWFXUzCfH3wJLLZkEG7UU/5H3BVokH0Y1XQYpM=
+	b=JNjr2iACosDN4xupwsS9nMPi2E4nQ04BVRjVcmsD0Z1vHjkK0XDdGFpSfuqTIkfiP
+	 JtPzgBQvDpCTHByUHCfDfmTmz0THWi9/DSkJDN0YjRDTsoDZSf9knY6MOxv6AAzkup
+	 Fn2jtqoGoLsQuJyCfVHQkasEj+Qxq/EhnXKcOW6c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730278AbgHJTSE (ORCPT
+        id S1729981AbgHJTSN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:18:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45994 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:18:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729962AbgHJTOI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:14:08 -0400
+        id S1729948AbgHJTOG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:14:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E5A022B47;
-        Mon, 10 Aug 2020 19:14:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98F18207FF;
+        Mon, 10 Aug 2020 19:14:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086848;
-        bh=WomFmjj1uULt2FAPYNU8E1ci3xeQ1BiIwIHIHeGx9qM=;
+        s=default; t=1597086845;
+        bh=uRyO4yW0oWApsXVUw1zk0cQsJJLPndkA72/KstVeyrY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1tVc6Ru7s9myWJPhnmv/iXN1WA/27rjwi9G3NEMHxhmqMb5VMc6hdcts7Ea8BzttG
-         aIlzRYmDMF5Py1Xs0JuZS7yOtFi4yuAmjSNB60YzQt9x5L7VrRaiswApe7HjdKHOt/
-         VWZFV2dDqo7D4W2Sz3UI6ka0YhMaauz/JPWhvxg0=
+        b=yp0Z9Gq2oUWg+RHjJINRBxr1PWxyMuu5UaFyiGI/2GavsrSG3K6KQLm3cCZn8PfVr
+         WibtizRpyCSuMZ67j5rLM07oLEPbi82IwDHba5z+ErSBw+Hsu8ceo6zehjco5eFwD2
+         5lTTwnbDVgN41VgB4OI2hjXZQDR59tdJ99LoAfTA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Evgeny Novikov <novikov@ispras.ru>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 16/22] usb: gadget: net2280: fix memory leak on probe error handling paths
-Date:   Mon, 10 Aug 2020 15:13:38 -0400
-Message-Id: <20200810191345.3795166-16-sashal@kernel.org>
+Cc:     Bolarinwa Olayemi Saheed <refactormyself@gmail.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 14/22] iwlegacy: Check the return value of pcie_capability_read_*()
+Date:   Mon, 10 Aug 2020 15:13:36 -0400
+Message-Id: <20200810191345.3795166-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810191345.3795166-1-sashal@kernel.org>
 References: <20200810191345.3795166-1-sashal@kernel.org>
@@ -59,40 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evgeny Novikov <novikov@ispras.ru>
+From: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
 
-[ Upstream commit 2468c877da428ebfd701142c4cdfefcfb7d4c00e ]
+[ Upstream commit 9018fd7f2a73e9b290f48a56b421558fa31e8b75 ]
 
-Driver does not release memory for device on error handling paths in
-net2280_probe() when gadget_release() is not registered yet.
+On failure pcie_capability_read_dword() sets it's last parameter, val
+to 0. However, with Patch 14/14, it is possible that val is set to ~0 on
+failure. This would introduce a bug because (x & x) == (~0 & x).
 
-The patch fixes the bug like in other similar drivers.
+This bug can be avoided without changing the function's behaviour if the
+return value of pcie_capability_read_dword is checked to confirm success.
 
-Found by Linux Driver Verification project (linuxtesting.org).
+Check the return value of pcie_capability_read_dword() to ensure success.
 
-Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
+Signed-off-by: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200713175529.29715-3-refactormyself@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/udc/net2280.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/wireless/intel/iwlegacy/common.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/gadget/udc/net2280.c b/drivers/usb/gadget/udc/net2280.c
-index 170327f84ea19..f1ac9a49e2bf1 100644
---- a/drivers/usb/gadget/udc/net2280.c
-+++ b/drivers/usb/gadget/udc/net2280.c
-@@ -3786,8 +3786,10 @@ static int net2280_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	return 0;
- 
- done:
--	if (dev)
-+	if (dev) {
- 		net2280_remove(pdev);
-+		kfree(dev);
-+	}
- 	return retval;
- }
- 
+diff --git a/drivers/net/wireless/intel/iwlegacy/common.c b/drivers/net/wireless/intel/iwlegacy/common.c
+index 6e6b124f0d5e3..3ca84577803cc 100644
+--- a/drivers/net/wireless/intel/iwlegacy/common.c
++++ b/drivers/net/wireless/intel/iwlegacy/common.c
+@@ -4302,8 +4302,8 @@ il_apm_init(struct il_priv *il)
+ 	 *    power savings, even without L1.
+ 	 */
+ 	if (il->cfg->set_l0s) {
+-		pcie_capability_read_word(il->pci_dev, PCI_EXP_LNKCTL, &lctl);
+-		if (lctl & PCI_EXP_LNKCTL_ASPM_L1) {
++		ret = pcie_capability_read_word(il->pci_dev, PCI_EXP_LNKCTL, &lctl);
++		if (!ret && (lctl & PCI_EXP_LNKCTL_ASPM_L1)) {
+ 			/* L1-ASPM enabled; disable(!) L0S  */
+ 			il_set_bit(il, CSR_GIO_REG,
+ 				   CSR_GIO_REG_VAL_L0S_ENABLED);
 -- 
 2.25.1
 
