@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE441C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 449FEC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:12:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CC5B21775
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:12:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 053382224D
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:12:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597086734;
-	bh=drg9k6fAr4o4ZaB/KVXQaJmhieDdCk/mTFHnx7qh7P0=;
+	s=default; t=1597086739;
+	bh=ObVOr0DUwToaJhdgjlbAKmKkmvclQaKXZYtibH2xuso=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tpY2uZcl/iueWIwPFup8LKbYc/OkK9ms21tEUzXSwPUDC0/TkxyWhDxEBCdts3KUf
-	 qMFomk5k6S2hfnx3YMw+HMuqpRmY6cDUn1TR6y4s2mqHOIH7aAeGW6gf7R3gyKblM3
-	 R62lEn3eoxGG8NX54cXI9Vt63dCI2HFp2/fX6ul4=
+	b=r6361tmK9TebqjdTGjFTJSrFkoM6UC05Dpv2GL0nMFu7qbil0bdsWR0fiGLr5sqd2
+	 7FO6et/Ne4Rl3T8cuwTMpqkm+9tiSPTOu9w1WnuvPoxFGj4Z0PNbgIVq8+aNMXG5Ux
+	 rm41NG8B1Bpru1ZZ2H15L11G6l60vtg/Df0Ddqjo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729489AbgHJTMM (ORCPT
+        id S1729119AbgHJTMQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:12:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40974 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:12:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729445AbgHJTMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:12:00 -0400
+        id S1729450AbgHJTMB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:12:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6A5E2224D;
-        Mon, 10 Aug 2020 19:11:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C4CF22B49;
+        Mon, 10 Aug 2020 19:12:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086719;
-        bh=drg9k6fAr4o4ZaB/KVXQaJmhieDdCk/mTFHnx7qh7P0=;
+        s=default; t=1597086720;
+        bh=ObVOr0DUwToaJhdgjlbAKmKkmvclQaKXZYtibH2xuso=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=buUv8LReKXK+Q2Fn5CTpgzb91SFTBEANiRprUOofiZMehJb4EOXMkMB7XDZGGiDSK
-         lGs0pB5tqRVtpflhMs5MP9ReCbyRBLhs2fJ4ZtuehN3bV95VLYxNh6PRrfwHXvizu3
-         b8sqTWt8XU0pC/vsU3rQU9MG9QooVF/+X7g6KmZo=
+        b=KGi1RpVWmgmfLZzkFCml/VqhbR5EBultsiByy8HFiN7+lWcFKNFHs0k5BAD6InEcS
+         S6Pf8Zn+iUMI98XqKnMJnx8tW6mptlzNYsBWDIbnPor2SXy9UQBFh0QthXgoX/wX4B
+         dv8MIDkPswafEDjIqMpAtU2V4cmPqnhO6ea6sh3M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Ming Lei <ming.lei@redhat.com>, Christoph Hellwig <hch@lst.de>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 04/45] loop: be paranoid on exit and prevent new additions / removals
-Date:   Mon, 10 Aug 2020 15:11:12 -0400
-Message-Id: <20200810191153.3794446-4-sashal@kernel.org>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 05/45] fs/btrfs: Add cond_resched() for try_release_extent_mapping() stalls
+Date:   Mon, 10 Aug 2020 15:11:13 -0400
+Message-Id: <20200810191153.3794446-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810191153.3794446-1-sashal@kernel.org>
 References: <20200810191153.3794446-1-sashal@kernel.org>
@@ -60,44 +58,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luis Chamberlain <mcgrof@kernel.org>
+From: "Paul E. McKenney" <paulmck@kernel.org>
 
-[ Upstream commit 200f93377220504c5e56754823e7adfea6037f1a ]
+[ Upstream commit 9f47eb5461aaeb6cb8696f9d11503ae90e4d5cb0 ]
 
-Be pedantic on removal as well and hold the mutex.
-This should prevent uses of addition while we exit.
+Very large I/Os can cause the following RCU CPU stall warning:
 
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+RIP: 0010:rb_prev+0x8/0x50
+Code: 49 89 c0 49 89 d1 48 89 c2 48 89 f8 e9 e5 fd ff ff 4c 89 48 10 c3 4c =
+89 06 c3 4c 89 40 10 c3 0f 1f 00 48 8b 0f 48 39 cf 74 38 <48> 8b 47 10 48 85 c0 74 22 48 8b 50 08 48 85 d2 74 0c 48 89 d0 48
+RSP: 0018:ffffc9002212bab0 EFLAGS: 00000287 ORIG_RAX: ffffffffffffff13
+RAX: ffff888821f93630 RBX: ffff888821f93630 RCX: ffff888821f937e0
+RDX: 0000000000000000 RSI: 0000000000102000 RDI: ffff888821f93630
+RBP: 0000000000103000 R08: 000000000006c000 R09: 0000000000000238
+R10: 0000000000102fff R11: ffffc9002212bac8 R12: 0000000000000001
+R13: ffffffffffffffff R14: 0000000000102000 R15: ffff888821f937e0
+ __lookup_extent_mapping+0xa0/0x110
+ try_release_extent_mapping+0xdc/0x220
+ btrfs_releasepage+0x45/0x70
+ shrink_page_list+0xa39/0xb30
+ shrink_inactive_list+0x18f/0x3b0
+ shrink_lruvec+0x38e/0x6b0
+ shrink_node+0x14d/0x690
+ do_try_to_free_pages+0xc6/0x3e0
+ try_to_free_mem_cgroup_pages+0xe6/0x1e0
+ reclaim_high.constprop.73+0x87/0xc0
+ mem_cgroup_handle_over_high+0x66/0x150
+ exit_to_usermode_loop+0x82/0xd0
+ do_syscall_64+0xd4/0x100
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+On a PREEMPT=n kernel, the try_release_extent_mapping() function's
+"while" loop might run for a very long time on a large I/O.  This commit
+therefore adds a cond_resched() to this loop, providing RCU any needed
+quiescent states.
+
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/loop.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ fs/btrfs/extent_io.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 565e35e69f249..bddbbf5b3dda2 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -2325,6 +2325,8 @@ static void __exit loop_exit(void)
+diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+index 1a089a6424221..99dcb38976592 100644
+--- a/fs/btrfs/extent_io.c
++++ b/fs/btrfs/extent_io.c
+@@ -4481,6 +4481,8 @@ int try_release_extent_mapping(struct page *page, gfp_t mask)
  
- 	range = max_loop ? max_loop << part_shift : 1UL << MINORBITS;
- 
-+	mutex_lock(&loop_ctl_mutex);
+ 			/* once for us */
+ 			free_extent_map(em);
 +
- 	idr_for_each(&loop_index_idr, &loop_exit_cb, NULL);
- 	idr_destroy(&loop_index_idr);
- 
-@@ -2332,6 +2334,8 @@ static void __exit loop_exit(void)
- 	unregister_blkdev(LOOP_MAJOR, "loop");
- 
- 	misc_deregister(&loop_misc);
-+
-+	mutex_unlock(&loop_ctl_mutex);
- }
- 
- module_init(loop_init);
++			cond_resched(); /* Allow large-extent preemption. */
+ 		}
+ 	}
+ 	return try_release_extent_state(tree, page, mask);
 -- 
 2.25.1
 
