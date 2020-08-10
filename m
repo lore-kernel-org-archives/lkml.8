@@ -1,172 +1,115 @@
-Return-Path: <SRS0=dnKw=BT=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4514C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 23:57:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD4DBC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 00:06:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DC4C206A1
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Aug 2020 23:57:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D1092070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 00:06:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597018002;
+	bh=R4aysq8cb7E0lt1g+L7QoE7drym+sqAlY7Kl5ewT9W4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=QOZQ/X5EDhbM7Q9rXFyoMOYKgBfCzIkYJz2L8KEgaHbzedTyqUL9FBP6kwKW5pcRp
+	 no6zc4blax4wAAfib5OwsnxedCE6W16RD3rohlOzuFqzU0BVgZlAcjN+bfr62mbABA
+	 04qsuOLkFgSK65CT+fAc7R3Kz4sHTiJVkmGS12jc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbgHIX50 (ORCPT
+        id S1726458AbgHJAGl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 19:57:26 -0400
-Received: from mail-il1-f200.google.com ([209.85.166.200]:47321 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726217AbgHIX50 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 19:57:26 -0400
-Received: by mail-il1-f200.google.com with SMTP id e12so6609739ile.14
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Aug 2020 16:57:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=knm+QemWG+MSMV1DpBju98nanbq8BEEg/qz4pwuH2RU=;
-        b=NO5W1yTA60RZrfXf7Xb/NJ0Jr6ajRJ221+9kerETu/jfRT+6FxcbyUgFpSIQvSHos4
-         /2WcxRfRvDa3+tns+4rtlX1T5CZH629j52jTpMql6DiMUdZxIP7OtyVLjx+lxLQLoeAC
-         W5brogc/beJLpNWxDKax2Zf45jRD+GXjWB3bRRXf9H9Vef/c0BlYB1l7G/2/couw6W/C
-         d/sKsq4Fdipbp5f41iKuhLhPp7W2I0z4eie+ZTzF8vRFJYM4SiMJoYSgMPUscDz3QSry
-         P3pdH6dh5jPX3rdIl9hCDpGaqDoan7BYA/3Y+cKvb7y6u+Ca7rcCgbfop8/5qo3s535G
-         3kdA==
-X-Gm-Message-State: AOAM530e68pAJc8nU1d5gB7rg9hWdzvWlDGDYYTL4X5Gzbm48ummFVVe
-        WXNidyvfPFN1c5Dz+NIGYPMrwYAVKyg+6c03IKcQEs7YPbHB
-X-Google-Smtp-Source: ABdhPJz9EkwbBlV75D+8HR7J/csv+ohFbZePeo8SDnCuowGv+BAzELV77UA1enouHvmiWJfeR48SdchzM4mgHZ+7ffftpTOXqgKZ
+        Sun, 9 Aug 2020 20:06:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36908 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726219AbgHJAGl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Aug 2020 20:06:41 -0400
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FC032070B;
+        Mon, 10 Aug 2020 00:06:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597018000;
+        bh=R4aysq8cb7E0lt1g+L7QoE7drym+sqAlY7Kl5ewT9W4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=PFJUK4RboaUyQadDQQxPBwd2mWFx5eqi8vYU/1ln23GMqVDmgxMjmS8OiCE5deT3T
+         3jL6lR41OYOSmVjW7gbdLQs4YANUBtRuawMrQz6qjssK0V/MZ1bA1wI7barj0aKoPP
+         oOqZccr58IG6qLu1rgsAHBxZYdck4+UEHXlk0n0U=
+Received: by mail-ed1-f43.google.com with SMTP id a14so5143136edx.7;
+        Sun, 09 Aug 2020 17:06:40 -0700 (PDT)
+X-Gm-Message-State: AOAM531aZqzbWlvlU+JyNk3zsiWHXygUB9R8hDg4+zU9UkIS/4L+fi05
+        WNjBRDhbyVUoNJxyZQis64lJfEqumwL+mUzPlA==
+X-Google-Smtp-Source: ABdhPJzs3hNq441TdiNg5sGMfiRejhS75UfI9CWnqxJ5HqFTUExR+ocEV58lXwZry63RX+M/RRZzyTn/TlCXxBAyudU=
+X-Received: by 2002:a05:6402:38c:: with SMTP id o12mr19470902edv.271.1597017998978;
+ Sun, 09 Aug 2020 17:06:38 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a6b:8e8c:: with SMTP id q134mr15009228iod.147.1597017445119;
- Sun, 09 Aug 2020 16:57:25 -0700 (PDT)
-Date:   Sun, 09 Aug 2020 16:57:25 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000843c1005ac7a990c@google.com>
-Subject: WARNING in rcu_irq_exit
-From:   syzbot <syzbot+c116bcba868f8148cd3e@syzkaller.appspotmail.com>
-To:     bp@alien8.de, hpa@zytor.com, jmattson@google.com, joro@8bytes.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@redhat.com, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, vkuznets@redhat.com, wanpengli@tencent.com,
-        x86@kernel.org
+References: <20200807082754.6790-1-linux@fw-web.de> <20200807082754.6790-2-linux@fw-web.de>
+ <trinity-f5a5deb1-c123-44d7-b7ca-1f7a8dbe1c1c-1596889651064@3c-app-gmx-bap69>
+ <CAAOTY_9o_hBWxWBdDoeeJ6zuV4rb4R_yEoN5+L0uHBGMw4Kduw@mail.gmail.com> <81DFA743-B455-498F-B2F2-161DD9D51F57@public-files.de>
+In-Reply-To: <81DFA743-B455-498F-B2F2-161DD9D51F57@public-files.de>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Mon, 10 Aug 2020 08:06:27 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_-DYsbAWkdKfiGeJOwmPUOO1T+6WmOmhDQEUbzoRh+KPw@mail.gmail.com>
+Message-ID: <CAAOTY_-DYsbAWkdKfiGeJOwmPUOO1T+6WmOmhDQEUbzoRh+KPw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] arm: dts: mt7623: move more display-related nodes to mt7623n.dtsi
+To:     Frank Wunderlich <frank-w@public-files.de>
+Cc:     "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        devicetree@vger.kernel.org, Ryder Lee <ryder.lee@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Frank Wunderlich <linux@fw-web.de>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi, Frank:
 
-syzbot found the following issue on:
+Frank Wunderlich <frank-w@public-files.de> =E6=96=BC 2020=E5=B9=B48=E6=9C=
+=889=E6=97=A5 =E9=80=B1=E6=97=A5 =E4=B8=8B=E5=8D=883:22=E5=AF=AB=E9=81=93=
+=EF=BC=9A
+>
+>
+>
+> Am 9. August 2020 02:16:59 MESZ schrieb Chun-Kuang Hu <chunkuang.hu@kerne=
+l.org>:
+> >
+> >I would like to put all device in mt7623.dtsi with some device's
+> >status is "disabled" and change its status in platform dtsi.
+> >I would like to see all device in mt7623.dtsi because of its name. If
+> >you move some device to platform dtsi, we would trace all platform
+> >dtsi to find out how many device in mt7623. One day a new platform
+> >enable different devices, you would reorganize all these platform
+> >dtsi?
+>
+> Ok,then i change the dts-patch from hdmi-series to disable all nodes and =
+enabling them in bpi-r2 dts. Do they need to be in alphabetical order (or a=
+ny other)?
 
-HEAD commit:    47ec5303 Merge git://git.kernel.org/pub/scm/linux/kernel/g..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=17228c62900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=e0c783f658542f35
-dashboard link: https://syzkaller.appspot.com/bug?extid=c116bcba868f8148cd3e
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+Alphabetical order is better.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+>
+> Is the tmds Patch ok? (because review missing) https://patchwork.kernel.o=
+rg/patch/11700679/
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+c116bcba868f8148cd3e@syzkaller.appspotmail.com
+That patch looks really like a hack patch. I would wait for a long
+time to see whether any one has comment for this. Or you could have a
+better explain for it.
+I could apply other patches first.
 
-device lo entered promiscuous mode
-------------[ cut here ]------------
-WARNING: CPU: 1 PID: 29030 at kernel/rcu/tree.c:772 rcu_irq_exit+0x19/0x20 kernel/rcu/tree.c:773
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 29030 Comm: syz-executor.2 Not tainted 5.8.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1f0/0x31e lib/dump_stack.c:118
- panic+0x264/0x7a0 kernel/panic.c:231
- __warn+0x227/0x250 kernel/panic.c:600
- report_bug+0x1b1/0x2e0 lib/bug.c:198
- handle_bug+0x42/0x80 arch/x86/kernel/traps.c:235
- exc_invalid_op+0x16/0x40 arch/x86/kernel/traps.c:255
- asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:536
-RIP: 0010:rcu_irq_exit+0x19/0x20 kernel/rcu/tree.c:773
-Code: 0b c3 0f 1f 44 00 00 66 2e 0f 1f 84 00 00 00 00 00 83 3d fd fb 68 01 00 74 0b 65 8b 05 50 00 dc 77 85 c0 75 05 e9 07 ff ff ff <0f> 0b e9 00 ff ff ff 41 56 53 83 3d da fb 68 01 00 74 0f 65 8b 05
-RSP: 0018:ffffc90001806e70 EFLAGS: 00010002
-RAX: 0000000000000001 RBX: 0000000000000082 RCX: 0000000000040000
-RDX: ffffc9000da6b000 RSI: 0000000000003173 RDI: 0000000000003174
-RBP: ffff8880a2ce9fa8 R08: ffffffff817a9064 R09: ffffed1015d26cf5
-R10: ffffed1015d26cf5 R11: 0000000000000000 R12: dffffc0000000000
-R13: 000000000000003c R14: dffffc0000000000 R15: 000000000000003c
- rcu_irq_exit_irqson+0x80/0x110 kernel/rcu/tree.c:827
- trace_console_rcuidle+0x15d/0x1c0 include/trace/events/printk.h:10
- call_console_drivers kernel/printk/printk.c:1809 [inline]
- console_unlock+0x74c/0xec0 kernel/printk/printk.c:2501
- vprintk_emit+0x1f8/0x3c0 kernel/printk/printk.c:2029
- printk+0x62/0x83 kernel/printk/printk.c:2078
- report_bug+0x1e1/0x2e0 lib/bug.c:194
- handle_bug+0x42/0x80 arch/x86/kernel/traps.c:235
- exc_invalid_op+0x16/0x40 arch/x86/kernel/traps.c:255
- asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:536
-RIP: 0010:rcu_irq_enter+0x19/0x20 kernel/rcu/tree.c:1058
-Code: 74 f8 f0 83 a0 a0 67 03 00 fe c3 66 0f 1f 44 00 00 83 3d 2d fa 68 01 00 74 0b 65 8b 05 80 fe db 77 85 c0 75 05 e9 07 ff ff ff <0f> 0b e9 00 ff ff ff e8 fb 04 00 00 89 c0 48 8b 04 c5 e0 18 2e 89
-RSP: 0018:ffffc90001807170 EFLAGS: 00010002
-RAX: 0000000000000001 RBX: 0000000000000082 RCX: 0000000000040000
-RDX: ffffc9000da6b000 RSI: 00000000000003f1 RDI: 00000000000003f2
-RBP: 0000000000000001 R08: ffffffff817a9064 R09: fffffbfff131daa6
-R10: fffffbfff131daa6 R11: 0000000000000000 R12: ffffffff81332ba5
-R13: 1ffffffff1641e9c R14: dffffc0000000000 R15: 0000000000000001
- rcu_irq_enter_irqson+0x80/0x110 kernel/rcu/tree.c:1072
- trace_irq_disable_rcuidle+0xc9/0x1c0 include/trace/events/preemptirq.h:36
- kvm_wait+0x95/0x1d0 arch/x86/kernel/kvm.c:800
- pv_wait arch/x86/include/asm/paravirt.h:666 [inline]
- pv_wait_head_or_lock kernel/locking/qspinlock_paravirt.h:470 [inline]
- __pv_queued_spin_lock_slowpath+0x701/0xc00 kernel/locking/qspinlock.c:508
- pv_queued_spin_lock_slowpath arch/x86/include/asm/paravirt.h:656 [inline]
- queued_spin_lock_slowpath arch/x86/include/asm/qspinlock.h:50 [inline]
- queued_spin_lock include/asm-generic/qspinlock.h:82 [inline]
- lockdep_lock+0x170/0x2c0 kernel/locking/lockdep.c:94
- graph_lock kernel/locking/lockdep.c:119 [inline]
- lookup_chain_cache_add kernel/locking/lockdep.c:3150 [inline]
- validate_chain+0x170/0x88a0 kernel/locking/lockdep.c:3183
- __lock_acquire+0x1161/0x2ab0 kernel/locking/lockdep.c:4426
- lock_acquire+0x160/0x730 kernel/locking/lockdep.c:5005
- __mutex_lock_common+0x189/0x2fc0 kernel/locking/mutex.c:956
- __mutex_lock kernel/locking/mutex.c:1103 [inline]
- mutex_lock_nested+0x1a/0x20 kernel/locking/mutex.c:1118
- packet_diag_dump+0x123/0x1e50 net/packet/diag.c:200
- netlink_dump+0x4be/0x10d0 net/netlink/af_netlink.c:2246
- __netlink_dump_start+0x538/0x700 net/netlink/af_netlink.c:2354
- netlink_dump_start include/linux/netlink.h:246 [inline]
- packet_diag_handler_dump+0x19b/0x220 net/packet/diag.c:242
- __sock_diag_cmd net/core/sock_diag.c:233 [inline]
- sock_diag_rcv_msg+0x2ff/0x3d0 net/core/sock_diag.c:264
- netlink_rcv_skb+0x190/0x3a0 net/netlink/af_netlink.c:2470
- sock_diag_rcv+0x26/0x40 net/core/sock_diag.c:275
- netlink_unicast_kernel net/netlink/af_netlink.c:1304 [inline]
- netlink_unicast+0x786/0x940 net/netlink/af_netlink.c:1330
- netlink_sendmsg+0xa57/0xd70 net/netlink/af_netlink.c:1919
- sock_sendmsg_nosec net/socket.c:651 [inline]
- sock_sendmsg net/socket.c:671 [inline]
- sock_write_iter+0x317/0x470 net/socket.c:998
- call_write_iter include/linux/fs.h:1868 [inline]
- new_sync_write fs/read_write.c:503 [inline]
- vfs_write+0xa09/0xc50 fs/read_write.c:578
- ksys_write+0x11b/0x220 fs/read_write.c:631
- do_syscall_64+0x31/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45ccd9
-Code: 2d b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb b5 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fd1ca9eec78 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 00000000000358c0 RCX: 000000000045ccd9
-RDX: 000000000000002f RSI: 00000000200003c0 RDI: 0000000000000005
-RBP: 000000000078bf40 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 000000000078bf0c
-R13: 00007fff08f9eaff R14: 00007fd1ca9ef9c0 R15: 000000000078bf0c
-Kernel Offset: disabled
+Regards,
+Chun-Kuang.
 
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+>
+> Just to know before reposting series as v5 :)
+> regards Frank
