@@ -2,174 +2,189 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9019DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 20:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B18D7C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 20:35:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61A7C20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 20:35:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A75120658
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 20:35:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gxn7awJT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QybsQxJy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726587AbgHJUfs (ORCPT
+        id S1726633AbgHJUfv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 16:35:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55146 "EHLO
+        Mon, 10 Aug 2020 16:35:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726507AbgHJUfr (ORCPT
+        with ESMTP id S1726453AbgHJUfu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 16:35:47 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99F68C061756
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 13:35:47 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id j21so5589931pgi.9
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 13:35:47 -0700 (PDT)
+        Mon, 10 Aug 2020 16:35:50 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAF70C061756
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 13:35:49 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id d190so691998wmd.4
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 13:35:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8bIRISkDDGTFXADmzCt8aRPLFkz3fsf+ngNbn9o21Dg=;
-        b=gxn7awJT9+Np4VgP/fswxqwEnVeGmRiyFa3TO18lRa9adR0yPu62PZvlMG3XNvtQwq
-         Mkwc1ciKjRqd2sj8jPtyTxcGIUrBr3zdjZMTqVA8n01OTZwofFP5uIr+ln8r8cpy+fou
-         2ObEl8jiC0/c29dV2mKFFAVcqNESxUSMyqdudzCSfDT/2xIKbmYMsOx9piZKf4+zICS9
-         MJDWAI0xzzeFTn7KKE18RY9Um0AOpWuod7fEkW6uMGLv4rgFzMiV1YDSeL88Vu4DpCsE
-         oscChhZyhfFyd1qSD27ql80hQ8Gzl1Di002f59SRbEfHXLIdF1YPLqnjcFCmxK/6/kpF
-         rTyQ==
+         :cc:content-transfer-encoding;
+        bh=rj9eDSRUMS+uoQYuFAG8NxQuUnLDOM6gUVvpTrrcc8w=;
+        b=QybsQxJy/ElzjYPLGbTsU/V8hleE5mE6MAqb3CN+8bjIDiEzMYYctbRm3KiA/O+W0+
+         rwUdf8vPY5tCPP/BkjSJM5fF5d3Cq5f71/15cpTM5+SM1ov8SkvVKCwjEHpmW/ltg2ku
+         1GBp5RP1kpFpLPrmUduqMb9p1800gj4eNPhfBCi8xjZd/7W4/JIhRWWpBftKwsP7f/lS
+         gylzj0kBSVcvxnj8qRGtTyaLfE0y6pgMsYwtk+i75Pz3NzTVNfs+ulSReUEIuhah2Wco
+         V+2zo0zMLLAdRQRbKyD3bte+IcjwpWDkuznlk3if8uQFjDaVWRiJWWljzEvDb0UwDl4m
+         XCfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8bIRISkDDGTFXADmzCt8aRPLFkz3fsf+ngNbn9o21Dg=;
-        b=PdFIVcm4PLhs9bOj/sHtv0YpZKzp/B7Mz4VbxKfhF3qI5h2LWpohA9ect0BocnIEVL
-         PyvQ+Armfv1bgDqMSerYRKNmONUccrPEKl3jkc2g0jKwAMPi34ADJ/OX46WxB+ochqPW
-         H2XXFhto8RKDXI0yj0M98jqnphTOIfW0NeaOGpoMJhDCDzbJsjRxSHfWViRFbFsnnSl4
-         4OBsWXnMoKcZgoStJDsnuSRWJU90Gvoq/Al2+TMLqHUWcWzYd/aaQOncIdHUyCKeqUf8
-         QEGFlaq9Cq/bDQMoUdYzS3avoahlZSzPrXya2aZFISMDZYUWMS0Pl2LGmWzjdyUffv6p
-         P/0g==
-X-Gm-Message-State: AOAM531Q9+czjKkWcz1YjT5XXJXD+veOwylLmV1piS2e+BCPlkxejAEq
-        CG7kc7Ndh1OBCULRz4NUAsgRnY8Ju44EAGCUZW3lDg==
-X-Google-Smtp-Source: ABdhPJxC2n4rFDhW9fIP7FdW5+L3038lUQLc/+oZMwG9o9fyQysucEzH8szpO8WTNuf6WmOt3EG7Igm7xxmhYHoh9hU=
-X-Received: by 2002:a63:5022:: with SMTP id e34mr2477990pgb.384.1597091746854;
- Mon, 10 Aug 2020 13:35:46 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=rj9eDSRUMS+uoQYuFAG8NxQuUnLDOM6gUVvpTrrcc8w=;
+        b=bYT0HTAjsntwxXBVKGGPY/aSYNo6gdd8tmlT+aAwHATpMW2SLCdxj2h9g5eK6taQkU
+         E2JkexgMFP2/tvWt8e7AdLqbmxzQ7+vKTKTYbDNza16whWtVRwWTutMudO6movSkey2u
+         Q8VDh5bKjr6hiOjkfhbEsGz2fxu+A9L/R9hLkrzHZORj2BE0q5rSpgYzEJ1za3OuCpBn
+         NzG2qlZLOK44qEG0JK94WZZH6l+xxIDkeBRYOARaNy6L1dmAdqCAi4sntj9KsZ83/toq
+         jcCKPLIB7JikiZzO23htWAsj7WgPAu6nLCYFZIBCZrkmhzYXacRhcmmg/QmLBk4lCFzk
+         c3vA==
+X-Gm-Message-State: AOAM533gFMyEjvQko2UKvLEPeTO+qNOUt2bM9UejZP+C6tOjRFMh3snV
+        Re/acuPtwjHL5wV/dhAGsNKi57RcO6Hqeo0ZJxI=
+X-Google-Smtp-Source: ABdhPJwHB9sIi+j3T1OLW8JLlCEir2qtZHzNKYnP01f0oYBnT1ztBA/Al7WGFDeax9Yn3C2g7QwGWG39DVsnYOgmVgg=
+X-Received: by 2002:a05:600c:252:: with SMTP id 18mr909508wmj.56.1597091748595;
+ Mon, 10 Aug 2020 13:35:48 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200806203737.3636830-1-urielguajardojr@gmail.com> <CAG30EedgwNJMCXX6Eo3b8heMa228N4=RLd=BgAQhS8AZ51bU0A@mail.gmail.com>
-In-Reply-To: <CAG30EedgwNJMCXX6Eo3b8heMa228N4=RLd=BgAQhS8AZ51bU0A@mail.gmail.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Mon, 10 Aug 2020 13:35:35 -0700
-Message-ID: <CAFd5g46=zgY_+jawXMS+yTx6MhRGa_4-WVmer-BwoL_c2QPcrg@mail.gmail.com>
-Subject: Re: [PATCH] kunit: added lockdep support
-To:     Uriel Guajardo <urielguajardo@google.com>
-Cc:     Uriel Guajardo <urielguajardojr@gmail.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <CAB-2Q08KQmS0D06k1QEUpccybGqCY+HYaZkF=sY0t1EX8Y_u2Q@mail.gmail.com>
+ <alpine.LNX.2.20.13.2008100928010.2454@monopod.intra.ispras.ru> <3f687bb2-d5c0-d538-53f4-af2b444bb1b6@gmail.com>
+In-Reply-To: <3f687bb2-d5c0-d538-53f4-af2b444bb1b6@gmail.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Mon, 10 Aug 2020 16:35:37 -0400
+Message-ID: <CADnq5_P6SSJCiHkZfgzZcMLbFOG1_qHe8D+oQgZppXQhEEhttQ@mail.gmail.com>
+Subject: Re: Non-deterministically boot into dark screen with `amdgpu`
+To:     Christian Koenig <christian.koenig@amd.com>
+Cc:     Alexander Monakov <amonakov@ispras.ru>,
+        Ignat Insarov <kindaro@gmail.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 6, 2020 at 1:43 PM Uriel Guajardo <urielguajardo@google.com> wrote:
+On Mon, Aug 10, 2020 at 7:46 AM Christian K=C3=B6nig
+<ckoenig.leichtzumerken@gmail.com> wrote:
 >
-> On Thu, Aug 6, 2020 at 3:37 PM Uriel Guajardo <urielguajardojr@gmail.com> wrote:
-> >
-> > From: Uriel Guajardo <urielguajardo@google.com>
-> >
-> > KUnit tests will now fail if lockdep detects an error during a test
-> > case.
-> >
-> > The idea comes from how lib/locking-selftest [1] checks for lock errors: we
-> > first if lock debugging is turned on. If not, an error must have
-> > occurred, so we fail the test and restart lockdep for the next test case.
-> >
-> > Like the locking selftests, we also fix possible preemption count
-> > corruption from lock bugs.
+> Hi guys,
+>
+> Am 10.08.20 um 08:43 schrieb Alexander Monakov:
+>
+> Hi,
+>
+> you should =D0=A1=D1=81 a specialized mailing list and a relevant maintai=
+ner,
+> otherwise your email is likely to be ignored as LKML is an incredibly
+> high-volume list. Adding amd-gfx and Alex Deucher.
+>
+>
+> Thanks for forwarding this. AFAIK we haven't heard of this bug before, bu=
+t Alex already might know more about it.
+>
+> More thoughts below.
+>
+> On Sun, 9 Aug 2020, Ignat Insarov wrote:
+>
+> Hello!
+>
+> This is an issue report.=E2=80=82I am not familiar with the Linux kernel
+> development procedure, so please direct me to a more appropriate or
+> specialized medium if this is not the right avenue.
+>
+> My laptop (Ryzen 7 Pro CPU/GPU) boots into dark screen more often than
+> not.=E2=80=82Screen blackness correlates with a line in the `systemd` jou=
+rnal
+> that says `RAM width Nbits DDR4`, where N is either 128 (resulting in
+> dark screen) or 64 (resulting in a healthy boot).=E2=80=82The number seem=
+s to
+> be chosen at random with bias towards 128.=E2=80=82This has been going on=
+ for
+> a while so here is some statistics:
+>
+> * 356 boots proceed far enough to  attempt mode setting.
+> * 82 boots set RAM width to 64 bits and presumably succeed.
+> * 274 boots set RAM width to 128 bits and presumably fail.
+>
+> The issue is prevented with the `nomodeset` kernel option.
+>
+> I reported this previously (about a year ago) on the forum of my Linux
+> distribution.[1]=E2=80=82The issue still persists as of  linux 5.8.0.
+>
+> The details of my graphics controller, as well as some journal
+> excerpts, can be seen at [1].=E2=80=82One thing that has changed since th=
+en is
+> that on failure, there now appears a null pointer dereference error.=E2=
+=80=82I
+> am attaching the log of kernel messages from the most recent failed
+> boot =E2=80=94 please request more information if needed.
+>
+> I appreciate any directions and advice as to how I may go about fixing
+> this annoyance.
+>
+> [1]: https://bbs.archlinux.org/viewtopic.php?id=3D248273
+>
+> On the forum you show that in the "success" case there's one less "BIOS
+> signature incorrect" message. This implies that amdgpu_get_bios() in
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/d=
+rivers/gpu/drm/amd/amdgpu/amdgpu_bios.c
+> gets the video BIOS from a different source. If that happens every time
+> (one "signature incorrect" message for "success", two for "failure")
+> that may be relevant to the problem you're experiencing.
+>
+> If you don't mind patching and rebuilding the kernel I suggest adding
+> debug printks to the aforementioned function to see exactly which methods
+> fail with wrong signature and which succeeds.
+>
+> Also might be worthwhile to check if there's a BIOS update for your lapto=
+p.
+>
+>
+> It might also be a good idea to try the latest amd-staging-drm-next branc=
+h from Alex repository (bear with me I don't have the link at hand, but it =
+should be easy to find).
+>
+> Opening a bug report or searching the existing ones for something similar=
+ under https://gitlab.freedesktop.org/drm/amd/-/issues might be a good idea=
+ as well.
+>
+> And I completely agree that this sounds like an issue getting the BIOS im=
+age.
 
-Sorry, just noticed: You probably want to send this to some of the
-lockdep maintainers or the maintainers of the kselftest for lockdep.
+I've not heard of an issue like this either.  Best to file a gitlab
+bug and attach your full dmesg output in both the working and
+non-working cases and we can go from there.
 
-> > Depends on kunit: support failure from dynamic analysis tools [2]
-> >
-> > [1] https://elixir.bootlin.com/linux/v5.7.12/source/lib/locking-selftest.c#L1137
-> >
-> > [2] https://lore.kernel.org/linux-kselftest/20200806174326.3577537-1-urielguajardojr@gmail.com/
-> >
-> > Signed-off-by: Uriel Guajardo <urielguajardo@google.com>
-> > ---
-> >  lib/kunit/test.c | 26 +++++++++++++++++++++++++-
-> >  1 file changed, 25 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/lib/kunit/test.c b/lib/kunit/test.c
-> > index d8189d827368..0838ececa005 100644
-> > --- a/lib/kunit/test.c
-> > +++ b/lib/kunit/test.c
-> > @@ -11,6 +11,8 @@
-> >  #include <linux/kref.h>
-> >  #include <linux/sched/debug.h>
-> >  #include <linux/sched.h>
-> > +#include <linux/lockdep.h>
-> > +#include <linux/debug_locks.h>
-> >
-> >  #include "debugfs.h"
-> >  #include "string-stream.h"
-> > @@ -22,6 +24,26 @@ void kunit_fail_current_test(void)
-> >                 kunit_set_failure(current->kunit_test);
-> >  }
-> >
-> > +static inline void kunit_check_locking_bugs(struct kunit *test,
-> > +                                           unsigned long saved_preempt_count)
-> > +{
-> > +       preempt_count_set(saved_preempt_count);
-> > +#ifdef CONFIG_TRACE_IRQFLAGS
-> > +       if (softirq_count())
-> > +               current->softirqs_enabled = 0;
-> > +       else
-> > +               current->softirqs_enabled = 1;
-> > +#endif
+Alex
+
 >
-> I am not entirely sure why lib/locking-selftests enables/disables
-> softirqs, but I suspect it has to do with the fact that preempt_count
-> became corrupted, and somehow softirqs became incorrectly
-> enabled/disabled as a result. The resetting of the preemption count
-> will undo the enabling/disabling accordingly. Any insight on this
-> would be appreciated!
+> Thanks,
+> Christian.
 >
-> > +#if IS_ENABLED(CONFIG_LOCKDEP)
-> > +       local_irq_disable();
-> > +       if (!debug_locks) {
-> > +               kunit_set_failure(test);
-> > +               lockdep_reset();
-> > +       }
-> > +       local_irq_enable();
-> > +#endif
-> > +}
-> > +
-> >  static void kunit_print_tap_version(void)
-> >  {
-> >         static bool kunit_has_printed_tap_version;
-> > @@ -289,6 +311,7 @@ static void kunit_try_run_case(void *data)
-> >         struct kunit *test = ctx->test;
-> >         struct kunit_suite *suite = ctx->suite;
-> >         struct kunit_case *test_case = ctx->test_case;
-> > +       unsigned long saved_preempt_count = preempt_count();
-> >
-> >         current->kunit_test = test;
-> >
-> > @@ -298,7 +321,8 @@ static void kunit_try_run_case(void *data)
-> >          * thread will resume control and handle any necessary clean up.
-> >          */
-> >         kunit_run_case_internal(test, suite, test_case);
-> > -       /* This line may never be reached. */
-> > +       /* These lines may never be reached. */
-> > +       kunit_check_locking_bugs(test, saved_preempt_count);
-> >         kunit_run_case_cleanup(test, suite);
-> >  }
-> >
-> > --
-> > 2.28.0.236.gb10cc79966-goog
-> >
+>
+> Alexander
+>
+>
+> _______________________________________________
+> amd-gfx mailing list
+> amd-gfx@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+>
+>
+> _______________________________________________
+> amd-gfx mailing list
+> amd-gfx@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
