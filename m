@@ -5,51 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CB79C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:22:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E99C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:22:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4424F2075F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:22:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FC132075D
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:22:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597072940;
-	bh=RgTeBxgnOs0aVVwj1kr1fdrTxJepd/TLEECd97S0y50=;
+	s=default; t=1597072948;
+	bh=x7ozp1mq3C1BY63eMKEcpS3peJBmk+UfyCtDfXhOuww=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K7QPqv1oNn47X1EPJ/Pw9hJ3aGyx30rvV2MX9jf8TEiP9cD+itOq0y2z9zxxIklDn
-	 +MbEi6hVBASqymYwzKr2CVM2OrXvfJC/WREiq0kAeTB4mxIj/MpJrtdOCGa41BDRCM
-	 MtRfZLj/dY9z1XEALFBBdo0H7vSX5wT6nDdYsh7Q=
+	b=rV4oOozligCFL2VEmfsS9cYlXTVzTeFVWY89sb9G2aUElXgfpkAGqpVG7IGDF9NVN
+	 FnKHCtiC45QnsW9fyf0C7zzjjXpshLWs+OJFp354y1aICLn7Vp1QNi+yhMNiQWrBab
+	 FLYR15mCDZVLjFr8bdkkE72md0uHbvJhuABTdZRU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727890AbgHJPUG (ORCPT
+        id S1728057AbgHJPW0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:20:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50122 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:22:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727842AbgHJPT6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:19:58 -0400
+        id S1727801AbgHJPWX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:22:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31DE12075F;
-        Mon, 10 Aug 2020 15:19:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15B0F20656;
+        Mon, 10 Aug 2020 15:22:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597072796;
-        bh=RgTeBxgnOs0aVVwj1kr1fdrTxJepd/TLEECd97S0y50=;
+        s=default; t=1597072942;
+        bh=x7ozp1mq3C1BY63eMKEcpS3peJBmk+UfyCtDfXhOuww=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Rc0+aPrKAMhoa2gCTWn02Db0PvuhZ9yh1NqShX1jVOPUm4NBdpsxRU/vyqhWL+2DR
-         OwOQJqaZ9eGejCLfRnjmTMXtjPhaDelyGEhlJlOxNfzKz7+gq2jGh0BAW9YzQgyOps
-         V8VHPSclEiemkHuiw6Zf8jfwdKkap9a90m8tYdD0=
+        b=0iQivmxDb+dqWeRz1jchQx76StioTKemusTc1nY2KfF5C2txFPsI+ZSqI1NVT5bNq
+         6VXzMgwa/7GqDd9hC6hB0mvusJgcKB1Omapa/ZGoi/VwlaQVGp2Kw6a2dRKINly1yJ
+         BDy5gqVc9jkBsiHGK3wLBkO5JdFWC6oJijLVni9g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.8 06/38] Revert "ALSA: hda: call runtime_allow() for all hda controllers"
-Date:   Mon, 10 Aug 2020 17:18:56 +0200
-Message-Id: <20200810151804.211796700@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+7a0d9d0b26efefe61780@syzkaller.appspotmail.com,
+        Suren Baghdasaryan <surenb@google.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Subject: [PATCH 5.7 12/79] staging: android: ashmem: Fix lockdep warning for write operation
+Date:   Mon, 10 Aug 2020 17:20:31 +0200
+Message-Id: <20200810151812.729806559@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200810151803.920113428@linuxfoundation.org>
-References: <20200810151803.920113428@linuxfoundation.org>
+In-Reply-To: <20200810151812.114485777@linuxfoundation.org>
+References: <20200810151812.114485777@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,41 +61,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hui Wang <hui.wang@canonical.com>
+From: Suren Baghdasaryan <surenb@google.com>
 
-commit 07c9983b567d0ef33aefc063299de95a987e12a8 upstream.
+commit 3e338d3c95c735dc3265a86016bb4c022ec7cadc upstream.
 
-This reverts commit 9a6418487b56 ("ALSA: hda: call runtime_allow()
-for all hda controllers").
+syzbot report [1] describes a deadlock when write operation against an
+ashmem fd executed at the time when ashmem is shrinking its cache results
+in the following lock sequence:
 
-The reverted patch already introduced some regressions on some
-machines:
- - on gemini-lake machines, the error of "azx_get_response timeout"
-   happens in the hda driver.
- - on the machines with alc662 codec, the audio jack detection doesn't
-   work anymore.
+Possible unsafe locking scenario:
 
-Fixes: 9a6418487b56 ("ALSA: hda: call runtime_allow() for all hda controllers")
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=208511
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Hui Wang <hui.wang@canonical.com>
-Link: https://lore.kernel.org/r/20200803064638.6139-1-hui.wang@canonical.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+        CPU0                    CPU1
+        ----                    ----
+   lock(fs_reclaim);
+                                lock(&sb->s_type->i_mutex_key#13);
+                                lock(fs_reclaim);
+   lock(&sb->s_type->i_mutex_key#13);
+
+kswapd takes fs_reclaim and then inode_lock while generic_perform_write
+takes inode_lock and then fs_reclaim. However ashmem does not support
+writing into backing shmem with a write syscall. The only way to change
+its content is to mmap it and operate on mapped memory. Therefore the race
+that lockdep is warning about is not valid. Resolve this by introducing a
+separate lockdep class for the backing shmem inodes.
+
+[1]: https://lkml.kernel.org/lkml/0000000000000b5f9d059aa2037f@google.com/
+
+Reported-by: syzbot+7a0d9d0b26efefe61780@syzkaller.appspotmail.com
+Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+Cc: stable <stable@vger.kernel.org>
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Link: https://lore.kernel.org/r/20200730192632.3088194-1-surenb@google.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/hda_intel.c |    1 -
- 1 file changed, 1 deletion(-)
+ drivers/staging/android/ashmem.c |   12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -2354,7 +2354,6 @@ static int azx_probe_continue(struct azx
+--- a/drivers/staging/android/ashmem.c
++++ b/drivers/staging/android/ashmem.c
+@@ -95,6 +95,15 @@ static DEFINE_MUTEX(ashmem_mutex);
+ static struct kmem_cache *ashmem_area_cachep __read_mostly;
+ static struct kmem_cache *ashmem_range_cachep __read_mostly;
  
- 	if (azx_has_pm_runtime(chip)) {
- 		pm_runtime_use_autosuspend(&pci->dev);
--		pm_runtime_allow(&pci->dev);
- 		pm_runtime_put_autosuspend(&pci->dev);
- 	}
++/*
++ * A separate lockdep class for the backing shmem inodes to resolve the lockdep
++ * warning about the race between kswapd taking fs_reclaim before inode_lock
++ * and write syscall taking inode_lock and then fs_reclaim.
++ * Note that such race is impossible because ashmem does not support write
++ * syscalls operating on the backing shmem.
++ */
++static struct lock_class_key backing_shmem_inode_class;
++
+ static inline unsigned long range_size(struct ashmem_range *range)
+ {
+ 	return range->pgend - range->pgstart + 1;
+@@ -396,6 +405,7 @@ static int ashmem_mmap(struct file *file
+ 	if (!asma->file) {
+ 		char *name = ASHMEM_NAME_DEF;
+ 		struct file *vmfile;
++		struct inode *inode;
  
+ 		if (asma->name[ASHMEM_NAME_PREFIX_LEN] != '\0')
+ 			name = asma->name;
+@@ -407,6 +417,8 @@ static int ashmem_mmap(struct file *file
+ 			goto out;
+ 		}
+ 		vmfile->f_mode |= FMODE_LSEEK;
++		inode = file_inode(vmfile);
++		lockdep_set_class(&inode->i_rwsem, &backing_shmem_inode_class);
+ 		asma->file = vmfile;
+ 		/*
+ 		 * override mmap operation of the vmfile so that it can't be
 
 
