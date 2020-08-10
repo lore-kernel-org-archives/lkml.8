@@ -2,54 +2,53 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFBCAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:36:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB91C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:36:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C58CD23110
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:36:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E5FC23101
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:36:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073809;
-	bh=1fgeCoTwmpji+1gz0ECi45OvDJ5prtYx5oK3gPIZZ2Y=;
+	s=default; t=1597073815;
+	bh=3XyBT8qm/Hn65XwcVEVyAbRbtgSY0hvyPErs0wZummM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qpEJ9lCL6yRmqZi/IrIE36iqCeWm0Vv90GODja9UWtf0AFvzO+/Ffm7HM2vKX/m0b
-	 Sy6YSBNHYpc6Y389BWAcSSWNVWkoPiQBpCCxutaJpacbOAH2vwbGUIoJX1ajo4JQOu
-	 cYdHmRfEILdiGEuUSIDCB08fAh1uuchFwhLIH424=
+	b=vUDkqIWJl1pY3LGuusxdCsNRrZMKzsYqvPvK8C+DnCfwd2dQOqlOS0Xsj4O3xYoZ4
+	 rrPcZtHtljoupZISytPTDN7NXStglcpYRAR/ukqNY+KMarDL639ULHoWsTLq/mEUAz
+	 wOxSBFIQxkpA4cOwj3n3s+x7bdVx5lOfabcOTsps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729077AbgHJPgs (ORCPT
+        id S1728060AbgHJPgw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:36:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32950 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:36:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728165AbgHJP1H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:27:07 -0400
+        id S1727797AbgHJP1E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:27:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F0DD22CF7;
-        Mon, 10 Aug 2020 15:27:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8101622B47;
+        Mon, 10 Aug 2020 15:27:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073226;
-        bh=1fgeCoTwmpji+1gz0ECi45OvDJ5prtYx5oK3gPIZZ2Y=;
+        s=default; t=1597073224;
+        bh=3XyBT8qm/Hn65XwcVEVyAbRbtgSY0hvyPErs0wZummM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z7rNJHLY4v+mR+P205pwVzz3j9w3NCGD7eokn7Fml+nlQJY0xpgHAwCT6kLN0XGPj
-         ift+DPMWtAgTpp5IU88WrbOn6y7EdKqbkrpcJXuFb3DHiZ8oRZDZSyacBp3oR0YA4r
-         WgRJm/XX1DFL2dztz0S8vNY+O3eVmZlkEuvJ5Bmw=
+        b=leOvK20bPzq8Jg459HKlGaZZyqpmiDwBA0XNdJwKHSQqfFrx9POaRUQw/JoP5A47/
+         zmUDMkDL0etwuwL4uIdPI/Sp8P24eFaFK49SAsFDlogNSgDPeOjytyu1SxrOwlFIA+
+         4cooaUW5hHt5WECx/oDZ+CdWzNKW2vlMfJkBdED4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+e6f77e16ff68b2434a2c@syzkaller.appspotmail.com,
-        Christoph Hellwig <hch@lst.de>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 31/67] net/9p: validate fds in p9_fd_open
-Date:   Mon, 10 Aug 2020 17:21:18 +0200
-Message-Id: <20200810151810.966885622@linuxfoundation.org>
+        syzbot+e6416dabb497a650da40@syzkaller.appspotmail.com,
+        Eric Biggers <ebiggers@google.com>,
+        Casey Schaufler <casey@schaufler-ca.com>
+Subject: [PATCH 5.4 22/67] Smack: fix use-after-free in smk_write_relabel_self()
+Date:   Mon, 10 Aug 2020 17:21:09 +0200
+Message-Id: <20200810151810.517300239@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151809.438685785@linuxfoundation.org>
 References: <20200810151809.438685785@linuxfoundation.org>
@@ -62,70 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit a39c46067c845a8a2d7144836e9468b7f072343e ]
+commit beb4ee6770a89646659e6a2178538d2b13e2654e upstream.
 
-p9_fd_open just fgets file descriptors passed in from userspace, but
-doesn't verify that they are valid for read or writing.  This gets
-cought down in the VFS when actually attempting a read or write, but
-a new warning added in linux-next upsets syzcaller.
+smk_write_relabel_self() frees memory from the task's credentials with
+no locking, which can easily cause a use-after-free because multiple
+tasks can share the same credentials structure.
 
-Fix this by just verifying the fds early on.
+Fix this by using prepare_creds() and commit_creds() to correctly modify
+the task's credentials.
 
-Link: http://lkml.kernel.org/r/20200710085722.435850-1-hch@lst.de
-Reported-by: syzbot+e6f77e16ff68b2434a2c@syzkaller.appspotmail.com
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-[Dominique: amend goto as per Doug Nazar's review]
-Signed-off-by: Dominique Martinet <asmadeus@codewreck.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reproducer for "BUG: KASAN: use-after-free in smk_write_relabel_self":
+
+	#include <fcntl.h>
+	#include <pthread.h>
+	#include <unistd.h>
+
+	static void *thrproc(void *arg)
+	{
+		int fd = open("/sys/fs/smackfs/relabel-self", O_WRONLY);
+		for (;;) write(fd, "foo", 3);
+	}
+
+	int main()
+	{
+		pthread_t t;
+		pthread_create(&t, NULL, thrproc, NULL);
+		thrproc(NULL);
+	}
+
+Reported-by: syzbot+e6416dabb497a650da40@syzkaller.appspotmail.com
+Fixes: 38416e53936e ("Smack: limited capability for changing process label")
+Cc: <stable@vger.kernel.org> # v4.4+
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- net/9p/trans_fd.c | 24 ++++++++++++++++--------
- 1 file changed, 16 insertions(+), 8 deletions(-)
+ security/smack/smackfs.c |   13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/net/9p/trans_fd.c b/net/9p/trans_fd.c
-index 3f67803123be2..12ecacf0c55fb 100644
---- a/net/9p/trans_fd.c
-+++ b/net/9p/trans_fd.c
-@@ -816,20 +816,28 @@ static int p9_fd_open(struct p9_client *client, int rfd, int wfd)
- 		return -ENOMEM;
+--- a/security/smack/smackfs.c
++++ b/security/smack/smackfs.c
+@@ -2720,7 +2720,6 @@ static int smk_open_relabel_self(struct
+ static ssize_t smk_write_relabel_self(struct file *file, const char __user *buf,
+ 				size_t count, loff_t *ppos)
+ {
+-	struct task_smack *tsp = smack_cred(current_cred());
+ 	char *data;
+ 	int rc;
+ 	LIST_HEAD(list_tmp);
+@@ -2745,11 +2744,21 @@ static ssize_t smk_write_relabel_self(st
+ 	kfree(data);
  
- 	ts->rd = fget(rfd);
-+	if (!ts->rd)
-+		goto out_free_ts;
-+	if (!(ts->rd->f_mode & FMODE_READ))
-+		goto out_put_rd;
- 	ts->wr = fget(wfd);
--	if (!ts->rd || !ts->wr) {
--		if (ts->rd)
--			fput(ts->rd);
--		if (ts->wr)
--			fput(ts->wr);
--		kfree(ts);
--		return -EIO;
--	}
-+	if (!ts->wr)
-+		goto out_put_rd;
-+	if (!(ts->wr->f_mode & FMODE_WRITE))
-+		goto out_put_wr;
- 
- 	client->trans = ts;
- 	client->status = Connected;
- 
- 	return 0;
+ 	if (!rc || (rc == -EINVAL && list_empty(&list_tmp))) {
++		struct cred *new;
++		struct task_smack *tsp;
 +
-+out_put_wr:
-+	fput(ts->wr);
-+out_put_rd:
-+	fput(ts->rd);
-+out_free_ts:
-+	kfree(ts);
-+	return -EIO;
++		new = prepare_creds();
++		if (!new) {
++			rc = -ENOMEM;
++			goto out;
++		}
++		tsp = smack_cred(new);
+ 		smk_destroy_label_list(&tsp->smk_relabel);
+ 		list_splice(&list_tmp, &tsp->smk_relabel);
++		commit_creds(new);
+ 		return count;
+ 	}
+-
++out:
+ 	smk_destroy_label_list(&list_tmp);
+ 	return rc;
  }
- 
- static int p9_socket_open(struct p9_client *client, struct socket *csocket)
--- 
-2.25.1
-
 
 
