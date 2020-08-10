@@ -2,51 +2,51 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5332C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:41:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E9D3C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:41:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79FEF20774
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:41:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 153AC20774
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:41:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597074069;
-	bh=SBJBhjEf5WQoaV758p8LTeeZcqluZ9Hz0KwBVAwXsxg=;
+	s=default; t=1597074074;
+	bh=OI8L8JHWA4I07xOnOfrugVYN6Wsn1SSxQOR6XVPL8Yc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UKBh+mlSI/4DFxINjJr0oyv7Jl0m5OJTdJ/KXHEoaCruCHOID3Yb9xuC95FCGnEbV
-	 RHXCitQIOqXpCgZXrxiBpxBvh+VmfBd01uvA2l1nODuXhVZalYcXgkDVgQdy/joXZT
-	 8K5g3ru8W+rTpoNB/zZhxfnL4xrjnW3SzMjqUinw=
+	b=p3Fja5rysfNl+nRAOgBzrA2ASR465CipXXpt8olIA6tT5NLZB4zHvw02rlzeYFbaM
+	 2CrDvyJ7b7o6ZgJ+Rht+1q5Fr1ELUz/XBHc/NHn0aBl+xq6+byT12T2PK+0gjoLnxr
+	 BwFYE9TRUq5XsGT4euKFxLhHZzbLviy90yxYhqnc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbgHJPlH (ORCPT
+        id S1728316AbgHJPX1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:41:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55002 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:23:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728334AbgHJPXb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:23:31 -0400
+        id S1728303AbgHJPXO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:23:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F93D207FF;
-        Mon, 10 Aug 2020 15:23:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1035F20782;
+        Mon, 10 Aug 2020 15:23:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073011;
-        bh=SBJBhjEf5WQoaV758p8LTeeZcqluZ9Hz0KwBVAwXsxg=;
+        s=default; t=1597072993;
+        bh=OI8L8JHWA4I07xOnOfrugVYN6Wsn1SSxQOR6XVPL8Yc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1NqTudXEdJYRqrlq3TektEpETKYx4teslX0hg4C5ZjHmMs7sbBeB8Nb6goinR/qxp
-         Ka4HsCwVhzDtiyS7lw7Zfsk8Qvg392XBXIGGiYZPkJ0iCU/dATrBmJHDtrsw8EVxnV
-         x/ZoRSh0IGtPhtAkoiVj0brW/FTZaYvinXwUz+aQ=
+        b=Rq0LTMZTonN6NZ/3ODvV57zVRlpCPlR0GI6mncxtxw/FMKyFVfRW4QW86klUgEQsF
+         p0dtclBK8N/D9p5BbFhv5GyievOmLbsN4Cw7Tpn6Ku7nY3CKEu64hvhdHfE6fi42Iu
+         pxdhGJ6GCt1JRK3RiBp3VTPnfcJvKIrqpOvmEqcs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ben Skeggs <bskeggs@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 34/79] drm/nouveau/fbcon: fix module unload when fbcon init has failed for some reason
-Date:   Mon, 10 Aug 2020 17:20:53 +0200
-Message-Id: <20200810151813.967903895@linuxfoundation.org>
+        stable@vger.kernel.org, Amitoj Kaur Chawla <amitoj1606@gmail.com>,
+        Johan Hovold <johan@kernel.org>, Pavel Machek <pavel@ucw.cz>
+Subject: [PATCH 5.7 29/79] leds: 88pm860x: fix use-after-free on unbind
+Date:   Mon, 10 Aug 2020 17:20:48 +0200
+Message-Id: <20200810151813.695460404@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151812.114485777@linuxfoundation.org>
 References: <20200810151812.114485777@linuxfoundation.org>
@@ -59,32 +59,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Skeggs <bskeggs@redhat.com>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit 498595abf5bd51f0ae074cec565d888778ea558f ]
+commit eca21c2d8655387823d695b26e6fe78cf3975c05 upstream.
 
-Stale pointer was tripping up the unload path.
+Several MFD child drivers register their class devices directly under
+the parent device. This means you cannot blindly do devres conversions
+so that deregistration ends up being tied to the parent device,
+something which leads to use-after-free on driver unbind when the class
+device is released while still being registered.
 
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 375446df95ee ("leds: 88pm860x: Use devm_led_classdev_register")
+Cc: stable <stable@vger.kernel.org>     # 4.6
+Cc: Amitoj Kaur Chawla <amitoj1606@gmail.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/gpu/drm/nouveau/nouveau_fbcon.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/leds/leds-88pm860x.c |   14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_fbcon.c b/drivers/gpu/drm/nouveau/nouveau_fbcon.c
-index 24d543a01f435..e42100a2425fd 100644
---- a/drivers/gpu/drm/nouveau/nouveau_fbcon.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_fbcon.c
-@@ -588,6 +588,7 @@ fini:
- 	drm_fb_helper_fini(&fbcon->helper);
- free:
- 	kfree(fbcon);
-+	drm->fbcon = NULL;
- 	return ret;
+--- a/drivers/leds/leds-88pm860x.c
++++ b/drivers/leds/leds-88pm860x.c
+@@ -203,21 +203,33 @@ static int pm860x_led_probe(struct platf
+ 	data->cdev.brightness_set_blocking = pm860x_led_set;
+ 	mutex_init(&data->lock);
+ 
+-	ret = devm_led_classdev_register(chip->dev, &data->cdev);
++	ret = led_classdev_register(chip->dev, &data->cdev);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "Failed to register LED: %d\n", ret);
+ 		return ret;
+ 	}
+ 	pm860x_led_set(&data->cdev, 0);
++
++	platform_set_drvdata(pdev, data);
++
+ 	return 0;
  }
  
--- 
-2.25.1
-
++static int pm860x_led_remove(struct platform_device *pdev)
++{
++	struct pm860x_led *data = platform_get_drvdata(pdev);
++
++	led_classdev_unregister(&data->cdev);
++
++	return 0;
++}
+ 
+ static struct platform_driver pm860x_led_driver = {
+ 	.driver	= {
+ 		.name	= "88pm860x-led",
+ 	},
+ 	.probe	= pm860x_led_probe,
++	.remove	= pm860x_led_remove,
+ };
+ 
+ module_platform_driver(pm860x_led_driver);
 
 
