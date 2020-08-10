@@ -2,143 +2,154 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3422C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:12:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCBF5C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:14:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCB9D206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:12:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="cxIlhD2g"
+	by mail.kernel.org (Postfix) with ESMTP id AF7CA206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:14:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597061645;
+	bh=IFnp5bKUa+G5klYWJa8znYTxFhwY8FgJZKRPDrSMId4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=dQlTcdojWLXgaAgpOuHxobgJKoDbGkrnX2aCY8Nz257ZSQ+cxG01Kt81HF9EKqVjt
+	 a/8QGjkG8koSLwQUMgwfl2/X3r9IGV8o+jxba3FI6mLcHbrwM657TQayu4Aoe5wrEu
+	 Zh5/SVAkaBJy71LlCCG0aQ8zIgKL90HwEl8HmW00=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726807AbgHJMMi (ORCPT
+        id S1726697AbgHJMOE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 08:12:38 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:61896 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726657AbgHJMMi (ORCPT
+        Mon, 10 Aug 2020 08:14:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34598 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726146AbgHJMOC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 08:12:38 -0400
-X-UUID: c19a747bc3b34e1dacf458ee352624a9-20200810
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=85XI0r8gSm4pXV6KLRTXENKU7LoA4RXMZocUnSqxJRc=;
-        b=cxIlhD2g5Qs6z62b8bTlSgu5/XQHLgDcdKdIfOke5gSemEonWspbZ+Jrhi8Db709r6KBPFFf17lsJWKBSKZxdyQkjhS9af8r+ymKVIbHP5YbKBMMaTWADX+UhAsbIwKNOEyez/x10MgRKDFQW+S8e99GP3kVwEuy3jJXuB0n3D4=;
-X-UUID: c19a747bc3b34e1dacf458ee352624a9-20200810
-Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw02.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1866359265; Mon, 10 Aug 2020 20:12:35 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Mon, 10 Aug 2020 20:12:32 +0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 10 Aug 2020 20:12:32 +0800
-Message-ID: <1597061554.13160.17.camel@mtksdccf07>
-Subject: Re: [PATCH 0/5] kasan: add workqueue and timer stack for generic
- KASAN
-From:   Walter Wu <walter-zh.wu@mediatek.com>
-To:     Qian Cai <cai@lca.pw>
-CC:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        John Stultz <john.stultz@linaro.org>,
-        "Stephen Boyd" <sboyd@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Tejun Heo" <tj@kernel.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        <kasan-dev@googlegroups.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Mon, 10 Aug 2020 20:12:34 +0800
-In-Reply-To: <1597060257.13160.11.camel@mtksdccf07>
-References: <20200810072115.429-1-walter-zh.wu@mediatek.com>
-         <B873B364-FF03-4819-8F9C-79F3C4EF47CE@lca.pw>
-         <1597060257.13160.11.camel@mtksdccf07>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Mon, 10 Aug 2020 08:14:02 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEB11C061756;
+        Mon, 10 Aug 2020 05:14:00 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id k13so4571404lfo.0;
+        Mon, 10 Aug 2020 05:14:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=2zpgXHsKMxHRy+CTgH2l0F8HPiOlelNzEHmaBlOocK4=;
+        b=H4EKnd2/IMOPN7QcPZaBTccnrrrH8e3ffZ0cWvlnNI+gKP6k5M2RtjcjEdBqkveAoE
+         x1iiqe+BvWXG+Sfx3Yfi6y84aj2/Q58qAGkFAldO+N/7aSFs63oQ4e6HhsNJHVOmM3x2
+         LLR1HiZlOo/6m7N/9cc0m8JfOYuEArfmM8Ic5JZ5ZYWFFvl+pgNS8feZY7B7uCvFYt2N
+         u8ZxRj1VswVraR6vmsED9V6EW2o/4pAffRTnP9yMiO4skrHgpjhnhi6P41alsesMqJl8
+         +Te1H3uwktnxWReKRjeUaEaFmVfmvdAi9q55tiKWGVqcPffB0+j0+UwT+jfgaDnVQWgP
+         XzZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=2zpgXHsKMxHRy+CTgH2l0F8HPiOlelNzEHmaBlOocK4=;
+        b=JgDBI3qJrp/DPpYGxnjJbRbXNKFKzch6nbWJpZYys/UI58lLAGfa997RWkHRfLiRVv
+         dMep78LxjilzSz6dV1E1xAn5fIFzqhZIjwsFwBCMWztJh8YRqPLkG7/3eenj8hKw+2q9
+         TlPQzAPmHhaXrqP4V7rbPwGr3h+fkp3+ws4pOXUBgEpUkMZIMvJwHgRS4I6nM6slrzWZ
+         gTnpFleO691EgFIaCuZculPoPy5GIDo4tYgaxQ0qzV4m91fT7TB2zCn67iqy8/Hog32c
+         g2QzK6l7gBVPskhmI6Nql001z3I/9z05pVuB75ZoAuNLU6SOsJ2SgljPuqadW+pNieJk
+         s2NA==
+X-Gm-Message-State: AOAM530wxsFoUim8eqZzIgNszKLGImUy1c2WPrngn8PNEE0OlRXib68I
+        zWxNhhP338CuEL5ti1wsB9c=
+X-Google-Smtp-Source: ABdhPJxIaVuL8YZg7Ejoa7FxGJp7/UUKqnY1VC6gXHFiza3h/gnhOJscPbwlFx9mDc1J7KJMkckN4g==
+X-Received: by 2002:a19:8644:: with SMTP id i65mr384598lfd.20.1597061638305;
+        Mon, 10 Aug 2020 05:13:58 -0700 (PDT)
+Received: from saruman ([194.34.132.58])
+        by smtp.gmail.com with ESMTPSA id a1sm10592918lfb.10.2020.08.10.05.13.56
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 10 Aug 2020 05:13:57 -0700 (PDT)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Wesley Cheng <wcheng@codeaurora.org>, bjorn.andersson@linaro.org,
+        kishon@ti.com, vkoul@kernel.org, agross@kernel.org,
+        gregkh@linuxfoundation.org, robh+dt@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        jackp@codeaurora.org, Wesley Cheng <wcheng@codeaurora.org>
+Subject: Re: [PATCH 3/3] usb: dwc3: dwc3-qcom: Find USB connector and register role switch
+In-Reply-To: <20200731045712.28495-4-wcheng@codeaurora.org>
+References: <20200731045712.28495-1-wcheng@codeaurora.org> <20200731045712.28495-4-wcheng@codeaurora.org>
+Date:   Mon, 10 Aug 2020 15:13:52 +0300
+Message-ID: <87ft8upukf.fsf@kernel.org>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDIwLTA4LTEwIGF0IDE5OjUwICswODAwLCBXYWx0ZXIgV3Ugd3JvdGU6DQo+IE9u
-IE1vbiwgMjAyMC0wOC0xMCBhdCAwNzoxOSAtMDQwMCwgUWlhbiBDYWkgd3JvdGU6DQo+ID4gDQo+
-ID4gPiBPbiBBdWcgMTAsIDIwMjAsIGF0IDM6MjEgQU0sIFdhbHRlciBXdSA8d2FsdGVyLXpoLnd1
-QG1lZGlhdGVrLmNvbT4gd3JvdGU6DQo+ID4gPiANCj4gPiA+IO+7v1N5emJvdCByZXBvcnRzIG1h
-bnkgVUFGIGlzc3VlcyBmb3Igd29ya3F1ZXVlIG9yIHRpbWVyLCBzZWUgWzFdIGFuZCBbMl0uDQo+
-ID4gPiBJbiBzb21lIG9mIHRoZXNlIGFjY2Vzcy9hbGxvY2F0aW9uIGhhcHBlbmVkIGluIHByb2Nl
-c3Nfb25lX3dvcmsoKSwNCj4gPiA+IHdlIHNlZSB0aGUgZnJlZSBzdGFjayBpcyB1c2VsZXNzIGlu
-IEtBU0FOIHJlcG9ydCwgaXQgZG9lc24ndCBoZWxwDQo+ID4gPiBwcm9ncmFtbWVycyB0byBzb2x2
-ZSBVQUYgb24gd29ya3F1ZXVlLiBUaGUgc2FtZSBtYXkgc3RhbmQgZm9yIHRpbWVzLg0KPiA+ID4g
-DQo+ID4gPiBUaGlzIHBhdGNoc2V0IGltcHJvdmVzIEtBU0FOIHJlcG9ydHMgYnkgbWFraW5nIHRo
-ZW0gdG8gaGF2ZSB3b3JrcXVldWUNCj4gPiA+IHF1ZXVlaW5nIHN0YWNrIGFuZCB0aW1lciBxdWV1
-ZWluZyBzdGFjayBpbmZvcm1hdGlvbi4gSXQgaXMgdXNlZnVsIGZvcg0KPiA+ID4gcHJvZ3JhbW1l
-cnMgdG8gc29sdmUgdXNlLWFmdGVyLWZyZWUgb3IgZG91YmxlLWZyZWUgbWVtb3J5IGlzc3VlLg0K
-PiA+ID4gDQo+ID4gPiBHZW5lcmljIEtBU0FOIHdpbGwgcmVjb3JkIHRoZSBsYXN0IHR3byB3b3Jr
-cXVldWUgYW5kIHRpbWVyIHN0YWNrcywNCj4gPiA+IHByaW50IHRoZW0gaW4gS0FTQU4gcmVwb3J0
-LiBJdCBpcyBvbmx5IHN1aXRhYmxlIGZvciBnZW5lcmljIEtBU0FOLg0KPiA+ID4gDQo+ID4gPiBJ
-biBvcmRlciB0byBwcmludCB0aGUgbGFzdCB0d28gd29ya3F1ZXVlIGFuZCB0aW1lciBzdGFja3Ms
-IHNvIHRoYXQNCj4gPiA+IHdlIGFkZCBuZXcgbWVtYmVycyBpbiBzdHJ1Y3Qga2FzYW5fYWxsb2Nf
-bWV0YS4NCj4gPiA+IC0gdHdvIHdvcmtxdWV1ZSBxdWV1ZWluZyB3b3JrIHN0YWNrcywgdG90YWwg
-c2l6ZSBpcyA4IGJ5dGVzLg0KPiA+ID4gLSB0d28gdGltZXIgcXVldWVpbmcgc3RhY2tzLCB0b3Rh
-bCBzaXplIGlzIDggYnl0ZXMuDQo+ID4gPiANCj4gPiA+IE9yaWduaWFsIHN0cnVjdCBrYXNhbl9h
-bGxvY19tZXRhIHNpemUgaXMgMTYgYnl0ZXMuIEFmdGVyIGFkZCBuZXcNCj4gPiA+IG1lbWJlcnMs
-IHRoZW4gdGhlIHN0cnVjdCBrYXNhbl9hbGxvY19tZXRhIHRvdGFsIHNpemUgaXMgMzIgYnl0ZXMs
-DQo+ID4gPiBJdCBpcyBhIGdvb2QgbnVtYmVyIG9mIGFsaWdubWVudC4gTGV0IGl0IGdldCBiZXR0
-ZXIgbWVtb3J5IGNvbnN1bXB0aW9uLg0KPiA+IA0KPiA+IEdldHRpbmcgZGVidWdnaW5nIHRvb2xz
-IGNvbXBsaWNhdGVkIHN1cmVseSBpcyB0aGUgYmVzdCB3YXkgdG8ga2lsbCBpdC4gSSB3b3VsZCBh
-cmd1ZSB0aGF0IGl0IG9ubHkgbWFrZSBzZW5zZSB0byBjb21wbGljYXRlIGl0IGlmIGl0IGlzIHVz
-ZWZ1bCBtb3N0IG9mIHRoZSB0aW1lIHdoaWNoIEkgbmV2ZXIgZmVlbCBvciBoZWFyIHRoYXQgaXMg
-dGhlIGNhc2UuIFRoaXMgcmVtaW5kcyBtZSB5b3VyIHJlY2VudCBjYWxsX3JjdSgpIHN0YWNrcyB0
-aGF0IG1vc3Qgb2YgdGltZSBqdXN0IG1ha2VzIHBhcnNpbmcgdGhlIHJlcG9ydCBjdW1iZXJzb21l
-LiBUaHVzLCBJIHVyZ2UgdGhpcyBleGVyY2lzZSB0byBvdmVyLWVuZ2luZWVyIG9uIHNwZWNpYWwg
-Y2FzZXMgbmVlZCB0byBzdG9wIGVudGlyZWx5Lg0KPiA+IA0KPiANCj4gQSBnb29kIGRlYnVnIHRv
-b2wgaXMgdG8gaGF2ZSBjb21wbGV0ZSBpbmZvcm1hdGlvbiBpbiBvcmRlciB0byBzb2x2ZQ0KPiBp
-c3N1ZS4gV2Ugc2hvdWxkIGZvY3VzIG9uIGlmIEtBU0FOIHJlcG9ydHMgYWx3YXlzIHNob3cgdGhp
-cyBkZWJ1Zw0KPiBpbmZvcm1hdGlvbiBvciBjcmVhdGUgYSBvcHRpb24gdG8gZGVjaWRlIGlmIHNo
-b3cgaXQuIEJlY2F1c2UgdGhpcw0KPiBmZWF0dXJlIGlzIERtaXRyeSdzIHN1Z2dlc3Rpb24uIHNl
-ZSBbMV0uIFNvIEkgdGhpbmsgaXQgbmVlZCB0byBiZQ0KPiBpbXBsZW1lbnRlZC4gTWF5YmUgd2Ug
-Y2FuIHdhaXQgaGlzIHJlc3BvbnNlLiANCj4gDQo+IFsxXWh0dHBzOi8vbGttbC5vcmcvbGttbC8y
-MDIwLzYvMjMvMjU2DQo+IA0KPiBUaGFua3MuDQo+IA0KDQpGaXggbmFtZSB0eXBvLiBJIGFtIHNv
-cnJ5IHRvIGhpbS4NCkFuZCBhZGQgYSBidWd6aWxsYSB0byBzaG93IHdoeSBuZWVkIHRvIGRvIGl0
-LiBwbGVhc2Ugc2VlIFsxXS4NCg0KWzFdIGh0dHBzOi8vYnVnemlsbGEua2VybmVsLm9yZy9zaG93
-X2J1Zy5jZ2k/aWQ9MTk4NDM3DQoNCj4gPiA+IA0KPiA+ID4gWzFdaHR0cHM6Ly9ncm91cHMuZ29v
-Z2xlLmNvbS9nL3N5emthbGxlci1idWdzL3NlYXJjaD9xPSUyMnVzZS1hZnRlci1mcmVlJTIyK3By
-b2Nlc3Nfb25lX3dvcmsNCj4gPiA+IFsyXWh0dHBzOi8vZ3JvdXBzLmdvb2dsZS5jb20vZy9zeXpr
-YWxsZXItYnVncy9zZWFyY2g/cT0lMjJ1c2UtYWZ0ZXItZnJlZSUyMiUyMGV4cGlyZV90aW1lcnMN
-Cj4gPiA+IFszXWh0dHBzOi8vYnVnemlsbGEua2VybmVsLm9yZy9zaG93X2J1Zy5jZ2k/aWQ9MTk4
-NDM3DQo+ID4gPiANCj4gPiA+IFdhbHRlciBXdSAoNSk6DQo+ID4gPiB0aW1lcjoga2FzYW46IHJl
-Y29yZCBhbmQgcHJpbnQgdGltZXIgc3RhY2sNCj4gPiA+IHdvcmtxdWV1ZToga2FzYW46IHJlY29y
-ZCBhbmQgcHJpbnQgd29ya3F1ZXVlIHN0YWNrDQo+ID4gPiBsaWIvdGVzdF9rYXNhbi5jOiBhZGQg
-dGltZXIgdGVzdCBjYXNlDQo+ID4gPiBsaWIvdGVzdF9rYXNhbi5jOiBhZGQgd29ya3F1ZXVlIHRl
-c3QgY2FzZQ0KPiA+ID4ga2FzYW46IHVwZGF0ZSBkb2N1bWVudGF0aW9uIGZvciBnZW5lcmljIGth
-c2FuDQo+ID4gPiANCj4gPiA+IERvY3VtZW50YXRpb24vZGV2LXRvb2xzL2thc2FuLnJzdCB8ICA0
-ICsrLS0NCj4gPiA+IGluY2x1ZGUvbGludXgva2FzYW4uaCAgICAgICAgICAgICB8ICA0ICsrKysN
-Cj4gPiA+IGtlcm5lbC90aW1lL3RpbWVyLmMgICAgICAgICAgICAgICB8ICAyICsrDQo+ID4gPiBr
-ZXJuZWwvd29ya3F1ZXVlLmMgICAgICAgICAgICAgICAgfCAgMyArKysNCj4gPiA+IGxpYi90ZXN0
-X2thc2FuLmMgICAgICAgICAgICAgICAgICB8IDU0ICsrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiA+ID4gbW0va2FzYW4vZ2VuZXJpYy5jICAg
-ICAgICAgICAgICAgIHwgNDIgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrDQo+ID4gPiBtbS9rYXNhbi9rYXNhbi5oICAgICAgICAgICAgICAgICAgfCAgNiArKysrKy0N
-Cj4gPiA+IG1tL2thc2FuL3JlcG9ydC5jICAgICAgICAgICAgICAgICB8IDIyICsrKysrKysrKysr
-KysrKysrKysrKysNCj4gPiA+IDggZmlsZXMgY2hhbmdlZCwgMTM0IGluc2VydGlvbnMoKyksIDMg
-ZGVsZXRpb25zKC0pDQo+ID4gPiANCj4gPiA+IC0tIA0KPiA+ID4gWW91IHJlY2VpdmVkIHRoaXMg
-bWVzc2FnZSBiZWNhdXNlIHlvdSBhcmUgc3Vic2NyaWJlZCB0byB0aGUgR29vZ2xlIEdyb3VwcyAi
-a2FzYW4tZGV2IiBncm91cC4NCj4gPiA+IFRvIHVuc3Vic2NyaWJlIGZyb20gdGhpcyBncm91cCBh
-bmQgc3RvcCByZWNlaXZpbmcgZW1haWxzIGZyb20gaXQsIHNlbmQgYW4gZW1haWwgdG8ga2FzYW4t
-ZGV2K3Vuc3Vic2NyaWJlQGdvb2dsZWdyb3Vwcy5jb20uDQo+ID4gPiBUbyB2aWV3IHRoaXMgZGlz
-Y3Vzc2lvbiBvbiB0aGUgd2ViIHZpc2l0IGh0dHBzOi8vZ3JvdXBzLmdvb2dsZS5jb20vZC9tc2dp
-ZC9rYXNhbi1kZXYvMjAyMDA4MTAwNzIxMTUuNDI5LTEtd2FsdGVyLXpoLnd1JTQwbWVkaWF0ZWsu
-Y29tLg0KPiANCg0K
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
+
+Hi,
+
+Wesley Cheng <wcheng@codeaurora.org> writes:
+> @@ -190,6 +195,73 @@ static int dwc3_qcom_register_extcon(struct dwc3_qco=
+m *qcom)
+>  	return 0;
+>  }
+>=20=20
+> +static int dwc3_qcom_usb_role_switch_set(struct usb_role_switch *sw,
+> +					 enum usb_role role)
+> +{
+> +	struct dwc3_qcom *qcom =3D usb_role_switch_get_drvdata(sw);
+> +	struct fwnode_handle *child;
+> +	bool enable =3D false;
+> +
+> +	if (!qcom->dwc3_drd_sw) {
+> +		child =3D device_get_next_child_node(qcom->dev, NULL);
+> +		if (child) {
+> +			qcom->dwc3_drd_sw =3D usb_role_switch_find_by_fwnode(child);
+> +			fwnode_handle_put(child);
+> +			if (IS_ERR(qcom->dwc3_drd_sw)) {
+> +				qcom->dwc3_drd_sw =3D NULL;
+> +				return 0;
+> +			}
+> +		}
+> +	}
+> +
+> +	usb_role_switch_set_role(qcom->dwc3_drd_sw, role);
+
+why is this done at the glue layer instead of core.c?
+
+> +	if (role =3D=3D USB_ROLE_DEVICE)
+> +		enable =3D true;
+> +	else
+> +		enable =3D false;
+> +
+> +	qcom->mode =3D (role =3D=3D USB_ROLE_HOST) ? USB_DR_MODE_HOST :
+> +					       USB_DR_MODE_PERIPHERAL;
+> +	dwc3_qcom_vbus_overrride_enable(qcom, enable);
+
+could you add a patch fixing this typo?
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl8xOgAACgkQzL64meEa
+mQZ8Zw//eFsuJ6NPTaokHR1rlrCmk0sslHZNSmcQ+J0h1dnmc+FW8zVN2fueQMEt
+OvRZKCsoo069xcAKRcD15GIphiAjqcX7NsqVCHnvASV3ts7Lk8/OLe2HydDAwuS9
+vavlIfjGUBofKSFS24p6nGva5lH+QcDbSaQEX2AMRP8O4rrIMNjkwB4luCiSUDMn
+py0FVm7eSuSDbuB0oZftw385e4BrS6pXdX8HYP1EBHbcYT5H6Z0WO9lflb5PgkM8
+uA+pc9UM7kbJrbd++J+siVJ6kYI8Nd9OZDQZjc/5+EqIsQsK384ewpigxs9dXwbB
+Mzu1izAeahlLdYXBbhRGCDL5xtfGMbmZ6D/8op9EEJDCZ4aOmSm5LmJCtax+rrsF
+6J7bjat+viFQT1n04gyZCpiEQrV1T+TWhuxRVOpwRxx9aN1pygJ7w4o9ieAiBZnA
+ubSjkygnQLcMUh24iNTWSg10CI8g35T9E0hatDWOnTJon1gTRC0ScPif7WpC3MPh
+rabVNAFq+suuDVcHGxNBbMO8OGOrTLgWeUtf92bAtaaD/e2ZAM8/GNtKR/Ru3E5g
+naw4rb4PsfCANjf9j7eEqsKJZmzBpGgLzjc16hAiZSbmZveoF9gDI8B/1F9sqilS
+tLulenKhCkwsmyjB+AJgMi2R5bebRSukHlcHkiM8X3Mkdc0uuWc=
+=Do2q
+-----END PGP SIGNATURE-----
+--=-=-=--
