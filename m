@@ -2,135 +2,102 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C78CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC3AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:48:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAE1720866
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:46:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597074417;
-	bh=j8jGR2gpWSiHYnlpQ+t1j++8nxUJKE0a7/TRK6Ps85U=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=ww4ZxAoQe6cXbh67N30L25h0HFmqgC3/xc8/8wVziknuJxwyPw+kcVUfM5iO2OgZZ
-	 ThkQ4rGEcWGqiSTajlkaJK+pjp1sWKZLojqddIRt4yJpUa/GJeagcWSCzsirJwQXpk
-	 iq9H0gZilLwM1dhFzjvf8WOblgtN9HE0vOSEqYas=
+	by mail.kernel.org (Postfix) with ESMTP id CA6B42078E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:48:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DPcy/uDM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727902AbgHJPqz (ORCPT
+        id S1728002AbgHJPsZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:46:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56414 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726406AbgHJPqz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:46:55 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 10 Aug 2020 11:48:25 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:43192 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727898AbgHJPsX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:48:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597074502;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=d/FqTzD6Anemh3gFgcLo0ThBd0ys9n4r95cTlaSJ7w8=;
+        b=DPcy/uDMtDOG+aMLbEjTYPrsr4PbglllxJa1LlWXyIFcCNbmd6OxUIAq4pWyKuwQ7/rnz9
+        QYYoiJrarF6myjlnPZvalxIDN7kQME3X1e9D9CEed/w43mllAuacv7Kp2uEbw9Q/3cqYtU
+        VzX0zHTNOcLbWwKXkImcf6PucdE3voc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-283-BblU8oHRP1W5aFMWkcTb1w-1; Mon, 10 Aug 2020 11:48:19 -0400
+X-MC-Unique: BblU8oHRP1W5aFMWkcTb1w-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9E0B2078E;
-        Mon, 10 Aug 2020 15:46:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597074414;
-        bh=j8jGR2gpWSiHYnlpQ+t1j++8nxUJKE0a7/TRK6Ps85U=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=0X+l8s+tl0tCoIQqESJhcYWbW5WNuyg+PexmYrKIBVWBqLtkYyILa2ZQwcRwRL0Vx
-         2nhRQy8UWf02p9p0IgW4FX76ZjJVqj27oGSNVkkfYEwwfIYEG4bZRXMIR6PyVYIpQP
-         V//VbuJ/POjIz51hrVuZCU2cQc6AckeSy0GRv80I=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 795BA35228C7; Mon, 10 Aug 2020 08:46:54 -0700 (PDT)
-Date:   Mon, 10 Aug 2020 08:46:54 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Neeraj Upadhyay <neeraju@codeaurora.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        linux-doc@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        peterz@infradead.org, Randy Dunlap <rdunlap@infradead.org>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        tglx@linutronix.de, vineethrp@gmail.com
-Subject: Re: [PATCH v4 1/5] rcu/tree: Add a warning if CPU being onlined did
- not report QS already
-Message-ID: <20200810154654.GJ4295@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200807170722.2897328-1-joel@joelfernandes.org>
- <20200807170722.2897328-2-joel@joelfernandes.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9A55980046C;
+        Mon, 10 Aug 2020 15:48:16 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-113-69.rdu2.redhat.com [10.10.113.69])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BCC8C7B92F;
+        Mon, 10 Aug 2020 15:48:09 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAH2r5msKipj1exNUDaSUN7h0pjanOenhSg2=EWYMv_h15yKtxg@mail.gmail.com>
+References: <CAH2r5msKipj1exNUDaSUN7h0pjanOenhSg2=EWYMv_h15yKtxg@mail.gmail.com> <447452.1596109876@warthog.procyon.org.uk> <1851200.1596472222@warthog.procyon.org.uk> <667820.1597072619@warthog.procyon.org.uk>
+To:     Steve French <smfrench@gmail.com>
+Cc:     dhowells@redhat.com,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Jeff Layton <jlayton@redhat.com>,
+        Dave Wysochanski <dwysocha@redhat.com>,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Steve French <sfrench@samba.org>,
+        Eric Van Hensbergen <ericvh@gmail.com>,
+        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
+        linux-nfs <linux-nfs@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>, ceph-devel@vger.kernel.org,
+        v9fs-developer@lists.sourceforge.net,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [GIT PULL] fscache rewrite -- please drop for now
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200807170722.2897328-2-joel@joelfernandes.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <672168.1597074488.1@warthog.procyon.org.uk>
+Date:   Mon, 10 Aug 2020 16:48:08 +0100
+Message-ID: <672169.1597074488@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 07, 2020 at 01:07:18PM -0400, Joel Fernandes (Google) wrote:
-> Currently, rcu_cpu_starting() checks to see if the RCU core expects a
-> quiescent state from the incoming CPU.  However, the current interaction
-> between RCU quiescent-state reporting and CPU-hotplug operations should
-> mean that the incoming CPU never needs to report a quiescent state.
-> First, the outgoing CPU reports a quiescent state if needed.  Second,
-> the race where the CPU is leaving just as RCU is initializing a new
-> grace period is handled by an explicit check for this condition.  Third,
-> the CPU's leaf rcu_node structure's ->lock serializes these checks.
-> 
-> This means that if rcu_cpu_starting() ever feels the need to report
-> a quiescent state, then there is a bug somewhere in the CPU hotplug
-> code or the RCU grace-period handling code.  This commit therefore
-> adds a WARN_ON_ONCE() to bring that bug to everyone's attention.
-> 
-> Cc: Paul E. McKenney <paulmck@kernel.org>
-> Cc: Neeraj Upadhyay <neeraju@codeaurora.org>
-> Suggested-by: Paul E. McKenney <paulmck@kernel.org>
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> ---
->  kernel/rcu/tree.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> index 65e1b5e92319..a49fa3b60faa 100644
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -3996,7 +3996,14 @@ void rcu_cpu_starting(unsigned int cpu)
->  	rcu_gpnum_ovf(rnp, rdp); /* Offline-induced counter wrap? */
->  	rdp->rcu_onl_gp_seq = READ_ONCE(rcu_state.gp_seq);
->  	rdp->rcu_onl_gp_flags = READ_ONCE(rcu_state.gp_flags);
-> -	if (rnp->qsmask & mask) { /* RCU waiting on incoming CPU? */
-> +
-> +	/*
-> +	 * XXX: The following rcu_report_qs_rnp() is redundant. If the below
-> +	 * warning does not fire, consider replacing it with the "else" block,
-> +	 * by June 2021 or so (while keeping the warning). Refer to RCU's
-> +	 * Requirements documentation for the rationale.
+Steve French <smfrench@gmail.com> wrote:
 
-Let's suppose that this change is made, and further that in a year or
-two the "if" statement below is replaced with its "else" block.
+> cifs.ko also can set rsize quite small (even 1K for example, although
+> that will be more than 10x slower than the default 4MB so hopefully no
+> one is crazy enough to do that).
 
-Now let's suppose that (some years after that) a hard-to-trigger bug
-makes its way into RCU's CPU-hotplug code that would have resulted in
-the WARN_ON_ONCE() triggering, but that this bug turns out to be not so
-hard to trigger in certain large production environments.
+You can set rsize < PAGE_SIZE?
 
-Let's suppose further that you have moved on to where you are responsible
-for one of these large production environments.  How would this
-hypothetical RCU/CPU-hotplug bug manifest?
+> I can't imagine an SMB3 server negotiating an rsize or wsize smaller than
+> 64K in today's world (and typical is 1MB to 8MB) but the user can specify a
+> much smaller rsize on mount.  If 64K is an adequate minimum, we could change
+> the cifs mount option parsing to require a certain minimum rsize if fscache
+> is selected.
 
-							Thanx, Paul
+I've borrowed the 256K granule size used by various AFS implementations for
+the moment.  A 512-byte xattr can thus hold a bitmap covering 1G of file
+space.
 
-> +	 */
-> +	if (WARN_ON_ONCE(rnp->qsmask & mask)) { /* RCU waiting on incoming CPU? */
->  		rcu_disable_urgency_upon_qs(rdp);
->  		/* Report QS -after- changing ->qsmaskinitnext! */
->  		rcu_report_qs_rnp(mask, rnp, rnp->gp_seq, flags);
-> -- 
-> 2.28.0.236.gb10cc79966-goog
-> 
+David
+
