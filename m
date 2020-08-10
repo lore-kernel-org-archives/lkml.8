@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A95E2C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:39:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09919C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:39:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 681B122D6F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:39:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D814922D6F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:39:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073988;
-	bh=XIOPiU9pReU8C1/DtvyOdHT6x/7y7MOglg4Mnvds7/8=;
+	s=default; t=1597073992;
+	bh=whRtReFj08e1xp24K+N5xB+MQVPRFfMYSvGhLz/DV98=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GxlHbqRdyhxE5ODwgfY9WkUOqlURVpNLlvU6+cMUS3jdQ0bD2t2JyPPO1BucZ7wb0
-	 oIWuQrYryNwqGTGxSzX1MrMTEMYo0xSu9ToVpBp48fersuhC8AbmTPPiUugzR7Nrll
-	 DihKbOi+yuE/bVNUj9cD3x99Bz00ILeS/GtBxVag=
+	b=nZJF/vDYiL1YDC7QojfY888GmISzS/R52bBbSYj2G4fMJfnDWaP8BLHH7gtL/4/E6
+	 BaHIIQac34AgcfQcMRhLUPrj9SjyEXXFekXBk5tklp8Ge1guk5Y7QwkxewYMZyFMdR
+	 Ze6ywog3o4bLxuLxYeDv95NAYWMvSO/pAAbxvYWQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728115AbgHJPjm (ORCPT
+        id S1729232AbgHJPjv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:39:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57856 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:39:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728432AbgHJPYe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:24:34 -0400
+        id S1727877AbgHJPYX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:24:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6B3F20855;
-        Mon, 10 Aug 2020 15:24:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2276422D07;
+        Mon, 10 Aug 2020 15:24:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073074;
-        bh=XIOPiU9pReU8C1/DtvyOdHT6x/7y7MOglg4Mnvds7/8=;
+        s=default; t=1597073062;
+        bh=whRtReFj08e1xp24K+N5xB+MQVPRFfMYSvGhLz/DV98=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JUGGVOukXQskX0Hbv6UQat0yg4QsitLfQYIPwnso/O9SJ3NTGKwcNaEGsgu2YK/OT
-         zZZugYgLQdEyEDvCpx7UOUz5wAKVLdbSN57r6aA/UKvjcrz7vh86LoEpfw1quTfXnr
-         +3KF9m7+7KINizicR+WjGLIe5G7FdvdwZPW+vjw0=
+        b=0tg4uspMs7j+XZqw1MVyqQw0CX2d5VtNZPwNoxZ4TJ7fbuseRPkDyjs38vRdyjgxI
+         TmQttF+Zi8xcbHlNNLutT7LPOqhckSH6nE693Gg+wcGgOQt/JCnge2fM9vDqSPvsrh
+         vPfJksTvMk8r72AmWkodFROfL+E7oyA+5h/QysrM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>,
-        David Ahern <dsahern@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.7 57/79] ipv6: Fix nexthop refcnt leak when creating ipv6 route info
-Date:   Mon, 10 Aug 2020 17:21:16 +0200
-Message-Id: <20200810151815.067815727@linuxfoundation.org>
+        stable@vger.kernel.org, Nicolas Chauvet <kwizart@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Subject: [PATCH 5.7 54/79] PCI: tegra: Revert tegra124 raw_violation_fixup
+Date:   Mon, 10 Aug 2020 17:21:13 +0200
+Message-Id: <20200810151814.919262883@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151812.114485777@linuxfoundation.org>
 References: <20200810151812.114485777@linuxfoundation.org>
@@ -61,54 +60,159 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+From: Nicolas Chauvet <kwizart@gmail.com>
 
-[ Upstream commit 706ec919164622ff5ce822065472d0f30a9e9dd2 ]
+commit e7b856dfcec6d3bf028adee8c65342d7035914a1 upstream.
 
-ip6_route_info_create() invokes nexthop_get(), which increases the
-refcount of the "nh".
+As reported in https://bugzilla.kernel.org/206217 , raw_violation_fixup
+is causing more harm than good in some common use-cases.
 
-When ip6_route_info_create() returns, local variable "nh" becomes
-invalid, so the refcount should be decreased to keep refcount balanced.
+This patch is a partial revert of commit:
 
-The reference counting issue happens in one exception handling path of
-ip6_route_info_create(). When nexthops can not be used with source
-routing, the function forgets to decrease the refcnt increased by
-nexthop_get(), causing a refcnt leak.
+191cd6fb5d2c ("PCI: tegra: Add SW fixup for RAW violations")
 
-Fix this issue by pulling up the error source routing handling when
-nexthops can not be used with source routing.
+and fixes the following regression since then.
 
-Fixes: f88d8ea67fbd ("ipv6: Plumb support for nexthop object in a fib6_info")
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-Reviewed-by: David Ahern <dsahern@kernel.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+* Description:
+
+When both the NIC and MMC are used one can see the following message:
+
+  NETDEV WATCHDOG: enp1s0 (r8169): transmit queue 0 timed out
+
+and
+
+  pcieport 0000:00:02.0: AER: Uncorrected (Non-Fatal) error received: 0000:01:00.0
+  r8169 0000:01:00.0: AER: PCIe Bus Error: severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Requester ID)
+  r8169 0000:01:00.0: AER:   device [10ec:8168] error status/mask=00004000/00400000
+  r8169 0000:01:00.0: AER:    [14] CmpltTO                (First)
+  r8169 0000:01:00.0: AER: can't recover (no error_detected callback)
+  pcieport 0000:00:02.0: AER: device recovery failed
+
+After that, the ethernet NIC is not functional anymore even after
+reloading the r8169 module. After a reboot, this is reproducible by
+copying a large file over the NIC to the MMC.
+
+For some reason this is not reproducible when files are copied to a tmpfs.
+
+* Little background on the fixup, by Manikanta Maddireddy:
+  "In the internal testing with dGPU on Tegra124, CmplTO is reported by
+dGPU. This happened because FIFO queue in AFI(AXI to PCIe) module
+get full by upstream posted writes. Back to back upstream writes
+interleaved with infrequent reads, triggers RAW violation and CmpltTO.
+This is fixed by reducing the posted write credits and by changing
+updateFC timer frequency. These settings are fixed after stress test.
+
+In the current case, RTL NIC is also reporting CmplTO. These settings
+seems to be aggravating the issue instead of fixing it."
+
+Link: https://lore.kernel.org/r/20200718100710.15398-1-kwizart@gmail.com
+Fixes: 191cd6fb5d2c ("PCI: tegra: Add SW fixup for RAW violations")
+Signed-off-by: Nicolas Chauvet <kwizart@gmail.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv6/route.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/net/ipv6/route.c
-+++ b/net/ipv6/route.c
-@@ -3677,14 +3677,14 @@ static struct fib6_info *ip6_route_info_
- 	rt->fib6_src.plen = cfg->fc_src_len;
- #endif
- 	if (nh) {
--		if (!nexthop_get(nh)) {
--			NL_SET_ERR_MSG(extack, "Nexthop has been deleted");
--			goto out;
--		}
- 		if (rt->fib6_src.plen) {
- 			NL_SET_ERR_MSG(extack, "Nexthops can not be used with source routing");
- 			goto out;
- 		}
-+		if (!nexthop_get(nh)) {
-+			NL_SET_ERR_MSG(extack, "Nexthop has been deleted");
-+			goto out;
-+		}
- 		rt->nh = nh;
- 		fib6_nh = nexthop_fib6_nh(rt->nh);
- 	} else {
+---
+ drivers/pci/controller/pci-tegra.c |   32 --------------------------------
+ 1 file changed, 32 deletions(-)
+
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -181,13 +181,6 @@
+ 
+ #define AFI_PEXBIAS_CTRL_0		0x168
+ 
+-#define RP_PRIV_XP_DL		0x00000494
+-#define  RP_PRIV_XP_DL_GEN2_UPD_FC_TSHOLD	(0x1ff << 1)
+-
+-#define RP_RX_HDR_LIMIT		0x00000e00
+-#define  RP_RX_HDR_LIMIT_PW_MASK	(0xff << 8)
+-#define  RP_RX_HDR_LIMIT_PW		(0x0e << 8)
+-
+ #define RP_ECTL_2_R1	0x00000e84
+ #define  RP_ECTL_2_R1_RX_CTLE_1C_MASK		0xffff
+ 
+@@ -323,7 +316,6 @@ struct tegra_pcie_soc {
+ 	bool program_uphy;
+ 	bool update_clamp_threshold;
+ 	bool program_deskew_time;
+-	bool raw_violation_fixup;
+ 	bool update_fc_timer;
+ 	bool has_cache_bars;
+ 	struct {
+@@ -659,23 +651,6 @@ static void tegra_pcie_apply_sw_fixup(st
+ 		writel(value, port->base + RP_VEND_CTL0);
+ 	}
+ 
+-	/* Fixup for read after write violation. */
+-	if (soc->raw_violation_fixup) {
+-		value = readl(port->base + RP_RX_HDR_LIMIT);
+-		value &= ~RP_RX_HDR_LIMIT_PW_MASK;
+-		value |= RP_RX_HDR_LIMIT_PW;
+-		writel(value, port->base + RP_RX_HDR_LIMIT);
+-
+-		value = readl(port->base + RP_PRIV_XP_DL);
+-		value |= RP_PRIV_XP_DL_GEN2_UPD_FC_TSHOLD;
+-		writel(value, port->base + RP_PRIV_XP_DL);
+-
+-		value = readl(port->base + RP_VEND_XP);
+-		value &= ~RP_VEND_XP_UPDATE_FC_THRESHOLD_MASK;
+-		value |= soc->update_fc_threshold;
+-		writel(value, port->base + RP_VEND_XP);
+-	}
+-
+ 	if (soc->update_fc_timer) {
+ 		value = readl(port->base + RP_VEND_XP);
+ 		value &= ~RP_VEND_XP_UPDATE_FC_THRESHOLD_MASK;
+@@ -2416,7 +2391,6 @@ static const struct tegra_pcie_soc tegra
+ 	.program_uphy = true,
+ 	.update_clamp_threshold = false,
+ 	.program_deskew_time = false,
+-	.raw_violation_fixup = false,
+ 	.update_fc_timer = false,
+ 	.has_cache_bars = true,
+ 	.ectl.enable = false,
+@@ -2446,7 +2420,6 @@ static const struct tegra_pcie_soc tegra
+ 	.program_uphy = true,
+ 	.update_clamp_threshold = false,
+ 	.program_deskew_time = false,
+-	.raw_violation_fixup = false,
+ 	.update_fc_timer = false,
+ 	.has_cache_bars = false,
+ 	.ectl.enable = false,
+@@ -2459,8 +2432,6 @@ static const struct tegra_pcie_soc tegra
+ 	.pads_pll_ctl = PADS_PLL_CTL_TEGRA30,
+ 	.tx_ref_sel = PADS_PLL_CTL_TXCLKREF_BUF_EN,
+ 	.pads_refclk_cfg0 = 0x44ac44ac,
+-	/* FC threshold is bit[25:18] */
+-	.update_fc_threshold = 0x03fc0000,
+ 	.has_pex_clkreq_en = true,
+ 	.has_pex_bias_ctrl = true,
+ 	.has_intr_prsnt_sense = true,
+@@ -2470,7 +2441,6 @@ static const struct tegra_pcie_soc tegra
+ 	.program_uphy = true,
+ 	.update_clamp_threshold = true,
+ 	.program_deskew_time = false,
+-	.raw_violation_fixup = true,
+ 	.update_fc_timer = false,
+ 	.has_cache_bars = false,
+ 	.ectl.enable = false,
+@@ -2494,7 +2464,6 @@ static const struct tegra_pcie_soc tegra
+ 	.program_uphy = true,
+ 	.update_clamp_threshold = true,
+ 	.program_deskew_time = true,
+-	.raw_violation_fixup = false,
+ 	.update_fc_timer = true,
+ 	.has_cache_bars = false,
+ 	.ectl = {
+@@ -2536,7 +2505,6 @@ static const struct tegra_pcie_soc tegra
+ 	.program_uphy = false,
+ 	.update_clamp_threshold = false,
+ 	.program_deskew_time = false,
+-	.raw_violation_fixup = false,
+ 	.update_fc_timer = false,
+ 	.has_cache_bars = false,
+ 	.ectl.enable = false,
 
 
