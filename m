@@ -2,113 +2,160 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9E00C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 282E2C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:09:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5DFC20729
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:08:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tUC05H8f"
+	by mail.kernel.org (Postfix) with ESMTP id F2F592073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:09:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597061363;
+	bh=ulzg4XSN8hmnySzA/cm1GK1DRA+dsU1xkBqs4jiywVU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=vIrO110GjPy6STHbxUL9w9uI5eBBAh6A2YXOMRQutTlFpDfVUuc3QN5sle9Jl/dEr
+	 e68IrNK+nhqUbVKOr6yBRmZLybu7wVDyQXdUlhsI8JcAFOW0uSBOUIyoSGVn94e3LW
+	 MBqcF4rj2yb7bA0xpfAKAo8XEVeFPOpRbeGMpFaA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbgHJMIO (ORCPT
+        id S1726775AbgHJMJV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 08:08:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33682 "EHLO
+        Mon, 10 Aug 2020 08:09:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726687AbgHJMIG (ORCPT
+        with ESMTP id S1726550AbgHJMJU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 08:08:06 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00CE7C061756
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 05:08:06 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id v15so4638219pgh.6
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 05:08:05 -0700 (PDT)
+        Mon, 10 Aug 2020 08:09:20 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD688C061756;
+        Mon, 10 Aug 2020 05:09:17 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id g6so9237740ljn.11;
+        Mon, 10 Aug 2020 05:09:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=r/v3HPD/WrvvMXnw2eHuBnmRHFKNLYVuv02hfUOAA4o=;
-        b=tUC05H8fFqKxeyCHN5LZ4cPCHD359odey85Kxa5I/4uZZUpgAZWlMFEdThf8AmyTBH
-         UwzyFWM5sKHYQYbzzgQpAxu7okKYl53kqFcJOuOCYvsqo/SVm9fHmsWwnUwSd9Seuc/J
-         MYOgvtOc0VQMbJU/y76QbU1//qmRh2W9JnrPPbJpLhkgBcFtaR6OirdXs045mWNmQF99
-         LPXtOUW/OY+JI/BC2oXKu9yLagFEzxv7v1tnFZXzZAdo6a7vsFFRoeBx1op1VcLFj0lP
-         lv6ADd72S4Do1TKyWGjdiZaVrWkguuH8G2Ld4WPGeKjgFfoz6KGTpRoiKMMLTT+j7j47
-         Hldw==
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=oMBvems1BGpH6GI9xJVHleaO1t7Rgz/V70ULHJgIFaM=;
+        b=Vzvcj9Fs+Dv6VULXjWSOlYNPSPrKGmJ+eEXF+LWwH+pZsdqPH/KY4W5WJBH5JI63Uj
+         yBuNa5tZySK6Rsuan+sN8q7WgK9Js6rVjYkjtlPNvOFUqZkaUh05hrcA5khvJyfMgfvO
+         FVVMH3ADZvoVDWOKFkOCBZvvh+MTP+e0N0orOKWLj1DJ2zH7ylZqTeurTmcQmgyx/oxR
+         jsNjE4diuNLnfRcUJof2hS2qJ0fOuw9Ai971TKPShYAXP51Lq69JPy/0U0qcc9KjXxbM
+         JaMFjPjYFrfXhUGEyUsOsUR6GLgliDHSWcpZXXOSqIoOnmO6PGI8T6dmf95XUdLiSwMc
+         ql0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=r/v3HPD/WrvvMXnw2eHuBnmRHFKNLYVuv02hfUOAA4o=;
-        b=K7iqafSv+GU78/Pkfv6LEYuWaywacNCPdYhEfzVnn4ZWjRE3osDB8bQuDG95CHGJMC
-         54F3g2bCsAez3hJZ5FbUVMtLgLm0adUxWP5AzWEkBfQCkbRIZBxmp+ZblKrBhT/L6fUp
-         +Y6JhG2TGJK+KjLwuGpYfWMJqIbnOS03LBM3icXy5YhOLmEUsAN4EhTfniF943oOiV1P
-         rAvn8kwz+DhjjPaWZmW+ExX7C7QfZW+ls9yodej5QnIGojNAXRrnr0NyWxghWd6fJth7
-         4VL0boLcOWsGTtVUOWwYqIOwc5z+vNp2PBAfyUFu8WiFeJa6W2XFNosUDRC1xam8Bku1
-         pqmA==
-X-Gm-Message-State: AOAM532JNwjN9QzZYd83nz9fclzmjWQt/FKFI87K96Nw7U8TWkazK2Jh
-        RdBiWvpbE+2Li9tMt+CvYL/gQL2Y0qgOWuCeDzg=
-X-Google-Smtp-Source: ABdhPJyERhCb4O3nm0s7/49mWV7vHp1usGknfIZHGCd6SUBQSdmjw/vglCnxeaKpl8iOaHV3cbahnvht43xjqmxor7U=
-X-Received: by 2002:a62:758f:: with SMTP id q137mr567110pfc.170.1597061285483;
- Mon, 10 Aug 2020 05:08:05 -0700 (PDT)
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=oMBvems1BGpH6GI9xJVHleaO1t7Rgz/V70ULHJgIFaM=;
+        b=rQ988D0X5AeB930WKRiKzU0SPL8UJW54Bw7ysbTjTdrtzdYY/+a174goency6vq8yT
+         sTTc6tTl4/vTk81/MCfilItMWHyAqHHuHeMDulxhco9R5nKJHW2zLmUx2Lwnphjwzqmp
+         f0munwzm5/Ls5wlwpZyusYjwPo/KYknfxO6EFzLum/ybMSfBP8ip3tzB83LqllL7l5pc
+         fT9lAzKUOCZy0BeEyfrnbUD0rjFqeCdAMSimBCV3KRPuhazYlyMAsgIlx2vOT1GsBpMM
+         t0otp5/R+MHxSbZ9WPrS5dZAEwLVrT/cRXZ32mxMxSbnljrIsZQOJkuP4tiBV3066Jua
+         czRw==
+X-Gm-Message-State: AOAM532Er51880RIW8XYWuVgcOh9iVJn2DdYfops/lDjSdzELP+A1LoN
+        Dmz7sLTLeBeOYY4X9z30Cac=
+X-Google-Smtp-Source: ABdhPJwaDWxR0aZPAD+mdtRsWa6zXkLg8uAwd451CmgPgwp3S2j5FYtstvBTqfeYY2+vFrhG8VIKPg==
+X-Received: by 2002:a2e:b689:: with SMTP id l9mr368612ljo.393.1597061354261;
+        Mon, 10 Aug 2020 05:09:14 -0700 (PDT)
+Received: from saruman ([194.34.132.58])
+        by smtp.gmail.com with ESMTPSA id m20sm11443764lfb.72.2020.08.10.05.09.11
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 10 Aug 2020 05:09:13 -0700 (PDT)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Maulik Shah <mkshah@codeaurora.org>, bjorn.andersson@linaro.org,
+        maz@kernel.org, linus.walleij@linaro.org, swboyd@chromium.org,
+        evgreen@chromium.org, mka@chromium.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
+        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org,
+        Maulik Shah <mkshah@codeaurora.org>
+Subject: Re: [PATCH v4 7/7] irqchip: qcom-pdc: Reset all pdc interrupts during init
+In-Reply-To: <1597058460-16211-8-git-send-email-mkshah@codeaurora.org>
+References: <1597058460-16211-1-git-send-email-mkshah@codeaurora.org> <1597058460-16211-8-git-send-email-mkshah@codeaurora.org>
+Date:   Mon, 10 Aug 2020 15:09:01 +0300
+Message-ID: <87imdqpusi.fsf@kernel.org>
 MIME-Version: 1.0
-References: <20200810091100.243932-1-leon@kernel.org>
-In-Reply-To: <20200810091100.243932-1-leon@kernel.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 10 Aug 2020 15:07:49 +0300
-Message-ID: <CAHp75VeCzvgPR4JdCndBrgtwBwk+_jT+EaxiDGXbx6yYcyMb5A@mail.gmail.com>
-Subject: Re: [PATCH rdma-next] MAINTAINERS: Update Mellanox and Cumulus
- Network addresses to new domain
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Leon Romanovsky <leonro@nvidia.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 12:13 PM Leon Romanovsky <leon@kernel.org> wrote:
-> From: Leon Romanovsky <leonro@nvidia.com>
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+
+Maulik Shah <mkshah@codeaurora.org> writes:
+
+> Clear previous kernel's configuration during init by resetting
+> interrupts in enable bank to zero.
 >
-> Mellanox and Cumulus Network were acquired by Nvidia, so change the
-> maintainers emails to new domain name.
+> Suggested-by: Stephen Boyd <swboyd@chromium.org>
+> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+> ---
+>  drivers/irqchip/qcom-pdc.c | 12 +++++++++++-
+>  1 file changed, 11 insertions(+), 1 deletion(-)
 >
-> Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+> diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
+> index dfcdfc5..80e0dfb 100644
+> --- a/drivers/irqchip/qcom-pdc.c
+> +++ b/drivers/irqchip/qcom-pdc.c
+> @@ -389,7 +389,8 @@ static const struct irq_domain_ops qcom_pdc_gpio_ops =
+=3D {
+>=20=20
+>  static int pdc_setup_pin_mapping(struct device_node *np)
+>  {
+> -	int ret, n;
+> +	int ret, n, i;
+> +	u32 irq_index, reg_index, val;
+>=20=20
+>  	n =3D of_property_count_elems_of_size(np, "qcom,pdc-ranges", sizeof(u32=
+));
+>  	if (n <=3D 0 || n % 3)
+> @@ -418,6 +419,15 @@ static int pdc_setup_pin_mapping(struct device_node =
+*np)
+>  						 &pdc_region[n].cnt);
+>  		if (ret)
+>  			return ret;
+> +
+> +		for (i =3D pdc_region[n].pin_base; i < pdc_region[n].pin_base +
+> +						 pdc_region[n].cnt; i++) {
 
-...
+how about making the for loop slightly easier to read by moving pin_base
+inside the loop?
 
->  MELLANOX HARDWARE PLATFORM SUPPORT
->  M:     Andy Shevchenko <andy@infradead.org>
->  M:     Darren Hart <dvhart@infradead.org>
-> -M:     Vadim Pasternak <vadimp@mellanox.com>
-> +M:     Vadim Pasternak <vadimp@nvidia.com>
->  L:     platform-driver-x86@vger.kernel.org
->  S:     Supported
->  F:     Documentation/ABI/testing/sysfs-platform-mellanox-bootctl
-> @@ -11017,7 +11017,7 @@ F:      drivers/platform/mellanox/
->  F:     include/linux/platform_data/mlxreg.h
+	for (i =3D 0; i < pdc_region[n].cnt; i++) {
+        	reg_index =3D (i + pdc_region[n].pin_base) >> 5;
+        	irq_index =3D (i + pdc_region[n].pin_base) & 0x1f;
 
-...
+		[...]
+        }
 
->  MELLANOX PLATFORM DRIVER
-> -M:     Vadim Pasternak <vadimp@mellanox.com>
-> +M:     Vadim Pasternak <vadimp@nvidia.com>
->  L:     platform-driver-x86@vger.kernel.org
->  S:     Supported
->  F:     drivers/platform/x86/mlx-platform.c
-> @@ -12027,8 +12027,8 @@ F:      net/ipv6/syncookies.c
->  F:     net/ipv6/tcp*.c
+=2D-=20
+balbi
 
-Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-for PDx86 related bits.
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
-With Best Regards,
-Andy Shevchenko
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl8xON0ACgkQzL64meEa
+mQYWmhAAoPMQrU9MnIAYOqNNzNtawl7woFD3U3/hWPKR9Ec+eg/mAnzUQn9WkCeZ
+iwF4bNfzAj3WR+oOm5zAR4rjqfy4nGRsgxabtD7ESAUsoDt5UEJv2upOjhLbyFwS
+PmYYg/2hl1/cDtmz2FtN9hd5EGcQpM/Cm09wgbI+PWWVb61IdFPE2zlUPZr4jKYS
+zhoqOgTxoZmsWwfVPsY6EpMWpGdnvQIOLvTg8/Xm55hGhNQPQt6lNrgY0olzHnxv
+Z92vaAYjbJSCtuc36DwyM2bfY49cYeYpxRkKQm8POZr3s5I6QF3GAc2GSV3e9dnq
+p6tLIZoGMOm25FJDHxuU7uDD7shQOWwWZf4zYTxIUxnKwlHgUqB3tR8Xch2zibW0
++UZdNLMqsB5OIHBblKaq11YAlIvmgaN0elnL3WQrZTaY1MvjGvTf7e8aQYSPelJz
+piZ9XP7uvt5y/WV6E4NCKIsAB0VRPeOLS2qoAUFuWHzcLN+YxPOtdRj1KASZElQJ
+AHKfuOkg6VWn+q6bb/OtHQ179dzoWNhMESZcapAbx72UIU2abtS8LQdXL7pIdCnt
+bEif9TrxTtGT5lkAgS5B5fMUrPRrxMdxFBDJy6pjDg6y+Y8MfhZRmnYhCJTB0+6v
+lqvrgJWBAzO1dR9zJYe5d5vAeRNBGFvvl9AFEOjuZU9mhCoNdYU=
+=O4o+
+-----END PGP SIGNATURE-----
+--=-=-=--
