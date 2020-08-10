@@ -5,48 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9731C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30283C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:10:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8067021775
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:10:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0578322B47
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:10:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597086615;
-	bh=8Tzd0Aos4HqBT8yzWLrxitqCDm+fIO4pv5Jqk510z8g=;
+	s=default; t=1597086621;
+	bh=SNx4u4/k2IbtAP3EPJ8PZIqvxZtBKRyULR07bQ8PFZ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kAzb/zT8x5pgH6/S4vvbPMn7tDob6cFUR38FDDzrGfM+oMlbyEekyuhnZc2KgpoOp
-	 9q2zthmCGyjENLwTfZk0UA+v+sUVIb9Id6TB5JDbCLXEOd8O5r13i3QWBDsrdd/Ifu
-	 8ayPZIUcdxNbKNSWiWcFnZB9UV7XgkozIOUKN2K0=
+	b=Mvc6Lds8Q0qEJPVExW5YIWPtH4meDnQ1xaOExXdBm1qJtRBu2OolajBJ93AAwqIqV
+	 T7H7Clm6PT5VJgXgWxf7/MaIal6OC+jeK6e/dr0rcIkdDin/nWvQUY1yV96vNW/cDt
+	 TBj24xFd9XaPayeqxNO8C3/psNMo6evmIuQP80JQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728883AbgHJTKO (ORCPT
+        id S1728906AbgHJTKS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:10:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37134 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:10:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728828AbgHJTKH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:10:07 -0400
+        id S1728852AbgHJTKL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:10:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19D2921775;
-        Mon, 10 Aug 2020 19:10:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D0A721775;
+        Mon, 10 Aug 2020 19:10:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086606;
-        bh=8Tzd0Aos4HqBT8yzWLrxitqCDm+fIO4pv5Jqk510z8g=;
+        s=default; t=1597086610;
+        bh=SNx4u4/k2IbtAP3EPJ8PZIqvxZtBKRyULR07bQ8PFZ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Chds1ofYJ+P4YMIYEMKpQmuBRK061cCtf+Bj3hV9rB8+FcFe8j9RFBzBGIG19EZUg
-         BLaVKf8xRkjCICZywmbl0SFnJtQagVtz1iKZzdDdSZxdygh29JgamryatmV9o/OhuL
-         aNUbaPRqteKgPn6VFOKzoQoYsH/s869AGoQmBfEI=
+        b=EDVUjsLFkcxemq7d/gouWC7rlLfG2xI5cYzHF6PB0B2RUzrT9/kHt164Ikq00XLZG
+         scahxhU7XFo61GJN15n8szyxxBw7YwolQl5k36UlFrw9jLtOm9XqMO6jBinVKyPHOY
+         V3B/NvGPVxAhqpN5hvwHE8pQBt9rMRrPqx9UqLU0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shannon Nelson <snelson@pensando.io>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 49/64] ionic: update eid test for overflow
-Date:   Mon, 10 Aug 2020 15:08:44 -0400
-Message-Id: <20200810190859.3793319-49-sashal@kernel.org>
+Cc:     Evgeny Novikov <novikov@ispras.ru>,
+        Felipe Balbi <balbi@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 52/64] usb: gadget: net2280: fix memory leak on probe error handling paths
+Date:   Mon, 10 Aug 2020 15:08:47 -0400
+Message-Id: <20200810190859.3793319-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810190859.3793319-1-sashal@kernel.org>
 References: <20200810190859.3793319-1-sashal@kernel.org>
@@ -59,33 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shannon Nelson <snelson@pensando.io>
+From: Evgeny Novikov <novikov@ispras.ru>
 
-[ Upstream commit 3fbc9bb6ca32d12d4d32a7ae32abef67ac95f889 ]
+[ Upstream commit 2468c877da428ebfd701142c4cdfefcfb7d4c00e ]
 
-Fix up our comparison to better handle a potential (but largely
-unlikely) wrap around.
+Driver does not release memory for device on error handling paths in
+net2280_probe() when gadget_release() is not registered yet.
 
-Signed-off-by: Shannon Nelson <snelson@pensando.io>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+The patch fixes the bug like in other similar drivers.
+
+Found by Linux Driver Verification project (linuxtesting.org).
+
+Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/pensando/ionic/ionic_lif.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/gadget/udc/net2280.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/pensando/ionic/ionic_lif.c b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
-index e55d41546cff2..aa93f9a6252df 100644
---- a/drivers/net/ethernet/pensando/ionic/ionic_lif.c
-+++ b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
-@@ -723,7 +723,7 @@ static bool ionic_notifyq_service(struct ionic_cq *cq,
- 	eid = le64_to_cpu(comp->event.eid);
+diff --git a/drivers/usb/gadget/udc/net2280.c b/drivers/usb/gadget/udc/net2280.c
+index 5eff85eeaa5a0..7530bd9a08c43 100644
+--- a/drivers/usb/gadget/udc/net2280.c
++++ b/drivers/usb/gadget/udc/net2280.c
+@@ -3781,8 +3781,10 @@ static int net2280_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	return 0;
  
- 	/* Have we run out of new completions to process? */
--	if (eid <= lif->last_eid)
-+	if ((s64)(eid - lif->last_eid) <= 0)
- 		return false;
+ done:
+-	if (dev)
++	if (dev) {
+ 		net2280_remove(pdev);
++		kfree(dev);
++	}
+ 	return retval;
+ }
  
- 	lif->last_eid = eid;
 -- 
 2.25.1
 
