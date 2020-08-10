@@ -2,179 +2,78 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F42FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 17:13:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F12C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 17:14:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37869207DE
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 17:13:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="iYCWO6Kd";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="iYCWO6Kd"
+	by mail.kernel.org (Postfix) with ESMTP id 3825520866
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 17:14:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728068AbgHJRNM (ORCPT
+        id S1728082AbgHJROO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 13:13:12 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:57290 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725873AbgHJRNK (ORCPT
+        Mon, 10 Aug 2020 13:14:14 -0400
+Received: from smtprelay0069.hostedemail.com ([216.40.44.69]:40336 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725873AbgHJROM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 13:13:10 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 999ED8EE1C0;
-        Mon, 10 Aug 2020 10:13:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1597079588;
-        bh=ZSUuR8ps3gaheFekbtCVfg8z7Gr1pV6yqoiecRqqW8c=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=iYCWO6Kd4nTdCv5g6xAbDjadaFzWlmhhoNj9TpbEWpJn5ZDHYArz/NgmrHI32upGU
-         CkiiHnu0oDclBoXTkOvdoqyhPba3bX4nZInPWPf1ZhwQLcVm9Mct4z4I7990dd4LBS
-         pGJMM7XnYmkDK80UUVcaInTgnsKlXcycISGTQ5eg=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id kjQAlOlinWBO; Mon, 10 Aug 2020 10:13:08 -0700 (PDT)
-Received: from [153.66.254.174] (c-73-35-198-56.hsd1.wa.comcast.net [73.35.198.56])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 22EBE8EE12E;
-        Mon, 10 Aug 2020 10:13:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1597079588;
-        bh=ZSUuR8ps3gaheFekbtCVfg8z7Gr1pV6yqoiecRqqW8c=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=iYCWO6Kd4nTdCv5g6xAbDjadaFzWlmhhoNj9TpbEWpJn5ZDHYArz/NgmrHI32upGU
-         CkiiHnu0oDclBoXTkOvdoqyhPba3bX4nZInPWPf1ZhwQLcVm9Mct4z4I7990dd4LBS
-         pGJMM7XnYmkDK80UUVcaInTgnsKlXcycISGTQ5eg=
-Message-ID: <1597079586.3966.34.camel@HansenPartnership.com>
-Subject: Re: [dm-devel] [RFC PATCH v5 00/11] Integrity Policy Enforcement
- LSM (IPE)
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>,
-        Chuck Lever <chucklever@gmail.com>,
-        James Morris <jmorris@namei.org>
-Cc:     Deven Bowers <deven.desai@linux.microsoft.com>,
-        Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>,
-        snitzer@redhat.com, dm-devel@redhat.com,
-        tyhicks@linux.microsoft.com, agk@redhat.com,
-        Paul Moore <paul@paul-moore.com>,
-        Jonathan Corbet <corbet@lwn.net>, nramas@linux.microsoft.com,
-        serge@hallyn.com, pasha.tatashin@soleen.com,
-        Jann Horn <jannh@google.com>, linux-block@vger.kernel.org,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jens Axboe <axboe@kernel.dk>, mdsakib@microsoft.com,
-        open list <linux-kernel@vger.kernel.org>, eparis@redhat.com,
-        linux-security-module@vger.kernel.org, linux-audit@redhat.com,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-integrity@vger.kernel.org,
-        jaskarankhurana@linux.microsoft.com
-Date:   Mon, 10 Aug 2020 10:13:06 -0700
-In-Reply-To: <4664ab7dc3b324084df323bfa4670d5bfde76e66.camel@linux.ibm.com>
-References: <20200728213614.586312-1-deven.desai@linux.microsoft.com>
-         <20200802115545.GA1162@bug> <20200802140300.GA2975990@sasha-vm>
-         <20200802143143.GB20261@amd>
-         <1596386606.4087.20.camel@HansenPartnership.com>
-         <fb35a1f7-7633-a678-3f0f-17cf83032d2b@linux.microsoft.com>
-         <1596639689.3457.17.camel@HansenPartnership.com>
-         <alpine.LRH.2.21.2008050934060.28225@namei.org>
-         <b08ae82102f35936427bf138085484f75532cff1.camel@linux.ibm.com>
-         <329E8DBA-049E-4959-AFD4-9D118DEB176E@gmail.com>
-         <da6f54d0438ee3d3903b2c75fcfbeb0afdf92dc2.camel@linux.ibm.com>
-         <1597073737.3966.12.camel@HansenPartnership.com>
-         <4664ab7dc3b324084df323bfa4670d5bfde76e66.camel@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
+        Mon, 10 Aug 2020 13:14:12 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 720C2180A68C0;
+        Mon, 10 Aug 2020 17:14:11 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: pull72_170428b26fdb
+X-Filterd-Recvd-Size: 1971
+Received: from XPS-9350 (unknown [172.58.78.167])
+        (Authenticated sender: joe@perches.com)
+        by omf14.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 10 Aug 2020 17:14:09 +0000 (UTC)
+Message-ID: <ca88752c86bf8a42f9aa56b69df585542ea26622.camel@perches.com>
+Subject: Re: [PATCH] USB: storage: isd200: fix spelling mistake "removeable"
+ -> "removable"
+From:   Joe Perches <joe@perches.com>
+To:     Alan Stern <stern@rowland.harvard.edu>,
+        Colin King <colin.king@canonical.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, usb-storage@lists.one-eyed-alien.net,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 10 Aug 2020 10:14:06 -0700
+In-Reply-To: <20200810142547.GC299045@rowland.harvard.edu>
+References: <20200810083211.48282-1-colin.king@canonical.com>
+         <20200810142547.GC299045@rowland.harvard.edu>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.3-0ubuntu1 
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-08-10 at 12:35 -0400, Mimi Zohar wrote:
-> On Mon, 2020-08-10 at 08:35 -0700, James Bottomley wrote:
-[...]
-> > > Up to now, verifying remote filesystem file integrity has been
-> > > out of scope for IMA.   With fs-verity file signatures I can at
-> > > least grasp how remote file integrity could possibly work.  I
-> > > don't understand how remote file integrity with existing IMA
-> > > formats could be supported. You might want to consider writing a
-> > > whitepaper, which could later be used as the basis for a patch
-> > > set cover letter.
+On Mon, 2020-08-10 at 10:25 -0400, Alan Stern wrote:
+> On Mon, Aug 10, 2020 at 09:32:11AM +0100, Colin King wrote:
+> > From: Colin Ian King <colin.king@canonical.com>
 > > 
-> > I think, before this, we can help with the basics (and perhaps we
-> > should sort them out before we start documenting what we'll do).
+> > There is a spelling mistake in a usb_stor_dbg debug message. Fix it.
+
+This is an alternate spelling in a few dictionaries.
+Is this an acceptable Briticism?
+If so, I suggest no change.
+
+> > diff --git a/drivers/usb/storage/isd200.c b/drivers/usb/storage/isd200.c
+[]
+> > @@ -1383,7 +1383,7 @@ static int isd200_scsi_to_ata(struct scsi_cmnd *srb, struct us_data *us,
+> >  				ATA_CMD_MEDIA_LOCK : ATA_CMD_MEDIA_UNLOCK;
+> >  			isd200_srb_set_bufflen(srb, 0);
+> >  		} else {
+> > -			usb_stor_dbg(us, "   Not removeable media, just report okay\n");
+> > +			usb_stor_dbg(us, "   Not removable media, just report okay\n");
+> >  			srb->result = SAM_STAT_GOOD;
+> >  			sendToTransport = 0;
+> >  		}
+> > -- 
 > 
-> I'm not opposed to doing that, but you're taking this discussion in a
-> totally different direction.  The current discussion is about NFSv4
-> supporting the existing IMA signatures, not only fs-verity
-> signatures. I'd like to understand how that is possible and for the
-> community to weigh in on whether it makes sense.
-
-Well, I see the NFS problem as being chunk at a time, right, which is
-merkle tree, or is there a different chunk at a time mechanism we want
-to use?  IMA currently verifies signature on open/exec and then
-controls updates.  Since for NFS we only control the client, we can't
-do that on an NFS server, so we really do need verification at read
-time ... unless we're threading IMA back to the NFS server?
-
-> > The first basic is that a merkle tree allows unit at a time
-> > verification. First of all we should agree on the unit.  Since we
-> > always fault a page at a time, I think our merkle tree unit should
-> > be a page not a block. Next, we should agree where the check gates
-> > for the per page accesses should be ... definitely somewhere in
-> > readpage, I suspect and finally we should agree how the merkle tree
-> > is presented at the gate.  I think there are three ways:
-> > 
-> >    1. Ahead of time transfer:  The merkle tree is transferred and
-> > verified
-> >       at some time before the accesses begin, so we already have a
-> >       verified copy and can compare against the lower leaf.
-> >    2. Async transfer:  We provide an async mechanism to transfer
-> > the
-> >       necessary components, so when presented with a unit, we check
-> > the
-> >       log n components required to get to the root
-> >    3. The protocol actually provides the capability of 2 (like the
-> > SCSI
-> >       DIF/DIX), so to IMA all the pieces get presented instead of
-> > IMA
-> >       having to manage the tree
-> > 
-> > There are also a load of minor things like how we get the head
-> > hash, which must be presented and verified ahead of time for each
-> > of the above 3.
-> 
->  
-> I was under the impression that IMA support for fs-verity signatures
-> would be limited to including the fs-verity signature in the
-> measurement list and verifying the fs-verity signature.   As fs-
-> verity is limited to immutable files, this could be done on file
-> open.  fs-verity would be responsible for enforcing the block/page
-> data integrity.   From a local filesystem perspective, I think that
-> is all that is necessary.
-
-The fs-verity use case is a bit of a crippled one because it's
-immutable.  I think NFS represents more the general case where you
-can't rely on immutability and have to verify at chunk read time.  If
-we get chunk at a time working for NFS, it should work also for fs-
-verity and we wouldn't need to have two special paths.
-
-I think, even for NFS we would only really need to log the open, so
-same as you imagine for fs-verity.  As long as the chunk read hashes
-match, we can be silent because everything is going OK, so we only need
-to determine what to do and log on mismatch (which isn't expected to
-happen for fs-verity).
-
-> In terms of remote file systems,  the main issue is transporting and
-> storing the Merkle tree.  As fs-verity is limited to immutable files,
-> this could still be done on file open.
-
-Right, I mentioned that in my options ... we need some "supply
-integrity" hook ... or possibly multiple hooks for a variety of
-possible methods.
-
-James
+> Acked-by: Alan Stern <stern@rowland.harvard.edu>
 
