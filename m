@@ -2,113 +2,128 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C545C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50938C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:46:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 344092080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:44:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="o99keg9q"
+	by mail.kernel.org (Postfix) with ESMTP id 311D62078E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:46:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728297AbgHJPot (ORCPT
+        id S1727901AbgHJPq0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:44:49 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:51366 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726406AbgHJPos (ORCPT
+        Mon, 10 Aug 2020 11:46:26 -0400
+Received: from mail-il1-f198.google.com ([209.85.166.198]:52229 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726406AbgHJPq0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:44:48 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07AFhXtJ153655;
-        Mon, 10 Aug 2020 15:44:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=JvLiuuU3UgGUfrDifIj6lXvZMS7W5udsSPkBUIuvbkM=;
- b=o99keg9qf1qCDxOhoorD6MCLSCgG2oiYfCjODzVYEfkaELoMgwnwZ4iv8hQ9KEaneAda
- iiZsUsiNkXMJfMXxW+3gLZ2PW7raHV/Kq4Z/OpNKyBQH7DNsIOPntyB9k4UjdF00IIa+
- XBwbI6vHtVrPx2WuehFw/AG/dtsTgxnd+H+hjN5w6bXUes3s51e09EgqtC7Yl4MpRAKl
- eQrbhKPWAdiOe9r2eCsf8YkrrOsPemAZdBKucdRfYA5KUkBGCzPkVcV07irNbBwO5Ipb
- YsQG5z8AtbiO1F8Rl4JrhU9vkxqeJcuG/48hNkNhXFzjwZ0HcapCSuNxr7FW8iF/14xa fQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 32smpn79q6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 10 Aug 2020 15:44:35 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07AFJEiH003551;
-        Mon, 10 Aug 2020 15:42:34 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 32t5y16wbq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 10 Aug 2020 15:42:34 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 07AFgNSI016391;
-        Mon, 10 Aug 2020 15:42:23 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 10 Aug 2020 15:42:22 +0000
-Date:   Mon, 10 Aug 2020 18:42:13 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     alexander.deucher@amd.com, christian.koenig@amd.com,
-        airlied@linux.ie, daniel@ffwll.ch, sumit.semwal@linaro.org,
-        colton.w.lewis@protonmail.com, Ori.Messinger@amd.com,
-        m.szyprowski@samsung.com, bernard@vivo.com,
-        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] drm: amdgpu: Use the correct size when allocating memory
-Message-ID: <20200810154213.GM1793@kadam>
-References: <20200809203406.751971-1-christophe.jaillet@wanadoo.fr>
+        Mon, 10 Aug 2020 11:46:26 -0400
+Received: by mail-il1-f198.google.com with SMTP id z14so8053798ilk.19
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 08:46:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=SHAexMyW7z201Yxw9hnQ8uPlGiip1/BeDLnLE7U9rJo=;
+        b=SBVQtbJj9QmSh1pteLTmGCopbEIGuUwI3BbWrmsEZC7bBeMj84Zt7DZoqIJwj7M6Sw
+         6SA4LK2FMwjOmuwyhcu5w1OHsVy4k/oiX6v3OYwbgP26yOMsJeyEi+p1Ecj7QxuCF9zq
+         k4C24sqmyNB3w8CN+bvmglkqjJoKoW5dOTM5fHa6bSIo+XS3NGzE+XYPqBtaDb28Zu67
+         Ywzf0ZGb5Tt22czDXd+1vDKKqkVBSXToSy0bl3EYmd3UhORI1eqMcwIjmzqYUuEfT1jR
+         4xnr3G0h+XPrOHMrJXz0ZjUWXOlPHeWTi1I3SBFViKY8fdOza3OVG/JK5peKFZGuTBJd
+         4Ctg==
+X-Gm-Message-State: AOAM530zAUKS7xIKotL+wrtNMgupafHtPCPSrDUlUWNmVMCO1GHDFIy8
+        0DiktpdyIC8OIUc1zxBm7fd1B/4ZgeepLZsBOBTPmyp4TMbt
+X-Google-Smtp-Source: ABdhPJwp+HLP3iQxO3liiiRpmTkJSrG5YWUlMOGePiAkgtJDyFSg+uttF8UMfBG3ecCN/S84Pv15S0aZzzwuNWMJOAckDOjPiSjG
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200809203406.751971-1-christophe.jaillet@wanadoo.fr>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9709 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0
- suspectscore=0 mlxscore=0 adultscore=0 bulkscore=0 phishscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008100115
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9709 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 lowpriorityscore=0
- bulkscore=0 impostorscore=0 phishscore=0 clxscore=1011 spamscore=0
- malwarescore=0 adultscore=0 mlxlogscore=999 mlxscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008100116
+X-Received: by 2002:a92:d9d1:: with SMTP id n17mr17253665ilq.182.1597074385031;
+ Mon, 10 Aug 2020 08:46:25 -0700 (PDT)
+Date:   Mon, 10 Aug 2020 08:46:25 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000066583105ac87dbf4@google.com>
+Subject: BUG: unable to handle kernel NULL pointer dereference in loop_rw_iter
+From:   syzbot <syzbot+1abbd16e49910f6bbe45@syzkaller.appspotmail.com>
+To:     axboe@kernel.dk, io-uring@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 09, 2020 at 10:34:06PM +0200, Christophe JAILLET wrote:
-> When '*sgt' is allocated, we must allocated 'sizeof(**sgt)' bytes instead
-> of 'sizeof(*sg)'. 'sg' (i.e. struct scatterlist) is smaller than
-> 'sgt' (i.e struct sg_table), so this could lead to memory corruption.
+Hello,
 
-The sizeof(*sg) is bigger than sizeof(**sgt) so this wastes memory but
-it won't lead to corruption.
+syzbot found the following issue on:
 
-    11  struct scatterlist {
-    12          unsigned long   page_link;
-    13          unsigned int    offset;
-    14          unsigned int    length;
-    15          dma_addr_t      dma_address;
-    16  #ifdef CONFIG_NEED_SG_DMA_LENGTH
-    17          unsigned int    dma_length;
-    18  #endif
-    19  };
+HEAD commit:    9420f1ce Merge tag 'pinctrl-v5.9-1' of git://git.kernel.or..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=13662f62900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=72cf85e4237850c8
+dashboard link: https://syzkaller.appspot.com/bug?extid=1abbd16e49910f6bbe45
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15929006900000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15e196aa900000
 
-    42  struct sg_table {
-    43          struct scatterlist *sgl;        /* the list */
-    44          unsigned int nents;             /* number of mapped entries */
-    45          unsigned int orig_nents;        /* original size of list */
-    46  };
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+1abbd16e49910f6bbe45@syzkaller.appspotmail.com
 
-regards,
-dan carpenter
+BUG: kernel NULL pointer dereference, address: 0000000000000000
+#PF: supervisor instruction fetch in kernel mode
+#PF: error_code(0x0010) - not-present page
+PGD a652e067 P4D a652e067 PUD a652f067 PMD 0 
+Oops: 0010 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 7461 Comm: io_wqe_worker-0 Not tainted 5.8.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:0x0
+Code: Bad RIP value.
+RSP: 0018:ffffc9000804f910 EFLAGS: 00010246
+RAX: 1ffffffff10b0b9b RBX: dffffc0000000000 RCX: ffff88808962e1c8
+RDX: 000000000000003c RSI: 0000000020000740 RDI: ffff88809fb2dcc0
+RBP: 0000000020000740 R08: ffffc9000804fa28 R09: ffff8880a7639c0f
+R10: 0000000000000000 R11: 0000000000000000 R12: ffffc9000804fa28
+R13: ffffffff88585cc0 R14: 000000000000003c R15: 0000000000000001
+FS:  0000000000000000(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffffffffd6 CR3: 000000008e2a7000 CR4: 00000000001506e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ loop_rw_iter.part.0+0x26e/0x450 fs/io_uring.c:2850
+ loop_rw_iter fs/io_uring.c:2829 [inline]
+ io_write+0x6a2/0x7a0 fs/io_uring.c:3190
+ io_issue_sqe+0x1b0/0x60d0 fs/io_uring.c:5530
+ io_wq_submit_work+0x183/0x3d0 fs/io_uring.c:5775
+ io_worker_handle_work+0xa45/0x13f0 fs/io-wq.c:527
+ io_wqe_worker+0xbf0/0x10e0 fs/io-wq.c:569
+ kthread+0x3b5/0x4a0 kernel/kthread.c:292
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+Modules linked in:
+CR2: 0000000000000000
+---[ end trace 97e511c5a98da2fe ]---
+RIP: 0010:0x0
+Code: Bad RIP value.
+RSP: 0018:ffffc9000804f910 EFLAGS: 00010246
+RAX: 1ffffffff10b0b9b RBX: dffffc0000000000 RCX: ffff88808962e1c8
+RDX: 000000000000003c RSI: 0000000020000740 RDI: ffff88809fb2dcc0
+RBP: 0000000020000740 R08: ffffc9000804fa28 R09: ffff8880a7639c0f
+R10: 0000000000000000 R11: 0000000000000000 R12: ffffc9000804fa28
+R13: ffffffff88585cc0 R14: 000000000000003c R15: 0000000000000001
+FS:  0000000000000000(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f84c3b15028 CR3: 000000008e2a7000 CR4: 00000000001506e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
