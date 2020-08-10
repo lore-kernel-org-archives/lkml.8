@@ -2,184 +2,137 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA5F0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C996BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:50:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 853B222BF3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:46:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C69C22CA1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:50:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YMpVmq+C"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AM3To5k5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728397AbgHJTq5 (ORCPT
+        id S1728469AbgHJTul (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:46:57 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:26076 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728275AbgHJTq4 (ORCPT
+        Mon, 10 Aug 2020 15:50:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48198 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728235AbgHJTul (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:46:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597088814;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=oRzQMCTvJ3d/F0CLCTpkBaK+ztkIxK4SeNJuOlZ33WI=;
-        b=YMpVmq+CqU6ZcFLCyTG4cnR/kYRlVG0+lax8JF9zCGKjay52C505XgARW/PjevF1AysAzf
-        keZx4JkXzL5DsE/+vH8/46pQEfZ7xGypqYJ/aBqHtKwoFG6uKsaSabzfQOlEOFph53asnC
-        AJBK0CAuIPC7p+16TMQUA/PK/w9pEw8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-142-bTE2M3asMpSHOHqjSXL1hQ-1; Mon, 10 Aug 2020 15:46:49 -0400
-X-MC-Unique: bTE2M3asMpSHOHqjSXL1hQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E8B591005510;
-        Mon, 10 Aug 2020 19:46:48 +0000 (UTC)
-Received: from [10.10.120.16] (ovpn-120-16.rdu2.redhat.com [10.10.120.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D09BF19C4F;
-        Mon, 10 Aug 2020 19:46:47 +0000 (UTC)
-Subject: refactoring livepatch documentation was Re: [PATCH 1/2]
- docs/livepatch: Add new compiler considerations doc
-To:     Petr Mladek <pmladek@suse.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200721161407.26806-1-joe.lawrence@redhat.com>
- <20200721161407.26806-2-joe.lawrence@redhat.com>
- <20200721230442.5v6ah7bpjx4puqva@treble>
- <de3672ef-8779-245f-943d-3d5a4b875446@redhat.com>
- <20200722205139.hwbej2atk2ejq27n@treble> <20200806120336.GP24529@alley>
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-Message-ID: <3842fe65-332e-9f90-fe75-7cd80b34b75e@redhat.com>
-Date:   Mon, 10 Aug 2020 15:46:46 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 10 Aug 2020 15:50:41 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 054C5C061756;
+        Mon, 10 Aug 2020 12:50:40 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id e4so603873pjd.0;
+        Mon, 10 Aug 2020 12:50:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Nak496W6Uz7095G3/h9V9Rt6HXnjw+oQmD5Xl3Awnvs=;
+        b=AM3To5k5Za9uQQSjvLX3R3ekehxvw7Er/kX/CgCwd94GuMmqIM+9euuFFp+6dVhYDW
+         trfMUqOiuualq6aaKk2WNfVhJ4/V0yc/16yH0+ZbMX/5sBRp2g42TFtKWBjGS7Ij8xHe
+         nTQVmSgvpm7lAxSC9Tt8PKoV1GK9UdC2OZNYQgRQfuXpdZJr2SNouHUdzy04/m2kThL2
+         CcmZcUtJ8qaum4rvIxv5x23995qRyH9LMLWEDdLdsrHsFfYww749X6tNSwnkO1RsOjOH
+         ccQdpfUJjTrgHjwWUPqBs5ver+3v8rTJt5jDX0Id5uOOFaoNHFP4dev6XhX2RMvbmuoU
+         YoVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Nak496W6Uz7095G3/h9V9Rt6HXnjw+oQmD5Xl3Awnvs=;
+        b=js71zvrmfosXb0hIeVodUTQ+wvnB+gCak7YgpvJDxS+aRd903VKzWtQjrXp4dQBByX
+         effRB2HCxjZnDZ6MKDCfGuJgeaS7S5cwBkzOVVgmbXe7Y6my2hJlu0miRGAmxWNAVMQA
+         Wz8lJEmyAsnCgX8hB/rOru6nahL9IjkHOJbYEaKRaxy/lK9oxx71S9uS+KMCCA/LXNUD
+         HBdVBJ3yQBiH8lo3Of1GVi9wnDMCEoOETLpl7omkbIaNhVuBC3oqH9tRF/wKqgbWdtcx
+         RHxIWxm5/wndRx4MkX+GMGJP/S9HY1jQHcmZk28pcfRMCxsyVJ3YmhVsSBAmrfvB8XVN
+         Ah0w==
+X-Gm-Message-State: AOAM531hvh+IJ4YkWehTMGfTKH9tYce+1miAGbVMz3UIe+s+Hsk8xUzI
+        HLOpSA7e2E3AtygdOJGcQ9mzriGDyZiUWCtqaCs=
+X-Google-Smtp-Source: ABdhPJyn3D6XiAUzNRf7Wly5OXvuXCI07y1Ndqg+GDotQoowvG46rb9kELTVmD3PShI8t+l6uUYW727iTa1I4qDZOpA=
+X-Received: by 2002:a17:90a:aa90:: with SMTP id l16mr908717pjq.210.1597089040409;
+ Mon, 10 Aug 2020 12:50:40 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200806120336.GP24529@alley>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+References: <20200809023548.684217-1-xie.he.0141@gmail.com>
+ <CA+FuTSe-FaQFn4WNvVPJ1v+jVZAghgd1AZc-cWn2+GjPR4GzVQ@mail.gmail.com>
+ <CAJht_EOao3-kA-W-SdJqKRiFMAFUxw7OARFGY5DL8pXvKd4TLw@mail.gmail.com> <CA+FuTSc7c+XTDU10Bh1ZviQomHgiTjiUvOO0iR1X95rq61Snrg@mail.gmail.com>
+In-Reply-To: <CA+FuTSc7c+XTDU10Bh1ZviQomHgiTjiUvOO0iR1X95rq61Snrg@mail.gmail.com>
+From:   Xie He <xie.he.0141@gmail.com>
+Date:   Mon, 10 Aug 2020 12:50:29 -0700
+Message-ID: <CAJht_EORX2intix=HxS+U+O1hiuSb25=GWi5ONHtFdEF_BS_Ng@mail.gmail.com>
+Subject: Re: [PATCH net] drivers/net/wan/x25_asy: Added needed_headroom and a
+ skb->len check
+To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux X25 <linux-x25@vger.kernel.org>,
+        Martin Schiller <ms@dev.tdt.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/6/20 8:03 AM, Petr Mladek wrote:
-> On Wed 2020-07-22 15:51:39, Josh Poimboeuf wrote:
->> On Wed, Jul 22, 2020 at 01:03:03PM -0400, Joe Lawrence wrote:
->>> On 7/21/20 7:04 PM, Josh Poimboeuf wrote:
->>>> On Tue, Jul 21, 2020 at 12:14:06PM -0400, Joe Lawrence wrote:
->>>>> Compiler optimizations can have serious implications on livepatching.
->>>>> Create a document that outlines common optimization patterns and safe
->>>>> ways to livepatch them.
->>>>>
->>>>> Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
->>>>
->>>> There's a lot of good info here, but I wonder if it should be
->>>> reorganized a bit and instead called "how to create a livepatch module",
->>>> because that's really the point of it all.
->>>>
->>>
->>> That would be nice.  Would you consider a stand-alone compiler-optimizations
->>> doc an incremental step towards that end?  Note that the other files
->>> (callbacks, shadow-vars, system-state) in their current form might be as
->>> confusing to the newbie.
->>
->> It's an incremental step towards _something_.  Whether that's a cohesive
->> patch creation guide, or just a growing hodgepodge of random documents,
->> it may be too early to say :-)
-> 
-> Yes, it would be nice to have a cohesive documentation. But scattered
-> pieces are better than nothing.
-> 
->>>> I'm thinking a newcomer reading this might be lost.  It's not
->>>> necessarily clear that there are currently two completely different
->>>> approaches to creating a livepatch module, each with their own quirks
->>>> and benefits/drawbacks.  There is one mention of a "source-based
->>>> livepatch author" but no explanation of what that means.
->>>>
->>>
->>> Yes, the initial draft was light on source-based patching since I only
->>> really tinker with it for samples/kselftests.  The doc was the result of an
->>> experienced livepatch developer and Sunday afternoon w/the compiler. I'm
->>> sure it reads as such. :)
->>
->> Are experienced livepatch developers the intended audience?  If so I
->> question what value this document has in its current form.  Presumably
->> experienced livepatch developers would already know this stuff.
-> 
-> IMHO, this document is useful even for newbies. They might at
-> least get a clue about these catches. It is better than nothing.
-> 
-> I do not want to discourage Joe from creating even better
-> documentation. But if he does not have interest or time
-> to work on it, I am happy even for this piece.
-> 
+On Mon, Aug 10, 2020 at 12:21 AM Willem de Bruijn
+<willemdebruijn.kernel@gmail.com> wrote:
+>
+> Acked-by: Willem de Bruijn <willemb@google.com>
 
-Hi Petr, Josh,
+Thank you so much!
 
-The compiler optimization pitfall document can wait for refactored 
-livepatch documentation if that puts it into better context, 
-particularly for newbies.  I don't mind either way.  FWIW, I don't 
-profess to be an authoritative source its content -- we've dealt some of 
-these issues in kpatch, so it was interesting to see how they affect 
-livepatches that don't rely on binary comparison.
+> > 1) I hope to set needed_headroom properly for all three X.25 drivers
+> > (lapbether, x25_asy, hdlc_x25) in the kernel. So that the upper layer
+> > (net/x25) can be changed to use needed_headroom to allocate skb,
+> > instead of the current way of using a constant to estimate the needed
+> > headroom.
+>
+> Which constant, X25_MAX_L2_LEN?
 
+Yes, by grepping X25_MAX_L2_LEN in net/x25, I can see it is used in
+various places to allocate and reserve the needed header space. For
+example in net/x25/af_x25.c, the function x25_sendmsg allocates and
+reserves a header space of X25_MAX_L2_LEN + X25_EXT_MIN_LEN.
 
-Toward the larger goal, I've changed the thread subject to talk about 
-how we may rearrange and supplement our current documentation.  This is 
-a first pass at a possible refactoring...
+> > 2) The code quality of this driver is actually very low, and I also
+> > hope to improve it gradually. Actually this driver had been completely
+> > broken for many years and no one had noticed this until I fixed it in
+> > commit 8fdcabeac398 (drivers/net/wan/x25_asy: Fix to make it work)
+> > last month.
+>
+> Just curious: how come that netif_rx could be removed?
 
+When receiving data, the driver should only submit skb to upper layers
+after it has been processed by the lapb module, i.e., it should only
+call netif_rx in the function x25_asy_data_indication. The removed
+netif_rx is in the function x25_asy_bump. This function is responsible
+for passing the skb to the lapb module to process. It doesn't make
+sense to call netif_rx here. If we call netif_rx here, we may pass
+control frames that shouldn't be passed to upper layers (and have been
+consumed and freed by the lapb module) to upper layers.
 
-1. Provide a better index page to connect the other files/docs, like
-https://www.kernel.org/doc/html/latest/core-api/index.html but obviously 
-not that extensive.  Right now we have only a Table of Contents tree 
-without any commentary.
+> One thing to keep in mind is that AF_PACKET sockets are not the normal
+> datapath. AF_X25 sockets are. But you mention that you also exercise
+> the upper layer? That gives confidence that these changes are not
+> accidentally introducing regressions for the default path while fixing
+> oddly crafted packets with (root only for a reason) packet sockets.
 
-2. Rearrange and refactor sections:
+Yes, I test with AF_X25 sockets too to make sure the changes are OK.
+I usually test AF_X25 sockets with:
+https://github.com/hyanggi/testing_linux/blob/master/network_x25/x25/server.c
+https://github.com/hyanggi/testing_linux/blob/master/network_x25/x25/client.c
 
-livepatch.rst
-   Keep just about everything
-   Add a history section to explain ksplice, kgraft, kpatch for the
-     uninitiated?
-   Add a section on source based vs. binary diff livepatch creation,
-     this may be worth its own top-level section
-
-Livepatch API
-   Basic API
-   Callbacks
-   Shadow variables
-   Cumulative patches
-   System state
-
-KLP Relocations
-   Right now this is a bit academic AFAIK kpatch is the only tool
-   currently making use of them.  So maybe this document becomes a
-   more general purpose doc explaining how to reference unexported
-   symbols?  (ie, how does kgraft currently do it, particularly
-   w/kallsyms going unexported?)
-
-   Eventually this could contain klp-convert howto if it ever gets
-   merged.
-
-Compiler considerations
-   TBD
-
-I suppose this doesn't create a "Livepatching creation for dummies" 
-guide, but my feeling is that there are so many potential (hidden) 
-pitfalls that such guide would be dangerous.
-
-If someone were to ask me today how to start building a livepatch, I 
-would probably point them at the samples to demonstrate the basic 
-concept and API, but then implore them to read through the documentation 
-to understand how quickly complicated it can become.
-
--- Joe
-
+I became interested in X.25 when I was trying different address
+families that Linux supported. I tried AF_X25 sockets. And then I
+tried to use the X.25 link layer directly through AF_PACKET. I believe
+both AF_X25 sockets and AF_PACKET sockets need to work without
+problems with X.25 drivers - lapbether and x25_asy. There is another
+X.25 driver (hdlc_x25) in the kernel. I haven't been able to run that
+driver. But that driver seems to be the real driver which is really
+used, and I know Martin Schiller <ms@dev.tdt.de> is an active user and
+developer of that driver.
