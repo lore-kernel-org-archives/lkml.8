@@ -2,53 +2,53 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01313C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:39:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A09FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:39:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFDC122D6F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:39:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A6E122EBE
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:39:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073944;
-	bh=gQWng/bO5oR+BA08SNco2VcnZgToS77LbevgmS+C7z4=;
+	s=default; t=1597073952;
+	bh=i0VkiJMEi5DxsVNBcNuzWr1qQezrzgwZMZRQemU+IyQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zqfg+N9STJQVJs+qnq9HXg8edQXwg1+kqHCDxoUhVpBEgi+QHZVjKHAv2UB00J6n0
-	 M0vINq408/Jr8eaXVXBBkmfYDDXxyjmTjZRA085yIaIMofd23U1WUhoOSWY9TqogEn
-	 Pkw95XAvSsqIoJpe6/UdE4Lfpasex0JCFbF8A7zg=
+	b=IGvWqMJh8gA1qaGhWipnkZO306CFieSAYDINcwx5XiMV/HeergG+0+vz9sJvB6w3/
+	 4dIkVYeKSWVXPJ+dldWKB2tvnuTJRhBeRE08/aZqIcGGoJRghFD3qgM/DRmNnQyRYS
+	 L9XxOCfCmLuDT7gd6YlcdA7h7jXzKg3kIudGGkoA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729115AbgHJPjD (ORCPT
+        id S1728493AbgHJPZF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:39:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59054 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:25:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728515AbgHJPZU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:25:20 -0400
+        id S1728140AbgHJPZA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:25:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A936D2177B;
-        Mon, 10 Aug 2020 15:25:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DF6420772;
+        Mon, 10 Aug 2020 15:24:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073120;
-        bh=gQWng/bO5oR+BA08SNco2VcnZgToS77LbevgmS+C7z4=;
+        s=default; t=1597073100;
+        bh=i0VkiJMEi5DxsVNBcNuzWr1qQezrzgwZMZRQemU+IyQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M2MsDR/mgy+GY1zdE3fCH/e44HbUVY0B15+NvJmdHaRlIlDiH9w/LGNql2SykRLQw
-         qq97XvdXQUeSshQ0XJU3KEStj9+s5El/83LEUNptBbOz35lm2XhH4D4RVX5LfV7/JJ
-         LosVcbXydg40MlCPrK80fy5RKJk4zCNtcFZ9zKTE=
+        b=KM+3FQ4iQYhjxJqpOrObpsbChEeaxiI18mEQIajeurpJeA4A47YNcCGVYglJLcRgN
+         WfvHsET8dWrQGZOJRet54Npycnn3gIfDjxUGKGysGp7s7yscECKE7t9ZdIR9DYE5lI
+         wXjdzvWVVpQfOuLcEA1HLrDJleJaOvt5h8OIZR30=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Alain Volmat <alain.volmat@st.com>,
-        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 43/79] i2c: slave: add sanity check when unregistering
-Date:   Mon, 10 Aug 2020 17:21:02 +0200
-Message-Id: <20200810151814.399625446@linuxfoundation.org>
+        stable@vger.kernel.org, "Shah, Ashish N" <ashish.n.shah@intel.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.7 65/79] hv_netvsc: do not use VF device if link is down
+Date:   Mon, 10 Aug 2020 17:21:24 +0200
+Message-Id: <20200810151815.446891982@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151812.114485777@linuxfoundation.org>
 References: <20200810151812.114485777@linuxfoundation.org>
@@ -61,34 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+From: Stephen Hemminger <stephen@networkplumber.org>
 
-[ Upstream commit 8808981baf96e1b3dea1f08461e4d958aa0dbde1 ]
+[ Upstream commit 7c9864bbccc23e1812ac82966555d68c13ea4006 ]
 
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Reviewed-by: Alain Volmat <alain.volmat@st.com>
-Signed-off-by: Wolfram Sang <wsa@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+If the accelerated networking SRIOV VF device has lost carrier
+use the synthetic network device which is available as backup
+path. This is a rare case since if VF link goes down, normally
+the VMBus device will also loose external connectivity as well.
+But if the communication is between two VM's on the same host
+the VMBus device will still work.
+
+Reported-by: "Shah, Ashish N" <ashish.n.shah@intel.com>
+Fixes: 0c195567a8f6 ("netvsc: transparent VF management")
+Signed-off-by: Stephen Hemminger <stephen@networkplumber.org>
+Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/i2c/i2c-core-slave.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/hyperv/netvsc_drv.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/i2c/i2c-core-slave.c b/drivers/i2c/i2c-core-slave.c
-index 549751347e6c7..1589179d5eb92 100644
---- a/drivers/i2c/i2c-core-slave.c
-+++ b/drivers/i2c/i2c-core-slave.c
-@@ -58,6 +58,9 @@ int i2c_slave_unregister(struct i2c_client *client)
- {
- 	int ret;
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -532,12 +532,13 @@ static int netvsc_xmit(struct sk_buff *s
+ 	u32 hash;
+ 	struct hv_page_buffer pb[MAX_PAGE_BUFFER_COUNT];
  
-+	if (IS_ERR_OR_NULL(client))
-+		return -EINVAL;
-+
- 	if (!client->adapter->algo->unreg_slave) {
- 		dev_err(&client->dev, "%s: not supported by adapter\n", __func__);
- 		return -EOPNOTSUPP;
--- 
-2.25.1
-
+-	/* if VF is present and up then redirect packets
+-	 * already called with rcu_read_lock_bh
++	/* If VF is present and up then redirect packets to it.
++	 * Skip the VF if it is marked down or has no carrier.
++	 * If netpoll is in uses, then VF can not be used either.
+ 	 */
+ 	vf_netdev = rcu_dereference_bh(net_device_ctx->vf_netdev);
+ 	if (vf_netdev && netif_running(vf_netdev) &&
+-	    !netpoll_tx_running(net))
++	    netif_carrier_ok(vf_netdev) && !netpoll_tx_running(net))
+ 		return netvsc_vf_xmit(net, vf_netdev, skb);
+ 
+ 	/* We will atmost need two pages to describe the rndis
 
 
