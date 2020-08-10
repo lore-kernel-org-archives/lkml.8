@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D13C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:31:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DC53C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28EAC22B47
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:31:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19F0922B47
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:31:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597087905;
-	bh=0hpCvABZStLplECItoq4E4rTIl3EAyzd0ZRKA+1fl1o=;
+	s=default; t=1597087913;
+	bh=4Abc2RcV96zkWCXOb26k7nxJQ2yw3b6kMzMkLIEkKJ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mBkOpKAXzsdTpDlLSfhv9hFVb9YrwUkhUe8ZDrI7AnUwLukOZGgkS964HA7dBT9+/
-	 z0i2gPgTgBZosTmVYrM96f4DNIp/4OHQO0X+fMu85v1rSuc4e1/0HCQh/4gzBjFiLP
-	 NUKJQRLxMjM8Sw7g/tO+el4enzy8SpYfuqAuGRsM=
+	b=C+LQdAMNUzmqnPkwHSed/oXQjF+FuA+8NED69WsFA2aYF+hNBhwgnyMUnoijy5dlF
+	 Gkur9BX91C8DxADnia+W9e17iTBl546yMCVeI+kVuw28wwIAca394jUzc05koWqOSz
+	 FAVV0OI/f9U62GK66AViveHBKkf/TFdvTdDM/bzc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730406AbgHJTbn (ORCPT
+        id S1728795AbgHJTKC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:31:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37052 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:10:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728800AbgHJTKD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:10:03 -0400
+        id S1728652AbgHJTJw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:09:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 210B021775;
-        Mon, 10 Aug 2020 19:10:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C2B622CF6;
+        Mon, 10 Aug 2020 19:09:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086603;
-        bh=0hpCvABZStLplECItoq4E4rTIl3EAyzd0ZRKA+1fl1o=;
+        s=default; t=1597086591;
+        bh=4Abc2RcV96zkWCXOb26k7nxJQ2yw3b6kMzMkLIEkKJ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BWmzyrbkx8aRiC3NFHBYqO0QJWgYJHAOrVp/ciahzhXXCThS+hECezdXIXDS8fYoX
-         UrQ/R1voeeC3cJ+sv0qPOk0BBboZBqEVy9fL96Ncy34M+XNydBerAz407rOrIir45i
-         TgJpl+TOs7BqnlFjvEPcgnlbTFfdgdUvi7qhBUH4=
+        b=2uwIo6NS4OcptriF5OXcCmOUqzmp3cEqXq0dlPH/KPYyMK7IDgVhMrzuHIs5581T9
+         ZBGcXr9FvjxBwv2u/5P0nXdYILThHhbIQC6k3waljGCAbuUhVtvpPQuy92TQFi0zYi
+         i67TjOGzvHwkR1FrMPGQETGeECAGf6BU5YmfAG+w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bolarinwa Olayemi Saheed <refactormyself@gmail.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 46/64] iwlegacy: Check the return value of pcie_capability_read_*()
-Date:   Mon, 10 Aug 2020 15:08:41 -0400
-Message-Id: <20200810190859.3793319-46-sashal@kernel.org>
+Cc:     Wenjing Liu <wenjing.liu@amd.com>, Jun Lei <Jun.Lei@amd.com>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.8 38/64] drm/amd/display: allow query ddc data over aux to be read only operation
+Date:   Mon, 10 Aug 2020 15:08:33 -0400
+Message-Id: <20200810190859.3793319-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810190859.3793319-1-sashal@kernel.org>
 References: <20200810190859.3793319-1-sashal@kernel.org>
@@ -61,43 +61,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
+From: Wenjing Liu <wenjing.liu@amd.com>
 
-[ Upstream commit 9018fd7f2a73e9b290f48a56b421558fa31e8b75 ]
+[ Upstream commit 26b4750d6cf84cb2b3f0a84c9b345e7b71886410 ]
 
-On failure pcie_capability_read_dword() sets it's last parameter, val
-to 0. However, with Patch 14/14, it is possible that val is set to ~0 on
-failure. This would introduce a bug because (x & x) == (~0 & x).
+[why]
+Two issues:
+1. Add read only operation support for query ddc data over aux.
+2. Fix a bug where if read size is multiple of 16,
+mot of the last read transaction will not be set to 0.
 
-This bug can be avoided without changing the function's behaviour if the
-return value of pcie_capability_read_dword is checked to confirm success.
-
-Check the return value of pcie_capability_read_dword() to ensure success.
-
-Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
-Signed-off-by: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200713175529.29715-3-refactormyself@gmail.com
+Signed-off-by: Wenjing Liu <wenjing.liu@amd.com>
+Reviewed-by: Jun Lei <Jun.Lei@amd.com>
+Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlegacy/common.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ .../gpu/drm/amd/display/dc/core/dc_link_ddc.c | 29 ++++++++++++-------
+ 1 file changed, 18 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlegacy/common.c b/drivers/net/wireless/intel/iwlegacy/common.c
-index 348c17ce72f5c..f78e062df572a 100644
---- a/drivers/net/wireless/intel/iwlegacy/common.c
-+++ b/drivers/net/wireless/intel/iwlegacy/common.c
-@@ -4286,8 +4286,8 @@ il_apm_init(struct il_priv *il)
- 	 *    power savings, even without L1.
- 	 */
- 	if (il->cfg->set_l0s) {
--		pcie_capability_read_word(il->pci_dev, PCI_EXP_LNKCTL, &lctl);
--		if (lctl & PCI_EXP_LNKCTL_ASPM_L1) {
-+		ret = pcie_capability_read_word(il->pci_dev, PCI_EXP_LNKCTL, &lctl);
-+		if (!ret && (lctl & PCI_EXP_LNKCTL_ASPM_L1)) {
- 			/* L1-ASPM enabled; disable(!) L0S  */
- 			il_set_bit(il, CSR_GIO_REG,
- 				   CSR_GIO_REG_VAL_L0S_ENABLED);
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link_ddc.c b/drivers/gpu/drm/amd/display/dc/core/dc_link_ddc.c
+index aefd29a440b52..be8f265976b09 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_link_ddc.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_link_ddc.c
+@@ -503,7 +503,7 @@ bool dal_ddc_service_query_ddc_data(
+ 	uint8_t *read_buf,
+ 	uint32_t read_size)
+ {
+-	bool ret = false;
++	bool success = true;
+ 	uint32_t payload_size =
+ 		dal_ddc_service_is_in_aux_transaction_mode(ddc) ?
+ 			DEFAULT_AUX_MAX_DATA_SIZE : EDID_SEGMENT_SIZE;
+@@ -527,7 +527,6 @@ bool dal_ddc_service_query_ddc_data(
+ 	 *  but we want to read 256 over i2c!!!!*/
+ 	if (dal_ddc_service_is_in_aux_transaction_mode(ddc)) {
+ 		struct aux_payload payload;
+-		bool read_available = true;
+ 
+ 		payload.i2c_over_aux = true;
+ 		payload.address = address;
+@@ -536,21 +535,26 @@ bool dal_ddc_service_query_ddc_data(
+ 
+ 		if (write_size != 0) {
+ 			payload.write = true;
+-			payload.mot = false;
++			/* should not set mot (middle of transaction) to 0
++			 * if there are pending read payloads
++			 */
++			payload.mot = read_size == 0 ? false : true;
+ 			payload.length = write_size;
+ 			payload.data = write_buf;
+ 
+-			ret = dal_ddc_submit_aux_command(ddc, &payload);
+-			read_available = ret;
++			success = dal_ddc_submit_aux_command(ddc, &payload);
+ 		}
+ 
+-		if (read_size != 0 && read_available) {
++		if (read_size != 0 && success) {
+ 			payload.write = false;
++			/* should set mot (middle of transaction) to 0
++			 * since it is the last payload to send
++			 */
+ 			payload.mot = false;
+ 			payload.length = read_size;
+ 			payload.data = read_buf;
+ 
+-			ret = dal_ddc_submit_aux_command(ddc, &payload);
++			success = dal_ddc_submit_aux_command(ddc, &payload);
+ 		}
+ 	} else {
+ 		struct i2c_command command = {0};
+@@ -573,7 +577,7 @@ bool dal_ddc_service_query_ddc_data(
+ 		command.number_of_payloads =
+ 			dal_ddc_i2c_payloads_get_count(&payloads);
+ 
+-		ret = dm_helpers_submit_i2c(
++		success = dm_helpers_submit_i2c(
+ 				ddc->ctx,
+ 				ddc->link,
+ 				&command);
+@@ -581,7 +585,7 @@ bool dal_ddc_service_query_ddc_data(
+ 		dal_ddc_i2c_payloads_destroy(&payloads);
+ 	}
+ 
+-	return ret;
++	return success;
+ }
+ 
+ bool dal_ddc_submit_aux_command(struct ddc_service *ddc,
+@@ -598,7 +602,7 @@ bool dal_ddc_submit_aux_command(struct ddc_service *ddc,
+ 
+ 	do {
+ 		struct aux_payload current_payload;
+-		bool is_end_of_payload = (retrieved + DEFAULT_AUX_MAX_DATA_SIZE) >
++		bool is_end_of_payload = (retrieved + DEFAULT_AUX_MAX_DATA_SIZE) >=
+ 			payload->length;
+ 
+ 		current_payload.address = payload->address;
+@@ -607,7 +611,10 @@ bool dal_ddc_submit_aux_command(struct ddc_service *ddc,
+ 		current_payload.i2c_over_aux = payload->i2c_over_aux;
+ 		current_payload.length = is_end_of_payload ?
+ 			payload->length - retrieved : DEFAULT_AUX_MAX_DATA_SIZE;
+-		current_payload.mot = !is_end_of_payload;
++		/* set mot (middle of transaction) to false
++		 * if it is the last payload
++		 */
++		current_payload.mot = is_end_of_payload ? payload->mot:true;
+ 		current_payload.reply = payload->reply;
+ 		current_payload.write = payload->write;
+ 
 -- 
 2.25.1
 
