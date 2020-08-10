@@ -5,50 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3623C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:14:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 003EBC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:14:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD81B207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:14:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE97322B49
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:14:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597086884;
-	bh=Oxz/pHHOfZu6DDktw0jpD77BvgosJPVmTpZamkfr8Jo=;
+	s=default; t=1597086887;
+	bh=bKZyCJY5tcwU9+t7Ri2QDzZnhI/88fXqAczSnav0mCs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vpQUuNpWioUf/Qk2ciVdUNehCYfqM0cBjQ1l3VQAo4K59VmcYUoPeRtEeCfB4+Uh0
-	 2VbjdunZszuLryLsdT2CscgE7dleongEJOha6Xw8jiyQHnglNJjgbarQUwc8e7reVp
-	 +Mth7xtSlC1fdm1Oh3NFcmtcWI63oMBaBGppw4O4=
+	b=nbUNBjfYYitadShD+J4+N2Q7vnGFXlVJeZX1IMs02FWmMXHrhayg5GbqFRgPpBrf6
+	 7Im+/3jpAIrejlo+ohdfx9vkoHcuEaY59LLZ0/DLDdLnqnSHfgIuyZVgmr5nZDmntK
+	 wvADqhdHlLQt+gwEjEyl19hZzLl83TYLc7MFy2dA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730076AbgHJTOm (ORCPT
+        id S1730087AbgHJTOq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:14:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46946 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:14:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730043AbgHJTOf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:14:35 -0400
+        id S1730063AbgHJTOj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:14:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF51B22CA1;
-        Mon, 10 Aug 2020 19:14:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B4D922CF6;
+        Mon, 10 Aug 2020 19:14:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086874;
-        bh=Oxz/pHHOfZu6DDktw0jpD77BvgosJPVmTpZamkfr8Jo=;
+        s=default; t=1597086878;
+        bh=bKZyCJY5tcwU9+t7Ri2QDzZnhI/88fXqAczSnav0mCs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t4ueJNhbRS4y9xvEH1K8LRM4+XnlxEoNauA1YHwbwjVm6yaASZ7ijSWLDjx57TQZj
-         HN88lWM8GG3TmHTN2Yof6cH06X7zUTsDzMInadBEPswnU+HMwp7n/1YVm8G/FRprwy
-         oZNpWSjZxs1ZbtFO9D4PsHqbKv2iRgbMyb3QD8xI=
+        b=s065Bz0v+2cvk78g79V1JVHr0Ot89bijMteAF92Ub6VLdd/Zr3qUeX/zZ/wtXeX/X
+         +lTyL3GOBAoIX2W5RSIjdcmGy9qbTc+GW/RYDwOtI2CiX6eEHp+DRmmXBCcCZ0wwSl
+         ibkFKAaiOBpRNp9Pjo1Nb8eEJdjDghlqK+9Q4jFo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bolarinwa Olayemi Saheed <refactormyself@gmail.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 11/17] iwlegacy: Check the return value of pcie_capability_read_*()
-Date:   Mon, 10 Aug 2020 15:14:12 -0400
-Message-Id: <20200810191418.3795394-11-sashal@kernel.org>
+Cc:     Jim Cromie <jim.cromie@gmail.com>, jbaron@akamai.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 14/17] dyndbg: fix a BUG_ON in ddebug_describe_flags
+Date:   Mon, 10 Aug 2020 15:14:15 -0400
+Message-Id: <20200810191418.3795394-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810191418.3795394-1-sashal@kernel.org>
 References: <20200810191418.3795394-1-sashal@kernel.org>
@@ -61,43 +59,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
+From: Jim Cromie <jim.cromie@gmail.com>
 
-[ Upstream commit 9018fd7f2a73e9b290f48a56b421558fa31e8b75 ]
+[ Upstream commit f678ce8cc3cb2ad29df75d8824c74f36398ba871 ]
 
-On failure pcie_capability_read_dword() sets it's last parameter, val
-to 0. However, with Patch 14/14, it is possible that val is set to ~0 on
-failure. This would introduce a bug because (x & x) == (~0 & x).
+ddebug_describe_flags() currently fills a caller provided string buffer,
+after testing its size (also passed) in a BUG_ON.  Fix this by
+replacing them with a known-big-enough string buffer wrapped in a
+struct, and passing that instead.
 
-This bug can be avoided without changing the function's behaviour if the
-return value of pcie_capability_read_dword is checked to confirm success.
+Also simplify ddebug_describe_flags() flags parameter from a struct to
+a member in that struct, and hoist the member deref up to the caller.
+This makes the function reusable (soon) where flags are unpacked.
 
-Check the return value of pcie_capability_read_dword() to ensure success.
-
-Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
-Signed-off-by: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200713175529.29715-3-refactormyself@gmail.com
+Acked-by: <jbaron@akamai.com>
+Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
+Link: https://lore.kernel.org/r/20200719231058.1586423-8-jim.cromie@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlegacy/common.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ lib/dynamic_debug.c | 23 +++++++++++------------
+ 1 file changed, 11 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlegacy/common.c b/drivers/net/wireless/intel/iwlegacy/common.c
-index db2373fe8ac32..55573d090503b 100644
---- a/drivers/net/wireless/intel/iwlegacy/common.c
-+++ b/drivers/net/wireless/intel/iwlegacy/common.c
-@@ -4302,8 +4302,8 @@ il_apm_init(struct il_priv *il)
- 	 *    power savings, even without L1.
- 	 */
- 	if (il->cfg->set_l0s) {
--		pcie_capability_read_word(il->pci_dev, PCI_EXP_LNKCTL, &lctl);
--		if (lctl & PCI_EXP_LNKCTL_ASPM_L1) {
-+		ret = pcie_capability_read_word(il->pci_dev, PCI_EXP_LNKCTL, &lctl);
-+		if (!ret && (lctl & PCI_EXP_LNKCTL_ASPM_L1)) {
- 			/* L1-ASPM enabled; disable(!) L0S  */
- 			il_set_bit(il, CSR_GIO_REG,
- 				   CSR_GIO_REG_VAL_L0S_ENABLED);
+diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
+index c7c96bc7654af..91c451e0f4741 100644
+--- a/lib/dynamic_debug.c
++++ b/lib/dynamic_debug.c
+@@ -85,22 +85,22 @@ static struct { unsigned flag:8; char opt_char; } opt_array[] = {
+ 	{ _DPRINTK_FLAGS_NONE, '_' },
+ };
+ 
++struct flagsbuf { char buf[ARRAY_SIZE(opt_array)+1]; };
++
+ /* format a string into buf[] which describes the _ddebug's flags */
+-static char *ddebug_describe_flags(struct _ddebug *dp, char *buf,
+-				    size_t maxlen)
++static char *ddebug_describe_flags(unsigned int flags, struct flagsbuf *fb)
+ {
+-	char *p = buf;
++	char *p = fb->buf;
+ 	int i;
+ 
+-	BUG_ON(maxlen < 6);
+ 	for (i = 0; i < ARRAY_SIZE(opt_array); ++i)
+-		if (dp->flags & opt_array[i].flag)
++		if (flags & opt_array[i].flag)
+ 			*p++ = opt_array[i].opt_char;
+-	if (p == buf)
++	if (p == fb->buf)
+ 		*p++ = '_';
+ 	*p = '\0';
+ 
+-	return buf;
++	return fb->buf;
+ }
+ 
+ #define vpr_info(fmt, ...)					\
+@@ -142,7 +142,7 @@ static int ddebug_change(const struct ddebug_query *query,
+ 	struct ddebug_table *dt;
+ 	unsigned int newflags;
+ 	unsigned int nfound = 0;
+-	char flagbuf[10];
++	struct flagsbuf fbuf;
+ 
+ 	/* search for matching ddebugs */
+ 	mutex_lock(&ddebug_lock);
+@@ -199,8 +199,7 @@ static int ddebug_change(const struct ddebug_query *query,
+ 			vpr_info("changed %s:%d [%s]%s =%s\n",
+ 				 trim_prefix(dp->filename), dp->lineno,
+ 				 dt->mod_name, dp->function,
+-				 ddebug_describe_flags(dp, flagbuf,
+-						       sizeof(flagbuf)));
++				 ddebug_describe_flags(dp->flags, &fbuf));
+ 		}
+ 	}
+ 	mutex_unlock(&ddebug_lock);
+@@ -779,7 +778,7 @@ static int ddebug_proc_show(struct seq_file *m, void *p)
+ {
+ 	struct ddebug_iter *iter = m->private;
+ 	struct _ddebug *dp = p;
+-	char flagsbuf[10];
++	struct flagsbuf flags;
+ 
+ 	vpr_info("called m=%p p=%p\n", m, p);
+ 
+@@ -792,7 +791,7 @@ static int ddebug_proc_show(struct seq_file *m, void *p)
+ 	seq_printf(m, "%s:%u [%s]%s =%s \"",
+ 		   trim_prefix(dp->filename), dp->lineno,
+ 		   iter->table->mod_name, dp->function,
+-		   ddebug_describe_flags(dp, flagsbuf, sizeof(flagsbuf)));
++		   ddebug_describe_flags(dp->flags, &flags));
+ 	seq_escape(m, dp->format, "\t\r\n\"");
+ 	seq_puts(m, "\"\n");
+ 
 -- 
 2.25.1
 
