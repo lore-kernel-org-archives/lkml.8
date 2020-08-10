@@ -2,69 +2,142 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4851C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 08:02:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25A2FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 08:03:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CFFB2073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 08:02:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEB112073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 08:03:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BLFDPlRa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726481AbgHJICv (ORCPT
+        id S1726511AbgHJIDD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 04:02:51 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:50716 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725846AbgHJICv (ORCPT
+        Mon, 10 Aug 2020 04:03:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52734 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725846AbgHJIDC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 04:02:51 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1k52lc-0004UZ-4m; Mon, 10 Aug 2020 08:02:48 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Maxim Levitsky <maximlevitsky@gmail.com>,
-        Alex Dubov <oakad@yahoo.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ms_block: fix spelling mistake "doesn'" -> "doesn't"
-Date:   Mon, 10 Aug 2020 09:02:47 +0100
-Message-Id: <20200810080247.47024-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.27.0
+        Mon, 10 Aug 2020 04:03:02 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EC83C061756;
+        Mon, 10 Aug 2020 01:03:02 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id f10so4356801plj.8;
+        Mon, 10 Aug 2020 01:03:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EIVYbfl60/LCAXTYgKZTMLflQoCrjmA+x5UQf4DHC8U=;
+        b=BLFDPlRaEIp2bEVswqI1V3rY6FhRvyvhrKzRCgp8XtqofWcIO+R2xg8xsxH+g2ewCL
+         rKZodlVz6vEJ7jlUQlvTofVSMkNZbEA2ofzmZ3Ll51KfOTeZiFe05PYW7MLdHw6hegtL
+         rxNbcrLM8whucUuOnBpyL91evVA3dVoD9m2ZX2Up7xDYXIxhnUaip/iP3x8LFfm9+he/
+         LSEPg3VY2l/QFnbByOpMMZoPEPResMdy6KsbmIVNE2HHBDDMBLllUuZnvn4c5AQjGgY4
+         9Om+TeqtZnUgAeaRCIX3vxbJR8Jbq45fYYcREg5j3DGJ0cSHEUJGr+YdBHyMl5AIBY5E
+         nEaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EIVYbfl60/LCAXTYgKZTMLflQoCrjmA+x5UQf4DHC8U=;
+        b=tvES0O1BfZT5pDr/3/k2ynTMYbwwnl9k02PRazNFak+OMGxpHzwB7z7P8N5TLGIpZ1
+         Rm5TDDo6swmd2XpCJohFFLTGXX/c6V5K+aBZhh3oZ3w1y7iWdozyhrI84/StGwBkwojq
+         VNeFhCbdKy8Fw6aOJaJzWFbFUybLvD71oJjNtudMZVII3czkHBoUuGcPEnHpSlYAWGCa
+         fwyvVd9NxpnBWDbzgMSk9ELANqVdZdONnBwBioPvVhor9FZBdm9JahFRFSfZxJTih/4P
+         OD/1dIbDRe9984Klv9x2gEN2wLk4aKjQvy+O21ywm2Hw8LoxH1JCW+5NFPZF3+Ge6zto
+         0qow==
+X-Gm-Message-State: AOAM531yfB1xKFn013vqTQZWY+K3YJHqepLSHgdz283097+CVJgmsJp5
+        7Ry1sP66KxRap74jI6mwcQdF6WfEz+be2viIcWTi97f4kdLi5A==
+X-Google-Smtp-Source: ABdhPJwHVCVP7tW6XE3VLpw262gbkqCVMj2TlQmrMSM9cSxkzFlBa9Yn9IC/QE5FWG2bR7VFa1pw8Jie3rkVmrEHBQo=
+X-Received: by 2002:a17:902:8491:: with SMTP id c17mr22749650plo.262.1597046581567;
+ Mon, 10 Aug 2020 01:03:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20200809155936.16898-1-trix@redhat.com>
+In-Reply-To: <20200809155936.16898-1-trix@redhat.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 10 Aug 2020 11:02:45 +0300
+Message-ID: <CAHp75VdEBjxYS_4g2j=ofjFWuGyTK5Me=9mMNcy5ienUUs67Ag@mail.gmail.com>
+Subject: Re: [PATCH] iio: imu: inv_mpu6050: check for temp_fifo_enable
+To:     trix@redhat.com
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald <pmeerw@pmeerw.net>,
+        Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        Lee Jones <lee.jones@linaro.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Sun, Aug 9, 2020 at 7:00 PM <trix@redhat.com> wrote:
+>
+> From: Tom Rix <trix@redhat.com>
+>
+> clang static analysis reports this problem
+>
+> inv_mpu_ring.c:181:18: warning: Division by zero
+>         nb = fifo_count / bytes_per_datum;
+>              ~~~~~~~~~~~^~~~~~~~~~~~~~~~~
+>
+> This is a false positive.
+> Dividing by 0 is protected by this check
+>
+>         if (!(st->chip_config.accl_fifo_enable |
+>                 st->chip_config.gyro_fifo_enable |
+>                 st->chip_config.magn_fifo_enable))
+>                 goto end_session;
+>         bytes_per_datum = 0;
+>
+> But there is another fifo, temp_fifo
+>
+>         if (st->chip_config.temp_fifo_enable)
+>                 bytes_per_datum += INV_MPU6050_BYTES_PER_TEMP_SENSOR;
+>
+> Which would be skipped if it was the only enabled fifo.
+> So add to the check.
+>
 
-There is a spelling mistake in a debug message. Fix it.
+> Fixes: 2e4c0a5e2576 ("iio: imu: inv_mpu6050: add fifo temperature data support")
+>
+> Signed-off-by: Tom Rix <trix@redhat.com>
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/memstick/core/ms_block.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+There shouldn't be a blank line in between.
 
-diff --git a/drivers/memstick/core/ms_block.c b/drivers/memstick/core/ms_block.c
-index d9ee8e3dc72d..ad1c6f2db089 100644
---- a/drivers/memstick/core/ms_block.c
-+++ b/drivers/memstick/core/ms_block.c
-@@ -1223,7 +1223,7 @@ static int msb_read_boot_blocks(struct msb_data *msb)
- 		}
- 
- 		if (be16_to_cpu(page->header.block_id) != MS_BLOCK_BOOT_ID) {
--			dbg("the pba at %d doesn' contain boot block ID", pba);
-+			dbg("the pba at %d doesn't contain boot block ID", pba);
- 			continue;
- 		}
- 
--- 
-2.27.0
+Other than that,
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
+
+
+> ---
+>  drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c
+> index b533fa2dad0a..5240a400dcb4 100644
+> --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c
+> +++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c
+> @@ -141,6 +141,7 @@ irqreturn_t inv_mpu6050_read_fifo(int irq, void *p)
+>
+>         if (!(st->chip_config.accl_fifo_enable |
+>                 st->chip_config.gyro_fifo_enable |
+> +               st->chip_config.temp_fifo_enable |
+>                 st->chip_config.magn_fifo_enable))
+>                 goto end_session;
+>         bytes_per_datum = 0;
+> --
+> 2.18.1
+>
+
+
+--
+With Best Regards,
+Andy Shevchenko
