@@ -2,142 +2,102 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADAB1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:11:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F41C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:11:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90A14206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:11:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC5DA20729
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:11:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qKCWptLl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726654AbgHJMLt (ORCPT
+        id S1726789AbgHJMLx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 08:11:49 -0400
-Received: from foss.arm.com ([217.140.110.172]:55570 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726611AbgHJMLm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 08:11:42 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A7FC411B3;
-        Mon, 10 Aug 2020 05:11:41 -0700 (PDT)
-Received: from bogus (unknown [10.37.12.40])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 33AB93F718;
-        Mon, 10 Aug 2020 05:11:39 -0700 (PDT)
-Date:   Mon, 10 Aug 2020 13:11:36 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Sumit Gupta <sumitg@nvidia.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mikko Perttunen <mperttunen@nvidia.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Hulk Robot <hulkci@huawei.com>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Bibek Basu <bbasu@nvidia.com>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH -next] arm64: Export __cpu_logical_map
-Message-ID: <20200810121136.GB31434@bogus>
-References: <20200724030433.22287-1-wangkefeng.wang@huawei.com>
- <82f750c4-d423-1ed8-a158-e75153745e07@huawei.com>
- <20200724131059.GB6521@bogus>
- <00cf6e67-16ed-872d-2c16-0ceea6b6f514@nvidia.com>
- <20200727160515.GA8003@bogus>
- <e3a4bc21-c334-4d48-90b5-aab8d187939e@nvidia.com>
- <20200810074956.GB28091@bogus>
- <20200810101954.GA9480@gaia>
+        Mon, 10 Aug 2020 08:11:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34244 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726685AbgHJMLs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 08:11:48 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FFEAC061756
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 05:11:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=F9rHrTNtavLmJnsON5rguqCFVYnqZxEY92qpddY9gk0=; b=qKCWptLlXNZ9MJYkpyJJTelWEI
+        5m2ObfMuiBrbwk0iCOwK1wo5W8d9X7IVR9elMzSK9VjTwAm9fZDiSSID/U+80YPpHD8/tug3lYBKT
+        5HZI7R2RErVfAb+H+ItQI1myQGDAoz2d0V2zbCbVIi8uNiXHK423yD4CgHSk4nPR+GK7TNzMd1HB3
+        NI4oSuWf6QwvUcsUnW4Ou4wARxtxN7JXPGIdtaDRtgnlpnuY1XCeWqVU3IxQ2Wav944f3OogxL3Vh
+        4mWnZtWyDh1r3qMes4bX7sUK5KNcMw9A2H8menQJy4Hl14++m+11TwewW/HPqMG/wnI/0pnYxA9vn
+        JiqFxHxA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k56eS-00005f-5C; Mon, 10 Aug 2020 12:11:40 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CFE8230015A;
+        Mon, 10 Aug 2020 14:11:38 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 88AF52B2C8031; Mon, 10 Aug 2020 14:11:38 +0200 (CEST)
+Date:   Mon, 10 Aug 2020 14:11:38 +0200
+From:   peterz@infradead.org
+To:     Marco Elver <elver@google.com>
+Cc:     tglx@linutronix.de, mingo@kernel.org, will@kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org, paulmck@kernel.org,
+        rostedt@goodmis.org, rjw@rjwysocki.net
+Subject: Re: [RFC][PATCH 0/3] Tracing, Idle, RCU and such goodness
+Message-ID: <20200810121138.GV2674@hirez.programming.kicks-ass.net>
+References: <20200807192336.405068898@infradead.org>
+ <20200810095535.GA1597985@elver.google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200810101954.GA9480@gaia>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200810095535.GA1597985@elver.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 11:19:55AM +0100, Catalin Marinas wrote:
-> On Mon, Aug 10, 2020 at 08:49:56AM +0100, Sudeep Holla wrote:
-> > On Sat, Aug 01, 2020 at 05:46:43PM +0530, Sumit Gupta wrote:
-> > > > > > > > ERROR: modpost: "__cpu_logical_map" [drivers/cpufreq/tegra194-cpufreq.ko] undefined!
-> > > > > > > >
-> > > > > > > > ARM64 tegra194-cpufreq driver use cpu_logical_map, export
-> > > > > > > > __cpu_logical_map to fix build issue.
-> > > > > > > >
-> > > > > >
-> > > > > > I wonder why like other instances in the drivers, the mpidr is not get
-> > > > > > directly from the cpu. The cpufreq_driver->init call happens when the cpu
-> > > > > > is being brought online and is executed on the required cpu IIUC.
-> > > > >
-> > > > > Yes, this occurs during hotplug case.
-> > > > > But in the case of system boot, 'cpufreq_driver->init' is called later
-> > > > > during cpufreq platform driver's probe. The value of CPU in 'policy->cpu'
-> > > > > can be different from the current CPU. That's why read_cpuid_mpidr() can't
-> > > > > be used.
-> > > >
-> > > > Fair enough, why not do cross call like in set_target ? Since it is one-off
-> > > > in init, I don't see any issue when you are doing it runtime for set_target.
-> > > >
-> > > > > > read_cpuid_mpidr() is inline and avoids having to export the logical_cpu_map.
-> > > > > > Though we may not add physical hotplug anytime soon, less dependency
-> > > > > > on this cpu_logical_map is better given that we can resolve this without
-> > > > > > the need to access the map.
-> > > >
-> > > > To be honest, we have tried to remove all the dependency on cluster id
-> > > > in generic code as it is not well defined. This one is tegra specific
-> > > > driver so should be fine. But I am still bit nervous to export
-> > > > cpu_logical_map as we have no clue what that would mean for physical
-> > > > hotplug.
-> > >
-> > > As suggested, I have done below change to get the cluster number using
-> > > read_cpuid_mpidr(). Please review and suggest if this looks ok?
-> > > I will send formal patch if the change is fine.
-> > >
-> > > diff --git a/drivers/cpufreq/tegra194-cpufreq.c
-> > > b/drivers/cpufreq/tegra194-cpufreq.c
-> > > index bae527e..06f5ccf 100644
-> > > --- a/drivers/cpufreq/tegra194-cpufreq.c
-> > > +++ b/drivers/cpufreq/tegra194-cpufreq.c
-> > > @@ -56,9 +56,11 @@ struct read_counters_work {
-> > >
-> > >  static struct workqueue_struct *read_counters_wq;
-> > >
-> > > -static enum cluster get_cpu_cluster(u8 cpu)
-> > > +static void get_cpu_cluster(void *cluster)
-> > >  {
-> > > -       return MPIDR_AFFINITY_LEVEL(cpu_logical_map(cpu), 1);
-> > > +       u64 mpidr = read_cpuid_mpidr() & MPIDR_HWID_BITMASK;
-> > > +
-> > > +       *((uint32_t *) cluster) = MPIDR_AFFINITY_LEVEL(mpidr, 1);
-> > >  }
-> > >
-> > >  /*
-> > > @@ -186,8 +188,10 @@ static unsigned int tegra194_get_speed(u32 cpu)
-> > >  static int tegra194_cpufreq_init(struct cpufreq_policy *policy)
-> > >  {
-> > >         struct tegra194_cpufreq_data *data = cpufreq_get_driver_data();
-> > > -       int cl = get_cpu_cluster(policy->cpu);
-> > >         u32 cpu;
-> > > +       u32 cl;
-> > > +
-> > > +       smp_call_function_single(policy->cpu, get_cpu_cluster, &cl, true);
-> > 
-> > Thanks for this, looks good to me. You can add:
-> > 
-> > Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
-> 
-> I already merged Kefeng's __cpu_logical_map fix (commit eaecca9e7710)
-> but if the above goes in, I can drop the EXPORT_SYMBOL part (and keep
-> the rest as it's a good refactoring).
-> 
+On Mon, Aug 10, 2020 at 11:55:35AM +0200, Marco Elver wrote:
 
-OK, I will keep an eye on this and we can drop export once this is merged.
+> Unfortunately I get LOCKDEP_DEBUG warnings, when testing with one of
+> syzbot's configs. This appears at some point during boot (no other
+> test):
+> 
+> 	DEBUG_LOCKS_WARN_ON(lockdep_hardirqs_enabled())
+> 	WARNING: CPU: 0 PID: 0 at kernel/locking/lockdep.c:4875 check_flags+0x52/0x200 kernel/locking/lockdep.c:4875
+> 	Modules linked in:
+> 	CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.8.0+ #8
+> 	Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1 04/01/2014
+> 	RIP: 0010:check_flags+0x52/0x200 kernel/locking/lockdep.c:4875
+> 	Code: c0 74 48 e8 40 f7 a5 03 85 c0 74 20 83 3d bd 33 53 05 00 75 17 48 c7 c7 ce 12 c9 85 48 c7 c6 04 8c ca 85 31 c0 e8 4e c1 f7 ff <0f> 0b 48 c7 c7 db 8b ca 85 e9 8c 01 00 00 85 c0 75 0f 65 8b 05 c5
+> 	RSP: 0000:ffffffff86203bf0 EFLAGS: 00010046
+> 	RAX: 1f9fa70771052a00 RBX: 0000000000000000 RCX: ffffffff8627e980
+> 	RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
+> 	RBP: 0000000000000000 R08: ffffffff813d8494 R09: 0000000000000000
+> 	R10: 0000000000000012 R11: ffffffff8627e980 R12: ffffffff8627e980
+> 	R13: ffffffff862e3420 R14: 00000000ffffffff R15: 0000000000000046
+> 	FS:  0000000000000000(0000) GS:ffff88881fa00000(0000) knlGS:0000000000000000
+> 	CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> 	CR2: ffff88883ffff000 CR3: 0000000006275001 CR4: 0000000000770ef0
+> 	DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> 	DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> 	PKRU: 00000000
+> 	Call Trace:
+> 	 lock_is_held_type+0x4d/0x110 kernel/locking/lockdep.c:5043
+> 	 lock_is_held include/linux/lockdep.h:266 [inline]
+> 	 rcu_read_lock_sched_held+0x41/0x90 kernel/rcu/update.c:136
+> 	 trace_lock_acquire+0x49/0x120 include/trace/events/lock.h:13
+> 	 lock_acquire+0x8d/0x2c0 kernel/locking/lockdep.c:5003
+> 	 mutex_trylock+0xdd/0x120 kernel/locking/mutex.c:1420
 
--- 
-Regards,
-Sudeep
+*groan*, indeed! Which is the direct result of lockdep recursion because
+we pulled that tracepoint out from under the recursion thing.
+
+Let me go prod this with a sharp stick...
