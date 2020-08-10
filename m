@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7737AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:23:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 576B8C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:23:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3153720825
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:23:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23EEF20772
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:23:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073010;
-	bh=FVS1rwU/d7kpluk2AmFSvZlK16GV3N0vXDMvPzBHcPY=;
+	s=default; t=1597073012;
+	bh=/r49fUnLffqqADpBWP3Ou/KuG0JvOEIzxkZ/qB1bVMI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R7oQ3/Zqtlcm0tpoR9LpLvWx7IJ8ZvTx1CiIlRhV1qZGuw4PHjlqNze68YGrUiEk+
-	 L+SoLh8FiN34MiVqcpeAYTqN/1I6KbCAj+ZJ4AMjaYfhBdTPx1rQ5QiRfiEQN2KpHE
-	 vvq3a5SqJ4SQNpvALeNel5DyVmzjdc6Mn2iFQvI8=
+	b=DpeZQutVlWufCb6YNp1lrTjSwoSGIO9xSRTBHMh8DqpiheTBTMCIE/hiHcFERpI24
+	 0+gar61K5c2lrbqAHtzX26NfUdHWv+UConMdD6KbqEZRGGdjYC6XYjc8eiqbJ1TDLH
+	 ZEJvUuXyym73UZ6cZsqvL27KqSGo7F4igIBNPZpQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728012AbgHJPX2 (ORCPT
+        id S1728332AbgHJPXa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:23:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54422 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:23:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728306AbgHJPXQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:23:16 -0400
+        id S1727850AbgHJPXW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:23:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E4A12080C;
-        Mon, 10 Aug 2020 15:23:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65FDE20838;
+        Mon, 10 Aug 2020 15:23:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597072996;
-        bh=FVS1rwU/d7kpluk2AmFSvZlK16GV3N0vXDMvPzBHcPY=;
+        s=default; t=1597073001;
+        bh=/r49fUnLffqqADpBWP3Ou/KuG0JvOEIzxkZ/qB1bVMI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=elM/uiP63MA/ZbmBDW3wH8E6HRF6H/fHsiAwBQUV2LbVoqel97VCJCsu7oTJZTlqa
-         qBQ8UroIBmetQKDmZ6qQeybJaLmwXMRrcwB8vuuvkKrJ5y3iUh+apu5qOS+o6GapKI
-         fD0esma+WFb/ocFhrgbJPb9iqtXwp5UChMruXH4Y=
+        b=ebziTicURFO9K5hl3GQFLT/dBCjAzbQ+KbGYy1rOVisgSjPNu/sPLQbWTp6QRJioj
+         d3hBVNuKtbn85ojMhY0vuGK20obXyPyEBdOYG8d+F2Z/Z9Sjn8No7aDmL2cHaKsjmc
+         S5KAlj7x33jUATSkTCzVzYmT4mEdCnHNMTkDjt3U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 5.7 30/79] gpio: max77620: Fix missing release of interrupt
-Date:   Mon, 10 Aug 2020 17:20:49 +0200
-Message-Id: <20200810151813.769499894@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Forest Crossman <cyrozap@gmail.com>
+Subject: [PATCH 5.7 05/79] usb: xhci: Fix ASMedia ASM1142 DMA addressing
+Date:   Mon, 10 Aug 2020 17:20:24 +0200
+Message-Id: <20200810151812.395216121@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151812.114485777@linuxfoundation.org>
 References: <20200810151812.114485777@linuxfoundation.org>
@@ -61,39 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Forest Crossman <cyrozap@gmail.com>
 
-commit 2a5e6f7eede8cd1c4bac0b8ec6491cec4e75c99a upstream.
+commit ec37198acca7b4c17b96247697406e47aafe0605 upstream.
 
-The requested interrupt is never released by the driver. Fix this by
-using the resource-managed variant of request_threaded_irq().
+I've confirmed that the ASMedia ASM1142 has the same problem as the
+ASM2142/ASM3142, in that it too reports that it supports 64-bit DMA
+addresses when in fact it does not. As with the ASM2142/ASM3142, this
+can cause problems on systems where the upper bits matter, and adding
+the XHCI_NO_64BIT_SUPPORT quirk completely fixes the issue.
 
-Fixes: ab3dd9cc24d4 ("gpio: max77620: Fix interrupt handling")
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Acked-by: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: <stable@vger.kernel.org> # 5.5+
-Link: https://lore.kernel.org/r/20200709171203.12950-3-digetx@gmail.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Acked-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Signed-off-by: Forest Crossman <cyrozap@gmail.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200728042408.180529-3-cyrozap@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpio/gpio-max77620.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/usb/host/xhci-pci.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/gpio/gpio-max77620.c
-+++ b/drivers/gpio/gpio-max77620.c
-@@ -305,8 +305,9 @@ static int max77620_gpio_probe(struct pl
- 	gpiochip_irqchip_add_nested(&mgpio->gpio_chip, &max77620_gpio_irqchip,
- 				    0, handle_edge_irq, IRQ_TYPE_NONE);
+--- a/drivers/usb/host/xhci-pci.c
++++ b/drivers/usb/host/xhci-pci.c
+@@ -58,6 +58,7 @@
+ #define PCI_DEVICE_ID_AMD_PROMONTORYA_1			0x43bc
+ #define PCI_DEVICE_ID_ASMEDIA_1042_XHCI			0x1042
+ #define PCI_DEVICE_ID_ASMEDIA_1042A_XHCI		0x1142
++#define PCI_DEVICE_ID_ASMEDIA_1142_XHCI			0x1242
+ #define PCI_DEVICE_ID_ASMEDIA_2142_XHCI			0x2142
  
--	ret = request_threaded_irq(gpio_irq, NULL, max77620_gpio_irqhandler,
--				   IRQF_ONESHOT, "max77620-gpio", mgpio);
-+	ret = devm_request_threaded_irq(&pdev->dev, gpio_irq, NULL,
-+					max77620_gpio_irqhandler, IRQF_ONESHOT,
-+					"max77620-gpio", mgpio);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "failed to request IRQ: %d\n", ret);
- 		return ret;
+ static const char hcd_name[] = "xhci_hcd";
+@@ -258,7 +259,8 @@ static void xhci_pci_quirks(struct devic
+ 		pdev->device == PCI_DEVICE_ID_ASMEDIA_1042A_XHCI)
+ 		xhci->quirks |= XHCI_TRUST_TX_LENGTH;
+ 	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
+-		pdev->device == PCI_DEVICE_ID_ASMEDIA_2142_XHCI)
++	    (pdev->device == PCI_DEVICE_ID_ASMEDIA_1142_XHCI ||
++	     pdev->device == PCI_DEVICE_ID_ASMEDIA_2142_XHCI))
+ 		xhci->quirks |= XHCI_NO_64BIT_SUPPORT;
+ 
+ 	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
 
 
