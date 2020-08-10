@@ -2,98 +2,163 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 702DFC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:46:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44F0FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:48:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44BD22311C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:46:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1720C22CF6
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:48:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hrv0m/DU"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="MH2gaLrd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728208AbgHJSqD (ORCPT
+        id S1728224AbgHJSsA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 14:46:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38236 "EHLO
+        Mon, 10 Aug 2020 14:48:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728071AbgHJSqD (ORCPT
+        with ESMTP id S1728071AbgHJSr7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 14:46:03 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4491DC061756;
-        Mon, 10 Aug 2020 11:46:03 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id v22so7159493edy.0;
-        Mon, 10 Aug 2020 11:46:03 -0700 (PDT)
+        Mon, 10 Aug 2020 14:47:59 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10720C061756
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 11:47:59 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id e5so7582204qth.5
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 11:47:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=0ggjU3FMbPE5SbyAI637pqBRTzs0p0XGDl+i3Y6bsrU=;
-        b=hrv0m/DUiqS/Wm9VaJIOzz19imALb8BpQw5yXSY7UWBvJLYQrlYMvquF1Y/JTX2lOV
-         NaMdOJmfHOy7d7ml5HESptwuWmNG3ZImKxL+93j996XQMG7aOZjWq01igO1dnBy3wCzJ
-         q636OKrz36TGirCB7lPZOJ+stOfqctUTgX+DLGbq4vAt7I/mcuMJLonXkVQIiF7aZCTq
-         yEGslCVOqjUTxoRLCWICuXxsovVwbo0uHQ3p/f9aWC6FtmCtTWS0tzzP4phtrq8Kzg1x
-         NZssgWxsXmGAd8p10j9jWNVBIk9NinDPtrEWu5t3I5c7JhHZCNCKcqqQsUeYJe1mcr6J
-         NxEw==
+        bh=5nwMnMw3DbCMTn2Fuh9eAKa97/L+CWpRN1IQSKfIrY8=;
+        b=MH2gaLrd+ufZ8bGh/fpu4X/Fn6WrIMiNmClU1rLt2mwix16/dTxs5cvPwyjuWaZAv9
+         ny8pcHOpdZmbrUMgAk2WpNSV3ClKUu280iuq0GCyH0opTG2DXOf5/MMeNM4y2zEX8MyO
+         33K5A5v6VJjE3i5tb62cCOeHWnBvFtJh+eTJzeAABy9TPV5RhQSXdinWMpcE1+PgeInS
+         yTpaN7g9UexxUps7yD0kDaG4wZLrVrIr/NBqPGwnV3IGaalDqL2OeKd5GHFZ9pmszeG8
+         6VNyA6FQPcpGQT+eRxsYuelA2j+R6xZLBPFMcrCP6sHix4PoSt24AOWRq4KODFO2wJPL
+         jcHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=0ggjU3FMbPE5SbyAI637pqBRTzs0p0XGDl+i3Y6bsrU=;
-        b=RwItHsTywUuBGjxET1q34oTcNI305tKHD/LfZU0UfZuScr4yGXZman9KaHJfjTYzoF
-         y/9DiFbmtY84PJ26uAUq4MNZzsetyZrNfrr0gVjO7F9N9nVozumlgcMXqbkWe1HoUCnD
-         A3I9QEKVsF956XS1bYkJXS4oYDP9tFGBqq1K7ryyiPWzEPs8Du0i8X1BscIA5xXDiE4R
-         ljBICOQujRReO8cTEJy4tnoohibJ1SAXk/AiDPlo7/FhqSGVGU/bIKxSowCFzBWtGoX4
-         NWAuGXcjLf5sJqz02cKnDnrMu5+R2f5fFBFvMUCMnznOvSr+O2Svom1Yk4AxTLb3gb7+
-         xGvQ==
-X-Gm-Message-State: AOAM5312931DZfqd6npIRj4AscHLJTObXOMcS/SDrXdOhUVNxXawSI8n
-        nFv5Tst/CyMS1l77vE/8eAba4w9C2CXs1nv6HEc=
-X-Google-Smtp-Source: ABdhPJyo0vfZItCVXQ178NPkspm9dRGbwW8YOurEOL9HZiesRrN1QLtjiIpy9ooZ9jdLd1ZSQUtYIbvuRQ4NKoJjUwY=
-X-Received: by 2002:aa7:c246:: with SMTP id y6mr23270403edo.78.1597085160405;
- Mon, 10 Aug 2020 11:46:00 -0700 (PDT)
+        bh=5nwMnMw3DbCMTn2Fuh9eAKa97/L+CWpRN1IQSKfIrY8=;
+        b=CjeE7HxDQfWdepAzNGqUWfY/x/vZjgvP6nj7nA3paBooiq1jRrd2b59VPiJDo2aRQI
+         RabWfJKLIRF5Vufw+OUEe5PGn+imtRAwctkTwvYQH4HCtKawq8pCXpLhw2Ql6NBthoks
+         xOFJ+mO8L/LbYCm0dW0wVFeJ4U6BM/8yXa+ft+mVgomPNUGTXCnuMiKqaL+yCCHF3oSw
+         nQILSlCLrLPohYvOZdUliPcT5ymlnagHXiPrEDh7xMopFYxNwyKtVmDp6B80ohQfICfo
+         X/nBHNNUjR82kdS6GTwSbnhpQPjlgrS80rN60Y8A14FLdN+JbENhtIaEVsDWUIUj8WRR
+         znYQ==
+X-Gm-Message-State: AOAM533DAQUjTXk4cMFh4J5mSTPoOO/cfdcPGmo3LOMe3Dwx3OH2/WoE
+        n2duQ8JzVKe8NbwQ9EwISBH3xfMjjn5K/8oJKCgJnQ==
+X-Google-Smtp-Source: ABdhPJzUFIIB7zZacQjcyBgpXBijPyFsFhCW5bngLlBmE5TsUrCisTyt73lEUBKPvEnILxlmIjOz+SnNtKoGYxLdbac=
+X-Received: by 2002:aed:21da:: with SMTP id m26mr29107739qtc.197.1597085277928;
+ Mon, 10 Aug 2020 11:47:57 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAPM=9ty8hOY0m2+RJdRiRADY5Li-hs3ZaDEK-DTf6rgFewar7g@mail.gmail.com>
- <20200810122320.GA20549@infradead.org>
-In-Reply-To: <20200810122320.GA20549@infradead.org>
-From:   Dave Airlie <airlied@gmail.com>
-Date:   Tue, 11 Aug 2020 04:45:48 +1000
-Message-ID: <CAPM=9tyDkW5rzz0PVQUXf0EnDoebRnD_Td=ZCWV1-LwvHE3Scg@mail.gmail.com>
-Subject: Re: [git pull] drm next for 5.9-rc1
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ben Skeggs <bskeggs@redhat.com>, Lyude Paul <lyude@redhat.com>,
-        linux-spdx@vger.kernel.org
+References: <20200809172444.16019-1-steve@sk2.org>
+In-Reply-To: <20200809172444.16019-1-steve@sk2.org>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 10 Aug 2020 20:47:47 +0200
+Message-ID: <CAMpxmJXLELE7CmMpqvw_1jFJW80f_O2wQg08JAd0gv-XBrWq_Q@mail.gmail.com>
+Subject: Re: [PATCH v2] ARM: davinci: use simple i2c probe function
+To:     Stephen Kitt <steve@sk2.org>
+Cc:     Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 10 Aug 2020 at 22:23, Christoph Hellwig <hch@infradead.org> wrote:
+On Sun, Aug 9, 2020 at 7:24 PM Stephen Kitt <steve@sk2.org> wrote:
 >
-> On Thu, Aug 06, 2020 at 11:07:02AM +1000, Dave Airlie wrote:
-> > nouveau:
-> > - add CRC support
-> > - start using NVIDIA published class header files
+> The i2c probe functions here don't use the id information provided in
+> their second argument, so the single-parameter i2c probe function
+> ("probe_new") can be used instead.
 >
-> Where does Nvdia provide them?  I looked into the commits and the
-> Nouveau mailing list archives and could not find anything.
-
-https://github.com/NVIDIA/open-gpu-doc
-
-Is I believe the canonical upstream source for them.
+> This avoids scanning the identifier tables during probes.
 >
-> Note that various new files with a MIT boilerplate instead of
-> an SPDX tag.
+> Signed-off-by: Stephen Kitt <steve@sk2.org>
+> ---
+> Changes since v1:
+>   - split into per-sub-architecture patches.
+>
+>  arch/arm/mach-davinci/board-dm644x-evm.c |  5 ++---
+>  arch/arm/mach-davinci/board-dm646x-evm.c | 10 ++++------
+>  2 files changed, 6 insertions(+), 9 deletions(-)
+>
+> diff --git a/arch/arm/mach-davinci/board-dm644x-evm.c b/arch/arm/mach-davinci/board-dm644x-evm.c
+> index a5d3708fedf6..d0dcf69cc76d 100644
+> --- a/arch/arm/mach-davinci/board-dm644x-evm.c
+> +++ b/arch/arm/mach-davinci/board-dm644x-evm.c
+> @@ -548,8 +548,7 @@ static const struct property_entry eeprom_properties[] = {
+>   */
+>  static struct i2c_client *dm6446evm_msp;
+>
+> -static int dm6446evm_msp_probe(struct i2c_client *client,
+> -               const struct i2c_device_id *id)
+> +static int dm6446evm_msp_probe(struct i2c_client *client)
+>  {
+>         dm6446evm_msp = client;
+>         return 0;
+> @@ -569,7 +568,7 @@ static const struct i2c_device_id dm6446evm_msp_ids[] = {
+>  static struct i2c_driver dm6446evm_msp_driver = {
+>         .driver.name    = "dm6446evm_msp",
+>         .id_table       = dm6446evm_msp_ids,
+> -       .probe          = dm6446evm_msp_probe,
+> +       .probe_new      = dm6446evm_msp_probe,
+>         .remove         = dm6446evm_msp_remove,
+>  };
+>
+> diff --git a/arch/arm/mach-davinci/board-dm646x-evm.c b/arch/arm/mach-davinci/board-dm646x-evm.c
+> index 4600b617f9b4..2dce16fff77e 100644
+> --- a/arch/arm/mach-davinci/board-dm646x-evm.c
+> +++ b/arch/arm/mach-davinci/board-dm646x-evm.c
+> @@ -160,8 +160,7 @@ static struct platform_device davinci_aemif_device = {
+>  #define DM646X_EVM_ATA_PWD             BIT(1)
+>
+>  /* CPLD Register 0 Client: used for I/O Control */
+> -static int cpld_reg0_probe(struct i2c_client *client,
+> -                          const struct i2c_device_id *id)
+> +static int cpld_reg0_probe(struct i2c_client *client)
+>  {
+>         if (HAS_ATA) {
+>                 u8 data;
+> @@ -197,7 +196,7 @@ static const struct i2c_device_id cpld_reg_ids[] = {
+>  static struct i2c_driver dm6467evm_cpld_driver = {
+>         .driver.name    = "cpld_reg0",
+>         .id_table       = cpld_reg_ids,
+> -       .probe          = cpld_reg0_probe,
+> +       .probe_new      = cpld_reg0_probe,
+>  };
+>
+>  /* LEDS */
+> @@ -402,8 +401,7 @@ static struct snd_platform_data dm646x_evm_snd_data[] = {
+>  #ifdef CONFIG_I2C
+>  static struct i2c_client *cpld_client;
+>
+> -static int cpld_video_probe(struct i2c_client *client,
+> -                       const struct i2c_device_id *id)
+> +static int cpld_video_probe(struct i2c_client *client)
+>  {
+>         cpld_client = client;
+>         return 0;
+> @@ -424,7 +422,7 @@ static struct i2c_driver cpld_video_driver = {
+>         .driver = {
+>                 .name   = "cpld_video",
+>         },
+> -       .probe          = cpld_video_probe,
+> +       .probe_new      = cpld_video_probe,
+>         .remove         = cpld_video_remove,
+>         .id_table       = cpld_video_id,
+>  };
+>
+> base-commit: bcf876870b95592b52519ed4aafcf9d95999bc9c
+> --
+> 2.20.1
+>
 
-Ben might just have imported them directly, so SPDX tags might need to
-be sent upstream and see if they accept them.
-
-Dave.
+Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
