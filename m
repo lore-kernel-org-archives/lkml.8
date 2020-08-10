@@ -2,150 +2,368 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28606C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 17:38:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87141C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 17:38:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED36220885
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 17:38:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CJ32tAiB"
+	by mail.kernel.org (Postfix) with ESMTP id 5BEBE20885
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 17:38:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727944AbgHJRil (ORCPT
+        id S1727992AbgHJRiu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 13:38:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56156 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727857AbgHJRij (ORCPT
+        Mon, 10 Aug 2020 13:38:50 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:50752 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727853AbgHJRiu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 13:38:39 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DFC7C061756
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 10:38:39 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id k20so326405wmi.5
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 10:38:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=EcJDg2O7xIbOjM5eLQ8gCplwOfat/XZVzxZppSuBFXA=;
-        b=CJ32tAiBMpba2lWqmucba2kWsAmrucVE+nHFEbLfe7F/yDIu8a5GsC+aKvXiXYYyjH
-         p6tY4SvZEFynuVENJxRY4zfZMk55Q8+jalMCUt5LbX15hB2LNARaGtL//JDIXpveJBnq
-         U97ZMz+k45sAX4uHdrKeocRzAh6Iaba1kKKm8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=EcJDg2O7xIbOjM5eLQ8gCplwOfat/XZVzxZppSuBFXA=;
-        b=WO/4VOJp9+t9GHX/yAEFXpSYiIotEJOBQAXXwynl4qFKF53hisQzFzrouuIs1yg7F/
-         RA6aWBXa4CQEnC0BGXgD/0qJ7OhxbxzwGth7A/ak2QPMVVsL3tuvSQhPq7qCrI5NJIMk
-         4J3lrKZDz1EhpkFaY6SwUC+7h47AyZJ0EhRROUsKNIeNt6gwRH8BgmN8+D45590kh2H1
-         sXKhkma6ahu7i6pUyy/H/TXpiR/wr8D4Esd/f/W+lWPXSlwh4z2LeUhLGRXVvgFeIGnb
-         Hw+9bnHC/mNvEP4XBZwfbtoW7dLSj7JF7eLd95rLpu4GkXGfR5G0CM3YEocBOBql8ZNi
-         ll9w==
-X-Gm-Message-State: AOAM533RSRJ3lAEogzxSOYQKKwWCTqYynmnPVAk8hndwlcE3GzyUhS6+
-        j/7K3HRvES05++VzCro5xk6l60mFupozfJwAcPdrAw==
-X-Google-Smtp-Source: ABdhPJxWy126EoPeXn68o0RtdQ9AM8iu0r0roUOi2/tEIALG8XKSfLdRwQWvkOSSkWppyvAfQ/KenjZMRMb5iSGO57w=
-X-Received: by 2002:a05:600c:2302:: with SMTP id 2mr325053wmo.151.1597081117897;
- Mon, 10 Aug 2020 10:38:37 -0700 (PDT)
+        Mon, 10 Aug 2020 13:38:50 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id BCDDA20023;
+        Mon, 10 Aug 2020 19:38:44 +0200 (CEST)
+Date:   Mon, 10 Aug 2020 19:38:43 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Vinay Simha B N <simhavcs@gmail.com>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v8 1/2] dt-binding: Add DSI/LVDS TC358775 bridge bindings
+Message-ID: <20200810173843.GB292825@ravnborg.org>
+References: <1594388491-15129-1-git-send-email-simhavcs@gmail.com>
+ <CAGWqDJ74bveHPKXqdPhwbZjb=cXPPQLTEng4oi+dkZa-1fRz_Q@mail.gmail.com>
 MIME-Version: 1.0
-References: <1596020585-11517-1-git-send-email-brent.lu@intel.com>
- <1596198365-10105-1-git-send-email-brent.lu@intel.com> <1596198365-10105-3-git-send-email-brent.lu@intel.com>
- <s5h5za3ajvb.wl-tiwai@suse.de> <DM6PR11MB3642AE90DF98956CCEDE6C2F974F0@DM6PR11MB3642.namprd11.prod.outlook.com>
- <s5hd04a90o4.wl-tiwai@suse.de> <DM6PR11MB3642B5BC2E1E0708088526D8974D0@DM6PR11MB3642.namprd11.prod.outlook.com>
- <63bca214-3434-16c6-1b60-adf323aec554@linux.intel.com> <DM6PR11MB3642D9BE1E5DAAB8B78B84B0974D0@DM6PR11MB3642.namprd11.prod.outlook.com>
- <s5hpn873by6.wl-tiwai@suse.de> <DM6PR11MB36423A9D28134811AD5A911F974A0@DM6PR11MB3642.namprd11.prod.outlook.com>
- <6466847a-8aae-24f7-d727-36ba75e95f98@linux.intel.com> <DM6PR11MB364259049769F6EF3B84AABD97480@DM6PR11MB3642.namprd11.prod.outlook.com>
- <3f3baf5e-f73d-9cd6-cbfb-36746071e126@linux.intel.com>
-In-Reply-To: <3f3baf5e-f73d-9cd6-cbfb-36746071e126@linux.intel.com>
-From:   Yu-Hsuan Hsu <yuhsuan@chromium.org>
-Date:   Tue, 11 Aug 2020 01:38:26 +0800
-Message-ID: <CAGvk5PohOP0Yv22tb53EX=ZLB9_vOMb=iujTh64OvHmjC1d4mg@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] ASoC: Intel: Add period size constraint on strago board
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     "Lu, Brent" <brent.lu@intel.com>, Takashi Iwai <tiwai@suse.de>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        "Rojewski, Cezary" <cezary.rojewski@intel.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "yuhsuan@google.com" <yuhsuan@google.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Sam McNally <sammc@chromium.org>,
-        Mark Brown <broonie@kernel.org>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Daniel Stuart <daniel.stuart14@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Damian van Soelen <dj.vsoelen@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGWqDJ74bveHPKXqdPhwbZjb=cXPPQLTEng4oi+dkZa-1fRz_Q@mail.gmail.com>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=pGLkceISAAAA:8 a=7gkXJVJtAAAA:8 a=VwQbUJbxAAAA:8
+        a=gEfo2CItAAAA:8 a=e5mUnYsNAAAA:8 a=njpYwi7_WxjI1lOXyc8A:9
+        a=0t7fiu_16AWWzKjv:21 a=kFrMhexQLHq2BP0q:21 a=CjuIK1q_8ugA:10
+        a=E9Po1WZjFZOl8hwRPBS3:22 a=AjGcO6oz07-iQ99wixmX:22
+        a=sptkURWiP4Gy88Gu7hUp:22 a=Vxmtnl_E_bksehYqCbjh:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com> =E6=96=BC
-2020=E5=B9=B48=E6=9C=8810=E6=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=8811:=
-03=E5=AF=AB=E9=81=93=EF=BC=9A
->
->
->
-> On 8/6/20 11:41 AM, Lu, Brent wrote:
-> >>
-> >> I don't get this. If the platform driver already stated 240 and 960 sa=
-mples why
-> >> would 432 be chosen? Doesn't this mean the constraint is not applied?
+Hi Vinay.
+
+On Wed, Jul 29, 2020 at 06:01:21PM +0530, Vinay Simha B N wrote:
+> Hi All,
+> 
+> Please Review the patch
+> 
+> On Fri, Jul 10, 2020 at 7:11 PM Vinay Simha BN <simhavcs@gmail.com> wrote:
+> 
+> > - license modified to (GPL-2.0-only OR BSD-2-Clause)
+> > - single-link and dual-link lvds description and
+> >   examples are added
+> > - proper indentation
+> > - VESA/JEIDA formats picked from panel-lvds dts
+> > - dsi data-lanes property removed, it will be picked
+> >   from dsi0 ports
+> > - dual-link lvds port added and implemented
+> > - converted from .txt to .yaml
 > >
-> > Hi Pierre,
+> > Signed-off-by: Vinay Simha BN <simhavcs@gmail.com>
+> > Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+
+The binding is already reviewed by Rob and me - as you have recorded
+above. It will be applied when the driver is ready.
+
+	Sam
+
+> > ---
+> > v1:
+> >  Initial version wast .txt file
 > >
-> > Sorry for late reply. I used following constraints in V3 patch so any p=
-eriod which
-> > aligns 1ms would be accepted.
+> > v2:
+> >  From txt to yaml file format
 > >
-> > +     /*
-> > +      * Make sure the period to be multiple of 1ms to align the
-> > +      * design of firmware. Apply same rule to buffer size to make
-> > +      * sure alsa could always find a value for period size
-> > +      * regardless the buffer size given by user space.
-> > +      */
-> > +     snd_pcm_hw_constraint_step(substream->runtime, 0,
-> > +                        SNDRV_PCM_HW_PARAM_PERIOD_SIZE, 48);
-> > +     snd_pcm_hw_constraint_step(substream->runtime, 0,
-> > +                        SNDRV_PCM_HW_PARAM_BUFFER_SIZE, 48);
->
-> 432 samples is 9ms, I don't have a clue why/how CRAS might ask for this
-> value.
->
-> It'd be a bit odd to add constraints just for the purpose of letting
-> userspace select a sensible value.
+> > v3:
+> > * Andrzej Hajda review comments incorporated
+> >   dual port lvds implemented
+> >
+> > * Laurent Pinchart review comments incorporated
+> >   dsi lanes property removed and it is dynamically
+> >   picked from the dsi ports
+> >   VESA/JEIDA format picked from panel-lvds dts
+> >
+> > v4:
+> > * Sam Ravnborg review comments incorporated
+> >   }' is indented properly in examples data-lanes
+> >   description for single-link and dual-link lvds
+> >
+> > v5:
+> > * Sam Ravnborg review comments incorporated
+> >   license modified to (GPL-2.0-only OR BSD-2-Clause)
+> >   changelog added
+> >
+> > v6:
+> > * No changes, revision version mentioned to inline with
+> >   driver file
+> >
+> > v7:
+> > * change log added
+> >   Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+> >
+> > v8:
+> > * Reviewed-by: Rob Herring <robh@kernel.org>
+> > * change log modified in reverse chronological order
+> > ---
+> >  .../bindings/display/bridge/toshiba,tc358775.yaml  | 215
+> > +++++++++++++++++++++
+> >  1 file changed, 215 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml
+> >
+> > diff --git
+> > a/Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml
+> > b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml
+> > new file mode 100644
+> > index 0000000..31f085d
+> > --- /dev/null
+> > +++
+> > b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml
+> > @@ -0,0 +1,215 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/display/bridge/toshiba,tc358775.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Toshiba TC358775 DSI to LVDS bridge bindings
+> > +
+> > +maintainers:
+> > + - Vinay Simha BN <simhavcs@gmail.com>
+> > +
+> > +description: |
+> > + This binding supports DSI to LVDS bridge TC358775
+> > +
+> > + MIPI DSI-RX Data 4-lane, CLK 1-lane with data rates up to 800 Mbps/lane.
+> > + Video frame size:
+> > + Up to 1600x1200 24-bit/pixel resolution for single-link LVDS display
+> > panel
+> > + limited by 135 MHz LVDS speed
+> > + Up to WUXGA (1920x1200 24-bit pixels) resolution for dual-link LVDS
+> > display
+> > + panel, limited by 270 MHz LVDS speed.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: toshiba,tc358775
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +    description: i2c address of the bridge, 0x0f
+> > +
+> > +  vdd-supply:
+> > +    maxItems: 1
+> > +    description:  1.2V LVDS Power Supply
+> > +
+> > +  vddio-supply:
+> > +    maxItems: 1
+> > +    description: 1.8V IO Power Supply
+> > +
+> > +  stby-gpios:
+> > +    maxItems: 1
+> > +    description: Standby pin, Low active
+> > +
+> > +  reset-gpios:
+> > +    maxItems: 1
+> > +    description: Hardware reset, Low active
+> > +
+> > +  ports:
+> > +    type: object
+> > +    description:
+> > +      A node containing input and output port nodes with endpoint
+> > definitions
+> > +      as documented in
+> > +      Documentation/devicetree/bindings/media/video-interfaces.txt
+> > +    properties:
+> > +      "#address-cells":
+> > +        const: 1
+> > +
+> > +      "#size-cells":
+> > +        const: 0
+> > +
+> > +      port@0:
+> > +        type: object
+> > +        description: |
+> > +          DSI Input. The remote endpoint phandle should be a
+> > +          reference to a valid mipi_dsi_host device node.
+> > +
+> > +      port@1:
+> > +        type: object
+> > +        description: |
+> > +          Video port for LVDS output (panel or connector).
+> > +
+> > +      port@2:
+> > +        type: object
+> > +        description: |
+> > +          Video port for Dual link LVDS output (panel or connector).
+> > +
+> > +    required:
+> > +      - port@0
+> > +      - port@1
+> > +
+> > +required:
+> > + - compatible
+> > + - reg
+> > + - vdd-supply
+> > + - vddio-supply
+> > + - stby-gpios
+> > + - reset-gpios
+> > + - ports
+> > +
+> > +examples:
+> > + - |
+> > +    #include <dt-bindings/gpio/gpio.h>
+> > +
+> > +    /* For single-link LVDS display panel */
+> > +
+> > +    i2c@78b8000 {
+> > +        /* On High speed expansion */
+> > +        label = "HS-I2C2";
+> > +        reg = <0x078b8000 0x500>;
+> > +        clock-frequency = <400000>; /* fastmode operation */
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +
+> > +        tc_bridge: bridge@f {
+> > +            compatible = "toshiba,tc358775";
+> > +            reg = <0x0f>;
+> > +
+> > +            vdd-supply = <&pm8916_l2>;
+> > +            vddio-supply = <&pm8916_l6>;
+> > +
+> > +            stby-gpios = <&msmgpio 99 GPIO_ACTIVE_LOW>;
+> > +            reset-gpios = <&msmgpio 72 GPIO_ACTIVE_LOW>;
+> > +
+> > +            ports {
+> > +                #address-cells = <1>;
+> > +                #size-cells = <0>;
+> > +
+> > +                port@0 {
+> > +                    reg = <0>;
+> > +                    d2l_in_test: endpoint {
+> > +                        remote-endpoint = <&dsi0_out>;
+> > +                    };
+> > +                };
+> > +
+> > +                port@1 {
+> > +                    reg = <1>;
+> > +                    lvds_out: endpoint {
+> > +                        remote-endpoint = <&panel_in>;
+> > +                    };
+> > +                };
+> > +            };
+> > +        };
+> > +    };
+> > +
+> > +    dsi@1a98000 {
+> > +        reg = <0x1a98000 0x25c>;
+> > +        reg-names = "dsi_ctrl";
+> > +
+> > +        ports {
+> > +            #address-cells = <1>;
+> > +            #size-cells = <0>;
+> > +            port@1 {
+> > +                reg = <1>;
+> > +                dsi0_out: endpoint {
+> > +                    remote-endpoint = <&d2l_in_test>;
+> > +                    data-lanes = <0 1 2 3>;
+> > +                };
+> > +             };
+> > +         };
+> > +     };
+> > +
+> > + - |
+> > +    /* For dual-link LVDS display panel */
+> > +
+> > +    i2c@78b8000 {
+> > +        /* On High speed expansion */
+> > +        label = "HS-I2C2";
+> > +        reg = <0x078b8000 0x500>;
+> > +        clock-frequency = <400000>; /* fastmode operation */
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +
+> > +        tc_bridge_dual: bridge@f {
+> > +            compatible = "toshiba,tc358775";
+> > +            reg = <0x0f>;
+> > +
+> > +            vdd-supply = <&pm8916_l2>;
+> > +            vddio-supply = <&pm8916_l6>;
+> > +
+> > +            stby-gpios = <&msmgpio 99 GPIO_ACTIVE_LOW>;
+> > +            reset-gpios = <&msmgpio 72 GPIO_ACTIVE_LOW>;
+> > +
+> > +            ports {
+> > +                #address-cells = <1>;
+> > +                #size-cells = <0>;
+> > +
+> > +                port@0 {
+> > +                    reg = <0>;
+> > +                    d2l_in_dual: endpoint {
+> > +                        remote-endpoint = <&dsi0_out_dual>;
+> > +                    };
+> > +                };
+> > +
+> > +                port@1 {
+> > +                    reg = <1>;
+> > +                    lvds0_out: endpoint {
+> > +                        remote-endpoint = <&panel_in0>;
+> > +                    };
+> > +                };
+> > +
+> > +                port@2 {
+> > +                    reg = <2>;
+> > +                    lvds1_out: endpoint {
+> > +                        remote-endpoint = <&panel_in1>;
+> > +                    };
+> > +                };
+> > +            };
+> > +        };
+> > +    };
+> > +
+> > +    dsi@1a98000 {
+> > +        reg = <0x1a98000 0x25c>;
+> > +        reg-names = "dsi_ctrl";
+> > +
+> > +        ports {
+> > +            #address-cells = <1>;
+> > +            #size-cells = <0>;
+> > +            port@1 {
+> > +                reg = <1>;
+> > +                dsi0_out_dual: endpoint {
+> > +                    remote-endpoint = <&d2l_in_dual>;
+> > +                    data-lanes = <0 1 2 3>;
+> > +                };
+> > +             };
+> > +         };
+> > +     };
+> > +...
+> > --
+> > 2.1.2
+> >
+> >
+> 
+> -- 
+> regards,
+> vinaysimha
 
-Sorry for the late reply. CRAS does not set the period size when using it.
-The default period size is 256, which consumes the samples
-quickly(about 49627 fps when the rate is 48000 fps) at the beginning
-of the playback.
-Since CRAS write samples with the fixed frequency, it triggers
-underruns immidiately.
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
-According to Brent, the DSP is using 240 period regardless the
-hw_param. If the period size is 256, DSP will read 256 samples each
-time but only consume 240 samples until the ring buffer of DSP is
-full. This behavior makes the samples in the ring buffer of kernel
-consumed quickly. (Not sure whether the explanation is correct. Need
-Brent to confirm it.)
-
-Unfortunately, we can not change the behavior of DSP. After some
-experiments, we found that the issue can be fixed if we set the period
-size to 240. With the same frequency as the DSP, the samples are
-consumed stably. Because everyone can trigger this issue when using
-the driver without setting the period size, we think it is a general
-issue that should be fixed in the kernel.
-
-Thanks,
-Yu-Hsuan
