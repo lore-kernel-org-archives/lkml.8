@@ -2,118 +2,149 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7FFDC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:34:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4097EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:34:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BC46207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:34:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SUqd4aq9"
+	by mail.kernel.org (Postfix) with ESMTP id 1294B207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:34:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597073699;
+	bh=zCYkyEIV0pJ1p1xvHaGjEolVjbZqfiYBTcKVJ5/fp3c=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=MQwxBsRfSJitmj6HpeNdoxAi9xDOBnTQ4SmECMUIJaa+SlNRy97bggQIeyNDS2Gt/
+	 QEsnOT1MDcW2nh+xTY3R5rxgN5UcnXZOuZewvTI2+eSI9WXZVMBcyY4ietWvz+OGEd
+	 kgR1S7H/Vd3deqGV9TGMytnCHuygNrAdo+cSJozs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728887AbgHJPer (ORCPT
+        id S1728999AbgHJPe5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:34:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37178 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728036AbgHJPed (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:34:33 -0400
-Received: from mail-io1-xd2b.google.com (mail-io1-xd2b.google.com [IPv6:2607:f8b0:4864:20::d2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 702E5C061756;
-        Mon, 10 Aug 2020 08:34:33 -0700 (PDT)
-Received: by mail-io1-xd2b.google.com with SMTP id g19so9324577ioh.8;
-        Mon, 10 Aug 2020 08:34:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5WTYhGSMVJwaOGI5CfF/LhAkHD90jfpwgnfPX4Hecs4=;
-        b=SUqd4aq9Y6Av+Gv7ga8W5ylkM3EMuDB+BJKiZDlYcl88/yG7+n1hocgfPi2FLC+Vxx
-         KqPoFLizRpDrrvQnQiwnl561zq27UuRh8UiqsCIrjxDmAuFJnRBl/DUzkplB4z4G7b9Q
-         jc7U58KTucVI+gNlNrZukqTN/vkc4mBRHbDXl2OTOpJufnJriy9ap0BWG6XUUXmUipsK
-         TVoTNnf58iia3wlyq6oUVjzJCFkxLz2VpA2zx08I9wplKHuxou/WV3K2uz/ioqL+Sskh
-         6g11stI+pS9OhTnOPgH6HxIYKtKYfdcqu6n4sRawgxF0zuuxqz7wmHR/8ocnUyPutNez
-         JFlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5WTYhGSMVJwaOGI5CfF/LhAkHD90jfpwgnfPX4Hecs4=;
-        b=HCk45M7IiUQUwGNaebCvCzLmOhXp8ays57qbXRn5jzqfn13QBsrulYmg/+yP7B0lkA
-         22XptBeBynIUOu4UYsNJHjViGqo3ymLHiKGjdiTwABth4dhDCTItrrJpKtCzqGacp8rG
-         ck7x1yXd2S/Yf25nxiPyC2QWO0+MR1MGuw5H6syFh1R5EWJ1Wm8X1dWF8Ww9/zsm/dfK
-         ecmTdAlxDaA12bfpTx5WWhQmRUoEgocN+pwmqJl+GISzlqtao99vvJy6Ib09rBUkGFkY
-         o4wpF/U4xzAMWEwLdwrqRpSwdsL/yjQj/HI4EVfd0p/mozNNu7Gfksx6Q09AnbYCHttd
-         g8xA==
-X-Gm-Message-State: AOAM530kuD+v77llCe5AZuZMoeW5QtqySxpRKqkFAHm1r72OXdhHWYe/
-        y7PvCzoHrRt4hUi+GF3HKBNezLcnCA298wT60hyz+Wi5
-X-Google-Smtp-Source: ABdhPJx/72p6MbNErre05awlascVxCqkGhI8Z4HJDnMGlc4VJwJdcxlxvUk8VJQtBs+c1JaA8neSe/NM/cZiAC2o7ms=
-X-Received: by 2002:a05:6638:bd1:: with SMTP id g17mr20791285jad.132.1597073672791;
- Mon, 10 Aug 2020 08:34:32 -0700 (PDT)
+        Mon, 10 Aug 2020 11:34:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34728 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728878AbgHJP2h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:28:37 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84EA322B47;
+        Mon, 10 Aug 2020 15:28:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597073316;
+        bh=zCYkyEIV0pJ1p1xvHaGjEolVjbZqfiYBTcKVJ5/fp3c=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=TXZzcKXd77ocP4lEHLfSSSwEMSfdMJgl599SDkt7Fh4FwA1AYXXRehKNeBv4Zzu1K
+         EyiFY+7jqiO1Ehf2cFEhcVqamwOPiAZJXUwxrpNGYTcWMYyZVHHxU34qq6q4wGpdtm
+         sVVJId2ey/I/RlvqxNigPsA39E9h8kGRnS4SlaX0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Todd Kjos <tkjos@google.com>,
+        Jann Horn <jannh@google.com>, Martijn Coenen <maco@android.com>
+Subject: [PATCH 5.4 21/67] binder: Prevent context manager from incrementing ref 0
+Date:   Mon, 10 Aug 2020 17:21:08 +0200
+Message-Id: <20200810151810.470545242@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200810151809.438685785@linuxfoundation.org>
+References: <20200810151809.438685785@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <447452.1596109876@warthog.procyon.org.uk> <1851200.1596472222@warthog.procyon.org.uk>
- <667820.1597072619@warthog.procyon.org.uk>
-In-Reply-To: <667820.1597072619@warthog.procyon.org.uk>
-From:   Steve French <smfrench@gmail.com>
-Date:   Mon, 10 Aug 2020 10:34:21 -0500
-Message-ID: <CAH2r5msKipj1exNUDaSUN7h0pjanOenhSg2=EWYMv_h15yKtxg@mail.gmail.com>
-Subject: Re: [GIT PULL] fscache rewrite -- please drop for now
-To:     David Howells <dhowells@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Jeff Layton <jlayton@redhat.com>,
-        Dave Wysochanski <dwysocha@redhat.com>,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Steve French <sfrench@samba.org>,
-        Eric Van Hensbergen <ericvh@gmail.com>,
-        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
-        linux-nfs <linux-nfs@vger.kernel.org>,
-        CIFS <linux-cifs@vger.kernel.org>, ceph-devel@vger.kernel.org,
-        v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-cifs.ko also can set rsize quite small (even 1K for example, although
-that will be more than 10x slower than the default 4MB so hopefully no
-one is crazy enough to do that).   I can't imagine an SMB3 server
-negotiating an rsize or wsize smaller than 64K in today's world (and
-typical is 1MB to 8MB) but the user can specify a much smaller rsize
-on mount.  If 64K is an adequate minimum, we could change the cifs
-mount option parsing to require a certain minimum rsize if fscache is
-selected.
+From: Jann Horn <jannh@google.com>
 
-On Mon, Aug 10, 2020 at 10:17 AM David Howells <dhowells@redhat.com> wrote:
->
-> Hi Linus,
->
-> Can you drop the fscache rewrite pull for now.  We've seem an issue in NFS
-> integration and need to rework the read helper a bit.  I made an assumption
-> that fscache will always be able to request that the netfs perform a read of a
-> certain minimum size - but with NFS you can break that by setting rsize too
-> small.
->
-> We need to make the read helper able to make multiple netfs reads.  This can
-> help ceph too.
->
-> Thanks,
-> David
->
+commit 4b836a1426cb0f1ef2a6e211d7e553221594f8fc upstream.
+
+Binder is designed such that a binder_proc never has references to
+itself. If this rule is violated, memory corruption can occur when a
+process sends a transaction to itself; see e.g.
+<https://syzkaller.appspot.com/bug?extid=09e05aba06723a94d43d>.
+
+There is a remaining edgecase through which such a transaction-to-self
+can still occur from the context of a task with BINDER_SET_CONTEXT_MGR
+access:
+
+ - task A opens /dev/binder twice, creating binder_proc instances P1
+   and P2
+ - P1 becomes context manager
+ - P2 calls ACQUIRE on the magic handle 0, allocating index 0 in its
+   handle table
+ - P1 dies (by closing the /dev/binder fd and waiting a bit)
+ - P2 becomes context manager
+ - P2 calls ACQUIRE on the magic handle 0, allocating index 1 in its
+   handle table
+   [this triggers a warning: "binder: 1974:1974 tried to acquire
+   reference to desc 0, got 1 instead"]
+ - task B opens /dev/binder once, creating binder_proc instance P3
+ - P3 calls P2 (via magic handle 0) with (void*)1 as argument (two-way
+   transaction)
+ - P2 receives the handle and uses it to call P3 (two-way transaction)
+ - P3 calls P2 (via magic handle 0) (two-way transaction)
+ - P2 calls P2 (via handle 1) (two-way transaction)
+
+And then, if P2 does *NOT* accept the incoming transaction work, but
+instead closes the binder fd, we get a crash.
+
+Solve it by preventing the context manager from using ACQUIRE on ref 0.
+There shouldn't be any legitimate reason for the context manager to do
+that.
+
+Additionally, print a warning if someone manages to find another way to
+trigger a transaction-to-self bug in the future.
+
+Cc: stable@vger.kernel.org
+Fixes: 457b9a6f09f0 ("Staging: android: add binder driver")
+Acked-by: Todd Kjos <tkjos@google.com>
+Signed-off-by: Jann Horn <jannh@google.com>
+Reviewed-by: Martijn Coenen <maco@android.com>
+Link: https://lore.kernel.org/r/20200727120424.1627555-1-jannh@google.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/android/binder.c |   15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
+
+--- a/drivers/android/binder.c
++++ b/drivers/android/binder.c
+@@ -2984,6 +2984,12 @@ static void binder_transaction(struct bi
+ 			goto err_dead_binder;
+ 		}
+ 		e->to_node = target_node->debug_id;
++		if (WARN_ON(proc == target_proc)) {
++			return_error = BR_FAILED_REPLY;
++			return_error_param = -EINVAL;
++			return_error_line = __LINE__;
++			goto err_invalid_target_handle;
++		}
+ 		if (security_binder_transaction(proc->tsk,
+ 						target_proc->tsk) < 0) {
+ 			return_error = BR_FAILED_REPLY;
+@@ -3637,10 +3643,17 @@ static int binder_thread_write(struct bi
+ 				struct binder_node *ctx_mgr_node;
+ 				mutex_lock(&context->context_mgr_node_lock);
+ 				ctx_mgr_node = context->binder_context_mgr_node;
+-				if (ctx_mgr_node)
++				if (ctx_mgr_node) {
++					if (ctx_mgr_node->proc == proc) {
++						binder_user_error("%d:%d context manager tried to acquire desc 0\n",
++								  proc->pid, thread->pid);
++						mutex_unlock(&context->context_mgr_node_lock);
++						return -EINVAL;
++					}
+ 					ret = binder_inc_ref_for_node(
+ 							proc, ctx_mgr_node,
+ 							strong, NULL, &rdata);
++				}
+ 				mutex_unlock(&context->context_mgr_node_lock);
+ 			}
+ 			if (ret)
 
 
--- 
-Thanks,
-
-Steve
