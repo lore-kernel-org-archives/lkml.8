@@ -2,98 +2,100 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,FORGED_MUA_MOZILLA,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E6CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:06:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF92BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:06:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1411720678
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:06:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAE7C20678
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:06:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ioJX7Gtn"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UamQ/jqM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727045AbgHJOGW (ORCPT
+        id S1726978AbgHJOG6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 10:06:22 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:52318 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727028AbgHJOGU (ORCPT
+        Mon, 10 Aug 2020 10:06:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51970 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726845AbgHJOG6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 10:06:20 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07AE2CWx118516;
-        Mon, 10 Aug 2020 10:06:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : date : mime-version : in-reply-to : content-type :
- content-transfer-encoding : message-id; s=pp1;
- bh=cGyomKEAmw2m1EZIHGC0ZQNOLNl4kskrn5JxSv/w0ro=;
- b=ioJX7GtnhRQ06f2A9OeA7f6ubv5XL7Rzen73O2RoECMWzIYkEGX4SKJJrDN/IpB4Z+aJ
- s5s/of6i1SsfrBANf7q3bgidE515oBjSdzCtta5uEmkT/chFF96jNGHlYm+ieb7163Uh
- yyaa/3n95yv0TP+TobJZyrhk/XoyTpjU1GKNRPyW6aKNNg/1oMq7QcmEPj7Ovhup8mIP
- B3aehgxgM9TAiaNyC5CQ53od7NlhvLgGCVP6YCCtJ/cdFEmGVkqQ0Xa3nD6oC9VQFE5s
- J+WKjXCgrEoFNHXQNkKmVeQUwuAtKVhUtx5yKH8YSietkdd0209LI4yIAANBpjyaQY3X zA== 
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32sravntea-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 10 Aug 2020 10:06:12 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07AE6ARU003648;
-        Mon, 10 Aug 2020 14:06:10 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma05fra.de.ibm.com with ESMTP id 32skp81edx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 10 Aug 2020 14:06:10 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07AE68PR23134718
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 10 Aug 2020 14:06:08 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1CCE6A4053;
-        Mon, 10 Aug 2020 14:06:08 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 34423A4059;
-        Mon, 10 Aug 2020 14:06:07 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.199.33.217])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 10 Aug 2020 14:06:07 +0000 (GMT)
-Subject: Re: [PATCH] mballoc: Replace seq_printf with seq_puts
-To:     Xu Wang <vulab@iscas.ac.cn>, tytso@mit.edu,
-        adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-References: <20200810022158.9167-1-vulab@iscas.ac.cn>
-From:   Ritesh Harjani <riteshh@linux.ibm.com>
-Date:   Mon, 10 Aug 2020 19:36:06 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 10 Aug 2020 10:06:58 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25C24C061756
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 07:06:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=0NkcUhh2BgxISPZreSijRxme2NhNix1+tFt4ONKujyE=; b=UamQ/jqMujk+F8HamiNl6Rxl36
+        P5XIgyW2bMiXe7mXZ3ty7215KWppEzzOB+SMCtBGUaXjPYoSl7i3bprOIdiXw5mwNt6RebEkj0QtP
+        ET2BcmGpZpaaPQxxv19Z8LZBqsSd6MgXHYwFCT3gc1rkxmxAbojJoFfwLtM8aKqitQi8AXGkKA1jd
+        tGUO9eWMKyXNmp1S6gNEGTGuAfQlIk91E+5l0Q4ePobrJLyEOxbdW7iaA4jfmIH/4aEVWkbo8hpoT
+        eL64na/ZbDfXDzvoaq16VPLNWNH45XyEOrsY/K7t5Yk+4WyBSxqEMAY3YLckSXAVjXcyg+j3/Sh7V
+        w2sV5mLQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k58Rt-0005F0-Sm; Mon, 10 Aug 2020 14:06:50 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7618430015A;
+        Mon, 10 Aug 2020 16:06:48 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 618082B2C802B; Mon, 10 Aug 2020 16:06:48 +0200 (CEST)
+Date:   Mon, 10 Aug 2020 16:06:48 +0200
+From:   peterz@infradead.org
+To:     Marco Elver <elver@google.com>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzbot <syzbot+8db9e1ecde74e590a657@syzkaller.appspotmail.com>
+Subject: Re: [PATCH] kcsan: Treat runtime as NMI-like with interrupt tracing
+Message-ID: <20200810140648.GZ2674@hirez.programming.kicks-ass.net>
+References: <20200807090031.3506555-1-elver@google.com>
+ <20200807170618.GW4295@paulmck-ThinkPad-P72>
+ <CANpmjNPqEeQvg53wJ5EsyfssSqyOqCsPG+YTV6ytj6wsc+5BPQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200810022158.9167-1-vulab@iscas.ac.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-Message-Id: <20200810140607.34423A4059@d06av23.portsmouth.uk.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-10_09:2020-08-06,2020-08-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=18 adultscore=0
- malwarescore=0 mlxscore=0 priorityscore=1501 impostorscore=0 spamscore=0
- bulkscore=0 phishscore=0 mlxlogscore=886 clxscore=1011 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008100101
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANpmjNPqEeQvg53wJ5EsyfssSqyOqCsPG+YTV6ytj6wsc+5BPQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 8/10/20 7:51 AM, Xu Wang wrote:
-> seq_puts is a lot cheaper than seq_printf, so use that to print
-> literal strings.
+On Mon, Aug 10, 2020 at 10:07:44AM +0200, Marco Elver wrote:
+> On Fri, 7 Aug 2020 at 19:06, Paul E. McKenney <paulmck@kernel.org> wrote:
+> > On Fri, Aug 07, 2020 at 11:00:31AM +0200, Marco Elver wrote:
+> > > Since KCSAN instrumentation is everywhere, we need to treat the hooks
+> > > NMI-like for interrupt tracing. In order to present an as 'normal' as
+> > > possible context to the code called by KCSAN when reporting errors, we
+> > > need to update the IRQ-tracing state.
+> > >
+> > > Tested: Several runs through kcsan-test with different configuration
+> > > (PROVE_LOCKING on/off), as well as hours of syzbot testing with the
+> > > original config that caught the problem (without CONFIG_PARAVIRT=y,
+> > > which appears to cause IRQ state tracking inconsistencies even when
+> > > KCSAN remains off, see Link).
+> > >
+> > > Link: https://lkml.kernel.org/r/0000000000007d3b2d05ac1c303e@google.com
+> > > Fixes: 248591f5d257 ("kcsan: Make KCSAN compatible with new IRQ state tracking")
+> > > Reported-by: syzbot+8db9e1ecde74e590a657@syzkaller.appspotmail.com
+> > > Co-developed-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 > 
-> Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
+> Peter, if you're fine with it, I think we'll require your
+> Signed-off-by (since Co-developed-by).
 
-Looks good to me.
-Reviewed-by: Ritesh Harjani <riteshh@linux.ibm.com>
+Sure:
+
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
