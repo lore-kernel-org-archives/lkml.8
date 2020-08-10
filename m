@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C13CBC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:24:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8965C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:24:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7988A22D02
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:24:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99C05208A9
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:24:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073063;
-	bh=0QbxLggjBKO58eoG4bJ9frg+oeij7hDqcORloJgxLIc=;
+	s=default; t=1597073068;
+	bh=cb3+F3jaEzT00l1EOCp55bQnkmNyBnJlpDVGn6CA520=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aCtXm/RWcnH3d7pq0/xOVuJoT1X191EJBSi2UYvsR3H5KT0fGDCZsjCs5zYKIPvcQ
-	 kNXGFCHYjMLHr9MZos8qrDwTVU3MEleRWQ16Nqyg8bxxWNuUKKtZ7g9v7qbEWZw4MO
-	 wGzHLEa04mbSNEiim6SCTVhY9HlE66HjCM9CgGhA=
+	b=obf6nqfAzMyQV0RjcNz9O894ASl9PPkEIWrXHQJoEUNtp5wXlZwFQbuBlvOHLbEto
+	 vFIzHIWGoXrhdaVQwz4O2E8+fYYHOR8tky+IykgCxrj0mLKwRmCMe50ckiZALiUsga
+	 sYeRzbgsyZyLIGR5F3U1CmZEHdOvaHyfdvqQkqO0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727816AbgHJPYU (ORCPT
+        id S1728421AbgHJPY0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:24:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56700 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:24:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727877AbgHJPYG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:24:06 -0400
+        id S1728162AbgHJPYJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:24:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2276922BEA;
-        Mon, 10 Aug 2020 15:24:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB6D222D2B;
+        Mon, 10 Aug 2020 15:24:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073045;
-        bh=0QbxLggjBKO58eoG4bJ9frg+oeij7hDqcORloJgxLIc=;
+        s=default; t=1597073048;
+        bh=cb3+F3jaEzT00l1EOCp55bQnkmNyBnJlpDVGn6CA520=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y8BXiyGua1+WPPqqK7hPuwsRC79S7adDpra4YQWL0NNzzTGP05QViCWxoi9IR2hcv
-         D71kRS2nEqu8wATcA0UjQzyuIaWYcTtBB7U4fnWSagAFVRcMPPM9+zoYYEiNFVIt1+
-         01Xcsbwif7qAW42hd5PYSzi7AXtRpPDEZ0gaiais=
+        b=GI1jiG8J7HHlvhQm6GO1b87zk4JCeLEIVgRyeiPM7bzJSzfj/qht5rsgP2EQzu/bV
+         FoTttGSMPvxHIqhLI0IfJDDo6YykRRCwA1iL9luUkaZ0tjfVM/zVQ8+dGzrnMGbKEH
+         WYdLnYcj2FSqjwzuU5ATPMTsLwC8puDcNOOnrrZc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julian Squires <julian@cipht.net>,
-        Johannes Berg <johannes.berg@intel.com>,
+        stable@vger.kernel.org, Francesco Ruggeri <fruggeri@arista.com>,
+        Aaron Brown <aaron.f.brown@intel.com>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 48/79] cfg80211: check vendor command doit pointer before use
-Date:   Mon, 10 Aug 2020 17:21:07 +0200
-Message-Id: <20200810151814.637692808@linuxfoundation.org>
+Subject: [PATCH 5.7 49/79] igb: reinit_locked() should be called with rtnl_lock
+Date:   Mon, 10 Aug 2020 17:21:08 +0200
+Message-Id: <20200810151814.681132424@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151812.114485777@linuxfoundation.org>
 References: <20200810151812.114485777@linuxfoundation.org>
@@ -60,48 +61,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julian Squires <julian@cipht.net>
+From: Francesco Ruggeri <fruggeri@arista.com>
 
-[ Upstream commit 4052d3d2e8f47a15053320bbcbe365d15610437d ]
+[ Upstream commit 024a8168b749db7a4aa40a5fbdfa04bf7e77c1c0 ]
 
-In the case where a vendor command does not implement doit, and has no
-flags set, doit would not be validated and a NULL pointer dereference
-would occur, for example when invoking the vendor command via iw.
+We observed two panics involving races with igb_reset_task.
+The first panic is caused by this race condition:
 
-I encountered this while developing new vendor commands.  Perhaps in
-practice it is advisable to always implement doit along with dumpit,
-but it seems reasonable to me to always check doit anyway, not just
-when NEED_WDEV.
+	kworker			reboot -f
 
-Signed-off-by: Julian Squires <julian@cipht.net>
-Link: https://lore.kernel.org/r/20200706211353.2366470-1-julian@cipht.net
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+	igb_reset_task
+	igb_reinit_locked
+	igb_down
+	napi_synchronize
+				__igb_shutdown
+				igb_clear_interrupt_scheme
+				igb_free_q_vectors
+				igb_free_q_vector
+				adapter->q_vector[v_idx] = NULL;
+	napi_disable
+	Panics trying to access
+	adapter->q_vector[v_idx].napi_state
+
+The second panic (a divide error) is caused by this race:
+
+kworker		reboot -f	tx packet
+
+igb_reset_task
+		__igb_shutdown
+		rtnl_lock()
+		...
+		igb_clear_interrupt_scheme
+		igb_free_q_vectors
+		adapter->num_tx_queues = 0
+		...
+		rtnl_unlock()
+rtnl_lock()
+igb_reinit_locked
+igb_down
+igb_up
+netif_tx_start_all_queues
+				dev_hard_start_xmit
+				igb_xmit_frame
+				igb_tx_queue_mapping
+				Panics on
+				r_idx % adapter->num_tx_queues
+
+This commit applies to igb_reset_task the same changes that
+were applied to ixgbe in commit 2f90b8657ec9 ("ixgbe: this patch
+adds support for DCB to the kernel and ixgbe driver"),
+commit 8f4c5c9fb87a ("ixgbe: reinit_locked() should be called with
+rtnl_lock") and commit 88adce4ea8f9 ("ixgbe: fix possible race in
+reset subtask").
+
+Signed-off-by: Francesco Ruggeri <fruggeri@arista.com>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/wireless/nl80211.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/intel/igb/igb_main.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
-index 7ae6b90e0d264..970f05c4150ea 100644
---- a/net/wireless/nl80211.c
-+++ b/net/wireless/nl80211.c
-@@ -13190,13 +13190,13 @@ static int nl80211_vendor_cmd(struct sk_buff *skb, struct genl_info *info)
- 				if (!wdev_running(wdev))
- 					return -ENETDOWN;
- 			}
--
--			if (!vcmd->doit)
--				return -EOPNOTSUPP;
- 		} else {
- 			wdev = NULL;
- 		}
+diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
+index b46bff8fe0568..b35d599fc78ea 100644
+--- a/drivers/net/ethernet/intel/igb/igb_main.c
++++ b/drivers/net/ethernet/intel/igb/igb_main.c
+@@ -6224,9 +6224,18 @@ static void igb_reset_task(struct work_struct *work)
+ 	struct igb_adapter *adapter;
+ 	adapter = container_of(work, struct igb_adapter, reset_task);
  
-+		if (!vcmd->doit)
-+			return -EOPNOTSUPP;
++	rtnl_lock();
++	/* If we're already down or resetting, just bail */
++	if (test_bit(__IGB_DOWN, &adapter->state) ||
++	    test_bit(__IGB_RESETTING, &adapter->state)) {
++		rtnl_unlock();
++		return;
++	}
 +
- 		if (info->attrs[NL80211_ATTR_VENDOR_DATA]) {
- 			data = nla_data(info->attrs[NL80211_ATTR_VENDOR_DATA]);
- 			len = nla_len(info->attrs[NL80211_ATTR_VENDOR_DATA]);
+ 	igb_dump(adapter);
+ 	netdev_err(adapter->netdev, "Reset adapter\n");
+ 	igb_reinit_locked(adapter);
++	rtnl_unlock();
+ }
+ 
+ /**
 -- 
 2.25.1
 
