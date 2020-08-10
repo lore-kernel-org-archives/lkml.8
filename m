@@ -2,161 +2,116 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28505C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 16:53:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C2F8C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 16:53:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE1F62083B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 16:53:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tZU4MM/S"
+	by mail.kernel.org (Postfix) with ESMTP id 2DC7D2083B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 16:53:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597078394;
+	bh=qll4ROc/iiSxpZbfUYAk6IGaJD6djwIBywiA409PpSo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=tXxDnPvVxKwfdwrIHzp0UfXImyGnjd1CYOXf9tGMZ8sazEmor5mrmRKEUo+ClA4y9
+	 IvbLooWHZIKSM6jqccjvwbsi22uCj4VB2LmZPmzqn8H0kq+2lCsaNOpAEIzujmmlKC
+	 b9317OXU5cMsmGkAuj2nzevyIGu/I9/Kr+UjaL9w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727995AbgHJQxE (ORCPT
+        id S1728025AbgHJQxN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 12:53:04 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:35346 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726720AbgHJQxD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 12:53:03 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07AGqqfd104330;
-        Mon, 10 Aug 2020 11:52:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1597078372;
-        bh=YTBNSuZB1ViSASi+2W5j6KH0rLJ0ephtkfszy/zEjVg=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=tZU4MM/StuZckikVJtsvPHNAs5WxAZEvCytqpDar+fxaCplcRREoRzF1ECr9WbcnD
-         Wvl1dqcEv4USEx8O9kXYXWA5NgO89WqYAIUqNH6bh9nPd7EwTwg78m45xpzBg4iVTo
-         a+zN/rqlFMP9W4l5BtdiFJC10mljni9qh7J9SiLI=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07AGqpUv107641
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 10 Aug 2020 11:52:51 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 10
- Aug 2020 11:52:51 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 10 Aug 2020 11:52:51 -0500
-Received: from [10.250.34.248] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07AGqpNQ055556;
-        Mon, 10 Aug 2020 11:52:51 -0500
-Subject: Re: [PATCH v2 1/4] dt-bindings: remoteproc: Add bindings for R5F
- subsystem on TI K3 SoCs
-From:   Suman Anna <s-anna@ti.com>
-To:     Stefano Stabellini <stefano.stabellini@xilinx.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Rob Herring <robh@kernel.org>
-CC:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <stefanos@xilinx.com>,
-        <BLEVINSK@xilinx.com>, <tomase@xilinx.com>
-References: <20200630024922.32491-1-s-anna@ti.com>
- <20200630024922.32491-2-s-anna@ti.com> <20200714171553.GA2522956@bogus>
- <20200716171903.GA3286345@xps15>
- <alpine.DEB.2.21.2007161232400.3886@sstabellini-ThinkPad-T480s>
- <b7415d48-a354-5610-a657-08cdefc482a6@ti.com>
-Message-ID: <8ba1f240-df9a-d63e-5c05-1a4a13e03213@ti.com>
-Date:   Mon, 10 Aug 2020 11:52:51 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 10 Aug 2020 12:53:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50400 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728000AbgHJQxM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 12:53:12 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68EBA20829;
+        Mon, 10 Aug 2020 16:53:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597078391;
+        bh=qll4ROc/iiSxpZbfUYAk6IGaJD6djwIBywiA409PpSo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=f4Z0AEuObhXDWOorZOmIAP8AsvVIrAjKw76TZ3TRPz74NoXUpoMbQ/NlIn7nfARjz
+         I/b0vt4TovXh3PIHae4xyqr7s6zwd0mVK9IzgYM5wA655XzZG3tWjUTyQaMNIPTkQd
+         fYF3Pm8vYfu8DkQTAsSDC2pWeY5z8L5lSAohIpO4=
+Date:   Mon, 10 Aug 2020 09:53:05 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Moshe Shemesh <moshe@mellanox.com>
+Cc:     Jiri Pirko <jiri@resnulli.us>,
+        Jacob Keller <jacob.e.keller@intel.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+Subject: Re: [PATCH net-next RFC 01/13] devlink: Add reload level option to
+ devlink reload command
+Message-ID: <20200810095305.0b9661ec@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <8b06ade2-dfbe-8894-0d6a-afe9c2f41b4e@mellanox.com>
+References: <20200728130653.7ce2f013@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <04f00024-758c-bc19-c187-49847c24a5a4@mellanox.com>
+        <20200729140708.5f914c15@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <3352bd96-d10e-6961-079d-5c913a967513@mellanox.com>
+        <20200730161101.48f42c5b@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <0f2467fd-ee2e-1a51-f9c1-02f8a579d542@mellanox.com>
+        <20200803141442.GB2290@nanopsycho>
+        <20200803135703.16967635@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <20200804100418.GA2210@nanopsycho>
+        <20200804133946.7246514e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <20200805110258.GA2169@nanopsycho>
+        <20200806112530.0588b3ac@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <8b06ade2-dfbe-8894-0d6a-afe9c2f41b4e@mellanox.com>
 MIME-Version: 1.0
-In-Reply-To: <b7415d48-a354-5610-a657-08cdefc482a6@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+On Sun, 9 Aug 2020 16:21:29 +0300 Moshe Shemesh wrote:
+> Okay, so devlink reload default for mlx5 will include also fw-activate 
+> to align with mlxsw default.
+> 
+> Meaning drivers that supports fw-activate will add it to the default.
 
-On 7/27/20 5:39 PM, Suman Anna wrote:
-> Hi Rob,
-> 
-> On 7/16/20 2:43 PM, Stefano Stabellini wrote:
->> On Thu, 16 Jul 2020, Mathieu Poirier wrote:
->>> Hi Rob,
->>>
->>> On Tue, Jul 14, 2020 at 11:15:53AM -0600, Rob Herring wrote:
->>>> On Mon, Jun 29, 2020 at 09:49:19PM -0500, Suman Anna wrote:
->>>>> The Texas Instruments K3 family of SoCs have one or more dual-core
->>>>> Arm Cortex R5F processor subsystems/clusters (R5FSS). The clusters
->>>>> can be split between multiple voltage domains as well. Add the device
->>>>> tree bindings document for these R5F subsystem devices. These R5F
->>>>> processors do not have an MMU, and so require fixed memory carveout
->>>>> regions matching the firmware image addresses. The nodes require more
->>>>> than one memory region, with the first memory region used for DMA
->>>>> allocations at runtime. The remaining memory regions are reserved
->>>>> and are used for the loading and running of the R5F remote processors.
->>>>> The R5F processors can also optionally use any internal on-chip SRAM
->>>>> memories either for executing code or using it as fast-access data.
->>>>>
->>>>> The added example illustrates the DT nodes for the single R5FSS device
->>>>> present on K3 AM65x family of SoCs.
->>>>>
->>>>> Signed-off-by: Suman Anna <s-anna@ti.com>
->>>>> ---
->>>>> v2:
->>>>>   - Renamed "lockstep-mode" property to "ti,cluster-mode"
->>>>
->>>> I don't think that's a move in the right direction given this is at
->>>> least partially a standard feature.
->>>>
->>>> As I said before, I'm very hesistant to accept anything here given I
->>>> know the desires and activity to define 'system Devicetrees' of which
->>>> TI is participating. While maybe an rproc node is sufficient for a
->>>> DSP, it seems multiple vendors have R cores and want to define them in
->>>> system DT.
-> 
-> Ping on this discussion. TI is participating on the System DT evolution in general, but we don't have any plans to use DTS on our remote cores. We have our own auto-generated Chip-Support-Library (CSL) code that gets used on our firmwares.
-> 
-> Also, most of the properties I defined are rather standard properties. I have posted a revised v3 [1] after the common ti,sci properties refactoring. This series is only waiting on the bindings. I am happy to change any ti, prefixed properties. I had one open question [2] that I am waiting for a response from you for identifying the R5F Core.
+No per-driver default.
 
-Ping on this. 
+Maybe the difference between mlxsw and mlx5 can be simply explained by
+the fact that mlxsw loads firmware from /lib/firmware on every probe
+(more or less).
 
-regards
-Suman
+It's only natural for a driver which loads FW from disk to load it on
+driver reload.
 
+> The flow of devlink reload default on mlx5 will be:
 > 
-> regards
-> Suman
+> If there is FW image pending and live patch is suitable to apply, do 
+> live patch and driver re-initialization.
 > 
-> [1] https://patchwork.kernel.org/patch/11679331/
-> [2] https://patchwork.kernel.org/comment/23273441/
+> If there is FW image pending but live patch doesn't fit do fw-reset and 
+> driver-initialization.
 > 
->>>>
->>>> Though the system DT effort has not yet given any thought to what is the
->>>> view of one processor or instance to another instance (which is what
->>>> this binding is). We'll still need something defined for that, but I'd
->>>> expect that to be dependent on what is defined for system DT.
->>>
->>> Efforts related to the definition of the system DT are under way, something I
->>> expect to keep going on for some time to come.  I agree with the need to use the
->>> system DT to define remote processors and I look forward to the time we can do
->>> so.
->>
->> I'll take this opportunity to add that I should be able to publicly
->> present a System Device Tree proposal for this during the next call (the
->> next one after the call early next week that has already a full agenda.)
->>
->>
->>> That being said we need to find a concensus on how to move forward with patches
->>> that are ready to be merged.  What is your opinion on that?
->>
->> In my opinion we don't have to necessarily wait for System Device Tree
->> to make progress with those if they look OK.
->>
-> 
+> If no FW image pending just do driver-initialization.
 
+This sounds too complicated. Don't try to guess what the user wants.
+
+> I still think I should on top of that add the level option to be 
+> selected by the user if he prefers a specific action, so the uAPI would be:
+> 
+> devlink dev reload [ netns { PID | NAME | ID } ] [ level { fw-live-patch 
+> | driver-reinit |fw-activate } ]
+
+I'm all for the level/action.
+
+> But I am still missing something: fw-activate implies that it will 
+> activate a new FW image stored on flash, pending activation. What if the 
+> user wants to reset and reload the FW if no new FW pending ? Should we 
+> add --force option to fw-activate level ?
+
+Since reload does not check today if anything changed - i.e. if reload
+is actually needed, neither should fw-activate, IMO. I'd expect the
+"--force behavior" to be the default.
