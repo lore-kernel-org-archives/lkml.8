@@ -5,54 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E42C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67C41C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:14:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EDBE207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:14:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21746207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:14:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597086844;
-	bh=ZYzY6ErG/NfSQMyGO+ymxwRPG0Hb5eEKj9Iv+PmCo5M=;
+	s=default; t=1597086853;
+	bh=2QCZ3VUr6GejNwX1/HPkPUgywla9ZFwSDAsdxWjBqZ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EBKkFUFdvtwOiXNbqznpgcM6RULaiKaajU0c394lSskoAKkjpbHRhI7ujPFTd2EB1
-	 nJAJUwvoXfB5U6FLmviL1Q1bxCZyMGWux0VnJO4LAR3PZmRfWUxZs5F90PeyVlhBsN
-	 OZKzl8iIonfu/TYY4l/aopSk4RshrtgGEAICpIG4=
+	b=cBY5M+hcA5P6YOQaP/RphHjl17nT8igMWg0EOaYZBmuA+aMhXpDc6/nzdyHCNb+N2
+	 3FRV9E5xaGYOoOb2oYGnA9AnyiXxmGt82Xzg4AzCNBqSbUVNiImN5ciCXfx2zDWHwH
+	 /YCvmglpRu0u/LBnA1DLgB8WSXcdz5tarN/obfDI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729935AbgHJTOD (ORCPT
+        id S1729955AbgHJTOG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:14:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45518 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:14:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729893AbgHJTN4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:13:56 -0400
+        id S1729908AbgHJTN6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:13:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93FC122B49;
-        Mon, 10 Aug 2020 19:13:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4128322BED;
+        Mon, 10 Aug 2020 19:13:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086835;
-        bh=ZYzY6ErG/NfSQMyGO+ymxwRPG0Hb5eEKj9Iv+PmCo5M=;
+        s=default; t=1597086838;
+        bh=2QCZ3VUr6GejNwX1/HPkPUgywla9ZFwSDAsdxWjBqZ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L7atsh4PWRP3j5M0E2fDvXXRP5x8IIfi6Z861pAoxDqOySxEPqKVIillUdwyCJ6Yv
-         mcJpz8zcwqGP6ST4p+iJbjVRp2stDexQNNl+4BFBTjgaMmsZKVQNRIaTdl4U7k54UF
-         TePh2q44ZO87MXX4lybeEODKPK0yXFqeTLpPA6+0=
+        b=QFn3FgQXWMXRBp4II/Y305gTCXnJWfNTk99A51sW+sVVHbI9CrtySx4Jugs4o3vaF
+         QMO05ap/mlecZmEJp4c4sjXrAAuaiKoHzvbGr0nfHfZfZBKywhjCyCeJiuV9amN9yI
+         J8DGH7B5eK/yCcJbXJZQx/Od1OLLwKV5Jef3//3w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Ricardo=20Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Wei Xu <xuwei5@hisilicon.com>, Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 07/22] arm64: dts: hisilicon: hikey: fixes to comply with adi, adv7533 DT binding
-Date:   Mon, 10 Aug 2020 15:13:29 -0400
-Message-Id: <20200810191345.3795166-7-sashal@kernel.org>
+Cc:     Michael Tretter <m.tretter@pengutronix.de>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Emil Velikov <emil.l.velikov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.14 09/22] drm/debugfs: fix plain echo to connector "force" attribute
+Date:   Mon, 10 Aug 2020 15:13:31 -0400
+Message-Id: <20200810191345.3795166-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810191345.3795166-1-sashal@kernel.org>
 References: <20200810191345.3795166-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,66 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ricardo Cañuelo <ricardo.canuelo@collabora.com>
+From: Michael Tretter <m.tretter@pengutronix.de>
 
-[ Upstream commit bbe28fc3cbabbef781bcdf847615d52ce2e26e42 ]
+[ Upstream commit c704b17071c4dc571dca3af4e4151dac51de081a ]
 
-hi3660-hikey960.dts:
-  Define a 'ports' node for 'adv7533: adv7533@39' and the
-  'adi,dsi-lanes' property to make it compliant with the adi,adv7533 DT
-  binding.
+Using plain echo to set the "force" connector attribute fails with
+-EINVAL, because echo appends a newline to the output.
 
-  This fills the requirements to meet the binding requirements,
-  remote endpoints are not defined.
+Replace strcmp with sysfs_streq to also accept strings that end with a
+newline.
 
-hi6220-hikey.dts:
-  Change property name s/pd-gpio/pd-gpios, gpio properties should be
-  plural. This is just a cosmetic change.
+v2: use sysfs_streq instead of stripping trailing whitespace
 
-Signed-off-by: Ricardo Cañuelo <ricardo.canuelo@collabora.com>
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Wei Xu <xuwei5@hisilicon.com>
+Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
+Reviewed-by: Jani Nikula <jani.nikula@intel.com>
+Signed-off-by: Emil Velikov <emil.l.velikov@gmail.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20170817104307.17124-1-m.tretter@pengutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts | 11 +++++++++++
- arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts    |  2 +-
- 2 files changed, 12 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/drm_debugfs.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-index e9f87cb61ade7..8587912e1eb00 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-+++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-@@ -210,6 +210,17 @@ adv7533: adv7533@39 {
- 		status = "ok";
- 		compatible = "adi,adv7533";
- 		reg = <0x39>;
-+		adi,dsi-lanes = <4>;
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			port@0 {
-+				reg = <0>;
-+			};
-+			port@1 {
-+				reg = <1>;
-+			};
-+		};
- 	};
- };
+diff --git a/drivers/gpu/drm/drm_debugfs.c b/drivers/gpu/drm/drm_debugfs.c
+index c1807d5754b2a..454deba13ee5b 100644
+--- a/drivers/gpu/drm/drm_debugfs.c
++++ b/drivers/gpu/drm/drm_debugfs.c
+@@ -250,13 +250,13 @@ static ssize_t connector_write(struct file *file, const char __user *ubuf,
  
-diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-index 6887cc1a743d4..f78e6468b02fc 100644
---- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-+++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-@@ -513,7 +513,7 @@ adv7533: adv7533@39 {
- 		reg = <0x39>;
- 		interrupt-parent = <&gpio1>;
- 		interrupts = <1 2>;
--		pd-gpio = <&gpio0 4 0>;
-+		pd-gpios = <&gpio0 4 0>;
- 		adi,dsi-lanes = <4>;
- 		#sound-dai-cells = <0>;
+ 	buf[len] = '\0';
  
+-	if (!strcmp(buf, "on"))
++	if (sysfs_streq(buf, "on"))
+ 		connector->force = DRM_FORCE_ON;
+-	else if (!strcmp(buf, "digital"))
++	else if (sysfs_streq(buf, "digital"))
+ 		connector->force = DRM_FORCE_ON_DIGITAL;
+-	else if (!strcmp(buf, "off"))
++	else if (sysfs_streq(buf, "off"))
+ 		connector->force = DRM_FORCE_OFF;
+-	else if (!strcmp(buf, "unspecified"))
++	else if (sysfs_streq(buf, "unspecified"))
+ 		connector->force = DRM_FORCE_UNSPECIFIED;
+ 	else
+ 		return -EINVAL;
 -- 
 2.25.1
 
