@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE25C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:26:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F925C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:26:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 516A422BEA
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:26:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 599DE22D06
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:26:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073201;
-	bh=ngKCcMzHTQNYCHTw8bd6wbDeqC73Pdu0xRCEpWuv/co=;
+	s=default; t=1597073202;
+	bh=RF1YYZcrR8jAOi1ZJRiN7u4xbfpSyq4rjhuxrTj5BHc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M/94BiGvK6i9OWwM71RHFMdew0KH7CJuq+7VbkHbAWGBWlkUY4+2g/JOsX/RV6/HV
-	 7tQF2qPJWry4YcsfEm7Q4Il7UozZyZ1+uokdHZIedCES7I01h77WPPuZFP95Lvu9KL
-	 4Dp+LO9hy2Dlol6OBbXgKQyDxwCstijOkYBbZG9s=
+	b=utJ1Wd6Gext5oAwVGFTJHiLpLYJxKfs+i9waQsHWhRksrxvAUW5njukhwbSHLAOqw
+	 3V0z9/vUbTLQPSeAErmiQo841GvOB248JyTDR89uonuSSRbUu3Qv263owkKwgMBUUf
+	 d70QB7NV9WrkfdMWGJnS51h5ozQriUwvDPxR9fEc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728161AbgHJP0j (ORCPT
+        id S1728654AbgHJP0k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:26:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60524 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:26:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60598 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728182AbgHJP0f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:26:35 -0400
+        id S1728374AbgHJP0i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:26:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D35F22B47;
-        Mon, 10 Aug 2020 15:26:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BAC322BEA;
+        Mon, 10 Aug 2020 15:26:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073195;
-        bh=ngKCcMzHTQNYCHTw8bd6wbDeqC73Pdu0xRCEpWuv/co=;
+        s=default; t=1597073197;
+        bh=RF1YYZcrR8jAOi1ZJRiN7u4xbfpSyq4rjhuxrTj5BHc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pDLsyBT6uTgmixhAigSUZETd8lMzIk7kUQ+tfzrZDJqg1SbZVG6gfOaUfYceM7A6+
-         YU9EjIDIv7UyZ/V1SPyRf0mRf/HivWfWz1kfP2DpaFLPRRDq5V4uWXXq8LNnw7El7B
-         ltTT8Te2zcQK3rFB92Wra5uF1olut9zHgaiK41Sg=
+        b=myUUAzb+3GD3bQrjJ8fn0ga9gOW+WQ2KjJIAfFP5BUXZ5dJWS5eNabreO2ERXL1Kg
+         9818bgcJfOU6LtC54rpk5KICVQsA4PpkXpnl1gDQt3UGgubXcvNJQyG/fQVp5wS1/r
+         yzxC8MvHq2+myhKtzelYFXou81EehHUtUG2WnrFg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Robin Murphy <robin.murphy@arm.com>
-Subject: [PATCH 5.4 02/67] perf/core: Fix endless multiplex timer
-Date:   Mon, 10 Aug 2020 17:20:49 +0200
-Message-Id: <20200810151809.565265387@linuxfoundation.org>
+        stable@vger.kernel.org, Adam Ford <aford173@gmail.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Dave Airlie <airlied@gmail.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: [PATCH 5.4 20/67] omapfb: dss: Fix max fclk divider for omap36xx
+Date:   Mon, 10 Aug 2020 17:21:07 +0200
+Message-Id: <20200810151810.420588550@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151809.438685785@linuxfoundation.org>
 References: <20200810151809.438685785@linuxfoundation.org>
@@ -61,75 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Adam Ford <aford173@gmail.com>
 
-commit 90c91dfb86d0ff545bd329d3ddd72c147e2ae198 upstream.
+commit 254503a2b186caa668a188dbbd7ab0d25149c0a5 upstream.
 
-Kan and Andi reported that we fail to kill rotation when the flexible
-events go empty, but the context does not. XXX moar
+The drm/omap driver was fixed to correct an issue where using a
+divider of 32 breaks the DSS despite the TRM stating 32 is a valid
+number.  Through experimentation, it appears that 31 works, and
+it is consistent with the value used by the drm/omap driver.
 
-Fixes: fd7d55172d1e ("perf/cgroups: Don't rotate events for cgroups unnecessarily")
-Reported-by: Andi Kleen <ak@linux.intel.com>
-Reported-by: Kan Liang <kan.liang@linux.intel.com>
-Tested-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200305123851.GX2596@hirez.programming.kicks-ass.net
-Cc: Robin Murphy <robin.murphy@arm.com>
+This patch fixes the divider for fbdev driver instead of the drm.
+
+Fixes: f76ee892a99e ("omapfb: copy omapdss & displays for omapfb")
+Cc: <stable@vger.kernel.org> #4.5+
+Signed-off-by: Adam Ford <aford173@gmail.com>
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Dave Airlie <airlied@gmail.com>
+Cc: Rob Clark <robdclark@gmail.com>
+[b.zolnierkie: mark patch as applicable to stable 4.5+ (was 4.9+)]
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200630182636.439015-1-aford173@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/events/core.c |   20 ++++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
+ drivers/video/fbdev/omap2/omapfb/dss/dss.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -2171,6 +2171,7 @@ __perf_remove_from_context(struct perf_e
+--- a/drivers/video/fbdev/omap2/omapfb/dss/dss.c
++++ b/drivers/video/fbdev/omap2/omapfb/dss/dss.c
+@@ -833,7 +833,7 @@ static const struct dss_features omap34x
+ };
  
- 	if (!ctx->nr_events && ctx->is_active) {
- 		ctx->is_active = 0;
-+		ctx->rotate_necessary = 0;
- 		if (ctx->task) {
- 			WARN_ON_ONCE(cpuctx->task_ctx != ctx);
- 			cpuctx->task_ctx = NULL;
-@@ -3047,12 +3048,6 @@ static void ctx_sched_out(struct perf_ev
- 	if (!ctx->nr_active || !(is_active & EVENT_ALL))
- 		return;
- 
--	/*
--	 * If we had been multiplexing, no rotations are necessary, now no events
--	 * are active.
--	 */
--	ctx->rotate_necessary = 0;
--
- 	perf_pmu_disable(ctx->pmu);
- 	if (is_active & EVENT_PINNED) {
- 		list_for_each_entry_safe(event, tmp, &ctx->pinned_active, active_list)
-@@ -3062,6 +3057,13 @@ static void ctx_sched_out(struct perf_ev
- 	if (is_active & EVENT_FLEXIBLE) {
- 		list_for_each_entry_safe(event, tmp, &ctx->flexible_active, active_list)
- 			group_sched_out(event, cpuctx, ctx);
-+
-+		/*
-+		 * Since we cleared EVENT_FLEXIBLE, also clear
-+		 * rotate_necessary, is will be reset by
-+		 * ctx_flexible_sched_in() when needed.
-+		 */
-+		ctx->rotate_necessary = 0;
- 	}
- 	perf_pmu_enable(ctx->pmu);
- }
-@@ -3800,6 +3802,12 @@ ctx_event_to_rotate(struct perf_event_co
- 				      typeof(*event), group_node);
- 	}
- 
-+	/*
-+	 * Unconditionally clear rotate_necessary; if ctx_flexible_sched_in()
-+	 * finds there are unschedulable events, it will set it again.
-+	 */
-+	ctx->rotate_necessary = 0;
-+
- 	return event;
- }
- 
+ static const struct dss_features omap3630_dss_feats = {
+-	.fck_div_max		=	32,
++	.fck_div_max		=	31,
+ 	.dss_fck_multiplier	=	1,
+ 	.parent_clk_name	=	"dpll4_ck",
+ 	.dpi_select_source	=	&dss_dpi_select_source_omap2_omap3,
 
 
