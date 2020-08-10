@@ -2,90 +2,78 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56986C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F405FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:44:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30CEA22B4E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:42:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCD0022B4E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:44:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="n2rI8nqq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728234AbgHJSmy (ORCPT
+        id S1728245AbgHJSoR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 14:42:54 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35330 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728151AbgHJSmx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 14:42:53 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id D34E6AB55;
-        Mon, 10 Aug 2020 18:43:12 +0000 (UTC)
-Subject: Re: [PATCH v3 4/7] x86/paravirt: remove 32-bit support from
- PARAVIRT_XXL
-To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        xen-devel@lists.xenproject.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Deep Shah <sdeep@vmware.com>,
-        "VMware, Inc." <pv-drivers@vmware.com>,
-        Stefano Stabellini <sstabellini@kernel.org>
-References: <20200807083826.16794-1-jgross@suse.com>
- <20200807083826.16794-5-jgross@suse.com>
- <a1073b86-ebd5-68b6-7761-99669dd93e1c@oracle.com>
- <4c5fb964-6acb-6bb8-4eff-0bcb67d922f2@suse.com>
- <8506b0cd-6f7e-7505-d9b9-e1468cefa4ec@oracle.com>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <c0917f5a-ffec-d422-bf8b-8c8859ea4312@suse.com>
-Date:   Mon, 10 Aug 2020 20:42:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 10 Aug 2020 14:44:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37968 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728166AbgHJSoQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 14:44:16 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93357C061756;
+        Mon, 10 Aug 2020 11:44:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=PzoXtefc2xa4aDuZ2kahfOK5e4Ic5jpl/FUwSRINSMw=; b=n2rI8nqq9g27Fx4PaBWbXc/5s8
+        MaiThRqzynKZI8KRWOT5ciRt4PXAjekSHawWYDocen++frKVMugPmyz5D6d3GgJzzx3w7w4Z115E8
+        d7DwQSrgdfEKHY4tZagFh+nlwA9YjlSYXRyt9ahdq1JFk/ppXj+3UZjW7ETam/VVydw4Qzyl/opYq
+        GBMkv5SglxD4anzP1i1RZ4JdXYwLvWUTUuUx0n2cxlDtrXRyzEy3XYJVHutecQg8mSBi/DxKS5hVU
+        ayW1wfVR3fext3XddEbN1u4U91HkvNRoLew+qr8qplaRy4Hmox7Vjcoj3W1OTheKNs12y+Vp0zsUf
+        2xtCPMRw==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k5CmL-0008PC-DZ; Mon, 10 Aug 2020 18:44:13 +0000
+Date:   Mon, 10 Aug 2020 19:44:13 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Puranjay Mohan <puranjay12@gmail.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>, skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Driver-API: Documentation: Replace deprecated :c:func:
+ Usage
+Message-ID: <20200810184413.GO17456@casper.infradead.org>
+References: <20200810182107.18577-1-puranjay12@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <8506b0cd-6f7e-7505-d9b9-e1468cefa4ec@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200810182107.18577-1-puranjay12@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10.08.20 18:53, Boris Ostrovsky wrote:
-> On 8/10/20 12:39 AM, Jürgen Groß wrote:
->> On 09.08.20 04:34, Boris Ostrovsky wrote:
->>> On 8/7/20 4:38 AM, Juergen Gross wrote:
->>>> @@ -377,10 +373,7 @@ static inline pte_t __pte(pteval_t val)
->>>>    {
->>>>        pteval_t ret;
->>>>    -    if (sizeof(pteval_t) > sizeof(long))
->>>> -        ret = PVOP_CALLEE2(pteval_t, mmu.make_pte, val, (u64)val >>
->>>> 32);
->>>> -    else
->>>> -        ret = PVOP_CALLEE1(pteval_t, mmu.make_pte, val);
->>>> +    ret = PVOP_CALLEE1(pteval_t, mmu.make_pte, val);
->>>>          return (pte_t) { .pte = ret };
->>>
->>>
->>> Can this now simply return (pte_t) ret?
->>
->> I don't think so, but I can turn it into
->>
->>    return native_make_pte(PVOP_CALLEE1(...));
-> 
-> 
-> I thought that since now this is only built for 64-bit we don't have to
-> worry about different pte_t definitions and can do what we do for
-> example, for __pgd()?
+On Mon, Aug 10, 2020 at 11:51:07PM +0530, Puranjay Mohan wrote:
+> Replace :c:func: with func() as the previous usage is deprecated.
 
-Yes, I did that:
+Generally, reflowing text as part of these patches is discouraged,
+but I'd make an exception here:
 
-  return (pte_t) { ret };
+> @@ -135,15 +135,15 @@ Accessing Port Space
+>  
+>  Accesses to this space are provided through a set of functions which
+>  allow 8-bit, 16-bit and 32-bit accesses; also known as byte, word and
+> -long. These functions are :c:func:`inb()`, :c:func:`inw()`,
+> -:c:func:`inl()`, :c:func:`outb()`, :c:func:`outw()` and
+> -:c:func:`outl()`.
+> +long. These functions are inb(), inw(),
+> +inl(), outb(), outw() and
+> +outl().
 
+...
++long. These functions are inb(), inw(), inl(), outb(), outw() and outl().
 
-Juergen
-
+The others are more of a judgement call where we could go either way.
