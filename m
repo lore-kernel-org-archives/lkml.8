@@ -2,179 +2,152 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0606C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 13:34:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 625D5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 13:34:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB9D3206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 13:34:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F038D206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 13:34:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=axis.com header.i=@axis.com header.b="OHaUKbGG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbgHJNeB (ORCPT
+        id S1726867AbgHJNe2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 09:34:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46904 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726465AbgHJNeA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 09:34:00 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40E6EC061756
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 06:34:00 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1k57w5-0002ut-S7; Mon, 10 Aug 2020 15:33:57 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1k57w4-0006od-PD; Mon, 10 Aug 2020 15:33:56 +0200
-Date:   Mon, 10 Aug 2020 15:33:56 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Ahmad Fatoum <a.fatoum@pengutronix.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thorsten Scherer <t.scherer@eckelmann.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>
-Subject: Re: [PATCH] gpio: siox: indicate exclusive support of threaded IRQs
-Message-ID: <20200810133356.wn2fk66pei3w5yua@pengutronix.de>
-References: <20200804091603.541-1-a.fatoum@pengutronix.de>
- <20200805061753.5o63zu4ionhgjab4@pengutronix.de>
- <871rkkhy7v.fsf@nanos.tec.linutronix.de>
- <CACRpkdaOysS1-Y=3ghQ+1qbMTR8yi3bHg=_+gUOPo_EcmGmJiw@mail.gmail.com>
- <87r1sjham2.fsf@nanos.tec.linutronix.de>
- <20200806194608.bdhvltvwxi3opykk@pengutronix.de>
- <87eeojh5vh.fsf@nanos.tec.linutronix.de>
- <20200806210709.5etazgtsfgkdnoui@pengutronix.de>
+        Mon, 10 Aug 2020 09:34:28 -0400
+Received: from smtp1.axis.com ([195.60.68.17]:2977 "EHLO smtp1.axis.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726614AbgHJNe0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 09:34:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=axis.com; l=2535; q=dns/txt; s=axis-central1;
+  t=1597066465; x=1628602465;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=jyiBG+7AxYWs1fq5Ne7NZgRbcmmsQfSp3ovATn+TQUg=;
+  b=OHaUKbGGccMxDB0lYNItxMumpeHSLTK98lag/BqKMPh6SfjoKm5Sqqpw
+   zRyFgIhsLhm91AUAHmmIktL/jARlI52oOqXg/08m+7RVjabjAqVDD//YU
+   H2NQROY2Nn831i5GRCbzAywT6Q+1y4sqEZ/xDKuYS4rAW9WtwIhO0n935
+   u1Nw8NF+cTwUP0/F4h2LG8Orr/oiB3+rhgtmCMw73xLd+YHinvv2eMmmk
+   PLdUOTL1rSrtQCttBbmcHiJltOLB4OBuTTPVqWbJje6ofv6zL+3nkufkP
+   Py3IMvc6qc4BMQ7KxNrAUh7pi4K+6lVDnBddfCwrkvuZkBHWRpDg0dbqg
+   g==;
+IronPort-SDR: IZbcggZ2K74SXZeXsM6xN/FVSB/v1r84WnVKG3tsM1528CCkt53pq+bRQMeDwbopwcPpM6WxFK
+ x9w5pq6cO0qbraRIHP/Ztkn1C+05OCpnec+ZRO8ZxqF/imDlXcxEU9AdxISEmFdARx26r2RxYX
+ bg7gO9GeucDVPO1N5OnZbZWTz+YX9bishi6J4pFyw/oX+jPSGQEFk7F6rdHSJVrkg5W9LTQa/V
+ P7cCXNXovbuaU2sMLGSenFq6L48qJd8Jvnzsx59Ucdg/I5VW7+AUHkqD5zQaqx8FJLaDWuufVq
+ RhM=
+X-IronPort-AV: E=Sophos;i="5.75,457,1589234400"; 
+   d="scan'208";a="11653402"
+From:   Vincent Whitchurch <vincent.whitchurch@axis.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>
+CC:     <kernel@axis.com>, <linux-kernel@vger.kernel.org>,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>
+Subject: [PATCH] perf bench mem: Always memset source before memcpy
+Date:   Mon, 10 Aug 2020 15:34:04 +0200
+Message-ID: <20200810133404.30829-1-vincent.whitchurch@axis.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="3fex52n3xl56lef6"
-Content-Disposition: inline
-In-Reply-To: <20200806210709.5etazgtsfgkdnoui@pengutronix.de>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+For memcpy, the source pages are memset to zero only when --cycles is
+used.  This leads to wildly different results with or without --cycles,
+since all sources pages are likely to be mapped to the same zero page
+without explicit writes.
 
---3fex52n3xl56lef6
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Before this fix:
 
-On Thu, Aug 06, 2020 at 11:07:09PM +0200, Uwe Kleine-K=F6nig wrote:
-> Hello Thomas,
->=20
-> On Thu, Aug 06, 2020 at 10:33:06PM +0200, Thomas Gleixner wrote:
-> > Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de> writes:
-> > > On Thu, Aug 06, 2020 at 08:50:45PM +0200, Thomas Gleixner wrote:
-> > >> handle_nested_irq() does not care. It cares about thread context,
-> > >> external reentrancy protection for the same nested interrupt and that
-> > >> the nested interrupt has a thread handler.
-> > >>=20
-> > >> The latter is what goes belly up because w/o that threaded bit set t=
-he
-> > >> GPIO core fails to set nested thread. So if a consumer requests an
-> > >> interrupt with request_any_context_irq() then that fails to select
-> > >> thread mode which means the threaded handler is not set causing
-> > >> handle_nested_irq() to fail.
-> > >
-> > > For a caller of request_threaded_irq() that passes a relevant hardirq
-> > > handler the hardirq handler is never called but request_threaded_irq()
-> > > doesn't fail. The handler is just replaced by irq_nested_primary_hand=
-ler
-> > > in __setup_irq(). Is that a bug? (I didn't test, just read the code, =
-so I
-> > > might have missed something.)
-> >=20
-> > Depends on what the threaded handler expects what the primary handler
-> > has done. It might just work or not :)
->=20
-> So we need something like:
->=20
-> diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
-> index 48c38e09c673..31777a0b79df 100644
-> --- a/kernel/irq/manage.c
-> +++ b/kernel/irq/manage.c
-> @@ -1393,12 +1393,18 @@ __setup_irq(unsigned int irq, struct irq_desc *de=
-sc, struct irqaction *new)
->  			ret =3D -EINVAL;
->  			goto out_mput;
->  		}
-> -		/*
-> -		 * Replace the primary handler which was provided from
-> -		 * the driver for non nested interrupt handling by the
-> -		 * dummy function which warns when called.
-> -		 */
-> -		new->handler =3D irq_nested_primary_handler;
-> +
-> +		if (new->handler =3D=3D NULL) {
-> +			/* Scream loud if the primary handler gets called */
-> +			new->handler =3D irq_nested_primary_handler;
-> +		} else {
-> +			/*
-> +			 * The handler won't be called as the requestor expects,
-> +			 * so refuse to install the handler
-> +			 */
-> +			ret =3D -EINVAL;
-> +			goto out_mput;
-> +		}
->  	} else {
->  		if (irq_settings_can_thread(desc)) {
->  			ret =3D irq_setup_forced_threading(new);
->=20
+$ export cmd="./perf stat -e LLC-loads -- ./perf bench \
+  mem memcpy -s 1024MB -l 100 -f default"
+$ $cmd
 
-The siox stuff is used at Eckelmann (i.e. probably the only siox user)
-via /dev/gpiochip%d. The code providing this device uses
-request_threaded_irq(), so that's why we didn't run into the oops. That
-the primary handler might not run was noticed already and cared for in
-commit 1033be58992f ("gpiolib: fix line event timestamps for nested
-irqs").
+         2,935,826      LLC-loads
+       3.821677452 seconds time elapsed
 
-I grepped around a bit and I think most other drivers depend on their
-primary handler being called. (Some primary handlers disable and/or mask
-the irq[1], this is wrong, isn't it?)
+$ $cmd --cycles
 
-So I really think request_threaded_irq should not silently rop the
-primary handler on the floor.
+       217,533,436      LLC-loads
+       8.616725985 seconds time elapsed
 
-Best regards
-Uwe
+After this fix:
 
-[1] I saw:
- - arch/mips/alchemy/devboards/db1200.c
- - drivers/crypto/hisilicon/sec/sec_drv.c
- - drivers/crypto/stm32/stm32-hash.c
- - drivers/dma/idxd/init.c
+$ $cmd
 
+       214,459,686      LLC-loads
+       8.674301124 seconds time elapsed
 
+$ $cmd --cycles
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+       214,758,651      LLC-loads
+       8.644480006 seconds time elapsed
 
---3fex52n3xl56lef6
-Content-Type: application/pgp-signature; name="signature.asc"
+Fixes: 47b5757bac03c3387c ("perf bench mem: Move boilerplate memory allocation to the infrastructure")
+Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
+---
+ tools/perf/bench/mem-functions.c | 21 +++++++++++----------
+ 1 file changed, 11 insertions(+), 10 deletions(-)
 
------BEGIN PGP SIGNATURE-----
+diff --git a/tools/perf/bench/mem-functions.c b/tools/perf/bench/mem-functions.c
+index 9235b76501be..19d45c377ac1 100644
+--- a/tools/perf/bench/mem-functions.c
++++ b/tools/perf/bench/mem-functions.c
+@@ -223,12 +223,8 @@ static int bench_mem_common(int argc, const char **argv, struct bench_mem_info *
+ 	return 0;
+ }
+ 
+-static u64 do_memcpy_cycles(const struct function *r, size_t size, void *src, void *dst)
++static void memcpy_prefault(memcpy_t fn, size_t size, void *src, void *dst)
+ {
+-	u64 cycle_start = 0ULL, cycle_end = 0ULL;
+-	memcpy_t fn = r->fn.memcpy;
+-	int i;
+-
+ 	/* Make sure to always prefault zero pages even if MMAP_THRESH is crossed: */
+ 	memset(src, 0, size);
+ 
+@@ -237,6 +233,15 @@ static u64 do_memcpy_cycles(const struct function *r, size_t size, void *src, vo
+ 	 * to not measure page fault overhead:
+ 	 */
+ 	fn(dst, src, size);
++}
++
++static u64 do_memcpy_cycles(const struct function *r, size_t size, void *src, void *dst)
++{
++	u64 cycle_start = 0ULL, cycle_end = 0ULL;
++	memcpy_t fn = r->fn.memcpy;
++	int i;
++
++	memcpy_prefault(fn, size, src, dst);
+ 
+ 	cycle_start = get_cycles();
+ 	for (i = 0; i < nr_loops; ++i)
+@@ -252,11 +257,7 @@ static double do_memcpy_gettimeofday(const struct function *r, size_t size, void
+ 	memcpy_t fn = r->fn.memcpy;
+ 	int i;
+ 
+-	/*
+-	 * We prefault the freshly allocated memory range here,
+-	 * to not measure page fault overhead:
+-	 */
+-	fn(dst, src, size);
++	memcpy_prefault(fn, size, src, dst);
+ 
+ 	BUG_ON(gettimeofday(&tv_start, NULL));
+ 	for (i = 0; i < nr_loops; ++i)
+-- 
+2.25.1
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8xTMEACgkQwfwUeK3K
-7AmXrAf6A6Q2k3DoADwkOMt5SOZJoWBkLVOwOALEc/qdFz8dOjYhTP7NMPLgpfIE
-uSo8H+NXI6V1sBmbuJS9EcwtAVc77eJ+krQ2+wVGZ2RYtMQgEc9j5RuodsXmxUtZ
-WMog0aYDAeKhKK521vl1VzXN4w1OGW3EGJeklPkQD3qFWb67SQmm/oVs49gtn51q
-SE9+QwnthqX3W/yMN8k9a8phQbCzISK4BBiz/m7uo+QxIyM1qfFLUqyTt3OSljL2
-oe61PKjjsBWodf2DUmJFv+fZQHMgUPs+zV/2hugOYwNKilf7EGjlvfqJvuwSpfHv
-g40WVoz4JvERPNl4PMBJuEAEQk1v/g==
-=j+b9
------END PGP SIGNATURE-----
-
---3fex52n3xl56lef6--
