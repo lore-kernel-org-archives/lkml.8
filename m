@@ -2,260 +2,115 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AB3FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 17:42:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6350AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 17:50:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B9CA207DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 17:42:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C55720791
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 17:50:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bBDVb1h6"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="lf4Z8/x6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728108AbgHJRmY (ORCPT
+        id S1727918AbgHJRuj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 13:42:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56720 "EHLO
+        Mon, 10 Aug 2020 13:50:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727841AbgHJRmR (ORCPT
+        with ESMTP id S1727003AbgHJRuh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 13:42:17 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64C02C061756
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 10:42:16 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id u20so5951687pfn.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 10:42:16 -0700 (PDT)
+        Mon, 10 Aug 2020 13:50:37 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA42CC061756
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 10:50:36 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id r11so5955183pfl.11
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 10:50:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=P9cttY//HN0s7WrW/AntSds1tktryGK3Uda8KTSA1XY=;
-        b=bBDVb1h6uSqzZKnbEO01+b5mEJAB9ZqGPbygd7/o8tEQYBBK9aV3TNTbkM41bMScyb
-         Sw+3sHv8adjoxx9Qz6+ktQ7enYfL/ctSNpZFe6TtBlzTKBixZ4tindjiadYSb6HuvnUE
-         0ExAQ0TcQzQmSwHwjTqUiPozcUDPBGYchex1N/3iXgA1MSA5jHwKYVE+7hPm4yYMMjB1
-         GjnMuZc/kPSKAjQilH1fqEJ+lfeY6TCxxFnYbzlxlRYYYVs4noyqKeUbIg7tF2PPBtD9
-         UUCz1a7a8Qff86lLgsGYUOh08YNGpVubiNaA3T0uYor3h0HFpvClTa3BSJNcaINtfS2i
-         O8Yw==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=KCbZaA2H4gGqQIl7shuSw8Q2zg/8QxZHjSgK2lY23U4=;
+        b=lf4Z8/x61x8hstJllWMdWgDivN0szStCTsr10NgTwRvrfLe/GFeTVyC9gtQBk1tKP0
+         jHXSY9/ck8F+Yn5/Q2QpHC4qieLwewS3ogyL3T7dyHWbn1Fs0aB7d8VObfIpKOvsej4I
+         3+JmUWtymVuGSKfm7NQSTf3UIiQ1H0OEsds3zUKPg+IuJWCqc97PzHHhBoFNBAvt6okK
+         Rnb8WJdFbY1GHrKcyav5ph0ZXWBYGgRfd/5RKstm5Fm7juT/cRbbY/7T3czKtSeTkZ45
+         sVwxgzwowa3lumTTVx84B38OIzqFWIWNtu2VLA809BDOptCs8KE+6dBb8xmL/fRCuA4B
+         b/tg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=P9cttY//HN0s7WrW/AntSds1tktryGK3Uda8KTSA1XY=;
-        b=OOWsuSBMzwsv/T/FyjL1QyIFNYTubQPCNftjy+p97BXrd+mjWY8q7gDRbX/tVSpirx
-         Gksd6KpkwfDJqRq5jxLNBMXySGD+Getg9Wsnde0fcwWVHxMnvz+hhOtkdmqcHQ+dCMF5
-         etbDYbZ1VJMTFAgeDrMQGTzrSUVkKNfbKOw0n9jq8BLzn4YWCrYzIHHx9H5I34ox9kK+
-         /SkF0ZfBLY2iqjdMtY+iDvVJzELlnCIBQPKyzEson+hp1Ps0dq3dbFjzkRdLPOWqiIvw
-         SgzzvxocDqTfaTcKVc+IfS+yIQMgQNGmFjKU+dhMRBahRFbd064o8pZ8bNTKuWm5dN1C
-         ScXg==
-X-Gm-Message-State: AOAM531kDGpgR3sHDbk/yh8vcEBfAGjXNi13OdKy26NQN19+x803eGy+
-        1hXHl0fDD4MPR9BnB1B+P47pVw==
-X-Google-Smtp-Source: ABdhPJyaFDp4DqisVSR8qMh6rbscLCk8/dC2XkKQ75Hmv7MBj3gSyBHobyQbHlT56AX6c8d4dbnRKw==
-X-Received: by 2002:a62:c541:: with SMTP id j62mr2090233pfg.257.1597081334889;
-        Mon, 10 Aug 2020 10:42:14 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id q82sm25718382pfc.139.2020.08.10.10.42.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Aug 2020 10:42:14 -0700 (PDT)
-Date:   Mon, 10 Aug 2020 11:42:12 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>, coresight@lists.linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCHv3] coresight: etm4x: Fix etm4_count race by moving cpuhp
- callbacks to init
-Message-ID: <20200810174212.GA3223977@xps15>
-References: <20200729051310.18436-1-saiprakash.ranjan@codeaurora.org>
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=KCbZaA2H4gGqQIl7shuSw8Q2zg/8QxZHjSgK2lY23U4=;
+        b=oP3loaGaJy3iFJUbsoBAob+Gf9wKvvXq1BskvhyCAXrTLRDsedjnuLUriBWSWQoBE3
+         CZYmIlcoYzV6rDz88Nl+foUGQ347S3wQQD/9vBHH0AJmlxuph1k+wv+wbZqymX8F4NwK
+         XKJmSB/3r2VsNNWPOvJbkyuM73BMEygKfDgD30mgTAvgiWG6QhjdXK91JupWnu+/ioyC
+         UgdM/dz9ZK7ErvoRYO0lp7DNOiN8PEIR2kaoGPCEQWNNhj/7cyUmLvOik3vyU+qT8Y9Z
+         5sH7u7w+buxbrX9mulAfOQIe9RL0wjNbws+Hki9BMvG6maFTcgLhx5coIqurhJERd2vx
+         H0+w==
+X-Gm-Message-State: AOAM530JbxX84w1+5N3bRuDF5mvyKVYLg+EeVuH/ZfAKMj5+tRiHHKvl
+        2fsEwLEscA1bsZj4PT410ZiV2A==
+X-Google-Smtp-Source: ABdhPJwiA6SSdo/T7MTHmUtxtnsZ23rKpLiJmI0TswWscbOsqjpnTSbRfknrF1/cU7UM9SPqQ/mANQ==
+X-Received: by 2002:aa7:9f92:: with SMTP id z18mr2114507pfr.260.1597081836160;
+        Mon, 10 Aug 2020 10:50:36 -0700 (PDT)
+Received: from [192.168.1.182] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id k23sm18703716pgb.92.2020.08.10.10.50.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Aug 2020 10:50:35 -0700 (PDT)
+Subject: Re: [PATCH] kernel: update callers of task_work_add() to use
+ TWA_RESUME
+From:   Jens Axboe <axboe@kernel.dk>
+To:     peterz@infradead.org
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>
+References: <10debfb3-25f2-20ed-d4f3-1d95ba4c2129@kernel.dk>
+ <20200810114407.GT2674@hirez.programming.kicks-ass.net>
+ <21d27dfe-91f8-ebc3-6390-a0345603ac28@kernel.dk>
+Message-ID: <2aeafd33-7e26-cdfc-9a4c-98965faeccfb@kernel.dk>
+Date:   Mon, 10 Aug 2020 11:50:33 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200729051310.18436-1-saiprakash.ranjan@codeaurora.org>
+In-Reply-To: <21d27dfe-91f8-ebc3-6390-a0345603ac28@kernel.dk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 10:43:10AM +0530, Sai Prakash Ranjan wrote:
-> etm4_count keeps track of number of ETMv4 registered and on some systems,
-> a race is observed on etm4_count variable which can lead to multiple calls
-> to cpuhp_setup_state_nocalls_cpuslocked(). This function internally calls
-> cpuhp_store_callbacks() which prevents multiple registrations of callbacks
-> for a given state and due to this race, it returns -EBUSY leading to ETM
-> probe failures like below.
+On 8/10/20 8:37 AM, Jens Axboe wrote:
+> On 8/10/20 5:44 AM, peterz@infradead.org wrote:
+>> On Sat, Aug 08, 2020 at 03:43:50PM -0600, Jens Axboe wrote:
+>>> Any pre-existing caller of this function uses 'true' to signal to use
+>>> notifications or not, but we now also have signaled notifications.
+>>> Update existing callers that specify 'true' for notify to use the
+>>> updated TWA_RESUME instead.
+>>>
+>>> This was noted in the original commit as well:
+>>>
+>>> e91b48162332 ("task_work: teach task_work_add() to do signal_wake_up()")
+>>>
+>>> Cc: Oleg Nesterov <oleg@redhat.com>
+>>> Cc: Peter Zijlstra <peterz@infradead.org>
+>>> Signed-off-by: Jens Axboe <axboe@kernel.dk>
+>>>
+>>
+>> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+>>
+>> How do you want to route this?
 > 
->  coresight-etm4x: probe of 7040000.etm failed with error -16
-> 
-> This race can easily be triggered with async probe by setting probe type
-> as PROBE_PREFER_ASYNCHRONOUS and with ETM power management property
-> "arm,coresight-loses-context-with-cpu".
-> 
-> Prevent this race by moving cpuhp callbacks to etm driver init since the
-> cpuhp callbacks doesn't have to depend on the etm4_count and can be once
-> setup during driver init. Similarly we move cpu_pm notifier registration
-> to driver init and completely remove etm4_count usage. Also now we can
-> use non cpuslocked version of cpuhp callbacks with this movement.
-> 
-> Fixes: 9b6a3f3633a5 ("coresight: etmv4: Fix CPU power management setup in probe() function")
-> Fixes: 58eb457be028 ("hwtracing/coresight-etm4x: Convert to hotplug state machine")
-> Suggested-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> I don't really care, as I have no dependencies on it. Feel free to queue
+> it up! It's just sitting at the top of my io_uring branch right now,
+> but that's because I had to stuff it somewhere. Easy to pop off the top.
 
-I have applied this patch to my local tree - it will be published when v5.9-rc1
-comes out next week.
+FWIW, I dropped this from my branch, so would be great if you or Oleg
+could push this one upstream.
 
-Thanks,
-Mathieu
+-- 
+Jens Axboe
 
-> ---
-> 
-> Changes in v3:
->  * Minor cleanups from v2 and change to device_initcall (Stephen Boyd)
->  * Move to non cpuslocked cpuhp callbacks and rename to etm_pm_setup() (Mike Leach) 
-> 
-> Changes in v2:
->  * Rearrange cpuhp callbacks and move them to driver init (Suzuki K Poulose)
-> 
-> ---
->  drivers/hwtracing/coresight/coresight-etm4x.c | 65 +++++++++----------
->  1 file changed, 31 insertions(+), 34 deletions(-)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
-> index 6d7d2169bfb2..fddfd93b9a7b 100644
-> --- a/drivers/hwtracing/coresight/coresight-etm4x.c
-> +++ b/drivers/hwtracing/coresight/coresight-etm4x.c
-> @@ -48,8 +48,6 @@ module_param(pm_save_enable, int, 0444);
->  MODULE_PARM_DESC(pm_save_enable,
->  	"Save/restore state on power down: 1 = never, 2 = self-hosted");
->  
-> -/* The number of ETMv4 currently registered */
-> -static int etm4_count;
->  static struct etmv4_drvdata *etmdrvdata[NR_CPUS];
->  static void etm4_set_default_config(struct etmv4_config *config);
->  static int etm4_set_event_filters(struct etmv4_drvdata *drvdata,
-> @@ -1398,28 +1396,25 @@ static struct notifier_block etm4_cpu_pm_nb = {
->  	.notifier_call = etm4_cpu_pm_notify,
->  };
->  
-> -/* Setup PM. Called with cpus locked. Deals with error conditions and counts */
-> -static int etm4_pm_setup_cpuslocked(void)
-> +/* Setup PM. Deals with error conditions and counts */
-> +static int __init etm4_pm_setup(void)
->  {
->  	int ret;
->  
-> -	if (etm4_count++)
-> -		return 0;
-> -
->  	ret = cpu_pm_register_notifier(&etm4_cpu_pm_nb);
->  	if (ret)
-> -		goto reduce_count;
-> +		return ret;
->  
-> -	ret = cpuhp_setup_state_nocalls_cpuslocked(CPUHP_AP_ARM_CORESIGHT_STARTING,
-> -						   "arm/coresight4:starting",
-> -						   etm4_starting_cpu, etm4_dying_cpu);
-> +	ret = cpuhp_setup_state_nocalls(CPUHP_AP_ARM_CORESIGHT_STARTING,
-> +					"arm/coresight4:starting",
-> +					etm4_starting_cpu, etm4_dying_cpu);
->  
->  	if (ret)
->  		goto unregister_notifier;
->  
-> -	ret = cpuhp_setup_state_nocalls_cpuslocked(CPUHP_AP_ONLINE_DYN,
-> -						   "arm/coresight4:online",
-> -						   etm4_online_cpu, NULL);
-> +	ret = cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN,
-> +					"arm/coresight4:online",
-> +					etm4_online_cpu, NULL);
->  
->  	/* HP dyn state ID returned in ret on success */
->  	if (ret > 0) {
-> @@ -1428,21 +1423,15 @@ static int etm4_pm_setup_cpuslocked(void)
->  	}
->  
->  	/* failed dyn state - remove others */
-> -	cpuhp_remove_state_nocalls_cpuslocked(CPUHP_AP_ARM_CORESIGHT_STARTING);
-> +	cpuhp_remove_state_nocalls(CPUHP_AP_ARM_CORESIGHT_STARTING);
->  
->  unregister_notifier:
->  	cpu_pm_unregister_notifier(&etm4_cpu_pm_nb);
-> -
-> -reduce_count:
-> -	--etm4_count;
->  	return ret;
->  }
->  
-> -static void etm4_pm_clear(void)
-> +static void __init etm4_pm_clear(void)
->  {
-> -	if (--etm4_count != 0)
-> -		return;
-> -
->  	cpu_pm_unregister_notifier(&etm4_cpu_pm_nb);
->  	cpuhp_remove_state_nocalls(CPUHP_AP_ARM_CORESIGHT_STARTING);
->  	if (hp_online) {
-> @@ -1498,22 +1487,12 @@ static int etm4_probe(struct amba_device *adev, const struct amba_id *id)
->  	if (!desc.name)
->  		return -ENOMEM;
->  
-> -	cpus_read_lock();
->  	etmdrvdata[drvdata->cpu] = drvdata;
->  
->  	if (smp_call_function_single(drvdata->cpu,
->  				etm4_init_arch_data,  drvdata, 1))
->  		dev_err(dev, "ETM arch init failed\n");
->  
-> -	ret = etm4_pm_setup_cpuslocked();
-> -	cpus_read_unlock();
-> -
-> -	/* etm4_pm_setup_cpuslocked() does its own cleanup - exit on error */
-> -	if (ret) {
-> -		etmdrvdata[drvdata->cpu] = NULL;
-> -		return ret;
-> -	}
-> -
->  	if (etm4_arch_supported(drvdata->arch) == false) {
->  		ret = -EINVAL;
->  		goto err_arch_supported;
-> @@ -1560,7 +1539,6 @@ static int etm4_probe(struct amba_device *adev, const struct amba_id *id)
->  
->  err_arch_supported:
->  	etmdrvdata[drvdata->cpu] = NULL;
-> -	etm4_pm_clear();
->  	return ret;
->  }
->  
-> @@ -1598,4 +1576,23 @@ static struct amba_driver etm4x_driver = {
->  	.probe		= etm4_probe,
->  	.id_table	= etm4_ids,
->  };
-> -builtin_amba_driver(etm4x_driver);
-> +
-> +static int __init etm4x_init(void)
-> +{
-> +	int ret;
-> +
-> +	ret = etm4_pm_setup();
-> +
-> +	/* etm4_pm_setup() does its own cleanup - exit on error */
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = amba_driver_register(&etm4x_driver);
-> +	if (ret) {
-> +		pr_err("Error registering etm4x driver\n");
-> +		etm4_pm_clear();
-> +	}
-> +
-> +	return ret;
-> +}
-> +device_initcall(etm4x_init);
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
-> 
