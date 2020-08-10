@@ -2,348 +2,165 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01586C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 20:08:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A52D1C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 20:09:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE7B32083B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 20:08:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A32820838
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 20:09:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="YxjIiKkp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726469AbgHJUI4 (ORCPT
+        id S1726515AbgHJUJY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 16:08:56 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:50066 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726068AbgHJUI4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 16:08:56 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 856182947F5
-Message-ID: <71e14c99e7b9b134201272894e96ac14914f7817.camel@collabora.com>
-Subject: Re: [PATCH v2 03/14] media: uapi: h264: Split prediction weight
- parameters
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Jernej =?UTF-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>
-Cc:     linux-media <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Date:   Mon, 10 Aug 2020 17:08:45 -0300
-In-Reply-To: <3175824.PBOCjEjZKB@jernej-laptop>
-References: <20200806151310.98624-1-ezequiel@collabora.com>
-         <2153096.Em8KjNIPHG@jernej-laptop>
-         <1684df93a76cbd5e5f5435d876cf7fb88681b2ab.camel@collabora.com>
-         <3175824.PBOCjEjZKB@jernej-laptop>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3-1 
+        Mon, 10 Aug 2020 16:09:24 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:39720 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726111AbgHJUJX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 16:09:23 -0400
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 4BQRrK1fWRz5m;
+        Mon, 10 Aug 2020 22:09:21 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1597090161; bh=x2W1ts7k6Q36bs2XZvdlym6exqyAoh+vsYhpJCbyDaU=;
+        h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
+        b=YxjIiKkp6ikJP1O/C4DC/cC5avVYsTqzIGXH+BSAc/cd7ZQp3/WRkB/dsFrQmXRgQ
+         4dBAr40teWQ4MtEcy4DRZ3q6asi1TeBdRQjKV+tI9FGf6VgN187Baco+mi9ADivpIx
+         N9Fn4kwHACbkyaSagbXAJWM218+Nk4/2myrXfNjcwEmHUjCk338+YqkZbfZuf62OYG
+         jJtxvPZhVeV3NMgF5VUHSU+WTbGe1CeIPsYN64kOtB5mfWV8o19I6nWT8tOfDE2/uG
+         puDu6XkQHfov9dsOEtlbu51gbKn0y8t7bNz7NE7RqFV7Vq0ZP/Ps2s6VjtcswGLz1I
+         3vhfdhQan/TpA==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.4 at mail
+Date:   Mon, 10 Aug 2020 22:09:21 +0200
+Message-Id: <501708a0f23b9d0a0dd63b38e03bf620f5018e35.1597089543.git.mirq-linux@rere.qmqm.pl>
+In-Reply-To: <cover.1597089543.git.mirq-linux@rere.qmqm.pl>
+References: <cover.1597089543.git.mirq-linux@rere.qmqm.pl>
+From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
+Subject: [RFC PATCH 1/3] regulator: allocate memory outside of regulator_list
+ mutex
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-08-10 at 21:34 +0200, Jernej Škrabec wrote:
-> Dne ponedeljek, 10. avgust 2020 ob 21:30:59 CEST je Ezequiel Garcia 
-> napisal(a):
-> > On Mon, 2020-08-10 at 19:05 +0200, Jernej Škrabec wrote:
-> > > Dne ponedeljek, 10. avgust 2020 ob 14:57:17 CEST je Ezequiel Garcia
-> > > 
-> > > napisal(a):
-> > > > On Sun, 2020-08-09 at 23:11 +0200, Jernej Škrabec wrote:
-> > > > > Dne nedelja, 09. avgust 2020 ob 15:55:50 CEST je Ezequiel Garcia
-> > > 
-> > > napisal(a):
-> > > > > > On Sat, 8 Aug 2020 at 18:01, Jonas Karlman <jonas@kwiboo.se> wrote:
-> > > > > > > On 2020-08-06 17:12, Ezequiel Garcia wrote:
-> > > > > > > > The prediction weight parameters are only required under
-> > > > > > > > certain conditions, which depend on slice header parameters.
-> > > > > > > > 
-> > > > > > > > As specified in section 7.3.3 Slice header syntax, the
-> > > > > > > > prediction
-> > > > > > > > weight table is present if:
-> > > > > > > > 
-> > > > > > > > ((weighted_pred_flag && (slice_type == P || slice_type == SP))
-> > > > > > > > > > \
-> > > > > > > > (weighted_bipred_idc == 1 && slice_type == B))
-> > > > > > > 
-> > > > > > > Maybe a macro can be added to help check this contition?
-> > > > > > > 
-> > > > > > > Something like this maybe:
-> > > > > > > 
-> > > > > > > #define V4L2_H264_CTRL_PRED_WEIGHTS_REQUIRED(pps, slice) \
-> > > > > > > 
-> > > > > > >         ((((pps)->flags & V4L2_H264_PPS_FLAG_WEIGHTED_PRED) && \
-> > > > > > >         
-> > > > > > >          ((slice)->slice_type == V4L2_H264_SLICE_TYPE_P || \
-> > > > > > >          
-> > > > > > >            (slice)->slice_type == V4L2_H264_SLICE_TYPE_SP)) || \
-> > > > > > >          
-> > > > > > >          ((pps)->weighted_bipred_idc == 1 && \
-> > > > > > >          
-> > > > > > >           (slice)->slice_type == V4L2_H264_SLICE_TYPE_B))
-> > > > > > 
-> > > > > > Yeah, that could make sense.
-> > > > > > 
-> > > > > > Note that the biggest value in having the prediction weight table
-> > > > > > separated is to allow  applications to skip setting this largish
-> > > > > > control,
-> > > > > > reducing the amount of data that needs to be passed from userspace
-> > > > > > -- especially when not needed :-)
-> > > > > > 
-> > > > > > > > Given its size, it makes sense to move this table to its
-> > > > > > > > control,
-> > > > > > > > so applications can avoid passing it if the slice doesn't
-> > > > > > > > specify
-> > > > > > > > it.
-> > > > > > > > 
-> > > > > > > > Before this change struct v4l2_ctrl_h264_slice_params was 960
-> > > > > > > > bytes.
-> > > > > > > > With this change, it's 188 bytes and struct
-> > > > > > > > v4l2_ctrl_h264_pred_weight
-> > > > > > > > is 772 bytes.
-> > > > > > > > 
-> > > > > > > > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> > > > > > > > ---
-> > > > > > > > v2: Fix missing Cedrus changes and mssing control declaration,
-> > > > > > > > 
-> > > > > > > >     as noted by Hans and Jernej.
-> > > > > > > > 
-> > > > > > > > ---
-> > > > > > > > 
-> > > > > > > >  .../media/v4l/ext-ctrls-codec.rst             | 19
-> > > > > > > >  ++++++++++++-------
-> > > > > > > >  drivers/media/v4l2-core/v4l2-ctrls.c          |  8 ++++++++
-> > > > > > > >  drivers/staging/media/sunxi/cedrus/cedrus.c   |  7 +++++++
-> > > > > > > >  drivers/staging/media/sunxi/cedrus/cedrus.h   |  1 +
-> > > > > > > >  .../staging/media/sunxi/cedrus/cedrus_dec.c   |  2 ++
-> > > > > > > >  .../staging/media/sunxi/cedrus/cedrus_h264.c  |  6 ++----
-> > > > > > > >  include/media/h264-ctrls.h                    |  5 +++--
-> > > > > > > >  include/media/v4l2-ctrls.h                    |  2 ++
-> > > > > > > >  8 files changed, 37 insertions(+), 13 deletions(-)
-> > > > > > > > 
-> > > > > > > > diff --git
-> > > > > > > > a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> > > > > > > > b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> > > > > > > > index
-> > > > > > > > d1438b1e259f..c36ce5a95fc5 100644
-> > > > > > > > --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> > > > > > > > +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> > > > > > > > @@ -1879,18 +1879,23 @@ enum
-> > > > > > > > v4l2_mpeg_video_h264_hierarchical_coding_type -> >
-> > > > > > > > 
-> > > > > > > >        - 0x00000008
-> > > > > > > >        -
-> > > > > > > > 
-> > > > > > > > -``Prediction Weight Table``
-> > > > > > > > +``V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHTS (struct)``
-> > > > > > > > +    Prediction weight table defined according to :ref:`h264`,
-> > > > > > > > +    section 7.4.3.2 "Prediction Weight Table Semantics".
-> > > > > > > > +    The prediction weight table must be passed by applications
-> > > > > > > > +    under the conditions explained in section 7.3.3 "Slice
-> > > > > > > > header
-> > > > > > > > +    syntax".
-> > > > > > > > 
-> > > > > > > > -    The bitstream parameters are defined according to
-> > > > > > > > :ref:`h264`,
-> > > > > > > > -    section 7.4.3.2 "Prediction Weight Table Semantics". For
-> > > > > > > > further
-> > > > > > > > -    documentation, refer to the above specification, unless
-> > > > > > > > there
-> > > > > > > > is
-> > > > > > > > -    an explicit comment stating otherwise.
-> > > > > > > > +    .. note::
-> > > > > > > > +
-> > > > > > > > +       This compound control is not yet part of the public
-> > > > > > > > kernel
-> > > > > > > > API
-> > > > > > > > and
-> > > > > > > > +       it is expected to change.
-> > > > > > > > 
-> > > > > > > > -.. c:type:: v4l2_h264_pred_weight_table
-> > > > > > > > +.. c:type:: v4l2_ctrl_h264_pred_weights
-> > > > > > > > 
-> > > > > > > >  .. cssclass:: longtable
-> > > > > > > > 
-> > > > > > > > -.. flat-table:: struct v4l2_h264_pred_weight_table
-> > > > > > > > +.. flat-table:: struct v4l2_ctrl_h264_pred_weights
-> > > > > > > > 
-> > > > > > > >      :header-rows:  0
-> > > > > > > >      :stub-columns: 0
-> > > > > > > >      :widths:       1 1 2
-> > > > > > > > 
-> > > > > > > > diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c
-> > > > > > > > b/drivers/media/v4l2-core/v4l2-ctrls.c index
-> > > > > > > > 3f3fbcd60cc6..76c8dc8fb31c
-> > > > > > > > 100644
-> > > > > > > > --- a/drivers/media/v4l2-core/v4l2-ctrls.c
-> > > > > > > > +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-> > > > > > > > @@ -897,6 +897,7 @@ const char *v4l2_ctrl_get_name(u32 id)
-> > > > > > > > 
-> > > > > > > >       case V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS:           
-> > > > > > > >       return
-> > > > > > > >       "H264 Decode Parameters"; case
-> > > > > > > >       V4L2_CID_MPEG_VIDEO_H264_DECODE_MODE:              return
-> > > > > > > >       "H264
-> > > > > > > >       
-> > > > > > > >       Decode Mode"; case V4L2_CID_MPEG_VIDEO_H264_START_CODE:
-> > > > > > > >           return "H264 Start Code";> >
-> > > > > > > > 
-> > > > > > > > +     case V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHTS:            
-> > > > > > > > return
-> > > > > > > > "H264 Prediction Weight Table";> >
-> > > > > > > > 
-> > > > > > > >       case V4L2_CID_MPEG_VIDEO_MPEG2_LEVEL:                  
-> > > > > > > >       return
-> > > > > > > >       
-> > > > > > > >       "MPEG2 Level"; case V4L2_CID_MPEG_VIDEO_MPEG2_PROFILE:
-> > > > > > > >            return "MPEG2 Profile"; case
-> > > > > > > >       
-> > > > > > > >       V4L2_CID_MPEG_VIDEO_MPEG4_I_FRAME_QP:              return
-> > > > > > > >       "MPEG4
-> > > > > > > >       I-Frame QP Value";> >
-> > > > > > > > 
-> > > > > > > > @@ -1412,6 +1413,9 @@ void v4l2_ctrl_fill(u32 id, const char
-> > > > > > > > **name,
-> > > > > > > > enum v4l2_ctrl_type *type,> >
-> > > > > > > > 
-> > > > > > > >       case V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS:
-> > > > > > > >               *type = V4L2_CTRL_TYPE_H264_DECODE_PARAMS;
-> > > > > > > >               break;
-> > > > > > > > 
-> > > > > > > > +     case V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHTS:
-> > > > > > > > +             *type = V4L2_CTRL_TYPE_H264_PRED_WEIGHTS;
-> > > > > > > > +             break;
-> > > > > > > > 
-> > > > > > > >       case V4L2_CID_MPEG_VIDEO_VP8_FRAME_HEADER:
-> > > > > > > >               *type = V4L2_CTRL_TYPE_VP8_FRAME_HEADER;
-> > > > > > > >               break;
-> > > > > > > > 
-> > > > > > > > @@ -1790,6 +1794,7 @@ static int std_validate_compound(const
-> > > > > > > > struct
-> > > > > > > > v4l2_ctrl *ctrl, u32 idx,> >
-> > > > > > > > 
-> > > > > > > >       case V4L2_CTRL_TYPE_H264_SPS:
-> > > > > > > >       case V4L2_CTRL_TYPE_H264_PPS:
-> > > > > > > > 
-> > > > > > > >       case V4L2_CTRL_TYPE_H264_SCALING_MATRIX:
-> > > > > > > > +     case V4L2_CTRL_TYPE_H264_PRED_WEIGHTS:
-> > > > > > > >       case V4L2_CTRL_TYPE_H264_SLICE_PARAMS:
-> > > > > > > >       
-> > > > > > > >       case V4L2_CTRL_TYPE_H264_DECODE_PARAMS:
-> > > > > > > >               break;
-> > > > > > > > 
-> > > > > > > > @@ -2553,6 +2558,9 @@ static struct v4l2_ctrl
-> > > > > > > > *v4l2_ctrl_new(struct
-> > > > > > > > v4l2_ctrl_handler *hdl,> >
-> > > > > > > > 
-> > > > > > > >       case V4L2_CTRL_TYPE_H264_DECODE_PARAMS:
-> > > > > > > >               elem_size = sizeof(struct
-> > > > > > > >               v4l2_ctrl_h264_decode_params);
-> > > > > > > >               break;
-> > > > > > > > 
-> > > > > > > > +     case V4L2_CTRL_TYPE_H264_PRED_WEIGHTS:
-> > > > > > > > +             elem_size = sizeof(struct
-> > > > > > > > v4l2_ctrl_h264_pred_weights);
-> > > > > > > > +             break;
-> > > > > > > > 
-> > > > > > > >       case V4L2_CTRL_TYPE_VP8_FRAME_HEADER:
-> > > > > > > >               elem_size = sizeof(struct
-> > > > > > > >               v4l2_ctrl_vp8_frame_header);
-> > > > > > > >               break;
-> > > > > > > > 
-> > > > > > > > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.c
-> > > > > > > > b/drivers/staging/media/sunxi/cedrus/cedrus.c index
-> > > > > > > > bc27f9430eeb..027cdd1be5a0 100644
-> > > > > > > > --- a/drivers/staging/media/sunxi/cedrus/cedrus.c
-> > > > > > > > +++ b/drivers/staging/media/sunxi/cedrus/cedrus.c
-> > > > > > > > @@ -78,6 +78,13 @@ static const struct cedrus_control
-> > > > > > > > cedrus_controls[]
-> > > > > > > > = {
-> > > > > > > > 
-> > > > > > > >               .codec          = CEDRUS_CODEC_H264,
-> > > > > > > >               .required       = true,
-> > > > > > > >       
-> > > > > > > >       },
-> > > > > > > > 
-> > > > > > > > +     {
-> > > > > > > > +             .cfg = {
-> > > > > > > > +                     .id     =
-> > > > > > > > V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHTS,
-> > > > > > > > +             },
-> > > > > > > > +             .codec          = CEDRUS_CODEC_H264,
-> > > > > > > > +             .required       = true,
-> > > > > > > 
-> > > > > > > This should probably be false if this control is to be optional as
-> > > > > > > implied
-> > > > > > > by the commit message.
-> > > > > > 
-> > > > > > Well, the control is optional if the driver implements it as
-> > > > > > optional,
-> > > > > > which Cedrus isn't currently doing :-)
-> > > > > 
-> > > > > Why do you think so? Prediction weights are filled only when they are
-> > > > > needed:https://elixir.bootlin.com/linux/latest/source/drivers/staging/
-> > > > > medi
-> > > > > a/ sunxi/cedrus/cedrus_h264.c#L370
-> > > > 
-> > > > Right, but that should be changed to be really optional.
-> > > > How does the driver reject/fail the request if the table is NULL?
-> > > 
-> > > It's my understanding that pointer to this table can't be NULL. NULL would
-> > > mean that there is no control with that ID registered in the driver.
-> > 
-> > Hm, I'm starting to think you are right. So, does this mean
-> > the default quantization matrix here is bogus?
-> > 
-> >         if (quantization && quantization->load_intra_quantiser_matrix)
-> >                 matrix = quantization->intra_quantiser_matrix;
-> >         else
-> >                 matrix = intra_quantization_matrix_default;
-> 
-> No, not really. Userspace can set load_intra_quantiser_matrix flag to false.
-> 
+Allocating memory with regulator_list_mutex held makes lockdep unhappy
+when memory pressure makes the system do fs_reclaim on eg. eMMC using
+a regulator. Push the lock inside regulator_init_coupling() after the
+allocation.
 
-Right. But quantization can never be NULL.
+======================================================
+WARNING: possible circular locking dependency detected
+5.7.13+ #533 Not tainted
+------------------------------------------------------
+kswapd0/383 is trying to acquire lock:
+cca78ca4 (&sbi->write_io[i][j].io_rwsem){++++}-{3:3}, at: __submit_merged_write_cond+0x104/0x154
+but task is already holding lock:
+c0e38518 (fs_reclaim){+.+.}-{0:0}, at: __fs_reclaim_acquire+0x0/0x50
+which lock already depends on the new lock.
+the existing dependency chain (in reverse order) is:
+-> #2 (fs_reclaim){+.+.}-{0:0}:
+       fs_reclaim_acquire.part.11+0x40/0x50
+       fs_reclaim_acquire+0x24/0x28
+       __kmalloc+0x54/0x218
+       regulator_register+0x860/0x1584
+       dummy_regulator_probe+0x60/0xa8
+[...]
+other info that might help us debug this:
 
-I think this if (quantization ...) has been confusing me
-into thinking a control can be NULL.
+Chain exists of:
+  &sbi->write_io[i][j].io_rwsem --> regulator_list_mutex --> fs_reclaim
 
-:-)
+Possible unsafe locking scenario:
 
-Thanks for the pointers, this is useful.
+       CPU0                    CPU1
+       ----                    ----
+  lock(fs_reclaim);
+                               lock(regulator_list_mutex);
+                               lock(fs_reclaim);
+  lock(&sbi->write_io[i][j].io_rwsem);
+ *** DEADLOCK ***
 
-Ezequiel
+1 lock held by kswapd0/383:
+ #0: c0e38518 (fs_reclaim){+.+.}-{0:0}, at: __fs_reclaim_acquire+0x0/0x50
+[...]
 
-> Best regards,
-> Jernej
-> 
-> > Thanks,
-> > Ezequiel
-> > 
-> > > Best regards,
-> > > Jernej
-> > > 
-> > > > In any case, I don't think it's necessarily something we need
-> > > > to tackle now.
-> > > > 
-> > > > Thanks,
-> > > > Ezequiel
-> 
-> 
-> 
+Fixes: d8ca7d184b33 ("regulator: core: Introduce API for regulators coupling customization")
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+---
+ drivers/regulator/core.c | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index 2ee109950352..915a727d8fc7 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -4900,7 +4900,7 @@ static void regulator_remove_coupling(struct regulator_dev *rdev)
+ static int regulator_init_coupling(struct regulator_dev *rdev)
+ {
+ 	struct regulator_dev **coupled;
+-	int err, n_phandles;
++	int err = 0, n_phandles;
+ 
+ 	if (!IS_ENABLED(CONFIG_OF))
+ 		n_phandles = 0;
+@@ -4911,6 +4911,7 @@ static int regulator_init_coupling(struct regulator_dev *rdev)
+ 	if (!coupled)
+ 		return -ENOMEM;
+ 
++	mutex_lock(&regulator_list_mutex);
+ 	rdev->coupling_desc.coupled_rdevs = coupled;
+ 
+ 	/*
+@@ -4923,19 +4924,21 @@ static int regulator_init_coupling(struct regulator_dev *rdev)
+ 
+ 	/* regulator isn't coupled */
+ 	if (n_phandles == 0)
+-		return 0;
++		goto out;
+ 
+-	if (!of_check_coupling_data(rdev))
+-		return -EPERM;
++	if (!of_check_coupling_data(rdev)) {
++		err = -EPERM;
++		goto out;
++	}
+ 
+ 	rdev->coupling_desc.coupler = regulator_find_coupler(rdev);
+ 	if (IS_ERR(rdev->coupling_desc.coupler)) {
+ 		err = PTR_ERR(rdev->coupling_desc.coupler);
+ 		rdev_err(rdev, "failed to get coupler: %d\n", err);
+-		return err;
+ 	}
+-
+-	return 0;
++out:
++	mutex_unlock(&regulator_list_mutex);
++	return err;
+ }
+ 
+ static int generic_coupler_attach(struct regulator_coupler *coupler,
+@@ -5135,9 +5138,7 @@ regulator_register(const struct regulator_desc *regulator_desc,
+ 	if (ret < 0)
+ 		goto wash;
+ 
+-	mutex_lock(&regulator_list_mutex);
+ 	ret = regulator_init_coupling(rdev);
+-	mutex_unlock(&regulator_list_mutex);
+ 	if (ret < 0)
+ 		goto wash;
+ 
+-- 
+2.20.1
 
