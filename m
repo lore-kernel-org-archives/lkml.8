@@ -2,107 +2,79 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C002C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 16:01:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00EF2C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 16:04:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5587F2078E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 16:01:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="q3B7YgUm"
+	by mail.kernel.org (Postfix) with ESMTP id CF5012078E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 16:04:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727887AbgHJQBN (ORCPT
+        id S1727840AbgHJQEJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 12:01:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41284 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727079AbgHJQBD (ORCPT
+        Mon, 10 Aug 2020 12:04:09 -0400
+Received: from mail-il1-f197.google.com ([209.85.166.197]:37120 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726720AbgHJQEG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 12:01:03 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D1D0C061788
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 09:01:02 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id f10so5134014plj.8
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 09:01:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=LY7XDlS+r9xqSatoqcPSl1dicDyGmLyMn5WxXWX4PDo=;
-        b=q3B7YgUm7VMx2mfLqu9k9cVpHrzROCKYAwlYzSD/aBGusdfTe2CDC8f4xuA+QLnSjk
-         ROghRiUkxSqgQLgFylgQs+dM1CPaMIXcC9GDsmSUs2N6ioYrKF7MkdEVFDupc3/wSysi
-         WnbLT1x6VqiBI2LM2ByCbE/h+1SRYXpBhLMj/7M1CBmRKw/gm/5iVqeoBNZzsuCkoX8C
-         JgolzwJ+hdHXK7BMoNHLUxfDoSp3N6Dyg9AvvDT8pzdEwxTCSvtvu6pD+PK3KTVhnSs5
-         92iZ3VUnfTrYkKUX3UdtcLW9QcDvUQhj6SqzT3kHJh2mc/Bf4EKsB/tyIA+wcTIUZY6a
-         NkGQ==
+        Mon, 10 Aug 2020 12:04:06 -0400
+Received: by mail-il1-f197.google.com with SMTP id 5so5022465ila.4
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 09:04:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=LY7XDlS+r9xqSatoqcPSl1dicDyGmLyMn5WxXWX4PDo=;
-        b=DOV2UOJ1GoicryGycWagrI2US3V1XaF8MmCrfOhISXHl77vvVWSkw0HtPJ1DPODDe4
-         Y5BLOA1LgRk96/HwDvTkaS+5KvbbIqYFftrOb7SUAzNBKPtIxIjKoEb/pvbmgqLzaSaX
-         VRkItVOJgMzIURKv0vDPUlXmM7ZbjW42dFePXC+Cx+daFhreI/lCXE6JKyoEkZKFmFlV
-         eUq3Nlrpcvk+M0seBGXdqBrHigCuGU1edgSIPlIS2XoZgViugdx1NiHtlS5r0fTdIsZ7
-         o8yqgDDZaeSqUGb1Uh7mTQ4ftIdogezsSsNANyVjglaCXlvoefp60yQNODmStyIZtPBT
-         Y0Pg==
-X-Gm-Message-State: AOAM532i/VWe++bRnXMNIiSzP2iqcUefUoiR7AtwgXR0dNGULmZx4+TY
-        OocrxyiyZLVh1FZNHk3RDtzKsg==
-X-Google-Smtp-Source: ABdhPJz8Y5b+PyT3yZofeU3N4BVvdvRUm8Izs7MwOkG4AnMVxYZEFqAM2ncdP19AMntvbbrQhA2z6Q==
-X-Received: by 2002:a17:90a:6b07:: with SMTP id v7mr17920pjj.138.1597075261076;
-        Mon, 10 Aug 2020 09:01:01 -0700 (PDT)
-Received: from [192.168.1.182] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id c10sm21937840pfc.62.2020.08.10.09.01.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Aug 2020 09:01:00 -0700 (PDT)
-Subject: Re: BUG: unable to handle kernel NULL pointer dereference in
- loop_rw_iter
-To:     syzbot <syzbot+1abbd16e49910f6bbe45@syzkaller.appspotmail.com>,
-        io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        viro@zeniv.linux.org.uk
-References: <00000000000066583105ac87dbf4@google.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <f81cc90f-1d09-4a05-1619-02d44189f03a@kernel.dk>
-Date:   Mon, 10 Aug 2020 10:00:59 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=JYunBAF0CO9I6T7+mCBUdOib7oLhSaU/1OgyuSzfO5o=;
+        b=SkDbSTNvBvPLi/asP6szvHrwhEiDJ7a1NPRv8uIrfUWm8SCr/aQiWTBdEDYUKi5XiM
+         Szg4HYoqW7GuOGi8mRzTp9V8NcFYC44YUuGOWZfjw12zMDFwJl4W2SlnnmQ9j/Nk2j4T
+         yB31DIfyV+RddAYWU5YPhl7obwo2fP/nDmWBKhWOOT1yXcbjdZu37DVgeHIS3CcjC3ys
+         oXNX8OlM0ycbV8EnUZ3cACf3lIpWMQwtD3MX2Ve3C6Pl9/DL6klUQgy+KyDWlyTpWsCq
+         wymuMQUq8uiWLzHZihJGD6/T1AtvFuEzUzzgSLHlOV7QRAplZiOc57orn+pLle4qszeh
+         mpRQ==
+X-Gm-Message-State: AOAM530u2MDxqZVoeUSX0O0lPQmHOhmxEYATc2wVRhoJXBZiIkaLytrE
+        MOOZ/s9hw08x3T9uqBOEp0dnvsskO1hbj+zM4HPTNh++og2t
+X-Google-Smtp-Source: ABdhPJypEi0fFwm9FfdzOt9VyXzPHxfS3H30esVuwqWhNkdWmk6zkV7Hh5f843JOksGNlCV4c68qEFWIGDUNpN78VlBwMuSaIAFL
 MIME-Version: 1.0
-In-Reply-To: <00000000000066583105ac87dbf4@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:546:: with SMTP id i6mr2505029ils.143.1597075445337;
+ Mon, 10 Aug 2020 09:04:05 -0700 (PDT)
+Date:   Mon, 10 Aug 2020 09:04:05 -0700
+In-Reply-To: <000000000000391eaf05ac87b74d@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000099566305ac881a16@google.com>
+Subject: Re: INFO: task hung in io_uring_flush
+From:   syzbot <syzbot+6338dcebf269a590b668@syzkaller.appspotmail.com>
+To:     axboe@kernel.dk, io-uring@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/10/20 9:46 AM, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following issue on:
-> 
-> HEAD commit:    9420f1ce Merge tag 'pinctrl-v5.9-1' of git://git.kernel.or..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=13662f62900000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=72cf85e4237850c8
-> dashboard link: https://syzkaller.appspot.com/bug?extid=1abbd16e49910f6bbe45
-> compiler:       gcc (GCC) 10.1.0-syz 20200507
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15929006900000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15e196aa900000
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+1abbd16e49910f6bbe45@syzkaller.appspotmail.com
+syzbot has bisected this issue to:
 
-Already fixed, just not upstream yet:
+commit f86cd20c9454847a524ddbdcdec32c0380ed7c9b
+Author: Jens Axboe <axboe@kernel.dk>
+Date:   Wed Jan 29 20:46:44 2020 +0000
 
-https://git.kernel.dk/cgit/linux-block/commit/?h=io_uring-5.9&id=2dd2111d0d383df104b144e0d1f6b5a00cb7cd88
+    io_uring: fix linked command file table usage
 
--- 
-Jens Axboe
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16db4d3a900000
+start commit:   9420f1ce Merge tag 'pinctrl-v5.9-1' of git://git.kernel.or..
+git tree:       upstream
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=15db4d3a900000
+console output: https://syzkaller.appspot.com/x/log.txt?x=11db4d3a900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=72cf85e4237850c8
+dashboard link: https://syzkaller.appspot.com/bug?extid=6338dcebf269a590b668
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=141dde52900000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15b196aa900000
 
+Reported-by: syzbot+6338dcebf269a590b668@syzkaller.appspotmail.com
+Fixes: f86cd20c9454 ("io_uring: fix linked command file table usage")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
