@@ -2,106 +2,183 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 014EEC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:58:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 515D4C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:59:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2B69206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:58:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C38F206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:59:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xal2rq4i"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Tf7pYYXr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726869AbgHJM6o (ORCPT
+        id S1726688AbgHJM7l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 08:58:44 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:20133 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726462AbgHJM6n (ORCPT
+        Mon, 10 Aug 2020 08:59:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41606 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726462AbgHJM7j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 08:58:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597064322;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=0XWxoXgTd+Cmn2+Y+VXXovIx+yerjTcX1eN21KuFyjg=;
-        b=Xal2rq4iVe3bQCuOWOefzw9WUXU1SJOLVd84mlyHC7iPfvHAQSZD/+6K4++U1c3xP4rtR/
-        th01CfaI5lzgR6+sBMUbSJ9+PLWAfdjEqrGG1b4Zvtxb7dh6+Xuni3Xu2tm5hSLibq1TnC
-        TCI3HI5ASMvM+i5nou0NVto3YY8dO4o=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-468-ib8iGnd0OACZx5CArPkNpw-1; Mon, 10 Aug 2020 08:58:40 -0400
-X-MC-Unique: ib8iGnd0OACZx5CArPkNpw-1
-Received: by mail-wr1-f70.google.com with SMTP id w7so4202347wrt.9
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 05:58:40 -0700 (PDT)
+        Mon, 10 Aug 2020 08:59:39 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1A6FC061756
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 05:59:38 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id a15so8052412wrh.10
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 05:59:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=FW1Q4XjebKZk2m+j8IXILmM0Omvwg7J33e4+M4nS+ck=;
+        b=Tf7pYYXr7LzEHY1LEd8JqT9o7fgZW4/hKMxt+9miHol6zc4GEq0kDtcsZ/lauz3QYT
+         zwnmzyNSRf+MdEr/cBebqmPfzC/00PUpS4ziiQZS2hg3WxL4aXadsGfNYdD3VqY5OHC1
+         WsfTNZHU1VgK4/SZuyqBWGCGfmGUV0MGbuJfasP33MC9EJSEFt9rfjfY8FYmDsmF6ELM
+         xR/g8oHsCmuI/7Yurg8WFy0LlscUlOpAWB67GDDHk29VNOtRawojqkvuZ1H+9WkYow/h
+         qfHcym9L+tZaG9rpHbmCdozST7I8SslhknWWbG2zuAWfR+FhZ7JchmCm5XwXTLcgFj8X
+         iLdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=0XWxoXgTd+Cmn2+Y+VXXovIx+yerjTcX1eN21KuFyjg=;
-        b=LnYVW0bzK3YM4jhBU01BXeKNLV7QJOx1PU+Y30XW46TYEbyZE8Qt6bQ8V8Sldlzc4/
-         LRy9HijSeg8Z/bB9/7toLp52O8c//jco6TsvVEuDJKVqCy7AsylkrGZmoHfeTedAtwZi
-         tDUuKU5gDJOdzb78dzX9inYWe+8Y3aoDa3CydJNbBdrDYA2rl4zBBggqKp6DeHTLnmCk
-         neqQKXjRkv4+YCRHpoSFrUlrrYW3gfctIlGQ/jaB7WuqrXs9h3lFqsYhudbvt3HGXm/L
-         aPgYxGbB1P+ZnbVRQOeo446Y6/77G7WZ91XTwU4PA3axteM8pVdsDJXaGA9e9I2/oHc0
-         3n2g==
-X-Gm-Message-State: AOAM533fiiInduGpnKlAgMuDI8EJT0j3uwj2pwJq3CDz40ddwHsX1uad
-        30kWbyTUh1DWCFXOAC7t/RG2xcEQ7j0PHGWFgCmb0K7kLqSrARe8db+u3KIdxjMIhIzgVRxitJN
-        dNe5oTMADATFHZnoX7aYwf503
-X-Received: by 2002:a05:6000:141:: with SMTP id r1mr23576324wrx.69.1597064319483;
-        Mon, 10 Aug 2020 05:58:39 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzgVrjE6ddfYhHeuXfquYYvBR+ne2IStmNs3q7O3IT77a7Q8nyuM1ewjqhkOrzQtMEqJjKPvg==
-X-Received: by 2002:a05:6000:141:: with SMTP id r1mr23576314wrx.69.1597064319331;
-        Mon, 10 Aug 2020 05:58:39 -0700 (PDT)
-Received: from redhat.com ([192.117.173.58])
-        by smtp.gmail.com with ESMTPSA id 31sm20844627wrj.94.2020.08.10.05.58.37
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FW1Q4XjebKZk2m+j8IXILmM0Omvwg7J33e4+M4nS+ck=;
+        b=DmR+mGE3LVsKKnm6G1GZReqQ1ilmaortKd2+eb8zy3MN7c5Psnz4cyrvL+dVNm/yuQ
+         LlNZrVpbvM7HQ0sIRd51BWtC7Jbb7KmFDYnb9fbm1YQ6GVWTZK8Rt4/rOTnhwA+wCG4C
+         VS6xTU+YtHgro8dgJLbvWNvhB2PNwUV/OvKgn4d0HcVR2YwQel8s1EjVmf8lkHNnDE7S
+         wuaSdsPGksQPzCQiiGo9P5F2hEgp29Rb+PVvBxATh9gTCChnRKv/8a/DlhzR7WNHKoM0
+         kQdHUDmzVwnMBi1lsoHr+5IyKHQojzVzPZrTXmy4mNi0gyAx60DPC88gIj6/4yj8TP2K
+         j7QA==
+X-Gm-Message-State: AOAM533430drBPRo6tobEvLT5Fp0JVP1/IAcuseKl4HDVccefTgQGhOJ
+        bLvn+BMwa0H7owuyYlm/FLs15g==
+X-Google-Smtp-Source: ABdhPJxmRba7iwHejaH4O2ObE3V+8JvqGeqhqMilpq6wDP046/AA7nJ7lbA+LHnLCMkaNlbtX0w6Hw==
+X-Received: by 2002:a5d:6692:: with SMTP id l18mr24437320wru.211.1597064377541;
+        Mon, 10 Aug 2020 05:59:37 -0700 (PDT)
+Received: from elver.google.com ([100.105.32.75])
+        by smtp.gmail.com with ESMTPSA id y203sm22876993wmc.29.2020.08.10.05.59.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Aug 2020 05:58:38 -0700 (PDT)
-Date:   Mon, 10 Aug 2020 08:58:35 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Jason Wang <jasowang@redhat.com>,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH] vdpa_sim: fix pointer math in get_config
-Message-ID: <20200810125833.1556552-1-mst@redhat.com>
+        Mon, 10 Aug 2020 05:59:36 -0700 (PDT)
+Date:   Mon, 10 Aug 2020 14:59:31 +0200
+From:   Marco Elver <elver@google.com>
+To:     syzbot <syzbot+0d4522639ba75b02bf19@syzkaller.appspotmail.com>
+Cc:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, syzkaller-bugs@googlegroups.com,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-fsdevel@vger.kernel.org, Will Deacon <will@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>
+Subject: Re: KCSAN: data-race in __xa_clear_mark / xas_find_marked
+Message-ID: <20200810125931.GA1734171@elver.google.com>
+References: <00000000000062a49205ac854581@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Mailer: git-send-email 2.27.0.106.g8ac3dc51b1
-X-Mutt-Fcc: =sent
+In-Reply-To: <00000000000062a49205ac854581@google.com>
+User-Agent: Mutt/1.14.4 (2020-06-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a pointer math bug here: the variable cast is a struct so the
-offset is in units of struct size.  If "offset" is non-zero this will
-copy memory from beyond the end of the array.
+[+Cc XArray maintainer]
 
-fixes: 2c53d0f64c06 ("vdpasim: vDPA device simulator")
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
----
- drivers/vdpa/vdpa_sim/vdpa_sim.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi Matthew,
 
-diff --git a/drivers/vdpa/vdpa_sim/vdpa_sim.c b/drivers/vdpa/vdpa_sim/vdpa_sim.c
-index 604d9d25ca47..62d640327145 100644
---- a/drivers/vdpa/vdpa_sim/vdpa_sim.c
-+++ b/drivers/vdpa/vdpa_sim/vdpa_sim.c
-@@ -558,7 +558,7 @@ static void vdpasim_get_config(struct vdpa_device *vdpa, unsigned int offset,
- 	struct vdpasim *vdpasim = vdpa_to_sim(vdpa);
- 
- 	if (offset + len < sizeof(struct virtio_net_config))
--		memcpy(buf, &vdpasim->config + offset, len);
-+		memcpy(buf, (u8 *)&vdpasim->config + offset, len);
- }
- 
- static void vdpasim_set_config(struct vdpa_device *vdpa, unsigned int offset,
--- 
-MST
+On Mon, Aug 10, 2020 at 05:41AM -0700, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following issue on:
+> 
+> HEAD commit:    fc80c51f Merge tag 'kbuild-v5.9' of git://git.kernel.org/p..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=13cb73fa900000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=997a92ee4b5588ef
+> dashboard link: https://syzkaller.appspot.com/bug?extid=0d4522639ba75b02bf19
+> compiler:       clang version 11.0.0 (https://github.com/llvm/llvm-project.git ca2dcbd030eadbf0aa9b660efe864ff08af6e18b)
+> 
+> Unfortunately, I don't have any reproducer for this issue yet.
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+0d4522639ba75b02bf19@syzkaller.appspotmail.com
+> 
+> ==================================================================
+> BUG: KCSAN: data-race in __xa_clear_mark / xas_find_marked
+> 
+> write to 0xffff8880bace9b30 of 8 bytes by interrupt on cpu 1:
+>  instrument_write include/linux/instrumented.h:42 [inline]
+>  __test_and_clear_bit include/asm-generic/bitops/instrumented-non-atomic.h:85 [inline]
+>  node_clear_mark lib/xarray.c:100 [inline]
+>  xas_clear_mark lib/xarray.c:908 [inline]
+>  __xa_clear_mark+0x229/0x350 lib/xarray.c:1726
+>  test_clear_page_writeback+0x28d/0x480 mm/page-writeback.c:2739
+>  end_page_writeback+0xa7/0x110 mm/filemap.c:1369
+>  page_endio+0x1aa/0x1e0 mm/filemap.c:1400
+>  mpage_end_io+0x186/0x1d0 fs/mpage.c:54
+>  bio_endio+0x28a/0x370 block/bio.c:1447
+>  req_bio_endio block/blk-core.c:259 [inline]
+>  blk_update_request+0x535/0xbd0 block/blk-core.c:1576
+>  blk_mq_end_request+0x22/0x50 block/blk-mq.c:562
+>  lo_complete_rq+0xca/0x180 drivers/block/loop.c:500
+>  blk_done_softirq+0x1a5/0x200 block/blk-mq.c:586
+>  __do_softirq+0x198/0x360 kernel/softirq.c:298
+>  run_ksoftirqd+0x2f/0x60 kernel/softirq.c:652
+>  smpboot_thread_fn+0x347/0x530 kernel/smpboot.c:165
+>  kthread+0x20d/0x230 kernel/kthread.c:292
+>  ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+> 
+> read to 0xffff8880bace9b30 of 8 bytes by task 12715 on cpu 0:
+>  xas_find_chunk include/linux/xarray.h:1625 [inline]
+>  xas_find_marked+0x22f/0x6b0 lib/xarray.c:1198
+>  find_get_pages_range_tag+0xa3/0x580 mm/filemap.c:1976
+>  pagevec_lookup_range_tag+0x37/0x50 mm/swap.c:1120
+>  __filemap_fdatawait_range+0xab/0x1b0 mm/filemap.c:519
+>  filemap_fdatawait_range mm/filemap.c:554 [inline]
+>  filemap_write_and_wait_range+0x119/0x2a0 mm/filemap.c:664
+>  generic_file_read_iter+0x11d/0x3e0 mm/filemap.c:2375
+>  call_read_iter include/linux/fs.h:1866 [inline]
+>  generic_file_splice_read+0x22b/0x310 fs/splice.c:312
+>  do_splice_to fs/splice.c:870 [inline]
+>  splice_direct_to_actor+0x2a8/0x660 fs/splice.c:950
+>  do_splice_direct+0xf2/0x170 fs/splice.c:1059
+>  do_sendfile+0x56a/0xba0 fs/read_write.c:1540
+>  __do_sys_sendfile64 fs/read_write.c:1595 [inline]
+>  __se_sys_sendfile64 fs/read_write.c:1587 [inline]
+>  __x64_sys_sendfile64+0xa9/0x130 fs/read_write.c:1587
+>  do_syscall_64+0x39/0x80 arch/x86/entry/common.c:46
+>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> 
+> Reported by Kernel Concurrency Sanitizer on:
+> CPU: 0 PID: 12715 Comm: syz-executor.4 Not tainted 5.8.0-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> ==================================================================
 
+We had a discussion around this earlier this year:
+
+	https://lore.kernel.org/lkml/20200305151831.GM29971@bombadil.infradead.org/#t
+
+where you mentioned:
+
+> - If a bit was set before and after the modification, it must be seen to
+>   be set.
+> - If a bit was clear before and after the modification, it must be seen to
+>   be clear.
+> - If a bit is modified, it may be seen as set or clear.
+
+Do the atomic bitops satisfy those criteria?
+(Though there were still some issues around find_next_bit(), but maybe
+we can fix that?)
+
+In general, we're wondering what is required to address this properly.
+
+[ Note: There are a bunch more syzbot reports, which can be treated as
+  duplicates, and haven't been sent to LKML:
+	https://syzkaller.appspot.com/bug?id=b3f09ccd19880d00592d1692ae3bfe5933fa2b86
+	https://syzkaller.appspot.com/bug?id=783c9bf4ad668f022c60e9b12bd8ce9974c1512a
+	https://syzkaller.appspot.com/bug?id=711fd5ad665157363e7a21df0c3808884ebeabb9
+	https://syzkaller.appspot.com/bug?id=cd60a83c9ff17c293fbb51355cf7b2f0420c4e0e
+	https://syzkaller.appspot.com/bug?id=4b16c74b38549b01920b73e5f2df53be5e8dae75
+	https://syzkaller.appspot.com/bug?id=7df642f4aa1c195834b4687ed3a9f18cd7f12ae8 ]
+
+Thanks,
+-- Marco
