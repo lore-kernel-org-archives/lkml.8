@@ -2,107 +2,115 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7CB1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 00:48:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F13FEC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 00:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9537F2068F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 00:48:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C491D2068F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 00:58:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="lFBvHwSj"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DS0d7uCE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbgHJAsP (ORCPT
+        id S1726428AbgHJA6F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 20:48:15 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:13200 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726338AbgHJAsO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 20:48:14 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597020493; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=lyx1K9lvsEfHQhbp6wimBqGRqyqH8L3RTY/INOpfUXw=;
- b=lFBvHwSjCAb+3OZh91+33PNj59oHGQgOcu7GQyQUIEYgaIzDoJRVx2KT7Jf1KJrGdD+mBKqt
- jrDnlpNu0vQPp5LYHFuei8UAhthJTCYk3A+0NLfKAudmlM4U9/We5+jNjp/BOl3ur9gDIuh1
- 4i1rzLEwYKpLIrPWk2O94Pr11II=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n18.prod.us-west-2.postgun.com with SMTP id
- 5f3099484c787f237b732937 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 10 Aug 2020 00:48:08
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 4AAC4C43391; Mon, 10 Aug 2020 00:48:08 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        Sun, 9 Aug 2020 20:58:05 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47103 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726335AbgHJA6F (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Aug 2020 20:58:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597021083;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=kCTZ+EBI9FQTeiqg16DaYSGV21VlDbKz4raMpmUYwf0=;
+        b=DS0d7uCE8gccNK1o87uzNlydCi9S/VbUN7DeTcK+CrhG8nRgAI0dFmFLB4J/ivEXWyuWre
+        lcIxM59INJtR1CtZSR69XqXhcNRpaF1WYFp0dQpJm+Rg2A7xMsyTI9CteoKOvxMyQP5GMP
+        MsuE3JCyToREwUU9s4rQV+IZDg6JVmA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-149-DAftb58wORqGISqKS68kzg-1; Sun, 09 Aug 2020 20:58:01 -0400
+X-MC-Unique: DAftb58wORqGISqKS68kzg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5A388C433C6;
-        Mon, 10 Aug 2020 00:48:07 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5620C1DE1;
+        Mon, 10 Aug 2020 00:58:00 +0000 (UTC)
+Received: from localhost (ovpn-12-116.pek2.redhat.com [10.72.12.116])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 56E9569318;
+        Mon, 10 Aug 2020 00:57:58 +0000 (UTC)
+Date:   Mon, 10 Aug 2020 08:57:55 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Wei Yang <richard.weiyang@linux.alibaba.com>
+Cc:     mike.kravetz@oracle.com, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 02/10] mm/hugetlb: make sure to get NULL when list is
+ empty
+Message-ID: <20200810005755.GU14854@MiWiFi-R3L-srv>
+References: <20200807091251.12129-1-richard.weiyang@linux.alibaba.com>
+ <20200807091251.12129-3-richard.weiyang@linux.alibaba.com>
+ <20200807124951.GM14854@MiWiFi-R3L-srv>
+ <20200807142800.GA14692@L-31X9LVDL-1304.local>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 10 Aug 2020 08:48:07 +0800
-From:   Can Guo <cang@codeaurora.org>
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     Stanley Chu <stanley.chu@mediatek.com>,
-        Asutosh Das <asutoshd@codeaurora.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-scsi@vger.kernel.org,
-        kernel-team@android.com, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "Bao D. Nguyen" <nguyenb@codeaurora.org>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Bean Huo <beanhuo@micron.com>,
-        Hongwu Su <hongwus@codeaurora.org>,
-        "James E. J. Bottomley" <jejb@linux.ibm.com>,
-        Mark Salyzyn <salyzyn@google.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Saravana Kannan <saravanak@google.com>
-Subject: Re: [9/9] scsi: ufs: Properly release resources if a task is aborted
- successfully
-In-Reply-To: <cb9dbb7d-5515-0190-d336-be657e1ca31c@web.de>
-References: <a752927b-dd9b-ebf0-8c77-e2ae0b2aa475@web.de>
- <fc5c328732792aca1dd451d0109f00b5@codeaurora.org>
- <cb9dbb7d-5515-0190-d336-be657e1ca31c@web.de>
-Message-ID: <8082186eed74798a403f3e3cb80a1751@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200807142800.GA14692@L-31X9LVDL-1304.local>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Markus,
-
-On 2020-08-10 02:00, Markus Elfring wrote:
->> Thanks, will fix these in next version.
+On 08/07/20 at 10:28pm, Wei Yang wrote:
+> On Fri, Aug 07, 2020 at 08:49:51PM +0800, Baoquan He wrote:
+> >On 08/07/20 at 05:12pm, Wei Yang wrote:
+> >> list_first_entry() may not return NULL even when the list is empty.
+> >> 
+> >> Let's make sure the behavior by using list_first_entry_or_null(),
+> >> otherwise it would corrupt the list.
+> >> 
+> >> Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
+> >> ---
+> >>  mm/hugetlb.c | 3 ++-
+> >>  1 file changed, 2 insertions(+), 1 deletion(-)
+> >> 
+> >> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> >> index 62ec74f6d03f..0a2f3851b828 100644
+> >> --- a/mm/hugetlb.c
+> >> +++ b/mm/hugetlb.c
+> >> @@ -237,7 +237,8 @@ get_file_region_entry_from_cache(struct resv_map *resv, long from, long to)
+> >>  	VM_BUG_ON(resv->region_cache_count <= 0);
+> >
+> >
+> >We have had above line, is it possible to be NULL from list_first_entry?
+> >
+> >>  
+> >>  	resv->region_cache_count--;
+> >> -	nrg = list_first_entry(&resv->region_cache, struct file_region, link);
+> >> +	nrg = list_first_entry_or_null(&resv->region_cache,
+> >> +			struct file_region, link);
+> >>  	VM_BUG_ON(!nrg);
 > 
-> Thanks for your adjustment of the proposed commit message.
-> Should the corresponding patch be marked with an other version number?
-> https://lore.kernel.org/linux-arm-kernel/1596975355-39813-10-git-send-email-cang@codeaurora.org/
-> https://lore.kernel.org/patchwork/patch/1285629/
-> https://lkml.org/lkml/2020/8/9/87
+> Or we can remove this VM_BUG_ON()?
+
+Yeah, it's fine to me.
+
 > 
-> Should a cover letter be provided for such a patch series?
+> >>  	list_del(&nrg->link);
+> >>  
+> >> -- 
+> >> 2.20.1 (Apple Git-117)
+> >> 
+> >> 
 > 
-> Regards,
-> Markus
+> -- 
+> Wei Yang
+> Help you, Help me
+> 
 
-I am not sure if you got my mails, this patch is included in
-a patch series with other 8 changes and they do have a cover
-letter. Let me re-send them to you.
-
-Thanks,
-
-Can Guo.
