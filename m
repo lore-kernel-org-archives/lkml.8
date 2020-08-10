@@ -2,97 +2,83 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69F98C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 08:16:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB67C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 08:16:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FDAB206B5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 08:16:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3548B2076C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 08:16:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726542AbgHJIQH (ORCPT
+        id S1726550AbgHJIQm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 04:16:07 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:54452 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726021AbgHJIQH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 04:16:07 -0400
-X-IronPort-AV: E=Sophos;i="5.75,456,1589212800"; 
-   d="scan'208";a="97927751"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 10 Aug 2020 16:16:05 +0800
-Received: from G08CNEXMBPEKD05.g08.fujitsu.local (unknown [10.167.33.204])
-        by cn.fujitsu.com (Postfix) with ESMTP id 1A5144CE34E6;
-        Mon, 10 Aug 2020 16:16:00 +0800 (CST)
-Received: from irides.mr (10.167.225.141) by G08CNEXMBPEKD05.g08.fujitsu.local
- (10.167.33.204) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 10 Aug
- 2020 16:16:02 +0800
-Subject: Re: [RFC PATCH 0/8] fsdax: introduce FS query interface to support
- reflink
-To:     Matthew Wilcox <willy@infradead.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-xfs@vger.kernel.org>,
-        <linux-nvdimm@lists.01.org>, <linux-mm@kvack.org>,
-        <linux-fsdevel@vger.kernel.org>, <darrick.wong@oracle.com>,
-        <dan.j.williams@intel.com>, <david@fromorbit.com>, <hch@lst.de>,
-        <rgoldwyn@suse.de>, <qi.fuli@fujitsu.com>, <y-goto@fujitsu.com>
-References: <20200807131336.318774-1-ruansy.fnst@cn.fujitsu.com>
- <20200807133857.GC17456@casper.infradead.org>
-From:   Ruan Shiyang <ruansy.fnst@cn.fujitsu.com>
-Message-ID: <9673ed3c-9e42-3d01-000b-b01cda9832ce@cn.fujitsu.com>
-Date:   Mon, 10 Aug 2020 16:15:50 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200807133857.GC17456@casper.infradead.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.167.225.141]
-X-ClientProxiedBy: G08CNEXCHPEKD06.g08.fujitsu.local (10.167.33.205) To
- G08CNEXMBPEKD05.g08.fujitsu.local (10.167.33.204)
-X-yoursite-MailScanner-ID: 1A5144CE34E6.AAE60
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: ruansy.fnst@cn.fujitsu.com
+        Mon, 10 Aug 2020 04:16:42 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:43230 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726108AbgHJIQl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 04:16:41 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id CAFC3201779;
+        Mon, 10 Aug 2020 10:16:39 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 4E6912011A9;
+        Mon, 10 Aug 2020 10:16:35 +0200 (CEST)
+Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 7A8A0402D2;
+        Mon, 10 Aug 2020 10:16:29 +0200 (CEST)
+From:   Shengjiu Wang <shengjiu.wang@nxp.com>
+To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
+        festevam@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
+        perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] ASoC: fsl-asoc-card: Get "extal" clock rate by clk_get_rate
+Date:   Mon, 10 Aug 2020 16:11:43 +0800
+Message-Id: <1597047103-6863-1-git-send-email-shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On some platform(.e.g. i.MX8QM MEK), the "extal" clock is different
+with the mclk of codec, then the clock rate is also different.
+So it is better to get clock rate of "extal" rate by clk_get_rate,
+don't reuse the clock rate of mclk.
 
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+---
+changes in v2
+- add defer probe handler
 
-On 2020/8/7 下午9:38, Matthew Wilcox wrote:
-> On Fri, Aug 07, 2020 at 09:13:28PM +0800, Shiyang Ruan wrote:
->> This patchset is a try to resolve the problem of tracking shared page
->> for fsdax.
->>
->> Instead of per-page tracking method, this patchset introduces a query
->> interface: get_shared_files(), which is implemented by each FS, to
->> obtain the owners of a shared page.  It returns an owner list of this
->> shared page.  Then, the memory-failure() iterates the list to be able
->> to notify each process using files that sharing this page.
->>
->> The design of the tracking method is as follow:
->> 1. dax_assocaite_entry() associates the owner's info to this page
-> 
-> I think that's the first problem with this design.  dax_associate_entry is
-> a horrendous idea which needs to be ripped out, not made more important.
-> It's all part of the general problem of trying to do something on a
-> per-page basis instead of per-extent basis.
-> 
+ sound/soc/fsl/fsl-asoc-card.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-The memory-failure needs to track owners info from a dax page, so I 
-should associate the owner with this page.  In this version, I associate 
-the block device to the dax page, so that the memory-failure is able to 
-iterate the owners by the query interface provided by filesystem.
-
-
---
-Thanks,
-Ruan Shiyang.
-> 
-> 
-
+diff --git a/sound/soc/fsl/fsl-asoc-card.c b/sound/soc/fsl/fsl-asoc-card.c
+index 52adedc03245..32f8f756e6bb 100644
+--- a/sound/soc/fsl/fsl-asoc-card.c
++++ b/sound/soc/fsl/fsl-asoc-card.c
+@@ -696,6 +696,17 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
+ 			goto asrc_fail;
+ 		}
+ 	} else if (of_node_name_eq(cpu_np, "esai")) {
++		struct clk *esai_clk = clk_get(&cpu_pdev->dev, "extal");
++
++		if (!IS_ERR(esai_clk)) {
++			priv->cpu_priv.sysclk_freq[TX] = clk_get_rate(esai_clk);
++			priv->cpu_priv.sysclk_freq[RX] = clk_get_rate(esai_clk);
++			clk_put(esai_clk);
++		} else if (PTR_ERR(esai_clk) == -EPROBE_DEFER) {
++			ret = -EPROBE_DEFER;
++			goto asrc_fail;
++		}
++
+ 		priv->cpu_priv.sysclk_id[1] = ESAI_HCKT_EXTAL;
+ 		priv->cpu_priv.sysclk_id[0] = ESAI_HCKR_EXTAL;
+ 	} else if (of_node_name_eq(cpu_np, "sai")) {
+-- 
+2.27.0
 
