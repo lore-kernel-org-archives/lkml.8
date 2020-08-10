@@ -2,294 +2,226 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5379AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:33:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22F6CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:34:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2ADA6207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:33:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0C5522CAE
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:34:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597073644;
+	bh=68W1lrHON+mnXteN5uH5KydswQjNoHEBArDwS/NNm4g=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=G3OhDkK2I9C7jnkAZrFv4dyi5rJScGbS327ZWFP2l0AyMCU44YLTfMMePMmLl5V0+
+	 TfofmK8N/qQltWjv5pqHjN/+8BnMPshuMkeKwJ3uOgJTLm+qSTYGHyZX8ggEWWfT6G
+	 jGNCwepEhF+fmyvpjVp1jMmwxxEk9GrE/ePFZ0sI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726888AbgHJP3V (ORCPT
+        id S1729258AbgHJPeB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:29:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36356 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728049AbgHJP3M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:29:12 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07D7EC061756;
-        Mon, 10 Aug 2020 08:29:12 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 0670D26B015
-Message-ID: <f0d2bdfc8f812052ecf4d7b77970a37260d1179c.camel@collabora.com>
-Subject: Re: [PATCH v2 03/14] media: uapi: h264: Split prediction weight
- parameters
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Jonas Karlman <jonas@kwiboo.se>,
-        Jernej =?UTF-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>
-Cc:     linux-media <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Date:   Mon, 10 Aug 2020 12:28:59 -0300
-In-Reply-To: <fcd4a18e-1442-4333-ec87-c53dba9890c5@kwiboo.se>
-References: <20200806151310.98624-1-ezequiel@collabora.com>
-         <ae2ac4ba-9272-ec67-d075-3429bc8926c3@kwiboo.se>
-         <CAAEAJfAGW6M1YPQhPqdvpYugWk+RRTNOQbKfSWrnw_A8M2k=EA@mail.gmail.com>
-         <2380739.qXQpHEDp1t@jernej-laptop>
-         <8cf55169fa1dd55b5bdf746b321419f8c7988821.camel@collabora.com>
-         <fcd4a18e-1442-4333-ec87-c53dba9890c5@kwiboo.se>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3-1 
+        Mon, 10 Aug 2020 11:34:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35594 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728948AbgHJP3Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:29:16 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B62122B47;
+        Mon, 10 Aug 2020 15:29:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597073356;
+        bh=68W1lrHON+mnXteN5uH5KydswQjNoHEBArDwS/NNm4g=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=hE6TYrX/T3Ox2P2Ae+Qc3W92AHad4CSQHm8TS+qTV+TLIdjERejVL3DACPWJTFAyP
+         4DaqIg6luZR/Bj29GEO4SULzv8Ut0ssL0sQpP2s5JcPthbstSmav+ZnXre5YFMnpbA
+         lrT7ERsd4pQMkm2Ie3wtEBpiICbeZv81IVtbE+jk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        syzbot+b54969381df354936d96@syzkaller.appspotmail.com,
+        David Howells <dhowells@redhat.com>,
+        Marc Dionne <marc.dionne@auristor.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 54/67] rxrpc: Fix race between recvmsg and sendmsg on immediate call failure
+Date:   Mon, 10 Aug 2020 17:21:41 +0200
+Message-Id: <20200810151812.163469353@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200810151809.438685785@linuxfoundation.org>
+References: <20200810151809.438685785@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-08-10 at 14:55 +0000, Jonas Karlman wrote:
-> On 2020-08-10 14:57, Ezequiel Garcia wrote:
-> > On Sun, 2020-08-09 at 23:11 +0200, Jernej Škrabec wrote:
-> > > Dne nedelja, 09. avgust 2020 ob 15:55:50 CEST je Ezequiel Garcia napisal(a):
-> > > > On Sat, 8 Aug 2020 at 18:01, Jonas Karlman <jonas@kwiboo.se> wrote:
-> > > > > On 2020-08-06 17:12, Ezequiel Garcia wrote:
-> > > > > > The prediction weight parameters are only required under
-> > > > > > certain conditions, which depend on slice header parameters.
-> > > > > > 
-> > > > > > As specified in section 7.3.3 Slice header syntax, the prediction
-> > > > > > weight table is present if:
-> > > > > > 
-> > > > > > ((weighted_pred_flag && (slice_type == P || slice_type == SP)) || \
-> > > > > > (weighted_bipred_idc == 1 && slice_type == B))
-> > > > > 
-> > > > > Maybe a macro can be added to help check this contition?
-> > > > > 
-> > > > > Something like this maybe:
-> > > > > 
-> > > > > #define V4L2_H264_CTRL_PRED_WEIGHTS_REQUIRED(pps, slice) \
-> > > > > 
-> > > > >         ((((pps)->flags & V4L2_H264_PPS_FLAG_WEIGHTED_PRED) && \
-> > > > >         
-> > > > >          ((slice)->slice_type == V4L2_H264_SLICE_TYPE_P || \
-> > > > >          
-> > > > >            (slice)->slice_type == V4L2_H264_SLICE_TYPE_SP)) || \
-> > > > >          
-> > > > >          ((pps)->weighted_bipred_idc == 1 && \
-> > > > >          
-> > > > >           (slice)->slice_type == V4L2_H264_SLICE_TYPE_B))
-> > > > 
-> > > > Yeah, that could make sense.
-> > > > 
-> > > > Note that the biggest value in having the prediction weight table
-> > > > separated is to allow  applications to skip setting this largish control,
-> > > > reducing the amount of data that needs to be passed from userspace
-> > > > -- especially when not needed :-)
-> > > > 
-> > > > > > Given its size, it makes sense to move this table to its control,
-> > > > > > so applications can avoid passing it if the slice doesn't specify it.
-> > > > > > 
-> > > > > > Before this change struct v4l2_ctrl_h264_slice_params was 960 bytes.
-> > > > > > With this change, it's 188 bytes and struct v4l2_ctrl_h264_pred_weight
-> > > > > > is 772 bytes.
-> > > > > > 
-> > > > > > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> > > > > > ---
-> > > > > > v2: Fix missing Cedrus changes and mssing control declaration,
-> > > > > > 
-> > > > > >     as noted by Hans and Jernej.
-> > > > > > 
-> > > > > > ---
-> > > > > > 
-> > > > > >  .../media/v4l/ext-ctrls-codec.rst             | 19 ++++++++++++-------
-> > > > > >  drivers/media/v4l2-core/v4l2-ctrls.c          |  8 ++++++++
-> > > > > >  drivers/staging/media/sunxi/cedrus/cedrus.c   |  7 +++++++
-> > > > > >  drivers/staging/media/sunxi/cedrus/cedrus.h   |  1 +
-> > > > > >  .../staging/media/sunxi/cedrus/cedrus_dec.c   |  2 ++
-> > > > > >  .../staging/media/sunxi/cedrus/cedrus_h264.c  |  6 ++----
-> > > > > >  include/media/h264-ctrls.h                    |  5 +++--
-> > > > > >  include/media/v4l2-ctrls.h                    |  2 ++
-> > > > > >  8 files changed, 37 insertions(+), 13 deletions(-)
-> > > > > > 
-> > > > > > diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> > > > > > b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst index
-> > > > > > d1438b1e259f..c36ce5a95fc5 100644
-> > > > > > --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> > > > > > +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> > > > > > @@ -1879,18 +1879,23 @@ enum
-> > > > > > v4l2_mpeg_video_h264_hierarchical_coding_type -> > 
-> > > > > >        - 0x00000008
-> > > > > >        -
-> > > > > > 
-> > > > > > -``Prediction Weight Table``
-> > > > > > +``V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHTS (struct)``
-> > > > > > +    Prediction weight table defined according to :ref:`h264`,
-> > > > > > +    section 7.4.3.2 "Prediction Weight Table Semantics".
-> > > > > > +    The prediction weight table must be passed by applications
-> > > > > > +    under the conditions explained in section 7.3.3 "Slice header
-> > > > > > +    syntax".
-> > > > > > 
-> > > > > > -    The bitstream parameters are defined according to :ref:`h264`,
-> > > > > > -    section 7.4.3.2 "Prediction Weight Table Semantics". For further
-> > > > > > -    documentation, refer to the above specification, unless there is
-> > > > > > -    an explicit comment stating otherwise.
-> > > > > > +    .. note::
-> > > > > > +
-> > > > > > +       This compound control is not yet part of the public kernel API
-> > > > > > and
-> > > > > > +       it is expected to change.
-> > > > > > 
-> > > > > > -.. c:type:: v4l2_h264_pred_weight_table
-> > > > > > +.. c:type:: v4l2_ctrl_h264_pred_weights
-> > > > > > 
-> > > > > >  .. cssclass:: longtable
-> > > > > > 
-> > > > > > -.. flat-table:: struct v4l2_h264_pred_weight_table
-> > > > > > +.. flat-table:: struct v4l2_ctrl_h264_pred_weights
-> > > > > > 
-> > > > > >      :header-rows:  0
-> > > > > >      :stub-columns: 0
-> > > > > >      :widths:       1 1 2
-> > > > > > 
-> > > > > > diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c
-> > > > > > b/drivers/media/v4l2-core/v4l2-ctrls.c index 3f3fbcd60cc6..76c8dc8fb31c
-> > > > > > 100644
-> > > > > > --- a/drivers/media/v4l2-core/v4l2-ctrls.c
-> > > > > > +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-> > > > > > @@ -897,6 +897,7 @@ const char *v4l2_ctrl_get_name(u32 id)
-> > > > > > 
-> > > > > >       case V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS:            return
-> > > > > >       "H264 Decode Parameters"; case
-> > > > > >       V4L2_CID_MPEG_VIDEO_H264_DECODE_MODE:              return "H264
-> > > > > >       Decode Mode"; case V4L2_CID_MPEG_VIDEO_H264_START_CODE:          
-> > > > > >           return "H264 Start Code";> > 
-> > > > > > +     case V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHTS:             return
-> > > > > > "H264 Prediction Weight Table";> > 
-> > > > > >       case V4L2_CID_MPEG_VIDEO_MPEG2_LEVEL:                   return
-> > > > > >       "MPEG2 Level"; case V4L2_CID_MPEG_VIDEO_MPEG2_PROFILE:           
-> > > > > >            return "MPEG2 Profile"; case
-> > > > > >       V4L2_CID_MPEG_VIDEO_MPEG4_I_FRAME_QP:              return "MPEG4
-> > > > > >       I-Frame QP Value";> > 
-> > > > > > @@ -1412,6 +1413,9 @@ void v4l2_ctrl_fill(u32 id, const char **name,
-> > > > > > enum v4l2_ctrl_type *type,> > 
-> > > > > >       case V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS:
-> > > > > >               *type = V4L2_CTRL_TYPE_H264_DECODE_PARAMS;
-> > > > > >               break;
-> > > > > > 
-> > > > > > +     case V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHTS:
-> > > > > > +             *type = V4L2_CTRL_TYPE_H264_PRED_WEIGHTS;
-> > > > > > +             break;
-> > > > > > 
-> > > > > >       case V4L2_CID_MPEG_VIDEO_VP8_FRAME_HEADER:
-> > > > > >               *type = V4L2_CTRL_TYPE_VP8_FRAME_HEADER;
-> > > > > >               break;
-> > > > > > 
-> > > > > > @@ -1790,6 +1794,7 @@ static int std_validate_compound(const struct
-> > > > > > v4l2_ctrl *ctrl, u32 idx,> > 
-> > > > > >       case V4L2_CTRL_TYPE_H264_SPS:
-> > > > > >       case V4L2_CTRL_TYPE_H264_PPS:
-> > > > > > 
-> > > > > >       case V4L2_CTRL_TYPE_H264_SCALING_MATRIX:
-> > > > > > +     case V4L2_CTRL_TYPE_H264_PRED_WEIGHTS:
-> > > > > >       case V4L2_CTRL_TYPE_H264_SLICE_PARAMS:
-> > > > > >       
-> > > > > >       case V4L2_CTRL_TYPE_H264_DECODE_PARAMS:
-> > > > > >               break;
-> > > > > > 
-> > > > > > @@ -2553,6 +2558,9 @@ static struct v4l2_ctrl *v4l2_ctrl_new(struct
-> > > > > > v4l2_ctrl_handler *hdl,> > 
-> > > > > >       case V4L2_CTRL_TYPE_H264_DECODE_PARAMS:
-> > > > > >               elem_size = sizeof(struct v4l2_ctrl_h264_decode_params);
-> > > > > >               break;
-> > > > > > 
-> > > > > > +     case V4L2_CTRL_TYPE_H264_PRED_WEIGHTS:
-> > > > > > +             elem_size = sizeof(struct v4l2_ctrl_h264_pred_weights);
-> > > > > > +             break;
-> > > > > > 
-> > > > > >       case V4L2_CTRL_TYPE_VP8_FRAME_HEADER:
-> > > > > >               elem_size = sizeof(struct v4l2_ctrl_vp8_frame_header);
-> > > > > >               break;
-> > > > > > 
-> > > > > > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.c
-> > > > > > b/drivers/staging/media/sunxi/cedrus/cedrus.c index
-> > > > > > bc27f9430eeb..027cdd1be5a0 100644
-> > > > > > --- a/drivers/staging/media/sunxi/cedrus/cedrus.c
-> > > > > > +++ b/drivers/staging/media/sunxi/cedrus/cedrus.c
-> > > > > > @@ -78,6 +78,13 @@ static const struct cedrus_control cedrus_controls[]
-> > > > > > = {
-> > > > > > 
-> > > > > >               .codec          = CEDRUS_CODEC_H264,
-> > > > > >               .required       = true,
-> > > > > >       
-> > > > > >       },
-> > > > > > 
-> > > > > > +     {
-> > > > > > +             .cfg = {
-> > > > > > +                     .id     = V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHTS,
-> > > > > > +             },
-> > > > > > +             .codec          = CEDRUS_CODEC_H264,
-> > > > > > +             .required       = true,
-> > > > > 
-> > > > > This should probably be false if this control is to be optional as implied
-> > > > > by the commit message.
-> > > > 
-> > > > Well, the control is optional if the driver implements it as optional,
-> > > > which Cedrus isn't currently doing :-)
-> > > 
-> > > Why do you think so? Prediction weights are filled only when they are 
-> > > needed:https://elixir.bootlin.com/linux/latest/source/drivers/staging/media/
-> > > sunxi/cedrus/cedrus_h264.c#L370
-> > > 
-> > 
-> > Right, but that should be changed to be really optional.
-> > How does the driver reject/fail the request if the table is NULL?
-> > 
-> > In any case, I don't think it's necessarily something we need
-> > to tackle now.
-> 
-> I do not fully follow, the commit message state following:
-> 
->   Note that the biggest value in having the prediction weight table
->   separated is to allow applications to skip setting this largish control
-> 
+From: David Howells <dhowells@redhat.com>
 
-This is not exactly what the commit message says, but yeah
-that's the idea.
+[ Upstream commit 65550098c1c4db528400c73acf3e46bfa78d9264 ]
 
-> Yet the driver still require this new control to be included in the request
-> thanks to the .required = true statement. (if i understand the code correctly)
-> 
-> So applications still need to set this largish control?
-> 
+There's a race between rxrpc_sendmsg setting up a call, but then failing to
+send anything on it due to an error, and recvmsg() seeing the call
+completion occur and trying to return the state to the user.
 
-This is a uAPI change that paves the way for Cedrus to make the control
-optional. The series doesn't take care of it, but it prepares the road
-for it.
+An assertion fails in rxrpc_recvmsg() because the call has already been
+released from the socket and is about to be released again as recvmsg deals
+with it.  (The recvmsg_q queue on the socket holds a ref, so there's no
+problem with use-after-free.)
 
-Since we are not stabilizing the uAPI (yet), I think we still have
-some room to make this change in steps: first we merge the new control
-and then we add the needed changes to Cedrus?
+We also have to be careful not to end up reporting an error twice, in such
+a way that both returns indicate to userspace that the user ID supplied
+with the call is no longer in use - which could cause the client to
+malfunction if it recycles the user ID fast enough.
 
-Does that make sense?
+Fix this by the following means:
 
-> Best regards,
-> Jonas
-> 
-> > Thanks,
-> > Ezequiel
-> > 
+ (1) When sendmsg() creates a call after the point that the call has been
+     successfully added to the socket, don't return any errors through
+     sendmsg(), but rather complete the call and let recvmsg() retrieve
+     them.  Make sendmsg() return 0 at this point.  Further calls to
+     sendmsg() for that call will fail with ESHUTDOWN.
+
+     Note that at this point, we haven't send any packets yet, so the
+     server doesn't yet know about the call.
+
+ (2) If sendmsg() returns an error when it was expected to create a new
+     call, it means that the user ID wasn't used.
+
+ (3) Mark the call disconnected before marking it completed to prevent an
+     oops in rxrpc_release_call().
+
+ (4) recvmsg() will then retrieve the error and set MSG_EOR to indicate
+     that the user ID is no longer known by the kernel.
+
+An oops like the following is produced:
+
+	kernel BUG at net/rxrpc/recvmsg.c:605!
+	...
+	RIP: 0010:rxrpc_recvmsg+0x256/0x5ae
+	...
+	Call Trace:
+	 ? __init_waitqueue_head+0x2f/0x2f
+	 ____sys_recvmsg+0x8a/0x148
+	 ? import_iovec+0x69/0x9c
+	 ? copy_msghdr_from_user+0x5c/0x86
+	 ___sys_recvmsg+0x72/0xaa
+	 ? __fget_files+0x22/0x57
+	 ? __fget_light+0x46/0x51
+	 ? fdget+0x9/0x1b
+	 do_recvmmsg+0x15e/0x232
+	 ? _raw_spin_unlock+0xa/0xb
+	 ? vtime_delta+0xf/0x25
+	 __x64_sys_recvmmsg+0x2c/0x2f
+	 do_syscall_64+0x4c/0x78
+	 entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Fixes: 357f5ef64628 ("rxrpc: Call rxrpc_release_call() on error in rxrpc_new_client_call()")
+Reported-by: syzbot+b54969381df354936d96@syzkaller.appspotmail.com
+Signed-off-by: David Howells <dhowells@redhat.com>
+Reviewed-by: Marc Dionne <marc.dionne@auristor.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ net/rxrpc/call_object.c |   27 +++++++++++++++++++--------
+ net/rxrpc/conn_object.c |    8 +++++---
+ net/rxrpc/recvmsg.c     |    2 +-
+ net/rxrpc/sendmsg.c     |    3 +++
+ 4 files changed, 28 insertions(+), 12 deletions(-)
+
+--- a/net/rxrpc/call_object.c
++++ b/net/rxrpc/call_object.c
+@@ -288,7 +288,7 @@ struct rxrpc_call *rxrpc_new_client_call
+ 	 */
+ 	ret = rxrpc_connect_call(rx, call, cp, srx, gfp);
+ 	if (ret < 0)
+-		goto error;
++		goto error_attached_to_socket;
+ 
+ 	trace_rxrpc_call(call->debug_id, rxrpc_call_connected,
+ 			 atomic_read(&call->usage), here, NULL);
+@@ -308,18 +308,29 @@ struct rxrpc_call *rxrpc_new_client_call
+ error_dup_user_ID:
+ 	write_unlock(&rx->call_lock);
+ 	release_sock(&rx->sk);
+-	ret = -EEXIST;
+-
+-error:
+ 	__rxrpc_set_call_completion(call, RXRPC_CALL_LOCAL_ERROR,
+-				    RX_CALL_DEAD, ret);
++				    RX_CALL_DEAD, -EEXIST);
+ 	trace_rxrpc_call(call->debug_id, rxrpc_call_error,
+-			 atomic_read(&call->usage), here, ERR_PTR(ret));
++			 atomic_read(&call->usage), here, ERR_PTR(-EEXIST));
+ 	rxrpc_release_call(rx, call);
+ 	mutex_unlock(&call->user_mutex);
+ 	rxrpc_put_call(call, rxrpc_call_put);
+-	_leave(" = %d", ret);
+-	return ERR_PTR(ret);
++	_leave(" = -EEXIST");
++	return ERR_PTR(-EEXIST);
++
++	/* We got an error, but the call is attached to the socket and is in
++	 * need of release.  However, we might now race with recvmsg() when
++	 * completing the call queues it.  Return 0 from sys_sendmsg() and
++	 * leave the error to recvmsg() to deal with.
++	 */
++error_attached_to_socket:
++	trace_rxrpc_call(call->debug_id, rxrpc_call_error,
++			 atomic_read(&call->usage), here, ERR_PTR(ret));
++	set_bit(RXRPC_CALL_DISCONNECTED, &call->flags);
++	__rxrpc_set_call_completion(call, RXRPC_CALL_LOCAL_ERROR,
++				    RX_CALL_DEAD, ret);
++	_leave(" = c=%08x [err]", call->debug_id);
++	return call;
+ }
+ 
+ /*
+--- a/net/rxrpc/conn_object.c
++++ b/net/rxrpc/conn_object.c
+@@ -212,9 +212,11 @@ void rxrpc_disconnect_call(struct rxrpc_
+ 
+ 	call->peer->cong_cwnd = call->cong_cwnd;
+ 
+-	spin_lock_bh(&conn->params.peer->lock);
+-	hlist_del_rcu(&call->error_link);
+-	spin_unlock_bh(&conn->params.peer->lock);
++	if (!hlist_unhashed(&call->error_link)) {
++		spin_lock_bh(&call->peer->lock);
++		hlist_del_rcu(&call->error_link);
++		spin_unlock_bh(&call->peer->lock);
++	}
+ 
+ 	if (rxrpc_is_client_call(call))
+ 		return rxrpc_disconnect_client_call(call);
+--- a/net/rxrpc/recvmsg.c
++++ b/net/rxrpc/recvmsg.c
+@@ -541,7 +541,7 @@ try_again:
+ 			goto error_unlock_call;
+ 	}
+ 
+-	if (msg->msg_name) {
++	if (msg->msg_name && call->peer) {
+ 		struct sockaddr_rxrpc *srx = msg->msg_name;
+ 		size_t len = sizeof(call->peer->srx);
+ 
+--- a/net/rxrpc/sendmsg.c
++++ b/net/rxrpc/sendmsg.c
+@@ -683,6 +683,9 @@ int rxrpc_do_sendmsg(struct rxrpc_sock *
+ 		if (IS_ERR(call))
+ 			return PTR_ERR(call);
+ 		/* ... and we have the call lock. */
++		ret = 0;
++		if (READ_ONCE(call->state) == RXRPC_CALL_COMPLETE)
++			goto out_put_unlock;
+ 	} else {
+ 		switch (READ_ONCE(call->state)) {
+ 		case RXRPC_CALL_UNINITIALISED:
 
 
