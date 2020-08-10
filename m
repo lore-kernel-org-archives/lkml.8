@@ -2,112 +2,109 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E848AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:27:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1223CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:27:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAD6C22CF7
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:27:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MhKuUzWj"
+	by mail.kernel.org (Postfix) with ESMTP id CC55322BF3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:27:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597073247;
+	bh=ZbU7oW6pEniYwr+6ZrXyjc9J+OiZlRg6pK0mZPuUxI0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=x2pZ7vs/gAqvsVhiUKxVcuMosRg0Kh2OOq9E1rGKndtS5G9ADISrqrXwCCYOie10u
+	 nzFKUU/EMtkGnmoJaApThH3IixZ6J6V4eWpNaHs4kab5GK03RhQn6Wv++4Mnf8X1Bo
+	 uDFcuLLXePbbKE80BLkay5KKEF2n7Gio3c9x+3gA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728727AbgHJP1T (ORCPT
+        id S1728750AbgHJP10 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:27:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36050 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728711AbgHJP1O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:27:14 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3578FC061787;
-        Mon, 10 Aug 2020 08:27:12 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id e4so5248325pjd.0;
-        Mon, 10 Aug 2020 08:27:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=cd+IPJICvi9NuWsJOzSKX+vyS3Uw46zm7ManV2vz6xU=;
-        b=MhKuUzWjWYlxnc4J815mhYCdXurI9S6A0HdHbu6r++lgkAaujJCwMvsxWlvYNJM6ym
-         3Jm/4rSSJ25UqqllgmaWJCwT8Qm3LnvlwrjiVuHQyJ+fQ6NMxCW1zJcn+ytAxGiAiHMe
-         L2M/5e1zyFKGzXiLenesVoBWuHohr/DGXAlkBVJd1a//SmXMOQNNPY26Zbu0y9q2A9wQ
-         tCWNlESutEKlp2OeR4NbZUX8PKj1m4OIbj7AAxp5Ukz7SyPQ4u6KMrfLweq5y7a09Mqp
-         czpenWmhGJGFeyha2O7pkx+2/p76/LTSYMkRQEZxEA2O2pVngsSlytR4g2XH+eTm1his
-         gu9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=cd+IPJICvi9NuWsJOzSKX+vyS3Uw46zm7ManV2vz6xU=;
-        b=A0X4Fi6bMQ+uf/dsU03QDgagrsJuwk3M3fjS74P8zijMN/LJVY/1ppn/nvGdDVu2E7
-         a2+uQ2VH1pH5bjonnytjR8PybjKL+QhP6HreO6RAikUa4IStNimV3ebjq+JYpBeiHPxA
-         DI204lYW8TPBZi0MvznGPXZlXrCeHZkPhYcdYNAzaEYiA34R1yOM5m+FsL00OHYn/7cN
-         dVsDodolF/kvd5t7IyjXbIEaIQJ6xvKuBO0Xt3YhaK9WBOKuAvZkA1A7Fscwg5gBTgE+
-         AZSmH+alDsXEsrMgH6rKIsvaLGxxrOJwVpgBSrodJw+tr/do7WL/r+tIxRf6TIFn7R3t
-         UQ3w==
-X-Gm-Message-State: AOAM533hSQS7lKFKjItB9QbN0dSogwOIbFD7oFB7xd8iYEn6am3Qccrq
-        Q8rk4oB4Ek1b+zG4I0TmV3Y=
-X-Google-Smtp-Source: ABdhPJwRbwAErii7zA3EI+YRxvEgtnR3zmPGYQ6lAsvRtoYFwyV+65gitvEN5F+f7bXNbYIQN7N0Eg==
-X-Received: by 2002:a17:90a:a590:: with SMTP id b16mr17299631pjq.131.1597073231782;
-        Mon, 10 Aug 2020 08:27:11 -0700 (PDT)
-Received: from eug-lubuntu ([124.170.227.101])
-        by smtp.gmail.com with ESMTPSA id s125sm25195270pfc.63.2020.08.10.08.27.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Aug 2020 08:27:11 -0700 (PDT)
-Date:   Tue, 11 Aug 2020 01:27:00 +1000
-From:   Eugene Lubarsky <elubarsky.linux@gmail.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, adobriyan@gmail.com,
-        avagin@gmail.com, dsahern@gmail.com
-Subject: Re: [RFC PATCH 0/5] Introduce /proc/all/ to gather stats from all
- processes
-Message-ID: <20200811012700.2c349082@eug-lubuntu>
-In-Reply-To: <20200810150453.GB3962761@kroah.com>
-References: <20200810145852.9330-1-elubarsky.linux@gmail.com>
-        <20200810150453.GB3962761@kroah.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 10 Aug 2020 11:27:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33096 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728013AbgHJP1Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:27:16 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D8FF22B47;
+        Mon, 10 Aug 2020 15:27:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597073235;
+        bh=ZbU7oW6pEniYwr+6ZrXyjc9J+OiZlRg6pK0mZPuUxI0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=iknzZu6GjWkWR1CflNU8pMyiLK62gnNRdZq/9t6k2L0Pj/LPuvYwzOq3K5tliC/0h
+         Z1vqCW2lJ6RoZydNbgwt0w3yslpZFGiUtaP+pUcLS2/rLBIhfd8sjglMjOS1bcIMCn
+         gJIXR/n3sulNBThjJSEaT4ewYw/cJGBwe2pk8QWY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, kyounghwan sohn <kyounghwan.sohn@sk.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 34/67] nvme-pci: prevent SK hynix PC400 from using Write Zeroes command
+Date:   Mon, 10 Aug 2020 17:21:21 +0200
+Message-Id: <20200810151811.124496132@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200810151809.438685785@linuxfoundation.org>
+References: <20200810151809.438685785@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 10 Aug 2020 17:04:53 +0200
-Greg KH <gregkh@linuxfoundation.org> wrote:
-> How many syscalls does this save on?
-> 
-> Perhaps you want my proposed readfile(2) syscall:
-> 	https://lore.kernel.org/r/20200704140250.423345-1-gregkh@linuxfoundation.org
-> to help out with things like this?  :)
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-The proposed readfile sounds great and would help, but if there are
-1000 processes wouldn't that require 1000 readfile calls to read their
-proc files?
+[ Upstream commit 5611ec2b9814bc91f7b0a8d804c1fc152e2025d9 ]
 
-With something like this the stats for 1000 processes could be
-retrieved with an open, a few reads and a close.
+After commit 6e02318eaea5 ("nvme: add support for the Write Zeroes
+command"), SK hynix PC400 becomes very slow with the following error
+message:
 
-> 
-> > The proposed files in this proof-of-concept patch set are:
-> > 
-> > * /proc/all/stat
-> 
-> I think the problem will be defining "all" in the case of the specific
-> namespace you are dealing with, right?  How will this handle all of
-> those issues properly for all of these different statisics?
-> 
+[  224.567695] blk_update_request: operation not supported error, dev nvme1n1, sector 499384320 op 0x9:(WRITE_ZEROES) flags 0x1000000 phys_seg 0 prio class 0]
 
-Currently I'm trying to re-use the existing code in fs/proc that
-controls which PIDs are visible, but may well be missing something..
+SK Hynix PC400 has a buggy firmware that treats NLB as max value instead
+of a range, so the NLB passed isn't a valid value to the firmware.
+
+According to SK hynix there are three commands are affected:
+- Write Zeroes
+- Compare
+- Write Uncorrectable
+
+Right now only Write Zeroes is implemented, so disable it completely on
+SK hynix PC400.
+
+BugLink: https://bugs.launchpad.net/bugs/1872383
+Cc: kyounghwan sohn <kyounghwan.sohn@sk.com>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/nvme/host/pci.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index a13cae1901962..ee7669f23cff0 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -3140,6 +3140,8 @@ static const struct pci_device_id nvme_id_table[] = {
+ 	{ PCI_DEVICE(0x1cc1, 0x8201),   /* ADATA SX8200PNP 512GB */
+ 		.driver_data = NVME_QUIRK_NO_DEEPEST_PS |
+ 				NVME_QUIRK_IGNORE_DEV_SUBNQN, },
++	{ PCI_DEVICE(0x1c5c, 0x1504),   /* SK Hynix PC400 */
++		.driver_data = NVME_QUIRK_DISABLE_WRITE_ZEROES, },
+ 	{ PCI_DEVICE_CLASS(PCI_CLASS_STORAGE_EXPRESS, 0xffffff) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_APPLE, 0x2001),
+ 		.driver_data = NVME_QUIRK_SINGLE_VECTOR },
+-- 
+2.25.1
 
 
-Best Wishes,
-Eugene
+
