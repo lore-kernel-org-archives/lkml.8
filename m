@@ -2,172 +2,143 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F012C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:48:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 928BFC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:54:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BD7620768
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:48:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DAE120734
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:54:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="RaEpa7qT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="szlzA6BX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbgHJWsR (ORCPT
+        id S1726915AbgHJWyu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 18:48:17 -0400
-Received: from vern.gendns.com ([98.142.107.122]:32830 "EHLO vern.gendns.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726775AbgHJWsR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 18:48:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=7BO2BV5ZL9NqupaOp8jHyF9nO1ZoO1djC1LGcXRvUvY=; b=RaEpa7qTSAHr/gGt2RlO6GMzlB
-        I1P3WYliTKVqcaszmXdUAvTHxtBtLkg6jp5eKrRdsEKwDPrjL0lAeLNLxadiGlaT6J/7fFxaUz2v9
-        imMr7dGIoiEOPRoGUTDUcciqR6RknkQsq2m7+NxNoPhozDIJmRRlO8Jx5Q/e7Y0+S8JIyrI38z2Kc
-        hKwM3rsrXL+UB5UtCmtCL82UAPgGIk7LddfLH1vH35tXPmhPQOeLDCL8H3NBgoMBIJpcIjtoOQHME
-        HB4mIErsOu2khipwarZw7AP9ShLXPFPm4VCBJijtntN02ZU3z+HGTb74TK25mhke9x2xN+4rO8Clc
-        XnC39Oog==;
-Received: from [2600:1700:4830:165f::19e] (port=45330)
-        by vern.gendns.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <david@lechnology.com>)
-        id 1k5GaQ-0002v9-CL; Mon, 10 Aug 2020 18:48:10 -0400
-Subject: Re: [PATCH v4 1/5] counter: Internalize sysfs interface code
-To:     William Breathitt Gray <vilhelm.gray@gmail.com>
-Cc:     jic23@kernel.org, kamel.bouhara@bootlin.com, gwendal@chromium.org,
-        alexandre.belloni@bootlin.com, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, syednwaris@gmail.com,
-        patrick.havelange@essensium.com, fabrice.gasnier@st.com,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
-        David.Laight@ACULAB.COM
-References: <cover.1595358237.git.vilhelm.gray@gmail.com>
- <e13d43849f68af8227c6aaa0ef672b459d47e9ab.1595358237.git.vilhelm.gray@gmail.com>
- <7209ac3d-d1ca-1b4c-b22c-8d98b13742e2@lechnology.com>
- <20200802210415.GA606173@shinobu>
- <4061c9e4-775e-b7a6-14fa-446de4fae537@lechnology.com>
- <20200809191500.GC6542@shinobu>
-From:   David Lechner <david@lechnology.com>
-Message-ID: <ca6337f5-b28b-a19e-735c-3cd124570c27@lechnology.com>
-Date:   Mon, 10 Aug 2020 17:48:07 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 10 Aug 2020 18:54:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48458 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726775AbgHJWyt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 18:54:49 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A961C061756
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 15:54:49 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id t6so5769352pgq.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 15:54:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=fKb1XDtHYo4y9AlyAa0W068lkmxD2lT16yayOu1K+QI=;
+        b=szlzA6BXPZZzYv7tgeeiBI/hmXhcZHAA8oH87hVJwjeA85Xg/l+ifQwGM4YQO05kYa
+         lVvi/JBybmOD6wA4PJc7d/UeaFDTMxI/IQt926VCum9UT7Hs3JeLA3UGyhycIoWHgwxk
+         BMu+OG3PffIKVMJRcsEfVqSVxjxqP6/GV0JZUyL3Dhh8cfE7wizpemJbiN7TFywWMGpl
+         U5zb4KuXamUDsq7moDAydYTNnjtpyCZCaQP8vf2PkKUlZnzhxtQZuKKMuqzo5lHbQH3d
+         96OYjaEvWw5d07CCxhnFlRC5Rl3JDgSau2idJy+DrIlSCsVZe1sVBgHrb4pNNcUyjfPA
+         75PQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=fKb1XDtHYo4y9AlyAa0W068lkmxD2lT16yayOu1K+QI=;
+        b=I59CIJmkHnY/EzfSuWxdEdARYcgbUbNdjMKN/ztHjNOkYxmiU2Xtz/j28t5Dfhcp58
+         fhP1tSYSTa0DACXWHgGOraXQWLzEK5MkRKv9Bu/j3Y1OvYV+BBB/ak43A2fQSRHN+cjO
+         u7MaM5Tj0VylWgkqDHP2OchvC01/RNDvAL7pHzDxlcI5J+BZg60i/f2IWMR3XxIYMSuY
+         Vr6/rRB+gX4dx0EZ/wR9/0Rk6aI92Iw/LiSaGRnlyOQ3iPXGA+XbpIcLwROhrt7R4qu2
+         XGcymRyp61HxIZ1wNR3iWIsgEoT6YiBfx9Tas55jMX20bvYSLosPlWqdd8TWe/ZWvWcl
+         QH8A==
+X-Gm-Message-State: AOAM5326bUKVy41LidOwlmGoKer9pnym3nMJDjfjQU+rYNKaVIe59g3d
+        CFinwOQP5mdhGv+OOJxFCXTonA==
+X-Google-Smtp-Source: ABdhPJz/gQKxkcJrWRzNaQSJ51fY2n1i6N2UjOuPLlsH6LfuPsWN8GZxDxhKTIjNyJ4Aabnv8C3/Ww==
+X-Received: by 2002:a63:545a:: with SMTP id e26mr18363900pgm.60.1597100088918;
+        Mon, 10 Aug 2020 15:54:48 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id y1sm25234135pfr.207.2020.08.10.15.54.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Aug 2020 15:54:48 -0700 (PDT)
+Date:   Mon, 10 Aug 2020 16:54:46 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Gurbir Arora <gurbaror@codeaurora.org>
+Cc:     linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bjorn.andersson@linaro.org, tsoni@codeaurora.org,
+        psodagud@codeaurora.org, sidgup@codeaurora.org,
+        rishabhb@codeaurora.org
+Subject: Re: [PATCH 1/3] remoteproc: core: Add coredump to remoteproc ops
+Message-ID: <20200810225446.GG3223977@xps15>
+References: <1596843121-82576-1-git-send-email-gurbaror@codeaurora.org>
+ <1596843121-82576-2-git-send-email-gurbaror@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <20200809191500.GC6542@shinobu>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - vern.gendns.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lechnology.com
-X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1596843121-82576-2-git-send-email-gurbaror@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
->>>>>     
->>>>>     CPMAC ETHERNET DRIVER
->>>>>     M:	Florian Fainelli <f.fainelli@gmail.com>
->>>>> diff --git a/drivers/counter/104-quad-8.c b/drivers/counter/104-quad-8.c
->>>>> index 78766b6ec271..0f20920073d6 100644
->>>>> --- a/drivers/counter/104-quad-8.c
->>>>> +++ b/drivers/counter/104-quad-8.c
->>>>> @@ -621,7 +621,7 @@ static const struct iio_chan_spec quad8_channels[] = {
->>>>>     };
->>>>>     
->>>>>     static int quad8_signal_read(struct counter_device *counter,
->>>>> -	struct counter_signal *signal, enum counter_signal_value *val)
->>>>> +			     struct counter_signal *signal, u8 *val)
->>>>
->>>> I'm not a fan of replacing enum types with u8 everywhere in this patch.
->>>> But if we have to for technical reasons (e.g. causes compiler error if
->>>> we don't) then it would be helpful to add comments giving the enum type
->>>> everywhere like this instance where u8 is actually an enum value.
->>>>
->>>> If we use u32 as the generic type for enums instead of u8, I think the
->>>> compiler will happlily let us use enum type and u32 interchangeably and
->>>> not complain.
->>>
->>> I switched to fixed-width types after the suggestion by David Laight:
->>> https://lkml.org/lkml/2020/5/3/159. I'll CC David Laight just in case he
->>> wants to chime in again.
->>>
->>> Enum types would be nice for making the valid values explicit, but there
->>> is one benefit I have appreciated from the move to fixed-width types:
->>> there has been a significant reduction of duplicate code; before, we had
->>> a different read function for each different enum type, but now we use a
->>> single function to handle them all.
->>
->> Yes, what I was trying to explain is that by using u32 instead of u8, I
->> think we can actually do both.
->>
->> The function pointers in struct counter_device *counter would use u32 as a
->> generic enum value in the declaration, but then the actual implementations
->> could still use the proper enum type.
+On Fri, Aug 07, 2020 at 04:31:59PM -0700, Gurbir Arora wrote:
+> Each remoteproc might have different requirements for coredumps and might
+> want to choose the type of dumps it wants to collect. This change allows
+> remoteproc drivers to specify their own custom dump function to be executed
+> in place of rproc_coredump. If the coredump op is not specified by the
+> remoteproc driver it will be set to rproc_coredump by default.
 > 
-> Oh, I see what you mean now. So for example:
+> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
+> Signed-off-by: Siddharth Gupta <sidgup@codeaurora.org>
+> Signed-off-by: Gurbir Arora <gurbaror@codeaurora.org>
+> ---
+>  drivers/remoteproc/remoteproc_core.c | 6 +++++-
+>  include/linux/remoteproc.h           | 1 +
+>  2 files changed, 6 insertions(+), 1 deletion(-)
+
+This is not the patch Siddharth sent.
+
+Please fix it problem along with the 3 kernel test robot warnings this set has
+generated and send again after 5.9-rc1 has been released.
+
+Thanks,
+Mathieu
+
 > 
->      int (*signal_read)(struct counter_device *counter,
->                         struct counter_signal *signal, u8 *val)
+> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+> index 7f90eee..283ecb6 100644
+> --- a/drivers/remoteproc/remoteproc_core.c
+> +++ b/drivers/remoteproc/remoteproc_core.c
+> @@ -1681,7 +1681,7 @@ int rproc_trigger_recovery(struct rproc *rproc)
+>  		goto unlock_mutex;
+>  
+>  	/* generate coredump */
+> -	rproc_coredump(rproc);
+> +	rproc->ops->coredump(rproc);
+>  
+>  	/* load firmware */
+>  	ret = request_firmware(&firmware_p, rproc->firmware, dev);
+> @@ -2113,6 +2113,10 @@ static int rproc_alloc_ops(struct rproc *rproc, const struct rproc_ops *ops)
+>  	rproc->ops->sanity_check = rproc_elf_sanity_check;
+>  	rproc->ops->get_boot_addr = rproc_elf_get_boot_addr;
+>  
+> +	/* Default to rproc_coredump if no coredump functions is specified */
+> +	if (!rproc->ops->coredump)
+> +		rproc->ops->coredump = rproc_coredump;
+> +
+>  	return 0;
+>  }
+>  
+> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+> index 2fa68bf..0ed1a2b 100644
+> --- a/include/linux/remoteproc.h
+> +++ b/include/linux/remoteproc.h
+> @@ -392,6 +392,7 @@ struct rproc_ops {
+>  	int (*load)(struct rproc *rproc, const struct firmware *fw);
+>  	int (*sanity_check)(struct rproc *rproc, const struct firmware *fw);
+>  	u64 (*get_boot_addr)(struct rproc *rproc, const struct firmware *fw);
+> +	void (*coredump)(struct rproc *rproc);
+>  	unsigned long (*panic)(struct rproc *rproc);
+>  };
+>  
+> -- 
+> 1.9.1
 > 
-> This will become instead:
-> 
->      int (*signal_read)(struct counter_device *counter,
->                         struct counter_signal *signal, u32 *val)
-> 
-> Then in the driver callback implementation we use the enum type we need:
-> 
->      enum counter_signal_level signal_level = COUNTER_SIGNAL_HIGH;
->      ...
->      *val = signal_level;
-> 
-> Is that what you have in mind?
-> 
-
-Yes.
-
-Additionally, if we have...
-
-
-       int (*x_write)(struct counter_device *counter,
-                      ..., u32 val)
-  
-We should be able to define the implementation as:
-
-static int my_driver_x_write(struct counter_device *counter,
-                              ..., enum some_type val)
-{
-	...
-}
-
-Not sure if it works if val is a pointer though. Little-
-endian systems would probably be fine, but maybe not big-
-endian combined with -fshort-enums compiler flag.
-
-
-       int (*x_read)(struct counter_device *counter,
-                     ..., u32 *val)
-  
-
-static int my_driver_x_read(struct counter_device *counter,
-                             ..., enum some_type *val)
-{
-	...
-}
-
