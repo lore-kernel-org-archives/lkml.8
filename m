@@ -2,153 +2,130 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1794C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:25:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C72F5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:25:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94DC422BF3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:25:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9193622CA1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:25:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597087537;
+	bh=2jF6y1ho6QClZOL+V94Un9aPqfIgQnMFVFaYRGB3EAY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=qyQXUPZRRIf4xudqAoWa5s2QH0Fh/UVr/eW/g4QGnNXkUbFm48DhhTreG9So7EjJ5
+	 A8fZ/E6Qz+WHcIVUJuH74uGg9tZbuANTfWMBM68SAfZat3QRntpplF3JMZq/OdRX+P
+	 7D3q+JX/7UbSo7TCAYsT2pwhzcnvgKVE8xxKj4JM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730330AbgHJTZd (ORCPT
+        id S1730253AbgHJTZg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:25:33 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53082 "EHLO mx2.suse.de"
+        Mon, 10 Aug 2020 15:25:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730039AbgHJTZ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:25:28 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 71F94AE24;
-        Mon, 10 Aug 2020 19:25:46 +0000 (UTC)
-Date:   Mon, 10 Aug 2020 21:25:25 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     Uladzislau Rezki <urezki@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
-Message-ID: <20200810192525.GG4773@dhcp22.suse.cz>
-References: <20200809204354.20137-1-urezki@gmail.com>
- <20200809204354.20137-2-urezki@gmail.com>
- <20200810123141.GF4773@dhcp22.suse.cz>
- <20200810160739.GA29884@pc636>
+        id S1729466AbgHJTME (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:12:04 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CDA8E21775;
+        Mon, 10 Aug 2020 19:12:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597086723;
+        bh=2jF6y1ho6QClZOL+V94Un9aPqfIgQnMFVFaYRGB3EAY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=byTnCqo4rT9gQ1o8eYIspfPwjtGD5Rylr+nF5NwmKwVnCZ/cK8/XtYVngxxYqL022
+         POD87p4jbERS5YoMq0Nhcxxl8HshRpUv2JteSrG06QBMIBDRLMirkr2sYWXhHX/Twz
+         MsXdC7lRUC6CcdT/euA8mvP8o9138PBu7I7ZkdM8=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Aditya Pakki <pakki001@umn.edu>, Evan Quan <evan.quan@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 07/45] drm/radeon: Fix reference count leaks caused by pm_runtime_get_sync
+Date:   Mon, 10 Aug 2020 15:11:15 -0400
+Message-Id: <20200810191153.3794446-7-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200810191153.3794446-1-sashal@kernel.org>
+References: <20200810191153.3794446-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200810160739.GA29884@pc636>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 10-08-20 18:07:39, Uladzislau Rezki wrote:
-> > On Sun 09-08-20 22:43:53, Uladzislau Rezki (Sony) wrote:
-> > [...]
-> > > Limitations and concerns (Main part)
-> > > ====================================
-> > > The current memmory-allocation interface presents to following
-> > > difficulties that this patch is designed to overcome:
-> > > 
-> > > a) If built with CONFIG_PROVE_RAW_LOCK_NESTING, the lockdep will
-> > >    complain about violation("BUG: Invalid wait context") of the
-> > >    nesting rules. It does the raw_spinlock vs. spinlock nesting
-> > >    checks, i.e. it is not legal to acquire a spinlock_t while
-> > >    holding a raw_spinlock_t.
-> > > 
-> > >    Internally the kfree_rcu() uses raw_spinlock_t(in rcu-dev branch)
-> > >    whereas the "page allocator" internally deals with spinlock_t to
-> > >    access to its zones. The code also can be broken from higher level
-> > >    of view:
-> > >    <snip>
-> > >        raw_spin_lock(&some_lock);
-> > >        kfree_rcu(some_pointer, some_field_offset);
-> > >    <snip>
-> > 
-> > Is there any fundamental problem to make zone raw_spin_lock?
-> > 
-> Good point. Converting a regular spinlock to the raw_* variant can solve 
-> an issue and to me it seems partly reasonable. Because there are other
-> questions if we do it:
-> 
-> a) what to do with kswapd and "wake-up path" that uses sleepable lock:
->     wakeup_kswapd() -> wake_up_interruptible(&pgdat->kswapd_wait).
+From: Aditya Pakki <pakki001@umn.edu>
 
-If there is no RT friendly variant for waking up process from the atomic
-context then we might need to special case this for the RT tree.
+[ Upstream commit 9fb10671011143d15b6b40d6d5fa9c52c57e9d63 ]
 
-> b) How RT people reacts on it? I guess they will no be happy.
+On calling pm_runtime_get_sync() the reference count of the device
+is incremented. In case of failure, decrement the
+reference count before returning the error.
 
-zone->lock should be held for a very limited amount of time.
+Acked-by: Evan Quan <evan.quan@amd.com>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/radeon/radeon_display.c | 4 +++-
+ drivers/gpu/drm/radeon/radeon_drv.c     | 4 +++-
+ drivers/gpu/drm/radeon/radeon_kms.c     | 4 +++-
+ 3 files changed, 9 insertions(+), 3 deletions(-)
 
-> As i described before, calling the __get_free_page(0) with 0 as argument
-> will solve the (a). How correctly is it? From my point of view the logic
-> that bypass the wakeup path should be explicitly defined.
-
-gfp_mask == 0 is GFP_NOWAIT (aka an atomic allocation request) which
-doesn't wake up kswapd. So if the wakeup is a problem then this would be
-a way to go.
-
-> Or we can enter the allocator with (__GFP_HIGH|__GFP_ATOMIC) that bypass
-> the __GFP_KSWAPD_RECLAIM as well.
-
-This would be an alternative which consumes memory reserves. Is this
-really needed for the particular case?
-
-> 
-> Any thoughts here? Please comment.
-> 
-> Having proposed flag will not heart RT latency and solve all concerns.
-> 
-> > > b) If built with CONFIG_PREEMPT_RT. Please note, in that case spinlock_t
-> > >    is converted into sleepable variant. Invoking the page allocator from
-> > >    atomic contexts leads to "BUG: scheduling while atomic".
-> > 
-> > [...]
-> > 
-> > > Proposal
-> > > ========
-> > > 1) Make GFP_* that ensures that the allocator returns NULL rather
-> > > than acquire its own spinlock_t. Having such flag will address a and b
-> > > limitations described above. It will also make the kfree_rcu() code
-> > > common for RT and regular kernel, more clean, less handling corner
-> > > cases and reduce the code size.
-> > 
-> > I do not think this is a good idea. Single purpose gfp flags that tend
-> > to heavily depend on the current implementation of the page allocator
-> > have turned out to be problematic. Users used to misunderstand their
-> > meaning resulting in a lot of abuse which was not trivial to remove.
-> > This flag seem to fall into exactly this sort of category. If there is a
-> > problem in nesting then that should be addressed rather than a new flag
-> > exported IMHO. If that is absolutely not possible for some reason then
-> > we can try to figure out what to do but that really need a very strong
-> > justification.
-> > 
-> The problem that i see is we can not use the page allocator from atomic
-> contexts, what is our case:
-> 
-> <snip>
->     local_irq_save(flags) or preempt_disable() or raw_spinlock();
->     __get_free_page(GFP_ATOMIC);
-> <snip>
-> 
-> So if we can convert the page allocator to raw_* lock it will be appreciated,
-> at least from our side, IMHO, not from RT one. But as i stated above we need
-> to sort raised questions out if converting is done.
-> 
-> What is your view?
-
-To me it would make more sense to support atomic allocations also for
-the RT tree. Having both GFP_NOWAIT and GFP_ATOMIC which do not really
-work for atomic context in RT sounds subtle and wrong.
+diff --git a/drivers/gpu/drm/radeon/radeon_display.c b/drivers/gpu/drm/radeon/radeon_display.c
+index 0826efd9b5f51..f9f74150d0d73 100644
+--- a/drivers/gpu/drm/radeon/radeon_display.c
++++ b/drivers/gpu/drm/radeon/radeon_display.c
+@@ -631,8 +631,10 @@ radeon_crtc_set_config(struct drm_mode_set *set,
+ 	dev = set->crtc->dev;
+ 
+ 	ret = pm_runtime_get_sync(dev->dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put_autosuspend(dev->dev);
+ 		return ret;
++	}
+ 
+ 	ret = drm_crtc_helper_set_config(set, ctx);
+ 
+diff --git a/drivers/gpu/drm/radeon/radeon_drv.c b/drivers/gpu/drm/radeon/radeon_drv.c
+index 6128792ab8836..7d417b9a52501 100644
+--- a/drivers/gpu/drm/radeon/radeon_drv.c
++++ b/drivers/gpu/drm/radeon/radeon_drv.c
+@@ -555,8 +555,10 @@ long radeon_drm_ioctl(struct file *filp,
+ 	long ret;
+ 	dev = file_priv->minor->dev;
+ 	ret = pm_runtime_get_sync(dev->dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put_autosuspend(dev->dev);
+ 		return ret;
++	}
+ 
+ 	ret = drm_ioctl(filp, cmd, arg);
+ 	
+diff --git a/drivers/gpu/drm/radeon/radeon_kms.c b/drivers/gpu/drm/radeon/radeon_kms.c
+index 2bb0187c5bc78..709c4ef5e7d59 100644
+--- a/drivers/gpu/drm/radeon/radeon_kms.c
++++ b/drivers/gpu/drm/radeon/radeon_kms.c
+@@ -638,8 +638,10 @@ int radeon_driver_open_kms(struct drm_device *dev, struct drm_file *file_priv)
+ 	file_priv->driver_priv = NULL;
+ 
+ 	r = pm_runtime_get_sync(dev->dev);
+-	if (r < 0)
++	if (r < 0) {
++		pm_runtime_put_autosuspend(dev->dev);
+ 		return r;
++	}
+ 
+ 	/* new gpu have virtual address space support */
+ 	if (rdev->family >= CHIP_CAYMAN) {
 -- 
-Michal Hocko
-SUSE Labs
+2.25.1
+
