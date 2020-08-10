@@ -2,159 +2,134 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C9EEC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:31:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4242C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:31:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CA292073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:31:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFF9F2073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:31:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KmjOr7lG"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="RskBIHUq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726474AbgHJHbd (ORCPT
+        id S1726563AbgHJHbt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 03:31:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47922 "EHLO
+        Mon, 10 Aug 2020 03:31:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726390AbgHJHbc (ORCPT
+        with ESMTP id S1726331AbgHJHbt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 03:31:32 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BB82C061786
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 00:31:32 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id z18so7147060wrm.12
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 00:31:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=4x9G4BKQPEodKbNbhS34JTOCfB7se7v0YDW0moilQvg=;
-        b=KmjOr7lGhApH6KmO1rV2ur9Cq8V7cNEvM8FRBK312jsW9+HLFlI/uzKP10UPa5smUh
-         MoOjclfPeo/4V+LP8l7LPZ68sn9H/heVE996XMzsiBINWGZfhnIE+3CJJd4WeacdBgBa
-         kg4kjO9LHV4tvpX3bK4xbgbWcsXdIN4b3k/ISucIebTERr0TEg1H8+JuovkT6/2gBHWn
-         HcWBMkGEy5oDrrBGqN9Haq1IlLCWfIWvZsDoy/7r1majuwzYvVqFwkiLFLJ3SeHEjEl+
-         ENQHPT2cAjuLfipnQNOXfEHR9/QMK+2cPXur508C9BBp0SQIbaek9bsgdDPq4vL/m0il
-         YJzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=4x9G4BKQPEodKbNbhS34JTOCfB7se7v0YDW0moilQvg=;
-        b=I5zDxNSqDfx/tehjube62QUPbqOWXsgilaYyXRfCr7W1BxM0+JzUK2mAwC1vyYx0eq
-         y5Si+MN4mEfGzlYehZ3yc05DxwOJ/tvnDoBKsQ+UJksM19VGjmOejus8zjsipZE0pn9g
-         6gR8ZIx4R0ME+FDSMCJxidNe/jZXlxgEMwZ11j21plmHloJTJmzVbM6ox15LAm0Nx6G2
-         6HoEjrBGCE7arVeqiSViEJQN//b1lMP3hq6V7ycT35LCkd152I7QPPDR+sxLLJ074Hok
-         76Si0xYxQMsbf0iruf0Qd7DTQRG8MZ2qevQ3Yu+rLxyuKTm1NnGco1z1pdotCrQO6mj0
-         vVQg==
-X-Gm-Message-State: AOAM530PX8zgKRgR+rzwMR7sWeiJhAdbt21UugPx2R1wXt6gluHQqh/9
-        pBKfQauGNR7M4im8PUxtxkgd1w==
-X-Google-Smtp-Source: ABdhPJxExxrYLyu6qXhRPgZztXKPrU/zgJr51FhpKEO58wSzN65gPrJEPbrrE6QHLTBHtOvwIbO0TA==
-X-Received: by 2002:adf:a351:: with SMTP id d17mr23056398wrb.111.1597044691012;
-        Mon, 10 Aug 2020 00:31:31 -0700 (PDT)
-Received: from dell ([2.27.167.73])
-        by smtp.gmail.com with ESMTPSA id z15sm20056653wrn.89.2020.08.10.00.31.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Aug 2020 00:31:30 -0700 (PDT)
-Date:   Mon, 10 Aug 2020 08:31:28 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Hsin-hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Josef Friedl <josef.friedl@speed.at>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        srv_heupstream <srv_heupstream@mediatek.com>
-Subject: Re: [PATCH 1/8] mfd: mt6358: refine interrupt code
-Message-ID: <20200810073128.GC4411@dell>
-References: <1595509133-5358-1-git-send-email-hsin-hsiung.wang@mediatek.com>
- <1595509133-5358-2-git-send-email-hsin-hsiung.wang@mediatek.com>
- <20200727154840.GY1850026@dell>
- <1596443379.31084.3.camel@mtksdaap41>
+        Mon, 10 Aug 2020 03:31:49 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDBA0C061756;
+        Mon, 10 Aug 2020 00:31:48 -0700 (PDT)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id EDE7F22ED5;
+        Mon, 10 Aug 2020 09:31:38 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1597044704;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=5klQWMMHU8Ee9M3fQmjdVoNMXn8r8NKjAB/+jN2Z22o=;
+        b=RskBIHUqm9dJEuq24ixJy/wnCPI1k+LlLwGD3YDaMNrIxpT7alp+IYBbidU9g/DDYL17L4
+        +i3UjQC+yZJzfyR+7fP0K9WgOcXXb0uA7lTIZWVLIgGcL8iORxooes7NnEN1Xjqmv1M1tg
+        UbCyOZUMcttJxhVpPMjuSDQ4j3mrgTQ=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1596443379.31084.3.camel@mtksdaap41>
+Date:   Mon, 10 Aug 2020 09:31:38 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v7 06/13] pwm: add support for sl28cpld PWM controller
+In-Reply-To: <20200810071328.GB4411@dell>
+References: <20200803093559.12289-1-michael@walle.cc>
+ <20200803093559.12289-7-michael@walle.cc>
+ <20200806084000.k3aj5nmqdodmb35v@pengutronix.de>
+ <e288ca6cfee819223395712e04159dd9@walle.cc> <20200810071328.GB4411@dell>
+User-Agent: Roundcube Webmail/1.4.7
+Message-ID: <2ca0a3a3f03a1f5b9b2777738824123b@walle.cc>
+X-Sender: michael@walle.cc
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 03 Aug 2020, Hsin-hsiung Wang wrote:
-
-> Hi,
+Am 2020-08-10 09:13, schrieb Lee Jones:
+> On Fri, 07 Aug 2020, Michael Walle wrote:
 > 
-> On Mon, 2020-07-27 at 16:48 +0100, Lee Jones wrote:
-> > On Thu, 23 Jul 2020, Hsin-Hsiung Wang wrote:
-> > 
-> > > This patch refines the interrupt related code to support new chips.
-> > 
-> > Refines in what way?
-> > 
-> > What makes this better?
-> > 
+>> Hi Uwe, Hi Lee,
+>> 
+>> Am 2020-08-06 10:40, schrieb Uwe Kleine-König:
+>> > On Mon, Aug 03, 2020 at 11:35:52AM +0200, Michael Walle wrote:
+>> > > diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+>> > > index 7dbcf6973d33..a0d50d70c3b9 100644
+>> > > --- a/drivers/pwm/Kconfig
+>> > > +++ b/drivers/pwm/Kconfig
+>> > > @@ -428,6 +428,16 @@ config PWM_SIFIVE
+>> > >  	  To compile this driver as a module, choose M here: the module
+>> > >  	  will be called pwm-sifive.
+>> > >
+>> > > +config PWM_SL28CPLD
+>> > > +	tristate "Kontron sl28cpld PWM support"
+>> > > +	select MFD_SIMPLE_MFD_I2C
+>> >
+>> > Is it sensible to present this option to everyone? Maybe
+>> >
+>> > 	depends on SOME_SYMBOL_ONLY_TRUE_ON_SL28CPLD || COMPILE_TEST
+>> 
+>> Because there is now no real MFD driver anymore, there is also
+>> no symbol for that. The closest would be ARCH_ARM64 but I don't
+>> think that is a good idea.
+>> 
+>> Lee, what do you think about adding a symbol to the MFD, which
+>> selects MFD_SIMPLE_MFD_I2C but doesn't enable any C modules?
+>> 
+>> I.e.
+>> config MFD_SL28CPLD
+>>     tristate "Kontron sl28cpld"
+>>     select MFD_SIMPLE_MFD_I2C
+>>     help
+>>       Say yes here to add support for the Kontron sl28cpld board
+>>       management controller.
+>> 
+>> Then all the other device driver could depend on the MFD_SL28CPLD
+>> symbol.
 > 
-> Thanks for the comment. I will add more information into comment message
-> based on my below explanation.
+> You want to add a virtual symbol to prevent having to present a real
+> one?  How is that a reasonable solution?
 
-Thanks.
+(1) Its a symbol on which all sl28cpld will depend on. Thus they will
+     all be hidden if that is not set.
+(2) the drivers itself wouldn't need to depend on MFD_SIMPLE_MFD_I2C,
+     which is more correct, because they don't have anything to do with
+     i2c.
 
-> > > Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-> > > ---
-> > >  drivers/mfd/mt6358-irq.c        | 65 ++++++++++++++++++++++++-----------------
-> > >  include/linux/mfd/mt6358/core.h |  8 ++---
-> > >  2 files changed, 41 insertions(+), 32 deletions(-)
-> > > 
-> > > diff --git a/drivers/mfd/mt6358-irq.c b/drivers/mfd/mt6358-irq.c
-> > > index db734f2..4b094e5 100644
-> > > --- a/drivers/mfd/mt6358-irq.c
-> > > +++ b/drivers/mfd/mt6358-irq.c
-> > > @@ -13,7 +13,9 @@
-> > >  #include <linux/platform_device.h>
-> > >  #include <linux/regmap.h>
-> > >  
-> > > -static struct irq_top_t mt6358_ints[] = {
-> > > +#define MTK_PMIC_REG_WIDTH 16
-> > > +
-> > > +static const struct irq_top_t mt6358_ints[] = {
-> > >  	MT6358_TOP_GEN(BUCK),
-> > >  	MT6358_TOP_GEN(LDO),
-> > >  	MT6358_TOP_GEN(PSC),
-> > > @@ -24,6 +26,13 @@ static struct irq_top_t mt6358_ints[] = {
-> > >  	MT6358_TOP_GEN(MISC),
-> > >  };
-> > >  
-> > > +static struct pmic_irq_data mt6358_irqd = {
-> > > +	.num_top = ARRAY_SIZE(mt6358_ints),
-> > > +	.num_pmic_irqs = MT6358_IRQ_NR,
-> > > +	.top_int_status_reg = MT6358_TOP_INT_STATUS0,
-> > > +	.pmic_ints = mt6358_ints,
-> > > +};
-> > 
-> > Dynamically assigned driver data is usually preferred.
-> > 
-> > Why have you gone static?
-> > 
-> 
-> Do you consider the memory allocation?
-> Below modification is to assign necessary data dynamically and the code
-> will become longer with more chips if we assign every member of the
-> structure.
-
-[...]
-
-Never mind.  On second glance, this should be fine.
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+-michael
