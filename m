@@ -2,127 +2,133 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06B85C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:01:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 028BCC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:02:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAA8B206B5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:01:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8B8C206B5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:02:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbgHJJBG (ORCPT
+        id S1726684AbgHJJC1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 05:01:06 -0400
-Received: from foss.arm.com ([217.140.110.172]:54316 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726679AbgHJJBD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 05:01:03 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 992BF101E;
-        Mon, 10 Aug 2020 02:01:02 -0700 (PDT)
-Received: from localhost (unknown [10.1.198.53])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3A2BB3F7BB;
-        Mon, 10 Aug 2020 02:01:02 -0700 (PDT)
-Date:   Mon, 10 Aug 2020 10:01:00 +0100
-From:   Ionela Voinescu <ionela.voinescu@arm.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>, rjw@rjwysocki.net,
-        catalin.marinas@arm.com, sudeep.holla@arm.com, will@kernel.org,
-        linux@armlinux.org.uk, mingo@redhat.com, peterz@infradead.org,
-        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/7] arch_topology: disable frequency invariance for
- CONFIG_BL_SWITCHER
-Message-ID: <20200810090100.GA7190@arm.com>
-References: <20200722093732.14297-1-ionela.voinescu@arm.com>
- <20200722093732.14297-4-ionela.voinescu@arm.com>
- <20200730042423.4j22udejluis7blw@vireshk-mac-ubuntu>
- <1db4317a-0018-1590-f0ae-ed5e235b174f@arm.com>
- <20200804063046.a2hw5cxwiewhb3aw@vireshk-mac-ubuntu>
+        Mon, 10 Aug 2020 05:02:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33574 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726177AbgHJJC1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 05:02:27 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42476C061756
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 02:02:27 -0700 (PDT)
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=localhost)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1k53hE-0000O3-4f; Mon, 10 Aug 2020 11:02:20 +0200
+Message-ID: <c2f17d7360387bf6d93d2ac24e5b326a542a5861.camel@pengutronix.de>
+Subject: Re: [PATCH] PCI: imx6: Do not output error message when
+ devm_clk_get() failed with -EPROBE_DEFER
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Anson Huang <Anson.Huang@nxp.com>, hongxing.zhu@nxp.com,
+        lorenzo.pieralisi@arm.com, robh@kernel.org, bhelgaas@google.com,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Date:   Mon, 10 Aug 2020 11:02:18 +0200
+In-Reply-To: <1596519481-28072-1-git-send-email-Anson.Huang@nxp.com>
+References: <1596519481-28072-1-git-send-email-Anson.Huang@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200804063046.a2hw5cxwiewhb3aw@vireshk-mac-ubuntu>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi guys,
+Am Dienstag, den 04.08.2020, 13:38 +0800 schrieb Anson Huang:
+> When devm_clk_get() returns -EPROBE_DEFER, i.MX6 PCI driver should
+> NOT print error message, just return -EPROBE_DEFER is enough.
 
-On Tuesday 04 Aug 2020 at 12:00:46 (+0530), Viresh Kumar wrote:
-> On 30-07-20, 12:29, Dietmar Eggemann wrote:
-> > On 30/07/2020 06:24, Viresh Kumar wrote:
-> > > On 22-07-20, 10:37, Ionela Voinescu wrote:
-> > >> +++ b/drivers/base/arch_topology.c
-> > >> @@ -27,6 +27,7 @@ __weak bool arch_freq_counters_available(struct cpumask *cpus)
-> > >>  }
-> > >>  DEFINE_PER_CPU(unsigned long, freq_scale) = SCHED_CAPACITY_SCALE;
-> > >>  
-> > >> +#ifndef CONFIG_BL_SWITCHER
-> > >>  void arch_set_freq_scale(struct cpumask *cpus, unsigned long cur_freq,
-> > >>  			 unsigned long max_freq)
-> > >>  {
-> > >> @@ -46,6 +47,7 @@ void arch_set_freq_scale(struct cpumask *cpus, unsigned long cur_freq,
-> > >>  	for_each_cpu(i, cpus)
-> > >>  		per_cpu(freq_scale, i) = scale;
-> > >>  }
-> > >> +#endif
-> > > 
-> > > I don't really like this change, the ifdef hackery is disgusting and
-> > > then we are putting that in a completely different part of the kernel.
-> > > 
-> > > There are at least these two ways of solving this, maybe more:
-> > > 
-> > > - Fix the bl switcher driver and add the complexity in it (which you
-> > >   tried to do earlier).
-> > > 
-> > > - Add a cpufreq flag to skip arch-set-freq-scale call.
-> > 
-> > I agree it's not nice but IMHO the cpufreq flag is worse since we would
-> > introduce new infrastructure only for a deprecated feature. I'm assuming
-> > that BL SWITCHER is the only feature needing this CPUfreq flag extension.
-> > 
-> > #ifdef CONFIG_BL_SWITCHER is already in drivers/irqchip/irq-gic.c so
-> > it's ugly already.
-> > 
-> > Runtime detecting (via bL_switching_enabled) of BL SWITCHER is right now
-> > also only handled inside vexpress-spc-cpufreq.c via a
-> > bL_switcher_notifier. A mechanism which also sits behind a #ifdef
-> > CONFIG_BL_SWITCHER.
+The reasoning behind this change is fine, but I think we should use the
+recently merged dev_err_probe() helper to achieve the same goal.
+
+Regards,
+Lucas
+
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+>  drivers/pci/controller/dwc/pci-imx6.c | 30 ++++++++++++++++++++----------
+>  1 file changed, 20 insertions(+), 10 deletions(-)
 > 
-> Vexpress one is a driver and so ugliness could be ignored here :)
-> 
-> So here is option number 3 (in continuation of the earlier two
-> options):
-> - Don't do anything for bL switcher, just add a TODO/NOTE in the
->   driver that FIE is broken for switcher. And I don't think anyone
->   will care about FIE for the switcher anyway :)
-> 
+> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> index 4e5c379..ee75d35 100644
+> --- a/drivers/pci/controller/dwc/pci-imx6.c
+> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> @@ -1076,20 +1076,26 @@ static int imx6_pcie_probe(struct platform_device *pdev)
+>  	/* Fetch clocks */
+>  	imx6_pcie->pcie_phy = devm_clk_get(dev, "pcie_phy");
+>  	if (IS_ERR(imx6_pcie->pcie_phy)) {
+> -		dev_err(dev, "pcie_phy clock source missing or invalid\n");
+> -		return PTR_ERR(imx6_pcie->pcie_phy);
+> +		ret = PTR_ERR(imx6_pcie->pcie_phy);
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(dev, "pcie_phy clock source missing or invalid\n");
+> +		return ret;
+>  	}
+>  
+>  	imx6_pcie->pcie_bus = devm_clk_get(dev, "pcie_bus");
+>  	if (IS_ERR(imx6_pcie->pcie_bus)) {
+> -		dev_err(dev, "pcie_bus clock source missing or invalid\n");
+> -		return PTR_ERR(imx6_pcie->pcie_bus);
+> +		ret = PTR_ERR(imx6_pcie->pcie_bus);
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(dev, "pcie_bus clock source missing or invalid\n");
+> +		return ret;
+>  	}
+>  
+>  	imx6_pcie->pcie = devm_clk_get(dev, "pcie");
+>  	if (IS_ERR(imx6_pcie->pcie)) {
+> -		dev_err(dev, "pcie clock source missing or invalid\n");
+> -		return PTR_ERR(imx6_pcie->pcie);
+> +		ret = PTR_ERR(imx6_pcie->pcie);
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(dev, "pcie clock source missing or invalid\n");
+> +		return ret;
+>  	}
+>  
+>  	switch (imx6_pcie->drvdata->variant) {
+> @@ -1097,15 +1103,19 @@ static int imx6_pcie_probe(struct platform_device *pdev)
+>  		imx6_pcie->pcie_inbound_axi = devm_clk_get(dev,
+>  							   "pcie_inbound_axi");
+>  		if (IS_ERR(imx6_pcie->pcie_inbound_axi)) {
+> -			dev_err(dev, "pcie_inbound_axi clock missing or invalid\n");
+> -			return PTR_ERR(imx6_pcie->pcie_inbound_axi);
+> +			ret = PTR_ERR(imx6_pcie->pcie_inbound_axi);
+> +			if (ret != -EPROBE_DEFER)
+> +				dev_err(dev, "pcie_inbound_axi clock missing or invalid\n");
+> +			return ret;
+>  		}
+>  		break;
+>  	case IMX8MQ:
+>  		imx6_pcie->pcie_aux = devm_clk_get(dev, "pcie_aux");
+>  		if (IS_ERR(imx6_pcie->pcie_aux)) {
+> -			dev_err(dev, "pcie_aux clock source missing or invalid\n");
+> -			return PTR_ERR(imx6_pcie->pcie_aux);
+> +			ret = PTR_ERR(imx6_pcie->pcie_aux);
+> +			if (ret != -EPROBE_DEFER)
+> +				dev_err(dev, "pcie_aux clock source missing or invalid\n");
+> +			return ret;
+>  		}
+>  		/* fall through */
+>  	case IMX7D:
 
-I gave it a bit of time in case anyone had strong opinions about this,
-but given the lack of those, what I can do in this series is the
-following: ignore the problem :). This issue was there before these
-patches and it will continue to be there after these patches - nothing
-changes.
-
-Separately from this series, I can submit a patch with Viresh's
-suggestion above and we can spin around a bit discussing this, if there
-is interest. My opinion on this is that option 1 is ugly but it does fix
-an issue in a relatively non-invasive way. I agree with "I don't think
-anyone will care about FIE for the switcher anyway", but for me this
-means that nobody will care if it's supported (and therefore option 1
-is the proper solution). But if bL switcher is used, I think people might
-care if it's broken, as it results in incorrect scheduler signals.
-Therefore, I would not like leaving it broken (option 3). If it's not
-used, option 2 is obvious.
-
-
-Many thanks,
-Ionela.
-
-> -- 
-> viresh
