@@ -5,48 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05AA3C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:24:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3428BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:24:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7C3F2080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:24:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 131ED22CBE
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:24:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597087463;
-	bh=EqJNG29WJqlWYLnVx8Gj2dUj6+tg18LY1lQ+vHZZAdk=;
+	s=default; t=1597087468;
+	bh=ZiaolnjIZq/xKnJoPIeccT6Nyg/HSL5K/OjpsfDFZts=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Or/68jfaFr/vOZ1a8tGCRw97B7LDgRU2lrpD9It48YHfclykCi5sJ00SaXrO6DraQ
-	 PL4WaE6p6lX0Y14I5+fSaVujH8WC2qjWLgnrjaVl9xKyWGrW+TrEvXu0j9G1AUEo5V
-	 wpp3upgLAIkSXFgUyeJi6tWc3xgkvb8xVbUEYwKQ=
+	b=NFyqoQXlIx06ZR0dLSOnDZXAz8FdCr9/temaZe76+YvnM4YT/ZzbKSl068jgvkG9W
+	 wlGZxkdDY9YP/9NG443OefQVoNYn9s7missB+3yHEAqOPVnddAdovZB738o37OG9FT
+	 sHFFT1pocmGmnLbiqD9o0zHWo7OO5qBS17uF58tg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729875AbgHJTYW (ORCPT
+        id S1729544AbgHJTM2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:24:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42340 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:12:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41928 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729559AbgHJTMc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:12:32 -0400
+        id S1729522AbgHJTMY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:12:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D10EB22D04;
-        Mon, 10 Aug 2020 19:12:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5571422CA1;
+        Mon, 10 Aug 2020 19:12:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086751;
-        bh=EqJNG29WJqlWYLnVx8Gj2dUj6+tg18LY1lQ+vHZZAdk=;
+        s=default; t=1597086743;
+        bh=ZiaolnjIZq/xKnJoPIeccT6Nyg/HSL5K/OjpsfDFZts=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A6PyrzQbGY1UmX5/ZriKBd4SNh2GKjBcU6Geb+RHJKpebN/Z48QCs1l4P9RDtSLqP
-         Czy+M9ouhxYA8eC9JrbBgFUCZL0livf8P8JLAXQNW6E2fDCPWjD1XN3ERd8oGofOFy
-         MgINxkHzYVOZ3KNNCOF1zeHKfJpOuU4OzEoSPyPo=
+        b=OUDNCw1MCZRkAR4Btk4o+Lw/f6PKE9dtEXb5Y1vSXbquhHQ2g5sQfhuWGPeSoHhnc
+         BJeKMEfJ6W7kfJiLs82pHOOj6vWftbKHKxChPUK/XCTQVFNdzkhGPwokVydhPR6WD0
+         b5OjKMJoynwy78QXZ3+UgDxCgLIUYdHS/A+3OcW8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        Evan Quan <evan.quan@amd.com>, Sasha Levin <sashal@kernel.org>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 27/45] drm/amdgpu/display bail early in dm_pp_get_static_clocks
-Date:   Mon, 10 Aug 2020 15:11:35 -0400
-Message-Id: <20200810191153.3794446-27-sashal@kernel.org>
+Cc:     Akhil P Oommen <akhilpo@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 21/45] drm: msm: a6xx: fix gpu failure after system resume
+Date:   Mon, 10 Aug 2020 15:11:29 -0400
+Message-Id: <20200810191153.3794446-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810191153.3794446-1-sashal@kernel.org>
 References: <20200810191153.3794446-1-sashal@kernel.org>
@@ -59,33 +62,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Deucher <alexander.deucher@amd.com>
+From: Akhil P Oommen <akhilpo@codeaurora.org>
 
-[ Upstream commit 376814f5fcf1aadda501d1413d56e8af85d19a97 ]
+[ Upstream commit 57c0bd517c06b088106b0236ed604056c8e06da5 ]
 
-If there are no supported callbacks.  We'll fall back to the
-nominal clocks.
+On targets where GMU is available, GMU takes over the ownership of GX GDSC
+during its initialization. So, move the refcount-get on GX PD before we
+initialize the GMU. This ensures that nobody can collapse the GX GDSC
+once GMU owns the GX GDSC. This patch fixes some GMU OOB errors seen
+during GPU wake up during a system resume.
 
-Bug: https://gitlab.freedesktop.org/drm/amd/-/issues/1170
-Reviewed-by: Evan Quan <evan.quan@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Reported-by: Matthias Kaehlcke <mka@chromium.org>
+Signed-off-by: Akhil P Oommen <akhilpo@codeaurora.org>
+Tested-by: Matthias Kaehlcke <mka@chromium.org>
+Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_pp_smu.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_pp_smu.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_pp_smu.c
-index 785322cd4c6c9..7241d4c207789 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_pp_smu.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_pp_smu.c
-@@ -530,6 +530,8 @@ bool dm_pp_get_static_clocks(
- 			&pp_clk_info);
- 	else if (adev->smu.funcs)
- 		ret = smu_get_current_clocks(&adev->smu, &pp_clk_info);
-+	else
-+		return false;
- 	if (ret)
- 		return false;
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+index e62b286947a7f..9ea748667fab0 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+@@ -713,10 +713,19 @@ int a6xx_gmu_resume(struct a6xx_gpu *a6xx_gpu)
+ 	/* Turn on the resources */
+ 	pm_runtime_get_sync(gmu->dev);
+ 
++	/*
++	 * "enable" the GX power domain which won't actually do anything but it
++	 * will make sure that the refcounting is correct in case we need to
++	 * bring down the GX after a GMU failure
++	 */
++	if (!IS_ERR_OR_NULL(gmu->gxpd))
++		pm_runtime_get_sync(gmu->gxpd);
++
+ 	/* Use a known rate to bring up the GMU */
+ 	clk_set_rate(gmu->core_clk, 200000000);
+ 	ret = clk_bulk_prepare_enable(gmu->nr_clocks, gmu->clocks);
+ 	if (ret) {
++		pm_runtime_put(gmu->gxpd);
+ 		pm_runtime_put(gmu->dev);
+ 		return ret;
+ 	}
+@@ -752,19 +761,12 @@ int a6xx_gmu_resume(struct a6xx_gpu *a6xx_gpu)
+ 	/* Set the GPU to the highest power frequency */
+ 	__a6xx_gmu_set_freq(gmu, gmu->nr_gpu_freqs - 1);
+ 
+-	/*
+-	 * "enable" the GX power domain which won't actually do anything but it
+-	 * will make sure that the refcounting is correct in case we need to
+-	 * bring down the GX after a GMU failure
+-	 */
+-	if (!IS_ERR_OR_NULL(gmu->gxpd))
+-		pm_runtime_get(gmu->gxpd);
+-
+ out:
+ 	/* On failure, shut down the GMU to leave it in a good state */
+ 	if (ret) {
+ 		disable_irq(gmu->gmu_irq);
+ 		a6xx_rpmh_stop(gmu);
++		pm_runtime_put(gmu->gxpd);
+ 		pm_runtime_put(gmu->dev);
+ 	}
  
 -- 
 2.25.1
