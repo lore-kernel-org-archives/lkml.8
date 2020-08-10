@@ -2,161 +2,211 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBAAEC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 17:57:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D69E9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 17:58:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83A1720885
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 17:57:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597082241;
-	bh=k3MjZ6XxaVvaOS3cbVAXkz+PUn0Cc+I/FN8m/6d5GPA=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=fSQGabkx/A7tpOdZkuwVqPU+o5lVsfT3KNo9Q6dBZxSBnxDtMFbFAYPNgzYTbkqz5
-	 EbigUmjtnrK/xOd9hjSWg/R1imWG1wbh2hVWaZMcDlvj7o9LoqtNbGCiPc2hfW61kf
-	 dJEojBmg5DzFwkYLHTwqFSsakGam9QVEJ69lDdn0=
+	by mail.kernel.org (Postfix) with ESMTP id A53EE20885
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 17:58:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="aKMxF9Va"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728093AbgHJR5T (ORCPT
+        id S1728105AbgHJR6I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 13:57:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43736 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726820AbgHJR5T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 13:57:19 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A6B620866;
-        Mon, 10 Aug 2020 17:57:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597082238;
-        bh=k3MjZ6XxaVvaOS3cbVAXkz+PUn0Cc+I/FN8m/6d5GPA=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=PX4NIdaDL9nliQXjykosBBnoC2HgYkGI2QIGSsLZaAgZRP71kueVIZPomm0JpBra/
-         d5MCf+/Cxf6n2h2WmviE/Q6RVnTaEHN+2pj5yoCxE3WLglbqhWycWs+7lX/VPDHH4Q
-         0moOWyIfb0PEzJUHFX8QiZmbdzbMh9K79CIRV4Ng=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id B277135228C7; Mon, 10 Aug 2020 10:57:17 -0700 (PDT)
-Date:   Mon, 10 Aug 2020 10:57:17 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Neeraj Upadhyay <neeraju@codeaurora.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        linux-doc@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        peterz@infradead.org, Randy Dunlap <rdunlap@infradead.org>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        tglx@linutronix.de, vineethrp@gmail.com
-Subject: Re: [PATCH v4 1/5] rcu/tree: Add a warning if CPU being onlined did
- not report QS already
-Message-ID: <20200810175717.GM4295@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200807170722.2897328-1-joel@joelfernandes.org>
- <20200807170722.2897328-2-joel@joelfernandes.org>
- <20200810154654.GJ4295@paulmck-ThinkPad-P72>
- <20200810173931.GB2253395@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200810173931.GB2253395@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Mon, 10 Aug 2020 13:58:08 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:1606 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726820AbgHJR6H (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 13:58:07 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07AHXinG131454;
+        Mon, 10 Aug 2020 13:57:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=pp1;
+ bh=r63m5wPatlVGKXEVci7ekmXKuv/hOL947q5faQjq6d0=;
+ b=aKMxF9VaYwBEUx++kNulk45CXmo5nFHZhP216H5AMH+kT9qR1elHYXlnc93zuKW0/5MZ
+ ARceEHihTQplOjWEuNeJ8Toi6i4uu07vD/Q2icmqMUsA+4yjkqEw9bySuY1CsK+D4kdT
+ Smlqo7y3/rIzbkDbmIHFczCzKK5ISOJFxzUyro6ruIkRVFZNI6o27fwDjK+mCo2a42OW
+ 684c37R6TmviOefDaZiviwHAPVOvJ5/+BDuzhdYR7WZBL/eXFbzjEz1eoZALwrNa8fpN
+ EKHoKmxXB8d4iuPZx0BeJRRBbmWvH0znKaM+nSbJzZHu+GwLbWHIU/7FMwrI4a1PsRqC 9A== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32sr8kkcaq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 10 Aug 2020 13:57:52 -0400
+Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07AHsL8R028934;
+        Mon, 10 Aug 2020 13:57:51 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32sr8kkc9v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 10 Aug 2020 13:57:51 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07AHtPub026448;
+        Mon, 10 Aug 2020 17:57:48 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma03ams.nl.ibm.com with ESMTP id 32skp8agfg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 10 Aug 2020 17:57:48 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07AHvkLX30736720
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 10 Aug 2020 17:57:46 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5633E11C052;
+        Mon, 10 Aug 2020 17:57:46 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3BFA511C04C;
+        Mon, 10 Aug 2020 17:57:41 +0000 (GMT)
+Received: from sig-9-65-241-154.ibm.com (unknown [9.65.241.154])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 10 Aug 2020 17:57:41 +0000 (GMT)
+Message-ID: <8565b1430d5244eba95fc1fe0ed470b886747aaa.camel@linux.ibm.com>
+Subject: Re: [dm-devel] [RFC PATCH v5 00/11] Integrity Policy Enforcement
+ LSM (IPE)
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Chuck Lever <chucklever@gmail.com>,
+        James Morris <jmorris@namei.org>
+Cc:     Deven Bowers <deven.desai@linux.microsoft.com>,
+        Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>,
+        snitzer@redhat.com, dm-devel@redhat.com,
+        tyhicks@linux.microsoft.com, agk@redhat.com,
+        Paul Moore <paul@paul-moore.com>,
+        Jonathan Corbet <corbet@lwn.net>, nramas@linux.microsoft.com,
+        serge@hallyn.com, pasha.tatashin@soleen.com,
+        Jann Horn <jannh@google.com>, linux-block@vger.kernel.org,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jens Axboe <axboe@kernel.dk>, mdsakib@microsoft.com,
+        open list <linux-kernel@vger.kernel.org>, eparis@redhat.com,
+        linux-security-module@vger.kernel.org, linux-audit@redhat.com,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-integrity@vger.kernel.org,
+        jaskarankhurana@linux.microsoft.com
+Date:   Mon, 10 Aug 2020 13:57:40 -0400
+In-Reply-To: <1597079586.3966.34.camel@HansenPartnership.com>
+References: <20200728213614.586312-1-deven.desai@linux.microsoft.com>
+         <20200802115545.GA1162@bug> <20200802140300.GA2975990@sasha-vm>
+         <20200802143143.GB20261@amd>
+         <1596386606.4087.20.camel@HansenPartnership.com>
+         <fb35a1f7-7633-a678-3f0f-17cf83032d2b@linux.microsoft.com>
+         <1596639689.3457.17.camel@HansenPartnership.com>
+         <alpine.LRH.2.21.2008050934060.28225@namei.org>
+         <b08ae82102f35936427bf138085484f75532cff1.camel@linux.ibm.com>
+         <329E8DBA-049E-4959-AFD4-9D118DEB176E@gmail.com>
+         <da6f54d0438ee3d3903b2c75fcfbeb0afdf92dc2.camel@linux.ibm.com>
+         <1597073737.3966.12.camel@HansenPartnership.com>
+         <4664ab7dc3b324084df323bfa4670d5bfde76e66.camel@linux.ibm.com>
+         <1597079586.3966.34.camel@HansenPartnership.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+X-Mailer: Evolution 3.28.5 (3.28.5-12.el8) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-10_14:2020-08-06,2020-08-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 adultscore=0
+ mlxlogscore=999 priorityscore=1501 bulkscore=0 suspectscore=3
+ lowpriorityscore=0 phishscore=0 malwarescore=0 clxscore=1015
+ impostorscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008100122
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 01:39:31PM -0400, Joel Fernandes wrote:
-> On Mon, Aug 10, 2020 at 08:46:54AM -0700, Paul E. McKenney wrote:
-> > On Fri, Aug 07, 2020 at 01:07:18PM -0400, Joel Fernandes (Google) wrote:
-> > > Currently, rcu_cpu_starting() checks to see if the RCU core expects a
-> > > quiescent state from the incoming CPU.  However, the current interaction
-> > > between RCU quiescent-state reporting and CPU-hotplug operations should
-> > > mean that the incoming CPU never needs to report a quiescent state.
-> > > First, the outgoing CPU reports a quiescent state if needed.  Second,
-> > > the race where the CPU is leaving just as RCU is initializing a new
-> > > grace period is handled by an explicit check for this condition.  Third,
-> > > the CPU's leaf rcu_node structure's ->lock serializes these checks.
+On Mon, 2020-08-10 at 10:13 -0700, James Bottomley wrote:
+> On Mon, 2020-08-10 at 12:35 -0400, Mimi Zohar wrote:
+> > On Mon, 2020-08-10 at 08:35 -0700, James Bottomley wrote:
+> [...]
+> > > > Up to now, verifying remote filesystem file integrity has been
+> > > > out of scope for IMA.   With fs-verity file signatures I can at
+> > > > least grasp how remote file integrity could possibly work.  I
+> > > > don't understand how remote file integrity with existing IMA
+> > > > formats could be supported. You might want to consider writing a
+> > > > whitepaper, which could later be used as the basis for a patch
+> > > > set cover letter.
 > > > 
-> > > This means that if rcu_cpu_starting() ever feels the need to report
-> > > a quiescent state, then there is a bug somewhere in the CPU hotplug
-> > > code or the RCU grace-period handling code.  This commit therefore
-> > > adds a WARN_ON_ONCE() to bring that bug to everyone's attention.
-> > > 
-> > > Cc: Paul E. McKenney <paulmck@kernel.org>
-> > > Cc: Neeraj Upadhyay <neeraju@codeaurora.org>
-> > > Suggested-by: Paul E. McKenney <paulmck@kernel.org>
-> > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > > ---
-> > >  kernel/rcu/tree.c | 9 ++++++++-
-> > >  1 file changed, 8 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > > index 65e1b5e92319..a49fa3b60faa 100644
-> > > --- a/kernel/rcu/tree.c
-> > > +++ b/kernel/rcu/tree.c
-> > > @@ -3996,7 +3996,14 @@ void rcu_cpu_starting(unsigned int cpu)
-> > >  	rcu_gpnum_ovf(rnp, rdp); /* Offline-induced counter wrap? */
-> > >  	rdp->rcu_onl_gp_seq = READ_ONCE(rcu_state.gp_seq);
-> > >  	rdp->rcu_onl_gp_flags = READ_ONCE(rcu_state.gp_flags);
-> > > -	if (rnp->qsmask & mask) { /* RCU waiting on incoming CPU? */
-> > > +
-> > > +	/*
-> > > +	 * XXX: The following rcu_report_qs_rnp() is redundant. If the below
-> > > +	 * warning does not fire, consider replacing it with the "else" block,
-> > > +	 * by June 2021 or so (while keeping the warning). Refer to RCU's
-> > > +	 * Requirements documentation for the rationale.
+> > > I think, before this, we can help with the basics (and perhaps we
+> > > should sort them out before we start documenting what we'll do).
 > > 
-> > Let's suppose that this change is made, and further that in a year or
-> > two the "if" statement below is replaced with its "else" block.
-> > 
-> > Now let's suppose that (some years after that) a hard-to-trigger bug
-> > makes its way into RCU's CPU-hotplug code that would have resulted in
-> > the WARN_ON_ONCE() triggering, but that this bug turns out to be not so
-> > hard to trigger in certain large production environments.
-> > 
-> > Let's suppose further that you have moved on to where you are responsible
-> > for one of these large production environments.  How would this
-> > hypothetical RCU/CPU-hotplug bug manifest?
+> > I'm not opposed to doing that, but you're taking this discussion in a
+> > totally different direction.  The current discussion is about NFSv4
+> > supporting the existing IMA signatures, not only fs-verity
+> > signatures. I'd like to understand how that is possible and for the
+> > community to weigh in on whether it makes sense.
 > 
-> It could manifest as an RCU stall (after the warning triggers) since RCU
-> would wait forever.
-> 
-> Were you thinking it is not worth doing this? I thought we wanted to remove
-> the reundant rcu_report_qs_rnp here to solidify everyone's understanding of
-> the code and fail early if there's something misunderstood (since such
-> misunderstanding could mean there are other hidden bugs somewhere). The
-> counter-argument to that being, making the code robust is more important for
-> the large production failure scenario where failures are costly.
+> Well, I see the NFS problem as being chunk at a time, right, which is
+> merkle tree, or is there a different chunk at a time mechanism we want
+> to use?  IMA currently verifies signature on open/exec and then
+> controls updates.  Since for NFS we only control the client, we can't
+> do that on an NFS server, so we really do need verification at read
+> time ... unless we're threading IMA back to the NFS server?
 
-The benefits of removing code that is in theory redundant was my thought
-at one point, but sleeping on this several times since has made me much
-less favorable to this change.  And perhaps my experiences with my new
-employer have affected my views on this as well.  You never know!  ;-)
+Yes.  I still don't see how we can support the existing IMA signatures,
+which is based on the file data hash, unless the "chunk at a time
+mechanism" is not a tree, but linear.
 
-							Thanx, Paul
+Mimi
 
-> thanks,
 > 
->  - Joel
-> 
-> 
-> > 							Thanx, Paul
-> > 
-> > > +	 */
-> > > +	if (WARN_ON_ONCE(rnp->qsmask & mask)) { /* RCU waiting on incoming CPU? */
-> > >  		rcu_disable_urgency_upon_qs(rdp);
-> > >  		/* Report QS -after- changing ->qsmaskinitnext! */
-> > >  		rcu_report_qs_rnp(mask, rnp, rnp->gp_seq, flags);
-> > > -- 
-> > > 2.28.0.236.gb10cc79966-goog
+> > > The first basic is that a merkle tree allows unit at a time
+> > > verification. First of all we should agree on the unit.  Since we
+> > > always fault a page at a time, I think our merkle tree unit should
+> > > be a page not a block. Next, we should agree where the check gates
+> > > for the per page accesses should be ... definitely somewhere in
+> > > readpage, I suspect and finally we should agree how the merkle tree
+> > > is presented at the gate.  I think there are three ways:
 > > > 
+> > >    1. Ahead of time transfer:  The merkle tree is transferred and
+> > > verified
+> > >       at some time before the accesses begin, so we already have a
+> > >       verified copy and can compare against the lower leaf.
+> > >    2. Async transfer:  We provide an async mechanism to transfer
+> > > the
+> > >       necessary components, so when presented with a unit, we check
+> > > the
+> > >       log n components required to get to the root
+> > >    3. The protocol actually provides the capability of 2 (like the
+> > > SCSI
+> > >       DIF/DIX), so to IMA all the pieces get presented instead of
+> > > IMA
+> > >       having to manage the tree
+> > > 
+> > > There are also a load of minor things like how we get the head
+> > > hash, which must be presented and verified ahead of time for each
+> > > of the above 3.
+> > 
+> >  
+> > I was under the impression that IMA support for fs-verity signatures
+> > would be limited to including the fs-verity signature in the
+> > measurement list and verifying the fs-verity signature.   As fs-
+> > verity is limited to immutable files, this could be done on file
+> > open.  fs-verity would be responsible for enforcing the block/page
+> > data integrity.   From a local filesystem perspective, I think that
+> > is all that is necessary.
+> 
+> The fs-verity use case is a bit of a crippled one because it's
+> immutable.  I think NFS represents more the general case where you
+> can't rely on immutability and have to verify at chunk read time.  If
+> we get chunk at a time working for NFS, it should work also for fs-
+> verity and we wouldn't need to have two special paths.
+> 
+> I think, even for NFS we would only really need to log the open, so
+> same as you imagine for fs-verity.  As long as the chunk read hashes
+> match, we can be silent because everything is going OK, so we only need
+> to determine what to do and log on mismatch (which isn't expected to
+> happen for fs-verity).
+> 
+> > In terms of remote file systems,  the main issue is transporting and
+> > storing the Merkle tree.  As fs-verity is limited to immutable files,
+> > this could still be done on file open.
+> 
+> Right, I mentioned that in my options ... we need some "supply
+> integrity" hook ... or possibly multiple hooks for a variety of
+> possible methods.
+
