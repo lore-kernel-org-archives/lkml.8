@@ -2,90 +2,172 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E1B4C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:47:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F012C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:48:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA99C20748
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:47:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BD7620768
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:48:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dbCCC3Y6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="RaEpa7qT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbgHJWry (ORCPT
+        id S1727063AbgHJWsR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 18:47:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47406 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726775AbgHJWry (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 18:47:54 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8BA2C06174A
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 15:47:53 -0700 (PDT)
+        Mon, 10 Aug 2020 18:48:17 -0400
+Received: from vern.gendns.com ([98.142.107.122]:32830 "EHLO vern.gendns.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726775AbgHJWsR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 18:48:17 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=K3+SuTqg7entB9Y6bJ/tYvrfsYaRjh4IcY0CFouemU4=; b=dbCCC3Y6qjK93UrfiO2J5XwTOV
-        dCmS8V+l1Di/pbiahsxif2AmynjKHPUmQn7JYJfI8E8Tr5Csts/lu19dJxNqgZYlU9vK6YvrzQ7Gt
-        OAcHkVk+47zbr06HOVW2xpoX0gCP5zek2fh8VaVj2RweAbqrbdjnp6R1C+tHNefDoFb3uQP4xfSzJ
-        +r6zCH2XUegfWBtkPGyRUocEClOIqrYK7UOLCzG81Zex60WUhwWliGw8PO58fd4i7L/tL5QETWFy2
-        SbwkY1hhw8waRI/tVxrD5pVUB4HZn/Ss7SCi5nhhZnyrKtLvyIlvmaLIdiKi8bTbSRP+NtLS6t/rb
-        4aCQ7afA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k5GZr-0005c1-S3; Mon, 10 Aug 2020 22:47:37 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id EDE8F980BF8; Tue, 11 Aug 2020 00:47:34 +0200 (CEST)
-Date:   Tue, 11 Aug 2020 00:47:34 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Liang, Kan" <kan.liang@linux.intel.com>
-Cc:     Dave Hansen <dave.hansen@intel.com>, acme@kernel.org,
-        mingo@redhat.com, linux-kernel@vger.kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, eranian@google.com, ak@linux.intel.com,
-        kirill.shutemov@linux.intel.com
-Subject: Re: [PATCH V6 01/16] perf/core: Add PERF_SAMPLE_DATA_PAGE_SIZE
-Message-ID: <20200810224734.GO3982@worktop.programming.kicks-ass.net>
-References: <20200810212436.8026-1-kan.liang@linux.intel.com>
- <20200810212436.8026-2-kan.liang@linux.intel.com>
- <b5422d70-f5d3-f2eb-0b39-4efd050d8828@intel.com>
- <298cfc4d-4a9b-7886-1006-09f2bc24d789@linux.intel.com>
+        d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=7BO2BV5ZL9NqupaOp8jHyF9nO1ZoO1djC1LGcXRvUvY=; b=RaEpa7qTSAHr/gGt2RlO6GMzlB
+        I1P3WYliTKVqcaszmXdUAvTHxtBtLkg6jp5eKrRdsEKwDPrjL0lAeLNLxadiGlaT6J/7fFxaUz2v9
+        imMr7dGIoiEOPRoGUTDUcciqR6RknkQsq2m7+NxNoPhozDIJmRRlO8Jx5Q/e7Y0+S8JIyrI38z2Kc
+        hKwM3rsrXL+UB5UtCmtCL82UAPgGIk7LddfLH1vH35tXPmhPQOeLDCL8H3NBgoMBIJpcIjtoOQHME
+        HB4mIErsOu2khipwarZw7AP9ShLXPFPm4VCBJijtntN02ZU3z+HGTb74TK25mhke9x2xN+4rO8Clc
+        XnC39Oog==;
+Received: from [2600:1700:4830:165f::19e] (port=45330)
+        by vern.gendns.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <david@lechnology.com>)
+        id 1k5GaQ-0002v9-CL; Mon, 10 Aug 2020 18:48:10 -0400
+Subject: Re: [PATCH v4 1/5] counter: Internalize sysfs interface code
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc:     jic23@kernel.org, kamel.bouhara@bootlin.com, gwendal@chromium.org,
+        alexandre.belloni@bootlin.com, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, syednwaris@gmail.com,
+        patrick.havelange@essensium.com, fabrice.gasnier@st.com,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        David.Laight@ACULAB.COM
+References: <cover.1595358237.git.vilhelm.gray@gmail.com>
+ <e13d43849f68af8227c6aaa0ef672b459d47e9ab.1595358237.git.vilhelm.gray@gmail.com>
+ <7209ac3d-d1ca-1b4c-b22c-8d98b13742e2@lechnology.com>
+ <20200802210415.GA606173@shinobu>
+ <4061c9e4-775e-b7a6-14fa-446de4fae537@lechnology.com>
+ <20200809191500.GC6542@shinobu>
+From:   David Lechner <david@lechnology.com>
+Message-ID: <ca6337f5-b28b-a19e-735c-3cd124570c27@lechnology.com>
+Date:   Mon, 10 Aug 2020 17:48:07 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <298cfc4d-4a9b-7886-1006-09f2bc24d789@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200809191500.GC6542@shinobu>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - vern.gendns.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lechnology.com
+X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 06:38:35PM -0400, Liang, Kan wrote:
-> On 8/10/2020 5:47 PM, Dave Hansen wrote:
 
-> > It's probably best if we very carefully define up front what is getting
-> > reported here.  For instance, I believe we already have some fun cases
-> > with huge tmpfs where a compound page is mapped with 4k PTEs.  Kirill
-> > also found a few drivers doing this as well.  I think there were also
-> > some weird cases for ARM hugetlbfs where there were multiple hardware
-> > page table entries mapping a single hugetlbfs page.  These would be
-> > cases where compound_head() size would be greater than the size of the
-> > leaf paging structure entry.
-> > 
-> > This is also why we have KerelPageSize and MMUPageSize in /proc/$pid/smaps.
-> > 
-> > So, is this returning the kernel software page size or the MMU size?
-> > 
+>>>>>     
+>>>>>     CPMAC ETHERNET DRIVER
+>>>>>     M:	Florian Fainelli <f.fainelli@gmail.com>
+>>>>> diff --git a/drivers/counter/104-quad-8.c b/drivers/counter/104-quad-8.c
+>>>>> index 78766b6ec271..0f20920073d6 100644
+>>>>> --- a/drivers/counter/104-quad-8.c
+>>>>> +++ b/drivers/counter/104-quad-8.c
+>>>>> @@ -621,7 +621,7 @@ static const struct iio_chan_spec quad8_channels[] = {
+>>>>>     };
+>>>>>     
+>>>>>     static int quad8_signal_read(struct counter_device *counter,
+>>>>> -	struct counter_signal *signal, enum counter_signal_value *val)
+>>>>> +			     struct counter_signal *signal, u8 *val)
+>>>>
+>>>> I'm not a fan of replacing enum types with u8 everywhere in this patch.
+>>>> But if we have to for technical reasons (e.g. causes compiler error if
+>>>> we don't) then it would be helpful to add comments giving the enum type
+>>>> everywhere like this instance where u8 is actually an enum value.
+>>>>
+>>>> If we use u32 as the generic type for enums instead of u8, I think the
+>>>> compiler will happlily let us use enum type and u32 interchangeably and
+>>>> not complain.
+>>>
+>>> I switched to fixed-width types after the suggestion by David Laight:
+>>> https://lkml.org/lkml/2020/5/3/159. I'll CC David Laight just in case he
+>>> wants to chime in again.
+>>>
+>>> Enum types would be nice for making the valid values explicit, but there
+>>> is one benefit I have appreciated from the move to fixed-width types:
+>>> there has been a significant reduction of duplicate code; before, we had
+>>> a different read function for each different enum type, but now we use a
+>>> single function to handle them all.
+>>
+>> Yes, what I was trying to explain is that by using u32 instead of u8, I
+>> think we can actually do both.
+>>
+>> The function pointers in struct counter_device *counter would use u32 as a
+>> generic enum value in the declaration, but then the actual implementations
+>> could still use the proper enum type.
 > 
-> This tries to return the kernel software page size. I will add a commit to
-> the function. For the above cases, I think they can be detected by
-> PageCompound(page). The current code should already cover them. Is my
-> understanding correct?
+> Oh, I see what you mean now. So for example:
+> 
+>      int (*signal_read)(struct counter_device *counter,
+>                         struct counter_signal *signal, u8 *val)
+> 
+> This will become instead:
+> 
+>      int (*signal_read)(struct counter_device *counter,
+>                         struct counter_signal *signal, u32 *val)
+> 
+> Then in the driver callback implementation we use the enum type we need:
+> 
+>      enum counter_signal_level signal_level = COUNTER_SIGNAL_HIGH;
+>      ...
+>      *val = signal_level;
+> 
+> Is that what you have in mind?
+> 
 
-But the rationale for the whole feature was to measure and possibly
-drive large page promotion/demotion, which requires the mmu page-size.
+Yes.
+
+Additionally, if we have...
+
+
+       int (*x_write)(struct counter_device *counter,
+                      ..., u32 val)
+  
+We should be able to define the implementation as:
+
+static int my_driver_x_write(struct counter_device *counter,
+                              ..., enum some_type val)
+{
+	...
+}
+
+Not sure if it works if val is a pointer though. Little-
+endian systems would probably be fine, but maybe not big-
+endian combined with -fshort-enums compiler flag.
+
+
+       int (*x_read)(struct counter_device *counter,
+                     ..., u32 *val)
+  
+
+static int my_driver_x_read(struct counter_device *counter,
+                             ..., enum some_type *val)
+{
+	...
+}
 
