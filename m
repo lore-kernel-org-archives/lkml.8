@@ -2,110 +2,171 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD78C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 20:56:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E08C1C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 20:56:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A8D220716
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 20:56:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jUYumKYn"
+	by mail.kernel.org (Postfix) with ESMTP id 9FDC42073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 20:56:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597093018;
+	bh=pum/l0HZs+kYzU3nToNYXCbY1WcpAwrT1CrspgU1jXY=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=E9DDVMGP1Qrcy9SRH0LQzGLAWI1u7sOIJT6HYjGi0pRVOnGnrNHaX/syp4DQ2PgRZ
+	 pBGrw9QH802XvYODCPhFdKnoeLXPtRx21DrsE72nwBECrz1k2d9oIjKDOpD5JLkYgN
+	 hSOF+qDnd1zEO2FkknJVkcqrc02VK0LVVtfRFuGA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726654AbgHJU4R (ORCPT
+        id S1726713AbgHJU45 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 16:56:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58294 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726115AbgHJU4R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 16:56:17 -0400
-Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9ED87C061756
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 13:56:16 -0700 (PDT)
-Received: by mail-lj1-x232.google.com with SMTP id z14so11170290ljm.1
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 13:56:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=UJ2Vqlv4BvhpTJPAIFfyDD26d6ySQAJxv6Dxf08So/Y=;
-        b=jUYumKYnqRT0iQ2kDFfTOTL1IwILe6T8kU49yLhhNL7K1ZbsgZxBiBU7RY27Cdjnq3
-         CsTUBh2hhfw54+eQkjXVU3r0w1SKzdY/Y6rM++6PeLGmgk1odTP40pY0MBxlcf0JK6/k
-         Qif2FGPjmAgEuxvo/H3316omRBqQPEbtA5zXmqFcQS155QBaPQYEvJg6F8TsAVsBgz5S
-         H88XBy+cluqajJAQgJkG/NjkMjXj7h2pe1hoHx4n6IzJn++BJ94IftIhUogZQ8csPGIS
-         hahcmlxSUiNZSqTtiW0MEFyPv4RK6smv2B4HvNg8iq6ohGQ78zkwVpAaj47IuVrYbS5f
-         N3Og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=UJ2Vqlv4BvhpTJPAIFfyDD26d6ySQAJxv6Dxf08So/Y=;
-        b=fiTh/UGBA2yDKO/BGCoI07DSp84nF6PzxqsEE01vqWs3i2Mn1A9Cm5FkZri0sOlCcY
-         //tHZV8MTSWQ38flFQByT+PaF0CYHHSAtB62/8eq4SIYLcEPaz5hfS335ZigLTA4m0BM
-         LG637JL2ZWtpBJMlnzbxk2F8lekp2ikJiHfmANocYiXg08iBBvBCLsSEWk7bY74uT3qh
-         BeWm6SoUzdqRuv8hZt/0D1+wKIo0O/K4uoBYxT57r1g0zIx2GYcyMZKxjHvoEal14mB8
-         CB3b7QlSHbt/3xlEJXe+K1huFdt3MYUK7FMP+V5wz82p/NmGcrVSzOGzTuA6F/QeQBCy
-         wRkg==
-X-Gm-Message-State: AOAM5325ZgETZGC/wu4TJB5LMlxSPpKnaywi5u0DYaoXIYV8TdPMKGlK
-        KAOcVhygVcSL5g2jyGtCwA+kjEi8
-X-Google-Smtp-Source: ABdhPJyFq4eNoaMzO3/HI56oT1ypKSiPIaGlhdDOKijxaiesUv4y86FHXnIEuAqAWUFDIhrbHyQ+5g==
-X-Received: by 2002:a2e:810c:: with SMTP id d12mr1363226ljg.34.1597092974837;
-        Mon, 10 Aug 2020 13:56:14 -0700 (PDT)
-Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.googlemail.com with ESMTPSA id t18sm10591147ljc.126.2020.08.10.13.56.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Aug 2020 13:56:14 -0700 (PDT)
-Subject: Re: regulator: deadlock vs memory reclaim
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Mark Brown <broonie@kernel.org>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org
-References: <cover.1597089543.git.mirq-linux@rere.qmqm.pl>
- <9a5c8ca6-2027-4d89-e290-6db564b99962@gmail.com>
- <20200810201846.GA12091@qmqm.qmqm.pl>
- <d9c3f307-e124-ea5e-c036-71138f9232f4@gmail.com>
-Message-ID: <81e490af-d1da-873a-51b4-130ca82fd1f6@gmail.com>
-Date:   Mon, 10 Aug 2020 23:56:13 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 10 Aug 2020 16:56:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49734 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726115AbgHJU44 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 16:56:56 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D80B20716;
+        Mon, 10 Aug 2020 20:56:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597093015;
+        bh=pum/l0HZs+kYzU3nToNYXCbY1WcpAwrT1CrspgU1jXY=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=tKm15NRiXzWMySEGdhssl0BukbdYKt/AJVy91KvXvmuA8mihfBAteoT3MGn2wh/EB
+         kKbKVje9DyeNu18RWZ4GpQXjUw9HxXomk8N3xWGhQduo6/gKrQA5owDzuY4Ak4iIhL
+         iXdKaxSPvGTSA/ffzlX3p8FORoJOnnKAqi9zLv68=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 50DDD35228C7; Mon, 10 Aug 2020 13:56:55 -0700 (PDT)
+Date:   Mon, 10 Aug 2020 13:56:55 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        linux-doc@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        neeraju@codeaurora.org, peterz@infradead.org,
+        Randy Dunlap <rdunlap@infradead.org>, rcu@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>, tglx@linutronix.de,
+        vineethrp@gmail.com
+Subject: Re: [PATCH v4 3/5] rcu/tree: Make FQS complaining about offline CPU
+ more aggressive
+Message-ID: <20200810205655.GA17709@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200807170722.2897328-1-joel@joelfernandes.org>
+ <20200807170722.2897328-4-joel@joelfernandes.org>
 MIME-Version: 1.0
-In-Reply-To: <d9c3f307-e124-ea5e-c036-71138f9232f4@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200807170722.2897328-4-joel@joelfernandes.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-10.08.2020 23:21, Dmitry Osipenko пишет:
-> 10.08.2020 23:18, Michał Mirosław пишет:
->> On Mon, Aug 10, 2020 at 11:15:28PM +0300, Dmitry Osipenko wrote:
->>> 10.08.2020 23:09, Michał Mirosław пишет:
->>>> At first I also thought so, but there's more. Below is a lockdep
->>>> complaint with your patch applied. I did a similar patch and then two more
->>>> (following) and that is still not enough (sysfs/debugfs do allocations,
->>>> too).
->>> Then it should be good to move the locking for init_coupling() like I
->>> suggested and use GFP_NOWAIT for the two other cases. It all could be a
->>> single small patch. Could you please check whether GFP_NOWAIT helps?
->>
->> This would be equivalent to my patches. Problem with sysfs and debugfs
->> remains as they don't have the option of GFP_NOWAIT. This needs to be
->> moved outside of the locks.
+On Fri, Aug 07, 2020 at 01:07:20PM -0400, Joel Fernandes (Google) wrote:
+> The FQS loop detecting that an offline CPU has not yet reported a
+> quiescent state, is a serious problem. The current interaction between
+> RCU quiescent-state reporting and CPU-hotplug operations means that the
+> FQS loop should never find that an offline CPU (by RCU's understanding
+> of what is offline or not) has not yet reported a quiescent state.
 > 
-> Ah okay, you meant the debugfs core. I see now, thanks.
+> First, the outgoing CPU explicitly reports a quiescent state if needed
+> in rcu_report_dead().  Second, the race where the CPU is leaving just as
+> RCU is initializing a new grace period is handled by an explicit check
+> for this condition in rcu_gp_init().  Third, the CPU's leaf rcu_node
+> structure's ->lock serializes these modifications and checks.
 > 
+> At the moment, the FQS loop detections this anomaly but only reports it
+> after a second has elapsed.
+> 
+> This commit therefore makes the warning more aggressive such that we fail
+> immediately when the FQS loop scan happens and bring the problem to
+> everyone's attention.
+> 
+> Light testing with TREE03 and hotplug shows no warnings. Converted the
+> warning as well to WARN_ON_ONCE() to reduce log spam.
+> 
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
-This indeed needs a capital solution.
+Looks good, queued, thank you!
 
-It's not obvious how to fix it.. we can probably remove taking the
-list_mutex from lock_dependent(), but this still won't help the case of
-memory reclaiming because reclaim may cause touching the already locked
-regulator. IIUC, the case of memory reclaiming under regulator lock was
-always dangerous and happened to work by chance before, correct?
+I did a bit of editing as shown below.  Please let me know if I messed
+anything up.
+
+							Thanx, Paul
+
+------------------------------------------------------------------------
+
+commit 61b82b349d0089120a9705240ece6ecf2b176fd5
+Author: Joel Fernandes (Google) <joel@joelfernandes.org>
+Date:   Fri Aug 7 13:07:20 2020 -0400
+
+    rcu: Make FQS more aggressive in complaining about offline CPUs
+    
+    The RCU grace-period kthread's force-quiescent state (FQS) loop should
+    never see an offline CPU that has not yet reported a quiescent state.
+    After all, the offline CPU should have reported a quiescent state
+    during the CPU-offline process, or, failing that, by rcu_gp_init()
+    if it ran concurrently with either the CPU going offline or the last
+    task on a leaf rcu_node structure exiting its RCU read-side critical
+    section while all CPUs corresponding to that structure are offline.
+    The FQS loop should therefore complain if it does see an offline CPU
+    that has not yet reported a quiescent state.
+    
+    And it does, but only once the grace period has been in force for a
+    full second.  This commit therefore makes this warning more aggressive,
+    so that it will trigger as soon as the condition makes its appearance.
+    
+    Light testing with TREE03 and hotplug shows no warnings.  This commit
+    also converts the warning to WARN_ON_ONCE() in order to stave off possible
+    log spam.
+    
+    Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 59e1943..f79827b 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -1215,13 +1215,28 @@ static int rcu_implicit_dynticks_qs(struct rcu_data *rdp)
+ 		return 1;
+ 	}
+ 
+-	/* If waiting too long on an offline CPU, complain. */
+-	if (!(rdp->grpmask & rcu_rnp_online_cpus(rnp)) &&
+-	    time_after(jiffies, rcu_state.gp_start + HZ)) {
++	/*
++	 * Complain if a CPU that is considered to be offline from RCU's
++	 * perspective has not yet reported a quiescent state.  After all,
++	 * the offline CPU should have reported a quiescent state during
++	 * the CPU-offline process, or, failing that, by rcu_gp_init()
++	 * if it ran concurrently with either the CPU going offline or the
++	 * last task on a leaf rcu_node structure exiting its RCU read-side
++	 * critical section while all CPUs corresponding to that structure
++	 * are offline.  This added warning detects bugs in any of these
++	 * code paths.
++	 *
++	 * The rcu_node structure's ->lock is held here, which excludes
++	 * the relevant portions the CPU-hotplug code, the grace-period
++	 * initialization code, and the rcu_read_unlock() code paths.
++	 *
++	 * For more detail, please refer to the "Hotplug CPU" section
++	 * of RCU's Requirements documentation.
++	 */
++	if (WARN_ON_ONCE(!(rdp->grpmask & rcu_rnp_online_cpus(rnp)))) {
+ 		bool onl;
+ 		struct rcu_node *rnp1;
+ 
+-		WARN_ON(1);  /* Offline CPUs are supposed to report QS! */
+ 		pr_info("%s: grp: %d-%d level: %d ->gp_seq %ld ->completedqs %ld\n",
+ 			__func__, rnp->grplo, rnp->grphi, rnp->level,
+ 			(long)rnp->gp_seq, (long)rnp->completedqs);
