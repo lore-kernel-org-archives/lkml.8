@@ -2,111 +2,97 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 683FAC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:03:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B700C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:03:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4155A20772
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:03:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D6152078B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:03:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597071813;
+	bh=2upOspJQyAc6VxHI3ZoPXqjcC9tIQ2ybsAs1y8sw9EY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=agjJ3t7UD5ktBJmVGAZWwKJrXUKEVrZL5uBKE7khZ7bXcMHW3X6CGo7R2IBSoYLFI
+	 opCsE9rZkaxe4s6d8U74zOCwZ66y7zyl78+0Y0HnRZQNxvXmdloCr4kiryHDnDoOHm
+	 xyUxWpvyfKtgz3U/lfNFxneaVr+mu1eDwU7O3rM0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727768AbgHJPDL (ORCPT
+        id S1727786AbgHJPDb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:03:11 -0400
-Received: from mga14.intel.com ([192.55.52.115]:38032 "EHLO mga14.intel.com"
+        Mon, 10 Aug 2020 11:03:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726499AbgHJPDK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:03:10 -0400
-IronPort-SDR: wWHoqf6ltRmFMz3QjQMdD1POQtu2tal+juHHNOJfckx7BgmxbCBEruqYTZJQXP9Bdc/PkIjjm6
- Pp5FyHYZYilw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9708"; a="152760447"
-X-IronPort-AV: E=Sophos;i="5.75,457,1589266800"; 
-   d="scan'208";a="152760447"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2020 08:03:09 -0700
-IronPort-SDR: 12GPmA8BCeQKGz3X7oWrHdalm2jYaMpo7RLVvb4zhfL6Ek6UshgXWdDmlDGRZyMjLYfytOv4Ny
- v8l1ys7ZGACg==
-X-IronPort-AV: E=Sophos;i="5.75,457,1589266800"; 
-   d="scan'208";a="438722426"
-Received: from schen8-mobl.amr.corp.intel.com (HELO [10.212.235.58]) ([10.212.235.58])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2020 08:03:07 -0700
-Subject: Re: [PATCH v3 2/2] ASoC: Intel: Add period size constraint on strago
- board
-To:     "Lu, Brent" <brent.lu@intel.com>, Takashi Iwai <tiwai@suse.de>
-Cc:     Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        "Rojewski, Cezary" <cezary.rojewski@intel.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "yuhsuan@google.com" <yuhsuan@google.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Sam McNally <sammc@chromium.org>,
-        Mark Brown <broonie@kernel.org>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Daniel Stuart <daniel.stuart14@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Yu-Hsuan Hsu <yuhsuan@chromium.org>,
-        Damian van Soelen <dj.vsoelen@gmail.com>
-References: <1596020585-11517-1-git-send-email-brent.lu@intel.com>
- <1596198365-10105-1-git-send-email-brent.lu@intel.com>
- <1596198365-10105-3-git-send-email-brent.lu@intel.com>
- <s5h5za3ajvb.wl-tiwai@suse.de>
- <DM6PR11MB3642AE90DF98956CCEDE6C2F974F0@DM6PR11MB3642.namprd11.prod.outlook.com>
- <s5hd04a90o4.wl-tiwai@suse.de>
- <DM6PR11MB3642B5BC2E1E0708088526D8974D0@DM6PR11MB3642.namprd11.prod.outlook.com>
- <63bca214-3434-16c6-1b60-adf323aec554@linux.intel.com>
- <DM6PR11MB3642D9BE1E5DAAB8B78B84B0974D0@DM6PR11MB3642.namprd11.prod.outlook.com>
- <s5hpn873by6.wl-tiwai@suse.de>
- <DM6PR11MB36423A9D28134811AD5A911F974A0@DM6PR11MB3642.namprd11.prod.outlook.com>
- <6466847a-8aae-24f7-d727-36ba75e95f98@linux.intel.com>
- <DM6PR11MB364259049769F6EF3B84AABD97480@DM6PR11MB3642.namprd11.prod.outlook.com>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <3f3baf5e-f73d-9cd6-cbfb-36746071e126@linux.intel.com>
-Date:   Mon, 10 Aug 2020 10:03:06 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1726499AbgHJPDa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:03:30 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E30C820772;
+        Mon, 10 Aug 2020 15:03:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597071809;
+        bh=2upOspJQyAc6VxHI3ZoPXqjcC9tIQ2ybsAs1y8sw9EY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EXHd7G+NT+8jdi+vKGgK9WZpeHQgBvMdxobJdmsIiRUXpKRVvZQSMhsBmkSJdGgmF
+         Z25rNlD7H3J1ghwDzPpD6NH/MfSJMEX0Uo9i5m0wiLphWHQDH9IWPObdWGGUP1qbb2
+         BPpYGUa4N4LRKtgf47KO8Uj93JtiYIxDz3bpZqDo=
+Received: by pali.im (Postfix)
+        id 8D5B97C9; Mon, 10 Aug 2020 17:03:26 +0200 (CEST)
+Date:   Mon, 10 Aug 2020 17:03:26 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Jason Cooper <jason@lakedaemon.net>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: mvebu: Check if reset gpio is defined
+Message-ID: <20200810150326.mrfcxnilpmib7u3m@pali>
+References: <20200724132930.7206-1-pali@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <DM6PR11MB364259049769F6EF3B84AABD97480@DM6PR11MB3642.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200724132930.7206-1-pali@kernel.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 8/6/20 11:41 AM, Lu, Brent wrote:
->>
->> I don't get this. If the platform driver already stated 240 and 960 samples why
->> would 432 be chosen? Doesn't this mean the constraint is not applied?
+On Friday 24 July 2020 15:29:30 Pali Rohár wrote:
+> Reset gpio is optional and it does not have to be defined for all boards.
 > 
-> Hi Pierre,
+> So in mvebu_pcie_powerdown() like in mvebu_pcie_powerup() check that reset
+> gpio is defined prior usage to prevent NULL pointer dereference.
 > 
-> Sorry for late reply. I used following constraints in V3 patch so any period which
-> aligns 1ms would be accepted.
+> Signed-off-by: Pali Rohár <pali@kernel.org>
+> ---
+>  drivers/pci/controller/pci-mvebu.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> +	/*
-> +	 * Make sure the period to be multiple of 1ms to align the
-> +	 * design of firmware. Apply same rule to buffer size to make
-> +	 * sure alsa could always find a value for period size
-> +	 * regardless the buffer size given by user space.
-> +	 */
-> +	snd_pcm_hw_constraint_step(substream->runtime, 0,
-> +			   SNDRV_PCM_HW_PARAM_PERIOD_SIZE, 48);
-> +	snd_pcm_hw_constraint_step(substream->runtime, 0,
-> +			   SNDRV_PCM_HW_PARAM_BUFFER_SIZE, 48);
+> diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
+> index 153a64676bc9..58607cbe84c8 100644
+> --- a/drivers/pci/controller/pci-mvebu.c
+> +++ b/drivers/pci/controller/pci-mvebu.c
+> @@ -947,7 +947,8 @@ static int mvebu_pcie_powerup(struct mvebu_pcie_port *port)
+>   */
+>  static void mvebu_pcie_powerdown(struct mvebu_pcie_port *port)
+>  {
+> -	gpiod_set_value_cansleep(port->reset_gpio, 1);
+> +	if (port->reset_gpio)
+> +		gpiod_set_value_cansleep(port->reset_gpio, 1);
 
-432 samples is 9ms, I don't have a clue why/how CRAS might ask for this 
-value.
+Please drop this patch. I have realized that gpiod_set_value_cansleep()
+calls VALIDATE_DESC_VOID() macro which returns from current running
+function if passed pointer is NULL. So this patch is not needed as
+gpiod_set_value_cansleep() may be called with NULL pointer.
 
-It'd be a bit odd to add constraints just for the purpose of letting 
-userspace select a sensible value.
+>  
+>  	clk_disable_unprepare(port->clk);
+>  }
+> -- 
+> 2.20.1
+> 
