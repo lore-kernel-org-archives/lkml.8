@@ -2,152 +2,149 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7122FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:13:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22CDBC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:13:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DA35206B5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:13:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEE7C2076C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:13:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="TRARDpzJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xQ1R7jn5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726115AbgHJHNE (ORCPT
+        id S1726468AbgHJHNf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 03:13:04 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:55340 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725846AbgHJHND (ORCPT
+        Mon, 10 Aug 2020 03:13:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45152 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726331AbgHJHNe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 03:13:03 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07A7CINi020015;
-        Mon, 10 Aug 2020 09:12:52 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=tlWSkjZvbyR9Qy2VKCg4c4PZZFkede4DNbC7P6xGMvY=;
- b=TRARDpzJXIWy6RTxpVgMBbTavkhh5qJTvbJYKCH31v0jHLeP2UBoDXfEX3EljOQ5vVAc
- 1RbZxYvYZs/yEAEXLOf5L/poDf/QYTzbQQtW4eKmEhctWZ87dLGj+tFyY0LbWO2HVar/
- G7ZMmneLQjfE8RLoq1x07FkJa9m10KuYp0MyAgOQQnA+pti50PLbmPcoCwfTh6euiiaA
- lYs5GbbQsOVSzc3C+6ASrTSHa95XdNGKf7cBgyOizOZuq+uyGW7IvAofwuuFMjVPNMtb
- Ad4J/+gnRoLEhvL00AZ0AZQ28oeuHiiaQeeEOfWq0AljgxdNRWam9EoTuDj62sH1L4GX bw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 32sma16n87-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 10 Aug 2020 09:12:52 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 680B810003B;
-        Mon, 10 Aug 2020 09:12:52 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 5C96B2AD9EB;
-        Mon, 10 Aug 2020 09:12:52 +0200 (CEST)
-Received: from localhost (10.75.127.46) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 10 Aug 2020 09:12:52
- +0200
-From:   Alain Volmat <alain.volmat@st.com>
-To:     <broonie@kernel.org>, <amelie.delaunay@st.com>
-CC:     <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
-        <linux-spi@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>,
-        <alain.volmat@st.com>
-Subject: [PATCH v2 5/5] spi: stm32: always perform registers configuration prior to transfer
-Date:   Mon, 10 Aug 2020 09:12:38 +0200
-Message-ID: <1597043558-29668-6-git-send-email-alain.volmat@st.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1597043558-29668-1-git-send-email-alain.volmat@st.com>
-References: <1597043558-29668-1-git-send-email-alain.volmat@st.com>
+        Mon, 10 Aug 2020 03:13:34 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0593AC06178A
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 00:13:32 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id y3so7107325wrl.4
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 00:13:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=+TUd9JRbZ1pyZaCnuclZ/AO9DW45PgvoNIXxTZ6zZrE=;
+        b=xQ1R7jn546DiRqc42dCW1K0GBZinc8U+spujkwGvBUURTctIhYaWn2QdhGZfToWnw/
+         5WaTr1uaqsnHbcqicFNMbrOXBvK3DRuOoa97gNdCZ3P/jMkT5DMw8Oqxo1o+rrdWnycB
+         F1Cmwbw50K8AsHAmU5ovD0YutO27HrbG0f5BRd7XGL/5CQdplPTOe43ukzJHgt0QJuIM
+         D49YXIRmo8bTF+TIGOxUn4gLC+4NkqpjzL3XxxmadY2k4VEgAi1B7xaQTHPeVPo2lVZS
+         qyQZU1p/vIReqk4RRLfGi8wx+XfFdG1W58Ic/CLzzZfCQ4+MaAjNBW4DYLLJJNqNd9tS
+         kRWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=+TUd9JRbZ1pyZaCnuclZ/AO9DW45PgvoNIXxTZ6zZrE=;
+        b=jaqs6gZ1+tlh94gE1LAMgDlpIKUSMksnoxqYl87fWnjIL62oVDbFdGwuOfEf/qpT1Q
+         70DQg/5LhPe5yB9bpVyZ4yTUJ55jInsim319RaGyrsx8xJzYg24jQEhi6ti9vC6sgOUm
+         VM48hQUOfY2rnGuB4G8/LHRzV+g8HOHQrFnW5YRqxz7XfL16Mw0Yzi2LrObf5+DjSWnP
+         jQb3EHNBpgtNtDc5aes6x4OpDharBrRLSmn7wsZMgUHysy7GhpM33bGlhtLscVWeQdm3
+         TJkHBLcfK8Y5SGndr8dEDmQRMVlua1Yybj+d2t19eq/A7mfrXwCVDh20wK3XWwCDhHt5
+         peDQ==
+X-Gm-Message-State: AOAM532k0MuY+3b8IoSQOEgVKG2ClUWDgQEPcuwIymPweDFlaUlyWjwY
+        eofLJ4xmD6FahQbrmn8krmk/jg==
+X-Google-Smtp-Source: ABdhPJyqMpwZFIytM3dip4yb9zg/T5q+SVei4Y+VdZ3uIDP/QBRxHBX79zX6kLVNBEQ3N66zTYZL3w==
+X-Received: by 2002:a5d:51c3:: with SMTP id n3mr23689763wrv.104.1597043611405;
+        Mon, 10 Aug 2020 00:13:31 -0700 (PDT)
+Received: from dell ([2.27.167.73])
+        by smtp.gmail.com with ESMTPSA id t3sm3850812wrx.5.2020.08.10.00.13.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Aug 2020 00:13:30 -0700 (PDT)
+Date:   Mon, 10 Aug 2020 08:13:28 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v7 06/13] pwm: add support for sl28cpld PWM controller
+Message-ID: <20200810071328.GB4411@dell>
+References: <20200803093559.12289-1-michael@walle.cc>
+ <20200803093559.12289-7-michael@walle.cc>
+ <20200806084000.k3aj5nmqdodmb35v@pengutronix.de>
+ <e288ca6cfee819223395712e04159dd9@walle.cc>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG1NODE3.st.com (10.75.127.3) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-10_03:2020-08-06,2020-08-10 signatures=0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e288ca6cfee819223395712e04159dd9@walle.cc>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SPI registers content may have been lost upon suspend/resume sequence.
-So, always compute and apply the necessary configuration in
-stm32_spi_transfer_one_setup routine.
+On Fri, 07 Aug 2020, Michael Walle wrote:
 
-Signed-off-by: Alain Volmat <alain.volmat@st.com>
----
-v2: identical to v1
+> Hi Uwe, Hi Lee,
+> 
+> Am 2020-08-06 10:40, schrieb Uwe Kleine-König:
+> > On Mon, Aug 03, 2020 at 11:35:52AM +0200, Michael Walle wrote:
+> > > diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> > > index 7dbcf6973d33..a0d50d70c3b9 100644
+> > > --- a/drivers/pwm/Kconfig
+> > > +++ b/drivers/pwm/Kconfig
+> > > @@ -428,6 +428,16 @@ config PWM_SIFIVE
+> > >  	  To compile this driver as a module, choose M here: the module
+> > >  	  will be called pwm-sifive.
+> > > 
+> > > +config PWM_SL28CPLD
+> > > +	tristate "Kontron sl28cpld PWM support"
+> > > +	select MFD_SIMPLE_MFD_I2C
+> > 
+> > Is it sensible to present this option to everyone? Maybe
+> > 
+> > 	depends on SOME_SYMBOL_ONLY_TRUE_ON_SL28CPLD || COMPILE_TEST
+> 
+> Because there is now no real MFD driver anymore, there is also
+> no symbol for that. The closest would be ARCH_ARM64 but I don't
+> think that is a good idea.
+> 
+> Lee, what do you think about adding a symbol to the MFD, which
+> selects MFD_SIMPLE_MFD_I2C but doesn't enable any C modules?
+> 
+> I.e.
+> config MFD_SL28CPLD
+>     tristate "Kontron sl28cpld"
+>     select MFD_SIMPLE_MFD_I2C
+>     help
+>       Say yes here to add support for the Kontron sl28cpld board
+>       management controller.
+> 
+> Then all the other device driver could depend on the MFD_SL28CPLD
+> symbol.
 
- drivers/spi/spi-stm32.c | 42 +++++++++++++++++-------------------------
- 1 file changed, 17 insertions(+), 25 deletions(-)
+You want to add a virtual symbol to prevent having to present a real
+one?  How is that a reasonable solution?
 
-diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
-index 9b90a22543fd..d4b33b358a31 100644
---- a/drivers/spi/spi-stm32.c
-+++ b/drivers/spi/spi-stm32.c
-@@ -1597,41 +1597,33 @@ static int stm32_spi_transfer_one_setup(struct stm32_spi *spi,
- 	unsigned long flags;
- 	unsigned int comm_type;
- 	int nb_words, ret = 0;
-+	int mbr;
- 
- 	spin_lock_irqsave(&spi->lock, flags);
- 
- 	spi->cur_xferlen = transfer->len;
- 
--	if (spi->cur_bpw != transfer->bits_per_word) {
--		spi->cur_bpw = transfer->bits_per_word;
--		spi->cfg->set_bpw(spi);
--	}
--
--	if (spi->cur_speed != transfer->speed_hz) {
--		int mbr;
--
--		/* Update spi->cur_speed with real clock speed */
--		mbr = stm32_spi_prepare_mbr(spi, transfer->speed_hz,
--					    spi->cfg->baud_rate_div_min,
--					    spi->cfg->baud_rate_div_max);
--		if (mbr < 0) {
--			ret = mbr;
--			goto out;
--		}
-+	spi->cur_bpw = transfer->bits_per_word;
-+	spi->cfg->set_bpw(spi);
- 
--		transfer->speed_hz = spi->cur_speed;
--		stm32_spi_set_mbr(spi, mbr);
-+	/* Update spi->cur_speed with real clock speed */
-+	mbr = stm32_spi_prepare_mbr(spi, transfer->speed_hz,
-+				    spi->cfg->baud_rate_div_min,
-+				    spi->cfg->baud_rate_div_max);
-+	if (mbr < 0) {
-+		ret = mbr;
-+		goto out;
- 	}
- 
--	comm_type = stm32_spi_communication_type(spi_dev, transfer);
--	if (spi->cur_comm != comm_type) {
--		ret = spi->cfg->set_mode(spi, comm_type);
-+	transfer->speed_hz = spi->cur_speed;
-+	stm32_spi_set_mbr(spi, mbr);
- 
--		if (ret < 0)
--			goto out;
-+	comm_type = stm32_spi_communication_type(spi_dev, transfer);
-+	ret = spi->cfg->set_mode(spi, comm_type);
-+	if (ret < 0)
-+		goto out;
- 
--		spi->cur_comm = comm_type;
--	}
-+	spi->cur_comm = comm_type;
- 
- 	if (spi->cfg->set_data_idleness)
- 		spi->cfg->set_data_idleness(spi, transfer->len);
 -- 
-2.7.4
-
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
