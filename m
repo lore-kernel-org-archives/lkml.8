@@ -2,125 +2,80 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0841C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:25:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A6CCC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:25:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C62420709
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:25:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lWO4TZW6"
+	by mail.kernel.org (Postfix) with ESMTP id 7943320709
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:25:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbgHJMZ2 (ORCPT
+        id S1726756AbgHJMZc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 08:25:28 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:35804 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbgHJMZ2 (ORCPT
+        Mon, 10 Aug 2020 08:25:32 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:45738 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726518AbgHJMZb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 08:25:28 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07ACGVaX182587;
-        Mon, 10 Aug 2020 12:25:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=LHGAkcFYSyuaEFdv/TGZUvxSEINDvA0B41yBg/c6SCw=;
- b=lWO4TZW6vjoZZdMr0YgLUAuFsqEV37EnHoL6zkRbnCBUoeyTNLwytQ3xYqhMjbPqA0P6
- Yg3rEEkajyM2AlaWmKlQFdTbO5/mI2HII1zGxIOoyKGmLW5wwExIZUFycPl00yXPeaAV
- r6/a9pFEl7zGMV29d2ZFKYwSy4TN24aksQ3v0QCgCZ/iC5MMtzJSo4Dt005rSY7w4gLi
- zpizs2Pkej0tkjkqdXuS0B67jDvn4zyenRs9CL/4HtYeD293U0ZDD3VSTspkk2gjzRU3
- PCzbAStfl4nSbvJkPVC96wRWcy7Bkymv8P0goBbLx8kdDjWDE901ysGO++3fhgU6MXcO ng== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 32smpn64f6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 10 Aug 2020 12:25:18 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07ACJFAn052752;
-        Mon, 10 Aug 2020 12:25:18 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 32t5y0py2n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 10 Aug 2020 12:25:17 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 07ACPGHe006184;
-        Mon, 10 Aug 2020 12:25:16 GMT
-Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 10 Aug 2020 12:25:15 +0000
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: Please pull NFS server updates for v5.9
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20200810090349.64bce58f@canb.auug.org.au>
-Date:   Mon, 10 Aug 2020 08:25:14 -0400
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Trond Myklebust <trondmy@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <EC1AA9E7-4AC1-49C6-B138-B6A3E4ED7A0B@oracle.com>
-References: <F9B8940D-9F7B-47F5-9946-D77C17CF959A@oracle.com>
- <20200810090349.64bce58f@canb.auug.org.au>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9708 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0
- suspectscore=0 mlxscore=0 adultscore=0 bulkscore=0 phishscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008100092
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9708 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 lowpriorityscore=0
- bulkscore=0 impostorscore=0 phishscore=0 clxscore=1011 spamscore=0
- malwarescore=0 adultscore=0 mlxlogscore=999 mlxscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008100092
+        Mon, 10 Aug 2020 08:25:31 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: gtucker)
+        with ESMTPSA id 0840B2935C0
+Subject: Re: [PATCH 1/3] ARM: exynos: clear L220_AUX_CTRL_NS_LOCKDOWN in
+ default l2c_aux_val
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        kernel@collabora.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <860eb8a1eed879e55daf960c96acdac514cbda93.1596028601.git.guillaume.tucker@collabora.com>
+ <20200803133439.GB476@kozik-lap>
+ <20200803142244.GO1551@shell.armlinux.org.uk>
+From:   Guillaume Tucker <guillaume.tucker@collabora.com>
+Message-ID: <875ad268-d65c-673e-6f5a-76d48c24f478@collabora.com>
+Date:   Mon, 10 Aug 2020 13:25:25 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200803142244.GO1551@shell.armlinux.org.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 03/08/2020 15:22, Russell King - ARM Linux admin wrote:
+> On Mon, Aug 03, 2020 at 03:34:39PM +0200, Krzysztof Kozlowski wrote:
+>> On Wed, Jul 29, 2020 at 02:47:31PM +0100, Guillaume Tucker wrote:
+>>> The L220_AUX_CTRL_NS_LOCKDOWN flag is set during the L2C enable
+>>> sequence.  There is no need to set it in the default register value,
+>>> this was done before support for it was implemented in the code.  It
+>>> is not set in the hardware initial value either.
+>>>
+>>> Clean this up by removing this flag from the default l2c_aux_val, and
+>>> add it to the l2c_aux_mask to print an alert message if it was already
+>>> set before the kernel initialisation.
+>>>
+>>> Signed-off-by: Guillaume Tucker <guillaume.tucker@collabora.com>
+>>> ---
+>>>  arch/arm/mach-exynos/exynos.c | 4 ++--
+>>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> Makes sense. I'll take it after the merge window.
+> 
+> Yes, because platforms actually have no control over this bit through
+> these values.
+> 
+> Please fix the description to use the right define, it's
+> L310_AUX_CTRL_NS_LOCKDOWN not L220_AUX_CTRL_NS_LOCKDOWN.
 
+Thanks, fixed in v2.
 
-> On Aug 9, 2020, at 7:03 PM, Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->=20
-> Hi Chuck,
->=20
-> On Sun, 9 Aug 2020 11:44:15 -0400 Chuck Lever <chuck.lever@oracle.com> =
-wrote:
->>=20
->> The following changes since commit =
-11ba468877bb23f28956a35e896356252d63c983:
->>=20
->>  Linux 5.8-rc5 (2020-07-12 16:34:50 -0700)
->>=20
->> are available in the Git repository at:
->>=20
->>  git://git.linux-nfs.org/projects/cel/cel-2.6.git tags/nfsd-5.9
->>=20
->> for you to fetch changes up to =
-b297fed699ad9e50315b27e78de42ac631c9990d:
->>=20
->>  svcrdma: CM event handler clean up (2020-07-28 10:18:15 -0400)
->=20
-> Despite you having a branch included in linux-next, only one of these
-> commits has been in linux-next :-( (and that via Trond's nfs tree)
-
-Is there something I need to change? The public copy of the cel-testing
-branch has had this content for the past 12 days.
-
-
---
-Chuck Lever
-
-
+Guilaume
 
