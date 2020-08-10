@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 156B1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:29:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A086EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:30:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D788E22D08
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:29:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C91522D08
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:30:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073397;
-	bh=TU8KcSxgf0mh/aZ/qfkuGB8IhN9MgKoxul2BZV7PuG0=;
+	s=default; t=1597073403;
+	bh=153lkc7ni49tWjnOa1AHM2bGXCUgmkpx6h3coe7FnQs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n/ah3J545Ojn3U2o60qgRA1eDfJcH+cIDD5L61bGFJcrd/kaArFJDE8aeQZ66xyYB
-	 9TVCX2jY7sxnHjd/21rsJBMcEp3SsYcmTRKPUeo+886lXVshmAYAX2wmhyxzUvb2Nc
-	 dtPlR6Y4wbHcFi5707+QJTYIKddOHqIknRaW167M=
+	b=ivmyqHyEBQK1SFs78r1hViCdjPA7VtYht4qIInVqOO8l3Pt/vyjjbe3Yr9PLcyYlD
+	 Ruc8hpI1zDmPW6d6V4WACgTEI0U+FoYXwXsDOBH1b4HjdNxH1sFtWp98Dv0CMQpQJ1
+	 gEUMzZ/AM4eM3QR/sU4l1DZQCxtEXW1Y7BlBYMR8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729028AbgHJP34 (ORCPT
+        id S1729039AbgHJPaA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:29:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36482 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:30:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729021AbgHJP3x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:29:53 -0400
+        id S1729023AbgHJP3z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:29:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C95322D07;
-        Mon, 10 Aug 2020 15:29:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC68422B47;
+        Mon, 10 Aug 2020 15:29:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073392;
-        bh=TU8KcSxgf0mh/aZ/qfkuGB8IhN9MgKoxul2BZV7PuG0=;
+        s=default; t=1597073395;
+        bh=153lkc7ni49tWjnOa1AHM2bGXCUgmkpx6h3coe7FnQs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U/0YWbgI9Tshv7X9qRmzvzWCPalehGsgWiT4BMamrA2STMtBc6C/BITKTxgs78mMU
-         V2Cy6hcGSMMuH1EOOJy+jVjolkW8xxmxW9i9x6SW7hReSiTdRBCPXL07ge+q8i+Iay
-         uZ2WogZR/M6miQOc3a7D85kQ4WorhEM4xX0/s/1I=
+        b=hSDgoCODA2ih/DnZjEFv/jplbjEoh2a+CIjRykhamglJ65DTmutR6FvN9UaKGjAxH
+         b/Tyx/HfOjSmgGuJIV9ILDZgD6hA9XaxkIWs+3hKND9FYcbpKtsYNEzbt/kxv2nXVU
+         9O1nD2XAremimnm/5VjKPr8hxTxvPazS7sOYZ5X8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Mathias Nyman <mathias.nyman@linux.intel.com>,
         Forest Crossman <cyrozap@gmail.com>
-Subject: [PATCH 4.19 03/48] usb: xhci: define IDs for various ASMedia host controllers
-Date:   Mon, 10 Aug 2020 17:21:25 +0200
-Message-Id: <20200810151804.380935938@linuxfoundation.org>
+Subject: [PATCH 4.19 04/48] usb: xhci: Fix ASMedia ASM1142 DMA addressing
+Date:   Mon, 10 Aug 2020 17:21:26 +0200
+Message-Id: <20200810151804.430808893@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151804.199494191@linuxfoundation.org>
 References: <20200810151804.199494191@linuxfoundation.org>
@@ -62,48 +62,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Forest Crossman <cyrozap@gmail.com>
 
-commit 1841cb255da41e87bed9573915891d056f80e2e7 upstream.
+commit ec37198acca7b4c17b96247697406e47aafe0605 upstream.
 
-Not all ASMedia host controllers have a device ID that matches its part
-number. #define some of these IDs to make it clearer at a glance which
-chips require what quirks.
+I've confirmed that the ASMedia ASM1142 has the same problem as the
+ASM2142/ASM3142, in that it too reports that it supports 64-bit DMA
+addresses when in fact it does not. As with the ASM2142/ASM3142, this
+can cause problems on systems where the upper bits matter, and adding
+the XHCI_NO_64BIT_SUPPORT quirk completely fixes the issue.
 
 Acked-by: Mathias Nyman <mathias.nyman@linux.intel.com>
 Signed-off-by: Forest Crossman <cyrozap@gmail.com>
-Link: https://lore.kernel.org/r/20200728042408.180529-2-cyrozap@gmail.com
 Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200728042408.180529-3-cyrozap@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci-pci.c |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/usb/host/xhci-pci.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 --- a/drivers/usb/host/xhci-pci.c
 +++ b/drivers/usb/host/xhci-pci.c
-@@ -47,7 +47,9 @@
- #define PCI_DEVICE_ID_AMD_PROMONTORYA_3			0x43ba
- #define PCI_DEVICE_ID_AMD_PROMONTORYA_2			0x43bb
+@@ -49,6 +49,7 @@
  #define PCI_DEVICE_ID_AMD_PROMONTORYA_1			0x43bc
-+#define PCI_DEVICE_ID_ASMEDIA_1042_XHCI			0x1042
+ #define PCI_DEVICE_ID_ASMEDIA_1042_XHCI			0x1042
  #define PCI_DEVICE_ID_ASMEDIA_1042A_XHCI		0x1142
-+#define PCI_DEVICE_ID_ASMEDIA_2142_XHCI			0x2142
++#define PCI_DEVICE_ID_ASMEDIA_1142_XHCI			0x1242
+ #define PCI_DEVICE_ID_ASMEDIA_2142_XHCI			0x2142
  
  static const char hcd_name[] = "xhci_hcd";
- 
-@@ -226,13 +228,13 @@ static void xhci_pci_quirks(struct devic
- 		xhci->quirks |= XHCI_BROKEN_STREAMS;
- 
- 	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
--			pdev->device == 0x1042)
-+		pdev->device == PCI_DEVICE_ID_ASMEDIA_1042_XHCI)
- 		xhci->quirks |= XHCI_BROKEN_STREAMS;
- 	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
--			pdev->device == 0x1142)
-+		pdev->device == PCI_DEVICE_ID_ASMEDIA_1042A_XHCI)
+@@ -234,7 +235,8 @@ static void xhci_pci_quirks(struct devic
+ 		pdev->device == PCI_DEVICE_ID_ASMEDIA_1042A_XHCI)
  		xhci->quirks |= XHCI_TRUST_TX_LENGTH;
  	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
--			pdev->device == 0x2142)
-+		pdev->device == PCI_DEVICE_ID_ASMEDIA_2142_XHCI)
+-		pdev->device == PCI_DEVICE_ID_ASMEDIA_2142_XHCI)
++	    (pdev->device == PCI_DEVICE_ID_ASMEDIA_1142_XHCI ||
++	     pdev->device == PCI_DEVICE_ID_ASMEDIA_2142_XHCI))
  		xhci->quirks |= XHCI_NO_64BIT_SUPPORT;
  
  	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
