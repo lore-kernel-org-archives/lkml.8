@@ -2,154 +2,99 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 084FFC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:41:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A43C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:41:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D813620791
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:41:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CnzTfUG1"
+	by mail.kernel.org (Postfix) with ESMTP id 1E2EF2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:41:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726949AbgHJOlX (ORCPT
+        id S1727042AbgHJOl5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 10:41:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57226 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726392AbgHJOlW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 10:41:22 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8658DC061756;
-        Mon, 10 Aug 2020 07:41:22 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id z17so7726926ill.6;
-        Mon, 10 Aug 2020 07:41:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=AidFlRL4Ug1HXYYI29mKf2liuKC4nCVYEFXiYCfw8vA=;
-        b=CnzTfUG1SpGkNdLlwHUtFMtEAs/lYxwUd5HQM1e687MC6Hx2DVg0XbIOvx3VGO/z74
-         /BRzNFMM9NnDz2jGQ2eASuxPpT/aB1AR3sUY0B97X9ZHGQols8ol6MIVMfMib/g48r13
-         +dOLOiywM+Fr6cEXRyNvtKTpvkt+vkdJGpS12tNiDQHg2E6/oVBCkQt5kLDzQO++FKwV
-         Zwa8lmALUMlCqBfNzCEQDtTttA1A9PzbVF4AwYgmbywQm+6czKeFZ5vEr8+0JbKwwxts
-         sbFCWoV2tT9H22iM4NLHNgkJvREVNYHhnlEWB8Dlv9Z67SOBGa1vmez+KhDjL99Dr6uA
-         yZxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=AidFlRL4Ug1HXYYI29mKf2liuKC4nCVYEFXiYCfw8vA=;
-        b=joOGrU3AHTTXbE887V1t4zygaZxJCDUMf4JRiY/8hlHNaSwcSWmbvKTA+2r4pOgUwA
-         kALmXK7OUx0Ovjj/q9EjcuIltsZKrBCye4JTgs+H9VvDcAF6H9O/Z1a4jwgfIYSGapYg
-         TMPoaZjI/x2kWDJCLqeXpp7Saf32n86hd3TdC7q5/cC3oVhBr8+uSMkQqFza25pIkMwK
-         To0CS7ZCRbZa+0DTiM23MZZ6pz6E3fyNJ0EXd/YWcNrul3w967Y4h675PSaFKGpnb+dL
-         cK9wQhzWSuitRJHdcjzwiR33r7fcLPzbG6HCEVL9hrAEZi2IMdBzVBhXX8mChIgX5C3J
-         KqYA==
-X-Gm-Message-State: AOAM533ZAd+EgrGc/5tKgWs3eI371X/d+IMmto1a3bRRBtF6hXBZYJKa
-        74MhQr7uEFB9IUmxKVEnZzpQnIsKe6rQzGwijJQ=
-X-Google-Smtp-Source: ABdhPJzo3pJ+3eWBSe8FMd4AtlSqVEx0Qp8bdmYA3soM8Urzw4pi6Kq6Bjl43tvikMG3Q/MAI+I2PSwzGbulSOR3JuA=
-X-Received: by 2002:a05:6e02:143:: with SMTP id j3mr16319712ilr.97.1597070481282;
- Mon, 10 Aug 2020 07:41:21 -0700 (PDT)
+        Mon, 10 Aug 2020 10:41:57 -0400
+Received: from foss.arm.com ([217.140.110.172]:56762 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726392AbgHJOl4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 10:41:56 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C24F81063;
+        Mon, 10 Aug 2020 07:41:55 -0700 (PDT)
+Received: from bogus (unknown [10.37.12.40])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3002A3F22E;
+        Mon, 10 Aug 2020 07:41:51 -0700 (PDT)
+Date:   Mon, 10 Aug 2020 15:41:48 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     linux-i2c@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-acpi@vger.kernel.org, Bingbu Cao <bingbu.cao@intel.com>,
+        linux-media@vger.kernel.org,
+        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
+        Hyungwoo Yang <hyungwoo.yang@intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        rajmohan.mani@intel.com, Tomasz Figa <tfiga@chromium.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "Qiu, Tian Shu" <tian.shu.qiu@intel.com>
+Subject: Re: [PATCH v5 1/6] i2c: Allow driver to manage the device's power
+ state during probe
+Message-ID: <20200810144148.GD31434@bogus>
+References: <20200810142747.12400-1-sakari.ailus@linux.intel.com>
+ <20200810142747.12400-2-sakari.ailus@linux.intel.com>
 MIME-Version: 1.0
-References: <1595681998-19193-1-git-send-email-alex.shi@linux.alibaba.com>
- <1595681998-19193-15-git-send-email-alex.shi@linux.alibaba.com>
- <CAKgT0UcbBv=QBK9ErqLKXoNLYxFz52L4fiiHy4h6zKdBs=YPOg@mail.gmail.com>
- <241ca157-104f-4f0d-7d5b-de394443788d@linux.alibaba.com> <CAKgT0UdSrarC8j+G=LYRSadcaG6yNCoCfeVpFjEiHRJb4A77-g@mail.gmail.com>
- <8dbd004e-8eba-f1ec-a5eb-5dc551978936@linux.alibaba.com>
-In-Reply-To: <8dbd004e-8eba-f1ec-a5eb-5dc551978936@linux.alibaba.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Mon, 10 Aug 2020 07:41:10 -0700
-Message-ID: <CAKgT0UdK-fy+yYGLFK=YgE+maa_0_uecq0_8S_0kM8BiVgRO7g@mail.gmail.com>
-Subject: Re: [PATCH v17 14/21] mm/compaction: do page isolation first in compaction
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        kbuild test robot <lkp@intel.com>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
-        Shakeel Butt <shakeelb@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Rong Chen <rong.a.chen@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200810142747.12400-2-sakari.ailus@linux.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 6:10 AM Alex Shi <alex.shi@linux.alibaba.com> wrote=
-:
+On Mon, Aug 10, 2020 at 05:27:42PM +0300, Sakari Ailus wrote:
+> Enable drivers to tell ACPI that there's no need to power on a device for
+> probe. Drivers should still perform this by themselves if there's a need
+> to. In some cases powering on the device during probe is undesirable, and
+> this change enables a driver to choose what fits best for it.
 >
+> Add a field called "flags" into struct i2c_driver for driver flags, and a
+> flag I2C_DRV_FL_ALLOW_LOW_POWER_PROBE to tell a driver supports probe in
+> low power state.
 >
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> ---
+>  drivers/i2c/i2c-core-base.c | 17 ++++++++++++++---
+>  include/linux/i2c.h         | 14 ++++++++++++++
+>  2 files changed, 28 insertions(+), 3 deletions(-)
 >
-> =E5=9C=A8 2020/8/7 =E4=B8=8B=E5=8D=8810:51, Alexander Duyck =E5=86=99=E9=
-=81=93:
-> > I wonder if this entire section shouldn't be restructured. This is the
-> > only spot I can see where we are resetting the LRU flag instead of
-> > pulling the page from the LRU list with the lock held. Looking over
-> > the code it seems like something like that should be possible. I am
-> > not sure the LRU lock is really protecting us in either the
-> > PageCompound check nor the skip bits. It seems like holding a
-> > reference on the page should prevent it from switching between
-> > compound or not, and the skip bits are per pageblock with the LRU bits
-> > being per node/memcg which I would think implies that we could have
-> > multiple LRU locks that could apply to a single skip bit.
+> diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+> index 34a9609f256da..cde9cf49a07e6 100644
+> --- a/drivers/i2c/i2c-core-base.c
+> +++ b/drivers/i2c/i2c-core-base.c
+> @@ -436,6 +436,14 @@ static int i2c_smbus_host_notify_to_irq(const struct i2c_client *client)
+>  	return irq > 0 ? irq : -ENXIO;
+>  }
 >
-> Hi Alexander,
->
-> I don't find problem yet on compound or skip bit usage. Would you clarify=
- the
-> issue do you concerned?
->
-> Thanks!
+> +static bool allow_low_power_probe(struct device *dev)
+> +{
+> +	struct i2c_driver *driver = to_i2c_driver(dev->driver);
+> +
+> +	return driver->flags & I2C_DRV_FL_ALLOW_LOW_POWER_PROBE &&
+> +		device_property_present(dev, "allow-low-power-probe");
 
-The point I was getting at is that the LRU lock is being used to
-protect these and with your changes I don't think that makes sense
-anymore.
+I assume this change makes even the DT property "allow-low-power-probe"
+work in the same way. Should we have proper DT binding for that ?
 
-The skip bits are per-pageblock bits. With your change the LRU lock is
-now per memcg first and then per node. As such I do not believe it
-really provides any sort of exclusive access to the skip bits. I still
-have to look into this more, but it seems like you need a lock per
-either section or zone that can be used to protect those bits and deal
-with this sooner rather than waiting until you have found an LRU page.
-The one part that is confusing though is that the definition of the
-skip bits seems to call out that they are a hint since they are not
-protected by a lock, but that is exactly what has been happening here.
+This comment applies for any property using device_property_* but has
+no explicit DT binding ? Just asking the question to know the strategy
+followed. Sorry if this is redundant question, feel free to point me
+to the past discussions.
 
-The point I was getting at with the PageCompound check is that instead
-of needing the LRU lock you should be able to look at PageCompound as
-soon as you call get_page_unless_zero() and preempt the need to set
-the LRU bit again. Instead of trying to rely on the LRU lock to
-guarantee that the page hasn't been merged you could just rely on the
-fact that you are holding a reference to it so it isn't going to
-switch between being compound or order 0 since it cannot be freed. It
-spoils the idea I originally had of combining the logic for
-get_page_unless_zero and TestClearPageLRU into a single function, but
-the advantage is you aren't clearing the LRU flag unless you are
-actually going to pull the page from the LRU list.
-
-My main worry is that this is the one spot where we appear to be
-clearing the LRU bit without ever actually pulling the page off of the
-LRU list, and I am thinking we would be better served by addressing
-the skip and PageCompound checks earlier rather than adding code to
-set the bit again if either of those cases are encountered. This way
-we don't pseudo-pin pages in the LRU if they are compound or supposed
-to be skipped.
-
-Thanks.
-
-- Alex
+--
+Regards,
+Sudeep
