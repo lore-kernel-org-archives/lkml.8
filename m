@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C58C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:59:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 702ECC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:59:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 040E520774
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:59:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 330FD21775
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:59:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="czbuPi5a"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dXiBXr6E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728360AbgHJS7s (ORCPT
+        id S1728372AbgHJS75 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 14:59:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40342 "EHLO
+        Mon, 10 Aug 2020 14:59:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728071AbgHJS7s (ORCPT
+        with ESMTP id S1728071AbgHJS74 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 14:59:48 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2ABB8C061756;
-        Mon, 10 Aug 2020 11:59:48 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id y6so5524585plt.3;
-        Mon, 10 Aug 2020 11:59:48 -0700 (PDT)
+        Mon, 10 Aug 2020 14:59:56 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA545C061756;
+        Mon, 10 Aug 2020 11:59:55 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id x25so2772929pff.4;
+        Mon, 10 Aug 2020 11:59:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ITe/X6Xdx2CY6PsGQ/PduP0lNpkYq6j7vCmUAE4nQQU=;
-        b=czbuPi5aq2XuD3n/veDuyK14hELrmZZeTQMlep+v0poheUKc/VGPDdaT3NGxicOZva
-         nV/ngVMDinb52OW5KIsARx9WODXexCfN5ctiykdzyh5PxaDvtI1Yk4AXTFZxAXVcZu9I
-         yjQ2mZTizSoPt4DuEpazlR61p+rT74RYezw6+TV8W+rjG93z8n5xeXTpFVm5FfoI3i3x
-         ciqh4/PSLKbyhVQAg4eBcl2Ex0LaGKhfCl6rwNr6i6QESouOOkjJ8onckjM78SCI9Gio
-         lCPj9c97zOEPE6mP0ldBLP+93GLitOE3juMoyVHuVs4cquYNurzkT5gPHX840vtNvLBq
-         dTdg==
+        bh=puMAU16yPRJjcWrBBbirtIhNXaGIaRb087rXL9a93dY=;
+        b=dXiBXr6E0TYKVe5evLcBJVsXAmowNxpsmGxjs5usDMfgqZiDNBp07ub/f1J2Tn/lk2
+         30Ye7V77uvvn1d0xyyH5N2KwzDyNy9YtTyjXu8Oe3mZCf7acoTgeg0D/c40WRn+Zx9AV
+         YLh5bOGmIOHuunBZ9CmRl1j+pacYeNhMpghSYprgJ0CXYtd1LoEF3oWPBVWQHhRsaKCA
+         S21MN1pNfEesIxslEGmKrp4RxeHSa8TUV5B1G8NmqfyDxQ29+o1xJjwPATWw8JzzEJ/4
+         7AhZwkOz205ia1OGQv1FWyDyUwl+tx+hfZzMKwVUv7GQQk8IVLRv5L/oqa8cPkKNYE/y
+         pbsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ITe/X6Xdx2CY6PsGQ/PduP0lNpkYq6j7vCmUAE4nQQU=;
-        b=ULvVAnuE8OXTDOYa6lWXj7P2dzAafWYlRcfYEGN0oABaYOPd/BPjKX1BMoUujiCMUX
-         xMenRbuA8Duv5iNMyuv4Nl9ZIXUo/5xyvtiYViy2TkfcpjnFr4eEIUK2fuuSFr2iVni2
-         hnc7ytnXv+HESr2FVRZYEK37vXoQYLDo7BFeyVJ8kndoFiRAui9wcIh3Fj+yB6dJSEou
-         Mue2LKnsfCKk3OsFZCUqIuElsyIjTRpewIZZGm9YNRk28Oy3zuS9j3O80uevwI0mZ545
-         GYyOYCrhioGyIb5p1Y2lR7/xKWZQuMwK9c3UMWtaoMWLWAYBX395dHGoKmSoZuuI5tjK
-         EJSQ==
-X-Gm-Message-State: AOAM533JaGDXfcOqqqJFpLQ+czYS5ekpuRs6soqPb54iCoX7AvsuHN2O
-        gR/AR+zxHEOyibNhS+WM5dE=
-X-Google-Smtp-Source: ABdhPJyGCzd/g3kP7yTryz4gYqh3FqhtFV+ScqA2qpYpbUkOAXoXjPpd6Ub0MyoApFlIKxoFeh63TQ==
-X-Received: by 2002:a17:90b:581:: with SMTP id t1mr670372pjz.215.1597085987631;
-        Mon, 10 Aug 2020 11:59:47 -0700 (PDT)
+        bh=puMAU16yPRJjcWrBBbirtIhNXaGIaRb087rXL9a93dY=;
+        b=iyIuom9d+mZ4PniEqnzhfpDJRwKqbQfwYfqEvL/1CzVWLrrOuP+MbVcSMK2iMbycqQ
+         qxh3ZdiaphqZerEclUfeicDozebiEf2lXzfzSnv00KdD6tNTDFeA4w2XkrKSMZ+EFw4A
+         kKKilMj/vO+2jwbiwtACjA8uBa9EKBzX8TcvojQaRbNgMBs7M+VFRcZZbxW3U3z5rTpZ
+         BIENJEyWBDGcsViAi0NB5X1uyT62WMD8U6YEiZnGqzdMJhRzWXkSLiWPEd4QwCBBveRF
+         AelYKKKHDW7tHGhPJpi2WXup/K3mm0QVDY9s5RkrDhK/1UrL2Xn0kByjudLsQofbSkNU
+         3ICg==
+X-Gm-Message-State: AOAM531DbXWBANjC4j9LAdD3/JlZfSEI15ihxK8jBccqNbSY8CkDAMUj
+        CyTiHpW5AFGD31lc2endejA=
+X-Google-Smtp-Source: ABdhPJw/8SWq4UyW3sAzJltPdzA+52NELmb6lAQ+XEPrB165bwZBbAYZXhx32FFAx3Jit3f0k7T6fQ==
+X-Received: by 2002:a63:aa04:: with SMTP id e4mr7515802pgf.318.1597085995343;
+        Mon, 10 Aug 2020 11:59:55 -0700 (PDT)
 Received: from varodek.localdomain ([103.105.152.86])
-        by smtp.gmail.com with ESMTPSA id f27sm22683547pfk.217.2020.08.10.11.59.41
+        by smtp.gmail.com with ESMTPSA id f27sm22683547pfk.217.2020.08.10.11.59.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Aug 2020 11:59:47 -0700 (PDT)
+        Mon, 10 Aug 2020 11:59:54 -0700 (PDT)
 From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -77,9 +77,9 @@ Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
         linux-geode@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-kernel-mentees@lists.linuxfoundation.org,
         Shuah Khan <skhan@linuxfoundation.org>
-Subject: [PATCH v2 04/12] fbdev: aty: use generic power management
-Date:   Tue, 11 Aug 2020 00:27:15 +0530
-Message-Id: <20200810185723.15540-5-vaibhavgupta40@gmail.com>
+Subject: [PATCH v2 05/12] fbdev: aty128fb: use generic power management
+Date:   Tue, 11 Aug 2020 00:27:16 +0530
+Message-Id: <20200810185723.15540-6-vaibhavgupta40@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200810185723.15540-1-vaibhavgupta40@gmail.com>
 References: <20200810165458.GA292825@ravnborg.org>
@@ -104,135 +104,119 @@ unnecessary calls to the PCI Helper functions along with the legacy
 
 Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
 ---
- drivers/video/fbdev/aty/atyfb_base.c | 50 ++++++++++++++++++++--------
- 1 file changed, 36 insertions(+), 14 deletions(-)
+ drivers/video/fbdev/aty/aty128fb.c | 51 ++++++++++++++++++++----------
+ 1 file changed, 34 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/video/fbdev/aty/atyfb_base.c b/drivers/video/fbdev/aty/atyfb_base.c
-index b0ac895e5ac9..a24d5bf6ade1 100644
---- a/drivers/video/fbdev/aty/atyfb_base.c
-+++ b/drivers/video/fbdev/aty/atyfb_base.c
-@@ -132,8 +132,8 @@
- #define PRINTKI(fmt, args...)	printk(KERN_INFO "atyfb: " fmt, ## args)
- #define PRINTKE(fmt, args...)	printk(KERN_ERR "atyfb: " fmt, ## args)
+diff --git a/drivers/video/fbdev/aty/aty128fb.c b/drivers/video/fbdev/aty/aty128fb.c
+index d05d4195acad..dd7762fea058 100644
+--- a/drivers/video/fbdev/aty/aty128fb.c
++++ b/drivers/video/fbdev/aty/aty128fb.c
+@@ -162,10 +162,22 @@ static char * const r128_family[] = {
+ static int aty128_probe(struct pci_dev *pdev,
+                                const struct pci_device_id *ent);
+ static void aty128_remove(struct pci_dev *pdev);
+-static int aty128_pci_suspend(struct pci_dev *pdev, pm_message_t state);
+-static int aty128_pci_resume(struct pci_dev *pdev);
++static int aty128_pci_suspend_late(struct device *dev, pm_message_t state);
++static int __maybe_unused aty128_pci_suspend(struct device *dev);
++static int __maybe_unused aty128_pci_hibernate(struct device *dev);
++static int __maybe_unused aty128_pci_freeze(struct device *dev);
++static int __maybe_unused aty128_pci_resume(struct device *dev);
+ static int aty128_do_resume(struct pci_dev *pdev);
  
--#if defined(CONFIG_PM) || defined(CONFIG_PMAC_BACKLIGHT) || \
--defined (CONFIG_FB_ATY_GENERIC_LCD) || defined(CONFIG_FB_ATY_BACKLIGHT)
-+#if defined(CONFIG_PMAC_BACKLIGHT) || defined(CONFIG_FB_ATY_GENERIC_LCD) || \
-+defined(CONFIG_FB_ATY_BACKLIGHT)
- static const u32 lt_lcd_regs[] = {
- 	CNFG_PANEL_LG,
- 	LCD_GEN_CNTL_LG,
-@@ -175,7 +175,7 @@ u32 aty_ld_lcd(int index, const struct atyfb_par *par)
- 		return aty_ld_le32(LCD_DATA, par);
- 	}
- }
--#endif /* defined(CONFIG_PM) || defined(CONFIG_PMAC_BACKLIGHT) || defined (CONFIG_FB_ATY_GENERIC_LCD) */
-+#endif /* defined(CONFIG_PMAC_BACKLIGHT) || defined (CONFIG_FB_ATY_GENERIC_LCD) */
- 
- #ifdef CONFIG_FB_ATY_GENERIC_LCD
- /*
-@@ -1994,7 +1994,7 @@ static int atyfb_mmap(struct fb_info *info, struct vm_area_struct *vma)
- 
- 
- 
--#if defined(CONFIG_PM) && defined(CONFIG_PCI)
-+#if defined(CONFIG_PCI)
- 
- #ifdef CONFIG_PPC_PMAC
- /* Power management routines. Those are used for PowerBook sleep.
-@@ -2055,8 +2055,9 @@ static int aty_power_mgmt(int sleep, struct atyfb_par *par)
- }
- #endif /* CONFIG_PPC_PMAC */
- 
--static int atyfb_pci_suspend(struct pci_dev *pdev, pm_message_t state)
-+static int atyfb_pci_suspend_late(struct device *dev, pm_message_t state)
- {
-+	struct pci_dev *pdev = to_pci_dev(dev);
- 	struct fb_info *info = pci_get_drvdata(pdev);
- 	struct atyfb_par *par = (struct atyfb_par *) info->par;
- 
-@@ -2082,7 +2083,6 @@ static int atyfb_pci_suspend(struct pci_dev *pdev, pm_message_t state)
- 	 * first save the config space content so the core can
- 	 * restore it properly on resume.
- 	 */
--	pci_save_state(pdev);
- 
- #ifdef CONFIG_PPC_PMAC
- 	/* Set chip to "suspend" mode */
-@@ -2094,8 +2094,6 @@ static int atyfb_pci_suspend(struct pci_dev *pdev, pm_message_t state)
- 		console_unlock();
- 		return -EIO;
- 	}
--#else
--	pci_set_power_state(pdev, pci_choose_state(pdev, state));
- #endif
- 
- 	console_unlock();
-@@ -2105,6 +2103,21 @@ static int atyfb_pci_suspend(struct pci_dev *pdev, pm_message_t state)
- 	return 0;
- }
- 
-+static int __maybe_unused atyfb_pci_suspend(struct device *dev)
-+{
-+	return atyfb_pci_suspend_late(dev, PMSG_SUSPEND);
-+}
-+
-+static int __maybe_unused atyfb_pci_hibernate(struct device *dev)
-+{
-+	return atyfb_pci_suspend_late(dev, PMSG_HIBERNATE);
-+}
-+
-+static int __maybe_unused atyfb_pci_freeze(struct device *dev)
-+{
-+	return atyfb_pci_suspend_late(dev, PMSG_FREEZE);
-+}
-+
- static void aty_resume_chip(struct fb_info *info)
- {
- 	struct atyfb_par *par = info->par;
-@@ -2119,8 +2132,9 @@ static void aty_resume_chip(struct fb_info *info)
- 			aty_ld_le32(BUS_CNTL, par) | BUS_APER_REG_DIS, par);
- }
- 
--static int atyfb_pci_resume(struct pci_dev *pdev)
-+static int __maybe_unused atyfb_pci_resume(struct device *dev)
- {
-+	struct pci_dev *pdev = to_pci_dev(dev);
- 	struct fb_info *info = pci_get_drvdata(pdev);
- 	struct atyfb_par *par = (struct atyfb_par *) info->par;
- 
-@@ -2162,7 +2176,18 @@ static int atyfb_pci_resume(struct pci_dev *pdev)
- 	return 0;
- }
- 
--#endif /*  defined(CONFIG_PM) && defined(CONFIG_PCI) */
-+static const struct dev_pm_ops atyfb_pci_pm_ops = {
-+#ifdef CONFIG_PM_SLEEP
-+	.suspend	= atyfb_pci_suspend,
-+	.resume		= atyfb_pci_resume,
-+	.freeze		= atyfb_pci_freeze,
-+	.thaw		= atyfb_pci_resume,
-+	.poweroff	= atyfb_pci_hibernate,
-+	.restore	= atyfb_pci_resume,
-+#endif /* CONFIG_PM_SLEEP */
++static const struct dev_pm_ops aty128_pci_pm_ops = {
++	.suspend	= aty128_pci_suspend,
++	.resume		= aty128_pci_resume,
++	.freeze		= aty128_pci_freeze,
++	.thaw		= aty128_pci_resume,
++	.poweroff	= aty128_pci_hibernate,
++	.restore	= aty128_pci_resume,
 +};
 +
-+#endif /*  defined(CONFIG_PCI) */
- 
- /* Backlight */
- #ifdef CONFIG_FB_ATY_BACKLIGHT
-@@ -3801,10 +3826,7 @@ static struct pci_driver atyfb_driver = {
- 	.id_table	= atyfb_pci_tbl,
- 	.probe		= atyfb_pci_probe,
- 	.remove		= atyfb_pci_remove,
--#ifdef CONFIG_PM
--	.suspend	= atyfb_pci_suspend,
--	.resume		= atyfb_pci_resume,
--#endif /* CONFIG_PM */
-+	.driver.pm	= &atyfb_pci_pm_ops,
+ /* supported Rage128 chipsets */
+ static const struct pci_device_id aty128_pci_tbl[] = {
+ 	{ PCI_VENDOR_ID_ATI, PCI_DEVICE_ID_ATI_RAGE128_LE,
+@@ -272,8 +284,7 @@ static struct pci_driver aty128fb_driver = {
+ 	.id_table	= aty128_pci_tbl,
+ 	.probe		= aty128_probe,
+ 	.remove		= aty128_remove,
+-	.suspend	= aty128_pci_suspend,
+-	.resume		= aty128_pci_resume,
++	.driver.pm	= &aty128_pci_pm_ops,
  };
  
- #endif /* CONFIG_PCI */
+ /* packed BIOS settings */
+@@ -2320,7 +2331,6 @@ static int aty128fb_ioctl(struct fb_info *info, u_int cmd, u_long arg)
+ static void aty128_set_suspend(struct aty128fb_par *par, int suspend)
+ {
+ 	u32	pmgt;
+-	struct pci_dev *pdev = par->pdev;
+ 
+ 	if (!par->pdev->pm_cap)
+ 		return;
+@@ -2347,23 +2357,15 @@ static void aty128_set_suspend(struct aty128fb_par *par, int suspend)
+ 		aty_st_le32(BUS_CNTL1, 0x00000010);
+ 		aty_st_le32(MEM_POWER_MISC, 0x0c830000);
+ 		msleep(100);
+-
+-		/* Switch PCI power management to D2 */
+-		pci_set_power_state(pdev, PCI_D2);
+ 	}
+ }
+ 
+-static int aty128_pci_suspend(struct pci_dev *pdev, pm_message_t state)
++static int aty128_pci_suspend_late(struct device *dev, pm_message_t state)
+ {
++	struct pci_dev *pdev = to_pci_dev(dev);
+ 	struct fb_info *info = pci_get_drvdata(pdev);
+ 	struct aty128fb_par *par = info->par;
+ 
+-	/* Because we may change PCI D state ourselves, we need to
+-	 * first save the config space content so the core can
+-	 * restore it properly on resume.
+-	 */
+-	pci_save_state(pdev);
+-
+ 	/* We don't do anything but D2, for now we return 0, but
+ 	 * we may want to change that. How do we know if the BIOS
+ 	 * can properly take care of D3 ? Also, with swsusp, we
+@@ -2422,6 +2424,21 @@ static int aty128_pci_suspend(struct pci_dev *pdev, pm_message_t state)
+ 	return 0;
+ }
+ 
++static int __maybe_unused aty128_pci_suspend(struct device *dev)
++{
++	return aty128_pci_suspend_late(dev, PMSG_SUSPEND);
++}
++
++static int __maybe_unused aty128_pci_hibernate(struct device *dev)
++{
++	return aty128_pci_suspend_late(dev, PMSG_HIBERNATE);
++}
++
++static int __maybe_unused aty128_pci_freeze(struct device *dev)
++{
++	return aty128_pci_suspend_late(dev, PMSG_FREEZE);
++}
++
+ static int aty128_do_resume(struct pci_dev *pdev)
+ {
+ 	struct fb_info *info = pci_get_drvdata(pdev);
+@@ -2468,12 +2485,12 @@ static int aty128_do_resume(struct pci_dev *pdev)
+ 	return 0;
+ }
+ 
+-static int aty128_pci_resume(struct pci_dev *pdev)
++static int __maybe_unused aty128_pci_resume(struct device *dev)
+ {
+ 	int rc;
+ 
+ 	console_lock();
+-	rc = aty128_do_resume(pdev);
++	rc = aty128_do_resume(to_pci_dev(dev));
+ 	console_unlock();
+ 
+ 	return rc;
 -- 
 2.27.0
 
