@@ -2,98 +2,100 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BD3EC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 10:59:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16986C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 11:02:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0503420709
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 10:59:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBA9B206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 11:02:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726547AbgHJK7B (ORCPT
+        id S1726426AbgHJLCJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 06:59:01 -0400
-Received: from mail.netline.ch ([148.251.143.178]:41850 "EHLO
-        netline-mail3.netline.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726173AbgHJK7B (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 06:59:01 -0400
-X-Greylist: delayed 489 seconds by postgrey-1.27 at vger.kernel.org; Mon, 10 Aug 2020 06:58:59 EDT
-Received: from localhost (localhost [127.0.0.1])
-        by netline-mail3.netline.ch (Postfix) with ESMTP id A582E2A6042;
-        Mon, 10 Aug 2020 12:50:48 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at netline-mail3.netline.ch
-Received: from netline-mail3.netline.ch ([127.0.0.1])
-        by localhost (netline-mail3.netline.ch [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id Mpbg-h6jHzk1; Mon, 10 Aug 2020 12:50:48 +0200 (CEST)
-Received: from thor (212.174.63.188.dynamic.wline.res.cust.swisscom.ch [188.63.174.212])
-        by netline-mail3.netline.ch (Postfix) with ESMTPSA id 9C3F02A6016;
-        Mon, 10 Aug 2020 12:50:46 +0200 (CEST)
-Received: from [::1]
-        by thor with esmtp (Exim 4.94)
-        (envelope-from <michel@daenzer.net>)
-        id 1k55O9-000Uyj-S3; Mon, 10 Aug 2020 12:50:45 +0200
-Subject: Re: [PATCH] gpu/drm: Remove TTM_PL_FLAG_WC of VRAM to fix
- writecombine issue for Loongson64
-To:     =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        Huacai Chen <chenhc@lemote.com>, linux-mips@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <1596871502-3432-1-git-send-email-yangtiezhu@loongson.cn>
- <20200808134147.GA5772@alpha.franken.de>
- <b7b16df1-d661-d59a-005b-da594ce9fc95@flygoat.com>
- <38857c24-25c4-cff3-569e-5bcb773bfae6@amd.com>
-From:   =?UTF-8?Q?Michel_D=c3=a4nzer?= <michel@daenzer.net>
-Message-ID: <2f3fd325-8093-98e7-5bc8-75490258baac@daenzer.net>
-Date:   Mon, 10 Aug 2020 12:50:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Mon, 10 Aug 2020 07:02:09 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:34654 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726033AbgHJLCJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 07:02:09 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 14C88507FDD3097F454F;
+        Mon, 10 Aug 2020 19:02:03 +0800 (CST)
+Received: from [127.0.0.1] (10.65.95.32) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Mon, 10 Aug 2020
+ 19:01:55 +0800
+Subject: Re: [PATCH] coresight: etm4x: Add Support for HiSilicon ETM device
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        <gregkh@linuxfoundation.org>, <saiprakash.ranjan@codeaurora.org>
+References: <1596461740-13527-1-git-send-email-liuqi115@huawei.com>
+ <d7271f87-719a-cc3b-6306-bb07f24fe070@arm.com>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
+From:   Qi Liu <liuqi115@huawei.com>
+Message-ID: <7aa0b078-7edd-db6a-c47e-fc6a00c2dd46@huawei.com>
+Date:   Mon, 10 Aug 2020 19:01:50 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-In-Reply-To: <38857c24-25c4-cff3-569e-5bcb773bfae6@amd.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <d7271f87-719a-cc3b-6306-bb07f24fe070@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.65.95.32]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-09 2:13 p.m., Christian König wrote:
-> Am 08.08.20 um 15:50 schrieb Jiaxun Yang:
->> 在 2020/8/8 下午9:41, Thomas Bogendoerfer 写道:
->>> On Sat, Aug 08, 2020 at 03:25:02PM +0800, Tiezhu Yang wrote:
->>>> Loongson processors have a writecombine issue that maybe failed to
->>>> write back framebuffer used with ATI Radeon or AMD GPU at times,
->>>> after commit 8a08e50cee66 ("drm: Permit video-buffers writecombine
->>>> mapping for MIPS"), there exists some errors such as blurred screen
->>>> and lockup, and so on.
->>>>
->>>> Remove the flag TTM_PL_FLAG_WC of VRAM to fix writecombine issue for
->>>> Loongson64 to work well with ATI Radeon or AMD GPU, and it has no any
->>>> influence on the other platforms.
->>> well it's not my call to take or reject this patch, but I already
->>> indicated it might be better to disable writecombine on the CPU
->>> detection side (or do you have other devices where writecombining
->>> works ?). Something like below will disbale it for all loongson64 CPUs.
->>> If you now find out where it works and where it doesn't, you can even
->>> reduce it to the required minium of affected CPUs.
->> Hi Tiezhu, Thomas,
->>
->> Yes, writecombine works well on LS7A's internal GPU....
->> And even works well with some AMD GPUs (in my case, RX550).
+Hi Suzuki,
+Thanks for your review.
+
+On 2020/8/4 18:47, Suzuki K Poulose wrote:
+> Hi Qi
 > 
-> In this case the patch is a clear NAK since you haven't root caused the
-> issue and are just working around it in a very questionable manner.
+> On 08/03/2020 02:35 PM, Qi Liu wrote:
+>> Add ETMv4 periperhal ID for HiSilicon Hip08 and Hip09 platform. Hip08
+>> contains ETMv4.2 device and Hip09 contains ETMv4.5 device.
+> 
+> Does the ETMv4.5 on your system implement system instructions to access
+> the ETMs ? If so, please could you give the following series on your
+> board ?
+> 
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2020-July/587745.html
+> 
 
-To be fair though, amdgpu & radeon are already disabling write-combining
-for system memory pages in 32-bit x86 kernels for similar reasons.
+ETMv4.5 on Hip09 platform does not support system instructions.
+> 
+>>
+>> Signed-off-by: Qi Liu <liuqi115@huawei.com>
+>> ---
+>>   drivers/hwtracing/coresight/coresight-etm4x.c | 2 ++
+>>   1 file changed, 2 insertions(+)
+>>
+>> diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
+>> index 0c35cd5e..4a4f0bd 100644
+>> --- a/drivers/hwtracing/coresight/coresight-etm4x.c
+>> +++ b/drivers/hwtracing/coresight/coresight-etm4x.c
+>> @@ -1561,6 +1561,8 @@ static struct amba_cs_uci_id uci_id_etm4[] = {
+>>   };
+>>
+>>   static const struct amba_id etm4_ids[] = {
+>> +    CS_AMBA_ID(0x000b6d02),            /* HiSilicon-Hip09 */
+>> +    CS_AMBA_ID(0x000b6d01),            /* HiSilicon-Hip08 */
+> 
+> Please use CS_AMBA_UCI_ID() instead.
+> 
+> We should stop using the CS_AMBA_ID()
+> 
+ok, I'll fix this in next version.
 
+Thanks,
+Qi
+> 
+> Suzuki
+> 
+> .
+> 
 
--- 
-Earthling Michel Dänzer               |               https://redhat.com
-Libre software enthusiast             |             Mesa and X developer
