@@ -2,146 +2,311 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A94FBC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:31:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02EE2C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:31:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7390B22BEA
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:31:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Z+nr3IVd";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="9BcfJBxO"
+	by mail.kernel.org (Postfix) with ESMTP id CD11E22BEA
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:31:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729694AbgHJTbJ (ORCPT
+        id S1730337AbgHJTbM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:31:09 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:52980 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728868AbgHJTbH (ORCPT
+        Mon, 10 Aug 2020 15:31:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45186 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728337AbgHJTbK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:31:07 -0400
-Date:   Mon, 10 Aug 2020 19:01:34 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597087864;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=6Jywy7lqllPTFMJ6o5Tm1gkuwwbnzeHH9S4UC1Euep4=;
-        b=Z+nr3IVdFq/vEDkoDCbCzPI/qcTHf2tClNSLYklPib/395MnaoQGa/7fq1nkCHswYD2cB9
-        sYtn1xIqLk0mgIfvFCsM03EuCDslESW+IVntEElhB04f6lZ4s4Lhpdl9GgM7Rz2Im2+Zfu
-        f52Uvwriy9px1ozdoTM5DLgWYQiull6Srmc2B2smBxUn1TjRA1hqyk9YDMTOh59SgWPvuB
-        Angx6TUgRgFvOOB6ru4zGXYzIOznKs21UgXNoKTH5oE7lO0MooVcWybwf6130UUMEIQ9NV
-        n7GWkL/yT9oJoNNq0H3J0lS2gdYAUd02BdI1LnCvSFwsKLZddtalssGSjFjnKg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597087864;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=6Jywy7lqllPTFMJ6o5Tm1gkuwwbnzeHH9S4UC1Euep4=;
-        b=9BcfJBxONyEb7sGKihmbXN/0UYXAjhIQLTnW+5lfgMWZNQpQkPRpKbHuPs6r7UU/XzWa24
-        rjfKC169qfhpP7Dw==
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: [GIT pull] locking/urgent for 5.9-rc1
-Message-ID: <159708609435.2571.13948681727529247231.tglx@nanos>
-Content-Type: text/plain; charset="utf-8"
+        Mon, 10 Aug 2020 15:31:10 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E0D6C061756;
+        Mon, 10 Aug 2020 12:31:10 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 08359293F19
+Message-ID: <1684df93a76cbd5e5f5435d876cf7fb88681b2ab.camel@collabora.com>
+Subject: Re: [PATCH v2 03/14] media: uapi: h264: Split prediction weight
+ parameters
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Jernej =?UTF-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>
+Cc:     linux-media <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Maxime Ripard <mripard@kernel.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Date:   Mon, 10 Aug 2020 16:30:59 -0300
+In-Reply-To: <2153096.Em8KjNIPHG@jernej-laptop>
+References: <20200806151310.98624-1-ezequiel@collabora.com>
+         <2380739.qXQpHEDp1t@jernej-laptop>
+         <8cf55169fa1dd55b5bdf746b321419f8c7988821.camel@collabora.com>
+         <2153096.Em8KjNIPHG@jernej-laptop>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3-1 
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+On Mon, 2020-08-10 at 19:05 +0200, Jernej Škrabec wrote:
+> Dne ponedeljek, 10. avgust 2020 ob 14:57:17 CEST je Ezequiel Garcia 
+> napisal(a):
+> > On Sun, 2020-08-09 at 23:11 +0200, Jernej Škrabec wrote:
+> > > Dne nedelja, 09. avgust 2020 ob 15:55:50 CEST je Ezequiel Garcia 
+> napisal(a):
+> > > > On Sat, 8 Aug 2020 at 18:01, Jonas Karlman <jonas@kwiboo.se> wrote:
+> > > > > On 2020-08-06 17:12, Ezequiel Garcia wrote:
+> > > > > > The prediction weight parameters are only required under
+> > > > > > certain conditions, which depend on slice header parameters.
+> > > > > > 
+> > > > > > As specified in section 7.3.3 Slice header syntax, the prediction
+> > > > > > weight table is present if:
+> > > > > > 
+> > > > > > ((weighted_pred_flag && (slice_type == P || slice_type == SP)) || \
+> > > > > > (weighted_bipred_idc == 1 && slice_type == B))
+> > > > > 
+> > > > > Maybe a macro can be added to help check this contition?
+> > > > > 
+> > > > > Something like this maybe:
+> > > > > 
+> > > > > #define V4L2_H264_CTRL_PRED_WEIGHTS_REQUIRED(pps, slice) \
+> > > > > 
+> > > > >         ((((pps)->flags & V4L2_H264_PPS_FLAG_WEIGHTED_PRED) && \
+> > > > >         
+> > > > >          ((slice)->slice_type == V4L2_H264_SLICE_TYPE_P || \
+> > > > >          
+> > > > >            (slice)->slice_type == V4L2_H264_SLICE_TYPE_SP)) || \
+> > > > >          
+> > > > >          ((pps)->weighted_bipred_idc == 1 && \
+> > > > >          
+> > > > >           (slice)->slice_type == V4L2_H264_SLICE_TYPE_B))
+> > > > 
+> > > > Yeah, that could make sense.
+> > > > 
+> > > > Note that the biggest value in having the prediction weight table
+> > > > separated is to allow  applications to skip setting this largish
+> > > > control,
+> > > > reducing the amount of data that needs to be passed from userspace
+> > > > -- especially when not needed :-)
+> > > > 
+> > > > > > Given its size, it makes sense to move this table to its control,
+> > > > > > so applications can avoid passing it if the slice doesn't specify
+> > > > > > it.
+> > > > > > 
+> > > > > > Before this change struct v4l2_ctrl_h264_slice_params was 960 bytes.
+> > > > > > With this change, it's 188 bytes and struct
+> > > > > > v4l2_ctrl_h264_pred_weight
+> > > > > > is 772 bytes.
+> > > > > > 
+> > > > > > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> > > > > > ---
+> > > > > > v2: Fix missing Cedrus changes and mssing control declaration,
+> > > > > > 
+> > > > > >     as noted by Hans and Jernej.
+> > > > > > 
+> > > > > > ---
+> > > > > > 
+> > > > > >  .../media/v4l/ext-ctrls-codec.rst             | 19
+> > > > > >  ++++++++++++-------
+> > > > > >  drivers/media/v4l2-core/v4l2-ctrls.c          |  8 ++++++++
+> > > > > >  drivers/staging/media/sunxi/cedrus/cedrus.c   |  7 +++++++
+> > > > > >  drivers/staging/media/sunxi/cedrus/cedrus.h   |  1 +
+> > > > > >  .../staging/media/sunxi/cedrus/cedrus_dec.c   |  2 ++
+> > > > > >  .../staging/media/sunxi/cedrus/cedrus_h264.c  |  6 ++----
+> > > > > >  include/media/h264-ctrls.h                    |  5 +++--
+> > > > > >  include/media/v4l2-ctrls.h                    |  2 ++
+> > > > > >  8 files changed, 37 insertions(+), 13 deletions(-)
+> > > > > > 
+> > > > > > diff --git
+> > > > > > a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> > > > > > b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst index
+> > > > > > d1438b1e259f..c36ce5a95fc5 100644
+> > > > > > --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> > > > > > +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> > > > > > @@ -1879,18 +1879,23 @@ enum
+> > > > > > v4l2_mpeg_video_h264_hierarchical_coding_type -> >
+> > > > > > 
+> > > > > >        - 0x00000008
+> > > > > >        -
+> > > > > > 
+> > > > > > -``Prediction Weight Table``
+> > > > > > +``V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHTS (struct)``
+> > > > > > +    Prediction weight table defined according to :ref:`h264`,
+> > > > > > +    section 7.4.3.2 "Prediction Weight Table Semantics".
+> > > > > > +    The prediction weight table must be passed by applications
+> > > > > > +    under the conditions explained in section 7.3.3 "Slice header
+> > > > > > +    syntax".
+> > > > > > 
+> > > > > > -    The bitstream parameters are defined according to :ref:`h264`,
+> > > > > > -    section 7.4.3.2 "Prediction Weight Table Semantics". For
+> > > > > > further
+> > > > > > -    documentation, refer to the above specification, unless there
+> > > > > > is
+> > > > > > -    an explicit comment stating otherwise.
+> > > > > > +    .. note::
+> > > > > > +
+> > > > > > +       This compound control is not yet part of the public kernel
+> > > > > > API
+> > > > > > and
+> > > > > > +       it is expected to change.
+> > > > > > 
+> > > > > > -.. c:type:: v4l2_h264_pred_weight_table
+> > > > > > +.. c:type:: v4l2_ctrl_h264_pred_weights
+> > > > > > 
+> > > > > >  .. cssclass:: longtable
+> > > > > > 
+> > > > > > -.. flat-table:: struct v4l2_h264_pred_weight_table
+> > > > > > +.. flat-table:: struct v4l2_ctrl_h264_pred_weights
+> > > > > > 
+> > > > > >      :header-rows:  0
+> > > > > >      :stub-columns: 0
+> > > > > >      :widths:       1 1 2
+> > > > > > 
+> > > > > > diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c
+> > > > > > b/drivers/media/v4l2-core/v4l2-ctrls.c index
+> > > > > > 3f3fbcd60cc6..76c8dc8fb31c
+> > > > > > 100644
+> > > > > > --- a/drivers/media/v4l2-core/v4l2-ctrls.c
+> > > > > > +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+> > > > > > @@ -897,6 +897,7 @@ const char *v4l2_ctrl_get_name(u32 id)
+> > > > > > 
+> > > > > >       case V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS:            return
+> > > > > >       "H264 Decode Parameters"; case
+> > > > > >       V4L2_CID_MPEG_VIDEO_H264_DECODE_MODE:              return
+> > > > > >       "H264
+> > > > > >       
+> > > > > >       Decode Mode"; case V4L2_CID_MPEG_VIDEO_H264_START_CODE:
+> > > > > >           return "H264 Start Code";> >
+> > > > > > 
+> > > > > > +     case V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHTS:             return
+> > > > > > "H264 Prediction Weight Table";> >
+> > > > > > 
+> > > > > >       case V4L2_CID_MPEG_VIDEO_MPEG2_LEVEL:                   return
+> > > > > >       
+> > > > > >       "MPEG2 Level"; case V4L2_CID_MPEG_VIDEO_MPEG2_PROFILE:
+> > > > > >            return "MPEG2 Profile"; case
+> > > > > >       
+> > > > > >       V4L2_CID_MPEG_VIDEO_MPEG4_I_FRAME_QP:              return
+> > > > > >       "MPEG4
+> > > > > >       I-Frame QP Value";> >
+> > > > > > 
+> > > > > > @@ -1412,6 +1413,9 @@ void v4l2_ctrl_fill(u32 id, const char **name,
+> > > > > > enum v4l2_ctrl_type *type,> >
+> > > > > > 
+> > > > > >       case V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS:
+> > > > > >               *type = V4L2_CTRL_TYPE_H264_DECODE_PARAMS;
+> > > > > >               break;
+> > > > > > 
+> > > > > > +     case V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHTS:
+> > > > > > +             *type = V4L2_CTRL_TYPE_H264_PRED_WEIGHTS;
+> > > > > > +             break;
+> > > > > > 
+> > > > > >       case V4L2_CID_MPEG_VIDEO_VP8_FRAME_HEADER:
+> > > > > >               *type = V4L2_CTRL_TYPE_VP8_FRAME_HEADER;
+> > > > > >               break;
+> > > > > > 
+> > > > > > @@ -1790,6 +1794,7 @@ static int std_validate_compound(const struct
+> > > > > > v4l2_ctrl *ctrl, u32 idx,> >
+> > > > > > 
+> > > > > >       case V4L2_CTRL_TYPE_H264_SPS:
+> > > > > >       case V4L2_CTRL_TYPE_H264_PPS:
+> > > > > > 
+> > > > > >       case V4L2_CTRL_TYPE_H264_SCALING_MATRIX:
+> > > > > > +     case V4L2_CTRL_TYPE_H264_PRED_WEIGHTS:
+> > > > > >       case V4L2_CTRL_TYPE_H264_SLICE_PARAMS:
+> > > > > >       
+> > > > > >       case V4L2_CTRL_TYPE_H264_DECODE_PARAMS:
+> > > > > >               break;
+> > > > > > 
+> > > > > > @@ -2553,6 +2558,9 @@ static struct v4l2_ctrl *v4l2_ctrl_new(struct
+> > > > > > v4l2_ctrl_handler *hdl,> >
+> > > > > > 
+> > > > > >       case V4L2_CTRL_TYPE_H264_DECODE_PARAMS:
+> > > > > >               elem_size = sizeof(struct
+> > > > > >               v4l2_ctrl_h264_decode_params);
+> > > > > >               break;
+> > > > > > 
+> > > > > > +     case V4L2_CTRL_TYPE_H264_PRED_WEIGHTS:
+> > > > > > +             elem_size = sizeof(struct
+> > > > > > v4l2_ctrl_h264_pred_weights);
+> > > > > > +             break;
+> > > > > > 
+> > > > > >       case V4L2_CTRL_TYPE_VP8_FRAME_HEADER:
+> > > > > >               elem_size = sizeof(struct v4l2_ctrl_vp8_frame_header);
+> > > > > >               break;
+> > > > > > 
+> > > > > > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.c
+> > > > > > b/drivers/staging/media/sunxi/cedrus/cedrus.c index
+> > > > > > bc27f9430eeb..027cdd1be5a0 100644
+> > > > > > --- a/drivers/staging/media/sunxi/cedrus/cedrus.c
+> > > > > > +++ b/drivers/staging/media/sunxi/cedrus/cedrus.c
+> > > > > > @@ -78,6 +78,13 @@ static const struct cedrus_control
+> > > > > > cedrus_controls[]
+> > > > > > = {
+> > > > > > 
+> > > > > >               .codec          = CEDRUS_CODEC_H264,
+> > > > > >               .required       = true,
+> > > > > >       
+> > > > > >       },
+> > > > > > 
+> > > > > > +     {
+> > > > > > +             .cfg = {
+> > > > > > +                     .id     =
+> > > > > > V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHTS,
+> > > > > > +             },
+> > > > > > +             .codec          = CEDRUS_CODEC_H264,
+> > > > > > +             .required       = true,
+> > > > > 
+> > > > > This should probably be false if this control is to be optional as
+> > > > > implied
+> > > > > by the commit message.
+> > > > 
+> > > > Well, the control is optional if the driver implements it as optional,
+> > > > which Cedrus isn't currently doing :-)
+> > > 
+> > > Why do you think so? Prediction weights are filled only when they are
+> > > needed:https://elixir.bootlin.com/linux/latest/source/drivers/staging/medi
+> > > a/ sunxi/cedrus/cedrus_h264.c#L370
+> > 
+> > Right, but that should be changed to be really optional.
+> > How does the driver reject/fail the request if the table is NULL?
+> 
+> It's my understanding that pointer to this table can't be NULL. NULL would 
+> mean that there is no control with that ID registered in the driver.
+> 
 
-please pull the latest locking/urgent branch from:
+Hm, I'm starting to think you are right. So, does this mean
+the default quantization matrix here is bogus?
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git locking-urgent-2020-08-10
-
-up to:  0cd39f4600ed: locking/seqlock, headers: Untangle the spaghetti monster
-
-A set of locking fixes and updates:
-
-  - Untangle the header spaghetti which causes build failures in various
-    situations caused by the lockdep additions to seqcount to validate that
-    the write side critical sections are non-preemptible.
-
-  - The seqcount associated lock debug addons which were blocked by the
-    above fallout.
-
-    seqcount writers contrary to seqlock writers must be externally
-    serialized, which usually happens via locking - except for strict per
-    CPU seqcounts. As the lock is not part of the seqcount, lockdep cannot
-    validate that the lock is held.
-
-    This new debug mechanism adds the concept of associated locks.
-    sequence count has now lock type variants and corresponding
-    initializers which take a pointer to the associated lock used for
-    writer serialization. If lockdep is enabled the pointer is stored and
-    write_seqcount_begin() has a lockdep assertion to validate that the
-    lock is held.
-
-    Aside of the type and the initializer no other code changes are
-    required at the seqcount usage sites. The rest of the seqcount API is
-    unchanged and determines the type at compile time with the help of
-    _Generic which is possible now that the minimal GCC version has been
-    moved up.
-
-    Adding this lockdep coverage unearthed a handful of seqcount bugs which
-    have been addressed already independent of this.
-
-    While generaly useful this comes with a Trojan Horse twist: On RT
-    kernels the write side critical section can become preemtible if the
-    writers are serialized by an associated lock, which leads to the well
-    known reader preempts writer livelock. RT prevents this by storing the
-    associated lock pointer independent of lockdep in the seqcount and
-    changing the reader side to block on the lock when a reader detects
-    that a writer is in the write side critical section.
-
- - Conversion of seqcount usage sites to associated types and initializers.
+        if (quantization && quantization->load_intra_quantiser_matrix)
+                matrix = quantization->intra_quantiser_matrix;
+        else
+                matrix = intra_quantization_matrix_default;
 
 Thanks,
+Ezequiel
 
-	tglx
-
------------------->
-Ahmed S. Darwish (16):
-      seqlock: Extend seqcount API with associated locks
-      seqlock: Align multi-line macros newline escapes at 72 columns
-      dma-buf: Remove custom seqcount lockdep class key
-      dma-buf: Use sequence counter with associated wound/wait mutex
-      sched: tasks: Use sequence counter with associated spinlock
-      netfilter: conntrack: Use sequence counter with associated spinlock
-      netfilter: nft_set_rbtree: Use sequence counter with associated rwlock
-      xfrm: policy: Use sequence counters with associated lock
-      timekeeping: Use sequence counter with associated raw spinlock
-      vfs: Use sequence counter with associated spinlock
-      raid5: Use sequence counter with associated spinlock
-      iocost: Use sequence counter with associated spinlock
-      NFSv4: Use sequence counter with associated spinlock
-      userfaultfd: Use sequence counter with associated spinlock
-      kvm/eventfd: Use sequence counter with associated spinlock
-      hrtimer: Use sequence counter with associated raw spinlock
-
-Chris Wilson (1):
-      locking/lockdep: Fix overflow in presentation of average lock-time
-
-Ingo Molnar (1):
-      x86/headers: Remove APIC headers from <asm/smp.h>
-
-Peter Zijlstra (7):
-      seqlock: s/__SEQ_LOCKDEP/__SEQ_LOCK/g
-      seqlock: Fold seqcount_LOCKNAME_t definition
-      seqlock: Fold seqcount_LOCKNAME_init() definition
-      seqcount: Compress SEQCNT_LOCKNAME_ZERO()
-      seqcount: More consistent seqprop names
-      locking, arch/ia64: Reduce <asm/smp.h> header dependencies by moving XTP bits into the new <asm/xtp.h> header
-      locking/seqlock, headers: Untangle the spaghetti monster
-
+> Best regards,
+> Jernej
+> 
+> > In any case, I don't think it's necessarily something we need
+> > to tackle now.
+> > 
+> > Thanks,
+> > Ezequiel
+> 
+> 
+> 
 
 
