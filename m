@@ -2,128 +2,90 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 889BEC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:25:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12DCAC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:25:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BEB32076B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:25:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBBBF2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:25:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727106AbgHJOZB (ORCPT
+        id S1727116AbgHJOZC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 10:25:01 -0400
-Received: from mga18.intel.com ([134.134.136.126]:26240 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727061AbgHJOYy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 10:24:54 -0400
-IronPort-SDR: qNzIV5FkwiWh+2U9XevxgSWdLP6YZABwDHEN3kBcQWu3dZ5erAooH2CPBtfMElTI2d09phIRC9
- fL0d+RyY4wWQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9708"; a="141147154"
-X-IronPort-AV: E=Sophos;i="5.75,457,1589266800"; 
-   d="scan'208";a="141147154"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2020 07:24:53 -0700
-IronPort-SDR: Cbfr4X4RiO57NQGiwjxsRxZOEYXtBlVUul/a9/rIV2xjPCkEFWfkezRP9cFsrssD2MtUuN/m2C
- 21rbVghlHELg==
-X-IronPort-AV: E=Sophos;i="5.75,457,1589266800"; 
-   d="scan'208";a="438711300"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2020 07:24:49 -0700
-Received: from punajuuri.localdomain (punajuuri.localdomain [192.168.240.130])
-        by paasikivi.fi.intel.com (Postfix) with ESMTP id C9A4720BC0;
-        Mon, 10 Aug 2020 17:24:41 +0300 (EEST)
-Received: from sailus by punajuuri.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@linux.intel.com>)
-        id 1k58mC-0003F6-Bp; Mon, 10 Aug 2020 17:27:48 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     linux-i2c@vger.kernel.org
-Cc:     Wolfram Sang <wsa@the-dreams.de>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-acpi@vger.kernel.org, Bingbu Cao <bingbu.cao@intel.com>,
-        linux-media@vger.kernel.org,
-        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
-        Hyungwoo Yang <hyungwoo.yang@intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        Mon, 10 Aug 2020 10:25:02 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:25596 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726888AbgHJOY5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 10:24:57 -0400
+X-IronPort-AV: E=Sophos;i="5.75,457,1589234400"; 
+   d="scan'208";a="463038467"
+Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Aug 2020 16:24:54 +0200
+Date:   Mon, 10 Aug 2020 16:24:54 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To:     Jonathan Corbet <corbet@lwn.net>
+cc:     Markus Elfring <Markus.Elfring@web.de>,
+        Sumera Priyadarsini <sylphrenadin@gmail.com>,
+        Coccinelle <cocci@systeme.lip6.fr>, linux-doc@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        rajmohan.mani@intel.com, Tomasz Figa <tfiga@chromium.org>,
-        "Qiu, Tian Shu" <tian.shu.qiu@intel.com>
-Subject: [PATCH v5 6/6] Documentation: ACPI: Document allow-low-power-probe _DSD property
-Date:   Mon, 10 Aug 2020 17:27:47 +0300
-Message-Id: <20200810142747.12400-7-sakari.ailus@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200810142747.12400-1-sakari.ailus@linux.intel.com>
-References: <20200810142747.12400-1-sakari.ailus@linux.intel.com>
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Subject: Re: [PATCH v2] documentation: coccinelle: Improve command example
+ for make C={1, 2}
+In-Reply-To: <20200810081914.37224551@lwn.net>
+Message-ID: <alpine.DEB.2.22.394.2008101624380.2466@hadrien>
+References: <ffe8c50d-0bb5-9477-a20c-96aa7bb45067@web.de> <20200810081914.37224551@lwn.net>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="8323329-1836737229-1597069495=:2466"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document the probe-low-power _DSD property and how it is used with I²C
-drivers.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
----
- .../acpi/dsd/allow-low-power-probe.rst        | 28 +++++++++++++++++++
- Documentation/firmware-guide/acpi/index.rst   |  1 +
- 2 files changed, 29 insertions(+)
- create mode 100644 Documentation/firmware-guide/acpi/dsd/allow-low-power-probe.rst
+--8323329-1836737229-1597069495=:2466
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
-diff --git a/Documentation/firmware-guide/acpi/dsd/allow-low-power-probe.rst b/Documentation/firmware-guide/acpi/dsd/allow-low-power-probe.rst
-new file mode 100644
-index 0000000000000..6fcc89162b898
---- /dev/null
-+++ b/Documentation/firmware-guide/acpi/dsd/allow-low-power-probe.rst
-@@ -0,0 +1,28 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+======================================
-+Probing I²C devices in low power state
-+======================================
-+
-+Introduction
-+============
-+
-+In some cases it may be preferred to leave certain devices powered off for the
-+entire system bootup if powering on these devices has adverse side effects,
-+beyond just powering on the said device. Linux recognizes the _DSD property
-+"allow-low-power-probe" that can be used for this purpose.
-+
-+How it works
-+============
-+
-+The property "allow-low-power-probe" boolean property may be used to tell Linux
-+that the I²C framework should instruct the kernel ACPI framework to leave the
-+device in the low power state. If the driver indicates its support for this by
-+setting the I2C_DRV_FL_ALLOW_LOW_POWER_PROBE flag in struct i2c_driver.flags
-+field and the "allow-low-power-probe" property is present, the device will not
-+be powered on for probe.
-+
-+The downside is that as the device is not powered on, even if there's a problem
-+with the device, the driver likely probes just fine but the first user will
-+find out the device doesn't work, instead of a failure at probe time. This
-+feature should thus be used sparingly.
-diff --git a/Documentation/firmware-guide/acpi/index.rst b/Documentation/firmware-guide/acpi/index.rst
-index ad3b5afdae77e..0070fcde9e669 100644
---- a/Documentation/firmware-guide/acpi/index.rst
-+++ b/Documentation/firmware-guide/acpi/index.rst
-@@ -11,6 +11,7 @@ ACPI Support
-    dsd/graph
-    dsd/data-node-references
-    dsd/leds
-+   dsd/allow-low-power-probe
-    enumeration
-    osi
-    method-customizing
--- 
-2.20.1
 
+
+On Mon, 10 Aug 2020, Jonathan Corbet wrote:
+
+> On Mon, 10 Aug 2020 09:30:18 +0200
+> Markus Elfring <Markus.Elfring@web.de> wrote:
+>
+> > > Modify coccinelle documentation to further clarify
+> > > the usage of the makefile C variable flag by coccicheck.
+> >
+> > How do you think about a wording variant like the following
+> > for the change description?
+> >
+> >    Clarify the usage of the make variable “C” for coccicheck.
+> >
+> >
+> > > +C flag is used. The C flag is a variable used by the makefile
+> >
+> > Can such a wording approach trigger understanding difficulties?
+> > [...]
+>
+> Markus, please don't harass our contributors.  This patch is an
+> improvement and, unless Julia disagrees, I am happy to apply it.
+
+There will be a V3.  Thanks.
+
+julia
+--8323329-1836737229-1597069495=:2466--
