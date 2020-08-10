@@ -2,167 +2,159 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8446AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:35:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45B98C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:35:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E0C6207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:35:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073743;
-	bh=fcijXXph/Ib20zYb8kxmJy/ligbrXC1nxTA4a9ahIx4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c22Kz8NE1h8nVC2yAvA+Ggi+uDNmPImo2Kd4I03iLmOITtk6yFGna+Q5bXT5w1zjz
-	 A81Nrpns5UxayIzovHsZ9Kr8lW3wACM1CJE82yaqWyYGdzqpHLig94hIu9odyQTzyo
-	 dNdLFFKG6SotT3Mv09B4SSMbhghkhvXf1TxU+1hU=
+	by mail.kernel.org (Postfix) with ESMTP id 210792078E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:35:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="cVt1iMuK";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="MjwJxpgT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729168AbgHJPfh (ORCPT
+        id S1729235AbgHJPfs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:35:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33852 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728297AbgHJP1x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:27:53 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        Mon, 10 Aug 2020 11:35:48 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:55864 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728752AbgHJPfn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:35:43 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id E27C78EE1DD;
+        Mon, 10 Aug 2020 08:35:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1597073741;
+        bh=H6RkvIzpfXOLSmHTbzR8XGbmPVN5aMmAbFV+0MS/vCw=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=cVt1iMuKWH4Bg+bLnyRSpUB/wXbG1V4IcQrDFdM+He/KopgifO7HNehQkYRafWpR7
+         B7RZHTNO5ffSnIB2urr4t5jxmwSfl4SQgYlbRQkBhgcHt8qoHLUYBwA7Q6vT3o6/tt
+         pW81Sr83Alr3AG3vWPtlKAQ4u+snVOqOmdggu00Q=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id NaS3pjwBelNS; Mon, 10 Aug 2020 08:35:40 -0700 (PDT)
+Received: from [153.66.254.174] (c-73-35-198-56.hsd1.wa.comcast.net [73.35.198.56])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2780F22B47;
-        Mon, 10 Aug 2020 15:27:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073272;
-        bh=fcijXXph/Ib20zYb8kxmJy/ligbrXC1nxTA4a9ahIx4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JoFf7kwFrdieucOdGIqGGq6AO/W/MWD2JbBVhVwDeUp4kPe72fJh9ijG86rsv94vZ
-         ExSmdEpuAvYJcy1PFW8M24/fTLrkJAQhtGoqFvZv6FMc9XLXboxyOsHLQ5yOgzyqkK
-         6gJF12GamlCb1o9FZ5Kgch4xR++fVwkdfZVPW1DQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 46/67] Drivers: hv: vmbus: Ignore CHANNELMSG_TL_CONNECT_RESULT(23)
-Date:   Mon, 10 Aug 2020 17:21:33 +0200
-Message-Id: <20200810151811.708790463@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200810151809.438685785@linuxfoundation.org>
-References: <20200810151809.438685785@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 490FA8EE12E;
+        Mon, 10 Aug 2020 08:35:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1597073740;
+        bh=H6RkvIzpfXOLSmHTbzR8XGbmPVN5aMmAbFV+0MS/vCw=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=MjwJxpgTQz4M0HQgOVHVrw7HDPZ5iwScXAZ3T0CV5ey1CM8n8Q+96pCZP7NtESu7J
+         Aa755rKZNaN6eMUTRHzcTFugAubBvvES0Y0Tz+SDho/oQczzL4HdAtuVcZFPuzBhG3
+         6CMTxxSQ5umiDNicSAXPubohnY0HnMFKrU59s060=
+Message-ID: <1597073737.3966.12.camel@HansenPartnership.com>
+Subject: Re: [dm-devel] [RFC PATCH v5 00/11] Integrity Policy Enforcement
+ LSM (IPE)
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>,
+        Chuck Lever <chucklever@gmail.com>,
+        James Morris <jmorris@namei.org>
+Cc:     Deven Bowers <deven.desai@linux.microsoft.com>,
+        Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>,
+        snitzer@redhat.com, dm-devel@redhat.com,
+        tyhicks@linux.microsoft.com, agk@redhat.com,
+        Paul Moore <paul@paul-moore.com>,
+        Jonathan Corbet <corbet@lwn.net>, nramas@linux.microsoft.com,
+        serge@hallyn.com, pasha.tatashin@soleen.com,
+        Jann Horn <jannh@google.com>, linux-block@vger.kernel.org,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jens Axboe <axboe@kernel.dk>, mdsakib@microsoft.com,
+        open list <linux-kernel@vger.kernel.org>, eparis@redhat.com,
+        linux-security-module@vger.kernel.org, linux-audit@redhat.com,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-integrity@vger.kernel.org,
+        jaskarankhurana@linux.microsoft.com
+Date:   Mon, 10 Aug 2020 08:35:37 -0700
+In-Reply-To: <da6f54d0438ee3d3903b2c75fcfbeb0afdf92dc2.camel@linux.ibm.com>
+References: <20200728213614.586312-1-deven.desai@linux.microsoft.com>
+         <20200802115545.GA1162@bug> <20200802140300.GA2975990@sasha-vm>
+         <20200802143143.GB20261@amd>
+         <1596386606.4087.20.camel@HansenPartnership.com>
+         <fb35a1f7-7633-a678-3f0f-17cf83032d2b@linux.microsoft.com>
+         <1596639689.3457.17.camel@HansenPartnership.com>
+         <alpine.LRH.2.21.2008050934060.28225@namei.org>
+         <b08ae82102f35936427bf138085484f75532cff1.camel@linux.ibm.com>
+         <329E8DBA-049E-4959-AFD4-9D118DEB176E@gmail.com>
+         <da6f54d0438ee3d3903b2c75fcfbeb0afdf92dc2.camel@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dexuan Cui <decui@microsoft.com>
+On Sun, 2020-08-09 at 13:16 -0400, Mimi Zohar wrote:
+> On Sat, 2020-08-08 at 13:47 -0400, Chuck Lever wrote:
+> > > On Aug 5, 2020, at 2:15 PM, Mimi Zohar <zohar@linux.ibm.com>
+> > > wrote:
+> 
+> <snip>
+> 
+> > > If block layer integrity was enough, there wouldn't have been a
+> > > need for fs-verity.   Even fs-verity is limited to read only
+> > > filesystems, which makes validating file integrity so much
+> > > easier.  From the beginning, we've said that fs-verity signatures
+> > > should be included in the measurement list.  (I thought someone
+> > > signed on to add that support to IMA, but have not yet seen
+> > > anything.)
+> > 
+> > Mimi, when you and I discussed this during LSS NA 2019, I didn't
+> > fully understand that you expected me to implement signed Merkle
+> > trees for all filesystems. At the time, it sounded to me like you
+> > wanted signed Merkle trees only for NFS files. Is that still the
+> > case?
+> 
+> I definitely do not expect you to support signed Merkle trees for all
+> filesystems.  My interested is from an IMA perspective of measuring
+> and verifying the fs-verity Merkle tree root (and header info)
+> signature. This is independent of which filesystems support it.
+> 
+> > 
+> > The first priority (for me, anyway) therefore is getting the
+> > ability to move IMA metadata between NFS clients and servers
+> > shoveled into the NFS protocol, but that's been blocked for various
+> > legal reasons.
+> 
+> Up to now, verifying remote filesystem file integrity has been out of
+> scope for IMA.   With fs-verity file signatures I can at least grasp
+> how remote file integrity could possibly work.  I don't understand
+> how remote file integrity with existing IMA formats could be
+> supported. You might want to consider writing a whitepaper, which
+> could later be used as the basis for a patch set cover letter.
 
-[ Upstream commit ddc9d357b991838c2d975e8d7e4e9db26f37a7ff ]
+I think, before this, we can help with the basics (and perhaps we
+should sort them out before we start documenting what we'll do).  The
+first basic is that a merkle tree allows unit at a time verification. 
+First of all we should agree on the unit.  Since we always fault a page
+at a time, I think our merkle tree unit should be a page not a block. 
+Next, we should agree where the check gates for the per page accesses
+should be ... definitely somewhere in readpage, I suspect and finally
+we should agree how the merkle tree is presented at the gate.  I think
+there are three ways:
 
-When a Linux hv_sock app tries to connect to a Service GUID on which no
-host app is listening, a recent host (RS3+) sends a
-CHANNELMSG_TL_CONNECT_RESULT (23) message to Linux and this triggers such
-a warning:
+   1. Ahead of time transfer:  The merkle tree is transferred and verified
+      at some time before the accesses begin, so we already have a
+      verified copy and can compare against the lower leaf.
+   2. Async transfer:  We provide an async mechanism to transfer the
+      necessary components, so when presented with a unit, we check the
+      log n components required to get to the root
+   3. The protocol actually provides the capability of 2 (like the SCSI
+      DIF/DIX), so to IMA all the pieces get presented instead of IMA
+      having to manage the tree
 
-unknown msgtype=23
-WARNING: CPU: 2 PID: 0 at drivers/hv/vmbus_drv.c:1031 vmbus_on_msg_dpc
+There are also a load of minor things like how we get the head hash,
+which must be presented and verified ahead of time for each of the
+above 3.
 
-Actually Linux can safely ignore the message because the Linux app's
-connect() will time out in 2 seconds: see VSOCK_DEFAULT_CONNECT_TIMEOUT
-and vsock_stream_connect(). We don't bother to make use of the message
-because: 1) it's only supported on recent hosts; 2) a non-trivial effort
-is required to use the message in Linux, but the benefit is small.
-
-So, let's not see the warning by silently ignoring the message.
-
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/hv/channel_mgmt.c | 21 +++++++--------------
- drivers/hv/vmbus_drv.c    |  4 ++++
- include/linux/hyperv.h    |  2 ++
- 3 files changed, 13 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
-index c8296d5e74c32..501c43c5851dc 100644
---- a/drivers/hv/channel_mgmt.c
-+++ b/drivers/hv/channel_mgmt.c
-@@ -1354,6 +1354,8 @@ channel_message_table[CHANNELMSG_COUNT] = {
- 	{ CHANNELMSG_19,			0, NULL },
- 	{ CHANNELMSG_20,			0, NULL },
- 	{ CHANNELMSG_TL_CONNECT_REQUEST,	0, NULL },
-+	{ CHANNELMSG_22,			0, NULL },
-+	{ CHANNELMSG_TL_CONNECT_RESULT,		0, NULL },
- };
- 
- /*
-@@ -1365,25 +1367,16 @@ void vmbus_onmessage(void *context)
- {
- 	struct hv_message *msg = context;
- 	struct vmbus_channel_message_header *hdr;
--	int size;
- 
- 	hdr = (struct vmbus_channel_message_header *)msg->u.payload;
--	size = msg->header.payload_size;
- 
- 	trace_vmbus_on_message(hdr);
- 
--	if (hdr->msgtype >= CHANNELMSG_COUNT) {
--		pr_err("Received invalid channel message type %d size %d\n",
--			   hdr->msgtype, size);
--		print_hex_dump_bytes("", DUMP_PREFIX_NONE,
--				     (unsigned char *)msg->u.payload, size);
--		return;
--	}
--
--	if (channel_message_table[hdr->msgtype].message_handler)
--		channel_message_table[hdr->msgtype].message_handler(hdr);
--	else
--		pr_err("Unhandled channel message type %d\n", hdr->msgtype);
-+	/*
-+	 * vmbus_on_msg_dpc() makes sure the hdr->msgtype here can not go
-+	 * out of bound and the message_handler pointer can not be NULL.
-+	 */
-+	channel_message_table[hdr->msgtype].message_handler(hdr);
- }
- 
- /*
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index 160ff640485be..24c38e44ed3bc 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -1073,6 +1073,10 @@ void vmbus_on_msg_dpc(unsigned long data)
- 	}
- 
- 	entry = &channel_message_table[hdr->msgtype];
-+
-+	if (!entry->message_handler)
-+		goto msg_handled;
-+
- 	if (entry->handler_type	== VMHT_BLOCKING) {
- 		ctx = kmalloc(sizeof(*ctx), GFP_ATOMIC);
- 		if (ctx == NULL)
-diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-index b4a017093b697..67d9b5a374600 100644
---- a/include/linux/hyperv.h
-+++ b/include/linux/hyperv.h
-@@ -423,6 +423,8 @@ enum vmbus_channel_message_type {
- 	CHANNELMSG_19				= 19,
- 	CHANNELMSG_20				= 20,
- 	CHANNELMSG_TL_CONNECT_REQUEST		= 21,
-+	CHANNELMSG_22				= 22,
-+	CHANNELMSG_TL_CONNECT_RESULT		= 23,
- 	CHANNELMSG_COUNT
- };
- 
--- 
-2.25.1
+James
 
 
 
