@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14946C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:34:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C1DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:34:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF5DA207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:34:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 210B1207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:34:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073652;
-	bh=97QJhoJYDeam/oMbkKOnP6nfbKvfx2kmikgCEsZvy+k=;
+	s=default; t=1597073658;
+	bh=Q6Pgy7o0Afz1Zbw9ftExXRtrFW699yUW2rEsF5uilYA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fqv6vtXKtTj2HVIh5yJy/lFbX3zH2CJZrevb72U8F9im/Q51+Fx537R+QSAk0nhTl
-	 NZnxDE8QZGW0CFECB3HOqDJTpbLDs27thmo1V6ATmRcHrFoIraXsC8KoMKdWMFmXEZ
-	 lSBSRIkiGQ4/cKy5dO0h8W4X44ErJ60gqCeB76GA=
+	b=Qoodo541QRCghZwHJGgVhRe25N9gHqXATTwVm/Wq6nESgrxJkfGrWhmJjDwyllm+q
+	 vCk1kPqkri79q9omqBP0av0CphDlD6d9VVqA9dmGhBdUJiLdiZdmwEHDiSUNAPLjIR
+	 E2m5Z1gB0GF3Pg8MV0jnzFf7omzDfUXkINOi0+nY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729125AbgHJPeL (ORCPT
+        id S1729273AbgHJPeQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:34:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35424 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:34:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727969AbgHJP3L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:29:11 -0400
+        id S1728411AbgHJP3F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:29:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E94722B47;
-        Mon, 10 Aug 2020 15:29:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5985722B47;
+        Mon, 10 Aug 2020 15:29:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073350;
-        bh=97QJhoJYDeam/oMbkKOnP6nfbKvfx2kmikgCEsZvy+k=;
+        s=default; t=1597073344;
+        bh=Q6Pgy7o0Afz1Zbw9ftExXRtrFW699yUW2rEsF5uilYA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I2uaY/TNxG6OG8ANyr/RtlWOq4kVZJvLW21n6/7Tt3xWSUhq+qdZwILMNPOtaUdph
-         RYFRne439P5Y8w/wn+YXnsT9Tvihp98MO9i/KpSxOdUarjYkxFDym7mpniEWO0gFMn
-         i02rZj7HJ30iK+7mGwDI0ZjWnccU+UMnW8B3Eosc=
+        b=2hYav89hGd0dR2aXKNaO4J46rScfk2Wibdi2+usK87jye+y5o1EVbhaMwjWLn+Rte
+         RqW3BPS54przlw6ORiD1dC+kd/6ygJHC0hsopwEODdwLaV3mbf4kQu0SJZjtOlSWA6
+         XEPWyTXxKlX+sHvFpbNnqepdmgnOcxA9SjkaXmtg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Peilin Ye <yepeilin.cs@gmail.com>,
+        stable@vger.kernel.org, Lorenzo Bianconi <lorenzo@kernel.org>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 62/67] openvswitch: Prevent kernel-infoleak in ovs_ct_put_key()
-Date:   Mon, 10 Aug 2020 17:21:49 +0200
-Message-Id: <20200810151812.564468225@linuxfoundation.org>
+Subject: [PATCH 5.4 60/67] net: gre: recompute gre csum for sctp over gre tunnels
+Date:   Mon, 10 Aug 2020 17:21:47 +0200
+Message-Id: <20200810151812.471999373@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151809.438685785@linuxfoundation.org>
 References: <20200810151809.438685785@linuxfoundation.org>
@@ -60,81 +60,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peilin Ye <yepeilin.cs@gmail.com>
+From: Lorenzo Bianconi <lorenzo@kernel.org>
 
-[ Upstream commit 9aba6c5b49254d5bee927d81593ed4429e91d4ae ]
+[ Upstream commit 622e32b7d4a6492cf5c1f759ef833f817418f7b3 ]
 
-ovs_ct_put_key() is potentially copying uninitialized kernel stack memory
-into socket buffers, since the compiler may leave a 3-byte hole at the end
-of `struct ovs_key_ct_tuple_ipv4` and `struct ovs_key_ct_tuple_ipv6`. Fix
-it by initializing `orig` with memset().
+The GRE tunnel can be used to transport traffic that does not rely on a
+Internet checksum (e.g. SCTP). The issue can be triggered creating a GRE
+or GRETAP tunnel and transmitting SCTP traffic ontop of it where CRC
+offload has been disabled. In order to fix the issue we need to
+recompute the GRE csum in gre_gso_segment() not relying on the inner
+checksum.
+The issue is still present when we have the CRC offload enabled.
+In this case we need to disable the CRC offload if we require GRE
+checksum since otherwise skb_checksum() will report a wrong value.
 
-Fixes: 9dd7f8907c37 ("openvswitch: Add original direction conntrack tuple to sw_flow_key.")
-Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+Fixes: 90017accff61 ("sctp: Add GSO support")
+Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+Reviewed-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/openvswitch/conntrack.c |   38 ++++++++++++++++++++------------------
- 1 file changed, 20 insertions(+), 18 deletions(-)
+ net/ipv4/gre_offload.c |   13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
---- a/net/openvswitch/conntrack.c
-+++ b/net/openvswitch/conntrack.c
-@@ -276,10 +276,6 @@ void ovs_ct_fill_key(const struct sk_buf
- 	ovs_ct_update_key(skb, NULL, key, false, false);
- }
- 
--#define IN6_ADDR_INITIALIZER(ADDR) \
--	{ (ADDR).s6_addr32[0], (ADDR).s6_addr32[1], \
--	  (ADDR).s6_addr32[2], (ADDR).s6_addr32[3] }
--
- int ovs_ct_put_key(const struct sw_flow_key *swkey,
- 		   const struct sw_flow_key *output, struct sk_buff *skb)
+--- a/net/ipv4/gre_offload.c
++++ b/net/ipv4/gre_offload.c
+@@ -15,12 +15,12 @@ static struct sk_buff *gre_gso_segment(s
+ 				       netdev_features_t features)
  {
-@@ -301,24 +297,30 @@ int ovs_ct_put_key(const struct sw_flow_
+ 	int tnl_hlen = skb_inner_mac_header(skb) - skb_transport_header(skb);
++	bool need_csum, need_recompute_csum, gso_partial;
+ 	struct sk_buff *segs = ERR_PTR(-EINVAL);
+ 	u16 mac_offset = skb->mac_header;
+ 	__be16 protocol = skb->protocol;
+ 	u16 mac_len = skb->mac_len;
+ 	int gre_offset, outer_hlen;
+-	bool need_csum, gso_partial;
  
- 	if (swkey->ct_orig_proto) {
- 		if (swkey->eth.type == htons(ETH_P_IP)) {
--			struct ovs_key_ct_tuple_ipv4 orig = {
--				output->ipv4.ct_orig.src,
--				output->ipv4.ct_orig.dst,
--				output->ct.orig_tp.src,
--				output->ct.orig_tp.dst,
--				output->ct_orig_proto,
--			};
-+			struct ovs_key_ct_tuple_ipv4 orig;
+ 	if (!skb->encapsulation)
+ 		goto out;
+@@ -41,6 +41,7 @@ static struct sk_buff *gre_gso_segment(s
+ 	skb->protocol = skb->inner_protocol;
+ 
+ 	need_csum = !!(skb_shinfo(skb)->gso_type & SKB_GSO_GRE_CSUM);
++	need_recompute_csum = skb->csum_not_inet;
+ 	skb->encap_hdr_csum = need_csum;
+ 
+ 	features &= skb->dev->hw_enc_features;
+@@ -98,7 +99,15 @@ static struct sk_buff *gre_gso_segment(s
+ 		}
+ 
+ 		*(pcsum + 1) = 0;
+-		*pcsum = gso_make_checksum(skb, 0);
++		if (need_recompute_csum && !skb_is_gso(skb)) {
++			__wsum csum;
 +
-+			memset(&orig, 0, sizeof(orig));
-+			orig.ipv4_src = output->ipv4.ct_orig.src;
-+			orig.ipv4_dst = output->ipv4.ct_orig.dst;
-+			orig.src_port = output->ct.orig_tp.src;
-+			orig.dst_port = output->ct.orig_tp.dst;
-+			orig.ipv4_proto = output->ct_orig_proto;
-+
- 			if (nla_put(skb, OVS_KEY_ATTR_CT_ORIG_TUPLE_IPV4,
- 				    sizeof(orig), &orig))
- 				return -EMSGSIZE;
- 		} else if (swkey->eth.type == htons(ETH_P_IPV6)) {
--			struct ovs_key_ct_tuple_ipv6 orig = {
--				IN6_ADDR_INITIALIZER(output->ipv6.ct_orig.src),
--				IN6_ADDR_INITIALIZER(output->ipv6.ct_orig.dst),
--				output->ct.orig_tp.src,
--				output->ct.orig_tp.dst,
--				output->ct_orig_proto,
--			};
-+			struct ovs_key_ct_tuple_ipv6 orig;
-+
-+			memset(&orig, 0, sizeof(orig));
-+			memcpy(orig.ipv6_src, output->ipv6.ct_orig.src.s6_addr32,
-+			       sizeof(orig.ipv6_src));
-+			memcpy(orig.ipv6_dst, output->ipv6.ct_orig.dst.s6_addr32,
-+			       sizeof(orig.ipv6_dst));
-+			orig.src_port = output->ct.orig_tp.src;
-+			orig.dst_port = output->ct.orig_tp.dst;
-+			orig.ipv6_proto = output->ct_orig_proto;
-+
- 			if (nla_put(skb, OVS_KEY_ATTR_CT_ORIG_TUPLE_IPV6,
- 				    sizeof(orig), &orig))
- 				return -EMSGSIZE;
++			csum = skb_checksum(skb, gre_offset,
++					    skb->len - gre_offset, 0);
++			*pcsum = csum_fold(csum);
++		} else {
++			*pcsum = gso_make_checksum(skb, 0);
++		}
+ 	} while ((skb = skb->next));
+ out:
+ 	return segs;
 
 
