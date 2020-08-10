@@ -2,120 +2,87 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0444EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:57:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C80C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:57:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1AFE2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:57:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597053466;
-	bh=Y+KH9N8ktz4rNGDsvRAGiG/Y5k3ax0fEm1fFpk+IFQ0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DiFBhOuB2ODz0KI8qcKlMvQDDiERv1V6Z0WHYZe4YtHR9B2dJFQghG7HYvLQmd2QA
-	 88o3d+CBeTTGBhg0P9G/CzMBejC1dxkK5MxS+9A/E8GaYp4TfM83XiUYBjeA8sCP4N
-	 lba4EKKJ+Fd77FvFRLO1Bpz6V+MHQ6za20JIqEZM=
+	by mail.kernel.org (Postfix) with ESMTP id CCB9E2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:57:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726688AbgHJJ5o (ORCPT
+        id S1726750AbgHJJ5z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 05:57:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57012 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726403AbgHJJ5o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 05:57:44 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCBB4206B5;
-        Mon, 10 Aug 2020 09:57:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597053463;
-        bh=Y+KH9N8ktz4rNGDsvRAGiG/Y5k3ax0fEm1fFpk+IFQ0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wT3SsHtloU7F1ectB3ldMXM84mI94tNU+Sfk4CxdAcmKSlu4oqD2YvCA0+gDbt4xj
-         OMk7KaVKLuFAJmITQPgDji0LosJc+V5tEEHKXI33HbCT5p5cuFIdAsWQC+OEPfpkY8
-         Vx84Hw2CKF8xqJJf1Q/t6iWBfgUnMj2X0HbwkykU=
-Date:   Mon, 10 Aug 2020 11:57:54 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     syzbot <syzbot+a7e220df5a81d1ab400e@syzkaller.appspotmail.com>,
-        Andrey Konovalov <andreyknvl@google.com>, balbi@kernel.org,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Alexander Potapenko <glider@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: KMSAN: kernel-infoleak in raw_ioctl
-Message-ID: <20200810095754.GA2404978@kroah.com>
-References: <000000000000ce85c405ac744ff6@google.com>
- <20200810074706.GD1529187@kroah.com>
- <CACT4Y+aS6oangE4BzhCfx3gs9guAW=zQpwN1LP+yB3kza68xFw@mail.gmail.com>
- <20200810090833.GA2271719@kroah.com>
- <20200810091538.GA2273701@kroah.com>
+        Mon, 10 Aug 2020 05:57:55 -0400
+Received: from 60-251-196-230.HINET-IP.hinet.net ([60.251.196.230]:15845 "EHLO
+        ironport.ite.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726304AbgHJJ5y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 05:57:54 -0400
+IronPort-SDR: 8euST1jLZ1i8nawPY2XW5tNeXITT8RE2+cwRmEuQog+sni1gjTl5Y0/hhGC6udXLtGi8CY2aBv
+ 6ALsukc5WHJQ==
+Received: from unknown (HELO mse.ite.com.tw) ([192.168.35.30])
+  by ironport.ite.com.tw with ESMTP; 10 Aug 2020 17:57:53 +0800
+Received: from CSBMAIL1.internal.ite.com.tw (csbmail1.internal.ite.com.tw [192.168.65.58])
+        by mse.ite.com.tw with ESMTP id 07A9vn4r018406;
+        Mon, 10 Aug 2020 17:57:49 +0800 (GMT-8)
+        (envelope-from allen.chen@ite.com.tw)
+Received: from allen-VirtualBox.internal.ite.com.tw (192.168.70.14) by
+ CSBMAIL1.internal.ite.com.tw (192.168.65.58) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Mon, 10 Aug 2020 17:57:49 +0800
+From:   allen <allen.chen@ite.com.tw>
+CC:     Allen Chen <allen.chen@ite.com.tw>,
+        Jau-Chih Tseng <Jau-Chih.Tseng@ite.com.tw>,
+        Hermes Wu <Hermes.Wu@ite.com.tw>,
+        Kenneth Hung <Kenneth.Hung@ite.com.tw>,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: [PATCH v1 1/2] ite-it6505 change trigger conditions
+Date:   Mon, 10 Aug 2020 17:53:17 +0800
+Message-ID: <1597053278-25421-2-git-send-email-allen.chen@ite.com.tw>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1597053278-25421-1-git-send-email-allen.chen@ite.com.tw>
+References: <1597053278-25421-1-git-send-email-allen.chen@ite.com.tw>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200810091538.GA2273701@kroah.com>
+Content-Type: text/plain
+X-Originating-IP: [192.168.70.14]
+X-ClientProxiedBy: CSBMAIL1.internal.ite.com.tw (192.168.65.58) To
+ CSBMAIL1.internal.ite.com.tw (192.168.65.58)
+X-TM-SNTS-SMTP: B8DB6207D0AA687208968D8B9B5CA28359740588D22311FECD03ED269E4066E22000:8
+X-MAIL: mse.ite.com.tw 07A9vn4r018406
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 11:15:38AM +0200, Greg KH wrote:
-> On Mon, Aug 10, 2020 at 11:08:33AM +0200, Greg KH wrote:
-> > On Mon, Aug 10, 2020 at 11:00:07AM +0200, Dmitry Vyukov wrote:
-> > > On Mon, Aug 10, 2020 at 9:46 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > > >
-> > > > On Sun, Aug 09, 2020 at 09:27:18AM -0700, syzbot wrote:
-> > > > > Hello,
-> > > > >
-> > > > > syzbot found the following issue on:
-> > > > >
-> > > > > HEAD commit:    ce8056d1 wip: changed copy_from_user where instrumented
-> > > > > git tree:       https://github.com/google/kmsan.git master
-> > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=141eb8b2900000
-> > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=3afe005fb99591f
-> > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=a7e220df5a81d1ab400e
-> > > > > compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-> > > > > userspace arch: i386
-> > > > >
-> > > > > Unfortunately, I don't have any reproducer for this issue yet.
-> > > >
-> > > > The irony of a kernel module written for syzbot testing, causing syzbot
-> > > > reports....
-> > > 
-> > > The raw gadget and KCOV are also kernel code and subject to all the
-> > > same rules as any other kernel code from syzkaller point of view.
-> > > 
-> > > But I think the root cause of this bug is the origin of the uninitialized-ness:
-> > > 
-> > > Local variable ----buf.i@asix_get_phy_addr created at:
-> > >  asix_read_cmd drivers/net/usb/asix_common.c:312 [inline]
-> > >  asix_read_phy_addr drivers/net/usb/asix_common.c:295 [inline]
-> > >  asix_get_phy_addr+0x4d/0x290 drivers/net/usb/asix_common.c:314
-> > >  asix_read_cmd drivers/net/usb/asix_common.c:312 [inline]
-> > >  asix_read_phy_addr drivers/net/usb/asix_common.c:295 [inline]
-> > >  asix_get_phy_addr+0x4d/0x290 drivers/net/usb/asix_common.c:314
-> > 
-> > read buffers sent to USB hardware are ment to be filled in by the
-> > hardware with the data received from it, we do not zero-out those
-> > buffers before passing the pointer there.
-> > 
-> > Perhaps with testing frameworks like the raw usb controller, that might
-> > cause a number of false-positives to happen?
-> 
-> Ah, wait, that buffer is coming from the stack, which isn't allowed in
-> the first place :(
-> 
-> So that should be changed anyway to a dynamic allocation, I'll go write
-> up a patch...
+it6505 changes trigger conditions.
+---
+ Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Nope, my fault, the data is not coming from the stack, so all is good.
+diff --git a/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml b/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
+index 2c50016..bf0e889 100644
+--- a/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
++++ b/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
+@@ -73,7 +73,7 @@ examples:
+ 
+         dp-bridge@5c {
+             compatible = "ite,it6505";
+-            interrupts = <152 IRQ_TYPE_EDGE_FALLING 152 0>;
++            interrupts = <152 IRQ_TYPE_LEVEL_LOW 152 0>;
+             reg = <0x5c>;
+             pinctrl-names = "default";
+             pinctrl-0 = <&it6505_pins>;
+-- 
+1.9.1
 
-thanks,
-
-greg k-h
