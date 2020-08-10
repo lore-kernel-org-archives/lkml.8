@@ -2,50 +2,49 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3254BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 21:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90A2EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 21:28:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F186F2073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 21:27:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6120C20734
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 21:28:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbgHJV1y (ORCPT
+        id S1727019AbgHJV16 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 17:27:54 -0400
-Received: from mga01.intel.com ([192.55.52.88]:25830 "EHLO mga01.intel.com"
+        Mon, 10 Aug 2020 17:27:58 -0400
+Received: from mga01.intel.com ([192.55.52.88]:25837 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726943AbgHJV1u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 17:27:50 -0400
-IronPort-SDR: pfDcxmoCHuU7ZDTTmQhzHhmWnOcqgRp4drRPl3ElIee8DUpoASSjWai7WgQc3uUxzviclOq5RA
- cZQjNQnQMdIQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9709"; a="171665960"
+        id S1726943AbgHJV1z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 17:27:55 -0400
+IronPort-SDR: l5sLP4M6UYTcqWzf05M+GU9oi06FUYj8IpFOR0EP2eoUxoPLHyk9q92o6AXWCQsUp1T+3ItGpH
+ WH1K055m6Gig==
+X-IronPort-AV: E=McAfee;i="6000,8403,9709"; a="171665980"
 X-IronPort-AV: E=Sophos;i="5.75,458,1589266800"; 
-   d="scan'208";a="171665960"
+   d="scan'208";a="171665980"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2020 14:27:49 -0700
-IronPort-SDR: MWTlcmPMY6n6Xwgzm8Jv+zJ0BwuecA05A3w9aULpxvvlTnSzCt0JnbuaO0dBsUdQIc3hWFd8WP
- 4t604nCK6K7g==
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2020 14:27:55 -0700
+IronPort-SDR: WRyRwwWHrKAmgoW6cJscmgAp47dJHrx6a2bXGKCmOjz2VU9gpuVg566Uk09dSpy/BbYqB0IKp+
+ hgHrgt1MVyqg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,458,1589266800"; 
-   d="scan'208";a="469196806"
+   d="scan'208";a="469196832"
 Received: from ssp-icl-u-210.jf.intel.com ([10.54.55.52])
-  by orsmga005.jf.intel.com with ESMTP; 10 Aug 2020 14:27:49 -0700
+  by orsmga005.jf.intel.com with ESMTP; 10 Aug 2020 14:27:54 -0700
 From:   Kan Liang <kan.liang@linux.intel.com>
 To:     peterz@infradead.org, acme@kernel.org, mingo@redhat.com,
         linux-kernel@vger.kernel.org
 Cc:     mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
         jolsa@redhat.com, eranian@google.com, ak@linux.intel.com,
-        dave.hansen@intel.com, kirill.shutemov@linux.intel.com,
-        Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V6 09/16] perf mem: Factor out a function to generate sort order
-Date:   Mon, 10 Aug 2020 14:24:29 -0700
-Message-Id: <20200810212436.8026-10-kan.liang@linux.intel.com>
+        dave.hansen@intel.com, kirill.shutemov@linux.intel.com
+Subject: [PATCH V6 14/16] perf script: Add support for PERF_SAMPLE_CODE_PAGE_SIZE
+Date:   Mon, 10 Aug 2020 14:24:34 -0700
+Message-Id: <20200810212436.8026-15-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200810212436.8026-1-kan.liang@linux.intel.com>
 References: <20200810212436.8026-1-kan.liang@linux.intel.com>
@@ -54,86 +53,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now, "--phys-data" is the only option which impacts the sort order.
-A simple "if else" is enough to handle the option. But there will be
-more options added, e.g. "--data-page-size", which also impact the sort
-order. The code will become too complex to be maintained.
+From: Stephane Eranian <eranian@google.com>
 
-Divide the sort order string into several small pieces.
-The first piece is always the default sort string for LOAD/STORE.
-Appends the specific sort string if related option is applied.
+Display sampled code page sizes when PERF_SAMPLE_CODE_PAGE_SIZE was set.
 
-No functional change.
+For example,
+perf script --fields comm,event,ip,code_page_size
+            dtlb mem-loads:uP:            445777 4K
+            dtlb mem-loads:uP:            40f724 4K
+            dtlb mem-loads:uP:            474926 4K
+            dtlb mem-loads:uP:            401075 4K
+            dtlb mem-loads:uP:            401095 4K
+            dtlb mem-loads:uP:            401095 4K
+            dtlb mem-loads:uP:            4010cc 4K
+            dtlb mem-loads:uP:            440b6f 4K
 
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Stephane Eranian <eranian@google.com>
 ---
- tools/perf/builtin-mem.c | 41 ++++++++++++++++++++++++++--------------
- 1 file changed, 27 insertions(+), 14 deletions(-)
+ tools/perf/Documentation/perf-script.txt |  2 +-
+ tools/perf/builtin-script.c              | 13 +++++++++++--
+ tools/perf/util/session.c                |  3 +++
+ 3 files changed, 15 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/builtin-mem.c b/tools/perf/builtin-mem.c
-index 3523279af6af..7fb04f41cd99 100644
---- a/tools/perf/builtin-mem.c
-+++ b/tools/perf/builtin-mem.c
-@@ -265,11 +265,35 @@ static int report_raw_events(struct perf_mem *mem)
- 	perf_session__delete(session);
- 	return ret;
+diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
+index 27a49f2e6cb7..fd7ec6cb971c 100644
+--- a/tools/perf/Documentation/perf-script.txt
++++ b/tools/perf/Documentation/perf-script.txt
+@@ -118,7 +118,7 @@ OPTIONS
+         comm, tid, pid, time, cpu, event, trace, ip, sym, dso, addr, symoff,
+ 	srcline, period, iregs, uregs, brstack, brstacksym, flags, bpf-output,
+ 	brstackinsn, brstackoff, callindent, insn, insnlen, synth, phys_addr,
+-	metric, misc, srccode, ipc, data_page_size.
++	metric, misc, srccode, ipc, data_page_size, code_page_size.
+         Field list can be prepended with the type, trace, sw or hw,
+         to indicate to which event type the field list applies.
+         e.g., -F sw:comm,tid,time,ip,sym  and -F trace:time,cpu,trace
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 69773025cc58..e6341216e6f7 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -116,6 +116,7 @@ enum perf_output_field {
+ 	PERF_OUTPUT_SRCCODE	    = 1ULL << 30,
+ 	PERF_OUTPUT_IPC             = 1ULL << 31,
+ 	PERF_OUTPUT_DATA_PAGE_SIZE  = 1ULL << 32,
++	PERF_OUTPUT_CODE_PAGE_SIZE  = 1ULL << 33,
+ };
+ 
+ struct output_option {
+@@ -155,6 +156,7 @@ struct output_option {
+ 	{.str = "srccode", .field = PERF_OUTPUT_SRCCODE},
+ 	{.str = "ipc", .field = PERF_OUTPUT_IPC},
+ 	{.str = "data_page_size", .field = PERF_OUTPUT_DATA_PAGE_SIZE},
++	{.str = "code_page_size", .field = PERF_OUTPUT_CODE_PAGE_SIZE},
+ };
+ 
+ enum {
+@@ -228,7 +230,7 @@ static struct {
+ 			      PERF_OUTPUT_DSO | PERF_OUTPUT_PERIOD |
+ 			      PERF_OUTPUT_ADDR | PERF_OUTPUT_DATA_SRC |
+ 			      PERF_OUTPUT_WEIGHT | PERF_OUTPUT_PHYS_ADDR |
+-			      PERF_OUTPUT_DATA_PAGE_SIZE,
++			      PERF_OUTPUT_DATA_PAGE_SIZE | PERF_OUTPUT_CODE_PAGE_SIZE,
+ 
+ 		.invalid_fields = PERF_OUTPUT_TRACE | PERF_OUTPUT_BPF_OUTPUT,
+ 	},
+@@ -481,6 +483,10 @@ static int perf_evsel__check_attr(struct evsel *evsel, struct perf_session *sess
+ 	    evsel__check_stype(evsel, PERF_SAMPLE_DATA_PAGE_SIZE, "DATA_PAGE_SIZE", PERF_OUTPUT_DATA_PAGE_SIZE))
+ 		return -EINVAL;
+ 
++	if (PRINT_FIELD(CODE_PAGE_SIZE) &&
++	    evsel__check_stype(evsel, PERF_SAMPLE_CODE_PAGE_SIZE, "CODE_PAGE_SIZE", PERF_OUTPUT_CODE_PAGE_SIZE))
++		return -EINVAL;
++
+ 	return 0;
  }
-+static char *get_sort_order(struct perf_mem *mem)
-+{
-+	bool has_extra_options = mem->phys_addr ? true : false;
-+	char sort[128];
+ 
+@@ -1953,6 +1959,9 @@ static void process_event(struct perf_script *script,
+ 	if (PRINT_FIELD(DATA_PAGE_SIZE))
+ 		fprintf(fp, " %s", get_page_size_name(sample->data_page_size, str));
+ 
++	if (PRINT_FIELD(CODE_PAGE_SIZE))
++		fprintf(fp, " %s", get_page_size_name(sample->code_page_size, str));
 +
-+	/*
-+	 * there is no weight (cost) associated with stores, so don't print
-+	 * the column
-+	 */
-+	if (!(mem->operation & MEM_OPERATION_LOAD)) {
-+		strcpy(sort, "--sort=mem,sym,dso,symbol_daddr,"
-+			     "dso_daddr,tlb,locked");
-+	} else if (has_extra_options) {
-+		strcpy(sort, "--sort=local_weight,mem,sym,dso,symbol_daddr,"
-+			     "dso_daddr,snoop,tlb,locked");
-+	} else
-+		return NULL;
+ 	perf_sample__fprintf_ipc(sample, attr, fp);
+ 
+ 	fprintf(fp, "\n");
+@@ -3436,7 +3445,7 @@ int cmd_script(int argc, const char **argv)
+ 		     "addr,symoff,srcline,period,iregs,uregs,brstack,"
+ 		     "brstacksym,flags,bpf-output,brstackinsn,brstackoff,"
+ 		     "callindent,insn,insnlen,synth,phys_addr,metric,misc,ipc,"
+-		     "data_page_size",
++		     "data_page_size,code_page_size",
+ 		     parse_output_fields),
+ 	OPT_BOOLEAN('a', "all-cpus", &system_wide,
+ 		    "system-wide collection from all CPUs"),
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index f810b07d10d2..83d4680044a2 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -1286,6 +1286,9 @@ static void dump_sample(struct evsel *evsel, union perf_event *event,
+ 	if (sample_type & PERF_SAMPLE_DATA_PAGE_SIZE)
+ 		printf(" .. data page size: %s\n", get_page_size_name(sample->data_page_size, str));
+ 
++	if (sample_type & PERF_SAMPLE_CODE_PAGE_SIZE)
++		printf(" .. code page size: %s\n", get_page_size_name(sample->code_page_size, str));
 +
-+	if (mem->phys_addr)
-+		strcat(sort, ",phys_daddr");
-+
-+	return strdup(sort);
-+}
+ 	if (sample_type & PERF_SAMPLE_TRANSACTION)
+ 		printf("... transaction: %" PRIx64 "\n", sample->transaction);
  
- static int report_events(int argc, const char **argv, struct perf_mem *mem)
- {
- 	const char **rep_argv;
- 	int ret, i = 0, j, rep_argc;
-+	char *new_sort_order;
- 
- 	if (mem->dump_raw)
- 		return report_raw_events(mem);
-@@ -283,20 +307,9 @@ static int report_events(int argc, const char **argv, struct perf_mem *mem)
- 	rep_argv[i++] = "--mem-mode";
- 	rep_argv[i++] = "-n"; /* display number of samples */
- 
--	/*
--	 * there is no weight (cost) associated with stores, so don't print
--	 * the column
--	 */
--	if (!(mem->operation & MEM_OPERATION_LOAD)) {
--		if (mem->phys_addr)
--			rep_argv[i++] = "--sort=mem,sym,dso,symbol_daddr,"
--					"dso_daddr,tlb,locked,phys_daddr";
--		else
--			rep_argv[i++] = "--sort=mem,sym,dso,symbol_daddr,"
--					"dso_daddr,tlb,locked";
--	} else if (mem->phys_addr)
--		rep_argv[i++] = "--sort=local_weight,mem,sym,dso,symbol_daddr,"
--				"dso_daddr,snoop,tlb,locked,phys_daddr";
-+	new_sort_order = get_sort_order(mem);
-+	if (new_sort_order)
-+		rep_argv[i++] = new_sort_order;
- 
- 	for (j = 1; j < argc; j++, i++)
- 		rep_argv[i] = argv[j];
 -- 
 2.17.1
 
