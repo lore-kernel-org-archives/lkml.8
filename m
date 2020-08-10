@@ -2,110 +2,91 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57BB7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:36:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 527CDC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:40:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2708C2083B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:36:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f5ESQ2LO"
+	by mail.kernel.org (Postfix) with ESMTP id 18A22208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:40:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728210AbgHJSgo (ORCPT
+        id S1728156AbgHJSku convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 14:36:44 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:21000 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728155AbgHJSgo (ORCPT
+        Mon, 10 Aug 2020 14:40:50 -0400
+Received: from lithops.sigma-star.at ([195.201.40.130]:57076 "EHLO
+        lithops.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728071AbgHJSku (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 14:36:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597084603;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=QXfIGxWYHli8UViM6M93oQLb9NwlH1AHgGXp2GsD3So=;
-        b=f5ESQ2LOJY2swKAXKmbQIF2CJVOPujC9qi0dh1QFgxJ0wDBUQQpHK9S1ZBit1SxO94shCL
-        u7O05heg0y9EFyZO2Z2SAHuGC7BUn6XKZ8JX6OAVhajb6LuvBh2liOcJaCLMIl7rIzNbRF
-        JwMRT+NUag333ofS6rT+Xvo47kV54tg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-414-6YiDE5zlPemw24k8Tq1dOg-1; Mon, 10 Aug 2020 14:36:41 -0400
-X-MC-Unique: 6YiDE5zlPemw24k8Tq1dOg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 61355107ACCA;
-        Mon, 10 Aug 2020 18:36:40 +0000 (UTC)
-Received: from max.home.com (unknown [10.40.194.131])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0D0045D9E7;
-        Mon, 10 Aug 2020 18:36:35 +0000 (UTC)
-From:   Andreas Gruenbacher <agruenba@redhat.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andreas Gruenbacher <agruenba@redhat.com>,
-        cluster-devel@redhat.com, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] GFS2 changes for 5.9
-Date:   Mon, 10 Aug 2020 20:36:34 +0200
-Message-Id: <20200810183634.617307-1-agruenba@redhat.com>
+        Mon, 10 Aug 2020 14:40:50 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id CD01161D8ABB;
+        Mon, 10 Aug 2020 20:40:47 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id hU8bXeKPAT8V; Mon, 10 Aug 2020 20:40:47 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 6AAEC61D8ABC;
+        Mon, 10 Aug 2020 20:40:47 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id aOzKDsZ6vDg5; Mon, 10 Aug 2020 20:40:47 +0200 (CEST)
+Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 425DD61D8ABB;
+        Mon, 10 Aug 2020 20:40:47 +0200 (CEST)
+Date:   Mon, 10 Aug 2020 20:40:47 +0200 (CEST)
+From:   Richard Weinberger <richard@nod.at>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        stable <stable@kernel.org>
+Message-ID: <1475688016.229129.1597084847149.JavaMail.zimbra@nod.at>
+In-Reply-To: <20200810163851.GB24408@amd>
+References: <20200810151804.199494191@linuxfoundation.org> <20200810151804.911709325@linuxfoundation.org> <20200810163851.GB24408@amd>
+Subject: Re: [PATCH 4.19 14/48] mtd: properly check all write ioctls for
+ permissions
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [195.201.40.130]
+X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF78 (Linux)/8.8.12_GA_3809)
+Thread-Topic: properly check all write ioctls for permissions
+Thread-Index: SPuvyTwnFDc3qnA8Gvg/tEw1EZFuYQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+----- Ursprüngliche Mail -----
+> Von: "Pavel Machek" <pavel@denx.de>
+>> When doing a "write" ioctl call, properly check that we have permissions
+>> to do so before copying anything from userspace or anything else so we
+>> can "fail fast".  This includes also covering the MEMWRITE ioctl which
+>> previously missed checking for this.
+> 
+>> +	/* "safe" commands */
+>> +	case MEMGETREGIONCOUNT:
+> 
+> I wonder if MEMSETBADBLOCK, MEMLOCK/MEMUNLOCK, BLKPG, OTPLOCK and
+> MTDFILEMODE should be in the list of "safe" commands? Sounds like they
+> can do at least as much damage as average MEMWRITE...
 
-please consider pulling the following gfs2 changes for 5.9.
+Most of the ioctls you listed are not write-exclusive because existing
+user space applications (such as mtd-utils) issue them on a read-only fd.
+So, we didn't want to break them.
+Before we move such an ioctl to the "non-safe" list, common user space needs to
+be inspected. This includes, android, openwrt, mtd-utils, etc...
 
-Thanks a lot,
-Andreas
+On the other hand, this is a raw mtd, it is hard to draw the line.
+For NAND even reading allows an attacker doing harm, she can trigger read-distrurb
+super efficiently using the read ioctl...
 
-The following changes since commit 11ba468877bb23f28956a35e896356252d63c983:
+So passing an mtdchar fd (no matter whether read or write mode) to untrusted
+entities is a bad idea.
 
-  Linux 5.8-rc5 (2020-07-12 16:34:50 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/gfs2/linux-gfs2.git tags/gfs2-for-5.9
-
-for you to fetch changes up to e28c02b94f9e039beeb5c75198caf6e17b66c520:
-
-  gfs2: When gfs2_dirty_inode gets a glock error, dump the glock (2020-08-07 17:26:24 +0200)
-
-----------------------------------------------------------------
-Changes in gfs2:
-
-- Make sure transactions won't be started recursively in gfs2_block_zero_range.
-  (Bug introduced in 5.4 when switching to iomap_zero_range.)
-- Fix a glock holder refcount leak introduced in the iopen glock locking
-  scheme rework merged in 5.8.
-- A few other small improvements (debugging, stack usage, comment fixes).
-
-----------------------------------------------------------------
-Andreas Gruenbacher (3):
-      gfs2: Pass glock holder to gfs2_file_direct_{read,write}
-      gfs2: Fix refcount leak in gfs2_glock_poke
-      fs: Fix typo in comment
-
-Bob Peterson (5):
-      gfs2: Add some flags missing from glock output
-      gfs2: Fix inaccurate comment
-      gfs2: print details on transactions that aren't properly ended
-      gfs2: Never call gfs2_block_zero_range with an open transaction
-      gfs2: When gfs2_dirty_inode gets a glock error, dump the glock
-
- fs/gfs2/bmap.c     | 69 ++++++++++++++++++++++++++++++------------------------
- fs/gfs2/file.c     | 31 ++++++++++++------------
- fs/gfs2/glock.c    | 10 +++++++-
- fs/gfs2/log.c      |  2 +-
- fs/gfs2/super.c    |  1 +
- fs/gfs2/trans.c    | 29 +++++++++++++----------
- include/linux/fs.h |  2 +-
- 7 files changed, 82 insertions(+), 62 deletions(-)
-
+Thanks,
+//richard
