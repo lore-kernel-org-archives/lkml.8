@@ -2,89 +2,177 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1F1DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:48:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF5CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:51:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9440320729
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:48:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99B5D2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:51:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DHdB3tW+"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="k+dFKhCh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbgHJJsw (ORCPT
+        id S1726729AbgHJJvF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 05:48:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40650 "EHLO
+        Mon, 10 Aug 2020 05:51:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725846AbgHJJsv (ORCPT
+        with ESMTP id S1725846AbgHJJvD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 05:48:51 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E10AC061756
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 02:48:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=IlQDR13HuxKJhI67djiwbAUoko3dA9XlpyaQNoTbkpo=; b=DHdB3tW+U1/KBBeCV3NzBr6wpg
-        f0uG2Y1m//uIOts/nshNMI3i10rd27mz75MiLiZBjHMRlv4j+e0xWEK/MTHToEj6irE2x4JbAnaE2
-        dIw4MxY4i9jsoZE2NkqrtfzdpuGJW4+tgFa1gnNs0mQk5NP5qlGPUxHfBmvGm+l4Q0VXVJk1Mn0j0
-        zTm352qCeVpwaSNKQ2LDQYrBz39gA5TeFZCfP528X8LtGwc7nI0XPCEmHWKh9r71GzC3G0P9BIHl0
-        wS/J9GnOQyjUydq6dpNrre+DByc1FgZBMIn6uRbKhQU1xPcv0rh78ovqah/Iku59HGBmV32JqKvnX
-        hXuYDl9w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k54Pn-0006vK-Pu; Mon, 10 Aug 2020 09:48:24 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2FBD4306CCF;
-        Mon, 10 Aug 2020 11:48:20 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C2359200D415C; Mon, 10 Aug 2020 11:48:20 +0200 (CEST)
-Date:   Mon, 10 Aug 2020 11:48:20 +0200
-From:   peterz@infradead.org
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 08/24] seqlock: lockdep assert non-preemptibility on
- seqcount_t write
-Message-ID: <20200810094820.GO2674@hirez.programming.kicks-ass.net>
-References: <20200519214547.352050-1-a.darwish@linutronix.de>
- <20200720155530.1173732-1-a.darwish@linutronix.de>
- <20200720155530.1173732-9-a.darwish@linutronix.de>
- <20200808232122.GA176509@roeck-us.net>
- <20200809184251.GA94072@lx-t490>
- <20200810085954.GA1591892@kroah.com>
+        Mon, 10 Aug 2020 05:51:03 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BC9BC061786
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 02:51:03 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id a15so7509038wrh.10
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 02:51:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=wLAOFokMTumfYpsNR+8SVNBDFRnEeROvH0KpvMDc688=;
+        b=k+dFKhCh67gRr7m58/fPDWfkNNhbMS48AtVuEWuUaL7GgRIyIEJqcBKh4X4a758b57
+         KkxB+nlBkH22LvsGhtwj+9AKExh67WZoahawhyDAkFVD9weSi8e5ZbVcy/eGKq099dNT
+         2rPIwd2l1SjoFjVUGdYWaoP+bfcSinZkbNbkr9MR2UhlRe6MyObY5TnVIz63omf1VXEc
+         /CiuYs7UqB+sFQ+1RAzS4v8QUgGIqojlO2zYXqpOHhQb4j0xfterod5++UDpWvEyFfu1
+         dkN1qnsISdn7dKkCzrj6hspVdZz0ntwatQs9yITSo29sJgxhUIS1t/mceafkgkVnAger
+         2xsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wLAOFokMTumfYpsNR+8SVNBDFRnEeROvH0KpvMDc688=;
+        b=FPk9WH3BoKaGqHHZc9WmF1wrRF0FF5b+nAKtRpYT72tD2+gPGlQiu6RpZZe5SkybBm
+         i529EilJlcVmJ7bTpR9N7d1wiHpHGZ4WhWqlsfS+sys7wGiSro2hFuzs3MB6CSMDEJYj
+         IMP/6d2K0KSVKPzUjoiVVoiT8xLdLI4flBCAAKywekbqXbOscUA9Lc1003yOO8AhQ3Oy
+         hWKh8X0te6Fi1HKRr1KrQdIJiZ609YKS3cpieRi3AnBVlu62NGJyVzBc1O6TBJxCAmO0
+         NngnbhBGWK7PNe5lmmBr2CE0pOs0ZULocrOIM1A2hwf3Q/Mjel931dbIiI+ovpcn7izk
+         lcPA==
+X-Gm-Message-State: AOAM531wgOaHjaFWQdnJVq/LCydzOyyHqlvGZBcHXenYpRCmk+UnrPmX
+        HEaZ1xMktlnm64ZfaQEy0XDT1A==
+X-Google-Smtp-Source: ABdhPJzdqkDkrHLo3mdpReSxPT2KGTqpJkwwoKLuu0f/k4VmOMdeq2ugWCPwy81kX9TCb0ZJOxWzMA==
+X-Received: by 2002:a5d:5588:: with SMTP id i8mr23947186wrv.177.1597053062045;
+        Mon, 10 Aug 2020 02:51:02 -0700 (PDT)
+Received: from [192.168.1.8] ([195.24.90.54])
+        by smtp.googlemail.com with ESMTPSA id f6sm2022636wme.32.2020.08.10.02.51.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Aug 2020 02:51:01 -0700 (PDT)
+Subject: Re: [RESEND 1/3] venus: core: handle race condititon for core ops
+To:     Mansur Alisha Shaik <mansur@codeaurora.org>,
+        linux-media@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        vgarodia@codeaurora.org
+References: <1596781478-12216-1-git-send-email-mansur@codeaurora.org>
+ <1596781478-12216-2-git-send-email-mansur@codeaurora.org>
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Message-ID: <dc1f37ed-3786-5bb2-3763-368b0165478b@linaro.org>
+Date:   Mon, 10 Aug 2020 12:50:59 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200810085954.GA1591892@kroah.com>
+In-Reply-To: <1596781478-12216-2-git-send-email-mansur@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 10:59:54AM +0200, Greg KH wrote:
-> On Sun, Aug 09, 2020 at 08:42:51PM +0200, Ahmed S. Darwish wrote:
+Hi Mansur,
 
-> > @Peter, I think let's revert this one for now?
+Thanks for the patches!
+
+On 8/7/20 9:24 AM, Mansur Alisha Shaik wrote:
+> For core ops we are having only write protect but there
+> is no read protect, because of this in multthreading
+> and concurrency, one CPU core is reading without wait
+> which is causing the NULL pointer dereferece crash.
 > 
-> Please do, it's blowing up my local builds as well :(
+> one such scenario is as show below, where in one
+> core core->ops becoming NULL and in another core
+> calling core->ops->session_init().
+> 
+> CPU: core-7:
+> Call trace:
+>  hfi_session_init+0x180/0x1dc [venus_core]
+>  vdec_queue_setup+0x9c/0x364 [venus_dec]
+>  vb2_core_reqbufs+0x1e4/0x368 [videobuf2_common]
+>  vb2_reqbufs+0x4c/0x64 [videobuf2_v4l2]
+>  v4l2_m2m_reqbufs+0x50/0x84 [v4l2_mem2mem]
+>  v4l2_m2m_ioctl_reqbufs+0x2c/0x38 [v4l2_mem2mem]
+>  v4l_reqbufs+0x4c/0x5c
+> __video_do_ioctl+0x2b0/0x39c
+> 
+> CPU: core-0:
+> Call trace:
+>  venus_shutdown+0x98/0xfc [venus_core]
+>  venus_sys_error_handler+0x64/0x148 [venus_core]
+>  process_one_work+0x210/0x3d0
+>  worker_thread+0x248/0x3f4
+>  kthread+0x11c/0x12c
+> 
+> Signed-off-by: Mansur Alisha Shaik <mansur@codeaurora.org>
+> ---
+>  drivers/media/platform/qcom/venus/core.c | 2 +-
+>  drivers/media/platform/qcom/venus/hfi.c  | 5 ++++-
+>  2 files changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
+> index 203c653..fe99c83 100644
+> --- a/drivers/media/platform/qcom/venus/core.c
+> +++ b/drivers/media/platform/qcom/venus/core.c
+> @@ -64,8 +64,8 @@ static void venus_sys_error_handler(struct work_struct *work)
+>  	pm_runtime_get_sync(core->dev);
+>  
+>  	hfi_core_deinit(core, true);
+> -	hfi_destroy(core);
+>  	mutex_lock(&core->lock);
+> +	hfi_destroy(core);
 
-There's a bunch of patches queued here:
+As my recovery fixes [1] touches this part also, could you please apply
+them on top of yours and re-test?
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git locking/urgent
+Otherwise this patch looks good to me.
 
-That should fix it all, but I'm not exactly sure when the pull request
-for that will go out.
+[1] https://www.spinics.net/lists/linux-arm-msm/msg70092.html
+
+>  	venus_shutdown(core);
+>  
+>  	pm_runtime_put_sync(core->dev);
+> diff --git a/drivers/media/platform/qcom/venus/hfi.c b/drivers/media/platform/qcom/venus/hfi.c
+> index a211eb9..2eeb31f 100644
+> --- a/drivers/media/platform/qcom/venus/hfi.c
+> +++ b/drivers/media/platform/qcom/venus/hfi.c
+> @@ -195,7 +195,7 @@ EXPORT_SYMBOL_GPL(hfi_session_create);
+>  int hfi_session_init(struct venus_inst *inst, u32 pixfmt)
+>  {
+>  	struct venus_core *core = inst->core;
+> -	const struct hfi_ops *ops = core->ops;
+> +	const struct hfi_ops *ops;
+>  	int ret;
+>  
+>  	if (inst->state != INST_UNINIT)
+> @@ -204,10 +204,13 @@ int hfi_session_init(struct venus_inst *inst, u32 pixfmt)
+>  	inst->hfi_codec = to_codec_type(pixfmt);
+>  	reinit_completion(&inst->done);
+>  
+> +	mutex_lock(&core->lock);
+> +	ops = core->ops;
+>  	ret = ops->session_init(inst, inst->session_type, inst->hfi_codec);
+>  	if (ret)
+>  		return ret;
+>  
+> +	mutex_unlock(&core->lock);
+>  	ret = wait_session_msg(inst);
+>  	if (ret)
+>  		return ret;
+> 
+
+-- 
+regards,
+Stan
