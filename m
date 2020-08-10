@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC67C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:27:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4CE2C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:27:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E868622B47
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:27:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6D7B22BEA
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:27:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073275;
-	bh=Xr/LrSwoPkpO+b5GNnU8G45cuP+w+tgscd35PT6++AU=;
+	s=default; t=1597073277;
+	bh=un7zhe35iB5O7wWshqcS9w6y1MdzU0o5XKOhS/qQX6Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E/KkaUztThs6Kz07cfv4CKgv1N/wBq/gPrmIXDkQPIFV2dl91AiPr1zWzehK90uxf
-	 F5xev5MuPuMeoZJm3dsmt1StB/Nn1FsORmYUOyAHCXjRMKiskPyp3eueq0rhzzA8zI
-	 4jJm28tS1MSmMMYumcv+T62/jPqTrO83nATQHyNE=
+	b=kZP0xBMqEishHSQ3ofEg1Hr8zWbhy+IAPKYk4JIPsJwuTwFrDdl1eEVKLaHP2VkUc
+	 i+sWJ6K4QEuMZ6BDTM+9P8DEm1Ltgy8d8fy/dBe0aTa6ktQN+Z0U5sJlrTpcKggzFG
+	 yGIUykqrAE9e9Y/SSbAo0vVMaPOyKnNWuaQ19fdM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728798AbgHJP1x (ORCPT
+        id S1728805AbgHJP14 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:27:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33666 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:27:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728786AbgHJP1m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:27:42 -0400
+        id S1728795AbgHJP1p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:27:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBE9322D08;
-        Mon, 10 Aug 2020 15:27:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8B1A22B47;
+        Mon, 10 Aug 2020 15:27:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073261;
-        bh=Xr/LrSwoPkpO+b5GNnU8G45cuP+w+tgscd35PT6++AU=;
+        s=default; t=1597073264;
+        bh=un7zhe35iB5O7wWshqcS9w6y1MdzU0o5XKOhS/qQX6Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VwOEFHtMWKKOlLVyDBFCcmWqauRC6P/5/6Gd36s66RxhwsOyiRYt9keIg+WNUoBLU
-         qUIR3JZsFQvjbYlUmpjfd72LVElCOBtNPezY6Bma4ZlOLPGwhBXBENdQj2pzKbSuiH
-         ERPYBtTRRmb44e/8KAPqURd84oViYLaOdhA3zyY0=
+        b=hmgVaz30MT3YyxTNjqcOsUxg8/Y0A/ylChxFxcLrFDrD9Gqfy7RcbcZgoM09Gf7Xb
+         MhaDPskKpYwh59OatdJ58ZOVE8bFwWDjU/elKVmOKS5XTpAbcXNTNCsAvmEyfHA2FW
+         go/3a8zZFHvILGw0lBi8zL0J2v2QzQN/PsCRCmjM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julian Squires <julian@cipht.net>,
-        Johannes Berg <johannes.berg@intel.com>,
+        stable@vger.kernel.org, Francesco Ruggeri <fruggeri@arista.com>,
+        Aaron Brown <aaron.f.brown@intel.com>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 42/67] cfg80211: check vendor command doit pointer before use
-Date:   Mon, 10 Aug 2020 17:21:29 +0200
-Message-Id: <20200810151811.514485826@linuxfoundation.org>
+Subject: [PATCH 5.4 43/67] igb: reinit_locked() should be called with rtnl_lock
+Date:   Mon, 10 Aug 2020 17:21:30 +0200
+Message-Id: <20200810151811.567105484@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151809.438685785@linuxfoundation.org>
 References: <20200810151809.438685785@linuxfoundation.org>
@@ -60,48 +61,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julian Squires <julian@cipht.net>
+From: Francesco Ruggeri <fruggeri@arista.com>
 
-[ Upstream commit 4052d3d2e8f47a15053320bbcbe365d15610437d ]
+[ Upstream commit 024a8168b749db7a4aa40a5fbdfa04bf7e77c1c0 ]
 
-In the case where a vendor command does not implement doit, and has no
-flags set, doit would not be validated and a NULL pointer dereference
-would occur, for example when invoking the vendor command via iw.
+We observed two panics involving races with igb_reset_task.
+The first panic is caused by this race condition:
 
-I encountered this while developing new vendor commands.  Perhaps in
-practice it is advisable to always implement doit along with dumpit,
-but it seems reasonable to me to always check doit anyway, not just
-when NEED_WDEV.
+	kworker			reboot -f
 
-Signed-off-by: Julian Squires <julian@cipht.net>
-Link: https://lore.kernel.org/r/20200706211353.2366470-1-julian@cipht.net
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+	igb_reset_task
+	igb_reinit_locked
+	igb_down
+	napi_synchronize
+				__igb_shutdown
+				igb_clear_interrupt_scheme
+				igb_free_q_vectors
+				igb_free_q_vector
+				adapter->q_vector[v_idx] = NULL;
+	napi_disable
+	Panics trying to access
+	adapter->q_vector[v_idx].napi_state
+
+The second panic (a divide error) is caused by this race:
+
+kworker		reboot -f	tx packet
+
+igb_reset_task
+		__igb_shutdown
+		rtnl_lock()
+		...
+		igb_clear_interrupt_scheme
+		igb_free_q_vectors
+		adapter->num_tx_queues = 0
+		...
+		rtnl_unlock()
+rtnl_lock()
+igb_reinit_locked
+igb_down
+igb_up
+netif_tx_start_all_queues
+				dev_hard_start_xmit
+				igb_xmit_frame
+				igb_tx_queue_mapping
+				Panics on
+				r_idx % adapter->num_tx_queues
+
+This commit applies to igb_reset_task the same changes that
+were applied to ixgbe in commit 2f90b8657ec9 ("ixgbe: this patch
+adds support for DCB to the kernel and ixgbe driver"),
+commit 8f4c5c9fb87a ("ixgbe: reinit_locked() should be called with
+rtnl_lock") and commit 88adce4ea8f9 ("ixgbe: fix possible race in
+reset subtask").
+
+Signed-off-by: Francesco Ruggeri <fruggeri@arista.com>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/wireless/nl80211.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/intel/igb/igb_main.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
-index a34bbca80f498..ec559dbad56ea 100644
---- a/net/wireless/nl80211.c
-+++ b/net/wireless/nl80211.c
-@@ -12949,13 +12949,13 @@ static int nl80211_vendor_cmd(struct sk_buff *skb, struct genl_info *info)
- 				if (!wdev_running(wdev))
- 					return -ENETDOWN;
- 			}
--
--			if (!vcmd->doit)
--				return -EOPNOTSUPP;
- 		} else {
- 			wdev = NULL;
- 		}
+diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
+index ed7e667d7eb29..3e41b20ed8eb5 100644
+--- a/drivers/net/ethernet/intel/igb/igb_main.c
++++ b/drivers/net/ethernet/intel/igb/igb_main.c
+@@ -6194,9 +6194,18 @@ static void igb_reset_task(struct work_struct *work)
+ 	struct igb_adapter *adapter;
+ 	adapter = container_of(work, struct igb_adapter, reset_task);
  
-+		if (!vcmd->doit)
-+			return -EOPNOTSUPP;
++	rtnl_lock();
++	/* If we're already down or resetting, just bail */
++	if (test_bit(__IGB_DOWN, &adapter->state) ||
++	    test_bit(__IGB_RESETTING, &adapter->state)) {
++		rtnl_unlock();
++		return;
++	}
 +
- 		if (info->attrs[NL80211_ATTR_VENDOR_DATA]) {
- 			data = nla_data(info->attrs[NL80211_ATTR_VENDOR_DATA]);
- 			len = nla_len(info->attrs[NL80211_ATTR_VENDOR_DATA]);
+ 	igb_dump(adapter);
+ 	netdev_err(adapter->netdev, "Reset adapter\n");
+ 	igb_reinit_locked(adapter);
++	rtnl_unlock();
+ }
+ 
+ /**
 -- 
 2.25.1
 
