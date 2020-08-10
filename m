@@ -2,129 +2,125 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA59C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 999D0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:34:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79CBD20771
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:33:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="KcKkDyHF"
+	by mail.kernel.org (Postfix) with ESMTP id 764492070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 14:34:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbgHJOds (ORCPT
+        id S1727006AbgHJOer (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 10:33:48 -0400
-Received: from mail-eopbgr80059.outbound.protection.outlook.com ([40.107.8.59]:45758
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726386AbgHJOdr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 10:33:47 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JbPOu3ULmQf7Ogod/cXDQ/mQwJE4pj3XlwHO0+FC4t/0Wq+g2WZOH7ZyJ9OB2+UoTq3yLJsLpvMUl7BY8RjGJWLqMiCllNwMxX22TpRVF6juQ3dxk9Kc1jlEESfrulXYWeX2v78TzKm6m7IoHWy5KEH2TvIfhi/GKy7kLVFHY8ZzRDoZQOVoSPekvYf7r/dN4NH9N9i9rTRwDk71lgsiQt4WAOC89kwBlq/xD22zWgp5/XbGWJYJ/9MHA1OuznVQcwpaaj6PXJpaVEg8r29kTwvaoeCrDMy1sqCEB+zCoFdvgycRwBUtZrnkovH9upjrnv2fUXE2iIIxgzgjYRRznA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=i1ii/Izet5M8Db8YInQdGB3nftdv2DhbVv7JmeUG/0k=;
- b=dA81RkbOHQtviLBvuYHur3OJggU8jY0XtGxykjaKQ7pYiRP+SHB/qf9o7JOU1FCw0IUyoTXpzqBWV3Jqd0v23szPTam/W/zqi1UOAajDeqqI3FEM9opBtQ5H3wW/U74D0tmstHNC5kq1jXiCWzK2JJiwLR/WkCupMTHSAOqu6SraPPnwRpLv6MOvk3Xl0Y3lgAPAWkfXuZ9BE33zrHgl/42E1p66Y2RTqkRrdZ3uqux7RzAA57iS3Y4U02bJNOvESHx7v4kMraa6P332JrQ3gmPkNcs+YiY75q+NIngKcQkjuYqBsx2AK8f7dI8HfbA4BPUzT8n0HV80mybFYu5FGg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=i1ii/Izet5M8Db8YInQdGB3nftdv2DhbVv7JmeUG/0k=;
- b=KcKkDyHFzXgaLu7iDt6HC1o2m+dgC7nm9uWJ77IcaL+NvHqilkQPHfnMnUpiKYEXncuL6dtQIB8GD9Bzz6/5AL5DqU+ijvyYduz8l4dEcmhQweIDmrA6GhAmnbG55lH5rgmsCG+CLXLWnXDoqkYdtbTkeBPPe0FP8KZyviuWn64=
-Authentication-Results: bootlin.com; dkim=none (message not signed)
- header.d=none;bootlin.com; dmarc=none action=none header.from=nxp.com;
-Received: from VI1PR04MB4046.eurprd04.prod.outlook.com (2603:10a6:803:4d::29)
- by VI1PR04MB4237.eurprd04.prod.outlook.com (2603:10a6:803:3e::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.16; Mon, 10 Aug
- 2020 14:33:42 +0000
-Received: from VI1PR04MB4046.eurprd04.prod.outlook.com
- ([fe80::8459:4be8:7034:7a81]) by VI1PR04MB4046.eurprd04.prod.outlook.com
- ([fe80::8459:4be8:7034:7a81%6]) with mapi id 15.20.3261.024; Mon, 10 Aug 2020
- 14:33:42 +0000
-Subject: Re: [PATCH 19/22] crypto: inside-secure - add check for xts input
- length equal to zero
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "Van Leeuwen, Pascal" <pvanleeuwen@rambus.com>
-Cc:     "Andrei Botila (OSS)" <andrei.botila@oss.nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-arm-kernel@axis.com" <linux-arm-kernel@axis.com>,
-        Andrei Botila <andrei.botila@nxp.com>,
-        Antoine Tenart <antoine.tenart@bootlin.com>
-References: <20200807162010.18979-1-andrei.botila@oss.nxp.com>
- <20200807162010.18979-20-andrei.botila@oss.nxp.com>
- <CY4PR0401MB36528610C3ABF802F8CBF35FC3440@CY4PR0401MB3652.namprd04.prod.outlook.com>
- <20200810134500.GA22914@gondor.apana.org.au>
-From:   =?UTF-8?Q?Horia_Geant=c4=83?= <horia.geanta@nxp.com>
-Message-ID: <fd3e5862-3357-7dfc-6c75-30086ab19f82@nxp.com>
-Date:   Mon, 10 Aug 2020 17:33:39 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Mon, 10 Aug 2020 10:34:47 -0400
+Received: from mga06.intel.com ([134.134.136.31]:31394 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726111AbgHJOeq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 10:34:46 -0400
+IronPort-SDR: qyxowIxnEOkT4IRuXqkODzGVffnCD1QpWi2Ff8zp5tWac9kE1iTeo2F0L1aHdqlfE65aIq/zF0
+ f1wOFQWrv1Gw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9708"; a="215060129"
+X-IronPort-AV: E=Sophos;i="5.75,457,1589266800"; 
+   d="scan'208";a="215060129"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2020 07:34:45 -0700
+IronPort-SDR: ykpKHPEA01HVmKLBbnbW7mdEUm3xME9VtWM7RLctOQr0UeMeOk5uXpB4mBa+4PbuJkRnbQaTqF
+ ajsOmEu4637Q==
+X-IronPort-AV: E=Sophos;i="5.75,457,1589266800"; 
+   d="scan'208";a="290367066"
+Received: from schen8-mobl.amr.corp.intel.com (HELO [10.212.235.58]) ([10.212.235.58])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2020 07:34:44 -0700
+Subject: Re: [PATCH] ASoC: intel: Fix memleak in sst_media_open
+To:     Dinghao Liu <dinghao.liu@zju.edu.cn>, kjlu@umn.edu
+Cc:     Cezary Rojewski <cezary.rojewski@intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        "Subhransu S. Prusty" <subhransu.s.prusty@intel.com>,
+        Vinod Koul <vkoul@kernel.org>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+References: <20200809085654.16483-1-dinghao.liu@zju.edu.cn>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <bf70ec51-6ee6-6d1e-1e5b-8e7191f08eba@linux.intel.com>
+Date:   Mon, 10 Aug 2020 09:34:43 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
-In-Reply-To: <20200810134500.GA22914@gondor.apana.org.au>
-Content-Type: text/plain; charset=utf-8
+MIME-Version: 1.0
+In-Reply-To: <20200809085654.16483-1-dinghao.liu@zju.edu.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AM0PR02CA0083.eurprd02.prod.outlook.com
- (2603:10a6:208:154::24) To VI1PR04MB4046.eurprd04.prod.outlook.com
- (2603:10a6:803:4d::29)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.0.129] (84.117.251.185) by AM0PR02CA0083.eurprd02.prod.outlook.com (2603:10a6:208:154::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.19 via Frontend Transport; Mon, 10 Aug 2020 14:33:40 +0000
-X-Originating-IP: [84.117.251.185]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 41bd7969-bdab-40da-8e7a-08d83d3a612f
-X-MS-TrafficTypeDiagnostic: VI1PR04MB4237:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR04MB423746628261C2719DC29C0198440@VI1PR04MB4237.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Dc6aSZ3g09Fh64a1iE1NTXTvoWwNYcJ5nzRTThX2Cfs3p+Jt/rigUisaMB0A/cEa/Ps9SgB9le1jz//NpYQ08u59cNq9J58svyZHNNnnT8n9bAR3c4Q3JnLi5b7qGgfJ+0xfOURTGRFCTULs6V9bT2fRQHx7ypquuC+YQ+F7/sQr+mL18gnCbqKd//2yKpdr/zTQK5Y9Il5/LII4BO1aJr/u8MAiqt2L1fIkXIlTlCR1gWYdUVdp3nbMkmiGAxxlcQ5NmfMsqx479l3ybhg+qPhl8AawwHlr/K+Owfp2rVo2+MWjNzoW3rP3VOLhUQPZPWLBPa3eFzUKn9B4rH/ce41ep6udMGyzEZCV4V0qviVJhY0siNn3sk+tiK+CmV07
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB4046.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(39860400002)(396003)(376002)(366004)(136003)(2906002)(83380400001)(16526019)(53546011)(8936002)(26005)(478600001)(4744005)(36756003)(8676002)(66476007)(86362001)(66556008)(66946007)(31686004)(5660300002)(186003)(52116002)(4326008)(31696002)(2616005)(7416002)(316002)(6486002)(956004)(110136005)(54906003)(16576012)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 9Aub7ZarZ4jYt1XvKycWoxbzkKPRd1EGDaAAWyr7lbibwWA+MuQC5D1sI2j7vHTvFO3mXKuTmnphDLtYswg1rAPXMrW0ikgl3Qya4YVJJTuhwbN152y0vqhoFZ88hA5UfsmQpGphmNbzCX62+NpQ8uSLzSV2i3DB6z9KI+0LkUELl/q2fhOAng1yaNZCX0LHE3ppg6ArnPH7rLGVjhKJ4n3r0MAXqfwv1GI3EYNvwuho/L92S+b6aA4CdevzvsQ32+NV/l3OTZM5ZzumPHQEFn+JKQpA6uncN9EMexfgG//bYI+YVD8xYnM4QGVgattpgr2UzggWLaKiV4QQCKSTaf+FQtmAl2N+RA/ATQmvvPGxlLk08kjT8X1Ya6VKpB9y8Br6zd9C5kIXdX7bJ35KKZbsl4OjNs9QzFSJ0+dskjYffoU+3dlcRLAFBsRbAKe0QOONPj+JJSK+exhDI4Z/xAg3a3nm5gNzYPLewyzlSS13fMuG0eMljeUIpJHKzV3eOofK8sKphymUENO29iHlHzGKxfFtlAnEpog1BIPBBFVSoLttCymF0uNglKtibHw9lkgCejN303gaAgT38YExmB6YyX5nx0WpLtzH+otuGV+iLdxmyze43wlNrJc+yXtHW7unLi0sUNryxtM+9LcbZA==
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 41bd7969-bdab-40da-8e7a-08d83d3a612f
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR04MB4046.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Aug 2020 14:33:42.3337
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xJtoVlsHUndTVHtUFdJqq234rFHuixV8OtGvTETDLfT3qzFpJZX7ahUgdw3ve2KJJfRYl5bDNIIj5+FWKmex0w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4237
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/10/2020 4:45 PM, Herbert Xu wrote:
-> On Mon, Aug 10, 2020 at 10:20:20AM +0000, Van Leeuwen, Pascal wrote:
->>
->> With all due respect, but this makes no sense.
-> 
-> I agree.  This is a lot of churn for no gain.
-> 
-I would say the gain is that all skcipher algorithms would behave the same
-when input length equals zero - i.e. treat the request as a no-op.
 
-We can't say "no input" has any meaning to the other skcipher algorithms,
-but the convention is to accept this case and just return 0.
-I don't see why XTS has to be handled differently.
 
-Thanks,
-Horia
+On 8/9/20 3:56 AM, Dinghao Liu wrote:
+> When power_up_sst() fails, stream needs to be freed
+> just like when try_module_get() fails. However, current
+> code is returning directly and ends up leaking memory.
+> 
+> Fixes: 0121327c1a68b ("ASoC: Intel: mfld-pcm: add control for powering up/down dsp")
+> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+> ---
+>   sound/soc/intel/atom/sst-mfld-platform-pcm.c | 4 +++-
+>   1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/sound/soc/intel/atom/sst-mfld-platform-pcm.c b/sound/soc/intel/atom/sst-mfld-platform-pcm.c
+> index 49b9f18472bc..79fedf9e3da1 100644
+> --- a/sound/soc/intel/atom/sst-mfld-platform-pcm.c
+> +++ b/sound/soc/intel/atom/sst-mfld-platform-pcm.c
+> @@ -330,8 +330,10 @@ static int sst_media_open(struct snd_pcm_substream *substream,
+>   	runtime->private_data = stream;
+>   
+>   	ret_val = power_up_sst(stream);
+> -	if (ret_val < 0)
+> +	if (ret_val < 0) {
+> +		kfree(stream);
+>   		return ret_val;
+> +	}
+>   
+>   	/* Make sure, that the period size is always even */
+>   	snd_pcm_hw_constraint_step(substream->runtime, 0,
+> 
+
+Alternate suggestion to fix this, it's not great when we mix gotos and 
+returns.
+
+diff --git a/sound/soc/intel/atom/sst-mfld-platform-pcm.c 
+b/sound/soc/intel/atom/sst-mfld-platform-pcm.c
+index 49b9f18472bc..b1cac7abdc0a 100644
+--- a/sound/soc/intel/atom/sst-mfld-platform-pcm.c
++++ b/sound/soc/intel/atom/sst-mfld-platform-pcm.c
+@@ -331,7 +331,7 @@ static int sst_media_open(struct snd_pcm_substream 
+*substream,
+
+         ret_val = power_up_sst(stream);
+         if (ret_val < 0)
+-               return ret_val;
++               goto out_power_up;
+
+         /* Make sure, that the period size is always even */
+         snd_pcm_hw_constraint_step(substream->runtime, 0,
+@@ -340,8 +340,9 @@ static int sst_media_open(struct snd_pcm_substream 
+*substream,
+         return snd_pcm_hw_constraint_integer(runtime,
+                          SNDRV_PCM_HW_PARAM_PERIODS);
+  out_ops:
+-       kfree(stream);
+         mutex_unlock(&sst_lock);
++out_power_up:
++       kfree(stream);
+         return ret_val;
+  }
