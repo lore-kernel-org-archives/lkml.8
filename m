@@ -6,71 +6,63 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E1FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7495C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:58:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 711E120774
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:58:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B62E320774
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:58:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597085893;
-	bh=6ZZ9G3SM7GPTdhIrNRHxeMljHgSvDpjiR2vpNrzWIy8=;
+	s=default; t=1597085901;
+	bh=u7PuXZEqeKunOaHhKj/3xF6yMMpUtKNV+V4e9KEv7Tk=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=uKhR3el8qShE0vSmlPdM7l5Atdn7dAJH2v6U49apptttzVMGpwsKn0f+zEmQu9Tpg
-	 KEh/D1NOub3jgZx/8RDEfAOZxbeF/zCa8LQ/1YH6toeFyTtVvsf9n2g4v9TOuE4shs
-	 qcOa75jF1zV4baStenR3/EptA8o6IwlyfbiDUhQU=
+	b=gCDlaSBpxQ2rztN9vqAbZfEyVgzV2HYM0LGLpzczKDQV4kIjYQTFhsYT2WyRXpGO7
+	 j+u0ykZItR2bnNP2nQdwv7tiVl0iqWIWbgvq+HGkyP2aCMHv1GpMJby36zKfdcQDfU
+	 uD2KiyG+YP/NL9kEIQQkQU2dZBEit6KPymuDMLJg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728257AbgHJS6M (ORCPT
+        id S1728271AbgHJS6U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 14:58:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53684 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 14:58:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728071AbgHJS6L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 14:58:11 -0400
+        id S1728071AbgHJS6T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 14:58:19 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C66B21775;
-        Mon, 10 Aug 2020 18:58:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3DD920774;
+        Mon, 10 Aug 2020 18:58:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597085891;
-        bh=6ZZ9G3SM7GPTdhIrNRHxeMljHgSvDpjiR2vpNrzWIy8=;
+        s=default; t=1597085899;
+        bh=u7PuXZEqeKunOaHhKj/3xF6yMMpUtKNV+V4e9KEv7Tk=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=wLbN9m9h0cjrOvQEEKFw9roG57w01qqZHmq8pxJHWSslbicO+nHh2c8Jk6vCcSNSF
-         eCUwzF6OvIpRRrAnu0V2rT37AOv1ptkTNt8RuqGs4I/1YcKGk6SRYiPK1B7J8DhTip
-         kwdlWwJxYdOHS6D5lEpjU5seCLlBhul3LvxsdOAs=
-Date:   Mon, 10 Aug 2020 19:57:44 +0100
+        b=KKnzD8ZWmOJcfG/H5Vbx7+ZyeLnZ7euP6YBDAI4H07NvU9Z3uJyzaaZjhnXdG0ke0
+         Qt/57iuE1sRTs9OEqXCHuuYXF99LrEB+xmYDU1ICxqJZOlq3TJbsLiE0ZD+hqB/Ly5
+         fmhS6Xo5IGW1aH8Vrp4bhZqvIjDZHABKWusbFJuE=
+Date:   Mon, 10 Aug 2020 19:57:52 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Ravulapati Vishnu vardhan rao 
-        <Vishnuvardhanrao.Ravulapati@amd.com>
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        Akshu Agrawal <akshu.agrawal@amd.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-In-Reply-To: <20200806101451.7918-1-Vishnuvardhanrao.Ravulapati@amd.com>
-References: <20200806101451.7918-1-Vishnuvardhanrao.Ravulapati@amd.com>
-Subject: Re: [PATCH] ASoC: amd: Replacing component->name with codec_dai->name
-Message-Id: <159708585777.21544.6227920009595743582.b4-ty@kernel.org>
+To:     Colin King <colin.king@canonical.com>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+In-Reply-To: <20200810093931.50624-1-colin.king@canonical.com>
+References: <20200810093931.50624-1-colin.king@canonical.com>
+Subject: Re: [PATCH] regulator: fix spelling mistake "Cant" -> "Can't"
+Message-Id: <159708587290.21583.4925368980262499422.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 6 Aug 2020 15:44:12 +0530, Ravulapati Vishnu vardhan rao wrote:
-> Replacing string compare with codec_dai->name instead of comparing with
-> codec_dai->component->name in hw_params.
+On Mon, 10 Aug 2020 10:39:31 +0100, Colin King wrote:
+> There is a spelling mistake in a dev_err message. Fix it.
 
 Applied to
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
 
 Thanks!
 
-[1/1] ASoC: amd: Replacing component->name with codec_dai->name.
-      commit: ea7dc097826b06a9746a2e74c2d6e78d35c98088
+[1/1] regulator: fix spelling mistake "Cant" -> "Can't"
+      commit: 09dad81e0f1701ea26babe2442a1478d6ad447d3
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
