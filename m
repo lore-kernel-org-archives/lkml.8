@@ -2,72 +2,123 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 757ACC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 13:31:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40034C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 13:32:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CEE1206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 13:31:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F6B2206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 13:32:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="XgunidY4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbgHJNbd (ORCPT
+        id S1726819AbgHJNcn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 09:31:33 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:60556 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726330AbgHJNba (ORCPT
+        Mon, 10 Aug 2020 09:32:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46702 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726518AbgHJNcm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 09:31:30 -0400
-Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1k57tQ-000489-AE; Mon, 10 Aug 2020 13:31:12 +0000
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     tiwai@suse.com
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        "Alexander A. Klimov" <grandmaster@al2klimov.de>,
-        Andrew Oakley <andrew@adoakley.name>,
-        Chris Boyle <chris@boyle.name>,
-        alsa-devel@alsa-project.org (moderated list:SOUND),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] ALSA: usb-audio: Disable Lenovo P620 Rear line-in volume control
-Date:   Mon, 10 Aug 2020 21:31:06 +0800
-Message-Id: <20200810133108.31580-1-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 10 Aug 2020 09:32:42 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79EF3C061756
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 06:32:42 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id p20so8201311wrf.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 06:32:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=a+nmwnQku2NPETSpBDN/P5VVyyO+hZH4dE82TSAC310=;
+        b=XgunidY4u2HlfrT7vWG1augSLzJLtFtt3MwWEaGZU0TEkWgCm8vp13Wp9OEkdH8cif
+         Myvc84JtAWcLoxHkNL54GxRSxWXMuRjjH6BJf4aKPj78zZmGJ3l/dUaVNmHN81D5faLR
+         NB3OTBiN1rgf+K3sqXS7g2el9wItvmalo6Wlk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=a+nmwnQku2NPETSpBDN/P5VVyyO+hZH4dE82TSAC310=;
+        b=l5OwZapXLzdnqqJdWZ+eGtRRoNXYIamO5UGLfm9TzFzFawtzOjnAzSKtAMSiM03TDQ
+         d6AaemcZPLS1Ypf2m33OsdnfhOaguGzLsgijBzH9axMiXywDaAwnn9gPYr97ENNnYO2L
+         x8rfVc8VSHSjGiQT5/gXuckVRNy2ozSUhN3Ly++KPerR7WByjuZcnmLmGRCnYXZPBb05
+         25l44Ury1i66yP5GrbRHlOLMK62idv6tl2ZsSxIvRqic+W8y7WTsdL1/JhJlpS/3aqp7
+         8ZLK/AVsx0D7X2uHbzSgB2VYP0kHlquhesgRD9sh7DMOCL/Ze8LBisG0KvGeCVIPJ1R4
+         veQg==
+X-Gm-Message-State: AOAM530MUbzLHhPau0ziRPXzJ85XCZQkzX9J/Wkx7Pddcb8Zlg5aO/cA
+        o6ULdq8xGso6aDo+lJaU1lqWxA==
+X-Google-Smtp-Source: ABdhPJwTLj+RebIoQLWCXGNcoMBm0EOS1JlGZLvmXwPU1hi7d1FhGfALDOJkrCtq5nQijkDH6PGBsQ==
+X-Received: by 2002:adf:a351:: with SMTP id d17mr24489798wrb.111.1597066361100;
+        Mon, 10 Aug 2020 06:32:41 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id k10sm20501231wrm.74.2020.08.10.06.32.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Aug 2020 06:32:40 -0700 (PDT)
+Date:   Mon, 10 Aug 2020 15:32:38 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Qinglang Miao <miaoqinglang@huawei.com>
+Cc:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+        Haneen Mohammed <hamohammed.sa@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/vkms: add missing platform_device_unregister() in
+ vkms_init()
+Message-ID: <20200810133238.GW2352366@phenom.ffwll.local>
+Mail-Followup-To: Qinglang Miao <miaoqinglang@huawei.com>,
+        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+        Haneen Mohammed <hamohammed.sa@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+References: <20200810130011.187691-1-miaoqinglang@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200810130011.187691-1-miaoqinglang@huawei.com>
+X-Operating-System: Linux phenom 5.7.0-1-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The USB device (0x17aa:0x1046) that support Lenovo P620 rear panel
-line-in claim to support volume control, but it doens't seem to have an
-AMP, so when line-in volume lowers below 80, nothing gets recorded
-anymore.
+On Mon, Aug 10, 2020 at 09:00:11PM +0800, Qinglang Miao wrote:
+> When vkms_init() get into out_put, the unregister call of
+> vkms_device->platform is missing. So add it before return.
+> 
+> Fixes: c27f0cc4d43a "drm/vkms: enable cursor by default"
 
-Disable the volume control to workaround the issue.
+This is the wrong commit, I fixed that up while applying.
+-Daniel
 
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
----
- sound/usb/mixer_maps.c | 1 +
- 1 file changed, 1 insertion(+)
+> Signed-off-by: Qinglang Miao <miaoqinglang@huawei.com>
+> ---
+>  drivers/gpu/drm/vkms/vkms_drv.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/vkms/vkms_drv.c b/drivers/gpu/drm/vkms/vkms_drv.c
+> index 57a8a397d..83dd5567d 100644
+> --- a/drivers/gpu/drm/vkms/vkms_drv.c
+> +++ b/drivers/gpu/drm/vkms/vkms_drv.c
+> @@ -190,8 +190,8 @@ static int __init vkms_init(void)
+>  
+>  out_put:
+>  	drm_dev_put(&vkms_device->drm);
+> +	platform_device_unregister(vkms_device->platform);
+>  	return ret;
+> -
+>  out_unregister:
+>  	platform_device_unregister(vkms_device->platform);
+>  out_free:
+> -- 
+> 2.25.1
+> 
 
-diff --git a/sound/usb/mixer_maps.c b/sound/usb/mixer_maps.c
-index c369c81e74c4..5b43e9e40e49 100644
---- a/sound/usb/mixer_maps.c
-+++ b/sound/usb/mixer_maps.c
-@@ -371,6 +371,7 @@ static const struct usbmix_name_map asus_rog_map[] = {
- };
- 
- static const struct usbmix_name_map lenovo_p620_rear_map[] = {
-+	{ 19, NULL, 2 }, /* FU, Volume */
- 	{ 19, NULL, 12 }, /* FU, Input Gain Pad */
- 	{}
- };
 -- 
-2.17.1
-
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
