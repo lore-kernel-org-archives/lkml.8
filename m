@@ -2,55 +2,52 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,URIBL_BLOCKED,USER_AGENT_GIT
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 133F9C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:25:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B78C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:25:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D709020855
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:25:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEE36208A9
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:25:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073141;
-	bh=8aTXwZ4opx8LLQJfKMRpxPVdMjiXrdDmraPtP16ipPk=;
+	s=default; t=1597073150;
+	bh=NKmo2FJbVFaNrNPyrXYIqpOWrHXNGdpkOmevazIuIkQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CzGfSwRMd8vSS+NwQTW7JhC5NDkbntEnAg5zQ+fxLrAuXUy1lzoVhmD2A2ula54Ys
-	 gbbPuo2FfrVrTviTYkLtnEM7b/wAVl5hNdGUdO/XHJSsbRmMJbCjYeF9u/RMml0WSb
-	 c6Y0ibO05cVLWLbKCMGN91uqEFEeTC1OUVIGKUHE=
+	b=ES5U5KE0dj2UQ/7BSTFVCU36HBY/1ZaxCUS0reTWxrD/b9e7WUsUrgUnLob52CcuI
+	 6MP6/Y+y+DP2fC8s6+Wu4rirrhhvbLdVr1w09vgDKUlzt6MyJysB+8/KRsh6u3IWk1
+	 FiETVUrpMH9XEy56yFqRDdVXmBXvVPH7BHl6qmFI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728560AbgHJPZj (ORCPT
+        id S1728586AbgHJPZu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:25:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59408 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:25:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728539AbgHJPZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:25:35 -0400
+        id S1728574AbgHJPZq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:25:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43CC920658;
-        Mon, 10 Aug 2020 15:25:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 674AF208A9;
+        Mon, 10 Aug 2020 15:25:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073134;
-        bh=8aTXwZ4opx8LLQJfKMRpxPVdMjiXrdDmraPtP16ipPk=;
+        s=default; t=1597073146;
+        bh=NKmo2FJbVFaNrNPyrXYIqpOWrHXNGdpkOmevazIuIkQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PJ9V2mWvfgouekQ/8P4txSPjnW1WFGDk900eiaaZ+QrtWV3v75CL8iq8iYQCKJwyM
-         RTdKH/tHJj1HlXFjJgEmLeCNMOJgrPSE08kHeFN9+TiLvOEg/kse9+XLG7zEZNvUGb
-         bA7VTHK7H9Al9pDeQ/aTzBFZCi7iDHCmeuU855IE=
+        b=AgY/+Idfp7Mw9YWbYQi0pHNMmJiavd7KAMacl4DEgK1yJCN6h/5vgCfir0f9oGndx
+         sRLW7pOc1WbbUv/TuXBUneZCu2whTQ2Lgrx64sulCveNLCzwVj9GvZVjK1WxsyxvuS
+         tFUQKLISLN2u+MS8XPvxKVQDPGyzc/vF9NWDGj6c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sedat Dilek <sedat.dilek@gmail.com>
-Subject: [PATCH 5.7 79/79] arm64: kaslr: Use standard early random function
-Date:   Mon, 10 Aug 2020 17:21:38 +0200
-Message-Id: <20200810151816.114898609@linuxfoundation.org>
+        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
+        Guillaume Nault <gnault@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.7 73/79] Revert "vxlan: fix tos value before xmit"
+Date:   Mon, 10 Aug 2020 17:21:32 +0200
+Message-Id: <20200810151815.823346131@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151812.114485777@linuxfoundation.org>
 References: <20200810151812.114485777@linuxfoundation.org>
@@ -63,76 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guenter Roeck <linux@roeck-us.net>
+From: Hangbin Liu <liuhangbin@gmail.com>
 
-commit 9bceb80b3cc483e6763c39a4928402fa82815d3e upstream.
+[ Upstream commit a0dced17ad9dc08b1b25e0065b54c97a318e6e8b ]
 
-Commit 585524081ecd ("random: random.h should include archrandom.h, not
-the other way around") tries to fix a problem with recursive inclusion
-of linux/random.h and arch/archrandom.h for arm64.  Unfortunately, this
-results in the following compile error if ARCH_RANDOM is disabled.
+This reverts commit 71130f29979c7c7956b040673e6b9d5643003176.
 
-  arch/arm64/kernel/kaslr.c: In function 'kaslr_early_init':
-  arch/arm64/kernel/kaslr.c:128:6: error: implicit declaration of function '__early_cpu_has_rndr'; did you mean '__early_pfn_to_nid'? [-Werror=implicit-function-declaration]
-    if (__early_cpu_has_rndr()) {
-        ^~~~~~~~~~~~~~~~~~~~
-        __early_pfn_to_nid
-  arch/arm64/kernel/kaslr.c:131:7: error: implicit declaration of function '__arm64_rndr' [-Werror=implicit-function-declaration]
-     if (__arm64_rndr(&raw))
-         ^~~~~~~~~~~~
+In commit 71130f29979c ("vxlan: fix tos value before xmit") we want to
+make sure the tos value are filtered by RT_TOS() based on RFC1349.
 
-The problem is that arch/archrandom.h is only included from
-linux/random.h if ARCH_RANDOM is enabled.  If not, __arm64_rndr() and
-__early_cpu_has_rndr() are undeclared, causing the problem.
+       0     1     2     3     4     5     6     7
+    +-----+-----+-----+-----+-----+-----+-----+-----+
+    |   PRECEDENCE    |          TOS          | MBZ |
+    +-----+-----+-----+-----+-----+-----+-----+-----+
 
-Use arch_get_random_seed_long_early() instead of arm64 specific
-functions to solve the problem.
+But RFC1349 has been obsoleted by RFC2474. The new DSCP field defined like
 
-Reported-by: Qian Cai <cai@lca.pw>
-Fixes: 585524081ecd ("random: random.h should include archrandom.h, not the other way around")
-Cc: Qian Cai <cai@lca.pw>
-Cc: Mark Brown <broonie@kernel.org>
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-Reviewed-by: Mark Brown <broonie@kernel.org>
-Tested-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Sedat Dilek <sedat.dilek@gmail.com>
+       0     1     2     3     4     5     6     7
+    +-----+-----+-----+-----+-----+-----+-----+-----+
+    |          DS FIELD, DSCP           | ECN FIELD |
+    +-----+-----+-----+-----+-----+-----+-----+-----+
+
+So with
+
+IPTOS_TOS_MASK          0x1E
+RT_TOS(tos)		((tos)&IPTOS_TOS_MASK)
+
+the first 3 bits DSCP info will get lost.
+
+To take all the DSCP info in xmit, we should revert the patch and just push
+all tos bits to ip_tunnel_ecn_encap(), which will handling ECN field later.
+
+Fixes: 71130f29979c ("vxlan: fix tos value before xmit")
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+Acked-by: Guillaume Nault <gnault@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- arch/arm64/kernel/kaslr.c |   12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+ drivers/net/vxlan.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/arm64/kernel/kaslr.c
-+++ b/arch/arm64/kernel/kaslr.c
-@@ -84,6 +84,7 @@ u64 __init kaslr_early_init(u64 dt_phys)
- 	void *fdt;
- 	u64 seed, offset, mask, module_range;
- 	const u8 *cmdline, *str;
-+	unsigned long raw;
- 	int size;
+--- a/drivers/net/vxlan.c
++++ b/drivers/net/vxlan.c
+@@ -2550,7 +2550,7 @@ static void vxlan_xmit_one(struct sk_buf
+ 		ndst = &rt->dst;
+ 		skb_tunnel_check_pmtu(skb, ndst, VXLAN_HEADROOM);
  
- 	/*
-@@ -122,15 +123,12 @@ u64 __init kaslr_early_init(u64 dt_phys)
- 	}
+-		tos = ip_tunnel_ecn_encap(RT_TOS(tos), old_iph, skb);
++		tos = ip_tunnel_ecn_encap(tos, old_iph, skb);
+ 		ttl = ttl ? : ip4_dst_hoplimit(&rt->dst);
+ 		err = vxlan_build_skb(skb, ndst, sizeof(struct iphdr),
+ 				      vni, md, flags, udp_sum);
+@@ -2590,7 +2590,7 @@ static void vxlan_xmit_one(struct sk_buf
  
- 	/*
--	 * Mix in any entropy obtainable architecturally, open coded
--	 * since this runs extremely early.
-+	 * Mix in any entropy obtainable architecturally if enabled
-+	 * and supported.
- 	 */
--	if (__early_cpu_has_rndr()) {
--		unsigned long raw;
+ 		skb_tunnel_check_pmtu(skb, ndst, VXLAN6_HEADROOM);
  
--		if (__arm64_rndr(&raw))
--			seed ^= raw;
--	}
-+	if (arch_get_random_seed_long_early(&raw))
-+		seed ^= raw;
- 
- 	if (!seed) {
- 		kaslr_status = KASLR_DISABLED_NO_SEED;
+-		tos = ip_tunnel_ecn_encap(RT_TOS(tos), old_iph, skb);
++		tos = ip_tunnel_ecn_encap(tos, old_iph, skb);
+ 		ttl = ttl ? : ip6_dst_hoplimit(ndst);
+ 		skb_scrub_packet(skb, xnet);
+ 		err = vxlan_build_skb(skb, ndst, sizeof(struct ipv6hdr),
 
 
