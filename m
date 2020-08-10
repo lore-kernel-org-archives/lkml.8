@@ -2,91 +2,66 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9207C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:30:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4068C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:30:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B679622B4B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:30:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597087831;
-	bh=ykiEy8HpZNwiqBDjKTD4vYL3gmZa6nUXJE0IRzyYAT0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bsiZWapYWZdldz9K97z723351z2aoxbFcfHJTbSogSg+lMZX0wY+VNWfrcxtfJHF6
-	 bwsF+SGsDygmlUmA0KjzlAWj9dsqLTI9HaLOd2pcq6o4Iqz3Y3GJ1QWrYg0SdP5SGD
-	 cky7EFi+9IxwN/ykmJGK6VT+J9+5PBDiJLPJWNOw=
+	by mail.kernel.org (Postfix) with ESMTP id B8C1F22B47
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:30:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728334AbgHJTa1 (ORCPT
+        id S1729581AbgHJTae (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:30:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37660 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728934AbgHJTKY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:30:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41982 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728931AbgHJTKY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Aug 2020 15:10:24 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 449B922B45;
-        Mon, 10 Aug 2020 19:10:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086624;
-        bh=ykiEy8HpZNwiqBDjKTD4vYL3gmZa6nUXJE0IRzyYAT0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rGe73gt0Ny15ZSR8o9sH9kfiG5KrP2ZO47sWvStEO9Y0Z7IArvf3Xy5iBAW0o+zkI
-         TbGBkEdFr591t9PPNkkBBx6IZDpQ1t5X3g2iuHpbWmy3YYMazv/2FDOaeX1XJH2hOG
-         WDxx/sDDJcYqx+bFwxLDk+MMyB3WGgCbfeDHvA48=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pavel Begunkov <asml.silence@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-fsdevel@vger.kernel.org, io-uring@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 62/64] io_uring: fix stalled deferred requests
-Date:   Mon, 10 Aug 2020 15:08:57 -0400
-Message-Id: <20200810190859.3793319-62-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200810190859.3793319-1-sashal@kernel.org>
-References: <20200810190859.3793319-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC83AC061756;
+        Mon, 10 Aug 2020 12:10:23 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 13FEE12752967;
+        Mon, 10 Aug 2020 11:53:37 -0700 (PDT)
+Date:   Mon, 10 Aug 2020 12:10:21 -0700 (PDT)
+Message-Id: <20200810.121021.1473385153484096771.davem@davemloft.net>
+To:     doshir@vmware.com
+Cc:     netdev@vger.kernel.org, pv-drivers@vmware.com, kuba@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 net-next] vmxnet3: use correct tcp hdr length when
+ packet is encapsulated
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200810165555.12523-1-doshir@vmware.com>
+References: <20200810165555.12523-1-doshir@vmware.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 10 Aug 2020 11:53:37 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Begunkov <asml.silence@gmail.com>
+From: Ronak Doshi <doshir@vmware.com>
+Date: Mon, 10 Aug 2020 09:55:55 -0700
 
-[ Upstream commit dd9dfcdf5a603680458f5e7b0d2273c66e5417db ]
+> Commit dacce2be3312 ("vmxnet3: add geneve and vxlan tunnel offload
+> support") added support for encapsulation offload. However, while
+> calculating tcp hdr length, it does not take into account if the
+> packet is encapsulated or not.
+> 
+> This patch fixes this issue by using correct reference for inner
+> tcp header.
+> 
+> Fixes: dacce2be3312 ("vmxnet3: add geneve and vxlan tunnel offload support")
+> Signed-off-by: Ronak Doshi <doshir@vmware.com>
+> Acked-by: Guolin Yang <gyang@vmware.com>
 
-Always do io_commit_cqring() after completing a request, even if it was
-accounted as overflowed on the CQ side. Failing to do that may lead to
-not to pushing deferred requests when needed, and so stalling the whole
-ring.
-
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/io_uring.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 73f5e0a9bf2bd..be790f3f13b5c 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -7531,6 +7531,7 @@ static void io_uring_cancel_files(struct io_ring_ctx *ctx,
- 			}
- 			WRITE_ONCE(ctx->rings->cq_overflow,
- 				atomic_inc_return(&ctx->cached_cq_overflow));
-+			io_commit_cqring(ctx);
- 			spin_unlock_irq(&ctx->completion_lock);
- 
- 			/*
--- 
-2.25.1
-
+Applied, thanks.
