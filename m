@@ -2,51 +2,53 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F37C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:30:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B428BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:30:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5ECAF22BEA
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:30:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F8FC22B47
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:30:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597087842;
-	bh=B7pz3A/RGxlVPXqUbuyVNgpNuReQn/DdqP+RwKMq5vo=;
+	s=default; t=1597087848;
+	bh=g+Wy7iCnNpmyB5BLU7r9saNvxQus1BUEvV7pAy8bNcg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z1jiuqp4jNzYjgLXCyUfsUlF/D1HraeLXaDfJ2IPQmEq4jISHY4vzzSwE14h5EG1Q
-	 8xI2+qV6Prh3/fTskhXpqC3BnH/LkkAQ9JYJtPp4zFQxqtS4QXPIs8VTkfzwiHn03+
-	 E1lq1DmfB3YipaugtMobGBejD7XYGbdnjqcO0HIE=
+	b=FFgav/+OXQ+n1XjNvNBSELu8P9tG00tnU4xtMdTM4366yCmhccoR7N1yaJOONoDPV
+	 XMc7zEeWhMA6ilr2WF8iyY205qkiJX9exPjeCmI5BF+A0j5NJZCR0UGlFDF9HxkVHo
+	 MSCNsSri+5WHrFu3bozMKeE9OZKvpvCcXwT7v4lo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728835AbgHJTal (ORCPT
+        id S1729679AbgHJTaq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:30:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37608 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:30:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728922AbgHJTKX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:10:23 -0400
+        id S1728919AbgHJTKW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:10:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7FDC22B47;
-        Mon, 10 Aug 2020 19:10:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FA35221E2;
+        Mon, 10 Aug 2020 19:10:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086622;
-        bh=B7pz3A/RGxlVPXqUbuyVNgpNuReQn/DdqP+RwKMq5vo=;
+        s=default; t=1597086621;
+        bh=g+Wy7iCnNpmyB5BLU7r9saNvxQus1BUEvV7pAy8bNcg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PiYnedJVx/Eu7fcr+nuZ2pfgM5io3xIT0SkSFNRgMhAWpxSEnzYxUd0rjYm6/jfvC
-         t1yNtc7m09ScS6ev2bS7Z00uxoeX76b0Z3KzLCbBMHaoQrVJk7X0kbFw+E5hBiGJMD
-         iTTLytYWZFngBvmpfGkCBDXd2wL6mppJwJWqzFPE=
+        b=kFyZIsme+pivG0gpoJrDv1XKz84wsoTP7w3BYW0zyV7TRMiKDdjln88kHQsgeNKoj
+         JpnipQjZnqtpuxuBELvB30YfjJaNDrLGUqppPHdNtqAyQqo5pKxzyBxh5BwByNH1YN
+         1LCnwk4CYfCP0OZX/5WDtZXfYRL6R3vwb4cdM0IY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pavel Begunkov <asml.silence@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 61/64] io_uring: fix racy overflow count reporting
-Date:   Mon, 10 Aug 2020 15:08:56 -0400
-Message-Id: <20200810190859.3793319-61-sashal@kernel.org>
+Cc:     Erik Kaneda <erik.kaneda@intel.com>,
+        Bob Moore <robert.moore@intel.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org,
+        devel@acpica.org
+Subject: [PATCH AUTOSEL 5.8 60/64] ACPICA: Do not increment operation_region reference counts for field units
+Date:   Mon, 10 Aug 2020 15:08:55 -0400
+Message-Id: <20200810190859.3793319-60-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810190859.3793319-1-sashal@kernel.org>
 References: <20200810190859.3793319-1-sashal@kernel.org>
@@ -59,37 +61,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Begunkov <asml.silence@gmail.com>
+From: Erik Kaneda <erik.kaneda@intel.com>
 
-[ Upstream commit b2bd1cf99f3e7c8fbf12ea07af2c6998e1209e25 ]
+[ Upstream commit 6a54ebae6d047c988a31f5ac5a64ab5cf83797a2 ]
 
-All ->cq_overflow modifications should be under completion_lock,
-otherwise it can report a wrong number to the userspace. Fix it in
-io_uring_cancel_files().
+ACPICA commit e17b28cfcc31918d0db9547b6b274b09c413eb70
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Object reference counts are used as a part of ACPICA's garbage
+collection mechanism. This mechanism keeps track of references to
+heap-allocated structures such as the ACPI operand objects.
+
+Recent server firmware has revealed that this reference count can
+overflow on large servers that declare many field units under the
+same operation_region. This occurs because each field unit declaration
+will add a reference count to the source operation_region.
+
+This change solves the reference count overflow for operation_regions
+objects by preventing fieldunits from incrementing their
+operation_region's reference count. Each operation_region's reference
+count will not be changed by named objects declared under the Field
+operator. During namespace deletion, the operation_region namespace
+node will be deleted and each fieldunit will be deleted without
+touching the deleted operation_region object.
+
+Link: https://github.com/acpica/acpica/commit/e17b28cf
+Signed-off-by: Erik Kaneda <erik.kaneda@intel.com>
+Signed-off-by: Bob Moore <robert.moore@intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/io_uring.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/acpi/acpica/exprep.c   | 4 ----
+ drivers/acpi/acpica/utdelete.c | 6 +-----
+ 2 files changed, 1 insertion(+), 9 deletions(-)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index acd98df1f7d44..73f5e0a9bf2bd 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -7529,10 +7529,9 @@ static void io_uring_cancel_files(struct io_ring_ctx *ctx,
- 				clear_bit(0, &ctx->cq_check_overflow);
- 				ctx->rings->sq_flags &= ~IORING_SQ_CQ_OVERFLOW;
+diff --git a/drivers/acpi/acpica/exprep.c b/drivers/acpi/acpica/exprep.c
+index a4e306690a21b..4a0f03157e082 100644
+--- a/drivers/acpi/acpica/exprep.c
++++ b/drivers/acpi/acpica/exprep.c
+@@ -473,10 +473,6 @@ acpi_status acpi_ex_prep_field_value(struct acpi_create_field_info *info)
+ 				    (u8)access_byte_width;
  			}
--			spin_unlock_irq(&ctx->completion_lock);
+ 		}
+-		/* An additional reference for the container */
 -
- 			WRITE_ONCE(ctx->rings->cq_overflow,
- 				atomic_inc_return(&ctx->cached_cq_overflow));
-+			spin_unlock_irq(&ctx->completion_lock);
+-		acpi_ut_add_reference(obj_desc->field.region_obj);
+-
+ 		ACPI_DEBUG_PRINT((ACPI_DB_BFIELD,
+ 				  "RegionField: BitOff %X, Off %X, Gran %X, Region %p\n",
+ 				  obj_desc->field.start_field_bit_offset,
+diff --git a/drivers/acpi/acpica/utdelete.c b/drivers/acpi/acpica/utdelete.c
+index c365faf4e6cd4..4c0d4e4341961 100644
+--- a/drivers/acpi/acpica/utdelete.c
++++ b/drivers/acpi/acpica/utdelete.c
+@@ -568,11 +568,6 @@ acpi_ut_update_object_reference(union acpi_operand_object *object, u16 action)
+ 			next_object = object->buffer_field.buffer_obj;
+ 			break;
  
- 			/*
- 			 * Put inflight ref and overflow ref. If that's
+-		case ACPI_TYPE_LOCAL_REGION_FIELD:
+-
+-			next_object = object->field.region_obj;
+-			break;
+-
+ 		case ACPI_TYPE_LOCAL_BANK_FIELD:
+ 
+ 			next_object = object->bank_field.bank_obj;
+@@ -613,6 +608,7 @@ acpi_ut_update_object_reference(union acpi_operand_object *object, u16 action)
+ 			}
+ 			break;
+ 
++		case ACPI_TYPE_LOCAL_REGION_FIELD:
+ 		case ACPI_TYPE_REGION:
+ 		default:
+ 
 -- 
 2.25.1
 
