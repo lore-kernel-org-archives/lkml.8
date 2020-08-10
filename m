@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E933C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:24:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E5C8C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:24:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E296E208A9
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:24:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDCF822D0B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:24:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073041;
-	bh=YPDX0crp7GERTlrl95GtvjvBnhsR8R4/6rjI44AeOc0=;
+	s=default; t=1597073045;
+	bh=BUZN2iYRYEWpPGvZM9TCQ2IgpLUABmspH7+7b8Y+DXo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=loMFR2UlPYz1YbAGEIsSOU2uT/N9rlYM4NIQUDM81wyJ+k0UCEn0vqq8q7dRfWpCO
-	 zDK36jg8JPKBl2D8phv8nriC8KB7xLUnfmmxnzordCMV7iJYsfl6c8L+40upFLECFG
-	 Zu3w/U6qMT/XmUFA4vp9YJo8yVm/+jIvcME8Gzz8=
+	b=La6LH3Jc0ijVKrs9rTF6gGCQXZlcHl0gY5mOsUzk+Q9qjGJyNeQ0Svf04sn2CBm/a
+	 CkzIj0UBZuMV4jzJnTo+PsX0ZwuQFAs3rNWCe7GqoXnshcib9ZMSWJbqlo2EtL+RtD
+	 M60hmyf/lqiVbQ0mnuv7gkW1wqsuDU+R5Y8m2ypg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728399AbgHJPX7 (ORCPT
+        id S1728407AbgHJPYC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:23:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56198 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:24:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728392AbgHJPXy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:23:54 -0400
+        id S1728093AbgHJPX5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:23:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCD8020782;
-        Mon, 10 Aug 2020 15:23:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CECF922B4B;
+        Mon, 10 Aug 2020 15:23:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073034;
-        bh=YPDX0crp7GERTlrl95GtvjvBnhsR8R4/6rjI44AeOc0=;
+        s=default; t=1597073037;
+        bh=BUZN2iYRYEWpPGvZM9TCQ2IgpLUABmspH7+7b8Y+DXo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WgF4qe7ZetUpdcCbeISChIHyzaWi2EcWPbBUtLCwY7qSXNHqE2RRFDomjOGCYbEcl
-         hZ/LQlPce91Us8SR/T30Bvvtm2ogPo1pisE+5ORnzpy9ZIT6e7sy6n/vSXEDkvzrHZ
-         C6P3dG3/mLJLKs86x0kQ1HzzTjc53uoLsrvwUphI=
+        b=xO6reyXAXk5D51i3v+gvZQJkgWrChRGhr41BmK3rU2zaryFMIgbAC5qEGhWAgkSF0
+         wWyCLruF/OW+ZsX2QLOx4+GsCyUdHFnVOh/haDJnrAM4SG1LyoJdS+Tu/sUSEeTgvA
+         L6UkAt5gEgOpfWinp5hVK6lPVFHjYa/KKaoN2qsE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Begunkov <asml.silence@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 36/79] io_uring: fix lockup in io_fail_links()
-Date:   Mon, 10 Aug 2020 17:20:55 +0200
-Message-Id: <20200810151814.064738321@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Ren=C3=A9=20van=20Dorst?= <opensource@vdorst.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 45/79] net: ethernet: mtk_eth_soc: Always call mtk_gmac0_rgmii_adjust() for mt7623
+Date:   Mon, 10 Aug 2020 17:21:04 +0200
+Message-Id: <20200810151814.497793574@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151812.114485777@linuxfoundation.org>
 References: <20200810151812.114485777@linuxfoundation.org>
@@ -59,54 +63,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Begunkov <asml.silence@gmail.com>
+From: René van Dorst <opensource@vdorst.com>
 
-[ Upstream commit 4ae6dbd683860b9edc254ea8acf5e04b5ae242e5 ]
+[ Upstream commit 19016d93bfc335f0c158c0d9e3b9d06c4dd53d39 ]
 
-io_fail_links() doesn't consider REQ_F_COMP_LOCKED leading to nested
-spin_lock(completion_lock) and lockup.
+Modify mtk_gmac0_rgmii_adjust() so it can always be called.
+mtk_gmac0_rgmii_adjust() sets-up the TRGMII clocks.
 
-[  197.680409] rcu: INFO: rcu_preempt detected expedited stalls on
-	CPUs/tasks: { 6-... } 18239 jiffies s: 1421 root: 0x40/.
-[  197.680411] rcu: blocking rcu_node structures:
-[  197.680412] Task dump for CPU 6:
-[  197.680413] link-timeout    R  running task        0  1669
-	1 0x8000008a
-[  197.680414] Call Trace:
-[  197.680420]  ? io_req_find_next+0xa0/0x200
-[  197.680422]  ? io_put_req_find_next+0x2a/0x50
-[  197.680423]  ? io_poll_task_func+0xcf/0x140
-[  197.680425]  ? task_work_run+0x67/0xa0
-[  197.680426]  ? do_exit+0x35d/0xb70
-[  197.680429]  ? syscall_trace_enter+0x187/0x2c0
-[  197.680430]  ? do_group_exit+0x43/0xa0
-[  197.680448]  ? __x64_sys_exit_group+0x18/0x20
-[  197.680450]  ? do_syscall_64+0x52/0xa0
-[  197.680452]  ? entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: René van Dorst <opensource@vdorst.com>
+Signed-off-By: David Woodhouse <dwmw2@infradead.org>
+Tested-by: Frank Wunderlich <frank-w@public-files.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/io_uring.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/ethernet/mediatek/mtk_eth_soc.c | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 4e09af1d5d223..fb9dc865c9eaa 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -4260,10 +4260,9 @@ static void io_poll_task_handler(struct io_kiocb *req, struct io_kiocb **nxt)
- 
- 	hash_del(&req->hash_node);
- 	io_poll_complete(req, req->result, 0);
--	req->flags |= REQ_F_COMP_LOCKED;
--	io_put_req_find_next(req, nxt);
- 	spin_unlock_irq(&ctx->completion_lock);
- 
-+	io_put_req_find_next(req, nxt);
- 	io_cqring_ev_posted(ctx);
+diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+index b743d8b56c848..82f5690ff4d30 100644
+--- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
++++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+@@ -171,11 +171,21 @@ static int mt7621_gmac0_rgmii_adjust(struct mtk_eth *eth,
+ 	return 0;
  }
  
+-static void mtk_gmac0_rgmii_adjust(struct mtk_eth *eth, int speed)
++static void mtk_gmac0_rgmii_adjust(struct mtk_eth *eth,
++				   phy_interface_t interface, int speed)
+ {
+ 	u32 val;
+ 	int ret;
+ 
++	if (interface == PHY_INTERFACE_MODE_TRGMII) {
++		mtk_w32(eth, TRGMII_MODE, INTF_MODE);
++		val = 500000000;
++		ret = clk_set_rate(eth->clks[MTK_CLK_TRGPLL], val);
++		if (ret)
++			dev_err(eth->dev, "Failed to set trgmii pll: %d\n", ret);
++		return;
++	}
++
+ 	val = (speed == SPEED_1000) ?
+ 		INTF_MODE_RGMII_1000 : INTF_MODE_RGMII_10_100;
+ 	mtk_w32(eth, val, INTF_MODE);
+@@ -262,10 +272,9 @@ static void mtk_mac_config(struct phylink_config *config, unsigned int mode,
+ 							      state->interface))
+ 					goto err_phy;
+ 			} else {
+-				if (state->interface !=
+-				    PHY_INTERFACE_MODE_TRGMII)
+-					mtk_gmac0_rgmii_adjust(mac->hw,
+-							       state->speed);
++				mtk_gmac0_rgmii_adjust(mac->hw,
++						       state->interface,
++						       state->speed);
+ 
+ 				/* mt7623_pad_clk_setup */
+ 				for (i = 0 ; i < NUM_TRGMII_CTRL; i++)
 -- 
 2.25.1
 
