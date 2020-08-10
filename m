@@ -7,45 +7,44 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 837B9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:01:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 667CAC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:01:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56C37206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:01:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DCE4206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:01:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="NrHMTLMi"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="IFXvG6+U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726965AbgHJWBx (ORCPT
+        id S1726980AbgHJWB4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 18:01:53 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:17437 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726657AbgHJWBw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 18:01:52 -0400
+        Mon, 10 Aug 2020 18:01:56 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:33944 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726897AbgHJWBy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 18:01:54 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597096911; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1597096913; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=xMY0O1xeL6kDCowrwUvGj3wJ0vz9brzkeVT9VotSpM0=; b=NrHMTLMit6PPZEwDbI5wNDLPmHNofEoSUc2YvduZge2lMrDrX5sy8nxLYh1N60DbJzZGSDMb
- gesVbiTg/Fj7YNzVrGkXwjKN2dH0eRZSAul9mAZ480RoG0NHrlNoFOZH1m2UQLAJNo1+N3oo
- S6uRxDib51q7gbry8B2DZpWsgf4=
-X-Mailgun-Sending-Ip: 104.130.122.29
+ bh=hzCCILvdutEOoElZcexPsK0xDQiZOeHuVxRPtnS4sYA=; b=IFXvG6+UcGFPDywsx4fhtJ8ecmE5cCrHIApWq7zXgNB4zA/32H90OgkRbvvgffecWbvxMU0r
+ s3NeJrjN0myRAOzr88ROnf/94sNxZhI08E7kzrRQVxg7HjlfqAVYdHJAdDoyR3O3jC0zFxMy
+ LinR0nenW2UQYjQPWZDvXZlV4EM=
+X-Mailgun-Sending-Ip: 69.72.43.7
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n06.prod.us-east-1.postgun.com with SMTP id
- 5f31c3ac91f8def8b29f04ef (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 10 Aug 2020 22:01:16
+ smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
+ 5f31c3ab85672017515f8425 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 10 Aug 2020 22:01:15
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 3B3D4C43391; Mon, 10 Aug 2020 22:01:15 +0000 (UTC)
+        id CEF4BC433A0; Mon, 10 Aug 2020 22:01:14 +0000 (UTC)
 Received: from malabar-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: bbhatt)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8A008C43395;
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1AA7DC433C9;
         Mon, 10 Aug 2020 22:01:14 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8A008C43395
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1AA7DC433C9
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bbhatt@codeaurora.org
 From:   Bhaumik Bhatt <bbhatt@codeaurora.org>
@@ -53,9 +52,9 @@ To:     manivannan.sadhasivam@linaro.org
 Cc:     linux-arm-msm@vger.kernel.org, hemantk@codeaurora.org,
         jhugo@codeaurora.org, linux-kernel@vger.kernel.org,
         Bhaumik Bhatt <bbhatt@codeaurora.org>
-Subject: [PATCH v7 03/11] bus: mhi: core: Use helper API to trigger a non-blocking host resume
-Date:   Mon, 10 Aug 2020 15:00:57 -0700
-Message-Id: <1597096865-19636-4-git-send-email-bbhatt@codeaurora.org>
+Subject: [PATCH v7 02/11] bus: mhi: core: Abort suspends due to outgoing pending packets
+Date:   Mon, 10 Aug 2020 15:00:56 -0700
+Message-Id: <1597096865-19636-3-git-send-email-bbhatt@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1597096865-19636-1-git-send-email-bbhatt@codeaurora.org>
 References: <1597096865-19636-1-git-send-email-bbhatt@codeaurora.org>
@@ -64,122 +63,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Autonomous low power mode support requires the MHI host to resume from
-multiple places and post a wakeup source to exit system suspend. This
-needs to be done in a non-blocking manner. Introduce a helper API to
-trigger the host resume for data transfers and other non-blocking use
-cases while supporting implementation of autonomous low power modes.
+Add the missing check to abort suspends if a client driver has pending
+outgoing packets to send to the device. This allows better utilization
+of the MHI bus wherein clients on the host are not left waiting for
+longer suspend or resume cycles to finish for data transfers.
 
 Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
 Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- drivers/bus/mhi/core/internal.h |  7 +++++++
- drivers/bus/mhi/core/main.c     | 21 +++++++--------------
- drivers/bus/mhi/core/pm.c       | 13 ++++---------
- 3 files changed, 18 insertions(+), 23 deletions(-)
+ drivers/bus/mhi/core/pm.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/bus/mhi/core/internal.h b/drivers/bus/mhi/core/internal.h
-index bcfa7b6..1bbd6e9 100644
---- a/drivers/bus/mhi/core/internal.h
-+++ b/drivers/bus/mhi/core/internal.h
-@@ -599,6 +599,13 @@ int __mhi_device_get_sync(struct mhi_controller *mhi_cntrl);
- int mhi_send_cmd(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan,
- 		 enum mhi_cmd_type cmd);
- 
-+static inline void mhi_trigger_resume(struct mhi_controller *mhi_cntrl)
-+{
-+	pm_wakeup_event(&mhi_cntrl->mhi_dev->dev, 0);
-+	mhi_cntrl->runtime_get(mhi_cntrl);
-+	mhi_cntrl->runtime_put(mhi_cntrl);
-+}
-+
- /* Register access methods */
- void mhi_db_brstmode(struct mhi_controller *mhi_cntrl, struct db_cfg *db_cfg,
- 		     void __iomem *db_addr, dma_addr_t db_val);
-diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
-index 1f622ce..79be18e 100644
---- a/drivers/bus/mhi/core/main.c
-+++ b/drivers/bus/mhi/core/main.c
-@@ -909,8 +909,7 @@ void mhi_ctrl_ev_task(unsigned long data)
- 		 * process it since we are probably in a suspended state,
- 		 * so trigger a resume.
- 		 */
--		mhi_cntrl->runtime_get(mhi_cntrl);
--		mhi_cntrl->runtime_put(mhi_cntrl);
-+		mhi_trigger_resume(mhi_cntrl);
- 
- 		return;
- 	}
-@@ -971,10 +970,8 @@ int mhi_queue_skb(struct mhi_device *mhi_dev, enum dma_data_direction dir,
- 	}
- 
- 	/* we're in M3 or transitioning to M3 */
--	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state)) {
--		mhi_cntrl->runtime_get(mhi_cntrl);
--		mhi_cntrl->runtime_put(mhi_cntrl);
--	}
-+	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state))
-+		mhi_trigger_resume(mhi_cntrl);
- 
- 	/* Toggle wake to exit out of M2 */
- 	mhi_cntrl->wake_toggle(mhi_cntrl);
-@@ -1032,10 +1029,8 @@ int mhi_queue_dma(struct mhi_device *mhi_dev, enum dma_data_direction dir,
- 	}
- 
- 	/* we're in M3 or transitioning to M3 */
--	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state)) {
--		mhi_cntrl->runtime_get(mhi_cntrl);
--		mhi_cntrl->runtime_put(mhi_cntrl);
--	}
-+	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state))
-+		mhi_trigger_resume(mhi_cntrl);
- 
- 	/* Toggle wake to exit out of M2 */
- 	mhi_cntrl->wake_toggle(mhi_cntrl);
-@@ -1147,10 +1142,8 @@ int mhi_queue_buf(struct mhi_device *mhi_dev, enum dma_data_direction dir,
- 	read_lock_irqsave(&mhi_cntrl->pm_lock, flags);
- 
- 	/* we're in M3 or transitioning to M3 */
--	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state)) {
--		mhi_cntrl->runtime_get(mhi_cntrl);
--		mhi_cntrl->runtime_put(mhi_cntrl);
--	}
-+	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state))
-+		mhi_trigger_resume(mhi_cntrl);
- 
- 	/* Toggle wake to exit out of M2 */
- 	mhi_cntrl->wake_toggle(mhi_cntrl);
 diff --git a/drivers/bus/mhi/core/pm.c b/drivers/bus/mhi/core/pm.c
-index 661d704..b227d41 100644
+index 7960980..661d704 100644
 --- a/drivers/bus/mhi/core/pm.c
 +++ b/drivers/bus/mhi/core/pm.c
-@@ -824,11 +824,8 @@ int __mhi_device_get_sync(struct mhi_controller *mhi_cntrl)
- 	/* Wake up the device */
- 	read_lock_bh(&mhi_cntrl->pm_lock);
- 	mhi_cntrl->wake_get(mhi_cntrl, true);
--	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state)) {
--		pm_wakeup_event(&mhi_cntrl->mhi_dev->dev, 0);
--		mhi_cntrl->runtime_get(mhi_cntrl);
--		mhi_cntrl->runtime_put(mhi_cntrl);
--	}
-+	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state))
-+		mhi_trigger_resume(mhi_cntrl);
- 	read_unlock_bh(&mhi_cntrl->pm_lock);
+@@ -686,7 +686,8 @@ int mhi_pm_suspend(struct mhi_controller *mhi_cntrl)
+ 		return -EIO;
  
- 	ret = wait_event_timeout(mhi_cntrl->state_event,
-@@ -1139,10 +1136,8 @@ void mhi_device_put(struct mhi_device *mhi_dev)
+ 	/* Return busy if there are any pending resources */
+-	if (atomic_read(&mhi_cntrl->dev_wake))
++	if (atomic_read(&mhi_cntrl->dev_wake) ||
++	    atomic_read(&mhi_cntrl->pending_pkts))
+ 		return -EBUSY;
  
- 	mhi_dev->dev_wake--;
- 	read_lock_bh(&mhi_cntrl->pm_lock);
--	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state)) {
--		mhi_cntrl->runtime_get(mhi_cntrl);
--		mhi_cntrl->runtime_put(mhi_cntrl);
--	}
-+	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state))
-+		mhi_trigger_resume(mhi_cntrl);
+ 	/* Take MHI out of M2 state */
+@@ -712,7 +713,8 @@ int mhi_pm_suspend(struct mhi_controller *mhi_cntrl)
  
- 	mhi_cntrl->wake_put(mhi_cntrl, false);
- 	read_unlock_bh(&mhi_cntrl->pm_lock);
+ 	write_lock_irq(&mhi_cntrl->pm_lock);
+ 
+-	if (atomic_read(&mhi_cntrl->dev_wake)) {
++	if (atomic_read(&mhi_cntrl->dev_wake) ||
++	    atomic_read(&mhi_cntrl->pending_pkts)) {
+ 		write_unlock_irq(&mhi_cntrl->pm_lock);
+ 		return -EBUSY;
+ 	}
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
