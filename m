@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3888C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:11:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93452C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:11:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 935BA207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:11:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F05E207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:11:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597086665;
-	bh=Z6K4uvy4C7W23CznrC/gasZ1erGhoQ4x23h6wbcUX98=;
+	s=default; t=1597086675;
+	bh=ennhsl72JIfwXruWZfItgNWSZh7AZzhHO7YlSTF7RGo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gpXlstka4r/PJEmJ/8FyOanrbP5TDl9Vi2JPR4TXZmHAN5/vDrbmK7Tjqhgrub87R
-	 f8/jNaqQiKTNRTVMScedLc8I07JAjrSLKKy/K/omiTiJenHuMiAaxRFGyxVxAG4D6l
-	 YAtCWrPhs07qfnZ7xAhClCTDt+2Z19PWkGzcQCYA=
+	b=gLsmZK5Lffev1N23qProW4+349k7JYpsd6OKFo0PNvnjbJ35ulCmym87RD321KrTe
+	 25kcXjK11Xv/wL7hXdLfiXFkLblsZG3b7KJep2/bWcp/Vquxtnlqb58RQUhByKDFrW
+	 mat/EL+BYx6xgzgHXlB/sEpYSZk2YcYzC43IZjB4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729147AbgHJTLE (ORCPT
+        id S1729203AbgHJTLO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:11:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38574 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:11:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728230AbgHJTKv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:10:51 -0400
+        id S1728589AbgHJTLB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:11:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0253A207FF;
-        Mon, 10 Aug 2020 19:10:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B24022B4B;
+        Mon, 10 Aug 2020 19:10:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086650;
-        bh=Z6K4uvy4C7W23CznrC/gasZ1erGhoQ4x23h6wbcUX98=;
+        s=default; t=1597086660;
+        bh=ennhsl72JIfwXruWZfItgNWSZh7AZzhHO7YlSTF7RGo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SZv2fHr4LqkyO49K/1D8bIvl8sdooHDKT/HdFinIRBIpg6tkPxKLNsv30ZSRNv4OJ
-         04VX8Dv0uEw4XwLh7LxZioZa5tacLG5PQ3YHEp04RJcolfjHpPmHr4LeVcKf2vdV8d
-         tXRpb+C2//XOevd/8UdGzPfEZaMRR2u43nrZHQLY=
+        b=YmEsfmllXDL9AGu3Q4Kie3dz6EyjmIxOTJzVJUa2LTRwRhtgi3Rx9QSv7DR2m0ARi
+         qkzYJCgi8wVCygaH6K6+j/gMS7P83eyJvOy5dQeXTAwkZXvl4Cy3v6BWgO9oAb0Ub+
+         EfBcCGMdSe4mL+sFvlkCz/nzZqPb7TQB+0XEQSEo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lyude Paul <lyude@redhat.com>, Ben Skeggs <bskeggs@redhat.com>,
-        Dave Airlie <airlied@gmail.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.7 16/60] drm/nouveau/kms/nv50-: Fix disabling dithering
-Date:   Mon, 10 Aug 2020 15:09:44 -0400
-Message-Id: <20200810191028.3793884-16-sashal@kernel.org>
+Cc:     Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 23/60] btrfs: fix lockdep splat from btrfs_dump_space_info
+Date:   Mon, 10 Aug 2020 15:09:51 -0400
+Message-Id: <20200810191028.3793884-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810191028.3793884-1-sashal@kernel.org>
 References: <20200810191028.3793884-1-sashal@kernel.org>
@@ -60,62 +59,196 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lyude Paul <lyude@redhat.com>
+From: Josef Bacik <josef@toxicpanda.com>
 
-[ Upstream commit fb2420b701edbf96c2b6d557f0139902f455dc2b ]
+[ Upstream commit ab0db043c35da3477e57d4d516492b2d51a5ca0f ]
 
-While we expose the ability to turn off hardware dithering for nouveau,
-we actually make the mistake of turning it on anyway, due to
-dithering_depth containing a non-zero value if our dithering depth isn't
-also set to 6 bpc.
+When running with -o enospc_debug you can get the following splat if one
+of the dump_space_info's trip
 
-So, fix it by never enabling dithering when it's disabled.
+  ======================================================
+  WARNING: possible circular locking dependency detected
+  5.8.0-rc5+ #20 Tainted: G           OE
+  ------------------------------------------------------
+  dd/563090 is trying to acquire lock:
+  ffff9e7dbf4f1e18 (&ctl->tree_lock){+.+.}-{2:2}, at: btrfs_dump_free_space+0x2b/0xa0 [btrfs]
 
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Reviewed-by: Ben Skeggs <bskeggs@redhat.com>
-Acked-by: Dave Airlie <airlied@gmail.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200627194657.156514-6-lyude@redhat.com
+  but task is already holding lock:
+  ffff9e7e2284d428 (&cache->lock){+.+.}-{2:2}, at: btrfs_dump_space_info+0xaa/0x120 [btrfs]
+
+  which lock already depends on the new lock.
+
+  the existing dependency chain (in reverse order) is:
+
+  -> #3 (&cache->lock){+.+.}-{2:2}:
+	 _raw_spin_lock+0x25/0x30
+	 btrfs_add_reserved_bytes+0x3c/0x3c0 [btrfs]
+	 find_free_extent+0x7ef/0x13b0 [btrfs]
+	 btrfs_reserve_extent+0x9b/0x180 [btrfs]
+	 btrfs_alloc_tree_block+0xc1/0x340 [btrfs]
+	 alloc_tree_block_no_bg_flush+0x4a/0x60 [btrfs]
+	 __btrfs_cow_block+0x122/0x530 [btrfs]
+	 btrfs_cow_block+0x106/0x210 [btrfs]
+	 commit_cowonly_roots+0x55/0x300 [btrfs]
+	 btrfs_commit_transaction+0x4ed/0xac0 [btrfs]
+	 sync_filesystem+0x74/0x90
+	 generic_shutdown_super+0x22/0x100
+	 kill_anon_super+0x14/0x30
+	 btrfs_kill_super+0x12/0x20 [btrfs]
+	 deactivate_locked_super+0x36/0x70
+	 cleanup_mnt+0x104/0x160
+	 task_work_run+0x5f/0x90
+	 __prepare_exit_to_usermode+0x1bd/0x1c0
+	 do_syscall_64+0x5e/0xb0
+	 entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+  -> #2 (&space_info->lock){+.+.}-{2:2}:
+	 _raw_spin_lock+0x25/0x30
+	 btrfs_block_rsv_release+0x1a6/0x3f0 [btrfs]
+	 btrfs_inode_rsv_release+0x4f/0x170 [btrfs]
+	 btrfs_clear_delalloc_extent+0x155/0x480 [btrfs]
+	 clear_state_bit+0x81/0x1a0 [btrfs]
+	 __clear_extent_bit+0x25c/0x5d0 [btrfs]
+	 clear_extent_bit+0x15/0x20 [btrfs]
+	 btrfs_invalidatepage+0x2b7/0x3c0 [btrfs]
+	 truncate_cleanup_page+0x47/0xe0
+	 truncate_inode_pages_range+0x238/0x840
+	 truncate_pagecache+0x44/0x60
+	 btrfs_setattr+0x202/0x5e0 [btrfs]
+	 notify_change+0x33b/0x490
+	 do_truncate+0x76/0xd0
+	 path_openat+0x687/0xa10
+	 do_filp_open+0x91/0x100
+	 do_sys_openat2+0x215/0x2d0
+	 do_sys_open+0x44/0x80
+	 do_syscall_64+0x52/0xb0
+	 entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+  -> #1 (&tree->lock#2){+.+.}-{2:2}:
+	 _raw_spin_lock+0x25/0x30
+	 find_first_extent_bit+0x32/0x150 [btrfs]
+	 write_pinned_extent_entries.isra.0+0xc5/0x100 [btrfs]
+	 __btrfs_write_out_cache+0x172/0x480 [btrfs]
+	 btrfs_write_out_cache+0x7a/0xf0 [btrfs]
+	 btrfs_write_dirty_block_groups+0x286/0x3b0 [btrfs]
+	 commit_cowonly_roots+0x245/0x300 [btrfs]
+	 btrfs_commit_transaction+0x4ed/0xac0 [btrfs]
+	 close_ctree+0xf9/0x2f5 [btrfs]
+	 generic_shutdown_super+0x6c/0x100
+	 kill_anon_super+0x14/0x30
+	 btrfs_kill_super+0x12/0x20 [btrfs]
+	 deactivate_locked_super+0x36/0x70
+	 cleanup_mnt+0x104/0x160
+	 task_work_run+0x5f/0x90
+	 __prepare_exit_to_usermode+0x1bd/0x1c0
+	 do_syscall_64+0x5e/0xb0
+	 entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+  -> #0 (&ctl->tree_lock){+.+.}-{2:2}:
+	 __lock_acquire+0x1240/0x2460
+	 lock_acquire+0xab/0x360
+	 _raw_spin_lock+0x25/0x30
+	 btrfs_dump_free_space+0x2b/0xa0 [btrfs]
+	 btrfs_dump_space_info+0xf4/0x120 [btrfs]
+	 btrfs_reserve_extent+0x176/0x180 [btrfs]
+	 __btrfs_prealloc_file_range+0x145/0x550 [btrfs]
+	 cache_save_setup+0x28d/0x3b0 [btrfs]
+	 btrfs_start_dirty_block_groups+0x1fc/0x4f0 [btrfs]
+	 btrfs_commit_transaction+0xcc/0xac0 [btrfs]
+	 btrfs_alloc_data_chunk_ondemand+0x162/0x4c0 [btrfs]
+	 btrfs_check_data_free_space+0x4c/0xa0 [btrfs]
+	 btrfs_buffered_write.isra.0+0x19b/0x740 [btrfs]
+	 btrfs_file_write_iter+0x3cf/0x610 [btrfs]
+	 new_sync_write+0x11e/0x1b0
+	 vfs_write+0x1c9/0x200
+	 ksys_write+0x68/0xe0
+	 do_syscall_64+0x52/0xb0
+	 entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+  other info that might help us debug this:
+
+  Chain exists of:
+    &ctl->tree_lock --> &space_info->lock --> &cache->lock
+
+   Possible unsafe locking scenario:
+
+	 CPU0                    CPU1
+	 ----                    ----
+    lock(&cache->lock);
+				 lock(&space_info->lock);
+				 lock(&cache->lock);
+    lock(&ctl->tree_lock);
+
+   *** DEADLOCK ***
+
+  6 locks held by dd/563090:
+   #0: ffff9e7e21d18448 (sb_writers#14){.+.+}-{0:0}, at: vfs_write+0x195/0x200
+   #1: ffff9e7dd0410ed8 (&sb->s_type->i_mutex_key#19){++++}-{3:3}, at: btrfs_file_write_iter+0x86/0x610 [btrfs]
+   #2: ffff9e7e21d18638 (sb_internal#2){.+.+}-{0:0}, at: start_transaction+0x40b/0x5b0 [btrfs]
+   #3: ffff9e7e1f05d688 (&cur_trans->cache_write_mutex){+.+.}-{3:3}, at: btrfs_start_dirty_block_groups+0x158/0x4f0 [btrfs]
+   #4: ffff9e7e2284ddb8 (&space_info->groups_sem){++++}-{3:3}, at: btrfs_dump_space_info+0x69/0x120 [btrfs]
+   #5: ffff9e7e2284d428 (&cache->lock){+.+.}-{2:2}, at: btrfs_dump_space_info+0xaa/0x120 [btrfs]
+
+  stack backtrace:
+  CPU: 3 PID: 563090 Comm: dd Tainted: G           OE     5.8.0-rc5+ #20
+  Hardware name: To Be Filled By O.E.M. To Be Filled By O.E.M./890FX Deluxe5, BIOS P1.40 05/03/2011
+  Call Trace:
+   dump_stack+0x96/0xd0
+   check_noncircular+0x162/0x180
+   __lock_acquire+0x1240/0x2460
+   ? wake_up_klogd.part.0+0x30/0x40
+   lock_acquire+0xab/0x360
+   ? btrfs_dump_free_space+0x2b/0xa0 [btrfs]
+   _raw_spin_lock+0x25/0x30
+   ? btrfs_dump_free_space+0x2b/0xa0 [btrfs]
+   btrfs_dump_free_space+0x2b/0xa0 [btrfs]
+   btrfs_dump_space_info+0xf4/0x120 [btrfs]
+   btrfs_reserve_extent+0x176/0x180 [btrfs]
+   __btrfs_prealloc_file_range+0x145/0x550 [btrfs]
+   ? btrfs_qgroup_reserve_data+0x1d/0x60 [btrfs]
+   cache_save_setup+0x28d/0x3b0 [btrfs]
+   btrfs_start_dirty_block_groups+0x1fc/0x4f0 [btrfs]
+   btrfs_commit_transaction+0xcc/0xac0 [btrfs]
+   ? start_transaction+0xe0/0x5b0 [btrfs]
+   btrfs_alloc_data_chunk_ondemand+0x162/0x4c0 [btrfs]
+   btrfs_check_data_free_space+0x4c/0xa0 [btrfs]
+   btrfs_buffered_write.isra.0+0x19b/0x740 [btrfs]
+   ? ktime_get_coarse_real_ts64+0xa8/0xd0
+   ? trace_hardirqs_on+0x1c/0xe0
+   btrfs_file_write_iter+0x3cf/0x610 [btrfs]
+   new_sync_write+0x11e/0x1b0
+   vfs_write+0x1c9/0x200
+   ksys_write+0x68/0xe0
+   do_syscall_64+0x52/0xb0
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+This is because we're holding the block_group->lock while trying to dump
+the free space cache.  However we don't need this lock, we just need it
+to read the values for the printk, so move the free space cache dumping
+outside of the block group lock.
+
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/dispnv50/head.c | 24 +++++++++++++-----------
- 1 file changed, 13 insertions(+), 11 deletions(-)
+ fs/btrfs/space-info.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/nouveau/dispnv50/head.c b/drivers/gpu/drm/nouveau/dispnv50/head.c
-index 8f6455697ba72..ed6819519f6d8 100644
---- a/drivers/gpu/drm/nouveau/dispnv50/head.c
-+++ b/drivers/gpu/drm/nouveau/dispnv50/head.c
-@@ -84,18 +84,20 @@ nv50_head_atomic_check_dither(struct nv50_head_atom *armh,
- {
- 	u32 mode = 0x00;
- 
--	if (asyc->dither.mode == DITHERING_MODE_AUTO) {
--		if (asyh->base.depth > asyh->or.bpc * 3)
--			mode = DITHERING_MODE_DYNAMIC2X2;
--	} else {
--		mode = asyc->dither.mode;
--	}
-+	if (asyc->dither.mode) {
-+		if (asyc->dither.mode == DITHERING_MODE_AUTO) {
-+			if (asyh->base.depth > asyh->or.bpc * 3)
-+				mode = DITHERING_MODE_DYNAMIC2X2;
-+		} else {
-+			mode = asyc->dither.mode;
-+		}
- 
--	if (asyc->dither.depth == DITHERING_DEPTH_AUTO) {
--		if (asyh->or.bpc >= 8)
--			mode |= DITHERING_DEPTH_8BPC;
--	} else {
--		mode |= asyc->dither.depth;
-+		if (asyc->dither.depth == DITHERING_DEPTH_AUTO) {
-+			if (asyh->or.bpc >= 8)
-+				mode |= DITHERING_DEPTH_8BPC;
-+		} else {
-+			mode |= asyc->dither.depth;
-+		}
+diff --git a/fs/btrfs/space-info.c b/fs/btrfs/space-info.c
+index 756950aba1a66..317d1d2160090 100644
+--- a/fs/btrfs/space-info.c
++++ b/fs/btrfs/space-info.c
+@@ -468,8 +468,8 @@ void btrfs_dump_space_info(struct btrfs_fs_info *fs_info,
+ 			"block group %llu has %llu bytes, %llu used %llu pinned %llu reserved %s",
+ 			cache->start, cache->length, cache->used, cache->pinned,
+ 			cache->reserved, cache->ro ? "[readonly]" : "");
+-		btrfs_dump_free_space(cache, bytes);
+ 		spin_unlock(&cache->lock);
++		btrfs_dump_free_space(cache, bytes);
  	}
- 
- 	asyh->dither.enable = mode;
+ 	if (++index < BTRFS_NR_RAID_TYPES)
+ 		goto again;
 -- 
 2.25.1
 
