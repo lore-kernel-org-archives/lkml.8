@@ -2,156 +2,130 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D3CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 10:39:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA5BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 10:41:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7ED8206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 10:39:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 108242073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 10:41:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="UgBxCuji"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726457AbgHJKjq (ORCPT
+        id S1726396AbgHJKlY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 06:39:46 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:9255 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726141AbgHJKjq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 06:39:46 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id A9F50F1C55EE3D0DF714;
-        Mon, 10 Aug 2020 18:39:43 +0800 (CST)
-Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 10 Aug 2020 18:39:33 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH] f2fs: compress: use more readable atomic_t type for {cic,dic}.ref
-Date:   Mon, 10 Aug 2020 18:39:30 +0800
-Message-ID: <20200810103930.37836-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.26.2
+        Mon, 10 Aug 2020 06:41:24 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:62218 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726141AbgHJKlW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 06:41:22 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597056081; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=bOfrWCltEVI8DM/7pKEvaC9vrWo0+jptX7+Cco4h2KM=;
+ b=UgBxCujiKv66KOoYmW5Xr7nJ8xwtzXOP3E+hT+A8NoYVyIsyYwaZO88G0X0s/8OPwbc8fB4R
+ 9mlIbSRNQZq5YgRA+KfN0i5NmKyksPgvKVxocvDr16ipjyAjjnZd+H7BqCjWNnnt/vsAcuiX
+ w+G3R6OZ9FAF28MsXvjRP7quU3o=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n12.prod.us-west-2.postgun.com with SMTP id
+ 5f31243d1e4d3989d43ac09e (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 10 Aug 2020 10:41:01
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 36E27C433CA; Mon, 10 Aug 2020 10:41:01 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 80FD0C433C6;
+        Mon, 10 Aug 2020 10:41:00 +0000 (UTC)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 10 Aug 2020 16:11:00 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org,
+        viresh.kumar@linaro.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH] opp: Fix dev_pm_opp_set_rate() to not return early
+In-Reply-To: <1597043179-17903-1-git-send-email-rnayak@codeaurora.org>
+References: <1597043179-17903-1-git-send-email-rnayak@codeaurora.org>
+Message-ID: <6b35716fbf56b2a37ed2a7e4e5bbec87@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-refcount_t type variable should never be less than one, so it's a
-little bit hard to understand when we use it to indicate pending
-compressed page count, let's change to use atomic_t for better
-readability.
+On 2020-08-10 12:36, Rajendra Nayak wrote:
+> dev_pm_opp_set_rate() can now be called with freq = 0 inorder
+> to either drop performance or bandwidth votes or to disable
+> regulators on platforms which support them.
+> In such cases, a subsequent call to dev_pm_opp_set_rate() with
+> the same frequency ends up returning early because 'old_freq == freq'
+> Instead make it fall through and put back the dropped performance
+> and bandwidth votes and/or enable back the regulators.
+> 
+> Fixes: cd7ea582 ("opp: Make dev_pm_opp_set_rate() handle freq = 0 to
+> drop performance votes")
+> Reported-by: Sajida Bhanu <sbhanu@codeaurora.org>
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
- fs/f2fs/compress.c | 10 +++++-----
- fs/f2fs/data.c     |  6 +++---
- fs/f2fs/f2fs.h     |  4 ++--
- 3 files changed, 10 insertions(+), 10 deletions(-)
+Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
 
-diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
-index 3bb112e91cf6..38eb6707f883 100644
---- a/fs/f2fs/compress.c
-+++ b/fs/f2fs/compress.c
-@@ -677,7 +677,7 @@ void f2fs_decompress_pages(struct bio *bio, struct page *page, bool verity)
- 	if (bio->bi_status || PageError(page))
- 		dic->failed = true;
- 
--	if (refcount_dec_not_one(&dic->ref))
-+	if (atomic_dec_return(&dic->pending_pages))
- 		return;
- 
- 	trace_f2fs_decompress_pages_start(dic->inode, dic->cluster_idx,
-@@ -746,7 +746,7 @@ void f2fs_decompress_pages(struct bio *bio, struct page *page, bool verity)
- 		cops->destroy_decompress_ctx(dic);
- out_free_dic:
- 	if (verity)
--		refcount_set(&dic->ref, dic->nr_cpages);
-+		atomic_set(&dic->pending_pages, dic->nr_cpages);
- 	if (!verity)
- 		f2fs_decompress_end_io(dic->rpages, dic->cluster_size,
- 								ret, false);
-@@ -1161,7 +1161,7 @@ static int f2fs_write_compressed_pages(struct compress_ctx *cc,
- 
- 	cic->magic = F2FS_COMPRESSED_PAGE_MAGIC;
- 	cic->inode = inode;
--	refcount_set(&cic->ref, cc->nr_cpages);
-+	atomic_set(&cic->pending_pages, cc->nr_cpages);
- 	cic->rpages = f2fs_kzalloc(sbi, sizeof(struct page *) <<
- 			cc->log_cluster_size, GFP_NOFS);
- 	if (!cic->rpages)
-@@ -1296,7 +1296,7 @@ void f2fs_compress_write_end_io(struct bio *bio, struct page *page)
- 
- 	dec_page_count(sbi, F2FS_WB_DATA);
- 
--	if (refcount_dec_not_one(&cic->ref))
-+	if (atomic_dec_return(&cic->pending_pages))
- 		return;
- 
- 	for (i = 0; i < cic->nr_rpages; i++) {
-@@ -1438,7 +1438,7 @@ struct decompress_io_ctx *f2fs_alloc_dic(struct compress_ctx *cc)
- 
- 	dic->magic = F2FS_COMPRESSED_PAGE_MAGIC;
- 	dic->inode = cc->inode;
--	refcount_set(&dic->ref, cc->nr_cpages);
-+	atomic_set(&dic->pending_pages, cc->nr_cpages);
- 	dic->cluster_idx = cc->cluster_idx;
- 	dic->cluster_size = cc->cluster_size;
- 	dic->log_cluster_size = cc->log_cluster_size;
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index c1b676be67b9..024e1695ae66 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -201,7 +201,7 @@ static void f2fs_verify_bio(struct bio *bio)
- 		dic = (struct decompress_io_ctx *)page_private(page);
- 
- 		if (dic) {
--			if (refcount_dec_not_one(&dic->ref))
-+			if (atomic_dec_return(&dic->pending_pages))
- 				continue;
- 			f2fs_verify_pages(dic->rpages,
- 						dic->cluster_size);
-@@ -2222,8 +2222,8 @@ int f2fs_read_multi_pages(struct compress_ctx *cc, struct bio **bio_ret,
- 			if (IS_ERR(bio)) {
- 				ret = PTR_ERR(bio);
- 				dic->failed = true;
--				if (refcount_sub_and_test(dic->nr_cpages - i,
--							&dic->ref)) {
-+				if (!atomic_sub_return(dic->nr_cpages - i,
-+							&dic->pending_pages)) {
- 					f2fs_decompress_end_io(dic->rpages,
- 							cc->cluster_size, true,
- 							false);
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 16322ea5b463..61da996ea4cc 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -1366,7 +1366,7 @@ struct compress_io_ctx {
- 	struct inode *inode;		/* inode the context belong to */
- 	struct page **rpages;		/* pages store raw data in cluster */
- 	unsigned int nr_rpages;		/* total page number in rpages */
--	refcount_t ref;			/* referrence count of raw page */
-+	atomic_t pending_pages;		/* in-flight compressed page count */
- };
- 
- /* decompress io context for read IO path */
-@@ -1385,7 +1385,7 @@ struct decompress_io_ctx {
- 	struct compress_data *cbuf;	/* virtual mapped address on cpages */
- 	size_t rlen;			/* valid data length in rbuf */
- 	size_t clen;			/* valid data length in cbuf */
--	refcount_t ref;			/* referrence count of compressed page */
-+	atomic_t pending_pages;		/* in-flight compressed page count */
- 	bool failed;			/* indicate IO error during decompression */
- 	void *private;			/* payload buffer for specified decompression algorithm */
- 	void *private2;			/* extra payload buffer */
+> ---
+>  drivers/opp/core.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+> index 0c8c74a..a994f30 100644
+> --- a/drivers/opp/core.c
+> +++ b/drivers/opp/core.c
+> @@ -901,6 +901,9 @@ int dev_pm_opp_set_rate(struct device *dev,
+> unsigned long target_freq)
+> 
+>  	/* Return early if nothing to do */
+>  	if (old_freq == freq) {
+> +		if (opp_table->required_opp_tables || opp_table->regulators ||
+> +		    opp_table->paths)
+> +			goto skip_clk_only;
+>  		dev_dbg(dev, "%s: old/new frequencies (%lu Hz) are same, nothing to 
+> do\n",
+>  			__func__, freq);
+>  		ret = 0;
+> @@ -919,6 +922,7 @@ int dev_pm_opp_set_rate(struct device *dev,
+> unsigned long target_freq)
+>  		goto put_opp_table;
+>  	}
+> 
+> +skip_clk_only:
+>  	temp_freq = old_freq;
+>  	old_opp = _find_freq_ceil(opp_table, &temp_freq);
+>  	if (IS_ERR(old_opp)) {
+> @@ -954,8 +958,10 @@ int dev_pm_opp_set_rate(struct device *dev,
+> unsigned long target_freq)
+>  						 IS_ERR(old_opp) ? NULL : old_opp->supplies,
+>  						 opp->supplies);
+>  	} else {
+> +		ret = 0;
+>  		/* Only frequency scaling */
+> -		ret = _generic_set_opp_clk_only(dev, clk, freq);
+> +		if (freq != old_freq)
+> +			ret = _generic_set_opp_clk_only(dev, clk, freq);
+>  	}
+> 
+>  	/* Scaling down? Configure required OPPs after frequency */
+
 -- 
-2.26.2
-
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
