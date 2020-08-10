@@ -2,89 +2,164 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 636DCC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:18:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 821E7C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:22:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FBB72073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:18:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="adOmvN9N"
+	by mail.kernel.org (Postfix) with ESMTP id 630D32073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:22:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726933AbgHJWSL (ORCPT
+        id S1726798AbgHJWWp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 18:18:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42820 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726841AbgHJWSF (ORCPT
+        Mon, 10 Aug 2020 18:22:45 -0400
+Received: from mail107.syd.optusnet.com.au ([211.29.132.53]:36133 "EHLO
+        mail107.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726500AbgHJWWo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 18:18:05 -0400
-Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89FAFC061787
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 15:18:04 -0700 (PDT)
-Received: by mail-pg1-x536.google.com with SMTP id o13so5733442pgf.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 15:18:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=9g8qtC2V4GxzmzZnkUZiLYQpHL1EZPwlKyzwefOemH0=;
-        b=adOmvN9Nh5Suu6Rr0ep559QiIFKSh6WVwTDWFA3E5IPQ8JTo6c6V1S2hhqTL5YhKq6
-         Fe1vLM4FdGV5u9+AJCiOEAJD/CSxl6aCXYP8Eee04JbdVZDFEIMPq3ax4n8SC8ngwA8S
-         QfyOD8iUtD9AEPfY7GNfGTzbl8JmSHfWdaJmrtHbNoVuGd2A8GoyuZNM2kc/FcoUv2Tv
-         ou2axvuOdArvKWxvENZ7Yhsad2M0LnkJ8/D0XMgxdoWsZAUJG6akoHYp37UZdovcSLAR
-         BUU8LfAgcvd6j748HEVdAQriBB4tGKw2Ols9mMChzbTx0tBAoYt3E37Xvrivt9G+Dbbr
-         RK0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=9g8qtC2V4GxzmzZnkUZiLYQpHL1EZPwlKyzwefOemH0=;
-        b=m16jgsoc2onSg2Q20zWyCY3u6mFpS1sWrjRzKemsSLx1vRN/KiJWVaSA0ggB2HUUnX
-         FAqejZ99oKP1sevkxBqmHwy8e5xuLSRRncglZ8Ut67CUcBw3atQtEoMlj4QW3YP086qc
-         mDTv7x5nm3otqF/rZgIwdI+ogydPM+VMfd4HmD0BT5dVEhpab8omjWEdTwnoihD6mM0L
-         yJeX0MNoeesHF0f7IrwG/7XcU51w9VzfV/9qFA2lhPGIED7ghmR/+JTBl/kqoPLLqMq1
-         X22ojz6cPtDN+YtylqpuqgS4mGWgssxPMKzsWEf0B7wPllKgerVigCEiQ8U+DSEDRi6L
-         u1Ug==
-X-Gm-Message-State: AOAM531n3chj2339Ph9q3YvR7KBg4aQgnRnfEnG4UigrepI6uGufFqyI
-        AZsZo3uOE89MJT8OywxMLUIlCg==
-X-Google-Smtp-Source: ABdhPJx9lnuS7+qH12wiV7U1ngctEYmUJ4OoiBcArJNsL5iYq+ebYnx24jafb/3FYN+x5XD96Z5mXA==
-X-Received: by 2002:a62:768e:: with SMTP id r136mr3295501pfc.187.1597097884004;
-        Mon, 10 Aug 2020 15:18:04 -0700 (PDT)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.gmail.com with ESMTPSA id r134sm23791051pfc.1.2020.08.10.15.18.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Aug 2020 15:18:03 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-amlogic@lists.infradead.org
-Subject: Re: [PATCH] arm64: dts: meson: vim3: make sound card common to all variants
-Date:   Mon, 10 Aug 2020 15:18:00 -0700
-Message-Id: <159709786936.10576.5338765095406106083.b4-ty@baylibre.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200803142158.173402-1-jbrunet@baylibre.com>
-References: <20200803142158.173402-1-jbrunet@baylibre.com>
+        Mon, 10 Aug 2020 18:22:44 -0400
+Received: from dread.disaster.area (pa49-180-53-24.pa.nsw.optusnet.com.au [49.180.53.24])
+        by mail107.syd.optusnet.com.au (Postfix) with ESMTPS id E7389D5AFD7;
+        Tue, 11 Aug 2020 08:22:40 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1k5GBi-0007nF-LK; Tue, 11 Aug 2020 08:22:38 +1000
+Date:   Tue, 11 Aug 2020 08:22:38 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Vivek Goyal <vgoyal@redhat.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        virtio-fs@redhat.com, miklos@szeredi.hu, stefanha@redhat.com,
+        dgilbert@redhat.com
+Subject: Re: [PATCH v2 15/20] fuse, dax: Take ->i_mmap_sem lock during dax
+ page fault
+Message-ID: <20200810222238.GD2079@dread.disaster.area>
+References: <20200807195526.426056-1-vgoyal@redhat.com>
+ <20200807195526.426056-16-vgoyal@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200807195526.426056-16-vgoyal@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=QIgWuTDL c=1 sm=1 tr=0
+        a=moVtWZxmCkf3aAMJKIb/8g==:117 a=moVtWZxmCkf3aAMJKIb/8g==:17
+        a=kj9zAlcOel0A:10 a=y4yBn9ojGxQA:10 a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8
+        a=rPINo3o76Op-SQJf9JMA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 3 Aug 2020 16:21:58 +0200, Jerome Brunet wrote:
-> The vim3 sound card definition should be same all the vim3 variants
-> Move the definition to the appropriate device tree file.
+On Fri, Aug 07, 2020 at 03:55:21PM -0400, Vivek Goyal wrote:
+> We need some kind of locking mechanism here. Normal file systems like
+> ext4 and xfs seems to take their own semaphore to protect agains
+> truncate while fault is going on.
+> 
+> We have additional requirement to protect against fuse dax memory range
+> reclaim. When a range has been selected for reclaim, we need to make sure
+> no other read/write/fault can try to access that memory range while
+> reclaim is in progress. Once reclaim is complete, lock will be released
+> and read/write/fault will trigger allocation of fresh dax range.
+> 
+> Taking inode_lock() is not an option in fault path as lockdep complains
+> about circular dependencies. So define a new fuse_inode->i_mmap_sem.
 
-Applied, thanks!
+That's precisely why filesystems like ext4 and XFS define their own
+rwsem.
 
-[1/1] arm64: dts: meson: vim3: make sound card common to all variants
-      (no commit info)
+Note that this isn't a DAX requirement - the page fault
+serialisation is actually a requirement of hole punching...
 
-Best regards,
+> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+> ---
+>  fs/fuse/dir.c    |  2 ++
+>  fs/fuse/file.c   | 15 ++++++++++++---
+>  fs/fuse/fuse_i.h |  7 +++++++
+>  fs/fuse/inode.c  |  1 +
+>  4 files changed, 22 insertions(+), 3 deletions(-)
+> 
+> diff --git a/fs/fuse/dir.c b/fs/fuse/dir.c
+> index 26f028bc760b..f40766c0693b 100644
+> --- a/fs/fuse/dir.c
+> +++ b/fs/fuse/dir.c
+> @@ -1609,8 +1609,10 @@ int fuse_do_setattr(struct dentry *dentry, struct iattr *attr,
+>  	 */
+>  	if ((is_truncate || !is_wb) &&
+>  	    S_ISREG(inode->i_mode) && oldsize != outarg.attr.size) {
+> +		down_write(&fi->i_mmap_sem);
+>  		truncate_pagecache(inode, outarg.attr.size);
+>  		invalidate_inode_pages2(inode->i_mapping);
+> +		up_write(&fi->i_mmap_sem);
+>  	}
+>  
+>  	clear_bit(FUSE_I_SIZE_UNSTABLE, &fi->state);
+> diff --git a/fs/fuse/file.c b/fs/fuse/file.c
+> index be7d90eb5b41..00ad27216cc3 100644
+> --- a/fs/fuse/file.c
+> +++ b/fs/fuse/file.c
+> @@ -2878,11 +2878,18 @@ static vm_fault_t __fuse_dax_fault(struct vm_fault *vmf,
+>  
+>  	if (write)
+>  		sb_start_pagefault(sb);
+> -
+> +	/*
+> +	 * We need to serialize against not only truncate but also against
+> +	 * fuse dax memory range reclaim. While a range is being reclaimed,
+> +	 * we do not want any read/write/mmap to make progress and try
+> +	 * to populate page cache or access memory we are trying to free.
+> +	 */
+> +	down_read(&get_fuse_inode(inode)->i_mmap_sem);
+>  	ret = dax_iomap_fault(vmf, pe_size, &pfn, NULL, &fuse_iomap_ops);
+>  
+>  	if (ret & VM_FAULT_NEEDDSYNC)
+>  		ret = dax_finish_sync_fault(vmf, pe_size, pfn);
+> +	up_read(&get_fuse_inode(inode)->i_mmap_sem);
+>  
+>  	if (write)
+>  		sb_end_pagefault(sb);
+> @@ -3849,9 +3856,11 @@ static long fuse_file_fallocate(struct file *file, int mode, loff_t offset,
+>  			file_update_time(file);
+>  	}
+>  
+> -	if (mode & FALLOC_FL_PUNCH_HOLE)
+> +	if (mode & FALLOC_FL_PUNCH_HOLE) {
+> +		down_write(&fi->i_mmap_sem);
+>  		truncate_pagecache_range(inode, offset, offset + length - 1);
+> -
+> +		up_write(&fi->i_mmap_sem);
+> +	}
+>  	fuse_invalidate_attr(inode);
+
+
+I'm not sure this is sufficient. You have to lock page faults out
+for the entire time the hole punch is being performed, not just while
+the mapping is being invalidated.
+
+That is, once you've taken the inode lock and written back the dirty
+data over the range being punched, you can then take a page fault
+and dirty the page again. Then after you punch the hole out,
+you have a dirty page with non-zero data in it, and that can get
+written out before the page cache is truncated.
+
+IOWs, to do a hole punch safely, you have to both lock the inode
+and lock out page faults *before* you write back dirty data. Then
+you can invalidate the page cache so you know there is no cached
+data over the range about to be punched. Once the punch is done,
+then you can drop all locks....
+
+The same goes for any other operation that manipulates extents
+directly (other fallocate ops, truncate, etc).
+
+/me also wonders if there can be racing AIO+DIO in progress over the
+range that is being punched and whether fuse needs to call
+inode_dio_wait() before punching holes, running truncates, etc...
+
+Cheers,
+
+Dave.
 -- 
-Kevin Hilman <khilman@baylibre.com>
+Dave Chinner
+david@fromorbit.com
