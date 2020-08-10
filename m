@@ -7,54 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C44FFC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 262C3C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:41:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F66A20774
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:41:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE56D20774
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:41:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597074110;
-	bh=OzsmA25owFxj0rqitKR2MBowKesqp44jQTh/7yr6E94=;
+	s=default; t=1597074119;
+	bh=Itc7IHb08ZGOHTDJBJwZojMpWgF91q1faBxQtgBUtgk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NdV6wrznjVNdhcvKReCo+M5aQZAvGnXVLe/9UQwvZrPhu4BasHgrtDaMQey38K7dd
-	 A+ImD7uzf6lpaRMswYqlawPc2LYPGgoiOv52DuApeRLNDY2zKQE9/KJOW3w9r4ymgA
-	 6esBG1R9ZAVMAL1FCkwkwMqPgFjEsyY0/triK/KE=
+	b=qltvzgVzD6+ZcUTaVjbXQk/8O4OL18bfFqPzYz0bLIj2OzVHjNKG3qttazWlhOJux
+	 VbjGZmOnvKOtrCmtbBz41tctiG6bfiqDZpOI0b6nSz0ipwyGk4LcZk+P53TRDDYhku
+	 dmks/mWKij3dyOhqDJiKc4mUYV6Kt/cqiqP5zato=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729102AbgHJPlt (ORCPT
+        id S1728705AbgHJPl5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:41:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53900 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:41:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728267AbgHJPW5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:22:57 -0400
+        id S1728244AbgHJPWs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:22:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C81B420768;
-        Mon, 10 Aug 2020 15:22:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D2B520782;
+        Mon, 10 Aug 2020 15:22:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597072976;
-        bh=OzsmA25owFxj0rqitKR2MBowKesqp44jQTh/7yr6E94=;
+        s=default; t=1597072967;
+        bh=Itc7IHb08ZGOHTDJBJwZojMpWgF91q1faBxQtgBUtgk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X0ntFu2IdLsbRy/51dbbBOmiZZp0VnbfFVXY19CyhuoKEP+9zWgCU6bgUgQ0byhDe
-         +3vp8KaoOvoRoBwhAvKpBs6draJcc/s4P53DFFkM/zn/8OUdi3QqV4B+d+WpBzcg9/
-         LVG6Zbsmc6M4S5mcERTvmUALZdbRcLC7UcE3HDJ4=
+        b=m/KNBIQd4PrbMp8WrO7drnHJYkq/93fM+BWFGArpZAFGvXE4RjpbamqNznFSHdWv7
+         6PXk+ZBNSQHQsN4+powt2I5/acka3shE+QlY6KZxQnjaRPieG+l/O/bAJPHb2Zjpgi
+         wQGp5XGMX7bWL6Bn65FdhKRhI6Y+B7I+tYg7AVPM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?=E5=BC=A0=E4=BA=91=E6=B5=B7?= <zhangyunhai@nsfocus.com>,
-        Yang Yingliang <yangyingliang@huawei.com>,
-        Kyungtae Kim <kt0755@gmail.com>, linux-fbdev@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Solar Designer <solar@openwall.com>,
-        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>,
-        Anthony Liguori <aliguori@amazon.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Jiri Slaby <jirislaby@kernel.org>
-Subject: [PATCH 5.7 23/79] vgacon: Fix for missing check in scrollback handling
-Date:   Mon, 10 Aug 2020 17:20:42 +0200
-Message-Id: <20200810151813.332203643@linuxfoundation.org>
+        stable@vger.kernel.org, Julia Lawall <julia.lawall@inria.fr>,
+        YueHaibing <yuehaibing@huawei.com>, jeyu@kernel.org,
+        cocci@systeme.lip6.fr, Matthias Maennich <maennich@google.com>,
+        Shuah Khan <skhan@linuxfoundation.org>
+Subject: [PATCH 5.7 21/79] scripts: add dummy report mode to add_namespace.cocci
+Date:   Mon, 10 Aug 2020 17:20:40 +0200
+Message-Id: <20200810151813.224449988@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151812.114485777@linuxfoundation.org>
 References: <20200810151812.114485777@linuxfoundation.org>
@@ -67,85 +61,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunhai Zhang <zhangyunhai@nsfocus.com>
+From: Matthias Maennich <maennich@google.com>
 
-commit ebfdfeeae8c01fcb2b3b74ffaf03876e20835d2d upstream.
+commit 55c7549819e438f40a3ef1d8ac5c38b73390bcb7 upstream.
 
-vgacon_scrollback_update() always leaves enbough room in the scrollback
-buffer for the next call, but if the console size changed that room
-might not actually be enough, and so we need to re-check.
+When running `make coccicheck` in report mode using the
+add_namespace.cocci file, it will fail for files that contain
+MODULE_LICENSE. Those match the replacement precondition, but spatch
+errors out as virtual.ns is not set.
 
-The check should be in the loop since vgacon_scrollback_cur->tail is
-updated in the loop and count may be more than 1 when triggered by CSI M,
-as Jiri's PoC:
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/ioctl.h>
-#include <fcntl.h>
+In order to fix that, add the virtual rule nsdeps and only do search and
+replace if that rule has been explicitly requested.
 
-int main(int argc, char** argv)
-{
-        int fd = open("/dev/tty1", O_RDWR);
-        unsigned short size[3] = {25, 200, 0};
-        ioctl(fd, 0x5609, size); // VT_RESIZE
+In order to make spatch happy in report mode, we also need a dummy rule,
+as otherwise it errors out with "No rules apply". Using a script:python
+rule appears unrelated and odd, but this is the shortest I could come up
+with.
 
-        write(fd, "\e[1;1H", 6);
-        for (int i = 0; i < 30; i++)
-                write(fd, "\e[10M", 5);
-}
+Adjust scripts/nsdeps accordingly to set the nsdeps rule when run trough
+`make nsdeps`.
 
-It leads to various crashes as vgacon_scrollback_update writes out of
-the buffer:
- BUG: unable to handle page fault for address: ffffc900001752a0
- #PF: supervisor write access in kernel mode
- #PF: error_code(0x0002) - not-present page
- RIP: 0010:mutex_unlock+0x13/0x30
-...
- Call Trace:
-  n_tty_write+0x1a0/0x4d0
-  tty_write+0x1a0/0x2e0
-
-Or to KASAN reports:
-BUG: KASAN: slab-out-of-bounds in vgacon_scroll+0x57a/0x8ed
-
-This fixes CVE-2020-14331.
-
-Reported-by: 张云海 <zhangyunhai@nsfocus.com>
-Reported-by: Yang Yingliang <yangyingliang@huawei.com>
-Reported-by: Kyungtae Kim <kt0755@gmail.com>
-Fixes: 15bdab959c9b ([PATCH] vgacon: Add support for soft scrollback)
+Suggested-by: Julia Lawall <julia.lawall@inria.fr>
+Fixes: c7c4e29fb5a4 ("scripts: add_namespace: Fix coccicheck failed")
+Cc: YueHaibing <yuehaibing@huawei.com>
+Cc: jeyu@kernel.org
+Cc: cocci@systeme.lip6.fr
 Cc: stable@vger.kernel.org
-Cc: linux-fbdev@vger.kernel.org
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Solar Designer <solar@openwall.com>
-Cc: "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
-Cc: Anthony Liguori <aliguori@amazon.com>
-Cc: Yang Yingliang <yangyingliang@huawei.com>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: Jiri Slaby <jirislaby@kernel.org>
-Signed-off-by: Yunhai Zhang <zhangyunhai@nsfocus.com>
-Link: https://lore.kernel.org/r/9fb43895-ca91-9b07-ebfd-808cf854ca95@nsfocus.com
+Signed-off-by: Matthias Maennich <maennich@google.com>
+Reported-by: Shuah Khan <skhan@linuxfoundation.org>
+Acked-by: Julia Lawall <julia.lawall@inria.fr>
+Link: https://lore.kernel.org/r/20200604164145.173925-1-maennich@google.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/video/console/vgacon.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ scripts/coccinelle/misc/add_namespace.cocci |    8 +++++++-
+ scripts/nsdeps                              |    2 +-
+ 2 files changed, 8 insertions(+), 2 deletions(-)
 
---- a/drivers/video/console/vgacon.c
-+++ b/drivers/video/console/vgacon.c
-@@ -251,6 +251,10 @@ static void vgacon_scrollback_update(str
- 	p = (void *) (c->vc_origin + t * c->vc_size_row);
+--- a/scripts/coccinelle/misc/add_namespace.cocci
++++ b/scripts/coccinelle/misc/add_namespace.cocci
+@@ -6,6 +6,7 @@
+ /// add a missing namespace tag to a module source file.
+ ///
  
- 	while (count--) {
-+		if ((vgacon_scrollback_cur->tail + c->vc_size_row) >
-+		    vgacon_scrollback_cur->size)
-+			vgacon_scrollback_cur->tail = 0;
++virtual nsdeps
+ virtual report
+ 
+ @has_ns_import@
+@@ -16,10 +17,15 @@ MODULE_IMPORT_NS(ns);
+ 
+ // Add missing imports, but only adjacent to a MODULE_LICENSE statement.
+ // That ensures we are adding it only to the main module source file.
+-@do_import depends on !has_ns_import@
++@do_import depends on !has_ns_import && nsdeps@
+ declarer name MODULE_LICENSE;
+ expression license;
+ identifier virtual.ns;
+ @@
+ MODULE_LICENSE(license);
+ + MODULE_IMPORT_NS(ns);
 +
- 		scr_memcpyw(vgacon_scrollback_cur->data +
- 			    vgacon_scrollback_cur->tail,
- 			    p, c->vc_size_row);
++// Dummy rule for report mode that would otherwise be empty and make spatch
++// fail ("No rules apply.")
++@script:python depends on report@
++@@
+--- a/scripts/nsdeps
++++ b/scripts/nsdeps
+@@ -29,7 +29,7 @@ fi
+ 
+ generate_deps_for_ns() {
+ 	$SPATCH --very-quiet --in-place --sp-file \
+-		$srctree/scripts/coccinelle/misc/add_namespace.cocci -D ns=$1 $2
++		$srctree/scripts/coccinelle/misc/add_namespace.cocci -D nsdeps -D ns=$1 $2
+ }
+ 
+ generate_deps() {
 
 
