@@ -2,166 +2,187 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD5FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 06:20:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD44C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 06:22:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E490206B5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 06:20:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 711752078D
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 06:22:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="XB3tJsIE"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Q77inBMn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726331AbgHJGU1 (ORCPT
+        id S1726415AbgHJGWV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 02:20:27 -0400
-Received: from mail-am6eur05on2040.outbound.protection.outlook.com ([40.107.22.40]:9825
-        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725763AbgHJGUZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 02:20:25 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gWSq+dc80UMP/InHYpOVsjlGGsphgfA4UWXwVlPWSHDHhCg0OkrPlqvOebSHf86f+rQMbn6yWHPbeufBhYVLZYRhQxkd1IOawwCcGmkMl8N8gsWuVwxxUG7Ow/H59Le7Nmb/wSNtgLsw29Ael1FqnjOqg/t3XXGTTYulEbDDTV8Hwea3hGWg9hwE6S07N7u5ama3mrG6CmHj5+LfWWjEDYQbl1uLzfCUTqdX/Ebyx3L73bxSe/uQ5KYCvXZyzPFhugUjM3C8W433QVCBLB7f7HOy/r19BXK+ewrlvRGT5jNu0LbsmyI2IbkEAcqYOR7KtBkP/JadoRTi++mndVpAxA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hSm7k20HOZpmr1tZrO2W1rqBeo9usfX8VtLs99TRYE0=;
- b=Tj7eOzBe0IyyzR+EhT3sD2oqshsNOPttOaSbbkd/dFUGvZCglBpCywpH9HmblyFZJs+uWCpYHiLcK1qWZ9A+byJAGNKbKlAEVjdyMezGdK/ElQwH4QgjdYbOXUXr06PWigXUpPmQelAf1v8aGxxL6Y3pzvOsHN9yHTpR1AKPgrT4lT83eqbnYzg/dH9NYcUL1KZA1oTm/fWgeWU9BLD1bUm5qTq0K2GFa/yM77qXfzmDq/SbcUuAC3LruOJGELJCcYrb3Rziz8ngGaK75RG8HaXDaD6pqcHNiFU0EDAYoayMkxVRA5+YK8fjy+mQUy+YTajLGGzve/a+NZm/uw0SGA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hSm7k20HOZpmr1tZrO2W1rqBeo9usfX8VtLs99TRYE0=;
- b=XB3tJsIE/BPeh3qeY3t8nUbc2Vz5OVeKjbogexmcZs5rsnEXer15lZJdN5OjqaWt4E04F9T2sBhpec9WtYjOzkjKUeclC+5oZwXNu6/P5ug9hM+zmwIGPLXwJdJLncM/N91iXzxQORFoqiaxZ6TnY2lUqj0RSfM1lPMpHrj5NVE=
-Received: from AM0PR0402MB3809.eurprd04.prod.outlook.com
- (2603:10a6:208:10::30) by AM0PR04MB7042.eurprd04.prod.outlook.com
- (2603:10a6:208:1a2::11) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.17; Mon, 10 Aug
- 2020 06:20:22 +0000
-Received: from AM0PR0402MB3809.eurprd04.prod.outlook.com
- ([fe80::156f:d82d:35d4:4f02]) by AM0PR0402MB3809.eurprd04.prod.outlook.com
- ([fe80::156f:d82d:35d4:4f02%2]) with mapi id 15.20.3261.022; Mon, 10 Aug 2020
- 06:20:22 +0000
-From:   Jason Liu <jason.hui.liu@nxp.com>
-To:     Oliver Graute <oliver.graute@gmail.com>
-CC:     Anson Huang <anson.huang@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: arm64: imx8qm: tlb SW workaround for IMX8QM
-Thread-Topic: arm64: imx8qm: tlb SW workaround for IMX8QM
-Thread-Index: AQHWHJJL3sMk5DuHM0ub5NdDHp2bnKiM71gAgKSSOACAAAECAA==
-Date:   Mon, 10 Aug 2020 06:20:22 +0000
-Message-ID: <AM0PR0402MB3809CD2049E4B97ECC8A362CAE440@AM0PR0402MB3809.eurprd04.prod.outlook.com>
-References: <20200427082348.GA98329@archlinux.localdomain>
- <20200427130328.GA101181@archlinux.localdomain>
- <20200810061324.GA66637@archlinux.localdomain>
-In-Reply-To: <20200810061324.GA66637@archlinux.localdomain>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.67]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: c3ef980b-7bfa-49f2-d35d-08d83cf57674
-x-ms-traffictypediagnostic: AM0PR04MB7042:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB704286E695AA3706125599D4AE440@AM0PR04MB7042.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: IpFGA++QZnrFJqy1DFdLDru5hXFJYbOnS2Z3NIlNvMUvlGzZV3y/oKgCJD3kKYqWHrsWPh81D7QOw04xm8XaV7v3v+wyh/HkWtttF3Sw1rr9J2L5tF9r8bJo/Cru9dYHYkDdfQWrIdDMXxFfmCo+V3PVRvGJmakD0/BRMP1Ef6CT0QMEW/lj1S9W6ncEuNnKKJTkT5EHTuGQ6UxCjE9PfNqyzGNIDF4IndyK75fInuQ35aGQDEMNhSOsFZ+/LlJ97O8seNQsL/BG3PFCl6lPxAebrAFXgLi+tk1txArc2h3N8vCvEUvZuONCtVzJdgfAC6kpTSXS6vgckD1VS8avEd807nydtuXzj0nMKfFIZ7lXBZY91JP7gNf6dp8Wl/PpLVy7kNFNGqH53jwSKEdOoja6jBH9LjLLCYhwtTHHyOJLz/IaR93Pj42xZSJPz6r1
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR0402MB3809.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(396003)(366004)(39860400002)(136003)(5660300002)(52536014)(2906002)(316002)(83080400001)(54906003)(8936002)(478600001)(9686003)(6506007)(4326008)(53546011)(45080400002)(26005)(83380400001)(33656002)(186003)(7696005)(71200400001)(66946007)(966005)(8676002)(64756008)(76116006)(66446008)(66556008)(66476007)(6916009)(86362001)(55016002)(32563001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: 4kBPip3N9KKbrN91Niv4E4DGPpAk6STTulCS7+qGKSrr2saACrbEmA1qPQtQWk17kmDDObk2vbnbw9DsY6Y3ZpOaHELwuUErVOmb+MELGiS281HVfPY+KmvO6EOJs1ZtM2Gs9Dzft7cPKpROr+rH6nrEhrWXbuHCMDAfKZ2sPqqCCWc3sQYQ41HIMzgIYAeZcfASaWRPp7DrN2Ve96PWGB6DrWvzJSohr+FBIyDHbiJbJUDczO/dnIbtRtxuAIHQG8ALrb+NILhl6zvIwXy1H/EFzeHLUne1vFJFhmtLbIQA09AQkP00YkGLUUj8yRiPNG6qe4twrAI/ZepoXAAeKeUrkcmg+ezJJIoNRR9j5Vdgo/b+dRpqlyL3BPUlfydI2THlVT+jPpnRKD22upfUvjqdRUFUBEMR1Y7q1MbL2ByxvY6bZ9xp/XsVMLfyYsgP7ZNa7Zb0O1kq7U3kH5ZcFFlcHK0LY/2vu6Pu9DMJ/zSlRcbiZJfwnd2RIIvF0XwhJQeZqZlFd4rho1WFVCMVFZejXfSK3hByvwg0J0dPx8ai+vQ6/AXvkZeROGpLHNKC6Q1VhXtAQHMYD6gFrXx/xmrwCbcuDUJUh0gE+jhFkQus2DOfUWW9RaCnzQ4dGXzisT//ON9hyeBC5aA9bNKQbA==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AM0PR0402MB3809.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c3ef980b-7bfa-49f2-d35d-08d83cf57674
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Aug 2020 06:20:22.4247
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: wYw55Qfvy2ZKgFhWfkCpvZJIdP/sgjnTZOQEUYz6kcIvi+bGbbhGKTzQzWsMjHNg7gQuYHc4laeXk7QB70F1lw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB7042
+        Mon, 10 Aug 2020 02:22:21 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:33924 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725808AbgHJGWT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 02:22:19 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07A62mDr003317;
+        Mon, 10 Aug 2020 02:22:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references; s=pp1;
+ bh=+vOVDz5vOViBE0HyVBNzS9vH4zM4sWUVSg7XjMPQCf4=;
+ b=Q77inBMnCSgf1lWojDBd58hgijbjvZL6j3rjSmQ0h43bKcmB5ODoAH8RqNBdEcmltyIx
+ O4UAZumNUCbOHxtvmvyoN63re6IWAd/JSLyqMMSQefDmeooQ38wJzlpIRMiHx7tcf+o4
+ N3FtDTgyNlb9s+JeHC3wG3/t5HWGRUdgWn5lCcx0tBXEvDEjKtyBQbLLPf0s3hgTB8gT
+ oSd5syQ+S/i5J2QguQEF8nscUsEE/AG+mAuv6yfzy7nhho8P4jZMGgjCtAlZsQ4L6tG1
+ RGOEYG2Y4duW9HUIl0K3zeEeE7VD6zpCk8XHtUJNuQuaTD9w7QLeLcxq4DdN2fduVQLP Lg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32src11uqk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 10 Aug 2020 02:22:08 -0400
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07A62n9O003438;
+        Mon, 10 Aug 2020 02:22:08 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32src11uq0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 10 Aug 2020 02:22:08 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07A6LhxS016005;
+        Mon, 10 Aug 2020 06:22:06 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma06ams.nl.ibm.com with ESMTP id 32skah9xcj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 10 Aug 2020 06:22:05 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07A6M3UC13893912
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 10 Aug 2020 06:22:03 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BF7F1A404D;
+        Mon, 10 Aug 2020 06:22:03 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1F214A4055;
+        Mon, 10 Aug 2020 06:22:03 +0000 (GMT)
+Received: from oc3871087118.ibm.com (unknown [9.145.20.209])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 10 Aug 2020 06:22:03 +0000 (GMT)
+From:   Alexander Gordeev <agordeev@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Alexander Gordeev <agordeev@linux.ibm.com>,
+        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Balamuruhan S <bala24@linux.vnet.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Subject: [PATCH v2 1/3] perf bench numa: use numa_node_to_cpus() to bind tasks to nodes
+Date:   Mon, 10 Aug 2020 08:21:58 +0200
+Message-Id: <a002ebf17a3970e5d2dc7b9869dc180e68b88db4.1597004831.git.agordeev@linux.ibm.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <cover.1597004831.git.agordeev@linux.ibm.com>
+References: <cover.1597004831.git.agordeev@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-10_02:2020-08-06,2020-08-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
+ mlxscore=0 impostorscore=0 mlxlogscore=999 clxscore=1015
+ priorityscore=1501 malwarescore=0 lowpriorityscore=0 phishscore=0
+ spamscore=0 suspectscore=1 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008100043
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+It is currently assumed that each node contains at most
+nr_cpus/nr_nodes CPUs and node CPU ranges do not overlap.
+That assumption is generally incorrect as there are archs
+where a CPU number does not depend on to its node number.
 
+This update removes the described assumption by simply calling
+numa_node_to_cpus() interface and using the returned mask for
+binding CPUs to nodes. It also tightens a cpumask allocation
+failure check a bit.
 
-> -----Original Message-----
-> From: Oliver Graute <oliver.graute@gmail.com>
-> Sent: Monday, August 10, 2020 2:13 PM
-> To: Jason Liu <jason.hui.liu@nxp.com>
-> Cc: Anson Huang <anson.huang@nxp.com>; Aisheng Dong
-> <aisheng.dong@nxp.com>; catalin.marinas@arm.com; will@kernel.org;
-> dl-linux-imx <linux-imx@nxp.com>; linux-kernel@vger.kernel.org
-> Subject: Re: arm64: imx8qm: tlb SW workaround for IMX8QM
->=20
-> On 27/04/20, Oliver Graute wrote:
-> > On 27/04/20, Oliver Graute wrote:
-> > > Hello,
-> > >
-> > > is this nxp software workaround already proposed to linux community?
-> > > can someone point me to the discussion if available.
-> > >
-> > > https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fs=
-o
-> > >
-> urce.codeaurora.org%2Fexternal%2Fimx%2Flinux-imx%2Fcommit%2F%3Fh%3
-> D3
-> > >
-> Dimx_5.4.3_%3D&amp;data=3D02%7C01%7Cjason.hui.liu%40nxp.com%7Cef51bf
-> 7d
-> > >
-> 704f4b7439f808d83cf48290%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%
-> 7C0%
-> > >
-> 7C637326368154132369&amp;sdata=3DGrMP8XdoYETWiFdHTHStYv7CEZjRx%2F
-> mkygA
-> > > prGckrus%3D&amp;reserved=3D0
-> > > 2.0.0&id=3D3D593bea4e36d8c8a4fd65ef4f07fb8144dab2de1c
-> >
-> > sry for the broken link. Here the right one:
-> >
-> > https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fsou=
-r
-> >
-> ce.codeaurora.org%2Fexternal%2Fimx%2Flinux-imx%2Fcommit%2F%3Fh%3Di
-> mx_5
-> > .4.3_2.0.0%26id%3D593bea4e36d8c8a4fd65ef4f07fb8144dab2de1c&amp;da
-> ta=3D02
-> > %7C01%7Cjason.hui.liu%40nxp.com%7Cef51bf7d704f4b7439f808d83cf4829
-> 0%7C6
-> >
-> 86ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C637326368154142361&a
-> mp;sdata
-> >
-> =3DUS2Pu6eOo3vLLNBH7Y1zZM5LACrnhLWGmx7bOc5fNg4%3D&amp;reserved=3D
-> 0
->=20
-> this patch is not applicable anymore since next-20200713. Is there an upd=
-ated
-> one?
+Cc: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
+Cc: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Cc: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Cc: Balamuruhan S <bala24@linux.vnet.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
+---
+ tools/perf/bench/numa.c | 27 +++++++++++++--------------
+ 1 file changed, 13 insertions(+), 14 deletions(-)
 
-The patch has been updated a little bit according to latest ERRATA. The pat=
-ch not
-sent upstream yet.
+diff --git a/tools/perf/bench/numa.c b/tools/perf/bench/numa.c
+index 5797253..23e224e 100644
+--- a/tools/perf/bench/numa.c
++++ b/tools/perf/bench/numa.c
+@@ -247,12 +247,13 @@ static int is_node_present(int node)
+  */
+ static bool node_has_cpus(int node)
+ {
+-	struct bitmask *cpu = numa_allocate_cpumask();
++	struct bitmask *cpumask = numa_allocate_cpumask();
+ 	unsigned int i;
+ 
+-	if (cpu && !numa_node_to_cpus(node, cpu)) {
+-		for (i = 0; i < cpu->size; i++) {
+-			if (numa_bitmask_isbitset(cpu, i))
++	BUG_ON(!cpumask);
++	if (!numa_node_to_cpus(node, cpumask)) {
++		for (i = 0; i < cpumask->size; i++) {
++			if (numa_bitmask_isbitset(cpumask, i))
+ 				return true;
+ 		}
+ 	}
+@@ -288,14 +289,10 @@ static cpu_set_t bind_to_cpu(int target_cpu)
+ 
+ static cpu_set_t bind_to_node(int target_node)
+ {
+-	int cpus_per_node = g->p.nr_cpus / nr_numa_nodes();
+ 	cpu_set_t orig_mask, mask;
+ 	int cpu;
+ 	int ret;
+ 
+-	BUG_ON(cpus_per_node * nr_numa_nodes() != g->p.nr_cpus);
+-	BUG_ON(!cpus_per_node);
+-
+ 	ret = sched_getaffinity(0, sizeof(orig_mask), &orig_mask);
+ 	BUG_ON(ret);
+ 
+@@ -305,13 +302,15 @@ static cpu_set_t bind_to_node(int target_node)
+ 		for (cpu = 0; cpu < g->p.nr_cpus; cpu++)
+ 			CPU_SET(cpu, &mask);
+ 	} else {
+-		int cpu_start = (target_node + 0) * cpus_per_node;
+-		int cpu_stop  = (target_node + 1) * cpus_per_node;
+-
+-		BUG_ON(cpu_stop > g->p.nr_cpus);
++		struct bitmask *cpumask = numa_allocate_cpumask();
+ 
+-		for (cpu = cpu_start; cpu < cpu_stop; cpu++)
+-			CPU_SET(cpu, &mask);
++		BUG_ON(!cpumask);
++		if (!numa_node_to_cpus(target_node, cpumask)) {
++			for (cpu = 0; cpu < (int)cpumask->size; cpu++) {
++				if (numa_bitmask_isbitset(cpumask, cpu))
++					CPU_SET(cpu, &mask);
++			}
++		}
+ 	}
+ 
+ 	ret = sched_setaffinity(0, sizeof(mask), &mask);
+-- 
+1.8.3.1
 
->=20
-> Best Regards,
->=20
-> Oliver
