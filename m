@@ -2,153 +2,101 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9866C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:31:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10D23C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:31:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A49B02063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:31:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="dEb8bolt"
+	by mail.kernel.org (Postfix) with ESMTP id D868820734
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 09:31:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbgHJJbe (ORCPT
+        id S1726756AbgHJJbr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 05:31:34 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:44153 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725984AbgHJJbd (ORCPT
+        Mon, 10 Aug 2020 05:31:47 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:54748 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726092AbgHJJbr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 05:31:33 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200810093132euoutp010c7e5516b87e512a517e9281b70ce86f~p3jwOdYyq3006530065euoutp01v
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 09:31:32 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200810093132euoutp010c7e5516b87e512a517e9281b70ce86f~p3jwOdYyq3006530065euoutp01v
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1597051892;
-        bh=fewrBoKQ2TfNzNkqjPXOMavPgLQV8gbWubkpvSRTAow=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=dEb8bolt0xtsmAnQA8YWRgTjKDueIE7ib3ULHXAN1OgIlamspPJ59y8W48AH46Ewp
-         ISm4Y6VXPR+6kLtrWkLne63QF9mC4n7HTvlAAVMW2hN1Sc23XZScGzdZAUS0uMomT1
-         4K2KRvGICCfAL/ONRcjj15sTtyVMmd2JCVuGbBqQ=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200810093132eucas1p231e41422f5d762c6c133cf3fc5e99e40~p3jwGLY-G1567415674eucas1p2L;
-        Mon, 10 Aug 2020 09:31:32 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id B8.6B.06318.4F3113F5; Mon, 10
-        Aug 2020 10:31:32 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200810093131eucas1p13b887da5b7e743876e2baed9046317ce~p3jvxRBkk0149201492eucas1p15;
-        Mon, 10 Aug 2020 09:31:31 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200810093131eusmtrp2385e06f53d021b7bd290fc14371253c2~p3jvwf6q20409204092eusmtrp2_;
-        Mon, 10 Aug 2020 09:31:31 +0000 (GMT)
-X-AuditID: cbfec7f5-371ff700000018ae-b3-5f3113f49dde
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id CF.33.06314.3F3113F5; Mon, 10
-        Aug 2020 10:31:31 +0100 (BST)
-Received: from [106.210.123.115] (unknown [106.210.123.115]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200810093131eusmtip1b77c631b1978d34a4564687b81fc3c84~p3jvHt-662083820838eusmtip1k;
-        Mon, 10 Aug 2020 09:31:31 +0000 (GMT)
-Subject: Re: [PATCH v2] media: exynos4-is: Add missed check for
- pinctrl_lookup_state()
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     Kyungmin Park <kyungmin.park@samsung.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
-Message-ID: <7ffcd1f8-91ba-ab9b-8a5e-98c206669666@samsung.com>
-Date:   Mon, 10 Aug 2020 11:31:30 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.11.0
+        Mon, 10 Aug 2020 05:31:47 -0400
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07A9I3sI003648;
+        Mon, 10 Aug 2020 05:31:44 -0400
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 32sry466pe-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 10 Aug 2020 05:31:44 -0400
+Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 07A9VgbO061682
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Mon, 10 Aug 2020 05:31:43 -0400
+Received: from SCSQCASHYB6.ad.analog.com (10.77.17.132) by
+ SCSQMBX11.ad.analog.com (10.77.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Mon, 10 Aug 2020 02:31:41 -0700
+Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by
+ SCSQCASHYB6.ad.analog.com (10.77.17.132) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Mon, 10 Aug 2020 02:30:46 -0700
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
+ (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Mon, 10 Aug 2020 02:31:40 -0700
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 07A9VdXO023493;
+        Mon, 10 Aug 2020 05:31:39 -0400
+From:   <alexandru.tachici@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <jic23@kernel.org>
+Subject: [PATCH v5 0/2] iio: accel: adxl372: Add support for FIFO peak mode
+Date:   Mon, 10 Aug 2020 12:32:55 +0300
+Message-ID: <20200810093257.65929-1-alexandru.tachici@analog.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20200528064147.547158-1-hslester96@gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHec9tx9XkuBl7sBuMQoy8peABRbLCFkT0sYycUw86U7c2NW+k
-        aYS3VEy0pjARrVTStXSmiclkDRPTCCW8kOH64K3bNDBF83iU/PZ7n/f3f5/ngZfGpZ2kF61J
-        TeP0qepkBSUmrO/WRn1XZIGqgNVSCVtnm8fZirlFnB0dNYvYkYIlEWuZmyDZT731FFtm7iLZ
-        x6P9GPvUsoGddVP2GGdESktrMaV81ZSnLO9sRUqX5dhVMkocFs8lazI4vX94jDjRPFdM6ZbE
-        mcubefloiy5BbjQwwbC4NIaVIDEtZZ4jeNGzRAqHFQQ/qu0i3pIyLgTVzbF7iYnZt7uJZwjm
-        XN92E78QFN+roHhLxlwD53QJzrMn4w2u3h4RL+FMGwYvBzp2JIoJhIf2csSzhAkH489BgmeC
-        OQl/+s0Yz4eYaOhyjGOC4wFDT5w7jhsTCvaPCyTPOCOHSacJE/g4dC/X43wzYGwiaJuqooS5
-        L4Bzc4wQWAYLjk6RwEdgq8eECYFCBGVvpkTCoRLBF0cDEqxQmP7wd/sleruFD3T0+gvlCLCM
-        DRF8GRh3+LzsIQzhDlXWWlwoS6DogVSwT8B6ay0msBeUOreISqQw7lvNuG8d4751jP/7NiCi
-        Fcm5dENKAmcISuXu+BnUKYb01AS/OG2KBW3/peFNx+pr1L8Ra0MMjRQHJflHA1RSUp1hyEqx
-        IaBxhafk3MhwtFQSr87K5vRalT49mTPY0GGaUMglQY3zN6VMgjqNu8VxOk6/d4vRbl75yKe9
-        OyBkvEU2OaM7M5CsX9mQD2olv3Nmhxbzc76uevreLQoNs6/VtA/en7IGRxVGJCaYagraD7zP
-        JbTW77rISxMXvTXkevej2y0xVfFXMuuSPOIsa97N2dlBl0ldZO5pv6RoXR+hStM1NDaZKHyl
-        tyzJQTVfD+nLumGekWnOKwhDojrwFK43qP8BYzZqqEcDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrGIsWRmVeSWpSXmKPExsVy+t/xu7qfhQ3jDX6vNbGYfegls0X/49fM
-        FufPb2C3ONv0ht1i0+NrrBaXd81hs+jZsJXVYsb5fUwWyzb9YXLg9Ng56y67x6ZVnWwem5fU
-        e/RtWcXo8XmTXABrlJ5NUX5pSapCRn5xia1StKGFkZ6hpYWekYmlnqGxeayVkamSvp1NSmpO
-        Zllqkb5dgl7GhsedbAVvuCre/qtvYPzP0cXIySEhYCJx7cF+pi5GLg4hgaWMEr92PmTrYuQA
-        SkhJzG9RgqgRlvhzrYsNouY9o8SV499YQRLCAhEST+50MYPYIgLqEp937WQHKWIWWM0ksWLR
-        aqipfYwSGw/1gVWxCRhK9B7tYwSxeQXsJGZ9OMwCYrMIqEp827eBCcQWFYiTeNz7nxmiRlDi
-        5MwnYDWcAtYSRy++AtvMDLTtz7xLzBC2uMStJ/OZIGx5ie1v5zBPYBSahaR9FpKWWUhaZiFp
-        WcDIsopRJLW0ODc9t9hQrzgxt7g0L10vOT93EyMwDrcd+7l5B+OljcGHGAU4GJV4eBtkDeKF
-        WBPLiitzDzFKcDArifA6nT0dJ8SbklhZlVqUH19UmpNafIjRFOi5icxSosn5wBSRVxJvaGpo
-        bmFpaG5sbmxmoSTO2yFwMEZIID2xJDU7NbUgtQimj4mDU6qBUfQHU/O/2xLWp5JUTATq2g9Z
-        ehafdprx5miOvfyUU3PXxm+zddAonL2yXTj3vv35jk29s+Z6Gaxp/79wj59m3/FXXf8e2eb/
-        j9tsdp7XNGYrP5+B8FX1SqHPdrVztE6UeHbxpqVbC3NpmpfPCdtx+WFiySHpHae7wrbsfSB0
-        RETXjeHA+XMmSizFGYmGWsxFxYkA5+Bxo9kCAAA=
-X-CMS-MailID: 20200810093131eucas1p13b887da5b7e743876e2baed9046317ce
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200528064613eucas1p268b1692ad11d7d2be863280be7d378c1
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200528064613eucas1p268b1692ad11d7d2be863280be7d378c1
-References: <CGME20200528064613eucas1p268b1692ad11d7d2be863280be7d378c1@eucas1p2.samsung.com>
-        <20200528064147.547158-1-hslester96@gmail.com>
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-10_03:2020-08-06,2020-08-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 mlxscore=0
+ lowpriorityscore=0 clxscore=1015 priorityscore=1501 adultscore=0
+ phishscore=0 suspectscore=0 impostorscore=0 malwarescore=0 spamscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008100068
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Alexandru Tachici <alexandru.tachici@analog.com>
 
-On 28.05.2020 08:41, Chuhong Yuan wrote:
-> fimc_md_get_pinctrl() misses a check for pinctrl_lookup_state().
-> Add the missed check to fix it.
-> 
-> Fixes: 4163851f7b99 ("[media] s5p-fimc: Use pinctrl API for camera ports configuration]") 
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> ---
-> Changes in v2:
->   - Add fixes tag.
-> 
->  drivers/media/platform/exynos4-is/media-dev.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/media/platform/exynos4-is/media-dev.c b/drivers/media/platform/exynos4-is/media-dev.c
-> index 9aaf3b8060d5..9c31d950cddf 100644
-> --- a/drivers/media/platform/exynos4-is/media-dev.c
-> +++ b/drivers/media/platform/exynos4-is/media-dev.c
-> @@ -1270,6 +1270,9 @@ static int fimc_md_get_pinctrl(struct fimc_md *fmd)
->  
->  	pctl->state_idle = pinctrl_lookup_state(pctl->pinctrl,
->  					PINCTRL_STATE_IDLE);
-> +	if (IS_ERR(pctl->state_idle))
-> +		return PTR_ERR(pctl->state_idle);
+This series adds the possibility to configure
+the device, from sysfs, to work in peak mode. This enables
+adxl372 to capture only over threshold accelerations.
 
-Unfortunately this is not correct, with that change the driver currently 
-fails to initialize. The "idle" pinctrl state is optional and might not 
-be specified in DT, as explained in the DT binding documentation added
-by the patch you mentioned in the "Fixes" tag.
-Actually the "idle" state is now not used in any mainline dts, I will 
-post a patch that removes related code in the driver.
+1. Create sysfs files for falling_period/rising_period
+and thresh_falling_value/thresh_rising_value in events/ dir.
+Set INT1 reg for activity/inactivity and push
+event code in events fifo on irq.
+
+2. Document use of iio events sysfs files.
+
+Alexandru Tachici (1):
+  iio: accel: adxl372: Add additional trigger ABI docs
+
+Stefan Popa (1):
+  iio: accel: adxl372: Add support for FIFO peak mode
+
+Changelog v4 -> v5:
+  - squash iio event interface patch into peak mode patch
+  - move patch to 100 lines length
+  - use((x) & BIT(0)) construct for define ADXL372_Y_AXIS_EN(x)
+  - add ABI docs to explain the use of the additional trigger
+
+ .../ABI/testing/sysfs-bus-iio-accel-adxl372   |   7 +
+ drivers/iio/accel/adxl372.c                   | 302 +++++++++++++++++-
+ 2 files changed, 301 insertions(+), 8 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-accel-adxl372
 
 -- 
-Thanks,
-Sylwester
+2.20.1
+
