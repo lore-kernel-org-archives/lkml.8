@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F925C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:26:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D23DBC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:26:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 599DE22D06
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:26:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85C2622D06
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:26:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073202;
-	bh=RF1YYZcrR8jAOi1ZJRiN7u4xbfpSyq4rjhuxrTj5BHc=;
+	s=default; t=1597073206;
+	bh=6Z0wpNCnyCWnQvnEZI5gwp9SLhd+PbsBcvUv0+XNS44=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=utJ1Wd6Gext5oAwVGFTJHiLpLYJxKfs+i9waQsHWhRksrxvAUW5njukhwbSHLAOqw
-	 3V0z9/vUbTLQPSeAErmiQo841GvOB248JyTDR89uonuSSRbUu3Qv263owkKwgMBUUf
-	 d70QB7NV9WrkfdMWGJnS51h5ozQriUwvDPxR9fEc=
+	b=EPNXmuZXH6LlMdC8n32Ifl2hx7ob/vU9z5fG1pgcNkYQYpLk+a6L88Wi3Uo4AADJT
+	 ZXHbCt5Qayg7vuHNOTtXn8Bdmm0zfNS1mxsHXZ4htyiMZFxwuAhOSJkWTmbQzwVjmv
+	 c/Qfcj1Y/ZDn/4IPjMYzEke7uYdf+j8X2E/eDTzE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728654AbgHJP0k (ORCPT
+        id S1728663AbgHJP0p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:26:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60598 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:26:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728374AbgHJP0i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:26:38 -0400
+        id S1728374AbgHJP0l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:26:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BAC322BEA;
-        Mon, 10 Aug 2020 15:26:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6EF3B22B47;
+        Mon, 10 Aug 2020 15:26:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073197;
-        bh=RF1YYZcrR8jAOi1ZJRiN7u4xbfpSyq4rjhuxrTj5BHc=;
+        s=default; t=1597073201;
+        bh=6Z0wpNCnyCWnQvnEZI5gwp9SLhd+PbsBcvUv0+XNS44=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=myUUAzb+3GD3bQrjJ8fn0ga9gOW+WQ2KjJIAfFP5BUXZ5dJWS5eNabreO2ERXL1Kg
-         9818bgcJfOU6LtC54rpk5KICVQsA4PpkXpnl1gDQt3UGgubXcvNJQyG/fQVp5wS1/r
-         yzxC8MvHq2+myhKtzelYFXou81EehHUtUG2WnrFg=
+        b=f8sovuYML8HTjQjPgFNs+sFIV0XtY735p6YOyl9CV/z1MH+mbrXwGf7g4yk46psbe
+         ChrikEyZCWU65U/R+/TwA5N0ukT4sQgH1dOGRj15tLrjuWXi3rM0RViPiWK6AQ4+0s
+         WPuzydrohuS/uwBTqrLxrq3aPClYxX6M8wu4tgng=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adam Ford <aford173@gmail.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Dave Airlie <airlied@gmail.com>,
-        Rob Clark <robdclark@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH 5.4 20/67] omapfb: dss: Fix max fclk divider for omap36xx
-Date:   Mon, 10 Aug 2020 17:21:07 +0200
-Message-Id: <20200810151810.420588550@linuxfoundation.org>
+        stable@vger.kernel.org, stable <stable@kernel.org>,
+        Christoph Jung <jung@codemercs.com>
+Subject: [PATCH 5.4 03/67] USB: iowarrior: fix up report size handling for some devices
+Date:   Mon, 10 Aug 2020 17:20:50 +0200
+Message-Id: <20200810151809.611667366@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151809.438685785@linuxfoundation.org>
 References: <20200810151809.438685785@linuxfoundation.org>
@@ -62,42 +59,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adam Ford <aford173@gmail.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-commit 254503a2b186caa668a188dbbd7ab0d25149c0a5 upstream.
+commit 17a82716587e9d7c3b246a789add490b2b5dcab6 upstream.
 
-The drm/omap driver was fixed to correct an issue where using a
-divider of 32 breaks the DSS despite the TRM stating 32 is a valid
-number.  Through experimentation, it appears that 31 works, and
-it is consistent with the value used by the drm/omap driver.
+In previous patches that added support for new iowarrior devices, the
+handling of the report size was not done correct.
 
-This patch fixes the divider for fbdev driver instead of the drm.
+Fix that up and update the copyright date for the driver
 
-Fixes: f76ee892a99e ("omapfb: copy omapdss & displays for omapfb")
-Cc: <stable@vger.kernel.org> #4.5+
-Signed-off-by: Adam Ford <aford173@gmail.com>
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Dave Airlie <airlied@gmail.com>
-Cc: Rob Clark <robdclark@gmail.com>
-[b.zolnierkie: mark patch as applicable to stable 4.5+ (was 4.9+)]
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200630182636.439015-1-aford173@gmail.com
+Reworked from an original patch written by Christoph Jung.
+
+Fixes: bab5417f5f01 ("USB: misc: iowarrior: add support for the 100 device")
+Fixes: 5f6f8da2d7b5 ("USB: misc: iowarrior: add support for the 28 and 28L devices")
+Fixes: 461d8deb26a7 ("USB: misc: iowarrior: add support for 2 OEMed devices")
+Cc: stable <stable@kernel.org>
+Reported-by: Christoph Jung <jung@codemercs.com>
+Link: https://lore.kernel.org/r/20200726094939.1268978-1-gregkh@linuxfoundation.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/video/fbdev/omap2/omapfb/dss/dss.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/misc/iowarrior.c |   35 +++++++++++++++++++++++++----------
+ 1 file changed, 25 insertions(+), 10 deletions(-)
 
---- a/drivers/video/fbdev/omap2/omapfb/dss/dss.c
-+++ b/drivers/video/fbdev/omap2/omapfb/dss/dss.c
-@@ -833,7 +833,7 @@ static const struct dss_features omap34x
- };
+--- a/drivers/usb/misc/iowarrior.c
++++ b/drivers/usb/misc/iowarrior.c
+@@ -2,8 +2,9 @@
+ /*
+  *  Native support for the I/O-Warrior USB devices
+  *
+- *  Copyright (c) 2003-2005  Code Mercenaries GmbH
+- *  written by Christian Lucht <lucht@codemercs.com>
++ *  Copyright (c) 2003-2005, 2020  Code Mercenaries GmbH
++ *  written by Christian Lucht <lucht@codemercs.com> and
++ *  Christoph Jung <jung@codemercs.com>
+  *
+  *  based on
  
- static const struct dss_features omap3630_dss_feats = {
--	.fck_div_max		=	32,
-+	.fck_div_max		=	31,
- 	.dss_fck_multiplier	=	1,
- 	.parent_clk_name	=	"dpll4_ck",
- 	.dpi_select_source	=	&dss_dpi_select_source_omap2_omap3,
+@@ -802,14 +803,28 @@ static int iowarrior_probe(struct usb_in
+ 
+ 	/* we have to check the report_size often, so remember it in the endianness suitable for our machine */
+ 	dev->report_size = usb_endpoint_maxp(dev->int_in_endpoint);
+-	if ((dev->interface->cur_altsetting->desc.bInterfaceNumber == 0) &&
+-	    ((dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW56) ||
+-	     (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW56AM) ||
+-	     (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW28) ||
+-	     (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW28L) ||
+-	     (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW100)))
+-		/* IOWarrior56 has wMaxPacketSize different from report size */
+-		dev->report_size = 7;
++
++	/*
++	 * Some devices need the report size to be different than the
++	 * endpoint size.
++	 */
++	if (dev->interface->cur_altsetting->desc.bInterfaceNumber == 0) {
++		switch (dev->product_id) {
++		case USB_DEVICE_ID_CODEMERCS_IOW56:
++		case USB_DEVICE_ID_CODEMERCS_IOW56AM:
++			dev->report_size = 7;
++			break;
++
++		case USB_DEVICE_ID_CODEMERCS_IOW28:
++		case USB_DEVICE_ID_CODEMERCS_IOW28L:
++			dev->report_size = 4;
++			break;
++
++		case USB_DEVICE_ID_CODEMERCS_IOW100:
++			dev->report_size = 13;
++			break;
++		}
++	}
+ 
+ 	/* create the urb and buffer for reading */
+ 	dev->int_in_urb = usb_alloc_urb(0, GFP_KERNEL);
 
 
