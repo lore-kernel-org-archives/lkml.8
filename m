@@ -2,251 +2,166 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ED59C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:21:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08CF5C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:23:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 656F82073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:21:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D975B2075D
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:23:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vqsl98sY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uw4kJBVy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbgHJHVk (ORCPT
+        id S1726454AbgHJHXU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 03:21:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46410 "EHLO
+        Mon, 10 Aug 2020 03:23:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725869AbgHJHVj (ORCPT
+        with ESMTP id S1725857AbgHJHXT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 03:21:39 -0400
-Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49DC4C061756
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 00:21:38 -0700 (PDT)
-Received: by mail-ua1-x944.google.com with SMTP id g11so2183176ual.2
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 00:21:38 -0700 (PDT)
+        Mon, 10 Aug 2020 03:23:19 -0400
+Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BCA8C061756;
+        Mon, 10 Aug 2020 00:23:19 -0700 (PDT)
+Received: by mail-yb1-xb41.google.com with SMTP id g3so1637642ybc.3;
+        Mon, 10 Aug 2020 00:23:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=EZuLaH0X1DjxkMIYvUZjBNQpk5tuEvtJPSM7s3zpgVA=;
-        b=Vqsl98sYIlry7YsaqgssuM5FYIzcM1D1osf7noHDmEMsN0q9nuXfpONaiOGWw4ZjNC
-         GxhEAINLCMhMJDXOQSwp0eT1EuzFIPK7K9sBVCA7MqB9w8S9as0fdMVPzkQztlI+7WOt
-         /rNLveVzyktnS6wtY82qfRfX2+vhRGoSTiY3sFsqzzrUVCALKkg6UEDeAAEwvLaSoBsr
-         XI4q4keaf/eP45qsUCtETI3Z8DZP3nBImstSbgruJmYJ4/vZGz2l0dj4nlPSEblvxSRT
-         6WN9Zy9y9GA/sLzBO/UHTY4UZ6sLECmSe7Fky3fjpNkkWQyi3isxhpzHbDgcYc+Njtee
-         WPtA==
+        bh=ANR7+RLPKBGxOqXxxUQUqxXFiaO4oBpzGIQRW0WVM/k=;
+        b=Uw4kJBVyINzL3H5dzKs85M7fDr0bvtu6awqtjBDuZIsjYfXLKFhgADett+saqb9aWG
+         lyKe2Q0105n9PALpQnBOd/YtWCPBlrIMiVMcnkcllbhg6fO9/pxlu9E1+jMiLBY5wyLe
+         BfRubpIMVYZHSrT/ymfkm2fVIN7zGKHGNuGOMA5snbKSpjld1Sv2i/Oovf1uId1qFImM
+         +saHUMOOHqMwf8ccSSn1nPO9oF+SiqIU28rQdNxjMID2L+db27qW0R4HzMAPi0NctH7y
+         kRBS5gsT10qOYlelQYDNd88uTHZoip41ZkxzknYpJCAe+2Kcm9404zS9/lE8ippXel0e
+         ZIQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=EZuLaH0X1DjxkMIYvUZjBNQpk5tuEvtJPSM7s3zpgVA=;
-        b=CxmmZcvKk4bFUuvnqJeu6fgHJtN4SBDOrgv80TDD6uGW9C3LBUQZ0oXk5U+DrXNDcq
-         sKsebN/7P9skKWHu26vWPrlTgprofrtcyshJCjm4dpVRIW67ObbkVytlsyoXbdBO/Q2w
-         NTzZilUoS2hqbZoClEJ0FsmG5c6snjSsJkEcIqGLbvODADWo93X3bAqU9DSjWG4Rd7cl
-         MSKAwvJoJmmX3vVBH9jiCDX1acuiOICjpQPP/IfJQ1IHVacfnMHjgcqAayKJzKm+fIVx
-         TIqoZYl+YRaRARwR0lKzjAQyXAv55WHcge1pzbigBTDYS1PBP9ancgv2h6gbJNTpTOlw
-         U+tg==
-X-Gm-Message-State: AOAM533ILOxj3YCF/VB/uVcg0MGOkxNqBmPCoBx9vB5STmD2wMrkWyiZ
-        48NaYoWLDHU9yorw8IEnVvJ55XBop5c=
-X-Google-Smtp-Source: ABdhPJyLzrYdLMeCai2m+tubfarxOqo0fuqpeUQigsvyB/QMc/Z3K4Vh0cZFReL9RQmb/3kuTFgcaw==
-X-Received: by 2002:a9f:300f:: with SMTP id h15mr18278308uab.47.1597044096554;
-        Mon, 10 Aug 2020 00:21:36 -0700 (PDT)
-Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com. [209.85.217.51])
-        by smtp.gmail.com with ESMTPSA id u4sm4506448vkg.42.2020.08.10.00.21.35
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Aug 2020 00:21:35 -0700 (PDT)
-Received: by mail-vs1-f51.google.com with SMTP id y8so3725244vsq.8
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 00:21:35 -0700 (PDT)
-X-Received: by 2002:a67:bb06:: with SMTP id m6mr19237225vsn.54.1597044094565;
- Mon, 10 Aug 2020 00:21:34 -0700 (PDT)
+        bh=ANR7+RLPKBGxOqXxxUQUqxXFiaO4oBpzGIQRW0WVM/k=;
+        b=FMZsQKO9JCm41Lk0fB3DwOsoFnYsckM65mYspIHuxr5q0dpW9TAEe+t5NgcT1Bb1rJ
+         yarniw1NLNbYt7GHepsAOEqf8cJ0PWLF+HdZpryiWSb9ngW7UOkIGhl9ei2v9vOyJ6ps
+         H8WQIAL0vM8PIJCZZbqLA4uIO+BK2xl2UnqQzBJ5jRkRzFw/MiKKYh5LGYbZAtrkLJ8K
+         7mGYWR4fhm8LLtgFIX1iJdd+if3Xjn+AWPwE2Q5ympDcH0P3eNMvcSnLyIMo2YnHNxRV
+         pTsSndKXvUjpDDKzLuYnXl8d2pjcjAKubIwcXoWke/wG468pFqsuQ8637l1YJsNpZBpU
+         2yiQ==
+X-Gm-Message-State: AOAM530v58M4OQPIagA3qUhz8vPi6Jw4qevrFFtG3OEeg1muZVy9s2Ah
+        2doHjzFSLUFxzYQy/naaQUjFgoZ1eM4NMvBEII0=
+X-Google-Smtp-Source: ABdhPJz9YtA5r0gyeWQ8/utyl5iTIa8cD2BpJQiEbgb1iOpQ3xsq68SsenTlc0sjjfhVV6DdyVh8fCEIeOZ5xY6D3BI=
+X-Received: by 2002:a25:6ad6:: with SMTP id f205mr38529089ybc.76.1597044198696;
+ Mon, 10 Aug 2020 00:23:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200809023548.684217-1-xie.he.0141@gmail.com>
- <CA+FuTSe-FaQFn4WNvVPJ1v+jVZAghgd1AZc-cWn2+GjPR4GzVQ@mail.gmail.com> <CAJht_EOao3-kA-W-SdJqKRiFMAFUxw7OARFGY5DL8pXvKd4TLw@mail.gmail.com>
-In-Reply-To: <CAJht_EOao3-kA-W-SdJqKRiFMAFUxw7OARFGY5DL8pXvKd4TLw@mail.gmail.com>
-From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Date:   Mon, 10 Aug 2020 09:20:56 +0200
-X-Gmail-Original-Message-ID: <CA+FuTSc7c+XTDU10Bh1ZviQomHgiTjiUvOO0iR1X95rq61Snrg@mail.gmail.com>
-Message-ID: <CA+FuTSc7c+XTDU10Bh1ZviQomHgiTjiUvOO0iR1X95rq61Snrg@mail.gmail.com>
-Subject: Re: [PATCH net] drivers/net/wan/x25_asy: Added needed_headroom and a
- skb->len check
-To:     Xie He <xie.he.0141@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux X25 <linux-x25@vger.kernel.org>,
-        Martin Schiller <ms@dev.tdt.de>
+References: <1596454753-13612-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1596454753-13612-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200806143559.ha6amfa4gq2o4jbi@uno.localdomain>
+In-Reply-To: <20200806143559.ha6amfa4gq2o4jbi@uno.localdomain>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Mon, 10 Aug 2020 08:22:52 +0100
+Message-ID: <CA+V-a8tk_KNoie0=aLBnj31RYoeHqHp8jnxqyJcPxWbkq6xTRA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: media: ov772x: Document endpoint properties
+To:     Jacopo Mondi <jacopo@jmondi.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 9, 2020 at 8:08 PM Xie He <xie.he.0141@gmail.com> wrote:
+Hi Jacopo,
+
+Thank you for the review.
+
+On Thu, Aug 6, 2020 at 3:32 PM Jacopo Mondi <jacopo@jmondi.org> wrote:
 >
-> On Sun, Aug 9, 2020 at 2:13 AM Willem de Bruijn
-> <willemdebruijn.kernel@gmail.com> wrote:
+> Hi Prabhakar,
+>
+> On Mon, Aug 03, 2020 at 12:39:11PM +0100, Lad Prabhakar wrote:
+> > Document endpoint properties required for parallel interface
 > >
-> > The patch is analogous to commit c7ca03c216ac
-> > ("drivers/net/wan/lapbether: Added needed_headroom and a skb->len
-> > check").
-
-Acked-by: Willem de Bruijn <willemb@google.com>
-
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > ---
+> >  .../devicetree/bindings/media/i2c/ov772x.txt     | 16 ++++++++++++++++
+> >  1 file changed, 16 insertions(+)
 > >
-> > Seems to make sense based on call stack
+> > diff --git a/Documentation/devicetree/bindings/media/i2c/ov772x.txt b/Documentation/devicetree/bindings/media/i2c/ov772x.txt
+> > index 0b3ede5b8e6a..1f4153484717 100644
+> > --- a/Documentation/devicetree/bindings/media/i2c/ov772x.txt
+> > +++ b/Documentation/devicetree/bindings/media/i2c/ov772x.txt
+> > @@ -21,6 +21,22 @@ subnode for its digital output video port, in accordance with the video
+> >  interface bindings defined in Documentation/devicetree/bindings/media/
+> >  video-interfaces.txt.
 > >
-> >   x25_asy_xmit               // skb_pull(skb, 1)
-> >   lapb_data_request
-> >   lapb_kick
-> >   lapb_send_iframe        // skb_push(skb, 2)
-> >   lapb_transmit_buffer    // skb_push(skb, 1)
-> >   lapb_data_transmit
-> >   x25_asy_data_transmit
-> >   x25_asy_encaps
+> > +Endpoint node required properties for parallel connection are:
+> > +- remote-endpoint: a phandle to the bus receiver's endpoint node.
 >
-> Thank you!
+> we allow endpoints without a remote end connected usually. They can be
+> filled in later, in example, with an overlay.
 >
-> > But I frankly don't know this code and would not modify logic that no
-> > one has complained about for many years without evidence of a real
-> > bug.
->
-> Maybe it's better to submit this patch to "net-next"?
+Agreed.
 
-That depends on whether this solves a bug. If it is possible to send a
-0 byte packet and make ndo_start_xmit read garbage, then net is the
-right target.
+> > +- bus-width: shall be set to <8> for 8 bits parallel bus
+> > +          or <10> for 10 bits parallel bus
+> > +- data-shift: shall be set to <2> for 8 bits parallel bus
+> > +           (lines 9:2 are used) or <0> for 10 bits parallel bus
+>
+> defining what is required or optional might be hard. I don't see the
+> driver enforcing their presence and I assume they have safe default.
+> Maybe make them optional and specify what the defaul value is ?
+>
+Will do.
 
-> I want to do this change because:
 >
-> 1) I hope to set needed_headroom properly for all three X.25 drivers
-> (lapbether, x25_asy, hdlc_x25) in the kernel. So that the upper layer
-> (net/x25) can be changed to use needed_headroom to allocate skb,
-> instead of the current way of using a constant to estimate the needed
-> headroom.
+> > +- hsync-active: active state of the HSYNC signal, 0/1 for LOW/HIGH respectively.
+> > +             (Not required for bus-type equal 6)
+> > +- vsync-active: active state of the VSYNC signal, 0/1 for LOW/HIGH respectively.
+> > +             (Not required for bus-type equal 6)
+>
+> If they're not required, they're optional, aren't they ? :)
+>
+Agreed.
 
-Which constant, X25_MAX_L2_LEN?
+> > +- pclk-sample: sample data on rising (1) or falling (0) edge of the pixel clock
+> > +            signal. (Not required for bus-type equal 6)
+>
+> Why the pclk polarity is does not apply to BT.656 ?
+>
+No it should apply.
 
-> 2) The code quality of this driver is actually very low, and I also
-> hope to improve it gradually. Actually this driver had been completely
-> broken for many years and no one had noticed this until I fixed it in
-> commit 8fdcabeac398 (drivers/net/wan/x25_asy: Fix to make it work)
-> last month.
+> > +- bus-type: data bus type. Possible values are:
+> > +         5 - Parallel
+> > +         6 - Bt.656
+>
+> Are we making this required, or do we expect this to be deduced
+> depending on which other properties have been specified ? Sakari it
+> seems you would like this to become a properties that has to be
+> specified most of the times, right ? (I tend to agree with that FWIW),
+> but does it impact retro-compatibility ?
+>
+Agreed can be deduced from other properties. But shall wait for Sakari
+to comment.
 
-Just curious: how come that netif_rx could be removed?
+Cheers,
+Prabhakar
 
-> This driver has a lot of other issues and I wish I can
-> gradually fix them, too.
->
-> > Were you able to actually exercise this path, similar to lapb_ether:
-> > configure the device, send data from a packet socket? If so, can you
-> > share the configuration steps?
->
-> Yes, I can run this driver. The driver is a software driver that runs
-> over TTY links. We can set up a x25_asy link over a virtual TTY link
-> using this method:
->
-> First:
->   sudo modprobe lapb
->   sudo modprobe x25_asy
->
-> Then set up a virtual TTY link:
->   socat -d -d pty,cfmakeraw pty,cfmakeraw &
-> This will open a pair of PTY ports.
-> (The "socat" program can be installed from package managers.)
->
-> Then use a C program to set the line discipline for the two PTY ports:
-> Simplified version for reading:
->   int ldisc = N_X25;
->   int fd = open("path/to/pty", O_RDWR);
->   ioctl(fd, TIOCSETD, &ldisc);
->   close(fd);
-> Complete version for running:
->   https://github.com/hyanggi/testing_linux/blob/master/network_x25/lapb/set_ldisc.c
-> Then we'll get two network interfaces named x25asy0 and x25asy1.
->
-> Then we do:
->   sudo ip link set x25asyN up
-> to bring them up.
->
-> After we set up this x25_asy link, we can test it using AF_PACKET sockets:
->
-> In the connected-side C program:
-> Complete version for running:
->   https://github.com/hyanggi/testing_linux/blob/master/network_x25/lapb/receiver.c
-> Simplified version for reading:
->   int sockfd = socket(AF_PACKET, SOCK_DGRAM, htons(ETH_P_ALL));
->
->   /* Get interface index */
->   struct ifreq ifr;
->   strcpy(ifr.ifr_name, "interface_name");
->   ioctl(sockfd, SIOCGIFINDEX, &ifr);
->   int ifindex = ifr.ifr_ifindex;
->
->   struct sockaddr_ll sender_addr;
->   socklen_t sender_addr_len = sizeof sender_addr;
->   char buffer[1500];
->
->   while (1) {
->       ssize_t length = recvfrom(sockfd, buffer, sizeof buffer, 0,
->                                 (struct sockaddr *)&sender_addr,
->                                 &sender_addr_len);
->       if (sender_addr.sll_ifindex != ifindex)
->           continue;
->       else if (buffer[0] == 0)
->           printf("Data received.\n");
->       else if (buffer[0] == 1)
->           printf("Connected by the other side.\n");
->       else if (buffer[0] == 2) {
->           printf("Disconnected by the other side.\n");
->           break;
->       }
->   }
->
->   close(sockfd);
->
-> In the connecting-side C program:
-> Complete version for running:
->   https://github.com/hyanggi/testing_linux/blob/master/network_x25/lapb/sender.c
-> Simplified version for reading:
->   int sockfd = socket(AF_PACKET, SOCK_DGRAM, htons(ETH_P_ALL));
->
->   /* Get interface index */
->   struct ifreq ifr;
->   strcpy(ifr.ifr_name, "interface_name");
->   ioctl(sockfd, SIOCGIFINDEX, &ifr);
->   int ifindex = ifr.ifr_ifindex;
->
->   struct sockaddr_ll addr = {
->       .sll_family = AF_PACKET,
->       .sll_ifindex = ifindex,
->   };
->
->   /* Connect */
->   sendto(sockfd, "\x01", 1, 0, (struct sockaddr *)&addr, sizeof addr);
->
->   /* Send data */
->   sendto(sockfd, "\x00" "data", 5, 0, (struct sockaddr *)&addr,
->          sizeof addr);
->
->   sleep(1); /* Wait a while before disconnecting */
->
->   /* Disconnect */
->   sendto(sockfd, "\x02", 1, 0, (struct sockaddr *)&addr, sizeof addr);
->
->   close(sockfd);
->
-> I'm happy to answer any questions. Thank you so much!
-
-Thanks very much for the detailed reproducer.
-
-One thing to keep in mind is that AF_PACKET sockets are not the normal
-datapath. AF_X25 sockets are. But you mention that you also exercise
-the upper layer? That gives confidence that these changes are not
-accidentally introducing regressions for the default path while fixing
-oddly crafted packets with (root only for a reason) packet sockets.
+> > +
+> >  Example:
+> >
+> >  &i2c0 {
+> > --
+> > 2.17.1
+> >
