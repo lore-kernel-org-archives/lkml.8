@@ -2,84 +2,270 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03E47C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 17:29:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92CE1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 17:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1A2C2083B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 17:29:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597080568;
-	bh=ireM7xLApekHQIqjELsBbT2kJiFJu4rDCIUy4AvUv8Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oVU4GPvhuLlawCZ21lVMZClL/qdwbGUvln5pS1H1nkBWuqCmGPb39+09bchdVhdnU
-	 ZrJUzQ1lHAJ50K7MxtfimTOUtXdEQC83I8fdOWToqe9K+H4MmKi+QjuJDJvKke4meF
-	 VDre2k2sEJ4Gr20xczJq6bZhKgQriWMaSV3k9s9s=
+	by mail.kernel.org (Postfix) with ESMTP id 59D9D2065C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 17:31:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="TeAR59/I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727864AbgHJR31 (ORCPT
+        id S1727906AbgHJRbU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 13:29:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57456 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725862AbgHJR30 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 13:29:26 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97E6520838;
-        Mon, 10 Aug 2020 17:29:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597080566;
-        bh=ireM7xLApekHQIqjELsBbT2kJiFJu4rDCIUy4AvUv8Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=F1tDgPKQ8a48L6iXeXl2ZQ+CV+co/rlaBWrRB5CIyCCdJto7kYTEFdNv49K9N/9Y5
-         rDuTX5EDazzaDQZWo494zj8Tk+rfGv8PkWAewnuz3/NtHw2HCOORQb1SpdmA8Xqp8n
-         T9Dz72HdKHAoAsEM2uS2KfzOnSyOz07eKsKy3tjA=
-Date:   Mon, 10 Aug 2020 19:29:36 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        syzbot+1a54a94bd32716796edd@syzkaller.appspotmail.com,
-        syzbot+9d2abfef257f3e2d4713@syzkaller.appspotmail.com,
-        Hillf Danton <hdanton@sina.com>, Takashi Iwai <tiwai@suse.de>
-Subject: Re: [PATCH 4.19 06/48] ALSA: seq: oss: Serialize ioctls
-Message-ID: <20200810172936.GA82601@kroah.com>
-References: <20200810151804.199494191@linuxfoundation.org>
- <20200810151804.528955642@linuxfoundation.org>
- <20200810163717.GA24408@amd>
+        Mon, 10 Aug 2020 13:31:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55034 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725862AbgHJRbS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 13:31:18 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DCC8C061787
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 10:31:15 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id w9so7362624qts.6
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 10:31:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ZilIbn8Ey5e/y0nurcgCYw++o8bX2sBJEAqKjJZdF3Y=;
+        b=TeAR59/IsQrIHUm1kqmj6qyUtILmf286hf119B3TZDeeDDuSnf67RCLE5rl9ZYvrBw
+         4/CpANJ73gHmkccdLd7QPTu18LIPLRkDGUK8I2Dwysjn88tWQWZC/yqz5Yun2ypnVT5H
+         iAROliLYVfBQ5l8ALknMRoE/AMOT3NfdTkhT4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ZilIbn8Ey5e/y0nurcgCYw++o8bX2sBJEAqKjJZdF3Y=;
+        b=TclnpPgSemsENSQFJ50TKK/w8NoiZNl+WXSJhM0kByGmK4iCKX9MySzZopI/EI9FV7
+         iOklVFrgcR9Q/Rq77avrfHf+MEPWwUKWAIRiB/rPMMplUtGqB+OQz7+vvVeSV5aExn/v
+         F1Yp7YRIJHgF8uGHCk8BzuN/YmjmUgll6+kO5Z8Ht1X3RbN3zjp5ZUwf87bG8YBRPknG
+         yQrVmpQu/KGhTzM6TIABuuSosb4toNPDlx5C2OJihoawavmsOlxyOGLg/h4v9hFc9Xr/
+         KI4+umYpLaz+dgNauj74T3HCrlyNTfxwQGbtO4bimkYDEr8H9lHDoOUvhUR7JTfZXILC
+         kiag==
+X-Gm-Message-State: AOAM530Gb5/GnFMyCAEsA0ok2px4YqcGa0AMxTj/eUvsgTC8XBapkq1C
+        l+b9gGy+VY9pp7/mOJIOcL2PrQ==
+X-Google-Smtp-Source: ABdhPJzuDduk9KeU4Tn3zvbI76yUyhP9Dlr8dxrVEI8d7EoyPDSJFgI/WFaVqcbl4dy+C3KWPY1vxg==
+X-Received: by 2002:ac8:d4e:: with SMTP id r14mr27341729qti.325.1597080670238;
+        Mon, 10 Aug 2020 10:31:10 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:cad3:ffff:feb3:bd59])
+        by smtp.gmail.com with ESMTPSA id l66sm16180988qte.48.2020.08.10.10.31.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Aug 2020 10:31:09 -0700 (PDT)
+Date:   Mon, 10 Aug 2020 13:31:09 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        linux-doc@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        neeraju@codeaurora.org, peterz@infradead.org,
+        Randy Dunlap <rdunlap@infradead.org>, rcu@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>, tglx@linutronix.de,
+        vineethrp@gmail.com
+Subject: Re: [PATCH v4 4/5] rcutorture: Force synchronizing of RCU flavor
+ from hotplug notifier
+Message-ID: <20200810173109.GA2253395@google.com>
+References: <20200807170722.2897328-1-joel@joelfernandes.org>
+ <20200807170722.2897328-5-joel@joelfernandes.org>
+ <20200810161945.GK4295@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200810163717.GA24408@amd>
+In-Reply-To: <20200810161945.GK4295@paulmck-ThinkPad-P72>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 06:37:17PM +0200, Pavel Machek wrote:
-> Hi!
-> 
-> > commit 80982c7e834e5d4e325b6ce33757012ecafdf0bb upstream.
-> > 
-> > Some ioctls via OSS sequencer API may race and lead to UAF when the
-> > port create and delete are performed concurrently, as spotted by a
-> > couple of syzkaller cases.  This patch is an attempt to address it by
-> > serializing the ioctls with the existing register_mutex.
-> > 
-> > Basically OSS sequencer API is an obsoleted interface and was designed
-> > without much consideration of the concurrency.  There are very few
-> > applications with it, and the concurrent performance isn't asked,
-> > hence this "big hammer" approach should be good enough.
-> 
-> That really is a "big hammer". And I believe it is too big.
+Hi Paul,
 
-Please discuss code architecture decisions on the mailing list for the
-subsystem/patch.  Doing it in random stable backports does not help out
-as all of the developers involved are not copied here.
+On Mon, Aug 10, 2020 at 09:19:45AM -0700, Paul E. McKenney wrote:
+> On Fri, Aug 07, 2020 at 01:07:21PM -0400, Joel Fernandes (Google) wrote:
+> > RCU has had deadlocks in the past related to synchronizing in a hotplug
+> > notifier. Typically, this has occurred because timer callbacks did not get
+> > migrated before the CPU hotplug notifier requesting RCU's services is
+> > called. If RCU's grace period processing has a timer callback queued in
+> > the meanwhile, it may never get called causing RCU stalls.
+> > 
+> > These issues have been fixed by removing such dependencies from grace
+> > period processing, however there are no testing scenarios for such
+> > cases.
+> > 
+> > This commit therefore reuses rcutorture's existing hotplug notifier to
+> > invoke the flavor-specific synchronize callback. If anything locks up,
+> > we expect stall warnings and/or other splats.
+> > 
+> > Obviously, we need not test for rcu_barrier from a notifier, since those
+> > are not allowed from notifiers. This fact is already detailed in the
+> > documentation as well.
+> > 
+> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> 
+> Given that rcutorture_booster_init() is invoked on the CPU in question
+> only after it is up and running, and that (if I remember correctly)
+> rcutorture_booster_cleanup() is invoked on the outgoing CPU before it
+> has really started going away, would this code really have caught that
+> timer/CPU-hotplug/RCU bug?
+
+You are right, it would not have caught that particular one because the timer
+callbacks would have been migrated by the time the rcutorture_booster_init()
+is called.
+
+I still thought it is a good idea anyway to test if the dynamic hotplug
+notifiers don't have these issues.
+
+Did you have a better idea on how to test the timer/hotplug/rcu bug?
 
 thanks,
 
-greg k-h
+ - Joel
+
+
+
+> >  kernel/rcu/rcutorture.c | 81 +++++++++++++++++++++--------------------
+> >  1 file changed, 42 insertions(+), 39 deletions(-)
+> > 
+> > diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
+> > index 92cb79620939..083b65e4877d 100644
+> > --- a/kernel/rcu/rcutorture.c
+> > +++ b/kernel/rcu/rcutorture.c
+> > @@ -1645,12 +1645,37 @@ rcu_torture_print_module_parms(struct rcu_torture_ops *cur_ops, const char *tag)
+> >  		 read_exit_delay, read_exit_burst);
+> >  }
+> >  
+> > -static int rcutorture_booster_cleanup(unsigned int cpu)
+> > +static bool rcu_torture_can_boost(void)
+> > +{
+> > +	static int boost_warn_once;
+> > +	int prio;
+> > +
+> > +	if (!(test_boost == 1 && cur_ops->can_boost) && test_boost != 2)
+> > +		return false;
+> > +
+> > +	prio = rcu_get_gp_kthreads_prio();
+> > +	if (!prio)
+> > +		return false;
+> > +
+> > +	if (prio < 2) {
+> > +		if (boost_warn_once  == 1)
+> > +			return false;
+> > +
+> > +		pr_alert("%s: WARN: RCU kthread priority too low to test boosting.  Skipping RCU boost test. Try passing rcutree.kthread_prio > 1 on the kernel command line.\n", KBUILD_MODNAME);
+> > +		boost_warn_once = 1;
+> > +		return false;
+> > +	}
+> > +
+> > +	return true;
+> > +}
+> > +
+> > +static int rcutorture_hp_cleanup(unsigned int cpu)
+> >  {
+> >  	struct task_struct *t;
+> >  
+> > -	if (boost_tasks[cpu] == NULL)
+> > +	if (!rcu_torture_can_boost() || boost_tasks[cpu] == NULL)
+> >  		return 0;
+> > +
+> >  	mutex_lock(&boost_mutex);
+> >  	t = boost_tasks[cpu];
+> >  	boost_tasks[cpu] = NULL;
+> > @@ -1662,11 +1687,14 @@ static int rcutorture_booster_cleanup(unsigned int cpu)
+> >  	return 0;
+> >  }
+> >  
+> > -static int rcutorture_booster_init(unsigned int cpu)
+> > +static int rcutorture_hp_init(unsigned int cpu)
+> >  {
+> >  	int retval;
+> >  
+> > -	if (boost_tasks[cpu] != NULL)
+> > +	/* Force synchronizing from hotplug notifier to ensure it is safe. */
+> > +	cur_ops->sync();
+> > +
+> > +	if (!rcu_torture_can_boost() || boost_tasks[cpu] != NULL)
+> >  		return 0;  /* Already created, nothing more to do. */
+> >  
+> >  	/* Don't allow time recalculation while creating a new task. */
+> > @@ -2336,30 +2364,6 @@ static void rcu_torture_barrier_cleanup(void)
+> >  	}
+> >  }
+> >  
+> > -static bool rcu_torture_can_boost(void)
+> > -{
+> > -	static int boost_warn_once;
+> > -	int prio;
+> > -
+> > -	if (!(test_boost == 1 && cur_ops->can_boost) && test_boost != 2)
+> > -		return false;
+> > -
+> > -	prio = rcu_get_gp_kthreads_prio();
+> > -	if (!prio)
+> > -		return false;
+> > -
+> > -	if (prio < 2) {
+> > -		if (boost_warn_once  == 1)
+> > -			return false;
+> > -
+> > -		pr_alert("%s: WARN: RCU kthread priority too low to test boosting.  Skipping RCU boost test. Try passing rcutree.kthread_prio > 1 on the kernel command line.\n", KBUILD_MODNAME);
+> > -		boost_warn_once = 1;
+> > -		return false;
+> > -	}
+> > -
+> > -	return true;
+> > -}
+> > -
+> >  static bool read_exit_child_stop;
+> >  static bool read_exit_child_stopped;
+> >  static wait_queue_head_t read_exit_wq;
+> > @@ -2503,8 +2507,7 @@ rcu_torture_cleanup(void)
+> >  		 rcutorture_seq_diff(gp_seq, start_gp_seq));
+> >  	torture_stop_kthread(rcu_torture_stats, stats_task);
+> >  	torture_stop_kthread(rcu_torture_fqs, fqs_task);
+> > -	if (rcu_torture_can_boost())
+> > -		cpuhp_remove_state(rcutor_hp);
+> > +	cpuhp_remove_state(rcutor_hp);
+> >  
+> >  	/*
+> >  	 * Wait for all RCU callbacks to fire, then do torture-type-specific
+> > @@ -2773,21 +2776,21 @@ rcu_torture_init(void)
+> >  		if (firsterr)
+> >  			goto unwind;
+> >  	}
+> > +
+> > +	firsterr = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "RCU_TORTURE",
+> > +			rcutorture_hp_init,
+> > +			rcutorture_hp_cleanup);
+> > +	if (firsterr < 0)
+> > +		goto unwind;
+> > +	rcutor_hp = firsterr;
+> > +
+> >  	if (test_boost_interval < 1)
+> >  		test_boost_interval = 1;
+> >  	if (test_boost_duration < 2)
+> >  		test_boost_duration = 2;
+> > -	if (rcu_torture_can_boost()) {
+> > -
+> > +	if (rcu_torture_can_boost())
+> >  		boost_starttime = jiffies + test_boost_interval * HZ;
+> >  
+> > -		firsterr = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "RCU_TORTURE",
+> > -					     rcutorture_booster_init,
+> > -					     rcutorture_booster_cleanup);
+> > -		if (firsterr < 0)
+> > -			goto unwind;
+> > -		rcutor_hp = firsterr;
+> > -	}
+> >  	shutdown_jiffies = jiffies + shutdown_secs * HZ;
+> >  	firsterr = torture_shutdown_init(shutdown_secs, rcu_torture_cleanup);
+> >  	if (firsterr)
+> > -- 
+> > 2.28.0.236.gb10cc79966-goog
+> > 
