@@ -5,53 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 315B5C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:18:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 151E0C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:19:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01D272080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:18:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE2342080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:19:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597087102;
-	bh=JCjjjWbCYvT0bGRkX2Iilrpaa0f75hvq0QdyHN79ywc=;
+	s=default; t=1597087197;
+	bh=FMih3/NXQq2ch2XERRB4MAPKDg5dZDiGVAUyMNS6M6c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WGDTDXt+Bd1Gp415TynVkiG341aYtg63TgjRp8rsgpDPCx+oz0BSIC/0+KUZstVwq
-	 NzPbmZI5nNEf35zvaq6qkrEvakX9j/O0NjrQbPmb+6wDi5BJQDBcmRgfco8IP0TzSK
-	 /JqXGspEqbm2M8kQug2bFHtpE9qEEON7UG5Y8aBM=
+	b=jFWWPIomz1eZNQol9egvEKbcLcfvXKrGIkQKMYJkVKgrKwfFA0Kp2f9qRYH0bmfbU
+	 MBdIBj2HHqK26sMkZgUuogMlT00Nuset8kfPo55A7D39aKQxbsk37eCP9LbQAsABh3
+	 8WFfhtJsz+wIqBMcjVgiErzCeimM+sFSgC5O+WQ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730286AbgHJTST (ORCPT
+        id S1729923AbgHJTOC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:18:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45842 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:14:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729938AbgHJTOF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:14:05 -0400
+        id S1729508AbgHJTNx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:13:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D958222BED;
-        Mon, 10 Aug 2020 19:14:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 850FB22DCC;
+        Mon, 10 Aug 2020 19:13:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086844;
-        bh=JCjjjWbCYvT0bGRkX2Iilrpaa0f75hvq0QdyHN79ywc=;
+        s=default; t=1597086832;
+        bh=FMih3/NXQq2ch2XERRB4MAPKDg5dZDiGVAUyMNS6M6c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TFWGXj26XeUzSsaeHnS3oDOZ82mnoN2JXJQ8rU46PB73Fg519H0Lf7PiEghzZX2iA
-         e5WmTJDV57Vun1GoasVEjkcb7RwtD8rp6d1KRMuh4KGQYolItUIfltzcPRMsPbgebi
-         wCVsOac3zY/PFjQp904IQh5RoqW91/SDFwB9otIg=
+        b=BZiOsAeRfMi0ma47KvqGmCOCJu3ncaNCzFMpeWSrepTbca3IbI5tgdA6nByn5pE0y
+         4LHd2twPHt1HvN32D6KYxdMV6EO6Nw+a1KIOtztJ+4QdhCETpWDhUKrdT55A4tFd0I
+         UyGVgZ0CHvIpNKtVfHyxaCaWEghGrN01JTPUb16Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wright Feng <wright.feng@cypress.com>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Chi-hsien Lin <chi-hsien.lin@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+Cc:     Evgeny Novikov <novikov@ispras.ru>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 13/22] brcmfmac: set state of hanger slot to FREE when flushing PSQ
-Date:   Mon, 10 Aug 2020 15:13:35 -0400
-Message-Id: <20200810191345.3795166-13-sashal@kernel.org>
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 05/22] video: fbdev: neofb: fix memory leak in neo_scan_monitor()
+Date:   Mon, 10 Aug 2020 15:13:27 -0400
+Message-Id: <20200810191345.3795166-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810191345.3795166-1-sashal@kernel.org>
 References: <20200810191345.3795166-1-sashal@kernel.org>
@@ -64,78 +64,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wright Feng <wright.feng@cypress.com>
+From: Evgeny Novikov <novikov@ispras.ru>
 
-[ Upstream commit fcdd7a875def793c38d7369633af3eba6c7cf089 ]
+[ Upstream commit edcb3895a751c762a18d25c8d9846ce9759ed7e1 ]
 
-When USB or SDIO device got abnormal bus disconnection, host driver
-tried to clean up the skbs in PSQ and TXQ (The skb's pointer in hanger
-slot linked to PSQ and TSQ), so we should set the state of skb hanger slot
-to BRCMF_FWS_HANGER_ITEM_STATE_FREE before freeing skb.
-In brcmf_fws_bus_txq_cleanup it already sets
-BRCMF_FWS_HANGER_ITEM_STATE_FREE before freeing skb, therefore we add the
-same thing in brcmf_fws_psq_flush to avoid following warning message.
+neofb_probe() calls neo_scan_monitor() that can successfully allocate a
+memory for info->monspecs.modedb and proceed to case 0x03. There it does
+not free the memory and returns -1. neofb_probe() goes to label
+err_scan_monitor, thus, it does not free this memory through calling
+fb_destroy_modedb() as well. We can not go to label err_init_hw since
+neo_scan_monitor() can fail during memory allocation. So, the patch frees
+the memory directly for case 0x03.
 
-   [ 1580.012880] ------------   [ cut here ]------------
-   [ 1580.017550] WARNING: CPU: 3 PID: 3065 at
-drivers/net/wireless/broadcom/brcm80211/brcmutil/utils.c:49
-brcmu_pkt_buf_free_skb+0x21/0x30 [brcmutil]
-   [ 1580.184017] Call Trace:
-   [ 1580.186514]  brcmf_fws_cleanup+0x14e/0x190 [brcmfmac]
-   [ 1580.191594]  brcmf_fws_del_interface+0x70/0x90 [brcmfmac]
-   [ 1580.197029]  brcmf_proto_bcdc_del_if+0xe/0x10 [brcmfmac]
-   [ 1580.202418]  brcmf_remove_interface+0x69/0x190 [brcmfmac]
-   [ 1580.207888]  brcmf_detach+0x90/0xe0 [brcmfmac]
-   [ 1580.212385]  brcmf_usb_disconnect+0x76/0xb0 [brcmfmac]
-   [ 1580.217557]  usb_unbind_interface+0x72/0x260
-   [ 1580.221857]  device_release_driver_internal+0x141/0x200
-   [ 1580.227152]  device_release_driver+0x12/0x20
-   [ 1580.231460]  bus_remove_device+0xfd/0x170
-   [ 1580.235504]  device_del+0x1d9/0x300
-   [ 1580.239041]  usb_disable_device+0x9e/0x270
-   [ 1580.243160]  usb_disconnect+0x94/0x270
-   [ 1580.246980]  hub_event+0x76d/0x13b0
-   [ 1580.250499]  process_one_work+0x144/0x360
-   [ 1580.254564]  worker_thread+0x4d/0x3c0
-   [ 1580.258247]  kthread+0x109/0x140
-   [ 1580.261515]  ? rescuer_thread+0x340/0x340
-   [ 1580.265543]  ? kthread_park+0x60/0x60
-   [ 1580.269237]  ? SyS_exit_group+0x14/0x20
-   [ 1580.273118]  ret_from_fork+0x25/0x30
-   [ 1580.300446] ------------   [ cut here ]------------
+Found by Linux Driver Verification project (linuxtesting.org).
 
-Acked-by: Arend van Spriel <arend.vanspriel@broadcom.com>
-Signed-off-by: Wright Feng <wright.feng@cypress.com>
-Signed-off-by: Chi-hsien Lin <chi-hsien.lin@cypress.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200624091608.25154-2-wright.feng@cypress.com
+Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
+Cc: Jani Nikula <jani.nikula@intel.com>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200630195451.18675-1-novikov@ispras.ru
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/video/fbdev/neofb.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c
-index 2370060ef980a..0807331284895 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c
-@@ -653,6 +653,7 @@ static inline int brcmf_fws_hanger_poppkt(struct brcmf_fws_hanger *h,
- static void brcmf_fws_psq_flush(struct brcmf_fws_info *fws, struct pktq *q,
- 				int ifidx)
- {
-+	struct brcmf_fws_hanger_item *hi;
- 	bool (*matchfn)(struct sk_buff *, void *) = NULL;
- 	struct sk_buff *skb;
- 	int prec;
-@@ -664,6 +665,9 @@ static void brcmf_fws_psq_flush(struct brcmf_fws_info *fws, struct pktq *q,
- 		skb = brcmu_pktq_pdeq_match(q, prec, matchfn, &ifidx);
- 		while (skb) {
- 			hslot = brcmf_skb_htod_tag_get_field(skb, HSLOT);
-+			hi = &fws->hanger.items[hslot];
-+			WARN_ON(skb != hi->pkt);
-+			hi->state = BRCMF_FWS_HANGER_ITEM_STATE_FREE;
- 			brcmf_fws_hanger_poppkt(&fws->hanger, hslot, &skb,
- 						true);
- 			brcmu_pkt_buf_free_skb(skb);
+diff --git a/drivers/video/fbdev/neofb.c b/drivers/video/fbdev/neofb.c
+index 5d3a444083f74..2018e1ca33eb6 100644
+--- a/drivers/video/fbdev/neofb.c
++++ b/drivers/video/fbdev/neofb.c
+@@ -1820,6 +1820,7 @@ static int neo_scan_monitor(struct fb_info *info)
+ #else
+ 		printk(KERN_ERR
+ 		       "neofb: Only 640x480, 800x600/480 and 1024x768 panels are currently supported\n");
++		kfree(info->monspecs.modedb);
+ 		return -1;
+ #endif
+ 	default:
 -- 
 2.25.1
 
