@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 031ABC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:34:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF51CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:34:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC4EF207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:34:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D38A207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:34:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073660;
-	bh=qeZvfDHiqugdAsX3cDYN3Pb3rFFOXn3FnRXjPQcaDf4=;
+	s=default; t=1597073666;
+	bh=4En08koklS31j5zljNpH/8tmw0+/G5vNA3eJ3dzAHfA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MzXyguX765D0Iofn04oTi99/azmEiGIyUbt6iKGfcJuoge9bmv5NYWIqk+pDpjKTv
-	 0ZGw1XI90BAERWH5fTpFA9gp78Qo66JY+QWddJ6GGjz7KnM5xSSApE2mDGr5STVple
-	 mMq7BMfj5haW6bSyEE4A/uR6sX6DAZhLYNwJ/lII=
+	b=zXQpFomfqz2We7/yguDVzZQzo0gBZ5iNc7oRw+s6jkeuS5gx5sJbL9jKxTSD+JzGd
+	 istcMBwl1I2O47Gw6wuoLP+9ZNQBP5LkPD4Q5tWuxJfLVbkxhJV8iogkDHLIm6kPA3
+	 Sl9cWFkVwvianj+8l1dtvlg2c/ycOTY4hssaHm4Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729281AbgHJPeS (ORCPT
+        id S1729266AbgHJPeO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:34:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35148 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:34:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728920AbgHJP24 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:28:56 -0400
+        id S1727115AbgHJP3I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:29:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7BE122B47;
-        Mon, 10 Aug 2020 15:28:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFC1D22CF7;
+        Mon, 10 Aug 2020 15:29:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073336;
-        bh=qeZvfDHiqugdAsX3cDYN3Pb3rFFOXn3FnRXjPQcaDf4=;
+        s=default; t=1597073347;
+        bh=4En08koklS31j5zljNpH/8tmw0+/G5vNA3eJ3dzAHfA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y/j2gLVt52l9u6rtDSTeiJNgVoHgZeefaLxYydk1npSzu5k8jd8uAAwDvuY3doW07
-         Fsc5I8EV6G+5DbncM9D8S7xGDw1SOmxQ8gVRf4Biay8HzIRulczTfoLiDruY0G5SdM
-         byqCbzWBmo9o5kfxrTm5MKWBn0Ur6qWuM2mz26Fw=
+        b=MNyj2bSoundFuETT9R5rnMWNhVDQENEgbsExZ1/5J0/rPDXCipEu8KHXrY52O70Y3
+         V8CNiUy8/PME+YN56pghx/CoRB+JIM85XSDgC5Q52sa8R6VY2iAAmp1a7nqGpgTPEk
+         6dDnCPreIuznUiSUd8XR4CS1GoFxbKDd6N2PlHo0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christopher KOBAYASHI <chris@disavowed.jp>,
-        Doug Brown <doug@downtowndougbrown.com>,
-        Vincent Duvert <vincent.ldev@duvert.net>,
-        Lukas Wunner <lukas@wunner.de>,
-        Yue Haibing <yuehaibing@huawei.com>,
+        stable@vger.kernel.org, "Rafael P." <rparrazo@redhat.com>,
+        Dean Nelson <dnelson@redhat.com>,
+        Xin Long <lucien.xin@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 57/67] appletalk: Fix atalk_proc_init() return path
-Date:   Mon, 10 Aug 2020 17:21:44 +0200
-Message-Id: <20200810151812.321216539@linuxfoundation.org>
+Subject: [PATCH 5.4 61/67] net: thunderx: use spin_lock_bh in nicvf_set_rx_mode_task()
+Date:   Mon, 10 Aug 2020 17:21:48 +0200
+Message-Id: <20200810151812.515456608@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151809.438685785@linuxfoundation.org>
 References: <20200810151809.438685785@linuxfoundation.org>
@@ -63,39 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Duvert <vincent.ldev@duvert.net>
+From: Xin Long <lucien.xin@gmail.com>
 
-[ Upstream commit d0f6ba2ef2c1c95069509e71402e7d6d43452512 ]
+[ Upstream commit bab9693a9a8c6dd19f670408ec1e78e12a320682 ]
 
-Add a missing return statement to atalk_proc_init so it doesn't return
--ENOMEM when successful.  This allows the appletalk module to load
-properly.
+A dead lock was triggered on thunderx driver:
 
-Fixes: e2bcd8b0ce6e ("appletalk: use remove_proc_subtree to simplify procfs code")
-Link: https://www.downtowndougbrown.com/2020/08/hacking-up-a-fix-for-the-broken-appletalk-kernel-module-in-linux-5-1-and-newer/
-Reported-by: Christopher KOBAYASHI <chris@disavowed.jp>
-Reported-by: Doug Brown <doug@downtowndougbrown.com>
-Signed-off-by: Vincent Duvert <vincent.ldev@duvert.net>
-[lukas: add missing tags]
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Cc: stable@vger.kernel.org # v5.1+
-Cc: Yue Haibing <yuehaibing@huawei.com>
+        CPU0                    CPU1
+        ----                    ----
+   [01] lock(&(&nic->rx_mode_wq_lock)->rlock);
+                           [11] lock(&(&mc->mca_lock)->rlock);
+                           [12] lock(&(&nic->rx_mode_wq_lock)->rlock);
+   [02] <Interrupt> lock(&(&mc->mca_lock)->rlock);
+
+The path for each is:
+
+  [01] worker_thread() -> process_one_work() -> nicvf_set_rx_mode_task()
+  [02] mld_ifc_timer_expire()
+  [11] ipv6_add_dev() -> ipv6_dev_mc_inc() -> igmp6_group_added() ->
+  [12] dev_mc_add() -> __dev_set_rx_mode() -> nicvf_set_rx_mode()
+
+To fix it, it needs to disable bh on [1], so that the timer on [2]
+wouldn't be triggered until rx_mode_wq_lock is released. So change
+to use spin_lock_bh() instead of spin_lock().
+
+Thanks to Paolo for helping with this.
+
+v1->v2:
+  - post to netdev.
+
+Reported-by: Rafael P. <rparrazo@redhat.com>
+Tested-by: Dean Nelson <dnelson@redhat.com>
+Fixes: 469998c861fa ("net: thunderx: prevent concurrent data re-writing by nicvf_set_rx_mode")
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/appletalk/atalk_proc.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/cavium/thunder/nicvf_main.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/net/appletalk/atalk_proc.c
-+++ b/net/appletalk/atalk_proc.c
-@@ -229,6 +229,8 @@ int __init atalk_proc_init(void)
- 				     sizeof(struct aarp_iter_state), NULL))
- 		goto out;
+--- a/drivers/net/ethernet/cavium/thunder/nicvf_main.c
++++ b/drivers/net/ethernet/cavium/thunder/nicvf_main.c
+@@ -2047,11 +2047,11 @@ static void nicvf_set_rx_mode_task(struc
+ 	/* Save message data locally to prevent them from
+ 	 * being overwritten by next ndo_set_rx_mode call().
+ 	 */
+-	spin_lock(&nic->rx_mode_wq_lock);
++	spin_lock_bh(&nic->rx_mode_wq_lock);
+ 	mode = vf_work->mode;
+ 	mc = vf_work->mc;
+ 	vf_work->mc = NULL;
+-	spin_unlock(&nic->rx_mode_wq_lock);
++	spin_unlock_bh(&nic->rx_mode_wq_lock);
  
-+	return 0;
-+
- out:
- 	remove_proc_subtree("atalk", init_net.proc_net);
- 	return -ENOMEM;
+ 	__nicvf_set_rx_mode_task(mode, mc, nic);
+ }
 
 
