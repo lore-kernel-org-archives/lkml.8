@@ -2,119 +2,118 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF51CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:34:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7FFDC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:34:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D38A207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:34:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073666;
-	bh=4En08koklS31j5zljNpH/8tmw0+/G5vNA3eJ3dzAHfA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zXQpFomfqz2We7/yguDVzZQzo0gBZ5iNc7oRw+s6jkeuS5gx5sJbL9jKxTSD+JzGd
-	 istcMBwl1I2O47Gw6wuoLP+9ZNQBP5LkPD4Q5tWuxJfLVbkxhJV8iogkDHLIm6kPA3
-	 Sl9cWFkVwvianj+8l1dtvlg2c/ycOTY4hssaHm4Q=
+	by mail.kernel.org (Postfix) with ESMTP id 6BC46207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:34:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SUqd4aq9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729266AbgHJPeO (ORCPT
+        id S1728887AbgHJPer (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:34:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35358 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727115AbgHJP3I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:29:08 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFC1D22CF7;
-        Mon, 10 Aug 2020 15:29:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073347;
-        bh=4En08koklS31j5zljNpH/8tmw0+/G5vNA3eJ3dzAHfA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MNyj2bSoundFuETT9R5rnMWNhVDQENEgbsExZ1/5J0/rPDXCipEu8KHXrY52O70Y3
-         V8CNiUy8/PME+YN56pghx/CoRB+JIM85XSDgC5Q52sa8R6VY2iAAmp1a7nqGpgTPEk
-         6dDnCPreIuznUiSUd8XR4CS1GoFxbKDd6N2PlHo0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Rafael P." <rparrazo@redhat.com>,
-        Dean Nelson <dnelson@redhat.com>,
-        Xin Long <lucien.xin@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 61/67] net: thunderx: use spin_lock_bh in nicvf_set_rx_mode_task()
-Date:   Mon, 10 Aug 2020 17:21:48 +0200
-Message-Id: <20200810151812.515456608@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200810151809.438685785@linuxfoundation.org>
-References: <20200810151809.438685785@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 10 Aug 2020 11:34:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37178 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728036AbgHJPed (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:34:33 -0400
+Received: from mail-io1-xd2b.google.com (mail-io1-xd2b.google.com [IPv6:2607:f8b0:4864:20::d2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 702E5C061756;
+        Mon, 10 Aug 2020 08:34:33 -0700 (PDT)
+Received: by mail-io1-xd2b.google.com with SMTP id g19so9324577ioh.8;
+        Mon, 10 Aug 2020 08:34:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5WTYhGSMVJwaOGI5CfF/LhAkHD90jfpwgnfPX4Hecs4=;
+        b=SUqd4aq9Y6Av+Gv7ga8W5ylkM3EMuDB+BJKiZDlYcl88/yG7+n1hocgfPi2FLC+Vxx
+         KqPoFLizRpDrrvQnQiwnl561zq27UuRh8UiqsCIrjxDmAuFJnRBl/DUzkplB4z4G7b9Q
+         jc7U58KTucVI+gNlNrZukqTN/vkc4mBRHbDXl2OTOpJufnJriy9ap0BWG6XUUXmUipsK
+         TVoTNnf58iia3wlyq6oUVjzJCFkxLz2VpA2zx08I9wplKHuxou/WV3K2uz/ioqL+Sskh
+         6g11stI+pS9OhTnOPgH6HxIYKtKYfdcqu6n4sRawgxF0zuuxqz7wmHR/8ocnUyPutNez
+         JFlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5WTYhGSMVJwaOGI5CfF/LhAkHD90jfpwgnfPX4Hecs4=;
+        b=HCk45M7IiUQUwGNaebCvCzLmOhXp8ays57qbXRn5jzqfn13QBsrulYmg/+yP7B0lkA
+         22XptBeBynIUOu4UYsNJHjViGqo3ymLHiKGjdiTwABth4dhDCTItrrJpKtCzqGacp8rG
+         ck7x1yXd2S/Yf25nxiPyC2QWO0+MR1MGuw5H6syFh1R5EWJ1Wm8X1dWF8Ww9/zsm/dfK
+         ecmTdAlxDaA12bfpTx5WWhQmRUoEgocN+pwmqJl+GISzlqtao99vvJy6Ib09rBUkGFkY
+         o4wpF/U4xzAMWEwLdwrqRpSwdsL/yjQj/HI4EVfd0p/mozNNu7Gfksx6Q09AnbYCHttd
+         g8xA==
+X-Gm-Message-State: AOAM530kuD+v77llCe5AZuZMoeW5QtqySxpRKqkFAHm1r72OXdhHWYe/
+        y7PvCzoHrRt4hUi+GF3HKBNezLcnCA298wT60hyz+Wi5
+X-Google-Smtp-Source: ABdhPJx/72p6MbNErre05awlascVxCqkGhI8Z4HJDnMGlc4VJwJdcxlxvUk8VJQtBs+c1JaA8neSe/NM/cZiAC2o7ms=
+X-Received: by 2002:a05:6638:bd1:: with SMTP id g17mr20791285jad.132.1597073672791;
+ Mon, 10 Aug 2020 08:34:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <447452.1596109876@warthog.procyon.org.uk> <1851200.1596472222@warthog.procyon.org.uk>
+ <667820.1597072619@warthog.procyon.org.uk>
+In-Reply-To: <667820.1597072619@warthog.procyon.org.uk>
+From:   Steve French <smfrench@gmail.com>
+Date:   Mon, 10 Aug 2020 10:34:21 -0500
+Message-ID: <CAH2r5msKipj1exNUDaSUN7h0pjanOenhSg2=EWYMv_h15yKtxg@mail.gmail.com>
+Subject: Re: [GIT PULL] fscache rewrite -- please drop for now
+To:     David Howells <dhowells@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Jeff Layton <jlayton@redhat.com>,
+        Dave Wysochanski <dwysocha@redhat.com>,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Steve French <sfrench@samba.org>,
+        Eric Van Hensbergen <ericvh@gmail.com>,
+        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
+        linux-nfs <linux-nfs@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>, ceph-devel@vger.kernel.org,
+        v9fs-developer@lists.sourceforge.net,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+cifs.ko also can set rsize quite small (even 1K for example, although
+that will be more than 10x slower than the default 4MB so hopefully no
+one is crazy enough to do that).   I can't imagine an SMB3 server
+negotiating an rsize or wsize smaller than 64K in today's world (and
+typical is 1MB to 8MB) but the user can specify a much smaller rsize
+on mount.  If 64K is an adequate minimum, we could change the cifs
+mount option parsing to require a certain minimum rsize if fscache is
+selected.
 
-[ Upstream commit bab9693a9a8c6dd19f670408ec1e78e12a320682 ]
-
-A dead lock was triggered on thunderx driver:
-
-        CPU0                    CPU1
-        ----                    ----
-   [01] lock(&(&nic->rx_mode_wq_lock)->rlock);
-                           [11] lock(&(&mc->mca_lock)->rlock);
-                           [12] lock(&(&nic->rx_mode_wq_lock)->rlock);
-   [02] <Interrupt> lock(&(&mc->mca_lock)->rlock);
-
-The path for each is:
-
-  [01] worker_thread() -> process_one_work() -> nicvf_set_rx_mode_task()
-  [02] mld_ifc_timer_expire()
-  [11] ipv6_add_dev() -> ipv6_dev_mc_inc() -> igmp6_group_added() ->
-  [12] dev_mc_add() -> __dev_set_rx_mode() -> nicvf_set_rx_mode()
-
-To fix it, it needs to disable bh on [1], so that the timer on [2]
-wouldn't be triggered until rx_mode_wq_lock is released. So change
-to use spin_lock_bh() instead of spin_lock().
-
-Thanks to Paolo for helping with this.
-
-v1->v2:
-  - post to netdev.
-
-Reported-by: Rafael P. <rparrazo@redhat.com>
-Tested-by: Dean Nelson <dnelson@redhat.com>
-Fixes: 469998c861fa ("net: thunderx: prevent concurrent data re-writing by nicvf_set_rx_mode")
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/cavium/thunder/nicvf_main.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
---- a/drivers/net/ethernet/cavium/thunder/nicvf_main.c
-+++ b/drivers/net/ethernet/cavium/thunder/nicvf_main.c
-@@ -2047,11 +2047,11 @@ static void nicvf_set_rx_mode_task(struc
- 	/* Save message data locally to prevent them from
- 	 * being overwritten by next ndo_set_rx_mode call().
- 	 */
--	spin_lock(&nic->rx_mode_wq_lock);
-+	spin_lock_bh(&nic->rx_mode_wq_lock);
- 	mode = vf_work->mode;
- 	mc = vf_work->mc;
- 	vf_work->mc = NULL;
--	spin_unlock(&nic->rx_mode_wq_lock);
-+	spin_unlock_bh(&nic->rx_mode_wq_lock);
- 
- 	__nicvf_set_rx_mode_task(mode, mc, nic);
- }
+On Mon, Aug 10, 2020 at 10:17 AM David Howells <dhowells@redhat.com> wrote:
+>
+> Hi Linus,
+>
+> Can you drop the fscache rewrite pull for now.  We've seem an issue in NFS
+> integration and need to rework the read helper a bit.  I made an assumption
+> that fscache will always be able to request that the netfs perform a read of a
+> certain minimum size - but with NFS you can break that by setting rsize too
+> small.
+>
+> We need to make the read helper able to make multiple netfs reads.  This can
+> help ceph too.
+>
+> Thanks,
+> David
+>
 
 
+-- 
+Thanks,
+
+Steve
