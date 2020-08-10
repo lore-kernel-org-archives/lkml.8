@@ -7,44 +7,45 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B97FFC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:27:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C472C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:27:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F5022073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:27:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B4C42073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:27:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ttcW1DBk"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="b+clH0zj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbgHJW11 (ORCPT
+        id S1727065AbgHJW12 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 18:27:27 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:41610 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727020AbgHJW1X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 18:27:23 -0400
+        Mon, 10 Aug 2020 18:27:28 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:30957 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726867AbgHJW1Y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 18:27:24 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597098442; h=Content-Transfer-Encoding: MIME-Version:
+ s=smtp; t=1597098443; h=Content-Transfer-Encoding: MIME-Version:
  References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=GrEw3oSw++nMPzEl+/BHJDxleP5vanw4s1YWFdwf0mU=; b=ttcW1DBkqZFxWQhu9vWGGik7RDpPvQnR6tOAelQWeyeShOVSrXkd4Q19Eu7R1R5hYRIRBoQ8
- /kIuEZlqcHC5TqkvvcEdo2DyFNS24uHtUb85FlCNShgzflSnMeVvtYjM4aePCwATs/77+UMw
- 8dNup8FdSpa7t4i4bzp0crSeeVQ=
-X-Mailgun-Sending-Ip: 69.72.43.7
+ Sender; bh=FHtW4WjaTsFoNisPqVbyXMhsG1JBUXON5dZ+qL6ZJhk=; b=b+clH0zj4rzOR2QJvoSTObKKrXNgbDQFklLHOjEOfgsIs/RCzc62IGl6Aa1OxWsVap+PmwJr
+ b+uK1qSWvPUjcNVM9yu3mPjKITEyQGs0Y2pddmjXN5Gssddw+nxEwrISoZh6RTkRV1hxTbHt
+ //SG3xyygtqip5l/VH4zQXt8koo=
+X-Mailgun-Sending-Ip: 104.130.122.29
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
- 5f31c9cac85a1092b0faef37 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 10 Aug 2020 22:27:22
+ smtp-out-n11.prod.us-west-2.postgun.com with SMTP id
+ 5f31c9be4c787f237b0ff914 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 10 Aug 2020 22:27:10
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 658CAC433B2; Mon, 10 Aug 2020 22:27:22 +0000 (UTC)
+        id 62C15C43391; Mon, 10 Aug 2020 22:27:10 +0000 (UTC)
 Received: from jordan-laptop.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7E7E2C433C9;
-        Mon, 10 Aug 2020 22:27:19 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7E7E2C433C9
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D52DCC433CA;
+        Mon, 10 Aug 2020 22:27:06 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D52DCC433CA
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
 From:   Jordan Crouse <jcrouse@codeaurora.org>
@@ -53,12 +54,17 @@ Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         iommu@lists.linux-foundation.org, freedreno@lists.freedesktop.org,
         Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Rob Herring <robh@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Krishna Reddy <vdumpa@nvidia.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v12 06/13] dt-bindings: arm-smmu: Add compatible string for Adreno GPU SMMU
-Date:   Mon, 10 Aug 2020 16:26:50 -0600
-Message-Id: <20200810222657.1841322-7-jcrouse@codeaurora.org>
+Subject: [PATCH v12 01/13] iommu/arm-smmu: Pass io-pgtable config to implementation specific function
+Date:   Mon, 10 Aug 2020 16:26:45 -0600
+Message-Id: <20200810222657.1841322-2-jcrouse@codeaurora.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810222657.1841322-1-jcrouse@codeaurora.org>
 References: <20200810222657.1841322-1-jcrouse@codeaurora.org>
@@ -69,34 +75,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Every Qcom Adreno GPU has an embedded SMMU for its own use. These
-devices depend on unique features such as split pagetables,
-different stall/halt requirements and other settings. Identify them
-with a compatible string so that they can be identified in the
-arm-smmu implementation specific code.
+Construct the io-pgtable config before calling the implementation specific
+init_context function and pass it so the implementation specific function
+can get a chance to change it before the io-pgtable is created.
 
 Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
 
- Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/iommu/arm/arm-smmu/arm-smmu-impl.c |  3 ++-
+ drivers/iommu/arm/arm-smmu/arm-smmu.c      | 11 ++++++-----
+ drivers/iommu/arm/arm-smmu/arm-smmu.h      |  3 ++-
+ 3 files changed, 10 insertions(+), 7 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-index 503160a7b9a0..70996348c1d8 100644
---- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-+++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-@@ -49,6 +49,10 @@ properties:
-           - enum:
-               - nvidia,tegra194-smmu
-           - const: nvidia,smmu-500
-+      - description: Qcom Adreno GPUs implementing "arm,smmu-v2"
-+        items:
-+          - const: qcom,adreno-smmu
-+          - const: qcom,smmu-v2
-       - items:
-           - const: arm,mmu-500
-           - const: arm,smmu-v2
+diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu-impl.c b/drivers/iommu/arm/arm-smmu/arm-smmu-impl.c
+index f4ff124a1967..a9861dcd0884 100644
+--- a/drivers/iommu/arm/arm-smmu/arm-smmu-impl.c
++++ b/drivers/iommu/arm/arm-smmu/arm-smmu-impl.c
+@@ -68,7 +68,8 @@ static int cavium_cfg_probe(struct arm_smmu_device *smmu)
+ 	return 0;
+ }
+ 
+-static int cavium_init_context(struct arm_smmu_domain *smmu_domain)
++static int cavium_init_context(struct arm_smmu_domain *smmu_domain,
++		struct io_pgtable_cfg *pgtbl_cfg)
+ {
+ 	struct cavium_smmu *cs = container_of(smmu_domain->smmu,
+ 					      struct cavium_smmu, smmu);
+diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu.c b/drivers/iommu/arm/arm-smmu/arm-smmu.c
+index 09c42af9f31e..37d8d49299b4 100644
+--- a/drivers/iommu/arm/arm-smmu/arm-smmu.c
++++ b/drivers/iommu/arm/arm-smmu/arm-smmu.c
+@@ -795,11 +795,6 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+ 		cfg->asid = cfg->cbndx;
+ 
+ 	smmu_domain->smmu = smmu;
+-	if (smmu->impl && smmu->impl->init_context) {
+-		ret = smmu->impl->init_context(smmu_domain);
+-		if (ret)
+-			goto out_unlock;
+-	}
+ 
+ 	pgtbl_cfg = (struct io_pgtable_cfg) {
+ 		.pgsize_bitmap	= smmu->pgsize_bitmap,
+@@ -810,6 +805,12 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+ 		.iommu_dev	= smmu->dev,
+ 	};
+ 
++	if (smmu->impl && smmu->impl->init_context) {
++		ret = smmu->impl->init_context(smmu_domain, &pgtbl_cfg);
++		if (ret)
++			goto out_clear_smmu;
++	}
++
+ 	if (smmu_domain->non_strict)
+ 		pgtbl_cfg.quirks |= IO_PGTABLE_QUIRK_NON_STRICT;
+ 
+diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu.h b/drivers/iommu/arm/arm-smmu/arm-smmu.h
+index d890a4a968e8..83294516ac08 100644
+--- a/drivers/iommu/arm/arm-smmu/arm-smmu.h
++++ b/drivers/iommu/arm/arm-smmu/arm-smmu.h
+@@ -386,7 +386,8 @@ struct arm_smmu_impl {
+ 			    u64 val);
+ 	int (*cfg_probe)(struct arm_smmu_device *smmu);
+ 	int (*reset)(struct arm_smmu_device *smmu);
+-	int (*init_context)(struct arm_smmu_domain *smmu_domain);
++	int (*init_context)(struct arm_smmu_domain *smmu_domain,
++			struct io_pgtable_cfg *cfg);
+ 	void (*tlb_sync)(struct arm_smmu_device *smmu, int page, int sync,
+ 			 int status);
+ 	int (*def_domain_type)(struct device *dev);
 -- 
 2.25.1
 
