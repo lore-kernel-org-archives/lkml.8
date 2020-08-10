@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A45E1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 08:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A90C4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 08:35:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75BC720716
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 08:35:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 817F420716
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 08:35:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597048519;
-	bh=1RRwYK3/OxCm9AMWwdkeCxClckrglMfUOB9WB7Z9NZo=;
+	s=default; t=1597048530;
+	bh=4BSR689DcTtffCAXQrwEP55IGcmgIVBSQnQXz56FHvk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0uLAVwE9ErTZr4+95Nyc+hCQqjV9ATwBU17ewM36ukLXi8DSt2PaHWhiIbVS55mUu
-	 0KDPhHJABPc+eBhIJFaXnHDSXWevdY5F8bq3RXa62XQtt9H00dOPqkw4c3N/CwzpxV
-	 7sYoHN7GY0M8hcfxkMR3QhscgKNHevMrItEqVLTA=
+	b=QUbmnxgTANUAKb9hDma89pmqr1qS3OjRaulV9ozCbfXrM0cXL3xIfZ/EnU4PjrF5I
+	 BNh3X0jcDNOZlbwtWT++QW9KmHlN55RSnvjKMhYQdyPi2Yf7eGPf24uDQ1SPj9SXaf
+	 9foiAAybDS6LYRYbUKPCK83CwkqqmL9bohzIgpgY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726624AbgHJIfR (ORCPT
+        id S1726645AbgHJIf3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 04:35:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50564 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 04:35:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725857AbgHJIfR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 04:35:17 -0400
+        id S1725857AbgHJIf1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 04:35:27 -0400
 Received: from localhost.localdomain (unknown [180.22.250.62])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0FF020709;
-        Mon, 10 Aug 2020 08:35:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C78322065C;
+        Mon, 10 Aug 2020 08:35:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597048516;
-        bh=1RRwYK3/OxCm9AMWwdkeCxClckrglMfUOB9WB7Z9NZo=;
+        s=default; t=1597048526;
+        bh=4BSR689DcTtffCAXQrwEP55IGcmgIVBSQnQXz56FHvk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BXLy1bsrsa4Xc1DEiWSBGX2nvm0+oQRVgXJzFv27eIbGyT19Sr+8HcbsH4f/LrSQ7
-         bpjZSDGSG6IB9PlpTyqNkKjrKLUAKOO5Md/aodWFTfBsnSwCyhxiwFWDe9lEjQjQ+0
-         m31AtvB6qI/Ns7zoR0ltCNlq9x0RYzrbSVa7GugU=
+        b=BGYiwD4UBAnuXMNe6FAbgAnDG7YNpFwKB/RrE/ojd1hn/WsbHaUy3IMgrx3HyXcoA
+         yBzPGtJYrDD9iuyl9Gpx2jLDExsAkRTnaR7TAfM2QDFnUicK7F6LcfNNNdsqWbd9pA
+         X9G3trqILOAnLkURr6lTtrFTzskjoq1tVNDk6/xU=
 From:   Masami Hiramatsu <mhiramat@kernel.org>
 To:     Steven Rostedt <rostedt@goodmis.org>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
         Ingo Molnar <mingo@redhat.com>,
         Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [PATCH 4/6] tools/bootconfig: Add a script to generate ftrace shell-command from bootconfig
-Date:   Mon, 10 Aug 2020 17:35:11 +0900
-Message-Id: <159704851101.175360.15119132351139842345.stgit@devnote2>
+Subject: [PATCH 5/6] tools/bootconfig: Add a script to generates bootconfig from ftrace
+Date:   Mon, 10 Aug 2020 17:35:21 +0900
+Message-Id: <159704852163.175360.16738029520293360558.stgit@devnote2>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <159704847064.175360.3292152056631660862.stgit@devnote2>
 References: <159704847064.175360.3292152056631660862.stgit@devnote2>
@@ -59,96 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a bconf2ftrace.sh under tools/bootconfig/scripts which generates
-a shell script to setup boot-time trace from bootconfig file for testing
-the bootconfig.
+Add a ftrace2bconf.sh under tools/bootconfig/scripts which generates
+a bootconfig file from the current ftrace settings.
 
-bconf2ftrace.sh will take a bootconfig file (includes boot-time tracing)
-and convert it into a shell-script which is almost same as the boot-time
-tracer does.
-If --apply option is given, it also tries to apply those command to the
-running kernel, which requires the root privilege (or sudo).
+To read the ftrace settings, ftrace2bconf.sh requires the root
+privilege (or sudo). The ftrace2bconf.sh will output the bootconfig
+to stdout and error messages to stderr, so usually you'll run it as
 
-For example, if you just want to confirm the shell commands, save
-the output as below.
+ # ftrace2bconf.sh > ftrace.bconf
 
- # bconf2ftrace.sh ftrace.bconf > ftrace.sh
-
-Or, you can apply it directly.
-
- # bconf2ftrace.sh --apply ftrace.bconf
-
-Note that some boot-time tracing parameters under kernel.* are not able
-to set via tracefs nor procfs (e.g. tp_printk, traceoff_on_warning.),
-so those are ignored.
+Note that some ftrace configurations are not supported. For example,
+function-call/callgraph trace/notrace settings are not supported because
+the wildcard has been expanded and lost in the ftrace anymore.
 
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
- tools/bootconfig/scripts/bconf2ftrace.sh |  189 ++++++++++++++++++++++++++++++
- tools/bootconfig/scripts/xbc.sh          |   56 +++++++++
- 2 files changed, 245 insertions(+)
- create mode 100755 tools/bootconfig/scripts/bconf2ftrace.sh
- create mode 100644 tools/bootconfig/scripts/xbc.sh
+ tools/bootconfig/scripts/ftrace2bconf.sh |  244 ++++++++++++++++++++++++++++++
+ 1 file changed, 244 insertions(+)
+ create mode 100755 tools/bootconfig/scripts/ftrace2bconf.sh
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 496fd4eafb68..fbe066d58eef 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6506,6 +6506,7 @@ F:	fs/proc/bootconfig.c
- F:	include/linux/bootconfig.h
- F:	lib/bootconfig.c
- F:	tools/bootconfig/*
-+F:	tools/bootconfig/scripts/*
- 
- EXYNOS DP DRIVER
- M:	Jingoo Han <jingoohan1@gmail.com>
-diff --git a/tools/bootconfig/scripts/bconf2ftrace.sh b/tools/bootconfig/scripts/bconf2ftrace.sh
+diff --git a/tools/bootconfig/scripts/ftrace2bconf.sh b/tools/bootconfig/scripts/ftrace2bconf.sh
 new file mode 100755
-index 000000000000..a46e984fb2ff
+index 000000000000..6c0d4b61e0c2
 --- /dev/null
-+++ b/tools/bootconfig/scripts/bconf2ftrace.sh
-@@ -0,0 +1,189 @@
++++ b/tools/bootconfig/scripts/ftrace2bconf.sh
+@@ -0,0 +1,244 @@
 +#!/bin/sh
 +# SPDX-License-Identifier: GPL-2.0-only
 +
 +usage() {
-+	echo "Ftrace boottime trace test tool"
-+	echo "Usage: $0 [--apply] [--debug] BOOTCONFIG-FILE"
-+	echo "    --apply: Test actual apply to tracefs (need sudo)"
++	echo "Dump boot-time tracing bootconfig from ftrace"
++	echo "Usage: $0 [--debug] [ > BOOTCONFIG-FILE]"
 +	exit 1
 +}
 +
-+[ $# -eq 0 ] && usage
-+
-+BCONF=
 +DEBUG=
-+APPLY=
 +while [ x"$1" != x ]; do
 +	case "$1" in
 +	"--debug")
 +		DEBUG=$1;;
-+	"--apply")
-+		APPLY=$1;;
-+	*)
-+		[ ! -f $1 ] && usage
-+		BCONF=$1;;
++	-*)
++		usage
++		;;
 +	esac
 +	shift 1
 +done
-+
-+if [ x"$APPLY" != x ]; then
-+	if [ `id -u` -ne 0 ]; then
-+		echo "This must be run by root user. Try sudo." 1>&2
-+		exec sudo $0 $DEBUG $APPLY $BCONF
-+	fi
-+fi
-+
-+run_cmd() { # command
-+	echo "$*"
-+	if [ x"$APPLY" != x ]; then # apply command
-+		eval $*
-+	fi
-+}
 +
 +if [ x"$DEBUG" != x ]; then
 +	set -x
@@ -157,7 +112,7 @@ index 000000000000..a46e984fb2ff
 +TRACEFS=`grep -m 1 -w tracefs /proc/mounts | cut -f 2 -d " "`
 +if [ -z "$TRACEFS" ]; then
 +	if ! grep -wq debugfs /proc/mounts; then
-+		echo "Error: No tracefs/debugfs was mounted." 1>&2
++		echo "Error: No tracefs/debugfs was mounted."
 +		exit 1
 +	fi
 +	TRACEFS=`grep -m 1 -w debugfs /proc/mounts | cut -f 2 -d " "`/tracing
@@ -167,196 +122,210 @@ index 000000000000..a46e984fb2ff
 +	fi
 +fi
 +
-+. `dirname $0`/xbc.sh
-+
 +######## main #########
++
 +set -e
 +
-+xbc_init $BCONF
++emit_kv() { # key =|+= value
++	echo "$@"
++}
 +
-+set_value_of() { # key file
-+	if xbc_has_key $1; then
-+		val=`xbc_get_val $1 1`
-+		run_cmd "echo '$val' >> $2"
++global_options() {
++	val=`cat $TRACEFS/max_graph_depth`
++	[ $val != 0 ] && emit_kv kernel.fgraph_max_depth = $val
++	if grep -qv "^#" $TRACEFS/set_graph_function $TRACEFS/set_graph_notrace ; then
++		cat 1>&2 << EOF
++# WARN: kernel.fgraph_filters and kernel.fgraph_notrace are not supported, since the wild card expression was expanded and lost from memory.
++EOF
 +	fi
 +}
 +
-+set_array_of() { # key file
-+	if xbc_has_key $1; then
-+		xbc_get_val $1 | while read line; do
-+			run_cmd "echo '$line' >> $2"
-+		done
-+	fi
-+}
-+
-+compose_synth() { # event_name branch
-+	echo -n "$1 "
-+	xbc_get_val $2 | while read field; do echo -n "$field; "; done
-+}
-+
-+setup_event() { # prefix group event [instance]
-+	branch=$1.$2.$3
-+	if [ "$4" ]; then
-+		eventdir="$TRACEFS/instances/$4/events/$2/$3"
-+	else
-+		eventdir="$TRACEFS/events/$2/$3"
-+	fi
-+	case $2 in
-+	kprobes)
-+		xbc_get_val ${branch}.probes | while read line; do
-+			run_cmd "echo 'p:kprobes/$3 $line' >> $TRACEFS/kprobe_events"
-+		done
-+		;;
-+	synthetic)
-+		run_cmd "echo '`compose_synth $3 ${branch}.fields`' >> $TRACEFS/synthetic_events"
-+		;;
-+	esac
-+
-+	set_value_of ${branch}.filter ${eventdir}/filter
-+	set_array_of ${branch}.actions ${eventdir}/trigger
-+
-+	if xbc_has_key ${branch}.enable; then
-+		run_cmd "echo 1 > ${eventdir}/enable"
-+	fi
-+}
-+
-+setup_events() { # prefix("ftrace" or "ftrace.instance.INSTANCE") [instance]
-+	prefix="${1}.event"
-+	if xbc_has_branch ${1}.event; then
-+		for grpev in `xbc_subkeys ${1}.event 2`; do
-+			setup_event $prefix ${grpev%.*} ${grpev#*.} $2
-+		done
-+	fi
-+}
-+
-+size2kb() { # size[KB|MB]
-+	case $1 in
-+	*KB)
-+		echo ${1%KB};;
-+	*MB)
-+		expr ${1%MB} \* 1024;;
-+	*)
-+		expr $1 / 1024 ;;
-+	esac
-+}
-+
-+setup_instance() { # [instance]
-+	if [ "$1" ]; then
-+		instance="ftrace.instance.${1}"
-+		instancedir=$TRACEFS/instances/$1
-+	else
-+		instance="ftrace"
-+		instancedir=$TRACEFS
-+	fi
-+
-+	set_array_of ${instance}.options ${instancedir}/trace_options
-+	set_value_of ${instance}.trace_clock ${instancedir}/trace_clock
-+	set_value_of ${instance}.cpumask ${instancedir}/tracing_cpumask
-+	set_value_of ${instance}.tracer ${instancedir}/current_tracer
-+	set_array_of ${instance}.ftrace.filters \
-+		${instancedir}/set_ftrace_filter
-+	set_array_of ${instance}.ftrace.notrace \
-+		${instancedir}/set_ftrace_notrace
-+
-+	if xbc_has_key ${instance}.alloc_snapshot; then
-+		run_cmd "echo 1 > ${instancedir}/snapshot"
-+	fi
-+
-+	if xbc_has_key ${instance}.buffer_size; then
-+		size=`xbc_get_val ${instance}.buffer_size 1`
-+		size=`eval size2kb $size`
-+		run_cmd "echo $size >> ${instancedir}/buffer_size_kb"
-+	fi
-+
-+	setup_events ${instance} $1
-+	set_array_of ${instance}.events ${instancedir}/set_event
-+}
-+
-+# ftrace global configs (kernel.*)
-+if xbc_has_key "kernel.dump_on_oops"; then
-+	dump_mode=`xbc_get_val "kernel.dump_on_oops" 1`
-+	[ "$dump_mode" ] && dump_mode=`eval echo $dump_mode` || dump_mode=1
-+	run_cmd "echo \"$dump_mode\" > /proc/sys/kernel/ftrace_dump_on_oops"
-+fi
-+
-+set_value_of kernel.fgraph_max_depth $TRACEFS/max_graph_depth
-+set_array_of kernel.fgraph_filters $TRACEFS/set_graph_function
-+set_array_of kernel.fgraph_notraces $TRACEFS/set_graph_notrace
-+
-+# Per-instance/per-event configs
-+if ! xbc_has_branch "ftrace" ; then
-+	exit 0
-+fi
-+
-+setup_instance # root instance
-+
-+if xbc_has_branch "ftrace.instance"; then
-+	for i in `xbc_subkeys "ftrace.instance" 1`; do
-+		run_cmd "mkdir -p $TRACEFS/instances/$i"
-+		setup_instance $i
++kprobe_event_options() {
++	cat $TRACEFS/kprobe_events | while read p args; do
++		case $p in
++		r*)
++		cat 1>&2 << EOF
++# WARN: A return probe found but it is not supported by bootconfig. Skip it.
++EOF
++		continue;;
++		esac
++		p=${p#*:}
++		event=${p#*/}
++		group=${p%/*}
++		if [ $group != "kprobes" ]; then
++			cat 1>&2 << EOF
++# WARN: kprobes group name $group is changed to "kprobes" for bootconfig.
++EOF
++		fi
++		emit_kv $PREFIX.event.kprobes.$event.probes += $args
 +	done
-+fi
++}
 +
-diff --git a/tools/bootconfig/scripts/xbc.sh b/tools/bootconfig/scripts/xbc.sh
-new file mode 100644
-index 000000000000..b8c84e654556
---- /dev/null
-+++ b/tools/bootconfig/scripts/xbc.sh
-@@ -0,0 +1,56 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0-only
++synth_event_options() {
++	cat $TRACEFS/synthetic_events | while read event fields; do
++		emit_kv $PREFIX.event.synthetic.$event.fields = `echo $fields | sed "s/;/,/g"`
++	done
++}
 +
-+# bootconfig utility functions
++# Variables resolver
++DEFINED_VARS=
++UNRESOLVED_EVENTS=
 +
-+XBC_TMPFILE=
-+XBC_BASEDIR=`dirname $0`
-+BOOTCONFIG=${BOOTCONFIG:=$XBC_BASEDIR/../bootconfig}
-+if [ ! -x "$BOOTCONFIG" ]; then
-+	BOOTCONFIG=`which bootconfig`
-+	if [ -z "$BOOTCONFIG" ]; then
-+		echo "Erorr: bootconfig command is not found" 1>&2
-+		exit 1
++defined_vars() { # event-dir
++	grep "^hist" $1/trigger | grep -o ':[a-zA-Z0-9]*='
++}
++referred_vars() {
++	grep "^hist" $1/trigger | grep -o '$[a-zA-Z0-9]*'
++}
++
++per_event_options() { # event-dir
++	evdir=$1
++	# Check the special event which has no filter and no trigger
++	[ ! -f $evdir/filter ] && return
++
++	if grep -q "^hist:" $evdir/trigger; then
++		# hist action can refer the undefined variables
++		__vars=`defined_vars $evdir`
++		for v in `referred_vars $evdir`; do
++			if echo $DEFINED_VARS $__vars | grep -vqw ${v#$}; then
++				# $v is not defined yet, defer it
++				UNRESOLVED_EVENTS="$UNRESOLVED_EVENTS $evdir"
++				return;
++			fi
++		done
++		DEFINED_VARS="$DEFINED_VARS "`defined_vars $evdir`
 +	fi
-+fi
++	grep -v "^#" $evdir/trigger | while read action active; do
++		emit_kv $PREFIX.event.$group.$event.actions += \'$action\'
++	done
 +
-+xbc_cleanup() {
-+	if [ "$XBC_TMPFILE" ]; then
-+		rm -f "$XBC_TMPFILE"
++	# enable is not checked; this is done by set_event in the instance.
++	val=`cat $evdir/filter`
++	if [ "$val" != "none" ]; then
++		emit_kv $PREFIX.event.$group.$event.filter = "$val"
 +	fi
 +}
 +
-+xbc_init() { # bootconfig-file
-+	xbc_cleanup
-+	XBC_TMPFILE=`mktemp bconf-XXXX`
-+	trap xbc_cleanup EXIT TERM
-+
-+	$BOOTCONFIG -l $1 > $XBC_TMPFILE || exit 1
++retry_unresolved() {
++	unresolved=$UNRESOLVED_EVENTS
++	UNRESOLVED_EVENTS=
++	for evdir in $unresolved; do
++		event=${evdir##*/}
++		group=${evdir%/*}; group=${group##*/}
++		per_event_options $evdir
++	done
 +}
 +
-+nr_args() { # args
-+	echo $#
-+}
-+
-+xbc_get_val() { # key [maxnum]
-+	if [ "$2" ]; then
-+		MAXOPT="-L $2"
++event_options() {
++	# PREFIX and INSTANCE must be set
++	if [ $PREFIX = "ftrace" ]; then
++		# define the dynamic events
++		kprobe_event_options
++		synth_event_options
 +	fi
-+	grep "^$1 =" $XBC_TMPFILE | cut -d= -f2- | \
-+		sed -e 's/", /" /g' -e "s/',/' /g" | \
-+		xargs $MAXOPT -n 1 echo
++	for group in `ls $INSTANCE/events/` ; do
++		[ ! -d $INSTANCE/events/$group ] && continue
++		for event in `ls $INSTANCE/events/$group/` ;do
++			[ ! -d $INSTANCE/events/$group/$event ] && continue
++			per_event_options $INSTANCE/events/$group/$event
++		done
++	done
++	retry=0
++	while [ $retry -lt 3 ]; do
++		retry_unresolved
++		retry=$((retry + 1))
++	done
++	if [ "$UNRESOLVED_EVENTS" ]; then
++		cat 1>&2 << EOF
++! ERROR: hist triggers in $UNRESOLVED_EVENTS use some undefined variables.
++EOF
++	fi
 +}
 +
-+xbc_has_key() { # key
-+	grep -q "^$1 =" $XBC_TMPFILE
++is_default_trace_option() { # option
++grep -qw $1 << EOF
++print-parent
++nosym-offset
++nosym-addr
++noverbose
++noraw
++nohex
++nobin
++noblock
++trace_printk
++annotate
++nouserstacktrace
++nosym-userobj
++noprintk-msg-only
++context-info
++nolatency-format
++record-cmd
++norecord-tgid
++overwrite
++nodisable_on_free
++irq-info
++markers
++noevent-fork
++nopause-on-trace
++function-trace
++nofunction-fork
++nodisplay-graph
++nostacktrace
++notest_nop_accept
++notest_nop_refuse
++EOF
 +}
 +
-+xbc_has_branch() { # prefix-key
-+	grep -q "^$1" $XBC_TMPFILE
++instance_options() { # [instance-name]
++	if [ $# -eq 0 ]; then
++		PREFIX="ftrace"
++		INSTANCE=$TRACEFS
++	else
++		PREFIX="ftrace.instance.$1"
++		INSTANCE=$TRACEFS/instances/$1
++	fi
++	val=
++	for i in `cat $INSTANCE/trace_options`; do
++		is_default_trace_option $i && continue
++		val="$val, $i"
++	done
++	[ "$val" ] && emit_kv $PREFIX.options = "${val#,}"
++	val="local"
++	for i in `cat $INSTANCE/trace_clock` ; do
++		[ "${i#*]}" ] && continue
++		i=${i%]}; val=${i#[}
++	done
++	[ $val != "local" ] && emit_kv $PREFIX.trace_clock = $val
++	val=`cat $INSTANCE/buffer_size_kb`
++	if echo $val | grep -vq "expanded" ; then
++		emit_kv $PREFIX.buffer_size = $val"KB"
++	fi
++	if grep -q "is allocated" $INSTANCE/snapshot ; then
++		emit_kv $PREFIX.alloc_snapshot
++	fi
++	val=`cat $INSTANCE/tracing_cpumask`
++	if [ `echo $val | sed -e s/f//g`x != x ]; then
++		emit_kv $PREFIX.cpumask = $val
++	fi
++
++	val=
++	for i in `cat $INSTANCE/set_event`; do
++		val="$val, $i"
++	done
++	[ "$val" ] && emit_kv $PREFIX.events = "${val#,}"
++	val=`cat $INSTANCE/current_tracer`
++	[ $val != nop ] && emit_kv $PREFIX.tracer = $val
++	if grep -qv "^#" $INSTANCE/set_ftrace_filter $INSTANCE/set_ftrace_notrace; then
++		cat 1>&2 << EOF
++# WARN: kernel.ftrace.filters and kernel.ftrace.notrace are not supported, since the wild card expression was expanded and lost from memory.
++EOF
++	fi
++	event_options
 +}
 +
-+xbc_subkeys() { # prefix-key depth
-+	__keys=`echo $1 | sed "s/\./ /g"`
-+	__s=`nr_args $__keys`
-+	grep "^$1" $XBC_TMPFILE | cut -d= -f1| cut -d. -f$((__s + 1))-$((__s + $2)) | uniq
-+}
++global_options
++instance_options
++for i in `ls $TRACEFS/instances` ; do
++	instance_options $i
++done
 
