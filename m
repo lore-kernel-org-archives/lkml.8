@@ -2,137 +2,116 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3818C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:29:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD4E3C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:29:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1B8F22BF3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:29:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="KciQmHrJ"
+	by mail.kernel.org (Postfix) with ESMTP id A12D72080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:29:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597087776;
+	bh=YOkFerOemTjN92sMOfEuhS5RoT6q5liwv0mCEz5doXs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=JGpaA2r+TwXfb80X460NxJWTz/HsIZ8gWVwBZOljQmNHzVooxrSVWy8jZn2d04tqX
+	 a2/XUuMKQsfer+a5DahEwRN/5WK/uJcxvTIFwEowYyOWckjTSucuHXebYCaremtwA8
+	 aUtjEyrNw1BQtBfnZc6zLH0225qjDTUrqhQz9+9I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730163AbgHJT33 (ORCPT
+        id S1730310AbgHJT3f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:29:29 -0400
-Received: from mail-bn8nam12on2050.outbound.protection.outlook.com ([40.107.237.50]:50529
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729032AbgHJTKo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:10:44 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NUxMxQNhF2ZgeE6tchQHk89+pZxW0AQi2kUVdXOGNqN3EOc4G/mU6UrvkNB0puPyYPZauol2vhJyhtX9xg7cp/XjIRVHR0PPNFLM+nCAWRWlOM6cXfBZke/k0H/otbTqkQdUjhsOWJWXqsjHhSEg/DX50rbe7ssD+srQ0xuvuPvCphmPVxORvnbohR68VIbM1y/qI4vA39cHGujVU0WIfQouG0ZLYDG/DbGq840mAzdZlzhNrS6atstE38CvCom8IFtsJCibOR9hrzpMf/DWmmaagnxb4JzTa7pZZ5LDQCgn/tVjISaWGD+MozkkiiFbuj6xjWtNI/3fKZ6pX29JPg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6ntjwhA7BptFtWiLYwUI+RUuxlOOv5ibCRFTF4k0srI=;
- b=PHDAZSWHzb/Uyz9iMNYG0FZaqig6v30IctLtDpJcTQuZKQmqfJ6cdr49Q7KTFITh8GJPZve23S21OJVLGBMaz6yVP310XxAGSNuNZyN3EihBIGhox8WsRj6+4SMjQ0qOA3B/RDTChjEy35XLDS4DXjoDx34GrC2JS5gYBXVoH68aiMqPmOUmllOtV5/SkiXtFAZTUFOSRsf5pXhahaLlxWGO+VSfNh71jyotKoctWDT4+Z2uUjvA7DJKYW/3AcZCyrqnS8jdpEgokkB235iX3Upiit/RNxJQkBnno1bcWK0y1whNkvnaUxdf4/HO7B9onztHHWp5g/lYLC3DFBewXQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6ntjwhA7BptFtWiLYwUI+RUuxlOOv5ibCRFTF4k0srI=;
- b=KciQmHrJaEpT9zFOT1ZY/trJRx43CsJ1TwKiBVzzboSNd6bBh7NL4xh+yOWiQm/zbugeQa3wN/08WsmFe040BPY7UY6dvTNr22MoAP6Y71/uQfbWm2PWLMuuwGJkzpw2tMikRdNbXpRnBzB3RaD4O7uZBmROOBxNslnlMPxH0h4=
-Authentication-Results: bytedance.com; dkim=none (message not signed)
- header.d=none;bytedance.com; dmarc=none action=none header.from=amd.com;
-Received: from BN8PR12MB3108.namprd12.prod.outlook.com (2603:10b6:408:40::20)
- by BN8PR12MB2980.namprd12.prod.outlook.com (2603:10b6:408:62::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.19; Mon, 10 Aug
- 2020 19:10:41 +0000
-Received: from BN8PR12MB3108.namprd12.prod.outlook.com
- ([fe80::1ef:8f33:480b:e2d0]) by BN8PR12MB3108.namprd12.prod.outlook.com
- ([fe80::1ef:8f33:480b:e2d0%4]) with mapi id 15.20.3261.024; Mon, 10 Aug 2020
- 19:10:41 +0000
-Date:   Mon, 10 Aug 2020 14:10:31 -0500
-From:   Yazen Ghannam <yazen.ghannam@amd.com>
-To:     Feng zhou <zhoufeng.zf@bytedance.com>
-Cc:     bp@alien8.de, mchehab@kernel.org, tony.luck@intel.com,
-        james.morse@arm.com, rrichter@marvell.com,
-        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
-        liuxian.1@bytedance.com
-Subject: Re: [PATCH] x86/MCE/AMD, EDAC/mce_amd
-Message-ID: <20200810190958.GA3406209@yaz-nikka.amd.com>
-References: <20200809043559.9740-1-zhoufeng.zf@bytedance.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200809043559.9740-1-zhoufeng.zf@bytedance.com>
-X-ClientProxiedBy: SA0PR11CA0006.namprd11.prod.outlook.com
- (2603:10b6:806:d3::11) To BN8PR12MB3108.namprd12.prod.outlook.com
- (2603:10b6:408:40::20)
+        Mon, 10 Aug 2020 15:29:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38118 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729019AbgHJTKk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:10:40 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2959022B47;
+        Mon, 10 Aug 2020 19:10:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597086639;
+        bh=YOkFerOemTjN92sMOfEuhS5RoT6q5liwv0mCEz5doXs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=n8lIZl9B4jinyxGFuSFwgL4JExUvtEU4l98wi47SgtUl9jX9iKdvcCUS4ff7z15ql
+         ZiMmvwsKnJIYRw8YEdfTjLfNfiNnpmfXdxOX1acjJc829jvBiIk9R4aE2DWau5b8kc
+         Znq7N2MICO6A6rbxj45H/fryV8cfZyNLlyvU559s=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 08/60] fs/btrfs: Add cond_resched() for try_release_extent_mapping() stalls
+Date:   Mon, 10 Aug 2020 15:09:36 -0400
+Message-Id: <20200810191028.3793884-8-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200810191028.3793884-1-sashal@kernel.org>
+References: <20200810191028.3793884-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from yaz-nikka.amd.com (165.204.77.1) by SA0PR11CA0006.namprd11.prod.outlook.com (2603:10b6:806:d3::11) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.18 via Frontend Transport; Mon, 10 Aug 2020 19:10:39 +0000
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 1ebb77e6-a9a8-4749-6acd-08d83d611312
-X-MS-TrafficTypeDiagnostic: BN8PR12MB2980:
-X-Microsoft-Antispam-PRVS: <BN8PR12MB29806965A375EF1382616B77F8440@BN8PR12MB2980.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: QpAl2WMjmbep/ePIGreatztN8TDPqe0aoB/np0so4ZTeufAliFNkL2NtVjRHaxnSEgb9/mhI6TaIcB/g89od3t9ZZnRkMG9/A9C3X0tlUnFQKsJIYqZAtXVszC0avbVqn0K432QvgIDs37j41Z8UG5UA997oEb7I3WI/uRLOQmdQORBssgVp6/HKm9qxRXpdhdxVWr+ByuRTx3tDPYmi3tIdY8rhHyqaVRRqiCmpTwAwLBQq1I/hi/+606cL8wShDNwdVh+u8G+xgodCE/vl0R9JaPukv/D89sSoAGKQxh1m5avK56/mxFce0moeZLc2oE2mFSlioxCyMMA6ut6ClQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB3108.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(376002)(136003)(346002)(366004)(396003)(5660300002)(4326008)(44832011)(55016002)(8676002)(186003)(478600001)(86362001)(16526019)(26005)(2906002)(6916009)(33656002)(7696005)(52116002)(956004)(66556008)(66476007)(83380400001)(66946007)(8936002)(6666004)(316002)(1076003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: PI5g1Sem8AyPj/NBZqI62ATYSMJEVo/nbPI+McflN+5DEjO30FGW5KeB+kSvNUFlnyIzUhRHK8hzEI2gmxM/W3wyY7ZJzCy6dnweJLnFkWQmbmj9XxDA9+nZOWvUo85GgPWLgNGHRLAKpTbJ4KM4doV3mA/VQbaYYYRsQmY7XhjXtn/ntoO18tZXkq6DpdD2ramedpT8ehP3H2tG6MIvI/5vtyPC8m7laTyZYCT5vJ0K8BT408Gh2PkziGZAhlnLnWCBuiw6e4Kpe7yhKduy6PLR9D1USWJVXRWvzQXG4pJLpfXeVZCHzT7HBRVqawCqtY8cprOBJSEileeoADy9YNuDcH8tbsrGgr50HnjEyAf5J+8heG5s6RaqN/MhNfMBlcdYDA0ATWI381iskKycjQu83gRt58IpHYev6xilJDL50YQdRts/cANBmEvSG09xDVtoF1QxExpYjPjpbUbWb1djeV8En920fGspkFvxMXdiP9J7VqeWqfN1vFvdeKKdhc4XUA7NlypQhA8blOeaJLd15tNliC/nn7aL/Q7ti6VBkJAHu9Q5SenfzAT52jMqlf2cB2Ck0zQAdYDsS/q7fcn+fnHp4KEIC8x8FabJYL+UZ/jjU3sO+3z5YI/fbmG0CkOiRAC3sfn23UI1AE02Jg==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1ebb77e6-a9a8-4749-6acd-08d83d611312
-X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB3108.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Aug 2020 19:10:41.6250
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: CuW7aJdO92v+WArJQ/qCRM32MMdMzJp515MhTiH30xkwjcE6PQ3V2ZZpL5SuRO0EJa3Ad0h/AyE4DhSqVvGCJA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB2980
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 09, 2020 at 12:35:59PM +0800, Feng zhou wrote:
-> From: zhoufeng <zhoufeng.zf@bytedance.com>
-> 
-> The edac_mce_amd module calls decode_dram_ecc() on AMD Family17h and
-> later systems. This function is used in amd64_edac_mod to do
-> system-specific decoding for DRAM ECC errors. The function takes a
-> "NodeId" as a parameter.
-> 
-> In AMD documentation, NodeId is used to identify a physical die in a
-> system. This can be used to identify a node in the AMD_NB code and also
-> it is used with umc_normaddr_to_sysaddr().
-> 
-> However, the input used for decode_dram_ecc() is currently the NUMA node
-> of a logical CPU. so this will cause the address translation function to
-> fail or report incorrect results.
-> 
-> Signed-off-by: zhoufeng <zhoufeng.zf@bytedance.com>
-> ---
->  drivers/edac/mce_amd.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/edac/mce_amd.c b/drivers/edac/mce_amd.c
-> index 325aedf46ff2..73c805113322 100644
-> --- a/drivers/edac/mce_amd.c
-> +++ b/drivers/edac/mce_amd.c
-> @@ -996,7 +996,7 @@ static void decode_smca_error(struct mce *m)
->  	}
->  
->  	if (bank_type == SMCA_UMC && xec == 0 && decode_dram_ecc)
-> -		decode_dram_ecc(cpu_to_node(m->extcpu), m);
-> +		decode_dram_ecc(topology_physical_package_id(m->extcpu), m);
+From: "Paul E. McKenney" <paulmck@kernel.org>
 
-This will break on Naples systems, because the NodeId and the physical
-package ID will not match.
+[ Upstream commit 9f47eb5461aaeb6cb8696f9d11503ae90e4d5cb0 ]
 
-I can send a patch soon that will work for Naples, Rome, and later
-systems.
+Very large I/Os can cause the following RCU CPU stall warning:
 
-Thanks,
-Yazen
+RIP: 0010:rb_prev+0x8/0x50
+Code: 49 89 c0 49 89 d1 48 89 c2 48 89 f8 e9 e5 fd ff ff 4c 89 48 10 c3 4c =
+89 06 c3 4c 89 40 10 c3 0f 1f 00 48 8b 0f 48 39 cf 74 38 <48> 8b 47 10 48 85 c0 74 22 48 8b 50 08 48 85 d2 74 0c 48 89 d0 48
+RSP: 0018:ffffc9002212bab0 EFLAGS: 00000287 ORIG_RAX: ffffffffffffff13
+RAX: ffff888821f93630 RBX: ffff888821f93630 RCX: ffff888821f937e0
+RDX: 0000000000000000 RSI: 0000000000102000 RDI: ffff888821f93630
+RBP: 0000000000103000 R08: 000000000006c000 R09: 0000000000000238
+R10: 0000000000102fff R11: ffffc9002212bac8 R12: 0000000000000001
+R13: ffffffffffffffff R14: 0000000000102000 R15: ffff888821f937e0
+ __lookup_extent_mapping+0xa0/0x110
+ try_release_extent_mapping+0xdc/0x220
+ btrfs_releasepage+0x45/0x70
+ shrink_page_list+0xa39/0xb30
+ shrink_inactive_list+0x18f/0x3b0
+ shrink_lruvec+0x38e/0x6b0
+ shrink_node+0x14d/0x690
+ do_try_to_free_pages+0xc6/0x3e0
+ try_to_free_mem_cgroup_pages+0xe6/0x1e0
+ reclaim_high.constprop.73+0x87/0xc0
+ mem_cgroup_handle_over_high+0x66/0x150
+ exit_to_usermode_loop+0x82/0xd0
+ do_syscall_64+0xd4/0x100
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+On a PREEMPT=n kernel, the try_release_extent_mapping() function's
+"while" loop might run for a very long time on a large I/O.  This commit
+therefore adds a cond_resched() to this loop, providing RCU any needed
+quiescent states.
+
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/btrfs/extent_io.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+index 79196eb1a1b36..9d6d646e1eb08 100644
+--- a/fs/btrfs/extent_io.c
++++ b/fs/btrfs/extent_io.c
+@@ -4518,6 +4518,8 @@ int try_release_extent_mapping(struct page *page, gfp_t mask)
+ 
+ 			/* once for us */
+ 			free_extent_map(em);
++
++			cond_resched(); /* Allow large-extent preemption. */
+ 		}
+ 	}
+ 	return try_release_extent_state(tree, page, mask);
+-- 
+2.25.1
+
