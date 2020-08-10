@@ -7,51 +7,49 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8954DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:10:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 217F7C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:10:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6808622B47
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:10:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9AA72224D
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:10:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597086631;
-	bh=2K2iG1CjBSTPdSLSG5ajTMC50p1FwenSlUrZitpjRWY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hU0tXT3N5RRW0Jq3LhrJMdc3PF8XW3foWeWhqmR/3Y33eS4iiZQFILpbsuMsrWIEW
-	 TwIfcNL2/FQyqz/J7j4J/Jnfs2vMYmjYgGcn375n5oXo8ILJuRRto+S5Myj2UBXRjD
-	 w7Tvd+Czc0xAT291UHoTjCtwF9IMWSjGuYo0ybGA=
+	s=default; t=1597086637;
+	bh=6LmQh1e/NqQGj+89BAr9m4CJNhDun1U7OdbG+iIs+F8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=plxEoPpLtAHrJGkscLACxZEkglEN8rN4Tl/TecX9Ef3GHjQZR59Ym08PMC4krx55v
+	 0aesBm9y6KOimN2wtqsFQzKd4NbW+yrsixu3IAkcV7kT/dmRX3MsVdKUdZ87cmQb2a
+	 k6xTlzREgt2UaNwV9x4RvA/YT1VS67SWYiRbpzGE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728977AbgHJTKa (ORCPT
+        id S1729003AbgHJTKf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:10:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37708 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:10:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728895AbgHJTK0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:10:26 -0400
+        id S1728895AbgHJTKb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:10:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0C7F2224D;
-        Mon, 10 Aug 2020 19:10:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D42520639;
+        Mon, 10 Aug 2020 19:10:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086625;
-        bh=2K2iG1CjBSTPdSLSG5ajTMC50p1FwenSlUrZitpjRWY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2TPOITXTNJaUhXrVs2LaaU/NlwHdsIB/XYpMETbz47cme8+Z+xCRIg4vsiPhfDVRI
-         67lCfD2jP+onaRAbL94v58qOyWBLTFvoIgjstZHYL7cK6B9OAQWgXmF5+ebhbmib1e
-         Yip2pMQ3KjyOxsMDnakm/NCwtTrEWULbUlO5O2Uo=
+        s=default; t=1597086630;
+        bh=6LmQh1e/NqQGj+89BAr9m4CJNhDun1U7OdbG+iIs+F8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Sxt0Igk2zDcul1PRZTZeYcQG4YEalfMWHZYiCbMCWGr0EDDQW8zRLeylCQCJcOHTw
+         129sw/N7bu3zyMoWfEMmGf7/1RUCxm3yQU6hrV684RLo+V+WFB3JXStPQYsylZTagb
+         yu6/2x7j4W8zwAKPxFYZS9pNabLS+4mxhkDX56Pg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 63/64] crypto: caam - silence .setkey in case of bad key length
-Date:   Mon, 10 Aug 2020 15:08:58 -0400
-Message-Id: <20200810190859.3793319-63-sashal@kernel.org>
+Cc:     Tomi Valkeinen <tomi.valkeinen@ti.com>, Jyri Sarha <jsarha@ti.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.7 01/60] drm/tilcdc: fix leak & null ref in panel_connector_get_modes
+Date:   Mon, 10 Aug 2020 15:09:29 -0400
+Message-Id: <20200810191028.3793884-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200810190859.3793319-1-sashal@kernel.org>
-References: <20200810190859.3793319-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,64 +58,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Horia Geantă <horia.geanta@nxp.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
 
-[ Upstream commit da6a66853a381864f4b040832cf11f0dbba0a097 ]
+[ Upstream commit 3f9c1c872cc97875ddc8d63bc9fe6ee13652b933 ]
 
-In case of bad key length, driver emits "key size mismatch" messages,
-but only for xts(aes) algorithms.
+If videomode_from_timings() returns true, the mode allocated with
+drm_mode_create will be leaked.
 
-Reduce verbosity by making them visible only when debugging.
-This way crypto fuzz testing log cleans up a bit.
+Also, the return value of drm_mode_create() is never checked, and thus
+could cause NULL deref.
 
-Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fix these two issues.
+
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200429104234.18910-1-tomi.valkeinen@ti.com
+Reviewed-by: Jyri Sarha <jsarha@ti.com>
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/caam/caamalg.c     | 2 +-
- drivers/crypto/caam/caamalg_qi.c  | 2 +-
- drivers/crypto/caam/caamalg_qi2.c | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/tilcdc/tilcdc_panel.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/crypto/caam/caamalg.c b/drivers/crypto/caam/caamalg.c
-index b2f9882bc010f..bf90a4fcabd1f 100644
---- a/drivers/crypto/caam/caamalg.c
-+++ b/drivers/crypto/caam/caamalg.c
-@@ -838,7 +838,7 @@ static int xts_skcipher_setkey(struct crypto_skcipher *skcipher, const u8 *key,
- 	u32 *desc;
+diff --git a/drivers/gpu/drm/tilcdc/tilcdc_panel.c b/drivers/gpu/drm/tilcdc/tilcdc_panel.c
+index 5584e656b8575..8c4fd1aa4c2db 100644
+--- a/drivers/gpu/drm/tilcdc/tilcdc_panel.c
++++ b/drivers/gpu/drm/tilcdc/tilcdc_panel.c
+@@ -143,12 +143,16 @@ static int panel_connector_get_modes(struct drm_connector *connector)
+ 	int i;
  
- 	if (keylen != 2 * AES_MIN_KEY_SIZE  && keylen != 2 * AES_MAX_KEY_SIZE) {
--		dev_err(jrdev, "key size mismatch\n");
-+		dev_dbg(jrdev, "key size mismatch\n");
- 		return -EINVAL;
- 	}
+ 	for (i = 0; i < timings->num_timings; i++) {
+-		struct drm_display_mode *mode = drm_mode_create(dev);
++		struct drm_display_mode *mode;
+ 		struct videomode vm;
  
-diff --git a/drivers/crypto/caam/caamalg_qi.c b/drivers/crypto/caam/caamalg_qi.c
-index 27e36bdf6163b..315d53499ce85 100644
---- a/drivers/crypto/caam/caamalg_qi.c
-+++ b/drivers/crypto/caam/caamalg_qi.c
-@@ -728,7 +728,7 @@ static int xts_skcipher_setkey(struct crypto_skcipher *skcipher, const u8 *key,
- 	int ret = 0;
+ 		if (videomode_from_timings(timings, &vm, i))
+ 			break;
  
- 	if (keylen != 2 * AES_MIN_KEY_SIZE  && keylen != 2 * AES_MAX_KEY_SIZE) {
--		dev_err(jrdev, "key size mismatch\n");
-+		dev_dbg(jrdev, "key size mismatch\n");
- 		return -EINVAL;
- 	}
++		mode = drm_mode_create(dev);
++		if (!mode)
++			break;
++
+ 		drm_display_mode_from_videomode(&vm, mode);
  
-diff --git a/drivers/crypto/caam/caamalg_qi2.c b/drivers/crypto/caam/caamalg_qi2.c
-index 28669cbecf77c..e1b6bc6ef091b 100644
---- a/drivers/crypto/caam/caamalg_qi2.c
-+++ b/drivers/crypto/caam/caamalg_qi2.c
-@@ -1058,7 +1058,7 @@ static int xts_skcipher_setkey(struct crypto_skcipher *skcipher, const u8 *key,
- 	u32 *desc;
- 
- 	if (keylen != 2 * AES_MIN_KEY_SIZE  && keylen != 2 * AES_MAX_KEY_SIZE) {
--		dev_err(dev, "key size mismatch\n");
-+		dev_dbg(dev, "key size mismatch\n");
- 		return -EINVAL;
- 	}
- 
+ 		mode->type = DRM_MODE_TYPE_DRIVER;
 -- 
 2.25.1
 
