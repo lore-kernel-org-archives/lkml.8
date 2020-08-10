@@ -2,239 +2,140 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CC55C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 738E7C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:28:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2530022BF3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:28:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="TTQcli1T"
+	by mail.kernel.org (Postfix) with ESMTP id 47ECF22BF3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:28:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597087715;
+	bh=tJYe3sdJ50MfFH8HSB5ARx5zC3LFkfTzC/sJ4lY5EjQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=NdLUURni8VVZ+pNjmCnlIUOkd8yiG4ee1RTXcC3IGJeUiFZR0i1VVum69FLIIQ/Fy
+	 TES1ha+yXDmRSdpGE6Eclyt+QfiPfSJYsmldHYDcUWVuyLFlLIqGrZP0UMQc6YRlnk
+	 c/Z+HO6J7qfa2ol2kPuNqZh6vCJAR5JGoAx0nDus=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729396AbgHJT23 (ORCPT
+        id S1729623AbgHJT2d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:28:29 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:44219 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729172AbgHJTLM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:11:12 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597086671; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=Erzx1fruSSrSxj4EEjWNMx4b9AuQa5yJ7QWcymESvIY=;
- b=TTQcli1TOiU4R+xD1jhtnvhtTbZVJUriDXEKqgpgvV8XjMhvBWmm6/KUewzZ2lo+3o+uRB+0
- vvT6ku3udQuzHXPX0bMjrfFEwKVOjN/21yk6SGmzpMX5eCq2Pr45MlrRIHJpZ+OCGg3qAupE
- JWJuH4qmUl1bI3CHyirzHI1UFUI=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n09.prod.us-west-2.postgun.com with SMTP id
- 5f319bcb1e4d3989d49a8d15 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 10 Aug 2020 19:11:07
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8588AC4363E; Mon, 10 Aug 2020 19:11:06 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        Mon, 10 Aug 2020 15:28:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39300 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729173AbgHJTLL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:11:11 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: bbhatt)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 557F0C43617;
-        Mon, 10 Aug 2020 19:11:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2D55207FF;
+        Mon, 10 Aug 2020 19:11:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597086670;
+        bh=tJYe3sdJ50MfFH8HSB5ARx5zC3LFkfTzC/sJ4lY5EjQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=pdAFsXo9VOKUjwRBNLrABjXxGG4ogerlMA7optwQfKpG5p2frVt/ZoJD4f4+oK9ZM
+         nmc5JRHRdrZZnTXbwid4/ZR7XX5iYA9Z2KF996Lbpc/sd2mzTYeworvy4YeJ+2eMzz
+         eidzvfCwMc+5MMrd903W+4GGj40nhFl/gtD9X2fo=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        Shakeel Butt <shakeelb@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 31/60] mm/mmap.c: Add cond_resched() for exit_mmap() CPU stalls
+Date:   Mon, 10 Aug 2020 15:09:59 -0400
+Message-Id: <20200810191028.3793884-31-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200810191028.3793884-1-sashal@kernel.org>
+References: <20200810191028.3793884-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 10 Aug 2020 12:11:04 -0700
-From:   bbhatt@codeaurora.org
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, hemantk@codeaurora.org,
-        jhugo@codeaurora.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH v6 11/11] bus: mhi: core: Introduce sysfs entries for MHI
-In-Reply-To: <20200807052242.GD3230@Mani-XPS-13-9360>
-References: <1595901740-27379-1-git-send-email-bbhatt@codeaurora.org>
- <1595901740-27379-12-git-send-email-bbhatt@codeaurora.org>
- <20200807052242.GD3230@Mani-XPS-13-9360>
-Message-ID: <dbe47f5d3b9aaef9815d2659df3a5161@codeaurora.org>
-X-Sender: bbhatt@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-06 22:22, Manivannan Sadhasivam wrote:
-> On Mon, Jul 27, 2020 at 07:02:20PM -0700, Bhaumik Bhatt wrote:
->> Introduce sysfs entries to enable userspace clients the ability to 
->> read
->> the serial number and the OEM PK Hash values obtained from BHI. OEMs
->> need to read these device-specific hardware information values through
->> userspace for factory testing purposes and cannot be exposed via 
->> degbufs
->> as it may remain disabled for performance reasons. Also, update the
->> documentation for ABI to include these entries.
->> 
->> Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
->> ---
->>  Documentation/ABI/stable/sysfs-bus-mhi | 21 ++++++++++++++
->>  MAINTAINERS                            |  1 +
->>  drivers/bus/mhi/core/init.c            | 53 
->> ++++++++++++++++++++++++++++++++++
->>  3 files changed, 75 insertions(+)
->>  create mode 100644 Documentation/ABI/stable/sysfs-bus-mhi
->> 
->> diff --git a/Documentation/ABI/stable/sysfs-bus-mhi 
->> b/Documentation/ABI/stable/sysfs-bus-mhi
->> new file mode 100644
->> index 0000000..1d5d0d6
->> --- /dev/null
->> +++ b/Documentation/ABI/stable/sysfs-bus-mhi
->> @@ -0,0 +1,21 @@
->> +What:		/sys/bus/mhi/devices/.../serialnumber
->> +Date:		Jul 2020
->> +KernelVersion:	5.8
->> +Contact:	Bhaumik Bhatt <bbhatt@codeaurora.org>
->> +Description:	The file holds the serial number of the client device 
->> obtained
->> +		using a BHI (Boot Host Interface) register read after at least
->> +		one attempt to power up the device has been done. If read
->> +		without having the device power on at least once, the file will
->> +		read all 0's.
->> +Users:		Any userspace application or clients interested in device 
->> info.
-> 
-> I think you're not using tabs here and that's why it is showing 
-> mangled. Please
-> use tabs as like other files.
-> 
-> Thanks,
-> Mani
-> 
-Hi Mani,
+From: "Paul E. McKenney" <paulmck@kernel.org>
 
-I am using tabs actually. I, in fact, copied another file 
-(sysfs-bus-vmbus) and only modified the
-required entries and did a diff to confirm.
+[ Upstream commit 0a3b3c253a1eb2c7fe7f34086d46660c909abeb3 ]
 
-I doubt there is more I can do.
+A large process running on a heavily loaded system can encounter the
+following RCU CPU stall warning:
 
-Please let me know if the next patch is acceptable soon.
+  rcu: INFO: rcu_sched self-detected stall on CPU
+  rcu: 	3-....: (20998 ticks this GP) idle=4ea/1/0x4000000000000002 softirq=556558/556558 fqs=5190
+  	(t=21013 jiffies g=1005461 q=132576)
+  NMI backtrace for cpu 3
+  CPU: 3 PID: 501900 Comm: aio-free-ring-w Kdump: loaded Not tainted 5.2.9-108_fbk12_rc3_3858_gb83b75af7909 #1
+  Hardware name: Wiwynn   HoneyBadger/PantherPlus, BIOS HBM6.71 02/03/2016
+  Call Trace:
+   <IRQ>
+   dump_stack+0x46/0x60
+   nmi_cpu_backtrace.cold.3+0x13/0x50
+   ? lapic_can_unplug_cpu.cold.27+0x34/0x34
+   nmi_trigger_cpumask_backtrace+0xba/0xca
+   rcu_dump_cpu_stacks+0x99/0xc7
+   rcu_sched_clock_irq.cold.87+0x1aa/0x397
+   ? tick_sched_do_timer+0x60/0x60
+   update_process_times+0x28/0x60
+   tick_sched_timer+0x37/0x70
+   __hrtimer_run_queues+0xfe/0x270
+   hrtimer_interrupt+0xf4/0x210
+   smp_apic_timer_interrupt+0x5e/0x120
+   apic_timer_interrupt+0xf/0x20
+   </IRQ>
+  RIP: 0010:kmem_cache_free+0x223/0x300
+  Code: 88 00 00 00 0f 85 ca 00 00 00 41 8b 55 18 31 f6 f7 da 41 f6 45 0a 02 40 0f 94 c6 83 c6 05 9c 41 5e fa e8 a0 a7 01 00 41 56 9d <49> 8b 47 08 a8 03 0f 85 87 00 00 00 65 48 ff 08 e9 3d fe ff ff 65
+  RSP: 0018:ffffc9000e8e3da8 EFLAGS: 00000206 ORIG_RAX: ffffffffffffff13
+  RAX: 0000000000020000 RBX: ffff88861b9de960 RCX: 0000000000000030
+  RDX: fffffffffffe41e8 RSI: 000060777fe3a100 RDI: 000000000001be18
+  RBP: ffffea00186e7780 R08: ffffffffffffffff R09: ffffffffffffffff
+  R10: ffff88861b9dea28 R11: ffff88887ffde000 R12: ffffffff81230a1f
+  R13: ffff888854684dc0 R14: 0000000000000206 R15: ffff8888547dbc00
+   ? remove_vma+0x4f/0x60
+   remove_vma+0x4f/0x60
+   exit_mmap+0xd6/0x160
+   mmput+0x4a/0x110
+   do_exit+0x278/0xae0
+   ? syscall_trace_enter+0x1d3/0x2b0
+   ? handle_mm_fault+0xaa/0x1c0
+   do_group_exit+0x3a/0xa0
+   __x64_sys_exit_group+0x14/0x20
+   do_syscall_64+0x42/0x100
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
->> +
->> +What:		/sys/bus/mhi/devices/.../oem_pk_hash
->> +Date:		Jul 2020
->> +KernelVersion:	5.8
->> +Contact:	Bhaumik Bhatt <bbhatt@codeaurora.org>
->> +Description:	The file holds the OEM PK Hash value of the endpoint 
->> device
->> +		obtained using a BHI (Boot Host Interface) register read after
->> +		at least one attempt to power up the device has been done. If
->> +		read without having the device power on at least once, the file
->> +		will read all 0's.
->> +Users:		Any userspace application or clients interested in device 
->> info.
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index e64e5db..5e49316 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -11018,6 +11018,7 @@ M:	Hemant Kumar <hemantk@codeaurora.org>
->>  L:	linux-arm-msm@vger.kernel.org
->>  S:	Maintained
->>  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/mani/mhi.git
->> +F:	Documentation/ABI/stable/sysfs-bus-mhi
->>  F:	Documentation/mhi/
->>  F:	drivers/bus/mhi/
->>  F:	include/linux/mhi.h
->> diff --git a/drivers/bus/mhi/core/init.c b/drivers/bus/mhi/core/init.c
->> index 972dbf0..c086ef2 100644
->> --- a/drivers/bus/mhi/core/init.c
->> +++ b/drivers/bus/mhi/core/init.c
->> @@ -76,6 +76,56 @@ const char *to_mhi_pm_state_str(enum mhi_pm_state 
->> state)
->>  	return mhi_pm_state_str[index];
->>  }
->> 
->> +static ssize_t serial_number_show(struct device *dev,
->> +				  struct device_attribute *attr,
->> +				  char *buf)
->> +{
->> +	struct mhi_device *mhi_dev = to_mhi_device(dev);
->> +	struct mhi_controller *mhi_cntrl = mhi_dev->mhi_cntrl;
->> +
->> +	return snprintf(buf, PAGE_SIZE, "Serial Number: %u\n",
->> +			mhi_cntrl->serial_number);
->> +}
->> +static DEVICE_ATTR_RO(serial_number);
->> +
->> +static ssize_t oem_pk_hash_show(struct device *dev,
->> +				struct device_attribute *attr,
->> +				char *buf)
->> +{
->> +	struct mhi_device *mhi_dev = to_mhi_device(dev);
->> +	struct mhi_controller *mhi_cntrl = mhi_dev->mhi_cntrl;
->> +	int i, cnt = 0;
->> +
->> +	for (i = 0; i < ARRAY_SIZE(mhi_cntrl->oem_pk_hash); i++)
->> +		cnt += snprintf(buf + cnt, PAGE_SIZE - cnt,
->> +				"OEMPKHASH[%d]: 0x%x\n", i,
->> +				mhi_cntrl->oem_pk_hash[i]);
->> +
->> +	return cnt;
->> +}
->> +static DEVICE_ATTR_RO(oem_pk_hash);
->> +
->> +static struct attribute *mhi_sysfs_attrs[] = {
->> +	&dev_attr_serial_number.attr,
->> +	&dev_attr_oem_pk_hash.attr,
->> +	NULL,
->> +};
->> +
->> +static const struct attribute_group mhi_sysfs_group = {
->> +	.attrs = mhi_sysfs_attrs,
->> +};
->> +
->> +static int mhi_create_sysfs(struct mhi_controller *mhi_cntrl)
->> +{
->> +	return sysfs_create_group(&mhi_cntrl->mhi_dev->dev.kobj,
->> +				  &mhi_sysfs_group);
->> +}
->> +
->> +static void mhi_destroy_sysfs(struct mhi_controller *mhi_cntrl)
->> +{
->> +	sysfs_remove_group(&mhi_cntrl->mhi_dev->dev.kobj, &mhi_sysfs_group);
->> +}
->> +
->>  /* MHI protocol requires the transfer ring to be aligned with ring 
->> length */
->>  static int mhi_alloc_aligned_ring(struct mhi_controller *mhi_cntrl,
->>  				  struct mhi_ring *ring,
->> @@ -917,6 +967,8 @@ int mhi_register_controller(struct mhi_controller 
->> *mhi_cntrl,
->>  	mhi_cntrl->mhi_dev = mhi_dev;
->> 
->>  	mhi_create_debugfs(mhi_cntrl);
->> +	if (mhi_create_sysfs(mhi_cntrl))
->> +		dev_err(mhi_cntrl->cntrl_dev, "Failed to create sysfs entries\n");
->> 
->>  	return 0;
->> 
->> @@ -940,6 +992,7 @@ void mhi_unregister_controller(struct 
->> mhi_controller *mhi_cntrl)
->>  	struct mhi_chan *mhi_chan = mhi_cntrl->mhi_chan;
->>  	unsigned int i;
->> 
->> +	mhi_destroy_sysfs(mhi_cntrl);
->>  	mhi_destroy_debugfs(mhi_cntrl);
->> 
->>  	kfree(mhi_cntrl->mhi_cmd);
->> --
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
->> Forum,
->> a Linux Foundation Collaborative Project
->> 
+And on a PREEMPT=n kernel, the "while (vma)" loop in exit_mmap() can run
+for a very long time given a large process.  This commit therefore adds
+a cond_resched() to this loop, providing RCU any needed quiescent states.
+
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: <linux-mm@kvack.org>
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ mm/mmap.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/mm/mmap.c b/mm/mmap.c
+index bb1822ac99090..55bb456fd0d0f 100644
+--- a/mm/mmap.c
++++ b/mm/mmap.c
+@@ -3171,6 +3171,7 @@ void exit_mmap(struct mm_struct *mm)
+ 		if (vma->vm_flags & VM_ACCOUNT)
+ 			nr_accounted += vma_pages(vma);
+ 		vma = remove_vma(vma);
++		cond_resched();
+ 	}
+ 	vm_unacct_memory(nr_accounted);
+ }
+-- 
+2.25.1
+
