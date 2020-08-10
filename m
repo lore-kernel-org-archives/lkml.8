@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 023C8C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE25C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:26:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D008E22D06
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:26:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 516A422BEA
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:26:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073196;
-	bh=Ro7+w9LSDJr703MxXUvYnDuljQ6lBlhm0Eovmufoplc=;
+	s=default; t=1597073201;
+	bh=ngKCcMzHTQNYCHTw8bd6wbDeqC73Pdu0xRCEpWuv/co=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tNeFW4S86e2kbbdqp7ds1sb269HVG13S3AI5ZKQdwnzia8AjibaeQrUMrjI0JoKSa
-	 fkNsMWNR4bQ+V7oqP8zlMMQSGeFgeTLvtU6jla0t0v64zSl0tOazZuTkTaFOoEexlu
-	 w/JyTlMZl+6CDIQE+IXcMUDwKOon0LTiwFI45cAY=
+	b=M/94BiGvK6i9OWwM71RHFMdew0KH7CJuq+7VbkHbAWGBWlkUY4+2g/JOsX/RV6/HV
+	 7tQF2qPJWry4YcsfEm7Q4Il7UozZyZ1+uokdHZIedCES7I01h77WPPuZFP95Lvu9KL
+	 4Dp+LO9hy2Dlol6OBbXgKQyDxwCstijOkYBbZG9s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728355AbgHJP0f (ORCPT
+        id S1728161AbgHJP0j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:26:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60410 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:26:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728631AbgHJP03 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:26:29 -0400
+        id S1728182AbgHJP0f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:26:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E70DB20658;
-        Mon, 10 Aug 2020 15:26:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D35F22B47;
+        Mon, 10 Aug 2020 15:26:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073189;
-        bh=Ro7+w9LSDJr703MxXUvYnDuljQ6lBlhm0Eovmufoplc=;
+        s=default; t=1597073195;
+        bh=ngKCcMzHTQNYCHTw8bd6wbDeqC73Pdu0xRCEpWuv/co=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xch3xN9z1cwfvWVynd7X6MfmWGxORbOdCInNXtpRnkYrydq4i1yKq7/lTRC6jqzkS
-         NUQNSNk2+JLAL6wWFU86FGLoJV/0jmH4taaxyoyW0SgrV++xrVKQ562VZhiG07fOXP
-         rf7dsLQoUl0lH2ATD7chbacEk3Ft0rUN7K8jGcM4=
+        b=pDLsyBT6uTgmixhAigSUZETd8lMzIk7kUQ+tfzrZDJqg1SbZVG6gfOaUfYceM7A6+
+         YU9EjIDIv7UyZ/V1SPyRf0mRf/HivWfWz1kfP2DpaFLPRRDq5V4uWXXq8LNnw7El7B
+         ltTT8Te2zcQK3rFB92Wra5uF1olut9zHgaiK41Sg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peilin Ye <yepeilin.cs@gmail.com>,
-        Marcel Holtmann <marcel@holtmann.org>
-Subject: [PATCH 5.4 18/67] Bluetooth: Prevent out-of-bounds read in hci_inquiry_result_evt()
-Date:   Mon, 10 Aug 2020 17:21:05 +0200
-Message-Id: <20200810151810.324186189@linuxfoundation.org>
+        stable@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: [PATCH 5.4 02/67] perf/core: Fix endless multiplex timer
+Date:   Mon, 10 Aug 2020 17:20:49 +0200
+Message-Id: <20200810151809.565265387@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151809.438685785@linuxfoundation.org>
 References: <20200810151809.438685785@linuxfoundation.org>
@@ -59,31 +61,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peilin Ye <yepeilin.cs@gmail.com>
+From: Peter Zijlstra <peterz@infradead.org>
 
-commit 75bbd2ea50ba1c5d9da878a17e92eac02fe0fd3a upstream.
+commit 90c91dfb86d0ff545bd329d3ddd72c147e2ae198 upstream.
 
-Check `num_rsp` before using it as for-loop counter.
+Kan and Andi reported that we fail to kill rotation when the flexible
+events go empty, but the context does not. XXX moar
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Fixes: fd7d55172d1e ("perf/cgroups: Don't rotate events for cgroups unnecessarily")
+Reported-by: Andi Kleen <ak@linux.intel.com>
+Reported-by: Kan Liang <kan.liang@linux.intel.com>
+Tested-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20200305123851.GX2596@hirez.programming.kicks-ass.net
+Cc: Robin Murphy <robin.murphy@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/bluetooth/hci_event.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/events/core.c |   20 ++++++++++++++------
+ 1 file changed, 14 insertions(+), 6 deletions(-)
 
---- a/net/bluetooth/hci_event.c
-+++ b/net/bluetooth/hci_event.c
-@@ -2444,7 +2444,7 @@ static void hci_inquiry_result_evt(struc
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -2171,6 +2171,7 @@ __perf_remove_from_context(struct perf_e
  
- 	BT_DBG("%s num_rsp %d", hdev->name, num_rsp);
- 
--	if (!num_rsp)
-+	if (!num_rsp || skb->len < num_rsp * sizeof(*info) + 1)
+ 	if (!ctx->nr_events && ctx->is_active) {
+ 		ctx->is_active = 0;
++		ctx->rotate_necessary = 0;
+ 		if (ctx->task) {
+ 			WARN_ON_ONCE(cpuctx->task_ctx != ctx);
+ 			cpuctx->task_ctx = NULL;
+@@ -3047,12 +3048,6 @@ static void ctx_sched_out(struct perf_ev
+ 	if (!ctx->nr_active || !(is_active & EVENT_ALL))
  		return;
  
- 	if (hci_dev_test_flag(hdev, HCI_PERIODIC_INQ))
+-	/*
+-	 * If we had been multiplexing, no rotations are necessary, now no events
+-	 * are active.
+-	 */
+-	ctx->rotate_necessary = 0;
+-
+ 	perf_pmu_disable(ctx->pmu);
+ 	if (is_active & EVENT_PINNED) {
+ 		list_for_each_entry_safe(event, tmp, &ctx->pinned_active, active_list)
+@@ -3062,6 +3057,13 @@ static void ctx_sched_out(struct perf_ev
+ 	if (is_active & EVENT_FLEXIBLE) {
+ 		list_for_each_entry_safe(event, tmp, &ctx->flexible_active, active_list)
+ 			group_sched_out(event, cpuctx, ctx);
++
++		/*
++		 * Since we cleared EVENT_FLEXIBLE, also clear
++		 * rotate_necessary, is will be reset by
++		 * ctx_flexible_sched_in() when needed.
++		 */
++		ctx->rotate_necessary = 0;
+ 	}
+ 	perf_pmu_enable(ctx->pmu);
+ }
+@@ -3800,6 +3802,12 @@ ctx_event_to_rotate(struct perf_event_co
+ 				      typeof(*event), group_node);
+ 	}
+ 
++	/*
++	 * Unconditionally clear rotate_necessary; if ctx_flexible_sched_in()
++	 * finds there are unschedulable events, it will set it again.
++	 */
++	ctx->rotate_necessary = 0;
++
+ 	return event;
+ }
+ 
 
 
