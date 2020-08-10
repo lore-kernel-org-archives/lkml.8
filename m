@@ -2,129 +2,171 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29FF2C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:41:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D560EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:44:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F76C20678
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:41:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4BC0206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:44:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="rUgIUgpg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbgHJMlU (ORCPT
+        id S1726587AbgHJMol (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 08:41:20 -0400
-Received: from mail-il1-f198.google.com ([209.85.166.198]:37434 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726536AbgHJMlT (ORCPT
+        Mon, 10 Aug 2020 08:44:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39298 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726446AbgHJMok (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 08:41:19 -0400
-Received: by mail-il1-f198.google.com with SMTP id 5so4485769ila.4
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 05:41:18 -0700 (PDT)
+        Mon, 10 Aug 2020 08:44:40 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C84EC061786
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 05:44:40 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id v22so6542184qtq.8
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 05:44:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=gAr4D/ePrFPzg5ITCo7F2eiZjjapefZpMToAlkphjvI=;
+        b=rUgIUgpgGYUj+dAL7OY+LRW5B1iNfQaizOTu9QModP4rJmLpbj0zM8gSoW2w1gF1gY
+         zJV8PNKkE6NtgSi2X3vVTIBw/spdtf7mf7l9OcqJ3uA+1MZ72PhMp3lhE+yX+35/6sKm
+         2BXOKptXGfmHSiMh9t93c6NwQX6CX8nkh7+lXAUa2XI8pLhB0IyVbvrXRpeBmlyGd86M
+         orq/baff+/CDquuUn8Tt53OsDBxzd8zRTB2ioMuODI0kfd0ZnVPsoFuHJT2QU09M2CEj
+         R60Lg3qbqsLE70u2+kBwOqcWgpANqUVqEkqWPi+87reEyhb5ukrem2Y8FB0qlr/gmCwE
+         ABqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=8FpRlx12JXZpYMKALW3p4bO1L8myHn0GObzI1j2u9CM=;
-        b=XCEB/1WcwJPUrALgqElyvO0VASi4TZrbQ3fTzuxEGOAMTjfsBQo5Mtp9TwWs5akJLm
-         i0Ht6Zzbs983ySuGlPYsMthADBmRMPMMZ84tLDeAyYF8iBOgqxLrJiE7dTxYwaHB0bUq
-         LDN/zr7Pm5Bttv/Myf9XFhh69Bsq+OgYAG8pnUHqCz243R9GR12y2S4kxGa3S83XsiqS
-         J4/wkwMRZa2Ugvu235vCTeMoicAAJx2zgZaV++Nmp0Ixpoy1kVMUn6mM/GdxuaBtbVZ4
-         V7Dmn0h/XwwNYc4TornsXHzyMfDGRCwbLK3WllD0hPZ1QQAmyJb5WEVV5t7QGVMnLLea
-         amIw==
-X-Gm-Message-State: AOAM532z5daBV262bdYr0+h33zmtyLetzh9r90oIjhQOfSiARW+ebOB8
-        YPT1Vk9EIQA9olE+enhNE2z9VAjvzbQr61lnzSwRDfukjsva
-X-Google-Smtp-Source: ABdhPJxmorMnL/jYRyFRA7cvUD4V+Xve2rdk0BZg2GTdbKiByML7Eh7x1ol9o8uhQcYR1VE6rfsAoQJEfYDNFINMYVzfJr9qGCh8
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=gAr4D/ePrFPzg5ITCo7F2eiZjjapefZpMToAlkphjvI=;
+        b=QxOUgwhgY/f7lqWo2PDVKKfbGp6I15ovD2l7zMP+IG+iEbTWLZWVmGydXhJ3QJ6DQx
+         weqsZHnjri4DvSFa1nTfn+C4sxyg/fDllFLtowMwsFA/gRAtxxtyzvvXIZ2rRdWmeavm
+         gvTKS6IMCKi+U/9tVJjkZHHq7f//+NYRKa0jchTNAMh9rQ9dc3SZtH9ZiAw+m9fOKF5H
+         /ETpTONs4c5RjHWB9gA9wJoHFr1La1EDE4OMOsN5VABpFJQxhc783CwFhcAkjQEjnBFd
+         8gi7+jjVSAiwtCtylwyudJXbkQCVgLHJl+AT8ZvuY+tF9ywpwLt+ItvrSDbRKhXoY3R5
+         YknA==
+X-Gm-Message-State: AOAM533/fDlJs1gpV2/VOHLGl5ot9mrIONNMq8DF9WUywJFWDJkcYnzR
+        Bh0e+FTz8aXlxX804KjInvxvEQ==
+X-Google-Smtp-Source: ABdhPJzs2CqjFarg0XkEZgbuZmZNab5q0MHr7iwix6stb9A6MtLvWHu783qEEPSn0NIzKfkEUxh6CA==
+X-Received: by 2002:ac8:47c8:: with SMTP id d8mr25413219qtr.32.1597063478706;
+        Mon, 10 Aug 2020 05:44:38 -0700 (PDT)
+Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id l1sm15330349qtp.96.2020.08.10.05.44.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Aug 2020 05:44:38 -0700 (PDT)
+Date:   Mon, 10 Aug 2020 08:44:31 -0400
+From:   Qian Cai <cai@lca.pw>
+To:     Walter Wu <walter-zh.wu@mediatek.com>
+Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tejun Heo <tj@kernel.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        kasan-dev@googlegroups.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH 0/5] kasan: add workqueue and timer stack for generic
+ KASAN
+Message-ID: <20200810124430.GA5307@lca.pw>
+References: <20200810072115.429-1-walter-zh.wu@mediatek.com>
+ <B873B364-FF03-4819-8F9C-79F3C4EF47CE@lca.pw>
+ <1597060257.13160.11.camel@mtksdccf07>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:22d0:: with SMTP id j16mr19825826jat.97.1597063278271;
- Mon, 10 Aug 2020 05:41:18 -0700 (PDT)
-Date:   Mon, 10 Aug 2020 05:41:18 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000062a49205ac854581@google.com>
-Subject: KCSAN: data-race in __xa_clear_mark / xas_find_marked
-From:   syzbot <syzbot+0d4522639ba75b02bf19@syzkaller.appspotmail.com>
-To:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1597060257.13160.11.camel@mtksdccf07>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Mon, Aug 10, 2020 at 07:50:57PM +0800, Walter Wu wrote:
+> On Mon, 2020-08-10 at 07:19 -0400, Qian Cai wrote:
+> > 
+> > > On Aug 10, 2020, at 3:21 AM, Walter Wu <walter-zh.wu@mediatek.com> wrote:
+> > > 
+> > > ﻿Syzbot reports many UAF issues for workqueue or timer, see [1] and [2].
+> > > In some of these access/allocation happened in process_one_work(),
+> > > we see the free stack is useless in KASAN report, it doesn't help
+> > > programmers to solve UAF on workqueue. The same may stand for times.
+> > > 
+> > > This patchset improves KASAN reports by making them to have workqueue
+> > > queueing stack and timer queueing stack information. It is useful for
+> > > programmers to solve use-after-free or double-free memory issue.
+> > > 
+> > > Generic KASAN will record the last two workqueue and timer stacks,
+> > > print them in KASAN report. It is only suitable for generic KASAN.
+> > > 
+> > > In order to print the last two workqueue and timer stacks, so that
+> > > we add new members in struct kasan_alloc_meta.
+> > > - two workqueue queueing work stacks, total size is 8 bytes.
+> > > - two timer queueing stacks, total size is 8 bytes.
+> > > 
+> > > Orignial struct kasan_alloc_meta size is 16 bytes. After add new
+> > > members, then the struct kasan_alloc_meta total size is 32 bytes,
+> > > It is a good number of alignment. Let it get better memory consumption.
+> > 
+> > Getting debugging tools complicated surely is the best way to kill it. I would argue that it only make sense to complicate it if it is useful most of the time which I never feel or hear that is the case. This reminds me your recent call_rcu() stacks that most of time just makes parsing the report cumbersome. Thus, I urge this exercise to over-engineer on special cases need to stop entirely.
+> > 
+> 
+> A good debug tool is to have complete information in order to solve
+> issue. We should focus on if KASAN reports always show this debug
+> information or create a option to decide if show it. Because this
+> feature is Dimitry's suggestion. see [1]. So I think it need to be
+> implemented. Maybe we can wait his response. 
+> 
+> [1]https://lkml.org/lkml/2020/6/23/256
 
-syzbot found the following issue on:
+I don't know if it is Dmitry's pipe-dream which every KASAN report would enable
+developers to fix it without reproducing it. It is always an ongoing struggling
+between to make kernel easier to debug and the things less cumbersome.
 
-HEAD commit:    fc80c51f Merge tag 'kbuild-v5.9' of git://git.kernel.org/p..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=13cb73fa900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=997a92ee4b5588ef
-dashboard link: https://syzkaller.appspot.com/bug?extid=0d4522639ba75b02bf19
-compiler:       clang version 11.0.0 (https://github.com/llvm/llvm-project.git ca2dcbd030eadbf0aa9b660efe864ff08af6e18b)
+On the other hand, Dmitry's suggestion makes sense only if the price we are
+going to pay is fair. With the current diffstat and the recent experience of
+call_rcu() stacks "waste" screen spaces as a heavy KASAN user myself, I can't
+really get that exciting for pushing the limit again at all.
 
-Unfortunately, I don't have any reproducer for this issue yet.
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+0d4522639ba75b02bf19@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KCSAN: data-race in __xa_clear_mark / xas_find_marked
-
-write to 0xffff8880bace9b30 of 8 bytes by interrupt on cpu 1:
- instrument_write include/linux/instrumented.h:42 [inline]
- __test_and_clear_bit include/asm-generic/bitops/instrumented-non-atomic.h:85 [inline]
- node_clear_mark lib/xarray.c:100 [inline]
- xas_clear_mark lib/xarray.c:908 [inline]
- __xa_clear_mark+0x229/0x350 lib/xarray.c:1726
- test_clear_page_writeback+0x28d/0x480 mm/page-writeback.c:2739
- end_page_writeback+0xa7/0x110 mm/filemap.c:1369
- page_endio+0x1aa/0x1e0 mm/filemap.c:1400
- mpage_end_io+0x186/0x1d0 fs/mpage.c:54
- bio_endio+0x28a/0x370 block/bio.c:1447
- req_bio_endio block/blk-core.c:259 [inline]
- blk_update_request+0x535/0xbd0 block/blk-core.c:1576
- blk_mq_end_request+0x22/0x50 block/blk-mq.c:562
- lo_complete_rq+0xca/0x180 drivers/block/loop.c:500
- blk_done_softirq+0x1a5/0x200 block/blk-mq.c:586
- __do_softirq+0x198/0x360 kernel/softirq.c:298
- run_ksoftirqd+0x2f/0x60 kernel/softirq.c:652
- smpboot_thread_fn+0x347/0x530 kernel/smpboot.c:165
- kthread+0x20d/0x230 kernel/kthread.c:292
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
-
-read to 0xffff8880bace9b30 of 8 bytes by task 12715 on cpu 0:
- xas_find_chunk include/linux/xarray.h:1625 [inline]
- xas_find_marked+0x22f/0x6b0 lib/xarray.c:1198
- find_get_pages_range_tag+0xa3/0x580 mm/filemap.c:1976
- pagevec_lookup_range_tag+0x37/0x50 mm/swap.c:1120
- __filemap_fdatawait_range+0xab/0x1b0 mm/filemap.c:519
- filemap_fdatawait_range mm/filemap.c:554 [inline]
- filemap_write_and_wait_range+0x119/0x2a0 mm/filemap.c:664
- generic_file_read_iter+0x11d/0x3e0 mm/filemap.c:2375
- call_read_iter include/linux/fs.h:1866 [inline]
- generic_file_splice_read+0x22b/0x310 fs/splice.c:312
- do_splice_to fs/splice.c:870 [inline]
- splice_direct_to_actor+0x2a8/0x660 fs/splice.c:950
- do_splice_direct+0xf2/0x170 fs/splice.c:1059
- do_sendfile+0x56a/0xba0 fs/read_write.c:1540
- __do_sys_sendfile64 fs/read_write.c:1595 [inline]
- __se_sys_sendfile64 fs/read_write.c:1587 [inline]
- __x64_sys_sendfile64+0xa9/0x130 fs/read_write.c:1587
- do_syscall_64+0x39/0x80 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 0 PID: 12715 Comm: syz-executor.4 Not tainted 5.8.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-==================================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> 
+> Thanks.
+> 
+> > > 
+> > > [1]https://groups.google.com/g/syzkaller-bugs/search?q=%22use-after-free%22+process_one_work
+> > > [2]https://groups.google.com/g/syzkaller-bugs/search?q=%22use-after-free%22%20expire_timers
+> > > [3]https://bugzilla.kernel.org/show_bug.cgi?id=198437
+> > > 
+> > > Walter Wu (5):
+> > > timer: kasan: record and print timer stack
+> > > workqueue: kasan: record and print workqueue stack
+> > > lib/test_kasan.c: add timer test case
+> > > lib/test_kasan.c: add workqueue test case
+> > > kasan: update documentation for generic kasan
+> > > 
+> > > Documentation/dev-tools/kasan.rst |  4 ++--
+> > > include/linux/kasan.h             |  4 ++++
+> > > kernel/time/timer.c               |  2 ++
+> > > kernel/workqueue.c                |  3 +++
+> > > lib/test_kasan.c                  | 54 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+> > > mm/kasan/generic.c                | 42 ++++++++++++++++++++++++++++++++++++++++++
+> > > mm/kasan/kasan.h                  |  6 +++++-
+> > > mm/kasan/report.c                 | 22 ++++++++++++++++++++++
+> > > 8 files changed, 134 insertions(+), 3 deletions(-)
+> > > 
+> > > -- 
+> > > You received this message because you are subscribed to the Google Groups "kasan-dev" group.
+> > > To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
+> > > To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/20200810072115.429-1-walter-zh.wu%40mediatek.com.
+> 
