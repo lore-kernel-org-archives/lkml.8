@@ -2,147 +2,215 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D031C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1370C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:24:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D63952073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:23:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F5722073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:24:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="mUc+I3UY"
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="tkK5Cfok"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726492AbgHJHXY (ORCPT
+        id S1726426AbgHJHYn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 03:23:24 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:33911 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726448AbgHJHXU (ORCPT
+        Mon, 10 Aug 2020 03:24:43 -0400
+Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:35494 "EHLO
+        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725911AbgHJHYm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 03:23:20 -0400
-X-UUID: a2a2e3ec4d1e4852ae6c1321513c1dbc-20200810
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=PpSc/tEQuCx3Ee+gj4Ko/cEUAbvYmxsK1TcRUj0zqIE=;
-        b=mUc+I3UYkH6D5bMqSwM0Z2C483rqHVq6lSsH5OADMnuNFWEb24s6QtIuT7rCeJ8hUKIWjczy1obNaHtGA892W56rwWuDunYSHh8s1suqhZ37d64RoeuqFBThFO1sTDEGfKEBmxQyzEGN12cUqmhGgTFZbtR1/SH6t4IRnZLkDic=;
-X-UUID: a2a2e3ec4d1e4852ae6c1321513c1dbc-20200810
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1729549305; Mon, 10 Aug 2020 15:23:16 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Mon, 10 Aug 2020 15:23:13 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 10 Aug 2020 15:23:13 +0800
-From:   Walter Wu <walter-zh.wu@mediatek.com>
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-CC:     <kasan-dev@googlegroups.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        <linux-mediatek@lists.infradead.org>,
-        Walter Wu <walter-zh.wu@mediatek.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 1/5] timer: kasan: record and print timer stack
-Date:   Mon, 10 Aug 2020 15:23:13 +0800
-Message-ID: <20200810072313.529-1-walter-zh.wu@mediatek.com>
+        Mon, 10 Aug 2020 03:24:42 -0400
+Received: from vla1-fdfb804fb3f3.qloud-c.yandex.net (vla1-fdfb804fb3f3.qloud-c.yandex.net [IPv6:2a02:6b8:c0d:3199:0:640:fdfb:804f])
+        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id 8931B2E126D;
+        Mon, 10 Aug 2020 10:24:38 +0300 (MSK)
+Received: from vla5-58875c36c028.qloud-c.yandex.net (vla5-58875c36c028.qloud-c.yandex.net [2a02:6b8:c18:340b:0:640:5887:5c36])
+        by vla1-fdfb804fb3f3.qloud-c.yandex.net (mxbackcorp/Yandex) with ESMTP id 5LOezUMGBy-ObwOeiSE;
+        Mon, 10 Aug 2020 10:24:38 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1597044278; bh=ZWfU/KIYRh2EbJ1Zuh32IQ5SqNMpfEy9pAR/vYry/3M=;
+        h=In-Reply-To:Message-Id:References:Date:Subject:To:From:Cc;
+        b=tkK5CfokMhEgA5OFPeSdtRTyPaeH5rOVZr26KuiSmQMqJmKPiYBDUhW4P19nkCU4q
+         uG6OKH3iTjHm/ZlVzPf3PBI8xd+BADXt9bmdmyXqERYG70N8RkLl8XaR7PmO77y2Zn
+         LQSuV6T4hUgqemEO3XYDxBlM6OMJuZMoglgCMyXU=
+Authentication-Results: vla1-fdfb804fb3f3.qloud-c.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from 95.108.174.193-red.dhcp.yndx.net (95.108.174.193-red.dhcp.yndx.net [95.108.174.193])
+        by vla5-58875c36c028.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id Lyi483T9f9-ObjiqUQh;
+        Mon, 10 Aug 2020 10:24:37 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+From:   Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
+To:     linux-kernel@vger.kernel.org
+Cc:     koct9i@gmail.com, Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
+Subject: [PATCH 2/2] lib/test_lockup.c: allow cond_resched inside iteration
+Date:   Mon, 10 Aug 2020 07:24:26 +0000
+Message-Id: <20200810072426.7180-2-dmtrmonakhov@yandex-team.ru>
 X-Mailer: git-send-email 2.18.0
-MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 98F01DCE42DA20CE4E3012D87E3ABB3D61BAAF8BDBEAA7561BC5D251A16DF3722000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200810072426.7180-1-dmtrmonakhov@yandex-team.ru>
+References: <20200810072426.7180-1-dmtrmonakhov@yandex-team.ru>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhpcyBwYXRjaCByZWNvcmRzIHRoZSBsYXN0IHR3byB0aW1lciBxdWV1ZWluZyBzdGFja3MgYW5k
-IHByaW50cw0KdXAgdG8gMiB0aW1lciBzdGFja3MgaW4gS0FTQU4gcmVwb3J0LiBJdCBpcyB1c2Vm
-dWwgZm9yIHByb2dyYW1tZXJzDQp0byBzb2x2ZSB1c2UtYWZ0ZXItZnJlZSBvciBkb3VibGUtZnJl
-ZSBtZW1vcnkgdGltZXIgaXNzdWVzLg0KDQpXaGVuIHRpbWVyX3NldHVwKCkgb3IgdGltZXJfc2V0
-dXBfb25fc3RhY2soKSBpcyBjYWxsZWQsIHRoZW4gaXQNCnByZXBhcmVzIHRvIHVzZSB0aGlzIHRp
-bWVyIGFuZCBzZXRzIHRpbWVyIGNhbGxiYWNrLCB3ZSBzdG9yZQ0KdGhpcyBjYWxsIHN0YWNrIGlu
-IG9yZGVyIHRvIHByaW50IGl0IGluIEtBU0FOIHJlcG9ydC4NCg0KU2lnbmVkLW9mZi1ieTogV2Fs
-dGVyIFd1IDx3YWx0ZXItemgud3VAbWVkaWF0ZWsuY29tPg0KQ2M6IEFuZHJleSBSeWFiaW5pbiA8
-YXJ5YWJpbmluQHZpcnR1b3p6by5jb20+DQpDYzogRG1pdHJ5IFZ5dWtvdiA8ZHZ5dWtvdkBnb29n
-bGUuY29tPg0KQ2M6IEFsZXhhbmRlciBQb3RhcGVua28gPGdsaWRlckBnb29nbGUuY29tPg0KQ2M6
-IFRob21hcyBHbGVpeG5lciA8dGdseEBsaW51dHJvbml4LmRlPg0KQ2M6IEpvaG4gU3R1bHR6IDxq
-b2huLnN0dWx0ekBsaW5hcm8ub3JnPg0KQ2M6IFN0ZXBoZW4gQm95ZCA8c2JveWRAa2VybmVsLm9y
-Zz4NCkNjOiBBbmRyZXcgTW9ydG9uIDxha3BtQGxpbnV4LWZvdW5kYXRpb24ub3JnPg0KLS0tDQog
-aW5jbHVkZS9saW51eC9rYXNhbi5oIHwgIDIgKysNCiBrZXJuZWwvdGltZS90aW1lci5jICAgfCAg
-MiArKw0KIG1tL2thc2FuL2dlbmVyaWMuYyAgICB8IDIxICsrKysrKysrKysrKysrKysrKysrKw0K
-IG1tL2thc2FuL2thc2FuLmggICAgICB8ICA0ICsrKy0NCiBtbS9rYXNhbi9yZXBvcnQuYyAgICAg
-fCAxMSArKysrKysrKysrKw0KIDUgZmlsZXMgY2hhbmdlZCwgMzkgaW5zZXJ0aW9ucygrKSwgMSBk
-ZWxldGlvbigtKQ0KDQpkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9rYXNhbi5oIGIvaW5jbHVk
-ZS9saW51eC9rYXNhbi5oDQppbmRleCAyM2I3ZWUwMDU3MmQuLjc2MzY2NGIzNmRjNiAxMDA2NDQN
-Ci0tLSBhL2luY2x1ZGUvbGludXgva2FzYW4uaA0KKysrIGIvaW5jbHVkZS9saW51eC9rYXNhbi5o
-DQpAQCAtMTc1LDEyICsxNzUsMTQgQEAgc3RhdGljIGlubGluZSBzaXplX3Qga2FzYW5fbWV0YWRh
-dGFfc2l6ZShzdHJ1Y3Qga21lbV9jYWNoZSAqY2FjaGUpIHsgcmV0dXJuIDA7IH0NCiB2b2lkIGth
-c2FuX2NhY2hlX3NocmluayhzdHJ1Y3Qga21lbV9jYWNoZSAqY2FjaGUpOw0KIHZvaWQga2FzYW5f
-Y2FjaGVfc2h1dGRvd24oc3RydWN0IGttZW1fY2FjaGUgKmNhY2hlKTsNCiB2b2lkIGthc2FuX3Jl
-Y29yZF9hdXhfc3RhY2sodm9pZCAqcHRyKTsNCit2b2lkIGthc2FuX3JlY29yZF90bXJfc3RhY2so
-dm9pZCAqcHRyKTsNCiANCiAjZWxzZSAvKiBDT05GSUdfS0FTQU5fR0VORVJJQyAqLw0KIA0KIHN0
-YXRpYyBpbmxpbmUgdm9pZCBrYXNhbl9jYWNoZV9zaHJpbmsoc3RydWN0IGttZW1fY2FjaGUgKmNh
-Y2hlKSB7fQ0KIHN0YXRpYyBpbmxpbmUgdm9pZCBrYXNhbl9jYWNoZV9zaHV0ZG93bihzdHJ1Y3Qg
-a21lbV9jYWNoZSAqY2FjaGUpIHt9DQogc3RhdGljIGlubGluZSB2b2lkIGthc2FuX3JlY29yZF9h
-dXhfc3RhY2sodm9pZCAqcHRyKSB7fQ0KK3N0YXRpYyBpbmxpbmUgdm9pZCBrYXNhbl9yZWNvcmRf
-dG1yX3N0YWNrKHZvaWQgKnB0cikge30NCiANCiAjZW5kaWYgLyogQ09ORklHX0tBU0FOX0dFTkVS
-SUMgKi8NCiANCmRpZmYgLS1naXQgYS9rZXJuZWwvdGltZS90aW1lci5jIGIva2VybmVsL3RpbWUv
-dGltZXIuYw0KaW5kZXggYTUyMjFhYmI0NTk0Li5lZjJkYTlkZGZhYzcgMTAwNjQ0DQotLS0gYS9r
-ZXJuZWwvdGltZS90aW1lci5jDQorKysgYi9rZXJuZWwvdGltZS90aW1lci5jDQpAQCAtNzgzLDYg
-Kzc4Myw4IEBAIHN0YXRpYyB2b2lkIGRvX2luaXRfdGltZXIoc3RydWN0IHRpbWVyX2xpc3QgKnRp
-bWVyLA0KIAl0aW1lci0+ZnVuY3Rpb24gPSBmdW5jOw0KIAl0aW1lci0+ZmxhZ3MgPSBmbGFncyB8
-IHJhd19zbXBfcHJvY2Vzc29yX2lkKCk7DQogCWxvY2tkZXBfaW5pdF9tYXAoJnRpbWVyLT5sb2Nr
-ZGVwX21hcCwgbmFtZSwga2V5LCAwKTsNCisNCisJa2FzYW5fcmVjb3JkX3Rtcl9zdGFjayh0aW1l
-cik7DQogfQ0KIA0KIC8qKg0KZGlmZiAtLWdpdCBhL21tL2thc2FuL2dlbmVyaWMuYyBiL21tL2th
-c2FuL2dlbmVyaWMuYw0KaW5kZXggNGIzY2JhZDc0MzFiLi5mMzVkY2VjOTkwYWIgMTAwNjQ0DQot
-LS0gYS9tbS9rYXNhbi9nZW5lcmljLmMNCisrKyBiL21tL2thc2FuL2dlbmVyaWMuYw0KQEAgLTM0
-Nyw2ICszNDcsMjcgQEAgdm9pZCBrYXNhbl9yZWNvcmRfYXV4X3N0YWNrKHZvaWQgKmFkZHIpDQog
-CWFsbG9jX2luZm8tPmF1eF9zdGFja1swXSA9IGthc2FuX3NhdmVfc3RhY2soR0ZQX05PV0FJVCk7
-DQogfQ0KIA0KK3ZvaWQga2FzYW5fcmVjb3JkX3Rtcl9zdGFjayh2b2lkICphZGRyKQ0KK3sNCisJ
-c3RydWN0IHBhZ2UgKnBhZ2UgPSBrYXNhbl9hZGRyX3RvX3BhZ2UoYWRkcik7DQorCXN0cnVjdCBr
-bWVtX2NhY2hlICpjYWNoZTsNCisJc3RydWN0IGthc2FuX2FsbG9jX21ldGEgKmFsbG9jX2luZm87
-DQorCXZvaWQgKm9iamVjdDsNCisNCisJaWYgKCEocGFnZSAmJiBQYWdlU2xhYihwYWdlKSkpDQor
-CQlyZXR1cm47DQorDQorCWNhY2hlID0gcGFnZS0+c2xhYl9jYWNoZTsNCisJb2JqZWN0ID0gbmVh
-cmVzdF9vYmooY2FjaGUsIHBhZ2UsIGFkZHIpOw0KKwlhbGxvY19pbmZvID0gZ2V0X2FsbG9jX2lu
-Zm8oY2FjaGUsIG9iamVjdCk7DQorDQorCS8qDQorCSAqIHJlY29yZCB0aGUgbGFzdCB0d28gdGlt
-ZXIgc3RhY2tzLg0KKwkgKi8NCisJYWxsb2NfaW5mby0+dG1yX3N0YWNrWzFdID0gYWxsb2NfaW5m
-by0+dG1yX3N0YWNrWzBdOw0KKwlhbGxvY19pbmZvLT50bXJfc3RhY2tbMF0gPSBrYXNhbl9zYXZl
-X3N0YWNrKEdGUF9OT1dBSVQpOw0KK30NCisNCiB2b2lkIGthc2FuX3NldF9mcmVlX2luZm8oc3Ry
-dWN0IGttZW1fY2FjaGUgKmNhY2hlLA0KIAkJCQl2b2lkICpvYmplY3QsIHU4IHRhZykNCiB7DQpk
-aWZmIC0tZ2l0IGEvbW0va2FzYW4va2FzYW4uaCBiL21tL2thc2FuL2thc2FuLmgNCmluZGV4IGVm
-NjU1YTFjNmUxNS4uYzUwODI3ZjM4OGEzIDEwMDY0NA0KLS0tIGEvbW0va2FzYW4va2FzYW4uaA0K
-KysrIGIvbW0va2FzYW4va2FzYW4uaA0KQEAgLTEwOCwxMCArMTA4LDEyIEBAIHN0cnVjdCBrYXNh
-bl9hbGxvY19tZXRhIHsNCiAJc3RydWN0IGthc2FuX3RyYWNrIGFsbG9jX3RyYWNrOw0KICNpZmRl
-ZiBDT05GSUdfS0FTQU5fR0VORVJJQw0KIAkvKg0KLQkgKiBjYWxsX3JjdSgpIGNhbGwgc3RhY2sg
-aXMgc3RvcmVkIGludG8gc3RydWN0IGthc2FuX2FsbG9jX21ldGEuDQorCSAqIGNhbGxfcmN1KCkg
-Y2FsbCBzdGFjayBhbmQgdGltZXIgcXVldWVpbmcgc3RhY2sgYXJlIHN0b3JlZA0KKwkgKiBpbnRv
-IHN0cnVjdCBrYXNhbl9hbGxvY19tZXRhLg0KIAkgKiBUaGUgZnJlZSBzdGFjayBpcyBzdG9yZWQg
-aW50byBzdHJ1Y3Qga2FzYW5fZnJlZV9tZXRhLg0KIAkgKi8NCiAJZGVwb3Rfc3RhY2tfaGFuZGxl
-X3QgYXV4X3N0YWNrWzJdOw0KKwlkZXBvdF9zdGFja19oYW5kbGVfdCB0bXJfc3RhY2tbMl07DQog
-I2Vsc2UNCiAJc3RydWN0IGthc2FuX3RyYWNrIGZyZWVfdHJhY2tbS0FTQU5fTlJfRlJFRV9TVEFD
-S1NdOw0KICNlbmRpZg0KZGlmZiAtLWdpdCBhL21tL2thc2FuL3JlcG9ydC5jIGIvbW0va2FzYW4v
-cmVwb3J0LmMNCmluZGV4IGZlZDNjOGZkZmQyNS4uNmZhM2JmZWUzODFmIDEwMDY0NA0KLS0tIGEv
-bW0va2FzYW4vcmVwb3J0LmMNCisrKyBiL21tL2thc2FuL3JlcG9ydC5jDQpAQCAtMTkxLDYgKzE5
-MSwxNyBAQCBzdGF0aWMgdm9pZCBkZXNjcmliZV9vYmplY3Qoc3RydWN0IGttZW1fY2FjaGUgKmNh
-Y2hlLCB2b2lkICpvYmplY3QsDQogCQkJcHJpbnRfc3RhY2soYWxsb2NfaW5mby0+YXV4X3N0YWNr
-WzFdKTsNCiAJCQlwcl9lcnIoIlxuIik7DQogCQl9DQorDQorCQlpZiAoYWxsb2NfaW5mby0+dG1y
-X3N0YWNrWzBdKSB7DQorCQkJcHJfZXJyKCJMYXN0IHRpbWVyIHN0YWNrOlxuIik7DQorCQkJcHJp
-bnRfc3RhY2soYWxsb2NfaW5mby0+dG1yX3N0YWNrWzBdKTsNCisJCQlwcl9lcnIoIlxuIik7DQor
-CQl9DQorCQlpZiAoYWxsb2NfaW5mby0+dG1yX3N0YWNrWzFdKSB7DQorCQkJcHJfZXJyKCJTZWNv
-bmQgdG8gbGFzdCB0aW1lciBzdGFjazpcbiIpOw0KKwkJCXByaW50X3N0YWNrKGFsbG9jX2luZm8t
-PnRtcl9zdGFja1sxXSk7DQorCQkJcHJfZXJyKCJcbiIpOw0KKwkJfQ0KICNlbmRpZg0KIAl9DQog
-DQotLSANCjIuMTguMA0K
+- New options:
+  cond_resched_inside=Y  call cond_resched inside iteration under lock
+  measure_lockup=Y       measure maximum lockup time
+
+- Rename option:
+  call_cond_resched=Y -> cond_resched_outside=Y: call cond_resched()
+                                                 between iterations.
+
+This allow us to simulate situation where process call cond_resched()
+with locks held.
+
+Example demonstrate priority inversion issue with epbf-program, where
+low priority task sheduled out while holding cgroup_mutex for a long
+periods of time which blocks others high priority tasks.
+
+CGROUP_MUTEX=$(gawk '$3 == "cgroup_mutex" {print "0x"$1}' /proc/kallsyms)
+# Emulate ebpf-applications load which can hung inside cgroup_bpf_attach()
+nice -20 modprobe lib/test_lockup.ko \
+      time_nsecs=1000 cooldown_nsecs=100000 iterations=100000 \
+      lock_mutex_ptr=$CGROUP_MUTEX reacquire_locks=Y\
+      cond_resched_inside=Y measure_lockup=Y &
+
+stress-ng -c $(nproc) --timeout 10s&
+time mkdir /sys/fs/cgroup/blkio/a
+time rmdir /sys/fs/cgroup/blkio/a
+
+Signed-off-by: Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
+---
+ lib/test_lockup.c | 45 +++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 37 insertions(+), 8 deletions(-)
+
+diff --git a/lib/test_lockup.c b/lib/test_lockup.c
+index 867b2f4..5666c00 100644
+--- a/lib/test_lockup.c
++++ b/lib/test_lockup.c
+@@ -73,9 +73,13 @@ static bool touch_hardlockup;
+ module_param(touch_hardlockup, bool, 0600);
+ MODULE_PARM_DESC(touch_hardlockup, "touch hard-lockup watchdog between iterations");
+ 
+-static bool call_cond_resched;
+-module_param(call_cond_resched, bool, 0600);
+-MODULE_PARM_DESC(call_cond_resched, "call cond_resched() between iterations");
++static bool cond_resched_inside;
++module_param(cond_resched_inside, bool, 0600);
++MODULE_PARM_DESC(cond_resched_inside, "call cond_resched() during iteration");
++
++static bool cond_resched_outside;
++module_param(cond_resched_outside, bool, 0600);
++MODULE_PARM_DESC(cond_resched_outside, "call cond_resched() between iterations");
+ 
+ static bool measure_alloc_pages_wait;
+ module_param(measure_alloc_pages_wait, bool, 0400);
+@@ -85,6 +89,10 @@ static bool measure_lock_wait;
+ module_param(measure_lock_wait, bool, 0400);
+ MODULE_PARM_DESC(measure_lock_wait, "measure lock wait time");
+ 
++static bool measure_lockup;
++module_param(measure_lockup, bool, 0400);
++MODULE_PARM_DESC(measure_lockup, "measure maximum lockup time");
++
+ static unsigned long lock_wait_threshold = ULONG_MAX;
+ module_param(lock_wait_threshold, ulong, 0400);
+ MODULE_PARM_DESC(lock_wait_threshold, "print lock wait time longer than this in nanoseconds, default off");
+@@ -167,6 +175,7 @@ static atomic_t alloc_pages_failed = ATOMIC_INIT(0);
+ 
+ static atomic64_t max_lock_wait = ATOMIC64_INIT(0);
+ static atomic64_t max_alloc_pages_wait = ATOMIC64_INIT(0);
++static atomic64_t max_lockup_time = ATOMIC64_INIT(0);
+ 
+ static struct task_struct *main_task;
+ static int master_cpu;
+@@ -369,6 +378,7 @@ static void test_wait(unsigned int secs, unsigned int nsecs)
+ static void test_lockup(bool master)
+ {
+ 	u64 lockup_start = local_clock();
++	u64 iter_start;
+ 	unsigned int iter = 0;
+ 	LIST_HEAD(pages);
+ 
+@@ -379,12 +389,18 @@ static void test_lockup(bool master)
+ 	test_alloc_pages(&pages);
+ 
+ 	while (iter++ < iterations && !signal_pending(main_task)) {
++		s64 cur_lockup, max_lockup;
++
++		iter_start = local_clock();
+ 
+ 		if (iowait)
+ 			current->in_iowait = 1;
+ 
+ 		test_wait(time_secs, time_nsecs);
+ 
++		if (cond_resched_inside)
++			cond_resched();
++
+ 		if (iowait)
+ 			current->in_iowait = 0;
+ 
+@@ -400,7 +416,15 @@ static void test_lockup(bool master)
+ 		if (touch_hardlockup)
+ 			touch_nmi_watchdog();
+ 
+-		if (call_cond_resched)
++		cur_lockup  = local_clock() - iter_start;
++		max_lockup = atomic64_read(&max_lockup_time);
++		do {
++			if (cur_lockup < max_lockup)
++				break;
++			max_lockup = atomic64_cmpxchg(&max_lockup_time, max_lockup, cur_lockup);
++		} while (max_lockup != cur_lockup);
++
++		if (cond_resched_outside)
+ 			cond_resched();
+ 
+ 		test_wait(cooldown_secs, cooldown_nsecs);
+@@ -515,8 +539,8 @@ static int __init test_lockup_init(void)
+ 		return -EINVAL;
+ #endif
+ 
+-	if ((wait_state != TASK_RUNNING ||
+-	     (call_cond_resched && !reacquire_locks) ||
++	if ((wait_state != TASK_RUNNING || cond_resched_inside ||
++	     (cond_resched_outside && !reacquire_locks) ||
+ 	     (alloc_pages_nr && gfpflags_allow_blocking(alloc_pages_gfp))) &&
+ 	    (test_disable_irq || disable_softirq || disable_preempt ||
+ 	     lock_rcu || lock_spinlock_ptr || lock_rwlock_ptr)) {
+@@ -552,7 +576,7 @@ static int __init test_lockup_init(void)
+ 	if (test_lock_sb_umount && test_inode)
+ 		lock_rwsem_ptr = (unsigned long)&test_inode->i_sb->s_umount;
+ 
+-	pr_notice("START pid=%d time=%u +%u ns cooldown=%u +%u ns iterations=%u state=%s %s%s%s%s%s%s%s%s%s%s%s\n",
++	pr_notice("START pid=%d time=%u +%u ns cooldown=%u +%u ns iterations=%u state=%s %s%s%s%s%s%s%s%s%s%s%s%s\n",
+ 		  main_task->pid, time_secs, time_nsecs,
+ 		  cooldown_secs, cooldown_nsecs, iterations, state,
+ 		  all_cpus ? "all_cpus " : "",
+@@ -564,7 +588,8 @@ static int __init test_lockup_init(void)
+ 		  lock_read ? "lock_read " : "",
+ 		  touch_softlockup ? "touch_softlockup " : "",
+ 		  touch_hardlockup ? "touch_hardlockup " : "",
+-		  call_cond_resched ? "call_cond_resched " : "",
++		  cond_resched_inside ? "cond_resched_inside " : "",
++		  cond_resched_outside ? "cond_resched_outside " : "",
+ 		  reacquire_locks ? "reacquire_locks " : "");
+ 
+ 	if (alloc_pages_nr)
+@@ -605,6 +630,10 @@ static int __init test_lockup_init(void)
+ 			pr_notice("Maximum pages allocation wait: %lld ns\n",
+ 				  atomic64_read(&max_alloc_pages_wait));
+ 	}
++	if (measure_lockup)
++		pr_notice("Maximum lockup time: %lld ns\n",
++			  atomic64_read(&max_lockup_time));
++
+ 	pr_notice("FINISH in %llu ns\n", local_clock() - test_start);
+ 
+ 	if (test_file)
+-- 
+2.7.4
 
