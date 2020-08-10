@@ -2,51 +2,54 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F5FAC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:41:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37CD1C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:41:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C70920774
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:41:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B3A02080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:41:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597074077;
-	bh=lI6E/4lPK/biapph8fLlSw8m7Ev/Xq7lJP/iubY+u2o=;
+	s=default; t=1597074082;
+	bh=3RsfUAp7aGDaL2Wks05J/+SuJ3XwH3Ysi/8Wj7A4IOY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h2u81MSIwdEk836rPtL92diKJ3v4dT9Sh0Q5UWpVm+oRLQ0/zwCV6dvIcIkIO3VNp
-	 D0jv5cFnstR6lled+kN0Y6ML4p3p+NDA4n7D6wQBbKH07WwiOXg7LdFiX8CWn7SaL4
-	 DaoGn+VxrPr4vvkCGKbZcd8gF7WSJI6D04A8CsXg=
+	b=e2hhjYfuTzEV/ZjMdUbxZdhkThi2yrif2MAKkfZSwsu1FanY99FeucHRkVgf7K/DW
+	 PKRr8s/Fk2KjvLZYdVExgKWTetaSbk3YtWqFW4Rw7rFUQ87VItN688htuHwQhpKxcW
+	 yNz5/7QxM040nvIm1D2ApGgg1ZlSe3N4LWKZ1UvQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728310AbgHJPXZ (ORCPT
+        id S1728825AbgHJPlU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:23:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54248 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:41:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728223AbgHJPXL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:23:11 -0400
+        id S1727880AbgHJPXT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:23:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BFBF20768;
-        Mon, 10 Aug 2020 15:23:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0CF2207FF;
+        Mon, 10 Aug 2020 15:23:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597072990;
-        bh=lI6E/4lPK/biapph8fLlSw8m7Ev/Xq7lJP/iubY+u2o=;
+        s=default; t=1597072999;
+        bh=3RsfUAp7aGDaL2Wks05J/+SuJ3XwH3Ysi/8Wj7A4IOY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QYCBrVntJ6pPmFK8MyxN+38UyACSpOAsI/cb6NSuK5lZtpnaqnvk/iUnwUSbeivQb
-         P4WjN4lw2QFPrbxd8zswP0PkUbAVwWbpdGajUjXJelFdExVrsHa5JiD1Ev0ywkqIl7
-         JhIaU2aD1dbFhP/egI6WJCpanbajikyGoXrLrDO4=
+        b=B4J2aNCFwnkhgiNEEDAJbJ7i1OWXIyqMpPyHCjpELRBj76oj561IONCFuvAypoteN
+         DzsTV1doUt2/JNRL4PZUmSjXp7l+XpmyxqFNCRf/mg1jrPuSF2n3gZY17RQInLg6dm
+         lZMDLefVzRZcZN7VNOuGW+1PlOWZMxVA8Nd4KZns=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Amitoj Kaur Chawla <amitoj1606@gmail.com>,
-        Johan Hovold <johan@kernel.org>, Pavel Machek <pavel@ucw.cz>
-Subject: [PATCH 5.7 28/79] leds: lm3533: fix use-after-free on unbind
-Date:   Mon, 10 Aug 2020 17:20:47 +0200
-Message-Id: <20200810151813.645661016@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+ee09bda7017345f1fbe6@syzkaller.appspotmail.com,
+        Peilin Ye <yepeilin.cs@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 31/79] bpf: Fix NULL pointer dereference in __btf_resolve_helper_id()
+Date:   Mon, 10 Aug 2020 17:20:50 +0200
+Message-Id: <20200810151813.824095381@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151812.114485777@linuxfoundation.org>
 References: <20200810151812.114485777@linuxfoundation.org>
@@ -59,66 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Peilin Ye <yepeilin.cs@gmail.com>
 
-commit d584221e683bbd173738603b83a315f27d27d043 upstream.
+[ Upstream commit 5b801dfb7feb2738975d80223efc2fc193e55573 ]
 
-Several MFD child drivers register their class devices directly under
-the parent device. This means you cannot blindly do devres conversions
-so that deregistration ends up being tied to the parent device,
-something which leads to use-after-free on driver unbind when the class
-device is released while still being registered.
+Prevent __btf_resolve_helper_id() from dereferencing `btf_vmlinux`
+as NULL. This patch fixes the following syzbot bug:
 
-Fixes: 50154e29e5cc ("leds: lm3533: Use devm_led_classdev_register")
-Cc: stable <stable@vger.kernel.org>     # 4.6
-Cc: Amitoj Kaur Chawla <amitoj1606@gmail.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Pavel Machek <pavel@ucw.cz>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    https://syzkaller.appspot.com/bug?id=f823224ada908fa5c207902a5a62065e53ca0fcc
 
+Reported-by: syzbot+ee09bda7017345f1fbe6@syzkaller.appspotmail.com
+Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Link: https://lore.kernel.org/bpf/20200714180904.277512-1-yepeilin.cs@gmail.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/leds/leds-lm3533.c |   12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ kernel/bpf/btf.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/drivers/leds/leds-lm3533.c
-+++ b/drivers/leds/leds-lm3533.c
-@@ -694,7 +694,7 @@ static int lm3533_led_probe(struct platf
+diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
+index d1f5d428c9fe2..6cafc596631c3 100644
+--- a/kernel/bpf/btf.c
++++ b/kernel/bpf/btf.c
+@@ -4011,6 +4011,11 @@ static int __btf_resolve_helper_id(struct bpf_verifier_log *log, void *fn,
+ 	const char *tname, *sym;
+ 	u32 btf_id, i;
  
- 	platform_set_drvdata(pdev, led);
- 
--	ret = devm_led_classdev_register(pdev->dev.parent, &led->cdev);
-+	ret = led_classdev_register(pdev->dev.parent, &led->cdev);
- 	if (ret) {
- 		dev_err(&pdev->dev, "failed to register LED %d\n", pdev->id);
- 		return ret;
-@@ -704,13 +704,18 @@ static int lm3533_led_probe(struct platf
- 
- 	ret = lm3533_led_setup(led, pdata);
- 	if (ret)
--		return ret;
-+		goto err_deregister;
- 
- 	ret = lm3533_ctrlbank_enable(&led->cb);
- 	if (ret)
--		return ret;
-+		goto err_deregister;
- 
- 	return 0;
++	if (!btf_vmlinux) {
++		bpf_log(log, "btf_vmlinux doesn't exist\n");
++		return -EINVAL;
++	}
 +
-+err_deregister:
-+	led_classdev_unregister(&led->cdev);
-+
-+	return ret;
- }
- 
- static int lm3533_led_remove(struct platform_device *pdev)
-@@ -720,6 +725,7 @@ static int lm3533_led_remove(struct plat
- 	dev_dbg(&pdev->dev, "%s\n", __func__);
- 
- 	lm3533_ctrlbank_disable(&led->cb);
-+	led_classdev_unregister(&led->cdev);
- 
- 	return 0;
- }
+ 	if (IS_ERR(btf_vmlinux)) {
+ 		bpf_log(log, "btf_vmlinux is malformed\n");
+ 		return -EINVAL;
+-- 
+2.25.1
+
 
 
