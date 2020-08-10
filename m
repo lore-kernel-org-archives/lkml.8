@@ -5,53 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB3FBC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:09:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 649CAC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:09:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88C5E221E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:09:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39162221E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:09:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597086569;
-	bh=kbuDP+M988482p05npem60kQat8V2wwECI9KCrdipsk=;
+	s=default; t=1597086571;
+	bh=zHckG6m84Zqzd5VIOruZMFe/2Q7NFzcOkZYzhVCARjw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H3/IJ+tRQbvN473QR2vioOAfdBvNJN7TpGZCbfSxZ2VL/lOG3TeYm7NO1iaMe3KZ8
-	 DshwGOTeiYyD4cj/NOrXO8beqQL1fiPDyQ/hHWfa5rDI7Hg2CxKtx32p5y0DU6XAZi
-	 5R4h6HQzhhWwTwcFbMrVXxtk1GPeqR3VB6WRPAHw=
+	b=SBuphI8lNBbuJB+yXUCoHPljVJzwLp1CUEA14bnVVZwNFjL4G47KMbHBT3G8VtDbJ
+	 qJ5k9YxYzONNTus2Z9yMVbYnLZ8qI6QGm6G37fU07ujcO7wgTxEjmtRsbvHof9og8+
+	 XVJW7IUeTJ2fKb5iMiox9bXq1RwOt84zFSjDfoBQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728519AbgHJTJ2 (ORCPT
+        id S1728530AbgHJTJa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:09:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35610 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:09:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728450AbgHJTJW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:09:22 -0400
+        id S1728482AbgHJTJ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:09:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB94B20885;
-        Mon, 10 Aug 2020 19:09:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD16E2078D;
+        Mon, 10 Aug 2020 19:09:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086561;
-        bh=kbuDP+M988482p05npem60kQat8V2wwECI9KCrdipsk=;
+        s=default; t=1597086564;
+        bh=zHckG6m84Zqzd5VIOruZMFe/2Q7NFzcOkZYzhVCARjw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fdL2u9HTyI7Wj7FnOt8JHS9nu+WRm2UGykaxf20TSXurVwivfRdsxTbme0Y13CTR0
-         WzkqX9Si3LG7x7k8LMByN68ORPgm3V9LllobXUuR4vvvYTWkC/ZhHHhgzBGSbD0ts0
-         i3WXxmRggozCwOtzy5GSpSaef7mu/2smAOfJtceA=
+        b=pdQBm1tGz22W58g7obmG1F8X7KkVMfGGbaSo80yHBopIwTIXNVraWRsFiYMWKAvBA
+         1vIaa9zWM7GST4qo8ylZY9MECVNNZ5M1BVi5aZvQyBx/X4rJAIGKDORJIAwbVDS0is
+         nOxWldnxl7WkAxN/jgZFwJRNs/xMPGLIgO9S5cWU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aaron Ma <aaron.ma@canonical.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 16/64] rtw88: 8822ce: add support for device ID 0xc82f
-Date:   Mon, 10 Aug 2020 15:08:11 -0400
-Message-Id: <20200810190859.3793319-16-sashal@kernel.org>
+Cc:     =?UTF-8?q?Ricardo=20Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Wei Xu <xuwei5@hisilicon.com>, Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 18/64] arm64: dts: hisilicon: hikey: fixes to comply with adi, adv7533 DT binding
+Date:   Mon, 10 Aug 2020 15:08:13 -0400
+Message-Id: <20200810190859.3793319-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810190859.3793319-1-sashal@kernel.org>
 References: <20200810190859.3793319-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,41 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aaron Ma <aaron.ma@canonical.com>
+From: Ricardo Cañuelo <ricardo.canuelo@collabora.com>
 
-[ Upstream commit 7d428b1c9ffc9ddcdd64c6955836bbb17a233ef3 ]
+[ Upstream commit bbe28fc3cbabbef781bcdf847615d52ce2e26e42 ]
 
-New device ID 0xc82f found on Lenovo ThinkCenter.
-Tested it with c822 driver, works good.
+hi3660-hikey960.dts:
+  Define a 'ports' node for 'adv7533: adv7533@39' and the
+  'adi,dsi-lanes' property to make it compliant with the adi,adv7533 DT
+  binding.
 
-PCI id:
-03:00.0 Network controller [0280]: Realtek Semiconductor Co., Ltd.
-Device [10ec:c82f]
-        Subsystem: Lenovo Device [17aa:c02f]
+  This fills the requirements to meet the binding requirements,
+  remote endpoints are not defined.
 
-Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200612082745.204400-1-aaron.ma@canonical.com
+hi6220-hikey.dts:
+  Change property name s/pd-gpio/pd-gpios, gpio properties should be
+  plural. This is just a cosmetic change.
+
+Signed-off-by: Ricardo Cañuelo <ricardo.canuelo@collabora.com>
+Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Wei Xu <xuwei5@hisilicon.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtw88/rtw8822ce.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts | 11 +++++++++++
+ arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts    |  2 +-
+ 2 files changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/realtek/rtw88/rtw8822ce.c b/drivers/net/wireless/realtek/rtw88/rtw8822ce.c
-index 7b6bd990651e1..026ac49ce6e3c 100644
---- a/drivers/net/wireless/realtek/rtw88/rtw8822ce.c
-+++ b/drivers/net/wireless/realtek/rtw88/rtw8822ce.c
-@@ -11,6 +11,10 @@ static const struct pci_device_id rtw_8822ce_id_table[] = {
- 		PCI_DEVICE(PCI_VENDOR_ID_REALTEK, 0xC822),
- 		.driver_data = (kernel_ulong_t)&rtw8822c_hw_spec
- 	},
-+	{
-+		PCI_DEVICE(PCI_VENDOR_ID_REALTEK, 0xC82F),
-+		.driver_data = (kernel_ulong_t)&rtw8822c_hw_spec
-+	},
- 	{}
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+index e035cf195b19a..8c4bfbaf3a806 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
++++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+@@ -530,6 +530,17 @@ adv7533: adv7533@39 {
+ 		status = "ok";
+ 		compatible = "adi,adv7533";
+ 		reg = <0x39>;
++		adi,dsi-lanes = <4>;
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			port@0 {
++				reg = <0>;
++			};
++			port@1 {
++				reg = <1>;
++			};
++		};
+ 	};
  };
- MODULE_DEVICE_TABLE(pci, rtw_8822ce_id_table);
+ 
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+index c14205cd6bf5c..3e47150c05ec2 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
++++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+@@ -516,7 +516,7 @@ adv7533: adv7533@39 {
+ 		reg = <0x39>;
+ 		interrupt-parent = <&gpio1>;
+ 		interrupts = <1 2>;
+-		pd-gpio = <&gpio0 4 0>;
++		pd-gpios = <&gpio0 4 0>;
+ 		adi,dsi-lanes = <4>;
+ 		#sound-dai-cells = <0>;
+ 
 -- 
 2.25.1
 
