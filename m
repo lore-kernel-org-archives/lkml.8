@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BF97C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 21:28:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D300EC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 21:28:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36F5220734
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 21:28:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3BA220734
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 21:28:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727030AbgHJV2A (ORCPT
+        id S1727038AbgHJV2C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 17:28:00 -0400
-Received: from mga01.intel.com ([192.55.52.88]:25839 "EHLO mga01.intel.com"
+        Mon, 10 Aug 2020 17:28:02 -0400
+Received: from mga01.intel.com ([192.55.52.88]:25837 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726979AbgHJV1y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 17:27:54 -0400
-IronPort-SDR: B75HTd3RW86g5ixneTPYCtJbHm12RauSi8/+owg0X2CuJXp+NDuls4XFSFp83bcsWPgWgAfZuW
- VbHlIbSwDMtA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9709"; a="171665977"
+        id S1726994AbgHJV14 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 17:27:56 -0400
+IronPort-SDR: 5CFhhVwhPWe0PZUc8I7RvoyQdkMdEnk4c3XJlagMILtGQapgxkbjnpYvJclR/ySo8qpZP46rcq
+ 1BNbZib6j0dA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9709"; a="171665982"
 X-IronPort-AV: E=Sophos;i="5.75,458,1589266800"; 
-   d="scan'208";a="171665977"
+   d="scan'208";a="171665982"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2020 14:27:54 -0700
-IronPort-SDR: k340XRErTHkZApA5yL9J2anilrBltD8oa13tBPX+WDQuEeEWtWUnFDHQS26B7PmOzCHeEkYuBL
- CkiyqAugu5gw==
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2020 14:27:55 -0700
+IronPort-SDR: GO58zXJ+lan42tFAO162H5gIO1D/fVaso2cQms36bt9IpylVwb7CQ5qIQAAII1YocFH/ZkSspr
+ 2heiesUnWZ9Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,458,1589266800"; 
-   d="scan'208";a="469196826"
+   d="scan'208";a="469196836"
 Received: from ssp-icl-u-210.jf.intel.com ([10.54.55.52])
-  by orsmga005.jf.intel.com with ESMTP; 10 Aug 2020 14:27:53 -0700
+  by orsmga005.jf.intel.com with ESMTP; 10 Aug 2020 14:27:55 -0700
 From:   Kan Liang <kan.liang@linux.intel.com>
 To:     peterz@infradead.org, acme@kernel.org, mingo@redhat.com,
         linux-kernel@vger.kernel.org
 Cc:     mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
         jolsa@redhat.com, eranian@google.com, ak@linux.intel.com,
         dave.hansen@intel.com, kirill.shutemov@linux.intel.com
-Subject: [PATCH V6 13/16] perf tools: Add support for PERF_SAMPLE_CODE_PAGE_SIZE
-Date:   Mon, 10 Aug 2020 14:24:33 -0700
-Message-Id: <20200810212436.8026-14-kan.liang@linux.intel.com>
+Subject: [PATCH V6 15/16] perf report: Add support for PERF_SAMPLE_CODE_PAGE_SIZE
+Date:   Mon, 10 Aug 2020 14:24:35 -0700
+Message-Id: <20200810212436.8026-16-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200810212436.8026-1-kan.liang@linux.intel.com>
 References: <20200810212436.8026-1-kan.liang@linux.intel.com>
@@ -55,138 +55,150 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Stephane Eranian <eranian@google.com>
 
-Adds the infrastructure to sample the code address page size.
+Add a new sort dimension "code_page_size" for common sort.
+With this option applied, perf can sort and report by sample's code page
+size.
 
-Introduce a new --code-page-size option for perf record.
+For example,
+perf report --stdio --sort=comm,symbol,code_page_size
+ # To display the perf.data header info, please use
+ # --header/--header-only options.
+ #
+ #
+ # Total Lost Samples: 0
+ #
+ # Samples: 3K of event 'mem-loads:uP'
+ # Event count (approx.): 1470769
+ #
+ # Overhead  Command  Symbol                        Code Page Size IPC
+ # [IPC Coverage]
+ # ........  .......  ............................  ..............
+ # ....................
+ #
+     69.56%  dtlb     [.] GetTickCount              4K             -
+
+     17.93%  dtlb     [.] Calibrate                 4K             -
+ -
+     11.40%  dtlb     [.] __gettimeofday            4K             -
+ -
 
 Signed-off-by: Stephane Eranian <eranian@google.com>
 ---
- tools/perf/Documentation/perf-record.txt  | 3 +++
- tools/perf/builtin-record.c               | 2 ++
- tools/perf/util/event.h                   | 1 +
- tools/perf/util/evsel.c                   | 9 +++++++++
- tools/perf/util/perf_event_attr_fprintf.c | 2 +-
- tools/perf/util/record.h                  | 1 +
- tools/perf/util/synthetic-events.c        | 8 ++++++++
- 7 files changed, 25 insertions(+), 1 deletion(-)
+ tools/perf/Documentation/perf-report.txt |  1 +
+ tools/perf/util/hist.c                   |  2 ++
+ tools/perf/util/hist.h                   |  1 +
+ tools/perf/util/sort.c                   | 26 ++++++++++++++++++++++++
+ tools/perf/util/sort.h                   |  2 ++
+ 5 files changed, 32 insertions(+)
 
-diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index cbc3f7fdf48d..3994318ac5b4 100644
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -292,6 +292,9 @@ OPTIONS
- --data-page-size::
- 	Record the sampled data address data page size
+diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
+index 8f7f4e9605d8..e44045842c5c 100644
+--- a/tools/perf/Documentation/perf-report.txt
++++ b/tools/perf/Documentation/perf-report.txt
+@@ -108,6 +108,7 @@ OPTIONS
+ 	- period: Raw number of event count of sample
+ 	- time: Separate the samples by time stamp with the resolution specified by
+ 	--time-quantum (default 100ms). Specify with overhead and before it.
++	- code_page_size: the code page size of sampled code address (ip)
  
-+--code-page-size::
-+	Record the sampled code address (ip) page size
+ 	By default, comm, dso and symbol keys are used.
+ 	(i.e. --sort comm,dso,symbol)
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index 7829ecd7ea59..af948da14d94 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -212,6 +212,7 @@ void hists__calc_col_len(struct hists *hists, struct hist_entry *h)
+ 		hists__new_col_len(hists, HISTC_TIME, 16);
+ 	else
+ 		hists__new_col_len(hists, HISTC_TIME, 12);
++	hists__new_col_len(hists, HISTC_CODE_PAGE_SIZE, 6);
+ 
+ 	if (h->srcline) {
+ 		len = MAX(strlen(h->srcline), strlen(sort_srcline.se_header));
+@@ -718,6 +719,7 @@ __hists__add_entry(struct hists *hists,
+ 		.cpumode = al->cpumode,
+ 		.ip	 = al->addr,
+ 		.level	 = al->level,
++		.code_page_size = sample->code_page_size,
+ 		.stat = {
+ 			.nr_events = 1,
+ 			.period	= sample->period,
+diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
+index e44cf5bb655f..6500c00ae7be 100644
+--- a/tools/perf/util/hist.h
++++ b/tools/perf/util/hist.h
+@@ -53,6 +53,7 @@ enum hist_column {
+ 	HISTC_DSO_TO,
+ 	HISTC_LOCAL_WEIGHT,
+ 	HISTC_GLOBAL_WEIGHT,
++	HISTC_CODE_PAGE_SIZE,
+ 	HISTC_MEM_DADDR_SYMBOL,
+ 	HISTC_MEM_DADDR_DSO,
+ 	HISTC_MEM_PHYS_DADDR,
+diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+index ad9666db07fb..bc79d446bcbd 100644
+--- a/tools/perf/util/sort.c
++++ b/tools/perf/util/sort.c
+@@ -1491,6 +1491,31 @@ struct sort_entry sort_mem_data_page_size = {
+ 	.se_width_idx	= HISTC_MEM_DATA_PAGE_SIZE,
+ };
+ 
++static int64_t
++sort__code_page_size_cmp(struct hist_entry *left, struct hist_entry *right)
++{
++	uint64_t l = left->code_page_size;
++	uint64_t r = right->code_page_size;
 +
- -T::
- --timestamp::
- 	Record the sample timestamps. Use it with 'perf report -D' to see the
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 27d8e563fe33..e44da98124ba 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -2447,6 +2447,8 @@ static struct option __record_options[] = {
- 		    "Record the sample physical addresses"),
- 	OPT_BOOLEAN(0, "data-page-size", &record.opts.sample_data_page_size,
- 		    "Record the sampled data address data page size"),
-+	OPT_BOOLEAN(0, "code-page-size", &record.opts.sample_code_page_size,
-+		    "Record the sampled code address (ip) page size"),
- 	OPT_BOOLEAN(0, "sample-cpu", &record.opts.sample_cpu, "Record the sample cpu"),
- 	OPT_BOOLEAN_SET('T', "timestamp", &record.opts.sample_time,
- 			&record.opts.sample_time_set,
-diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-index 9db85c515a8b..5bd1b31f7b7f 100644
---- a/tools/perf/util/event.h
-+++ b/tools/perf/util/event.h
-@@ -136,6 +136,7 @@ struct perf_sample {
- 	u64 data_src;
- 	u64 phys_addr;
- 	u64 data_page_size;
-+	u64 code_page_size;
- 	u64 cgroup;
- 	u32 flags;
- 	u16 insn_len;
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 9e5e986b56bc..f96fdac83a02 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1078,6 +1078,9 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
- 	if (opts->sample_data_page_size)
- 		evsel__set_sample_bit(evsel, DATA_PAGE_SIZE);
- 
-+	if (opts->sample_code_page_size)
-+		evsel__set_sample_bit(evsel, CODE_PAGE_SIZE);
++	return (int64_t)(r - l);
++}
 +
- 	if (opts->record_switch_events)
- 		attr->context_switch = track;
- 
-@@ -2254,6 +2257,12 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
- 		array++;
- 	}
- 
-+	data->code_page_size = 0;
-+	if (type & PERF_SAMPLE_CODE_PAGE_SIZE) {
-+		data->code_page_size = *array;
-+		array++;
-+	}
++static int hist_entry__code_page_size_snprintf(struct hist_entry *he, char *bf,
++					  size_t size, unsigned int width)
++{
++	char str[PAGE_SIZE_NAME_LEN];
 +
- 	if (type & PERF_SAMPLE_AUX) {
- 		OVERFLOW_CHECK_u64(array);
- 		sz = *array++;
-diff --git a/tools/perf/util/perf_event_attr_fprintf.c b/tools/perf/util/perf_event_attr_fprintf.c
-index 68188c7c188a..a97a95f3b1be 100644
---- a/tools/perf/util/perf_event_attr_fprintf.c
-+++ b/tools/perf/util/perf_event_attr_fprintf.c
-@@ -35,7 +35,7 @@ static void __p_sample_type(char *buf, size_t size, u64 value)
- 		bit_name(BRANCH_STACK), bit_name(REGS_USER), bit_name(STACK_USER),
- 		bit_name(IDENTIFIER), bit_name(REGS_INTR), bit_name(DATA_SRC),
- 		bit_name(WEIGHT), bit_name(PHYS_ADDR), bit_name(AUX),
--		bit_name(CGROUP), bit_name(DATA_PAGE_SIZE),
-+		bit_name(CGROUP), bit_name(DATA_PAGE_SIZE), bit_name(CODE_PAGE_SIZE),
- 		{ .name = NULL, }
- 	};
- #undef bit_name
-diff --git a/tools/perf/util/record.h b/tools/perf/util/record.h
-index 924fcfbebd18..20141cb7a953 100644
---- a/tools/perf/util/record.h
-+++ b/tools/perf/util/record.h
-@@ -23,6 +23,7 @@ struct record_opts {
- 	bool	      sample_address;
- 	bool	      sample_phys_addr;
- 	bool	      sample_data_page_size;
-+	bool	      sample_code_page_size;
- 	bool	      sample_weight;
- 	bool	      sample_time;
- 	bool	      sample_time_set;
-diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-index 0de5f8c0b867..88f8f42c6b76 100644
---- a/tools/perf/util/synthetic-events.c
-+++ b/tools/perf/util/synthetic-events.c
-@@ -1409,6 +1409,9 @@ size_t perf_event__sample_event_size(const struct perf_sample *sample, u64 type,
- 	if (type & PERF_SAMPLE_DATA_PAGE_SIZE)
- 		result += sizeof(u64);
- 
-+	if (type & PERF_SAMPLE_CODE_PAGE_SIZE)
-+		result += sizeof(u64);
++	return repsep_snprintf(bf, size, "%-*s", width,
++			       get_page_size_name(he->code_page_size, str));
++}
 +
- 	if (type & PERF_SAMPLE_AUX) {
- 		result += sizeof(u64);
- 		result += sample->aux_sample.size;
-@@ -1593,6 +1596,11 @@ int perf_event__synthesize_sample(union perf_event *event, u64 type, u64 read_fo
- 		array++;
- 	}
- 
-+	if (type & PERF_SAMPLE_CODE_PAGE_SIZE) {
-+		*array = sample->code_page_size;
-+		array++;
-+	}
++struct sort_entry sort_code_page_size = {
++	.se_header	= "Code Page Size",
++	.se_cmp		= sort__code_page_size_cmp,
++	.se_snprintf	= hist_entry__code_page_size_snprintf,
++	.se_width_idx	= HISTC_CODE_PAGE_SIZE,
++};
 +
- 	if (type & PERF_SAMPLE_AUX) {
- 		sz = sample->aux_sample.size;
- 		*array++ = sz;
+ static int64_t
+ sort__abort_cmp(struct hist_entry *left, struct hist_entry *right)
+ {
+@@ -1735,6 +1760,7 @@ static struct sort_dimension common_sort_dimensions[] = {
+ 	DIM(SORT_CGROUP_ID, "cgroup_id", sort_cgroup_id),
+ 	DIM(SORT_SYM_IPC_NULL, "ipc_null", sort_sym_ipc_null),
+ 	DIM(SORT_TIME, "time", sort_time),
++	DIM(SORT_CODE_PAGE_SIZE, "code_page_size", sort_code_page_size),
+ };
+ 
+ #undef DIM
+diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
+index e50f2b695bc4..cab4172a6ec3 100644
+--- a/tools/perf/util/sort.h
++++ b/tools/perf/util/sort.h
+@@ -106,6 +106,7 @@ struct hist_entry {
+ 	u64			transaction;
+ 	s32			socket;
+ 	s32			cpu;
++	u64			code_page_size;
+ 	u8			cpumode;
+ 	u8			depth;
+ 
+@@ -229,6 +230,7 @@ enum sort_type {
+ 	SORT_CGROUP_ID,
+ 	SORT_SYM_IPC_NULL,
+ 	SORT_TIME,
++	SORT_CODE_PAGE_SIZE,
+ 
+ 	/* branch stack specific sort keys */
+ 	__SORT_BRANCH_STACK,
 -- 
 2.17.1
 
