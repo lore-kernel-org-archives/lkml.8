@@ -7,54 +7,45 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D10BDC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:21:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C930C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:21:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CF8520656
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:21:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E3412075F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:21:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597072885;
-	bh=OzsmA25owFxj0rqitKR2MBowKesqp44jQTh/7yr6E94=;
+	s=default; t=1597072887;
+	bh=HcBNhSb0GmByQS2frDJPr/p9ayMXKaZQ4dRvzizDfvM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aGOwXU/5FSljmCKclEUosSvRSVA62SeSZzKilMzmzwxtemh+7GMT7mUioJe9SXw2n
-	 aqFXuiGemp/lErxAuo5416l3tEAgcTvtoKiQFVMAr1EeWHQkrCViA0hLxB4ej9Bn31
-	 HndyOAWNfpQNDXUxNLk0DzcUUrmPfTo2XkMbEzPY=
+	b=f28PqY8ZcY8Hf8K4avoOGLSOPaHsVuByo+6Ashh6UcHBT1y97jHbdduwOE67PAUSx
+	 bZYYXhskxk4SW2Um11xBr5OtF8Q9HVGmGaJxHqEKxeZr1+jvIWVvdk8/nTkYSXdHTW
+	 C3bix4ijjjdoVtjkQKEJ+DhlAdcy/FVZip1gcVc4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728139AbgHJPVH (ORCPT
+        id S1728129AbgHJPVE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:21:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51696 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:21:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728058AbgHJPU7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:20:59 -0400
+        id S1728071AbgHJPU4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:20:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8A7620656;
-        Mon, 10 Aug 2020 15:20:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8869C20782;
+        Mon, 10 Aug 2020 15:20:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597072858;
-        bh=OzsmA25owFxj0rqitKR2MBowKesqp44jQTh/7yr6E94=;
+        s=default; t=1597072856;
+        bh=HcBNhSb0GmByQS2frDJPr/p9ayMXKaZQ4dRvzizDfvM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W4b8ZO7SnvBrljS26BfyNmTyLvtQYcw7ZaT6K4rJY1QGIR5HJ1B8Skwtny30T4C6v
-         VjgctvcS4ur+2wZmbxnq+skvIY4foVkW33gHSYbS3NvxeyY+l7fN7KVE+eGPKS3PIo
-         r9rid14XhNL7oloxc7One0HFiSHybLS1WRspV4vY=
+        b=Moq+0hU+GyI4IXSfB+eWpEnCc2az7kBVMuQfabfNZEk6G+WxldifS+EC+NwBX+uzN
+         Co0PQfn0Uq5qp0o7A3tSUldlND/qGyg23GdVYAQ10Qz5BL4wTnuDl1iFzOkNtjrlNO
+         C2Up9vn4n4atu272q6nA33SRsPTMycTR7eJu2WDY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?=E5=BC=A0=E4=BA=91=E6=B5=B7?= <zhangyunhai@nsfocus.com>,
-        Yang Yingliang <yangyingliang@huawei.com>,
-        Kyungtae Kim <kt0755@gmail.com>, linux-fbdev@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Solar Designer <solar@openwall.com>,
-        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>,
-        Anthony Liguori <aliguori@amazon.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Jiri Slaby <jirislaby@kernel.org>
-Subject: [PATCH 5.8 23/38] vgacon: Fix for missing check in scrollback handling
-Date:   Mon, 10 Aug 2020 17:19:13 +0200
-Message-Id: <20200810151805.039678187@linuxfoundation.org>
+        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>
+Subject: [PATCH 5.8 22/38] lkdtm/heap: Avoid edge and middle of slabs
+Date:   Mon, 10 Aug 2020 17:19:12 +0200
+Message-Id: <20200810151804.989498491@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151803.920113428@linuxfoundation.org>
 References: <20200810151803.920113428@linuxfoundation.org>
@@ -67,85 +58,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunhai Zhang <zhangyunhai@nsfocus.com>
+From: Kees Cook <keescook@chromium.org>
 
-commit ebfdfeeae8c01fcb2b3b74ffaf03876e20835d2d upstream.
+commit e12145cf1c3a8077e6d9f575711e38dd7d8a3ebc upstream.
 
-vgacon_scrollback_update() always leaves enbough room in the scrollback
-buffer for the next call, but if the console size changed that room
-might not actually be enough, and so we need to re-check.
+Har har, after I moved the slab freelist pointer into the middle of the
+slab, now it looks like the contents are getting poisoned. Adjust the
+test to avoid the freelist pointer again.
 
-The check should be in the loop since vgacon_scrollback_cur->tail is
-updated in the loop and count may be more than 1 when triggered by CSI M,
-as Jiri's PoC:
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/ioctl.h>
-#include <fcntl.h>
-
-int main(int argc, char** argv)
-{
-        int fd = open("/dev/tty1", O_RDWR);
-        unsigned short size[3] = {25, 200, 0};
-        ioctl(fd, 0x5609, size); // VT_RESIZE
-
-        write(fd, "\e[1;1H", 6);
-        for (int i = 0; i < 30; i++)
-                write(fd, "\e[10M", 5);
-}
-
-It leads to various crashes as vgacon_scrollback_update writes out of
-the buffer:
- BUG: unable to handle page fault for address: ffffc900001752a0
- #PF: supervisor write access in kernel mode
- #PF: error_code(0x0002) - not-present page
- RIP: 0010:mutex_unlock+0x13/0x30
-...
- Call Trace:
-  n_tty_write+0x1a0/0x4d0
-  tty_write+0x1a0/0x2e0
-
-Or to KASAN reports:
-BUG: KASAN: slab-out-of-bounds in vgacon_scroll+0x57a/0x8ed
-
-This fixes CVE-2020-14331.
-
-Reported-by: 张云海 <zhangyunhai@nsfocus.com>
-Reported-by: Yang Yingliang <yangyingliang@huawei.com>
-Reported-by: Kyungtae Kim <kt0755@gmail.com>
-Fixes: 15bdab959c9b ([PATCH] vgacon: Add support for soft scrollback)
+Fixes: 3202fa62fb43 ("slub: relocate freelist pointer to middle of object")
 Cc: stable@vger.kernel.org
-Cc: linux-fbdev@vger.kernel.org
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Solar Designer <solar@openwall.com>
-Cc: "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
-Cc: Anthony Liguori <aliguori@amazon.com>
-Cc: Yang Yingliang <yangyingliang@huawei.com>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: Jiri Slaby <jirislaby@kernel.org>
-Signed-off-by: Yunhai Zhang <zhangyunhai@nsfocus.com>
-Link: https://lore.kernel.org/r/9fb43895-ca91-9b07-ebfd-808cf854ca95@nsfocus.com
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Link: https://lore.kernel.org/r/20200625203704.317097-3-keescook@chromium.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/video/console/vgacon.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/misc/lkdtm/heap.c |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
---- a/drivers/video/console/vgacon.c
-+++ b/drivers/video/console/vgacon.c
-@@ -251,6 +251,10 @@ static void vgacon_scrollback_update(str
- 	p = (void *) (c->vc_origin + t * c->vc_size_row);
+--- a/drivers/misc/lkdtm/heap.c
++++ b/drivers/misc/lkdtm/heap.c
+@@ -58,11 +58,12 @@ void lkdtm_READ_AFTER_FREE(void)
+ 	int *base, *val, saw;
+ 	size_t len = 1024;
+ 	/*
+-	 * The slub allocator uses the first word to store the free
+-	 * pointer in some configurations. Use the middle of the
+-	 * allocation to avoid running into the freelist
++	 * The slub allocator will use the either the first word or
++	 * the middle of the allocation to store the free pointer,
++	 * depending on configurations. Store in the second word to
++	 * avoid running into the freelist.
+ 	 */
+-	size_t offset = (len / sizeof(*base)) / 2;
++	size_t offset = sizeof(*base);
  
- 	while (count--) {
-+		if ((vgacon_scrollback_cur->tail + c->vc_size_row) >
-+		    vgacon_scrollback_cur->size)
-+			vgacon_scrollback_cur->tail = 0;
-+
- 		scr_memcpyw(vgacon_scrollback_cur->data +
- 			    vgacon_scrollback_cur->tail,
- 			    p, c->vc_size_row);
+ 	base = kmalloc(len, GFP_KERNEL);
+ 	if (!base) {
 
 
