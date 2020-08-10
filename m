@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A33C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:32:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E367C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:33:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D3CA22CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:32:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9E9322B47
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:33:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597087977;
-	bh=1hUmOdoEj32TW0X8WVtmQHKVAglxkLerFvsfjtaXHtE=;
+	s=default; t=1597087982;
+	bh=QxI8nMbPMJKIuhodP60C5mUw6z111u/c85LY1GoQevs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C/nR+EYIH3qN6Vik+p/88ZfrlJ75I15WEEO5EghnU6nyCecJhb5rzOMw7C7puaVnD
-	 5BKN0ztoRNB3aBzVEhftx9GxGzckK+JnkzKiUOK7UNMcY24FAwhujhvAS3/wDAakPt
-	 qN9m8MMbpawBoG5Ri6lKhkp0c6nwzs58JuVgEOis=
+	b=f3RqUpsQdx5nnB4vaQ7l3uAcnFCDbtg/O+/qIWNU3ofUOHmAUTS4NYJ/Wto+En/cY
+	 lNzLH0Mvw9klcwEsaQfhFjqMrBXEpITuBjFzhUr1zPy69Fjfjl1EJeB6XUK6F4m9cz
+	 Xf7rvGZXXTe225OxmNrWbSytdXxpJ7YZ/X2FqJ48=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728548AbgHJTJd (ORCPT
+        id S1729867AbgHJTc7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:09:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35692 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:32:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728489AbgHJTJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:09:27 -0400
+        id S1728546AbgHJTJd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:09:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E7CA21775;
-        Mon, 10 Aug 2020 19:09:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD3FD22B45;
+        Mon, 10 Aug 2020 19:09:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086566;
-        bh=1hUmOdoEj32TW0X8WVtmQHKVAglxkLerFvsfjtaXHtE=;
+        s=default; t=1597086572;
+        bh=QxI8nMbPMJKIuhodP60C5mUw6z111u/c85LY1GoQevs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VVp04AFdJRnwSredpHavZgeoqHimx1ZRsbBXTuBFPKnrw6iH0mQ7+tTD01DdBXRwq
-         CChEyHxQsbW2YHnTaM6zRe0znXzC4FZ/n7NntIJ3UtbZZo/hAHUTXQCs9F/KPlimh/
-         L/COOoJbmyIJEMAqG8Rw7weoRQzB9PnFLeLx7Ijc=
+        b=sjoDxNFyfkVq6At8RCXg9WJ0ZR+8uPkojiTHg427y8LrMwJev2N5DMzzLcC55Y97Q
+         +dchBCpGy3quKAqnNukNR2fxEBKmY3xEgcIQ6NyKmAGU4dy0Qvc6TlvrWZlEczUAVz
+         Jbn7BlTTOJJIapu0+eY6FLvm3/8utMKdlBE2dG6k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Sasha Levin <sashal@kernel.org>, etnaviv@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.8 19/64] drm/etnaviv: fix ref count leak via pm_runtime_get_sync
-Date:   Mon, 10 Aug 2020 15:08:14 -0400
-Message-Id: <20200810190859.3793319-19-sashal@kernel.org>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 24/64] mmc: sdhci-cadence: do not use hardware tuning for SD mode
+Date:   Mon, 10 Aug 2020 15:08:19 -0400
+Message-Id: <20200810190859.3793319-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810190859.3793319-1-sashal@kernel.org>
 References: <20200810190859.3793319-1-sashal@kernel.org>
@@ -60,97 +59,193 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-[ Upstream commit c5d5a32ead1e3a61a07a1e59eb52a53e4a6b2a7f ]
+[ Upstream commit adc40a5179df30421a5537bfeb4545100ab97d5e ]
 
-in etnaviv_gpu_submit, etnaviv_gpu_recover_hang, etnaviv_gpu_debugfs,
-and etnaviv_gpu_init the call to pm_runtime_get_sync increments the
-counter even in case of failure, leading to incorrect ref count.
-In case of failure, decrement the ref count before returning.
+As commit ef6b75671b5f ("mmc: sdhci-cadence: send tune request twice to
+work around errata") stated, this IP has an errata. This commit applies
+the second workaround for the SD mode.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Due to the errata, it is not possible to use the hardware tuning provided
+by SDHCI_HOST_CONTROL2.
+
+Use the software-controlled tuning like the eMMC mode.
+
+Set sdhci_host_ops::platform_execute_tuning instead of overriding
+mmc_host_ops::execute_tuning.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Link: https://lore.kernel.org/r/20200720061141.172944-1-yamada.masahiro@socionext.com
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/etnaviv/etnaviv_gpu.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ drivers/mmc/host/sdhci-cadence.c | 123 ++++++++++++++++---------------
+ 1 file changed, 62 insertions(+), 61 deletions(-)
 
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-index a31eeff2b297a..7c9f3f9ba1235 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-@@ -722,7 +722,7 @@ int etnaviv_gpu_init(struct etnaviv_gpu *gpu)
- 	ret = pm_runtime_get_sync(gpu->dev);
- 	if (ret < 0) {
- 		dev_err(gpu->dev, "Failed to enable GPU power domain\n");
--		return ret;
-+		goto pm_put;
- 	}
- 
- 	etnaviv_hw_identify(gpu);
-@@ -819,6 +819,7 @@ int etnaviv_gpu_init(struct etnaviv_gpu *gpu)
- 
- fail:
- 	pm_runtime_mark_last_busy(gpu->dev);
-+pm_put:
- 	pm_runtime_put_autosuspend(gpu->dev);
- 
- 	return ret;
-@@ -859,7 +860,7 @@ int etnaviv_gpu_debugfs(struct etnaviv_gpu *gpu, struct seq_file *m)
- 
- 	ret = pm_runtime_get_sync(gpu->dev);
- 	if (ret < 0)
--		return ret;
-+		goto pm_put;
- 
- 	dma_lo = gpu_read(gpu, VIVS_FE_DMA_LOW);
- 	dma_hi = gpu_read(gpu, VIVS_FE_DMA_HIGH);
-@@ -1003,6 +1004,7 @@ int etnaviv_gpu_debugfs(struct etnaviv_gpu *gpu, struct seq_file *m)
- 	ret = 0;
- 
- 	pm_runtime_mark_last_busy(gpu->dev);
-+pm_put:
- 	pm_runtime_put_autosuspend(gpu->dev);
- 
- 	return ret;
-@@ -1016,7 +1018,7 @@ void etnaviv_gpu_recover_hang(struct etnaviv_gpu *gpu)
- 	dev_err(gpu->dev, "recover hung GPU!\n");
- 
- 	if (pm_runtime_get_sync(gpu->dev) < 0)
--		return;
-+		goto pm_put;
- 
- 	mutex_lock(&gpu->lock);
- 
-@@ -1035,6 +1037,7 @@ void etnaviv_gpu_recover_hang(struct etnaviv_gpu *gpu)
- 
- 	mutex_unlock(&gpu->lock);
- 	pm_runtime_mark_last_busy(gpu->dev);
-+pm_put:
- 	pm_runtime_put_autosuspend(gpu->dev);
+diff --git a/drivers/mmc/host/sdhci-cadence.c b/drivers/mmc/host/sdhci-cadence.c
+index 4a6c9ba825381..4d9f7681817c1 100644
+--- a/drivers/mmc/host/sdhci-cadence.c
++++ b/drivers/mmc/host/sdhci-cadence.c
+@@ -202,57 +202,6 @@ static u32 sdhci_cdns_get_emmc_mode(struct sdhci_cdns_priv *priv)
+ 	return FIELD_GET(SDHCI_CDNS_HRS06_MODE, tmp);
  }
  
-@@ -1308,8 +1311,10 @@ struct dma_fence *etnaviv_gpu_submit(struct etnaviv_gem_submit *submit)
+-static void sdhci_cdns_set_uhs_signaling(struct sdhci_host *host,
+-					 unsigned int timing)
+-{
+-	struct sdhci_cdns_priv *priv = sdhci_cdns_priv(host);
+-	u32 mode;
+-
+-	switch (timing) {
+-	case MMC_TIMING_MMC_HS:
+-		mode = SDHCI_CDNS_HRS06_MODE_MMC_SDR;
+-		break;
+-	case MMC_TIMING_MMC_DDR52:
+-		mode = SDHCI_CDNS_HRS06_MODE_MMC_DDR;
+-		break;
+-	case MMC_TIMING_MMC_HS200:
+-		mode = SDHCI_CDNS_HRS06_MODE_MMC_HS200;
+-		break;
+-	case MMC_TIMING_MMC_HS400:
+-		if (priv->enhanced_strobe)
+-			mode = SDHCI_CDNS_HRS06_MODE_MMC_HS400ES;
+-		else
+-			mode = SDHCI_CDNS_HRS06_MODE_MMC_HS400;
+-		break;
+-	default:
+-		mode = SDHCI_CDNS_HRS06_MODE_SD;
+-		break;
+-	}
+-
+-	sdhci_cdns_set_emmc_mode(priv, mode);
+-
+-	/* For SD, fall back to the default handler */
+-	if (mode == SDHCI_CDNS_HRS06_MODE_SD)
+-		sdhci_set_uhs_signaling(host, timing);
+-}
+-
+-static const struct sdhci_ops sdhci_cdns_ops = {
+-	.set_clock = sdhci_set_clock,
+-	.get_timeout_clock = sdhci_cdns_get_timeout_clock,
+-	.set_bus_width = sdhci_set_bus_width,
+-	.reset = sdhci_reset,
+-	.set_uhs_signaling = sdhci_cdns_set_uhs_signaling,
+-};
+-
+-static const struct sdhci_pltfm_data sdhci_cdns_uniphier_pltfm_data = {
+-	.ops = &sdhci_cdns_ops,
+-	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
+-};
+-
+-static const struct sdhci_pltfm_data sdhci_cdns_pltfm_data = {
+-	.ops = &sdhci_cdns_ops,
+-};
+-
+ static int sdhci_cdns_set_tune_val(struct sdhci_host *host, unsigned int val)
+ {
+ 	struct sdhci_cdns_priv *priv = sdhci_cdns_priv(host);
+@@ -286,23 +235,24 @@ static int sdhci_cdns_set_tune_val(struct sdhci_host *host, unsigned int val)
+ 	return 0;
+ }
  
- 	if (!submit->runtime_resumed) {
- 		ret = pm_runtime_get_sync(gpu->dev);
--		if (ret < 0)
-+		if (ret < 0) {
-+			pm_runtime_put_noidle(gpu->dev);
- 			return NULL;
-+		}
- 		submit->runtime_resumed = true;
- 	}
+-static int sdhci_cdns_execute_tuning(struct mmc_host *mmc, u32 opcode)
++/*
++ * In SD mode, software must not use the hardware tuning and instead perform
++ * an almost identical procedure to eMMC.
++ */
++static int sdhci_cdns_execute_tuning(struct sdhci_host *host, u32 opcode)
+ {
+-	struct sdhci_host *host = mmc_priv(mmc);
+ 	int cur_streak = 0;
+ 	int max_streak = 0;
+ 	int end_of_streak = 0;
+ 	int i;
  
-@@ -1326,6 +1331,7 @@ struct dma_fence *etnaviv_gpu_submit(struct etnaviv_gem_submit *submit)
- 	ret = event_alloc(gpu, nr_events, event);
- 	if (ret) {
- 		DRM_ERROR("no free events\n");
-+		pm_runtime_put_noidle(gpu->dev);
- 		return NULL;
- 	}
+ 	/*
+-	 * This handler only implements the eMMC tuning that is specific to
+-	 * this controller.  Fall back to the standard method for SD timing.
++	 * Do not execute tuning for UHS_SDR50 or UHS_DDR50.
++	 * The delay is set by probe, based on the DT properties.
+ 	 */
+-	if (host->timing != MMC_TIMING_MMC_HS200)
+-		return sdhci_execute_tuning(mmc, opcode);
+-
+-	if (WARN_ON(opcode != MMC_SEND_TUNING_BLOCK_HS200))
+-		return -EINVAL;
++	if (host->timing != MMC_TIMING_MMC_HS200 &&
++	    host->timing != MMC_TIMING_UHS_SDR104)
++		return 0;
  
+ 	for (i = 0; i < SDHCI_CDNS_MAX_TUNING_LOOP; i++) {
+ 		if (sdhci_cdns_set_tune_val(host, i) ||
+@@ -325,6 +275,58 @@ static int sdhci_cdns_execute_tuning(struct mmc_host *mmc, u32 opcode)
+ 	return sdhci_cdns_set_tune_val(host, end_of_streak - max_streak / 2);
+ }
+ 
++static void sdhci_cdns_set_uhs_signaling(struct sdhci_host *host,
++					 unsigned int timing)
++{
++	struct sdhci_cdns_priv *priv = sdhci_cdns_priv(host);
++	u32 mode;
++
++	switch (timing) {
++	case MMC_TIMING_MMC_HS:
++		mode = SDHCI_CDNS_HRS06_MODE_MMC_SDR;
++		break;
++	case MMC_TIMING_MMC_DDR52:
++		mode = SDHCI_CDNS_HRS06_MODE_MMC_DDR;
++		break;
++	case MMC_TIMING_MMC_HS200:
++		mode = SDHCI_CDNS_HRS06_MODE_MMC_HS200;
++		break;
++	case MMC_TIMING_MMC_HS400:
++		if (priv->enhanced_strobe)
++			mode = SDHCI_CDNS_HRS06_MODE_MMC_HS400ES;
++		else
++			mode = SDHCI_CDNS_HRS06_MODE_MMC_HS400;
++		break;
++	default:
++		mode = SDHCI_CDNS_HRS06_MODE_SD;
++		break;
++	}
++
++	sdhci_cdns_set_emmc_mode(priv, mode);
++
++	/* For SD, fall back to the default handler */
++	if (mode == SDHCI_CDNS_HRS06_MODE_SD)
++		sdhci_set_uhs_signaling(host, timing);
++}
++
++static const struct sdhci_ops sdhci_cdns_ops = {
++	.set_clock = sdhci_set_clock,
++	.get_timeout_clock = sdhci_cdns_get_timeout_clock,
++	.set_bus_width = sdhci_set_bus_width,
++	.reset = sdhci_reset,
++	.platform_execute_tuning = sdhci_cdns_execute_tuning,
++	.set_uhs_signaling = sdhci_cdns_set_uhs_signaling,
++};
++
++static const struct sdhci_pltfm_data sdhci_cdns_uniphier_pltfm_data = {
++	.ops = &sdhci_cdns_ops,
++	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
++};
++
++static const struct sdhci_pltfm_data sdhci_cdns_pltfm_data = {
++	.ops = &sdhci_cdns_ops,
++};
++
+ static void sdhci_cdns_hs400_enhanced_strobe(struct mmc_host *mmc,
+ 					     struct mmc_ios *ios)
+ {
+@@ -385,7 +387,6 @@ static int sdhci_cdns_probe(struct platform_device *pdev)
+ 	priv->hrs_addr = host->ioaddr;
+ 	priv->enhanced_strobe = false;
+ 	host->ioaddr += SDHCI_CDNS_SRS_BASE;
+-	host->mmc_host_ops.execute_tuning = sdhci_cdns_execute_tuning;
+ 	host->mmc_host_ops.hs400_enhanced_strobe =
+ 				sdhci_cdns_hs400_enhanced_strobe;
+ 	sdhci_enable_v4_mode(host);
 -- 
 2.25.1
 
