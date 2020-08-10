@@ -2,102 +2,121 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E08C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:11:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 292D0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F7312080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:11:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 036372080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 18:12:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="BsvJhtuE"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="FR2zrXih"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728134AbgHJSLm (ORCPT
+        id S1728147AbgHJSMO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 14:11:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32976 "EHLO
+        Mon, 10 Aug 2020 14:12:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728062AbgHJSLl (ORCPT
+        with ESMTP id S1728062AbgHJSMM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 14:11:41 -0400
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9D62C061787
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 11:11:40 -0700 (PDT)
-Received: by mail-pj1-x102d.google.com with SMTP id i92so316111pje.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 11:11:40 -0700 (PDT)
+        Mon, 10 Aug 2020 14:12:12 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48F3EC061787
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 11:12:12 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id b14so9242113qkn.4
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 11:12:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=S0kQGL1Z8bJks/onFWo7b2UmOXKnEogpEFfQxSaoZZQ=;
-        b=BsvJhtuEB8EnVSkDyBpqlM4lWzlhc+vAlB1NwoCjyNXrKrgAN1esgAeHIAVIzUOGCu
-         hdUl6g9dyqfXgvf8pTL5Ju2D8gHYWrp8bUmyJ1OkI0p8QaUPYIdfnUOVT/GGtEG0dx5y
-         PKCxFkUlHUGzIkX12nGr0dHUhV1NsxIJ+QEaENSRd2DS/K1+OLrS3FuH0EcKEBsdrXPE
-         xjW6ljsHTsqw3n7wY4DbRyDBw71glTLQBWPRF1KmeftWOj2gP0rJZq7zxO0I9byJVfi/
-         qyqwsO3e0HDCIk4B7p0oArS+W0O0fA+2Z27NCRatQtuucoQtd69/4Xk6iy3L8YrCiYiM
-         5asQ==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=QgYtQ0nvpVp5fhNq6Bvi4E7+pTeN2jB4TjYNqQS0gag=;
+        b=FR2zrXihy6D3nhs1ct5EvXKpFFv8/X/8ppPIYYdFMToMH8E5g9vRvtyRITLyi1aYD4
+         qFve2SrwjFOk4YOBylAQ5gTTGJ3lSvmEkoR32EUPLXrZraiyNOisEwpnQR8GOOU9tjP3
+         Y2py6RuA213m/Rvnw0IhJPMijSfYqjfZWJcNsFYJ7/lyPd55FWuAYxyXTUF9ESpv6YbM
+         Zw9JeH8tyW/L9vftgbAD1pwA1ZVdSOvVzYsXpTJpascbwTyGsmtLI9t1ltPXrqYi7STX
+         orxLdQUrP2NMJ61eNOIU2FmENuF8hkbuncXq4ZnxD6WOkJFuP333L4i8BzJDg8EEVeg/
+         7LMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=S0kQGL1Z8bJks/onFWo7b2UmOXKnEogpEFfQxSaoZZQ=;
-        b=oECRUFXXjnbiVWsV1R1xg5O7/595jc9vten57XN/zUFC3ygJWiDTDZDLIh/lCYUH69
-         ZlIMQoxZaCw7gh/Oz4peAMEAfI/drW2I9dqBkmhZI6s7KNMl2oPjgbrsSOQDB9abE8Qz
-         EIeXlZguAri8GOhL/2VgVNFmdT4BUCiqqiXSJ80ZYDJaA21us6SJA8Umb4YK3Vtogo2/
-         w4/DpjwBeTiPMpIgIyXI8vmRYWAATQdKr9rzlsSuCsKzCQ+lNPFtMFPYW9imST5wnP5L
-         UbfNfge6yeJQrGwpwQ7dFhAqxqx2u85eiF+eK2adDfd6Rp39BwKWITiu2UQCvwg5ZS+8
-         IGgQ==
-X-Gm-Message-State: AOAM531TiA1TqMCLGGHFfAyRJcZIWA9tQ6Z/cLnJVAMGaEJnG8LuLWK+
-        CYer7+0/0bZe8UB52uN1Jk14FA==
-X-Google-Smtp-Source: ABdhPJzCCoxLw6D751mh3seWnzIzGBBgYKolOyGsKXgliby4JAVq7FQ2IASxq3IaDwl0pEMwyd5ZWw==
-X-Received: by 2002:a17:902:7291:: with SMTP id d17mr6460922pll.141.1597083098512;
-        Mon, 10 Aug 2020 11:11:38 -0700 (PDT)
-Received: from [192.168.1.182] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id r15sm24531992pfq.189.2020.08.10.11.11.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Aug 2020 11:11:37 -0700 (PDT)
-Subject: Re: INFO: task hung in io_uring_flush
-To:     Pavel Begunkov <asml.silence@gmail.com>,
-        syzbot <syzbot+6338dcebf269a590b668@syzkaller.appspotmail.com>,
-        io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        viro@zeniv.linux.org.uk
-References: <00000000000099566305ac881a16@google.com>
- <bff14407-8ad7-fdda-e5cf-0dabc1acbb0d@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <a7e6d4a4-71f8-2a87-324e-31826b728902@kernel.dk>
-Date:   Mon, 10 Aug 2020 12:11:36 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=QgYtQ0nvpVp5fhNq6Bvi4E7+pTeN2jB4TjYNqQS0gag=;
+        b=FQ65hVtzHyxPm7IJR+2ENlhYrld5q+g6ZzE4875Jd583AemUyRHTRN2LrGEM5OkB7D
+         nScKgtUSUgtf/WfJA1SUWapa7SNbzpvfReJ9OmE1W26t/dqAXy+irxhNo59CKh9ncn1N
+         ydP/ckdq1VLdrAax27J4jWP4u1tOFiQe0HFuQuJ5lRmNiuzyZ538IjZQ5xpGwJmaT9E5
+         ty55VFdijb1WVakyNFCQ2HtreUn+LMDOLlD7Y+8ka1pbKzMgKA311yeS1UTIk05vgJ6H
+         HgkTeYE6Yft5ysTAN2QYp6J/by+FUXVhfwnbI8KwQnMaYykRxxpQDOPaZdgiQ8gx6koD
+         hYWg==
+X-Gm-Message-State: AOAM533kBAaEuHLGhurIfZxH+dq0ZtgTbZIw1dL/7kkOTl3pfoibDRz3
+        OLMH+0IlKn/QEA6xQng2UxYTIRkw+w5wa/vvFbsaig==
+X-Google-Smtp-Source: ABdhPJzVZ0Mt67L/YycKJ+BfSO6D2a5cJbAo4OEZcWsLpeH4ANdkOsDGT7TO+eRhnKZmnPmdNsI1M/pIA69c/9oNGEo=
+X-Received: by 2002:a37:9d97:: with SMTP id g145mr23363392qke.263.1597083131390;
+ Mon, 10 Aug 2020 11:12:11 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <bff14407-8ad7-fdda-e5cf-0dabc1acbb0d@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200121134157.20396-1-sakari.ailus@linux.intel.com>
+ <20200121134157.20396-6-sakari.ailus@linux.intel.com> <CAMpxmJU5dG49N2FA0oSQsOfKrCr3KQ1BisON4c+nUJJmZQG=bQ@mail.gmail.com>
+ <20200311085555.GH5379@paasikivi.fi.intel.com> <CAMpxmJVPTKW+sYSJ3dnfF8nLAOKEa4Ob7bpxG0KD3Tkdm+rtYw@mail.gmail.com>
+ <20200323213101.GB21174@kekkonen.localdomain> <CAMpxmJVdyTkZMVuhSy0Ux8VUYTmQN_YEfH-akQsAL3zrwiz8Dw@mail.gmail.com>
+ <20200810082549.GD840@valkosipuli.retiisi.org.uk>
+In-Reply-To: <20200810082549.GD840@valkosipuli.retiisi.org.uk>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 10 Aug 2020 20:12:00 +0200
+Message-ID: <CAMpxmJUKSR-oCGnV1E5XiAMA2nYBy5f_f8=VSoMn0zf+qF39vg@mail.gmail.com>
+Subject: Re: [PATCH v4 5/6] at24: Support probing while off
+To:     Sakari Ailus <sakari.ailus@iki.fi>
+Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Wolfram Sang <wsa@the-dreams.de>, linux-acpi@vger.kernel.org,
+        Bingbu Cao <bingbu.cao@intel.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
+        Hyungwoo Yang <hyungwoo.yang@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rajmohan Mani <rajmohan.mani@intel.com>,
+        Tomasz Figa <tfiga@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/10/20 10:08 AM, Pavel Begunkov wrote:
-> On 10/08/2020 19:04, syzbot wrote:
->> syzbot has bisected this issue to:
->>
->> commit f86cd20c9454847a524ddbdcdec32c0380ed7c9b
->> Author: Jens Axboe <axboe@kernel.dk>
->> Date:   Wed Jan 29 20:46:44 2020 +0000
->>
->>     io_uring: fix linked command file table usage
-> 
-> There are several known problems with io_uring_cancel_files() including
-> races and hangs. I had some drafts and going to patch it in a week or so.
+On Mon, Aug 10, 2020 at 10:26 AM Sakari Ailus <sakari.ailus@iki.fi> wrote:
+>
 
-I'll let you deal with this one, thanks.
+[snip]
 
--- 
-Jens Axboe
+> >
+> > Rafael: I think that there are two issues with patch 1/5:
+> > 1. It adds a very specific boolean flag to a structure that's meant to
+> > be very general. As I pointed out in the i2c patch: at the very least
+> > this could be made into an int storing flag values, instead of a
+> > boolean field. But rather than that - it looks to me more like a
+> > device (or bus) feature than a driver feature. Is there any ACPI flag
+> > we could use to pass this information to the driver model without
+> > changing the driver structure?
+>
+> To my knowledge there isn't. The fact that I=C2=B2C devices are powered o=
+n for
+> probe in ACPI based systems is specific to Linux kernel and not ACPI as
+> such.
+>
+> The reason this needs to be in a generic struct is that the device's powe=
+r
+> state will be changed before any interaction with the driver takes place =
+as
+> it's the I=C2=B2C framework that powers on the device.
+>
 
+I'm not sure I'm following. Looking at patch 1/6 struct device already
+exists so why can't this information be conveyed "per device" as
+opposed to "per driver"?
+
+[snip]
+
+Bartosz
