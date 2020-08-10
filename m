@@ -2,90 +2,76 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B61DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 13:56:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D5DAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 13:56:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FF132078D
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 13:56:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AA8D207CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 13:56:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597067801;
+	bh=SdnRjVTx+XenxW0mx6UmkUexgdMB8KMdeUjFwmhv2yg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mztA4wYZB8PNuVc+Xh9SyevERkAt0MV2FxrwzuagfdeTljn/t5EcfU/EW/nLca3XS
+	 G42bRocPH7/ldloJewg/xDv/oevdq/dPrpLM/5tVfDofeSuOIqsSEQ9gcNiLN+wUOS
+	 ua0xohcPK64rK4+dTYExLzte/BOicAl3fGi8uV2g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbgHJN4Y (ORCPT
+        id S1726970AbgHJN4k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 09:56:24 -0400
-Received: from mga07.intel.com ([134.134.136.100]:57142 "EHLO mga07.intel.com"
+        Mon, 10 Aug 2020 09:56:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726584AbgHJN4U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 09:56:20 -0400
-IronPort-SDR: WaNxmwxiwkySdttbO8SGW/kGdtEbQoe1uZDZD9H+v/db/8qrJ+FTURgUMUPMVwWBxsjIvkQF7f
- LtOTOlVaMnbQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9708"; a="217872764"
-X-IronPort-AV: E=Sophos;i="5.75,457,1589266800"; 
-   d="scan'208";a="217872764"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2020 06:56:19 -0700
-IronPort-SDR: 0t9M9lMXOzK3HPE+tIyyb47C/vDYHkaxh4iEG9ZHgOOKa+dI1zioTnfx8C3pc7Lm9uXZy5/6no
- hUzT16+SboCg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,457,1589266800"; 
-   d="scan'208";a="469052860"
-Received: from ahunter-desktop.fi.intel.com ([10.237.72.73])
-  by orsmga005.jf.intel.com with ESMTP; 10 Aug 2020 06:56:17 -0700
-From:   Adrian Hunter <adrian.hunter@intel.com>
-To:     "Martin K . Petersen" <martin.petersen@oracle.com>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Can Guo <cang@codeaurora.org>
-Subject: [PATCH 2/2] scsi: ufs: Improve interrupt handling for shared interrupts
-Date:   Mon, 10 Aug 2020 16:55:48 +0300
-Message-Id: <20200810135548.28213-2-adrian.hunter@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200810135548.28213-1-adrian.hunter@intel.com>
-References: <20200810135548.28213-1-adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+        id S1726584AbgHJN4j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 09:56:39 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBC1B2078D;
+        Mon, 10 Aug 2020 13:56:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597067799;
+        bh=SdnRjVTx+XenxW0mx6UmkUexgdMB8KMdeUjFwmhv2yg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GmhHKG+Sjryr43HZGFUTKyF64RRPiYc5FAw9/8cIHo3kkBMjwdVulsEcYeO9BjFR9
+         0eB/ecwLP1aLSHqdyP5XZRAs2wnemDEhF6rSVgnMTdw9pSmFtYSNWu9/eMcE+rzE7F
+         KF1P+dHwCz3uAWpbh18BCdePAyIs0LzPHUOe5JWk=
+Date:   Mon, 10 Aug 2020 15:56:50 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Izabela Bakollari <izabela.bakollari@gmail.com>
+Cc:     nhorman@tuxdriver.com, davem@davemloft.net, kuba@kernel.org,
+        netdev@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [Linux-kernel-mentees] [PATCHv2 net-next] dropwatch: Support
+ monitoring of dropped frames
+Message-ID: <20200810135650.GA3726113@kroah.com>
+References: <20200707171515.110818-1-izabela.bakollari@gmail.com>
+ <20200804160908.46193-1-izabela.bakollari@gmail.com>
+ <CAC8tkWDuvz3HQDp=Bb-Sfgiks1ETG-j1SMFn6O2nhyzYL5Cc8Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAC8tkWDuvz3HQDp=Bb-Sfgiks1ETG-j1SMFn6O2nhyzYL5Cc8Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For shared interrupts, the interrupt status might be zero, so check that
-first.
+On Mon, Aug 10, 2020 at 03:39:40PM +0200, Izabela Bakollari wrote:
+> I have worked on this feature as part of the Linux Kernel Mentorship
+> Program. Your review would really help me in this learning process.
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
----
- drivers/scsi/ufs/ufshcd.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+You sent this just a bit less than 1 week ago, and it's the middle of
+the kernel merge window, where no maintainer can take any new patches
+that are not bugfixes, and they are totally busy with the merge window
+issues.
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index d7522dba4dcf..fd006340f37a 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -5983,7 +5983,7 @@ static irqreturn_t ufshcd_intr(int irq, void *__hba)
- 	 * read, make sure we handle them by checking the interrupt status
- 	 * again in a loop until we process all of the reqs before returning.
- 	 */
--	do {
-+	while (intr_status && retries--) {
- 		enabled_intr_status =
- 			intr_status & ufshcd_readl(hba, REG_INTERRUPT_ENABLE);
- 		if (intr_status)
-@@ -5992,7 +5992,7 @@ static irqreturn_t ufshcd_intr(int irq, void *__hba)
- 			retval |= ufshcd_sl_intr(hba, enabled_intr_status);
- 
- 		intr_status = ufshcd_readl(hba, REG_INTERRUPT_STATUS);
--	} while (intr_status && --retries);
-+	}
- 
- 	spin_unlock(hba->host->host_lock);
- 	return retval;
--- 
-2.17.1
+Give people a chance, try resending this after the net-next tree is open
+in a few weeks.
 
+thanks,
+
+greg k-h
