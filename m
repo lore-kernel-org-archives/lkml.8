@@ -2,88 +2,112 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15105C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 23:11:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76FAAC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 23:12:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E16C120734
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 23:11:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YOm0rklr"
+	by mail.kernel.org (Postfix) with ESMTP id 51E362075D
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 23:12:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597101174;
+	bh=z4s+xGQlDNxE0CjtSJ+vpisdbvNrgzxOm5IGtlKS7ZQ=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=WMmCuraoSyHGRJmgfnyACliwfo4gRa2pZO4tkTZl8BrDXTPRrtF8z1R3inoZUVdK/
+	 x/tIYNeimeTa8uDuM8qpuhPmkMjOdmsEKyMBDqowxks5kx7OQ9w3IMFJXNOv2ifLDH
+	 vqXpC6pX7F+w1/P3jdjb+dCprIsCITpe6kxfmev4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727088AbgHJXLw (ORCPT
+        id S1727123AbgHJXMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 19:11:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51068 "EHLO
+        Mon, 10 Aug 2020 19:12:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726722AbgHJXLw (ORCPT
+        with ESMTP id S1726722AbgHJXMw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 19:11:52 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE14EC06174A
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 16:11:51 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id r11so6556482pfl.11
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 16:11:51 -0700 (PDT)
+        Mon, 10 Aug 2020 19:12:52 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68909C061756
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 16:12:52 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id v6so8651156ota.13
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 16:12:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=iyYx+79mwCrZYi3nlfml4tfsSp9D2+EXuOvJ+LHVxHU=;
-        b=YOm0rklrG+M8yFJVFuQfstvRO3v/Hq2XyONxrwKB7WZOa58+I2waQdvBPnfANWEeWd
-         v5WN019344fkBd/eUIc5q/mc3sglQTBGZDEbM8ImbMp2WhdkG5RRxU7pqJnJaPrw3WCn
-         +VCZvNgkDjq9REtEPH2RI17kTTXfMsoGMrpDtzTMLDGVK/Hs4tuMJinvZbhtK5F0CDfW
-         vD2Lf3HLMgqNmaMxZfzFed+8IPMFkA3udQF3G1LCYaCNG0raW05Dxr9MbiCOHu/8QXal
-         0WXPqS2vz1Z7OsqX/2vdlYryvbQk7whq3a/jKkt4UUUnuIODEDf7pXoMTvj+s4CZjfqc
-         IVAg==
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=SU7C5n0mjZgBQ0rPDuKYOoV0ucFHKRmKd1+rkblTeo8=;
+        b=G4qB9y699W6Tzpa3363a9KER4rMzBEBY+csm7xk7oWiMyr3KKdnEmCyH01yCtjRcpK
+         eJJepQSDtDcdUPCfyZ+Fx9Yw3xgTZnfsX+1m6GR9i/rxemYVGo2EtxgMkkAP4j0Q/DtP
+         52R0G4RfPd7nuEYCIESOhV1rF2kpoOOLtlksY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=iyYx+79mwCrZYi3nlfml4tfsSp9D2+EXuOvJ+LHVxHU=;
-        b=ggDl3Uo+naQ+CMs0/SXO9EVerQkToh7fdNngeUZd6uARlcnCHmOtj6jQE4iNdLUA3C
-         wcenzEQ0JcZE+PyNsH2IFujlnLfSaLuKnILcn4wl2LzJ9uA4XM0C0A/copIxJavQ4Md5
-         x7iHzc0rIPPKgtYeAgnR0m6xoNIpbD1eE77XXGyTBi8PGfzvGim8GRlCHzMXXW4N5Yk2
-         /INCQNkihhA22mTjVaB+6+jcofn3MEEakW8Fm/b8UzeBIbTe2lVJezoc1NQ5+eI7ewIf
-         Jt2bCtEwNc2BeRYVb4K8j5vMmsZqLQ/sFD3jBaPbaue6h9zR+eCoVzdVLAzqlIoBMGVt
-         HfAg==
-X-Gm-Message-State: AOAM533Dd+NTlhwo4ov0vi01JpNofnWK7NMR+STd/OqcwYh4OEnd8k9Y
-        9QmHwLH1StNQsJM8qo0ZN34=
-X-Google-Smtp-Source: ABdhPJyuVXKLUZzlX+04asv1rO5NDwf3RYoPK3yQ/Y5WBimvbdL5XOOKrIANZFoQMNYFlRtNl7BTDQ==
-X-Received: by 2002:a63:705b:: with SMTP id a27mr21206295pgn.405.1597101111429;
-        Mon, 10 Aug 2020 16:11:51 -0700 (PDT)
-Received: from Asurada-Nvidia (searspoint.nvidia.com. [216.228.112.21])
-        by smtp.gmail.com with ESMTPSA id y4sm19161705pgb.16.2020.08.10.16.11.50
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 10 Aug 2020 16:11:51 -0700 (PDT)
-Date:   Mon, 10 Aug 2020 16:11:45 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc:     timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com,
-        lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com, alsa-devel@alsa-project.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ASoC: fsl_sai: Add -EPROBE_DEFER check for regmap init
-Message-ID: <20200810231144.GA16645@Asurada-Nvidia>
-References: <1596791682-4311-1-git-send-email-shengjiu.wang@nxp.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=SU7C5n0mjZgBQ0rPDuKYOoV0ucFHKRmKd1+rkblTeo8=;
+        b=ClQSwhV+Ae2wRewVYKQqnC9sz8kUaz9RxoCsK6Cj0/7OOHo2UpMqbTp78NOJozv24p
+         tJSY0gVjStNC3nCUYXg5Dxlq7uPufJsxEudC0gbKxpMRCbSBAiys+hcFhy7KOy6SLPio
+         GuC5NtPc6qeoyvfi4WDJ1mYIHS1TDbD9rcYU7W1UZInL72sNiKp0xaUmQF0yUpQSvpRY
+         dP/8ITdR5BwH17mZFLOvoOvNvmflzNkbZujnCZd3Mp/WjhJRDDtmA5sQsdq0/fQlmfR7
+         /Omu1f3r4CB5opZsYoqf2nmmWeuu7Abkcgew8Wec7xwUwKM3q8R4qb5KRJJbUSQCtKFK
+         OcwQ==
+X-Gm-Message-State: AOAM532SQ9UYDWvMH4KqV9LbdQQx8chvq/nM7Rjo9RO9f18hqw6dy2V8
+        ABnX7y4HeMgdPe1+HOZ14DheZQ==
+X-Google-Smtp-Source: ABdhPJyIzznkB3XtO0QPID7PAzRM5l8q1dR2dWWHNIjl2NGwXaermQjcy/s51YfWoC2HyFbVKRmIjg==
+X-Received: by 2002:a9d:7405:: with SMTP id n5mr2782246otk.286.1597101171176;
+        Mon, 10 Aug 2020 16:12:51 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id i10sm3945874oie.42.2020.08.10.16.12.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Aug 2020 16:12:50 -0700 (PDT)
+Subject: Re: [PATCH 4.19 00/48] 4.19.139-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, skhan@linuxfoundation.org
+References: <20200810151804.199494191@linuxfoundation.org>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <abdf0790-e2b7-c36c-ab0b-b01e4df817d3@linuxfoundation.org>
+Date:   Mon, 10 Aug 2020 17:12:49 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1596791682-4311-1-git-send-email-shengjiu.wang@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200810151804.199494191@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 07, 2020 at 05:14:42PM +0800, Shengjiu Wang wrote:
-> Regmap initialization may return -EPROBE_DEFER for clock
-> may not be ready, so check -EPROBE_DEFER error type before
-> start another Regmap initialization.
+On 8/10/20 9:21 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.139 release.
+> There are 48 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> Responses should be made by Wed, 12 Aug 2020 15:17:47 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.139-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
+Compiled and booted on my test system. No dmesg regressions.
+
+Tested-by: Shuah Khan <skhan@linuxfoundation.org>
+
+thanks,
+-- Shuah
