@@ -2,134 +2,122 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F136C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:06:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32990C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:07:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 630A72076B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:06:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e4CED/lO"
+	by mail.kernel.org (Postfix) with ESMTP id E32232076B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:07:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597072026;
+	bh=YZy2YZvqtBOSoxa9pOWWX5q5MbckXDWFu6szjgvgk3w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aIUseTrMCFG0aUp2fCprh36maNG1dS5fKmVYU71pOPXrWQEBmr2VCGmva7sQVEpYd
+	 CeZylazIyhRiKyIoWM2SqlKX6w+TVyz0P2efYRTagf68rSB53gzicGzGiLEGdhVs4o
+	 IJ+JDsf7sbjA9BCoqFJOg33if5+wGr/4jGnu2h60=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbgHJPGP (ORCPT
+        id S1726604AbgHJPHD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:06:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32838 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726143AbgHJPGP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:06:15 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86A95C061756;
-        Mon, 10 Aug 2020 08:06:14 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id x6so5017589pgx.12;
-        Mon, 10 Aug 2020 08:06:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=n4zzcA0S7W6+MhfPmPe3RkV9t2uiG0tre547UgCr2Yw=;
-        b=e4CED/lOpJOr7C5jNbzDgAza5R3Mg9DDJmNYBlkci158HZSpAeyZwiyogXJe0HNOCw
-         xmEog1xuYF6Dz2fE4oLif2q7zzpix1m13YKOCaTF8zX7K2h6BgjFrnMSON5qpwuvXRJE
-         RywwfQ5qz91TIAeuddzcmv2Y46s130neNjYqwvU/K4Qn2V2xoClaUTu5KNOos66RL3xV
-         aAla7wyQxUHsi8xaMTZ6ZcFkYME2ohFvbK+lp1Ph+FeL8QbDoVL96g76pYXFzZpKNUzr
-         6j108ZWIqMp4CfY8NZvJLgwj8ydOBQVgS48fAZ6nZC00S/56NV4FhivPit+OYnuWweYD
-         DHJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=n4zzcA0S7W6+MhfPmPe3RkV9t2uiG0tre547UgCr2Yw=;
-        b=kq4+mYvJuZvOFUwv7bCB8G0g1s8ExW05gV3NHZcICROERXhpyrQiS+Wen4D2+/QU+q
-         66LpMy8VE0T3BuzRygzGjBgnn/EerkAolhWN7aUgNCqdAO9aQD8lt0+nW09tQGoR2Suq
-         djsPOa652ge9ulkVJzjIKuWYDKb+V1SH58DLL4UWNBXeot6lGGi4wtkeSSWX0hB4IKgf
-         s20N+urAgaXzJjqne9dVecQqCNmTkU62X9tW0bdb8DhQzftSz6jWnl/GI5aKLge6Q5Ob
-         NVmyuEsxshUkMr1H7L8ZiExccxylXQJnk3rmKf6GNr9OQ/Pqhb1IcGBaDep10bSkWQue
-         EDYA==
-X-Gm-Message-State: AOAM5300NYbwEBbnAuqrNdDFLTNlCLlOWCvIHQqsetsKZI/Mt8ikswG1
-        0y7lI84HQheizZksdrRIhTsm5eyO
-X-Google-Smtp-Source: ABdhPJx4c4+BYLQf4r4GU3U/41YOwsfRHq6/82P9SZmrmDFh0rIdScrqpKs+IBzAO+0BatEzBH8MAQ==
-X-Received: by 2002:a62:7c09:: with SMTP id x9mr1369261pfc.229.1597071973271;
-        Mon, 10 Aug 2020 08:06:13 -0700 (PDT)
-Received: from [10.1.10.11] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
-        by smtp.gmail.com with ESMTPSA id v10sm6321590pff.192.2020.08.10.08.06.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Aug 2020 08:06:12 -0700 (PDT)
-Subject: Re: [PATCH] net: eliminate meaningless memcpy to data in
- pskb_carve_inside_nonlinear()
-To:     Miaohe Lin <linmiaohe@huawei.com>, davem@davemloft.net,
-        kuba@kernel.org, pshelar@ovn.org, martin.varghese@nokia.com,
-        fw@strlen.de, dcaratti@redhat.com, edumazet@google.com,
-        steffen.klassert@secunet.com, pabeni@redhat.com,
-        shmulik@metanetworks.com, kyk.segfault@gmail.com
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200810122856.5423-1-linmiaohe@huawei.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <fd23f2e0-5cf9-ef66-0c15-b46eac1da609@gmail.com>
-Date:   Mon, 10 Aug 2020 08:06:11 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Mon, 10 Aug 2020 11:07:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42464 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726115AbgHJPGz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:06:55 -0400
+Received: from linux-8ccs (p57a236d4.dip0.t-ipconnect.de [87.162.54.212])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6660C2076B;
+        Mon, 10 Aug 2020 15:06:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597072014;
+        bh=YZy2YZvqtBOSoxa9pOWWX5q5MbckXDWFu6szjgvgk3w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uIS/n6MVd8SISJgvsgLgWAvfmKAKezEXqiK+r8LrgVivrNOPINd1Y8ao1iQvUOoTH
+         RP9JYTq2Hj/UGqhs8aU6RvcGYY/MOReCkHDUkhODIunkAmXY3oYvJz+OJ2yeQPA4Pf
+         dUqPdupdOqsxHXEGuB/PiKSBgJ+zXvF6k9E4T+oY=
+Date:   Mon, 10 Aug 2020 17:06:50 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        keescook@chromium.org, Josh Poimboeuf <jpoimboe@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>
+Subject: Re: [PATCH v2] module: Harden STRICT_MODULE_RWX
+Message-ID: <20200810150647.GB8612@linux-8ccs>
+References: <20200403171303.GK20760@hirez.programming.kicks-ass.net>
+ <20200808101222.5103093e@coco.lan>
+ <20200810092523.GA8612@linux-8ccs>
 MIME-Version: 1.0
-In-Reply-To: <20200810122856.5423-1-linmiaohe@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200810092523.GA8612@linux-8ccs>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
++++ Jessica Yu [10/08/20 11:25 +0200]:
+>+++ Mauro Carvalho Chehab [08/08/20 10:12 +0200]:
+>[snip]
+>>Right now, what happens is:
+>>
+>>	# modprobe wlcore
+>>	modprobe: ERROR: could not insert 'wlcore': Exec format error
+>>
+>>This seems to be failing for all modules, as doesn't show anything
+>>probed.
+>>
+>>Btw, IMO, it would be useful to have some pr_debug() infra in order to
+>>explain why insmod is failing, or to have more error codes used there,
+>>as nothing was printed at dmesg. That makes harder to debug issues
+>>there. I ended losing a lot of time yesterday rebuilding the Kernel
+>>and checking the FS, before deciding to add some printks inside the
+>>Kernel ;-)
+>>
+>>In order for modprobe to start working again, I had to apply this
+>>dirty hack:
+>>
+>><hack>
+>>diff --git a/kernel/module.c b/kernel/module.c
+>>index 910a57640818..10d590dc48ad 100644
+>>--- a/kernel/module.c
+>>+++ b/kernel/module.c
+>>@@ -2051,11 +2051,12 @@ static int module_enforce_rwx_sections(Elf_Ehdr *hdr, Elf_Shdr *sechdrs,
+>>	const unsigned long shf_wx = SHF_WRITE|SHF_EXECINSTR;
+>>	int i;
+>>
+>>+#if 0
+>>	for (i = 0; i < hdr->e_shnum; i++) {
+>>		if ((sechdrs[i].sh_flags & shf_wx) == shf_wx)
+>>			return -ENOEXEC;
+>>	}
+>>-
+>>+#endif
+>>	return 0;
+>>}
+>></hack>
 
+[ I somehow munged the To: header in the last mail. Sorry about that,
+it's fixed now. ]
 
-On 8/10/20 5:28 AM, Miaohe Lin wrote:
-> The skb_shared_info part of the data is assigned in the following loop. It
-> is meaningless to do a memcpy here.
-> 
-> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
-> ---
->  net/core/skbuff.c | 3 ---
->  1 file changed, 3 deletions(-)
-> 
-> diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-> index 7e2e502ef519..5b983c9472f5 100644
-> --- a/net/core/skbuff.c
-> +++ b/net/core/skbuff.c
-> @@ -5952,9 +5952,6 @@ static int pskb_carve_inside_nonlinear(struct sk_buff *skb, const u32 off,
->  
->  	size = SKB_WITH_OVERHEAD(ksize(data));
->  
-> -	memcpy((struct skb_shared_info *)(data + size),
-> -	       skb_shinfo(skb), offsetof(struct skb_shared_info,
-> -					 frags[skb_shinfo(skb)->nr_frags]));
->  	if (skb_orphan_frags(skb, gfp_mask)) {
->  		kfree(data);
->  		return -ENOMEM;
-> 
+>All this hunk does it reject loading modules that have any sections
+>that have both the writable and executable flags. You're saying it's
+>happening for all modules on your setup - I am curious as to which
+>sections have both these flags - what does readelf -S tell you?
 
-Reminder : net-next is CLOSED.
+Hmm, I was not able to reproduce this with a cross-compiled kernel
+using the attached config (gcc 9.3.0 with vanilla v5.8 kernel). I am
+curious if the failing sections are also SHF_ALLOC - in that case, the
+code is doing what it is intended to do, which is rejecting loading
+any modules with writable and executable sections. If the problematic
+sections are *not* SHF_ALLOC, then we might be able to work around
+that by ignoring non-SHF_ALLOC sections as they are not copied to the
+final module location anyway.
 
-This is not correct. We still have to copy _something_
+Jessica
 
-Something like :
-
-diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index 2828f6d5ba898a5e50ccce45589bf1370e474b0f..1c0519426c7ba4b04377fc8054c4223c135879ab 100644
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -5953,8 +5953,8 @@ static int pskb_carve_inside_nonlinear(struct sk_buff *skb, const u32 off,
-        size = SKB_WITH_OVERHEAD(ksize(data));
- 
-        memcpy((struct skb_shared_info *)(data + size),
--              skb_shinfo(skb), offsetof(struct skb_shared_info,
--                                        frags[skb_shinfo(skb)->nr_frags]));
-+              skb_shinfo(skb), offsetof(struct skb_shared_info, frags[0]));
-+
-        if (skb_orphan_frags(skb, gfp_mask)) {
-                kfree(data);
-                return -ENOMEM;
