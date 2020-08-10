@@ -5,50 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D704C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:12:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE441C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:12:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25C8F22C9E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:12:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CC5B21775
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:12:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597086729;
-	bh=6LmQh1e/NqQGj+89BAr9m4CJNhDun1U7OdbG+iIs+F8=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=UdN6zJA+WD9SPshuehi6y/em4K5Ag3Sn9lsBOhw/LBWcaL4QxTc04/cc3JODRY/y0
-	 7Y4XumYMLyVOtebohpcpUjIL15kx7sBWvCNnQgLsMULf6Dp0pAGCUeQLBwkxjxiSNo
-	 zewUUlWdGx/EPdyqXjAuRXoqXV36nPbPFkhO/CFw=
+	s=default; t=1597086734;
+	bh=drg9k6fAr4o4ZaB/KVXQaJmhieDdCk/mTFHnx7qh7P0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=tpY2uZcl/iueWIwPFup8LKbYc/OkK9ms21tEUzXSwPUDC0/TkxyWhDxEBCdts3KUf
+	 qMFomk5k6S2hfnx3YMw+HMuqpRmY6cDUn1TR6y4s2mqHOIH7aAeGW6gf7R3gyKblM3
+	 R62lEn3eoxGG8NX54cXI9Vt63dCI2HFp2/fX6ul4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729100AbgHJTMH (ORCPT
+        id S1729489AbgHJTMM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:12:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40848 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:12:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729434AbgHJTLz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:11:55 -0400
+        id S1729445AbgHJTMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:12:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B8BB207FF;
-        Mon, 10 Aug 2020 19:11:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6A5E2224D;
+        Mon, 10 Aug 2020 19:11:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086715;
-        bh=6LmQh1e/NqQGj+89BAr9m4CJNhDun1U7OdbG+iIs+F8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=BuLL5duUR/37nkcuVy063AFHi/sBcNGwbU1W3QWZLmsOkObMR2p54E157SEukJbej
-         auUTxH2cE8gKWXH+BJTVW633/ailXzOaDzyS8mupnqwUzyn9p/+Dm8ZNMlh9hgo6GC
-         BXd/A9fpcrPous52Ap1B/KAEwS/PB5YbQJmFUAok=
+        s=default; t=1597086719;
+        bh=drg9k6fAr4o4ZaB/KVXQaJmhieDdCk/mTFHnx7qh7P0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=buUv8LReKXK+Q2Fn5CTpgzb91SFTBEANiRprUOofiZMehJb4EOXMkMB7XDZGGiDSK
+         lGs0pB5tqRVtpflhMs5MP9ReCbyRBLhs2fJ4ZtuehN3bV95VLYxNh6PRrfwHXvizu3
+         b8sqTWt8XU0pC/vsU3rQU9MG9QooVF/+X7g6KmZo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tomi Valkeinen <tomi.valkeinen@ti.com>, Jyri Sarha <jsarha@ti.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 01/45] drm/tilcdc: fix leak & null ref in panel_connector_get_modes
-Date:   Mon, 10 Aug 2020 15:11:09 -0400
-Message-Id: <20200810191153.3794446-1-sashal@kernel.org>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Ming Lei <ming.lei@redhat.com>, Christoph Hellwig <hch@lst.de>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 04/45] loop: be paranoid on exit and prevent new additions / removals
+Date:   Mon, 10 Aug 2020 15:11:12 -0400
+Message-Id: <20200810191153.3794446-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200810191153.3794446-1-sashal@kernel.org>
+References: <20200810191153.3794446-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,49 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+From: Luis Chamberlain <mcgrof@kernel.org>
 
-[ Upstream commit 3f9c1c872cc97875ddc8d63bc9fe6ee13652b933 ]
+[ Upstream commit 200f93377220504c5e56754823e7adfea6037f1a ]
 
-If videomode_from_timings() returns true, the mode allocated with
-drm_mode_create will be leaked.
+Be pedantic on removal as well and hold the mutex.
+This should prevent uses of addition while we exit.
 
-Also, the return value of drm_mode_create() is never checked, and thus
-could cause NULL deref.
-
-Fix these two issues.
-
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200429104234.18910-1-tomi.valkeinen@ti.com
-Reviewed-by: Jyri Sarha <jsarha@ti.com>
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
+Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/tilcdc/tilcdc_panel.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/block/loop.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/gpu/drm/tilcdc/tilcdc_panel.c b/drivers/gpu/drm/tilcdc/tilcdc_panel.c
-index 5584e656b8575..8c4fd1aa4c2db 100644
---- a/drivers/gpu/drm/tilcdc/tilcdc_panel.c
-+++ b/drivers/gpu/drm/tilcdc/tilcdc_panel.c
-@@ -143,12 +143,16 @@ static int panel_connector_get_modes(struct drm_connector *connector)
- 	int i;
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index 565e35e69f249..bddbbf5b3dda2 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -2325,6 +2325,8 @@ static void __exit loop_exit(void)
  
- 	for (i = 0; i < timings->num_timings; i++) {
--		struct drm_display_mode *mode = drm_mode_create(dev);
-+		struct drm_display_mode *mode;
- 		struct videomode vm;
+ 	range = max_loop ? max_loop << part_shift : 1UL << MINORBITS;
  
- 		if (videomode_from_timings(timings, &vm, i))
- 			break;
- 
-+		mode = drm_mode_create(dev);
-+		if (!mode)
-+			break;
++	mutex_lock(&loop_ctl_mutex);
 +
- 		drm_display_mode_from_videomode(&vm, mode);
+ 	idr_for_each(&loop_index_idr, &loop_exit_cb, NULL);
+ 	idr_destroy(&loop_index_idr);
  
- 		mode->type = DRM_MODE_TYPE_DRIVER;
+@@ -2332,6 +2334,8 @@ static void __exit loop_exit(void)
+ 	unregister_blkdev(LOOP_MAJOR, "loop");
+ 
+ 	misc_deregister(&loop_misc);
++
++	mutex_unlock(&loop_ctl_mutex);
+ }
+ 
+ module_init(loop_init);
 -- 
 2.25.1
 
