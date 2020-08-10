@@ -2,138 +2,100 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ABE8C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:26:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6B77C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:26:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 073822075D
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:26:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B65120773
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:26:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OG+MeLJS"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="GyJWAJ4X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726577AbgHJH02 (ORCPT
+        id S1726594AbgHJH02 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 10 Aug 2020 03:26:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47146 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726025AbgHJH00 (ORCPT
+Received: from mailgw01.mediatek.com ([210.61.82.183]:22527 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726127AbgHJH01 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 03:26:26 -0400
-Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A90AC061756;
-        Mon, 10 Aug 2020 00:26:25 -0700 (PDT)
-Received: by mail-yb1-xb41.google.com with SMTP id m200so4640926ybf.10;
-        Mon, 10 Aug 2020 00:26:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=a/yQjIpGQ9bwN19T0c8h1wga/yLfPYyGvmAA4RpqO9o=;
-        b=OG+MeLJSksMXQYnng3ZOq6fUtWnCYdY5dR1M1xCP2OB9ND+9+4gTccvtg9esOBO8aY
-         gtirQoqKkpqoqmrbG7tGO0qdLyMXyV0NJ/xJER24xixIb67EJa8RmSQF2Ff7aIr2wYAG
-         bAoeaXl/I2YDiY3TlR4Q8dzk+t2YsYj46MLrVBciwEz2H7kh6AorllAny6O+UFnqdWsF
-         oVAqzKJFAsREVEASyYves69+s+Y/hLecF33Xiz/Gck+5vGk2HL4Ngq/msOKp+arz7rHV
-         sjHchbSuQbUBIppXohuffpkxb3UsDyddlDTDs+IACcu8BNO6GDRwD0PhZpPHJkJj0axg
-         39Lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=a/yQjIpGQ9bwN19T0c8h1wga/yLfPYyGvmAA4RpqO9o=;
-        b=nku+gK88rrPf6TCNq7PmCU4m+fGk6qquKezO60dXXYaLUd2mnncLJY6taH+eahrGMM
-         pJVOboJK1nRwZzyGNj1SUTxQd4L8v5J1dutJLVSbWo7pGWdWLYUpe8KiSC/AIv4gK+j3
-         6/oiVAaTnY/UDljhEQt5cdPfYa8Yx2pO/vt99S9SBhFhUrAQNkVa4o8umkOD/37OFYyw
-         3QwDpUuIftvgT1oCEoIBlRxz5WJmE7huXVWLlg5+Bp37Q2MxZ/KfBwQms52hlvNcp2Tu
-         WJ5AsQdSMytmcvxFtgYOe1gfzB/VHibFQR5oF82X0Q+nv5KDcaHt7O1Rbg0UbNoMkff7
-         gBBA==
-X-Gm-Message-State: AOAM531T2GleVWjQet8F1kX8dndv8rVswAN7m+4irktcJHRH/UewRpTq
-        BmcDNcJ12iODtC0zWlC1985CxTpTjSn1tQ4lRwE=
-X-Google-Smtp-Source: ABdhPJx5ZqLguTnboxWSbfqbxWq6Zi7lwEzwh50vnLLZ5b7sQaMUmIrC4FfDLxZUtT0lEp3C6ZVNHYQi/QODDA9MeYY=
-X-Received: by 2002:a25:b74b:: with SMTP id e11mr3088014ybm.395.1597044384816;
- Mon, 10 Aug 2020 00:26:24 -0700 (PDT)
+        Mon, 10 Aug 2020 03:26:27 -0400
+X-UUID: 3103f9590f114368a6175e1b069cbd80-20200810
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=MiZ6leJF9tYuSzVOQIulz0H4R7mIPrSUOEtllZRLwmQ=;
+        b=GyJWAJ4XvfW9O2Vc9O1hgQ/ZePfms5ONFEyEMB1bpJrHQ86G/mukGyOXcKBDGw8fzXjV0OLXQh73bMI6/u75pjVY7NA89PI7tRA/DaPezlV1cHKisZacM5wddZjxZZDf7uDvgNKEm3+muRVFcWfRq9WvmfBnL0ZDvSPk8BlAmy4=;
+X-UUID: 3103f9590f114368a6175e1b069cbd80-20200810
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <walter-zh.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 455172873; Mon, 10 Aug 2020 15:26:23 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs06n1.mediatek.inc (172.21.101.129) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Mon, 10 Aug 2020 15:26:22 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 10 Aug 2020 15:26:20 +0800
+From:   Walter Wu <walter-zh.wu@mediatek.com>
+To:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     <kasan-dev@googlegroups.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        <linux-mediatek@lists.infradead.org>,
+        Walter Wu <walter-zh.wu@mediatek.com>
+Subject: [PATCH 3/5] lib/test_kasan.c: add timer test case
+Date:   Mon, 10 Aug 2020 15:26:20 +0800
+Message-ID: <20200810072620.747-1-walter-zh.wu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-References: <1596465107-14251-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200806144828.bflbpla2x4sjfsbp@uno.localdomain>
-In-Reply-To: <20200806144828.bflbpla2x4sjfsbp@uno.localdomain>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Mon, 10 Aug 2020 08:25:58 +0100
-Message-ID: <CA+V-a8tmU2OVg8L8qsySG1CtpMw08BmjeyYBiakXdAh8vgxuNQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/4] media: i2c: ov5640 feature enhancement and fixes
-To:     Jacopo Mondi <jacopo@jmondi.org>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Steve Longerbeam <slongerbeam@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hugues Fruchet <hugues.fruchet@st.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacopo,
+QWRkcyBhIHRlc3QgY2FzZSB0byB2ZXJpZnkgdGltZXIgc3RhY2sgcmVjb3JkaW5nDQphbmQgcHJp
+bnQgdGhlIGxhc3QgdGltZXIgc3RhY2sgaW4gS0FTQU4gcmVwb3J0Lg0KDQpUaGUgS0FTQU4gcmVw
+b3J0IHdhcyBhcyBmb2xsb3dzKGNsZWFuZWQgdXAgc2xpZ2h0bHkpOg0KDQogQlVHOiBLQVNBTjog
+dXNlLWFmdGVyLWZyZWUgaW4ga2FzYW5fdGltZXJfdWFmDQoNCiBGcmVlZCBieSB0YXNrIDA6DQog
+IGthc2FuX3NhdmVfc3RhY2srMHgyNC8weDUwDQogIGthc2FuX3NldF90cmFjaysweDI0LzB4MzgN
+CiAga2FzYW5fc2V0X2ZyZWVfaW5mbysweDIwLzB4NDANCiAgX19rYXNhbl9zbGFiX2ZyZWUrMHgx
+MGMvMHgxNzANCiAga2FzYW5fc2xhYl9mcmVlKzB4MTAvMHgxOA0KICBrZnJlZSsweDk4LzB4Mjcw
+DQogIGthc2FuX3RpbWVyX2Z1bmN0aW9uKzB4MWMvMHgyOA0KDQogTGFzdCB0aW1lciBzdGFjazoN
+CiAga2FzYW5fc2F2ZV9zdGFjaysweDI0LzB4NTANCiAga2FzYW5fcmVjb3JkX3Rtcl9zdGFjaysw
+eGE4LzB4YjgNCiAgaW5pdF90aW1lcl9rZXkrMHhmMC8weDI0OA0KICBrYXNhbl90aW1lcl91YWYr
+MHg1Yy8weGQ4DQoNClNpZ25lZC1vZmYtYnk6IFdhbHRlciBXdSA8d2FsdGVyLXpoLnd1QG1lZGlh
+dGVrLmNvbT4NCkNjOiBBbmRyZXkgUnlhYmluaW4gPGFyeWFiaW5pbkB2aXJ0dW96em8uY29tPg0K
+Q2M6IERtaXRyeSBWeXVrb3YgPGR2eXVrb3ZAZ29vZ2xlLmNvbT4NCkNjOiBBbGV4YW5kZXIgUG90
+YXBlbmtvIDxnbGlkZXJAZ29vZ2xlLmNvbT4NCkNjOiBNYXR0aGlhcyBCcnVnZ2VyIDxtYXR0aGlh
+cy5iZ2dAZ21haWwuY29tPg0KLS0tDQogbGliL3Rlc3Rfa2FzYW4uYyB8IDI1ICsrKysrKysrKysr
+KysrKysrKysrKysrKysNCiAxIGZpbGUgY2hhbmdlZCwgMjUgaW5zZXJ0aW9ucygrKQ0KDQpkaWZm
+IC0tZ2l0IGEvbGliL3Rlc3Rfa2FzYW4uYyBiL2xpYi90ZXN0X2thc2FuLmMNCmluZGV4IDZlNWZi
+MDVkNDJkOC4uMmJkNjE2NzRjN2EzIDEwMDY0NA0KLS0tIGEvbGliL3Rlc3Rfa2FzYW4uYw0KKysr
+IGIvbGliL3Rlc3Rfa2FzYW4uYw0KQEAgLTgyMSw2ICs4MjEsMzAgQEAgc3RhdGljIG5vaW5saW5l
+IHZvaWQgX19pbml0IGthc2FuX3JjdV91YWYodm9pZCkNCiAJY2FsbF9yY3UoJmdsb2JhbF9wdHIt
+PnJjdSwga2FzYW5fcmN1X3JlY2xhaW0pOw0KIH0NCiANCitzdGF0aWMgbm9pbmxpbmUgdm9pZCBf
+X2luaXQga2FzYW5fdGltZXJfZnVuY3Rpb24oc3RydWN0IHRpbWVyX2xpc3QgKnRpbWVyKQ0KK3sN
+CisJZGVsX3RpbWVyKHRpbWVyKTsNCisJa2ZyZWUodGltZXIpOw0KK30NCisNCitzdGF0aWMgbm9p
+bmxpbmUgdm9pZCBfX2luaXQga2FzYW5fdGltZXJfdWFmKHZvaWQpDQorew0KKwlzdHJ1Y3QgdGlt
+ZXJfbGlzdCAqdGltZXI7DQorDQorCXRpbWVyID0ga21hbGxvYyhzaXplb2Yoc3RydWN0IHRpbWVy
+X2xpc3QpLCBHRlBfS0VSTkVMKTsNCisJaWYgKCF0aW1lcikgew0KKwkJcHJfZXJyKCJBbGxvY2F0
+aW9uIGZhaWxlZFxuIik7DQorCQlyZXR1cm47DQorCX0NCisNCisJdGltZXJfc2V0dXAodGltZXIs
+IGthc2FuX3RpbWVyX2Z1bmN0aW9uLCAwKTsNCisJYWRkX3RpbWVyKHRpbWVyKTsNCisJbXNsZWVw
+KDEwMCk7DQorDQorCXByX2luZm8oInVzZS1hZnRlci1mcmVlIG9uIHRpbWVyXG4iKTsNCisJKCh2
+b2xhdGlsZSBzdHJ1Y3QgdGltZXJfbGlzdCAqKXRpbWVyKS0+ZXhwaXJlczsNCit9DQorDQogc3Rh
+dGljIGludCBfX2luaXQga21hbGxvY190ZXN0c19pbml0KHZvaWQpDQogew0KIAkvKg0KQEAgLTg2
+OSw2ICs4OTMsNyBAQCBzdGF0aWMgaW50IF9faW5pdCBrbWFsbG9jX3Rlc3RzX2luaXQodm9pZCkN
+CiAJa21hbGxvY19kb3VibGVfa3pmcmVlKCk7DQogCXZtYWxsb2Nfb29iKCk7DQogCWthc2FuX3Jj
+dV91YWYoKTsNCisJa2FzYW5fdGltZXJfdWFmKCk7DQogDQogCWthc2FuX3Jlc3RvcmVfbXVsdGlf
+c2hvdChtdWx0aXNob3QpOw0KIA0KLS0gDQoyLjE4LjANCg==
 
-
-On Thu, Aug 6, 2020 at 3:44 PM Jacopo Mondi <jacopo@jmondi.org> wrote:
->
-> Hello,
->
-> On Mon, Aug 03, 2020 at 03:31:43PM +0100, Lad Prabhakar wrote:
-> > Hi All,
-> >
-> > This patch series fixes DVP support and enables BT656 mode in
-> > the driver.
-> >
-> > @Jacopo Mondi - patch 1/4 will collide with your patch series [1],
-> > feel free to merge it as part of your v2.
->
-> This would actually make my life simpler, as one of the issues I had
-> was trying to make bus-type required to be able to differentiate
-> between different properties.
->
-Thank you for taking care of it.
-
-Cheers,
-Prabhakar
-
-> >
-> > [1] https://www.spinics.net/lists/linux-renesas-soc/msg51236.html
-> >
-> > Cheers,
-> > Prabhakar
-> >
-> > Changes for v2:
-> > * Added support to fallback in parallel mode
-> > * Documented bus-type property
-> > * Added descriptive commit message for patch 2/4 as pointed
-> >   by Sakari
-> > * Fixed review comments pointed by Laurent to have separate functions
-> >   for mipi and dvp setup
-> > * Made sure the sensor is in power down mode during startup too for
-> >   DVP mode
-> >
-> > Lad Prabhakar (4):
-> >   dt-bindings: media: i2c: ov5640: Document bus-type property
-> >   media: i2c: ov5640: Enable data pins on poweron for DVP mode
-> >   media: i2c: ov5640: Add support for BT656 mode
-> >   media: i2c: ov5640: Fallback to parallel mode
-> >
-> >  .../devicetree/bindings/media/i2c/ov5640.txt  |   9 +-
-> >  drivers/media/i2c/ov5640.c                    | 333 ++++++++++--------
-> >  2 files changed, 198 insertions(+), 144 deletions(-)
-> >
-> > --
-> > 2.17.1
-> >
