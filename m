@@ -2,160 +2,182 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41F28C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 21:17:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D364FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 21:17:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B87920716
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 21:17:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A622E20716
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 21:17:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="e049/iE5"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YwVxAf9E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbgHJVRS (ORCPT
+        id S1726806AbgHJVR4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 17:17:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33276 "EHLO
+        Mon, 10 Aug 2020 17:17:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726624AbgHJVRR (ORCPT
+        with ESMTP id S1726654AbgHJVRz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 17:17:17 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85BAFC061787
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 14:17:17 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id c19so786185wmd.1
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 14:17:17 -0700 (PDT)
+        Mon, 10 Aug 2020 17:17:55 -0400
+Received: from mail-oo1-xc42.google.com (mail-oo1-xc42.google.com [IPv6:2607:f8b0:4864:20::c42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91323C061756
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 14:17:55 -0700 (PDT)
+Received: by mail-oo1-xc42.google.com with SMTP id j16so2192636ooc.7
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 14:17:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Fj2es0dCEPOQUTQgxshXQADi10l+RVsAVXH1AGZUZrE=;
-        b=e049/iE5zjU3fuIZOmYEgRgRB8FElNKBQdO1T9yZ3dwFurZ/cVpoFb9P4ECfLn05Lh
-         CnbpAUYssYvu6J8zWlzF9f6z4HCdfPzEnoJDcwANUr75zB4tOR961Gt3VQ2wEJ3vqcHs
-         84jIaz953mb7RCN0Xhza3wxmNmSeVDjTc5nus=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8GBCeeTPIAs1vqUkzRTPXsfrx2cgCSPgccIBR3gAYiM=;
+        b=YwVxAf9ERd4NAgz/iv74mmhNe+RAXg6chRDIyAeaYYRlCmWNGbR8BirN0ldW84u1U6
+         cSpF2BdqRyuFhjeWnuigySpcmnXkJianTvoEnYFvC92ziAo86ZXbrzlpUvdIiEXFo8wp
+         N6bOwOepauIwC6qjZs0bjOeCNDZV+0wCbn+R+OifZSNds/eh0KSUgNYpKXcYqhd/82Mn
+         iNoethuJvVwm86k/hPDhnY2blkQcN5HL+q3qfjpK/AWaYuKQfo8ZTCrP/QqLpmYYZISQ
+         e93nJEL83o8hEd6G4P24Rz4sRWb5R1u2yEdmL5R/qLnFl1ewOuabrlFqD0T2rzWMOagi
+         habg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Fj2es0dCEPOQUTQgxshXQADi10l+RVsAVXH1AGZUZrE=;
-        b=bIzRkB6RdIib3K+jVGRlHk2A3/4IRzYNpimx9qjcFQtwvjoQEueWn3BnJejI266/R5
-         a2JC34ik1kwoTjkax0MZ8Tzrx/+vVwBab4MML66kgmN6Z86JbBWXdoiMaa7v2+ADj85a
-         ZePzbG7Qitz/gBG5SpS9YATan7ZcnfgUCznYhMDqNhl4/G7/amkm+toOYHpd2NxJ0Ecu
-         wlPtPokG82eQ1qkMo13wq+IHZgDfMAMsDswpzPYLj1JgeRlJ2CKi6PYISjKhYsR+8U1f
-         mt1jietXmRXSvQQY2NlSIg+4Uih03ZBL/QeG6i9yIXCGns6xpQx0lL2JiROfPhPxydbU
-         8djQ==
-X-Gm-Message-State: AOAM533dFeANgQuirZ30np6gkDbGL0CvVoPA+hV+qXVLfcZizx6CF9MI
-        xLWsbp0YWrqupyC8Uar39wUVdw==
-X-Google-Smtp-Source: ABdhPJxgf/jaiJBGUk2+J0Qe9jP7a+xe9d6Dd3Fiaxg86dtAjIMdS9jRQM0f3OPzMV3XcLuAfSYusw==
-X-Received: by 2002:a05:600c:258e:: with SMTP id 14mr929987wmh.141.1597094235871;
-        Mon, 10 Aug 2020 14:17:15 -0700 (PDT)
-Received: from [10.230.0.249] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id f63sm1372299wmf.9.2020.08.10.14.17.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Aug 2020 14:17:15 -0700 (PDT)
-Subject: Re: [PATCH v2] i2c: iproc: fix race between client unreg and isr
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Dhananjay Phadke <dphadke@linux.microsoft.com>
-Cc:     bcm-kernel-feedback-list@broadcom.com, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org, rayagonda.kokatanur@broadcom.com,
-        rjui@broadcom.com, wsa@kernel.org
-References: <00a30ca7-d533-94ba-994a-9a133fadb045@gmail.com>
- <1596858925-45763-1-git-send-email-dphadke@linux.microsoft.com>
- <0f7063f5-8ca7-f469-574b-82382d49e266@gmail.com>
-From:   Ray Jui <ray.jui@broadcom.com>
-Message-ID: <18cf439a-8fde-02b0-31b6-9ac42f7e972c@broadcom.com>
-Date:   Mon, 10 Aug 2020 14:17:10 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8GBCeeTPIAs1vqUkzRTPXsfrx2cgCSPgccIBR3gAYiM=;
+        b=FEjCvWPc4XEu8mWoVklYEfo99HHvXEFA7kh+4sLD1p8it6mqQMCQSSouS3Y34ypUF1
+         k1btNpocY8qdob/y1IKwQ1gWkK4az890zxbs6dTyyPVpYmYcl0+EUas+xb9w+yRwLwn7
+         PCVFdOWHB+UeTmCaCcYLwFtUnGdRD0otWqS9CYGnv+x+qIEqPp1amDdQ86+lX09dEnlT
+         g21jWZxOKeo8MHFhkuW0cfA8ssfFlZIT8Gdt8e+iWlEsd0CaHM9xi3HzHEwdhTIz4yoL
+         LrHALC6ixRHw18FUmM0kV96vE9tfkBHDNe7HLyLNSfBuYAkX/YMRtdTM0uKOFlx/gZhq
+         GgYQ==
+X-Gm-Message-State: AOAM5338M3QrGAxcr2h2G5nKhyS9mpW+9c4LUy5O1bkvrnb4w7P/SLsU
+        EHVNmrYDxbPx8Td/kghJ72Uzh0BR6DveEGe2oH5XYQ==
+X-Google-Smtp-Source: ABdhPJxXkpHFF2U46lA8Sr5XEnEOEijV7VeFTbAVhQpK/iA4yeeZSPUsJWxQ2yqfY0fvcMn3EmXFJA8V16fFe5EBNQM=
+X-Received: by 2002:a4a:2f4b:: with SMTP id p72mr2448256oop.39.1597094273806;
+ Mon, 10 Aug 2020 14:17:53 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <0f7063f5-8ca7-f469-574b-82382d49e266@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200806203737.3636830-1-urielguajardojr@gmail.com>
+ <CAG30EedgwNJMCXX6Eo3b8heMa228N4=RLd=BgAQhS8AZ51bU0A@mail.gmail.com> <CAFd5g46=zgY_+jawXMS+yTx6MhRGa_4-WVmer-BwoL_c2QPcrg@mail.gmail.com>
+In-Reply-To: <CAFd5g46=zgY_+jawXMS+yTx6MhRGa_4-WVmer-BwoL_c2QPcrg@mail.gmail.com>
+From:   Uriel Guajardo <urielguajardo@google.com>
+Date:   Mon, 10 Aug 2020 16:17:42 -0500
+Message-ID: <CAG30EefjgzOMePHA2tQ-UmAw5_mnLDoS2hJH6z3nidNC8n8+Lg@mail.gmail.com>
+Subject: Re: [PATCH] kunit: added lockdep support
+To:     Brendan Higgins <brendanhiggins@google.com>, peterz@infradead.org,
+        mingo@redhat.com, will@kernel.org
+Cc:     Uriel Guajardo <urielguajardojr@gmail.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Aug 10, 2020 at 3:35 PM Brendan Higgins
+<brendanhiggins@google.com> wrote:
+>
+> On Thu, Aug 6, 2020 at 1:43 PM Uriel Guajardo <urielguajardo@google.com> wrote:
+> >
+> > On Thu, Aug 6, 2020 at 3:37 PM Uriel Guajardo <urielguajardojr@gmail.com> wrote:
+> > >
+> > > From: Uriel Guajardo <urielguajardo@google.com>
+> > >
+> > > KUnit tests will now fail if lockdep detects an error during a test
+> > > case.
+> > >
+> > > The idea comes from how lib/locking-selftest [1] checks for lock errors: we
+> > > first if lock debugging is turned on. If not, an error must have
+> > > occurred, so we fail the test and restart lockdep for the next test case.
+> > >
+> > > Like the locking selftests, we also fix possible preemption count
+> > > corruption from lock bugs.
+>
+> Sorry, just noticed: You probably want to send this to some of the
+> lockdep maintainers or the maintainers of the kselftest for lockdep.
+>
+
+Thanks for the reminder. CC'ed lockdep maintainers.
 
 
-On 8/8/2020 7:47 AM, Florian Fainelli wrote:
-> 
-> 
-> On 8/7/2020 8:55 PM, Dhananjay Phadke wrote:
->> On 8/7/2020, Florian Fainelli wrote:
->>>> When i2c client unregisters, synchronize irq before setting
->>>> iproc_i2c->slave to NULL.
->>>>
->>>> (1) disable_irq()
->>>> (2) Mask event enable bits in control reg
->>>> (3) Erase slave address (avoid further writes to rx fifo)
->>>> (4) Flush tx and rx FIFOs
->>>> (5) Clear pending event (interrupt) bits in status reg
->>>> (6) enable_irq()
->>>> (7) Set client pointer to NULL
->>>>
->>>
->>>> @@ -1091,6 +1091,17 @@ static int bcm_iproc_i2c_unreg_slave(struct i2c_client *slave)
->>>>  	tmp &= ~BIT(S_CFG_EN_NIC_SMB_ADDR3_SHIFT);
->>>>  	iproc_i2c_wr_reg(iproc_i2c, S_CFG_SMBUS_ADDR_OFFSET, tmp);
->>>>  
->>>> +	/* flush TX/RX FIFOs */
->>>> +	tmp = (BIT(S_FIFO_RX_FLUSH_SHIFT) | BIT(S_FIFO_TX_FLUSH_SHIFT));
->>>> +	iproc_i2c_wr_reg(iproc_i2c, S_FIFO_CTRL_OFFSET, tmp);
->>>> +
->>>> +	/* clear all pending slave interrupts */
->>>> +	iproc_i2c_wr_reg(iproc_i2c, IS_OFFSET, ISR_MASK_SLAVE);
->>>> +
->>>> +	enable_irq(iproc_i2c->irq);
->>>> +
->>>> +	iproc_i2c->slave = NULL;
->>>
->>> There is nothing that checks on iproc_i2c->slave being valid within the
->>> interrupt handler, we assume that the pointer is valid which is fin,
->>> however non functional it may be, it may feel more natural to move the
->>> assignment before the enable_irq()?
->>
->> As far as the teardown sequence ensures no more interrupts arrive after
->> enable_irq() and they are enabled only after setting pointer during
->> client register(); checking for NULL in ISR isn't necessary. 
-> 
-> Agreed.
-> 
-
-Okay I think we all agree that this teardown sequence will guarantee
-that no further "slave" interrupts will be fired after it.
-
->>
->> If The teardown sequence doesn't guarantee quiescing of interrupts,
->> setting NULL before or after enable_irq() is equally vulnerable.
-> 
-> The teardown sequence is sort of a critical section if we may say, so
-> ensuring that everything happens within it and that enable_irq() is the
-> last operation would seem more natural to me at least. Thanks
-> 
-
-I tend to agree with Florian here.
-
-1. Enable/Disable IRQ is done on the interrupt line for both master and
-slave (or even other peripherals that share the same interrupt line,
-although that is not the case here since this interrupt is dedicated to
-I2C in all iProc based SoCs).
-
-2. The tear down sequence here wrapped by disable/enable_irq is slave
-specific
-
-The effect of 1. is temporary, and the purpose of it is to ensure slave
-interrupts are quiesced properly at the end of the sequence.
-
-If we consider both 1. and 2., I agree with Florian that while the end
-result is the same, it is indeed more natural to wrap the entire slave
-tear down sequence within disable/enable irq.
-
-Thanks,
-
-Ray
+> > > Depends on kunit: support failure from dynamic analysis tools [2]
+> > >
+> > > [1] https://elixir.bootlin.com/linux/v5.7.12/source/lib/locking-selftest.c#L1137
+> > >
+> > > [2] https://lore.kernel.org/linux-kselftest/20200806174326.3577537-1-urielguajardojr@gmail.com/
+> > >
+> > > Signed-off-by: Uriel Guajardo <urielguajardo@google.com>
+> > > ---
+> > >  lib/kunit/test.c | 26 +++++++++++++++++++++++++-
+> > >  1 file changed, 25 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/lib/kunit/test.c b/lib/kunit/test.c
+> > > index d8189d827368..0838ececa005 100644
+> > > --- a/lib/kunit/test.c
+> > > +++ b/lib/kunit/test.c
+> > > @@ -11,6 +11,8 @@
+> > >  #include <linux/kref.h>
+> > >  #include <linux/sched/debug.h>
+> > >  #include <linux/sched.h>
+> > > +#include <linux/lockdep.h>
+> > > +#include <linux/debug_locks.h>
+> > >
+> > >  #include "debugfs.h"
+> > >  #include "string-stream.h"
+> > > @@ -22,6 +24,26 @@ void kunit_fail_current_test(void)
+> > >                 kunit_set_failure(current->kunit_test);
+> > >  }
+> > >
+> > > +static inline void kunit_check_locking_bugs(struct kunit *test,
+> > > +                                           unsigned long saved_preempt_count)
+> > > +{
+> > > +       preempt_count_set(saved_preempt_count);
+> > > +#ifdef CONFIG_TRACE_IRQFLAGS
+> > > +       if (softirq_count())
+> > > +               current->softirqs_enabled = 0;
+> > > +       else
+> > > +               current->softirqs_enabled = 1;
+> > > +#endif
+> >
+> > I am not entirely sure why lib/locking-selftests enables/disables
+> > softirqs, but I suspect it has to do with the fact that preempt_count
+> > became corrupted, and somehow softirqs became incorrectly
+> > enabled/disabled as a result. The resetting of the preemption count
+> > will undo the enabling/disabling accordingly. Any insight on this
+> > would be appreciated!
+> >
+> > > +#if IS_ENABLED(CONFIG_LOCKDEP)
+> > > +       local_irq_disable();
+> > > +       if (!debug_locks) {
+> > > +               kunit_set_failure(test);
+> > > +               lockdep_reset();
+> > > +       }
+> > > +       local_irq_enable();
+> > > +#endif
+> > > +}
+> > > +
+> > >  static void kunit_print_tap_version(void)
+> > >  {
+> > >         static bool kunit_has_printed_tap_version;
+> > > @@ -289,6 +311,7 @@ static void kunit_try_run_case(void *data)
+> > >         struct kunit *test = ctx->test;
+> > >         struct kunit_suite *suite = ctx->suite;
+> > >         struct kunit_case *test_case = ctx->test_case;
+> > > +       unsigned long saved_preempt_count = preempt_count();
+> > >
+> > >         current->kunit_test = test;
+> > >
+> > > @@ -298,7 +321,8 @@ static void kunit_try_run_case(void *data)
+> > >          * thread will resume control and handle any necessary clean up.
+> > >          */
+> > >         kunit_run_case_internal(test, suite, test_case);
+> > > -       /* This line may never be reached. */
+> > > +       /* These lines may never be reached. */
+> > > +       kunit_check_locking_bugs(test, saved_preempt_count);
+> > >         kunit_run_case_cleanup(test, suite);
+> > >  }
+> > >
+> > > --
+> > > 2.28.0.236.gb10cc79966-goog
+> > >
