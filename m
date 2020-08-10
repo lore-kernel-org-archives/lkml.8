@@ -5,55 +5,55 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D255BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F67BC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:42:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A477620774
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:42:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEF5420774
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:42:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597074123;
-	bh=RF1YYZcrR8jAOi1ZJRiN7u4xbfpSyq4rjhuxrTj5BHc=;
+	s=default; t=1597074132;
+	bh=86lS6JMTyHDZ4MsN9aNKQqb7YRtZnwskVhxQbpWN7oo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2bK6UU9CVuy7gaNNifzrosV8fGHXuj6UYJ8CafLfkcoN2RtHYcDgOtUJtOoZXrj69
-	 uLDypEykI4WhrnPLSa+mAOwmJibX0pdTugLWKmL5xSdpF4CbI/EdEF/mwdXiVJYhbR
-	 jC80/YDR04Xt5O0cYxoG6w5a6SS7ejF/MBosrhr0=
+	b=LOixFkkIS+HlyKvBw7WB5xd0kao98KshQu91UKFPJrtfK3eVIHcfsWDjfC9sFBx6t
+	 f/AvHiC90BG1iUou1/HzomvKpE8Eq3FDKxeWNlPyPZjC/uMg0DEpVxY+9ZHJwyKFMa
+	 NYvMjP75X6Ob1lq7XAfOiKYDx4X5qd+/LTT9An4s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729289AbgHJPmC (ORCPT
+        id S1727789AbgHJPW0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:42:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53512 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:22:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728231AbgHJPWj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:22:39 -0400
+        id S1726046AbgHJPWT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:22:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB00D20782;
-        Mon, 10 Aug 2020 15:22:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9948020656;
+        Mon, 10 Aug 2020 15:22:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597072959;
-        bh=RF1YYZcrR8jAOi1ZJRiN7u4xbfpSyq4rjhuxrTj5BHc=;
+        s=default; t=1597072934;
+        bh=86lS6JMTyHDZ4MsN9aNKQqb7YRtZnwskVhxQbpWN7oo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i4GPy6dNNwTyIqf24ReY2LCfOfTmbDzFJ72UW8QCWzki7obJIQ/xi93UJLRzYD8s/
-         DVSFmF4jHpqOIk2iW2ofzqO+fq4+QzWjkzZiiuCO2uMANql/RdaS8tdSXDa30Y39qm
-         d55DU49WMIxt6BVTtflc+TDZ6vReK7se62NVaK5Q=
+        b=oK7rPtAob7ppM6migHb6JluKVMHaJQ+6jgGCTb2yStEQHrOkLrMbGbSgB0ycooU2E
+         LrvpowMvmNx+PxDa8Mytt8QCwX0pAb6ozURkSwXYDVJwmiIPfS7rNVLMcnB5kr0OdA
+         uVob+j5dwQvCymzmLbehaZrzv39grglDNbVVOcr0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adam Ford <aford173@gmail.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Dave Airlie <airlied@gmail.com>,
-        Rob Clark <robdclark@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH 5.7 18/79] omapfb: dss: Fix max fclk divider for omap36xx
-Date:   Mon, 10 Aug 2020 17:20:37 +0200
-Message-Id: <20200810151813.015689378@linuxfoundation.org>
+        stable@vger.kernel.org, Avri Altman <Avri.Altman@wdc.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.7 01/79] scsi: ufs: Fix and simplify setup_xfer_req variant operation
+Date:   Mon, 10 Aug 2020 17:20:20 +0200
+Message-Id: <20200810151812.194906098@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151812.114485777@linuxfoundation.org>
 References: <20200810151812.114485777@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,42 +62,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adam Ford <aford173@gmail.com>
+From: Stanley Chu <stanley.chu@mediatek.com>
 
-commit 254503a2b186caa668a188dbbd7ab0d25149c0a5 upstream.
+commit 6edfdcfe285e499994b94a0f93e1f46ab2398162 upstream.
 
-The drm/omap driver was fixed to correct an issue where using a
-divider of 32 breaks the DSS despite the TRM stating 32 is a valid
-number.  Through experimentation, it appears that 31 works, and
-it is consistent with the value used by the drm/omap driver.
+Add missing setup_xfer_req() call in ufshcd_issue_devman_upiu_cmd() in
+ufs-bsg path. Relocate existing setup_xfer_req() calls to a common place,
+i.e., ufshcd_send_command(), to simplify the driver.
 
-This patch fixes the divider for fbdev driver instead of the drm.
-
-Fixes: f76ee892a99e ("omapfb: copy omapdss & displays for omapfb")
-Cc: <stable@vger.kernel.org> #4.5+
-Signed-off-by: Adam Ford <aford173@gmail.com>
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Dave Airlie <airlied@gmail.com>
-Cc: Rob Clark <robdclark@gmail.com>
-[b.zolnierkie: mark patch as applicable to stable 4.5+ (was 4.9+)]
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200630182636.439015-1-aford173@gmail.com
+Link: https://lore.kernel.org/r/20200706060707.32608-3-stanley.chu@mediatek.com
+Acked-by: Avri Altman <Avri.Altman@wdc.com>
+Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/video/fbdev/omap2/omapfb/dss/dss.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/ufs/ufshcd.c |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
---- a/drivers/video/fbdev/omap2/omapfb/dss/dss.c
-+++ b/drivers/video/fbdev/omap2/omapfb/dss/dss.c
-@@ -833,7 +833,7 @@ static const struct dss_features omap34x
- };
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -1908,8 +1908,11 @@ static void ufshcd_clk_scaling_update_bu
+ static inline
+ void ufshcd_send_command(struct ufs_hba *hba, unsigned int task_tag)
+ {
+-	hba->lrb[task_tag].issue_time_stamp = ktime_get();
+-	hba->lrb[task_tag].compl_time_stamp = ktime_set(0, 0);
++	struct ufshcd_lrb *lrbp = &hba->lrb[task_tag];
++
++	lrbp->issue_time_stamp = ktime_get();
++	lrbp->compl_time_stamp = ktime_set(0, 0);
++	ufshcd_vops_setup_xfer_req(hba, task_tag, (lrbp->cmd ? true : false));
+ 	ufshcd_add_command_trace(hba, task_tag, "send");
+ 	ufshcd_clk_scaling_start_busy(hba);
+ 	__set_bit(task_tag, &hba->outstanding_reqs);
+@@ -2519,7 +2522,6 @@ static int ufshcd_queuecommand(struct Sc
  
- static const struct dss_features omap3630_dss_feats = {
--	.fck_div_max		=	32,
-+	.fck_div_max		=	31,
- 	.dss_fck_multiplier	=	1,
- 	.parent_clk_name	=	"dpll4_ck",
- 	.dpi_select_source	=	&dss_dpi_select_source_omap2_omap3,
+ 	/* issue command to the controller */
+ 	spin_lock_irqsave(hba->host->host_lock, flags);
+-	ufshcd_vops_setup_xfer_req(hba, tag, true);
+ 	ufshcd_send_command(hba, tag);
+ out_unlock:
+ 	spin_unlock_irqrestore(hba->host->host_lock, flags);
+@@ -2706,7 +2708,6 @@ static int ufshcd_exec_dev_cmd(struct uf
+ 	/* Make sure descriptors are ready before ringing the doorbell */
+ 	wmb();
+ 	spin_lock_irqsave(hba->host->host_lock, flags);
+-	ufshcd_vops_setup_xfer_req(hba, tag, false);
+ 	ufshcd_send_command(hba, tag);
+ 	spin_unlock_irqrestore(hba->host->host_lock, flags);
+ 
 
 
