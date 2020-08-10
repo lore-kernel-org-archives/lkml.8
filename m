@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33A13C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:15:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D29AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:15:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0E68207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:15:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67A242080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:15:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597086945;
-	bh=HC8oHq7fJG1RBCuzDFQfpZGuk2RXpAtpBuCpvgHUtvc=;
+	s=default; t=1597086951;
+	bh=Y8fek5Prvh23bZv4yQX0W0Su6L95AytBC8qnzyWtnb0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZSPC/+cUuebYj0pXmFGbvEJEe8UFQOwKl8zDGakHxazy2LHaiVFcfv3tsahepMDXL
-	 7irAk934gYWWYQFWE9KvBZRAz/ARx/0P12HHq2ReJnsNPwLFIrJClUgyVIZUxE/nHe
-	 EfUb3ZkfQCCHQh/fv1V0AndkMP+CQAzbH6w47pYY=
+	b=AwfZ6wD+PJj5Q0etLt5FYXslaOSnZ7WEC4sB7JXRqCtFYxL9Ga5G36wHzJ6BCQE3V
+	 WKhFsD8q1qPXxQadmbnh5++kfdzT9r1Whvvx1alMCk4KhNAqCRwvzpvkSFcZuFAcfO
+	 EBn7ngxZRmAdtjXLZ4O5LHktlioCDSpsQSRFuRuo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730213AbgHJTPn (ORCPT
+        id S1729615AbgHJTPt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:15:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47896 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:15:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730164AbgHJTPG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:15:06 -0400
+        id S1730151AbgHJTPE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:15:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B7E122BEB;
-        Mon, 10 Aug 2020 19:15:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B14C622CBE;
+        Mon, 10 Aug 2020 19:15:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086906;
-        bh=HC8oHq7fJG1RBCuzDFQfpZGuk2RXpAtpBuCpvgHUtvc=;
+        s=default; t=1597086903;
+        bh=Y8fek5Prvh23bZv4yQX0W0Su6L95AytBC8qnzyWtnb0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oiChpJ/+05LgzxQPGLsm1FgYJMUH3/D7fIGhGHzicl+Rg5AFG4IPSFEnFAF86O3tI
-         1jSkKcT1gCk9i+n8w/38W/aEFz8HzrUBtuo6eKXt4WiIBXfRFsLKALwJNHKMEjAriJ
-         Qz4t/zUSkI40cLndB0nj2/QdVztqRGqpGGuE49tg=
+        b=PlN+50YvgwokdhKvigMSDHVImek1e2kJ3IVBuqK7CMsNbAfltfjxDU8E1OTlylKdW
+         tD+Nt+lWeyfxh3C2VZ3xWa4FnlsM90dlasiZFfO3amXQK+CLQ92nfvQmAgbVWDACAb
+         zAaDM844CBV/qjr5CYBSBb9f3ufpV2+E4UDH/lHA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Coly Li <colyli@suse.de>, Hannes Reinecke <hare@suse.de>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-bcache@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 15/16] bcache: fix super block seq numbers comparision in register_cache_set()
-Date:   Mon, 10 Aug 2020 15:14:42 -0400
-Message-Id: <20200810191443.3795581-15-sashal@kernel.org>
+Cc:     Jim Cromie <jim.cromie@gmail.com>, jbaron@akamai.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 13/16] dyndbg: fix a BUG_ON in ddebug_describe_flags
+Date:   Mon, 10 Aug 2020 15:14:40 -0400
+Message-Id: <20200810191443.3795581-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810191443.3795581-1-sashal@kernel.org>
 References: <20200810191443.3795581-1-sashal@kernel.org>
@@ -59,76 +59,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+From: Jim Cromie <jim.cromie@gmail.com>
 
-[ Upstream commit 117f636ea695270fe492d0c0c9dfadc7a662af47 ]
+[ Upstream commit f678ce8cc3cb2ad29df75d8824c74f36398ba871 ]
 
-In register_cache_set(), c is pointer to struct cache_set, and ca is
-pointer to struct cache, if ca->sb.seq > c->sb.seq, it means this
-registering cache has up to date version and other members, the in-
-memory version and other members should be updated to the newer value.
+ddebug_describe_flags() currently fills a caller provided string buffer,
+after testing its size (also passed) in a BUG_ON.  Fix this by
+replacing them with a known-big-enough string buffer wrapped in a
+struct, and passing that instead.
 
-But current implementation makes a cache set only has a single cache
-device, so the above assumption works well except for a special case.
-The execption is when a cache device new created and both ca->sb.seq and
-c->sb.seq are 0, because the super block is never flushed out yet. In
-the location for the following if() check,
-2156         if (ca->sb.seq > c->sb.seq) {
-2157                 c->sb.version           = ca->sb.version;
-2158                 memcpy(c->sb.set_uuid, ca->sb.set_uuid, 16);
-2159                 c->sb.flags             = ca->sb.flags;
-2160                 c->sb.seq               = ca->sb.seq;
-2161                 pr_debug("set version = %llu\n", c->sb.version);
-2162         }
-c->sb.version is not initialized yet and valued 0. When ca->sb.seq is 0,
-the if() check will fail (because both values are 0), and the cache set
-version, set_uuid, flags and seq won't be updated.
+Also simplify ddebug_describe_flags() flags parameter from a struct to
+a member in that struct, and hoist the member deref up to the caller.
+This makes the function reusable (soon) where flags are unpacked.
 
-The above problem is hiden for current code, because the bucket size is
-compatible among different super block version. And the next time when
-running cache set again, ca->sb.seq will be larger than 0 and cache set
-super block version will be updated properly.
-
-But if the large bucket feature is enabled,  sb->bucket_size is the low
-16bits of the bucket size. For a power of 2 value, when the actual
-bucket size exceeds 16bit width, sb->bucket_size will always be 0. Then
-read_super_common() will fail because the if() check to
-is_power_of_2(sb->bucket_size) is false. This is how the long time
-hidden bug is triggered.
-
-This patch modifies the if() check to the following way,
-2156         if (ca->sb.seq > c->sb.seq || c->sb.seq == 0) {
-Then cache set's version, set_uuid, flags and seq will always be updated
-corectly including for a new created cache device.
-
-Signed-off-by: Coly Li <colyli@suse.de>
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Acked-by: <jbaron@akamai.com>
+Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
+Link: https://lore.kernel.org/r/20200719231058.1586423-8-jim.cromie@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/super.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ lib/dynamic_debug.c | 23 +++++++++++------------
+ 1 file changed, 11 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-index df8f1e69077f6..23ffd4469dabb 100644
---- a/drivers/md/bcache/super.c
-+++ b/drivers/md/bcache/super.c
-@@ -1778,7 +1778,14 @@ static const char *register_cache_set(struct cache *ca)
- 	    sysfs_create_link(&c->kobj, &ca->kobj, buf))
- 		goto err;
+diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
+index c6368ae93fe6e..f50d63f67899a 100644
+--- a/lib/dynamic_debug.c
++++ b/lib/dynamic_debug.c
+@@ -85,22 +85,22 @@ static struct { unsigned flag:8; char opt_char; } opt_array[] = {
+ 	{ _DPRINTK_FLAGS_NONE, '_' },
+ };
  
--	if (ca->sb.seq > c->sb.seq) {
-+	/*
-+	 * A special case is both ca->sb.seq and c->sb.seq are 0,
-+	 * such condition happens on a new created cache device whose
-+	 * super block is never flushed yet. In this case c->sb.version
-+	 * and other members should be updated too, otherwise we will
-+	 * have a mistaken super block version in cache set.
-+	 */
-+	if (ca->sb.seq > c->sb.seq || c->sb.seq == 0) {
- 		c->sb.version		= ca->sb.version;
- 		memcpy(c->sb.set_uuid, ca->sb.set_uuid, 16);
- 		c->sb.flags             = ca->sb.flags;
++struct flagsbuf { char buf[ARRAY_SIZE(opt_array)+1]; };
++
+ /* format a string into buf[] which describes the _ddebug's flags */
+-static char *ddebug_describe_flags(struct _ddebug *dp, char *buf,
+-				    size_t maxlen)
++static char *ddebug_describe_flags(unsigned int flags, struct flagsbuf *fb)
+ {
+-	char *p = buf;
++	char *p = fb->buf;
+ 	int i;
+ 
+-	BUG_ON(maxlen < 6);
+ 	for (i = 0; i < ARRAY_SIZE(opt_array); ++i)
+-		if (dp->flags & opt_array[i].flag)
++		if (flags & opt_array[i].flag)
+ 			*p++ = opt_array[i].opt_char;
+-	if (p == buf)
++	if (p == fb->buf)
+ 		*p++ = '_';
+ 	*p = '\0';
+ 
+-	return buf;
++	return fb->buf;
+ }
+ 
+ #define vpr_info(fmt, ...)					\
+@@ -142,7 +142,7 @@ static int ddebug_change(const struct ddebug_query *query,
+ 	struct ddebug_table *dt;
+ 	unsigned int newflags;
+ 	unsigned int nfound = 0;
+-	char flagbuf[10];
++	struct flagsbuf fbuf;
+ 
+ 	/* search for matching ddebugs */
+ 	mutex_lock(&ddebug_lock);
+@@ -192,8 +192,7 @@ static int ddebug_change(const struct ddebug_query *query,
+ 			vpr_info("changed %s:%d [%s]%s =%s\n",
+ 				 trim_prefix(dp->filename), dp->lineno,
+ 				 dt->mod_name, dp->function,
+-				 ddebug_describe_flags(dp, flagbuf,
+-						       sizeof(flagbuf)));
++				 ddebug_describe_flags(dp->flags, &fbuf));
+ 		}
+ 	}
+ 	mutex_unlock(&ddebug_lock);
+@@ -777,7 +776,7 @@ static int ddebug_proc_show(struct seq_file *m, void *p)
+ {
+ 	struct ddebug_iter *iter = m->private;
+ 	struct _ddebug *dp = p;
+-	char flagsbuf[10];
++	struct flagsbuf flags;
+ 
+ 	vpr_info("called m=%p p=%p\n", m, p);
+ 
+@@ -790,7 +789,7 @@ static int ddebug_proc_show(struct seq_file *m, void *p)
+ 	seq_printf(m, "%s:%u [%s]%s =%s \"",
+ 		   trim_prefix(dp->filename), dp->lineno,
+ 		   iter->table->mod_name, dp->function,
+-		   ddebug_describe_flags(dp, flagsbuf, sizeof(flagsbuf)));
++		   ddebug_describe_flags(dp->flags, &flags));
+ 	seq_escape(m, dp->format, "\t\r\n\"");
+ 	seq_puts(m, "\"\n");
+ 
 -- 
 2.25.1
 
