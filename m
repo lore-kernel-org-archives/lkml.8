@@ -2,80 +2,99 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73520C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 03:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8FA6C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 03:22:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CF8120658
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 03:20:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76B6D2065D
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 03:22:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZDGM8Qth"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726474AbgHJDU1 (ORCPT
+        id S1726479AbgHJDWw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 23:20:27 -0400
-Received: from smtprelay0113.hostedemail.com ([216.40.44.113]:59298 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726338AbgHJDU0 (ORCPT
+        Sun, 9 Aug 2020 23:22:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38332 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726335AbgHJDWv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 23:20:26 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 58A8D182244EC;
-        Mon, 10 Aug 2020 03:20:25 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: dogs95_06140a126fd6
-X-Filterd-Recvd-Size: 2141
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf03.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 10 Aug 2020 03:20:24 +0000 (UTC)
-Message-ID: <4265227298e8d0a943ca4468a4f32222317df197.camel@perches.com>
-Subject: Re: [PATCH] ionic_lif: Use devm_kcalloc() in ionic_qcq_alloc()
-From:   Joe Perches <joe@perches.com>
-To:     Xu Wang <vulab@iscas.ac.cn>, snelson@pensando.io,
-        drivers@pensando.io, davem@davemloft.net, kuba@kernel.org,
-        netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-Date:   Sun, 09 Aug 2020 20:20:22 -0700
-In-Reply-To: <20200810023807.9260-1-vulab@iscas.ac.cn>
-References: <20200810023807.9260-1-vulab@iscas.ac.cn>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.3-0ubuntu1 
+        Sun, 9 Aug 2020 23:22:51 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82433C061756;
+        Sun,  9 Aug 2020 20:22:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=uOQ8yZ/DAL78l4x4TeTTcSfJ+LbD3rh0jqrIXRRd/r8=; b=ZDGM8QthpVFD4qWSRe65+sqilB
+        Gzr7WqlbWraI/lCOwKi8OisjDJhUSnMGEF23kEjaH0BZEuas6jGi+3vgwaWgTu7YmG3OKm8wiNwCW
+        7+lHUlabDqO9DHkbRsvrMgBKgs89KADLCTi1/j6suLVxHxb4Hbxm3BvEk/Qz9qbTtP3U848+d8Qqa
+        NZn62WgONP8+195RJrCj9GS7zaRfksgFZgLchAErM+H0pMM7WSauq3d8haYcvchYSfDB3/xjhlnLK
+        W+cLiCyHw1yCB6CXnLv4H9gbqmZdox2rVP0CEAuRsljKXP9t55MYUSWDETN12Cv9mOiaOWPbuw6Rz
+        QAdaoCkQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k4yOd-00071L-Ua; Mon, 10 Aug 2020 03:22:48 +0000
+Date:   Mon, 10 Aug 2020 04:22:47 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: Very slow qemu device access
+Message-ID: <20200810032247.GJ17456@casper.infradead.org>
+References: <20200807174416.GF17456@casper.infradead.org>
+ <20200809024005.GC2134904@T590>
+ <20200809142522.GI17456@casper.infradead.org>
+ <20200810031049.GA2202641@T590>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200810031049.GA2202641@T590>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-08-10 at 02:38 +0000, Xu Wang wrote:
-> A multiplication for the size determination of a memory allocation
-> indicated that an array data structure should be processed.
-> Thus use the corresponding function "devm_kcalloc".
-[]
-> diff --git a/drivers/net/ethernet/pensando/ionic/ionic_lif.c b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
-[]
-> @@ -412,7 +412,7 @@ static int ionic_qcq_alloc(struct ionic_lif *lif, unsigned int type,
->  
->  	new->flags = flags;
->  
-> -	new->q.info = devm_kzalloc(dev, sizeof(*new->q.info) * num_descs,
-> +	new->q.info = devm_kcalloc(dev, num_descs, sizeof(*new->q.info),
->  				   GFP_KERNEL);
->  	if (!new->q.info) {
->  		netdev_err(lif->netdev, "Cannot allocate queue info\n");
+On Mon, Aug 10, 2020 at 11:10:49AM +0800, Ming Lei wrote:
+> On Sun, Aug 09, 2020 at 03:25:22PM +0100, Matthew Wilcox wrote:
+> > On Sun, Aug 09, 2020 at 10:40:05AM +0800, Ming Lei wrote:
+> > > Hello Matthew,
+> > > 
+> > > On Fri, Aug 07, 2020 at 06:44:16PM +0100, Matthew Wilcox wrote:
+> > > > 
+> > > > Everything starts going very slowly after this commit:
+> > > > 
+> > > > commit 37f4a24c2469a10a4c16c641671bd766e276cf9f (refs/bisect/bad)
+> > > > Author: Ming Lei <ming.lei@redhat.com>
+> > > > Date:   Tue Jun 30 22:03:57 2020 +0800
+> > > > 
+> > > >     blk-mq: centralise related handling into blk_mq_get_driver_tag
+> > > 
+> > > Yeah, the above is one known bad commit, which is reverted in
+> > > 4e2f62e566b5 ("Revert "blk-mq: put driver tag when this request is completed")
+> > > 
+> > > Finally the fixed patch of 'blk-mq: centralise related handling into blk_mq_get_driver_tag'
+> > > is merged as 568f27006577 ("blk-mq: centralise related handling into blk_mq_get_driver_tag").
+> > > 
+> > > So please test either 4e2f62e566b5 or 568f27006577 and see if there is
+> > > such issue.
+> > 
+> > 4e2f62e566b5 is good
+> > 568f27006577 is bad
+> 
+> Please try the following patch, and we shouldn't take flush request
+> account into driver tag allocation, because it always shares the
+> data request's tag:
+> 
+> >From d508415eee08940ff9c78efe0eddddf594afdb94 Mon Sep 17 00:00:00 2001
+> From: Ming Lei <ming.lei@redhat.com>
+> Date: Mon, 10 Aug 2020 11:06:15 +0800
+> Subject: [PATCH] block: don't double account of flush request's driver tag
+> 
+> In case of none scheduler, we share data request's driver tag for
+> flush request, so have to mark the flush request as INFLIGHT for
+> avoiding double account of this driver tag.
 
-You could also remove these unnecessary allocation error messages.
-There is an existing dump_stack() on allocation failure.
-
-> @@ -462,7 +462,7 @@ static int ionic_qcq_alloc(struct ionic_lif *lif, unsigned int type,
->  		new->intr.index = IONIC_INTR_INDEX_NOT_ASSIGNED;
->  	}
->  
-> -	new->cq.info = devm_kzalloc(dev, sizeof(*new->cq.info) * num_descs,
-> +	new->cq.info = devm_kcalloc(dev, num_descs, sizeof(*new->cq.info),
->  				    GFP_KERNEL);
->  	if (!new->cq.info) {
->  		netdev_err(lif->netdev, "Cannot allocate completion queue info\n");
-
+Yes, this fixes the problem.  Thanks!
