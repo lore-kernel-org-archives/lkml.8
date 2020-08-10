@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35AD3C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:24:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0DCBC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:24:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F91B22BF3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:24:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3F442080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:24:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597087444;
-	bh=9i6H2Tin48+twAxQyorX2vTSljyFWWgJukO4sM8Zwzs=;
+	s=default; t=1597087458;
+	bh=fawSJcfUm9T8ngtROovH+G7OVNYMfbyCkgJlVlGEZDI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K4LtHcfKf8StOp5XLLCyoy7q58gpUR2umYCYe5iKKcYiPJTrMpuMoIPnWynaaEte+
-	 VHIG2W+TmQT2x+OOMuEVWP/3qwmZOlGewsa0DriCdHmKBH+/wRFe+zycV1SDHodo77
-	 h5frVS/p4bzcTJ1s7dp/Co4r6t15rsP1gb9gi3+8=
+	b=FDld7IIfceQ9ZisQerj0o2fwIgdY2V4SRulkbjtTcufgyblS1URwIf6leRUPE5wKc
+	 2LfRtGN2OpyORi3QiJ1EwZMZGkZWDf30Q5bUw7vSqllgdcpYXyIjFn7LUz+01vxDzl
+	 fDoUdwRCQoQwukwXZ3+TBSw8Puc1t66jI/29l9MY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730270AbgHJTYB (ORCPT
+        id S1729806AbgHJTYR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:24:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42756 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:24:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729593AbgHJTMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:12:41 -0400
+        id S1729568AbgHJTMf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:12:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DDE222B49;
-        Mon, 10 Aug 2020 19:12:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9A6E207FF;
+        Mon, 10 Aug 2020 19:12:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086759;
-        bh=9i6H2Tin48+twAxQyorX2vTSljyFWWgJukO4sM8Zwzs=;
+        s=default; t=1597086754;
+        bh=fawSJcfUm9T8ngtROovH+G7OVNYMfbyCkgJlVlGEZDI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B39wYx6cnHPZDLUyDX8+w9A2KQUPUQsAypazYzj7Poz72a2U6eH8qyAeCuCJtS50g
-         ASSgnDxNlynsQ9rJPIoffzBDbHm+9dZv40ngtFN9LpkQntXWsQeDZ7YpCWouI2mc+H
-         /CfjEjVS1qTe6C0bqw93yr/yX6dSCM4h5DSbBD5s=
+        b=eYOTBr64Tyc/KdHIKSd0MeAyfl4KiGOUVD29ryxEUyzBpLfogjJIJzwzpFyX65qCr
+         +V4NgiYyWIoLbgGV8KvSnLpZwNCAZMewRtJGJ62zFcvU5/m7cU1ak4OWIJCVwgM5gR
+         1017n3gidwDJOtP6ncQBMFAJ/D7Au3TgqGO0+Mio=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wright Feng <wright.feng@cypress.com>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Chi-hsien Lin <chi-hsien.lin@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 32/45] brcmfmac: set state of hanger slot to FREE when flushing PSQ
-Date:   Mon, 10 Aug 2020 15:11:40 -0400
-Message-Id: <20200810191153.3794446-32-sashal@kernel.org>
+Cc:     Wenbo Zhang <ethercflow@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 29/45] bpf: Fix fds_example SIGSEGV error
+Date:   Mon, 10 Aug 2020 15:11:37 -0400
+Message-Id: <20200810191153.3794446-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810191153.3794446-1-sashal@kernel.org>
 References: <20200810191153.3794446-1-sashal@kernel.org>
@@ -64,78 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wright Feng <wright.feng@cypress.com>
+From: Wenbo Zhang <ethercflow@gmail.com>
 
-[ Upstream commit fcdd7a875def793c38d7369633af3eba6c7cf089 ]
+[ Upstream commit eef8a42d6ce087d1c81c960ae0d14f955b742feb ]
 
-When USB or SDIO device got abnormal bus disconnection, host driver
-tried to clean up the skbs in PSQ and TXQ (The skb's pointer in hanger
-slot linked to PSQ and TSQ), so we should set the state of skb hanger slot
-to BRCMF_FWS_HANGER_ITEM_STATE_FREE before freeing skb.
-In brcmf_fws_bus_txq_cleanup it already sets
-BRCMF_FWS_HANGER_ITEM_STATE_FREE before freeing skb, therefore we add the
-same thing in brcmf_fws_psq_flush to avoid following warning message.
+The `BPF_LOG_BUF_SIZE`'s value is `UINT32_MAX >> 8`, so define an array
+with it on stack caused an overflow.
 
-   [ 1580.012880] ------------   [ cut here ]------------
-   [ 1580.017550] WARNING: CPU: 3 PID: 3065 at
-drivers/net/wireless/broadcom/brcm80211/brcmutil/utils.c:49
-brcmu_pkt_buf_free_skb+0x21/0x30 [brcmutil]
-   [ 1580.184017] Call Trace:
-   [ 1580.186514]  brcmf_fws_cleanup+0x14e/0x190 [brcmfmac]
-   [ 1580.191594]  brcmf_fws_del_interface+0x70/0x90 [brcmfmac]
-   [ 1580.197029]  brcmf_proto_bcdc_del_if+0xe/0x10 [brcmfmac]
-   [ 1580.202418]  brcmf_remove_interface+0x69/0x190 [brcmfmac]
-   [ 1580.207888]  brcmf_detach+0x90/0xe0 [brcmfmac]
-   [ 1580.212385]  brcmf_usb_disconnect+0x76/0xb0 [brcmfmac]
-   [ 1580.217557]  usb_unbind_interface+0x72/0x260
-   [ 1580.221857]  device_release_driver_internal+0x141/0x200
-   [ 1580.227152]  device_release_driver+0x12/0x20
-   [ 1580.231460]  bus_remove_device+0xfd/0x170
-   [ 1580.235504]  device_del+0x1d9/0x300
-   [ 1580.239041]  usb_disable_device+0x9e/0x270
-   [ 1580.243160]  usb_disconnect+0x94/0x270
-   [ 1580.246980]  hub_event+0x76d/0x13b0
-   [ 1580.250499]  process_one_work+0x144/0x360
-   [ 1580.254564]  worker_thread+0x4d/0x3c0
-   [ 1580.258247]  kthread+0x109/0x140
-   [ 1580.261515]  ? rescuer_thread+0x340/0x340
-   [ 1580.265543]  ? kthread_park+0x60/0x60
-   [ 1580.269237]  ? SyS_exit_group+0x14/0x20
-   [ 1580.273118]  ret_from_fork+0x25/0x30
-   [ 1580.300446] ------------   [ cut here ]------------
-
-Acked-by: Arend van Spriel <arend.vanspriel@broadcom.com>
-Signed-off-by: Wright Feng <wright.feng@cypress.com>
-Signed-off-by: Chi-hsien Lin <chi-hsien.lin@cypress.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200624091608.25154-2-wright.feng@cypress.com
+Signed-off-by: Wenbo Zhang <ethercflow@gmail.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+Link: https://lore.kernel.org/bpf/20200710092035.28919-1-ethercflow@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ samples/bpf/fds_example.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c
-index 2bd892df83cc5..eadc64454839d 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c
-@@ -643,6 +643,7 @@ static inline int brcmf_fws_hanger_poppkt(struct brcmf_fws_hanger *h,
- static void brcmf_fws_psq_flush(struct brcmf_fws_info *fws, struct pktq *q,
- 				int ifidx)
+diff --git a/samples/bpf/fds_example.c b/samples/bpf/fds_example.c
+index 2d4b717726b64..34b3fca788e8d 100644
+--- a/samples/bpf/fds_example.c
++++ b/samples/bpf/fds_example.c
+@@ -30,6 +30,8 @@
+ #define BPF_M_MAP	1
+ #define BPF_M_PROG	2
+ 
++char bpf_log_buf[BPF_LOG_BUF_SIZE];
++
+ static void usage(void)
  {
-+	struct brcmf_fws_hanger_item *hi;
- 	bool (*matchfn)(struct sk_buff *, void *) = NULL;
- 	struct sk_buff *skb;
- 	int prec;
-@@ -654,6 +655,9 @@ static void brcmf_fws_psq_flush(struct brcmf_fws_info *fws, struct pktq *q,
- 		skb = brcmu_pktq_pdeq_match(q, prec, matchfn, &ifidx);
- 		while (skb) {
- 			hslot = brcmf_skb_htod_tag_get_field(skb, HSLOT);
-+			hi = &fws->hanger.items[hslot];
-+			WARN_ON(skb != hi->pkt);
-+			hi->state = BRCMF_FWS_HANGER_ITEM_STATE_FREE;
- 			brcmf_fws_hanger_poppkt(&fws->hanger, hslot, &skb,
- 						true);
- 			brcmu_pkt_buf_free_skb(skb);
+ 	printf("Usage: fds_example [...]\n");
+@@ -57,7 +59,6 @@ static int bpf_prog_create(const char *object)
+ 		BPF_EXIT_INSN(),
+ 	};
+ 	size_t insns_cnt = sizeof(insns) / sizeof(struct bpf_insn);
+-	char bpf_log_buf[BPF_LOG_BUF_SIZE];
+ 	struct bpf_object *obj;
+ 	int prog_fd;
+ 
 -- 
 2.25.1
 
