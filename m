@@ -2,49 +2,50 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0183AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 837B9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:01:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDB13206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:01:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56C37206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 22:01:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="v3l/8fJb"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="NrHMTLMi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726929AbgHJWBt (ORCPT
+        id S1726965AbgHJWBx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 18:01:49 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:33944 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726806AbgHJWBt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 18:01:49 -0400
+        Mon, 10 Aug 2020 18:01:53 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:17437 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726657AbgHJWBw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 18:01:52 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597096907; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1597096911; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=uiN1yiJaHUxPqkVoYGHlZ165biAT4uriLuXJuR6IkLM=; b=v3l/8fJbe/jRsL0mED79apz+abZQhYDIJMod1ioCekzFN2VYIYkstXBg0ir+/R7LU0MDoWNv
- o3C9FLUgn1u2hJ7gBtVVET4NsPG1MiGSFPZHkp9vuzJPl/WGP2ogJNCSqZFJd1blEeVbDRtT
- zra1SesCOlGXpHHjOl3yr9Ih49M=
-X-Mailgun-Sending-Ip: 69.72.43.7
+ bh=xMY0O1xeL6kDCowrwUvGj3wJ0vz9brzkeVT9VotSpM0=; b=NrHMTLMit6PPZEwDbI5wNDLPmHNofEoSUc2YvduZge2lMrDrX5sy8nxLYh1N60DbJzZGSDMb
+ gesVbiTg/Fj7YNzVrGkXwjKN2dH0eRZSAul9mAZ480RoG0NHrlNoFOZH1m2UQLAJNo1+N3oo
+ S6uRxDib51q7gbry8B2DZpWsgf4=
+X-Mailgun-Sending-Ip: 104.130.122.29
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
- 5f31c3b1d48d4625ca1631cb (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 10 Aug 2020 22:01:21
+ smtp-out-n06.prod.us-east-1.postgun.com with SMTP id
+ 5f31c3ac91f8def8b29f04ef (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 10 Aug 2020 22:01:16
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 71FD1C433C6; Mon, 10 Aug 2020 22:01:20 +0000 (UTC)
+        id 3B3D4C43391; Mon, 10 Aug 2020 22:01:15 +0000 (UTC)
 Received: from malabar-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: bbhatt)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 38873C433CB;
-        Mon, 10 Aug 2020 22:01:18 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 38873C433CB
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8A008C43395;
+        Mon, 10 Aug 2020 22:01:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8A008C43395
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bbhatt@codeaurora.org
 From:   Bhaumik Bhatt <bbhatt@codeaurora.org>
@@ -52,9 +53,9 @@ To:     manivannan.sadhasivam@linaro.org
 Cc:     linux-arm-msm@vger.kernel.org, hemantk@codeaurora.org,
         jhugo@codeaurora.org, linux-kernel@vger.kernel.org,
         Bhaumik Bhatt <bbhatt@codeaurora.org>
-Subject: [PATCH v7 11/11] bus: mhi: core: Introduce sysfs entries for MHI
-Date:   Mon, 10 Aug 2020 15:01:05 -0700
-Message-Id: <1597096865-19636-12-git-send-email-bbhatt@codeaurora.org>
+Subject: [PATCH v7 03/11] bus: mhi: core: Use helper API to trigger a non-blocking host resume
+Date:   Mon, 10 Aug 2020 15:00:57 -0700
+Message-Id: <1597096865-19636-4-git-send-email-bbhatt@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1597096865-19636-1-git-send-email-bbhatt@codeaurora.org>
 References: <1597096865-19636-1-git-send-email-bbhatt@codeaurora.org>
@@ -63,138 +64,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce sysfs entries to enable userspace clients the ability to read
-the serial number and the OEM PK Hash values obtained from BHI. OEMs
-need to read these device-specific hardware information values through
-userspace for factory testing purposes and cannot be exposed via degbufs
-as it may remain disabled for performance reasons. Also, update the
-documentation for ABI to include these entries.
+Autonomous low power mode support requires the MHI host to resume from
+multiple places and post a wakeup source to exit system suspend. This
+needs to be done in a non-blocking manner. Introduce a helper API to
+trigger the host resume for data transfers and other non-blocking use
+cases while supporting implementation of autonomous low power modes.
 
 Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- Documentation/ABI/stable/sysfs-bus-mhi | 21 ++++++++++++++
- MAINTAINERS                            |  1 +
- drivers/bus/mhi/core/init.c            | 53 ++++++++++++++++++++++++++++++++++
- 3 files changed, 75 insertions(+)
- create mode 100644 Documentation/ABI/stable/sysfs-bus-mhi
+ drivers/bus/mhi/core/internal.h |  7 +++++++
+ drivers/bus/mhi/core/main.c     | 21 +++++++--------------
+ drivers/bus/mhi/core/pm.c       | 13 ++++---------
+ 3 files changed, 18 insertions(+), 23 deletions(-)
 
-diff --git a/Documentation/ABI/stable/sysfs-bus-mhi b/Documentation/ABI/stable/sysfs-bus-mhi
-new file mode 100644
-index 0000000..59da56d
---- /dev/null
-+++ b/Documentation/ABI/stable/sysfs-bus-mhi
-@@ -0,0 +1,21 @@
-+What:		/sys/bus/mhi/devices/.../serialnumber
-+Date:		Aug 2020
-+KernelVersion:	5.10
-+Contact:	Bhaumik Bhatt <bbhatt@codeaurora.org>
-+Description:	The file holds the serial number of the client device obtained
-+		using a BHI (Boot Host Interface) register read after at least
-+		one attempt to power up the device has been done. If read
-+		without having the device power on at least once, the file will
-+		read all 0's.
-+Users:		Any userspace application or clients interested in device info.
-+
-+What:		/sys/bus/mhi/devices/.../oem_pk_hash
-+Date:		Aug 2020
-+KernelVersion:	5.10
-+Contact:	Bhaumik Bhatt <bbhatt@codeaurora.org>
-+Description:	The file holds the OEM PK Hash value of the endpoint device
-+		obtained using a BHI (Boot Host Interface) register read after
-+		at least one attempt to power up the device has been done. If
-+		read without having the device power on at least once, the file
-+		will read all 0's.
-+Users:		Any userspace application or clients interested in device info.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e64e5db..5e49316 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11018,6 +11018,7 @@ M:	Hemant Kumar <hemantk@codeaurora.org>
- L:	linux-arm-msm@vger.kernel.org
- S:	Maintained
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/mani/mhi.git
-+F:	Documentation/ABI/stable/sysfs-bus-mhi
- F:	Documentation/mhi/
- F:	drivers/bus/mhi/
- F:	include/linux/mhi.h
-diff --git a/drivers/bus/mhi/core/init.c b/drivers/bus/mhi/core/init.c
-index 972dbf0..c086ef2 100644
---- a/drivers/bus/mhi/core/init.c
-+++ b/drivers/bus/mhi/core/init.c
-@@ -76,6 +76,56 @@ const char *to_mhi_pm_state_str(enum mhi_pm_state state)
- 	return mhi_pm_state_str[index];
- }
+diff --git a/drivers/bus/mhi/core/internal.h b/drivers/bus/mhi/core/internal.h
+index bcfa7b6..1bbd6e9 100644
+--- a/drivers/bus/mhi/core/internal.h
++++ b/drivers/bus/mhi/core/internal.h
+@@ -599,6 +599,13 @@ int __mhi_device_get_sync(struct mhi_controller *mhi_cntrl);
+ int mhi_send_cmd(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan,
+ 		 enum mhi_cmd_type cmd);
  
-+static ssize_t serial_number_show(struct device *dev,
-+				  struct device_attribute *attr,
-+				  char *buf)
++static inline void mhi_trigger_resume(struct mhi_controller *mhi_cntrl)
 +{
-+	struct mhi_device *mhi_dev = to_mhi_device(dev);
-+	struct mhi_controller *mhi_cntrl = mhi_dev->mhi_cntrl;
-+
-+	return snprintf(buf, PAGE_SIZE, "Serial Number: %u\n",
-+			mhi_cntrl->serial_number);
-+}
-+static DEVICE_ATTR_RO(serial_number);
-+
-+static ssize_t oem_pk_hash_show(struct device *dev,
-+				struct device_attribute *attr,
-+				char *buf)
-+{
-+	struct mhi_device *mhi_dev = to_mhi_device(dev);
-+	struct mhi_controller *mhi_cntrl = mhi_dev->mhi_cntrl;
-+	int i, cnt = 0;
-+
-+	for (i = 0; i < ARRAY_SIZE(mhi_cntrl->oem_pk_hash); i++)
-+		cnt += snprintf(buf + cnt, PAGE_SIZE - cnt,
-+				"OEMPKHASH[%d]: 0x%x\n", i,
-+				mhi_cntrl->oem_pk_hash[i]);
-+
-+	return cnt;
-+}
-+static DEVICE_ATTR_RO(oem_pk_hash);
-+
-+static struct attribute *mhi_sysfs_attrs[] = {
-+	&dev_attr_serial_number.attr,
-+	&dev_attr_oem_pk_hash.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group mhi_sysfs_group = {
-+	.attrs = mhi_sysfs_attrs,
-+};
-+
-+static int mhi_create_sysfs(struct mhi_controller *mhi_cntrl)
-+{
-+	return sysfs_create_group(&mhi_cntrl->mhi_dev->dev.kobj,
-+				  &mhi_sysfs_group);
++	pm_wakeup_event(&mhi_cntrl->mhi_dev->dev, 0);
++	mhi_cntrl->runtime_get(mhi_cntrl);
++	mhi_cntrl->runtime_put(mhi_cntrl);
 +}
 +
-+static void mhi_destroy_sysfs(struct mhi_controller *mhi_cntrl)
-+{
-+	sysfs_remove_group(&mhi_cntrl->mhi_dev->dev.kobj, &mhi_sysfs_group);
-+}
-+
- /* MHI protocol requires the transfer ring to be aligned with ring length */
- static int mhi_alloc_aligned_ring(struct mhi_controller *mhi_cntrl,
- 				  struct mhi_ring *ring,
-@@ -917,6 +967,8 @@ int mhi_register_controller(struct mhi_controller *mhi_cntrl,
- 	mhi_cntrl->mhi_dev = mhi_dev;
+ /* Register access methods */
+ void mhi_db_brstmode(struct mhi_controller *mhi_cntrl, struct db_cfg *db_cfg,
+ 		     void __iomem *db_addr, dma_addr_t db_val);
+diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
+index 1f622ce..79be18e 100644
+--- a/drivers/bus/mhi/core/main.c
++++ b/drivers/bus/mhi/core/main.c
+@@ -909,8 +909,7 @@ void mhi_ctrl_ev_task(unsigned long data)
+ 		 * process it since we are probably in a suspended state,
+ 		 * so trigger a resume.
+ 		 */
+-		mhi_cntrl->runtime_get(mhi_cntrl);
+-		mhi_cntrl->runtime_put(mhi_cntrl);
++		mhi_trigger_resume(mhi_cntrl);
  
- 	mhi_create_debugfs(mhi_cntrl);
-+	if (mhi_create_sysfs(mhi_cntrl))
-+		dev_err(mhi_cntrl->cntrl_dev, "Failed to create sysfs entries\n");
+ 		return;
+ 	}
+@@ -971,10 +970,8 @@ int mhi_queue_skb(struct mhi_device *mhi_dev, enum dma_data_direction dir,
+ 	}
  
- 	return 0;
+ 	/* we're in M3 or transitioning to M3 */
+-	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state)) {
+-		mhi_cntrl->runtime_get(mhi_cntrl);
+-		mhi_cntrl->runtime_put(mhi_cntrl);
+-	}
++	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state))
++		mhi_trigger_resume(mhi_cntrl);
  
-@@ -940,6 +992,7 @@ void mhi_unregister_controller(struct mhi_controller *mhi_cntrl)
- 	struct mhi_chan *mhi_chan = mhi_cntrl->mhi_chan;
- 	unsigned int i;
+ 	/* Toggle wake to exit out of M2 */
+ 	mhi_cntrl->wake_toggle(mhi_cntrl);
+@@ -1032,10 +1029,8 @@ int mhi_queue_dma(struct mhi_device *mhi_dev, enum dma_data_direction dir,
+ 	}
  
-+	mhi_destroy_sysfs(mhi_cntrl);
- 	mhi_destroy_debugfs(mhi_cntrl);
+ 	/* we're in M3 or transitioning to M3 */
+-	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state)) {
+-		mhi_cntrl->runtime_get(mhi_cntrl);
+-		mhi_cntrl->runtime_put(mhi_cntrl);
+-	}
++	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state))
++		mhi_trigger_resume(mhi_cntrl);
  
- 	kfree(mhi_cntrl->mhi_cmd);
+ 	/* Toggle wake to exit out of M2 */
+ 	mhi_cntrl->wake_toggle(mhi_cntrl);
+@@ -1147,10 +1142,8 @@ int mhi_queue_buf(struct mhi_device *mhi_dev, enum dma_data_direction dir,
+ 	read_lock_irqsave(&mhi_cntrl->pm_lock, flags);
+ 
+ 	/* we're in M3 or transitioning to M3 */
+-	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state)) {
+-		mhi_cntrl->runtime_get(mhi_cntrl);
+-		mhi_cntrl->runtime_put(mhi_cntrl);
+-	}
++	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state))
++		mhi_trigger_resume(mhi_cntrl);
+ 
+ 	/* Toggle wake to exit out of M2 */
+ 	mhi_cntrl->wake_toggle(mhi_cntrl);
+diff --git a/drivers/bus/mhi/core/pm.c b/drivers/bus/mhi/core/pm.c
+index 661d704..b227d41 100644
+--- a/drivers/bus/mhi/core/pm.c
++++ b/drivers/bus/mhi/core/pm.c
+@@ -824,11 +824,8 @@ int __mhi_device_get_sync(struct mhi_controller *mhi_cntrl)
+ 	/* Wake up the device */
+ 	read_lock_bh(&mhi_cntrl->pm_lock);
+ 	mhi_cntrl->wake_get(mhi_cntrl, true);
+-	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state)) {
+-		pm_wakeup_event(&mhi_cntrl->mhi_dev->dev, 0);
+-		mhi_cntrl->runtime_get(mhi_cntrl);
+-		mhi_cntrl->runtime_put(mhi_cntrl);
+-	}
++	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state))
++		mhi_trigger_resume(mhi_cntrl);
+ 	read_unlock_bh(&mhi_cntrl->pm_lock);
+ 
+ 	ret = wait_event_timeout(mhi_cntrl->state_event,
+@@ -1139,10 +1136,8 @@ void mhi_device_put(struct mhi_device *mhi_dev)
+ 
+ 	mhi_dev->dev_wake--;
+ 	read_lock_bh(&mhi_cntrl->pm_lock);
+-	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state)) {
+-		mhi_cntrl->runtime_get(mhi_cntrl);
+-		mhi_cntrl->runtime_put(mhi_cntrl);
+-	}
++	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state))
++		mhi_trigger_resume(mhi_cntrl);
+ 
+ 	mhi_cntrl->wake_put(mhi_cntrl, false);
+ 	read_unlock_bh(&mhi_cntrl->pm_lock);
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
