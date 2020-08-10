@@ -2,116 +2,143 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0253C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:08:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC162C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:08:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 759D1206B5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:08:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92E25206B5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 07:08:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="S3oxY+Ib"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zcKtsfc8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726108AbgHJHI1 (ORCPT
+        id S1726219AbgHJHIs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 03:08:27 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:17768 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725857AbgHJHI0 (ORCPT
+        Mon, 10 Aug 2020 03:08:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44426 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725846AbgHJHIr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 03:08:26 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597043306; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=DWno83mBRJaK7NOCf0kx0lg1MeEy1FowAQbEwyuoYr4=; b=S3oxY+IbWbgQcKsdvQ1jlx0CREJU+zuPU/2QroYuhlCumSrnO/iloGXcXfU1pont+gjy7wLs
- dJE1w85WbvYDKmW1Y/IX0V9Plp60ooyXEWqmFecESZmtEETYeOLhtf2bkhAIbGf3CrbTVsjR
- bOQB3SPEgfdACzd2uDHYaZvWgUc=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n06.prod.us-west-2.postgun.com with SMTP id
- 5f30f20d1e4d3989d4ed2b26 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 10 Aug 2020 07:06:53
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 64E17C433CB; Mon, 10 Aug 2020 07:06:53 +0000 (UTC)
-Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7C2E4C433C6;
-        Mon, 10 Aug 2020 07:06:50 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7C2E4C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-To:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org,
-        viresh.kumar@linaro.org
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH] opp: Fix dev_pm_opp_set_rate() to not return early
-Date:   Mon, 10 Aug 2020 12:36:19 +0530
-Message-Id: <1597043179-17903-1-git-send-email-rnayak@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Mon, 10 Aug 2020 03:08:47 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9410C061756
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 00:08:46 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id c80so6709557wme.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 00:08:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=47Gs9F1F8d09vZAc729o4HZeuw/VZH9JG+bx1Ajssig=;
+        b=zcKtsfc8/Kleb9yRFPedZRukZN5BBfo337spqmdbUq9GEygQLbhq2BJ4pzaTY0/jUo
+         91w5WkpjQW5DWV6jefPAnIRJvmGRiwiJcMfFNoOeDvuYJEa4PNoh36UhmSwof/MQAsGR
+         m2xJsQK9B/9RZimDRm5uYXPUQq58wChaHdgj7XJYw6L6cMig5+QJ0+Wgg7VLEwzrU3DU
+         fuRLexZM8n86RWBdX+vcqa9boVH8K2D3ntwLzct/OLmqy7m1Yy5+7NR2s0Qj1AER3+BE
+         HFEDUEbuI0RitlAe4uPcyWkF19VwDo7tD381Uy/kh964R5Znw1VCtPGix9HAT4eUIFKZ
+         kz8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=47Gs9F1F8d09vZAc729o4HZeuw/VZH9JG+bx1Ajssig=;
+        b=rpTL7TcjPtHntqmQUh6EhoWGdIaiHFOOkA31/dZ90Bm7tNMfygvKgp7QJsPGEeFfzm
+         XOUINMCUPW5VK8NR4qyFGeCLiaTq4grL0aS0FR8/VMKyJPYqiJYF30Yq8DEQdj7+SSOZ
+         rsGt81c6fKZg61u73mCPy1mezdaQERVddgSkRngv/wM6N27pczDR7ibkXkwM3/L2CmIW
+         zEIZsf+/YMzqnhVxw17y+nhbsvPfhd4tvSCwunfFy7K7EOl2OVMQRSg8e94zVZRBEbBt
+         eqIQ0UUJIV7tsxYe1cBEgxJjMWtjO9h+jCuUyQRgOwRzkym32Whg38eud1n3KD4Djj3q
+         L4gg==
+X-Gm-Message-State: AOAM531v0jJgGe7jloAR2xnpriX+UbLU3SiBZ3v9XgBnWBINpzwSl4xk
+        a7lb5OBurBCRF3nYCsNr1HNybA==
+X-Google-Smtp-Source: ABdhPJzaszzYjiz41rjzxkM5loaOj5BIe+vF8wU0E97WRWint16E9KsV5ipy0b3/vzW4w2iwnkZh7Q==
+X-Received: by 2002:a7b:c4d5:: with SMTP id g21mr25757680wmk.185.1597043325510;
+        Mon, 10 Aug 2020 00:08:45 -0700 (PDT)
+Received: from dell ([2.27.167.73])
+        by smtp.gmail.com with ESMTPSA id w10sm20031948wmk.0.2020.08.10.00.08.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Aug 2020 00:08:44 -0700 (PDT)
+Date:   Mon, 10 Aug 2020 08:08:43 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Gene Chen <gene.chen.richtek@gmail.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>, rafael@kernel.org,
+        gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Gene Chen <gene_chen@richtek.com>, benjamin.chao@mediatek.com,
+        shufan_lee@richtek.com, cy_huang@richtek.com
+Subject: Re: [PATCH 9/9] mfd: mt6360: Merge different sub-devices I2C
+ read/write
+Message-ID: <20200810070843.GA4411@dell>
+References: <1596558782-3415-1-git-send-email-gene.chen.richtek@gmail.com>
+ <1596558782-3415-11-git-send-email-gene.chen.richtek@gmail.com>
+ <20200805161021.GK5556@sirena.org.uk>
+ <CAE+NS360iKLoGxiiz8NmQqCp2Uge98Eehe4g2sn_N0e-E3DgyQ@mail.gmail.com>
+ <20200806121332.GB6442@sirena.org.uk>
+ <CAE+NS37tr65GnTue89wJkPvJzddahKj__KPgzmjzwkOfWQnc8g@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAE+NS37tr65GnTue89wJkPvJzddahKj__KPgzmjzwkOfWQnc8g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dev_pm_opp_set_rate() can now be called with freq = 0 inorder
-to either drop performance or bandwidth votes or to disable
-regulators on platforms which support them.
-In such cases, a subsequent call to dev_pm_opp_set_rate() with
-the same frequency ends up returning early because 'old_freq == freq'
-Instead make it fall through and put back the dropped performance
-and bandwidth votes and/or enable back the regulators.
+On Fri, 07 Aug 2020, Gene Chen wrote:
 
-Fixes: cd7ea582 ("opp: Make dev_pm_opp_set_rate() handle freq = 0 to drop performance votes")
-Reported-by: Sajida Bhanu <sbhanu@codeaurora.org>
-Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
----
- drivers/opp/core.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+> Mark Brown <broonie@kernel.org> 於 2020年8月6日 週四 下午8:13寫道：
+> >
+> > On Thu, Aug 06, 2020 at 11:30:56AM +0800, Gene Chen wrote:
+> > > Mark Brown <broonie@kernel.org> 於 2020年8月6日 週四 上午12:10寫道：
+> >
+> > > > It's not clear why this isn't just done in the device regmap, there's
+> > > > exactly one user?
+> >
+> > > because I use one regmap to access 4 I2C devices,
+> >
+> > There appears to be only one device here?
+> >
+> > > I need change the regmap_bus struct to fit I2C read/write with CRC bit
+> > > Therefore, MFD reviewer suggests I can move the regmap api to regmap
+> > > folder such as regmap-ac97.c
+> >
+> > AC'97 is an industry standard bus used by a range of devices in
+> > different subsystems.  You can already have custom operations for a
+> > device just in a regular regmap using the reg_read() and reg_write()
+> > operations which are there so devices that individual device support
+> > doesn't need to be added to the regmap core.
+> >
+> 
+> I need use regmap_raw_read to access MT6360 TYPEC part, so we need
+> implement bus read control
+> 
+> > You really also need to write a much clearer changelog, I would be hard
+> > pressed to tell from the changelog that this was moving things to the
+> > regmap core rather than shuffling regmaps within the device.
+> 
+> MT6360 has 4 I2C worker devices
+> First, I increase reg_bits from 8 to 16 bits.
+> Higher 8 bits, bank, indicated which worker device I want access
+> Then, if worker devices is PMIC or LDO part, I need calculate or check
+> CRC8 bits when we write or read data.
+> CRC8 bits is calculated by 3 parts.
+> 1'st part include 1 byte is worker address and R/W in LSB.
+> 2'nd part include 1 byte is register address
+> 3'nd part include written data or read data from MT6360
+> I also need 1 dummy byte when write data
+> 
+> @Lee Jones,
+> I found out drivers/iio/chemical/bme680_spi.c implement their own
+> regmap_bus too.
+> Can I move regmap control back to mt6360-core.c?
 
-diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-index 0c8c74a..a994f30 100644
---- a/drivers/opp/core.c
-+++ b/drivers/opp/core.c
-@@ -901,6 +901,9 @@ int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq)
- 
- 	/* Return early if nothing to do */
- 	if (old_freq == freq) {
-+		if (opp_table->required_opp_tables || opp_table->regulators ||
-+		    opp_table->paths)
-+			goto skip_clk_only;
- 		dev_dbg(dev, "%s: old/new frequencies (%lu Hz) are same, nothing to do\n",
- 			__func__, freq);
- 		ret = 0;
-@@ -919,6 +922,7 @@ int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq)
- 		goto put_opp_table;
- 	}
- 
-+skip_clk_only:
- 	temp_freq = old_freq;
- 	old_opp = _find_freq_ceil(opp_table, &temp_freq);
- 	if (IS_ERR(old_opp)) {
-@@ -954,8 +958,10 @@ int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq)
- 						 IS_ERR(old_opp) ? NULL : old_opp->supplies,
- 						 opp->supplies);
- 	} else {
-+		ret = 0;
- 		/* Only frequency scaling */
--		ret = _generic_set_opp_clk_only(dev, clk, freq);
-+		if (freq != old_freq)
-+			ret = _generic_set_opp_clk_only(dev, clk, freq);
- 	}
- 
- 	/* Scaling down? Configure required OPPs after frequency */
+Yes, if that is the 'done thing'.
+
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
-
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
