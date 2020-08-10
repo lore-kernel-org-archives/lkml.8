@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1D3AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:37:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B490C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:37:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 966DB22D6F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:37:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C00323117
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:37:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597073876;
-	bh=PvXo4XK8AZRqUTr2CoG0DPYsgX5nyXoeG9ZFRmeqqhI=;
+	s=default; t=1597073879;
+	bh=x7ozp1mq3C1BY63eMKEcpS3peJBmk+UfyCtDfXhOuww=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=avssue7hgMYbsYnxZFhHXg1266GlD1bWMEOsxy/WY82zRNOIFEZmn1KrO9mfQaKx7
-	 M4kS2gkH/BihOVWo/bF7ui/R4bObl6uEubYaYlndPJ1e16LQCOUl1FH8xXctkmv46x
-	 YZHenYjkK+zq6VHAkfqw8VbJTpO18gJ2RCI8prnY=
+	b=UvZwTiyoAhLAsZRgnk3SrqO+CIdj53X3WLVv6+4YbAB7MTq9JpYlyC/zGEUILq8vA
+	 mKWwuEfg2r+y79/hLfLRjqWpr1MrxTgaEwadwmllEdQPy1uOaASYXgC1iuYBTCg142
+	 QJS8/axc2fNOTPWywCEDwRryVikRDdLpidCNCPrw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728899AbgHJPhz (ORCPT
+        id S1728969AbgHJPh6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:37:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60234 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:37:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728466AbgHJP0W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:26:22 -0400
+        id S1728616AbgHJP0S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:26:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B130F208A9;
-        Mon, 10 Aug 2020 15:26:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB05D20772;
+        Mon, 10 Aug 2020 15:26:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597073181;
-        bh=PvXo4XK8AZRqUTr2CoG0DPYsgX5nyXoeG9ZFRmeqqhI=;
+        s=default; t=1597073178;
+        bh=x7ozp1mq3C1BY63eMKEcpS3peJBmk+UfyCtDfXhOuww=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=liRr2yVHVOUvjbthHnVqamC5XQFQsZA9QdPe6E6mWz8w4xW0nNmn3uSi7HuR8EiPR
-         YC7EFRkjT3A+f6osmxYHgLC0UOxqeXHNIiLwZNKENCnFxjQYFM4K7RyceD/7tOQO2u
-         PBFRMNw49Josve8M/MiBiLHeohhZk36lTWEFHYvo=
+        b=O19SBIeQk3JW4bUCq77m7CBQKbKnuvlgDD7yLnsyuBoOvQn8jXLEqXOO2zYdl33M+
+         EBbmyeL6qE55G1tB+DYKLgtVBpDTFXrNtCL+JvHFtFiNCJ2Pv0aH/FAgcIDr4pe+lF
+         xjP1r5TiuEYf2Y6IFyys2ulkTOUEOCWnkeo+uPZI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+80899a8a8efe8968cde7@syzkaller.appspotmail.com,
-        Rustam Kovhaev <rkovhaev@gmail.com>
-Subject: [PATCH 5.4 15/67] staging: rtl8712: handle firmware load failure
-Date:   Mon, 10 Aug 2020 17:21:02 +0200
-Message-Id: <20200810151810.180199211@linuxfoundation.org>
+        syzbot+7a0d9d0b26efefe61780@syzkaller.appspotmail.com,
+        Suren Baghdasaryan <surenb@google.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Subject: [PATCH 5.4 14/67] staging: android: ashmem: Fix lockdep warning for write operation
+Date:   Mon, 10 Aug 2020 17:21:01 +0200
+Message-Id: <20200810151810.131585891@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151809.438685785@linuxfoundation.org>
 References: <20200810151809.438685785@linuxfoundation.org>
@@ -60,80 +61,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rustam Kovhaev <rkovhaev@gmail.com>
+From: Suren Baghdasaryan <surenb@google.com>
 
-commit b4383c971bc5263efe2b0915ba67ebf2bf3f1ee5 upstream.
+commit 3e338d3c95c735dc3265a86016bb4c022ec7cadc upstream.
 
-when firmware fails to load we should not call unregister_netdev()
-this patch fixes a race condition between rtl871x_load_fw_cb() and
-r871xu_dev_remove() and fixes the bug reported by syzbot
+syzbot report [1] describes a deadlock when write operation against an
+ashmem fd executed at the time when ashmem is shrinking its cache results
+in the following lock sequence:
 
-Reported-by: syzbot+80899a8a8efe8968cde7@syzkaller.appspotmail.com
-Link: https://syzkaller.appspot.com/bug?extid=80899a8a8efe8968cde7
-Signed-off-by: Rustam Kovhaev <rkovhaev@gmail.com>
+Possible unsafe locking scenario:
+
+        CPU0                    CPU1
+        ----                    ----
+   lock(fs_reclaim);
+                                lock(&sb->s_type->i_mutex_key#13);
+                                lock(fs_reclaim);
+   lock(&sb->s_type->i_mutex_key#13);
+
+kswapd takes fs_reclaim and then inode_lock while generic_perform_write
+takes inode_lock and then fs_reclaim. However ashmem does not support
+writing into backing shmem with a write syscall. The only way to change
+its content is to mmap it and operate on mapped memory. Therefore the race
+that lockdep is warning about is not valid. Resolve this by introducing a
+separate lockdep class for the backing shmem inodes.
+
+[1]: https://lkml.kernel.org/lkml/0000000000000b5f9d059aa2037f@google.com/
+
+Reported-by: syzbot+7a0d9d0b26efefe61780@syzkaller.appspotmail.com
+Signed-off-by: Suren Baghdasaryan <surenb@google.com>
 Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200716151324.1036204-1-rkovhaev@gmail.com
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Link: https://lore.kernel.org/r/20200730192632.3088194-1-surenb@google.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/rtl8712/hal_init.c |    3 ++-
- drivers/staging/rtl8712/usb_intf.c |   11 ++++++++---
- 2 files changed, 10 insertions(+), 4 deletions(-)
+ drivers/staging/android/ashmem.c |   12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
---- a/drivers/staging/rtl8712/hal_init.c
-+++ b/drivers/staging/rtl8712/hal_init.c
-@@ -33,7 +33,6 @@ static void rtl871x_load_fw_cb(const str
+--- a/drivers/staging/android/ashmem.c
++++ b/drivers/staging/android/ashmem.c
+@@ -95,6 +95,15 @@ static DEFINE_MUTEX(ashmem_mutex);
+ static struct kmem_cache *ashmem_area_cachep __read_mostly;
+ static struct kmem_cache *ashmem_range_cachep __read_mostly;
+ 
++/*
++ * A separate lockdep class for the backing shmem inodes to resolve the lockdep
++ * warning about the race between kswapd taking fs_reclaim before inode_lock
++ * and write syscall taking inode_lock and then fs_reclaim.
++ * Note that such race is impossible because ashmem does not support write
++ * syscalls operating on the backing shmem.
++ */
++static struct lock_class_key backing_shmem_inode_class;
++
+ static inline unsigned long range_size(struct ashmem_range *range)
  {
- 	struct _adapter *adapter = context;
+ 	return range->pgend - range->pgstart + 1;
+@@ -396,6 +405,7 @@ static int ashmem_mmap(struct file *file
+ 	if (!asma->file) {
+ 		char *name = ASHMEM_NAME_DEF;
+ 		struct file *vmfile;
++		struct inode *inode;
  
--	complete(&adapter->rtl8712_fw_ready);
- 	if (!firmware) {
- 		struct usb_device *udev = adapter->dvobjpriv.pusbdev;
- 		struct usb_interface *usb_intf = adapter->pusb_intf;
-@@ -41,11 +40,13 @@ static void rtl871x_load_fw_cb(const str
- 		dev_err(&udev->dev, "r8712u: Firmware request failed\n");
- 		usb_put_dev(udev);
- 		usb_set_intfdata(usb_intf, NULL);
-+		complete(&adapter->rtl8712_fw_ready);
- 		return;
- 	}
- 	adapter->fw = firmware;
- 	/* firmware available - start netdev */
- 	register_netdev(adapter->pnetdev);
-+	complete(&adapter->rtl8712_fw_ready);
- }
- 
- static const char firmware_file[] = "rtlwifi/rtl8712u.bin";
---- a/drivers/staging/rtl8712/usb_intf.c
-+++ b/drivers/staging/rtl8712/usb_intf.c
-@@ -595,13 +595,17 @@ static void r871xu_dev_remove(struct usb
- 	if (pnetdev) {
- 		struct _adapter *padapter = netdev_priv(pnetdev);
- 
--		usb_set_intfdata(pusb_intf, NULL);
--		release_firmware(padapter->fw);
- 		/* never exit with a firmware callback pending */
- 		wait_for_completion(&padapter->rtl8712_fw_ready);
-+		pnetdev = usb_get_intfdata(pusb_intf);
-+		usb_set_intfdata(pusb_intf, NULL);
-+		if (!pnetdev)
-+			goto firmware_load_fail;
-+		release_firmware(padapter->fw);
- 		if (drvpriv.drv_registered)
- 			padapter->surprise_removed = true;
--		unregister_netdev(pnetdev); /* will call netdev_close() */
-+		if (pnetdev->reg_state != NETREG_UNINITIALIZED)
-+			unregister_netdev(pnetdev); /* will call netdev_close() */
- 		flush_scheduled_work();
- 		udelay(1);
- 		/* Stop driver mlme relation timer */
-@@ -614,6 +618,7 @@ static void r871xu_dev_remove(struct usb
- 		 */
- 		usb_put_dev(udev);
- 	}
-+firmware_load_fail:
- 	/* If we didn't unplug usb dongle and remove/insert module, driver
- 	 * fails on sitesurvey for the first time when device is up.
- 	 * Reset usb port for sitesurvey fail issue.
+ 		if (asma->name[ASHMEM_NAME_PREFIX_LEN] != '\0')
+ 			name = asma->name;
+@@ -407,6 +417,8 @@ static int ashmem_mmap(struct file *file
+ 			goto out;
+ 		}
+ 		vmfile->f_mode |= FMODE_LSEEK;
++		inode = file_inode(vmfile);
++		lockdep_set_class(&inode->i_rwsem, &backing_shmem_inode_class);
+ 		asma->file = vmfile;
+ 		/*
+ 		 * override mmap operation of the vmfile so that it can't be
 
 
