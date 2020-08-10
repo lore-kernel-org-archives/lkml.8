@@ -2,108 +2,146 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57014C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:48:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57489C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:49:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31D5C206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:48:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EFoQ/RLd"
+	by mail.kernel.org (Postfix) with ESMTP id 37E452070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 12:49:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbgHJMsr (ORCPT
+        id S1726766AbgHJMtx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 08:48:47 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:25115 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726446AbgHJMsq (ORCPT
+        Mon, 10 Aug 2020 08:49:53 -0400
+Received: from alexa-out.qualcomm.com ([129.46.98.28]:8911 "EHLO
+        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726446AbgHJMtx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 08:48:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597063725;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=EfpMMW6Vx3J0Luy6MoDr3dSbyKrKFJoHO4ZG8rIQx5M=;
-        b=EFoQ/RLdcmbs8b2M76w1Q21DVPU68D10I785T+pF9YWVPgKmO6O7wn0nLoQXX8/jTnNCRB
-        0iUp4s9Wcseds9FzqRpBO+lo31eYp1eP8/rQWw6wUe2kW4I4WAhCXy6kcbrjcwfN0Tj6p2
-        +UcJR8VPJVaYli37LnttKju7j3DdXvQ=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-335-OOjMJa0gOMindDvDX99UGQ-1; Mon, 10 Aug 2020 08:48:43 -0400
-X-MC-Unique: OOjMJa0gOMindDvDX99UGQ-1
-Received: by mail-wr1-f72.google.com with SMTP id 5so4161781wrc.17
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 05:48:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=EfpMMW6Vx3J0Luy6MoDr3dSbyKrKFJoHO4ZG8rIQx5M=;
-        b=k8VpOLYDQjfd28PMwkV9mQbNKkT9uPsm6opuZT1m2Y3f4s+Zy8ojyjoOcVjLAuLAKb
-         zMq7JbNVojLNj4J48YLGPGV3PonvdQZnr6AMYDNwJgY7uXRjWl66NgYHbQ7XOeqprw0w
-         mC7QobnxKRnpSMXbYTQHLseG36z4hefJRBXMtUONsySPaWdEwsU+OVlmupcogAkBd3go
-         8ooS02Etc4ZEvkn4HI7ngkj23ywlUBujjaGHl2tz+glDEI3dR9zekHfxQB8x9CUe6bik
-         pGfBKHFSx+X51vuMCcSHfKZXcFdfDQIR0EQtOI71GVp009A3+JCcehzxbPyR/5qHOWDp
-         gBfQ==
-X-Gm-Message-State: AOAM533SfFqcHryOr3EwQIsjiSe9AgHdJRwzREc8ggFS82sGGl2s9tsY
-        +RF9JBK1jkN7UpakWIKFSX0jon+q2Ciaruup7Rnv+lbQdLd4l5r3XuE8DZhOGlrPnc21l2jtGPS
-        3X6jFmLYExplqVIQLsrgt6DRW
-X-Received: by 2002:adf:f189:: with SMTP id h9mr1333264wro.122.1597063722442;
-        Mon, 10 Aug 2020 05:48:42 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwQg4tk7pdRNPfnZDpCQdYiSarWXQWMHaUKFpslCi6kVUNoHOoJaD6xWEwdF7c0UDOSuRlE+A==
-X-Received: by 2002:adf:f189:: with SMTP id h9mr1333248wro.122.1597063722253;
-        Mon, 10 Aug 2020 05:48:42 -0700 (PDT)
-Received: from redhat.com (bzq-109-67-41-16.red.bezeqint.net. [109.67.41.16])
-        by smtp.gmail.com with ESMTPSA id o2sm22221324wrh.70.2020.08.10.05.48.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Aug 2020 05:48:41 -0700 (PDT)
-Date:   Mon, 10 Aug 2020 08:48:39 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     kernel test robot <rong.a.chen@intel.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Jason Wang <jasowang@redhat.com>,
-        virtualization@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
-Subject: [PATCH] vdpa_sim: init iommu lock
-Message-ID: <20200810124813.1555677-1-mst@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email 2.27.0.106.g8ac3dc51b1
-X-Mutt-Fcc: =sent
+        Mon, 10 Aug 2020 08:49:53 -0400
+Received: from ironmsg07-lv.qualcomm.com (HELO ironmsg07-lv.qulacomm.com) ([10.47.202.151])
+  by alexa-out.qualcomm.com with ESMTP; 10 Aug 2020 05:49:52 -0700
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by ironmsg07-lv.qulacomm.com with ESMTP/TLS/AES256-SHA; 10 Aug 2020 05:49:49 -0700
+Received: from kalyant-linux.qualcomm.com ([10.204.66.210])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 10 Aug 2020 18:19:21 +0530
+Received: by kalyant-linux.qualcomm.com (Postfix, from userid 94428)
+        id 8338048E5; Mon, 10 Aug 2020 18:19:20 +0530 (IST)
+From:   Kalyan Thota <kalyan_t@codeaurora.org>
+To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc:     Kalyan Thota <kalyan_t@codeaurora.org>,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        dianders@chromium.org, mkrishn@codeaurora.org,
+        travitej@codeaurora.org, nganji@codeaurora.org,
+        swboyd@chromium.org, abhinavk@codeaurora.org,
+        ddavenport@chromium.org
+Subject: [v3] drm/msm/dpu: Fix reservation failures in modeset
+Date:   Mon, 10 Aug 2020 18:19:18 +0530
+Message-Id: <1597063758-26238-1-git-send-email-kalyan_t@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch adding the iommu lock did not initialize it.
-The struct is zero-initialized so this is mostly a problem
-when using lockdep.
+In TEST_ONLY commit, rm global_state will duplicate the
+object and request for new reservations, once they pass
+then the new state will be swapped with the old and will
+be available for the Atomic Commit.
 
-Reported-by: kernel test robot <rong.a.chen@intel.com>
-Cc: Max Gurtovoy <maxg@mellanox.com>
-Fixes: 0ea9ee430e74 ("vdpasim: protect concurrent access to iommu iotlb")
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+This patch fixes some of missing links in the resource
+reservation sequence mentioned above.
+
+1) Creation of duplicate state in test_only commit (Rob)
+2) Allocate and release the resources on every modeset.
+3) Avoid allocation only when active is false.
+
+In a modeset operation, swap state happens well before
+disable. Hence clearing reservations in disable will
+cause failures in modeset enable.
+
+Allow reservations to be cleared/allocated before swap,
+such that only newly committed resources are pushed to HW.
+
+Changes in v1:
+ - Move the rm release to atomic_check.
+ - Ensure resource allocation and free happens when active
+   is not changed i.e only when mode is changed.(Rob)
+
+Changes in v2:
+ - Handle dpu_kms_get_global_state API failure as it may
+   return EDEADLK (swboyd).
+
+Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
 ---
- drivers/vdpa/vdpa_sim/vdpa_sim.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 20 +++++++++++---------
+ 1 file changed, 11 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/vdpa/vdpa_sim/vdpa_sim.c b/drivers/vdpa/vdpa_sim/vdpa_sim.c
-index df3224b138ee..604d9d25ca47 100644
---- a/drivers/vdpa/vdpa_sim/vdpa_sim.c
-+++ b/drivers/vdpa/vdpa_sim/vdpa_sim.c
-@@ -358,6 +358,7 @@ static struct vdpasim *vdpasim_create(void)
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+index 63976dc..39e0b32 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+@@ -582,7 +582,10 @@ static int dpu_encoder_virt_atomic_check(
+ 	dpu_kms = to_dpu_kms(priv->kms);
+ 	mode = &crtc_state->mode;
+ 	adj_mode = &crtc_state->adjusted_mode;
+-	global_state = dpu_kms_get_existing_global_state(dpu_kms);
++	global_state = dpu_kms_get_global_state(crtc_state->state);
++	if (IS_ERR(global_state))
++		return PTR_ERR(global_state);
++
+ 	trace_dpu_enc_atomic_check(DRMID(drm_enc));
  
- 	INIT_WORK(&vdpasim->work, vdpasim_work);
- 	spin_lock_init(&vdpasim->lock);
-+	spin_lock_init(&vdpasim->iommu_lock);
+ 	/*
+@@ -617,12 +620,15 @@ static int dpu_encoder_virt_atomic_check(
+ 	/* Reserve dynamic resources now. */
+ 	if (!ret) {
+ 		/*
+-		 * Avoid reserving resources when mode set is pending. Topology
+-		 * info may not be available to complete reservation.
++		 * Release and Allocate resources on every modeset
++		 * Dont allocate when active is false.
+ 		 */
+ 		if (drm_atomic_crtc_needs_modeset(crtc_state)) {
+-			ret = dpu_rm_reserve(&dpu_kms->rm, global_state,
+-					drm_enc, crtc_state, topology);
++			dpu_rm_release(global_state, drm_enc);
++
++			if (!crtc_state->active_changed || crtc_state->active)
++				ret = dpu_rm_reserve(&dpu_kms->rm, global_state,
++						drm_enc, crtc_state, topology);
+ 		}
+ 	}
  
- 	dev = &vdpasim->vdpa.dev;
- 	dev->coherent_dma_mask = DMA_BIT_MASK(64);
+@@ -1171,7 +1177,6 @@ static void dpu_encoder_virt_disable(struct drm_encoder *drm_enc)
+ 	struct dpu_encoder_virt *dpu_enc = NULL;
+ 	struct msm_drm_private *priv;
+ 	struct dpu_kms *dpu_kms;
+-	struct dpu_global_state *global_state;
+ 	int i = 0;
+ 
+ 	if (!drm_enc) {
+@@ -1190,7 +1195,6 @@ static void dpu_encoder_virt_disable(struct drm_encoder *drm_enc)
+ 
+ 	priv = drm_enc->dev->dev_private;
+ 	dpu_kms = to_dpu_kms(priv->kms);
+-	global_state = dpu_kms_get_existing_global_state(dpu_kms);
+ 
+ 	trace_dpu_enc_disable(DRMID(drm_enc));
+ 
+@@ -1220,8 +1224,6 @@ static void dpu_encoder_virt_disable(struct drm_encoder *drm_enc)
+ 
+ 	DPU_DEBUG_ENC(dpu_enc, "encoder disabled\n");
+ 
+-	dpu_rm_release(global_state, drm_enc);
+-
+ 	mutex_unlock(&dpu_enc->enc_lock);
+ }
+ 
 -- 
-MST
+1.9.1
 
