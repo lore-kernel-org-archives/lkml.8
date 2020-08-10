@@ -2,71 +2,72 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB3F2C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 00:59:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D23ECC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 01:00:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A00F2068F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 00:59:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC522206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 01:00:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WcDioUBh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XpGjhd5I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726566AbgHJA7v (ORCPT
+        id S1726528AbgHJBAV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Aug 2020 20:59:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44868 "EHLO
+        Sun, 9 Aug 2020 21:00:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726335AbgHJA7v (ORCPT
+        with ESMTP id S1726335AbgHJBAU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Aug 2020 20:59:51 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BA2AC061756;
-        Sun,  9 Aug 2020 17:59:51 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id f9so4085449pju.4;
-        Sun, 09 Aug 2020 17:59:51 -0700 (PDT)
+        Sun, 9 Aug 2020 21:00:20 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D990FC061756
+        for <linux-kernel@vger.kernel.org>; Sun,  9 Aug 2020 18:00:19 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id l60so3942969pjb.3
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Aug 2020 18:00:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=q0qJO4EPZit/EH6A7WT7wLcgl0yNkUMzQdIUs1Xd0rs=;
-        b=WcDioUBhF3OBNLdRFGPm4xL/wg35NsnX1T7B+N5mLgLGfMHPO6e+ws8jSymjP+fehv
-         Ymmj/A6435/LrpYObcEkppCnaGGFKHSFsc5Ok7yFInm1fFiQ1pRb5OADygG4gD/UQiyU
-         jRioeUsmQzBmnvSOQVGnA7APtjxLRx2pCwkaAoh0rKBI+KwCOGP94+uGAeBY4BZPHm8K
-         61uXgWQlXJ1btsyM3z4HvgYLxoXS0TwCFcZ1JQVvvSH/tfXVaDabCX6i5Iq26FN+Fl7f
-         q+swu2/13lE3Skkfm/pY2Jf9hphdNgNueVLvi4ZCbH+cGiPdJ9qxMi00TiTCAh4bi/ZG
-         hZHg==
+        bh=WXUIwf2ehBPUDiy3lFJF1kJPO1DKKK/C2iqXILzYiwQ=;
+        b=XpGjhd5IF5/XHVzC9m/JLd1F/Oqsq9kyQql9WB89B7hF5M2gyx7A0Ru4wOjMq5a0St
+         Ap1yomu4hZ0kRLmRJBGqkQktBer/GHiTgQz/K9V9qK6zVSRC6h0+U3jNTlYHhZmjuk+t
+         7cBahxYgAIkoIZxNU9wO40PDX9V47v07DpIoxkAmTAlh2HwL/SyLlHRtMOJjGuISax/O
+         LU6JzGavRyA0rn19wN0/Atf4QXdxPmkj7mkplxZcP+/W1N5+QjV3qaMJRre+ZD50X+oq
+         cmHApQfgdS3cnIE6ajopdgzuKyIPSPkYuUD6xTr7cj2p0n/PnQhe7apWHNT/P45dbWPx
+         CXvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=q0qJO4EPZit/EH6A7WT7wLcgl0yNkUMzQdIUs1Xd0rs=;
-        b=LCZEr76RLHWB4JtMuoZrlTadoxuEVl13t0EVvp9pAtBOv93dT7GqiEtHzIN7MBcKxw
-         1y5chC1JNSIIewfbyZfmmu4yaRu9tK+UNSCNcaCKpW2Pc3uDJ+eIfq1gO/dxIrI0Esxf
-         MKLG9tx5eovoQzTEVzwAPbsPfFO9hiLsGRy+2rdQRPIw9hCRbnwN4LCzn0qKmAP0v78M
-         1cCQrU/TMcAYi8NlCyFhWTrbY0xkP26CLdOLlsKicAhWXjwGKOgVjY0+y7HoWRuLF1H+
-         DL4TLiC0svddgnsiqYcjGg+5SmwvvX1hTrZ3K8YJvtmDkcJwmEolAGWh6mAzvdvTZEtv
-         4z2A==
-X-Gm-Message-State: AOAM532tJHFLrFFJqmyp1GPCDFK2KHa5xJJRQauwyW0ZU7swN2iY0Das
-        BJ+tmKy/+JQ6BqvIzkNPqeQzZVVIU8vkhA==
-X-Google-Smtp-Source: ABdhPJwN4CR2mZ8LTgbsjjdYYXjpnUy33fewmZnUndv91/R9tDZ9Wg5yIe7kVXKqjfra6UNUTrSO0Q==
-X-Received: by 2002:a17:90b:252:: with SMTP id fz18mr24344482pjb.48.1597021190564;
-        Sun, 09 Aug 2020 17:59:50 -0700 (PDT)
-Received: from localhost.localdomain (c-24-16-167-223.hsd1.wa.comcast.net. [24.16.167.223])
-        by smtp.gmail.com with ESMTPSA id j5sm21504055pfg.80.2020.08.09.17.59.49
+        bh=WXUIwf2ehBPUDiy3lFJF1kJPO1DKKK/C2iqXILzYiwQ=;
+        b=OC+Bd2YUueHPNnkoRKJwhyhwHmGZnqTYQmIGwtkH0QBl511YvoSP/gbaWXd7FtycYs
+         HPeLz/AkyX3BYTdjKgjZQJbz6sEixHAEeq/LOmLdJynkzAxHLwSgqJDV/UflGd4UTQ/z
+         3kFmKw5HIsdLnDgR6fP3KT1rM2VeBp6SHjl+JA1fnZzNyQyh0JiSEjgAW8deOhlSDyIu
+         l4J2sbrptr76M0rW3Dzilwn7hHCEUod3F4HMcAGtls+TIgj/reDuqug2rOe0PlSjCURe
+         +yYcR8Gc0fTJ1w6DmriBhMJ1oBBPbKMe4qj7/ZKrG7jpJZXKs8YcrNj4C78TwnssvGYC
+         Y9Lw==
+X-Gm-Message-State: AOAM530E4r6ZbYih1EmW1FBWS8tNqBeufNfWEySq0U1mabvBzou7Ukkk
+        YX7kUm2K0SI59dhbtYaW82Y=
+X-Google-Smtp-Source: ABdhPJyX7RzBsUVOG8vXjDxXDnWVrm/Ms6e8XrP+UGLnd1ksmb7I2+9jaGvd8SDNM6YBNbMA52w3tA==
+X-Received: by 2002:a17:90a:bc96:: with SMTP id x22mr26078715pjr.164.1597021218377;
+        Sun, 09 Aug 2020 18:00:18 -0700 (PDT)
+Received: from XiaoXinPro-13.hytera.com ([167.99.75.144])
+        by smtp.gmail.com with ESMTPSA id r91sm17477735pja.56.2020.08.09.18.00.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Aug 2020 17:59:50 -0700 (PDT)
-From:   YourName <argoz1701@gmail.com>
-To:     marcel@holtmann.org, johan.hedberg@gmail.com
-Cc:     mturquette@baylibre.com, linux-ide@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-clk@vger.kernel.org, argoz1701@gmail.com
-Subject: [PATCH 3/3] drivers/clk/clk-asm9260.c
-Date:   Sun,  9 Aug 2020 17:59:41 -0700
-Message-Id: <20200810005941.20581-1-argoz1701@gmail.com>
+        Sun, 09 Aug 2020 18:00:17 -0700 (PDT)
+From:   Qi Zheng <arch0.zheng@gmail.com>
+To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de
+Cc:     linux-kernel@vger.kernel.org, Qi Zheng <arch0.zheng@gmail.com>
+Subject: [PATCH] sched/fair: Remove the duplicate check from group_has_capacity()
+Date:   Mon, 10 Aug 2020 09:00:09 +0800
+Message-Id: <20200810010009.92758-1-arch0.zheng@gmail.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -75,84 +76,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel <argoz1701@gmail.com>
+1. The group_has_capacity() function is only called in
+   group_classify().
+2. The following inequality has already been checked in
+   group_is_overloaded() which was also called in
+   group_classify().
 
+	(sgs->group_capacity * imbalance_pct) <
+                        (sgs->group_runnable * 100)
+
+So just remove the duplicate check from group_has_capacity().
+
+Signed-off-by: Qi Zheng <arch0.zheng@gmail.com>
 ---
- drivers/ata/acard-ahci.c  |  6 +++---
- drivers/bluetooth/bfusb.c |  5 ++---
- drivers/clk/clk-asm9260.c | 12 ++++++------
- 3 files changed, 11 insertions(+), 12 deletions(-)
+ kernel/sched/fair.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/ata/acard-ahci.c b/drivers/ata/acard-ahci.c
-index 2a04e8abd397..3ffb21f3e88b 100644
---- a/drivers/ata/acard-ahci.c
-+++ b/drivers/ata/acard-ahci.c
-@@ -79,10 +79,10 @@ static struct ata_port_operations acard_ops = {
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 2ba8f230feb9..a41903fb327a 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -8234,10 +8234,6 @@ group_has_capacity(unsigned int imbalance_pct, struct sg_lb_stats *sgs)
+ 	if (sgs->sum_nr_running < sgs->group_weight)
+ 		return true;
  
- #define AHCI_HFLAGS(flags)	.private_data	= (void *)(flags)
- 
--static const struct ata_port_info acard_ahci_port_info[] = {
-+static const struct ata_port_info acard_ahci_port_info[] ={
- 	[board_acard_ahci] =
--	{
--		AHCI_HFLAGS	(AHCI_HFLAG_NO_NCQ),
-+	
-+        {       AHCI_HFLAGS	(AHCI_HFLAG_NO_NCQ),
- 		.flags		= AHCI_FLAG_COMMON,
- 		.pio_mask	= ATA_PIO4,
- 		.udma_mask	= ATA_UDMA6,
-diff --git a/drivers/bluetooth/bfusb.c b/drivers/bluetooth/bfusb.c
-index 5a321b4076aa..dc6a62cb1941 100644
---- a/drivers/bluetooth/bfusb.c
-+++ b/drivers/bluetooth/bfusb.c
-@@ -355,15 +355,14 @@ static void bfusb_rx_complete(struct urb *urb)
- 	while (count) {
- 		hdr = buf[0] | (buf[1] << 8);
- 
--		if (hdr & 0x4000) {
-+		if (hdr & 0x4000) 
- 			len = 0;
- 			count -= 2;
- 			buf   += 2;
--		} else {
-+		 else {
- 			len = (buf[2] == 0) ? 256 : buf[2];
- 			count -= 3;
- 			buf   += 3;
--		}
- 
- 		if (count < len) {
- 			bt_dev_err(data->hdev, "block extends over URB buffer ranges");
-diff --git a/drivers/clk/clk-asm9260.c b/drivers/clk/clk-asm9260.c
-index bacebd457e6f..4e608807a00a 100644
---- a/drivers/clk/clk-asm9260.c
-+++ b/drivers/clk/clk-asm9260.c
-@@ -92,8 +92,8 @@ static const struct asm9260_div_clk asm9260_div_clks[] __initconst = {
- 	{ CLKID_SYS_CPU,	"cpu_div", "main_gate", HW_CPUCLKDIV },
- 	{ CLKID_SYS_AHB,	"ahb_div", "cpu_div", HW_SYSAHBCLKDIV },
- 
--	/* i2s has two deviders: one for only external mclk and internal
--	 * devider for all clks. */
-+	//i2s has two deviders: one for only external mclk and internal
-+	//devider for all clks.
- 	{ CLKID_SYS_I2S0M,	"i2s0m_div", "i2s0_mclk",  HW_I2S0MCLKDIV },
- 	{ CLKID_SYS_I2S1M,	"i2s1m_div", "i2s1_mclk",  HW_I2S1MCLKDIV },
- 	{ CLKID_SYS_I2S0S,	"i2s0s_div", "i2s0_gate",  HW_I2S0SCLKDIV },
-@@ -232,10 +232,10 @@ static const struct asm9260_gate_data asm9260_ahb_gates[] __initconst = {
- 		HW_AHBCLKCTRL1,	16 },
- };
- 
--static const char __initdata *main_mux_p[] =   { NULL, NULL };
--static const char __initdata *i2s0_mux_p[] =   { NULL, NULL, "i2s0m_div"};
--static const char __initdata *i2s1_mux_p[] =   { NULL, NULL, "i2s1m_div"};
--static const char __initdata *clkout_mux_p[] = { NULL, NULL, "rtc"};
-+static const char __initconst *main_mux_p[] =   { NULL, NULL };
-+static const char __initconst *i2s0_mux_p[] =   { NULL, NULL, "i2s0m_div"};
-+static const char __initconst *i2s1_mux_p[] =   { NULL, NULL, "i2s1m_div"};
-+static const char __initconst *clkout_mux_p[] = { NULL, NULL, "rtc"};
- static u32 three_mux_table[] = {0, 1, 3};
- 
- static struct asm9260_mux_clock asm9260_mux_clks[] __initdata = {
+-	if ((sgs->group_capacity * imbalance_pct) <
+-			(sgs->group_runnable * 100))
+-		return false;
+-
+ 	if ((sgs->group_capacity * 100) >
+ 			(sgs->group_util * imbalance_pct))
+ 		return true;
 -- 
 2.25.1
 
