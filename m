@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED0E8C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:19:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1039C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:19:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6CC0207BB
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:19:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A84F822B47
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 15:19:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597072776;
-	bh=PvXo4XK8AZRqUTr2CoG0DPYsgX5nyXoeG9ZFRmeqqhI=;
+	s=default; t=1597072783;
+	bh=VOPjOURGlZwgIah6yUjOeqwg005U9YKaz3GSlAKIVak=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B0r6RYzXnFrY2rAghUIvgFCvXuDasqmUuMKAg7tJl9I0LUJhAnJGSPBlSGEEH0iaA
-	 KqJ7/F11DB2Hg54CxVCHGDKH6rt76bIfLfxkdXOD74gPAqOGUCKdqCdlR3S1+a3zDl
-	 AsTbTgEQhzqx+KHh7Fl9GZY9PWfrGVhummY25IKg=
+	b=UQkCclc28y72cU15teGvp5beQviAbKOyyEq82M01ZYg+qYjwqiPcXUjOvfKydvcFv
+	 TUOOxeXSyPZ/BT509LZlLC3MWJIW/LLkMpqZntjLZmnqmR0eQZ+s7iN5z6xG+aN1Lf
+	 GScSNe6H/BZGnoMktIc1+OXFN7k+lySEsOqVewJs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727775AbgHJPTf (ORCPT
+        id S1726068AbgHJPTm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 11:19:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49546 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 11:19:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727018AbgHJPTe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 11:19:34 -0400
+        id S1726888AbgHJPTk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 11:19:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82E60207BB;
-        Mon, 10 Aug 2020 15:19:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61286207BB;
+        Mon, 10 Aug 2020 15:19:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597072774;
-        bh=PvXo4XK8AZRqUTr2CoG0DPYsgX5nyXoeG9ZFRmeqqhI=;
+        s=default; t=1597072779;
+        bh=VOPjOURGlZwgIah6yUjOeqwg005U9YKaz3GSlAKIVak=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ivalbHb+4oj30WiXHAf+KbIwdW+VYffT8JSpgUFT3ZvXXtp8YiGessBDkzC8hB6aE
-         CN2i8ID/pId9X39WbBYiv6TNVLwjYZ6MVTsd0EDd6veVt8xuo4CTpWN1xfF2jEy+PY
-         O+4lFlqPx7MimmMIiy5l4NBOyZDEY6CLauRjsKeA=
+        b=sPw2z8GCcM0vwpggUcpRhoBPPVr/SPb0m8g9a2jZIkmSXJ2stdTGFxdbHLdh6qb0v
+         FlUQAnOvat8cMDYrrFcQ21IfDxYKgHEQnG9b4nxZASthLxYiX1FG2qsfQr8y2uRKcv
+         L8QItKavm1ezvtor9cVK3No70eOq0YZ7BMoJMASI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+80899a8a8efe8968cde7@syzkaller.appspotmail.com,
-        Rustam Kovhaev <rkovhaev@gmail.com>
-Subject: [PATCH 5.8 13/38] staging: rtl8712: handle firmware load failure
-Date:   Mon, 10 Aug 2020 17:19:03 +0200
-Message-Id: <20200810151804.549924311@linuxfoundation.org>
+        syzbot+d8489a79b781849b9c46@syzkaller.appspotmail.com,
+        Peilin Ye <yepeilin.cs@gmail.com>,
+        Marcel Holtmann <marcel@holtmann.org>
+Subject: [PATCH 5.8 15/38] Bluetooth: Fix slab-out-of-bounds read in hci_extended_inquiry_result_evt()
+Date:   Mon, 10 Aug 2020 17:19:05 +0200
+Message-Id: <20200810151804.642329635@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810151803.920113428@linuxfoundation.org>
 References: <20200810151803.920113428@linuxfoundation.org>
@@ -60,80 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rustam Kovhaev <rkovhaev@gmail.com>
+From: Peilin Ye <yepeilin.cs@gmail.com>
 
-commit b4383c971bc5263efe2b0915ba67ebf2bf3f1ee5 upstream.
+commit 51c19bf3d5cfaa66571e4b88ba2a6f6295311101 upstream.
 
-when firmware fails to load we should not call unregister_netdev()
-this patch fixes a race condition between rtl871x_load_fw_cb() and
-r871xu_dev_remove() and fixes the bug reported by syzbot
+Check upon `num_rsp` is insufficient. A malformed event packet with a
+large `num_rsp` number makes hci_extended_inquiry_result_evt() go out
+of bounds. Fix it.
 
-Reported-by: syzbot+80899a8a8efe8968cde7@syzkaller.appspotmail.com
-Link: https://syzkaller.appspot.com/bug?extid=80899a8a8efe8968cde7
-Signed-off-by: Rustam Kovhaev <rkovhaev@gmail.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200716151324.1036204-1-rkovhaev@gmail.com
+This patch fixes the following syzbot bug:
+
+    https://syzkaller.appspot.com/bug?id=4bf11aa05c4ca51ce0df86e500fce486552dc8d2
+
+Reported-by: syzbot+d8489a79b781849b9c46@syzkaller.appspotmail.com
+Cc: stable@vger.kernel.org
+Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/rtl8712/hal_init.c |    3 ++-
- drivers/staging/rtl8712/usb_intf.c |   11 ++++++++---
- 2 files changed, 10 insertions(+), 4 deletions(-)
+ net/bluetooth/hci_event.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/staging/rtl8712/hal_init.c
-+++ b/drivers/staging/rtl8712/hal_init.c
-@@ -33,7 +33,6 @@ static void rtl871x_load_fw_cb(const str
- {
- 	struct _adapter *adapter = context;
+--- a/net/bluetooth/hci_event.c
++++ b/net/bluetooth/hci_event.c
+@@ -4382,7 +4382,7 @@ static void hci_extended_inquiry_result_
  
--	complete(&adapter->rtl8712_fw_ready);
- 	if (!firmware) {
- 		struct usb_device *udev = adapter->dvobjpriv.pusbdev;
- 		struct usb_interface *usb_intf = adapter->pusb_intf;
-@@ -41,11 +40,13 @@ static void rtl871x_load_fw_cb(const str
- 		dev_err(&udev->dev, "r8712u: Firmware request failed\n");
- 		usb_put_dev(udev);
- 		usb_set_intfdata(usb_intf, NULL);
-+		complete(&adapter->rtl8712_fw_ready);
+ 	BT_DBG("%s num_rsp %d", hdev->name, num_rsp);
+ 
+-	if (!num_rsp)
++	if (!num_rsp || skb->len < num_rsp * sizeof(*info) + 1)
  		return;
- 	}
- 	adapter->fw = firmware;
- 	/* firmware available - start netdev */
- 	register_netdev(adapter->pnetdev);
-+	complete(&adapter->rtl8712_fw_ready);
- }
  
- static const char firmware_file[] = "rtlwifi/rtl8712u.bin";
---- a/drivers/staging/rtl8712/usb_intf.c
-+++ b/drivers/staging/rtl8712/usb_intf.c
-@@ -595,13 +595,17 @@ static void r871xu_dev_remove(struct usb
- 	if (pnetdev) {
- 		struct _adapter *padapter = netdev_priv(pnetdev);
- 
--		usb_set_intfdata(pusb_intf, NULL);
--		release_firmware(padapter->fw);
- 		/* never exit with a firmware callback pending */
- 		wait_for_completion(&padapter->rtl8712_fw_ready);
-+		pnetdev = usb_get_intfdata(pusb_intf);
-+		usb_set_intfdata(pusb_intf, NULL);
-+		if (!pnetdev)
-+			goto firmware_load_fail;
-+		release_firmware(padapter->fw);
- 		if (drvpriv.drv_registered)
- 			padapter->surprise_removed = true;
--		unregister_netdev(pnetdev); /* will call netdev_close() */
-+		if (pnetdev->reg_state != NETREG_UNINITIALIZED)
-+			unregister_netdev(pnetdev); /* will call netdev_close() */
- 		flush_scheduled_work();
- 		udelay(1);
- 		/* Stop driver mlme relation timer */
-@@ -614,6 +618,7 @@ static void r871xu_dev_remove(struct usb
- 		 */
- 		usb_put_dev(udev);
- 	}
-+firmware_load_fail:
- 	/* If we didn't unplug usb dongle and remove/insert module, driver
- 	 * fails on sitesurvey for the first time when device is up.
- 	 * Reset usb port for sitesurvey fail issue.
+ 	if (hci_dev_test_flag(hdev, HCI_PERIODIC_INQ))
 
 
