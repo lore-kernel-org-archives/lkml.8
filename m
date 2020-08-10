@@ -2,94 +2,94 @@ Return-Path: <SRS0=LKJ9=BU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B40BAC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 20:52:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A44C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 20:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78E52206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 20:52:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4F2820734
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 20:54:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597092874;
+	bh=gJ5Ifo9W+baBISOLBMEfsvj/GFxqg72b+nHkl5xjrC8=;
+	h=To:Cc:From:Subject:Date:List-ID:From;
+	b=VF62ZPxFtXonHIXie+49X7YcPBRYUV9KOTfQ/2+vJr7F9URSUgzbjQUj39wSQ3vG+
+	 6eoNNvo6FvdCkZ0/RBXdMt8EZfFf+N6H/edYtFhfXzDrG+6cLXV4MPKARx6DDtVY0m
+	 fYvAufFeRf3khXsr23b0txg4N6UqheehVPNbyNiI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbgHJUwk (ORCPT
+        id S1726697AbgHJUyd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 16:52:40 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:23841 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726474AbgHJUwk (ORCPT
+        Mon, 10 Aug 2020 16:54:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58018 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726115AbgHJUyc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 16:52:40 -0400
-X-IronPort-AV: E=Sophos;i="5.75,458,1589234400"; 
-   d="scan'208";a="463066759"
-Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Aug 2020 22:52:38 +0200
-Date:   Mon, 10 Aug 2020 22:52:37 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To:     Markus Elfring <Markus.Elfring@web.de>
-cc:     Sumera Priyadarsini <sylphrenadin@gmail.com>,
-        Coccinelle <cocci@systeme.lip6.fr>, linux-doc@vger.kernel.org,
-        Michal Marek <michal.lkml@markovi.net>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        linux-kernel@vger.kernel.org, Matthew Wilcox <willy@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Subject: Re: [Cocci] [PATCH v3] documentation: coccinelle: Improve command
- example for make C={1, 2}
-In-Reply-To: <478715f8-87dd-7b4d-d3fd-01585f5f3bd7@web.de>
-Message-ID: <alpine.DEB.2.22.394.2008102249570.2466@hadrien>
-References: <478715f8-87dd-7b4d-d3fd-01585f5f3bd7@web.de>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+        Mon, 10 Aug 2020 16:54:32 -0400
+Received: from mail-ot1-x32a.google.com (mail-ot1-x32a.google.com [IPv6:2607:f8b0:4864:20::32a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 091B7C061756
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 13:54:32 -0700 (PDT)
+Received: by mail-ot1-x32a.google.com with SMTP id h22so8389295otq.11
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 13:54:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=gJ5Ifo9W+baBISOLBMEfsvj/GFxqg72b+nHkl5xjrC8=;
+        b=RMHtZPwgQw7bUNKOsJdHaFVguO6zz6Zxv4freNKCfxNTJ5pVLlNUnZ54AKnsyBzCBV
+         bemCZLn7auoKtGxttUUzhCY/Zlhm8dPgL/iKNJ6+R35Us34VVKdwrazswXXhViXLsrT1
+         gwviorivkbSvJGE70i+HEWCOSR4OaMF3jo+TE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=gJ5Ifo9W+baBISOLBMEfsvj/GFxqg72b+nHkl5xjrC8=;
+        b=dLOLqjB0gQ8hf2WXRJ084DFkVqeBbeWYoIe2tE0eeT6VXm+4u1oWI42bopN10Cg+TM
+         FuF+aIs46IYo1SQTP0FS13zfgGVMUL5rtfMM0e43kpUZSBiUAvNT8SHzfLbQ0GKTcJhC
+         oySMd09Qd90BV3DtvwnGTsKgiJINXCqmHD176klnXjQSFODGd/Z+v/wtfkIPSHSDoc0A
+         /xFUJS1l0P7ZgpsoKs/Zy4UOJm93qH3xKNQ8f77I4Sy1aSYcCWsucUax1VaI+dsvDkbX
+         Yx8RFHX0VZux5nWuknhD622CVIzg4wMvihEnJxiysFXD6JUhp1c8kHbYGw8y4EbBw1Q1
+         zWdw==
+X-Gm-Message-State: AOAM531KhsfKL8M7dnsyeo+e691Br7ysPY9tfVIBvY1FZIoo+WZeMYTQ
+        9bpIk5GTGbaKTvEb/nylOIxu6PKikvs=
+X-Google-Smtp-Source: ABdhPJxJ4ojzYQX6InHDcDzmiiNyt20mTG9ve8m1VMTn2N550HzrEDcNdqFfN2ZrhFNY/Ax8sL9Hjw==
+X-Received: by 2002:a9d:6d08:: with SMTP id o8mr2197292otp.257.1597092871383;
+        Mon, 10 Aug 2020 13:54:31 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id d19sm3853895otl.63.2020.08.10.13.54.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Aug 2020 13:54:30 -0700 (PDT)
+To:     Sasha Levin <alexander.levin@microsoft.com>
+Cc:     Brendan Higgins <brendanhiggins@google.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Subject: Please pick this kunit fix for stables (5.8 & 5.7)
+Message-ID: <59f75dc7-3fe4-d61f-4cf1-4b922f596818@linuxfoundation.org>
+Date:   Mon, 10 Aug 2020 14:54:29 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1168634418-1597092758=:2466"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi Sasha,
 
---8323329-1168634418-1597092758=:2466
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Please pick the following commit for stables Linux 5.8 and 5.7
 
+kunit: capture stderr on all make subprocess calls
 
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=5a9fcad71caa970f30aef99134a1cd19bc4b8eea
 
-On Mon, 10 Aug 2020, Markus Elfring wrote:
-
-> > the usage of the makefile C variable flag by coccicheck.
->
-> * Can it be confusing to denote an item as a variable and a flag?
->
-> * Would you really like to stress here that a flag can be variable?
-
-This is not part of the documentation, so it doesn't really matter.
-
-Nevertheless, Sumera, there is stail an occurrence of flag in the proposed
-change to the documentation, so you could indeed change that one to
-variable.
-
->
->
-> > +This variable can be used to run scripts for …
->
-> Can the scope for a make command be selected also without such a variable?
-
-If you know something that is different than what is in the documentation,
-then please say what it is.  Don't just ask questions.
-
-> Will clarification requests for previously mentioned background information
-> influence the proposed descriptions any further?
-
-The point is to document the use of make coccicheck, not the C variables.
-So the point about KBUILD_CHECK, while interesting, does not seem
-appropriate for this documentation.
-
-julia
---8323329-1168634418-1597092758=:2466--
+thanks,
+-- Shuah
