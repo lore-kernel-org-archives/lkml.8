@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67466C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:28:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1672C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:28:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31D242080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:28:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A8412080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Aug 2020 19:28:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597087682;
-	bh=15qDq60fpjZ7HW0bZaWJ+geijTtQUm7ianQRg3nvz3w=;
+	s=default; t=1597087687;
+	bh=c5QOL1QgbzR/JoY99O/Ik4GYLGGKIIPwqLUVpA8E+kA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HmZw+iFyO6IiNhKrFfEybTnapkGdvT7K24Us7dPd/jag3beFWEXc8Tne8sSJaaVsT
-	 mpZbVaPnnFPjm3WW2cjZ9p4l/tg6rYBLxpvKYx7CluxKURIEXBWR3yYz+t/+lN8Yu4
-	 SYml6TfPkxpDN8rlIU/Ig56Egwf8vx3DmxIfNhzM=
+	b=B7n9WTwRcSvgAIDG05eW72AMA6d4tag7u+66qCCK6wkIRKHoNmu2C4gi7KN5SWDQf
+	 EoO+17Qvrqpx94gkELAtVPPsTEdKxgWijcKElF+puMmUvzlYcz6H6+YV6Xd2JAZVVo
+	 KjmOxokCPfxRhlBeMecCADoyFvsQMJWvFyAHy0Qc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729782AbgHJT2B (ORCPT
+        id S1729237AbgHJTLT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:28:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39638 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:11:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729236AbgHJTLU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:11:20 -0400
+        id S1729158AbgHJTLG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:11:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCF2B20885;
-        Mon, 10 Aug 2020 19:11:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC1B82078D;
+        Mon, 10 Aug 2020 19:11:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086679;
-        bh=15qDq60fpjZ7HW0bZaWJ+geijTtQUm7ianQRg3nvz3w=;
+        s=default; t=1597086665;
+        bh=c5QOL1QgbzR/JoY99O/Ik4GYLGGKIIPwqLUVpA8E+kA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J2x1NPFUqtMDmyv+ggKk38bvT/3wnkNlk1KEJDjeZRW5CvWHl3euiPceSptJ/x+qN
-         hmskQr28qqd2EmG3+4RnjM7VUgzJekGUaF+yQbjjaivdewkOsRLamtPjeu3t+82u2r
-         e5IkpNVazwjsoJ8v1FNk2xCOEmBt41RTjSxjy+AY=
+        b=J9QZzEdn+dnFvTPu4DscTaIVjWk+ty29HgnoJKp3aZ13lO+Jy2pdW01IgVc0c9vgG
+         IW2HNqT+8PkACCXbxHje2eWnvODI3Jtzpy2Xp8yzQgSbm/3JLEnEmh+bVMGEd6VPnv
+         cGcDFP2DftTSrEiCUPZxJVxJMJDbmN34TpXyTHsc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
+Cc:     Michael Tretter <m.tretter@pengutronix.de>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Emil Velikov <emil.l.velikov@gmail.com>,
         Sasha Levin <sashal@kernel.org>,
-        linux-bluetooth@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 37/60] Bluetooth: hci_qca: Bug fixes for SSR
-Date:   Mon, 10 Aug 2020 15:10:05 -0400
-Message-Id: <20200810191028.3793884-37-sashal@kernel.org>
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.7 27/60] drm/debugfs: fix plain echo to connector "force" attribute
+Date:   Mon, 10 Aug 2020 15:09:55 -0400
+Message-Id: <20200810191028.3793884-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810191028.3793884-1-sashal@kernel.org>
 References: <20200810191028.3793884-1-sashal@kernel.org>
@@ -60,111 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
+From: Michael Tretter <m.tretter@pengutronix.de>
 
-[ Upstream commit 3344537f614b966f726c1ec044d1c70a8cabe178 ]
+[ Upstream commit c704b17071c4dc571dca3af4e4151dac51de081a ]
 
-1.During SSR for command time out if BT SoC goes to inresponsive
-state, power cycling of BT SoC was not happening. Given the fix by
-sending hw error event to reset the BT SoC.
+Using plain echo to set the "force" connector attribute fails with
+-EINVAL, because echo appends a newline to the output.
 
-2.If SSR is triggered then ignore the transmit data requests to
-BT SoC until SSR is completed.
+Replace strcmp with sysfs_streq to also accept strings that end with a
+newline.
 
-Signed-off-by: Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+v2: use sysfs_streq instead of stripping trailing whitespace
+
+Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
+Reviewed-by: Jani Nikula <jani.nikula@intel.com>
+Signed-off-by: Emil Velikov <emil.l.velikov@gmail.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20170817104307.17124-1-m.tretter@pengutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bluetooth/hci_qca.c | 40 +++++++++++++++++++++++++++++++++----
- 1 file changed, 36 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/drm_debugfs.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-index 0b1036e5e963c..14e4d2eaf8959 100644
---- a/drivers/bluetooth/hci_qca.c
-+++ b/drivers/bluetooth/hci_qca.c
-@@ -71,7 +71,8 @@ enum qca_flags {
- 	QCA_DROP_VENDOR_EVENT,
- 	QCA_SUSPENDING,
- 	QCA_MEMDUMP_COLLECTION,
--	QCA_HW_ERROR_EVENT
-+	QCA_HW_ERROR_EVENT,
-+	QCA_SSR_TRIGGERED
- };
+diff --git a/drivers/gpu/drm/drm_debugfs.c b/drivers/gpu/drm/drm_debugfs.c
+index 4e673d318503c..fb251c00fdd3e 100644
+--- a/drivers/gpu/drm/drm_debugfs.c
++++ b/drivers/gpu/drm/drm_debugfs.c
+@@ -336,13 +336,13 @@ static ssize_t connector_write(struct file *file, const char __user *ubuf,
  
+ 	buf[len] = '\0';
  
-@@ -854,6 +855,13 @@ static int qca_enqueue(struct hci_uart *hu, struct sk_buff *skb)
- 	BT_DBG("hu %p qca enq skb %p tx_ibs_state %d", hu, skb,
- 	       qca->tx_ibs_state);
- 
-+	if (test_bit(QCA_SSR_TRIGGERED, &qca->flags)) {
-+		/* As SSR is in progress, ignore the packets */
-+		bt_dev_dbg(hu->hdev, "SSR is in progress");
-+		kfree_skb(skb);
-+		return 0;
-+	}
-+
- 	/* Prepend skb with frame type */
- 	memcpy(skb_push(skb, 1), &hci_skb_pkt_type(skb), 1);
- 
-@@ -1085,6 +1093,7 @@ static int qca_controller_memdump_event(struct hci_dev *hdev,
- 	struct hci_uart *hu = hci_get_drvdata(hdev);
- 	struct qca_data *qca = hu->priv;
- 
-+	set_bit(QCA_SSR_TRIGGERED, &qca->flags);
- 	skb_queue_tail(&qca->rx_memdump_q, skb);
- 	queue_work(qca->workqueue, &qca->ctrl_memdump_evt);
- 
-@@ -1445,6 +1454,7 @@ static void qca_hw_error(struct hci_dev *hdev, u8 code)
- 	struct qca_memdump_data *qca_memdump = qca->qca_memdump;
- 	char *memdump_buf = NULL;
- 
-+	set_bit(QCA_SSR_TRIGGERED, &qca->flags);
- 	set_bit(QCA_HW_ERROR_EVENT, &qca->flags);
- 	bt_dev_info(hdev, "mem_dump_status: %d", qca->memdump_state);
- 
-@@ -1489,10 +1499,30 @@ static void qca_cmd_timeout(struct hci_dev *hdev)
- 	struct hci_uart *hu = hci_get_drvdata(hdev);
- 	struct qca_data *qca = hu->priv;
- 
--	if (qca->memdump_state == QCA_MEMDUMP_IDLE)
-+	set_bit(QCA_SSR_TRIGGERED, &qca->flags);
-+	if (qca->memdump_state == QCA_MEMDUMP_IDLE) {
-+		set_bit(QCA_MEMDUMP_COLLECTION, &qca->flags);
- 		qca_send_crashbuffer(hu);
--	else
--		bt_dev_info(hdev, "Dump collection is in process");
-+		qca_wait_for_dump_collection(hdev);
-+	} else if (qca->memdump_state == QCA_MEMDUMP_COLLECTING) {
-+		/* Let us wait here until memory dump collected or
-+		 * memory dump timer expired.
-+		 */
-+		bt_dev_info(hdev, "waiting for dump to complete");
-+		qca_wait_for_dump_collection(hdev);
-+	}
-+
-+	mutex_lock(&qca->hci_memdump_lock);
-+	if (qca->memdump_state != QCA_MEMDUMP_COLLECTED) {
-+		qca->memdump_state = QCA_MEMDUMP_TIMEOUT;
-+		if (!test_bit(QCA_HW_ERROR_EVENT, &qca->flags)) {
-+			/* Inject hw error event to reset the device
-+			 * and driver.
-+			 */
-+			hci_reset_dev(hu->hdev);
-+		}
-+	}
-+	mutex_unlock(&qca->hci_memdump_lock);
- }
- 
- static int qca_wcn3990_init(struct hci_uart *hu)
-@@ -1603,6 +1633,8 @@ static int qca_setup(struct hci_uart *hu)
- 	if (ret)
- 		return ret;
- 
-+	clear_bit(QCA_SSR_TRIGGERED, &qca->flags);
-+
- 	if (qca_is_wcn399x(soc_type)) {
- 		set_bit(HCI_QUIRK_USE_BDADDR_PROPERTY, &hdev->quirks);
- 
+-	if (!strcmp(buf, "on"))
++	if (sysfs_streq(buf, "on"))
+ 		connector->force = DRM_FORCE_ON;
+-	else if (!strcmp(buf, "digital"))
++	else if (sysfs_streq(buf, "digital"))
+ 		connector->force = DRM_FORCE_ON_DIGITAL;
+-	else if (!strcmp(buf, "off"))
++	else if (sysfs_streq(buf, "off"))
+ 		connector->force = DRM_FORCE_OFF;
+-	else if (!strcmp(buf, "unspecified"))
++	else if (sysfs_streq(buf, "unspecified"))
+ 		connector->force = DRM_FORCE_UNSPECIFIED;
+ 	else
+ 		return -EINVAL;
 -- 
 2.25.1
 
