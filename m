@@ -2,123 +2,110 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC1E0C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 22:15:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A93D4C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 22:16:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD21D206DC
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 22:15:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B1E2206DC
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 22:16:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726274AbgHKWP4 (ORCPT
+        id S1726368AbgHKWQt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 18:15:56 -0400
-Received: from mga04.intel.com ([192.55.52.120]:25349 "EHLO mga04.intel.com"
+        Tue, 11 Aug 2020 18:16:49 -0400
+Received: from cmta19.telus.net ([209.171.16.92]:35830 "EHLO cmta19.telus.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725901AbgHKWP4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 18:15:56 -0400
-IronPort-SDR: Yr3NohTmaP4XdfsJpdw5HrLnMdmnZGcMUGQf4ywR2LoaveGvkd+PZoZkx/oz5mTw3fl+o4ENv1
- Ga3vqPEan+dA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9710"; a="151273799"
-X-IronPort-AV: E=Sophos;i="5.76,301,1592895600"; 
-   d="scan'208";a="151273799"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2020 15:15:55 -0700
-IronPort-SDR: dIHx8NC7z+ukfiY7P7TV7ohJbmDTP2rwhqDU+Ae7vDwJ8oCTTGZduFyUY1k5bRdMZemWQwa5nq
- As0wVewInQng==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,301,1592895600"; 
-   d="scan'208";a="324891321"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
-  by orsmga008.jf.intel.com with ESMTP; 11 Aug 2020 15:15:55 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 96968301CAF; Tue, 11 Aug 2020 11:02:03 -0700 (PDT)
-Date:   Tue, 11 Aug 2020 11:02:03 -0700
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc:     peterz@infradead.org, Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        Jiri Olsa <jolsa@kernel.org>, alexey.budankov@linux.intel.com,
-        adrian.hunter@intel.com
-Subject: Re: [PATCH 1/2] perf: Add closing sibling events' file descriptors
-Message-ID: <20200811180203.GG1448395@tassilo.jf.intel.com>
-References: <20200708151635.81239-1-alexander.shishkin@linux.intel.com>
- <20200708151635.81239-2-alexander.shishkin@linux.intel.com>
- <20200806083530.GV2674@hirez.programming.kicks-ass.net>
- <20200806153205.GA1448395@tassilo.jf.intel.com>
- <875z9q1u3g.fsf@ashishki-desk.ger.corp.intel.com>
- <20200810144518.GB1448395@tassilo.jf.intel.com>
- <87364t1plf.fsf@ashishki-desk.ger.corp.intel.com>
- <20200811143424.GD1448395@tassilo.jf.intel.com>
- <87zh71ywzq.fsf@ashishki-desk.ger.corp.intel.com>
+        id S1725901AbgHKWQs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 18:16:48 -0400
+Received: from montezuma.home ([154.5.226.127])
+        by cmsmtp with SMTP
+        id 5cZXkg9CWpULu5cZYkCNXh; Tue, 11 Aug 2020 16:16:47 -0600
+X-Telus-Authed: none
+X-Authority-Analysis: v=2.3 cv=T9TysMCQ c=1 sm=1 tr=0
+ a=f8b3WT/FcTuUJCJtQO1udw==:117 a=f8b3WT/FcTuUJCJtQO1udw==:17
+ a=kj9zAlcOel0A:10 a=x7bEGLp0ZPQA:10 a=COSDN44dAAMA:10 a=e5mUnYsNAAAA:8
+ a=7LT71PhNQJGCqy_fO74A:9 a=CjuIK1q_8ugA:10 a=Vxmtnl_E_bksehYqCbjh:22
+Date:   Tue, 11 Aug 2020 15:16:43 -0700 (PDT)
+From:   Zwane Mwaikambo <zwanem@gmail.com>
+To:     Daniel Vetter <daniel@ffwll.ch>
+cc:     tcamuso@redhat.com, dkwon@redhat.com,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH] drm: assure aux_dev is nonzero before using it
+In-Reply-To: <20200811085830.GZ2352366@phenom.ffwll.local>
+Message-ID: <alpine.DEB.2.21.2008111514210.35094@montezuma.home>
+References: <alpine.DEB.2.21.2008101004110.27032@montezuma.home> <20200811085830.GZ2352366@phenom.ffwll.local>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87zh71ywzq.fsf@ashishki-desk.ger.corp.intel.com>
+Content-Type: text/plain; charset=US-ASCII
+X-CMAE-Envelope: MS4wfM7P2Qveb9f03hcrnn/yURgCyHfwV6v+s0PERnrykmqUT9nIDFaYZca86P7MhymuDfMJ8Dft8ITHy7q8RytlH7vlQSIZSejlytm13CeLcq/mMelBiApu
+ y1TTYNtKCJ3Q/v2pncXORY17OTSUGFaloe8dt7NV8Wq1vj9jLDnpoq4wyyV/kSdE+CczOlN4IhiiFlo2Dh8yJcWP93bErXIkEArHtGERwrKsXGQl5d2lK0XW
+ x50GKKcuU6FBvyR2xKvixQevQ4Vu39luQkhZOHO4NYGtFQj7qrjElt44L3H4n8Yq9StF7F1YIVq9M5YDX7S95Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 07:21:13PM +0300, Alexander Shishkin wrote:
-> Andi Kleen <ak@linux.intel.com> writes:
+On Tue, 11 Aug 2020, Daniel Vetter wrote:
+
+> On Mon, Aug 10, 2020 at 10:11:50AM -0700, Zwane Mwaikambo wrote:
+> > Hi Folks,
+> > 	I know this thread eventually dropped off due to not identifying 
+> > the underlying issue. It's still occuring on 5.8 and in my case it 
+> > happened because the udev device nodes for the DP aux devices were not 
+> > cleaned up whereas the kernel had no association with them. I can 
+> > reproduce the bug just by creating a device node for a non-existent minor 
+> > device and calling open().
 > 
-> > On Tue, Aug 11, 2020 at 12:47:24PM +0300, Alexander Shishkin wrote:
-> >> 
-> >> Right, but which bytes? One byte per event? That's
-> >> arbitrary. sizeof(struct perf_event)? Then, probably also sizeof(struct
-> >> perf_event_context).
-> >
-> > Yes the sum of all the sizeofs needed for a perf_event.
+> Hm I don't have that thread anymore, but generally these bugs are solved
+> by not registering the device before it's ready for use. We do have
+> drm_connector->late_register for that stuff. Just a guess since I'm not
+> seeing full details here.
+
+In this particular case, the physical device disappeared before the nodes 
+were cleaned up. It involves putting a computer to sleep with a monitor 
+plugged in and then waking it up with the monitor unplugged.
+
+
+> > 
+> > To me it still makes sense to just check aux_dev because the chardev has 
+> > no way to check before calling.
+> > 
+> > (gdb) list *drm_dp_aux_dev_get_by_minor+0x29
+> > 0x17b39 is in drm_dp_aux_dev_get_by_minor (drivers/gpu/drm/drm_dp_aux_dev.c:65).
+> > 60      static struct drm_dp_aux_dev *drm_dp_aux_dev_get_by_minor(unsigned index)
+> > 61      {
+> > 62              struct drm_dp_aux_dev *aux_dev = NULL;
+> > 63
+> > 64              mutex_lock(&aux_idr_mutex);
+> > 65              aux_dev = idr_find(&aux_idr, index);
+> > 66              if (!kref_get_unless_zero(&aux_dev->refcount))
+> > 67                      aux_dev = NULL;
+> > 68              mutex_unlock(&aux_idr_mutex);
+> > 69
+> > (gdb) p/x &((struct drm_dp_aux_dev *)(0x0))->refcount
+> > $8 = 0x18
+> > 
+> > static int auxdev_open(struct inode *inode, struct file *file)
+> > {
+> >     unsigned int minor = iminor(inode);
+> >     struct drm_dp_aux_dev *aux_dev;
+> > 
+> >     aux_dev = drm_dp_aux_dev_get_by_minor(minor);
+> >     if (!aux_dev)
+> >         return -ENODEV;
+> > 
+> >     file->private_data = aux_dev;
+> >     return 0;
+> > }
+> > 
+> > 
+> > _______________________________________________
+> > dri-devel mailing list
+> > dri-devel@lists.freedesktop.org
+> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
 > 
-> Well, *all* of them will be tedious to collect, seeing as there is
-> ctx->task_ctx_data, there is ring_buffer, scheduling trees, there is
-> stuff that pmus allocate under the hood, like AUX SG tables.
-
-Well I'm sure we can figure something out. I guess it doesn't need to be
-fully accurate, just approximate enough, and be bounded.
-
 > 
-> >> The above two structs add up to 2288 bytes on my local build. Given the
-> >> default RLIMIT_MEMLOCK of 64k, that's 28 events. As opposed to ~1k
-> >> events if we keep using the RLIMIT_NOFILE. Unless I'm missing your
-> >> point.
-> >
-> > Yes that's true. We would probably need to increase the limit to a few
-> > MB at least.
-> 
-> Ok, but if we have to increase a limit anyway, we might as well increase
-> the NOFILE.
-
-NFILE is a terrible limit because it's really large factor * NFILE for
-DoS. Also I suspect there will be many cases where the kernel default
-is not used.
-
-But yes I suspect it should be increased, not just for perf, but
-for other use cases. AFAIK pretty much every non trivial network
-server has to change it.
-
-> 
-> > Or maybe use some combination with the old rlimit for compatibility.
-> > The old rlimit would give an implicit extra RLIMIT_NFILE * 2288 limit
-> > for RLIMIT_MEMLOCK. This would only give full compatibility for a single
-> > perf process, but I suspect that's good enough for most users.
-> 
-> We'd need to settle on charging a fixed set of structures per event,
-> then. And, without increasing the file limit, this would still total at
-> 1052 events.
-
-True. For perf we really would like a limit that scales with the number
-of CPUs.
-
-> 
-> We could also involve perf_event_mlock_kb *and* increase it too, but I
-> suspect distros don't just leave it at kernel's default either.
-
-I haven't seen any distribution that changed it so far.
-
--Andi
