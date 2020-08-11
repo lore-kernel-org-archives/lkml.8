@@ -2,141 +2,197 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 773D7C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 20:13:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA2FAC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 20:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5076120756
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 20:13:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 818842076C
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 20:14:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HSC9jimH"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="AyQ/CFmE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726473AbgHKUNI (ORCPT
+        id S1726512AbgHKUOS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 16:13:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47438 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725889AbgHKUNH (ORCPT
+        Tue, 11 Aug 2020 16:14:18 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:29472 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725889AbgHKUOQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 16:13:07 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5998AC06174A
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 13:13:07 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id a65so112701otc.8
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 13:13:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wMKY1Jw9WxsNwHBaKFMxM1LYgIpjkj5V6Wxr1s+O2Ac=;
-        b=HSC9jimHDqj2Rr/YX/+SxiUOCVVW88ynLYyl/lDM7MG18I3Awgye833RnYVBR2kVdS
-         gVA9vwie+VlyFLkCq5Nj6iBdlaxk8IblV2OB+2iwJswifSkVCRLUex4q+tLLxNj500tH
-         OkAPdLCgDWW08vBQY+uE/41F+6UcAg020bK0w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wMKY1Jw9WxsNwHBaKFMxM1LYgIpjkj5V6Wxr1s+O2Ac=;
-        b=jHyqL7zINBZ0ldVQN2/7uz7C4QScdkXLXFMRW9ip9Y4VYwW4uqgA2Pmhfii1lX0m4u
-         4hRwQG+OQ0TgUiqwwEu5VNSSsqn1rd/qhbBouQ1E7WtpbWoPcO3qc/brEGsUQ+3+pPo9
-         aHpL7fQzWtu28BE5e4V0GlG03ZKE3p9pn7jR/lj9pZWbnQFccD4iDhO/Typotc5xjrRR
-         FgdY0U/4UnKPT0iZpieQ2kC7o4xZcBrUCv2UxJ2Ln7AznqamxQRkAsJTKTnTWufJpRDF
-         LrS/rZ8ho2GZvKH8j3ZDyF9p1WMDer/6SObobTm+/xVWS/okyv2HOug9P6ncYtqomGU9
-         riHw==
-X-Gm-Message-State: AOAM5339AVX1dr3MB9RFBuNHoFB9WViMQXKNdjEWAPt9c4cxKCfsEE9J
-        E1kEmIWwTk/B5tS+OC941z/vvXzGv3g=
-X-Google-Smtp-Source: ABdhPJyDy9pPSqjcZllnx3g24UTlmL8XV5PDqHAgWTOPG86qBDPW0MWX8QYWvqvil9SkYH5ct/Jybw==
-X-Received: by 2002:a05:6830:1e71:: with SMTP id m17mr6883090otr.188.1597176783318;
-        Tue, 11 Aug 2020 13:13:03 -0700 (PDT)
-Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com. [209.85.210.45])
-        by smtp.gmail.com with ESMTPSA id 14sm430341otg.45.2020.08.11.13.13.03
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Aug 2020 13:13:03 -0700 (PDT)
-Received: by mail-ot1-f45.google.com with SMTP id z18so121734otk.6
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 13:13:03 -0700 (PDT)
-X-Received: by 2002:ab0:623:: with SMTP id f32mr9988390uaf.121.1597176383647;
- Tue, 11 Aug 2020 13:06:23 -0700 (PDT)
+        Tue, 11 Aug 2020 16:14:16 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07BK27fl160693;
+        Tue, 11 Aug 2020 16:14:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=ymwOzIn/WHaR13lGBFwwEePPes0F8FmXQ4eXAPvZjeI=;
+ b=AyQ/CFmEF6IKGKVLuj+l8A36MMzLUNY3xIGjy0rKbkym5FuClorNyQKO6C++UFFAAJge
+ EipJ+BTh/FBac4kn6dRBgZNEGQF2lEuSK0XLf25gkRyWEc3GBmwD2YIVuOB4qevhgXOE
+ QSavTUdNH3XHwW2/4i2nf7cKtKqJnp993NYbnlqnhEioz4YtV27P1f4PuIldpz8QeB3M
+ rFAvYIHhJCE0OrSUQLYj+Qsn9DPEfPK/5/5CYXz9JmsZYN7daHOXMpmOGdkBkhhOG/7K
+ /iZuCGg/D6jBA6CTa4h0dGgwunnZmtC8XmxcSDu70GvNIJXgWx4ku6gDwXVgsVjarxz7 zw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32uvjb1nbg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 11 Aug 2020 16:14:00 -0400
+Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07BK2Toj163169;
+        Tue, 11 Aug 2020 16:14:00 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32uvjb1nav-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 11 Aug 2020 16:14:00 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07BK6AMg008912;
+        Tue, 11 Aug 2020 20:13:58 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma04ams.nl.ibm.com with ESMTP id 32skp83ps0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 11 Aug 2020 20:13:58 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07BKDukZ24904094
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 11 Aug 2020 20:13:56 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EB985A405B;
+        Tue, 11 Aug 2020 20:13:55 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E3322A4054;
+        Tue, 11 Aug 2020 20:13:54 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.145.85.161])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 11 Aug 2020 20:13:54 +0000 (GMT)
+Date:   Tue, 11 Aug 2020 23:13:52 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Jessica Clarke <jrtc27@jrtc27.com>
+Cc:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        Tony Luck <tony.luck@intel.com>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
+        Anatoly Pugachev <matorola@gmail.com>,
+        Sergei Trofimovich <slyfox@gentoo.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Frank Scheiner <frank.scheiner@web.de>
+Subject: Re: [PATCH v2] arch/ia64: Restore arch-specific pgd_offset_k
+ implementation
+Message-ID: <20200811201352.GY163101@linux.ibm.com>
+References: <fe587e09-2835-87b9-ceed-89cdb81f327c@physik.fu-berlin.de>
+ <fa71f38e-b191-597a-6359-502cba197050@physik.fu-berlin.de>
+ <AA5E212C-56ED-4DB9-9CC1-EB13745DD5AF@jrtc27.com>
+ <20200811182457.57957-1-jrtc27@jrtc27.com>
 MIME-Version: 1.0
-References: <1597058460-16211-1-git-send-email-mkshah@codeaurora.org>
- <1597058460-16211-3-git-send-email-mkshah@codeaurora.org> <159717444178.1360974.6520145243224264090@swboyd.mtv.corp.google.com>
-In-Reply-To: <159717444178.1360974.6520145243224264090@swboyd.mtv.corp.google.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 11 Aug 2020 13:06:12 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=W8kG-ffngoSp-aEViRHas0rOVHDo5WH-OcmkEER0itMw@mail.gmail.com>
-Message-ID: <CAD=FV=W8kG-ffngoSp-aEViRHas0rOVHDo5WH-OcmkEER0itMw@mail.gmail.com>
-Subject: Re: [PATCH v4 2/7] pinctrl: qcom: Use return value from irq_set_wake call
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Maulik Shah <mkshah@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Evan Green <evgreen@chromium.org>,
-        LinusW <linus.walleij@linaro.org>, Marc Zyngier <maz@kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Srinivas Rao L <lsrao@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200811182457.57957-1-jrtc27@jrtc27.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-11_15:2020-08-11,2020-08-11 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ phishscore=0 spamscore=0 clxscore=1011 mlxscore=0 suspectscore=1
+ lowpriorityscore=0 priorityscore=1501 impostorscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008110138
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Aug 11, 2020 at 07:24:57PM +0100, Jessica Clarke wrote:
+> IA-64 is special and treats pgd_offset_k differently from pgd_offset by
+> not including the region number, and init_mm's PGD is such that it only
+> points to the kernel's region's PGD. This was broken in 974b9b2c68 which
+> unified the two and therefore included the region number, causing it to
+> go way out of bounds of the kernel's PGD, which made the kernel hang
+> during early boot. Thus, permit pgd_offset_k to be overridden like the
+> other macros and override it on IA-64 with the old implementation. Also
+> update the comment to clarify that this is not just an optimisation but
+> a required implementation detail.
 
-On Tue, Aug 11, 2020 at 12:34 PM Stephen Boyd <swboyd@chromium.org> wrote:
->
-> Quoting Maulik Shah (2020-08-10 04:20:55)
-> > msmgpio irqchip is not using return value of irq_set_wake call.
-> > Start using it.
->
-> Does this work when the irq parent isn't setup in a hierarchy? I seem to
-> recall that this was written this way because sometimes
-> irq_set_irq_wake() would fail for the summary irq so it was a best
-> effort setting of wake on the summary line.
->
-> >
-> > Fixes: e35a6ae0eb3a ("pinctrl/msm: Setup GPIO chip in hierarchy")
-> > Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-> > Reviewed-by: Douglas Anderson <dianders@chromium.org>
-> > ---
-> >  drivers/pinctrl/qcom/pinctrl-msm.c | 8 +++-----
-> >  1 file changed, 3 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-> > index 90edf61..c264561 100644
-> > --- a/drivers/pinctrl/qcom/pinctrl-msm.c
-> > +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-> > @@ -1077,12 +1077,10 @@ static int msm_gpio_irq_set_wake(struct irq_data *d, unsigned int on)
-> >          * when TLMM is powered on. To allow that, enable the GPIO
-> >          * summary line to be wakeup capable at GIC.
-> >          */
-> > -       if (d->parent_data)
-> > -               irq_chip_set_wake_parent(d, on);
-> > -
-> > -       irq_set_irq_wake(pctrl->irq, on);
-> > +       if (d->parent_data && test_bit(d->hwirq, pctrl->skip_wake_irqs))
-> > +               return irq_chip_set_wake_parent(d, on);
->
-> So this bit is probably fine.
->
-> >
-> > -       return 0;
-> > +       return irq_set_irq_wake(pctrl->irq, on);
->
-> But this one is probably not fine.
+If I may suggest:
 
-Interesting.  I wasn't aware of the history and thus assumed this was
-a bug.  If Stephen is remembering correctly, please add a comment
-saying that we are purposely ignoring the return value in this case.
+IA-64 is special and treats pgd_offset_k() differently from pgd_offset() by
+using different formulas to calculate index into kernel and user PGD
+tables. The index into user PGDs takes into account the region number
+and the index into the kernel (init_mm) PGD always presumes predefined
+kernel region number. Commit 974b9b2c68 ("mm: consolidate pte_index()
+and pte_offset_*() definitions") made IA-64 to use generic
+pgd_offset_k() which wrongly used pgd_index() for user page tables. As
+the result, the index into kernel PGD was going out of bounds and the
+kernel hang during early boot.
 
--Doug
+Allow overrides of pgd_offset_k() and use an override on IA-64 with the
+old implementation that will correctly index kernel PGD.
+
+> Fixes: 974b9b2c68 ("mm: consolidate pte_index() and pte_offset_*() definitions")
+> Reported-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+> Signed-off-by: Jessica Clarke <jrtc27@jrtc27.com>
+> Tested-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+
+Thanks for the fix, I don't insist on the changelog update, so with the
+nit below
+
+Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
+
+> ---
+> Changes since v1:
+>  * Fixed typo in commit message
+>  * Slightly reworded commit message to sound less weird
+>  * Included Adrian's Tested-by
+> 
+>  arch/ia64/include/asm/pgtable.h | 8 ++++++++
+>  include/linux/pgtable.h         | 2 ++
+>  2 files changed, 10 insertions(+)
+> 
+> diff --git a/arch/ia64/include/asm/pgtable.h b/arch/ia64/include/asm/pgtable.h
+> index 10850897a91c..2ac2199d99ce 100644
+> --- a/arch/ia64/include/asm/pgtable.h
+> +++ b/arch/ia64/include/asm/pgtable.h
+> @@ -366,6 +366,14 @@ pgd_index (unsigned long address)
+>  }
+>  #define pgd_index pgd_index
+>  
+> +/*
+> + * In the kernel's mapped region we know everything is in region number 5, so
+> + * as an optimisation its PGD already points to the area for that region, but
+> + * that means not adding the region here is required, not just an optimisation.
+> + */
+
+How about:
+
+/*
+ * In the kernel's mapped region we know everything is in region number 5, so
+ * as an optimisation its PGD already points to the area for that region.
+ * However, this also means that we cannot use pgd_index() and we never
+ * should add the region here.
+ */
+
+> +#define pgd_offset_k(addr) \
+> +	(init_mm.pgd + (((addr) >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1)))
+> +
+>  /* Look up a pgd entry in the gate area.  On IA-64, the gate-area
+>     resides in the kernel-mapped segment, hence we use pgd_offset_k()
+>     here.  */
+> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+> index 53e97da1e8e2..73c64fe098ba 100644
+> --- a/include/linux/pgtable.h
+> +++ b/include/linux/pgtable.h
+> @@ -117,7 +117,9 @@ static inline pgd_t *pgd_offset_pgd(pgd_t *pgd, unsigned long address)
+>   * a shortcut which implies the use of the kernel's pgd, instead
+>   * of a process's
+>   */
+> +#ifndef pgd_offset_k
+>  #define pgd_offset_k(address)		pgd_offset(&init_mm, (address))
+> +#endif
+>  
+>  /*
+>   * In many cases it is known that a virtual address is mapped at PMD or PTE
+> -- 
+> 2.23.0
+> 
+
+-- 
+Sincerely yours,
+Mike.
