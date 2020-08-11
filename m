@@ -2,122 +2,105 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7231C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 08:32:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40498C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 08:33:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81A9C20756
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 08:32:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bu1id6ST"
+	by mail.kernel.org (Postfix) with ESMTP id 2703B20658
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 08:33:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728451AbgHKIcX (ORCPT
+        id S1728378AbgHKIdY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 04:32:23 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:25270 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728253AbgHKIcW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 04:32:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597134741;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=113l6rTObZmAfNhvroTdwAx0MPPacy2TWww2KjZvjFE=;
-        b=Bu1id6STBDZHupKP9WghdjZGj32KVUbB7DJBKUjBfHgwzCTJ1biieEVVcRZJQk1sk2sgOY
-        dIQ8hboBda+YANOBJx1Pxp3H4aZeFb/I3l3uk0Fj4ZBexXjsLeceSwr/pDdYXhOoMCLpjF
-        GLJiTJ3sjTq/p9x356+JanyGzuACpm8=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-360-elkfaLBnMuqCpxAPLIYW1g-1; Tue, 11 Aug 2020 04:32:19 -0400
-X-MC-Unique: elkfaLBnMuqCpxAPLIYW1g-1
-Received: by mail-ej1-f72.google.com with SMTP id sd23so4878430ejb.14
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 01:32:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=113l6rTObZmAfNhvroTdwAx0MPPacy2TWww2KjZvjFE=;
-        b=ly1+QxXSnTQlcra/ZHY9DAJNRS1lRGSUGKz89beolvAIYt5N0K7ym/D+AX6yM49mC/
-         j+omXlBOczBzA4djSCdnwfCU+5Vj3wVH4SEPgeiAlTk+7CF5W6xeWkqJjdFGhCBWieto
-         ufnUfOaZzVG5fp0fmlybdYiZhRkRmKKXQf4LQom2mDZ3sPmJMQ4ug4uRVzkrw2aFihfi
-         lqwRSU6E0k+KWWHZ64Fl4JkhCHJ1Fue1fRcdiBEjTGZKhuU/cfYadGSL742sLnZPfk09
-         03DqM4p9Z8VGUW4C9F/yzIr1BYQRLN1VjrGXMnfrGWUtmdLCoUqpcXjnUuQwxtiZdPsV
-         BqPw==
-X-Gm-Message-State: AOAM531W6gA5/VeW7lVuPP+Yvt+t90qzy/aKFyh72hXR2i+AqMWEtut/
-        pA/HThbEpibyvQV9x0oY9X2X3Ikwnd4n9TEqI2q7Ssw8U6m800yrKjZPPDozkAIaPzpFDj2s4Uc
-        oeMcPRw4wNA5tKTLoOEjwthAE
-X-Received: by 2002:a17:906:1c0e:: with SMTP id k14mr24859819ejg.479.1597134738248;
-        Tue, 11 Aug 2020 01:32:18 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJybotlmCqqppRaJBarXLrP9vGvqFoSrT6KeBVeAUKEclQWSoGUzHpi4cyfpXTfE0GXpnUywlA==
-X-Received: by 2002:a17:906:1c0e:: with SMTP id k14mr24859805ejg.479.1597134738030;
-        Tue, 11 Aug 2020 01:32:18 -0700 (PDT)
-Received: from [192.168.178.58] ([151.21.12.249])
-        by smtp.gmail.com with ESMTPSA id d11sm13983189edm.87.2020.08.11.01.32.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Aug 2020 01:32:17 -0700 (PDT)
-Subject: Re: [PATCH v3 2/2] x86/kvm: Expose new features for supported cpuid
-To:     "Luck, Tony" <tony.luck@intel.com>,
-        "Zhang, Cathy" <cathy.zhang@intel.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>
-Cc:     "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "Park, Kyung Min" <kyung.min.park@intel.com>,
-        "ricardo.neri-calderon@linux.intel.com" 
-        <ricardo.neri-calderon@linux.intel.com>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "wanpengli@tencent.com" <wanpengli@tencent.com>,
-        "jmattson@google.com" <jmattson@google.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
-        "ak@linux.intel.com" <ak@linux.intel.com>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>
-References: <1596959242-2372-1-git-send-email-cathy.zhang@intel.com>
- <1596959242-2372-3-git-send-email-cathy.zhang@intel.com>
- <d7e9fb9a-e392-73b1-5fc8-3876cb30665c@redhat.com>
- <27965021-2ec7-aa30-5526-5a6b293b2066@intel.com>
- <e92df7bb267c478f8dfa28a31fc59d95@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <450cca92-259f-4fb5-1f95-596e8862ba3b@redhat.com>
-Date:   Tue, 11 Aug 2020 10:32:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Tue, 11 Aug 2020 04:33:24 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:56696 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728224AbgHKIdY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 04:33:24 -0400
+Received: from bogon.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxeMXKVzJfOlcHAA--.16S2;
+        Tue, 11 Aug 2020 16:33:16 +0800 (CST)
+From:   XingxingSu <suxingxing@loongson.cn>
+To:     Huacai Chen <chenhc@lemote.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Aleksandar Markovic <aleksandar.qemu.devel@gmail.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] KVM: MIPS/VZ: Fix build error caused by 'kvm_run' cleanup
+Date:   Tue, 11 Aug 2020 16:33:14 +0800
+Message-Id: <1597134794-20611-1-git-send-email-suxingxing@loongson.cn>
+X-Mailer: git-send-email 2.1.0
 MIME-Version: 1.0
-In-Reply-To: <e92df7bb267c478f8dfa28a31fc59d95@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=y
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf9DxeMXKVzJfOlcHAA--.16S2
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+        VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYd7k0a2IF6FyUM7kC6x804xWl14x267AK
+        xVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGw
+        A2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r4j
+        6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Cr
+        1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv
+        0487M2AExVAIFx02aVAFz4v204v7Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
+        IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
+        Y48IcxkI7VAKI48JM4kE6I8I3I0E14AKx2xKxVC2ax8xMxkIecxEwVAFwVW8ZwCF04k20x
+        vY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I
+        3I0E7480Y4vE14v26r1j6r18MI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIx
+        AIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAI
+        cVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4
+        A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jVUDJUUUUU=
+X-CM-SenderInfo: pvx0x0xj0l0wo6or00hjvr0hdfq/1tbiAQAFC13QvMLnFwABsN
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/08/20 01:59, Luck, Tony wrote:
-> 
-> Part 1: Add TSXLDTRK to cpufeatures.h Part 2: Add TSXLDTRK to
-> arch/x86/kvm/cpuid.c (on top of the version that Paolo committed with
-> SERIALIZE)
-> 
-> Paolo: The 5.9 merge window is still open this week. Will you send
-> the KVM serialize patch to Linus before this merge window closes?  Or
-> do you have it queued for v5.10?
+Commit c34b26b98caca48ec9ee9 ("KVM: MIPS: clean up redundant 'kvm_run'
+parameters") remove the 'kvm_run' parameter in kvm_vz_gpsi_lwc2.
 
-Yes, I am sending it today together with the bulk of ARM and PPC
-changes.  I just wanted to soak the branch in linux-next for a day or
-two, just in case I screwed up the ARM and PPC pull requests.
+The following build error:
 
-Paolo
+arch/mips/kvm/vz.c: In function ‘kvm_trap_vz_handle_gpsi’:
+arch/mips/kvm/vz.c:1243:43: error: ‘run’ undeclared (first use in this function)
+   er = kvm_vz_gpsi_lwc2(inst, opc, cause, run, vcpu);
+                                           ^~~
+arch/mips/kvm/vz.c:1243:43: note: each undeclared identifier is reported only 
+ once for each function it appears in
+scripts/Makefile.build:283: recipe for target 'arch/mips/kvm/vz.o' failed
+make[2]: *** [arch/mips/kvm/vz.o] Error 1
+scripts/Makefile.build:500: recipe for target 'arch/mips/kvm' failed
+make[1]: *** [arch/mips/kvm] Error 2
+Makefile:1785: recipe for target 'arch/mips' failed
+make: *** [arch/mips] Error 2
+
+
+Signed-off-by: XingxingSu <suxingxing@loongson.cn>
+---
+ arch/mips/kvm/vz.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/arch/mips/kvm/vz.c b/arch/mips/kvm/vz.c
+index 3932f76..49c6a2a 100644
+--- a/arch/mips/kvm/vz.c
++++ b/arch/mips/kvm/vz.c
+@@ -1142,7 +1142,6 @@ static enum emulation_result kvm_vz_gpsi_cache(union mips_instruction inst,
+ #ifdef CONFIG_CPU_LOONGSON64
+ static enum emulation_result kvm_vz_gpsi_lwc2(union mips_instruction inst,
+ 					      u32 *opc, u32 cause,
+-					      struct kvm_run *run,
+ 					      struct kvm_vcpu *vcpu)
+ {
+ 	unsigned int rs, rd;
+@@ -1240,7 +1239,7 @@ static enum emulation_result kvm_trap_vz_handle_gpsi(u32 cause, u32 *opc,
+ #endif
+ #ifdef CONFIG_CPU_LOONGSON64
+ 	case lwc2_op:
+-		er = kvm_vz_gpsi_lwc2(inst, opc, cause, run, vcpu);
++		er = kvm_vz_gpsi_lwc2(inst, opc, cause, vcpu);
+ 		break;
+ #endif
+ 	case spec3_op:
+-- 
+2.1.0
 
