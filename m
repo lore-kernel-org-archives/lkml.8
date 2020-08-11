@@ -2,82 +2,87 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E7B6C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 02:31:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6928FC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 02:33:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED99920639
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 02:31:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FD83206DC
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 02:33:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GLjyr0HE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DXgS/arh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728013AbgHKCbE (ORCPT
+        id S1728135AbgHKCdv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 22:31:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53218 "EHLO
+        Mon, 10 Aug 2020 22:33:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726971AbgHKCbE (ORCPT
+        with ESMTP id S1726958AbgHKCdu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 22:31:04 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12ADBC06174A;
-        Mon, 10 Aug 2020 19:31:04 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id c10so829667pjn.1;
-        Mon, 10 Aug 2020 19:31:04 -0700 (PDT)
+        Mon, 10 Aug 2020 22:33:50 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56ADDC06174A;
+        Mon, 10 Aug 2020 19:33:50 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id m7so10406262qki.12;
+        Mon, 10 Aug 2020 19:33:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=YrmOd6VYsBxeA4HmWkdR0wsjfu5WqCWHq6heMSIzewU=;
-        b=GLjyr0HEEMeYzfZLEfs8euboLxhX2h8WIBGawhdJ0Wmj2roVLiobjEzTA334o655qd
-         +Lf8QaFDWSj8mEP75Lb/S2JAAkMvY1pMR6plideMThmJJb3BNBs1zmZYdMA6CoXHXLXN
-         RLDjFoziTcD6ar4Blq3TWEsdd1c68I5AxSPJZ9OA/s521gtI2f8OZm/Fx/9NZLMueWSG
-         B1HSsaiPi45OkNJppZ+JSLWILklcT2lmpJy8Cb2lNKpknuvIa1z+aiehOPGIesFx+KmO
-         tdqERmaxDPJsb4QEGXTylUAQxPto7MrqZ4ifIgnfPFCuO2lzLBK/2IhFKULfP0bGwBAv
-         Geaw==
+        bh=7oCC5oUKG+SSG28wXifIp6MPrRleapWysXVZ3T9Urho=;
+        b=DXgS/arh9/9yYFYXbDzO0r5dePHSSrRCMD49flNv5AftIZX7HT0X7L78nFJJHIjfZP
+         br3hOuGW7HxaL2d7Zf4Jn4bsjSNL4bqz3vZXR0LyX80g7PpWhkJs2rkefgrDhDCYzrE4
+         cK6F0MB0DuEFCM8wV84HyNPP95wS3hD9hYE/TXaGyIR3h1egs+Ml8xSiuKScC30Xxz6A
+         hajW6cOEfo6E+fnwsZB2VPFCZiKHyTGfRrjinT6BU2NF8yj3iF/GAyPIg1x5f6TD2UMk
+         yDGqgan/QgtPZaTO6l1s5/X1n4CC4X+IrvKfRnN9bxQdLc0PJI1yIHaIyuuu3Vrq+U46
+         kbcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=YrmOd6VYsBxeA4HmWkdR0wsjfu5WqCWHq6heMSIzewU=;
-        b=tEa9jSBEZuGu241JN2bE0sEkvyCWUudQ37WHyO8VXXzxsNC90EuVtUXTW9CgN2kh8P
-         OW2bbnPVAMO/uKzMKKrohfg/6rPSHf6RseFYB/jvlH1IwFyqiTmdfgmjy0LlqtULnSE4
-         oN591TyvY4Q+A+YRne7FEdMcvytU10o/q1sahfrmZ0iqaNjcKtlddIM3AsIUdHu14qgP
-         4SH8bukU+aWbF7XkaallkvbwfY/U9dqt87+JJ7Xq95eBOjljBlxbI5u/OrZz/rP7zjMV
-         k03RUpNmXhZ8+TFgJyJnf/MEE2ghnyi3BwxA+rPiZiE3zxpB7Pvfn6VumYUgSZrG1vRt
-         QEUQ==
-X-Gm-Message-State: AOAM533ooQFLxwY2DQlMph1l5Gjggj5b2OpH/h/sScYmWXIogpAIk79k
-        lcFFIBkX0/FSw0Imbo5y19A=
-X-Google-Smtp-Source: ABdhPJwOaUJin4V1AXI+DSZIrGGA9wu2kqfhZ9JqLdXn1nINUwvApruRO3Y5B/8wB/C8Cu1O0rSiJg==
-X-Received: by 2002:a17:90a:2224:: with SMTP id c33mr2285430pje.56.1597113063374;
-        Mon, 10 Aug 2020 19:31:03 -0700 (PDT)
-Received: from [10.230.30.107] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id h5sm23666430pfq.146.2020.08.10.19.31.00
+        bh=7oCC5oUKG+SSG28wXifIp6MPrRleapWysXVZ3T9Urho=;
+        b=opTOpprvHhxzpf4SAQP0uwXFrzhI8JziW74TvLYHwm2RWfyU2CFDinSzcwZxDczWNp
+         P4+B3Q/KJc2SlyIFjSlLwOQyb5HmtuWQmqzbPTI1W3CsZkppGphqr/S5s7Vc+pbdy+fl
+         Ozpo4uSOXa9FsZ8Vspv3S4kXj//4iZ6Plp/JHq7OPkS4L4J6mxGh4L8Hi2YJqsST04n6
+         RvmiQZvgsPVbVu4eeC6MfF74pTFe+5PjOl7fCjBfISnD596hYqC3fSn7OYfUXaHoE49e
+         4sGitsCVed4/ZQ9UYxErzcJoazetK9ZWPaPGV+1cRZeVcby3BRNWlEEW3xq9GnnaYqiW
+         Yu0A==
+X-Gm-Message-State: AOAM531yT2aBtH/+5bSpDzGdrVnm1yZNwMKi3d7+EYPHV1mTE8BVmehw
+        cn6aLf8Z3KZyc/C2MfQRppe3vEiO
+X-Google-Smtp-Source: ABdhPJwe8UYWaUgrasvpBwhqujStM1uIsyxDOPiwRUmCTDhmkaI80KIECz9rIXCj08klupW2QylnuQ==
+X-Received: by 2002:a37:62cf:: with SMTP id w198mr29454919qkb.172.1597113229005;
+        Mon, 10 Aug 2020 19:33:49 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id 7sm15235445qky.89.2020.08.10.19.33.46
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Aug 2020 19:31:02 -0700 (PDT)
-Subject: Re: [PATCH v3] i2c: iproc: fix race between client unreg and isr
-To:     Dhananjay Phadke <dphadke@linux.microsoft.com>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Wolfram Sang <wsa@kernel.org>, Ray Jui <rjui@broadcom.com>
-Cc:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com
-References: <1597106560-79693-1-git-send-email-dphadke@linux.microsoft.com>
+        Mon, 10 Aug 2020 19:33:47 -0700 (PDT)
+Subject: Re: [PATCH v2 3/4] MIPS: BCM63xx: enable EHCI for DWV-S0 board
+To:     =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>,
+        =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jonas Gorski <jonas.gorski@gmail.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200807100411.2904279-1-noltari@gmail.com>
+ <20200807100411.2904279-4-noltari@gmail.com>
+ <CAAdtpL7+_inNrbDpq_wt1Eo=tU6+e+yYR9ox-BF7bN82HVV5_Q@mail.gmail.com>
 From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <69576821-1e8e-51c2-6c15-5774ca598c36@gmail.com>
-Date:   Mon, 10 Aug 2020 19:30:58 -0700
+Message-ID: <b1210ef6-36ec-9e3f-e686-a87244ea1c33@gmail.com>
+Date:   Mon, 10 Aug 2020 19:33:45 -0700
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Firefox/68.0 Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <1597106560-79693-1-git-send-email-dphadke@linux.microsoft.com>
+In-Reply-To: <CAAdtpL7+_inNrbDpq_wt1Eo=tU6+e+yYR9ox-BF7bN82HVV5_Q@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -85,60 +90,23 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 8/10/2020 5:42 PM, Dhananjay Phadke wrote:
-> When i2c client unregisters, synchronize irq before setting
-> iproc_i2c->slave to NULL.
+On 8/9/2020 11:49 AM, Philippe Mathieu-Daudé wrote:
+> Hi Álvaro,
 > 
-> (1) disable_irq()
-> (2) Mask event enable bits in control reg
-> (3) Erase slave address (avoid further writes to rx fifo)
-> (4) Flush tx and rx FIFOs
-> (5) Clear pending event (interrupt) bits in status reg
-> (6) enable_irq()
-> (7) Set client pointer to NULL
+> On Fri, Aug 7, 2020 at 12:05 PM Álvaro Fernández Rojas
+> <noltari@gmail.com> wrote:
+>>
+>> EHCI and OHCI share the same USB ports. Therefore, if the board has OHCI
+>> it should also have EHCI.
 > 
-> Unable to handle kernel NULL pointer dereference at virtual address 0000000000000318
+> This statement isn't correct. OHCI doesn't imply EHCI...
+> (although the opposite is almost always true).
 > 
-> [  371.020421] pc : bcm_iproc_i2c_isr+0x530/0x11f0
-> [  371.025098] lr : __handle_irq_event_percpu+0x6c/0x170
-> [  371.030309] sp : ffff800010003e40
-> [  371.033727] x29: ffff800010003e40 x28: 0000000000000060
-> [  371.039206] x27: ffff800010ca9de0 x26: ffff800010f895df
-> [  371.044686] x25: ffff800010f18888 x24: ffff0008f7ff3600
-> [  371.050165] x23: 0000000000000003 x22: 0000000001600000
-> [  371.055645] x21: ffff800010f18888 x20: 0000000001600000
-> [  371.061124] x19: ffff0008f726f080 x18: 0000000000000000
-> [  371.066603] x17: 0000000000000000 x16: 0000000000000000
-> [  371.072082] x15: 0000000000000000 x14: 0000000000000000
-> [  371.077561] x13: 0000000000000000 x12: 0000000000000001
-> [  371.083040] x11: 0000000000000000 x10: 0000000000000040
-> [  371.088519] x9 : ffff800010f317c8 x8 : ffff800010f317c0
-> [  371.093999] x7 : ffff0008f805b3b0 x6 : 0000000000000000
-> [  371.099478] x5 : ffff0008f7ff36a4 x4 : ffff8008ee43d000
-> [  371.104957] x3 : 0000000000000000 x2 : ffff8000107d64c0
-> [  371.110436] x1 : 00000000c00000af x0 : 0000000000000000
+> Now per 6358-PB01-R the bcm6358 indeed has a EHCI controller.
 > 
-> [  371.115916] Call trace:
-> [  371.118439]  bcm_iproc_i2c_isr+0x530/0x11f0
-> [  371.122754]  __handle_irq_event_percpu+0x6c/0x170
-> [  371.127606]  handle_irq_event_percpu+0x34/0x88
-> [  371.132189]  handle_irq_event+0x40/0x120
-> [  371.136234]  handle_fasteoi_irq+0xcc/0x1a0
-> [  371.140459]  generic_handle_irq+0x24/0x38
-> [  371.144594]  __handle_domain_irq+0x60/0xb8
-> [  371.148820]  gic_handle_irq+0xc0/0x158
-> [  371.152687]  el1_irq+0xb8/0x140
-> [  371.155927]  arch_cpu_idle+0x10/0x18
-> [  371.159615]  do_idle+0x204/0x290
-> [  371.162943]  cpu_startup_entry+0x24/0x60
-> [  371.166990]  rest_init+0xb0/0xbc
-> [  371.170322]  arch_call_rest_init+0xc/0x14
-> [  371.174458]  start_kernel+0x404/0x430
-> 
-> Fixes: c245d94ed106 ("i2c: iproc: Add multi byte read-write support for slave mode")
-> 
-> Signed-off-by: Dhananjay Phadke <dphadke@linux.microsoft.com>
+> Do you mind rewording the commit description?
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Is not it that a single USB port is used and we need the EHCI controller
+active in order for the correct speed negotiation to occur?
 -- 
 Florian
