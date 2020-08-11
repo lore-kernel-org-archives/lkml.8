@@ -2,153 +2,318 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C9AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 12:20:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D2EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 12:22:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A1A7206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 12:20:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="je2tbc1z";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="VSdXqrZI"
+	by mail.kernel.org (Postfix) with ESMTP id 7C082206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 12:22:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597148556;
+	bh=kmUJH2BigcAC4dcBoqp5/zGq8P1LDQpVAX+VdGsMKak=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=1DUvWFf73NcbiIs8GNtPazr2GjQhL1ZmtkFDEqLPSiJNbZELKpPCAuR6rcq7D7KLz
+	 Q1ufwEkE5V3EmCXHNmsV3rConWjRcSkWpy+RKbD+7gi4sePZ1t3CosbTbCpN1LxMUu
+	 obHLz4hrLxajIGyRzpQuXix4an+0UtGapeW1D+Vo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728526AbgHKMUx (ORCPT
+        id S1728756AbgHKMWd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 08:20:53 -0400
-Received: from esa3.hgst.iphmx.com ([216.71.153.141]:17766 "EHLO
-        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728564AbgHKMUg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 08:20:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1597148436; x=1628684436;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=YUyOKJBR40/MT0ng/2QW+6KSy68wt+XVtCajjHAPDFU=;
-  b=je2tbc1zxL5sNVCSu/bsuAJOvz8woMUhStDGyCP05+hgugrtsxqHI3vt
-   lWIYh+pzj9hOsyi3+HHca6jC3zH4nQZElUrQTO/ANZPqzM8B6FnzIK+3P
-   /8pgQnEm8klvIx3Kx6vyLArd0J+TPUek9xNyUa5JV59VzjcPDd5vrhBrr
-   VMlVy/Aw6Y34bwAgXr2hwIP8Tgl3Qhs08//PTLaN3UAtsm1SC0ojOXcxR
-   2tKLuwEfy1I4RDfMejjyTmZKZciRtvovnfo9jPTXJ56wBEJzKT4yja0Qy
-   ybTtw7sWZ8vw+ZUSc1wbofg6jNhTZZjfyt8VUCmzfH+ofRqymR4KWTh0d
-   g==;
-IronPort-SDR: doh5YiBaw+a6tPrHb7laUNE/N8Rbx3cVf8I83LPSpQB//hkuyy162jfCabmtuUHn/outJ5W98Q
- wvSJs8u1p1Ku1KYxTxzB2R9U2v7uMEEkFjKUjnGWR6UmUU+GNkbLg8pe6uZZlb5qQpBh0MLL+3
- qmJATghFtcejDQUh2Ey01NwjwgwgSzs4wNUHVGIDU3a1l3w7C6L9JDzZMVzefVqlyVEtdkhN5j
- w7SFhAIWyO6Ip/0IG8ZZWhihzbcBPAmKZEL7KSeEfvWFySU1/HnNmrYy1yYuxINwHJwH/fHjS/
- /SE=
-X-IronPort-AV: E=Sophos;i="5.75,461,1589212800"; 
-   d="scan'208";a="148989681"
-Received: from mail-bn7nam10lp2102.outbound.protection.outlook.com (HELO NAM10-BN7-obe.outbound.protection.outlook.com) ([104.47.70.102])
-  by ob1.hgst.iphmx.com with ESMTP; 11 Aug 2020 20:20:29 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ftv0whBauaD88ohfc6AZc+43ef88pJB5agNSrhs/Ftz0Ox3yItbvHSIrMefl2u6It3XuOpaA4nUFYvy3hH9cD9EYOSENWSD0OrmYnjzpLK8qsjvChSanVUYw1bPQbYgwK1UvZXtHuuL1aVEUNmZcP+Ia2YidGmYu8wnYC/sjYEd1W6f22C+fTkexC7089b4hLRhA1TWm0fOGEfa0PoxosAwpPJQPQP0Bg001Y2pUlMCI3JgfDP/Hi1YVzKnvpVVpTq6gOI90GVDXVS8NvUTz9dpMC+UXfndl7VzFqMks9I+SFRAK/Ztf3OkAEPMlylnRWTMNFksQwGWjUY8cV2u3TQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=smIMNEceCoetEbne5cyVXD8FRtst86fqI/yBgUzNNjk=;
- b=FXvfQYvV4vBX3DfEyrcvCH90QyxuE+dyWF5o5xIfYTsfVLfIafggWtT4VvRHDQuqV1SnEcV1OLP+/m3lUoWh069Rju3V5bBjAW055sJP3nTqc5o0iPQk0K0kt9c31FkNCY1+p/GvYks9TnyXTDQYmioePiMFhRRKsX+MbaQGW8SlEPIolDazpCx1wQnmzE5PvqFdvrA49k7r/vnFQ+jqT+YR7eNgrdZrekfs/7jzFDnw2xet+U30XCtzEDM/AS6QtWXBaYr7YstASCGr6JFyFwyobsnQdb89R/HvPNgxaREn6LDQtMzE8JpumFVNdGehSG4SOHF2Bd8EvUKOhx5sPg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=smIMNEceCoetEbne5cyVXD8FRtst86fqI/yBgUzNNjk=;
- b=VSdXqrZI6vW9RO9Oq372aAR3b4sbpY0Nc4AuYPsIaUV1avyiiqGZjQt7BNzItAzftkVSBtVtTKgDycfT6yp2uZL2tydVpO5/k/owPDDfhF6KOyxfSAfHbAW/6pCQcJvQ9E2ZMLJPohYT/KIEFVrLJWPz60cO4OaGQVCDX03wxs0=
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com (2603:10b6:805:a4::19)
- by SN2PR04MB2351.namprd04.prod.outlook.com (2603:10b6:804:12::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.19; Tue, 11 Aug
- 2020 12:20:26 +0000
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::c86c:8b99:3242:2c68]) by SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::c86c:8b99:3242:2c68%7]) with mapi id 15.20.3261.025; Tue, 11 Aug 2020
- 12:20:26 +0000
-From:   Avri Altman <Avri.Altman@wdc.com>
-To:     Adrian Hunter <adrian.hunter@intel.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Can Guo <cang@codeaurora.org>
-Subject: RE: [PATCH 1/2] scsi: ufs: Fix interrupt error message for shared
- interrupts
-Thread-Topic: [PATCH 1/2] scsi: ufs: Fix interrupt error message for shared
- interrupts
-Thread-Index: AQHWbx4HOuqfYrnFSkanGiAtl5Qaa6ky1Mdw
-Date:   Tue, 11 Aug 2020 12:20:26 +0000
-Message-ID: <SN6PR04MB4640A7618C2425D6E837C20EFC450@SN6PR04MB4640.namprd04.prod.outlook.com>
-References: <20200810135548.28213-1-adrian.hunter@intel.com>
-In-Reply-To: <20200810135548.28213-1-adrian.hunter@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: intel.com; dkim=none (message not signed)
- header.d=none;intel.com; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [212.25.79.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: aa4daf5d-8800-4db7-9bca-08d83df0ee19
-x-ms-traffictypediagnostic: SN2PR04MB2351:
-x-microsoft-antispam-prvs: <SN2PR04MB2351EBFC5A3360B191D002A8FC450@SN2PR04MB2351.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 6Dpvg1NBZmNGcE7vQ3QNJ0ie/Jfd02DXx3io8y71eefzsF9FdLWrde/j0DhCAPGxUmYJ868IN4Dc/FlFzJlzv7j7lecLrh07bTfqmyBrtJrA4koqdBjkEFg/1+LM9sIvzLx+WeUZrsZKjxkpAAIEcP58I/nPZ/4vviL1TU7vldhKXjOWFqI5K55MMeQVvq8ORg9YoEH5V4XDXllddo5zm1SAPLSeSgi/RHh3b3dmc37KSLXpq8KnAFwMrGuse5/NnaAuMH4lSJeifcD/6F+ccC4qO5fb6pvO+oExsamqtT+2vNmwC4be8GcywvN/6cV+2aQwbMgvXGf0of8YaVnhfg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR04MB4640.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(66476007)(9686003)(71200400001)(8936002)(7696005)(4744005)(54906003)(6506007)(4326008)(5660300002)(83380400001)(64756008)(110136005)(8676002)(66446008)(66946007)(76116006)(52536014)(66556008)(186003)(86362001)(498600001)(33656002)(55016002)(2906002)(15650500001)(26005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: vxpRegkMDrLScNNerW1Zom99JnknG7pSg5A50dRR3D3QyNHiyOqz4q00gpPzMvRep1cpLCWJQJvUA/9wNnSqQYs0pPtHrHO8kJcC7tqWxJROZjQSrEce/r/Iw3cG+5ywUY3YhYbeSZOGEiW3MV60QUZgilSXPLxUw4HqEpDpFW0JdJjUAtXpCVHLKGQQEc+ajltEI3cUyMSmsUouThyJcIWU3/vvT1rNGj5b0Fg/tjFfs/xvrn6CSSDkJfzUdcXO6EUQFfAFd+e8dOfWoNZ7whHKIbQBx0KxW7bq7nnon4iGfEEiCoDZbcnSX85RdLK8sTgVSYQ5rX0eIVoHe2u4I6B45O8YKTLTifCUOn/c0L35mAA3Cb+5Rbrir2HiWXR6n8w0zl+dUOxD7USe3PnpaLUE5NCdqXLewgwTm5hVMb3/1x5Pxc/FcZ5pNg794strbxqfUIQA7jnuk4H/A5toZ6wVTd+bi/m89UQRSWVV/brF/Exz2PTovNv24f5bpZY1fCBGyEAcNr2wqzl+dnMkcBMgca5JlGEV3Rb0JeE25HPDtCsid6Rbt4eWe6nehmqOaBfsZLKDSnAsicvYVk6L5p8dX0Sx+/mY+v32Anb4AvjJAi61CJX9TZqx5oHrr1BS1ASTwGxLGSHWirpqHDPBtg==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 11 Aug 2020 08:22:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44858 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728691AbgHKMVT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 08:21:19 -0400
+Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5F9A206C3;
+        Tue, 11 Aug 2020 12:21:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597148472;
+        bh=kmUJH2BigcAC4dcBoqp5/zGq8P1LDQpVAX+VdGsMKak=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=RFtL7ecWChnXfKaHeuWjfotFW4bSoItFdSrL7GIV1PxB634hcCW3537i+Q7u/VUEV
+         +LkT8cy2Fb3ISPz93x1bPAJM0q6kbeE9ZX1GaNjsRa6nS4xo7rl0x4sgxvZc/JsijZ
+         dqXHMkuHWZ+iV0dRDolS0V+Iaaci7Kd/7w39gfiA=
+Date:   Tue, 11 Aug 2020 14:21:06 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>, Yu Chen <chenyu56@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        ShuFan Lee <shufan_lee@richtek.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Jun Li <lijun.kernel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Jack Pham <jackp@codeaurora.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Subject: Re: [RFC][PATCH v3 11/11] misc: hisi_hikey_usb: Driver to support
+ usb functionality of Hikey960
+Message-ID: <20200811142106.3dba2f9f@coco.lan>
+In-Reply-To: <CALAqxLUu76m=Q_tDht4DmtgXYmL7Ma1zVJZzvhcsHn2hMAgpLA@mail.gmail.com>
+References: <20191016033340.1288-1-john.stultz@linaro.org>
+        <20191016033340.1288-12-john.stultz@linaro.org>
+        <20200810183503.3e8bae80@coco.lan>
+        <CALAqxLUu76m=Q_tDht4DmtgXYmL7Ma1zVJZzvhcsHn2hMAgpLA@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR04MB4640.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: aa4daf5d-8800-4db7-9bca-08d83df0ee19
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Aug 2020 12:20:26.7776
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 0SRt6lM3+nHYCcdzBphOmA5f1FZ8+Rwaw1/rP76ckDjs35W7aYCxU1eVdidQyv7gmGcFeJVrfZnMtVUwZc8LBA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN2PR04MB2351
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=20
-> The interrupt might be shared, in which case it is not an error for the
-> interrupt handler to be called when the interrupt status is zero, so
-> remove the message print and register dump.
->=20
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-> Fixes: 9333d77573485 ("scsi: ufs: Fix irq return code")
-> ---
->  drivers/scsi/ufs/ufshcd.c | 6 ------
->  1 file changed, 6 deletions(-)
->=20
-> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-> index cdcf56679b41..d7522dba4dcf 100644
-> --- a/drivers/scsi/ufs/ufshcd.c
-> +++ b/drivers/scsi/ufs/ufshcd.c
-> @@ -5994,12 +5994,6 @@ static irqreturn_t ufshcd_intr(int irq, void *__hb=
-a)
->                 intr_status =3D ufshcd_readl(hba, REG_INTERRUPT_STATUS);
->         } while (intr_status && --retries);
->=20
-> -       if (retval =3D=3D IRQ_NONE) {
-Maybe    if (enabled_intr_status && retval =3D=3D IRQ_NONE) { ?
+Em Mon, 10 Aug 2020 21:36:58 -0700
+John Stultz <john.stultz@linaro.org> escreveu:
+
+> On Mon, Aug 10, 2020 at 9:35 AM Mauro Carvalho Chehab
+> <mchehab+huawei@kernel.org> wrote:
+> > Em Wed, 16 Oct 2019 03:33:40 +0000
+> > John Stultz <john.stultz@linaro.org> escreveu:
+> >  
+> > > From: Yu Chen <chenyu56@huawei.com>
+> > >
+> > > The HiKey960 has a fairly complex USB configuration due to it
+> > > needing to support a USB-C port for host/device mode and multiple
+> > > USB-A ports in host mode using a single USB controller.
+> > >
+> > > See schematics here:
+> > >   https://github.com/96boards/documentation/raw/master/consumer/hikey/hikey960/hardware-docs/HiKey960_Schematics.pdf
+> > >
+> > > This driver acts as a usb-role-switch intermediary, intercepting
+> > > the role switch notifications from the tcpm code, and passing
+> > > them on to the dwc3 core.
+> > >
+> > > In doing so, it also controls the onboard hub and power gpios in
+> > > order to properly route the data lines between the USB-C port
+> > > and the onboard hub to the USB-A ports.
+> > >
+> > > NOTE: It was noted that controlling the TYPEC_VBUS_POWER_OFF and
+> > > TYPEC_VBUS_POWER_ON values here is not reccomended. I'm looking
+> > > for a way to remove that bit from the logic here, but wanted to
+> > > still get feedback on this approach.  
+> >
+> > Let me somewhat hijack this thread. I'm trying to add support here
+> > for the Hikey 970 driver. Maybe you might help me finding the remaing
+> > issues over there ;-)  
+> 
+> So.. just as a heads up, this is a fairly old version of this patch. I
+> have the current version here:
+>   https://git.linaro.org/people/john.stultz/android-dev.git/commit/?h=dev/hikey960-mainline-WIP&id=1155346a06472177b8a7e7918de052549916f06f
+> 
+> So you may want to rework ontop of that.
+
+Yeah, I used the version from your tree.
+
+> 
+> That said, the last time I submitted the hub/mux driver, Rob pushed
+> back suggesting that the vbus, switch and hub power should probably be
+> DT describable:
+>   https://lore.kernel.org/lkml/20191218163738.GA12358@bogus/
+
+Yeah, makes sense. After USB starts working, I'll try to write a
+patch on the top of yours in order to use the schema he proposed.
+
+For now, I'm trying to understand why the only two devices found
+are the hub ones. Maybe the device is still in budget mode.
+
+> I'm at the point where I probably don't have additional cycles to
+> spend to rework all the supporting drivers to support such a DT
+> binding, so I'm not very optimistic this patch will go upstream (its
+> much easier to float the current hub/mux driver).  So you may want to
+> focus on Rob's feedback there rather than any of my feedback here. :)
+
+I have some cycles to spend on this. Just got a 960 board on my hands.
+I guess I'll try to test your patches on the top of it.
+
+> > The Hikey 970 has lots of things in common with Hikey 960, but
+> > the USB hub uses a somewhat different approach (based on what I
+> > saw at the Linaro's 4.9 official Hikey kernel tree).
+> >
+> > Basically, with the enclosed patch applied, the USB hub needs these
+> > at the DT file:
+> >
+> >                 hikey_usbhub: hikey_usbhub {
+> >                         compatible = "hisilicon,kirin970_hikey_usbhub";
+> >
+> >                         typec-vbus-gpios = <&gpio26 1 0>;
+> >                         otg-switch-gpios = <&gpio4 2 0>;
+> >                         hub_reset_en_gpio = <&gpio0 3 0>;
+> >                         hub-vdd-supply = <&ldo17>;
+> >                         usb-role-switch;
+> > ...
+> >                 }
+> >
+> > E.g. when compared with Hikey 960, the USB hub:
+> >
+> > - Hikey 970 uses a regulator instead of GPIO for powering on;  
+> 
+> So, it might not be too hard to rework the hikey960 hub power gpio to
+> a gpio-regulator binding, and then both platforms can use the same
+> code?
+
+Good point. Yeah, it doesn't sound hard to do that.
+
+> > - Hikey 970 has a reset pin controlled via GPIO.  
+> 
+> You might be able to put this reset pin under the dwc3 resets?
+
+I'll try.
+
+> > It should be simple to add support for it, as done by the
+> > enclosed patch. With this, the phy driver for Hikey 970 and a new
+> > small driver to properly set clocks and reset lines at dwg3[1],
+> > I can now see the hub on my Hikey970:
+> >
+> >         $ lsusb
+> >         Bus 002 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+> >         Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+> >
+> > Still, I'm missing something to make it work, as, besides the hub,
+> > right now, it doesn't detect the keyboard/mouse, which are
+> > attached at the USB hub.
+> >
+> > Do you have any ideas?  
+> 
+> Not sure about the hub keyboard mouse issue. I worry that may be an
+> issue with the hub power not being on?
+> Make sure the mux driver is in the expected state when you boot up and
+> switch modes.
+
+No, it is not power. The power supply for LDO17 (used on Hikey 970) is
+enabled before this driver gets called (as there's a logic handling
+EPROBE_DEFER on my patch).
+
+It is starting to work, after a couple of hacks:
+
+[    1.503038] JDB: dwc3_core_init DWC3_DSTS: 0xd3037c
+[    1.560131] JDB: dwc3_core_init_mode  dr_mode: 3
+[    1.583522] dwc3 ff100000.dwc3: JDB: dwc3_drd_init: dwc3_get_extcon returned 0
+[    1.595804] JDB: dwc3_set_mode  desired role: 1
+[    1.769184] dwc3 ff100000.dwc3: JDB: dwc3_drd_init: dwc3_setup_role_switch returned 0
+[    1.777110] JDB: __dwc3_set_mode dr_mode: 3
+[    1.781343] JDB: dwc3_set_prtcap  current_dr_role set to: 1
+[    1.781348] JDB: dwc3_probe init mode returned 0
+...
+[    3.829930] platform ldo17: Adding to iommu group 52
+...
+[    4.760428] JDB: hisi_hikey_usb_probe: usb_role_switch_get returned 0
+[    4.766867] JDB: hisi_hikey_usb_probe: initializing USB role switch 
+[    4.773252] JDB: hisi_hikey_usb_probe complete!
+[    4.848182] usb 2-1: new SuperSpeed Gen 1 USB device number 2 using xhci-hcd
+[    4.908727] hub 2-1:1.0: USB hub found
+[    4.912551] hub 2-1:1.0: 4 ports detected
+[    5.004136] usb 1-1: new high-speed USB device number 2 using xhci-hcd
+[    5.556147] usb 1-1.1: new low-speed USB device number 3 using xhci-hcd
+[    5.710919] input: PixArt Dell MS116 USB Optical Mouse as /devices/platform/soc/ff100000.dwc3/xhci-hcd.0.auto/usb1/1-1/1-1.1/1-1.1:1.0/0003:413C:301A.0001/input/input0
+[    5.732353] hid-generic 0003:413C:301A.0001: input: USB HID v1.11 Mouse [PixArt Dell MS116 USB Optical Mouse] on usb-xhci-hcd.0.auto-1.1/input0
+[    5.832141] usb 1-1.2: new low-speed USB device number 4 using xhci-hcd
+[    6.032760] input: Dell KB216 Wired Keyboard as /devices/platform/soc/ff100000.dwc3/xhci-hcd.0.auto/usb1/1-1/1-1.2/1-1.2:1.0/0003:413C:2113.0002/input/input1
+[    6.104393] hid-generic 0003:413C:2113.0002: input: USB HID v1.11 Keyboard [Dell KB216 Wired Keyboard] on usb-xhci-hcd.0.auto-1.2/input0
+[    6.122554] input: Dell KB216 Wired Keyboard System Control as /devices/platform/soc/ff100000.dwc3/xhci-hcd.0.auto/usb1/1-1/1-1.2/1-1.2:1.1/0003:413C:2113.0003/input/input2
+[    6.200460] input: Dell KB216 Wired Keyboard Consumer Control as /devices/platform/soc/ff100000.dwc3/xhci-hcd.0.auto/usb1/1-1/1-1.2/1-1.2:1.1/0003:413C:2113.0003/input/input3
+[    6.216611] hid-generic 0003:413C:2113.0003: input: USB HID v1.11 Device [Dell KB216 Wired Keyboard] on usb-xhci-hcd.0.auto-1.2/input1
+
+However, when rt1711 is probed, the USB switches to role "none":
+
+[    6.690237] JDB: rt1711h_probe
+[    6.740208] JDB: tcpm_init
+[    6.744181] JDB: tcpci_init
+[    6.744365] JDB: rt1711h_init
+[    6.757570] JDB: tcpm_reset_port
+[    6.760415] JDB: tcpm_typec_disconnect
+[    6.770065] JDB: tcpci_set_vconn
+[    6.780626] JDB: rt1711h_set_vconn
+[    6.789456] JDB: tcpci_set_polarity
+[    6.805052] JDB: tcpm_mux_set
+[    6.818989] JDB: hub_usb_role_switch_set role: none!
+[    6.958528] JDB: relay_set_role_switch role: none!
+[    6.960157] JDB: tcpci_set_roles
+[    6.960698] JDB: tcpci_get_vbus
+[    6.961116] JDB: tcpm_set_state
+[    6.961444] JDB: tcpm_set_state
+[    6.961475] JDB: tcpm_reset_port
+[    6.961477] JDB: tcpm_typec_disconnect
+[    6.961792] pl061_gpio fff10000.gpio: line 5: IRQ on LOW level
+[    6.961829] JDB: tcpci_set_vconn
+[    6.961831] JDB: rt1711h_set_vconn
+[    6.962069] JDB: tcpci_set_polarity
+[    6.962402] JDB: tcpm_mux_set
+[    6.962514] JDB: hub_usb_role_switch_set role: none!
+[    6.968554] JDB: hub_power_ctrl value: 0 (0000000000000000)
+[    6.968557] JDB: usb_switch_ctrl value: 0 ((____ptrval____))
+[    6.968563] JDB: usb_typec_power_ctrl value: 1 ((____ptrval____))
+[    6.978721] JDB: dwc3_set_mode  desired role: 1
+[    6.978740] JDB: tcpci_set_roles
+[    6.978755] JDB: relay_set_role_switch role: host!
+[    6.978759] JDB: hub_power_ctrl value: 0 (0000000000000000)
+[    6.978761] JDB: usb_switch_ctrl value: 0 ((____ptrval____))
+[    6.978763] JDB: usb_typec_power_ctrl value: 1 ((____ptrval____))
+[    6.978766] JDB: dwc3_set_mode  desired role: 1
+[    6.978779] JDB: __dwc3_set_mode dr_mode: 3
+[    6.986650] JDB: rt1711h_irq
+[    6.986836] JDB: tcpci_irq
+[    6.987197] JDB: tcpm_set_state
+[    7.004582] JDB: tcpm_vbus_change
+[    7.012256] JDB: tcpm_pd_event_handler
+[    7.012260] JDB: tcpci_get_vbus
+
+And the USB devices got disconnected afterwards:
+
+[    7.020689] usb 1-1.1: reset low-speed USB device number 3 using xhci-hcd
+[    7.020695] usb 1-1.1: hub failed to enable device, error -22
+[    7.020765] usb 1-1.1: USB disconnect, device number 3
+[    7.288840] usb 1-1.2: USB disconnect, device number 4
+
+I tried force it to switch to host mode with:
+
+	sudo su -c 'echo "device" > /sys/kernel/debug/usb/ff100000.dwc3/mode'
+	sudo su -c 'echo "host" > /sys/kernel/debug/usb/ff100000.dwc3/mode'
+
+But didn't work. What's weird is that the usb_role_switch_desc->set() ops 
+is only called once, just after the USB hub driver is probed. 
+
+Switching the mode later between host/device mode doesn't make any calls to
+the USB hub driver.
+
+> 
+> > [1] Right now, this is needed:
+> >         https://github.com/96boards-hikey/linux/blob/hikey970-v4.9/drivers/usb/dwc3/dwc3-hisi.c
+> >
+> >     Placing dwc3 directly under soc at DT causes some weird NMI, with
+> >     either produce an OOPS or hangs the machine at boot time.  
+> 
+> I suspect you can drop the dwc3-hisi glue code once you move the clks
+> and resets to the dwc3 node directly, as we did for hikey960.
+>   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/boot/dts/hisilicon/hi3660.dtsi?id=4bcf69e57063c9b1b15df1a293c969e80a1c97e6#n1169
+
+I was able to drop it, but I had to add this at dwc3 settings:
+
+	regulator-on-in-suspend;
+
+As otherwise the device seems to stop a few seconds after the dwc3
+driver gets started.
+
+I suspect it could be related to those calls at the dwg3 driver:
+
+	pm_runtime_use_autosuspend(dev);
+	pm_runtime_set_autosuspend_delay(dev, DWC3_DEFAULT_AUTOSUSPEND_DELAY);
+
+As this seems to be the only difference between what the dwc3 core
+does and the dwc3-hisi doesn't do.
 
 Thanks,
-Avri
+Mauro
