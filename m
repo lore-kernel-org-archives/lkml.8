@@ -2,55 +2,55 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDDD5C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38645C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:43:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D08202083B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:43:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1496E2083B
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:43:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597160630;
-	bh=Mv6bUdWC+SpZr0Ygy9V4QusAzRKfdHVnIi7cmc3ugqw=;
+	s=default; t=1597160632;
+	bh=fDw2vapQW45GEAIC6jIOi73M8vhpNaPkN5x5Kic47FQ=;
 	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
-	b=1FotEWm5jaYG61pv3MPHh6U7J13mtrxEkDjEIw6rqhykYXsx9mTVf5x2emZ/+gppB
-	 XK593rM+jbiWbbuN2mak7L2webVF951YaShwqYB7W1+j6OMlfRATEo3pvx/WfVYiqe
-	 eu4EfChMzUo05+36YyQxjAsQW/b6SWxevXAOh0os=
+	b=b739c+TQDOH7sZzXn80vpDhpP7kdxZegWPu9WSUyU938BY18pEisLjQCRotqXHF0X
+	 XapkiH0vIgWZdyOvAIrKa7JaX7sVhaWSfZkLM7s3r2evcdO4ahNmDcNolDAcITIo0w
+	 YO3e0AzovQ/uKJ1GMwUd4/WYbCkrwf6IChGWx4jM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729267AbgHKPnt (ORCPT
+        id S1729277AbgHKPnu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 11:43:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47564 "EHLO mail.kernel.org"
+        Tue, 11 Aug 2020 11:43:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728966AbgHKPmF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728952AbgHKPmF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 11 Aug 2020 11:42:05 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D88822BED;
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D2CB21744;
         Tue, 11 Aug 2020 15:42:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1597160523;
-        bh=Mv6bUdWC+SpZr0Ygy9V4QusAzRKfdHVnIi7cmc3ugqw=;
+        bh=fDw2vapQW45GEAIC6jIOi73M8vhpNaPkN5x5Kic47FQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lXAajxkH4rDw8N0yfJNEtKSJBzOTVILSCqBIDjP6kvBnFBBrCcYhbqTQxevCfDTMr
-         xz/fGSZnDgaXQE1bbUUdRgPorItokDsrVRv0YeC54bUGDlcyeZsRJhMYAQMySwSrQT
-         kAMPaUSHkYpZjkoqMvTMMwMmRq1nBrQ+buNLqT98=
+        b=AtHl43FAlReYUvlkW+vyltfmLlwn6J7xS7c43W+dpaU7LJQEiJ/Md2HEGqKdivOwU
+         mUXFq0mrUyxVfh9VvnhPED7d3QJjdDdO9tULV7jiZfI0Nvj6JsAd//ujDgZdBHIHOm
+         bt5LL1gcGjja8eKqI1kKLRHmhJ7X/qD6GR8Nb9D0=
 Received: from mchehab by mail.kernel.org with local (Exim 4.94)
         (envelope-from <mchehab@kernel.org>)
-        id 1k5WPZ-004bmw-Po; Tue, 11 Aug 2020 17:42:01 +0200
+        id 1k5WPZ-004bmk-LP; Tue, 11 Aug 2020 17:42:01 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Stephen Boyd <sboyd@kernel.org>,
         Mayulong <mayulong1@huawei.com>, linux-arm-msm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 16/33] spmi: hisi-spmi-controller: fix the dev_foo() logic
-Date:   Tue, 11 Aug 2020 17:41:42 +0200
-Message-Id: <3d20ec2b40ba1c339fd7e0d74ff34863b3d58e35.1597160086.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 12/33] spmi: hisi-spmi-controller: add debug when values are read/write
+Date:   Tue, 11 Aug 2020 17:41:38 +0200
+Message-Id: <ec73dd61397a73b073a1676c5a4a93c0802feeba.1597160086.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1597160086.git.mchehab+huawei@kernel.org>
 References: <cover.1597160086.git.mchehab+huawei@kernel.org>
@@ -62,141 +62,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Right now, driver is printing some messages as:
-
-	[   33.833026] (NULL device *): spmi_read_cmd: id:0 addr:0x17, read value: 00
-
-This is because dev_foo() are not using a device with a name
-set. Change the logic for it to print it right.
+It is interesting to be able to check if the driver is doing
+the right thing. So, add some debug macros to allow checking it.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- drivers/spmi/hisi-spmi-controller.c | 41 +++++++++++++++--------------
- 1 file changed, 21 insertions(+), 20 deletions(-)
+ drivers/spmi/hisi-spmi-controller.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/spmi/hisi-spmi-controller.c b/drivers/spmi/hisi-spmi-controller.c
-index e996114bc717..153bcdb0cde4 100644
+index cacd28150b49..e996114bc717 100644
 --- a/drivers/spmi/hisi-spmi-controller.c
 +++ b/drivers/spmi/hisi-spmi-controller.c
-@@ -102,7 +102,8 @@ struct spmi_controller_dev {
- 	u32			channel;
- };
+@@ -41,7 +41,6 @@
+ #define SPMI_APB_SPMI_CMD_EN				BIT(31)
+ #define SPMI_APB_SPMI_CMD_TYPE_OFFSET			24
+ #define SPMI_APB_SPMI_CMD_LENGTH_OFFSET			20
+-
+ #define SPMI_APB_SPMI_CMD_SLAVEID_OFFSET		16
+ #define SPMI_APB_SPMI_CMD_ADDR_OFFSET			0
  
--static int spmi_controller_wait_for_done(struct spmi_controller_dev *ctrl_dev,
-+static int spmi_controller_wait_for_done(struct device *dev,
-+					 struct spmi_controller_dev *ctrl_dev,
- 					 void __iomem *base, u8 sid, u16 addr)
- {
- 	u32 status = 0;
-@@ -117,19 +118,17 @@ static int spmi_controller_wait_for_done(struct spmi_controller_dev *ctrl_dev,
- 
- 		if (status & SPMI_APB_TRANS_DONE) {
- 			if (status & SPMI_APB_TRANS_FAIL) {
--				dev_err(ctrl_dev->dev,
--					"%s: transaction failed (0x%x)\n",
-+				dev_err(dev, "%s: transaction failed (0x%x)\n",
- 					__func__, status);
- 				return -EIO;
- 			}
-+			dev_dbg(dev, "%s: status 0x%x\n", __func__, status);
- 			return 0;
- 		}
- 		udelay(1);
- 	}
- 
--	dev_err(ctrl_dev->dev,
--		"%s: timeout, status 0x%x\n",
--		__func__, status);
-+	dev_err(dev, "%s: timeout, status 0x%x\n", __func__, status);
- 	return -ETIMEDOUT;
+@@ -135,10 +134,11 @@ static int spmi_controller_wait_for_done(struct spmi_controller_dev *ctrl_dev,
  }
  
-@@ -145,9 +144,9 @@ static int spmi_read_cmd(struct spmi_controller *ctrl,
- 	u8 op_code, i;
- 
- 	if (bc > SPMI_CONTROLLER_MAX_TRANS_BYTES) {
--		dev_err(spmi_controller->dev
--		, "spmi_controller supports 1..%d bytes per trans, but:%ld requested"
--					, SPMI_CONTROLLER_MAX_TRANS_BYTES, bc);
-+		dev_err(&ctrl->dev,
-+			"spmi_controller supports 1..%d bytes per trans, but:%ld requested",
-+			SPMI_CONTROLLER_MAX_TRANS_BYTES, bc);
- 		return  -EINVAL;
- 	}
- 
-@@ -159,7 +158,7 @@ static int spmi_read_cmd(struct spmi_controller *ctrl,
- 	} else if (opc == SPMI_CMD_EXT_READL) {
- 		op_code = SPMI_CMD_EXT_REG_READ_L;
- 	} else {
--		dev_err(spmi_controller->dev, "invalid read cmd 0x%x", opc);
-+		dev_err(&ctrl->dev, "invalid read cmd 0x%x", opc);
- 		return -EINVAL;
- 	}
- 
-@@ -173,7 +172,7 @@ static int spmi_read_cmd(struct spmi_controller *ctrl,
- 
- 	writel(cmd, spmi_controller->base + chnl_ofst + SPMI_APB_SPMI_CMD_BASE_ADDR);
- 
--	rc = spmi_controller_wait_for_done(spmi_controller,
-+	rc = spmi_controller_wait_for_done(&ctrl->dev, spmi_controller,
- 					   spmi_controller->base, sid, addr);
+ static int spmi_read_cmd(struct spmi_controller *ctrl,
+-			 u8 opc, u8 sid, u16 addr, u8 *buf, size_t bc)
++			 u8 opc, u8 sid, u16 addr, u8 *__buf, size_t bc)
+ {
+ 	struct spmi_controller_dev *spmi_controller = dev_get_drvdata(&ctrl->dev);
+ 	unsigned long flags;
++	u8 *buf = __buf;
+ 	u32 cmd, data;
+ 	int rc;
+ 	u32 chnl_ofst = SPMI_CHANNEL_OFFSET * spmi_controller->channel;
+@@ -197,13 +197,18 @@ static int spmi_read_cmd(struct spmi_controller *ctrl,
  	if (rc)
- 		goto done;
-@@ -195,10 +194,11 @@ static int spmi_read_cmd(struct spmi_controller *ctrl,
- done:
- 	spin_unlock_irqrestore(&spmi_controller->lock, flags);
- 	if (rc)
--		dev_err(spmi_controller->dev, "spmi read wait timeout op:0x%x sid:%d addr:0x%x bc:%ld\n",
-+		dev_err(&ctrl->dev,
-+			"spmi read wait timeout op:0x%x sid:%d addr:0x%x bc:%ld\n",
+ 		dev_err(spmi_controller->dev, "spmi read wait timeout op:0x%x sid:%d addr:0x%x bc:%ld\n",
  			opc, sid, addr, bc + 1);
- 	else
--		dev_dbg(spmi_controller->dev, "%s: id:%d addr:0x%x, read value: %*ph\n",
-+		dev_dbg(&ctrl->dev, "%s: id:%d addr:0x%x, read value: %*ph\n",
- 			__func__, sid, addr, (int)bc, __buf);
- 
++	else
++		dev_dbg(spmi_controller->dev, "%s: id:%d addr:0x%x, read value: %*ph\n",
++			__func__, sid, addr, (int)bc, __buf);
++
  	return rc;
-@@ -216,9 +216,9 @@ static int spmi_write_cmd(struct spmi_controller *ctrl,
- 	u8 op_code, i;
+ }
  
- 	if (bc > SPMI_CONTROLLER_MAX_TRANS_BYTES) {
--		dev_err(spmi_controller->dev
--		, "spmi_controller supports 1..%d bytes per trans, but:%ld requested"
--					, SPMI_CONTROLLER_MAX_TRANS_BYTES, bc);
-+		dev_err(&ctrl->dev,
-+			"spmi_controller supports 1..%d bytes per trans, but:%ld requested",
-+			SPMI_CONTROLLER_MAX_TRANS_BYTES, bc);
- 		return  -EINVAL;
- 	}
- 
-@@ -230,7 +230,7 @@ static int spmi_write_cmd(struct spmi_controller *ctrl,
- 	} else if (opc == SPMI_CMD_EXT_WRITEL) {
- 		op_code = SPMI_CMD_EXT_REG_WRITE_L;
- 	} else {
--		dev_err(spmi_controller->dev, "invalid write cmd 0x%x", opc);
-+		dev_err(&ctrl->dev, "invalid write cmd 0x%x", opc);
- 		return -EINVAL;
- 	}
- 
-@@ -262,14 +262,15 @@ static int spmi_write_cmd(struct spmi_controller *ctrl,
- 	/* Start the transaction */
- 	writel(cmd, spmi_controller->base + chnl_ofst + SPMI_APB_SPMI_CMD_BASE_ADDR);
- 
--	rc = spmi_controller_wait_for_done(spmi_controller, spmi_controller->base, sid, addr);
-+	rc = spmi_controller_wait_for_done(&ctrl->dev, spmi_controller,
-+					   spmi_controller->base, sid, addr);
- 	spin_unlock_irqrestore(&spmi_controller->lock, flags);
- 
+ static int spmi_write_cmd(struct spmi_controller *ctrl,
+-			  u8 opc, u8 sid, u16 addr, const u8 *buf, size_t bc)
++			  u8 opc, u8 sid, u16 addr, const u8 *__buf, size_t bc)
+ {
+ 	struct spmi_controller_dev *spmi_controller = dev_get_drvdata(&ctrl->dev);
++	const u8 *buf = __buf;
+ 	unsigned long flags;
+ 	u32 cmd, data;
+ 	int rc;
+@@ -263,6 +268,9 @@ static int spmi_write_cmd(struct spmi_controller *ctrl,
  	if (rc)
--		dev_err(spmi_controller->dev, "spmi write wait timeout op:0x%x sid:%d addr:0x%x bc:%ld\n",
-+		dev_err(&ctrl->dev, "spmi write wait timeout op:0x%x sid:%d addr:0x%x bc:%ld\n",
+ 		dev_err(spmi_controller->dev, "spmi write wait timeout op:0x%x sid:%d addr:0x%x bc:%ld\n",
  			opc, sid, addr, bc);
- 	else
--		dev_dbg(spmi_controller->dev, "%s: id:%d addr:0x%x, wrote value: %*ph\n",
-+		dev_dbg(&ctrl->dev, "%s: id:%d addr:0x%x, wrote value: %*ph\n",
- 			__func__, sid, addr, (int)bc, __buf);
++	else
++		dev_dbg(spmi_controller->dev, "%s: id:%d addr:0x%x, wrote value: %*ph\n",
++			__func__, sid, addr, (int)bc, __buf);
  
  	return rc;
+ }
+@@ -275,6 +283,7 @@ static int spmi_controller_probe(struct platform_device *pdev)
+ 	int ret = 0;
+ 
+ 	dev_info(&pdev->dev, "HISI SPMI probe\n");
++
+ 	ctrl = spmi_controller_alloc(&pdev->dev, sizeof(*spmi_controller));
+ 	if (!ctrl) {
+ 		dev_err(&pdev->dev, "can not allocate spmi_controller data\n");
 -- 
 2.26.2
 
