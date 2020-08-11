@@ -2,134 +2,137 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60B0EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 08:57:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD04C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 08:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43E0F20678
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 08:57:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6D2A207DE
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 08:58:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="ZhqiEQB0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728441AbgHKI5v (ORCPT
+        id S1728409AbgHKI6e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 04:57:51 -0400
-Received: from mga07.intel.com ([134.134.136.100]:33872 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728336AbgHKI5v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 04:57:51 -0400
-IronPort-SDR: hhrZbCcZRh0Sdybu/vfzBM6qAONDK1+1j3R6DppUJ3gqgUZ8YF3rjl//Jh+07QQcW8Qu2DnN4i
- bT7tXicfI20g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9709"; a="218030568"
-X-IronPort-AV: E=Sophos;i="5.75,460,1589266800"; 
-   d="scan'208";a="218030568"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2020 01:57:49 -0700
-IronPort-SDR: EmAtZuRpcdtRFUCT8R9mvEDeG40/XSjZz7NwrbIXaM72Jbh4UNwML1IGy6XVooLEowvXfWqy3P
- Zit6SPImqfOg==
-X-IronPort-AV: E=Sophos;i="5.75,460,1589266800"; 
-   d="scan'208";a="277522857"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2020 01:57:46 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id 391D8206E3; Tue, 11 Aug 2020 11:57:44 +0300 (EEST)
-Date:   Tue, 11 Aug 2020 11:57:44 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     linux-i2c@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-acpi@vger.kernel.org, Bingbu Cao <bingbu.cao@intel.com>,
-        linux-media@vger.kernel.org,
-        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
-        Hyungwoo Yang <hyungwoo.yang@intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        rajmohan.mani@intel.com, Tomasz Figa <tfiga@chromium.org>,
-        "Qiu, Tian Shu" <tian.shu.qiu@intel.com>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 1/6] i2c: Allow driver to manage the device's power
- state during probe
-Message-ID: <20200811085744.GK16270@paasikivi.fi.intel.com>
-References: <20200810142747.12400-1-sakari.ailus@linux.intel.com>
- <20200810142747.12400-2-sakari.ailus@linux.intel.com>
- <20200810144148.GD31434@bogus>
+        Tue, 11 Aug 2020 04:58:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56436 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728224AbgHKI6e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 04:58:34 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0F04C06174A
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 01:58:33 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id g8so1877681wmk.3
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 01:58:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=kI5qakFErIhAtlSahv1ie780vLsnJZJzRH85CVk9xkc=;
+        b=ZhqiEQB0gxx0HMNGdIud33HXbwCcUGzAFvTEZOcnfrRehwjb8pJce47DxCS3Vpe/hO
+         0W/c/dlmjtWDghDUtpf+BYA89HTOVxVctUrjarY7zXxYNXIwVqSUqn6u4n2MAPyGdHzH
+         dPBRBhHUwVzJsYQnp6o2LC1HI/cO4MqsXyKNA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=kI5qakFErIhAtlSahv1ie780vLsnJZJzRH85CVk9xkc=;
+        b=jMm1dv7Lzref0o1vPOyvtWiZay5JRG9aMR5Qswf5b8Rn8Guooc6jHVO2s41IWETsi7
+         n2pEoNKZZqT8XWtMAbNHEes7XAJXoRlFqVszFqGpcOKyNhwn+DU22wxtLXCDnxIerd6B
+         q9/BS+ZYT3yeuK7AwEs0czj1obO/r2nq90TGeytl8ROAl583b2OVWQRXwSTk9uHBvo6n
+         YJN84InIekKjck0BKGJeIWWcWJo290nrkBERAlWCWUF/PvcOXmBBz+U1uYW5BnT5vjnQ
+         HBhfR44YFmv1A4TNlnH9/YSUJYn1I+t1gXMx4KZ9eRob4t4GeI7t7xhQ8gF4wKRkOQ0f
+         VmJQ==
+X-Gm-Message-State: AOAM531bbnkTQp/P+6AgIovH836nbaM3weF8oSZmz9v0oqxTRv2NLqB/
+        Hi8Hm+3gHBd3Nmf2BWInBxfFfg==
+X-Google-Smtp-Source: ABdhPJySHjTR0UHPleGabdZv7zNIZM+F28Kgk+liHl+qFW7HhY9BvenSYNBJUkXh68zLkce7tt7d0g==
+X-Received: by 2002:a1c:e244:: with SMTP id z65mr3067068wmg.34.1597136312570;
+        Tue, 11 Aug 2020 01:58:32 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id g25sm3735876wmh.35.2020.08.11.01.58.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Aug 2020 01:58:31 -0700 (PDT)
+Date:   Tue, 11 Aug 2020 10:58:30 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Zwane Mwaikambo <zwanem@gmail.com>
+Cc:     tcamuso@redhat.com, dkwon@redhat.com,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH] drm: assure aux_dev is nonzero before using it
+Message-ID: <20200811085830.GZ2352366@phenom.ffwll.local>
+Mail-Followup-To: Zwane Mwaikambo <zwanem@gmail.com>, tcamuso@redhat.com,
+        dkwon@redhat.com, Linux Kernel <linux-kernel@vger.kernel.org>,
+        dri-devel@lists.freedesktop.org
+References: <alpine.DEB.2.21.2008101004110.27032@montezuma.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200810144148.GD31434@bogus>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <alpine.DEB.2.21.2008101004110.27032@montezuma.home>
+X-Operating-System: Linux phenom 5.7.0-1-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sudeep,
+On Mon, Aug 10, 2020 at 10:11:50AM -0700, Zwane Mwaikambo wrote:
+> Hi Folks,
+> 	I know this thread eventually dropped off due to not identifying 
+> the underlying issue. It's still occuring on 5.8 and in my case it 
+> happened because the udev device nodes for the DP aux devices were not 
+> cleaned up whereas the kernel had no association with them. I can 
+> reproduce the bug just by creating a device node for a non-existent minor 
+> device and calling open().
 
-Thanks for the review.
+Hm I don't have that thread anymore, but generally these bugs are solved
+by not registering the device before it's ready for use. We do have
+drm_connector->late_register for that stuff. Just a guess since I'm not
+seeing full details here.
+-Daniel
 
-On Mon, Aug 10, 2020 at 03:41:48PM +0100, Sudeep Holla wrote:
-> On Mon, Aug 10, 2020 at 05:27:42PM +0300, Sakari Ailus wrote:
-> > Enable drivers to tell ACPI that there's no need to power on a device for
-> > probe. Drivers should still perform this by themselves if there's a need
-> > to. In some cases powering on the device during probe is undesirable, and
-> > this change enables a driver to choose what fits best for it.
-> >
-> > Add a field called "flags" into struct i2c_driver for driver flags, and a
-> > flag I2C_DRV_FL_ALLOW_LOW_POWER_PROBE to tell a driver supports probe in
-> > low power state.
-> >
-> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > ---
-> >  drivers/i2c/i2c-core-base.c | 17 ++++++++++++++---
-> >  include/linux/i2c.h         | 14 ++++++++++++++
-> >  2 files changed, 28 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-> > index 34a9609f256da..cde9cf49a07e6 100644
-> > --- a/drivers/i2c/i2c-core-base.c
-> > +++ b/drivers/i2c/i2c-core-base.c
-> > @@ -436,6 +436,14 @@ static int i2c_smbus_host_notify_to_irq(const struct i2c_client *client)
-> >  	return irq > 0 ? irq : -ENXIO;
-> >  }
-> >
-> > +static bool allow_low_power_probe(struct device *dev)
-> > +{
-> > +	struct i2c_driver *driver = to_i2c_driver(dev->driver);
-> > +
-> > +	return driver->flags & I2C_DRV_FL_ALLOW_LOW_POWER_PROBE &&
-> > +		device_property_present(dev, "allow-low-power-probe");
 > 
-> I assume this change makes even the DT property "allow-low-power-probe"
-> work in the same way. Should we have proper DT binding for that ?
+> To me it still makes sense to just check aux_dev because the chardev has 
+> no way to check before calling.
 > 
-> This comment applies for any property using device_property_* but has
-> no explicit DT binding ? Just asking the question to know the strategy
-> followed. Sorry if this is redundant question, feel free to point me
-> to the past discussions.
-
-It's not a redundant question, no.
-
-I²C drivers on OF are responsible for controlling device's power state
-already (using runtime PM or without) so I think the drivers could use the
-property directly on OF systems (and document the property in DT bindings
-first) if there's a need to. IOW this code isn't needed on OF.
-
-Note that the power_on or power_off arguments are not used by
-genpd_dev_pm_attach() or genpd_dev_pm_detach() so this patch only affects
-ACPI. I think I should check the device is an ACPI device above, for
-clarity.
-
-Cc also DT list. The entire set is here:
-
-<URL:https://lore.kernel.org/linux-acpi/20200810142747.12400-1-sakari.ailus@linux.intel.com/>
+> (gdb) list *drm_dp_aux_dev_get_by_minor+0x29
+> 0x17b39 is in drm_dp_aux_dev_get_by_minor (drivers/gpu/drm/drm_dp_aux_dev.c:65).
+> 60      static struct drm_dp_aux_dev *drm_dp_aux_dev_get_by_minor(unsigned index)
+> 61      {
+> 62              struct drm_dp_aux_dev *aux_dev = NULL;
+> 63
+> 64              mutex_lock(&aux_idr_mutex);
+> 65              aux_dev = idr_find(&aux_idr, index);
+> 66              if (!kref_get_unless_zero(&aux_dev->refcount))
+> 67                      aux_dev = NULL;
+> 68              mutex_unlock(&aux_idr_mutex);
+> 69
+> (gdb) p/x &((struct drm_dp_aux_dev *)(0x0))->refcount
+> $8 = 0x18
+> 
+> static int auxdev_open(struct inode *inode, struct file *file)
+> {
+>     unsigned int minor = iminor(inode);
+>     struct drm_dp_aux_dev *aux_dev;
+> 
+>     aux_dev = drm_dp_aux_dev_get_by_minor(minor);
+>     if (!aux_dev)
+>         return -ENODEV;
+> 
+>     file->private_data = aux_dev;
+>     return 0;
+> }
+> 
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
 -- 
-Kind regards,
-
-Sakari Ailus
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
