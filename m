@@ -2,122 +2,177 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24FDAC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:17:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD009C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:18:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E42F620756
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:17:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B45262054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:18:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="hkHUyzl9"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eCGLbFfk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728520AbgHKKRv (ORCPT
+        id S1728526AbgHKKSo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 06:17:51 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:13120 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728346AbgHKKRv (ORCPT
+        Tue, 11 Aug 2020 06:18:44 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:58874 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728346AbgHKKSn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 06:17:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1597141070; x=1628677070;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=pH/dqPFqn/5c/fFx2x7y3lTOdQqwfNkq66YZ1oLQHaE=;
-  b=hkHUyzl9kpqc6B6IDEkk2OnF4YXHCP/80VMugiyGJiKPcJZQfMzY8J2b
-   fabmugmKx7xD8+hfTJ+Lp2IJRRP99UwPfzOqJU2i9p+94QEwI7P5IrUf4
-   rJw8q0LbGCYyavr5XtDLnI/tAqqwv/cEO7uwHFeYtKCja2tJNWUaNJbdz
-   Q=;
-IronPort-SDR: /Jfizqq72H/cs+siuKEQ9MKFuSHy05tstZjjnB9QrOJfwKBi5ykGU6svTVGGSO0fjz/aJYFIea
- qIxaItFYFA+Q==
-X-IronPort-AV: E=Sophos;i="5.75,460,1589241600"; 
-   d="scan'208";a="47084569"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 11 Aug 2020 10:17:49 +0000
-Received: from EX13MTAUEB002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com (Postfix) with ESMTPS id 34EF5A272D;
-        Tue, 11 Aug 2020 10:17:46 +0000 (UTC)
-Received: from EX13D16EUB001.ant.amazon.com (10.43.166.28) by
- EX13MTAUEB002.ant.amazon.com (10.43.60.12) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 11 Aug 2020 10:17:46 +0000
-Received: from 38f9d34ed3b1.ant.amazon.com (10.43.162.140) by
- EX13D16EUB001.ant.amazon.com (10.43.166.28) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 11 Aug 2020 10:17:36 +0000
-Subject: Re: [PATCH v6 10/18] nitro_enclaves: Add logic for getting the
- enclave image load info
-To:     Alexander Graf <graf@amazon.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-CC:     Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        "David Duncan" <davdunc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        "David Woodhouse" <dwmw@amazon.co.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Karen Noel <knoel@redhat.com>,
-        "Martin Pohlack" <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        Uwe Dannowski <uwed@amazon.de>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        kvm <kvm@vger.kernel.org>,
-        ne-devel-upstream <ne-devel-upstream@amazon.com>
-References: <20200805091017.86203-1-andraprs@amazon.com>
- <20200805091017.86203-11-andraprs@amazon.com>
- <70ec8010-cb3b-50a8-5472-a96c5aa2cf8d@amazon.de>
-From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
-Message-ID: <0ef970b1-eea2-916c-3546-fdc4f2595e99@amazon.com>
-Date:   Tue, 11 Aug 2020 13:17:31 +0300
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:78.0)
- Gecko/20100101 Thunderbird/78.1.0
+        Tue, 11 Aug 2020 06:18:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597141121;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=dXr0v2qCKUiU33aW80QeAyd5m+K7XDsVEelwTu5R4yM=;
+        b=eCGLbFfkh9L3FWnpeJKXnke1IdTmOQWc/wkki9XnA1LYlUt6HM9K8CD7W20ltEWbm6dMcR
+        nu03DPaBGzZyz1KaoSjK+1vb4UQoz7zOzuJ+ZzQAu6alq1G3g1t2zXygTw0pORMEgKucK1
+        isVuuu6MvksvOFOCstmLe+dNzSxINqE=
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com
+ [209.85.216.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-419-tBNQNTZYMWCpY11vFTwOMg-1; Tue, 11 Aug 2020 06:18:39 -0400
+X-MC-Unique: tBNQNTZYMWCpY11vFTwOMg-1
+Received: by mail-pj1-f69.google.com with SMTP id s4so1990124pjq.8
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 03:18:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=dXr0v2qCKUiU33aW80QeAyd5m+K7XDsVEelwTu5R4yM=;
+        b=E7Ah5ZMi9kmjc/QWVO9LvU0RFU48nMKLECIeta9xDr3oL7C/jtUKOorJoJJepNf7XG
+         PG2TIMQnYxAGs/LTTTWLR+VOCxyR0FqCdnQww1EAHQB7g0k7LZc3vDRTKCFHMA6QaVC/
+         n0p4LhdaFD0e8gcDnV6vIzx5+zsXe31XRsdfuj2mO2xucsBvYSGyajA7X9RH4v/k1PCP
+         +LTPBIK4glU6xGonE8H4fla9adoyCDdmJSacl6rY+p0XtKGG+MfowO2KadB5vhwrC/IS
+         0FpmEmGsJbBAAsHdfIQzdYPJJvOyeQ9uaDEX0nfbli9WMyYozZtLVVP2JhHapzW8VhLN
+         wzTw==
+X-Gm-Message-State: AOAM533TMCWTasf3Yys2cvz4EMYQ1O4Lx/opwxXGI9Lv+JoiNM9KFyWu
+        c8NhkzfpO3H0zltinzjlT9hjgeV3HbqslDfu7UhszOSrkogeOI4FpTQ7hJzdnEtm1GXZcOiOR0n
+        WP9IwRNQ5YsicPJzjM9GoyBnI
+X-Received: by 2002:a17:90b:1092:: with SMTP id gj18mr352170pjb.10.1597141118811;
+        Tue, 11 Aug 2020 03:18:38 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxK6UND4AXpX87GBFtSia3sjBshFyIl2h6dcdG3mZugkorVx/HwVZyuaovl/iCAB8U7+1XTWw==
+X-Received: by 2002:a17:90b:1092:: with SMTP id gj18mr352152pjb.10.1597141118495;
+        Tue, 11 Aug 2020 03:18:38 -0700 (PDT)
+Received: from xiangao.remote.csb ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id k125sm22603134pga.48.2020.08.11.03.18.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Aug 2020 03:18:37 -0700 (PDT)
+Date:   Tue, 11 Aug 2020 18:18:27 +0800
+From:   Gao Xiang <hsiangkao@redhat.com>
+To:     Daeho Jeong <daeho43@gmail.com>
+Cc:     Chao Yu <yuchao0@huawei.com>, Daeho Jeong <daehojeong@google.com>,
+        kernel-team@android.com, linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: Re: [f2fs-dev] [PATCH] f2fs: change virtual mapping way for
+ compression pages
+Message-ID: <20200811101827.GA7870@xiangao.remote.csb>
+References: <20200811033753.783276-1-daeho43@gmail.com>
+ <20200811071552.GA8365@xiangao.remote.csb>
+ <3059d7b0-cf50-4315-e5a9-8d9c00965a7c@huawei.com>
+ <CACOAw_yic7GF3E1zEvZ=Gea3XW4fMYdg-cNuu4wfg+uTKMcJqA@mail.gmail.com>
+ <CACOAw_wi3C0iyTVYc3075d4K27NT7BGMGzsKFDDozf=98vWMcA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <70ec8010-cb3b-50a8-5472-a96c5aa2cf8d@amazon.de>
-Content-Language: en-US
-X-Originating-IP: [10.43.162.140]
-X-ClientProxiedBy: EX13D12UWC001.ant.amazon.com (10.43.162.78) To
- EX13D16EUB001.ant.amazon.com (10.43.166.28)
-Content-Type: text/plain; charset="windows-1252"; format="flowed"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8\""
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACOAw_wi3C0iyTVYc3075d4K27NT7BGMGzsKFDDozf=98vWMcA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Aug 11, 2020 at 06:33:26PM +0900, Daeho Jeong wrote:
+> Plus, when we use vmap(), vmap() normally executes in a short time
+> like vm_map_ram().
+> But, sometimes, it has a very long delay.
+> 
+> 2020년 8월 11일 (화) 오후 6:28, Daeho Jeong <daeho43@gmail.com>님이 작성:
+> >
+> > Actually, as you can see, I use the whole zero data blocks in the test file.
+> > It can maximize the effect of changing virtual mapping.
+> > When I use normal files which can be compressed about 70% from the
+> > original file,
+> > The vm_map_ram() version is about 2x faster than vmap() version.
+
+What f2fs does is much similar to btrfs compression. Even if these
+blocks are all zeroed. In principle, the maximum compression ratio
+is determined (cluster sized blocks into one compressed block, e.g
+16k cluster into one compressed block).
+
+So it'd be better to describe your configured cluster size (16k or
+128k) and your hardware information in the commit message as well.
+
+Actually, I also tried with this patch as well on my x86 laptop just
+now with FIO (I didn't use zeroed block though), and I didn't notice
+much difference with turbo boost off and maxfreq.
+
+I'm not arguing this commit, just a note about this commit message.
+> > > >> 1048576000 bytes (0.9 G) copied, 9.146217 s, 109 M/s
+> > > >> 1048576000 bytes (0.9 G) copied, 9.997542 s, 100 M/s
+> > > >> 1048576000 bytes (0.9 G) copied, 10.109727 s, 99 M/s
+
+IMHO, the above number is much like decompressing in the arm64 little cores.
+
+Thanks,
+Gao Xiang
 
 
-On 10/08/2020 12:57, Alexander Graf wrote:
->
->
-> On 05.08.20 11:10, Andra Paraschiv wrote:
->> Before setting the memory regions for the enclave, the enclave image
->> needs to be placed in memory. After the memory regions are set, this
->> memory cannot be used anymore by the VM, being carved out.
->>
->> Add ioctl command logic to get the offset in enclave memory where to
->> place the enclave image. Then the user space tooling copies the enclave
->> image in the memory using the given memory offset.
->>
->> Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
->
-> Reviewed-by: Alexander Graf <graf@amazon.com>
-
-Thanks for review. I included the tag for this one and the next 2 patches.
-
-Andra
-
-
-
-Amazon Development Center (Romania) S.R.L. registered office: 27A Sf. Lazar=
- Street, UBC5, floor 2, Iasi, Iasi County, 700045, Romania. Registered in R=
-omania. Registration number J22/2621/2005.
+> >
+> > 2020년 8월 11일 (화) 오후 4:55, Chao Yu <yuchao0@huawei.com>님이 작성:
+> > >
+> > > On 2020/8/11 15:15, Gao Xiang wrote:
+> > > > On Tue, Aug 11, 2020 at 12:37:53PM +0900, Daeho Jeong wrote:
+> > > >> From: Daeho Jeong <daehojeong@google.com>
+> > > >>
+> > > >> By profiling f2fs compression works, I've found vmap() callings are
+> > > >> bottlenecks of f2fs decompression path. Changing these with
+> > > >> vm_map_ram(), we can enhance f2fs decompression speed pretty much.
+> > > >>
+> > > >> [Verification]
+> > > >> dd if=/dev/zero of=dummy bs=1m count=1000
+> > > >> echo 3 > /proc/sys/vm/drop_caches
+> > > >> dd if=dummy of=/dev/zero bs=512k
+> > > >>
+> > > >> - w/o compression -
+> > > >> 1048576000 bytes (0.9 G) copied, 1.999384 s, 500 M/s
+> > > >> 1048576000 bytes (0.9 G) copied, 2.035988 s, 491 M/s
+> > > >> 1048576000 bytes (0.9 G) copied, 2.039457 s, 490 M/s
+> > > >>
+> > > >> - before patch -
+> > > >> 1048576000 bytes (0.9 G) copied, 9.146217 s, 109 M/s
+> > > >> 1048576000 bytes (0.9 G) copied, 9.997542 s, 100 M/s
+> > > >> 1048576000 bytes (0.9 G) copied, 10.109727 s, 99 M/s
+> > > >>
+> > > >> - after patch -
+> > > >> 1048576000 bytes (0.9 G) copied, 2.253441 s, 444 M/s
+> > > >> 1048576000 bytes (0.9 G) copied, 2.739764 s, 365 M/s
+> > > >> 1048576000 bytes (0.9 G) copied, 2.185649 s, 458 M/s
+> > > >
+> > > > Indeed, vmap() approach has some impact on the whole
+> > > > workflow. But I don't think the gap is such significant,
+> > > > maybe it relates to unlocked cpufreq (and big little
+> > > > core difference if it's on some arm64 board).
+> > >
+> > > Agreed,
+> > >
+> > > I guess there should be other reason causing the large performance
+> > > gap, scheduling, frequency, or something else.
+> > >
+> > > >
+> > > >
+> > > >
+> > > > _______________________________________________
+> > > > Linux-f2fs-devel mailing list
+> > > > Linux-f2fs-devel@lists.sourceforge.net
+> > > > https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
+> > > > .
+> > > >
+> 
 
