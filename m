@@ -2,103 +2,98 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 647C3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:34:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F2E0C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:34:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4359A204FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:34:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597156466;
-	bh=3AjsKA1VumCVABg20vwy5RU3t9PG4uAwh4YkfZ5osao=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=mcrXWi55Zd5VM1NQsDhQM3A4T5vTolrtHEMf9UEqOyikXPNjYGABeSwcNraTjhgBj
-	 zjaNSZfBb+i++hyIM0ywMTQGQRtnIpBBrTGEDXSvW1lZ/NlG5pxZGfHr5k8nh4NFXx
-	 baUQ1u5tdo09LP1wlQ0QQBwX4MozmhDNm75cBZOE=
+	by mail.kernel.org (Postfix) with ESMTP id 514822083B
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:34:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728788AbgHKOeY (ORCPT
+        id S1728821AbgHKOe3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 10:34:24 -0400
-Received: from mail-oo1-f67.google.com ([209.85.161.67]:35743 "EHLO
-        mail-oo1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728737AbgHKOeX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 10:34:23 -0400
-Received: by mail-oo1-f67.google.com with SMTP id j19so2669566oor.2;
-        Tue, 11 Aug 2020 07:34:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KIC4cfW+RcaIaHxzET6Mv7HV0tRxX9+Hs/NGmdFDqgQ=;
-        b=lV041ly4fydpqfzso7qJIM66jjIFILbyLnAFM82OxHw1RPjEyWWhrZPEI5qTFBH350
-         RVwimoFDQGPBVICZdM0aN3qrQ5LCNztQcaYTBAoIJ9sQwfh0dhlgTRd9zjkuVpjEXMAc
-         K6bIzP+0c2HmORZq1We6vb9jMpCs47iooTJsdnV4SjbQYE9CKqzY/qaiJdX6m4SdS5b3
-         OedR95VQnwobXqiqI2kj33s0d0AbxMB/jj+C944Gh4EwMgvjLM8zpUqWv+47FEYswhGO
-         6cV1fQr8+GZFv5Uw1ydwvfDye4VYKkY/DE/G+UZPPGfx+/gLUMi53gX0hwN6e69uvt1C
-         238g==
-X-Gm-Message-State: AOAM532yWo/tk/IwTxPqQrfWtMS768FL+cY+sYGoQKMrxk9X0u1T2FEF
-        aEHCfdUcg9M7eOfySrPILtk8XonHzfKE7QmRlV0=
-X-Google-Smtp-Source: ABdhPJzlzVsSL+6xjj+8UpyK2xzCh7cJEzoW8doRs3Y9Ve3BiPOquBNUZU2eVdJdyNiRRO9V88pV93P7wpUziQEvOHo=
-X-Received: by 2002:a4a:4201:: with SMTP id h1mr5401194ooj.1.1597156462415;
- Tue, 11 Aug 2020 07:34:22 -0700 (PDT)
+        Tue, 11 Aug 2020 10:34:29 -0400
+Received: from mga01.intel.com ([192.55.52.88]:59588 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728792AbgHKOe0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 10:34:26 -0400
+IronPort-SDR: 349InYtPa/uKYuws5mlnyVo2MAyIhC8XkCM17NTNFVSLUrI2RznCxqPMbDbzfgr4vffg4YEJHq
+ YOn33luQX+Aw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9710"; a="171783532"
+X-IronPort-AV: E=Sophos;i="5.76,461,1592895600"; 
+   d="scan'208";a="171783532"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2020 07:34:25 -0700
+IronPort-SDR: 30Q6wEZhMGlaEJBhaG8+jkm0kR2f/WkT6es1kzFJTzHSDqL+oeZcXFK4bTONZ26cjJRASoyDI7
+ 2AasSOgc9ijA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,461,1592895600"; 
+   d="scan'208";a="324775517"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
+  by orsmga008.jf.intel.com with ESMTP; 11 Aug 2020 07:34:25 -0700
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id 07BBE301CB1; Tue, 11 Aug 2020 07:34:25 -0700 (PDT)
+Date:   Tue, 11 Aug 2020 07:34:24 -0700
+From:   Andi Kleen <ak@linux.intel.com>
+To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc:     peterz@infradead.org, Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        Jiri Olsa <jolsa@kernel.org>, alexey.budankov@linux.intel.com,
+        adrian.hunter@intel.com
+Subject: Re: [PATCH 1/2] perf: Add closing sibling events' file descriptors
+Message-ID: <20200811143424.GD1448395@tassilo.jf.intel.com>
+References: <20200708151635.81239-1-alexander.shishkin@linux.intel.com>
+ <20200708151635.81239-2-alexander.shishkin@linux.intel.com>
+ <20200806083530.GV2674@hirez.programming.kicks-ass.net>
+ <20200806153205.GA1448395@tassilo.jf.intel.com>
+ <875z9q1u3g.fsf@ashishki-desk.ger.corp.intel.com>
+ <20200810144518.GB1448395@tassilo.jf.intel.com>
+ <87364t1plf.fsf@ashishki-desk.ger.corp.intel.com>
 MIME-Version: 1.0
-References: <871rmesqkk.fsf@gmx.net> <20200617142734.mxwfoblufmo6li5e@linutronix.de>
- <87ftatqu07.fsf@gmx.net> <20200624201156.xu6hel3drnhno6c3@linutronix.de>
- <87ftak2kxr.fsf@rub.de> <20200714134410.3odqfvjq6rndjjf6@linutronix.de>
- <CAJZ5v0hZSUkEMCszDADGWk-v0xNEiDE45B3CHLi05BX6rPfm6g@mail.gmail.com>
- <20200714141135.47adndrsdgpiqfy4@linutronix.de> <87blkbx1gt.fsf@gmx.net>
- <87imdp5r80.fsf@rub.de> <20200811132955.wbt55ns7bu5mxouq@linutronix.de>
-In-Reply-To: <20200811132955.wbt55ns7bu5mxouq@linutronix.de>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 11 Aug 2020 16:34:09 +0200
-Message-ID: <CAJZ5v0h+n9VCz5=VixVbe_b=ZbTU3D=46stGhE9z7Y7yaUMJzw@mail.gmail.com>
-Subject: Re: power-off delay/hang due to commit 6d25be57 (mainline)
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Stephen Berman <stephen.berman@gmx.net>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Robert Moore <robert.moore@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Len Brown <lenb@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87364t1plf.fsf@ashishki-desk.ger.corp.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 3:29 PM Sebastian Andrzej Siewior
-<bigeasy@linutronix.de> wrote:
->
-> On 2020-08-11 13:58:39 [+0200], Stephen Berman wrote:
-> > him about your workaround of adding 'thermal.tzp=300' to the kernel
-> > commandline, and he replied that this works for him too.  And it turns
-> > out we have similar motherboards: I have a Gigabyte Z390 M Gaming
-> > Rev. 1001 board and he has Gigabyte Z390 Designare rev 1.0.
->
-> Yes. Based on latest dmesg, the ACPI tables contain code which schedules
-> the worker and takes so long. It is possible / likely that his board
-> contains the same tables which leads to the same effect. After all those
-> two boards are very similar from the naming part :)
-> Would you mind to dump the ACPI tables and send them? There might be
-> some hints.
+On Tue, Aug 11, 2020 at 12:47:24PM +0300, Alexander Shishkin wrote:
+> Andi Kleen <ak@linux.intel.com> writes:
+> 
+> >> It didn't. I can't figure out what to charge on the locked memory, as
+> >> all that memory is in kernel-side objects. It also needs to make sense
+> >
+> > I don't see how that makes a difference for the count. It just account
+> > bytes. Can you elaborate?
+> 
+> Right, but which bytes? One byte per event? That's
+> arbitrary. sizeof(struct perf_event)? Then, probably also sizeof(struct
+> perf_event_context).
 
-Do we have a BZ for this?  It would be useful to open one if not.
+Yes the sum of all the sizeofs needed for a perf_event.
 
-> It might be possible that a BIOS update fixes the problem but I would
-> prefer very much to fix this in kernel to ensure that such a BIOS does
-> not lead to this problem again.
+> 
+> >> as iirc the default MLOCK_LIMIT is quite low, you'd hit it sooner than
+> >> the file descriptor limit.
+> >
+> > For a single process? 
+> 
+> The above two structs add up to 2288 bytes on my local build. Given the
+> default RLIMIT_MEMLOCK of 64k, that's 28 events. As opposed to ~1k
+> events if we keep using the RLIMIT_NOFILE. Unless I'm missing your
+> point.
 
-I agree.
+Yes that's true. We would probably need to increase the limit to a few
+MB at least.
 
-It looks like one way to address this issue might be to add a rate
-limit for thermal notifications on a given zone.
+Or maybe use some combination with the old rlimit for compatibility.
+The old rlimit would give an implicit extra RLIMIT_NFILE * 2288 limit
+for RLIMIT_MEMLOCK. This would only give full compatibility for a single
+perf process, but I suspect that's good enough for most users.
+
+-Andi
