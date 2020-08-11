@@ -2,146 +2,96 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAD_ENC_HEADER,BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5052EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 19:03:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1BB5C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 19:03:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18D09206DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 19:03:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D17A206DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 19:03:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="sk3i5lfo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726424AbgHKTD3 convert rfc822-to-8bit (ORCPT
+        id S1726457AbgHKTDk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 15:03:29 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:49030 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725889AbgHKTDZ (ORCPT
+        Tue, 11 Aug 2020 15:03:40 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:39044 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725889AbgHKTDj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 15:03:25 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out02.mta.xmission.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1k5ZYK-006qgE-65; Tue, 11 Aug 2020 13:03:16 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1k5ZYJ-0006gu-5w; Tue, 11 Aug 2020 13:03:15 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-Cc:     linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Philippe =?utf-8?Q?Tr=C3=A9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Thibaut Sautereau <thibaut.sautereau@clip-os.org>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-References: <20200723171227.446711-1-mic@digikod.net>
-        <20200723171227.446711-2-mic@digikod.net>
-Date:   Tue, 11 Aug 2020 13:59:48 -0500
-In-Reply-To: <20200723171227.446711-2-mic@digikod.net> (=?utf-8?Q?=22Micka?=
- =?utf-8?Q?=C3=ABl_Sala=C3=BCn=22's?=
-        message of "Thu, 23 Jul 2020 19:12:21 +0200")
-Message-ID: <87eeodnh3v.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Tue, 11 Aug 2020 15:03:39 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597172619; h=Content-Transfer-Encoding: MIME-Version:
+ References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=+3oLMOjRVphuPQ+PhEKkKC/mDHCGYkvA89mtuFU3+3Y=; b=sk3i5lfo2qlSx2lUqlCEiazgrLeGYC0XXpiLeL11bXP+TuYdg4xGmfvPfDYaNFxwJ4xUpNWt
+ 8WOp6ESjM3twBB2SCYqNZ5K+RbOLzk7oxUlvspbu8IXvUjTYrPzslArxNT6aPbTWzLd71Fln
+ qwsacxYYdcajYzUfI94wvvaZdsk=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n11.prod.us-east-1.postgun.com with SMTP id
+ 5f32eb79ba4c2cd3676fcc0b (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 11 Aug 2020 19:03:21
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 15EF5C433C6; Tue, 11 Aug 2020 19:03:21 +0000 (UTC)
+Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9FCB0C433CB;
+        Tue, 11 Aug 2020 19:03:16 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9FCB0C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     bjorn.andersson@linaro.org, ulf.hansson@linaro.org,
+        rjw@rjwysocki.net
+Cc:     agross@kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+        gregkh@linuxfoundation.org, pavel@ucw.cz, len.brown@intel.com,
+        rnayak@codeaurora.org, dianders@chromium.org, khilman@kernel.org,
+        Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH 2/2] soc: qcom: aoss: Use GENPD_FLAG_SUSPEND_ON flag
+Date:   Wed, 12 Aug 2020 00:32:52 +0530
+Message-Id: <20200811190252.10559-2-sibis@codeaurora.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200811190252.10559-1-sibis@codeaurora.org>
+References: <20200811190252.10559-1-sibis@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-XM-SPF: eid=1k5ZYJ-0006gu-5w;;;mid=<87eeodnh3v.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX19Ak6/vsLtopnFYs9ZfaNrZr8Zt2Ow/qiA=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH v7 1/7] exec: Change uselib(2) IS_SREG() failure to EACCES
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mickaël Salaün <mic@digikod.net> writes:
+All the power domains exposed as part of AOSS QMP driver require to stay
+powered on for suspend. They are powered on when the remote processors
+boots up and powered off on remote processor crash/shutdown. Mark the
+power domains with GENPD_FLAG_SUSPEND_ON to model this behavior.
 
-> From: Kees Cook <keescook@chromium.org>
->
-> Change uselib(2)' S_ISREG() error return to EACCES instead of EINVAL so
-> the behavior matches execve(2), and the seemingly documented value.
-> The "not a regular file" failure mode of execve(2) is explicitly
-> documented[1], but it is not mentioned in uselib(2)[2] which does,
-> however, say that open(2) and mmap(2) errors may apply. The documentation
-> for open(2) does not include a "not a regular file" error[3], but mmap(2)
-> does[4], and it is EACCES.
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+---
+ drivers/soc/qcom/qcom_aoss.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Do you have enough visibility into uselib to be certain this will change
-will not cause regressions?
+diff --git a/drivers/soc/qcom/qcom_aoss.c b/drivers/soc/qcom/qcom_aoss.c
+index ed2c687c16b31..5a5b4bf928147 100644
+--- a/drivers/soc/qcom/qcom_aoss.c
++++ b/drivers/soc/qcom/qcom_aoss.c
+@@ -366,6 +366,7 @@ static int qmp_pd_add(struct qmp *qmp)
+ 		res[i].pd.name = sdm845_resources[i];
+ 		res[i].pd.power_on = qmp_pd_power_on;
+ 		res[i].pd.power_off = qmp_pd_power_off;
++		res[i].pd.flags = GENPD_FLAG_SUSPEND_ON;
+ 
+ 		ret = pm_genpd_init(&res[i].pd, NULL, true);
+ 		if (ret < 0) {
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
-My sense of uselib is that it would be easier to remove the system call
-entirely (I think it's last use was in libc5) than to validate that a
-change like this won't cause problems for the users of uselib.
-
-For the kernel what is important are real world users and the manpages
-are only important as far as they suggest what the real world users do.
-
-Eric
-
-
-> [1] http://man7.org/linux/man-pages/man2/execve.2.html#ERRORS
-> [2] http://man7.org/linux/man-pages/man2/uselib.2.html#ERRORS
-> [3] http://man7.org/linux/man-pages/man2/open.2.html#ERRORS
-> [4] http://man7.org/linux/man-pages/man2/mmap.2.html#ERRORS
->
-> Signed-off-by: Mickaël Salaün <mic@digikod.net>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
-> Link: https://lore.kernel.org/r/20200605160013.3954297-2-keescook@chromium.org
-> ---
->  fs/exec.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
->
-> diff --git a/fs/exec.c b/fs/exec.c
-> index e6e8a9a70327..d7c937044d10 100644
-> --- a/fs/exec.c
-> +++ b/fs/exec.c
-> @@ -141,11 +141,10 @@ SYSCALL_DEFINE1(uselib, const char __user *, library)
->  	if (IS_ERR(file))
->  		goto out;
->  
-> -	error = -EINVAL;
-> +	error = -EACCES;
->  	if (!S_ISREG(file_inode(file)->i_mode))
->  		goto exit;
->  
-> -	error = -EACCES;
->  	if (path_noexec(&file->f_path))
->  		goto exit;
