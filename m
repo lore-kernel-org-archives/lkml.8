@@ -2,119 +2,166 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B6F1C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 13:08:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29BD3C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 13:12:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 831672076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 13:08:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBCF92076B
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 13:12:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TE8F4eu3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728701AbgHKNIl (ORCPT
+        id S1728685AbgHKNM0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 09:08:41 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:41556 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728557AbgHKNIk (ORCPT
+        Tue, 11 Aug 2020 09:12:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38906 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728566AbgHKNM0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 09:08:40 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id C95DF1C0BD8; Tue, 11 Aug 2020 15:08:37 +0200 (CEST)
-Date:   Tue, 11 Aug 2020 15:08:37 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, oleg@redhat.com,
-        x86@kernel.org
-Subject: Re: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
-Message-ID: <20200811130837.hi6wllv6g67j5wds@duo.ucw.cz>
-References: <aefc85852ea518982e74b233e11e16d2e707bc32>
- <20200728131050.24443-1-madvenka@linux.microsoft.com>
- <20200731180955.GC67415@C02TD0UTHF1T.local>
- <6236adf7-4bed-534e-0956-fddab4fd96b6@linux.microsoft.com>
- <20200804143018.GB7440@C02TD0UTHF1T.local>
- <b3368692-afe6-89b5-d634-12f4f0a601f8@linux.microsoft.com>
- <20200808221748.GA1020@bug>
- <6cca8eac-f767-b891-dc92-eaa7504a0e8b@linux.microsoft.com>
+        Tue, 11 Aug 2020 09:12:26 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2530BC06174A
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 06:12:26 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id j21so6690460pgi.9
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 06:12:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=qZ9iduntohOD5MRWKGXE3NQwDvKnC/BQdlgFzYDcVCg=;
+        b=TE8F4eu3B0uTZCmWX+baJY9caqGEcgZS9Ibz77pNiep8D7kqZbmgpJ8fRsP68Mq2A6
+         P7tgGes4ixKX83YBlw2LTNVBHeu3Wl0wUZXhkUY5a32krwLV9jKWr+XDkjwm5U1Eap/k
+         d3KY7FpiFKXGj3V/xHU8UWZpXutQkg8iw/ZTCqi38StguxoL38Aw1o8WmcGTArrJHL11
+         9Bfs1J1r8fFgvuPljJTt1sqmAgAYIeWrS/9eqvq06C1rkXEh/eDCmWZBbaKT61/EHVqR
+         CkfvKzcjTxi05D7nEq6teN+SHyvN4mfjgQboJmTkMLlYav8X2wBgFYKsFHimQTdpb5s3
+         aFxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=qZ9iduntohOD5MRWKGXE3NQwDvKnC/BQdlgFzYDcVCg=;
+        b=FQ4Zv8WKPJzyL/W5pUsGC/U0ouwbhiMV9gD6icjFCXd+w+F+jXymNOBE9CQFOhkluf
+         b9sOWSRhPooRc7shGtYJW0XDm0gfOKq8P6DiNnlKItenGcWAYPSfIaKed8E8iVKooo1i
+         7pRKyAmy3V53BI9EiYSUrJuTLGFJTJzHMQcWtZbfEPcX94b3xLXS0VNYgmqGm9qSOJ2j
+         XIARfA2zl0mtk1GPr/XkcESaTg1vledYpq4CsE82QmbOCNL+f9dKOP8oooufJcTVUZs/
+         BLpU+HaJGz8G6dzEz3T3EECLHmJLasuBHIufCcx9786DotSFMYqnqANXsxBnZXsFxZWk
+         e4Lg==
+X-Gm-Message-State: AOAM5331Zm9B+k4pP1QLp7/5yDYTNfGuEhELADaWnQsoQQwfF10YiN9r
+        s0qGCZneFvdH2GEKtvgQvVjTSY8X
+X-Google-Smtp-Source: ABdhPJzag+6WSRDNu7ZNw4sns8gGX08sBi+Z9IMfaz/uThKA+RP5nIlholb6XTT8dwmceBQlzKmC6g==
+X-Received: by 2002:aa7:8608:: with SMTP id p8mr5978330pfn.62.1597151545250;
+        Tue, 11 Aug 2020 06:12:25 -0700 (PDT)
+Received: from [0.0.0.0] ([108.61.186.250])
+        by smtp.gmail.com with ESMTPSA id w82sm26414844pff.7.2020.08.11.06.12.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Aug 2020 06:12:24 -0700 (PDT)
+Subject: Re: [PATCH] sched/fair: Remove the duplicate check from
+ group_has_capacity()
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        linux-kernel@vger.kernel.org
+References: <20200810010009.92758-1-arch0.zheng@gmail.com>
+ <jhjwo26gxlb.mognet@arm.com> <9425382c-2a42-57ca-512d-c93c589dc701@gmail.com>
+ <jhjv9hph3h7.mognet@arm.com> <01fe6a9b-fd3a-9b36-b2fa-6cea58415670@gmail.com>
+ <jhjtux9gxh2.mognet@arm.com>
+From:   Qi Zheng <arch0.zheng@gmail.com>
+Message-ID: <905d8887-e79c-daf6-cbce-80fd0509e37d@gmail.com>
+Date:   Tue, 11 Aug 2020 21:12:17 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="yvr4rtdsyfwruwtq"
-Content-Disposition: inline
-In-Reply-To: <6cca8eac-f767-b891-dc92-eaa7504a0e8b@linux.microsoft.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <jhjtux9gxh2.mognet@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020/8/11 下午8:48, Valentin Schneider wrote:
+> 
+> On 11/08/20 12:44, Qi Zheng wrote:
+>> On 2020/8/11 下午6:38, Valentin Schneider wrote:
+>>>
+>>> On 11/08/20 04:39, Qi Zheng wrote:
+>>>> On 2020/8/11 上午2:33, Valentin Schneider wrote:
+>>>>>
+>>>>> On 10/08/20 02:00, Qi Zheng wrote:
+>>>>>> 1. The group_has_capacity() function is only called in
+>>>>>>       group_classify().
+>>>>>> 2. The following inequality has already been checked in
+>>>>>>       group_is_overloaded() which was also called in
+>>>>>>       group_classify().
+>>>>>>
+>>>>>>          (sgs->group_capacity * imbalance_pct) <
+>>>>>>                            (sgs->group_runnable * 100)
+>>>>>>
+>>>>>
+>>>>> Consider group_is_overloaded() returns false because of the first
+>>>>> condition:
+>>>>>
+>>>>>            if (sgs->sum_nr_running <= sgs->group_weight)
+>>>>>                    return false;
+>>>>>
+>>>>> then group_has_capacity() would be the first place where the group_runnable
+>>>>> vs group_capacity comparison would be done.
+>>>>>
+>>>>> Now in that specific case we'll actually only check it if
+>>>>>
+>>>>>      sgs->sum_nr_running == sgs->group_weight
+>>>>>
+>>>>> and the only case where the runnable vs capacity check can fail here is if
+>>>>> there's significant capacity pressure going on. TBH this capacity pressure
+>>>>> could be happening even when there are fewer tasks than CPUs, so I'm not
+>>>>> sure how intentional that corner case is.
+>>>>
+>>>> Maybe some cpus in sg->cpumask are no longer active at the == case,
+>>>> which causes the significant capacity pressure?
+>>>>
+>>>
+>>> That can only happen in that short window between deactivating a CPU and
+>>> not having rebuilt the sched_domains yet, which sounds quite elusive.
+>>>
+>>
+>> In fact, at the beginning, I added unlikely() here to hint the compiler:
+>>
+>> -	if ((sgs->group_capacity * imbalance_pct) <
+>> -			(sgs->group_runnable * 100))
+>> +	if (unlikely((sgs->group_capacity * imbalance_pct) <
+>> +			(sgs->group_runnable * 100)))
+>>
+>> The corresponding patch is as follows:
+>>
+>>        [PATCH]sched/core: add unlikely in group_has_capacity()
+>>
+>> Do you think it is necessary?
+> 
+> The "unlikely" approach has the benefit of keeping all corner cases in
+> place. I was tempted to say it could still make sense to get rid of the
+> extra check entirely, given that it has an impact only when:
+> 
+> - sum_nr_running == group_weight
+> - group capacity has been noticeably reduced
+> 
+> If sum_nr_running < group_weight, we won't evaluate it.
+> If sum_nr_running > group_weight, we either won't call into
+>    group_has_capacity() or we'll have checked it already in
+>    group_overloaded().
+> 
+> That said, it does make very much sense to check it in that ==
+> case. Vincent might have a different take on this, but right now I'd say
+> the unlikely approach is the safest one of the two.
+> 
 
---yvr4rtdsyfwruwtq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-> >> Thanks for the lively discussion. I have tried to answer some of the
-> >> comments below.
-> >=20
-> >>> There are options today, e.g.
-> >>>
-> >>> a) If the restriction is only per-alias, you can have distinct aliases
-> >>>    where one is writable and another is executable, and you can make =
-it
-> >>>    hard to find the relationship between the two.
-> >>>
-> >>> b) If the restriction is only temporal, you can write instructions in=
-to
-> >>>    an RW- buffer, transition the buffer to R--, verify the buffer
-> >>>    contents, then transition it to --X.
-> >>>
-> >>> c) You can have two processes A and B where A generates instrucitons =
-into
-> >>>    a buffer that (only) B can execute (where B may be restricted from
-> >>>    making syscalls like write, mprotect, etc).
-> >>
-> >> The general principle of the mitigation is W^X. I would argue that
-> >> the above options are violations of the W^X principle. If they are
-> >> allowed today, they must be fixed. And they will be. So, we cannot
-> >> rely on them.
-> >=20
-> > Would you mind describing your threat model?
-> >=20
-> > Because I believe you are using model different from everyone else.
-> >=20
-> > In particular, I don't believe b) is a problem or should be fixed.
->=20
-> It is a problem because a kernel that implements W^X properly
-> will not allow it. It has no idea what has been done in userland.
-> It has no idea that the user has checked and verified the buffer
-> contents after transitioning the page to R--.
-
-No, it is not a problem. W^X is designed to protect from attackers
-doing buffer overflows, not attackers doing arbitrary syscalls.
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---yvr4rtdsyfwruwtq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EARECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXzKYVQAKCRAw5/Bqldv6
-8ukgAJ9NvrVhKohEnNz0+UYVlo/02QCYaACgiTn7V4hdsKUqG2xCfqc/g1HOnV4=
-=VFJ2
------END PGP SIGNATURE-----
-
---yvr4rtdsyfwruwtq--
+So what should I do next? Do I resubmit a patch with unlikely() or
+add your email to the old patch([PATCH]sched/core: add unlikely in
+group_has_capacity())? Or continue to wait for suggestions from
+other maintainers?
