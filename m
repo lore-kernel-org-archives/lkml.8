@@ -2,79 +2,190 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 570B0C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 07:02:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5B1BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 07:02:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B63720772
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 07:02:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB57B2078E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 07:02:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="AEhR5it6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727995AbgHKHCJ (ORCPT
+        id S1728358AbgHKHCH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 03:02:09 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:44938 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728208AbgHKHCG (ORCPT
+        Tue, 11 Aug 2020 03:02:07 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:32141 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726576AbgHKHCF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 03:02:06 -0400
-Received: by mail-io1-f72.google.com with SMTP id m12so9030007iov.11
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 00:02:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=TCO+CRsxJrzBCsKOBMk3YisLrnkYLPAHpyx6MjWmV2I=;
-        b=H/tJ7Ec3Vk/IImvb0plMhBv0u5JCgoHZs4u1rpI2oR1So3nR8H3ttkZt4uZfaFUxf+
-         3ZJcQ7FouWauUCvQ8K2OKeW/u5rUKbMmrKG/hDDASIFSbAvhO20pVBoPhdnTdvRcTRjk
-         bo3SUyVd7S9Fn3PZfbHcpPxAOX9/gF1HbK9dMBq4+d119RAsDTU28pyTCYr0MBq5E+wA
-         U9L0eqcNI1VnTuQdrEZ8+gWs/jGbJvK/pnPjxtHPl24YHJj31zarkRWe4OJIP7fzfpSw
-         i82CGyFQf2WR2pNzu9ZtZsHRpbm99pw1ioo6T2tdmMrW2VFh8SmvTPTYnMftVIPcGaPE
-         7XJA==
-X-Gm-Message-State: AOAM531xK6hJPqjNdO1DS42Syabz732M47QsarOb0cP6W3RPBAkWawZ3
-        ULYGO6oCicYuOO32iCtbaJv8z1UGaHzXLcFfM0oULG27y24Z
-X-Google-Smtp-Source: ABdhPJyIOSFerfWVR1Xo+/AxlOPWMpkrbzwv7jfTrQQsSCTPmQrSRvQ8Qgc2g4nydi3v0jjeKq2dBeLk3CJlnTSTNsYyiHQh6z0f
-MIME-Version: 1.0
-X-Received: by 2002:a92:db51:: with SMTP id w17mr1349732ilq.105.1597129325132;
- Tue, 11 Aug 2020 00:02:05 -0700 (PDT)
-Date:   Tue, 11 Aug 2020 00:02:05 -0700
-In-Reply-To: <00000000000079a77705a8ce6da7@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000015bfd405ac94a6c0@google.com>
-Subject: Re: general protection fault in qrtr_endpoint_post
-From:   syzbot <syzbot+03e343dbccf82a5242a2@syzkaller.appspotmail.com>
-To:     bjorn.andersson@linaro.org, bkkarthik@pesu.pes.edu,
-        dan.carpenter@oracle.com, davem@davemloft.net, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, manivannan.sadhasivam@linaro.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+        Tue, 11 Aug 2020 03:02:05 -0400
+X-UUID: 47e7e4e0f1884c7da90cb65fc3392206-20200811
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=luiMjCONGDSZAfgjuV+GaEcthQ2SBwbITf3lz2PQy1k=;
+        b=AEhR5it6VK6aQOJJAPle8Vtqqae/26zFXbVNaBBJDcYqptRcYugvMj/JQjFhkZeNsiz5nYbQervcZM5WPeoRSQ1mBzt9lgItxN8CzzesenJghPaMc4xKfcgnRhpHeKLuNCsmlX8syHHxnrLAfLclD9MoOlCQFYu+aHXyf8qhp5M=;
+X-UUID: 47e7e4e0f1884c7da90cb65fc3392206-20200811
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <weiyi.lu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 2007145941; Tue, 11 Aug 2020 15:01:56 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 11 Aug 2020 15:01:53 +0800
+Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 11 Aug 2020 15:01:53 +0800
+Message-ID: <1597129314.20627.25.camel@mtksdaap41>
+Subject: Re: [PATCH v2 1/5] dt-bindings: ARM: Mediatek: Document bindings
+ for MT8192
+From:   Weiyi Lu <weiyi.lu@mediatek.com>
+To:     Enric Balletbo Serra <eballetbo@gmail.com>
+CC:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        James Liao <jamesjj.liao@mediatek.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>, <linux-clk@vger.kernel.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        Wendell Lin <wendell.lin@mediatek.com>
+Date:   Tue, 11 Aug 2020 15:01:54 +0800
+In-Reply-To: <CAFqH_50+_Bt97roTACRhoq8XkfSc1UcHyQP3OCacQR5oK-viOg@mail.gmail.com>
+References: <1596012277-8448-1-git-send-email-weiyi.lu@mediatek.com>
+         <1596012277-8448-2-git-send-email-weiyi.lu@mediatek.com>
+         <CAFqH_50+_Bt97roTACRhoq8XkfSc1UcHyQP3OCacQR5oK-viOg@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+X-TM-SNTS-SMTP: 268E491AB7C4BC3B53770B729121ED1B10A33991DE15E3EB8DFFC0639A50E6EB2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot suspects this issue was fixed by commit:
+T24gV2VkLCAyMDIwLTA3LTI5IGF0IDExOjUzICswMjAwLCBFbnJpYyBCYWxsZXRibyBTZXJyYSB3
+cm90ZToNCj4gSGkgV2VpeXUsDQo+IA0KPiBUaGFua3MgZm9yIHRoZSBwYXRjaCwgc29tZSBjb21t
+ZW50cyBiZWxvdy4gSSBhbSBub3Qgc3VyZSB3aGF0DQo+IG1haW50YWluZXJzIHRoaW5rIGJ1dCB5
+b3VyIHBhdGNoZXMsIGluIGdlbmVyYWwsIGFyZSByZWFsbHkgYmlnIGFuZCBJJ20NCj4gd29uZGVy
+aW5nIGlmIHdvdWxkbid0IGJlIGJldHRlciBzcGxpdCBieSBmdW5jdGlvbmFsaXRpZXMuIFdpbGwg
+bWFrZQ0KPiB5b3VyIHNlcmllcyBtdWNoIGxvbmdlciBidXQgZWFzeSB0byByZXZpZXcgaW4gbXkg
+b3Bpbmlvbi4gQW55d2F5LCBJJ20NCj4gZ29pbmcgdG8gY29tbWVudCBhIGZldyBmaWxlcyBidXQg
+dGhlIGNvbW1lbnRzIGNhbiBiZSBhcHBsaWVkIHRvIG90aGVyDQo+IGZpbGVzLg0KPiANCg0KSGkg
+RW5yaWMsDQpZb3UncmUgcmlnaHQsIHRoZXNlIGFyZSBiaWcuIEkgd2FzIHRyeWluZyB0byB0byBh
+ZGQgdGhlc2UgZG9jdW1lbnRzDQp0aHJvdWdoIHRoZSBjbG9jayBzZXJpZXMgYXQgdGhpcyBzdGFn
+ZS4gRG8geW91IHN1Z2dlc3QgdG8gc2VuZCB3aXRoDQpvdGhlciBmdW5jdGlvbmFsIHNlcmllcyBp
+bnN0ZWFkIHRocm91Z2ggdGhlIGNsb2NrIHNlcmllcz8NCg0KPiBNaXNzYXRnZSBkZSBXZWl5aSBM
+dSA8d2VpeWkubHVAbWVkaWF0ZWsuY29tPiBkZWwgZGlhIGRjLiwgMjkgZGUganVsLg0KPiAyMDIw
+IGEgbGVzIDEwOjQ2Og0KPiA+DQo+ID4gVGhpcyBwYXRjaCBhZGRzIHRoZSBiaW5kaW5nIGRvY3Vt
+ZW50YXRpb24gZm9yIGFwbWl4ZWRzeXMsIGF1ZHN5cywNCj4gPiBjYW1zeXMtcmF3LCBjYW1zeXMs
+IGltZ3N5cywgaW1wX2lpY193cmFwLCBpbmZyYWNmZywgaXBlc3lzLCBtZHBzeXMsDQo+ID4gbWZn
+Y2ZnLCBtbXN5cywgbXNkYywgcGVyaWNmZywgc2NwLWFkc3AsIHRvcGNrZ2VuLCB2ZGVjc3lzLXNv
+YywNCj4gPiB2ZGVjc3lzIGFuZCB2ZW5jc3lzIGZvciBNZWRpYXRlayBNVDgxOTIuDQo+ID4NCj4g
+PiBTaWduZWQtb2ZmLWJ5OiBXZWl5aSBMdSA8d2VpeWkubHVAbWVkaWF0ZWsuY29tPg0KPiA+IC0t
+LQ0KPiA+ICAuLi4vYmluZGluZ3MvYXJtL21lZGlhdGVrL21lZGlhdGVrLGFwbWl4ZWRzeXMudHh0
+ICB8ICAxICsNCj4gPiAgLi4uL2JpbmRpbmdzL2FybS9tZWRpYXRlay9tZWRpYXRlayxhdWRzeXMu
+dHh0ICAgICAgfCAgMSArDQo+ID4gIC4uLi9iaW5kaW5ncy9hcm0vbWVkaWF0ZWsvbWVkaWF0ZWss
+Y2Ftc3lzLXJhdy55YW1sIHwgNDAgKysrKysrKysrKysrKysrKysrKysNCj4gPiAgLi4uL2JpbmRp
+bmdzL2FybS9tZWRpYXRlay9tZWRpYXRlayxjYW1zeXMudHh0ICAgICAgfCAgMSArDQo+ID4gIC4u
+Li9iaW5kaW5ncy9hcm0vbWVkaWF0ZWsvbWVkaWF0ZWssaW1nc3lzLnR4dCAgICAgIHwgIDIgKw0K
+PiA+ICAuLi4vYXJtL21lZGlhdGVrL21lZGlhdGVrLGltcF9paWNfd3JhcC55YW1sICAgICAgICB8
+IDQzICsrKysrKysrKysrKysrKysrKysrKysNCj4gPiAgLi4uL2JpbmRpbmdzL2FybS9tZWRpYXRl
+ay9tZWRpYXRlayxpbmZyYWNmZy50eHQgICAgfCAgMSArDQo+ID4gIC4uLi9iaW5kaW5ncy9hcm0v
+bWVkaWF0ZWsvbWVkaWF0ZWssaXBlc3lzLnR4dCAgICAgIHwgIDEgKw0KPiA+ICAuLi4vYmluZGlu
+Z3MvYXJtL21lZGlhdGVrL21lZGlhdGVrLG1kcHN5cy55YW1sICAgICB8IDM4ICsrKysrKysrKysr
+KysrKysrKysNCj4gPiAgLi4uL2JpbmRpbmdzL2FybS9tZWRpYXRlay9tZWRpYXRlayxtZmdjZmcu
+dHh0ICAgICAgfCAgMSArDQo+ID4gIC4uLi9iaW5kaW5ncy9hcm0vbWVkaWF0ZWsvbWVkaWF0ZWss
+bW1zeXMudHh0ICAgICAgIHwgIDEgKw0KPiA+ICAuLi4vYmluZGluZ3MvYXJtL21lZGlhdGVrL21l
+ZGlhdGVrLG1zZGMueWFtbCAgICAgICB8IDM5ICsrKysrKysrKysrKysrKysrKysrDQo+ID4gIC4u
+Li9iaW5kaW5ncy9hcm0vbWVkaWF0ZWsvbWVkaWF0ZWsscGVyaWNmZy55YW1sICAgIHwgIDEgKw0K
+PiA+ICAuLi4vYmluZGluZ3MvYXJtL21lZGlhdGVrL21lZGlhdGVrLHNjcC1hZHNwLnlhbWwgICB8
+IDM4ICsrKysrKysrKysrKysrKysrKysNCj4gPiAgLi4uL2JpbmRpbmdzL2FybS9tZWRpYXRlay9t
+ZWRpYXRlayx0b3Bja2dlbi50eHQgICAgfCAgMSArDQo+ID4gIC4uLi9hcm0vbWVkaWF0ZWsvbWVk
+aWF0ZWssdmRlY3N5cy1zb2MueWFtbCAgICAgICAgIHwgMzggKysrKysrKysrKysrKysrKysrKw0K
+PiA+ICAuLi4vYmluZGluZ3MvYXJtL21lZGlhdGVrL21lZGlhdGVrLHZkZWNzeXMudHh0ICAgICB8
+ICAxICsNCj4gPiAgLi4uL2JpbmRpbmdzL2FybS9tZWRpYXRlay9tZWRpYXRlayx2ZW5jc3lzLnR4
+dCAgICAgfCAgMSArDQo+ID4gIDE4IGZpbGVzIGNoYW5nZWQsIDI0OSBpbnNlcnRpb25zKCspDQo+
+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+YXJtL21lZGlhdGVrL21lZGlhdGVrLGNhbXN5cy1yYXcueWFtbA0KPiA+ICBjcmVhdGUgbW9kZSAx
+MDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9tZWRpYXRlay9tZWRp
+YXRlayxpbXBfaWljX3dyYXAueWFtbA0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9tZWRpYXRlay9tZWRpYXRlayxtZHBzeXMueWFt
+bA0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2FybS9tZWRpYXRlay9tZWRpYXRlayxtc2RjLnlhbWwNCj4gPiAgY3JlYXRlIG1vZGUgMTAw
+NjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vbWVkaWF0ZWsvbWVkaWF0
+ZWssc2NwLWFkc3AueWFtbA0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9tZWRpYXRlay9tZWRpYXRlayx2ZGVjc3lzLXNvYy55YW1s
+DQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2FybS9tZWRpYXRlay9tZWRpYXRlayxhcG1peGVkc3lzLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9hcm0vbWVkaWF0ZWsvbWVkaWF0ZWssYXBtaXhlZHN5cy50eHQNCj4g
+PiBpbmRleCBiZDdhMGZhLi42OTQyYWQ0IDEwMDY0NA0KPiA+IC0tLSBhL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vbWVkaWF0ZWsvbWVkaWF0ZWssYXBtaXhlZHN5cy50eHQN
+Cj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL21lZGlhdGVr
+L21lZGlhdGVrLGFwbWl4ZWRzeXMudHh0DQo+ID4gQEAgLTE3LDYgKzE3LDcgQEAgUmVxdWlyZWQg
+UHJvcGVydGllczoNCj4gPiAgICAgICAgIC0gIm1lZGlhdGVrLG10ODEzNS1hcG1peGVkc3lzIg0K
+PiA+ICAgICAgICAgLSAibWVkaWF0ZWssbXQ4MTczLWFwbWl4ZWRzeXMiDQo+ID4gICAgICAgICAt
+ICJtZWRpYXRlayxtdDgxODMtYXBtaXhlZHN5cyIsICJzeXNjb24iDQo+ID4gKyAgICAgICAtICJt
+ZWRpYXRlayxtdDgxOTItYXBtaXhlZHN5cyIsICJzeXNjb24iDQo+ID4gICAgICAgICAtICJtZWRp
+YXRlayxtdDg1MTYtYXBtaXhlZHN5cyINCj4gPiAgLSAjY2xvY2stY2VsbHM6IE11c3QgYmUgMQ0K
+PiA+DQo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9h
+cm0vbWVkaWF0ZWsvbWVkaWF0ZWssYXVkc3lzLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9hcm0vbWVkaWF0ZWsvbWVkaWF0ZWssYXVkc3lzLnR4dA0KPiA+IGluZGV4IDM4
+MzA5ZGIuLmZkY2IyNjcgMTAwNjQ0DQo+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2FybS9tZWRpYXRlay9tZWRpYXRlayxhdWRzeXMudHh0DQo+ID4gKysrIGIvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9tZWRpYXRlay9tZWRpYXRlayxhdWRz
+eXMudHh0DQo+ID4gQEAgLTEyLDYgKzEyLDcgQEAgUmVxdWlyZWQgUHJvcGVydGllczoNCj4gPiAg
+ICAgICAgIC0gIm1lZGlhdGVrLG10NzYyMi1hdWRzeXMiLCAic3lzY29uIg0KPiA+ICAgICAgICAg
+LSAibWVkaWF0ZWssbXQ3NjIzLWF1ZHN5cyIsICJtZWRpYXRlayxtdDI3MDEtYXVkc3lzIiwgInN5
+c2NvbiINCj4gPiAgICAgICAgIC0gIm1lZGlhdGVrLG10ODE4My1hdWRpb3N5cyIsICJzeXNjb24i
+DQo+ID4gKyAgICAgICAtICJtZWRpYXRlayxtdDgxOTItYXVkc3lzIiwgInN5c2NvbiINCj4gPiAg
+ICAgICAgIC0gIm1lZGlhdGVrLG10ODUxNi1hdWRzeXMiLCAic3lzY29uIg0KPiA+ICAtICNjbG9j
+ay1jZWxsczogTXVzdCBiZSAxDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9tZWRpYXRlay9tZWRpYXRlayxjYW1zeXMtcmF3LnlhbWwg
+Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL21lZGlhdGVrL21lZGlhdGVr
+LGNhbXN5cy1yYXcueWFtbA0KPiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4gaW5kZXggMDAw
+MDAwMC4uZGI2ZjQyNQ0KPiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvYXJtL21lZGlhdGVrL21lZGlhdGVrLGNhbXN5cy1yYXcueWFt
+bA0KPiA+IEBAIC0wLDAgKzEsNDAgQEANCj4gPiArIyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjog
+KEdQTC0yLjAgT1IgQlNELTItQ2xhdXNlKQ0KPiA+ICslWUFNTCAxLjINCj4gPiArLS0tDQo+ID4g
+KyRpZDogaHR0cHM6Ly91cmxkZWZlbnNlLmNvbS92My9fX2h0dHA6Ly9kZXZpY2V0cmVlLm9yZy9z
+Y2hlbWFzL2FybS9tZWRpYXRlay9tZWRpYXRlayxjYW1zeXMtcmF3LnlhbWwqX187SXchIUNUUk5L
+QTl3TWcwQVJidyEzdzg0WG9YR1JBa1ZYNXp4VEJBNG81aDdFa0tpS0J1Q081VlpETW14OTRxb0pL
+MzU3d2JUbmpUOVhONlNSUFFjJCANCj4gPiArJHNjaGVtYTogaHR0cHM6Ly91cmxkZWZlbnNlLmNv
+bS92My9fX2h0dHA6Ly9kZXZpY2V0cmVlLm9yZy9tZXRhLXNjaGVtYXMvY29yZS55YW1sKl9fO0l3
+ISFDVFJOS0E5d01nMEFSYnchM3c4NFhvWEdSQWtWWDV6eFRCQTRvNWg3RWtLaUtCdUNPNVZaRE1t
+eDk0cW9KSzM1N3diVG5qVDlYR0xYN0ZxNyQgDQo+ID4gKw0KPiA+ICt0aXRsZTogTWVkaWFUZWsg
+Q0FNU1lTIFJBVyBDb250cm9sbGVyDQo+ID4gKw0KPiA+ICttYWludGFpbmVyczoNCj4gPiArICAt
+IFdlaXlpIEx1IDx3ZWl5aS5sdUBtZWRpYXRlay5jb20+DQo+ID4gKw0KPiA+ICtkZXNjcmlwdGlv
+bjoNCj4gPiArICBUaGUgTWVkaWF0ZWsgY2Ftc3lzIHJhdyBjb250cm9sbGVyIHByb3ZpZGVzIHZh
+cmlvdXMgY2xvY2tzIHRvIHRoZSBzeXN0ZW0uDQo+ID4gKw0KPiANCj4gSXQgb25seSBwcm92aWRl
+cyBjbG9ja3Mgb3IgYWxzbyBwcm92aWRlcyBjb25maWd1cmF0aW9uIHJlZ2lzdGVycw0KPiBub24t
+Y2xvY2sgcmVsYXRlZD8NCj4gDQoNClRoYW5rcyBmb3IgcmVtaW5kaW5nLCBpdCBhbHNvIHByb3Zp
+ZGVzIG90aGVyIGNvbmZpZ3VyYXRpb24gcmVnaXN0ZXJzLg0KSSdsbCB1cGRhdGUgdGhlIGRlc2Ny
+aXB0aW9uIGluIG5leHQgdmVyc2lvbi4NCg0KPiA+ICtwcm9wZXJ0aWVzOg0KPiA+ICsgIGNvbXBh
+dGlibGU6DQo+ID4gKyAgICBpdGVtczoNCj4gPiArICAgICAgLSBlbnVtOg0KPiA+ICsgICAgICAg
+ICAgLSBtZWRpYXRlayxtdDgxOTItY2Ftc3lzX3Jhd2ENCj4gPiArICAgICAgICAgIC0gbWVkaWF0
+ZWssbXQ4MTkyLWNhbXN5c19yYXdiDQo+ID4gKyAgICAgICAgICAtIG1lZGlhdGVrLG10ODE5Mi1j
+YW1zeXNfcmF3Yw0KPiA+ICsgICAgICAtIGNvbnN0OiBzeXNjb24NCj4gPiArDQo+ID4gKyAgcmVn
+Og0KPiA+ICsgICAgbWF4SXRlbXM6IDENCj4gPiArDQo+ID4gKyAgJyNjbG9jay1jZWxscyc6DQo+
+ID4gKyAgICBjb25zdDogMQ0KPiA+ICsNCj4gPiArcmVxdWlyZWQ6DQo+ID4gKyAgLSBjb21wYXRp
+YmxlDQo+ID4gKyAgLSByZWcNCj4gPiArDQo+ID4gK2V4YW1wbGVzOg0KPiA+ICsgIC0gfA0KPiA+
+ICsgICAgY2Ftc3lzX3Jhd2E6IGNhbXN5c19yYXdhQDFhMDRmMDAwIHsNCj4gDQo+IEkgdGhpbmsg
+dGhhdCB0aGlzIHNob3VsZCBiZSAgInN5c2NvbkAxYTA0ZjAwMCIsIHNpbmNlIG5vZGUgbmFtZXMg
+YXJlDQo+IHN1cHBvc2VkIHRvIG1hdGNoIHRoZSBjbGFzcyBvZiB0aGUgZGV2aWNlIGluc3RlYWQg
+b2YgdGhlIG5hbWUgb2YgdGhlDQo+IGRldmljZS4NCj4gDQoNCkdvdCBpdCwgSSdsbCBmaXggaW4g
+bmV4dCB2ZXJzaW9uLg0KDQo+IEp1c3QgYmVjYXVzZSBJIGFtIGN1cmlvdXMsIGNhbiB5b3Ugc2hv
+dyBtZSBhbiBleGFtcGxlIG9mDQo+ICJtZWRpYXRlayxtdDgxOTItY2Ftc3lzX3Jhd2IiIG9yICJt
+ZWRpYXRlayxtdDgxOTItY2Ftc3lzX3Jhd2MiPyBJdCdzIGENCj4gZGlmZmVyZW50IGFkZHJlc3Mg
+c3BhY2U/DQo+IA0KPiA+ICsgICAgICAgIGNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTkyLWNh
+bXN5c19yYXdhIiwgInN5c2NvbiI7DQo+ID4gKyAgICAgICAgcmVnID0gPDAgMHgxYTA0ZjAwMCAw
+IDB4MTAwMD47DQo+ID4gKyAgICAgICAgI2Nsb2NrLWNlbGxzID0gPDE+Ow0KPiA+ICsgICAgfTsN
+Cj4gDQoNCk9LLCBJJ2xsIGFkZCB0aG9zZSBpbiBuZXh0IHZlcnNpb24uDQoNCj4gW3NuaXBdDQoN
+Cg==
 
-commit 8ff41cc21714704ef0158a546c3c4d07fae2c952
-Author: Dan Carpenter <dan.carpenter@oracle.com>
-Date:   Tue Jun 30 11:46:15 2020 +0000
-
-    net: qrtr: Fix an out of bounds read qrtr_endpoint_post()
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10f1cfe6900000
-start commit:   1590a2e1 Merge tag 'acpi-5.8-rc3' of git://git.kernel.org/..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=20c907630cbdbe5
-dashboard link: https://syzkaller.appspot.com/bug?extid=03e343dbccf82a5242a2
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1496f9f9100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1692523d100000
-
-If the result looks correct, please mark the issue as fixed by replying with:
-
-#syz fix: net: qrtr: Fix an out of bounds read qrtr_endpoint_post()
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
