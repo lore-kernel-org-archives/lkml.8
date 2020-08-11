@@ -2,59 +2,79 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F9CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 03:20:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C37CC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 03:28:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D33C20734
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 03:20:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 130F42065D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 03:28:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728080AbgHKDT5 (ORCPT
+        id S1728161AbgHKD2o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 23:19:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38994 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 23:28:44 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:48460 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727861AbgHKDT4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 23:19:56 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF28C2065D;
-        Tue, 11 Aug 2020 03:19:55 +0000 (UTC)
-Date:   Mon, 10 Aug 2020 23:19:54 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Tingwei Zhang <tingweiz@codeaurora.org>
-Cc:     Tingwei Zhang <tingwei@codeaurora.org>,
-        Ingo Molnar <mingo@redhat.com>, tsoni@codeaurora.org,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Mao Jinlong <jinlmao@codeaurora.org>,
+        id S1727819AbgHKD2n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 23:28:43 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id F0D9C200725;
+        Tue, 11 Aug 2020 05:28:41 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 85E06201D74;
+        Tue, 11 Aug 2020 05:28:37 +0200 (CEST)
+Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id B047140243;
+        Tue, 11 Aug 2020 05:28:31 +0200 (CEST)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        lee.jones@linaro.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com,
+        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/6] tracing: export event trace and trace_marker
-Message-ID: <20200810231954.3388855c@oasis.local.home>
-In-Reply-To: <20200811030418.GA1893@codeaurora.org>
-References: <20200728013359.2326-1-tingwei@codeaurora.org>
-        <20200811030418.GA1893@codeaurora.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH 1/3] pwm: imx-tpm: Use dev_err_probe() to simplify error handling
+Date:   Tue, 11 Aug 2020 11:23:42 +0800
+Message-Id: <1597116224-26221-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 11 Aug 2020 11:04:18 +0800
-Tingwei Zhang <tingweiz@codeaurora.org> wrote:
+dev_err_probe() can reduce code size, uniform error handling and record the
+defer probe reason etc., use it to simplify the code.
 
-> Thanks for your comments, Steven.  I've addressed all your comments in v3.
-> Do you have more comments on v3? Is there anything I need to do to merge
-> this series to Linux Kernel?
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ drivers/pwm/pwm-imx-tpm.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-I gave my Reviewed-by tag on each of the patches that touch my tree. It
-should go in via whoever maintains the drivers/hwtracing tree. Is that
-Greg KH?
+diff --git a/drivers/pwm/pwm-imx-tpm.c b/drivers/pwm/pwm-imx-tpm.c
+index fcdf6be..e46fad3 100644
+--- a/drivers/pwm/pwm-imx-tpm.c
++++ b/drivers/pwm/pwm-imx-tpm.c
+@@ -350,13 +350,9 @@ static int pwm_imx_tpm_probe(struct platform_device *pdev)
+ 		return PTR_ERR(tpm->base);
+ 
+ 	tpm->clk = devm_clk_get(&pdev->dev, NULL);
+-	if (IS_ERR(tpm->clk)) {
+-		ret = PTR_ERR(tpm->clk);
+-		if (ret != -EPROBE_DEFER)
+-			dev_err(&pdev->dev,
+-				"failed to get PWM clock: %d\n", ret);
+-		return ret;
+-	}
++	if (IS_ERR(tpm->clk))
++		return dev_err_probe(&pdev->dev, PTR_ERR(tpm->clk),
++				     "failed to get PWM clock: %ld\n", PTR_ERR(tpm->clk));
+ 
+ 	ret = clk_prepare_enable(tpm->clk);
+ 	if (ret) {
+-- 
+2.7.4
 
--- Steve
