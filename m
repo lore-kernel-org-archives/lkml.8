@@ -2,111 +2,100 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF04CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:30:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 428B9C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:31:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCB64205CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:30:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19A53205CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:31:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="g9iHXfC7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728705AbgHKKaE (ORCPT
+        id S1728624AbgHKKa7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 06:30:04 -0400
-Received: from ja.ssi.bg ([178.16.129.10]:33806 "EHLO ja.ssi.bg"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728346AbgHKKaB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 06:30:01 -0400
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-        by ja.ssi.bg (8.15.2/8.15.2) with ESMTP id 07BAT4fo009688;
-        Tue, 11 Aug 2020 13:29:04 +0300
-Date:   Tue, 11 Aug 2020 13:29:04 +0300 (EEST)
-From:   Julian Anastasov <ja@ssi.bg>
-To:     Peilin Ye <yepeilin.cs@gmail.com>
-cc:     Wensong Zhang <wensong@linux-vs.org>,
-        Simon Horman <horms@verge.net.au>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        netdev@vger.kernel.org, lvs-devel@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        syzkaller-bugs@googlegroups.com, linux-kernel@vger.kernel.org
-Subject: Re: [Linux-kernel-mentees] [PATCH net-next v2] ipvs: Fix uninit-value
- in do_ip_vs_set_ctl()
-In-Reply-To: <20200811074640.841693-1-yepeilin.cs@gmail.com>
-Message-ID: <alpine.LFD.2.23.451.2008111324570.7428@ja.home.ssi.bg>
-References: <20200810220703.796718-1-yepeilin.cs@gmail.com> <20200811074640.841693-1-yepeilin.cs@gmail.com>
+        Tue, 11 Aug 2020 06:30:59 -0400
+Received: from mout.gmx.net ([212.227.15.19]:56193 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728280AbgHKKay (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 06:30:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1597141852;
+        bh=TQiX4fEKRzWrITACzvC/FrFoTdfBi1/ynPROfWfjH60=;
+        h=X-UI-Sender-Class:Date:From:To:Subject;
+        b=g9iHXfC7Hbqjq4xllG/hEkRpg6y0VgDLgfmmMpQlsGASqPWeA+I32pfqpDtq4zvqY
+         1/hJTkvtPTMPRm+DNR2fWxlFfXdqs6+i6DMQQnVLif1ucED77X8kVS0BRaXmR0zNPO
+         m7wCK+sDR9fXvSUZrtPTZEcDvnYHw1I+iLbMV4HM=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from ls3530.fritz.box ([92.116.143.39]) by mail.gmx.com (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MKsjH-1kQYlt1S3h-00LFrv; Tue, 11
+ Aug 2020 12:30:52 +0200
+Date:   Tue, 11 Aug 2020 12:30:50 +0200
+From:   Helge Deller <deller@gmx.de>
+To:     Linux Kernel <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org
+Subject: [PATCH] sections.h: dereference_function_descriptor() returns void
+ pointer
+Message-ID: <20200811103050.GA6645@ls3530.fritz.box>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Provags-ID: V03:K1:tds8f2G04nb1fmFYqSSVjheMpDt5sARFmYT6RzZdlJgXyFBIRDY
+ luDxbKpOqQ1GeVg7MSTMM0jEjEY9+JnBUoiluaTZ/UgyM2+Rgu+9WEDbRFydBRIuX6dZxSS
+ EFiyLjUk3O2w9f5d9XxQurFflQ96NgzZ1HDrcnqlNbKzX3txy7Dby2NPyiIhNObsI/HxLzC
+ 3jxZpZPfBEj1mwFfMOjBQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:X/koSh1x8uQ=:jAPyPkq6C4W6cncmr6rAXQ
+ yhNwq7eHzKuZTz0C844DplMdGSNDuhNlAqTpAT1CDQDitiigU/6FYau4ep0NPAVv9hHZZahSy
+ wJRrWSzJe1OPJq/BH6AjWbrfiW0FK2eWh0eIuFwnHNMius5Y8hiX5jEkpYligpT9t6JYULPB9
+ WYayU0AdUlZsHftuWoLW0joft7JCEorhHuuJioREi8gAZA/ss7fJRepWGW7ikMtxeD/vFYG+c
+ MjlJtotvrPipR5Jm0bCppyxio4FyjJXxNTeCdfygw774H4u5y7OrcU3ND8n3u12PZlZ6iTw42
+ ts7NpJOH+lcOExiGSyPkGdXoeMY0EMvjMlenV9PlNhMB6KC3p1wuvKw7jTUTXdHlJJhvkniU9
+ qCqxjdqmZrPtm4+3Okn01634OXibDqCqbNBtXx/3Scx26hkl/NqDoDr4IrCDrisVf8YAyDfGi
+ 6Vd7Dt5mIYaVpDoq7388YDSKBz3HSP8vwGV6Gwa8+jHaVUaG1WcDBcbAS4PLmRMSbQIlLEvNM
+ nst6vH7bVQOAr2pw2gdNjf410mgNif/H4N42SyaktV4XnDYJRpmBF6LbZHYisD3g2dgZR4LKE
+ TLzF6OLB+cvqbfygi5EvIP1NVKo8STqwxAlr6TEQ48RuWCZxYIqMQD80NZovSu40eqtXWnvvm
+ 4HL0MGj/uz43PyqZ5/RKKouBdKo8g0/DWe+bqX1nYchDptETkPlJq3bBmncY7dg1wwW3agNX2
+ /VlqcMYtgcdI57bAYoP/uHQh2A/vzb5euPgB8LBIeBORsYjdIv+sCdcKvS1ZZlX3gefQTDuaA
+ leu2wQxqk1lJAvzrDeJsl4bQmLlX12QxnC6LPNC1L0DjJyOmk8OXPYm3rPlQcWOfTivVml9XN
+ Q0udJ1Yem2PDqZqLCzUNt+jDEHPQbNw07cqHVc3zaYyCgiUNYXMVMkdqGQMBKq0YxMNj1/gHq
+ GnvbPXs0W3Phsm7nHlbm/f0yWKjrx5z2bKJPfLssbcbVrYW1mPbESKARFXJyMRGrpUXX+2Xee
+ zGU7MxaqBbz8wTGg4bmhvA2O9pejokostlGggisQey/A1k4KDNZr7eE5+2DTJdPrQJOEzDyf1
+ EhGL79s4ldV19J1i2zu6DsqriMnB7bK90oX2PY0YHF0qA0CGf/JAMnpplepAac38nID/IvYZz
+ fD4G9wVqypWQ9Ln/fH3ze1ZnDqQa4BaDPptuUdDM3Ve4oftPyg6uUmhFEM7wToCgxgllY7ByY
+ HecyWjFe7Y2grCW82
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The function dereference_function_descriptor() takes on hppa64, ppc64
+and ia64 a pointer to a function descriptor and returns a (void) pointer
+to the dereferenced function.
+To make cross-arch coding easier, on all other architectures the
+dereference_function_descriptor() macro should return a void pointer
+too.
 
-	Hello,
+Signed-off-by: Helge Deller <deller@gmx.de>
 
-On Tue, 11 Aug 2020, Peilin Ye wrote:
+diff --git a/include/asm-generic/sections.h b/include/asm-generic/sections=
+.h
+index 66397ed10acb..d16302d3eb59 100644
+=2D-- a/include/asm-generic/sections.h
++++ b/include/asm-generic/sections.h
+@@ -60,8 +60,8 @@ extern __visible const void __nosave_begin, __nosave_end=
+;
 
-> do_ip_vs_set_ctl() is referencing uninitialized stack value when `len` is
-> zero. Fix it.
-> 
-> Reported-by: syzbot+23b5f9e7caf61d9a3898@syzkaller.appspotmail.com
-> Link: https://syzkaller.appspot.com/bug?id=46ebfb92a8a812621a001ef04d90dfa459520fe2
-> Suggested-by: Julian Anastasov <ja@ssi.bg>
-> Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+ /* Function descriptor handling (if any).  Override in asm/sections.h */
+ #ifndef dereference_function_descriptor
+-#define dereference_function_descriptor(p) (p)
+-#define dereference_kernel_function_descriptor(p) (p)
++#define dereference_function_descriptor(p) ((void *)(p))
++#define dereference_kernel_function_descriptor(p) ((void *)(p))
+ #endif
 
-	Looks good to me, thanks!
-
-Acked-by: Julian Anastasov <ja@ssi.bg>
-
-> ---
-> Changes in v2:
->     - Target net-next tree. (Suggested by Julian Anastasov <ja@ssi.bg>)
->     - Reject all `len == 0` requests except `IP_VS_SO_SET_FLUSH`, instead
->       of initializing `arg`. (Suggested by Cong Wang
->       <xiyou.wangcong@gmail.com>, Julian Anastasov <ja@ssi.bg>)
-> 
->  net/netfilter/ipvs/ip_vs_ctl.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/net/netfilter/ipvs/ip_vs_ctl.c b/net/netfilter/ipvs/ip_vs_ctl.c
-> index 412656c34f20..beeafa42aad7 100644
-> --- a/net/netfilter/ipvs/ip_vs_ctl.c
-> +++ b/net/netfilter/ipvs/ip_vs_ctl.c
-> @@ -2471,6 +2471,10 @@ do_ip_vs_set_ctl(struct sock *sk, int cmd, void __user *user, unsigned int len)
->  		/* Set timeout values for (tcp tcpfin udp) */
->  		ret = ip_vs_set_timeout(ipvs, (struct ip_vs_timeout_user *)arg);
->  		goto out_unlock;
-> +	} else if (!len) {
-> +		/* No more commands with len == 0 below */
-> +		ret = -EINVAL;
-> +		goto out_unlock;
->  	}
->  
->  	usvc_compat = (struct ip_vs_service_user *)arg;
-> @@ -2547,9 +2551,6 @@ do_ip_vs_set_ctl(struct sock *sk, int cmd, void __user *user, unsigned int len)
->  		break;
->  	case IP_VS_SO_SET_DELDEST:
->  		ret = ip_vs_del_dest(svc, &udest);
-> -		break;
-> -	default:
-> -		ret = -EINVAL;
->  	}
->  
->    out_unlock:
-> -- 
-> 2.25.1
-
-Regards
-
---
-Julian Anastasov <ja@ssi.bg>
+ /* random extra sections (if any).  Override
