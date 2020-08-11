@@ -2,164 +2,171 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2513FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 13:43:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66D22C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 13:43:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5E90206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 13:43:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39F64206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 13:43:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LnwEdiH/"
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="Jgg5an1w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728722AbgHKNno (ORCPT
+        id S1728745AbgHKNnr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 09:43:44 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:38662 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728550AbgHKNnn (ORCPT
+        Tue, 11 Aug 2020 09:43:47 -0400
+Received: from m15114.mail.126.com ([220.181.15.114]:38809 "EHLO
+        m15114.mail.126.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728532AbgHKNnq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 09:43:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597153421;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=zsEkVhBkdW2xurAwlkSpkIIJfJ5lTVvR2x5t+rRtl1c=;
-        b=LnwEdiH/ozKlibaLAtnzoLbOKC73kGMD/ALyzyqvFD0UlctwbBI4XZDxbcJNBUVR593c90
-        XFrSFe5bE4Wh++3u8dLAyX/sXYT8rK7vNLfGEsGE9jwzitFZLW4mWJG80iRRXw6Dd5zaAn
-        0t2eDNkwUfb5s37yZtHfwssGommFH7I=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-226-XpoG-LUSMPKJjFXjDFnTNg-1; Tue, 11 Aug 2020 09:43:37 -0400
-X-MC-Unique: XpoG-LUSMPKJjFXjDFnTNg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2767D100A8F1;
-        Tue, 11 Aug 2020 13:43:34 +0000 (UTC)
-Received: from prarit.bos.redhat.com (dhcp16-222-232.7a2m.lab.eng.bos.redhat.com [10.16.222.232])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CC1B170599;
-        Tue, 11 Aug 2020 13:43:28 +0000 (UTC)
-Subject: Re: [RFC PATCH] printk: Change timestamp to triplet as mono, boot and
- real
-To:     Petr Mladek <pmladek@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Orson Zhai <orsonzhai@gmail.com>, Dave Young <dyoung@redhat.com>,
-        Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>, kexec@lists.infradead.org,
-        linux-kernel@vger.kernel.org, zhang.lyra@gmail.com,
-        ruifeng.zhang1@unisoc.com, cixi.geng1@unisoc.com,
-        Orson Zhai <orson.zhai@unisoc.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Steven Sistare <steven.sistare@oracle.com>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Jon DeVree <nuxi@vault24.org>,
-        Salvatore Bonaccorso <carnil@debian.org>,
-        John Ogness <john.ogness@linutronix.de>
-References: <1597120822-11999-1-git-send-email-orsonzhai@gmail.com>
- <20200811094413.GA12903@alley> <87zh7175hj.fsf@nanos.tec.linutronix.de>
- <20200811130218.GI6215@alley>
-From:   Prarit Bhargava <prarit@redhat.com>
-Message-ID: <ea1def14-3f03-e0e7-6658-6bbcd9861b2e@redhat.com>
-Date:   Tue, 11 Aug 2020 09:43:28 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20200811130218.GI6215@alley>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+        Tue, 11 Aug 2020 09:43:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+        s=s110527; h=From:Subject:Date:Message-Id; bh=6n9ucVjwm5xquc5GPM
+        dzBC85j1s4vXBylBHGsRZs4Ms=; b=Jgg5an1wvpkpZs1ZrZkhMeUIB8/6tYVEJw
+        jpzf3+Kq+omnrzTjIDicoaMlTNT+YsN6s763Z67WnHDeb++HPzpzDEzloFSVbfeC
+        jZCfHKIbqfoFkhNa5hcmMC57X6PlfRD3BtuIRfl7BMtlYYT17b8CoHO56d2qoyke
+        xDJ66a1L8=
+Received: from 192.168.137.133 (unknown [112.10.84.202])
+        by smtp7 (Coremail) with SMTP id DsmowAA3CBBqoDJfSwACIQ--.8153S3;
+        Tue, 11 Aug 2020 21:43:09 +0800 (CST)
+From:   Xianting Tian <xianting_tian@126.com>
+To:     axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] block: don't read block device if it's invalid
+Date:   Tue, 11 Aug 2020 09:43:06 -0400
+Message-Id: <1597153386-87954-1-git-send-email-xianting_tian@126.com>
+X-Mailer: git-send-email 1.8.3.1
+X-CM-TRANSID: DsmowAA3CBBqoDJfSwACIQ--.8153S3
+X-Coremail-Antispam: 1Uf129KBjvJXoW3Jw1xXF18Gw4fCFWrAw48Xrb_yoW7Xw4rpr
+        y5XryUGr18Cr47Jr47tF13JrW8t3yDtay7JrWxKry3Ar1UGrW5tFyxAFyUAF1qgr18trZr
+        JF4qqr40gryUWFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jrR6wUUUUU=
+X-Originating-IP: [112.10.84.202]
+X-CM-SenderInfo: h0ld03plqjs3xldqqiyswou0bp/1tbi3A19pFpD-XbzCAAAsh
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+We found several processes in 'D' state after nvme device hot-removed,
+The call trace as below, we can see process 848 got lock 'bdev->bd_mutex'
+in blkdev_reread_part(), but scheduled out due to wait for IO done. But
+the IO won't be completed as the device is hot-removed. Then it caused
+the lock 'bdev->bd_mutex' can't be unlocked. As a result, it caused
+other processes, which need to get the same lock 'bdev->bd_mutex',
+blocked on this lock.
 
+When nvme device hot-removed, kernel will start a thread to handle the
+task of nvme device removing, as the call trace of process 1111504 shows
+below. I listed the call trace of nvme_kill_queues() in detail as below,
+we can see 'NVME_NS_DEAD' is set, then when executing
+nvme_revalidate_disk(), it found 'NVME_NS_DEAD' is set and
+'set_capacity(disk, 0)' will be called to set disk capacity to 0.
+    nvme_kill_queues()
+        if (test_and_set_bit(NVME_NS_DEAD, &ns->flags)) return;
+            revalidate_disk(disk)
+                disk->fops->revalidate_disk(disk) <=for nvme device, revalidate_disk=nvme_revalidate_disk()
+                     mutex_lock(&bdev->bd_mutex)
 
-On 8/11/20 9:02 AM, Petr Mladek wrote:
-> On Tue 2020-08-11 14:05:12, Thomas Gleixner wrote:
->> Petr Mladek <pmladek@suse.com> writes:
->>> At least "crash" tool would need an update anyway. AFAIK, it checks
->>> the size of struct printk_log and refuses to read it when it changes.
->>>
->>> It means that the hack with VMCOREINFO_FIELD_OFFSET probably is not
->>> needed because we would need to update the crashdump-related tools anyway.
->>>
->>> Well, the timing is good. We are about to switch the printk ring
->>> buffer into a lockless one. It requires updating the crashdump tools
->>> as well. We could do this at the same time. The lockless ring buffer
->>> already is in linux-next. It is aimed for 5.10 or 5.11.
->> ...
->>> It would be great to synchronize all these changes changes of the
->>> printk log buffer structures.
->>
->> I agree that having one update is a good thing, but pretty please can we
->> finally make progress with this and not create yet another dependency?
-> 
-> To make it clear. I definitely do not want to block lockless printk by
-> this.
+This patch is to reduce the probability of such problem. Before getting
+the lock of 'bdev->bd_mutex' in blkdev_reread_part(), add the code to
+check if the capacity of the disk is 0, just return. Then we can avoid
+the happen of the issue:
+nvme device is hot-removed, and its capacity is alreday set to 0; then
+if there is process like 848 want to read the device, it will return
+directly in blkdev_reread_part(), then it will not get the lock
+"bdev->bd_mutex", which can't be unlocked by the process itself as IO
+can't be completed.
 
-Thanks for clarifying that.  I had the same concern that tglx had.
+cat /proc/848/stack
+[<ffffffffb14b9d56>] io_schedule+0x16/0x40
+[<ffffffffb15b009e>] do_read_cache_page+0x3ee/0x5e0
+[<ffffffffb15b02a5>] read_cache_page+0x15/0x20
+[<ffffffffb17810ad>] read_dev_sector+0x2d/0xa0
+[<ffffffffb17856e4>] read_lba+0x104/0x1c0
+[<ffffffffb1785d1a>] find_valid_gpt+0xfa/0x720
+[<ffffffffb17863c9>] efi_partition+0x89/0x430
+[<ffffffffb1783280>] check_partition+0x100/0x1f0
+[<ffffffffb17819e4>] rescan_partitions+0xb4/0x360
+[<ffffffffb177d544>] __blkdev_reread_part+0x64/0x70
+[<ffffffffb177d573>] blkdev_reread_part+0x23/0x40  <<==mutex_lock(&bdev->bd_mutex);
+[<ffffffffb177e00b>] blkdev_ioctl+0x44b/0x8e0
+[<ffffffffb1692dc1>] block_ioctl+0x41/0x50
+[<ffffffffb1668d37>] do_vfs_ioctl+0xa7/0x5e0
+[<ffffffffb16692e9>] SyS_ioctl+0x79/0x90
+[<ffffffffb1bd6001>] entry_SYSCALL_64_fastpath+0x1f/0xb9
+[<ffffffffffffffff>] 0xffffffffffffffff
 
-> 
-> BTW: I am not 100% convinced that storing all three timestamps is
-> worth it. It increases the code complexity, metadata size. It needs
-> an interface with the userspace that has to stay backward compatible.
-> 
-> Also it still will be racy because the timestamp is taken when the message
-> is printed. It might be "long" before or after the event that
-> it talks about.
+cat /proc/1111504/stack
+[<ffffffffb1692fb9>] revalidate_disk+0x49/0x80  <<==mutex_lock(&bdev->bd_mutex);
+[<ffffffffc0112ff2>] nvme_kill_queues+0x52/0x80 [nvme_core]
+[<ffffffffc0116304>] nvme_remove_namespaces+0x44/0x50 [nvme_core]
+[<ffffffffc0050805>] nvme_remove+0x85/0x130 [nvme]
+[<ffffffffb17e9a69>] pci_device_remove+0x39/0xc0
+[<ffffffffb18f9f91>] device_release_driver_internal+0x141/0x210
+[<ffffffffb18fa072>] device_release_driver+0x12/0x20
+[<ffffffffb17e1b3c>] pci_stop_bus_device+0x8c/0xa0
+[<ffffffffb17e1cd2>] pci_stop_and_remove_bus_device+0x12/0x20
+[<ffffffffb17fdeaa>] pciehp_unconfigure_device+0x7a/0x1e0
+[<ffffffffb17fd9b2>] pciehp_disable_slot+0x52/0xd0
+[<ffffffffb17fdaba>] pciehp_power_thread+0x8a/0xb0
+[<ffffffffb14a556e>] process_one_work+0x14e/0x370
+[<ffffffffb14a601d>] worker_thread+0x4d/0x3f0
+[<ffffffffb14abd09>] kthread+0x109/0x140
+[<ffffffffb1bd627a>] ret_from_fork+0x2a/0x40
+[<ffffffffffffffff>] 0xffffffffffffffff
 
-That scenario plays out today with the current timestamp.  Printing debug with a
-better timestamp doesn't resolve that problem nor is it intended to.
+cat /proc/1197767/stack
+[<ffffffffb169444e>] __blkdev_get+0x6e/0x450  <<==mutex_lock_nested(&bdev->bd_mutex, for_part);
+[<ffffffffb16949d4>] blkdev_get+0x1a4/0x300
+[<ffffffffb1694f1a>] blkdev_open+0x7a/0xa0
+[<ffffffffb164f93f>] do_dentry_open+0x20f/0x330
+[<ffffffffb1650e10>] vfs_open+0x50/0x70
+[<ffffffffb16621f8>] path_openat+0x548/0x13b0
+[<ffffffffb1664d71>] do_filp_open+0x91/0x100
+[<ffffffffb16511e4>] do_sys_open+0x124/0x210
+[<ffffffffb16512ee>] SyS_open+0x1e/0x20
+[<ffffffffb140396c>] do_syscall_64+0x6c/0x1b0
+[<ffffffffb1bd60c0>] entry_SYSCALL64_slow_path+0x25/0x25
+[<ffffffffffffffff>] 0xffffffffffffffff
 
-> 
-> There is still the alternative to print all three timestamps regularly
-> for those interested. It is less user convenient but much easier
-> to maintain.
+ps -eo pid,comm,state | grep '  D'
+    848 systemd-udevd   D
+1111504 kworker/10:1    D
+1197767 isdct           D
+1198830 isdct           D
+1580322 xxd             D
+1616804 kworker/10:0    D
+1626264 isdct           D
+1734726 kworker/10:2    D
+2197993 isdct           D
+2662117 xxd             D
+3083718 xxd             D
+3189834 xxd             D
 
-While I agree, in general, your alternative is useful for in-person debugging it
-is not helpful in cases where a user only has an image of a panic where the
-printk time-synch message has scrolled off the screen.
+Signed-off-by: Xianting Tian <xianting_tian@126.com>
+---
+ block/ioctl.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Consider this real debug case where I hacked the boottime stamp into printk:  We
-had some systems with flaky HW that hit panics at 10 hours [1] of uptime.  Since
-these systems came from different vendors with different HW the clocks were
-out-of-sync.  I had a suspicion that it was some human-coded event causing the
-HW to die but wasn't sure until I did a boottime-stamped printk to prove that
-all the systems died after 10 hours.
-
-I could have set a stopwatch or timer to somehow catch this kind of event.  I
-could have set up video cameras to watch the consoles, etc.  There are a lot of
-other ways I could have debugged this situation but ultimately the fastest thing
-to do was code and provide kernels to the various HW companies and see if
-everything lined up as I thought it would.
-
-This problem happens far more often then I'd like to admit and we still see this
-type of problem with new HW and FW.  I also recall that other kernel groups
-(storage, networking, etc.) were interested in the timestamps as it would make
-their debugging easier to have a true synchronized timestamp available.
-
-One other thing -- IIRC I had to modify the dmesg code by providing a sysfs (or
-proc?) interface for dmesg to identify the stamp.  It's something that should be
-investigated with this code too.
-
-P.
-
-[1] It was 3+ years ago.  I can't remember if it was 10 or 100 but you get the
-point.
-
-> 
-> Best Regards,
-> Petr
-> 
+diff --git a/block/ioctl.c b/block/ioctl.c
+index bdb3bbb..159bceb 100644
+--- a/block/ioctl.c
++++ b/block/ioctl.c
+@@ -94,6 +94,9 @@ static int blkdev_reread_part(struct block_device *bdev)
+ {
+ 	int ret;
+ 
++	if (unlikely(!get_capacity(bdev->bd_disk)))
++		return -EIO;
++
+ 	if (!disk_part_scan_enabled(bdev->bd_disk) || bdev != bdev->bd_contains)
+ 		return -EINVAL;
+ 	if (!capable(CAP_SYS_ADMIN))
+-- 
+1.8.3.1
 
