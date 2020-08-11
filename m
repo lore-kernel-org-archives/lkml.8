@@ -2,302 +2,232 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE666C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 02:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F1FAC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 02:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84ECA2065D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 02:41:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 279ED2065D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 02:43:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="O9VoCGk2"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="slXs9tKw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728188AbgHKClv (ORCPT
+        id S1728216AbgHKCnB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 22:41:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54862 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726831AbgHKClv (ORCPT
+        Mon, 10 Aug 2020 22:43:01 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:44170 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726831AbgHKCnA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 22:41:51 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4F48C06174A;
-        Mon, 10 Aug 2020 19:41:50 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id DF77358;
-        Tue, 11 Aug 2020 04:41:48 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1597113709;
-        bh=IP3vvfZRAj5uZH057vJvXmMQLsLN1/Y6gQCRiqmJQYg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=O9VoCGk2vi/0jLsh7/9dZlpSVzS9CBQmnmfh6JqHRy/UfNGssyd69kj20ArJb3UoA
-         68INVB8BA/qM6c6gAAdJ7SnWv3gVhFtQmzh2SuP1uH90eFGTFJgIHfMDfqkorvhSCH
-         b71r4wgT1LNg7zlpm9CEJnhU5C8AJsZbiwoBe/vc=
-Date:   Tue, 11 Aug 2020 05:41:35 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Swapnil Jakhade <sjakhade@cadence.com>
-Cc:     airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org,
-        a.hajda@samsung.com, narmstrong@baylibre.com, jonas@kwiboo.se,
-        jernej.skrabec@siol.net, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mparab@cadence.com, yamonkar@cadence.com, tomi.valkeinen@ti.com,
-        jsarha@ti.com, nsekhar@ti.com, praneeth@ti.com
-Subject: Re: [PATCH v8 3/3] drm: bridge: cdns-mhdp: Add j721e wrapper
-Message-ID: <20200811024135.GD13513@pendragon.ideasonboard.com>
-References: <1596713672-8146-1-git-send-email-sjakhade@cadence.com>
- <1596713672-8146-4-git-send-email-sjakhade@cadence.com>
+        Mon, 10 Aug 2020 22:43:00 -0400
+X-UUID: 50dc2a50074e4d44a7a0587386d627b6-20200811
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=4dSh8X50lsQTddyaxFcLAsX9p7BVfAPhylW2w4QlGJ0=;
+        b=slXs9tKwusDLCzUuAvaZiJXpdHzlz4rTEyCBVnu6zM6/+aJoh5PELc8A9Th5PDdMtxvshGPHcaRMJv1+b/X7xc9R0PKPvVvtJGZQdZX9A0O9A7tu2Ppn3zSC7NS502ASYiRwjwVRHDDJzxvbrycw1HwLr7n+S/yRLJdskOg4e3E=;
+X-UUID: 50dc2a50074e4d44a7a0587386d627b6-20200811
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
+        (envelope-from <neal.liu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 2030525295; Tue, 11 Aug 2020 10:42:46 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 11 Aug 2020 10:42:45 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 11 Aug 2020 10:42:45 +0800
+Message-ID: <1597113765.15146.3.camel@mtkswgap22>
+Subject: Re: [PATCH v5 2/2] soc: mediatek: add mt6779 devapc driver
+From:   Neal Liu <neal.liu@mediatek.com>
+To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
+CC:     Neal Liu <neal.liu@mediatek.com>, Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <devicetree@vger.kernel.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Date:   Tue, 11 Aug 2020 10:42:45 +0800
+In-Reply-To: <CAAOTY__dYy2yN5MHNJP5=_v48oVWPu2GRZW=EuKT=-U1Pfu7wQ@mail.gmail.com>
+References: <1596766948-29767-1-git-send-email-neal.liu@mediatek.com>
+         <1596766948-29767-3-git-send-email-neal.liu@mediatek.com>
+         <CAAOTY_8dhV8Ns4w9SqSpA7BvRO1gLn=hgRWU-hCJjNM6ZJf+rw@mail.gmail.com>
+         <1597030994.7823.5.camel@mtkswgap22>
+         <CAAOTY__dYy2yN5MHNJP5=_v48oVWPu2GRZW=EuKT=-U1Pfu7wQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1596713672-8146-4-git-send-email-sjakhade@cadence.com>
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Swapnil,
+SGkgQ2h1bi1LdWFuZywNCg0KT24gVHVlLCAyMDIwLTA4LTExIGF0IDA3OjE0ICswODAwLCBDaHVu
+LUt1YW5nIEh1IHdyb3RlOg0KPiBIaSwgTmVhbDoNCj4gDQo+IE5lYWwgTGl1IDxuZWFsLmxpdUBt
+ZWRpYXRlay5jb20+IOaWvCAyMDIw5bm0OOaciDEw5pelIOmAseS4gCDkuIrljYgxMTo0M+Wvq+mB
+k++8mg0KPiA+DQo+ID4gSGkgQ2h1bi1LdWFuZywNCj4gPg0KPiA+IE9uIEZyaSwgMjAyMC0wOC0w
+NyBhdCAyMzo1MiArMDgwMCwgQ2h1bi1LdWFuZyBIdSB3cm90ZToNCj4gPiA+IEhpLCBOZWFsOg0K
+PiA+ID4NCj4gPiA+IE5lYWwgTGl1IDxuZWFsLmxpdUBtZWRpYXRlay5jb20+IOaWvCAyMDIw5bm0
+OOaciDfml6Ug6YCx5LqUIOS4iuWNiDEwOjM05a+r6YGT77yaDQo+ID4gPiA+DQo+ID4gPiA+IE1l
+ZGlhVGVrIGJ1cyBmYWJyaWMgcHJvdmlkZXMgVHJ1c3Rab25lIHNlY3VyaXR5IHN1cHBvcnQgYW5k
+IGRhdGENCj4gPiA+ID4gcHJvdGVjdGlvbiB0byBwcmV2ZW50IHNsYXZlcyBmcm9tIGJlaW5nIGFj
+Y2Vzc2VkIGJ5IHVuZXhwZWN0ZWQNCj4gPiA+ID4gbWFzdGVycy4NCj4gPiA+ID4gVGhlIHNlY3Vy
+aXR5IHZpb2xhdGlvbiBpcyBsb2dnZWQgYW5kIHNlbnQgdG8gdGhlIHByb2Nlc3NvciBmb3INCj4g
+PiA+ID4gZnVydGhlciBhbmFseXNpcyBvciBjb3VudGVybWVhc3VyZXMuDQo+ID4gPiA+DQo+ID4g
+PiA+IEFueSBvY2N1cnJlbmNlIG9mIHNlY3VyaXR5IHZpb2xhdGlvbiB3b3VsZCByYWlzZSBhbiBp
+bnRlcnJ1cHQsIGFuZA0KPiA+ID4gPiBpdCB3aWxsIGJlIGhhbmRsZWQgYnkgbXRrLWRldmFwYyBk
+cml2ZXIuIFRoZSB2aW9sYXRpb24NCj4gPiA+ID4gaW5mb3JtYXRpb24gaXMgcHJpbnRlZCBpbiBv
+cmRlciB0byBmaW5kIHRoZSBtdXJkZXJlci4NCj4gPiA+ID4NCj4gPiA+ID4gU2lnbmVkLW9mZi1i
+eTogTmVhbCBMaXUgPG5lYWwubGl1QG1lZGlhdGVrLmNvbT4NCj4gPiA+ID4gLS0tDQo+ID4gPg0K
+PiA+ID4gW3NuaXBdDQo+ID4gPg0KPiA+ID4gPiArDQo+ID4gPiA+ICsjZGVmaW5lIFBIWV9ERVZB
+UENfVElNRU9VVCAgICAgMHgxMDAwMA0KPiA+ID4gPiArDQo+ID4gPiA+ICsvKg0KPiA+ID4gPiAr
+ICogZGV2YXBjX3N5bmNfdmlvX2RiZyAtIGRvICJzaGlmdCIgbWVjaGFuc2ltIiB0byBnZXQgZnVs
+bCB2aW9sYXRpb24gaW5mb3JtYXRpb24uDQo+ID4gPiA+ICsgKiAgICAgICAgICAgICAgICAgICAg
+ICAgc2hpZnQgbWVjaGFuaXNtIGlzIGRlcGVuZHMgb24gZGV2YXBjIGhhcmR3YXJlIGRlc2lnbi4N
+Cj4gPiA+ID4gKyAqICAgICAgICAgICAgICAgICAgICAgICBNZWRpYXRlayBkZXZhcGMgc2V0IG11
+bHRpcGxlIHNsYXZlcyBhcyBhIGdyb3VwLg0KPiA+ID4gPiArICogICAgICAgICAgICAgICAgICAg
+ICAgIFdoZW4gdmlvbGF0aW9uIGlzIHRyaWdnZXJlZCwgdmlvbGF0aW9uIGluZm8gaXMga2VwdA0K
+PiA+ID4gPiArICogICAgICAgICAgICAgICAgICAgICAgIGluc2lkZSBkZXZhcGMgaGFyZHdhcmUu
+DQo+ID4gPiA+ICsgKiAgICAgICAgICAgICAgICAgICAgICAgRHJpdmVyIHNob3VsZCBkbyBzaGlm
+dCBtZWNoYW5zaW0gdG8gc3luYyBmdWxsIHZpb2xhdGlvbg0KPiA+ID4gPiArICogICAgICAgICAg
+ICAgICAgICAgICAgIGluZm8gdG8gVklPX0RCR3MgcmVnaXN0ZXJzLg0KPiA+ID4gPiArICoNCj4g
+PiA+ID4gKyAqLw0KPiA+ID4gPiArc3RhdGljIGludCBkZXZhcGNfc3luY192aW9fZGJnKHN0cnVj
+dCBtdGtfZGV2YXBjX2NvbnRleHQgKmN0eCkNCj4gPiA+ID4gK3sNCj4gPiA+ID4gKyAgICAgICB2
+b2lkIF9faW9tZW0gKnBkX3Zpb19zaGlmdF9zdGFfcmVnOw0KPiA+ID4gPiArICAgICAgIHZvaWQg
+X19pb21lbSAqcGRfdmlvX3NoaWZ0X3NlbF9yZWc7DQo+ID4gPiA+ICsgICAgICAgdm9pZCBfX2lv
+bWVtICpwZF92aW9fc2hpZnRfY29uX3JlZzsNCj4gPiA+ID4gKyAgICAgICBpbnQgbWluX3NoaWZ0
+X2dyb3VwOw0KPiA+ID4gPiArICAgICAgIGludCByZXQ7DQo+ID4gPiA+ICsgICAgICAgdTMyIHZh
+bDsNCj4gPiA+ID4gKw0KPiA+ID4gPiArICAgICAgIHBkX3Zpb19zaGlmdF9zdGFfcmVnID0gY3R4
+LT5pbmZyYV9iYXNlICsNCj4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGN0
+eC0+ZGF0YS0+dmlvX3NoaWZ0X3N0YV9vZmZzZXQ7DQo+ID4gPiA+ICsgICAgICAgcGRfdmlvX3No
+aWZ0X3NlbF9yZWcgPSBjdHgtPmluZnJhX2Jhc2UgKw0KPiA+ID4gPiArICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgY3R4LT5kYXRhLT52aW9fc2hpZnRfc2VsX29mZnNldDsNCj4gPiA+ID4g
+KyAgICAgICBwZF92aW9fc2hpZnRfY29uX3JlZyA9IGN0eC0+aW5mcmFfYmFzZSArDQo+ID4gPiA+
+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjdHgtPmRhdGEtPnZpb19zaGlmdF9jb25f
+b2Zmc2V0Ow0KPiA+ID4gPiArDQo+ID4gPiA+ICsgICAgICAgLyogRmluZCB0aGUgbWluaW11bSBz
+aGlmdCBncm91cCB3aGljaCBoYXMgdmlvbGF0aW9uICovDQo+ID4gPiA+ICsgICAgICAgdmFsID0g
+cmVhZGwocGRfdmlvX3NoaWZ0X3N0YV9yZWcpOw0KPiA+ID4gPiArICAgICAgIGlmICghdmFsKQ0K
+PiA+ID4gPiArICAgICAgICAgICAgICAgcmV0dXJuIGZhbHNlOw0KPiA+ID4gPiArDQo+ID4gPiA+
+ICsgICAgICAgbWluX3NoaWZ0X2dyb3VwID0gX19mZnModmFsKTsNCj4gPiA+ID4gKw0KPiA+ID4g
+PiArICAgICAgIC8qIEFzc2lnbiB0aGUgZ3JvdXAgdG8gc3luYyAqLw0KPiA+ID4gPiArICAgICAg
+IHdyaXRlbCgweDEgPDwgbWluX3NoaWZ0X2dyb3VwLCBwZF92aW9fc2hpZnRfc2VsX3JlZyk7DQo+
+ID4gPiA+ICsNCj4gPiA+ID4gKyAgICAgICAvKiBTdGFydCBzeW5jaW5nICovDQo+ID4gPiA+ICsg
+ICAgICAgd3JpdGVsKDB4MSwgcGRfdmlvX3NoaWZ0X2Nvbl9yZWcpOw0KPiA+ID4gPiArDQo+ID4g
+PiA+ICsgICAgICAgcmV0ID0gcmVhZGxfcG9sbF90aW1lb3V0KHBkX3Zpb19zaGlmdF9jb25fcmVn
+LCB2YWwsIHZhbCA9PSAweDMsIDAsDQo+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIFBIWV9ERVZBUENfVElNRU9VVCk7DQo+ID4gPiA+ICsgICAgICAgaWYgKHJldCkgew0K
+PiA+ID4gPiArICAgICAgICAgICAgICAgZGV2X2VycihjdHgtPmRldiwgIiVzOiBTaGlmdCB2aW9s
+YXRpb24gaW5mbyBmYWlsZWRcbiIsIF9fZnVuY19fKTsNCj4gPiA+ID4gKyAgICAgICAgICAgICAg
+IHJldHVybiBmYWxzZTsNCj4gPiA+ID4gKyAgICAgICB9DQo+ID4gPiA+ICsNCj4gPiA+ID4gKyAg
+ICAgICAvKiBTdG9wIHN5bmNpbmcgKi8NCj4gPiA+ID4gKyAgICAgICB3cml0ZWwoMHgwLCBwZF92
+aW9fc2hpZnRfY29uX3JlZyk7DQo+ID4gPiA+ICsgICAgICAgd3JpdGVsKDB4MCwgcGRfdmlvX3No
+aWZ0X3NlbF9yZWcpOw0KPiA+ID4NCj4gPiA+IFRoaXMgaXMgcmVkdW5kYW50IGJlY2F1c2UgeW91
+IHNldCB0aGlzIHJlZ2lzdGVyIGJlZm9yZSBzdGFydCBzeW5jaW5nLg0KPiA+DQo+ID4gTm8sIHdl
+IGRvbid0IHNldCB0aGlzIHJlZyBiZWZvcmUgc3RhcnQgc3luY2luZy4NCj4gPg0KPiANCj4gSSdt
+IHRhbGtpbmcgYWJvdXQgcGRfdmlvX3NoaWZ0X3NlbF9yZWcsIGFuZCBJIGZpbmQgdGhpcyBiZWZv
+cmUgc3RhcnQgc3luY2luZzoNCj4gDQo+ICAgICAgICAvKiBBc3NpZ24gdGhlIGdyb3VwIHRvIHN5
+bmMgKi8NCj4gICAgICAgIHdyaXRlbCgweDEgPDwgbWluX3NoaWZ0X2dyb3VwLCBwZF92aW9fc2hp
+ZnRfc2VsX3JlZyk7DQo+IA0KPiAgICAgICAgLyogU3RhcnQgc3luY2luZyAqLw0KPiAgICAgICAg
+d3JpdGVsKDB4MSwgcGRfdmlvX3NoaWZ0X2Nvbl9yZWcpOw0KPiANCg0KV2Ugc2V0IDAgdG8gbWFr
+ZSBzdXJlIGFsbCBiaXRzIGFyZSBjbGVhcmVkLiBCdXQgaXQgd29uJ3QgY2F1c2UgYW55DQpwcm9i
+bGVtIGlmIHdlIHJlbW92ZSBpdC4gSSdsbCB1cGRhdGUgb24gbmV4dCBwYXRjaC4NClRoYW5rcyAh
+DQoNCj4gPiA+DQo+ID4gPiA+ICsgICAgICAgd3JpdGVsKDB4MSA8PCBtaW5fc2hpZnRfZ3JvdXAs
+IHBkX3Zpb19zaGlmdF9zdGFfcmVnKTsNCj4gPiA+DQo+ID4gPiBZb3UgcmVhZCB0aGlzIHJlZ2lz
+dGVyIHRvIGZpbmQgbWluaW11bSBzaGlmdCBncm91cCwgYnV0IHlvdSB3cml0ZSBpdA0KPiA+ID4g
+YmFjayBpbnRvIHRoaXMgcmVnaXN0ZXIsIHNvIHRoaXMgZnVuY3Rpb24gd291bGQgZ2V0IHRoZSBz
+YW1lIG1pbmltdW0NCj4gPiA+IHNoaWZ0IGdyb3VwIGluIG5leHQgdGltZSwgaXNuJ3QgaXQ/DQo+
+ID4NCj4gPiBOby4gVGhlIG9wZXJhdGlvbiBtZWFucyB3cml0ZSBjbGVhci4gV2Ugd29uJ3QgZ2V0
+IHRoZSBzYW1lIG1pbmltdW0gc2hpZnQNCj4gPiBncm91cCBhZnRlciBjbGVhciB0aGlzIGJpdC4N
+Cj4gPg0KPiANCj4gQWRkIGNvbW1lbnQgZm9yIHRoaXMgYmVjYXVzZSB0aGlzIGlzIG5vdCB0cml2
+aWFsLg0KDQpPa2F5Lg0KDQo+IA0KPiA+ID4NCj4gPiA+ID4gKw0KPiA+ID4gPiArICAgICAgIHJl
+dHVybiB0cnVlOw0KPiA+ID4gPiArfQ0KPiA+ID4gPiArDQo+ID4gPiA+ICsvKg0KPiA+ID4gPiAr
+ICogZGV2YXBjX2V4dHJhY3RfdmlvX2RiZyAtIGV4dHJhY3QgZnVsbCB2aW9sYXRpb24gaW5mb3Jt
+YXRpb24gYWZ0ZXIgZG9pbmcNCj4gPiA+ID4gKyAqICAgICAgICAgICAgICAgICAgICAgICAgICBz
+aGlmdCBtZWNoYW5pc20uDQo+ID4gPiA+ICsgKi8NCj4gPiA+ID4gK3N0YXRpYyB2b2lkIGRldmFw
+Y19leHRyYWN0X3Zpb19kYmcoc3RydWN0IG10a19kZXZhcGNfY29udGV4dCAqY3R4KQ0KPiA+ID4g
+PiArew0KPiA+ID4gPiArICAgICAgIHN0cnVjdCBtdGtfZGV2YXBjX3Zpb19kYmdzICp2aW9fZGJn
+czsNCj4gPiA+DQo+ID4gPiBzdHJ1Y3QgbXRrX2RldmFwY192aW9fZGJncyB2aW9fZGJnczsNCj4g
+PiA+DQo+ID4gPiBVc2Ugc3RhY2sgaW5zdGVhZCBvZiBhbGxvY2F0aW5nIGZyb20gaGVhcC4NCj4g
+Pg0KPiA+IFdoeSBpdCBjYW5ub3QgdXNlIGhlYXAgaWYgdGhlIG1lbW9yeSBpcyBoYW5kbGVkIGNv
+cnJlY3RseT8NCj4gPg0KPiANCj4gWW91IGNvdWxkIHVzZSBoZWFwIGJ1dCBhbGxvY2F0aW5nIG1l
+bW9yeSBmcm9tIGhlYXAgd291bGQgY29zdCBtdWNoDQo+IHRpbWUuIEluIHRoZSB3b3JzdCBjYXNl
+LCBpdCB3b3VsZCB0cmlnZ2VyIGJ1ZGR5IHN5c3RlbSB0byBicmVhayBhIHBhZ2UNCj4gZm9yIHNs
+dWIuIFVzaW5nIHN0YWNrIGNvc3QgYWxtb3N0IG5vIHRpbWUsIGJ1dCBpdCBoYXMgc29tZSBsaW1p
+dGF0aW9uLg0KPiBTdGFjayBtZW1vcnkgaXMgc21hbGwgYW5kIGl0IHNob3VsZCBiZSB1c2VkIGZv
+ciBsb2NhbCB2YXJpYWJsZSwgYW5kDQo+IHZpb19kYmdzIG1hdGNoIHRoaXMgbGltaXRhdGlvbiwg
+c28gc3RhY2sgaXMgYmV0dGVyIHRoYW4gaGVhcC4NCj4gDQoNCk9rYXksIGl0IG1ha2Ugc2Vuc2Uu
+IEknbGwgdXBkYXRlIG9uIG5leHQgcGF0Y2guDQpUaGFua3MgIQ0KDQo+ID4gPg0KPiA+ID4gPiAr
+ICAgICAgIHZvaWQgX19pb21lbSAqdmlvX2RiZzBfcmVnOw0KPiA+ID4gPiArICAgICAgIHZvaWQg
+X19pb21lbSAqdmlvX2RiZzFfcmVnOw0KPiA+ID4gPiArDQo+ID4gPiA+ICsgICAgICAgdmlvX2Ri
+Z3MgPSBkZXZtX2t6YWxsb2MoY3R4LT5kZXYsIHNpemVvZihzdHJ1Y3QgbXRrX2RldmFwY192aW9f
+ZGJncyksDQo+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgR0ZQX0tFUk5F
+TCk7DQo+ID4gPiA+ICsgICAgICAgaWYgKCF2aW9fZGJncykNCj4gPiA+ID4gKyAgICAgICAgICAg
+ICAgIHJldHVybjsNCj4gPiA+ID4gKw0KPiA+ID4gPiArICAgICAgIHZpb19kYmcwX3JlZyA9IGN0
+eC0+aW5mcmFfYmFzZSArIGN0eC0+ZGF0YS0+dmlvX2RiZzBfb2Zmc2V0Ow0KPiA+ID4gPiArICAg
+ICAgIHZpb19kYmcxX3JlZyA9IGN0eC0+aW5mcmFfYmFzZSArIGN0eC0+ZGF0YS0+dmlvX2RiZzFf
+b2Zmc2V0Ow0KPiA+ID4gPiArDQo+ID4gPiA+ICsgICAgICAgdmlvX2RiZ3MtPnZpb19kYmcwID0g
+cmVhZGwodmlvX2RiZzBfcmVnKTsNCj4gPiA+ID4gKyAgICAgICB2aW9fZGJncy0+dmlvX2RiZzEg
+PSByZWFkbCh2aW9fZGJnMV9yZWcpOw0KPiA+ID4gPiArDQo+ID4gPiA+ICsgICAgICAgLyogUHJp
+bnQgdmlvbGF0aW9uIGluZm9ybWF0aW9uICovDQo+ID4gPiA+ICsgICAgICAgaWYgKHZpb19kYmdz
+LT5kYmcwX2JpdHMudmlvX3cpDQo+ID4gPiA+ICsgICAgICAgICAgICAgICBkZXZfaW5mbyhjdHgt
+PmRldiwgIldyaXRlIFZpb2xhdGlvblxuIik7DQo+ID4gPiA+ICsgICAgICAgZWxzZSBpZiAodmlv
+X2RiZ3MtPmRiZzBfYml0cy52aW9fcikNCj4gPiA+ID4gKyAgICAgICAgICAgICAgIGRldl9pbmZv
+KGN0eC0+ZGV2LCAiUmVhZCBWaW9sYXRpb25cbiIpOw0KPiA+ID4gPiArDQo+ID4gPiA+ICsgICAg
+ICAgZGV2X2luZm8oY3R4LT5kZXYsICJCdXMgSUQ6MHgleCwgRG9tIElEOjB4JXgsIFZpbyBBZGRy
+OjB4JXhcbiIsDQo+ID4gPiA+ICsgICAgICAgICAgICAgICAgdmlvX2RiZ3MtPmRiZzBfYml0cy5t
+c3RpZCwgdmlvX2RiZ3MtPmRiZzBfYml0cy5kbW5pZCwNCj4gPiA+ID4gKyAgICAgICAgICAgICAg
+ICB2aW9fZGJncy0+dmlvX2RiZzEpOw0KPiA+ID4gPiArfQ0KPiA+ID4gPiArDQo+ID4gPg0KPiA+
+ID4gW3NuaXBdDQo+ID4gPg0KPiA+ID4gPiArDQo+ID4gPiA+ICtzdGF0aWMgaW50IG10a19kZXZh
+cGNfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gPiA+ID4gK3sNCj4gPiA+
+ID4gKyAgICAgICBzdHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGUgPSBwZGV2LT5kZXYub2Zfbm9kZTsN
+Cj4gPiA+ID4gKyAgICAgICBzdHJ1Y3QgbXRrX2RldmFwY19jb250ZXh0ICpjdHg7DQo+ID4gPiA+
+ICsgICAgICAgdTMyIGRldmFwY19pcnE7DQo+ID4gPiA+ICsgICAgICAgaW50IHJldDsNCj4gPiA+
+ID4gKw0KPiA+ID4gPiArICAgICAgIGlmIChJU19FUlIobm9kZSkpDQo+ID4gPiA+ICsgICAgICAg
+ICAgICAgICByZXR1cm4gLUVOT0RFVjsNCj4gPiA+ID4gKw0KPiA+ID4gPiArICAgICAgIGN0eCA9
+IGRldm1fa3phbGxvYygmcGRldi0+ZGV2LCBzaXplb2YoKmN0eCksIEdGUF9LRVJORUwpOw0KPiA+
+ID4gPiArICAgICAgIGlmICghY3R4KQ0KPiA+ID4gPiArICAgICAgICAgICAgICAgcmV0dXJuIC1F
+Tk9NRU07DQo+ID4gPiA+ICsNCj4gPiA+ID4gKyAgICAgICBjdHgtPmRhdGEgPSBvZl9kZXZpY2Vf
+Z2V0X21hdGNoX2RhdGEoJnBkZXYtPmRldik7DQo+ID4gPiA+ICsgICAgICAgY3R4LT5kZXYgPSAm
+cGRldi0+ZGV2Ow0KPiA+ID4gPiArDQo+ID4gPiA+ICsgICAgICAgY3R4LT5pbmZyYV9iYXNlID0g
+b2ZfaW9tYXAobm9kZSwgMCk7DQo+ID4gPiA+ICsgICAgICAgaWYgKCFjdHgtPmluZnJhX2Jhc2Up
+DQo+ID4gPiA+ICsgICAgICAgICAgICAgICByZXR1cm4gLUVJTlZBTDsNCj4gPiA+ID4gKw0KPiA+
+ID4gPiArICAgICAgIGRldmFwY19pcnEgPSBpcnFfb2ZfcGFyc2VfYW5kX21hcChub2RlLCAwKTsN
+Cj4gPiA+ID4gKyAgICAgICBpZiAoIWRldmFwY19pcnEpDQo+ID4gPiA+ICsgICAgICAgICAgICAg
+ICByZXR1cm4gLUVJTlZBTDsNCj4gPiA+ID4gKw0KPiA+ID4gPiArICAgICAgIGN0eC0+aW5mcmFf
+Y2xrID0gZGV2bV9jbGtfZ2V0KCZwZGV2LT5kZXYsICJkZXZhcGMtaW5mcmEtY2xvY2siKTsNCj4g
+PiA+ID4gKyAgICAgICBpZiAoSVNfRVJSKGN0eC0+aW5mcmFfY2xrKSkNCj4gPiA+ID4gKyAgICAg
+ICAgICAgICAgIHJldHVybiAtRUlOVkFMOw0KPiA+ID4gPiArDQo+ID4gPiA+ICsgICAgICAgaWYg
+KGNsa19wcmVwYXJlX2VuYWJsZShjdHgtPmluZnJhX2NsaykpDQo+ID4gPiA+ICsgICAgICAgICAg
+ICAgICByZXR1cm4gLUVJTlZBTDsNCj4gPiA+ID4gKw0KPiA+ID4gPiArICAgICAgIHJldCA9IGRl
+dm1fcmVxdWVzdF9pcnEoJnBkZXYtPmRldiwgZGV2YXBjX2lycSwNCj4gPiA+ID4gKyAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIChpcnFfaGFuZGxlcl90KWRldmFwY192aW9sYXRpb25faXJx
+LA0KPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgSVJRRl9UUklHR0VSX05P
+TkUsICJkZXZhcGMiLCBjdHgpOw0KPiA+ID4gPiArICAgICAgIGlmIChyZXQpIHsNCj4gPiA+ID4g
+KyAgICAgICAgICAgICAgIGNsa19kaXNhYmxlX3VucHJlcGFyZShjdHgtPmluZnJhX2Nsayk7DQo+
+ID4gPiA+ICsgICAgICAgICAgICAgICByZXR1cm4gcmV0Ow0KPiA+ID4gPiArICAgICAgIH0NCj4g
+PiA+ID4gKw0KPiA+ID4gPiArICAgICAgIHBsYXRmb3JtX3NldF9kcnZkYXRhKHBkZXYsIGN0eCk7
+DQo+ID4gPiA+ICsNCj4gPiA+ID4gKyAgICAgICBzdGFydF9kZXZhcGMoY3R4KTsNCj4gPiA+ID4g
+Kw0KPiA+ID4gPiArICAgICAgIHJldHVybiAwOw0KPiA+ID4gPiArfQ0KPiA+ID4gPiArDQo+ID4g
+PiA+ICtzdGF0aWMgaW50IG10a19kZXZhcGNfcmVtb3ZlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2Ug
+KnBkZXYpDQo+ID4gPiA+ICt7DQo+ID4gPiA+ICsgICAgICAgc3RydWN0IG10a19kZXZhcGNfY29u
+dGV4dCAqY3R4ID0gcGxhdGZvcm1fZ2V0X2RydmRhdGEocGRldik7DQo+ID4gPiA+ICsNCj4gPiA+
+DQo+ID4gPiBzdG9wX2RldmFwYyhjdHgpOw0KPiA+DQo+ID4gV2UgZG9uJ3QgaGF2ZSB0byBkbyBh
+bnkgZnVydGhlciBvcGVyYXRpb25zIHRvIHN0b3AgZGV2YXBjIGh3Lg0KPiA+DQo+IA0KPiBBZnRl
+ciB0aGlzIGRyaXZlciBpcyByZW1vdmVkLCBJIHRoaW5rIHdlIHNob3VsZCByZXN0b3JlIGhhcmR3
+YXJlIHRvDQo+IHRoZSBzdGF0dXMgYmVmb3JlIHByb2JpbmcuIEJlZm9yZSBwcm9iZSgpLCBkZXZh
+cGMgaGFyZHdhcmUgaXMgc3RvcHBlZA0KPiAocGRfYXBjX2Nvbl9yZWcgaXMgYSBkZWZhdWx0IHZh
+bHVlIGFuZCBhbGwgdmlvIGlycSBpcyBtYXNrZWQpLCBzbyBpdA0KPiBzaG91bGQgYmUgdGhlIHNh
+bWUgc3RhdHVzIGFmdGVyIHJlbW92ZSgpLiBUaGlzIGNvbmNlcHQgaXMgdGhlIHNhbWUgYXMNCj4g
+d2hhdCB5b3UgZG8gZm9yIGluZnJhX2Nsay4NCg0KT2theSwgaXQgbWFrZSBzZW5zZS4gSSdsbCBh
+ZGQgc3RvcF9kZXZhcGMoKSBvbiBuZXh0IHBhdGNoLg0KVGhhbmtzICENCg0KPiANCj4gUmVnYXJk
+cywNCj4gQ2h1bi1LdWFuZy4NCj4gDQo+ID4gPg0KPiA+ID4gUmVnYXJkcywNCj4gPiA+IENodW4t
+S3VhbmcuDQo+ID4gPg0KPiA+ID4gPiArICAgICAgIGlmIChjdHgtPmluZnJhX2NsaykNCj4gPiA+
+ID4gKyAgICAgICAgICAgICAgIGNsa19kaXNhYmxlX3VucHJlcGFyZShjdHgtPmluZnJhX2Nsayk7
+DQo+ID4gPiA+ICsNCj4gPiA+ID4gKyAgICAgICByZXR1cm4gMDsNCj4gPiA+ID4gK30NCj4gPiA+
+ID4gKw0KPiA+DQoNCg==
 
-Thank you for the patch.
-
-On Thu, Aug 06, 2020 at 01:34:32PM +0200, Swapnil Jakhade wrote:
-> Add j721e wrapper for mhdp, which sets up the clock and data muxes.
-> 
-> Signed-off-by: Jyri Sarha <jsarha@ti.com>
-> Signed-off-by: Yuti Amonkar <yamonkar@cadence.com>
-> Signed-off-by: Swapnil Jakhade <sjakhade@cadence.com>
-> Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> ---
->  drivers/gpu/drm/bridge/Kconfig           | 13 +++++
->  drivers/gpu/drm/bridge/Makefile          |  2 +
->  drivers/gpu/drm/bridge/cdns-mhdp-core.c  | 15 +++++
->  drivers/gpu/drm/bridge/cdns-mhdp-core.h  |  1 +
->  drivers/gpu/drm/bridge/cdns-mhdp-j721e.c | 72 ++++++++++++++++++++++++
->  drivers/gpu/drm/bridge/cdns-mhdp-j721e.h | 19 +++++++
->  6 files changed, 122 insertions(+)
->  create mode 100644 drivers/gpu/drm/bridge/cdns-mhdp-j721e.c
->  create mode 100644 drivers/gpu/drm/bridge/cdns-mhdp-j721e.h
-> 
-> diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
-> index 6a4c324302a8..8c1738653b7e 100644
-> --- a/drivers/gpu/drm/bridge/Kconfig
-> +++ b/drivers/gpu/drm/bridge/Kconfig
-> @@ -38,6 +38,19 @@ config DRM_CDNS_MHDP
->  	  It takes a DPI stream as input and outputs it encoded
->  	  in DP format.
->  
-> +if DRM_CDNS_MHDP
-> +
-> +config DRM_CDNS_MHDP_J721E
-> +	depends on ARCH_K3_J721E_SOC
-
-	depends on ARCH_K3_J721E_SOC || COMPILE_TEST
-
-> +	bool "J721E Cadence DPI/DP wrapper support"
-> +	default y
-> +	help
-> +	  Support J721E Cadence DPI/DP wrapper. This is a wrapper
-> +	  which adds support for J721E related platform ops. It
-> +	  initializes the J721e Display Port and sets up the
-> +	  clock and data muxes.
-> +endif
-> +
->  config DRM_CHRONTEL_CH7033
->  	tristate "Chrontel CH7033 Video Encoder"
->  	depends on OF
-> diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
-> index 7046bf077603..be92ebf620b6 100644
-> --- a/drivers/gpu/drm/bridge/Makefile
-> +++ b/drivers/gpu/drm/bridge/Makefile
-> @@ -2,6 +2,8 @@
->  obj-$(CONFIG_DRM_CDNS_DSI) += cdns-dsi.o
->  obj-$(CONFIG_DRM_CDNS_MHDP) += cdns-mhdp.o
->  cdns-mhdp-y := cdns-mhdp-core.o
-> +cdns-mhdp-$(CONFIG_DRM_CDNS_MHDP_J721E) += cdns-mhdp-j721e.o
-> +
->  obj-$(CONFIG_DRM_CHRONTEL_CH7033) += chrontel-ch7033.o
->  obj-$(CONFIG_DRM_DISPLAY_CONNECTOR) += display-connector.o
->  obj-$(CONFIG_DRM_LVDS_CODEC) += lvds-codec.o
-> diff --git a/drivers/gpu/drm/bridge/cdns-mhdp-core.c b/drivers/gpu/drm/bridge/cdns-mhdp-core.c
-> index d47187ab358b..53c25f6ecddf 100644
-> --- a/drivers/gpu/drm/bridge/cdns-mhdp-core.c
-> +++ b/drivers/gpu/drm/bridge/cdns-mhdp-core.c
-> @@ -42,6 +42,8 @@
->  
->  #include "cdns-mhdp-core.h"
->  
-> +#include "cdns-mhdp-j721e.h"
-> +
->  static DECLARE_WAIT_QUEUE_HEAD(fw_load_wq);
->  
->  static int cdns_mhdp_mailbox_read(struct cdns_mhdp_device *mhdp)
-> @@ -1702,6 +1704,16 @@ static int cdns_mhdp_connector_init(struct cdns_mhdp_device *mhdp)
->  
->  	conn->display_info.bus_flags = DRM_BUS_FLAG_DE_HIGH;
->  
-> +	if (of_device_is_compatible(mhdp->dev->of_node, "ti,j721e-mhdp8546"))
-> +	/*
-> +	 * DP is internal to J7 SoC and we need to use DRIVE_POSEDGE
-> +	 * in the display controller. This is achieved for the time being
-> +	 * by defining SAMPLE_NEGEDGE here.
-> +	 */
-
-The indentation is wrong. You can adjust it or move it before the if (...).
-
-> +		conn->display_info.bus_flags |=
-> +					DRM_BUS_FLAG_PIXDATA_SAMPLE_NEGEDGE |
-> +					DRM_BUS_FLAG_SYNC_SAMPLE_NEGEDGE;
-
-This should be set in drm_bridge_timings.input_bus_flags instead, and
-the tidss should use those when available instead of getting the value
-from the connector.
-
-> +
->  	ret = drm_connector_attach_encoder(conn, bridge->encoder);
->  	if (ret) {
->  		DRM_ERROR("Failed to attach connector to encoder\n");
-> @@ -2521,6 +2533,9 @@ static int cdns_mhdp_remove(struct platform_device *pdev)
->  
->  static const struct of_device_id mhdp_ids[] = {
->  	{ .compatible = "cdns,mhdp8546", },
-> +#ifdef CONFIG_DRM_CDNS_MHDP_J721E
-> +	{ .compatible = "ti,j721e-mhdp8546", .data = &mhdp_ti_j721e_ops },
-> +#endif
->  	{ /* sentinel */ }
->  };
->  MODULE_DEVICE_TABLE(of, mhdp_ids);
-> diff --git a/drivers/gpu/drm/bridge/cdns-mhdp-core.h b/drivers/gpu/drm/bridge/cdns-mhdp-core.h
-> index bd97a7aeb28b..d40a0f8615a4 100644
-> --- a/drivers/gpu/drm/bridge/cdns-mhdp-core.h
-> +++ b/drivers/gpu/drm/bridge/cdns-mhdp-core.h
-> @@ -343,6 +343,7 @@ struct cdns_mhdp_bridge_state {
->  
->  struct cdns_mhdp_device {
->  	void __iomem *regs;
-> +	void __iomem *j721e_regs;
->  
->  	struct device *dev;
->  	struct clk *clk;
-> diff --git a/drivers/gpu/drm/bridge/cdns-mhdp-j721e.c b/drivers/gpu/drm/bridge/cdns-mhdp-j721e.c
-> new file mode 100644
-> index 000000000000..cc33c9afb5bb
-> --- /dev/null
-> +++ b/drivers/gpu/drm/bridge/cdns-mhdp-j721e.c
-> @@ -0,0 +1,72 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * TI j721e Cadence MHDP DP wrapper
-> + *
-> + * Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com/
-> + * Author: Jyri Sarha <jsarha@ti.com
-
-Missing >
-
-> + */
-> +
-> +#include <linux/io.h>
-> +#include <linux/platform_device.h>
-> +
-> +#include "cdns-mhdp-j721e.h"
-> +
-> +#define	REVISION			0x00
-> +#define	DPTX_IPCFG			0x04
-> +#define	ECC_MEM_CFG			0x08
-> +#define	DPTX_DSC_CFG			0x0c
-> +#define	DPTX_SRC_CFG			0x10
-> +#define	DPTX_VIF_SECURE_MODE_CFG	0x14
-> +#define	DPTX_VIF_CONN_STATUS		0x18
-> +#define	PHY_CLK_STATUS			0x1c
-> +
-> +#define DPTX_SRC_AIF_EN			BIT(16)
-> +#define DPTX_SRC_VIF_3_IN30B		BIT(11)
-> +#define DPTX_SRC_VIF_2_IN30B		BIT(10)
-> +#define DPTX_SRC_VIF_1_IN30B		BIT(9)
-> +#define DPTX_SRC_VIF_0_IN30B		BIT(8)
-> +#define DPTX_SRC_VIF_3_SEL_DPI5		BIT(7)
-> +#define DPTX_SRC_VIF_3_SEL_DPI3		0
-> +#define DPTX_SRC_VIF_2_SEL_DPI4		BIT(6)
-> +#define DPTX_SRC_VIF_2_SEL_DPI2		0
-> +#define DPTX_SRC_VIF_1_SEL_DPI3		BIT(5)
-> +#define DPTX_SRC_VIF_1_SEL_DPI1		0
-> +#define DPTX_SRC_VIF_0_SEL_DPI2		BIT(4)
-> +#define DPTX_SRC_VIF_0_SEL_DPI0		0
-> +#define DPTX_SRC_VIF_3_EN		BIT(3)
-> +#define DPTX_SRC_VIF_2_EN		BIT(2)
-> +#define DPTX_SRC_VIF_1_EN		BIT(1)
-> +#define DPTX_SRC_VIF_0_EN		BIT(0)
-> +
-> +/* TODO turn DPTX_IPCFG fw_mem_clk_en at pm_runtime_suspend. */
-> +
-> +static int cdns_mhdp_j721e_init(struct cdns_mhdp_device *mhdp)
-> +{
-> +	struct platform_device *pdev = to_platform_device(mhdp->dev);
-> +
-> +	mhdp->j721e_regs = devm_platform_ioremap_resource(pdev, 1);
-> +	return PTR_ERR_OR_ZERO(mhdp->j721e_regs);
-> +}
-> +
-> +static void cdns_mhdp_j721e_enable(struct cdns_mhdp_device *mhdp)
-> +{
-> +	/*
-> +	 * Eneble VIF_0 and select DPI2 as its input. DSS0 DPI0 is connected
-
-s/Eneble/Enable/
-
-> +	 * to eDP DPI2. This is the only supported SST configuration on
-> +	 * J721E.
-> +	 */
-> +	writel(DPTX_SRC_VIF_0_EN | DPTX_SRC_VIF_0_SEL_DPI2,
-> +	       mhdp->j721e_regs + DPTX_SRC_CFG);
-> +}
-> +
-> +static void cdns_mhdp_j721e_disable(struct cdns_mhdp_device *mhdp)
-> +{
-> +	/* Put everything to defaults  */
-> +	writel(0, mhdp->j721e_regs + DPTX_DSC_CFG);
-> +}
-> +
-> +const struct mhdp_platform_ops mhdp_ti_j721e_ops = {
-> +	.init = cdns_mhdp_j721e_init,
-> +	.enable = cdns_mhdp_j721e_enable,
-> +	.disable = cdns_mhdp_j721e_disable,
-> +};
-> diff --git a/drivers/gpu/drm/bridge/cdns-mhdp-j721e.h b/drivers/gpu/drm/bridge/cdns-mhdp-j721e.h
-> new file mode 100644
-> index 000000000000..7a4a1a269b5e
-> --- /dev/null
-> +++ b/drivers/gpu/drm/bridge/cdns-mhdp-j721e.h
-> @@ -0,0 +1,19 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * TI j721e Cadence MHDP DP wrapper
-> + *
-> + * Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com/
-> + * Author: Jyri Sarha <jsarha@ti.com
-
-Missing >
-
-> + */
-> +
-> +#ifndef CDNS_MHDP_J721E_H
-> +#define CDNS_MHDP_J721E_H
-> +
-> +#include <linux/platform_device.h>
-> +#include "cdns-mhdp-core.h"
-
-I don't think you need any of those two headers.
-
-> +
-> +struct mhdp_platform_ops;
-> +
-> +extern const struct mhdp_platform_ops mhdp_ti_j721e_ops;
-> +
-> +#endif /* !CDNS_MHDP_J721E_H */
-
--- 
-Regards,
-
-Laurent Pinchart
