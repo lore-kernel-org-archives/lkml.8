@@ -2,107 +2,107 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DATE_IN_PAST_96_XX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D995EC433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 21:37:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31A5AC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 21:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADF7F2078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 21:37:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n+1Am0Ap"
+	by mail.kernel.org (Postfix) with ESMTP id DF75F2078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 21:38:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728986AbgIAVhf (ORCPT
+        id S1729453AbgIAVi6 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 17:37:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54548 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728179AbgIAVhe (ORCPT
+        Tue, 1 Sep 2020 17:38:58 -0400
+Received: from mailoutvs47.siol.net ([185.57.226.238]:38772 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728179AbgIAViy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 17:37:34 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78F01C061244;
-        Tue,  1 Sep 2020 14:37:32 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id v12so3342972ljc.10;
-        Tue, 01 Sep 2020 14:37:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=5T+g9DRQqay2PabjlLSj/X2sJw2Dpph5rvQ4ZUvPnIs=;
-        b=n+1Am0Apg9IabuusVP/4fVRuYgL9+tynHNQeQp6G8FjopV6kJilZ9INYZ5haBgkKK8
-         YuMIwjomp3ceqS9sq65t7uQOcAY5qgrKjblohnoTLNAAnZ8DY461wlHomP/fHf00/3js
-         CKStdJlP1m7pjmNbC7iODcvjDINXvqByV7Pbje6fXsYdXhUJUVU+/0GK5SbtiuzUMDhm
-         ViRaDoteJVjkj+FHVrUwQpDkz9wJoCV1sApSzBgEee7woo8tIrW+UpFiyg2arOfJ8/lZ
-         4Lcgo5ntl8IchBKcl3T6WlkwqUptffEgYdy8+OOe64fZJFxc/LbmD8wXvPUMN1EjHnLd
-         l8IQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5T+g9DRQqay2PabjlLSj/X2sJw2Dpph5rvQ4ZUvPnIs=;
-        b=pWdNnys3Xbp3rJzULFb7EC3rW+tounVFfEip0c7ypvSzXQNQih5l9FXyn28zknW9iC
-         dF5Xj18pMHV6yy4CWqZMdEvaQQwb2pWndl9CXwDJaa/8LqwgWfkZmDcpm0TVWd2xqsn8
-         ouBfwNoVu+OqlgCCFqIHS1MsObHu75/1Rge5xyPUN95au+a91tT7egupP+xesJAz+zIW
-         KBLHrvglV0GCpagOu4clHXzkvmHBsp86A9mdBGAnpw8cAcq8GJKaNyPBf908fR8AEgAR
-         HK1xnHxYhNvZ86NYNqaagiu8+EfxpgIGGEqWDq/JSnzah2volP+2r0EkOvORx1oTrWfx
-         etAg==
-X-Gm-Message-State: AOAM531VqEPi1wDWTNkzsxtsZkbMkZnbGMmGyDrwRH9WUgD/Lxpy8IBy
-        uCddA97+tKWJlODRS49ixrejQcVPyuA=
-X-Google-Smtp-Source: ABdhPJzuf3UbN7Jo3MJq20m+YQboZeEgPiVQkb3uTbaNUrUPHCOAN+2A/DNI61e1hV8L69sfLamkOg==
-X-Received: by 2002:a2e:9643:: with SMTP id z3mr1710770ljh.282.1598996250679;
-        Tue, 01 Sep 2020 14:37:30 -0700 (PDT)
-Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.googlemail.com with ESMTPSA id l15sm521755lje.16.2020.09.01.14.37.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Sep 2020 14:37:30 -0700 (PDT)
-Subject: Re: [PATCH v2 03/17] i2c: tegra: Clean up messages in the code
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200901211102.11072-1-digetx@gmail.com>
- <20200901211102.11072-4-digetx@gmail.com>
- <CAHp75Vf9ETJMibQGe4Nx7n4703GtgO1XBsE1yGwsk3TaSPTDHw@mail.gmail.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <9bc715d3-3065-d705-7349-5aacdac7cbbc@gmail.com>
-Date:   Wed, 2 Sep 2020 00:37:29 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 1 Sep 2020 17:38:54 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id 282055267C4;
+        Tue,  1 Sep 2020 23:38:52 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id JNyKGgweMjQS; Tue,  1 Sep 2020 23:38:51 +0200 (CEST)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id B612452644C;
+        Tue,  1 Sep 2020 23:38:51 +0200 (CEST)
+Received: from kista.localnet (cpe1-5-97.cable.triera.net [213.161.5.97])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Postfix) with ESMTPA id ECFCB5263BF;
+        Tue,  1 Sep 2020 23:38:50 +0200 (CEST)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ezequiel Garcia <ezequiel@collabora.com>
+Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Maxime Ripard <mripard@kernel.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>
+Subject: Re: [PATCH v2 00/14] Clean H264 stateless uAPI
+Date:   Tue, 11 Aug 2020 21:16:09 +0200
+Message-ID: <3072394.25LIjdDuC7@kista>
+In-Reply-To: <20200806151310.98624-1-ezequiel@collabora.com>
+References: <20200806151310.98624-1-ezequiel@collabora.com>
 MIME-Version: 1.0
-In-Reply-To: <CAHp75Vf9ETJMibQGe4Nx7n4703GtgO1XBsE1yGwsk3TaSPTDHw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-02.09.2020 00:23, Andy Shevchenko пишет:
-> 
-> 
-> On Wednesday, September 2, 2020, Dmitry Osipenko <digetx@gmail.com
-> <mailto:digetx@gmail.com>> wrote:
-> 
->     Use lowercase and consistent wording for all messages in the code.
-> 
-> 
-> Why? DMA is an abbreviation and reads in capital letters. FWIW, I don’t
-> like bending English grammar.
+Hi!
 
-The idea is to make messages to look less "noisy" in a log. Although, I
-don't have strong preference in regards to the style and keeping the
-capitalization of abbreviations would be okay too. All I really care
-about is to make all messages to use one common style.
+Dne četrtek, 06. avgust 2020 ob 17:12:56 CEST je Ezequiel Garcia napisal(a):
+> Here's a new round for the H.264 uAPI cleanup, which as discussed
+> aims at being stabilized and promoted as a first-class public uAPI soon.
+> 
+> It should be noted that there is already GStreamer native
+> support for this interface, which will be part of 1.18,
+> once it's released.
+> 
+> I have pushed a branch porting GStreamer to
+> support these interface changes:
+> 
+> https://gitlab.freedesktop.org/ezequielgarcia/gst-plugins-bad/-/commits/for_
+> h264_uapi_v3
+> 
+> As was discussed the SLICE_PARAMS control is now clarified
+> to work for one-slice-per-request operation, using CAPTURE
+> buffer holding features. This is how Cedrus driver is implemented.
+> 
+> The other drivers currently supported Hantro and Rockchip VDEC,
+> as well as the MTK stateless decoder posted by Alex Courbot
+> operate in frame-based mode.
+> 
+> These "frame-based" devices parse the slice headers in hardware,
+> and therefore shall not support SLICE_PARAMS. To that extent,
+> the redundant bitstream fields are now part of the DECODE_PARAMS
+> control.
+> 
+> Hopefully now the specification documentation is clear enough.
+> GStreamer, Chromium and FFmpeg (which I'm sure will be implemented
+> as soon as we stabilize the API) should serve as reference examples
+> on how the API is consumed.
+> 
 
-I'll consider returning the capitalization in the next revision, thank
-you for the input!
+I tested this series using https://github.com/Kwiboo/FFmpeg/commits/v4l2-request-hwaccel-4.3.1 on Cedrus (Allwinner H6) using additional patch 
+contained in discussion around patch 3 and I couldn't find any issue.
+
+You can add to whole series:
+Tested-by: Jernej Skrabec <jernej.skrabec@siol.net>
+
+Best regards,
+Jernej
+
+
