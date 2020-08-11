@@ -2,116 +2,215 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD81C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 05:39:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D347C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 05:43:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C70220678
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 05:39:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D928120756
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 05:43:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tHAO4iJN"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="veoZiNzH";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="veoZiNzH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728336AbgHKFju (ORCPT
+        id S1728101AbgHKFnu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 01:39:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54146 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728293AbgHKFjr (ORCPT
+        Tue, 11 Aug 2020 01:43:50 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:35478 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726438AbgHKFnu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 01:39:47 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09354C061756
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 22:39:47 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id o8so15433183ybg.16
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 22:39:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=z+/W2Lb1k0h/CCYiwDe5JijUnwa2JcEcWzU8gpWcUfw=;
-        b=tHAO4iJNAEzJVYvZQdBfl/Z0HJY38AuKODLE4Ch1wZBc8FPg/7KBHMPJyf8/uTGa2e
-         E6klPsx4jU07UlBRuauki8fP8QiBAPYycbCl1RDqcjzChLjeDP4E2k1e1NnpULdZnzv1
-         Pl8iQesn3UiLyjEZOnShWyZkTZA+n4xtyP8tzlxbdeudDI8XTUsWsGqywXNK1eIeCWBz
-         3qjrz1HaOS6k9W/9yXae8zdCnwm1yQpe5q7lFbbL0i94z9RVr+3vhvKoInjL+Nblfb0t
-         cJpkzK5h/Tri0RocDIDd2pIR/eUsEGMktj67qOjOYUxaBd3zxwrutEWKbzr0abxxWFdS
-         +mbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=z+/W2Lb1k0h/CCYiwDe5JijUnwa2JcEcWzU8gpWcUfw=;
-        b=rJA7hcAZFEMcSIX9nxD0Rc+jx1cFTG8rK2UFTrpV28XIR4dD114Coqz07BD9SrA3bw
-         B24YZ0aSvEV3fcR2xW448gX520ldzvT7oaTp3tpQBnI0ynhsNwZYBwBZ9fQgXNqX4Ra/
-         xaFfRjSYfAYZfXmlY361r6ID0XgGgfuIKLVvSOg7r/7AN0DoBNOc7r3LdvEJkUvZX8L7
-         pOI7oPpuHZwu/FSzE9iHFFTkoEHwwow8wM2eLo80E7/ADmSfBe1m302DfOBXJWHM32X5
-         4yQY9ZmXP6y5HBILfCEDThHXy1eN7H+GD+mVEQaevjbX6jTh11klV+ITUb/GhUik6Q/n
-         bwYQ==
-X-Gm-Message-State: AOAM530IsD2WDnbDiIStDfvcqgPPJQfgoS+UVK0bRKEn57vtSjmQkcdt
-        quz+sVmWQIle4JjdY1fVmxFkoFQMoUqOgQ==
-X-Google-Smtp-Source: ABdhPJx02k8uMoR6T3Ar7ZJVf6WCI2ZKosVhH/to+X0ddTMzwXgqLTS/eGRWzl6vu4PuJiIyGRtJ9xX8Em6y5A==
-X-Received: by 2002:a5b:308:: with SMTP id j8mr41696962ybp.185.1597124386219;
- Mon, 10 Aug 2020 22:39:46 -0700 (PDT)
-Date:   Mon, 10 Aug 2020 22:39:15 -0700
-In-Reply-To: <20200811053914.652710-1-davidgow@google.com>
-Message-Id: <20200811053914.652710-7-davidgow@google.com>
-Mime-Version: 1.0
-References: <20200811053914.652710-1-davidgow@google.com>
-X-Mailer: git-send-email 2.28.0.236.gb10cc79966-goog
-Subject: [PATCH v12 6/6] mm: kasan: Do not panic if both panic_on_warn and
- kasan_multishot set
-From:   David Gow <davidgow@google.com>
-To:     trishalfonso@google.com, brendanhiggins@google.com,
-        aryabinin@virtuozzo.com, dvyukov@google.com, mingo@redhat.com,
-        peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, andreyknvl@google.com,
-        shuah@kernel.org, akpm@linux-foundation.org
-Cc:     David Gow <davidgow@google.com>, linux-kernel@vger.kernel.org,
-        kasan-dev@googlegroups.com, kunit-dev@googlegroups.com,
-        linux-kselftest@vger.kernel.org, linux-mm@kvack.org
+        Tue, 11 Aug 2020 01:43:50 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 6E31D8EE1C8;
+        Mon, 10 Aug 2020 22:43:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1597124627;
+        bh=6++efxZWUIt1KBjwP+6L/VyAd4UOvuyeY6vy7uK6LLw=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=veoZiNzHc9BFEYlOo5IH5LwkzWLuui4/+g+gnkpk20Y6DEwjRnC/ajnJDlQSxOsEI
+         SDogOn68x90v7SM1UDtO4XGXSKeMSZCoUmqj+iaiAdeIe2VKXtb2YUIw0ZIWhD3gQQ
+         d67Aq3HC3CBffdg/JxnN2JIq2Z/+gMV/XLmEyyTc=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id BX1EFXHll9pB; Mon, 10 Aug 2020 22:43:47 -0700 (PDT)
+Received: from [153.66.254.174] (c-73-35-198-56.hsd1.wa.comcast.net [73.35.198.56])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id EEC048EE12E;
+        Mon, 10 Aug 2020 22:43:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1597124627;
+        bh=6++efxZWUIt1KBjwP+6L/VyAd4UOvuyeY6vy7uK6LLw=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=veoZiNzHc9BFEYlOo5IH5LwkzWLuui4/+g+gnkpk20Y6DEwjRnC/ajnJDlQSxOsEI
+         SDogOn68x90v7SM1UDtO4XGXSKeMSZCoUmqj+iaiAdeIe2VKXtb2YUIw0ZIWhD3gQQ
+         d67Aq3HC3CBffdg/JxnN2JIq2Z/+gMV/XLmEyyTc=
+Message-ID: <1597124623.30793.14.camel@HansenPartnership.com>
+Subject: Re: [dm-devel] [RFC PATCH v5 00/11] Integrity Policy Enforcement
+ LSM (IPE)
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Chuck Lever <chucklever@gmail.com>
+Cc:     Mimi Zohar <zohar@linux.ibm.com>, James Morris <jmorris@namei.org>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>,
+        snitzer@redhat.com, dm-devel@redhat.com,
+        tyhicks@linux.microsoft.com, agk@redhat.com,
+        Paul Moore <paul@paul-moore.com>,
+        Jonathan Corbet <corbet@lwn.net>, nramas@linux.microsoft.com,
+        serge@hallyn.com, pasha.tatashin@soleen.com,
+        Jann Horn <jannh@google.com>, linux-block@vger.kernel.org,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jens Axboe <axboe@kernel.dk>, mdsakib@microsoft.com,
+        open list <linux-kernel@vger.kernel.org>, eparis@redhat.com,
+        linux-security-module@vger.kernel.org, linux-audit@redhat.com,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-integrity@vger.kernel.org,
+        jaskarankhurana@linux.microsoft.com
+Date:   Mon, 10 Aug 2020 22:43:43 -0700
+In-Reply-To: <6E907A22-02CC-42DD-B3CD-11D304F3A1A8@gmail.com>
+References: <20200728213614.586312-1-deven.desai@linux.microsoft.com>
+         <20200802115545.GA1162@bug> <20200802140300.GA2975990@sasha-vm>
+         <20200802143143.GB20261@amd>
+         <1596386606.4087.20.camel@HansenPartnership.com>
+         <fb35a1f7-7633-a678-3f0f-17cf83032d2b@linux.microsoft.com>
+         <1596639689.3457.17.camel@HansenPartnership.com>
+         <alpine.LRH.2.21.2008050934060.28225@namei.org>
+         <b08ae82102f35936427bf138085484f75532cff1.camel@linux.ibm.com>
+         <329E8DBA-049E-4959-AFD4-9D118DEB176E@gmail.com>
+         <da6f54d0438ee3d3903b2c75fcfbeb0afdf92dc2.camel@linux.ibm.com>
+         <1597073737.3966.12.camel@HansenPartnership.com>
+         <6E907A22-02CC-42DD-B3CD-11D304F3A1A8@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-KASAN errors will currently trigger a panic when panic_on_warn is set.
-This renders kasan_multishot useless, as further KASAN errors won't be
-reported if the kernel has already paniced. By making kasan_multishot
-disable this behaviour for KASAN errors, we can still have the benefits
-of panic_on_warn for non-KASAN warnings, yet be able to use
-kasan_multishot.
+On Mon, 2020-08-10 at 19:36 -0400, Chuck Lever wrote:
+> > On Aug 10, 2020, at 11:35 AM, James Bottomley
+> > <James.Bottomley@HansenPartnership.com> wrote:
+> > On Sun, 2020-08-09 at 13:16 -0400, Mimi Zohar wrote:
+> > > On Sat, 2020-08-08 at 13:47 -0400, Chuck Lever wrote:
+[...]
+> > > > The first priority (for me, anyway) therefore is getting the
+> > > > ability to move IMA metadata between NFS clients and servers
+> > > > shoveled into the NFS protocol, but that's been blocked for
+> > > > various legal reasons.
+> > > 
+> > > Up to now, verifying remote filesystem file integrity has been
+> > > out of scope for IMA.   With fs-verity file signatures I can at
+> > > least grasp how remote file integrity could possibly work.  I
+> > > don't understand how remote file integrity with existing IMA
+> > > formats could be supported. You might want to consider writing a
+> > > whitepaper, which could later be used as the basis for a patch
+> > > set cover letter.
+> > 
+> > I think, before this, we can help with the basics (and perhaps we
+> > should sort them out before we start documenting what we'll do).
+> 
+> Thanks for the help! I just want to emphasize that documentation
+> (eg, a specification) will be critical for remote filesystems.
+> 
+> If any of this is to be supported by a remote filesystem, then we
+> need an unencumbered description of the new metadata format rather
+> than code. GPL-encumbered formats cannot be contributed to the NFS
+> standard, and are probably difficult for other filesystems that are
+> not Linux-native, like SMB, as well.
 
-This is particularly important when running KASAN tests, which need to
-trigger multiple KASAN errors: previously these would panic the system
-if panic_on_warn was set, now they can run (and will panic the system
-should non-KASAN warnings show up).
+I don't understand what you mean by GPL encumbered formats.  The GPL is
+a code licence not a data or document licence.  The way the spec
+process works in Linux is that we implement or evolve a data format
+under a GPL implementaiton, but that implementation doesn't implicate
+the later standardisation of the data format and people are free to
+reimplement under any licence they choose.
 
-Signed-off-by: David Gow <davidgow@google.com>
-Reviewed-by: Andrey Konovalov <andreyknvl@google.com>
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
-Tested-by: Andrey Konovalov <andreyknvl@google.com>
----
- mm/kasan/report.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> > The first basic is that a merkle tree allows unit at a time
+> > verification. First of all we should agree on the unit.  Since we
+> > always fault a page at a time, I think our merkle tree unit should
+> > be a page not a block.
+> 
+> Remote filesystems will need to agree that the size of that unit is
+> the same everywhere, or the unit size could be stored in the per-file
+> metadata.
+> 
+> 
+> > Next, we should agree where the check gates for the per page
+> > accesses should be ... definitely somewhere in readpage, I suspect
+> > and finally we should agree how the merkle tree is presented at the
+> > gate.  I think there are three ways:
+> > 
+> >   1. Ahead of time transfer:  The merkle tree is transferred and
+> > verified
+> >      at some time before the accesses begin, so we already have a
+> >      verified copy and can compare against the lower leaf.
+> >   2. Async transfer:  We provide an async mechanism to transfer the
+> >      necessary components, so when presented with a unit, we check
+> > the
+> >      log n components required to get to the root
+> >   3. The protocol actually provides the capability of 2 (like the
+> > SCSI
+> >      DIF/DIX), so to IMA all the pieces get presented instead of
+> > IMA
+> >      having to manage the tree
+> 
+> A Merkle tree is potentially large enough that it cannot be stored in
+> an extended attribute. In addition, an extended attribute is not a
+> byte stream that you can seek into or read small parts of, it is
+> retrieved in a single shot.
 
-diff --git a/mm/kasan/report.c b/mm/kasan/report.c
-index e2c14b10bc81..00a53f1355ae 100644
---- a/mm/kasan/report.c
-+++ b/mm/kasan/report.c
-@@ -95,7 +95,7 @@ static void end_report(unsigned long *flags)
- 	pr_err("==================================================================\n");
- 	add_taint(TAINT_BAD_PAGE, LOCKDEP_NOW_UNRELIABLE);
- 	spin_unlock_irqrestore(&report_lock, *flags);
--	if (panic_on_warn) {
-+	if (panic_on_warn && !test_bit(KASAN_BIT_MULTI_SHOT, &kasan_flags)) {
- 		/*
- 		 * This thread may hit another WARN() in the panic path.
- 		 * Resetting this prevents additional WARN() from panicking the
--- 
-2.28.0.236.gb10cc79966-goog
+Well you wouldn't store the tree would you, just the head hash.  The
+rest of the tree can be derived from the data.  You need to distinguish
+between what you *must* have to verify integrity (the head hash,
+possibly signed) and what is nice to have to speed up the verification
+process.  The choice for the latter is cache or reconstruct depending
+on the resources available.  If the tree gets cached on the server,
+that would be a server implementation detail invisible to the client.
+
+> For this reason, the idea was to save only the signature of the
+> tree's root on durable storage. The client would retrieve that
+> signature possibly at open time, and reconstruct the tree at that
+> time.
+
+Right that's the integrity data you must have.
+
+> Or the tree could be partially constructed on-demand at the time each
+> unit is to be checked (say, as part of 2. above).
+
+Whether it's reconstructed or cached can be an implementation detail. 
+You clearly have to reconstruct once, but whether you have to do it
+again depends on the memory available for caching and all the other
+resource calls in the system.
+
+> The client would have to reconstruct that tree again if memory
+> pressure caused some or all of the tree to be evicted, so perhaps an
+> on-demand mechanism is preferable.
+
+Right, but I think that's implementation detail.  Probably what we need
+is a way to get the log(N) verification hashes from the server and it's
+up to the client whether it caches them or not.
+
+> > There are also a load of minor things like how we get the head
+> > hash, which must be presented and verified ahead of time for each
+> > of the above 3.
+> 
+> Also, changes to a file's content and its tree signature are not
+> atomic. If a file is mutable, then there is the period between when
+> the file content has changed and when the signature is updated.
+> Some discussion of how a client is to behave in those situations will
+> be necessary.
+
+For IMA, if you write to a checked file, it gets rechecked the next
+time the gate (open/exec/mmap) is triggered.  This means you must
+complete the update and have the new integrity data in-place before
+triggering the check.  I think this could apply equally to a merkel
+tree based system.  It's a sort of Doctor, Doctor it hurts when I do
+this situation.
+
+James
 
