@@ -2,102 +2,134 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D18C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:54:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41916C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:54:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F334B20771
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:54:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 192A220771
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:54:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="XjJgHPUV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729063AbgHKPyp (ORCPT
+        id S1729079AbgHKPyt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 11:54:45 -0400
-Received: from foss.arm.com ([217.140.110.172]:38472 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728959AbgHKPyj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 11:54:39 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EC5AD31B;
-        Tue, 11 Aug 2020 08:54:38 -0700 (PDT)
-Received: from [192.168.178.2] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6B10E3F6CF;
-        Tue, 11 Aug 2020 08:54:30 -0700 (PDT)
-Subject: Re: [PATCH] sched/fair: reduce preemption with IDLE tasks
- runable(Internet mail)
-To:     =?UTF-8?B?YmVuYmppYW5nKOiSi+W9qik=?= <benbjiang@tencent.com>
-Cc:     Jiang Biao <benbjiang@gmail.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
-        "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "bsegall@google.com" <bsegall@google.com>,
-        "mgorman@suse.de" <mgorman@suse.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200801023248.90104-1-benbjiang@gmail.com>
- <5ed0fd46-3a3d-3c1a-5d75-03a74864e640@arm.com>
- <592F24A7-BF43-457D-AC40-DC5E35279730@tencent.com>
- <8bef1f94-f9bf-08a5-2ff3-3485d7796a96@arm.com>
- <8629CB9F-AFC8-43D6-BD14-B60A0B85ADB3@tencent.com>
- <5f870781-1648-b4ac-6026-557dfc347109@arm.com>
- <CCA1D942-3669-4216-92BD-768967B1ECE5@tencent.com>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <4964e359-afc5-a256-4950-853a9485eeff@arm.com>
-Date:   Tue, 11 Aug 2020 17:54:29 +0200
+        Tue, 11 Aug 2020 11:54:49 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:46966 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728902AbgHKPyn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 11:54:43 -0400
+Received: from [192.168.254.32] (unknown [47.187.206.220])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 526A020B4908;
+        Tue, 11 Aug 2020 08:54:41 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 526A020B4908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1597161281;
+        bh=4AnwX8pKWPwuyBMQsqp5N2j48UHwDWqRiS19V2RyUzA=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=XjJgHPUVELV8QE2+Nsp1p5tMtuU8P+D3ZycY0KrJ6EOneE/ByWA3lLQxw3g/B9Mw2
+         vWi2ncOTpaIkbJhV4RsoLHIkICD1ZGWQ7AXMucKMWRJHnO31eOS5fl2cDtURk5xkzx
+         AtMEKomaUXd1s2zq9SUxj3UK2cWtqfSH2YCiPVhU=
+Subject: Re: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, oleg@redhat.com,
+        x86@kernel.org
+References: <aefc85852ea518982e74b233e11e16d2e707bc32>
+ <20200728131050.24443-1-madvenka@linux.microsoft.com>
+ <20200731180955.GC67415@C02TD0UTHF1T.local>
+ <6236adf7-4bed-534e-0956-fddab4fd96b6@linux.microsoft.com>
+ <20200804143018.GB7440@C02TD0UTHF1T.local>
+ <b3368692-afe6-89b5-d634-12f4f0a601f8@linux.microsoft.com>
+ <20200808221748.GA1020@bug>
+ <6cca8eac-f767-b891-dc92-eaa7504a0e8b@linux.microsoft.com>
+ <20200811130837.hi6wllv6g67j5wds@duo.ucw.cz>
+From:   "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
+Message-ID: <1eec55aa-1bd6-b273-a88e-09d3c726111c@linux.microsoft.com>
+Date:   Tue, 11 Aug 2020 10:54:40 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <CCA1D942-3669-4216-92BD-768967B1ECE5@tencent.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200811130837.hi6wllv6g67j5wds@duo.ucw.cz>
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/08/2020 02:41, benbjiang(蒋彪) wrote:
-> Hi,
+
+
+On 8/11/20 8:08 AM, Pavel Machek wrote:
+> Hi!
 > 
->> On Aug 10, 2020, at 9:24 PM, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
->>
->> On 06/08/2020 17:52, benbjiang(蒋彪) wrote:
->>> Hi, 
+>>>> Thanks for the lively discussion. I have tried to answer some of the
+>>>> comments below.
 >>>
->>>> On Aug 6, 2020, at 9:29 PM, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+>>>>> There are options today, e.g.
+>>>>>
+>>>>> a) If the restriction is only per-alias, you can have distinct aliases
+>>>>>    where one is writable and another is executable, and you can make it
+>>>>>    hard to find the relationship between the two.
+>>>>>
+>>>>> b) If the restriction is only temporal, you can write instructions into
+>>>>>    an RW- buffer, transition the buffer to R--, verify the buffer
+>>>>>    contents, then transition it to --X.
+>>>>>
+>>>>> c) You can have two processes A and B where A generates instrucitons into
+>>>>>    a buffer that (only) B can execute (where B may be restricted from
+>>>>>    making syscalls like write, mprotect, etc).
 >>>>
->>>> On 03/08/2020 13:26, benbjiang(蒋彪) wrote:
->>>>>
->>>>>
->>>>>> On Aug 3, 2020, at 4:16 PM, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
->>>>>>
->>>>>> On 01/08/2020 04:32, Jiang Biao wrote:
->>>>>>> From: Jiang Biao <benbjiang@tencent.com>
-
-[...]
-
->> Because of this very small weight (weight=3), compared to a SCHED_NORMAL
->> nice 0 task (weight=1024), a SCHED_IDLE task is penalized by a huge
->> se->vruntime value (1024/3 higher than for a SCHED_NORMAL nice 0 task).
->> This should make sure it doesn't tick preempt a SCHED_NORMAL nice 0 task.
-> Could you please explain how the huge penalization of vruntime(1024/3) could
-> make sure SCHED_IDLE not tick preempting SCHED_NORMAL nice 0 task?
+>>>> The general principle of the mitigation is W^X. I would argue that
+>>>> the above options are violations of the W^X principle. If they are
+>>>> allowed today, they must be fixed. And they will be. So, we cannot
+>>>> rely on them.
+>>>
+>>> Would you mind describing your threat model?
+>>>
+>>> Because I believe you are using model different from everyone else.
+>>>
+>>> In particular, I don't believe b) is a problem or should be fixed.
+>>
+>> It is a problem because a kernel that implements W^X properly
+>> will not allow it. It has no idea what has been done in userland.
+>> It has no idea that the user has checked and verified the buffer
+>> contents after transitioning the page to R--.
 > 
-> Thanks a lot.
+> No, it is not a problem. W^X is designed to protect from attackers
+> doing buffer overflows, not attackers doing arbitrary syscalls.
+> 
 
-Trace a run of 2 SCHED_OTHER (nice 0) tasks and 1 SCHED_IDLE task on a
-single CPU and trace_printk the conditions  'if (delta < 0)' and ' if
-(delta > ideal_runtime)' in check_preempt_tick().
+Hey Pavel,
 
-Then do the same with 3 SCHED_OTHER (nice 0) tasks. You can also change
-the niceness of the 2 SCHED_OTHER task to 19 to see some differences in
-the kernelshark's task layout.
+You are correct. The W^X implementation today still has some holes.
+IIUC, the principle of W^X is - user should not be able to (W) write code
+into a page and use some trick to get it to (X) execute. So, what I
+was trying to say was that the W^X principle is not implemented
+completely today.
 
-rt-app (https://github.com/scheduler-tools/rt-app) is a nice tool to
-craft those artificial use cases.
+Mark Rutland mentioned some other tricks as well which are being used
+today.
 
-[...]
+For instance, Microsoft has submitted this proposal:
+
+ https://microsoft.github.io/ipe/
+
+IPE is an LSM. In this proposal, only mappings that are backed by a
+signature verified file can have execute permissions. This means that
+all anonymous page based tricks will fail. And, file mapping based
+tricks will fail as well when temporary files are used to load code
+and mmap(). That is the intent.
+
+Thanks!
+
+Madhavan
