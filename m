@@ -2,91 +2,141 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC7CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 04:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D520C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 05:09:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD10220756
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 04:57:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71A552073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 05:09:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qYs1kqOy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eLBzjVCO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbgHKE47 (ORCPT
+        id S1726526AbgHKFJe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 00:56:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47290 "EHLO
+        Tue, 11 Aug 2020 01:09:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49290 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726020AbgHKE46 (ORCPT
+        with ESMTP id S1726134AbgHKFJd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 00:56:58 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79CCAC06174A
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 21:56:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=ZjofLFFhvWgNTqXw/7Hk7zgdK7p+AaFWRQrmkPAcBe0=; b=qYs1kqOyq/LEl5UvPBwkSMa73O
-        XtPnIntrS77KJR+X/f7+AMIqjtYab4UMn5yPU0AAeOQYEvqEuFVyE5CLb9+PYJF7uuXTKEMN9ecB0
-        AUBYV5OZsWrT6AsMkfo6x3h2HClQDgnVGYETb89Ll+Jxdjl2hiPxN/6xsYoQjYQsP7TZiOZuU/J9q
-        Ms/kAir65VwVEkfT/cW4U0Vuw54jafoUeen0hDxHjxsfOYKgHkaqRauCOPOgLiJFR0PvzeXB03F/6
-        WilcHGTfFh0s0e9vxC16DzQc//iLknbic5P/cr0GVXOnbwRKg18gEvuKunvaPGjILgyiDtlITZROv
-        L8LVRARw==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k5ML9-0005r5-CX; Tue, 11 Aug 2020 04:56:47 +0000
-Subject: Re: [RFC PATCH] printk: Change timestamp to triplet as mono, boot and
- real
-To:     Orson Zhai <orsonzhai@gmail.com>,
-        Prarit Bhargava <prarit@redhat.com>,
-        Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        zhang.lyra@gmail.com, ruifeng.zhang1@unisoc.com,
-        cixi.geng1@unisoc.com, Orson Zhai <orson.zhai@unisoc.com>
-References: <1597120822-11999-1-git-send-email-orsonzhai@gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <4bbc99b0-3d20-eb22-1996-52474b463fe7@infradead.org>
-Date:   Mon, 10 Aug 2020 21:56:40 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 11 Aug 2020 01:09:33 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47466C06174A;
+        Mon, 10 Aug 2020 22:09:33 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id l64so10640623qkb.8;
+        Mon, 10 Aug 2020 22:09:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=bMSxjMPm7VjNJMk372pm84tQNgfCuUZD1VrmgkqYZCk=;
+        b=eLBzjVCO5YbxLczQR30kyge47su0iVcJrFjbDeldqpgB2hjXU5IW3vXcQ8JtxRodoF
+         qhbLl6bjXO7Jlw5cfCnfSLBt+UguSzjYM/bCiq6Xxpf+ZkzFhamxpFsXgZzbBx6bwrRb
+         AnpIjg5QVPT1+z+Qpl+qqYHwXJoByhiyqO//u5t9q3f2ygLnkR8e72dL3xFxHLsAbyRH
+         0oluLqNNUANwqEYLXSTn4UMI+9lJTfM97LFe+l/JXOJSCK689qf99iDm1Firfr0u/GSu
+         UpgsbvWWHqyyqD/O1gvgX4uLDpJCVFTDiHOJmuk2+ojKOft0M7v7IHvKcYcncAIGKVzp
+         EkZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=bMSxjMPm7VjNJMk372pm84tQNgfCuUZD1VrmgkqYZCk=;
+        b=BTlPSmunqFwuBVPO3p9W4Q28xfTdbKstlBwuNWI81Q0pLMJDT6HinYuNM0rIAEU1DH
+         qN4d0dt21upQPUqchocGiLu+Nv6xurOKV0gjTXSLsdVGFQ/Sa10sWP4ZzHpSfzjRUb3u
+         mCMqN815UgcgHOyOYdY9Nino8YDEsU31zJB593i9VEasGDxU1L7fwAzQUbw15xcjp6OH
+         1IRGidtP3qYERWQcbdat5jbEa3eNGosa1ERzP1NMfcC/sVKwgVek0GCMQKBx5Mrphnv8
+         xucpN93awnxHfKRCQ/ugL7ZDzSd3SE8itwd9CJdstzz8JhyAu6lcyZGFOEVyvrjTue9o
+         yluQ==
+X-Gm-Message-State: AOAM533KN0JLoH61bKUB8TQKJiAicYkedFr6Ly4z7xtPKw5Dg/ciASGY
+        K4DY2B7d37Fe/twe1VJoAg==
+X-Google-Smtp-Source: ABdhPJx2Ee81fca74pCzQRr0gAjmwBmoPjLgb54zYmDsOm6OFBy2IQqatW+oGAXQ0UUv+/hmSrUZKA==
+X-Received: by 2002:ae9:f301:: with SMTP id p1mr28616754qkg.295.1597122572273;
+        Mon, 10 Aug 2020 22:09:32 -0700 (PDT)
+Received: from PWN (146-115-88-66.s3894.c3-0.sbo-ubr1.sbo.ma.cable.rcncustomer.com. [146.115.88.66])
+        by smtp.gmail.com with ESMTPSA id l189sm15659624qke.67.2020.08.10.22.09.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Aug 2020 22:09:31 -0700 (PDT)
+Date:   Tue, 11 Aug 2020 01:09:29 -0400
+From:   Peilin Ye <yepeilin.cs@gmail.com>
+To:     Cong Wang <xiyou.wangcong@gmail.com>
+Cc:     Wensong Zhang <wensong@linux-vs.org>,
+        Simon Horman <horms@verge.net.au>,
+        Julian Anastasov <ja@ssi.bg>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        lvs-devel@vger.kernel.org,
+        NetFilter <netfilter-devel@vger.kernel.org>,
+        coreteam@netfilter.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [Linux-kernel-mentees] [PATCH net] ipvs: Fix uninit-value in
+ do_ip_vs_set_ctl()
+Message-ID: <20200811050929.GA821443@PWN>
+References: <20200810220703.796718-1-yepeilin.cs@gmail.com>
+ <CAM_iQpWsQubVJ-AYaLHujHwz68+nsHBcbgbf8XPMEPD=Vu+zaA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1597120822-11999-1-git-send-email-orsonzhai@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAM_iQpWsQubVJ-AYaLHujHwz68+nsHBcbgbf8XPMEPD=Vu+zaA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/10/20 9:40 PM, Orson Zhai wrote:
-> +/*
-> + * struct timestanps - Simultaneous mono/boot/real timestamps
+On Mon, Aug 10, 2020 at 08:57:19PM -0700, Cong Wang wrote:
+> On Mon, Aug 10, 2020 at 3:10 PM Peilin Ye <yepeilin.cs@gmail.com> wrote:
+> >
+> > do_ip_vs_set_ctl() is referencing uninitialized stack value when `len` is
+> > zero. Fix it.
+> 
+> Which exact 'cmd' is it here?
+> 
+> I _guess_ it is one of those uninitialized in set_arglen[], which is 0.
 
-typo:        timestamps
+Yes, it was `IP_VS_SO_SET_NONE`, implicitly initialized to zero.
 
-> + * @mono:	Monotonic timestamp
-> + * @boot:	Boottime timestamp
-> + * @real:	Realtime timestamp
-> + */
-> +struct timestamps {
-> +	u64		mono;
-> +	u64		boot;
-> +	u64		real;
-> +};
+> But if that is the case, should it be initialized to
+> sizeof(struct ip_vs_service_user) instead because ip_vs_copy_usvc_compat()
+> is called anyway. Or, maybe we should just ban len==0 case.
 
+I see. I think the latter would be easier, but we cannot ban all of
+them, since the function does something with `IP_VS_SO_SET_FLUSH`, which
+is a `len == 0` case.
 
--- 
-~Randy
+Maybe we do something like this?
 
+@@ -2432,6 +2432,8 @@ do_ip_vs_set_ctl(struct sock *sk, int cmd, void __user *user, unsigned int len)
+
+ 	if (cmd < IP_VS_BASE_CTL || cmd > IP_VS_SO_SET_MAX)
+ 		return -EINVAL;
++	if (len == 0 && cmd != IP_VS_SO_SET_FLUSH)
++		return -EINVAL;
+ 	if (len != set_arglen[CMDID(cmd)]) {
+ 		IP_VS_DBG(1, "set_ctl: len %u != %u\n",
+ 			  len, set_arglen[CMDID(cmd)]);
+@@ -2547,9 +2549,6 @@ do_ip_vs_set_ctl(struct sock *sk, int cmd, void __user *user, unsigned int len)
+ 		break;
+ 	case IP_VS_SO_SET_DELDEST:
+ 		ret = ip_vs_del_dest(svc, &udest);
+-		break;
+-	default:
+-		ret = -EINVAL;
+ 	}
+
+   out_unlock:
+
+Thank you,
+Peilin Ye
+
+> In either case, it does not look like you fix it correctly.
+> 
+> Thanks.
