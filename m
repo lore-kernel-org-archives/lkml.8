@@ -2,48 +2,52 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FE80C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 12:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B326C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 12:43:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 626ED20756
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 12:43:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4538A20756
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 12:43:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="yiJaFQqU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728637AbgHKMnF (ORCPT
+        id S1728653AbgHKMnY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 08:43:05 -0400
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:52603 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726829AbgHKMnE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 08:43:04 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04427;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0U5TNqJ4_1597149777;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U5TNqJ4_1597149777)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 11 Aug 2020 20:42:58 +0800
-Subject: Re: [Resend PATCH 2/6] mm/memcg: remove useless check on
- page->mem_cgroup
-To:     Michal Hocko <mhocko@suse.com>
-Cc:     akpm@linux-foundation.org, Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <1597144232-11370-1-git-send-email-alex.shi@linux.alibaba.com>
- <1597144232-11370-2-git-send-email-alex.shi@linux.alibaba.com>
- <20200811113008.GK4793@dhcp22.suse.cz>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <a1da796f-e42a-aaac-58e2-8b352fde4dc2@linux.alibaba.com>
-Date:   Tue, 11 Aug 2020 20:42:28 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        Tue, 11 Aug 2020 08:43:24 -0400
+Received: from crapouillou.net ([89.234.176.41]:34682 "EHLO crapouillou.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726829AbgHKMnX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 08:43:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1597149800; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=UoMzuNHLpMyb1+tD82j6gU5EX07Smv4Upec9Fe1sZFs=;
+        b=yiJaFQqUyuBXx4xoZbPe55o0lB0pePTCFmKY5H8WBawqqfcwfgk7kE1wH6XSjY2KfIjC+D
+        HVs1UVB/8Bie3A5PGbLy0zURsBndkRRmarKO34mDOQBEmNQveYXG5ZV/zgyffEDhyJNGNw
+        gAUcBrx+zz9pItOBKhriZV+b/X8Bbgs=
+Date:   Tue, 11 Aug 2020 14:43:10 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 06/13] MIPS: generic: Call the machine's .get_system_type
+ callback if provided
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     Paul Burton <paulburton@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        =?UTF-8?b?5ZGo55Cw5p2w?= <zhouyanjie@wanyeetech.com>, od@zcrc.me,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org
+Message-Id: <YNGWEQ.XFIJE749QSY11@crapouillou.net>
+In-Reply-To: <20200803170124.231110-7-paul@crapouillou.net>
+References: <20200803170124.231110-1-paul@crapouillou.net>
+        <20200803170124.231110-7-paul@crapouillou.net>
 MIME-Version: 1.0
-In-Reply-To: <20200811113008.GK4793@dhcp22.suse.cz>
-Content-Type: text/plain; charset=gbk
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -51,70 +55,104 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-ÔÚ 2020/8/11 ÏÂÎç7:30, Michal Hocko Ð´µÀ:
-> subject line looks like a left over. It doesn't match the path. Did you
-> mean
-> memcg: bail out early from swap accounting when memcg is disabled?
+Le lun. 3 ao=FBt 2020 =E0 19:01, Paul Cercueil <paul@crapouillou.net> a=20
+=E9crit :
+> Call the machine's .get_system_type callback in the global
+> get_system_type() function, if it was provided by the mips_machine
+> implementation.
+>=20
+> The get_system_type() function had to be moved within init.c to be=20
+> able
+> to use the static variable "mach". Therefore the proc.c, now empty,=20
+> has
+> been removed.
+>=20
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+>  arch/mips/generic/Makefile |  1 -
+>  arch/mips/generic/init.c   | 19 +++++++++++++++++++
+>  arch/mips/generic/proc.c   | 25 -------------------------
+>  3 files changed, 19 insertions(+), 26 deletions(-)
+>  delete mode 100644 arch/mips/generic/proc.c
+>=20
+> diff --git a/arch/mips/generic/Makefile b/arch/mips/generic/Makefile
+> index 2384a6b09e4c..f49aeede93c2 100644
+> --- a/arch/mips/generic/Makefile
+> +++ b/arch/mips/generic/Makefile
+> @@ -6,7 +6,6 @@
+>=20
+>  obj-y +=3D init.o
+>  obj-y +=3D irq.o
+> -obj-y +=3D proc.o
+>=20
+>  obj-$(CONFIG_YAMON_DT_SHIM)		+=3D yamon-dt.o
+>  obj-$(CONFIG_LEGACY_BOARD_SEAD3)	+=3D board-sead3.o
+> diff --git a/arch/mips/generic/init.c b/arch/mips/generic/init.c
+> index 805d0135a9f4..7d82b436939e 100644
+> --- a/arch/mips/generic/init.c
+> +++ b/arch/mips/generic/init.c
+> @@ -207,3 +207,22 @@ void __init arch_init_irq(void)
+>  void __init prom_free_prom_memory(void)
+>  {
+>  }
+> +
+> +const char *get_system_type(void)
+> +{
+> +	const char *str;
+> +	int err;
+> +
+> +	if (mach && mach->get_system_type)
+> +		return mach->get_system_type(of_root);
 
-It's much better, Thanks for correction!
+The 'mach' variable is __initconst, so there's a section violation=20
+right here. I'll send a V2.
 
-> 
-> Btw. if this patch was first in the series then you wouldn't need to
-> mention the warnings that would trigger based on your previous patch.
-> I am fine with both ways but mentioning the warning is usefule.
+-Paul
 
-Right. but the patch is very simple,  w/o warning message doesn't cuase trouble.
-So, removing the 'and keep WARN_ON monitor' make sense too.
+> +
+> +	err =3D of_property_read_string(of_root, "model", &str);
+> +	if (!err)
+> +		return str;
+> +
+> +	err =3D of_property_read_string_index(of_root, "compatible", 0, &str);
+> +	if (!err)
+> +		return str;
+> +
+> +	return "Unknown";
+> +}
+> diff --git a/arch/mips/generic/proc.c b/arch/mips/generic/proc.c
+> deleted file mode 100644
+> index 4c992809cc3f..000000000000
+> --- a/arch/mips/generic/proc.c
+> +++ /dev/null
+> @@ -1,25 +0,0 @@
+> -// SPDX-License-Identifier: GPL-2.0-or-later
+> -/*
+> - * Copyright (C) 2016 Imagination Technologies
+> - * Author: Paul Burton <paul.burton@mips.com>
+> - */
+> -
+> -#include <linux/of.h>
+> -
+> -#include <asm/bootinfo.h>
+> -
+> -const char *get_system_type(void)
+> -{
+> -	const char *str;
+> -	int err;
+> -
+> -	err =3D of_property_read_string(of_root, "model", &str);
+> -	if (!err)
+> -		return str;
+> -
+> -	err =3D of_property_read_string_index(of_root, "compatible", 0, &str);
+> -	if (!err)
+> -		return str;
+> -
+> -	return "Unknown";
+> -}
+> --
+> 2.27.0
+>=20
 
-Do I need a resend for the commit log change?
 
-Thanks a lot!
-Alex
-
-> 
-> On Tue 11-08-20 19:10:28, Alex Shi wrote:
->> If we disabled memcg by cgroup_disable=memory, the swap charges are
->> still called. Let's return from the funcs earlier and keep WARN_ON
->> monitor.
->>
->> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
->> Reviewed-by: Roman Gushchin <guro@fb.com>
->> Acked-by: Michal Hocko <mhocko@suse.com>
->> Cc: Johannes Weiner <hannes@cmpxchg.org>
->> Cc: Michal Hocko <mhocko@kernel.org>
->> Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: cgroups@vger.kernel.org
->> Cc: linux-mm@kvack.org
->> Cc: linux-kernel@vger.kernel.org
->> ---
->>  mm/memcontrol.c | 6 ++++++
->>  1 file changed, 6 insertions(+)
->>
->> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
->> index 299382fc55a9..419cf565f40b 100644
->> --- a/mm/memcontrol.c
->> +++ b/mm/memcontrol.c
->> @@ -7098,6 +7098,9 @@ void mem_cgroup_swapout(struct page *page, swp_entry_t entry)
->>  	VM_BUG_ON_PAGE(PageLRU(page), page);
->>  	VM_BUG_ON_PAGE(page_count(page), page);
->>  
->> +	if (mem_cgroup_disabled())
->> +		return;
->> +
->>  	if (cgroup_subsys_on_dfl(memory_cgrp_subsys))
->>  		return;
->>  
->> @@ -7163,6 +7166,9 @@ int mem_cgroup_try_charge_swap(struct page *page, swp_entry_t entry)
->>  	struct mem_cgroup *memcg;
->>  	unsigned short oldid;
->>  
->> +	if (mem_cgroup_disabled())
->> +		return 0;
->> +
->>  	if (!cgroup_subsys_on_dfl(memory_cgrp_subsys))
->>  		return 0;
->>  
->> -- 
->> 1.8.3.1
-> 
