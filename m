@@ -2,146 +2,126 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5541C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 18:25:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30384C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 18:28:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0B9720771
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 18:25:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BD172076C
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 18:28:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=jrtc27.com header.i=@jrtc27.com header.b="FkfQGzpI"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="f8kSFMTU";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="OSDLkaQV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726355AbgHKSZj (ORCPT
+        id S1726368AbgHKS2e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 14:25:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59032 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725873AbgHKSZh (ORCPT
+        Tue, 11 Aug 2020 14:28:34 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:43170 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725889AbgHKS2d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 14:25:37 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA228C061787
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 11:25:36 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id f7so12395186wrw.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 11:25:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jrtc27.com; s=gmail.jrtc27.user;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Kg0VF6ErX5lT4lkgbP5PbpghpVG9uMhPSEFo6VamS/k=;
-        b=FkfQGzpI44fbqgrcOaj1mgkIjSMLmbJv3+916pIl7eKyrNEb/q5Qf6pcbttxCIlXMC
-         soo0SglK/yG3GOLxSmMNYjNLmD7B9jzwqC5PD5sxiif9EaDqEngFD8CtscBayUAhhNdK
-         yzJHHOxgnoLpCozUcFjyDe3yvHFeV7Fn3ESp+MZ4cQDAjhBDUgjr02p9Q0Y5IoSjPOQF
-         zL0/wsPE7hZnmXCGQsn0tHiUM6Mqa2SMZqVY9ojuftOmgiDa6D0KYCDXNku/nfRfNG6/
-         rulqM/TzsVmO14H6DC6ye4zfwGMM3nqJRuTAR9EAcJgD8CBbRPrAElqfkAHRmLM2ctPW
-         +A/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Kg0VF6ErX5lT4lkgbP5PbpghpVG9uMhPSEFo6VamS/k=;
-        b=EUqyYnvGTvHMLIQXBzOyK5fF6AmKct1krD46SgufRJtLhrnyCOEdu+VH8/aNT/doZh
-         yY5pW0EuoFA9zkjlof69IWq3LxstgmeCB20heCsFOmot7ugCDnri2CKCryLnBm4z5+Qf
-         sYWPewhYVo22v0QJR7nid46HcUFKt5hHNs8kXs2FHlCpoMO7eC6QY+F/R0gpqLz2qm8f
-         jpt3RNka+lXG9CBhZqkljZ5+5TUoaS7Up+lHZKrVdEIzIPK4DAKt0sSG2aVxNGLT4G/D
-         sNs8cPGAQnGLVcheRuEszCfPG1I9YQ87QbAx4okbCUp8cUB/MZhg+bx9Oj8sebl5jiTC
-         q9eA==
-X-Gm-Message-State: AOAM531BdiqJNeDcj8siG3nKakG0tbfc8WZXeBuUxJZoQ3nozjekbpXw
-        TDmOsLJkZBNy1ar3UuD8xsp1RQ==
-X-Google-Smtp-Source: ABdhPJx3xd5kWvkA/X2/NFNPoUCPO1s6nR2S1WU2LkG5uY9O7IMEyCUYrD8bC3Aplc8N5CFwdop0eg==
-X-Received: by 2002:a5d:6a8b:: with SMTP id s11mr29945727wru.222.1597170335629;
-        Tue, 11 Aug 2020 11:25:35 -0700 (PDT)
-Received: from Jessicas-MacBook.local (trinity-students-nat.trin.cam.ac.uk. [131.111.193.104])
-        by smtp.gmail.com with ESMTPSA id i4sm28401118wrw.26.2020.08.11.11.25.35
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 11 Aug 2020 11:25:35 -0700 (PDT)
-Received: by Jessicas-MacBook.local (Postfix, from userid 501)
-        id 6EE9C207EFCE4D; Tue, 11 Aug 2020 19:25:34 +0100 (BST)
-From:   Jessica Clarke <jrtc27@jrtc27.com>
-To:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Cc:     Jessica Clarke <jrtc27@jrtc27.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Tony Luck <tony.luck@intel.com>,
-        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
-        Anatoly Pugachev <matorola@gmail.com>,
-        Sergei Trofimovich <slyfox@gentoo.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Frank Scheiner <frank.scheiner@web.de>
-Subject: [PATCH v2] arch/ia64: Restore arch-specific pgd_offset_k implementation
-Date:   Tue, 11 Aug 2020 19:24:57 +0100
-Message-Id: <20200811182457.57957-1-jrtc27@jrtc27.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <fe587e09-2835-87b9-ceed-89cdb81f327c@physik.fu-berlin.de>
-References: <fe587e09-2835-87b9-ceed-89cdb81f327c@physik.fu-berlin.de> <fa71f38e-b191-597a-6359-502cba197050@physik.fu-berlin.de> <AA5E212C-56ED-4DB9-9CC1-EB13745DD5AF@jrtc27.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 11 Aug 2020 14:28:33 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 12B4B8EE19D;
+        Tue, 11 Aug 2020 11:28:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1597170512;
+        bh=3WEnw6QUJlA/ul3OQNUWXjoU13+yLZLQS09srF5MAho=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=f8kSFMTUDNJBODH89PuFjILL2FIdhsJg734xkqUR/cnDMS0KoMreMUczSAhnUyPMA
+         FTeH0AYqaAUb8S0lZlH/2MKXOBNx4BiGB+ITLubur3uSRnr1jBTuyfUMErztSAvCOK
+         o6mPwANArB0pQb+2/z1bhs18+blmHF0lRNFSsct0=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id zuQo8S5FYJFD; Tue, 11 Aug 2020 11:28:31 -0700 (PDT)
+Received: from [153.66.254.174] (c-73-35-198-56.hsd1.wa.comcast.net [73.35.198.56])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 7EF748EE149;
+        Tue, 11 Aug 2020 11:28:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1597170511;
+        bh=3WEnw6QUJlA/ul3OQNUWXjoU13+yLZLQS09srF5MAho=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=OSDLkaQVZ4KRYf4a0s5X94LSMaapheTMG3B7iv1TDO9dOQ2MOULwugwtLeHe6qdeF
+         qJgkWRBhCi9y0UIGoySKjkb+RHhMP2bUFkZ9nJkEdlUyNr1yc428zvmYrJhUC4gJZu
+         kZoLKW8vwf99sZFDKUvV19sDo8EBD6kP0uULOtBM=
+Message-ID: <1597170509.4325.55.camel@HansenPartnership.com>
+Subject: Re: [dm-devel] [RFC PATCH v5 00/11] Integrity Policy Enforcement
+ LSM (IPE)
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Chuck Lever <chucklever@gmail.com>
+Cc:     Mimi Zohar <zohar@linux.ibm.com>, James Morris <jmorris@namei.org>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>,
+        snitzer@redhat.com, dm-devel@redhat.com,
+        tyhicks@linux.microsoft.com, agk@redhat.com,
+        Paul Moore <paul@paul-moore.com>,
+        Jonathan Corbet <corbet@lwn.net>, nramas@linux.microsoft.com,
+        serge@hallyn.com, pasha.tatashin@soleen.com,
+        Jann Horn <jannh@google.com>, linux-block@vger.kernel.org,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jens Axboe <axboe@kernel.dk>, mdsakib@microsoft.com,
+        open list <linux-kernel@vger.kernel.org>, eparis@redhat.com,
+        linux-security-module@vger.kernel.org, linux-audit@redhat.com,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-integrity@vger.kernel.org,
+        jaskarankhurana@linux.microsoft.com
+Date:   Tue, 11 Aug 2020 11:28:29 -0700
+In-Reply-To: <16C3BF97-A7D3-488A-9D26-7C9B18AD2084@gmail.com>
+References: <20200728213614.586312-1-deven.desai@linux.microsoft.com>
+         <20200802115545.GA1162@bug> <20200802140300.GA2975990@sasha-vm>
+         <20200802143143.GB20261@amd>
+         <1596386606.4087.20.camel@HansenPartnership.com>
+         <fb35a1f7-7633-a678-3f0f-17cf83032d2b@linux.microsoft.com>
+         <1596639689.3457.17.camel@HansenPartnership.com>
+         <alpine.LRH.2.21.2008050934060.28225@namei.org>
+         <b08ae82102f35936427bf138085484f75532cff1.camel@linux.ibm.com>
+         <329E8DBA-049E-4959-AFD4-9D118DEB176E@gmail.com>
+         <da6f54d0438ee3d3903b2c75fcfbeb0afdf92dc2.camel@linux.ibm.com>
+         <1597073737.3966.12.camel@HansenPartnership.com>
+         <6E907A22-02CC-42DD-B3CD-11D304F3A1A8@gmail.com>
+         <1597124623.30793.14.camel@HansenPartnership.com>
+         <16C3BF97-A7D3-488A-9D26-7C9B18AD2084@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-IA-64 is special and treats pgd_offset_k differently from pgd_offset by
-not including the region number, and init_mm's PGD is such that it only
-points to the kernel's region's PGD. This was broken in 974b9b2c68 which
-unified the two and therefore included the region number, causing it to
-go way out of bounds of the kernel's PGD, which made the kernel hang
-during early boot. Thus, permit pgd_offset_k to be overridden like the
-other macros and override it on IA-64 with the old implementation. Also
-update the comment to clarify that this is not just an optimisation but
-a required implementation detail.
+On Tue, 2020-08-11 at 10:48 -0400, Chuck Lever wrote:
+> Mimi's earlier point is that any IMA metadata format that involves
+> unsigned digests is exposed to an alteration attack at rest or in
+> transit, thus will not provide a robust end-to-end integrity
+> guarantee.
 
-Fixes: 974b9b2c68 ("mm: consolidate pte_index() and pte_offset_*() definitions")
-Reported-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Signed-off-by: Jessica Clarke <jrtc27@jrtc27.com>
-Tested-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
----
-Changes since v1:
- * Fixed typo in commit message
- * Slightly reworded commit message to sound less weird
- * Included Adrian's Tested-by
+I don't believe that is Mimi's point, because it's mostly not correct:
+the xattr mechanism does provide this today.  The point is the
+mechanism we use for storing IMA hashes and signatures today is xattrs
+because they have robust security properties for local filesystems that
+the kernel enforces.  This use goes beyond IMA, selinux labels for
+instance use this property as well.
 
- arch/ia64/include/asm/pgtable.h | 8 ++++++++
- include/linux/pgtable.h         | 2 ++
- 2 files changed, 10 insertions(+)
+What I think you're saying is that NFS can't provide the robust
+security for xattrs we've been relying on, so you need some other
+mechanism for storing them.
 
-diff --git a/arch/ia64/include/asm/pgtable.h b/arch/ia64/include/asm/pgtable.h
-index 10850897a91c..2ac2199d99ce 100644
---- a/arch/ia64/include/asm/pgtable.h
-+++ b/arch/ia64/include/asm/pgtable.h
-@@ -366,6 +366,14 @@ pgd_index (unsigned long address)
- }
- #define pgd_index pgd_index
- 
-+/*
-+ * In the kernel's mapped region we know everything is in region number 5, so
-+ * as an optimisation its PGD already points to the area for that region, but
-+ * that means not adding the region here is required, not just an optimisation.
-+ */
-+#define pgd_offset_k(addr) \
-+	(init_mm.pgd + (((addr) >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1)))
-+
- /* Look up a pgd entry in the gate area.  On IA-64, the gate-area
-    resides in the kernel-mapped segment, hence we use pgd_offset_k()
-    here.  */
-diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
-index 53e97da1e8e2..73c64fe098ba 100644
---- a/include/linux/pgtable.h
-+++ b/include/linux/pgtable.h
-@@ -117,7 +117,9 @@ static inline pgd_t *pgd_offset_pgd(pgd_t *pgd, unsigned long address)
-  * a shortcut which implies the use of the kernel's pgd, instead
-  * of a process's
-  */
-+#ifndef pgd_offset_k
- #define pgd_offset_k(address)		pgd_offset(&init_mm, (address))
-+#endif
- 
- /*
-  * In many cases it is known that a virtual address is mapped at PMD or PTE
--- 
-2.23.0
+I think Mimi's other point is actually that IMA uses a flat hash which
+we derive by reading the entire file and then watching for mutations. 
+Since you cannot guarantee we get notice of mutation with NFS, the
+entire IMA mechanism can't really be applied in its current form and we
+have to resort to chunk at a time verifications that a Merkel tree
+would provide.  Doesn't this make moot any thinking about
+standardisation in NFS for the current IMA flat hash mechanism because
+we simply can't use it ... If I were to construct a prototype I'd have
+to work out and securely cache the hash of ever chunk when verifying
+the flat hash so I could recheck on every chunk read.  I think that's
+infeasible for large files.
+
+James
 
