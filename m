@@ -2,100 +2,83 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A40B9C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:20:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D13C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 530CF2054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:20:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E01142078E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:21:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728584AbgHKKUc (ORCPT
+        id S1728558AbgHKKVd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 06:20:32 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:52836 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728448AbgHKKUb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 06:20:31 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id BB2661C0BD8; Tue, 11 Aug 2020 12:20:28 +0200 (CEST)
-Date:   Tue, 11 Aug 2020 12:20:28 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     jacek.anaszewski@gmail.com, robh@kernel.org, marek.behun@nic.cz,
-        devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v32 1/6] dt: bindings: lp50xx: Introduce the lp50xx
- family of RGB drivers
-Message-ID: <20200811102028.tjea7oqbzb5jjqip@duo.ucw.cz>
-References: <20200722153146.8767-1-dmurphy@ti.com>
- <20200722153146.8767-2-dmurphy@ti.com>
+        Tue, 11 Aug 2020 06:21:33 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53314 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728390AbgHKKVd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 06:21:33 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 1B968AE51;
+        Tue, 11 Aug 2020 10:21:52 +0000 (UTC)
+Date:   Tue, 11 Aug 2020 12:21:24 +0200
+From:   Michal Hocko <mhocko@suse.com>
+To:     Uladzislau Rezki <urezki@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
+Message-ID: <20200811102124.GH4793@dhcp22.suse.cz>
+References: <20200809204354.20137-1-urezki@gmail.com>
+ <20200809204354.20137-2-urezki@gmail.com>
+ <20200810123141.GF4773@dhcp22.suse.cz>
+ <20200810160739.GA29884@pc636>
+ <20200810192525.GG4773@dhcp22.suse.cz>
+ <20200811091807.GA2634@pc636>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="7jkgene5vcu5zbvy"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200722153146.8767-2-dmurphy@ti.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200811091807.GA2634@pc636>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue 11-08-20 11:18:07, Uladzislau Rezki wrote:
+> On Mon, Aug 10, 2020 at 09:25:25PM +0200, Michal Hocko wrote:
+> > On Mon 10-08-20 18:07:39, Uladzislau Rezki wrote:
+> > > > On Sun 09-08-20 22:43:53, Uladzislau Rezki (Sony) wrote:
+[...]
+> > > As i described before, calling the __get_free_page(0) with 0 as argument
+> > > will solve the (a). How correctly is it? From my point of view the logic
+> > > that bypass the wakeup path should be explicitly defined.
+> > 
+> > gfp_mask == 0 is GFP_NOWAIT (aka an atomic allocation request) which
+> > doesn't wake up kswapd. So if the wakeup is a problem then this would be
+> > a way to go.
+> > 
+> What do you mean Michal? gfp_mask 0 != GFP_NOWAIT:
+> 
+> #define GFP_NOWAIT (__GFP_KSWAPD_RECLAIM)
+> 
+> it does wakeup of the kswapd. Or am i missing something? Please comment.
+> If we are about to avoid the kswapd, should we define something special?
+> 
+> #define GFP_NOWWAKE_KSWAPD 0
 
---7jkgene5vcu5zbvy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-On Wed 2020-07-22 10:31:41, Dan Murphy wrote:
-> Introduce the bindings for the Texas Instruments LP5036, LP5030, LP5024,
-> LP5018, LP5012 and LP5009 RGB LED device driver.  The LP5036/30/24/18/12/9
-> can control RGB LEDs individually or as part of a control bank group.
-> These devices have the ability to adjust the mixing control for the RGB
-> LEDs to obtain different colors independent of the overall brightness of
-> the LED grouping.
->=20
-> Datasheet:
-> http://www.ti.com/lit/ds/symlink/lp5012.pdf
-> http://www.ti.com/lit/ds/symlink/lp5024.pdf
-> http://www.ti.com/lit/ds/symlink/lp5036.pdf
->=20
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-
-Acked-by: Pavel Machek <pavel@ucw.cz>
-
-> +           multi-led@1 {
-> +               #address-cells =3D <1>;
-> +               #size-cells =3D <0>;
-> +               reg =3D <0x1>;
-> +               color =3D <LED_COLOR_ID_MULTI>;
-> +               function =3D LED_FUNCTION_CHARGING;
-
-These are just examples, but we should really separate "MULTI" colors
-and "RGB".
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---7jkgene5vcu5zbvy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EARECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXzJw7AAKCRAw5/Bqldv6
-8pbSAJ9s18t0lQR7n0nNMX/9cwncEkoDIwCgvjSqotB88Nj3mVWhq3SbaHJ4yq4=
-=k3hG
------END PGP SIGNATURE-----
-
---7jkgene5vcu5zbvy--
+Sorry, I was more cryptic than necessary. What I meant is that
+GFP_NOWAIT is the basic non-sleepable allocation. It does wake up
+kswapd but a lack of it can be expressed GFP_NOWAIT & ~__GFP_KSWAPD_RECLAIM
+which is 0, now. The mouthfull variant is better for future
+maintainability.
+-- 
+Michal Hocko
+SUSE Labs
