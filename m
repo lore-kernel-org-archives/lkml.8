@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BEADC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5366CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:43:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F07142083B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:43:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28B762083B
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:43:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597160594;
-	bh=npS1UcCtHCP439erK4scgZbNiBJ0UDXcvFk0JSqD+5E=;
+	s=default; t=1597160599;
+	bh=ID9m2di5uWFUHjHXqWoCOfbSjERtutMoIjz3A7NMuqk=;
 	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
-	b=do5utspS4mR6SspCyFH1obeI9ads/Yim9A7+qLSIJkUHM//b2XvaH7ZdGHcm0cWSf
-	 o/kBWTyGoG49fj3JURL+EuMFW7GFun8N92VLg0SXAowuzPhcJjXQQtkNLOH1sLUf/2
-	 8oIo0lejUJEETEVFnYTHBd1u0jwcghOboKiLAdsc=
+	b=Jaghec+b8AbGFjy2rH38o7WxLYM7DyPCPApRKg2tEgpAijU+B7ip3rO3mUzWBNU9M
+	 NF7EZTMG/zRErALxQsN/MTeSS/f3lDWWkHTYravPQggpvU0CKIjX+rvVAWKj10lccL
+	 nplvOUE40+7VRn691HVlewdxdZP2LJDOXVLgXbQA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729209AbgHKPnM (ORCPT
+        id S1729216AbgHKPnP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 11:43:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47582 "EHLO mail.kernel.org"
+        Tue, 11 Aug 2020 11:43:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47532 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729000AbgHKPmG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728986AbgHKPmG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 11 Aug 2020 11:42:06 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF17A22D08;
+        by mail.kernel.org (Postfix) with ESMTPSA id ACAEC22CB3;
         Tue, 11 Aug 2020 15:42:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597160524;
-        bh=npS1UcCtHCP439erK4scgZbNiBJ0UDXcvFk0JSqD+5E=;
+        s=default; t=1597160523;
+        bh=ID9m2di5uWFUHjHXqWoCOfbSjERtutMoIjz3A7NMuqk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KxJOElcIRDuuHIWwGcU90b+WttljKtqgn8FU9sg3YiawA+5UBBMBmSplQUGhme1FH
-         I/jafALUJzDRZIZjaI+sf9V6LIsVWnqYpByycSF9FRers/jebLeq+oEGbuQwDs3SJ5
-         VWkMqVERiTUgQ7S0oepzXhTrk+LALlKUL68H3vuw=
+        b=xbW9gKcT9946v1CIPGUTYOF9ypQMx12v9pfu5ZoZuZHuooZkBES8T6GHJFlzaazfJ
+         9SFeWk2tlOGIRH+Ycl/HXVBLKnHr2mjpcufJagBLslfoILfaH6kMMhyhvht/lh12Sp
+         ZI2LqgwSvHebOy9fAZAdDLvhJLDt9WXll8lPuCTM=
 Received: from mchehab by mail.kernel.org with local (Exim 4.94)
         (envelope-from <mchehab@kernel.org>)
-        id 1k5WPa-004bnF-0G; Tue, 11 Aug 2020 17:42:02 +0200
+        id 1k5WPZ-004bn2-SA; Tue, 11 Aug 2020 17:42:01 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH 22/33] regulator: hi6421v600-regulator: use shorter names for OF properties
-Date:   Tue, 11 Aug 2020 17:41:48 +0200
-Message-Id: <40669d30f999d706ea3aea6457071d56915b748a.1597160086.git.mchehab+huawei@kernel.org>
+        Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH 18/33] mfd: hi6421-spmi-pmic: get rid of unused OF properties
+Date:   Tue, 11 Aug 2020 17:41:44 +0200
+Message-Id: <545ff887305156caebe75c03c0605bfab97cc6b9.1597160086.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1597160086.git.mchehab+huawei@kernel.org>
 References: <cover.1597160086.git.mchehab+huawei@kernel.org>
@@ -61,172 +60,270 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Simplify the names of the OF properties, in order to make
-them similar to other drivers and to make easier to understand
-what each property means.
+There are several OF properties that aren't used by Hikey 970,
+and some are not even used inside the driver.
+
+So, drop them, as as this makes easier to document what's
+actually used.
+
+If latter needed, those could be re-added later.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- drivers/regulator/hi6421v600-regulator.c | 52 ++++++++++--------------
- 1 file changed, 21 insertions(+), 31 deletions(-)
+ drivers/mfd/hi6421-spmi-pmic.c       | 145 +--------------------------
+ include/linux/mfd/hi6421-spmi-pmic.h |  14 +--
+ 2 files changed, 7 insertions(+), 152 deletions(-)
 
-diff --git a/drivers/regulator/hi6421v600-regulator.c b/drivers/regulator/hi6421v600-regulator.c
-index 2d1096ecb277..e4a64893a7ad 100644
---- a/drivers/regulator/hi6421v600-regulator.c
-+++ b/drivers/regulator/hi6421v600-regulator.c
-@@ -196,14 +196,14 @@ static int hisi_regulator_set_mode(struct regulator_dev *rdev,
- {
- 	struct hi6421v600_regulator *sreg = rdev_get_drvdata(rdev);
- 	struct hisi_pmic *pmic = sreg->pmic;
--	u32 eco_mode;
-+	u32 val;
+diff --git a/drivers/mfd/hi6421-spmi-pmic.c b/drivers/mfd/hi6421-spmi-pmic.c
+index 939f7bd5d8ba..f523b2d844b9 100644
+--- a/drivers/mfd/hi6421-spmi-pmic.c
++++ b/drivers/mfd/hi6421-spmi-pmic.c
+@@ -49,7 +49,6 @@
+ /*#define HISI_NR_IRQ			25*/
+ #define HISI_MASK_FIELD		0xFF
+ #define HISI_BITS			8
+-#define PMIC_FPGA_FLAG          1
  
- 	switch (mode) {
- 	case REGULATOR_MODE_NORMAL:
--		eco_mode = HISI_ECO_MODE_DISABLE;
-+		val = 0;
- 		break;
- 	case REGULATOR_MODE_IDLE:
--		eco_mode = HISI_ECO_MODE_ENABLE;
-+		val = sreg->eco_mode_mask << (ffs(sreg->eco_mode_mask) - 1);
- 		break;
- 	default:
- 		return -EINVAL;
-@@ -211,15 +211,12 @@ static int hisi_regulator_set_mode(struct regulator_dev *rdev,
+ /*define the first group interrupt register number*/
+ #define HISI_PMIC_FIRST_GROUP_INT_NUM        2
+@@ -144,24 +143,6 @@ static irqreturn_t hisi_irq_handler(int irq, void *data)
+ 		}
+ 	}
  
- 	/* set mode */
- 	hisi_pmic_rmw(pmic, rdev->desc->enable_reg,
--		      sreg->eco_mode_mask,
--		eco_mode << (ffs(sreg->eco_mode_mask) - 1));
-+		      sreg->eco_mode_mask, val);
- 
- 	dev_dbg(&rdev->dev,
- 		"%s: enable_reg=0x%x, eco_mode_mask=0x%x, value=0x%x\n",
--		 __func__,
--		rdev->desc->enable_reg,
--		sreg->eco_mode_mask,
--		eco_mode << (ffs(sreg->eco_mode_mask) - 1));
-+		 __func__, rdev->desc->enable_reg, sreg->eco_mode_mask, val);
-+
- 	return 0;
+-	/*Handle the second group irq if analysis the second group irq from dtsi*/
+-	if (pmic->g_extinterrupt_flag == 1) {
+-		for (i = 0; i < pmic->irqarray1; i++) {
+-			pending = hisi_pmic_read(pmic, (i + pmic->irq_addr1.start_addr));
+-			pending &= HISI_MASK_FIELD;
+-			if (pending != 0)
+-				pr_debug("pending[%d]=0x%lx\n\r", i, pending);
+-
+-			hisi_pmic_write(pmic, (i + pmic->irq_addr1.start_addr), pending);
+-
+-			if (!pending)
+-				continue;
+-
+-			for_each_set_bit(offset, &pending, HISI_BITS)
+-				generic_handle_irq(pmic->irqs[offset + (i + HISI_PMIC_FIRST_GROUP_INT_NUM) * HISI_BITS]);
+-		}
+-	}
+-
+ 	return IRQ_HANDLED;
  }
  
-@@ -249,10 +246,10 @@ static int hisi_dt_parse(struct platform_device *pdev,
- 	int ret;
+@@ -172,19 +153,8 @@ static void hisi_irq_mask(struct irq_data *d)
+ 	unsigned long flags;
  
- 	/* parse .register_info.enable_reg */
--	ret = of_property_read_u32_array(np, "hisilicon,hisi-ctrl",
-+	ret = of_property_read_u32_array(np, "hi6421-ctrl",
- 					 register_info, 3);
- 	if (ret) {
--		dev_err(dev, "no hisilicon,hisi-ctrl property set\n");
-+		dev_err(dev, "no hi6421-ctrl property set\n");
- 		return ret;
- 	}
- 	rdesc->enable_reg = register_info[0];
-@@ -260,33 +257,33 @@ static int hisi_dt_parse(struct platform_device *pdev,
- 	sreg->eco_mode_mask = register_info[2];
+ 	offset = (irqd_to_hwirq(d) >> 3);
+-	if (pmic->g_extinterrupt_flag == 1) {
+-		if (offset < HISI_PMIC_FIRST_GROUP_INT_NUM) {
+-			offset += pmic->irq_mask_addr.start_addr;
+-		} else {
+-			/*
+-			 * Change addr when irq num larger than 16 because
+-			 * interrupt addr is nonsequence
+-			 */
+-			offset = offset + (pmic->irq_mask_addr1.start_addr) - HISI_PMIC_FIRST_GROUP_INT_NUM;
+-		}
+-	} else {
+-		offset += pmic->irq_mask_addr.start_addr;
+-	}
++	offset += pmic->irq_mask_addr.start_addr;
++
+ 	spin_lock_irqsave(&pmic->lock, flags);
+ 	data = hisi_pmic_read(pmic, offset);
+ 	data |= (1 << (irqd_to_hwirq(d) & 0x07));
+@@ -199,14 +169,8 @@ static void hisi_irq_unmask(struct irq_data *d)
+ 	unsigned long flags;
  
- 	/* parse .register_info.vsel_reg */
--	ret = of_property_read_u32_array(np, "hisilicon,hisi-vset",
-+	ret = of_property_read_u32_array(np, "hi6421-vsel",
- 					 register_info, 2);
- 	if (ret) {
--		dev_err(dev, "no hisilicon,hisi-vset property set\n");
-+		dev_err(dev, "no hi6421-vsel property set\n");
- 		return ret;
- 	}
- 	rdesc->vsel_reg = register_info[0];
- 	rdesc->vsel_mask = register_info[1];
- 
- 	/* parse .off-on-delay */
--	ret = of_property_read_u32(np, "hisilicon,hisi-off-on-delay-us",
-+	ret = of_property_read_u32(np, "off-on-delay-us",
- 				   &rdesc->off_on_delay);
- 	if (ret) {
--		dev_err(dev, "no hisilicon,hisi-off-on-delay-us property set\n");
-+		dev_err(dev, "no off-on-delay-us property set\n");
- 		return ret;
- 	}
- 
- 	/* parse .enable_time */
--	ret = of_property_read_u32(np, "hisilicon,hisi-enable-time-us",
-+	ret = of_property_read_u32(np, "startup-delay-us",
- 				   &rdesc->enable_time);
- 	if (ret) {
--		dev_err(dev, "no hisilicon,hisi-enable-time-us property set\n");
-+		dev_err(dev, "no startup-delay-us property set\n");
+ 	offset = (irqd_to_hwirq(d) >> 3);
+-	if (pmic->g_extinterrupt_flag == 1) {
+-		if (offset < HISI_PMIC_FIRST_GROUP_INT_NUM)
+-			offset += pmic->irq_mask_addr.start_addr;
+-		else
+-			offset = offset + (pmic->irq_mask_addr1.start_addr) - HISI_PMIC_FIRST_GROUP_INT_NUM;
+-	} else {
+-		offset += pmic->irq_mask_addr.start_addr;
+-	}
++	offset += pmic->irq_mask_addr.start_addr;
++
+ 	spin_lock_irqsave(&pmic->lock, flags);
+ 	data = hisi_pmic_read(pmic, offset);
+ 	data &= ~(1 << (irqd_to_hwirq(d) & 0x07));
+@@ -280,69 +244,6 @@ static int get_pmic_device_tree_data(struct device_node *np, struct hisi_pmic *p
  		return ret;
  	}
  
- 	/* parse .eco_uA */
--	ret = of_property_read_u32(np, "hisilicon,hisi-eco-microamp",
-+	ret = of_property_read_u32(np, "eco-microamp",
- 				   &sreg->eco_uA);
- 	if (ret) {
- 		sreg->eco_uA = 0;
-@@ -295,7 +292,7 @@ static int hisi_dt_parse(struct platform_device *pdev,
- 
- 	/* parse volt_table */
- 
--	rdesc->n_voltages = of_property_count_u32_elems(np, "hisilicon,hisi-vset-table");
-+	rdesc->n_voltages = of_property_count_u32_elems(np, "voltage-table");
- 
- 	v_table = devm_kzalloc(dev, sizeof(unsigned int) * rdesc->n_voltages,
- 			       GFP_KERNEL);
-@@ -303,10 +300,10 @@ static int hisi_dt_parse(struct platform_device *pdev,
- 		return  -ENOMEM;
- 	rdesc->volt_table = v_table;
- 
--	ret = of_property_read_u32_array(np, "hisilicon,hisi-vset-table",
-+	ret = of_property_read_u32_array(np, "voltage-table",
- 					 v_table, rdesc->n_voltages);
- 	if (ret) {
--		dev_err(dev, "no hisilicon,hisi-vset-table property set\n");
-+		dev_err(dev, "no voltage-table property set\n");
- 		return ret;
- 	}
- 
-@@ -329,13 +326,6 @@ static struct regulator_ops hisi_ldo_rops = {
-  * Used only for parsing the DT properties
-  */
- 
--static const struct of_device_id of_hisi_pmic_match_tbl[] = {
--	{
--		.compatible = "hisilicon,hi6421-spmi-pmic-ldo",
--	},
--	{ }
--};
+-	/*pmic lock*/
+-	ret = of_property_read_u32_array(np, "hisilicon,hisi-pmic-lock",
+-					 (int *)&pmic->normal_lock, 2);
+-	if (ret) {
+-		pr_err("no hisilicon,hisi-pmic-lock property set\n");
+-		ret = -ENODEV;
+-		return ret;
+-	}
 -
- static int hisi_regulator_probe_ldo(struct platform_device *pdev,
- 				    struct device_node *np,
- 				    struct hisi_pmic *pmic)
-@@ -360,14 +350,14 @@ static int hisi_regulator_probe_ldo(struct platform_device *pdev,
- 	/* hisi regulator supports two modes */
- 	constraint = &initdata->constraints;
+-	/*pmic debug lock*/
+-	ret = of_property_read_u32_array(np, "hisilicon,hisi-pmic-debug-lock",
+-					 (int *)&pmic->debug_lock, 2);
+-	if (ret) {
+-		pr_err("no hisilicon,hisi-pmic-debug-lock property set\n");
+-		ret = -ENODEV;
+-		return ret;
+-	}
+-
+-	return ret;
+-}
+-
+-static int get_pmic_device_tree_data1(struct device_node *np, struct hisi_pmic *pmic)
+-{
+-	int ret = 0;
+-
+-	/*get pmic irq num*/
+-	ret = of_property_read_u32_array(np, "hisilicon,hisi-pmic-irq-num1",
+-					 &pmic->irqnum1, 1);
+-	if (ret) {
+-		pr_err("no hisilicon,hisi-pmic-irq-num1 property set\n");
+-		ret = -ENODEV;
+-		pmic->irqnum1 = 0;
+-		return ret;
+-	}
+-
+-	/*get pmic irq array number*/
+-	ret = of_property_read_u32_array(np, "hisilicon,hisi-pmic-irq-array1",
+-					 &pmic->irqarray1, 1);
+-	if (ret) {
+-		pr_err("no hisilicon,hisi-pmic-irq-array1 property set\n");
+-		ret = -ENODEV;
+-		return ret;
+-	}
+-
+-	/*SOC_PMIC_IRQ_MASK_0_ADDR*/
+-	ret = of_property_read_u32_array(np, "hisilicon,hisi-pmic-irq-mask-addr1",
+-					 (int *)&pmic->irq_mask_addr1, 2);
+-	if (ret) {
+-		pr_err("no hisilicon,hisi-pmic-irq-mask-addr1 property set\n");
+-		ret = -ENODEV;
+-		return ret;
+-	}
+-
+-	/*SOC_PMIC_IRQ0_ADDR*/
+-	ret = of_property_read_u32_array(np, "hisilicon,hisi-pmic-irq-addr1",
+-					 (int *)&pmic->irq_addr1, 2);
+-	if (ret) {
+-		pr_err("no hisilicon,hisi-pmic-irq-addr1 property set\n");
+-		ret = -ENODEV;
+-		return ret;
+-	}
+-
+-	pmic->g_extinterrupt_flag = 1;
+ 	return ret;
+ }
  
--	ret = of_property_read_u32_array(np, "hisilicon,valid-modes-mask",
-+	ret = of_property_read_u32_array(np, "valid-modes-mask",
- 					 &constraint->valid_modes_mask, 1);
- 	if (ret) {
- 		dev_err(dev, "no valid modes mask\n");
- 		ret = -ENODEV;
+@@ -362,26 +263,6 @@ static void hisi_pmic_irq_prc(struct hisi_pmic *pmic)
+ 	}
+ }
+ 
+-static void hisi_pmic_irq1_prc(struct hisi_pmic *pmic)
+-{
+-	int i;
+-	unsigned int pending1;
+-
+-	if (pmic->g_extinterrupt_flag == 1) {
+-		for (i = 0 ; i < pmic->irq_mask_addr1.array; i++)
+-			hisi_pmic_write(pmic, pmic->irq_mask_addr1.start_addr + i, HISI_MASK_STATE);
+-
+-		for (i = 0 ; i < pmic->irq_addr1.array; i++) {
+-			pending1 = hisi_pmic_read(pmic, pmic->irq_addr1.start_addr + i);
+-
+-			pr_debug("PMU IRQ address1 value:irq[0x%x] = 0x%x\n",
+-				 pmic->irq_addr1.start_addr + i, pending1);
+-
+-			hisi_pmic_write(pmic, pmic->irq_addr1.start_addr + i, HISI_MASK_STATE);
+-		}
+-	}
+-}
+-
+ static int hisi_pmic_probe(struct spmi_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -390,7 +271,6 @@ static int hisi_pmic_probe(struct spmi_device *pdev)
+ 	enum of_gpio_flags flags;
+ 	int ret = 0;
+ 	int i;
+-	unsigned int fpga_flag = 0;
+ 	unsigned int virq;
+ 
+ 	pmic = devm_kzalloc(dev, sizeof(*pmic), GFP_KERNEL);
+@@ -404,22 +284,10 @@ static int hisi_pmic_probe(struct spmi_device *pdev)
  		return ret;
  	}
--	ret = of_property_read_u32_array(np, "hisilicon,valid-idle-mask",
-+	ret = of_property_read_u32_array(np, "valid-idle-mask",
- 					 &temp_modes, 1);
- 	if (ret) {
- 		dev_err(dev, "no valid idle mask\n");
-@@ -388,7 +378,7 @@ static int hisi_regulator_probe_ldo(struct platform_device *pdev,
- 	rdesc->type = REGULATOR_VOLTAGE;
- 	rdesc->min_uV = initdata->constraints.min_uV;
  
--	supplyname = of_get_property(np, "hisilicon,supply_name", NULL);
-+	supplyname = of_get_property(np, "supply_name", NULL);
- 	if (supplyname)
- 		initdata->supply_regulator = supplyname;
+-	/*get pmic dts the second group irq*/
+-	ret = get_pmic_device_tree_data1(np, pmic);
+-	if (ret)
+-		dev_err(&pdev->dev, "the platform don't support ext-interrupt.\n");
+-
+ 	/* TODO: get and enable clk request */
+ 	spin_lock_init(&pmic->lock);
  
+ 	pmic->dev = dev;
+-	ret = of_property_read_u32_array(np, "hisilicon,pmic_fpga_flag",
+-					 &fpga_flag, 1);
+-	if (ret)
+-		pr_err("no hisilicon,pmic_fpga_flag property set\n");
+-
+-	if (fpga_flag == PMIC_FPGA_FLAG)
+-		goto after_irq_register;
+ 
+ 	pmic->gpio = of_get_gpio_flags(np, 0, &flags);
+ 	if (pmic->gpio < 0)
+@@ -438,10 +306,6 @@ static int hisi_pmic_probe(struct spmi_device *pdev)
+ 
+ 	/* mask && clear IRQ status */
+ 	hisi_pmic_irq_prc(pmic);
+-	/*clear && mask the new adding irq*/
+-	hisi_pmic_irq1_prc(pmic);
+-
+-	pmic->irqnum += pmic->irqnum1;
+ 
+ 	pmic->irqs = devm_kzalloc(dev, pmic->irqnum * sizeof(int), GFP_KERNEL);
+ 	if (!pmic->irqs)
+@@ -491,7 +355,6 @@ static int hisi_pmic_probe(struct spmi_device *pdev)
+ 		return ret;
+ 	}
+ 
+-after_irq_register:
+ 	return 0;
+ 
+ request_theaded_irq:
+diff --git a/include/linux/mfd/hi6421-spmi-pmic.h b/include/linux/mfd/hi6421-spmi-pmic.h
+index 1f986dd5f31c..41b61de48259 100644
+--- a/include/linux/mfd/hi6421-spmi-pmic.h
++++ b/include/linux/mfd/hi6421-spmi-pmic.h
+@@ -48,19 +48,11 @@ struct hisi_pmic {
+ 	struct irq_domain	*domain;
+ 	int			irq;
+ 	int			gpio;
+-	unsigned int	*irqs;
++	unsigned int		*irqs;
+ 	int			irqnum;
+ 	int			irqarray;
+-	struct irq_mask_info irq_mask_addr;
+-	struct irq_info irq_addr;
+-	int			irqnum1;
+-	int			irqarray1;
+-	struct irq_mask_info irq_mask_addr1;
+-	struct irq_info irq_addr1;
+-	struct write_lock normal_lock;
+-	struct write_lock debug_lock;
+-
+-	unsigned int g_extinterrupt_flag;
++	struct irq_mask_info 	irq_mask_addr;
++	struct irq_info		irq_addr;
+ };
+ 
+ u32 hisi_pmic_read(struct hisi_pmic *pmic, int reg);
 -- 
 2.26.2
 
