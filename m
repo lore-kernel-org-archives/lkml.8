@@ -2,100 +2,142 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC665C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8097BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C7D120768
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:33:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5048120768
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:35:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FIwU9pLX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729062AbgHKPdy (ORCPT
+        id S1728964AbgHKPfL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 11:33:54 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:62204 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728859AbgHKPdw (ORCPT
+        Tue, 11 Aug 2020 11:35:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60952 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728873AbgHKPfK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 11:33:52 -0400
-Received: from 89-64-89-44.dynamic.chello.pl (89.64.89.44) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
- id 2461079d11a94e2c; Tue, 11 Aug 2020 17:33:50 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Francisco Jerez <currojerez@riseup.net>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        Linux Documentation <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Giovanni Gherdovich <ggherdovich@suse.cz>,
-        Doug Smythies <dsmythies@telus.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v7] cpufreq: intel_pstate: Implement passive mode with HWP enabled
-Date:   Tue, 11 Aug 2020 17:33:49 +0200
-Message-ID: <4931766.VNY61sLD3B@kreacher>
-In-Reply-To: <87mu32atsy.fsf@riseup.net>
-References: <4981405.3kqTVLv5tO@kreacher> <122847018.uQ7iJ9lzrg@kreacher> <87mu32atsy.fsf@riseup.net>
+        Tue, 11 Aug 2020 11:35:10 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82A8FC06174A;
+        Tue, 11 Aug 2020 08:35:10 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id a79so7802842pfa.8;
+        Tue, 11 Aug 2020 08:35:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=3NcJIBT/HlNiF+P77zhcDLzGnLCscXOa/4/7lUf9iqM=;
+        b=FIwU9pLX0UbNCO538H8fmYvlUbsTl60KwRFBfeAm5vZlim5Iahw161peY3VQNcCR/8
+         E0ZB8V4/WCJsK089AviUFqN6z7Q0YeYiidosMjeABDGUAD4qaEbh4sj7F9Z3I4/XZHim
+         Xf/guEnD6/ndc6Ir8drf5/RBiEATEd2cdoYdYoZmQ6ZMvCflb4YIgn106S/hDN27NLyt
+         HIdU2iMzmHJ0ZsmElypigGUiHwFDO/Lzk0VgXpOjE2MiucX9J3dKPIg36kPXVHWjEg7z
+         3AMzoLbAb7uKM3WwhgU9NQuMdp1H/C4iUzJFQ9cFHPO4yxdAJAicQ4ZXjccM/Rg6TR8B
+         9wHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=3NcJIBT/HlNiF+P77zhcDLzGnLCscXOa/4/7lUf9iqM=;
+        b=HtDmsmLiwBjyFHStJWWPsiYnpAPlZywilXxtysRwUuNJztKBJoa5U8emsHcM20EQZH
+         pveA/mch8mBDXmUgCTylPdtDVYu+MrCJb1Gx8Fv1+SrqF18qVAO/mIevnFuU5oi4i5ni
+         C+Ho+mo93c0cbU/kwCq64+GC+cZztHj2srgcXIL5ZSinTaenO006Vf+Rye1DruVElxjo
+         xMXuwUYhWxKlyjK9rGrxmvYPxinfWuUuwL+GxRhgegzWrITBGx2PLLqettKZY5Sw5OCh
+         xmjV0rxxvq3gtNF5TwOGI+hDShBAf8i+jJRVugyKq775vVPtFCmj0Q/MxM1ykha6+K/j
+         NrUw==
+X-Gm-Message-State: AOAM532KNLIqR2il8LZdcboDAq3TVxFeeRwxpyKKIbZHRUVpWqv3qnEU
+        FkCK8qIoSLkLe+az8Ja+E7QHGqYZ
+X-Google-Smtp-Source: ABdhPJy4Zd68AFxP2oFzRzoPRHbEG6FpLJxG9EfSIOQIKo4lAlCzjnkLp6QHpSx4okspQPqrflSi7w==
+X-Received: by 2002:a63:a517:: with SMTP id n23mr1273054pgf.122.1597160109738;
+        Tue, 11 Aug 2020 08:35:09 -0700 (PDT)
+Received: from [10.1.10.11] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
+        by smtp.gmail.com with ESMTPSA id u24sm25768448pfm.20.2020.08.11.08.35.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Aug 2020 08:35:09 -0700 (PDT)
+Subject: Re: [PATCH] net: eliminate meaningless memcpy to data in
+ pskb_carve_inside_nonlinear()
+To:     linmiaohe <linmiaohe@huawei.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>
+Cc:     "davem@davemloft.net" <davem@davemloft.net>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "pshelar@ovn.org" <pshelar@ovn.org>,
+        "martin.varghese@nokia.com" <martin.varghese@nokia.com>,
+        "fw@strlen.de" <fw@strlen.de>,
+        "dcaratti@redhat.com" <dcaratti@redhat.com>,
+        "edumazet@google.com" <edumazet@google.com>,
+        "steffen.klassert@secunet.com" <steffen.klassert@secunet.com>,
+        "pabeni@redhat.com" <pabeni@redhat.com>,
+        "shmulik@metanetworks.com" <shmulik@metanetworks.com>,
+        "kyk.segfault@gmail.com" <kyk.segfault@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <40a0b4ba22ff499686a2521998767ae5@huawei.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <9684c26c-9f26-5a7f-3d17-d180afff432c@gmail.com>
+Date:   Tue, 11 Aug 2020 08:35:07 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <40a0b4ba22ff499686a2521998767ae5@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday, August 11, 2020 2:51:41 AM CEST Francisco Jerez wrote:
+
+
+On 8/11/20 5:10 AM, linmiaohe wrote:
+> Eric Dumazet <eric.dumazet@gmail.com> wrote:
+>> On 8/10/20 5:28 AM, Miaohe Lin wrote:
+>>> The skb_shared_info part of the data is assigned in the following 
+>>> loop. It is meaningless to do a memcpy here.
+>>>
+>>
+>> Reminder : net-next is CLOSED.
+>>
 > 
-> --==-=-=
-> Content-Type: multipart/mixed; boundary="=-=-="
+> Thanks for your remind. I would wait for it open.
 > 
-> --=-=-=
-> Content-Type: text/plain; charset=utf-8
-> Content-Disposition: inline
-> Content-Transfer-Encoding: quoted-printable
+>> This is not correct. We still have to copy _something_
+>>
+>> Something like :
+>>
+>> diff --git a/net/core/skbuff.c b/net/core/skbuff.c index 2828f6d5ba898a5e50ccce45589bf1370e474b0f..1c0519426c7ba4b04377fc8054c4223c135879ab 100644
+>> --- a/net/core/skbuff.c
+>> +++ b/net/core/skbuff.c
+>> @@ -5953,8 +5953,8 @@ static int pskb_carve_inside_nonlinear(struct sk_buff *skb, const u32 off,
+>>        size = SKB_WITH_OVERHEAD(ksize(data));
+>>
+>>        memcpy((struct skb_shared_info *)(data + size),
+>> -              skb_shinfo(skb), offsetof(struct skb_shared_info,
+>> -                                        frags[skb_shinfo(skb)->nr_frags]));
+>> +              skb_shinfo(skb), offsetof(struct skb_shared_info, 
+>> + frags[0]));
+>> +
+>>        if (skb_orphan_frags(skb, gfp_mask)) {
+>>                kfree(data);
+>>                return -ENOMEM;
+>>
 > 
-> "Rafael J. Wysocki" <rjw@rjwysocki.net> writes:
+> This looks good. Will send a patch v2 soon. May I add a suggested-by tag of you ?
+
+I would advise not using Suggested-by, as this would imply I suggested the idea of changing
+this function in the first place.
+
+I will add a Reviewed-by:  eventually if your v2 submission looks fine to me.
+
+Thanks.
+
+
+> Many thanks.
 > 
-> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >
-> > Allow intel_pstate to work in the passive mode with HWP enabled and
-> > make it set the HWP minimum performance limit (HWP floor) to the
-> > P-state value given by the target frequency supplied by the cpufreq
-> > governor, so as to prevent the HWP algorithm and the CPU scheduler
-> > from working against each other, at least when the schedutil governor
-> > is in use, and update the intel_pstate documentation accordingly.
-> >
-> > Among other things, this allows utilization clamps to be taken
-> > into account, at least to a certain extent, when intel_pstate is
-> > in use and makes it more likely that sufficient capacity for
-> > deadline tasks will be provided.
-> >
-> > After this change, the resulting behavior of an HWP system with
-> > intel_pstate in the passive mode should be close to the behavior
-> > of the analogous non-HWP system with intel_pstate in the passive
-> > mode, except that in the frequency range below the base frequency
-> > (ie. the frequency retured by the base_frequency cpufreq attribute
-> > in sysfs on HWP systems) the HWP algorithm is allowed to make the
-> > CPU run at a frequency above the floor P-state set by intel_pstate,
-> > with or without hardware coordination of P-states among CPUs in the
-> > same package.
-> >
-> 
-> The "frequency range below the base frequency" part of the paragraph
-> above seems somewhat misleading, since AFAICT the same thing will happen
-> in the P-state range above the base frequency. 
-
-Fair enough.  I rephrased the changelog when applying the patch.
-
-> Another minor comment below, other than that LGTM:
-
-And this one has been fixed too.
-
-> Reviewed-by: Francisco Jerez <currojerez@riseup.net>
-
-Thanks!
-
-
-
