@@ -2,115 +2,150 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F925C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 19:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A98C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 19:11:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5DA020781
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 19:11:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31A7220756
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 19:11:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="DIs9NLMS"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="fbMx3780"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726271AbgHKTLF (ORCPT
+        id S1726441AbgHKTLx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 15:11:05 -0400
-Received: from mail.efficios.com ([167.114.26.124]:47324 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725889AbgHKTLF (ORCPT
+        Tue, 11 Aug 2020 15:11:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37950 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725889AbgHKTLx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 15:11:05 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 529BD2CF2E0;
-        Tue, 11 Aug 2020 15:11:04 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id hgoaOP9Sff08; Tue, 11 Aug 2020 15:11:04 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id EE8232CF534;
-        Tue, 11 Aug 2020 15:11:03 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com EE8232CF534
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1597173063;
-        bh=aX5VywJt4AvedzVTU+00PoSO60+jsYPIe8N+NMnuuug=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=DIs9NLMS2FYpHh94Q10fjl+V6SBbPVR01oX0qwjrLguaKAqnFi0TVrLl3CXcfviqE
-         qbH6eO/X1BD8RVhuQ12hUCpLfiGHLK0L1McWyeW8NkUMi6HHCAYZfy0dbzo9LV+FIM
-         EOgfLWhM82MePWHTY1kZbisd2TtJPjHM2/Et0jzGOAPVbzAoqqldRa23i7Og5bOiky
-         jzJJi+00KyxItp1zpr/72YGD3/Ul52rkQo5EVqBv39oY0RtFBC/YlhvsKuKukWeos5
-         igSPkh2hI/v+//AD6i+o+X2OIvPikNr5KpvY4MlsDeQOQ20vj+22LzqsMzy8KJ5Uzo
-         Zup9/QpDcGV+Q==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id CuFNI7mpAn5G; Tue, 11 Aug 2020 15:11:03 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id E29242CF351;
-        Tue, 11 Aug 2020 15:11:03 -0400 (EDT)
-Date:   Tue, 11 Aug 2020 15:11:03 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     David Ahern <dsahern@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Michael Jeanson <mjeanson@efficios.com>,
-        David Ahern <dsahern@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-Message-ID: <699475546.4794.1597173063863.JavaMail.zimbra@efficios.com>
-In-Reply-To: <f43a9397-c506-9270-b423-efaf6f520a80@gmail.com>
-References: <42cb74c8-9391-cf4c-9e57-7a1d464f8706@gmail.com> <20200806185121.19688-1-mjeanson@efficios.com> <20200811.102856.864544731521589077.davem@davemloft.net> <f43a9397-c506-9270-b423-efaf6f520a80@gmail.com>
-Subject: Re: [PATCH] selftests: Add VRF icmp error route lookup test
+        Tue, 11 Aug 2020 15:11:53 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36051C06174A
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 12:11:53 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id j10so6513646qvo.13
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 12:11:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pLatoOn79pYJ/DuOSj6cLvAVzQZnxlbGJi91nLHmWxM=;
+        b=fbMx3780UeiwoaK7tuSdafEpSCzt2QSHEE1/+ByVUmkAE+hSHgf3oW7Kw9luwn/bGk
+         u6kcshS5/siw0+AdKcgPIXz05yzhKR/moxZm+Z53BlEZKybm6wcvZZNOb8yoDcyApwBo
+         XNuNqoGVhcajRdB5mIN1cspaFlnL2h2oBAjCV8LKG+CTr1z8rRWsdTo5Axty2xciXgdL
+         1rJKcrugyV9FCIxqVf9lrT+uHiWbkp32Y4S8zCNHg++NnG5yjflYqd+nOEpysOGYHfbD
+         Xkb7J8MdsmMB8Ccr8Mjm86xw4hmVRa7R7vej56eNeTjX123T6UDvr6lzyhrAhMx1SYdk
+         PFVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pLatoOn79pYJ/DuOSj6cLvAVzQZnxlbGJi91nLHmWxM=;
+        b=gEE2D5Wk9cB33oP/DDiszVoegH3W17JMmWmbY0RKi1nChJ3MRKOJVReI+sgn7ZS3W8
+         QlBbBkYnYPPvlJd1EVqTvDQWypop+v6/C/IwBqjSlh2fWX5DlfsnMcaBvHgYgCuEdZzS
+         QJO1SQODLYRkEnwDug7WADbDR9P1dGwdeT8G5idTmFNp7Kwi7ymM8cHUffmc/vOtEd1j
+         JoKb0neUErZn9T4BbnVsXQR9VaYXNwHGbo/1LaTcfSVdLR4/KQFift5KTLWkDfuBvSSq
+         GLz3EnuVPVk4v2+393ZIjWhf9tnGddI7MVIhiivzsyW0vGoPuEtqjXAPgCwkTBFbmK4j
+         lwlA==
+X-Gm-Message-State: AOAM530OyUaprxBxnrocO+ZalSM5SDDSEdRIUA2uiW8urRx2PeiCd3yM
+        TRiACZsCBZrVUEMhN6Bli6WCL0fYWLKCs/R+AXIepQ==
+X-Google-Smtp-Source: ABdhPJyXKG5auxbjO/56cTDqtGqYLvRX2FdO9CddQgB4MxuvJmkMvAuxZjB4zO/rAxMf67Lmgq2vQK60FVe0EGnmo8w=
+X-Received: by 2002:a0c:ff06:: with SMTP id w6mr2973554qvt.61.1597173112408;
+ Tue, 11 Aug 2020 12:11:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3959 (ZimbraWebClient - FF79 (Linux)/8.8.15_GA_3953)
-Thread-Topic: selftests: Add VRF icmp error route lookup test
-Thread-Index: K9OU1fUupPJcTCWW0BAtiweVmt3suA==
+References: <20200809132529.264312-1-warthog618@gmail.com> <20200809132529.264312-3-warthog618@gmail.com>
+In-Reply-To: <20200809132529.264312-3-warthog618@gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Tue, 11 Aug 2020 21:11:41 +0200
+Message-ID: <CAMpxmJWe6Cjhwt3izuPLK-Xzvm=LqOy_nnZ7xg123+M_JgriLw@mail.gmail.com>
+Subject: Re: [PATCH v3 02/18] gpio: uapi: define uAPI v2
+To:     Kent Gibson <warthog618@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Aug 11, 2020, at 2:57 PM, David Ahern dsahern@gmail.com wrote:
+On Sun, Aug 9, 2020 at 3:26 PM Kent Gibson <warthog618@gmail.com> wrote:
+>
+> Add a new version of the uAPI to address existing 32/64-bit alignment
+> issues, add support for debounce and event sequence numbers, allow
+> requested lines with different configurations, and provide some future
+> proofing by adding padding reserved for future use.
+>
+> The alignment issue relates to the gpioevent_data, which packs to different
+> sizes on 32-bit and 64-bit platforms. That creates problems for 32-bit apps
+> running on 64-bit kernels.  uAPI v2 addresses that particular issue, and
+> the problem more generally, by adding pad fields that explicitly pad
+> structs out to 64-bit boundaries, so they will pack to the same size now,
+> and even if some of the reserved padding is used for __u64 fields in the
+> future.
+>
+> The new structs have been analysed with pahole to ensure that they
+> are sized as expected and contain no implicit padding.
+>
+> The lack of future proofing in v1 makes it impossible to, for example,
+> add the debounce feature that is included in v2.
+> The future proofing is addressed by providing configurable attributes in
+> line config and reserved padding in all structs for future features.
+> Specifically, the line request, config, info, info_changed and event
+> structs receive updated versions and new ioctls.
+>
+> As the majority of the structs and ioctls were being replaced, it is
+> opportune to rework some of the other aspects of the uAPI:
+>
+> v1 has three different flags fields, each with their own separate
+> bit definitions.  In v2 that is collapsed to one - gpio_v2_line_flag.
+>
+> The handle and event requests are merged into a single request, the line
+> request, as the two requests were mostly the same other than the edge
+> detection provided by event requests.  As a byproduct, the v2 uAPI allows
+> for multiple lines producing edge events on the same line handle.
+> This is a new capability as v1 only supports a single line in an event
+> request.
+>
+> As a consequence, there are now only two types of file handle to be
+> concerned with, the chip and the line, and it is clearer which ioctls
+> apply to which type of handle.
+>
+> There is also some minor renaming of fields for consistency compared to
+> their v1 counterparts, e.g. offset rather than lineoffset or line_offset,
+> and consumer rather than consumer_label.
+>
+> Additionally, v1 GPIOHANDLES_MAX becomes GPIO_V2_LINES_MAX in v2 for
+> clarity, and the gpiohandle_data __u8 array becomes a bitmap in
+> gpio_v2_line_values.
+>
+> The v2 uAPI is mostly a reorganisation and extension of v1, so userspace
+> code, particularly libgpiod, should readily port to it.
+>
+> Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> ---
 
-> On 8/11/20 11:28 AM, David Miller wrote:
->> From: Michael Jeanson <mjeanson@efficios.com>
->> Date: Thu,  6 Aug 2020 14:51:21 -0400
->> 
->>> The objective is to check that the incoming vrf routing table is selected
->>> to send an ICMP error back to the source when the ttl of a packet reaches 1
->>> while it is forwarded between different vrfs.
->>>
->>> The first test sends a ping with a ttl of 1 from h1 to h2 and parses the
->>> output of the command to check that a ttl expired error is received.
->>>
->>> [This may be flaky, I'm open to suggestions of a more robust approch.]
->>>
->>> The second test runs traceroute from h1 to h2 and parses the output to
->>> check for a hop on r1.
->>>
->>> Signed-off-by: Michael Jeanson <mjeanson@efficios.com>
->> 
->> This patch does not apply cleanly to the current net tree.
->> 
-> 
-> It is also out of context since the tests fail on current net and net-next.
-> 
-> The tests along with the patches that fix the problem should be sent
-> together.
+This now looks good for me. Just a small nit below.
 
-One thing I am missing before this series can be considered for upstreaming
-is an Acked-by of the 2 fixes for ipv4 and ipv6 from you, as maintainer
-of l3mdev, if you think the approach I am taking with those fixes makes sense.
+Andy: would you mind taking a look as well?
 
-Thanks,
+>
+> +/*
+> + * Maximum number of requested lines.
+> + *
+> + * Must be no greater than 64 as bitmaps are limited to 64-bits, and a
+> + * multiple of 2 to ensure 32/64-bit alignment of structs.
+> + */
+> +#define GPIO_V2_LINES_MAX 64
+> +
 
-Mathieu
+If we refer to bitmaps for which helpers are defined in
+include/linux/bitmap.h then they're not limited to 64-bits. I'd just
+say here that we want to fit into 64-bit integers for simplicity.
 
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+[snip]
+
+Bartosz
