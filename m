@@ -2,207 +2,242 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 858ABC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:06:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23DB8C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:06:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A8A72076B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:06:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBBA82076B
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:06:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="cBzenF4x";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="ZENQ581C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729224AbgHKRGe (ORCPT
+        id S1729305AbgHKRGd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 13:06:34 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:56271 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729163AbgHKRGT (ORCPT
+        Tue, 11 Aug 2020 13:06:33 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:13770 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729161AbgHKRG3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 13:06:19 -0400
-Received: by mail-il1-f197.google.com with SMTP id q17so6135589ile.22
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 10:06:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=G++ky09F079bG+vggjBA6cynULCbu9QPjUKnei+ThwM=;
-        b=V7qWAkjCz8dALX7HpXPKZzTLSrfk2JXUjx9v1HERuOadkJveNuiQZSR5JSki7Gr2Pg
-         qlRk4bJvwZ8owc8N2D5tFtga47gWSX9aBkycC3yMxyw3Aq31E9q2JjiL/kF4wRym8VLx
-         LPfNHB3Ldtwv14Al0QsmzC6scTT3bnRkMIxHMpwaMMk1y+GofuDRWAxPpJXEaAMbreMH
-         4Cs8s2cL1UqmaJvg0wVOpQ7NUosPmNNEvGl7ia2E1NUTmtls1pemYaaqH3dhEFs1efzm
-         +Yh1qKQVHumiw7CaO1RnnZtm3UkNiObcMpbS6D8TB2Dnng8OGMdcHDFctrow1a4H6AZa
-         xf5w==
-X-Gm-Message-State: AOAM5315lJlBnlfxEHLAldHa1CE6H0L5dl6+Vh5euKAAkHhVSJx8Hu51
-        NxFaPwcd/hmAg9NvrdpTR/lVDjdp+8sTp968abG65MFLymvW
-X-Google-Smtp-Source: ABdhPJzWBiD1vV1YIUh0HYvGBuu3An+mPYfzSYNhPPiYSJfIV8BjkblrqGdLukLkNfo6FlbhlL9D4pK1povrcfZt6+rGgzCBvUSm
+        Tue, 11 Aug 2020 13:06:29 -0400
+Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07BH4cVa017059;
+        Tue, 11 Aug 2020 10:06:17 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=facebook; bh=CbSmh8UXuEpQiApSbvycdTICM1ESyRpIS47YqzAmU10=;
+ b=cBzenF4xb5GwkZYwjIna3MXJWzpLgMeZjn5pCV16iTyCwhwwDVgPKLthpbckvsQ70GF+
+ uWDnxPrpHXk4W89vuXGDayQi189S9WL8iaYsJXeaSJbFGj5FE52p1D1+qiTUwYxbA2vv
+ CQgsBYa4gWKSksPovhlmV5UK0r+DvK5NhIQ= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com with ESMTP id 32uxp788k3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Tue, 11 Aug 2020 10:06:17 -0700
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (100.104.98.9) by
+ o365-in.thefacebook.com (100.104.94.199) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Tue, 11 Aug 2020 10:06:16 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Li0LG9mKozYkl8D9tOYZzXiF/XNlP5pOs4nmDJc7GzGCeM0By8s0twOS1SSnI+To7oEGUcO2IUIKYRGanIs3SDXCVu4Gkh4C1bJtbq0zt7OcbKIhWn/p9usr9ZEw9B0hzUfxK59bxUmLee4UQ7Tj0p6NjM21Z/B82Db66gZUYCbrqROnzN1KHLSQnNW2zKVqKKlnq0uywRIKmAwElTEmvuEefjTSHVhJz+nfDgk1DfnKYHmIy8VvzGbSaIEwg+mk5OJIMokGV3EPd+RwghoLgykCJ+bW5L+upPdAy1SakXpbfRoAI3lJd2prgruCeGjqFUamHTfgvhGwI5EW540fyw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CbSmh8UXuEpQiApSbvycdTICM1ESyRpIS47YqzAmU10=;
+ b=l8wkLtVZNq224UFN4qU3H2Q9ql/7ZgN6vomkwSFZ3Me5JejK4eG7mU+0RpNh+DvNtNoH4+szlBfrcd1UascQHY7n2g9Mu4k1m3TkDITA/9IebyzMIvTVbdhjtu8rHcYGE7oz4gs0bDl5YBrFaQn6i9EuXu549RxKWaSzwlyLJSconNBw7Zh7MuECGzE6QqfHgmDLnivDbI0goQiBW7OLXdPcky0FwmjYG5EsvTjbP2RvVqjjWncydx1XGnqMbVBAg8ZqYl919N5qsMhefhHyOEC45tqDhxXsJ3QRWh2nv/QTDwvKtFh3o5I5Sf39LWESpoSbdP9CFk+QJmt8vy2Few==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CbSmh8UXuEpQiApSbvycdTICM1ESyRpIS47YqzAmU10=;
+ b=ZENQ581C1PREoipMF6glJRUZ/hVEEvEWwgW6p0o3dX+eZcCVLd5mN8fdEY3SfUBngT86CNt6YAFhJLqoqvj/+ARi2egIc3EXdxj7PDMiOdtHKEya3ubeKKevlJgD7hbgKV5Pc04bdoBDl/0VQ48yTVSkrD2ZJxrg1vYQfEh6DrI=
+Authentication-Results: cmpxchg.org; dkim=none (message not signed)
+ header.d=none;cmpxchg.org; dmarc=none action=none header.from=fb.com;
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
+ by BYAPR15MB2598.namprd15.prod.outlook.com (2603:10b6:a03:14d::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.15; Tue, 11 Aug
+ 2020 17:06:14 +0000
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::354d:5296:6a28:f55e]) by BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::354d:5296:6a28:f55e%6]) with mapi id 15.20.3261.025; Tue, 11 Aug 2020
+ 17:06:14 +0000
+Date:   Tue, 11 Aug 2020 10:06:11 -0700
+From:   Roman Gushchin <guro@fb.com>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Christoph Lameter <cl@linux.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Shakeel Butt <shakeelb@google.com>, <linux-mm@kvack.org>,
+        <kernel-team@fb.com>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 4/5] mm: memcg: charge memcg percpu memory to the
+ parent cgroup
+Message-ID: <20200811170611.GB1507044@carbon.DHCP.thefacebook.com>
+References: <20200623184515.4132564-1-guro@fb.com>
+ <20200623184515.4132564-5-guro@fb.com>
+ <20200811152737.GB650506@cmpxchg.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200811152737.GB650506@cmpxchg.org>
+X-ClientProxiedBy: BYAPR08CA0055.namprd08.prod.outlook.com
+ (2603:10b6:a03:117::32) To BYAPR15MB4136.namprd15.prod.outlook.com
+ (2603:10b6:a03:96::24)
 MIME-Version: 1.0
-X-Received: by 2002:a02:29ca:: with SMTP id p193mr27622294jap.131.1597165577931;
- Tue, 11 Aug 2020 10:06:17 -0700 (PDT)
-Date:   Tue, 11 Aug 2020 10:06:17 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000eb931405ac9d164f@google.com>
-Subject: KMSAN: uninit-value in joydev_connect
-From:   syzbot <syzbot+6a1bb5a33a0b128085bc@syzkaller.appspotmail.com>
-To:     dmitry.torokhov@gmail.com, glider@google.com,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from carbon.DHCP.thefacebook.com (2620:10d:c090:400::5:fa33) by BYAPR08CA0055.namprd08.prod.outlook.com (2603:10b6:a03:117::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.19 via Frontend Transport; Tue, 11 Aug 2020 17:06:13 +0000
+X-Originating-IP: [2620:10d:c090:400::5:fa33]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: b827c471-9761-4d33-e6b2-08d83e18daab
+X-MS-TrafficTypeDiagnostic: BYAPR15MB2598:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR15MB25981F38BDE608FBB91715D0BE450@BYAPR15MB2598.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4136.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(39860400002)(136003)(366004)(376002)(346002)(396003)(8936002)(6916009)(8676002)(186003)(6506007)(16526019)(478600001)(7696005)(52116002)(1076003)(86362001)(83380400001)(55016002)(5660300002)(9686003)(33656002)(54906003)(2906002)(316002)(66556008)(66476007)(66946007)(4326008);DIR:OUT;SFP:1102;
+X-MS-Exchange-CrossTenant-Network-Message-Id: b827c471-9761-4d33-e6b2-08d83e18daab
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB4136.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Aug 2020 17:06:14.3470
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: /YVeaHBH9x1eMpYLHjWf/LKWdwjJHatZlZLR84jyjBBEmQAkM1ZpHWqq0cBulauL
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2598
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-11_15:2020-08-11,2020-08-11 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 suspectscore=5
+ priorityscore=1501 mlxlogscore=962 phishscore=0 clxscore=1015 adultscore=0
+ mlxscore=0 lowpriorityscore=0 impostorscore=0 malwarescore=0 spamscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008110119
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Tue, Aug 11, 2020 at 11:27:37AM -0400, Johannes Weiner wrote:
+> On Tue, Jun 23, 2020 at 11:45:14AM -0700, Roman Gushchin wrote:
+> > Memory cgroups are using large chunks of percpu memory to store vmstat
+> > data.  Yet this memory is not accounted at all, so in the case when there
+> > are many (dying) cgroups, it's not exactly clear where all the memory is.
+> > 
+> > Because the size of memory cgroup internal structures can dramatically
+> > exceed the size of object or page which is pinning it in the memory, it's
+> > not a good idea to simple ignore it.  It actually breaks the isolation
+> > between cgroups.
+> > 
+> > Let's account the consumed percpu memory to the parent cgroup.
+> > 
+> > Signed-off-by: Roman Gushchin <guro@fb.com>
+> > Acked-by: Dennis Zhou <dennis@kernel.org>
+> 
+> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
 
-syzbot found the following issue on:
+Thank you!
 
-HEAD commit:    ce8056d1 wip: changed copy_from_user where instrumented
-git tree:       https://github.com/google/kmsan.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=14b5da2c900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3afe005fb99591f
-dashboard link: https://syzkaller.appspot.com/bug?extid=6a1bb5a33a0b128085bc
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-userspace arch: i386
+> 
+> This makes sense, and the accounting is in line with how we track and
+> distribute child creation quotas (cgroup.max.descendants and
+> cgroup.max.depth) up the cgroup tree.
+> 
+> I have one minor comment that isn't a dealbreaker for me:
+> 
+> > @@ -5069,13 +5069,15 @@ static int alloc_mem_cgroup_per_node_info(struct mem_cgroup *memcg, int node)
+> >  	if (!pn)
+> >  		return 1;
+> >  
+> > -	pn->lruvec_stat_local = alloc_percpu(struct lruvec_stat);
+> > +	pn->lruvec_stat_local = alloc_percpu_gfp(struct lruvec_stat,
+> > +						 GFP_KERNEL_ACCOUNT);
+> >  	if (!pn->lruvec_stat_local) {
+> >  		kfree(pn);
+> >  		return 1;
+> >  	}
+> >  
+> > -	pn->lruvec_stat_cpu = alloc_percpu(struct lruvec_stat);
+> > +	pn->lruvec_stat_cpu = alloc_percpu_gfp(struct lruvec_stat,
+> > +					       GFP_KERNEL_ACCOUNT);
+> >  	if (!pn->lruvec_stat_cpu) {
+> >  		free_percpu(pn->lruvec_stat_local);
+> >  		kfree(pn);
+> > @@ -5149,11 +5151,13 @@ static struct mem_cgroup *mem_cgroup_alloc(void)
+> >  		goto fail;
+> >  	}
+> >  
+> > -	memcg->vmstats_local = alloc_percpu(struct memcg_vmstats_percpu);
+> > +	memcg->vmstats_local = alloc_percpu_gfp(struct memcg_vmstats_percpu,
+> > +						GFP_KERNEL_ACCOUNT);
+> >  	if (!memcg->vmstats_local)
+> >  		goto fail;
+> >  
+> > -	memcg->vmstats_percpu = alloc_percpu(struct memcg_vmstats_percpu);
+> > +	memcg->vmstats_percpu = alloc_percpu_gfp(struct memcg_vmstats_percpu,
+> > +						 GFP_KERNEL_ACCOUNT);
+> >  	if (!memcg->vmstats_percpu)
+> >  		goto fail;
+> >  
+> > @@ -5202,7 +5206,9 @@ mem_cgroup_css_alloc(struct cgroup_subsys_state *parent_css)
+> >  	struct mem_cgroup *memcg;
+> >  	long error = -ENOMEM;
+> >  
+> > +	memalloc_use_memcg(parent);
+> >  	memcg = mem_cgroup_alloc();
+> > +	memalloc_unuse_memcg();
+> 
+> The disconnect between 1) requesting accounting and 2) which cgroup to
+> charge is making me uneasy. It makes mem_cgroup_alloc() a bit of a
+> handgrenade, because accounting to the current task is almost
+> guaranteed to be wrong if the use_memcg() annotation were to get lost
+> in a refactor or not make it to a new caller of the function.
+> 
+> The saving grace is that mem_cgroup_alloc() is pretty unlikely to be
+> used elsewhere. And pretending it's an independent interface would be
+> overengineering. But how about the following in mem_cgroup_alloc() and
+> alloc_mem_cgroup_per_node_info() to document that caller relationship:
+> 
+> 	/* We charge the parent cgroup, never the current task */
+> 	WARN_ON_ONCE(!current->active_memcg);
 
-Unfortunately, I don't have any reproducer for this issue yet.
+I have nothing against.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+6a1bb5a33a0b128085bc@syzkaller.appspotmail.com
+Andrew, can you, please, squash the following diff into the patch?
 
-gtco 4-1:0.219: Collection level already at zero
-gtco 4-1:0.219: Not enough data (need 130, have 129)
-input: GTCO_CalComp as /devices/platform/dummy_hcd.3/usb4/4-1/4-1:0.219/input/input5
-=====================================================
-BUG: KMSAN: uninit-value in joydev_connect+0x10c0/0x1920 drivers/input/joydev.c:958
-CPU: 1 PID: 8715 Comm: kworker/1:3 Not tainted 5.8.0-rc5-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x21c/0x280 lib/dump_stack.c:118
- kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:121
- __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
- joydev_connect+0x10c0/0x1920 drivers/input/joydev.c:958
- input_attach_handler drivers/input/input.c:1031 [inline]
- input_register_device+0x1d7b/0x21c0 drivers/input/input.c:2229
- gtco_probe+0x32ce/0x39b0 drivers/input/tablet/gtco.c:990
- usb_probe_interface+0xece/0x1550 drivers/usb/core/driver.c:374
- really_probe+0xf20/0x20b0 drivers/base/dd.c:529
- driver_probe_device+0x293/0x390 drivers/base/dd.c:701
- __device_attach_driver+0x63f/0x830 drivers/base/dd.c:807
- bus_for_each_drv+0x2ca/0x3f0 drivers/base/bus.c:431
- __device_attach+0x4e2/0x7f0 drivers/base/dd.c:873
- device_initial_probe+0x4a/0x60 drivers/base/dd.c:920
- bus_probe_device+0x177/0x3d0 drivers/base/bus.c:491
- device_add+0x3b0e/0x40d0 drivers/base/core.c:2680
- usb_set_configuration+0x380f/0x3f10 drivers/usb/core/message.c:2032
- usb_generic_driver_probe+0x138/0x300 drivers/usb/core/generic.c:241
- usb_probe_device+0x311/0x490 drivers/usb/core/driver.c:272
- really_probe+0xf20/0x20b0 drivers/base/dd.c:529
- driver_probe_device+0x293/0x390 drivers/base/dd.c:701
- __device_attach_driver+0x63f/0x830 drivers/base/dd.c:807
- bus_for_each_drv+0x2ca/0x3f0 drivers/base/bus.c:431
- __device_attach+0x4e2/0x7f0 drivers/base/dd.c:873
- device_initial_probe+0x4a/0x60 drivers/base/dd.c:920
- bus_probe_device+0x177/0x3d0 drivers/base/bus.c:491
- device_add+0x3b0e/0x40d0 drivers/base/core.c:2680
- usb_new_device+0x1bd4/0x2a30 drivers/usb/core/hub.c:2554
- hub_port_connect drivers/usb/core/hub.c:5208 [inline]
- hub_port_connect_change drivers/usb/core/hub.c:5348 [inline]
- port_event drivers/usb/core/hub.c:5494 [inline]
- hub_event+0x5e7b/0x8a70 drivers/usb/core/hub.c:5576
- process_one_work+0x1688/0x2140 kernel/workqueue.c:2269
- worker_thread+0x10bc/0x2730 kernel/workqueue.c:2415
- kthread+0x551/0x590 kernel/kthread.c:292
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
+Thanks!
 
-Uninit was stored to memory at:
- kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
- kmsan_internal_chain_origin+0xad/0x130 mm/kmsan/kmsan.c:310
- __msan_chain_origin+0x50/0x90 mm/kmsan/kmsan_instr.c:165
- input_set_abs_params+0x331/0x540 drivers/input/input.c:514
- gtco_setup_caps drivers/input/tablet/gtco.c:598 [inline]
- gtco_probe+0x2800/0x39b0 drivers/input/tablet/gtco.c:966
- usb_probe_interface+0xece/0x1550 drivers/usb/core/driver.c:374
- really_probe+0xf20/0x20b0 drivers/base/dd.c:529
- driver_probe_device+0x293/0x390 drivers/base/dd.c:701
- __device_attach_driver+0x63f/0x830 drivers/base/dd.c:807
- bus_for_each_drv+0x2ca/0x3f0 drivers/base/bus.c:431
- __device_attach+0x4e2/0x7f0 drivers/base/dd.c:873
- device_initial_probe+0x4a/0x60 drivers/base/dd.c:920
- bus_probe_device+0x177/0x3d0 drivers/base/bus.c:491
- device_add+0x3b0e/0x40d0 drivers/base/core.c:2680
- usb_set_configuration+0x380f/0x3f10 drivers/usb/core/message.c:2032
- usb_generic_driver_probe+0x138/0x300 drivers/usb/core/generic.c:241
- usb_probe_device+0x311/0x490 drivers/usb/core/driver.c:272
- really_probe+0xf20/0x20b0 drivers/base/dd.c:529
- driver_probe_device+0x293/0x390 drivers/base/dd.c:701
- __device_attach_driver+0x63f/0x830 drivers/base/dd.c:807
- bus_for_each_drv+0x2ca/0x3f0 drivers/base/bus.c:431
- __device_attach+0x4e2/0x7f0 drivers/base/dd.c:873
- device_initial_probe+0x4a/0x60 drivers/base/dd.c:920
- bus_probe_device+0x177/0x3d0 drivers/base/bus.c:491
- device_add+0x3b0e/0x40d0 drivers/base/core.c:2680
- usb_new_device+0x1bd4/0x2a30 drivers/usb/core/hub.c:2554
- hub_port_connect drivers/usb/core/hub.c:5208 [inline]
- hub_port_connect_change drivers/usb/core/hub.c:5348 [inline]
- port_event drivers/usb/core/hub.c:5494 [inline]
- hub_event+0x5e7b/0x8a70 drivers/usb/core/hub.c:5576
- process_one_work+0x1688/0x2140 kernel/workqueue.c:2269
- worker_thread+0x10bc/0x2730 kernel/workqueue.c:2415
- kthread+0x551/0x590 kernel/kthread.c:292
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
+--
 
-Uninit was stored to memory at:
- kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
- kmsan_internal_chain_origin+0xad/0x130 mm/kmsan/kmsan.c:310
- __msan_chain_origin+0x50/0x90 mm/kmsan/kmsan_instr.c:165
- parse_hid_report_descriptor drivers/input/tablet/gtco.c:330 [inline]
- gtco_probe+0x1e56/0x39b0 drivers/input/tablet/gtco.c:935
- usb_probe_interface+0xece/0x1550 drivers/usb/core/driver.c:374
- really_probe+0xf20/0x20b0 drivers/base/dd.c:529
- driver_probe_device+0x293/0x390 drivers/base/dd.c:701
- __device_attach_driver+0x63f/0x830 drivers/base/dd.c:807
- bus_for_each_drv+0x2ca/0x3f0 drivers/base/bus.c:431
- __device_attach+0x4e2/0x7f0 drivers/base/dd.c:873
- device_initial_probe+0x4a/0x60 drivers/base/dd.c:920
- bus_probe_device+0x177/0x3d0 drivers/base/bus.c:491
- device_add+0x3b0e/0x40d0 drivers/base/core.c:2680
- usb_set_configuration+0x380f/0x3f10 drivers/usb/core/message.c:2032
- usb_generic_driver_probe+0x138/0x300 drivers/usb/core/generic.c:241
- usb_probe_device+0x311/0x490 drivers/usb/core/driver.c:272
- really_probe+0xf20/0x20b0 drivers/base/dd.c:529
- driver_probe_device+0x293/0x390 drivers/base/dd.c:701
- __device_attach_driver+0x63f/0x830 drivers/base/dd.c:807
- bus_for_each_drv+0x2ca/0x3f0 drivers/base/bus.c:431
- __device_attach+0x4e2/0x7f0 drivers/base/dd.c:873
- device_initial_probe+0x4a/0x60 drivers/base/dd.c:920
- bus_probe_device+0x177/0x3d0 drivers/base/bus.c:491
- device_add+0x3b0e/0x40d0 drivers/base/core.c:2680
- usb_new_device+0x1bd4/0x2a30 drivers/usb/core/hub.c:2554
- hub_port_connect drivers/usb/core/hub.c:5208 [inline]
- hub_port_connect_change drivers/usb/core/hub.c:5348 [inline]
- port_event drivers/usb/core/hub.c:5494 [inline]
- hub_event+0x5e7b/0x8a70 drivers/usb/core/hub.c:5576
- process_one_work+0x1688/0x2140 kernel/workqueue.c:2269
- worker_thread+0x10bc/0x2730 kernel/workqueue.c:2415
- kthread+0x551/0x590 kernel/kthread.c:292
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
-
-Local variable ----globalval.i@gtco_probe created at:
- parse_hid_report_descriptor drivers/input/tablet/gtco.c:221 [inline]
- gtco_probe+0xda0/0x39b0 drivers/input/tablet/gtco.c:935
- parse_hid_report_descriptor drivers/input/tablet/gtco.c:221 [inline]
- gtco_probe+0xda0/0x39b0 drivers/input/tablet/gtco.c:935
-=====================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 130093bdf74b..e25f2db7e61c 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -5137,6 +5137,9 @@ static int alloc_mem_cgroup_per_node_info(struct mem_cgroup *memcg, int node)
+        if (!pn)
+                return 1;
+ 
++       /* We charge the parent cgroup, never the current task */
++       WARN_ON_ONCE(!current->active_memcg);
++
+        pn->lruvec_stat_local = alloc_percpu_gfp(struct lruvec_stat,
+                                                 GFP_KERNEL_ACCOUNT);
+        if (!pn->lruvec_stat_local) {
+@@ -5219,6 +5222,9 @@ static struct mem_cgroup *mem_cgroup_alloc(void)
+                goto fail;
+        }
+ 
++       /* We charge the parent cgroup, never the current task */
++       WARN_ON_ONCE(!current->active_memcg);
++
+        memcg->vmstats_local = alloc_percpu_gfp(struct memcg_vmstats_percpu,
+                                                GFP_KERNEL_ACCOUNT);
+        if (!memcg->vmstats_local)
