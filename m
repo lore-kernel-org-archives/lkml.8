@@ -2,143 +2,123 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D6DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 22:09:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC1E0C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 22:15:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81E46206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 22:09:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="t2K1Wp1Z"
+	by mail.kernel.org (Postfix) with ESMTP id CD21D206DC
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 22:15:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726366AbgHKWJv (ORCPT
+        id S1726274AbgHKWP4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 18:09:51 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:44571 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726173AbgHKWJv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 18:09:51 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597183790; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=8nVYNeSoMlj/0DZnpTkkfpxc5/vnT3kxypEjr4vqN8U=;
- b=t2K1Wp1Z8uaHGZM/Ds/ii4l57tiDZmmGN+pnAm/L4QmhHNBKNZdc7C5u3NV0qbbJtNwDOOPK
- kBNzX0wX6f7lXxjybB9DZHWJ8b/r4UEwC9K1hWjegMuD+EavhC+Bj/Hryw2QYbzJ15J776Wj
- m7QiTAhxFHNh8jIes1B5FcrA6RE=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
- 5f331729ba4c2cd367d667e7 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 11 Aug 2020 22:09:45
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D10C1C4339C; Tue, 11 Aug 2020 22:09:44 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: tanmay)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E81ABC433C6;
-        Tue, 11 Aug 2020 22:09:43 +0000 (UTC)
+        Tue, 11 Aug 2020 18:15:56 -0400
+Received: from mga04.intel.com ([192.55.52.120]:25349 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725901AbgHKWP4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 18:15:56 -0400
+IronPort-SDR: Yr3NohTmaP4XdfsJpdw5HrLnMdmnZGcMUGQf4ywR2LoaveGvkd+PZoZkx/oz5mTw3fl+o4ENv1
+ Ga3vqPEan+dA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9710"; a="151273799"
+X-IronPort-AV: E=Sophos;i="5.76,301,1592895600"; 
+   d="scan'208";a="151273799"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2020 15:15:55 -0700
+IronPort-SDR: dIHx8NC7z+ukfiY7P7TV7ohJbmDTP2rwhqDU+Ae7vDwJ8oCTTGZduFyUY1k5bRdMZemWQwa5nq
+ As0wVewInQng==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,301,1592895600"; 
+   d="scan'208";a="324891321"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
+  by orsmga008.jf.intel.com with ESMTP; 11 Aug 2020 15:15:55 -0700
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id 96968301CAF; Tue, 11 Aug 2020 11:02:03 -0700 (PDT)
+Date:   Tue, 11 Aug 2020 11:02:03 -0700
+From:   Andi Kleen <ak@linux.intel.com>
+To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc:     peterz@infradead.org, Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        Jiri Olsa <jolsa@kernel.org>, alexey.budankov@linux.intel.com,
+        adrian.hunter@intel.com
+Subject: Re: [PATCH 1/2] perf: Add closing sibling events' file descriptors
+Message-ID: <20200811180203.GG1448395@tassilo.jf.intel.com>
+References: <20200708151635.81239-1-alexander.shishkin@linux.intel.com>
+ <20200708151635.81239-2-alexander.shishkin@linux.intel.com>
+ <20200806083530.GV2674@hirez.programming.kicks-ass.net>
+ <20200806153205.GA1448395@tassilo.jf.intel.com>
+ <875z9q1u3g.fsf@ashishki-desk.ger.corp.intel.com>
+ <20200810144518.GB1448395@tassilo.jf.intel.com>
+ <87364t1plf.fsf@ashishki-desk.ger.corp.intel.com>
+ <20200811143424.GD1448395@tassilo.jf.intel.com>
+ <87zh71ywzq.fsf@ashishki-desk.ger.corp.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Tue, 11 Aug 2020 15:09:43 -0700
-From:   Tanmay Shah <tanmay@codeaurora.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     David Airlie <airlied@linux.ie>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Stephen Boyd <swboyd@chromium.org>, khsieh@codeaurora.org,
-        Rob Clark <robdclark@gmail.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Abhinav Kumar <abhinavk@codeaurora.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Vara Reddy <varar@codeaurora.org>, aravindh@codeaurora.org,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Chandan Uddaraju <chandanu@codeaurora.org>
-Subject: Re: [Freedreno] [PATCH v9 3/5] drm/msm/dp: add support for DP PLL
- driver
-In-Reply-To: <7222ceca-9fe2-f91b-4129-5a70952875f7@infradead.org>
-References: <20200807071718.17937-1-tanmay@codeaurora.org>
- <20200807071718.17937-4-tanmay@codeaurora.org>
- <3b0d0e49-5fe8-e217-4ddc-1ff08e65ab48@infradead.org>
- <CAF6AEGv5Yf1x7aCEauP7XtzTjpUCxJt6_GzxFhFXyf_DX_Gi+g@mail.gmail.com>
- <159683184187.1360974.15575847254880429529@swboyd.mtv.corp.google.com>
- <75acac5a-b4a5-9c5a-4404-fb936d738e46@infradead.org>
- <639438051c1b2fe1d9bec5f6343a6dec@codeaurora.org>
- <7222ceca-9fe2-f91b-4129-5a70952875f7@infradead.org>
-Message-ID: <9624e970765dc0739793612c2a5c53bc@codeaurora.org>
-X-Sender: tanmay@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87zh71ywzq.fsf@ashishki-desk.ger.corp.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-11 13:21, Randy Dunlap wrote:
-> On 8/11/20 12:49 PM, tanmay@codeaurora.org wrote:
->> On 2020-08-07 13:28, Randy Dunlap wrote:
->>> On 8/7/20 1:24 PM, Stephen Boyd wrote:
->>>> Quoting Rob Clark (2020-08-07 08:51:48)
->>>>> On Fri, Aug 7, 2020 at 8:27 AM Randy Dunlap <rdunlap@infradead.org>
->>>>> wrote:
->>>>>> 
->>>>>> On 8/7/20 12:17 AM, Tanmay Shah wrote:
->>>>>>> diff --git a/drivers/gpu/drm/msm/Kconfig 
->>>>>>> b/drivers/gpu/drm/msm/Kconfig
->>>>>>> index ea3c4d094d09..cc1392b29022 100644
->>>>>>> --- a/drivers/gpu/drm/msm/Kconfig
->>>>>>> +++ b/drivers/gpu/drm/msm/Kconfig
->>>>>>> @@ -60,6 +60,7 @@ config DRM_MSM_HDMI_HDCP
->>>>>>>  config DRM_MSM_DP
->>>>>>>       bool "Enable DP support in MSM DRM driver"
->>>>>>>       depends on DRM_MSM
->>>>>>> +     default y
->>>>>>>       help
->>>>>>>         Compile in support for DP driver in msm drm driver. DP 
->>>>>>> external
->>>>>>>         display support is enabled through this config option. It 
->>>>>>> can
->>>>>> 
->>>>>> Hi,
->>>>>> 
->>>>>> You need a very strong justification to make an optional part of a
->>>>>> driver
->>>>>> to be "default y".
->>>>> 
->>>>> My opinion is that if the driver is built, everything should be 
->>>>> built.
->>>>> This is what makes sense for distro's.  It is only the embedded 
->>>>> case
->>>>> where you want to trim down unneeded features where you might want 
->>>>> to
->>>>> disable some parts.  So 'default y' makes sense to me.
->>> 
->>> We don't set defaults for distro convenience.
->>> 
->>>> 
->>>> Maybe use 'default DRM_MSM' so that it doesn't trigger the 'default 
->>>> y'
->>>> filters people have?
->>> 
->>> Most people can figure that one out.  ;)
->>> I don't have any automated filters.
->> 
->> After after further reviews, I agree with Rob. Display Port is 
->> required module as of now so it makes sense to keep 'default y'.
+On Tue, Aug 11, 2020 at 07:21:13PM +0300, Alexander Shishkin wrote:
+> Andi Kleen <ak@linux.intel.com> writes:
 > 
-> If it is required, then you don't need to have a Kconfig entry/symbol 
-> for it.
+> > On Tue, Aug 11, 2020 at 12:47:24PM +0300, Alexander Shishkin wrote:
+> >> 
+> >> Right, but which bytes? One byte per event? That's
+> >> arbitrary. sizeof(struct perf_event)? Then, probably also sizeof(struct
+> >> perf_event_context).
+> >
+> > Yes the sum of all the sizeofs needed for a perf_event.
+> 
+> Well, *all* of them will be tedious to collect, seeing as there is
+> ctx->task_ctx_data, there is ring_buffer, scheduling trees, there is
+> stuff that pmus allocate under the hood, like AUX SG tables.
 
-Kconfig makes driver flexible. Other moudles in the driver are also 
-'default y' such as DSI. I will let Rob guide us further on this as he 
-is the maintainer.
+Well I'm sure we can figure something out. I guess it doesn't need to be
+fully accurate, just approximate enough, and be bounded.
+
+> 
+> >> The above two structs add up to 2288 bytes on my local build. Given the
+> >> default RLIMIT_MEMLOCK of 64k, that's 28 events. As opposed to ~1k
+> >> events if we keep using the RLIMIT_NOFILE. Unless I'm missing your
+> >> point.
+> >
+> > Yes that's true. We would probably need to increase the limit to a few
+> > MB at least.
+> 
+> Ok, but if we have to increase a limit anyway, we might as well increase
+> the NOFILE.
+
+NFILE is a terrible limit because it's really large factor * NFILE for
+DoS. Also I suspect there will be many cases where the kernel default
+is not used.
+
+But yes I suspect it should be increased, not just for perf, but
+for other use cases. AFAIK pretty much every non trivial network
+server has to change it.
+
+> 
+> > Or maybe use some combination with the old rlimit for compatibility.
+> > The old rlimit would give an implicit extra RLIMIT_NFILE * 2288 limit
+> > for RLIMIT_MEMLOCK. This would only give full compatibility for a single
+> > perf process, but I suspect that's good enough for most users.
+> 
+> We'd need to settle on charging a fixed set of structures per event,
+> then. And, without increasing the file limit, this would still total at
+> 1052 events.
+
+True. For perf we really would like a limit that scales with the number
+of CPUs.
+
+> 
+> We could also involve perf_event_mlock_kb *and* increase it too, but I
+> suspect distros don't just leave it at kernel's default either.
+
+I haven't seen any distribution that changed it so far.
+
+-Andi
