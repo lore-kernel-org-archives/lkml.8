@@ -2,118 +2,88 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFD30C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 09:55:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AB5FC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:02:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A63C20774
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 09:55:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SSSp5xgA"
+	by mail.kernel.org (Postfix) with ESMTP id 56AE920716
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:02:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728537AbgHKJzb (ORCPT
+        id S1728444AbgHKKCC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 05:55:31 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:26423 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728378AbgHKJz3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 05:55:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597139728;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0t6pyerkz2yQxFGUrBVr3335mJPptpvA69HZOPrEqE4=;
-        b=SSSp5xgABeOzvYjcTmRh5mRWKboJwAKa3R9BdSYW/xm8vyZnwMxzCSC6pzKVcM0o7Vgeck
-        VdveAp+DJ239ESjAMVqH8oFdytRDLlt6GrC8nQj0RpWJ7SpML4jd2xAkJxcfIGxuMpoqeI
-        /hqmk6v7kMzjEK0h1ybtPD9KId7+T0U=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-13-GaghuQZsPpy8XUvNlyvc4w-1; Tue, 11 Aug 2020 05:55:26 -0400
-X-MC-Unique: GaghuQZsPpy8XUvNlyvc4w-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 26077107ACCA;
-        Tue, 11 Aug 2020 09:55:25 +0000 (UTC)
-Received: from steredhat.redhat.com (ovpn-113-182.ams2.redhat.com [10.36.113.182])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DE54D5D9FC;
-        Tue, 11 Aug 2020 09:55:21 +0000 (UTC)
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     davem@davemloft.net
-Cc:     Jorgen Hansen <jhansen@vmware.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        netdev@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>, linux-kernel@vger.kernel.org,
-        Stefan Hajnoczi <stefanha@redhat.com>
-Subject: [PATCH net 2/2] vsock: small cleanup in vsock_poll()
-Date:   Tue, 11 Aug 2020 11:55:04 +0200
-Message-Id: <20200811095504.25051-3-sgarzare@redhat.com>
-In-Reply-To: <20200811095504.25051-1-sgarzare@redhat.com>
-References: <20200811095504.25051-1-sgarzare@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+        Tue, 11 Aug 2020 06:02:02 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:41462 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728265AbgHKKCB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 06:02:01 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id AA0C8201EED;
+        Tue, 11 Aug 2020 12:01:59 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C2059201E80;
+        Tue, 11 Aug 2020 12:01:52 +0200 (CEST)
+Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id EF188402DD;
+        Tue, 11 Aug 2020 12:01:43 +0200 (CEST)
+From:   Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
+To:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, robh+dt@kernel.org,
+        bhelgaas@google.com, lorenzo.pieralisi@arm.com,
+        shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com,
+        gustavo.pimentel@synopsys.com, roy.zang@nxp.com,
+        jingoohan1@gmail.com, andrew.murray@arm.com
+Cc:     mingkai.hu@nxp.com, minghuan.Lian@nxp.com,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+Subject: [PATCHv7 00/12]PCI: dwc: Add the multiple PF support for DWC and Layerscape
+Date:   Tue, 11 Aug 2020 17:54:29 +0800
+Message-Id: <20200811095441.7636-1-Zhiqiang.Hou@nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch combines nested if statements in a single one to reduce
-the indentation in vsock_poll().
-It also combines an if nested in the else branch.
+From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-The behavior isn't changed.
+Add the PCIe EP multiple PF support for DWC and Layerscape, and use
+a list to manage the PFs of each PCIe controller; add the doorbell
+MSIX function for DWC; and refactor the Layerscape EP driver due to
+some difference in Layercape platforms PCIe integration.
 
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
----
- net/vmw_vsock/af_vsock.c | 27 ++++++++++++---------------
- 1 file changed, 12 insertions(+), 15 deletions(-)
+Hou Zhiqiang (1):
+  misc: pci_endpoint_test: Add driver data for Layerscape PCIe
+    controllers
 
-diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
-index 9e93bc201cc0..2c80dc14fa60 100644
---- a/net/vmw_vsock/af_vsock.c
-+++ b/net/vmw_vsock/af_vsock.c
-@@ -1032,21 +1032,18 @@ static __poll_t vsock_poll(struct file *file, struct socket *sock,
- 		}
- 
- 		/* Connected sockets that can produce data can be written. */
--		if (transport && sk->sk_state == TCP_ESTABLISHED) {
--			if (!(sk->sk_shutdown & SEND_SHUTDOWN)) {
--				bool space_avail_now = false;
--				int ret = transport->notify_poll_out(
--						vsk, 1, &space_avail_now);
--				if (ret < 0) {
--					mask |= EPOLLERR;
--				} else {
--					if (space_avail_now)
--						/* Remove EPOLLWRBAND since INET
--						 * sockets are not setting it.
--						 */
--						mask |= EPOLLOUT | EPOLLWRNORM;
--
--				}
-+		if (transport && sk->sk_state == TCP_ESTABLISHED &&
-+		    !(sk->sk_shutdown & SEND_SHUTDOWN)) {
-+			bool space_avail_now = false;
-+			int ret = transport->notify_poll_out(vsk, 1,
-+							     &space_avail_now);
-+			if (ret < 0) {
-+				mask |= EPOLLERR;
-+			} else if (space_avail_now) {
-+				/* Remove EPOLLWRBAND since INET
-+				 * sockets are not setting it.
-+				 */
-+				mask |= EPOLLOUT | EPOLLWRNORM;
- 			}
- 		}
- 
+Xiaowei Bao (11):
+  PCI: designware-ep: Add multiple PFs support for DWC
+  PCI: designware-ep: Add the doorbell mode of MSI-X in EP mode
+  PCI: designware-ep: Move the function of getting MSI capability
+    forward
+  PCI: designware-ep: Modify MSI and MSIX CAP way of finding
+  dt-bindings: pci: layerscape-pci: Add compatible strings for ls1088a
+    and ls2088a
+  PCI: layerscape: Fix some format issue of the code
+  PCI: layerscape: Modify the way of getting capability with different
+    PEX
+  PCI: layerscape: Modify the MSIX to the doorbell mode
+  PCI: layerscape: Add EP mode support for ls1088a and ls2088a
+  arm64: dts: layerscape: Add PCIe EP node for ls1088a
+  misc: pci_endpoint_test: Add LS1088a in pci_device_id table
+
+ .../bindings/pci/layerscape-pci.txt           |   2 +
+ .../arm64/boot/dts/freescale/fsl-ls1088a.dtsi |  31 +++
+ drivers/misc/pci_endpoint_test.c              |   8 +-
+ .../pci/controller/dwc/pci-layerscape-ep.c    | 100 +++++--
+ .../pci/controller/dwc/pcie-designware-ep.c   | 258 ++++++++++++++----
+ drivers/pci/controller/dwc/pcie-designware.c  |  59 ++--
+ drivers/pci/controller/dwc/pcie-designware.h  |  48 +++-
+ 7 files changed, 410 insertions(+), 96 deletions(-)
+
 -- 
-2.26.2
+2.17.1
 
