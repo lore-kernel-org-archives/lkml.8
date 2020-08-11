@@ -2,79 +2,115 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4683EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 07:59:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D73C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 08:00:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19CB7206DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 07:59:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FaIeeDH1"
+	by mail.kernel.org (Postfix) with ESMTP id 3B4AB20656
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 08:00:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728345AbgHKH7l (ORCPT
+        id S1728280AbgHKIAo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 03:59:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47310 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726397AbgHKH7i (ORCPT
-        <rfc822;Linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 03:59:38 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD61DC06174A
-        for <Linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 00:59:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=tmLs+QilYKUZTKQ3uTScZNsmKC3Uh/2MkcPg+WGingM=; b=FaIeeDH1ObZsUZV1Q+NIMbiICS
-        WhADg+iBdbMI5tc+XyicIhjjEgt/fF+zNslnKWhYR/oXIS6aUt5rkCXmySw+tj2VwjRxnESDa2PEI
-        Ph6/MqYpPc2dDzyPpyO/bSkSDOSkqn/7t0jwvwFn4DQUyMwQad3TjrYOoHXDAkcRNqvntNSuyLKKa
-        q1ZKItqR1im/OGn4Ckg6lfBvkyC7AlltUskpTBc6Z9PbHZBBwo2FRCpS8lH5Xdo0P2l5Ba/GAZyOi
-        gTngKcz3ql4aWS3EBvhwifC1i+cMSBAWn7IuMWYqpEn+AXqfby9iIsyIuEeerESYsWgr03Co8frrw
-        WSpdCBGw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k5PBs-0006Qk-IW; Tue, 11 Aug 2020 07:59:24 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 35260980C9D; Tue, 11 Aug 2020 09:59:24 +0200 (CEST)
-Date:   Tue, 11 Aug 2020 09:59:24 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Jin, Yao" <yao.jin@linux.intel.com>
-Cc:     mingo@redhat.com, oleg@redhat.com, acme@kernel.org,
-        jolsa@kernel.org, Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com,
-        alexander.shishkin@linux.intel.com, mark.rutland@arm.com
-Subject: Re: [PATCH v1 2/2] perf/core: Fake regs for leaked kernel samples
-Message-ID: <20200811075924.GU3982@worktop.programming.kicks-ass.net>
-References: <20200731025617.16243-1-yao.jin@linux.intel.com>
- <20200731025617.16243-2-yao.jin@linux.intel.com>
- <20200804114900.GI2657@hirez.programming.kicks-ass.net>
- <4c958d61-11a7-9f3e-9e7d-d733270144a1@linux.intel.com>
- <20200805124454.GP2657@hirez.programming.kicks-ass.net>
- <797aa4de-c618-f340-ad7b-cef38c96b035@linux.intel.com>
- <56957a58-6292-e075-8c30-6230450e3518@linux.intel.com>
+        Tue, 11 Aug 2020 04:00:44 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:45760 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726397AbgHKIAn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 04:00:43 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 256DC634C87;
+        Tue, 11 Aug 2020 11:00:10 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1k5PCb-0001ID-Uo; Tue, 11 Aug 2020 11:00:09 +0300
+Date:   Tue, 11 Aug 2020 11:00:09 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Wolfram Sang <wsa@the-dreams.de>, linux-acpi@vger.kernel.org,
+        Bingbu Cao <bingbu.cao@intel.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
+        Hyungwoo Yang <hyungwoo.yang@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rajmohan Mani <rajmohan.mani@intel.com>,
+        Tomasz Figa <tfiga@chromium.org>
+Subject: Re: [PATCH v4 5/6] at24: Support probing while off
+Message-ID: <20200811080009.GE840@valkosipuli.retiisi.org.uk>
+References: <20200121134157.20396-1-sakari.ailus@linux.intel.com>
+ <20200121134157.20396-6-sakari.ailus@linux.intel.com>
+ <CAMpxmJU5dG49N2FA0oSQsOfKrCr3KQ1BisON4c+nUJJmZQG=bQ@mail.gmail.com>
+ <20200311085555.GH5379@paasikivi.fi.intel.com>
+ <CAMpxmJVPTKW+sYSJ3dnfF8nLAOKEa4Ob7bpxG0KD3Tkdm+rtYw@mail.gmail.com>
+ <20200323213101.GB21174@kekkonen.localdomain>
+ <CAMpxmJVdyTkZMVuhSy0Ux8VUYTmQN_YEfH-akQsAL3zrwiz8Dw@mail.gmail.com>
+ <20200810082549.GD840@valkosipuli.retiisi.org.uk>
+ <CAMpxmJUKSR-oCGnV1E5XiAMA2nYBy5f_f8=VSoMn0zf+qF39vg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <56957a58-6292-e075-8c30-6230450e3518@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMpxmJUKSR-oCGnV1E5XiAMA2nYBy5f_f8=VSoMn0zf+qF39vg@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 03:50:43PM +0800, Jin, Yao wrote:
-> Could I post v2 which basically refers to your patch but removes some
-> conditions since I see some issues in test if we use these conditions.
-> 
->  1. Remove '!event->attr.exclude_hv || !event->attr.exclude_host ||
->     !event->attr.exclude_guest' at the entry of sanitize_sample_regs().
-> 
->  2. Remove '!attr.exclude_hv || !attr.exclude_host || !attr.exclude_guest'
->     at the perf_event_open syscall entry.
+Hi Bartosz,
 
-exclude_host, maybe -- due to the dodgy semantics of it, but the others
-should definitely be there.
+On Mon, Aug 10, 2020 at 08:12:00PM +0200, Bartosz Golaszewski wrote:
+> On Mon, Aug 10, 2020 at 10:26 AM Sakari Ailus <sakari.ailus@iki.fi> wrote:
+> >
+> 
+> [snip]
+> 
+> > >
+> > > Rafael: I think that there are two issues with patch 1/5:
+> > > 1. It adds a very specific boolean flag to a structure that's meant to
+> > > be very general. As I pointed out in the i2c patch: at the very least
+> > > this could be made into an int storing flag values, instead of a
+> > > boolean field. But rather than that - it looks to me more like a
+> > > device (or bus) feature than a driver feature. Is there any ACPI flag
+> > > we could use to pass this information to the driver model without
+> > > changing the driver structure?
+> >
+> > To my knowledge there isn't. The fact that I²C devices are powered on for
+> > probe in ACPI based systems is specific to Linux kernel and not ACPI as
+> > such.
+> >
+> > The reason this needs to be in a generic struct is that the device's power
+> > state will be changed before any interaction with the driver takes place as
+> > it's the I²C framework that powers on the device.
+> >
+> 
+> I'm not sure I'm following. Looking at patch 1/6 struct device already
+> exists so why can't this information be conveyed "per device" as
+> opposed to "per driver"?
+
+It's both driver and device.
+
+Suppose there's no indication of driver support. If you add the property
+telling the device shouldn't be powered on for probe, it won't be. And if
+the driver doesn't support that, probe will fail. That could happen e.g.
+when running an older kernel on a system that happens to specify this
+property for a given device.
+
+You could view this as a driver bug of course. I still think it's better to
+make driver support for this explicit, and avoid making this a practical
+problem anywhere.
+
+-- 
+Kind regards,
+
+Sakari Ailus
