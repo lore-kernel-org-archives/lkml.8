@@ -2,146 +2,146 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F87C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 00:19:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5BF2C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 00:20:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A8C9206DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 00:19:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF9472065D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 00:20:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nYo6R5xN"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Cut0rtNt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728018AbgHKATV (ORCPT
+        id S1728024AbgHKAUd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 20:19:21 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:43226 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726733AbgHKATU (ORCPT
+        Mon, 10 Aug 2020 20:20:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33306 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726733AbgHKAUc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 20:19:20 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07B0IT66100079;
-        Tue, 11 Aug 2020 00:19:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=lVPgkjQT85W+RcU/RogyTKUwwWula5UdGKEr/TamCCs=;
- b=nYo6R5xNgZOh/Mykxz9RynBciy9EqfcsCpYRx5Zpqs1KQrABaXhrrfi5ya8EpLg6T2ip
- kTs9mB++SbSVGruptFyDvFU3ncWnloDLmkGoES4UE2nzaYaYE4i9mz3oOKCGIJxZJNM7
- 8ZiO8CmqNd3GLDpEClI9fCGE99c3oHEm6519e7urFee5tz3ZvQHZr0DCp0ixNtEt+HH2
- VcS7LU1ruwC2xOQRU67To/1sysch45y5n1seYB8KVqW8wRxFZqg6/fSsCcM4bmVugExU
- jUBaCep7Xe89RnaISbfIYwwhBUyq2uL1kbIkD4ZlvQhRaiaEeXgAXlunSetWpB0vVblV Fg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 32t2ydg2fd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 11 Aug 2020 00:19:09 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07B0HPGS193253;
-        Tue, 11 Aug 2020 00:19:09 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 32u3h0hxxp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 11 Aug 2020 00:19:09 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07B0J7pb030676;
-        Tue, 11 Aug 2020 00:19:08 GMT
-Received: from [192.168.2.112] (/50.38.35.18)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 11 Aug 2020 00:19:07 +0000
-Subject: Re: [PATCH 10/10] mm/hugetlb: not necessary to abuse temporary page
- to workaround the nasty free_huge_page
-To:     Baoquan He <bhe@redhat.com>,
-        Wei Yang <richard.weiyang@linux.alibaba.com>, mhocko@kernel.org
-Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <20200807091251.12129-1-richard.weiyang@linux.alibaba.com>
- <20200807091251.12129-11-richard.weiyang@linux.alibaba.com>
- <20200810021737.GV14854@MiWiFi-R3L-srv>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <129cc03e-c6d5-24f8-2f3c-f5a3cc821e76@oracle.com>
-Date:   Mon, 10 Aug 2020 17:19:06 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 10 Aug 2020 20:20:32 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 807AFC06174A
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 17:20:32 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id B21A158;
+        Tue, 11 Aug 2020 02:20:30 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1597105230;
+        bh=keX5QvlxidUvTCX6mbkM8E28WiUaAlc2f2K8eUfsH9o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Cut0rtNtcxP6H+KUsa1VHoQftdsMyeidFBWG0CQeBZzcsicFH0jVxZY2TNQmWg31n
+         x3RGj28QbVzPW2ptmrKQLPXfonFRtyEpjl5ZhbL8R49/oaFi23LYjc24UQ5KPGsKUI
+         IIbFrISoCIc7ONOQ/6o9EK36htE44B3qqQ4okc/Y=
+Date:   Tue, 11 Aug 2020 03:20:17 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Swapnil Jakhade <sjakhade@cadence.com>
+Cc:     vkoul@kernel.org, kishon@ti.com, linux-kernel@vger.kernel.org,
+        maxime@cerno.tech, mparab@cadence.com, yamonkar@cadence.com,
+        nsekhar@ti.com, tomi.valkeinen@ti.com, jsarha@ti.com,
+        praneeth@ti.com
+Subject: Re: [PATCH v4 1/2] phy: Add new PHY attribute max_link_rate and APIs
+ to get/set PHY attributes
+Message-ID: <20200811002017.GA6845@pendragon.ideasonboard.com>
+References: <1594968633-12535-1-git-send-email-sjakhade@cadence.com>
+ <1594968633-12535-2-git-send-email-sjakhade@cadence.com>
 MIME-Version: 1.0
-In-Reply-To: <20200810021737.GV14854@MiWiFi-R3L-srv>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9709 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=999 mlxscore=0
- malwarescore=0 spamscore=0 suspectscore=2 phishscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008110000
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9709 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 priorityscore=1501
- malwarescore=0 impostorscore=0 lowpriorityscore=0 mlxscore=0 bulkscore=0
- suspectscore=2 phishscore=0 adultscore=0 spamscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008110000
+Content-Disposition: inline
+In-Reply-To: <1594968633-12535-2-git-send-email-sjakhade@cadence.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/9/20 7:17 PM, Baoquan He wrote:
-> On 08/07/20 at 05:12pm, Wei Yang wrote:
->> Let's always increase surplus_huge_pages and so that free_huge_page
->> could decrease it at free time.
->>
->> Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
->> ---
->>  mm/hugetlb.c | 14 ++++++--------
->>  1 file changed, 6 insertions(+), 8 deletions(-)
->>
->> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
->> index 1f2010c9dd8d..a0eb81e0e4c5 100644
->> --- a/mm/hugetlb.c
->> +++ b/mm/hugetlb.c
->> @@ -1913,21 +1913,19 @@ static struct page *alloc_surplus_huge_page(struct hstate *h, gfp_t gfp_mask,
->>  		return NULL;
->>  
->>  	spin_lock(&hugetlb_lock);
->> +
->> +	h->surplus_huge_pages++;
->> +	h->surplus_huge_pages_node[page_to_nid(page)]++;
->> +
->>  	/*
->>  	 * We could have raced with the pool size change.
->>  	 * Double check that and simply deallocate the new page
->> -	 * if we would end up overcommiting the surpluses. Abuse
->> -	 * temporary page to workaround the nasty free_huge_page
->> -	 * codeflow
->> +	 * if we would end up overcommiting the surpluses.
->>  	 */
->> -	if (h->surplus_huge_pages >= h->nr_overcommit_huge_pages) {
->> -		SetPageHugeTemporary(page);
+Hi Swapnil,
+
+Thank you for the patch.
+
+On Fri, Jul 17, 2020 at 08:50:32AM +0200, Swapnil Jakhade wrote:
+> Add new PHY attribute max_link_rate to struct phy_attrs.
+> Add a pair of PHY APIs to get/set all the PHY attributes.
+> Use phy_get_attrs() to get attribute values and phy_set_attrs()
+> to set attribute values.
 > 
-> Hmm, the temporary page way is taken intentionally in
-> commit 9980d744a0428 ("mm, hugetlb: get rid of surplus page accounting tricks").
-> From code, this is done inside hugetlb_lock holding, and the code flow
-> is straightforward, should be safe. Adding Michal to CC.
+> Signed-off-by: Yuti Amonkar <yamonkar@cadence.com>
+> Signed-off-by: Swapnil Jakhade <sjakhade@cadence.com>
+> ---
+>  include/linux/phy/phy.h | 26 ++++++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
 > 
+> diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
+> index bcee8eba62b3..5d8ebb056c1d 100644
+> --- a/include/linux/phy/phy.h
+> +++ b/include/linux/phy/phy.h
+> @@ -115,10 +115,12 @@ struct phy_ops {
+>  /**
+>   * struct phy_attrs - represents phy attributes
+>   * @bus_width: Data path width implemented by PHY
+> + * @max_link_rate: Maximum link rate supported by PHY (in Mbps)
+>   * @mode: PHY mode
+>   */
+>  struct phy_attrs {
+>  	u32			bus_width;
+> +	u32			max_link_rate;
+>  	enum phy_mode		mode;
+>  };
+>  
+> @@ -231,6 +233,20 @@ static inline void phy_set_bus_width(struct phy *phy, int bus_width)
+>  {
+>  	phy->attrs.bus_width = bus_width;
+>  }
+> +
+> +static inline void phy_get_attrs(struct phy *phy, struct phy_attrs *attrs)
+> +{
+> +	mutex_lock(&phy->mutex);
+> +	memcpy(attrs, &phy->attrs, sizeof(struct phy_attrs));
+> +	mutex_unlock(&phy->mutex);
+> +}
+> +
+> +static inline void phy_set_attrs(struct phy *phy, struct phy_attrs attrs)
 
-I remember when the temporary page code was added for page migration.
-The use of temporary page here was added at about the same time.  Temporary
-page does have one advantage in that it will not CAUSE surplus count to
-exceed overcommit.  This patch could cause surplus to exceed overcommit
-for a very short period of time.  However, do note that for this to happen
-the code needs to race with a pool resize which itself could cause surplus
-to exceed overcommit.
+Passing the second argument by (const) pointer would be more efficient.
 
-IMO both approaches are valid.
-- Advantage of temporary page is that it can not cause surplus to exceed
-  overcommit.  Disadvantage is as mentioned in the comment 'abuse of temporary
-  page'.
-- Advantage of this patch is that it uses existing counters.  Disadvantage
-  is that it can momentarily cause surplus to exceed overcommit.
+> +{
+> +	mutex_lock(&phy->mutex);
+> +	memcpy(&phy->attrs, &attrs, sizeof(struct phy_attrs));
+> +	mutex_unlock(&phy->mutex);
+> +}
 
-Unless someone has a strong opinion, I prefer the changes in this patch.
+These two functions should be documented. I'm a but puzzled by the need
+to protect the data with phy->mutex. Isn't phy->attrs static,
+initialized at driver probe time, and then never changed ? If so I think
+we can just access it directly, both in the PHY provider and consumer.
+
+If the data can change at runtime, then the documentation of these
+functions need to explain what can change, and when.
+
+>  struct phy *phy_get(struct device *dev, const char *string);
+>  struct phy *phy_optional_get(struct device *dev, const char *string);
+>  struct phy *devm_phy_get(struct device *dev, const char *string);
+> @@ -389,6 +405,16 @@ static inline void phy_set_bus_width(struct phy *phy, int bus_width)
+>  	return;
+>  }
+>  
+> +static inline void phy_get_attrs(struct phy *phy, struct phy_attrs *attrs)
+> +{
+> +	return;
+> +}
+> +
+> +static inline void phy_set_attrs(struct phy *phy, struct phy_attrs attrs)
+> +{
+> +	return;
+> +}
+> +
+>  static inline struct phy *phy_get(struct device *dev, const char *string)
+>  {
+>  	return ERR_PTR(-ENOSYS);
+
 -- 
-Mike Kravetz
+Regards,
+
+Laurent Pinchart
