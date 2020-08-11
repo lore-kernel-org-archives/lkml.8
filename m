@@ -2,92 +2,87 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B054C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A8BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:06:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16CCB20716
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:02:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEECA2075D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:06:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597140371;
+	bh=XXVs6ePFSZqShwwG3cMttcMPTHSZIqfP8Uz26mv6Pdk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wB5zldfT1bHteH4Y0RKej3vfIYg+Wwk1qb2gaXwO3z6SreDzUa5AWo55tUin/1cN6
+	 /T1vPaH95LpS76x1EKbUP6D0ETCDN0xHQkf00UGwW4eW5RCKqRhrfdDM9YgX8TxSFb
+	 LpEZyvdzHotln6qKPb2GdSCf9THWsP+CwguXkR2k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728661AbgHKKCr (ORCPT
+        id S1728423AbgHKKGF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 06:02:47 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:45550 "EHLO inva020.nxp.com"
+        Tue, 11 Aug 2020 06:06:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728265AbgHKKCM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 06:02:12 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 7798E1A1979;
-        Tue, 11 Aug 2020 12:02:10 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 35C171A1972;
-        Tue, 11 Aug 2020 12:02:03 +0200 (CEST)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 4DE3740309;
-        Tue, 11 Aug 2020 12:01:54 +0200 (CEST)
-From:   Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
-To:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, robh+dt@kernel.org,
-        bhelgaas@google.com, lorenzo.pieralisi@arm.com,
-        shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com,
-        gustavo.pimentel@synopsys.com, roy.zang@nxp.com,
-        jingoohan1@gmail.com, andrew.murray@arm.com
-Cc:     mingkai.hu@nxp.com, minghuan.Lian@nxp.com,
-        Xiaowei Bao <xiaowei.bao@nxp.com>,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Subject: [PATCHv7 06/12] PCI: layerscape: Fix some format issue of the code
-Date:   Tue, 11 Aug 2020 17:54:35 +0800
-Message-Id: <20200811095441.7636-7-Zhiqiang.Hou@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200811095441.7636-1-Zhiqiang.Hou@nxp.com>
-References: <20200811095441.7636-1-Zhiqiang.Hou@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1728274AbgHKKGD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 06:06:03 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E9362054F;
+        Tue, 11 Aug 2020 10:06:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597140362;
+        bh=XXVs6ePFSZqShwwG3cMttcMPTHSZIqfP8Uz26mv6Pdk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kEr9CXzoQihfJUhgjofTwCMp6TVICPkU1c2e0OxxhWAddaNvbhTLTxB1b9Tuh2++B
+         GseBLbenKigDfanwSQYpgci6Dl3YbO9kJbyHVANBFsrzBd+SkgS/C6PDN+Y2ItxN5v
+         wM2+We5831Zdo4GWJ4itQHBj3+BgGIjsHDuCkPZc=
+Date:   Tue, 11 Aug 2020 12:06:13 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     "Ahmed S. Darwish" <a.darwish@linutronix.de>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 08/24] seqlock: lockdep assert non-preemptibility on
+ seqcount_t write
+Message-ID: <20200811100613.GA148069@kroah.com>
+References: <20200519214547.352050-1-a.darwish@linutronix.de>
+ <20200720155530.1173732-1-a.darwish@linutronix.de>
+ <20200720155530.1173732-9-a.darwish@linutronix.de>
+ <20200808232122.GA176509@roeck-us.net>
+ <20200809184251.GA94072@lx-t490>
+ <20200810085954.GA1591892@kroah.com>
+ <87v9hqxolz.fsf@nanos>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87v9hqxolz.fsf@nanos>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiaowei Bao <xiaowei.bao@nxp.com>
+On Mon, Aug 10, 2020 at 09:55:20PM +0200, Thomas Gleixner wrote:
+> Greg KH <gregkh@linuxfoundation.org> writes:
+> > On Sun, Aug 09, 2020 at 08:42:51PM +0200, Ahmed S. Darwish wrote:
+> >> On Sat, Aug 08, 2020 at 04:21:22PM -0700, Guenter Roeck wrote:
+> >> > Reverting it fixes the problem. Is this being addressed ?
+> >> >
+> >> 
+> >> @Peter, I think let's revert this one for now?
+> >
+> > Please do, it's blowing up my local builds as well :(
+> 
+> Peter and Ingo sorted the header mess last week and I just sent a pull
+> request to Linus.
 
-Fix some format issue of the code in EP driver.
+Thanks, that looks good and works for my build tests!
 
-Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
----
-V7:
- - Rebase the patch without functionality change.
-
- drivers/pci/controller/dwc/pci-layerscape-ep.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-index 0d151cead1b7..0691d9ad1356 100644
---- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
-+++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-@@ -63,7 +63,7 @@ static void ls_pcie_ep_init(struct dw_pcie_ep *ep)
- }
- 
- static int ls_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
--				  enum pci_epc_irq_type type, u16 interrupt_num)
-+				enum pci_epc_irq_type type, u16 interrupt_num)
- {
- 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
- 
-@@ -87,7 +87,7 @@ static const struct dw_pcie_ep_ops pcie_ep_ops = {
- };
- 
- static int __init ls_add_pcie_ep(struct ls_pcie_ep *pcie,
--					struct platform_device *pdev)
-+				 struct platform_device *pdev)
- {
- 	struct dw_pcie *pci = pcie->pci;
- 	struct device *dev = pci->dev;
--- 
-2.17.1
-
+greg k-h
