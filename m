@@ -7,44 +7,45 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76764C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 03:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE3B6C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 03:58:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50DA2206EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 03:58:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E704206EF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 03:58:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="PV4bHLMN"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="UWmKDAtW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728303AbgHKD6A (ORCPT
+        id S1728323AbgHKD6F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 23:58:00 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:56858 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728196AbgHKD57 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 23:57:59 -0400
+        Mon, 10 Aug 2020 23:58:05 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:11398 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728196AbgHKD6E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 23:58:04 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597118279; h=Content-Transfer-Encoding: MIME-Version:
+ s=smtp; t=1597118283; h=Content-Transfer-Encoding: MIME-Version:
  References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=J+GkYlJeue+xhm0JgHaodonblQjXsPYjEk8/Vc2LCdw=; b=PV4bHLMNFS5h/wi6Hol+qm3lXsV68mmmL18qgMup4YVB2itpb8kM9dzzZTqgqaOoqFZVO01G
- ohH1Yh1qUwzvmT4xFZNzR1gveGD3DWAvnMvO4+jwCEU9ULmJU2uTnsN0VtN7QAijnb9oXznB
- r1y8Wi+NK8o8+egpWj7PfLHFP60=
-X-Mailgun-Sending-Ip: 69.72.43.7
+ Sender; bh=TkFuY0ECli/sCKgYmNqUO1n0Jk8nvCqHM1OFgJ1hDxQ=; b=UWmKDAtWw3LBjQLcKO5N5/gtL2BJOkt0g0Kf38G0xycAXtcmPIWZ9StR8u4gEWurw/iPTFYU
+ D4YoWpMTZieoXm8btuen0QO6HPyzPmG4mPdUI1JYKFyY+Xf9PC2VRRT1tNtrw7HtNvrfcNs3
+ Bj6W+hV1cCGsZa1Zqk8ST27TAnA=
+X-Mailgun-Sending-Ip: 104.130.122.29
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n11.prod.us-east-1.postgun.com with SMTP id
- 5f321742d78a2e58330c6777 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 11 Aug 2020 03:57:54
+ smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
+ 5f32173bcbcd42bdeebc67d7 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 11 Aug 2020 03:57:47
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A794CC433C6; Tue, 11 Aug 2020 03:57:53 +0000 (UTC)
+        id 0E85DC433A1; Tue, 11 Aug 2020 03:57:47 +0000 (UTC)
 Received: from tingweiz-gv.qualcomm.com (unknown [180.166.53.21])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: tingwei)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4EE52C43391;
-        Tue, 11 Aug 2020 03:57:51 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4EE52C43391
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 39DAAC433C6;
+        Tue, 11 Aug 2020 03:57:44 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 39DAAC433C6
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tingwei@codeaurora.org
 From:   Tingwei Zhang <tingwei@codeaurora.org>
@@ -56,9 +57,9 @@ Cc:     Tingwei Zhang <tingwei@codeaurora.org>, tsoni@codeaurora.org,
         Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
         Mao Jinlong <jinlmao@codeaurora.org>,
         linux-kernel@vger.kernel.org, coresight@lists.linaro.org
-Subject: [PATCH v3 4/6] tracing: add trace_export support for trace_marker
-Date:   Tue, 11 Aug 2020 11:57:24 +0800
-Message-Id: <20200811035726.10379-5-tingwei@codeaurora.org>
+Subject: [PATCH v3 2/6] tracing: add flag to control different traces
+Date:   Tue, 11 Aug 2020 11:57:22 +0800
+Message-Id: <20200811035726.10379-3-tingwei@codeaurora.org>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20200811035726.10379-1-tingwei@codeaurora.org>
 References: <20200811035726.10379-1-tingwei@codeaurora.org>
@@ -69,69 +70,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the support to route trace_marker buffer to other destination
-via trace_export.
+More traces like event trace or trace marker will be supported.
+Add flag for difference traces, so that they can be controlled
+separately. Move current function trace to it's own flag
+instead of global ftrace enable flag.
 
 Signed-off-by: Tingwei Zhang <tingwei@codeaurora.org>
 Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- include/linux/trace.h | 1 +
- kernel/trace/trace.c  | 9 +++++++++
- 2 files changed, 10 insertions(+)
+ include/linux/trace.h |  5 +++++
+ kernel/trace/trace.c  | 36 +++++++++++++++++++-----------------
+ 2 files changed, 24 insertions(+), 17 deletions(-)
 
 diff --git a/include/linux/trace.h b/include/linux/trace.h
-index 5a01eeffb254..80b7df68bc0f 100644
+index 7fd86d3c691f..bc93063dda39 100644
 --- a/include/linux/trace.h
 +++ b/include/linux/trace.h
-@@ -6,6 +6,7 @@
+@@ -3,6 +3,9 @@
+ #define _LINUX_TRACE_H
  
- #define TRACE_EXPORT_FUNCTION	BIT(0)
- #define TRACE_EXPORT_EVENT	BIT(1)
-+#define TRACE_EXPORT_MARKER	BIT(2)
- 
+ #ifdef CONFIG_TRACING
++
++#define TRACE_EXPORT_FUNCTION	BIT(0)
++
  /*
   * The trace export - an export of Ftrace output. The trace_export
+  * can process traces and export them to a registered destination as
+@@ -15,10 +18,12 @@
+  * next		- pointer to the next trace_export
+  * write	- copy traces which have been delt with ->commit() to
+  *		  the destination
++ * flags	- which ftrace to be exported
+  */
+ struct trace_export {
+ 	struct trace_export __rcu	*next;
+ 	void (*write)(struct trace_export *, const void *, unsigned int);
++	int flags;
+ };
+ 
+ int register_ftrace_export(struct trace_export *export);
 diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 2f9302a8b322..67993abda394 100644
+index bb62269724d5..8f1e66831e9e 100644
 --- a/kernel/trace/trace.c
 +++ b/kernel/trace/trace.c
-@@ -271,6 +271,7 @@ static struct trace_export __rcu *ftrace_exports_list __read_mostly;
+@@ -2747,33 +2747,37 @@ trace_buffer_unlock_commit_nostack(struct trace_buffer *buffer,
  
- static DEFINE_STATIC_KEY_FALSE(trace_function_exports_enabled);
- static DEFINE_STATIC_KEY_FALSE(trace_event_exports_enabled);
-+static DEFINE_STATIC_KEY_FALSE(trace_marker_exports_enabled);
- 
- static inline void ftrace_exports_enable(struct trace_export *export)
+ static void
+ trace_process_export(struct trace_export *export,
+-	       struct ring_buffer_event *event)
++	       struct ring_buffer_event *event, int flag)
  {
-@@ -279,6 +280,9 @@ static inline void ftrace_exports_enable(struct trace_export *export)
+ 	struct trace_entry *entry;
+ 	unsigned int size = 0;
  
- 	if (export->flags & TRACE_EXPORT_EVENT)
- 		static_branch_inc(&trace_event_exports_enabled);
-+
-+	if (export->flags & TRACE_EXPORT_MARKER)
-+		static_branch_inc(&trace_marker_exports_enabled);
+-	entry = ring_buffer_event_data(event);
+-	size = ring_buffer_event_length(event);
+-	export->write(export, entry, size);
++	if (export->flags & flag) {
++		entry = ring_buffer_event_data(event);
++		size = ring_buffer_event_length(event);
++		export->write(export, entry, size);
++	}
  }
  
- static inline void ftrace_exports_disable(struct trace_export *export)
-@@ -288,6 +292,9 @@ static inline void ftrace_exports_disable(struct trace_export *export)
+ static DEFINE_MUTEX(ftrace_export_lock);
  
- 	if (export->flags & TRACE_EXPORT_EVENT)
- 		static_branch_dec(&trace_event_exports_enabled);
-+
-+	if (export->flags & TRACE_EXPORT_MARKER)
-+		static_branch_dec(&trace_marker_exports_enabled);
+ static struct trace_export __rcu *ftrace_exports_list __read_mostly;
+ 
+-static DEFINE_STATIC_KEY_FALSE(ftrace_exports_enabled);
++static DEFINE_STATIC_KEY_FALSE(trace_function_exports_enabled);
+ 
+-static inline void ftrace_exports_enable(void)
++static inline void ftrace_exports_enable(struct trace_export *export)
+ {
+-	static_branch_enable(&ftrace_exports_enabled);
++	if (export->flags & TRACE_EXPORT_FUNCTION)
++		static_branch_inc(&trace_function_exports_enabled);
  }
  
- static void ftrace_exports(struct ring_buffer_event *event, int flag)
-@@ -6648,6 +6655,8 @@ tracing_mark_write(struct file *filp, const char __user *ubuf,
- 	} else
- 		entry->buf[cnt] = '\0';
+-static inline void ftrace_exports_disable(void)
++static inline void ftrace_exports_disable(struct trace_export *export)
+ {
+-	static_branch_disable(&ftrace_exports_enabled);
++	if (export->flags & TRACE_EXPORT_FUNCTION)
++		static_branch_dec(&trace_function_exports_enabled);
+ }
  
-+	if (static_branch_unlikely(&trace_marker_exports_enabled))
-+		ftrace_exports(event, TRACE_EXPORT_MARKER);
- 	__buffer_unlock_commit(buffer, event);
+-static void ftrace_exports(struct ring_buffer_event *event)
++static void ftrace_exports(struct ring_buffer_event *event, int flag)
+ {
+ 	struct trace_export *export;
  
- 	if (tt)
+@@ -2781,7 +2785,7 @@ static void ftrace_exports(struct ring_buffer_event *event)
+ 
+ 	export = rcu_dereference_raw_check(ftrace_exports_list);
+ 	while (export) {
+-		trace_process_export(export, event);
++		trace_process_export(export, event, flag);
+ 		export = rcu_dereference_raw_check(export->next);
+ 	}
+ 
+@@ -2821,8 +2825,7 @@ rm_trace_export(struct trace_export **list, struct trace_export *export)
+ static inline void
+ add_ftrace_export(struct trace_export **list, struct trace_export *export)
+ {
+-	if (*list == NULL)
+-		ftrace_exports_enable();
++	ftrace_exports_enable(export);
+ 
+ 	add_trace_export(list, export);
+ }
+@@ -2833,8 +2836,7 @@ rm_ftrace_export(struct trace_export **list, struct trace_export *export)
+ 	int ret;
+ 
+ 	ret = rm_trace_export(list, export);
+-	if (*list == NULL)
+-		ftrace_exports_disable();
++	ftrace_exports_disable(export);
+ 
+ 	return ret;
+ }
+@@ -2887,8 +2889,8 @@ trace_function(struct trace_array *tr,
+ 	entry->parent_ip		= parent_ip;
+ 
+ 	if (!call_filter_check_discard(call, entry, buffer, event)) {
+-		if (static_branch_unlikely(&ftrace_exports_enabled))
+-			ftrace_exports(event);
++		if (static_branch_unlikely(&trace_function_exports_enabled))
++			ftrace_exports(event, TRACE_EXPORT_FUNCTION);
+ 		__buffer_unlock_commit(buffer, event);
+ 	}
+ }
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
