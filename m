@@ -2,185 +2,100 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1B7CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 07:03:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5C92C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 07:04:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89B9C20772
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 07:03:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="XxyH5xHr"
+	by mail.kernel.org (Postfix) with ESMTP id 9E7A820772
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 07:04:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728234AbgHKHDq (ORCPT
+        id S1728254AbgHKHEp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 03:03:46 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:33975 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726792AbgHKHDp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 03:03:45 -0400
-X-UUID: af262d47e9f4490fb5ff86db74aec43e-20200811
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=usoA9Yokks0SP8P4YiF+O2f/8bLSWfQUxX1DlJ4XR3Y=;
-        b=XxyH5xHr58mlf7jGNCokoN4nW4g1wjU8H3hASt03AI9rDl3c9Vy/bKZ12p3d060Txk1m9z4JGejDCF9wLlwvkzgs6XkCoPsD0iZeSbOkZ03YwtlGi/2Yns8Z/AYyhAhgCdisL5GOV7t9p+BssW5UJNeuR0ElCJBK6Slu5nCp79k=;
-X-UUID: af262d47e9f4490fb5ff86db74aec43e-20200811
-Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw01.mediatek.com
-        (envelope-from <weiyi.lu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1522997416; Tue, 11 Aug 2020 15:03:40 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 11 Aug 2020 15:03:38 +0800
-Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 11 Aug 2020 15:03:38 +0800
-Message-ID: <1597129418.20627.27.camel@mtksdaap41>
-Subject: Re: [PATCH v2 5/5] clk: mediatek: Add MT8192 clock support
-From:   Weiyi Lu <weiyi.lu@mediatek.com>
-To:     Enric Balletbo Serra <eballetbo@gmail.com>
-CC:     Rob Herring <robh@kernel.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        James Liao <jamesjj.liao@mediatek.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Wendell Lin <wendell.lin@mediatek.com>,
-        <linux-clk@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Date:   Tue, 11 Aug 2020 15:03:38 +0800
-In-Reply-To: <CAFqH_50_xi5WkokS3WmV2Z-yAK06bpXBMgTQomwmJHcQmfX9yw@mail.gmail.com>
-References: <1596012277-8448-1-git-send-email-weiyi.lu@mediatek.com>
-         <1596012277-8448-6-git-send-email-weiyi.lu@mediatek.com>
-         <CAFqH_50_xi5WkokS3WmV2Z-yAK06bpXBMgTQomwmJHcQmfX9yw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
-MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Tue, 11 Aug 2020 03:04:45 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:41798 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727871AbgHKHEo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 03:04:44 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2CCDE1A1E73;
+        Tue, 11 Aug 2020 09:04:43 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id B1DC91A1E6D;
+        Tue, 11 Aug 2020 09:04:38 +0200 (CEST)
+Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id E4A8240243;
+        Tue, 11 Aug 2020 09:04:32 +0200 (CEST)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     rui.zhang@intel.com, daniel.lezcano@linaro.org, amitk@kernel.org,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V2 1/2] thermal: imx: Use dev_err_probe() to simplify error handling
+Date:   Tue, 11 Aug 2020 14:59:44 +0800
+Message-Id: <1597129185-8460-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTA3LTI5IGF0IDExOjMyICswMjAwLCBFbnJpYyBCYWxsZXRibyBTZXJyYSB3
-cm90ZToNCj4gSGkgV2VpeWksDQo+IA0KPiBUaGFuayB5b3UgZm9yIHlvdXIgcGF0Y2guIFNvbWUg
-ZmV3IGNvbW1lbnQgYmVsb3csIEknbGwgZm9jdXMgb24NCj4gY2xrLW10ODE5Mi1tbSBmaWxlLCBi
-dXQgSSB0aGluayBjYW4gYXBwbHkgdG8gb3RoZXIgZmlsZXMgdG9vLg0KPiANCj4gW3NuaXBdDQo+
-IA0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2Nsay9tZWRpYXRlay9jbGstbXQ4MTkyLW1tLmMg
-Yi9kcml2ZXJzL2Nsay9tZWRpYXRlay9jbGstbXQ4MTkyLW1tLmMNCj4gPiBuZXcgZmlsZSBtb2Rl
-IDEwMDY0NA0KPiA+IGluZGV4IDAwMDAwMDAuLjAyZWVmMjQNCj4gPiAtLS0gL2Rldi9udWxsDQo+
-ID4gKysrIGIvZHJpdmVycy9jbGsvbWVkaWF0ZWsvY2xrLW10ODE5Mi1tbS5jDQo+ID4gQEAgLTAs
-MCArMSwxMDggQEANCj4gPiArLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjANCj4g
-DQo+IG5pdDogQWx0aG91Z2ggaXMgYSB2YWxpZCBsaWNlbnNlIGlkZW50aWZpZXIgZm9yIHRoZSBr
-ZXJuZWwgd291bGQgYmUNCj4gYmV0dGVyIHRvIHVzZSB0aGUgbm9uLWRlcHJlY2F0ZWQgZm9ybSBi
-eSBTUERYLCBHUEwtMi4wLW9ubHkNCj4gDQo+ID4gKy8vDQo+ID4gKy8vIENvcHlyaWdodCAoYykg
-MjAyMCBNZWRpYVRlayBJbmMuDQo+ID4gKy8vIEF1dGhvcjogV2VpeWkgTHUgPHdlaXlpLmx1QG1l
-ZGlhdGVrLmNvbT4NCj4gPiArDQo+ID4gKyNpbmNsdWRlIDxsaW51eC9jbGstcHJvdmlkZXIuaD4N
-Cj4gPiArI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5oPg0KPiA+ICsNCj4gPiArI2lu
-Y2x1ZGUgImNsay1tdGsuaCINCj4gPiArI2luY2x1ZGUgImNsay1nYXRlLmgiDQo+ID4gKw0KPiA+
-ICsjaW5jbHVkZSA8ZHQtYmluZGluZ3MvY2xvY2svbXQ4MTkyLWNsay5oPg0KPiA+ICsNCj4gPiAr
-c3RhdGljIGNvbnN0IHN0cnVjdCBtdGtfZ2F0ZV9yZWdzIG1tMF9jZ19yZWdzID0gew0KPiA+ICsg
-ICAgICAgLnNldF9vZnMgPSAweDEwNCwNCj4gPiArICAgICAgIC5jbHJfb2ZzID0gMHgxMDgsDQo+
-ID4gKyAgICAgICAuc3RhX29mcyA9IDB4MTAwLA0KPiA+ICt9Ow0KPiA+ICsNCj4gPiArc3RhdGlj
-IGNvbnN0IHN0cnVjdCBtdGtfZ2F0ZV9yZWdzIG1tMV9jZ19yZWdzID0gew0KPiA+ICsgICAgICAg
-LnNldF9vZnMgPSAweDExNCwNCj4gPiArICAgICAgIC5jbHJfb2ZzID0gMHgxMTgsDQo+ID4gKyAg
-ICAgICAuc3RhX29mcyA9IDB4MTEwLA0KPiA+ICt9Ow0KPiA+ICsNCj4gPiArc3RhdGljIGNvbnN0
-IHN0cnVjdCBtdGtfZ2F0ZV9yZWdzIG1tMl9jZ19yZWdzID0gew0KPiA+ICsgICAgICAgLnNldF9v
-ZnMgPSAweDFhNCwNCj4gPiArICAgICAgIC5jbHJfb2ZzID0gMHgxYTgsDQo+ID4gKyAgICAgICAu
-c3RhX29mcyA9IDB4MWEwLA0KPiA+ICt9Ow0KPiA+ICsNCj4gPiArI2RlZmluZSBHQVRFX01NMChf
-aWQsIF9uYW1lLCBfcGFyZW50LCBfc2hpZnQpICAgICAgICAgICAgICAgICAgXA0KPiA+ICsgICAg
-ICAgR0FURV9NVEsoX2lkLCBfbmFtZSwgX3BhcmVudCwgJm1tMF9jZ19yZWdzLCBfc2hpZnQsICAg
-ICBcDQo+ID4gKyAgICAgICAgICAgICAgICZtdGtfY2xrX2dhdGVfb3BzX3NldGNscikNCj4gDQo+
-IG5pdDogWW91IGNhbiB0YWtlIGFkdmFudGFnZSBvZiB0aGUgbmV3IGxpbmUgbGVuZ3RoIGxpbWl0
-LCB3aGljaCBpcyBub3cNCj4gMTAwIGNoYXJhY3RlcnMuDQo+IA0KDQpPSywgdGhhbmtzIGZvciBy
-ZW1pbmRpbmcuDQoNCj4gPiArDQo+ID4gKyNkZWZpbmUgR0FURV9NTTEoX2lkLCBfbmFtZSwgX3Bh
-cmVudCwgX3NoaWZ0KSAgICAgICAgICAgICAgICAgIFwNCj4gPiArICAgICAgIEdBVEVfTVRLKF9p
-ZCwgX25hbWUsIF9wYXJlbnQsICZtbTFfY2dfcmVncywgX3NoaWZ0LCAgICAgXA0KPiA+ICsgICAg
-ICAgICAgICAgICAmbXRrX2Nsa19nYXRlX29wc19zZXRjbHIpDQo+ID4gKw0KPiANCj4gZGl0dG8N
-Cj4gDQoNCkdvdCBpdC4NCg0KPiA+ICsjZGVmaW5lIEdBVEVfTU0yKF9pZCwgX25hbWUsIF9wYXJl
-bnQsIF9zaGlmdCkgICAgICAgICAgICAgICAgICBcDQo+ID4gKyAgICAgICBHQVRFX01USyhfaWQs
-IF9uYW1lLCBfcGFyZW50LCAmbW0yX2NnX3JlZ3MsIF9zaGlmdCwgICAgIFwNCj4gPiArICAgICAg
-ICAgICAgICAgJm10a19jbGtfZ2F0ZV9vcHNfc2V0Y2xyKQ0KPiA+ICsNCj4gDQo+IGRpdHRvDQo+
-IA0KPiA+ICtzdGF0aWMgY29uc3Qgc3RydWN0IG10a19nYXRlIG1tX2Nsa3NbXSA9IHsNCj4gPiAr
-ICAgICAgIC8qIE1NMCAqLw0KPiA+ICsgICAgICAgR0FURV9NTTAoQ0xLX01NX0RJU1BfTVVURVgw
-LCAibW1fZGlzcF9tdXRleDAiLCAiZGlzcF9zZWwiLCAwKSwNCj4gPiArICAgICAgIEdBVEVfTU0w
-KENMS19NTV9ESVNQX0NPTkZJRywgIm1tX2Rpc3BfY29uZmlnIiwgImRpc3Bfc2VsIiwgMSksDQo+
-ID4gKyAgICAgICBHQVRFX01NMChDTEtfTU1fRElTUF9PVkwwLCAibW1fZGlzcF9vdmwwIiwgImRp
-c3Bfc2VsIiwgMiksDQo+ID4gKyAgICAgICBHQVRFX01NMChDTEtfTU1fRElTUF9SRE1BMCwgIm1t
-X2Rpc3BfcmRtYTAiLCAiZGlzcF9zZWwiLCAzKSwNCj4gPiArICAgICAgIEdBVEVfTU0wKENMS19N
-TV9ESVNQX09WTDBfMkwsICJtbV9kaXNwX292bDBfMmwiLCAiZGlzcF9zZWwiLCA0KSwNCj4gPiAr
-ICAgICAgIEdBVEVfTU0wKENMS19NTV9ESVNQX1dETUEwLCAibW1fZGlzcF93ZG1hMCIsICJkaXNw
-X3NlbCIsIDUpLA0KPiA+ICsgICAgICAgR0FURV9NTTAoQ0xLX01NX0RJU1BfVUZCQ19XRE1BMCwg
-Im1tX2Rpc3BfdWZiY193ZG1hMCIsICJkaXNwX3NlbCIsIDYpLA0KPiA+ICsgICAgICAgR0FURV9N
-TTAoQ0xLX01NX0RJU1BfUlNaMCwgIm1tX2Rpc3BfcnN6MCIsICJkaXNwX3NlbCIsIDcpLA0KPiA+
-ICsgICAgICAgR0FURV9NTTAoQ0xLX01NX0RJU1BfQUFMMCwgIm1tX2Rpc3BfYWFsMCIsICJkaXNw
-X3NlbCIsIDgpLA0KPiA+ICsgICAgICAgR0FURV9NTTAoQ0xLX01NX0RJU1BfQ0NPUlIwLCAibW1f
-ZGlzcF9jY29ycjAiLCAiZGlzcF9zZWwiLCA5KSwNCj4gPiArICAgICAgIEdBVEVfTU0wKENMS19N
-TV9ESVNQX0RJVEhFUjAsICJtbV9kaXNwX2RpdGhlcjAiLCAiZGlzcF9zZWwiLCAxMCksDQo+ID4g
-KyAgICAgICBHQVRFX01NMChDTEtfTU1fU01JX0lORlJBLCAibW1fc21pX2luZnJhIiwgImRpc3Bf
-c2VsIiwgMTEpLA0KPiA+ICsgICAgICAgR0FURV9NTTAoQ0xLX01NX0RJU1BfR0FNTUEwLCAibW1f
-ZGlzcF9nYW1tYTAiLCAiZGlzcF9zZWwiLCAxMiksDQo+ID4gKyAgICAgICBHQVRFX01NMChDTEtf
-TU1fRElTUF9QT1NUTUFTSzAsICJtbV9kaXNwX3Bvc3RtYXNrMCIsICJkaXNwX3NlbCIsIDEzKSwN
-Cj4gPiArICAgICAgIEdBVEVfTU0wKENMS19NTV9ESVNQX0RTQ19XUkFQMCwgIm1tX2Rpc3BfZHNj
-X3dyYXAwIiwgImRpc3Bfc2VsIiwgMTQpLA0KPiA+ICsgICAgICAgR0FURV9NTTAoQ0xLX01NX0RT
-STAsICJtbV9kc2kwIiwgImRpc3Bfc2VsIiwgMTUpLA0KPiA+ICsgICAgICAgR0FURV9NTTAoQ0xL
-X01NX0RJU1BfQ09MT1IwLCAibW1fZGlzcF9jb2xvcjAiLCAiZGlzcF9zZWwiLCAxNiksDQo+ID4g
-KyAgICAgICBHQVRFX01NMChDTEtfTU1fU01JX0NPTU1PTiwgIm1tX3NtaV9jb21tb24iLCAiZGlz
-cF9zZWwiLCAxNyksDQo+ID4gKyAgICAgICBHQVRFX01NMChDTEtfTU1fRElTUF9GQUtFX0VORzAs
-ICJtbV9kaXNwX2Zha2VfZW5nMCIsICJkaXNwX3NlbCIsIDE4KSwNCj4gPiArICAgICAgIEdBVEVf
-TU0wKENMS19NTV9ESVNQX0ZBS0VfRU5HMSwgIm1tX2Rpc3BfZmFrZV9lbmcxIiwgImRpc3Bfc2Vs
-IiwgMTkpLA0KPiA+ICsgICAgICAgR0FURV9NTTAoQ0xLX01NX01EUF9URFNIUDQsICJtbV9tZHBf
-dGRzaHA0IiwgImRpc3Bfc2VsIiwgMjApLA0KPiA+ICsgICAgICAgR0FURV9NTTAoQ0xLX01NX01E
-UF9SU1o0LCAibW1fbWRwX3JzejQiLCAiZGlzcF9zZWwiLCAyMSksDQo+ID4gKyAgICAgICBHQVRF
-X01NMChDTEtfTU1fTURQX0FBTDQsICJtbV9tZHBfYWFsNCIsICJkaXNwX3NlbCIsIDIyKSwNCj4g
-PiArICAgICAgIEdBVEVfTU0wKENMS19NTV9NRFBfSERSNCwgIm1tX21kcF9oZHI0IiwgImRpc3Bf
-c2VsIiwgMjMpLA0KPiA+ICsgICAgICAgR0FURV9NTTAoQ0xLX01NX01EUF9SRE1BNCwgIm1tX21k
-cF9yZG1hNCIsICJkaXNwX3NlbCIsIDI0KSwNCj4gPiArICAgICAgIEdBVEVfTU0wKENMS19NTV9N
-RFBfQ09MT1I0LCAibW1fbWRwX2NvbG9yNCIsICJkaXNwX3NlbCIsIDI1KSwNCj4gPiArICAgICAg
-IEdBVEVfTU0wKENMS19NTV9ESVNQX1kyUjAsICJtbV9kaXNwX3kycjAiLCAiZGlzcF9zZWwiLCAy
-NiksDQo+ID4gKyAgICAgICBHQVRFX01NMChDTEtfTU1fU01JX0dBTFMsICJtbV9zbWlfZ2FscyIs
-ICJkaXNwX3NlbCIsIDI3KSwNCj4gPiArICAgICAgIEdBVEVfTU0wKENMS19NTV9ESVNQX09WTDJf
-MkwsICJtbV9kaXNwX292bDJfMmwiLCAiZGlzcF9zZWwiLCAyOCksDQo+ID4gKyAgICAgICBHQVRF
-X01NMChDTEtfTU1fRElTUF9SRE1BNCwgIm1tX2Rpc3BfcmRtYTQiLCAiZGlzcF9zZWwiLCAyOSks
-DQo+ID4gKyAgICAgICBHQVRFX01NMChDTEtfTU1fRElTUF9EUEkwLCAibW1fZGlzcF9kcGkwIiwg
-ImRpc3Bfc2VsIiwgMzApLA0KPiA+ICsgICAgICAgLyogTU0xICovDQo+ID4gKyAgICAgICBHQVRF
-X01NMShDTEtfTU1fU01JX0lPTU1VLCAibW1fc21pX2lvbW11IiwgImRpc3Bfc2VsIiwgMCksDQo+
-ID4gKyAgICAgICAvKiBNTTIgKi8NCj4gPiArICAgICAgIEdBVEVfTU0yKENMS19NTV9EU0lfRFNJ
-MCwgIm1tX2RzaV9kc2kwIiwgImRpc3Bfc2VsIiwgMCksDQo+ID4gKyAgICAgICBHQVRFX01NMihD
-TEtfTU1fRFBJX0RQSTAsICJtbV9kcGlfZHBpMCIsICJkcGlfc2VsIiwgOCksDQo+ID4gKyAgICAg
-ICBHQVRFX01NMihDTEtfTU1fMjZNSFosICJtbV8yNm1oeiIsICJjbGsyNm0iLCAyNCksDQo+ID4g
-KyAgICAgICBHQVRFX01NMihDTEtfTU1fMzJLSFosICJtbV8zMmtoeiIsICJjbGszMmsiLCAyNSks
-DQo+ID4gK307DQo+ID4gKw0KPiA+ICtzdGF0aWMgaW50IGNsa19tdDgxOTJfbW1fcHJvYmUoc3Ry
-dWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gPiArew0KPiA+ICsgICAgICAgc3RydWN0IGRl
-dmljZSAqZGV2ID0gJnBkZXYtPmRldjsNCj4gPiArICAgICAgIHN0cnVjdCBkZXZpY2Vfbm9kZSAq
-bm9kZSA9IGRldi0+cGFyZW50LT5vZl9ub2RlOw0KPiA+ICsgICAgICAgc3RydWN0IGNsa19vbmVj
-ZWxsX2RhdGEgKmNsa19kYXRhOw0KPiA+ICsNCj4gPiArICAgICAgIGNsa19kYXRhID0gbXRrX2Fs
-bG9jX2Nsa19kYXRhKENMS19NTV9OUl9DTEspOw0KPiANCj4gbXRrX2FsbG9jX2Nsa19kYXRhIGNh
-biByZXR1cm4gTlVMTA0KPiANCj4gICAgICAgICAgICBpZiAoIWNsa19kYXRhKQ0KPiAgICAgICAg
-ICAgICAgIHJldHVybiAtRU5PTUVNOw0KPiANCj4gPiArDQo+ID4gKyAgICAgICBtdGtfY2xrX3Jl
-Z2lzdGVyX2dhdGVzKG5vZGUsIG1tX2Nsa3MsIEFSUkFZX1NJWkUobW1fY2xrcyksDQo+ID4gKyAg
-ICAgICAgICAgICAgICAgICAgICAgY2xrX2RhdGEpOw0KPiA+ICsNCj4gDQo+IFRoZSBhYm92ZSBm
-dW5jdGlvbiBjYW4gZmFpbCwgYmV0dGVyIGNoZWNrIGZvciBlcnJvcg0KPiANCj4gICAgICAgICAg
-aWYgKHJldCkNCj4gICAgICAgICAgICAgIHJldHVybiByZXQ7DQo+IA0KDQpPSywgSSdsbCBmaXgg
-aW4gbmV4dCB2ZXJzaW9uLg0KDQo+ID4gKyAgICAgICByZXR1cm4gb2ZfY2xrX2FkZF9wcm92aWRl
-cihub2RlLCBvZl9jbGtfc3JjX29uZWNlbGxfZ2V0LCBjbGtfZGF0YSk7DQo+ID4gK30NCj4gPiAr
-DQo+ID4gKw0KPiANCj4gTm8gbmVlZCBmb3IgZG91YmxlIGxpbmUgc3BhY2luZy4NCj4gDQoNCkdv
-dCBpdC4NCg0KPiA+ICtzdGF0aWMgc3RydWN0IHBsYXRmb3JtX2RyaXZlciBjbGtfbXQ4MTkyX21t
-X2RydiA9IHsNCj4gPiArICAgICAgIC5wcm9iZSA9IGNsa19tdDgxOTJfbW1fcHJvYmUsDQo+ID4g
-KyAgICAgICAuZHJpdmVyID0gew0KPiA+ICsgICAgICAgICAgICAgICAubmFtZSA9ICJjbGstbXQ4
-MTkyLW1tIiwNCj4gPiArICAgICAgIH0sDQo+ID4gK307DQo+ID4gKw0KPiA+ICtidWlsdGluX3Bs
-YXRmb3JtX2RyaXZlcihjbGtfbXQ4MTkyX21tX2Rydik7DQo+IA0KPiBbc25pcF0NCj4gDQo+IF9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQo+IExpbnV4LW1l
-ZGlhdGVrIG1haWxpbmcgbGlzdA0KPiBMaW51eC1tZWRpYXRla0BsaXN0cy5pbmZyYWRlYWQub3Jn
-DQo+IGh0dHBzOi8vdXJsZGVmZW5zZS5jb20vdjMvX19odHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LW1lZGlhdGVrX187ISFDVFJOS0E5d01nMEFSYnchMy10
-UkdnOHBZUkJ5MHlKNEE5TGtHdXZlWFBEN2d6aVN6SHlRREV4am9VaTNpaUxvb0R1NWsyU2J4MmtX
-UVp0VyQgDQoNCg==
+dev_err_probe() can reduce code size, uniform error handling and record the
+defer probe reason etc., use it to simplify the code.
+
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+changes since V1:
+	- remove redundant return value print.
+---
+ drivers/thermal/imx_thermal.c | 22 ++++++----------------
+ 1 file changed, 6 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/thermal/imx_thermal.c b/drivers/thermal/imx_thermal.c
+index 3f74ab4..2c7473d 100644
+--- a/drivers/thermal/imx_thermal.c
++++ b/drivers/thermal/imx_thermal.c
+@@ -716,14 +716,9 @@ static int imx_thermal_probe(struct platform_device *pdev)
+ 
+ 	if (of_find_property(pdev->dev.of_node, "nvmem-cells", NULL)) {
+ 		ret = imx_init_from_nvmem_cells(pdev);
+-		if (ret) {
+-			if (ret == -EPROBE_DEFER)
+-				return ret;
+-
+-			dev_err(&pdev->dev, "failed to init from nvmem: %d\n",
+-				ret);
+-			return ret;
+-		}
++		if (ret)
++			return dev_err_probe(&pdev->dev, ret,
++					     "failed to init from nvmem\n");
+ 	} else {
+ 		ret = imx_init_from_tempmon_data(pdev);
+ 		if (ret) {
+@@ -746,14 +741,9 @@ static int imx_thermal_probe(struct platform_device *pdev)
+ 		     data->socdata->power_down_mask);
+ 
+ 	ret = imx_thermal_register_legacy_cooling(data);
+-	if (ret) {
+-		if (ret == -EPROBE_DEFER)
+-			return ret;
+-
+-		dev_err(&pdev->dev,
+-			"failed to register cpufreq cooling device: %d\n", ret);
+-		return ret;
+-	}
++	if (ret)
++		return dev_err_probe(&pdev->dev, ret,
++				     "failed to register cpufreq cooling device\n");
+ 
+ 	data->thermal_clk = devm_clk_get(&pdev->dev, NULL);
+ 	if (IS_ERR(data->thermal_clk)) {
+-- 
+2.7.4
 
