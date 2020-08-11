@@ -2,96 +2,93 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1179CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:58:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C44C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:59:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D81DB208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:58:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597161521;
-	bh=8n/01n12WvJeXrMtt8X3n/lThM/2bNJzmPG1/GiBxD4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=chnxrZjtxuwkbFh3tkj1c25xmEsWdJIxM25ho2b8OP8Qyjz3pNnyu35C4NfJ8W/0M
-	 1JnG8VdLL4Oxb/PTuzwsCYwCNuIxMdHaQ29RA/f835tOLygEY1A+qtRRqKEU+fYk/o
-	 b01W07CXK/XdSxyuHxFBAFYY+NP0dttoDiWb30zE=
+	by mail.kernel.org (Postfix) with ESMTP id A04FF2078B
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:59:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KVhKpmx5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728955AbgHKP6k (ORCPT
+        id S1728975AbgHKP7z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 11:58:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53960 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728797AbgHKP6j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 11:58:39 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6473920756;
-        Tue, 11 Aug 2020 15:58:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597161519;
-        bh=8n/01n12WvJeXrMtt8X3n/lThM/2bNJzmPG1/GiBxD4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ehnKMjK+y2G4JLAfH72T5hWivRxjXsYnRitWYNtBDqBEJDjlWWy2wKsrLFmIhUmR7
-         61lovTjNqZdfPsccku6Jmhw6CSChuK2ieMkdeYot/cWu2UWE9piATQWpwhlNlFqYaQ
-         AuwxOaqy2wrscHjjr8nMCJPTJ/hAGuU1rYC6Pb60=
-Date:   Tue, 11 Aug 2020 16:58:10 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
-        Mayulong <mayulong1@huawei.com>,
-        Lee Jones <lee.jones@linaro.org>,
+        Tue, 11 Aug 2020 11:59:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36524 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728982AbgHKP7z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 11:59:55 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4539C06174A
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 08:59:54 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id h19so14083520ljg.13
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 08:59:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=xAz+V9xSviK+KE3bK3AlSLGhTEyhwFK2obNPSfmyWq0=;
+        b=KVhKpmx5MRW2CeSl/ljKDguzeY9+f337pfRsUGSSa50Lxln280/QkKvINTrLrt5x0d
+         VfBSKnAGOnx3a1sQDRXZZ/YWPEiCbkzitMdU6YxA+hONzfLChd+TBR/+qJ5MgdAfC+5N
+         F1tqAA+xis3OUHRijbLQaHmMvCHPHJ+MDvjescQ1am9LF6Z3msM70Du1yiaQoRLC3p7t
+         LVZKofe7teFcjVPUDnDYPaV4VbMHFVnBesbjb9K9LHFP8agHazvOVIHowYiVQC5c8hAj
+         MjIaKMPqDwAOghfYVeSfIeTMxAP73FNnEfbZjmhou/lNjU2LQ/5I2na3mxogK7YWF7In
+         fXXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=xAz+V9xSviK+KE3bK3AlSLGhTEyhwFK2obNPSfmyWq0=;
+        b=Clx09ALkumkZ1w5te0Iecqp3OrZgN2MjtbJ62Eax9/AE/od059Ji4zQiCFLXfucTlE
+         kSOKz0IUPKE7pv0ow/lDdWTZRACb6JOXaoKMWTGYy/dDYSsMyhatz6l5eSKX6kvnu9zs
+         27T84isx5nfwtlCJ+K3E6+y55Qyk5xgcwIksw1GxvqX43FbEtUz7sm2flUKBrfswlolg
+         g2YshHp68ScLtSb8kvE5us0NPSxmQyQA4lyk2rEGuob/5fb+QlyiB6u2pNn6IrxMg1UI
+         9I4WrQKM3MFtWJa9YyoP+rbCYonp2QlY8vempHPF3RHIgYQtyMXEvKRTJObJNHNAh4zO
+         QoXw==
+X-Gm-Message-State: AOAM532p0dVbU9Y779p47BY+Aav5YFZRO2Oqj2wSxCbAYOBxsPYGaftG
+        /bU8cIrS3VHhL3I+OLOdevw=
+X-Google-Smtp-Source: ABdhPJxbUxEYU/HAs7PQLEi1C+wZedvi7p7SDlxWxTwc1sH8tPGt9ZKph1DdhMIlKdaoV+7Eq7ZnNg==
+X-Received: by 2002:a2e:9e97:: with SMTP id f23mr3325225ljk.216.1597161593055;
+        Tue, 11 Aug 2020 08:59:53 -0700 (PDT)
+Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.googlemail.com with ESMTPSA id f24sm11261481ljc.99.2020.08.11.08.59.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Aug 2020 08:59:52 -0700 (PDT)
+Subject: Re: [PATCH 1/7] regulator: push allocation in
+ regulator_init_coupling() outside of lock
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
         Liam Girdwood <lgirdwood@gmail.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 02/33] spmi, regulator, mfd: add drivers for hikey970
- SPMI PMIC
-Message-ID: <20200811155810.GH6967@sirena.org.uk>
-References: <cover.1597160086.git.mchehab+huawei@kernel.org>
- <36a548c10ea8c75d13c3e796c4cee65132819ef1.1597160086.git.mchehab+huawei@kernel.org>
+        Mark Brown <broonie@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Vladimir Zapolskiy <vz@mleia.com>
+References: <cover.1597107682.git.mirq-linux@rere.qmqm.pl>
+ <b305adf8bcde9417cdd5c9d84ef5ed99541f0e2c.1597107682.git.mirq-linux@rere.qmqm.pl>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <0d61983a-ed11-e5c1-f2c8-954e5ae330f4@gmail.com>
+Date:   Tue, 11 Aug 2020 18:59:51 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="7J16OGEJ/mt06A90"
-Content-Disposition: inline
-In-Reply-To: <36a548c10ea8c75d13c3e796c4cee65132819ef1.1597160086.git.mchehab+huawei@kernel.org>
-X-Cookie: Gravity is a myth, the Earth sucks.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <b305adf8bcde9417cdd5c9d84ef5ed99541f0e2c.1597107682.git.mirq-linux@rere.qmqm.pl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+11.08.2020 04:07, Michał Mirosław пишет:
+> Allocating memory with regulator_list_mutex held makes lockdep unhappy
+> when memory pressure makes the system do fs_reclaim on eg. eMMC using
+> a regulator. Push the lock inside regulator_init_coupling() after the
+> allocation.
+...
 
---7J16OGEJ/mt06A90
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
 
-On Tue, Aug 11, 2020 at 05:41:28PM +0200, Mauro Carvalho Chehab wrote:
-
->  drivers/mfd/hisi_pmic_spmi.c            | 759 ++++++++++++++++++++++++
->  drivers/regulator/hisi_regulator_spmi.c | 741 +++++++++++++++++++++++
->  drivers/spmi/hisi-spmi-controller.c     | 390 ++++++++++++
->  include/linux/mfd/hisi_pmic.h           | 165 ++++++
-
-This is a single patch for three subsystems, please split it into per
-subsystem patches.
-
---7J16OGEJ/mt06A90
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8ywBIACgkQJNaLcl1U
-h9B0Gwf/bkoBYa45gS5d+/J8udbJcc+WYRzVIKPxRylg0boztmS4vPcb8+5CtDfl
-GrbTgKABmZSFuRKtvtklBEO6yP0XWxFLr2TDMY8KNtWrGVHrQJjUGf9yiAajPHCa
-FNVWRx5W/G06HKz0O3m500FTHjoo1UZvgXUVFdeSIqXjzkPWslrqNBUVQYqdmaYR
-2r+gmSwkJbuBaF4tAu7u2+I7WoV2K3+cpD2qXlcH0hKoSq1iC4N832zbql7EDDXc
-gybUOo9smxzpZjSzw3Cl3o08PXDr7VCAHsUO8JOe81T61ayc3H58wCaLE40WTfT5
-JvnSzZonmPI3fyrOLqmJ3Djw32wn0A==
-=vU2i
------END PGP SIGNATURE-----
-
---7J16OGEJ/mt06A90--
