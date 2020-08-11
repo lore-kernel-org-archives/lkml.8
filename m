@@ -2,298 +2,132 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,
+	CHARSET_FARAWAY_HEADER,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1730AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 23:12:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D143CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 23:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D79552073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 23:12:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21A812076C
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 23:18:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="v6Zyqzfy"
+	dkim=pass (1024-bit key) header.d=tencent.com header.i=@tencent.com header.b="deFFdOdn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726474AbgHKXMy (ORCPT
+        id S1726274AbgHKXS0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 19:12:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46946 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726164AbgHKXMy (ORCPT
+        Tue, 11 Aug 2020 19:18:26 -0400
+Received: from mail4.tencent.com ([183.57.53.109]:39215 "EHLO
+        mail4.tencent.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726115AbgHKXS0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 19:12:54 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5407EC06174A
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 16:12:54 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id A36689A8;
-        Wed, 12 Aug 2020 01:12:52 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1597187572;
-        bh=bsZIpSrl5v4vESB1vCsrKXg6WuAzyrOEr1BzCY32iLQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=v6Zyqzfyn28EmLyu13Soj9xSC/hbhe5clYZwLV0Ju6xkVKlMRrfI2V6ej2Zrsp5dN
-         heGK+1ip4HSA9JBfRi3k8gBtOXVqcU8xKQdvbyQOZQLdgzzR5b7/ATlkVcld/p0TF1
-         jbMzHQs3SXkfjcUSiVh00K0zrVZWzVtrygXCdX3w=
-Date:   Wed, 12 Aug 2020 02:12:38 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Venkateshwar Rao Gannavarapu 
-        <venkateshwar.rao.gannavarapu@xilinx.com>
-Cc:     hyun.kwon@xilinx.com, dri-devel@lists.freedesktop.org,
-        airlied@linux.ie, daniel@ffwll.ch, linux-kernel@vger.kernel.org,
-        sandipk@xilinx.com, vgannava@xilinx.com
-Subject: Re: [RFC PATCH V2 1/2] dt-bindings: display: xlnx: dsi: This add a
- DT binding for Xilinx DSI TX subsystem.
-Message-ID: <20200811231238.GA23600@pendragon.ideasonboard.com>
-References: <1597106777-30913-1-git-send-email-venkateshwar.rao.gannavarapu@xilinx.com>
- <1597106777-30913-2-git-send-email-venkateshwar.rao.gannavarapu@xilinx.com>
+        Tue, 11 Aug 2020 19:18:26 -0400
+Received: from EX-SZ021.tencent.com (unknown [10.28.6.73])
+        by mail4.tencent.com (Postfix) with ESMTP id 7BC2772530;
+        Wed, 12 Aug 2020 07:18:21 +0800 (CST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tencent.com;
+        s=s202002; t=1597187901;
+        bh=ccbasj18elNigywhvKIXQ5fmp3tYk0m6zTnBvcl6CV8=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=deFFdOdnS7w1NEmgc6Ka6XjQUzsgmS2As+bwQ5p4FCTFQMkUz4MYeOWZdYXwQQbBn
+         f2TfEtKJpXVOuMfdo/pV1F/sOnhftYcA252l00EG0nNxi1TekDibOwu+ENZf9OeAZY
+         MIQiiV1Itf3tx2MlnD6YkBg/v9e8/VxDQNo4VZJw=
+Received: from EX-SZ012.tencent.com (10.28.6.36) by EX-SZ021.tencent.com
+ (10.28.6.73) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Wed, 12 Aug
+ 2020 07:18:21 +0800
+Received: from EX-SZ012.tencent.com (10.28.6.36) by EX-SZ012.tencent.com
+ (10.28.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Wed, 12 Aug
+ 2020 07:18:21 +0800
+Received: from EX-SZ012.tencent.com ([fe80::f57b:8971:e6d4:fe6b]) by
+ EX-SZ012.tencent.com ([fe80::f57b:8971:e6d4:fe6b%3]) with mapi id
+ 15.01.1847.007; Wed, 12 Aug 2020 07:18:21 +0800
+From:   =?iso-2022-jp?B?YmVuYmppYW5nKBskQj5VSTcbKEIp?= 
+        <benbjiang@tencent.com>
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+CC:     Jiang Biao <benbjiang@gmail.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
+        "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "bsegall@google.com" <bsegall@google.com>,
+        "mgorman@suse.de" <mgorman@suse.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] sched/fair: Optimize dequeue_task_fair()(Internet mail)
+Thread-Topic: [PATCH] sched/fair: Optimize dequeue_task_fair()(Internet mail)
+Thread-Index: AQHWb7uHIOwUFikfVEWDShzE3PLAcakymr+AgABqtoA=
+Date:   Tue, 11 Aug 2020 23:18:21 +0000
+Message-ID: <FA4A95BE-596A-4550-BB28-959938D19729@tencent.com>
+References: <20200811084310.27130-1-benbjiang@tencent.com>
+ <9a2ddb2d-4c9a-a85d-cba2-0956b6d953c0@arm.com>
+In-Reply-To: <9a2ddb2d-4c9a-a85d-cba2-0956b6d953c0@arm.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [9.19.161.120]
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-ID: <694C00228257544F84CF6DE302BE3910@tencent.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1597106777-30913-2-git-send-email-venkateshwar.rao.gannavarapu@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi GVRao,
+Hi,
 
-Thank you for the patch.
+> On Aug 12, 2020, at 12:55 AM, Dietmar Eggemann <dietmar.eggemann@arm.com>=
+ wrote:
+>=20
+> On 11/08/2020 10:43, Jiang Biao wrote:
+>> Similar optimization as what has been done in commit,
+>> 7d148be69e3a(sched/fair: Optimize enqueue_task_fair())
+>>=20
+>> dequeue_task_fair jumps to dequeue_throttle label when cfs_rq_of(se) is
+>> throttled which means that se can't be NULL. We can move the label after
+>> the if (!se) statement and remove the if(!se) statment as se is always
+>> NULL when reaching this point.
+>>=20
+>> Besides, trying to keep the same pattern with enqueue_task_fair can make
+>> it more readable.
+>>=20
+>> Signed-off-by: Jiang Biao <benbjiang@tencent.com>
+>> ---
+>> kernel/sched/fair.c | 6 +++---
+>> 1 file changed, 3 insertions(+), 3 deletions(-)
+>>=20
+>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+>> index 04fa8dbcfa4d..cbbeafdfa8b7 100644
+>> --- a/kernel/sched/fair.c
+>> +++ b/kernel/sched/fair.c
+>> @@ -5618,10 +5618,10 @@ static void dequeue_task_fair(struct rq *rq, str=
+uct task_struct *p, int flags)
+>>=20
+>> 	}
+>>=20
+>> -dequeue_throttle:
+>> -	if (!se)
+>> -		sub_nr_running(rq, 1);
+>> +	/* At this point se is NULL and we are at root level*/
+>> +	sub_nr_running(rq, 1);
+>>=20
+>> +dequeue_throttle:
+>> 	/* balance early to pull high priority tasks */
+>> 	if (unlikely(!was_sched_idle && sched_idle_rq(rq)))
+>> 		rq->next_balance =3D jiffies;
+>=20
+> There is already a similar patch in master.
+>=20
+> 423d02e1463b - sched/fair: Optimize dequeue_task_fair() (2020-06-25 Peng
+> Wang)
+Indeed, my local repo has been outdated, sorry for the interruption. :)
 
-On Tue, Aug 11, 2020 at 06:16:16AM +0530, Venkateshwar Rao Gannavarapu wrote:
-> The Xilinx MIPI DSI (Display Serial Interface) Transmitter subsystem
-> implements the Mobile Industry Processor Interface (MIPI) based display
-> interface. It supports the interface with programmable logic (FPGA).
-> 
-> Signed-off-by: Venkateshwar Rao Gannavarapu <venkateshwar.rao.gannavarapu@xilinx.com>
-> ---
->  .../devicetree/bindings/display/xlnx/xlnx,dsi.yaml | 147 +++++++++++++++++++++
->  1 file changed, 147 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/xlnx/xlnx,dsi.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/display/xlnx/xlnx,dsi.yaml b/Documentation/devicetree/bindings/display/xlnx/xlnx,dsi.yaml
-> new file mode 100644
-> index 0000000..73da0d8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/xlnx/xlnx,dsi.yaml
-> @@ -0,0 +1,147 @@
-> +# SPDX-License-Identifier: GPL-2.0
-
-New bindings must be licensed as (GPL-2.0-only OR BSD-2-Clause).
-
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/xlnx/xlnx,dsi.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Xilinx Programmable DSI-TX Subsystem
-> +
-> +description: |
-> +  The programmable MIPI DSI controller of Xilinx implements display pipeline
-> +  based on DSI v1.3 specification. The subsystem includes multiple functional
-> +  blocks as below
-> +
-> +  +---------------+                +-----------------------------------------------+
-> +  |               |                |                      +------------------+     |
-> +  |               |                |         v----------->+AXI CROSBAR       |XXX  |
-> +  |FRAME BUFFER   | AXI STREAM     |         |            |                  X   X |
-> +  |(DMA)          |       +------->+    +------------+    +------------------+  XX |
-> +  |               +<------+        |    |MIPI        |                          X  |
-> +  |               |                |    |DSI-TX      |                          X  |
-> +  |               |                |    |Controller  |             +------------+  |
-> +  |               |                |    |            +------------->D-PHY       |  |
-> +  +---------------+                |    |            |             |            |  |
-> +                  S_AXIS_ACLK      |    +-------------<------------+            |  |
-> +                 +---------------->+                               |            |  |
-> +                                   |                               |            |  |
-> +                  DPHY_CLK_200M    |                               |            |  |
-> +                 +---------------->+                               |            |  |
-> +                 +                 |                               +------------+  |
-> +                                   |                                               |
-> +                                   | MIPI DSI TX SUBSYSTEM                         |
-> +                                   +-----------------------------------------------+
-> +
-> +  The DSI TX controller consists of multiple layers such as lane management layer,
-> +  low-level protocol and pixel-to-byte conversion. The DSI TX controller core
-> +  receives stream of image data through an input stream interface. The subsystem
-> +  driver supports upto 4 lane support and generates PPI trasfers towards DPHY
-
-DT bindings shouldn't mention drivers, you can just say "The subsystem
-supports up to 4 data lanes ...".
-
-s/trasfers/transfers/
-
-> +  with continuous clock. It supports Burst, non-burst modes and command modes.
-> +
-> +maintainers:
-> +  - Venkateshwar Rao Gannavarapu <venkateshwar.rao.gannavarapu@xilinx.com>
-> +
-> +properties:
-> +  compatible:
-> +    const: xlnx,dsi-1.0
-
-I think calling it just "dsi-1.0" isn't specific enough, as it could
-also be a DSI RX. "xlnx,dsi-tx-1.0" would be a better value.
-
-Is this binding for v1.0 of the IP core ? There's a v2.0 too. Only v2.0
-supports command mode as far as I can tell, so with the
-xlnx,dsi-cmd-mode property below, this seems to match v2.0.
-
-> +
-> +  reg:
-> +    maxItems: 1
-
-This should specify in the description if only the DSI TX registers are
-covered, or if the D-PHY registers are included too.
-
-> +
-> +  clocks:
-> +    description: List of clock specifiers
-> +    items:
-> +      - description: AXI Lite clock
-> +      - description: Video DPHY clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: s_axis_aclk
-> +      - const: dphy_clk_200M
-> +
-> +  xlnx,dsi-num-lanes:
-> +    description: Maximum number of lanes that IP configured with.
-> +           possible values are 1, 2, 4.
-
-You can drop the second sentence as it's implied by the enum below.
-
-> +
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - enum: [1, 2, 4]
-
-Do we need this property ? The protocol configuration register has an
-Active Lanes field that reports the number of lanes. Could we read the
-information from the register, and drop this property ?
-
-> +
-> +  xlnx,dsi-data-type:
-> +    description: MIPI DSI pixel format.
-> +           possible values are 0, 1, 2, 3.
-
-Same here.
-
-> +
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - enum: [0, 1, 2, 3]
-
-Same comment as above, should this be read from the Pixel Format field
-instead of being specified in DT ?
-
-> +
-> +  xlnx,dsi-cmd-mode:
-> +    description: denotes command mode support
-> +
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - enum: [0, 1]
-
-I don't see a command mode user parameter in the datasheet, it seems
-that command mode is a runtime configuration parameter (bit 3 in the
-Core Configuration Register). It shouldn't be specified in DT, but
-queried at runtime from the connected panel.
-
-> +
-> +  ports:
-> +    type: object
-> +
-> +    properties:
-> +      port@0:
-> +        type: object
-> +        description: |
-> +          output / source port node, endpoint describing modules
-> +          connected the DSI TX subsystem
-> +
-> +        properties:
-> +          reg:
-> +            const: 0
-> +
-> +          endpoint:
-> +            type: object
-> +
-> +            properties:
-> +
-> +              remote-endpoint: true
-> +
-> +            required:
-> +              - remote-endpoint
-> +
-> +            additionalProperties: false
-> +
-> +        additionalProperties: false
-
-There should also be a port for the AXI4-Stream interface. The common
-practice is to number the input port@0 and the output port@1.
-
-Shouldn't ports specify
-
-    required:
-      - port@0
-      - port@1
-
-?
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - xlnx,dsi-num-lanes
-> +  - xlnx,dsi-data-type
-> +  - xlnx,dsi-cmd-mode
-> +  - ports
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> + -  |
-> +    mipi_dsi_tx_subsystem@80000000 {
-> +      compatible = "xlnx,dsi-1.0";
-> +      reg = <0x0 0x80000000 0x0 0x10000>;
-
-DT examples are compiled in a context where #address-cells and
-#size-cells are both set to 1. The reg property should thus be
-<0x80000000 0x10000>; in the example, even if it doesn't match the
-hardware.
-
-Could you please validate the bindings with
-
-	make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/xlnx/xlnx,dsi.yaml
-
-as explained in Documentation/devicetree/writing-schema.rst ? This will
-also compile the example to make sure that everything is right.
-
-> +      clocks = <&misc_clk_0>, <&misc_clk_1>;
-> +      clock-names = "s_axis_aclk", "dphy_clk_200M";
-> +      xlnx,dsi-num-lanes = <4>;
-> +      xlnx,dsi-data-type = <1>;
-> +      xlnx,dsi-cmd-mode = <0>;
-> +      ports {
-> +          #address-cells = <1>;
-> +          #size-cells = <0>;
-> +
-> +          port@0 {
-> +              reg = <0x0>;
-> +              dsi_tx_out: endpoint {
-> +                   remote-endpoint = <&panel_in>;
-> +              };
-> +          };
-> +      };
-> +    };
-> +
-> +...
-
--- 
+Thx.
 Regards,
+Jiang
 
-Laurent Pinchart
