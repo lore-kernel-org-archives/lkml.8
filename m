@@ -3,235 +3,266 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F407C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 09:12:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF24AC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 09:15:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 494982076B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 09:12:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597137153;
-	bh=JRnhXaH/f3fE892cqJcIwk+cBEd8EiSVWDW91lbdx2Y=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=uLvuf9b3XGp/pzk9kQEpeaDzyVrSqQLkaw/zwbRLdXwo+MhsvBH/cDYtSlWe+wUSl
-	 JxmDUkWtTHjJ9THWSZrBfcLrJ55jDwtNZYo9uk4heISnyUGHNt9xUkpQ6E+CSimU76
-	 AnHvTn47Xouo3GKOLw2vCOfXsfQCuM++CfANjluU=
+	by mail.kernel.org (Postfix) with ESMTP id 7C81F2076B
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 09:15:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QSOFbrhp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728413AbgHKJMb (ORCPT
+        id S1728403AbgHKJP4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 05:12:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58552 "EHLO
+        Tue, 11 Aug 2020 05:15:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728355AbgHKJMa (ORCPT
+        with ESMTP id S1728355AbgHKJPz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 05:12:30 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FD18C06174A;
-        Tue, 11 Aug 2020 02:12:28 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id g6so12652738ljn.11;
-        Tue, 11 Aug 2020 02:12:28 -0700 (PDT)
+        Tue, 11 Aug 2020 05:15:55 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C26DC06174A
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 02:15:55 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id cq28so8345658edb.10
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 02:15:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=Eqc+3NbaxwoojpJ4wCmnVzMHGK5tFF910hokAKhwEAQ=;
-        b=QGaJh62swSOyNJSej4GYVVg1+IdjpM91enN86WzVB5D+VT3gJ4F2gVyA67n+QbKlwi
-         vOTvwRtaSkKpVxiRAM6wu07GI0JFfpOm8/6lScOdsMeg9mVzJW0sJjUcEG8LePKK5UzG
-         vOmRdtSMMmGeXonsMVc+4kuQntv6eIFkgFRChGKD0yE7iLNJhb781Qegs1T/6rjUmYSY
-         yHHMHg6aSyFt7wH61PFJNXIJLwCtHc/CnVtcnIvwMNol9qgLVN0L4hoiwDdWAnXfpp6d
-         7C3oBFWGT6N6Sq5YOV1MyyY5dEVm//TnIWGtn5HxSJ2+FFCMhhYhgY3tXa85AwwGEY5K
-         kO1Q==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2f83cAD6hLFggbL5wDPDL5CQAHmHJh2YdT/JjJ/mVTs=;
+        b=QSOFbrhp895XEQx5jjd74TwEycV/CKZ8F8g9Yp+IPBMXFe64/SeDlUK6p7kDo6tYub
+         XFKVZM6Ch41mSIIUb49sjVNrhZKZn+C3CTOO4jOW5OmGAeyefhiTQ3OHAhRxkGMozL8E
+         oyxYYKpZHbcgCNMBjix491CUZLObcrZRiIdAg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :date:message-id:mime-version;
-        bh=Eqc+3NbaxwoojpJ4wCmnVzMHGK5tFF910hokAKhwEAQ=;
-        b=BUGSmkK2CbeLYf1+o60B+F3yS99E892Zdt71hMaH1zwRrYjTs6hq8zJJMzCcEDpsU+
-         J1TkAGtLqa74N+ExkqpGGABUj9r4oPHWQrrwRjUWEmEFLvOs2UxM8P9Rv2LdK/W67Dbl
-         gNokHJcd3AD42Dt+LiV29LDDt+PHHinmMQxrU4Tcrn4DXGpzZ6G6x5pZOGx0itHpTAT/
-         v5Z2JByJA2y06GuKZPt6DtzeKMwZ65YcBVzEJK3KUbFZbTRZP8hA3YczwXLgMGWXytcy
-         mP/EoHQnlGz5gslXISTCao3tICIXshl3/3m4kijnop4pZsSTv1y5TFEDgjIVwLCoCjGe
-         9qvg==
-X-Gm-Message-State: AOAM533fHwVsdqVrVtchwmqorfIKe8D7ybF1KYB94Bk4Fnal+yUx/Nem
-        Ko6n2nn4mSxSSp/ilAObqFA=
-X-Google-Smtp-Source: ABdhPJyywIbiOv+zXy+wOQ3SXRh/6kavcG9IMhbtAn8xZQHQnrTcXEUm0BS+Ph7ZWqu7cv6m9U017Q==
-X-Received: by 2002:a2e:3c10:: with SMTP id j16mr2740226lja.324.1597137147094;
-        Tue, 11 Aug 2020 02:12:27 -0700 (PDT)
-Received: from saruman ([194.34.132.58])
-        by smtp.gmail.com with ESMTPSA id d20sm11416961lfn.85.2020.08.11.02.12.24
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 11 Aug 2020 02:12:26 -0700 (PDT)
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Sandeep Maheswaram <sanm@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Michael Turquette <mturquette@baylibre.com>
-Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>,
-        linux-clk@vger.kernel.org, Taniya Das <tdas@codeaurora.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>
-Subject: Re: [PATCH 2/2] usb: dwc3: Host wake up support from system suspend
-In-Reply-To: <1591885683-29514-3-git-send-email-sanm@codeaurora.org>
-References: <1591885683-29514-1-git-send-email-sanm@codeaurora.org> <1591885683-29514-3-git-send-email-sanm@codeaurora.org>
-Date:   Tue, 11 Aug 2020 12:12:20 +0300
-Message-ID: <874kp9pmvf.fsf@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2f83cAD6hLFggbL5wDPDL5CQAHmHJh2YdT/JjJ/mVTs=;
+        b=AiVnCFp/zuDloH91D7p7tcPN0Tzs7vEkeQafM/Ph1VYaWXTKSnzgtBA+DbfEwAEiF6
+         uT2jCMXUkGaqx53+4WS30W/n1dhbojsSAU7+YdkfNYE2/3sxM4gRzm34dMVItoWBFh5K
+         UwH9ZvcgtHQsL4bo063E8OOlcVih4QqNo6heLyXM2AkLWhmaH6vGx574yWs4kQpT417a
+         6BrhOr/PgHhZq5+TjtsYNX+Lz/HLwD+a8qNOW/BoIl8x4e6htKss4scrlYXrPTgWosce
+         M4n/T5T2GG1uF06pxOwTc2fa2XRput8ndiFwYg8rLzqCf43cqSp3NClAxxN8/chdHdYW
+         3hCg==
+X-Gm-Message-State: AOAM531PBvmq5CW4GCTNz+71DyVDc8iMBnpEeEwcAzzJleiL2dlJad5D
+        wfVr2YKIrOxvgwsknF7y9l+tvmmE4cc=
+X-Google-Smtp-Source: ABdhPJyYkfhaJKKUl/Br3OqHCIjj55SCvO14+5+zihXJbWi5pMaYzKOtG7hUptr9Hh/ZCdQfKcAohQ==
+X-Received: by 2002:aa7:dd15:: with SMTP id i21mr25268326edv.153.1597137349506;
+        Tue, 11 Aug 2020 02:15:49 -0700 (PDT)
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com. [209.85.128.50])
+        by smtp.gmail.com with ESMTPSA id cn27sm14240462edb.4.2020.08.11.02.15.48
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Aug 2020 02:15:48 -0700 (PDT)
+Received: by mail-wm1-f50.google.com with SMTP id f18so1711647wmc.0
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 02:15:48 -0700 (PDT)
+X-Received: by 2002:a7b:cb50:: with SMTP id v16mr3174224wmj.11.1597137347759;
+ Tue, 11 Aug 2020 02:15:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+References: <20200728050140.996974-1-tientzu@chromium.org> <20200728050140.996974-5-tientzu@chromium.org>
+ <20200731205804.GB756942@bogus> <CALiNf2-BGQ+8Lm6A61oM6v+6N1zRTJYvod7LQLsCmK-ADsrMaw@mail.gmail.com>
+ <CAAFQd5Cm+ZGx9ia2sAdvHQC6zC1U=+9AWs7iW7o-qE4g7wZgsw@mail.gmail.com>
+In-Reply-To: <CAAFQd5Cm+ZGx9ia2sAdvHQC6zC1U=+9AWs7iW7o-qE4g7wZgsw@mail.gmail.com>
+From:   Tomasz Figa <tfiga@chromium.org>
+Date:   Tue, 11 Aug 2020 11:15:35 +0200
+X-Gmail-Original-Message-ID: <CAAFQd5AfbN0V3sGCs8vhmeD-MNn3bTvfWBCaT-OY3hgjBUs-LQ@mail.gmail.com>
+Message-ID: <CAAFQd5AfbN0V3sGCs8vhmeD-MNn3bTvfWBCaT-OY3hgjBUs-LQ@mail.gmail.com>
+Subject: Re: [RFC v2 4/5] dt-bindings: of: Add plumbing for restricted DMA pool
+To:     Rob Herring <robh@kernel.org>, Robin Murphy <robin.murphy@arm.com>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Saravana Kannan <saravanak@google.com>, suzuki.poulose@arm.com,
+        dan.j.williams@intel.com, heikki.krogerus@linux.intel.com,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Claire Chang <tientzu@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-
-Sandeep Maheswaram <sanm@codeaurora.org> writes:
-
-> Avoiding phy powerdown in host mode so that it can be wake up by devices.
-> Set usb controller wakeup capable when wakeup capable devices are
-> connected to the host.
+On Mon, Aug 3, 2020 at 5:15 PM Tomasz Figa <tfiga@chromium.org> wrote:
 >
-> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
-> ---
->  drivers/usb/dwc3/core.c      | 47 ++++++++++++++++++++++++++-----
->  drivers/usb/dwc3/core.h      |  1 +
->  drivers/usb/dwc3/dwc3-qcom.c | 66 +++++++++++++++++++++++++++++++++-----=
-------
->  3 files changed, 91 insertions(+), 23 deletions(-)
+> Hi Claire and Rob,
 >
-> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-> index 25c686a7..8370350 100644
-> --- a/drivers/usb/dwc3/core.c
-> +++ b/drivers/usb/dwc3/core.c
-> @@ -31,15 +31,19 @@
->  #include <linux/usb/gadget.h>
->  #include <linux/usb/of.h>
->  #include <linux/usb/otg.h>
-> +#include <linux/usb/hcd.h>
->=20=20
->  #include "core.h"
->  #include "gadget.h"
->  #include "io.h"
->=20=20
->  #include "debug.h"
-> +#include "../host/xhci.h"
+> On Mon, Aug 3, 2020 at 4:26 PM Claire Chang <tientzu@chromium.org> wrote:
+> >
+> > On Sat, Aug 1, 2020 at 4:58 AM Rob Herring <robh@kernel.org> wrote:
+> > >
+> > > On Tue, Jul 28, 2020 at 01:01:39PM +0800, Claire Chang wrote:
+> > > > Introduce the new compatible string, device-swiotlb-pool, for restricted
+> > > > DMA. One can specify the address and length of the device swiotlb memory
+> > > > region by device-swiotlb-pool in the device tree.
+> > > >
+> > > > Signed-off-by: Claire Chang <tientzu@chromium.org>
+> > > > ---
+> > > >  .../reserved-memory/reserved-memory.txt       | 35 +++++++++++++++++++
+> > > >  1 file changed, 35 insertions(+)
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt b/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+> > > > index 4dd20de6977f..78850896e1d0 100644
+> > > > --- a/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+> > > > +++ b/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+> > > > @@ -51,6 +51,24 @@ compatible (optional) - standard definition
+> > > >            used as a shared pool of DMA buffers for a set of devices. It can
+> > > >            be used by an operating system to instantiate the necessary pool
+> > > >            management subsystem if necessary.
+> > > > +        - device-swiotlb-pool: This indicates a region of memory meant to be
+> > >
+> > > swiotlb is a Linux thing. The binding should be independent.
+> > Got it. Thanks for pointing this out.
+> >
+> > >
+> > > > +          used as a pool of device swiotlb buffers for a given device. When
+> > > > +          using this, the no-map and reusable properties must not be set, so the
+> > > > +          operating system can create a virtual mapping that will be used for
+> > > > +          synchronization. Also, there must be a restricted-dma property in the
+> > > > +          device node to specify the indexes of reserved-memory nodes. One can
+> > > > +          specify two reserved-memory nodes in the device tree. One with
+> > > > +          shared-dma-pool to handle the coherent DMA buffer allocation, and
+> > > > +          another one with device-swiotlb-pool for regular DMA to/from system
+> > > > +          memory, which would be subject to bouncing. The main purpose for
+> > > > +          restricted DMA is to mitigate the lack of DMA access control on
+> > > > +          systems without an IOMMU, which could result in the DMA accessing the
+> > > > +          system memory at unexpected times and/or unexpected addresses,
+> > > > +          possibly leading to data leakage or corruption. The feature on its own
+> > > > +          provides a basic level of protection against the DMA overwriting buffer
+> > > > +          contents at unexpected times. However, to protect against general data
+> > > > +          leakage and system memory corruption, the system needs to provide a
+> > > > +          way to restrict the DMA to a predefined memory region.
+> > >
+> > > I'm pretty sure we already support per device carveouts and I don't
+> > > understand how this is different.
+> > We use this to bounce streaming DMA in and out of a specially allocated region.
+> > I'll try to merge this with the existing one (i.e., shared-dma-pool)
+> > to see if that
+> > makes things clearer.
+> >
+>
+> Indeed, from the firmware point of view, this is just a carveout, for
+> which we have the "shared-dma-pool" compatible string defined already.
+>
+> However, depending on the device and firmware setup, the way the
+> carevout is used may change. I can see the following scenarios:
+>
+> 1) coherent DMA (dma_alloc_*) within a reserved pool and no
+> non-coherent DMA (dma_map_*).
+>
+> This is how the "memory-region" property is handled today in Linux for
+> devices which can only DMA from/to the given memory region. However,
+> I'm not sure if no non-coherent DMA is actually enforced in any way by
+> the DMA subsystem.
+>
+> 2) coherent DMA from a reserved pool and non-coherent DMA from system memory
+>
+> This is the case for the systems which have some dedicated part of
+> memory which is guaranteed to be coherent with the DMA, but still can
+> do non-coherent DMA to any part of the system memory. Linux handles it
+> the same way as 1), which is what made me believe that 1) might not
+> actually be handled correctly.
+>
+> 3) coherent DMA and bounced non-coherent DMA within a reserved pool
+> 4) coherent DMA within one pool and bounced non-coherent within another pool
+>
+> These are the two cases we're interested in. Basically they make it
+> possible for non-coherent DMA from arbitrary system memory to be
+> bounced through a reserved pool, which the device has access to. The
+> current series implements 4), but I'd argue that it:
+>
+> - is problematic from the firmware point of view, because on most of
+> the systems, both pools would be just some carveouts and the fact that
+> Linux would use one for coherent and the other for non-coherent DMA
+> would be an OS implementation detail,
+> - suffers from the static memory split between coherent and
+> non-coherent DMA, which could either result in some wasted memory or
+> the DMA stopped working after a kernel update if the driver changes
+> its allocation pattern,
+>
+> and so we should rather go with 3).
+>
+> Now, from the firmware point of view, it doesn't matter how the OS
+> uses the carveout, but I think it's still necessary to tell the OS
+> about the device DMA capability. Right now we use "memory-region" for
+> any kind of reserved memory, but looking at the above scenarios, there
+> are 2 cases:
+>
+> a) the memory region is preferred for the device, e.g. it enables
+> coherency, but the device can still DMA across the rest of the system
+> memory. This is the case in scenario 2) and is kind of assumed in the
+> Linux DMA subsystem, although it's certainly not the case for a lot of
+> hardware, even if they use the "memory-region" binding.
+>
+> b) the memory region is the only region that the device can access.
+> This is the case in scenarios 1), 3) and 4).
+>
+> For this, I'd like to propose a "restricted-dma-region" (feel free to
+> suggest a better name) binding, which is explicitly specified to be
+> the only DMA-able memory for this device and make Linux use the given
+> pool for coherent DMA allocations and bouncing non-coherent DMA.
+>
+> What do you think?
 
-nope
+Rob, Robin, we'd appreciate your feedback on this when you have a
+chance to take a look again. Thanks!
 
->  #define DWC3_DEFAULT_AUTOSUSPEND_DELAY	5000 /* ms */
->=20=20
-> +bool need_phy_for_wakeup;
+Best regards,
+Tomasz
 
-nope
-
-> +
->  /**
->   * dwc3_get_dr_mode - Validates and sets dr_mode
->   * @dwc: pointer to our context structure
-> @@ -1627,10 +1631,36 @@ static int dwc3_core_init_for_resume(struct dwc3 =
-*dwc)
->  	return ret;
->  }
->=20=20
-> +static void dwc3_set_phy_speed_flags(struct dwc3 *dwc)
-> +{
-> +
-> +	int i, num_ports;
-> +	u32 reg;
-> +	struct usb_hcd	*hcd =3D platform_get_drvdata(dwc->xhci);
-> +	struct xhci_hcd	*xhci_hcd =3D hcd_to_xhci(hcd);
-> +
-> +	dwc->hs_phy_flags &=3D ~(PHY_MODE_USB_HOST_HS | PHY_MODE_USB_HOST_LS);
-> +
-> +	reg =3D readl(&xhci_hcd->cap_regs->hcs_params1);
-> +
-> +	num_ports =3D HCS_MAX_PORTS(reg);
-> +	for (i =3D 0; i < num_ports; i++) {
-> +		reg =3D readl(&xhci_hcd->op_regs->port_status_base + i*0x10);
-> +		if (reg & PORT_PE) {
-> +			if (DEV_HIGHSPEED(reg) || DEV_FULLSPEED(reg))
-> +				dwc->hs_phy_flags |=3D PHY_MODE_USB_HOST_HS;
-> +			else if (DEV_LOWSPEED(reg))
-> +				dwc->hs_phy_flags |=3D PHY_MODE_USB_HOST_LS;
-> +		}
-> +	}
-> +	phy_set_mode(dwc->usb2_generic_phy, dwc->hs_phy_flags);
-
-XHCI already supports PHY framework, no?
-
->  static int dwc3_suspend_common(struct dwc3 *dwc, pm_message_t msg)
->  {
->  	unsigned long	flags;
->  	u32 reg;
-> +	struct usb_hcd  *hcd =3D platform_get_drvdata(dwc->xhci);
->=20=20
->  	switch (dwc->current_dr_role) {
->  	case DWC3_GCTL_PRTCAP_DEVICE:
-> @@ -1643,9 +1673,10 @@ static int dwc3_suspend_common(struct dwc3 *dwc, p=
-m_message_t msg)
->  		dwc3_core_exit(dwc);
->  		break;
->  	case DWC3_GCTL_PRTCAP_HOST:
-> +		dwc3_set_phy_speed_flags(dwc);
->  		if (!PMSG_IS_AUTO(msg)) {
-> -			dwc3_core_exit(dwc);
-> -			break;
-> +			if (usb_wakeup_enabled_descendants(hcd->self.root_hub))
-> +				need_phy_for_wakeup =3D true;
-
-should be done in xhci-plat
-
-> @@ -1705,11 +1736,13 @@ static int dwc3_resume_common(struct dwc3 *dwc, p=
-m_message_t msg)
->  		break;
->  	case DWC3_GCTL_PRTCAP_HOST:
->  		if (!PMSG_IS_AUTO(msg)) {
-> -			ret =3D dwc3_core_init_for_resume(dwc);
-> -			if (ret)
-> -				return ret;
-> -			dwc3_set_prtcap(dwc, DWC3_GCTL_PRTCAP_HOST);
-> -			break;
-> +			if (!need_phy_for_wakeup) {
-> +				ret =3D dwc3_core_init_for_resume(dwc);
-> +				if (ret)
-> +					return ret;
-> +				dwc3_set_prtcap(dwc, DWC3_GCTL_PRTCAP_HOST);
-> +				break;
-
-why?
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl8yYPQACgkQzL64meEa
-mQYzpQ//RlvBlJqDn5YjtLQDgcPnIwSd+Toup6FmId0ZU9y6UA08aKYTxxtjupUq
-kx4XvOOrPY0xggUoWDd1od1LIXfwbRci1os+5J4yEyKT9tANjTZucJZLaYH7j5ki
-mCB1Pf8g5LJ1ol5j/fh7UElA+CJ6ZYFXj3Mky9Knd5T++ve02jLzAhqga1cz3fiL
-NHXkCPt2MqILB8H7NYE8Pytp9DHTElr//+lrVBSkxyqTT8buM/pZ2kfo04nJvO6+
-v2yiq6Edksa+Ky8H5NxOM/Up5Y/anuh6AqLiwvirWl1Ugf1gBV3LxCPunezeIg2I
-hXGJ2xnGX+pJkcFhFT5mac6gQVd2qxPOtaQLWRbuswewykyOhtp7e6yOqma5SjuZ
-7VnYVLZ8By/oRH4/dBAtRSrJyagY2+RWOJFOzF3G6zgx0PrDITwWn9qaYzD5f3FD
-Iy1Ybz1U1O8a+TcB9R7DhfSTLTmWswHT8xniuaqdqXOuJKiTwjBZuBkt9WIzvBAS
-Gnnd2jYpu0DMvS037Wv3mnAcps78rPuG7YeepUEzs3irck0HNvI+DajEh/TVzRpe
-NmzFnb9SsfkoLc+cnFvU/GAW4mlyadxZrqydDVI4zawmqxF+eNqxgP6r21waq8Nq
-KchxxSssP4X7sECoErPZRI6O5zPLk1VaXHg7IyjBvCILWcEskLE=
-=3o7M
------END PGP SIGNATURE-----
---=-=-=--
+>
+> Best regards,
+> Tomasz
+>
+> > >
+> > > What is the last sentence supposed to imply? You need an IOMMU?
+> > The main purpose is to mitigate the lack of DMA access control on
+> > systems without an IOMMU.
+> > For example, we plan to use this plus a MPU for our PCIe WiFi which is
+> > not behind an IOMMU.
+> >
+> > >
+> > > >          - vendor specific string in the form <vendor>,[<device>-]<usage>
+> > > >  no-map (optional) - empty property
+> > > >      - Indicates the operating system must not create a virtual mapping
+> > > > @@ -117,6 +135,16 @@ one for multimedia processing (named multimedia-memory@77000000, 64MiB).
+> > > >                       compatible = "acme,multimedia-memory";
+> > > >                       reg = <0x77000000 0x4000000>;
+> > > >               };
+> > > > +
+> > > > +             wifi_coherent_mem_region: wifi_coherent_mem_region {
+> > > > +                     compatible = "shared-dma-pool";
+> > > > +                     reg = <0x50000000 0x400000>;
+> > > > +             };
+> > > > +
+> > > > +             wifi_device_swiotlb_region: wifi_device_swiotlb_region {
+> > > > +                     compatible = "device-swiotlb-pool";
+> > > > +                     reg = <0x50400000 0x4000000>;
+> > > > +             };
+> > > >       };
+> > > >
+> > > >       /* ... */
+> > > > @@ -135,4 +163,11 @@ one for multimedia processing (named multimedia-memory@77000000, 64MiB).
+> > > >               memory-region = <&multimedia_reserved>;
+> > > >               /* ... */
+> > > >       };
+> > > > +
+> > > > +     pcie_wifi: pcie_wifi@0,0 {
+> > > > +             memory-region = <&wifi_coherent_mem_region>,
+> > > > +                      <&wifi_device_swiotlb_region>;
+> > > > +             restricted-dma = <0>, <1>;
+> > > > +             /* ... */
+> > > > +     };
+> > > >  };
+> > > > --
+> > > > 2.28.0.rc0.142.g3c755180ce-goog
+> > > >
