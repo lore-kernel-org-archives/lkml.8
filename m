@@ -2,127 +2,117 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E35C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:25:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE337C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:26:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A71C42078E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:25:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OQq/o6a5";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZWVlbzQi"
+	by mail.kernel.org (Postfix) with ESMTP id D388A21744
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:26:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728949AbgHKPZz (ORCPT
+        id S1728959AbgHKP0a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 11:25:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59530 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728833AbgHKPZz (ORCPT
+        Tue, 11 Aug 2020 11:26:30 -0400
+Received: from shelob.surriel.com ([96.67.55.147]:51782 "EHLO
+        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728833AbgHKP03 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 11:25:55 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 076AFC06174A;
-        Tue, 11 Aug 2020 08:25:54 -0700 (PDT)
-Date:   Tue, 11 Aug 2020 17:25:51 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597159552;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=H/PoO99VsZeKU1ujq9T6uhiYphTk/6W+rjmcRTYfavM=;
-        b=OQq/o6a5Bx1Ji03ydocv7ch7KSWm4fMb57nF9O4u+W7WHjdpA1p7/5vErU95SZcp8sSeem
-        YfIeb8dzL7aqLON9otn+2W4/sA6QOxOfTU/7xm7ePP9jAVSyAccLFCWZ8TbG0oIZdBS9qv
-        bCuronuAuzXQoaZjYzk32Q58lii2T9gT7fdY+MLj6548T7krvIYSr5aPNM02sZIRZWjE5U
-        cRSBYMfDTkQWGs/Fqe+DxoZYfVaPzrX29jos2k2Xv39m/9NXcgnkiFCkiONfs55VNCsbm3
-        eYR0dwqATsfVoOK6OfhuVs7GYkCIA/eZQgLKi/9Bp3XkMLcs4pJbFfAy6PZfSw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597159552;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=H/PoO99VsZeKU1ujq9T6uhiYphTk/6W+rjmcRTYfavM=;
-        b=ZWVlbzQie0KOYgCV5rE8j6j0xagRISQi6y5u2cw+QUeHXip+3H8rVXV+qC70k/TFMS/Oaf
-        a+jffPRt062k0vAw==
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Stephen Berman <stephen.berman@gmx.net>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Robert Moore <robert.moore@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Len Brown <lenb@kernel.org>,
+        Tue, 11 Aug 2020 11:26:29 -0400
+Received: from imladris.surriel.com ([96.67.55.152])
+        by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94)
+        (envelope-from <riel@shelob.surriel.com>)
+        id 1k5WAP-0000L2-7E; Tue, 11 Aug 2020 11:26:21 -0400
+Message-ID: <b3c828825cc62ce79d16a2f1a840279b01f33848.camel@surriel.com>
+Subject: Re: [PATCH for 5.9 v2 1/4] futex: introduce FUTEX_SWAP operation
+From:   Rik van Riel <riel@surriel.com>
+To:     peterz@infradead.org, Peter Oskolkov <posk@posk.io>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>
-Subject: Re: power-off delay/hang due to commit 6d25be57 (mainline)
-Message-ID: <20200811152551.dmfw46urecbmeklr@linutronix.de>
-References: <87ftatqu07.fsf@gmx.net>
- <20200624201156.xu6hel3drnhno6c3@linutronix.de>
- <87ftak2kxr.fsf@rub.de>
- <20200714134410.3odqfvjq6rndjjf6@linutronix.de>
- <CAJZ5v0hZSUkEMCszDADGWk-v0xNEiDE45B3CHLi05BX6rPfm6g@mail.gmail.com>
- <20200714141135.47adndrsdgpiqfy4@linutronix.de>
- <87blkbx1gt.fsf@gmx.net>
- <87imdp5r80.fsf@rub.de>
- <20200811132955.wbt55ns7bu5mxouq@linutronix.de>
- <CAJZ5v0h+n9VCz5=VixVbe_b=ZbTU3D=46stGhE9z7Y7yaUMJzw@mail.gmail.com>
+        Ingo Molnar <mingo@redhat.com>, Ingo Molnar <mingo@kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Peter Oskolkov <posk@google.com>,
+        Andrei Vagin <avagin@google.com>, Paul Turner <pjt@google.com>,
+        Ben Segall <bsegall@google.com>, Aaron Lu <aaron.lwe@gmail.com>
+Date:   Tue, 11 Aug 2020 11:26:20 -0400
+In-Reply-To: <20200804123147.GI2674@hirez.programming.kicks-ass.net>
+References: <20200803221510.170674-1-posk@posk.io>
+         <20200803221510.170674-2-posk@posk.io>
+         <20200804123147.GI2674@hirez.programming.kicks-ass.net>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-RJsqJcckj6wQC4gZIoGP"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CAJZ5v0h+n9VCz5=VixVbe_b=ZbTU3D=46stGhE9z7Y7yaUMJzw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-11 16:34:09 [+0200], Rafael J. Wysocki wrote:
-> On Tue, Aug 11, 2020 at 3:29 PM Sebastian Andrzej Siewior
-> <bigeasy@linutronix.de> wrote:
-> >
-> > On 2020-08-11 13:58:39 [+0200], Stephen Berman wrote:
-> > > him about your workaround of adding 'thermal.tzp=3D300' to the kernel
-> > > commandline, and he replied that this works for him too.  And it turns
-> > > out we have similar motherboards: I have a Gigabyte Z390 M Gaming
-> > > Rev. 1001 board and he has Gigabyte Z390 Designare rev 1.0.
-> >
-> > Yes. Based on latest dmesg, the ACPI tables contain code which schedules
-> > the worker and takes so long. It is possible / likely that his board
-> > contains the same tables which leads to the same effect. After all those
-> > two boards are very similar from the naming part :)
-> > Would you mind to dump the ACPI tables and send them? There might be
-> > some hints.
+
+--=-RJsqJcckj6wQC4gZIoGP
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, 2020-08-04 at 14:31 +0200, peterz@infradead.org wrote:
+> On Mon, Aug 03, 2020 at 03:15:07PM -0700, Peter Oskolkov wrote:
+> > A simplified/idealized use case: imagine a multi-user service
+> > application
+> > (e.g. a DBMS) that has to implement the following user CPU quota
+> > policy:
 >=20
-> Do we have a BZ for this?  It would be useful to open one if not.
-
-no, it came via lkml and I looked at it since it was bisected to a
-workqueue commit with my signoff=E2=80=A6
-Stephen, can you open a bug on https://bugzilla.kernel.org/?
-
-> > It might be possible that a BIOS update fixes the problem but I would
-> > prefer very much to fix this in kernel to ensure that such a BIOS does
-> > not lead to this problem again.
+> So the last posting made hackernews; and there a bunch expressed far
+> more interest in coroutines, which, if I'm not mistaken, can also be
+> implemented using all this.
 >=20
-> I agree.
+> Would that not make for a far simpler and more convincing use-case?
+
+Also just worker threads in general. Instead of waking up
+an idle worker thread every time a new request comes in,
+why not allow worker threads to indicate "I'm almost done",
+and the main/receiving thread to enqueue the new request,
+to be handled when the worker thread is done with the current
+request?
+
+> I really think we want to have block/resume detection sorted before
+> this
+> goes anywhere, I also strongly feel BPF should not be used for
+> functional interfaces like that.
 >=20
-> It looks like one way to address this issue might be to add a rate
-> limit for thermal notifications on a given zone.
+> That is, I want to see a complete interface before I want to commit
+> to
+> an ABI that we're stuck with.
 
-So one thing is that ACPI says to poll every second and driver is doing
-it. This could be increased to something like 15 or 30 seconds as lower
-sane level. I don't think there is much value in polling this sensor
-every second. As workaound, Stephen is using `thermal.tzp=3D300' now.=20
+The work case above also needs to have that figured out,
+for the (slow path, but still common) case of the worker
+thread actually having gone to sleep while the work got
+enqueued, and then needing to be woken up anyway.
 
-Would it make sense to flush the workqueue before checking the
-temperature? I have no idea what the ACPI is doing there but there is no
-upper limit on time how long in may take, right? Doing this inline (and
-avoiding the worker) is probably causing other trouble, right?
+Not sure that is a direction you are interested in, given
+the description, but it could make coroutines and worker
+threads more efficient :)
 
-Sebastian
+--=20
+All Rights Reversed.
+
+--=-RJsqJcckj6wQC4gZIoGP
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEKR73pCCtJ5Xj3yADznnekoTE3oMFAl8yuJwACgkQznnekoTE
+3oNbgggAwBO/BAmj8n+qEFRTCkdwzHNl90lkqKNMQXHJC+tVuATC/SkdIeYwwxLq
+df3aSMxGfNqO4dOg9qs3adNAHZL43ttZ01+SYppfyaIniebPHfOYU6ezYqdH7/Zt
+6NTQHp237I890cfqcXhPJdJqt4OyR9m0hpKu7XCR9MbHtcNAiT1NYTIXEMrJuj/x
+lLVndwUcFTtg4gwFsb7PnAiUn5dJeTcYgXxwXf4TvGCkgFlXP0M6+rJV/kM3pjWD
+D5SLnzS8JNtVU5ASyFQlVxAzVev8Jxud36C7gqeQKA1WVXQktVAQqsTIeMXxeK1e
+7bFNA8BEE5btQLrXUUfeufw6ofWz/g==
+=KAJv
+-----END PGP SIGNATURE-----
+
+--=-RJsqJcckj6wQC4gZIoGP--
+
