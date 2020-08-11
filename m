@@ -2,119 +2,137 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0844DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 12:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C5BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 12:31:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAD6620756
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 12:31:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S5RKRAOe"
+	by mail.kernel.org (Postfix) with ESMTP id 520BA20756
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 12:31:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728788AbgHKMbB (ORCPT
+        id S1728821AbgHKMbr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 08:31:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60798 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728638AbgHKMa4 (ORCPT
+        Tue, 11 Aug 2020 08:31:47 -0400
+Received: from lucky1.263xmail.com ([211.157.147.132]:48782 "EHLO
+        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728622AbgHKMbn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 08:30:56 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F8D3C06174A;
-        Tue, 11 Aug 2020 05:30:56 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id z20so6741658plo.6;
-        Tue, 11 Aug 2020 05:30:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=3XX9yDBRTZL+T/pjwN944z7PGV7W0j24B30SMgNKaTY=;
-        b=S5RKRAOeAfBV3RSsMwhWdYdu1TEZhqfyIrc1nMqcLIt1/ZOTGJb+4PNYJRFWSmi0iK
-         V0qFIiW4Kb0h/jhTZhxt4bG3B17sjub9t+bIEnz2oeWCYnRUeTslctgNfUSsSsXOB6SQ
-         TkE5zLvRB1dkCzDeFaEcfzELMWJlzs+jyfpG2YQYk0v+YOztD/Q53urFhIC4pnEPfjjt
-         13pgTPu7iKV1WDkHMmfLySuK6+HLZrfRaV1JgOClw0QwM8DEuonuAO79g7ESfLciNJnx
-         mO5Q1rG6wd277EuWKp8K4st2srHgJl2nHYqijwsuND06Se/AH6Exedf46Mv/49hZIAtU
-         ZVJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=3XX9yDBRTZL+T/pjwN944z7PGV7W0j24B30SMgNKaTY=;
-        b=i3D1EEgWgxWh3zuod41eTgdJqKyLflkfdQ2RU0d7Z/HRfv/2hHwx63971MfcwWe5iD
-         AjQMjleNpQDbam30bDH0K7tdHPnwSl+vuJTNSx2sFyVg3pXEdPU7IlAGVC4KRymZvDyS
-         T9kIzL3woXivT9uk4FMHZFxvOGFwOvQGQjPp8iLj1FCnjo3OqQ6JljeGzWkKF5rgTf1d
-         FQICyIgZWoF+l+cfV7sNEHEpQ7pGclisBixcIp4WDeHYY55Uk9RVMCL4ejiDiyywobXp
-         AcMiZdpFCTS1qmNZWeXWMJNatyjkAmafqImDjeik3kOn7kOGkdPib+rpzXQLYwWhLhoS
-         neRw==
-X-Gm-Message-State: AOAM533wNwI85ruosgkVbz+rfq2qYx3GERGGMv9p6IY/+tMISeRGvFXh
-        iC5rajOXP9oMo/G7BC3BZA==
-X-Google-Smtp-Source: ABdhPJySeojQ1Efm0gNatgwnk5Z2M6FSxf81DVjF4PnSZNhWgbKScK5Y1QVSTbgg8wtbdafaJbwH9Q==
-X-Received: by 2002:a17:902:fe0d:: with SMTP id g13mr651862plj.287.1597149055765;
-        Tue, 11 Aug 2020 05:30:55 -0700 (PDT)
-Received: from localhost.localdomain ([2402:3a80:d23:8b8d:155f:b85f:bf0a:1250])
-        by smtp.gmail.com with ESMTPSA id b15sm25015117pft.116.2020.08.11.05.30.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Aug 2020 05:30:54 -0700 (PDT)
-From:   madhuparnabhowmik10@gmail.com
-To:     jamie@jamieiles.com, herbert@gondor.apana.org.au,
-        davem@davemloft.net
-Cc:     linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, andrianov@ispras.ru,
-        ldv-project@linuxtesting.org,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Subject: [PATCH] drivers: crypto: picoxcell_crypto: Fix potential race condition bug
-Date:   Tue, 11 Aug 2020 18:00:24 +0530
-Message-Id: <20200811123024.14501-1-madhuparnabhowmik10@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 11 Aug 2020 08:31:43 -0400
+Received: from localhost (unknown [192.168.167.209])
+        by lucky1.263xmail.com (Postfix) with ESMTP id 6A8D5EC6FA;
+        Tue, 11 Aug 2020 20:31:33 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-ABS-CHECKED: 0
+Received: from localhost.localdomain (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P31766T140662640989952S1597149092697840_;
+        Tue, 11 Aug 2020 20:31:33 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <ce0762416ef844ab3f3891c498f4d4c5>
+X-RL-SENDER: finley.xiao@rock-chips.com
+X-SENDER: xf@rock-chips.com
+X-LOGIN-NAME: finley.xiao@rock-chips.com
+X-FST-TO: heiko@sntech.de
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+X-System-Flag: 0
+From:   Finley Xiao <finley.xiao@rock-chips.com>
+To:     heiko@sntech.de, rui.zhang@intel.com, daniel.lezcano@linaro.org,
+        robh+dt@kernel.org
+Cc:     linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        huangtao@rock-chips.com, tony.xie@rock-chips.com,
+        cl@rock-chips.com, Finley Xiao <finley.xiao@rock-chips.com>
+Subject: [PATCH v1] thermal/of: Introduce k-po, k-pu and k-i for a thermal zone
+Date:   Tue, 11 Aug 2020 20:31:15 +0800
+Message-Id: <20200811123115.8144-1-finley.xiao@rock-chips.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+The default value for k_pu is:
+    2 * sustainable_power / (desired_temperature - switch_on_temp)
+The default value for k_po is:
+    sustainable_power / (desired_temperature - switch_on_temp)
+The default value for k_i is 10.
 
-engine->stat_irq_thresh was initialized after device_create_file() in
-the probe function, the initialization may race with call to
-spacc_stat_irq_thresh_store() which updates engine->stat_irq_thresh,
-therefore initialize it before creating the file in probe function.
+Even though these parameters of the PID controller can be changed
+by the following sysfs files:
+    /sys/class/thermal/thermal_zoneX/k_pu
+    /sys/class/thermal/thermal_zoneX/k_po
+    /sys/class/thermal/thermal_zoneX/k_i
 
-Found by Linux Driver Verification project (linuxtesting.org).
+But it's still more convenient to change the default values by devicetree,
+so introduce these three optional properties. If provided these properties,
+they will be parsed and associated with the thermal zone via the thermal
+zone parameters.
 
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
 ---
- drivers/crypto/picoxcell_crypto.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ Documentation/devicetree/bindings/thermal/thermal.txt | 14 ++++++++++++++
+ drivers/thermal/thermal_of.c                          |  7 +++++++
+ 2 files changed, 21 insertions(+)
 
-diff --git a/drivers/crypto/picoxcell_crypto.c b/drivers/crypto/picoxcell_crypto.c
-index dac6eb37fff9..fb34bf92861d 100644
---- a/drivers/crypto/picoxcell_crypto.c
-+++ b/drivers/crypto/picoxcell_crypto.c
-@@ -1685,11 +1685,6 @@ static int spacc_probe(struct platform_device *pdev)
- 		goto err_clk_put;
- 	}
+diff --git a/Documentation/devicetree/bindings/thermal/thermal.txt b/Documentation/devicetree/bindings/thermal/thermal.txt
+index f78bec19ca35..ebe936b57ded 100644
+--- a/Documentation/devicetree/bindings/thermal/thermal.txt
++++ b/Documentation/devicetree/bindings/thermal/thermal.txt
+@@ -165,6 +165,20 @@ Optional property:
+ 			2000mW, while on a 10'' tablet is around
+ 			4500mW.
  
--	ret = device_create_file(&pdev->dev, &dev_attr_stat_irq_thresh);
--	if (ret)
--		goto err_clk_disable;
--
--
- 	/*
- 	 * Use an IRQ threshold of 50% as a default. This seems to be a
- 	 * reasonable trade off of latency against throughput but can be
-@@ -1697,6 +1692,10 @@ static int spacc_probe(struct platform_device *pdev)
- 	 */
- 	engine->stat_irq_thresh = (engine->fifo_sz / 2);
- 
-+	ret = device_create_file(&pdev->dev, &dev_attr_stat_irq_thresh);
-+	if (ret)
-+		goto err_clk_disable;
++- k-po:			Proportional parameter of the PID controller when
++			current temperature is above the target.
++  Type: signed
++  Size: one cell
 +
- 	/*
- 	 * Configure the interrupts. We only use the STAT_CNT interrupt as we
- 	 * only submit a new packet for processing when we complete another in
++- k-pu:			Proportional parameter of the PID controller when
++			current temperature is below the target.
++  Type: signed
++  Size: one cell
++
++- k-i:			Integral parameter of the PID controller.
++  Type: signed
++  Size: one cell
++
+ Note: The delay properties are bound to the maximum dT/dt (temperature
+ derivative over time) in two situations for a thermal zone:
+ (i)  - when passive cooling is activated (polling-delay-passive); and
+diff --git a/drivers/thermal/thermal_of.c b/drivers/thermal/thermal_of.c
+index ddf88dbe7ba2..b2a9f92cd8d2 100644
+--- a/drivers/thermal/thermal_of.c
++++ b/drivers/thermal/thermal_of.c
+@@ -1089,6 +1089,7 @@ int __init of_parse_thermal_zones(void)
+ 		struct thermal_zone_params *tzp;
+ 		int i, mask = 0;
+ 		u32 prop;
++		s32 sval;
+ 
+ 		tz = thermal_of_build_thermal_zone(child);
+ 		if (IS_ERR(tz)) {
+@@ -1113,6 +1114,12 @@ int __init of_parse_thermal_zones(void)
+ 
+ 		if (!of_property_read_u32(child, "sustainable-power", &prop))
+ 			tzp->sustainable_power = prop;
++		if (!of_property_read_s32(child, "k-po", &sval))
++			tzp->k_po = sval;
++		if (!of_property_read_s32(child, "k-pu", &sval))
++			tzp->k_pu = sval;
++		if (!of_property_read_s32(child, "k-i", &sval))
++			tzp->k_i = sval;
+ 
+ 		for (i = 0; i < tz->ntrips; i++)
+ 			mask |= 1 << i;
 -- 
-2.17.1
+2.11.0
+
+
 
