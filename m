@@ -2,127 +2,107 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD51CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 16:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB581C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 16:16:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93B9520771
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 16:11:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="gS19uwfs"
+	by mail.kernel.org (Postfix) with ESMTP id 9EF9A2076C
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 16:16:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597162569;
+	bh=0yGybgD9IL3gRoWDqSMgaHoVLjZvPfOQziQxPv1gUzs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mgmGFIc6+wd9Vk83hSGv/TpVUVbNZ0BU9Wrf2OARl2/+kZFw3ELb+yekx932JY40D
+	 wO7dPLjyCiJoYkz4Nj5D3wexKll9edN97GSYGLx3j9trq4zPZLny6JyPhNRNMPBuR+
+	 jVQ+ungq2TyKENantzcVruUFvkbkuQdKz9qxPYng=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729102AbgHKQLG (ORCPT
+        id S1729009AbgHKQQI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 12:11:06 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:14353 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728797AbgHKQLF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 12:11:05 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f32c30c0000>; Tue, 11 Aug 2020 09:10:52 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 11 Aug 2020 09:11:05 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 11 Aug 2020 09:11:05 -0700
-Received: from [10.2.60.121] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 11 Aug
- 2020 16:10:56 +0000
-Subject: Re: VDPA Debug/Statistics
-To:     "Michael S. Tsirkin" <mst@redhat.com>, Eli Cohen <elic@nvidia.com>
-CC:     Jason Wang <jasowang@redhat.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "eli@mellanox.com" <eli@mellanox.com>,
-        "lulu@redhat.com" <lulu@redhat.com>,
-        Majd Dibbiny <majd@nvidia.com>,
-        "Maor Dickman" <maord@nvidia.com>,
-        Shahaf Shuler <shahafs@mellanox.com>,
-        "Parav Pandit" <parav@mellanox.com>
-References: <BN8PR12MB342559414BE03DFC992AD03DAB450@BN8PR12MB3425.namprd12.prod.outlook.com>
- <20200811073144-mutt-send-email-mst@kernel.org>
- <BN8PR12MB34259F2AE1FDAF2D40E48C5BAB450@BN8PR12MB3425.namprd12.prod.outlook.com>
- <20200811083803-mutt-send-email-mst@kernel.org>
-From:   Roopa Prabhu <roopa@nvidia.com>
-Message-ID: <16cef93e-7421-a151-65ab-ba21e44cd00f@nvidia.com>
-Date:   Tue, 11 Aug 2020 09:10:52 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 11 Aug 2020 12:16:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34800 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728797AbgHKQQH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 12:16:07 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4171C206B5;
+        Tue, 11 Aug 2020 16:16:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597162566;
+        bh=0yGybgD9IL3gRoWDqSMgaHoVLjZvPfOQziQxPv1gUzs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SeNDbfoExQPUA34zj0XHGgYP86QWVpcMXgujtgsL9w8dTdX7/Zg/5KkShqYpCtChb
+         //S7N8/2L8iXX3E62saYcst+JpZFGmQUBGXKft8Vo8A2I5JQVpzqDnI0dcT0ToQ7zr
+         cB5UEhW7tv2zefd0F35d9ZS0pPgxd2VGL9ROIRyw=
+Date:   Tue, 11 Aug 2020 17:15:39 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
+        Mayulong <mayulong1@huawei.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 02/33] spmi, regulator, mfd: add drivers for hikey970
+ SPMI PMIC
+Message-ID: <20200811161539.GK6967@sirena.org.uk>
+References: <cover.1597160086.git.mchehab+huawei@kernel.org>
+ <36a548c10ea8c75d13c3e796c4cee65132819ef1.1597160086.git.mchehab+huawei@kernel.org>
+ <20200811155810.GH6967@sirena.org.uk>
+ <20200811180837.2285c8b5@coco.lan>
 MIME-Version: 1.0
-In-Reply-To: <20200811083803-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1597162252; bh=EK1sbFulOF0V9vRXAL3GbYbkOAW9ujbZSox8NAhaWus=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:Content-Type:
-         Content-Transfer-Encoding:Content-Language:X-Originating-IP:
-         X-ClientProxiedBy;
-        b=gS19uwfsH12QJJzg9ZODa7mhQbKSP1lVW35d0TgX5+PAr7ToMbjpXXuaq/R2J2vnZ
-         sEYD47GIu0nqR+rJQtdkjFLU+Yl83CqM3MN7b7BonSD8L5BanYpKbg81YS7Nz8UXL7
-         YlKbwRcNK5liipinpMS67fkeNt6gw9WLVwW6mG+z5419Q78JxjOSAY+U4XHVbghojA
-         PHyzitc4Y9iftdDW7ymuUOn22mRkk3QQ9KI/LJ80d4bAZc6GChOwJkxndt4l4gPuHU
-         fEmP4ctUu244HPPdLw8pmcBQNnlxbwGUPeM1l0YgXZJr830nTrYW/lb0oD+9sa+XmV
-         61sTlM6BQOFDA==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="wRokNccIwvMzawGl"
+Content-Disposition: inline
+In-Reply-To: <20200811180837.2285c8b5@coco.lan>
+X-Cookie: Gravity is a myth, the Earth sucks.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 8/11/20 5:44 AM, Michael S. Tsirkin wrote:
-> External email: Use caution opening links or attachments
->
->
-> On Tue, Aug 11, 2020 at 11:58:23AM +0000, Eli Cohen wrote:
->> On Tue, Aug 11, 2020 at 11:26:20AM +0000, Eli Cohen wrote:
->>> Hi All
->>>
->>> Currently, the only statistics we get for a VDPA instance comes from the virtio_net device instance. Since VDPA involves hardware acceleration, there can be quite a lot of information that can be fetched from the underlying device. Currently there is no generic method to fetch this information.
->>>
->>> One way of doing this can be to create a the host, a net device for
->>> each VDPA instance, and use it to get this information or do some
->>> configuration. Ethtool can be used in such a case
->>>
->>> I would like to hear what you think about this or maybe you have some other ideas to address this topic.
->>>
->>> Thanks,
->>> Eli
->> Something I'm not sure I understand is how are vdpa instances created on mellanox cards? There's a devlink command for that, is that right?
->> Can that be extended for stats?
->>
->> Currently any VF will be probed as VDPA device. We're adding devlink support but I am not sure if devlink is suitable for displaying statistics. We will discuss internally but I wanted to know why you guys think.
-> OK still things like specifying the mac are managed through rtnetlink,
-> right?
->
-> Right now it does not look like you can mix stats and vf, they are
-> handled separately:
->
->          if (rtnl_fill_stats(skb, dev))
->                  goto nla_put_failure;
->
->          if (rtnl_fill_vf(skb, dev, ext_filter_mask))
->                  goto nla_put_failure;
->
-> but ability to query vf stats on the host sounds useful generally.
->
-> As another option, we could use a vdpa specific way to retrieve stats,
-> and teach qemu to report them.
+--wRokNccIwvMzawGl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-If you are looking for a place to add additional stats, please, check 
-the RTM_*STATS api
+On Tue, Aug 11, 2020 at 06:08:37PM +0200, Mauro Carvalho Chehab wrote:
+> Mark Brown <broonie@kernel.org> escreveu:
 
-https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/tree/net/core/rtnetlink.c#n5351
-(Its a place where new interface and protocol stats are being added)
+> > This is a single patch for three subsystems, please split it into per
+> > subsystem patches.
+
+> Ok, I'll split on a next version.=20
+
+> Yet, it would be good to have all tree drivers applied via the same tree,
+> as those drivers are needed altogether in order for this PMIC to work:
+
+This is completely normal for MFD drivers, it's still much easier to
+review things if individual subsystem maintainers can easily get to the
+code for their subsystem, any Reviewed-bys or whatever can be sensibly
+applies to relevant code and ideally people can apply patches as they're
+ready if there's no build time dependencies or Kconfig symbols which
+prevent build without the dependencies being merged.
+
+--wRokNccIwvMzawGl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8yxCoACgkQJNaLcl1U
+h9C3Jgf/VVfcbuWfx2m33vDnwyRvVhII/5u4hRIJK8ayFl3O6szxc/724CvRi+7m
+GZqWDuj7W3iDnP1DDex058PR2FUCa3b+UrNXPL2167fi8VUe5mZTy67o047GV1MP
+G9Kwhbwm5AB/nvkNBKjE3gMgm3BelrIQOs/u2ti374mh9xNoj3ocWIliViixg/aq
+JPsfrI/XhRS0HU8OT+2TS2tINH71OLTv8iO+T+l2j8pHVwJgjE53XCPmOHdWxj3B
+bmgCRSYZGqpBkfDOfxeeI3LbsHrXzjtwSlj10RcGY+oLN7nMb0OYuXcS7VhwX9d7
+36uTnw1KNIlJ7igXm1EczUsVwF1GFQ==
+=maAa
+-----END PGP SIGNATURE-----
+
+--wRokNccIwvMzawGl--
