@@ -2,167 +2,92 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3215C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF1ABC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:40:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA85F204FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:39:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mymailcheap.com header.i=@mymailcheap.com header.b="o4x1IOWG";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="sGK+w3Nz"
+	by mail.kernel.org (Postfix) with ESMTP id 7DE62206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:40:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728847AbgHKOjK (ORCPT
+        id S1728845AbgHKOky (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 10:39:10 -0400
-Received: from relay4.mymailcheap.com ([137.74.80.154]:52665 "EHLO
-        relay4.mymailcheap.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728794AbgHKOjJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 10:39:09 -0400
-Received: from filter2.mymailcheap.com (filter2.mymailcheap.com [91.134.140.82])
-        by relay4.mymailcheap.com (Postfix) with ESMTPS id 62B5D3F20A;
-        Tue, 11 Aug 2020 16:39:07 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by filter2.mymailcheap.com (Postfix) with ESMTP id 322F02A519;
-        Tue, 11 Aug 2020 16:39:07 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mymailcheap.com;
-        s=default; t=1597156747;
-        bh=iIou0YGXsaz4tenihi4kspgnU410+h+4rSvatxov18k=;
-        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
-        b=o4x1IOWGnMOooK/NSHeXWPwWNhS4rEUScv0trMtEpRcB9sZUwGQ6kLI2gDWc6foMf
-         LS9sc2Hv2RKwb1kIo+Ae0DzBR6pDDS+iQuDwu5xUxX8VMtMaSHrLHEvfL9lMq0xxwM
-         iciB3aYHBPpiijd7zNeukvYNVYCAYiqGPPscCqgg=
-X-Virus-Scanned: Debian amavisd-new at filter2.mymailcheap.com
-Received: from filter2.mymailcheap.com ([127.0.0.1])
-        by localhost (filter2.mymailcheap.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Uf-F6loMtAcP; Tue, 11 Aug 2020 16:39:06 +0200 (CEST)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by filter2.mymailcheap.com (Postfix) with ESMTPS;
-        Tue, 11 Aug 2020 16:39:06 +0200 (CEST)
-Received: from [213.133.102.83] (ml.mymailcheap.com [213.133.102.83])
-        by mail20.mymailcheap.com (Postfix) with ESMTP id 9779640855;
-        Tue, 11 Aug 2020 14:39:05 +0000 (UTC)
-Authentication-Results: mail20.mymailcheap.com;
-        dkim=pass (1024-bit key; unprotected) header.d=flygoat.com header.i=@flygoat.com header.b="sGK+w3Nz";
-        dkim-atps=neutral
-AI-Spam-Status: Not processed
-Received: from [0.0.0.0] (n11212042148.netvigator.com [112.120.42.148])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by mail20.mymailcheap.com (Postfix) with ESMTPSA id C91AE40855;
-        Tue, 11 Aug 2020 14:38:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com;
-        s=default; t=1597156738;
-        bh=iIou0YGXsaz4tenihi4kspgnU410+h+4rSvatxov18k=;
-        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
-        b=sGK+w3Nz2LronVjeIOj0dAd4di6kmCubd0B1A860wHQXz0D6/C1IWD03D/aYd/qjK
-         yqZPUihB4z8fmgmNuJgfFwhpkXmjGWW9MWK40apvDVwt+7BiDyf3728f6pDD4Saz+U
-         jYxLKQQem3oXQrxHUhrmaGLDpSj/bI4Ihvbb4beY=
-Subject: Re: [PATCH RESEND] KVM: MIPS/VZ: Fix build error caused by 'kvm_run'
- cleanup
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     Xingxing Su <suxingxing@loongson.cn>,
-        Huacai Chen <chenhc@lemote.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Aleksandar Markovic <aleksandar.qemu.devel@gmail.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1597138297-2105-1-git-send-email-suxingxing@loongson.cn>
- <49a63b59-c03e-b9f5-03d6-ef268f5a6555@flygoat.com>
-Message-ID: <f44652c7-2716-7e56-6e04-3f990a197895@flygoat.com>
-Date:   Tue, 11 Aug 2020 22:38:49 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Tue, 11 Aug 2020 10:40:54 -0400
+Received: from mga02.intel.com ([134.134.136.20]:39417 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728750AbgHKOkx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 10:40:53 -0400
+IronPort-SDR: 53KUnZqTTqY2CHQMgStOOuKS0hr/4CZAP37o6C2N4Jf/1TFRjPv6cksQ94N/KW+8lviwfHpR0X
+ Rdbx6Q9xRtJw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9710"; a="141595789"
+X-IronPort-AV: E=Sophos;i="5.76,461,1592895600"; 
+   d="scan'208";a="141595789"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2020 07:40:53 -0700
+IronPort-SDR: JGfBK8o+ksaoxfDMs5qMmlA6+A78FyKE42qHn7BbegCwAzsraHtXotUojVRJoqvgefCiLl6opJ
+ NWwTNkEGnCuw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,461,1592895600"; 
+   d="scan'208";a="324777032"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
+  by orsmga008.jf.intel.com with ESMTP; 11 Aug 2020 07:40:53 -0700
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id C5847301CAF; Tue, 11 Aug 2020 07:29:55 -0700 (PDT)
+Date:   Tue, 11 Aug 2020 07:29:55 -0700
+From:   Andi Kleen <ak@linux.intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        Jiri Olsa <jolsa@kernel.org>, alexey.budankov@linux.intel.com,
+        adrian.hunter@intel.com
+Subject: Re: [PATCH 1/2] perf: Add closing sibling events' file descriptors
+Message-ID: <20200811142955.GC1448395@tassilo.jf.intel.com>
+References: <20200708151635.81239-1-alexander.shishkin@linux.intel.com>
+ <20200708151635.81239-2-alexander.shishkin@linux.intel.com>
+ <20200806083530.GV2674@hirez.programming.kicks-ass.net>
+ <20200806153205.GA1448395@tassilo.jf.intel.com>
+ <875z9q1u3g.fsf@ashishki-desk.ger.corp.intel.com>
+ <20200810144518.GB1448395@tassilo.jf.intel.com>
+ <20200810203632.GF3982@worktop.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <49a63b59-c03e-b9f5-03d6-ef268f5a6555@flygoat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Rspamd-Queue-Id: 9779640855
-X-Spamd-Result: default: False [1.40 / 10.00];
-         ARC_NA(0.00)[];
-         RCVD_VIA_SMTP_AUTH(0.00)[];
-         R_DKIM_ALLOW(0.00)[flygoat.com:s=default];
-         MID_RHS_MATCH_FROM(0.00)[];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         R_SPF_SOFTFAIL(0.00)[~all:c];
-         ML_SERVERS(-3.10)[213.133.102.83];
-         DKIM_TRACE(0.00)[flygoat.com:+];
-         DMARC_POLICY_ALLOW(0.00)[flygoat.com,none];
-         RCPT_COUNT_SEVEN(0.00)[8];
-         RCVD_IN_DNSWL_NONE(0.00)[213.133.102.83:from];
-         DMARC_POLICY_ALLOW_WITH_FAILURES(0.00)[];
-         FREEMAIL_TO(0.00)[loongson.cn,lemote.com,alpha.franken.de,gmail.com,redhat.com];
-         RCVD_NO_TLS_LAST(0.10)[];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         ASN(0.00)[asn:24940, ipnet:213.133.96.0/19, country:DE];
-         RCVD_COUNT_TWO(0.00)[2];
-         SUSPICIOUS_RECIPS(1.50)[];
-         HFILTER_HELO_BAREIP(3.00)[213.133.102.83,1]
-X-Rspamd-Server: mail20.mymailcheap.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200810203632.GF3982@worktop.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Aug 10, 2020 at 10:36:32PM +0200, Peter Zijlstra wrote:
+> On Mon, Aug 10, 2020 at 07:45:18AM -0700, Andi Kleen wrote:
+> 
+> > Unfortunately we're kind of stuck with the old NFILE=1024 default
+> > even though it makes little sense on modern servers.
+> 
+> Why can't that be changed? It seems to me all of userspace changes all
+> the time; heck that system-doofus thing flushed 20+ years of sysadmin
+> experience down the drain, just cause. Why can't we up a file limit?
 
+We could try, but I believe it's hard coded in various places outside
+the kernel.
 
-在 2020/8/11 下午10:37, Jiaxun Yang 写道:
->
->
-> 在 2020/8/11 下午5:31, Xingxing Su 写道:
->> Commit c34b26b98caca48ec9ee9 ("KVM: MIPS: clean up redundant 'kvm_run'
->> parameters") remove the 'kvm_run' parameter in kvm_vz_gpsi_lwc2.
->>
->> The following build error:
->>
->> arch/mips/kvm/vz.c: In function ‘kvm_trap_vz_handle_gpsi’:
->> arch/mips/kvm/vz.c:1243:43: error: ‘run’ undeclared (first use in 
->> this function)
->>     er = kvm_vz_gpsi_lwc2(inst, opc, cause, run, vcpu);
->>                                             ^~~
->> arch/mips/kvm/vz.c:1243:43: note: each undeclared identifier is 
->> reported only
->> once for each function it appears in
->> scripts/Makefile.build:283: recipe for target 'arch/mips/kvm/vz.o' 
->> failed
->> make[2]: *** [arch/mips/kvm/vz.o] Error 1
->> scripts/Makefile.build:500: recipe for target 'arch/mips/kvm' failed
->> make[1]: *** [arch/mips/kvm] Error 2
->> Makefile:1785: recipe for target 'arch/mips' failed
->> make: *** [arch/mips] Error 2
->>
->> Signed-off-by: Xingxing Su <suxingxing@loongson.cn>
->
-> That have already quened in Paolo's KVM tree.
->
-> Thanks.
+But this wouldn't solve the problem of the unnecessary overhead of 
+the inode + file descriptor per event that the patch was trying
+to address. It would just waste more memory.
 
-Oops, I was looking at the wrong place, please ignore the noise.
+And increasing it makes the worst case memory consumption you complained
+about event worse because the real limit per uid i
+RLIMIT_NPROC*RLIMIT_FILES.  Of course NPROC needs to be large enough too,
+so the total just becomes bigger and bigger.
 
-Thanks.
+Ultimatively you need another accounting mechanism that actually
+works per uid without extra factors.
 
-- Jiaxun
+Now perf already has one so it's still unclear to me why we can't use it.
 
->
-> - Jiaxun
->
->> ---
->>   +cc Paolo Bonzini <pbonzini@redhat.com> and kvm@vger.kernel.org.
->>
->>
+-Andi
