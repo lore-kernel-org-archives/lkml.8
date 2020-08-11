@@ -2,115 +2,109 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD4CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 23:03:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB112C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 23:04:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CE83206DC
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 23:03:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB21020774
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 23:04:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="izB3B4oc"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rLTy+RRO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726402AbgHKXDE (ORCPT
+        id S1726469AbgHKXEy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 19:03:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45422 "EHLO
+        Tue, 11 Aug 2020 19:04:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726115AbgHKXDD (ORCPT
+        with ESMTP id S1726422AbgHKXEx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 19:03:03 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BBB4C06174A;
-        Tue, 11 Aug 2020 16:03:03 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id y18so37818ilp.10;
-        Tue, 11 Aug 2020 16:03:03 -0700 (PDT)
+        Tue, 11 Aug 2020 19:04:53 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58968C061787
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 16:04:53 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id m8so41726pfh.3
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 16:04:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=QQI+D9apjuGTk7RqRIkrIxzr1ODPo5dCRfIgzB3j/pE=;
-        b=izB3B4ocv4H8XIdypDbeaBhizopoZWB683/KBMpD7isRWQ4VKUDjm4XUbO1h2OojEd
-         iCtDu5YutliTUYoxaDjNF1r7S/TNFFOUoItxRPnEFT4xH3QFa84pasHvBslnHD/LpSgL
-         0dO1rDY9WBKW9gKkZ/MVTzbbhIYUmCrB2JBl15ocZmB8CFV/49ci4Y0rGxN+YmBB8IOC
-         9+SXufMagopOFi+5woxe4Ur+/BzjscZ0oYl5XZCELyK6XLHnSpd81NVR/JEV5P4xTLjg
-         9ASNIA9xFnk/e8K2Ne/N07Y187bwVlQBNxro5Ranw1XVZuOKC4yhRfw7GwRBZtPjWBMZ
-         tAyA==
+        bh=/jIVnC/ThBVmdAOVNCKzkgYvpkZs/3SaWOETF+/bDBw=;
+        b=rLTy+RROVIXKYHzRZBfjIkWOti+ozBxFxi1Y8dQbExBZaxXRu+MHpQylvMEgpB9YZk
+         8/Dxr4NCf7tnPzgiQd1HgYSPD4gTj+Wsm4gWGJzWRwEYiaMZuUyekuXE/Tx6gX7ctGC2
+         +bbLBDKDcwiruY43RjcxqxAj+jnjQJQtgCY6jLXyngqEQ1JphgIj+MRK/9U/GC1B4TIX
+         WpxLutHmu+HJcryDgWQzTr4ScFIpWrv7SilLHJm/NGRBsm3+QgZeAzr0o0T9suc/Zuwh
+         WQdc3YsohEnPfTVoVyGG7EsWSptfc1Vi+f9xbYbg2B1IGZFeoBkAMUtWIJaz0p/MwI+9
+         JX5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=QQI+D9apjuGTk7RqRIkrIxzr1ODPo5dCRfIgzB3j/pE=;
-        b=bvODhmKI30swb5GAY5tPJBRE7RvLqBLbxt2FBajPq/S/8Qc6xW6AkLlDt9OVS00iAA
-         5zLFOjQXcsgGom/VW+4asJ77BzqHKAV15og2Gbn0as8yttejZERSPfK2l3B/bKHV6RcB
-         ez21BFd1Tvhag+VSIiKnRMCQ/RG2MfheHr9ccLZvLsrmZ5SRyGU1CrUQKERMEgShuLuH
-         SHkPQDoxF89QAIg4fUUDCTI/OrNS/iLXxBST+6spEOU+7EGeM/7ved1MiseiU2sEsheS
-         /FVu0MFc2Ux02RuHxJIz74AuqzuP34IvzUSXo9TeKC3LlMOdKwFQJmRHygC7Kn5Nt2wt
-         LuAQ==
-X-Gm-Message-State: AOAM532su6EmHV14qSBsvZKfC461XyYXu6c6OzlEPdhJ+TvfRg7S6MqI
-        iVLFu5PboP3K6waos+JI9bg7JUFrEiBbgPL3ph01yspG
-X-Google-Smtp-Source: ABdhPJz0W4lhUp4ywYkL9orfL2in8i8It0F3WoU6CTUNdhv05whtP7iWyJpNtiTxlEfFqWNJN2Mbfvn6GbBODQ/8muA=
-X-Received: by 2002:a92:8b84:: with SMTP id i126mr26216996ild.238.1597186982440;
- Tue, 11 Aug 2020 16:03:02 -0700 (PDT)
+        bh=/jIVnC/ThBVmdAOVNCKzkgYvpkZs/3SaWOETF+/bDBw=;
+        b=L+PWotYuwWI7MgRZSgBoowk4z9K+aa24TEGmd25hvQujyEshhjQR+UXBKg612sqZ5J
+         7AlNABlWwp0QsYqrUdajE823w2Drb+5i5tg7cfJ7x1To+ZXziSF8AyJDTKTyhzDDMAIL
+         l4ybuVCGVkmhpGqPQnBdEbvSWoiyBDj8mcw9Af3hNfXMgw2W7op7d8w9lMfIJ6ixdz1E
+         djyiWjW32cNF3f3wPe6QFPjtIopHaT7Ou/uPgnopXCAdVk0NpwuV2sz36f+GNiBITkSP
+         3CGTrTAYm6DWZhLeHorrip1U/FZGFhxxOO/x3yYrmUD5Uie7SyNYYVd6pC0T3ajPRXr4
+         SiCA==
+X-Gm-Message-State: AOAM532aQD3VRT1zkzkV6OnTX4rsvs5u5kBDU2bO4ei0w+6JzNl+51yA
+        ep/MUWqUBDsqyLVe+xB4iKYyJmOicB+TwEmjmsbZAw==
+X-Google-Smtp-Source: ABdhPJygigo4EqPc+yqir+aRi30bS1mpvV1cF5plaBFBJoaeqBve89TpMGWKhtsUTAscu1yjyEjJDFo7iN0qttT88XU=
+X-Received: by 2002:a62:8081:: with SMTP id j123mr8666722pfd.80.1597187092283;
+ Tue, 11 Aug 2020 16:04:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200810121658.54657-1-linmiaohe@huawei.com>
-In-Reply-To: <20200810121658.54657-1-linmiaohe@huawei.com>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Tue, 11 Aug 2020 16:02:51 -0700
-Message-ID: <CAM_iQpW6R5=J0VPwNimOLJRrhwUh--aknpbksizzs0o6Q-gxFA@mail.gmail.com>
-Subject: Re: [PATCH] net: Fix potential memory leak in proto_register()
-To:     Miaohe Lin <linmiaohe@huawei.com>
-Cc:     David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Sitnicki <jakub@cloudflare.com>,
-        Kees Cook <keescook@chromium.org>, zhang.lin16@zte.com.cn,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <CAKwvOd=ypa8xE-kaDa7XtzPsBH8=Xu_pZj2rnWaeawNs=3dDkw@mail.gmail.com>
+ <20200811173655.1162093-1-nivedita@alum.mit.edu> <CAKwvOdnjLfQ0fWsrFYDJ2O+qFAfEFnTEEnW-aHrPha8G3_WTrg@mail.gmail.com>
+ <20200811224436.GA1302731@rani.riverdale.lan>
+In-Reply-To: <20200811224436.GA1302731@rani.riverdale.lan>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 11 Aug 2020 16:04:40 -0700
+Message-ID: <CAKwvOdnvyVapAJBchivu8SxoQriKEu1bAimm8688EH=uq5YMqA@mail.gmail.com>
+Subject: Re: [PATCH] x86/boot/compressed: Disable relocation relaxation for
+ non-pie link
+To:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
+Cc:     Fangrui Song <maskray@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        e5ten.arch@gmail.com,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "# 3.4.x" <stable@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 5:19 AM Miaohe Lin <linmiaohe@huawei.com> wrote:
+On Tue, Aug 11, 2020 at 3:44 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
 >
-> If we failed to assign proto idx, we free the twsk_slab_name but forget to
-> free the twsk_slab. Add a helper function tw_prot_cleanup() to free these
-> together and also use this helper function in proto_unregister().
+> On Tue, Aug 11, 2020 at 10:58:40AM -0700, Nick Desaulniers wrote:
+> > > Cc: stable@vger.kernel.org # 4.19.x
+> >
+> > Thanks Arvind, good write up.  Just curious about this stable tag, how
+> > come you picked 4.19?  I can see boot failures in our CI for x86+LLD
+> > back to 4.9.  Can we amend that tag to use `# 4.9`? I'd be happy to
+> > help submit backports should they fail to apply cleanly.
+> > https://travis-ci.com/github/ClangBuiltLinux/continuous-integration/builds/179237488
+> >
 >
-> Fixes: b45ce32135d1 ("sock: fix potential memory leak in proto_register()")
-> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
-> ---
->  net/core/sock.c | 25 +++++++++++++++----------
->  1 file changed, 15 insertions(+), 10 deletions(-)
->
-> diff --git a/net/core/sock.c b/net/core/sock.c
-> index 49cd5ffe673e..c9083ad44ea1 100644
-> --- a/net/core/sock.c
-> +++ b/net/core/sock.c
-> @@ -3406,6 +3406,16 @@ static void sock_inuse_add(struct net *net, int val)
->  }
->  #endif
->
-> +static void tw_prot_cleanup(struct timewait_sock_ops *twsk_prot)
-> +{
-> +       if (!twsk_prot)
-> +               return;
-> +       kfree(twsk_prot->twsk_slab_name);
-> +       twsk_prot->twsk_slab_name = NULL;
-> +       kmem_cache_destroy(twsk_prot->twsk_slab);
+> 4.19 renamed LDFLAGS to KBUILD_LDFLAGS. For 4.4, 4.9 and 4.14 the patch
+> needs to be modified, KBUILD_LDFLAGS -> LDFLAGS, so I figured we should
+> submit backports separately. For 4.19 onwards, it should apply without
+> changes I think.
 
-Hmm, are you sure you can free the kmem cache name before
-kmem_cache_destroy()? To me, it seems kmem_cache_destroy()
-frees the name via slab_kmem_cache_release() via kfree_const().
-With your patch, we have a double-free on the name?
+Cool, sounds good.  I'll keep an eye out for when stable goes to pick this up.
 
-Or am I missing anything?
-
-Thanks.
+tglx, Ingo, BP, can we pretty please get this in tip/urgent for
+inclusion into 5.9?
+-- 
+Thanks,
+~Nick Desaulniers
