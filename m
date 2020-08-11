@@ -2,104 +2,126 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ABCCC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 11:18:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1D0FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 11:19:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7112E20768
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 11:18:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C84920716
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 11:19:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jz+aoNkI"
+	dkim=pass (1024-bit key) header.d=tencent.com header.i=@tencent.com header.b="ITglALbI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728709AbgHKLS4 (ORCPT
+        id S1728718AbgHKLTq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 07:18:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49694 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728469AbgHKLSz (ORCPT
+        Tue, 11 Aug 2020 07:19:46 -0400
+Received: from mail4.tencent.com ([183.57.53.109]:50365 "EHLO
+        mail4.tencent.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728663AbgHKLTp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 07:18:55 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76E9DC06174A
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 04:18:55 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id k8so2463007wma.2
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 04:18:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WhMlMR0rWuSfJKIPPo9mAojnhHNWUY4zWDVzFeeHjaY=;
-        b=Jz+aoNkIcFDY6nGZZsPqisGocV5D1HD4hNhlDzRzcadvtZ56+uD7mYRpbzlO1RgNuD
-         UVvnCfwAGTtGwlnAE3kl2NJbWOoBS/+F9gGWz26ruptiARES3F6KsanO7nMWQ1iwT/jB
-         TQkZIYgtxn3zms7KAb1qOqESycn3YzMQLHOQpeBtgnK/ynLY5wdtwTGMywNCsE/LL6GH
-         QN9R2XV80pwRjRJ2RA2WP7mgP9ZJhq4CmrOxfyf7EZYZKIDlURJYWhsXcRv9cYqwcZ0Q
-         PboD5Kf8J5hrbCxANqp/ZnV0lVcLRK0LPo5WcPcV2ISTe9JHfFQ/HTQHWVumtrw+s4HP
-         aN1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WhMlMR0rWuSfJKIPPo9mAojnhHNWUY4zWDVzFeeHjaY=;
-        b=MvetusAOlTAArWjLZym63bJhqTEVxI/bpCPwYIt9yFaW+heTtwwZgprBoB300PLLmM
-         1MyRWqcZ3YRm09JDjo+VYoDrRboO7U+aIULX+4aW/QTwtmRpFaj9VFdMF0LjuEo0VKBU
-         SzdUK/1x50fa1EFM/SM8kaVMWIpXsnVrjAVb0N4TsAAd6Dt2Ww5EFa6cBKZIAb/lLs4Q
-         tWbzxW0yLdo8BzE7paQusBSZh8amv/NFR0HHKOs+0OBNad4c8Y54QLP6Y5953MpM/UqB
-         aQ3qQiMkjASXhs5m0Qg853AJCqpuyqgvtB3mgoCh6HllaK04mewMtsPqGABFsRzSTn7w
-         Gvdw==
-X-Gm-Message-State: AOAM53140fJDQXdnlKsyH8c7dUk65cMrowqClE86+tQa++8P8aeDvz9F
-        fZfhJlygK3SEZWAmd8H9iBZvF3qK
-X-Google-Smtp-Source: ABdhPJwBz0QXOIsjFl8fTDXDwU6V3q5VDdVsjTjA4lHmld5TpMebvTdgNMLcWqtfmJW6sn22ji8TbA==
-X-Received: by 2002:a1c:750f:: with SMTP id o15mr3737321wmc.182.1597144734158;
-        Tue, 11 Aug 2020 04:18:54 -0700 (PDT)
-Received: from laptop.fritz.box ([2a02:908:1252:fb60:be8a:bd56:1f94:86e7])
-        by smtp.gmail.com with ESMTPSA id t14sm29172064wrg.38.2020.08.11.04.18.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Aug 2020 04:18:53 -0700 (PDT)
-From:   "=?UTF-8?q?Christian=20K=C3=B6nig?=" 
-        <ckoenig.leichtzumerken@gmail.com>
-X-Google-Original-From: =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
-To:     peterz@infradead.org, mingo@redhat.com, will@kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: [PATCH] locking/rwsem: remove redundant semicolon of down_write_nest_lock
-Date:   Tue, 11 Aug 2020 13:18:52 +0200
-Message-Id: <20200811111852.190209-1-christian.koenig@amd.com>
-X-Mailer: git-send-email 2.25.1
+        Tue, 11 Aug 2020 07:19:45 -0400
+Received: from EX-SZ022.tencent.com (unknown [10.28.6.88])
+        by mail4.tencent.com (Postfix) with ESMTP id 0FA26723BE;
+        Tue, 11 Aug 2020 19:19:42 +0800 (CST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tencent.com;
+        s=s202002; t=1597144782;
+        bh=ik46Ua1t/TkaPI6X0sFrHvqZLSqTSbhSIKiPdTF69YE=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=ITglALbIeNrzi9eSOgRHjxSZRobtjudFRtHbigEMb/NF3HJBRNmXYoRhrwfLhXHzQ
+         lnWU212V9vAT4Gy7ZskXE11n+DUw3ODJmHer3Be2efYQ6JoXUAAlYAyfyaGa5hRnSQ
+         0EaJcmlmEoJtMwF7YflDXKEEBiqsCP/gvM2+7r/I=
+Received: from EX-SZ006.tencent.com (10.28.6.30) by EX-SZ022.tencent.com
+ (10.28.6.88) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Tue, 11 Aug
+ 2020 19:19:41 +0800
+Received: from EX-SZ012.tencent.com (10.28.6.36) by EX-SZ006.tencent.com
+ (10.28.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Tue, 11 Aug
+ 2020 19:19:41 +0800
+Received: from EX-SZ012.tencent.com ([fe80::f57b:8971:e6d4:fe6b]) by
+ EX-SZ012.tencent.com ([fe80::f57b:8971:e6d4:fe6b%3]) with mapi id
+ 15.01.1847.007; Tue, 11 Aug 2020 19:19:41 +0800
+From:   =?utf-8?B?YmVuYmppYW5nKOiSi+W9qik=?= <benbjiang@tencent.com>
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+CC:     Jiang Biao <benbjiang@gmail.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
+        "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "bsegall@google.com" <bsegall@google.com>,
+        "mgorman@suse.de" <mgorman@suse.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RFC v2] sched/fair: simplify the work when reweighting
+ entity(Internet mail)
+Thread-Topic: [PATCH RFC v2] sched/fair: simplify the work when reweighting
+ entity(Internet mail)
+Thread-Index: AQHWbAzE7ZT5yMr2eUuDjHbLKgkwdakyK2YAgAAZAAA=
+Date:   Tue, 11 Aug 2020 11:19:41 +0000
+Message-ID: <4E0D3766-146C-4864-984A-79B90F0B2EEF@tencent.com>
+References: <20200806161406.22629-1-benbjiang@tencent.com>
+ <9149cf7c-df81-cf9d-65f7-a51d4ec76f78@arm.com>
+In-Reply-To: <9149cf7c-df81-cf9d-65f7-a51d4ec76f78@arm.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.28.2.14]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <2E7D3BEAAA82B043A6B12476C2E9F629@tencent.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guchun Chen <guchun.chen@amd.com>
-
-Otherwise, braces are needed when using it.
-
-Signed-off-by: Guchun Chen <guchun.chen@amd.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
----
- include/linux/rwsem.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/linux/rwsem.h b/include/linux/rwsem.h
-index 7e5b2a4eb560..7a5bf5d50489 100644
---- a/include/linux/rwsem.h
-+++ b/include/linux/rwsem.h
-@@ -179,7 +179,7 @@ extern void _down_write_nest_lock(struct rw_semaphore *sem, struct lockdep_map *
- do {								\
- 	typecheck(struct lockdep_map *, &(nest_lock)->dep_map);	\
- 	_down_write_nest_lock(sem, &(nest_lock)->dep_map);	\
--} while (0);
-+} while (0)
- 
- /*
-  * Take/release a lock when not the owner will release it.
--- 
-2.25.1
-
+SGksDQoNCj4gT24gQXVnIDExLCAyMDIwLCBhdCA1OjUwIFBNLCBEaWV0bWFyIEVnZ2VtYW5uIDxk
+aWV0bWFyLmVnZ2VtYW5uQGFybS5jb20+IHdyb3RlOg0KPiANCj4gT24gMDYvMDgvMjAyMCAxODox
+NCwgSmlhbmcgQmlhbyB3cm90ZToNCj4+IEZyb206IEppYW5nIEJpYW8gPGJlbmJqaWFuZ0B0ZW5j
+ZW50LmNvbT4NCj4+IA0KPj4gSWYgYSBzZSBpcyBvbl9ycSB3aGVuIHJld2VpZ2h0aW5nIGVudGl0
+eSwgYWxsIHdlIG5lZWQgc2hvdWxkIGJlDQo+PiB1cGRhdGluZyB0aGUgbG9hZCBvZiBjZnNfcnEs
+IG90aGVyIGRlcXVldWUvZW5xdWV1ZSB3b3JrIGNvdWxkIGJlDQo+PiByZWR1bmRhbnQsIHN1Y2gg
+YXMsDQo+PiAqIG5yX3J1bm5pbmctLS9ucl9ydW5uaW5nKysNCj4+IA0KPj4gRXZlbiB0aG91Z2gg
+dGhlIGZvbGxvd2luZyBkZXF1ZXVlL2VucXVldWUgcGF0aCB3b3VsZCBuZXZlciBiZSByZWFjaGVk
+DQo+PiAqIGFjY291bnRfbnVtYV9kZXF1ZXVlL2FjY291bnRfbnVtYV9lbnF1ZXVlDQo+PiAqIGxp
+c3RfZGVsL2xpc3RfYWRkIGZyb20vaW50byBjZnNfdGFza3MNCj4+IGJ1dCBpdCBjb3VsZCBiZSBh
+IGxpdHRsZSBjb25mdXNpbmcuDQo+PiANCj4+IFNpbXBsaWZ5aW5nIHRoZSBsb2dpYyBjb3VsZCBi
+ZSBoZWxwZnVsIHRvIHJlZHVjZSBhIGxpdHRlIG92ZXJoZWFkIGZvcg0KPj4gaG90IHBhdGgsIGFu
+ZCBtYWtlIGl0IGNsZWFuZXIgYW5kIG1vcmUgcmVhZGFibGUuDQo+IA0KPiBMR1RNLiBJIGd1ZXNz
+IHlvdSBoYXZlIHRvIHJlc2VuZCBpdCB3L28gdGhlIFJGQyB0YWcuDQpXaWxsIGRvIHNvb24uDQo+
+IA0KPiBNYXliZSB5b3UgY2FuIHJld29yayB0aGUgcGF0Y2ggaGVhZGVyIGEgbGl0dGxlPw0KPiAN
+Cj4gU29tZXRoaW5nIGxpa2UgdGhpczoNCj4gDQo+IFRoZSBjb2RlIGluIHJld2VpZ2h0X2VudGl0
+eSgpIGNhbiBiZSBzaW1wbGlmaWVkLg0KPiANCj4gRm9yIGEgc2NoZWQgZW50aXR5IG9uIHRoZSBy
+cSwgdGhlIGVudGl0eSBhY2NvdW50aW5nIGNhbiBiZSByZXBsYWNlZCBieQ0KPiBjZnNfcnEgaW5z
+dGFudGFuZW91cyBsb2FkIHVwZGF0ZXMgY3VycmVudGx5IGNhbGxlZCBmcm9tIHdpdGhpbiB0aGUN
+Cj4gZW50aXR5IGFjY291bnRpbmcuDQo+IA0KPiBFdmVuIHRob3VnaCBhbiBlbnRpdHkgb24gdGhl
+IHJxIGNhbid0IHJlcHJlc2VudCBhIHRhc2sgaW4NCj4gcmV3ZWlnaHRfZW50aXR5KCkgKGEgdGFz
+ayBpcyBhbHdheXMgZGVxdWV1ZWQgYmVmb3JlIGNhbGxpbmcgdGhpcw0KPiBmdW5jdGlvbikgYW5k
+IHNvIHRoZSBudW1hIHRhc2sgYWNjb3VudGluZyBhbmQgdGhlIHJxLT5jZnNfdGFza3MgbGlzdA0K
+PiBtYW5hZ2VtZW50IG9mIHRoZSBlbnRpdHkgYWNjb3VudGluZyBhcmUgbmV2ZXIgY2FsbGVkLCB0
+aGUgcmVkdW5kYW50DQo+IGNmc19ycS0+bnJfcnVubmluZyBkZWNyZW1lbnQvaW5jcmVtZW50IHdp
+bGwgYmUgYXZvaWRlZC4NClRoYXTigJlzIGEgbXVjaCBiZXR0ZXIuIEnigJlsbCBwaWNrIHRoZSBo
+ZWFkZXIgaWYgeW91IGRvbuKAmXQgbWluZC4gOikNCg0KVGhhbmtzIGEgbG90IGZvciB5b3VyIGtp
+bmRseSByZXBseSBhbmQgZGV0YWlsZWQgZXhwbGFuYXRpb24uDQoNClJlZ2FyZHMsDQpKaWFuZw0K
+PiANCj4+IA0KPj4gU2lnbmVkLW9mZi1ieTogSmlhbmcgQmlhbyA8YmVuYmppYW5nQHRlbmNlbnQu
+Y29tPg0KPj4gLS0tDQo+PiB2MjwtdjE6IA0KPj4gLSBBbWVuZCB0aGUgY29tbWl0IGxvZy4NCj4+
+IA0KPj4ga2VybmVsL3NjaGVkL2ZhaXIuYyB8IDQgKystLQ0KPj4gMSBmaWxlIGNoYW5nZWQsIDIg
+aW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkNCj4+IA0KPj4gZGlmZiAtLWdpdCBhL2tlcm5l
+bC9zY2hlZC9mYWlyLmMgYi9rZXJuZWwvc2NoZWQvZmFpci5jDQo+PiBpbmRleCAwNGZhOGRiY2Zh
+NGQuLjE4YThmYzdiZDBkZSAxMDA2NDQNCj4+IC0tLSBhL2tlcm5lbC9zY2hlZC9mYWlyLmMNCj4+
+ICsrKyBiL2tlcm5lbC9zY2hlZC9mYWlyLmMNCj4+IEBAIC0zMDg2LDcgKzMwODYsNyBAQCBzdGF0
+aWMgdm9pZCByZXdlaWdodF9lbnRpdHkoc3RydWN0IGNmc19ycSAqY2ZzX3JxLCBzdHJ1Y3Qgc2No
+ZWRfZW50aXR5ICpzZSwNCj4+IAkJLyogY29tbWl0IG91dHN0YW5kaW5nIGV4ZWN1dGlvbiB0aW1l
+ICovDQo+PiAJCWlmIChjZnNfcnEtPmN1cnIgPT0gc2UpDQo+PiAJCQl1cGRhdGVfY3VycihjZnNf
+cnEpOw0KPj4gLQkJYWNjb3VudF9lbnRpdHlfZGVxdWV1ZShjZnNfcnEsIHNlKTsNCj4+ICsJCXVw
+ZGF0ZV9sb2FkX3N1YigmY2ZzX3JxLT5sb2FkLCBzZS0+bG9hZC53ZWlnaHQpOw0KPj4gCX0NCj4+
+IAlkZXF1ZXVlX2xvYWRfYXZnKGNmc19ycSwgc2UpOw0KPj4gDQo+PiBAQCAtMzEwMiw3ICszMTAy
+LDcgQEAgc3RhdGljIHZvaWQgcmV3ZWlnaHRfZW50aXR5KHN0cnVjdCBjZnNfcnEgKmNmc19ycSwg
+c3RydWN0IHNjaGVkX2VudGl0eSAqc2UsDQo+PiANCj4+IAllbnF1ZXVlX2xvYWRfYXZnKGNmc19y
+cSwgc2UpOw0KPj4gCWlmIChzZS0+b25fcnEpDQo+PiAtCQlhY2NvdW50X2VudGl0eV9lbnF1ZXVl
+KGNmc19ycSwgc2UpOw0KPj4gKwkJdXBkYXRlX2xvYWRfYWRkKCZjZnNfcnEtPmxvYWQsIHNlLT5s
+b2FkLndlaWdodCk7DQo+PiANCj4+IH0NCg0K
