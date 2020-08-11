@@ -2,100 +2,382 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD1FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 12:55:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64AF9C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 12:57:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C65722076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 12:55:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29F16206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 12:57:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dOLn0qQi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728664AbgHKMy4 (ORCPT
+        id S1728672AbgHKM54 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 08:54:56 -0400
-Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:43536 "EHLO
-        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728081AbgHKMyv (ORCPT
+        Tue, 11 Aug 2020 08:57:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36670 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728081AbgHKM5v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 08:54:51 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R231e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0U5U0lpc_1597150487;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U5U0lpc_1597150487)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 11 Aug 2020 20:54:48 +0800
-Subject: Re: [Resend PATCH 2/6] mm/memcg: remove useless check on
- page->mem_cgroup
-To:     Michal Hocko <mhocko@suse.com>
-Cc:     akpm@linux-foundation.org, Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <1597144232-11370-1-git-send-email-alex.shi@linux.alibaba.com>
- <1597144232-11370-2-git-send-email-alex.shi@linux.alibaba.com>
- <20200811113008.GK4793@dhcp22.suse.cz>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <776b0e6f-4129-9fb9-0f66-47757cf320d5@linux.alibaba.com>
-Date:   Tue, 11 Aug 2020 20:54:18 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        Tue, 11 Aug 2020 08:57:51 -0400
+Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A4A3C06174A
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 05:57:51 -0700 (PDT)
+Received: by mail-vk1-xa41.google.com with SMTP id s81so2602308vkb.3
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 05:57:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AL6Rc0fjEZsUIiqTKaF4QuZnNQMFT5drdpMHmwxBtLE=;
+        b=dOLn0qQiuPhr7thP74vx2KSfABzfXum3+YLt83xU5hH8EgFgq8mlO4lRH+rQs7BeP/
+         UT7/Agbj25A/CFn5jGgRTfO3EbgHSqajG/aiJyDwY3SkZcUkJr0ta4c+yr41x4kr87j8
+         QqX/JR0QoARZOxK7a2ak1khlq7CctO0tIBoloN+YxjSZnIaRYjL3caSUn5kOs+823UTu
+         s7Sug6qdrseeL9pWqMLjaP8d4m1yagaRvZnNkYQqTGwbl1b2Y6csg6CKVLUxt2j1S7YP
+         x83IXmLLFXvwUe/OpYSZ5B6eENKejjpQUXBLjb2dPsSGiSlmO/kJs+Lkvt9snleE9Fpp
+         KgrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AL6Rc0fjEZsUIiqTKaF4QuZnNQMFT5drdpMHmwxBtLE=;
+        b=gSTQg1xIB3MSf0f/NqqfS00RWgkibfs8g4YAU5rav0wTTPSk9KUPkLBle0XzGoSgWz
+         wl9Ond3jZ34JDUkX/EBrm23N2mTKRmnwqw99sfTT/GkRuCIFIcicBOA0srQUz+9mmr6S
+         aZGS+YTO4YF6/6snPVetHZo+mPGiCusnPt28mrVoCKxMSelezQ4ScYBX9fx8sxSWCrku
+         /iOGYMX+Z8S84ROCjuj9VGSOjxHQNJ+RzShq2cnKCDhWzURG1HVaTuTBPOYFGikscwKY
+         dSs4Fdh5arLumtaLZe4zYZufF6xJL7gP1dOSoC5vQ9cBU1slooT0JGt2I+YbjwMWSX0U
+         YqLw==
+X-Gm-Message-State: AOAM5332J4AJtL0/Zy5+hq7R9zdS317RGH13wOFU5UF4vmpaRbvuSQfQ
+        p59UuH0LASvuKT7WoP9LOu28Bl14kqHYlkoUdkhFLA==
+X-Google-Smtp-Source: ABdhPJy7GhXD9WF+vFOxBmvqLYSQ9qGDvGcYcKLvAoiMERjbXwoEosLE/h7Z2U0e3Ob+MQEwh3ibR3YWWu/7+eIUqds=
+X-Received: by 2002:a1f:6282:: with SMTP id w124mr24283068vkb.46.1597150670494;
+ Tue, 11 Aug 2020 05:57:50 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200811113008.GK4793@dhcp22.suse.cz>
-Content-Type: text/plain; charset=gbk
-Content-Transfer-Encoding: 7bit
+References: <20200725181404.18951-1-ansuelsmth@gmail.com> <20200725181404.18951-2-ansuelsmth@gmail.com>
+In-Reply-To: <20200725181404.18951-2-ansuelsmth@gmail.com>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Tue, 11 Aug 2020 18:27:39 +0530
+Message-ID: <CAHLCerMc8yUjh9qwUCa=jMZHs18GC4qeS3rqT1_6K90QJd=nVA@mail.gmail.com>
+Subject: Re: [RFC PATCH v5 1/7] drivers: thermal: tsens: Add VER_0 tsens version
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From beeac61119ab39b1869c520c0f272fb8bab93765 Mon Sep 17 00:00:00 2001
-From: Alex Shi <alex.shi@linux.alibaba.com>
-Date: Wed, 5 Aug 2020 21:02:30 +0800
-Subject: [PATCH 2/6] memcg: bail out early from swap accounting when memcg is
- disabled
+On Sat, Jul 25, 2020 at 11:44 PM Ansuel Smith <ansuelsmth@gmail.com> wrote:
+>
+> VER_0 is used to describe device based on tsens version before v0.1.
+> These device are devices based on msm8960 for example apq8064 or
+> ipq806x.
+>
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> ---
+>  drivers/thermal/qcom/tsens.c | 160 +++++++++++++++++++++++++++--------
+>  drivers/thermal/qcom/tsens.h |   7 +-
+>  2 files changed, 132 insertions(+), 35 deletions(-)
+>
+> diff --git a/drivers/thermal/qcom/tsens.c b/drivers/thermal/qcom/tsens.c
+> index 9fe9a2b26705..78840c1bc5d2 100644
+> --- a/drivers/thermal/qcom/tsens.c
+> +++ b/drivers/thermal/qcom/tsens.c
+> @@ -516,6 +516,15 @@ static irqreturn_t tsens_irq_thread(int irq, void *data)
+>                         dev_dbg(priv->dev, "[%u] %s: no violation:  %d\n",
+>                                 hw_id, __func__, temp);
+>                 }
+> +
+> +               if (tsens_version(priv) < VER_0_1) {
+> +                       /* Constraint: There is only 1 interrupt control register for all
+> +                        * 11 temperature sensor. So monitoring more than 1 sensor based
+> +                        * on interrupts will yield inconsistent result. To overcome this
+> +                        * issue we will monitor only sensor 0 which is the master sensor.
+> +                        */
+> +                       break;
+> +               }
+>         }
+>
+>         return IRQ_HANDLED;
+> @@ -531,6 +540,13 @@ static int tsens_set_trips(void *_sensor, int low, int high)
+>         int high_val, low_val, cl_high, cl_low;
+>         u32 hw_id = s->hw_id;
+>
+> +       if (tsens_version(priv) < VER_0_1) {
+> +               /* Pre v0.1 IP had a single register for each type of interrupt
+> +                * and thresholds
+> +                */
+> +               hw_id = 0;
+> +       }
+> +
+>         dev_dbg(dev, "[%u] %s: proposed thresholds: (%d:%d)\n",
+>                 hw_id, __func__, low, high);
+>
+> @@ -550,6 +566,12 @@ static int tsens_set_trips(void *_sensor, int low, int high)
+>         tsens_set_interrupt(priv, hw_id, LOWER, true);
+>         tsens_set_interrupt(priv, hw_id, UPPER, true);
+>
+> +       /* VER_0 require to set MIN and MAX THRESH */
+> +       if (tsens_version(priv) < VER_0_1) {
+> +               regmap_field_write(priv->rf[MIN_THRESH_0], 0);
+> +               regmap_field_write(priv->rf[MAX_THRESH_0], 120000);
 
-If we disabled memcg by cgroup_disable=memory, the swap charges are
-still called. Let's return from the funcs earlier.
+Since MIN_THRESH_0 and MAX_THRESH_0 are the only two threshold on pre
+0.1 IP, just (mis)use the already predefined LOW_THRESH_0 and
+UP_THRESH_0 in regfield_ids in init_common() below? Then we won't need
+this special casing here. All the special casing ugliness can then
+stay in init_common() with comments.
 
-Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Reviewed-by: Roman Gushchin <guro@fb.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: cgroups@vger.kernel.org
-Cc: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org
----
- mm/memcontrol.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+> +       }
+> +
+>         spin_unlock_irqrestore(&priv->ul_lock, flags);
+>
+>         dev_dbg(dev, "[%u] %s: (%d:%d)->(%d:%d)\n",
+> @@ -584,18 +606,21 @@ int get_temp_tsens_valid(const struct tsens_sensor *s, int *temp)
+>         u32 valid;
+>         int ret;
+>
+> -       ret = regmap_field_read(priv->rf[valid_idx], &valid);
+> -       if (ret)
+> -               return ret;
+> -       while (!valid) {
+> -               /* Valid bit is 0 for 6 AHB clock cycles.
+> -                * At 19.2MHz, 1 AHB clock is ~60ns.
+> -                * We should enter this loop very, very rarely.
+> -                */
+> -               ndelay(400);
+> +       /* VER_0 doesn't have VALID bit */
+> +       if (tsens_version(priv) >= VER_0_1) {
 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 299382fc55a9..419cf565f40b 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -7098,6 +7098,9 @@ void mem_cgroup_swapout(struct page *page, swp_entry_t entry)
- 	VM_BUG_ON_PAGE(PageLRU(page), page);
- 	VM_BUG_ON_PAGE(page_count(page), page);
- 
-+	if (mem_cgroup_disabled())
-+		return;
-+
- 	if (cgroup_subsys_on_dfl(memory_cgrp_subsys))
- 		return;
- 
-@@ -7163,6 +7166,9 @@ int mem_cgroup_try_charge_swap(struct page *page, swp_entry_t entry)
- 	struct mem_cgroup *memcg;
- 	unsigned short oldid;
- 
-+	if (mem_cgroup_disabled())
-+		return 0;
-+
- 	if (!cgroup_subsys_on_dfl(memory_cgrp_subsys))
- 		return 0;
- 
--- 
-1.8.3.1
+Since 8960 needs a custom get_temp function, is this change really needed?
 
+>                 ret = regmap_field_read(priv->rf[valid_idx], &valid);
+>                 if (ret)
+>                         return ret;
+> +               while (!valid) {
+> +                       /* Valid bit is 0 for 6 AHB clock cycles.
+> +                        * At 19.2MHz, 1 AHB clock is ~60ns.
+> +                        * We should enter this loop very, very rarely.
+> +                        */
+> +                       ndelay(400);
+> +                       ret = regmap_field_read(priv->rf[valid_idx], &valid);
+> +                       if (ret)
+> +                               return ret;
+> +               }
+>         }
+>
+>         /* Valid bit is set, OK to read the temperature */
+> @@ -765,8 +790,8 @@ int __init init_common(struct tsens_priv *priv)
+>
+>         if (tsens_version(priv) > VER_0_1) {
+>                 for (i = VER_MAJOR; i <= VER_STEP; i++) {
+> -                       priv->rf[i] = devm_regmap_field_alloc(dev, priv->srot_map,
+> -                                                             priv->fields[i]);
+> +                       priv->rf[i] = devm_regmap_field_alloc(
+> +                               dev, priv->srot_map, priv->fields[i]);
+
+This doesn't change any code, simply reformats the code to 80 columns.
+Avoid adding such lines to other features, makes it harder to review
+changes.
+
+Please ignore the 80 column warning here and elsewhere below when it
+is only going over by a few characters. Run checkpatch on your patches
+which has now increased the number of columns to 100 now.
+
+
+>                         if (IS_ERR(priv->rf[i]))
+>                                 return PTR_ERR(priv->rf[i]);
+>                 }
+> @@ -775,12 +800,80 @@ int __init init_common(struct tsens_priv *priv)
+>                         goto err_put_device;
+>         }
+>
+> -       priv->rf[TSENS_EN] = devm_regmap_field_alloc(dev, priv->srot_map,
+> -                                                    priv->fields[TSENS_EN]);
+> -       if (IS_ERR(priv->rf[TSENS_EN])) {
+> -               ret = PTR_ERR(priv->rf[TSENS_EN]);
+> -               goto err_put_device;
+> +       if (tsens_version(priv) >= VER_0_1) {
+> +               priv->rf[TSENS_EN] = devm_regmap_field_alloc(
+> +                       dev, priv->srot_map, priv->fields[TSENS_EN]);
+> +               if (IS_ERR(priv->rf[TSENS_EN])) {
+> +                       ret = PTR_ERR(priv->rf[TSENS_EN]);
+> +                       goto err_put_device;
+> +               }
+> +
+> +               priv->rf[SENSOR_EN] = devm_regmap_field_alloc(
+> +                       dev, priv->srot_map, priv->fields[SENSOR_EN]);
+> +               if (IS_ERR(priv->rf[SENSOR_EN])) {
+> +                       ret = PTR_ERR(priv->rf[SENSOR_EN]);
+> +                       goto err_put_device;
+> +               }
+> +               priv->rf[INT_EN] = devm_regmap_field_alloc(
+> +                       dev, priv->tm_map, priv->fields[INT_EN]);
+> +               if (IS_ERR(priv->rf[INT_EN])) {
+> +                       ret = PTR_ERR(priv->rf[INT_EN]);
+> +                       goto err_put_device;
+> +               }
+> +       } else {
+
+Let's not create two big sections with if-else for 8960 and everything
+else. For example, what is wrong with using common code for TSENS_EN?
+
+If the concern is memory wasted trying to allocate fields not present
+on this older platform, perhaps consider adding a check in the loop to
+break early in case of 8960?
+
+> +               priv->rf[TSENS_EN] = devm_regmap_field_alloc(
+> +                       dev, priv->tm_map, priv->fields[TSENS_EN]);
+> +               if (IS_ERR(priv->rf[TSENS_EN])) {
+> +                       ret = PTR_ERR(priv->rf[TSENS_EN]);
+> +                       goto err_put_device;
+> +               }
+> +
+> +               priv->rf[TSENS_SW_RST] = devm_regmap_field_alloc(
+> +                       dev, priv->tm_map, priv->fields[TSENS_EN]);
+> +               if (IS_ERR(priv->rf[TSENS_EN])) {
+> +                       ret = PTR_ERR(priv->rf[TSENS_EN]);
+> +                       goto err_put_device;
+> +               }
+> +
+> +               /* enable TSENS */
+> +               regmap_field_write(priv->rf[TSENS_EN], 1);
+> +
+> +               priv->rf[LOW_INT_CLEAR_0] = devm_regmap_field_alloc(
+> +                       dev, priv->tm_map, priv->fields[LOW_INT_CLEAR_0]);
+> +               if (IS_ERR(priv->rf[LOW_INT_CLEAR_0])) {
+> +                       ret = PTR_ERR(priv->rf[LOW_INT_CLEAR_0]);
+> +                       goto err_put_device;
+> +               }
+> +
+> +               priv->rf[UP_INT_CLEAR_0] = devm_regmap_field_alloc(
+> +                       dev, priv->tm_map, priv->fields[UP_INT_CLEAR_0]);
+> +               if (IS_ERR(priv->rf[UP_INT_CLEAR_0])) {
+> +                       ret = PTR_ERR(priv->rf[UP_INT_CLEAR_0]);
+> +                       goto err_put_device;
+> +               }
+> +
+> +               priv->rf[MIN_THRESH_0] = devm_regmap_field_alloc(
+> +                       dev, priv->tm_map, priv->fields[MIN_THRESH_0]);
+> +               if (IS_ERR(priv->rf[MIN_THRESH_0])) {
+> +                       ret = PTR_ERR(priv->rf[MIN_THRESH_0]);
+> +                       goto err_put_device;
+> +               }
+> +
+> +               priv->rf[MAX_THRESH_0] = devm_regmap_field_alloc(
+> +                       dev, priv->tm_map, priv->fields[MAX_THRESH_0]);
+> +               if (IS_ERR(priv->rf[MAX_THRESH_0])) {
+> +                       ret = PTR_ERR(priv->rf[MAX_THRESH_0]);
+> +                       goto err_put_device;
+> +               }
+> +
+> +               priv->rf[TRDY] = devm_regmap_field_alloc(dev, priv->tm_map,
+> +                                                        priv->fields[TRDY]);
+> +               if (IS_ERR(priv->rf[TRDY])) {
+> +                       ret = PTR_ERR(priv->rf[TRDY]);
+> +                       goto err_put_device;
+> +               }
+>         }
+> +
+>         ret = regmap_field_read(priv->rf[TSENS_EN], &enabled);
+>         if (ret)
+>                 goto err_put_device;
+> @@ -790,19 +883,6 @@ int __init init_common(struct tsens_priv *priv)
+>                 goto err_put_device;
+>         }
+>
+> -       priv->rf[SENSOR_EN] = devm_regmap_field_alloc(dev, priv->srot_map,
+> -                                                     priv->fields[SENSOR_EN]);
+> -       if (IS_ERR(priv->rf[SENSOR_EN])) {
+> -               ret = PTR_ERR(priv->rf[SENSOR_EN]);
+> -               goto err_put_device;
+> -       }
+> -       priv->rf[INT_EN] = devm_regmap_field_alloc(dev, priv->tm_map,
+> -                                                  priv->fields[INT_EN]);
+> -       if (IS_ERR(priv->rf[INT_EN])) {
+> -               ret = PTR_ERR(priv->rf[INT_EN]);
+> -               goto err_put_device;
+> -       }
+> -
+>         /* This loop might need changes if enum regfield_ids is reordered */
+>         for (j = LAST_TEMP_0; j <= UP_THRESH_15; j += 16) {
+>                 for (i = 0; i < priv->feat->max_sensors; i++) {
+> @@ -856,7 +936,11 @@ int __init init_common(struct tsens_priv *priv)
+>         }
+>
+>         spin_lock_init(&priv->ul_lock);
+> -       tsens_enable_irq(priv);
+> +
+> +       /* VER_0 interrupt doesn't need to be enabled */
+> +       if (tsens_version(priv) >= VER_0_1)
+> +               tsens_enable_irq(priv);
+> +
+>         tsens_debug_init(op);
+>
+>  err_put_device:
+> @@ -952,10 +1036,18 @@ static int tsens_register_irq(struct tsens_priv *priv, char *irqname,
+>                 if (irq == -ENXIO)
+>                         ret = 0;
+>         } else {
+> -               ret = devm_request_threaded_irq(&pdev->dev, irq,
+> -                                               NULL, thread_fn,
+> -                                               IRQF_ONESHOT,
+> -                                               dev_name(&pdev->dev), priv);
+> +               /* VER_0 have a different interrupt type */
+
+Say how it is different.
+
+
+> +               if (tsens_version(priv) > VER_0)
+> +                       ret = devm_request_threaded_irq(&pdev->dev, irq, NULL,
+> +                                                       thread_fn, IRQF_ONESHOT,
+> +                                                       dev_name(&pdev->dev),
+> +                                                       priv);
+> +               else
+> +                       ret = devm_request_threaded_irq(&pdev->dev, irq,
+> +                                                       thread_fn, NULL,
+> +                                                       IRQF_TRIGGER_RISING,
+> +                                                       dev_name(&pdev->dev),
+> +                                                       priv);
+>                 if (ret)
+>                         dev_err(&pdev->dev, "%s: failed to get irq\n",
+>                                 __func__);
+> diff --git a/drivers/thermal/qcom/tsens.h b/drivers/thermal/qcom/tsens.h
+> index 59d01162c66a..f1120791737c 100644
+> --- a/drivers/thermal/qcom/tsens.h
+> +++ b/drivers/thermal/qcom/tsens.h
+> @@ -25,7 +25,8 @@ struct tsens_priv;
+>
+>  /* IP version numbers in ascending order */
+>  enum tsens_ver {
+> -       VER_0_1 = 0,
+> +       VER_0 = 0,
+> +       VER_0_1,
+>         VER_1_X,
+>         VER_2_X,
+>  };
+> @@ -441,6 +442,10 @@ enum regfield_ids {
+>         CRIT_THRESH_14,
+>         CRIT_THRESH_15,
+>
+> +       /* VER_0 MIN MAX THRESH */
+> +       MIN_THRESH_0,
+> +       MAX_THRESH_0,
+> +
+>         /* WATCHDOG */
+>         WDOG_BARK_STATUS,
+>         WDOG_BARK_CLEAR,
+> --
+> 2.27.0
+>
