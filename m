@@ -2,78 +2,88 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98AEFC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 12:07:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA9FBC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 12:13:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A02020756
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 12:07:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C00D420756
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 12:13:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728888AbgHKMHI (ORCPT
+        id S1728665AbgHKMMy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 08:07:08 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:43629 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728865AbgHKMHG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 08:07:06 -0400
-Received: by mail-io1-f72.google.com with SMTP id f19so9547075iol.10
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 05:07:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=HzQLLDC1IVxhcp7/2UGjOxAx/is2c+2Svqmxvr49UPw=;
-        b=Ewz7UjvAb/d0FZO08AqjEyYxu3MYO6U6BDh4V3ff6Fvor102/jEF6ZYVOL+4fJoJkh
-         GadJJdfRX8DaifZ/liNzNADspNZiLo4nR96B7EIUTeW8vWeH4PpJs8GtYCmcGTqfbB1x
-         uHzKCZMOBDCHR9glDBoWdcf3UMjQOdPEeTPs0LZj3xdCfmbkvp5L/FmDJQoWPnci9+Pz
-         C8tN725UZ6Gp5whubs4pzXWzAw7JuTqzBR7aWDlD3N0ymRlt1ZFwW1vEz8nrcsg61NCD
-         HZSnrYzbL8OtKy5VzZi+vl4w1MKaOWc1rv5k28mLrsvJG5xZSe2MO77I/vSk4mH9WNh/
-         C2FA==
-X-Gm-Message-State: AOAM532EXycgWJD9ZxjdZQ1o3dEmU7lOqhamG5ECHYKpiQ04Gp3dYG5n
-        Us31htFDWwKjucvDWGVfS350CdOkJhI9I24SytUmVEQovjjZ
-X-Google-Smtp-Source: ABdhPJxzQS39hv4MK29/Jx/x0y/5Yh1oJ5MVyHs9Ac+UcQli1on3FM41GDUlr03BCZqL5G33nbAGhCmN34y5wng1V3Lzp7VBKGAJ
+        Tue, 11 Aug 2020 08:12:54 -0400
+Received: from szxga03-in.huawei.com ([45.249.212.189]:3012 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728423AbgHKMLZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 08:11:25 -0400
+Received: from dggeme753-chm.china.huawei.com (unknown [172.30.72.53])
+        by Forcepoint Email with ESMTP id 2FEF98870F8A34B11D91;
+        Tue, 11 Aug 2020 20:10:50 +0800 (CST)
+Received: from dggeme753-chm.china.huawei.com (10.3.19.99) by
+ dggeme753-chm.china.huawei.com (10.3.19.99) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1913.5; Tue, 11 Aug 2020 20:10:49 +0800
+Received: from dggeme753-chm.china.huawei.com ([10.7.64.70]) by
+ dggeme753-chm.china.huawei.com ([10.7.64.70]) with mapi id 15.01.1913.007;
+ Tue, 11 Aug 2020 20:10:49 +0800
+From:   linmiaohe <linmiaohe@huawei.com>
+To:     Eric Dumazet <eric.dumazet@gmail.com>
+CC:     "davem@davemloft.net" <davem@davemloft.net>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "pshelar@ovn.org" <pshelar@ovn.org>,
+        "martin.varghese@nokia.com" <martin.varghese@nokia.com>,
+        "fw@strlen.de" <fw@strlen.de>,
+        "dcaratti@redhat.com" <dcaratti@redhat.com>,
+        "edumazet@google.com" <edumazet@google.com>,
+        "steffen.klassert@secunet.com" <steffen.klassert@secunet.com>,
+        "pabeni@redhat.com" <pabeni@redhat.com>,
+        "shmulik@metanetworks.com" <shmulik@metanetworks.com>,
+        "kyk.segfault@gmail.com" <kyk.segfault@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] net: eliminate meaningless memcpy to data in
+ pskb_carve_inside_nonlinear()
+Thread-Topic: [PATCH] net: eliminate meaningless memcpy to data in
+ pskb_carve_inside_nonlinear()
+Thread-Index: AdZv1p8z2cljr2j1QqmBFzhMwq+yDA==
+Date:   Tue, 11 Aug 2020 12:10:49 +0000
+Message-ID: <40a0b4ba22ff499686a2521998767ae5@huawei.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.174.176.252]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-Received: by 2002:a92:b6cb:: with SMTP id m72mr14759930ill.276.1597147624930;
- Tue, 11 Aug 2020 05:07:04 -0700 (PDT)
-Date:   Tue, 11 Aug 2020 05:07:04 -0700
-In-Reply-To: <000000000000cf1be105a8ffc44c@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000d683c505ac98e87e@google.com>
-Subject: Re: possible deadlock in dev_mc_unsync
-From:   syzbot <syzbot+08e3d39f3eb8643216be@syzkaller.appspotmail.com>
-To:     ap420073@gmail.com, davem@davemloft.net, edumazet@google.com,
-        kuba@kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        xiyou.wangcong@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot suspects this issue was fixed by commit:
-
-commit be74294ffa24f5fbc0d6643842e3e095447e17a2
-Author: Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Fri Jun 26 18:24:22 2020 +0000
-
-    net: get rid of lockdep_set_class_and_subclass()
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=110b0fc2900000
-start commit:   4a21185c Merge git://git.kernel.org/pub/scm/linux/kernel/g..
-git tree:       net
-kernel config:  https://syzkaller.appspot.com/x/.config?x=bf3aec367b9ab569
-dashboard link: https://syzkaller.appspot.com/bug?extid=08e3d39f3eb8643216be
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11d2b1c5100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17aed775100000
-
-If the result looks correct, please mark the issue as fixed by replying with:
-
-#syz fix: net: get rid of lockdep_set_class_and_subclass()
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+RXJpYyBEdW1hemV0IDxlcmljLmR1bWF6ZXRAZ21haWwuY29tPiB3cm90ZToNCj4gT24gOC8xMC8y
+MCA1OjI4IEFNLCBNaWFvaGUgTGluIHdyb3RlOg0KPj4gVGhlIHNrYl9zaGFyZWRfaW5mbyBwYXJ0
+IG9mIHRoZSBkYXRhIGlzIGFzc2lnbmVkIGluIHRoZSBmb2xsb3dpbmcgDQo+PiBsb29wLiBJdCBp
+cyBtZWFuaW5nbGVzcyB0byBkbyBhIG1lbWNweSBoZXJlLg0KPj4gDQo+DQo+UmVtaW5kZXIgOiBu
+ZXQtbmV4dCBpcyBDTE9TRUQuDQo+DQoNClRoYW5rcyBmb3IgeW91ciByZW1pbmQuIEkgd291bGQg
+d2FpdCBmb3IgaXQgb3Blbi4NCg0KPlRoaXMgaXMgbm90IGNvcnJlY3QuIFdlIHN0aWxsIGhhdmUg
+dG8gY29weSBfc29tZXRoaW5nXw0KPg0KPlNvbWV0aGluZyBsaWtlIDoNCj4NCj5kaWZmIC0tZ2l0
+IGEvbmV0L2NvcmUvc2tidWZmLmMgYi9uZXQvY29yZS9za2J1ZmYuYyBpbmRleCAyODI4ZjZkNWJh
+ODk4YTVlNTBjY2NlNDU1ODliZjEzNzBlNDc0YjBmLi4xYzA1MTk0MjZjN2JhNGIwNDM3N2ZjODA1
+NGM0MjIzYzEzNTg3OWFiIDEwMDY0NA0KPi0tLSBhL25ldC9jb3JlL3NrYnVmZi5jDQo+KysrIGIv
+bmV0L2NvcmUvc2tidWZmLmMNCj5AQCAtNTk1Myw4ICs1OTUzLDggQEAgc3RhdGljIGludCBwc2ti
+X2NhcnZlX2luc2lkZV9ub25saW5lYXIoc3RydWN0IHNrX2J1ZmYgKnNrYiwgY29uc3QgdTMyIG9m
+ZiwNCj4gICAgICAgIHNpemUgPSBTS0JfV0lUSF9PVkVSSEVBRChrc2l6ZShkYXRhKSk7DQo+IA0K
+PiAgICAgICAgbWVtY3B5KChzdHJ1Y3Qgc2tiX3NoYXJlZF9pbmZvICopKGRhdGEgKyBzaXplKSwN
+Cj4tICAgICAgICAgICAgICBza2Jfc2hpbmZvKHNrYiksIG9mZnNldG9mKHN0cnVjdCBza2Jfc2hh
+cmVkX2luZm8sDQo+LSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBmcmFn
+c1tza2Jfc2hpbmZvKHNrYiktPm5yX2ZyYWdzXSkpOw0KPisgICAgICAgICAgICAgIHNrYl9zaGlu
+Zm8oc2tiKSwgb2Zmc2V0b2Yoc3RydWN0IHNrYl9zaGFyZWRfaW5mbywgDQo+KyBmcmFnc1swXSkp
+Ow0KPisNCj4gICAgICAgIGlmIChza2Jfb3JwaGFuX2ZyYWdzKHNrYiwgZ2ZwX21hc2spKSB7DQo+
+ICAgICAgICAgICAgICAgIGtmcmVlKGRhdGEpOw0KPiAgICAgICAgICAgICAgICByZXR1cm4gLUVO
+T01FTTsNCj4NCg0KVGhpcyBsb29rcyBnb29kLiBXaWxsIHNlbmQgYSBwYXRjaCB2MiBzb29uLiBN
+YXkgSSBhZGQgYSBzdWdnZXN0ZWQtYnkgdGFnIG9mIHlvdSA/DQpNYW55IHRoYW5rcy4NCg0K
