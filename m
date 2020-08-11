@@ -2,122 +2,132 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02506C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 21:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19305C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 21:35:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9F8720756
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 21:33:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E248220756
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 21:35:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nO3gYAQ3"
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="i91CjXyS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726529AbgHKVdR (ORCPT
+        id S1726474AbgHKVfi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 17:33:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59824 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726483AbgHKVdQ (ORCPT
+        Tue, 11 Aug 2020 17:35:38 -0400
+Received: from sonic312-30.consmr.mail.ne1.yahoo.com ([66.163.191.211]:44377
+        "EHLO sonic312-30.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726114AbgHKVfh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 17:33:16 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 026C5C06178B
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 14:33:15 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id q19so157691pll.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 14:33:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=1XmU1UxtFoX+JxWRWBVQUmWx0SHpCQU0BLn06Acf+NU=;
-        b=nO3gYAQ3UHUw7olEjw932d3zFLqOCCUdnacl9cVKrUgmFx2PGjAFNp8CQwEB7V4Hmy
-         FGOy733ZHh3A1xH6oKC3op8DvO/HEaTRYWhxchiQa9h8rnO5vamgJzN81P21hsQ5n8I3
-         t7TvIriH92cU2JNs0mnOTN8SDZ89gDDMfKKUs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=1XmU1UxtFoX+JxWRWBVQUmWx0SHpCQU0BLn06Acf+NU=;
-        b=MTXMS4C4oG0vAC2SM9oz22TwTVX+6/caKpczKObe7xZmuJgYh3peMfFICmS+Whg0Oa
-         geSXnGoQKauMQDiwucS47kmxMRTSl1ZR1Yf8EfMclk5ILaVnGk6WdOciVDLF49meMkF4
-         0/0nBLKm9DwY6GGClbxvYnA7CDlMeIImzK4DG4RRo3FEc+uV5KBnn2DQfz6Bkj0kbaK4
-         dPTwSepGJ8JD4jqy/bKs1VsWdFe4uKHB2l/EWMB1sfcLPuBQT2z0jin967e5r3AKo+/7
-         R0FVRjUcJ8PrQ3VRQFwN7UrqPRyfrXu12kctPKYq0Di8oY8nF3XLO4rqYhEzTL75P+A8
-         om5w==
-X-Gm-Message-State: AOAM5334e50qrFcyktHBt7jf/Et2+W46gGMnjp/bIDYN/z/FB2JNQIva
-        rTNNaSoOHb0irr4laRQy8LrMhw==
-X-Google-Smtp-Source: ABdhPJzVUgwczR2LI6waXoChEBBAZmQiyV+rznpXD/j383hrrCcUrIvWs+lVRQIEgQVz81ia6sNYwg==
-X-Received: by 2002:a17:90a:ccd:: with SMTP id 13mr2785480pjt.123.1597181595355;
-        Tue, 11 Aug 2020 14:33:15 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id k12sm3694242pjp.38.2020.08.11.14.33.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Aug 2020 14:33:14 -0700 (PDT)
-Date:   Tue, 11 Aug 2020 14:33:13 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Allen <allen.lkml@gmail.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Oscar Carter <oscar.carter@gmx.com>,
-        Romain Perier <romain.perier@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-s390@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-usb@vger.kernel.org, kgdb-bugreport@lists.sourceforge.net,
-        alsa-devel@alsa-project.org,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>
-Subject: Re: [PATCH 0/3] Modernize tasklet callback API
-Message-ID: <202008111427.D00FCCF@keescook>
-References: <20200716030847.1564131-1-keescook@chromium.org>
- <87h7tpa3hg.fsf@nanos.tec.linutronix.de>
- <202007301113.45D24C9D@keescook>
- <CAOMdWSJQKHAWY1P297b9koOLd8sVtezEYEyWGtymN1YeY27M6A@mail.gmail.com>
+        Tue, 11 Aug 2020 17:35:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1597181736; bh=8w+EvcZsCqHpbTMb7B5p6NtPpopAs+8fJLhaCvPEguQ=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=i91CjXySd1TgYGOpZu2BTool5O+P8ufWcekoPfjnGFQp9kbbp4YCkeAzRTkM7AH8X3sfZ6sfWbJLK+FvddMQew7r5WK2dolRfKKtYB/IZ1DsFL0lWIv4vHJ6llQU/fFMYQo5h9TPmE2ayh6tItTnfAL5+Ldx4qBqCuG9VTH2MM1IvZNd3bBP7AM5qSRczXL+Efnqqm+SOq+gjKKb/sI1EIIzZwMj+/Ia3qfxdmSawd9ZwDE8hgiq5af6YRVSlcAoHNrMxSWpOiaE488/kd6fbcE3rRxpBnlnfLD5g9qRaB5lNZ34ODqUJtSClBjL7H+bCwvj7G5Pij/onFn6TBN22w==
+X-YMail-OSG: WpZ3b0IVM1lOWflYFjwxd55lge1PeLe6UFcnTAkXmNFz68kn9XRwy3GlteeHBPi
+ dzQAo.fvGwnt0N1bdticMs1as11oix7oMxoAXjzv0YmACD9HGQ38XBuJScIsbASifn4MIcIOmcv4
+ 5iDwRWMvXuDPIY37R38Rfeo_swDDA0w5ecqTDEoAzH7cQMPjz6fkj_1BQPYXJkMetYuxZXB2fivU
+ .TFgOCK.C4_82teyT5tKiHwgfYzrZIf3jCUML8pZDLKqf202bzrDoP9wycwhqKzdAyd7pVbvfL10
+ DL4oIU2JdaN5ri6mfHU.cqraJdoCGf2ptndpgPnU_6L_YRyd2XjM814y1ZbKtsQKnWSXjoljv6pw
+ wwVoumV.nOdtp49.GffNPS1g3zcAaP.TYdSORXIyA_24BsvEkbuxr8hNRo86mdawuxIWbTaKtaHO
+ 0rKTCWQeXircV8F3XrgiK5XQgOype7HvJAddh0tN2JUVNRLKFsYVafPZEuqk68G9FQmBZAY.AYIa
+ 5TUFl23mEH7o6gG9Z8sE7hgq_.3IdEGf761nmp6qmbXFS75A12MamD_dc2Fbfo5ui7gDfQAGGb0W
+ 3UE8LNRuOuQ16wqoob86h4FrYVQVesPXlEBlSyUhAQPUG5TP_P2T0I56X2_frrGULaI.wsvS94kL
+ rIASWAkB3Bp..fw0Ag3zYlfR4oGMB6uXa65aGnMvoqsfEYt7ORRyyP0oiSQsJzKM1n5mr3oFDaWY
+ Bs4afdjlRC.A0dyd9FboZFNgTzHwgdo_Yg1NhlQEDUJZ1hbzvsWLB12qQInlMTfcBondpNmP34fk
+ IhIwj0tfBbuguSuudR98cKAf_DioUGANHc1nIGTidBz4BSbS.1Oa7O_JjpWi4O4WAp_7RBfNt3MA
+ S3NpsokMdgsIOKTlZVp7eN3mK18dczJs0_.0Xi21tc6.ohEr70gLejLMbbjhREn9kURu..k1gdNr
+ EUYPJOSwDZf5eaGQd9j7.VH8Asu16xztRa9cmxzyNZGyF2WqcOOrGbkvhfAuOGe0zd7yfh0WKAQI
+ 8B3AoCYRz.wccr9hd.lS7kNel5rjpCUfpweZK_cP66XAZ_fCyoKDdLFOElU6zKQFdzGTCGEyMlyn
+ ATPwA6O1Qe2ruuFkx.y6HLhdHAQ85jMhnNpdRFY4KedHWYsdnAG..cS9lxAfTM81z31E.3fcOOhx
+ DvKyYL_YM7HhsGmX6wiXskyDSzS7H1jNTqei_OTjrr2j2m7lZQKDVMEYv6n3yhaTgbwxkSX8gGNP
+ 5PWXqcKMMQ8A5YDvuNBAhk1LJgXBnD6D5xJep6cmbHeyeC_JVyL1wRB_dAyYUNBscorpkn0D5hY_
+ IxFJD0tiQhnl2tetFuJqrpq_NGHIR8aIq4ZkkHC1D4fys0ELI59Iq_CK1iV_6bLhFJKGZMrcSImc
+ kvVBYO4myW2zF9GmT33nOUpmciPoyK_pdh_NHRQSECyWXoWVsu_ju8Wc7OgY8bnn9mTKZrflDwcB
+ _B5SCzE92E6IdAorK8ll.vqIRtuhjgePlgw--
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic312.consmr.mail.ne1.yahoo.com with HTTP; Tue, 11 Aug 2020 21:35:36 +0000
+Received: by smtp415.mail.bf1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID 96b01fe5efcd5843237bda437e1afa7c;
+          Tue, 11 Aug 2020 21:35:35 +0000 (UTC)
+Subject: Re: file metadata via fs API (was: [GIT PULL] Filesystem Information)
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>, Karel Zak <kzak@redhat.com>,
+        Jeff Layton <jlayton@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Christian Brauner <christian@brauner.io>,
+        Lennart Poettering <lennart@poettering.net>,
+        Linux API <linux-api@vger.kernel.org>,
+        Ian Kent <raven@themaw.net>,
+        LSM <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Casey Schaufler <casey@schaufler-ca.com>
+References: <CAHk-=wjzLmMRf=QG-n+1HnxWCx4KTQn9+OhVvUSJ=ZCQd6Y1WA@mail.gmail.com>
+ <5C8E0FA8-274E-4B56-9B5A-88E768D01F3A@amacapital.net>
+ <a6cd01ed-918a-0ed7-aa87-0585db7b6852@schaufler-ca.com>
+ <CAJfpegvUBpb+C2Ab=CLAwWffOaeCedr-b7ZZKZnKvF4ph1nJrw@mail.gmail.com>
+From:   Casey Schaufler <casey@schaufler-ca.com>
+Message-ID: <c013f32e-3931-f832-5857-2537a0b3d634@schaufler-ca.com>
+Date:   Tue, 11 Aug 2020 14:35:33 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOMdWSJQKHAWY1P297b9koOLd8sVtezEYEyWGtymN1YeY27M6A@mail.gmail.com>
+In-Reply-To: <CAJfpegvUBpb+C2Ab=CLAwWffOaeCedr-b7ZZKZnKvF4ph1nJrw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Mailer: WebService/1.1.16455 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo Apache-HttpAsyncClient/4.1.4 (Java/11.0.7)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 03, 2020 at 02:16:15PM +0530, Allen wrote:
-> Here's the series re-based on top of 5.8
-> https://github.com/allenpais/tasklets/tree/V3
+On 8/11/2020 1:28 PM, Miklos Szeredi wrote:
+> On Tue, Aug 11, 2020 at 6:17 PM Casey Schaufler <casey@schaufler-ca.com> wrote:
+>
+>> Since a////////b has known meaning, and lots of applications
+>> play loose with '/', its really dangerous to treat the string as
+>> special. We only get away with '.' and '..' because their behavior
+>> was defined before many of y'all were born.
+> So the founding fathers have set things in stone and now we can't
+> change it.   Right?
 
-Great!
+The founders did lots of things that, in retrospect, weren't
+such great ideas, but that we have to live with.
 
-> Let me know how you would want these to be reviewed.
+> Well that's how it looks... but let's think a little; we have '/' and
+> '\0' that can't be used in filenames.  Also '.' and '..' are
+> prohibited names. It's not a trivial limitation, so applications are
+> probably not used to dumping binary data into file names.
 
-Was a Coccinelle script used for any of these conversions? I wonder if
-it'd be easier to do a single treewide patch for the more mechanical
-changes.
+Hee Hee. Back in the early days of UNIX (the 1970s) there was command
+dsw(1) "delete from switches" because files with untypeible names where
+unfortunately common. I would question the assertion that "applications
+are not used to dumping binary data into file names", based on how
+often I've wished we still had dsw(1).
 
-And, actually, I still think the "prepare" patches should just be
-collapsed into the actual "covert" patches -- there are only a few.
+>   And that
+> means it's probably possible to find a fairly short combination that
+> is never used in practice (probably containing the "/." sequence).
 
-After those, yeah, I think getting these sent to their respective
-maintainers is the next step.
+You'd think, but you'd be wrong. In the UNIX days we tried everything
+from "..." to ".NO_HID." and there always arose a problem or two. Not
+the least of which is that a "magic" pathname generated on an old system,
+then mounted on a new system will never give you the results you want.
 
-> Also, I was thinking if removing tasklets completely could be a task
-> on KSPP wiki. If yes, I did like to take ownership of that task. I have a
-> couple of ideas in mind, which could be discussed in a separate email.
 
-Sure! I will add it to the tracker. Here's for the refactoring:
-https://github.com/KSPP/linux/issues/30
+> Why couldn't we reserve such a combination now?
+>
+> I have no idea how to find such it, but other than that, I see no
+> theoretical problem with extending the list of reserved filenames.
 
-and here's for the removal:
-https://github.com/KSPP/linux/issues/94
+You need a sequence that is never used in any language, and
+that has never been used as a magic shell sequence. If you want
+a fun story to tell over beers, look up how using the "@" as the
+erase character on a TTY33 lead to it being used in email addresses.
 
-if you can added details/examples of how they should be removed, that'd
-help other folks too, if they wanted to jump in. :)
-
--Kees
-
--- 
-Kees Cook
+> Thanks,
+> Miklos
