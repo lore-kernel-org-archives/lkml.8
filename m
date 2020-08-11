@@ -2,190 +2,185 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAD_ENC_HEADER,BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 195ACC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 19:40:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E23AC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 19:40:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3957206B2
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 19:40:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cEH19Ysc"
+	by mail.kernel.org (Postfix) with ESMTP id 7B8EB206B2
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 19:40:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726546AbgHKTkA (ORCPT
+        id S1726630AbgHKTkT convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 15:40:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42314 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726134AbgHKTkA (ORCPT
+        Tue, 11 Aug 2020 15:40:19 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:58502 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726068AbgHKTkS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 15:40:00 -0400
-Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4720DC061787
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 12:40:00 -0700 (PDT)
-Received: by mail-vk1-xa44.google.com with SMTP id x187so2905037vkc.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 12:40:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AOiSxcuSfZzNv56P2tZSGWJNbgYch9+wEvv742NuBqE=;
-        b=cEH19YscT/ZWpvdojxqMu6DwaSPCy6M0c6BUPX2w6cR/lWOe9nBUYwYpX8Y01uETh2
-         kyzp4LYgL7gSVq0ntMRO69xt6/rjxRTVjv2bokYEIF7SECO1Cvo/hmXOB9gD0DVxZmCV
-         nc8qjgllaELRI2j5lbNuJ5p7t7N+cjEUxsgpLgki3+WEfy2eLQBZ0OCV/NGF23OyEUc9
-         ouhKAKyZvGMaA1XmumRkNkOMx1qMikq6sx0qe6HPU2cbqbil+l5vTZTJCRtLK1CqeClE
-         mfGaXV+EPyHxReNM55rQfoSj67j95hN5+3LS7LeSsGI/l43u1i/YtM7+33aW7ulHmyzH
-         pHbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AOiSxcuSfZzNv56P2tZSGWJNbgYch9+wEvv742NuBqE=;
-        b=l5owyXLD5+qIpf5oFz7flZjWm3OZeebDn1SIqw3HKe6tAivNpnDaybbV8hO6UDwBya
-         AGUqxwc9MpWpGIOGPyabZNRxrLwXkL+3SoM8sxS3GEeeTVXtSmtbhzjT/jkTa/q5YOLb
-         p1f6cd88CXr3cQV5bQJDAgyWGyyb2knLTOhlUFzUMj5t9YUMVX1LsSc1ax4+sWPSRN35
-         cGdN5AMncRxmD7mX3rkNrlWgBXrEBhARumMWaGDE9JVLFACiz+F4U0DWRBJgnwoQgvRX
-         hij3+gzL/BJMzasRaIXPMZCJnCPyfg9erTR4Phl4HepgUacoLNfB0bcj4MFDFEMHM5gu
-         x7xQ==
-X-Gm-Message-State: AOAM531VYe4LxSsMfIdJ7hi6i2YMED1LyKbCfiM9rNevsLE3jxBzAEtv
-        URejZ/KkiKiL2VekHOeeXIB2vA31RnJt0LESe4sMpQ==
-X-Google-Smtp-Source: ABdhPJwQuDD3bf9gvYIUnNWZG0MGqlAUCFMoZtTuCxU/7Rjfe5ktF9qOoacVv2ix8pdIMOXu67iigYzpYZ/wPFkiC/A=
-X-Received: by 2002:a1f:ab02:: with SMTP id u2mr26476383vke.80.1597174798811;
- Tue, 11 Aug 2020 12:39:58 -0700 (PDT)
+        Tue, 11 Aug 2020 15:40:18 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out01.mta.xmission.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1k5a7y-009jin-2l; Tue, 11 Aug 2020 13:40:06 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1k5a7w-0004Qr-Ti; Tue, 11 Aug 2020 13:40:05 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+Cc:     linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Eric Chiang <ericchiang@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Philippe =?utf-8?Q?Tr=C3=A9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Thibaut Sautereau <thibaut.sautereau@clip-os.org>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+References: <20200723171227.446711-1-mic@digikod.net>
+        <20200723171227.446711-4-mic@digikod.net>
+Date:   Tue, 11 Aug 2020 14:36:38 -0500
+In-Reply-To: <20200723171227.446711-4-mic@digikod.net> (=?utf-8?Q?=22Micka?=
+ =?utf-8?Q?=C3=ABl_Sala=C3=BCn=22's?=
+        message of "Thu, 23 Jul 2020 19:12:23 +0200")
+Message-ID: <87a6z1m0u1.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-References: <20200811011126.130297-1-badhri@google.com> <ef32ea96-16c8-772b-2c80-8df43ee8f668@roeck-us.net>
- <CAPTae5Lhty3rJymi-4gANjUoz79_LujdjddS9oT=vpOxTSecdQ@mail.gmail.com> <20200811184507.GB86545@roeck-us.net>
-In-Reply-To: <20200811184507.GB86545@roeck-us.net>
-From:   Badhri Jagan Sridharan <badhri@google.com>
-Date:   Tue, 11 Aug 2020 12:39:22 -0700
-Message-ID: <CAPTae5KFxTS+QPnN1Qt_miOFdVYuyuDD2m=jH_Fo87F_C4tTBw@mail.gmail.com>
-Subject: Re: [PATCH v1] usb: typec: tcpm: Fix TDA 2.2.1.1 and TDA 2.2.1.2 failures
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        USB <linux-usb@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-XM-SPF: eid=1k5a7w-0004Qr-Ti;;;mid=<87a6z1m0u1.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX18bRw6Qx631bJvZB6GAyvN2Z5/PhB9504A=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH v7 3/7] exec: Move path_noexec() check earlier
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 11:45 AM Guenter Roeck <linux@roeck-us.net> wrote:
+Mickaël Salaün <mic@digikod.net> writes:
+
+> From: Kees Cook <keescook@chromium.org>
 >
-> On Tue, Aug 11, 2020 at 11:24:07AM -0700, Badhri Jagan Sridharan wrote:
-> > On Mon, Aug 10, 2020 at 6:51 PM Guenter Roeck <linux@roeck-us.net> wrote:
-> > >
-> > > On 8/10/20 6:11 PM, Badhri Jagan Sridharan wrote:
-> > > >>From the spec:
-> > > > "7.1.5 Response to Hard Resets
-> > > > Hard Reset Signaling indicates a communication failure has occurred and
-> > > > the Source Shall stop driving VCONN, Shall remove Rp from the VCONN pin
-> > > > and Shall drive VBUS to vSafe0V as shown in Figure 7-9. The USB connection
-> > > > May reset during a Hard Reset since the VBUS voltage will be less than
-> > > > vSafe5V for an extended period of time. After establishing the vSafe0V
-> > > > voltage condition on VBUS, the Source Shall wait tSrcRecover before
-> > > > re-applying VCONN and restoring VBUS to vSafe5V. A Source Shall conform
-> > > > to the VCONN timing as specified in [USB Type-C 1.3]."
-> > > >
-> > > > Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
-> > > > ---
-> > > >  drivers/usb/typec/tcpm/tcpm.c | 16 +++++++++++++---
-> > > >  1 file changed, 13 insertions(+), 3 deletions(-)
-> > > >
-> > > > diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
-> > > > index 3ef37202ee37..e41c4e5d3c71 100644
-> > > > --- a/drivers/usb/typec/tcpm/tcpm.c
-> > > > +++ b/drivers/usb/typec/tcpm/tcpm.c
-> > > > @@ -3372,13 +3372,19 @@ static void run_state_machine(struct tcpm_port *port)
-> > > >                       tcpm_set_state(port, SNK_HARD_RESET_SINK_OFF, 0);
-> > > >               break;
-> > > >       case SRC_HARD_RESET_VBUS_OFF:
-> > > > -             tcpm_set_vconn(port, true);
-> > > > +             /*
-> > > > +              * 7.1.5 Response to Hard Resets
-> > > > +              * Hard Reset Signaling indicates a communication failure has occurred and the
-> > > > +              * Source Shall stop driving VCONN, Shall remove Rp from the VCONN pin and Shall
-> > > > +              * drive VBUS to vSafe0V as shown in Figure 7-9.
-> > > > +              */
-> > > > +             tcpm_set_vconn(port, false);
-> > > >               tcpm_set_vbus(port, false);
-> > > >               tcpm_set_roles(port, port->self_powered, TYPEC_SOURCE,
-> > > >                              tcpm_data_role_for_source(port));
-> > > > -             tcpm_set_state(port, SRC_HARD_RESET_VBUS_ON, PD_T_SRC_RECOVER);
-> > >
-> > > I am a bit concerned about this. If I understand correctly, it means that
-> > > we won't turn VBUS back on unless a SRC_HARD_RESET_VBUS_OFF PD event is received.
-> > > Is that correct ? What happens if that event is never received ?
-> > >
-> > > Thanks,
-> > > Guenter
-> >
-> > The term PD event is a little ambiguous to me. Trying to summarize the workflow.
-> > Lower level tcpc driver would have to call tcpm_vbus_change which
-> > would in-turn trigger TCPM_VBUS_EVENT
-> > and queries port->tcpc->get_vbus to get the vbus status. It is not
-> > really a PD protocol driven event hence the
-> > confusion.
-> >
-> > "What happens if that event is never received ?"
-> > Yeah TCPM would be in SRC_HARD_RESET_VBUS_OFF till the tcpc calls the
-> > tcpm_vbus_change.
-> > Do you suspect that existing tcpc would not have the capability to
-> > monitor vbus status while sourcing and call tcpm_vbus_change?
-> >
-> That, or the driver might be buggy, or the hardware does't signal a status
-> update, or the update gets lost. I think we should have some backup,
-> to trigger if the event is not received in a reasonable amout of time.
-> I don't know if the specification has some kind of maximum limit. If
-> not, we should still have something
+> The path_noexec() check, like the regular file check, was happening too
+> late, letting LSMs see impossible execve()s. Check it earlier as well
+> in may_open() and collect the redundant fs/exec.c path_noexec() test
+> under the same robustness comment as the S_ISREG() check.
 >
-> Thanks,
-> Guenter
+> My notes on the call path, and related arguments, checks, etc:
 
-Got it ! The specification actually has a bound for vbus off.
-tSafe0V  - Time to reach vSafe0V max - 650ms. (PD_T_SAFE_0V).
-So I will bound it to that.
+A big question arises, that I think someone already asked.
 
-From Table 7-12 Sequence Description for a Source Initiated Hard Reset:
-4.Policy Engine waits tPSHardReset after sending Hard Reset Signaling
-and then tells the Device Policy Manager to instruct the power supply
-to perform a Hard Reset. The transition to vSafe0V Shall occur within
-tSafe0V (t2).
-5 After tSrcRecover the Source applies power to VBUS in an attempt to
-re-establish communication with the Sink and resume USB Default
-Operation. The transition to vSafe5V Shall occur within tSrcTurnOn
-(t4).
+Why perform this test in may_open directly instead of moving
+it into inode_permission.  That way the code can be shared with
+faccessat, and any other code path that wants it?
 
-Thanks,
-Badhri
+That would look to provide a more maintainable kernel.
 
+Eric
+
+
+> do_open_execat()
+>     struct open_flags open_exec_flags = {
+>         .open_flag = O_LARGEFILE | O_RDONLY | __FMODE_EXEC,
+>         .acc_mode = MAY_EXEC,
+>         ...
+>     do_filp_open(dfd, filename, open_flags)
+>         path_openat(nameidata, open_flags, flags)
+>             file = alloc_empty_file(open_flags, current_cred());
+>             do_open(nameidata, file, open_flags)
+>                 may_open(path, acc_mode, open_flag)
+>                     /* new location of MAY_EXEC vs path_noexec() test */
+>                     inode_permission(inode, MAY_OPEN | acc_mode)
+>                         security_inode_permission(inode, acc_mode)
+>                 vfs_open(path, file)
+>                     do_dentry_open(file, path->dentry->d_inode, open)
+>                         security_file_open(f)
+>                         open()
+>     /* old location of path_noexec() test */
 >
-> > Thanks,
-> > Badhri
-> >
-> >
-> > > >               break;
-> > > >       case SRC_HARD_RESET_VBUS_ON:
-> > > > +             tcpm_set_vconn(port, true);
-> > > >               tcpm_set_vbus(port, true);
-> > > >               port->tcpc->set_pd_rx(port->tcpc, true);
-> > > >               tcpm_set_attached_state(port, true);
-> > > > @@ -3944,7 +3950,11 @@ static void _tcpm_pd_vbus_off(struct tcpm_port *port)
-> > > >               tcpm_set_state(port, SNK_HARD_RESET_WAIT_VBUS, 0);
-> > > >               break;
-> > > >       case SRC_HARD_RESET_VBUS_OFF:
-> > > > -             tcpm_set_state(port, SRC_HARD_RESET_VBUS_ON, 0);
-> > > > +             /*
-> > > > +              * After establishing the vSafe0V voltage condition on VBUS, the Source Shall wait
-> > > > +              * tSrcRecover before re-applying VCONN and restoring VBUS to vSafe5V.
-> > > > +              */
-> > > > +             tcpm_set_state(port, SRC_HARD_RESET_VBUS_ON, PD_T_SRC_RECOVER);
-> > > >               break;
-> > > >       case HARD_RESET_SEND:
-> > > >               break;
-> > > >
-> > >
+> Signed-off-by: Mickaël Salaün <mic@digikod.net>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> Link: https://lore.kernel.org/r/20200605160013.3954297-4-keescook@chromium.org
+> ---
+>  fs/exec.c  | 12 ++++--------
+>  fs/namei.c |  4 ++++
+>  2 files changed, 8 insertions(+), 8 deletions(-)
+>
+> diff --git a/fs/exec.c b/fs/exec.c
+> index bdc6a6eb5dce..4eea20c27b01 100644
+> --- a/fs/exec.c
+> +++ b/fs/exec.c
+> @@ -147,10 +147,8 @@ SYSCALL_DEFINE1(uselib, const char __user *, library)
+>  	 * and check again at the very end too.
+>  	 */
+>  	error = -EACCES;
+> -	if (WARN_ON_ONCE(!S_ISREG(file_inode(file)->i_mode)))
+> -		goto exit;
+> -
+> -	if (path_noexec(&file->f_path))
+> +	if (WARN_ON_ONCE(!S_ISREG(file_inode(file)->i_mode) ||
+> +			 path_noexec(&file->f_path)))
+>  		goto exit;
+>  
+>  	fsnotify_open(file);
+> @@ -897,10 +895,8 @@ static struct file *do_open_execat(int fd, struct filename *name, int flags)
+>  	 * and check again at the very end too.
+>  	 */
+>  	err = -EACCES;
+> -	if (WARN_ON_ONCE(!S_ISREG(file_inode(file)->i_mode)))
+> -		goto exit;
+> -
+> -	if (path_noexec(&file->f_path))
+> +	if (WARN_ON_ONCE(!S_ISREG(file_inode(file)->i_mode) ||
+> +			 path_noexec(&file->f_path)))
+>  		goto exit;
+>  
+>  	err = deny_write_access(file);
+> diff --git a/fs/namei.c b/fs/namei.c
+> index a559ad943970..ddc9b25540fe 100644
+> --- a/fs/namei.c
+> +++ b/fs/namei.c
+> @@ -2863,6 +2863,10 @@ static int may_open(const struct path *path, int acc_mode, int flag)
+>  			return -EACCES;
+>  		flag &= ~O_TRUNC;
+>  		break;
+> +	case S_IFREG:
+> +		if ((acc_mode & MAY_EXEC) && path_noexec(path))
+> +			return -EACCES;
+> +		break;
+>  	}
+>  
+>  	error = inode_permission(inode, MAY_OPEN | acc_mode);
