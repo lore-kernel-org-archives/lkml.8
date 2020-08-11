@@ -2,96 +2,180 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3161C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 02:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 811F1C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 02:50:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7766A2065D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 02:43:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FC18206DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 02:50:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="AvcnLevq"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Cowl6hL2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728229AbgHKCnY (ORCPT
+        id S1728105AbgHKCut (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 22:43:24 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:49214 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726831AbgHKCnX (ORCPT
+        Mon, 10 Aug 2020 22:50:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56232 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726994AbgHKCus (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 22:43:23 -0400
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 6460858;
-        Tue, 11 Aug 2020 04:43:21 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1597113801;
-        bh=WW5T77cfFpWObOoCK4Jd1gjvAgx5wXNgpO1aG1KQAGo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AvcnLevqsm+75glXW8u0IeEaT4/SPDcX+tRt01nszuRleIHWVqP/1zGNKhPdeBtwQ
-         Rl4lNNNYSdi+4OxLFhJ3rzoHDVNBTshZjfwVsj+lNybDvr8CE2mUlW5SH1e3s9zW72
-         f/j9m4qvpu4MYOpl+jw/rDfGzRp/8Ev4jngdT+BE=
-Date:   Tue, 11 Aug 2020 05:43:08 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Tomi Valkeinen <tomi.valkeinen@ti.com>, daniel@ffwll.ch
-Cc:     Yuti Amonkar <yamonkar@cadence.com>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, maxime@cerno.tech, airlied@linux.ie,
-        mark.rutland@arm.com, a.hajda@samsung.com, narmstrong@baylibre.com,
-        jonas@kwiboo.se, jernej.skrabec@siol.net, praneeth@ti.com,
-        jsarha@ti.com, mparab@cadence.com, sjakhade@cadence.com
-Subject: Re: [PATCH v6 2/3] drm: bridge: Add support for Cadence MHDP DPI/DP
- bridge
-Message-ID: <20200811024308.GE13513@pendragon.ideasonboard.com>
-References: <1582712579-28504-1-git-send-email-yamonkar@cadence.com>
- <1582712579-28504-3-git-send-email-yamonkar@cadence.com>
- <20200311222053.GE4863@pendragon.ideasonboard.com>
- <ef6a6e31-425f-c402-83ab-886221b4a0c3@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ef6a6e31-425f-c402-83ab-886221b4a0c3@ti.com>
+        Mon, 10 Aug 2020 22:50:48 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EE74C061787
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 19:50:48 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id r4so6112404pls.2
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 19:50:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=KVlt6KV9H0iPcN45PNaGR/Bhb6+rc7oK3VoVzry5jSQ=;
+        b=Cowl6hL2OrBvzyF50us265NuyXL9Dhg58JH+EhDji5WF+WvsTA9Za7Wz49GMUPw3T7
+         x8niprKhc8T/Gb9a8lNzRx3hJkBA+qQ9Sc5eqXjpzVkdElM+hfDwxU1MO8i9CkBRHWIS
+         PWL5RjfEIlgJjNB9+H8JnOaal1w4ap9LStii6NjWib/7r16IOgKhQaQRLLe/ixYACV4V
+         gNsd+WSh+/MB/YrCqH6c+ZHgRnY/dKxRRtlfZYIPeOzv0iBHaH5j4EHs8fuFFIXaRLoc
+         9gQKIU+e1nA2Xlf5O0msCHRLxTilc/gNuaxfJl1eydiv/ARHlwq/vsIJk7kJO1uEvh/Q
+         kmvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=KVlt6KV9H0iPcN45PNaGR/Bhb6+rc7oK3VoVzry5jSQ=;
+        b=RQNNUN6LLiZPFivo6cmI1jaVxL6LWAAaLCSxXhV6m2bjOUKZgbYc3O9Bpr2Hkxyqd4
+         oRfJUXayoo0AQm0wzh5kA4nIBDZi87h+IyG7Zvu1VV6PAAr8Uig2TUiMxpqCy2KYcxgb
+         n4icndUZZ9sr+iYH2bHZxA2vurYY9OVmA7FPzzT6SlPgniYwCFa9ZojdvoiR+C+Ch4Jw
+         Pi9aG8H20VPCTKwiqX0BrUzR9x4lgteBVz/c729EIQ2wVv1nJsFIN+avMTzbd7C3AAXV
+         7zv6SUgQDccz16jphDeBMVofDTeCc0LgyPdB+41tiigGDW5fS1qkqDYTsOCkgeW5XosM
+         9zvw==
+X-Gm-Message-State: AOAM532+jEPlsDHwAduTZInYaWJ5pUZyHlBomHCVnhY4CXcwSM19vR+O
+        FskmxyMyxLT1FFcTKvQnCGrPwrOrizE=
+X-Google-Smtp-Source: ABdhPJzw9l0zmh9YYKufq6N1PiRLaPX7C2bOWYLQhjUtc76q++QdeCVxcewuBwJnYccQQ02ct2W8Ag==
+X-Received: by 2002:a17:902:b486:: with SMTP id y6mr6019242plr.100.1597114247418;
+        Mon, 10 Aug 2020 19:50:47 -0700 (PDT)
+Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
+        by smtp.gmail.com with ESMTPSA id 8sm868673pjx.14.2020.08.10.19.50.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Aug 2020 19:50:46 -0700 (PDT)
+From:   John Stultz <john.stultz@linaro.org>
+To:     lkml <linux-kernel@vger.kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Todd Kjos <tkjos@google.com>,
+        Amit Pundir <amit.pundir@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-serial@vger.kernel.org
+Subject: [RFC][PATCH] tty: serial: qcom_geni_serial: Drop __init from qcom_geni_console_setup
+Date:   Tue, 11 Aug 2020 02:50:44 +0000
+Message-Id: <20200811025044.70626-1-john.stultz@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tomi, Daniel,
+When booting with heavily modularized config, the serial console
+may not be able to load until after init when modules that
+satisfy needed dependencies have time to load.
 
-On Thu, Mar 12, 2020 at 09:13:06AM +0200, Tomi Valkeinen wrote:
-> On 12/03/2020 00:20, Laurent Pinchart wrote:
-> >> +	ret = load_firmware(mhdp);
-> >> +	if (ret)
-> >> +		goto phy_exit;
-> >> +
-> >> +	drm_bridge_add(&mhdp->bridge);
->
-> > What if someone starts using the bridge before the firmware is
-> > operational ? It seems that you should delay bridge registration until
-> > the firmware is loaded. It may make it possible to remove
-> > bridge_attached and solve the problem you mention in mhdp_fw_cb().
-> 
-> Handling the fw has been a bit of a pain... This is what we came up with to support all the 
-> combinations (built-in/module, fw-userspace-helper/direct load, single-output/multiple-outputs).
-> 
-> The idea is that when the driver is loaded and probed (with or without fw), the DP is "ready". If we 
-> don't have fw yet, everything looks fine, but the connector stays in disconnected state. When we get 
-> the fw, connector will get connected (only if there's a cable connected, of course).
-> 
-> If we register the bridge only when we have fw, two things can happen:
-> 
-> - If we get the fw only rather late (in case userspace fw helper), a userspace app (e.g. weston) 
-> could already have been started, and failed due to there being no DRM card.
-> 
-> - If we have two displays from the same display controller, say, DP and HDMI, the HDMI will only be 
-> available when the DP is available. If the DP fw, for some reason, cannot be loaded, we never get HDMI.
+Unfortunately, as qcom_geni_console_setup is marked as __init,
+the function may have been freed before we get to run it,
+causing boot time crashes such as:
 
-These seem to me to be deficiencies in the graphics stack. We don't have
-to solve them now, but I'm curious to know if anyone would have ideas on
-how this should ideally be addressed. Daniel, what do you think ?
+[    6.469057] Unable to handle kernel paging request at virtual address ffffffe645d4e6cc
+[    6.481623] Mem abort info:
+[    6.484466]   ESR = 0x86000007
+[    6.487557]   EC = 0x21: IABT (current EL), IL = 32 bits
+[    6.492929]   SET = 0, FnV = 0g
+[    6.496016]   EA = 0, S1PTW = 0
+[    6.499202] swapper pgtable: 4k pages, 39-bit VAs, pgdp=000000008151e000
+[    6.501286] ufshcd-qcom 1d84000.ufshc: ufshcd_print_pwr_info:[RX, TX]: gear=[3, 3], lane[2, 2], pwr[FAST MODE, FAST MODE], rate = 2
+[    6.505977] [ffffffe645d4e6cc] pgd=000000017df9f003, p4d=000000017df9f003, pud=000000017df9f003, pmd=000000017df9c003, pte=0000000000000000
+[    6.505990] Internal error: Oops: 86000007 [#1] PREEMPT SMP
+[    6.505995] Modules linked in: zl10353 zl10039 zl10036 zd1301_demod xc5000 xc4000 ves1x93 ves1820 tuner_xc2028 tuner_simple tuner_types tua9001 tua6100 1
+[    6.506152]  isl6405
+[    6.518104] ufshcd-qcom 1d84000.ufshc: ufshcd_find_max_sup_active_icc_level: Regulator capability was not set, actvIccLevel=0
+[    6.530549]  horus3a helene fc2580 fc0013 fc0012 fc0011 ec100 e4000 dvb_pll ds3000 drxk drxd drx39xyj dib9000 dib8000 dib7000p dib7000m dib3000mc dibx003
+[    6.624271] CPU: 7 PID: 148 Comm: kworker/7:2 Tainted: G        W       5.8.0-mainline-12021-g6defd37ba1cd #3455
+[    6.624273] Hardware name: Thundercomm Dragonboard 845c (DT)
+[    6.624290] Workqueue: events deferred_probe_work_func
+[    6.624296] pstate: 40c00005 (nZcv daif +PAN +UAO BTYPE=--)
+[    6.624307] pc : qcom_geni_console_setup+0x0/0x110
+[    6.624316] lr : try_enable_new_console+0xa0/0x140
+[    6.624318] sp : ffffffc010843a30
+[    6.624320] x29: ffffffc010843a30 x28: ffffffe645c3e7d0
+[    6.624325] x27: ffffff80f8022180 x26: ffffffc010843b28
+[    6.637937] x25: 0000000000000000 x24: ffffffe6462a2000
+[    6.637941] x23: ffffffe646398000 x22: 0000000000000000
+[    6.637945] x21: 0000000000000000 x20: ffffffe6462a5ce8
+[    6.637952] x19: ffffffe646398e38 x18: ffffffffffffffff
+[    6.680296] x17: 0000000000000000 x16: ffffffe64492b900
+[    6.680300] x15: ffffffe6461e9d08 x14: 69202930203d2064
+[    6.680305] x13: 7561625f65736162 x12: 202c363331203d20
+[    6.696434] x11: 0000000000000030 x10: 0101010101010101
+[    6.696438] x9 : 4d4d20746120304d x8 : 7f7f7f7f7f7f7f7f
+[    6.707249] x7 : feff4c524c787373 x6 : 0000000000008080
+[    6.707253] x5 : 0000000000000000 x4 : 8080000000000000
+[    6.707257] x3 : 0000000000000000 x2 : ffffffe645d4e6cc
+[    6.744223] qcom_geni_serial 898000.serial: dev_pm_opp_set_rate: failed to find OPP for freq 102400000 (-34)
+[    6.744966] x1 : fffffffefe74e174 x0 : ffffffe6462a5ce8
+[    6.753580] qcom_geni_serial 898000.serial: dev_pm_opp_set_rate: failed to find OPP for freq 102400000 (-34)
+[    6.761634] Call trace:
+[    6.761639]  qcom_geni_console_setup+0x0/0x110
+[    6.761645]  register_console+0x29c/0x2f8
+[    6.767981] Bluetooth: hci0: Frame reassembly failed (-84)
+[    6.775252]  uart_add_one_port+0x438/0x500
+[    6.775258]  qcom_geni_serial_probe+0x2c4/0x4a8
+[    6.775266]  platform_drv_probe+0x58/0xa8
+[    6.855359]  really_probe+0xec/0x398
+[    6.855362]  driver_probe_device+0x5c/0xb8
+[    6.855367]  __device_attach_driver+0x98/0xb8
+[    7.184945]  bus_for_each_drv+0x74/0xd8
+[    7.188825]  __device_attach+0xec/0x148
+[    7.192705]  device_initial_probe+0x24/0x30
+[    7.196937]  bus_probe_device+0x9c/0xa8
+[    7.200816]  deferred_probe_work_func+0x7c/0xb8
+[    7.205398]  process_one_work+0x20c/0x4b0
+[    7.209456]  worker_thread+0x48/0x460
+[    7.213157]  kthread+0x14c/0x158
+[    7.216432]  ret_from_fork+0x10/0x18
+[    7.220049] Code: bad PC value
+[    7.223139] ---[ end trace 73f3b21e251d5a70 ]---
 
+Thus this patch removes the __init avoiding crash in such
+configs.
+
+Cc: Andy Gross <agross@kernel.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jiri Slaby <jirislaby@kernel.org>
+Cc: Saravana Kannan <saravanak@google.com>
+Cc: Todd Kjos <tkjos@google.com>
+Cc: Amit Pundir <amit.pundir@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org
+Cc: linux-serial@vger.kernel.org
+Suggested-by: Saravana Kannan <saravanak@google.com>
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+---
+ drivers/tty/serial/qcom_geni_serial.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
+index 3aa29d201f54..f7c6c7466520 100644
+--- a/drivers/tty/serial/qcom_geni_serial.c
++++ b/drivers/tty/serial/qcom_geni_serial.c
+@@ -1098,7 +1098,7 @@ static unsigned int qcom_geni_serial_tx_empty(struct uart_port *uport)
+ }
+ 
+ #ifdef CONFIG_SERIAL_QCOM_GENI_CONSOLE
+-static int __init qcom_geni_console_setup(struct console *co, char *options)
++static int qcom_geni_console_setup(struct console *co, char *options)
+ {
+ 	struct uart_port *uport;
+ 	struct qcom_geni_serial_port *port;
 -- 
-Regards,
+2.17.1
 
-Laurent Pinchart
