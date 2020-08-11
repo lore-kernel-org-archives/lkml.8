@@ -2,87 +2,207 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C35BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 02:13:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C42C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 02:16:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 620442065C
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 02:13:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E523B206DC
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 02:16:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="cD5xIGjG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbgHKCNG (ORCPT
+        id S1727773AbgHKCQ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 22:13:06 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:9259 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726380AbgHKCNF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 22:13:05 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 9CE0B367C7515FE61482;
-        Tue, 11 Aug 2020 10:13:02 +0800 (CST)
-Received: from localhost (10.174.179.108) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Tue, 11 Aug 2020
- 10:12:54 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <hjc@rock-chips.com>, <heiko@sntech.de>, <airlied@linux.ie>,
-        <daniel@ffwll.ch>
-CC:     <dri-devel@lists.freedesktop.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-rockchip@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] drm/rockchip: cdn-dp: Mark cdn_dp_core_suspend/resume __maybe_unused
-Date:   Tue, 11 Aug 2020 10:12:25 +0800
-Message-ID: <20200811021225.50296-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Mon, 10 Aug 2020 22:16:26 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:33511 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726868AbgHKCQ0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 22:16:26 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597112184; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=/llS1VKuhZjl980iJmKrV/VZDO5nanGEJAgyZaE+Dkk=; b=cD5xIGjGoMsNnYfdWyt0C6Qnonv7avuZV6KCCiDpuuNKFEGfEJXTNuaReutVITXhk7SThryH
+ ZWGvDGt3WHhzRF8bCYZUwlGw9HfwfjoyNqc/tVx2Y7GZY4eFuUA2okfaAefAtlKLYk/VR4CA
+ bVg/m4/XT2Roi8kdGACRCVR4HtU=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n06.prod.us-east-1.postgun.com with SMTP id
+ 5f31ff78d48d4625ca63264b (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 11 Aug 2020 02:16:24
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 712BEC4339C; Tue, 11 Aug 2020 02:16:23 +0000 (UTC)
+Received: from linuxdisplay-lab-04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tanmay)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1BF4BC433C9;
+        Tue, 11 Aug 2020 02:16:22 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1BF4BC433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tanmay@codeaurora.org
+From:   Tanmay Shah <tanmay@codeaurora.org>
+To:     swboyd@chromium.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        robdclark@gmail.com
+Cc:     linux-kernel@vger.kernel.org, freedreno@lists.freedesktop.org,
+        seanpaul@chromium.org, daniel@ffwll.ch, airlied@linux.ie,
+        aravindh@codeaurora.org, abhinavk@codeaurora.org,
+        khsieh@codeaurora.org, Tanmay Shah <tanmay@codeaurora.org>
+Subject: [PATCH v5] arm64: dts: qcom: sc7180: Add Display Port dt node
+Date:   Mon, 10 Aug 2020 19:15:53 -0700
+Message-Id: <20200811021553.25023-1-tanmay@codeaurora.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.179.108]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If CONFIG_PM is not set, gcc warns:
+Add DP device node on sc7180.
 
-drivers/gpu/drm/rockchip/cdn-dp-core.c:1124:12:
- warning: ‘cdn_dp_resume’ defined but not used [-Wunused-function]
+Changes in v2:
 
-Mark them __maybe_unused to fix this.
+- Add assigned-clocks and assigned-clock-parents
+- Remove cell-index and pixel_rcg
+- Change compatible to qcom,sc7180-dp
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Changes in v3:
+- Update commit text
+- Make DP child node of MDSS
+- Remove data-lanes property from SOC dts
+- Disable DP node in SOC dts
+- Assign DP to Port2 in MDP node
+- Add MDSS AHB clock in DP device node
+
+Changes in v4:
+- Remove redundant reg-names property
+- Use IRQ flag instead had hard coded value.
+- Add link clock source in assigned-clocks list.
+
+Changes in v5:
+- Add OPP table and power-domains for DisplayPort
+
+This patch depends-on following series:
+https://lore.kernel.org/dri-devel/20200807071718.17937-1-tanmay@codeaurora.org/
+
+Signed-off-by: Tanmay Shah <tanmay@codeaurora.org>
+Co-developed-by: Kuogee Hsieh <khsieh@codeaurora.org>
+Signed-off-by: Kuogee Hsieh <khsieh@codeaurora.org>
 ---
- drivers/gpu/drm/rockchip/cdn-dp-core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 76 +++++++++++++++++++++++++++-
+ 1 file changed, 74 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/rockchip/cdn-dp-core.c b/drivers/gpu/drm/rockchip/cdn-dp-core.c
-index a4a45daf93f2..413b0e90f10f 100644
---- a/drivers/gpu/drm/rockchip/cdn-dp-core.c
-+++ b/drivers/gpu/drm/rockchip/cdn-dp-core.c
-@@ -1107,7 +1107,7 @@ static const struct component_ops cdn_dp_component_ops = {
- 	.unbind = cdn_dp_unbind,
- };
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 31b9217bb5bf..2998fae863a7 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -2371,6 +2371,13 @@ dpu_intf1_out: endpoint {
+ 							remote-endpoint = <&dsi0_in>;
+ 						};
+ 					};
++
++					port@2 {
++						reg = <2>;
++						dpu_intf0_out: endpoint {
++							remote-endpoint = <&dp_in>;
++						};
++					};
+ 				};
+ 			};
  
--static int cdn_dp_suspend(struct device *dev)
-+static __maybe_unused int cdn_dp_suspend(struct device *dev)
- {
- 	struct cdn_dp_device *dp = dev_get_drvdata(dev);
- 	int ret = 0;
-@@ -1121,7 +1121,7 @@ static int cdn_dp_suspend(struct device *dev)
- 	return ret;
- }
+@@ -2440,6 +2447,71 @@ dsi_phy: dsi-phy@ae94400 {
  
--static int cdn_dp_resume(struct device *dev)
-+static __maybe_unused int cdn_dp_resume(struct device *dev)
- {
- 	struct cdn_dp_device *dp = dev_get_drvdata(dev);
+ 				status = "disabled";
+ 			};
++
++			msm_dp: displayport-controller@ae90000 {
++				status = "disabled";
++				compatible = "qcom,sc7180-dp";
++
++				reg = <0 0x0ae90000 0 0x1400>;
++
++				interrupt-parent = <&mdss>;
++				interrupts = <12 IRQ_TYPE_NONE>;
++
++				clocks = <&dispcc DISP_CC_MDSS_AHB_CLK>,
++					 <&dispcc DISP_CC_MDSS_DP_AUX_CLK>,
++					 <&dispcc DISP_CC_MDSS_DP_LINK_CLK>,
++					 <&dispcc DISP_CC_MDSS_DP_LINK_INTF_CLK>,
++					 <&dispcc DISP_CC_MDSS_DP_PIXEL_CLK>;
++				clock-names = "core_iface", "core_aux", "ctrl_link",
++					      "ctrl_link_iface", "stream_pixel";
++				#clock-cells = <1>;
++				assigned-clocks = <&dispcc DISP_CC_MDSS_DP_LINK_CLK_SRC>,
++						  <&dispcc DISP_CC_MDSS_DP_PIXEL_CLK_SRC>;
++				assigned-clock-parents = <&msm_dp 0>, <&msm_dp 1>;
++
++				operating-points-v2 = <&dp_opp_table>;
++				power-domains = <&rpmhpd SC7180_CX>;
++
++				ports {
++					#address-cells = <1>;
++					#size-cells = <0>;
++					port@0 {
++						reg = <0>;
++						dp_in: endpoint {
++							remote-endpoint = <&dpu_intf0_out>;
++						};
++					};
++
++					port@1 {
++						reg = <1>;
++						dp_out: endpoint { };
++					};
++				};
++
++				dp_opp_table: dp-opp-table {
++					compatible = "operating-points-v2";
++
++					opp-160000000 {
++						opp-hz = /bits/ 64 <160000000>;
++						required-opps = <&rpmhpd_opp_low_svs>;
++					};
++
++					opp-270000000 {
++						opp-hz = /bits/ 64 <270000000>;
++						required-opps = <&rpmhpd_opp_svs>;
++					};
++
++					opp-540000000 {
++						opp-hz = /bits/ 64 <540000000>;
++						required-opps = <&rpmhpd_opp_svs_l1>;
++					};
++
++					opp-810000000 {
++						opp-hz = /bits/ 64 <810000000>;
++						required-opps = <&rpmhpd_opp_nom>;
++					};
++				};
++			};
+ 		};
  
+ 		dispcc: clock-controller@af00000 {
+@@ -2449,8 +2521,8 @@ dispcc: clock-controller@af00000 {
+ 				 <&gcc GCC_DISP_GPLL0_CLK_SRC>,
+ 				 <&dsi_phy 0>,
+ 				 <&dsi_phy 1>,
+-				 <0>,
+-				 <0>;
++				 <&msm_dp 0>,
++				 <&msm_dp 1>;
+ 			clock-names = "bi_tcxo",
+ 				      "gcc_disp_gpll0_clk_src",
+ 				      "dsi0_phy_pll_out_byteclk",
 -- 
-2.17.1
-
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
