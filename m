@@ -2,93 +2,232 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UPPERCASE_50_75,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C74BAC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 07:54:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6365DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 07:54:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EE6220658
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 07:54:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AA9620658
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 07:54:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="0i0sScr/"
+	dkim=pass (2048-bit key) header.d=melexis.com header.i=@melexis.com header.b="AWg5Or5Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728178AbgHKHyc (ORCPT
+        id S1728223AbgHKHyg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 03:54:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46528 "EHLO
+        Tue, 11 Aug 2020 03:54:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46534 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728133AbgHKHyc (ORCPT
+        with ESMTP id S1728133AbgHKHyd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 03:54:32 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7C88C061787
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 00:54:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=BJ6NngLNkSYp1sT0N1/N2C51huBBRbAX2VjGCXSkBSg=; b=0i0sScr/Cr7h1kkBEKTDu101YF
-        qtTsZ2DEO1xzwMWXsvaJAH7bq3GzL2PmLIge+QKKoAfGVDsMrAsPitjkPH9vUBvFFXshSHlkROMOD
-        FoFlSItG/vqJBs/HcY2qMTDQZ+Cgtu0eRebEHbrJnpYlRErTnocI0fuPgVcKJVGCYSAslQcv4t2tF
-        10upX3tTokJhm0n8kVHY+0F05ZsLkzNH+7P62RpTeN8K7m6+CrVdh+LlHny+BQUmZSkn57NtVyzHV
-        e/QNH5AfOmd29El/b5rcKAZeAs2WHRtj33PEltpe6yRAO/y2BqaXUUszut+gBpThSosIoMWcVJ46l
-        GTVwEHfw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k5P70-000204-6o; Tue, 11 Aug 2020 07:54:22 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 8D56D980C9D; Tue, 11 Aug 2020 09:54:20 +0200 (CEST)
-Date:   Tue, 11 Aug 2020 09:54:20 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Peter Oskolkov <posk@google.com>
-Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        linux-kernel@vger.kernel.org, Paul Turner <pjt@google.com>,
-        Chris Kennelly <ckennelly@google.com>,
-        Peter Oskolkov <posk@posk.io>
-Subject: Re: [PATCH 1/2 v3] rseq/membarrier: add
- MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ
-Message-ID: <20200811075420.GA5637@worktop.programming.kicks-ass.net>
-References: <20200811000959.2486636-1-posk@google.com>
- <20200811062733.GP3982@worktop.programming.kicks-ass.net>
+        Tue, 11 Aug 2020 03:54:33 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BB02C06174A
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 00:54:33 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id y18so9786949ilp.10
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 00:54:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=melexis.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Z5wWPMoezqlPQW+XdXx9xDErG0vZ5Ug+GxrnTbtmQ7M=;
+        b=AWg5Or5YERYKPYus/eM6Psz/6DB+ozbeyIgm5BdkcNrz+qaXydnw5C9h2yoNvdDN5L
+         BVwNYvfnGupyhB3fNudXRx17vToJsrp/WuFz7OccXouv5EOMlCDhKyQf7arOLvEgKskr
+         CHcdKTyQDaZXTITMAdPG1+EqwrysS4FjRXFq250kG9RyuPLfOcHhaxHzbop867temC91
+         HgjqFt4KcdcPJmq7FOCUhWbGmRQXhBFFXtn4eYrvOXDDrYHUFDdiCo79izc/XOb+Nm1G
+         ZvIkJlOL1BHQdPwPAOneQ41ySPYmks5pmre/t7gxMA0veF6Q25TcnXlzhJ/O5GfmhkfZ
+         IhAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Z5wWPMoezqlPQW+XdXx9xDErG0vZ5Ug+GxrnTbtmQ7M=;
+        b=cN4CxCTp38xdDKWDcLWuKj0OKrJrb2/o61KBmhtnDFBUI3ryfCaSCfRcWB5UNOpibK
+         YfTv8PcORPcD2r1HTMUHpWt3Y05QM5y2P8nlcXgZX+atRLeYumxZtcVsQDlpZgzR5ziS
+         yYtNEQ58420iwdExA5gpVgM7WIkAWo61elwC1ytbzYxcll/Tsx2Ey2d2lIE+VYHsJl1Y
+         WaYfKXzTVpiALi+qJx10cBZ36KkXRNhVCLPgg5iaWLzl18CAJJ9LkkUwR1NF10hi0pzQ
+         A4HzPQ49K/cnOm/kRr4NyZlALw7M/9nbk2vtaebHEdL5zBfDvqMmogwnOBC1wL/8LpqG
+         pkzQ==
+X-Gm-Message-State: AOAM5334F54viOpSpAlyNyAlv6w5RT8CoC103Mh/tcNb2W9p+OhFL6+k
+        xQ33QhFWuIi6CA0Ih6NNHl51BRLPnZB9kUt0BFmAMw==
+X-Google-Smtp-Source: ABdhPJxwBM5O2lPH+oGFjeL1pKcmpnayR8cPQmg3NDuJvttcswQ8j93D3BnivaApSCPbShY8CtutkgmYHtHlOc5nIKM=
+X-Received: by 2002:a92:cb12:: with SMTP id s18mr5277285ilo.13.1597132470806;
+ Tue, 11 Aug 2020 00:54:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200811062733.GP3982@worktop.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200808121026.1300375-1-cmo@melexis.com> <20200808121026.1300375-3-cmo@melexis.com>
+ <CAHp75VfWk7pCy4Osv0uY0UH4yFS=PRGbE1CNCakuRFTE33SDJg@mail.gmail.com>
+ <CAKv63uv-+r6M=G2rviSedgdCUd_0nzHKWXK363bJNERTQHRYXA@mail.gmail.com>
+ <20200809143222.4e19ea38@archlinux> <CAKv63uu1cRVCujM0nR5BstDYLZnCuGQTeFxhyUF0QK0mr0hvkQ@mail.gmail.com>
+In-Reply-To: <CAKv63uu1cRVCujM0nR5BstDYLZnCuGQTeFxhyUF0QK0mr0hvkQ@mail.gmail.com>
+From:   Crt Mori <cmo@melexis.com>
+Date:   Tue, 11 Aug 2020 09:53:55 +0200
+Message-ID: <CAKv63uuVYS5isAnhBzcqOJEJWhD5muSDBJzvYoJk1KkucrRnDA@mail.gmail.com>
+Subject: Re: [PATCH v4 2/4] iio:temperature:mlx90632: Adding extended
+ calibration option
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 08:27:33AM +0200, Peter Zijlstra wrote:
->  SYSCALL_DEFINE2(membarrier, int, cmd, int, flags)
->  {
-> +	int cflags = 0, int cpuid = -1;
-> +
->  	if (unlikely(flags) && cmd != MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ)
->  		return -EINVAL;
-> +
-> +	if (cmd & (MEMBARRIER_CMD_PRIVATE_EXPEDITED |
-> +		   MEMBARRIER_CMD_PRIVATE_EXPEDITED_SYNC_CORE |
-> +		   MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ)) {
-> +
-> +		if (cmd & MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ)
-> +			cflags |= MEMBARRIER_FLAG_RSEQ;
-> +
-> +		if (cmd & MEMBARRIER_CMD_PRIVATE_EXPEDITED_SYNC_CORE) {
-> +			cflags |= MEMBARRIER_FLAG_SYNC_CORE;
-> +			cpuid = flags;
-> +		}
-> +
-> +		cmd = MEMBARRIER_CMD_PRIVATE_EXPEDITED;
-> +	}
+On Sun, 9 Aug 2020 at 23:05, Crt Mori <cmo@melexis.com> wrote:
+>
+> On Sun, 9 Aug 2020 at 15:32, Jonathan Cameron <jic23@kernel.org> wrote:
+> >
+> > On Sat, 8 Aug 2020 23:57:59 +0200
+> > Crt Mori <cmo@melexis.com> wrote:
+> >
+> > > Hi,
+> > > I am very sorry you missed them, I thought you saw it (reply on v3 of
+> > > the patch). Maybe something happened to that mail, as it contained
+> > > link to datasheet, so I will omit it now.
+> > >
+> > > Except for the order, only the remarks below are still open (did you
+> > > get the polling trail I did?)
+> > >
+> > > On Sat, 8 Aug 2020 at 22:04, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> > > >
+> > > > On Sat, Aug 8, 2020 at 3:11 PM Crt Mori <cmo@melexis.com> wrote:
+> > > > >
+> > > > > For some time the market wants medical grade accuracy in medical range,
+> > > > > while still retaining the declared accuracy outside of the medical range
+> > > > > within the same sensor. That is why we created extended calibration
+> > > > > which is automatically switched to when object temperature is too high.
+> > > > >
+> > > > > This patch also introduces the object_ambient_temperature variable which
+> > > > > is needed for more accurate calculation of the object infra-red
+> > > > > footprint as sensor's ambient temperature might be totally different
+> > > > > than what the ambient temperature is at object and that is why we can
+> > > > > have some more errors which can be eliminated. Currently this temperature
+> > > > > is fixed at 25, but the interface to adjust it by user (with external
+> > > > > sensor or just IR measurement of the other object which acts as ambient),
+> > > > > will be introduced in another commit.
+> > > >
+> > > > The kernel doc patch should go before this patch.
+> > > >
+> > > > ...
+> > > >
+> > > > > +       *ambient_new_raw = (s16)read_tmp;
+> > > >
+> > > > > +       *ambient_old_raw = (s16)read_tmp;
+> > > >
+> > > > Sorry, did I miss your answer about these castings all over the patch?
+> > > >
+> > >
+> > > These castings are in fact needed. You read unsigned integer, but the
+> > > return value is signed integer. Without the cast it did not extend the
+> > > signed bit, but just wrote the value to signed. Also I find it more
+> > > obvious with casts, that I did not "accidentally" convert to signed.
+> >
+> > Should we perhaps be making this explicit for the cases where we
+> > are sign extending?  That doesn't include these two as the lvalue
+> > is s16, but does include some of the others.
+> >
+> > sign_extend32(read_tmp, 15)
+> >
+>
+> So for you lines like
+> s32 read;
+> read = (read + (s16)read_tmp) / 2;
+>
+> would actually be better as:
+> read = (read + sign_extend32(read_tmp, 15)) / 2;
+>
+> Hm, strange. I would read that more align the read_tmp to 32 bit than
+> the value you have in read_tmp is actually a signed 16 bit integer...
+>
 
-This of course fails to check if other bits are set, and it goes really
-'funny' if you use cpuid != -1.
+OK, I did some trails without the casts and had deja-vu from the first
+series of patches I submitted.  I noticed that without a cast the
+value that ends up in variable is not extended to signed, but it is
+unsigned value truncated. This same finding leads to have these casts
+already in current ambient and object raw read functions.
 
-That all needs a little more thought.
+So now only debate is if sign_extend32 is useful in this case, as read
+in the current case is 32 bit (before it was also 16 bit).
+
+My preference is to leave unified across the driver.
+
+> > >
+> > > > ...
+> > > >
+> > > > > +       ret = regmap_read(regmap, MLX90632_RAM_1(17), &read_tmp);
+> > > > > +       ret = regmap_read(regmap, MLX90632_RAM_2(17), &read_tmp);
+> > > > > +       ret = regmap_read(regmap, MLX90632_RAM_1(18), &read_tmp);
+> > > > > +       ret = regmap_read(regmap, MLX90632_RAM_2(18), &read_tmp);
+> > > > > +       ret = regmap_read(regmap, MLX90632_RAM_1(19), &read_tmp);
+> > > > > +       ret = regmap_read(regmap, MLX90632_RAM_2(19), &read_tmp);
+> > > >
+> > > > What so special about these magic 17, 18, 19? Can you provide definitions?
+> > > >
+> > > When we started 0 to 19 were all open for access, from userspace, then
+> > > only 1 and 2 were used with calculations, and now we use 17, 18 and
+> > > 19. Matter of fact is, I can't provide a descriptive name as it
+> > > depends on DSP version and as you can see now within the same DSP
+> > > version, also on the ID part. While RAM3 vs RAM1 and RAM2 could be
+> > > named RAM_OBJECT1, RAM_OBJECT2, RAM_AMBIENT, knowing our development
+> > > that might not be true in the next configuration, so I rather keep the
+> > > naming as in the datasheet.
+> > Normal solution for that is to version the defines as well.
+> >
+> > MLX90632_FW3_RAM_1_AMBIENT etc
+> > When a new version changes this, then you introduced new defines to
+> > support that firmware.
+> >
+>
+> OK will add those, but it is ending up as:
+> MLX90632_RAM_DSP5_AMBIENT
+> MLX90632_RAM_DSP5_EXTENDED_AMBIENT
+> MLX90632_RAM_DSP5_OBJECT_1
+> MLX90632_RAM_DSP5_EXTENDED_OBJECT_1
+> MLX90632_RAM_DSP5_OBJECT_2
+> MLX90632_RAM_DSP5_EXTENDED_OBJECT_2
+>
+> ok?
+> > >
+> > > > ...
+> > > >
+> > > > > +       int tries = 4;
+> > > >
+> > > > > +       while (tries-- > 0) {
+> > > > > +               ret = mlx90632_perform_measurement(data);
+> > > > > +               if (ret < 0)
+> > > > > +                       goto read_unlock;
+> > > > > +
+> > > > > +               if (ret == 19)
+> > > > > +                       break;
+> > > > > +       }
+> > > > > +       if (tries < 0) {
+> > > > > +               ret = -ETIMEDOUT;
+> > > > > +               goto read_unlock;
+> > > > > +       }
+> > > >
+> > > > Please avoid ping-pong type of changes in the same series (similar way
+> > > > as for kernel doc), which means don't introduce something you are
+> > > > going to change later on. Patch to move to do {} while () should go
+> > > > before this one.
+> > >
+> > > OK, will fix that ordering in v5, but will wait till we solve also
+> > > above discussions to avoid adding new versions.
+> > >
+> > > >
+> > > > --
+> > > > With Best Regards,
+> > > > Andy Shevchenko
+> > >
+> > > And about that voodoo stuff with numbers:
+> > >
+> > > Honestly, the equation is in the datasheet[1] and this is just making
+> > > floating point to fixed point with proper intermediate scaling
+> > > (initially I had defines of TENTOX, but that was not desired). There
+> > > is no better explanation of this voodoo.
+> >
+> > We all love fixed point arithmetic :)
+> >
+> > Jonathan
