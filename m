@@ -2,180 +2,138 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 811F1C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 02:50:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAEBFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 02:53:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FC18206DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 02:50:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88E91206DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 02:53:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Cowl6hL2"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BRjS9o/6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728105AbgHKCut (ORCPT
+        id S1728168AbgHKCx1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 22:50:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56232 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726994AbgHKCus (ORCPT
+        Mon, 10 Aug 2020 22:53:27 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:23500 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726994AbgHKCx1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 22:50:48 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EE74C061787
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 19:50:48 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id r4so6112404pls.2
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 19:50:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=KVlt6KV9H0iPcN45PNaGR/Bhb6+rc7oK3VoVzry5jSQ=;
-        b=Cowl6hL2OrBvzyF50us265NuyXL9Dhg58JH+EhDji5WF+WvsTA9Za7Wz49GMUPw3T7
-         x8niprKhc8T/Gb9a8lNzRx3hJkBA+qQ9Sc5eqXjpzVkdElM+hfDwxU1MO8i9CkBRHWIS
-         PWL5RjfEIlgJjNB9+H8JnOaal1w4ap9LStii6NjWib/7r16IOgKhQaQRLLe/ixYACV4V
-         gNsd+WSh+/MB/YrCqH6c+ZHgRnY/dKxRRtlfZYIPeOzv0iBHaH5j4EHs8fuFFIXaRLoc
-         9gQKIU+e1nA2Xlf5O0msCHRLxTilc/gNuaxfJl1eydiv/ARHlwq/vsIJk7kJO1uEvh/Q
-         kmvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=KVlt6KV9H0iPcN45PNaGR/Bhb6+rc7oK3VoVzry5jSQ=;
-        b=RQNNUN6LLiZPFivo6cmI1jaVxL6LWAAaLCSxXhV6m2bjOUKZgbYc3O9Bpr2Hkxyqd4
-         oRfJUXayoo0AQm0wzh5kA4nIBDZi87h+IyG7Zvu1VV6PAAr8Uig2TUiMxpqCy2KYcxgb
-         n4icndUZZ9sr+iYH2bHZxA2vurYY9OVmA7FPzzT6SlPgniYwCFa9ZojdvoiR+C+Ch4Jw
-         Pi9aG8H20VPCTKwiqX0BrUzR9x4lgteBVz/c729EIQ2wVv1nJsFIN+avMTzbd7C3AAXV
-         7zv6SUgQDccz16jphDeBMVofDTeCc0LgyPdB+41tiigGDW5fS1qkqDYTsOCkgeW5XosM
-         9zvw==
-X-Gm-Message-State: AOAM532+jEPlsDHwAduTZInYaWJ5pUZyHlBomHCVnhY4CXcwSM19vR+O
-        FskmxyMyxLT1FFcTKvQnCGrPwrOrizE=
-X-Google-Smtp-Source: ABdhPJzw9l0zmh9YYKufq6N1PiRLaPX7C2bOWYLQhjUtc76q++QdeCVxcewuBwJnYccQQ02ct2W8Ag==
-X-Received: by 2002:a17:902:b486:: with SMTP id y6mr6019242plr.100.1597114247418;
-        Mon, 10 Aug 2020 19:50:47 -0700 (PDT)
-Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id 8sm868673pjx.14.2020.08.10.19.50.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Aug 2020 19:50:46 -0700 (PDT)
-From:   John Stultz <john.stultz@linaro.org>
-To:     lkml <linux-kernel@vger.kernel.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Todd Kjos <tkjos@google.com>,
-        Amit Pundir <amit.pundir@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-serial@vger.kernel.org
-Subject: [RFC][PATCH] tty: serial: qcom_geni_serial: Drop __init from qcom_geni_console_setup
-Date:   Tue, 11 Aug 2020 02:50:44 +0000
-Message-Id: <20200811025044.70626-1-john.stultz@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Mon, 10 Aug 2020 22:53:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597114405;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=0Uybr7bUWG76B7NZzZpYoruROjuEoNEFed1mvtj7ELc=;
+        b=BRjS9o/6wgVlyw0Fqpid5rLMrR/LIdlSXKBGyFWdjrUpUcC8O6CL0wHgyBxANTBZ+A0l9+
+        LBIz7UJAZd05kP0gi5TZoglMZjEqCAorTk6NkO8nrJT/BLbcKtpc2F4Kk37I6NHeGK3HrR
+        vrXJ3dL8uV0PAOxhnPP4boT+wWYWUxQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-429-YzemLnq8NfGmYei6ueFNDw-1; Mon, 10 Aug 2020 22:53:21 -0400
+X-MC-Unique: YzemLnq8NfGmYei6ueFNDw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5979E1005504;
+        Tue, 11 Aug 2020 02:53:19 +0000 (UTC)
+Received: from [10.72.13.186] (ovpn-13-186.pek2.redhat.com [10.72.13.186])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9D4AD61983;
+        Tue, 11 Aug 2020 02:53:11 +0000 (UTC)
+Subject: Re: [PATCH 1/4] vdpa: introduce config op to get valid iova range
+To:     "Michael S. Tsirkin" <mst@redhat.com>, Eli Cohen <eli@mellanox.com>
+Cc:     virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, rob.miller@broadcom.com,
+        lingshan.zhu@intel.com, eperezma@redhat.com, lulu@redhat.com,
+        shahafs@mellanox.com, hanand@xilinx.com, mhabets@solarflare.com,
+        gdawar@xilinx.com, saugatm@xilinx.com, vmireyno@marvell.com,
+        zhangweining@ruijie.com.cn
+References: <20200617032947.6371-1-jasowang@redhat.com>
+ <20200617032947.6371-2-jasowang@redhat.com>
+ <20200805085035-mutt-send-email-mst@kernel.org>
+ <20200806120354.GA171218@mtl-vdi-166.wap.labs.mlnx>
+ <20200806082727-mutt-send-email-mst@kernel.org>
+ <20200806124354.GA172661@mtl-vdi-166.wap.labs.mlnx>
+ <20200810080410-mutt-send-email-mst@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <2d1e6278-e57e-c340-399e-40ff102c74a3@redhat.com>
+Date:   Tue, 11 Aug 2020 10:53:09 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200810080410-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When booting with heavily modularized config, the serial console
-may not be able to load until after init when modules that
-satisfy needed dependencies have time to load.
 
-Unfortunately, as qcom_geni_console_setup is marked as __init,
-the function may have been freed before we get to run it,
-causing boot time crashes such as:
+On 2020/8/10 下午8:05, Michael S. Tsirkin wrote:
+> On Thu, Aug 06, 2020 at 03:43:54PM +0300, Eli Cohen wrote:
+>> On Thu, Aug 06, 2020 at 08:29:22AM -0400, Michael S. Tsirkin wrote:
+>>> On Thu, Aug 06, 2020 at 03:03:55PM +0300, Eli Cohen wrote:
+>>>> On Wed, Aug 05, 2020 at 08:51:56AM -0400, Michael S. Tsirkin wrote:
+>>>>> On Wed, Jun 17, 2020 at 11:29:44AM +0800, Jason Wang wrote:
+>>>>>> This patch introduce a config op to get valid iova range from the vDPA
+>>>>>> device.
+>>>>>>
+>>>>>> Signed-off-by: Jason Wang <jasowang@redhat.com>
+>>>>>> ---
+>>>>>>   include/linux/vdpa.h | 14 ++++++++++++++
+>>>>>>   1 file changed, 14 insertions(+)
+>>>>>>
+>>>>>> diff --git a/include/linux/vdpa.h b/include/linux/vdpa.h
+>>>>>> index 239db794357c..b7633ed2500c 100644
+>>>>>> --- a/include/linux/vdpa.h
+>>>>>> +++ b/include/linux/vdpa.h
+>>>>>> @@ -41,6 +41,16 @@ struct vdpa_device {
+>>>>>>   	unsigned int index;
+>>>>>>   };
+>>>>>>   
+>>>>>> +/**
+>>>>>> + * vDPA IOVA range - the IOVA range support by the device
+>>>>>> + * @start: start of the IOVA range
+>>>>>> + * @end: end of the IOVA range
+>>>>>> + */
+>>>>>> +struct vdpa_iova_range {
+>>>>>> +	u64 start;
+>>>>>> +	u64 end;
+>>>>>> +};
+>>>>>> +
+>>>>>
+>>>>> This is ambiguous. Is end in the range or just behind it?
+>>>>> How about first/last?
+>>>> It is customary in the kernel to use start-end where end corresponds to
+>>>> the byte following the last in the range. See struct vm_area_struct
+>>>> vm_start and vm_end fields
+>>> Exactly my point:
+>>>
+>>> include/linux/mm_types.h:       unsigned long vm_end;           /* The first byte after our end address
+>>>
+>>> in this case Jason wants it to be the last byte, not one behind.
+>>>
+>>>
+>> Maybe start, size? Not ambiguous, and you don't need to do annoying
+>> calculations like size = last - start + 1
+> Size has a bunch of issues: can overlap, can not cover the entire 64 bit
+> range. The requisite checks are arguably easier to get wrong than
+> getting the size if you need it.
 
-[    6.469057] Unable to handle kernel paging request at virtual address ffffffe645d4e6cc
-[    6.481623] Mem abort info:
-[    6.484466]   ESR = 0x86000007
-[    6.487557]   EC = 0x21: IABT (current EL), IL = 32 bits
-[    6.492929]   SET = 0, FnV = 0g
-[    6.496016]   EA = 0, S1PTW = 0
-[    6.499202] swapper pgtable: 4k pages, 39-bit VAs, pgdp=000000008151e000
-[    6.501286] ufshcd-qcom 1d84000.ufshc: ufshcd_print_pwr_info:[RX, TX]: gear=[3, 3], lane[2, 2], pwr[FAST MODE, FAST MODE], rate = 2
-[    6.505977] [ffffffe645d4e6cc] pgd=000000017df9f003, p4d=000000017df9f003, pud=000000017df9f003, pmd=000000017df9c003, pte=0000000000000000
-[    6.505990] Internal error: Oops: 86000007 [#1] PREEMPT SMP
-[    6.505995] Modules linked in: zl10353 zl10039 zl10036 zd1301_demod xc5000 xc4000 ves1x93 ves1820 tuner_xc2028 tuner_simple tuner_types tua9001 tua6100 1
-[    6.506152]  isl6405
-[    6.518104] ufshcd-qcom 1d84000.ufshc: ufshcd_find_max_sup_active_icc_level: Regulator capability was not set, actvIccLevel=0
-[    6.530549]  horus3a helene fc2580 fc0013 fc0012 fc0011 ec100 e4000 dvb_pll ds3000 drxk drxd drx39xyj dib9000 dib8000 dib7000p dib7000m dib3000mc dibx003
-[    6.624271] CPU: 7 PID: 148 Comm: kworker/7:2 Tainted: G        W       5.8.0-mainline-12021-g6defd37ba1cd #3455
-[    6.624273] Hardware name: Thundercomm Dragonboard 845c (DT)
-[    6.624290] Workqueue: events deferred_probe_work_func
-[    6.624296] pstate: 40c00005 (nZcv daif +PAN +UAO BTYPE=--)
-[    6.624307] pc : qcom_geni_console_setup+0x0/0x110
-[    6.624316] lr : try_enable_new_console+0xa0/0x140
-[    6.624318] sp : ffffffc010843a30
-[    6.624320] x29: ffffffc010843a30 x28: ffffffe645c3e7d0
-[    6.624325] x27: ffffff80f8022180 x26: ffffffc010843b28
-[    6.637937] x25: 0000000000000000 x24: ffffffe6462a2000
-[    6.637941] x23: ffffffe646398000 x22: 0000000000000000
-[    6.637945] x21: 0000000000000000 x20: ffffffe6462a5ce8
-[    6.637952] x19: ffffffe646398e38 x18: ffffffffffffffff
-[    6.680296] x17: 0000000000000000 x16: ffffffe64492b900
-[    6.680300] x15: ffffffe6461e9d08 x14: 69202930203d2064
-[    6.680305] x13: 7561625f65736162 x12: 202c363331203d20
-[    6.696434] x11: 0000000000000030 x10: 0101010101010101
-[    6.696438] x9 : 4d4d20746120304d x8 : 7f7f7f7f7f7f7f7f
-[    6.707249] x7 : feff4c524c787373 x6 : 0000000000008080
-[    6.707253] x5 : 0000000000000000 x4 : 8080000000000000
-[    6.707257] x3 : 0000000000000000 x2 : ffffffe645d4e6cc
-[    6.744223] qcom_geni_serial 898000.serial: dev_pm_opp_set_rate: failed to find OPP for freq 102400000 (-34)
-[    6.744966] x1 : fffffffefe74e174 x0 : ffffffe6462a5ce8
-[    6.753580] qcom_geni_serial 898000.serial: dev_pm_opp_set_rate: failed to find OPP for freq 102400000 (-34)
-[    6.761634] Call trace:
-[    6.761639]  qcom_geni_console_setup+0x0/0x110
-[    6.761645]  register_console+0x29c/0x2f8
-[    6.767981] Bluetooth: hci0: Frame reassembly failed (-84)
-[    6.775252]  uart_add_one_port+0x438/0x500
-[    6.775258]  qcom_geni_serial_probe+0x2c4/0x4a8
-[    6.775266]  platform_drv_probe+0x58/0xa8
-[    6.855359]  really_probe+0xec/0x398
-[    6.855362]  driver_probe_device+0x5c/0xb8
-[    6.855367]  __device_attach_driver+0x98/0xb8
-[    7.184945]  bus_for_each_drv+0x74/0xd8
-[    7.188825]  __device_attach+0xec/0x148
-[    7.192705]  device_initial_probe+0x24/0x30
-[    7.196937]  bus_probe_device+0x9c/0xa8
-[    7.200816]  deferred_probe_work_func+0x7c/0xb8
-[    7.205398]  process_one_work+0x20c/0x4b0
-[    7.209456]  worker_thread+0x48/0x460
-[    7.213157]  kthread+0x14c/0x158
-[    7.216432]  ret_from_fork+0x10/0x18
-[    7.220049] Code: bad PC value
-[    7.223139] ---[ end trace 73f3b21e251d5a70 ]---
 
-Thus this patch removes the __init avoiding crash in such
-configs.
+Yes, so do you still prefer first/last or just begin/end which is 
+consistent with iommu_domain_geometry?
 
-Cc: Andy Gross <agross@kernel.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jiri Slaby <jirislaby@kernel.org>
-Cc: Saravana Kannan <saravanak@google.com>
-Cc: Todd Kjos <tkjos@google.com>
-Cc: Amit Pundir <amit.pundir@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org
-Cc: linux-serial@vger.kernel.org
-Suggested-by: Saravana Kannan <saravanak@google.com>
-Signed-off-by: John Stultz <john.stultz@linaro.org>
----
- drivers/tty/serial/qcom_geni_serial.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks
 
-diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
-index 3aa29d201f54..f7c6c7466520 100644
---- a/drivers/tty/serial/qcom_geni_serial.c
-+++ b/drivers/tty/serial/qcom_geni_serial.c
-@@ -1098,7 +1098,7 @@ static unsigned int qcom_geni_serial_tx_empty(struct uart_port *uport)
- }
- 
- #ifdef CONFIG_SERIAL_QCOM_GENI_CONSOLE
--static int __init qcom_geni_console_setup(struct console *co, char *options)
-+static int qcom_geni_console_setup(struct console *co, char *options)
- {
- 	struct uart_port *uport;
- 	struct qcom_geni_serial_port *port;
--- 
-2.17.1
+
+>
 
