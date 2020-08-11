@@ -2,125 +2,225 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62968C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 21:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7441FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 21:41:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DF9A20786
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 21:40:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FBE020756
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 21:41:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NF9nDofa"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oabY19Z8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726412AbgHKVkS (ORCPT
+        id S1726473AbgHKVlA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 17:40:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60906 "EHLO
+        Tue, 11 Aug 2020 17:41:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726023AbgHKVkR (ORCPT
+        with ESMTP id S1726420AbgHKVk7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 17:40:17 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D237EC06174A
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 14:40:16 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id d188so8335665pfd.2
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 14:40:16 -0700 (PDT)
+        Tue, 11 Aug 2020 17:40:59 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0084C061787
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 14:40:59 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id o13so7343869pgf.0
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 14:40:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=xh1nFmiFsyPig921Fwk7pCd225ZkH0tJsK6GH0jcq9Q=;
-        b=NF9nDofa//83sJtBUpVI2eC0Kf/qGVDT+X35ri144puGnCvGTfZJ6RgZxtEcRnp4eY
-         Pbq/3SQIFzN0UySOyqMQfvQn8Ao2+zgiUuCSiV9Lo87/6Bqh8P6CfIHVx3NArVEGCk30
-         SlG3Ra8q9tR0JsITHSC2K4bdr/IVIuDPD544ywmn4iZq8ns1zfx9Qjf6e+8VfrR3b5kS
-         K0fej6N70MA7/2OK2TIG4OFhogiydqY3JuSewDBDGCMMnlSb1CQZqXG47EPmKxTtjU3O
-         BwQyJQY5A0HJGHk8zaTMuWkqCRFu6nAOQuYlmUbfhCbK/83tTNkcbJODqq3N8etyGNFI
-         SflA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=AJOup3ZxW54qYpiONuV0+CKv0qJfDDqSyRIaH9fvcgU=;
+        b=oabY19Z8jrN9tbam2Saghz+d5donMjhVeBr2VG0ucXKln8tacmJ6U2fHEXrbwClVfi
+         /XVS3onQtw4sRLzR2r/GUqnJSRhId+snFz5WAfTAKhhqQKwCQjfws1/PHUfj5Aw1SGsT
+         Z6D9H5RSNFgg8Ggkb3tfSlUE+vud7XnV1CdyXCaWBgb0HoIRLOKNOpoEliHa3Jpn243B
+         wtBRRT/RDcBuW0e5TVq6LJ+hRNEfJ4gRfVWtu+6Esx8VkoiCoHZ1iiFBf3q16KEmId4r
+         LLVIWomgmuIOBdhpqEKJHzJErvWC/pXlR7O4n69fpxp6x5PNulx1dGZboywDm/IDaoyx
+         n+9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=xh1nFmiFsyPig921Fwk7pCd225ZkH0tJsK6GH0jcq9Q=;
-        b=rs7Ls60+rpSNaiefFdvJBCw8JjBSt7e5x5aDRtDcEWOLHkc1X98pcExFBOv0sFBpVr
-         nNQzxcVjYSO+KlR/Z1LVkQ8ri/xWl4Wk6BTZJzTZCqjDcevtkIB4wUVpopEaV0ZivlOD
-         xUAJ0Ed5q4PF2lNiElB1mAmk6OByZTpo1oz2m7wHJUEzYA/lLOGFstOXpjw7fjlifw7l
-         vcoU69YBThALxHqx55PuZi/4gJCtgP2np3U8gMk2CwVSC5+Nt3DUXJr3AdK/0huhd1Iv
-         ecAv42/IHKWFimEJFDg4UUMJmUZenJiIq4zsrr6EzxonAY8ta0m0oB7F/BjZ4TrdXpsG
-         kMOQ==
-X-Gm-Message-State: AOAM530mgrrPY4n+cxvO+UxVVg1T2kcy7yS4qRxPzutAj9xE/gMwqL6O
-        Jg6VqfHsNEYY7VbQnxmU1+ueWw==
-X-Google-Smtp-Source: ABdhPJyEA7lC5GKVFyT2NcG/5JHdpnv77bPF4IxLESV+U/UJuN955B9GPwSnjylIiwsvAopuI9cxeQ==
-X-Received: by 2002:aa7:96c5:: with SMTP id h5mr8025042pfq.195.1597182016109;
-        Tue, 11 Aug 2020 14:40:16 -0700 (PDT)
-Received: from [2620:15c:17:3:4a0f:cfff:fe51:6667] ([2620:15c:17:3:4a0f:cfff:fe51:6667])
-        by smtp.gmail.com with ESMTPSA id w6sm96744pgr.82.2020.08.11.14.40.15
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=AJOup3ZxW54qYpiONuV0+CKv0qJfDDqSyRIaH9fvcgU=;
+        b=oLAgXCcJ6e5M0muH3TxEfN64HNZ+0glH+exALF0smajJw23wJZlzZwZuX/iDjZkk0z
+         5RmkamKQ0SAYherctWL/AFbJHNCs+PKWEt1JiT2x63Vuig3Egr3AGunJZO8zN4qf3uHH
+         /M6y/s+0LuZwyoH+V3wNN2+NYso+VSI+B1uRuAn8vvp0B1RaAJO/xHugCMVfzy1AFwNs
+         czvJ2AZLrCj3KCOUrM19kBKWXeeAgZ58DTdtsvjn6UKCBCS7C0hi/XEfcP9mgF2h68fw
+         zt23hQ/JTalM4Tc86jzBUYpSytUJ2by/ohZGBkw+lnbk4l1GWTLomC7gpjX7JjyNxQsB
+         chQw==
+X-Gm-Message-State: AOAM5300wXhzhsQWEDkx+zjkOk5X9fuwTJqEPJxecKmfP0YULvhmOl4W
+        Iqix3TlLFKHjKYiCLFnkj/z4/g==
+X-Google-Smtp-Source: ABdhPJy6Xr/1mRIVs7VW6TlfxTPSMX2OXN4iKwfeu39RchR7ERZonklTRn+qTmONTxMzHGfC86pXlQ==
+X-Received: by 2002:a63:e118:: with SMTP id z24mr2321982pgh.230.1597182059092;
+        Tue, 11 Aug 2020 14:40:59 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id c2sm104077pgb.52.2020.08.11.14.40.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Aug 2020 14:40:15 -0700 (PDT)
-Date:   Tue, 11 Aug 2020 14:40:14 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Abel Wu <wuyun.wu@huawei.com>
-cc:     Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        hewenliang4@huawei.com, hushiyuan@huawei.com,
-        "open list:SLAB ALLOCATOR" <linux-mm@kvack.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mm/slub: fix missing ALLOC_SLOWPATH stat when bulk
- alloc
-In-Reply-To: <20200811022427.1363-1-wuyun.wu@huawei.com>
-Message-ID: <alpine.DEB.2.23.453.2008111435300.3428139@chino.kir.corp.google.com>
-References: <20200811022427.1363-1-wuyun.wu@huawei.com>
-User-Agent: Alpine 2.23 (DEB 453 2020-06-18)
+        Tue, 11 Aug 2020 14:40:58 -0700 (PDT)
+Date:   Tue, 11 Aug 2020 15:40:56 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     bjorn.andersson@linaro.org, o.rempel@pengutronix.de,
+        robh+dt@kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 06/10] remoteproc: imx_rproc: add load hook
+Message-ID: <20200811214056.GB3370567@xps15>
+References: <20200724080813.24884-1-peng.fan@nxp.com>
+ <20200724080813.24884-7-peng.fan@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200724080813.24884-7-peng.fan@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 11 Aug 2020, wuyun.wu@huawei.com wrote:
-
-> From: Abel Wu <wuyun.wu@huawei.com>
+On Fri, Jul 24, 2020 at 04:08:09PM +0800, Peng Fan wrote:
+> To i.MX8, we not able to see the correct data written into TCM when
+> using ioremap_wc, so use ioremap.
 > 
-> The ALLOC_SLOWPATH statistics is missing in bulk allocation now.
-> Fix it by doing statistics in alloc slow path.
+> However common elf loader using memset.
 > 
-> Signed-off-by: Abel Wu <wuyun.wu@huawei.com>
+> To arm64, "dc      zva, dst" is used in memset.
+> Per ARM DDI 0487A.j, chapter C5.3.8 DC ZVA, Data Cache Zero by VA,
+> 
+> "If the memory region being zeroed is any type of Device memory,
+> this instruction can give an alignment fault which is prioritized
+> in the same way as other alignment faults that are determined
+> by the memory type."
+> 
+> On i.MX platforms, when elf is loaded to onchip TCM area, the region
+> is ioremapped, so "dc zva, dst" will trigger abort.
+> 
+> So add i.MX specific loader to address the TCM write issue.
+> 
+> The change not impact i.MX6/7 function.
+> 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 > ---
->  mm/slub.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  drivers/remoteproc/imx_rproc.c | 76 ++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 76 insertions(+)
 > 
-> diff --git a/mm/slub.c b/mm/slub.c
-> index df93a5a0e9a4..5d89e4064f83 100644
-> --- a/mm/slub.c
-> +++ b/mm/slub.c
-> @@ -2600,6 +2600,8 @@ static void *___slab_alloc(struct kmem_cache *s, gfp_t gfpflags, int node,
->  	void *freelist;
->  	struct page *page;
+> diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
+> index aee790efbf7b..c23726091228 100644
+> --- a/drivers/remoteproc/imx_rproc.c
+> +++ b/drivers/remoteproc/imx_rproc.c
+> @@ -4,6 +4,7 @@
+>   */
 >  
-> +	stat(s, ALLOC_SLOWPATH);
+>  #include <linux/clk.h>
+> +#include <linux/elf.h>
+>  #include <linux/err.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/kernel.h>
+> @@ -15,6 +16,9 @@
+>  #include <linux/regmap.h>
+>  #include <linux/remoteproc.h>
+>  
+> +#include "remoteproc_internal.h"
+> +#include "remoteproc_elf_helpers.h"
 > +
->  	page = c->page;
->  	if (!page) {
->  		/*
-> @@ -2788,7 +2790,6 @@ static __always_inline void *slab_alloc_node(struct kmem_cache *s,
->  	page = c->page;
->  	if (unlikely(!object || !node_match(page, node))) {
->  		object = __slab_alloc(s, gfpflags, node, addr, c);
-> -		stat(s, ALLOC_SLOWPATH);
->  	} else {
->  		void *next_object = get_freepointer_safe(s, object);
+>  #define IMX7D_SRC_SCR			0x0C
+>  #define IMX7D_ENABLE_M4			BIT(3)
+>  #define IMX7D_SW_M4P_RST		BIT(2)
+> @@ -247,10 +251,82 @@ static void *imx_rproc_da_to_va(struct rproc *rproc, u64 da, size_t len)
+>  	return va;
+>  }
 >  
+> +static int imx_rproc_elf_load_segments(struct rproc *rproc, const struct firmware *fw)
+> +{
+> +	struct device *dev = &rproc->dev;
+> +	const void *ehdr, *phdr;
+> +	int i, ret = 0;
+> +	u16 phnum;
+> +	const u8 *elf_data = fw->data;
+> +	u8 class = fw_elf_get_class(fw);
+> +	u32 elf_phdr_get_size = elf_size_of_phdr(class);
+> +
+> +	ehdr = elf_data;
+> +	phnum = elf_hdr_get_e_phnum(class, ehdr);
+> +	phdr = elf_data + elf_hdr_get_e_phoff(class, ehdr);
+> +
+> +	/* go through the available ELF segments */
+> +	for (i = 0; i < phnum; i++, phdr += elf_phdr_get_size) {
+> +		u64 da = elf_phdr_get_p_paddr(class, phdr);
+> +		u64 memsz = elf_phdr_get_p_memsz(class, phdr);
+> +		u64 filesz = elf_phdr_get_p_filesz(class, phdr);
+> +		u64 offset = elf_phdr_get_p_offset(class, phdr);
+> +		u32 type = elf_phdr_get_p_type(class, phdr);
+> +		void *ptr;
+> +
+> +		if (type != PT_LOAD)
+> +			continue;
+> +
+> +		dev_dbg(dev, "phdr: type %d da 0x%llx memsz 0x%llx filesz 0x%llx\n",
+> +			type, da, memsz, filesz);
+> +
+> +		if (filesz > memsz) {
+> +			dev_err(dev, "bad phdr filesz 0x%llx memsz 0x%llx\n",
+> +				filesz, memsz);
+> +			ret = -EINVAL;
+> +			break;
+> +		}
+> +
+> +		if (offset + filesz > fw->size) {
+> +			dev_err(dev, "truncated fw: need 0x%llx avail 0x%zx\n",
+> +				offset + filesz, fw->size);
+> +			ret = -EINVAL;
+> +			break;
+> +		}
+> +
+> +		if (!rproc_u64_fit_in_size_t(memsz)) {
+> +			dev_err(dev, "size (%llx) does not fit in size_t type\n",
+> +				memsz);
+> +			ret = -EOVERFLOW;
+> +			break;
+> +		}
+> +
+> +		/* grab the kernel address for this device address */
+> +		ptr = rproc_da_to_va(rproc, da, memsz);
+> +		if (!ptr) {
+> +			dev_err(dev, "bad phdr da 0x%llx mem 0x%llx\n", da,
+> +				memsz);
+> +			ret = -EINVAL;
+> +			break;
+> +		}
+> +
+> +		/* put the segment where the remote processor expects it */
+> +		if (filesz)
+> +			memcpy_toio(ptr, elf_data + offset, filesz);
+> +	}
+> +
+> +	return ret;
+> +}
 
-Acked-by: David Rientjes <rientjes@google.com>
+This is clearly the wrong approach.  What you came up with in [1] is far better,
+though I would call the the operations elf_memcpy() and elf_memset().
 
+That being said I don't know how [1] fits with this patchset.  From where I
+stand a new revision is needed.
+
+[1]. https://patchwork.kernel.org/patch/11688751/
+
+> +
+>  static const struct rproc_ops imx_rproc_ops = {
+>  	.start		= imx_rproc_start,
+>  	.stop		= imx_rproc_stop,
+>  	.da_to_va       = imx_rproc_da_to_va,
+> +	.load		= imx_rproc_elf_load_segments,
+> +	.parse_fw	= rproc_elf_load_rsc_table,
+> +	.find_loaded_rsc_table = rproc_elf_find_loaded_rsc_table,
+> +	.sanity_check	= rproc_elf_sanity_check,
+> +	.get_boot_addr	= rproc_elf_get_boot_addr,
+>  };
+>  
+>  static int imx_rproc_addr_init(struct imx_rproc *priv,
 > -- 
-> 2.28.0.windows.1
-
-Lol :)
+> 2.16.4
+> 
