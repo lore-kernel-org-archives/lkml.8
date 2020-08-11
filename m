@@ -2,154 +2,115 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 360FBC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 19:07:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F925C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 19:11:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F20DE20756
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 19:07:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5DA020781
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 19:11:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uVSv7U0l"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="DIs9NLMS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726366AbgHKTHr (ORCPT
+        id S1726271AbgHKTLF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 15:07:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37328 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725886AbgHKTHq (ORCPT
+        Tue, 11 Aug 2020 15:11:05 -0400
+Received: from mail.efficios.com ([167.114.26.124]:47324 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725889AbgHKTLF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 15:07:46 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF3F8C06174A
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 12:07:45 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id t6so14760459ljk.9
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 12:07:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=INpDWjNYGP9lfSOGCymtUET262GzdAuaS1/P3+r78GU=;
-        b=uVSv7U0lqaY+MWDIFnGK/xEiH3pw+bUSNyy5HsA8O5NMrbaL9iEoPYgpr7QDo2CxdZ
-         LYQGqb2+Jj17yXh09A30L+ACHf7ct1ljmoPYYv54336pCL8Loe+mcyuD12Imb/iPVlOM
-         dLfoH5LCWIO4WNAlo0eV/DAT2z+zBdFoZIRYOi1ZNC1fJCy3XRicJtzlrMMreH7esT6O
-         3W0cL0h1YX6em1CzYMRw+bz4A4ar1kPkSZAR3k9HVYFS4Gg0RThce7Sonw2KY94Ar716
-         pY8G+bXyJmupNWBo1z93yooWgRMbnQtKgf7uBynCXq/0YtjHDAfQJkzktCOkPFYbg8WZ
-         SJlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=INpDWjNYGP9lfSOGCymtUET262GzdAuaS1/P3+r78GU=;
-        b=SSwjx0xl2tNhESNLomAzSq6ukBgX6V0AW7+YOcUN21fvHFRv5cc8EaBo8kX1EXWMgU
-         ceqOFQBmih9rYHIbJi3vNXCMZHCjsTS2bGYRCyiEbGHrn74obncfW4Bdpbbu627Db2TP
-         ROGhmNq2dpZ9qxKqRI9TraQGlWatmaRAHeSuvzYrVaAhaCTFxYV0UOKqJ+RPhL6+WUnx
-         45w7N2aBTd5XbdgB4cft3IQ5x30kY+gdRoAlLDDzLFRHQIGCUmtbgP8+bEuKJxiIxHG8
-         yvMZs5jmxGoUgFii3r0z41cjzkPQYJmRV7qD3fC+zmhrIRh4iZwqBG74GA5+/t1KTzR9
-         XUAg==
-X-Gm-Message-State: AOAM530S0wEd3aYmdQEzEJv9ne0jtxTNYWaOiRWQwBj1f5mdW/TM9ow6
-        V9yP8o5kKdkCu13wTvEKjSB8yD+0YP3eal4Pv08BGQ==
-X-Google-Smtp-Source: ABdhPJzMxJ9A4H4kP8Z09SXkhC7ilefcaFnvf1tkDqVFuCdc5ftEr5lDXxI1xWQ4uT4PJnGIgWvLnxjWIqxcAXz/pwo=
-X-Received: by 2002:a2e:302:: with SMTP id 2mr3328448ljd.156.1597172864098;
- Tue, 11 Aug 2020 12:07:44 -0700 (PDT)
+        Tue, 11 Aug 2020 15:11:05 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 529BD2CF2E0;
+        Tue, 11 Aug 2020 15:11:04 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id hgoaOP9Sff08; Tue, 11 Aug 2020 15:11:04 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id EE8232CF534;
+        Tue, 11 Aug 2020 15:11:03 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com EE8232CF534
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1597173063;
+        bh=aX5VywJt4AvedzVTU+00PoSO60+jsYPIe8N+NMnuuug=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=DIs9NLMS2FYpHh94Q10fjl+V6SBbPVR01oX0qwjrLguaKAqnFi0TVrLl3CXcfviqE
+         qbH6eO/X1BD8RVhuQ12hUCpLfiGHLK0L1McWyeW8NkUMi6HHCAYZfy0dbzo9LV+FIM
+         EOgfLWhM82MePWHTY1kZbisd2TtJPjHM2/Et0jzGOAPVbzAoqqldRa23i7Og5bOiky
+         jzJJi+00KyxItp1zpr/72YGD3/Ul52rkQo5EVqBv39oY0RtFBC/YlhvsKuKukWeos5
+         igSPkh2hI/v+//AD6i+o+X2OIvPikNr5KpvY4MlsDeQOQ20vj+22LzqsMzy8KJ5Uzo
+         Zup9/QpDcGV+Q==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id CuFNI7mpAn5G; Tue, 11 Aug 2020 15:11:03 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id E29242CF351;
+        Tue, 11 Aug 2020 15:11:03 -0400 (EDT)
+Date:   Tue, 11 Aug 2020 15:11:03 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     David Ahern <dsahern@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Michael Jeanson <mjeanson@efficios.com>,
+        David Ahern <dsahern@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Message-ID: <699475546.4794.1597173063863.JavaMail.zimbra@efficios.com>
+In-Reply-To: <f43a9397-c506-9270-b423-efaf6f520a80@gmail.com>
+References: <42cb74c8-9391-cf4c-9e57-7a1d464f8706@gmail.com> <20200806185121.19688-1-mjeanson@efficios.com> <20200811.102856.864544731521589077.davem@davemloft.net> <f43a9397-c506-9270-b423-efaf6f520a80@gmail.com>
+Subject: Re: [PATCH] selftests: Add VRF icmp error route lookup test
 MIME-Version: 1.0
-References: <20200811183950.10603-1-peterx@redhat.com>
-In-Reply-To: <20200811183950.10603-1-peterx@redhat.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Tue, 11 Aug 2020 21:07:17 +0200
-Message-ID: <CAG48ez0dJh=-J2RNcam4Q353Lq_ZT+kfkHzTKGgwCvea-eQLqg@mail.gmail.com>
-Subject: Re: [PATCH v3] mm/gup: Allow real explicit breaking of COW
-To:     Peter Xu <peterx@redhat.com>
-Cc:     Linux-MM <linux-mm@kvack.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Marty Mcfadden <mcfadden8@llnl.gov>,
-        "Maya B . Gokhale" <gokhale2@llnl.gov>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Kirill Shutemov <kirill@shutemov.name>, Jan Kara <jack@suse.cz>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3959 (ZimbraWebClient - FF79 (Linux)/8.8.15_GA_3953)
+Thread-Topic: selftests: Add VRF icmp error route lookup test
+Thread-Index: K9OU1fUupPJcTCWW0BAtiweVmt3suA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 8:39 PM Peter Xu <peterx@redhat.com> wrote:
-> Starting from commit 17839856fd58 ("gup: document and work around "COW can
-> break either way" issue", 2020-06-02), explicit copy-on-write behavior is
-> enforced for private gup pages even if it's a read-only.  It is achieved by
-> always passing FOLL_WRITE to emulate a write.
->
-> That should fix the COW issue that we were facing, however above commit could
-> also break userfaultfd-wp and applications like umapsort [1,2].
->
-> One general routine of umap-like program is: userspace library will manage page
-> allocations, and it will evict the least recently used pages from memory to
-> external storages (e.g., file systems).  Below are the general steps to evict
-> an in-memory page in the uffd service thread when the page pool is full:
->
->   (1) UFFDIO_WRITEPROTECT with mode=WP on some to-be-evicted page P, so that
->       further writes to page P will block (keep page P clean)
->   (2) Copy page P to external storage (e.g. file system)
->   (3) MADV_DONTNEED to evict page P
->
-> Here step (1) makes sure that the page to dump will always be up-to-date, so
-> that the page snapshot in the file system is consistent with the one that was
-> in the memory.  However with commit 17839856fd58, step (2) can potentially hang
-> itself because e.g. if we use write() to a file system fd to dump the page
-> data, that will be a translated read gup request in the file system driver to
-> read the page content, then the read gup will be translated to a write gup due
-> to the new enforced COW behavior.  This write gup will further trigger
-> handle_userfault() and hang the uffd service thread itself.
->
-> I think the problem will go away too if we replace the write() to the file
-> system into a memory write to a mmaped region in the userspace library, because
-> normal page faults will not enforce COW, only gup is affected.  However we
-> cannot forbid users to use write() or any form of kernel level read gup.
->
-> One solution is actually already mentioned in commit 17839856fd58, which is to
-> provide an explicit BREAK_COW scemantics for enforced COW.  Then we can still
-> use FAULT_FLAG_WRITE to identify whether this is a "real write request" or an
-> "enfornced COW (read) request".
->
-> With the enforced COW, we also need to inherit UFFD_WP bit during COW because
-> now COW can happen with UFFD_WP enabled (previously, it cannot).
->
-> Since at it, rename the variable in __handle_mm_fault() from "dirty" to "cow"
-> to better suite its functionality.
-[...]
-> diff --git a/mm/memory.c b/mm/memory.c
-[...]
-> +                        * copied due to enfornced COW.  When it happens, we
+----- On Aug 11, 2020, at 2:57 PM, David Ahern dsahern@gmail.com wrote:
 
-(typo here and in the huge_memory version)
+> On 8/11/20 11:28 AM, David Miller wrote:
+>> From: Michael Jeanson <mjeanson@efficios.com>
+>> Date: Thu,  6 Aug 2020 14:51:21 -0400
+>> 
+>>> The objective is to check that the incoming vrf routing table is selected
+>>> to send an ICMP error back to the source when the ttl of a packet reaches 1
+>>> while it is forwarded between different vrfs.
+>>>
+>>> The first test sends a ping with a ttl of 1 from h1 to h2 and parses the
+>>> output of the command to check that a ttl expired error is received.
+>>>
+>>> [This may be flaky, I'm open to suggestions of a more robust approch.]
+>>>
+>>> The second test runs traceroute from h1 to h2 and parses the output to
+>>> check for a hop on r1.
+>>>
+>>> Signed-off-by: Michael Jeanson <mjeanson@efficios.com>
+>> 
+>> This patch does not apply cleanly to the current net tree.
+>> 
+> 
+> It is also out of context since the tests fail on current net and net-next.
+> 
+> The tests along with the patches that fix the problem should be sent
+> together.
 
-[...]
-> diff --git a/mm/gup.c b/mm/gup.c
-> index d8a33dd1430d..c33e84ab9c36 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -870,6 +870,8 @@ static int faultin_page(struct task_struct *tsk, struct vm_area_struct *vma,
->                 return -ENOENT;
->         if (*flags & FOLL_WRITE)
->                 fault_flags |= FAULT_FLAG_WRITE;
-> +       if (*flags & FOLL_BREAK_COW)
-> +               fault_flags |= FAULT_FLAG_BREAK_COW;
->         if (*flags & FOLL_REMOTE)
->                 fault_flags |= FAULT_FLAG_REMOTE;
->         if (locked)
-> @@ -1076,7 +1078,7 @@ static long __get_user_pages(struct task_struct *tsk, struct mm_struct *mm,
->                         }
->                         if (is_vm_hugetlb_page(vma)) {
->                                 if (should_force_cow_break(vma, foll_flags))
-> -                                       foll_flags |= FOLL_WRITE;
-> +                                       foll_flags |= FOLL_BREAK_COW;
+One thing I am missing before this series can be considered for upstreaming
+is an Acked-by of the 2 fixes for ipv4 and ipv6 from you, as maintainer
+of l3mdev, if you think the approach I am taking with those fixes makes sense.
 
-How does this interact with the FOLL_WRITE check in follow_page_pte()?
-If we want the COW to be broken, follow_page_pte() would have to treat
-FOLL_BREAK_COW similarly to FOLL_WRITE, right?
+Thanks,
+
+Mathieu
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
