@@ -2,118 +2,75 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3599AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 12:48:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62FA9C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 12:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1406C2076B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 12:48:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A08D2076B
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 12:52:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728709AbgHKMsR convert rfc822-to-8bit (ORCPT
+        id S1728614AbgHKMwg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 08:48:17 -0400
-Received: from foss.arm.com ([217.140.110.172]:37270 "EHLO foss.arm.com"
+        Tue, 11 Aug 2020 08:52:36 -0400
+Received: from gentwo.org ([3.19.106.255]:35610 "EHLO gentwo.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726829AbgHKMsR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 08:48:17 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0B1E8D6E;
-        Tue, 11 Aug 2020 05:48:16 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AE0E53F575;
-        Tue, 11 Aug 2020 05:48:14 -0700 (PDT)
-References: <20200810010009.92758-1-arch0.zheng@gmail.com> <jhjwo26gxlb.mognet@arm.com> <9425382c-2a42-57ca-512d-c93c589dc701@gmail.com> <jhjv9hph3h7.mognet@arm.com> <01fe6a9b-fd3a-9b36-b2fa-6cea58415670@gmail.com>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Qi Zheng <arch0.zheng@gmail.com>
-Cc:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sched/fair: Remove the duplicate check from group_has_capacity()
-In-reply-to: <01fe6a9b-fd3a-9b36-b2fa-6cea58415670@gmail.com>
-Date:   Tue, 11 Aug 2020 13:48:09 +0100
-Message-ID: <jhjtux9gxh2.mognet@arm.com>
+        id S1726829AbgHKMwf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 08:52:35 -0400
+Received: by gentwo.org (Postfix, from userid 1002)
+        id 15CC43F447; Tue, 11 Aug 2020 12:52:35 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+        by gentwo.org (Postfix) with ESMTP id 1310B3F043;
+        Tue, 11 Aug 2020 12:52:35 +0000 (UTC)
+Date:   Tue, 11 Aug 2020 12:52:35 +0000 (UTC)
+From:   Christopher Lameter <cl@linux.com>
+X-X-Sender: cl@www.lameter.com
+To:     Pekka Enberg <penberg@gmail.com>
+cc:     Vlastimil Babka <vbabka@suse.cz>,
+        Xunlei Pang <xlpang@linux.alibaba.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Wen Yang <wenyang@linux.alibaba.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Roman Gushchin <guro@fb.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        David Rientjes <rientjes@google.com>
+Subject: Re: [PATCH 1/2] mm/slub: Introduce two counters for the partial
+ objects
+In-Reply-To: <CAOJsxLGqrCTgQhdOTTWKcCz0TsVfh_AxTCVWNGj6Mo4hyE5E2Q@mail.gmail.com>
+Message-ID: <alpine.DEB.2.22.394.2008111250170.86069@www.lameter.com>
+References: <1593678728-128358-1-git-send-email-xlpang@linux.alibaba.com> <a53f9039-5cba-955b-009e-12e8c5ffb345@suse.cz> <CAOJsxLHX62P0yvHZcXdje41zm_2demzTraqvHXAvfhVPp2HKsA@mail.gmail.com> <alpine.DEB.2.22.394.2008071258020.55871@www.lameter.com>
+ <CAOJsxLGqrCTgQhdOTTWKcCz0TsVfh_AxTCVWNGj6Mo4hyE5E2Q@mail.gmail.com>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 7 Aug 2020, Pekka Enberg wrote:
 
-On 11/08/20 12:44, Qi Zheng wrote:
-> On 2020/8/11 下午6:38, Valentin Schneider wrote:
->>
->> On 11/08/20 04:39, Qi Zheng wrote:
->>> On 2020/8/11 上午2:33, Valentin Schneider wrote:
->>>>
->>>> On 10/08/20 02:00, Qi Zheng wrote:
->>>>> 1. The group_has_capacity() function is only called in
->>>>>      group_classify().
->>>>> 2. The following inequality has already been checked in
->>>>>      group_is_overloaded() which was also called in
->>>>>      group_classify().
->>>>>
->>>>>         (sgs->group_capacity * imbalance_pct) <
->>>>>                           (sgs->group_runnable * 100)
->>>>>
->>>>
->>>> Consider group_is_overloaded() returns false because of the first
->>>> condition:
->>>>
->>>>           if (sgs->sum_nr_running <= sgs->group_weight)
->>>>                   return false;
->>>>
->>>> then group_has_capacity() would be the first place where the group_runnable
->>>> vs group_capacity comparison would be done.
->>>>
->>>> Now in that specific case we'll actually only check it if
->>>>
->>>>     sgs->sum_nr_running == sgs->group_weight
->>>>
->>>> and the only case where the runnable vs capacity check can fail here is if
->>>> there's significant capacity pressure going on. TBH this capacity pressure
->>>> could be happening even when there are fewer tasks than CPUs, so I'm not
->>>> sure how intentional that corner case is.
->>>
->>> Maybe some cpus in sg->cpumask are no longer active at the == case,
->>> which causes the significant capacity pressure?
->>>
->>
->> That can only happen in that short window between deactivating a CPU and
->> not having rebuilt the sched_domains yet, which sounds quite elusive.
->>
->
-> In fact, at the beginning, I added unlikely() here to hint the compiler:
->
-> -	if ((sgs->group_capacity * imbalance_pct) <
-> -			(sgs->group_runnable * 100))
-> +	if (unlikely((sgs->group_capacity * imbalance_pct) <
-> +			(sgs->group_runnable * 100)))
->
-> The corresponding patch is as follows:
->
->       [PATCH]sched/core: add unlikely in group_has_capacity()
->
-> Do you think it is necessary?
+> Why do you consider this to be a fast path? This is all partial list
+> accounting when we allocate/deallocate a slab, no? Just like
+> ___slab_alloc() says, I assumed this to be the slow path... What am I
+> missing?
 
-The "unlikely" approach has the benefit of keeping all corner cases in
-place. I was tempted to say it could still make sense to get rid of the
-extra check entirely, given that it has an impact only when:
+I thought these were per object counters? If you just want to count the
+number of slabs then you do not need the lock at all. We already have a
+counter for the number of slabs.
 
-- sum_nr_running == group_weight
-- group capacity has been noticeably reduced
+> No objections to alternative fixes, of course, but wrapping the
+> counters under CONFIG_DEBUG seems like just hiding the actual issue...
 
-If sum_nr_running < group_weight, we won't evaluate it.
-If sum_nr_running > group_weight, we either won't call into
-  group_has_capacity() or we'll have checked it already in
-  group_overloaded().
+CONFIG_DEBUG is on by default. It just compiles in the debug code and
+disables it so we can enable it with a kernel boot option. This is because
+we have had numerous issues in the past with "production" kernels that
+could not be recompiled with debug options. So just running the prod
+kernel with another option will allow you to find hard to debug issues in
+a full scale producton deployment with potentially proprietary modules
+etc.
 
-That said, it does make very much sense to check it in that ==
-case. Vincent might have a different take on this, but right now I'd say
-the unlikely approach is the safest one of the two.
