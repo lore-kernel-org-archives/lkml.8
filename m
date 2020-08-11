@@ -4,31 +4,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C37CC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 03:28:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B590C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 03:28:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 130F42065D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 03:28:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FC742065D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 03:28:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728161AbgHKD2o (ORCPT
+        id S1728223AbgHKD2s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 23:28:44 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:48460 "EHLO inva021.nxp.com"
+        Mon, 10 Aug 2020 23:28:48 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:43654 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727819AbgHKD2n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 23:28:43 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id F0D9C200725;
-        Tue, 11 Aug 2020 05:28:41 +0200 (CEST)
+        id S1727819AbgHKD2p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 23:28:45 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 3650E1A082B;
+        Tue, 11 Aug 2020 05:28:44 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 85E06201D74;
-        Tue, 11 Aug 2020 05:28:37 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id B2D341A1D79;
+        Tue, 11 Aug 2020 05:28:39 +0200 (CEST)
 Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id B047140243;
-        Tue, 11 Aug 2020 05:28:31 +0200 (CEST)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id E8517402DD;
+        Tue, 11 Aug 2020 05:28:33 +0200 (CEST)
 From:   Anson Huang <Anson.Huang@nxp.com>
 To:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
         lee.jones@linaro.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
@@ -36,10 +36,12 @@ To:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
         linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
 Cc:     Linux-imx@nxp.com
-Subject: [PATCH 1/3] pwm: imx-tpm: Use dev_err_probe() to simplify error handling
-Date:   Tue, 11 Aug 2020 11:23:42 +0800
-Message-Id: <1597116224-26221-1-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH 3/3] pwm: imx1: Use dev_err_probe() to simplify error handling
+Date:   Tue, 11 Aug 2020 11:23:44 +0800
+Message-Id: <1597116224-26221-3-git-send-email-Anson.Huang@nxp.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1597116224-26221-1-git-send-email-Anson.Huang@nxp.com>
+References: <1597116224-26221-1-git-send-email-Anson.Huang@nxp.com>
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -51,30 +53,45 @@ defer probe reason etc., use it to simplify the code.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- drivers/pwm/pwm-imx-tpm.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ drivers/pwm/pwm-imx1.c | 23 ++++++++---------------
+ 1 file changed, 8 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/pwm/pwm-imx-tpm.c b/drivers/pwm/pwm-imx-tpm.c
-index fcdf6be..e46fad3 100644
---- a/drivers/pwm/pwm-imx-tpm.c
-+++ b/drivers/pwm/pwm-imx-tpm.c
-@@ -350,13 +350,9 @@ static int pwm_imx_tpm_probe(struct platform_device *pdev)
- 		return PTR_ERR(tpm->base);
+diff --git a/drivers/pwm/pwm-imx1.c b/drivers/pwm/pwm-imx1.c
+index f8b2c2e..c0757a5 100644
+--- a/drivers/pwm/pwm-imx1.c
++++ b/drivers/pwm/pwm-imx1.c
+@@ -145,23 +145,16 @@ static int pwm_imx1_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, imx);
  
- 	tpm->clk = devm_clk_get(&pdev->dev, NULL);
--	if (IS_ERR(tpm->clk)) {
--		ret = PTR_ERR(tpm->clk);
+ 	imx->clk_ipg = devm_clk_get(&pdev->dev, "ipg");
+-	if (IS_ERR(imx->clk_ipg)) {
+-		dev_err(&pdev->dev, "getting ipg clock failed with %ld\n",
+-				PTR_ERR(imx->clk_ipg));
+-		return PTR_ERR(imx->clk_ipg);
+-	}
++	if (IS_ERR(imx->clk_ipg))
++		return dev_err_probe(&pdev->dev, PTR_ERR(imx->clk_ipg),
++				     "getting ipg clock failed with %ld\n",
++				     PTR_ERR(imx->clk_ipg));
+ 
+ 	imx->clk_per = devm_clk_get(&pdev->dev, "per");
+-	if (IS_ERR(imx->clk_per)) {
+-		int ret = PTR_ERR(imx->clk_per);
+-
 -		if (ret != -EPROBE_DEFER)
 -			dev_err(&pdev->dev,
--				"failed to get PWM clock: %d\n", ret);
+-				"failed to get peripheral clock: %d\n",
+-				ret);
+-
 -		return ret;
 -	}
-+	if (IS_ERR(tpm->clk))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(tpm->clk),
-+				     "failed to get PWM clock: %ld\n", PTR_ERR(tpm->clk));
++	if (IS_ERR(imx->clk_per))
++		return dev_err_probe(&pdev->dev, PTR_ERR(imx->clk_per),
++				     "failed to get peripheral clock: %ld\n",
++				     PTR_ERR(imx->clk_per));
  
- 	ret = clk_prepare_enable(tpm->clk);
- 	if (ret) {
+ 	imx->chip.ops = &pwm_imx1_ops;
+ 	imx->chip.dev = &pdev->dev;
 -- 
 2.7.4
 
