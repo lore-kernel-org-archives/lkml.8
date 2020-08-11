@@ -2,122 +2,176 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B55C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:51:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B809C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:52:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1077120782
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:51:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597161099;
-	bh=Z1hIcu7q4cy7WOXTTcnE5jegEMEU+/eF9e0CtjzECdY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Q5uNe0HTEV0UE9QRjdhELGa+8xm7fQsZ8e40oQDZlHBMl0lM5QPjS4ffvEZM3CYoa
-	 7RsMeiHpuIT8McR8UHpW134PZHkreMKGkq7ltZ+XXMX7pp7uForWucVu0aiXMu/zqG
-	 k5VJI3IPPt6Ouz6yvldBEX0V0eUajEHlgH6BRp3Q=
+	by mail.kernel.org (Postfix) with ESMTP id E895720756
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:52:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="IlWKI/fa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728970AbgHKPvi (ORCPT
+        id S1728962AbgHKPwK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 11:51:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35256 "EHLO
+        Tue, 11 Aug 2020 11:52:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728879AbgHKPvh (ORCPT
+        with ESMTP id S1728800AbgHKPwH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 11:51:37 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15080C06174A
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 08:51:37 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id h8so6925378lfp.9
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 08:51:36 -0700 (PDT)
+        Tue, 11 Aug 2020 11:52:07 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FA1AC06174A
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 08:52:06 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id z18so11942012wrm.12
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 08:52:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jIwKc0Pf5DTDi2LxUBmmYZLh8vGovo5mHhsVAPJpcZA=;
-        b=YxevrWSp+E+voSCnY74qs4J0R19cGPtLQOWtpl0z3c/DeSKSVtKrcCYK4LtRCDEhzQ
-         5GZSNB+smjJYraoq6/L+LxnG4nkTbP+YB6UJNHcN403pCwshZu+pA1E/B04ljW5vFXuy
-         13rBaEkWTjDHlLSwzQ1CE3YuaBdfpidKv/Mu4=
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=9aCeAHh+tJpUW3mQW2V6JCgolza+sh48fpnGnwOnipk=;
+        b=IlWKI/fa9axZFDtAyM+nbd8f8M6K6q2uI3EF+7Oij+ty6MQl2FpMDa0V56rCfcgYJy
+         GPFbmS/eqnvpQSjFeoIcz9CErIRegacw40Q38xrhFAYWhY4mFO/HZNSKVvHM/38DuLVR
+         /Y9NCD0WavOjw+F1n4x5M61a2yLf6j0ZpAg4U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jIwKc0Pf5DTDi2LxUBmmYZLh8vGovo5mHhsVAPJpcZA=;
-        b=KTjjpT1+xIUOcCbu1u/3U8E6w4IedyEMZP3Z7lKDj1OIXDkHDD5SSAWA8CoHJAWwUH
-         R1j3w3gvqZcyITdHdMZ0BlDuH86yxNAGvd+HztowiLauGF4pNBUvfxhIvwzaovne7X7J
-         MZ2gzNsURcVmJy0OvfoP2AhT8CU0+iqFk5QaFYbjOIteM1KoVg6JjScmviphErd1nXoB
-         oDcERHRGufjMGghN0fOVb+CMhW/Qt5VNRLsyNcc5RiVagdIpWxIc7GfYe34d3WShi9DL
-         0uvi9emz5KBBhEcDq1dVraWY88r+JiHRhYimwbVzC7LQKRa4eFj46ResvX/v0TiHAg+S
-         +/ew==
-X-Gm-Message-State: AOAM531gAiAlF8RgPo+RXkaJ+hXJTdYDYJSv4aAD85AIQfhU09XokE0N
-        0/ZKOB8fw2gr735iV1MrYw4VqVoG3d4=
-X-Google-Smtp-Source: ABdhPJyqp+9DtrysdX9l7LMaBwwB6IrKP5Tkmp4EY6Uh1YlDq9T/NXKQBPzb2WxD40oPA0c+Q/5z9Q==
-X-Received: by 2002:a19:f808:: with SMTP id a8mr3507566lff.62.1597161095163;
-        Tue, 11 Aug 2020 08:51:35 -0700 (PDT)
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com. [209.85.208.178])
-        by smtp.gmail.com with ESMTPSA id a7sm10125382ljk.2.2020.08.11.08.51.34
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=9aCeAHh+tJpUW3mQW2V6JCgolza+sh48fpnGnwOnipk=;
+        b=iv+hAlQyrV6jrZ03Ge04jTVV56mk0r/lrS4cp3Yfc8YRZrQwU9qHyYbbaHiAvNxkzs
+         e7qEAP8uSc+Tza40XrUmAiT7vTFBJpqpEHG9U6qk9hq3v5Bf05RwrfONGYfUgr0w/EG/
+         IYzEadoLgf8xwNGD2LyNPD3RwYiQn0+tGs9jgMW9Ak6FB4nPd+Me5T8e5dcbxI1Q58N3
+         ToQdoIF9i9bOOi/lbiBY5vMju3HILJQPQQfc3ESIyFCJP26auBJwH7ZBZcH9/ICogc8v
+         SKV5q4poVQlv6o01i39mrbhylTVmpA5r7ldACI3XlRaNO4hRZphsIigYnf26SOua1ai2
+         byjg==
+X-Gm-Message-State: AOAM530f4BXW4kT+oRp7Gn/iXHedUe+DwcXJ2GhDsXvJ9qhchcafb2nu
+        LpJjj1yNg/DsLtGgZ5ARK8sWeg==
+X-Google-Smtp-Source: ABdhPJwmQ09pbVIsm5G6JWGLVVkrdVRK9rctTlUrcLL274znvsX2IIRJ6wCEsi6XW2KeK56vvoHHtw==
+X-Received: by 2002:adf:fd41:: with SMTP id h1mr31876509wrs.124.1597161125115;
+        Tue, 11 Aug 2020 08:52:05 -0700 (PDT)
+Received: from [10.230.0.249] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id b203sm6013680wmc.22.2020.08.11.08.52.02
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Aug 2020 08:51:34 -0700 (PDT)
-Received: by mail-lj1-f178.google.com with SMTP id t23so14095535ljc.3
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 08:51:34 -0700 (PDT)
-X-Received: by 2002:a2e:545:: with SMTP id 66mr3421035ljf.285.1597161093904;
- Tue, 11 Aug 2020 08:51:33 -0700 (PDT)
+        Tue, 11 Aug 2020 08:52:04 -0700 (PDT)
+Subject: Re: [PATCH v3] i2c: iproc: fix race between client unreg and isr
+To:     Dhananjay Phadke <dphadke@linux.microsoft.com>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Wolfram Sang <wsa@kernel.org>, Ray Jui <rjui@broadcom.com>
+Cc:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com
+References: <1597106560-79693-1-git-send-email-dphadke@linux.microsoft.com>
+From:   Ray Jui <ray.jui@broadcom.com>
+Message-ID: <c7ef0a9e-e3c1-abcf-160b-4df4f523fa04@broadcom.com>
+Date:   Tue, 11 Aug 2020 08:52:00 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-References: <20200811083315.GB7488@shao2-debian>
-In-Reply-To: <20200811083315.GB7488@shao2-debian>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 11 Aug 2020 08:51:17 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wg36CfqcBr8ucE_xcqCaPWeL8LmkAuYMsY4yW74F9=ZOA@mail.gmail.com>
-Message-ID: <CAHk-=wg36CfqcBr8ucE_xcqCaPWeL8LmkAuYMsY4yW74F9=ZOA@mail.gmail.com>
-Subject: Re: [mm] 2a9127fcf2: hackbench.throughput -69.2% regression
-To:     kernel test robot <rong.a.chen@intel.com>
-Cc:     Oleg Nesterov <oleg@redhat.com>, Hugh Dickins <hughd@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1597106560-79693-1-git-send-email-dphadke@linux.microsoft.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 1:34 AM kernel test robot <rong.a.chen@intel.com> wrote:
->
-> FYI, we noticed a -69.2% regression of hackbench.throughput due to commit:
->
-> commit: 2a9127fcf2296674d58024f83981f40b128fffea ("mm: rewrite wait_on_page_bit_common() logic")
->
-> in testcase: hackbench
->
-> In addition to that, the commit also has significant impact on the following tests:
 
-You can say that again. It's all over the map. with some benchmarks
-showing huge improvement and some showing a lot of downside.
 
-Which is not surprising, I guess. Waking things up earlier can cause
-more of a thundering herd effect, and it looks like some path ends up
-just going right back to sleep again, with voluntary_context_switches
-growing by a factor of 25x, and involuntary_context_switches growing
-by 110x if I read that right.
+On 8/10/2020 5:42 PM, Dhananjay Phadke wrote:
+> When i2c client unregisters, synchronize irq before setting
+> iproc_i2c->slave to NULL.
+> 
+> (1) disable_irq()
+> (2) Mask event enable bits in control reg
+> (3) Erase slave address (avoid further writes to rx fifo)
+> (4) Flush tx and rx FIFOs
+> (5) Clear pending event (interrupt) bits in status reg
+> (6) enable_irq()
+> (7) Set client pointer to NULL
+> 
+> Unable to handle kernel NULL pointer dereference at virtual address 0000000000000318
+> 
+> [  371.020421] pc : bcm_iproc_i2c_isr+0x530/0x11f0
+> [  371.025098] lr : __handle_irq_event_percpu+0x6c/0x170
+> [  371.030309] sp : ffff800010003e40
+> [  371.033727] x29: ffff800010003e40 x28: 0000000000000060
+> [  371.039206] x27: ffff800010ca9de0 x26: ffff800010f895df
+> [  371.044686] x25: ffff800010f18888 x24: ffff0008f7ff3600
+> [  371.050165] x23: 0000000000000003 x22: 0000000001600000
+> [  371.055645] x21: ffff800010f18888 x20: 0000000001600000
+> [  371.061124] x19: ffff0008f726f080 x18: 0000000000000000
+> [  371.066603] x17: 0000000000000000 x16: 0000000000000000
+> [  371.072082] x15: 0000000000000000 x14: 0000000000000000
+> [  371.077561] x13: 0000000000000000 x12: 0000000000000001
+> [  371.083040] x11: 0000000000000000 x10: 0000000000000040
+> [  371.088519] x9 : ffff800010f317c8 x8 : ffff800010f317c0
+> [  371.093999] x7 : ffff0008f805b3b0 x6 : 0000000000000000
+> [  371.099478] x5 : ffff0008f7ff36a4 x4 : ffff8008ee43d000
+> [  371.104957] x3 : 0000000000000000 x2 : ffff8000107d64c0
+> [  371.110436] x1 : 00000000c00000af x0 : 0000000000000000
+> 
+> [  371.115916] Call trace:
+> [  371.118439]  bcm_iproc_i2c_isr+0x530/0x11f0
+> [  371.122754]  __handle_irq_event_percpu+0x6c/0x170
+> [  371.127606]  handle_irq_event_percpu+0x34/0x88
+> [  371.132189]  handle_irq_event+0x40/0x120
+> [  371.136234]  handle_fasteoi_irq+0xcc/0x1a0
+> [  371.140459]  generic_handle_irq+0x24/0x38
+> [  371.144594]  __handle_domain_irq+0x60/0xb8
+> [  371.148820]  gic_handle_irq+0xc0/0x158
+> [  371.152687]  el1_irq+0xb8/0x140
+> [  371.155927]  arch_cpu_idle+0x10/0x18
+> [  371.159615]  do_idle+0x204/0x290
+> [  371.162943]  cpu_startup_entry+0x24/0x60
+> [  371.166990]  rest_init+0xb0/0xbc
+> [  371.170322]  arch_call_rest_init+0xc/0x14
+> [  371.174458]  start_kernel+0x404/0x430
+> 
+> Fixes: c245d94ed106 ("i2c: iproc: Add multi byte read-write support for slave mode")
+> 
+> Signed-off-by: Dhananjay Phadke <dphadke@linux.microsoft.com>
+> ---
+>  drivers/i2c/busses/i2c-bcm-iproc.c | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-bcm-iproc.c b/drivers/i2c/busses/i2c-bcm-iproc.c
+> index 8a3c98866fb7..688e92818821 100644
+> --- a/drivers/i2c/busses/i2c-bcm-iproc.c
+> +++ b/drivers/i2c/busses/i2c-bcm-iproc.c
+> @@ -1078,7 +1078,7 @@ static int bcm_iproc_i2c_unreg_slave(struct i2c_client *slave)
+>  	if (!iproc_i2c->slave)
+>  		return -EINVAL;
+>  
+> -	iproc_i2c->slave = NULL;
+> +	disable_irq(iproc_i2c->irq);
+>  
+>  	/* disable all slave interrupts */
+>  	tmp = iproc_i2c_rd_reg(iproc_i2c, IE_OFFSET);
+> @@ -1091,6 +1091,17 @@ static int bcm_iproc_i2c_unreg_slave(struct i2c_client *slave)
+>  	tmp &= ~BIT(S_CFG_EN_NIC_SMB_ADDR3_SHIFT);
+>  	iproc_i2c_wr_reg(iproc_i2c, S_CFG_SMBUS_ADDR_OFFSET, tmp);
+>  
+> +	/* flush TX/RX FIFOs */
+> +	tmp = (BIT(S_FIFO_RX_FLUSH_SHIFT) | BIT(S_FIFO_TX_FLUSH_SHIFT));
+> +	iproc_i2c_wr_reg(iproc_i2c, S_FIFO_CTRL_OFFSET, tmp);
+> +
+> +	/* clear all pending slave interrupts */
+> +	iproc_i2c_wr_reg(iproc_i2c, IS_OFFSET, ISR_MASK_SLAVE);
+> +
+> +	iproc_i2c->slave = NULL;
+> +
+> +	enable_irq(iproc_i2c->irq);
+> +
+>  	return 0;
+>  }
+>  
+> 
 
-And the reason really does seem to be due to having a _lot_ more
-runnable active threads:nr_running.avg increases by 2x, and
-runnable_avg.min is 4x what it used to be.
+Thanks again, Dhananjay! Looks good to me.
 
-I think this is more of a "Hugh load" - it was likely already scaling
-the load past the machine limits, and the more aggressive wakeups just
-made it go even further past what resources there were available.
-
-The odd thing is that in the profile, wakup_up_common does show up,
-but it has nothing to do with the page lock. It's the
-unix_stream_sendmsg() waking up readers.
-
-I wonder if it used to be synchronized more on the page lock, and now
-it's past that, and we end up having a lot of readers on the same unix
-domain socket, and we get a thundering herd there when the writer
-comes along. Or something.
-
-              Linus
+Acked-by: Ray Jui <ray.jui@broadcom.com>
