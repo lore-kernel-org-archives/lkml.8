@@ -2,115 +2,129 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE53C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 12:37:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 976D6C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 12:41:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2AD120756
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 12:37:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597149427;
-	bh=aj3OHVG7/rXzCnhpHmjC06NSadxzyG0lzSdEAOk0tGs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xKrTalozY4ePg+NWhU3tyJG8sEd/VYpxXG2CwPt/9lmSDM+IHq1ActilqFQ/qBgw9
-	 pxNrTlZLpTgAHOQjGXAb8Rgh9TS+DeYq27D72ruJadnhUErXYGil6EoaYE2SJ8Relq
-	 K18d2RzWfAwq+80S4N20h3+pF9Z0dx7s5kcf9cE4=
+	by mail.kernel.org (Postfix) with ESMTP id 6B76B20756
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 12:41:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="PFQNuX5m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728566AbgHKMhG (ORCPT
+        id S1728622AbgHKMlS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 08:37:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32880 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728506AbgHKMhD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 08:37:03 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE72220756;
-        Tue, 11 Aug 2020 12:37:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597149422;
-        bh=aj3OHVG7/rXzCnhpHmjC06NSadxzyG0lzSdEAOk0tGs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uwuYb9or3/CS7Jl65+FfoFkcgAIVPsyT/a1tkVXX8vTq2LL1M52m9TEPSsGVo7u2p
-         FHXzXwETO6Gnzo16IxW3R1AM94tOqO9iADfLHkM4TEQ+j9Sm64RMJ9GJTy11xnvVN/
-         /FKA+GAnMMsXmadKrQbd9pNw/pnwbNaY78ZCd/fs=
-Date:   Tue, 11 Aug 2020 13:36:58 +0100
-From:   Will Deacon <will@kernel.org>
-To:     peterz@infradead.org
-Cc:     linux@armlinux.org.uk, gregkh@linuxfoundation.org,
-        andre.przywara@arm.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: lockdep splat ("possible circular locking dependency detected")
- with PL011 on 5.8
-Message-ID: <20200811123657.GA7252@willie-the-truck>
-References: <20200811101313.GA6970@willie-the-truck>
- <20200811103841.GC2674@hirez.programming.kicks-ass.net>
- <20200811111713.GA7203@willie-the-truck>
+        Tue, 11 Aug 2020 08:41:18 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:52328 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726829AbgHKMlR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 08:41:17 -0400
+Received: from [192.168.254.32] (unknown [47.187.206.220])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 7A2A120B4908;
+        Tue, 11 Aug 2020 05:41:16 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7A2A120B4908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1597149677;
+        bh=/01YYim8UON1WnW57/jtTiKZ9zMxYZQ09Mw9cbuIu4A=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=PFQNuX5mWMquO2HGENEzafqUyJUE7/be/jyBGj5BPS+LLzBuKDCp8oxu/gpMGiuzS
+         6nmE9EJ+VCIZo4ZznNZO0l1rypST2o/WGeVSn+KjlmzrdKh1od3CFRwpGX0UIvppY1
+         +3sGwRwS/5aecpkyVSZ45vXgzNz/7thzHMTdnYOE=
+Subject: Re: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, oleg@redhat.com,
+        x86@kernel.org
+References: <aefc85852ea518982e74b233e11e16d2e707bc32>
+ <20200728131050.24443-1-madvenka@linux.microsoft.com>
+ <20200731180955.GC67415@C02TD0UTHF1T.local>
+ <6236adf7-4bed-534e-0956-fddab4fd96b6@linux.microsoft.com>
+ <20200804143018.GB7440@C02TD0UTHF1T.local>
+ <b3368692-afe6-89b5-d634-12f4f0a601f8@linux.microsoft.com>
+ <20200808221748.GA1020@bug>
+From:   "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
+Message-ID: <6cca8eac-f767-b891-dc92-eaa7504a0e8b@linux.microsoft.com>
+Date:   Tue, 11 Aug 2020 07:41:15 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200811111713.GA7203@willie-the-truck>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200808221748.GA1020@bug>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 12:17:13PM +0100, Will Deacon wrote:
-> On Tue, Aug 11, 2020 at 12:38:41PM +0200, peterz@infradead.org wrote:
-> > diff --git a/drivers/tty/serial/amba-pl011.c b/drivers/tty/serial/amba-pl011.c
-> > index 8efd7c2a34fe..1717790ece2b 100644
-> > --- a/drivers/tty/serial/amba-pl011.c
-> > +++ b/drivers/tty/serial/amba-pl011.c
-> > @@ -308,8 +308,9 @@ static void pl011_write(unsigned int val, const struct uart_amba_port *uap,
-> >   */
-> >  static int pl011_fifo_to_tty(struct uart_amba_port *uap)
-> >  {
-> > -	u16 status;
-> >  	unsigned int ch, flag, fifotaken;
-> > +	int sysrq;
-> > +	u16 status;
-> >  
-> >  	for (fifotaken = 0; fifotaken != 256; fifotaken++) {
-> >  		status = pl011_read(uap, REG_FR);
-> > @@ -344,10 +345,12 @@ static int pl011_fifo_to_tty(struct uart_amba_port *uap)
-> >  				flag = TTY_FRAME;
-> >  		}
-> >  
-> > -		if (uart_handle_sysrq_char(&uap->port, ch & 255))
-> > -			continue;
-> > +		spin_unlock(&uap->port.lock);
-> > +		sysrq = uart_handle_sysrq_char(&uap->port, ch & 255);
-> > +		spin_lock(&uap->port.lock);
-> >  
-> > -		uart_insert_char(&uap->port, ch, UART011_DR_OE, ch, flag);
-> > +		if (!sysrq)
-> > +			uart_insert_char(&uap->port, ch, UART011_DR_OE, ch, flag);
-> >  	}
-> >  
-> >  	return fifotaken;
+
+
+On 8/8/20 5:17 PM, Pavel Machek wrote:
+> Hi!
 > 
-> Cheers, that seems to do the trick:
+>> Thanks for the lively discussion. I have tried to answer some of the
+>> comments below.
 > 
-> Tested-by: Will Deacon <will@kernel.org>
+>>> There are options today, e.g.
+>>>
+>>> a) If the restriction is only per-alias, you can have distinct aliases
+>>>    where one is writable and another is executable, and you can make it
+>>>    hard to find the relationship between the two.
+>>>
+>>> b) If the restriction is only temporal, you can write instructions into
+>>>    an RW- buffer, transition the buffer to R--, verify the buffer
+>>>    contents, then transition it to --X.
+>>>
+>>> c) You can have two processes A and B where A generates instrucitons into
+>>>    a buffer that (only) B can execute (where B may be restricted from
+>>>    making syscalls like write, mprotect, etc).
+>>
+>> The general principle of the mitigation is W^X. I would argue that
+>> the above options are violations of the W^X principle. If they are
+>> allowed today, they must be fixed. And they will be. So, we cannot
+>> rely on them.
 > 
-> but what I don't understand is why I haven't run into this before, and why
-> nobody else seems to be reporting it!
+> Would you mind describing your threat model?
 > 
-> I'll try some older kernels to see if it ever worked.
+> Because I believe you are using model different from everyone else.
+> 
+> In particular, I don't believe b) is a problem or should be fixed.
 
-I tried 5.4, 4.19, 4.14 and 4.9:
+It is a problem because a kernel that implements W^X properly
+will not allow it. It has no idea what has been done in userland.
+It has no idea that the user has checked and verified the buffer
+contents after transitioning the page to R--.
 
-5.4 and 4.19 have the lockdep splat
 
-4.14 doesn't have the splat, yet I don't see why (the driver code hasn't really
-changed)
+> 
+> I'll add d), application mmaps a file(R--), and uses write syscall to change
+> trampolines in it.
+> 
 
-4.9 magic sysrq doesn't work at all (no splat either though)
+No matter how you do it, these are all user-level methods that can be
+hacked. The kernel cannot be sure that an attacker's code has
+not found its way into the file.
 
-Will
+>> b) This is again a violation. The kernel should refuse to give execute
+>> ???????? permission to a page that was writeable in the past and refuse to
+>> ???????? give write permission to a page that was executable in the past.
+> 
+> Why?
+
+I don't know about the latter part. I guess I need to think about it.
+But the former is valid. When a page is RW-, a hacker could hack the
+page. Then it does not matter that the page is transitioned to R--.
+Again, the kernel cannot be sure that the user has verified the contents
+after R--.
+
+IMO, W^X needs to be enforced temporally as well.
+
+Madhavan
