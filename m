@@ -2,59 +2,106 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E7F6C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:36:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21E7FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:36:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2226A20782
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:36:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C1C820786
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:36:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729223AbgHKRgb (ORCPT
+        id S1729226AbgHKRgp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 13:36:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51418 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729046AbgHKRg1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 13:36:27 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A34AC06174A;
-        Tue, 11 Aug 2020 10:36:27 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 4A05712880A35;
-        Tue, 11 Aug 2020 10:19:41 -0700 (PDT)
-Date:   Tue, 11 Aug 2020 10:36:26 -0700 (PDT)
-Message-Id: <20200811.103626.1076774285411123636.davem@davemloft.net>
-To:     vulab@iscas.ac.cn
-Cc:     snelson@pensando.io, drivers@pensando.io, kuba@kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ionic_lif: Use devm_kcalloc() in ionic_qcq_alloc()
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200810023807.9260-1-vulab@iscas.ac.cn>
-References: <20200810023807.9260-1-vulab@iscas.ac.cn>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 11 Aug 2020 10:19:41 -0700 (PDT)
+        Tue, 11 Aug 2020 13:36:45 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41558 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729046AbgHKRgl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 13:36:41 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 8D6E5B69F;
+        Tue, 11 Aug 2020 17:37:00 +0000 (UTC)
+Date:   Tue, 11 Aug 2020 19:36:26 +0200
+From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+To:     Shakeel Butt <shakeelb@google.com>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Roman Gushchin <guro@fb.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        David Rientjes <rientjes@google.com>,
+        Greg Thelen <gthelen@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Cgroups <cgroups@vger.kernel.org>
+Subject: Re: [RFC PROPOSAL] memcg: per-memcg user space reclaim interface
+Message-ID: <20200811173626.GA58879@blackbook>
+References: <20200702152222.2630760-1-shakeelb@google.com>
+ <20200703063548.GM18446@dhcp22.suse.cz>
+ <CALvZod5gthVX5m6o50OiYsXa=0_NpXK-tVvjTF42Oj4udr4Nuw@mail.gmail.com>
+ <20200707121422.GP5913@dhcp22.suse.cz>
+ <CALvZod5ty=piw6czyVyMhxQMBWGghC3ujxbrkVPr0fzwqogwrw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="RnlQjJ0d97Da+TV1"
+Content-Disposition: inline
+In-Reply-To: <CALvZod5ty=piw6czyVyMhxQMBWGghC3ujxbrkVPr0fzwqogwrw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xu Wang <vulab@iscas.ac.cn>
-Date: Mon, 10 Aug 2020 02:38:07 +0000
 
-> A multiplication for the size determination of a memory allocation
-> indicated that an array data structure should be processed.
-> Thus use the corresponding function "devm_kcalloc".
-> 
-> Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
+--RnlQjJ0d97Da+TV1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Applied, thanks.
+Hi Shakeel.
+
+On Tue, Jul 07, 2020 at 10:02:50AM -0700, Shakeel Butt <shakeelb@google.com=
+> wrote:
+> > Well, I was talkingg about memory.low. It is not meant only to protect
+> > from the global reclaim. It can be used for balancing memory reclaim
+> > from _any_ external memory pressure source. So it is somehow related to
+> > the usecase you have mentioned.
+> >
+>=20
+> For the uswapd use-case, I am not concerned about the external memory
+> pressure source but the application hitting its own memory.high limit
+> and getting throttled.
+FTR, you can transform own memory.high into "external" pressure with a
+hierarchy such as
+
+  limit-group			memory.high=3DN+margin memory.low=3D0
+  `- latency-sensitive-group	memory.low=3DN
+  `- regular-group		memory.low=3D0
+
+Would that ensure the latency targets?
+
+Michal
+
+--RnlQjJ0d97Da+TV1
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEEoQaUCWq8F2Id1tNia1+riC5qSgFAl8y1xcACgkQia1+riC5
+qShqhw//YT26h60lQF35uV5/xyJu8L4l+X7FL+ZZjsTqvY/lPSVgvrRzv3zb2h4B
+ocoUY0cjJ4JatVY9uurZJAMEbGd9Iww8UmPaZAvCb8VPssWTHFgSbD1Eb+RAi4py
+zEBPLd1JMZ4IeI7FmjGfZHk1/2Qr7nle3KPhHSZKrc83t0tDF6DTTYLOkWBTm+bS
+JL56nLcXOb8Gm3kOkhLhseffcaWhBKYBzn3GzBXHYfbwX0Ba1I/OX6YrJD649vvc
+xsmlJc9YfMVixDEatA4Vzt3Pi9ZhpsdfbqMrgHeVA1p81MoA3q8Sk7q9Oz1mze7p
+aZbmCnl7t04NW7quKmqqqeMG91u+76KpmdGP/T+xpgXu2F8yLDGxzlfgbftb6wVr
+LhcqYd9SXnX5fy/A0rV4tKAOXTqEpSY9/gEhnBwptwI2KO8VIiFo4a0dKKZ/9K9F
+yREd3aoKMyad5E99i0N8ZJloo0X42sRdnVoc5SGV0Lj30Wp660IMEO/atRP0Z2+1
+SgQmD9VTbsU4wBb2LcaCEz4P83keWm1oMfqdZ7EuGXzvmRT0FOMWvXAQ17RxYBtG
+DjA+HOCeP9EuHXyefUA2DxsVRbK7Yn0Zb79nOkitb0oXrJuKTFlIW0qQ8oYmmrY8
+gsOblNPf1DI2gLr+Wqh58u8/vER3NRgGv77xs/R39KeDh9DMz6Q=
+=ODBM
+-----END PGP SIGNATURE-----
+
+--RnlQjJ0d97Da+TV1--
