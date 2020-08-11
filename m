@@ -2,119 +2,202 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1542C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 06:45:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C387C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 06:47:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7095206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 06:45:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="aq+bhGjt"
+	by mail.kernel.org (Postfix) with ESMTP id 619E2206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 06:47:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728193AbgHKGpv (ORCPT
+        id S1728211AbgHKGrT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 02:45:51 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:64139 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727066AbgHKGpu (ORCPT
+        Tue, 11 Aug 2020 02:47:19 -0400
+Received: from mail-il1-f198.google.com ([209.85.166.198]:46715 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728045AbgHKGrT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 02:45:50 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597128350; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=qaD0uP3479tOBE0W+RFgHcukoSHpOeQAxStJYz/hn1I=; b=aq+bhGjtjGejAvXAcU4cnU5FhoASzZ8mT4YgtFaSSrj28cdToFou2ehxK13S+Lokamt+v20s
- 1LcKSxsaydytHRUtxla8pEm7QTG5/q63Qr9xS507pwHKmva0HuWzB9RdwdhnSUYwbVa1RjYU
- XM038BUgaYQ4tdZLC9yw8MOxo+o=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-west-2.postgun.com with SMTP id
- 5f323e973f2ce110203c104b (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 11 Aug 2020 06:45:43
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 1C890C433CB; Tue, 11 Aug 2020 06:45:43 +0000 (UTC)
-Received: from codeaurora.org (unknown [180.166.53.21])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tingwei)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7AB43C433C6;
-        Tue, 11 Aug 2020 06:45:40 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7AB43C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tingweiz@codeaurora.org
-Date:   Tue, 11 Aug 2020 14:45:29 +0800
-From:   Tingwei Zhang <tingweiz@codeaurora.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Tingwei Zhang <tingwei@codeaurora.org>,
-        Ingo Molnar <mingo@redhat.com>, tsoni@codeaurora.org,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Mao Jinlong <jinlmao@codeaurora.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/6] tracing: export event trace and trace_marker
-Message-ID: <20200811064529.GA4253@codeaurora.org>
-References: <20200728013359.2326-1-tingwei@codeaurora.org>
- <20200811030418.GA1893@codeaurora.org>
- <20200810231954.3388855c@oasis.local.home>
- <20200811034946.GA9338@codeaurora.org>
- <20200811000333.5d24b16f@oasis.local.home>
+        Tue, 11 Aug 2020 02:47:19 -0400
+Received: by mail-il1-f198.google.com with SMTP id q19so2934299ilt.13
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 23:47:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=ALLgFYzJu8xYow6jwfC/O/mtKqGLcRdyWSt6PNLRIOE=;
+        b=YYuhdNaUVuGAcwEvR/f2jlSX9dox4u9ECQtRFBerslfNDpsOgYxO9sNDB4MeymF/zA
+         QgZ82eorRKCqQM1YYOX5cRpnmhjO3Rdx/noc0PHx+B793OvgR1CWQ3ClMxtJAKzlAhYI
+         YHOcCxokmFFLABvslKqyQ9Ww7E3hkBIBoahS+hbC1/WGXjPd65YfJxD+Ujsnt3va3HM2
+         5dVsuvt6lAUuvIhVe3q46yuGsgwFuOPt53niKOTxFrqvOtXGVx8QN7chelIfp18rFoTm
+         BvIA8ri3DCUgcuCs5+KuElj9dw24Vza8sw75I4U6atZTWZZakTuQNsjDTS4vXqgb+yZs
+         tNPw==
+X-Gm-Message-State: AOAM531nQVhc22X1oRJMh+8NP/EpTkQ864f8aECOgX6M290DVKColoMI
+        xYcDRGupB6EzH5vY7fqE8lSDFQ792hdKm2XcOJBL9U3dyqZZ
+X-Google-Smtp-Source: ABdhPJwsQJoDHRXwvBGadlNgxs/TtlOVxU5vI+1XAOWQ07/0G8DKpifSYhjJFyWYQFFnzzwuWqpPnogZ1ICepLxDeXQ1restm2Gb
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200811000333.5d24b16f@oasis.local.home>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Received: by 2002:a5d:9d8a:: with SMTP id 10mr21911301ion.195.1597128437091;
+ Mon, 10 Aug 2020 23:47:17 -0700 (PDT)
+Date:   Mon, 10 Aug 2020 23:47:17 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000002753ac05ac9471f4@google.com>
+Subject: KASAN: use-after-free Read in io_async_task_func
+From:   syzbot <syzbot+9b260fc33297966f5a8e@syzkaller.appspotmail.com>
+To:     axboe@kernel.dk, io-uring@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 12:03:33PM +0800, Steven Rostedt wrote:
-> On Tue, 11 Aug 2020 11:49:46 +0800
-> Tingwei Zhang <tingweiz@codeaurora.org> wrote:
-> 
-> > On Tue, Aug 11, 2020 at 11:19:54AM +0800, Steven Rostedt wrote:
-> > > On Tue, 11 Aug 2020 11:04:18 +0800
-> > > Tingwei Zhang <tingweiz@codeaurora.org> wrote:
-> > >   
-> > > > Thanks for your comments, Steven.  I've addressed all your comments
-> in  
-> > > v3.  
-> > > > Do you have more comments on v3? Is there anything I need to do to
-> merge
-> > > > this series to Linux Kernel?  
-> > > 
-> > > I gave my Reviewed-by tag on each of the patches that touch my tree.
-> It
-> > > should go in via whoever maintains the drivers/hwtracing tree. Is that
-> > > Greg KH?  
-> > I thought it will go to tracing tree since majority of the changes are
-> in
-> > kernel/trace.
-> > 
-> > Maintainers of drviers/hwtracing are Mathieu and Suzuki. I'll add them
-> > into review list.
-> >
-> 
-> As I didn't have reviews or acks from them. I couldn't take the code.
-> When touching two subsystems, it usually requires one of the subsystem
-> maintainers to ack the changes to their subsystem, so that the other
-> subsystem maintainer can take the rest of the code through their tree.
-> 
-> And it usually goes through the tree that has the interface that is
-> changing.  That is, the changes to tracing was the infrastructure
-> needed for the changes in the hwtrace subsystem. And I don't test that
-> subsystem, so I wouldn't really be able to test this code.
-> 
-Thanks a lot for detail clarification, Steven.
+Hello,
 
-Thanks,
-Tingwei
+syzbot found the following issue on:
 
-> -- Steve
+HEAD commit:    fc80c51f Merge tag 'kbuild-v5.9' of git://git.kernel.org/p..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=17601ab2900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d48472fcc2f68903
+dashboard link: https://syzkaller.appspot.com/bug?extid=9b260fc33297966f5a8e
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=174272b2900000
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+9b260fc33297966f5a8e@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: use-after-free in instrument_atomic_read include/linux/instrumented.h:56 [inline]
+BUG: KASAN: use-after-free in atomic64_read include/asm-generic/atomic-instrumented.h:837 [inline]
+BUG: KASAN: use-after-free in atomic_long_read include/asm-generic/atomic-long.h:29 [inline]
+BUG: KASAN: use-after-free in __mutex_unlock_slowpath+0x88/0x590 kernel/locking/mutex.c:1237
+Read of size 8 at addr ffff8880952503c0 by task syz-executor.1/23201
+
+CPU: 0 PID: 23201 Comm: syz-executor.1 Not tainted 5.8.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1f0/0x31e lib/dump_stack.c:118
+ print_address_description+0x66/0x620 mm/kasan/report.c:383
+ __kasan_report mm/kasan/report.c:513 [inline]
+ kasan_report+0x132/0x1d0 mm/kasan/report.c:530
+ check_memory_region_inline mm/kasan/generic.c:183 [inline]
+ check_memory_region+0x2b5/0x2f0 mm/kasan/generic.c:192
+ instrument_atomic_read include/linux/instrumented.h:56 [inline]
+ atomic64_read include/asm-generic/atomic-instrumented.h:837 [inline]
+ atomic_long_read include/asm-generic/atomic-long.h:29 [inline]
+ __mutex_unlock_slowpath+0x88/0x590 kernel/locking/mutex.c:1237
+ io_async_task_func+0x485/0x610 fs/io_uring.c:4689
+ task_work_run+0x137/0x1c0 kernel/task_work.c:135
+ tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+ exit_to_user_mode_loop kernel/entry/common.c:139 [inline]
+ exit_to_user_mode_prepare+0xfa/0x1c0 kernel/entry/common.c:166
+ syscall_exit_to_user_mode+0x5e/0x1a0 kernel/entry/common.c:241
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x45ce69
+Code: 2d b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb b5 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f6719775c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000037
+RAX: fffffffffffffffe RBX: 0000000000004f40 RCX: 000000000045ce69
+RDX: 0000000000000043 RSI: 0000000000000000 RDI: 0000000000000006
+RBP: 000000000118c010 R08: 0000000020000140 R09: 0000000000000000
+R10: 0000000020000000 R11: 0000000000000246 R12: 000000000118bfcc
+R13: 00007fff62cc118f R14: 00007f67197769c0 R15: 000000000118bfcc
+
+Allocated by task 23153:
+ kasan_save_stack mm/kasan/common.c:48 [inline]
+ kasan_set_track mm/kasan/common.c:56 [inline]
+ __kasan_kmalloc+0x100/0x130 mm/kasan/common.c:461
+ kmem_cache_alloc_trace+0x1f6/0x2f0 mm/slab.c:3550
+ kmalloc include/linux/slab.h:554 [inline]
+ kzalloc include/linux/slab.h:666 [inline]
+ io_ring_ctx_alloc fs/io_uring.c:1030 [inline]
+ io_uring_create fs/io_uring.c:8308 [inline]
+ io_uring_setup fs/io_uring.c:8401 [inline]
+ __do_sys_io_uring_setup fs/io_uring.c:8407 [inline]
+ __se_sys_io_uring_setup+0x5ce/0x2c70 fs/io_uring.c:8404
+ do_syscall_64+0x31/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Freed by task 5:
+ kasan_save_stack mm/kasan/common.c:48 [inline]
+ kasan_set_track+0x3d/0x70 mm/kasan/common.c:56
+ kasan_set_free_info+0x17/0x30 mm/kasan/generic.c:355
+ __kasan_slab_free+0xdd/0x110 mm/kasan/common.c:422
+ __cache_free mm/slab.c:3418 [inline]
+ kfree+0x10a/0x220 mm/slab.c:3756
+ process_one_work+0x789/0xfc0 kernel/workqueue.c:2269
+ worker_thread+0xaa4/0x1460 kernel/workqueue.c:2415
+ kthread+0x37e/0x3a0 drivers/block/aoe/aoecmd.c:1234
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+
+Last call_rcu():
+ kasan_save_stack+0x27/0x50 mm/kasan/common.c:48
+ kasan_record_aux_stack+0x7b/0xb0 mm/kasan/generic.c:346
+ __call_rcu kernel/rcu/tree.c:2894 [inline]
+ call_rcu+0x139/0x840 kernel/rcu/tree.c:2968
+ __percpu_ref_switch_to_atomic lib/percpu-refcount.c:192 [inline]
+ __percpu_ref_switch_mode+0x2c1/0x4f0 lib/percpu-refcount.c:237
+ percpu_ref_kill_and_confirm+0x8f/0x130 lib/percpu-refcount.c:350
+ percpu_ref_kill include/linux/percpu-refcount.h:136 [inline]
+ io_ring_ctx_wait_and_kill+0x3c/0x570 fs/io_uring.c:7797
+ io_uring_release+0x59/0x70 fs/io_uring.c:7829
+ __fput+0x34f/0x7b0 fs/file_table.c:281
+ task_work_run+0x137/0x1c0 kernel/task_work.c:135
+ tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+ exit_to_user_mode_loop kernel/entry/common.c:139 [inline]
+ exit_to_user_mode_prepare+0xfa/0x1c0 kernel/entry/common.c:166
+ syscall_exit_to_user_mode+0x5e/0x1a0 kernel/entry/common.c:241
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Second to last call_rcu():
+ kasan_save_stack+0x27/0x50 mm/kasan/common.c:48
+ kasan_record_aux_stack+0x7b/0xb0 mm/kasan/generic.c:346
+ __call_rcu kernel/rcu/tree.c:2894 [inline]
+ call_rcu+0x139/0x840 kernel/rcu/tree.c:2968
+ __percpu_ref_switch_to_atomic lib/percpu-refcount.c:192 [inline]
+ __percpu_ref_switch_mode+0x2c1/0x4f0 lib/percpu-refcount.c:237
+ percpu_ref_kill_and_confirm+0x8f/0x130 lib/percpu-refcount.c:350
+ percpu_ref_kill include/linux/percpu-refcount.h:136 [inline]
+ io_ring_ctx_wait_and_kill+0x3c/0x570 fs/io_uring.c:7797
+ io_uring_release+0x59/0x70 fs/io_uring.c:7829
+ __fput+0x34f/0x7b0 fs/file_table.c:281
+ task_work_run+0x137/0x1c0 kernel/task_work.c:135
+ tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+ exit_to_user_mode_loop kernel/entry/common.c:139 [inline]
+ exit_to_user_mode_prepare+0xfa/0x1c0 kernel/entry/common.c:166
+ syscall_exit_to_user_mode+0x5e/0x1a0 kernel/entry/common.c:241
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+The buggy address belongs to the object at ffff888095250000
+ which belongs to the cache kmalloc-2k of size 2048
+The buggy address is located 960 bytes inside of
+ 2048-byte region [ffff888095250000, ffff888095250800)
+The buggy address belongs to the page:
+page:000000005a2c89d9 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x95250
+flags: 0xfffe0000000200(slab)
+raw: 00fffe0000000200 ffffea00024ca6c8 ffffea00024d8c48 ffff8880aa440800
+raw: 0000000000000000 ffff888095250000 0000000100000001 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff888095250280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888095250300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff888095250380: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                           ^
+ ffff888095250400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888095250480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
