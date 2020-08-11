@@ -2,141 +2,134 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E562C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 20:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AEDCC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 20:10:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47E6620756
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 20:09:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="H3ZdlnlZ"
+	by mail.kernel.org (Postfix) with ESMTP id 797FC206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 20:10:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726501AbgHKUJR (ORCPT
+        id S1726503AbgHKUKt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 16:09:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46846 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726164AbgHKUJQ (ORCPT
+        Tue, 11 Aug 2020 16:10:49 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:54530 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726164AbgHKUKs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 16:09:16 -0400
-Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CF57C06174A
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 13:09:16 -0700 (PDT)
-Received: by mail-ua1-x944.google.com with SMTP id z12so966409uam.12
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 13:09:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6qJqVdc/uC0k/47tmN/6OGWwLLeKwWyMRmMGNyMuMes=;
-        b=H3ZdlnlZZbMSAPEofrl6nm6YexFFLFIlxi1eqa1GptjaFwv/xFa49I/fUr0oFBROIv
-         9aU6FfSZBMqZYb8nS74vVLPJYMrj7tE81Xq79ZWbCcCyu4RRn0sOk9D/yKEs59P3iJcR
-         14Kbt+2OH5xfn8oZtuAkZoCLV21W+/GQ320Ms=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6qJqVdc/uC0k/47tmN/6OGWwLLeKwWyMRmMGNyMuMes=;
-        b=NPpcRhLe0jdY9Dvt+jDrrMWQll9NS2LWnC4iLrcfDVmLBB6JI9lBTPMwycfe2j86Bq
-         BiHzNPyy8UUmXUjmP1tTuRH2Jl/mzzE/GFvVrZzXIsnLDSRXaNAIvWkmWl1/d9ElTPOG
-         iJ2O/jDlJz5jB7w9RHcss/Yj5LilLF+56ibXXyrsZasyq9itcwx5G9KJCX3y/58LoqDr
-         IpmrSKDqvIvUcewEGnDlfmWV7NQsNF0IntgDHBc3n1Mc6yvn+AznA3MjHdXidvFpbp2c
-         DWR75wlhmHGWAvgX0dg+5sw98haCEJoMfBGS4ZCK0XlLHqIyTitL43p3a2FuqbGD5KAj
-         FS/g==
-X-Gm-Message-State: AOAM5332rEyhpzrekR/N6gNlVyYWMj560ZT+6iTO3hhWStOEQNYMsp8s
-        D3D5CZpGQznxiqpUAwLE6ZxFAR69eTg=
-X-Google-Smtp-Source: ABdhPJzfR8i6cwOS4PeRxA5nX5BI5fZG7oQS9QrG9iiFXt1Di9TAndGOOhEEizZXStwZIIdm8bylbg==
-X-Received: by 2002:a9f:29a5:: with SMTP id s34mr25782840uas.111.1597176554088;
-        Tue, 11 Aug 2020 13:09:14 -0700 (PDT)
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com. [209.85.217.42])
-        by smtp.gmail.com with ESMTPSA id s5sm7280431vsk.10.2020.08.11.13.09.12
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Aug 2020 13:09:13 -0700 (PDT)
-Received: by mail-vs1-f42.google.com with SMTP id n25so6643497vsq.6
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 13:09:12 -0700 (PDT)
-X-Received: by 2002:a05:6102:213a:: with SMTP id f26mr25614974vsg.6.1597176552506;
- Tue, 11 Aug 2020 13:09:12 -0700 (PDT)
+        Tue, 11 Aug 2020 16:10:48 -0400
+Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1k5abe-0003Nk-Gh; Tue, 11 Aug 2020 20:10:46 +0000
+Date:   Tue, 11 Aug 2020 22:10:45 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Josh Triplett <josh@joshtriplett.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Christian Brauner <christian@brauner.io>,
+        Jens Axboe <axboe@kernel.dk>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        linux-doc@vger.kernel.org
+Subject: Re: pidfd and O_NONBLOCK
+Message-ID: <20200811201045.jw2bc3yegrgrvnpz@wittgenstein>
+References: <20200811181236.GA18763@localhost>
 MIME-Version: 1.0
-References: <1597058460-16211-1-git-send-email-mkshah@codeaurora.org> <1597058460-16211-4-git-send-email-mkshah@codeaurora.org>
-In-Reply-To: <1597058460-16211-4-git-send-email-mkshah@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 11 Aug 2020 13:09:01 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=XH3183sJiP68v_Ka2+b=rYb8Y=7G=RcdbxdsK+nzyW=g@mail.gmail.com>
-Message-ID: <CAD=FV=XH3183sJiP68v_Ka2+b=rYb8Y=7G=RcdbxdsK+nzyW=g@mail.gmail.com>
-Subject: Re: [PATCH v4 3/7] genirq: Introduce irq_suspend_one() and
- irq_resume_one() callbacks
-To:     Maulik Shah <mkshah@codeaurora.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        LinusW <linus.walleij@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Srinivas Rao L <lsrao@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200811181236.GA18763@localhost>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Aug 11, 2020 at 11:12:36AM -0700, Josh Triplett wrote:
+> As far as I can tell, O_NONBLOCK has no effect on a pidfd. When calling
+> waitid on a pidfd for a running process, it always blocks unless you
+> provide WNOHANG.
+> 
+> I don't think anything depends on that behavior. Would it be possible to
+> make O_NONBLOCK on a pidfd cause waitid on a running process to return
+> EWOULDBLOCK?
+> 
+> This would make it easier to use pidfd in some non-blocking event loops.
 
-On Mon, Aug 10, 2020 at 4:21 AM Maulik Shah <mkshah@codeaurora.org> wrote:
->
-> From: Douglas Anderson <dianders@chromium.org>
->
-> The "struct irq_chip" has two callbacks in it: irq_suspend() and
-> irq_resume().  These two callbacks are interesting because sometimes
-> an irq chip needs to know about suspend/resume, but they are a bit
-> awkward because:
-> 1. They are called once for the whole irq_chip, not once per IRQ.
->    It's passed data for one of the IRQs enabled on that chip.  That
->    means it's up to the irq_chip driver to aggregate.
-> 2. They are only called if you're using "generic-chip", which not
->    everyone is.
-> 3. The implementation uses syscore ops, which apparently have problems
->    with s2idle.
->
-> Probably the old irq_suspend() and irq_resume() callbacks should be
-> deprecated.
->
-> Let's introcuce a nicer API that works for all irq_chip devices.  This
+Hey Josh,
 
-You grabbed my patch (which is great, thanks!) but forgot to address
-Stephen's early feedback from <https://crrev.com/c/2321123>.
-Specifically:
+Just to see I did a _horrible_ draft (cf. [1]) and it seems doable to me
+and if you can provide a good rationale and a use-case then I think that
+would be ok.
 
-s/introcuce/introduce
+[1]:
+diff --git a/kernel/exit.c b/kernel/exit.c
+index 727150f28103..b43a0e126cee 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -934,6 +934,7 @@ struct wait_opts {
 
+        wait_queue_entry_t              child_wait;
+        int                     notask_error;
++       bool                    wo_pidfd_nonblock;
+ };
 
-> --- a/include/linux/irq.h
-> +++ b/include/linux/irq.h
-> @@ -468,10 +468,16 @@ static inline irq_hw_number_t irqd_to_hwirq(struct irq_data *d)
->   * @irq_bus_sync_unlock:function to sync and unlock slow bus (i2c) chips
->   * @irq_cpu_online:    configure an interrupt source for a secondary CPU
->   * @irq_cpu_offline:   un-configure an interrupt source for a secondary CPU
-> + * @irq_suspend_one:   called on an every irq to suspend it; called even if
-> + *                     this IRQ is configured for wakeup
+ static int eligible_pid(struct wait_opts *wo, struct task_struct *p)
+@@ -1462,6 +1463,11 @@ static long do_wait(struct wait_opts *wo)
+ notask:
+        retval = wo->notask_error;
+        if (!retval && !(wo->wo_flags & WNOHANG)) {
++               if (wo->wo_pidfd_nonblock) {
++                       retval = -EWOULDBLOCK;
++                       goto end;
++               }
++
+                retval = -ERESTARTSYS;
+                if (!signal_pending(current)) {
+                        schedule();
+@@ -1495,9 +1501,10 @@ static long kernel_waitid(int which, pid_t upid, struct waitid_info *infop,
+                          int options, struct rusage *ru)
+ {
+        struct wait_opts wo;
++       struct fd f;
+        struct pid *pid = NULL;
+        enum pid_type type;
+-       long ret;
++       long ret = 0;
 
-s/called on an/called on
+        if (options & ~(WNOHANG|WNOWAIT|WEXITED|WSTOPPED|WCONTINUED|
+                        __WNOTHREAD|__WCLONE|__WALL))
+@@ -1505,6 +1512,7 @@ static long kernel_waitid(int which, pid_t upid, struct waitid_info *infop,
+        if (!(options & (WEXITED|WSTOPPED|WCONTINUED)))
+                return -EINVAL;
 
-> + * @irq_resume_one:    called on an every irq to resume it; called even if
-> + *                     this IRQ is configured for wakeup
++       wo.wo_pidfd_nonblock = false;
+        switch (which) {
+        case P_ALL:
+                type = PIDTYPE_MAX;
+@@ -1531,9 +1539,22 @@ static long kernel_waitid(int which, pid_t upid, struct waitid_info *infop,
+                if (upid < 0)
+                        return -EINVAL;
 
-s/called on an/called on
+-               pid = pidfd_get_pid(upid);
++               f = fdget(upid);
++               if (!f.file)
++                       return ERR_PTR(-EBADF);
++
++               pid = pidfd_pid(f.file);
++
++               if (f.file->f_flags & O_NONBLOCK)
++                       wo.wo_pidfd_nonblock = true;
++
+                if (IS_ERR(pid))
+-                       return PTR_ERR(pid);
++                       ret = PTR_ERR(pid);
++               else
++                       get_pid(pid);
++               fdput(f);
++               if (ret)
++                       return ret;
+                break;
+        default:
+                return -EINVAL;
 
-
--Doug
