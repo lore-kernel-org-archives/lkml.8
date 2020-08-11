@@ -2,96 +2,242 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 215EFC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 21:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEE9EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 21:25:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E190F207DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 21:25:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 944F4205CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 21:25:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GfgeTZn6"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hHMPyBCC";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ELIHt1uF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbgHKVZB (ORCPT
+        id S1726962AbgHKVZ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 17:25:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58498 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726795AbgHKVZA (ORCPT
+        Tue, 11 Aug 2020 17:25:26 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:47830 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726932AbgHKVZZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 17:25:00 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAE8DC061787
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 14:24:59 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id p1so141530pls.4
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 14:24:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=DFlBMPyt7J0RGkVcjHVECvZh9R+qJQmjTnftMhGc9oE=;
-        b=GfgeTZn6K1IcL3MUGkyDVnbBmlavOTF/EaRjtJeJ24UF15Z/QRUGKapNcftg7Gs1dW
-         dEaFRpGiRfLdrrjt1v8cCnkr8mj8Ckn7apw8aTpY6h0D6qiRCfGz0RgjqZUWAlH6UYdd
-         4mFx3stCMztBu3Iu47TOCSaTckzQx8+5DY1NU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=DFlBMPyt7J0RGkVcjHVECvZh9R+qJQmjTnftMhGc9oE=;
-        b=B1b06FcwM3kIeBtmF9ir2npFF16/S/QJAU49EP/qoAZX0VnN/AP06W/9l9hV77wgl3
-         7N9DyBy74AWLqDhojY0EtjbHJSwEUShBv3s+p8SjKF2VXl9KbzIgCFn/HUa3bj8cpN63
-         DeUgnv+4cIFotd6qmMiEfKWwNz/TKiPSmBKKJwvbPEfUQ6TuGnjXHB0oMrCa4PTbRJIw
-         CHpcKshKvdw5m9pFJC6tyNiiNe6R3t/lgLj8DkhnSUsKjez9wizrNxlw74Z0aug5zKFh
-         nV3UydzkCavkhkmVhrSAuSxw3bZJBMqBRRJu9Q7GwMWcuU79Vp93Z6zH/a1uA4xatEVG
-         Nt0g==
-X-Gm-Message-State: AOAM532/cFUYJcJSMyl94wt2F7zkNhhqTOyoi0Anjom5Z3G6bFPnkI2Z
-        s6luo6glrxZXvpNqXqop9/Nnbg==
-X-Google-Smtp-Source: ABdhPJxCPu5w1GCWEQMd5TdYawx2fktZItPPByTDo8uB/XfG/L7TDaJjOPvHnm5z/E7MUGh3RG0OYQ==
-X-Received: by 2002:a17:90b:384b:: with SMTP id nl11mr3005244pjb.91.1597181099549;
-        Tue, 11 Aug 2020 14:24:59 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 16sm11871pfi.161.2020.08.11.14.24.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Aug 2020 14:24:58 -0700 (PDT)
-Date:   Tue, 11 Aug 2020 14:24:57 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Subject: Re: [PATCH] docs: Fix function name trailing double-()s
-Message-ID: <202008111424.91AF109DCB@keescook>
-References: <202008072348.3BA3DD14E@keescook>
- <20200811104834.5f5ff007@lwn.net>
+        Tue, 11 Aug 2020 17:25:25 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1597181121;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=m7u9iZM4bgu8PK3FkxHuv+64l2WKnfoRB2cXVRaJnw4=;
+        b=hHMPyBCCFhlvypwiG0tlGoOocC/6/w0Nr1YrzlsbqBj4aPtPO/SivNrJhDJEsTmJyGBIdn
+        wK0wPPSyrn7SNhuGozY7SxeMQGtH3iWuZKg1GkBrbc8IlgZ2Gx3o6VXa3NqbhOwIfzBaRX
+        DDw0wFU1fbPEzxG7beKNyXGeTrMpfuk2yUHezKaaKjlqKA7w5mpEXFXBx76TWqQTGw4fVl
+        ChhvpDvDISgZQd4H5KwPka7VdwhciDFvo1qFJDfsKn/qZvzrO8XXhGQCqQFRBZ2c1Gi7gs
+        3EM4eZN6+l+aw+/4T6WNsCaZ0eoOLyv/0QwkRGu2PU270twsSL5THasIK9zWdw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1597181121;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=m7u9iZM4bgu8PK3FkxHuv+64l2WKnfoRB2cXVRaJnw4=;
+        b=ELIHt1uF/dwRXMv9lB5SfQSoe8rLSoQwm3SbukE5hxSYXAPouA1PkOj1GSCxGPJ4+5QGfT
+        SzYNpK6OM0WGwOBw==
+To:     "Dey\, Megha" <megha.dey@intel.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        "gregkh\@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        "Jiang\, Dave" <dave.jiang@intel.com>,
+        "vkoul\@kernel.org" <vkoul@kernel.org>,
+        "bhelgaas\@google.com" <bhelgaas@google.com>,
+        "rafael\@kernel.org" <rafael@kernel.org>,
+        "hpa\@zytor.com" <hpa@zytor.com>,
+        "alex.williamson\@redhat.com" <alex.williamson@redhat.com>,
+        "Pan\, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Raj\, Ashok" <ashok.raj@intel.com>,
+        "Liu\, Yi L" <yi.l.liu@intel.com>,
+        "Lu\, Baolu" <baolu.lu@intel.com>,
+        "Tian\, Kevin" <kevin.tian@intel.com>,
+        "Kumar\, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck\, Tony" <tony.luck@intel.com>,
+        "Lin\, Jing" <jing.lin@intel.com>,
+        "Williams\, Dan J" <dan.j.williams@intel.com>,
+        "kwankhede\@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger\@redhat.com" <eric.auger@redhat.com>,
+        "parav\@mellanox.com" <parav@mellanox.com>,
+        "Hansen\, Dave" <dave.hansen@intel.com>,
+        "netanelg\@mellanox.com" <netanelg@mellanox.com>,
+        "shahafs\@mellanox.com" <shahafs@mellanox.com>,
+        "yan.y.zhao\@linux.intel.com" <yan.y.zhao@linux.intel.com>,
+        "pbonzini\@redhat.com" <pbonzini@redhat.com>,
+        "Ortiz\, Samuel" <samuel.ortiz@intel.com>,
+        "Hossain\, Mona" <mona.hossain@intel.com>,
+        "dmaengine\@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86\@kernel.org" <x86@kernel.org>,
+        "linux-pci\@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm\@vger.kernel.org" <kvm@vger.kernel.org>,
+        xen-devel@lists.xenproject.org,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>
+Subject: Re: [PATCH RFC v2 02/18] irq/dev-msi: Add support for a new DEV_MSI irq domain
+In-Reply-To: <8a8a853c-cbe6-b19c-f6ba-c8cdeda84a36@intel.com>
+References: <87h7tcgbs2.fsf@nanos.tec.linutronix.de> <87ft8uxjga.fsf@nanos> <87d03x5x0k.fsf@nanos.tec.linutronix.de> <8a8a853c-cbe6-b19c-f6ba-c8cdeda84a36@intel.com>
+Date:   Tue, 11 Aug 2020 23:25:20 +0200
+Message-ID: <87bljg7u4f.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200811104834.5f5ff007@lwn.net>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 10:48:34AM -0600, Jonathan Corbet wrote:
-> On Fri, 7 Aug 2020 23:49:59 -0700
-> Kees Cook <keescook@chromium.org> wrote:
-> 
-> > I noticed a double-() after a function name in deprecated.rst today. Fix
-> > that one and two others in the Documentation/ tree.
-> > 
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> >  Documentation/RCU/lockdep.rst                           | 2 +-
-> >  Documentation/process/deprecated.rst                    | 2 +-
-> >  Documentation/translations/it_IT/process/deprecated.rst | 2 +-
-> >  3 files changed, 3 insertions(+), 3 deletions(-)
-> 
-> This one doesn't apply, and it crashes b4 outright.  The problem seems to
-> be some sort of encoding confusion...?
+"Dey, Megha" <megha.dey@intel.com> writes:
+> On 8/11/2020 2:53 AM, Thomas Gleixner wrote:
+>>> And the annoying fact that you need XEN support which opens another can
+>>> of worms...
+>
+> hmm I am not sure why we need Xen support... are you referring to idxd 
+> using xen?
 
-Hmmm. Weird. Something in the translation file? Let me try to re-send.
+What about using IDXD when you are running on XEN? I might be missing
+something and IDXD/IMS is hypervisor only, but that still does not solve
+this problem on bare metal:
 
--- 
-Kees Cook
+>> x86 still does not associate the irq domain to devices at device
+>> discovery time, i.e. the device::msi_domain pointer is never
+>> populated.
+
+We can't do that right now due to the way how X86 PCI/MSI allocation
+works and being able to do so would make things consistent and way
+simpler even for your stuff.
+
+>> The right thing to do is to convert XEN MSI support over to proper irq
+>> domains. This allows to populate device::msi_domain which makes a lot of
+>> things simpler and also more consistent.
+>
+> do you think this cleanup is to be a precursor to my patches? I could 
+> look into it but I am not familiar with the background of Xen
+>
+> and this stuff. Can you please provide further guidance on where to
+> look
+
+As I said:
+
+>> So to support this new fangled device MSI stuff we'd need yet more
+>> x86/xen specific arch_*msi_irqs() indirection and hackery, which is not
+>> going to happen.
+
+  git grep arch_.*msi_irq arch/x86
+
+This indirection prevents storing the irq_domain pointer in the device
+at probe/detection time. Native code already uses irq domains for
+PCI/MSI but we can't exploit the full potential because then
+pci_msi_setup_msi_irqs() would never end up in arch_setup_msi_irqs()
+which breaks XEN.
+
+I was reminded of that nastiness when I was looking at sensible ways to
+integrate this device MSI maze proper.
+
+From a conceptual POV this stuff, which is not restricted to IDXD at all,
+looks like this:
+
+           ]-------------------------------------------|
+PCI BUS -- | PCI device                                |
+           ]-------------------|                       |
+           | Physical function |                       |
+           ]-------------------|                       |
+           ]-------------------|----------|            |
+           | Control block for subdevices |            |
+           ]------------------------------|            |
+           |            | <- "Subdevice BUS"           |
+           |            |                              |
+           |            |-- Subddevice 0               | 
+           |            |-- Subddevice 1               | 
+           |            |-- ...                        | 
+           |            |-- Subddevice N               | 
+           ]-------------------------------------------|
+
+It does not matter whether this is IDXD with it's magic devices or a
+network card with a gazillion of queues. Conceptually we need to look at
+them as individual subdevices.
+
+And obviously the above picture gives you the topology. The physical
+function device belongs to PCI in all aspects including the MSI
+interrupt control. The control block is part of the PCI device as well
+and it even can have regular PCI/MSI interrupts for its own
+purposes. There might be devices where the Physical function device does
+not exist at all and the only true PCI functionality is the control
+block to manage subdevices. That does not matter and does not change the
+concept.
+
+Now the subdevices belong topology wise NOT to the PCI part. PCI is just
+the transport they utilize. And their irq domain is distinct from the
+PCI/MSI domain for reasons I explained before.
+
+So looking at it from a Linux perspective:
+
+  pci-bus -> PCI device (managed by PCI/MSI domain)
+               - PF device
+               - CB device (hosts DEVMSI domain)
+                    | "Subdevice bus"
+                    | - subdevice
+                    | - subdevice
+                    | - subdevice
+
+Now you would assume that figuring out the irq domain which the DEVMSI
+domain serving the subdevices on the subdevice bus should take as parent
+is pretty trivial when looking at the topology, right?
+
+CB device's parent is PCI device and we know that PCI device MSI is
+handled by the PCI/MSI domain which is either system wide or per IR
+unit.
+
+So getting the relevant PCI/MSI irq domain is as simple as doing:
+
+   pcimsi_domain = pcidevice->device->msi_domain;
+
+and then because we know that this is a hierarchy the parent domain of
+pcimsi_domain is the one which is the parent of our DEVMSI domain, i.e.:
+
+   parent = pcmsi_domain->parent;
+
+Obvious, right?
+
+What's not so obvious is that pcidevice->device->msi_domain is not
+populated on x86 and trying to get the parent from there is a NULL
+pointer dereference which does not work well.
+
+So you surely can hack up some workaround for this, but that's just
+proliferating crap. We want this to be consistent and there is
+absolutely no reason why that network card with the MSI storage in the
+queue data should not work on any other architecture.
+
+We do the correct association already for IOMMU and whatever topological
+stuff is attached to (PCI) devices on probe/detection time so making it
+consistent for irq domains is just a logical consequence and matter of
+consistency.
+
+Back in the days when x86 was converted to hierarchical irq domains in
+order to support I/O APIC hotplug this workaround was accepted to make
+progress and it was meant as a transitional step. Of course after the
+goal was achieved nobody @Intel cared anymore and so far this did not
+cause big problems. But now it does and we really want to make this
+consistent first.
+
+And no we are not making an exception for IDXD either just because
+that's Intel only. Intel is not special and not exempt from cleaning
+stuff up before adding new features especially not when the stuff to
+cleanup is a leftover from Intel itself. IOW, we are not adding more
+crap on top of crap which should not exists anymore.
+
+It's not rocket science to fix this. All it needs is to let XEN create
+irq domains and populate them during init.
+
+On device detection/probe the proper domain needs to be determined which
+is trivial and then stored in device->msi_domain. That makes
+arch_.*_msi_irq() go away and a lot of code just simpler.
+
+Thanks,
+
+        tglx
