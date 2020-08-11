@@ -2,198 +2,244 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.1 required=3.0 tests=BAYES_00,
-	DATE_IN_FUTURE_06_12,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C92CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 07:41:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4A66C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 07:41:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 442D620829
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 07:41:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 871AF2054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 07:41:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="RK8pwuis"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="c46YpCUa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728463AbgHKHlL (ORCPT
+        id S1728469AbgHKHlx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 03:41:11 -0400
-Received: from mail-eopbgr130053.outbound.protection.outlook.com ([40.107.13.53]:28418
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728442AbgHKHlK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 03:41:10 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QfHxrQhcGIXF/CA2tFgMGPCciNXp3BL6KWQjgZGf1FpJZFeyqPses8acylzM+Sgbggu9rO1tIy7OmQ6+hEnr5Kh8zHlz45Pz7UjihRulaH4tpWCbBIMjbc9aKDg3lvr8GqQ+5GqHTLZ+z4E6xDYs6zimn7Pv4qDWQOITI0reX+P+3LIcBkAIWu9daQ0Kq95O3NY8wsRC1FIOX78EDU1w4pOoxB219y4zqKj18wyGNE1F2OjG2JG/KuPJtFpxc4COUem8bj3GHGIWgHXVasHbJJ3UgdoV7emE4ghEe+15S713EddPbUzwzTHHmjTeuC+Dq43kw8PuTBNciJaNzP2Ukg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YRY+2DrI/tzbBi6A4V4crHRv5r0Tmfc824mu7Vll8wo=;
- b=UuRrH0zyo6LaYLnsBNXBWl2U1Qb3GrN/B1AApIC+kW3CwpJZ5NdObTG2xCk4RXk3Ms+wEErU1XQGW8a8/9c4sB5NzfcZ410Dl4BL6NBInExrWH193Zf3izxEGq1rf0NL+S6TSk3cIASzbYCuE2AtGWOzP3C5ponAEFAhwHQ1tZNcMCdqGkDy5qZR5ym6u9Dw3vL5+/iq3BIHTksLWMezEKDfUCMpQnM1pD1kOq9SsiCKeowQ48YDHqPTnQXiL4Lssd1mIbScAaQo34I2LHzfa3FX9e60Q18wUr4lXixEkY2qF+qcsezPmKoNkBablkY0el1BxqLy+aS+q3WPjGJxiw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YRY+2DrI/tzbBi6A4V4crHRv5r0Tmfc824mu7Vll8wo=;
- b=RK8pwuisupwWC8EXTP81DrHLsXt/16X4PLsraEAZ46IaRRNTOa/jBL1gCAvqhz4qsA8eIAJdjjILLchU2ibkslbR9OhHBephX2e97reA/YtlNVbpjfwNgPf11/603keRXPP0wM7fLrlwoPcn72qX5f/kDiBoV8704VXXQbvXOWk=
-Authentication-Results: arm.com; dkim=none (message not signed)
- header.d=none;arm.com; dmarc=none action=none header.from=nxp.com;
-Received: from AM6PR04MB6630.eurprd04.prod.outlook.com (2603:10a6:20b:f4::33)
- by AM6PR0402MB3464.eurprd04.prod.outlook.com (2603:10a6:209:12::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.16; Tue, 11 Aug
- 2020 07:41:03 +0000
-Received: from AM6PR04MB6630.eurprd04.prod.outlook.com
- ([fe80::c9b8:4020:7705:e3dd]) by AM6PR04MB6630.eurprd04.prod.outlook.com
- ([fe80::c9b8:4020:7705:e3dd%7]) with mapi id 15.20.3261.025; Tue, 11 Aug 2020
- 07:41:03 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     mark.rutland@arm.com, broonie@kernel.org, robh+dt@kernel.org,
-        catalin.marinas@arm.com, vkoul@kernel.org, will.deacon@arm.com,
-        shawnguo@kernel.org, festevam@gmail.com, s.hauer@pengutronix.de,
-        martin.fuzzey@flowbird.group, u.kleine-koenig@pengutronix.de,
-        dan.j.williams@intel.com, matthias.schiffer@ew.tq-group.com,
-        frieder.schrempf@kontron.de, r.schwebel@pengutronix.de
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kernel@pengutronix.de, dmaengine@vger.kernel.org, linux-imx@nxp.com
-Subject: [PATCH v12 12/12] dmaengine: imx-sdma: add uart rom script
-Date:   Tue, 11 Aug 2020 23:53:51 +0800
-Message-Id: <1597161231-32303-13-git-send-email-yibin.gong@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1597161231-32303-1-git-send-email-yibin.gong@nxp.com>
-References: <1597161231-32303-1-git-send-email-yibin.gong@nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SG2P153CA0014.APCP153.PROD.OUTLOOK.COM (2603:1096::24) To
- AM6PR04MB6630.eurprd04.prod.outlook.com (2603:10a6:20b:f4::33)
+        Tue, 11 Aug 2020 03:41:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44590 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728270AbgHKHlw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 03:41:52 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DFB4C06174A
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 00:41:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=H1ur41PMwJaDcTMSo/nD4VartbQ+qRn6j+If8bFfsJQ=; b=c46YpCUa2s205EbeyhBAihRmIf
+        we1pk0/2FhtINa1I7UTqooymivlx2sWDXjCXl7aZq9WiGO/XUe6gFoZenjEgui0n8Vc39imW8dpq3
+        z6Kw9H2UA0hazMrlRwc8DbBtCEV+Uw/fesllEZ+CFwmCMjBU8Z0fROMqjyBn6dVNpLJ4PAtgRROaZ
+        bWkYfbAs8rQUnFXX+2pdOgFMJO++0RalqOA5G6LJ9cSdNrqE0RiU16cteiv7ve3XiOqTz+AEFG60L
+        IYrY2X2R96usta9vFjHZxW6m6wREEQ4jgy7Ctwk/unVsVD3y1o9idNOBAXN5+CxZaa+131KsUwryJ
+        in8m3+mQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k5OuZ-00067x-1O; Tue, 11 Aug 2020 07:41:31 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 56841980C9D; Tue, 11 Aug 2020 09:41:27 +0200 (CEST)
+Date:   Tue, 11 Aug 2020 09:41:27 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Marco Elver <elver@google.com>
+Cc:     =?iso-8859-1?Q?J=FCrgen_Gro=DF?= <jgross@suse.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        fenghua.yu@intel.com, "H. Peter Anvin" <hpa@zytor.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        yu-cheng.yu@intel.com, sdeep@vmware.com,
+        virtualization@lists.linux-foundation.org,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        syzbot <syzbot+8db9e1ecde74e590a657@syzkaller.appspotmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>
+Subject: Re: [PATCH] x86/paravirt: Add missing noinstr to arch_local*()
+ helpers
+Message-ID: <20200811074127.GR3982@worktop.programming.kicks-ass.net>
+References: <20200806131702.GA3029162@elver.google.com>
+ <CANpmjNNqt8YrCad4WqgCoXvH47pRXtSLpnTKhD8W8+UpoYJ+jQ@mail.gmail.com>
+ <CANpmjNO860SHpNve+vaoAOgarU1SWy8o--tUWCqNhn82OLCiew@mail.gmail.com>
+ <fe2bfa7f-132f-7581-a967-d01d58be1588@suse.com>
+ <20200807095032.GA3528289@elver.google.com>
+ <16671cf3-3885-eb06-79ff-4cbfaeeaea79@suse.com>
+ <20200807113838.GA3547125@elver.google.com>
+ <e5bf3e6a-efff-7170-5ee6-1798008393a2@suse.com>
+ <CANpmjNPau_DEYadey9OL+iFZKEaUTqnFnyFs1dU12o00mg7ofA@mail.gmail.com>
+ <20200807151903.GA1263469@elver.google.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from robin-OptiPlex-790.ap.freescale.net (119.31.174.67) by SG2P153CA0014.APCP153.PROD.OUTLOOK.COM (2603:1096::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3305.2 via Frontend Transport; Tue, 11 Aug 2020 07:40:57 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [119.31.174.67]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 71c4b123-6115-4916-823e-08d83dc9e646
-X-MS-TrafficTypeDiagnostic: AM6PR0402MB3464:
-X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM6PR0402MB3464AFD9725F3AD071EA328689450@AM6PR0402MB3464.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: f96QC6hFyQEEOm0cTt+LfQ21uPDUACSBC8cdJDQFxhouO91pAALDMYYWzwIRFbIiFoTyJaRor0nxLI18A5RYa7MlosVP9kcauWmqKU8ngTY3kHIrFUgTt37iJkSDVAPPDhs2ptTYKa6QkzVDdgeNjMCIucw4jMtwaxMPOzVDxErz0tkdAJ+zslg0gcY8ccKOpAV5GWVpTWMaU6DeU7PCb+PQFuESVw1ulNkyNw6EcFWvJsyqyGNrnC1HgBU+cohKdet3te8E1JG3ziY6vgUZzAUjr4mXwjpbY5unUaWzld88sXIEKYcbsTxSTv/JDBRhG7Fyr8FJ+38ja9mEY5qa0bC9CEww1REHfkfGC5lEWvn6UHYciSJZWM8loMQdfIYZWciLIxdysQcZx0DF6nO9PQnmzRNRpirRjWWfVvdPC8ppVNmpCGCoyxPOj8zU7ABj
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB6630.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(396003)(136003)(366004)(39860400002)(346002)(4326008)(5660300002)(52116002)(66476007)(66556008)(86362001)(956004)(66946007)(6486002)(2616005)(7416002)(316002)(966005)(36756003)(186003)(2906002)(8676002)(6506007)(6666004)(6512007)(8936002)(26005)(478600001)(83380400001)(16526019)(921003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: DkLSOvOxVl1QXYV6NuINdtJG50x1tK/ajFEwZ5P5JbGWXJ9/bA99+M57hsYFUzWG1BbcLSDI89I+aNd0Sc375Je1JXXcSBsnnPSETUhx4QipJohhO2GsAaKsIYfJkLq8rV6MjW1wfkz9O3Q/r0oIh8N+rI+z67w//cNsoHlgusVzCviqeYpezn5uXi6miICHlEwsmd2BllAPJ44h/xuLowa0cQmDuBLaPj4BJVm6MjqactJS1WdlXBjm5+4FwQBDl+fuHtKajud+LkcQv4nOU4NeS8u+hxPBW0Fe+XslD5jJV4pw8uAXbLKUswOSE+JGEmQWlgMHB2C/1JXXmlHjbGrL4sHyrJy1VeeMX44dHX86xVCGI7HIYwnF+AuymT8Mc1fufP/O91TRGkcUIaY1e3Sr036m54XHsGuPeXgWXy71cDnTj4pqBYkbXt9s+TLWnTzlw/7Ycx+VvJtn8luUYmbAPzFJxrJaNdAcuXXwJqYYqORLdlkLEpTNFJoiTQ/ZBtWfHvTEx2rLTRZo/jJ46OGN/fncD8Wt5bu5gHv2rt1d8Bn1NzYyuVeszk0W3axftrT9DjzZHurqT5hOjNhlyh+NRqcvK95+GqSMNnefMWwppBPXXSL3ot8INUvx1dKeGxaRAnzgSmbBANZRnL/CRA==
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 71c4b123-6115-4916-823e-08d83dc9e646
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB6630.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Aug 2020 07:41:03.6115
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: uXqVOUq9zIEaAdqsC8n37JnLvpMRalQF1NN63o8zhAjUasyrmFzVIGBP8f0xThUzppvkIduKju1Arjz0P0/zcg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0402MB3464
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200807151903.GA1263469@elver.google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For the compatibility of NXP internal legacy kernel before 4.19 which
-is based on uart ram script and upstreaming kernel based on uart rom
-script, add both uart ram/rom script in latest sdma firmware. By default
-uart rom script used.
-Besides, add two multi-fifo scripts for SAI/PDM on i.mx8m/8mm and add
-back qspi script miss for v4(i.mx7d/8m/8mm family, but v3 is for i.mx6).
+On Fri, Aug 07, 2020 at 05:19:03PM +0200, Marco Elver wrote:
 
-rom script:
-        uart_2_mcu_addr
-	uartsh_2_mcu_addr /* through spba bus */
-am script:
-	uart_2_mcu_ram_addr
-	uartsh_2_mcu_ram_addr /* through spba bus */
+> My hypothesis here is simply that kvm_wait() may be called in a place
+> where we get the same case I mentioned to Peter,
+> 
+> 	raw_local_irq_save(); /* or other IRQs off without tracing */
+> 	...
+> 	kvm_wait() /* IRQ state tracing gets confused */
+> 	...
+> 	raw_local_irq_restore();
+> 
+> and therefore, using raw variants in kvm_wait() works. It's also safe
+> because it doesn't call any other libraries that would result in corrupt
 
-Please get latest sdma firmware from the below and put them into the path
-(/lib/firmware/imx/sdma/):
-https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git
-/tree/imx/sdma
+Yes, this is definitely an issue.
 
-Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-Acked-by: Vinod Koul <vkoul@kernel.org>
+Tracing, we also musn't call into tracing when using raw_local_irq_*().
+Because then we re-intoduce this same issue all over again.
+
+Both halt() and safe_halt() are more paravirt calls, but given we're in
+a KVM paravirt call already, I suppose we can directly use native_*()
+here.
+
+Something like so then... I suppose, but then the Xen variants need TLC
+too.
+
 ---
- drivers/dma/imx-sdma.c                     | 17 +++++++++++++++--
- include/linux/platform_data/dma-imx-sdma.h |  8 ++++++--
- 2 files changed, 21 insertions(+), 4 deletions(-)
+ arch/x86/include/asm/irqflags.h |  4 ++--
+ arch/x86/include/asm/kvm_para.h | 18 +++++++++---------
+ arch/x86/kernel/kvm.c           | 14 +++++++-------
+ 3 files changed, 18 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index 8735606..1631242 100644
---- a/drivers/dma/imx-sdma.c
-+++ b/drivers/dma/imx-sdma.c
-@@ -1729,8 +1729,8 @@ static void sdma_issue_pending(struct dma_chan *chan)
- 
- #define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V1	34
- #define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V2	38
--#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V3	41
--#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V4	42
-+#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V3	45
-+#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V4	46
- 
- static void sdma_add_scripts(struct sdma_engine *sdma,
- 		const struct sdma_script_start_addrs *addr)
-@@ -1754,6 +1754,19 @@ static void sdma_add_scripts(struct sdma_engine *sdma,
- 	for (i = 0; i < sdma->script_number; i++)
- 		if (addr_arr[i] > 0)
- 			saddr_arr[i] = addr_arr[i];
-+
-+	/*
-+	 * get uart_2_mcu_addr/uartsh_2_mcu_addr rom script specially because
-+	 * they are now replaced by uart_2_mcu_ram_addr/uartsh_2_mcu_ram_addr
-+	 * to be compatible with legacy freescale/nxp sdma firmware, and they
-+	 * are located in the bottom part of sdma_script_start_addrs which are
-+	 * beyond the SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V1.
-+	 */
-+	if (addr->uart_2_mcu_addr)
-+		sdma->script_addrs->uart_2_mcu_addr = addr->uart_2_mcu_addr;
-+	if (addr->uartsh_2_mcu_addr)
-+		sdma->script_addrs->uartsh_2_mcu_addr = addr->uartsh_2_mcu_addr;
-+
+diff --git a/arch/x86/include/asm/irqflags.h b/arch/x86/include/asm/irqflags.h
+index 02a0cf547d7b..7c614db25274 100644
+--- a/arch/x86/include/asm/irqflags.h
++++ b/arch/x86/include/asm/irqflags.h
+@@ -54,13 +54,13 @@ static __always_inline void native_irq_enable(void)
+ 	asm volatile("sti": : :"memory");
  }
- 
- static void sdma_load_firmware(const struct firmware *fw, void *context)
-diff --git a/include/linux/platform_data/dma-imx-sdma.h b/include/linux/platform_data/dma-imx-sdma.h
-index 30e676b..e12d2e8 100644
---- a/include/linux/platform_data/dma-imx-sdma.h
-+++ b/include/linux/platform_data/dma-imx-sdma.h
-@@ -20,12 +20,12 @@ struct sdma_script_start_addrs {
- 	s32 per_2_firi_addr;
- 	s32 mcu_2_firi_addr;
- 	s32 uart_2_per_addr;
--	s32 uart_2_mcu_addr;
-+	s32 uart_2_mcu_ram_addr;
- 	s32 per_2_app_addr;
- 	s32 mcu_2_app_addr;
- 	s32 per_2_per_addr;
- 	s32 uartsh_2_per_addr;
--	s32 uartsh_2_mcu_addr;
-+	s32 uartsh_2_mcu_ram_addr;
- 	s32 per_2_shp_addr;
- 	s32 mcu_2_shp_addr;
- 	s32 ata_2_mcu_addr;
-@@ -52,6 +52,10 @@ struct sdma_script_start_addrs {
- 	s32 zcanfd_2_mcu_addr;
- 	s32 zqspi_2_mcu_addr;
- 	s32 mcu_2_ecspi_addr;
-+	s32 mcu_2_sai_addr;
-+	s32 sai_2_mcu_addr;
-+	s32 uart_2_mcu_addr;
-+	s32 uartsh_2_mcu_addr;
- 	/* End of v3 array */
- 	s32 mcu_2_zqspi_addr;
- 	/* End of v4 array */
--- 
-2.7.4
+
+-static inline __cpuidle void native_safe_halt(void)
++static __always_inline __cpuidle void native_safe_halt(void)
+ {
+ 	mds_idle_clear_cpu_buffers();
+ 	asm volatile("sti; hlt": : :"memory");
+ }
+
+-static inline __cpuidle void native_halt(void)
++static __always_inline __cpuidle void native_halt(void)
+ {
+ 	mds_idle_clear_cpu_buffers();
+ 	asm volatile("hlt": : :"memory");
+diff --git a/arch/x86/include/asm/kvm_para.h b/arch/x86/include/asm/kvm_para.h
+index 49d3a9edb06f..90f7ea58ebb0 100644
+--- a/arch/x86/include/asm/kvm_para.h
++++ b/arch/x86/include/asm/kvm_para.h
+@@ -30,7 +30,7 @@ static inline bool kvm_check_and_clear_guest_paused(void)
+  * noted by the particular hypercall.
+  */
+
+-static inline long kvm_hypercall0(unsigned int nr)
++static __always_inline long kvm_hypercall0(unsigned int nr)
+ {
+ 	long ret;
+ 	asm volatile(KVM_HYPERCALL
+@@ -40,7 +40,7 @@ static inline long kvm_hypercall0(unsigned int nr)
+ 	return ret;
+ }
+
+-static inline long kvm_hypercall1(unsigned int nr, unsigned long p1)
++static __always_inline long kvm_hypercall1(unsigned int nr, unsigned long p1)
+ {
+ 	long ret;
+ 	asm volatile(KVM_HYPERCALL
+@@ -50,8 +50,8 @@ static inline long kvm_hypercall1(unsigned int nr, unsigned long p1)
+ 	return ret;
+ }
+
+-static inline long kvm_hypercall2(unsigned int nr, unsigned long p1,
+-				  unsigned long p2)
++static __always_inline long kvm_hypercall2(unsigned int nr, unsigned long p1,
++					   unsigned long p2)
+ {
+ 	long ret;
+ 	asm volatile(KVM_HYPERCALL
+@@ -61,8 +61,8 @@ static inline long kvm_hypercall2(unsigned int nr, unsigned long p1,
+ 	return ret;
+ }
+
+-static inline long kvm_hypercall3(unsigned int nr, unsigned long p1,
+-				  unsigned long p2, unsigned long p3)
++static __always_inline long kvm_hypercall3(unsigned int nr, unsigned long p1,
++					   unsigned long p2, unsigned long p3)
+ {
+ 	long ret;
+ 	asm volatile(KVM_HYPERCALL
+@@ -72,9 +72,9 @@ static inline long kvm_hypercall3(unsigned int nr, unsigned long p1,
+ 	return ret;
+ }
+
+-static inline long kvm_hypercall4(unsigned int nr, unsigned long p1,
+-				  unsigned long p2, unsigned long p3,
+-				  unsigned long p4)
++static __always_inline long kvm_hypercall4(unsigned int nr, unsigned long p1,
++					   unsigned long p2, unsigned long p3,
++					   unsigned long p4)
+ {
+ 	long ret;
+ 	asm volatile(KVM_HYPERCALL
+diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+index 233c77d056c9..15f8dfd8812d 100644
+--- a/arch/x86/kernel/kvm.c
++++ b/arch/x86/kernel/kvm.c
+@@ -779,7 +779,7 @@ arch_initcall(kvm_alloc_cpumask);
+ #ifdef CONFIG_PARAVIRT_SPINLOCKS
+
+ /* Kick a cpu by its apicid. Used to wake up a halted vcpu */
+-static void kvm_kick_cpu(int cpu)
++static notrace kvm_kick_cpu(int cpu)
+ {
+ 	int apicid;
+ 	unsigned long flags = 0;
+@@ -790,14 +790,14 @@ static void kvm_kick_cpu(int cpu)
+
+ #include <asm/qspinlock.h>
+
+-static void kvm_wait(u8 *ptr, u8 val)
++static notrace kvm_wait(u8 *ptr, u8 val)
+ {
+ 	unsigned long flags;
+
+ 	if (in_nmi())
+ 		return;
+
+-	local_irq_save(flags);
++	raw_local_irq_save(flags);
+
+ 	if (READ_ONCE(*ptr) != val)
+ 		goto out;
+@@ -808,16 +808,16 @@ static void kvm_wait(u8 *ptr, u8 val)
+ 	 * in irq spinlock slowpath and no spurious interrupt occur to save us.
+ 	 */
+ 	if (arch_irqs_disabled_flags(flags))
+-		halt();
++		native_halt();
+ 	else
+-		safe_halt();
++		native_safe_halt();
+
+ out:
+-	local_irq_restore(flags);
++	raw_local_irq_restore(flags);
+ }
+
+ #ifdef CONFIG_X86_32
+-__visible bool __kvm_vcpu_is_preempted(long cpu)
++__visible notrace bool __kvm_vcpu_is_preempted(long cpu)
+ {
+ 	struct kvm_steal_time *src = &per_cpu(steal_time, cpu);
+
 
