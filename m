@@ -2,142 +2,56 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31DD0C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 11:11:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D16C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 11:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CBBE2075D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 11:11:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 792A320716
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 11:15:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728721AbgHKLLN (ORCPT
+        id S1728664AbgHKLPz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 07:11:13 -0400
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:40342 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728469AbgHKLK6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 07:10:58 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07484;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0U5TLMT5_1597144252;
-Received: from aliy80.localdomain(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U5TLMT5_1597144252)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 11 Aug 2020 19:10:52 +0800
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-To:     akpm@linux-foundation.org
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [Resend PATCH 1/6] mm/memcg: warning on !memcg after readahead page charged
-Date:   Tue, 11 Aug 2020 19:10:27 +0800
-Message-Id: <1597144232-11370-1-git-send-email-alex.shi@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
+        Tue, 11 Aug 2020 07:15:55 -0400
+Received: from verein.lst.de ([213.95.11.211]:39919 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728469AbgHKLPy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 07:15:54 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 00C5C67357; Tue, 11 Aug 2020 13:15:51 +0200 (CEST)
+Date:   Tue, 11 Aug 2020 13:15:51 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Miles Chen <miles.chen@mediatek.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        wsd_upstream@mediatek.com
+Subject: Re: [PATCH] net: untag pointer in sockptr_is_kernel
+Message-ID: <20200811111551.GA3958@lst.de>
+References: <20200811102704.17875-1-miles.chen@mediatek.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200811102704.17875-1-miles.chen@mediatek.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since readahead page is charged on memcg too, in theory we don't have to
-check this exception now. Before safely remove them all, add a warning
-for the unexpected !memcg.
+On Tue, Aug 11, 2020 at 06:27:04PM +0800, Miles Chen wrote:
+> From: Miles Chen <miles.chen@mediatek.com>
+> 
+> sockptr_is_kernel() uses (sockptr.kernel >= TASK_SIZE) to tell
+> if the pointer is kernel space or user space. When user space uses
+> the "top byte ignored" feature such as HWAsan, we must untag
+> the pointer before checking against TASK_SIZE.
+> 
+> sockptr_is_kernel() will view a tagged user pointer as a kernel pointer
+> and use memcpy directly and causes a kernel crash.
 
-Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: cgroups@vger.kernel.org
-Cc: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org
----
- include/linux/mmdebug.h | 13 +++++++++++++
- mm/memcontrol.c         | 15 ++++++++-------
- 2 files changed, 21 insertions(+), 7 deletions(-)
-
-diff --git a/include/linux/mmdebug.h b/include/linux/mmdebug.h
-index 2ad72d2c8cc5..4ed52879ce55 100644
---- a/include/linux/mmdebug.h
-+++ b/include/linux/mmdebug.h
-@@ -37,6 +37,18 @@
- 			BUG();						\
- 		}							\
- 	} while (0)
-+#define VM_WARN_ON_ONCE_PAGE(cond, page)	({			\
-+	static bool __section(.data.once) __warned;			\
-+	int __ret_warn_once = !!(cond);					\
-+									\
-+	if (unlikely(__ret_warn_once && !__warned)) {			\
-+		dump_page(page, "VM_WARN_ON_ONCE_PAGE(" __stringify(cond)")");\
-+		__warned = true;					\
-+		WARN_ON(1);						\
-+	}								\
-+	unlikely(__ret_warn_once);					\
-+})
-+
- #define VM_WARN_ON(cond) (void)WARN_ON(cond)
- #define VM_WARN_ON_ONCE(cond) (void)WARN_ON_ONCE(cond)
- #define VM_WARN_ONCE(cond, format...) (void)WARN_ONCE(cond, format)
-@@ -48,6 +60,7 @@
- #define VM_BUG_ON_MM(cond, mm) VM_BUG_ON(cond)
- #define VM_WARN_ON(cond) BUILD_BUG_ON_INVALID(cond)
- #define VM_WARN_ON_ONCE(cond) BUILD_BUG_ON_INVALID(cond)
-+#define VM_WARN_ON_ONCE_PAGE(cond, page)  BUILD_BUG_ON_INVALID(cond)
- #define VM_WARN_ONCE(cond, format...) BUILD_BUG_ON_INVALID(cond)
- #define VM_WARN(cond, format...) BUILD_BUG_ON_INVALID(cond)
- #endif
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 130093bdf74b..299382fc55a9 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -1322,10 +1322,8 @@ struct lruvec *mem_cgroup_page_lruvec(struct page *page, struct pglist_data *pgd
- 	}
- 
- 	memcg = page->mem_cgroup;
--	/*
--	 * Swapcache readahead pages are added to the LRU - and
--	 * possibly migrated - before they are charged.
--	 */
-+	/* Readahead page is charged too, to see if other page uncharged */
-+	VM_WARN_ON_ONCE_PAGE(!memcg, page);
- 	if (!memcg)
- 		memcg = root_mem_cgroup;
- 
-@@ -6906,8 +6904,9 @@ void mem_cgroup_migrate(struct page *oldpage, struct page *newpage)
- 	if (newpage->mem_cgroup)
- 		return;
- 
--	/* Swapcache readahead pages can get replaced before being charged */
- 	memcg = oldpage->mem_cgroup;
-+	/* Readahead page is charged too, to see if other page uncharged */
-+	VM_WARN_ON_ONCE_PAGE(!memcg, oldpage);
- 	if (!memcg)
- 		return;
- 
-@@ -7104,7 +7103,8 @@ void mem_cgroup_swapout(struct page *page, swp_entry_t entry)
- 
- 	memcg = page->mem_cgroup;
- 
--	/* Readahead page, never charged */
-+	/* Readahead page is charged too, to see if other page uncharged */
-+	VM_WARN_ON_ONCE_PAGE(!memcg, page);
- 	if (!memcg)
- 		return;
- 
-@@ -7168,7 +7168,8 @@ int mem_cgroup_try_charge_swap(struct page *page, swp_entry_t entry)
- 
- 	memcg = page->mem_cgroup;
- 
--	/* Readahead page, never charged */
-+	/* Readahead page is charged too, to see if other page uncharged */
-+	VM_WARN_ON_ONCE_PAGE(!memcg, page);
- 	if (!memcg)
- 		return 0;
- 
--- 
-1.8.3.1
-
+Dave merged a patch from me to rever the optimized sockptr
+implementation for now.  If we bring it back we should fold in your
+fix.
