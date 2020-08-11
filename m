@@ -2,100 +2,87 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BA2EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F68EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0612A2076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:06:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C39E2076C
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:08:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728730AbgHKOGy (ORCPT
+        id S1728779AbgHKOIo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 10:06:54 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:17274 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728516AbgHKOGw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 10:06:52 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4BQvlX2VjCz9vCqh;
-        Tue, 11 Aug 2020 16:06:48 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id uyiEbRNZdcYa; Tue, 11 Aug 2020 16:06:48 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4BQvlX0t4Fz9vCqm;
-        Tue, 11 Aug 2020 16:06:48 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8B6608BB80;
-        Tue, 11 Aug 2020 16:06:49 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id LEGyWSBRNps0; Tue, 11 Aug 2020 16:06:49 +0200 (CEST)
-Received: from [172.25.230.100] (po15451.idsi0.si.c-s.fr [172.25.230.100])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3238A8BB86;
-        Tue, 11 Aug 2020 16:06:49 +0200 (CEST)
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: Re: [RFC PATCH v1] power: don't manage floating point regs when no
- FPU
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <95c00a811897f6d9176d30bf2ac92dab8c9c8e95.1596816789.git.christophe.leroy@csgroup.eu>
- <87o8nh9yjd.fsf@mpe.ellerman.id.au>
-Message-ID: <da699207-b172-cf12-a04f-4444313e3e27@csgroup.eu>
-Date:   Tue, 11 Aug 2020 16:06:44 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Tue, 11 Aug 2020 10:08:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47574 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728516AbgHKOIm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 10:08:42 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2557CC06174A;
+        Tue, 11 Aug 2020 07:08:42 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k5Ux7-00DbzY-IB; Tue, 11 Aug 2020 14:08:33 +0000
+Date:   Tue, 11 Aug 2020 15:08:33 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     linux-fsdevel@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Karel Zak <kzak@redhat.com>, Jeff Layton <jlayton@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Christian Brauner <christian@brauner.io>,
+        Lennart Poettering <lennart@poettering.net>,
+        Linux API <linux-api@vger.kernel.org>,
+        Ian Kent <raven@themaw.net>,
+        LSM <linux-security-module@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: file metadata via fs API  (was: [GIT PULL] Filesystem
+ Information)
+Message-ID: <20200811140833.GH1236603@ZenIV.linux.org.uk>
+References: <1842689.1596468469@warthog.procyon.org.uk>
+ <1845353.1596469795@warthog.procyon.org.uk>
+ <CAJfpegunY3fuxh486x9ysKtXbhTE0745ZCVHcaqs9Gww9RV2CQ@mail.gmail.com>
+ <ac1f5e3406abc0af4cd08d818fe920a202a67586.camel@themaw.net>
+ <CAJfpegu8omNZ613tLgUY7ukLV131tt7owR+JJ346Kombt79N0A@mail.gmail.com>
+ <CAJfpegtNP8rQSS4Z14Ja4x-TOnejdhDRTsmmDD-Cccy2pkfVVw@mail.gmail.com>
+ <20200811135419.GA1263716@miu.piliscsaba.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <87o8nh9yjd.fsf@mpe.ellerman.id.au>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200811135419.GA1263716@miu.piliscsaba.redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 11/08/2020 à 14:07, Michael Ellerman a écrit :
-> Christophe Leroy <christophe.leroy@csgroup.eu> writes:
->>   10 files changed, 44 insertions(+), 1 deletion(-)
+On Tue, Aug 11, 2020 at 03:54:19PM +0200, Miklos Szeredi wrote:
+> On Wed, Aug 05, 2020 at 10:24:23AM +0200, Miklos Szeredi wrote:
+> > On Tue, Aug 4, 2020 at 4:36 PM Miklos Szeredi <miklos@szeredi.hu> wrote:
+> > 
+> > > I think we already lost that with the xattr API, that should have been
+> > > done in a way that fits this philosophy.  But given that we  have "/"
+> > > as the only special purpose char in filenames, and even repetitions
+> > > are allowed, it's hard to think of a good way to do that.  Pity.
+> > 
+> > One way this could be solved is to allow opting into an alternative
+> > path resolution mode.
+> > 
+> > E.g.
+> >   openat(AT_FDCWD, "foo/bar//mnt/info", O_RDONLY | O_ALT);
 > 
-> In general this looks fine.
+> Proof of concept patch and test program below.
 > 
-> It's a bit #ifdef heavy. Maybe some of those can be cleaned up a bit
-> with some wrapper inlines?
-
-Looking at it once more, looks like more or less the same level of 
-#ifdefs as things like CONFIG_ALTIVEC for instance. I can't really see 
-much opportunities to clean it up.
-
+> Opted for triple slash in the hope that just maybe we could add a global
+> /proc/sys/fs/resolve_alt knob to optionally turn on alternative (non-POSIX) path
+> resolution without breaking too many things.  Will try that later...
 > 
->> diff --git a/arch/powerpc/kernel/ptrace/ptrace-novsx.c b/arch/powerpc/kernel/ptrace/ptrace-novsx.c
->> index b2dc4e92d11a..8f87a11f3f8c 100644
->> --- a/arch/powerpc/kernel/ptrace/ptrace-novsx.c
->> +++ b/arch/powerpc/kernel/ptrace/ptrace-novsx.c
->> @@ -28,6 +29,9 @@ int fpr_get(struct task_struct *target, const struct user_regset *regset,
->>   
->>   	return user_regset_copyout(&pos, &count, &kbuf, &ubuf,
->>   				   &target->thread.fp_state, 0, -1);
->> +#else
->> +	return 0;
->> +#endif
-> 
-> Should we return -ENODEV/EIO here? Wonder if another arch can give us a clue.
-> 
+> Comments?
 
-Looks like we have to do another way  ... another #ifdef ... in the 
-definition of native_regsets[] in ptrace-view.c . And then we should be 
-able to not build ptrace-novsx.c at all. Will try that.
+Hell, NO.  This is unspeakably tasteless.  And full of lovely corner cases wrt
+symlink bodies, etc.
 
-Christophe
+Consider that one NAKed.  I'm seriously unhappy with the entire fsinfo thing
+in general, but this one is really over the top.
