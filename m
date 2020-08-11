@@ -2,254 +2,380 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCDA8C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 20:18:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE9B9C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 20:18:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93FD0206DC
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 20:18:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82D0E206DC
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 20:18:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vo3D3jiZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="zULSQsAh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726515AbgHKUSI (ORCPT
+        id S1726529AbgHKUSa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 16:18:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48222 "EHLO
+        Tue, 11 Aug 2020 16:18:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725889AbgHKUSG (ORCPT
+        with ESMTP id S1725889AbgHKUS3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 16:18:06 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6587AC06174A;
-        Tue, 11 Aug 2020 13:18:06 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id e4so6199pjd.0;
-        Tue, 11 Aug 2020 13:18:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zfMPfxlj9mnYSLIV0WYfjRsLk+y/Wj9/5di1DzKlu4A=;
-        b=Vo3D3jiZYaRY97UjJMHl5peOZNkjgg0nT5+KrFR/zRvraG+C1vXAfHdHlc/8EXJKwy
-         WHW+HELFPyLVZV9mSHq8KC3ZOaaCrRYxaFxINEXN0DGjNZlVRS9jU5PU1ZdWzZ65IRMt
-         NKiOVgxjPdOuzSftkW+YCMzpDeDiVJvOzOo76nVtqS+3XopiRAchf2xplIY2JKh530dX
-         yHiUXRHv0q49oGMNbI2yWXskvIKqPgqpuOkBVA1WgIahwyevNevHKmcWYvlZfbpYNtkE
-         NzOm1REDirZAOMX+yTd7WJ8+3XvKVvJxpQ9K9kehv0Zbnfz6gtW3Xt23dZlUXIyvY41V
-         kZAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=zfMPfxlj9mnYSLIV0WYfjRsLk+y/Wj9/5di1DzKlu4A=;
-        b=aFMub2BJ33xldpQ8aaTBd8xGi3zDBx6O4Z4dg/niK0HpKFPkpOZ9+L4SrqS/C+B9O+
-         BZWks+HYSH7VfLRSyMDzlmMW8m23AbGY2ThYy2YFn/ZokEtfPj2UYb4ylO5cWMzkZ8JE
-         yM+9CUtAjV348iUx7N5YhykbmL4fIR4rhF2dWMZIuFyYSYLRjk9FyH2i6GbuQv4qXmjl
-         IbJ9cb6DDclOOXGRDKEUXWpZGv+KEaNmeRPleIKDQBYiEdt3s8ol6eFg8sSDlBd4t0yW
-         L89HTM2LikYvPz4cz85aX91Kgwdd8JZbr/5sW0+FHILvURCDZnn7m+PXbQoBLhVH9Kf9
-         fyQw==
-X-Gm-Message-State: AOAM531wxXwdRqKICc9rjcu3w5OL52ka5uSirhiDugos9JCjGJ2KrCFh
-        h3UbbhGYymKXvDyqNPFvwBYIDnm9
-X-Google-Smtp-Source: ABdhPJwx+XwIfTUurOq1zzJvgJCvLcB+ntPddzGOQynwee7YXCeD/2OXIsCxxFhtHvLvJYvrsjWVEg==
-X-Received: by 2002:a17:90a:230d:: with SMTP id f13mr2571253pje.116.1597177085586;
-        Tue, 11 Aug 2020 13:18:05 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id e65sm25749472pfe.91.2020.08.11.13.18.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Aug 2020 13:18:04 -0700 (PDT)
-Subject: Re: [PATCH v1] usb: typec: tcpm: Fix TDA 2.2.1.1 and TDA 2.2.1.2
- failures
-To:     Badhri Jagan Sridharan <badhri@google.com>
-Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        USB <linux-usb@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20200811011126.130297-1-badhri@google.com>
- <ef32ea96-16c8-772b-2c80-8df43ee8f668@roeck-us.net>
- <CAPTae5Lhty3rJymi-4gANjUoz79_LujdjddS9oT=vpOxTSecdQ@mail.gmail.com>
- <20200811184507.GB86545@roeck-us.net>
- <CAPTae5KFxTS+QPnN1Qt_miOFdVYuyuDD2m=jH_Fo87F_C4tTBw@mail.gmail.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- xsFNBE6H1WcBEACu6jIcw5kZ5dGeJ7E7B2uweQR/4FGxH10/H1O1+ApmcQ9i87XdZQiB9cpN
- RYHA7RCEK2dh6dDccykQk3bC90xXMPg+O3R+C/SkwcnUak1UZaeK/SwQbq/t0tkMzYDRxfJ7
- nyFiKxUehbNF3r9qlJgPqONwX5vJy4/GvDHdddSCxV41P/ejsZ8PykxyJs98UWhF54tGRWFl
- 7i1xvaDB9lN5WTLRKSO7wICuLiSz5WZHXMkyF4d+/O5ll7yz/o/JxK5vO/sduYDIlFTvBZDh
- gzaEtNf5tQjsjG4io8E0Yq0ViobLkS2RTNZT8ICq/Jmvl0SpbHRvYwa2DhNsK0YjHFQBB0FX
- IdhdUEzNefcNcYvqigJpdICoP2e4yJSyflHFO4dr0OrdnGLe1Zi/8Xo/2+M1dSSEt196rXaC
- kwu2KgIgmkRBb3cp2vIBBIIowU8W3qC1+w+RdMUrZxKGWJ3juwcgveJlzMpMZNyM1jobSXZ0
- VHGMNJ3MwXlrEFPXaYJgibcg6brM6wGfX/LBvc/haWw4yO24lT5eitm4UBdIy9pKkKmHHh7s
- jfZJkB5fWKVdoCv/omy6UyH6ykLOPFugl+hVL2Prf8xrXuZe1CMS7ID9Lc8FaL1ROIN/W8Vk
- BIsJMaWOhks//7d92Uf3EArDlDShwR2+D+AMon8NULuLBHiEUQARAQABzTJHdWVudGVyIFJv
- ZWNrIChMaW51eCBhY2NvdW50KSA8bGludXhAcm9lY2stdXMubmV0PsLBgQQTAQIAKwIbAwYL
- CQgHAwIGFQgCCQoLBBYCAwECHgECF4ACGQEFAlVcphcFCRmg06EACgkQyx8mb86fmYFg0RAA
- nzXJzuPkLJaOmSIzPAqqnutACchT/meCOgMEpS5oLf6xn5ySZkl23OxuhpMZTVX+49c9pvBx
- hpvl5bCWFu5qC1jC2eWRYU+aZZE4sxMaAGeWenQJsiG9lP8wkfCJP3ockNu0ZXXAXwIbY1O1
- c+l11zQkZw89zNgWgKobKzrDMBFOYtAh0pAInZ9TSn7oA4Ctejouo5wUugmk8MrDtUVXmEA9
- 7f9fgKYSwl/H7dfKKsS1bDOpyJlqhEAH94BHJdK/b1tzwJCFAXFhMlmlbYEk8kWjcxQgDWMu
- GAthQzSuAyhqyZwFcOlMCNbAcTSQawSo3B9yM9mHJne5RrAbVz4TWLnEaX8gA5xK3uCNCeyI
- sqYuzA4OzcMwnnTASvzsGZoYHTFP3DQwf2nzxD6yBGCfwNGIYfS0i8YN8XcBgEcDFMWpOQhT
- Pu3HeztMnF3HXrc0t7e5rDW9zCh3k2PA6D2NV4fews9KDFhLlTfCVzf0PS1dRVVWM+4jVl6l
- HRIAgWp+2/f8dx5vPc4Ycp4IsZN0l1h9uT7qm1KTwz+sSl1zOqKD/BpfGNZfLRRxrXthvvY8
- BltcuZ4+PGFTcRkMytUbMDFMF9Cjd2W9dXD35PEtvj8wnEyzIos8bbgtLrGTv/SYhmPpahJA
- l8hPhYvmAvpOmusUUyB30StsHIU2LLccUPPOwU0ETofVZwEQALlLbQeBDTDbwQYrj0gbx3bq
- 7kpKABxN2MqeuqGr02DpS9883d/t7ontxasXoEz2GTioevvRmllJlPQERVxM8gQoNg22twF7
- pB/zsrIjxkE9heE4wYfN1AyzT+AxgYN6f8hVQ7Nrc9XgZZe+8IkuW/Nf64KzNJXnSH4u6nJM
- J2+Dt274YoFcXR1nG76Q259mKwzbCukKbd6piL+VsT/qBrLhZe9Ivbjq5WMdkQKnP7gYKCAi
- pNVJC4enWfivZsYupMd9qn7Uv/oCZDYoBTdMSBUblaLMwlcjnPpOYK5rfHvC4opxl+P/Vzyz
- 6WC2TLkPtKvYvXmdsI6rnEI4Uucg0Au/Ulg7aqqKhzGPIbVaL+U0Wk82nz6hz+WP2ggTrY1w
- ZlPlRt8WM9w6WfLf2j+PuGklj37m+KvaOEfLsF1v464dSpy1tQVHhhp8LFTxh/6RWkRIR2uF
- I4v3Xu/k5D0LhaZHpQ4C+xKsQxpTGuYh2tnRaRL14YMW1dlI3HfeB2gj7Yc8XdHh9vkpPyuT
- nY/ZsFbnvBtiw7GchKKri2gDhRb2QNNDyBnQn5mRFw7CyuFclAksOdV/sdpQnYlYcRQWOUGY
- HhQ5eqTRZjm9z+qQe/T0HQpmiPTqQcIaG/edgKVTUjITfA7AJMKLQHgp04Vylb+G6jocnQQX
- JqvvP09whbqrABEBAAHCwWUEGAECAA8CGwwFAlVcpi8FCRmg08MACgkQyx8mb86fmYHNRQ/+
- J0OZsBYP4leJvQF8lx9zif+v4ZY/6C9tTcUv/KNAE5leyrD4IKbnV4PnbrVhjq861it/zRQW
- cFpWQszZyWRwNPWUUz7ejmm9lAwPbr8xWT4qMSA43VKQ7ZCeTQJ4TC8kjqtcbw41SjkjrcTG
- wF52zFO4bOWyovVAPncvV9eGA/vtnd3xEZXQiSt91kBSqK28yjxAqK/c3G6i7IX2rg6pzgqh
- hiH3/1qM2M/LSuqAv0Rwrt/k+pZXE+B4Ud42hwmMr0TfhNxG+X7YKvjKC+SjPjqp0CaztQ0H
- nsDLSLElVROxCd9m8CAUuHplgmR3seYCOrT4jriMFBtKNPtj2EE4DNV4s7k0Zy+6iRQ8G8ng
- QjsSqYJx8iAR8JRB7Gm2rQOMv8lSRdjva++GT0VLXtHULdlzg8VjDnFZ3lfz5PWEOeIMk7Rj
- trjv82EZtrhLuLjHRCaG50OOm0hwPSk1J64R8O3HjSLdertmw7eyAYOo4RuWJguYMg5DRnBk
- WkRwrSuCn7UG+qVWZeKEsFKFOkynOs3pVbcbq1pxbhk3TRWCGRU5JolI4ohy/7JV1TVbjiDI
- HP/aVnm6NC8of26P40Pg8EdAhajZnHHjA7FrJXsy3cyIGqvg9os4rNkUWmrCfLLsZDHD8FnU
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <8a2e77f4-1470-ebf0-402c-df90ab6332bb@roeck-us.net>
-Date:   Tue, 11 Aug 2020 13:18:03 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 11 Aug 2020 16:18:29 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 675E9C06174A
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 13:18:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=LQfBOeOjjqS/nBAqElZF8KgMdzWHn+FKx6prXkYnbW4=; b=zULSQsAh02JS664sm85VUUbGih
+        cK0gSoPEAcgmphhHuR6xfQKwwNeiaSPzZdVm8c0+NmHKrfBNMnDj4DH1ek/yhguOrGGiokFTIb59N
+        cDFnYJIMPY9OSMCNQe/9MuJQ2ktHe4yJoJW20pHNXzsOVZL3TZkyEi7f5Ks/Zni6WVZa64xBjd6Hk
+        GdlX1s4Rl2UFmitejGXIaSdHmReyFQAqWyS2FfKRe+bs21IRTe694scXMKUdKyoENFiGwG96ZkAU9
+        9S+gC2u7Ic/MBCLGFHPOMB4lGVw2DLP/dhRz4p42OeQj/saxo1Zm/22ZmHRqOCWjelmGh1Vob0W8x
+        z+BvRtPg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k5aid-0001H9-J1; Tue, 11 Aug 2020 20:17:59 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 916843012C3;
+        Tue, 11 Aug 2020 22:17:55 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 76B9D2B05AEA1; Tue, 11 Aug 2020 22:17:55 +0200 (CEST)
+Date:   Tue, 11 Aug 2020 22:17:55 +0200
+From:   peterz@infradead.org
+To:     =?iso-8859-1?Q?J=FCrgen_Gro=DF?= <jgross@suse.com>
+Cc:     Marco Elver <elver@google.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        fenghua.yu@intel.com, "H. Peter Anvin" <hpa@zytor.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        yu-cheng.yu@intel.com, sdeep@vmware.com,
+        virtualization@lists.linux-foundation.org,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        syzbot <syzbot+8db9e1ecde74e590a657@syzkaller.appspotmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Wei Liu <wei.liu@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH] x86/paravirt: Add missing noinstr to arch_local*()
+ helpers
+Message-ID: <20200811201755.GI35926@hirez.programming.kicks-ass.net>
+References: <20200807113838.GA3547125@elver.google.com>
+ <e5bf3e6a-efff-7170-5ee6-1798008393a2@suse.com>
+ <CANpmjNPau_DEYadey9OL+iFZKEaUTqnFnyFs1dU12o00mg7ofA@mail.gmail.com>
+ <20200807151903.GA1263469@elver.google.com>
+ <20200811074127.GR3982@worktop.programming.kicks-ass.net>
+ <a2dffeeb-04f0-8042-b39a-b839c4800d6f@suse.com>
+ <20200811081205.GV3982@worktop.programming.kicks-ass.net>
+ <07f61573-fef1-e07c-03f2-a415c88dec6f@suse.com>
+ <20200811092054.GB2674@hirez.programming.kicks-ass.net>
+ <20200811094651.GH35926@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <CAPTae5KFxTS+QPnN1Qt_miOFdVYuyuDD2m=jH_Fo87F_C4tTBw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200811094651.GH35926@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/11/20 12:39 PM, Badhri Jagan Sridharan wrote:
-> On Tue, Aug 11, 2020 at 11:45 AM Guenter Roeck <linux@roeck-us.net> wrote:
->>
->> On Tue, Aug 11, 2020 at 11:24:07AM -0700, Badhri Jagan Sridharan wrote:
->>> On Mon, Aug 10, 2020 at 6:51 PM Guenter Roeck <linux@roeck-us.net> wrote:
->>>>
->>>> On 8/10/20 6:11 PM, Badhri Jagan Sridharan wrote:
->>>>> >From the spec:
->>>>> "7.1.5 Response to Hard Resets
->>>>> Hard Reset Signaling indicates a communication failure has occurred and
->>>>> the Source Shall stop driving VCONN, Shall remove Rp from the VCONN pin
->>>>> and Shall drive VBUS to vSafe0V as shown in Figure 7-9. The USB connection
->>>>> May reset during a Hard Reset since the VBUS voltage will be less than
->>>>> vSafe5V for an extended period of time. After establishing the vSafe0V
->>>>> voltage condition on VBUS, the Source Shall wait tSrcRecover before
->>>>> re-applying VCONN and restoring VBUS to vSafe5V. A Source Shall conform
->>>>> to the VCONN timing as specified in [USB Type-C 1.3]."
->>>>>
->>>>> Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
->>>>> ---
->>>>>  drivers/usb/typec/tcpm/tcpm.c | 16 +++++++++++++---
->>>>>  1 file changed, 13 insertions(+), 3 deletions(-)
->>>>>
->>>>> diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
->>>>> index 3ef37202ee37..e41c4e5d3c71 100644
->>>>> --- a/drivers/usb/typec/tcpm/tcpm.c
->>>>> +++ b/drivers/usb/typec/tcpm/tcpm.c
->>>>> @@ -3372,13 +3372,19 @@ static void run_state_machine(struct tcpm_port *port)
->>>>>                       tcpm_set_state(port, SNK_HARD_RESET_SINK_OFF, 0);
->>>>>               break;
->>>>>       case SRC_HARD_RESET_VBUS_OFF:
->>>>> -             tcpm_set_vconn(port, true);
->>>>> +             /*
->>>>> +              * 7.1.5 Response to Hard Resets
->>>>> +              * Hard Reset Signaling indicates a communication failure has occurred and the
->>>>> +              * Source Shall stop driving VCONN, Shall remove Rp from the VCONN pin and Shall
->>>>> +              * drive VBUS to vSafe0V as shown in Figure 7-9.
->>>>> +              */
->>>>> +             tcpm_set_vconn(port, false);
->>>>>               tcpm_set_vbus(port, false);
->>>>>               tcpm_set_roles(port, port->self_powered, TYPEC_SOURCE,
->>>>>                              tcpm_data_role_for_source(port));
->>>>> -             tcpm_set_state(port, SRC_HARD_RESET_VBUS_ON, PD_T_SRC_RECOVER);
->>>>
->>>> I am a bit concerned about this. If I understand correctly, it means that
->>>> we won't turn VBUS back on unless a SRC_HARD_RESET_VBUS_OFF PD event is received.
->>>> Is that correct ? What happens if that event is never received ?
->>>>
->>>> Thanks,
->>>> Guenter
->>>
->>> The term PD event is a little ambiguous to me. Trying to summarize the workflow.
->>> Lower level tcpc driver would have to call tcpm_vbus_change which
->>> would in-turn trigger TCPM_VBUS_EVENT
->>> and queries port->tcpc->get_vbus to get the vbus status. It is not
->>> really a PD protocol driven event hence the
->>> confusion.
->>>
->>> "What happens if that event is never received ?"
->>> Yeah TCPM would be in SRC_HARD_RESET_VBUS_OFF till the tcpc calls the
->>> tcpm_vbus_change.
->>> Do you suspect that existing tcpc would not have the capability to
->>> monitor vbus status while sourcing and call tcpm_vbus_change?
->>>
->> That, or the driver might be buggy, or the hardware does't signal a status
->> update, or the update gets lost. I think we should have some backup,
->> to trigger if the event is not received in a reasonable amout of time.
->> I don't know if the specification has some kind of maximum limit. If
->> not, we should still have something
->>
->> Thanks,
->> Guenter
-> 
-> Got it ! The specification actually has a bound for vbus off.
-> tSafe0V  - Time to reach vSafe0V max - 650ms. (PD_T_SAFE_0V).
-> So I will bound it to that.
-> 
+On Tue, Aug 11, 2020 at 11:46:51AM +0200, peterz@infradead.org wrote:
 
-Excellent. Thanks a lot for looking into this!
+> So let me once again see if I can't find a better solution for this all.
+> Clearly it needs one :/
 
-Guenter
+So the below boots without triggering the debug code from Marco -- it
+should allow nesting local_irq_save/restore under raw_local_irq_*().
 
->>From Table 7-12 Sequence Description for a Source Initiated Hard Reset:
-> 4.Policy Engine waits tPSHardReset after sending Hard Reset Signaling
-> and then tells the Device Policy Manager to instruct the power supply
-> to perform a Hard Reset. The transition to vSafe0V Shall occur within
-> tSafe0V (t2).
-> 5 After tSrcRecover the Source applies power to VBUS in an attempt to
-> re-establish communication with the Sink and resume USB Default
-> Operation. The transition to vSafe5V Shall occur within tSrcTurnOn
-> (t4).
-> 
-> Thanks,
-> Badhri
-> 
->>
->>> Thanks,
->>> Badhri
->>>
->>>
->>>>>               break;
->>>>>       case SRC_HARD_RESET_VBUS_ON:
->>>>> +             tcpm_set_vconn(port, true);
->>>>>               tcpm_set_vbus(port, true);
->>>>>               port->tcpc->set_pd_rx(port->tcpc, true);
->>>>>               tcpm_set_attached_state(port, true);
->>>>> @@ -3944,7 +3950,11 @@ static void _tcpm_pd_vbus_off(struct tcpm_port *port)
->>>>>               tcpm_set_state(port, SNK_HARD_RESET_WAIT_VBUS, 0);
->>>>>               break;
->>>>>       case SRC_HARD_RESET_VBUS_OFF:
->>>>> -             tcpm_set_state(port, SRC_HARD_RESET_VBUS_ON, 0);
->>>>> +             /*
->>>>> +              * After establishing the vSafe0V voltage condition on VBUS, the Source Shall wait
->>>>> +              * tSrcRecover before re-applying VCONN and restoring VBUS to vSafe5V.
->>>>> +              */
->>>>> +             tcpm_set_state(port, SRC_HARD_RESET_VBUS_ON, PD_T_SRC_RECOVER);
->>>>>               break;
->>>>>       case HARD_RESET_SEND:
->>>>>               break;
->>>>>
->>>>
+I tried unconditional counting, but there's some _reallly_ wonky /
+asymmetric code that wrecks that and I've not been able to come up with
+anything useful.
 
+This one starts counting when local_irq_save() finds it didn't disable
+IRQs while lockdep though it did. At that point, local_irq_restore()
+will decrement and enable things again when it reaches 0.
+
+This assumes local_irq_save()/local_irq_restore() are nested sane, which
+is mostly true.
+
+This leaves #PF, which I fixed in these other patches, but I realized it
+needs fixing for all architectures :-( No bright ideas there yet.
+
+---
+ arch/x86/entry/thunk_32.S       |  5 ----
+ include/linux/irqflags.h        | 45 +++++++++++++++++++-------------
+ init/main.c                     | 16 ++++++++++++
+ kernel/locking/lockdep.c        | 58 +++++++++++++++++++++++++++++++++++++++++
+ kernel/trace/trace_preemptirq.c | 33 +++++++++++++++++++++++
+ 5 files changed, 134 insertions(+), 23 deletions(-)
+
+diff --git a/arch/x86/entry/thunk_32.S b/arch/x86/entry/thunk_32.S
+index 3a07ce3ec70b..f1f96d4d8cd6 100644
+--- a/arch/x86/entry/thunk_32.S
++++ b/arch/x86/entry/thunk_32.S
+@@ -29,11 +29,6 @@ SYM_CODE_START_NOALIGN(\name)
+ SYM_CODE_END(\name)
+ 	.endm
+ 
+-#ifdef CONFIG_TRACE_IRQFLAGS
+-	THUNK trace_hardirqs_on_thunk,trace_hardirqs_on_caller,1
+-	THUNK trace_hardirqs_off_thunk,trace_hardirqs_off_caller,1
+-#endif
+-
+ #ifdef CONFIG_PREEMPTION
+ 	THUNK preempt_schedule_thunk, preempt_schedule
+ 	THUNK preempt_schedule_notrace_thunk, preempt_schedule_notrace
+diff --git a/include/linux/irqflags.h b/include/linux/irqflags.h
+index bd5c55755447..67e2a16d3846 100644
+--- a/include/linux/irqflags.h
++++ b/include/linux/irqflags.h
+@@ -23,12 +23,16 @@
+   extern void lockdep_hardirqs_on_prepare(unsigned long ip);
+   extern void lockdep_hardirqs_on(unsigned long ip);
+   extern void lockdep_hardirqs_off(unsigned long ip);
++  extern void lockdep_hardirqs_save(unsigned long ip, unsigned long flags);
++  extern void lockdep_hardirqs_restore(unsigned long ip, unsigned long flags);
+ #else
+   static inline void lockdep_softirqs_on(unsigned long ip) { }
+   static inline void lockdep_softirqs_off(unsigned long ip) { }
+   static inline void lockdep_hardirqs_on_prepare(unsigned long ip) { }
+   static inline void lockdep_hardirqs_on(unsigned long ip) { }
+   static inline void lockdep_hardirqs_off(unsigned long ip) { }
++  static inline void lockdep_hardirqs_save(unsigned long ip, unsigned long flags) { }
++  static inline void lockdep_hardirqs_restore(unsigned long ip, unsigned long flags) { }
+ #endif
+ 
+ #ifdef CONFIG_TRACE_IRQFLAGS
+@@ -49,10 +53,13 @@ struct irqtrace_events {
+ DECLARE_PER_CPU(int, hardirqs_enabled);
+ DECLARE_PER_CPU(int, hardirq_context);
+ 
+-  extern void trace_hardirqs_on_prepare(void);
+-  extern void trace_hardirqs_off_finish(void);
+-  extern void trace_hardirqs_on(void);
+-  extern void trace_hardirqs_off(void);
++extern void trace_hardirqs_on_prepare(void);
++extern void trace_hardirqs_off_finish(void);
++extern void trace_hardirqs_on(void);
++extern void trace_hardirqs_off(void);
++extern void trace_hardirqs_save(unsigned long flags);
++extern void trace_hardirqs_restore(unsigned long flags);
++
+ # define lockdep_hardirq_context()	(this_cpu_read(hardirq_context))
+ # define lockdep_softirq_context(p)	((p)->softirq_context)
+ # define lockdep_hardirqs_enabled()	(this_cpu_read(hardirqs_enabled))
+@@ -120,17 +127,19 @@ do {						\
+ #else
+ # define trace_hardirqs_on_prepare()		do { } while (0)
+ # define trace_hardirqs_off_finish()		do { } while (0)
+-# define trace_hardirqs_on()		do { } while (0)
+-# define trace_hardirqs_off()		do { } while (0)
+-# define lockdep_hardirq_context()	0
+-# define lockdep_softirq_context(p)	0
+-# define lockdep_hardirqs_enabled()	0
+-# define lockdep_softirqs_enabled(p)	0
+-# define lockdep_hardirq_enter()	do { } while (0)
+-# define lockdep_hardirq_threaded()	do { } while (0)
+-# define lockdep_hardirq_exit()		do { } while (0)
+-# define lockdep_softirq_enter()	do { } while (0)
+-# define lockdep_softirq_exit()		do { } while (0)
++# define trace_hardirqs_on()			do { } while (0)
++# define trace_hardirqs_off()			do { } while (0)
++# define trace_hardirqs_save(flags)		do { } while (0)
++# define trace_hardirqs_restore(flags)		do { } while (0)
++# define lockdep_hardirq_context()		0
++# define lockdep_softirq_context(p)		0
++# define lockdep_hardirqs_enabled()		0
++# define lockdep_softirqs_enabled(p)		0
++# define lockdep_hardirq_enter()		do { } while (0)
++# define lockdep_hardirq_threaded()		do { } while (0)
++# define lockdep_hardirq_exit()			do { } while (0)
++# define lockdep_softirq_enter()		do { } while (0)
++# define lockdep_softirq_exit()			do { } while (0)
+ # define lockdep_hrtimer_enter(__hrtimer)	false
+ # define lockdep_hrtimer_exit(__context)	do { } while (0)
+ # define lockdep_posixtimer_enter()		do { } while (0)
+@@ -185,18 +194,18 @@ do {						\
+ 	do { trace_hardirqs_on(); raw_local_irq_enable(); } while (0)
+ #define local_irq_disable() \
+ 	do { raw_local_irq_disable(); trace_hardirqs_off(); } while (0)
++
+ #define local_irq_save(flags)				\
+ 	do {						\
+ 		raw_local_irq_save(flags);		\
+-		trace_hardirqs_off();			\
++		trace_hardirqs_save(flags);		\
+ 	} while (0)
+ 
+-
+ #define local_irq_restore(flags)			\
+ 	do {						\
+ 		if (raw_irqs_disabled_flags(flags)) {	\
+ 			raw_local_irq_restore(flags);	\
+-			trace_hardirqs_off();		\
++			trace_hardirqs_restore(flags);	\
+ 		} else {				\
+ 			trace_hardirqs_on();		\
+ 			raw_local_irq_restore(flags);	\
+diff --git a/init/main.c b/init/main.c
+index 15bd0efff3df..0873319dcff4 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -1041,6 +1041,22 @@ asmlinkage __visible void __init start_kernel(void)
+ 	sfi_init_late();
+ 	kcsan_init();
+ 
++	/* DEBUG CODE */
++	lockdep_assert_irqs_enabled(); /* Pass. */
++	{
++		unsigned long flags1;
++		raw_local_irq_save(flags1);
++		{
++			unsigned long flags2;
++			lockdep_assert_irqs_enabled(); /* Pass - expectedly blind. */
++			local_irq_save(flags2);
++			lockdep_assert_irqs_disabled(); /* Pass. */
++			local_irq_restore(flags2);
++		}
++		raw_local_irq_restore(flags1);
++	}
++	lockdep_assert_irqs_enabled(); /* FAIL! */
++
+ 	/* Do the rest non-__init'ed, we're now alive */
+ 	arch_call_rest_init();
+ 
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index 3617abb08e31..2c88574b817c 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -3763,6 +3763,30 @@ void noinstr lockdep_hardirqs_on(unsigned long ip)
+ }
+ EXPORT_SYMBOL_GPL(lockdep_hardirqs_on);
+ 
++static DEFINE_PER_CPU(int, hardirqs_disabled);
++
++void lockdep_hardirqs_restore(unsigned long ip, unsigned long flags)
++{
++	if (unlikely(!debug_locks))
++		return;
++
++	if (in_nmi()) {
++		if (!IS_ENABLED(CONFIG_TRACE_IRQFLAGS_NMI))
++			return;
++	} else if (current->lockdep_recursion & LOCKDEP_RECURSION_MASK)
++		return;
++
++	if (__this_cpu_read(hardirqs_disabled) &&
++	    __this_cpu_dec_return(hardirqs_disabled) == 0) {
++
++		lockdep_hardirqs_on_prepare(ip);
++		lockdep_hardirqs_on(ip);
++	} else {
++		lockdep_hardirqs_off(ip);
++	}
++}
++EXPORT_SYMBOL_GPL(lockdep_hardirqs_restore);
++
+ /*
+  * Hardirqs were disabled:
+  */
+@@ -3805,6 +3829,40 @@ void noinstr lockdep_hardirqs_off(unsigned long ip)
+ }
+ EXPORT_SYMBOL_GPL(lockdep_hardirqs_off);
+ 
++void lockdep_hardirqs_save(unsigned long ip, unsigned long flags)
++{
++	if (unlikely(!debug_locks))
++		return;
++
++	/*
++	 * Matching lockdep_hardirqs_on(), allow NMIs in the middle of lockdep;
++	 * they will restore the software state. This ensures the software
++	 * state is consistent inside NMIs as well.
++	 */
++	if (in_nmi()) {
++		if (!IS_ENABLED(CONFIG_TRACE_IRQFLAGS_NMI))
++			return;
++	} else if (current->lockdep_recursion & LOCKDEP_RECURSION_MASK)
++		return;
++
++	/*
++	 * If IRQs were disabled, but IRQ tracking state said enabled we
++	 * 'missed' an update (or are nested inside raw_local_irq_*()) and
++	 * cannot rely on IRQ state to tell us when we should enable again.
++	 *
++	 * Count our way through this.
++	 */
++	if (raw_irqs_disabled_flags(flags)) {
++		if (__this_cpu_read(hardirqs_enabled)) {
++			WARN_ON_ONCE(__this_cpu_read(hardirqs_disabled) != 0);
++			__this_cpu_write(hardirqs_disabled, 1);
++		} else if (__this_cpu_read(hardirqs_disabled))
++			__this_cpu_inc(hardirqs_disabled);
++	}
++	lockdep_hardirqs_off(ip);
++}
++EXPORT_SYMBOL_GPL(lockdep_hardirqs_save);
++
+ /*
+  * Softirqs will be enabled:
+  */
+diff --git a/kernel/trace/trace_preemptirq.c b/kernel/trace/trace_preemptirq.c
+index f10073e62603..080deaa1d9c9 100644
+--- a/kernel/trace/trace_preemptirq.c
++++ b/kernel/trace/trace_preemptirq.c
+@@ -85,6 +85,36 @@ void trace_hardirqs_off(void)
+ EXPORT_SYMBOL(trace_hardirqs_off);
+ NOKPROBE_SYMBOL(trace_hardirqs_off);
+ 
++void trace_hardirqs_save(unsigned long flags)
++{
++	lockdep_hardirqs_save(CALLER_ADDR0, flags);
++
++	if (!this_cpu_read(tracing_irq_cpu)) {
++		this_cpu_write(tracing_irq_cpu, 1);
++		tracer_hardirqs_off(CALLER_ADDR0, CALLER_ADDR1);
++		if (!in_nmi())
++			trace_irq_disable_rcuidle(CALLER_ADDR0, CALLER_ADDR1);
++	}
++}
++EXPORT_SYMBOL(trace_hardirqs_save);
++NOKPROBE_SYMBOL(trace_hardirqs_save);
++
++void trace_hardirqs_restore(unsigned long flags)
++{
++	if (this_cpu_read(tracing_irq_cpu)) {
++		if (!in_nmi())
++			trace_irq_enable_rcuidle(CALLER_ADDR0, CALLER_ADDR1);
++		tracer_hardirqs_on(CALLER_ADDR0, CALLER_ADDR1);
++		this_cpu_write(tracing_irq_cpu, 0);
++	}
++
++	lockdep_hardirqs_restore(CALLER_ADDR0, flags);
++}
++EXPORT_SYMBOL(trace_hardirqs_restore);
++NOKPROBE_SYMBOL(trace_hardirqs_restore);
++
++#ifdef __s390__
++
+ __visible void trace_hardirqs_on_caller(unsigned long caller_addr)
+ {
+ 	if (this_cpu_read(tracing_irq_cpu)) {
+@@ -113,6 +143,9 @@ __visible void trace_hardirqs_off_caller(unsigned long caller_addr)
+ }
+ EXPORT_SYMBOL(trace_hardirqs_off_caller);
+ NOKPROBE_SYMBOL(trace_hardirqs_off_caller);
++
++#endif /* __s390__ */
++
+ #endif /* CONFIG_TRACE_IRQFLAGS */
+ 
+ #ifdef CONFIG_TRACE_PREEMPT_TOGGLE
