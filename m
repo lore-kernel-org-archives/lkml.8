@@ -2,108 +2,141 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ABECC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 09:31:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F7D0C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 09:33:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E31AA20756
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 09:31:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C998420774
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 09:33:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Omj1hGSj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728480AbgHKJbp (ORCPT
+        id S1728433AbgHKJdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 05:31:45 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:39742 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728397AbgHKJbo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 05:31:44 -0400
-Received: from bogon.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxT9x6ZTJfGGAHAA--.60S2;
-        Tue, 11 Aug 2020 17:31:38 +0800 (CST)
-From:   Xingxing Su <suxingxing@loongson.cn>
-To:     Huacai Chen <chenhc@lemote.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Aleksandar Markovic <aleksandar.qemu.devel@gmail.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND] KVM: MIPS/VZ: Fix build error caused by 'kvm_run' cleanup
-Date:   Tue, 11 Aug 2020 17:31:37 +0800
-Message-Id: <1597138297-2105-1-git-send-email-suxingxing@loongson.cn>
-X-Mailer: git-send-email 2.1.0
+        Tue, 11 Aug 2020 05:33:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33560 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728377AbgHKJdj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 05:33:39 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09959C06174A
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 02:33:39 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id c15so6299178lfi.3
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 02:33:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Vr+YAPUn6N4dSx2qVc2bEJB62Hk13xcs0NQkMDb0a3E=;
+        b=Omj1hGSjKXZRe1OLMx57+tZ3KgMo68eDvuhMeeQj/DYbyY/7bi2vWawvkV4mlze3mN
+         qnEHESnfoW5DC939GmMhwMZsoas8HUIUdt6AgPVB9vGCloiAQ++qW02yvHB6IQttb4zh
+         T1E92N6m6cfdtDB6dVgLB1ILze8LIHAxDY+fn33rQXxQDxlyIrlcMlCg46v+BcyAig0r
+         xHyFvYV+bAYFN7qxJKVnQ7aaOyzO+1i7VgS0KIxrf0jyFMI9wvFz91qcyTigQB3FgENs
+         sJCl9sJmfxR+PmP2lpxG9KqqSDYWZhUqiH5aV9j3fTZdCM61iGBszPRB7+Jqma+kIzum
+         25Rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Vr+YAPUn6N4dSx2qVc2bEJB62Hk13xcs0NQkMDb0a3E=;
+        b=dk6PSYA4wGsujbVmBQwZ8aenRoRh9POPKWgVRuXHjsLmt8qrwdz2mK4vuRwQdjG/Oo
+         xXDj907WQUq9SSHVHDEUdZk7U9JOV3Nf5u/Pp4z7apx+6g+Jsyf88DSb5xZo8N/AFA8h
+         xQhZpdMfje/+z2tLotBWnspRaEs/vNS1Z6BFJ1hxcneIEMVaLhx2JLTdIf5Iqwtmqjtm
+         amTgIrvgCaZdY1YjiYy6UwHEXJW15WLcmDBE0EZpOBMFqkpatxhs7E7kNL7ajAcOqw98
+         YHV09XdsuzynkV3Sb4FNHCsUP+/UQcg33qYoEU84SKAwTEd7rT6LEOYwDKBt0MdDxHMN
+         Z7dg==
+X-Gm-Message-State: AOAM530Am5dDn9T7Aioguo7MUyu+Vsol3jMYzFXjMTDBnNADALeqEZao
+        vYg0x3bavDHFsschJncMbZV2+RFxS9cYTCF8SWU=
+X-Google-Smtp-Source: ABdhPJzDIV6ej2CnAWTam+6M7DMCu/58gN3ERRhWB631uDglP2D16ZpLlMoWSMKJRFK7bmUEmYTGXH9gxP4r2GV6ePI=
+X-Received: by 2002:a19:ae0a:: with SMTP id f10mr2783256lfc.100.1597138417413;
+ Tue, 11 Aug 2020 02:33:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=y
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf9DxT9x6ZTJfGGAHAA--.60S2
-X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-        VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYl7k0a2IF6F4UM7kC6x804xWl14x267AK
-        xVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGw
-        A2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r4j
-        6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Cr
-        1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv
-        0487M2AExVAIFx02aVAFz4v204v7Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
-        IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Cr0_Gr1UMcvjeVCFs4IE7xkEbVWUJVW8JwAC
-        jcxG0xvY0x0EwIxGrwAKzVC20s0267AEwI8IwI0ExsIj0wCY02Avz4vE14v_GFWl42xK82
-        IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC2
-        0s026x8GjcxK67AKxVWUJVWUGwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMI
-        IF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF
-        0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I
-        8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUzMa0DUUUU
-X-CM-SenderInfo: pvx0x0xj0l0wo6or00hjvr0hdfq/1tbiAQAFC13QvMLodgACsg
+References: <20200811033753.783276-1-daeho43@gmail.com> <20200811071552.GA8365@xiangao.remote.csb>
+ <3059d7b0-cf50-4315-e5a9-8d9c00965a7c@huawei.com> <CACOAw_yic7GF3E1zEvZ=Gea3XW4fMYdg-cNuu4wfg+uTKMcJqA@mail.gmail.com>
+In-Reply-To: <CACOAw_yic7GF3E1zEvZ=Gea3XW4fMYdg-cNuu4wfg+uTKMcJqA@mail.gmail.com>
+From:   Daeho Jeong <daeho43@gmail.com>
+Date:   Tue, 11 Aug 2020 18:33:26 +0900
+Message-ID: <CACOAw_wi3C0iyTVYc3075d4K27NT7BGMGzsKFDDozf=98vWMcA@mail.gmail.com>
+Subject: Re: [f2fs-dev] [PATCH] f2fs: change virtual mapping way for
+ compression pages
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     Gao Xiang <hsiangkao@redhat.com>,
+        Daeho Jeong <daehojeong@google.com>, kernel-team@android.com,
+        linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit c34b26b98caca48ec9ee9 ("KVM: MIPS: clean up redundant 'kvm_run'
-parameters") remove the 'kvm_run' parameter in kvm_vz_gpsi_lwc2.
+Plus, when we use vmap(), vmap() normally executes in a short time
+like vm_map_ram().
+But, sometimes, it has a very long delay.
 
-The following build error:
-
-arch/mips/kvm/vz.c: In function ‘kvm_trap_vz_handle_gpsi’:
-arch/mips/kvm/vz.c:1243:43: error: ‘run’ undeclared (first use in this function)
-   er = kvm_vz_gpsi_lwc2(inst, opc, cause, run, vcpu);
-                                           ^~~
-arch/mips/kvm/vz.c:1243:43: note: each undeclared identifier is reported only 
-once for each function it appears in
-scripts/Makefile.build:283: recipe for target 'arch/mips/kvm/vz.o' failed
-make[2]: *** [arch/mips/kvm/vz.o] Error 1
-scripts/Makefile.build:500: recipe for target 'arch/mips/kvm' failed
-make[1]: *** [arch/mips/kvm] Error 2
-Makefile:1785: recipe for target 'arch/mips' failed
-make: *** [arch/mips] Error 2
-
-Signed-off-by: Xingxing Su <suxingxing@loongson.cn>
----
- +cc Paolo Bonzini <pbonzini@redhat.com> and kvm@vger.kernel.org.
-
- arch/mips/kvm/vz.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/arch/mips/kvm/vz.c b/arch/mips/kvm/vz.c
-index 3932f76..49c6a2a 100644
---- a/arch/mips/kvm/vz.c
-+++ b/arch/mips/kvm/vz.c
-@@ -1142,7 +1142,6 @@ static enum emulation_result kvm_vz_gpsi_cache(union mips_instruction inst,
- #ifdef CONFIG_CPU_LOONGSON64
- static enum emulation_result kvm_vz_gpsi_lwc2(union mips_instruction inst,
- 					      u32 *opc, u32 cause,
--					      struct kvm_run *run,
- 					      struct kvm_vcpu *vcpu)
- {
- 	unsigned int rs, rd;
-@@ -1240,7 +1239,7 @@ static enum emulation_result kvm_trap_vz_handle_gpsi(u32 cause, u32 *opc,
- #endif
- #ifdef CONFIG_CPU_LOONGSON64
- 	case lwc2_op:
--		er = kvm_vz_gpsi_lwc2(inst, opc, cause, run, vcpu);
-+		er = kvm_vz_gpsi_lwc2(inst, opc, cause, vcpu);
- 		break;
- #endif
- 	case spec3_op:
--- 
-2.1.0
-
+2020=EB=85=84 8=EC=9B=94 11=EC=9D=BC (=ED=99=94) =EC=98=A4=ED=9B=84 6:28, D=
+aeho Jeong <daeho43@gmail.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
+>
+> Actually, as you can see, I use the whole zero data blocks in the test fi=
+le.
+> It can maximize the effect of changing virtual mapping.
+> When I use normal files which can be compressed about 70% from the
+> original file,
+> The vm_map_ram() version is about 2x faster than vmap() version.
+>
+> 2020=EB=85=84 8=EC=9B=94 11=EC=9D=BC (=ED=99=94) =EC=98=A4=ED=9B=84 4:55,=
+ Chao Yu <yuchao0@huawei.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
+> >
+> > On 2020/8/11 15:15, Gao Xiang wrote:
+> > > On Tue, Aug 11, 2020 at 12:37:53PM +0900, Daeho Jeong wrote:
+> > >> From: Daeho Jeong <daehojeong@google.com>
+> > >>
+> > >> By profiling f2fs compression works, I've found vmap() callings are
+> > >> bottlenecks of f2fs decompression path. Changing these with
+> > >> vm_map_ram(), we can enhance f2fs decompression speed pretty much.
+> > >>
+> > >> [Verification]
+> > >> dd if=3D/dev/zero of=3Ddummy bs=3D1m count=3D1000
+> > >> echo 3 > /proc/sys/vm/drop_caches
+> > >> dd if=3Ddummy of=3D/dev/zero bs=3D512k
+> > >>
+> > >> - w/o compression -
+> > >> 1048576000 bytes (0.9 G) copied, 1.999384 s, 500 M/s
+> > >> 1048576000 bytes (0.9 G) copied, 2.035988 s, 491 M/s
+> > >> 1048576000 bytes (0.9 G) copied, 2.039457 s, 490 M/s
+> > >>
+> > >> - before patch -
+> > >> 1048576000 bytes (0.9 G) copied, 9.146217 s, 109 M/s
+> > >> 1048576000 bytes (0.9 G) copied, 9.997542 s, 100 M/s
+> > >> 1048576000 bytes (0.9 G) copied, 10.109727 s, 99 M/s
+> > >>
+> > >> - after patch -
+> > >> 1048576000 bytes (0.9 G) copied, 2.253441 s, 444 M/s
+> > >> 1048576000 bytes (0.9 G) copied, 2.739764 s, 365 M/s
+> > >> 1048576000 bytes (0.9 G) copied, 2.185649 s, 458 M/s
+> > >
+> > > Indeed, vmap() approach has some impact on the whole
+> > > workflow. But I don't think the gap is such significant,
+> > > maybe it relates to unlocked cpufreq (and big little
+> > > core difference if it's on some arm64 board).
+> >
+> > Agreed,
+> >
+> > I guess there should be other reason causing the large performance
+> > gap, scheduling, frequency, or something else.
+> >
+> > >
+> > >
+> > >
+> > > _______________________________________________
+> > > Linux-f2fs-devel mailing list
+> > > Linux-f2fs-devel@lists.sourceforge.net
+> > > https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
+> > > .
+> > >
