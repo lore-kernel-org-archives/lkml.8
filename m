@@ -2,91 +2,77 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26162C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 08:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DED95C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 08:28:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA1D420678
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 08:25:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B11FD206B5
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 08:28:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ghue3xrO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ovrImObt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728320AbgHKIZf (ORCPT
+        id S1728321AbgHKI2S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 04:25:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51326 "EHLO
+        Tue, 11 Aug 2020 04:28:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728178AbgHKIZf (ORCPT
+        with ESMTP id S1728224AbgHKI2R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 04:25:35 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAC15C06174A
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 01:25:34 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id g75so1534870wme.4
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 01:25:34 -0700 (PDT)
+        Tue, 11 Aug 2020 04:28:17 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F433C061787
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 01:28:17 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id a5so11755708ioa.13
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 01:28:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=s4WfRm8FL/l3vhau3PXNvN3lXdJUqSYFtG1h+otOPkA=;
-        b=Ghue3xrOtNhufzYQGfXg/CZW/hyk0FgPLGhC7FEOBZzB63zistsT+SbJ43i8BpMid9
-         Zpd3qyTjLgKkuC/hCjCQWSf0eDU0CnK8G1QfwjXWat9QoQTVfNAFpwJNFdK+IDWEbujX
-         NueiMNP3/qlT3snIibb25eZGOTnRB5bFoa5Vg=
+        bh=eo2L93RRdI84FxyH7GVcLy69tN4zbbbp3YsbGWN8W5I=;
+        b=ovrImObt5hFzeUHg8X9Ivfh3lAA7VBIl9LCNEjyZ+T5wLui90H+gv3jxG8DHDLkPAx
+         DLytiwMEw7Vw7kbtHS6SocODZ1+imZr/4PHHlykhwsMFBIWV+Z6O3upXU2haehmDs93k
+         VGvY3om8WRG/bqfYQfYwMa6bHJGlvNOT/BjTp1JNnEmdzryc+MreDyBkDt5FMYrrsk1d
+         b4bKf3fqedm6Ff0LUtd6FYjdXBNa/+LnSFZ6nfwuXAtCxuSJOaBrfILnL5d/9xoVoV1/
+         j4YoVgvW6ioUJwSYNHYPEVuoDJBLFLE7SNIxvCBC5zulRQGg24R5jahQ4ghMbLL8I8sU
+         y64g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=s4WfRm8FL/l3vhau3PXNvN3lXdJUqSYFtG1h+otOPkA=;
-        b=rIrVDnumUwWUzWIgitk4PPjfgzvC2818GrnDK5btPgWFrV9EtXkTaok5r9qpWaQ1Fc
-         V3F7HqPsQiXOdFNU6qoxGM0nQimZ2hFqv0Shuuob8n3EoEZ6tBW2i5X4zY+0h4q6dHCU
-         p4qNJB0/mxx+HehHnmgmWA52RJV6RAQb+udN3DUcmikgJeoGU+MVBhnQAFUjKzdi05TZ
-         eBMQMHcJbFtbt4md1aIA50gyzPJ708LgnEiqDGCOOWX6L6LE4FReX1Z5lkDpUWoBTsVT
-         FioJ+MaZf1KSh34GwRf+DEUx2diw5FVbrFk0LXUzH9Ln9Wk8ugV3Oc/y32IaL9mkgDmd
-         xhgg==
-X-Gm-Message-State: AOAM533/WfMjdEm+zHiPgC4stzUbVVeNgLLggUxT1HANMOdxC9vbdG5f
-        ZmGSYVn2lnqhhJ76W0Eh7YvmgpENaQEQVMYlA5GL4A==
-X-Google-Smtp-Source: ABdhPJwjb89iO8CnJzAD6D8G5SaTNey2aeRIeFGTY6hY7rG3v1COnZB5ucBxyvm0UwEdRBuaOI6zY0/AiQ/wzBwJhHw=
-X-Received: by 2002:a7b:c7c6:: with SMTP id z6mr3123230wmk.17.1597134333428;
- Tue, 11 Aug 2020 01:25:33 -0700 (PDT)
+        bh=eo2L93RRdI84FxyH7GVcLy69tN4zbbbp3YsbGWN8W5I=;
+        b=ctE/thhuW0rVR58wxlV5Mn263bg2q2NTgkosnA8Zs4mI8J9NmmYFiyBYQ13abK9o84
+         Zh9npIQp2bgxXDbMSHJeNzNixITmeHmDMIDvAf8fTUYoBJ+sBWzKsOdv3JyKrxA4aDX5
+         0H7i1OjLpFKfRNIo47Lh5MTSEb858i1rSp3WBh+og/YcV8O6vL0z2Xgpss+3SgXDgQZf
+         E4KcQ9JVZ+1wNr0Z2G1LoHPjefW+TW+kAN2ZuRb0aau//vjpbCwC3GFG46Klm/I774am
+         pTiNZYH9ztWkaszfri1nxvbPzZ3rrnM9Ty/qjrl7zmsavrOHYkcTxs0ZAbEdmGrPA/15
+         qscg==
+X-Gm-Message-State: AOAM532vkq8deoOtLQ6zj361bgQoXwykxS6Q1OH81pFJiLUSOBxzNHe+
+        fKpg/61mMgbg8+JcUtUzT8/TU4lUP+SSF+FwU7D26ZJHJuERBw==
+X-Google-Smtp-Source: ABdhPJw8lJUpnFEPPL5OFUHqYYnO3+VCUnRb4InhMNNIoUVe4NPoNSm8G+RDmsolpVU/P08BFJzLbidP1QTMOjqgN5s=
+X-Received: by 2002:a6b:144d:: with SMTP id 74mr21503920iou.49.1597134496103;
+ Tue, 11 Aug 2020 01:28:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <1596020585-11517-1-git-send-email-brent.lu@intel.com>
- <1596198365-10105-1-git-send-email-brent.lu@intel.com> <1596198365-10105-3-git-send-email-brent.lu@intel.com>
- <s5h5za3ajvb.wl-tiwai@suse.de> <DM6PR11MB3642AE90DF98956CCEDE6C2F974F0@DM6PR11MB3642.namprd11.prod.outlook.com>
- <s5hd04a90o4.wl-tiwai@suse.de> <DM6PR11MB3642B5BC2E1E0708088526D8974D0@DM6PR11MB3642.namprd11.prod.outlook.com>
- <63bca214-3434-16c6-1b60-adf323aec554@linux.intel.com> <DM6PR11MB3642D9BE1E5DAAB8B78B84B0974D0@DM6PR11MB3642.namprd11.prod.outlook.com>
- <s5hpn873by6.wl-tiwai@suse.de> <DM6PR11MB36423A9D28134811AD5A911F974A0@DM6PR11MB3642.namprd11.prod.outlook.com>
- <6466847a-8aae-24f7-d727-36ba75e95f98@linux.intel.com> <DM6PR11MB364259049769F6EF3B84AABD97480@DM6PR11MB3642.namprd11.prod.outlook.com>
- <3f3baf5e-f73d-9cd6-cbfb-36746071e126@linux.intel.com> <CAGvk5PohOP0Yv22tb53EX=ZLB9_vOMb=iujTh64OvHmjC1d4mg@mail.gmail.com>
- <DM6PR11MB3642AC7F8EC47EB48B384D4797450@DM6PR11MB3642.namprd11.prod.outlook.com>
- <CAGvk5PogmqfEnFRA8hzby+AGgbOSvbELamh_1=eA9KTpyBMPYQ@mail.gmail.com> <s5htux939x1.wl-tiwai@suse.de>
-In-Reply-To: <s5htux939x1.wl-tiwai@suse.de>
-From:   Yu-Hsuan Hsu <yuhsuan@chromium.org>
-Date:   Tue, 11 Aug 2020 16:25:22 +0800
-Message-ID: <CAGvk5PpcmkZ2HarqeCDaXm4id=84wYs-u4vWxJunHaf09gj66g@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] ASoC: Intel: Add period size constraint on strago board
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     "Lu, Brent" <brent.lu@intel.com>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Rojewski, Cezary" <cezary.rojewski@intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Sam McNally <sammc@chromium.org>,
-        Mark Brown <broonie@kernel.org>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Daniel Stuart <daniel.stuart14@gmail.com>,
-        "yuhsuan@google.com" <yuhsuan@google.com>,
-        Damian van Soelen <dj.vsoelen@gmail.com>
+References: <20200810151804.199494191@linuxfoundation.org>
+In-Reply-To: <20200810151804.199494191@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 11 Aug 2020 13:58:04 +0530
+Message-ID: <CA+G9fYsZs6u8LH6gJ=bnc8UWrNzLZXnaq2oMY+psNCQPzyPxdQ@mail.gmail.com>
+Subject: Re: [PATCH 4.19 00/48] 4.19.139-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Steven Rostedt <rostedt@goodmis.org>, zanussi@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
@@ -94,121 +80,216 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Takashi Iwai <tiwai@suse.de> =E6=96=BC 2020=E5=B9=B48=E6=9C=8811=E6=97=A5 =
-=E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=883:43=E5=AF=AB=E9=81=93=EF=BC=9A
+On Mon, 10 Aug 2020 at 21:00, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> On Tue, 11 Aug 2020 04:29:24 +0200,
-> Yu-Hsuan Hsu wrote:
-> >
-> > Lu, Brent <brent.lu@intel.com> =E6=96=BC 2020=E5=B9=B48=E6=9C=8811=E6=
-=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8A=E5=8D=8810:17=E5=AF=AB=E9=81=93=EF=BC=
-=9A
-> > >
-> > > >
-> > > > Sorry for the late reply. CRAS does not set the period size when us=
-ing it.
-> > > > The default period size is 256, which consumes the samples quickly(=
-about 49627
-> > > > fps when the rate is 48000 fps) at the beginning of the playback.
-> > > > Since CRAS write samples with the fixed frequency, it triggers unde=
-rruns
-> > > > immidiately.
-> > > >
-> > > > According to Brent, the DSP is using 240 period regardless the hw_p=
-aram. If the
-> > > > period size is 256, DSP will read 256 samples each time but only co=
-nsume 240
-> > > > samples until the ring buffer of DSP is full. This behavior makes t=
-he samples in
-> > > > the ring buffer of kernel consumed quickly. (Not sure whether the e=
-xplanation is
-> > > > correct. Need Brent to confirm it.)
-> > > >
-> > > > Unfortunately, we can not change the behavior of DSP. After some ex=
-periments,
-> > > > we found that the issue can be fixed if we set the period size to 2=
-40. With the
-> > > > same frequency as the DSP, the samples are consumed stably. Because=
- everyone
-> > > > can trigger this issue when using the driver without setting the pe=
-riod size, we
-> > > > think it is a general issue that should be fixed in the kernel.
-> > >
-> > > I check the code and just realized CRAS does nothing but request maxi=
-mum buffer
-> > > size. As I know the application needs to decide the buffer time and p=
-eriod time so
-> > > ALSA could generate a hw_param structure with proper period size inst=
-ead of using
-> > > fixed constraint in machine driver because driver has no idea about t=
-he latency you
-> > > want.
-> > >
-> > > You can use snd_pcm_hw_params_set_buffer_time_near() and
-> > > snd_pcm_hw_params_set_period_time_near() to get a proper configuratio=
-n of
-> > > buffer and period parameters according to the latency requirement. In=
- the CRAS
-> > > code, there is a UCM variable to support this: DmaPeriodMicrosecs. I =
-tested it on
-> > > Celes and it looks quite promising. It seems to me that adding constr=
-aint in machine
-> > > driver is not necessary.
-> > >
-> > > SectionDevice."Speaker".0 {
-> > >         Value {
-> > >                 PlaybackPCM "hw:chtrt5650,0"
-> > >                 DmaPeriodMicrosecs "5000"
-> > > ...
-> > >
-> > > [   52.434761] sound pcmC1D0p: hw_param
-> > > [   52.434767] sound pcmC1D0p:   ACCESS 0x1
-> > > [   52.434770] sound pcmC1D0p:   FORMAT 0x4
-> > > [   52.434772] sound pcmC1D0p:   SUBFORMAT 0x1
-> > > [   52.434776] sound pcmC1D0p:   SAMPLE_BITS [16:16]
-> > > [   52.434779] sound pcmC1D0p:   FRAME_BITS [32:32]
-> > > [   52.434782] sound pcmC1D0p:   CHANNELS [2:2]
-> > > [   52.434785] sound pcmC1D0p:   RATE [48000:48000]
-> > > [   52.434788] sound pcmC1D0p:   PERIOD_TIME [5000:5000]
-> > > [   52.434791] sound pcmC1D0p:   PERIOD_SIZE [240:240]
-> > > [   52.434794] sound pcmC1D0p:   PERIOD_BYTES [960:960]
-> > > [   52.434797] sound pcmC1D0p:   PERIODS [852:852]
-> > > [   52.434799] sound pcmC1D0p:   BUFFER_TIME [4260000:4260000]
-> > > [   52.434802] sound pcmC1D0p:   BUFFER_SIZE [204480:204480]
-> > > [   52.434805] sound pcmC1D0p:   BUFFER_BYTES [817920:817920]
-> > > [   52.434808] sound pcmC1D0p:   TICK_TIME [0:0]
-> > >
-> > > Regards,
-> > > Brent
-> > Hi Brent,
-> >
-> > Yes, I know we can do it to fix the issue as well. As I mentioned
-> > before, we wanted to fix it in kernel because it is a real issue,
-> > isn't it? Basically, a driver should work with any param it supports.
-> > But in this case, everyone can trigger underrun if he or she does not
-> > the period size to 240. If you still think it's not necessary, I can
-> > modify UCM to make CRAS set the appropriate period size.
+> This is the start of the stable review cycle for the 4.19.139 release.
+> There are 48 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 >
-> How does it *not* work if you set other than period size 240, more
-> exactly?
+> Responses should be made by Wed, 12 Aug 2020 15:17:47 +0000.
+> Anything received after that time might be too late.
 >
-> The hw_constraint to a fixed period size must be really an exception.
-> If you look at other drivers, you won't find any other doing such.
-> It already indicates that something is wrong.
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.19.139-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.19.y
+> and the diffstat can be found below.
 >
-> Usually the fixed period size comes from the hardware limitation and
-> defined in snd_pcm_hardware.  Or, sometimes it's an alignment issue.
-> If you need more than that, you should doubt what's really not
-> working.
+> thanks,
 >
->
-> Takashi
-Thank Takashi,
+> greg k-h
 
-As I mentioned before, if the period size is set to 256, the measured
-rate of sample-consuming will be around 49627 fps. It causes underrun
-because the rate we set is 48000 fps. This behavior also happen on the
-other period rate except for 240.
+Results from Linaro=E2=80=99s test farm.
+Regressions on x86_64.
 
-Thanks,
-Yu-Hsuan
+We have added LTP tracing test suite this week and started noticing
+kernel BUG on x86_64 KASAN enabled kernel. Which means this issue might not=
+ be
+specific to this release candidate.
+
+[   90.134426] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+[   90.141651] BUG: KASAN: use-after-free in trace_stack_print+0x133/0x150
+[   90.148264] Read of size 8 at addr ffff888228015ffc by task cat/3569
+[   90.154613]
+[   90.156106] CPU: 3 PID: 3569 Comm: cat Not tainted 4.19.139-rc1 #1
+[   90.162278] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
+2.2 05/23/2018
+[   90.169669] Call Trace:
+[   90.172115]  dump_stack+0x7d/0xaa
+[   90.175463]  print_address_description+0x67/0x229
+[   90.180165]  ? trace_stack_print+0x133/0x150
+[   90.184460]  kasan_report.cold+0xae/0x2fe
+[   90.188469]  __asan_load8+0x54/0x90
+[   90.191959]  trace_stack_print+0x133/0x150
+[   90.196051]  print_trace_line+0x3c7/0x930
+[   90.200063]  ? tracing_buffers_read+0x310/0x310
+[   90.204589]  tracing_read_pipe+0x2db/0x530
+[   90.208687]  __vfs_read+0xe5/0x3c0
+[   90.212093]  ? __x64_sys_copy_file_range+0x360/0x360
+[   90.217059]  ? fsnotify+0x7cb/0x7f0
+[   90.220550]  ? _cond_resched+0x14/0x30
+[   90.224296]  ? __inode_security_revalidate+0x5d/0x70
+[   90.229262]  ? avc_policy_seqno+0x21/0x30
+[   90.233273]  ? security_file_permission+0xc6/0xf0
+[   90.237970]  ? security_file_permission+0xc6/0xf0
+[   90.242667]  ? rw_verify_area+0x73/0x140
+[   90.246584]  vfs_read+0xc8/0x1d0
+[   90.249808]  ksys_read+0xbb/0x170
+[   90.253120]  ? kernel_write+0xa0/0xa0
+[   90.256786]  ? __audit_syscall_exit+0x3bb/0x430
+[   90.261320]  __x64_sys_read+0x3e/0x50
+[   90.264985]  do_syscall_64+0x63/0x160
+[   90.268649]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[   90.273693] RIP: 0033:0x7f9596d9e071
+[   90.277266] Code: fe ff ff 48 8d 3d 3f 71 09 00 48 83 ec 08 e8 26
+ee 01 00 66 0f 1f 44 00 00 48 8d 05 91 e8 2c 00 8b 00 85 c0 75 13 31
+c0 0f 05 <48> 3d 00 f0 ff ff 77 57 c3 66 0f 1f 44 00 00 41 54 49 89 d4
+55 48
+[   90.296011] RSP: 002b:00007ffee5028688 EFLAGS: 00000246 ORIG_RAX:
+0000000000000000
+[   90.303575] RAX: ffffffffffffffda RBX: 0000000000020000 RCX: 00007f9596d=
+9e071
+[   90.310699] RDX: 0000000000020000 RSI: 00007f9597269000 RDI: 00000000000=
+00006
+[   90.317823] RBP: 0000000000020000 R08: 00000000ffffffff R09: 00000000000=
+00000
+[   90.324947] R10: 00000000000008c6 R11: 0000000000000246 R12: 00007f95972=
+69000
+[   90.332071] R13: 0000000000000006 R14: 0000000000000f8e R15: 00000000000=
+20000
+[   90.339194]
+[   90.340684] The buggy address belongs to the page:
+[   90.345470] page:ffffea0008a00540 count:1 mapcount:0
+mapping:0000000000000000 index:0x0
+[   90.353461] flags: 0x200000000000000()
+[   90.357215] raw: 0200000000000000 dead000000000100 dead000000000200
+0000000000000000
+[   90.364952] raw: 0000000000000000 0000000000000000 00000001ffffffff
+0000000000000000
+[   90.372681] page dumped because: kasan: bad access detected
+[   90.378245]
+[   90.379736] Memory state around the buggy address:
+[   90.384523]  ffff888228015f00: 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00
+[   90.391741]  ffff888228015f80: 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00
+[   90.398951] >ffff888228016000: fb fb fb fb fb fb fb fb fb fb fb fb
+fb fb fb fb
+[   90.406161]                    ^
+[   90.409407]  ffff888228016080: fc fc fc fc fc fc fc fc fb fb fb fb
+fb fb fb fb
+[   90.416665]  ffff888228016100: fb fb fb fb fb fb fb fb fc fc fc fc
+fc fc fc fc
+[   90.423876] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+[   90.431095] Disabling lock debugging due to kernel taint
+
+
+steps to reproduce:
+- boot x86_64 with kasan enabled 4.19 stable kernel
+- cd /opt/ltp
+- ./runltp -f tracing
+
+Full test log link,
+https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/build/v4.19.138-=
+49-gb0e1bc72f7dd/testrun/3050053/suite/linux-log-parser/test/check-kernel-b=
+ug-1656536/log
+
+kernel-config link,
+https://builds.tuxbuild.com/BDfU1nbOpLG7hFIf-nv5dQ/kernel.config
+
+Summary
+------------------------------------------------------------------------
+
+kernel: 4.19.139-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.19.y
+git commit: b0e1bc72f7ddff40c7c5b68313d3ac76495d678d
+git describe: v4.19.138-49-gb0e1bc72f7dd
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
+ild/v4.19.138-49-gb0e1bc72f7dd
+
+No fixes (compared to build v4.19.138)
+
+
+Ran 34683 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- juno-r2-compat
+- juno-r2-kasan
+- nxp-ls2088
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+- x86-kasan
+
+Test Suites
+-----------
+* build
+* igt-gpu-tools
+* install-android-platform-tools-r2600
+* kselftest
+* kselftest/drivers
+* kselftest/filesystems
+* kselftest/net
+* kvm-unit-tests
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-cve-tests
+* ltp-ipc-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* ltp-tracing-tests
+* v4l2-compliance
+* ltp-commands-tests
+* ltp-controllers-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-io-tests
+* ltp-math-tests
+* network-basic-tests
+* perf
+* libhugetlbfs
+* ltp-hugetlb-tests
+* ltp-mm-tests
+* ltp-open-posix-tests
+* ssuite
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-native/drivers
+* kselftest-vsyscall-mode-native/filesystems
+* kselftest-vsyscall-mode-native/net
+* kselftest-vsyscall-mode-none
+* kselftest-vsyscall-mode-none/drivers
+* kselftest-vsyscall-mode-none/filesystems
+* kselftest-vsyscall-mode-none/net
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
