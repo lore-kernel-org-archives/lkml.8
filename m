@@ -2,100 +2,93 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CACB6C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:50:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6593C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:53:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DDA8206DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:50:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O/Glpljm"
+	by mail.kernel.org (Postfix) with ESMTP id 7980D20756
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:53:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728584AbgHKKup (ORCPT
+        id S1728570AbgHKKxz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 06:50:45 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:39375 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728464AbgHKKuj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 06:50:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597143038;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Nmyx2UdRvq7Iu84Oic8xZ8d1B/WpUnFI8Ebnoq7B4AY=;
-        b=O/Glpljmg/uf81j0Rm8bATWHMUw5R1J3QZ4jxRJZ3/q1EliDPcYKIvowoHp7r63FiKwrOz
-        vpfTEcY6pSa+fkNtUqd+mwK9tfe+qdIarucJTNI7ObO9ObcAQSkY0LmtczGycdQl+nRpVf
-        jxXhAK2ZSbTGLlFs60BpxMcZiXAHhrc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-401-C1RI_Y4bOHGUZiHwZUK3Jg-1; Tue, 11 Aug 2020 06:50:34 -0400
-X-MC-Unique: C1RI_Y4bOHGUZiHwZUK3Jg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9A704106B249;
-        Tue, 11 Aug 2020 10:50:32 +0000 (UTC)
-Received: from krava (unknown [10.40.195.156])
-        by smtp.corp.redhat.com (Postfix) with SMTP id C8F001001281;
-        Tue, 11 Aug 2020 10:50:28 +0000 (UTC)
-Date:   Tue, 11 Aug 2020 12:50:27 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [RFC] libperf: Add support for user space counter access
-Message-ID: <20200811105027.GD699846@krava>
-References: <20200807230517.57114-1-robh@kernel.org>
- <20200808102208.GA619980@krava>
- <CAL_Jsq+gfqyqCx3Yuc6TsbXjYSLfJQhhPUnwRVjpJgwL24v1Qg@mail.gmail.com>
+        Tue, 11 Aug 2020 06:53:55 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41820 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728326AbgHKKxy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 06:53:54 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id D8A7AAB3E;
+        Tue, 11 Aug 2020 10:54:13 +0000 (UTC)
+Date:   Tue, 11 Aug 2020 12:53:52 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Paul Menzel <pmenzel@molgen.mpg.de>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        John Ogness <john.ogness@linutronix.de>,
+        Linus Torvalds <torvalds@linuxfoundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-embedded@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] init/Kconfig: Increase default log buffer size
+ from 128 KB to 512 KB
+Message-ID: <20200811105352.GG6215@alley>
+References: <20200811092924.6256-1-pmenzel@molgen.mpg.de>
+ <20200811092924.6256-2-pmenzel@molgen.mpg.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+gfqyqCx3Yuc6TsbXjYSLfJQhhPUnwRVjpJgwL24v1Qg@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <20200811092924.6256-2-pmenzel@molgen.mpg.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 12:11:23PM -0600, Rob Herring wrote:
-> On Sat, Aug 8, 2020 at 4:22 AM Jiri Olsa <jolsa@redhat.com> wrote:
-> >
-> > On Fri, Aug 07, 2020 at 05:05:17PM -0600, Rob Herring wrote:
-> > > x86 and arm64 can both support direct access of event counters in
-> > > userspace. The access sequence is less than trivial and currently exists
-> > > in perf test code (tools/perf/arch/x86/tests/rdpmc.c) with copies in
-> > > projects such as PAPI and libpfm4.
-> > >
-> > > Patches to add arm64 userspace support are pending[1].
-> > >
-> > > For this RFC, looking for a yes, seems like a good idea, or no, go away we
-> > > don't want this in libperf.
-> >
-> > hi,
-> > looks great!
-> >
-> > I wanted to add this for very long time.. so yes, we want this ;-)
+On Tue 2020-08-11 11:29:24, Paul Menzel wrote:
+> Commit f17a32e97e (let LOG_BUF_SHIFT default to 17) from 2008 was the
+> last time, the the default log buffer size bump was increased.
 > 
-> Thanks for the quick feedback. Would this be better implemented as a
-> fast path for perf_evsel__read()? If so, how to get the mmap data
+> Machines have evolved, and on current hardware, enough memory is
+> present, and some devices have over 200 PCI devices, like a two socket
+> Skylake-E server, resulting a lot of lines.
+> 
+> Therefore, increase the default from 128 KB to 512 KB. Anyone, with
+> limited memory, can still lower it.
+> 
+> --- a/init/Kconfig
+> +++ b/init/Kconfig
+> @@ -681,9 +681,9 @@ config IKHEADERS
+>  	  kheaders.ko is built which can be loaded on-demand to get access to headers.
+>  
+>  config LOG_BUF_SHIFT
+> -	int "Kernel log buffer size (16 => 64KB, 17 => 128KB)"
+> +	int "Kernel log buffer size (17 => 128KB, 19 => 512KB)"
+>  	range 12 25
+> -	default 17
+> +	default 19
+>  	depends on PRINTK
+>  	help
+>  	  Select the minimal kernel log buffer size as a power of 2.
 
-if it works for all events, which I'm not sure of
+Honestly, I do not have experience with changing the defaults. People
+hacking small devices might complain. Well, this can be solved
+by increasing the default only when BASE_FULL is set.
 
-> which is associated with a evlist rather than a evsel?
+I am personally fine with increasing the default when BASE_FULL
+is set. The amount of messages is growing over time because of
+increasing complexity of both the hardware and software.
+Fortunately also the amount of available memory is growing.
 
-not sure what you mean, you can mmap evsel, not evlist
+Well, this should get discussed in wider audience. Adding some
+people into CC.
 
-jirka
+JFYI, it started with report of lost messages, see
+https://lore.kernel.org/lkml/264bfbae-122d-9c41-59ea-6413f91bd866@molgen.mpg.de/
 
+Best Regards,
+Petr
