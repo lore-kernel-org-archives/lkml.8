@@ -2,129 +2,123 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DBE3C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:19:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C882FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:21:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2557E206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:19:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A521F20768
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:21:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UsZATr2c"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="nIVENNEC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728801AbgHKOTr (ORCPT
+        id S1728821AbgHKOVR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 10:19:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49260 "EHLO
+        Tue, 11 Aug 2020 10:21:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728516AbgHKOTo (ORCPT
+        with ESMTP id S1728516AbgHKOVP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 10:19:44 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3273C06174A;
-        Tue, 11 Aug 2020 07:19:43 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id bo3so13254605ejb.11;
-        Tue, 11 Aug 2020 07:19:43 -0700 (PDT)
+        Tue, 11 Aug 2020 10:21:15 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 619D6C06174A
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 07:21:15 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id q19so536506pll.0
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 07:21:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=YEsfFaQhbNo4Nh7eCvn4HhXSvpFeuv1zORb6ik42jgw=;
-        b=UsZATr2cNAFxqiVxvPOK8ahADy4L1dDNduK7GACjlWsMDN5tCavCLbrwWccj5laels
-         4LF3Y0HrqBHLTow17Q3+C4k0XZPQIOvHsdgOjn0bG6GOXutiI91kMxU6m5wb5wCCvwnh
-         mQASFylYiGrx78sXVASy1jobZxKWsX2jZoixnvnHwNExSwW7ezpU+6IEVUh0+Fg49LSR
-         RKCDtYHTRgWUD0gD+o/mo1+s/LzfcKF7tVr5YZEVMwgI2Qwr1Bj1xgVDZgzfhJY7aXbj
-         mTjbk4cSq+6wW44wOzKpu8ynei0pQlM4yVJlilDZi3N/Qmr5qIC2m35QNCnJo+loQNdK
-         YAbA==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=kpp0GdsRYi0omTcELeAUu1IMsTjPcKqE7Mbm6MS6NsM=;
+        b=nIVENNECr3scMV3Vs0Pk19gB4ND0y15sXhPBCf6HIrSOLZcwArP5jkRsMgiiQTGGTT
+         K0gMxPkFjppSFqMHHcUessGfQrn6yLDwJVujYkXTbgWxsrBk81BWCRbILztlDnoLnIeC
+         BpyLr590T6RGyyAtJD9fxl1IUWlqdwNvb5Ln8ftjU4NOEtRmEp3zQx5JmssgcR4DzXi8
+         Mp19H0InTGtz41UCno+m+z6cPqH/ruxaU9dY8w9qr1hSyROsHdH5a71TiiykxPR+G4pq
+         9HkTKlqfovpph0d9YnJbb1rMkgNhlWiWtUDEkRgHqMjRBFvZoWMi20V++sq6rE6Jkni8
+         pRpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=YEsfFaQhbNo4Nh7eCvn4HhXSvpFeuv1zORb6ik42jgw=;
-        b=VrwOzhDJ4ZOyogbNll2UxXlSIcWtD56PSzHnn2ihjAyYOJZ9XEyxK0IH9AwIxZsn7D
-         Wm7RWoQ6lIdNbZyiX+QHY7rk34SbqcX9N6HvYn6pAOj9mx0F0oWHkO5r0A4VNoBBY2ot
-         5Gz0jquGGWd6YX4q0s3QYOGs2wQBY4H3GEvYK4izh1EIp90IshHOW6mYzFeCwL/2wii/
-         Rg6CxnjgrpEFimewwkGsL69yhc7ToebuRg9lwA5ZWFd6r37/CtHc9W4+8L2sUBp2UN8O
-         Q0jjJHyQNZOL34eYJ6O/p3RWuHSM5bcw0SOJAYFGIDDWay8YfGbzs5xwNNYyZdtjEwzk
-         3F2Q==
-X-Gm-Message-State: AOAM530qXFSaLeZGQg8+ujxwFMjOCvayZRPWU1SFYfz9iS2gmaxwnqVO
-        fCBtukkAam7MJoA0l1+G45s=
-X-Google-Smtp-Source: ABdhPJzyb7M7mG3dDtcLnkTiqXUcQEES7gFqcW6KVcEobXEubQ5NScG4FLPERR6RFSxXw5NYrc0idg==
-X-Received: by 2002:a17:906:73d9:: with SMTP id n25mr8793159ejl.412.1597155582400;
-        Tue, 11 Aug 2020 07:19:42 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:598:b888:52c9:44c:d55b:5f94:2fc4])
-        by smtp.gmail.com with ESMTPSA id q15sm1467050edc.74.2020.08.11.07.19.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Aug 2020 07:19:41 -0700 (PDT)
-From:   Bean Huo <huobean@gmail.com>
-To:     alim.akhtar@samsung.com, avri.altman@wdc.com,
-        asutoshd@codeaurora.org, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, stanley.chu@mediatek.com,
-        beanhuo@micron.com, bvanassche@acm.org, tomas.winkler@intel.com,
-        cang@codeaurora.org
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] scsi: ufs: no need to send one Abort Task TM in case the task in DB was cleared
-Date:   Tue, 11 Aug 2020 16:18:59 +0200
-Message-Id: <20200811141859.27399-3-huobean@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200811141859.27399-1-huobean@gmail.com>
-References: <20200811141859.27399-1-huobean@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=kpp0GdsRYi0omTcELeAUu1IMsTjPcKqE7Mbm6MS6NsM=;
+        b=VhWudY33MmFOdj3f0uSr23NtYTW4lH/o9h/KRUq1wdzeduZJbyT117lsCIBHtRoUNe
+         8wlgwvXF/l/kPYjordAB6kizoic4RrZpWXaw83OHy5WqpxNyIngeyLOs96X7uaeNzO/g
+         Y6oPMszOsP4iNvEf8WzjvK7wMKLBrVmqsXrvUBK5tTTJsrNMLzSf+i2sTir6Lz3shqS4
+         thVS7kqCg14s+KzmxsYokVUdyZLet1RX/fvYqyTeGDDCRnU3zve0qQslPLFj9PrU0xHu
+         T6CVaaGQ8fAohgl5EOPbwYYeNLq6nplJkcqUS80QkNB7U8Qk/zxoPwxHIJy/tXBCcvYu
+         NLNw==
+X-Gm-Message-State: AOAM533W3RrU1mrDs0RrEK/ipH5usAW4FzNLRhvDfcx7UjjkYO+UZj93
+        So9hF3ieuKA30CZg3tJH1CdrGw==
+X-Google-Smtp-Source: ABdhPJxfOVBzlRW7S7Ar5cYVRxLsJ7EGz70ufrLcvD+osyMmeYUOi6NLWrhlSTcaWP9RyHAaH9gABA==
+X-Received: by 2002:a17:902:b941:: with SMTP id h1mr1142974pls.200.1597155674883;
+        Tue, 11 Aug 2020 07:21:14 -0700 (PDT)
+Received: from [192.168.1.182] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id j13sm26263358pfa.149.2020.08.11.07.21.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Aug 2020 07:21:14 -0700 (PDT)
+Subject: Re: possible deadlock in __io_queue_deferred
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     syzbot <syzbot+996f91b6ec3812c48042@syzkaller.appspotmail.com>,
+        io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        viro@zeniv.linux.org.uk
+References: <00000000000035fdf505ac87b7f9@google.com>
+ <76cc7c43-2ebb-180d-c2c8-912972a3f258@kernel.dk>
+ <20200811140010.gigc2amchytqmrkk@steredhat>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <504b4b08-30c1-4ca8-ab3b-c9f0b58f0cfa@kernel.dk>
+Date:   Tue, 11 Aug 2020 08:21:12 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200811140010.gigc2amchytqmrkk@steredhat>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bean Huo <beanhuo@micron.com>
+On 8/11/20 8:00 AM, Stefano Garzarella wrote:
+> On Mon, Aug 10, 2020 at 09:55:17AM -0600, Jens Axboe wrote:
+>> On 8/10/20 9:36 AM, syzbot wrote:
+>>> Hello,
+>>>
+>>> syzbot found the following issue on:
+>>>
+>>> HEAD commit:    449dc8c9 Merge tag 'for-v5.9' of git://git.kernel.org/pub/..
+>>> git tree:       upstream
+>>> console output: https://syzkaller.appspot.com/x/log.txt?x=14d41e02900000
+>>> kernel config:  https://syzkaller.appspot.com/x/.config?x=9d25235bf0162fbc
+>>> dashboard link: https://syzkaller.appspot.com/bug?extid=996f91b6ec3812c48042
+>>> compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+>>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=133c9006900000
+>>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1191cb1a900000
+>>>
+>>> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+>>> Reported-by: syzbot+996f91b6ec3812c48042@syzkaller.appspotmail.com
+>>
+>> Thanks, the below should fix this one.
+> 
+> Yeah, it seems right to me, since only __io_queue_deferred() (invoked by
+> io_commit_cqring()) can be called with 'completion_lock' held.
 
-If the bit corresponds to a task in the Doorbell register has been
-cleared, no need to poll the status of the task on the device side
-and to send an Abort Task TM. Instead, let it directly goto cleanup.
+Right
 
-Meanwhile, to keep original debug print, move this goto below the debug
-print.
+> Just out of curiosity, while exploring the code I noticed that we call
+> io_commit_cqring() always with the 'completion_lock' held, except in the
+> io_poll_* functions.
+> 
+> That's because then there can't be any concurrency?
 
-Signed-off-by: Bean Huo <beanhuo@micron.com>
----
- drivers/scsi/ufs/ufshcd.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+Do you mean the iopoll functions? Because we're definitely holding it
+for the io_poll_* functions.
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 66fe814c8725..5f09cda7b21c 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -6434,14 +6434,8 @@ static int ufshcd_abort(struct scsi_cmnd *cmd)
- 		goto out;
- 	}
- 
--	if (!(reg & (1 << tag))) {
--		dev_err(hba->dev,
--		"%s: cmd was completed, but without a notifying intr, tag = %d",
--		__func__, tag);
--	}
--
- 	/* Print Transfer Request of aborted task */
--	dev_err(hba->dev, "%s: Device abort task at tag %d\n", __func__, tag);
-+	dev_info(hba->dev, "%s: Device abort task at tag %d\n", __func__, tag);
- 
- 	/*
- 	 * Print detailed info about aborted request.
-@@ -6462,6 +6456,13 @@ static int ufshcd_abort(struct scsi_cmnd *cmd)
- 	}
- 	hba->req_abort_count++;
- 
-+	if (!(reg & (1 << tag))) {
-+		dev_err(hba->dev,
-+		"%s: cmd was completed, but without a notifying intr, tag = %d",
-+		__func__, tag);
-+		goto cleanup;
-+	}
-+
- 	/* Skip task abort in case previous aborts failed and report failure */
- 	if (lrbp->req_abort_skip) {
- 		err = -EIO;
 -- 
-2.17.1
+Jens Axboe
 
