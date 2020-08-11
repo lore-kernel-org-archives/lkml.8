@@ -2,150 +2,125 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EC9EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 23:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7FC2C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 23:11:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 280B020B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 23:11:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597187479;
-	bh=SvT0rvnnvQrqVaaOf5x7WAW1GmNYgN3HsG7gujkrphg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=L3Q3XVQONnPD9Klo7bvnYJ9NnvqdUrFq2Wjru69cjuYp79EsegbZa16xxVLnBbO77
-	 LyQuuEKEKHJEcO44Po+gNk+5L2quief0UPzs/2yX7j5tQ0dBap9V/ZPOBAiRL8FPgd
-	 Z+4HcAmO55wmAuwPzt+T1fhf+pMRo2RZg+9mj95A=
+	by mail.kernel.org (Postfix) with ESMTP id C242B2073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 23:11:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="dVOjrOnN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726479AbgHKXLR (ORCPT
+        id S1726489AbgHKXLy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 19:11:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46690 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726115AbgHKXLR (ORCPT
+        Tue, 11 Aug 2020 19:11:54 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:59456 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726164AbgHKXLy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 19:11:17 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 102D7C06174A
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 16:11:17 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id v12so132044ljc.10
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 16:11:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wLNNVJSdWQONVjpAUUPGUdY9DEPRmdPHuKKqpzDsfqg=;
-        b=a5GhrKjBf0PAmxmSEbjWUBWZJO4eP+0G9mthkovjp8ofgJc7Jk8Qoqa1S58g+k2mDE
-         fcAYRDnfGmnARo0/Q2cxcOrRvBNGF9me0fXh6xWZv950UXqcW/1TYtzsx/E7oz4GBSn2
-         88Q218pBpIdSZTW+PUNZxzbLstopizX7AChLM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wLNNVJSdWQONVjpAUUPGUdY9DEPRmdPHuKKqpzDsfqg=;
-        b=WpPHexHp1f6IwYx9j0bxSEz8HTNEhrPdUwYySkhJqm52ePgy2v+g29e1Th/FVrOl5T
-         utNJGVzrIGHqPxwYnjhZ9a0Uw9lO+umYt0fuWCPpp+Mt0EPhuft3vGLBhV4tFxWYv6mX
-         VLLunW3AK0POy0TXNAOxg+fTwcjPMYp6+4O4iiMlmwXIKjf+YTq7a9DsVmwXGqEkijCf
-         XnGE4dhRIlCHLgULxkCtv+7eQSikI3U5v3cGdQp6NIC/JA5s6C/sz0pVqqrJQvBNQX3x
-         Rg5dFdq7icVFtZ64sQt4b6rKYRfcU7H+rl0dG1CIQsAyReITJO1qBBCHQ/3DZU3rvVdq
-         Bo8w==
-X-Gm-Message-State: AOAM5310MEr4ZCxc5RLQmJTP0qWAXYhInAfMFzUHm8I62p07LVGTqWAX
-        xaVCEroHJ4R3/SNOPpDSwQ/y+0J056g=
-X-Google-Smtp-Source: ABdhPJzY4tz7TAe2Xt/iPktFsvErbPxLeTcge0nL+TyrUBcB7K4/y3OeHmCxD/NYQspCCphFcEz6qQ==
-X-Received: by 2002:a2e:a483:: with SMTP id h3mr356579lji.76.1597187475043;
-        Tue, 11 Aug 2020 16:11:15 -0700 (PDT)
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
-        by smtp.gmail.com with ESMTPSA id h2sm42507ljl.16.2020.08.11.16.11.13
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Aug 2020 16:11:13 -0700 (PDT)
-Received: by mail-lj1-f177.google.com with SMTP id h19so116678ljg.13
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 16:11:13 -0700 (PDT)
-X-Received: by 2002:a2e:9a11:: with SMTP id o17mr3849775lji.314.1597187473000;
- Tue, 11 Aug 2020 16:11:13 -0700 (PDT)
+        Tue, 11 Aug 2020 19:11:54 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07BN7wlD097318;
+        Tue, 11 Aug 2020 23:11:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=sPV5JQ+e38i1YMMKVPdkIvnzXO+BvLyLRtktxRzbHX8=;
+ b=dVOjrOnNQx2fPB/uYH7ZCSEXYnnrE9keiBdVc6lR+HHDAoQ0VM9WKGWF4VGlat4QeSm2
+ GbD5+Fo5NVa5z6Wn1Kx0l97/LFY0mXyXCVfdx8ETTpXasZEgHVDvil1R1esgc3DxhM30
+ QeM2/PimG1/G9xqi0z2N7kJACSCS/s8fr+T6iSW/bLwLSp5bGQDmRywCmQrY3fNofLmR
+ z03oKc9ZmO53CS5kD48OdnPn7vRyBJB1b/78wKF7rBG87mM8dDBHtBiaJlv50uyIYHQi
+ GRo+oPnFCF1ZHEZ2cSI7GCoY6PQnjavK+cfrYkewrYRjpGqIfioTIsvUxYRcFmOf7Sys PA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 32t2ydp0cf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 11 Aug 2020 23:11:40 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07BN4VK3108105;
+        Tue, 11 Aug 2020 23:11:40 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 32t600ggbv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 11 Aug 2020 23:11:40 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 07BNBcY5006285;
+        Tue, 11 Aug 2020 23:11:38 GMT
+Received: from [192.168.2.112] (/50.38.35.18)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 11 Aug 2020 23:11:37 +0000
+Subject: Re: [PATCH v2 4/4] mm/hugetl.c: warn out if expected count of huge
+ pages adjustment is not achieved
+To:     Michal Hocko <mhocko@suse.com>
+Cc:     Baoquan He <bhe@redhat.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org, david@redhat.com,
+        akpm@linux-foundation.org
+References: <20200723032248.24772-1-bhe@redhat.com>
+ <20200723032248.24772-5-bhe@redhat.com>
+ <62c8ce6c-fe98-f371-99b6-cfdb96d1c2fd@arm.com>
+ <20200723091142.GR32539@MiWiFi-R3L-srv>
+ <b94f4dc1-5c53-68ca-2023-0aa4de4df8b7@oracle.com>
+ <20200811021152.GW14854@MiWiFi-R3L-srv>
+ <f659959f-47c5-93f0-ad84-48e53561b1e2@oracle.com>
+ <20200811072212.GD4793@dhcp22.suse.cz>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <89039447-f2f6-1c5e-f8c0-10314a002069@oracle.com>
+Date:   Tue, 11 Aug 2020 16:11:36 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200811183950.10603-1-peterx@redhat.com> <CAHk-=whQM=m5td5tfbuxh1f_Gxjsa74XV962BYkjrbeDMAhBpA@mail.gmail.com>
- <CAHk-=wit7LDr0tA2eVn7yHHEH76oK=Lfm3tTs8_JxO8XEED4_g@mail.gmail.com>
- <CAHk-=wifRg0pDhufQFasWa7G3sMHbG0nahnm5yRwvTKpKU9g4A@mail.gmail.com> <20200811214255.GE6353@xz-x1>
-In-Reply-To: <20200811214255.GE6353@xz-x1>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 11 Aug 2020 16:10:57 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiVN-+P1vOCSMyfGwYQD3hF7A18OJyXgpiMwGDfMaU+8w@mail.gmail.com>
-Message-ID: <CAHk-=wiVN-+P1vOCSMyfGwYQD3hF7A18OJyXgpiMwGDfMaU+8w@mail.gmail.com>
-Subject: Re: [PATCH v3] mm/gup: Allow real explicit breaking of COW
-To:     Peter Xu <peterx@redhat.com>
-Cc:     Andrea Arcangeli <aarcange@redhat.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Marty Mcfadden <mcfadden8@llnl.gov>,
-        "Maya B . Gokhale" <gokhale2@llnl.gov>,
-        Jann Horn <jannh@google.com>, Christoph Hellwig <hch@lst.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Kirill Shutemov <kirill@shutemov.name>, Jan Kara <jack@suse.cz>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200811072212.GD4793@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9710 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 phishscore=0
+ bulkscore=0 adultscore=0 spamscore=0 suspectscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008110167
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9710 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 priorityscore=1501
+ malwarescore=0 impostorscore=0 lowpriorityscore=0 mlxscore=0 bulkscore=0
+ suspectscore=0 phishscore=0 adultscore=0 spamscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008110167
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 2:43 PM Peter Xu <peterx@redhat.com> wrote:
->
-> I don't know good enough on the reuse refactoring patch (which at least looks
-> functionally correct), but... IMHO we still need the enforced cow logic no
-> matter we refactor the page reuse logic or not, am I right?
->
-> Example:
->
->   - Process A & B shares private anonymous page P0
->
->   - Process A does READ of get_user_pages() on page P0
->
->   - Process A (e.g., another thread of process A, or as long as process A still
->     holds the page P0 somehow) writes to page P0 which triggers cow, so for
->     process A the page P0 is replaced by P1 with identical content
->
-> Then process A still keeps the reference to page P0 that potentially belongs to
-> process B or others?
+On 8/11/20 12:24 AM, Michal Hocko wrote:
+> 
+> My opinion is that the warning is too late to add at this stage. It
+> would have been much better if the user interface has provided a
+> reasonable feedback on how much the request was sucessful. But this
+> is not the case (except for few error cases) and we have to live with
+> the interface where the caller has to read the value after writing to
+> it. Lame but a reality.
+> 
+> I have heard about people making an opportunistic attempt to grab as
+> many hugetlb pages as possible and they do expect the failure and scale
+> the request size down. I do not think those would appreciate warnings.
+> 
+> That being said I would rather keep the existing behavior even though it
+> is suboptimal. It is just trivial to add the check in the userspace
+> without risking complains by other users. Besides the warning is not
+> really telling us much more than a subsequent read anyway. You are not
+> going to learn why the allocation has failed because that one is done
+> (intentionaly) as __GFP_NOWARN.
+> 
 
-The COW from process A will indeed keep a reference to page P0 (for
-whatever nefarious kernel use it did the GUP for). And yes, that page
-is still mapped into process B.
+Thanks Michal.
 
-HOWEVER.
+As previously stated, I do not have a strong opinion about this.  Because of
+this, let's just leave things as they are and not add the message.
 
-Since the GUP will be incrementing the reference count of said page,
-the actual problem has gone away. Because the GUP copy won't be
-modifying the page (it's a read lookup), and as long as process B only
-reads from the page, we're happily sharing a read-only page.
-
-And if process B now starts writing to it, the "page_count()" check at
-fault time will trigger, and process B will do a COW copy.
-
-So now we'll have three copies of the page: the original one is being
-kept for the GUP, and both A and B did their COW copies in their page
-tables.
-
-And that's exactly what we wanted - they are all now containing
-different data, after all.
-
-The problem with the *current* code is that we don't actually look at
-the page count at all, only the mapping count, so the GUP reference
-count is basically invisible.
-
-And the reason we don't look too closely at the page count is that
-there's a lot of incidental things that can affect it, like the whole
-KSM reference, the swap cache reference, other GUP users etc etc. So
-we historically have tried to maximize the amount of sharing we can
-do.
-
-But that "maximize sharing" is really complicated.
-
-That's the big change of that simplification patch - it's basically
-saying that "whenever _anything_ else has a reference to that page,
-we'll just copy and not even try to share".
-
-             Linus
+It is pretty clear that a user needs to read the value after writing to
+determine if all pages were allocated.  The log message would add little
+benefit to the end user.
+-- 
+Mike Kravetz
