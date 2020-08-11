@@ -2,126 +2,136 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30384C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 18:28:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 427CBC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 18:32:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BD172076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 18:28:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="f8kSFMTU";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="OSDLkaQV"
+	by mail.kernel.org (Postfix) with ESMTP id 2568320774
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 18:32:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726368AbgHKS2e (ORCPT
+        id S1726114AbgHKScc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 14:28:34 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:43170 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725889AbgHKS2d (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 14:28:33 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 12B4B8EE19D;
-        Tue, 11 Aug 2020 11:28:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1597170512;
-        bh=3WEnw6QUJlA/ul3OQNUWXjoU13+yLZLQS09srF5MAho=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=f8kSFMTUDNJBODH89PuFjILL2FIdhsJg734xkqUR/cnDMS0KoMreMUczSAhnUyPMA
-         FTeH0AYqaAUb8S0lZlH/2MKXOBNx4BiGB+ITLubur3uSRnr1jBTuyfUMErztSAvCOK
-         o6mPwANArB0pQb+2/z1bhs18+blmHF0lRNFSsct0=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id zuQo8S5FYJFD; Tue, 11 Aug 2020 11:28:31 -0700 (PDT)
-Received: from [153.66.254.174] (c-73-35-198-56.hsd1.wa.comcast.net [73.35.198.56])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 7EF748EE149;
-        Tue, 11 Aug 2020 11:28:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1597170511;
-        bh=3WEnw6QUJlA/ul3OQNUWXjoU13+yLZLQS09srF5MAho=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=OSDLkaQVZ4KRYf4a0s5X94LSMaapheTMG3B7iv1TDO9dOQ2MOULwugwtLeHe6qdeF
-         qJgkWRBhCi9y0UIGoySKjkb+RHhMP2bUFkZ9nJkEdlUyNr1yc428zvmYrJhUC4gJZu
-         kZoLKW8vwf99sZFDKUvV19sDo8EBD6kP0uULOtBM=
-Message-ID: <1597170509.4325.55.camel@HansenPartnership.com>
-Subject: Re: [dm-devel] [RFC PATCH v5 00/11] Integrity Policy Enforcement
- LSM (IPE)
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Chuck Lever <chucklever@gmail.com>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>, James Morris <jmorris@namei.org>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>,
-        snitzer@redhat.com, dm-devel@redhat.com,
-        tyhicks@linux.microsoft.com, agk@redhat.com,
-        Paul Moore <paul@paul-moore.com>,
-        Jonathan Corbet <corbet@lwn.net>, nramas@linux.microsoft.com,
-        serge@hallyn.com, pasha.tatashin@soleen.com,
-        Jann Horn <jannh@google.com>, linux-block@vger.kernel.org,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jens Axboe <axboe@kernel.dk>, mdsakib@microsoft.com,
-        open list <linux-kernel@vger.kernel.org>, eparis@redhat.com,
-        linux-security-module@vger.kernel.org, linux-audit@redhat.com,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-integrity@vger.kernel.org,
-        jaskarankhurana@linux.microsoft.com
-Date:   Tue, 11 Aug 2020 11:28:29 -0700
-In-Reply-To: <16C3BF97-A7D3-488A-9D26-7C9B18AD2084@gmail.com>
-References: <20200728213614.586312-1-deven.desai@linux.microsoft.com>
-         <20200802115545.GA1162@bug> <20200802140300.GA2975990@sasha-vm>
-         <20200802143143.GB20261@amd>
-         <1596386606.4087.20.camel@HansenPartnership.com>
-         <fb35a1f7-7633-a678-3f0f-17cf83032d2b@linux.microsoft.com>
-         <1596639689.3457.17.camel@HansenPartnership.com>
-         <alpine.LRH.2.21.2008050934060.28225@namei.org>
-         <b08ae82102f35936427bf138085484f75532cff1.camel@linux.ibm.com>
-         <329E8DBA-049E-4959-AFD4-9D118DEB176E@gmail.com>
-         <da6f54d0438ee3d3903b2c75fcfbeb0afdf92dc2.camel@linux.ibm.com>
-         <1597073737.3966.12.camel@HansenPartnership.com>
-         <6E907A22-02CC-42DD-B3CD-11D304F3A1A8@gmail.com>
-         <1597124623.30793.14.camel@HansenPartnership.com>
-         <16C3BF97-A7D3-488A-9D26-7C9B18AD2084@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Tue, 11 Aug 2020 14:32:32 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59904 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725862AbgHKScc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 14:32:32 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 87132AC82;
+        Tue, 11 Aug 2020 18:32:51 +0000 (UTC)
+Date:   Tue, 11 Aug 2020 20:32:25 +0200
+From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Christoph Lameter <cl@linux.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
+        kernel-team@fb.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 4/5] mm: memcg: charge memcg percpu memory to the
+ parent cgroup
+Message-ID: <20200811183225.GA62582@blackbook>
+References: <20200623184515.4132564-1-guro@fb.com>
+ <20200623184515.4132564-5-guro@fb.com>
+ <20200729171039.GA22229@blackbody.suse.cz>
+ <20200806211603.195727c03995c3a25ffc6d76@linux-foundation.org>
+ <20200807043717.GA1231562@carbon.DHCP.thefacebook.com>
+ <20200811144754.GA45201@blackbook>
+ <20200811165527.GA1507044@carbon.DHCP.thefacebook.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="k1lZvvs/B4yU6o8G"
+Content-Disposition: inline
+In-Reply-To: <20200811165527.GA1507044@carbon.DHCP.thefacebook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-08-11 at 10:48 -0400, Chuck Lever wrote:
-> Mimi's earlier point is that any IMA metadata format that involves
-> unsigned digests is exposed to an alteration attack at rest or in
-> transit, thus will not provide a robust end-to-end integrity
-> guarantee.
 
-I don't believe that is Mimi's point, because it's mostly not correct:
-the xattr mechanism does provide this today.  The point is the
-mechanism we use for storing IMA hashes and signatures today is xattrs
-because they have robust security properties for local filesystems that
-the kernel enforces.  This use goes beyond IMA, selinux labels for
-instance use this property as well.
+--k1lZvvs/B4yU6o8G
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-What I think you're saying is that NFS can't provide the robust
-security for xattrs we've been relying on, so you need some other
-mechanism for storing them.
+On Tue, Aug 11, 2020 at 09:55:27AM -0700, Roman Gushchin <guro@fb.com> wrot=
+e:
+> As I said, there are 2 problems with charging systemd (or a similar daemo=
+n):
+> 1) It often belongs to the root cgroup.
+This doesn't hold for systemd (if we agree that systemd is the most
+common case).
 
-I think Mimi's other point is actually that IMA uses a flat hash which
-we derive by reading the entire file and then watching for mutations. 
-Since you cannot guarantee we get notice of mutation with NFS, the
-entire IMA mechanism can't really be applied in its current form and we
-have to resort to chunk at a time verifications that a Merkel tree
-would provide.  Doesn't this make moot any thinking about
-standardisation in NFS for the current IMA flat hash mechanism because
-we simply can't use it ... If I were to construct a prototype I'd have
-to work out and securely cache the hash of ever chunk when verifying
-the flat hash so I could recheck on every chunk read.  I think that's
-infeasible for large files.
+> 2) OOMing or failing some random memory allocations is a bad way
+>    to "communicate" a memory shortage to the daemon.
+>    What we really want is to prevent creating a huge number of cgroups
+There's cgroup.max.descendants for that...
 
-James
+>    (including dying cgroups) in some specific sub-tree(s).
+=2E..oh, so is this limiting the number of cgroups or limiting resources
+used?
 
+>    OOMing the daemon or returning -ENOMEM to some random syscalls
+>    will not help us to reach the goal and likely will bring a bad
+>    experience to a user.
+If we reach the situation when memory for cgroup operations is tight,
+it'll disappoint the user either way.
+My premise is that a running workload is more valuable than the
+accompanying manager.
+
+> In a generic case I don't see how we can charge the cgroup which
+> creates cgroups without solving these problems first.
+In my understanding, "onbehalveness" is a concept useful for various
+kernel threads doing deferred work. Here it's promoted to user processes
+managing cgroups.
+
+> And if there is a very special case where we have to limit it,
+> we can just add an additional layer:
+>=20
+> ` root or delegated root
+>    ` manager-parent-cgroup-with-a-limit
+>      ` manager-cgroup (systemd, docker, ...)
+>    ` [aggregation group(s)]
+>      ` job-group-1
+>      ` ...
+>      ` job-group-n
+If the charge goes to the parent of created cgroup (job-cgroup-i here),
+then the layer adds nothing. Am I missing something?
+
+> I'd definitely charge the parent cgroup in all similar cases.
+(This would mandate the controllers on the unified hierarchy, which is
+fine IMO.) Then the order of enabling controllers on a subtree (e.g.
+cpu,memory vs memory,cpu) by the manager would yield different charging.
+This seems wrong^W confusing to me.=20
+
+
+Thanks,
+Michal
+
+--k1lZvvs/B4yU6o8G
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEEoQaUCWq8F2Id1tNia1+riC5qSgFAl8y5DUACgkQia1+riC5
+qShkEQ/+Nm08BsWmxXI72rR1oe/Tct4+M6N4pnmGnkh53373/NHFMIFRIVPANXyO
+bgafqQlVbpSnTT6wemU9fj/DCZp/CCR3fepcT7aoauQacOlPvlf579Hrhj7RU8hI
+h3PwqWwoUD9iK1V1hHZk+kEysHQx3y4N7UQfav4LtjlIqnHvzb9VfK8hjARtR1R+
+i2t15zS9EEscmctY5Fx1uvnjzbpllj6MSJH8fhOi/5axW8b5pCfrvZ4pFUnB2t9Q
+CuKwWSidDmg9+Q+/xegZ12h3t+X+a/T+O+g9uH2D0R/28VexpI0MpzaOtpsXlQIb
+V4CPOGK9Glx3iPNc4IAPl1NHcusink/2RWBHKRkzCPS8gTywLKDFrilAtQ11y010
+C0jjixQXO8of8OmktELfaqV7XUNgDru8TFpCQMAJOuyZ8Kt+1MxywRfNlieIsChJ
+NaMtXA6N72GrIIC+IFK1W+e4rTeuAnrolBg+KG7cgSAF1HgopyfyQvskaIlJcSzb
+qxawQebRsJx52Wz3NmHuHabefaua2n6Zuw8k/Ac0GBum4D7vxvmgpuKPXQjhqs5l
+plYP7ueHP3gxRSW32ho0sHtW9qB7+cReHPXN/FFTye7ICZ50N4bT4oWQpZh8vNBM
+ws9M9jzGjB+9QKDeECIDA7s0H9XJDMKVkXIS4RbdhLe2twuexOs=
+=4/65
+-----END PGP SIGNATURE-----
+
+--k1lZvvs/B4yU6o8G--
