@@ -2,118 +2,186 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05BB0C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 08:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38745C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 08:39:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE9B3206B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 08:38:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11AA9206B5
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 08:39:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728346AbgHKIix (ORCPT
+        id S1728370AbgHKIjI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 04:38:53 -0400
-Received: from mx2.suse.de ([195.135.220.15]:32826 "EHLO mx2.suse.de"
+        Tue, 11 Aug 2020 04:39:08 -0400
+Received: from mx2.suse.de ([195.135.220.15]:32886 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728237AbgHKIix (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 04:38:53 -0400
+        id S1728237AbgHKIjG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 04:39:06 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 9C3F0B1ED;
-        Tue, 11 Aug 2020 08:39:11 +0000 (UTC)
-Subject: Re: [PATCH] x86/paravirt: Add missing noinstr to arch_local*()
- helpers
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Marco Elver <elver@google.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        fenghua.yu@intel.com, "H. Peter Anvin" <hpa@zytor.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        yu-cheng.yu@intel.com, sdeep@vmware.com,
-        virtualization@lists.linux-foundation.org,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        syzbot <syzbot+8db9e1ecde74e590a657@syzkaller.appspotmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Wei Liu <wei.liu@kernel.org>
-References: <CANpmjNO860SHpNve+vaoAOgarU1SWy8o--tUWCqNhn82OLCiew@mail.gmail.com>
- <fe2bfa7f-132f-7581-a967-d01d58be1588@suse.com>
- <20200807095032.GA3528289@elver.google.com>
- <16671cf3-3885-eb06-79ff-4cbfaeeaea79@suse.com>
- <20200807113838.GA3547125@elver.google.com>
- <e5bf3e6a-efff-7170-5ee6-1798008393a2@suse.com>
- <CANpmjNPau_DEYadey9OL+iFZKEaUTqnFnyFs1dU12o00mg7ofA@mail.gmail.com>
- <20200807151903.GA1263469@elver.google.com>
- <20200811074127.GR3982@worktop.programming.kicks-ass.net>
- <a2dffeeb-04f0-8042-b39a-b839c4800d6f@suse.com>
- <20200811081205.GV3982@worktop.programming.kicks-ass.net>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <07f61573-fef1-e07c-03f2-a415c88dec6f@suse.com>
-Date:   Tue, 11 Aug 2020 10:38:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200811081205.GV3982@worktop.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+        by mx2.suse.de (Postfix) with ESMTP id CB812B1ED;
+        Tue, 11 Aug 2020 08:39:25 +0000 (UTC)
+Date:   Tue, 11 Aug 2020 10:39:04 +0200
+Message-ID: <s5ho8nh37br.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Yu-Hsuan Hsu <yuhsuan@chromium.org>
+Cc:     "Lu, Brent" <brent.lu@intel.com>,
+        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Rojewski, Cezary" <cezary.rojewski@intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Sam McNally <sammc@chromium.org>,
+        Mark Brown <broonie@kernel.org>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Daniel Stuart <daniel.stuart14@gmail.com>,
+        "yuhsuan@google.com" <yuhsuan@google.com>,
+        Damian van Soelen <dj.vsoelen@gmail.com>
+Subject: Re: [PATCH v3 2/2] ASoC: Intel: Add period size constraint on strago board
+In-Reply-To: <CAGvk5PpcmkZ2HarqeCDaXm4id=84wYs-u4vWxJunHaf09gj66g@mail.gmail.com>
+References: <1596020585-11517-1-git-send-email-brent.lu@intel.com>
+        <1596198365-10105-1-git-send-email-brent.lu@intel.com>
+        <1596198365-10105-3-git-send-email-brent.lu@intel.com>
+        <s5h5za3ajvb.wl-tiwai@suse.de>
+        <DM6PR11MB3642AE90DF98956CCEDE6C2F974F0@DM6PR11MB3642.namprd11.prod.outlook.com>
+        <s5hd04a90o4.wl-tiwai@suse.de>
+        <DM6PR11MB3642B5BC2E1E0708088526D8974D0@DM6PR11MB3642.namprd11.prod.outlook.com>
+        <63bca214-3434-16c6-1b60-adf323aec554@linux.intel.com>
+        <DM6PR11MB3642D9BE1E5DAAB8B78B84B0974D0@DM6PR11MB3642.namprd11.prod.outlook.com>
+        <s5hpn873by6.wl-tiwai@suse.de>
+        <DM6PR11MB36423A9D28134811AD5A911F974A0@DM6PR11MB3642.namprd11.prod.outlook.com>
+        <6466847a-8aae-24f7-d727-36ba75e95f98@linux.intel.com>
+        <DM6PR11MB364259049769F6EF3B84AABD97480@DM6PR11MB3642.namprd11.prod.outlook.com>
+        <3f3baf5e-f73d-9cd6-cbfb-36746071e126@linux.intel.com>
+        <CAGvk5PohOP0Yv22tb53EX=ZLB9_vOMb=iujTh64OvHmjC1d4mg@mail.gmail.com>
+        <DM6PR11MB3642AC7F8EC47EB48B384D4797450@DM6PR11MB3642.namprd11.prod.outlook.com>
+        <CAGvk5PogmqfEnFRA8hzby+AGgbOSvbELamh_1=eA9KTpyBMPYQ@mail.gmail.com>
+        <s5htux939x1.wl-tiwai@suse.de>
+        <CAGvk5PpcmkZ2HarqeCDaXm4id=84wYs-u4vWxJunHaf09gj66g@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11.08.20 10:12, Peter Zijlstra wrote:
-> On Tue, Aug 11, 2020 at 09:57:55AM +0200, Jürgen Groß wrote:
->> On 11.08.20 09:41, Peter Zijlstra wrote:
->>> On Fri, Aug 07, 2020 at 05:19:03PM +0200, Marco Elver wrote:
->>>
->>>> My hypothesis here is simply that kvm_wait() may be called in a place
->>>> where we get the same case I mentioned to Peter,
->>>>
->>>> 	raw_local_irq_save(); /* or other IRQs off without tracing */
->>>> 	...
->>>> 	kvm_wait() /* IRQ state tracing gets confused */
->>>> 	...
->>>> 	raw_local_irq_restore();
->>>>
->>>> and therefore, using raw variants in kvm_wait() works. It's also safe
->>>> because it doesn't call any other libraries that would result in corrupt
->>>
->>> Yes, this is definitely an issue.
->>>
->>> Tracing, we also musn't call into tracing when using raw_local_irq_*().
->>> Because then we re-intoduce this same issue all over again.
->>>
->>> Both halt() and safe_halt() are more paravirt calls, but given we're in
->>> a KVM paravirt call already, I suppose we can directly use native_*()
->>> here.
->>>
->>> Something like so then... I suppose, but then the Xen variants need TLC
->>> too.
->>
->> Just to be sure I understand you correct:
->>
->> You mean that xen_qlock_kick() and xen_qlock_wait() and all functions
->> called by those should gain the "notrace" attribute, right?
->>
->> I am not sure why the kick variants need it, though. IMO those are
->> called only after the lock has been released, so they should be fine
->> without notrace.
+On Tue, 11 Aug 2020 10:25:22 +0200,
+Yu-Hsuan Hsu wrote:
 > 
-> The issue happens when someone uses arch_spinlock_t under
-> raw_local_irq_*().
+> Takashi Iwai <tiwai@suse.de> 於 2020年8月11日 週二 下午3:43寫道：
+> >
+> > On Tue, 11 Aug 2020 04:29:24 +0200,
+> > Yu-Hsuan Hsu wrote:
+> > >
+> > > Lu, Brent <brent.lu@intel.com> 於 2020年8月11日 週二 上午10:17寫道：
+> > > >
+> > > > >
+> > > > > Sorry for the late reply. CRAS does not set the period size when using it.
+> > > > > The default period size is 256, which consumes the samples quickly(about 49627
+> > > > > fps when the rate is 48000 fps) at the beginning of the playback.
+> > > > > Since CRAS write samples with the fixed frequency, it triggers underruns
+> > > > > immidiately.
+> > > > >
+> > > > > According to Brent, the DSP is using 240 period regardless the hw_param. If the
+> > > > > period size is 256, DSP will read 256 samples each time but only consume 240
+> > > > > samples until the ring buffer of DSP is full. This behavior makes the samples in
+> > > > > the ring buffer of kernel consumed quickly. (Not sure whether the explanation is
+> > > > > correct. Need Brent to confirm it.)
+> > > > >
+> > > > > Unfortunately, we can not change the behavior of DSP. After some experiments,
+> > > > > we found that the issue can be fixed if we set the period size to 240. With the
+> > > > > same frequency as the DSP, the samples are consumed stably. Because everyone
+> > > > > can trigger this issue when using the driver without setting the period size, we
+> > > > > think it is a general issue that should be fixed in the kernel.
+> > > >
+> > > > I check the code and just realized CRAS does nothing but request maximum buffer
+> > > > size. As I know the application needs to decide the buffer time and period time so
+> > > > ALSA could generate a hw_param structure with proper period size instead of using
+> > > > fixed constraint in machine driver because driver has no idea about the latency you
+> > > > want.
+> > > >
+> > > > You can use snd_pcm_hw_params_set_buffer_time_near() and
+> > > > snd_pcm_hw_params_set_period_time_near() to get a proper configuration of
+> > > > buffer and period parameters according to the latency requirement. In the CRAS
+> > > > code, there is a UCM variable to support this: DmaPeriodMicrosecs. I tested it on
+> > > > Celes and it looks quite promising. It seems to me that adding constraint in machine
+> > > > driver is not necessary.
+> > > >
+> > > > SectionDevice."Speaker".0 {
+> > > >         Value {
+> > > >                 PlaybackPCM "hw:chtrt5650,0"
+> > > >                 DmaPeriodMicrosecs "5000"
+> > > > ...
+> > > >
+> > > > [   52.434761] sound pcmC1D0p: hw_param
+> > > > [   52.434767] sound pcmC1D0p:   ACCESS 0x1
+> > > > [   52.434770] sound pcmC1D0p:   FORMAT 0x4
+> > > > [   52.434772] sound pcmC1D0p:   SUBFORMAT 0x1
+> > > > [   52.434776] sound pcmC1D0p:   SAMPLE_BITS [16:16]
+> > > > [   52.434779] sound pcmC1D0p:   FRAME_BITS [32:32]
+> > > > [   52.434782] sound pcmC1D0p:   CHANNELS [2:2]
+> > > > [   52.434785] sound pcmC1D0p:   RATE [48000:48000]
+> > > > [   52.434788] sound pcmC1D0p:   PERIOD_TIME [5000:5000]
+> > > > [   52.434791] sound pcmC1D0p:   PERIOD_SIZE [240:240]
+> > > > [   52.434794] sound pcmC1D0p:   PERIOD_BYTES [960:960]
+> > > > [   52.434797] sound pcmC1D0p:   PERIODS [852:852]
+> > > > [   52.434799] sound pcmC1D0p:   BUFFER_TIME [4260000:4260000]
+> > > > [   52.434802] sound pcmC1D0p:   BUFFER_SIZE [204480:204480]
+> > > > [   52.434805] sound pcmC1D0p:   BUFFER_BYTES [817920:817920]
+> > > > [   52.434808] sound pcmC1D0p:   TICK_TIME [0:0]
+> > > >
+> > > > Regards,
+> > > > Brent
+> > > Hi Brent,
+> > >
+> > > Yes, I know we can do it to fix the issue as well. As I mentioned
+> > > before, we wanted to fix it in kernel because it is a real issue,
+> > > isn't it? Basically, a driver should work with any param it supports.
+> > > But in this case, everyone can trigger underrun if he or she does not
+> > > the period size to 240. If you still think it's not necessary, I can
+> > > modify UCM to make CRAS set the appropriate period size.
+> >
+> > How does it *not* work if you set other than period size 240, more
+> > exactly?
+> >
+> > The hw_constraint to a fixed period size must be really an exception.
+> > If you look at other drivers, you won't find any other doing such.
+> > It already indicates that something is wrong.
+> >
+> > Usually the fixed period size comes from the hardware limitation and
+> > defined in snd_pcm_hardware.  Or, sometimes it's an alignment issue.
+> > If you need more than that, you should doubt what's really not
+> > working.
+> >
+> >
+> > Takashi
+> Thank Takashi,
 > 
->> And again: we shouldn't forget the Hyper-V variants.
-> 
-> Bah, my grep failed :/ Also *groan*, that's calling apic->send_IPI().
+> As I mentioned before, if the period size is set to 256, the measured
+> rate of sample-consuming will be around 49627 fps. It causes underrun
+> because the rate we set is 48000 fps.
 
-In case you don't want to do it I can send the patch for the Xen
-variants.
+But this explanation rather sounds like the alignment problem.
+However...
+
+> This behavior also happen on the
+> other period rate except for 240.
+
+... Why only 240?  That's the next logical question.
+If you have a clarification for it, it may be the rigid reason to
+introduce such a hw constraint.
 
 
-Juergen
+Takashi
