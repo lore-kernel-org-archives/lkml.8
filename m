@@ -2,316 +2,144 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC746C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:44:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09F47C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:44:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4FCE2076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:44:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597160658;
-	bh=GgCj4E5DcuEWyZLFNtMPjpN6arpbaWAiIEVIgFoS37M=;
-	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
-	b=0mUgKfBaI212H20TcXIO29HY1iRz0aGOfjLgGH4cfx54qDhDud7rMsXn3iT95rVzL
-	 Xwd56b7NTfqjnneE7XGlf1rZ+gVvBE6yFCE6abOIXLax6TwMJ2rNcYETKXjRJU40I/
-	 pcmeg7UTUSpk86AUIBuZnEG1CqOKyJC1XUVd6zhE=
+	by mail.kernel.org (Postfix) with ESMTP id DAF732083B
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:44:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CTAw/eTr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729339AbgHKPoR (ORCPT
+        id S1729324AbgHKPoQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 11:44:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47190 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728881AbgHKPmE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 11:42:04 -0400
-Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4978A20866;
-        Tue, 11 Aug 2020 15:42:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597160523;
-        bh=GgCj4E5DcuEWyZLFNtMPjpN6arpbaWAiIEVIgFoS37M=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RTzrdq4TrEhBncnD8bqNnDNhQvo6ysxzxZ6IgwtVBokLb/VozIizaUGV+IvBCx/xY
-         yNc9bBLxbSusbvT7ZX7Zx0j2bGvU+sJK34oB9KATLU19erbtXerxDFKWtTGIihbdxI
-         y6T4uUNgsz30t6zNfygdDMUr4Zf+NlzWLqxmQOwY=
-Received: from mchehab by mail.kernel.org with local (Exim 4.94)
-        (envelope-from <mchehab@kernel.org>)
-        id 1k5WPZ-004bmT-Fh; Tue, 11 Aug 2020 17:42:01 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH 06/33] mfd: hisi_pmic_spmi: deal with non-static functions
-Date:   Tue, 11 Aug 2020 17:41:32 +0200
-Message-Id: <a114149c41dff6d489572f7ad0645f2c97c1bae1.1597160086.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.1597160086.git.mchehab+huawei@kernel.org>
-References: <cover.1597160086.git.mchehab+huawei@kernel.org>
+        Tue, 11 Aug 2020 11:44:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34130 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728915AbgHKPoN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 11:44:13 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7724EC06174A
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 08:44:13 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id w14so14059060ljj.4
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 08:44:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=MOndPYlZWn1KUGkvBWd7W30cieUHtsfgNEZmQV/QvA4=;
+        b=CTAw/eTr4fScH6Gje6odi7huo03BbW4g/c4lcrnA1XW6L5OmD5ZjIRMapE1LLfhWNn
+         up0Snd71a4cVf1z5rIRFMf4Kire2tKV2bMSYxOYzFGEDJjimD2W8gFuEglVwbwFunqY4
+         WCS4W4Fy9RHJLg/2FIF4rf15LRDuJwLBN2Xv6wVAXoKgWZH/26K4IV57ct/DBn/WJXPB
+         gXpAS6na7VkmGk4ex0cYpDTVh7FrRcWsNzodcK8wpF90lZhtPMvVNAjEeAgLrXy+fvB0
+         C5c7Qxo2SRD9J4qiNubSgcxr5j2jN1nWodTsb0WJKhhTac+5CWlKCNSHyNvTFmrFjgm4
+         aMUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=MOndPYlZWn1KUGkvBWd7W30cieUHtsfgNEZmQV/QvA4=;
+        b=RY3xv05pxDdC7W1Xv/rCr5DboGUzCkHManroKtJL5VaVT8TBz0AubMv5OMpXAAHmzi
+         f9VtyJ2tCCuebgPYr16mXKlFQrFdO7MI49uq+n5crSmRkQKvQUzGDbzakxKgHeyFVopm
+         quKH3IcJPNvdqebkBj+StiBKIk3JNGHDpla1TgiXxwIBC+YGYE0GvRNJSrQqQucVoQ/v
+         Mfgj9BqwuiRJT/gfmIblNI9/+aEjLkN7rbt09Z5GnSFkQVdX2PU00o/FXKhIttHSLGkX
+         HdkXsUJrGB4+gX0bWRPuEWwPNTGxV2tSRAE2Fu6NWXuCzDr4Hln7CiMuiJwim/gjH8S/
+         K7OQ==
+X-Gm-Message-State: AOAM532kFpcmrYIigTmE5uo92cIZmLDs3Jr2D2jpMVmFL5dH1QRDQCN3
+        bBiU5YZKJUqWDMH6MHehfzAWMq/x
+X-Google-Smtp-Source: ABdhPJzB47eqeHkywNhgNoJ1FGuiZtopfBkuQxNrlTDjJ2aX7AMOeJ/h0Oo4OXpWXSJQn2om3cAJBw==
+X-Received: by 2002:a2e:b53b:: with SMTP id z27mr3248228ljm.441.1597160651390;
+        Tue, 11 Aug 2020 08:44:11 -0700 (PDT)
+Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.googlemail.com with ESMTPSA id s4sm11817211lfc.56.2020.08.11.08.44.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Aug 2020 08:44:10 -0700 (PDT)
+Subject: Re: regulator: deadlock vs memory reclaim
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org
+References: <cover.1597089543.git.mirq-linux@rere.qmqm.pl>
+ <9a5c8ca6-2027-4d89-e290-6db564b99962@gmail.com>
+ <20200810201846.GA12091@qmqm.qmqm.pl>
+ <d9c3f307-e124-ea5e-c036-71138f9232f4@gmail.com>
+ <81e490af-d1da-873a-51b4-130ca82fd1f6@gmail.com>
+ <20200811000722.GA30574@qmqm.qmqm.pl>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <d6b4ec96-d81b-5025-628b-ba6c5f77a3dc@gmail.com>
+Date:   Tue, 11 Aug 2020 18:44:09 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200811000722.GA30574@qmqm.qmqm.pl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Several functions aren't used outside the mfd driver. So,
-either remove or make them static.
+11.08.2020 03:07, Michał Mirosław пишет:
+...
+> I just noticed that locking in regulator_resolve_coupling() is bogus.
+> This all holds up because regulator_list_mutex is held during the call.
+> Feel free to test a patch below.
+> 
+> I'm working my way to push allocations outside of the locks, but the
+> coupling-related locking will need to be fixed regardless.
+> 
+> Best Regards,
+> Michał Mirosław
+> 
+> ---->8<----
+> 
+> [PATCH] regulator: remove superfluous lock in regulator_resolve_coupling()
+> 
+> The code modifies rdev, but locks c_rdev instead. The bug remains:
+> stored c_rdev could be freed just after unlock anyway. This doesn't blow
+> up because regulator_list_mutex taken outside holds it together.
+> 
+> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+> ---
+>  drivers/regulator/core.c | 4 ----
+>  1 file changed, 4 deletions(-)
+> 
+> diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+> index 94f9225869da..e519bc9a860d 100644
+> --- a/drivers/regulator/core.c
+> +++ b/drivers/regulator/core.c
+> @@ -4859,13 +4859,9 @@ static void regulator_resolve_coupling(struct regulator_dev *rdev)
+>  			return;
+>  		}
+>  
+> -		regulator_lock(c_rdev);
+> -
+>  		c_desc->coupled_rdevs[i] = c_rdev;
+>  		c_desc->n_resolved++;
+>  
+> -		regulator_unlock(c_rdev);
+> -
+>  		regulator_resolve_coupling(c_rdev);
+>  	}
+>  }
+> 
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- drivers/mfd/hisi_pmic_spmi.c | 147 ++++++-----------------------------
- 1 file changed, 24 insertions(+), 123 deletions(-)
+The change looks like a good cleanup to me, thanks. I think that c_rdev
+locking was accidentally left from some older version of the patch that
+introduced the coupling support. There shouldn't be any real bug in this
+code.
 
-diff --git a/drivers/mfd/hisi_pmic_spmi.c b/drivers/mfd/hisi_pmic_spmi.c
-index 809381eb6043..8b87d48b88b5 100644
---- a/drivers/mfd/hisi_pmic_spmi.c
-+++ b/drivers/mfd/hisi_pmic_spmi.c
-@@ -73,21 +73,21 @@ u32 hisi_pmic_read(struct hisi_pmic *pmic, int reg)
- 	u8 read_value = 0;
- 	struct spmi_device *pdev;
- 
--	if (NULL == g_pmic) {
--		pr_err(" g_pmic  is NULL\n");
-+	if (!g_pmic) {
-+		pr_err("%s: g_pmic is NULL\n", __func__);
- 		return 0;
- 	}
- 
- 	pdev = to_spmi_device(g_pmic->dev);
--	if (NULL == pdev) {
--		pr_err("%s:pdev get failed!\n", __func__);
-+	if (!pdev) {
-+		pr_err("%s: pdev get failed!\n", __func__);
- 		return 0;
- 	}
- 
- 	ret = spmi_ext_register_readl(pdev, reg, (unsigned char*)&read_value, 1);/*lint !e734 !e732 */
- 	if (ret) {
--		pr_err("%s:spmi_ext_register_readl failed!\n", __func__);
--		return ret;
-+		pr_err("%s: spmi_ext_register_readl failed!\n", __func__);
-+		return 0;
- 	}
- 	return (u32)read_value;
- }
-@@ -98,34 +98,32 @@ void hisi_pmic_write(struct hisi_pmic *pmic, int reg, u32 val)
- 	u32 ret;
- 	struct spmi_device *pdev;
- 
--	if (NULL == g_pmic) {
--		pr_err(" g_pmic  is NULL\n");
-+	if (!g_pmic) {
-+		pr_err("%s: g_pmic is NULL\n", __func__);
- 		return;
- 	}
- 
- 	pdev = to_spmi_device(g_pmic->dev);
--	if (NULL == pdev) {
--		pr_err("%s:pdev get failed!\n", __func__);
-+	if (!pdev) {
-+		pr_err("%s: pdev get failed!\n", __func__);
- 		return;
- 	}
- 
- 	ret = spmi_ext_register_writel(pdev, reg, (unsigned char*)&val, 1);/*lint !e734 !e732 */
- 	if (ret) {
--		pr_err("%s:spmi_ext_register_writel failed!\n", __func__);
--		return ;
-+		pr_err("%s: spmi_ext_register_writel failed!\n", __func__);
-+		return;
- 	}
- }
- EXPORT_SYMBOL(hisi_pmic_write);
- 
--
--void hisi_pmic_rmw(struct hisi_pmic *pmic, int reg,
--		     u32 mask, u32 bits)
-+void hisi_pmic_rmw(struct hisi_pmic *pmic, int reg, u32 mask, u32 bits)
- {
- 	u32 data;
- 	unsigned long flags;
- 
--	if (NULL == g_pmic) {
--		pr_err(" g_pmic  is NULL\n");
-+	if (!g_pmic) {
-+		pr_err("%s: g_pmic is NULL\n", __func__);
- 		return;
- 	}
- 
-@@ -137,75 +135,6 @@ void hisi_pmic_rmw(struct hisi_pmic *pmic, int reg,
- }
- EXPORT_SYMBOL(hisi_pmic_rmw);
- 
--unsigned int hisi_pmic_reg_read(int addr)
--{
--	return (unsigned int)hisi_pmic_read(g_pmic, addr);
--}
--EXPORT_SYMBOL(hisi_pmic_reg_read);
--
--void hisi_pmic_reg_write(int addr, int val)
--{
--	hisi_pmic_write(g_pmic, addr, val);
--}
--EXPORT_SYMBOL(hisi_pmic_reg_write);
--
--void hisi_pmic_reg_write_lock(int addr, int val)
--{
--	unsigned long flags;
--
--	if (NULL == g_pmic) {
--		pr_err(" g_pmic  is NULL\n");
--		return;
--	}
--
--	spin_lock_irqsave(&g_pmic->lock, flags);
--	hisi_pmic_write(g_pmic, g_pmic->normal_lock.addr, g_pmic->normal_lock.val);
--	hisi_pmic_write(g_pmic, g_pmic->debug_lock.addr, g_pmic->debug_lock.val);
--	hisi_pmic_write(g_pmic, addr, val);
--	hisi_pmic_write(g_pmic, g_pmic->normal_lock.addr, 0);
--	hisi_pmic_write(g_pmic, g_pmic->debug_lock.addr, 0);
--	spin_unlock_irqrestore(&g_pmic->lock, flags);
--}
--
--int hisi_pmic_array_read(int addr, char *buff, unsigned int len)
--{
--	unsigned int i;
--
--	if ((len > 32) || (NULL == buff)) {
--		return -EINVAL;
--	}
--
--	/*
--	 * Here is a bug in the pmu die.
--	 * the coul driver will read 4 bytes,
--	 * but the ssi bus only read 1 byte, and the pmu die
--	 * will make sampling 1/10669us about vol cur,so the driver
--	 * read the data is not the same sampling
--	 */
--	for (i = 0; i < len; i++)
--	{
--		*(buff + i) = hisi_pmic_reg_read(addr+i);
--	}
--
--	return 0;
--}
--
--int hisi_pmic_array_write(int addr, char *buff, unsigned int len)
--{
--    unsigned int i;
--
--	if ((len > 32) || (NULL == buff)) {
--		return -EINVAL;
--	}
--
--	for (i = 0; i < len; i++)
--	{
--		hisi_pmic_reg_write(addr+i, *(buff + i));
--	}
--
--	return 0;
--}
--
- static irqreturn_t hisi_irq_handler(int irq, void *data)
- {
- 	struct hisi_pmic *pmic = (struct hisi_pmic *)data;
-@@ -213,13 +142,13 @@ static irqreturn_t hisi_irq_handler(int irq, void *data)
- 	int i, offset;
- 
- 	for (i = 0; i < pmic->irqarray; i++) {
--		pending = hisi_pmic_reg_read((i + pmic->irq_addr.start_addr));
-+		pending = hisi_pmic_read(g_pmic, (i + pmic->irq_addr.start_addr));
- 		pending &= HISI_MASK_FIELD;
- 		if (pending != 0) {
- 			pr_info("pending[%d]=0x%lx\n\r", i, pending);
- 		}
- 
--		hisi_pmic_reg_write((i + pmic->irq_addr.start_addr), pending);
-+		hisi_pmic_write(g_pmic, (i + pmic->irq_addr.start_addr), pending);
- 
- 		/*solve powerkey order*/
- 		if ((HISI_IRQ_KEY_NUM == i) && ((pending & HISI_IRQ_KEY_VALUE) == HISI_IRQ_KEY_VALUE)) {
-@@ -237,13 +166,13 @@ static irqreturn_t hisi_irq_handler(int irq, void *data)
- 	/*Handle the second group irq if analysis the second group irq from dtsi*/
- 	if (1 == g_extinterrupt_flag){
- 		for (i = 0; i < pmic->irqarray1; i++) {
--			pending = hisi_pmic_reg_read((i + pmic->irq_addr1.start_addr));
-+			pending = hisi_pmic_read(g_pmic, (i + pmic->irq_addr1.start_addr));
- 			pending &= HISI_MASK_FIELD;
- 			if (pending != 0) {
- 				pr_info("pending[%d]=0x%lx\n\r", i, pending);
- 			}
- 
--			hisi_pmic_reg_write((i + pmic->irq_addr1.start_addr), pending);
-+			hisi_pmic_write(g_pmic, (i + pmic->irq_addr1.start_addr), pending);
- 
- 			if (pending) {
- 				for_each_set_bit(offset, &pending, HISI_BITS)
-@@ -276,9 +205,9 @@ static void hisi_irq_mask(struct irq_data *d)
- 		offset += pmic->irq_mask_addr.start_addr;
- 	}
- 	spin_lock_irqsave(&g_pmic->lock, flags);
--	data = hisi_pmic_reg_read(offset);
-+	data = hisi_pmic_read(g_pmic, offset);
- 	data |= (1 << (irqd_to_hwirq(d) & 0x07));
--	hisi_pmic_reg_write(offset, data);
-+	hisi_pmic_write(g_pmic, offset, data);
- 	spin_unlock_irqrestore(&g_pmic->lock, flags);
- }
- 
-@@ -303,9 +232,9 @@ static void hisi_irq_unmask(struct irq_data *d)
- 		offset += pmic->irq_mask_addr.start_addr;
- 	}
- 	spin_lock_irqsave(&g_pmic->lock, flags);
--	data = hisi_pmic_reg_read(offset);
--	data &= ~(1 << (irqd_to_hwirq(d) & 0x07)); /*lint !e502 */
--	hisi_pmic_reg_write(offset, data);
-+	data = hisi_pmic_read(g_pmic, offset);
-+	data &= ~(1 << (irqd_to_hwirq(d) & 0x07));
-+	hisi_pmic_write(g_pmic, offset, data);
- 	spin_unlock_irqrestore(&g_pmic->lock, flags);
- }
- 
-@@ -452,34 +381,6 @@ static int get_pmic_device_tree_data1(struct device_node *np, struct hisi_pmic *
- 	return ret;
- }/*lint -restore*/
- 
--int hisi_get_pmic_irq_byname(unsigned int pmic_irq_list)
--{
--	if ( NULL == g_pmic ) {
--		pr_err("[%s]g_pmic is NULL\n", __func__);
--		return -1;
--	}
--
--	if (pmic_irq_list > (unsigned int)g_pmic->irqnum) {
--		pr_err("[%s]input pmic irq number is error.\n", __func__);
--		return -1;
--	}
--	pr_info("%s:g_pmic->irqs[%d]=%d\n", __func__, pmic_irq_list, g_pmic->irqs[pmic_irq_list]);
--	return (int)g_pmic->irqs[pmic_irq_list];
--}
--EXPORT_SYMBOL(hisi_get_pmic_irq_byname);
--
--int hisi_pmic_get_vbus_status(void)
--{
--	if (0 == g_pmic_vbus.addr)
--		return -1;
--
--	if (hisi_pmic_reg_read(g_pmic_vbus.addr) & BIT(g_pmic_vbus.bit))
--		return 1;
--
--	return 0;
--}
--EXPORT_SYMBOL(hisi_pmic_get_vbus_status);
--
- static void hisi_pmic_irq_prc(struct hisi_pmic *pmic)
- {
- 	int i;
--- 
-2.26.2
-
+IIRC, at some point I changed the code to disallow consumers to get a
+partially coupled regulator and then protected the resolve_coupling()
+with list_mutex, but seems missed to remove that c_rdev locking. Hence
+there shouldn't be a need to lock regulators individually during the
+resolve because nothing should touch the coupled regulators until all
+the coupling has been resolved.
