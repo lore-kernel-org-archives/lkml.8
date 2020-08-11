@@ -2,107 +2,178 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D3AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 18:16:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E34A4C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 18:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B872C2076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 18:16:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="S9F2yfa/"
+	by mail.kernel.org (Postfix) with ESMTP id C53D320774
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 18:17:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726355AbgHKSQl (ORCPT
+        id S1726405AbgHKSRD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 14:16:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57640 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726085AbgHKSQk (ORCPT
+        Tue, 11 Aug 2020 14:17:03 -0400
+Received: from outpost1.zedat.fu-berlin.de ([130.133.4.66]:46545 "EHLO
+        outpost1.zedat.fu-berlin.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725901AbgHKSRC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 14:16:40 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7700C06174A
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 11:16:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=d2angCcfziZJsj+jE5k0KH3MCZIXsKjqVtB9YbQL44w=; b=S9F2yfa/UzmRITxVoNJ9lYraVf
-        Dy6MZ/M1ZBoBbV+p6eAQcY0VezPPFBCRlz6gqSuqC23Xcz2ebJ1urP9Gr4WE+izj+2ltXOAqd2QRG
-        XT3q1CfhnyfcEQwSwTLEt3ITXI8YkMcZX3WgZM/f4VbwtJ4hUfnQqouRsm1XNTOZmKxrus69f4AF3
-        E89nzV8iJViywqhN+D1abbdpG2hHKMw3L4Si6M1UWVTg1vLUVQmQjpCcFeR5j3ZavvHx+NVMhQUKR
-        N9Hvsq7cORsmxq2k8uyLJdhfgVc/0isUCN1i7dVuql95XYZMgJFB8asOHsj0aOuJqZGcIPD1XKw6W
-        TqKbkyhQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k5Yp6-0007wb-7O; Tue, 11 Aug 2020 18:16:32 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4B5BD3060AE;
-        Tue, 11 Aug 2020 19:59:12 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 32C1820BFC4E4; Tue, 11 Aug 2020 19:59:12 +0200 (CEST)
-Date:   Tue, 11 Aug 2020 19:59:12 +0200
-From:   peterz@infradead.org
-To:     Jessica Yu <jeyu@kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        keescook@chromium.org, Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>
-Subject: Re: [PATCH v2] module: Harden STRICT_MODULE_RWX
-Message-ID: <20200811175912.GF2674@hirez.programming.kicks-ass.net>
-References: <20200403171303.GK20760@hirez.programming.kicks-ass.net>
- <20200808101222.5103093e@coco.lan>
- <20200810092523.GA8612@linux-8ccs>
- <20200810150647.GB8612@linux-8ccs>
- <20200811163427.6edbf343@coco.lan>
- <20200811145524.GE2674@hirez.programming.kicks-ass.net>
- <20200811172738.2d632a09@coco.lan>
- <20200811160134.GA13652@linux-8ccs>
+        Tue, 11 Aug 2020 14:17:02 -0400
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.93)
+          with esmtps (TLS1.2)
+          tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1k5YpW-003rJ7-Ix; Tue, 11 Aug 2020 20:16:58 +0200
+Received: from p57bd93c4.dip0.t-ipconnect.de ([87.189.147.196] helo=[192.168.178.139])
+          by inpost2.zedat.fu-berlin.de (Exim 4.93)
+          with esmtpsa (TLS1.2)
+          tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1k5YpW-002zpy-8o; Tue, 11 Aug 2020 20:16:58 +0200
+Subject: Re: "mm: consolidate pte_index() and pte_offset_*() definitions"
+ broke ia64
+To:     Jessica Clarke <jrtc27@jrtc27.com>
+Cc:     Mike Rapoport <rppt@linux.ibm.com>,
+        Tony Luck <tony.luck@intel.com>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
+        Anatoly Pugachev <matorola@gmail.com>,
+        Sergei Trofimovich <slyfox@gentoo.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Frank Scheiner <frank.scheiner@web.de>
+References: <fa71f38e-b191-597a-6359-502cba197050@physik.fu-berlin.de>
+ <AA5E212C-56ED-4DB9-9CC1-EB13745DD5AF@jrtc27.com>
+From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Autocrypt: addr=glaubitz@physik.fu-berlin.de; keydata=
+ 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
+ scOkTAZQGVpD/8AaLH4v1w==
+Message-ID: <fe587e09-2835-87b9-ceed-89cdb81f327c@physik.fu-berlin.de>
+Date:   Tue, 11 Aug 2020 20:16:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200811160134.GA13652@linux-8ccs>
+In-Reply-To: <AA5E212C-56ED-4DB9-9CC1-EB13745DD5AF@jrtc27.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-Originating-IP: 87.189.147.196
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 06:01:35PM +0200, Jessica Yu wrote:
-
-> > > On Tue, Aug 11, 2020 at 04:34:27PM +0200, Mauro Carvalho Chehab wrote:
-> > > >   [33] .plt              PROGBITS         0000000000000340  00035c80
-> > > >        0000000000000001  0000000000000000 WAX       0     0     1
-> > > >   [34] .init.plt         NOBITS           0000000000000341  00035c81
-> > > >        0000000000000001  0000000000000000  WA       0     0     1
-> > > >   [35] .text.ftrace[...] PROGBITS         0000000000000342  00035c81
-> > > >        0000000000000001  0000000000000000 WAX       0     0     1
-
-> Interesting, my cross-compiled modules do not have the executable flag -
+On 8/11/20 7:20 PM, Jessica Clarke wrote:
+> From 6c13e42cb95025e5f7ea3ac1a1262817bf3fcfec Mon Sep 17 00:00:00 2001
+> From: Jessica Clarke <jrtc27@jrtc27.com>
+> Date: Tue, 11 Aug 2020 19:18:28 +0200
+> Subject: [PATCH] arch/ia64: Restore arch-specific pgd_offset_k implementation
 > 
->  [38] .plt              NOBITS           0000000000000340  00038fc0
->       0000000000000001  0000000000000000  WA       0     0     1
->  [39] .init.plt         NOBITS           0000000000000341  00038fc0
->       0000000000000001  0000000000000000  WA       0     0     1
->  [40] .text.ftrace_tram NOBITS           0000000000000342  00038fc0
->       0000000000000001  0000000000000000  WA       0     0     1
+> IA-64 is special and treats pgd_offset_k differently from pgd_offset by
+> not including the region number, and init_mm's PGD is such that it only
+> points to the kernel's region's PGD. This was broken in 974b9b2c68 which
+> unified the two and therfore included the region number, causing it to
+> index way out of bounds of the kernel's PGD and cause the kernel to hang
+> during early boot. Thus, permit pgd_offset_k to be overridden like the
+> other macros and override it on IA-64 with the old implementation. Also
+> update the comment to clarify that this is not just an optimisation but
+> a required implementation detail.
+> 
+> Fixes: 974b9b2c68 ("mm: consolidate pte_index() and pte_offset_*() definitions")
+> Reported-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+> Signed-off-by: Jessica Clarke <jrtc27@jrtc27.com>
+> ---
+>  arch/ia64/include/asm/pgtable.h | 8 ++++++++
+>  include/linux/pgtable.h         | 2 ++
+>  2 files changed, 10 insertions(+)
+> 
+> diff --git a/arch/ia64/include/asm/pgtable.h b/arch/ia64/include/asm/pgtable.h
+> index 10850897a91c..2ac2199d99ce 100644
+> --- a/arch/ia64/include/asm/pgtable.h
+> +++ b/arch/ia64/include/asm/pgtable.h
+> @@ -366,6 +366,14 @@ pgd_index (unsigned long address)
+>  }
+>  #define pgd_index pgd_index
+>  
+> +/*
+> + * In the kernel's mapped region we know everything is in region number 5, so
+> + * as an optimisation its PGD already points to the area for that region, but
+> + * that means not adding the region here is required, not just an optimisation.
+> + */
+> +#define pgd_offset_k(addr) \
+> +	(init_mm.pgd + (((addr) >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1)))
+> +
+>  /* Look up a pgd entry in the gate area.  On IA-64, the gate-area
+>     resides in the kernel-mapped segment, hence we use pgd_offset_k()
+>     here.  */
+> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+> index 53e97da1e8e2..73c64fe098ba 100644
+> --- a/include/linux/pgtable.h
+> +++ b/include/linux/pgtable.h
+> @@ -117,7 +117,9 @@ static inline pgd_t *pgd_offset_pgd(pgd_t *pgd, unsigned long address)
+>   * a shortcut which implies the use of the kernel's pgd, instead
+>   * of a process's
+>   */
+> +#ifndef pgd_offset_k
+>  #define pgd_offset_k(address)		pgd_offset(&init_mm, (address))
+> +#endif
+>  
+>  /*
+>   * In many cases it is known that a virtual address is mapped at PMD or PTE
+> 
 
-> I'm a bit confused about what NOLOAD actually implies in this context. From the
-> ld documentation - "The `(NOLOAD)' directive will mark a section to not be
-> loaded at run time." But these sections are marked SHF_ALLOC and are referenced
-> to in the module plt code. Or does it just tell the linker to not initialize it?
+Yes, this fixes it for me. The kernel boots fine again. Also, no build issues.
 
-Yeah, that confusion is wide-spread, so much so that bfd-ld and gold,
-both in bintils, had different behaviour at some point.
+Tested-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
 
-Anyway, another clue is that your build has all NOBITS, while Mauro's
-build has PROGBITS for the broken sections.
+Adrian
 
-Anyway, my gcc-10.1/binutils-2.34 cross tool chain (from k.org)
-generates the same as Jessica's too. I wonder if binutils-2.35 is
-wonky...
+-- 
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer - glaubitz@debian.org
+`. `'   Freie Universitaet Berlin - glaubitz@physik.fu-berlin.de
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
