@@ -7,35 +7,35 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D12C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 09:29:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91292C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 09:29:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B09220772
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 09:29:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6368920756
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 09:29:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728455AbgHKJ3b (ORCPT
+        id S1728465AbgHKJ3i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 05:29:31 -0400
-Received: from mx3.molgen.mpg.de ([141.14.17.11]:38383 "EHLO mx1.molgen.mpg.de"
+        Tue, 11 Aug 2020 05:29:38 -0400
+Received: from mx3.molgen.mpg.de ([141.14.17.11]:44249 "EHLO mx1.molgen.mpg.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728224AbgHKJ3b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 05:29:31 -0400
+        id S1728224AbgHKJ3h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 05:29:37 -0400
 Received: from ersatz.molgen.mpg.de (g45.guest.molgen.mpg.de [141.14.220.45])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: pmenzel)
-        by mx.molgen.mpg.de (Postfix) with ESMTPSA id 5470E206462B4;
-        Tue, 11 Aug 2020 11:29:29 +0200 (CEST)
+        by mx.molgen.mpg.de (Postfix) with ESMTPSA id F1A95206462B4;
+        Tue, 11 Aug 2020 11:29:35 +0200 (CEST)
 From:   Paul Menzel <pmenzel@molgen.mpg.de>
 To:     Petr Mladek <pmladek@suse.com>,
         Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc:     Paul Menzel <pmenzel@molgen.mpg.de>,
-        "Luis R . Rodriguez" <mcgrof@suse.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] init/Kconfig: Fix CPU number in LOG_CPU_MAX_BUF_SHIFT description
-Date:   Tue, 11 Aug 2020 11:29:23 +0200
-Message-Id: <20200811092924.6256-1-pmenzel@molgen.mpg.de>
+Cc:     Paul Menzel <pmenzel@molgen.mpg.de>, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/2] init/Kconfig: Increase default log buffer size from 128 KB to 512 KB
+Date:   Tue, 11 Aug 2020 11:29:24 +0200
+Message-Id: <20200811092924.6256-2-pmenzel@molgen.mpg.de>
 X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200811092924.6256-1-pmenzel@molgen.mpg.de>
+References: <20200811092924.6256-1-pmenzel@molgen.mpg.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -43,35 +43,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, LOG_BUF_SHIFT defaults to 17, which is 2 ^ 17 bytes = 128 KB,
-and LOG_CPU_MAX_BUF_SHIFT defaults to 12, which is 2 ^ 12 bytes = 4 KB.
+Commit f17a32e97e (let LOG_BUF_SHIFT default to 17) from 2008 was the
+last time, the the default log buffer size bump was increased.
 
-Half of 128 KB is 64 KB, so more than 16 CPUs are required for the value
-to be used, as then the sum of contributions is greater than 64 KB for
-the first time. My guess is, that the description was written with the
-configuration values used in the SUSE in mind.
+Machines have evolved, and on current hardware, enough memory is
+present, and some devices have over 200 PCI devices, like a two socket
+Skylake-E server, resulting a lot of lines.
 
-Fixes: 23b2899f7f ("printk: allow increasing the ring buffer depending on the number of CPUs")
-Cc: Luis R. Rodriguez <mcgrof@suse.com>
-Cc: linux-kernel@vger.kernel.org
-Reviewed-by: Petr Mladek <pmladek@suse.com>
+Therefore, increase the default from 128 KB to 512 KB. Anyone, with
+limited memory, can still lower it.
+
 Signed-off-by: Paul Menzel <pmenzel@molgen.mpg.de>
+Cc: linux-kernel@vger.kernel.org
 ---
-v2: Add Reviewed-by tag
+v2: New patch in series.
 
- init/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Is sending it to linux-kernel enough? If not, who to send it also to?
+
+ init/Kconfig | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
 diff --git a/init/Kconfig b/init/Kconfig
-index d6a0b31b13dc..9dc607e3806f 100644
+index 9dc607e3806f..13df63517cc2 100644
 --- a/init/Kconfig
 +++ b/init/Kconfig
-@@ -718,7 +718,7 @@ config LOG_CPU_MAX_BUF_SHIFT
+@@ -681,9 +681,9 @@ config IKHEADERS
+ 	  kheaders.ko is built which can be loaded on-demand to get access to headers.
+ 
+ config LOG_BUF_SHIFT
+-	int "Kernel log buffer size (16 => 64KB, 17 => 128KB)"
++	int "Kernel log buffer size (17 => 128KB, 19 => 512KB)"
+ 	range 12 25
+-	default 17
++	default 19
+ 	depends on PRINTK
+ 	help
+ 	  Select the minimal kernel log buffer size as a power of 2.
+@@ -692,6 +692,8 @@ config LOG_BUF_SHIFT
+ 	  by "log_buf_len" boot parameter.
+ 
+ 	  Examples:
++		     19 => 512 KB
++		     18 => 256 KB
+ 		     17 => 128 KB
+ 		     16 => 64 KB
+ 		     15 => 32 KB
+@@ -718,7 +720,7 @@ config LOG_CPU_MAX_BUF_SHIFT
  	  with more CPUs. Therefore this value is used only when the sum of
  	  contributions is greater than the half of the default kernel ring
  	  buffer as defined by LOG_BUF_SHIFT. The default values are set
--	  so that more than 64 CPUs are needed to trigger the allocation.
-+	  so that more than 16 CPUs are needed to trigger the allocation.
+-	  so that more than 16 CPUs are needed to trigger the allocation.
++	  so that more than 64 CPUs are needed to trigger the allocation.
  
  	  Also this option is ignored when "log_buf_len" kernel parameter is
  	  used as it forces an exact (power of two) size of the ring buffer.
