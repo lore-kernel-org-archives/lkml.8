@@ -8,56 +8,56 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F1F3C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 11:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C3B7C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 11:27:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BFBA20716
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 11:27:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 753D320716
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 11:27:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="IpW6kkxj"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="kmm4Tfqo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728785AbgHKL1D (ORCPT
+        id S1728786AbgHKL1M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 07:27:03 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:43536 "EHLO
+        Tue, 11 Aug 2020 07:27:12 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:43570 "EHLO
         mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728597AbgHKL1B (ORCPT
+        with ESMTP id S1728773AbgHKL1D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 07:27:01 -0400
+        Tue, 11 Aug 2020 07:27:03 -0400
 Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200811112658euoutp015b406851de5b9e6108c74aa080cd2ca1~qMx05Y3im1185911859euoutp01I
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 11:26:58 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200811112658euoutp015b406851de5b9e6108c74aa080cd2ca1~qMx05Y3im1185911859euoutp01I
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200811112701euoutp01f2876495cb4b031d4e2b37bc56d08914~qMx3psJsJ1304313043euoutp01M
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 11:27:01 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200811112701euoutp01f2876495cb4b031d4e2b37bc56d08914~qMx3psJsJ1304313043euoutp01M
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1597145218;
-        bh=gacXBuln4oGWnyT4m4WiEPmqSVavwuGzS9Pg8D+Y3KI=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=IpW6kkxj4xw6s7iyT4FxKSYoIq70d2jg3VrNQEfsaHvAHBHjtWCNjzeuGMIcEqv5u
-         ZDB/COGRfVd+k2eRGxZk68nAIndfoREOhXWob1KljyDbc624wC/loAXi/gLrNyB+l1
-         GPnOC1G9Hd20E+rt0ycpYA9Th4pHOkZf4z+jqVnw=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200811112658eucas1p2eee3a9ebd6d951f7086d215314959a9a~qMx0op-Qs2696226962eucas1p2Z;
-        Tue, 11 Aug 2020 11:26:58 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 95.E5.06318.280823F5; Tue, 11
-        Aug 2020 12:26:58 +0100 (BST)
+        s=mail20170921; t=1597145221;
+        bh=mb3uJApwo1DYzh9StpkGFcFQ+kpnacrAYQ1U+QTV1+c=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=kmm4TfqoQ+WcKBwYNQ6/1Z7KnOnTS0Md+pwNmGo+H3oi3fMmpCw6roi+JgQEwyinT
+         IwbHNyuFO7wOw+iPemR/LITXjJ869IRf6E1QJQ3utb6SRoEiQDiKVtNwuWjkNIx1bA
+         JnCFD2/rI8b8JTCVL2hh+23p9C0zAs92ST4VkIYw=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200811112701eucas1p16b0c9addefd5c317cf1d36e3d3874ae9~qMx3VDfPl1263112631eucas1p1X;
+        Tue, 11 Aug 2020 11:27:01 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id C9.D9.06456.480823F5; Tue, 11
+        Aug 2020 12:27:01 +0100 (BST)
 Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
         eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200811112657eucas1p2bf040e677830015a4a494584b5de9eba~qMx0SKU0_2695626956eucas1p2Y;
-        Tue, 11 Aug 2020 11:26:57 +0000 (GMT)
+        20200811112700eucas1p28bccc0c1a9e0c37d08f5f5bcd512cf30~qMx3CjDse0422204222eucas1p2K;
+        Tue, 11 Aug 2020 11:27:00 +0000 (GMT)
 Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
         eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200811112657eusmtrp2ee92c98ec00123bd78465c3fb79aa36d~qMx0RhhVQ2089620896eusmtrp2X;
-        Tue, 11 Aug 2020 11:26:57 +0000 (GMT)
-X-AuditID: cbfec7f5-371ff700000018ae-0e-5f328082bb7b
+        20200811112700eusmtrp2e37e2bbaf70a0d7a057f17c4afc0a3b5~qMx3B7nAP2089620896eusmtrp2e;
+        Tue, 11 Aug 2020 11:27:00 +0000 (GMT)
+X-AuditID: cbfec7f2-809ff70000001938-2a-5f3280849289
 Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 49.B3.06017.180823F5; Tue, 11
-        Aug 2020 12:26:57 +0100 (BST)
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 3B.B3.06017.480823F5; Tue, 11
+        Aug 2020 12:27:00 +0100 (BST)
 Received: from AMDC3061.digital.local (unknown [106.120.51.75]) by
         eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200811112657eusmtip2b0ebaa29fe53dd5a19abb8e08a22ef0d~qMxzu6Vcy2652926529eusmtip2I;
-        Tue, 11 Aug 2020 11:26:57 +0000 (GMT)
+        20200811112700eusmtip2e9fa1b04b7188e2de2b42fec938f3d8f~qMx2jy6sQ2620926209eusmtip2G;
+        Tue, 11 Aug 2020 11:27:00 +0000 (GMT)
 From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
 To:     linux-clk@vger.kernel.org
 Cc:     tomasz.figa@gmail.com, cw00.choi@samsung.com, sboyd@kernel.org,
@@ -65,72 +65,105 @@ Cc:     tomasz.figa@gmail.com, cw00.choi@samsung.com, sboyd@kernel.org,
         linux-kernel@vger.kernel.org, b.zolnierkie@samsung.com,
         m.szyprowski@samsung.com,
         Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: [PATCH 1/2] clk: samsung: exynos5420: Add definition of clock ID
- for mout_sw_aclk_g3d
-Date:   Tue, 11 Aug 2020 13:26:44 +0200
-Message-Id: <20200811112645.24596-1-s.nawrocki@samsung.com>
+Subject: [PATCH 2/2] clk: samsung: exynos5420: Avoid __clk_lookup() calls
+ when enabling clocks
+Date:   Tue, 11 Aug 2020 13:26:45 +0200
+Message-Id: <20200811112645.24596-2-s.nawrocki@samsung.com>
 X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrLIsWRmVeSWpSXmKPExsWy7djP87pNDUbxBt/Os1hsnLGe1eL6l+es
-        Fh977rFaXN41h81ixvl9TBZrj9xlt7h4ytXi8Jt2Vot/1zayWKza9YfRgcvj/Y1Wdo+ds+6y
-        e2xa1cnm0bdlFaPH501yAaxRXDYpqTmZZalF+nYJXBmT7xxgLjjGVnHpU0kD4ynWLkZODgkB
-        E4nfWyYxg9hCAisYJbpWcncxcgHZXxgl3hybwgLhfGaUmLjzFxNMx8eXrxghEssZJS5NecAG
-        17L1zAWwWWwChhK9R/sYQWwRAVmJW8d+ghUxCzQzSXzub2IBSQgLJEjc+ryRDcRmEVCVuLdn
-        E9gKXgFria+vvzBCrJOXWL3hADNIs4TAezaJni9zWCASLhLHjh9gh7CFJV4d3wJly0j83zmf
-        CaKhmVGiZ/dtdghnAqPE/eMLoMZaS9w59wtoNQfQTZoS63fpQ4QdJfbsaWIFCUsI8EnceCsI
-        EmYGMidtm84MEeaV6GgTgqhWkfi9ajo0WKQkup/8hzrNQ+JcdzcLJFBjJX6/b2WfwCg3C2HX
-        AkbGVYziqaXFuempxcZ5qeV6xYm5xaV56XrJ+bmbGIGJ4vS/4193MO77k3SIUYCDUYmHt8Da
-        MF6INbGsuDL3EKMEB7OSCK/T2dNxQrwpiZVVqUX58UWlOanFhxilOViUxHmNF72MFRJITyxJ
-        zU5NLUgtgskycXBKNTBOmqHJl1r770Ma26w7WTfCvhq0dbPZJMZ/7Njmf/qMD6viteKQN/F5
-        TPVZk5xv1dsXWTSHvTz9vaZXv3z+2mr2syd3396pVybMUPpwl32PGgtzbLBpLNcP/1kPDNjE
-        evOX/erk3Sh5SGPOJU23yKCib08ubE9uUJlfrRWxfn7hvNKFe0RMLymxFGckGmoxFxUnAgBd
-        PzEzEAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrELMWRmVeSWpSXmKPExsVy+t/xe7qNDUbxBpd26lhsnLGe1eL6l+es
+In-Reply-To: <20200811112645.24596-1-s.nawrocki@samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupileLIzCtJLcpLzFFi42LZduznOd3WBqN4g54NTBYbZ6xntbj+5Tmr
+        xceee6wWl3fNYbOYcX4fk8XaI3fZLS6ecrU4/Kad1eLftY0sFqt2/WF04PJ4f6OV3WPnrLvs
+        HptWdbJ59G1ZxejxeZNcAGsUl01Kak5mWWqRvl0CV0bHgcnsBS8FKn5PaWJrYPzD28XIySEh
+        YCJx9e9RNhBbSGAFo8Tkt0ldjFxA9hdGiQUrJjBBOJ8ZJeZ/aGGE6Vi34hULRGI5o8THSccY
+        4Vr27FzBAlLFJmAo0Xu0D6xDREBW4taxn2wgRcwCzUwSn/ubwIqEBRIk1i39CFbEIqAqcePa
+        I1YQm1fAWuLJwy42iHXyEqs3HGAGsTkFbCRe7nsMNkhCoJ1d4s6/a1A3uUh8bv/IDmELS7w6
+        vgXKlpH4v3M+E0RDM6NEz+7b7BDOBEaJ+8cXQHVbS9w59wtoLAfQfZoS63fpg5gSAo4SzRs9
+        IUw+iRtvBUGKmYHMSdumM0OEeSU62oQgZqhI/F41nQnClpLofvKfBcL2kFj1/g40tPoZJf4/
+        3Mg8gVF+FsKuBYyMqxjFU0uLc9NTiw3zUsv1ihNzi0vz0vWS83M3MQJTyOl/xz/tYPx6KekQ
+        owAHoxIPb4G1YbwQa2JZcWXuIUYJDmYlEV6ns6fjhHhTEiurUovy44tKc1KLDzFKc7AoifMa
+        L3oZKySQnliSmp2aWpBaBJNl4uCUamDMenIyRfGTmEV8XWhlqPuD2wuLfr24biyZ/fPGXdcL
+        PJslb2tWFnAFO06qfLd3Dt+hF7adV9YFTXjUraQ6q/6xXIjc78S41J6LvI2KwqZXqhUcDMWz
+        ryepW2YGGJbW3OksfjGrdVPll0+/XuVWyceIpL3WlHq6cIr6IiYTl2NH94asda0oZVNiKc5I
+        NNRiLipOBAC2W3cCHQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrNLMWRmVeSWpSXmKPExsVy+t/xe7otDUbxBnOOa1tsnLGe1eL6l+es
         Fh977rFaXN41h81ixvl9TBZrj9xlt7h4ytXi8Jt2Vot/1zayWKza9YfRgcvj/Y1Wdo+ds+6y
         e2xa1cnm0bdlFaPH501yAaxRejZF+aUlqQoZ+cUltkrRhhZGeoaWFnpGJpZ6hsbmsVZGpkr6
-        djYpqTmZZalF+nYJehmT7xxgLjjGVnHpU0kD4ynWLkZODgkBE4mPL18xdjFycQgJLGWU2Nh+
-        jb2LkQMoISUxv0UJokZY4s+1LjaImk+MErc+7WcCSbAJGEr0Hu1jBLFFBGQlbh37CVbELNDL
-        JNH+fQsLSEJYIE6ibdZlsCIWAVWJe3s2gTXzClhLfH39hRFig7zE6g0HmCcw8ixgZFjFKJJa
-        WpybnltspFecmFtcmpeul5yfu4kRGJ7bjv3csoOx613wIUYBDkYlHt4Ca8N4IdbEsuLK3EOM
-        EhzMSiK8TmdPxwnxpiRWVqUW5ccXleakFh9iNAVaPpFZSjQ5Hxg7eSXxhqaG5haWhubG5sZm
-        FkrivB0CB2OEBNITS1KzU1MLUotg+pg4OKUaGG8c/Smb1bjaQfBaaJKq54+JE6+emNDBEfS1
-        Zonr5Zy5zx1SXYOZXh+IWcEW+8BMu3+7qVz8gRedUpcls9SuLz+16uQ7W5a4be7zVopKcnCL
-        3jvxYtIeHZW1+apzLZd5rjD3f2Cz4YTE7JOX9y6STjrz+vi7OIszj17LX/m3c428nHl5zc3V
-        emuUWIozEg21mIuKEwGPvy1OZQIAAA==
-X-CMS-MailID: 20200811112657eucas1p2bf040e677830015a4a494584b5de9eba
+        djYpqTmZZalF+nYJehkdByazF7wUqPg9pYmtgfEPbxcjJ4eEgInEuhWvWLoYuTiEBJYySvw6
+        2wzkcAAlpCTmtyhB1AhL/LnWxQZR84lR4u7rTiaQBJuAoUTv0T5GEFtEQFbi1rGfYEXMAr1M
+        Eu3ft7CAJIQF4iQO9ZwHK2IRUJW4ce0RK4jNK2At8eQhyFSQDfISqzccYAaxOQVsJF7uewwW
+        FwKqmbbrM/MERr4FjAyrGEVSS4tz03OLjfSKE3OLS/PS9ZLzczcxAgN627GfW3Ywdr0LPsQo
+        wMGoxMNbYG0YL8SaWFZcmXuIUYKDWUmE1+ns6Tgh3pTEyqrUovz4otKc1OJDjKZAR01klhJN
+        zgdGW15JvKGpobmFpaG5sbmxmYWSOG+HwMEYIYH0xJLU7NTUgtQimD4mDk6pBkarYh6F+dMk
+        A78lVD1b1tOV1PnmnwynxrujM9obq4WVmI4rrnRKXX0xQeummJm0beWNdevm2N2eZms5ZYbB
+        MuOe+2158XpVheUTC776CSyRVtu20/FWLrtG0xUxgaUzmq77+oovfTp5zoO9TG/+/RJkj+Nh
+        ddJeEtp1Ku01259nP/2jp0RNfKvEUpyRaKjFXFScCACJgNdwfgIAAA==
+X-CMS-MailID: 20200811112700eucas1p28bccc0c1a9e0c37d08f5f5bcd512cf30
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200811112657eucas1p2bf040e677830015a4a494584b5de9eba
+X-RootMTR: 20200811112700eucas1p28bccc0c1a9e0c37d08f5f5bcd512cf30
 X-EPHeader: CA
 CMS-TYPE: 201P
-X-CMS-RootMailID: 20200811112657eucas1p2bf040e677830015a4a494584b5de9eba
-References: <CGME20200811112657eucas1p2bf040e677830015a4a494584b5de9eba@eucas1p2.samsung.com>
+X-CMS-RootMailID: 20200811112700eucas1p28bccc0c1a9e0c37d08f5f5bcd512cf30
+References: <20200811112645.24596-1-s.nawrocki@samsung.com>
+        <CGME20200811112700eucas1p28bccc0c1a9e0c37d08f5f5bcd512cf30@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds ID for the mout_sw_aclk_g3d (SW_CLKMUX_ACLK_G3D) clock,
-mostly for internal use in the CMU driver. It will allow to avoid the
-__clk_lookup() call when setting up the clock during the clock provider
-initialization.
+This patch adds a clk ID to the mout_sw_aclk_g3d clk definition so related
+clk pointer gets cached in the driver's private data and can be used
+later instead of a __clk_lookup() call.
+
+With that we have all clocks used in the clk_prepare_enable() calls in the
+clk provider init callback cached in clk_data.hws[] and we can reference
+the clk pointers directly rather than using __clk_lookup() with global names.
 
 Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 ---
- include/dt-bindings/clock/exynos5420.h | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/include/dt-bindings/clock/exynos5420.h b/include/dt-bindings/clock/exynos5420.h
-index 02d5ac4..ff917c8 100644
---- a/include/dt-bindings/clock/exynos5420.h
-+++ b/include/dt-bindings/clock/exynos5420.h
-@@ -230,6 +230,7 @@
- #define CLK_MOUT_USER_MAU_EPLL	659
- #define CLK_MOUT_SCLK_SPLL	660
- #define CLK_MOUT_MX_MSPLL_CCORE_PHY	661
-+#define CLK_MOUT_SW_ACLK_G3D	662
- 
- /* divider clocks */
- #define CLK_DOUT_PIXEL		768
--- 
+Depends on patch:
+[PATCH v2] clk: samsung: Keep top BPLL mux on Exynos542x enabled
+
+ drivers/clk/samsung/clk-exynos5420.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
+index bd62087..06841a6 100644
+--- a/drivers/clk/samsung/clk-exynos5420.c
++++ b/drivers/clk/samsung/clk-exynos5420.c
+@@ -712,8 +712,8 @@ static const struct samsung_mux_clock exynos5x_mux_clks[] __initconst = {
+ 			SRC_TOP12, 8, 1),
+ 	MUX(0, "mout_sw_aclk266_g2d", mout_sw_aclk266_g2d_p,
+ 			SRC_TOP12, 12, 1),
+-	MUX_F(0, "mout_sw_aclk_g3d", mout_sw_aclk_g3d_p, SRC_TOP12, 16, 1,
+-	      CLK_SET_RATE_PARENT, 0),
++	MUX_F(CLK_MOUT_SW_ACLK_G3D, "mout_sw_aclk_g3d", mout_sw_aclk_g3d_p,
++			SRC_TOP12, 16, 1, CLK_SET_RATE_PARENT, 0),
+ 	MUX(0, "mout_sw_aclk300_jpeg", mout_sw_aclk300_jpeg_p,
+ 			SRC_TOP12, 20, 1),
+ 	MUX(CLK_MOUT_SW_ACLK300, "mout_sw_aclk300_disp1",
+@@ -1649,17 +1649,18 @@ static void __init exynos5x_clk_init(struct device_node *np,
+ 				     exynos5x_subcmus);
+ 	}
+
++	hws = ctx->clk_data.hws;
+ 	/*
+ 	 * Keep top part of G3D clock path enabled permanently to ensure
+ 	 * that the internal busses get their clock regardless of the
+ 	 * main G3D clock enablement status.
+ 	 */
+-	clk_prepare_enable(__clk_lookup("mout_sw_aclk_g3d"));
++	clk_prepare_enable(hws[CLK_MOUT_SW_ACLK_G3D]->clk);
+ 	/*
+ 	 * Keep top BPLL mux enabled permanently to ensure that DRAM operates
+ 	 * properly.
+ 	 */
+-	clk_prepare_enable(__clk_lookup("mout_bpll"));
++	clk_prepare_enable(hws[CLK_MOUT_BPLL]->clk);
+
+ 	samsung_clk_of_add_provider(np, ctx);
+ }
+--
 2.7.4
 
