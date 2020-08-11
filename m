@@ -2,161 +2,133 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D908C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:27:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A49F3C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57E5A20656
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:27:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597141664;
-	bh=9Romhf292P/7ZD0l5gS6HnWmQI7XdzkZhvz1lKd/kss=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gAQzIMd/QtyRyQ+TpgKAqdw84gK0elsHUemQaVV2RCfXCYk8DrgGBHkDsqxuijbhn
-	 hfkKCmIau2yABemoPci/ZXigfFlXRQvICoOq0EEsyKpFc8oHQCKX0be45g48O8AANU
-	 /h+xk0PlNanJ9Kcktpfi2AwsUs6uFt20Q8ZGobDU=
+	by mail.kernel.org (Postfix) with ESMTP id 7EA6620656
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:27:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zkqeyvOR";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uRP3HjIj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728677AbgHKK1k (ORCPT
+        id S1728678AbgHKK1s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 06:27:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54544 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728650AbgHKK1h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 06:27:37 -0400
-Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57C602076B;
-        Tue, 11 Aug 2020 10:27:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597141656;
-        bh=9Romhf292P/7ZD0l5gS6HnWmQI7XdzkZhvz1lKd/kss=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aAlG44Q2Txjplxll/ncPm0p5mbaNu1HTyfSnYzKxvkVBKedsl0inc+1EdrfsYIwiT
-         DBJFfyBY3IYVYvGJkpJ+rXRDPjIajafW8A0T6lOnQGz8wPjGWzs2zF8/GIshW1lLN2
-         JE37Fg/E48IslKJ8Mi3OvZgns2UgYJkmqX3mj8c4=
-From:   Will Deacon <will@kernel.org>
-To:     kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        stable@vger.kernel.org
-Subject: [PATCH 2/2] KVM: arm64: Only reschedule if MMU_NOTIFIER_RANGE_BLOCKABLE is not set
-Date:   Tue, 11 Aug 2020 11:27:25 +0100
-Message-Id: <20200811102725.7121-3-will@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200811102725.7121-1-will@kernel.org>
-References: <20200811102725.7121-1-will@kernel.org>
+        Tue, 11 Aug 2020 06:27:48 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:57080 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728660AbgHKK1j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 06:27:39 -0400
+Date:   Tue, 11 Aug 2020 12:27:35 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1597141657;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=jp00Rr/a4cDX95tUyF9kFZf8y43Q4hOeQjwY+IySvJE=;
+        b=zkqeyvORSehZ1011o/jDBzYfgqEUWc7nSPhc+cuBiFnjrp59giKDvUWCHYXLdYT7f+2dVD
+        +KtbUyoVte8z13xRz83p3Ps1FtHWO4nwlx+h9OMbbm24O7q/lEl7/FfX9Fat05KIlNDyD7
+        vvw580NH77BBXxuB/MQfAPfSlwcyPaAE3xF/IKRKt333j05+15uH0YYwMga9s3u+9zE14E
+        cXb9TfhLjljNhI6L+MiD6qnx8yXP21r6LxEIuFU8pw17GYR1MGgV8skNP1aB/GT5ne/4oG
+        r7qri2wm18w7p53BsGT1LM0AKtS8Tqa78TDqvhlMZK7YcT6gGMu2GZGiEvEWqQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1597141657;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=jp00Rr/a4cDX95tUyF9kFZf8y43Q4hOeQjwY+IySvJE=;
+        b=uRP3HjIjqKMTFF8Zk9/NrdRmUpb/WYsuP90kV8dQfAPvbaKiVMr614nI4JvggAfYdBb5PF
+        90QeXgwmEsUE0ZAQ==
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Stephen Berman <stephen.berman@gmx.net>,
+        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>
+Subject: Re: power-off delay/hang due to commit 6d25be57 (mainline)
+Message-ID: <20200811102735.yifejbx62ewzpfcs@linutronix.de>
+References: <20200616155501.psduxnisltitodme@linutronix.de>
+ <871rmesqkk.fsf@gmx.net>
+ <20200617142734.mxwfoblufmo6li5e@linutronix.de>
+ <87ftatqu07.fsf@gmx.net>
+ <20200624201156.xu6hel3drnhno6c3@linutronix.de>
+ <87ftak2kxr.fsf@rub.de>
+ <20200714134410.3odqfvjq6rndjjf6@linutronix.de>
+ <CAJZ5v0hZSUkEMCszDADGWk-v0xNEiDE45B3CHLi05BX6rPfm6g@mail.gmail.com>
+ <20200714141135.47adndrsdgpiqfy4@linutronix.de>
+ <CAJZ5v0iogereapmhcFi=iXHsjnzmC26mewUSTY3+5O3ei5kfDQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAJZ5v0iogereapmhcFi=iXHsjnzmC26mewUSTY3+5O3ei5kfDQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When an MMU notifier call results in unmapping a range that spans multiple
-PGDs, we end up calling into cond_resched_lock() when crossing a PGD boundary,
-since this avoids running into RCU stalls during VM teardown. Unfortunately,
-if the VM is destroyed as a result of OOM, then blocking is not permitted
-and the call to the scheduler triggers the following BUG():
+On 2020-07-14 17:53:15 [+0200], Rafael J. Wysocki wrote:
+> acpi_evaluate_integer() doesn't show up in the trace, though, AFAICS.
+>=20
+> > I assumed acpi_ex_opcode_2A_0T_0R() since the other
+> > candidate was acpi_ev_asynch_execute_gpe_method().
+>=20
+> Which probably is the case.  Specifically
+>=20
+> acpi_ev_asynch_execute_gpe_method: Evaluate _L66
+>=20
+> is likely to cause the Notify() to be dispatched.
+=E2=80=A6
+> > Rafael, are you also interested in an ACPI dump?
+>=20
+> That might help a bit.
+>=20
+> So what probably happens is that poking at the TZ causes a GPE to
+> trigger and a Notify() to be dispatched which then goes into the
+> workqueue for execution.
+>=20
+> Now, I'm not sure what happens to those Notify() items, though.  They
+> each should cause a handler (in the thermal driver) to be executed,
+> but does that happen?
 
- | BUG: sleeping function called from invalid context at arch/arm64/kvm/mmu.c:394
- | in_atomic(): 1, irqs_disabled(): 0, non_block: 1, pid: 36, name: oom_reaper
- | INFO: lockdep is turned off.
- | CPU: 3 PID: 36 Comm: oom_reaper Not tainted 5.8.0 #1
- | Hardware name: QEMU QEMU Virtual Machine, BIOS 0.0.0 02/06/2015
- | Call trace:
- |  dump_backtrace+0x0/0x284
- |  show_stack+0x1c/0x28
- |  dump_stack+0xf0/0x1a4
- |  ___might_sleep+0x2bc/0x2cc
- |  unmap_stage2_range+0x160/0x1ac
- |  kvm_unmap_hva_range+0x1a0/0x1c8
- |  kvm_mmu_notifier_invalidate_range_start+0x8c/0xf8
- |  __mmu_notifier_invalidate_range_start+0x218/0x31c
- |  mmu_notifier_invalidate_range_start_nonblock+0x78/0xb0
- |  __oom_reap_task_mm+0x128/0x268
- |  oom_reap_task+0xac/0x298
- |  oom_reaper+0x178/0x17c
- |  kthread+0x1e4/0x1fc
- |  ret_from_fork+0x10/0x30
+Stephen's trace contains a few backtraces, all of them look like this:
 
-Use the new 'flags' argument to kvm_unmap_hva_range() to ensure that we
-only reschedule if MMU_NOTIFIER_RANGE_BLOCKABLE is set in the notifier
-flags.
+| Call Trace:
+|  acpi_ex_opcode_2A_0T_0R+0x93/0xdf
+|  acpi_ds_exec_end_op+0x10d/0x701
+|  acpi_ps_parse_loop+0x7f2/0x8c3
+|  acpi_ps_parse_aml+0x1a5/0x540
+|  acpi_ps_execute_method+0x1fe/0x2ba
+|  acpi_ns_evaluate+0x345/0x4e2
+|  acpi_evaluate_object+0x177/0x39f
+|  acpi_evaluate_integer+0x4f/0x110
+|  acpi_thermal_get_temperature.part.0+0x45/0xc4
+|  thermal_get_temp.cold+0xc/0x2e
+|  thermal_zone_get_temp+0x4c/0x70
+|  thermal_zone_device_update.part.0+0x2a/0x110
+|  acpi_thermal_notify+0xcf/0x140
+|  acpi_ev_notify_dispatch+0x45/0x5a
+|  acpi_os_execute_deferred_notify+0x34/0x60
+|  process_one_work+0x1d2/0x3a0
+|  worker_thread+0x45/0x3c0
+|  kthread+0xf6/0x130
+|  ret_from_fork+0x35/0x40
 
-Cc: <stable@vger.kernel.org>
-Fixes: 8b3405e345b5 ("kvm: arm/arm64: Fix locking for kvm_free_stage2_pgd")
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: James Morse <james.morse@arm.com>
-Signed-off-by: Will Deacon <will@kernel.org>
----
- arch/arm64/kvm/mmu.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+so no GPE and it comes the notify callback while parsing the ACPI table.
+Any ideas? I guess acpi_ex_opcode_2A_0T_0R() uses the workqueue because
+it may sleep and it might be invoked from non-preemptible context.
 
-diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
-index 5f6b35c33618..bd47f06739d6 100644
---- a/arch/arm64/kvm/mmu.c
-+++ b/arch/arm64/kvm/mmu.c
-@@ -365,7 +365,8 @@ static void unmap_stage2_p4ds(struct kvm *kvm, pgd_t *pgd,
-  * destroying the VM), otherwise another faulting VCPU may come in and mess
-  * with things behind our backs.
-  */
--static void unmap_stage2_range(struct kvm *kvm, phys_addr_t start, u64 size)
-+static void __unmap_stage2_range(struct kvm *kvm, phys_addr_t start, u64 size,
-+				 bool may_block)
- {
- 	pgd_t *pgd;
- 	phys_addr_t addr = start, end = start + size;
-@@ -390,11 +391,16 @@ static void unmap_stage2_range(struct kvm *kvm, phys_addr_t start, u64 size)
- 		 * If the range is too large, release the kvm->mmu_lock
- 		 * to prevent starvation and lockup detector warnings.
- 		 */
--		if (next != end)
-+		if (may_block && next != end)
- 			cond_resched_lock(&kvm->mmu_lock);
- 	} while (pgd++, addr = next, addr != end);
- }
- 
-+static void unmap_stage2_range(struct kvm *kvm, phys_addr_t start, u64 size)
-+{
-+	__unmap_stage2_range(kvm, start, size, true);
-+}
-+
- static void stage2_flush_ptes(struct kvm *kvm, pmd_t *pmd,
- 			      phys_addr_t addr, phys_addr_t end)
- {
-@@ -2198,7 +2204,10 @@ static int handle_hva_to_gpa(struct kvm *kvm,
- 
- static int kvm_unmap_hva_handler(struct kvm *kvm, gpa_t gpa, u64 size, void *data)
- {
--	unmap_stage2_range(kvm, gpa, size);
-+	unsigned flags = *(unsigned *)data;
-+	bool may_block = flags & MMU_NOTIFIER_RANGE_BLOCKABLE;
-+
-+	__unmap_stage2_range(kvm, gpa, size, may_block);
- 	return 0;
- }
- 
-@@ -2209,7 +2218,7 @@ int kvm_unmap_hva_range(struct kvm *kvm,
- 		return 0;
- 
- 	trace_kvm_unmap_hva_range(start, end);
--	handle_hva_to_gpa(kvm, start, end, &kvm_unmap_hva_handler, NULL);
-+	handle_hva_to_gpa(kvm, start, end, &kvm_unmap_hva_handler, &flags);
- 	return 0;
- }
- 
--- 
-2.28.0.236.gb10cc79966-goog
-
+Sebastian
