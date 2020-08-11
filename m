@@ -4,62 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE9CC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 21:59:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CF81C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 22:00:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE13C20782
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 21:59:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12FAC2078B
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 22:00:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597183165;
-	bh=caXpSKJLl/H/kbgKiL0Py3zpO3QdrpqXX99iATBhD3U=;
+	s=default; t=1597183203;
+	bh=XWjFDV1hJdjAa/nR5SVad2zNjY2lB4N6n0y9GY88vrU=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=lXmziMpTklu9rZc9cn1/EqJ6ltA8m7NUhpOSqtAByJUsRESndX+jAFG4KQqRj0MUu
-	 2RSylBXXSXWn6YaNxhFVXZUcib+Wz0gBt5dfKPEK9xPTWxS/lw+vwhXVBP5SuZUB2g
-	 Xn2kqT4tzacS6YTKI7S2PcOvvf7UO3Z43UcxibwA=
+	b=jhne3X/wSs1KR93vcb3XeZk+EpyW6XsrCh6Gm2uZQzZRSVck04grHxEARryDtdgSZ
+	 N4dn5baB7KzcacI91tTHABU7ticmhKKFY6py7xGhafLXBTxO9BxX9MKpmwhHYmTyt4
+	 lVXMwyBsXwol7Ab0y0thu3tDnmJao3H9/xIrHg7M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbgHKV7Y (ORCPT
+        id S1726506AbgHKWAB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 17:59:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45332 "EHLO mail.kernel.org"
+        Tue, 11 Aug 2020 18:00:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726453AbgHKV7X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 17:59:23 -0400
-Subject: Re: [GIT PULL] Security subsystem updates for v5.9
+        id S1726366AbgHKWAA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 18:00:00 -0400
+Subject: Re: [GIT PULL] arm64 fix for 5.9-rc1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597183163;
-        bh=caXpSKJLl/H/kbgKiL0Py3zpO3QdrpqXX99iATBhD3U=;
+        s=default; t=1597183200;
+        bh=XWjFDV1hJdjAa/nR5SVad2zNjY2lB4N6n0y9GY88vrU=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=Rq/JY7KZ1FI10wfRWG0s4V7M6uy3QF9tH17qwXONca5kNkEzGCWi076x3dOzB0gHI
-         Kpcyw5NML/wTbQpKq1bIlixIuWIothFW5fRH2XQKl2gAIPpeT68JgMqPmfuKOT+VtM
-         4KBQ8opsqV+k9XlbTHhOkrH7ypwx7vHa0BgLgdA8=
+        b=Y31iQP6R+s7HvcdO4hmdvcp9IhZlc0Qa9he0d2LdtqijU7Yvl6jhwCOIVqpC3Oze4
+         AD5nECyR5Dr+01AF8oPJWnAn4y1oMuXuvfGG0189UhfkTXnwKq4pbDojz5J2fGb5R8
+         P9AIytQnamPK3URzvm1tPoMrEfayWrxjpqJkoDb8=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <alpine.LRH.2.21.2008110454190.26986@namei.org>
-References: <alpine.LRH.2.21.2008110454190.26986@namei.org>
-X-PR-Tracked-List-Id: <linux-security-module.vger.kernel.org>
-X-PR-Tracked-Message-Id: <alpine.LRH.2.21.2008110454190.26986@namei.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/jmorris/linux-security.git tags/for-v5.9
-X-PR-Tracked-Commit-Id: bb22d80b47d5dd641d09d31946c4be0f610f3f45
+In-Reply-To: <20200811173957.GA11571@gaia>
+References: <20200811173957.GA11571@gaia>
+X-PR-Tracked-List-Id: <linux-arm-kernel.lists.infradead.org>
+X-PR-Tracked-Message-Id: <20200811173957.GA11571@gaia>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux tags/arm64-fixes
+X-PR-Tracked-Commit-Id: 3df14264ad9930733a8166e5bd0eccc1727564bb
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: ce13266d97b198934e86166491bfa4938e96508f
-Message-Id: <159718316337.19600.2683594569021966590.pr-tracker-bot@kernel.org>
-Date:   Tue, 11 Aug 2020 21:59:23 +0000
-To:     James Morris <jmorris@namei.org>
+X-PR-Merge-Commit-Id: bb5baaa9238ecf8f13b112232c7bbe0d3d598ee8
+Message-Id: <159718320056.19600.16990916723096769196.pr-tracker-bot@kernel.org>
+Date:   Tue, 11 Aug 2020 22:00:00 +0000
+To:     Catalin Marinas <catalin.marinas@arm.com>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
+        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue, 11 Aug 2020 04:55:33 +1000 (AEST):
+The pull request you sent on Tue, 11 Aug 2020 18:40:00 +0100:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/jmorris/linux-security.git tags/for-v5.9
+> git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux tags/arm64-fixes
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/ce13266d97b198934e86166491bfa4938e96508f
+https://git.kernel.org/torvalds/c/bb5baaa9238ecf8f13b112232c7bbe0d3d598ee8
 
 Thank you!
 
