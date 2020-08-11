@@ -2,132 +2,156 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F22C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:54:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D538C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:58:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D47C520855
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:54:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F40FC20782
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:58:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597157666;
-	bh=Zl1pJ2DFMmfKMyJErLFYhmOgyXO6PRB0VQI/KuGEDw0=;
+	s=default; t=1597157891;
+	bh=rpjJYDNyUBJye/pKJy8+A0p0IjypBh/1eTDNkuQVops=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=U03R5ka4fyGRi/ciTt3T4rSOm4q8YaqR1J2BfO1i/SZnhUmfQVLZNg4SuFwAtpUeF
-	 yB96kmUVAOGXOrWDq943O3zCtEw1mnbhBloBLCTGpx/rip07p5y6hAoRgB9Vrz/0gd
-	 AffLrHHu60H71/P22g0SoIesNbCMTGt/yQbi+F/g=
+	b=YgnCkX9GeiNKEihBf/wqhGiHAmlExPeN1q/dD18FJmkke9sq1a3PYtabRpA34iFQQ
+	 EWAdrRpVOCbej9WMAvbfRVSoK2W7+9AYOW782KSxQZXzohHEw09fraYBx8ZP/6V4qk
+	 jj2yp4/l06YEAR8nDYU5G7fkj68/vGLDn5HzxXho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728893AbgHKOyY (ORCPT
+        id S1728841AbgHKO6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 10:54:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56534 "EHLO mail.kernel.org"
+        Tue, 11 Aug 2020 10:58:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728802AbgHKOyW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 10:54:22 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        id S1728788AbgHKO6I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 10:58:08 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3B492083B;
-        Tue, 11 Aug 2020 14:54:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5D872076C;
+        Tue, 11 Aug 2020 14:58:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597157661;
-        bh=Zl1pJ2DFMmfKMyJErLFYhmOgyXO6PRB0VQI/KuGEDw0=;
+        s=default; t=1597157887;
+        bh=rpjJYDNyUBJye/pKJy8+A0p0IjypBh/1eTDNkuQVops=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iH7qbb0GzuMV9fPw7/HNe4Txfq+eGeS0iW+h2zR9twWkwrCwj6bRX/czJr6xvZmxO
-         BJhNNJLU0wdnPYenJjKjIfSaNWPOJfypoLhQb4DrxzJtSR5eW4EKVvcU3DmrjWI4kE
-         ZJXvf1YeXxKuNSeNN5/3K+lEqj30omp1+1UMbIKw=
-Date:   Tue, 11 Aug 2020 15:53:53 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Yu-Hsuan Hsu <yuhsuan@chromium.org>
-Cc:     Takashi Iwai <tiwai@suse.de>, "Lu, Brent" <brent.lu@intel.com>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Rojewski, Cezary" <cezary.rojewski@intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Sam McNally <sammc@chromium.org>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Daniel Stuart <daniel.stuart14@gmail.com>,
-        "yuhsuan@google.com" <yuhsuan@google.com>,
-        Damian van Soelen <dj.vsoelen@gmail.com>
-Subject: Re: [PATCH v3 2/2] ASoC: Intel: Add period size constraint on strago
- board
-Message-ID: <20200811145353.GG6967@sirena.org.uk>
-References: <6466847a-8aae-24f7-d727-36ba75e95f98@linux.intel.com>
- <DM6PR11MB364259049769F6EF3B84AABD97480@DM6PR11MB3642.namprd11.prod.outlook.com>
- <3f3baf5e-f73d-9cd6-cbfb-36746071e126@linux.intel.com>
- <CAGvk5PohOP0Yv22tb53EX=ZLB9_vOMb=iujTh64OvHmjC1d4mg@mail.gmail.com>
- <DM6PR11MB3642AC7F8EC47EB48B384D4797450@DM6PR11MB3642.namprd11.prod.outlook.com>
- <CAGvk5PogmqfEnFRA8hzby+AGgbOSvbELamh_1=eA9KTpyBMPYQ@mail.gmail.com>
- <s5htux939x1.wl-tiwai@suse.de>
- <CAGvk5PpcmkZ2HarqeCDaXm4id=84wYs-u4vWxJunHaf09gj66g@mail.gmail.com>
- <s5ho8nh37br.wl-tiwai@suse.de>
- <CAGvk5PphzkdiNfW8hiDuqX+2eQO2FvrpzA0qR3=3VvqM3GBhAA@mail.gmail.com>
+        b=HKhalOQMVaEdBkBATPK3DlaVPy3dsufQphPHD8qF1tXlhOeoUlrWjyw9RvLs3Yqx/
+         R8vgpRuviQTFGJZ8KVdnpRtGlNtOIwsirOSFeDfIFXshjHzDVq1nnHrOnpg5FaCE3C
+         7jfYOkaLBoTQBGGebtEeUf1liV8Q3b7Ld5r1gPzs=
+Date:   Tue, 11 Aug 2020 16:58:16 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Sumit Garg <sumit.garg@linaro.org>
+Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-serial@vger.kernel.org, kgdb-bugreport@lists.sourceforge.net,
+        Jiri Slaby <jslaby@suse.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [RFC 0/5] Introduce NMI aware serial drivers
+Message-ID: <20200811145816.GA424033@kroah.com>
+References: <1595333413-30052-1-git-send-email-sumit.garg@linaro.org>
+ <CAFA6WYMN=na4Pxnu1LYRVAAZRdV==5EwU-Vcq-QkRb_jaLiPmw@mail.gmail.com>
+ <20200811135801.GA416071@kroah.com>
+ <CAFA6WYMN8i96rEZuHLnskB+4k0o=K9vF1_we83P04h2BSoGjmQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="5L6AZ1aJH5mDrqCQ"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAGvk5PphzkdiNfW8hiDuqX+2eQO2FvrpzA0qR3=3VvqM3GBhAA@mail.gmail.com>
-X-Cookie: Gravity is a myth, the Earth sucks.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAFA6WYMN8i96rEZuHLnskB+4k0o=K9vF1_we83P04h2BSoGjmQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Aug 11, 2020 at 07:59:24PM +0530, Sumit Garg wrote:
+> Hi Greg,
+> 
+> Thanks for your comments.
+> 
+> On Tue, 11 Aug 2020 at 19:27, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Tue, Aug 11, 2020 at 07:20:26PM +0530, Sumit Garg wrote:
+> > > On Tue, 21 Jul 2020 at 17:40, Sumit Garg <sumit.garg@linaro.org> wrote:
+> > > >
+> > > > Make it possible for UARTs to trigger magic sysrq from an NMI. With the
+> > > > advent of pseudo NMIs on arm64 it became quite generic to request serial
+> > > > device interrupt as an NMI rather than IRQ. And having NMI driven serial
+> > > > RX will allow us to trigger magic sysrq as an NMI and hence drop into
+> > > > kernel debugger in NMI context.
+> > > >
+> > > > The major use-case is to add NMI debugging capabilities to the kernel
+> > > > in order to debug scenarios such as:
+> > > > - Primary CPU is stuck in deadlock with interrupts disabled and hence
+> > > >   doesn't honor serial device interrupt. So having magic sysrq triggered
+> > > >   as an NMI is helpful for debugging.
+> > > > - Always enabled NMI based magic sysrq irrespective of whether the serial
+> > > >   TTY port is active or not.
+> > > >
+> > > > Currently there is an existing kgdb NMI serial driver which provides
+> > > > partial implementation in upstream to have a separate ttyNMI0 port but
+> > > > that remained in silos with the serial core/drivers which made it a bit
+> > > > odd to enable using serial device interrupt and hence remained unused. It
+> > > > seems to be clearly intended to avoid almost all custom NMI changes to
+> > > > the UART driver.
+> > > >
+> > > > But this patch-set allows the serial core/drivers to be NMI aware which
+> > > > in turn provides NMI debugging capabilities via magic sysrq and hence
+> > > > there is no specific reason to keep this special driver. So remove it
+> > > > instead.
+> > > >
+> > > > Approach:
+> > > > ---------
+> > > >
+> > > > The overall idea is to intercept serial RX characters in NMI context, if
+> > > > those are specific to magic sysrq then allow corresponding handler to run
+> > > > in NMI context. Otherwise, defer all other RX and TX operations onto IRQ
+> > > > work queue in order to run those in normal interrupt context.
+> > > >
+> > > > This approach is demonstrated using amba-pl011 driver.
+> > > >
+> > > > Patch-wise description:
+> > > > -----------------------
+> > > >
+> > > > Patch #1 prepares magic sysrq handler to be NMI aware.
+> > > > Patch #2 adds NMI framework to serial core.
+> > > > Patch #3 and #4 demonstrates NMI aware uart port using amba-pl011 driver.
+> > > > Patch #5 removes kgdb NMI serial driver.
+> > > >
+> > > > Goal of this RFC:
+> > > > -----------------
+> > > >
+> > > > My main reason for sharing this as an RFC is to help decide whether or
+> > > > not to continue with this approach. The next step for me would to port
+> > > > the work to a system with an 8250 UART.
+> > > >
+> > >
+> > > A gentle reminder to seek feedback on this series.
+> >
+> > It's the middle of the merge window, and I can't do anything.
+> >
+> > Also, I almost never review RFC patches as I have have way too many
+> > patches that people think are "right" to review first...
+> >
+> 
+> Okay, I understand and I can definitely wait for your feedback.
 
---5L6AZ1aJH5mDrqCQ
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+My feedback here is this:
 
-On Tue, Aug 11, 2020 at 05:35:45PM +0800, Yu-Hsuan Hsu wrote:
-> Takashi Iwai <tiwai@suse.de> =E6=96=BC 2020=E5=B9=B48=E6=9C=8811=E6=97=A5=
- =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=884:39=E5=AF=AB=E9=81=93=EF=BC=9A
+> > I suggest you work to flesh this out first and submit something that you
+> > feels works properly.
 
-> > ... Why only 240?  That's the next logical question.
-> > If you have a clarification for it, it may be the rigid reason to
-> > introduce such a hw constraint.
+:)
 
-> According to Brent, the DSP is using 240 period regardless the
-> hw_param. If the period size is 256, DSP will read 256 samples each
-> time but only consume 240 samples until the ring buffer of DSP is
-> full. This behavior makes the samples in the ring buffer of kernel
-> consumed quickly.
+> IIUC, in order to make this approach substantial I need to make it
+> work with 8250 UART (major serial driver), correct? As currently it
+> works properly for amba-pl011 driver.
 
-> Not sure whether the explanation is correct. Hi Brent, can you confirm it?
+Yes, try to do that, or better yet, make it work with all serial drivers
+automatically.
 
-This seems to be going round and round in circles.  Userspace lets the
-kernel pick the period size, if the period size isn't 240 (or a multiple
-of it?) the DSP doesn't properly pay attention to that apparently due to
-internal hard coding in the DSP firmware which we can't change so the
-constraint logic needs to know about this DSP limitation - it seems like
-none of this is going to change without something new going into the
-mix?  We at least need a new question to ask about the DSP firmware I
-think.
+thanks,
 
---5L6AZ1aJH5mDrqCQ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8ysQAACgkQJNaLcl1U
-h9AeeAf/UWVHZwuLSbdU4F24gTh9Evg65nXjOQ/J9iQI9FUTAWaZmBBgfnbWlbRx
-1sqvxQ03kOtC40oS9jFz0hYMwDMQm4seHQfg9Zy0gr6DUHcZBnh+eTmn//6u6Xto
-W68Wr61drakKTT+9jqC5j694fxtAl1uAvrySfjiIoAJFUg+JRsytjzaeUWRGY1+z
-9EjA+q5dX7LuwPKxUmkPkSipJwxXF4zateJ3VnKK2dmNvtnFbYAYD+b7FK2x+9sK
-Q30ZaYcs5rlAif136+aUFKABTBjVBjxzE1yGlD66ZipYapXuFo1IyGiQWwq2phPT
-ZRU1vj4Zn9eW/Ma7XKCxMWgxJHEoOg==
-=CfWE
------END PGP SIGNATURE-----
-
---5L6AZ1aJH5mDrqCQ--
+greg k-h
