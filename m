@@ -2,109 +2,98 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11674C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 21:17:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B7DEC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 21:18:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E01D5205CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 21:17:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aediAnXz"
+	by mail.kernel.org (Postfix) with ESMTP id 5ACA220781
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 21:18:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597180683;
+	bh=H697I+zAaTrCDiFR/QxpngC4s+tbXs3+JE4nJBDzzfA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=XQqHYYW9V+poT3+cQTmH8wQzwuU7niqqaP11rREl5pc0WuJn9Xpl0diw8YbzByjby
+	 qqC6ZkAJvZoBd+9s9fZ+KTlKZQQKZBqKBz8MPrbEIqCb11gdRd7hacrpCJHinplCBF
+	 pEMVTTsAZjJBIdjxWyUTQV9kxujqRJokq7cFXAyI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726489AbgHKVR0 (ORCPT
+        id S1726512AbgHKVSC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 17:17:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57312 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726164AbgHKVRZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 17:17:25 -0400
-Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B867C06174A
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 14:17:25 -0700 (PDT)
-Received: by mail-vs1-xe41.google.com with SMTP id q13so21418vsn.9
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 14:17:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=y6METftXhKSKa4OJt8K+q8U+3V8Jq6aEorQMb99jfW0=;
-        b=aediAnXzrsIsrvtUll1amabGwpepmtJ394qjWBNHZ0ZsjYESbfEhdOR9crzTm+iKoc
-         C2znHUO5M7sdH7rb0Pkd1Ha0SusGVyHpnQlM7KjFQM0Ioa70gSeSag84l4BXHv84HhOb
-         i+vQZuMhUFtXeL04J/JHVzYQlobEA10bxYqVc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=y6METftXhKSKa4OJt8K+q8U+3V8Jq6aEorQMb99jfW0=;
-        b=bIPsPV9Qbk/UXoe+x9dkkdbsLMMGG68pRdDtMO7j/e1IEv/0COTIp8ZpX0c80djguN
-         YrFEDwidHaZrF3W+t6d2bx8LxtNj/4wjqK37nPyK1Zi9Zyzg06BpX6uiSqRmbLwUaoV6
-         RJHsz5ZB5niLJ6HE2amvAoRHF3Cwq0TY29da8sA0pEt9SofpY5+DeREZRyu2XVKP4/Tk
-         4YYKuQvjrcAsmPsN1Yc6/YyZtpCHkTm5oZkFun1Q2EfVAkgG4JnKwEbujX1G/ozAIvvX
-         phouCkk8w67Ur2EtthCgukVhewAHwIJjE/SJSAaZ8CQBeeic01PS2VY/FFizL7nDEfFs
-         CGjw==
-X-Gm-Message-State: AOAM532Yk3M0Kw1OxyKSsGPQmYYaco1OaYQv9DJfo9CSp0dH7zC2U59J
-        qsbAnyFHlVxFif5ZbY/iUc3rZ0DmIcc=
-X-Google-Smtp-Source: ABdhPJzJ8uZxeyBy5dRHJMhT8vZvQfYCG2oGY7kEpQGLzgtgybQtEdxSFyqAnvEmhhINrPtTbvPX1A==
-X-Received: by 2002:a67:f44f:: with SMTP id r15mr23774663vsn.42.1597180643796;
-        Tue, 11 Aug 2020 14:17:23 -0700 (PDT)
-Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com. [209.85.217.51])
-        by smtp.gmail.com with ESMTPSA id y6sm29119vke.35.2020.08.11.14.17.22
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Aug 2020 14:17:22 -0700 (PDT)
-Received: by mail-vs1-f51.google.com with SMTP id y8so25642vsq.8
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 14:17:22 -0700 (PDT)
-X-Received: by 2002:a67:fd67:: with SMTP id h7mr23572394vsa.121.1597180642357;
- Tue, 11 Aug 2020 14:17:22 -0700 (PDT)
+        Tue, 11 Aug 2020 17:18:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49416 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726424AbgHKVSB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 17:18:01 -0400
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1C72214F1
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 21:18:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597180681;
+        bh=H697I+zAaTrCDiFR/QxpngC4s+tbXs3+JE4nJBDzzfA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=tK2CUSAYGJsXC5JeDzxddiaRcH9cSe3p7Fz9EbTt74CjnD60QIkwqw4vvNHVT4ACh
+         k8OJdYzfRcSknn79jqH5aZ7+zPt0lwvNeqsUB4IiILuEyl7X0VzGp5mhon5W5y90Os
+         iDR/mF3JdxH+U4oF2F+FVjl0qmG7VCiROIuzIczU=
+Received: by mail-wm1-f51.google.com with SMTP id c19so2894606wmd.1
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 14:18:00 -0700 (PDT)
+X-Gm-Message-State: AOAM530iEZh4+QNYmbUhQAq5kilKi6Z52Lm0rsnwYKHFzJU7gIhTNy2V
+        1QXWcegFJA4W4f/tynY1+pbn+ikmOZt3ekylqK2rjg==
+X-Google-Smtp-Source: ABdhPJws+21t6FOJ6sK8kO00+QCrfmrTy0qT7N99L+sWIie61bUyPjWf7GBWU+7WzuyTe6ork3V+hpcBZbDKW738l/Y=
+X-Received: by 2002:a1c:7e02:: with SMTP id z2mr5576013wmc.138.1597180679149;
+ Tue, 11 Aug 2020 14:17:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200811190252.10559-1-sibis@codeaurora.org>
-In-Reply-To: <20200811190252.10559-1-sibis@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 11 Aug 2020 14:17:11 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=VtPX19o-tdyPBT=07AgbT7kWKhjpuU4d22SQ5D0r=jog@mail.gmail.com>
-Message-ID: <CAD=FV=VtPX19o-tdyPBT=07AgbT7kWKhjpuU4d22SQ5D0r=jog@mail.gmail.com>
-Subject: Re: [PATCH 1/2] PM / Domains: Add GENPD_FLAG_SUSPEND_ON flag
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Andy Gross <agross@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        "Brown, Len" <len.brown@intel.com>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Kevin Hilman <khilman@kernel.org>
+References: <CAHk-=wjzLmMRf=QG-n+1HnxWCx4KTQn9+OhVvUSJ=ZCQd6Y1WA@mail.gmail.com>
+ <5C8E0FA8-274E-4B56-9B5A-88E768D01F3A@amacapital.net> <a6cd01ed-918a-0ed7-aa87-0585db7b6852@schaufler-ca.com>
+ <CAJfpegvUBpb+C2Ab=CLAwWffOaeCedr-b7ZZKZnKvF4ph1nJrw@mail.gmail.com>
+ <CAG48ez3Li+HjJ6-wJwN-A84WT2MFE131Dt+6YiU96s+7NO5wkQ@mail.gmail.com> <CAJfpeguh5VaDBdVkV3FJtRsMAvXHWUcBfEpQrYPEuX9wYzg9dA@mail.gmail.com>
+In-Reply-To: <CAJfpeguh5VaDBdVkV3FJtRsMAvXHWUcBfEpQrYPEuX9wYzg9dA@mail.gmail.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Tue, 11 Aug 2020 14:17:46 -0700
+X-Gmail-Original-Message-ID: <CALCETrXRrMdbzcQPHQQgH3cKKhf87Piy7=gs3wVUX4z20bLyUw@mail.gmail.com>
+Message-ID: <CALCETrXRrMdbzcQPHQQgH3cKKhf87Piy7=gs3wVUX4z20bLyUw@mail.gmail.com>
+Subject: Re: file metadata via fs API (was: [GIT PULL] Filesystem Information)
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     Jann Horn <jannh@google.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>, Karel Zak <kzak@redhat.com>,
+        Jeff Layton <jlayton@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Christian Brauner <christian@brauner.io>,
+        Lennart Poettering <lennart@poettering.net>,
+        Linux API <linux-api@vger.kernel.org>,
+        Ian Kent <raven@themaw.net>,
+        LSM <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Tue, Aug 11, 2020 at 12:03 PM Sibi Sankar <sibis@codeaurora.org> wrote:
+On Tue, Aug 11, 2020 at 1:56 PM Miklos Szeredi <miklos@szeredi.hu> wrote:
 >
-> This is for power domains which needs to stay powered on for suspend
-> but can be powered on/off as part of runtime PM. This flag is aimed at
-> power domains coupled to remote processors which enter suspend states
-> independent to that of the application processor. Such power domains
-> are turned off only on remote processor crash/shutdown.
+> On Tue, Aug 11, 2020 at 10:37 PM Jann Horn <jannh@google.com> wrote:
+> > If you change the semantics of path strings, you'd have to be
+> > confident that the new semantics fit nicely with all the path
+> > validation routines that exist scattered across userspace, and don't
+> > expose new interfaces through file server software and setuid binaries
+> > and so on.
 >
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> ---
->  drivers/base/power/domain.c | 3 ++-
->  include/linux/pm_domain.h   | 5 +++++
->  2 files changed, 7 insertions(+), 1 deletion(-)
+> So that's where O_ALT comes in.   If the application is consenting,
+> then that should prevent exploits.   Or?
 
-Seems sane to me.
+We're going to be at risk from libraries that want to use the new
+O_ALT mechanism but are invoked by old code that passes traditional
+Linux paths.  Each library will have to sanitize paths, and some will
+screw it up.
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Tested-by: Douglas Anderson <dianders@chromium.org>
+I much prefer Linus' variant where the final part of the extended path
+is passed as a separate parameter.
