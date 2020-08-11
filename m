@@ -7,29 +7,29 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C77D1C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 16:57:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D03A6C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 16:58:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 810A52076B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 16:57:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92C6A2076B
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 16:58:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="HDKlERFU"
+	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="FYng3RiA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729296AbgHKQ5g (ORCPT
+        id S1729268AbgHKQ5g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 11 Aug 2020 12:57:36 -0400
-Received: from mail-eopbgr80042.outbound.protection.outlook.com ([40.107.8.42]:58881
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+Received: from mail-eopbgr30046.outbound.protection.outlook.com ([40.107.3.46]:38457
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729001AbgHKQ5b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 12:57:31 -0400
+        id S1728975AbgHKQ5d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 12:57:33 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Nwr4KZgUZGWZViAVN7S8TI4PoESYn8lgdPoLqT2768Y0UEOGJYg61IJ7wAu0IoPhcNnSp7rFz58Rz8KBaSKRDT9TOrT4pJEW1akzeYXWEDTt0bxkx4xrgrAxnYZERVx40kpBtb1TUZXsdPL8B3i/EU7zGIkA/xz4szhGYpIqKug2J6Iq2r0USqGayBQl4adrgD9bDGH6YcTNmu8oJ9q5PfEBwsXA05MnSJuH8ScxfGt+8kHsI968jlZI2XmN/hdSDuGx32ye/PeO7jMDOceySzF49yJr89sZGIMD0RY8p7DviPTgCwyfuN6hUMKwlCr/IJV/q9k6nFyq9Jer2JDBwQ==
+ b=EHnhkp18mheE9ujKJdTlFBZ3ylNuh4J088q2i42bLLliW4gKttfUlxwmHdsSEDbUNC99IpxyGXiLSFGUeLp0recx8y7W6tdd2iXIjXeDmK3po2BNNwqlB8q3csnzocWa6bDcsyncETYo7VGtaYJasdDyOavJCue0sq9rDaRS64QK1adH3Eb7GO3SB6ADZ7oiyiD7otNozHqWtue8P/4Ig4UXCbnkf8dKndEobR8/U7u4CqTEkHvw0/x+zzCz0SSEGPlLrM/kxkOJj7+Uj5brqmVYlrVPylLy3fH4paJ2m9+eFaX+szV6cFeoGbJ+iEqINSD0dkJMj0pQD7/Q/RbMeA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kF9EcLxD1hz4JHRjWWbm7O1KzgQzRYAqlH+/+v+HmfE=;
- b=mwySn27/Y6DNXlrbup8JNufjnC+utBgX1BlPBRd38FNUUGe1pI7UmXIUn9aPJqpOrm6a1QJ2I6QudMdn7svgkqSmnSbEsTGLGIwvtKyKZjH6hjP+qr9EQPbla3yiNcI177jtQD5ZtojcyT0b43XHoPgAjD0rOoRzpLh0551tx1bCW+8MxCLOpa26qS4Pr8IT9QRbffswj5Q2iq3nqYM3nSiKak/usVwdLf+xXLvaIn6gsm8hiqpADJekbhhZdVJl/SluEunH9tNLX2qTxHy7fEKCh5EVJ8iv+Wx23C1NP5W5XQEXCZ2G5EDgtcx7SQHlkRz75iv48PKYMghltzfDRg==
+ bh=3H2bfkd2YAPPWt9mJxh9/GUsLJTm4m7Y13uacQdqrXs=;
+ b=ZN4+pqVk9APxX6S11AvwhBU+Vny3sCy+QYKaITLMLnpS4ZdNR7p2PIdZn24biGsTQTj9MLCbj+rKpFrLLvWS6eeOwF0CaP0FD+VopDR/y+p+X38eV752psUKnL/guJfd5KTmduS7LVBVTilqKyqxTpSz0x8CgJ8ScClWZ7iJxvqASVyYvN6e0HdEh4rFRvYHL+JFZFoyAzooU2Z32IazIdWilgbA1FhrHX+sAQgqMep+Y5/MEvYbIvsLAGeUhyz3XU81n357N3GyX6VcHns3LpNkkPWXRFfqctjd/bkX7I0K/oY2x7X0KNGyJYqFyyN+A5kuoaFKCWouqCu/PRbsTA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
  is 193.240.239.45) smtp.rcpttodomain=perex.cz smtp.mailfrom=diasemi.com;
  dmarc=fail (p=none sp=none pct=100) action=none header.from=diasemi.com;
@@ -38,18 +38,18 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=dialogsemiconductor.onmicrosoft.com;
  s=selector1-dialogsemiconductor-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kF9EcLxD1hz4JHRjWWbm7O1KzgQzRYAqlH+/+v+HmfE=;
- b=HDKlERFUh7H7gi2D+55yfoj5ChsrWbVltbWICfSl7BLzvEbwR4va6zOjTi0Z3f6eqaZgLMcUWxVMQ4lh3t/LZrjFhaYwnJs+7RAxWrKI7xv27M97hZWJ9XRrWUg7wA/zb1vF+izbvVux8C6DDLVeWkbh0r4z380acLvTSI5gFSA=
-Received: from AM6PR02CA0023.eurprd02.prod.outlook.com (2603:10a6:20b:6e::36)
- by DB6PR1001MB1015.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:4:65::23) with
+ bh=3H2bfkd2YAPPWt9mJxh9/GUsLJTm4m7Y13uacQdqrXs=;
+ b=FYng3RiAv1lIe0eK1/5YdD1akD0CDzvJusexhx8Jw+z6qjO6ZZytqowOPvu0oncUL7wxvBqFXo/rHTV+dC3r6saSUyJ8He4PJ5KeYGiiMhZZqn5sFcKO+59J2e13hpuxVqn1Cd25v7wymjY3m7ZnfZ4ixuXsGz507sud9hBlykE=
+Received: from AM6PR02CA0008.eurprd02.prod.outlook.com (2603:10a6:20b:6e::21)
+ by AM6PR10MB2086.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:209:2d::31) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.15; Tue, 11 Aug
- 2020 16:57:26 +0000
+ 2020 16:57:30 +0000
 Received: from HE1EUR02FT053.eop-EUR02.prod.protection.outlook.com
- (2603:10a6:20b:6e:cafe::83) by AM6PR02CA0023.outlook.office365.com
- (2603:10a6:20b:6e::36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.19 via Frontend
- Transport; Tue, 11 Aug 2020 16:57:26 +0000
+ (2603:10a6:20b:6e:cafe::c6) by AM6PR02CA0008.outlook.office365.com
+ (2603:10a6:20b:6e::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.15 via Frontend
+ Transport; Tue, 11 Aug 2020 16:57:30 +0000
 X-MS-Exchange-Authentication-Results: spf=softfail (sender IP is
  193.240.239.45) smtp.mailfrom=diasemi.com; perex.cz; dkim=none (message not
  signed) header.d=none;perex.cz; dmarc=fail action=none
@@ -59,19 +59,18 @@ Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
 Received: from mailrelay1.diasemi.com (193.240.239.45) by
  HE1EUR02FT053.mail.protection.outlook.com (10.152.11.109) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.3261.16 via Frontend Transport; Tue, 11 Aug 2020 16:57:26 +0000
+ 15.20.3261.16 via Frontend Transport; Tue, 11 Aug 2020 16:57:29 +0000
 Received: from swsrvapps-01.diasemi.com (10.20.28.141) by
  NB-EX-CASHUB01.diasemi.com (10.1.16.140) with Microsoft SMTP Server id
- 14.3.468.0; Tue, 11 Aug 2020 18:57:23 +0200
+ 14.3.468.0; Tue, 11 Aug 2020 18:57:25 +0200
 Received: by swsrvapps-01.diasemi.com (Postfix, from userid 22379)      id
- C53E13FB96; Tue, 11 Aug 2020 17:57:23 +0100 (BST)
-Message-ID: <7a9a2ead6e37820a6025c0a62dc45952d5032ab7.1597164865.git.Adam.Thomson.Opensource@diasemi.com>
+ CB8003FBE7; Tue, 11 Aug 2020 17:57:25 +0100 (BST)
+Message-ID: <b92c461baeed27a6cd92e59e36a55c2547218683.1597164865.git.Adam.Thomson.Opensource@diasemi.com>
 In-Reply-To: <cover.1597164865.git.Adam.Thomson.Opensource@diasemi.com>
 References: <cover.1597164865.git.Adam.Thomson.Opensource@diasemi.com>
 From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Date:   Tue, 11 Aug 2020 17:57:23 +0100
-Subject: [PATCH 1/3] ASoC: da7219: Move required devm_* allocations to device
- level code
+Date:   Tue, 11 Aug 2020 17:57:25 +0100
+Subject: [PATCH 3/3] ASoC: da7219: Fix clock handling around codec level probe
 To:     Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>,
         Liam Girdwood <lgirdwood@gmail.com>,
         Jaroslav Kysela <perex@perex.cz>
@@ -83,385 +82,240 @@ MIME-Version: 1.0
 Content-Type: text/plain
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 8bbd5ac6-b942-4bbe-3e6a-08d83e17a013
-X-MS-TrafficTypeDiagnostic: DB6PR1001MB1015:
-X-Microsoft-Antispam-PRVS: <DB6PR1001MB101512C6F1E1B1D82F8910DEA7450@DB6PR1001MB1015.EURPRD10.PROD.OUTLOOK.COM>
-X-MS-Oob-TLC-OOBClassifiers: OLM:119;
+X-MS-Office365-Filtering-Correlation-Id: b1ae614d-3f94-473c-28a8-08d83e17a22d
+X-MS-TrafficTypeDiagnostic: AM6PR10MB2086:
+X-Microsoft-Antispam-PRVS: <AM6PR10MB208604F664150983E81D0E47A7450@AM6PR10MB2086.EURPRD10.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:328;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: AzO7zrVRFuispZdXo+lttTAjt9TrTAaIU7Fn20eTWIkon6DIBTlo7TiTAlHXxh2zpQ8h0OHkFbaoO/cRYITELxbjw1pxOQ1tT9dZUxVrPG9pRBNbLdmc5N/UYvMbfV3QVysWKnkvA7raCwjVluRX++CwRuvlIghBPDmS3hLAX9tglXH4EY7LciWb6XH85fjzqML8PzYAxTxepJGkRou327Lods2nHSuk0AjSMoJ2gq9DE+C/wYvE6GbRjU6S8p4r+rVI7gKEmlx+M50Kv/exo5rbaxTTQpQo98Ewl6fHQl5/eJaWdYS/cxtGtBpWGhwDtDRS3xBYsIxmYipnuDo0FLRqI5IsAyZ2ngT2EUr+FQFf37jEx36Th1+ogdxIPahXFKfEUFDd8IgdACSQzY3mmKdpJmbrb8PeJtBbRT9Mu9U0pcFla9Htu7nHG347fQwJw6/YyGY0KwB43yMe3Ev0AA==
-X-Forefront-Antispam-Report: CIP:193.240.239.45;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mailrelay1.diasemi.com;PTR:InfoDomainNonexistent;CAT:NONE;SFTY:;SFS:(4636009)(39850400004)(136003)(376002)(346002)(396003)(46966005)(26005)(82310400002)(83380400001)(70586007)(186003)(54906003)(107886003)(70206006)(356005)(81166007)(33310700002)(82740400003)(2906002)(47076004)(36756003)(6266002)(8936002)(110136005)(36906005)(86362001)(30864003)(42186006)(5660300002)(4326008)(316002)(426003)(478600001)(336012)(2616005)(8676002)(136400200001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: vUk9FJI+bUhCF79wWKqJgTFM/SIgOAD0pbxM8DdxrONmcoqg6tyOX0a2nSu/QmN5AzdcyEJE3zmpTNq6NPKBinW4BKAGbc07LbHyeycrxWRq4gvc3pAFiiTlZuLFfQdy7RZHdwWFIk/TFZ7e+gjK7wK8gCqSQJTbpzKwqodcOghZbioXv0KofiBWJjckAsZedBGA+yigwTyS5rnsswSBYhjRlnHJCrTaoq/MEZPcSxvSYIrK/WPy+0PnJcosPN6hs0BxgGWNtKpURZKdINk9yC6Hc6zSGNG+R0zB1AhJMvpz+ZugUY7pn5zccFHVjVQLlxNz8ev51Sx0P32ZBpkCvo3YYpozlAe40LWuQ5rpHKvtEd4wFkEUps475zyxZiX5TX1m51812ZQWbD3Qudvtf9fonS4QrD/BQ+lVQPlUkUKI/A32VM/KDCskTvXWawZeZo6sV2iCwNQDS3D8XeZppA==
+X-Forefront-Antispam-Report: CIP:193.240.239.45;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mailrelay1.diasemi.com;PTR:InfoDomainNonexistent;CAT:NONE;SFTY:;SFS:(4636009)(136003)(376002)(39850400004)(346002)(396003)(46966005)(70206006)(83380400001)(186003)(70586007)(86362001)(8676002)(82310400002)(33310700002)(4326008)(356005)(478600001)(8936002)(26005)(6266002)(2616005)(36756003)(2906002)(5660300002)(47076004)(42186006)(426003)(54906003)(336012)(81166007)(107886003)(110136005)(36906005)(316002)(82740400003)(136400200001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: diasemi.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Aug 2020 16:57:26.0822
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Aug 2020 16:57:29.6145
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8bbd5ac6-b942-4bbe-3e6a-08d83e17a013
+X-MS-Exchange-CrossTenant-Network-Message-Id: b1ae614d-3f94-473c-28a8-08d83e17a22d
 X-MS-Exchange-CrossTenant-Id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=511e3c0e-ee96-486e-a2ec-e272ffa37b7c;Ip=[193.240.239.45];Helo=[mailrelay1.diasemi.com]
 X-MS-Exchange-CrossTenant-AuthSource: HE1EUR02FT053.eop-EUR02.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR1001MB1015
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR10MB2086
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation for cleanup of device level and codec level probe
-funcitonality, all necessary devm_* allocations and fw retrieval
-functions are moved to the I2C probe level code.
+Previously the driver would use devm_* related functions at
+the codec level probe() to allocate clock resources for MCLK
+and the DAI clocks exposed by the device. This caused issues
+when registering clocks on a re-probe (no device level
+remove/prove involved) as the devm_* resources were never
+freed up so the clocks were still registered from the previous
+codec level probe().
+
+This commit updates the clock handling for MCLK usage and DAI
+clock provision to fix this discrepancy and allow the codec level
+probe/remove functionality to operate as intended.
 
 Signed-off-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
 ---
- sound/soc/codecs/da7219-aad.c | 85 +++++++++++++++++++++++++------------------
- sound/soc/codecs/da7219-aad.h |  3 ++
- sound/soc/codecs/da7219.c     | 30 ++++++++-------
- 3 files changed, 70 insertions(+), 48 deletions(-)
+ sound/soc/codecs/da7219.c | 96 +++++++++++++++++++++++++++++++++++------------
+ sound/soc/codecs/da7219.h |  1 +
+ 2 files changed, 72 insertions(+), 25 deletions(-)
 
-diff --git a/sound/soc/codecs/da7219-aad.c b/sound/soc/codecs/da7219-aad.c
-index 4f2a96e..3827734 100644
---- a/sound/soc/codecs/da7219-aad.c
-+++ b/sound/soc/codecs/da7219-aad.c
-@@ -460,7 +460,7 @@ static irqreturn_t da7219_aad_irq_thread(int irq, void *data)
-  */
- 
- static enum da7219_aad_micbias_pulse_lvl
--	da7219_aad_fw_micbias_pulse_lvl(struct snd_soc_component *component, u32 val)
-+	da7219_aad_fw_micbias_pulse_lvl(struct device *dev, u32 val)
- {
- 	switch (val) {
- 	case 2800:
-@@ -468,13 +468,13 @@ static irqreturn_t da7219_aad_irq_thread(int irq, void *data)
- 	case 2900:
- 		return DA7219_AAD_MICBIAS_PULSE_LVL_2_9V;
- 	default:
--		dev_warn(component->dev, "Invalid micbias pulse level");
-+		dev_warn(dev, "Invalid micbias pulse level");
- 		return DA7219_AAD_MICBIAS_PULSE_LVL_OFF;
- 	}
- }
- 
- static enum da7219_aad_btn_cfg
--	da7219_aad_fw_btn_cfg(struct snd_soc_component *component, u32 val)
-+	da7219_aad_fw_btn_cfg(struct device *dev, u32 val)
- {
- 	switch (val) {
- 	case 2:
-@@ -492,13 +492,13 @@ static irqreturn_t da7219_aad_irq_thread(int irq, void *data)
- 	case 500:
- 		return DA7219_AAD_BTN_CFG_500MS;
- 	default:
--		dev_warn(component->dev, "Invalid button config");
-+		dev_warn(dev, "Invalid button config");
- 		return DA7219_AAD_BTN_CFG_10MS;
- 	}
- }
- 
- static enum da7219_aad_mic_det_thr
--	da7219_aad_fw_mic_det_thr(struct snd_soc_component *component, u32 val)
-+	da7219_aad_fw_mic_det_thr(struct device *dev, u32 val)
- {
- 	switch (val) {
- 	case 200:
-@@ -510,13 +510,13 @@ static irqreturn_t da7219_aad_irq_thread(int irq, void *data)
- 	case 1000:
- 		return DA7219_AAD_MIC_DET_THR_1000_OHMS;
- 	default:
--		dev_warn(component->dev, "Invalid mic detect threshold");
-+		dev_warn(dev, "Invalid mic detect threshold");
- 		return DA7219_AAD_MIC_DET_THR_500_OHMS;
- 	}
- }
- 
- static enum da7219_aad_jack_ins_deb
--	da7219_aad_fw_jack_ins_deb(struct snd_soc_component *component, u32 val)
-+	da7219_aad_fw_jack_ins_deb(struct device *dev, u32 val)
- {
- 	switch (val) {
- 	case 5:
-@@ -536,13 +536,13 @@ static irqreturn_t da7219_aad_irq_thread(int irq, void *data)
- 	case 1000:
- 		return DA7219_AAD_JACK_INS_DEB_1S;
- 	default:
--		dev_warn(component->dev, "Invalid jack insert debounce");
-+		dev_warn(dev, "Invalid jack insert debounce");
- 		return DA7219_AAD_JACK_INS_DEB_20MS;
- 	}
- }
- 
- static enum da7219_aad_jack_det_rate
--	da7219_aad_fw_jack_det_rate(struct snd_soc_component *component, const char *str)
-+	da7219_aad_fw_jack_det_rate(struct device *dev, const char *str)
- {
- 	if (!strcmp(str, "32ms_64ms")) {
- 		return DA7219_AAD_JACK_DET_RATE_32_64MS;
-@@ -553,13 +553,13 @@ static irqreturn_t da7219_aad_irq_thread(int irq, void *data)
- 	} else if (!strcmp(str, "256ms_512ms")) {
- 		return DA7219_AAD_JACK_DET_RATE_256_512MS;
- 	} else {
--		dev_warn(component->dev, "Invalid jack detect rate");
-+		dev_warn(dev, "Invalid jack detect rate");
- 		return DA7219_AAD_JACK_DET_RATE_256_512MS;
- 	}
- }
- 
- static enum da7219_aad_jack_rem_deb
--	da7219_aad_fw_jack_rem_deb(struct snd_soc_component *component, u32 val)
-+	da7219_aad_fw_jack_rem_deb(struct device *dev, u32 val)
- {
- 	switch (val) {
- 	case 1:
-@@ -571,13 +571,13 @@ static irqreturn_t da7219_aad_irq_thread(int irq, void *data)
- 	case 20:
- 		return DA7219_AAD_JACK_REM_DEB_20MS;
- 	default:
--		dev_warn(component->dev, "Invalid jack removal debounce");
-+		dev_warn(dev, "Invalid jack removal debounce");
- 		return DA7219_AAD_JACK_REM_DEB_1MS;
- 	}
- }
- 
- static enum da7219_aad_btn_avg
--	da7219_aad_fw_btn_avg(struct snd_soc_component *component, u32 val)
-+	da7219_aad_fw_btn_avg(struct device *dev, u32 val)
- {
- 	switch (val) {
- 	case 1:
-@@ -589,13 +589,13 @@ static irqreturn_t da7219_aad_irq_thread(int irq, void *data)
- 	case 8:
- 		return DA7219_AAD_BTN_AVG_8;
- 	default:
--		dev_warn(component->dev, "Invalid button average value");
-+		dev_warn(dev, "Invalid button average value");
- 		return DA7219_AAD_BTN_AVG_2;
- 	}
- }
- 
- static enum da7219_aad_adc_1bit_rpt
--	da7219_aad_fw_adc_1bit_rpt(struct snd_soc_component *component, u32 val)
-+	da7219_aad_fw_adc_1bit_rpt(struct device *dev, u32 val)
- {
- 	switch (val) {
- 	case 1:
-@@ -607,14 +607,13 @@ static irqreturn_t da7219_aad_irq_thread(int irq, void *data)
- 	case 8:
- 		return DA7219_AAD_ADC_1BIT_RPT_8;
- 	default:
--		dev_warn(component->dev, "Invalid ADC 1-bit repeat value");
-+		dev_warn(dev, "Invalid ADC 1-bit repeat value");
- 		return DA7219_AAD_ADC_1BIT_RPT_1;
- 	}
- }
- 
--static struct da7219_aad_pdata *da7219_aad_fw_to_pdata(struct snd_soc_component *component)
-+static struct da7219_aad_pdata *da7219_aad_fw_to_pdata(struct device *dev)
- {
--	struct device *dev = component->dev;
- 	struct i2c_client *i2c = to_i2c_client(dev);
- 	struct fwnode_handle *aad_np;
- 	struct da7219_aad_pdata *aad_pdata;
-@@ -634,7 +633,7 @@ static struct da7219_aad_pdata *da7219_aad_fw_to_pdata(struct snd_soc_component
- 	if (fwnode_property_read_u32(aad_np, "dlg,micbias-pulse-lvl",
- 				     &fw_val32) >= 0)
- 		aad_pdata->micbias_pulse_lvl =
--			da7219_aad_fw_micbias_pulse_lvl(component, fw_val32);
-+			da7219_aad_fw_micbias_pulse_lvl(dev, fw_val32);
- 	else
- 		aad_pdata->micbias_pulse_lvl = DA7219_AAD_MICBIAS_PULSE_LVL_OFF;
- 
-@@ -643,31 +642,31 @@ static struct da7219_aad_pdata *da7219_aad_fw_to_pdata(struct snd_soc_component
- 		aad_pdata->micbias_pulse_time = fw_val32;
- 
- 	if (fwnode_property_read_u32(aad_np, "dlg,btn-cfg", &fw_val32) >= 0)
--		aad_pdata->btn_cfg = da7219_aad_fw_btn_cfg(component, fw_val32);
-+		aad_pdata->btn_cfg = da7219_aad_fw_btn_cfg(dev, fw_val32);
- 	else
- 		aad_pdata->btn_cfg = DA7219_AAD_BTN_CFG_10MS;
- 
- 	if (fwnode_property_read_u32(aad_np, "dlg,mic-det-thr", &fw_val32) >= 0)
- 		aad_pdata->mic_det_thr =
--			da7219_aad_fw_mic_det_thr(component, fw_val32);
-+			da7219_aad_fw_mic_det_thr(dev, fw_val32);
- 	else
- 		aad_pdata->mic_det_thr = DA7219_AAD_MIC_DET_THR_500_OHMS;
- 
- 	if (fwnode_property_read_u32(aad_np, "dlg,jack-ins-deb", &fw_val32) >= 0)
- 		aad_pdata->jack_ins_deb =
--			da7219_aad_fw_jack_ins_deb(component, fw_val32);
-+			da7219_aad_fw_jack_ins_deb(dev, fw_val32);
- 	else
- 		aad_pdata->jack_ins_deb = DA7219_AAD_JACK_INS_DEB_20MS;
- 
- 	if (!fwnode_property_read_string(aad_np, "dlg,jack-det-rate", &fw_str))
- 		aad_pdata->jack_det_rate =
--			da7219_aad_fw_jack_det_rate(component, fw_str);
-+			da7219_aad_fw_jack_det_rate(dev, fw_str);
- 	else
- 		aad_pdata->jack_det_rate = DA7219_AAD_JACK_DET_RATE_256_512MS;
- 
- 	if (fwnode_property_read_u32(aad_np, "dlg,jack-rem-deb", &fw_val32) >= 0)
- 		aad_pdata->jack_rem_deb =
--			da7219_aad_fw_jack_rem_deb(component, fw_val32);
-+			da7219_aad_fw_jack_rem_deb(dev, fw_val32);
- 	else
- 		aad_pdata->jack_rem_deb = DA7219_AAD_JACK_REM_DEB_1MS;
- 
-@@ -692,13 +691,13 @@ static struct da7219_aad_pdata *da7219_aad_fw_to_pdata(struct snd_soc_component
- 		aad_pdata->c_mic_btn_thr = 0x3E;
- 
- 	if (fwnode_property_read_u32(aad_np, "dlg,btn-avg", &fw_val32) >= 0)
--		aad_pdata->btn_avg = da7219_aad_fw_btn_avg(component, fw_val32);
-+		aad_pdata->btn_avg = da7219_aad_fw_btn_avg(dev, fw_val32);
- 	else
- 		aad_pdata->btn_avg = DA7219_AAD_BTN_AVG_2;
- 
- 	if (fwnode_property_read_u32(aad_np, "dlg,adc-1bit-rpt", &fw_val32) >= 0)
- 		aad_pdata->adc_1bit_rpt =
--			da7219_aad_fw_adc_1bit_rpt(component, fw_val32);
-+			da7219_aad_fw_adc_1bit_rpt(dev, fw_val32);
- 	else
- 		aad_pdata->adc_1bit_rpt = DA7219_AAD_ADC_1BIT_RPT_1;
- 
-@@ -887,21 +886,13 @@ void da7219_aad_resume(struct snd_soc_component *component)
- int da7219_aad_init(struct snd_soc_component *component)
- {
- 	struct da7219_priv *da7219 = snd_soc_component_get_drvdata(component);
--	struct da7219_aad_priv *da7219_aad;
-+	struct da7219_aad_priv *da7219_aad = da7219->aad;
- 	u8 mask[DA7219_AAD_IRQ_REG_MAX];
- 	int ret;
- 
--	da7219_aad = devm_kzalloc(component->dev, sizeof(*da7219_aad), GFP_KERNEL);
--	if (!da7219_aad)
--		return -ENOMEM;
--
--	da7219->aad = da7219_aad;
- 	da7219_aad->component = component;
- 
- 	/* Handle any DT/ACPI/platform data */
--	if (da7219->pdata && !da7219->pdata->aad_pdata)
--		da7219->pdata->aad_pdata = da7219_aad_fw_to_pdata(component);
--
- 	da7219_aad_handle_pdata(component);
- 
- 	/* Disable button detection */
-@@ -947,6 +938,30 @@ void da7219_aad_exit(struct snd_soc_component *component)
- }
- EXPORT_SYMBOL_GPL(da7219_aad_exit);
- 
-+/*
-+ * AAD related I2C probe handling
-+ */
-+
-+int da7219_aad_probe(struct i2c_client *i2c)
-+{
-+	struct da7219_priv *da7219 = i2c_get_clientdata(i2c);
-+	struct device *dev = &i2c->dev;
-+	struct da7219_aad_priv *da7219_aad;
-+
-+	da7219_aad = devm_kzalloc(dev, sizeof(*da7219_aad), GFP_KERNEL);
-+	if (!da7219_aad)
-+		return -ENOMEM;
-+
-+	da7219->aad = da7219_aad;
-+
-+	/* Retrieve any DT/ACPI/platform data */
-+	if (da7219->pdata && !da7219->pdata->aad_pdata)
-+		da7219->pdata->aad_pdata = da7219_aad_fw_to_pdata(dev);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(da7219_aad_probe);
-+
- MODULE_DESCRIPTION("ASoC DA7219 AAD Driver");
- MODULE_AUTHOR("Adam Thomson <Adam.Thomson.Opensource@diasemi.com>");
- MODULE_LICENSE("GPL");
-diff --git a/sound/soc/codecs/da7219-aad.h b/sound/soc/codecs/da7219-aad.h
-index cfa46fb..f48a120 100644
---- a/sound/soc/codecs/da7219-aad.h
-+++ b/sound/soc/codecs/da7219-aad.h
-@@ -212,4 +212,7 @@ struct da7219_aad_priv {
- int da7219_aad_init(struct snd_soc_component *component);
- void da7219_aad_exit(struct snd_soc_component *component);
- 
-+/* I2C Probe */
-+int da7219_aad_probe(struct i2c_client *i2c);
-+
- #endif /* __DA7219_AAD_H */
 diff --git a/sound/soc/codecs/da7219.c b/sound/soc/codecs/da7219.c
-index f83a6ea..82d35bc 100644
+index 0d1c70f8..ddd422c 100644
 --- a/sound/soc/codecs/da7219.c
 +++ b/sound/soc/codecs/da7219.c
-@@ -1751,9 +1751,8 @@ static int da7219_hw_params(struct snd_pcm_substream *substream,
- 	}
- }
- 
--static struct da7219_pdata *da7219_fw_to_pdata(struct snd_soc_component *component)
-+static struct da7219_pdata *da7219_fw_to_pdata(struct device *dev)
+@@ -2115,14 +2115,26 @@ static int da7219_bclk_set_rate(struct clk_hw *hw, unsigned long rate,
+ static int da7219_register_dai_clks(struct snd_soc_component *component)
  {
--	struct device *dev = component->dev;
- 	struct da7219_pdata *pdata;
- 	const char *of_str;
- 	u32 of_val32;
-@@ -2289,10 +2288,6 @@ static int da7219_probe(struct snd_soc_component *component)
+ 	struct device *dev = component->dev;
++	struct device_node *np = dev->of_node;
+ 	struct da7219_priv *da7219 = snd_soc_component_get_drvdata(component);
+ 	struct da7219_pdata *pdata = da7219->pdata;
+ 	const char *parent_name;
++	struct clk_hw_onecell_data *clk_data;
+ 	int i, ret;
+ 
++	/* For DT platforms allocate onecell data for clock registration */
++	if (np) {
++		clk_data = kzalloc(struct_size(clk_data, hws, DA7219_DAI_NUM_CLKS),
++				   GFP_KERNEL);
++		if (!clk_data)
++			return -ENOMEM;
++
++		clk_data->num = DA7219_DAI_NUM_CLKS;
++		da7219->clk_hw_data = clk_data;
++	}
++
+ 	for (i = 0; i < DA7219_DAI_NUM_CLKS; ++i) {
+ 		struct clk_init_data init = {};
+-		struct clk *dai_clk;
+ 		struct clk_lookup *dai_clk_lookup;
+ 		struct clk_hw *dai_clk_hw = &da7219->dai_clks_hw[i];
+ 
+@@ -2158,22 +2170,20 @@ static int da7219_register_dai_clks(struct snd_soc_component *component)
+ 		init.flags = CLK_GET_RATE_NOCACHE | CLK_SET_RATE_GATE;
+ 		dai_clk_hw->init = &init;
+ 
+-		dai_clk = devm_clk_register(dev, dai_clk_hw);
+-		if (IS_ERR(dai_clk)) {
+-			dev_warn(dev, "Failed to register %s: %ld\n",
+-				 init.name, PTR_ERR(dai_clk));
+-			ret = PTR_ERR(dai_clk);
++		ret = clk_hw_register(dev, dai_clk_hw);
++		if (ret) {
++			dev_warn(dev, "Failed to register %s: %d\n", init.name,
++				 ret);
+ 			goto err;
+ 		}
+-		da7219->dai_clks[i] = dai_clk;
++		da7219->dai_clks[i] = dai_clk_hw->clk;
+ 
+-		/* If we're using DT, then register as provider accordingly */
+-		if (dev->of_node) {
+-			devm_of_clk_add_hw_provider(dev, of_clk_hw_simple_get,
+-						    dai_clk_hw);
++		/* For DT setup onecell data, otherwise create lookup */
++		if (np) {
++			da7219->clk_hw_data->hws[i] = dai_clk_hw;
+ 		} else {
+-			dai_clk_lookup = clkdev_create(dai_clk, init.name,
+-						       "%s", dev_name(dev));
++			dai_clk_lookup = clkdev_hw_create(dai_clk_hw, init.name,
++							  "%s", dev_name(dev));
+ 			if (!dai_clk_lookup) {
+ 				ret = -ENOMEM;
+ 				goto err;
+@@ -2183,21 +2193,58 @@ static int da7219_register_dai_clks(struct snd_soc_component *component)
+ 		}
  	}
  
- 	/* Handle DT/ACPI/Platform data */
--	da7219->pdata = dev_get_platdata(component->dev);
--	if (!da7219->pdata)
--		da7219->pdata = da7219_fw_to_pdata(component);
--
++	/* If we're using DT, then register as provider accordingly */
++	if (np) {
++		ret = of_clk_add_hw_provider(dev->of_node, of_clk_hw_onecell_get,
++					     da7219->clk_hw_data);
++		if (ret) {
++			dev_err(dev, "Failed to register clock provider\n");
++			goto err;
++		}
++	}
++
+ 	return 0;
+ 
+ err:
+ 	do {
+ 		if (da7219->dai_clks_lookup[i])
+ 			clkdev_drop(da7219->dai_clks_lookup[i]);
++
++		clk_hw_unregister(&da7219->dai_clks_hw[i]);
+ 	} while (i-- > 0);
+ 
++	if (np)
++		kfree(da7219->clk_hw_data);
++
+ 	return ret;
+ }
++
++static void da7219_free_dai_clks(struct snd_soc_component *component)
++{
++	struct da7219_priv *da7219 = snd_soc_component_get_drvdata(component);
++	struct device_node *np = component->dev->of_node;
++	int i;
++
++	if (np)
++		of_clk_del_provider(np);
++
++	for (i = DA7219_DAI_NUM_CLKS - 1; i >= 0; --i) {
++		if (da7219->dai_clks_lookup[i])
++			clkdev_drop(da7219->dai_clks_lookup[i]);
++
++		clk_hw_unregister(&da7219->dai_clks_hw[i]);
++	}
++
++	if (np)
++		kfree(da7219->clk_hw_data);
++}
+ #else
+ static inline int da7219_register_dai_clks(struct snd_soc_component *component)
+ {
+ 	return 0;
+ }
++
++static void da7219_free_dai_clks(struct snd_soc_component *component) {}
+ #endif /* CONFIG_COMMON_CLK */
+ 
+ static void da7219_handle_pdata(struct snd_soc_component *component)
+@@ -2462,7 +2509,7 @@ static int da7219_probe(struct snd_soc_component *component)
  	da7219_handle_pdata(component);
  
  	/* Check if MCLK provided */
-@@ -2569,11 +2564,12 @@ static bool da7219_volatile_register(struct device *dev, unsigned int reg)
- static int da7219_i2c_probe(struct i2c_client *i2c,
- 			    const struct i2c_device_id *id)
+-	da7219->mclk = devm_clk_get(component->dev, "mclk");
++	da7219->mclk = clk_get(component->dev, "mclk");
+ 	if (IS_ERR(da7219->mclk)) {
+ 		if (PTR_ERR(da7219->mclk) != -ENOENT) {
+ 			ret = PTR_ERR(da7219->mclk);
+@@ -2475,7 +2522,7 @@ static int da7219_probe(struct snd_soc_component *component)
+ 	/* Register CCF DAI clock control */
+ 	ret = da7219_register_dai_clks(component);
+ 	if (ret)
+-		return ret;
++		goto err_put_clk;
+ 
+ 	/* Default PC counter to free-running */
+ 	snd_soc_component_update_bits(component, DA7219_PC_COUNT, DA7219_PC_FREERUN_MASK,
+@@ -2512,10 +2559,16 @@ static int da7219_probe(struct snd_soc_component *component)
+ 	/* Initialise AAD block */
+ 	ret = da7219_aad_init(component);
+ 	if (ret)
+-		goto err_disable_reg;
++		goto err_free_dai_clks;
+ 
+ 	return 0;
+ 
++err_free_dai_clks:
++	da7219_free_dai_clks(component);
++
++err_put_clk:
++	clk_put(da7219->mclk);
++
+ err_disable_reg:
+ 	regulator_bulk_disable(DA7219_NUM_SUPPLIES, da7219->supplies);
+ 	regulator_bulk_free(DA7219_NUM_SUPPLIES, da7219->supplies);
+@@ -2526,18 +2579,11 @@ static int da7219_probe(struct snd_soc_component *component)
+ static void da7219_remove(struct snd_soc_component *component)
  {
-+	struct device *dev = &i2c->dev;
- 	struct da7219_priv *da7219;
- 	unsigned int system_active, system_status;
- 	int i, ret;
+ 	struct da7219_priv *da7219 = snd_soc_component_get_drvdata(component);
+-#ifdef CONFIG_COMMON_CLK
+-	int i;
+-#endif
  
--	da7219 = devm_kzalloc(&i2c->dev, sizeof(struct da7219_priv),
-+	da7219 = devm_kzalloc(dev, sizeof(struct da7219_priv),
- 			      GFP_KERNEL);
- 	if (!da7219)
- 		return -ENOMEM;
-@@ -2583,7 +2579,7 @@ static int da7219_i2c_probe(struct i2c_client *i2c,
- 	da7219->regmap = devm_regmap_init_i2c(i2c, &da7219_regmap_config);
- 	if (IS_ERR(da7219->regmap)) {
- 		ret = PTR_ERR(da7219->regmap);
--		dev_err(&i2c->dev, "regmap_init() failed: %d\n", ret);
-+		dev_err(dev, "regmap_init() failed: %d\n", ret);
- 		return ret;
- 	}
+ 	da7219_aad_exit(component);
  
-@@ -2618,12 +2614,20 @@ static int da7219_i2c_probe(struct i2c_client *i2c,
+-#ifdef CONFIG_COMMON_CLK
+-	for (i = DA7219_DAI_NUM_CLKS - 1; i >= 0; --i) {
+-		if (da7219->dai_clks_lookup[i])
+-			clkdev_drop(da7219->dai_clks_lookup[i]);
+-	}
+-#endif
++	da7219_free_dai_clks(component);
++	clk_put(da7219->mclk);
  
- 	regcache_cache_bypass(da7219->regmap, false);
+ 	/* Supplies */
+ 	regulator_bulk_disable(DA7219_NUM_SUPPLIES, da7219->supplies);
+diff --git a/sound/soc/codecs/da7219.h b/sound/soc/codecs/da7219.h
+index 88b67fe..94af88f 100644
+--- a/sound/soc/codecs/da7219.h
++++ b/sound/soc/codecs/da7219.h
+@@ -817,6 +817,7 @@ struct da7219_priv {
  
--	ret = devm_snd_soc_register_component(&i2c->dev,
--				     &soc_component_dev_da7219,
--				     &da7219_dai, 1);
-+	/* Retrieve DT/ACPI/Platform data */
-+	da7219->pdata = dev_get_platdata(dev);
-+	if (!da7219->pdata)
-+		da7219->pdata = da7219_fw_to_pdata(dev);
-+
-+	/* AAD */
-+	ret = da7219_aad_probe(i2c);
-+	if (ret)
-+		return ret;
-+
-+	ret = devm_snd_soc_register_component(dev, &soc_component_dev_da7219,
-+					      &da7219_dai, 1);
- 	if (ret < 0) {
--		dev_err(&i2c->dev, "Failed to register da7219 component: %d\n",
--			ret);
-+		dev_err(dev, "Failed to register da7219 component: %d\n", ret);
- 	}
- 	return ret;
- }
+ #ifdef CONFIG_COMMON_CLK
+ 	struct clk_hw dai_clks_hw[DA7219_DAI_NUM_CLKS];
++	struct clk_hw_onecell_data *clk_hw_data;
+ #endif
+ 	struct clk_lookup *dai_clks_lookup[DA7219_DAI_NUM_CLKS];
+ 	struct clk *dai_clks[DA7219_DAI_NUM_CLKS];
 -- 
 1.9.1
 
