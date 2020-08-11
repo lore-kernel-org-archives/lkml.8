@@ -2,67 +2,94 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0AC9C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 16:44:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B5D0C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 16:45:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5E8F20771
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 16:44:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32396206DC
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 16:45:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729163AbgHKQoe (ORCPT
+        id S1729111AbgHKQpH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 12:44:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43398 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728844AbgHKQod (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 12:44:33 -0400
-Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8EBAC06174A;
-        Tue, 11 Aug 2020 09:44:33 -0700 (PDT)
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 5DC8431A;
-        Tue, 11 Aug 2020 16:44:33 +0000 (UTC)
-Date:   Tue, 11 Aug 2020 10:44:32 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Remi Andruccioli <remi.andruccioli@gmail.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] docs: cdrom: Fix a typo and rst markup
-Message-ID: <20200811104432.0fbe21db@lwn.net>
-In-Reply-To: <20200808163123.17643-1-remi.andruccioli@gmail.com>
-References: <20200808163123.17643-1-remi.andruccioli@gmail.com>
-Organization: LWN.net
+        Tue, 11 Aug 2020 12:45:07 -0400
+Received: from mga01.intel.com ([192.55.52.88]:10736 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728844AbgHKQpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 12:45:06 -0400
+IronPort-SDR: LEm0IEe3ItJ7CmA1O2Z4PSpoWx2wtpnq8jntfJqd/Uw0cczla5zelcACOSBeVTOU2Mg+iSsP6F
+ ovi7lLzTYcaw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9710"; a="171818111"
+X-IronPort-AV: E=Sophos;i="5.76,301,1592895600"; 
+   d="scan'208";a="171818111"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2020 09:45:06 -0700
+IronPort-SDR: Xyr4BmkhoH5allwCx1J2v5ZZj/pn9A6anrpHZfhvC5mWpsgUNVQEa2eTLRmFdndIgK62uHknbN
+ xhXdPQQG9BOA==
+X-IronPort-AV: E=Sophos;i="5.76,301,1592895600"; 
+   d="scan'208";a="332550145"
+Received: from jbrandeb-mobl3.amr.corp.intel.com (HELO localhost) ([10.209.73.16])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2020 09:45:05 -0700
+Date:   Tue, 11 Aug 2020 09:45:04 -0700
+From:   Jesse Brandeburg <jesse.brandeburg@intel.com>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
+        Martyna Szapar <martyna.szapar@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        "Jeff Kirsher" <jeffrey.t.kirsher@intel.com>
+Subject: Re: [PATCH 4.19 47/48] i40e: Memory leak in
+ i40e_config_iwarp_qvlist
+Message-ID: <20200811094504.000068bb@intel.com>
+In-Reply-To: <20200811124614.2myealhkhnla6v3a@duo.ucw.cz>
+References: <20200810151804.199494191@linuxfoundation.org>
+        <20200810151806.541597863@linuxfoundation.org>
+        <20200811124614.2myealhkhnla6v3a@duo.ucw.cz>
+X-Mailer: Claws Mail 3.12.0 (GTK+ 2.24.28; i686-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat,  8 Aug 2020 18:31:23 +0200
-Remi Andruccioli <remi.andruccioli@gmail.com> wrote:
+On Tue, 11 Aug 2020 14:46:14 +0200
+Pavel Machek <pavel@denx.de> wrote:
 
-> "The capability fags" should be "The capability flags".
+> > --- a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
+> > +++ b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
+> > @@ -449,16 +450,19 @@ static int i40e_config_iwarp_qvlist(stru
+> >  			 "Incorrect number of iwarp vectors %u.
+> > Maximum %u allowed.\n", qvlist_info->num_vectors,
+> >  			 msix_vf);
+> > -		goto err;
+> > +		ret = -EINVAL;
+> > +		goto err_out;
+> >  	}
 > 
-> In rst markup, a incorrect markup expression is causing bad rendering in
-> Sphinx output. Replace the erroneous single quote by a backquote.
-> 
-> Signed-off-by: Remi Andruccioli <remi.andruccioli@gmail.com>
-> ---
->  Documentation/cdrom/cdrom-standard.rst | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> And it is no longer freeing data qvlist_info() in this path. Is that
+> correct? Should it goto err_free instead? 
 
-I've applied this, thanks.
+Hi Pavel, thanks for the review.
 
-The backtick replacement makes the warning go away, but a better fix would
-be to remove the backticks entirely; I'm not sure why they are used as
-quotes in that file.
+I believe it is still correct, the logic is a bit convoluted, but
+tracing back, I see that the caller in i40e_main.c allocates a buffer,
+calls this function (eventually) with that memory cast to the *input*
+variable qvlist_info, and then the top caller frees the original buffer.
 
-jon
+One thing that I'll admit is confusing here is that the *input* struct
+qvlist_info is different than the vf->qvlist_info struct managed by
+this function. Maybe that they have the same name was confusing to you?
+It confused me for a moment while I investigated, but I believe there
+is no actual problem.
+
+The reason for the function working this way is that the input data is
+from the VF message, and the driver data structures in the PF (i40e)
+driver representing state of the VF are managed separately. 
+
+Jesse
