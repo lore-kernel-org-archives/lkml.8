@@ -2,171 +2,149 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A791C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 06:26:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34715C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 06:27:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB9CC2076B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 06:26:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C3602076B
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 06:27:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TagRL43F"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WH6Zpbi2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728068AbgHKG0d (ORCPT
+        id S1728081AbgHKG1m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 02:26:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33052 "EHLO
+        Tue, 11 Aug 2020 02:27:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33230 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726154AbgHKG0d (ORCPT
+        with ESMTP id S1726154AbgHKG1l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 02:26:33 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0994C06174A
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 23:26:32 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id mt12so1329161pjb.4
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 23:26:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=VJTXqvLrvMMQzRof1vfqgipc+TGVK+u9sAMmZlRXQAg=;
-        b=TagRL43FdmkJVZHHkDLuQOHpBpVjVUeBo6kA7CgyCUtd9h0IiwlOyCCJ8JYKd/sRO6
-         0G5GFEx76LsLH4gTbPLBMKX4OT/bZ8MY9Pg1ZlJXg6gvqKyEiPVP8c9gm7PBZvcpRS5k
-         j27BBdBUMKGqy90oqSfEqe9bLV2aGZNMjPkhpfi3oks1dJ7myszwKtc/XudO2ujxlQD/
-         cuA6VKgImD6dWvyDfQje9e5/vHLmNyebo4IMJeDuz7mDfU/0fw4sn25twlS5M45/0q4Z
-         lVPJUShFl2Mc7CL+LgXUydGzOAmCHlBq9TxM6mpchTMkQGmK42A81G/xYqTUwTCnRnwQ
-         +ZbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VJTXqvLrvMMQzRof1vfqgipc+TGVK+u9sAMmZlRXQAg=;
-        b=UnkSfQjvxpfmgQFOiwbzfiYISNbO4gpOJz4sblkC1XSFBNgcYxTRZa+9SNnUQth83g
-         E4Z+iUuiDM6q11aGdLQhQjpazp/+nGgvxHqWa3sB0eBHCk2qk8freckf7qwYfxGoqGZW
-         I8mztQ/XZuTKrg3ePxPr+sPQqVPbfFh+uAnLGIuJHQogJ5bW2BpGUPDo3k01Ua44N6Ou
-         I6z5mmKcRnue2xJZsGu6LiEDOpBDy/qU8tSxa9ax1qWLVbxgSd7T2/qqi9f1KsHb8bCq
-         fJLyDGDRTZmJyc8yJZ38FezKQLMhdy+BUL9SsXCx8gvGRc9+ELaqs7SA7qEOv9NuihIf
-         c0NQ==
-X-Gm-Message-State: AOAM530HvgrApnPaYBZGWX3DE0ukc9ZH1S1mktUHaLaoU28JUSirGBVN
-        gSDShNSf03WV7tHzbi+h4+Z9j8Ihsg==
-X-Google-Smtp-Source: ABdhPJzWa4+iScHbqTBVCEZxGz8oX3jdRGzQwlJy8qC9cvSt8meVn4PTHsxB0TneD/ZWVhU1qWqvJg==
-X-Received: by 2002:a17:90a:cc14:: with SMTP id b20mr3052803pju.1.1597127192084;
-        Mon, 10 Aug 2020 23:26:32 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:699:2bc7:b9eb:9a30:bf89:3f3d])
-        by smtp.gmail.com with ESMTPSA id u15sm1432169pje.42.2020.08.10.23.26.28
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 10 Aug 2020 23:26:31 -0700 (PDT)
-Date:   Tue, 11 Aug 2020 11:56:25 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Bhaumik Bhatt <bbhatt@codeaurora.org>
-Cc:     linux-arm-msm@vger.kernel.org, hemantk@codeaurora.org,
-        jhugo@codeaurora.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 00/11] Introduce features and debugfs/sysfs entries
- for MHI
-Message-ID: <20200811062625.GD2762@Mani-XPS-13-9360>
-References: <1597096865-19636-1-git-send-email-bbhatt@codeaurora.org>
+        Tue, 11 Aug 2020 02:27:41 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFDE2C06174A
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 23:27:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=tHm64C/K319CawL1Utw9/ujWZDpftWfDesnIuDRE+5s=; b=WH6Zpbi2msSZ0uT5t9XaZ8WIr9
+        j1QCkVRYlP8mX6dTCAAKSAG+FmMrHkmhMwuOYG/g11ibR9ur1RQeR6wPBhfPuCcRVt8a+ZBR5xd3s
+        JkYrCpnA7AgXL6aDIiG62FkF4OQx6NwN/rfH0rnx6fm2rmJnlTskabmtkRuof2hBaHR40FRKsUWIz
+        vpVZ2LfJX8Qa5UHXQnsUo7LHx+CX/1UXNswg5GhV/QEgx8mLyIP4vfQXUyosKD1U47PRNhM04CV/2
+        ELKCcrYDUVqmHHT8SPQQuIqhbY6AT1xnwAGpVdGSt89Hxvjld7cZD97oTWnRYi8qyLbZMIxJPpPVD
+        xk67ClZA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k5Nl0-0001zc-UW; Tue, 11 Aug 2020 06:27:35 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D253A980CA0; Tue, 11 Aug 2020 08:27:33 +0200 (CEST)
+Date:   Tue, 11 Aug 2020 08:27:33 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Peter Oskolkov <posk@google.com>
+Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        linux-kernel@vger.kernel.org, Paul Turner <pjt@google.com>,
+        Chris Kennelly <ckennelly@google.com>,
+        Peter Oskolkov <posk@posk.io>
+Subject: Re: [PATCH 1/2 v3] rseq/membarrier: add
+ MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ
+Message-ID: <20200811062733.GP3982@worktop.programming.kicks-ass.net>
+References: <20200811000959.2486636-1-posk@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1597096865-19636-1-git-send-email-bbhatt@codeaurora.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200811000959.2486636-1-posk@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bhaumik,
+On Mon, Aug 10, 2020 at 05:09:58PM -0700, Peter Oskolkov wrote:
+> @@ -27,6 +35,12 @@
+>  
+>  static void ipi_mb(void *info)
+>  {
 
-On Mon, Aug 10, 2020 at 03:00:54PM -0700, Bhaumik Bhatt wrote:
-> Save hardware information from BHI.
-> Allow reading and modifying some MHI variables for debug, test, and
-> informational purposes using debugfs.
-> Read values for device specific hardware information to be used by OEMs in
-> factory testing such as serial number and PK hash using sysfs.
-> 
-> This set of patches was tested on arm64 and x86.
-> 
+The #ifdef wants to behere, otherwise you'll get a compile warning for
+!RSEQ builds.
 
-Sorry for stretching the review so long. Will apply the series to mhi-next
-once v5.9-rc1 is out.
+> +	int *flags = info;
+> +
+> +#ifdef CONFIG_RSEQ
+> +	if (flags && (*flags == MEMBARRIER_FLAG_RSEQ))
+> +		rseq_preempt(current);
+> +#endif
+>  	smp_mb();	/* IPIs should be serializing but paranoid. */
+>  }
 
-Thanks,
-Mani
+But yes, this looks much better.
 
-> v7:
-> -Added suggested-by and reviewed-by tags
-> -Fixed nitpick on removal of M3_fast counter as it was unused
-> -Updated sysfs documentation dates and intended kernel version
-> -Fixed minor debugfs formatting by removing an extra newline character
-> 
-> v6:
-> -Introduced APIs for allocating and freeing the MHI controller so as to ensure
-> that it is always zero-initialized
-> -Moved gerrits around for counter introduction
-> -Fixed documentation for sysfs
-> 
-> v5:
-> -Removed the debug entry to trigger reset and will be addressed in a seperate
-> patch
-> -Added patch bus: mhi: core: Use counters to track MHI device state transitions
-> -Updated helper API to trigger a non-blocking host resume
-> -Minor nitpicks also fixed
-> 
-> v4:
-> -Removed bus: mhi: core: Introduce independent voting mechanism patch
-> -Removed bus vote function from debugfs due to independent voting removal
-> -Added helper resume APIs to aid consolidation of spread out code
-> -Added a clean-up patch and a missing host resume in voting API
-> 
-> v3:
-> -Add patch to check for pending packets in suspend as a dependency for the
-> independent voting mechanism introduction
-> -Include register dump entry for debugfs to dump MHI, BHI, and BHIe registers
-> -Update commit message for the debugfs patch
-> -Updated Documentation/ABI with the required info for sysfs
-> -Updated debugfs patch to include a new KConfig entry and dependencies
-> -Updated reviewed-by for some patches
-> 
-> v2:
-> -Added a new debugfs.c file for specific debugfs entries and code
-> -Updated commit text and addressed some comments for voting change
-> -Made sure sysfs is only used for serial number and OEM PK hash usage
-> 
-> Bhaumik Bhatt (11):
->   bus: mhi: core: Remove double occurrence for mhi_ctrl_ev_task()
->     declaration
->   bus: mhi: core: Abort suspends due to outgoing pending packets
->   bus: mhi: core: Use helper API to trigger a non-blocking host resume
->   bus: mhi: core: Trigger host resume if suspended during
->     mhi_device_get()
->   bus: mhi: core: Use generic name field for an MHI device
->   bus: mhi: core: Introduce helper function to check device state
->   bus: mhi: core: Introduce counters to track MHI device state
->     transitions
->   bus: mhi: core: Introduce debugfs entries for MHI
->   bus: mhi: core: Read and save device hardware information from BHI
->   bus: mhi: core: Introduce APIs to allocate and free the MHI controller
->   bus: mhi: core: Introduce sysfs entries for MHI
-> 
->  Documentation/ABI/stable/sysfs-bus-mhi |  21 ++
->  MAINTAINERS                            |   1 +
->  drivers/bus/mhi/Kconfig                |   8 +
->  drivers/bus/mhi/core/Makefile          |   5 +-
->  drivers/bus/mhi/core/boot.c            |  17 +-
->  drivers/bus/mhi/core/debugfs.c         | 409 +++++++++++++++++++++++++++++++++
->  drivers/bus/mhi/core/init.c            |  81 ++++++-
->  drivers/bus/mhi/core/internal.h        |  37 ++-
->  drivers/bus/mhi/core/main.c            |  27 +--
->  drivers/bus/mhi/core/pm.c              |  26 ++-
->  include/linux/mhi.h                    |  30 ++-
->  11 files changed, 623 insertions(+), 39 deletions(-)
->  create mode 100644 Documentation/ABI/stable/sysfs-bus-mhi
->  create mode 100644 drivers/bus/mhi/core/debugfs.c
-> 
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
+Mathieu did mention a few other points that I didn't see addressed:
+
+ - he didn't like abusing the @flags syscall argument for a CPUid;
+ - he wondered if we should support SYNC_CORE + RSEQ.
+
+
+Not sure we can easily change the syscall at this point, but the latter
+point could be addressed with something like this.
+
+---
+Index: linux-2.6/kernel/sched/membarrier.c
+===================================================================
+--- linux-2.6.orig/kernel/sched/membarrier.c
++++ linux-2.6/kernel/sched/membarrier.c
+@@ -374,8 +374,26 @@ static int membarrier_register_private_e
+  */
+ SYSCALL_DEFINE2(membarrier, int, cmd, int, flags)
+ {
++	int cflags = 0, int cpuid = -1;
++
+ 	if (unlikely(flags) && cmd != MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ)
+ 		return -EINVAL;
++
++	if (cmd & (MEMBARRIER_CMD_PRIVATE_EXPEDITED |
++		   MEMBARRIER_CMD_PRIVATE_EXPEDITED_SYNC_CORE |
++		   MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ)) {
++
++		if (cmd & MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ)
++			cflags |= MEMBARRIER_FLAG_RSEQ;
++
++		if (cmd & MEMBARRIER_CMD_PRIVATE_EXPEDITED_SYNC_CORE) {
++			cflags |= MEMBARRIER_FLAG_SYNC_CORE;
++			cpuid = flags;
++		}
++
++		cmd = MEMBARRIER_CMD_PRIVATE_EXPEDITED;
++	}
++
+ 	switch (cmd) {
+ 	case MEMBARRIER_CMD_QUERY:
+ 	{
+@@ -396,18 +414,16 @@ SYSCALL_DEFINE2(membarrier, int, cmd, in
+ 		return membarrier_global_expedited();
+ 	case MEMBARRIER_CMD_REGISTER_GLOBAL_EXPEDITED:
+ 		return membarrier_register_global_expedited();
+-	case MEMBARRIER_CMD_PRIVATE_EXPEDITED:
+-		return membarrier_private_expedited(0, -1);
+ 	case MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED:
+ 		return membarrier_register_private_expedited(0);
+-	case MEMBARRIER_CMD_PRIVATE_EXPEDITED_SYNC_CORE:
+-		return membarrier_private_expedited(MEMBARRIER_FLAG_SYNC_CORE, -1);
+ 	case MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED_SYNC_CORE:
+ 		return membarrier_register_private_expedited(MEMBARRIER_FLAG_SYNC_CORE);
+-	case MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ:
+-		return membarrier_private_expedited(MEMBARRIER_FLAG_RSEQ, flags);
+ 	case MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED_RSEQ:
+ 		return membarrier_register_private_expedited(MEMBARRIER_FLAG_RSEQ);
++
++	case MEMBARRIER_CMD_PRIVATE_EXPEDITED:
++		return membarrier_private_expedited(cflags, cpuid);
++
+ 	default:
+ 		return -EINVAL;
+ 	}
+
