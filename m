@@ -2,114 +2,127 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4519C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E35C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:25:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 913CF2078E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:25:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A71C42078E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:25:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="iOeUdNug"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OQq/o6a5";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZWVlbzQi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728902AbgHKPZR (ORCPT
+        id S1728949AbgHKPZz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 11:25:17 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:58466 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728833AbgHKPZQ (ORCPT
+        Tue, 11 Aug 2020 11:25:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59530 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728833AbgHKPZz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 11:25:16 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07BFOJta044848;
-        Tue, 11 Aug 2020 11:24:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=cEwk6TAa95zYV1nxW+N1opA9VVfSaCs08FvB3POEfBQ=;
- b=iOeUdNug91mwxq6LkF1sO727VPzsCU0i8y9yfmxNA7+NdLRrHdBU06QLzjzcjZMIWf3i
- l3USvjp+4uYf2hZa7poPqAwl/7pkEb89WIqTo/jS5JegX/h14jqtjBrk08SkD4fEVQvL
- +67oKss94tuAvU9N8+YRGbdrqjply3gP37VZ0GVbqtfx51tq2BVJb+8cA4eD8/aoAmCW
- ORoTYO+745lpVUmjHQlOMNc4UkCf5xDwWxyY2XT8NlA1paQ9FhWTtlVFoQ2vFoXtIrVT
- FzXhpUzqcKK4+yLsxCvv8QsrcrAEwiCPu/5HVNLUdCZxabvyuFa+fMbLgJkkGytzsoOv wQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32ut5nyw8w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 11 Aug 2020 11:24:21 -0400
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07BFOLuO045061;
-        Tue, 11 Aug 2020 11:24:21 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32ut5nyw5k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 11 Aug 2020 11:24:20 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07BFKOsk029899;
-        Tue, 11 Aug 2020 15:24:15 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma04ams.nl.ibm.com with ESMTP id 32skp83gpb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 11 Aug 2020 15:24:15 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07BFODgs20775192
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 11 Aug 2020 15:24:13 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4052052067;
-        Tue, 11 Aug 2020 15:24:13 +0000 (GMT)
-Received: from JAVRIS.in.ibm.com (unknown [9.199.46.203])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 584635204F;
-        Tue, 11 Aug 2020 15:24:12 +0000 (GMT)
-Subject: Re: [PATCH] [v2] tools/objtool: Fix unnecessary jumps
-To:     Youling Tang <tangyouling@loongson.cn>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org
-References: <1597119505-8038-1-git-send-email-tangyouling@loongson.cn>
-From:   Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-Message-ID: <c3cc66bb-bdf0-bc53-f7d3-75cf8d5f94d4@linux.vnet.ibm.com>
-Date:   Tue, 11 Aug 2020 20:54:10 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 11 Aug 2020 11:25:55 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 076AFC06174A;
+        Tue, 11 Aug 2020 08:25:54 -0700 (PDT)
+Date:   Tue, 11 Aug 2020 17:25:51 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1597159552;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=H/PoO99VsZeKU1ujq9T6uhiYphTk/6W+rjmcRTYfavM=;
+        b=OQq/o6a5Bx1Ji03ydocv7ch7KSWm4fMb57nF9O4u+W7WHjdpA1p7/5vErU95SZcp8sSeem
+        YfIeb8dzL7aqLON9otn+2W4/sA6QOxOfTU/7xm7ePP9jAVSyAccLFCWZ8TbG0oIZdBS9qv
+        bCuronuAuzXQoaZjYzk32Q58lii2T9gT7fdY+MLj6548T7krvIYSr5aPNM02sZIRZWjE5U
+        cRSBYMfDTkQWGs/Fqe+DxoZYfVaPzrX29jos2k2Xv39m/9NXcgnkiFCkiONfs55VNCsbm3
+        eYR0dwqATsfVoOK6OfhuVs7GYkCIA/eZQgLKi/9Bp3XkMLcs4pJbFfAy6PZfSw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1597159552;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=H/PoO99VsZeKU1ujq9T6uhiYphTk/6W+rjmcRTYfavM=;
+        b=ZWVlbzQie0KOYgCV5rE8j6j0xagRISQi6y5u2cw+QUeHXip+3H8rVXV+qC70k/TFMS/Oaf
+        a+jffPRt062k0vAw==
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Stephen Berman <stephen.berman@gmx.net>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>
+Subject: Re: power-off delay/hang due to commit 6d25be57 (mainline)
+Message-ID: <20200811152551.dmfw46urecbmeklr@linutronix.de>
+References: <87ftatqu07.fsf@gmx.net>
+ <20200624201156.xu6hel3drnhno6c3@linutronix.de>
+ <87ftak2kxr.fsf@rub.de>
+ <20200714134410.3odqfvjq6rndjjf6@linutronix.de>
+ <CAJZ5v0hZSUkEMCszDADGWk-v0xNEiDE45B3CHLi05BX6rPfm6g@mail.gmail.com>
+ <20200714141135.47adndrsdgpiqfy4@linutronix.de>
+ <87blkbx1gt.fsf@gmx.net>
+ <87imdp5r80.fsf@rub.de>
+ <20200811132955.wbt55ns7bu5mxouq@linutronix.de>
+ <CAJZ5v0h+n9VCz5=VixVbe_b=ZbTU3D=46stGhE9z7Y7yaUMJzw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1597119505-8038-1-git-send-email-tangyouling@loongson.cn>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-11_13:2020-08-11,2020-08-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
- bulkscore=0 phishscore=0 priorityscore=1501 malwarescore=0 suspectscore=8
- lowpriorityscore=0 mlxscore=0 adultscore=0 spamscore=0 mlxlogscore=665
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008110101
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAJZ5v0h+n9VCz5=VixVbe_b=ZbTU3D=46stGhE9z7Y7yaUMJzw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/08/20 9:48 am, Youling Tang wrote:
-> There is no need to jump to the "out" tag when "ret < 0", just return
-> directly to "ret".
-> 
-> Signed-off-by: Youling Tang <tangyouling@loongson.cn>
+On 2020-08-11 16:34:09 [+0200], Rafael J. Wysocki wrote:
+> On Tue, Aug 11, 2020 at 3:29 PM Sebastian Andrzej Siewior
+> <bigeasy@linutronix.de> wrote:
+> >
+> > On 2020-08-11 13:58:39 [+0200], Stephen Berman wrote:
+> > > him about your workaround of adding 'thermal.tzp=3D300' to the kernel
+> > > commandline, and he replied that this works for him too.  And it turns
+> > > out we have similar motherboards: I have a Gigabyte Z390 M Gaming
+> > > Rev. 1001 board and he has Gigabyte Z390 Designare rev 1.0.
+> >
+> > Yes. Based on latest dmesg, the ACPI tables contain code which schedules
+> > the worker and takes so long. It is possible / likely that his board
+> > contains the same tables which leads to the same effect. After all those
+> > two boards are very similar from the naming part :)
+> > Would you mind to dump the ACPI tables and send them? There might be
+> > some hints.
+>=20
+> Do we have a BZ for this?  It would be useful to open one if not.
 
-the patch looks good to me, the commit message doesn't explain the
-reason for the change. It can be written like:
+no, it came via lkml and I looked at it since it was bisected to a
+workqueue commit with my signoff=E2=80=A6
+Stephen, can you open a bug on https://bugzilla.kernel.org/?
 
-"Previously cleanup() function was called under the out label for both
-fatal errors (ret < 0) and warnings.  Now that cleanup() function is
-removed, the out label is no longer required. Remove it and return
-immediately for the fatal errors with ret as return code and 0 for
-warnings."
+> > It might be possible that a BIOS update fixes the problem but I would
+> > prefer very much to fix this in kernel to ensure that such a BIOS does
+> > not lead to this problem again.
+>=20
+> I agree.
+>=20
+> It looks like one way to address this issue might be to add a rate
+> limit for thermal notifications on a given zone.
 
+So one thing is that ACPI says to poll every second and driver is doing
+it. This could be increased to something like 15 or 30 seconds as lower
+sane level. I don't think there is much value in polling this sensor
+every second. As workaound, Stephen is using `thermal.tzp=3D300' now.=20
 
-Reviewed-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+Would it make sense to flush the workqueue before checking the
+temperature? I have no idea what the ACPI is doing there but there is no
+upper limit on time how long in may take, right? Doing this inline (and
+avoiding the worker) is probably causing other trouble, right?
 
-
--- 
-Kamalesh
+Sebastian
