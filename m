@@ -2,267 +2,58 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C04BC433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 16:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1EA7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 16:23:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BECD720781
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 16:21:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GvKwKq8K"
+	by mail.kernel.org (Postfix) with ESMTP id BE31C2076C
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 16:23:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729253AbgHKQVx (ORCPT
+        id S1729100AbgHKQXo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 12:21:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39854 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729238AbgHKQVi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 12:21:38 -0400
-Received: from mail-vk1-xa42.google.com (mail-vk1-xa42.google.com [IPv6:2607:f8b0:4864:20::a42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6368C061787
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 09:21:37 -0700 (PDT)
-Received: by mail-vk1-xa42.google.com with SMTP id k1so1232524vkb.7
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 09:21:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=X9jWu21QNef/y5RNTkP3JQSFDtJBKoAf39qs8UQj2Es=;
-        b=GvKwKq8KzBW7bvzT/gMFdhvrNCMi36fLi5QJh0aPqDeIix2UD0f6x75Zx8Rs/obKIg
-         XgoPnYeyDRybszElAKPaek1CeqfPDBP0/gcJwQH7r/KChcEdrmFy9xMu2/1/o+gODLjB
-         DOI+rUbSa67JUJHKCfGyUGS7xwnA/xjEEI080=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=X9jWu21QNef/y5RNTkP3JQSFDtJBKoAf39qs8UQj2Es=;
-        b=WtZ4Ra3LryhlLDC/PVMEekKJKGREJ57W/XstTq3Ozuz/WHDy6rRoH9/KsIsdP6d2xG
-         59t5xaRpkd95KwOFonzrVJyb8PzOZQc9KMGzMroMnGdUqRbPlpvAWWtETTz61lrNjfuf
-         aqztWnnvoEo6w6M+LgO2pE6/aRd/spULn8alh72I1UNq2dEmxypmm81A/sUoJvkTxSvZ
-         pHAgmpTeKPV6vKcfyZwKzbmOY4LI6PBuxvlqvpkiidsMHGg8CzfCsJXdIH0q84kPCwAx
-         kLDES93pTbeQKvqcwH5gEKoe8SkC4MYxUQ/0QXM0DRqTR+P3sS2xnWCTveJ80HHctRUV
-         b7wQ==
-X-Gm-Message-State: AOAM532d0C/U4P1y6+ywCw6Z8kFFPIshuV/aO0XgaiPPDA8XCYVA96ib
-        jYIGxe724NcrqIP1HtCyeI6Fx2LNC74=
-X-Google-Smtp-Source: ABdhPJzo4AjoGVKAwo9L7RHN1UdNEDJMHfEfECPdfXLSQonGSNxoLSKJspBF7Y2ISQJ8XEyRZq7F0A==
-X-Received: by 2002:a1f:2589:: with SMTP id l131mr2658919vkl.90.1597162896306;
-        Tue, 11 Aug 2020 09:21:36 -0700 (PDT)
-Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com. [209.85.217.43])
-        by smtp.gmail.com with ESMTPSA id n123sm6847908vkf.41.2020.08.11.09.21.34
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Aug 2020 09:21:35 -0700 (PDT)
-Received: by mail-vs1-f43.google.com with SMTP id n25so6275492vsq.6
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 09:21:34 -0700 (PDT)
-X-Received: by 2002:a67:fd67:: with SMTP id h7mr22597678vsa.121.1597162894299;
- Tue, 11 Aug 2020 09:21:34 -0700 (PDT)
+        Tue, 11 Aug 2020 12:23:44 -0400
+Received: from ms.lwn.net ([45.79.88.28]:59216 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728947AbgHKQXo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 12:23:44 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 44D792C0;
+        Tue, 11 Aug 2020 16:23:44 +0000 (UTC)
+Date:   Tue, 11 Aug 2020 10:23:43 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Puranjay Mohan <puranjay12@gmail.com>
+Cc:     skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Filesystems: Documentation: Replace deprecated :c:func:
+ Usage
+Message-ID: <20200811102343.10dce072@lwn.net>
+In-Reply-To: <20200810184828.29297-1-puranjay12@gmail.com>
+References: <20200810184828.29297-1-puranjay12@gmail.com>
+Organization: LWN.net
 MIME-Version: 1.0
-References: <20200806221904.1.I4455ff86f0ef5281c2a0cd0a4712db614548a5ca@changeid>
- <adaef6bf-7887-feea-fedf-d3bc5566bb9d@codeaurora.org> <CAD=FV=X8tNpmkSrEjXgKPKsBOZfjt8aVQe47gzi5FvPqdOQN+A@mail.gmail.com>
- <b4cd8daf-ef37-4cc1-546e-ba46cb19392a@codeaurora.org>
-In-Reply-To: <b4cd8daf-ef37-4cc1-546e-ba46cb19392a@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 11 Aug 2020 09:21:22 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=W=C111X2VzZaAKo8JhRGexG=crK+YJbr9FWcAzATggAQ@mail.gmail.com>
-Message-ID: <CAD=FV=W=C111X2VzZaAKo8JhRGexG=crK+YJbr9FWcAzATggAQ@mail.gmail.com>
-Subject: Re: [PATCH] serial: qcom_geni_serial: Fix recent kdb hang
-To:     Akash Asthana <akashast@codeaurora.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Mukesh Savaliya <msavaliy@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Evan Green <evgreen@chromium.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-serial@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, 11 Aug 2020 00:18:28 +0530
+Puranjay Mohan <puranjay12@gmail.com> wrote:
 
-On Tue, Aug 11, 2020 at 4:54 AM Akash Asthana <akashast@codeaurora.org> wrote:
->
->
-> On 8/11/2020 2:56 AM, Doug Anderson wrote:
-> > Hi,
-> >
-> > On Mon, Aug 10, 2020 at 5:32 AM Akash Asthana <akashast@codeaurora.org> wrote:
-> >> Hi Doug,
-> >>
-> >> On 8/7/2020 10:49 AM, Douglas Anderson wrote:
-> >>> The commit e42d6c3ec0c7 ("serial: qcom_geni_serial: Make kgdb work
-> >>> even if UART isn't console") worked pretty well and I've been doing a
-> >>> lot of debugging with it.  However, recently I typed "dmesg" in kdb
-> >>> and then held the space key down to scroll through the pagination.  My
-> >>> device hung.  This was repeatable and I found that it was introduced
-> >>> with the aforementioned commit.
-> >>>
-> >>> It turns out that there are some strange boundary cases in geni where
-> >>> in some weird situations it will signal RX_LAST but then will put 0 in
-> >>> RX_LAST_BYTE.  This means that the entire last FIFO entry is valid.
-> >> IMO that means we received a word in RX_FIFO and it is the last word
-> >> hence RX_LAST bit is set.
-> > What you say would make logical sense, but it's not how I have
-> > observed geni to work.  See below.
-> >
-> >
-> >> RX_LAST_BYTE is 0 means none of the bytes are valid in the last word.
-> > This would imply that qcom_geni_serial_handle_rx() is also broken
-> > though, wouldn't it?  Specifically imagine that WORD_CNT is 1 and
-> > RX_LAST is set and RX_LAST_BYTE_VALID is true.  Here's the logic from
-> > that function:
-> >
-> >    total_bytes = BYTES_PER_FIFO_WORD * (word_cnt - 1);
-> >    if (last_word_partial && last_word_byte_cnt)
-> >      total_bytes += last_word_byte_cnt;
-> >    else
-> >      total_bytes += BYTES_PER_FIFO_WORD;
-> >    port->handle_rx(uport, total_bytes, drop);
-> >
-> > As you can see that logic will set "total_bytes" to 4 in the case I'm
-> > talking about.
->
-> Yeah IMO as per theory this should also be corrected but since you have
-> already pulled out few experiment to prove garbage data issue(which I
-> was suspecting) is not seen.
->
-> It's already consistent with existing logic and it behaves well
-> practically . So the changes could be merge. Meanwhile I am checking
-> with HW team to get clarity.
->
-> >
-> >
-> >> In such scenario we should just read RX_FIFO buffer (to empty it),
-> >> discard the word and return NO_POLL_CHAR. Something like below.
-> >>
-> >> ---------------------------------------------------------------------------------------------------------------------------------------------------------
-> >>
-> >>                   else
-> >>                           private_data->poll_cached_bytes_cnt = 4;
-> >>
-> >>                   private_data->poll_cached_bytes =
-> >>                           readl(uport->membase + SE_GENI_RX_FIFOn);
-> >>           }
-> >>
-> >> +        if (!private_data->poll_cached_bytes_cnt)
-> >> +              return NO_POLL_CHAR;
-> >>           private_data->poll_cached_bytes_cnt--;
-> >>           ret = private_data->poll_cached_bytes & 0xff;
-> >> -------------------------------------------------------------------------------------------------------------------------------------------------------------
-> >>
-> >> Please let me know whether above code helps.
-> > Your code will avoid the hang.  Yes.  ...but it will drop bytes.  I
-> > devised a quick-n-dirty test.  Here's a test of your code:
-> I assumed those as invalid bytes and don't wanted to read them so yeah
-> dropping of bytes was expected.
-> >
-> > https://crrev.com/c/2346886
-> >
-> > ...and here's a test of my code:
-> >
-> > https://crrev.com/c/2346884
-> >
-> > I had to keep a buffer around since it's hard to debug the serial
-> > driver.  In both cases I put "DOUG" into the buffer when I detect this
-> > case.  If my theory about how geni worked was wrong then we should
-> > expect to see some garbage in the buffer right after the DOUG, right?
-> > ...but my code gets the alphabet in nice sequence.  Your code drops 4
-> > bytes.
-> Yeah I was expecting garbage data.
-> >
-> >
-> > NOTE: while poking around with the above two test patches I found it
-> > was pretty easy to get geni to drop bytes / hit overflow cases and
-> > also to insert bogus 0 bytes in the stream (I believe these are
-> > related).  I was able to reproduce this:
-> > * With ${SUBJECT} patch in place.
-> > * With your proposed patch.
-> > * With the recent "geni" patches reverted (in other words back to 1
-> > byte per FIFO entry).
-> >
-> > It's not terribly surprising that we're overflowing since I believe
-> > kgdb isn't too keen to read characters at the same time it's writing.
-> > That doesn't explain the weird 0-bytes that geni seemed to be
-> > inserting, but at least it would explain the overflows.  However, even
-> > after I fixed this I _still_ was getting problems.  Specifically geni
-> > seemed to be hiding bytes from me until it was too late.  I put
-> > logging in and would see this:
-> >
-> > 1 word in FIFO - wxyz
-> > 1 word in FIFO (last set, last FIFO has 1 byte) - \n
-> > Check again, still 0 bytes in FIFO
-> > Suddenly 16 bytes are in FIFO and S_RX_FIFO_WR_ERR_EN is set.
->
-> RX data first stored in RX_ASYNC_FIFO then it's transfered to RX_FIFO
->
-> When get_char is called and we observe 0 bytes in RX_FIFO, most probably
-> data is not transfered from RX_ASYNC_FIFO to RX_FIFO.
->
-> BITS 27:25 of SE_GENI_RX_FIFO_STATUS register shows RX_ASYNC_FIFO word
-> count.
+> Replace :c:func: with func() as the previous usage is deprecated.
+> 
+> Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
+> ---
+>  Documentation/filesystems/journalling.rst | 66 +++++++++++------------
+>  1 file changed, 33 insertions(+), 33 deletions(-)
 
-OK, I did a tad bit more debugging and I think any problems left after
-my patch are actually kdb's fault, though geni doesn't behave terribly
-well with overflows (it would be better if it just dropped characters
-rather than enqueuing garbage).  Specifically in the tests I was
-running recently kdb would sometimes still take over 30 ms between
-polls so it's not surprising that we'd get overflows if we're
-spamming.  All my test code and results are at:
+Applied, thanks.
 
-https://crrev.com/c/2348284
-
-Earlier when I claimed that bytes were showing up in geni too quickly
-I was wrong.  My timing code was broken at the time.
-
-
-> > I spent a whole bunch of time poking at this and couldn't find any
-> > sort of workaround.  Presumably geni is taking some time between me
-> > reading the last word out of the FIFO from the "previous" packet and
-> > then transitioning to the new packet.  I found a lot of references to
-> > this process in the hardware register description (see GENI_CFG_REG69,
-> > for instance), but I couldn't manage to make the kick to happen any
-> > faster.  Presumably this isn't a problem for things like Bluetooth
-> > since flow control saves them.  ...and I guess this isn't a problem in
-> > practice because we usually _send_ a lot of data to the host for
-> > console/kgdb and it's only the host => DUT path that has problems.
-> >
-> >
-> >> I am not sure about what all scenario can leads to this behavior from
-> >> hardware, I will try to get an answer from hardware team.
-> >>
-> >> Any error bit was set for SE_GENI_S_IRQ_STATUS & SE_GENI_M_IRQ_STATUS
-> >> registers?
-> > As per above I can see overflows in my test case and geni seems to be
-> > behaving pretty badly.  If you have ideas on how to fix this I'd love
-> > it.  However, it still seems like my patch is right because (at least
-> > in the cases I tested) it avoids dropping bytes in some cases.  It
-> > also matches how qcom_geni_serial_handle_rx() works and if that was
-> > broken we'd have noticed by now.
->
-> Reviewed-by: Akash Asthana <akashast@codeaurora.org>
-
-Thanks!  After my extra digging I now think that the weird case is
-triggered by the overflows and the FIFO certainly does get garbage in
-it when there are overflows, but I think my patch is still correct and
-gets correct bytes.  The garbage that is queued up is queued up later
-and looks like normal transfers.  ...so I think we're good to go with
-it.
-
-So summary:
-1. We should land my patch.
-2. I filed <https://crbug.com/1115125> to track trying to make kdb's
-polling nicer.
-3. I also filed an internal bug to track seeing if we could make geni
-not queue up garbage in this case.
-
-
--Doug
+jon
