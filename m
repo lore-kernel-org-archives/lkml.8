@@ -2,146 +2,92 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A392C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 432D8C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:47:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3ABF02075D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:46:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KdMQrkY1"
+	by mail.kernel.org (Postfix) with ESMTP id 2689920756
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:47:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728534AbgHKKqG (ORCPT
+        id S1728557AbgHKKrv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 06:46:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44660 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728416AbgHKKqF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 06:46:05 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A35BC06174A;
-        Tue, 11 Aug 2020 03:46:04 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id w14so12977695ljj.4;
-        Tue, 11 Aug 2020 03:46:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=QbMPdkDZ6gl/XQAeycQLRz6hlFETojbWgl9OUCbj+o8=;
-        b=KdMQrkY1LdGJd0zpajnMj9oxmjqrSVc1Ggja6K/3OAPivsUw0oJkKNiUY4F9waF1te
-         XJLnps9AOaVyx0c1Tp21zoeFkUQuH89qxsROKFQ7b77W53d2REmt6Bu4TmUy+i8lWz8y
-         vKpxJyAbci8bqRPsojduDOCfOii3mGmsZqUN49Q+xf9cYn6m+atFNVbXk2ymWuDOpCCr
-         qs2rxr/iO4UWtrO++nxmHmAqHhwsHuYSayZxG4GgODL+GUqdSCy50rEqp66ChcBhk6mR
-         wsrTP7gexzSD3OKV+/EGs6/L8J1rn+t00EYTY/1HBeWLr3EeOnBlt5Er4SFM6sLCbl9p
-         zfzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QbMPdkDZ6gl/XQAeycQLRz6hlFETojbWgl9OUCbj+o8=;
-        b=Bnh+umub2g/91sLA5Bu/K8hIcCBRPcWHjOVnVxQWXA3Ttvd2Bkk0Kywv6axP4Zwgbw
-         R8VkepsSoVkMcN/t71vBvC5jGiLoTq5V+h9+9vzvDwYJsDKKYF9on0Due1+OcK8EY80k
-         1n53v3FajDa+sWoE0nsR+n9MlRusGTxNRnjHUPuG3sBi+3LR0zwbyEuz2S81F5YdboeX
-         cY1sFDdEiQGDzZ0vVyWl4oW0asaZReyXFR7+ovYOkoQQYizKJc7rGtg8gAVii56EvRHQ
-         B9uY9CPlKgnf15py5x+4J/g5sAsaLuWMu+60qhMiKRJUVYmn+DmxLC8QwrrX+HmgPr7n
-         IBdg==
-X-Gm-Message-State: AOAM531UF6fOPakyDBK4s2RbKTI6Xr3WW438miTmPAXRFFF++njwBkwx
-        igfozEn1t7eDKnNZ65oFoQI=
-X-Google-Smtp-Source: ABdhPJzhc/jXUCVGVIhHeGPo2BEqY7mmIBU7D7Izx8scomgDPFT4g7QVNFF+iXyroJpk6NgUN+PwYw==
-X-Received: by 2002:a2e:8589:: with SMTP id b9mr2661458lji.126.1597142760327;
-        Tue, 11 Aug 2020 03:46:00 -0700 (PDT)
-Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
-        by smtp.gmail.com with ESMTPSA id m12sm9353432lji.106.2020.08.11.03.45.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Aug 2020 03:45:59 -0700 (PDT)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Tue, 11 Aug 2020 12:45:57 +0200
-To:     Michal Hocko <mhocko@suse.com>
-Cc:     Uladzislau Rezki <urezki@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
-Message-ID: <20200811104557.GA5301@pc636>
-References: <20200809204354.20137-1-urezki@gmail.com>
- <20200809204354.20137-2-urezki@gmail.com>
- <20200810123141.GF4773@dhcp22.suse.cz>
- <20200810160739.GA29884@pc636>
- <20200810192525.GG4773@dhcp22.suse.cz>
- <20200811081917.GG4793@dhcp22.suse.cz>
- <20200811093713.GB2634@pc636>
- <20200811094251.GA3767@pc636>
- <20200811102818.GJ4793@dhcp22.suse.cz>
+        Tue, 11 Aug 2020 06:47:51 -0400
+Received: from foss.arm.com ([217.140.110.172]:36648 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728280AbgHKKrr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 06:47:47 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1BC0931B;
+        Tue, 11 Aug 2020 03:47:46 -0700 (PDT)
+Received: from [10.37.12.74] (unknown [10.37.12.74])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C7CEC3F22E;
+        Tue, 11 Aug 2020 03:47:42 -0700 (PDT)
+Subject: Re: [PATCH 2/2] KVM: arm64: Only reschedule if
+ MMU_NOTIFIER_RANGE_BLOCKABLE is not set
+To:     will@kernel.org, kvmarm@lists.cs.columbia.edu,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     maz@kernel.org, james.morse@arm.com, tsbogend@alpha.franken.de,
+        paulus@ozlabs.org, pbonzini@redhat.com,
+        sean.j.christopherson@intel.com, stable@vger.kernel.org
+References: <20200811102725.7121-1-will@kernel.org>
+ <20200811102725.7121-3-will@kernel.org>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <1b326944-c4aa-eb52-b7dc-a77f9eecae63@arm.com>
+Date:   Tue, 11 Aug 2020 11:52:41 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200811102818.GJ4793@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200811102725.7121-3-will@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 12:28:18PM +0200, Michal Hocko wrote:
-> On Tue 11-08-20 11:42:51, Uladzislau Rezki wrote:
-> > On Tue, Aug 11, 2020 at 11:37:13AM +0200, Uladzislau Rezki wrote:
-> > > On Tue, Aug 11, 2020 at 10:19:17AM +0200, Michal Hocko wrote:
-> [...]
-> > > > Anyway, if the zone->lock is not a good fit for raw_spin_lock then the
-> > > > only way I can see forward is to detect real (RT) atomic contexts and
-> > > > bail out early before taking the lock in the allocator for NOWAIT/ATOMIC
-> > > > requests.
-> > > >
-> > This is similar what i have done with mm: Add __GFP_NO_LOCKS flag. I just
-> > did it for order-0 pages(other paths are impossible) and made it common for
-> > any kernel.
-> > 
-> > Because when you say "bail out early" i suspect that we would like to check
-> > the per-cpu-list cache.
+On 08/11/2020 11:27 AM, Will Deacon wrote:
+> When an MMU notifier call results in unmapping a range that spans multiple
+> PGDs, we end up calling into cond_resched_lock() when crossing a PGD boundary,
+> since this avoids running into RCU stalls during VM teardown. Unfortunately,
+> if the VM is destroyed as a result of OOM, then blocking is not permitted
+> and the call to the scheduler triggers the following BUG():
 > 
-> Bail out early means to do as much as possible until a raw non-compliant
-> lock has to be taken.
+>   | BUG: sleeping function called from invalid context at arch/arm64/kvm/mmu.c:394
+>   | in_atomic(): 1, irqs_disabled(): 0, non_block: 1, pid: 36, name: oom_reaper
+>   | INFO: lockdep is turned off.
+>   | CPU: 3 PID: 36 Comm: oom_reaper Not tainted 5.8.0 #1
+>   | Hardware name: QEMU QEMU Virtual Machine, BIOS 0.0.0 02/06/2015
+>   | Call trace:
+>   |  dump_backtrace+0x0/0x284
+>   |  show_stack+0x1c/0x28
+>   |  dump_stack+0xf0/0x1a4
+>   |  ___might_sleep+0x2bc/0x2cc
+>   |  unmap_stage2_range+0x160/0x1ac
+>   |  kvm_unmap_hva_range+0x1a0/0x1c8
+>   |  kvm_mmu_notifier_invalidate_range_start+0x8c/0xf8
+>   |  __mmu_notifier_invalidate_range_start+0x218/0x31c
+>   |  mmu_notifier_invalidate_range_start_nonblock+0x78/0xb0
+>   |  __oom_reap_task_mm+0x128/0x268
+>   |  oom_reap_task+0xac/0x298
+>   |  oom_reaper+0x178/0x17c
+>   |  kthread+0x1e4/0x1fc
+>   |  ret_from_fork+0x10/0x30
 > 
+> Use the new 'flags' argument to kvm_unmap_hva_range() to ensure that we
+> only reschedule if MMU_NOTIFIER_RANGE_BLOCKABLE is set in the notifier
+> flags.
+> 
+> Cc: <stable@vger.kernel.org>
+> Fixes: 8b3405e345b5 ("kvm: arm/arm64: Fix locking for kvm_free_stage2_pgd")
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: James Morse <james.morse@arm.com>
+> Signed-off-by: Will Deacon <will@kernel.org>
+> ---
 
-<snip>
-struct page *rmqueue(struct zone *preferred_zone,
-   struct zone *zone, unsigned int order,
-   gfp_t gfp_flags, unsigned int alloc_flags,
-   int migratetype)
-{
- unsigned long flags;
- struct page *page;
-
- if (likely(order == 0)) {
-  page = rmqueue_pcplist(preferred_zone, zone, gfp_flags,
-     migratetype, alloc_flags);
-  goto out;
- }
-
- /*
-  * We most definitely don't want callers attempting to
-  * allocate greater than order-1 page units with __GFP_NOFAIL.
-  */
- WARN_ON_ONCE((gfp_flags & __GFP_NOFAIL) && (order > 1));
- spin_lock_irqsave(&zone->lock, flags);
-<snip>
-
-only order-0 allocations can be checked if CPUs pcp-list-cache has something.
-I mean without taking any locks, i.e. it is lockless. "Pre-fetching" is not
-possible since it takes zone->lock in order to do transfer pages from the buddy
-to the per-cpu-lists. It is done in the rmqueue_bulk() function.
-
---
-Vlad Rezki
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
