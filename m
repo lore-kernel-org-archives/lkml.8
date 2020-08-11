@@ -2,87 +2,90 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD188C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 06:51:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E215C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 06:53:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92CB420772
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 06:51:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62EC320772
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 06:53:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aP+WpLxt"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="l/MvN3zS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728301AbgHKGvV (ORCPT
+        id S1728242AbgHKGxP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 02:51:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36828 "EHLO
+        Tue, 11 Aug 2020 02:53:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728271AbgHKGvR (ORCPT
+        with ESMTP id S1728135AbgHKGxO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 02:51:17 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2307C06174A
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 23:51:16 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id a24so11295495oia.6
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 23:51:16 -0700 (PDT)
+        Tue, 11 Aug 2020 02:53:14 -0400
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18B60C06174A
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 23:53:14 -0700 (PDT)
+Received: by mail-pj1-x1029.google.com with SMTP id mt12so1363468pjb.4
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 23:53:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lSWklIV0NJkqa+0Z9KEPk/bUuO+WORhyM7guQm05mvI=;
-        b=aP+WpLxtqr2hpgFbG8y+8cfzjhwv2iCJrd2NRiAFR9JUX6zm6kmbp+4XrEdDEerxWr
-         TsMvSm5JGXUqdS+CHi/eh2VcKfCm8jQ4hg6QG6QL5HAN5/1YHDoIGdeTdLP9HQH3hQXf
-         qJl6duBBQQ8hTjkNSS+JSXOydKZ47pZa5wH39N3GESrPX1GG4sSvQMyj+6ZP7L96KXOB
-         phPKvmqfj5hDBFIhZvWuwIbr4rtCII51k4rer6EUx8+x3LLCEoIt8FAUrHp5NsxQBKWp
-         37yqV1NHdEbyt4q2VFZTteGxdolu9CyFRm6arYa2o7/CgeR0DXByUHNDUt3WThohDjNx
-         hUag==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kVyLaU4+BT0CbBg8wXnS9t25mJ9x+rEfYROdR9As1Es=;
+        b=l/MvN3zSLaDAVf/ZEMGuKIVX2W6b0GobJ7BNF386lIwvlgxAF2o6tm6X8QapJ3+Zqg
+         W5gN23ay6ZI+/HTNvAhPozVVbnnJh9jMX2kab611Gb9N1Il70xK7NIXLVo2a2wv/yB3v
+         YP7Cb/9cGoQsX6+3CiLXlfmITwhmg2TeDX9hQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lSWklIV0NJkqa+0Z9KEPk/bUuO+WORhyM7guQm05mvI=;
-        b=cctPxp9+QQQwEw6iXNunyK9ii8Igl0fkzYLl5szd88otQE1tzDfZbRVwFj09s2+rvJ
-         uuBMvf5JojsThIJvZeoiI+aV/k/UgpadVoMlrJuDQVrJ+AdDkQs+1AuS0MOr/y9uxbVs
-         A+tkoiZ/4snDGvciL1qAGbi5hZLYqlc9MtYL2EdsHMC8Ydu3B9rzv5N7FbLAtQveWz65
-         tUJdg0ArJYZBtxbyxdhsn44rVlu1gq6DaPrlF8LUEI5KSYAWrlnxFjuMIChnxh4p5oR9
-         Hfu2MFE5HNBhRE+N1tzbwDg4Ckf1ljjbFAWMwmQi1wbKL2Yft/V9enx4oUPv+0o3QV0c
-         ITTA==
-X-Gm-Message-State: AOAM531U/CY2r8O+aDVVaxkj0NL6dKFLOVfUkXlqi1JNw9l9YqY8EJUB
-        hY7XSaCOuLYlXROUsUysDtx7C+5EP/5iLgd3QwM=
-X-Google-Smtp-Source: ABdhPJwjn2ii6c8fbj7No/jA42GR90gSTQ+rcckd10d7X6zwkQod4Z4tEpgin0MmB1xX8qMDWQ/BWETIp58VEawHix4=
-X-Received: by 2002:aca:f38b:: with SMTP id r133mr2414368oih.81.1597128676385;
- Mon, 10 Aug 2020 23:51:16 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kVyLaU4+BT0CbBg8wXnS9t25mJ9x+rEfYROdR9As1Es=;
+        b=r47PjfM6M+3Gge7sgMggWAltEfO2uQEFEJq+v9LNdMCx1ya9eUyov0e1PAQPv4pR9w
+         jUXA/SQ6MnzoA9uG28kAD6eToq4aIaNHI9Yv3H1eymnL/7LONJSg4oQFcE3P5itbW1Kx
+         A18t2l7Nnx9WxPCpeSb1JjUdrXwjRjeA0zqQYeP911EZ5du02LaFPkrgNb3zwtMm8dRW
+         73dJhLZ1QZzcFf0v/uyZ3caHKzFYy0bX1N+r62mj62Q94AyjYBeocCd90iELn5U+3xgQ
+         SzyoCMhCjd++awzr7Q6IRLN4TMBDFEdoCpLXBzca1mnYX1ahnpgovx1JOIq0dfTaNDCZ
+         rbpg==
+X-Gm-Message-State: AOAM530/JmC7Oiv+qpFa7d+4lst9PI1Hp5Ryn8zyzZnfVCaoWGJ+ZyL6
+        RC2xFizFW2IIUfOTePm3r9zWdA==
+X-Google-Smtp-Source: ABdhPJwQHLudf/hU6n2fobVQ1fVT/hk2E3bs045RNnDZoeghFT3resIKbQ30X2QKWnezkqlPSna/vg==
+X-Received: by 2002:a17:90b:384b:: with SMTP id nl11mr3214695pjb.91.1597128792275;
+        Mon, 10 Aug 2020 23:53:12 -0700 (PDT)
+Received: from ikjn-p920.tpe.corp.google.com ([2401:fa00:1:10:f693:9fff:fef4:a8fc])
+        by smtp.gmail.com with ESMTPSA id q13sm1667351pjj.36.2020.08.10.23.53.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Aug 2020 23:53:11 -0700 (PDT)
+From:   Ikjoon Jang <ikjn@chromium.org>
+To:     Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Ikjoon Jang <ikjn@chromium.org>
+Subject: [PATCH v2 0/2] power: supply: sbs-battery: fix presence check
+Date:   Tue, 11 Aug 2020 14:53:07 +0800
+Message-Id: <20200811065307.2094930-1-ikjn@chromium.org>
+X-Mailer: git-send-email 2.28.0.236.gb10cc79966-goog
 MIME-Version: 1.0
-References: <20200811022427.1363-1-wuyun.wu@huawei.com>
-In-Reply-To: <20200811022427.1363-1-wuyun.wu@huawei.com>
-From:   Pekka Enberg <penberg@gmail.com>
-Date:   Tue, 11 Aug 2020 09:50:59 +0300
-Message-ID: <CAOJsxLGzh=U941A25NDHknD-vN4oxpsgPNT4NU_-3W5sdV5o1Q@mail.gmail.com>
-Subject: Re: [PATCH] mm/slub: fix missing ALLOC_SLOWPATH stat when bulk alloc
-To:     wuyun.wu@huawei.com
-Cc:     Christoph Lameter <cl@linux.com>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        hewenliang4@huawei.com, hushiyuan@huawei.com,
-        "open list:SLAB ALLOCATOR" <linux-mm@kvack.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 5:25 AM <wuyun.wu@huawei.com> wrote:
->
-> From: Abel Wu <wuyun.wu@huawei.com>
->
-> The ALLOC_SLOWPATH statistics is missing in bulk allocation now.
-> Fix it by doing statistics in alloc slow path.
->
-> Signed-off-by: Abel Wu <wuyun.wu@huawei.com>
+When gpio detection is not supplied, presence state transitions depend
+on every smbus transfer result from get_property(). This patch tries to
+check battery presence again with well supported command before
+state transition.
 
-Reviewed-by: Pekka Enberg <penberg@kernel.org>
+Changes:
+v2: combine get_presence_and_health functions to reuse
+
+Ikjoon Jang (2):
+  power: supply: sbs-battery: combine get_presence_and_health
+  power: supply: sbs-battery: don't assume i2c errors as battery
+    disconnect
+
+ drivers/power/supply/sbs-battery.c | 99 ++++++++++++++++--------------
+ 1 file changed, 53 insertions(+), 46 deletions(-)
+
+-- 
+2.28.0.236.gb10cc79966-goog
+
