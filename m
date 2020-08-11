@@ -2,114 +2,99 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFFA8C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 04:19:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF2B5C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 04:30:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35A98206DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 04:19:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gibson.dropbear.id.au header.i=@gibson.dropbear.id.au header.b="WH64YnKM"
+	by mail.kernel.org (Postfix) with ESMTP id A2D27206DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 04:30:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597120206;
+	bh=HVa5a8fSarE3FjEzPI/tiTxOe2uPd2Fd/PzzU5E8/3M=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=U06u5RPASCQp0n6RUxKeumcOrPhFyCenCDTYUgSINFYCU1f8XaAECHozbXjtjzFXY
+	 fiDQ4oPU/ujdsnYRzMngUlppSXXBEtO4XEDDz1kKuF8NJ+ZYbueyxSvA3vhxczlh93
+	 mKQWeA5bKWfAZTFRjKeVa8iMHjIRYGNrQOhRmY4g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726411AbgHKETV (ORCPT
+        id S1726114AbgHKE16 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 00:19:21 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:33701 "EHLO ozlabs.org"
+        Tue, 11 Aug 2020 00:27:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725837AbgHKETU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 00:19:20 -0400
-Received: by ozlabs.org (Postfix, from userid 1007)
-        id 4BQfjf3pLbz9sTS; Tue, 11 Aug 2020 14:19:18 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-        d=gibson.dropbear.id.au; s=201602; t=1597119558;
-        bh=2NZiS/B9GDmUuTZl+DIdhj2fNIhZ6RGfvaIFICHqFSM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=WH64YnKMptRO4Eox2YloZbysBg7ADBHWYMCYZMpjNkFkZ7mEP/KxNx5G3tL1CKXQu
-         uhBEtjcHOmb30U2vTPlkz9eIoTSffzJN8sLu7PUF5NjsEsY4f3vQru3UoQGzwgIqFU
-         0ONoy5meOvv+eWlw4dGBg3SCcKueEgHNmY1/1gNM=
-From:   David Gibson <david@gibson.dropbear.id.au>
-To:     paulus@samba.org, mpe@ellerman.id.au
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        David Gibson <david@gibson.dropbear.id.au>
-Subject: [PATCH] powerpc: kvm: Increase HDEC threshold to enter guest
-Date:   Tue, 11 Aug 2020 14:08:34 +1000
-Message-Id: <20200811040834.45930-1-david@gibson.dropbear.id.au>
-X-Mailer: git-send-email 2.26.2
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        id S1725837AbgHKE15 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 00:27:57 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B09CE206DA;
+        Tue, 11 Aug 2020 04:27:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597120077;
+        bh=HVa5a8fSarE3FjEzPI/tiTxOe2uPd2Fd/PzzU5E8/3M=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=gIfikik50rH/Y4HMFk3aIcoToJ/0tTiPNEUlv8NUE+AEiM79Y9PA2333Y6aefP6UU
+         /dgCsVT51be2bS+OzVuRzzkGYXTeKuj5Ddu52sT6TWjCAsB05IW8+lUGz/GNybsJpE
+         7iX8Ft0Ic/34l9pmo4/4Yv8nFJbx7CCImclFWS0k=
+Date:   Mon, 10 Aug 2020 21:27:56 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     kernel test robot <lkp@intel.com>
+Cc:     Rikard Falkeborn <rikard.falkeborn@gmail.com>,
+        kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Peter Rosin <peda@axentia.se>
+Subject: Re: include/linux/bits.h:25:21: error: first argument to
+ '__builtin_choose_expr' not a constant
+Message-Id: <20200810212756.04c006476aa9c663edb01f32@linux-foundation.org>
+In-Reply-To: <202008080833.zZnw48Gr%lkp@intel.com>
+References: <202008080833.zZnw48Gr%lkp@intel.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Before entering a guest, we need to set the HDEC to pull us out again
-when the guest's time is up.  This needs some care, though, because the
-HDEC is edge triggered, which means that if it expires before entering the
-guest, the interrupt will be lost, meaning we stay in the guest
-indefinitely (in practice, until the the hard lockup detector pulls us out
-with an NMI).
+On Sat, 8 Aug 2020 08:03:38 +0800 kernel test robot <lkp@intel.com> wrote:
 
-For the POWER9, independent threads mode specific path, we attempt to
-prevent that, by testing time has already expired before setting the HDEC
-in kvmhv_load_regs_and_go().  However, that doesn't account for the case
-where the timer expires between that test and the actual guest entry.
-Preliminary instrumentation suggests that can take as long as 1.5µs under
-certain load conditions, and simply checking the HDEC value we're going to
-load is positive isn't enough to guarantee that leeway.
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> head:   30185b69a2d533c4ba6ca926b8390ce7de495e29
+> commit: 295bcca84916cb5079140a89fccb472bb8d1f6e2 linux/bits.h: add compile time sanity check of GENMASK inputs
+> date:   4 months ago
+> config: s390-randconfig-r001-20200808 (attached as .config)
+> compiler: s390-linux-gcc (GCC) 9.3.0
+> reproduce (this is a W=1 build):
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         git checkout 295bcca84916cb5079140a89fccb472bb8d1f6e2
+>         # save the attached .config to linux build tree
+>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=s390 
+> 
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
+> 
+> All errors (new ones prefixed by >>):
+> 
+>    drivers/mux/mmio.c: In function 'mux_mmio_probe':
+>    drivers/mux/mmio.c:76:20: error: storage size of 'field' isn't known
+>       76 |   struct reg_field field;
+>          |                    ^~~~~
+>    In file included from include/linux/bits.h:23,
+>                     from include/linux/bitops.h:5,
+>                     from drivers/mux/mmio.c:8:
+> >> include/linux/bits.h:25:21: error: first argument to '__builtin_choose_expr' not a constant
 
-That test here is sometimes masked by a test in kvmhv_p9_guest_entry(), its
-caller.  That checks that the remaining time is at 1µs.  However as noted
-above that doesn't appear to be sufficient in all circumstances even
-from the point HDEC is set, let alone this earlier point.
+I assume the first error is the cause of the second?
 
-Therefore, increase the threshold we check for in both locations to 4µs
-(2048 timebase ticks).  This is a pretty crude approach, but it addresses
-a real problem where guest load can trigger a host hard lockup.
+struct reg_field is only defined if CONFIG_REGMAP, and that is unset in
+this .config.  Perhaps drivers/mux/mmio.c should depend on
+CONFIG_REGMAP?  (cc Peter).
 
-We're hoping to refine this in future by gathering more data on exactly
-how long these paths can take, and possibly by moving the check closer to
-the actual guest entry point to reduce the variance.  Getting the details
-for that might take some time however.
-
-NOTE: For reasons I haven't yet tracked down yet, I haven't actually
-managed to reproduce this on current upstream.  I have reproduced it on
-RHEL kernels without obvious differences in this area.  I'm still trying
-to determine what the cause of that difference is, but I think it's worth
-applying this change as a precaution in the interim.
-
-Signed-off-by: David Gibson <david@gibson.dropbear.id.au>
----
- arch/powerpc/kvm/book3s_hv.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
-index 0f83f39a2bd2..65a92dd890cb 100644
---- a/arch/powerpc/kvm/book3s_hv.c
-+++ b/arch/powerpc/kvm/book3s_hv.c
-@@ -3435,7 +3435,7 @@ static int kvmhv_load_hv_regs_and_go(struct kvm_vcpu *vcpu, u64 time_limit,
- 	unsigned long host_pidr = mfspr(SPRN_PID);
- 
- 	hdec = time_limit - mftb();
--	if (hdec < 0)
-+	if (hdec < 2048)
- 		return BOOK3S_INTERRUPT_HV_DECREMENTER;
- 	mtspr(SPRN_HDEC, hdec);
- 
-@@ -3564,7 +3564,7 @@ int kvmhv_p9_guest_entry(struct kvm_vcpu *vcpu, u64 time_limit,
- 
- 	dec = mfspr(SPRN_DEC);
- 	tb = mftb();
--	if (dec < 512)
-+	if (dec < 2048)
- 		return BOOK3S_INTERRUPT_HV_DECREMENTER;
- 	local_paca->kvm_hstate.dec_expires = dec + tb;
- 	if (local_paca->kvm_hstate.dec_expires < time_limit)
--- 
-2.26.2
 
