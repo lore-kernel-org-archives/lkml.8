@@ -2,126 +2,179 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46DF6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 11:32:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B56E4C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 11:33:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FD0920658
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 11:32:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 908052076B
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 11:33:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QjpUqioR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CfRVNWn9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728789AbgHKLcU (ORCPT
+        id S1728795AbgHKLdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 07:32:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51764 "EHLO
+        Tue, 11 Aug 2020 07:33:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728454AbgHKLcU (ORCPT
+        with ESMTP id S1728681AbgHKLdi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 07:32:20 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C729C06174A
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 04:32:20 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id ep8so1729444pjb.3
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 04:32:20 -0700 (PDT)
+        Tue, 11 Aug 2020 07:33:38 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 717BBC06174A;
+        Tue, 11 Aug 2020 04:33:37 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id f26so11697742ljc.8;
+        Tue, 11 Aug 2020 04:33:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=BctG/qaJdDXtKFvw6lMKacsPfVSKQtLH7iFF3+pMRlM=;
-        b=QjpUqioRorxWY/SVtxtGIFTNjlh0OzsQjd3uNqVUz9BeP9g85qFpx8SNmQh3YN/95u
-         o8q2jQDvEBwNfpt5hMuoyD40Jbhvz2cBYJn6MLrwDYKktxExxhYGri8iJdkiG/E8m/iE
-         2l7Doo6GamuB0cqn6JTzc2DXX89X9qloxT3m5stn5KJc3muyGEM559SNtvqTWfaH5Ex1
-         NBLyxEsHuS3AgcUI5cnRf4JHYG6JiIfnrCmzQQk1nGEBim7a0fENx4SbqthDQrB0zSx6
-         WWFVsSDoL1usG2DBA29U+tN/xLJ5kml3j6epX4R96177MoDCbJPUOVNf8Fzl43sB+vMW
-         bjBQ==
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=SMkuBJo8KjT0i67c85My8K7V8IYtugZCFjfRB5iQb6A=;
+        b=CfRVNWn9/nIuW9aaP2jQZpMFZBBTiNXXjb+GUYvcDlhsrvH6yLD4BxJ8vQH+x2OVNk
+         Pr3e3c+wpsFY9YitZeb2YWX6Q3XPTesJjEq4U7ZyH329bSOCleeTIzuuMGHRiMV2DTdp
+         Utwm4vuorMG3LGREE/Q6+cz3S135YFIDgn8EDmUQ29kJez7WmGESXcIaShhnUaO/viPy
+         dp+eOSX3PzaUTHs2eGDygdYvsiGGLosj4cRkq8hEqYNF5mzQGJNX7ZHvwWpCicjffhQw
+         LYJbtdmQw33KmkGPR+JjnMT37B5Lfy8RSIrVIgmOyYz2UBNu5DB7ZnCNvvqzhkoDqYHH
+         w2jQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=BctG/qaJdDXtKFvw6lMKacsPfVSKQtLH7iFF3+pMRlM=;
-        b=jYkB1MLjAlyrEyFJUReXNAeyDjGdWTPg+ZOB6zjPkp8drqtsGZsZ1K8qozAuliBbtN
-         6nhahchVN+o4hWLAbgu7xdPIfdRYfBKGHQcsnKQGHYvdeafPuAdYwTq+J0qj3d2kdvye
-         tbiTeTsTQGbilcH41VAl472foQOaevOEYuSqPYsgWj4hWIj/r7TOBnh7GXwW7htupq0k
-         REhewiOzME5UbLd3rhIC21aOMwxHsj47LoQlJj5YjfWm4+8uTaws089e1Pc9kJC61Qk1
-         yyxOtEnZXxnTdymYjXFbNrhAu6CU5Nn+jNu9rbVEjQe68YoMAPPzqXj/OQtfNSj80IYg
-         0d2w==
-X-Gm-Message-State: AOAM532BMDuomvZwoFZA20ihIlZS/7cq9atTo/14W2OUkMYG7wHBxggr
-        MkS+1kljFhMdgmzSY/P/i8dHG3Hpv/U=
-X-Google-Smtp-Source: ABdhPJx68lUG8OjUmXnQuo1LfXpp0gcnhDvKm3bO8qvqXsjH0lkNvqIoHDCIidrvXBAlqjIbZI8xDg==
-X-Received: by 2002:a17:902:8509:: with SMTP id bj9mr473545plb.179.1597145539827;
-        Tue, 11 Aug 2020 04:32:19 -0700 (PDT)
-Received: from localhost.localdomain ([103.7.29.7])
-        by smtp.gmail.com with ESMTPSA id e125sm25462835pfh.69.2020.08.11.04.32.16
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Aug 2020 04:32:18 -0700 (PDT)
-From:   Jiang Biao <benbjiang@gmail.com>
-X-Google-Original-From: Jiang Biao <benbjiang@tencent.com>
-To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org
-Cc:     dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, linux-kernel@vger.kernel.org,
-        Jiang Biao <benbjiang@tencent.com>
-Subject: [PATCH v3] sched/fair: simplfy the work when reweighting entity
-Date:   Tue, 11 Aug 2020 19:32:09 +0800
-Message-Id: <20200811113209.34057-1-benbjiang@tencent.com>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SMkuBJo8KjT0i67c85My8K7V8IYtugZCFjfRB5iQb6A=;
+        b=DMxF2wQqac7eXzV7CRPp/Hx30wwvh+37tGnGtaNIG/OCQhgxJVeYbuHLz/t7Rbnbo6
+         uPZ/v8V+VyqOOXlIN1OyKq2Ar3s+Q5oPyNrNps8AvRfCUhYUhXTDB1wSRseaIYEhbIN8
+         bugtRy3+yUGd4xrXmn5TE4VqifLc0+O3yDrE1SXCwxGUSPbQfedVGRg2VmeYnth7P+T9
+         CQNlBovD1AMavC8M1dFHJVgpMn5adrcOstAqNo7HM7XEF8QRVpPPVOm6RKPWtpcYs9Yz
+         pn5GQ387GH0MlSRDu8drW8IHhgyUdkIw96WdGnQoVs41j5RbjB0UoHLLCvavpwtKrSMM
+         LOLA==
+X-Gm-Message-State: AOAM532Ex/a0xjA8GkRFLbE2xykjXVt6dL5l7mf1ha5YPBe5b1cCU7gF
+        PyFFiyL8wdTFxWZ954EJEYM=
+X-Google-Smtp-Source: ABdhPJzS7SV0WXVoCZwR/JEFg9CmHJCaDbuBolh8AJloxfxMx3lWrgr/1lcaSwck6EXSpzcgXaOOSQ==
+X-Received: by 2002:a2e:9010:: with SMTP id h16mr2905899ljg.316.1597145615838;
+        Tue, 11 Aug 2020 04:33:35 -0700 (PDT)
+Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id j6sm9926933lja.23.2020.08.11.04.33.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Aug 2020 04:33:35 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Tue, 11 Aug 2020 13:33:32 +0200
+To:     Michal Hocko <mhocko@suse.com>
+Cc:     Uladzislau Rezki <urezki@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
+Message-ID: <20200811113332.GB5544@pc636>
+References: <20200809204354.20137-1-urezki@gmail.com>
+ <20200809204354.20137-2-urezki@gmail.com>
+ <20200810123141.GF4773@dhcp22.suse.cz>
+ <20200810160739.GA29884@pc636>
+ <20200810192525.GG4773@dhcp22.suse.cz>
+ <20200811081917.GG4793@dhcp22.suse.cz>
+ <20200811093713.GB2634@pc636>
+ <20200811102649.GI4793@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200811102649.GI4793@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiang Biao <benbjiang@tencent.com>
+On Tue, Aug 11, 2020 at 12:26:49PM +0200, Michal Hocko wrote:
+> On Tue 11-08-20 11:37:13, Uladzislau Rezki wrote:
+> > On Tue, Aug 11, 2020 at 10:19:17AM +0200, Michal Hocko wrote:
+> > > On Mon 10-08-20 21:25:26, Michal Hocko wrote:
+> > > > On Mon 10-08-20 18:07:39, Uladzislau Rezki wrote:
+> > > [...]
+> > > > > The problem that i see is we can not use the page allocator from atomic
+> > > > > contexts, what is our case:
+> > > > > 
+> > > > > <snip>
+> > > > >     local_irq_save(flags) or preempt_disable() or raw_spinlock();
+> > > > >     __get_free_page(GFP_ATOMIC);
+> > > > > <snip>
+> > > > > 
+> > > > > So if we can convert the page allocator to raw_* lock it will be appreciated,
+> > > > > at least from our side, IMHO, not from RT one. But as i stated above we need
+> > > > > to sort raised questions out if converting is done.
+> > > > > 
+> > > > > What is your view?
+> > > > 
+> > > > To me it would make more sense to support atomic allocations also for
+> > > > the RT tree. Having both GFP_NOWAIT and GFP_ATOMIC which do not really
+> > > > work for atomic context in RT sounds subtle and wrong.
+> > > 
+> > > I was thinking about this some more. I still think the above would be a
+> > > reasonable goal we should try to achieve. If for not other then for
+> > > future maintainability (especially after the RT patchset is merged).
+> > > I have tried to search for any known problems/attempts to make
+> > > zone->lock raw but couldn't find anything. Maybe somebody more involved
+> > > in RT world have something to say about that.
+> > > 
+> > I tried yesterday to convert zone->lock. See below files i had to modify:
+> > <snip>
+> >         modified:   include/linux/mmzone.h
+> >         modified:   mm/compaction.c
+> >         modified:   mm/memory_hotplug.c
+> >         modified:   mm/page_alloc.c
+> >         modified:   mm/page_isolation.c
+> >         modified:   mm/page_reporting.c
+> >         modified:   mm/shuffle.c
+> >         modified:   mm/vmscan.c
+> >         modified:   mm/vmstat.c
+> > <snip>
+> > 
+> > There is one more lock, that is zone->lru_lock one. Both zone->lock and this
+> > one intersect between each other. If the lru_lock can be nested under zone->lock
+> > it should be converted as well. But i need to analyze it farther. There are
+> > two wrapper functions which are used as common interface to lock/unlock both
+> > locks. See compact_lock_irqsave()/compact_unlock_should_abort_lru() in the 
+> > mm/compaction.c.
+> > 
+> > Any thoughts here?
+> 
+> I am not an expert on compaction. Vlastimil would know better. My
+> thinking was that zone->lock is a tail lock but compaction/page
+> isolation might be doing something I am not aware of right now.
+> 
+> > Anyway i tried to convert only zone->lock and use page allocator passing there
+> > gfp_mask=0 as argument. So it works. CONFIG_PROVE_RAW_LOCK_NESTING does not
+> > complain about any "bad" lock nesting.
+> > 
+> > > Anyway, if the zone->lock is not a good fit for raw_spin_lock then the
+> > > only way I can see forward is to detect real (RT) atomic contexts and
+> > > bail out early before taking the lock in the allocator for NOWAIT/ATOMIC
+> > > requests.
+> > >
+> > For RT kernel we can detect it for sure. preemtable() works just fine there,
+> > i.e. we can identify the context we are currently in.
+> 
+> In previous email I didn't mention why I prefer full NOWAIT semantic
+> over rt specific bailouts. There are users making NOWAIT allocation
+> attempts as an opportunistic allocation request which is OK to fail
+> as they have a fallback to go through. This would imply they would
+> prefer to know this ASAP rather then get blocked and sleep. A lack of
+> reports for PREEMPT_RT would suggest that nobody has noticed as this
+> though.
+>
+I agree here and share your view on it. To me, making *_ATOMIC *_NOWAIT
+to be fully workable on both kernels sounds like correct way to go. 
 
-The code in reweight_entity() can be simplified.
+Indeed, there can be no complains as of now. But later on it can be
+and the question will be raised again, what to do.
 
-For a sched entity on the rq, the entity accounting can be replaced by
-cfs_rq instantaneous load updates currently called from within the
-entity accounting.
-
-Even though an entity on the rq can't represent a task in
-reweight_entity() (a task is always dequeued before calling this
-function) and so the numa task accounting and the rq->cfs_tasks list
-management of the entity accounting are never called, the redundant
-cfs_rq->nr_running decrement/increment will be avoided.
-
-Signed-off-by: Jiang Biao <benbjiang@tencent.com>
----
-v3<-v2: Amend commit log taking Dietmar's advice. Thx.
-v2<-v1: Amend the commit log
-
- kernel/sched/fair.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 04fa8dbcfa4d..18a8fc7bd0de 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -3086,7 +3086,7 @@ static void reweight_entity(struct cfs_rq *cfs_rq, struct sched_entity *se,
- 		/* commit outstanding execution time */
- 		if (cfs_rq->curr == se)
- 			update_curr(cfs_rq);
--		account_entity_dequeue(cfs_rq, se);
-+		update_load_sub(&cfs_rq->load, se->load.weight);
- 	}
- 	dequeue_load_avg(cfs_rq, se);
- 
-@@ -3102,7 +3102,7 @@ static void reweight_entity(struct cfs_rq *cfs_rq, struct sched_entity *se,
- 
- 	enqueue_load_avg(cfs_rq, se);
- 	if (se->on_rq)
--		account_entity_enqueue(cfs_rq, se);
-+		update_load_add(&cfs_rq->load, se->load.weight);
- 
- }
- 
--- 
-2.21.0
-
+--
+Vlad Rezki
