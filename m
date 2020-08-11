@@ -2,118 +2,94 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 415D1C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 22:50:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 298D5C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 22:51:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1626D204FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 22:50:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="WULtYCFh"
+	by mail.kernel.org (Postfix) with ESMTP id 01C7E20782
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 22:51:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726274AbgHKWuX (ORCPT
+        id S1726422AbgHKWvr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 18:50:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43478 "EHLO
+        Tue, 11 Aug 2020 18:51:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726105AbgHKWuW (ORCPT
+        with ESMTP id S1726023AbgHKWvr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 18:50:22 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3821CC06174A
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 15:50:22 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 5F7DF9A8;
-        Wed, 12 Aug 2020 00:50:20 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1597186220;
-        bh=z0+tnkTy0eTpC44ri8cQIX/D1k5LuXDoUMZ0F3SL5CU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WULtYCFh3fQcGhgKvsmcXIU7qlug+miUSADw8VaZE4bAEQINy0wZa//WQe+IrPeoa
-         Wj8kpszqs3XjkrlBn2Fpls37ex28l2YwCiCjN/tl8b3rZxRjklIZDh88PCl47pEkS1
-         176H8sjAplphuYnBoB1zbCZKZOu3g2ZiRlzgwV7A=
-Date:   Wed, 12 Aug 2020 01:50:06 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     kernel test robot <lkp@intel.com>
-Cc:     Hyun Kwon <hyun.kwon@xilinx.com>, kbuild-all@lists.01.org,
-        linux-kernel@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
-        Tejas Upadhyay <tejasu@xilinx.com>,
-        Michal Simek <monstr@monstr.eu>
-Subject: Re: drivers/dma/xilinx/xilinx_dpdma.c:1172
- xilinx_dpdma_synchronize() error: double unlocked 'chan->vchan.lock' (orig
- line 1170)
-Message-ID: <20200811225006.GF17446@pendragon.ideasonboard.com>
-References: <202008120657.drkFgIsC%lkp@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <202008120657.drkFgIsC%lkp@intel.com>
+        Tue, 11 Aug 2020 18:51:47 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 742E0C06174A;
+        Tue, 11 Aug 2020 15:51:47 -0700 (PDT)
+Received: from localhost (50-47-103-195.evrt.wa.frontiernet.net [50.47.103.195])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id D08C2128B618E;
+        Tue, 11 Aug 2020 15:35:00 -0700 (PDT)
+Date:   Tue, 11 Aug 2020 15:51:45 -0700 (PDT)
+Message-Id: <20200811.155145.1823736054077708967.davem@davemloft.net>
+To:     tim.froidcoeur@tessares.net
+Cc:     kuba@kernel.org, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        kaber@trash.net, hidden@balabit.hu, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net v4 0/2] net: initialize fastreuse on
+ inet_inherit_port
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200811183325.42748-1-tim.froidcoeur@tessares.net>
+References: <20200811183325.42748-1-tim.froidcoeur@tessares.net>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 11 Aug 2020 15:35:01 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 06:37:59AM +0800, kernel test robot wrote:
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> head:   c636eef2ee3696f261a35f34989842701a107895
-> commit: 7cbb0c63de3fc218fd06ecfedb477772a4d12f76 dmaengine: xilinx: dpdma: Add the Xilinx DisplayPort DMA engine driver
-> date:   4 weeks ago
-> config: h8300-randconfig-m031-20200811 (attached as .config)
-> compiler: h8300-linux-gcc (GCC) 9.3.0
-> 
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
-> 
-> smatch warnings:
-> drivers/dma/xilinx/xilinx_dpdma.c:1172 xilinx_dpdma_synchronize() error: double unlocked 'chan->vchan.lock' (orig line 1170)
+From: Tim Froidcoeur <tim.froidcoeur@tessares.net>
+Date: Tue, 11 Aug 2020 20:33:22 +0200
 
-Unless I'm mistaken, this is a false positive. I'd appreciate if someone
-could check if I'm missing something obvious.
-
-> vim +1172 drivers/dma/xilinx/xilinx_dpdma.c
+> In the case of TPROXY, bind_conflict optimizations for SO_REUSEADDR or
+> SO_REUSEPORT are broken, possibly resulting in O(n) instead of O(1) bind
+> behaviour or in the incorrect reuse of a bind.
 > 
->   1140	
->   1141	/**
->   1142	 * xilinx_dpdma_synchronize - Synchronize callback execution
->   1143	 * @dchan: DMA channel
->   1144	 *
->   1145	 * Synchronizing callback execution ensures that all previously issued
->   1146	 * transfers have completed and all associated callbacks have been called and
->   1147	 * have returned.
->   1148	 *
->   1149	 * This function waits for the DMA channel to stop. It assumes it has been
->   1150	 * paused by a previous call to dmaengine_terminate_async(), and that no new
->   1151	 * pending descriptors have been issued with dma_async_issue_pending(). The
->   1152	 * behaviour is undefined otherwise.
->   1153	 */
->   1154	static void xilinx_dpdma_synchronize(struct dma_chan *dchan)
->   1155	{
->   1156		struct xilinx_dpdma_chan *chan = to_xilinx_chan(dchan);
->   1157		unsigned long flags;
->   1158	
->   1159		xilinx_dpdma_chan_stop(chan);
->   1160	
->   1161		spin_lock_irqsave(&chan->vchan.lock, flags);
->   1162		if (chan->desc.pending) {
->   1163			vchan_terminate_vdesc(&chan->desc.pending->vdesc);
->   1164			chan->desc.pending = NULL;
->   1165		}
->   1166		if (chan->desc.active) {
->   1167			vchan_terminate_vdesc(&chan->desc.active->vdesc);
->   1168			chan->desc.active = NULL;
->   1169		}
-> > 1170		spin_unlock_irqrestore(&chan->vchan.lock, flags);
->   1171	
-> > 1172		vchan_synchronize(&chan->vchan);
->   1173	}
->   1174	
+> the kernel keeps track for each bind_bucket if all sockets in the
+> bind_bucket support SO_REUSEADDR or SO_REUSEPORT in two fastreuse flags.
+> These flags allow skipping the costly bind_conflict check when possible
+> (meaning when all sockets have the proper SO_REUSE option).
 > 
+> For every socket added to a bind_bucket, these flags need to be updated.
+> As soon as a socket that does not support reuse is added, the flag is
+> set to false and will never go back to true, unless the bind_bucket is
+> deleted.
+> 
+> Note that there is no mechanism to re-evaluate these flags when a socket
+> is removed (this might make sense when removing a socket that would not
+> allow reuse; this leaves room for a future patch).
+> 
+> For this optimization to work, it is mandatory that these flags are
+> properly initialized and updated.
+> 
+> When a child socket is created from a listen socket in
+> __inet_inherit_port, the TPROXY case could create a new bind bucket
+> without properly initializing these flags, thus preventing the
+> optimization to work. Alternatively, a socket not allowing reuse could
+> be added to an existing bind bucket without updating the flags, causing
+> bind_conflict to never be called as it should.
+> 
+> Patch 1/2 refactors the fastreuse update code in inet_csk_get_port into a
+> small helper function, making the actual fix tiny and easier to understand.
+> 
+> Patch 2/2 calls this new helper when __inet_inherit_port decides to create
+> a new bind_bucket or use a different bind_bucket than the one of the listen
+> socket.
+> 
+> v4: - rebase on latest linux/net master branch
+> v3: - remove company disclaimer from automatic signature
+> v2: - remove unnecessary cast
 
--- 
-Regards,
-
-Laurent Pinchart
+Series applied and queued up for -stable, thank you.
