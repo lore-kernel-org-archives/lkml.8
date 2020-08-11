@@ -2,138 +2,126 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C9CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:29:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0589DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:30:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5AB120781
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:29:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IqDuLgB6"
+	by mail.kernel.org (Postfix) with ESMTP id DC5D920756
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:30:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729320AbgHKR3g (ORCPT
+        id S1729333AbgHKRa1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 13:29:36 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45999 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729218AbgHKR3f (ORCPT
+        Tue, 11 Aug 2020 13:30:27 -0400
+Received: from mail-il1-f199.google.com ([209.85.166.199]:42231 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729150AbgHKRaZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 13:29:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597166974;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/kCCiP1A994GEPhfTMliHq1uK+Sv/vNDYIXMua8VMzw=;
-        b=IqDuLgB6JJNeR0UFLOWa+giGAEu2+7S1ZRnVivBFGZEbewfUjRrQAnRG12cJjwF7TFt6Eu
-        wHQ1do3sBMR1J6aD/tuz9H6GlecmHeebI2mFspeJrPQpmssjLMiK/UgxIhjcFQ6HgUVLaz
-        bsatkcLL428CRS2XQa0/Q/SBxS92AGQ=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-503-TVFwQiL0M2y6yYcg3WB2Lg-1; Tue, 11 Aug 2020 13:29:32 -0400
-X-MC-Unique: TVFwQiL0M2y6yYcg3WB2Lg-1
-Received: by mail-qk1-f198.google.com with SMTP id a186so9834581qke.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 10:29:32 -0700 (PDT)
+        Tue, 11 Aug 2020 13:30:25 -0400
+Received: by mail-il1-f199.google.com with SMTP id z1so1584618ilz.9
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 10:30:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=/kCCiP1A994GEPhfTMliHq1uK+Sv/vNDYIXMua8VMzw=;
-        b=nfBPO+zEeNH/o2JrdQPSBgfi/oyJmkXDSABOUzS7ZB0p7LavHIYrryJtvIRs2OO8XX
-         /mgGeMXS/8mzKfHFDjF70MQcLAN4+y0joKVTFvG5ES4N9VztWmk2yiU3xKW2G1XcOQ7/
-         JSdvwdHHGvf3tXOhh0T21ck6JmqpCWaI5V6LcMqWhPM032NRzECTfnBME371A92s2MVq
-         WJWcJAXAhoX1GLRGy312Hl0vBVwx3qPDNvtV5/06GbyoQjRCGgQiEfsYbvm77y/hfP3K
-         uHOvpIgkPhH5EQplzyXeVijcqHRfY5O9HOC3bWJ/X0AuKXF2T7bi7+sdnh5KuJxeXDWo
-         vWsw==
-X-Gm-Message-State: AOAM531o4rLDn2upkIxLcSKtiJaOFHmrBNYkEbpS/vObhk8U+ddLQQQ6
-        0yDColjtg2jR5zO8BqcZjcNacFmRZr9jI5PxFVoGLLLzEaftl8hoqnPh34Em7VsiCJvCSvI0Rnz
-        wxJKuPn7DsCw80l04n8RjYsmt
-X-Received: by 2002:ac8:6e87:: with SMTP id c7mr2347338qtv.62.1597166971941;
-        Tue, 11 Aug 2020 10:29:31 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyL8bEYELl1qXi1MXs8Z4bGDTdMzjg5IXgTDDjBowuqwx+PFGWiyKTQTphCbSqHo0N18EI7IQ==
-X-Received: by 2002:ac8:6e87:: with SMTP id c7mr2347311qtv.62.1597166971642;
-        Tue, 11 Aug 2020 10:29:31 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id g55sm20376876qta.94.2020.08.11.10.29.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Aug 2020 10:29:31 -0700 (PDT)
-Subject: Re: [PATCH] USB: realtek_cr: fix return check for dma functions
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     gregkh@linuxfoundation.org, acozzette@cs.hmc.edu,
-        linux-usb@vger.kernel.org, usb-storage@lists.one-eyed-alien.net,
-        linux-kernel@vger.kernel.org
-References: <20200811151505.12222-1-trix@redhat.com>
- <20200811160348.GD335280@rowland.harvard.edu>
-From:   Tom Rix <trix@redhat.com>
-Message-ID: <1f7d5a64-f264-4fed-bf90-b64e2693652d@redhat.com>
-Date:   Tue, 11 Aug 2020 10:29:29 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=wYPqHOKiPEiq4c/9oNHWGAHHdoSgKuM8jKVa9B1NydQ=;
+        b=fDz5yMScCkHqY9y0wBwjYdn7QacYejSDCD4yM7OhKzIM+vhik1CX/CRE5z6HEIinft
+         brhGG0I6WOGmQx3zGz2AUxqmN+IPnZKMuLPg3wJyslvsjnAVTlCW4BB0q+0M20O3wvra
+         L6t+PLxID0Wb02/5VqtXAoNxD/juR4hlCdAMwem5wckiUZBWU5VqLlWpFJNYjBQq1HOx
+         WwRhe6QaRFSfsTgzenxCYgdqRvxTvQlt8mkzvDmBe5AfhkwvZKNJ3kQKdVshtQQqCPie
+         qlIrON6rt/MJSLZ8QOmSMvrDPHHS+DIDDyPu0yBext9j6DeuHJxsyJ0ETm20LVrcLfhi
+         e5/Q==
+X-Gm-Message-State: AOAM532v5ANgcG9c3CoAAdoEHA1q8L2cGqdXtjUHPjCDENb1g0jzkUKj
+        yLHT1oz9w6XszQ5B/e0NrTe3FsVj/PmIZGNs4gN73NO3dCvr
+X-Google-Smtp-Source: ABdhPJzuvdFF/eryapjz18jWZQjX+uUKxP9iCExAkSrA73P+bYbzt9f9bRI9OkHK+KAxko2TkHzilohTdt46KpJnzPRoeZ3heg2X
 MIME-Version: 1.0
-In-Reply-To: <20200811160348.GD335280@rowland.harvard.edu>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+X-Received: by 2002:a02:6d5d:: with SMTP id e29mr26421416jaf.139.1597167024410;
+ Tue, 11 Aug 2020 10:30:24 -0700 (PDT)
+Date:   Tue, 11 Aug 2020 10:30:24 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000023195505ac9d6d26@google.com>
+Subject: KASAN: wild-memory-access Read in do_ebt_set_ctl
+From:   syzbot <syzbot+64d60892aaa4d4c34812@syzkaller.appspotmail.com>
+To:     bridge@lists.linux-foundation.org, coreteam@netfilter.org,
+        davem@davemloft.net, fw@strlen.de, kadlec@netfilter.org,
+        kuba@kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        nikolay@cumulusnetworks.com, pablo@netfilter.org,
+        roopa@cumulusnetworks.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
 
-On 8/11/20 9:03 AM, Alan Stern wrote:
-> On Tue, Aug 11, 2020 at 08:15:05AM -0700, trix@redhat.com wrote:
->> From: Tom Rix <trix@redhat.com>
->>
->> clang static analysis reports this representative problem
->>
->> realtek_cr.c:639:3: warning: The left expression of the compound
->>   assignment is an uninitialized value. The computed value will
->>   also be garbage
->>     SET_BIT(value, 2);
->>     ^~~~~~~~~~~~~~~~~
->>
->> value is set by a successful call to rts51x_read_mem()
->>
->> 	retval = rts51x_read_mem(us, 0xFE77, &value, 1);
->> 	if (retval < 0)
->> 		return -EIO;
->>
->> A successful call to rts51x_read_mem returns 0, failure can
->> return positive and negative values.  This check is wrong
->> for a number of functions.  Fix the retval check.
->>
->> Fixes: 065e60964e29 ("ums_realtek: do not use stack memory for DMA")
->> Signed-off-by: Tom Rix <trix@redhat.com>
->> ---
->>  drivers/usb/storage/realtek_cr.c | 36 ++++++++++++++++----------------
->>  1 file changed, 18 insertions(+), 18 deletions(-)
->>
->> diff --git a/drivers/usb/storage/realtek_cr.c b/drivers/usb/storage/realtek_cr.c
->> index 3789698d9d3c..b983753e2368 100644
->> --- a/drivers/usb/storage/realtek_cr.c
->> +++ b/drivers/usb/storage/realtek_cr.c
->> @@ -481,16 +481,16 @@ static int enable_oscillator(struct us_data *us)
->>  	u8 value;
->>  
->>  	retval = rts51x_read_mem(us, 0xFE77, &value, 1);
->> -	if (retval < 0)
->> +	if (retval != STATUS_SUCCESS)
->>  		return -EIO;
-> Instead of changing all these call sites, wouldn't it be a lot easier 
-> just to change rts51x_read_mem() to make it always return a negative 
-> value (such as -EIO) when there's an error?
->
-> Alan Stern
+syzbot found the following issue on:
 
-I thought about that but there was already existing (retval != STATUS_SUCCESS) checks for these calls.
+HEAD commit:    86cfccb6 Merge tag 'dlm-5.9' of git://git.kernel.org/pub/s..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1419de8a900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=bcf489e08c9b8c5e
+dashboard link: https://syzkaller.appspot.com/bug?extid=64d60892aaa4d4c34812
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+userspace arch: i386
 
-Tom
+Unfortunately, I don't have any reproducer for this issue yet.
 
->
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+64d60892aaa4d4c34812@syzkaller.appspotmail.com
 
+BUG: KASAN: wild-memory-access in memcpy include/linux/string.h:406 [inline]
+BUG: KASAN: wild-memory-access in copy_from_sockptr_offset include/linux/sockptr.h:71 [inline]
+BUG: KASAN: wild-memory-access in copy_from_sockptr include/linux/sockptr.h:77 [inline]
+BUG: KASAN: wild-memory-access in compat_update_counters net/bridge/netfilter/ebtables.c:2222 [inline]
+BUG: KASAN: wild-memory-access in do_ebt_set_ctl+0x2c0/0x53b net/bridge/netfilter/ebtables.c:2389
+Read of size 80 at addr 00000000ffffffff by task syz-executor.3/9621
+
+CPU: 1 PID: 9621 Comm: syz-executor.3 Not tainted 5.8.0-syzkaller #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ __kasan_report mm/kasan/report.c:517 [inline]
+ kasan_report.cold+0x5/0x37 mm/kasan/report.c:530
+ check_memory_region_inline mm/kasan/generic.c:186 [inline]
+ check_memory_region+0x13d/0x180 mm/kasan/generic.c:192
+ memcpy+0x20/0x60 mm/kasan/common.c:105
+ memcpy include/linux/string.h:406 [inline]
+ copy_from_sockptr_offset include/linux/sockptr.h:71 [inline]
+ copy_from_sockptr include/linux/sockptr.h:77 [inline]
+ compat_update_counters net/bridge/netfilter/ebtables.c:2222 [inline]
+ do_ebt_set_ctl+0x2c0/0x53b net/bridge/netfilter/ebtables.c:2389
+ nf_setsockopt+0x6f/0xc0 net/netfilter/nf_sockopt.c:101
+ ip_setsockopt+0x54d/0x3c10 net/ipv4/ip_sockglue.c:1436
+ raw_setsockopt+0x205/0x250 net/ipv4/raw.c:856
+ __sys_setsockopt+0x2ad/0x6d0 net/socket.c:2138
+ __do_sys_setsockopt net/socket.c:2149 [inline]
+ __se_sys_setsockopt net/socket.c:2146 [inline]
+ __ia32_sys_setsockopt+0xb9/0x150 net/socket.c:2146
+ do_syscall_32_irqs_on arch/x86/entry/common.c:84 [inline]
+ __do_fast_syscall_32+0x57/0x80 arch/x86/entry/common.c:126
+ do_fast_syscall_32+0x2f/0x70 arch/x86/entry/common.c:149
+ entry_SYSENTER_compat_after_hwframe+0x4d/0x5c
+RIP: 0023:0xf7f19569
+Code: c4 01 10 03 03 74 c0 01 10 05 03 74 b8 01 10 06 03 74 b4 01 10 07 03 74 b0 01 10 08 03 74 d8 01 00 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
+RSP: 002b:00000000f55130bc EFLAGS: 00000296 ORIG_RAX: 000000000000016e
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000000000
+RDX: 0000000000000081 RSI: 00000000ffffffff RDI: 0000000000000000
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+==================================================================
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
