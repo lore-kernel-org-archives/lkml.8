@@ -7,132 +7,297 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C784C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EDCEC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:27:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC9C120771
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:26:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DA1920781
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:27:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="TXEWF0PR"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Bc4KMCho"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729223AbgHKR0N (ORCPT
+        id S1729184AbgHKR1o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 13:26:13 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:50909 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729116AbgHKR0L (ORCPT
+        Tue, 11 Aug 2020 13:27:44 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:56780 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729096AbgHKR1n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 13:26:11 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200811172609euoutp02847654398e86864cd8550acff7ad3ebb~qRrb-84hz1390613906euoutp02O
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 17:26:09 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200811172609euoutp02847654398e86864cd8550acff7ad3ebb~qRrb-84hz1390613906euoutp02O
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1597166769;
-        bh=DWSq51BVqD/cJXFaRO9qdwmVLjQYWLiMKoZTS3OxLlo=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=TXEWF0PR3a7MjDGUBYFIjGOEZ1NGlXcNmIUXoNH1tr+JsOh+6FI3pT7T19hf7GYh5
-         VCRu7/hbSDpMxDYg6QXYCO7lYQOosWxu8WBkdH1dh0F+KDy2eXk88hKNrkXbn9ywQJ
-         mENeRn7XerNHmlCyKbmcMGr8EEi7YHQuvl3sIsPM=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200811172609eucas1p2836ca6b88971ab73d32f2dc6999c53bf~qRrbZn8Ea0784407844eucas1p2H;
-        Tue, 11 Aug 2020 17:26:09 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 99.46.06456.0B4D23F5; Tue, 11
-        Aug 2020 18:26:08 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200811172608eucas1p139ea646735cd81a8c5fe76cc701c7b05~qRra4uTjq1061710617eucas1p1T;
-        Tue, 11 Aug 2020 17:26:08 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200811172608eusmtrp12364ad39b2bd51504b1a7643e3cf4898~qRra4DzuI2746427464eusmtrp19;
-        Tue, 11 Aug 2020 17:26:08 +0000 (GMT)
-X-AuditID: cbfec7f2-7efff70000001938-56-5f32d4b0daf3
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 47.99.06314.0B4D23F5; Tue, 11
-        Aug 2020 18:26:08 +0100 (BST)
-Received: from [106.210.123.115] (unknown [106.210.123.115]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200811172607eusmtip2d0f1f37c2f15c6ede57d77d2107da6c0~qRraEcG_D0617706177eusmtip2e;
-        Tue, 11 Aug 2020 17:26:07 +0000 (GMT)
-Subject: Re: [PATCH v2] clk: samsung: Prevent potential endless loop in the
- PLL set_rate ops
-To:     Tomasz Figa <tomasz.figa@gmail.com>
-Cc:     "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Mike Turquette <mturquette@baylibre.com>,
-        "moderated list:SAMSUNG SOC CLOCK DRIVERS" 
-        <linux-samsung-soc@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
-Message-ID: <774ad8b4-2d6f-fd09-1582-edd674385aa9@samsung.com>
-Date:   Tue, 11 Aug 2020 19:26:07 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.11.0
+        Tue, 11 Aug 2020 13:27:43 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07BHRRci114491;
+        Tue, 11 Aug 2020 12:27:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1597166847;
+        bh=FGXj1s1bgapDbOhk+hV14xUat7NY8t3A4MWv2IcwDKU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Bc4KMChoLu7A1OZjgH/ujenQ0xGQgALEF6i7UouPSfEIV7CJ4bFasVdK7ENM4hVkY
+         cRuBXODeBCyla+wRJddggnR1JVQuOXefX1X8c8MwDYaG1gEJyOCxwxm7lfOyEvS6Jo
+         X5gZoGKV2UesvR5114mrDWMtA34GeLmTkzzgCt7M=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07BHRRxS047879
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 11 Aug 2020 12:27:27 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 11
+ Aug 2020 12:27:27 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 11 Aug 2020 12:27:27 -0500
+Received: from [10.250.38.37] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07BHRQmi075923;
+        Tue, 11 Aug 2020 12:27:26 -0500
+Subject: Re: [PATCH v32 2/6] leds: lp50xx: Add the LP50XX family of the RGB
+ LED driver
+To:     Pavel Machek <pavel@ucw.cz>
+CC:     <jacek.anaszewski@gmail.com>, <robh@kernel.org>,
+        <marek.behun@nic.cz>, <devicetree@vger.kernel.org>,
+        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200722153146.8767-1-dmurphy@ti.com>
+ <20200722153146.8767-3-dmurphy@ti.com>
+ <20200811105413.r2m2f7bubuz55rrt@duo.ucw.cz>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <935119fa-6d1f-8e99-51f9-87966b4d03ad@ti.com>
+Date:   Tue, 11 Aug 2020 12:27:21 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <CA+Ln22E4FPexE1R2dmV=u9U5UFWsAz=8kXgqBntEBgabnUEF+Q@mail.gmail.com>
+In-Reply-To: <20200811105413.r2m2f7bubuz55rrt@duo.ucw.cz>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Se0hTcRjlt3u33Y0m17nY15KCmz1M0tTCS5mUKewfwyBKgrRrXqbmVDZ1
-        WoGGaPlILQ1tGZp/pIxEHb6lguUzU9FKl6VlrEzFfAuVaF6vkv+dc77zPQ58BCavE6qIiOg4
-        VhfNRFEiKV7f/rv3SPV7j5CjJbNedE1RlZAeWhwX0nPZo0L6XXOxiC7qeymgK1tHxHT/G396
-        dbAGp03NK+i0RD1jTROrm4wjYrXZlCFS59SakHrBvCdQeFnqHcZGRSSwOjefq9LwuvRnKHYI
-        T8ysrsBSkA3LRBICyGMwOPdUmImkhJysQLD2uAvxZBHBbE+TiCcLCGy9VuFWy9T85GahHIHx
-        RTPOkzkE375Xbgx2IIOhtvGjgMMK8iAsF+SKORNGPsbgR2OnmCuISHe415azvpAgZKQPLI/F
-        czJO7ofx4eINy871OXUdHzbmyEh76HpkwzksIc/DWG66iMMYqYRhW4mAx3uhYboY43YB2S6G
-        ifLKzaR+cOd5mYjHDjDZUSvmsSN052fjfEMqguyWT2Ke5CH40lGKeNdJ+Nz7R8RdipHOUNXs
-        xstnoGZqCONkIO3AOm3PH2EHD+oLN2UZ3E2X824n+GsqFPBYBVm2NTwPUcZt0Yzb4hi3xTH+
-        31uKcBNSsvF6rYbVu0ezBlc9o9XHR2tcr8VozWj9mbpXO+Yb0dJAqAWRBKJ2yErve4TIhUyC
-        PklrQUBglELm29MdLJeFMUk3WF1MiC4+itVb0G4Cp5Qyz7KJK3JSw8Sx11k2ltVtVQWERJWC
-        nC88cVY0MDcNAtNYRpf1oovvT8uJ5DzfwoAllcutzkBzovI1dtbUVzyWW+aUxUgvtfoVmD2/
-        pif3Fwb+yjiEhi2J/pqHQbERaZq40JpureE2VarY9zZ49PiM4ZS9oS2SEuyqHVBRtnyv1BXH
-        ANRSgilfHTB5Wyt9IuvPBVkoXB/OuB/GdHrmH460u0BIAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrGIsWRmVeSWpSXmKPExsVy+t/xe7obrhjFG9zeLWaxccZ6VovrX56z
-        WnzsucdqcXnXHDaLGef3MVmsPXKX3eLiKVeLf9c2slis2vWH0YHT4/2NVnaPnbPusntsWtXJ
-        5tG3ZRWjx+dNcgGsUXo2RfmlJakKGfnFJbZK0YYWRnqGlhZ6RiaWeobG5rFWRqZK+nY2Kak5
-        mWWpRfp2CXoZW9uWMRZcZ6no2rCCuYHxCXMXIyeHhICJxOtPr9i6GLk4hASWMkqc6VjE1MXI
-        AZSQkpjfogRRIyzx51oXVM17RonZh94wgSSEBeIktuy4CWaLCKhLfJvSzw5SxCwwn1li+fs9
-        7BAdl5gkDrRPBFvHJmAo0Xu0jxFkA6+AncS3h6UgYRYBVYnnt+awg9iiQEMf9/4HK+cVEJQ4
-        OfMJC4jNKRAo8bC/jQ3EZgZa9mfeJWYIW1zi1pP5TBC2vMT2t3OYJzAKzULSPgtJyywkLbOQ
-        tCxgZFnFKJJaWpybnltsqFecmFtcmpeul5yfu4kRGIfbjv3cvIPx0sbgQ4wCHIxKPLwLJhrF
-        C7EmlhVX5h5ilOBgVhLhdTp7Ok6INyWxsiq1KD++qDQntfgQoynQcxOZpUST84EpIq8k3tDU
-        0NzC0tDc2NzYzEJJnLdD4GCMkEB6YklqdmpqQWoRTB8TB6dUAyNDdddfqbm/y62FXx28dTn+
-        +OPrVzm/NnxxfxZ43OyUVdfh8DCHvAiWR4VX9ofPvLxttT2rYHqG3O2XaeouQc8XFkW+Lbp3
-        XvezpmfGr+tWKSo53/52zntT4Kazm8sw3eLi2Z4oJhODD4LMN1SCk17neTud7rQ3PhQoyr80
-        ju/VT0NH/j93NyixFGckGmoxFxUnAgBUVANB2QIAAA==
-X-CMS-MailID: 20200811172608eucas1p139ea646735cd81a8c5fe76cc701c7b05
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200811112518eucas1p2a751f664a907ac7cd8e1dd235dc2fa54
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200811112518eucas1p2a751f664a907ac7cd8e1dd235dc2fa54
-References: <CGME20200811112518eucas1p2a751f664a907ac7cd8e1dd235dc2fa54@eucas1p2.samsung.com>
-        <20200811112507.24418-1-s.nawrocki@samsung.com>
-        <CA+Ln22Hfys7r2EDstOsdks1X88Fuv77DLTuXLWDynTt4kmiCiQ@mail.gmail.com>
-        <66c7330e-507e-d81f-1cb1-b509bf54d050@samsung.com>
-        <CA+Ln22E4FPexE1R2dmV=u9U5UFWsAz=8kXgqBntEBgabnUEF+Q@mail.gmail.com>
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11.08.2020 18:53, Tomasz Figa wrote:
-> Yeah... I should've thought about this. Interestingly enough, some of
-> the existing implementations in drivers/clk/samsung/clk-pll.c use the
-> ktime API. I guess they are lucky enough not to be called too early,
-> i.e. are not needed for the initialization of timers.
+Hello
 
-In normal conditions nothing bad really happens, the loop exits as soon
-as the lock bit is asserted. Just the timeout condition will never be
-detected - if there is something wrong with the PLL's setup and it never
-locks we will never stop polling.
+On 8/11/20 5:54 AM, Pavel Machek wrote:
+> Hi!
+>
+>> +/* LP5009 and LP5012 registers */
+>> +#define LP5012_BNK_BRT		0x03
+>> +#define LP5012_BNKA_CLR		0x04
+>> +#define LP5012_BNKB_CLR		0x05
+>> +#define LP5012_BNKC_CLR		0x06
+>> +#define LP5012_LED0_BRT		0x07
+>> +#define LP5012_LED1_BRT		0x08
+>> +#define LP5012_LED2_BRT		0x09
+>> +#define LP5012_LED3_BRT		0x0a
+>> +#define LP5012_OUT0_CLR		0x0b
+>> +#define LP5012_OUT1_CLR		0x0c
+>> +#define LP5012_OUT2_CLR		0x0d
+>> +#define LP5012_OUT3_CLR		0x0e
+>> +#define LP5012_OUT4_CLR		0x0f
+>> +#define LP5012_OUT5_CLR		0x10
+>> +#define LP5012_OUT6_CLR		0x11
+>> +#define LP5012_OUT7_CLR		0x12
+>> +#define LP5012_OUT8_CLR		0x13
+>> +#define LP5012_OUT9_CLR		0x14
+>> +#define LP5012_OUT10_CLR	0x15
+>> +#define LP5012_OUT11_CLR	0x16
+>> +#define LP5012_RESET		0x17
+>> +
+>> +/* LP5018 and LP5024 registers */
+>> +#define LP5024_BNK_BRT		0x03
+>> +#define LP5024_BNKA_CLR		0x04
+>> +#define LP5024_BNKB_CLR		0x05
+>> +#define LP5024_BNKC_CLR		0x06
+>> +#define LP5024_LED0_BRT		0x07
+>> +#define LP5024_LED1_BRT		0x08
+>> +#define LP5024_LED2_BRT		0x09
+>> +#define LP5024_LED3_BRT		0x0a
+>> +#define LP5024_LED4_BRT		0x0b
+>> +#define LP5024_LED5_BRT		0x0c
+>> +#define LP5024_LED6_BRT		0x0d
+>> +#define LP5024_LED7_BRT		0x0e
+>> +
+>> +#define LP5024_OUT0_CLR		0x0f
+>> +#define LP5024_OUT1_CLR		0x10
+>> +#define LP5024_OUT2_CLR		0x11
+>> +#define LP5024_OUT3_CLR		0x12
+>> +#define LP5024_OUT4_CLR		0x13
+>> +#define LP5024_OUT5_CLR		0x14
+>> +#define LP5024_OUT6_CLR		0x15
+>> +#define LP5024_OUT7_CLR		0x16
+>> +#define LP5024_OUT8_CLR		0x17
+>> +#define LP5024_OUT9_CLR		0x18
+>> +#define LP5024_OUT10_CLR	0x19
+>> +#define LP5024_OUT11_CLR	0x1a
+>> +#define LP5024_OUT12_CLR	0x1b
+>> +#define LP5024_OUT13_CLR	0x1c
+>> +#define LP5024_OUT14_CLR	0x1d
+>> +#define LP5024_OUT15_CLR	0x1e
+>> +#define LP5024_OUT16_CLR	0x1f
+>> +#define LP5024_OUT17_CLR	0x20
+>> +#define LP5024_OUT18_CLR	0x21
+>> +#define LP5024_OUT19_CLR	0x22
+>> +#define LP5024_OUT20_CLR	0x23
+>> +#define LP5024_OUT21_CLR	0x24
+>> +#define LP5024_OUT22_CLR	0x25
+>> +#define LP5024_OUT23_CLR	0x26
+>> +#define LP5024_RESET		0x27
+>> +
+>> +/* LP5030 and LP5036 registers */
+>> +#define LP5036_LED_CFG1		0x03
+>> +#define LP5036_BNK_BRT		0x04
+>> +#define LP5036_BNKA_CLR		0x05
+>> +#define LP5036_BNKB_CLR		0x06
+>> +#define LP5036_BNKC_CLR		0x07
+>> +#define LP5036_LED0_BRT		0x08
+>> +#define LP5036_LED1_BRT		0x09
+>> +#define LP5036_LED2_BRT		0x0a
+>> +#define LP5036_LED3_BRT		0x0b
+>> +#define LP5036_LED4_BRT		0x0c
+>> +#define LP5036_LED5_BRT		0x0d
+>> +#define LP5036_LED6_BRT		0x0e
+>> +#define LP5036_LED7_BRT		0x0f
+>> +#define LP5036_LED8_BRT		0x10
+>> +#define LP5036_LED9_BRT		0x11
+>> +#define LP5036_LED10_BRT	0x12
+>> +#define LP5036_LED11_BRT	0x13
+>> +
+>> +#define LP5036_OUT0_CLR		0x14
+>> +#define LP5036_OUT1_CLR		0x15
+>> +#define LP5036_OUT2_CLR		0x16
+>> +#define LP5036_OUT3_CLR		0x17
+>> +#define LP5036_OUT4_CLR		0x18
+>> +#define LP5036_OUT5_CLR		0x19
+>> +#define LP5036_OUT6_CLR		0x1a
+>> +#define LP5036_OUT7_CLR		0x1b
+>> +#define LP5036_OUT8_CLR		0x1c
+>> +#define LP5036_OUT9_CLR		0x1d
+>> +#define LP5036_OUT10_CLR	0x1e
+>> +#define LP5036_OUT11_CLR	0x1f
+>> +#define LP5036_OUT12_CLR	0x20
+>> +#define LP5036_OUT13_CLR	0x21
+>> +#define LP5036_OUT14_CLR	0x22
+>> +#define LP5036_OUT15_CLR	0x23
+>> +#define LP5036_OUT16_CLR	0x24
+>> +#define LP5036_OUT17_CLR	0x25
+>> +#define LP5036_OUT18_CLR	0x26
+>> +#define LP5036_OUT19_CLR	0x27
+>> +#define LP5036_OUT20_CLR	0x28
+>> +#define LP5036_OUT21_CLR	0x29
+>> +#define LP5036_OUT22_CLR	0x2a
+>> +#define LP5036_OUT23_CLR	0x2b
+>> +#define LP5036_OUT24_CLR	0x2c
+>> +#define LP5036_OUT25_CLR	0x2d
+>> +#define LP5036_OUT26_CLR	0x2e
+>> +#define LP5036_OUT27_CLR	0x2f
+>> +#define LP5036_OUT28_CLR	0x30
+>> +#define LP5036_OUT29_CLR	0x31
+>> +#define LP5036_OUT30_CLR	0x32
+>> +#define LP5036_OUT31_CLR	0x33
+>> +#define LP5036_OUT32_CLR	0x34
+>> +#define LP5036_OUT33_CLR	0x35
+>> +#define LP5036_OUT34_CLR	0x36
+>> +#define LP5036_OUT35_CLR	0x37
+>> +#define LP5036_RESET		0x38
+>> +static const struct reg_default lp5012_reg_defs[] = {
+> ...
+>> +	{LP5012_OUT1_CLR, 0x00},
+>> +	{LP5012_OUT2_CLR, 0x00},
+>> +	{LP5012_OUT3_CLR, 0x00},
+>> +	{LP5012_OUT4_CLR, 0x00},
+>> +	{LP5012_OUT5_CLR, 0x00},
+>> +	{LP5012_OUT6_CLR, 0x00},
+>> +	{LP5012_OUT7_CLR, 0x00},
+>> +	{LP5012_OUT8_CLR, 0x00},
+>> +	{LP5012_OUT9_CLR, 0x00},
+>> +	{LP5012_OUT10_CLR, 0x00},
+>> +	{LP5012_OUT11_CLR, 0x00},
+>> +	{LP5012_RESET, 0x00}
+>> +};
+>> +
+>> +static const struct reg_default lp5024_reg_defs[] = {
+> ...
+>> +	{LP5024_OUT1_CLR, 0x00},
+>> +	{LP5024_OUT2_CLR, 0x00},
+>> +	{LP5024_OUT3_CLR, 0x00},
+>> +	{LP5024_OUT4_CLR, 0x00},
+>> +	{LP5024_OUT5_CLR, 0x00},
+>> +	{LP5024_OUT6_CLR, 0x00},
+>> +	{LP5024_OUT7_CLR, 0x00},
+>> +	{LP5024_OUT8_CLR, 0x00},
+>> +	{LP5024_OUT9_CLR, 0x00},
+>> +	{LP5024_OUT10_CLR, 0x00},
+>> +	{LP5024_OUT11_CLR, 0x00},
+>> +	{LP5024_OUT12_CLR, 0x00},
+>> +	{LP5024_OUT13_CLR, 0x00},
+>> +	{LP5024_OUT14_CLR, 0x00},
+>> +	{LP5024_OUT15_CLR, 0x00},
+>> +	{LP5024_OUT16_CLR, 0x00},
+>> +	{LP5024_OUT17_CLR, 0x00},
+>> +	{LP5024_OUT18_CLR, 0x00},
+>> +	{LP5024_OUT19_CLR, 0x00},
+>> +	{LP5024_OUT20_CLR, 0x00},
+>> +	{LP5024_OUT21_CLR, 0x00},
+>> +	{LP5024_OUT22_CLR, 0x00},
+>> +	{LP5024_OUT23_CLR, 0x00},
+>> +	{LP5024_RESET, 0x00}
+>> +};
+>> +
+>> +static const struct reg_default lp5036_reg_defs[] = {
+>> +	{LP5036_OUT1_CLR, 0x00},
+>> +	{LP5036_OUT2_CLR, 0x00},
+>> +	{LP5036_OUT3_CLR, 0x00},
+>> +	{LP5036_OUT4_CLR, 0x00},
+>> +	{LP5036_OUT5_CLR, 0x00},
+>> +	{LP5036_OUT6_CLR, 0x00},
+>> +	{LP5036_OUT7_CLR, 0x00},
+>> +	{LP5036_OUT8_CLR, 0x00},
+>> +	{LP5036_OUT9_CLR, 0x00},
+>> +	{LP5036_OUT10_CLR, 0x00},
+>> +	{LP5036_OUT11_CLR, 0x00},
+>> +	{LP5036_OUT12_CLR, 0x00},
+>> +	{LP5036_OUT13_CLR, 0x00},
+>> +	{LP5036_OUT14_CLR, 0x00},
+>> +	{LP5036_OUT15_CLR, 0x00},
+>> +	{LP5036_OUT16_CLR, 0x00},
+>> +	{LP5036_OUT17_CLR, 0x00},
+>> +	{LP5036_OUT18_CLR, 0x00},
+>> +	{LP5036_OUT19_CLR, 0x00},
+>> +	{LP5036_OUT20_CLR, 0x00},
+>> +	{LP5036_OUT21_CLR, 0x00},
+>> +	{LP5036_OUT22_CLR, 0x00},
+>> +	{LP5036_OUT23_CLR, 0x00},
+>> +	{LP5036_OUT24_CLR, 0x00},
+>> +	{LP5036_OUT25_CLR, 0x00},
+>> +	{LP5036_OUT26_CLR, 0x00},
+>> +	{LP5036_OUT27_CLR, 0x00},
+>> +	{LP5036_OUT28_CLR, 0x00},
+>> +	{LP5036_OUT29_CLR, 0x00},
+>> +	{LP5036_OUT30_CLR, 0x00},
+>> +	{LP5036_OUT31_CLR, 0x00},
+>> +	{LP5036_OUT32_CLR, 0x00},
+>> +	{LP5036_OUT33_CLR, 0x00},
+>> +	{LP5036_OUT34_CLR, 0x00},
+>> +	{LP5036_OUT35_CLR, 0x00},
+>> +	{LP5036_RESET, 0x00}
+>> +};
+> Actually... This is quite impressive ammount of code to
+> zero-initialize few registers. Could the regmap be told to set the
+> range to zero, or use loops to reduce ammount of code?
 
--- 
-Regards,
-Sylwester
+I am not aware of any regmap calls that will set a range of registers to 
+a certain value.
+
+Well it depends on where we want to create the default cache values.
+
+Either we run through a for..loop during driver probe and delay device 
+start up or we keep the simple arrays and increase the driver total size.
+
+I am not seeing an advantage or disadvantage of one over the other.  
+This is a simpler and more clear way to init the registers versus a loop.
+
+Dan
+
+> Thanks,
+> 								Pavel
+>
+>
