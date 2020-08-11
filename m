@@ -2,195 +2,114 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFAC5C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 19:24:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60637C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 19:25:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEE1220782
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 19:24:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597173883;
-	bh=BqFHDivktO2v2DgcoUuslMhBd4l+xl/4G9mm7hCxrqY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ivm1mwc85gZ9HLefwwD+SVMMrRxNh99ylLTF+e8roJRg698J1n8JgR+9P+HA87y+K
-	 beVkR6Ybz3P/YCY2oFrw3Y7AZmRVZ6rM+A/Ww9Mr1rDbnKjIuM+2CYXsEzB4ye7kvA
-	 Vb69yW3t888pGd8u3Agr0dRCkEBURkhL9smJ8iiI=
+	by mail.kernel.org (Postfix) with ESMTP id 3D9E320782
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 19:25:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hWEBPhJH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726310AbgHKTYm (ORCPT
+        id S1726441AbgHKTZG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 15:24:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39914 "EHLO
+        Tue, 11 Aug 2020 15:25:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725889AbgHKTYm (ORCPT
+        with ESMTP id S1726329AbgHKTZF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 15:24:42 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A36BC06174A
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 12:24:41 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id g6so14772639ljn.11
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 12:24:41 -0700 (PDT)
+        Tue, 11 Aug 2020 15:25:05 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6613AC06174A
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 12:25:05 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id t11so6094plr.5
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 12:25:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XpN6xraykRS+TA74TQmy+03p34x/yy7UF3SXmuV0HYg=;
-        b=IlP6ZNw/3TyULOWMmm7t1u6tgdDTVgMSnIjrGb6EkAd9JLYt9PMPIxqmlU/yRqicXx
-         g3KFM4RWJY5FFrSPJ7FdsHTuMtA7c6A/+xD8eyvb54B0lJgR4si9iu7qlOyaeog9UO+R
-         5P89PzEVoqEh6ADwIcGiRqr7j2tIaouCFYfBs=
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Th9F+Ys6njcnXzjyOUMQAgDagGiaCGUsjwgut8vgfCA=;
+        b=hWEBPhJHpzylK4ONAg1gpYb9KIbwqmMPtXitCIHPnAw9YWb10rGjpru87lXragFiLz
+         1/+Kpcu+HvtIoXL54Vnk6MZAo3jkVnkcLBm9F9014pGcL3pmxrfCh57lYLeTX3wlhlX7
+         FywIHupGsfeUSlmjvwHyV98MhAgYCpI40YBJE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XpN6xraykRS+TA74TQmy+03p34x/yy7UF3SXmuV0HYg=;
-        b=orfgIEErQNiGsLc7L4nAyjAO+XyeA+oVmH15wQDgrVBYgGShnF3XfKnRH1awwus7BQ
-         k2+enRTPXPOrIbqSWiZ39O/ibEgzcZ5iOEUVuzJA+HSU4vpLVh3YkWO2ElPf9lcK724p
-         VR5NyqTriAMEB6XysblQ/ZnMkArn2uXTmKExafe8yWvmakF73v09nz5g7D/gyK8hpAZ5
-         vdMTVrNns0aEVL/rkJjZ/XD8c3J/sktYrs9ZgWePu6unU1flCpyBpmNBsaNCXjrnUzTd
-         8Y/JUP7cXqpYMI3uPpAp1+utzAFd0sXuVg+fAljWh2TCTvCrm063KyyTgJM0OChlDwkn
-         TzBA==
-X-Gm-Message-State: AOAM532cGn1Cj5SK3Z30tlFN3lyq+qeSRyOPPR2ld8qJB1nrnXpsdeHQ
-        O7yFcdJ8//qROOQm5SM/YH9h7opcbQw=
-X-Google-Smtp-Source: ABdhPJzL5E0LVs7W2TvJqTf5KzEtdpU0jCQtrMxd6CcQ352tusvOXUbKQf1vIV/BMMbBCjKf5LRroQ==
-X-Received: by 2002:a2e:8ecc:: with SMTP id e12mr3439775ljl.33.1597173878800;
-        Tue, 11 Aug 2020 12:24:38 -0700 (PDT)
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
-        by smtp.gmail.com with ESMTPSA id n29sm12967024lfi.9.2020.08.11.12.24.37
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Aug 2020 12:24:37 -0700 (PDT)
-Received: by mail-lj1-f179.google.com with SMTP id m22so14746205ljj.5
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 12:24:37 -0700 (PDT)
-X-Received: by 2002:a2e:2e04:: with SMTP id u4mr3493591lju.102.1597173876835;
- Tue, 11 Aug 2020 12:24:36 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Th9F+Ys6njcnXzjyOUMQAgDagGiaCGUsjwgut8vgfCA=;
+        b=NLi+mmU6kK+Rii9awKN/6jstAFt454aaIFMTBxvE2YkxGbXbo+8JAJX01tvwcKC4Tm
+         SW9b+oC/p9ZwYz74I+1ix8uKMS26im6KpufFw9FutQMDgMvLEFSWMTVsTg36ams4h7i9
+         mO/dySwWqYHDEu7mEAWxm4kIelakcbiIVuQTZxmdvvRepWIOp9BVztkqqvfhQyw9ayQ4
+         K9wrBHe1BH0OCEiTmDkgN11orhRp2xhvcqWnPndnNRYjWbfsCtItnrEDfLINGMu3o2sB
+         azjeFXc8+umXs3qfnZ/ngJTB7miyUo37NStyhUMsgPCI/XrjZN43XHnQVLMM2Thl9u3P
+         /jpA==
+X-Gm-Message-State: AOAM533lm3vGyAQSHGl6QZQN2XpMASofC06kJidmsGAajsC6CVAv8ScS
+        dDeLzWN2ousPpBgpGv5voWroyg==
+X-Google-Smtp-Source: ABdhPJxwDq2Ukpnrjta9HOf8EzBQkMdphnR9aadRRe8ZViQFmoGG6OMd9DM7Ta7RY6yTK3Z6LOitAA==
+X-Received: by 2002:a17:902:7205:: with SMTP id ba5mr2112076plb.230.1597173904802;
+        Tue, 11 Aug 2020 12:25:04 -0700 (PDT)
+Received: from smtp.gmail.com ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id i14sm3432227pjz.25.2020.08.11.12.25.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Aug 2020 12:25:04 -0700 (PDT)
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Kalyan Thota <kalyan_t@codeaurora.org>
+Subject: [PATCH] arm64: dts: qcom: sc7180: Drop flags on mdss irqs
+Date:   Tue, 11 Aug 2020 12:25:03 -0700
+Message-Id: <20200811192503.1811462-1-swboyd@chromium.org>
+X-Mailer: git-send-email 2.28.0.236.gb10cc79966-goog
 MIME-Version: 1.0
-References: <20200811183950.10603-1-peterx@redhat.com>
-In-Reply-To: <20200811183950.10603-1-peterx@redhat.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 11 Aug 2020 12:24:20 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whQM=m5td5tfbuxh1f_Gxjsa74XV962BYkjrbeDMAhBpA@mail.gmail.com>
-Message-ID: <CAHk-=whQM=m5td5tfbuxh1f_Gxjsa74XV962BYkjrbeDMAhBpA@mail.gmail.com>
-Subject: Re: [PATCH v3] mm/gup: Allow real explicit breaking of COW
-To:     Peter Xu <peterx@redhat.com>
-Cc:     Linux-MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Marty Mcfadden <mcfadden8@llnl.gov>,
-        "Maya B . Gokhale" <gokhale2@llnl.gov>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Jann Horn <jannh@google.com>, Christoph Hellwig <hch@lst.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Kirill Shutemov <kirill@shutemov.name>, Jan Kara <jack@suse.cz>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 11:40 AM Peter Xu <peterx@redhat.com> wrote:
->
-> index 206f52b36ffb..c88f773d03af 100644
-> --- a/mm/huge_memory.c
-> +++ b/mm/huge_memory.c
-> @@ -1296,7 +1296,17 @@ vm_fault_t do_huge_pmd_wp_page(struct vm_fault *vmf, pmd_t orig_pmd)
->         if (reuse_swap_page(page, NULL)) {
->                 pmd_t entry;
->                 entry = pmd_mkyoung(orig_pmd);
-> -               entry = maybe_pmd_mkwrite(pmd_mkdirty(entry), vma);
-> +               entry = pmd_mkdirty(entry);
-> +               if (pmd_uffd_wp(orig_pmd))
-> +                       /*
-> +                        * This can happen when an uffd-wp protected page is
-> +                        * copied due to enfornced COW.  When it happens, we
-> +                        * need to keep the uffd-wp bit even after COW, and
-> +                        * make sure write bit is kept cleared.
-> +                        */
-> +                       entry = pmd_mkuffd_wp(pmd_wrprotect(entry));
-> +               else
-> +                       entry = maybe_pmd_mkwrite(entry, vma);
->                 if (pmdp_set_access_flags(vma, haddr, vmf->pmd, entry, 1))
->                         update_mmu_cache_pmd(vma, vmf->address, vmf->pmd);
->                 unlock_page(page);
-> diff --git a/mm/memory.c b/mm/memory.c
-> index c39a13b09602..b27b555a9df8 100644
-> --- a/mm/memory.c
-> +++ b/mm/memory.c
-> @@ -2706,7 +2706,17 @@ static vm_fault_t wp_page_copy(struct vm_fault *vmf)
->                 flush_cache_page(vma, vmf->address, pte_pfn(vmf->orig_pte));
->                 entry = mk_pte(new_page, vma->vm_page_prot);
->                 entry = pte_sw_mkyoung(entry);
-> -               entry = maybe_mkwrite(pte_mkdirty(entry), vma);
-> +               entry = pte_mkdirty(entry);
-> +               if (pte_uffd_wp(vmf->orig_pte))
-> +                       /*
-> +                        * This can happen when an uffd-wp protected page is
-> +                        * copied due to enfornced COW.  When it happens, we
-> +                        * need to keep the uffd-wp bit even after COW, and
-> +                        * make sure write bit is kept cleared.
-> +                        */
-> +                       entry = pte_mkuffd_wp(pte_wrprotect(entry));
-> +               else
-> +                       entry = maybe_mkwrite(entry, vma);
->                 /*
->                  * Clear the pte entry and flush it first, before updating the
->                  * pte with the new entry. This will avoid a race condition
+The number of interrupt cells for the mdss interrupt controller is 1,
+meaning there should only be one cell for the interrupt number, not two
+where the second cell is the irq flags. Drop the second cell to match
+the binding.
 
-I think this needs to be cleaned up some way. I realize it's not an
-exact duplicate (pmd vs pte), but this code is illegible.
+Cc: Kalyan Thota <kalyan_t@codeaurora.org>
+Cc: Harigovindan P <harigovi@codeaurora.org
+Fixes: a3db7ad1af49 ("arm64: dts: sc7180: add display dt nodes")
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+---
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Maybe just making it a helper inline function (well, two separate
-ones) with the comment above the function would resolve my "this is
-very ugly" concerns.
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 31b9217bb5bf..9d1660e1a6f0 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -2357,7 +2357,7 @@ mdp: mdp@ae01000 {
+ 						       <19200000>;
+ 
+ 				interrupt-parent = <&mdss>;
+-				interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <0>;
+ 
+ 				status = "disabled";
+ 
+@@ -2380,7 +2380,7 @@ dsi0: dsi@ae94000 {
+ 				reg-names = "dsi_ctrl";
+ 
+ 				interrupt-parent = <&mdss>;
+-				interrupts = <4 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <4>;
+ 
+ 				clocks = <&dispcc DISP_CC_MDSS_BYTE0_CLK>,
+ 					 <&dispcc DISP_CC_MDSS_BYTE0_INTF_CLK>,
 
+base-commit: bcf876870b95592b52519ed4aafcf9d95999bc9c
+-- 
+Sent by a computer, using git, on the internet
 
-> @@ -2900,7 +2910,13 @@ static vm_fault_t do_wp_page(struct vm_fault *vmf)
->  {
->         struct vm_area_struct *vma = vmf->vma;
->
-> -       if (userfaultfd_pte_wp(vma, *vmf->pte)) {
-> +       /*
-> +        * Userfaultfd-wp only cares about real writes.  E.g., enforced COW for
-> +        * read does not count.  When that happens, we will do the COW with the
-> +        * UFFD_WP bit inherited from the original PTE/PMD.
-> +        */
-> +       if ((vmf->flags & FAULT_FLAG_WRITE) &&
-> +           userfaultfd_pte_wp(vma, *vmf->pte)) {
->                 pte_unmap_unlock(vmf->pte, vmf->ptl);
->                 return handle_userfault(vmf, VM_UFFD_WP);
->         }
-> @@ -4117,7 +4133,14 @@ static inline vm_fault_t create_huge_pmd(struct vm_fault *vmf)
->  static inline vm_fault_t wp_huge_pmd(struct vm_fault *vmf, pmd_t orig_pmd)
->  {
->         if (vma_is_anonymous(vmf->vma)) {
-> -               if (userfaultfd_huge_pmd_wp(vmf->vma, orig_pmd))
-> +               /*
-> +                * Userfaultfd-wp only cares about real writes.  E.g., enforced
-> +                * COW for read does not count.  When that happens, we will do
-> +                * the COW with the UFFD_WP bit inherited from the original
-> +                * PTE/PMD.
-> +                */
-> +               if ((vmf->flags & FAULT_FLAG_WRITE) &&
-> +                   userfaultfd_huge_pmd_wp(vmf->vma, orig_pmd))
->                         return handle_userfault(vmf, VM_UFFD_WP);
-
-Here again the comment placement could be improved. Particularly in
-the do_wp_page() case, we have a big and somewhat complex function,
-and this duplicated boiler-plate makes me worry.
-
-Making it a helper function with a comment above would again I think
-make it more legible.
-
-And I think Jann is on the money wrt the follow_page_pte() issue.
-
-I think you broke COW break there entirely.
-
-That was one of the reasons I did just that "make it use FOLL_WRITE"
-originally, because it meant that we couldn't have any subtle places
-we'd missed.
-
-Now I wonder if there's any other case of FOLL_WRITE that is missing.
-
-            Linus
