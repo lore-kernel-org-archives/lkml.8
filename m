@@ -2,150 +2,116 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9DDCC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 21:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB97CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 21:02:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 804AA20771
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 21:02:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F994206DC
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 21:02:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hxxtjYrY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726518AbgHKVCB (ORCPT
+        id S1726479AbgHKVCw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 17:02:01 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:46535 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726503AbgHKVCA (ORCPT
+        Tue, 11 Aug 2020 17:02:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55078 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726114AbgHKVCv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 17:02:00 -0400
-Received: by mail-lj1-f195.google.com with SMTP id h19so15068390ljg.13
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 14:01:58 -0700 (PDT)
+        Tue, 11 Aug 2020 17:02:51 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E5E7C06174A
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 14:02:51 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id v12so15079284ljc.10
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 14:02:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=SqN9nLJxMkItru3oYTXhx6j96ZiU7pTVOyqv1zeuuIY=;
+        b=hxxtjYrYnGjD1wO09RSb92fDA1DZ9IDUTJZ/qu5XfVPOB46ylXC+sbRzBA/viA4sbs
+         DJQV0OmvrA6e59CfODLNw38BxEdUd4loYwnfSY+id8d6AazjTx9c1EcXXoeezTymmsuQ
+         NnoswU1VlZ9JUiUdg7Z59swgFVOABYLT2fhaXKqu9B9tCdrye8UY4dBwVKz57nyMuFxJ
+         89bvZDFYMbUil0jiMqcy29K41PiPHOad3q5z/UA/Bo58zNrD2jd0MDpCAFj/PUCwJhFs
+         9Hd5ldijIRRPaKEDjmrLhkxaMkGg7TW//0n80PzrqvAimeVaOPPSMwXEJeWV0Mbz4vNK
+         LaVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=/rLVEXEg2UmvMufjSAF7U0pAi6vIHw1hc4UHchgW5EU=;
-        b=XGzYmzjFM6+i2pdCz5OrDAXN5gu+cPHw1pI7MnAcz8fhHwUqwoFoGPQ3RwGAsEZ3/2
-         HHBbRXxCSpCxKPiIZ+oAf+fbQT4JTZnhET7nVwa2UNdKbPOcL7y3wrU8hlU8SwMiVyrF
-         oGqdrb/BGEnKOKABbRIG9DZ+TWznj+1+eQcNKxqf77x6Eq7Ng5D0+OSg4UHxrstX+uX0
-         ex6PBhPu4XTY2XrEGYFeyiF3li2lalbXQc91qVmGxflsdkwSHn57wuc+5w/z94CpBwFM
-         BZZv9oSOwFnJIUc9iGB3/Mzrsz3lMHr7hwS5AAec3HrOXEpdVlpysKtVFvs6o2F7605i
-         nE6Q==
-X-Gm-Message-State: AOAM531iWO5UMSir7nWp6tRHcztlxVdYuIgEThz7u0A5unqx4zyt+DHR
-        DlPPyKvQe8LlwBHZR+B/P14=
-X-Google-Smtp-Source: ABdhPJxNt4Y58LNPRSHZhxIIteWTiyzlrXqElWX0V/P2mYMjZJP1Sqj/8C0a14QJFu1lNfEUBSE6vQ==
-X-Received: by 2002:a05:651c:1122:: with SMTP id e2mr3709126ljo.36.1597179717627;
-        Tue, 11 Aug 2020 14:01:57 -0700 (PDT)
-Received: from localhost.localdomain (broadband-37-110-38-130.ip.moscow.rt.ru. [37.110.38.130])
-        by smtp.googlemail.com with ESMTPSA id b1sm10265823ljp.78.2020.08.11.14.01.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Aug 2020 14:01:57 -0700 (PDT)
-From:   Denis Efremov <efremov@linux.com>
-To:     Julia Lawall <julia.lawall@inria.fr>
-Cc:     Denis Efremov <efremov@linux.com>, cocci@systeme.lip6.fr,
-        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>
-Subject: [RFC PATCH] coccinelle: misc: add uninitialized_var.cocci script
-Date:   Wed, 12 Aug 2020 00:01:27 +0300
-Message-Id: <20200811210127.11889-1-efremov@linux.com>
-X-Mailer: git-send-email 2.26.2
+        bh=SqN9nLJxMkItru3oYTXhx6j96ZiU7pTVOyqv1zeuuIY=;
+        b=VYY9u32A2lh6e1SttN3iJRnhMIijc7W5utn8vbg6My/2oH6v3ChJOQq9HVY1+82zl6
+         9ieCXtBErTPLeLHsubtJSKarRNyP6uHorM0bt/TEykZ0X9Er+pJySu483P20krH73QHa
+         PDjqdWX+IgDVLtQSqcCctBeDAAFHwHufWsZ4fG1/ZVImX3l2K3oRY0wI4OVLNiS2sFhQ
+         AWc40sT9Z98rjgg0PW6IiCRw3jIfuzUEZEJhggJpA1ahnnFSrfJtvpwPVMGOoOYhSVxu
+         fSAhGicFnBYXBYydwSl6+XrOSJJ/8Fhzl0C21bD2RqZcWmt0V28hItco8aHAkValUV3w
+         26gQ==
+X-Gm-Message-State: AOAM532e0PU+pop1xzGCOElsfeIKLmukzINL1HAiLdlWDBld+pGPiIoU
+        HFt0fI9z4LF19RQfMlha5sY=
+X-Google-Smtp-Source: ABdhPJySHDLA938vyHhaUe+TpFjhPXNrywrjp6YatW5UID9cPQWmrZFTrG8GI4kWluIzhHM+tH3zew==
+X-Received: by 2002:a2e:968c:: with SMTP id q12mr4025093lji.345.1597179769581;
+        Tue, 11 Aug 2020 14:02:49 -0700 (PDT)
+Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.googlemail.com with ESMTPSA id 185sm10254613ljf.82.2020.08.11.14.02.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Aug 2020 14:02:48 -0700 (PDT)
+Subject: Re: [PATCH 1/7] regulator: push allocation in
+ regulator_init_coupling() outside of lock
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
+        Vladimir Zapolskiy <vz@mleia.com>
+References: <cover.1597107682.git.mirq-linux@rere.qmqm.pl>
+ <b305adf8bcde9417cdd5c9d84ef5ed99541f0e2c.1597107682.git.mirq-linux@rere.qmqm.pl>
+ <0d61983a-ed11-e5c1-f2c8-954e5ae330f4@gmail.com>
+ <b27219ff-6cd8-399b-5710-cb5c2d99b21f@gmail.com>
+ <20200811172015.GA21273@qmqm.qmqm.pl>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <813bb196-769b-cffa-d5a0-7a6e6d9aa824@gmail.com>
+Date:   Wed, 12 Aug 2020 00:02:48 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200811172015.GA21273@qmqm.qmqm.pl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 63a0895d960a ("compiler: Remove uninitialized_var() macro") and
-commit 4b19bec97c88 ("docs: deprecated.rst: Add uninitialized_var()")
-removed uninitialized_var() and deprecated it.
+11.08.2020 20:20, Michał Mirosław пишет:
+> On Tue, Aug 11, 2020 at 07:27:43PM +0300, Dmitry Osipenko wrote:
+>> 11.08.2020 18:59, Dmitry Osipenko пишет:
+>>> 11.08.2020 04:07, Michał Mirosław пишет:
+>>>> Allocating memory with regulator_list_mutex held makes lockdep unhappy
+>>>> when memory pressure makes the system do fs_reclaim on eg. eMMC using
+>>>> a regulator. Push the lock inside regulator_init_coupling() after the
+>>>> allocation.
+>>> ...
+>>>
+>>> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+>> On the other hand, couldn't it be better to just remove taking the
+>> list_mutex from the regulator_lock_dependent()?
+>>
+>> I think the list_mutex is only needed to protect from supply/couple
+>> regulator being removed during of the locking process, but maybe this is
+>> not something we should worry about?
+> 
+> This is what I would like to see in the end, but it requires more
+> thought, at least around interaction with regulator_resolve_coupling()
+> and the regulator removal.
 
-The purpose of this script is to prevent new occurrences of open-coded
-variants of uninitialized_var().
+I meant that it's very unlikely to have regulator gone while it's
+in-use. Hence it could be okay to ignore this rare case, and thus,
+simplify the fix significantly by removing the offending lock.
 
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
-Signed-off-by: Denis Efremov <efremov@linux.com>
----
-List of warnings:
-./lib/glob.c:48:31-39: WARNING: this kind of initialization is deprecated
-./tools/testing/selftests/vm/userfaultfd.c:349:15-22: WARNING: this kind of initialization is deprecated
-./drivers/block/drbd/drbd_vli.h:330:5-9: WARNING: this kind of initialization is deprecated
-./drivers/char/hw_random/intel-rng.c:333:15-18: WARNING: this kind of initialization is deprecated
-./drivers/gpu/drm/nouveau/nvkm/subdev/instmem/nv50.c:316:7-10: WARNING: this kind of initialization is deprecated
-./arch/x86/include/asm/paravirt_types.h:455:15-20: WARNING: this kind of initialization is deprecated
-./arch/x86/include/asm/paravirt_types.h:455:30-35: WARNING: this kind of initialization is deprecated
-./arch/x86/include/asm/paravirt_types.h:455:45-50: WARNING: this kind of initialization is deprecated
-./arch/x86/include/asm/paravirt_types.h:475:15-20: WARNING: this kind of initialization is deprecated
-./arch/x86/include/asm/paravirt_types.h:475:30-35: WARNING: this kind of initialization is deprecated
-./arch/x86/include/asm/paravirt_types.h:476:2-7: WARNING: this kind of initialization isdeprecated
-./arch/x86/include/asm/paravirt_types.h:476:17-22: WARNING: this kind of initialization is deprecated
-./arch/x86/include/asm/paravirt_types.h:476:32-37: WARNING: this kind of initialization is deprecated
-
- .../coccinelle/misc/uninitialized_var.cocci   | 51 +++++++++++++++++++
- 1 file changed, 51 insertions(+)
- create mode 100644 scripts/coccinelle/misc/uninitialized_var.cocci
-
-diff --git a/scripts/coccinelle/misc/uninitialized_var.cocci b/scripts/coccinelle/misc/uninitialized_var.cocci
-new file mode 100644
-index 000000000000..e4787bc6ab9c
---- /dev/null
-+++ b/scripts/coccinelle/misc/uninitialized_var.cocci
-@@ -0,0 +1,51 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+///
-+/// uninitialized_var() and its open-coded variations are
-+/// deprecated. For details, see:
-+/// Documentation/process/deprecated.rst
-+///
-+// Confidence: High
-+// Copyright: (C) 2020 Denis Efremov ISPRAS
-+// Options: --no-includes --include-headers
-+//
-+
-+virtual context
-+virtual report
-+virtual org
-+
-+@r@
-+identifier var;
-+type T;
-+position p;
-+@@
-+
-+(
-+* T var@p = var;
-+|
-+* T var@p = *(&(var));
-+//|
-+// TODO: Actually, I'm not sure about this pattern.
-+// Looks like it's used in wireless drivers to determine
-+// whether data belongs to the driver or not.
-+// Here are all matches:
-+// https://elixir.bootlin.com/linux/latest/source/net/mac802154/util.c#L14
-+// https://elixir.bootlin.com/linux/latest/source/drivers/staging/wlan-ng/cfg80211.c#L48
-+// https://elixir.bootlin.com/linux/latest/source/drivers/net/wireless/intersil/orinoco/cfg.c#L21
-+// https://elixir.bootlin.com/linux/latest/source/net/mac80211/util.c#L37
-+// https://elixir.bootlin.com/linux/latest/source/drivers/net/wireless/rndis_wlan.c#L544
-+// * T *var@p = &var;
-+)
-+
-+@script:python depends on report@
-+p << r.p;
-+@@
-+
-+coccilib.report.print_report(p[0],
-+  "WARNING: this kind of initialization is deprecated")
-+
-+@script:python depends on org@
-+p << r.p;
-+@@
-+
-+coccilib.org.print_todo(p[0],
-+  "WARNING: this kind of initialization is deprecated")
--- 
-2.26.2
-
+Still this won't solve the root of the problem because potentially
+reclaim could happen while storage regulator (or its supply) is locked,
+although it should be a very unlikely condition in practice.
