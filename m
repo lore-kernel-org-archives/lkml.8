@@ -2,109 +2,117 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,LONGWORDS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E496C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 13:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B26DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 13:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF773204FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 13:56:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 711282076B
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 13:57:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728721AbgHKN4d (ORCPT
+        id S1728760AbgHKN5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 09:56:33 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49072 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728532AbgHKN43 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 09:56:29 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id BA8F6B0A5;
-        Tue, 11 Aug 2020 13:56:48 +0000 (UTC)
-Date:   Tue, 11 Aug 2020 15:56:26 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     akpm@linux-foundation.org, Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Resend PATCH 2/6] mm/memcg: remove useless check on
- page->mem_cgroup
-Message-ID: <20200811135626.GL4793@dhcp22.suse.cz>
-References: <1597144232-11370-1-git-send-email-alex.shi@linux.alibaba.com>
- <1597144232-11370-2-git-send-email-alex.shi@linux.alibaba.com>
- <20200811113008.GK4793@dhcp22.suse.cz>
- <776b0e6f-4129-9fb9-0f66-47757cf320d5@linux.alibaba.com>
+        Tue, 11 Aug 2020 09:57:19 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:39184 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728532AbgHKN5S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 09:57:18 -0400
+Received: by mail-io1-f70.google.com with SMTP id v10so9744855iot.6
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 06:57:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=+cHgg9a8eJJddqLe/oCJVSWP9J8KQvuNJEZvME5xXmA=;
+        b=kigu+aDpH7starEUmmirwWJRjnvPYhS8coKBlXM57vPajll9rZsg+eXVayZ49pRo0q
+         ePIgY7r+He28OIIfAWqtEkvGaFKYG7Tnc2gc7mKOBdHDY5whbAduTkB95tqw9N9gJBE5
+         ln/MaBVTt2fVAaqtOc5L9xIvHYBeEIayh2TT19DOXc+Lz+VJj/VLobk73/noyFleQDy6
+         xQ1jmUc0xSKNXPMk6tl7/Dhl/FZOzru7Uutf3dtxrWJcoXRCsQYT0DvDXSbR9uKxqkQW
+         dcKw9PFI6HDR00zY7m7dW5+HpmOu/pH3xwmg3rEJnk+0KhfwVchmzQrppErQX/LVsFp5
+         eUlQ==
+X-Gm-Message-State: AOAM531lPMIblSPW8nY2uBSYs899gElIMxhQ7a9N9ZvLqO18G6VMrhUF
+        k4tZXztx5IB5zsUrTK74/hySV5LeDEuyzO+ofhV7dN3NrEAA
+X-Google-Smtp-Source: ABdhPJzs9eayEdRluYFEuglfzFGulTDu+xWt1TmqdMl9GvrP3V31DsgZogEIIu9s8vdOXfBs4Z46I6DETIsQ3oOb27AArE8NQjvQ
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <776b0e6f-4129-9fb9-0f66-47757cf320d5@linux.alibaba.com>
+X-Received: by 2002:a02:9307:: with SMTP id d7mr17785704jah.71.1597154237154;
+ Tue, 11 Aug 2020 06:57:17 -0700 (PDT)
+Date:   Tue, 11 Aug 2020 06:57:17 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000f50fb505ac9a72c9@google.com>
+Subject: memory leak in io_submit_sqes
+From:   syzbot <syzbot+a730016dc0bdce4f6ff5@syzkaller.appspotmail.com>
+To:     axboe@kernel.dk, io-uring@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 11-08-20 20:54:18, Alex Shi wrote:
-> >From beeac61119ab39b1869c520c0f272fb8bab93765 Mon Sep 17 00:00:00 2001
-> From: Alex Shi <alex.shi@linux.alibaba.com>
-> Date: Wed, 5 Aug 2020 21:02:30 +0800
-> Subject: [PATCH 2/6] memcg: bail out early from swap accounting when memcg is
->  disabled
-> 
-> If we disabled memcg by cgroup_disable=memory, the swap charges are
-> still called. Let's return from the funcs earlier.
+Hello,
 
-They are not, are they? page->memcg will be NULL and so the charge is
-skipped and that will trigger a warning with your current ordering.
+syzbot found the following issue on:
 
-Let me repeat again. Either you put it first in the series and argue
-that we can bail out early or keep the ordering then this makes sure the
-warning doesn't trigger.
+HEAD commit:    d6efb3ac Merge tag 'tty-5.9-rc1' of git://git.kernel.org/p..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=13cb0762900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=42163327839348a9
+dashboard link: https://syzkaller.appspot.com/bug?extid=a730016dc0bdce4f6ff5
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16e877dc900000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1608291a900000
 
-> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-> Reviewed-by: Roman Gushchin <guro@fb.com>
-> Acked-by: Michal Hocko <mhocko@suse.com>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: Michal Hocko <mhocko@kernel.org>
-> Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: cgroups@vger.kernel.org
-> Cc: linux-mm@kvack.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  mm/memcontrol.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index 299382fc55a9..419cf565f40b 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -7098,6 +7098,9 @@ void mem_cgroup_swapout(struct page *page, swp_entry_t entry)
->  	VM_BUG_ON_PAGE(PageLRU(page), page);
->  	VM_BUG_ON_PAGE(page_count(page), page);
->  
-> +	if (mem_cgroup_disabled())
-> +		return;
-> +
->  	if (cgroup_subsys_on_dfl(memory_cgrp_subsys))
->  		return;
->  
-> @@ -7163,6 +7166,9 @@ int mem_cgroup_try_charge_swap(struct page *page, swp_entry_t entry)
->  	struct mem_cgroup *memcg;
->  	unsigned short oldid;
->  
-> +	if (mem_cgroup_disabled())
-> +		return 0;
-> +
->  	if (!cgroup_subsys_on_dfl(memory_cgrp_subsys))
->  		return 0;
->  
-> -- 
-> 1.8.3.1
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+a730016dc0bdce4f6ff5@syzkaller.appspotmail.com
 
--- 
-Michal Hocko
-SUSE Labs
+executing program
+executing program
+executing program
+executing program
+executing program
+BUG: memory leak
+unreferenced object 0xffff888124949100 (size 256):
+  comm "syz-executor808", pid 6480, jiffies 4294949911 (age 33.960s)
+  hex dump (first 32 bytes):
+    00 78 74 2a 81 88 ff ff 00 00 00 00 00 00 00 00  .xt*............
+    90 b0 51 81 ff ff ff ff 00 00 00 00 00 00 00 00  ..Q.............
+  backtrace:
+    [<0000000084e46f34>] io_alloc_req fs/io_uring.c:1503 [inline]
+    [<0000000084e46f34>] io_submit_sqes+0x5dc/0xc00 fs/io_uring.c:6306
+    [<000000006d4e19eb>] __do_sys_io_uring_enter+0x582/0x830 fs/io_uring.c:8036
+    [<00000000a4116b07>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+    [<0000000067b2aefc>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+BUG: memory leak
+unreferenced object 0xffff88811751d200 (size 96):
+  comm "syz-executor808", pid 6480, jiffies 4294949911 (age 33.960s)
+  hex dump (first 32 bytes):
+    00 78 74 2a 81 88 ff ff 00 00 00 00 00 00 00 00  .xt*............
+    0e 01 00 00 00 00 75 22 00 00 00 00 00 0f 1f 04  ......u"........
+  backtrace:
+    [<00000000073ea2ba>] kmalloc include/linux/slab.h:555 [inline]
+    [<00000000073ea2ba>] io_arm_poll_handler fs/io_uring.c:4773 [inline]
+    [<00000000073ea2ba>] __io_queue_sqe+0x445/0x6b0 fs/io_uring.c:5988
+    [<000000001551bde0>] io_queue_sqe+0x309/0x550 fs/io_uring.c:6060
+    [<000000002dfb908f>] io_submit_sqe fs/io_uring.c:6130 [inline]
+    [<000000002dfb908f>] io_submit_sqes+0x8b8/0xc00 fs/io_uring.c:6327
+    [<000000006d4e19eb>] __do_sys_io_uring_enter+0x582/0x830 fs/io_uring.c:8036
+    [<00000000a4116b07>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+    [<0000000067b2aefc>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
