@@ -2,106 +2,148 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21E7FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:36:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AD0DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C1C820786
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:36:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D9CC20786
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:37:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729226AbgHKRgp (ORCPT
+        id S1729270AbgHKRhA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 13:36:45 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41558 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729046AbgHKRgl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 13:36:41 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 8D6E5B69F;
-        Tue, 11 Aug 2020 17:37:00 +0000 (UTC)
-Date:   Tue, 11 Aug 2020 19:36:26 +0200
-From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        David Rientjes <rientjes@google.com>,
-        Greg Thelen <gthelen@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Cgroups <cgroups@vger.kernel.org>
-Subject: Re: [RFC PROPOSAL] memcg: per-memcg user space reclaim interface
-Message-ID: <20200811173626.GA58879@blackbook>
-References: <20200702152222.2630760-1-shakeelb@google.com>
- <20200703063548.GM18446@dhcp22.suse.cz>
- <CALvZod5gthVX5m6o50OiYsXa=0_NpXK-tVvjTF42Oj4udr4Nuw@mail.gmail.com>
- <20200707121422.GP5913@dhcp22.suse.cz>
- <CALvZod5ty=piw6czyVyMhxQMBWGghC3ujxbrkVPr0fzwqogwrw@mail.gmail.com>
+        Tue, 11 Aug 2020 13:37:00 -0400
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:34621 "EHLO
+        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729046AbgHKRg6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 13:36:58 -0400
+Received: by mail-qv1-f66.google.com with SMTP id t6so6366609qvw.1;
+        Tue, 11 Aug 2020 10:36:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=2HnMUolNEq5cXPKXr7ZP+lVltLaJ656X7idvYxtYJ7A=;
+        b=Pl5B0myGCA0wsbETlDHMgxKZY1rdOqLnNI6Z+rZ6JwYT+IzTA5EUbTDw7nRIPE6Idd
+         6g+HSRPpqkp9xP36/s9m6IIGbLAA4tugxfXe1k+OFXGok5kKrDe4ub7n9uOEX8u6aYel
+         Hwu87YfpzMWJ85KAFhJF+vhixmNdf2+W2LtSqHXI3jZVyVBnk7HN+PbjqTc9mR19ACMt
+         FxUYD/n9ExGJfrSh3/WFxEzXDungU3Nt//mBmHiJZpgbcNIjV1CMZzeyTLKqpEynm9l5
+         sILdED892AK+DvMz3RQgiWU6mkYrjXv7mbw6Wmt3RyNU02Z7I3BpM3BD31b9/2lqGqzA
+         +F5A==
+X-Gm-Message-State: AOAM5338qWjUIMIPw9EdbqKcjWNrFv4LaRgjVi++bxEknsX9XwdE/EGq
+        EKXOjjNyxmab9ri3YfYtVKI=
+X-Google-Smtp-Source: ABdhPJwhGbiF/GVbqEyHJWJ4sQPbBhzYCPykjHnulAAj6EUyOwQ1D7fpG8kqEetz98Mxmg5RR6edzQ==
+X-Received: by 2002:ad4:450e:: with SMTP id k14mr2315086qvu.211.1597167416620;
+        Tue, 11 Aug 2020 10:36:56 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id q68sm17305993qke.123.2020.08.11.10.36.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Aug 2020 10:36:56 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Fangrui Song <maskray@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        e5ten.arch@gmail.com,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
+Subject: [PATCH] x86/boot/compressed: Disable relocation relaxation for non-pie link
+Date:   Tue, 11 Aug 2020 13:36:55 -0400
+Message-Id: <20200811173655.1162093-1-nivedita@alum.mit.edu>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <CAKwvOd=ypa8xE-kaDa7XtzPsBH8=Xu_pZj2rnWaeawNs=3dDkw@mail.gmail.com>
+References: <CAKwvOd=ypa8xE-kaDa7XtzPsBH8=Xu_pZj2rnWaeawNs=3dDkw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="RnlQjJ0d97Da+TV1"
-Content-Disposition: inline
-In-Reply-To: <CALvZod5ty=piw6czyVyMhxQMBWGghC3ujxbrkVPr0fzwqogwrw@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The x86-64 psABI [0] specifies special relocation types
+(R_X86_64_[REX_]GOTPCRELX) for indirection through the Global Offset
+Table, semantically equivalent to R_X86_64_GOTPCREL, which the linker
+can take advantage of for optimization (relaxation) at link time. This
+is supported by LLD and binutils versions 2.26 onwards.
 
---RnlQjJ0d97Da+TV1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The compressed kernel is position-independent code, however, when using
+LLD or binutils versions before 2.27, it must be linked without the -pie
+option. In this case, the linker may optimize certain instructions into
+a non-position-independent form, by converting foo@GOTPCREL(%rip) to $foo.
 
-Hi Shakeel.
+This potential issue has been present with LLD and binutils-2.26 for a
+long time, but it has never manifested itself before now:
+- LLD and binutils-2.26 only relax
+	movq	foo@GOTPCREL(%rip), %reg
+  to
+	leaq	foo(%rip), %reg
+  which is still position-independent, rather than
+	mov	$foo, %reg
+  which is permitted by the psABI when -pie is not enabled.
+- gcc happens to only generate GOTPCREL relocations on mov instructions.
+- clang does generate GOTPCREL relocations on non-mov instructions, but
+  when building the compressed kernel, it uses its integrated assembler
+  (due to the redefinition of KBUILD_CFLAGS dropping -no-integrated-as),
+  which has so far defaulted to not generating the GOTPCRELX
+  relocations.
 
-On Tue, Jul 07, 2020 at 10:02:50AM -0700, Shakeel Butt <shakeelb@google.com=
-> wrote:
-> > Well, I was talkingg about memory.low. It is not meant only to protect
-> > from the global reclaim. It can be used for balancing memory reclaim
-> > from _any_ external memory pressure source. So it is somehow related to
-> > the usecase you have mentioned.
-> >
->=20
-> For the uswapd use-case, I am not concerned about the external memory
-> pressure source but the application hitting its own memory.high limit
-> and getting throttled.
-FTR, you can transform own memory.high into "external" pressure with a
-hierarchy such as
+Nick Desaulniers reports [1,2]:
+  A recent change [3] to a default value of configuration variable
+  (ENABLE_X86_RELAX_RELOCATIONS OFF -> ON) in LLVM now causes Clang's
+  integrated assembler to emit R_X86_64_GOTPCRELX/R_X86_64_REX_GOTPCRELX
+  relocations. LLD will relax instructions with these relocations based
+  on whether the image is being linked as position independent or not.
+  When not, then LLD will relax these instructions to use absolute
+  addressing mode (R_RELAX_GOT_PC_NOPIC). This causes kernels built with
+  Clang and linked with LLD to fail to boot.
 
-  limit-group			memory.high=3DN+margin memory.low=3D0
-  `- latency-sensitive-group	memory.low=3DN
-  `- regular-group		memory.low=3D0
+Patch series [4] is a solution to allow the compressed kernel to be
+linked with -pie unconditionally, but even if merged is unlikely to be
+backported. As a simple solution that can be applied to stable as well,
+prevent the assembler from generating the relaxed relocation types using
+the -mrelax-relocations=no option.
 
-Would that ensure the latency targets?
+[0] https://gitlab.com/x86-psABIs/x86-64-ABI/-/blob/master/x86-64-ABI/linker-optimization.tex#L65
+[1] https://lore.kernel.org/lkml/20200807194100.3570838-1-ndesaulniers@google.com/
+[2] https://github.com/ClangBuiltLinux/linux/issues/1121
+[3] https://reviews.llvm.org/rGc41a18cf61790fc898dcda1055c3efbf442c14c0
+[4] https://lore.kernel.org/lkml/20200731202738.2577854-1-nivedita@alum.mit.edu/
 
-Michal
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+Reported-by: Nick Desaulniers <ndesaulniers@google.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+Cc: stable@vger.kernel.org # 4.19.x
+---
+ arch/x86/boot/compressed/Makefile | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
---RnlQjJ0d97Da+TV1
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+index 3962f592633d..c5449bea58ec 100644
+--- a/arch/x86/boot/compressed/Makefile
++++ b/arch/x86/boot/compressed/Makefile
+@@ -62,6 +62,12 @@ KBUILD_LDFLAGS += $(shell $(LD) --help 2>&1 | grep -q "\-z noreloc-overflow" \
+ endif
+ LDFLAGS_vmlinux := -T
+ 
++# Disable relocation relaxation if not linking as PIE
++ifeq ($(filter -pie,$(KBUILD_LDFLAGS)),)
++KBUILD_CFLAGS += $(call as-option, -Wa$(comma)-mrelax-relocations=no)
++KBUILD_AFLAGS += $(call as-option, -Wa$(comma)-mrelax-relocations=no)
++endif
++
+ hostprogs	:= mkpiggy
+ HOST_EXTRACFLAGS += -I$(srctree)/tools/include
+ 
+-- 
+2.26.2
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEEoQaUCWq8F2Id1tNia1+riC5qSgFAl8y1xcACgkQia1+riC5
-qShqhw//YT26h60lQF35uV5/xyJu8L4l+X7FL+ZZjsTqvY/lPSVgvrRzv3zb2h4B
-ocoUY0cjJ4JatVY9uurZJAMEbGd9Iww8UmPaZAvCb8VPssWTHFgSbD1Eb+RAi4py
-zEBPLd1JMZ4IeI7FmjGfZHk1/2Qr7nle3KPhHSZKrc83t0tDF6DTTYLOkWBTm+bS
-JL56nLcXOb8Gm3kOkhLhseffcaWhBKYBzn3GzBXHYfbwX0Ba1I/OX6YrJD649vvc
-xsmlJc9YfMVixDEatA4Vzt3Pi9ZhpsdfbqMrgHeVA1p81MoA3q8Sk7q9Oz1mze7p
-aZbmCnl7t04NW7quKmqqqeMG91u+76KpmdGP/T+xpgXu2F8yLDGxzlfgbftb6wVr
-LhcqYd9SXnX5fy/A0rV4tKAOXTqEpSY9/gEhnBwptwI2KO8VIiFo4a0dKKZ/9K9F
-yREd3aoKMyad5E99i0N8ZJloo0X42sRdnVoc5SGV0Lj30Wp660IMEO/atRP0Z2+1
-SgQmD9VTbsU4wBb2LcaCEz4P83keWm1oMfqdZ7EuGXzvmRT0FOMWvXAQ17RxYBtG
-DjA+HOCeP9EuHXyefUA2DxsVRbK7Yn0Zb79nOkitb0oXrJuKTFlIW0qQ8oYmmrY8
-gsOblNPf1DI2gLr+Wqh58u8/vER3NRgGv77xs/R39KeDh9DMz6Q=
-=ODBM
------END PGP SIGNATURE-----
-
---RnlQjJ0d97Da+TV1--
