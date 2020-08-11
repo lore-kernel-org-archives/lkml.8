@@ -6,73 +6,81 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54FD2C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 11:02:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B6A2C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 11:04:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EBF82075D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 11:02:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B1652076B
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 11:04:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nnG0xX/t"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="d+qdLXSB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728648AbgHKLC4 (ORCPT
+        id S1728653AbgHKLEY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 07:02:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47266 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728559AbgHKLC4 (ORCPT
+        Tue, 11 Aug 2020 07:04:24 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.52]:17993 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728448AbgHKLEY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 07:02:56 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F6EEC06174A
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 04:02:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=lt8wHkIyCIxj/2BuJAaCTMhwAvgeabZ4hhroohQEExc=; b=nnG0xX/tjPSiIdvRpowmv8FHjp
-        dl0w3Gd1Gms4vzzzsfuDfVi5JHhGZq6O+JV0Rr1DWlM/lIDJTMuYQzJ2PQB9/szxngx6B/ANObyQi
-        cZBhmpjWfaHEYx7fJgACSYd8xOLW7rAR4m0vvjO/Xjod7kaaEk2pOHQ8zacbLE7HEc0q+bOYxGrxJ
-        S8RGEO4DhfXL9tDZ1vEhhbv6lBJRrLsDGmKDxI2jbMXdm47j+K13oYY1oXrMKlyrf9pFhkY/mLsC2
-        j/qEw3yPnDtRf07XpYS5gHOu2s9++RnAbVHv57qKFa1ujHVAfCpZ4TdGnRerWGtd3N/ppkrD1JIP0
-        DUXxSZAw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k5S3M-0006xO-Mq; Tue, 11 Aug 2020 11:02:49 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 84357300DAE;
-        Tue, 11 Aug 2020 13:02:46 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 3A75F20BFC4E4; Tue, 11 Aug 2020 13:02:46 +0200 (CEST)
-Date:   Tue, 11 Aug 2020 13:02:46 +0200
-From:   peterz@infradead.org
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [RFC] libperf: Add support for user space counter access
-Message-ID: <20200811110246.GD2674@hirez.programming.kicks-ass.net>
-References: <20200807230517.57114-1-robh@kernel.org>
- <20200808102208.GA619980@krava>
- <CAL_Jsq+gfqyqCx3Yuc6TsbXjYSLfJQhhPUnwRVjpJgwL24v1Qg@mail.gmail.com>
- <20200811105027.GD699846@krava>
+        Tue, 11 Aug 2020 07:04:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1597143860;
+        s=strato-dkim-0002; d=gerhold.net;
+        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=zmGqtyvDjnPl9SF3eHck7clcf6r4U0VaDRO31hZb3o4=;
+        b=d+qdLXSBv6QDhgBQVDigRdPZMhyqciRmS1qhnmw+3KSrfQhbqj41S15Tzcbmfu9zhc
+        z/opV4OpNXZiDWO7J6b7tb3vbovk8gDdR0IRb4KZDSp3vD4VbRCS1eMFFypT9R493Z9o
+        zezUEpNh4rMSqDJrk4ZOAPFts+eqDYYygZ1zFVU57CUN3IXpox4vfXP5u2SOJ9edDTlA
+        A5x+mTLpriXUB93wmcmPWinlvS5RhZKW0ZTvH5w4hFzx5bfVQATOnxPakqY9MRTXInqB
+        w2DCvbx1MMJPEVEUCMuNuTIBM2kHuZS3W7gpai+B7qay/yS7Z3w57oJ5YU5su5IVhBhJ
+        UfCg==
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u26zEodhPgRDZ8j9IczHboo="
+X-RZG-CLASS-ID: mo00
+Received: from gerhold.net
+        by smtp.strato.de (RZmta 46.10.5 DYNA|AUTH)
+        with ESMTPSA id Y0939ew7BB4HjIj
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Tue, 11 Aug 2020 13:04:17 +0200 (CEST)
+Date:   Tue, 11 Aug 2020 13:04:09 +0200
+From:   Stephan Gerhold <stephan@gerhold.net>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     broonie@kernel.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, lgirdwood@gmail.com, tiwai@suse.com,
+        john.stultz@linaro.org
+Subject: Re: [PATCH 1/2] ASoC: q6afe-dai: add dummy register read function
+Message-ID: <20200811110409.GA1481@gerhold.net>
+References: <20200811102552.26975-1-srinivas.kandagatla@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200811105027.GD699846@krava>
+In-Reply-To: <20200811102552.26975-1-srinivas.kandagatla@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 12:50:27PM +0200, Jiri Olsa wrote:
+On Tue, Aug 11, 2020 at 11:25:51AM +0100, Srinivas Kandagatla wrote:
+> Most of the DAPM widgets for DSP ASoC components reuse reg field
+> of the widgets for its internal calculations, however these are not
+> real registers. So read/writes to these numbers are not really
+> valid. However ASoC core will read these registers to get default
+> state during startup.
+> 
 
-> if it works for all events, which I'm not sure of
+Actually q6afe-dai does not seem to make use of the register number.
+The DAPM widgets all look like
 
-That's what we have cap_user_rdpmc for.
+  SND_SOC_DAPM_AIF_IN("HDMI_RX",  NULL,   0,    0,     0,      0),
+                  /* (wname,    stname, wchan, wreg, wshift, winvert)
 
+Wouldn't it be better to replace wreg = 0 with SND_SOC_NOPM in this case
+so the read/write won't happen at all?
+
+q6routing on the other hand does make use of wreg, so this would not
+work there...
+
+Also: If I remember correctly the ASoC core will also attempt to write
+to these "registers" when starting to play some audio, so you might also
+need to implement component->write().
+
+Stephan
