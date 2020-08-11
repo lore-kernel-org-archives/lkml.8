@@ -2,161 +2,150 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 784E8C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:28:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A40C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:28:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 484082078E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:28:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18EE92078E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:28:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="O+oz/y94"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="pP8kfmAs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728976AbgHKP2n (ORCPT
+        id S1728991AbgHKP2t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 11:28:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59954 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728859AbgHKP2n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 11:28:43 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D408C06174A
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 08:28:43 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id y11so6126369qvl.4
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 08:28:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Lgl2XWPxOkvTO1C8S88OrGJFzEG0BedRecFChwB3gY8=;
-        b=O+oz/y94S7Ot2vFCIAFHszkvovBOf36KdyrH2IEJWc4M4iGAI+0vUVeb65yAePs+57
-         DROlBFWLKmiEh+5yYPQAuZxOyCCI59rbE60yQsK/k5p+hCWZLwZuiio3saMyRdst9aN6
-         W00Raq/cnhUCgHcCrtxHXZRE6zekJg2/KMflF2aaWNHLVuSUxA1oo1s4fEWzKninscH7
-         +U1Bhx4SjBooCPa+GwTjN7sivvJ+csbnAYbo7Rsrvfg+DIRVEeLlRuCSag4yPLoeRdCG
-         FufH0Ro9lxoInq9MGfEz5Pr+bqIIzZVDkYh86LTyBcauJu8KDfKElTqTqBT5krSr8MMX
-         gq3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Lgl2XWPxOkvTO1C8S88OrGJFzEG0BedRecFChwB3gY8=;
-        b=N+fFL+f1fdgIxJO4ZEO8ipOTPh0LMqYgXNUiodz0URi5HoMa9BZYMyVBGz4hJhO0yl
-         6aAe7+66/SWCHDL3qRVBZczN/Irv03sAWvcYhEciRyaBaHHLxdNRUYCPLGH2ZS66dcbJ
-         Kw55A1+xuuymWtPbdAqR1Bef0We4/FpMAg86tJn5ioyh2gkjfVX+KxAa/AgWL6AkSVgy
-         v2ZYOjzhyZlbYYTUQIOo1vJM/wv2MiGY9j2aAqamcOA5feh8Mr3YM8AixGEd1VcrdR8t
-         kESy+TuYHyPcCtuzObn5Ahqw66jH2eG/2pe0MR/dSHjgrdVx8j7/3aA4XGEdoXfhxGCe
-         tjow==
-X-Gm-Message-State: AOAM532e01bO3jeCbV5DO0TSABSEJzQ0LDy32E0JKxmCJt2Nr2nxpXqd
-        5+lUR88vA91vbwE4jAR1uP88mQ==
-X-Google-Smtp-Source: ABdhPJwUsKgHMBfWAiaT6/HGMo7TWT1YWSQ7mkn2a8Es9KiyKcTAN0v8Enpnj6TS8l5TEuNaxVqYfA==
-X-Received: by 2002:ad4:446d:: with SMTP id s13mr1833462qvt.183.1597159722398;
-        Tue, 11 Aug 2020 08:28:42 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:2dd0])
-        by smtp.gmail.com with ESMTPSA id l189sm17003362qke.67.2020.08.11.08.28.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Aug 2020 08:28:41 -0700 (PDT)
-Date:   Tue, 11 Aug 2020 11:27:37 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-        Christoph Lameter <cl@linux.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
-        kernel-team@fb.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 4/5] mm: memcg: charge memcg percpu memory to the
- parent cgroup
-Message-ID: <20200811152737.GB650506@cmpxchg.org>
-References: <20200623184515.4132564-1-guro@fb.com>
- <20200623184515.4132564-5-guro@fb.com>
+        Tue, 11 Aug 2020 11:28:49 -0400
+Received: from mail-db8eur05on2076.outbound.protection.outlook.com ([40.107.20.76]:52544
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728859AbgHKP2r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 11:28:47 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=a6r6FMVqJp6UZ1VxM3cVyWlYwl3YX7L8mwRvvksCoU70ICj/5KqXQLmyAtHgV7sUQIPCQcVV7CHw9CDcEQis59ujBQcMnZ4B7XowgzD9McbO87jsWBYGsVllzbLzgHm3vb0vJHDOSViI5lBXMgjNux75/F+VZrjYU9Ro8ccwWhTfv7sro9uBftCsxgU5ftLn2EAPEZqmFGTAwMk39gAb/Lg3tj4n0dUobsyKHg2V0MrcnEh87bllaHxbABnhTfFYXDDWzF+e4MA19ibm046ZbQkngsJ4WAaKyfZRaNrPMi0Z9NQp9d2eXjMOv81p7qpxSpsmLZ5GoWSKmX/JxxsvzA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CxhYKv4jeOLljKMt/NyQmzoSAbqOYB8v8jV1P9KhjKM=;
+ b=brbAaEgh2fymiAOTw0hXGi4CZQkx+NtgPJNs1qEW1uZfisrL1gzKci1rbQzJBI3d2eQsnVxRDJ+s16ax7KEJ5Yakfgb3eg15m5Expy3Y50srBM71t2goUb4UzjTzMTuprKlTPnmI0NEVavPmsWKvLsulEduyt7tAoRnmSBBgdSRmI+QUqCBkxV1G2ktiIvEE/MXWK3KqDi0c3cVwiaYc0RU45iFOBmPGj3843IcKLtyy7otApumAL08Y5fGICI4EXtkbtjLrzALhrylTrPFWfDkZjSV7J7qvl9zRmJyzQ3zprAtuOWXh1qRL2o5AgI2SyPZM28y3w7ez0SvucrJTwg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CxhYKv4jeOLljKMt/NyQmzoSAbqOYB8v8jV1P9KhjKM=;
+ b=pP8kfmAsCERsthWrqGqCegKjEg+IOxpbKLUw+EyNuKMyKObmW/ZoywmPGMEMrzPhJmEGF9dXjQHTJlJHm5zQpSXTNv1y4/XW8wTAU68JYXBQZxLscB8gjPLA454Ikm99MZGnI0fBKMSTK+eLYq3RDTFaQzJvmkc8903FhDn5XMI=
+Authentication-Results: bootlin.com; dkim=none (message not signed)
+ header.d=none;bootlin.com; dmarc=none action=none header.from=nxp.com;
+Received: from VI1PR04MB4046.eurprd04.prod.outlook.com (2603:10a6:803:4d::29)
+ by VI1PR0402MB2880.eurprd04.prod.outlook.com (2603:10a6:800:b4::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.16; Tue, 11 Aug
+ 2020 15:28:43 +0000
+Received: from VI1PR04MB4046.eurprd04.prod.outlook.com
+ ([fe80::8459:4be8:7034:7a81]) by VI1PR04MB4046.eurprd04.prod.outlook.com
+ ([fe80::8459:4be8:7034:7a81%6]) with mapi id 15.20.3261.024; Tue, 11 Aug 2020
+ 15:28:42 +0000
+Subject: Re: [PATCH 19/22] crypto: inside-secure - add check for xts input
+ length equal to zero
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "Van Leeuwen, Pascal" <pvanleeuwen@rambus.com>,
+        "Andrei Botila (OSS)" <andrei.botila@oss.nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-arm-kernel@axis.com" <linux-arm-kernel@axis.com>,
+        Andrei Botila <andrei.botila@nxp.com>,
+        Antoine Tenart <antoine.tenart@bootlin.com>
+References: <20200807162010.18979-1-andrei.botila@oss.nxp.com>
+ <20200807162010.18979-20-andrei.botila@oss.nxp.com>
+ <CY4PR0401MB36528610C3ABF802F8CBF35FC3440@CY4PR0401MB3652.namprd04.prod.outlook.com>
+ <20200810134500.GA22914@gondor.apana.org.au>
+ <fd3e5862-3357-7dfc-6c75-30086ab19f82@nxp.com>
+ <20200810170305.GA3352718@gmail.com>
+From:   =?UTF-8?Q?Horia_Geant=c4=83?= <horia.geanta@nxp.com>
+Message-ID: <d4a471e6-34c9-c702-63d6-1f6a3cba0ebe@nxp.com>
+Date:   Tue, 11 Aug 2020 18:28:39 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+In-Reply-To: <20200810170305.GA3352718@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: AM3PR03CA0076.eurprd03.prod.outlook.com
+ (2603:10a6:207:5::34) To VI1PR04MB4046.eurprd04.prod.outlook.com
+ (2603:10a6:803:4d::29)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200623184515.4132564-5-guro@fb.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.0.129] (84.117.251.185) by AM3PR03CA0076.eurprd03.prod.outlook.com (2603:10a6:207:5::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.19 via Frontend Transport; Tue, 11 Aug 2020 15:28:41 +0000
+X-Originating-IP: [84.117.251.185]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: af4f938c-f813-4516-9e6c-08d83e0b3acc
+X-MS-TrafficTypeDiagnostic: VI1PR0402MB2880:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR0402MB28808EE67F92408E2F7951C598450@VI1PR0402MB2880.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: FuvyZBeebrJ6FCaXgz8+oSaKznrDZIZ7V385uK791DQNINE8S88wup27qZf/JWBuVa+Wc5TSTP04+0bqH1V02YkeHiEW+Ny7GbqQuKfmWc9lvvM2XkNjsDvBcnwOXb5fEntynjC7r7n5Ohgm8QpqEFdoT8sQbHqfzxFjK+B4Gp1LDetn5XGQqtKm2qvJ2Y5EUr7OHYYYN3iDbaMUKxBkcjdwIURRupurbruSsfe4526gTKg6p3kkRuTjN5laY3mV07W8tyEG9TfpDV/uPRoKP3WYw15ykmoorat/K7jrTzOJFRT8htp5K4MbDDb9Efj1auYy8lic2qHbOJfQbJ1zBGs6tGl7sfA0pXuEAcByehUFP3EVARi+QO1uZcu28y72
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB4046.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39850400004)(366004)(346002)(396003)(376002)(136003)(31686004)(31696002)(66946007)(66476007)(6486002)(186003)(4326008)(16526019)(66556008)(83380400001)(956004)(2906002)(52116002)(7416002)(16576012)(478600001)(54906003)(2616005)(8676002)(86362001)(6916009)(36756003)(316002)(26005)(53546011)(5660300002)(8936002)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: x2Y1PUQ1vMyR+hFDAzir5q0FSm8sOXnXlzXL2DN/B5cwEb+GQstF2BGo66rNogjU5zYp8EkRifDEMUdKhJ2BvDlZXndOfrpA4zj70EjhqHevJNxSFn0jEM90uZ1IXrexnlTCrKYdQcS+V7iXjN/5oOPXyGxdgJQIMISEKRh7XPbiN80bUw/PJMLyXKv3hbN2f88dyNW8hFm7RLtezEvhDpYkhYG0ZEN9wRt3inugRP2rc4o389ITnPUiBT2UHOilqel7e51YJynBavd77LVQEKGuLxftH/ZEhJglkCZ38ZQ/Gfg8p6vcl2esgWgm34Anjgmdp6EAfYtEBHh2TJFfAPhtgOe0IYHrFJtKSGp4gPDxj5VouLxXZnF/O0nCJZykNrFNF5zIPz7+qN93v1aqFe0DDB18ziKcqhSZdMeGkiYQ6S8bNQwv8jUGaWG6fuc/isCWDeqXRpAZ8l8ddtm5Wyc2l4/WQR1JXwrHPUHsOn53etNKzc4For3e1t2H2wDtB/IWuwONCN9T81gG5A5Wom7sn/hw0irSn6gowuKlhrOSlVfCqI8/jL0Yyij22WPNmN0pPxmge5DKhKdamRJ6iBYdZWmZBOURSu+hW0EmUiNvRhTx5+7BXLk1eYd0Y47mK+P85JtEmWn90bR5fmJ/Pw==
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: af4f938c-f813-4516-9e6c-08d83e0b3acc
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR04MB4046.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Aug 2020 15:28:42.8563
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: VyTnr7iI8nghJGE5tzVp/FlaGPm5Xx0IJgnUEzXcHjysQ1QDYOFC82hlEQ6+PMDYunp3StGnWBfX0h1eK4neGw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB2880
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 11:45:14AM -0700, Roman Gushchin wrote:
-> Memory cgroups are using large chunks of percpu memory to store vmstat
-> data.  Yet this memory is not accounted at all, so in the case when there
-> are many (dying) cgroups, it's not exactly clear where all the memory is.
+On 8/10/2020 8:03 PM, Eric Biggers wrote:
+> On Mon, Aug 10, 2020 at 05:33:39PM +0300, Horia Geantă wrote:
+>> On 8/10/2020 4:45 PM, Herbert Xu wrote:
+>>> On Mon, Aug 10, 2020 at 10:20:20AM +0000, Van Leeuwen, Pascal wrote:
+>>>>
+>>>> With all due respect, but this makes no sense.
+>>>
+>>> I agree.  This is a lot of churn for no gain.
+>>>
+>> I would say the gain is that all skcipher algorithms would behave the same
+>> when input length equals zero - i.e. treat the request as a no-op.
+>>
+>> We can't say "no input" has any meaning to the other skcipher algorithms,
+>> but the convention is to accept this case and just return 0.
+>> I don't see why XTS has to be handled differently.
+>>
 > 
-> Because the size of memory cgroup internal structures can dramatically
-> exceed the size of object or page which is pinning it in the memory, it's
-> not a good idea to simple ignore it.  It actually breaks the isolation
-> between cgroups.
+> CTS also rejects empty inputs.
 > 
-> Let's account the consumed percpu memory to the parent cgroup.
+> The rule it follows is just that all input lengths >= blocksize are allowed.
+> Input lengths < blocksize aren't allowed.
 > 
-> Signed-off-by: Roman Gushchin <guro@fb.com>
-> Acked-by: Dennis Zhou <dennis@kernel.org>
+Indeed, thanks.
 
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+What about, for example, CBC?
+AFAICT cbc(aes) with input length = 0 is valid.
 
-This makes sense, and the accounting is in line with how we track and
-distribute child creation quotas (cgroup.max.descendants and
-cgroup.max.depth) up the cgroup tree.
+Same for CTR (with the note that blocksize = 1) and several other algorithms
+mentioned in the cover letter.
 
-I have one minor comment that isn't a dealbreaker for me:
+What's the rule in these cases?
 
-> @@ -5069,13 +5069,15 @@ static int alloc_mem_cgroup_per_node_info(struct mem_cgroup *memcg, int node)
->  	if (!pn)
->  		return 1;
->  
-> -	pn->lruvec_stat_local = alloc_percpu(struct lruvec_stat);
-> +	pn->lruvec_stat_local = alloc_percpu_gfp(struct lruvec_stat,
-> +						 GFP_KERNEL_ACCOUNT);
->  	if (!pn->lruvec_stat_local) {
->  		kfree(pn);
->  		return 1;
->  	}
->  
-> -	pn->lruvec_stat_cpu = alloc_percpu(struct lruvec_stat);
-> +	pn->lruvec_stat_cpu = alloc_percpu_gfp(struct lruvec_stat,
-> +					       GFP_KERNEL_ACCOUNT);
->  	if (!pn->lruvec_stat_cpu) {
->  		free_percpu(pn->lruvec_stat_local);
->  		kfree(pn);
-> @@ -5149,11 +5151,13 @@ static struct mem_cgroup *mem_cgroup_alloc(void)
->  		goto fail;
->  	}
->  
-> -	memcg->vmstats_local = alloc_percpu(struct memcg_vmstats_percpu);
-> +	memcg->vmstats_local = alloc_percpu_gfp(struct memcg_vmstats_percpu,
-> +						GFP_KERNEL_ACCOUNT);
->  	if (!memcg->vmstats_local)
->  		goto fail;
->  
-> -	memcg->vmstats_percpu = alloc_percpu(struct memcg_vmstats_percpu);
-> +	memcg->vmstats_percpu = alloc_percpu_gfp(struct memcg_vmstats_percpu,
-> +						 GFP_KERNEL_ACCOUNT);
->  	if (!memcg->vmstats_percpu)
->  		goto fail;
->  
-> @@ -5202,7 +5206,9 @@ mem_cgroup_css_alloc(struct cgroup_subsys_state *parent_css)
->  	struct mem_cgroup *memcg;
->  	long error = -ENOMEM;
->  
-> +	memalloc_use_memcg(parent);
->  	memcg = mem_cgroup_alloc();
-> +	memalloc_unuse_memcg();
-
-The disconnect between 1) requesting accounting and 2) which cgroup to
-charge is making me uneasy. It makes mem_cgroup_alloc() a bit of a
-handgrenade, because accounting to the current task is almost
-guaranteed to be wrong if the use_memcg() annotation were to get lost
-in a refactor or not make it to a new caller of the function.
-
-The saving grace is that mem_cgroup_alloc() is pretty unlikely to be
-used elsewhere. And pretending it's an independent interface would be
-overengineering. But how about the following in mem_cgroup_alloc() and
-alloc_mem_cgroup_per_node_info() to document that caller relationship:
-
-	/* We charge the parent cgroup, never the current task */
-	WARN_ON_ONCE(!current->active_memcg);
+Thanks,
+Horia
