@@ -2,184 +2,99 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E16C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 23:19:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D1CCC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 23:21:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D41492076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 23:19:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08E0620774
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 23:21:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Serdodq7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726405AbgHKXTh (ORCPT
+        id S1726457AbgHKXVZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 19:19:37 -0400
-Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:54312 "EHLO
-        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726115AbgHKXTh (ORCPT
+        Tue, 11 Aug 2020 19:21:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48250 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726115AbgHKXVY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 19:19:37 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0U5Vraek_1597187972;
-Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U5Vraek_1597187972)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 12 Aug 2020 07:19:32 +0800
-Date:   Wed, 12 Aug 2020 07:19:32 +0800
-From:   Wei Yang <richard.weiyang@linux.alibaba.com>
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-Cc:     Michal Hocko <mhocko@suse.com>, Baoquan He <bhe@redhat.com>,
-        Wei Yang <richard.weiyang@linux.alibaba.com>,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 10/10] mm/hugetlb: not necessary to abuse temporary page
- to workaround the nasty free_huge_page
-Message-ID: <20200811231932.GA33666@L-31X9LVDL-1304.local>
-Reply-To: Wei Yang <richard.weiyang@linux.alibaba.com>
-References: <20200807091251.12129-1-richard.weiyang@linux.alibaba.com>
- <20200807091251.12129-11-richard.weiyang@linux.alibaba.com>
- <20200810021737.GV14854@MiWiFi-R3L-srv>
- <129cc03e-c6d5-24f8-2f3c-f5a3cc821e76@oracle.com>
- <20200811015148.GA10792@MiWiFi-R3L-srv>
- <20200811065406.GC4793@dhcp22.suse.cz>
- <eb9d1e13-7455-0c4e-1f94-0c859c36c0bb@oracle.com>
+        Tue, 11 Aug 2020 19:21:24 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9428C06174A;
+        Tue, 11 Aug 2020 16:21:24 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BR83N6h2Xz9sTF;
+        Wed, 12 Aug 2020 09:21:20 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1597188081;
+        bh=Y2vW2Epp8nTTxxe83f4Ui3It8Mqs0UxYWMCHKIcXLJk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Serdodq7YpCGYgosG96NAHtfdDy1lsToeReIeHp/XtAcU/5fh5lgFZHAKKP8cFC5t
+         ib0k2cw8oBXLs7aG7JWCaNu4iZ/K3DOSwWmAsWXy3ZaWJauFnnWoqHQ4hpjwjHhSGK
+         mblgiR0S4DCl1CFAWGzDowXTJyPQYTDws8cuZKoh8nCUVwYF2U4X4huJlNiMxtYYL9
+         sSIWoG7wABhqMdMsDPQPL3uLeJ7W8K0blihWvB98kxGKlhfhXeanq6Em+QyJ716dtc
+         ZqW2DCqaL+gfgQKuQUtSNUQAyQW6pIRIn9f9q9OdaVPLw2qt/Cd9AfmoMTgnGSnN50
+         JWONHJxs1L6wQ==
+Date:   Wed, 12 Aug 2020 09:21:19 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hui Wang <hui.wang@canonical.com>
+Subject: linux-next: build warning after merge of the sound-current tree
+Message-ID: <20200812092119.710d92ec@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <eb9d1e13-7455-0c4e-1f94-0c859c36c0bb@oracle.com>
+Content-Type: multipart/signed; boundary="Sig_/N8rC=SW9_Z70GIOlKuDN2Pz";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 02:43:28PM -0700, Mike Kravetz wrote:
->On 8/10/20 11:54 PM, Michal Hocko wrote:
->> 
->> I have managed to forgot all the juicy details since I have made that
->> change. All that remains is that the surplus pages accounting was quite
->> tricky and back then I didn't figure out a simpler method that would
->> achieve the consistent look at those counters. As mentioned above I
->> suspect this could lead to pre-mature allocation failures while the
->> migration is ongoing.
->
->It is likely lost in the e-mail thread, but the suggested change was to
->alloc_surplus_huge_page().  The code which allocates the migration target
->(alloc_migrate_huge_page) will not be changed.  So, this should not be
->an issue.
->
->>                       Sure quite unlikely to happen and the race window
->> is likely very small. Maybe this is even acceptable but I would strongly
->> recommend to have all this thinking documented in the changelog.
->
->I wrote down a description of what happens in the two different approaches
->"temporary page" vs "surplus page".  It is at the very end of this e-mail.
->When looking at the details, I came up with what may be an even better
->approach.  Why not just call the low level routine to free the page instead
->of going through put_page/free_huge_page?  At the very least, it saves a
->lock roundtrip and there is no need to worry about the counters/accounting.
->
->Here is a patch to do that.  However, we are optimizing a return path in
->a race condition that we are unlikely to ever hit.  I 'tested' it by allocating
->an 'extra' page and freeing it via this method in alloc_surplus_huge_page.
->
->>From 864c5f8ef4900c95ca3f6f2363a85f3cb25e793e Mon Sep 17 00:00:00 2001
->From: Mike Kravetz <mike.kravetz@oracle.com>
->Date: Tue, 11 Aug 2020 12:45:41 -0700
->Subject: [PATCH] hugetlb: optimize race error return in
-> alloc_surplus_huge_page
->
->The routine alloc_surplus_huge_page() could race with with a pool
->size change.  If this happens, the allocated page may not be needed.
->To free the page, the current code will 'Abuse temporary page to
->workaround the nasty free_huge_page codeflow'.  Instead, directly
->call the low level routine that free_huge_page uses.  This works
->out well because the page is new, we hold the only reference and
->already hold the hugetlb_lock.
->
->Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
->---
-> mm/hugetlb.c | 13 ++++++++-----
-> 1 file changed, 8 insertions(+), 5 deletions(-)
->
->diff --git a/mm/hugetlb.c b/mm/hugetlb.c
->index 590111ea6975..ac89b91fba86 100644
->--- a/mm/hugetlb.c
->+++ b/mm/hugetlb.c
->@@ -1923,14 +1923,17 @@ static struct page *alloc_surplus_huge_page(struct hstate *h, gfp_t gfp_mask,
-> 	/*
-> 	 * We could have raced with the pool size change.
-> 	 * Double check that and simply deallocate the new page
->-	 * if we would end up overcommiting the surpluses. Abuse
->-	 * temporary page to workaround the nasty free_huge_page
->-	 * codeflow
->+	 * if we would end up overcommiting the surpluses.
-> 	 */
-> 	if (h->surplus_huge_pages >= h->nr_overcommit_huge_pages) {
->-		SetPageHugeTemporary(page);
->+		/*
->+		 * Since this page is new, we hold the only reference, and
->+		 * we already hold the hugetlb_lock call the low level free
->+		 * page routine.  This saves at least a lock roundtrip.
+--Sig_/N8rC=SW9_Z70GIOlKuDN2Pz
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-The change looks good to me, while I may not understand the "lock roundtrip".
-You mean we don't need to release the hugetlb_lock?
+Hi all,
 
->+		 */
->+		(void)put_page_testzero(page); /* don't call destructor */
->+		update_and_free_page(h, page);
-> 		spin_unlock(&hugetlb_lock);
->-		put_page(page);
-> 		return NULL;
-> 	} else {
-> 		h->surplus_huge_pages++;
->-- 
->2.25.4
->
->
->Here is a description of the difference in "Temporary Page" vs "Surplus
->Page" approach.
->
->Both only allocate a fresh huge page if surplus_huge_pages is less than
->nr_overcommit_huge_pages.  Of course, the lock protecting those counts
->must be dropped to perform the allocation.  After reacquiring the lock
->is where we have the proposed difference in behavior.
->
->temporary page behavior
->-----------------------
->if surplus_huge_pages >= h->nr_overcommit_huge_pages
->	SetPageHugeTemporary(page)
->	spin_unlock(&hugetlb_lock);
->	put_page(page);
->
->At this time we know surplus_huge_pages is 'at least' nr_overcommit_huge_pages.
->As a result, any new allocation will fail.
->Only user visible result is that number of huge pages will be one greater than
->that specified by user and overcommit values.  This is only visible for the
->short time until the page is actully freed as a result of put_page().
->
->free_huge_page()
->	number of huge pages will be decremented
->
->suprlus page behavior
->---------------------
->surplus_huge_pages++
->surplus_huge_pages_node[page_to_nid(page)]++
->if surplus_huge_pages > nr_overcommit_huge_pages
->	spin_unlock(&hugetlb_lock);
->	put_page(page);
->
->At this time we know surplus_huge_pages is greater than
->nr_overcommit_huge_pages.  As a result, any new allocation will fail.
->User visible result is an increase in surplus pages as well as number of
->huge pages.  In addition, surplus pages will exceed overcommit.  This is
->only visible for the short time until the page is actully freed as a
->result of put_page().
->
->free_huge_page()
->	number of huge pages will be decremented
->	h->surplus_huge_pages--;
->	h->surplus_huge_pages_node[nid]--;
+After merging the sound-current tree, today's linux-next build (arm
+multi_v7_defconfig) produced this warning:
 
--- 
-Wei Yang
-Help you, Help me
+sound/pci/hda/patch_realtek.c: In function 'alc285_fixup_hp_gpio_led':
+sound/pci/hda/patch_realtek.c:4163:19: warning: unused variable 'spec' [-Wu=
+nused-variable]
+ 4163 |  struct alc_spec *spec =3D codec->spec;
+      |                   ^~~~
+
+Introduced by commit
+
+  404690649e6a ("ALSA: hda - reverse the setting value in the micmute_led_s=
+et")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/N8rC=SW9_Z70GIOlKuDN2Pz
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8zJ/AACgkQAVBC80lX
+0Gw6FQf/XlUYJEIXpWSeKfVYd/oIa6KCjtEQw7DyvvBDI7FYzdENg7Kbohkghsgp
+UMTru+QX84d6Z7gzjiKC6djaa6DL1Be/g8Ycjw0J6KQSDWm2kUaUA1RDN0+6I+of
+prJzmDe7N+sULAX2gZAC5GC8vTTsFTGXOBPHwWlYhtlT0zDWgG6r70/rt6SdnTfJ
+W/aqwRwATt5Hk39sN0zBMjuBAxEZ6XcFNGZTdRNAwhpdy/wTfiHMM/SF5oodUrDk
+x1WFCnWitNJhMUq/dlCeCsyBkYVecLnyrvBpvvPP6YIzvJAlmzhVOTs6nwoVM45V
+FT59gSxCHyyq2sz1fB9sRhMR4F6GVQ==
+=/88z
+-----END PGP SIGNATURE-----
+
+--Sig_/N8rC=SW9_Z70GIOlKuDN2Pz--
