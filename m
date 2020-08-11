@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3D8EC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 16:35:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68E6FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 16:36:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98CC22076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 16:35:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38E0920781
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 16:36:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728862AbgHKQf5 (ORCPT
+        id S1729274AbgHKQgD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 12:35:57 -0400
-Received: from mga14.intel.com ([192.55.52.115]:62150 "EHLO mga14.intel.com"
+        Tue, 11 Aug 2020 12:36:03 -0400
+Received: from mga14.intel.com ([192.55.52.115]:62152 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729233AbgHKQfr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729223AbgHKQfr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 11 Aug 2020 12:35:47 -0400
-IronPort-SDR: YgGt0T0p7GeLNqXfN55tHi9KzOnF6WWzNnaYsrEcJGp89bQ+eahllxpNqj1N6Vtv9gTvYtXFqC
- QPLN+JdqjJRg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9710"; a="152985430"
+IronPort-SDR: zmM5LtrpeJJ9IPP4KRqDn2G7NHecOSFN5YGn5LO3HXVBMvq2NV5KSg5InJwUqr/r55UUuiw/xq
+ Qzawppyk4b2Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9710"; a="152985421"
 X-IronPort-AV: E=Sophos;i="5.76,301,1592895600"; 
-   d="scan'208";a="152985430"
+   d="scan'208";a="152985421"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2020 09:30:48 -0700
-IronPort-SDR: dWn146jOQnB4qstKodo/USHjpTqYLxwvU0mdj9yjISxKjHdB5XY/OtBC6LgiKLV2Ti3tVNIEx5
- +Lg6I6upSUng==
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2020 09:30:47 -0700
+IronPort-SDR: 9zF9uZjzvyFLvfFWsLwusLx/9Lb+oBf/ZumkIldBXHpmw31uSdt7F+Qsx3CWGF9vt41vlWRfZN
+ PWQ+L0Z6GMsA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.76,301,1592895600"; 
-   d="scan'208";a="317786540"
+   d="scan'208";a="317786532"
 Received: from txasoft-yocto.an.intel.com ([10.123.72.192])
-  by fmsmga004.fm.intel.com with ESMTP; 11 Aug 2020 09:30:47 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 11 Aug 2020 09:30:46 -0700
 From:   Gage Eads <gage.eads@intel.com>
 To:     linux-kernel@vger.kernel.org, arnd@arndb.de,
         gregkh@linuxfoundation.org
 Cc:     magnus.karlsson@intel.com, bjorn.topel@intel.com
-Subject: [PATCH v2 18/19] dlb2: add basic PF sysfs interfaces
-Date:   Tue, 11 Aug 2020 11:27:31 -0500
-Message-Id: <20200811162732.1369-19-gage.eads@intel.com>
+Subject: [PATCH v2 17/19] dlb2: add device FLR support
+Date:   Tue, 11 Aug 2020 11:27:30 -0500
+Message-Id: <20200811162732.1369-18-gage.eads@intel.com>
 X-Mailer: git-send-email 2.13.6
 In-Reply-To: <20200811162732.1369-1-gage.eads@intel.com>
 References: <20200811162732.1369-1-gage.eads@intel.com>
@@ -54,690 +54,788 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These interfaces include files for reading the total and available device
-resources, getting and setting sequence number group allocations, and
-reading the device ID.
+A device FLR can be triggered while applications are actively using the
+device, which poses two problems:
+- If applications continue to enqueue to the hardware they will cause
+  hardware errors, because the FLR will have reset the scheduling domains,
+  ports, and queues.
+- When the applications end, they must not trigger the driver's domain
+  reset logic, which would fail because the device's registers will have
+  been reset by the FLR.
+
+The driver needs to stop applications from using the device before the FLR
+begins, and detect when these applications exit (so they don't trigger the
+domain reset that occurs when their last file reference (or memory mapping)
+closes). The driver must also disallow applications from configuring the
+device while the reset is in progress.
+
+To avoid these problems, the driver handles unexpected resets as follows:
+1. Set the reset_active flag. This flag blocks new device files from being
+   opened and is used as a wakeup condition in the driver's wait queues.
+2. If this is a PF FLR and there are active VFs, send them a pre-reset
+   notification, so they can stop any VF applications. (Added in a later
+   commit.)
+3. Disable all device files (set the per-file valid flag to false, which
+   prevents the file from being used after FLR completes) and wake any
+   threads blocked on a wait queue.
+4. If the device is not in use -- i.e. no open device files or memory
+   mappings, and no VFs in use (PF FLR only) -- the FLR can begin.
+5. Else, the driver waits (up to a user-specified timeout, default 5s) for
+   software to stop using the driver and the device. If the timeout
+   elapses, the driver zaps any remaining MMIO mappings so the
+   extant applications can no longer use the device.
+6. Do not unlock the resource mutex at the end of the reset prepare
+   function, to prevent device access during the reset.
+
+The reset timeout is exposed as a module parameter.
+
+After the FLR:
+1. Clear the per-domain pointers (the memory is freed elsewhere).
+2. Release any remaining allocated port or CQ memory, now that it's
+   guaranteed the device is unconfigured and won't write to memory.
+3. Reset software and hardware state.
+4. Notify VFs that the FLR is complete. (Added in a later commit.)
+5. Set reset_active to false.
+6. Unlock the resource mutex.
 
 Signed-off-by: Gage Eads <gage.eads@intel.com>
 Reviewed-by: Björn Töpel <bjorn.topel@intel.com>
 ---
- Documentation/ABI/testing/sysfs-driver-dlb2 | 165 +++++++++++
- drivers/misc/dlb2/dlb2_main.c               |  11 +
- drivers/misc/dlb2/dlb2_main.h               |   3 +
- drivers/misc/dlb2/dlb2_pf_ops.c             | 423 ++++++++++++++++++++++++++++
- 4 files changed, 602 insertions(+)
+ Documentation/ABI/testing/sysfs-driver-dlb2 |  22 ++
+ drivers/misc/dlb2/dlb2_intr.c               |  13 +-
+ drivers/misc/dlb2/dlb2_intr.h               |   1 +
+ drivers/misc/dlb2/dlb2_ioctl.c              |  54 ++++-
+ drivers/misc/dlb2/dlb2_main.c               | 315 +++++++++++++++++++++++++++-
+ drivers/misc/dlb2/dlb2_main.h               |   4 +
+ drivers/misc/dlb2/dlb2_resource.c           |  17 ++
+ drivers/misc/dlb2/dlb2_resource.h           |   9 +
+ 8 files changed, 424 insertions(+), 11 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-driver-dlb2
 
 diff --git a/Documentation/ABI/testing/sysfs-driver-dlb2 b/Documentation/ABI/testing/sysfs-driver-dlb2
-index 38d0d3d92670..c5cb1cbb70f4 100644
---- a/Documentation/ABI/testing/sysfs-driver-dlb2
+new file mode 100644
+index 000000000000..38d0d3d92670
+--- /dev/null
 +++ b/Documentation/ABI/testing/sysfs-driver-dlb2
-@@ -20,3 +20,168 @@ Description:	Interface for setting the driver's reset timeout.
- 		their device mappings can interfere with processes that use the
- 		device after the reset completes. To ensure that user processes
- 		have enough time to clean up, reset_timeout_s can be increased.
-+
-+What:		/sys/bus/pci/devices/.../sequence_numbers/group<N>_sns_per_queue
+@@ -0,0 +1,22 @@
++What:		/sys/bus/pci/drivers/dlb2/module/parameters/reset_timeout_s
 +Date:		June 22, 2020
 +KernelVersion:	5.9
 +Contact:	gage.eads@intel.com
-+Description:	Interface for configuring dlb2 load-balanced sequence numbers.
++Description:	Interface for setting the driver's reset timeout.
++		When a device reset (FLR) is issued, the driver waits for
++		user-space to stop using the device before allowing the FLR to
++		proceed, with a timeout. The device is considered in use if
++		there are any open domain device file descriptors or memory
++		mapped producer ports. (For PF device resets, this includes all
++		VF-owned domains and producer ports.)
 +
-+		The DLB 2.0 has a fixed number of sequence numbers used for
-+		ordered scheduling. They are divided among two sequence number
-+		groups. A group can be configured to contain one queue with
-+		1,024 sequence numbers, or two queues with 512 sequence numbers
-+		each, and so on, down to 16 queues with 64 sequence numbers
-+		each.
++		The amount of time the driver waits for userspace to stop using
++		the device is controlled by the module parameter
++		reset_timeout_s, which is in units of seconds and defaults to
++		5. If reset_timeout_s seconds elapse and any user is still
++		using the device, the driver zaps those processes' memory
++		mappings and marks their device file descriptors as invalid.
++		This is necessary because user processes that do not relinquish
++		their device mappings can interfere with processes that use the
++		device after the reset completes. To ensure that user processes
++		have enough time to clean up, reset_timeout_s can be increased.
+diff --git a/drivers/misc/dlb2/dlb2_intr.c b/drivers/misc/dlb2/dlb2_intr.c
+index 0e20197e96fb..ace7df36294e 100644
+--- a/drivers/misc/dlb2/dlb2_intr.c
++++ b/drivers/misc/dlb2/dlb2_intr.c
+@@ -30,7 +30,10 @@ static inline bool wake_condition(struct dlb2_cq_intr *intr,
+ 				  struct dlb2_dev *dev,
+ 				  struct dlb2_domain *domain)
+ {
+-	return (READ_ONCE(intr->wake) || READ_ONCE(intr->disabled));
++	return (READ_ONCE(intr->wake) ||
++		READ_ONCE(dev->reset_active) ||
++		!READ_ONCE(domain->valid) ||
++		READ_ONCE(intr->disabled));
+ }
+ 
+ struct dlb2_dequeue_qe {
+@@ -114,8 +117,12 @@ int dlb2_block_on_cq_interrupt(struct dlb2_dev *dev,
+ 	ret = wait_event_interruptible(intr->wq_head,
+ 				       wake_condition(intr, dev, dom));
+ 
+-	if (ret == 0 && READ_ONCE(intr->disabled))
+-		ret = -EACCES;
++	if (ret == 0) {
++		if (READ_ONCE(dev->reset_active) || !READ_ONCE(dom->valid))
++			ret = -EINTR;
++		else if (READ_ONCE(intr->disabled))
++			ret = -EACCES;
++	}
+ 
+ 	WRITE_ONCE(intr->wake, false);
+ 
+diff --git a/drivers/misc/dlb2/dlb2_intr.h b/drivers/misc/dlb2/dlb2_intr.h
+index 613179795d8f..250c391d729e 100644
+--- a/drivers/misc/dlb2/dlb2_intr.h
++++ b/drivers/misc/dlb2/dlb2_intr.h
+@@ -20,6 +20,7 @@ int dlb2_block_on_cq_interrupt(struct dlb2_dev *dev,
+ enum dlb2_wake_reason {
+ 	WAKE_CQ_INTR,
+ 	WAKE_PORT_DISABLED,
++	WAKE_DEV_RESET
+ };
+ 
+ void dlb2_wake_thread(struct dlb2_dev *dev,
+diff --git a/drivers/misc/dlb2/dlb2_ioctl.c b/drivers/misc/dlb2/dlb2_ioctl.c
+index 3e4fb19dd726..3589acceedf8 100644
+--- a/drivers/misc/dlb2/dlb2_ioctl.c
++++ b/drivers/misc/dlb2/dlb2_ioctl.c
+@@ -31,6 +31,11 @@ static int dlb2_domain_ioctl_##lower_name(struct dlb2_dev *dev,		   \
+ 									   \
+ 	mutex_lock(&dev->resource_mutex);				   \
+ 									   \
++	if (!domain->valid) {						   \
++		mutex_unlock(&dev->resource_mutex);			   \
++		return -EINVAL;						   \
++	}								   \
++									   \
+ 	ret = dev->ops->lower_name(&dev->hw,				   \
+ 				   domain->id,				   \
+ 				   &arg,				   \
+@@ -74,6 +79,11 @@ static int dlb2_domain_ioctl_enable_ldb_port(struct dlb2_dev *dev,
+ 
+ 	mutex_lock(&dev->resource_mutex);
+ 
++	if (!domain->valid) {
++		mutex_unlock(&dev->resource_mutex);
++		return -EINVAL;
++	}
 +
-+		When a load-balanced queue is configured with non-zero sequence
-+		numbers, the driver finds a group configured for the same
-+		number of sequence numbers and an available slot. If no such
-+		groups are found, the queue cannot be configured.
+ 	ret = dev->ops->enable_ldb_port(&dev->hw, domain->id, &arg, &response);
+ 
+ 	/* Allow threads to block on this port's CQ interrupt */
+@@ -103,6 +113,11 @@ static int dlb2_domain_ioctl_enable_dir_port(struct dlb2_dev *dev,
+ 
+ 	mutex_lock(&dev->resource_mutex);
+ 
++	if (!domain->valid) {
++		mutex_unlock(&dev->resource_mutex);
++		return -EINVAL;
++	}
 +
-+		Once the first ordered queue is configured, the sequence number
-+		configurations are locked. The driver returns an error on writes
-+		to locked sequence number configurations. When all ordered
-+		queues are unconfigured, the sequence number configurations can
-+		be changed again.
+ 	ret = dev->ops->enable_dir_port(&dev->hw, domain->id, &arg, &response);
+ 
+ 	/* Allow threads to block on this port's CQ interrupt */
+@@ -132,6 +147,11 @@ static int dlb2_domain_ioctl_disable_ldb_port(struct dlb2_dev *dev,
+ 
+ 	mutex_lock(&dev->resource_mutex);
+ 
++	if (!domain->valid) {
++		mutex_unlock(&dev->resource_mutex);
++		return -EINVAL;
++	}
 +
-+		This file is only accessible for physical function DLB 2.0
-+		devices.
+ 	ret = dev->ops->disable_ldb_port(&dev->hw, domain->id, &arg, &response);
+ 
+ 	/*
+@@ -166,6 +186,11 @@ static int dlb2_domain_ioctl_disable_dir_port(struct dlb2_dev *dev,
+ 
+ 	mutex_lock(&dev->resource_mutex);
+ 
++	if (!domain->valid) {
++		mutex_unlock(&dev->resource_mutex);
++		return -EINVAL;
++	}
 +
-+What:		/sys/bus/pci/devices/.../total_resources/num_atomic_inflights
-+What:		/sys/bus/pci/devices/.../total_resources/num_dir_credits
-+What:		/sys/bus/pci/devices/.../total_resources/num_dir_ports
-+What:		/sys/bus/pci/devices/.../total_resources/num_hist_list_entries
-+What:		/sys/bus/pci/devices/.../total_resources/num_ldb_credits
-+What:		/sys/bus/pci/devices/.../total_resources/num_ldb_ports
-+What:		/sys/bus/pci/devices/.../total_resources/num_cos0_ldb_ports
-+What:		/sys/bus/pci/devices/.../total_resources/num_cos1_ldb_ports
-+What:		/sys/bus/pci/devices/.../total_resources/num_cos2_ldb_ports
-+What:		/sys/bus/pci/devices/.../total_resources/num_cos3_ldb_ports
-+What:		/sys/bus/pci/devices/.../total_resources/num_ldb_queues
-+What:		/sys/bus/pci/devices/.../total_resources/num_sched_domains
-+Date:		June 22, 2020
-+KernelVersion:	5.9
-+Contact:	gage.eads@intel.com
-+Description:
-+		The total_resources subdirectory contains read-only files that
-+		indicate the total number of resources in the device.
+ 	ret = dev->ops->disable_dir_port(&dev->hw, domain->id, &arg, &response);
+ 
+ 	/*
+@@ -206,6 +231,11 @@ static int dlb2_domain_ioctl_create_ldb_port(struct dlb2_dev *dev,
+ 
+ 	mutex_lock(&dev->resource_mutex);
+ 
++	if (!domain->valid) {
++		mutex_unlock(&dev->resource_mutex);
++		return -EINVAL;
++	}
 +
-+		num_atomic_inflights:  Total number of atomic inflights in the
-+				       device. Atomic inflights refers to the
-+				       on-device storage used by the atomic
-+				       scheduler.
+ 	cq_base = dma_alloc_coherent(&dev->pdev->dev,
+ 				     DLB2_CQ_SIZE,
+ 				     &cq_dma_base,
+@@ -271,6 +301,11 @@ static int dlb2_domain_ioctl_create_dir_port(struct dlb2_dev *dev,
+ 
+ 	mutex_lock(&dev->resource_mutex);
+ 
++	if (!domain->valid) {
++		mutex_unlock(&dev->resource_mutex);
++		return -EINVAL;
++	}
 +
-+		num_dir_credits:       Total number of directed credits in the
-+				       device.
+ 	cq_base = dma_alloc_coherent(&dev->pdev->dev,
+ 				     DLB2_CQ_SIZE,
+ 				     &cq_dma_base,
+@@ -332,6 +367,13 @@ static int dlb2_domain_ioctl_block_on_cq_interrupt(struct dlb2_dev *dev,
+ 	if (copy_from_user(&arg, (void __user *)user_arg, sizeof(arg)))
+ 		return -EFAULT;
+ 
++	/*
++	 * Note: dlb2_block_on_cq_interrupt() checks domain->valid again when
++	 * it puts the thread on the waitqueue
++	 */
++	if (!domain->valid)
++		return -EINVAL;
 +
-+		num_dir_ports:	       Total number of directed ports (and
-+				       queues) in the device.
+ 	ret = dlb2_block_on_cq_interrupt(dev,
+ 					 domain,
+ 					 arg.port_id,
+@@ -401,6 +443,11 @@ static int dlb2_domain_get_port_fd(struct dlb2_dev *dev,
+ 
+ 	mutex_lock(&dev->resource_mutex);
+ 
++	if (!domain->valid) {
++		mutex_unlock(&dev->resource_mutex);
++		return -EINVAL;
++	}
 +
-+		num_hist_list_entries: Total number of history list entries in
-+				       the device.
+ 	if ((is_ldb &&
+ 	     dev->ops->ldb_port_owned_by_domain(&dev->hw,
+ 						domain->id,
+@@ -590,6 +637,11 @@ static int dlb2_ioctl_create_sched_domain(struct dlb2_dev *dev,
+ 
+ 	mutex_lock(&dev->resource_mutex);
+ 
++	if (dev->reset_active) {
++		ret = -EINVAL;
++		goto unlock;
++	}
 +
-+		num_ldb_credits:       Total number of load-balanced credits in
-+				       the device.
-+
-+		num_ldb_ports:	       Total number of load-balanced ports in
-+				       the device.
-+
-+		num_cos<M>_ldb_ports:  Total number of load-balanced ports
-+				       belonging to class-of-service M in the
-+				       device.
-+
-+		num_ldb_queues:	       Total number of load-balanced queues in
-+				       the device.
-+
-+		num_sched_domains:     Total number of scheduling domains in the
-+				       device.
-+
-+What:		/sys/bus/pci/devices/.../avail_resources/num_atomic_inflights
-+What:		/sys/bus/pci/devices/.../avail_resources/num_dir_credits
-+What:		/sys/bus/pci/devices/.../avail_resources/num_dir_ports
-+What:		/sys/bus/pci/devices/.../avail_resources/num_hist_list_entries
-+What:		/sys/bus/pci/devices/.../avail_resources/num_ldb_credits
-+What:		/sys/bus/pci/devices/.../avail_resources/num_ldb_ports
-+What:		/sys/bus/pci/devices/.../avail_resources/num_cos0_ldb_ports
-+What:		/sys/bus/pci/devices/.../avail_resources/num_cos1_ldb_ports
-+What:		/sys/bus/pci/devices/.../avail_resources/num_cos2_ldb_ports
-+What:		/sys/bus/pci/devices/.../avail_resources/num_cos3_ldb_ports
-+What:		/sys/bus/pci/devices/.../avail_resources/num_ldb_queues
-+What:		/sys/bus/pci/devices/.../avail_resources/num_sched_domains
-+What:		/sys/bus/pci/devices/.../avail_resources/max_ctg_hl_entries
-+Date:		June 22, 2020
-+KernelVersion:	5.9
-+Contact:	gage.eads@intel.com
-+Description:
-+		The avail_resources subdirectory contains read-only files that
-+		indicate the available number of resources in the device.
-+		"Available" here means resources that are not currently in use
-+		by an application or, in the case of a physical function
-+		device, assigned to a virtual function.
-+
-+		num_atomic_inflights:  Available number of atomic inflights in
-+				       the device.
-+
-+		num_dir_ports:	       Available number of directed ports (and
-+				       queues) in the device.
-+
-+		num_hist_list_entries: Available number of history list entries
-+				       in the device.
-+
-+		num_ldb_credits:       Available number of load-balanced credits
-+				       in the device.
-+
-+		num_ldb_ports:	       Available number of load-balanced ports
-+				       in the device.
-+
-+		num_cos<M>_ldb_ports:  Available number of load-balanced ports
-+				       belonging to class-of-service M in the
-+				       device.
-+
-+		num_ldb_queues:	       Available number of load-balanced queues
-+				       in the device.
-+
-+		num_sched_domains:     Available number of scheduling domains in
-+				       the device.
-+
-+		max_ctg_hl_entries:    Maximum contiguous history list entries
-+				       available in the device.
-+
-+				       Each scheduling domain is created with
-+				       an allocation of history list entries,
-+				       and each domain's allocation of entries
-+				       must be contiguous.
-+
-+What:		/sys/bus/pci/devices/.../cos_bw/cos<N>_bw_percent
-+Date:		June 22, 2020
-+KernelVersion:	5.9
-+Contact:	gage.eads@intel.com
-+Description:	Interface for configuring dlb2 class-of-service bandwidths.
-+
-+		The DLB 2.0 supports four load-balanced port classes of service
-+		(CoS). Each CoS receives a guaranteed percentage of the
-+		load-balanced scheduler's bandwidth, and any unreserved
-+		bandwidth is divided among the four CoS.
-+
-+		By default, each CoS is guaranteed 25% of the bandwidth. Writing
-+		these files allows the user to change the CoS, subject to the
-+		constraint that the total reserved bandwidth of all CoS cannot
-+		exceed 100%.
-+
-+		Bandwidth reservations can be modified during run-time.
-+
-+		These files are only accessible for physical function DLB 2.0
-+		devices.
-+
-+What:		/sys/bus/pci/devices/.../dev_id
-+Date:		June 22, 2020
-+KernelVersion:	5.9
-+Contact:	gage.eads@intel.com
-+Description:	Device ID used in /dev, i.e. /dev/dlb<device ID>
-+
-+		Each DLB 2.0 PF and VF device is granted a unique ID by the
-+		kernel driver, and this ID is used to construct the device's
-+		/dev directory: /dev/dlb<device ID>. This sysfs file can be read
-+		to determine a device's ID, which allows the user to map a
-+		device file to a PCI BDF.
+ 	if (dev->domain_reset_failed) {
+ 		response.status = DLB2_ST_DOMAIN_RESET_FAILED;
+ 		ret = -EINVAL;
+@@ -612,8 +664,6 @@ static int dlb2_ioctl_create_sched_domain(struct dlb2_dev *dev,
+ 			      domain, O_RDWR);
+ 
+ 	if (fd < 0) {
+-		dev_err(dev->dlb2_device,
+-			"[%s()] Failed to get anon fd.\n", __func__);
+ 		kref_put(&domain->refcnt, dlb2_free_domain);
+ 		ret = fd;
+ 		goto unlock;
 diff --git a/drivers/misc/dlb2/dlb2_main.c b/drivers/misc/dlb2/dlb2_main.c
-index bc065788061a..b000319599aa 100644
+index b457bda7be44..bc065788061a 100644
 --- a/drivers/misc/dlb2/dlb2_main.c
 +++ b/drivers/misc/dlb2/dlb2_main.c
-@@ -603,6 +603,10 @@ static int dlb2_probe(struct pci_dev *pdev,
+@@ -12,6 +12,7 @@
+ #include <linux/uaccess.h>
+ 
+ #include "dlb2_file.h"
++#include "dlb2_intr.h"
+ #include "dlb2_ioctl.h"
+ #include "dlb2_main.h"
+ #include "dlb2_resource.h"
+@@ -26,6 +27,11 @@ MODULE_LICENSE("GPL v2");
+ MODULE_AUTHOR("Copyright(c) 2018-2020 Intel Corporation");
+ MODULE_DESCRIPTION("Intel(R) Dynamic Load Balancer 2.0 Driver");
+ 
++static unsigned int dlb2_reset_timeout_s = DLB2_DEFAULT_RESET_TIMEOUT_S;
++module_param_named(reset_timeout_s, dlb2_reset_timeout_s, uint, 0644);
++MODULE_PARM_DESC(reset_timeout_s,
++		 "Wait time (in seconds) after reset is requested given for app shutdown until driver zaps VMAs");
++
+ /* The driver lock protects data structures that used by multiple devices. */
+ static DEFINE_MUTEX(dlb2_driver_lock);
+ static struct list_head dlb2_dev_list = LIST_HEAD_INIT(dlb2_dev_list);
+@@ -60,6 +66,10 @@ static int dlb2_open(struct inode *i, struct file *f)
+ 
+ 	dev = container_of(f->f_inode->i_cdev, struct dlb2_dev, cdev);
+ 
++	/* See dlb2_reset_prepare() for more details */
++	if (dev->reset_active)
++		return -EINVAL;
++
+ 	f->private_data = dev;
+ 
+ 	dev->ops->inc_pm_refcnt(dev->pdev, true);
+@@ -98,6 +108,7 @@ int dlb2_init_domain(struct dlb2_dev *dlb2_dev, u32 domain_id)
+ 
+ 	domain->id = domain_id;
+ 
++	domain->valid = true;
+ 	kref_init(&domain->refcnt);
+ 	domain->dlb2_dev = dlb2_dev;
+ 
+@@ -179,6 +190,22 @@ static int __dlb2_free_domain(struct dlb2_dev *dev, struct dlb2_domain *domain)
+ {
+ 	int i, ret = 0;
+ 
++	/*
++	 * Check if the domain was reset and its memory released during FLR
++	 * handling.
++	 */
++	if (!domain->valid) {
++		/*
++		 * Before clearing the sched_domains[] pointer, confirm the
++		 * slot isn't in use by a newer (valid) domain.
++		 */
++		if (dev->sched_domains[domain->id] == domain)
++			dev->sched_domains[domain->id] = NULL;
++
++		devm_kfree(dev->dlb2_device, domain);
++		return 0;
++	}
++
+ 	ret = dev->ops->reset_domain(&dev->hw, domain->id);
+ 
+ 	/* Unpin and free all memory pages associated with the domain */
+@@ -238,7 +265,7 @@ int dlb2_write_domain_alert(struct dlb2_dev *dev,
+ 	struct dlb2_domain_alert alert;
+ 	int idx;
+ 
+-	if (!domain)
++	if (!domain || !domain->valid)
+ 		return -EINVAL;
+ 
+ 	/* Grab the alert lock to access the read and write indexes */
+@@ -306,9 +333,16 @@ static int dlb2_read_domain_alert(struct dlb2_dev *dev,
+ 			current->pid, domain->id);
+ 
+ 		if (wait_event_interruptible(domain->wq_head,
+-					     dlb2_alerts_avail(domain)))
++					     dlb2_alerts_avail(domain) ||
++					     !READ_ONCE(domain->valid)))
+ 			return -ERESTARTSYS;
+ 
++		/* See dlb2_reset_prepare() for more details */
++		if (!READ_ONCE(domain->valid)) {
++			alert->alert_id = DLB2_DOMAIN_ALERT_DEVICE_RESET;
++			return 0;
++		}
++
+ 		spin_lock(&domain->alert_lock);
+ 	}
+ 
+@@ -337,6 +371,11 @@ static ssize_t dlb2_domain_read(struct file *f,
+ 	if (len != sizeof(alert))
+ 		return -EINVAL;
+ 
++	if (!domain->valid) {
++		alert.alert_id = DLB2_DOMAIN_ALERT_DEVICE_RESET;
++		goto copy;
++	}
++
+ 	/* See dlb2_user.h for details on domain alert notifications */
+ 
+ 	ret = dlb2_read_domain_alert(dev,
+@@ -346,6 +385,7 @@ static ssize_t dlb2_domain_read(struct file *f,
  	if (ret)
- 		goto dma_set_mask_fail;
+ 		return ret;
  
-+	ret = dlb2_dev->ops->sysfs_create(dlb2_dev);
-+	if (ret)
-+		goto sysfs_create_fail;
++copy:
+ 	if (copy_to_user(buf, &alert, sizeof(alert)))
+ 		return -EFAULT;
+ 
+@@ -375,6 +415,11 @@ static int dlb2_pp_mmap(struct file *f, struct vm_area_struct *vma)
+ 
+ 	mutex_lock(&dev->resource_mutex);
+ 
++	if (!domain->valid) {
++		ret = -EINVAL;
++		goto end;
++	}
 +
- 	/*
- 	 * PM enable must be done before any other MMIO accesses, and this
- 	 * setting is persistent across device reset.
-@@ -653,6 +657,8 @@ static int dlb2_probe(struct pci_dev *pdev,
- init_interrupts_fail:
- dlb2_reset_fail:
- wait_for_device_ready_fail:
-+	dlb2_dev->ops->sysfs_destroy(dlb2_dev);
-+sysfs_create_fail:
- dma_set_mask_fail:
- 	dlb2_dev->ops->device_destroy(dlb2_dev, dlb2_class);
- device_add_fail:
-@@ -694,6 +700,8 @@ static void dlb2_remove(struct pci_dev *pdev)
+ 	if ((vma->vm_end - vma->vm_start) != DLB2_PP_SIZE) {
+ 		ret = -EINVAL;
+ 		goto end;
+@@ -411,6 +456,11 @@ static int dlb2_cq_mmap(struct file *f, struct vm_area_struct *vma)
  
- 	dlb2_release_device_memory(dlb2_dev);
+ 	mutex_lock(&dev->resource_mutex);
  
-+	dlb2_dev->ops->sysfs_destroy(dlb2_dev);
++	if (!domain->valid) {
++		ret = -EINVAL;
++		goto end;
++	}
 +
- 	dlb2_dev->ops->device_destroy(dlb2_dev, dlb2_class);
+ 	if ((vma->vm_end - vma->vm_start) != DLB2_CQ_SIZE) {
+ 		ret = -EINVAL;
+ 		goto end;
+@@ -661,10 +711,10 @@ static void dlb2_remove(struct pci_dev *pdev)
+ 	devm_kfree(&pdev->dev, dlb2_dev);
+ }
  
- 	dlb2_dev->ops->cdev_del(dlb2_dev);
-@@ -719,6 +727,9 @@ static void dlb2_reset_hardware_state(struct dlb2_dev *dev, bool issue_flr)
+-#ifdef CONFIG_PM
+-static void dlb2_reset_hardware_state(struct dlb2_dev *dev)
++static void dlb2_reset_hardware_state(struct dlb2_dev *dev, bool issue_flr)
+ {
+-	dlb2_reset_device(dev->pdev);
++	if (issue_flr)
++		dlb2_reset_device(dev->pdev);
+ 
  	/* Reinitialize interrupt configuration */
  	dev->ops->reinit_interrupts(dev);
- 
-+	/* Reset configuration done through the sysfs */
-+	dev->ops->sysfs_reapply(dev);
-+
- 	/* Reinitialize any other hardware state */
+@@ -673,6 +723,7 @@ static void dlb2_reset_hardware_state(struct dlb2_dev *dev)
  	dev->ops->init_hardware(dev);
  }
-diff --git a/drivers/misc/dlb2/dlb2_main.h b/drivers/misc/dlb2/dlb2_main.h
-index 45050403a4be..ab8cebe6220f 100644
---- a/drivers/misc/dlb2/dlb2_main.h
-+++ b/drivers/misc/dlb2/dlb2_main.h
-@@ -57,6 +57,9 @@ struct dlb2_device_ops {
- 			dev_t base,
- 			const struct file_operations *fops);
- 	void (*cdev_del)(struct dlb2_dev *dlb2_dev);
-+	int (*sysfs_create)(struct dlb2_dev *dlb2_dev);
-+	void (*sysfs_destroy)(struct dlb2_dev *dlb2_dev);
-+	void (*sysfs_reapply)(struct dlb2_dev *dev);
- 	int (*init_interrupts)(struct dlb2_dev *dev, struct pci_dev *pdev);
- 	int (*enable_ldb_cq_interrupts)(struct dlb2_dev *dev,
- 					int domain_id,
-diff --git a/drivers/misc/dlb2/dlb2_pf_ops.c b/drivers/misc/dlb2/dlb2_pf_ops.c
-index 771fd793870b..4f0f0e41ab8d 100644
---- a/drivers/misc/dlb2/dlb2_pf_ops.c
-+++ b/drivers/misc/dlb2/dlb2_pf_ops.c
-@@ -416,6 +416,426 @@ dlb2_pf_init_hardware(struct dlb2_dev *dlb2_dev)
- }
  
- /*****************************/
-+/****** Sysfs callbacks ******/
-+/*****************************/
-+
-+#define DLB2_TOTAL_SYSFS_SHOW(name, macro)		\
-+static ssize_t total_##name##_show(			\
-+	struct device *dev,				\
-+	struct device_attribute *attr,			\
-+	char *buf)					\
-+{							\
-+	int val = DLB2_MAX_NUM_##macro;			\
-+							\
-+	return scnprintf(buf, PAGE_SIZE, "%d\n", val);	\
-+}
-+
-+DLB2_TOTAL_SYSFS_SHOW(num_sched_domains, DOMAINS)
-+DLB2_TOTAL_SYSFS_SHOW(num_ldb_queues, LDB_QUEUES)
-+DLB2_TOTAL_SYSFS_SHOW(num_ldb_ports, LDB_PORTS)
-+DLB2_TOTAL_SYSFS_SHOW(num_cos0_ldb_ports, LDB_PORTS / DLB2_NUM_COS_DOMAINS)
-+DLB2_TOTAL_SYSFS_SHOW(num_cos1_ldb_ports, LDB_PORTS / DLB2_NUM_COS_DOMAINS)
-+DLB2_TOTAL_SYSFS_SHOW(num_cos2_ldb_ports, LDB_PORTS / DLB2_NUM_COS_DOMAINS)
-+DLB2_TOTAL_SYSFS_SHOW(num_cos3_ldb_ports, LDB_PORTS / DLB2_NUM_COS_DOMAINS)
-+DLB2_TOTAL_SYSFS_SHOW(num_dir_ports, DIR_PORTS)
-+DLB2_TOTAL_SYSFS_SHOW(num_ldb_credits, LDB_CREDITS)
-+DLB2_TOTAL_SYSFS_SHOW(num_dir_credits, DIR_CREDITS)
-+DLB2_TOTAL_SYSFS_SHOW(num_atomic_inflights, AQED_ENTRIES)
-+DLB2_TOTAL_SYSFS_SHOW(num_hist_list_entries, HIST_LIST_ENTRIES)
-+
-+#define DLB2_AVAIL_SYSFS_SHOW(name)			     \
-+static ssize_t avail_##name##_show(			     \
-+	struct device *dev,				     \
-+	struct device_attribute *attr,			     \
-+	char *buf)					     \
-+{							     \
-+	struct dlb2_dev *dlb2_dev = dev_get_drvdata(dev);    \
-+	struct dlb2_get_num_resources_args arg;		     \
-+	struct dlb2_hw *hw = &dlb2_dev->hw;		     \
-+	int val;					     \
-+							     \
-+	mutex_lock(&dlb2_dev->resource_mutex);		     \
-+							     \
-+	val = dlb2_hw_get_num_resources(hw, &arg, false, 0); \
-+							     \
-+	mutex_unlock(&dlb2_dev->resource_mutex);	     \
-+							     \
-+	if (val)					     \
-+		return -1;				     \
-+							     \
-+	val = arg.name;					     \
-+							     \
-+	return scnprintf(buf, PAGE_SIZE, "%d\n", val);	     \
-+}
-+
-+#define DLB2_AVAIL_SYSFS_SHOW_COS(name, idx)		     \
-+static ssize_t avail_##name##_show(			     \
-+	struct device *dev,				     \
-+	struct device_attribute *attr,			     \
-+	char *buf)					     \
-+{							     \
-+	struct dlb2_dev *dlb2_dev = dev_get_drvdata(dev);    \
-+	struct dlb2_get_num_resources_args arg;		     \
-+	struct dlb2_hw *hw = &dlb2_dev->hw;		     \
-+	int val;					     \
-+							     \
-+	mutex_lock(&dlb2_dev->resource_mutex);		     \
-+							     \
-+	val = dlb2_hw_get_num_resources(hw, &arg, false, 0); \
-+							     \
-+	mutex_unlock(&dlb2_dev->resource_mutex);	     \
-+							     \
-+	if (val)					     \
-+		return -1;				     \
-+							     \
-+	val = arg.num_cos_ldb_ports[idx];		     \
-+							     \
-+	return scnprintf(buf, PAGE_SIZE, "%d\n", val);	     \
-+}
-+
-+DLB2_AVAIL_SYSFS_SHOW(num_sched_domains)
-+DLB2_AVAIL_SYSFS_SHOW(num_ldb_queues)
-+DLB2_AVAIL_SYSFS_SHOW(num_ldb_ports)
-+DLB2_AVAIL_SYSFS_SHOW_COS(num_cos0_ldb_ports, 0)
-+DLB2_AVAIL_SYSFS_SHOW_COS(num_cos1_ldb_ports, 1)
-+DLB2_AVAIL_SYSFS_SHOW_COS(num_cos2_ldb_ports, 2)
-+DLB2_AVAIL_SYSFS_SHOW_COS(num_cos3_ldb_ports, 3)
-+DLB2_AVAIL_SYSFS_SHOW(num_dir_ports)
-+DLB2_AVAIL_SYSFS_SHOW(num_ldb_credits)
-+DLB2_AVAIL_SYSFS_SHOW(num_dir_credits)
-+DLB2_AVAIL_SYSFS_SHOW(num_atomic_inflights)
-+DLB2_AVAIL_SYSFS_SHOW(num_hist_list_entries)
-+
-+static ssize_t max_ctg_hl_entries_show(struct device *dev,
-+				       struct device_attribute *attr,
-+				       char *buf)
++#ifdef CONFIG_PM
+ static int dlb2_runtime_suspend(struct device *dev)
+ {
+ 	/* Return and let the PCI subsystem put the device in D3hot. */
+@@ -696,7 +747,7 @@ static int dlb2_runtime_resume(struct device *dev)
+ 		return ret;
+ 
+ 	/* Now reinitialize the device state. */
+-	dlb2_reset_hardware_state(dlb2_dev);
++	dlb2_reset_hardware_state(dlb2_dev, true);
+ 
+ 	return 0;
+ }
+@@ -708,6 +759,257 @@ static struct pci_device_id dlb2_id_table[] = {
+ };
+ MODULE_DEVICE_TABLE(pci, dlb2_id_table);
+ 
++static unsigned int dlb2_total_device_file_refcnt(struct dlb2_dev *dev)
 +{
-+	struct dlb2_dev *dlb2_dev = dev_get_drvdata(dev);
-+	struct dlb2_get_num_resources_args arg;
-+	struct dlb2_hw *hw = &dlb2_dev->hw;
-+	int val;
++	unsigned int cnt = 0;
++	int i;
 +
-+	mutex_lock(&dlb2_dev->resource_mutex);
++	for (i = 0; i < DLB2_MAX_NUM_DOMAINS; i++)
++		if (dev->sched_domains[i])
++			cnt += kref_read(&dev->sched_domains[i]->refcnt);
 +
-+	val = dlb2_hw_get_num_resources(hw, &arg, false, 0);
-+
-+	mutex_unlock(&dlb2_dev->resource_mutex);
-+
-+	if (val)
-+		return -1;
-+
-+	val = arg.max_contiguous_hist_list_entries;
-+
-+	return scnprintf(buf, PAGE_SIZE, "%d\n", val);
++	return cnt;
 +}
 +
-+/*
-+ * Device attribute name doesn't match the show function name, so we define our
-+ * own DEVICE_ATTR macro.
-+ */
-+#define DLB2_DEVICE_ATTR_RO(_prefix, _name) \
-+struct device_attribute dev_attr_##_prefix##_##_name = {\
-+	.attr = { .name = __stringify(_name), .mode = 0444 },\
-+	.show = _prefix##_##_name##_show,\
-+}
-+
-+static DLB2_DEVICE_ATTR_RO(total, num_sched_domains);
-+static DLB2_DEVICE_ATTR_RO(total, num_ldb_queues);
-+static DLB2_DEVICE_ATTR_RO(total, num_ldb_ports);
-+static DLB2_DEVICE_ATTR_RO(total, num_cos0_ldb_ports);
-+static DLB2_DEVICE_ATTR_RO(total, num_cos1_ldb_ports);
-+static DLB2_DEVICE_ATTR_RO(total, num_cos2_ldb_ports);
-+static DLB2_DEVICE_ATTR_RO(total, num_cos3_ldb_ports);
-+static DLB2_DEVICE_ATTR_RO(total, num_dir_ports);
-+static DLB2_DEVICE_ATTR_RO(total, num_ldb_credits);
-+static DLB2_DEVICE_ATTR_RO(total, num_dir_credits);
-+static DLB2_DEVICE_ATTR_RO(total, num_atomic_inflights);
-+static DLB2_DEVICE_ATTR_RO(total, num_hist_list_entries);
-+
-+static struct attribute *dlb2_total_attrs[] = {
-+	&dev_attr_total_num_sched_domains.attr,
-+	&dev_attr_total_num_ldb_queues.attr,
-+	&dev_attr_total_num_ldb_ports.attr,
-+	&dev_attr_total_num_cos0_ldb_ports.attr,
-+	&dev_attr_total_num_cos1_ldb_ports.attr,
-+	&dev_attr_total_num_cos2_ldb_ports.attr,
-+	&dev_attr_total_num_cos3_ldb_ports.attr,
-+	&dev_attr_total_num_dir_ports.attr,
-+	&dev_attr_total_num_ldb_credits.attr,
-+	&dev_attr_total_num_dir_credits.attr,
-+	&dev_attr_total_num_atomic_inflights.attr,
-+	&dev_attr_total_num_hist_list_entries.attr,
-+	NULL
-+};
-+
-+static const struct attribute_group dlb2_total_attr_group = {
-+	.attrs = dlb2_total_attrs,
-+	.name = "total_resources",
-+};
-+
-+static DLB2_DEVICE_ATTR_RO(avail, num_sched_domains);
-+static DLB2_DEVICE_ATTR_RO(avail, num_ldb_queues);
-+static DLB2_DEVICE_ATTR_RO(avail, num_ldb_ports);
-+static DLB2_DEVICE_ATTR_RO(avail, num_cos0_ldb_ports);
-+static DLB2_DEVICE_ATTR_RO(avail, num_cos1_ldb_ports);
-+static DLB2_DEVICE_ATTR_RO(avail, num_cos2_ldb_ports);
-+static DLB2_DEVICE_ATTR_RO(avail, num_cos3_ldb_ports);
-+static DLB2_DEVICE_ATTR_RO(avail, num_dir_ports);
-+static DLB2_DEVICE_ATTR_RO(avail, num_ldb_credits);
-+static DLB2_DEVICE_ATTR_RO(avail, num_dir_credits);
-+static DLB2_DEVICE_ATTR_RO(avail, num_atomic_inflights);
-+static DLB2_DEVICE_ATTR_RO(avail, num_hist_list_entries);
-+static DEVICE_ATTR_RO(max_ctg_hl_entries);
-+
-+static struct attribute *dlb2_avail_attrs[] = {
-+	&dev_attr_avail_num_sched_domains.attr,
-+	&dev_attr_avail_num_ldb_queues.attr,
-+	&dev_attr_avail_num_ldb_ports.attr,
-+	&dev_attr_avail_num_cos0_ldb_ports.attr,
-+	&dev_attr_avail_num_cos1_ldb_ports.attr,
-+	&dev_attr_avail_num_cos2_ldb_ports.attr,
-+	&dev_attr_avail_num_cos3_ldb_ports.attr,
-+	&dev_attr_avail_num_dir_ports.attr,
-+	&dev_attr_avail_num_ldb_credits.attr,
-+	&dev_attr_avail_num_dir_credits.attr,
-+	&dev_attr_avail_num_atomic_inflights.attr,
-+	&dev_attr_avail_num_hist_list_entries.attr,
-+	&dev_attr_max_ctg_hl_entries.attr,
-+	NULL
-+};
-+
-+static const struct attribute_group dlb2_avail_attr_group = {
-+	.attrs = dlb2_avail_attrs,
-+	.name = "avail_resources",
-+};
-+
-+#define DLB2_GROUP_SNS_PER_QUEUE_SHOW(id)	       \
-+static ssize_t group##id##_sns_per_queue_show(	       \
-+	struct device *dev,			       \
-+	struct device_attribute *attr,		       \
-+	char *buf)				       \
-+{						       \
-+	struct dlb2_dev *dlb2_dev =		       \
-+		dev_get_drvdata(dev);		       \
-+	struct dlb2_hw *hw = &dlb2_dev->hw;	       \
-+	int val;				       \
-+						       \
-+	mutex_lock(&dlb2_dev->resource_mutex);	       \
-+						       \
-+	val = dlb2_get_group_sequence_numbers(hw, id); \
-+						       \
-+	mutex_unlock(&dlb2_dev->resource_mutex);       \
-+						       \
-+	return scnprintf(buf, PAGE_SIZE, "%d\n", val); \
-+}
-+
-+DLB2_GROUP_SNS_PER_QUEUE_SHOW(0)
-+DLB2_GROUP_SNS_PER_QUEUE_SHOW(1)
-+
-+#define DLB2_GROUP_SNS_PER_QUEUE_STORE(id)		    \
-+static ssize_t group##id##_sns_per_queue_store(		    \
-+	struct device *dev,				    \
-+	struct device_attribute *attr,			    \
-+	const char *buf,				    \
-+	size_t count)					    \
-+{							    \
-+	struct dlb2_dev *dlb2_dev = dev_get_drvdata(dev);   \
-+	struct dlb2_hw *hw = &dlb2_dev->hw;		    \
-+	unsigned long val;				    \
-+	int err;					    \
-+							    \
-+	err = kstrtoul(buf, 0, &val);			    \
-+	if (err)					    \
-+		return -1;				    \
-+							    \
-+	mutex_lock(&dlb2_dev->resource_mutex);		    \
-+							    \
-+	err = dlb2_set_group_sequence_numbers(hw, id, val); \
-+							    \
-+	mutex_unlock(&dlb2_dev->resource_mutex);	    \
-+							    \
-+	return err ? err : count;			    \
-+}
-+
-+DLB2_GROUP_SNS_PER_QUEUE_STORE(0)
-+DLB2_GROUP_SNS_PER_QUEUE_STORE(1)
-+
-+/* RW sysfs files in the sequence_numbers/ subdirectory */
-+static DEVICE_ATTR_RW(group0_sns_per_queue);
-+static DEVICE_ATTR_RW(group1_sns_per_queue);
-+
-+static struct attribute *dlb2_sequence_number_attrs[] = {
-+	&dev_attr_group0_sns_per_queue.attr,
-+	&dev_attr_group1_sns_per_queue.attr,
-+	NULL
-+};
-+
-+static const struct attribute_group dlb2_sequence_number_attr_group = {
-+	.attrs = dlb2_sequence_number_attrs,
-+	.name = "sequence_numbers"
-+};
-+
-+#define DLB2_COS_BW_PERCENT_SHOW(id)		       \
-+static ssize_t cos##id##_bw_percent_show(	       \
-+	struct device *dev,			       \
-+	struct device_attribute *attr,		       \
-+	char *buf)				       \
-+{						       \
-+	struct dlb2_dev *dlb2_dev =		       \
-+		dev_get_drvdata(dev);		       \
-+	struct dlb2_hw *hw = &dlb2_dev->hw;	       \
-+	int val;				       \
-+						       \
-+	mutex_lock(&dlb2_dev->resource_mutex);	       \
-+						       \
-+	val = dlb2_hw_get_cos_bandwidth(hw, id);       \
-+						       \
-+	mutex_unlock(&dlb2_dev->resource_mutex);       \
-+						       \
-+	return scnprintf(buf, PAGE_SIZE, "%d\n", val); \
-+}
-+
-+DLB2_COS_BW_PERCENT_SHOW(0)
-+DLB2_COS_BW_PERCENT_SHOW(1)
-+DLB2_COS_BW_PERCENT_SHOW(2)
-+DLB2_COS_BW_PERCENT_SHOW(3)
-+
-+#define DLB2_COS_BW_PERCENT_STORE(id)		      \
-+static ssize_t cos##id##_bw_percent_store(	      \
-+	struct device *dev,			      \
-+	struct device_attribute *attr,		      \
-+	const char *buf,			      \
-+	size_t count)				      \
-+{						      \
-+	struct dlb2_dev *dlb2_dev =		      \
-+		dev_get_drvdata(dev);		      \
-+	struct dlb2_hw *hw = &dlb2_dev->hw;	      \
-+	unsigned long val;			      \
-+	int err;				      \
-+						      \
-+	err = kstrtoul(buf, 0, &val);		      \
-+	if (err)				      \
-+		return -1;			      \
-+						      \
-+	mutex_lock(&dlb2_dev->resource_mutex);	      \
-+						      \
-+	err = dlb2_hw_set_cos_bandwidth(hw, id, val); \
-+						      \
-+	mutex_unlock(&dlb2_dev->resource_mutex);      \
-+						      \
-+	return err ? err : count;		      \
-+}
-+
-+DLB2_COS_BW_PERCENT_STORE(0)
-+DLB2_COS_BW_PERCENT_STORE(1)
-+DLB2_COS_BW_PERCENT_STORE(2)
-+DLB2_COS_BW_PERCENT_STORE(3)
-+
-+/* RW sysfs files in the sequence_numbers/ subdirectory */
-+static DEVICE_ATTR_RW(cos0_bw_percent);
-+static DEVICE_ATTR_RW(cos1_bw_percent);
-+static DEVICE_ATTR_RW(cos2_bw_percent);
-+static DEVICE_ATTR_RW(cos3_bw_percent);
-+
-+static struct attribute *dlb2_cos_bw_percent_attrs[] = {
-+	&dev_attr_cos0_bw_percent.attr,
-+	&dev_attr_cos1_bw_percent.attr,
-+	&dev_attr_cos2_bw_percent.attr,
-+	&dev_attr_cos3_bw_percent.attr,
-+	NULL
-+};
-+
-+static const struct attribute_group dlb2_cos_bw_percent_attr_group = {
-+	.attrs = dlb2_cos_bw_percent_attrs,
-+	.name = "cos_bw"
-+};
-+
-+static ssize_t dev_id_show(struct device *dev,
-+			   struct device_attribute *attr,
-+			   char *buf)
++static bool dlb2_in_use(struct dlb2_dev *dev)
 +{
-+	struct dlb2_dev *dlb2_dev = dev_get_drvdata(dev);
-+
-+	return scnprintf(buf, PAGE_SIZE, "%d\n", dlb2_dev->id);
++	return dlb2_total_device_file_refcnt(dev) != 0;
 +}
 +
-+static DEVICE_ATTR_RO(dev_id);
-+
-+static int
-+dlb2_pf_sysfs_create(struct dlb2_dev *dlb2_dev)
-+{
-+	struct kobject *kobj;
-+	int ret;
-+
-+	kobj = &dlb2_dev->pdev->dev.kobj;
-+
-+	ret = sysfs_create_file(kobj, &dev_attr_dev_id.attr);
-+	if (ret)
-+		goto dlb2_dev_id_attr_group_fail;
-+
-+	ret = sysfs_create_group(kobj, &dlb2_total_attr_group);
-+	if (ret)
-+		goto dlb2_total_attr_group_fail;
-+
-+	ret = sysfs_create_group(kobj, &dlb2_avail_attr_group);
-+	if (ret)
-+		goto dlb2_avail_attr_group_fail;
-+
-+	ret = sysfs_create_group(kobj, &dlb2_sequence_number_attr_group);
-+	if (ret)
-+		goto dlb2_sn_attr_group_fail;
-+
-+	ret = sysfs_create_group(kobj, &dlb2_cos_bw_percent_attr_group);
-+	if (ret)
-+		goto dlb2_cos_bw_percent_attr_group_fail;
-+
-+	return 0;
-+
-+dlb2_cos_bw_percent_attr_group_fail:
-+	sysfs_remove_group(kobj, &dlb2_sequence_number_attr_group);
-+dlb2_sn_attr_group_fail:
-+	sysfs_remove_group(kobj, &dlb2_avail_attr_group);
-+dlb2_avail_attr_group_fail:
-+	sysfs_remove_group(kobj, &dlb2_total_attr_group);
-+dlb2_total_attr_group_fail:
-+	sysfs_remove_file(kobj, &dev_attr_dev_id.attr);
-+dlb2_dev_id_attr_group_fail:
-+	return ret;
-+}
-+
-+static void
-+dlb2_pf_sysfs_destroy(struct dlb2_dev *dlb2_dev)
-+{
-+	struct kobject *kobj;
-+
-+	kobj = &dlb2_dev->pdev->dev.kobj;
-+
-+	sysfs_remove_group(kobj, &dlb2_cos_bw_percent_attr_group);
-+	sysfs_remove_group(kobj, &dlb2_sequence_number_attr_group);
-+	sysfs_remove_group(kobj, &dlb2_avail_attr_group);
-+	sysfs_remove_group(kobj, &dlb2_total_attr_group);
-+	sysfs_remove_file(kobj, &dev_attr_dev_id.attr);
-+}
-+
-+static void
-+dlb2_pf_sysfs_reapply_configuration(struct dlb2_dev *dev)
++static void dlb2_wait_for_idle(struct dlb2_dev *dlb2_dev)
 +{
 +	int i;
 +
-+	for (i = 0; i < DLB2_MAX_NUM_SEQUENCE_NUMBER_GROUPS; i++) {
-+		int num_sns = dlb2_get_group_sequence_numbers(&dev->hw, i);
++	for (i = 0; i < dlb2_reset_timeout_s * 10; i++) {
++		bool idle;
 +
-+		dlb2_set_group_sequence_numbers(&dev->hw, i, num_sns);
++		mutex_lock(&dlb2_dev->resource_mutex);
++
++		/*
++		 * Check for any application threads in the driver, extant
++		 * mmaps, or open device files.
++		 */
++		idle = !dlb2_in_use(dlb2_dev);
++
++		mutex_unlock(&dlb2_dev->resource_mutex);
++
++		if (idle)
++			return;
++
++		cond_resched();
++		msleep(100);
 +	}
 +
-+	for (i = 0; i < DLB2_NUM_COS_DOMAINS; i++) {
-+		int bw = dlb2_hw_get_cos_bandwidth(&dev->hw, i);
++	dev_err(dlb2_dev->dlb2_device,
++		"PF driver timed out waiting for applications to idle\n");
++}
 +
-+		dlb2_hw_set_cos_bandwidth(&dev->hw, i, bw);
++static void dlb2_unmap_all_mappings(struct dlb2_dev *dlb2_dev)
++{
++	if (dlb2_dev->inode)
++		unmap_mapping_range(dlb2_dev->inode->i_mapping, 0, 0, 1);
++}
++
++static void dlb2_disable_domain_files(struct dlb2_dev *dlb2_dev)
++{
++	int i;
++
++	/*
++	 * Set all domain->valid flags to false to prevent existing device
++	 * files from being used to enter the device driver.
++	 */
++	for (i = 0; i < DLB2_MAX_NUM_DOMAINS; i++) {
++		if (dlb2_dev->sched_domains[i])
++			dlb2_dev->sched_domains[i]->valid = false;
 +	}
 +}
 +
-+/*****************************/
- /****** IOCTL callbacks ******/
- /*****************************/
++static void dlb2_wake_threads(struct dlb2_dev *dlb2_dev)
++{
++	int i;
++
++	/*
++	 * Wake any blocked device file readers. These threads will return the
++	 * DLB2_DOMAIN_ALERT_DEVICE_RESET alert, and well-behaved applications
++	 * will close their fds and unmap DLB memory as a result.
++	 */
++	for (i = 0; i < DLB2_MAX_NUM_DOMAINS; i++) {
++		if (!dlb2_dev->sched_domains[i])
++			continue;
++
++		wake_up_interruptible(&dlb2_dev->sched_domains[i]->wq_head);
++	}
++
++	/* Wake threads blocked on a CQ interrupt */
++	for (i = 0; i < DLB2_MAX_NUM_LDB_PORTS; i++)
++		dlb2_wake_thread(dlb2_dev,
++				 &dlb2_dev->intr.ldb_cq_intr[i],
++				 WAKE_DEV_RESET);
++
++	for (i = 0; i < DLB2_MAX_NUM_DIR_PORTS; i++)
++		dlb2_wake_thread(dlb2_dev,
++				 &dlb2_dev->intr.dir_cq_intr[i],
++				 WAKE_DEV_RESET);
++}
++
++static void dlb2_stop_users(struct dlb2_dev *dlb2_dev)
++{
++	/*
++	 * Disable existing domain files to prevent applications from enter the
++	 * device driver through file operations. (New files can't be opened
++	 * while the resource mutex is held.)
++	 */
++	dlb2_disable_domain_files(dlb2_dev);
++
++	/* Wake any threads blocked in the kernel */
++	dlb2_wake_threads(dlb2_dev);
++}
++
++static void dlb2_reset_prepare(struct pci_dev *pdev)
++{
++	/*
++	 * Unexpected FLR. Applications may be actively using the device at
++	 * the same time, which poses two problems:
++	 * - If applications continue to enqueue to the hardware they will
++	 *   cause hardware errors, because the FLR will have reset the
++	 *   scheduling domains, ports, and queues.
++	 * - When the applications end, they must not trigger the driver's
++	 *   domain reset code. The domain reset procedure would fail because
++	 *   the device's registers will have been reset by the FLR.
++	 *
++	 * To avoid these problems, the driver handles unexpected resets as
++	 * follows:
++	 * 1. Set the reset_active flag. This flag blocks new device files
++	 *    from being opened and is used as a wakeup condition in the
++	 *    driver's wait queues.
++	 * 2. If this is a PF FLR and there are active VFs, send them a
++	 *    pre-reset notification, so they can stop any VF applications.
++	 * 3. Disable all device files (set the per-file valid flag to false,
++	 *    which prevents the file from being used after FLR completes) and
++	 *    wake any threads on a wait queue.
++	 * 4. If the DLB is not in use -- i.e. no open device files or memory
++	 *    mappings, and no VFs in use (PF FLR only) -- the FLR can begin.
++	 * 5. Else, the driver waits (up to a user-specified timeout, default
++	 *    5s) for software to stop using the driver and the device. If the
++	 *    timeout elapses, the driver zaps any remaining MMIO mappings.
++	 *
++	 * After the FLR:
++	 * 1. Clear the per-domain pointers (the memory is freed in either
++	 *    dlb2_close or dlb2_stop_users).
++	 * 2. Release any remaining allocated port or CQ memory, now that it's
++	 *    guaranteed the device is unconfigured and won't write to memory.
++	 * 3. Reset software and hardware state
++	 * 4. Notify VFs that the FLR is complete.
++	 * 5. Set reset_active to false.
++	 */
++
++	struct dlb2_dev *dlb2_dev;
++
++	dlb2_dev = pci_get_drvdata(pdev);
++
++	mutex_lock(&dlb2_dev->resource_mutex);
++
++	/* Block any new device files from being opened */
++	dlb2_dev->reset_active = true;
++
++	/*
++	 * If the device has 1+ VFs, even if they're not in use, it will not be
++	 * suspended. To avoid having to handle two cases (reset while device
++	 * suspended and reset while device active), increment the device's PM
++	 * refcnt here, to guarantee that the device is in D0 for the duration
++	 * of the reset.
++	 */
++	dlb2_dev->ops->inc_pm_refcnt(dlb2_dev->pdev, true);
++
++	/*
++	 * Stop existing applications from continuing to use the device by
++	 * blocking kernel driver interfaces and waking any threads on wait
++	 * queues, but don't zap VMA entries yet. If this is a PF FLR, notify
++	 * any VFs of the impending FLR so they can stop their users as well.
++	 */
++	dlb2_stop_users(dlb2_dev);
++
++	/* If no software is using the device, there's nothing to clean up. */
++	if (!dlb2_in_use(dlb2_dev))
++		return;
++
++	/*
++	 * Release the resource mutex so threads can complete their work and
++	 * exit the driver
++	 */
++	mutex_unlock(&dlb2_dev->resource_mutex);
++
++	/*
++	 * Wait until the device is idle or dlb2_reset_timeout_s seconds
++	 * elapse. If the timeout occurs, zap any remaining VMA entries to
++	 * guarantee applications can't reach the device.
++	 */
++	dlb2_wait_for_idle(dlb2_dev);
++
++	mutex_lock(&dlb2_dev->resource_mutex);
++
++	if (!dlb2_in_use(dlb2_dev))
++		return;
++
++	dlb2_unmap_all_mappings(dlb2_dev);
++
++	/*
++	 * Don't release resource_mutex until after the FLR occurs. This
++	 * prevents applications from accessing the device during reset.
++	 */
++}
++
++static void dlb2_reset_done(struct pci_dev *pdev)
++{
++	struct dlb2_dev *dlb2_dev;
++	int i;
++
++	dlb2_dev = pci_get_drvdata(pdev);
++
++	/*
++	 * Clear all domain pointers, to be filled in by post-FLR applications
++	 * using the device driver.
++	 *
++	 * Note that domain memory isn't leaked -- it is either freed during
++	 * dlb2_stop_users() or in the file close callback.
++	 */
++	for (i = 0; i < DLB2_MAX_NUM_DOMAINS; i++)
++		dlb2_dev->sched_domains[i] = NULL;
++
++	/*
++	 * Free allocated CQ memory. These are no longer accessible to
++	 * user-space: either the applications closed, or their mappings were
++	 * zapped in dlb2_reset_prepare().
++	 */
++	dlb2_release_device_memory(dlb2_dev);
++
++	/* Reset interrupt state */
++	for (i = 0; i < DLB2_MAX_NUM_LDB_PORTS; i++)
++		dlb2_dev->intr.ldb_cq_intr[i].configured = false;
++	for (i = 0; i < DLB2_MAX_NUM_DIR_PORTS; i++)
++		dlb2_dev->intr.dir_cq_intr[i].configured = false;
++
++	/* Reset resource allocation state */
++	dlb2_resource_reset(&dlb2_dev->hw);
++
++	/* Reset the hardware state, but don't issue an additional FLR */
++	dlb2_reset_hardware_state(dlb2_dev, false);
++
++	dlb2_dev->domain_reset_failed = false;
++
++	dlb2_dev->reset_active = false;
++
++	/* Undo the PM refcnt increment in dlb2_reset_prepare(). */
++	dlb2_dev->ops->dec_pm_refcnt(dlb2_dev->pdev);
++
++	mutex_unlock(&dlb2_dev->resource_mutex);
++}
++
++static const struct pci_error_handlers dlb2_err_handler = {
++	.reset_prepare = dlb2_reset_prepare,
++	.reset_done    = dlb2_reset_done,
++};
++
+ #ifdef CONFIG_PM
+ static const struct dev_pm_ops dlb2_pm_ops = {
+ 	SET_RUNTIME_PM_OPS(dlb2_runtime_suspend, dlb2_runtime_resume, NULL)
+@@ -722,6 +1024,7 @@ static struct pci_driver dlb2_pci_driver = {
+ #ifdef CONFIG_PM
+ 	.driver.pm	 = &dlb2_pm_ops,
+ #endif
++	.err_handler     = &dlb2_err_handler,
+ };
  
-@@ -649,6 +1069,9 @@ struct dlb2_device_ops dlb2_pf_ops = {
- 	.device_destroy = dlb2_pf_device_destroy,
- 	.cdev_add = dlb2_pf_cdev_add,
- 	.cdev_del = dlb2_pf_cdev_del,
-+	.sysfs_create = dlb2_pf_sysfs_create,
-+	.sysfs_destroy = dlb2_pf_sysfs_destroy,
-+	.sysfs_reapply = dlb2_pf_sysfs_reapply_configuration,
- 	.init_interrupts = dlb2_pf_init_interrupts,
- 	.enable_ldb_cq_interrupts = dlb2_pf_enable_ldb_cq_interrupts,
- 	.enable_dir_cq_interrupts = dlb2_pf_enable_dir_cq_interrupts,
+ static int __init dlb2_init_module(void)
+diff --git a/drivers/misc/dlb2/dlb2_main.h b/drivers/misc/dlb2/dlb2_main.h
+index e3d7c9362257..45050403a4be 100644
+--- a/drivers/misc/dlb2/dlb2_main.h
++++ b/drivers/misc/dlb2/dlb2_main.h
+@@ -31,6 +31,8 @@ static const char dlb2_driver_name[] = KBUILD_MODNAME;
+ #define DLB2_NUM_FUNCS_PER_DEVICE (1 + DLB2_MAX_NUM_VDEVS)
+ #define DLB2_MAX_NUM_DEVICES	  (DLB2_MAX_NUM_PFS * DLB2_NUM_FUNCS_PER_DEVICE)
+ 
++#define DLB2_DEFAULT_RESET_TIMEOUT_S 5
++
+ enum dlb2_device_type {
+ 	DLB2_PF,
+ 	DLB2_VF,
+@@ -182,6 +184,7 @@ struct dlb2_domain {
+ 	u8 alert_rd_idx;
+ 	u8 alert_wr_idx;
+ 	u8 id;
++	u8 valid;
+ };
+ 
+ struct dlb2_cq_intr {
+@@ -237,6 +240,7 @@ struct dlb2_dev {
+ 	int id;
+ 	dev_t dev_number;
+ 	u8 domain_reset_failed;
++	u8 reset_active;
+ 	u8 worker_launched;
+ };
+ 
+diff --git a/drivers/misc/dlb2/dlb2_resource.c b/drivers/misc/dlb2/dlb2_resource.c
+index f2f650bc979e..4d751a0ce1db 100644
+--- a/drivers/misc/dlb2/dlb2_resource.c
++++ b/drivers/misc/dlb2/dlb2_resource.c
+@@ -24,6 +24,9 @@
+ #define DLB2_DOM_LIST_FOR_SAFE(head, ptr, ptr_tmp) \
+ 	list_for_each_entry_safe(ptr, ptr_tmp, &(head), domain_list)
+ 
++#define DLB2_FUNC_LIST_FOR_SAFE(head, ptr, ptr_tmp) \
++	list_for_each_entry_safe(ptr, ptr_tmp, &(head), func_list)
++
+ /*
+  * The PF driver cannot assume that a register write will affect subsequent HCW
+  * writes. To ensure a write completes, the driver must read back a CSR. This
+@@ -5327,6 +5330,20 @@ static int dlb2_domain_reset_software_state(struct dlb2_hw *hw,
+ 	return 0;
+ }
+ 
++void dlb2_resource_reset(struct dlb2_hw *hw)
++{
++	struct dlb2_hw_domain *domain, *next __attribute__((unused));
++	int i;
++
++	for (i = 0; i < DLB2_MAX_NUM_VDEVS; i++) {
++		DLB2_FUNC_LIST_FOR_SAFE(hw->vdev[i].used_domains, domain, next)
++			dlb2_domain_reset_software_state(hw, domain);
++	}
++
++	DLB2_FUNC_LIST_FOR_SAFE(hw->pf.used_domains, domain, next)
++		dlb2_domain_reset_software_state(hw, domain);
++}
++
+ static u32 dlb2_dir_queue_depth(struct dlb2_hw *hw,
+ 				struct dlb2_dir_pq_pair *queue)
+ {
+diff --git a/drivers/misc/dlb2/dlb2_resource.h b/drivers/misc/dlb2/dlb2_resource.h
+index e325c584cb3f..258ec1c11032 100644
+--- a/drivers/misc/dlb2/dlb2_resource.h
++++ b/drivers/misc/dlb2/dlb2_resource.h
+@@ -37,6 +37,15 @@ int dlb2_resource_init(struct dlb2_hw *hw);
+ void dlb2_resource_free(struct dlb2_hw *hw);
+ 
+ /**
++ * dlb2_resource_reset() - reset in-use resources to their initial state
++ * @hw: dlb2_hw handle for a particular device.
++ *
++ * This function resets in-use resources, and makes them available for use.
++ * All resources go back to their owning function, whether a PF or a VF.
++ */
++void dlb2_resource_reset(struct dlb2_hw *hw);
++
++/**
+  * dlb2_hw_create_sched_domain() - create a scheduling domain
+  * @hw: dlb2_hw handle for a particular device.
+  * @args: scheduling domain creation arguments.
 -- 
 2.13.6
 
