@@ -2,244 +2,161 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4A66C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 07:41:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A24C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 07:43:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 871AF2054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 07:41:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="c46YpCUa"
+	by mail.kernel.org (Postfix) with ESMTP id B157C206B2
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 07:43:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728469AbgHKHlx (ORCPT
+        id S1728160AbgHKHnJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 03:41:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44590 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728270AbgHKHlw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 03:41:52 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DFB4C06174A
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 00:41:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=H1ur41PMwJaDcTMSo/nD4VartbQ+qRn6j+If8bFfsJQ=; b=c46YpCUa2s205EbeyhBAihRmIf
-        we1pk0/2FhtINa1I7UTqooymivlx2sWDXjCXl7aZq9WiGO/XUe6gFoZenjEgui0n8Vc39imW8dpq3
-        z6Kw9H2UA0hazMrlRwc8DbBtCEV+Uw/fesllEZ+CFwmCMjBU8Z0fROMqjyBn6dVNpLJ4PAtgRROaZ
-        bWkYfbAs8rQUnFXX+2pdOgFMJO++0RalqOA5G6LJ9cSdNrqE0RiU16cteiv7ve3XiOqTz+AEFG60L
-        IYrY2X2R96usta9vFjHZxW6m6wREEQ4jgy7Ctwk/unVsVD3y1o9idNOBAXN5+CxZaa+131KsUwryJ
-        in8m3+mQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k5OuZ-00067x-1O; Tue, 11 Aug 2020 07:41:31 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 56841980C9D; Tue, 11 Aug 2020 09:41:27 +0200 (CEST)
-Date:   Tue, 11 Aug 2020 09:41:27 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Marco Elver <elver@google.com>
-Cc:     =?iso-8859-1?Q?J=FCrgen_Gro=DF?= <jgross@suse.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        fenghua.yu@intel.com, "H. Peter Anvin" <hpa@zytor.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        yu-cheng.yu@intel.com, sdeep@vmware.com,
-        virtualization@lists.linux-foundation.org,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        syzbot <syzbot+8db9e1ecde74e590a657@syzkaller.appspotmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Subject: Re: [PATCH] x86/paravirt: Add missing noinstr to arch_local*()
- helpers
-Message-ID: <20200811074127.GR3982@worktop.programming.kicks-ass.net>
-References: <20200806131702.GA3029162@elver.google.com>
- <CANpmjNNqt8YrCad4WqgCoXvH47pRXtSLpnTKhD8W8+UpoYJ+jQ@mail.gmail.com>
- <CANpmjNO860SHpNve+vaoAOgarU1SWy8o--tUWCqNhn82OLCiew@mail.gmail.com>
- <fe2bfa7f-132f-7581-a967-d01d58be1588@suse.com>
- <20200807095032.GA3528289@elver.google.com>
- <16671cf3-3885-eb06-79ff-4cbfaeeaea79@suse.com>
- <20200807113838.GA3547125@elver.google.com>
- <e5bf3e6a-efff-7170-5ee6-1798008393a2@suse.com>
- <CANpmjNPau_DEYadey9OL+iFZKEaUTqnFnyFs1dU12o00mg7ofA@mail.gmail.com>
- <20200807151903.GA1263469@elver.google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200807151903.GA1263469@elver.google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 11 Aug 2020 03:43:09 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55632 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727852AbgHKHnJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 03:43:09 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id ADC6BAC52;
+        Tue, 11 Aug 2020 07:43:27 +0000 (UTC)
+Date:   Tue, 11 Aug 2020 09:43:06 +0200
+Message-ID: <s5htux939x1.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Yu-Hsuan Hsu <yuhsuan@chromium.org>
+Cc:     "Lu, Brent" <brent.lu@intel.com>,
+        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Rojewski, Cezary" <cezary.rojewski@intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Sam McNally <sammc@chromium.org>,
+        Mark Brown <broonie@kernel.org>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Daniel Stuart <daniel.stuart14@gmail.com>,
+        "yuhsuan@google.com" <yuhsuan@google.com>,
+        Damian van Soelen <dj.vsoelen@gmail.com>
+Subject: Re: [PATCH v3 2/2] ASoC: Intel: Add period size constraint on strago board
+In-Reply-To: <CAGvk5PogmqfEnFRA8hzby+AGgbOSvbELamh_1=eA9KTpyBMPYQ@mail.gmail.com>
+References: <1596020585-11517-1-git-send-email-brent.lu@intel.com>
+        <1596198365-10105-1-git-send-email-brent.lu@intel.com>
+        <1596198365-10105-3-git-send-email-brent.lu@intel.com>
+        <s5h5za3ajvb.wl-tiwai@suse.de>
+        <DM6PR11MB3642AE90DF98956CCEDE6C2F974F0@DM6PR11MB3642.namprd11.prod.outlook.com>
+        <s5hd04a90o4.wl-tiwai@suse.de>
+        <DM6PR11MB3642B5BC2E1E0708088526D8974D0@DM6PR11MB3642.namprd11.prod.outlook.com>
+        <63bca214-3434-16c6-1b60-adf323aec554@linux.intel.com>
+        <DM6PR11MB3642D9BE1E5DAAB8B78B84B0974D0@DM6PR11MB3642.namprd11.prod.outlook.com>
+        <s5hpn873by6.wl-tiwai@suse.de>
+        <DM6PR11MB36423A9D28134811AD5A911F974A0@DM6PR11MB3642.namprd11.prod.outlook.com>
+        <6466847a-8aae-24f7-d727-36ba75e95f98@linux.intel.com>
+        <DM6PR11MB364259049769F6EF3B84AABD97480@DM6PR11MB3642.namprd11.prod.outlook.com>
+        <3f3baf5e-f73d-9cd6-cbfb-36746071e126@linux.intel.com>
+        <CAGvk5PohOP0Yv22tb53EX=ZLB9_vOMb=iujTh64OvHmjC1d4mg@mail.gmail.com>
+        <DM6PR11MB3642AC7F8EC47EB48B384D4797450@DM6PR11MB3642.namprd11.prod.outlook.com>
+        <CAGvk5PogmqfEnFRA8hzby+AGgbOSvbELamh_1=eA9KTpyBMPYQ@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 07, 2020 at 05:19:03PM +0200, Marco Elver wrote:
-
-> My hypothesis here is simply that kvm_wait() may be called in a place
-> where we get the same case I mentioned to Peter,
+On Tue, 11 Aug 2020 04:29:24 +0200,
+Yu-Hsuan Hsu wrote:
 > 
-> 	raw_local_irq_save(); /* or other IRQs off without tracing */
-> 	...
-> 	kvm_wait() /* IRQ state tracing gets confused */
-> 	...
-> 	raw_local_irq_restore();
+> Lu, Brent <brent.lu@intel.com> 於 2020年8月11日 週二 上午10:17寫道：
+> >
+> > >
+> > > Sorry for the late reply. CRAS does not set the period size when using it.
+> > > The default period size is 256, which consumes the samples quickly(about 49627
+> > > fps when the rate is 48000 fps) at the beginning of the playback.
+> > > Since CRAS write samples with the fixed frequency, it triggers underruns
+> > > immidiately.
+> > >
+> > > According to Brent, the DSP is using 240 period regardless the hw_param. If the
+> > > period size is 256, DSP will read 256 samples each time but only consume 240
+> > > samples until the ring buffer of DSP is full. This behavior makes the samples in
+> > > the ring buffer of kernel consumed quickly. (Not sure whether the explanation is
+> > > correct. Need Brent to confirm it.)
+> > >
+> > > Unfortunately, we can not change the behavior of DSP. After some experiments,
+> > > we found that the issue can be fixed if we set the period size to 240. With the
+> > > same frequency as the DSP, the samples are consumed stably. Because everyone
+> > > can trigger this issue when using the driver without setting the period size, we
+> > > think it is a general issue that should be fixed in the kernel.
+> >
+> > I check the code and just realized CRAS does nothing but request maximum buffer
+> > size. As I know the application needs to decide the buffer time and period time so
+> > ALSA could generate a hw_param structure with proper period size instead of using
+> > fixed constraint in machine driver because driver has no idea about the latency you
+> > want.
+> >
+> > You can use snd_pcm_hw_params_set_buffer_time_near() and
+> > snd_pcm_hw_params_set_period_time_near() to get a proper configuration of
+> > buffer and period parameters according to the latency requirement. In the CRAS
+> > code, there is a UCM variable to support this: DmaPeriodMicrosecs. I tested it on
+> > Celes and it looks quite promising. It seems to me that adding constraint in machine
+> > driver is not necessary.
+> >
+> > SectionDevice."Speaker".0 {
+> >         Value {
+> >                 PlaybackPCM "hw:chtrt5650,0"
+> >                 DmaPeriodMicrosecs "5000"
+> > ...
+> >
+> > [   52.434761] sound pcmC1D0p: hw_param
+> > [   52.434767] sound pcmC1D0p:   ACCESS 0x1
+> > [   52.434770] sound pcmC1D0p:   FORMAT 0x4
+> > [   52.434772] sound pcmC1D0p:   SUBFORMAT 0x1
+> > [   52.434776] sound pcmC1D0p:   SAMPLE_BITS [16:16]
+> > [   52.434779] sound pcmC1D0p:   FRAME_BITS [32:32]
+> > [   52.434782] sound pcmC1D0p:   CHANNELS [2:2]
+> > [   52.434785] sound pcmC1D0p:   RATE [48000:48000]
+> > [   52.434788] sound pcmC1D0p:   PERIOD_TIME [5000:5000]
+> > [   52.434791] sound pcmC1D0p:   PERIOD_SIZE [240:240]
+> > [   52.434794] sound pcmC1D0p:   PERIOD_BYTES [960:960]
+> > [   52.434797] sound pcmC1D0p:   PERIODS [852:852]
+> > [   52.434799] sound pcmC1D0p:   BUFFER_TIME [4260000:4260000]
+> > [   52.434802] sound pcmC1D0p:   BUFFER_SIZE [204480:204480]
+> > [   52.434805] sound pcmC1D0p:   BUFFER_BYTES [817920:817920]
+> > [   52.434808] sound pcmC1D0p:   TICK_TIME [0:0]
+> >
+> > Regards,
+> > Brent
+> Hi Brent,
 > 
-> and therefore, using raw variants in kvm_wait() works. It's also safe
-> because it doesn't call any other libraries that would result in corrupt
+> Yes, I know we can do it to fix the issue as well. As I mentioned
+> before, we wanted to fix it in kernel because it is a real issue,
+> isn't it? Basically, a driver should work with any param it supports.
+> But in this case, everyone can trigger underrun if he or she does not
+> the period size to 240. If you still think it's not necessary, I can
+> modify UCM to make CRAS set the appropriate period size.
 
-Yes, this is definitely an issue.
+How does it *not* work if you set other than period size 240, more
+exactly?
 
-Tracing, we also musn't call into tracing when using raw_local_irq_*().
-Because then we re-intoduce this same issue all over again.
+The hw_constraint to a fixed period size must be really an exception.
+If you look at other drivers, you won't find any other doing such.
+It already indicates that something is wrong.
 
-Both halt() and safe_halt() are more paravirt calls, but given we're in
-a KVM paravirt call already, I suppose we can directly use native_*()
-here.
-
-Something like so then... I suppose, but then the Xen variants need TLC
-too.
-
----
- arch/x86/include/asm/irqflags.h |  4 ++--
- arch/x86/include/asm/kvm_para.h | 18 +++++++++---------
- arch/x86/kernel/kvm.c           | 14 +++++++-------
- 3 files changed, 18 insertions(+), 18 deletions(-)
-
-diff --git a/arch/x86/include/asm/irqflags.h b/arch/x86/include/asm/irqflags.h
-index 02a0cf547d7b..7c614db25274 100644
---- a/arch/x86/include/asm/irqflags.h
-+++ b/arch/x86/include/asm/irqflags.h
-@@ -54,13 +54,13 @@ static __always_inline void native_irq_enable(void)
- 	asm volatile("sti": : :"memory");
- }
-
--static inline __cpuidle void native_safe_halt(void)
-+static __always_inline __cpuidle void native_safe_halt(void)
- {
- 	mds_idle_clear_cpu_buffers();
- 	asm volatile("sti; hlt": : :"memory");
- }
-
--static inline __cpuidle void native_halt(void)
-+static __always_inline __cpuidle void native_halt(void)
- {
- 	mds_idle_clear_cpu_buffers();
- 	asm volatile("hlt": : :"memory");
-diff --git a/arch/x86/include/asm/kvm_para.h b/arch/x86/include/asm/kvm_para.h
-index 49d3a9edb06f..90f7ea58ebb0 100644
---- a/arch/x86/include/asm/kvm_para.h
-+++ b/arch/x86/include/asm/kvm_para.h
-@@ -30,7 +30,7 @@ static inline bool kvm_check_and_clear_guest_paused(void)
-  * noted by the particular hypercall.
-  */
-
--static inline long kvm_hypercall0(unsigned int nr)
-+static __always_inline long kvm_hypercall0(unsigned int nr)
- {
- 	long ret;
- 	asm volatile(KVM_HYPERCALL
-@@ -40,7 +40,7 @@ static inline long kvm_hypercall0(unsigned int nr)
- 	return ret;
- }
-
--static inline long kvm_hypercall1(unsigned int nr, unsigned long p1)
-+static __always_inline long kvm_hypercall1(unsigned int nr, unsigned long p1)
- {
- 	long ret;
- 	asm volatile(KVM_HYPERCALL
-@@ -50,8 +50,8 @@ static inline long kvm_hypercall1(unsigned int nr, unsigned long p1)
- 	return ret;
- }
-
--static inline long kvm_hypercall2(unsigned int nr, unsigned long p1,
--				  unsigned long p2)
-+static __always_inline long kvm_hypercall2(unsigned int nr, unsigned long p1,
-+					   unsigned long p2)
- {
- 	long ret;
- 	asm volatile(KVM_HYPERCALL
-@@ -61,8 +61,8 @@ static inline long kvm_hypercall2(unsigned int nr, unsigned long p1,
- 	return ret;
- }
-
--static inline long kvm_hypercall3(unsigned int nr, unsigned long p1,
--				  unsigned long p2, unsigned long p3)
-+static __always_inline long kvm_hypercall3(unsigned int nr, unsigned long p1,
-+					   unsigned long p2, unsigned long p3)
- {
- 	long ret;
- 	asm volatile(KVM_HYPERCALL
-@@ -72,9 +72,9 @@ static inline long kvm_hypercall3(unsigned int nr, unsigned long p1,
- 	return ret;
- }
-
--static inline long kvm_hypercall4(unsigned int nr, unsigned long p1,
--				  unsigned long p2, unsigned long p3,
--				  unsigned long p4)
-+static __always_inline long kvm_hypercall4(unsigned int nr, unsigned long p1,
-+					   unsigned long p2, unsigned long p3,
-+					   unsigned long p4)
- {
- 	long ret;
- 	asm volatile(KVM_HYPERCALL
-diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-index 233c77d056c9..15f8dfd8812d 100644
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -779,7 +779,7 @@ arch_initcall(kvm_alloc_cpumask);
- #ifdef CONFIG_PARAVIRT_SPINLOCKS
-
- /* Kick a cpu by its apicid. Used to wake up a halted vcpu */
--static void kvm_kick_cpu(int cpu)
-+static notrace kvm_kick_cpu(int cpu)
- {
- 	int apicid;
- 	unsigned long flags = 0;
-@@ -790,14 +790,14 @@ static void kvm_kick_cpu(int cpu)
-
- #include <asm/qspinlock.h>
-
--static void kvm_wait(u8 *ptr, u8 val)
-+static notrace kvm_wait(u8 *ptr, u8 val)
- {
- 	unsigned long flags;
-
- 	if (in_nmi())
- 		return;
-
--	local_irq_save(flags);
-+	raw_local_irq_save(flags);
-
- 	if (READ_ONCE(*ptr) != val)
- 		goto out;
-@@ -808,16 +808,16 @@ static void kvm_wait(u8 *ptr, u8 val)
- 	 * in irq spinlock slowpath and no spurious interrupt occur to save us.
- 	 */
- 	if (arch_irqs_disabled_flags(flags))
--		halt();
-+		native_halt();
- 	else
--		safe_halt();
-+		native_safe_halt();
-
- out:
--	local_irq_restore(flags);
-+	raw_local_irq_restore(flags);
- }
-
- #ifdef CONFIG_X86_32
--__visible bool __kvm_vcpu_is_preempted(long cpu)
-+__visible notrace bool __kvm_vcpu_is_preempted(long cpu)
- {
- 	struct kvm_steal_time *src = &per_cpu(steal_time, cpu);
+Usually the fixed period size comes from the hardware limitation and
+defined in snd_pcm_hardware.  Or, sometimes it's an alignment issue.
+If you need more than that, you should doubt what's really not
+working.
 
 
+Takashi
