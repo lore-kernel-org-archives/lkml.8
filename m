@@ -2,99 +2,146 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE9ADC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 00:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F87C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 00:19:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABEB5206DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 00:18:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A8C9206DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 00:19:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nYo6R5xN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727979AbgHKASl (ORCPT
+        id S1728018AbgHKATV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 20:18:41 -0400
-Received: from mga07.intel.com ([134.134.136.100]:51176 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726733AbgHKASk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 20:18:40 -0400
-IronPort-SDR: +xpmmPFEFMBjfLrEOey0zxjlg6bq84P2ntTOTljTHsWB70fOo9uJNDqMxB2eyi0Z4NzNruRfxZ
- Ty2h8plq3Pbg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9709"; a="217975322"
-X-IronPort-AV: E=Sophos;i="5.75,458,1589266800"; 
-   d="scan'208";a="217975322"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2020 17:18:39 -0700
-IronPort-SDR: AYJ9db4E945V2WtApKiuVM8pT5M9W3BAKjBmVMvHTzmF6iAw4mktxTnYYrXWBju9Jp4WrFJ/NR
- 4NoU01x+yWTQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,458,1589266800"; 
-   d="scan'208";a="317540213"
-Received: from zhangj4-mobl1.ccr.corp.intel.com (HELO [10.255.28.102]) ([10.255.28.102])
-  by fmsmga004.fm.intel.com with ESMTP; 10 Aug 2020 17:18:33 -0700
-Subject: Re: [PATCH v3 2/2] x86/kvm: Expose new features for supported cpuid
-To:     "Luck, Tony" <tony.luck@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>
-Cc:     "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "Park, Kyung Min" <kyung.min.park@intel.com>,
-        "ricardo.neri-calderon@linux.intel.com" 
-        <ricardo.neri-calderon@linux.intel.com>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "wanpengli@tencent.com" <wanpengli@tencent.com>,
-        "jmattson@google.com" <jmattson@google.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
-        "ak@linux.intel.com" <ak@linux.intel.com>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>
-References: <1596959242-2372-1-git-send-email-cathy.zhang@intel.com>
- <1596959242-2372-3-git-send-email-cathy.zhang@intel.com>
- <d7e9fb9a-e392-73b1-5fc8-3876cb30665c@redhat.com>
- <27965021-2ec7-aa30-5526-5a6b293b2066@intel.com>
- <e92df7bb267c478f8dfa28a31fc59d95@intel.com>
-From:   "Zhang, Cathy" <cathy.zhang@intel.com>
-Message-ID: <8f5d3b35-2478-c030-e51d-3183dbcaf4a6@intel.com>
-Date:   Tue, 11 Aug 2020 08:18:32 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Mon, 10 Aug 2020 20:19:21 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:43226 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726733AbgHKATU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 20:19:20 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07B0IT66100079;
+        Tue, 11 Aug 2020 00:19:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=lVPgkjQT85W+RcU/RogyTKUwwWula5UdGKEr/TamCCs=;
+ b=nYo6R5xNgZOh/Mykxz9RynBciy9EqfcsCpYRx5Zpqs1KQrABaXhrrfi5ya8EpLg6T2ip
+ kTs9mB++SbSVGruptFyDvFU3ncWnloDLmkGoES4UE2nzaYaYE4i9mz3oOKCGIJxZJNM7
+ 8ZiO8CmqNd3GLDpEClI9fCGE99c3oHEm6519e7urFee5tz3ZvQHZr0DCp0ixNtEt+HH2
+ VcS7LU1ruwC2xOQRU67To/1sysch45y5n1seYB8KVqW8wRxFZqg6/fSsCcM4bmVugExU
+ jUBaCep7Xe89RnaISbfIYwwhBUyq2uL1kbIkD4ZlvQhRaiaEeXgAXlunSetWpB0vVblV Fg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 32t2ydg2fd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 11 Aug 2020 00:19:09 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07B0HPGS193253;
+        Tue, 11 Aug 2020 00:19:09 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 32u3h0hxxp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 11 Aug 2020 00:19:09 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07B0J7pb030676;
+        Tue, 11 Aug 2020 00:19:08 GMT
+Received: from [192.168.2.112] (/50.38.35.18)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 11 Aug 2020 00:19:07 +0000
+Subject: Re: [PATCH 10/10] mm/hugetlb: not necessary to abuse temporary page
+ to workaround the nasty free_huge_page
+To:     Baoquan He <bhe@redhat.com>,
+        Wei Yang <richard.weiyang@linux.alibaba.com>, mhocko@kernel.org
+Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <20200807091251.12129-1-richard.weiyang@linux.alibaba.com>
+ <20200807091251.12129-11-richard.weiyang@linux.alibaba.com>
+ <20200810021737.GV14854@MiWiFi-R3L-srv>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <129cc03e-c6d5-24f8-2f3c-f5a3cc821e76@oracle.com>
+Date:   Mon, 10 Aug 2020 17:19:06 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <e92df7bb267c478f8dfa28a31fc59d95@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200810021737.GV14854@MiWiFi-R3L-srv>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9709 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=999 mlxscore=0
+ malwarescore=0 spamscore=0 suspectscore=2 phishscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008110000
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9709 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 priorityscore=1501
+ malwarescore=0 impostorscore=0 lowpriorityscore=0 mlxscore=0 bulkscore=0
+ suspectscore=2 phishscore=0 adultscore=0 spamscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008110000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/11/2020 7:59 AM, Luck, Tony wrote:
->> As you suggest, I will split the kvm patch into two parts, SERIALIZE and
->> TSXLDTRK, and this series will include three patches then, 2 kvm patches
->> and 1 kernel patch. SERIALIZE could get merged into 5.9, but TSXLDTRK
->> should wait for the next release. I just want to double confirm with
->> you, please help correct me if I'm wrong.
-> Paolo is saying that he has applied the SERIALIZE part to his KVM tree.
->
-> https://git.kernel.org/pub/scm/virt/kvm/kvm.git/commit/?h=queue&id=43bd9ef42b3b862c97f1f4e86bf3ace890bef924
->
-> Next step for you is a two part series.
->
-> Part 1: Add TSXLDTRK to cpufeatures.h
-> Part 2: Add TSXLDTRK to arch/x86/kvm/cpuid.c (on top of the version that Paolo committed with SERIALIZE)
->
-> Paolo: The 5.9 merge window is still open this week. Will you send the KVM serialize patch to Linus
-> before this merge window closes?  Or do you have it queued for v5.10?
->
-> -Tony
-Got it! Thanks for the explanation, Tony!
+On 8/9/20 7:17 PM, Baoquan He wrote:
+> On 08/07/20 at 05:12pm, Wei Yang wrote:
+>> Let's always increase surplus_huge_pages and so that free_huge_page
+>> could decrease it at free time.
+>>
+>> Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
+>> ---
+>>  mm/hugetlb.c | 14 ++++++--------
+>>  1 file changed, 6 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+>> index 1f2010c9dd8d..a0eb81e0e4c5 100644
+>> --- a/mm/hugetlb.c
+>> +++ b/mm/hugetlb.c
+>> @@ -1913,21 +1913,19 @@ static struct page *alloc_surplus_huge_page(struct hstate *h, gfp_t gfp_mask,
+>>  		return NULL;
+>>  
+>>  	spin_lock(&hugetlb_lock);
+>> +
+>> +	h->surplus_huge_pages++;
+>> +	h->surplus_huge_pages_node[page_to_nid(page)]++;
+>> +
+>>  	/*
+>>  	 * We could have raced with the pool size change.
+>>  	 * Double check that and simply deallocate the new page
+>> -	 * if we would end up overcommiting the surpluses. Abuse
+>> -	 * temporary page to workaround the nasty free_huge_page
+>> -	 * codeflow
+>> +	 * if we would end up overcommiting the surpluses.
+>>  	 */
+>> -	if (h->surplus_huge_pages >= h->nr_overcommit_huge_pages) {
+>> -		SetPageHugeTemporary(page);
+> 
+> Hmm, the temporary page way is taken intentionally in
+> commit 9980d744a0428 ("mm, hugetlb: get rid of surplus page accounting tricks").
+> From code, this is done inside hugetlb_lock holding, and the code flow
+> is straightforward, should be safe. Adding Michal to CC.
+> 
+
+I remember when the temporary page code was added for page migration.
+The use of temporary page here was added at about the same time.  Temporary
+page does have one advantage in that it will not CAUSE surplus count to
+exceed overcommit.  This patch could cause surplus to exceed overcommit
+for a very short period of time.  However, do note that for this to happen
+the code needs to race with a pool resize which itself could cause surplus
+to exceed overcommit.
+
+IMO both approaches are valid.
+- Advantage of temporary page is that it can not cause surplus to exceed
+  overcommit.  Disadvantage is as mentioned in the comment 'abuse of temporary
+  page'.
+- Advantage of this patch is that it uses existing counters.  Disadvantage
+  is that it can momentarily cause surplus to exceed overcommit.
+
+Unless someone has a strong opinion, I prefer the changes in this patch.
+-- 
+Mike Kravetz
