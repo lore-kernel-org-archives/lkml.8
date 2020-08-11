@@ -2,152 +2,1008 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9604C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 16:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0727DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 16:48:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9254520768
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 16:46:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597164395;
-	bh=sWqcxqz17wuIoacW9cc/QVekVWGlz9VlySBF823uhIo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kEuGCB3239QOOB2v8MZgOoajwQnI1AyBVJxxP4ML4nSrKLPuBHPMo09P7GYSeqHg6
-	 xjNJxEdGNMM7+diDil5zrCzk/uZbX7Ez0cJBWTkUUveCI959C3qiXwaZJfoTPaEGXe
-	 Pf3rz0a10jy/acoZZMrf9Ptc2c74lbtiQsACzJrM=
+	by mail.kernel.org (Postfix) with ESMTP id CDA1D2076B
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 16:48:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729298AbgHKQqe convert rfc822-to-8bit (ORCPT
+        id S1729073AbgHKQsZ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 12:46:34 -0400
-Received: from mail-ej1-f65.google.com ([209.85.218.65]:34295 "EHLO
-        mail-ej1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728844AbgHKQqd (ORCPT
+        Tue, 11 Aug 2020 12:48:25 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:40409 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728962AbgHKQsY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 12:46:33 -0400
-Received: by mail-ej1-f65.google.com with SMTP id o23so13832274ejr.1;
-        Tue, 11 Aug 2020 09:46:31 -0700 (PDT)
+        Tue, 11 Aug 2020 12:48:24 -0400
+Received: by mail-ed1-f68.google.com with SMTP id a14so9587306edx.7;
+        Tue, 11 Aug 2020 09:48:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=G2/FL5p/UBsN/pTnJvwvZ3cpq1IwMUSfHcFh9xZXbUU=;
-        b=JZxbYiDYcNlPUWjyr8sFwXVi2gKMAytqf4PrQMKEwRk+aFxPHrKWLwrxXfRJ3m1Jxv
-         Rry97EZGsv9+ZVBISjHP8b689bQ49LTHt/tNbjq49qor6oVQxqjzeMMtvXXVJ8+trE90
-         RIpm567TQYAroMWk88VvdIp1ooM2Xe9yYPeCRbWY7GHm2OTTaVP9C7rV6y9tHlNclQuj
-         +H9bB/EMeT2dji5HOSzfqql4T+GKBFPFdPHoQfUgMk1gm4ijv9WiEBIJJjmhrtaaxMIa
-         TWOmNtY0ulzs60tABqny7mvbReZv6o2zuZLSMctFaA5XXf/yT5J/ufg3Ub3xqoGfpeix
-         /wRQ==
-X-Gm-Message-State: AOAM531dCnVo7WgwNjKdK4I4WA8ytPp3DSYjf+sYFw291Tc7XehRJedz
-        IAZ2A/wPXRI5BqnZbWoXRnmIe/ZzFyg=
-X-Google-Smtp-Source: ABdhPJxfsaegErx+I1BPh4/QzrIWeC3zvULnFaO+1ZfLEODfWZgX80kzF3d8nTpmh2MeaBaPwrQ/wA==
-X-Received: by 2002:a17:906:a413:: with SMTP id l19mr27923288ejz.15.1597164391237;
-        Tue, 11 Aug 2020 09:46:31 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.117])
-        by smtp.googlemail.com with ESMTPSA id p20sm15338656ejy.107.2020.08.11.09.46.30
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 11 Aug 2020 09:46:30 -0700 (PDT)
-Date:   Tue, 11 Aug 2020 18:46:28 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Tomasz Figa <tomasz.figa@gmail.com>
-Cc:     Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Mike Turquette <mturquette@baylibre.com>,
-        "moderated list:SAMSUNG SOC CLOCK DRIVERS" 
-        <linux-samsung-soc@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH v2] clk: samsung: Prevent potential endless loop in the
- PLL set_rate ops
-Message-ID: <20200811164628.GA7958@kozik-lap>
-References: <CGME20200811112518eucas1p2a751f664a907ac7cd8e1dd235dc2fa54@eucas1p2.samsung.com>
- <20200811112507.24418-1-s.nawrocki@samsung.com>
- <CA+Ln22Hfys7r2EDstOsdks1X88Fuv77DLTuXLWDynTt4kmiCiQ@mail.gmail.com>
- <20200811162358.GA7169@kozik-lap>
- <CA+Ln22Es+Mtokw91wzUaoWC2yCQHRJDEvW6=U1Rbt2H7PbDOeA@mail.gmail.com>
- <20200811163428.GA7590@kozik-lap>
- <CA+Ln22FdFBPU5f0agknRN5xnUtJWOuGARfnsYh3ru_xdjoGC=A@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=BA+WL9stkz0wGiKjuA4yVOy/QJqM4LdAj4DBM99qc54=;
+        b=hXpr4pBVsklereTy8TrLb5H5cSAC72t+Jw2q0rmlj5SUbYlXAFhDAiEq0znxGc/LK9
+         OwZqGQUgWxS4kMQixkshe1A+dgmOEoCfRuIMOEykD+IJ4T4lsO5oz51fUcmt/6tfT061
+         oGD/YHU1YYiEjzADjMNf0VT2SGHbCsNc9FL37uaWWs1LQfedx3cPKdsPLEMPnVs6Ws5b
+         NfJE3VGjFVC3N1KKzDWqboLZLm2ZW5ZDYRH/G6aHYJOBVzeVvf4JPQPPCxECbm5bH6Ra
+         xWdtGyCAglPguz62l5abPODIGU+JsxfWNIewpO2kDaxyk8dSTLR/CdbUHmd7y5kttn06
+         Wclg==
+X-Gm-Message-State: AOAM530jhTKRpZ4ZSzJ+eGDh1Uv5W9ZOYn3Blecrl1V2n7x3tegJ/k2B
+        FEG+Mxsl7aAie5HjBquZOLJDdR16b222eq3Sqoc=
+X-Google-Smtp-Source: ABdhPJzccdbqdjq4amCFIt1o7oaks1h0uDP+cTOmuOOYOZV/VfjHrJdr1IBeK/qFggWZbSbLVOlRt8wHg0U0oyEbw8s=
+X-Received: by 2002:a50:e70e:: with SMTP id a14mr11675003edn.93.1597164498882;
+ Tue, 11 Aug 2020 09:48:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+References: <20200811150117.254620-1-noltari@gmail.com> <20200811150117.254620-5-noltari@gmail.com>
+In-Reply-To: <20200811150117.254620-5-noltari@gmail.com>
+From:   =?UTF-8?Q?Philippe_Mathieu=2DDaud=C3=A9?= <f4bug@amsat.org>
+Date:   Tue, 11 Aug 2020 18:48:07 +0200
+Message-ID: <CAAdtpL6VZExOBuJ1CiAgbstrGOudcwvhmafxrit0gZCsNvYRuA@mail.gmail.com>
+Subject: Re: [PATCH v3 4/4] MIPS: BCM63xx: refactor board declarations
+To:     =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jonas Gorski <jonas.gorski@gmail.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
-In-Reply-To: <CA+Ln22FdFBPU5f0agknRN5xnUtJWOuGARfnsYh3ru_xdjoGC=A@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 06:41:20PM +0200, Tomasz Figa wrote:
-> 2020年8月11日(火) 18:34 Krzysztof Kozlowski <krzk@kernel.org>:
-> >
-> > On Tue, Aug 11, 2020 at 06:28:18PM +0200, Tomasz Figa wrote:
-> > > 2020年8月11日(火) 18:24 Krzysztof Kozlowski <krzk@kernel.org>:
-> > > >
-> > > > On Tue, Aug 11, 2020 at 02:59:07PM +0200, Tomasz Figa wrote:
-> > > > > Hi Sylwester,
-> > > > >
-> > > > > 2020年8月11日(火) 13:25 Sylwester Nawrocki <s.nawrocki@samsung.com>:
-> > > > > >
-> > > > > > In the .set_rate callback for some PLLs there is a loop polling state
-> > > > > > of the PLL lock bit and it may become an endless loop when something
-> > > > > > goes wrong with the PLL. For some PLLs there is already (a duplicated)
-> > > > > > code for polling with timeout. This patch replaces that code with
-> > > > > > the readl_relaxed_poll_timeout_atomic() macro and moves it to a common
-> > > > > > helper function, which is then used for all the PLLs. The downside
-> > > > > > of switching to the common macro is that we drop the cpu_relax() call.
-> > > > >
-> > > > > Tbh. I'm not sure what effect was exactly expected from cpu_relax() in
-> > > > > the functions which already had timeout handling. Could someone shed
-> > > > > some light on this?
-> > > >
-> > > > For us, it should not matter much, except:
-> > > > 1. when on A9 with ARM_ERRATA_754327, but we do not enable it on our
-> > > >    platforms,
-> > > > 2. it is a generic pattern for busy loops.
-> > > >
-> > > > On other architectures it could mean something (e.g. yield to other
-> > > > hyper-threading CPU).
-> > >
-> > > Okay, thanks for confirming that it doesn't matter for us.
-> > >
-> > > Now, I wonder if the readx_poll_*() helpers are supposed to take all
-> > > of those into account or on systems which would benefit from such
-> > > operations, it would be the caller's responsibility.
-> >
-> > That's a very good point. In case of ARM_ERRATA_754327, busy waiting
-> > should have a barrier thus cpu_relax() is desired. I guess the generic
-> > macro for busy waiting therefore should use them.
-> 
-> Is there yet another macro available somewhere or you mean
-> read_poll_timeout_atomic()? The latter doesn't include cpu_relax().
+On Tue, Aug 11, 2020 at 5:01 PM Álvaro Fernández Rojas
+<noltari@gmail.com> wrote:
+>
+> Current board declarations are a mess. Let's put some order and make them
+> follow the same structure. Also board declarations tabs.
+> Switch to SPDX license identifier.
+>
+> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  v3: no changes.
+>  v2: switch to SPDX license identifier.
+>
+>  arch/mips/bcm63xx/boards/board_bcm963xx.c | 620 +++++++++++-----------
+>  1 file changed, 306 insertions(+), 314 deletions(-)
+>
+> diff --git a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards/board_bcm963xx.c
+> index ac9570b66f37..01aff80a5967 100644
+> --- a/arch/mips/bcm63xx/boards/board_bcm963xx.c
+> +++ b/arch/mips/bcm63xx/boards/board_bcm963xx.c
+> @@ -1,8 +1,5 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+>  /*
+> - * This file is subject to the terms and conditions of the GNU General Public
+> - * License.  See the file "COPYING" in the main directory of this archive
+> - * for more details.
+> - *
 
-Yes, I meant the generic read_poll_timeout_atomic().
+Sorry for missing this earlier and being picky, but doing license
+change and code
+change in the same commit is not recommended. Adding a SPDX tag is easy to
+review, removing a license is another story. IANAL so up to the maintainer...
 
-> Given that udelay() likely already does this kind of an idle call,
-> perhaps it could be as simple as this?
-> 
->         if (__delay_us) \
->                 udelay(__delay_us); \
-> +       else \
-> +               cpu_relax(); \
-> 
-
-I think udelay does not have it. Delaying by some simple operations
-(e.g. multiplication) does not require IO barriers.
-
-> On the other hand, I wonder if there are cases where a call to
-> cpu_relax() is not desirable.
-
-Hmmm, it is really a generic pattern all over the kernel, so I doubt
-that generic macros should target such case.
-
-Best regards,
-Krzysztof
-
+>   * Copyright (C) 2008 Maxime Bizon <mbizon@freebox.fr>
+>   * Copyright (C) 2008 Florian Fainelli <florian@openwrt.org>
+>   */
+> @@ -41,30 +38,28 @@ static struct board_info board;
+>   */
+>  #ifdef CONFIG_BCM63XX_CPU_3368
+>  static struct board_info __initdata board_cvg834g = {
+> -       .name                           = "CVG834G_E15R3921",
+> -       .expected_cpu_id                = 0x3368,
+> +       .name = "CVG834G_E15R3921",
+> +       .expected_cpu_id = 0x3368,
+>
+> -       .has_uart0                      = 1,
+> -       .has_uart1                      = 1,
+> -
+> -       .has_enet0                      = 1,
+> -       .has_pci                        = 1,
+> +       .ephy_reset_gpio = 36,
+> +       .ephy_reset_gpio_flags = GPIOF_INIT_HIGH,
+> +       .has_pci = 1,
+> +       .has_uart0 = 1,
+> +       .has_uart1 = 1,
+>
+> +       .has_enet0 = 1,
+>         .enet0 = {
+> -               .has_phy                = 1,
+> -               .use_internal_phy       = 1,
+> +               .has_phy = 1,
+> +               .use_internal_phy = 1,
+>         },
+>
+>         .leds = {
+>                 {
+> -                       .name           = "CVG834G:green:power",
+> -                       .gpio           = 37,
+> +                       .name = "CVG834G:green:power",
+> +                       .gpio = 37,
+>                         .default_trigger= "default-on",
+>                 },
+>         },
+> -
+> -       .ephy_reset_gpio                = 36,
+> -       .ephy_reset_gpio_flags          = GPIOF_INIT_HIGH,
+>  };
+>  #endif /* CONFIG_BCM63XX_CPU_3368 */
+>
+> @@ -73,44 +68,44 @@ static struct board_info __initdata board_cvg834g = {
+>   */
+>  #ifdef CONFIG_BCM63XX_CPU_6328
+>  static struct board_info __initdata board_96328avng = {
+> -       .name                           = "96328avng",
+> -       .expected_cpu_id                = 0x6328,
+> +       .name = "96328avng",
+> +       .expected_cpu_id = 0x6328,
+>
+> -       .has_uart0                      = 1,
+> -       .has_pci                        = 1,
+> -       .has_usbd                       = 0,
+> +       .has_pci = 1,
+> +       .has_uart0 = 1,
+>
+> +       .has_usbd = 0,
+>         .usbd = {
+> -               .use_fullspeed          = 0,
+> -               .port_no                = 0,
+> +               .use_fullspeed = 0,
+> +               .port_no = 0,
+>         },
+>
+>         .leds = {
+>                 {
+> -                       .name           = "96328avng::ppp-fail",
+> -                       .gpio           = 2,
+> -                       .active_low     = 1,
+> +                       .name = "96328avng::ppp-fail",
+> +                       .gpio = 2,
+> +                       .active_low = 1,
+>                 },
+>                 {
+> -                       .name           = "96328avng::power",
+> -                       .gpio           = 4,
+> -                       .active_low     = 1,
+> +                       .name = "96328avng::power",
+> +                       .gpio = 4,
+> +                       .active_low = 1,
+>                         .default_trigger = "default-on",
+>                 },
+>                 {
+> -                       .name           = "96328avng::power-fail",
+> -                       .gpio           = 8,
+> -                       .active_low     = 1,
+> +                       .name = "96328avng::power-fail",
+> +                       .gpio = 8,
+> +                       .active_low = 1,
+>                 },
+>                 {
+> -                       .name           = "96328avng::wps",
+> -                       .gpio           = 9,
+> -                       .active_low     = 1,
+> +                       .name = "96328avng::wps",
+> +                       .gpio = 9,
+> +                       .active_low = 1,
+>                 },
+>                 {
+> -                       .name           = "96328avng::ppp",
+> -                       .gpio           = 11,
+> -                       .active_low     = 1,
+> +                       .name = "96328avng::ppp",
+> +                       .gpio = 11,
+> +                       .active_low = 1,
+>                 },
+>         },
+>  };
+> @@ -121,85 +116,86 @@ static struct board_info __initdata board_96328avng = {
+>   */
+>  #ifdef CONFIG_BCM63XX_CPU_6338
+>  static struct board_info __initdata board_96338gw = {
+> -       .name                           = "96338GW",
+> -       .expected_cpu_id                = 0x6338,
+> +       .name = "96338GW",
+> +       .expected_cpu_id = 0x6338,
+> +
+> +       .has_ohci0 = 1,
+> +       .has_uart0 = 1,
+>
+> -       .has_uart0                      = 1,
+> -       .has_enet0                      = 1,
+> +       .has_enet0 = 1,
+>         .enet0 = {
+> -               .force_speed_100        = 1,
+> -               .force_duplex_full      = 1,
+> +               .force_speed_100 = 1,
+> +               .force_duplex_full = 1,
+>         },
+>
+> -       .has_ohci0                      = 1,
+> -
+>         .leds = {
+>                 {
+> -                       .name           = "adsl",
+> -                       .gpio           = 3,
+> -                       .active_low     = 1,
+> +                       .name = "adsl",
+> +                       .gpio = 3,
+> +                       .active_low = 1,
+>                 },
+>                 {
+> -                       .name           = "ses",
+> -                       .gpio           = 5,
+> -                       .active_low     = 1,
+> +                       .name = "ses",
+> +                       .gpio = 5,
+> +                       .active_low = 1,
+>                 },
+>                 {
+> -                       .name           = "ppp-fail",
+> -                       .gpio           = 4,
+> -                       .active_low     = 1,
+> +                       .name = "ppp-fail",
+> +                       .gpio = 4,
+> +                       .active_low = 1,
+>                 },
+>                 {
+> -                       .name           = "power",
+> -                       .gpio           = 0,
+> -                       .active_low     = 1,
+> +                       .name = "power",
+> +                       .gpio = 0,
+> +                       .active_low = 1,
+>                         .default_trigger = "default-on",
+>                 },
+>                 {
+> -                       .name           = "stop",
+> -                       .gpio           = 1,
+> -                       .active_low     = 1,
+> +                       .name = "stop",
+> +                       .gpio = 1,
+> +                       .active_low = 1,
+>                 }
+>         },
+>  };
+>
+>  static struct board_info __initdata board_96338w = {
+> -       .name                           = "96338W",
+> -       .expected_cpu_id                = 0x6338,
+> +       .name = "96338W",
+> +       .expected_cpu_id = 0x6338,
+> +
+> +       .has_uart0 = 1,
+>
+> -       .has_uart0                      = 1,
+> -       .has_enet0                      = 1,
+> +       .has_enet0 = 1,
+>         .enet0 = {
+> -               .force_speed_100        = 1,
+> -               .force_duplex_full      = 1,
+> +               .force_speed_100 = 1,
+> +               .force_duplex_full = 1,
+>         },
+>
+>         .leds = {
+>                 {
+> -                       .name           = "adsl",
+> -                       .gpio           = 3,
+> -                       .active_low     = 1,
+> +                       .name = "adsl",
+> +                       .gpio = 3,
+> +                       .active_low = 1,
+>                 },
+>                 {
+> -                       .name           = "ses",
+> -                       .gpio           = 5,
+> -                       .active_low     = 1,
+> +                       .name = "ses",
+> +                       .gpio = 5,
+> +                       .active_low = 1,
+>                 },
+>                 {
+> -                       .name           = "ppp-fail",
+> -                       .gpio           = 4,
+> -                       .active_low     = 1,
+> +                       .name = "ppp-fail",
+> +                       .gpio = 4,
+> +                       .active_low = 1,
+>                 },
+>                 {
+> -                       .name           = "power",
+> -                       .gpio           = 0,
+> -                       .active_low     = 1,
+> +                       .name = "power",
+> +                       .gpio = 0,
+> +                       .active_low = 1,
+>                         .default_trigger = "default-on",
+>                 },
+>                 {
+> -                       .name           = "stop",
+> -                       .gpio           = 1,
+> -                       .active_low     = 1,
+> +                       .name = "stop",
+> +                       .gpio = 1,
+> +                       .active_low = 1,
+>                 },
+>         },
+>  };
+> @@ -210,10 +206,10 @@ static struct board_info __initdata board_96338w = {
+>   */
+>  #ifdef CONFIG_BCM63XX_CPU_6345
+>  static struct board_info __initdata board_96345gw2 = {
+> -       .name                           = "96345GW2",
+> -       .expected_cpu_id                = 0x6345,
+> +       .name = "96345GW2",
+> +       .expected_cpu_id = 0x6345,
+>
+> -       .has_uart0                      = 1,
+> +       .has_uart0 = 1,
+>  };
+>  #endif /* CONFIG_BCM63XX_CPU_6345 */
+>
+> @@ -222,282 +218,282 @@ static struct board_info __initdata board_96345gw2 = {
+>   */
+>  #ifdef CONFIG_BCM63XX_CPU_6348
+>  static struct board_info __initdata board_96348r = {
+> -       .name                           = "96348R",
+> -       .expected_cpu_id                = 0x6348,
+> +       .name = "96348R",
+> +       .expected_cpu_id = 0x6348,
+>
+> -       .has_uart0                      = 1,
+> -       .has_enet0                      = 1,
+> -       .has_pci                        = 1,
+> +       .has_pci = 1,
+> +       .has_uart0 = 1,
+>
+> +       .has_enet0 = 1,
+>         .enet0 = {
+> -               .has_phy                = 1,
+> -               .use_internal_phy       = 1,
+> +               .has_phy = 1,
+> +               .use_internal_phy = 1,
+>         },
+>
+>         .leds = {
+>                 {
+> -                       .name           = "adsl-fail",
+> -                       .gpio           = 2,
+> -                       .active_low     = 1,
+> +                       .name = "adsl-fail",
+> +                       .gpio = 2,
+> +                       .active_low = 1,
+>                 },
+>                 {
+> -                       .name           = "ppp",
+> -                       .gpio           = 3,
+> -                       .active_low     = 1,
+> +                       .name = "ppp",
+> +                       .gpio = 3,
+> +                       .active_low = 1,
+>                 },
+>                 {
+> -                       .name           = "ppp-fail",
+> -                       .gpio           = 4,
+> -                       .active_low     = 1,
+> +                       .name = "ppp-fail",
+> +                       .gpio = 4,
+> +                       .active_low = 1,
+>                 },
+>                 {
+> -                       .name           = "power",
+> -                       .gpio           = 0,
+> -                       .active_low     = 1,
+> +                       .name = "power",
+> +                       .gpio = 0,
+> +                       .active_low = 1,
+>                         .default_trigger = "default-on",
+>
+>                 },
+>                 {
+> -                       .name           = "stop",
+> -                       .gpio           = 1,
+> -                       .active_low     = 1,
+> +                       .name = "stop",
+> +                       .gpio = 1,
+> +                       .active_low = 1,
+>                 },
+>         },
+>  };
+>
+>  static struct board_info __initdata board_96348gw_10 = {
+> -       .name                           = "96348GW-10",
+> -       .expected_cpu_id                = 0x6348,
+> +       .name = "96348GW-10",
+> +       .expected_cpu_id = 0x6348,
+>
+> -       .has_uart0                      = 1,
+> -       .has_enet0                      = 1,
+> -       .has_enet1                      = 1,
+> -       .has_pci                        = 1,
+> +       .has_ohci0 = 1,
+> +       .has_pccard = 1,
+> +       .has_pci = 1,
+> +       .has_uart0 = 1,
+>
+> +       .has_enet0 = 1,
+>         .enet0 = {
+> -               .has_phy                = 1,
+> -               .use_internal_phy       = 1,
+> +               .has_phy = 1,
+> +               .use_internal_phy = 1,
+>         },
+> +
+> +       .has_enet1 = 1,
+>         .enet1 = {
+> -               .force_speed_100        = 1,
+> -               .force_duplex_full      = 1,
+> +               .force_speed_100 = 1,
+> +               .force_duplex_full = 1,
+>         },
+>
+> -       .has_ohci0                      = 1,
+> -       .has_pccard                     = 1,
+> -
+>         .leds = {
+>                 {
+> -                       .name           = "adsl-fail",
+> -                       .gpio           = 2,
+> -                       .active_low     = 1,
+> +                       .name = "adsl-fail",
+> +                       .gpio = 2,
+> +                       .active_low = 1,
+>                 },
+>                 {
+> -                       .name           = "ppp",
+> -                       .gpio           = 3,
+> -                       .active_low     = 1,
+> +                       .name = "ppp",
+> +                       .gpio = 3,
+> +                       .active_low = 1,
+>                 },
+>                 {
+> -                       .name           = "ppp-fail",
+> -                       .gpio           = 4,
+> -                       .active_low     = 1,
+> +                       .name = "ppp-fail",
+> +                       .gpio = 4,
+> +                       .active_low = 1,
+>                 },
+>                 {
+> -                       .name           = "power",
+> -                       .gpio           = 0,
+> -                       .active_low     = 1,
+> +                       .name = "power",
+> +                       .gpio = 0,
+> +                       .active_low = 1,
+>                         .default_trigger = "default-on",
+>                 },
+>                 {
+> -                       .name           = "stop",
+> -                       .gpio           = 1,
+> -                       .active_low     = 1,
+> +                       .name = "stop",
+> +                       .gpio = 1,
+> +                       .active_low = 1,
+>                 },
+>         },
+>  };
+>
+>  static struct board_info __initdata board_96348gw_11 = {
+> -       .name                           = "96348GW-11",
+> -       .expected_cpu_id                = 0x6348,
+> +       .name = "96348GW-11",
+> +       .expected_cpu_id = 0x6348,
+>
+> -       .has_uart0                      = 1,
+> -       .has_enet0                      = 1,
+> -       .has_enet1                      = 1,
+> -       .has_pci                        = 1,
+> +       .has_ohci0 = 1,
+> +       .has_pccard = 1,
+> +       .has_pci = 1,
+> +       .has_uart0 = 1,
+>
+> +       .has_enet0 = 1,
+>         .enet0 = {
+> -               .has_phy                = 1,
+> -               .use_internal_phy       = 1,
+> +               .has_phy = 1,
+> +               .use_internal_phy = 1,
+>         },
+>
+> +       .has_enet1 = 1,
+>         .enet1 = {
+> -               .force_speed_100        = 1,
+> -               .force_duplex_full      = 1,
+> +               .force_speed_100 = 1,
+> +               .force_duplex_full = 1,
+>         },
+>
+> -       .has_ohci0 = 1,
+> -       .has_pccard = 1,
+> -
+>         .leds = {
+>                 {
+> -                       .name           = "adsl-fail",
+> -                       .gpio           = 2,
+> -                       .active_low     = 1,
+> +                       .name = "adsl-fail",
+> +                       .gpio = 2,
+> +                       .active_low = 1,
+>                 },
+>                 {
+> -                       .name           = "ppp",
+> -                       .gpio           = 3,
+> -                       .active_low     = 1,
+> +                       .name = "ppp",
+> +                       .gpio = 3,
+> +                       .active_low = 1,
+>                 },
+>                 {
+> -                       .name           = "ppp-fail",
+> -                       .gpio           = 4,
+> -                       .active_low     = 1,
+> +                       .name = "ppp-fail",
+> +                       .gpio = 4,
+> +                       .active_low = 1,
+>                 },
+>                 {
+> -                       .name           = "power",
+> -                       .gpio           = 0,
+> -                       .active_low     = 1,
+> +                       .name = "power",
+> +                       .gpio = 0,
+> +                       .active_low = 1,
+>                         .default_trigger = "default-on",
+>                 },
+>                 {
+> -                       .name           = "stop",
+> -                       .gpio           = 1,
+> -                       .active_low     = 1,
+> +                       .name = "stop",
+> +                       .gpio = 1,
+> +                       .active_low = 1,
+>                 },
+>         },
+>  };
+>
+>  static struct board_info __initdata board_96348gw = {
+> -       .name                           = "96348GW",
+> -       .expected_cpu_id                = 0x6348,
+> +       .name = "96348GW",
+> +       .expected_cpu_id = 0x6348,
+>
+> -       .has_uart0                      = 1,
+> -       .has_enet0                      = 1,
+> -       .has_enet1                      = 1,
+> -       .has_pci                        = 1,
+> +       .has_ohci0 = 1,
+> +       .has_pci = 1,
+> +       .has_uart0 = 1,
+>
+> +       .has_enet0 = 1,
+>         .enet0 = {
+> -               .has_phy                = 1,
+> -               .use_internal_phy       = 1,
+> +               .has_phy = 1,
+> +               .use_internal_phy = 1,
+>         },
+> +
+> +       .has_enet1 = 1,
+>         .enet1 = {
+> -               .force_speed_100        = 1,
+> -               .force_duplex_full      = 1,
+> +               .force_speed_100 = 1,
+> +               .force_duplex_full = 1,
+>         },
+>
+> -       .has_ohci0 = 1,
+> -
+>         .leds = {
+>                 {
+> -                       .name           = "adsl-fail",
+> -                       .gpio           = 2,
+> -                       .active_low     = 1,
+> +                       .name = "adsl-fail",
+> +                       .gpio = 2,
+> +                       .active_low = 1,
+>                 },
+>                 {
+> -                       .name           = "ppp",
+> -                       .gpio           = 3,
+> -                       .active_low     = 1,
+> +                       .name = "ppp",
+> +                       .gpio = 3,
+> +                       .active_low = 1,
+>                 },
+>                 {
+> -                       .name           = "ppp-fail",
+> -                       .gpio           = 4,
+> -                       .active_low     = 1,
+> +                       .name = "ppp-fail",
+> +                       .gpio = 4,
+> +                       .active_low = 1,
+>                 },
+>                 {
+> -                       .name           = "power",
+> -                       .gpio           = 0,
+> -                       .active_low     = 1,
+> +                       .name = "power",
+> +                       .gpio = 0,
+> +                       .active_low = 1,
+>                         .default_trigger = "default-on",
+>                 },
+>                 {
+> -                       .name           = "stop",
+> -                       .gpio           = 1,
+> -                       .active_low     = 1,
+> +                       .name = "stop",
+> +                       .gpio = 1,
+> +                       .active_low = 1,
+>                 },
+>         },
+>  };
+>
+>  static struct board_info __initdata board_FAST2404 = {
+> -       .name                           = "F@ST2404",
+> -       .expected_cpu_id                = 0x6348,
+> +       .name = "F@ST2404",
+> +       .expected_cpu_id = 0x6348,
+>
+> -       .has_uart0                      = 1,
+> -       .has_enet0                      = 1,
+> -       .has_enet1                      = 1,
+> -       .has_pci                        = 1,
+> +       .has_ohci0 = 1,
+> +       .has_pccard = 1,
+> +       .has_pci = 1,
+> +       .has_uart0 = 1,
+>
+> +       .has_enet0 = 1,
+>         .enet0 = {
+> -               .has_phy                = 1,
+> -               .use_internal_phy       = 1,
+> +               .has_phy = 1,
+> +               .use_internal_phy = 1,
+>         },
+>
+> +       .has_enet1 = 1,
+>         .enet1 = {
+> -               .force_speed_100        = 1,
+> -               .force_duplex_full      = 1,
+> +               .force_speed_100 = 1,
+> +               .force_duplex_full = 1,
+>         },
+> -
+> -       .has_ohci0                      = 1,
+> -       .has_pccard                     = 1,
+>  };
+>
+>  static struct board_info __initdata board_rta1025w_16 = {
+> -       .name                           = "RTA1025W_16",
+> -       .expected_cpu_id                = 0x6348,
+> +       .name = "RTA1025W_16",
+> +       .expected_cpu_id = 0x6348,
+>
+> -       .has_enet0                      = 1,
+> -       .has_enet1                      = 1,
+> -       .has_pci                        = 1,
+> +       .has_pci = 1,
+>
+> +       .has_enet0 = 1,
+>         .enet0 = {
+> -               .has_phy                = 1,
+> -               .use_internal_phy       = 1,
+> +               .has_phy = 1,
+> +               .use_internal_phy = 1,
+>         },
+> +
+> +       .has_enet1 = 1,
+>         .enet1 = {
+> -               .force_speed_100        = 1,
+> -               .force_duplex_full      = 1,
+> +               .force_speed_100 = 1,
+> +               .force_duplex_full = 1,
+>         },
+>  };
+>
+>  static struct board_info __initdata board_DV201AMR = {
+> -       .name                           = "DV201AMR",
+> -       .expected_cpu_id                = 0x6348,
+> +       .name = "DV201AMR",
+> +       .expected_cpu_id = 0x6348,
+>
+> -       .has_uart0                      = 1,
+> -       .has_pci                        = 1,
+> -       .has_ohci0                      = 1,
+> +       .has_ohci0 = 1,
+> +       .has_pci = 1,
+> +       .has_uart0 = 1,
+>
+> -       .has_enet0                      = 1,
+> -       .has_enet1                      = 1,
+> +       .has_enet0 = 1,
+>         .enet0 = {
+> -               .has_phy                = 1,
+> -               .use_internal_phy       = 1,
+> +               .has_phy = 1,
+> +               .use_internal_phy = 1,
+>         },
+> +
+> +       .has_enet1 = 1,
+>         .enet1 = {
+> -               .force_speed_100        = 1,
+> -               .force_duplex_full      = 1,
+> +               .force_speed_100 = 1,
+> +               .force_duplex_full = 1,
+>         },
+>  };
+>
+>  static struct board_info __initdata board_96348gw_a = {
+> -       .name                           = "96348GW-A",
+> -       .expected_cpu_id                = 0x6348,
+> +       .name = "96348GW-A",
+> +       .expected_cpu_id = 0x6348,
+>
+> -       .has_uart0                      = 1,
+> -       .has_enet0                      = 1,
+> -       .has_enet1                      = 1,
+> -       .has_pci                        = 1,
+> +       .has_ohci0 = 1,
+> +       .has_pci = 1,
+> +       .has_uart0 = 1,
+>
+> +       .has_enet0 = 1,
+>         .enet0 = {
+> -               .has_phy                = 1,
+> -               .use_internal_phy       = 1,
+> +               .has_phy = 1,
+> +               .use_internal_phy = 1,
+>         },
+> +
+> +       .has_enet1 = 1,
+>         .enet1 = {
+> -               .force_speed_100        = 1,
+> -               .force_duplex_full      = 1,
+> +               .force_speed_100 = 1,
+> +               .force_duplex_full = 1,
+>         },
+> -
+> -       .has_ohci0 = 1,
+>  };
+>  #endif /* CONFIG_BCM63XX_CPU_6348 */
+>
+> @@ -506,146 +502,142 @@ static struct board_info __initdata board_96348gw_a = {
+>   */
+>  #ifdef CONFIG_BCM63XX_CPU_6358
+>  static struct board_info __initdata board_96358vw = {
+> -       .name                           = "96358VW",
+> -       .expected_cpu_id                = 0x6358,
+> +       .name = "96358VW",
+> +       .expected_cpu_id = 0x6358,
+>
+> -       .has_uart0                      = 1,
+> -       .has_enet0                      = 1,
+> -       .has_enet1                      = 1,
+> -       .has_pci                        = 1,
+> +       .has_ehci0 = 1,
+> +       .has_ohci0 = 1,
+> +       .has_pccard = 1,
+> +       .has_pci = 1,
+> +       .has_uart0 = 1,
+>
+> +       .has_enet0 = 1,
+>         .enet0 = {
+> -               .has_phy                = 1,
+> -               .use_internal_phy       = 1,
+> +               .has_phy = 1,
+> +               .use_internal_phy = 1,
+>         },
+>
+> +       .has_enet1 = 1,
+>         .enet1 = {
+> -               .force_speed_100        = 1,
+> -               .force_duplex_full      = 1,
+> +               .force_speed_100 = 1,
+> +               .force_duplex_full = 1,
+>         },
+>
+> -       .has_ohci0 = 1,
+> -       .has_pccard = 1,
+> -       .has_ehci0 = 1,
+> -
+>         .leds = {
+>                 {
+> -                       .name           = "adsl-fail",
+> -                       .gpio           = 15,
+> -                       .active_low     = 1,
+> +                       .name = "adsl-fail",
+> +                       .gpio = 15,
+> +                       .active_low = 1,
+>                 },
+>                 {
+> -                       .name           = "ppp",
+> -                       .gpio           = 22,
+> -                       .active_low     = 1,
+> +                       .name = "ppp",
+> +                       .gpio = 22,
+> +                       .active_low = 1,
+>                 },
+>                 {
+> -                       .name           = "ppp-fail",
+> -                       .gpio           = 23,
+> -                       .active_low     = 1,
+> +                       .name = "ppp-fail",
+> +                       .gpio = 23,
+> +                       .active_low = 1,
+>                 },
+>                 {
+> -                       .name           = "power",
+> -                       .gpio           = 4,
+> +                       .name = "power",
+> +                       .gpio = 4,
+>                         .default_trigger = "default-on",
+>                 },
+>                 {
+> -                       .name           = "stop",
+> -                       .gpio           = 5,
+> +                       .name = "stop",
+> +                       .gpio = 5,
+>                 },
+>         },
+>  };
+>
+>  static struct board_info __initdata board_96358vw2 = {
+> -       .name                           = "96358VW2",
+> -       .expected_cpu_id                = 0x6358,
+> +       .name = "96358VW2",
+> +       .expected_cpu_id = 0x6358,
+>
+> -       .has_uart0                      = 1,
+> -       .has_enet0                      = 1,
+> -       .has_enet1                      = 1,
+> -       .has_pci                        = 1,
+> +       .has_ehci0 = 1,
+> +       .has_ohci0 = 1,
+> +       .has_pccard = 1,
+> +       .has_pci = 1,
+> +       .has_uart0 = 1,
+>
+> +       .has_enet0 = 1,
+>         .enet0 = {
+> -               .has_phy                = 1,
+> -               .use_internal_phy       = 1,
+> +               .has_phy = 1,
+> +               .use_internal_phy = 1,
+>         },
+>
+> +       .has_enet1 = 1,
+>         .enet1 = {
+> -               .force_speed_100        = 1,
+> -               .force_duplex_full      = 1,
+> +               .force_speed_100 = 1,
+> +               .force_duplex_full = 1,
+>         },
+>
+> -       .has_ohci0 = 1,
+> -       .has_pccard = 1,
+> -       .has_ehci0 = 1,
+> -
+>         .leds = {
+>                 {
+> -                       .name           = "adsl",
+> -                       .gpio           = 22,
+> -                       .active_low     = 1,
+> +                       .name = "adsl",
+> +                       .gpio = 22,
+> +                       .active_low = 1,
+>                 },
+>                 {
+> -                       .name           = "ppp-fail",
+> -                       .gpio           = 23,
+> +                       .name = "ppp-fail",
+> +                       .gpio = 23,
+>                 },
+>                 {
+> -                       .name           = "power",
+> -                       .gpio           = 5,
+> -                       .active_low     = 1,
+> +                       .name = "power",
+> +                       .gpio = 5,
+> +                       .active_low = 1,
+>                         .default_trigger = "default-on",
+>                 },
+>                 {
+> -                       .name           = "stop",
+> -                       .gpio           = 4,
+> -                       .active_low     = 1,
+> +                       .name = "stop",
+> +                       .gpio = 4,
+> +                       .active_low = 1,
+>                 },
+>         },
+>  };
+>
+>  static struct board_info __initdata board_AGPFS0 = {
+> -       .name                           = "AGPF-S0",
+> -       .expected_cpu_id                = 0x6358,
+> +       .name = "AGPF-S0",
+> +       .expected_cpu_id = 0x6358,
+>
+> -       .has_uart0                      = 1,
+> -       .has_enet0                      = 1,
+> -       .has_enet1                      = 1,
+> -       .has_pci                        = 1,
+> +       .has_ehci0 = 1,
+> +       .has_ohci0 = 1,
+> +       .has_pci = 1,
+> +       .has_uart0 = 1,
+>
+> +       .has_enet0 = 1,
+>         .enet0 = {
+> -               .has_phy                = 1,
+> -               .use_internal_phy       = 1,
+> +               .has_phy = 1,
+> +               .use_internal_phy = 1,
+>         },
+>
+> +       .has_enet1 = 1,
+>         .enet1 = {
+> -               .force_speed_100        = 1,
+> -               .force_duplex_full      = 1,
+> +               .force_speed_100 = 1,
+> +               .force_duplex_full = 1,
+>         },
+> -
+> -       .has_ohci0 = 1,
+> -       .has_ehci0 = 1,
+>  };
+>
+>  static struct board_info __initdata board_DWVS0 = {
+> -       .name                           = "DWV-S0",
+> -       .expected_cpu_id                = 0x6358,
+> +       .name = "DWV-S0",
+> +       .expected_cpu_id = 0x6358,
+>
+> -       .has_enet0                      = 1,
+> -       .has_enet1                      = 1,
+> -       .has_pci                        = 1,
+> +       .has_ehci0 = 1,
+> +       .has_ohci0 = 1,
+> +       .has_pci = 1,
+>
+> +       .has_enet0 = 1,
+>         .enet0 = {
+> -               .has_phy                = 1,
+> -               .use_internal_phy       = 1,
+> +               .has_phy = 1,
+> +               .use_internal_phy = 1,
+>         },
+>
+> +       .has_enet1 = 1,
+>         .enet1 = {
+> -               .force_speed_100        = 1,
+> -               .force_duplex_full      = 1,
+> +               .force_speed_100 = 1,
+> +               .force_duplex_full = 1,
+>         },
+> -
+> -       .has_ohci0                      = 1,
+> -       .has_ehci0                      = 1,
+>  };
+>  #endif /* CONFIG_BCM63XX_CPU_6358 */
+>
+> --
+> 2.28.0
+>
