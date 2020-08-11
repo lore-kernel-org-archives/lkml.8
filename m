@@ -2,165 +2,122 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE709C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B55C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:51:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8891120756
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:49:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="G+ZaOUTA"
+	by mail.kernel.org (Postfix) with ESMTP id 1077120782
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:51:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597161099;
+	bh=Z1hIcu7q4cy7WOXTTcnE5jegEMEU+/eF9e0CtjzECdY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Q5uNe0HTEV0UE9QRjdhELGa+8xm7fQsZ8e40oQDZlHBMl0lM5QPjS4ffvEZM3CYoa
+	 7RsMeiHpuIT8McR8UHpW134PZHkreMKGkq7ltZ+XXMX7pp7uForWucVu0aiXMu/zqG
+	 k5VJI3IPPt6Ouz6yvldBEX0V0eUajEHlgH6BRp3Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728956AbgHKPtc (ORCPT
+        id S1728970AbgHKPvi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 11:49:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34934 "EHLO
+        Tue, 11 Aug 2020 11:51:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728879AbgHKPtb (ORCPT
+        with ESMTP id S1728879AbgHKPvh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 11:49:31 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A13E1C061788
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 08:49:31 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id p8so6891659pgn.13
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 08:49:31 -0700 (PDT)
+        Tue, 11 Aug 2020 11:51:37 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15080C06174A
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 08:51:37 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id h8so6925378lfp.9
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 08:51:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:from:to:references:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=1RoNYDYvCgpLLRWCuumNMoAb1U/U13+su+iqhg08vrA=;
-        b=G+ZaOUTABRY2uaa7exuF9V693p1+/Aq92mMnUXDM0xSjDLxYZHnk2loQum0lmZklvu
-         gavDX8FnkFLF3m0LF13jEKwqunJXhebTR9C+PVK0+27BF2MdYni5G5s0QMPclcDbw33y
-         pivUFiiYDDl+K8jkY08D8WSKQhccYO0eANN2qrLBsppanGGSLmyM0rg1KFCIuXeRtd5W
-         ja2xxU/wZU1/K/GUKfE56yofuh/+8iY4+fq3391Id0hYaYmIJORKt4333Q+mZLEJVtyO
-         uKh1JW/lNXMQvUmN3hcPiqbKSCdjLrPHI20sUx5TlnAAiAxsU/etOwfVJHX+qNmBBM9i
-         LC4w==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jIwKc0Pf5DTDi2LxUBmmYZLh8vGovo5mHhsVAPJpcZA=;
+        b=YxevrWSp+E+voSCnY74qs4J0R19cGPtLQOWtpl0z3c/DeSKSVtKrcCYK4LtRCDEhzQ
+         5GZSNB+smjJYraoq6/L+LxnG4nkTbP+YB6UJNHcN403pCwshZu+pA1E/B04ljW5vFXuy
+         13rBaEkWTjDHlLSwzQ1CE3YuaBdfpidKv/Mu4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=1RoNYDYvCgpLLRWCuumNMoAb1U/U13+su+iqhg08vrA=;
-        b=Ec3grYT8JmWSFXQhrrX8d75BoaFX+Em29MJms+ySfpD7O1PFah2UwjulToHZcIfGXN
-         7M4yaiVbb+ZidrrikIUSY2xSQ4nbe9uxz/1Uty1/a0uP5xmi04lNMxbphqX/KQIVGJJx
-         aAcJ2+E1mcwQYvufmda5p3Cn1ZQ0PA9SFuNnGwKPYuXs8yD2SY33G73oJWgT51m/5sw3
-         jTNVHiTpKCZ+RObBMr6NDQ9ZL0xKAC0aX8LZ6F/5R1F8YQmh7qlGg2FvMGaCACxgg1IQ
-         9O2TQe/f2vQJvFIqWlIwLo0rM3Zs/WlagSFHRnXZxtYQwL03MdlwvJs2S2I3DiHgsAG3
-         JmXQ==
-X-Gm-Message-State: AOAM532pi+eh1yGmoYe1Cxd5IjhfODjm1uymO+Q82v1LQ+pP8rHUtmh5
-        n49fp01uXnI9lAD+MpcsIZqR2A==
-X-Google-Smtp-Source: ABdhPJyImT5VS2jSW7cIWKnDAuCFRuBhWkOy7HCCCtavJT7faPpml2SIfF69oV5pKG86DD3ZalrbtQ==
-X-Received: by 2002:a65:4103:: with SMTP id w3mr1362290pgp.426.1597160970982;
-        Tue, 11 Aug 2020 08:49:30 -0700 (PDT)
-Received: from [192.168.1.182] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id bf8sm3311237pjb.4.2020.08.11.08.49.29
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jIwKc0Pf5DTDi2LxUBmmYZLh8vGovo5mHhsVAPJpcZA=;
+        b=KTjjpT1+xIUOcCbu1u/3U8E6w4IedyEMZP3Z7lKDj1OIXDkHDD5SSAWA8CoHJAWwUH
+         R1j3w3gvqZcyITdHdMZ0BlDuH86yxNAGvd+HztowiLauGF4pNBUvfxhIvwzaovne7X7J
+         MZ2gzNsURcVmJy0OvfoP2AhT8CU0+iqFk5QaFYbjOIteM1KoVg6JjScmviphErd1nXoB
+         oDcERHRGufjMGghN0fOVb+CMhW/Qt5VNRLsyNcc5RiVagdIpWxIc7GfYe34d3WShi9DL
+         0uvi9emz5KBBhEcDq1dVraWY88r+JiHRhYimwbVzC7LQKRa4eFj46ResvX/v0TiHAg+S
+         +/ew==
+X-Gm-Message-State: AOAM531gAiAlF8RgPo+RXkaJ+hXJTdYDYJSv4aAD85AIQfhU09XokE0N
+        0/ZKOB8fw2gr735iV1MrYw4VqVoG3d4=
+X-Google-Smtp-Source: ABdhPJyqp+9DtrysdX9l7LMaBwwB6IrKP5Tkmp4EY6Uh1YlDq9T/NXKQBPzb2WxD40oPA0c+Q/5z9Q==
+X-Received: by 2002:a19:f808:: with SMTP id a8mr3507566lff.62.1597161095163;
+        Tue, 11 Aug 2020 08:51:35 -0700 (PDT)
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com. [209.85.208.178])
+        by smtp.gmail.com with ESMTPSA id a7sm10125382ljk.2.2020.08.11.08.51.34
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Aug 2020 08:49:30 -0700 (PDT)
-Subject: Re: memory leak in io_submit_sqes
-From:   Jens Axboe <axboe@kernel.dk>
-To:     syzbot <syzbot+a730016dc0bdce4f6ff5@syzkaller.appspotmail.com>,
-        io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        viro@zeniv.linux.org.uk
-References: <000000000000f50fb505ac9a72c9@google.com>
- <b8c5db23-c3cf-7daf-6a0a-8a5f713e9803@kernel.dk>
- <f0386716-eba3-392c-b6b6-35109a1b009b@kernel.dk>
-Message-ID: <f6595321-fc08-6c5a-c39c-dc3a2fbb83ed@kernel.dk>
-Date:   Tue, 11 Aug 2020 09:49:28 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 11 Aug 2020 08:51:34 -0700 (PDT)
+Received: by mail-lj1-f178.google.com with SMTP id t23so14095535ljc.3
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 08:51:34 -0700 (PDT)
+X-Received: by 2002:a2e:545:: with SMTP id 66mr3421035ljf.285.1597161093904;
+ Tue, 11 Aug 2020 08:51:33 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <f0386716-eba3-392c-b6b6-35109a1b009b@kernel.dk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200811083315.GB7488@shao2-debian>
+In-Reply-To: <20200811083315.GB7488@shao2-debian>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 11 Aug 2020 08:51:17 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wg36CfqcBr8ucE_xcqCaPWeL8LmkAuYMsY4yW74F9=ZOA@mail.gmail.com>
+Message-ID: <CAHk-=wg36CfqcBr8ucE_xcqCaPWeL8LmkAuYMsY4yW74F9=ZOA@mail.gmail.com>
+Subject: Re: [mm] 2a9127fcf2: hackbench.throughput -69.2% regression
+To:     kernel test robot <rong.a.chen@intel.com>
+Cc:     Oleg Nesterov <oleg@redhat.com>, Hugh Dickins <hughd@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/11/20 9:23 AM, Jens Axboe wrote:
-> On 8/11/20 8:59 AM, Jens Axboe wrote:
->> On 8/11/20 7:57 AM, syzbot wrote:
->>> Hello,
->>>
->>> syzbot found the following issue on:
->>>
->>> HEAD commit:    d6efb3ac Merge tag 'tty-5.9-rc1' of git://git.kernel.org/p..
->>> git tree:       upstream
->>> console output: https://syzkaller.appspot.com/x/log.txt?x=13cb0762900000
->>> kernel config:  https://syzkaller.appspot.com/x/.config?x=42163327839348a9
->>> dashboard link: https://syzkaller.appspot.com/bug?extid=a730016dc0bdce4f6ff5
->>> compiler:       gcc (GCC) 10.1.0-syz 20200507
->>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16e877dc900000
->>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1608291a900000
->>>
->>> IMPORTANT: if you fix the issue, please add the following tag to the commit:
->>> Reported-by: syzbot+a730016dc0bdce4f6ff5@syzkaller.appspotmail.com
->>>
->>> executing program
->>> executing program
->>> executing program
->>> executing program
->>> executing program
->>> BUG: memory leak
->>> unreferenced object 0xffff888124949100 (size 256):
->>>   comm "syz-executor808", pid 6480, jiffies 4294949911 (age 33.960s)
->>>   hex dump (first 32 bytes):
->>>     00 78 74 2a 81 88 ff ff 00 00 00 00 00 00 00 00  .xt*............
->>>     90 b0 51 81 ff ff ff ff 00 00 00 00 00 00 00 00  ..Q.............
->>>   backtrace:
->>>     [<0000000084e46f34>] io_alloc_req fs/io_uring.c:1503 [inline]
->>>     [<0000000084e46f34>] io_submit_sqes+0x5dc/0xc00 fs/io_uring.c:6306
->>>     [<000000006d4e19eb>] __do_sys_io_uring_enter+0x582/0x830 fs/io_uring.c:8036
->>>     [<00000000a4116b07>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
->>>     [<0000000067b2aefc>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
->>>
->>> BUG: memory leak
->>> unreferenced object 0xffff88811751d200 (size 96):
->>>   comm "syz-executor808", pid 6480, jiffies 4294949911 (age 33.960s)
->>>   hex dump (first 32 bytes):
->>>     00 78 74 2a 81 88 ff ff 00 00 00 00 00 00 00 00  .xt*............
->>>     0e 01 00 00 00 00 75 22 00 00 00 00 00 0f 1f 04  ......u"........
->>>   backtrace:
->>>     [<00000000073ea2ba>] kmalloc include/linux/slab.h:555 [inline]
->>>     [<00000000073ea2ba>] io_arm_poll_handler fs/io_uring.c:4773 [inline]
->>>     [<00000000073ea2ba>] __io_queue_sqe+0x445/0x6b0 fs/io_uring.c:5988
->>>     [<000000001551bde0>] io_queue_sqe+0x309/0x550 fs/io_uring.c:6060
->>>     [<000000002dfb908f>] io_submit_sqe fs/io_uring.c:6130 [inline]
->>>     [<000000002dfb908f>] io_submit_sqes+0x8b8/0xc00 fs/io_uring.c:6327
->>>     [<000000006d4e19eb>] __do_sys_io_uring_enter+0x582/0x830 fs/io_uring.c:8036
->>>     [<00000000a4116b07>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
->>>     [<0000000067b2aefc>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
->>
->> This one looks very odd, and I cannot reproduce it. The socket() calls
->> reliably fails for me, and even if I hack it to use 0 for protocol instead
->> of 2, I don't see anything interesting happening here. An IORING_OP_WRITEV
->> is submitted on the socket, which just fails with ENOTCONN.
-> 
-> Dug a bit deeper and found the missing option, I can now reproduce this!
-> I'll take a look.
+On Tue, Aug 11, 2020 at 1:34 AM kernel test robot <rong.a.chen@intel.com> wrote:
+>
+> FYI, we noticed a -69.2% regression of hackbench.throughput due to commit:
+>
+> commit: 2a9127fcf2296674d58024f83981f40b128fffea ("mm: rewrite wait_on_page_bit_common() logic")
+>
+> in testcase: hackbench
+>
+> In addition to that, the commit also has significant impact on the following tests:
 
-This should fix it.
+You can say that again. It's all over the map. with some benchmarks
+showing huge improvement and some showing a lot of downside.
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 99582cf5106b..8a2afd8c33c9 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -4883,7 +4883,7 @@ static bool io_arm_poll_handler(struct io_kiocb *req)
- 
- 	ret = __io_arm_poll_handler(req, &apoll->poll, &ipt, mask,
- 					io_async_wake);
--	if (ret) {
-+	if (ret || ipt.error) {
- 		io_poll_remove_double(req, apoll->double_poll);
- 		spin_unlock_irq(&ctx->completion_lock);
- 		kfree(apoll->double_poll);
+Which is not surprising, I guess. Waking things up earlier can cause
+more of a thundering herd effect, and it looks like some path ends up
+just going right back to sleep again, with voluntary_context_switches
+growing by a factor of 25x, and involuntary_context_switches growing
+by 110x if I read that right.
 
--- 
-Jens Axboe
+And the reason really does seem to be due to having a _lot_ more
+runnable active threads:nr_running.avg increases by 2x, and
+runnable_avg.min is 4x what it used to be.
 
+I think this is more of a "Hugh load" - it was likely already scaling
+the load past the machine limits, and the more aggressive wakeups just
+made it go even further past what resources there were available.
+
+The odd thing is that in the profile, wakup_up_common does show up,
+but it has nothing to do with the page lock. It's the
+unix_stream_sendmsg() waking up readers.
+
+I wonder if it used to be synchronized more on the page lock, and now
+it's past that, and we end up having a lot of readers on the same unix
+domain socket, and we get a thundering herd there when the writer
+comes along. Or something.
+
+              Linus
