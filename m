@@ -2,150 +2,204 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19767C433E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 20:06:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23517C433ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 20:06:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D87CC20756
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 20:06:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597176407;
-	bh=9kVJER9GnmAJgIf1v0EsXQx3cmVIVjyDJgu9AFSZDAs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=yMrU+NwTvTldr7CaxGVAZMd9/+BV8dypuhSvtWnl0Z+DzOdDkDrwo1EQ3VbHEJS6U
-	 vV8LGD3h7nWcezLXG1u0S1vvimRrklP3/sfMEW74lhfA59cRHC2vL3OaK2eeOsPdCu
-	 ILRPwjJeMc759Vy/SuviZv6o2Sr5U67v+vNos8KQ=
+	by mail.kernel.org (Postfix) with ESMTP id 00BA420774
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 20:06:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gt9J2xi2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726749AbgHKUG0 (ORCPT
+        id S1726807AbgHKUGu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 16:06:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46406 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726564AbgHKUGY (ORCPT
+        Tue, 11 Aug 2020 16:06:50 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:52871 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726846AbgHKUGr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 16:06:24 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37D62C06174A
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 13:06:24 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id z6so85804iow.6
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 13:06:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=x9Z56G7Sq+yoxF26YYsaVBF/VyvZNYi0ExatDmNcea8=;
-        b=CmHP/prH5/FP2ejP8hzk1TIK0ioM1mTElZ2Xxat1dgv6XbaDed3rUDQIZjKALmYmYW
-         M2Wpi1pa2zNkpS0Il8/Tlx3hEW8wDBHDDMl9j+p7tY795MeaYQkirp7mw2hLYW098fYa
-         mvwBVOUXNuGA+5s9y1TTFETU57MNRjCYyagQo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=x9Z56G7Sq+yoxF26YYsaVBF/VyvZNYi0ExatDmNcea8=;
-        b=DaIQEeQJnEMcsYY76U2/rNRBh0N81mrDO8GqvN/ETefX8fw8KjECJKuIYuQgXmIH2w
-         q8hWUhMF+Kg7W3BOIx+34ReK+wsDuRxOWIyg2m3qOubk0EMYI22CDZheeZofj+oNzLYb
-         fGcWbiJ8wGQudrWTKCcbVqk8FXQDF04+5qvxo+mLXduZw8dRSX3wlPwGgBfpGhMhUWuB
-         KMZ1li+E5CQEgXI6/qFvZjjzNU9HrENXyfcjVdWglbPh78bCEOGYDmZOSqZDhErYwf6v
-         Jh+pH7eUEXG5wkx2ZCpMFMKRcEtFMfjmEmrQ0yuOEdmhWh/fa/gjGHK/CPALVyYFKM7C
-         nJWQ==
-X-Gm-Message-State: AOAM532dn3mxRuFVqprsJVz0x03ezB8Np5wEez2w2m0Jgr4eFZCzA+tv
-        tUT+Gg9IzhXdEIXyFPOcl5THb6i9x3o=
-X-Google-Smtp-Source: ABdhPJxt7J4Yz+saDja0hs4hbbCY2wxkcPJTzkfMm3klrxtA/5R73fQ8qccYz0C7xutctQijFvlhyw==
-X-Received: by 2002:a05:6602:2d43:: with SMTP id d3mr24043574iow.39.1597176383128;
-        Tue, 11 Aug 2020 13:06:23 -0700 (PDT)
-Received: from mail-io1-f49.google.com (mail-io1-f49.google.com. [209.85.166.49])
-        by smtp.gmail.com with ESMTPSA id t26sm7007850ilb.80.2020.08.11.13.06.21
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Aug 2020 13:06:21 -0700 (PDT)
-Received: by mail-io1-f49.google.com with SMTP id z6so85527iow.6
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 13:06:21 -0700 (PDT)
-X-Received: by 2002:a02:9247:: with SMTP id y7mr26798836jag.140.1597176381447;
- Tue, 11 Aug 2020 13:06:21 -0700 (PDT)
+        Tue, 11 Aug 2020 16:06:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597176405;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=AhcvER536skwh1frvQT5MeeGfBQaW3XChUL6+sO3t0s=;
+        b=gt9J2xi20NY6Q3lJXiUaDWGPa3MbCaJPYd8KospPSkqz0OuEpsrzzkz2itL51k80JIDuwv
+        rdJxB6p/DSOqcvFHWTecmUah4BFZR6BQUs75m+hZSbM7u7NqIG+n1q6WBlGqiHKRmGOZzK
+        mvWAD5RaxATogLCo2o2Ly3sGqFDoRmo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-285-WOfAwr5KPz-iuXpgqm4tMw-1; Tue, 11 Aug 2020 16:06:43 -0400
+X-MC-Unique: WOfAwr5KPz-iuXpgqm4tMw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6BCDC800479;
+        Tue, 11 Aug 2020 20:06:41 +0000 (UTC)
+Received: from Ruby.redhat.com (ovpn-119-184.rdu2.redhat.com [10.10.119.184])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E67B05D9DD;
+        Tue, 11 Aug 2020 20:06:35 +0000 (UTC)
+From:   Lyude Paul <lyude@redhat.com>
+To:     nouveau@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>,
+        =?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?= <jose.souza@intel.com>,
+        Manasi Navare <manasi.d.navare@intel.com>,
+        Uma Shankar <uma.shankar@intel.com>,
+        Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>,
+        Imre Deak <imre.deak@intel.com>,
+        Wambui Karuga <wambui.karugax@gmail.com>,
+        Lucas De Marchi <lucas.demarchi@intel.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [RFC 15/20] drm/i915/dp: Extract drm_dp_has_sink_count()
+Date:   Tue, 11 Aug 2020 16:04:52 -0400
+Message-Id: <20200811200457.134743-16-lyude@redhat.com>
+In-Reply-To: <20200811200457.134743-1-lyude@redhat.com>
+References: <20200811200457.134743-1-lyude@redhat.com>
 MIME-Version: 1.0
-References: <20200811183950.10603-1-peterx@redhat.com> <CAHk-=whQM=m5td5tfbuxh1f_Gxjsa74XV962BYkjrbeDMAhBpA@mail.gmail.com>
-In-Reply-To: <CAHk-=whQM=m5td5tfbuxh1f_Gxjsa74XV962BYkjrbeDMAhBpA@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 11 Aug 2020 13:06:04 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wit7LDr0tA2eVn7yHHEH76oK=Lfm3tTs8_JxO8XEED4_g@mail.gmail.com>
-Message-ID: <CAHk-=wit7LDr0tA2eVn7yHHEH76oK=Lfm3tTs8_JxO8XEED4_g@mail.gmail.com>
-Subject: Re: [PATCH v3] mm/gup: Allow real explicit breaking of COW
-To:     Peter Xu <peterx@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>
-Cc:     Linux-MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Marty Mcfadden <mcfadden8@llnl.gov>,
-        "Maya B . Gokhale" <gokhale2@llnl.gov>,
-        Jann Horn <jannh@google.com>, Christoph Hellwig <hch@lst.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Kirill Shutemov <kirill@shutemov.name>, Jan Kara <jack@suse.cz>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-;
+Since other drivers are also going to need to be aware of the sink count
+in order to do proper dongle detection, we might as well steal i915's
+DP_SINK_COUNT helpers and move them into DRM helpers so that other
+dirvers can use them as well.
 
-On Tue, Aug 11, 2020 at 12:24 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> Now I wonder if there's any other case of FOLL_WRITE that is missing.
+Note that this also starts using intel_dp_has_sink_count() in
+intel_dp_detect_dpcd(), which is a functional change.
 
-Actually, now I wonder if we really should have tried to handle the
-wrong-way cow reuse case some other way entirely.
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+---
+ drivers/gpu/drm/drm_dp_helper.c         | 22 ++++++++++++++++++++++
+ drivers/gpu/drm/i915/display/intel_dp.c | 21 ++++++++++++---------
+ include/drm/drm_dp_helper.h             |  8 +++++++-
+ 3 files changed, 41 insertions(+), 10 deletions(-)
 
-When discussing this wrong-way-COW issue originally I looked at just doing
+diff --git a/drivers/gpu/drm/drm_dp_helper.c b/drivers/gpu/drm/drm_dp_helper.c
+index 9703b33599c3b..05bb47e589731 100644
+--- a/drivers/gpu/drm/drm_dp_helper.c
++++ b/drivers/gpu/drm/drm_dp_helper.c
+@@ -700,6 +700,28 @@ void drm_dp_set_subconnector_property(struct drm_connector *connector,
+ }
+ EXPORT_SYMBOL(drm_dp_set_subconnector_property);
+ 
++/**
++ * drm_dp_has_sink_count() - Check whether a given connector has a valid sink
++ * count
++ * @connector: The DRM connector to check
++ * @dpcd: A cached copy of the connector's DPCD RX capabilities
++ * @desc: A cached copy of the connector's DP descriptor
++ *
++ * Returns: %True if the (e)DP connector has a valid sink count that should
++ * be probed, %false otherwise.
++ */
++bool drm_dp_has_sink_count(struct drm_connector *connector,
++			   const u8 dpcd[DP_RECEIVER_CAP_SIZE],
++			   const struct drm_dp_desc *desc)
++{
++	/* Some eDP panels don't set a valid value for the sink count */
++	return connector->connector_type != DRM_MODE_CONNECTOR_eDP &&
++		dpcd[DP_DPCD_REV] >= DP_DPCD_REV_11 &&
++		dpcd[DP_DOWNSTREAMPORT_PRESENT] & DP_DWN_STRM_PORT_PRESENT &&
++		!drm_dp_has_quirk(desc, 0, DP_DPCD_QUIRK_NO_SINK_COUNT);
++}
++EXPORT_SYMBOL(drm_dp_has_sink_count);
++
+ /*
+  * I2C-over-AUX implementation
+  */
+diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915/display/intel_dp.c
+index 984e49194ca31..35a4779a442e2 100644
+--- a/drivers/gpu/drm/i915/display/intel_dp.c
++++ b/drivers/gpu/drm/i915/display/intel_dp.c
+@@ -4634,6 +4634,16 @@ intel_edp_init_dpcd(struct intel_dp *intel_dp)
+ 	return true;
+ }
+ 
++static bool
++intel_dp_has_sink_count(struct intel_dp *intel_dp)
++{
++	if (!intel_dp->attached_connector)
++		return false;
++
++	return drm_dp_has_sink_count(&intel_dp->attached_connector->base,
++				     intel_dp->dpcd,
++				     &intel_dp->desc);
++}
+ 
+ static bool
+ intel_dp_get_dpcd(struct intel_dp *intel_dp)
+@@ -4653,13 +4663,7 @@ intel_dp_get_dpcd(struct intel_dp *intel_dp)
+ 		intel_dp_set_common_rates(intel_dp);
+ 	}
+ 
+-	/*
+-	 * Some eDP panels do not set a valid value for sink count, that is why
+-	 * it don't care about read it here and in intel_edp_init_dpcd().
+-	 */
+-	if (!intel_dp_is_edp(intel_dp) &&
+-	    !drm_dp_has_quirk(&intel_dp->desc, 0,
+-			      DP_DPCD_QUIRK_NO_SINK_COUNT)) {
++	if (intel_dp_has_sink_count(intel_dp)) {
+ 		u8 count;
+ 		ssize_t r;
+ 
+@@ -5939,9 +5943,8 @@ intel_dp_detect_dpcd(struct intel_dp *intel_dp)
+ 		return connector_status_connected;
+ 
+ 	/* If we're HPD-aware, SINK_COUNT changes dynamically */
+-	if (intel_dp->dpcd[DP_DPCD_REV] >= 0x11 &&
++	if (intel_dp_has_sink_count(intel_dp) &&
+ 	    intel_dp->downstream_ports[0] & DP_DS_PORT_HPD) {
+-
+ 		return intel_dp->sink_count ?
+ 		connector_status_connected : connector_status_disconnected;
+ 	}
+diff --git a/include/drm/drm_dp_helper.h b/include/drm/drm_dp_helper.h
+index 1349f16564ace..a1413a531eaf4 100644
+--- a/include/drm/drm_dp_helper.h
++++ b/include/drm/drm_dp_helper.h
+@@ -1631,6 +1631,11 @@ void drm_dp_set_subconnector_property(struct drm_connector *connector,
+ 				      const u8 *dpcd,
+ 				      const u8 port_cap[4]);
+ 
++struct drm_dp_desc;
++bool drm_dp_has_sink_count(struct drm_connector *connector,
++			   const u8 dpcd[DP_RECEIVER_CAP_SIZE],
++			   const struct drm_dp_desc *desc);
++
+ void drm_dp_remote_aux_init(struct drm_dp_aux *aux);
+ void drm_dp_aux_init(struct drm_dp_aux *aux);
+ int drm_dp_aux_register(struct drm_dp_aux *aux);
+@@ -1689,7 +1694,8 @@ enum drm_dp_quirk {
+ 	 * @DP_DPCD_QUIRK_NO_SINK_COUNT:
+ 	 *
+ 	 * The device does not set SINK_COUNT to a non-zero value.
+-	 * The driver should ignore SINK_COUNT during detection.
++	 * The driver should ignore SINK_COUNT during detection. Note that
++	 * drm_dp_has_sink_count() automatically checks for this quirk.
+ 	 */
+ 	DP_DPCD_QUIRK_NO_SINK_COUNT,
+ 	/**
+-- 
+2.26.2
 
-        struct page *page = vmf->page;
-
-        if (page_count(page) != 1)
-                goto copy;
-        if (!trylock_page(page))
-                goto copy;
-        if (page_mapcount(page) != 1 && page_count(page) != 1) {
-                unlock_page(page);
-                goto copy;
-        }
-        /* Ok, we've got the only map reference, and the only
-         *  page count reference, and the page is locked,
-         * it's dark out, and we're wearing sunglasses. Hit it.
-         */
-        wp_page_reuse(vmf);
-        unlock_page(page);
-        return VM_FAULT_WRITE
-
-at the top of the PageAnon() case in do_wp_page(), and be entirely done with it.
-
-Make the rule be that we *only* re-use the page if there is no
-question what-so-ever that we're the only possible owner of it.
-Anything else at all - whether they be GUP users, other processes,
-KSM, hughepage collapsing, whatever: don't even try.
-
-That would possibly cause a lot of extra copies, but our rules for
-"can we re-use this page" are just crazy complicated. And now the
-"minimal" thing of just always breaking COW ends up causing
-complications of its own.
-
-IOW, maybe all of this falls under "yeah, we have historical reasons
-for all of it, but it's just not worth the pain".
-
-We do a _lot_ of complex stuff just to check whether we could possibly
-share the page.
-
-Maybe trying to reuse the page just isn't worth it?
-
-Adding Andrea to the cc (although he probably sees this through
-linux-mm anyway). Maybe he can go "naah, that will be horribly bad,
-because..."
-
-Then we could get rid of all the FAULT_FORCE_COW games again entirely,
-and people can point fingers at me and laugh behind my back because of
-what a bad idea it was.
-
-                    Linus
