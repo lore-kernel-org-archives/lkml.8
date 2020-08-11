@@ -2,130 +2,187 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 410BCC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 08:51:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3AD1C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 08:51:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26E9720756
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 08:51:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAF0B20756
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 08:51:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="DK3XNnjc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728423AbgHKIu6 (ORCPT
+        id S1728433AbgHKIvT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 04:50:58 -0400
-Received: from smtp-bc0e.mail.infomaniak.ch ([45.157.188.14]:57327 "EHLO
-        smtp-bc0e.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728346AbgHKIu6 (ORCPT
+        Tue, 11 Aug 2020 04:51:19 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:42875 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728325AbgHKIvS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 04:50:58 -0400
-Received: from smtp-3-0000.mail.infomaniak.ch (unknown [10.4.36.107])
-        by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4BQml41VTWzlhkjB;
-        Tue, 11 Aug 2020 10:50:56 +0200 (CEST)
-Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
-        by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4BQml140TQzlh8Tv;
-        Tue, 11 Aug 2020 10:50:53 +0200 (CEST)
-Subject: Re: [PATCH v7 0/7] Add support for O_MAYEXEC
-To:     David Laight <David.Laight@aculab.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Thibaut Sautereau <thibaut.sautereau@clip-os.org>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        "kernel-hardening@lists.openwall.com" 
-        <kernel-hardening@lists.openwall.com>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-References: <20200723171227.446711-1-mic@digikod.net>
- <202007241205.751EBE7@keescook>
- <0733fbed-cc73-027b-13c7-c368c2d67fb3@digikod.net>
- <20200810202123.GC1236603@ZenIV.linux.org.uk>
- <30b8c003f49d4280be5215f634ca2c06@AcuMS.aculab.com>
- <20200810222838.GF1236603@ZenIV.linux.org.uk>
- <2531a0e8-5122-867c-ba06-5d2e623a3834@digikod.net>
- <26a4a8378f3b4ad28eaa476853092716@AcuMS.aculab.com>
-From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
-Message-ID: <c0224c08-f669-168e-3bb4-35eceec96a8b@digikod.net>
-Date:   Tue, 11 Aug 2020 10:50:53 +0200
-User-Agent: 
+        Tue, 11 Aug 2020 04:51:18 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597135877; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=7WwnnDLcpDYR0mzRDFxxHd6DBQPVie18LRrLzCaS3S4=; b=DK3XNnjceqLItRAB/N2p+op4lzPc4nkaNpNhLfFPZIVkgOtwzZS/YotTTEJhA3vAWz06oJCb
+ 8z5yAvs9rK1++tQvqwOwPAe7VLwoVIqq8y9WdwlbWQLsSZwx9fFM3o5rZyO8yshicl/Bb2BR
+ TL4otMxAIP3fKz/rkJ3ir0yLewo=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n12.prod.us-east-1.postgun.com with SMTP id
+ 5f325bf82b87d66049f524f7 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 11 Aug 2020 08:51:04
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 125CAC433A1; Tue, 11 Aug 2020 08:51:04 +0000 (UTC)
+Received: from [10.131.194.49] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mgautam)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 22AE7C433C9;
+        Tue, 11 Aug 2020 08:50:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 22AE7C433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mgautam@codeaurora.org
+Subject: Re: [PATCH 2/2] usb: dwc3: Host wake up support from system suspend
+To:     Sandeep Maheswaram <sanm@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Michael Turquette <mturquette@baylibre.com>
+Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, Taniya Das <tdas@codeaurora.org>
+References: <1591885683-29514-1-git-send-email-sanm@codeaurora.org>
+ <1591885683-29514-3-git-send-email-sanm@codeaurora.org>
+From:   Manu Gautam <mgautam@codeaurora.org>
+Message-ID: <7e2e94c8-e06b-1ecc-4304-008fcce1fe30@codeaurora.org>
+Date:   Tue, 11 Aug 2020 14:20:55 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <26a4a8378f3b4ad28eaa476853092716@AcuMS.aculab.com>
+In-Reply-To: <1591885683-29514-3-git-send-email-sanm@codeaurora.org>
 Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
-X-Antivirus-Code: 0x100000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
-On 11/08/2020 10:09, David Laight wrote:
->> On 11/08/2020 00:28, Al Viro wrote:
->>> On Mon, Aug 10, 2020 at 10:09:09PM +0000, David Laight wrote:
->>>>> On Mon, Aug 10, 2020 at 10:11:53PM +0200, Mickaël Salaün wrote:
->>>>>> It seems that there is no more complains nor questions. Do you want me
->>>>>> to send another series to fix the order of the S-o-b in patch 7?
->>>>>
->>>>> There is a major question regarding the API design and the choice of
->>>>> hooking that stuff on open().  And I have not heard anything resembling
->>>>> a coherent answer.
->>>>
->>>> To me O_MAYEXEC is just the wrong name.
->>>> The bit would be (something like) O_INTERPRET to indicate
->>>> what you want to do with the contents.
->>
->> The properties is "execute permission". This can then be checked by
->> interpreters or other applications, then the generic O_MAYEXEC name.
-> 
-> The english sense of MAYEXEC is just wrong for what you are trying
-> to check.
+On 6/11/2020 7:58 PM, Sandeep Maheswaram wrote:
+> Avoiding phy powerdown in host mode so that it can be wake up by devices.
+> Set usb controller wakeup capable when wakeup capable devices are
+> connected to the host.
+>
+> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+> ---
+>  drivers/usb/dwc3/core.c      | 47 ++++++++++++++++++++++++++-----
+>  drivers/usb/dwc3/core.h      |  1 +
+>  drivers/usb/dwc3/dwc3-qcom.c | 66 +++++++++++++++++++++++++++++++++-----------
+>  3 files changed, 91 insertions(+), 23 deletions(-)
+>
+> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+> index 25c686a7..8370350 100644
+> --- a/drivers/usb/dwc3/core.c
+> +++ b/drivers/usb/dwc3/core.c
+> @@ -31,15 +31,19 @@
+>  #include <linux/usb/gadget.h>
+>  #include <linux/usb/of.h>
+>  #include <linux/usb/otg.h>
+> +#include <linux/usb/hcd.h>
+>  
+>  #include "core.h"
+>  #include "gadget.h"
+>  #include "io.h"
+>  
+>  #include "debug.h"
+> +#include "../host/xhci.h"
+>  
+>  #define DWC3_DEFAULT_AUTOSUSPEND_DELAY	5000 /* ms */
+>  
+> +bool need_phy_for_wakeup;
+> +
+>  /**
+>   * dwc3_get_dr_mode - Validates and sets dr_mode
+>   * @dwc: pointer to our context structure
+> @@ -1627,10 +1631,36 @@ static int dwc3_core_init_for_resume(struct dwc3 *dwc)
+>  	return ret;
+>  }
+>  
+> +static void dwc3_set_phy_speed_flags(struct dwc3 *dwc)
+> +{
+> +
+> +	int i, num_ports;
+> +	u32 reg;
+> +	struct usb_hcd	*hcd = platform_get_drvdata(dwc->xhci);
 
-We think it reflects exactly what it's purpose is.
+dwc->xhci could be NULL for DR_MODE = PERIPHERAL.
 
-> 
->>> ... which does not answer the question - name of constant is the least of
->>> the worries here.  Why the hell is "apply some unspecified checks to
->>> file" combined with opening it, rather than being an independent primitive
->>> you apply to an already opened file?  Just in case - "'cuz that's how we'd
->>> done it" does not make a good answer...
-> 
-> Maybe an access_ok() that acts on an open fd would be more
-> appropriate.
-> Which might end up being an fcntrl() action.
-> That would give you a full 32bit mask of options.
 
-I previously talk about fcntl(2):
-https://lore.kernel.org/lkml/eaf5bc42-e086-740b-a90c-93e67c535eee@digikod.net/
+> +	struct xhci_hcd	*xhci_hcd = hcd_to_xhci(hcd);
+> +
+> +	dwc->hs_phy_flags &= ~(PHY_MODE_USB_HOST_HS | PHY_MODE_USB_HOST_LS);
+> +
+> +	reg = readl(&xhci_hcd->cap_regs->hcs_params1);
+> +
+> +	num_ports = HCS_MAX_PORTS(reg);
+> +	for (i = 0; i < num_ports; i++) {
+> +		reg = readl(&xhci_hcd->op_regs->port_status_base + i*0x10);
+> +		if (reg & PORT_PE) {
+> +			if (DEV_HIGHSPEED(reg) || DEV_FULLSPEED(reg))
+> +				dwc->hs_phy_flags |= PHY_MODE_USB_HOST_HS;
+> +			else if (DEV_LOWSPEED(reg))
+> +				dwc->hs_phy_flags |= PHY_MODE_USB_HOST_LS;
+> +		}
+> +	}
+> +	phy_set_mode(dwc->usb2_generic_phy, dwc->hs_phy_flags);
+
+
+Can we move this logic to xhci driver instead?
+
+> +}
+> +
+..
+> @@ -240,6 +267,11 @@ static int dwc3_qcom_suspend(struct dwc3_qcom *qcom)
+>  {
+>  	u32 val;
+>  	int i;
+> +	struct dwc3 *dwc = platform_get_drvdata(qcom->dwc3);
+> +	struct usb_hcd  *hcd = platform_get_drvdata(dwc->xhci);
+
+dwc->xhci could be NULL
+
+
+> +
+> +	if (usb_wakeup_enabled_descendants(hcd->self.root_hub))
+> +		device_init_wakeup(qcom->dev, 1);
+>  
+>  	if (qcom->is_suspended)
+>  		return 0;
+> @@ -262,6 +294,8 @@ static int dwc3_qcom_resume(struct dwc3_qcom *qcom)
+>  	int ret;
+>  	int i;
+>  
+> +	device_init_wakeup(qcom->dev, 0);
+> +
+>  	if (!qcom->is_suspended)
+>  		return 0;
+>  
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
