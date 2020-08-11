@@ -2,88 +2,74 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0201EC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 06:13:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89412C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 06:15:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4264206DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 06:13:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72BFF206B5
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 06:15:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbgHKGNU (ORCPT
+        id S1727871AbgHKGPR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 02:13:20 -0400
-Received: from mail106.syd.optusnet.com.au ([211.29.132.42]:37833 "EHLO
-        mail106.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726154AbgHKGNU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 02:13:20 -0400
-Received: from dread.disaster.area (pa49-180-53-24.pa.nsw.optusnet.com.au [49.180.53.24])
-        by mail106.syd.optusnet.com.au (Postfix) with ESMTPS id 91FE9760815;
-        Tue, 11 Aug 2020 16:13:16 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1k5NX8-0002CA-9F; Tue, 11 Aug 2020 16:13:14 +1000
-Date:   Tue, 11 Aug 2020 16:13:14 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] fs: RWF_NOWAIT should imply IOCB_NOIO
-Message-ID: <20200811061314.GF2079@dread.disaster.area>
-References: <e8325bef-7e91-5fd4-fa25-74cfa169ffd2@kernel.dk>
+        Tue, 11 Aug 2020 02:15:17 -0400
+Received: from mleia.com ([178.79.152.223]:41242 "EHLO mail.mleia.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726154AbgHKGPP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 02:15:15 -0400
+Received: from mail.mleia.com (localhost [127.0.0.1])
+        by mail.mleia.com (Postfix) with ESMTP id C28C93FDBB3;
+        Tue, 11 Aug 2020 06:15:13 +0000 (UTC)
+Subject: Re: [PATCH 5/7] regulator: plug of_node leak in
+ regulator_register()'s error path
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+References: <cover.1597107682.git.mirq-linux@rere.qmqm.pl>
+ <f106ae5b37612b36cb817691fb690e5456aea0ee.1597107682.git.mirq-linux@rere.qmqm.pl>
+From:   Vladimir Zapolskiy <vz@mleia.com>
+Message-ID: <e8caa9cd-f3e2-8a33-12f4-81dfd6f9c551@mleia.com>
+Date:   Tue, 11 Aug 2020 09:15:07 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e8325bef-7e91-5fd4-fa25-74cfa169ffd2@kernel.dk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=LPwYv6e9 c=1 sm=1 tr=0
-        a=moVtWZxmCkf3aAMJKIb/8g==:117 a=moVtWZxmCkf3aAMJKIb/8g==:17
-        a=kj9zAlcOel0A:10 a=y4yBn9ojGxQA:10 a=7-415B0cAAAA:8 a=20KFwNOVAAAA:8
-        a=4G0RZZJQyTIlTLWZrEUA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <f106ae5b37612b36cb817691fb690e5456aea0ee.1597107682.git.mirq-linux@rere.qmqm.pl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-49551924 
+X-CRM114-CacheID: sfid-20200811_061513_819030_95435139 
+X-CRM114-Status: GOOD (  10.54  )
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 06:48:19PM -0600, Jens Axboe wrote:
-> With the change allowing read-ahead for IOCB_NOWAIT, we changed the
-> RWF_NOWAIT semantics of only doing cached reads. Since we know have
-> IOCB_NOIO to manage that specific side of it, just make RWF_NOWAIT
-> imply IOCB_NOIO as well to restore the previous behavior.
-> 
-> Fixes: 2e85abf053b9 ("mm: allow read-ahead with IOCB_NOWAIT set")
-> Reported-by: Dave Chinner <david@fromorbit.com>
-> Signed-off-by: Jens Axboe <axboe@kernel.dk>
-> 
-> ---
-> 
-> This was a known change with the buffered async read change, but we
-> didn't have IOCB_NOIO until late in 5.8. Now that bases are synced,
-> make the change to make RWF_NOWAIT behave like past kernels.
-> 
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index bd7ec3eaeed0..f1cca4bfdd7b 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -3293,7 +3293,7 @@ static inline int kiocb_set_rw_flags(struct kiocb *ki, rwf_t flags)
->  	if (flags & RWF_NOWAIT) {
->  		if (!(ki->ki_filp->f_mode & FMODE_NOWAIT))
->  			return -EOPNOTSUPP;
-> -		kiocb_flags |= IOCB_NOWAIT;
-> +		kiocb_flags |= IOCB_NOWAIT | IOCB_NOIO;
->  	}
->  	if (flags & RWF_HIPRI)
->  		kiocb_flags |= IOCB_HIPRI;
+Hi Michał,
 
-Looks good.
+On 8/11/20 4:07 AM, Michał Mirosław wrote:
+> By calling device_initialize() earlier and noting that kfree(NULL) is
+> ok, we can save a bit of code in error handling and plug of_node leak.
+> Fixed commit already did part of the work.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 9177514ce349 ("regulator: fix memory leak on error path of regulator_register()")
+> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
+thank you for the patch!
 
--- 
-Dave Chinner
-david@fromorbit.com
+I was worried about a potentially remaining of_node reference leak,
+but I was not able to reproduce it on practice without code fuzzing.
+
+The change looks valid and it's a nice simplification.
+
+Acked-by: Vladimir Zapolskiy <vz@mleia.com>
+
+--
+Best wishes,
+Vladimir
