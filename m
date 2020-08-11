@@ -2,63 +2,64 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50FE2C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:01:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1465EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:01:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2905C2078B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:01:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1D1B20771
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:01:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MnGiFeMt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="igix8vnt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728903AbgHKPBf (ORCPT
+        id S1728923AbgHKPBm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 11:01:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55752 "EHLO
+        Tue, 11 Aug 2020 11:01:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728801AbgHKPB1 (ORCPT
+        with ESMTP id S1728879AbgHKPB2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 11:01:27 -0400
-Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02268C061787;
-        Tue, 11 Aug 2020 08:01:27 -0700 (PDT)
-Received: by mail-wm1-x336.google.com with SMTP id c80so2878553wme.0;
-        Tue, 11 Aug 2020 08:01:26 -0700 (PDT)
+        Tue, 11 Aug 2020 11:01:28 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 888BAC06174A;
+        Tue, 11 Aug 2020 08:01:28 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id c19so2295394wmd.1;
+        Tue, 11 Aug 2020 08:01:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Q8s0DvqKHUDOgwL+41LR/o2tBL7BQpYDVvLQhOyKNmE=;
-        b=MnGiFeMtI8YJG+KhcK1nZQBYvSHiryie4h22btJkI+1ErbBDAu9T6Bi0LWr7w6UbCM
-         1OrLNjigQjPvkPQKLou7TfZdhGAnSKAzRZGc1ZxmDl+6qBj/PeyUgxcs04z1wuehrYHc
-         THc7vR5gtKjl9yIclQcCVbnuXO+l4JvuKfiLBzAHy/4heiX883plaxMkfmDI2ONVDP9t
-         o4tUOvwEnOHM96927ZAPvgDrgfCDWrB1O/R42bidsQb1IDRwXFSg+p7AwNi4YnC17ea1
-         yZD6+x9EVYYks1Qq5iTYB3hHU2gh315YlbfqdGNIxlUmGxZFibey0bxu0TGIs+Dqqtyj
-         xzvA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=G6V/OqOvjtGyfeK4VfmVQNJE3fnNa+RlZtfmz9pCWl8=;
+        b=igix8vnto1Sx5HkGVypyCf6MUAS2BULEalfhuivAYFfIVX40Yiv4kZFPAurZ2Gtpkb
+         NcnkmfaDL/WhnqA2210ude14/JXZy1LcYQyUkfS1UVKgtDzflhpPtHuBHZRP6ggzyMPr
+         VGWcPk5DhJTru1Z8fyegbuaDap+boweD1BMWebu6l7arKzdRXpMb7ybAJlVs8QRNPTW6
+         V8dLZVe5lSA0bmF875ndoF9uznO7xFbeSe9bq9ZwVRHsKaM4KqWGZ3El76Jl8iORtFAa
+         P8rYTLVMADg2EWaitC7r9jeqiigo9JEC0a93ZfjNzmuGATJksKmZLKJdgGJucr7K2FmL
+         HCXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Q8s0DvqKHUDOgwL+41LR/o2tBL7BQpYDVvLQhOyKNmE=;
-        b=YWehnzDihruiVj0bQHs+zv5hHBxbkt1UFYzrFHYznl2OXTD8oCacEAPxUi9lOwFWLR
-         BMSPh3jYH9HbqK49veKe5GYdoIGS6b52ZtVjNCOvx4xboK32qzvNpQHrJq0W3LPmMe44
-         8OYPWD6mUhFP6qerxhXhlp6okMBfu6cvTL8BW/PUPwzWHmzzmuy9VMGxHTHw40sIZ+1g
-         7Tq/Iu92rEFNnO8HmWHPBH6pMoA8iMpf9nlcDz+SvoMRqwMNB6TfSi0XTLya4R98AnDR
-         PGI13ZoU1MtpLn/Jk9WMJtVM6fxGG+weuF3lkpP3xNVqsQW65hbMOwB/P/kXn7cxLRwV
-         Fy3w==
-X-Gm-Message-State: AOAM532fdhBfKZEsqOfAgN13kf2/K/9gk78pvFyW6aT/y0ojWa5yOvCu
-        fO5J6PzF905rgOmqRZanp4A=
-X-Google-Smtp-Source: ABdhPJwm++OYHVlMJdIp4ElGM7WtMsr9nZSTihomZB0DeFdy60BJb3DpEj9ZnpyPy0GA8QB0sqcIRQ==
-X-Received: by 2002:a1c:1bc4:: with SMTP id b187mr4273141wmb.175.1597158083703;
-        Tue, 11 Aug 2020 08:01:23 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=G6V/OqOvjtGyfeK4VfmVQNJE3fnNa+RlZtfmz9pCWl8=;
+        b=deyv8C9FkPPaHjxEt5XmrLeVhDX5QOpHnE1C69VtCBdUWSppY6EIeelg0Xkf5++FTr
+         uaTltqD47J1bf7gS1yiWuR+TGjvM2lXXrzaeLccONrTblJulPQYUPYuQNVCaSaTlpYmG
+         FRaZa/J5uostCHAD31S9efzgI8uedInceLjkfAmmI/WK97/LrNN4vIDAAwhZ58UoQuGz
+         E5n9xZmtyc6DfGooG/qaHDMgopQCzDGC83JF5ytUuCHxKgCo61A5GvBxrXtG9y30nzlT
+         ywXjmOECMuFN61LDuk4oeGKpaN4NaHUOheLoA2uZ/1yWdYLqpDSZAGaqKy3SD3JlSKBt
+         2csQ==
+X-Gm-Message-State: AOAM530rDLanOwMDFhE1p9xAV3UYsp/PgQeCNJAjBoZnj4ozkHqrAt8T
+        mGLG0IwOgx8Fh0XmKC5pnzY=
+X-Google-Smtp-Source: ABdhPJzPdhjMD0Lx53CAXhkpNaKyQ099EdsF6At8pBPi6eXUCFu2H1D9brDvbtCWIci6CUhwboliRg==
+X-Received: by 2002:a7b:ca4b:: with SMTP id m11mr4251892wml.120.1597158086825;
+        Tue, 11 Aug 2020 08:01:26 -0700 (PDT)
 Received: from skynet.lan (88.red-83-49-60.dynamicip.rima-tde.net. [83.49.60.88])
-        by smtp.gmail.com with ESMTPSA id 15sm5350494wmo.33.2020.08.11.08.01.22
+        by smtp.gmail.com with ESMTPSA id 15sm5350494wmo.33.2020.08.11.08.01.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Aug 2020 08:01:23 -0700 (PDT)
+        Tue, 11 Aug 2020 08:01:26 -0700 (PDT)
 From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
         <noltari@gmail.com>
 To:     tsbogend@alpha.franken.de, f.fainelli@gmail.com,
@@ -67,10 +68,12 @@ To:     tsbogend@alpha.franken.de, f.fainelli@gmail.com,
         linux-kernel@vger.kernel.org
 Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
         <noltari@gmail.com>
-Subject: [PATCH v3 0/4] MIPS: BCM63xx: board improvements
-Date:   Tue, 11 Aug 2020 17:01:13 +0200
-Message-Id: <20200811150117.254620-1-noltari@gmail.com>
+Subject: [PATCH v3 3/4] MIPS: BCM63xx: enable EHCI for DWV-S0 board
+Date:   Tue, 11 Aug 2020 17:01:16 +0200
+Message-Id: <20200811150117.254620-4-noltari@gmail.com>
 X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200811150117.254620-1-noltari@gmail.com>
+References: <20200811150117.254620-1-noltari@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -79,20 +82,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Theses patches improve BCM63xx board declarations and source code.
+BCM6358 SoCs have OHCI and EHCI controllers that share the same USB ports.
+Therefore, the board should also have EHCI enabled.
 
-v3: Reword DWV-S0 board commit description to avoid possible confusions.
-v2: switch to SPDX license identifier.
+Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ v3: Reword commit description to avoid possible confusions.
+ v2: no changes.
 
-Álvaro Fernández Rojas (4):
-  MIPS: BCM63xx: remove duplicated new lines
-  MIPS: BCM63xx: remove EHCI from BCM6348 boards
-  MIPS: BCM63xx: enable EHCI for DWV-S0 board
-  MIPS: BCM63xx: refactor board declarations
+ arch/mips/bcm63xx/boards/board_bcm963xx.c | 1 +
+ 1 file changed, 1 insertion(+)
 
- arch/mips/bcm63xx/boards/board_bcm963xx.c | 625 +++++++++++-----------
- 1 file changed, 306 insertions(+), 319 deletions(-)
-
+diff --git a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards/board_bcm963xx.c
+index 45f1bc437245..ac9570b66f37 100644
+--- a/arch/mips/bcm63xx/boards/board_bcm963xx.c
++++ b/arch/mips/bcm63xx/boards/board_bcm963xx.c
+@@ -645,6 +645,7 @@ static struct board_info __initdata board_DWVS0 = {
+ 	},
+ 
+ 	.has_ohci0			= 1,
++	.has_ehci0			= 1,
+ };
+ #endif /* CONFIG_BCM63XX_CPU_6358 */
+ 
 -- 
 2.28.0
 
