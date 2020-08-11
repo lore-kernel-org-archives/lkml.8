@@ -2,119 +2,139 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B18B6C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:47:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25632C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:48:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 895FC2078E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:47:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="b/1GrCuy"
+	by mail.kernel.org (Postfix) with ESMTP id 097722078E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:48:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728895AbgHKOr4 (ORCPT
+        id S1728907AbgHKOsB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 10:47:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53678 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728821AbgHKOry (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 10:47:54 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67CC0C061787
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 07:47:54 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id qc22so13392429ejb.4
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 07:47:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NlI3wwMv00NWAKa4U5L5YIW/C1hPZtgfWHscUycMhMg=;
-        b=b/1GrCuy3zsT+xu5hfBEofJfyyKQre91pqNlsX0MOiaTmfxSPwy7IGLslRBMr1FYKY
-         zI3t+/pBjNn/cWUYAhxg2ybd+V693B7WeKqrlAhEyzJ+Wc8nUDESQI2IF1QON3Jh9uVT
-         YZ8yQWu+czbgj3GVSDUvltitl5HM0LYJ+TUMs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NlI3wwMv00NWAKa4U5L5YIW/C1hPZtgfWHscUycMhMg=;
-        b=XBRA1NvN73JdQG1lx1Sf6LYpYTTNUXvCC3K+RVckZyjl88TGrHGlbBJctzcxO3J9pu
-         nn/8T/2z262lAI+y9ILFsPZZoOpAWHbXhBrmwQlu8TeXWXu4b4LVGDR8onbSUkslSIgI
-         rmX+fwVGVze4L8/yOBJyYny4KrGCyjm858bNEg8RAbGZz46hgXNZyosuUg8g5aD64vDm
-         o2yrRoiJXDpGRL9moOCIZzmxupQsYe5SRhhmDXrP5EpnlZ5GUKkcT0BQFv1CfY6JOIMH
-         nWgM1+Y8bJ44TJAh4yGoUJHOZWBUisHRXk6VjO+pFLRPMY7LTfjor9LrpVi55UGhKVUE
-         1+CQ==
-X-Gm-Message-State: AOAM532+ubK0sCrr1VH630NpNctkBvxRJ2Y+4+2WUZ/tQ7QSxW8mUeMo
-        k6a/0Lf5ysHqzueKw+4L7oGTSw5Lz42JQycXQhG+gA==
-X-Google-Smtp-Source: ABdhPJyzKi8DHXr7w4yVAeEpF1qKnBzFBfVBk8wgiswCZWAR8v6h3A2J/MoGxuGyvmtaDdoLAlCOJpZxXZxjkYlm3EU=
-X-Received: by 2002:a17:906:3c59:: with SMTP id i25mr26135160ejg.202.1597157272920;
- Tue, 11 Aug 2020 07:47:52 -0700 (PDT)
+        Tue, 11 Aug 2020 10:48:01 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47112 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728794AbgHKOsA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 10:48:00 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id CB4FAACDF;
+        Tue, 11 Aug 2020 14:48:19 +0000 (UTC)
+Date:   Tue, 11 Aug 2020 16:47:54 +0200
+From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Christoph Lameter <cl@linux.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
+        kernel-team@fb.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 4/5] mm: memcg: charge memcg percpu memory to the
+ parent cgroup
+Message-ID: <20200811144754.GA45201@blackbook>
+References: <20200623184515.4132564-1-guro@fb.com>
+ <20200623184515.4132564-5-guro@fb.com>
+ <20200729171039.GA22229@blackbody.suse.cz>
+ <20200806211603.195727c03995c3a25ffc6d76@linux-foundation.org>
+ <20200807043717.GA1231562@carbon.DHCP.thefacebook.com>
 MIME-Version: 1.0
-References: <1845353.1596469795@warthog.procyon.org.uk> <CAJfpegunY3fuxh486x9ysKtXbhTE0745ZCVHcaqs9Gww9RV2CQ@mail.gmail.com>
- <ac1f5e3406abc0af4cd08d818fe920a202a67586.camel@themaw.net>
- <CAJfpegu8omNZ613tLgUY7ukLV131tt7owR+JJ346Kombt79N0A@mail.gmail.com>
- <CAJfpegtNP8rQSS4Z14Ja4x-TOnejdhDRTsmmDD-Cccy2pkfVVw@mail.gmail.com>
- <20200811135419.GA1263716@miu.piliscsaba.redhat.com> <20200811140833.GH1236603@ZenIV.linux.org.uk>
- <CAJfpegsNj55pTXe97qE_i-=zFwca1=2W_NqFdn=rHqc_AJjr8Q@mail.gmail.com>
- <20200811143107.GI1236603@ZenIV.linux.org.uk> <CAJfpegvAVOYg03q7n24d6faX33rd16WWi5+LLDdfwj_gRYaJLQ@mail.gmail.com>
- <20200811144247.GK1236603@ZenIV.linux.org.uk>
-In-Reply-To: <20200811144247.GK1236603@ZenIV.linux.org.uk>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Tue, 11 Aug 2020 16:47:41 +0200
-Message-ID: <CAJfpegv3chrvqoGJLUM7JgUYKMWdqU+5h6if1ZFiKELZ1-NFqw@mail.gmail.com>
-Subject: Re: file metadata via fs API (was: [GIT PULL] Filesystem Information)
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     linux-fsdevel@vger.kernel.org, David Howells <dhowells@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Karel Zak <kzak@redhat.com>, Jeff Layton <jlayton@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Christian Brauner <christian@brauner.io>,
-        Lennart Poettering <lennart@poettering.net>,
-        Linux API <linux-api@vger.kernel.org>,
-        Ian Kent <raven@themaw.net>,
-        LSM <linux-security-module@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="lrZ03NoBR/3+SXJZ"
+Content-Disposition: inline
+In-Reply-To: <20200807043717.GA1231562@carbon.DHCP.thefacebook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 4:42 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
->
-> On Tue, Aug 11, 2020 at 04:36:32PM +0200, Miklos Szeredi wrote:
->
-> > > >  - strip off trailing part after first instance of ///
-> > > >  - perform path lookup as normal
-> > > >  - resolve meta path after /// on result of normal lookup
-> > >
-> > > ... and interpolation of relative symlink body into the pathname does change
-> > > behaviour now, *including* the cases when said symlink body does not contain
-> > > that triple-X^Hslash garbage.  Wonderful...
-> >
-> > Can you please explain?
->
-> Currently substituting the body of a relative symlink in place of its name
-> results in equivalent pathname.
 
-Except proc symlinks, that is.
+--lrZ03NoBR/3+SXJZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->  With your patch that is not just no longer
-> true, it's no longer true even when the symlink body does not contain that
-> /// kludge - it can come in part from the symlink body and in part from the
-> rest of pathname.  I.e. you can't even tell if substitution is an equivalent
-> replacement by looking at the symlink body alone.
+On Thu, Aug 06, 2020 at 09:37:17PM -0700, Roman Gushchin <guro@fb.com> wrot=
+e:
+> In general, yes. But in this case I think it wouldn't be a good idea:
+> most often cgroups are created by a centralized daemon (systemd),
+> which is usually located in the root cgroup. Even if it's located not in
+> the root cgroup, limiting it's memory will likely affect the whole system,
+> even if only one specific limit was reached.
+The generic scheme would be (assuming the no internal process
+constraint, in the root too)
 
-Yes, that's true not just for symlink bodies but any concatenation of
-two path segments.
+` root or delegated root
+  ` manager-cgroup (systemd, docker, ...)
+  ` [aggregation group(s)]
+    ` job-group-1
+    ` ...
+    ` job-group-n
 
-That's why it's enabled with RESOLVE_ALT.  I've said that I plan to
-experiment with turning this on globally, but that doesn't mean it's
-necessarily a good idea.  The posted patch contains nothing of that
-sort.
+> If there is a containerized workload, which creates sub-cgroups,
+> charging it's parent cgroup is perfectly effective.
+No dispute about this in either approaches.
 
-Thanks,
-Miklos
+> And the opposite, if we'll charge the cgroup of a process, who created
+> a cgroup, we'll not cover the most common case: systemd creating
+> cgroups for all services in the system.
+What I mean is that systemd should be charged for the cgroup creation.
+Or more generally, any container/cgroup manager should be charged.
+Consider a leak when it wouldn't remove spent cgroups, IMO the effect
+(throttling, reclaim) should be exercised on such a culprit.
+
+I don't think the existing workload (job-group-i above) should
+unnecessarily suffer when only manager is acting up. Is that different
+=66rom your idea?
+
+> Right, but it's quite unusual for tasks from one cgroup to create sub-cgr=
+oups
+> in completely different cgroup. In this particular case there are tons of=
+ other
+> ways how a task from C00 can hurt C1.
+I agree with that.
+
+
+If I haven't overlooked anything, this should be first case when
+cgroup-related structures are accounted (please correct me).
+So this is setting a precendent, if others show useful to be accounted
+in the future too. I'm thinking about cpu_cgroup_css_alloc() that can
+also allocate a lot (with big CPU count). The current approach would lead
+situations where matching cpu and memory csses needn't to exist and that
+would need special handling.
+
+
+> On Thu, Aug 06, 2020 at 09:16:03PM -0700, Andrew Morton wrote:
+> > These week-old issues appear to be significant.  Roman?  Or someone
+> > else?
+Despite my concerns, I don't think this is fundamental and can't be
+changed later so it doesn't prevent the inclusion in 5.9 RC1.
+
+Regards,
+Michal
+
+--lrZ03NoBR/3+SXJZ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEEoQaUCWq8F2Id1tNia1+riC5qSgFAl8yr5UACgkQia1+riC5
+qSgqkg/+MCv3Rc5uG81ZfD7sWfTTfN12Pj2O+whAoYgOXvsv+JD1PsezvdVdwb3C
+oNH/HYMbJBNUkrz/9/pq53kJIIzq2UQ+cEbEatMy8T0kjImYn0Ark4JEF+R43egy
+gaYf26ABfNYxu+r+/aOPdnWx2yL9aeK3o0L9jyWxJhe6EqThSi+9eONCwA/j1fsZ
+/xhlhoojWC2hRVD18xG3xk3pIRCaYqYPq+NBNamnYiUcwrJ3/lE1VDawjWALSG+D
+3PvxjphzJok0Ou+5Nxzh14jfYyXtPMkitHsq3+wA/nEjJWsbxY3AA9E8LG5gkMbe
+g5SG3N7clGWF+MqfHoGjIF6LUreF5mD+dDWGkovs9vWmA5WRAMZh9RhxFKD6QyXd
+7437kkZxWWiut9AkWkp2iXqLjT1gY65lRHFIiELXIid71k0tVKNUe6Xy8OlVSOPv
+yFHC5EhDeWwwEI2FBCtlPP+7nwd0o5tZreYuyCyC1hroDWWiGa23z6u7Uin9pjON
+/qPGHkKid2E9EK6tS47cblvSXdpzO1Gc37hVZjrPsx2esdhumlQkZGJsgFh1kmRD
+v2Q8BZDTLnxdWzVFFpeHO4gToni/MbwHYYf98JjF8YLMtn2duZtecevAPUkAtpAM
+cxIITurK9Jwak8cIlPhtJaySEoHmWKI4MQrvgERh30m0Af3pqqY=
+=N0tJ
+-----END PGP SIGNATURE-----
+
+--lrZ03NoBR/3+SXJZ--
