@@ -3,89 +3,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC92EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 13:48:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBEECC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 13:48:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F1622076B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 13:48:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 860B320771
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 13:48:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728740AbgHKNsV (ORCPT
+        id S1728760AbgHKNsy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 09:48:21 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:1630 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728532AbgHKNsQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 09:48:16 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4BQvKy5jqDz9vCqH;
-        Tue, 11 Aug 2020 15:48:06 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id T6AfGy8k89Hu; Tue, 11 Aug 2020 15:48:06 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4BQvKy4SfWz9vCqD;
-        Tue, 11 Aug 2020 15:48:06 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3FD6A8BB86;
-        Tue, 11 Aug 2020 15:48:08 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id K8SJqBJ0A9aJ; Tue, 11 Aug 2020 15:48:08 +0200 (CEST)
-Received: from [172.25.230.100] (po15451.idsi0.si.c-s.fr [172.25.230.100])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id DD8758BB80;
-        Tue, 11 Aug 2020 15:48:07 +0200 (CEST)
-Subject: Re: [RFC PATCH v1] power: don't manage floating point regs when no
- FPU
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <95c00a811897f6d9176d30bf2ac92dab8c9c8e95.1596816789.git.christophe.leroy@csgroup.eu>
- <87o8nh9yjd.fsf@mpe.ellerman.id.au>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Message-ID: <9edf75a2-103d-ea01-2f53-dbb467047d13@csgroup.eu>
-Date:   Tue, 11 Aug 2020 15:48:07 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Tue, 11 Aug 2020 09:48:54 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:39677 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1728738AbgHKNsw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 09:48:52 -0400
+Received: (qmail 332045 invoked by uid 1000); 11 Aug 2020 09:48:51 -0400
+Date:   Tue, 11 Aug 2020 09:48:51 -0400
+From:   Alan Stern <stern@rowland.harvard.edu>
+To:     Martin Kepplinger <martin.kepplinger@puri.sm>
+Cc:     James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Can Guo <cang@codeaurora.org>, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@puri.sm
+Subject: Re: [PATCH] scsi: sd: add runtime pm to open / release
+Message-ID: <20200811134851.GB331864@rowland.harvard.edu>
+References: <9b80ca7c-39f8-e52d-2535-8b0baf93c7d1@puri.sm>
+ <425990b3-4b0b-4dcf-24dc-4e7e60d5869d@puri.sm>
+ <20200807143002.GE226516@rowland.harvard.edu>
+ <b0abab28-880e-4b88-eb3c-9ffd927d1ed9@puri.sm>
+ <20200808150542.GB256751@rowland.harvard.edu>
+ <d3b6f7b8-5345-1ae1-4f79-5dde226e74f1@puri.sm>
+ <20200809152643.GA277165@rowland.harvard.edu>
+ <60150284-be13-d373-5448-651b72a7c4c9@puri.sm>
+ <20200810141343.GA299045@rowland.harvard.edu>
+ <6f0c530f-4309-ab1e-393b-83bf8367f59e@puri.sm>
 MIME-Version: 1.0
-In-Reply-To: <87o8nh9yjd.fsf@mpe.ellerman.id.au>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6f0c530f-4309-ab1e-393b-83bf8367f59e@puri.sm>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 11/08/2020 à 14:07, Michael Ellerman a écrit :
-> Christophe Leroy <christophe.leroy@csgroup.eu> writes:
->> There is no point in copying floating point regs when there
->> is no FPU and MATH_EMULATION is not selected.
+On Tue, Aug 11, 2020 at 09:55:54AM +0200, Martin Kepplinger wrote:
+> On 10.08.20 16:13, Alan Stern wrote:
+> > This may not matter...  but it's worth pointing out that 
+> > expecting_media_change doesn't get cleared if ++scmd->retries > 
+> > scmd->allowed.
 > 
-> Yeah I guess you're right. I've never touched a system with neither, but
-> if such a thing exists then it does seem silly to copy regs around that
-> can't be used.
-
-Yes that exists, because glibc implements floating point emulation and 
-it is definitely more efficient to rely of glibc emulation than kernel one.
-
->>   10 files changed, 44 insertions(+), 1 deletion(-)
+> absolutely worth pointing out and I'm not yet sure about that one.
 > 
-> In general this looks fine.
+> > 
+> > It also doesn't get cleared in cases where the device _doesn't_ 
+> > report a Unit Attention.
 > 
-> It's a bit #ifdef heavy. Maybe some of those can be cleaned up a bit
-> with some wrapper inlines?
-> 
+> true. but don't we set the flag for a future UA we don't yet know of? If
+> we would want to clear it outside of a UA, I think we'd need to keep
+> track of a suspend/resume cycle and if we see that we *had* successfully
+> "done requests" after resuming, we could clear it...
 
-Yes I'll try and respin, as part of a series I'm preparing to switch the 
-32 bits signal code to using user_access_begin() logic and 
-unsafe_put_user() and friends to reduce KUAP unlock/lock.
+The point is that expecting_media_change should apply only to the _next_ 
+command.  It should be cleared after _every_ command.  You do not want 
+to leave it hanging around -- if you do then you will miss real media 
+changes.
 
-Christophe
+There's a potential issue when a bunch of commands get sent and 
+completed all at once, but hopefully it won't matter here.
+
+Alan Stern
