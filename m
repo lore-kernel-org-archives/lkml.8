@@ -4,112 +4,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 546F0C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 16:08:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D190C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 16:08:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D9E820756
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 16:08:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7416220774
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 16:08:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597162107;
-	bh=YXBnDr9tWBPpWviVYK4o6ebIMUfUB+PCboBIK49UgUo=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=p8Vd40kNhFiXXS1oXgiLNk3XgB+sQPje1m3694BmLvD/BOKkK2Ik+m7AesXuTgjDR
-	 CW9Hi/3Rm2nS/81sn3H5SQpDiLNtYIHxb/3/Y7+WT95TofdxS6gDPcBhN/rEjv4uu+
-	 FXeXuqORpl87/nkcOQOLsBgoJbsiaZdkhwieuFiQ=
+	s=default; t=1597162124;
+	bh=c0bG2i1Yo67i7IiXHYRfswulMbXblEFqkOVi4XhGV88=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=WgpMKyGfl6s1fWxaMYfF1n5MVJeUP28xd7NIHtV3yaedMcL7ZS07OZ3XiR1mdJOJk
+	 hmtGPXUAsVhn/m9CbmrleNw/2TbC2lgruqmIvoo4EDrgzRwHCI+2nEnsK+leY7fI4C
+	 S1LeEx3vabkofFbyD+rAtPinwYs0kKHdY5JIIZ6o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729073AbgHKQI0 (ORCPT
+        id S1729117AbgHKQIn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 12:08:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56944 "EHLO mail.kernel.org"
+        Tue, 11 Aug 2020 12:08:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728797AbgHKQIZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 12:08:25 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        id S1728924AbgHKQIm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 12:08:42 -0400
+Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9F4D206B5;
-        Tue, 11 Aug 2020 16:08:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 368E020756;
+        Tue, 11 Aug 2020 16:08:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597162104;
-        bh=YXBnDr9tWBPpWviVYK4o6ebIMUfUB+PCboBIK49UgUo=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=af3H88W3v7EMMAKb7WaheEgqPqTKpQQbn3+BHd+EmRF76CyQrmvumehitO+OvC5sl
-         CQlQRCFKJQHPIQAsKNY1JWS5wF3HfvaONAvjyU5s3ixEn5aG8xmHx4AfyZyyqaYVt0
-         HfhO2cshwrvMhRGzghktPwaBCdOvz2KXeu5K/Ccs=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 866C0352308E; Tue, 11 Aug 2020 09:08:24 -0700 (PDT)
-Date:   Tue, 11 Aug 2020 09:08:24 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     peterz@infradead.org
-Cc:     Marco Elver <elver@google.com>, tglx@linutronix.de,
-        mingo@kernel.org, will@kernel.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        rjw@rjwysocki.net
-Subject: Re: [RFC][PATCH 0/3] Tracing, Idle, RCU and such goodness
-Message-ID: <20200811160824.GY4295@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200807192336.405068898@infradead.org>
- <20200810095535.GA1597985@elver.google.com>
- <20200810121138.GV2674@hirez.programming.kicks-ass.net>
+        s=default; t=1597162122;
+        bh=c0bG2i1Yo67i7IiXHYRfswulMbXblEFqkOVi4XhGV88=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=qEZSye+miar8vUJnqElxOTF+POpDxRLrwgb4PFF6bSP2+ggDRLHJqs/AfECj87jDo
+         1dznyQAFkuNwLkHu0LO3+yWcPxweWPpRdDSW8sKfRXW3yCDeVZMbUR7azBqArgGOTe
+         KV83OQUa/6vq3aQLEdM8lF2WgrK1juCFqTxYsaIw=
+Date:   Tue, 11 Aug 2020 18:08:37 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
+        Mayulong <mayulong1@huawei.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 02/33] spmi, regulator, mfd: add drivers for hikey970
+ SPMI PMIC
+Message-ID: <20200811180837.2285c8b5@coco.lan>
+In-Reply-To: <20200811155810.GH6967@sirena.org.uk>
+References: <cover.1597160086.git.mchehab+huawei@kernel.org>
+        <36a548c10ea8c75d13c3e796c4cee65132819ef1.1597160086.git.mchehab+huawei@kernel.org>
+        <20200811155810.GH6967@sirena.org.uk>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200810121138.GV2674@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 02:11:38PM +0200, peterz@infradead.org wrote:
-> On Mon, Aug 10, 2020 at 11:55:35AM +0200, Marco Elver wrote:
+Em Tue, 11 Aug 2020 16:58:10 +0100
+Mark Brown <broonie@kernel.org> escreveu:
+
+> On Tue, Aug 11, 2020 at 05:41:28PM +0200, Mauro Carvalho Chehab wrote:
 > 
-> > Unfortunately I get LOCKDEP_DEBUG warnings, when testing with one of
-> > syzbot's configs. This appears at some point during boot (no other
-> > test):
-> > 
-> > 	DEBUG_LOCKS_WARN_ON(lockdep_hardirqs_enabled())
-> > 	WARNING: CPU: 0 PID: 0 at kernel/locking/lockdep.c:4875 check_flags+0x52/0x200 kernel/locking/lockdep.c:4875
-> > 	Modules linked in:
-> > 	CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.8.0+ #8
-> > 	Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1 04/01/2014
-> > 	RIP: 0010:check_flags+0x52/0x200 kernel/locking/lockdep.c:4875
-> > 	Code: c0 74 48 e8 40 f7 a5 03 85 c0 74 20 83 3d bd 33 53 05 00 75 17 48 c7 c7 ce 12 c9 85 48 c7 c6 04 8c ca 85 31 c0 e8 4e c1 f7 ff <0f> 0b 48 c7 c7 db 8b ca 85 e9 8c 01 00 00 85 c0 75 0f 65 8b 05 c5
-> > 	RSP: 0000:ffffffff86203bf0 EFLAGS: 00010046
-> > 	RAX: 1f9fa70771052a00 RBX: 0000000000000000 RCX: ffffffff8627e980
-> > 	RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
-> > 	RBP: 0000000000000000 R08: ffffffff813d8494 R09: 0000000000000000
-> > 	R10: 0000000000000012 R11: ffffffff8627e980 R12: ffffffff8627e980
-> > 	R13: ffffffff862e3420 R14: 00000000ffffffff R15: 0000000000000046
-> > 	FS:  0000000000000000(0000) GS:ffff88881fa00000(0000) knlGS:0000000000000000
-> > 	CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > 	CR2: ffff88883ffff000 CR3: 0000000006275001 CR4: 0000000000770ef0
-> > 	DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > 	DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > 	PKRU: 00000000
-> > 	Call Trace:
-> > 	 lock_is_held_type+0x4d/0x110 kernel/locking/lockdep.c:5043
-> > 	 lock_is_held include/linux/lockdep.h:266 [inline]
-> > 	 rcu_read_lock_sched_held+0x41/0x90 kernel/rcu/update.c:136
-> > 	 trace_lock_acquire+0x49/0x120 include/trace/events/lock.h:13
-> > 	 lock_acquire+0x8d/0x2c0 kernel/locking/lockdep.c:5003
-> > 	 mutex_trylock+0xdd/0x120 kernel/locking/mutex.c:1420
+> >  drivers/mfd/hisi_pmic_spmi.c            | 759 ++++++++++++++++++++++++
+> >  drivers/regulator/hisi_regulator_spmi.c | 741 +++++++++++++++++++++++
+> >  drivers/spmi/hisi-spmi-controller.c     | 390 ++++++++++++
+> >  include/linux/mfd/hisi_pmic.h           | 165 ++++++  
 > 
-> *groan*, indeed! Which is the direct result of lockdep recursion because
-> we pulled that tracepoint out from under the recursion thing.
-> 
-> Let me go prod this with a sharp stick...
+> This is a single patch for three subsystems, please split it into per
+> subsystem patches.
 
-On the other hand, the first two commits in this series did pass
-weekend rcutorture testing.
+Ok, I'll split on a next version. 
 
-I clearly need to make rcutorture more viscious.  ;-)
 
-But in the meantime, for the first two:
+Yet, it would be good to have all tree drivers applied via the same tree,
+as those drivers are needed altogether in order for this PMIC to work:
 
-Tested-by: Paul E. McKenney <paulmck@kernel.org>
+- The SPMI controller driver talks with the hardware and provides
+  support via the SPMI bus calls;
+- The MFD PMIC driver binds into the SPMI bus and provide support
+  for interrupts. It also has support for binding the regulator
+  driver;
+- The regulator driver needs the PMIC driver (which in turn needs
+  the SPMI bus) in order to be able to talk with the hardware and
+  set the power supplied.
 
-							Thanx, Paul
+That's basically why I opted to send the entire series altogether.
+
+Thanks,
+Mauro
