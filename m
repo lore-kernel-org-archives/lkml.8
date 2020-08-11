@@ -2,132 +2,325 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8016C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD16C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:20:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB4E1206DC
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:18:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15BB220771
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:20:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="PoJFWvdJ"
+	dkim=pass (2048-bit key) header.d=jrtc27.com header.i=@jrtc27.com header.b="Yh4522UE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729207AbgHKRSM (ORCPT
+        id S1729194AbgHKRUT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 13:18:12 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:56798 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728990AbgHKRSK (ORCPT
+        Tue, 11 Aug 2020 13:20:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48946 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728990AbgHKRUS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 13:18:10 -0400
-Received: from [10.137.106.139] (unknown [131.107.174.11])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 364D420B4908;
-        Tue, 11 Aug 2020 10:18:09 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 364D420B4908
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1597166289;
-        bh=4CUNuNiiePWf1WTPIiwYBL13LZ+7k2/9/J/jpcaXW7A=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=PoJFWvdJ1RO9aetIAjmD0rk7oHcgoNUd11mJAo6cf98zwa1+fMROHW9q/uMp6iMeX
-         Gx9jAgsZekiKh7pxAVZrnSCW536fsoku8TARzOm+dS5qqA/BlR8Bpa7J8vLGhpHHRD
-         Yi+yCyW66KZsN6+KFh8r2FianF/MQzdF5N+1bL7A=
-Subject: Re: [PATCH v7 0/7] Add support for O_MAYEXEC
-To:     =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>,
-        Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Mimi Zohar <zohar@linux.ibm.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Thibaut Sautereau <thibaut.sautereau@clip-os.org>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-integrity@vger.kernel.org,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-References: <20200723171227.446711-1-mic@digikod.net>
- <202007241205.751EBE7@keescook>
- <0733fbed-cc73-027b-13c7-c368c2d67fb3@digikod.net>
- <20200810202123.GC1236603@ZenIV.linux.org.uk>
- <917bb071-8b1a-3ba4-dc16-f8d7b4cc849f@digikod.net>
- <CAG48ez0NAV5gPgmbDaSjo=zzE=FgnYz=-OHuXwu0Vts=B5gesA@mail.gmail.com>
- <0cc94c91-afd3-27cd-b831-8ea16ca8ca93@digikod.net>
-From:   Deven Bowers <deven.desai@linux.microsoft.com>
-Message-ID: <77d685ec-aba2-6a2c-5d25-1172279ceb83@linux.microsoft.com>
-Date:   Tue, 11 Aug 2020 10:18:08 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <0cc94c91-afd3-27cd-b831-8ea16ca8ca93@digikod.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Tue, 11 Aug 2020 13:20:18 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A36B1C06174A
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 10:20:17 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id 3so3601422wmi.1
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 10:20:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jrtc27.com; s=gmail.jrtc27.user;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=wp+5ZaFf1QbnwLDrPCmaXkqrjaCFIhwjnpZssqgW770=;
+        b=Yh4522UESZrNZEfXagYw+bL0GktDu+xWNMRnegKv9gospYVm4e0LxnFv+GMO+jQJ+i
+         U0KrNq0TWj12YtlYK/MWlVyCdIheYW6p+UPm1g/+W5jsWtLowiqTUl/wLbLwZgAEMSpe
+         ociD7aM+iVfMQA2NUTH0pBBFDX1PN9OR6tXbvOaaBgML+u+BtBgevEioPf2kipiRwd9u
+         IDh5NbpeF27XYvEOgkPuAo10jK0HNNU1kkygs+CAY3Z7MIM5XcY/lhxpCmeplEo1tqoM
+         AR9Zyra5GMG4i1pwQJkUBsIUDaeS3FxDc9NGESpZLftJxHISTS4PyNd18GDkNET+chCK
+         NQvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=wp+5ZaFf1QbnwLDrPCmaXkqrjaCFIhwjnpZssqgW770=;
+        b=SMVmYBIeiyYRCqSe0kVJFtoiw7BwW935AU2coPM2zuh2s/yu4z01kDMd/2D6CiyKVU
+         lMkPyJCszmzEOF+p6PDPEmP8VsanldTUw87rj5oGNdUUN0xtGzBa7FaDP9p8CExHKw26
+         xMJZGcpXnjixsC1YfCa7kViIpo0szZualicKDHQuL54ZOfujNRlCkcGDjQX7WkueN7FO
+         PicvDAMoq/e9FKjPqufGN3IcONkKs/0zN5WP42FcHBu19EmqPcEvhGrWc+Grr96HZz5r
+         a2anbEKVY/wJHDnAImUW7D0sIh1LkEak7DAJrnHu3admXQotYza/2+WGlDevX1MWvKXb
+         Uayw==
+X-Gm-Message-State: AOAM5322ZvzznjsJImO0h8M3QTEj9MTaw7v56DR/y44egPaFdPh4ObLT
+        /kcCXDNEDyHKUUSk/m8lCnCIhA==
+X-Google-Smtp-Source: ABdhPJxUdETwwMoZqjnMHFKdGRa4ItOH3++fzm4pRPin6Bb3tTiMjmhKmZN+15V94ZyImrlaepao7Q==
+X-Received: by 2002:a7b:c258:: with SMTP id b24mr4756895wmj.122.1597166415374;
+        Tue, 11 Aug 2020 10:20:15 -0700 (PDT)
+Received: from [192.168.149.251] (trinity-students-nat.trin.cam.ac.uk. [131.111.193.104])
+        by smtp.gmail.com with ESMTPSA id z66sm6532408wme.16.2020.08.11.10.20.14
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 11 Aug 2020 10:20:14 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.1\))
+Subject: Re: "mm: consolidate pte_index() and pte_offset_*() definitions"
+ broke ia64
+From:   Jessica Clarke <jrtc27@jrtc27.com>
+In-Reply-To: <fa71f38e-b191-597a-6359-502cba197050@physik.fu-berlin.de>
+Date:   Tue, 11 Aug 2020 18:20:14 +0100
+Cc:     Mike Rapoport <rppt@linux.ibm.com>,
+        Tony Luck <tony.luck@intel.com>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
+        Anatoly Pugachev <matorola@gmail.com>,
+        Sergei Trofimovich <slyfox@gentoo.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Frank Scheiner <frank.scheiner@web.de>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <AA5E212C-56ED-4DB9-9CC1-EB13745DD5AF@jrtc27.com>
+References: <fa71f38e-b191-597a-6359-502cba197050@physik.fu-berlin.de>
+To:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+X-Mailer: Apple Mail (2.3608.120.23.2.1)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 11 Aug 2020, at 17:35, John Paul Adrian Glaubitz =
+<glaubitz@physik.fu-berlin.de> wrote:
+>=20
+> Hi Mike!
+>=20
+> I just bisected a kernel issue on ia64 which leads to the kernel =
+hanging very early
+> when booting on an HP RX2600 server (also verified to hang on other =
+ia64 machines):
+>=20
+> Loading Linux 5.8.0-12299-g00e4db51259a ...
+> Loading initial ramdisk ...
+> [    0.000000] Linux version 5.8.0-12299-g00e4db51259a =
+(root@glendronach) (gcc (Debian 10.2.0-3) 10.2.0, GNU ld (GNU Binutils =
+for Debian) 2.35) #5 SMP Tue Aug 11 15:33:11 CEST 2020
+> [    0.000000] efi: EFI v2.00 by HP
+> [    0.000000] efi: SALsystab=3D0x3ee7a000 ACPI 2.0=3D0x3fde4000 =
+ESI=3D0x3ee7b000 SMBIOS=3D0x3ee7c000 HCDP=3D0x3fde2000=20
+> [    0.000000] PCDP: v3 at 0x3fde2000
+> [    0.000000] earlycon: uart8250 at MMIO 0x0000000088033000 (options =
+'115200n8')
+> [    0.000000] printk: bootconsole [uart8250] enabled
+> [    0.000000] ACPI: Early table checksum verification disabled
+> [    0.000000] ACPI: RSDP 0x000000003FDE4000 000028 (v02 HP    )
+> [    0.000000] ACPI: XSDT 0x000000003FDE402C 0000A4 (v01 HP     rx2660 =
+  00000000 HP   00000000)
+> [    0.000000] ACPI: FACP 0x000000003FDF6A08 0000F4 (v03 HP     rx2660 =
+  00000000 HP   00000000)
+> [    0.000000] ACPI: DSDT 0x000000003FDE41C8 00E566 (v01 HP     rx2660 =
+  00000007 INTL 20050309)
+> [    0.000000] ACPI: FACS 0x000000003FDF6B00 000040
+> [    0.000000] ACPI: SPCR 0x000000003FDF6B40 000050 (v01 HP            =
+  00000000 HP   00000000)
+> [    0.000000] ACPI: DBGP 0x000000003FDF6B90 000034 (v01 HP     rx2660 =
+  00000000 HP   00000000)
+> [    0.000000] ACPI: APIC 0x000000003FDF6FB0 0000C8 (v01 HP     rx2660 =
+  00000000 HP   00000000)
+> [    0.000000] ACPI: SPMI 0x000000003FDF6BC8 000050 (v04 HP     rx2660 =
+  00000000 HP   00000000)
+> [    0.000000] ACPI: CPEP 0x000000003FDF6E80 000034 (v01 HP     rx2660 =
+  00000000 HP   00000000)
+> [    0.000000] ACPI: SSDT 0x000000003FDF2738 0004B3 (v01 HP     rx2660 =
+  00000006 INTL 20050309)
+> [    0.000000] ACPI: SSDT 0x000000003FDF2BF8 000456 (v01 HP     rx2660 =
+  00000006 INTL 20050309)
+> [    0.000000] ACPI: SSDT 0x000000003FDF3058 000EB8 (v01 HP     rx2660 =
+  00000006 INTL 20050309)
+> [    0.000000] ACPI: SSDT 0x000000003FDF3F18 000EB8 (v01 HP     rx2660 =
+  00000006 INTL 20050309)
+> [    0.000000] ACPI: SSDT 0x000000003FDF4DD8 000866 (v01 HP     rx2660 =
+  00000006 INTL 20050309)
+> [    0.000000] ACPI: SSDT 0x000000003FDF5648 000EB8 (v01 HP     rx2660 =
+  00000006 INTL 20050309)
+> [    0.000000] ACPI: SSDT 0x000000003FDF6508 000138 (v01 HP     rx2660 =
+  00000006 INTL 20050309)
+> [    0.000000] ACPI: SSDT 0x000000003FDF6648 00013C (v01 HP     rx2660 =
+  00000006 INTL 20050309)
+> [    0.000000] ACPI: SSDT 0x000000003FDF6788 00013C (v01 HP     rx2660 =
+  00000006 INTL 20050309)
+> [    0.000000] ACPI: SSDT 0x000000003FDF68C8 00013C (v01 HP     rx2660 =
+  00000006 INTL 20050309)
+> [    0.000000] ACPI: Local APIC address (____ptrval____)
+> [    0.000000] 4 CPUs available, 4 CPUs total
+> [    0.000000] SMP: Allowing 4 CPUs, 0 hotplug CPUs
+> [    0.000000] Initial ramdisk at: 0xe00000002e368000 (9818100 bytes)
+> [    0.000000] SAL 3.20: HP version 4.4
+> [    0.000000] SAL Platform features:
+> [    0.000000]  None
+> [    0.000000] SAL: AP wakeup using external interrupt vector 0xff
+> [    0.000000] MCA related initialization done                         =
+                                                                         =
+             =20
+> [    0.000000] Virtual mem_map starts at 0x(____ptrval____)            =
+                                                                         =
+             =20
+> [    0.000000] Zone ranges:                                            =
+                                                                         =
+             =20
+> [    0.000000]   DMA32    [mem 0x0000000001000000-0x00000000ffffffff]  =
+                                                                         =
+             =20
+> [    0.000000]   Normal   [mem 0x0000000100000000-0x000001007fffffff]  =
+                                                                         =
+             =20
+> [    0.000000] Movable zone start for each node                        =
+                                                                         =
+             =20
+> [    0.000000] Early memory node ranges                                =
+                                                                         =
+             =20
+> [    0.000000]   node   0: [mem 0x0000000001000000-0x000000003e67ffff] =
+                                                                         =
+             =20
+> [    0.000000]   node   0: [mem 0x000000003eaec000-0x000000003ee77fff] =
+                                                                         =
+             =20
+> [    0.000000]   node   0: [mem 0x000000003fc00000-0x000000003fd77fff] =
+                                                                         =
+             =20
+> [    0.000000]   node   0: [mem 0x000000003fddc000-0x000000003fddffff] =
+                                                                         =
+             =20
+> [    0.000000]   node   0: [mem 0x0000010040000000-0x000001007f1fbfff] =
+                                                                         =
+             =20
+> [    0.000000]   node   0: [mem 0x000001007f200000-0x000001007fffffff] =
+                                                                         =
+             =20
+> [    0.000000] Initmem setup node 0 [mem =
+0x0000000001000000-0x000001007fffffff]
+>=20
+> Bisecting the problem lead to your change as mentioned in the topic:
+>=20
+> 974b9b2c68f3d35a65e80af9657fe378d2439b60 is the first bad commit
+> commit 974b9b2c68f3d35a65e80af9657fe378d2439b60
+> Author: Mike Rapoport <rppt@linux.ibm.com>
+> Date:   Mon Jun 8 21:33:10 2020 -0700
+>=20
+>    mm: consolidate pte_index() and pte_offset_*() definitions
+>=20
+>    All architectures define pte_index() as
+>=20
+>            (address >> PAGE_SHIFT) & (PTRS_PER_PTE - 1)
+>=20
+>    and all architectures define pte_offset_kernel() as an entry in the =
+array
+>    of PTEs indexed by the pte_index().
+>=20
+>    For the most architectures the pte_offset_kernel() implementation =
+relies
+>    on the availability of pmd_page_vaddr() that converts a PMD entry =
+value to
+>    the virtual address of the page containing PTEs array.
+>=20
+>    Let's move x86 definitions of the PTE accessors to the generic =
+place in
+>    <linux/pgtable.h> and then simply drop the respective definitions =
+from the
+>    other architectures.
+>=20
+>    The architectures that didn't provide pmd_page_vaddr() are updated =
+to have
+>    that defined.
+>=20
+>    The generic implementation of pte_offset_kernel() can be overridden =
+by an
+>    architecture and alpha makes use of this because it has special =
+ordering
+>    requirements for its version of pte_offset_kernel().
+>=20
+> Any suggestions what could be the problem?
+
+Yeah, so, this definitely looks broken on ia64. pgd_offset_k was:
+
+> /* In the kernel's mapped region we completely ignore the region =
+number	=09
+>    (since we know it's in region number 5). */	=09
+> #define pgd_offset_k(addr) \	=09
+> 	(init_mm.pgd + (((addr) >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1)))
+
+But now it's the generic:
+
+> #define pgd_offset_k(address)		pgd_offset(&init_mm, (address))
 
 
-On 8/11/2020 1:48 AM, Mickaël Salaün wrote:
+and so will call ia64's pgd_index, and thus include the region number,
+but presumably this causes surprises because the expectation is that
+it's just an offset within region 5, whereas now it's got a 5 in the
+high bits. Please try the patch below (not compile tested but WCPGW).
 
-[...snip]
+Jess
 
->>> It is a
->>> good practice to check as soon as possible such properties, and it may
->>> enables to avoid (user space) time-of-check to time-of-use (TOCTOU)
->>> attacks (i.e. misuse of already open resources).
->>
->> The assumption that security checks should happen as early as possible
->> can actually cause security problems. For example, because seccomp was
->> designed to do its checks as early as possible, including before
->> ptrace, we had an issue for a long time where the ptrace API could be
->> abused to bypass seccomp filters.
->>
->> Please don't decide that a check must be ordered first _just_ because
->> it is a security check. While that can be good for limiting attack
->> surface, it can also create issues when the idea is applied too
->> broadly.
-> 
-> I'd be interested with such security issue examples.
-> 
-> I hope that delaying checks will not be an issue for mechanisms such as
-> IMA or IPE:
-> https://lore.kernel.org/lkml/1544699060.6703.11.camel@linux.ibm.com/
-> 
-> Any though Mimi, Deven, Chrome OS folks?
-> 
+=46rom 6c13e42cb95025e5f7ea3ac1a1262817bf3fcfec Mon Sep 17 00:00:00 2001
+From: Jessica Clarke <jrtc27@jrtc27.com>
+Date: Tue, 11 Aug 2020 19:18:28 +0200
+Subject: [PATCH] arch/ia64: Restore arch-specific pgd_offset_k =
+implementation
 
-I don't see an issue with IPE. As long as the hypothetical new syscall
-and associated security hook have the file struct available in the
-hook, it should integrate fairly easily.
+IA-64 is special and treats pgd_offset_k differently from pgd_offset by
+not including the region number, and init_mm's PGD is such that it only
+points to the kernel's region's PGD. This was broken in 974b9b2c68 which
+unified the two and therfore included the region number, causing it to
+index way out of bounds of the kernel's PGD and cause the kernel to hang
+during early boot. Thus, permit pgd_offset_k to be overridden like the
+other macros and override it on IA-64 with the old implementation. Also
+update the comment to clarify that this is not just an optimisation but
+a required implementation detail.
 
-[...snip]
+Fixes: 974b9b2c68 ("mm: consolidate pte_index() and pte_offset_*() =
+definitions")
+Reported-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Signed-off-by: Jessica Clarke <jrtc27@jrtc27.com>
+---
+ arch/ia64/include/asm/pgtable.h | 8 ++++++++
+ include/linux/pgtable.h         | 2 ++
+ 2 files changed, 10 insertions(+)
+
+diff --git a/arch/ia64/include/asm/pgtable.h =
+b/arch/ia64/include/asm/pgtable.h
+index 10850897a91c..2ac2199d99ce 100644
+--- a/arch/ia64/include/asm/pgtable.h
++++ b/arch/ia64/include/asm/pgtable.h
+@@ -366,6 +366,14 @@ pgd_index (unsigned long address)
+ }
+ #define pgd_index pgd_index
+=20
++/*
++ * In the kernel's mapped region we know everything is in region number =
+5, so
++ * as an optimisation its PGD already points to the area for that =
+region, but
++ * that means not adding the region here is required, not just an =
+optimisation.
++ */
++#define pgd_offset_k(addr) \
++	(init_mm.pgd + (((addr) >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1)))
++
+ /* Look up a pgd entry in the gate area.  On IA-64, the gate-area
+    resides in the kernel-mapped segment, hence we use pgd_offset_k()
+    here.  */
+diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+index 53e97da1e8e2..73c64fe098ba 100644
+--- a/include/linux/pgtable.h
++++ b/include/linux/pgtable.h
+@@ -117,7 +117,9 @@ static inline pgd_t *pgd_offset_pgd(pgd_t *pgd, =
+unsigned long address)
+  * a shortcut which implies the use of the kernel's pgd, instead
+  * of a process's
+  */
++#ifndef pgd_offset_k
+ #define pgd_offset_k(address)		pgd_offset(&init_mm, (address))
++#endif
+=20
+ /*
+  * In many cases it is known that a virtual address is mapped at PMD or =
+PTE
+--=20
+2.23.0
+
