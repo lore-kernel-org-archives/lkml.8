@@ -2,112 +2,389 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F4CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:04:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ED16C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:05:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A945F2076B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:04:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rpYoSTAj"
+	by mail.kernel.org (Postfix) with ESMTP id 2140720774
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:05:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597165507;
+	bh=dwZHod6KPc3W7szywYJ/l216Bk/RtF5qw8WxOfVfm1o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=G+qnIPmurHi2QjIQc5/kMflC1NX3KXcQ8Clu5bHW+roqLz/HG8Wcj3YtieQsDYzHP
+	 9YDesREZGCaMjbRr/yvhshcV5gShvJQnKj3NCXGIgPqNUo9PnyZegb7njXr5OamrlF
+	 AXU7mnIdJEI17r8s6MIAksk8WQV3vriI+VXwTSuo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729214AbgHKREG (ORCPT
+        id S1728906AbgHKRFE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 13:04:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46412 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729046AbgHKREE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 13:04:04 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71281C061787
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 10:04:04 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id e11so10666918otk.4
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 10:04:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gCeRiVh6vPaecDrIdWPljTkapUhpeRVTmR3kunsiO48=;
-        b=rpYoSTAjwv042WPkWR7I2ZB1OvMlxvCpJvkeO0KXMjmrhffrXd2YA9eryzKSK29lUI
-         KroJeWEJB6Zd+u9D1rYfoeb2xyw3xN9kTPb5f0w40sUkH+j0rIZW7AtgOdhOie/VuTUL
-         SyWvEgRsTphX8aiKjqvsia+Drj7MbtvcynPYiETLJ3tAb2pm/Te8HhTykkOmcCR9rNWT
-         qxrMroHFWWXsWwA405t9eI6amsm1U0qbIaytVeE7lxjbh2TuoS+2cesWNaaeqCE0SALa
-         C62tGi6L4uAK2jPtFoYjMSH29ZRfu56/Tku0st9M218nGziuHkpoksEQGCMLdKlf6LNS
-         /+Ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gCeRiVh6vPaecDrIdWPljTkapUhpeRVTmR3kunsiO48=;
-        b=tGdNXXJ8DvncYOsg5fPlSo6M7vQx14Oa0oCCS2J+hsIcg7ckk0wu5CRrLPGtaq6gZE
-         AVvpJYjV5jHvToZ0pfAXdcFFIA2e3fySAQCWOc4vtqXk+DeLQ9lIvJ99G+CUQ2cGl10+
-         abCGEUX/i8/zSkTbjHCI/fIAxou7vyoi2HWitZJtTmZnjeKOg778J3kOZIQrsBkOFWRv
-         d9nckrVwB75n4PdNgxaxTvO7EWmUflDyfpcPDWbkzBKcs1+jr8XlUfI5FKo7/EBaIydk
-         erdutyyMCGX76srtdQHNGIeDSrWj/Q6tasaeyWvVqwX+NePHkmNEoklXF5MpRzALc/SI
-         I7yQ==
-X-Gm-Message-State: AOAM5314DXr2I43fzjjTJ07j8Kq9IOIJs2tH3HqLt28C0LpyLyLtfgTZ
-        ICN3xxZdSx7wxTJCr9XjECUfwS2XivIsSuJaFCfWVg==
-X-Google-Smtp-Source: ABdhPJzYuugOtC+Wb+6fmfcYEMHjCY+iRT8x6dSkskSN93//Z9s8mZkfx5MLbKaeIlF41Q7bnAMdvn681hPBgO9aQd8=
-X-Received: by 2002:a9d:450a:: with SMTP id w10mr5892233ote.327.1597165442676;
- Tue, 11 Aug 2020 10:04:02 -0700 (PDT)
+        Tue, 11 Aug 2020 13:05:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53582 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728862AbgHKRFB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 13:05:01 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 877662076B;
+        Tue, 11 Aug 2020 17:04:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597165500;
+        bh=dwZHod6KPc3W7szywYJ/l216Bk/RtF5qw8WxOfVfm1o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=i4ff7+a2wHioJT6TKLvhGgOrC3G4fKAx3Hb3BQR/FXG8pI1u9FntXbm64THwpT+pC
+         n0hi8qcGPABJxd+zBSpdtN4Xt4A5BeBoz42AcBHwO2K5/bvdhLSDOu8KFf3U+x8a4j
+         fbHAv448AkLehgSly2nXkTkxRAy2jalt0Cl4eXio=
+Date:   Tue, 11 Aug 2020 19:05:09 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Gage Eads <gage.eads@intel.com>
+Cc:     linux-kernel@vger.kernel.org, arnd@arndb.de,
+        magnus.karlsson@intel.com, bjorn.topel@intel.com
+Subject: Re: [PATCH v2 01/19] dlb2: add skeleton for DLB 2.0 driver
+Message-ID: <20200811170509.GA765993@kroah.com>
+References: <20200811162732.1369-1-gage.eads@intel.com>
+ <20200811162732.1369-2-gage.eads@intel.com>
 MIME-Version: 1.0
-References: <20200810213257.438861-1-urielguajardojr@gmail.com> <20200810214328.GM3982@worktop.programming.kicks-ass.net>
-In-Reply-To: <20200810214328.GM3982@worktop.programming.kicks-ass.net>
-From:   Uriel Guajardo <urielguajardo@google.com>
-Date:   Tue, 11 Aug 2020 12:03:51 -0500
-Message-ID: <CAG30EecPEzM7hkPxagCD8GQb=JUZhatyW50KAoaHjrHoj4BiFw@mail.gmail.com>
-Subject: Re: [PATCH] kunit: added lockdep support
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Uriel Guajardo <urielguajardojr@gmail.com>,
-        Brendan Higgins <brendanhiggins@google.com>, mingo@redhat.com,
-        will@kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, kunit-dev@googlegroups.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200811162732.1369-2-gage.eads@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 4:43 PM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Mon, Aug 10, 2020 at 09:32:57PM +0000, Uriel Guajardo wrote:
-> > +static inline void kunit_check_locking_bugs(struct kunit *test,
-> > +                                         unsigned long saved_preempt_count)
-> > +{
-> > +     preempt_count_set(saved_preempt_count);
-> > +#ifdef CONFIG_TRACE_IRQFLAGS
-> > +     if (softirq_count())
-> > +             current->softirqs_enabled = 0;
-> > +     else
-> > +             current->softirqs_enabled = 1;
-> > +#endif
-> > +#if IS_ENABLED(CONFIG_LOCKDEP)
-> > +     local_irq_disable();
-> > +     if (!debug_locks) {
-> > +             kunit_set_failure(test);
-> > +             lockdep_reset();
-> > +     }
-> > +     local_irq_enable();
-> > +#endif
-> > +}
->
-> Unless you can guarantee this runs before SMP brinup, that
-> lockdep_reset() is terminally broken.
+On Tue, Aug 11, 2020 at 11:27:14AM -0500, Gage Eads wrote:
+> diff --git a/drivers/misc/dlb2/dlb2_main.c b/drivers/misc/dlb2/dlb2_main.c
+> new file mode 100644
+> index 000000000000..ffd6df788e2e
+> --- /dev/null
+> +++ b/drivers/misc/dlb2/dlb2_main.c
+> @@ -0,0 +1,208 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/* Copyright(c) 2018-2020 Intel Corporation */
+> +
+> +#include <linux/aer.h>
+> +#include <linux/cdev.h>
+> +#include <linux/delay.h>
+> +#include <linux/fs.h>
+> +#include <linux/init.h>
+> +#include <linux/list.h>
+> +#include <linux/module.h>
+> +#include <linux/pci.h>
+> +#include <linux/uaccess.h>
+> +
+> +#include "dlb2_main.h"
+> +
+> +static const char
+> +dlb2_driver_copyright[] = "Copyright(c) 2018-2020 Intel Corporation";
 
-Good point. KUnit is initialized after SMP is set up, and KUnit can
-also be built as a module, so it's not a guarantee that we can make.
-Is there any other way to turn lockdep back on after we detect a
-failure? It would be ideal if lockdep could still run in the next test
-case after a failure in a previous one.
+Why do you have this static string that you never use?
 
-I suppose we could only display the first failure that occurs, similar
-to how lockdep does it. But it could also be useful to developers if
-they saw failures in subsequent test cases, with the knowledge that
-those failures may be unreliable.
+> +
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_AUTHOR("Copyright(c) 2018-2020 Intel Corporation");
+> +MODULE_DESCRIPTION("Intel(R) Dynamic Load Balancer 2.0 Driver");
+> +
+> +/* The driver lock protects data structures that used by multiple devices. */
+> +static DEFINE_MUTEX(dlb2_driver_lock);
+> +static struct list_head dlb2_dev_list = LIST_HEAD_INIT(dlb2_dev_list);
+
+A static list of devices that you constantly walk?  Why?  This isn't the
+1990's anymore, that should not be needed anywhere at all.
+
+> +
+> +static struct class *dlb2_class;
+> +static dev_t dlb2_dev_number_base;
+
+static dev_t my_major; perhaps?
+
+Why have "dlb2_" as a prefix for static variables?
+
+> +
+> +/*****************************/
+> +/****** Devfs callbacks ******/
+
+there is nothing in the kernel called "devfs", and has not been for 16+
+years I think.  Where did you get that term from???
+
+> +/*****************************/
+> +
+> +static int dlb2_open(struct inode *i, struct file *f)
+> +{
+> +	return 0;
+> +}
+> +
+> +static int dlb2_close(struct inode *i, struct file *f)
+> +{
+> +	return 0;
+
+If you do not need an open/close function, do not include it.
+
+> +}
+> +
+> +static const struct file_operations dlb2_fops = {
+> +	.owner   = THIS_MODULE,
+> +	.open    = dlb2_open,
+> +	.release = dlb2_close,
+> +};
+
+You never use this structure in this patch :(
+
+> +
+> +/**********************************/
+> +/****** PCI driver callbacks ******/
+> +/**********************************/
+> +
+> +static DEFINE_IDA(dlb2_ids);
+
+This is not a pci driver callback :)
+
+Why have comments if they instantly are wrong? :(
+
+> +
+> +static int dlb2_alloc_id(void)
+> +{
+> +	return ida_alloc_max(&dlb2_ids, DLB2_MAX_NUM_DEVICES - 1, GFP_KERNEL);
+> +}
+> +
+> +static void dlb2_free_id(int id)
+> +{
+> +	ida_free(&dlb2_ids, id);
+
+No locking needed for accessing the ida?
+
+> +}
+> +
+> +static int dlb2_probe(struct pci_dev *pdev,
+> +		      const struct pci_device_id *pdev_id)
+> +{
+> +	struct dlb2_dev *dlb2_dev;
+> +	int ret;
+> +
+> +	dlb2_dev = devm_kzalloc(&pdev->dev, sizeof(*dlb2_dev), GFP_KERNEL);
+
+Why are you calling devm_kzalloc() if you manually call devm_kfree() for
+this chunk of memory?  Either rely on the devm api or don't use it at
+all.
+
+> +	if (!dlb2_dev)
+> +		return -ENOMEM;
+> +
+> +	pci_set_drvdata(pdev, dlb2_dev);
+> +
+> +	dlb2_dev->pdev = pdev;
+> +
+> +	dlb2_dev->id = dlb2_alloc_id();
+> +	if (dlb2_dev->id < 0) {
+> +		dev_err(&pdev->dev, "probe: device ID allocation failed\n");
+> +
+> +		ret = dlb2_dev->id;
+> +		goto alloc_id_fail;
+> +	}
+> +
+> +	ret = pci_enable_device(pdev);
+> +	if (ret != 0) {
+> +		dev_err(&pdev->dev, "pci_enable_device() returned %d\n", ret);
+> +
+> +		goto pci_enable_device_fail;
+> +	}
+> +
+> +	ret = pci_request_regions(pdev, dlb2_driver_name);
+> +	if (ret != 0) {
+> +		dev_err(&pdev->dev,
+> +			"pci_request_regions(): returned %d\n", ret);
+> +
+> +		goto pci_request_regions_fail;
+> +	}
+> +
+> +	pci_set_master(pdev);
+> +
+> +	if (pci_enable_pcie_error_reporting(pdev))
+> +		dev_info(&pdev->dev, "[%s()] Failed to enable AER\n", __func__);
+> +
+> +	mutex_lock(&dlb2_driver_lock);
+> +	list_add(&dlb2_dev->list, &dlb2_dev_list);
+> +	mutex_unlock(&dlb2_driver_lock);
+> +
+> +	return 0;
+> +
+> +pci_request_regions_fail:
+> +	pci_disable_device(pdev);
+> +pci_enable_device_fail:
+> +	dlb2_free_id(dlb2_dev->id);
+> +alloc_id_fail:
+> +	devm_kfree(&pdev->dev, dlb2_dev);
+> +	return ret;
+> +}
+> +
+> +static void dlb2_remove(struct pci_dev *pdev)
+> +{
+> +	struct dlb2_dev *dlb2_dev;
+> +
+> +	/* Undo all the dlb2_probe() operations */
+> +	dlb2_dev = pci_get_drvdata(pdev);
+> +
+> +	mutex_lock(&dlb2_driver_lock);
+> +	list_del(&dlb2_dev->list);
+> +	mutex_unlock(&dlb2_driver_lock);
+> +
+> +	pci_disable_pcie_error_reporting(pdev);
+> +
+> +	pci_release_regions(pdev);
+> +
+> +	pci_disable_device(pdev);
+> +
+> +	dlb2_free_id(dlb2_dev->id);
+> +
+> +	devm_kfree(&pdev->dev, dlb2_dev);
+> +}
+> +
+> +static struct pci_device_id dlb2_id_table[] = {
+> +	{ PCI_DEVICE_DATA(INTEL, DLB2_PF, NULL) },
+> +	{ 0 }
+> +};
+> +MODULE_DEVICE_TABLE(pci, dlb2_id_table);
+> +
+> +static struct pci_driver dlb2_pci_driver = {
+> +	.name		 = (char *)dlb2_driver_name,
+
+Why is this cast needed?  That's a hint that something is wrong...
+
+> +	.id_table	 = dlb2_id_table,
+> +	.probe		 = dlb2_probe,
+> +	.remove		 = dlb2_remove,
+> +};
+> +
+> +static int __init dlb2_init_module(void)
+> +{
+> +	int err;
+> +
+> +	dlb2_class = class_create(THIS_MODULE, dlb2_driver_name);
+> +
+> +	if (IS_ERR(dlb2_class)) {
+
+blank line was not needed.
+
+> +		pr_err("%s: class_create() returned %ld\n",
+> +		       dlb2_driver_name, PTR_ERR(dlb2_class));
+> +
+> +		return PTR_ERR(dlb2_class);
+> +	}
+> +
+> +	/* Allocate one minor number per domain */
+> +	err = alloc_chrdev_region(&dlb2_dev_number_base,
+> +				  0,
+> +				  DLB2_MAX_NUM_DEVICES,
+> +				  dlb2_driver_name);
+> +
+> +	if (err < 0) {
+> +		pr_err("%s: alloc_chrdev_region() returned %d\n",
+> +		       dlb2_driver_name, err);
+> +
+> +		return err;
+> +	}
+> +
+> +	err = pci_register_driver(&dlb2_pci_driver);
+> +	if (err < 0) {
+> +		pr_err("%s: pci_register_driver() returned %d\n",
+> +		       dlb2_driver_name, err);
+> +		return err;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void __exit dlb2_exit_module(void)
+> +{
+> +	pci_unregister_driver(&dlb2_pci_driver);
+> +
+> +	unregister_chrdev_region(dlb2_dev_number_base,
+> +				 DLB2_MAX_NUM_DEVICES);
+> +
+> +	if (dlb2_class) {
+> +		class_destroy(dlb2_class);
+> +		dlb2_class = NULL;
+
+Why set this?
+
+> +	}
+
+No freeing of allocated ida structures?  Or is that not needed anymore,
+I can never remember...
+
+> +}
+> +
+> +module_init(dlb2_init_module);
+> +module_exit(dlb2_exit_module);
+> diff --git a/drivers/misc/dlb2/dlb2_main.h b/drivers/misc/dlb2/dlb2_main.h
+> new file mode 100644
+> index 000000000000..cc05546fba13
+> --- /dev/null
+> +++ b/drivers/misc/dlb2/dlb2_main.h
+> @@ -0,0 +1,37 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only
+> + * Copyright(c) 2017-2020 Intel Corporation
+> + */
+> +
+> +#ifndef __DLB2_MAIN_H
+> +#define __DLB2_MAIN_H
+> +
+> +#include <linux/cdev.h>
+> +#include <linux/device.h>
+> +#include <linux/ktime.h>
+> +#include <linux/list.h>
+> +#include <linux/mutex.h>
+> +#include <linux/pci.h>
+> +#include <linux/types.h>
+> +
+> +#include "dlb2_hw_types.h"
+> +
+> +static const char dlb2_driver_name[] = KBUILD_MODNAME;
+> +
+> +/*
+> + * The dlb2 driver uses a different minor number for each device file, of which
+> + * there are:
+> + * - 33 per device (PF or VF/VDEV): 1 for the device, 32 for scheduling domains
+> + * - Up to 17 devices per PF: 1 PF and up to 16 VFs/VDEVs
+> + * - Up to 16 PFs per system
+> + */
+> +#define DLB2_MAX_NUM_PFS	  16
+> +#define DLB2_NUM_FUNCS_PER_DEVICE (1 + DLB2_MAX_NUM_VDEVS)
+> +#define DLB2_MAX_NUM_DEVICES	  (DLB2_MAX_NUM_PFS * DLB2_NUM_FUNCS_PER_DEVICE)
+> +
+> +struct dlb2_dev {
+> +	struct pci_dev *pdev;
+> +	struct list_head list;
+
+Why is list needed?
+
+> +	int id;
+
+u32?  u64?  u8?  Pick something :)
+
+> +};
+> +
+> +#endif /* __DLB2_MAIN_H */
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index 5c709a1450b1..eb865b4eb900 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -2809,6 +2809,8 @@
+>  #define PCI_DEVICE_ID_INTEL_ESB2_14	0x2698
+>  #define PCI_DEVICE_ID_INTEL_ESB2_17	0x269b
+>  #define PCI_DEVICE_ID_INTEL_ESB2_18	0x269e
+> +#define PCI_DEVICE_ID_INTEL_DLB2_PF	0x2710
+> +#define PCI_DEVICE_ID_INTEL_DLB2_VF	0x2711
+
+Did you read the top of this file?  How does this patch justify the
+request there?
+
+{sigh}
+
+I'm not reviewing beyond this patch, sorry.
+
+greg k-h
