@@ -2,133 +2,77 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A49F3C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:27:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E84C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:28:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7EA6620656
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:27:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zkqeyvOR";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uRP3HjIj"
+	by mail.kernel.org (Postfix) with ESMTP id 038E7205CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:28:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728678AbgHKK1s (ORCPT
+        id S1728672AbgHKK2V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 06:27:48 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:57080 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728660AbgHKK1j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 06:27:39 -0400
-Date:   Tue, 11 Aug 2020 12:27:35 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597141657;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=jp00Rr/a4cDX95tUyF9kFZf8y43Q4hOeQjwY+IySvJE=;
-        b=zkqeyvORSehZ1011o/jDBzYfgqEUWc7nSPhc+cuBiFnjrp59giKDvUWCHYXLdYT7f+2dVD
-        +KtbUyoVte8z13xRz83p3Ps1FtHWO4nwlx+h9OMbbm24O7q/lEl7/FfX9Fat05KIlNDyD7
-        vvw580NH77BBXxuB/MQfAPfSlwcyPaAE3xF/IKRKt333j05+15uH0YYwMga9s3u+9zE14E
-        cXb9TfhLjljNhI6L+MiD6qnx8yXP21r6LxEIuFU8pw17GYR1MGgV8skNP1aB/GT5ne/4oG
-        r7qri2wm18w7p53BsGT1LM0AKtS8Tqa78TDqvhlMZK7YcT6gGMu2GZGiEvEWqQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597141657;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=jp00Rr/a4cDX95tUyF9kFZf8y43Q4hOeQjwY+IySvJE=;
-        b=uRP3HjIjqKMTFF8Zk9/NrdRmUpb/WYsuP90kV8dQfAPvbaKiVMr614nI4JvggAfYdBb5PF
-        90QeXgwmEsUE0ZAQ==
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Robert Moore <robert.moore@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Len Brown <lenb@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Stephen Berman <stephen.berman@gmx.net>,
-        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>
-Subject: Re: power-off delay/hang due to commit 6d25be57 (mainline)
-Message-ID: <20200811102735.yifejbx62ewzpfcs@linutronix.de>
-References: <20200616155501.psduxnisltitodme@linutronix.de>
- <871rmesqkk.fsf@gmx.net>
- <20200617142734.mxwfoblufmo6li5e@linutronix.de>
- <87ftatqu07.fsf@gmx.net>
- <20200624201156.xu6hel3drnhno6c3@linutronix.de>
- <87ftak2kxr.fsf@rub.de>
- <20200714134410.3odqfvjq6rndjjf6@linutronix.de>
- <CAJZ5v0hZSUkEMCszDADGWk-v0xNEiDE45B3CHLi05BX6rPfm6g@mail.gmail.com>
- <20200714141135.47adndrsdgpiqfy4@linutronix.de>
- <CAJZ5v0iogereapmhcFi=iXHsjnzmC26mewUSTY3+5O3ei5kfDQ@mail.gmail.com>
+        Tue, 11 Aug 2020 06:28:21 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56138 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728346AbgHKK2V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 06:28:21 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 21739AD6A;
+        Tue, 11 Aug 2020 10:28:40 +0000 (UTC)
+Date:   Tue, 11 Aug 2020 12:28:18 +0200
+From:   Michal Hocko <mhocko@suse.com>
+To:     Uladzislau Rezki <urezki@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
+Message-ID: <20200811102818.GJ4793@dhcp22.suse.cz>
+References: <20200809204354.20137-1-urezki@gmail.com>
+ <20200809204354.20137-2-urezki@gmail.com>
+ <20200810123141.GF4773@dhcp22.suse.cz>
+ <20200810160739.GA29884@pc636>
+ <20200810192525.GG4773@dhcp22.suse.cz>
+ <20200811081917.GG4793@dhcp22.suse.cz>
+ <20200811093713.GB2634@pc636>
+ <20200811094251.GA3767@pc636>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CAJZ5v0iogereapmhcFi=iXHsjnzmC26mewUSTY3+5O3ei5kfDQ@mail.gmail.com>
+In-Reply-To: <20200811094251.GA3767@pc636>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-14 17:53:15 [+0200], Rafael J. Wysocki wrote:
-> acpi_evaluate_integer() doesn't show up in the trace, though, AFAICS.
->=20
-> > I assumed acpi_ex_opcode_2A_0T_0R() since the other
-> > candidate was acpi_ev_asynch_execute_gpe_method().
->=20
-> Which probably is the case.  Specifically
->=20
-> acpi_ev_asynch_execute_gpe_method: Evaluate _L66
->=20
-> is likely to cause the Notify() to be dispatched.
-=E2=80=A6
-> > Rafael, are you also interested in an ACPI dump?
->=20
-> That might help a bit.
->=20
-> So what probably happens is that poking at the TZ causes a GPE to
-> trigger and a Notify() to be dispatched which then goes into the
-> workqueue for execution.
->=20
-> Now, I'm not sure what happens to those Notify() items, though.  They
-> each should cause a handler (in the thermal driver) to be executed,
-> but does that happen?
+On Tue 11-08-20 11:42:51, Uladzislau Rezki wrote:
+> On Tue, Aug 11, 2020 at 11:37:13AM +0200, Uladzislau Rezki wrote:
+> > On Tue, Aug 11, 2020 at 10:19:17AM +0200, Michal Hocko wrote:
+[...]
+> > > Anyway, if the zone->lock is not a good fit for raw_spin_lock then the
+> > > only way I can see forward is to detect real (RT) atomic contexts and
+> > > bail out early before taking the lock in the allocator for NOWAIT/ATOMIC
+> > > requests.
+> > >
+> This is similar what i have done with mm: Add __GFP_NO_LOCKS flag. I just
+> did it for order-0 pages(other paths are impossible) and made it common for
+> any kernel.
+> 
+> Because when you say "bail out early" i suspect that we would like to check
+> the per-cpu-list cache.
 
-Stephen's trace contains a few backtraces, all of them look like this:
+Bail out early means to do as much as possible until a raw non-compliant
+lock has to be taken.
 
-| Call Trace:
-|  acpi_ex_opcode_2A_0T_0R+0x93/0xdf
-|  acpi_ds_exec_end_op+0x10d/0x701
-|  acpi_ps_parse_loop+0x7f2/0x8c3
-|  acpi_ps_parse_aml+0x1a5/0x540
-|  acpi_ps_execute_method+0x1fe/0x2ba
-|  acpi_ns_evaluate+0x345/0x4e2
-|  acpi_evaluate_object+0x177/0x39f
-|  acpi_evaluate_integer+0x4f/0x110
-|  acpi_thermal_get_temperature.part.0+0x45/0xc4
-|  thermal_get_temp.cold+0xc/0x2e
-|  thermal_zone_get_temp+0x4c/0x70
-|  thermal_zone_device_update.part.0+0x2a/0x110
-|  acpi_thermal_notify+0xcf/0x140
-|  acpi_ev_notify_dispatch+0x45/0x5a
-|  acpi_os_execute_deferred_notify+0x34/0x60
-|  process_one_work+0x1d2/0x3a0
-|  worker_thread+0x45/0x3c0
-|  kthread+0xf6/0x130
-|  ret_from_fork+0x35/0x40
-
-so no GPE and it comes the notify callback while parsing the ACPI table.
-Any ideas? I guess acpi_ex_opcode_2A_0T_0R() uses the workqueue because
-it may sleep and it might be invoked from non-preemptible context.
-
-Sebastian
+-- 
+Michal Hocko
+SUSE Labs
