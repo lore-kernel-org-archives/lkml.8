@@ -2,188 +2,143 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44B84C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 02:29:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E7B6C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 02:31:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08D0820771
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 02:29:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED99920639
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 02:31:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="N2WbK4V7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GLjyr0HE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728422AbgHKC3h (ORCPT
+        id S1728013AbgHKCbE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 22:29:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52998 "EHLO
+        Mon, 10 Aug 2020 22:31:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53218 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728408AbgHKC3h (ORCPT
+        with ESMTP id S1726971AbgHKCbE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 22:29:37 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8A79C06174A
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 19:29:36 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id a14so9998777wra.5
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 19:29:36 -0700 (PDT)
+        Mon, 10 Aug 2020 22:31:04 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12ADBC06174A;
+        Mon, 10 Aug 2020 19:31:04 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id c10so829667pjn.1;
+        Mon, 10 Aug 2020 19:31:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=X/70H9Q9Fhe0k/LriAao6FGlrMhsC+D8fqJ9Zp1ZId4=;
-        b=N2WbK4V7NzZoluibv/IR/Gzljh6tqtfJ/HQoZPGT8RLzw4W9/AYC6qP+gJsB9ipiQr
-         +uptnGJbKGryZfnLgJxPqBQngbIbplDCSCXKV9762jRcXc0oT4S/4EqAsN+t0cQC3yRC
-         wviLx4Exwt8aWJVNWbWd4WzlufM9CTBKe82YM=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=YrmOd6VYsBxeA4HmWkdR0wsjfu5WqCWHq6heMSIzewU=;
+        b=GLjyr0HEEMeYzfZLEfs8euboLxhX2h8WIBGawhdJ0Wmj2roVLiobjEzTA334o655qd
+         +Lf8QaFDWSj8mEP75Lb/S2JAAkMvY1pMR6plideMThmJJb3BNBs1zmZYdMA6CoXHXLXN
+         RLDjFoziTcD6ar4Blq3TWEsdd1c68I5AxSPJZ9OA/s521gtI2f8OZm/Fx/9NZLMueWSG
+         B1HSsaiPi45OkNJppZ+JSLWILklcT2lmpJy8Cb2lNKpknuvIa1z+aiehOPGIesFx+KmO
+         tdqERmaxDPJsb4QEGXTylUAQxPto7MrqZ4ifIgnfPFCuO2lzLBK/2IhFKULfP0bGwBAv
+         Geaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=X/70H9Q9Fhe0k/LriAao6FGlrMhsC+D8fqJ9Zp1ZId4=;
-        b=bd/mX/JHlUmyShDIByDUgNAv0nacDOBkI4GSylhblWXkOtWIgzbDDsnXRF7IH+IGhc
-         hNzhrtkh8GoR5KJDAu3iEhnCn+YLJWT8l3dhFTJ4/Nn3oe3yRoS6EqAXyMyFtSg7+Q61
-         hSEVmdNd+cGO5rxvvprrGDExIHXWeO2fGG4q6V/AXMGHOs4DMn8ycQWz5ijJP+0rCmyM
-         JbX5uAHfRKrkSRCldTKNjgjS/JLf0PAWWWylln5hKDTfvgZCo6zbHFkF4vWUC0fPu3TV
-         NOJyLqyAD3w6Y9zhZPRDpiNwk7qhdv+cElMu/0LNVPNaCNJ7EdXfnWUz3bSqPiQSe6rA
-         TjGw==
-X-Gm-Message-State: AOAM531FRYL80RUkcD4bmv+zxsgEwgcmHR+pnjlBew/Rzzdbi/k4MAF2
-        O6eaQHlyAbR8Cc4MZFFTmzazbjlQAyZkr6NPZX8abg==
-X-Google-Smtp-Source: ABdhPJzoRKjULwzqB/GeoCyOIzYWNcIXL9vijf50RkDSGdI+bzliEeuAID29pjnEQwhlgwEAwuRgznr6tbIy4cY97Hg=
-X-Received: by 2002:a5d:42c5:: with SMTP id t5mr27393019wrr.370.1597112975525;
- Mon, 10 Aug 2020 19:29:35 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YrmOd6VYsBxeA4HmWkdR0wsjfu5WqCWHq6heMSIzewU=;
+        b=tEa9jSBEZuGu241JN2bE0sEkvyCWUudQ37WHyO8VXXzxsNC90EuVtUXTW9CgN2kh8P
+         OW2bbnPVAMO/uKzMKKrohfg/6rPSHf6RseFYB/jvlH1IwFyqiTmdfgmjy0LlqtULnSE4
+         oN591TyvY4Q+A+YRne7FEdMcvytU10o/q1sahfrmZ0iqaNjcKtlddIM3AsIUdHu14qgP
+         4SH8bukU+aWbF7XkaallkvbwfY/U9dqt87+JJ7Xq95eBOjljBlxbI5u/OrZz/rP7zjMV
+         k03RUpNmXhZ8+TFgJyJnf/MEE2ghnyi3BwxA+rPiZiE3zxpB7Pvfn6VumYUgSZrG1vRt
+         QEUQ==
+X-Gm-Message-State: AOAM533ooQFLxwY2DQlMph1l5Gjggj5b2OpH/h/sScYmWXIogpAIk79k
+        lcFFIBkX0/FSw0Imbo5y19A=
+X-Google-Smtp-Source: ABdhPJwOaUJin4V1AXI+DSZIrGGA9wu2kqfhZ9JqLdXn1nINUwvApruRO3Y5B/8wB/C8Cu1O0rSiJg==
+X-Received: by 2002:a17:90a:2224:: with SMTP id c33mr2285430pje.56.1597113063374;
+        Mon, 10 Aug 2020 19:31:03 -0700 (PDT)
+Received: from [10.230.30.107] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id h5sm23666430pfq.146.2020.08.10.19.31.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Aug 2020 19:31:02 -0700 (PDT)
+Subject: Re: [PATCH v3] i2c: iproc: fix race between client unreg and isr
+To:     Dhananjay Phadke <dphadke@linux.microsoft.com>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Wolfram Sang <wsa@kernel.org>, Ray Jui <rjui@broadcom.com>
+Cc:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com
+References: <1597106560-79693-1-git-send-email-dphadke@linux.microsoft.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <69576821-1e8e-51c2-6c15-5774ca598c36@gmail.com>
+Date:   Mon, 10 Aug 2020 19:30:58 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <1596020585-11517-1-git-send-email-brent.lu@intel.com>
- <1596198365-10105-1-git-send-email-brent.lu@intel.com> <1596198365-10105-3-git-send-email-brent.lu@intel.com>
- <s5h5za3ajvb.wl-tiwai@suse.de> <DM6PR11MB3642AE90DF98956CCEDE6C2F974F0@DM6PR11MB3642.namprd11.prod.outlook.com>
- <s5hd04a90o4.wl-tiwai@suse.de> <DM6PR11MB3642B5BC2E1E0708088526D8974D0@DM6PR11MB3642.namprd11.prod.outlook.com>
- <63bca214-3434-16c6-1b60-adf323aec554@linux.intel.com> <DM6PR11MB3642D9BE1E5DAAB8B78B84B0974D0@DM6PR11MB3642.namprd11.prod.outlook.com>
- <s5hpn873by6.wl-tiwai@suse.de> <DM6PR11MB36423A9D28134811AD5A911F974A0@DM6PR11MB3642.namprd11.prod.outlook.com>
- <6466847a-8aae-24f7-d727-36ba75e95f98@linux.intel.com> <DM6PR11MB364259049769F6EF3B84AABD97480@DM6PR11MB3642.namprd11.prod.outlook.com>
- <3f3baf5e-f73d-9cd6-cbfb-36746071e126@linux.intel.com> <CAGvk5PohOP0Yv22tb53EX=ZLB9_vOMb=iujTh64OvHmjC1d4mg@mail.gmail.com>
- <DM6PR11MB3642AC7F8EC47EB48B384D4797450@DM6PR11MB3642.namprd11.prod.outlook.com>
-In-Reply-To: <DM6PR11MB3642AC7F8EC47EB48B384D4797450@DM6PR11MB3642.namprd11.prod.outlook.com>
-From:   Yu-Hsuan Hsu <yuhsuan@chromium.org>
-Date:   Tue, 11 Aug 2020 10:29:24 +0800
-Message-ID: <CAGvk5PogmqfEnFRA8hzby+AGgbOSvbELamh_1=eA9KTpyBMPYQ@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] ASoC: Intel: Add period size constraint on strago board
-To:     "Lu, Brent" <brent.lu@intel.com>
-Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.de>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        "Rojewski, Cezary" <cezary.rojewski@intel.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "yuhsuan@google.com" <yuhsuan@google.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Sam McNally <sammc@chromium.org>,
-        Mark Brown <broonie@kernel.org>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Daniel Stuart <daniel.stuart14@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Damian van Soelen <dj.vsoelen@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1597106560-79693-1-git-send-email-dphadke@linux.microsoft.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lu, Brent <brent.lu@intel.com> =E6=96=BC 2020=E5=B9=B48=E6=9C=8811=E6=97=A5=
- =E9=80=B1=E4=BA=8C =E4=B8=8A=E5=8D=8810:17=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> >
-> > Sorry for the late reply. CRAS does not set the period size when using =
-it.
-> > The default period size is 256, which consumes the samples quickly(abou=
-t 49627
-> > fps when the rate is 48000 fps) at the beginning of the playback.
-> > Since CRAS write samples with the fixed frequency, it triggers underrun=
-s
-> > immidiately.
-> >
-> > According to Brent, the DSP is using 240 period regardless the hw_param=
-. If the
-> > period size is 256, DSP will read 256 samples each time but only consum=
-e 240
-> > samples until the ring buffer of DSP is full. This behavior makes the s=
-amples in
-> > the ring buffer of kernel consumed quickly. (Not sure whether the expla=
-nation is
-> > correct. Need Brent to confirm it.)
-> >
-> > Unfortunately, we can not change the behavior of DSP. After some experi=
-ments,
-> > we found that the issue can be fixed if we set the period size to 240. =
-With the
-> > same frequency as the DSP, the samples are consumed stably. Because eve=
-ryone
-> > can trigger this issue when using the driver without setting the period=
- size, we
-> > think it is a general issue that should be fixed in the kernel.
->
-> I check the code and just realized CRAS does nothing but request maximum =
-buffer
-> size. As I know the application needs to decide the buffer time and perio=
-d time so
-> ALSA could generate a hw_param structure with proper period size instead =
-of using
-> fixed constraint in machine driver because driver has no idea about the l=
-atency you
-> want.
->
-> You can use snd_pcm_hw_params_set_buffer_time_near() and
-> snd_pcm_hw_params_set_period_time_near() to get a proper configuration of
-> buffer and period parameters according to the latency requirement. In the=
- CRAS
-> code, there is a UCM variable to support this: DmaPeriodMicrosecs. I test=
-ed it on
-> Celes and it looks quite promising. It seems to me that adding constraint=
- in machine
-> driver is not necessary.
->
-> SectionDevice."Speaker".0 {
->         Value {
->                 PlaybackPCM "hw:chtrt5650,0"
->                 DmaPeriodMicrosecs "5000"
-> ...
->
-> [   52.434761] sound pcmC1D0p: hw_param
-> [   52.434767] sound pcmC1D0p:   ACCESS 0x1
-> [   52.434770] sound pcmC1D0p:   FORMAT 0x4
-> [   52.434772] sound pcmC1D0p:   SUBFORMAT 0x1
-> [   52.434776] sound pcmC1D0p:   SAMPLE_BITS [16:16]
-> [   52.434779] sound pcmC1D0p:   FRAME_BITS [32:32]
-> [   52.434782] sound pcmC1D0p:   CHANNELS [2:2]
-> [   52.434785] sound pcmC1D0p:   RATE [48000:48000]
-> [   52.434788] sound pcmC1D0p:   PERIOD_TIME [5000:5000]
-> [   52.434791] sound pcmC1D0p:   PERIOD_SIZE [240:240]
-> [   52.434794] sound pcmC1D0p:   PERIOD_BYTES [960:960]
-> [   52.434797] sound pcmC1D0p:   PERIODS [852:852]
-> [   52.434799] sound pcmC1D0p:   BUFFER_TIME [4260000:4260000]
-> [   52.434802] sound pcmC1D0p:   BUFFER_SIZE [204480:204480]
-> [   52.434805] sound pcmC1D0p:   BUFFER_BYTES [817920:817920]
-> [   52.434808] sound pcmC1D0p:   TICK_TIME [0:0]
->
-> Regards,
-> Brent
-Hi Brent,
 
-Yes, I know we can do it to fix the issue as well. As I mentioned
-before, we wanted to fix it in kernel because it is a real issue,
-isn't it? Basically, a driver should work with any param it supports.
-But in this case, everyone can trigger underrun if he or she does not
-the period size to 240. If you still think it's not necessary, I can
-modify UCM to make CRAS set the appropriate period size.
 
-Thanks,
-Yu-Hsuan
+On 8/10/2020 5:42 PM, Dhananjay Phadke wrote:
+> When i2c client unregisters, synchronize irq before setting
+> iproc_i2c->slave to NULL.
+> 
+> (1) disable_irq()
+> (2) Mask event enable bits in control reg
+> (3) Erase slave address (avoid further writes to rx fifo)
+> (4) Flush tx and rx FIFOs
+> (5) Clear pending event (interrupt) bits in status reg
+> (6) enable_irq()
+> (7) Set client pointer to NULL
+> 
+> Unable to handle kernel NULL pointer dereference at virtual address 0000000000000318
+> 
+> [  371.020421] pc : bcm_iproc_i2c_isr+0x530/0x11f0
+> [  371.025098] lr : __handle_irq_event_percpu+0x6c/0x170
+> [  371.030309] sp : ffff800010003e40
+> [  371.033727] x29: ffff800010003e40 x28: 0000000000000060
+> [  371.039206] x27: ffff800010ca9de0 x26: ffff800010f895df
+> [  371.044686] x25: ffff800010f18888 x24: ffff0008f7ff3600
+> [  371.050165] x23: 0000000000000003 x22: 0000000001600000
+> [  371.055645] x21: ffff800010f18888 x20: 0000000001600000
+> [  371.061124] x19: ffff0008f726f080 x18: 0000000000000000
+> [  371.066603] x17: 0000000000000000 x16: 0000000000000000
+> [  371.072082] x15: 0000000000000000 x14: 0000000000000000
+> [  371.077561] x13: 0000000000000000 x12: 0000000000000001
+> [  371.083040] x11: 0000000000000000 x10: 0000000000000040
+> [  371.088519] x9 : ffff800010f317c8 x8 : ffff800010f317c0
+> [  371.093999] x7 : ffff0008f805b3b0 x6 : 0000000000000000
+> [  371.099478] x5 : ffff0008f7ff36a4 x4 : ffff8008ee43d000
+> [  371.104957] x3 : 0000000000000000 x2 : ffff8000107d64c0
+> [  371.110436] x1 : 00000000c00000af x0 : 0000000000000000
+> 
+> [  371.115916] Call trace:
+> [  371.118439]  bcm_iproc_i2c_isr+0x530/0x11f0
+> [  371.122754]  __handle_irq_event_percpu+0x6c/0x170
+> [  371.127606]  handle_irq_event_percpu+0x34/0x88
+> [  371.132189]  handle_irq_event+0x40/0x120
+> [  371.136234]  handle_fasteoi_irq+0xcc/0x1a0
+> [  371.140459]  generic_handle_irq+0x24/0x38
+> [  371.144594]  __handle_domain_irq+0x60/0xb8
+> [  371.148820]  gic_handle_irq+0xc0/0x158
+> [  371.152687]  el1_irq+0xb8/0x140
+> [  371.155927]  arch_cpu_idle+0x10/0x18
+> [  371.159615]  do_idle+0x204/0x290
+> [  371.162943]  cpu_startup_entry+0x24/0x60
+> [  371.166990]  rest_init+0xb0/0xbc
+> [  371.170322]  arch_call_rest_init+0xc/0x14
+> [  371.174458]  start_kernel+0x404/0x430
+> 
+> Fixes: c245d94ed106 ("i2c: iproc: Add multi byte read-write support for slave mode")
+> 
+> Signed-off-by: Dhananjay Phadke <dphadke@linux.microsoft.com>
 
->
-> >
-> > Thanks,
-> > Yu-Hsuan
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
