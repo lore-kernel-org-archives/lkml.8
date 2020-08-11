@@ -2,141 +2,76 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F5DCC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 23:43:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C15CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 23:47:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B0FA20756
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 23:43:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yby0aUts"
+	by mail.kernel.org (Postfix) with ESMTP id 0DD9D2073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 23:47:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726430AbgHKXnp (ORCPT
+        id S1726355AbgHKXrk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 19:43:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51694 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726143AbgHKXnn (ORCPT
+        Tue, 11 Aug 2020 19:47:40 -0400
+Received: from smtprelay0143.hostedemail.com ([216.40.44.143]:59418 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726143AbgHKXrj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 19:43:43 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB8F7C06174A;
-        Tue, 11 Aug 2020 16:43:43 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id b25so266295qto.2;
-        Tue, 11 Aug 2020 16:43:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=vVYy/T/u6izyIYXA6EUbzp0+LeJ2m23WS7/Kot+WNrE=;
-        b=Yby0aUts73aRfCsw4V6P+RYSKTwKF+8rHhYs7KENngCDKF+H++UO9BkAysZ32g3b0e
-         lGr4e4VmnNbJo5p6UuV/ECFV2bbOblPYSXMWOJ0qVUJ5z+R+yU0Ol7MT56e2ku514rnO
-         dLjE2ofh5qyA8ext65sVpqmx7pePdwn7O/MhO4X+8QFx21Ocv64dpn0JrLyumzF3Wu77
-         10Rjyn6+LoDpNJX0Kj6bI+XcjQdw0f9dcndqgKwhCGI57P+N9JEO5zrpOUSY5QL2RBvb
-         kwM4Q39RLWo5waDKV5/Du22gSRiv8+iwmyO1ZUTk6A5Lxwrx5EpVujXBgiNyMUfbLoDB
-         zY7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=vVYy/T/u6izyIYXA6EUbzp0+LeJ2m23WS7/Kot+WNrE=;
-        b=qq23P0/sntn5aqXJ0hBJDjIN8kblnF2Oi7A4KKDTDUhaCtWM6Oi+ZZnHKLKOd7Lmd5
-         UgmKg2xCH0N1PMMPEdsuSLyA7Og1Gs7NH/qK70KQbnZOC7HOp630tSfQxXxwtn8PdK8+
-         83ckehlTuNkeslfy7WKrh1moh0762JOwJzmHZqAEvX5nZrFxRqYb/M86nsD2VllBYqHx
-         Xv3uMLa8syeWCFYnmjIIhQCKbUlE3OS+WRCyzDxxQl8N7j+WPPU+HEHsKWhpguTjRkK9
-         qiQzSibaa/BmtJFenjkUUM3G2VeR8WQJDyQ0Z8w5b+RMgCfPSB7KG1UlfXT3TDs7Tsdr
-         X+qA==
-X-Gm-Message-State: AOAM530FB+po55WQnM+fydnoSlnNlEblaQiSg4pkB5uByz9DUv3XxsYH
-        x52H6Fhcle8Dj2L11re1Nps=
-X-Google-Smtp-Source: ABdhPJzudyfHP6Ux2+lbRuA+IPyYdUAQq2u63fY6ljJl9CUwh+fBtrGqlYDBMrWmHmUiOa4GXyNyWQ==
-X-Received: by 2002:ac8:428f:: with SMTP id o15mr3499525qtl.213.1597189422871;
-        Tue, 11 Aug 2020 16:43:42 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id x57sm424168qtc.61.2020.08.11.16.43.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Aug 2020 16:43:42 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Tue, 11 Aug 2020 19:43:40 -0400
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Fangrui Song <maskray@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        e5ten.arch@gmail.com,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "# 3.4.x" <stable@vger.kernel.org>
-Subject: Re: [PATCH] x86/boot/compressed: Disable relocation relaxation for
- non-pie link
-Message-ID: <20200811234340.GA1318440@rani.riverdale.lan>
-References: <CAKwvOd=ypa8xE-kaDa7XtzPsBH8=Xu_pZj2rnWaeawNs=3dDkw@mail.gmail.com>
- <20200811173655.1162093-1-nivedita@alum.mit.edu>
- <CAKwvOdnjLfQ0fWsrFYDJ2O+qFAfEFnTEEnW-aHrPha8G3_WTrg@mail.gmail.com>
- <20200811224436.GA1302731@rani.riverdale.lan>
- <CAKwvOdnvyVapAJBchivu8SxoQriKEu1bAimm8688EH=uq5YMqA@mail.gmail.com>
+        Tue, 11 Aug 2020 19:47:39 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id E6ABC18027463;
+        Tue, 11 Aug 2020 23:47:38 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: hose67_3c0d1e026fe6
+X-Filterd-Recvd-Size: 1725
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf14.hostedemail.com (Postfix) with ESMTPA;
+        Tue, 11 Aug 2020 23:47:37 +0000 (UTC)
+Message-ID: <98383342041c87a8d50fe9cef486a687c50af248.camel@perches.com>
+Subject: Re: [PATCH 0/3] mtd: lpddr: Fix bad logic bug in print_drs_error
+From:   Joe Perches <joe@perches.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-mtd@lists.infradead.org
+Date:   Tue, 11 Aug 2020 16:47:36 -0700
+In-Reply-To: <cover.1588013366.git.gustavo@embeddedor.com>
+References: <cover.1588013366.git.gustavo@embeddedor.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.3-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAKwvOdnvyVapAJBchivu8SxoQriKEu1bAimm8688EH=uq5YMqA@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 04:04:40PM -0700, Nick Desaulniers wrote:
-> On Tue, Aug 11, 2020 at 3:44 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> >
-> > On Tue, Aug 11, 2020 at 10:58:40AM -0700, Nick Desaulniers wrote:
-> > > > Cc: stable@vger.kernel.org # 4.19.x
-> > >
-> > > Thanks Arvind, good write up.  Just curious about this stable tag, how
-> > > come you picked 4.19?  I can see boot failures in our CI for x86+LLD
-> > > back to 4.9.  Can we amend that tag to use `# 4.9`? I'd be happy to
-> > > help submit backports should they fail to apply cleanly.
-> > > https://travis-ci.com/github/ClangBuiltLinux/continuous-integration/builds/179237488
-> > >
-> >
-> > 4.19 renamed LDFLAGS to KBUILD_LDFLAGS. For 4.4, 4.9 and 4.14 the patch
-> > needs to be modified, KBUILD_LDFLAGS -> LDFLAGS, so I figured we should
-> > submit backports separately. For 4.19 onwards, it should apply without
-> > changes I think.
+On Mon, 2020-04-27 at 14:00 -0500, Gustavo A. R. Silva wrote:
+> Hi,
 > 
-> Cool, sounds good.  I'll keep an eye out for when stable goes to pick this up.
+> This series aims to fix a bad logic bug in print_drs_error, which is
+> tagged for -stable.  The series also include some formatting fixups.
+
+AFAICT: This series is still not applied to any tree.
+
+Can someone please apply it?
+
+https://lore.kernel.org/linux-mtd/cover.1588016644.git.gustavo@embeddedor.com/
+
+> Thanks
 > 
-> tglx, Ingo, BP, can we pretty please get this in tip/urgent for
-> inclusion into 5.9?
-> -- 
-> Thanks,
-> ~Nick Desaulniers
+> Gustavo A. R. Silva (3):
+>   mtd: lpddr: Fix bad logic in print_drs_error
+>   mtd: lpddr: Replace printk with pr_notice
+>   mtd: lpddr: Move function print_drs_error to lpddr_cmds.c
+> 
+>  drivers/mtd/lpddr/lpddr_cmds.c | 33 +++++++++++++++++++++++++++++++++
+>  include/linux/mtd/pfow.h       | 32 --------------------------------
+>  2 files changed, 33 insertions(+), 32 deletions(-)
+> 
 
-Another alternative is to just do this unconditionally instead of even
-checking for the -pie flag. None of the GOTPCRELs are in the
-decompressor, so they shouldn't be performance-sensitive at all.
-
-It still wouldn't apply cleanly to all the stable versions, but
-backporting would be even simpler.
-
-What do you think?
-
-diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-index 3962f592633d..10c2ba59d192 100644
---- a/arch/x86/boot/compressed/Makefile
-+++ b/arch/x86/boot/compressed/Makefile
-@@ -43,6 +43,7 @@ KBUILD_CFLAGS += -Wno-pointer-sign
- KBUILD_CFLAGS += $(call cc-option,-fmacro-prefix-map=$(srctree)/=)
- KBUILD_CFLAGS += -fno-asynchronous-unwind-tables
- KBUILD_CFLAGS += -D__DISABLE_EXPORTS
-+KBUILD_CFLAGS += $(call as-option,-Wa$(comma)-mrelax-relocations=no)
- 
- KBUILD_AFLAGS  := $(KBUILD_CFLAGS) -D__ASSEMBLY__
- GCOV_PROFILE := n
