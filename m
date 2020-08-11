@@ -2,125 +2,95 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47049C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:01:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFEAFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:01:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BD2220771
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:01:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A62C320771
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:01:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oYmEnwpI"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MJPPVath"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728931AbgHKPBv (ORCPT
+        id S1728948AbgHKPB4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 11:01:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55754 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728837AbgHKPB1 (ORCPT
+        Tue, 11 Aug 2020 11:01:56 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45873 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728837AbgHKPBz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 11:01:27 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 592C7C061788;
-        Tue, 11 Aug 2020 08:01:27 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id k8so3168449wma.2;
-        Tue, 11 Aug 2020 08:01:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=/PamCJTJWS9McL3YMw+k49gmnnx82kmNjt/V1IJPP/I=;
-        b=oYmEnwpIQfNzxBaW7xyHlYGZ7gBxIlmi7VVyyEY9i+tNIV1xQSkmcPcaNt7ExW8gDT
-         9vDMuoZUE7maoFTnSoXHDOirn4ztEaKTVHNBozUX8qm+swQHSEH1rX/JXuDDZJCfy/pb
-         TuyjB1LV3W0FuvpXiXYZbRR0wkgNMfWGdyNZQdEyyKPOQUB34I+QYtawzU5+71YLfjAy
-         wvw039t3mNJ1aglJS8/da2lyCVRmgHf7RZQMprMrXIBxuNO0z6J4gjBeOOhvmQwke5TH
-         Yby0cOubgbbPViPvN4v1zwOdWIT745QAmxo8/n9i3SJb4IRv6B0pqCsa0wmGd9K4nbW1
-         q15Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=/PamCJTJWS9McL3YMw+k49gmnnx82kmNjt/V1IJPP/I=;
-        b=f/8y/F3oNRMSDm9amIlM2aQs9WskoLkm4G9VaPJFob89bKrBsrXDjOy518fWCZyOtH
-         LqInaMK99pfeContxs6hL5Ijqagiq0QaXVlPFvOY2do5C8vrfeqciflMqXcx5KZ+HOGv
-         W8l3AEmMikyGdy8V63uPVXYrxHa21vN7+88mCS9YUo3+LQBXZdiKzQ1cyjc4Qf/Uygvj
-         E1ZX5ynXNh4S/pFWoHhPUT/A6jKHwayj0fLO3rvcjTNb7AAxzcmq2wkkNIJculaq7NaR
-         MwOVQq+zgZRbyvK757zeZJvTLCXIC8YpOisIxVwG1fiawEk7u17uy4UABl2SdHXBneCh
-         55Hg==
-X-Gm-Message-State: AOAM532pwGaSmJHgSNoTcBNNMx4zfoJAGJCQ9+60tn0dJV9dR02m5/5D
-        Z8f7YXoj6eR2uLmVweilnsE=
-X-Google-Smtp-Source: ABdhPJyB6mUBDCgmoeQDB4nnf4wlqRwmDF87BAw3MEbpoX0X0eFFZ3M+TFnnTF51izQ+sNRlvQn2Uw==
-X-Received: by 2002:a05:600c:21d3:: with SMTP id x19mr4556815wmj.174.1597158085803;
-        Tue, 11 Aug 2020 08:01:25 -0700 (PDT)
-Received: from skynet.lan (88.red-83-49-60.dynamicip.rima-tde.net. [83.49.60.88])
-        by smtp.gmail.com with ESMTPSA id 15sm5350494wmo.33.2020.08.11.08.01.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Aug 2020 08:01:25 -0700 (PDT)
-From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
-        <noltari@gmail.com>
-To:     tsbogend@alpha.franken.de, f.fainelli@gmail.com,
-        jonas.gorski@gmail.com, bcm-kernel-feedback-list@broadcom.com,
-        linux-mips@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
-        <noltari@gmail.com>
-Subject: [PATCH v3 2/4] MIPS: BCM63xx: remove EHCI from BCM6348 boards
-Date:   Tue, 11 Aug 2020 17:01:15 +0200
-Message-Id: <20200811150117.254620-3-noltari@gmail.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200811150117.254620-1-noltari@gmail.com>
-References: <20200811150117.254620-1-noltari@gmail.com>
+        Tue, 11 Aug 2020 11:01:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597158114;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=zDRlGLWIwDOghzmBBGdpXjJ9z1N+J+XyA1bX28/IXrA=;
+        b=MJPPVathhsN1ENen/orRKP9rxiekMPvJbtu2m3nrYvDE+6PBcKgrUeOiJY4TxQIAM6q1Xd
+        mv3LAKd3Ba7x9+5i0KZnrkPsFjNzJNsJKHyu4SCHuRBV8YJ59XAGgvPk++MZmQIxw1EIVY
+        1IYobFfG+7hXke4lfJDbPaYDshaApzo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-51-xYn28TrCNG2K7t6ePMNq0w-1; Tue, 11 Aug 2020 11:01:52 -0400
+X-MC-Unique: xYn28TrCNG2K7t6ePMNq0w-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AFD77107ACCA;
+        Tue, 11 Aug 2020 15:01:50 +0000 (UTC)
+Received: from rules.brq.redhat.com (unknown [10.40.208.50])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 89C461001B07;
+        Tue, 11 Aug 2020 15:01:48 +0000 (UTC)
+From:   Vladis Dronov <vdronov@redhat.com>
+To:     Taehee Yoo <ap420073@gmail.com>, gregkh@linuxfoundation.org,
+        rafael@kernel.org, linux-fsdevel@vger.kernel.org
+Cc:     Vladis Dronov <vdronov@redhat.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH] debugfs: Fix module state check condition
+Date:   Tue, 11 Aug 2020 17:01:29 +0200
+Message-Id: <20200811150129.53343-1-vdronov@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There's no EHCI controller on BCM6348.
+The '#ifdef MODULE' check in the original commit does not work as intended.
+The code under the check is not built at all if CONFIG_DEBUG_FS=y. Fix this
+by using a correct check.
 
-Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Fixes: 275678e7a9be ("debugfs: Check module state before warning in {full/open}_proxy_open()")
+Signed-off-by: Vladis Dronov <vdronov@redhat.com>
 ---
- v3: no changes.
- v2: no changes.
+ fs/debugfs/file.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
- arch/mips/bcm63xx/boards/board_bcm963xx.c | 3 ---
- 1 file changed, 3 deletions(-)
-
-diff --git a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards/board_bcm963xx.c
-index 744aa16bab12..45f1bc437245 100644
---- a/arch/mips/bcm63xx/boards/board_bcm963xx.c
-+++ b/arch/mips/bcm63xx/boards/board_bcm963xx.c
-@@ -285,7 +285,6 @@ static struct board_info __initdata board_96348gw_10 = {
+diff --git a/fs/debugfs/file.c b/fs/debugfs/file.c
+index b167d2d02148..a768a09430c3 100644
+--- a/fs/debugfs/file.c
++++ b/fs/debugfs/file.c
+@@ -177,7 +177,7 @@ static int open_proxy_open(struct inode *inode, struct file *filp)
+ 		goto out;
  
- 	.has_ohci0			= 1,
- 	.has_pccard			= 1,
--	.has_ehci0			= 1,
+ 	if (!fops_get(real_fops)) {
+-#ifdef MODULE
++#ifdef CONFIG_MODULES
+ 		if (real_fops->owner &&
+ 		    real_fops->owner->state == MODULE_STATE_GOING)
+ 			goto out;
+@@ -312,7 +312,7 @@ static int full_proxy_open(struct inode *inode, struct file *filp)
+ 		goto out;
  
- 	.leds = {
- 		{
-@@ -338,7 +337,6 @@ static struct board_info __initdata board_96348gw_11 = {
- 
- 	.has_ohci0 = 1,
- 	.has_pccard = 1,
--	.has_ehci0 = 1,
- 
- 	.leds = {
- 		{
-@@ -441,7 +439,6 @@ static struct board_info __initdata board_FAST2404 = {
- 
- 	.has_ohci0			= 1,
- 	.has_pccard			= 1,
--	.has_ehci0			= 1,
- };
- 
- static struct board_info __initdata board_rta1025w_16 = {
+ 	if (!fops_get(real_fops)) {
+-#ifdef MODULE
++#ifdef CONFIG_MODULES
+ 		if (real_fops->owner &&
+ 		    real_fops->owner->state == MODULE_STATE_GOING)
+ 			goto out;
 -- 
-2.28.0
+2.26.2
 
