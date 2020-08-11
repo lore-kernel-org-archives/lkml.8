@@ -2,93 +2,118 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 972D9C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 08:12:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D0BC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 08:17:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D8AC20678
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 08:12:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD691206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 08:17:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728354AbgHKIMn (ORCPT
+        id S1728297AbgHKIR1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 04:12:43 -0400
-Received: from mga11.intel.com ([192.55.52.93]:1493 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728000AbgHKIMm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 04:12:42 -0400
-IronPort-SDR: mYERgpeWGaI4Ce2imFbdxj1EXPQlvm7toEl1JkWtHcoCVG9wN6CL0K8HhQ1aSlE6RqYtlXboYs
- uD4kRfQdffbA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9709"; a="151364737"
-X-IronPort-AV: E=Sophos;i="5.75,460,1589266800"; 
-   d="scan'208";a="151364737"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2020 01:12:42 -0700
-IronPort-SDR: D4y46sC0Ef5ocWgaOIwdPWYAAuQXaDhiTLq/NhqmTn9hOqM2krynsy+9eCoCcMz7HHDsGpq3/D
- gQJLVyPROXog==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,460,1589266800"; 
-   d="scan'208";a="277511088"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga008.fm.intel.com with ESMTP; 11 Aug 2020 01:12:42 -0700
-Received: from [10.249.225.27] (abudanko-mobl.ccr.corp.intel.com [10.249.225.27])
-        by linux.intel.com (Postfix) with ESMTP id 3D21F5807AA;
-        Tue, 11 Aug 2020 01:12:40 -0700 (PDT)
-Subject: Re: [PATCH 1/2] perf: Add closing sibling events' file descriptors
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        Jiri Olsa <jolsa@kernel.org>, adrian.hunter@intel.com
-References: <20200708151635.81239-1-alexander.shishkin@linux.intel.com>
- <20200708151635.81239-2-alexander.shishkin@linux.intel.com>
- <20200806083530.GV2674@hirez.programming.kicks-ass.net>
- <20200806153205.GA1448395@tassilo.jf.intel.com>
- <875z9q1u3g.fsf@ashishki-desk.ger.corp.intel.com>
- <20200810144518.GB1448395@tassilo.jf.intel.com>
- <20200810203632.GF3982@worktop.programming.kicks-ass.net>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <d9389142-1065-0769-33b4-0f97e5d6eca4@linux.intel.com>
-Date:   Tue, 11 Aug 2020 11:12:39 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <20200810203632.GF3982@worktop.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 11 Aug 2020 04:17:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50072 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728254AbgHKIR0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 04:17:26 -0400
+Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [IPv6:2a02:1800:120:4::f00:13])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3B0FC06174A
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 01:17:25 -0700 (PDT)
+Received: from ramsan ([84.195.186.194])
+        by baptiste.telenet-ops.be with bizsmtp
+        id E8HH230014C55Sk018HHG0; Tue, 11 Aug 2020 10:17:20 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1k5PTA-0000UC-Tn; Tue, 11 Aug 2020 10:17:16 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1k5PTA-0001g9-RW; Tue, 11 Aug 2020 10:17:16 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Sergei Shtylyov <sergei.shtylyov@gmail.com>,
+        linux-ide@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        stable <stable@vger.kernel.org>
+Subject: [PATCH v2] ata: sata_rcar: Fix DMA boundary mask
+Date:   Tue, 11 Aug 2020 10:17:12 +0200
+Message-Id: <20200811081712.4981-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Before commit 9495b7e92f716ab2 ("driver core: platform: Initialize
+dma_parms for platform devices"), the R-Car SATA device didn't have DMA
+parameters.  Hence the DMA boundary mask supplied by its driver was
+silently ignored, as __scsi_init_queue() doesn't check the return value
+of dma_set_seg_boundary(), and the default value of 0xffffffff was used.
 
-On 10.08.2020 23:36, Peter Zijlstra wrote:
-> On Mon, Aug 10, 2020 at 07:45:18AM -0700, Andi Kleen wrote:
-> 
->> Unfortunately we're kind of stuck with the old NFILE=1024 default
->> even though it makes little sense on modern servers.
-> 
-> Why can't that be changed? It seems to me all of userspace changes all
-> the time; heck that system-doofus thing flushed 20+ years of sysadmin
-> experience down the drain, just cause. Why can't we up a file limit?
-> 
+Now the device has gained DMA parameters, the driver-supplied value is
+used, and the following warning is printed on Salvator-XS:
 
-If you asked me I would say that
-Intel VTune HW micro architecture analysis would also be unblocked
-by pushing RLIMIT_NOFILE limit beyond its current 1K default.
+    DMA-API: sata_rcar ee300000.sata: mapping sg segment across boundary [start=0x00000000ffffe000] [end=0x00000000ffffefff] [boundary=0x000000001ffffffe]
+    WARNING: CPU: 5 PID: 38 at kernel/dma/debug.c:1233 debug_dma_map_sg+0x298/0x300
 
-Currently rule of thumb for VTune users is to set the limit to
-value == #cores X # events. The recommended value is 64K [1].
+(the range of start/end values depend on whether IOMMU support is
+ enabled or not)
 
-BR,
-Alexei
+The issue here is that SATA_RCAR_DMA_BOUNDARY doesn't have bit 0 set, so
+any typical end value, which is odd, will trigger the check.
 
-[1] https://software.intel.com/content/www/us/en/develop/documentation/vtune-cookbook/top/configuration-recipes/profiling-hardware-without-sampling-drivers.html
+Fix this by increasing the DMA boundary value by 1.
+
+Fixes: 8bfbeed58665dbbf ("sata_rcar: correct 'sata_rcar_sht'")
+Fixes: 9495b7e92f716ab2 ("driver core: platform: Initialize dma_parms for platform devices")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reviewed-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Tested-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc: stable <stable@vger.kernel.org>
+---
+v2:
+  - Add Reviewed-by, Tested-by, Cc.
+
+This is a fix for a regression in v5.7-rc5 that fell through the cracks.
+https://lore.kernel.org/linux-ide/20200513110426.22472-1-geert+renesas@glider.be/
+
+As by default the DMA debug code prints the first error only, this issue
+may be hidden on plain v5.7-rc5, where the FCP driver triggers a similar
+warning.  Merging commit dd844fb8e50b12e6 ("media: platform: fcp: Set
+appropriate DMA parameters", in v5.8-rc1) from the media tree fixes the
+FCP issue, and exposes the SATA issue.
+
+I added the second fixes tag because that commit is already being
+backported to stable kernels, and this patch thus needs backporting,
+too.
+---
+ drivers/ata/sata_rcar.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/ata/sata_rcar.c b/drivers/ata/sata_rcar.c
+index 141ac600b64c87ef..44b0ed8f6bb8a120 100644
+--- a/drivers/ata/sata_rcar.c
++++ b/drivers/ata/sata_rcar.c
+@@ -120,7 +120,7 @@
+ /* Descriptor table word 0 bit (when DTA32M = 1) */
+ #define SATA_RCAR_DTEND			BIT(0)
+ 
+-#define SATA_RCAR_DMA_BOUNDARY		0x1FFFFFFEUL
++#define SATA_RCAR_DMA_BOUNDARY		0x1FFFFFFFUL
+ 
+ /* Gen2 Physical Layer Control Registers */
+ #define RCAR_GEN2_PHY_CTL1_REG		0x1704
+-- 
+2.17.1
+
