@@ -2,174 +2,126 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27053C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 08:49:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA3DCC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 08:49:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECD36206B2
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 08:49:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A99C8206B2
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 08:49:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728377AbgHKItQ (ORCPT
+        id S1728401AbgHKItX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 04:49:16 -0400
-Received: from smtp-42ae.mail.infomaniak.ch ([84.16.66.174]:53985 "EHLO
-        smtp-42ae.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728301AbgHKItN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 04:49:13 -0400
-Received: from smtp-2-0001.mail.infomaniak.ch (unknown [10.5.36.108])
-        by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4BQmhT3K8VzlhJKq;
-        Tue, 11 Aug 2020 10:48:41 +0200 (CEST)
-Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
-        by smtp-2-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4BQmhQ2drjzlh8T5;
-        Tue, 11 Aug 2020 10:48:38 +0200 (CEST)
-Subject: Re: [PATCH v7 0/7] Add support for O_MAYEXEC
-To:     Jann Horn <jannh@google.com>, Kees Cook <keescook@chromium.org>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Mimi Zohar <zohar@linux.ibm.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Thibaut Sautereau <thibaut.sautereau@clip-os.org>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-integrity@vger.kernel.org,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-References: <20200723171227.446711-1-mic@digikod.net>
- <202007241205.751EBE7@keescook>
- <0733fbed-cc73-027b-13c7-c368c2d67fb3@digikod.net>
- <20200810202123.GC1236603@ZenIV.linux.org.uk>
- <917bb071-8b1a-3ba4-dc16-f8d7b4cc849f@digikod.net>
- <CAG48ez0NAV5gPgmbDaSjo=zzE=FgnYz=-OHuXwu0Vts=B5gesA@mail.gmail.com>
-From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
-Message-ID: <0cc94c91-afd3-27cd-b831-8ea16ca8ca93@digikod.net>
-Date:   Tue, 11 Aug 2020 10:48:37 +0200
-User-Agent: 
+        Tue, 11 Aug 2020 04:49:23 -0400
+Received: from mga06.intel.com ([134.134.136.31]:5597 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728301AbgHKItX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 04:49:23 -0400
+IronPort-SDR: oBEgQenW7Xvw3xd945JvGpy2rB84uc15GwYzjNopmZJ/MOycshNV7nGXrzIngvVfLC3sYqQwZP
+ XN5T4LuYC8sw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9709"; a="215210977"
+X-IronPort-AV: E=Sophos;i="5.75,460,1589266800"; 
+   d="scan'208";a="215210977"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2020 01:49:21 -0700
+IronPort-SDR: IjDMjOjtMt5NrsPQQQhQG5ppu9k/6vRzxFy9SnlCF1inWJL2ZuVvgbjwN5CxLjn+lOhn+EJU4K
+ 9qcllnVS6xCQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,460,1589266800"; 
+   d="scan'208";a="276244986"
+Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.170]) ([10.237.72.170])
+  by fmsmga007.fm.intel.com with ESMTP; 11 Aug 2020 01:49:20 -0700
+Subject: Re: [PATCH] xhci: Do warm-reset when both CAS and XDEV_RESUME are set
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        mathias.nyman@intel.com
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:USB XHCI DRIVER" <linux-usb@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200810140753.6639-1-kai.heng.feng@canonical.com>
+From:   Mathias Nyman <mathias.nyman@linux.intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mathias.nyman@linux.intel.com; prefer-encrypt=mutual; keydata=
+ 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 fiD/
+Message-ID: <171f8ce9-2fdf-9b8b-9dfe-2b24e5a4b1a1@linux.intel.com>
+Date:   Tue, 11 Aug 2020 11:52:39 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <CAG48ez0NAV5gPgmbDaSjo=zzE=FgnYz=-OHuXwu0Vts=B5gesA@mail.gmail.com>
+In-Reply-To: <20200810140753.6639-1-kai.heng.feng@canonical.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
-X-Antivirus-Code: 0x100000
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 11/08/2020 01:03, Jann Horn wrote:
-> On Tue, Aug 11, 2020 at 12:43 AM Mickaël Salaün <mic@digikod.net> wrote:
->> On 10/08/2020 22:21, Al Viro wrote:
->>> On Mon, Aug 10, 2020 at 10:11:53PM +0200, Mickaël Salaün wrote:
->>>> It seems that there is no more complains nor questions. Do you want me
->>>> to send another series to fix the order of the S-o-b in patch 7?
->>>
->>> There is a major question regarding the API design and the choice of
->>> hooking that stuff on open().  And I have not heard anything resembling
->>> a coherent answer.
->>
->> Hooking on open is a simple design that enables processes to check files
->> they intend to open, before they open them. From an API point of view,
->> this series extends openat2(2) with one simple flag: O_MAYEXEC. The
->> enforcement is then subject to the system policy (e.g. mount points,
->> file access rights, IMA, etc.).
->>
->> Checking on open enables to not open a file if it does not meet some
->> requirements, the same way as if the path doesn't exist or (for whatever
->> reasons, including execution permission) if access is denied.
+On 10.8.2020 17.07, Kai-Heng Feng wrote:
+> Sometimes re-plugging a USB device during system sleep renders the device
+> useless:
+> [  173.418345] xhci_hcd 0000:00:14.0: Get port status 2-4 read: 0x14203e2, return 0x10262
+> ...
+> [  176.496485] usb 2-4: Waited 2000ms for CONNECT
+> [  176.496781] usb usb2-port4: status 0000.0262 after resume, -19
+> [  176.497103] usb 2-4: can't resume, status -19
+> [  176.497438] usb usb2-port4: logical disconnect
 > 
-> You can do exactly the same thing if you do the check in a separate
-> syscall though.
+> Because PLS equals to XDEV_RESUME, xHCI driver reports U3 to usbcore,
+> despite of CAS bit is flagged.
 > 
-> And it provides a greater degree of flexibility; for example, you can
-> use it in combination with fopen() without having to modify the
-> internals of fopen() or having to use fdopen().
+> So proritize CAS over XDEV_RESUME to let usbcore handle warm-reset for
+> the port.
 > 
->> It is a
->> good practice to check as soon as possible such properties, and it may
->> enables to avoid (user space) time-of-check to time-of-use (TOCTOU)
->> attacks (i.e. misuse of already open resources).
-> 
-> The assumption that security checks should happen as early as possible
-> can actually cause security problems. For example, because seccomp was
-> designed to do its checks as early as possible, including before
-> ptrace, we had an issue for a long time where the ptrace API could be
-> abused to bypass seccomp filters.
-> 
-> Please don't decide that a check must be ordered first _just_ because
-> it is a security check. While that can be good for limiting attack
-> surface, it can also create issues when the idea is applied too
-> broadly.
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> ---
 
-I'd be interested with such security issue examples.
+Thanks, nice catch.
+Adding to queue
 
-I hope that delaying checks will not be an issue for mechanisms such as
-IMA or IPE:
-https://lore.kernel.org/lkml/1544699060.6703.11.camel@linux.ibm.com/
+-Mathias
 
-Any though Mimi, Deven, Chrome OS folks?
-
-> 
-> I don't see how TOCTOU issues are relevant in any way here. If someone
-> can turn a script that is considered a trusted file into an untrusted
-> file and then maliciously change its contents, you're going to have
-> issues either way because the modifications could still happen after
-> openat(); if this was possible, the whole thing would kind of fall
-> apart. And if that isn't possible, I don't see any TOCTOU.
-
-Sure, and if the scripts are not protected in some way there is no point
-to check anything.
-
-> 
->> It is important to keep
->> in mind that the use cases we are addressing consider that the (user
->> space) script interpreters (or linkers) are trusted and unaltered (i.e.
->> integrity/authenticity checked). These are similar sought defensive
->> properties as for SUID/SGID binaries: attackers can still launch them
->> with malicious inputs (e.g. file paths, file descriptors, environment
->> variables, etc.), but the binaries can then have a way to check if they
->> can extend their trust to some file paths.
->>
->> Checking file descriptors may help in some use cases, but not the ones
->> motivating this series.
-> 
-> It actually provides a superset of the functionality that your
-> existing patches provide.
-
-It also brings new issues with multiple file descriptor origins (e.g.
-memfd_create).
-
-> 
->> Checking (already) opened resources could be a
->> *complementary* way to check execute permission, but it is not in the
->> scope of this series.
