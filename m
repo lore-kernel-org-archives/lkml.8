@@ -2,109 +2,92 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 128AAC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 12:46:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A65E3C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 12:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0417206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 12:46:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85857206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 12:47:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728619AbgHKMqf (ORCPT
+        id S1728649AbgHKMrU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 08:46:35 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:39428 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726966AbgHKMqe (ORCPT
+        Tue, 11 Aug 2020 08:47:20 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:39149 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728081AbgHKMrT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 08:46:34 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id EAB7F1C0BD8; Tue, 11 Aug 2020 14:46:29 +0200 (CEST)
-Date:   Tue, 11 Aug 2020 14:46:14 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Martyna Szapar <martyna.szapar@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>
-Subject: Re: [PATCH 4.19 47/48] i40e: Memory leak in i40e_config_iwarp_qvlist
-Message-ID: <20200811124614.2myealhkhnla6v3a@duo.ucw.cz>
-References: <20200810151804.199494191@linuxfoundation.org>
- <20200810151806.541597863@linuxfoundation.org>
+        Tue, 11 Aug 2020 08:47:19 -0400
+Received: by mail-io1-f71.google.com with SMTP id v10so9610931iot.6
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 05:47:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=5vEcG9zeyOZ/QenNgo3ls9OBA79q1Txnz2k4N411U8A=;
+        b=AbZPH3gbesIZpJmiCBM3ZYhx2F8mfHx95MzJgdWIjI7yInnAyrgGNnp8L5GmJrUI0m
+         Dg7BafdQRnzBAE7i4hGdKS3ygHVoC1M/5d/4uZ0MQa6aQ8fQ1Pb2yeAQkuk+xq41q3Rz
+         JRLxVxMAYxXuTqi6xnMoSOKZRqHTJEte9O2AysT6C5cOG5BybSr4KijCQB+VymFJ7ic+
+         J2t0AYV/RXmxaS3sL1SYhF1GjhxpKHlSG+xmQiSDghvz2YzQ99LbdHcUktep+sV6W9BH
+         Ns3mAEW7qBLUIksE/enT6rXBZQtVfGUDVv5/3zlnyTqzUxsSfamoIjyVsylUa0KltncB
+         mMLQ==
+X-Gm-Message-State: AOAM533NU1AKM9uFteuDFmaXZh0tk1jeo7SQhIQukKw8WxvsNDztL8fX
+        rNfaD7vcUwGoIM84Fq7zzNo6njxBKQ0yvPof6fExCM++mhX1
+X-Google-Smtp-Source: ABdhPJyMYMdwxugH7bEJWBFsjpR4rXUiRcwyxJrAMZIHRaY7op4hzQUlF4TYM2Vi7KTM1VfoFtiM7FhO375FdGbUc72BhsIIr7iw
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="pkqhj7nvnn7tsqgk"
-Content-Disposition: inline
-In-Reply-To: <20200810151806.541597863@linuxfoundation.org>
-User-Agent: NeoMutt/20180716
+X-Received: by 2002:a6b:b513:: with SMTP id e19mr22259220iof.167.1597150039477;
+ Tue, 11 Aug 2020 05:47:19 -0700 (PDT)
+Date:   Tue, 11 Aug 2020 05:47:19 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000c1925305ac997812@google.com>
+Subject: KASAN: use-after-free Read in corrupted (4)
+From:   syzbot <syzbot+48135e34de22e3a82c99@syzkaller.appspotmail.com>
+To:     linux-kernel@vger.kernel.org, mingo@redhat.com,
+        peterz@infradead.org, syzkaller-bugs@googlegroups.com,
+        will@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
 
---pkqhj7nvnn7tsqgk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+syzbot found the following issue on:
 
-Hi!
+HEAD commit:    d6efb3ac Merge tag 'tty-5.9-rc1' of git://git.kernel.org/p..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=172b6976900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ff87594cecb7e666
+dashboard link: https://syzkaller.appspot.com/bug?extid=48135e34de22e3a82c99
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1373613a900000
 
-> From: Martyna Szapar <martyna.szapar@intel.com>
->=20
-> [ Upstream commit 0b63644602cfcbac849f7ea49272a39e90fa95eb ]
->=20
-> Added freeing the old allocation of vf->qvlist_info in function
-> i40e_config_iwarp_qvlist before overwriting it with
-> the new allocation.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+48135e34de22e3a82c99@syzkaller.appspotmail.com
 
-Ok, but this also other error paths:
+netdevsim netdevsim0 netdevsim1: set [1, 0] type 2 family 0 port 6081 - 0
+netdevsim netdevsim0 netdevsim2: set [1, 0] type 2 family 0 port 6081 - 0
+netdevsim netdevsim0 netdevsim3: set [1, 0] type 2 family 0 port 6081 - 0
+==================================================================
+BUG: KASAN: use-after-free in __lock_acquire+0x41d0/0x5640 kernel/locking/lockdep.c:4296
+Read of size 8 at addr ffff8880936320a0 by task syz-executor.0/6858
 
-> --- a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
-> +++ b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
-> @@ -449,16 +450,19 @@ static int i40e_config_iwarp_qvlist(stru
->  			 "Incorrect number of iwarp vectors %u. Maximum %u allowed.\n",
->  			 qvlist_info->num_vectors,
->  			 msix_vf);
-> -		goto err;
-> +		ret =3D -EINVAL;
-> +		goto err_out;
->  	}
+CPU: 1 PID: 6858 Comm: syz-executor.0 Not tainted 5.8.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ dump_sta
 
-And it is no longer freeing data qvlist_info() in this path. Is that
-correct? Should it goto err_free instead?=20
 
-> @@ -512,10 +518,11 @@ static int i40e_config_iwarp_qvlist(stru
->  	}
-> =20
->  	return 0;
-> -err:
-> +err_free:
->  	kfree(vf->qvlist_info);
->  	vf->qvlist_info =3D NULL;
-> -	return -EINVAL;
-> +err_out:
-> +	return ret;
->  }
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---pkqhj7nvnn7tsqgk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EARECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXzKTFgAKCRAw5/Bqldv6
-8nD1AJ9hp8KEZX9mmHBxiUCrpm+Gq6mugACfR7ihn9zGN+1XhiI1cZej7g1gahQ=
-=eSCO
------END PGP SIGNATURE-----
-
---pkqhj7nvnn7tsqgk--
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
