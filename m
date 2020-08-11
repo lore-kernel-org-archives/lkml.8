@@ -2,241 +2,95 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAD_ENC_HEADER,BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0CDFC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 19:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE32C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 19:32:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D5D320771
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 19:31:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 788B9206B2
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 19:32:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="As8qfrI4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726523AbgHKTbi convert rfc822-to-8bit (ORCPT
+        id S1726557AbgHKTcG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 15:31:38 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:56630 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726068AbgHKTbh (ORCPT
+        Tue, 11 Aug 2020 15:32:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41102 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726528AbgHKTcG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 15:31:37 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out02.mta.xmission.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1k5ZzW-006toT-91; Tue, 11 Aug 2020 13:31:22 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1k5ZzU-00036t-PY; Tue, 11 Aug 2020 13:31:21 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-Cc:     linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Philippe =?utf-8?Q?Tr=C3=A9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Thibaut Sautereau <thibaut.sautereau@clip-os.org>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-References: <20200723171227.446711-1-mic@digikod.net>
-        <20200723171227.446711-3-mic@digikod.net>
-Date:   Tue, 11 Aug 2020 14:27:54 -0500
-In-Reply-To: <20200723171227.446711-3-mic@digikod.net> (=?utf-8?Q?=22Micka?=
- =?utf-8?Q?=C3=ABl_Sala=C3=BCn=22's?=
-        message of "Thu, 23 Jul 2020 19:12:22 +0200")
-Message-ID: <87o8nhm18l.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Tue, 11 Aug 2020 15:32:06 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C29BC061788
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 12:32:06 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id m8so8164127pfh.3
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 12:32:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=tA1M4j2w8ikxzsm8TqiavbfeCWghKEktBcvPRuyYdeI=;
+        b=As8qfrI4fsdQlw1YluH7CQP9RPdnbLLarMDBpBfPLtdJM6Zz9+5A7xoQef2NTzfUE/
+         +C1+3eziTtpdJnqzivpXYwXCBLOe3YSljJNFih8WyxQrvWp6asRkc6RZ6Bw0jOsnQh2g
+         pMc19VgG5f7Jp9oK3lDGsOeZmBremTkgYbNvc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=tA1M4j2w8ikxzsm8TqiavbfeCWghKEktBcvPRuyYdeI=;
+        b=FD5BZljBE0S2zUNNoG3Mlk+jBtKSqgETiLT7k/Oa2IpTT61vNVmk7h0dmS0c5jJNn+
+         QCdkKI3Xb36AKz7ocOCd7WvMciuiqmxib7AXrPqlYOyRa9DHOeOgmFNk4FCgWsT4xLkF
+         CQYeayD+mafTOdBcEKZGBY+eHxIsljhN28MWTf1yLl9cyNA0Fot7HPVZcPZZWNPiGNlj
+         bHdHMzZxMUSIaV4atzGlTxVzhhEmtvZVpvzh6C65KzGuaSGR2NVxDXd88VPE1XMozqE1
+         nZU+u34HtRBsX/tSecJtY4tK3DOI5T1hl3eoqUTkD3tv1wSO5r66UYH3pKlQlXEmnB53
+         2gww==
+X-Gm-Message-State: AOAM532Y3X1Xzkr9HvZSkY7eGQ7H2KnKw1kTuvcPyOFGsNIfujRBtmAY
+        DKSubyw0fCAC9xQOohwi/T3ORpNI0Ic=
+X-Google-Smtp-Source: ABdhPJxLgsyPl3Dbi+HYEp5MXKHxD/EOIrbVN3IARmbEfeFc7gN7kF/USAK2IJ9ZzHp+dLVfg9OamA==
+X-Received: by 2002:a63:a50e:: with SMTP id n14mr2037903pgf.234.1597174325609;
+        Tue, 11 Aug 2020 12:32:05 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id j8sm18852860pfh.90.2020.08.11.12.32.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Aug 2020 12:32:05 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-XM-SPF: eid=1k5ZzU-00036t-PY;;;mid=<87o8nhm18l.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX19o313fM1rdJpFj27lRA/GiywQHoqdRBk0=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH v7 2/7] exec: Move S_ISREG() check earlier
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1597058460-16211-2-git-send-email-mkshah@codeaurora.org>
+References: <1597058460-16211-1-git-send-email-mkshah@codeaurora.org> <1597058460-16211-2-git-send-email-mkshah@codeaurora.org>
+Subject: Re: [PATCH v4 1/7] pinctrl: qcom: Add msmgpio irqchip flags
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
+        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org,
+        Maulik Shah <mkshah@codeaurora.org>
+To:     Maulik Shah <mkshah@codeaurora.org>, bjorn.andersson@linaro.org,
+        evgreen@chromium.org, linus.walleij@linaro.org, maz@kernel.org,
+        mka@chromium.org
+Date:   Tue, 11 Aug 2020 12:32:03 -0700
+Message-ID: <159717432398.1360974.1005323166939228511@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mickaël Salaün <mic@digikod.net> writes:
+Can the subject be more specific? "pinctrl: qcom: Set IRQCHIP_SET_TYPE_MASK=
+ED flag"?
 
-> From: Kees Cook <keescook@chromium.org>
->
-> The execve(2)/uselib(2) syscalls have always rejected non-regular
-> files. Recently, it was noticed that a deadlock was introduced when trying
-> to execute pipes, as the S_ISREG() test was happening too late. This was
-> fixed in commit 73601ea5b7b1 ("fs/open.c: allow opening only regular files
-> during execve()"), but it was added after inode_permission() had already
-> run, which meant LSMs could see bogus attempts to execute non-regular
-> files.
->
-> Move the test into the other inode type checks (which already look
-> for other pathological conditions[1]). Since there is no need to use
-> FMODE_EXEC while we still have access to "acc_mode", also switch the
-> test to MAY_EXEC.
->
-> Also include a comment with the redundant S_ISREG() checks at the end of
-> execve(2)/uselib(2) to note that they are present to avoid any mistakes.
-
-The comment is:
-> +	/*
-> +	 * may_open() has already checked for this, so it should be
-> +	 * impossible to trip now. But we need to be extra cautious
-> +	 * and check again at the very end too.
-> +	 */
-Those comments scare me.  Why do you need to be extra cautious?
-How can the file type possibly change between may_open and anywhere?
-The type of a file is immutable after it's creation.
-
-If the comment said check just in case something went wrong with
-code maintenance I could understand but that isn't what the comment
-says.
-
-Also the fallthrough change below really should be broken out into
-it's own change.
-
-
-> My notes on the call path, and related arguments, checks, etc:
->
-> do_open_execat()
->     struct open_flags open_exec_flags = {
->         .open_flag = O_LARGEFILE | O_RDONLY | __FMODE_EXEC,
->         .acc_mode = MAY_EXEC,
->         ...
->     do_filp_open(dfd, filename, open_flags)
->         path_openat(nameidata, open_flags, flags)
->             file = alloc_empty_file(open_flags, current_cred());
->             do_open(nameidata, file, open_flags)
->                 may_open(path, acc_mode, open_flag)
-> 		    /* new location of MAY_EXEC vs S_ISREG() test */
->                     inode_permission(inode, MAY_OPEN | acc_mode)
->                         security_inode_permission(inode, acc_mode)
->                 vfs_open(path, file)
->                     do_dentry_open(file, path->dentry->d_inode, open)
->                         /* old location of FMODE_EXEC vs S_ISREG() test */
->                         security_file_open(f)
->                         open()
->
-> [1] https://lore.kernel.org/lkml/202006041910.9EF0C602@keescook/
->
-> Signed-off-by: Mickaël Salaün <mic@digikod.net>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> Link: https://lore.kernel.org/r/20200605160013.3954297-3-keescook@chromium.org
+Quoting Maulik Shah (2020-08-10 04:20:54)
+> Add irqchip specific flags for msmgpio irqchip to mask non wakeirqs
+> during suspend and mask before setting irq type.
+>=20
+> Masking before changing type should make sure any spurious interrupt
+> is not detected during this operation.
+>=20
+> Fixes: e35a6ae0eb3a ("pinctrl/msm: Setup GPIO chip in hierarchy")
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
 > ---
->  fs/exec.c  | 14 ++++++++++++--
->  fs/namei.c |  6 ++++--
->  fs/open.c  |  6 ------
->  3 files changed, 16 insertions(+), 10 deletions(-)
->
-> diff --git a/fs/exec.c b/fs/exec.c
-> index d7c937044d10..bdc6a6eb5dce 100644
-> --- a/fs/exec.c
-> +++ b/fs/exec.c
-> @@ -141,8 +141,13 @@ SYSCALL_DEFINE1(uselib, const char __user *, library)
->  	if (IS_ERR(file))
->  		goto out;
->  
-> +	/*
-> +	 * may_open() has already checked for this, so it should be
-> +	 * impossible to trip now. But we need to be extra cautious
-> +	 * and check again at the very end too.
-> +	 */
->  	error = -EACCES;
-> -	if (!S_ISREG(file_inode(file)->i_mode))
-> +	if (WARN_ON_ONCE(!S_ISREG(file_inode(file)->i_mode)))
->  		goto exit;
->  
->  	if (path_noexec(&file->f_path))
-> @@ -886,8 +891,13 @@ static struct file *do_open_execat(int fd, struct filename *name, int flags)
->  	if (IS_ERR(file))
->  		goto out;
->  
-> +	/*
-> +	 * may_open() has already checked for this, so it should be
-> +	 * impossible to trip now. But we need to be extra cautious
-> +	 * and check again at the very end too.
-> +	 */
->  	err = -EACCES;
-> -	if (!S_ISREG(file_inode(file)->i_mode))
-> +	if (WARN_ON_ONCE(!S_ISREG(file_inode(file)->i_mode)))
->  		goto exit;
->
->  	if (path_noexec(&file->f_path))
-> diff --git a/fs/namei.c b/fs/namei.c
-> index 72d4219c93ac..a559ad943970 100644
-> --- a/fs/namei.c
-> +++ b/fs/namei.c
-> @@ -2849,16 +2849,18 @@ static int may_open(const struct path *path, int acc_mode, int flag)
->  	case S_IFLNK:
->  		return -ELOOP;
->  	case S_IFDIR:
-> -		if (acc_mode & MAY_WRITE)
-> +		if (acc_mode & (MAY_WRITE | MAY_EXEC))
->  			return -EISDIR;
->  		break;
->  	case S_IFBLK:
->  	case S_IFCHR:
->  		if (!may_open_dev(path))
->  			return -EACCES;
-> -		/*FALLTHRU*/
-> +		fallthrough;
-                ^^^^^^^^^^^
-That is an unrelated change and should be sent separately.
-
->  	case S_IFIFO:
->  	case S_IFSOCK:
-> +		if (acc_mode & MAY_EXEC)
-> +			return -EACCES;
->  		flag &= ~O_TRUNC;
->  		break;
->  	}
-> diff --git a/fs/open.c b/fs/open.c
-> index 6cd48a61cda3..623b7506a6db 100644
-> --- a/fs/open.c
-> +++ b/fs/open.c
-> @@ -784,12 +784,6 @@ static int do_dentry_open(struct file *f,
->  		return 0;
->  	}
->  
-> -	/* Any file opened for execve()/uselib() has to be a regular file. */
-> -	if (unlikely(f->f_flags & FMODE_EXEC && !S_ISREG(inode->i_mode))) {
-> -		error = -EACCES;
-> -		goto cleanup_file;
-> -	}
-> -
->  	if (f->f_mode & FMODE_WRITE && !special_file(inode->i_mode)) {
->  		error = get_write_access(inode);
->  		if (unlikely(error))
