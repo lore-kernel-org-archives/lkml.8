@@ -2,205 +2,144 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D122C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 12:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A929EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 12:58:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D825A206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 12:58:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84D44206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 12:58:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Obr5opiZ"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="cjWNsYWz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728717AbgHKM6I (ORCPT
+        id S1728727AbgHKM6r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 08:58:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36720 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728701AbgHKM6F (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 08:58:05 -0400
-Received: from mail-vk1-xa42.google.com (mail-vk1-xa42.google.com [IPv6:2607:f8b0:4864:20::a42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AFFEC06178A
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 05:58:05 -0700 (PDT)
-Received: by mail-vk1-xa42.google.com with SMTP id x2so2601403vkd.8
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 05:58:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RBFHfl706h8Q/rIQEa117NC5OvZkkSKYk5SzCFZSYis=;
-        b=Obr5opiZuO2ryFJN5Sft0B2C2MHLQ7ZL/zDgEGPuxOTr85P1WaydVIimaASb/eZ80j
-         98/eZMLZHEIB5oct++4Zu9VYzBitp13gPamxYOcbradM9sfIVVIgSboowqFt9YjDLjgf
-         PVXsbzCIbV2FLjlLMIK0VmhJObzhkWjd5+s3iBU8jL2PcRcPVbNSWcobn+We+Xi4359s
-         UbNrKts1JWQLX5EwiV0GS7LQaSSJB6Wa+DcPXo4obiuxC0DWfUBwgVQVvDnonKDokD4n
-         a8ODAPNJlfoZsXNxaZIojz+9Xi0pDQPJOKKpJpXXrpNYTpNPt4P3uCU0UxUKXCXwpXmq
-         9WIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RBFHfl706h8Q/rIQEa117NC5OvZkkSKYk5SzCFZSYis=;
-        b=owZNqV6A/BWznkQa4Xj1d6guh1C/trEHIGb9FE/vMV2rbwoexKousyLxjlJ89GS0WW
-         B7vfRrwpUOrXOnus2exh8QE07R+uQO/piso20xRP+B8wTg0d4GtU/eqQvpbIh6YieLdC
-         5ddZhGvARvlN4d8Hv4FpCUzUmTy69pjhO1hDAA+28kwu9wtUFcISISlFIPMME2zUP1Q3
-         uLOjzOkVGOzSBD8rdcyoMwGAGKjNLqDpFEqsa+Ia9e+gaLy7GNACyF1+kxtkELb5u3mO
-         BqIqpti5KuODGoigPZtguS2ujM9IW3KUVF3/BMqc2GSmiY47+frPXBqisQlDvWTo7lGf
-         2vUA==
-X-Gm-Message-State: AOAM533Ci6xWmcQak/ptF+y+3h78NfzmxrWfdq7W94Qntf6S5JXD3RcG
-        GpkIn8qGm4hdfZXkvjZ1plAHzZNuEbLdcBdCBRMxuQ==
-X-Google-Smtp-Source: ABdhPJzDrXCZmbt9/m57eR99/eX0TO4r0pa0DE4iQxGP3NaiFrTboxgbCASK0cRRih00hTqSZictiDAc0M3qeyBgQrw=
-X-Received: by 2002:a1f:9048:: with SMTP id s69mr8450750vkd.73.1597150684496;
- Tue, 11 Aug 2020 05:58:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200725181404.18951-1-ansuelsmth@gmail.com> <20200725181404.18951-3-ansuelsmth@gmail.com>
-In-Reply-To: <20200725181404.18951-3-ansuelsmth@gmail.com>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Tue, 11 Aug 2020 18:27:53 +0530
-Message-ID: <CAHLCerN_S+5G0oZrAjoui7U6H+H46uLeYHe3p3PVbmCDwJtC_Q@mail.gmail.com>
-Subject: Re: [RFC PATCH v5 2/7] drivers: thermal: tsens: Convert msm8960 to reg_field
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 11 Aug 2020 08:58:47 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:18407 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728566AbgHKM6q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 08:58:46 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597150726; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=Sx3ep+KIHVu/tITGzEEH1tzVULyGxJl+pKTXi6iVWK8=; b=cjWNsYWzWb33DrKDncz97NkbXdzEnEu3DwgdjKs9c9v42VJKVbAqU8LT/qZK9B8GH+8krfRb
+ ktiriFbgAlGBBGAK17isw+k/WeIipj206QuQ+uJKlYh87kDTWU8AoAoGQ4WOaGSIjuwBcjIf
+ Hjz7TmOWDLPvdKMJ1qdCj/PWuz0=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n10.prod.us-west-2.postgun.com with SMTP id
+ 5f3296002f4952907d83f9c8 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 11 Aug 2020 12:58:40
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 22D42C433CA; Tue, 11 Aug 2020 12:58:40 +0000 (UTC)
+Received: from charante-linux.qualcomm.com (unknown [202.46.22.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: charante)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4F332C433C9;
+        Tue, 11 Aug 2020 12:58:35 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4F332C433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=charante@codeaurora.org
+From:   Charan Teja Reddy <charante@codeaurora.org>
+To:     akpm@linux-foundation.org, mhocko@suse.com, vbabka@suse.cz,
+        david@redhat.com, rientjes@google.com, linux-mm@kvack.org
+Cc:     linux-kernel@vger.kernel.org, vinmenon@codeaurora.org,
+        Charan Teja Reddy <charante@codeaurora.org>
+Subject: [PATCH V2] mm, page_alloc: fix core hung in free_pcppages_bulk()
+Date:   Tue, 11 Aug 2020 18:28:23 +0530
+Message-Id: <1597150703-19003-1-git-send-email-charante@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 25, 2020 at 11:44 PM Ansuel Smith <ansuelsmth@gmail.com> wrote:
->
-> Covert msm9860 driver to reg_filed to use the init_common
+The following race is observed with the repeated online, offline and a
+delay between two successive online of memory blocks of movable zone.
 
-typo: field
+P1						P2
 
-> function.
->
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> ---
->  drivers/thermal/qcom/tsens-8960.c | 74 +++++++++++++++++++++++++++++++
->  1 file changed, 74 insertions(+)
->
-> diff --git a/drivers/thermal/qcom/tsens-8960.c b/drivers/thermal/qcom/tsens-8960.c
-> index 2a28a5af209e..45cd0cdff2f5 100644
-> --- a/drivers/thermal/qcom/tsens-8960.c
-> +++ b/drivers/thermal/qcom/tsens-8960.c
-> @@ -56,6 +56,18 @@
->  #define TRDY_MASK              BIT(7)
->  #define TIMEOUT_US             100
->
-> +#define S0_STATUS_OFF          0x3628
-> +#define S1_STATUS_OFF          0x362c
-> +#define S2_STATUS_OFF          0x3630
-> +#define S3_STATUS_OFF          0x3634
-> +#define S4_STATUS_OFF          0x3638
-> +#define S5_STATUS_OFF          0x3664  /* Sensors 5 thru 10 found on apq8064/msm8960 */
+Online the first memory block in
+the movable zone. The pcp struct
+values are initialized to default
+values,i.e., pcp->high = 0 &
+pcp->batch = 1.
 
-Run checkpatch and fix spelling. :-) Or just say 'sensor 5-10'
+					Allocate the pages from the
+					movable zone.
 
-> +#define S6_STATUS_OFF          0x3668
-> +#define S7_STATUS_OFF          0x366c
-> +#define S8_STATUS_OFF          0x3670
-> +#define S9_STATUS_OFF          0x3674
-> +#define S10_STATUS_OFF         0x3678
-> +
->  static int suspend_8960(struct tsens_priv *priv)
->  {
->         int ret;
-> @@ -269,6 +281,66 @@ static int get_temp_8960(const struct tsens_sensor *s, int *temp)
->         return -ETIMEDOUT;
->  }
->
-> +static struct tsens_features tsens_8960_feat = {
-> +       .ver_major      = VER_0,
-> +       .crit_int       = 0,
-> +       .adc            = 1,
-> +       .srot_split     = 0,
-> +       .max_sensors    = 11,
+Try to Online the second memory
+block in the movable zone thus it
+entered the online_pages() but yet
+to call zone_pcp_update().
+					This process is entered into
+					the exit path thus it tries
+					to release the order-0 pages
+					to pcp lists through
+					free_unref_page_commit().
+					As pcp->high = 0, pcp->count = 1
+					proceed to call the function
+					free_pcppages_bulk().
+Update the pcp values thus the
+new pcp values are like, say,
+pcp->high = 378, pcp->batch = 63.
+					Read the pcp's batch value using
+					READ_ONCE() and pass the same to
+					free_pcppages_bulk(), pcp values
+					passed here are, batch = 63,
+					count = 1.
 
-Align the equal to like in other files please.
+					Since num of pages in the pcp
+					lists are less than ->batch,
+					then it will stuck in
+					while(list_empty(list)) loop
+					with interrupts disabled thus
+					a core hung.
 
-> +};
-> +
-> +static const struct reg_field tsens_8960_regfields[MAX_REGFIELDS] = {
-> +       /* ----- SROT ------ */
-> +       /* No VERSION information */
-> +
-> +       /* CNTL */
-> +       [TSENS_EN]     = REG_FIELD(CNTL_ADDR,  0, 0),
-> +       [TSENS_SW_RST] = REG_FIELD(CNTL_ADDR,  1, 1),
-> +       /* 8960 has 5 sensors, 8660 has 11, we only handle 5 */
-> +       [SENSOR_EN]    = REG_FIELD(CNTL_ADDR,  3, 7),
-> +
-> +       /* ----- TM ------ */
-> +       /* INTERRUPT ENABLE */
-> +       // [INT_EN] = REG_FIELD(TM_INT_EN_OFF, 0, 0),
+Avoid this by ensuring free_pcppages_bulk() is called with proper count
+of pcp list pages.
 
-Get rid of these comments and at the very least use C-style comments.
+The mentioned race is some what easily reproducible without [1] because
+pcp's are not updated for the first memory block online and thus there
+is a enough race window for P2 between alloc+free and pcp struct values
+update through onlining of second memory block.
 
-> +
-> +       /* Single UPPER/LOWER TEMPERATURE THRESHOLD for all sensors */
-> +       [LOW_THRESH_0]   = REG_FIELD(THRESHOLD_ADDR,  0,  7),
-> +       [UP_THRESH_0]    = REG_FIELD(THRESHOLD_ADDR,  8, 15),
-> +       [MIN_THRESH_0]   = REG_FIELD(THRESHOLD_ADDR, 16, 23),
-> +       [MAX_THRESH_0]   = REG_FIELD(THRESHOLD_ADDR, 24, 31),
-> +
-> +       // /* UPPER/LOWER INTERRUPT [CLEAR/STATUS] */
-> +       // /* 1 == clear, 0 == normal operation */
+With [1], the race is still exists but it is very much narrow as we
+update the pcp struct values for the first memory block online itself.
 
-Get rid of these comments and at the very least use C-style comments.
+[1]: https://patchwork.kernel.org/patch/11696389/
 
+Signed-off-by: Charan Teja Reddy <charante@codeaurora.org>
+---
 
-> +       [LOW_INT_CLEAR_0]   = REG_FIELD(CNTL_ADDR,  9,  9),
-> +       [UP_INT_CLEAR_0]    = REG_FIELD(CNTL_ADDR, 10, 10),
-> +
-> +       /* NO CRITICAL INTERRUPT SUPPORT on 8960 */
-> +
-> +       /* Sn_STATUS */
-> +       [LAST_TEMP_0]  = REG_FIELD(S0_STATUS_OFF,  0,  7),
-> +       [LAST_TEMP_1]  = REG_FIELD(S1_STATUS_OFF,  0,  7),
-> +       [LAST_TEMP_2]  = REG_FIELD(S2_STATUS_OFF,  0,  7),
-> +       [LAST_TEMP_3]  = REG_FIELD(S3_STATUS_OFF,  0,  7),
-> +       [LAST_TEMP_4]  = REG_FIELD(S4_STATUS_OFF,  0,  7),
-> +       [LAST_TEMP_5]  = REG_FIELD(S5_STATUS_OFF,  0,  7),
-> +       [LAST_TEMP_6]  = REG_FIELD(S6_STATUS_OFF,  0,  7),
-> +       [LAST_TEMP_7]  = REG_FIELD(S7_STATUS_OFF,  0,  7),
-> +       [LAST_TEMP_8]  = REG_FIELD(S8_STATUS_OFF,  0,  7),
-> +       [LAST_TEMP_9]  = REG_FIELD(S9_STATUS_OFF,  0,  7),
-> +       [LAST_TEMP_10] = REG_FIELD(S10_STATUS_OFF, 0,  7),
-> +
-> +       /* No VALID field on 8960 */
-> +       /* TSENS_INT_STATUS bits: 1 == threshold violated */
-> +       [MIN_STATUS_0] = REG_FIELD(INT_STATUS_ADDR, 0, 0),
-> +       [LOWER_STATUS_0] = REG_FIELD(INT_STATUS_ADDR, 1, 1),
-> +       [UPPER_STATUS_0] = REG_FIELD(INT_STATUS_ADDR, 2, 2),
-> +       /* No CRITICAL field on 8960 */
-> +       [MAX_STATUS_0] = REG_FIELD(INT_STATUS_ADDR, 3, 3),
-> +
-> +       /* TRDY: 1=ready, 0=in progress */
-> +       [TRDY] = REG_FIELD(INT_STATUS_ADDR, 7, 7),
-> +};
-> +
->  static const struct tsens_ops ops_8960 = {
->         .init           = init_8960,
->         .calibrate      = calibrate_8960,
-> @@ -282,4 +354,6 @@ static const struct tsens_ops ops_8960 = {
->  struct tsens_plat_data data_8960 = {
->         .num_sensors    = 11,
->         .ops            = &ops_8960,
-> +       .feat           = &tsens_8960_feat,
-> +       .fields         = tsens_8960_regfields,
->  };
-> --
-> 2.27.0
->
+v1: https://patchwork.kernel.org/patch/11707637/
+
+ mm/page_alloc.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index e4896e6..839039f 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -1304,6 +1304,11 @@ static void free_pcppages_bulk(struct zone *zone, int count,
+ 	struct page *page, *tmp;
+ 	LIST_HEAD(head);
+ 
++	/*
++	 * Ensure proper count is passed which otherwise would stuck in the
++	 * below while (list_empty(list)) loop.
++	 */
++	count = min(pcp->count, count);
+ 	while (count) {
+ 		struct list_head *list;
+ 
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
+member of the Code Aurora Forum, hosted by The Linux Foundation
+
