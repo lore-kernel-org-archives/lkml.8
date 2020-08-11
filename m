@@ -2,324 +2,134 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86FF2C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 08:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60B0EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 08:57:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 445EE20756
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 08:56:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ShmpMJt6"
+	by mail.kernel.org (Postfix) with ESMTP id 43E0F20678
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 08:57:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728397AbgHKI41 (ORCPT
+        id S1728441AbgHKI5v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 04:56:27 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27906 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728394AbgHKI40 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 04:56:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597136182;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=d88xcVVVwUczUwSPBmg1oFZLtRXHohyyivhvTCzox5c=;
-        b=ShmpMJt6rk+fpMvg7RL+QFhm5ZupeVy4gIcXDzH4Quw8XOdLxl3e+SjgivGSr2QUEuS3bA
-        Du79cQNYZCKDlm1ZwC7NnurE9xGZLqH2F7yNY3/uybJwXWhqIf9QyFHuEr6Jq/Syp8KmF3
-        gd91JQHk6nTe90czpaJ6sdatlroqadc=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-462-VOznhiTkP12ugUw-BWU7Sg-1; Tue, 11 Aug 2020 04:56:21 -0400
-X-MC-Unique: VOznhiTkP12ugUw-BWU7Sg-1
-Received: by mail-wm1-f69.google.com with SMTP id f74so619991wmf.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 01:56:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=d88xcVVVwUczUwSPBmg1oFZLtRXHohyyivhvTCzox5c=;
-        b=Vo/VOzkwvpp4S8OoNMgHyrN8QzEQSo0FeZ/VKBaeOwFiBz0V+8lBFnaHIzdCysN1ph
-         kvi+6qGRIHw6C5XT8TMbibuhhlt2loYq48VOYL/UJxXmbMJL2OfxLVDXW5B884decjRm
-         Qllgcar1ZceqBxMOj2DHQXk4FVUzfx5eH9+WPf99XlKBeOqKNfJEKzUGK218ZnXuqpSA
-         qavj9FxutP6I4qKrcb4D2ExRSgtfJO8tEun3rRHJecWRooD1Udkd8MPK+Cr300SNIlBt
-         QwjqQ2+R1WiIsXYkZjck9p3zmgJCCCDZbLjnbg+j0mHXiFfauRScjORmn1i4jQWCqwwh
-         V4Xw==
-X-Gm-Message-State: AOAM530C7DoIZNQFGinqqe0SNnKYOiRLl1Z6DWZzp6miArq9IiNrntl9
-        prBKVgHt9i6QYT5+ZZlM0sKdcFkigLZxQAnZoRH/pJlGOVAGxrtTsoRqxCFA8luLfGUWPQiPzXy
-        3sJ6YlEdbarBOUuB36i2oJ0hn
-X-Received: by 2002:adf:f248:: with SMTP id b8mr30092852wrp.247.1597136180004;
-        Tue, 11 Aug 2020 01:56:20 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJytzwO8E3CNR4SmeuTaD5pfM/K8artOAdX7C77z9smbpOM/a84oJwE9y6glNyYTcgPnJ5upKw==
-X-Received: by 2002:adf:f248:: with SMTP id b8mr30092826wrp.247.1597136179687;
-        Tue, 11 Aug 2020 01:56:19 -0700 (PDT)
-Received: from redhat.com (bzq-79-180-0-181.red.bezeqint.net. [79.180.0.181])
-        by smtp.gmail.com with ESMTPSA id c4sm25337308wrt.41.2020.08.11.01.56.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Aug 2020 01:56:18 -0700 (PDT)
-Date:   Tue, 11 Aug 2020 04:56:13 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        alex.dewar@gmx.co.uk, andy.shevchenko@gmail.com, cohuck@redhat.com,
-        colin.king@canonical.com, dan.carpenter@oracle.com,
-        david@redhat.com, elic@nvidia.com, eli@mellanox.com,
-        gustavoars@kernel.org, jasowang@redhat.com, leonro@mellanox.com,
-        liao.pingfang@zte.com.cn, lingshan.zhu@intel.com, lkp@intel.com,
-        lulu@redhat.com, maorg@mellanox.com, maxg@mellanox.com,
-        meirl@mellanox.com, michaelgur@mellanox.com, mst@redhat.com,
-        parav@mellanox.com, rong.a.chen@intel.com, saeedm@mellanox.com,
-        stable@vger.kernel.org, tariqt@mellanox.com, vgoyal@redhat.com,
-        wang.yi59@zte.com.cn, wenan.mao@linux.alibaba.com
-Subject: [GIT PULL] virtio: features, fixes
-Message-ID: <20200811045613-mutt-send-email-mst@kernel.org>
+        Tue, 11 Aug 2020 04:57:51 -0400
+Received: from mga07.intel.com ([134.134.136.100]:33872 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728336AbgHKI5v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 04:57:51 -0400
+IronPort-SDR: hhrZbCcZRh0Sdybu/vfzBM6qAONDK1+1j3R6DppUJ3gqgUZ8YF3rjl//Jh+07QQcW8Qu2DnN4i
+ bT7tXicfI20g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9709"; a="218030568"
+X-IronPort-AV: E=Sophos;i="5.75,460,1589266800"; 
+   d="scan'208";a="218030568"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2020 01:57:49 -0700
+IronPort-SDR: EmAtZuRpcdtRFUCT8R9mvEDeG40/XSjZz7NwrbIXaM72Jbh4UNwML1IGy6XVooLEowvXfWqy3P
+ Zit6SPImqfOg==
+X-IronPort-AV: E=Sophos;i="5.75,460,1589266800"; 
+   d="scan'208";a="277522857"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2020 01:57:46 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id 391D8206E3; Tue, 11 Aug 2020 11:57:44 +0300 (EEST)
+Date:   Tue, 11 Aug 2020 11:57:44 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     linux-i2c@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-acpi@vger.kernel.org, Bingbu Cao <bingbu.cao@intel.com>,
+        linux-media@vger.kernel.org,
+        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
+        Hyungwoo Yang <hyungwoo.yang@intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        rajmohan.mani@intel.com, Tomasz Figa <tfiga@chromium.org>,
+        "Qiu, Tian Shu" <tian.shu.qiu@intel.com>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v5 1/6] i2c: Allow driver to manage the device's power
+ state during probe
+Message-ID: <20200811085744.GK16270@paasikivi.fi.intel.com>
+References: <20200810142747.12400-1-sakari.ailus@linux.intel.com>
+ <20200810142747.12400-2-sakari.ailus@linux.intel.com>
+ <20200810144148.GD31434@bogus>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-X-Mutt-Fcc: =sent
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200810144148.GD31434@bogus>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-OK, some patches in the series add buggy code which is then fixed by
-follow-up patches, but none of the bugs fixed are severe regressions on
-common configs (e.g. compiler warnings, lockdep/rt errors, or bugs in
-new drivers). So I thought it's more important to preserve the credit
-for the fixes.
+Hi Sudeep,
 
-I had to pull 5 patches from git://git.kernel.org/pub/scm/linux/kernel/git/mellanox/linux mlx5-next
-to get the mlx5 things to work, this seems to be how mellanox guys are
-always managing things, and they told me they are ok with it.
+Thanks for the review.
 
-The following changes since commit bcf876870b95592b52519ed4aafcf9d95999bc9c:
+On Mon, Aug 10, 2020 at 03:41:48PM +0100, Sudeep Holla wrote:
+> On Mon, Aug 10, 2020 at 05:27:42PM +0300, Sakari Ailus wrote:
+> > Enable drivers to tell ACPI that there's no need to power on a device for
+> > probe. Drivers should still perform this by themselves if there's a need
+> > to. In some cases powering on the device during probe is undesirable, and
+> > this change enables a driver to choose what fits best for it.
+> >
+> > Add a field called "flags" into struct i2c_driver for driver flags, and a
+> > flag I2C_DRV_FL_ALLOW_LOW_POWER_PROBE to tell a driver supports probe in
+> > low power state.
+> >
+> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > ---
+> >  drivers/i2c/i2c-core-base.c | 17 ++++++++++++++---
+> >  include/linux/i2c.h         | 14 ++++++++++++++
+> >  2 files changed, 28 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+> > index 34a9609f256da..cde9cf49a07e6 100644
+> > --- a/drivers/i2c/i2c-core-base.c
+> > +++ b/drivers/i2c/i2c-core-base.c
+> > @@ -436,6 +436,14 @@ static int i2c_smbus_host_notify_to_irq(const struct i2c_client *client)
+> >  	return irq > 0 ? irq : -ENXIO;
+> >  }
+> >
+> > +static bool allow_low_power_probe(struct device *dev)
+> > +{
+> > +	struct i2c_driver *driver = to_i2c_driver(dev->driver);
+> > +
+> > +	return driver->flags & I2C_DRV_FL_ALLOW_LOW_POWER_PROBE &&
+> > +		device_property_present(dev, "allow-low-power-probe");
+> 
+> I assume this change makes even the DT property "allow-low-power-probe"
+> work in the same way. Should we have proper DT binding for that ?
+> 
+> This comment applies for any property using device_property_* but has
+> no explicit DT binding ? Just asking the question to know the strategy
+> followed. Sorry if this is redundant question, feel free to point me
+> to the past discussions.
 
-  Linux 5.8 (2020-08-02 14:21:45 -0700)
+It's not a redundant question, no.
 
-are available in the Git repository at:
+I²C drivers on OF are responsible for controlling device's power state
+already (using runtime PM or without) so I think the drivers could use the
+property directly on OF systems (and document the property in DT bindings
+first) if there's a need to. IOW this code isn't needed on OF.
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git tags/for_linus
+Note that the power_on or power_off arguments are not used by
+genpd_dev_pm_attach() or genpd_dev_pm_detach() so this patch only affects
+ACPI. I think I should check the device is an ACPI device above, for
+clarity.
 
-for you to fetch changes up to 8a7c3213db068135e816a6a517157de6443290d6:
+Cc also DT list. The entire set is here:
 
-  vdpa/mlx5: fix up endian-ness for mtu (2020-08-10 10:38:55 -0400)
+<URL:https://lore.kernel.org/linux-acpi/20200810142747.12400-1-sakari.ailus@linux.intel.com/>
 
-----------------------------------------------------------------
-virtio: fixes, features
+-- 
+Kind regards,
 
-IRQ bypass support for vdpa and IFC
-MLX5 vdpa driver
-Endian-ness fixes for virtio drivers
-Misc other fixes
-
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-
-----------------------------------------------------------------
-Alex Dewar (1):
-      vdpa/mlx5: Fix uninitialised variable in core/mr.c
-
-Colin Ian King (1):
-      vdpa/mlx5: fix memory allocation failure checks
-
-Dan Carpenter (2):
-      vdpa/mlx5: Fix pointer math in mlx5_vdpa_get_config()
-      vdpa: Fix pointer math bug in vdpasim_get_config()
-
-Eli Cohen (9):
-      net/mlx5: Support setting access rights of dma addresses
-      net/mlx5: Add VDPA interface type to supported enumerations
-      net/mlx5: Add interface changes required for VDPA
-      net/vdpa: Use struct for set/get vq state
-      vdpa: Modify get_vq_state() to return error code
-      vdpa/mlx5: Add hardware descriptive header file
-      vdpa/mlx5: Add support library for mlx5 VDPA implementation
-      vdpa/mlx5: Add shared memory registration code
-      vdpa/mlx5: Add VDPA driver for supported mlx5 devices
-
-Gustavo A. R. Silva (1):
-      vhost: Use flex_array_size() helper in copy_from_user()
-
-Jason Wang (6):
-      vhost: vdpa: remove per device feature whitelist
-      vhost-vdpa: refine ioctl pre-processing
-      vhost: generialize backend features setting/getting
-      vhost-vdpa: support get/set backend features
-      vhost-vdpa: support IOTLB batching hints
-      vdpasim: support batch updating
-
-Liao Pingfang (1):
-      virtio_pci_modern: Fix the comment of virtio_pci_find_capability()
-
-Mao Wenan (1):
-      virtio_ring: Avoid loop when vq is broken in virtqueue_poll
-
-Maor Gottlieb (2):
-      net/mlx5: Export resource dump interface
-      net/mlx5: Add support in query QP, CQ and MKEY segments
-
-Max Gurtovoy (2):
-      vdpasim: protect concurrent access to iommu iotlb
-      vdpa: remove hard coded virtq num
-
-Meir Lichtinger (1):
-      RDMA/mlx5: ConnectX-7 new capabilities to set relaxed ordering by UMR
-
-Michael Guralnik (2):
-      net/mlx5: Enable QP number request when creating IPoIB underlay QP
-      net/mlx5: Enable count action for rules with allow action
-
-Michael S. Tsirkin (44):
-      virtio: VIRTIO_F_IOMMU_PLATFORM -> VIRTIO_F_ACCESS_PLATFORM
-      virtio: virtio_has_iommu_quirk -> virtio_has_dma_quirk
-      virtio_balloon: fix sparse warning
-      virtio_ring: sparse warning fixup
-      virtio: allow __virtioXX, __leXX in config space
-      virtio_9p: correct tags for config space fields
-      virtio_balloon: correct tags for config space fields
-      virtio_blk: correct tags for config space fields
-      virtio_console: correct tags for config space fields
-      virtio_crypto: correct tags for config space fields
-      virtio_fs: correct tags for config space fields
-      virtio_gpu: correct tags for config space fields
-      virtio_input: correct tags for config space fields
-      virtio_iommu: correct tags for config space fields
-      virtio_mem: correct tags for config space fields
-      virtio_net: correct tags for config space fields
-      virtio_pmem: correct tags for config space fields
-      virtio_scsi: correct tags for config space fields
-      virtio_config: disallow native type fields
-      mlxbf-tmfifo: sparse tags for config access
-      vdpa: make sure set_features is invoked for legacy
-      vhost/vdpa: switch to new helpers
-      virtio_vdpa: legacy features handling
-      vdpa_sim: fix endian-ness of config space
-      virtio_config: cread/write cleanup
-      virtio_config: rewrite using _Generic
-      virtio_config: disallow native type fields (again)
-      virtio_config: LE config space accessors
-      virtio_caif: correct tags for config space fields
-      virtio_config: add virtio_cread_le_feature
-      virtio_balloon: use LE config space accesses
-      virtio_input: convert to LE accessors
-      virtio_fs: convert to LE accessors
-      virtio_crypto: convert to LE accessors
-      virtio_pmem: convert to LE accessors
-      drm/virtio: convert to LE accessors
-      virtio_mem: convert to LE accessors
-      virtio-iommu: convert to LE accessors
-      virtio_config: drop LE option from config space
-      virtio_net: use LE accessors for speed/duplex
-      Merge branch 'mlx5-next' of git://git.kernel.org/.../mellanox/linux into HEAD
-      virtio_config: fix up warnings on parisc
-      vdpa_sim: init iommu lock
-      vdpa/mlx5: fix up endian-ness for mtu
-
-Parav Pandit (2):
-      net/mlx5: Avoid RDMA file inclusion in core driver
-      net/mlx5: Avoid eswitch header inclusion in fs core layer
-
-Tariq Toukan (1):
-      net/mlx5: kTLS, Improve TLS params layout structures
-
-Zhu Lingshan (7):
-      vhost: introduce vhost_vring_call
-      kvm: detect assigned device via irqbypass manager
-      vDPA: add get_vq_irq() in vdpa_config_ops
-      vhost_vdpa: implement IRQ offloading in vhost_vdpa
-      ifcvf: implement vdpa_config_ops.get_vq_irq()
-      irqbypass: do not start cons/prod when failed connect
-      vDPA: dont change vq irq after DRIVER_OK
-
- arch/um/drivers/virtio_uml.c                       |    2 +-
- arch/x86/kvm/x86.c                                 |   12 +-
- drivers/crypto/virtio/virtio_crypto_core.c         |   46 +-
- drivers/gpu/drm/virtio/virtgpu_kms.c               |   16 +-
- drivers/gpu/drm/virtio/virtgpu_object.c            |    2 +-
- drivers/gpu/drm/virtio/virtgpu_vq.c                |    4 +-
- drivers/iommu/virtio-iommu.c                       |   34 +-
- drivers/net/ethernet/mellanox/mlx5/core/alloc.c    |   11 +-
- .../ethernet/mellanox/mlx5/core/diag/rsc_dump.c    |    6 +
- .../ethernet/mellanox/mlx5/core/diag/rsc_dump.h    |   33 +-
- drivers/net/ethernet/mellanox/mlx5/core/en/txrx.h  |    2 +-
- .../ethernet/mellanox/mlx5/core/en_accel/ktls.h    |    2 +-
- .../ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c |   14 +-
- .../mellanox/mlx5/core/en_accel/tls_rxtx.c         |    2 +-
- drivers/net/ethernet/mellanox/mlx5/core/eswitch.h  |   10 -
- drivers/net/ethernet/mellanox/mlx5/core/fs_core.c  |    2 +-
- drivers/net/ethernet/mellanox/mlx5/core/fs_core.h  |   10 +
- .../net/ethernet/mellanox/mlx5/core/ipoib/ipoib.c  |    7 +
- drivers/net/ethernet/mellanox/mlx5/core/main.c     |    3 +
- drivers/net/virtio_net.c                           |    9 +-
- drivers/nvdimm/virtio_pmem.c                       |    4 +-
- drivers/platform/mellanox/mlxbf-tmfifo.c           |   13 +-
- drivers/scsi/virtio_scsi.c                         |    4 +-
- drivers/vdpa/Kconfig                               |   19 +
- drivers/vdpa/Makefile                              |    1 +
- drivers/vdpa/ifcvf/ifcvf_base.c                    |    4 +-
- drivers/vdpa/ifcvf/ifcvf_base.h                    |    6 +-
- drivers/vdpa/ifcvf/ifcvf_main.c                    |   31 +-
- drivers/vdpa/mlx5/Makefile                         |    4 +
- drivers/vdpa/mlx5/core/mlx5_vdpa.h                 |   91 +
- drivers/vdpa/mlx5/core/mlx5_vdpa_ifc.h             |  168 ++
- drivers/vdpa/mlx5/core/mr.c                        |  486 +++++
- drivers/vdpa/mlx5/core/resources.c                 |  284 +++
- drivers/vdpa/mlx5/net/main.c                       |   76 +
- drivers/vdpa/mlx5/net/mlx5_vnet.c                  | 1974 ++++++++++++++++++++
- drivers/vdpa/mlx5/net/mlx5_vnet.h                  |   24 +
- drivers/vdpa/vdpa.c                                |    4 +
- drivers/vdpa/vdpa_sim/vdpa_sim.c                   |  124 +-
- drivers/vhost/Kconfig                              |    1 +
- drivers/vhost/net.c                                |   22 +-
- drivers/vhost/vdpa.c                               |  183 +-
- drivers/vhost/vhost.c                              |   39 +-
- drivers/vhost/vhost.h                              |   11 +-
- drivers/virtio/virtio_balloon.c                    |   30 +-
- drivers/virtio/virtio_input.c                      |   32 +-
- drivers/virtio/virtio_mem.c                        |   30 +-
- drivers/virtio/virtio_pci_modern.c                 |    1 +
- drivers/virtio/virtio_ring.c                       |    7 +-
- drivers/virtio/virtio_vdpa.c                       |    9 +-
- fs/fuse/virtio_fs.c                                |    4 +-
- include/linux/mlx5/cq.h                            |    1 -
- include/linux/mlx5/device.h                        |   13 +-
- include/linux/mlx5/driver.h                        |    2 +
- include/linux/mlx5/mlx5_ifc.h                      |  134 +-
- include/linux/mlx5/qp.h                            |    2 +-
- include/linux/mlx5/rsc_dump.h                      |   51 +
- include/linux/vdpa.h                               |   66 +-
- include/linux/virtio_caif.h                        |    6 +-
- include/linux/virtio_config.h                      |  191 +-
- include/linux/virtio_ring.h                        |   19 +-
- include/uapi/linux/vhost.h                         |    2 +
- include/uapi/linux/vhost_types.h                   |   11 +
- include/uapi/linux/virtio_9p.h                     |    4 +-
- include/uapi/linux/virtio_balloon.h                |   10 +-
- include/uapi/linux/virtio_blk.h                    |   26 +-
- include/uapi/linux/virtio_config.h                 |   10 +-
- include/uapi/linux/virtio_console.h                |    8 +-
- include/uapi/linux/virtio_crypto.h                 |   26 +-
- include/uapi/linux/virtio_fs.h                     |    2 +-
- include/uapi/linux/virtio_gpu.h                    |    8 +-
- include/uapi/linux/virtio_input.h                  |   18 +-
- include/uapi/linux/virtio_iommu.h                  |   12 +-
- include/uapi/linux/virtio_mem.h                    |   14 +-
- include/uapi/linux/virtio_net.h                    |    8 +-
- include/uapi/linux/virtio_pmem.h                   |    4 +-
- include/uapi/linux/virtio_scsi.h                   |   20 +-
- tools/virtio/linux/virtio_config.h                 |    6 +-
- virt/lib/irqbypass.c                               |   16 +-
- 78 files changed, 4116 insertions(+), 487 deletions(-)
- create mode 100644 drivers/vdpa/mlx5/Makefile
- create mode 100644 drivers/vdpa/mlx5/core/mlx5_vdpa.h
- create mode 100644 drivers/vdpa/mlx5/core/mlx5_vdpa_ifc.h
- create mode 100644 drivers/vdpa/mlx5/core/mr.c
- create mode 100644 drivers/vdpa/mlx5/core/resources.c
- create mode 100644 drivers/vdpa/mlx5/net/main.c
- create mode 100644 drivers/vdpa/mlx5/net/mlx5_vnet.c
- create mode 100644 drivers/vdpa/mlx5/net/mlx5_vnet.h
- create mode 100644 include/linux/mlx5/rsc_dump.h
-
+Sakari Ailus
