@@ -2,128 +2,280 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C271DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 237DDC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:15:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9774B2076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:09:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="b5qU5rXK"
+	by mail.kernel.org (Postfix) with ESMTP id F0B8C20782
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:15:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597155359;
+	bh=zWMlmJB1HlVKW8Wg0QY20hOxqwzcNWsUp85/HFNWzd8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=c5o672xt70y8gl0uCAlM+aLPtQiIxzxdnYEPbJujQeaMnxOL1LlV6gG76XLPIdfNG
+	 B9KIb3SsUHVry6chDvbk/eLh0b37lw0Fzk0k34stDQGDJ1RWWvQ5oM9LPXdlwVb6aP
+	 m/V871bgatKrFvCf0P5aQm3ZJ8sz3sOVRafEbIzk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728781AbgHKOI6 (ORCPT
+        id S1728760AbgHKOP6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 10:08:58 -0400
-Received: from mail-bn8nam12on2109.outbound.protection.outlook.com ([40.107.237.109]:35072
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728516AbgHKOIy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 10:08:54 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XTzafLkgcN7gIxb6jkl8NVQwrXUXe8Q2uQ2oG2/8T+cT4EWxjvESRGHVDvSovgROxWsKo5ApCwrcl1eOWWGuZ5s4+zecu1pG6cIyQzgn5te5/gxqR6KA3ZDd+AWkad20i6CkEBZS2BgqfFarlOpu5ONycn13o8fwnjfV6YDyIne4wPAIyUIlxOpfHzWEyEem4wdNSi7MMhHgtr4xEZYsdxbXlCngmUQbptgv1S0eg8ajaa4ViroX6OvlrgfvQ3oVNp2s2+Q1ChkziBh+oA8sOLWu1Bd5qWGCvBYudp27Xd+xEqgED0w9qT4Y0KScGdkoYOiNfEgc3XwqNByX0XYEGw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xVQHAAoye2HqK7tjQF7N8UVGVSv/bY5VUtCwTq93pQw=;
- b=fcdgFlnkhrJAkC68iNRo05rRBqRkB8J4z98u2Ko73z5zZGx9Nq1lHiJtPrABhS0dBX+9rtRE10UgKm+3757ssPUZMzC71iSl+ofWCt0MQEPSNhJ2hV4fpOXvbA/o/rSm/QeUlV6R8JcmQKX4c0VGDSQWj4HjdAnHBzHXYCKR2te2P8gTU07aNu0u8fVh8Yt6kvg0ajuV0ENxLQPaGujdUG/YJnrZNIwDbcMxjkU/6iOroXjYR9C4ZlxPN5CWwwZTbX9uWBe5zDOGA/2S5wA5JaEDAeG8uYLCRN/kuCL5TGAgzveiVhkIZAZn0C0/+/MrNjjeDyk8DFR171tIymdUug==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xVQHAAoye2HqK7tjQF7N8UVGVSv/bY5VUtCwTq93pQw=;
- b=b5qU5rXKa+yQknUzRpsJ+9yHrRAb4rSc4S2vUaChMEcw2/xx5awnyvJm+c27ZnZ9SyRru82JyLL3w75Jq3n7OfaGxe94gbZ/jfN+gGJhDc4ht8nrztXY+4Cxfgz/wHLEKZSsJjMwCNeCD3ZUMvfJtK/FY6U/Ma3CgWSxI4dOFdI=
-Received: from CH2PR13MB3398.namprd13.prod.outlook.com (2603:10b6:610:2a::33)
- by CH2PR13MB3879.namprd13.prod.outlook.com (2603:10b6:610:90::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.11; Tue, 11 Aug
- 2020 14:08:51 +0000
-Received: from CH2PR13MB3398.namprd13.prod.outlook.com
- ([fe80::403c:2a29:ba13:7756]) by CH2PR13MB3398.namprd13.prod.outlook.com
- ([fe80::403c:2a29:ba13:7756%3]) with mapi id 15.20.3283.015; Tue, 11 Aug 2020
- 14:08:51 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "jeffrey.mitchell@starlab.io" <jeffrey.mitchell@starlab.io>,
-        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] nfs: Fix getxattr kernel panic and memory overflow
-Thread-Topic: [PATCH] nfs: Fix getxattr kernel panic and memory overflow
-Thread-Index: AQHWa01EofftYhU/gkSiMLa8WGYG/aky+0OA
-Date:   Tue, 11 Aug 2020 14:08:51 +0000
-Message-ID: <0f8054d4b1e510cfdbccdb1355574c3e09ba30e4.camel@hammerspace.com>
-References: <20200805172319.12633-1-jeffrey.mitchell@starlab.io>
-         <20200805172319.12633-2-jeffrey.mitchell@starlab.io>
-In-Reply-To: <20200805172319.12633-2-jeffrey.mitchell@starlab.io>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: starlab.io; dkim=none (message not signed)
- header.d=none;starlab.io; dmarc=none action=none header.from=hammerspace.com;
-x-originating-ip: [68.36.133.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 67af3a74-6c43-4417-0e45-08d83e001342
-x-ms-traffictypediagnostic: CH2PR13MB3879:
-x-microsoft-antispam-prvs: <CH2PR13MB38790ABF921DF92603A3C0EDB8450@CH2PR13MB3879.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2276;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: K4cPbUeKBYFiQXBLnL85aufC4pZl9sIFQurhyneZ9pPaKPj2Y7X9jAo/I94ur/0IRW2Tt4PePY8BkmmLcqOVbdCoNNGfcRiuRWLpVm2ChdGcVVvSz7IwhVRqtdQirkfjWldIYxbHnsSxs12q8yM8a/tIzJCrE7CC3i+9OIsx4ndqm8bMGGgoX8R58s04o/bj7yyQmVaDRsRACzsk8ukbdD63cgNyqOQvA7TPWIbYX/vmC2ak64laPfOuTbXUc5+r3RERJtMez15hoLBp1q2ulZvoDeOXdw3+BxTYxYquNY+PNrYgiBDfQCzWAO8MVMnMzazIZjoRxw6fPvMphHV0/Q==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR13MB3398.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(136003)(346002)(376002)(366004)(396003)(39840400004)(76116006)(66446008)(66476007)(66556008)(64756008)(478600001)(5660300002)(71200400001)(54906003)(110136005)(316002)(2616005)(8936002)(66946007)(6512007)(36756003)(2906002)(4326008)(86362001)(186003)(83380400001)(8676002)(26005)(6486002)(6506007);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: BoutRpuH/dWSFZnf+PvXDQaMZ5wYPUi5y9npskinGTpscY8toXS57FLxKBO64xD6VIYbaAjI2hxOkwuQCBqCtDde26B0skfJGqR9tv/SJCloSJ4UmLzpvvpPMpzs4rJlKxHH3tz4S6yKUXweuRL57j+TPtJrw1o4/yprMpmb7AiVi82uzs4fDZIkMo380yXSfeMNUV+YN4EdC4P0gzyIDRxdO4oa91hnNTYjVgXf23SZHmlPNLLum+/+CaO32xtaewoU0nD6cXhX5v0ZpqTTxVRavjSq2n3SgfxQoUEf0IRUTfIT4YW5uxwfRumL/Qc7kMgAokupjuuUKlauy7rJce3q6RdpTSjhKN5n55hzkDvPcB7BpzuXIk8ufqxMxRlfnlHhb66/zlCvl9Q45PN2CP37H2wt4aNEBVZq6t/e1C4GRwl8MKVKuJFsw6x49tjSc7YNGkSkIH8UatOiq2N1z14f7Xjak39C1IiMs59yNtVXCqqKwTAqCAmdMAqHQUtbLCJF8POpcewxM2Cy1Z+8rINUviR4F0igUdBVlEp1uP2zplcxkrz2SlM07T7O6FBE4ddwDlsdLh94axdv/Gd6j/ctEq7psPigmMoboc5Wtr8HRb6XjHP9zkpBJCiYeXO8QRQB3Vou5+e6IsmBp4Wmow==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D8D022339B807C49A67F0AC2E8D7CBF7@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 11 Aug 2020 10:15:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54782 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728516AbgHKOP5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 10:15:57 -0400
+Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E9DA206C3;
+        Tue, 11 Aug 2020 14:15:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597155356;
+        bh=zWMlmJB1HlVKW8Wg0QY20hOxqwzcNWsUp85/HFNWzd8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=NJ0FUbDiSmfTBvKOQnICMqMcaH97rzRamK5ZTeyJlQjAg0Nnn/NajT4Y/0+GOntVD
+         YmYhKN3/swgNlGd6EhfmDWSNqaUlYGE69dNOV/aSV3RTygkBkqYdJUBg9C7NIpnAB/
+         tWAaQ+sNQeAeXJVzE/1XII16Hw6fuuC7/OWfQ5oA=
+Date:   Tue, 11 Aug 2020 16:15:49 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>, Yu Chen <chenyu56@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        ShuFan Lee <shufan_lee@richtek.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Jun Li <lijun.kernel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Jack Pham <jackp@codeaurora.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Subject: Re: [RFC][PATCH v3 11/11] misc: hisi_hikey_usb: Driver to support
+ usb functionality of Hikey960
+Message-ID: <20200811161141.431007e8@coco.lan>
+In-Reply-To: <20200811142106.3dba2f9f@coco.lan>
+References: <20191016033340.1288-1-john.stultz@linaro.org>
+        <20191016033340.1288-12-john.stultz@linaro.org>
+        <20200810183503.3e8bae80@coco.lan>
+        <CALAqxLUu76m=Q_tDht4DmtgXYmL7Ma1zVJZzvhcsHn2hMAgpLA@mail.gmail.com>
+        <20200811142106.3dba2f9f@coco.lan>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR13MB3398.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 67af3a74-6c43-4417-0e45-08d83e001342
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Aug 2020 14:08:51.5244
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 0bGXtWpkJ+h4YwoLiOQz4/x628DM7X2ZV/C2iSaEYZAcb2Lw5TljMB2Q1rnSyQNFA9C4sKes/azTd2RXyJX68g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3879
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTA4LTA1IGF0IDEyOjIzIC0wNTAwLCBKZWZmcmV5IE1pdGNoZWxsIHdyb3Rl
-Og0KPiBNb3ZlIHRoZSBidWZmZXIgc2l6ZSBjaGVjayB0byBkZWNvZGVfYXR0cl9zZWN1cml0eV9s
-YWJlbCgpIGJlZm9yZQ0KPiBtZW1jcHkoKQ0KPiBPbmx5IGNhbGwgbWVtY3B5KCkgaWYgdGhlIGJ1
-ZmZlciBpcyBsYXJnZSBlbm91Z2gNCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEplZmZyZXkgTWl0Y2hl
-bGwgPGplZmZyZXkubWl0Y2hlbGxAc3RhcmxhYi5pbz4NCj4gLS0tDQo+ICBmcy9uZnMvbmZzNHBy
-b2MuYyB8IDIgLS0NCj4gIGZzL25mcy9uZnM0eGRyLmMgIHwgNSArKysrLQ0KPiAgMiBmaWxlcyBj
-aGFuZ2VkLCA0IGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0
-IGEvZnMvbmZzL25mczRwcm9jLmMgYi9mcy9uZnMvbmZzNHByb2MuYw0KPiBpbmRleCAyZTJkYWMy
-OWE5ZTkuLjQ1ZTA1ODVlMDY2NyAxMDA2NDQNCj4gLS0tIGEvZnMvbmZzL25mczRwcm9jLmMNCj4g
-KysrIGIvZnMvbmZzL25mczRwcm9jLmMNCj4gQEAgLTU4NDUsOCArNTg0NSw2IEBAIHN0YXRpYyBp
-bnQgX25mczRfZ2V0X3NlY3VyaXR5X2xhYmVsKHN0cnVjdA0KPiBpbm9kZSAqaW5vZGUsIHZvaWQg
-KmJ1ZiwNCj4gIAkJcmV0dXJuIHJldDsNCj4gIAlpZiAoIShmYXR0ci52YWxpZCAmIE5GU19BVFRS
-X0ZBVFRSX1Y0X1NFQ1VSSVRZX0xBQkVMKSkNCj4gIAkJcmV0dXJuIC1FTk9FTlQ7DQo+IC0JaWYg
-KGJ1ZmxlbiA8IGxhYmVsLmxlbikNCj4gLQkJcmV0dXJuIC1FUkFOR0U7DQo+ICAJcmV0dXJuIDA7
-DQo+ICB9DQo+ICANCj4gZGlmZiAtLWdpdCBhL2ZzL25mcy9uZnM0eGRyLmMgYi9mcy9uZnMvbmZz
-NHhkci5jDQo+IGluZGV4IDQ3ODE3ZWYwYWFkYi4uNTAxNjJlMGE5NTljIDEwMDY0NA0KPiAtLS0g
-YS9mcy9uZnMvbmZzNHhkci5jDQo+ICsrKyBiL2ZzL25mcy9uZnM0eGRyLmMNCj4gQEAgLTQxNjYs
-NyArNDE2NiwxMCBAQCBzdGF0aWMgaW50IGRlY29kZV9hdHRyX3NlY3VyaXR5X2xhYmVsKHN0cnVj
-dA0KPiB4ZHJfc3RyZWFtICp4ZHIsIHVpbnQzMl90ICpiaXRtYXAsDQo+ICAJCQlyZXR1cm4gLUVJ
-TzsNCj4gIAkJaWYgKGxlbiA8IE5GUzRfTUFYTEFCRUxMRU4pIHsNCj4gIAkJCWlmIChsYWJlbCkg
-ew0KPiAtCQkJCW1lbWNweShsYWJlbC0+bGFiZWwsIHAsIGxlbik7DQo+ICsJCQkJaWYgKGxhYmVs
-LT5sZW4gJiYgbGFiZWwtPmxlbiA8IGxlbikNCj4gKwkJCQkJcmV0dXJuIC1FUkFOR0U7DQo+ICsJ
-CQkJaWYgKGxhYmVsLT5sZW4pDQo+ICsJCQkJCW1lbWNweShsYWJlbC0+bGFiZWwsIHAsIGxlbik7
-DQoNCkp1c3QgYSBoZWFkcyB1cCB0aGF0IEkgZml4ZWQgdGhpcyB0byBhdm9pZCB0aGUgZHVwbGlj
-YXRlIHRlc3Qgb2YgbGFiZWwtDQo+bGVuICE9IDAgYW5kIEkgYWRkZWQgYSBGaXhlczogYmVmb3Jl
-IGFwcGx5aW5nLg0KDQo+ICAJCQkJbGFiZWwtPmxlbiA9IGxlbjsNCj4gIAkJCQlsYWJlbC0+cGkg
-PSBwaTsNCj4gIAkJCQlsYWJlbC0+bGZzID0gbGZzOw0KLS0gDQpUcm9uZCBNeWtsZWJ1c3QNCkxp
-bnV4IE5GUyBjbGllbnQgbWFpbnRhaW5lciwgSGFtbWVyc3BhY2UNCnRyb25kLm15a2xlYnVzdEBo
-YW1tZXJzcGFjZS5jb20NCg0KDQo=
+Em Tue, 11 Aug 2020 14:21:06 +0200
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> escreveu:
+
+> I was able to drop it, but I had to add this at dwc3 settings:
+> 
+> 	regulator-on-in-suspend;
+> 
+> As otherwise the device seems to stop a few seconds after the dwc3
+> driver gets started.
+> 
+> I suspect it could be related to those calls at the dwg3 driver:
+> 
+> 	pm_runtime_use_autosuspend(dev);
+> 	pm_runtime_set_autosuspend_delay(dev, DWC3_DEFAULT_AUTOSUSPEND_DELAY);
+> 
+> As this seems to be the only difference between what the dwc3 core
+> does and the dwc3-hisi doesn't do.
+
+Found the issue.
+
+It is due to a quirk that was renamed:
+
+	-                       snps,dis-split-quirk;
+	+                       snps,dis_enblslpm_quirk;
+
+I'm now using just those drivers:
+
+	- hikey 970 phy (pulled from OOT);
+	- upstream dwc3;
+	- upstream rt1711 driver;
+	- drivers/misc/hisi_hikey_usb.c (with my changes).
+
+Now, the problem is that the USB devices are getting one reset per 
+second (which starts about 10 seconds after dwc3 driver is loaded):
+
+[   14.080666] usb 1-1.1: reset low-speed USB device number 3 using xhci-hcd
+[   14.752689] usb 1-1.2: reset low-speed USB device number 4 using xhci-hcd
+[   15.712646] usb 1-1.1: reset low-speed USB device number 3 using xhci-hcd
+[   16.480683] usb 1-1.2: reset low-speed USB device number 4 using xhci-hcd
+[   17.472651] usb 1-1.1: reset low-speed USB device number 3 using xhci-hcd
+[   18.208675] usb 1-1.2: reset low-speed USB device number 4 using xhci-hcd
+
+It sounds like an autosuspend thing, but disabling it (using powertop) 
+doesn't affect it. Any ideas?
+
+PS.: I'm enclosing the relevant DT data.
+
+Thanks,
+Mauro
+
+		i2c1: i2c@ffd72000 {
+			compatible = "snps,designware-i2c";
+			reg = <0x0 0xffd72000 0x0 0x1000>;
+			interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+			clock-frequency = <400000>;
+			clocks = <&iomcu HI3670_CLK_GATE_I2C1>;
+			resets = <&iomcu_rst 0x20 4>;
+			pinctrl-names = "default";
+			pinctrl-0 = <&i2c1_pmx_func &i2c1_cfg_func>;
+
+			rt1711h: rt1711h@4e {
+				compatible = "richtek,rt1711h";
+				reg = <0x4e>;
+				status = "ok";
+				interrupt-parent = <&gpio27>;
+				interrupts = <5 IRQ_TYPE_LEVEL_LOW>;
+				pinctrl-names = "default";
+				pinctrl-0 = <&pd_cfg_func>;
+
+				usb_con: connector {
+					compatible = "usb-c-connector";
+					label = "USB-C";
+					data-role = "dual";
+					power-role = "dual";
+					try-power-role = "sink";
+					source-pdos = <PDO_FIXED(5000, 500, PDO_FIXED_USB_COMM)>;
+					sink-pdos = <PDO_FIXED(5000, 500, PDO_FIXED_USB_COMM)
+						     PDO_VAR(5000, 5000, 1000)>;
+					op-sink-microwatt = <10000000>;
+
+					ports {
+						#address-cells = <1>;
+						#size-cells = <0>;
+						port@1 {
+							reg = <1>;
+							usb_con_ss: endpoint {
+								remote-endpoint = <&dwc3_ss>;
+							};
+						};
+					};
+				};
+				port {
+					#address-cells = <1>;
+					#size-cells = <0>;
+
+					rt1711h_ep: endpoint@0 {
+						reg = <0>;
+						remote-endpoint = <&hikey_usb_ep1>;
+					};
+				};
+			};
+		};
+
+		hikey_usbhub: hikey_usbhub {
+			compatible = "hisilicon,kirin970_hikey_usbhub";
+
+			typec-vbus-gpios = <&gpio26 1 0>;
+			otg-switch-gpios = <&gpio4 2 0>;
+			hub_reset_en_gpio = <&gpio0 3 0>;
+			hub-vdd-supply = <&ldo17>;
+			usb-role-switch;
+
+			port {
+				#address-cells = <1>;
+				#size-cells = <0>;
+
+				hikey_usb_ep0: endpoint@0 {
+					reg = <0>;
+					remote-endpoint = <&dwc3_role_switch>;
+				};
+				hikey_usb_ep1: endpoint@1 {
+					reg = <1>;
+					remote-endpoint = <&rt1711h_ep>;
+				};
+			};
+		};
+
+		usb31_misc: usb31_misc@ff200000 {
+			compatible = "syscon";
+			reg = <0x0 0xff200000 0x0 0x1000>;
+		};
+
+		usb31_misc_rst: usb31_misc_rst_controller {
+			compatible = "hisilicon,hi3660-reset";
+			#reset-cells = <2>;
+			hisi,rst-syscon = <&usb31_misc>;
+		};
+
+		usb_phy: usbphy {
+			compatible = "hisilicon,hi3670-usb-phy";
+			#phy-cells = <0>;
+			hisilicon,pericrg-syscon = <&crg_ctrl>;
+			hisilicon,pctrl-syscon = <&pctrl>;
+			hisilicon,sctrl-syscon = <&sctrl>;
+			hisilicon,usb31-misc-syscon = <&usb31_misc>;
+			eye-diagram-param = <0xFDFEE4>;
+			usb3-phy-tx-vboost-lvl = <0x5>;
+		};
+		dwc3: dwc3@ff100000 {
+			compatible = "snps,dwc3";
+			reg = <0x0 0xff100000 0x0 0x100000>;
+			interrupts = <0 159 IRQ_TYPE_LEVEL_HIGH>,
+				    <0 161 IRQ_TYPE_LEVEL_HIGH>;
+
+			clocks = <&crg_ctrl HI3670_CLK_GATE_ABB_USB>,
+				    <&crg_ctrl HI3670_HCLK_GATE_USB3OTG>,
+				    <&crg_ctrl HI3670_CLK_GATE_USB3OTG_REF>,
+				    <&crg_ctrl HI3670_ACLK_GATE_USB3DVFS>;
+			clock-names = "clk_gate_abb_usb",
+				      "hclk_gate_usb3otg",
+				      "clk_gate_usb3otg_ref",
+				      "aclk_gate_usb3dvfs";
+
+			assigned-clocks = <&crg_ctrl HI3670_ACLK_GATE_USB3DVFS>;
+			assigned-clock-rates = <238000000>;
+			resets = <&crg_rst 0x90 6>,
+				 <&crg_rst 0x90 7>,
+				 <&usb31_misc_rst 0xA0 8>,
+				 <&usb31_misc_rst 0xA0 9>;
+
+			phys = <&usb_phy>;
+			phy-names = "usb3-phy";
+			dr_mode = "otg";
+			maximum-speed = "super-speed";
+			phy_type = "utmi";
+			snps,dis-del-phy-power-chg-quirk;
+			snps,lfps_filter_quirk;
+			snps,dis_u2_susphy_quirk;
+			snps,dis_u3_susphy_quirk;
+			snps,tx_de_emphasis_quirk;
+			snps,tx_de_emphasis = <1>;
+			snps,dis_enblslpm_quirk;
+			snps,gctl-reset-quirk;
+			usb-role-switch;
+			role-switch-default-mode = "host";
+			port {
+				#address-cells = <1>;
+				#size-cells = <0>;
+				dwc3_role_switch: endpoint@0 {
+					reg = <0>;
+					remote-endpoint = <&hikey_usb_ep0>;
+				};
+
+				dwc3_ss: endpoint@1 {
+					reg = <1>;
+					remote-endpoint = <&usb_con_ss>;
+				};
+			};
+		};
+
+
