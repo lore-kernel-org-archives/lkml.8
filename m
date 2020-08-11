@@ -2,112 +2,97 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01A5BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 16:19:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89AE3C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 16:20:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB96420774
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 16:19:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E00A2076C
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 16:20:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597162774;
-	bh=eSlY7bnaywQP2Qzm8/RoLCGGkJGUHuYdHvojM9qWpDg=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=q0QxZBkN8Ax4mRdyQ1uOmFl83wpMRRpmvlPdjV4Q1S3sD2GtQEDpBBU/phb6HHmfB
-	 pGqsHbIBDsZcEG1xWpxvl/dL8X6+X/AQ4KQPXbCPB1krPq+bx9b1Z8//VYk5k8c3o2
-	 XhChj9MFoxnOWXSTHet+2ryNJIJLYY+R6AqHUnD0=
+	s=default; t=1597162803;
+	bh=DBTLEgLoShBacLtvTrSjzwCoe7AuHPsP195roGj64sw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xKs1hZ1Y/pEOX4uQYaezDysessmCDrE/SZV/n//2z0E/tI9NXZUKbMBqUlNtolWSq
+	 e1osgjs6zk0C74ta/9caqEqd2QspSLf19SJFxoC9wbosR40hLsBeJNzvpdmKuE4g2P
+	 xyRGeFuREEQtpi4MnOe2DYVVEGG7QWtHkP7ntcPM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729108AbgHKQTd (ORCPT
+        id S1729120AbgHKQUC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 12:19:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37780 "EHLO mail.kernel.org"
+        Tue, 11 Aug 2020 12:20:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728797AbgHKQTc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 12:19:32 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        id S1728797AbgHKQUC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 12:20:02 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2AA7B206B5;
-        Tue, 11 Aug 2020 16:19:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2787206B5;
+        Tue, 11 Aug 2020 16:20:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597162772;
-        bh=eSlY7bnaywQP2Qzm8/RoLCGGkJGUHuYdHvojM9qWpDg=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=ZVEGIHWMLJLCWOXy2zPXwFEWPqlLABJ4U8TkB9Q1qgj3XY+i2S7NSiY6Xz//PNRaI
-         W1z5kGe5Zl+SR/6OahDUitkov36/DQjBJQXoIeN50kZLyYc8HbgSx4AggrRCiGUfct
-         CMx658Og1vNxfKwgzGEWEAKgDLMRiivDZ3326qXY=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id D559B352308E; Tue, 11 Aug 2020 09:19:31 -0700 (PDT)
-Date:   Tue, 11 Aug 2020 09:19:31 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Michal Hocko <mhocko@suse.com>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
-Message-ID: <20200811161931.GA1746@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200809204354.20137-1-urezki@gmail.com>
- <20200809204354.20137-2-urezki@gmail.com>
- <20200810123141.GF4773@dhcp22.suse.cz>
- <20200810160739.GA29884@pc636>
- <20200810192525.GG4773@dhcp22.suse.cz>
- <87pn7x6y4a.fsf@nanos.tec.linutronix.de>
- <20200811153327.GW4295@paulmck-ThinkPad-P72>
- <87h7t96ve3.fsf@nanos.tec.linutronix.de>
- <20200811160240.GX4295@paulmck-ThinkPad-P72>
+        s=default; t=1597162801;
+        bh=DBTLEgLoShBacLtvTrSjzwCoe7AuHPsP195roGj64sw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rddeRjqVG7gIOrNaU8xh/5TSbZes30GoO60ZrGqoMvPx7dn3iF4csv2R+Snmba446
+         8mmOqnuxKDDNvgASr61Us0OzAGKlZXHLPOjVWqplpAeg0YySDYLnu6yg5gvHS5J+QM
+         hpkQXafs12kBaT8A/i1tR6qc+pNdI0x4hQ3rt3Zc=
+Date:   Tue, 11 Aug 2020 18:20:10 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+Subject: Re: [PATCH 5.8 00/38] 5.8.1-rc1 review
+Message-ID: <20200811162010.GC440280@kroah.com>
+References: <20200810151803.920113428@linuxfoundation.org>
+ <CA+G9fYtzP22nR4vd+GAn+tqy0S38XAa3E9=QfDiSPWHrHeqgsw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200811160240.GX4295@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+G9fYtzP22nR4vd+GAn+tqy0S38XAa3E9=QfDiSPWHrHeqgsw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 09:02:40AM -0700, Paul E. McKenney wrote:
-> On Tue, Aug 11, 2020 at 05:43:16PM +0200, Thomas Gleixner wrote:
-> > "Paul E. McKenney" <paulmck@kernel.org> writes:
-> > > On Tue, Aug 11, 2020 at 04:44:21PM +0200, Thomas Gleixner wrote:
-> > >> Now RCU creates a new thing which enforces to make page allocation in
-> > >> atomic context possible on RT. What for?
-> > >> 
-> > >> What's the actual use case in truly atomic context for this new thing on
-> > >> an RT kernel?
-> > >
-> > > It is not just RT kernels.  CONFIG_PROVE_RAW_LOCK_NESTING=y propagates
-> > > this constraint to all configurations, and a patch in your new favorite
-> > > subsystem really did trigger this lockdep check in a non-RT kernel.
-> > >
-> > >> The actual RCU code disabling interrupts is an implementation detail
-> > >> which can easily be mitigated with a local lock.
-> > >
-> > > In this case, we are in raw-spinlock context on entry to kfree_rcu().
-> > 
-> > Where?
+On Tue, Aug 11, 2020 at 11:59:37AM +0530, Naresh Kamboju wrote:
+> On Mon, 10 Aug 2020 at 20:50, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > This is the start of the stable review cycle for the 5.8.1 release.
+> > There are 38 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >
+> > Responses should be made by Wed, 12 Aug 2020 15:17:47 +0000.
+> > Anything received after that time might be too late.
+> >
+> > The whole patch series can be found in one patch at:
+> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.8.1-rc1.gz
+> > or in the git tree and branch at:
+> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.8.y
+> > and the diffstat can be found below.
+> >
+> > thanks,
+> >
+> > greg k-h
+> >
 > 
-> Some BPF code that needs to process and free a list.  As noted above,
-> this is a patch rather than something that is already in mainline.
-> Not surprising, though, given call_rcu() invocations in similar contexts.
 > 
-> Yes, we can perhaps rework all current and future callers to avoid
-> invoking both call_rcu() and kfree_rcu() from raw atomic context, but
-> the required change to permit this is quite a bit simpler.
+> Results from Linaro’s test farm.
+> No regressions on arm64, arm, x86_64, and i386.
 
-I should hasten to add that from what I can see right now, the required
-change allows telling the memory allocator bail out instead of acquiring
-a non-raw spinlock.  I am absolutely not advocating converting the
-allocator's spinlocks to raw spinlocks.
+Thanks for testing all of these and letting me know.
 
-							Thanx, Paul
+greg k-h
