@@ -2,97 +2,236 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03464C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 09:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F407C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 09:12:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5B1420772
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 09:09:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 494982076B
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 09:12:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597137153;
+	bh=JRnhXaH/f3fE892cqJcIwk+cBEd8EiSVWDW91lbdx2Y=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=uLvuf9b3XGp/pzk9kQEpeaDzyVrSqQLkaw/zwbRLdXwo+MhsvBH/cDYtSlWe+wUSl
+	 JxmDUkWtTHjJ9THWSZrBfcLrJ55jDwtNZYo9uk4heISnyUGHNt9xUkpQ6E+CSimU76
+	 AnHvTn47Xouo3GKOLw2vCOfXsfQCuM++CfANjluU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728401AbgHKJJf convert rfc822-to-8bit (ORCPT
+        id S1728413AbgHKJMb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 05:09:35 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:39503 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728336AbgHKJJe (ORCPT
+        Tue, 11 Aug 2020 05:12:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58552 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728355AbgHKJMa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 05:09:34 -0400
-Received: by mail-ed1-f67.google.com with SMTP id c10so8497449edk.6;
-        Tue, 11 Aug 2020 02:09:32 -0700 (PDT)
+        Tue, 11 Aug 2020 05:12:30 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FD18C06174A;
+        Tue, 11 Aug 2020 02:12:28 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id g6so12652738ljn.11;
+        Tue, 11 Aug 2020 02:12:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=Eqc+3NbaxwoojpJ4wCmnVzMHGK5tFF910hokAKhwEAQ=;
+        b=QGaJh62swSOyNJSej4GYVVg1+IdjpM91enN86WzVB5D+VT3gJ4F2gVyA67n+QbKlwi
+         vOTvwRtaSkKpVxiRAM6wu07GI0JFfpOm8/6lScOdsMeg9mVzJW0sJjUcEG8LePKK5UzG
+         vOmRdtSMMmGeXonsMVc+4kuQntv6eIFkgFRChGKD0yE7iLNJhb781Qegs1T/6rjUmYSY
+         yHHMHg6aSyFt7wH61PFJNXIJLwCtHc/CnVtcnIvwMNol9qgLVN0L4hoiwDdWAnXfpp6d
+         7C3oBFWGT6N6Sq5YOV1MyyY5dEVm//TnIWGtn5HxSJ2+FFCMhhYhgY3tXa85AwwGEY5K
+         kO1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=7nAprOq2xfZCg8U+qPFrSCSPVHDN3Z4PSbLlksPqDaQ=;
-        b=KZbRVuhOyyK9le2+9kicadsjCLCe942WCWBJWfgiwQcHAVQEnGTLhiWIfkh0Fz2lPo
-         F1Dei75G/We1kp9Sq5QiHCOAvVCMGtRyadnlzhRP5mRhonBuCI8DlUpHYnOws8mHNDuz
-         aEn0FdZ1ZSqnKwISo5upjzjid7dPyaPJhrjVdtQfObVLHXn+qWUPo9dhFaeduFcUPGfI
-         gvHygsnERxeIoA3XsElWAEHDGhjitK2MOSXroKTEhat1uPtKMoQ5rZY8WinpWOUoCVwR
-         mfJNWhEdq5hICUf4Ghc2xVRgneT11Zs0HOn5KPta3kazemQUum2m7FuKRd2MA+ErHfa5
-         Dxvw==
-X-Gm-Message-State: AOAM530NhfatOxATEaVFYTI5tMJvWTpN53FyH/ibYcNIHFLT8emGGjal
-        akZaPWymLXQu7kF2HsL0AlnvKyLDnPeSZOqKT+RuQZzX
-X-Google-Smtp-Source: ABdhPJwsET5r+S0OddQDzlODnuDPEC1cxBkBpR48tmVZwKKukz6tCJ53SK+KdU7nBegaksGW9TaBIk4T/gZYhQf8RXE=
-X-Received: by 2002:a50:e70e:: with SMTP id a14mr9836310edn.93.1597136972345;
- Tue, 11 Aug 2020 02:09:32 -0700 (PDT)
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=Eqc+3NbaxwoojpJ4wCmnVzMHGK5tFF910hokAKhwEAQ=;
+        b=BUGSmkK2CbeLYf1+o60B+F3yS99E892Zdt71hMaH1zwRrYjTs6hq8zJJMzCcEDpsU+
+         J1TkAGtLqa74N+ExkqpGGABUj9r4oPHWQrrwRjUWEmEFLvOs2UxM8P9Rv2LdK/W67Dbl
+         gNokHJcd3AD42Dt+LiV29LDDt+PHHinmMQxrU4Tcrn4DXGpzZ6G6x5pZOGx0itHpTAT/
+         v5Z2JByJA2y06GuKZPt6DtzeKMwZ65YcBVzEJK3KUbFZbTRZP8hA3YczwXLgMGWXytcy
+         mP/EoHQnlGz5gslXISTCao3tICIXshl3/3m4kijnop4pZsSTv1y5TFEDgjIVwLCoCjGe
+         9qvg==
+X-Gm-Message-State: AOAM533fHwVsdqVrVtchwmqorfIKe8D7ybF1KYB94Bk4Fnal+yUx/Nem
+        Ko6n2nn4mSxSSp/ilAObqFA=
+X-Google-Smtp-Source: ABdhPJyywIbiOv+zXy+wOQ3SXRh/6kavcG9IMhbtAn8xZQHQnrTcXEUm0BS+Ph7ZWqu7cv6m9U017Q==
+X-Received: by 2002:a2e:3c10:: with SMTP id j16mr2740226lja.324.1597137147094;
+        Tue, 11 Aug 2020 02:12:27 -0700 (PDT)
+Received: from saruman ([194.34.132.58])
+        by smtp.gmail.com with ESMTPSA id d20sm11416961lfn.85.2020.08.11.02.12.24
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 11 Aug 2020 02:12:26 -0700 (PDT)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Sandeep Maheswaram <sanm@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Michael Turquette <mturquette@baylibre.com>
+Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        linux-clk@vger.kernel.org, Taniya Das <tdas@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>
+Subject: Re: [PATCH 2/2] usb: dwc3: Host wake up support from system suspend
+In-Reply-To: <1591885683-29514-3-git-send-email-sanm@codeaurora.org>
+References: <1591885683-29514-1-git-send-email-sanm@codeaurora.org> <1591885683-29514-3-git-send-email-sanm@codeaurora.org>
+Date:   Tue, 11 Aug 2020 12:12:20 +0300
+Message-ID: <874kp9pmvf.fsf@kernel.org>
 MIME-Version: 1.0
-References: <20200807100411.2904279-1-noltari@gmail.com> <20200807100411.2904279-4-noltari@gmail.com>
- <CAAdtpL7+_inNrbDpq_wt1Eo=tU6+e+yYR9ox-BF7bN82HVV5_Q@mail.gmail.com> <b1210ef6-36ec-9e3f-e686-a87244ea1c33@gmail.com>
-In-Reply-To: <b1210ef6-36ec-9e3f-e686-a87244ea1c33@gmail.com>
-From:   =?UTF-8?Q?Philippe_Mathieu=2DDaud=C3=A9?= <f4bug@amsat.org>
-Date:   Tue, 11 Aug 2020 11:09:20 +0200
-Message-ID: <CAAdtpL7=oA-2f0CA8-d6o44jbd7VtBOSSJSGmQjitVT3e_WLZw@mail.gmail.com>
-Subject: Re: [PATCH v2 3/4] MIPS: BCM63xx: enable EHCI for DWV-S0 board
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Jonas Gorski <jonas.gorski@gmail.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Florian,
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 11, 2020 at 4:33 AM Florian Fainelli <f.fainelli@gmail.com> wrote:
-> On 8/9/2020 11:49 AM, Philippe Mathieu-Daudé wrote:
-> > Hi Álvaro,
-> >
-> > On Fri, Aug 7, 2020 at 12:05 PM Álvaro Fernández Rojas
-> > <noltari@gmail.com> wrote:
-> >>
-> >> EHCI and OHCI share the same USB ports. Therefore, if the board has OHCI
-> >> it should also have EHCI.
-> >
-> > This statement isn't correct. OHCI doesn't imply EHCI...
-> > (although the opposite is almost always true).
-> >
-> > Now per 6358-PB01-R the bcm6358 indeed has a EHCI controller.
-> >
-> > Do you mind rewording the commit description?
+Sandeep Maheswaram <sanm@codeaurora.org> writes:
+
+> Avoiding phy powerdown in host mode so that it can be wake up by devices.
+> Set usb controller wakeup capable when wakeup capable devices are
+> connected to the host.
 >
-> Is not it that a single USB port is used and we need the EHCI controller
-> active in order for the correct speed negotiation to occur?
+> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+> ---
+>  drivers/usb/dwc3/core.c      | 47 ++++++++++++++++++++++++++-----
+>  drivers/usb/dwc3/core.h      |  1 +
+>  drivers/usb/dwc3/dwc3-qcom.c | 66 +++++++++++++++++++++++++++++++++-----=
+------
+>  3 files changed, 91 insertions(+), 23 deletions(-)
+>
+> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+> index 25c686a7..8370350 100644
+> --- a/drivers/usb/dwc3/core.c
+> +++ b/drivers/usb/dwc3/core.c
+> @@ -31,15 +31,19 @@
+>  #include <linux/usb/gadget.h>
+>  #include <linux/usb/of.h>
+>  #include <linux/usb/otg.h>
+> +#include <linux/usb/hcd.h>
+>=20=20
+>  #include "core.h"
+>  #include "gadget.h"
+>  #include "io.h"
+>=20=20
+>  #include "debug.h"
+> +#include "../host/xhci.h"
 
-Yes. What sounds odd is "if the board has OHCI it should also have EHCI."
+nope
 
-This is true for this particular board because its chipset is a bcm6358,
-but I'm worried it might later confuse other developers. For example the
-bcm6348 has a OHCI controller, but that doesn't imply its port can be
-used as EHCI.
+>  #define DWC3_DEFAULT_AUTOSUSPEND_DELAY	5000 /* ms */
+>=20=20
+> +bool need_phy_for_wakeup;
 
-Regards,
+nope
 
-Phil.
+> +
+>  /**
+>   * dwc3_get_dr_mode - Validates and sets dr_mode
+>   * @dwc: pointer to our context structure
+> @@ -1627,10 +1631,36 @@ static int dwc3_core_init_for_resume(struct dwc3 =
+*dwc)
+>  	return ret;
+>  }
+>=20=20
+> +static void dwc3_set_phy_speed_flags(struct dwc3 *dwc)
+> +{
+> +
+> +	int i, num_ports;
+> +	u32 reg;
+> +	struct usb_hcd	*hcd =3D platform_get_drvdata(dwc->xhci);
+> +	struct xhci_hcd	*xhci_hcd =3D hcd_to_xhci(hcd);
+> +
+> +	dwc->hs_phy_flags &=3D ~(PHY_MODE_USB_HOST_HS | PHY_MODE_USB_HOST_LS);
+> +
+> +	reg =3D readl(&xhci_hcd->cap_regs->hcs_params1);
+> +
+> +	num_ports =3D HCS_MAX_PORTS(reg);
+> +	for (i =3D 0; i < num_ports; i++) {
+> +		reg =3D readl(&xhci_hcd->op_regs->port_status_base + i*0x10);
+> +		if (reg & PORT_PE) {
+> +			if (DEV_HIGHSPEED(reg) || DEV_FULLSPEED(reg))
+> +				dwc->hs_phy_flags |=3D PHY_MODE_USB_HOST_HS;
+> +			else if (DEV_LOWSPEED(reg))
+> +				dwc->hs_phy_flags |=3D PHY_MODE_USB_HOST_LS;
+> +		}
+> +	}
+> +	phy_set_mode(dwc->usb2_generic_phy, dwc->hs_phy_flags);
 
-> --
-> Florian
+XHCI already supports PHY framework, no?
+
+>  static int dwc3_suspend_common(struct dwc3 *dwc, pm_message_t msg)
+>  {
+>  	unsigned long	flags;
+>  	u32 reg;
+> +	struct usb_hcd  *hcd =3D platform_get_drvdata(dwc->xhci);
+>=20=20
+>  	switch (dwc->current_dr_role) {
+>  	case DWC3_GCTL_PRTCAP_DEVICE:
+> @@ -1643,9 +1673,10 @@ static int dwc3_suspend_common(struct dwc3 *dwc, p=
+m_message_t msg)
+>  		dwc3_core_exit(dwc);
+>  		break;
+>  	case DWC3_GCTL_PRTCAP_HOST:
+> +		dwc3_set_phy_speed_flags(dwc);
+>  		if (!PMSG_IS_AUTO(msg)) {
+> -			dwc3_core_exit(dwc);
+> -			break;
+> +			if (usb_wakeup_enabled_descendants(hcd->self.root_hub))
+> +				need_phy_for_wakeup =3D true;
+
+should be done in xhci-plat
+
+> @@ -1705,11 +1736,13 @@ static int dwc3_resume_common(struct dwc3 *dwc, p=
+m_message_t msg)
+>  		break;
+>  	case DWC3_GCTL_PRTCAP_HOST:
+>  		if (!PMSG_IS_AUTO(msg)) {
+> -			ret =3D dwc3_core_init_for_resume(dwc);
+> -			if (ret)
+> -				return ret;
+> -			dwc3_set_prtcap(dwc, DWC3_GCTL_PRTCAP_HOST);
+> -			break;
+> +			if (!need_phy_for_wakeup) {
+> +				ret =3D dwc3_core_init_for_resume(dwc);
+> +				if (ret)
+> +					return ret;
+> +				dwc3_set_prtcap(dwc, DWC3_GCTL_PRTCAP_HOST);
+> +				break;
+
+why?
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl8yYPQACgkQzL64meEa
+mQYzpQ//RlvBlJqDn5YjtLQDgcPnIwSd+Toup6FmId0ZU9y6UA08aKYTxxtjupUq
+kx4XvOOrPY0xggUoWDd1od1LIXfwbRci1os+5J4yEyKT9tANjTZucJZLaYH7j5ki
+mCB1Pf8g5LJ1ol5j/fh7UElA+CJ6ZYFXj3Mky9Knd5T++ve02jLzAhqga1cz3fiL
+NHXkCPt2MqILB8H7NYE8Pytp9DHTElr//+lrVBSkxyqTT8buM/pZ2kfo04nJvO6+
+v2yiq6Edksa+Ky8H5NxOM/Up5Y/anuh6AqLiwvirWl1Ugf1gBV3LxCPunezeIg2I
+hXGJ2xnGX+pJkcFhFT5mac6gQVd2qxPOtaQLWRbuswewykyOhtp7e6yOqma5SjuZ
+7VnYVLZ8By/oRH4/dBAtRSrJyagY2+RWOJFOzF3G6zgx0PrDITwWn9qaYzD5f3FD
+Iy1Ybz1U1O8a+TcB9R7DhfSTLTmWswHT8xniuaqdqXOuJKiTwjBZuBkt9WIzvBAS
+Gnnd2jYpu0DMvS037Wv3mnAcps78rPuG7YeepUEzs3irck0HNvI+DajEh/TVzRpe
+NmzFnb9SsfkoLc+cnFvU/GAW4mlyadxZrqydDVI4zawmqxF+eNqxgP6r21waq8Nq
+KchxxSssP4X7sECoErPZRI6O5zPLk1VaXHg7IyjBvCILWcEskLE=
+=3o7M
+-----END PGP SIGNATURE-----
+--=-=-=--
