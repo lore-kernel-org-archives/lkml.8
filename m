@@ -2,912 +2,110 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F75C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 00:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0069BC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 00:48:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E48B20734
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 00:46:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6A9C206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 00:48:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="mwW/ZH4j"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="nCH6zHj4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727965AbgHKAqt (ORCPT
+        id S1728012AbgHKAsY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 20:46:49 -0400
-Received: from mail-bn7nam10on2048.outbound.protection.outlook.com ([40.107.92.48]:17729
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727014AbgHKAqs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 20:46:48 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Gu+spdjZMCIOPHV8NuIUXRCfXckS6SHuqDy5jHw1P+fZKo/g+049ipv3IKZMCCT/7qhFS+iiI9kgpAHtbUmBR8yVP18FoweNlR9kBOzbU6ixVGqXdfua69iRABqGgOku1JDPsqN3bB6RwYzpew8OQ8zVyuM8L6HUtNPlavw5GMvrFagcP2W5xM8BEYkgz56n+Zx/7s/HCPWLt/Himu1vfmBH/f+xlEt+LpmuO9FVtmSfwfWOg13ZRA8YE50mZ37KDnPtTOmP/2hZwkbps1rVhHj3QhYU1g0oiv7e6j82ZBzeQWykYYhdSgrxICL94kyJPSo4ve4NnZgRoofFfhIcfA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ip3lgg/POb498WWKn3xfUREB68HW0ma/uBuwhD4XZzw=;
- b=ZenBgj0OvUEkauqBWRl8kUpxPzGsZVPHKjkM/GhMxbVpFbjmBvrltRBy4gEmAQvWzLP9AQDUm0/JNY6n0eYmgX6/yBN+lkqyb79sFgQaCVpq0tNFr0IcM/7RdgpgdWp3qRIdX6UEKWlqHX89vYW8gswBtE413NLY6CzJnDTCSbphPAfxblUd+4m5gN4mIIBogQDwl0n7FGgQH8RFibH4rm1mLwWvI0E9GMckrNodcSEchyU0NJ1+u+wkv+3u4/Ldvxbhw5j4cOueW4osure8+baV3MRErSIanva8pHMeZZqPIYkMW9r+tWFHwBwil4TtoWb50BWSRFnR2LSplvwuEw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
+        Mon, 10 Aug 2020 20:48:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37552 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727088AbgHKAsX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 20:48:23 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E33C4C061756
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 17:48:22 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id r11so6664561pfl.11
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 17:48:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ip3lgg/POb498WWKn3xfUREB68HW0ma/uBuwhD4XZzw=;
- b=mwW/ZH4j9yOWsWqaJ9tOVHu2IVHOleOrJN8PzH6Gqc9S4IG/2H2jaCYRzG3GMy6Lpo/IvJyTSJbbe0gviEuazcUugPj5Xf5FEcsLCWP9AElcY4sIPmV6RL4RYGqFbyZ1y1dXTCnRjmI9vvgYHWEEBwWskF3G5Pl1wwfDyi69DsM=
-Received: from DM5PR13CA0065.namprd13.prod.outlook.com (2603:10b6:3:117::27)
- by CH2PR02MB6022.namprd02.prod.outlook.com (2603:10b6:610:2::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.22; Tue, 11 Aug
- 2020 00:46:41 +0000
-Received: from DM3NAM02FT007.eop-nam02.prod.protection.outlook.com
- (2603:10b6:3:117:cafe::b3) by DM5PR13CA0065.outlook.office365.com
- (2603:10b6:3:117::27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.7 via Frontend
- Transport; Tue, 11 Aug 2020 00:46:41 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- DM3NAM02FT007.mail.protection.outlook.com (10.13.4.88) with Microsoft SMTP
- Server id 15.20.3261.19 via Frontend Transport; Tue, 11 Aug 2020 00:46:41
- +0000
-Received: from [149.199.38.66] (port=39388 helo=smtp.xilinx.com)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
-        (envelope-from <venkateshwar.rao.gannavarapu@xilinx.com>)
-        id 1k5IR0-0006Xz-UN; Mon, 10 Aug 2020 17:46:34 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <venkateshwar.rao.gannavarapu@xilinx.com>)
-        id 1k5IR7-0000Bj-Bj; Mon, 10 Aug 2020 17:46:41 -0700
-Received: from xsj-pvapsmtp01 (mailman.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 07B0kaYW005602;
-        Mon, 10 Aug 2020 17:46:36 -0700
-Received: from [172.23.155.151] (helo=xhdengvm155151.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <venkateshwar.rao.gannavarapu@xilinx.com>)
-        id 1k5IR1-00009x-I1; Mon, 10 Aug 2020 17:46:35 -0700
-From:   Venkateshwar Rao Gannavarapu 
-        <venkateshwar.rao.gannavarapu@xilinx.com>
-To:     hyun.kwon@xilinx.com, laurent.pinchart@ideasonboard.com,
-        dri-devel@lists.freedesktop.org
-Cc:     airlied@linux.ie, daniel@ffwll.ch, linux-kernel@vger.kernel.org,
-        sandipk@xilinx.com, vgannava@xilinx.com,
-        Venkateshwar Rao Gannavarapu 
-        <venkateshwar.rao.gannavarapu@xilinx.com>
-Subject: [RFC PATCH V2 2/2] drm: xlnx: dsi: driver for Xilinx DSI TX subsystem
-Date:   Tue, 11 Aug 2020 06:16:17 +0530
-Message-Id: <1597106777-30913-3-git-send-email-venkateshwar.rao.gannavarapu@xilinx.com>
-X-Mailer: git-send-email 2.1.1
-In-Reply-To: <1597106777-30913-1-git-send-email-venkateshwar.rao.gannavarapu@xilinx.com>
-References: <1597106777-30913-1-git-send-email-venkateshwar.rao.gannavarapu@xilinx.com>
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-PublicTrafficType: Email
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=52A4xc+/jrmiozXKI+LLTyESLZ7QKwO1hVqCs6brWXc=;
+        b=nCH6zHj4AOKIWgZb4Ahvrwv8CD8AaduZoy5T66g7tY5prKUIgU98KPz6SItfK3J67p
+         Iq9PSjA8dMIDiZs2KGE2CUChb5bJjd13bnm363gXbJi/9O6Bxt4Hw63W9mpheCdz93/I
+         TdGNxE4MKc5nwXlVpDENDiyuBv+xsi2srJgzqh5/1WXDCo41w1RBj1TT2ORdzEWUqrhY
+         ed9Da81FAhmeY3FRJPKghFlsGJr4vjY27+Mm1QEFK7Tmdk1xgFb3aME/cziDItiGir+c
+         cOfL2CIjcIvPSRN5mjtyS5Ih4ct4UXNNQRXBn0oMlkvnbWgyspgnYemFJiYFbfxbvp1l
+         riGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=52A4xc+/jrmiozXKI+LLTyESLZ7QKwO1hVqCs6brWXc=;
+        b=FJ/4uLzhnD8NgnBwbF6hdA5dwa2a8qPF2YcAC+IMkl8ZyvwmBNhsw7E7hhNlhax5jS
+         +8ole5I+FyeTsrNmSwEkf4KoF314Qd/vla+cIXvIjtdjlfx2Eiqnp+FitsN/Wnoz/g2o
+         lCvm2ZS9+p8okZzErdWWE40dIwkZNvOCAClPqwE+TvvU7uIU2vEJhnwXPZOPcbcXRhlk
+         tYA2sZovyOlbTbT8J427wnUKIz9j+eF0wLHaXxOMO3lDN/hzRGtKx9X3To32sWXNQR4h
+         PrACb6O3pjUZLZMHkJAh3z3OlT4HjQv7lTZzu8b+W4zVF6VGBRxJ83q2aKv+ddcw4CdK
+         5sHg==
+X-Gm-Message-State: AOAM533PWcd9KKUbna88MwfN9t18PkqeGXsnTzkyb2RNrRRws8RzcoqK
+        P+3+Ra7hfPtUULtzjjQGgNk2oPJV4Ow=
+X-Google-Smtp-Source: ABdhPJyKg7M1xo0mE5OyggHZYj7FNw5Tnfh7CUnhnpzXIT5tIPdbzw8czS+ti2esIItqfhgkfJVtwg==
+X-Received: by 2002:aa7:9390:: with SMTP id t16mr3552357pfe.311.1597106901827;
+        Mon, 10 Aug 2020 17:48:21 -0700 (PDT)
+Received: from [192.168.1.182] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id x18sm22935914pfc.93.2020.08.10.17.48.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Aug 2020 17:48:20 -0700 (PDT)
+To:     linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Cc:     Dave Chinner <david@fromorbit.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH] fs: RWF_NOWAIT should imply IOCB_NOIO
+Message-ID: <e8325bef-7e91-5fd4-fa25-74cfa169ffd2@kernel.dk>
+Date:   Mon, 10 Aug 2020 18:48:19 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 21b91aa6-0c10-405a-2196-08d83d900381
-X-MS-TrafficTypeDiagnostic: CH2PR02MB6022:
-X-Microsoft-Antispam-PRVS: <CH2PR02MB60224AEC2E8986EB5B674075B1450@CH2PR02MB6022.namprd02.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:2803;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 90cwHUN82xDEcVLL2nDvzAgai28NyamyEctyhdL9yU3kL05GEeD4AjvZCdd2Yr3Ijltc8VdcZmOfwxybLgAT7bUEn4iMyphg5Awpz5srl0TBmUN/8NvvIfGHVZdsfRpvHgKdW0VWpHDnOL+IaxOM1LpXSTkNv9oJCsIyf0hV1qGGAmRqoghORJLbulWpRrQjZo0X2Xs4YEWC3PGAUcxoEwpH6mexepeVas/6SL9FXlRQi/SGayMMW1S0Ipoyt7Og7O+efz2Pk5EPPS7Oz5Xuice7aDAMhC2DXJ1lGM3lXGcqe1pMHu5nu+4FvW5Xx1aMBzE6U5D28F/XxMY4m06hj3ZV0xA71tv4BRT6K0ephl9WwYjpzrOMslo5ZU3smwSQQeY7klJ1ZnvHfGvUkfadRA==
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(396003)(39860400002)(136003)(376002)(346002)(46966005)(316002)(5660300002)(7696005)(9786002)(6666004)(26005)(82740400003)(478600001)(47076004)(2616005)(70206006)(70586007)(83380400001)(426003)(356005)(81166007)(2906002)(82310400002)(107886003)(186003)(30864003)(36756003)(8936002)(8676002)(336012)(4326008);DIR:OUT;SFP:1101;
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Aug 2020 00:46:41.6114
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 21b91aa6-0c10-405a-2196-08d83d900381
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-AuthSource: DM3NAM02FT007.eop-nam02.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6022
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Xilinx MIPI DSI TX subsystem soft IP is used to display video
-data from AXI-4 stream interface.
+With the change allowing read-ahead for IOCB_NOWAIT, we changed the
+RWF_NOWAIT semantics of only doing cached reads. Since we know have
+IOCB_NOIO to manage that specific side of it, just make RWF_NOWAIT
+imply IOCB_NOIO as well to restore the previous behavior.
 
-It supports upto 4 lanes, multiple RGB color formats, video mode
-and command mode. The driver provides the kernel mode setting and
-MIPI DSI host functionalities.
+Fixes: 2e85abf053b9 ("mm: allow read-ahead with IOCB_NOWAIT set")
+Reported-by: Dave Chinner <david@fromorbit.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 
-Signed-off-by: Venkateshwar Rao Gannavarapu <venkateshwar.rao.gannavarapu@x=
-ilinx.com>
 ---
- drivers/gpu/drm/xlnx/Kconfig    |  11 +
- drivers/gpu/drm/xlnx/Makefile   |   2 +
- drivers/gpu/drm/xlnx/xlnx_dsi.c | 701 ++++++++++++++++++++++++++++++++++++=
-++++
- 3 files changed, 714 insertions(+)
- create mode 100644 drivers/gpu/drm/xlnx/xlnx_dsi.c
 
-diff --git a/drivers/gpu/drm/xlnx/Kconfig b/drivers/gpu/drm/xlnx/Kconfig
-index aa6cd88..991bb37 100644
---- a/drivers/gpu/drm/xlnx/Kconfig
-+++ b/drivers/gpu/drm/xlnx/Kconfig
-@@ -11,3 +11,14 @@ config DRM_ZYNQMP_DPSUB
-          This is a DRM/KMS driver for ZynqMP DisplayPort controller. Choos=
-e
-          this option if you have a Xilinx ZynqMP SoC with DisplayPort
-          subsystem.
-+
-+config DRM_XLNX_DSI
-+       tristate "Xilinx DRM DSI Subsystem Driver"
-+       select DRM_MIPI_DSI
-+       select DRM_PANEL
-+       select DRM_PANEL_SIMPLE
-+       help
-+         DRM KMS driver for Xilinx programmable DSI subsystem controller.
-+         Choose this option if you have a Xilinx MIPI DSI-TX in video
-+         pipeline. The driver provides the kernel mode settings and MIPI
-+         DSI host functionalities.
-diff --git a/drivers/gpu/drm/xlnx/Makefile b/drivers/gpu/drm/xlnx/Makefile
-index 2b844c6..b7ee6ef 100644
---- a/drivers/gpu/drm/xlnx/Makefile
-+++ b/drivers/gpu/drm/xlnx/Makefile
-@@ -1,2 +1,4 @@
- zynqmp-dpsub-objs +=3D zynqmp_disp.o zynqmp_dpsub.o zynqmp_dp.o
- obj-$(CONFIG_DRM_ZYNQMP_DPSUB) +=3D zynqmp-dpsub.o
-+
-+obj-$(CONFIG_DRM_XLNX_DSI) +=3D xlnx_dsi.o
-diff --git a/drivers/gpu/drm/xlnx/xlnx_dsi.c b/drivers/gpu/drm/xlnx/xlnx_ds=
-i.c
-new file mode 100644
-index 0000000..3231043
---- /dev/null
-+++ b/drivers/gpu/drm/xlnx/xlnx_dsi.c
-@@ -0,0 +1,701 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Xilinx FPGA MIPI DSI Tx Controller driver
-+ *
-+ * Copyright (C) 2017 - 2019 Xilinx, Inc.
-+ *
-+ * Authors:
-+ * - Saurabh Sengar <saurabhs@xilinx.com>
-+ * - Venkateshwar Rao Gannavarapu <venkateshwar.rao.gannavarapu@xilinx.com=
->
-+ */
-+
-+#include <drm/drm_atomic_helper.h>
-+#include <drm/drm_connector.h>
-+#include <drm/drm_crtc.h>
-+#include <drm/drm_crtc_helper.h>
-+#include <drm/drm_device.h>
-+#include <drm/drm_encoder.h>
-+#include <drm/drm_fourcc.h>
-+#include <drm/drm_gem_cma_helper.h>
-+#include <drm/drm_mipi_dsi.h>
-+#include <drm/drm_panel.h>
-+#include <drm/drm_probe_helper.h>
-+
-+#include <linux/clk.h>
-+#include <linux/component.h>
-+#include <linux/device.h>
-+#include <linux/iopoll.h>
-+#include <linux/of_device.h>
-+#include <linux/of_graph.h>
-+#include <linux/phy/phy.h>
-+
-+#include <video/mipi_display.h>
-+#include <video/videomode.h>
-+
-+/* DSI Tx IP registers */
-+#define XDSI_CCR                       0x00
-+#define XDSI_CCR_COREENB               BIT(0)
-+#define XDSI_CCR_SOFTRST               BIT(1)
-+#define XDSI_CCR_CRREADY               BIT(2)
-+#define XDSI_CCR_CMDMODE               BIT(3)
-+#define XDSI_CCR_DFIFORST              BIT(4)
-+#define XDSI_CCR_CMDFIFORST            BIT(5)
-+#define XDSI_PCR                       0x04
-+#define XDSI_PCR_VIDEOMODE(x)          (((x) & 0x3) << 3)
-+#define XDSI_PCR_VIDEOMODE_MASK                (0x3 << 3)
-+#define XDSI_PCR_VIDEOMODE_SHIFT       3
-+#define XDSI_PCR_BLLPTYPE(x)           ((x) << 5)
-+#define XDSI_PCR_BLLPMODE(x)           ((x) << 6)
-+#define XDSI_PCR_EOTPENABLE(x)         ((x) << 13)
-+#define XDSI_GIER                      0x20
-+#define XDSI_ISR                       0x24
-+#define XDSI_IER                       0x28
-+#define XDSI_STR                       0x2C
-+#define XDSI_STR_RDY_SHPKT             BIT(6)
-+#define XDSI_STR_RDY_LNGPKT            BIT(7)
-+#define XDSI_STR_DFIFO_FULL            BIT(8)
-+#define XDSI_STR_DFIFO_EMPTY           BIT(9)
-+#define XDSI_STR_WAITFR_DATA           BIT(10)
-+#define XDSI_STR_CMD_EXE_PGS           BIT(11)
-+#define XDSI_STR_CCMD_PROC             BIT(12)
-+#define XDSI_STR_LPKT_MASK             (0x5 << 7)
-+#define XDSI_CMD                       0x30
-+#define XDSI_CMD_QUEUE_PACKET(x)       ((x) & GENMASK(23, 0))
-+#define XDSI_DFR                       0x34
-+#define XDSI_TIME1                     0x50
-+#define XDSI_TIME1_BLLP_BURST(x)       ((x) & GENMASK(15, 0))
-+#define XDSI_TIME1_HSA(x)              (((x) & GENMASK(15, 0)) << 16)
-+#define XDSI_TIME2                     0x54
-+#define XDSI_TIME2_VACT(x)             ((x) & GENMASK(15, 0))
-+#define XDSI_TIME2_HACT(x)             (((x) & GENMASK(15, 0)) << 16)
-+#define XDSI_HACT_MULTIPLIER           GENMASK(1, 0)
-+#define XDSI_TIME3                     0x58
-+#define XDSI_TIME3_HFP(x)              ((x) & GENMASK(15, 0))
-+#define XDSI_TIME3_HBP(x)              (((x) & GENMASK(15, 0)) << 16)
-+#define XDSI_TIME4                     0x5c
-+#define XDSI_TIME4_VFP(x)              ((x) & GENMASK(7, 0))
-+#define XDSI_TIME4_VBP(x)              (((x) & GENMASK(7, 0)) << 8)
-+#define XDSI_TIME4_VSA(x)              (((x) & GENMASK(7, 0)) << 16)
-+#define XDSI_LTIME                     0x60
-+#define XDSI_BLLP_TIME                 0x64
-+/*
-+ * XDSI_NUM_DATA_T represents number of data types in the
-+ * enum mipi_dsi_pixel_format in the MIPI DSI part of DRM framework.
-+ */
-+#define XDSI_NUM_DATA_T                        4
-+
-+#define XDSI_DPHY_CLK_MIN      197000000000UL
-+#define XDSI_DPHY_CLK_MAX      203000000000UL
-+#define XDSI_DPHY_CLK_REQ      200000000000UL
-+
-+/* command timeout in usec */
-+#define XDSI_CMD_TIMEOUT_VAL   (3000)
-+
-+/**
-+ * struct xlnx_dsi - Xilinx DSI-TX core
-+ * @encoder: DRM encoder structure
-+ * @dsi_host: DSI host device
-+ * @connector: DRM connector structure
-+ * @panel_node: MIPI DSI device panel node
-+ * @panel:  DRM panel structure
-+ * @dev: device structure
-+ * @iomem: Base address of DSI subsystem
-+ * @lanes: number of active data lanes supported by DSI controller
-+ * @cmdmode: command mode support
-+ * @mode_flags: DSI operation mode related flags
-+ * @format: pixel format for video mode of DSI controller
-+ * @mul_factor: multiplication factor for HACT timing parameter
-+ * @video_aclk: Video clock
-+ * @dphy_clk_200M: 200MHz DPHY clock and AXI Lite clock
-+ */
-+struct xlnx_dsi {
-+       struct drm_encoder encoder;
-+       struct mipi_dsi_host dsi_host;
-+       struct drm_connector connector;
-+       struct device_node *panel_node;
-+       struct drm_panel *panel;
-+       struct device *dev;
-+       void __iomem *iomem;
-+       u32 lanes;
-+       bool cmdmode;
-+       u32 mode_flags;
-+       enum mipi_dsi_pixel_format format;
-+       u32 mul_factor;
-+       struct clk *video_aclk;
-+       struct clk *dphy_clk_200M;
-+};
-+
-+#define host_to_dsi(host) container_of(host, struct xlnx_dsi, dsi_host)
-+#define connector_to_dsi(c) container_of(c, struct xlnx_dsi, connector)
-+#define encoder_to_dsi(e) container_of(e, struct xlnx_dsi, encoder)
-+
-+static inline void xlnx_dsi_writel(void __iomem *base, int offset, u32 val=
-)
-+{
-+       writel(val, base + offset);
-+}
-+
-+static inline u32 xlnx_dsi_readl(void __iomem *base, int offset)
-+{
-+       return readl(base + offset);
-+}
-+
-+/**
-+ * xlnx_dsi_host_transfer - transfer command to panel
-+ * @host: mipi dsi host structure
-+ * @msg: mipi dsi msg with type, length and data
-+ *
-+ * This function is valid only in command mode.
-+ * It checks the command fifo empty status and writes into
-+ * data or cmd register and waits for the completion status.
-+ *
-+ * Return: number of bytes, on success and error number on failure
-+ */
-+static ssize_t xlnx_dsi_host_transfer(struct mipi_dsi_host *host,
-+                                     const struct mipi_dsi_msg *msg)
-+{
-+       struct xlnx_dsi *dsi =3D host_to_dsi(host);
-+       u32 data, cmd0, val, offset;
-+       int status;
-+       const char *tx_buf =3D msg->tx_buf;
-+
-+       switch (msg->type) {
-+       case MIPI_DSI_DCS_LONG_WRITE:
-+       case MIPI_DSI_DCS_GENERIC_LONG_WRITE:
-+               status =3D readl_poll_timeout(dsi->iomem + XDSI_STR, val,
-+                                           (val & XDSI_STR_LPKT_MASK =3D=
-=3D
-+                                            XDSI_STR_LPKT_MASK), 1,
-+                                           XDSI_CMD_TIMEOUT_VAL);
-+               if (status) {
-+                       dev_err(dsi->dev, "long cmd fifo not empty!\n");
-+                       return -EBUSY;
-+               }
-+               cmd0 =3D msg->type | (msg->tx_len << 8);
-+               xlnx_dsi_writel(dsi->iomem, XDSI_CMD, cmd0);
-+
-+               for (offset =3D 0; offset <=3D msg->tx_len; offset +=3D 4, =
-data =3D 0) {
-+                       data =3D tx_buf[0 + offset] | tx_buf[1 + offset] <<=
- 8 |
-+                               tx_buf[2 + offset] << 16 |
-+                               tx_buf[3 + offset] << 24;
-+                       xlnx_dsi_writel(dsi->iomem, XDSI_DFR, data);
-+               }
-+               break;
-+       case MIPI_DSI_DCS_SHORT_WRITE_PARAM:
-+               status =3D readl_poll_timeout(dsi->iomem + XDSI_STR, val,
-+                                           (val & XDSI_STR_RDY_SHPKT =3D=
-=3D
-+                                            XDSI_STR_RDY_SHPKT), 1,
-+                                           XDSI_CMD_TIMEOUT_VAL);
-+               if (status) {
-+                       dev_err(dsi->dev, "short cmd fifo not empty\n");
-+                       return -EBUSY;
-+               }
-+               data =3D MIPI_DSI_DCS_SHORT_WRITE_PARAM |
-+                       (tx_buf[0] << 8) | (tx_buf[1] << 16);
-+               xlnx_dsi_writel(dsi->iomem, XDSI_CMD, data);
-+               break;
-+       case MIPI_DSI_DCS_SHORT_WRITE:
-+               status =3D readl_poll_timeout(dsi->iomem + XDSI_STR, val,
-+                                           (val & XDSI_STR_RDY_SHPKT =3D=
-=3D
-+                                            XDSI_STR_RDY_SHPKT), 1,
-+                                           XDSI_CMD_TIMEOUT_VAL);
-+               if (status) {
-+                       dev_err(dsi->dev, "short cmd fifo not empty\n");
-+                       return -EBUSY;
-+               }
-+               data =3D MIPI_DSI_DCS_SHORT_WRITE | (tx_buf[0] << 8);
-+               xlnx_dsi_writel(dsi->iomem, XDSI_CMD, data);
-+               break;
-+       case default:
-+               dev_err(dsi->dev, "Unsupported command type\n");
-+               return -EINVAL;
-+       }
-+
-+       status =3D readl_poll_timeout(dsi->iomem + XDSI_STR, val,
-+                                   !(val & XDSI_STR_CMD_EXE_PGS), 1,
-+                                   XDSI_CMD_TIMEOUT_VAL);
-+       if (status) {
-+               dev_err(dsi->dev, "cmd timeout\n");
-+               return status;
-+       }
-+
-+       return msg->tx_len;
-+}
-+
-+static int xlnx_dsi_host_attach(struct mipi_dsi_host *host,
-+                               struct mipi_dsi_device *device)
-+{
-+       u32 panel_lanes =3D device->lanes;
-+       struct xlnx_dsi *dsi =3D host_to_dsi(host);
-+
-+       dsi->mode_flags =3D device->mode_flags;
-+       dsi->panel_node =3D device->dev.of_node;
-+
-+       if (panel_lanes !=3D dsi->lanes) {
-+               dev_err(dsi->dev, "Mismatch of lanes. panel =3D %d, DSI =3D=
- %d\n",
-+                       panel_lanes, dsi->lanes);
-+               return -EINVAL;
-+       }
-+
-+       if (device->format !=3D dsi->format) {
-+               dev_err(dsi->dev, "Mismatch of format. panel =3D %d, DSI =
-=3D %d\n",
-+                       device->format, dsi->format);
-+               return -EINVAL;
-+       }
-+
-+       if (dsi->connector.dev)
-+               drm_helper_hpd_irq_event(dsi->connector.dev);
-+
-+       dsi->panel =3D of_drm_find_panel(dsi->panel_node);
-+       if (IS_ERR(dsi->panel)) {
-+               dsi->panel =3D NULL;
-+       } else {
-+               drm_panel_attach(dsi->panel, &dsi->connector);
-+               dsi->connector.status =3D connector_status_connected;
-+       }
-+
-+       return 0;
-+}
-+
-+static int xlnx_dsi_host_detach(struct mipi_dsi_host *host,
-+                               struct mipi_dsi_device *device)
-+{
-+       struct xlnx_dsi *dsi =3D host_to_dsi(host);
-+
-+       if (dsi->panel) {
-+               drm_panel_detach(dsi->panel);
-+               dsi->panel =3D NULL;
-+       }
-+
-+       if (dsi->connector.dev)
-+               drm_helper_hpd_irq_event(dsi->connector.dev);
-+
-+       return 0;
-+}
-+
-+static const struct mipi_dsi_host_ops xlnx_dsi_ops =3D {
-+       .attach =3D xlnx_dsi_host_attach,
-+       .detach =3D xlnx_dsi_host_detach,
-+       .transfer =3D xlnx_dsi_host_transfer,
-+};
-+
-+static int xlnx_dsi_connector_dpms(struct drm_connector *connector,
-+                                  int mode)
-+{
-+       struct xlnx_dsi *dsi =3D connector_to_dsi(connector);
-+       int ret;
-+
-+       dev_dbg(dsi->dev, "connector dpms state: %d\n", mode);
-+
-+       switch (mode) {
-+       case DRM_MODE_DPMS_ON:
-+               ret =3D drm_panel_enable(dsi->panel);
-+               if (ret < 0) {
-+                       drm_panel_unprepare(dsi->panel);
-+                       dev_err(dsi->dev, "DRM panel not enabled\n");
-+                       return ret;
-+               }
-+               break;
-+       default:
-+               drm_panel_disable(dsi->panel);
-+               drm_panel_unprepare(dsi->panel);
-+               break;
-+       }
-+
-+       return drm_helper_connector_dpms(connector, mode);
-+}
-+
-+static enum drm_connector_status
-+xlnx_dsi_detect(struct drm_connector *connector, bool force)
-+{
-+       struct xlnx_dsi *dsi =3D connector_to_dsi(connector);
-+
-+       if (dsi->panel) {
-+               if (dsi->cmdmode)
-+                       xlnx_dsi_writel(dsi->iomem, XDSI_CCR,
-+                                       XDSI_CCR_CMDMODE | XDSI_CCR_COREENB=
-);
-+               ret =3D drm_panel_prepare(dsi->panel);
-+               if (ret < 0) {
-+                       dev_err(dsi->dev, "DRM panel not found\n");
-+                       return ret;
-+               }
-+               xlnx_dsi_writel(dsi->iomem, XDSI_CCR, 0);
-+               return connector_status_connected;
-+       } else if (!dsi->panel_node) {
-+               xlnx_dsi_connector_dpms(connector, DRM_MODE_DPMS_OFF);
-+               drm_panel_detach(dsi->panel);
-+               dsi->panel =3D NULL;
-+       }
-+
-+       return connector_status_disconnected;
-+}
-+
-+static void xlnx_dsi_connector_destroy(struct drm_connector *connector)
-+{
-+       drm_connector_unregister(connector);
-+       drm_connector_cleanup(connector);
-+       connector->dev =3D NULL;
-+}
-+
-+static const struct drm_connector_funcs xlnx_dsi_connector_funcs =3D {
-+       .detect =3D xlnx_dsi_detect,
-+       .fill_modes =3D drm_helper_probe_single_connector_modes,
-+       .destroy =3D xlnx_dsi_connector_destroy,
-+       .reset =3D drm_atomic_helper_connector_reset,
-+       .atomic_duplicate_state =3D drm_atomic_helper_connector_duplicate_s=
-tate,
-+       .atomic_destroy_state =3D drm_atomic_helper_connector_destroy_state=
-,
-+       .dpms =3D xlnx_dsi_connector_dpms,
-+};
-+
-+static int xlnx_dsi_get_modes(struct drm_connector *connector)
-+{
-+       struct xlnx_dsi *dsi =3D connector_to_dsi(connector);
-+
-+       if (dsi->panel)
-+               return drm_panel_get_modes(dsi->panel, connector);
-+
-+       return 0;
-+}
-+
-+static struct drm_encoder *
-+xlnx_dsi_best_encoder(struct drm_connector *connector)
-+{
-+       return &(connector_to_dsi(connector)->encoder);
-+}
-+
-+static const struct drm_connector_helper_funcs
-+xlnx_dsi_connector_helper_funcs =3D {
-+       .get_modes =3D xlnx_dsi_get_modes,
-+       .best_encoder =3D xlnx_dsi_best_encoder,
-+};
-+
-+static int xlnx_dsi_create_connector(struct drm_encoder *encoder)
-+{
-+       struct xlnx_dsi *dsi =3D encoder_to_dsi(encoder);
-+       struct drm_connector *connector =3D &dsi->connector;
-+       struct drm_device *drm =3D encoder->dev;
-+       int ret;
-+
-+       connector->polled =3D DRM_CONNECTOR_POLL_HPD;
-+
-+       ret =3D drm_connector_init(encoder->dev, connector,
-+                                &xlnx_dsi_connector_funcs,
-+                                DRM_MODE_CONNECTOR_DSI);
-+       if (ret) {
-+               dev_err(dsi->dev, "Failed to create the DRM connector\n");
-+               return ret;
-+       }
-+
-+       drm_connector_helper_add(connector, &xlnx_dsi_connector_helper_func=
-s);
-+       drm_connector_register(connector);
-+       drm_connector_attach_encoder(connector, encoder);
-+
-+       return 0;
-+}
-+
-+/**
-+ * xlnx_dsi_atomic_mode_set -  derive the DSI timing parameters
-+ *
-+ * @encoder: pointer to Xilinx DRM encoder
-+ * @crtc_state: Pointer to drm core crtc state
-+ * @connector_state: DSI connector drm state
-+ *
-+ * This function derives the DSI IP timing parameters from the timing
-+ * values given in the attached panel driver.
-+ */
-+static void
-+xlnx_dsi_atomic_mode_set(struct drm_encoder *encoder,
-+                        struct drm_crtc_state *crtc_state,
-+                                struct drm_connector_state *connector_stat=
-e)
-+{
-+       struct xlnx_dsi *dsi =3D encoder_to_dsi(encoder);
-+       struct drm_display_mode *m =3D &crtc_state->adjusted_mode;
-+       u32 reg, video_mode;
-+
-+       reg =3D xlnx_dsi_readl(dsi->iomem, XDSI_PCR);
-+       video_mode =3D (reg & XDSI_PCR_VIDEOMODE_MASK) >>
-+                     XDSI_PCR_VIDEOMODE_SHIFT;
-+
-+       /* configure the HSA value only if non_burst_sync_pluse video mode =
-*/
-+       if (!video_mode &&
-+           (dsi->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE)) {
-+               reg =3D XDSI_TIME1_HSA(m->hsync_end - m->hsync_start);
-+               xlnx_dsi_writel(dsi->iomem, XDSI_TIME1, reg);
-+       }
-+
-+       reg =3D XDSI_TIME4_VFP(m->vsync_start - m->vdisplay) |
-+               XDSI_TIME4_VBP(m->vtotal - m->vsync_end) |
-+               XDSI_TIME4_VSA(m->vsync_end - m->vsync_start);
-+       xlnx_dsi_writel(dsi->iomem, XDSI_TIME4, reg);
-+
-+       reg =3D XDSI_TIME3_HFP(m->hsync_start - m->hdisplay) |
-+               XDSI_TIME3_HBP(m->htotal - m->hsync_end);
-+       xlnx_dsi_writel(dsi->iomem, XDSI_TIME3, reg);
-+       dev_dbg(dsi->dev, "mul factor for parsed datatype is =3D %d\n",
-+               dsi->mul_factor / 100);
-+       /*
-+        * The HACT parameter received from panel timing values should be
-+        * divisible by 4. The reason for this is, the word count given as
-+        * input to DSI controller is HACT * mul_factor. The mul_factor is
-+        * 3, 2.25, 2.25, 2 respectively for RGB888, RGB666_L, RGB666_P and
-+        * RGB565.
-+        * e.g. for RGB666_L color format and 1080p, the word count is
-+        * 1920*2.25 =3D 4320 which is divisible by 4 and it is a valid inp=
-ut
-+        * to DSI controller. Based on this 2.25 mul factor, we come up wit=
-h
-+        * the division factor of (XDSI_HACT_MULTIPLIER) as 4 for checking
-+        */
-+       if ((m->hdisplay & XDSI_HACT_MULTIPLIER) !=3D 0)
-+               dev_warn(dsi->dev, "hactive received from panel is not alig=
-ned\n");
-+
-+       reg =3D XDSI_TIME2_HACT(m->hdisplay * dsi->mul_factor / 100) |
-+               XDSI_TIME2_VACT(m->vdisplay);
-+       xlnx_dsi_writel(dsi->iomem, XDSI_TIME2, reg);
-+
-+       dev_dbg(dsi->dev, "LCD size =3D %dx%d\n", m->hdisplay, m->hdisplay)=
-;
-+}
-+
-+static void xlnx_dsi_disable(struct drm_encoder *encoder)
-+{
-+       struct xlnx_dsi *dsi =3D encoder_to_dsi(encoder);
-+       u32 reg =3D xlnx_dsi_readl(dsi->iomem, XDSI_CCR);
-+
-+       reg &=3D ~XDSI_CCR_COREENB;
-+       xlnx_dsi_writel(dsi->iomem, XDSI_CCR, reg);
-+       dev_dbg(dsi->dev, "DSI Tx is disabled. regs are at default values\n=
-");
-+}
-+
-+static void xlnx_dsi_enable(struct drm_encoder *encoder)
-+{
-+       struct xlnx_dsi *dsi =3D encoder_to_dsi(encoder);
-+       u32 reg =3D xlnx_dsi_readl(dsi->iomem, XDSI_CCR);
-+
-+       reg |=3D XDSI_CCR_COREENB;
-+       xlnx_dsi_writel(dsi->iomem, XDSI_CCR, reg);
-+       dev_dbg(dsi->dev, "MIPI DSI Tx controller is enabled\n");
-+}
-+
-+static const struct drm_encoder_helper_funcs
-+xlnx_dsi_encoder_helper_funcs =3D {
-+       .atomic_mode_set =3D xlnx_dsi_atomic_mode_set,
-+       .enable =3D xlnx_dsi_enable,
-+       .disable =3D xlnx_dsi_disable,
-+};
-+
-+static const struct drm_encoder_funcs xlnx_dsi_encoder_funcs =3D {
-+       .destroy =3D drm_encoder_cleanup,
-+};
-+
-+static int xlnx_dsi_parse_dt(struct xlnx_dsi *dsi)
-+{
-+       struct device *dev =3D dsi->dev;
-+       struct device_node *node =3D dev->of_node;
-+       int ret;
-+       u32 datatype;
-+       static const int xdsi_mul_fact[XDSI_NUM_DATA_T] =3D {300, 225, 225,=
- 200};
-+
-+       dsi->dphy_clk_200M =3D devm_clk_get(dev, "dphy_clk_200M");
-+       if (IS_ERR(dsi->dphy_clk_200M)) {
-+               ret =3D PTR_ERR(dsi->dphy_clk_200M);
-+               dev_err(dev, "failed to get dphy_clk_200M %d\n", ret);
-+               return ret;
-+       }
-+
-+       dsi->video_aclk =3D devm_clk_get(dev, "s_axis_aclk");
-+       if (IS_ERR(dsi->video_aclk)) {
-+               ret =3D PTR_ERR(dsi->video_aclk);
-+               dev_err(dev, "failed to get video_clk %d\n", ret);
-+               return ret;
-+       }
-+
-+       ret =3D of_property_read_u32(node, "xlnx,dsi-num-lanes", &dsi->lane=
-s);
-+       if (ret < 0) {
-+               dev_err(dsi->dev, "missing xlnx,dsi-num-lanes property\n");
-+               return ret;
-+       }
-+       if (dsi->lanes > 4 || dsi->lanes < 1) {
-+               dev_err(dsi->dev, "%d lanes : invalid lanes\n", dsi->lanes)=
-;
-+               return -EINVAL;
-+       }
-+
-+       ret =3D of_property_read_u32(node, "xlnx,dsi-data-type", &datatype)=
-;
-+       if (ret < 0) {
-+               dev_err(dsi->dev, "missing xlnx,dsi-data-type property\n");
-+               return ret;
-+       }
-+       dsi->format =3D datatype;
-+       if (datatype > MIPI_DSI_FMT_RGB565) {
-+               dev_err(dsi->dev, "Invalid xlnx,dsi-data-type string\n");
-+               return -EINVAL;
-+       }
-+
-+       /*
-+        * multiplication factor used for HACT, based on data type.
-+        *
-+        * e.g. for RGB666_L datatype and 1920x1080 resolution,
-+        * the Hact (WC) would be as follows -
-+        * 1920 pixels * 18 bits per pixel / 8 bits per byte
-+        * =3D 1920 pixels * 2.25 bytes per pixel =3D 4320 bytes.
-+        *
-+        * Data Type - Multiplication factor
-+        * RGB888    - 3
-+        * RGB666_L  - 2.25
-+-       * RGB666_P  - 2.25
-+        * RGB565    - 2
-+        *
-+        * Since the multiplication factor maybe a floating number,
-+        * a 100x multiplication factor is used.
-+        */
-+       dsi->mul_factor =3D xdsi_mul_fact[datatype];
-+
-+       dsi->cmdmode =3D of_property_read_bool(node, "xlnx,dsi-cmd-mode");
-+
-+       dev_dbg(dsi->dev, "DSI controller num lanes =3D %d", dsi->lanes);
-+       dev_dbg(dsi->dev, "DSI controller datatype =3D %d\n", datatype);
-+       dev_dbg(dsi->dev, "DSI controller cmd mode =3D %d\n", dsi->cmdmode)=
-;
-+
-+       return 0;
-+}
-+
-+static int xlnx_dsi_bind(struct device *dev, struct device *master,
-+                        void *data)
-+{
-+       struct xlnx_dsi *dsi =3D dev_get_drvdata(dev);
-+       struct drm_encoder *encoder =3D &dsi->encoder;
-+       struct drm_device *drm_dev =3D data;
-+       int ret;
-+
-+       drm_encoder_init(drm_dev, encoder, &xlnx_dsi_encoder_funcs,
-+                        DRM_MODE_ENCODER_DSI, NULL);
-+       drm_encoder_helper_add(encoder, &xlnx_dsi_encoder_helper_funcs);
-+
-+       encoder->possible_crtcs =3D 1;
-+
-+       ret =3D xlnx_dsi_create_connector(encoder);
-+       if (ret) {
-+               dev_err(dsi->dev, "fail creating connector, ret =3D %d\n", =
-ret);
-+               drm_encoder_cleanup(encoder);
-+               return ret;
-+       }
-+
-+       ret =3D mipi_dsi_host_register(&dsi->dsi_host);
-+       if (ret) {
-+               dev_err(dsi->dev, "failed to register DSI host: %d\n", ret)=
-;
-+               xlnx_dsi_connector_destroy(&dsi->connector);
-+               drm_encoder_cleanup(encoder);
-+               return ret;
-+       }
-+
-+       return 0;
-+}
-+
-+static void xlnx_dsi_unbind(struct device *dev, struct device *master,
-+                           void *data)
-+{
-+       struct xlnx_dsi *dsi =3D dev_get_drvdata(dev);
-+
-+       xlnx_dsi_disable(&dsi->encoder);
-+       mipi_dsi_host_unregister(&dsi->dsi_host);
-+}
-+
-+static const struct component_ops xlnx_dsi_component_ops =3D {
-+       .bind   =3D xlnx_dsi_bind,
-+       .unbind =3D xlnx_dsi_unbind,
-+};
-+
-+static int xlnx_dsi_probe(struct platform_device *pdev)
-+{
-+       struct device *dev =3D &pdev->dev;
-+       struct resource *res;
-+       struct xlnx_dsi *dsi;
-+       int ret;
-+       unsigned long rate;
-+
-+       dsi =3D devm_kzalloc(dev, sizeof(*dsi), GFP_KERNEL);
-+       if (!dsi)
-+               return -ENOMEM;
-+
-+       dsi->dsi_host.ops =3D &xlnx_dsi_ops;
-+       dsi->dsi_host.dev =3D dev;
-+       dsi->dev =3D dev;
-+
-+       ret =3D xlnx_dsi_parse_dt(dsi);
-+       if (ret)
-+               return ret;
-+
-+       res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+       dsi->iomem =3D devm_ioremap_resource(dev, res);
-+       if (IS_ERR(dsi->iomem)) {
-+               dev_err(dev, "failed to remap io region\n");
-+               return PTR_ERR(dsi->iomem);
-+       }
-+       platform_set_drvdata(pdev, dsi);
-+
-+       ret =3D clk_set_rate(dsi->dphy_clk_200M, XDSI_DPHY_CLK_REQ);
-+       if (ret) {
-+               dev_err(dev, "failed to set dphy clk rate %d\n", ret);
-+               return ret;
-+       }
-+
-+       ret =3D clk_prepare_enable(dsi->dphy_clk_200M);
-+       if (ret) {
-+               dev_err(dev, "failed to enable dphy clk %d\n", ret);
-+               return ret;
-+       }
-+
-+       rate =3D clk_get_rate(dsi->dphy_clk_200M);
-+       /* Based on clock source, little deviation is acceptable */
-+       if (rate < XDSI_DPHY_CLK_MIN && rate > XDSI_DPHY_CLK_MAX) {
-+               dev_err(dev, "Error DPHY clock =3D %lu\n", rate);
-+               ret =3D -EINVAL;
-+               goto err_disable_dphy_clk;
-+       }
-+
-+       ret =3D clk_prepare_enable(dsi->video_aclk);
-+       if (ret) {
-+               dev_err(dev, "failed to enable video clk %d\n", ret);
-+               goto err_disable_dphy_clk;
-+       }
-+
-+       ret =3D component_add(dev, &xlnx_dsi_component_ops);
-+       if (ret)
-+               goto err_disable_video_clk;
-+
-+       return 0;
-+
-+err_disable_video_clk:
-+       clk_disable_unprepare(dsi->video_aclk);
-+err_disable_dphy_clk:
-+       clk_disable_unprepare(dsi->dphy_clk_200M);
-+
-+       return ret;
-+}
-+
-+static int xlnx_dsi_remove(struct platform_device *pdev)
-+{
-+       struct xlnx_dsi *dsi =3D platform_get_drvdata(pdev);
-+
-+       component_del(&pdev->dev, &xlnx_dsi_component_ops);
-+       clk_disable_unprepare(dsi->video_aclk);
-+       clk_disable_unprepare(dsi->dphy_clk_200M);
-+
-+       return 0;
-+}
-+
-+static const struct of_device_id xlnx_dsi_of_match[] =3D {
-+       { .compatible =3D "xlnx-dsi-1.0", },
-+       { /* end of table */ },
-+};
-+MODULE_DEVICE_TABLE(of, xlnx_dsi_of_match);
-+
-+static struct platform_driver dsi_driver =3D {
-+       .probe =3D xlnx_dsi_probe,
-+       .remove =3D xlnx_dsi_remove,
-+       .driver =3D {
-+               .name =3D "xlnx-dsi",
-+               .of_match_table =3D xlnx_dsi_of_match,
-+       },
-+};
-+
-+module_platform_driver(dsi_driver);
-+
-+MODULE_AUTHOR("Xilinx, Inc.");
-+MODULE_DESCRIPTION("Xilinx Programmable MIPI DSI TX Driver");
-+MODULE_LICENSE("GPL v2");
---
-1.8.3.1
+This was a known change with the buffered async read change, but we
+didn't have IOCB_NOIO until late in 5.8. Now that bases are synced,
+make the change to make RWF_NOWAIT behave like past kernels.
 
-This email and any attachments are intended for the sole use of the named r=
-ecipient(s) and contain(s) confidential information that may be proprietary=
-, privileged or copyrighted under applicable law. If you are not the intend=
-ed recipient, do not read, copy, or forward this email message or any attac=
-hments. Delete this email message and any attachments immediately.
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index bd7ec3eaeed0..f1cca4bfdd7b 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -3293,7 +3293,7 @@ static inline int kiocb_set_rw_flags(struct kiocb *ki, rwf_t flags)
+ 	if (flags & RWF_NOWAIT) {
+ 		if (!(ki->ki_filp->f_mode & FMODE_NOWAIT))
+ 			return -EOPNOTSUPP;
+-		kiocb_flags |= IOCB_NOWAIT;
++		kiocb_flags |= IOCB_NOWAIT | IOCB_NOIO;
+ 	}
+ 	if (flags & RWF_HIPRI)
+ 		kiocb_flags |= IOCB_HIPRI;
+
+-- 
+Jens Axboe
+
