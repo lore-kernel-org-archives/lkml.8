@@ -4,31 +4,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC57C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:02:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26695C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E67620716
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:02:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0D4C20716
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:02:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728572AbgHKKCU (ORCPT
+        id S1728591AbgHKKCY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 06:02:20 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:42182 "EHLO inva021.nxp.com"
+        Tue, 11 Aug 2020 06:02:24 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:45920 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728541AbgHKKCS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 06:02:18 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id DCC70201EED;
-        Tue, 11 Aug 2020 12:02:15 +0200 (CEST)
+        id S1728568AbgHKKCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 06:02:21 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 68A0F1A1982;
+        Tue, 11 Aug 2020 12:02:19 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 6EECD201EFC;
-        Tue, 11 Aug 2020 12:02:08 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id F12ED1A196D;
+        Tue, 11 Aug 2020 12:02:11 +0200 (CEST)
 Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 8601C4031C;
-        Tue, 11 Aug 2020 12:01:59 +0200 (CEST)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id F05E3402EB;
+        Tue, 11 Aug 2020 12:02:02 +0200 (CEST)
 From:   Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
 To:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
@@ -40,9 +40,9 @@ To:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
 Cc:     mingkai.hu@nxp.com, minghuan.Lian@nxp.com,
         Xiaowei Bao <xiaowei.bao@nxp.com>,
         Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Subject: [PATCHv7 09/12] PCI: layerscape: Add EP mode support for ls1088a and ls2088a
-Date:   Tue, 11 Aug 2020 17:54:38 +0800
-Message-Id: <20200811095441.7636-10-Zhiqiang.Hou@nxp.com>
+Subject: [PATCHv7 11/12] misc: pci_endpoint_test: Add LS1088a in pci_device_id table
+Date:   Tue, 11 Aug 2020 17:54:40 +0800
+Message-Id: <20200811095441.7636-12-Zhiqiang.Hou@nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200811095441.7636-1-Zhiqiang.Hou@nxp.com>
 References: <20200811095441.7636-1-Zhiqiang.Hou@nxp.com>
@@ -54,145 +54,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Xiaowei Bao <xiaowei.bao@nxp.com>
 
-Add PCIe EP mode support for ls1088a and ls2088a, there are some
-difference between LS1 and LS2 platform, so refactor the code of
-the EP driver.
+Add LS1088a in pci_device_id table so that pci-epf-test can be used
+for testing PCIe EP in LS1088a.
 
 Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
 Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 ---
 V7:
  - Rebase the patch without functionality change.
 
- .../pci/controller/dwc/pci-layerscape-ep.c    | 72 ++++++++++++++-----
- 1 file changed, 53 insertions(+), 19 deletions(-)
+ drivers/misc/pci_endpoint_test.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-index bfab1c694f00..84206f265e54 100644
---- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
-+++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-@@ -20,27 +20,29 @@
+diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+index e060796f9caa..4a17f08de60f 100644
+--- a/drivers/misc/pci_endpoint_test.c
++++ b/drivers/misc/pci_endpoint_test.c
+@@ -70,6 +70,7 @@
  
- #define PCIE_DBI2_OFFSET		0x1000	/* DBI2 base address*/
+ #define PCI_DEVICE_ID_TI_J721E			0xb00d
+ #define PCI_DEVICE_ID_TI_AM654			0xb00c
++#define PCI_DEVICE_ID_LS1088A			0x80c0
  
--struct ls_pcie_ep {
--	struct dw_pcie		*pci;
--	struct pci_epc_features	*ls_epc;
-+#define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
-+
-+struct ls_pcie_ep_drvdata {
-+	u32				func_offset;
-+	const struct dw_pcie_ep_ops	*ops;
-+	const struct dw_pcie_ops	*dw_pcie_ops;
- };
- 
--#define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
-+struct ls_pcie_ep {
-+	struct dw_pcie			*pci;
-+	struct pci_epc_features		*ls_epc;
-+	const struct ls_pcie_ep_drvdata *drvdata;
-+};
- 
- static int ls_pcie_establish_link(struct dw_pcie *pci)
- {
- 	return 0;
- }
- 
--static const struct dw_pcie_ops ls_pcie_ep_ops = {
-+static const struct dw_pcie_ops dw_ls_pcie_ep_ops = {
- 	.start_link = ls_pcie_establish_link,
- };
- 
--static const struct of_device_id ls_pcie_ep_of_match[] = {
--	{ .compatible = "fsl,ls-pcie-ep",},
--	{ },
--};
--
- static const struct pci_epc_features*
- ls_pcie_ep_get_features(struct dw_pcie_ep *ep)
- {
-@@ -87,10 +89,39 @@ static int ls_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
- 	}
- }
- 
--static const struct dw_pcie_ep_ops pcie_ep_ops = {
-+static unsigned int ls_pcie_ep_func_conf_select(struct dw_pcie_ep *ep,
-+						u8 func_no)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-+	struct ls_pcie_ep *pcie = to_ls_pcie_ep(pci);
-+
-+	WARN_ON(func_no && !pcie->drvdata->func_offset);
-+	return pcie->drvdata->func_offset * func_no;
-+}
-+
-+static const struct dw_pcie_ep_ops ls_pcie_ep_ops = {
- 	.ep_init = ls_pcie_ep_init,
- 	.raise_irq = ls_pcie_ep_raise_irq,
- 	.get_features = ls_pcie_ep_get_features,
-+	.func_conf_select = ls_pcie_ep_func_conf_select,
-+};
-+
-+static const struct ls_pcie_ep_drvdata ls1_ep_drvdata = {
-+	.ops = &ls_pcie_ep_ops,
-+	.dw_pcie_ops = &dw_ls_pcie_ep_ops,
-+};
-+
-+static const struct ls_pcie_ep_drvdata ls2_ep_drvdata = {
-+	.func_offset = 0x20000,
-+	.ops = &ls_pcie_ep_ops,
-+	.dw_pcie_ops = &dw_ls_pcie_ep_ops,
-+};
-+
-+static const struct of_device_id ls_pcie_ep_of_match[] = {
-+	{ .compatible = "fsl,ls1046a-pcie-ep", .data = &ls1_ep_drvdata },
-+	{ .compatible = "fsl,ls1088a-pcie-ep", .data = &ls2_ep_drvdata },
-+	{ .compatible = "fsl,ls2088a-pcie-ep", .data = &ls2_ep_drvdata },
-+	{ },
- };
- 
- static int __init ls_add_pcie_ep(struct ls_pcie_ep *pcie,
-@@ -103,7 +134,7 @@ static int __init ls_add_pcie_ep(struct ls_pcie_ep *pcie,
- 	int ret;
- 
- 	ep = &pci->ep;
--	ep->ops = &pcie_ep_ops;
-+	ep->ops = pcie->drvdata->ops;
- 
- 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "addr_space");
- 	if (!res)
-@@ -142,20 +173,23 @@ static int __init ls_pcie_ep_probe(struct platform_device *pdev)
- 	if (!ls_epc)
- 		return -ENOMEM;
- 
--	dbi_base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "regs");
--	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
--	if (IS_ERR(pci->dbi_base))
--		return PTR_ERR(pci->dbi_base);
-+	pcie->drvdata = of_device_get_match_data(dev);
- 
--	pci->dbi_base2 = pci->dbi_base + PCIE_DBI2_OFFSET;
- 	pci->dev = dev;
--	pci->ops = &ls_pcie_ep_ops;
--	pcie->pci = pci;
-+	pci->ops = pcie->drvdata->dw_pcie_ops;
- 
- 	ls_epc->bar_fixed_64bit = (1 << BAR_2) | (1 << BAR_4),
- 
-+	pcie->pci = pci;
- 	pcie->ls_epc = ls_epc;
- 
-+	dbi_base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "regs");
-+	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
-+	if (IS_ERR(pci->dbi_base))
-+		return PTR_ERR(pci->dbi_base);
-+
-+	pci->dbi_base2 = pci->dbi_base + PCIE_DBI2_OFFSET;
-+
- 	platform_set_drvdata(pdev, pcie);
- 
- 	ret = ls_add_pcie_ep(pcie, pdev);
+ #define is_am654_pci_dev(pdev)		\
+ 		((pdev)->device == PCI_DEVICE_ID_TI_AM654)
+@@ -946,6 +947,7 @@ static const struct pci_device_id pci_endpoint_test_tbl[] = {
+ 	  .driver_data = (kernel_ulong_t)&default_data,
+ 	},
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_FREESCALE, 0x81c0) },
++	{ PCI_DEVICE(PCI_VENDOR_ID_FREESCALE, PCI_DEVICE_ID_LS1088A) },
+ 	{ PCI_DEVICE_DATA(SYNOPSYS, EDDA, NULL) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_AM654),
+ 	  .driver_data = (kernel_ulong_t)&am654_data
 -- 
 2.17.1
 
