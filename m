@@ -2,106 +2,155 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39074C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 18:34:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9E37C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 18:35:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 205FB2076B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 18:34:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 823202076B
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 18:35:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ERHWcWCr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbgHKSeP (ORCPT
+        id S1726523AbgHKSfD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 14:34:15 -0400
-Received: from smtprelay0060.hostedemail.com ([216.40.44.60]:34422 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725901AbgHKSeM (ORCPT
+        Tue, 11 Aug 2020 14:35:03 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:34957 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726478AbgHKSfD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 14:34:12 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 5EE6A8378A85;
-        Tue, 11 Aug 2020 18:34:11 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: stamp43_0b0be8426fe5
-X-Filterd-Recvd-Size: 2715
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf07.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 11 Aug 2020 18:34:10 +0000 (UTC)
-Message-ID: <5dd3d10088dbc8a126bc788237f5206130a090ae.camel@perches.com>
-Subject: Re: [PATCH 19/20] media: platform: vpdma.c: fix comparison to bool
-From:   Joe Perches <joe@perches.com>
-To:     Benoit Parrot <bparrot@ti.com>,
-        "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
-Cc:     skhan@linuxfoundation.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Tue, 11 Aug 2020 11:34:09 -0700
-In-Reply-To: <20200811125748.s3pdpwjmqmd5bffb@ti.com>
-References: <20200807083548.204360-19-dwlsalmeida@gmail.com>
-         <20200811125748.s3pdpwjmqmd5bffb@ti.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.3-0ubuntu1 
+        Tue, 11 Aug 2020 14:35:03 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597170902; h=Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Message-ID: Date: Subject: In-Reply-To: References: Cc:
+ To: From: Reply-To: Sender;
+ bh=Im9yRO9mh487palFvyNYpFQ99DNOmpNy24geWo/2G34=; b=ERHWcWCrLuqpJgsfCX/zlW0bX8y4cvDOBEUq/yTog+590W0opk+p97RVB5SkumS6ml+Wzr5T
+ Gx7ZeIFg3aK9k7I7eS/Q4lVOCQH1S5usFJ+s+W05NhpgjSXygU3W/zzZVwLjkgXpt4KVL8df
+ +AM2qs7DOXaqy9BVjnb2Vamimp0=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n13.prod.us-east-1.postgun.com with SMTP id
+ 5f32e4d0ba4c2cd3675f90fa (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 11 Aug 2020 18:34:56
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 2F637C43395; Tue, 11 Aug 2020 18:34:55 +0000 (UTC)
+Received: from BCAIN (104-54-226-75.lightspeed.austtx.sbcglobal.net [104.54.226.75])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bcain)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5A230C433C6;
+        Tue, 11 Aug 2020 18:34:53 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5A230C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bcain@codeaurora.org
+Reply-To: <bcain@codeaurora.org>
+From:   "Brian Cain" <bcain@codeaurora.org>
+To:     "'Nicholas Piggin'" <npiggin@gmail.com>,
+        <linux-arch@vger.kernel.org>
+Cc:     <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+        "'Arnd Bergmann'" <arnd@arndb.de>, <linux-hexagon@vger.kernel.org>
+References: <20200728033405.78469-1-npiggin@gmail.com> <20200728033405.78469-8-npiggin@gmail.com>
+In-Reply-To: <20200728033405.78469-8-npiggin@gmail.com>
+Subject: RE: [PATCH 07/24] hexagon: use asm-generic/mmu_context.h for no-op implementations
+Date:   Tue, 11 Aug 2020 13:34:52 -0500
+Message-ID: <037d01d6700e$1af0a580$50d1f080$@codeaurora.org>
 MIME-Version: 1.0
+Content-Type: text/plain;
+        charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQIkqsFHYugh5s2ey2Pj0VF04P8MggLS7NLsqIAvKQA=
+Content-Language: en-us
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-08-11 at 07:57 -0500, Benoit Parrot wrote:
-> Daniel W. S. Almeida <dwlsalmeida@gmail.com> wrote on Fri [2020-Aug-07 05:35:46 -0300]:
-> > From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
-> > 
-> > Fix the following coccinelle report:
-> > 
-> > drivers/media/platform/ti-vpe/vpdma.c:946:5-26: WARNING:
-> > Comparison to bool
-> > 
-> > Found using - Coccinelle (http://coccinelle.lip6.fr)
-[]
-> > diff --git a/drivers/media/platform/ti-vpe/vpdma.c b/drivers/media/platform/ti-vpe/vpdma.c
-[]
-> > @@ -943,7 +943,7 @@ int vpdma_hwlist_alloc(struct vpdma_data *vpdma, void *priv)
-> >  
-> >  	spin_lock_irqsave(&vpdma->lock, flags);
-> >  	for (i = 0; i < VPDMA_MAX_NUM_LIST &&
-> > -	    vpdma->hwlist_used[i] == true; i++)
-> > +	    vpdma->hwlist_used[i]; i++)
-> >  		;
 
+> -----Original Message-----
+> From: linux-arch-owner@vger.kernel.org <linux-arch-owner@vger.kernel.org>
+> On Behalf Of Nicholas Piggin
 
-A more typical way to write this loop is
-not testing i < VPDMA_MAX_NUM_LIST multiple
-times like the below:
----
- drivers/media/platform/ti-vpe/vpdma.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+Acked-by: Brian Cain <bcain@codeaurora.org>
 
-diff --git a/drivers/media/platform/ti-vpe/vpdma.c b/drivers/media/platform/ti-vpe/vpdma.c
-index 2e5148ae7a0f..5893917ce50d 100644
---- a/drivers/media/platform/ti-vpe/vpdma.c
-+++ b/drivers/media/platform/ti-vpe/vpdma.c
-@@ -942,14 +942,13 @@ int vpdma_hwlist_alloc(struct vpdma_data *vpdma, void *priv)
- 	unsigned long flags;
  
- 	spin_lock_irqsave(&vpdma->lock, flags);
--	for (i = 0; i < VPDMA_MAX_NUM_LIST &&
--	    vpdma->hwlist_used[i] == true; i++)
--		;
--
--	if (i < VPDMA_MAX_NUM_LIST) {
-+	for (i = 0; i < VPDMA_MAX_NUM_LIST; i++) {
-+		if (vpdma->hwlist_used[i])
-+			continue;
- 		list_num = i;
- 		vpdma->hwlist_used[i] = true;
- 		vpdma->hwlist_priv[i] = priv;
-+		break;
- 	}
- 	spin_unlock_irqrestore(&vpdma->lock, flags);
- 
+> Cc: Brian Cain <bcain@codeaurora.org>
+> Cc: linux-hexagon@vger.kernel.org
+> Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+> ---
+>  arch/hexagon/include/asm/mmu_context.h | 33 ++++----------------------
+>  1 file changed, 5 insertions(+), 28 deletions(-)
+> 
+> diff --git a/arch/hexagon/include/asm/mmu_context.h
+> b/arch/hexagon/include/asm/mmu_context.h
+> index cdc4adc0300a..81947764c47d 100644
+> --- a/arch/hexagon/include/asm/mmu_context.h
+> +++ b/arch/hexagon/include/asm/mmu_context.h
+> @@ -15,39 +15,13 @@
+>  #include <asm/pgalloc.h>
+>  #include <asm/mem-layout.h>
+> 
+> -static inline void destroy_context(struct mm_struct *mm) -{ -}
+> -
+>  /*
+>   * VM port hides all TLB management, so "lazy TLB" isn't very
+>   * meaningful.  Even for ports to architectures with visble TLBs,
+>   * this is almost invariably a null function.
+> + *
+> + * mm->context is set up by pgd_alloc, so no init_new_context required.
+>   */
+> -static inline void enter_lazy_tlb(struct mm_struct *mm,
+> -	struct task_struct *tsk)
+> -{
+> -}
+> -
+> -/*
+> - * Architecture-specific actions, if any, for memory map deactivation.
+> - */
+> -static inline void deactivate_mm(struct task_struct *tsk,
+> -	struct mm_struct *mm)
+> -{
+> -}
+> -
+> -/**
+> - * init_new_context - initialize context related info for new mm_struct
+> instance
+> - * @tsk: pointer to a task struct
+> - * @mm: pointer to a new mm struct
+> - */
+> -static inline int init_new_context(struct task_struct *tsk,
+> -					struct mm_struct *mm)
+> -{
+> -	/* mm->context is set up by pgd_alloc */
+> -	return 0;
+> -}
+> 
+>  /*
+>   *  Switch active mm context
+> @@ -74,6 +48,7 @@ static inline void switch_mm(struct mm_struct *prev,
+> struct mm_struct *next,
+>  /*
+>   *  Activate new memory map for task
+>   */
+> +#define activate_mm activate_mm
+>  static inline void activate_mm(struct mm_struct *prev, struct mm_struct
+> *next)  {
+>  	unsigned long flags;
+> @@ -86,4 +61,6 @@ static inline void activate_mm(struct mm_struct *prev,
+> struct mm_struct *next)
+>  /*  Generic hooks for arch_dup_mmap and arch_exit_mmap  */  #include
+> <asm-generic/mm_hooks.h>
+> 
+> +#include <asm-generic/mmu_context.h>
+> +
+>  #endif
+> --
+> 2.23.0
 
 
