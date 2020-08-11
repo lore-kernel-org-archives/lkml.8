@@ -7,80 +7,84 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F86C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 02:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3FC1C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 02:03:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DE6320716
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 02:00:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B81E020748
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 02:03:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728111AbgHKCAK (ORCPT
+        id S1728122AbgHKCDH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 22:00:10 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:34216 "EHLO loongson.cn"
+        Mon, 10 Aug 2020 22:03:07 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:9361 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727989AbgHKCAK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 22:00:10 -0400
-Received: from bogon.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxT9+d+zFfTCoHAA--.3432S2;
-        Tue, 11 Aug 2020 09:59:58 +0800 (CST)
-From:   Kaige Li <likaige@loongson.cn>
-To:     Sanjay R Mehta <sanju.mehta@amd.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>
-Cc:     linux-ntb@googlegroups.com, linux-kernel@vger.kernel.org
-Subject: [RESEND] NTB: hw: amd: fix an issue about leak system resources
-Date:   Tue, 11 Aug 2020 09:59:57 +0800
-Message-Id: <1597111197-28563-1-git-send-email-likaige@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9DxT9+d+zFfTCoHAA--.3432S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7Xr4kWF18WFyrKFyftF13Arb_yoW3uFb_J3
-        43XrsYgr1ktF9xt3WSkr1avrWSvas0vrsrWFyktF9xuF4UWr47W3yUAFs5GF4Y9FWjvFy3
-        ur1qkFy5C3sIyjkaLaAFLSUrUUUUnb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbh8YjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I
-        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
-        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0
-        cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4
-        vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28I
-        cVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx
-        0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY
-        1x0262kKe7AKxVWUAVWUtwCY02Avz4vE14v_KwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4
-        IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I
-        3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIx
-        AIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAI
-        cVCF04k26cxKx2IYs7xG6Fyj6rWUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87
-        Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU4Vc_UUUUU
-X-CM-SenderInfo: 5olntxtjh6z05rqj20fqof0/
+        id S1728012AbgHKCDH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 22:03:07 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 47154FA38E8B707599D2;
+        Tue, 11 Aug 2020 10:03:05 +0800 (CST)
+Received: from DESKTOP-A9S207P.china.huawei.com (10.174.179.61) by
+ DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 11 Aug 2020 10:02:55 +0800
+From:   <wuyun.wu@huawei.com>
+To:     Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        "David Rientjes" <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        "Andrew Morton" <akpm@linux-foundation.org>
+CC:     <liu.xiang6@zte.com.cn>, Abel Wu <wuyun.wu@huawei.com>,
+        "open list:SLAB ALLOCATOR" <linux-mm@kvack.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: [PATCH] mm/slub: make add_full() condition more explicit
+Date:   Tue, 11 Aug 2020 10:02:36 +0800
+Message-ID: <20200811020240.1231-1-wuyun.wu@huawei.com>
+X-Mailer: git-send-email 2.28.0.windows.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.174.179.61]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The related system resources were not released when pci_set_dma_mask(),
-pci_set_consistent_dma_mask(), or pci_iomap() return error in the
-amd_ntb_init_pci() function. Add pci_release_regions() to fix it.
+From: Abel Wu <wuyun.wu@huawei.com>
 
-Signed-off-by: Kaige Li <likaige@loongson.cn>
+The commit below is incomplete, as it didn't handle the add_full() part.
+commit a4d3f8916c65 ("slub: remove useless kmem_cache_debug() before remove_full()")
+
+This patch checks for SLAB_STORE_USER instead of kmem_cache_debug(),
+since that should be the only context in which we need the list_lock for
+add_full().
+
+Signed-off-by: Abel Wu <wuyun.wu@huawei.com>
 ---
+ mm/slub.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-changed commit massage.
-
- drivers/ntb/hw/amd/ntb_hw_amd.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/ntb/hw/amd/ntb_hw_amd.c b/drivers/ntb/hw/amd/ntb_hw_amd.c
-index 88e1db6..71428d8 100644
---- a/drivers/ntb/hw/amd/ntb_hw_amd.c
-+++ b/drivers/ntb/hw/amd/ntb_hw_amd.c
-@@ -1203,6 +1203,7 @@ static int amd_ntb_init_pci(struct amd_ntb_dev *ndev,
+diff --git a/mm/slub.c b/mm/slub.c
+index f226d66408ee..df93a5a0e9a4 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -2182,7 +2182,8 @@ static void deactivate_slab(struct kmem_cache *s, struct page *page,
+ 		}
+ 	} else {
+ 		m = M_FULL;
+-		if (kmem_cache_debug(s) && !lock) {
++#ifdef CONFIG_SLUB_DEBUG
++		if ((s->flags & SLAB_STORE_USER) && !lock) {
+ 			lock = 1;
+ 			/*
+ 			 * This also ensures that the scanning of full
+@@ -2191,6 +2192,7 @@ static void deactivate_slab(struct kmem_cache *s, struct page *page,
+ 			 */
+ 			spin_lock(&n->list_lock);
+ 		}
++#endif
+ 	}
  
- err_dma_mask:
- 	pci_clear_master(pdev);
-+	pci_release_regions(pdev);
- err_pci_regions:
- 	pci_disable_device(pdev);
- err_pci_enable:
+ 	if (l != m) {
 -- 
-2.1.0
+2.28.0.windows.1
 
