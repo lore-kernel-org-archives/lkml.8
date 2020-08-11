@@ -2,96 +2,122 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26C73C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 21:31:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02506C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 21:33:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01EDE20756
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 21:31:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9F8720756
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 21:33:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ic5XdKk6"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nO3gYAQ3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726355AbgHKVbx (ORCPT
+        id S1726529AbgHKVdR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 17:31:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59574 "EHLO
+        Tue, 11 Aug 2020 17:33:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726164AbgHKVbw (ORCPT
+        with ESMTP id S1726483AbgHKVdQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 17:31:52 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E1E4C061788
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 14:31:52 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id d4so80510pjx.5
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 14:31:52 -0700 (PDT)
+        Tue, 11 Aug 2020 17:33:16 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 026C5C06178B
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 14:33:15 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id q19so157691pll.0
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 14:33:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=AfVxpgJxZ32N1LOm+xuOB6bkmTr53McK9vmsomA92LE=;
-        b=ic5XdKk6gydxMYgraTNOoIX9Qr9I7gTNGubgAXooXrZz721fDPz4m2EjMsb00Sz127
-         fbvckWvmv30KrMBqS0QhDkKbbJcxA7HlsSi94cHs+zcHYOvkq3S86i84M0rblZRajpOf
-         IcSFe1DZhwHH7CyGIHN64J+Tvo+CwqO7p+XM4=
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=1XmU1UxtFoX+JxWRWBVQUmWx0SHpCQU0BLn06Acf+NU=;
+        b=nO3gYAQ3UHUw7olEjw932d3zFLqOCCUdnacl9cVKrUgmFx2PGjAFNp8CQwEB7V4Hmy
+         FGOy733ZHh3A1xH6oKC3op8DvO/HEaTRYWhxchiQa9h8rnO5vamgJzN81P21hsQ5n8I3
+         t7TvIriH92cU2JNs0mnOTN8SDZ89gDDMfKKUs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=AfVxpgJxZ32N1LOm+xuOB6bkmTr53McK9vmsomA92LE=;
-        b=VMduaSbIql7dfL/mzsRpTQryi/SCR5zQtr9D0cvgjJlbXNFCZunQHAiasj/3gk/oKu
-         L81t8GJJFQ5+7tLaLromlfFWFNvfWAWWt5dnnp8sK9DBEzX+bos1xIXrimJixlglqSN4
-         yrk59jXbiGF659QnYbtIx4T4o/uZu403puPAEXHllIx52eCMeIY6MmKWLpsbaYxvJP1b
-         wYLO83rbQgCkuzUXSsVHfXDgo5nmFH3FreMgpeVl0mz5YfaEXoVnAmfwQSdkTeIv5Xuf
-         DDR/vJ4rfnlwocQsTjsXpEXYDalFVvFCd5UoNnyjk+u5aRZBpTeT6/MGPhcP5JHy9S9w
-         Q9DQ==
-X-Gm-Message-State: AOAM533i70fTKSsrZQzKlMT3taFxKK5cpuMt3VqOqVGM3OWgFKxohXtg
-        nB7iKaKodUw7zCOkYDITBA/dBWLUl0c=
-X-Google-Smtp-Source: ABdhPJyqL4TIDkhnnHdUryy4LGUhSjye4Oo+pBg8Wb1pq/wCqARm+tYcIqMsZ0lHBAcH7HwPz+7cPg==
-X-Received: by 2002:a17:902:6ac3:: with SMTP id i3mr2101777plt.21.1597181511570;
-        Tue, 11 Aug 2020 14:31:51 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
-        by smtp.gmail.com with ESMTPSA id w15sm3796047pjk.13.2020.08.11.14.31.50
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=1XmU1UxtFoX+JxWRWBVQUmWx0SHpCQU0BLn06Acf+NU=;
+        b=MTXMS4C4oG0vAC2SM9oz22TwTVX+6/caKpczKObe7xZmuJgYh3peMfFICmS+Whg0Oa
+         geSXnGoQKauMQDiwucS47kmxMRTSl1ZR1Yf8EfMclk5ILaVnGk6WdOciVDLF49meMkF4
+         0/0nBLKm9DwY6GGClbxvYnA7CDlMeIImzK4DG4RRo3FEc+uV5KBnn2DQfz6Bkj0kbaK4
+         dPTwSepGJ8JD4jqy/bKs1VsWdFe4uKHB2l/EWMB1sfcLPuBQT2z0jin967e5r3AKo+/7
+         R0FVRjUcJ8PrQ3VRQFwN7UrqPRyfrXu12kctPKYq0Di8oY8nF3XLO4rqYhEzTL75P+A8
+         om5w==
+X-Gm-Message-State: AOAM5334e50qrFcyktHBt7jf/Et2+W46gGMnjp/bIDYN/z/FB2JNQIva
+        rTNNaSoOHb0irr4laRQy8LrMhw==
+X-Google-Smtp-Source: ABdhPJzVUgwczR2LI6waXoChEBBAZmQiyV+rznpXD/j383hrrCcUrIvWs+lVRQIEgQVz81ia6sNYwg==
+X-Received: by 2002:a17:90a:ccd:: with SMTP id 13mr2785480pjt.123.1597181595355;
+        Tue, 11 Aug 2020 14:33:15 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id k12sm3694242pjp.38.2020.08.11.14.33.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Aug 2020 14:31:50 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Tue, 11 Aug 2020 14:33:14 -0700 (PDT)
+Date:   Tue, 11 Aug 2020 14:33:13 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Allen <allen.lkml@gmail.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Oscar Carter <oscar.carter@gmx.com>,
+        Romain Perier <romain.perier@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-s390@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-usb@vger.kernel.org, kgdb-bugreport@lists.sourceforge.net,
+        alsa-devel@alsa-project.org,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>
+Subject: Re: [PATCH 0/3] Modernize tasklet callback API
+Message-ID: <202008111427.D00FCCF@keescook>
+References: <20200716030847.1564131-1-keescook@chromium.org>
+ <87h7tpa3hg.fsf@nanos.tec.linutronix.de>
+ <202007301113.45D24C9D@keescook>
+ <CAOMdWSJQKHAWY1P297b9koOLd8sVtezEYEyWGtymN1YeY27M6A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1597058460-16211-8-git-send-email-mkshah@codeaurora.org>
-References: <1597058460-16211-1-git-send-email-mkshah@codeaurora.org> <1597058460-16211-8-git-send-email-mkshah@codeaurora.org>
-Subject: Re: [PATCH v4 7/7] irqchip: qcom-pdc: Reset all pdc interrupts during init
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
-        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org,
-        Maulik Shah <mkshah@codeaurora.org>
-To:     Maulik Shah <mkshah@codeaurora.org>, bjorn.andersson@linaro.org,
-        evgreen@chromium.org, linus.walleij@linaro.org, maz@kernel.org,
-        mka@chromium.org
-Date:   Tue, 11 Aug 2020 14:31:49 -0700
-Message-ID: <159718150946.1360974.10983789401181131846@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOMdWSJQKHAWY1P297b9koOLd8sVtezEYEyWGtymN1YeY27M6A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Maulik Shah (2020-08-10 04:21:00)
-> Clear previous kernel's configuration during init by resetting
-> interrupts in enable bank to zero.
+On Mon, Aug 03, 2020 at 02:16:15PM +0530, Allen wrote:
+> Here's the series re-based on top of 5.8
+> https://github.com/allenpais/tasklets/tree/V3
 
-Can you please add some more information here about why we're not
-clearing all the pdc irqs and only the ones that are listed in DT? Is
-that because the pdc is shared between exception levels of the CPU and
-so some irqs shouldn't be used? Does the DT binding need to change to
-only list the hwirqs that are usable by the OS instead of the ones that
-are usable for the entire system? The binding doesn't mention this at
-all so I am just guessing here.
+Great!
 
->=20
-> Suggested-by: Stephen Boyd <swboyd@chromium.org>
-> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+> Let me know how you would want these to be reviewed.
+
+Was a Coccinelle script used for any of these conversions? I wonder if
+it'd be easier to do a single treewide patch for the more mechanical
+changes.
+
+And, actually, I still think the "prepare" patches should just be
+collapsed into the actual "covert" patches -- there are only a few.
+
+After those, yeah, I think getting these sent to their respective
+maintainers is the next step.
+
+> Also, I was thinking if removing tasklets completely could be a task
+> on KSPP wiki. If yes, I did like to take ownership of that task. I have a
+> couple of ideas in mind, which could be discussed in a separate email.
+
+Sure! I will add it to the tracker. Here's for the refactoring:
+https://github.com/KSPP/linux/issues/30
+
+and here's for the removal:
+https://github.com/KSPP/linux/issues/94
+
+if you can added details/examples of how they should be removed, that'd
+help other folks too, if they wanted to jump in. :)
+
+-Kees
+
+-- 
+Kees Cook
