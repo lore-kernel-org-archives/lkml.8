@@ -2,97 +2,142 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 816F1C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 19:50:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB331C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 19:50:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55CFC20782
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 19:50:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9098920756
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 19:50:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="tsje6rQn"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="Sx0JsDe1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726473AbgHKTuN (ORCPT
+        id S1726586AbgHKTuS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 15:50:13 -0400
-Received: from mail.efficios.com ([167.114.26.124]:58192 "EHLO
+        Tue, 11 Aug 2020 15:50:18 -0400
+Received: from mail.efficios.com ([167.114.26.124]:58242 "EHLO
         mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725889AbgHKTuM (ORCPT
+        with ESMTP id S1726479AbgHKTuO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 15:50:12 -0400
+        Tue, 11 Aug 2020 15:50:14 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id DAE422CFA31;
-        Tue, 11 Aug 2020 15:50:11 -0400 (EDT)
+        by mail.efficios.com (Postfix) with ESMTP id B6C042CFB27;
+        Tue, 11 Aug 2020 15:50:13 -0400 (EDT)
 Received: from mail.efficios.com ([127.0.0.1])
         by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id YVx5N7hH33_8; Tue, 11 Aug 2020 15:50:11 -0400 (EDT)
+        with ESMTP id 1GnV_Lvrq8dV; Tue, 11 Aug 2020 15:50:13 -0400 (EDT)
 Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 947262CFB20;
-        Tue, 11 Aug 2020 15:50:11 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 947262CFB20
+        by mail.efficios.com (Postfix) with ESMTP id 7867C2CFA35;
+        Tue, 11 Aug 2020 15:50:13 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 7867C2CFA35
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1597175411;
-        bh=DwqrTLQnS6fjFlO1mJ2lCxMpXY3v8dVZG7vx/OeBnAs=;
+        s=default; t=1597175413;
+        bh=hirGB7719ENx0a4MEmZZHjARmO79aShnRe+cHp8/M/w=;
         h=From:To:Date:Message-Id;
-        b=tsje6rQnilZZGtjqq2xh8rjcJGMfZCpTyroUDD9Emz5I1+Af2MOw1Wz3qK3tfGl/N
-         KJmsPeLlwsfaT1cinv2l1hRhgXNhzJ6fXSH5aHh5Olm5UFdwHGx8oHISCHZXMkCTjr
-         iOQE5IjQiW2DaXlgHoLP91m68g7xnnDlB5omw24MAH6k11UyS7iZD3tpe9MDpI6a9s
-         JhV0rfZhsvJ2GvX3H3cjcLrwAQu8ys/Hv2sM6kslxCb3PgDDLtf0ad3cd/TWBT5KB4
-         rbrpex1WlP8WAXAiyo9WNd6wsmaiR1cqEED+fa3CKht2cdbgNl+7ylRalEiMfPhZGc
-         pjy7ut//JfpsA==
+        b=Sx0JsDe1+j8ij9qqcdv+jlM6j8P30aT4ypK9yRwRD2F5/Y6ZCSWQ0CtQ/6KQONjX6
+         Q7m7YQ5exvOD4DgZDkrz6Eh1aXeUrm/W5WbE8iTnxfAUh1h6gpGD7WpG8CsKkOwxn3
+         q4wqLNKBtWo5ge5ZYA1AB01IMGrJYLWEx4uUcDTquxJymo6R5/nG82fO7DLb6le0PC
+         ISSfTaosfyii+w9hQrRzTqbCmJB9qGnmycMjDD3b2MSFdF6++eWa3mdm9ln7nfRz6P
+         eWd38XCc2aRiBYnI7nr+2egpWN4YOUmiuDEHODUvPN9a11zz0TxpYKO6f1wC5bvNFv
+         qf28K1x3uFVNA==
 X-Virus-Scanned: amavisd-new at efficios.com
 Received: from mail.efficios.com ([127.0.0.1])
         by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id Gjib0gfB4uCE; Tue, 11 Aug 2020 15:50:11 -0400 (EDT)
+        with ESMTP id SCAqtuGKfgP0; Tue, 11 Aug 2020 15:50:13 -0400 (EDT)
 Received: from localhost.localdomain (192-222-181-218.qc.cable.ebox.net [192.222.181.218])
-        by mail.efficios.com (Postfix) with ESMTPSA id 56E012CFB1F;
-        Tue, 11 Aug 2020 15:50:11 -0400 (EDT)
+        by mail.efficios.com (Postfix) with ESMTPSA id 28BA32CFB26;
+        Tue, 11 Aug 2020 15:50:13 -0400 (EDT)
 From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 To:     David Ahern <dsahern@kernel.org>
 Cc:     linux-kernel@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: [PATCH 0/3] l3mdev icmp error route lookup fixes
-Date:   Tue, 11 Aug 2020 15:50:00 -0400
-Message-Id: <20200811195003.1812-1-mathieu.desnoyers@efficios.com>
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+Subject: [PATCH 3/3] ipv6/icmp: l3mdev: Perform icmp error route lookup on source device routing table
+Date:   Tue, 11 Aug 2020 15:50:03 -0400
+Message-Id: <20200811195003.1812-4-mathieu.desnoyers@efficios.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200811195003.1812-1-mathieu.desnoyers@efficios.com>
+References: <20200811195003.1812-1-mathieu.desnoyers@efficios.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+As per RFC4443, the destination address field for ICMPv6 error messages
+is copied from the source address field of the invoking packet.
 
-Here is a series of fixes for ipv4 and ipv6 which which ensure the route
-lookup is performed on the right routing table in VRF configurations.
+In configurations with Virtual Routing and Forwarding tables, looking up
+which routing table to use for sending ICMPv6 error messages is
+currently done by using the destination net_device.
 
-It includes a test for both ipv4 and ipv6.
+If the source and destination interfaces are within separate VRFs, or
+one in the global routing table and the other in a VRF, looking up the
+source address of the invoking packet in the destination interface's
+routing table will fail if the destination interface's routing table
+contains no route to the invoking packet's source address.
 
-The series has been rebased on the net tree.
+One observable effect of this issue is that traceroute6 does not work in
+the following cases:
 
-Thanks,
+- Route leaking between global routing table and VRF
+- Route leaking between VRFs
 
-Mathieu
+Preferably use the source device routing table when sending ICMPv6 error
+messages. If no source device is set, fall-back on the destination
+device routing table.
 
-Mathieu Desnoyers (2):
-  ipv4/icmp: l3mdev: Perform icmp error route lookup on source device
-    routing table
-  ipv6/icmp: l3mdev: Perform icmp error route lookup on source device
-    routing table
+Link: https://tools.ietf.org/html/rfc4443
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: David Ahern <dsahern@kernel.org>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: netdev@vger.kernel.org
+---
+ net/ipv6/icmp.c       | 15 +++++++++++++--
+ net/ipv6/ip6_output.c |  2 --
+ 2 files changed, 13 insertions(+), 4 deletions(-)
 
-Michael Jeanson (1):
-  selftests: Add VRF icmp error route lookup test
-
- net/ipv4/icmp.c                               |  15 +-
- net/ipv6/icmp.c                               |  15 +-
- net/ipv6/ip6_output.c                         |   2 -
- tools/testing/selftests/net/Makefile          |   1 +
- .../selftests/net/vrf_icmp_error_route.sh     | 429 ++++++++++++++++++
- 5 files changed, 456 insertions(+), 6 deletions(-)
- create mode 100755 tools/testing/selftests/net/vrf_icmp_error_route.sh
-
+diff --git a/net/ipv6/icmp.c b/net/ipv6/icmp.c
+index a4e4912ad607..a971b58b0371 100644
+--- a/net/ipv6/icmp.c
++++ b/net/ipv6/icmp.c
+@@ -501,8 +501,19 @@ void icmp6_send(struct sk_buff *skb, u8 type, u8 code, __u32 info,
+ 	if (__ipv6_addr_needs_scope_id(addr_type)) {
+ 		iif = icmp6_iif(skb);
+ 	} else {
+-		dst = skb_dst(skb);
+-		iif = l3mdev_master_ifindex(dst ? dst->dev : skb->dev);
++		struct net_device *route_lookup_dev = NULL;
++
++		/*
++		 * The device used for looking up which routing table to use is
++		 * preferably the source whenever it is set, which should
++		 * ensure the icmp error can be sent to the source host, else
++		 * fallback on the destination device.
++		 */
++		if (skb->dev)
++			route_lookup_dev = skb->dev;
++		else if (skb_dst(skb))
++			route_lookup_dev = skb_dst(skb)->dev;
++		iif = l3mdev_master_ifindex(route_lookup_dev);
+ 	}
+ 
+ 	/*
+diff --git a/net/ipv6/ip6_output.c b/net/ipv6/ip6_output.c
+index c78e67d7747f..cd623068de53 100644
+--- a/net/ipv6/ip6_output.c
++++ b/net/ipv6/ip6_output.c
+@@ -468,8 +468,6 @@ int ip6_forward(struct sk_buff *skb)
+ 	 *	check and decrement ttl
+ 	 */
+ 	if (hdr->hop_limit <= 1) {
+-		/* Force OUTPUT device used as source address */
+-		skb->dev = dst->dev;
+ 		icmpv6_send(skb, ICMPV6_TIME_EXCEED, ICMPV6_EXC_HOPLIMIT, 0);
+ 		__IP6_INC_STATS(net, idev, IPSTATS_MIB_INHDRERRORS);
+ 
 -- 
 2.17.1
 
