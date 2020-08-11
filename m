@@ -2,106 +2,207 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C4F0C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:06:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75155C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:06:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E44062076B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:06:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597165588;
-	bh=gHbIwWEGQh8BBQnvGLHlvb5XXf47uZWtZJ9RyXgxn1U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OB/T8Kf23hWI+PMd9QPnM/Mk+spTVJTHOaerraD5QhAzMPZVd5s1iASorHehWdVmz
-	 MnvP0mYwSc8eAmMDMxjMggvhfl03u0J+VN3LyhcQnXmkikRIzImizF6ZFt27vKF/Aa
-	 1mwod8w/9/l/xl1xcK3UfIK3jL+OB48U4j2v9aM0=
+	by mail.kernel.org (Postfix) with ESMTP id 4D80120771
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:06:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729258AbgHKRGV (ORCPT
+        id S1729222AbgHKRGV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 11 Aug 2020 13:06:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53730 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729121AbgHKRGS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+Received: from mail-il1-f197.google.com ([209.85.166.197]:51144 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729099AbgHKRGS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 11 Aug 2020 13:06:18 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5225B2076B;
-        Tue, 11 Aug 2020 17:06:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597165577;
-        bh=gHbIwWEGQh8BBQnvGLHlvb5XXf47uZWtZJ9RyXgxn1U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=q+TtcDIqMBsKn92O1SBEGXNtPDp3KGZ5NdvmZ6C9zPphh+LRV4WaZEYUjiNnjW/pT
-         cHY4te50ZEmPIRSzQgPTzXa0AIJfDw01LBHtzFH247bD2d5RJgTp+owoduqeb/ySPk
-         hmsAWXgFHHtOzDtUOs9Tn2EUOu/cmrmLNmUGjFHk=
-Date:   Tue, 11 Aug 2020 19:06:27 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Gage Eads <gage.eads@intel.com>
-Cc:     linux-kernel@vger.kernel.org, arnd@arndb.de,
-        magnus.karlsson@intel.com, bjorn.topel@intel.com
-Subject: Re: [PATCH v2 02/19] dlb2: initialize PF device
-Message-ID: <20200811170627.GB765993@kroah.com>
-References: <20200811162732.1369-1-gage.eads@intel.com>
- <20200811162732.1369-3-gage.eads@intel.com>
+Received: by mail-il1-f197.google.com with SMTP id t20so11019013ill.17
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 10:06:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=3Vhix2QlrP7+/gWO8RD9Xb0nh1rKeNHswNvEEXVVggk=;
+        b=XouC0hBMeM13UqedVGkDx1ue5BEK8SBndIbDSwi4XR6b7EtUo0hQA3tpEacWip8xE6
+         b6A3uGARzlLGYBUIkbRj4IyQJa4KnHLL80V2MFj32lYyKZqtkhpB+fTRpGSnu01zwfoh
+         oU9i2PuSNnO6QOBNXi5yHKKhEFnFHIqm6t/v+QWSFZ1EO964WdY9uBR/HZVYS6hYt7jT
+         iBv+h1jgndoIVqCPmaV713g1hdDKm2OFmhwXBlPeXw639neTj4R90GCYFNz/fpQaQ+QQ
+         ZrychKqqtq3AgZaVcmRN/x5bm7KZk3aqcWVPq5tD+/vyl/4smBgbLmEYeUiT7i8xO9oo
+         oU2Q==
+X-Gm-Message-State: AOAM531nmhjgJPRNw0848huvOTyHB07AfOu71rj9dOupeJJqqN+Jpso4
+        VcTdFCo1M1pkzs18nKq1pYjUBF2PuaDmnfPyQG9lQZLMHk1u
+X-Google-Smtp-Source: ABdhPJya4bXun/+NQ/qES9zRA+AQVNLy2Qz0OtAXqkV8v7oBezDW3rOulXZRMs+qHM9W8AjOsCoLdjJMu7AGJQaCF65y00BA+kfB
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200811162732.1369-3-gage.eads@intel.com>
+X-Received: by 2002:a05:6602:2246:: with SMTP id o6mr23227895ioo.35.1597165577561;
+ Tue, 11 Aug 2020 10:06:17 -0700 (PDT)
+Date:   Tue, 11 Aug 2020 10:06:17 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000e5ea9e05ac9d16c1@google.com>
+Subject: memory leak in do_seccomp
+From:   syzbot <syzbot+3ad9614a12f80994c32e@syzkaller.appspotmail.com>
+To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
+        daniel@iogearbox.net, john.fastabend@gmail.com, kafai@fb.com,
+        keescook@chromium.org, kpsingh@chromium.org,
+        linux-kernel@vger.kernel.org, luto@amacapital.net,
+        netdev@vger.kernel.org, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com, wad@chromium.org, yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 11:27:15AM -0500, Gage Eads wrote:
-> The driver detects the device type (PF/VF) at probe time, and assigns the
-> corresponding 'ops' callbacks from that. These callbacks include mapping
-> and unmapping the PCI BAR space, creating/destroying the device, and
-> adding/deleting a char device.
-> 
-> Signed-off-by: Gage Eads <gage.eads@intel.com>
-> Reviewed-by: Magnus Karlsson <magnus.karlsson@intel.com>
-> ---
->  drivers/misc/dlb2/Makefile        |   5 +-
->  drivers/misc/dlb2/dlb2_hw_types.h |  28 +++++++++
->  drivers/misc/dlb2/dlb2_main.c     |  49 ++++++++++++++-
->  drivers/misc/dlb2/dlb2_main.h     |  30 +++++++++
->  drivers/misc/dlb2/dlb2_pf_ops.c   | 126 ++++++++++++++++++++++++++++++++++++++
->  5 files changed, 235 insertions(+), 3 deletions(-)
->  create mode 100644 drivers/misc/dlb2/dlb2_pf_ops.c
-> 
-> diff --git a/drivers/misc/dlb2/Makefile b/drivers/misc/dlb2/Makefile
-> index 90ae953d2a8f..95e67e5bd8ff 100644
-> --- a/drivers/misc/dlb2/Makefile
-> +++ b/drivers/misc/dlb2/Makefile
-> @@ -4,5 +4,6 @@
->  
->  obj-$(CONFIG_INTEL_DLB2) := dlb2.o
->  
-> -dlb2-objs :=  \
-> -  dlb2_main.o \
-> +dlb2-objs :=    \
-> +  dlb2_main.o   \
-> +  dlb2_pf_ops.o \
-> diff --git a/drivers/misc/dlb2/dlb2_hw_types.h b/drivers/misc/dlb2/dlb2_hw_types.h
-> index a0f908c603eb..10b26356535f 100644
-> --- a/drivers/misc/dlb2/dlb2_hw_types.h
-> +++ b/drivers/misc/dlb2/dlb2_hw_types.h
-> @@ -5,6 +5,25 @@
->  #ifndef __DLB2_HW_TYPES_H
->  #define __DLB2_HW_TYPES_H
->  
-> +#include <linux/io.h>
-> +
-> +#define DLB2_PCI_REG_READ(addr)        ioread32(addr)
-> +#define DLB2_PCI_REG_WRITE(reg, value) iowrite32(value, reg)
+Hello,
 
-Why create a macro that is larger than the native call, this saves
-nothing except make the reviewer wonder what in the world is happening.
+syzbot found the following issue on:
 
-Just use the real call.
+HEAD commit:    449dc8c9 Merge tag 'for-v5.9' of git://git.kernel.org/pub/..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=15d816c2900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4810fa4a53b3aa2c
+dashboard link: https://syzkaller.appspot.com/bug?extid=3ad9614a12f80994c32e
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=153d30e2900000
 
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+3ad9614a12f80994c32e@syzkaller.appspotmail.com
+
+2020/08/09 00:29:47 executed programs: 3
+BUG: memory leak
+unreferenced object 0xffff88811310ea80 (size 96):
+  comm "syz-executor.0", pid 6688, jiffies 4294954707 (age 12.810s)
+  hex dump (first 32 bytes):
+    01 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00  ................
+    00 00 00 00 00 00 00 00 00 30 e0 00 00 c9 ff ff  .........0......
+  backtrace:
+    [<0000000073bb6e7d>] kmalloc include/linux/slab.h:554 [inline]
+    [<0000000073bb6e7d>] kzalloc include/linux/slab.h:666 [inline]
+    [<0000000073bb6e7d>] seccomp_prepare_filter kernel/seccomp.c:562 [inline]
+    [<0000000073bb6e7d>] seccomp_prepare_user_filter kernel/seccomp.c:604 [inline]
+    [<0000000073bb6e7d>] seccomp_set_mode_filter kernel/seccomp.c:1535 [inline]
+    [<0000000073bb6e7d>] do_seccomp+0x2ec/0xd40 kernel/seccomp.c:1649
+    [<00000000658618a4>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+    [<00000000b8258e4d>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+BUG: memory leak
+unreferenced object 0xffffc90000e03000 (size 4096):
+  comm "syz-executor.0", pid 6688, jiffies 4294954707 (age 12.810s)
+  hex dump (first 32 bytes):
+    01 00 03 00 00 00 00 00 00 00 00 00 05 00 00 00  ................
+    2d 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  -...............
+  backtrace:
+    [<000000003b6a39af>] __vmalloc_node_range+0x2e1/0x3c0 mm/vmalloc.c:2520
+    [<00000000eee59e12>] __vmalloc_node mm/vmalloc.c:2552 [inline]
+    [<00000000eee59e12>] __vmalloc+0x49/0x50 mm/vmalloc.c:2566
+    [<000000006e13ac2a>] bpf_prog_alloc_no_stats+0x32/0x100 kernel/bpf/core.c:85
+    [<00000000cff3572c>] bpf_prog_alloc+0x1c/0xb0 kernel/bpf/core.c:111
+    [<000000003222ffa9>] bpf_prog_create_from_user+0x5f/0x2a0 net/core/filter.c:1409
+    [<00000000baa576ae>] seccomp_prepare_filter kernel/seccomp.c:567 [inline]
+    [<00000000baa576ae>] seccomp_prepare_user_filter kernel/seccomp.c:604 [inline]
+    [<00000000baa576ae>] seccomp_set_mode_filter kernel/seccomp.c:1535 [inline]
+    [<00000000baa576ae>] do_seccomp+0x32e/0xd40 kernel/seccomp.c:1649
+    [<00000000658618a4>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+    [<00000000b8258e4d>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+BUG: memory leak
+unreferenced object 0xffff888113bc1c00 (size 1024):
+  comm "syz-executor.0", pid 6688, jiffies 4294954707 (age 12.810s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<000000000466b245>] kmalloc include/linux/slab.h:554 [inline]
+    [<000000000466b245>] kzalloc include/linux/slab.h:666 [inline]
+    [<000000000466b245>] bpf_prog_alloc_no_stats+0x73/0x100 kernel/bpf/core.c:89
+    [<00000000cff3572c>] bpf_prog_alloc+0x1c/0xb0 kernel/bpf/core.c:111
+    [<000000003222ffa9>] bpf_prog_create_from_user+0x5f/0x2a0 net/core/filter.c:1409
+    [<00000000baa576ae>] seccomp_prepare_filter kernel/seccomp.c:567 [inline]
+    [<00000000baa576ae>] seccomp_prepare_user_filter kernel/seccomp.c:604 [inline]
+    [<00000000baa576ae>] seccomp_set_mode_filter kernel/seccomp.c:1535 [inline]
+    [<00000000baa576ae>] do_seccomp+0x32e/0xd40 kernel/seccomp.c:1649
+    [<00000000658618a4>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+    [<00000000b8258e4d>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+BUG: memory leak
+unreferenced object 0xffff8881154cb860 (size 32):
+  comm "syz-executor.0", pid 6688, jiffies 4294954707 (age 12.810s)
+  hex dump (first 32 bytes):
+    01 00 73 74 65 6d 64 2d 00 5c d6 19 81 88 ff ff  ..stemd-.\......
+    65 72 76 69 63 65 00 00 00 00 00 00 00 00 00 00  ervice..........
+  backtrace:
+    [<00000000561d65d4>] kmalloc include/linux/slab.h:554 [inline]
+    [<00000000561d65d4>] bpf_prog_store_orig_filter+0x33/0xa0 net/core/filter.c:1131
+    [<000000005d9b7cd2>] bpf_prog_create_from_user+0xda/0x2a0 net/core/filter.c:1422
+    [<00000000baa576ae>] seccomp_prepare_filter kernel/seccomp.c:567 [inline]
+    [<00000000baa576ae>] seccomp_prepare_user_filter kernel/seccomp.c:604 [inline]
+    [<00000000baa576ae>] seccomp_set_mode_filter kernel/seccomp.c:1535 [inline]
+    [<00000000baa576ae>] do_seccomp+0x32e/0xd40 kernel/seccomp.c:1649
+    [<00000000658618a4>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+    [<00000000b8258e4d>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+BUG: memory leak
+unreferenced object 0xffff888119d65c00 (size 32):
+  comm "syz-executor.0", pid 6688, jiffies 4294954707 (age 12.810s)
+  hex dump (first 32 bytes):
+    06 00 00 00 fb ff ff 7f 00 00 00 00 00 00 00 00  ................
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<00000000ad603142>] kmemdup+0x23/0x50 mm/util.c:127
+    [<0000000001d3eabf>] kmemdup include/linux/string.h:479 [inline]
+    [<0000000001d3eabf>] bpf_prog_store_orig_filter+0x5e/0xa0 net/core/filter.c:1138
+    [<000000005d9b7cd2>] bpf_prog_create_from_user+0xda/0x2a0 net/core/filter.c:1422
+    [<00000000baa576ae>] seccomp_prepare_filter kernel/seccomp.c:567 [inline]
+    [<00000000baa576ae>] seccomp_prepare_user_filter kernel/seccomp.c:604 [inline]
+    [<00000000baa576ae>] seccomp_set_mode_filter kernel/seccomp.c:1535 [inline]
+    [<00000000baa576ae>] do_seccomp+0x32e/0xd40 kernel/seccomp.c:1649
+    [<00000000658618a4>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+    [<00000000b8258e4d>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+BUG: memory leak
+unreferenced object 0xffff8881131ecb00 (size 96):
+  comm "syz-executor.0", pid 6688, jiffies 4294954707 (age 12.810s)
+  hex dump (first 32 bytes):
+    01 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00  ................
+    80 ea 10 13 81 88 ff ff 00 b0 d8 00 00 c9 ff ff  ................
+  backtrace:
+    [<0000000073bb6e7d>] kmalloc include/linux/slab.h:554 [inline]
+    [<0000000073bb6e7d>] kzalloc include/linux/slab.h:666 [inline]
+    [<0000000073bb6e7d>] seccomp_prepare_filter kernel/seccomp.c:562 [inline]
+    [<0000000073bb6e7d>] seccomp_prepare_user_filter kernel/seccomp.c:604 [inline]
+    [<0000000073bb6e7d>] seccomp_set_mode_filter kernel/seccomp.c:1535 [inline]
+    [<0000000073bb6e7d>] do_seccomp+0x2ec/0xd40 kernel/seccomp.c:1649
+    [<00000000658618a4>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+    [<00000000b8258e4d>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+BUG: memory leak
+unreferenced object 0xffff88811310e400 (size 96):
+  comm "syz-executor.0", pid 6702, jiffies 4294955242 (age 7.460s)
+  hex dump (first 32 bytes):
+    01 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00  ................
+    00 00 00 00 00 00 00 00 00 50 e1 00 00 c9 ff ff  .........P......
+  backtrace:
+    [<0000000073bb6e7d>] kmalloc include/linux/slab.h:554 [inline]
+    [<0000000073bb6e7d>] kzalloc include/linux/slab.h:666 [inline]
+    [<0000000073bb6e7d>] seccomp_prepare_filter kernel/seccomp.c:562 [inline]
+    [<0000000073bb6e7d>] seccomp_prepare_user_filter kernel/seccomp.c:604 [inline]
+    [<0000000073bb6e7d>] seccomp_set_mode_filter kernel/seccomp.c:1535 [inline]
+    [<0000000073bb6e7d>] do_seccomp+0x2ec/0xd40 kernel/seccomp.c:1649
+    [<00000000658618a4>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+    [<00000000b8258e4d>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
