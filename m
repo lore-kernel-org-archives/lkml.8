@@ -2,129 +2,120 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC90C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 06:54:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F007C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 06:56:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C493F20772
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 06:54:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17A0820772
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 06:56:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uA2yZ3mD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728293AbgHKGyt (ORCPT
+        id S1728289AbgHKG4Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 02:54:49 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35546 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728018AbgHKGyt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 02:54:49 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id A8E87AC98;
-        Tue, 11 Aug 2020 06:55:08 +0000 (UTC)
-Date:   Tue, 11 Aug 2020 08:54:46 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     Baoquan He <bhe@redhat.com>
-Cc:     Mike Kravetz <mike.kravetz@oracle.com>,
-        Wei Yang <richard.weiyang@linux.alibaba.com>,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 10/10] mm/hugetlb: not necessary to abuse temporary page
- to workaround the nasty free_huge_page
-Message-ID: <20200811065406.GC4793@dhcp22.suse.cz>
-References: <20200807091251.12129-1-richard.weiyang@linux.alibaba.com>
- <20200807091251.12129-11-richard.weiyang@linux.alibaba.com>
- <20200810021737.GV14854@MiWiFi-R3L-srv>
- <129cc03e-c6d5-24f8-2f3c-f5a3cc821e76@oracle.com>
- <20200811015148.GA10792@MiWiFi-R3L-srv>
+        Tue, 11 Aug 2020 02:56:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37610 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728018AbgHKG4X (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 02:56:23 -0400
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 317BDC06174A
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 23:56:23 -0700 (PDT)
+Received: by mail-ot1-x344.google.com with SMTP id 93so9352856otx.2
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 23:56:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qBONm3JGSIredide1r1f2aq4pO6yJwD51o3qC+jyQL4=;
+        b=uA2yZ3mDI1T3Jw/4Vw6Q4OmEX9280h204wtCZslPvkbSbJ++eKzvSeAhhrNM1Wljp6
+         Y7jwvdnHOJmxy2ME53uMlxfjGa8nNwPpcWr/eBJiwl2SQ2nnOnvaZ+SGE7nDsXWULQZ7
+         l9ABu3WkNG0A+tWxm0LMfVE3BbTCxIiruxb7xHNggyPLUXgHojv9deY8GtcOSZFkTZtO
+         SWPZ2yA5TVOEclgWK5w86Rcrjj3rOLPXLXaazg3ubnN7o5BLTV+YhfiDJ6Dr7w6+pFPG
+         c95FeTXCtPyqJ+jsTtG0H21f7CTsb2o1m4nK/UVIA2rU4KEvTowNdSbe2y0eBJylenQO
+         5PFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qBONm3JGSIredide1r1f2aq4pO6yJwD51o3qC+jyQL4=;
+        b=s3RZLuRuI+dXEnxC6EdAOrRsPm1wa9qVCYoG6mfBSc6MCX3UCqvy2OnsnkH7M+PnW6
+         i6G0E9jOlNnq77qbI6haElw1o89vSlwbnjRjOH0ZeZu6o5rFWjQ3i4ZjgCZRYFm9XPG5
+         aX8y/onfwAX3NR8vSQgTc08mwJ6lDxo8MpYiZ1S+Hvg+lpCz/hNKjyYQBADM5xSLlmr/
+         5G0aFAngE34yXoJA9Eia8/SHt6J8zjPQPKSH5ssqEeYafMHKhCTXNh5H8SXmJwabW2Om
+         NtDp/V2qCO1htO+GoA+NJ6G9KOH2N6BquV7cS2+kgl6E+PcABbyikelWIqAWK3XZ7nEq
+         J1FQ==
+X-Gm-Message-State: AOAM531gs8EuSNiOYGymdzrafaJkjodVjr5MlFxivJFvoJmNIp/8PVhn
+        Z8SAKlVkjURHisI2Ak2/+XmfgMbm2CCo87Nl9o3+tw==
+X-Google-Smtp-Source: ABdhPJz0h+PAxT9CHR0cArH9HnFQg8IEq9+hbJ00AW1gM8CTFdKuHLfSLn6hydj29Nxks8KouNcv/78fjJVRgWKJJjU=
+X-Received: by 2002:a9d:3da1:: with SMTP id l30mr3989495otc.233.1597128982279;
+ Mon, 10 Aug 2020 23:56:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200811015148.GA10792@MiWiFi-R3L-srv>
+References: <20200807090031.3506555-1-elver@google.com> <87pn7yxnjc.fsf@nanos>
+In-Reply-To: <87pn7yxnjc.fsf@nanos>
+From:   Marco Elver <elver@google.com>
+Date:   Tue, 11 Aug 2020 08:56:10 +0200
+Message-ID: <CANpmjNPz8vZLGWUzO_8xxtxdXC7cODUL1zVyZf-rBKDBd9LOpA@mail.gmail.com>
+Subject: Re: [PATCH] kcsan: Treat runtime as NMI-like with interrupt tracing
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzbot <syzbot+8db9e1ecde74e590a657@syzkaller.appspotmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 11-08-20 09:51:48, Baoquan He wrote:
-> On 08/10/20 at 05:19pm, Mike Kravetz wrote:
-> > On 8/9/20 7:17 PM, Baoquan He wrote:
-> > > On 08/07/20 at 05:12pm, Wei Yang wrote:
-> > >> Let's always increase surplus_huge_pages and so that free_huge_page
-> > >> could decrease it at free time.
-> > >>
-> > >> Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
-> > >> ---
-> > >>  mm/hugetlb.c | 14 ++++++--------
-> > >>  1 file changed, 6 insertions(+), 8 deletions(-)
-> > >>
-> > >> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> > >> index 1f2010c9dd8d..a0eb81e0e4c5 100644
-> > >> --- a/mm/hugetlb.c
-> > >> +++ b/mm/hugetlb.c
-> > >> @@ -1913,21 +1913,19 @@ static struct page *alloc_surplus_huge_page(struct hstate *h, gfp_t gfp_mask,
-> > >>  		return NULL;
-> > >>  
-> > >>  	spin_lock(&hugetlb_lock);
-> > >> +
-> > >> +	h->surplus_huge_pages++;
-> > >> +	h->surplus_huge_pages_node[page_to_nid(page)]++;
-> > >> +
-> > >>  	/*
-> > >>  	 * We could have raced with the pool size change.
-> > >>  	 * Double check that and simply deallocate the new page
-> > >> -	 * if we would end up overcommiting the surpluses. Abuse
-> > >> -	 * temporary page to workaround the nasty free_huge_page
-> > >> -	 * codeflow
-> > >> +	 * if we would end up overcommiting the surpluses.
-> > >>  	 */
-> > >> -	if (h->surplus_huge_pages >= h->nr_overcommit_huge_pages) {
-> > >> -		SetPageHugeTemporary(page);
-> > > 
-> > > Hmm, the temporary page way is taken intentionally in
-> > > commit 9980d744a0428 ("mm, hugetlb: get rid of surplus page accounting tricks").
-> > > From code, this is done inside hugetlb_lock holding, and the code flow
-> > > is straightforward, should be safe. Adding Michal to CC.
+On Mon, 10 Aug 2020 at 22:18, Thomas Gleixner <tglx@linutronix.de> wrote:
+> Marco Elver <elver@google.com> writes:
+> > Since KCSAN instrumentation is everywhere, we need to treat the hooks
+> > NMI-like for interrupt tracing. In order to present an as 'normal' as
+> > possible context to the code called by KCSAN when reporting errors, we
+> > need to update the IRQ-tracing state.
+> >
+> > Tested: Several runs through kcsan-test with different configuration
+> > (PROVE_LOCKING on/off), as well as hours of syzbot testing with the
+> > original config that caught the problem (without CONFIG_PARAVIRT=y,
+> > which appears to cause IRQ state tracking inconsistencies even when
+> > KCSAN remains off, see Link).
+> >
+> > Link: https://lkml.kernel.org/r/0000000000007d3b2d05ac1c303e@google.com
+> > Fixes: 248591f5d257 ("kcsan: Make KCSAN compatible with new IRQ state tracking")
+> > Reported-by: syzbot+8db9e1ecde74e590a657@syzkaller.appspotmail.com
+> > Co-developed-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > Signed-off-by: Marco Elver <elver@google.com>
+> > ---
+> > Patch Note: This patch applies to latest mainline. While current
+> > mainline suffers from the above problem, the configs required to hit the
+> > issue are likely not enabled too often (of course with PROVE_LOCKING on;
+> > we hit it on syzbot though). It'll probably be wise to queue this as
+> > normal on -rcu, just in case something is still off, given the
+> > non-trivial nature of the issue. (If it should instead go to mainline
+> > right now as a fix, I'd like some more test time on syzbot.)
+>
+> I'd rather stick it into mainline before -rc1.
+>
+> Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
 
-But the lock is not held during the migration, right?
+Thank you, sounds good.
 
-> > I remember when the temporary page code was added for page migration.
-> > The use of temporary page here was added at about the same time.  Temporary
-> > page does have one advantage in that it will not CAUSE surplus count to
-> > exceed overcommit.  This patch could cause surplus to exceed overcommit
-> > for a very short period of time.  However, do note that for this to happen
-> > the code needs to race with a pool resize which itself could cause surplus
-> > to exceed overcommit.
+FWIW I let it run on syzkaller over night once more, rebased against
+Sunday's mainline, and found no DEBUG_LOCKDEP issues. (It still found
+the known issue in irqentry_exit(), but is not specific to KCSAN:
+https://lore.kernel.org/lkml/000000000000e3068105ac405407@google.com/)
 
-Correct.
-
-> > IMO both approaches are valid.
-> > - Advantage of temporary page is that it can not cause surplus to exceed
-> >   overcommit.  Disadvantage is as mentioned in the comment 'abuse of temporary
-> >   page'.
-> > - Advantage of this patch is that it uses existing counters.  Disadvantage
-> >   is that it can momentarily cause surplus to exceed overcommit.
-
-Do I remember correctly that this can cause an allocation failure due to
-overcommit check? In other words it would be user space visible thing?
-
-> Yeah, since it's all done inside hugetlb_lock, should be OK even
-> though it may cause surplus to exceed overcommit.
-> > 
-> > Unless someone has a strong opinion, I prefer the changes in this patch.
-> 
-> Agree, I also prefer the code change in this patch, to remove the
-> unnecessary confusion about the temporary page.
-
-I have managed to forgot all the juicy details since I have made that
-change. All that remains is that the surplus pages accounting was quite
-tricky and back then I didn't figure out a simpler method that would
-achieve the consistent look at those counters. As mentioned above I
-suspect this could lead to pre-mature allocation failures while the
-migration is ongoing. Sure quite unlikely to happen and the race window
-is likely very small. Maybe this is even acceptable but I would strongly
-recommend to have all this thinking documented in the changelog.
--- 
-Michal Hocko
-SUSE Labs
+Thanks,
+-- Marco
