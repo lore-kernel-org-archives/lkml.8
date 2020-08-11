@@ -2,197 +2,88 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C8CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 03:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2DEAC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 03:09:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22FDF2073A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 03:06:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Vt/xx+6q"
+	by mail.kernel.org (Postfix) with ESMTP id 9CB6F206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 03:09:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728030AbgHKDGM (ORCPT
+        id S1727912AbgHKDJk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 23:06:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58572 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727066AbgHKDGL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 23:06:11 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC6C8C061756
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 20:06:10 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id m15so5840321lfp.7
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 20:06:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lAgPe7LYxrHND6axLhyzWgoGWJo7W6UM/7KYKZFAicY=;
-        b=Vt/xx+6qknXNsAC24DXedJ+8lw2kZx476DKnzqwxqQHYmJ/b+vSOJ6uzjOOga0I6Pr
-         9KJ8nvtVaX/cYg14ek3e5Prb2+LHlU5eogRzmyaTtuSoIydVzMVTUSVQWLYvUV6XSFCF
-         gTQaoglRLjuiQYYad1i7Ky+S6jrDOMpFBu0XZspeQyMFPfMtSHSPL3J6j63TuSbtHa37
-         +L4QJvsOShc6cHCqwJubi8QLmUtIbE3+iA9jtZvfyfWCtZeIA0tUsZ5FrGt8bCCgA0u2
-         Oq+Id6wDp61B1gJ0CKJntpsULkprxmjKMo5RN2SmtSQFISDi+GEDmKNI6p/WnG6lwjAY
-         MZ1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lAgPe7LYxrHND6axLhyzWgoGWJo7W6UM/7KYKZFAicY=;
-        b=pb/QHXwCI+BJouEabzW6bEtDI10H88gE+SVDENxvBuNWOijheh6dAt7X2Z82HfTYsL
-         xapWxHvJvTg7zfzeTJyeJqeOLaKzhX0++81G+tspqzTxHRXZl40dQxia/DnIEM1ZTDl0
-         l1MJd0T0VBJWXVVa+vzCQQIl2zkQ20xDpRry3+ajOqPwnicNDZcqNBZN+imVxmWSH5hJ
-         MslULeZoVH8c3T+zamBg+CakTASk40rMg2FQZtFba0ziJjfrm8O546TgjPx1MZTwwHQE
-         3VUBOoqqnkCHdpnMyKcVVwcew2bPAkT76u0fuUeWLS+I/2lIIepRmyqvKPo1jKSUqWPn
-         +ryQ==
-X-Gm-Message-State: AOAM530foduI9I7yvLGWILLZ+PZbUhk2Dh8h0C/kUqHfZqTHeN3T7Ec8
-        b44MHAYcFeYzG1zQwTeNP7VagInVoa5jD7Wc+E5KlQN27pU=
-X-Google-Smtp-Source: ABdhPJwmgkeAByVMl8IHzTNel+UQSvrkal3Iy/3KmtsWbDWQJpZEQt6WukV/7ph1+nZ7ZkmIlZpzPGBYM79Tc1xCHnA=
-X-Received: by 2002:ac2:5f48:: with SMTP id 8mr2044815lfz.157.1597115168800;
- Mon, 10 Aug 2020 20:06:08 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200429214954.44866-1-jannh@google.com> <20200429214954.44866-2-jannh@google.com>
- <20200505104805.GA17400@lst.de> <CAG48ez3F70-UXwdHmO4CnR0bAForn-SBtstW5WAYjcrLFwS_9A@mail.gmail.com>
- <20200505121557.GA24052@lst.de>
-In-Reply-To: <20200505121557.GA24052@lst.de>
-From:   Jann Horn <jannh@google.com>
-Date:   Tue, 11 Aug 2020 05:05:42 +0200
-Message-ID: <CAG48ez3ssZLqGC_Jy1su93wieCtvaxEtVw43skiXcKFHEMhp5A@mail.gmail.com>
-Subject: Re: [PATCH v2 1/5] binfmt_elf_fdpic: Stop using dump_emit() on user
- pointers on !MMU
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Mark Salter <msalter@redhat.com>,
-        Aurelien Jacquiot <jacquiot.aurelien@gmail.com>,
-        linux-c6x-dev@linux-c6x.org,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 10 Aug 2020 23:09:40 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:51256 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726981AbgHKDJj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 23:09:39 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 253471A1D79;
+        Tue, 11 Aug 2020 05:09:38 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 6318F1A0801;
+        Tue, 11 Aug 2020 05:09:34 +0200 (CEST)
+Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 5584F402EB;
+        Tue, 11 Aug 2020 05:09:29 +0200 (CEST)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, daniel.baluta@nxp.com, agx@sigxcpu.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] soc: imx: gpcv2: Use dev_err_probe() to simplify error handling
+Date:   Tue, 11 Aug 2020 11:04:42 +0800
+Message-Id: <1597115082-20328-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 2:15 PM Christoph Hellwig <hch@lst.de> wrote:
-> On Tue, May 05, 2020 at 01:42:12PM +0200, Jann Horn wrote:
-> > On Tue, May 5, 2020 at 12:48 PM Christoph Hellwig <hch@lst.de> wrote:
-> > > On Wed, Apr 29, 2020 at 11:49:50PM +0200, Jann Horn wrote:
-> > > > dump_emit() is for kernel pointers, and VMAs describe userspace memory.
-> > > > Let's be tidy here and avoid accessing userspace pointers under KERNEL_DS,
-> > > > even if it probably doesn't matter much on !MMU systems - especially given
-> > > > that it looks like we can just use the same get_dump_page() as on MMU if
-> > > > we move it out of the CONFIG_MMU block.
-> > >
-> > > Looks sensible.  Did you get a chance to test this with a nommu setup?
-> >
-> > Nope. Do you happen to have a recommendation for a convenient
-> > environment I can use with QEMU, or something like that? I'm guessing
-> > that just running a standard armel Debian userspace with a !mmu ARM
-> > kernel wouldn't work so well?
->
-> Nommu generally needs special userspace either using uclibc-ng or musl.
-> When I did the RISC-V nommu work I used buildroot for my root file
-> systems.  We haven't gotten elffdpic to work on RISC-V yet, so I can't
-> use that setup for testing, but it should support ARM as well.
+dev_err_probe() can reduce code size, uniform error handling and record the
+defer probe reason etc., use it to simplify the code.
 
-I've finally gotten around to testing this, and discovered that I
-actually had to change something in the patch - thanks for asking me
-to test this.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ drivers/soc/imx/gpcv2.c | 15 +++++----------
+ 1 file changed, 5 insertions(+), 10 deletions(-)
 
+diff --git a/drivers/soc/imx/gpcv2.c b/drivers/soc/imx/gpcv2.c
+index 6cf8a7a..db7e7fc 100644
+--- a/drivers/soc/imx/gpcv2.c
++++ b/drivers/soc/imx/gpcv2.c
+@@ -487,22 +487,17 @@ static int imx_pgc_domain_probe(struct platform_device *pdev)
+ 
+ 	domain->regulator = devm_regulator_get_optional(domain->dev, "power");
+ 	if (IS_ERR(domain->regulator)) {
+-		if (PTR_ERR(domain->regulator) != -ENODEV) {
+-			if (PTR_ERR(domain->regulator) != -EPROBE_DEFER)
+-				dev_err(domain->dev, "Failed to get domain's regulator\n");
+-			return PTR_ERR(domain->regulator);
+-		}
++		if (PTR_ERR(domain->regulator) != -ENODEV)
++			return dev_err_probe(domain->dev, PTR_ERR(domain->regulator),
++					     "Failed to get domain's regulator\n");
+ 	} else if (domain->voltage) {
+ 		regulator_set_voltage(domain->regulator,
+ 				      domain->voltage, domain->voltage);
+ 	}
+ 
+ 	ret = imx_pgc_get_clocks(domain);
+-	if (ret) {
+-		if (ret != -EPROBE_DEFER)
+-			dev_err(domain->dev, "Failed to get domain's clocks\n");
+-		return ret;
+-	}
++	if (ret)
++		return dev_err_probe(domain->dev, ret, "Failed to get domain's clocks\n");
+ 
+ 	ret = pm_genpd_init(&domain->genpd, NULL, true);
+ 	if (ret) {
+-- 
+2.7.4
 
-
-Some notes on running ARM nommu testing:
-
-I ended up running QEMU with "-machine versatilepb". To make that
-work, I applied this patch:
-<https://github.com/buildroot/buildroot/blob/master/board/qemu/arm-versatile/patches/linux/versatile-nommu.patch>
-A couple of directories up, there are also a README and a kernel
-config for that.
-
-Note that the emulated harddrive of this board doesn't seem to work,
-because it's connected via PCI, and nommu generally can't use PCI; but
-you can boot from initramfs, and you can copy files from/to the host
-with netcat, since the emulated network card does work. (To avoid
-having to bring up the interface from userspace, you can use
-"ip=10.0.2.1::10.0.2.2:255.255.255.0" on the kernel cmdline if the
-corresponding feature is enabled in the kernel config.)
-
-The first trouble I ran into with trying to run FDPIC userspace (based
-on musl) was that Linux has support for running ARM userspace in
-"26-bit mode", which is some ARM feature from the dark ages, with no
-support in QEMU; and while normally Linux only tries to enable that
-thing when the binary explicitly requires it, the FDPIC path isn't
-wired up to the appropriate personality logic properly, and so you get
-a spectacular explosion, where eventually the kernel oopses with a
-message about how it's trying to load an invalid value into CPSR
-because first the kernel tries to return to 26-bit mode, and then,
-through some mysterious spooky action at a distance, the kernel
-(AFAICS) ends up trying to do a syscall return with the stack pointer
-pointing somewhere in the middle of the kernel stack (and not where
-the entry register frame is).
-
-Anyway, my hacky workaround for that is:
-
-diff --git a/arch/arm/include/asm/processor.h b/arch/arm/include/asm/processor.h
-index b9241051e5cb..d5aa409e366c 100644
---- a/arch/arm/include/asm/processor.h
-+++ b/arch/arm/include/asm/processor.h
-@@ -70,7 +70,7 @@ static inline void
-arch_thread_struct_whitelist(unsigned long *offset,
-        if (current->personality & ADDR_LIMIT_32BIT)                    \
-                regs->ARM_cpsr = USR_MODE;                              \
-        else                                                            \
--               regs->ARM_cpsr = USR26_MODE;                            \
-+               { WARN(1, "setting USR26_MODE"); regs->ARM_cpsr = USR_MODE; } \
-        if (elf_hwcap & HWCAP_THUMB && pc & 1)                          \
-                regs->ARM_cpsr |= PSR_T_BIT;                            \
-        regs->ARM_cpsr |= PSR_ENDSTATE;                                 \
-
-
-Next up: Early on in the libc startup code, musl aborts execution by
-intentionally executing an undefined instruction in
-__set_thread_area(), because it can't figure out any working
-implementation of atomic cmpxchg. For the MMU case, there is a kuser
-helper (what x86 would call vsyscall); but for NOMMU ARM, no working
-implementation exists. So I gave up on musl and went with uclibc-ng
-(built via buildroot) instead, since uclibc-ng has support for
-compiling out thread support.
-
-
-Annoyingly, buildroot doesn't support FDPIC (at least not for nommu
-ARM). So I ended up telling it to build a small FLAT userspace, and
-used a standard ARM toolchain to build a tiny static PIE ELF binary
-with no reliance on libc (the FDPIC loader can actually load normal
-ELF mostly fine as long as it's PIE, at the cost of having to
-duplicate the text section for every instance) - luckily I didn't need
-the ELF binary to actually do anything complicated, and so working
-without any libc was tolerable:
-
-arm-linux-gnueabi-gcc-10 -fPIC -c -o test_crash.o test_crash.c
-arm-linux-gnueabi-ld -pie --no-dynamic-linker -o test_crash test_crash.o
-
-
-Next fun part: gdb-multiarch doesn't seem to be able to open FDPIC
-core dumps properly - none of the register status is available. I took
-apart the core dump before and after the patch in a hex editor,
-though, and it seems to have all the expected stuff in it. I'm
-guessing that maybe GDB got thrown off by struct elf_prstatus having a
-different layout if the core dump was generated on nommu? GDB's
-elf32_arm_nabi_grok_prstatus() seems to only handle the struct size
-for the non-FDPIC struct.
