@@ -2,105 +2,99 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D57FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 19:37:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03BCCC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 19:39:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DEFB20786
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 19:37:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB334206B2
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 19:39:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oHAMia7u";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="5elTrME8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726537AbgHKTh0 (ORCPT
+        id S1726543AbgHKTjN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 15:37:26 -0400
-Received: from mga17.intel.com ([192.55.52.151]:10832 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725889AbgHKThT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 15:37:19 -0400
-IronPort-SDR: WC3dMdpDlCnbB280a91MCnyufK499kuIp9uja9BYUQW0CWGUNWaEKt+jxuRaIK7tdmOO3qRBjS
- rFGsCokF0KPg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9710"; a="133871953"
-X-IronPort-AV: E=Sophos;i="5.76,301,1592895600"; 
-   d="scan'208";a="133871953"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2020 12:37:18 -0700
-IronPort-SDR: yi8JMcSjo182gZ4kkqEpd8n4Mz31m6IoG3XLeZPrghbXvigDBf4sENDT73d3g7Ux6g0T/CQaCw
- 4SOifjztUI6Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,301,1592895600"; 
-   d="scan'208";a="317840437"
-Received: from otc-chromeosbuild-1.jf.intel.com ([10.54.30.83])
-  by fmsmga004.fm.intel.com with ESMTP; 11 Aug 2020 12:37:18 -0700
-From:   Azhar Shaikh <azhar.shaikh@intel.com>
-To:     bleung@chromium.org, enric.balletbo@collabora.com,
-        groeck@chromium.org, heikki.krogerus@linux.intel.com,
-        pmalani@chromium.org
-Cc:     linux-kernel@vger.kernel.org, azhar.shaikh@intel.com,
-        rajmohan.mani@intel.com, utkarsh.h.patel@intel.com,
-        casey.g.bowman@intel.com
-Subject: [PATCH v3 2/3] platform/chrome: cros_ec_typec: Avoid setting usb role twice during disconnect
-Date:   Tue, 11 Aug 2020 12:37:56 -0700
-Message-Id: <20200811193757.45057-3-azhar.shaikh@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200811193757.45057-1-azhar.shaikh@intel.com>
-References: <20200811193757.45057-1-azhar.shaikh@intel.com>
+        Tue, 11 Aug 2020 15:39:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42192 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726405AbgHKTjN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 15:39:13 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 000E6C06174A;
+        Tue, 11 Aug 2020 12:39:12 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1597174751;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=YV8vEVVqhngk6zTeFdnzvuc65En/mdSLGrqYDqzVMCg=;
+        b=oHAMia7usYnGV2/RbJIvgRIFvUXvTG1MqS0jAZdgAYOx9M5ro+TzckijDUADM/SInRXrBu
+        1yimeOxa2NVEiVIHyprnRi6fmMg70374QzA7yoCp1Z1SoI63nUOztGCJ96Igb+JvIzLbhY
+        hiI7wFKn0tQHZYgCctYnvTUDNklRkGAcYx40u5JdzPIfoGgBrjzxO13tnzBMhEazDVNSBu
+        rq0y/UtPS2S5Cx46Ys3AJTHEx6OBXd9Bg+7Fx1Rn2EmpoXclNR04sva/VVv/sltViSdJpS
+        tb8OOxICpLyHsfimC7Stucm4e25ujHgSWW043c+a9AhmPQ9cO1De+PFSHy0gTQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1597174751;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=YV8vEVVqhngk6zTeFdnzvuc65En/mdSLGrqYDqzVMCg=;
+        b=5elTrME8Ulv5SlkhoPEmX3f8GciJjnw7jNzCPNSl2o6RnBtKEsfmk+OiBO4Fxx9XgSgzbM
+        sC9NgOyDeRXNApBw==
+To:     paulmck@kernel.org
+Cc:     Michal Hocko <mhocko@suse.com>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
+In-Reply-To: <87h7t96ve3.fsf@nanos.tec.linutronix.de>
+References: <20200809204354.20137-1-urezki@gmail.com> <20200809204354.20137-2-urezki@gmail.com> <20200810123141.GF4773@dhcp22.suse.cz> <20200810160739.GA29884@pc636> <20200810192525.GG4773@dhcp22.suse.cz> <87pn7x6y4a.fsf@nanos.tec.linutronix.de> <20200811153327.GW4295@paulmck-ThinkPad-P72> <87h7t96ve3.fsf@nanos.tec.linutronix.de>
+Date:   Tue, 11 Aug 2020 21:39:10 +0200
+Message-ID: <87eeod6kgx.fsf@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On disconnect port partner is removed and usb role is set to NONE.
-But then in cros_typec_port_update() the role is set again.
-Avoid this by moving usb_role_switch_set_role() to
-cros_typec_configure_mux().
+Thomas Gleixner <tglx@linutronix.de> writes:
+> "Paul E. McKenney" <paulmck@kernel.org> writes:
+>> On Tue, Aug 11, 2020 at 04:44:21PM +0200, Thomas Gleixner wrote:
+>>> Now RCU creates a new thing which enforces to make page allocation in
+>>> atomic context possible on RT. What for?
+>>> 
+>>> What's the actual use case in truly atomic context for this new thing on
+>>> an RT kernel?
+>>
+>> It is not just RT kernels.  CONFIG_PROVE_RAW_LOCK_NESTING=y propagates
+>> this constraint to all configurations, and a patch in your new favorite
+>> subsystem really did trigger this lockdep check in a non-RT kernel.
+>>
+>>> The actual RCU code disabling interrupts is an implementation detail
+>>> which can easily be mitigated with a local lock.
+>>
+>> In this case, we are in raw-spinlock context on entry to kfree_rcu().
+>
+> Where?
 
-Signed-off-by: Azhar Shaikh <azhar.shaikh@intel.com>
----
-Changes in v3:
- - Move the location of calling usb_role_switch_set_role() to
-   end of function in cros_typec_configure_mux() to avoid any change
-   in code flow.
+And aside of the where, wasn't kfree_rcu() from within raw spinlock held
+regions possible all the time? Either I'm missing something or you are
+fundamentally changing RCU internals. kfree_rcu() saved RT in various
+ways where invoking kfree() was just not an option. Confused...
 
-Changes in v2:
- - New patch added
+Thanks,
 
- drivers/platform/chrome/cros_ec_typec.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
-index 06108212ee94..2b43e1176e73 100644
---- a/drivers/platform/chrome/cros_ec_typec.c
-+++ b/drivers/platform/chrome/cros_ec_typec.c
-@@ -533,7 +533,12 @@ static int cros_typec_configure_mux(struct cros_typec_data *typec, int port_num,
- 		ret = -ENOTSUPP;
- 	}
- 
--	return ret;
-+	if (ret)
-+		return ret;
-+
-+	return usb_role_switch_set_role(typec->ports[port_num]->role_sw,
-+				       pd_ctrl->role & PD_CTRL_RESP_ROLE_DATA
-+				       ? USB_ROLE_HOST : USB_ROLE_DEVICE);
- }
- 
- static int cros_typec_port_update(struct cros_typec_data *typec, int port_num)
-@@ -590,9 +595,7 @@ static int cros_typec_port_update(struct cros_typec_data *typec, int port_num)
- 	if (ret)
- 		dev_warn(typec->dev, "Configure muxes failed, err = %d\n", ret);
- 
--	return usb_role_switch_set_role(typec->ports[port_num]->role_sw,
--				       resp.role & PD_CTRL_RESP_ROLE_DATA
--				       ? USB_ROLE_HOST : USB_ROLE_DEVICE);
-+	return ret;
- }
- 
- static int cros_typec_get_cmd_version(struct cros_typec_data *typec)
--- 
-2.17.1
-
+        tglx
