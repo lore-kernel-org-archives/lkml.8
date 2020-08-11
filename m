@@ -2,177 +2,132 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95FF1C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:17:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8016C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62ECE206DC
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:17:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB4E1206DC
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:18:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AdEIj+b1"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="PoJFWvdJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729175AbgHKRRU (ORCPT
+        id S1729207AbgHKRSM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 13:17:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48470 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729047AbgHKRRT (ORCPT
+        Tue, 11 Aug 2020 13:18:12 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:56798 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728990AbgHKRSK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 13:17:19 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43A75C06174A
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 10:17:19 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id ep8so2192772pjb.3
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 10:17:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=33Hoffu/6HYF4B1Z8E9C6OhynQs2nu3DpzVn1XGkMVc=;
-        b=AdEIj+b1IS2QdZCjV3XTzWNayAPgqYLDmsKP9brnolbkaI4dIKmqJY4MGeAkOmuq70
-         pSXJkcMlr/LH728ATkIKVjscetox7XGBLMSlQIM/YW5toPeacZ+weXnWv4Z4KnlGCO0V
-         9A8RTyFW1Jz0V46LkrpmVomhcbsWUZncoXd+ninP8IvbEJMqyceOQMQcSy2RX8bD57wz
-         kgkf67bHdAWpNVdQRClaBwxzYZ4lxGJmFtWohBOFnWWZRfebqOuU98MNeSCbL8q56xqS
-         ByzghgJHO3KLXnsamkFxBOp3eyO8p3b3ED8vpWOjn3Yo6CjpiT6y6GdXgK2oEcyp6WNw
-         ZOIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=33Hoffu/6HYF4B1Z8E9C6OhynQs2nu3DpzVn1XGkMVc=;
-        b=aTlXyPa5g/ZBQjMEP4X3wn5MdrzzxeU+PmSrZhmf30V53IKF/pG2lUs8UBSkaxXoCQ
-         Z+vfI9aBR+c9w5YBHZyjYwQC/PTCDisJeEKkqRLVt1Hjenbedj2jfE5bQ2Z9ZtfQyPRu
-         i+NSvv0W2xfl0ESdZHZc9ea9Dgc3rxQBpy6VhZ+nnPFTcj9W9Q4BTon4AaA3W3WANtrM
-         Et5t3zLT/iijttlvNF652wKrrZu6GnbksSNJ5pxtSDUCPmG6wO3u6ej75RPX0ppVPnr3
-         HfiS4+REEX/Wb+ClGl0wyDlFNWmgcNjt1iebSO+sZOvpV7EFbCyXF6r4Qs5YxLu19al4
-         TBvQ==
-X-Gm-Message-State: AOAM532BOzHOgjnHljk0qpTQlwCKihLn41nTHbWcSvgw/ZfqVgzIqYAh
-        h+bWWJNQm112h/wcgvGcMf4=
-X-Google-Smtp-Source: ABdhPJw3MlBcU9kBFTQ1zF90kaJv832K9A3Sbmi3onOx6kfPymH1/THYrO133+fe0FwBsxnsXEKkaw==
-X-Received: by 2002:a17:902:b686:: with SMTP id c6mr1779157pls.133.1597166238815;
-        Tue, 11 Aug 2020 10:17:18 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id v11sm21424322pgs.22.2020.08.11.10.17.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Aug 2020 10:17:18 -0700 (PDT)
-Subject: Re: [PATCH] hwmon: (pmbus/isl68137) remove READ_TEMPERATURE_1
- telemetry for RAA228228
-To:     Grant Peltier <grantpeltier93@gmail.com>
-Cc:     grant.peltier.jg@renesas.com, linux-kernel@vger.kernel.org,
-        adam.vaughn.xh@renesas.com
-References: <20200810183627.GA5457@raspberrypi>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <47df1832-86f6-bb51-0488-d1d9ab0e0b6f@roeck-us.net>
-Date:   Tue, 11 Aug 2020 10:17:16 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 11 Aug 2020 13:18:10 -0400
+Received: from [10.137.106.139] (unknown [131.107.174.11])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 364D420B4908;
+        Tue, 11 Aug 2020 10:18:09 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 364D420B4908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1597166289;
+        bh=4CUNuNiiePWf1WTPIiwYBL13LZ+7k2/9/J/jpcaXW7A=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=PoJFWvdJ1RO9aetIAjmD0rk7oHcgoNUd11mJAo6cf98zwa1+fMROHW9q/uMp6iMeX
+         Gx9jAgsZekiKh7pxAVZrnSCW536fsoku8TARzOm+dS5qqA/BlR8Bpa7J8vLGhpHHRD
+         Yi+yCyW66KZsN6+KFh8r2FianF/MQzdF5N+1bL7A=
+Subject: Re: [PATCH v7 0/7] Add support for O_MAYEXEC
+To:     =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Mimi Zohar <zohar@linux.ibm.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Eric Chiang <ericchiang@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Thibaut Sautereau <thibaut.sautereau@clip-os.org>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-integrity@vger.kernel.org,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+References: <20200723171227.446711-1-mic@digikod.net>
+ <202007241205.751EBE7@keescook>
+ <0733fbed-cc73-027b-13c7-c368c2d67fb3@digikod.net>
+ <20200810202123.GC1236603@ZenIV.linux.org.uk>
+ <917bb071-8b1a-3ba4-dc16-f8d7b4cc849f@digikod.net>
+ <CAG48ez0NAV5gPgmbDaSjo=zzE=FgnYz=-OHuXwu0Vts=B5gesA@mail.gmail.com>
+ <0cc94c91-afd3-27cd-b831-8ea16ca8ca93@digikod.net>
+From:   Deven Bowers <deven.desai@linux.microsoft.com>
+Message-ID: <77d685ec-aba2-6a2c-5d25-1172279ceb83@linux.microsoft.com>
+Date:   Tue, 11 Aug 2020 10:18:08 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <20200810183627.GA5457@raspberrypi>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <0cc94c91-afd3-27cd-b831-8ea16ca8ca93@digikod.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/10/20 11:36 AM, Grant Peltier wrote:
-> Per the RAA228228 datasheet, READ_TEMPERATURE_1 is not a supported PMBus
-> command.
+
+
+On 8/11/2020 1:48 AM, Mickaël Salaün wrote:
+
+[...snip]
+
+>>> It is a
+>>> good practice to check as soon as possible such properties, and it may
+>>> enables to avoid (user space) time-of-check to time-of-use (TOCTOU)
+>>> attacks (i.e. misuse of already open resources).
+>>
+>> The assumption that security checks should happen as early as possible
+>> can actually cause security problems. For example, because seccomp was
+>> designed to do its checks as early as possible, including before
+>> ptrace, we had an issue for a long time where the ptrace API could be
+>> abused to bypass seccomp filters.
+>>
+>> Please don't decide that a check must be ordered first _just_ because
+>> it is a security check. While that can be good for limiting attack
+>> surface, it can also create issues when the idea is applied too
+>> broadly.
 > 
-> Signed-off-by: Grant Peltier <grantpeltier93@gmail.com>
-
-Please copy linux-hwmon@vger.kernel.org on hwmon patches. This patch is not
-in the hwmon patchwork, which in general almost guarantees that it gets lost
-since I usually pull patches from there. As it happens, you are lucky
-that I noticed. Patch applied.
-
-Guenter
-
-> ---
->  drivers/hwmon/pmbus/isl68137.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
+> I'd be interested with such security issue examples.
 > 
-> diff --git a/drivers/hwmon/pmbus/isl68137.c b/drivers/hwmon/pmbus/isl68137.c
-> index 0c622711ef7e..58aa95a3c010 100644
-> --- a/drivers/hwmon/pmbus/isl68137.c
-> +++ b/drivers/hwmon/pmbus/isl68137.c
-> @@ -67,6 +67,7 @@ enum variants {
->  	raa_dmpvr1_2rail,
->  	raa_dmpvr2_1rail,
->  	raa_dmpvr2_2rail,
-> +	raa_dmpvr2_2rail_nontc,
->  	raa_dmpvr2_3rail,
->  	raa_dmpvr2_hv,
->  };
-> @@ -241,6 +242,10 @@ static int isl68137_probe(struct i2c_client *client,
->  		info->pages = 1;
->  		info->read_word_data = raa_dmpvr2_read_word_data;
->  		break;
-> +	case raa_dmpvr2_2rail_nontc:
-> +		info->func[0] &= ~PMBUS_HAVE_TEMP;
-> +		info->func[1] &= ~PMBUS_HAVE_TEMP;
-> +		fallthrough;
->  	case raa_dmpvr2_2rail:
->  		info->pages = 2;
->  		info->read_word_data = raa_dmpvr2_read_word_data;
-> @@ -304,7 +309,7 @@ static const struct i2c_device_id raa_dmpvr_id[] = {
->  	{"raa228000", raa_dmpvr2_hv},
->  	{"raa228004", raa_dmpvr2_hv},
->  	{"raa228006", raa_dmpvr2_hv},
-> -	{"raa228228", raa_dmpvr2_2rail},
-> +	{"raa228228", raa_dmpvr2_2rail_nontc},
->  	{"raa229001", raa_dmpvr2_2rail},
->  	{"raa229004", raa_dmpvr2_2rail},
->  	{}
+> I hope that delaying checks will not be an issue for mechanisms such as
+> IMA or IPE:
+> https://lore.kernel.org/lkml/1544699060.6703.11.camel@linux.ibm.com/
+> 
+> Any though Mimi, Deven, Chrome OS folks?
 > 
 
+I don't see an issue with IPE. As long as the hypothetical new syscall
+and associated security hook have the file struct available in the
+hook, it should integrate fairly easily.
+
+[...snip]
