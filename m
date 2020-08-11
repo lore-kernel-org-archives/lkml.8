@@ -2,242 +2,135 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEE9EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 21:25:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31FC7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 21:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 944F4205CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 21:25:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05D41206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 21:28:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hHMPyBCC";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ELIHt1uF"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="v0rqLtrG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbgHKVZ0 (ORCPT
+        id S1726441AbgHKV2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 17:25:26 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:47830 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726932AbgHKVZZ (ORCPT
+        Tue, 11 Aug 2020 17:28:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58994 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725987AbgHKV2H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 17:25:25 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597181121;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=m7u9iZM4bgu8PK3FkxHuv+64l2WKnfoRB2cXVRaJnw4=;
-        b=hHMPyBCCFhlvypwiG0tlGoOocC/6/w0Nr1YrzlsbqBj4aPtPO/SivNrJhDJEsTmJyGBIdn
-        wK0wPPSyrn7SNhuGozY7SxeMQGtH3iWuZKg1GkBrbc8IlgZ2Gx3o6VXa3NqbhOwIfzBaRX
-        DDw0wFU1fbPEzxG7beKNyXGeTrMpfuk2yUHezKaaKjlqKA7w5mpEXFXBx76TWqQTGw4fVl
-        ChhvpDvDISgZQd4H5KwPka7VdwhciDFvo1qFJDfsKn/qZvzrO8XXhGQCqQFRBZ2c1Gi7gs
-        3EM4eZN6+l+aw+/4T6WNsCaZ0eoOLyv/0QwkRGu2PU270twsSL5THasIK9zWdw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597181121;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=m7u9iZM4bgu8PK3FkxHuv+64l2WKnfoRB2cXVRaJnw4=;
-        b=ELIHt1uF/dwRXMv9lB5SfQSoe8rLSoQwm3SbukE5hxSYXAPouA1PkOj1GSCxGPJ4+5QGfT
-        SzYNpK6OM0WGwOBw==
-To:     "Dey\, Megha" <megha.dey@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        "gregkh\@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        "Jiang\, Dave" <dave.jiang@intel.com>,
-        "vkoul\@kernel.org" <vkoul@kernel.org>,
-        "bhelgaas\@google.com" <bhelgaas@google.com>,
-        "rafael\@kernel.org" <rafael@kernel.org>,
-        "hpa\@zytor.com" <hpa@zytor.com>,
-        "alex.williamson\@redhat.com" <alex.williamson@redhat.com>,
-        "Pan\, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Raj\, Ashok" <ashok.raj@intel.com>,
-        "Liu\, Yi L" <yi.l.liu@intel.com>,
-        "Lu\, Baolu" <baolu.lu@intel.com>,
-        "Tian\, Kevin" <kevin.tian@intel.com>,
-        "Kumar\, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck\, Tony" <tony.luck@intel.com>,
-        "Lin\, Jing" <jing.lin@intel.com>,
-        "Williams\, Dan J" <dan.j.williams@intel.com>,
-        "kwankhede\@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger\@redhat.com" <eric.auger@redhat.com>,
-        "parav\@mellanox.com" <parav@mellanox.com>,
-        "Hansen\, Dave" <dave.hansen@intel.com>,
-        "netanelg\@mellanox.com" <netanelg@mellanox.com>,
-        "shahafs\@mellanox.com" <shahafs@mellanox.com>,
-        "yan.y.zhao\@linux.intel.com" <yan.y.zhao@linux.intel.com>,
-        "pbonzini\@redhat.com" <pbonzini@redhat.com>,
-        "Ortiz\, Samuel" <samuel.ortiz@intel.com>,
-        "Hossain\, Mona" <mona.hossain@intel.com>,
-        "dmaengine\@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86\@kernel.org" <x86@kernel.org>,
-        "linux-pci\@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm\@vger.kernel.org" <kvm@vger.kernel.org>,
-        xen-devel@lists.xenproject.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>
-Subject: Re: [PATCH RFC v2 02/18] irq/dev-msi: Add support for a new DEV_MSI irq domain
-In-Reply-To: <8a8a853c-cbe6-b19c-f6ba-c8cdeda84a36@intel.com>
-References: <87h7tcgbs2.fsf@nanos.tec.linutronix.de> <87ft8uxjga.fsf@nanos> <87d03x5x0k.fsf@nanos.tec.linutronix.de> <8a8a853c-cbe6-b19c-f6ba-c8cdeda84a36@intel.com>
-Date:   Tue, 11 Aug 2020 23:25:20 +0200
-Message-ID: <87bljg7u4f.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Tue, 11 Aug 2020 17:28:07 -0400
+Received: from mail-qk1-x74a.google.com (mail-qk1-x74a.google.com [IPv6:2607:f8b0:4864:20::74a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B054C061787
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 14:28:07 -0700 (PDT)
+Received: by mail-qk1-x74a.google.com with SMTP id 195so61704qke.14
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 14:28:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=JEHvtyXY0PahDyTNTofnb+o70v/Ji63GK4tErbh+T7U=;
+        b=v0rqLtrGjr6RFTcXhotnND/SQoYUh8qkJiSo07+iNVvoBLd/0LvoE9uKnK7QGigI+H
+         lOsCUjwqLAQts0bZdwzMbO7m+/6LPejOxPT652Ef1zJyeKkPQSkF9eGFV3/wI4pSMeRp
+         isxJ3DUdz3d9fsGLF27K1CDAphFRsyMlDSub4YXU/wtyuwsVmg/UBRfA7fMUtuj8F+1A
+         pAnel/CZ/vbYM9gccjLQGsy3Ci7VH0lPDsxbjoTPiLf9Q6OUZzJxdx5r1EEyik+4xG++
+         kqzgGblHuxo9mG+yOb/h8tavfSWnv8dalfViOp9SEWna1ZXzs8aeC49uvvL+01l7LkdW
+         yAyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=JEHvtyXY0PahDyTNTofnb+o70v/Ji63GK4tErbh+T7U=;
+        b=Wq7XBtkFLJpxYSYZFiXhh5ZbqdmAvKnh4dTvj5x9uHqteRvNE5Te4wNnmQjYDE7/vY
+         DunoQx1b15yrcNncltyv0+nIB87bx6EssZ/JQ2wt7JoMM4R2mzCXBaJ5sHpU3Izlya+C
+         1j4GV3mtqLit9xzEFjhQOTp9wcA4tuUibMbbt4tHXc+eiXh89b2XHhjTDaoRVFQofj3E
+         0kbcTLEAQcBp8+LqNJQ8J5coG4sNiwSZ50e3pCfDxusiibx1p0byNHEqKdd9v+ilqiyr
+         8i925nkBivt+LSpIO4ebulRhle9/EZ9NyTbG+I3HS4ENsVQdenYAznkB+s+dIWds0TRn
+         kRdQ==
+X-Gm-Message-State: AOAM532N7YvPX+Knl6PRse39Hq3Pkcvf1hC9x7IDdMkoEqKXZnXJjXjC
+        Zerk3QCW1l/NjCIF1/iQUl3Jr8XHPB/6/WkUmtQMZg==
+X-Google-Smtp-Source: ABdhPJwe/D1QnjaomloZ5+oBlMTzK1X7S7cIeykWGHTCWPLu4m/3lcVHUxJZ3HD2LIOfXvjGcgC+f/3kwSG0yIrGgAyxqA==
+X-Received: by 2002:a05:6214:1302:: with SMTP id a2mr3525273qvv.156.1597181286277;
+ Tue, 11 Aug 2020 14:28:06 -0700 (PDT)
+Date:   Tue, 11 Aug 2020 14:27:55 -0700
+Message-Id: <20200811212756.3328740-1-brendanhiggins@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.236.gb10cc79966-goog
+Subject: [PATCH v2 1/2] kunit: tool: fix running kunit_tool from outside
+ kernel tree
+From:   Brendan Higgins <brendanhiggins@google.com>
+To:     shuah@kernel.org, davidgow@google.com
+Cc:     linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, Tim.Bird@sony.com,
+        Brendan Higgins <brendanhiggins@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Dey, Megha" <megha.dey@intel.com> writes:
-> On 8/11/2020 2:53 AM, Thomas Gleixner wrote:
->>> And the annoying fact that you need XEN support which opens another can
->>> of worms...
->
-> hmm I am not sure why we need Xen support... are you referring to idxd 
-> using xen?
+Currently kunit_tool does not work correctly when executed from a path
+outside of the kernel tree, so make sure that the current working
+directory is correct and the kunit_dir is properly initialized before
+running.
 
-What about using IDXD when you are running on XEN? I might be missing
-something and IDXD/IMS is hypervisor only, but that still does not solve
-this problem on bare metal:
+Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+---
+ tools/testing/kunit/kunit.py | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
 
->> x86 still does not associate the irq domain to devices at device
->> discovery time, i.e. the device::msi_domain pointer is never
->> populated.
+diff --git a/tools/testing/kunit/kunit.py b/tools/testing/kunit/kunit.py
+index 425ef40067e7e..e2caf4e24ecb2 100755
+--- a/tools/testing/kunit/kunit.py
++++ b/tools/testing/kunit/kunit.py
+@@ -237,9 +237,13 @@ def main(argv, linux=None):
+ 
+ 	cli_args = parser.parse_args(argv)
+ 
++	if get_kernel_root_path():
++		os.chdir(get_kernel_root_path())
++
+ 	if cli_args.subcommand == 'run':
+ 		if not os.path.exists(cli_args.build_dir):
+ 			os.mkdir(cli_args.build_dir)
++			create_default_kunitconfig()
+ 
+ 		if not linux:
+ 			linux = kunit_kernel.LinuxSourceTree()
+@@ -257,6 +261,7 @@ def main(argv, linux=None):
+ 		if cli_args.build_dir:
+ 			if not os.path.exists(cli_args.build_dir):
+ 				os.mkdir(cli_args.build_dir)
++				create_default_kunitconfig()
+ 
+ 		if not linux:
+ 			linux = kunit_kernel.LinuxSourceTree()
+@@ -270,10 +275,6 @@ def main(argv, linux=None):
+ 		if result.status != KunitStatus.SUCCESS:
+ 			sys.exit(1)
+ 	elif cli_args.subcommand == 'build':
+-		if cli_args.build_dir:
+-			if not os.path.exists(cli_args.build_dir):
+-				os.mkdir(cli_args.build_dir)
+-
+ 		if not linux:
+ 			linux = kunit_kernel.LinuxSourceTree()
+ 
+@@ -288,10 +289,6 @@ def main(argv, linux=None):
+ 		if result.status != KunitStatus.SUCCESS:
+ 			sys.exit(1)
+ 	elif cli_args.subcommand == 'exec':
+-		if cli_args.build_dir:
+-			if not os.path.exists(cli_args.build_dir):
+-				os.mkdir(cli_args.build_dir)
+-
+ 		if not linux:
+ 			linux = kunit_kernel.LinuxSourceTree()
+ 
 
-We can't do that right now due to the way how X86 PCI/MSI allocation
-works and being able to do so would make things consistent and way
-simpler even for your stuff.
+base-commit: 30185b69a2d533c4ba6ca926b8390ce7de495e29
+-- 
+2.28.0.236.gb10cc79966-goog
 
->> The right thing to do is to convert XEN MSI support over to proper irq
->> domains. This allows to populate device::msi_domain which makes a lot of
->> things simpler and also more consistent.
->
-> do you think this cleanup is to be a precursor to my patches? I could 
-> look into it but I am not familiar with the background of Xen
->
-> and this stuff. Can you please provide further guidance on where to
-> look
-
-As I said:
-
->> So to support this new fangled device MSI stuff we'd need yet more
->> x86/xen specific arch_*msi_irqs() indirection and hackery, which is not
->> going to happen.
-
-  git grep arch_.*msi_irq arch/x86
-
-This indirection prevents storing the irq_domain pointer in the device
-at probe/detection time. Native code already uses irq domains for
-PCI/MSI but we can't exploit the full potential because then
-pci_msi_setup_msi_irqs() would never end up in arch_setup_msi_irqs()
-which breaks XEN.
-
-I was reminded of that nastiness when I was looking at sensible ways to
-integrate this device MSI maze proper.
-
-From a conceptual POV this stuff, which is not restricted to IDXD at all,
-looks like this:
-
-           ]-------------------------------------------|
-PCI BUS -- | PCI device                                |
-           ]-------------------|                       |
-           | Physical function |                       |
-           ]-------------------|                       |
-           ]-------------------|----------|            |
-           | Control block for subdevices |            |
-           ]------------------------------|            |
-           |            | <- "Subdevice BUS"           |
-           |            |                              |
-           |            |-- Subddevice 0               | 
-           |            |-- Subddevice 1               | 
-           |            |-- ...                        | 
-           |            |-- Subddevice N               | 
-           ]-------------------------------------------|
-
-It does not matter whether this is IDXD with it's magic devices or a
-network card with a gazillion of queues. Conceptually we need to look at
-them as individual subdevices.
-
-And obviously the above picture gives you the topology. The physical
-function device belongs to PCI in all aspects including the MSI
-interrupt control. The control block is part of the PCI device as well
-and it even can have regular PCI/MSI interrupts for its own
-purposes. There might be devices where the Physical function device does
-not exist at all and the only true PCI functionality is the control
-block to manage subdevices. That does not matter and does not change the
-concept.
-
-Now the subdevices belong topology wise NOT to the PCI part. PCI is just
-the transport they utilize. And their irq domain is distinct from the
-PCI/MSI domain for reasons I explained before.
-
-So looking at it from a Linux perspective:
-
-  pci-bus -> PCI device (managed by PCI/MSI domain)
-               - PF device
-               - CB device (hosts DEVMSI domain)
-                    | "Subdevice bus"
-                    | - subdevice
-                    | - subdevice
-                    | - subdevice
-
-Now you would assume that figuring out the irq domain which the DEVMSI
-domain serving the subdevices on the subdevice bus should take as parent
-is pretty trivial when looking at the topology, right?
-
-CB device's parent is PCI device and we know that PCI device MSI is
-handled by the PCI/MSI domain which is either system wide or per IR
-unit.
-
-So getting the relevant PCI/MSI irq domain is as simple as doing:
-
-   pcimsi_domain = pcidevice->device->msi_domain;
-
-and then because we know that this is a hierarchy the parent domain of
-pcimsi_domain is the one which is the parent of our DEVMSI domain, i.e.:
-
-   parent = pcmsi_domain->parent;
-
-Obvious, right?
-
-What's not so obvious is that pcidevice->device->msi_domain is not
-populated on x86 and trying to get the parent from there is a NULL
-pointer dereference which does not work well.
-
-So you surely can hack up some workaround for this, but that's just
-proliferating crap. We want this to be consistent and there is
-absolutely no reason why that network card with the MSI storage in the
-queue data should not work on any other architecture.
-
-We do the correct association already for IOMMU and whatever topological
-stuff is attached to (PCI) devices on probe/detection time so making it
-consistent for irq domains is just a logical consequence and matter of
-consistency.
-
-Back in the days when x86 was converted to hierarchical irq domains in
-order to support I/O APIC hotplug this workaround was accepted to make
-progress and it was meant as a transitional step. Of course after the
-goal was achieved nobody @Intel cared anymore and so far this did not
-cause big problems. But now it does and we really want to make this
-consistent first.
-
-And no we are not making an exception for IDXD either just because
-that's Intel only. Intel is not special and not exempt from cleaning
-stuff up before adding new features especially not when the stuff to
-cleanup is a leftover from Intel itself. IOW, we are not adding more
-crap on top of crap which should not exists anymore.
-
-It's not rocket science to fix this. All it needs is to let XEN create
-irq domains and populate them during init.
-
-On device detection/probe the proper domain needs to be determined which
-is trivial and then stored in device->msi_domain. That makes
-arch_.*_msi_irq() go away and a lot of code just simpler.
-
-Thanks,
-
-        tglx
