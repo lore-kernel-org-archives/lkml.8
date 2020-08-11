@@ -2,148 +2,90 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B6BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:20:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC90C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:22:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC7C22078E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:20:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597159248;
-	bh=ebxY0fLYyFD3bCoJFQxYp3Sulg3by0GmfajwxeS0Trs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=p+Om1RdTVwRx0N+ogCjHWfBkQP/+iNoUZfgGVDEMUIDCWKAek6RY6GYlM0g0h8A2v
-	 jsbU2allUjNo/01WRk1q1P2IPYMfjYlzJitGZ9co3+dpTVbLYldzFUpVOiG/etUReb
-	 Jpf83H+4/5Ux2YOWxAwsxGoTf47DhiUboLYkibeM=
+	by mail.kernel.org (Postfix) with ESMTP id 665922177B
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:22:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Q4D+OfpR";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eKcqpl3a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728862AbgHKPUq (ORCPT
+        id S1728911AbgHKPW6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 11:20:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58726 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728783AbgHKPUp (ORCPT
+        Tue, 11 Aug 2020 11:22:58 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:59156 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728783AbgHKPW5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 11:20:45 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EF69C06174A
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 08:20:44 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id v12so13938797ljc.10
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 08:20:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bx6crtxCZeThOx4D4bD3ehsUEC/VPmmXSGnr3LbBSBM=;
-        b=fuVOZ6VXbzk9u1owlS5IWY/26dqpjDl8Zn92+ZwUfu1Iht5ylUjVdvAnr4KRzCh7VV
-         901ieKbmeI/uj2OiDMkFTEr6IDlawY4EVR5ym128Z6kvWcI5hAIhMBgVCcgpeT57dS6W
-         FJmGAlO9FQumMVHcvcBKzUuxybYBj4tt5eXdQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bx6crtxCZeThOx4D4bD3ehsUEC/VPmmXSGnr3LbBSBM=;
-        b=EwI7rx4DXxlJYquGqYrh0JJborW32diDisnKGIeYawe9owFW/TD11QlEztVvPyj49o
-         B9t3aM5CUdPPzanXxENMPFyFBOUGJ88dFSJ/E7DmZZnttg4BtYFlVPFRvtIiSWGy/DIh
-         pWEqy+F85qBkxeXT+jf2gV0fLC3A1S7AqsecqAshvv3hgVBUV61VzkJIbowVUa4JW7ig
-         ST8XGu4i1rWvKMOyw8dgkPI9G5GzPbAcECiUkdTimcjwetNX95zGyeOlOteNO+0no4Ox
-         wncyKXi6sc1Bs3A2C59lWFWq4TNrLIYJO+718ifLQgEhl5Hvhk5AzGqZa2aaVzDvyiN6
-         0lDw==
-X-Gm-Message-State: AOAM530yoXC1gi8vlaZVF2gr9Let5/ag9o2waDEE516i3RueqWaSVz9s
-        u11cdlq+Cq+Qfvh7XciSwB5SPNS9V/M=
-X-Google-Smtp-Source: ABdhPJwjymL7mcX+hW0ng3vBboXsEG99adp4GkMZxtFcu4A9g5s7oOVQpKOyiA2pxD3edbvCHDiguw==
-X-Received: by 2002:a05:651c:23a:: with SMTP id z26mr3142838ljn.257.1597159242327;
-        Tue, 11 Aug 2020 08:20:42 -0700 (PDT)
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
-        by smtp.gmail.com with ESMTPSA id g6sm11752403lfr.51.2020.08.11.08.20.40
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Aug 2020 08:20:41 -0700 (PDT)
-Received: by mail-lj1-f171.google.com with SMTP id z14so13989006ljm.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 08:20:40 -0700 (PDT)
-X-Received: by 2002:a2e:545:: with SMTP id 66mr3363842ljf.285.1597159240486;
- Tue, 11 Aug 2020 08:20:40 -0700 (PDT)
+        Tue, 11 Aug 2020 11:22:57 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1597159375;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=cOKrhA9/8Dw3b1MEGoQnT3OLTeegBJg+uMIZeCAWcPA=;
+        b=Q4D+OfpRS/p/vhHrfquXf6g0lyrsNdi1mroTAtY9KhvLFBpN9C1BKdL2o+E4GFj9v5ry2w
+        gOojjnlKOZY7XlkFA+vfTTmynlHH/jAiS14XVy+kqXf8Qi2smXWdBM1HSEr8dO6+f/7qES
+        NNyby2pgEjuPM1DnswKs9F8ZfphgWj8HP+Q+tZmZMCCjDL8g4a1IEaPgGg905J6axpM8Zk
+        lonWW6ZY/I9GFa/PQzy7JFGnbQfXupLCLVhJTR+06NgwaNjIzsZ7ge9X86CCAXkthm7YoO
+        vbL5MAWomQ/3AEW+8YVvrSHG+pObd5ZUsK9rqHolRXpBQ5y0Noml5G7+2lkdww==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1597159375;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=cOKrhA9/8Dw3b1MEGoQnT3OLTeegBJg+uMIZeCAWcPA=;
+        b=eKcqpl3aGqnoNbuEnk9+xeczPxofwMUfvBKJ9zXcIPBSGQaGiOQM/oWzZMbZ5bnJsEfb7f
+        DKPJKuByk1O135Cw==
+To:     Michal Hocko <mhocko@suse.com>, Uladzislau Rezki <urezki@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
+In-Reply-To: <87pn7x6y4a.fsf@nanos.tec.linutronix.de>
+References: <20200809204354.20137-1-urezki@gmail.com> <20200809204354.20137-2-urezki@gmail.com> <20200810123141.GF4773@dhcp22.suse.cz> <20200810160739.GA29884@pc636> <20200810192525.GG4773@dhcp22.suse.cz> <87pn7x6y4a.fsf@nanos.tec.linutronix.de>
+Date:   Tue, 11 Aug 2020 17:22:54 +0200
+Message-ID: <87k0y56wc1.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <1842689.1596468469@warthog.procyon.org.uk> <1845353.1596469795@warthog.procyon.org.uk>
- <CAJfpegunY3fuxh486x9ysKtXbhTE0745ZCVHcaqs9Gww9RV2CQ@mail.gmail.com>
- <ac1f5e3406abc0af4cd08d818fe920a202a67586.camel@themaw.net>
- <CAJfpegu8omNZ613tLgUY7ukLV131tt7owR+JJ346Kombt79N0A@mail.gmail.com>
- <CAJfpegtNP8rQSS4Z14Ja4x-TOnejdhDRTsmmDD-Cccy2pkfVVw@mail.gmail.com> <20200811135419.GA1263716@miu.piliscsaba.redhat.com>
-In-Reply-To: <20200811135419.GA1263716@miu.piliscsaba.redhat.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 11 Aug 2020 08:20:24 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjzLmMRf=QG-n+1HnxWCx4KTQn9+OhVvUSJ=ZCQd6Y1WA@mail.gmail.com>
-Message-ID: <CAHk-=wjzLmMRf=QG-n+1HnxWCx4KTQn9+OhVvUSJ=ZCQd6Y1WA@mail.gmail.com>
-Subject: Re: file metadata via fs API (was: [GIT PULL] Filesystem Information)
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>, Karel Zak <kzak@redhat.com>,
-        Jeff Layton <jlayton@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Christian Brauner <christian@brauner.io>,
-        Lennart Poettering <lennart@poettering.net>,
-        Linux API <linux-api@vger.kernel.org>,
-        Ian Kent <raven@themaw.net>,
-        LSM <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ I missed the beginning of this discussion, so maybe this was already
-suggested ]
-
-On Tue, Aug 11, 2020 at 6:54 AM Miklos Szeredi <miklos@szeredi.hu> wrote:
+Thomas Gleixner <tglx@linutronix.de> writes:
+> Michal Hocko <mhocko@suse.com> writes:
+>> zone->lock should be held for a very limited amount of time.
 >
-> >
-> > E.g.
-> >   openat(AT_FDCWD, "foo/bar//mnt/info", O_RDONLY | O_ALT);
+> Emphasis on should. free_pcppages_bulk() can hold it for quite some time
+> when a large amount of pages are purged. We surely would have converted
+> it to a raw lock long time ago otherwise.
 >
-> Proof of concept patch and test program below.
+> For regular enterprise stuff a few hundred microseconds might qualify as
+> a limited amount of time. For advanced RT applications that's way beyond
+> tolerable..
 
-I don't think this works for the reasons Al says, but a slight
-modification might.
+Sebastian just tried with zone lock converted to a raw lock and maximum
+latencies go up by a factor of 7 when putting a bit of stress on the
+memory subsytem. Just a regular kernel compile kicks them up by a factor
+of 5. Way out of tolerance.
 
-IOW, if you do something more along the lines of
+We'll have a look whether it's solely free_pcppages_bulk() and if so we
+could get away with dropping the lock in the loop.
 
-       fd = open(""foo/bar", O_PATH);
-       metadatafd = openat(fd, "metadataname", O_ALT);
+Thanks,
 
-it might be workable.
-
-So you couldn't do it with _one_ pathname, because that is always
-fundamentally going to hit pathname lookup rules.
-
-But if you start a new path lookup with new rules, that's fine.
-
-This is what I think xattrs should always have done, because they are
-broken garbage.
-
-In fact, if we do it right, I think we could have "getxattr()" be 100%
-equivalent to (modulo all the error handling that this doesn't do, of
-course):
-
-  ssize_t getxattr(const char *path, const char *name,
-                        void *value, size_t size)
-  {
-     int fd, attrfd;
-
-     fd = open(path, O_PATH);
-     attrfd = openat(fd, name, O_ALT);
-     close(fd);
-     read(attrfd, value, size);
-     close(attrfd);
-  }
-
-and you'd still use getxattr() and friends as a shorthand (and for
-POSIX compatibility), but internally in the kernel we'd have a
-interface around that "xattrs are just file handles" model.
-
-               Linus
+        tglx
