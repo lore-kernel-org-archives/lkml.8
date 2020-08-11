@@ -2,280 +2,105 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E2D4C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F23AC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:54:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCDF920756
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:54:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A53720756
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:54:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p15OKQ0B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728623AbgHKKye (ORCPT
+        id S1728637AbgHKKy6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 06:54:34 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:57818 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728326AbgHKKyc (ORCPT
+        Tue, 11 Aug 2020 06:54:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46040 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728280AbgHKKy5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 06:54:32 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id AEC7C1C0BD8; Tue, 11 Aug 2020 12:54:28 +0200 (CEST)
-Date:   Tue, 11 Aug 2020 12:54:13 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     jacek.anaszewski@gmail.com, robh@kernel.org, marek.behun@nic.cz,
-        devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v32 2/6] leds: lp50xx: Add the LP50XX family of the RGB
- LED driver
-Message-ID: <20200811105413.r2m2f7bubuz55rrt@duo.ucw.cz>
-References: <20200722153146.8767-1-dmurphy@ti.com>
- <20200722153146.8767-3-dmurphy@ti.com>
+        Tue, 11 Aug 2020 06:54:57 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29E29C06174A;
+        Tue, 11 Aug 2020 03:54:57 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id b11so6401733lfe.10;
+        Tue, 11 Aug 2020 03:54:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=70Up9z9wSMaoR2aNY1eUSKhBW91aRmZQ48unQBd8YGA=;
+        b=p15OKQ0B1cqUK91WwW3wXcV6A/K6ldC7BspOWe/hTR3w2TTTRSI+Rrm6l4sx2YGNhy
+         czP7GhTGSip1Mdzm1Ai3vFQ0wY72RfkwT1sGbCEmCnpl47RG+4CsnAFKKIrgggactmYv
+         iKjcxjOhtg0MFA9x9bstmFLNQhu43ZYQ641d+q7bicklCJaC7sriy1GSCWIOrLu9Poi2
+         D51PJtObiXlEkpaqm9OE1ebnhJNAo4ALQefYUqUIhGwNmlZmJ/RWjlJFxl1L+PRC2fZO
+         PcT1VXpav/UOMC9VVyR9XJrmRBzLUmUHclEe4bYbfy9tkh6oOi2jXnA1I9lMurGkcZIY
+         NL5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=70Up9z9wSMaoR2aNY1eUSKhBW91aRmZQ48unQBd8YGA=;
+        b=c4otZeY3NUy5hVN0AYouf/Cr/5UpivlOl6zDnMqBgg4jmqgvH0RiJZF3Ue+lrDxg4E
+         kJ/NhuivLOFWNOY/xLmVQU1L2AbGAztyhmZcOt1KS6RZGAaQGi7MV8EQNTpY2DdYRzNI
+         TAKsXAjN3kNpOdDcBW5lfVHjdl0eIAnsQyzwepxIJztkvQEFy+pNDMMzsRdZYM7X9oND
+         WSq8qfK3nYHoyfWj7tNNoYTpH2uyBD9xVm37a5057kTgJyon6szD8Zl3S9OVSVqzxIF8
+         V/u6HqK6q+AiuqYPIG7Yagp/1/MSunK02+GfNUnLtFIy+8LOiQm8MyoU67qEilQnXGZu
+         8Ifg==
+X-Gm-Message-State: AOAM533hqhApmwa+szjzUGHg7F1o4RmuIT7mgMo6KgTtZ/c2iGdGUO0J
+        7OHZJZzsOAFsFlebDlcJX6vPb37NrxusPivVEyo=
+X-Google-Smtp-Source: ABdhPJzuEz99wYtFWOo4xi9WxDsReSIZ3oPfSCa5vUioSXWWF30eLbWTM9EmGBaCAouUOvsLAkHvqY4lYu4GGfFGRhE=
+X-Received: by 2002:ac2:5e2c:: with SMTP id o12mr2938346lfg.71.1597143295578;
+ Tue, 11 Aug 2020 03:54:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="5gd3rgzruht2t34x"
-Content-Disposition: inline
-In-Reply-To: <20200722153146.8767-3-dmurphy@ti.com>
-User-Agent: NeoMutt/20180716
+References: <20200810151803.920113428@linuxfoundation.org>
+In-Reply-To: <20200810151803.920113428@linuxfoundation.org>
+From:   Puranjay Mohan <puranjay12@gmail.com>
+Date:   Tue, 11 Aug 2020 16:24:15 +0530
+Message-ID: <CANk7y0hRikqFBPfkPmEZRNOubeLXr1Us7w3C3-fwkgfxZET8FQ@mail.gmail.com>
+Subject: Re: [PATCH 5.8 00/38] 5.8.1-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Aug 10, 2020 at 8:53 PM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 5.8.1 release.
+> There are 38 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Wed, 12 Aug 2020 15:17:47 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.8.1-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.8.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+>
+Successfully booted on my Asus machine running x86_64
+No kernel regressions found.
+-- 
+Thanks and Regards
 
---5gd3rgzruht2t34x
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yours Truly,
 
-Hi!
-
-> +/* LP5009 and LP5012 registers */
-> +#define LP5012_BNK_BRT		0x03
-> +#define LP5012_BNKA_CLR		0x04
-> +#define LP5012_BNKB_CLR		0x05
-> +#define LP5012_BNKC_CLR		0x06
-> +#define LP5012_LED0_BRT		0x07
-> +#define LP5012_LED1_BRT		0x08
-> +#define LP5012_LED2_BRT		0x09
-> +#define LP5012_LED3_BRT		0x0a
-> +#define LP5012_OUT0_CLR		0x0b
-> +#define LP5012_OUT1_CLR		0x0c
-> +#define LP5012_OUT2_CLR		0x0d
-> +#define LP5012_OUT3_CLR		0x0e
-> +#define LP5012_OUT4_CLR		0x0f
-> +#define LP5012_OUT5_CLR		0x10
-> +#define LP5012_OUT6_CLR		0x11
-> +#define LP5012_OUT7_CLR		0x12
-> +#define LP5012_OUT8_CLR		0x13
-> +#define LP5012_OUT9_CLR		0x14
-> +#define LP5012_OUT10_CLR	0x15
-> +#define LP5012_OUT11_CLR	0x16
-> +#define LP5012_RESET		0x17
-> +
-> +/* LP5018 and LP5024 registers */
-> +#define LP5024_BNK_BRT		0x03
-> +#define LP5024_BNKA_CLR		0x04
-> +#define LP5024_BNKB_CLR		0x05
-> +#define LP5024_BNKC_CLR		0x06
-> +#define LP5024_LED0_BRT		0x07
-> +#define LP5024_LED1_BRT		0x08
-> +#define LP5024_LED2_BRT		0x09
-> +#define LP5024_LED3_BRT		0x0a
-> +#define LP5024_LED4_BRT		0x0b
-> +#define LP5024_LED5_BRT		0x0c
-> +#define LP5024_LED6_BRT		0x0d
-> +#define LP5024_LED7_BRT		0x0e
-> +
-> +#define LP5024_OUT0_CLR		0x0f
-> +#define LP5024_OUT1_CLR		0x10
-> +#define LP5024_OUT2_CLR		0x11
-> +#define LP5024_OUT3_CLR		0x12
-> +#define LP5024_OUT4_CLR		0x13
-> +#define LP5024_OUT5_CLR		0x14
-> +#define LP5024_OUT6_CLR		0x15
-> +#define LP5024_OUT7_CLR		0x16
-> +#define LP5024_OUT8_CLR		0x17
-> +#define LP5024_OUT9_CLR		0x18
-> +#define LP5024_OUT10_CLR	0x19
-> +#define LP5024_OUT11_CLR	0x1a
-> +#define LP5024_OUT12_CLR	0x1b
-> +#define LP5024_OUT13_CLR	0x1c
-> +#define LP5024_OUT14_CLR	0x1d
-> +#define LP5024_OUT15_CLR	0x1e
-> +#define LP5024_OUT16_CLR	0x1f
-> +#define LP5024_OUT17_CLR	0x20
-> +#define LP5024_OUT18_CLR	0x21
-> +#define LP5024_OUT19_CLR	0x22
-> +#define LP5024_OUT20_CLR	0x23
-> +#define LP5024_OUT21_CLR	0x24
-> +#define LP5024_OUT22_CLR	0x25
-> +#define LP5024_OUT23_CLR	0x26
-> +#define LP5024_RESET		0x27
-> +
-> +/* LP5030 and LP5036 registers */
-> +#define LP5036_LED_CFG1		0x03
-> +#define LP5036_BNK_BRT		0x04
-> +#define LP5036_BNKA_CLR		0x05
-> +#define LP5036_BNKB_CLR		0x06
-> +#define LP5036_BNKC_CLR		0x07
-> +#define LP5036_LED0_BRT		0x08
-> +#define LP5036_LED1_BRT		0x09
-> +#define LP5036_LED2_BRT		0x0a
-> +#define LP5036_LED3_BRT		0x0b
-> +#define LP5036_LED4_BRT		0x0c
-> +#define LP5036_LED5_BRT		0x0d
-> +#define LP5036_LED6_BRT		0x0e
-> +#define LP5036_LED7_BRT		0x0f
-> +#define LP5036_LED8_BRT		0x10
-> +#define LP5036_LED9_BRT		0x11
-> +#define LP5036_LED10_BRT	0x12
-> +#define LP5036_LED11_BRT	0x13
-> +
-> +#define LP5036_OUT0_CLR		0x14
-> +#define LP5036_OUT1_CLR		0x15
-> +#define LP5036_OUT2_CLR		0x16
-> +#define LP5036_OUT3_CLR		0x17
-> +#define LP5036_OUT4_CLR		0x18
-> +#define LP5036_OUT5_CLR		0x19
-> +#define LP5036_OUT6_CLR		0x1a
-> +#define LP5036_OUT7_CLR		0x1b
-> +#define LP5036_OUT8_CLR		0x1c
-> +#define LP5036_OUT9_CLR		0x1d
-> +#define LP5036_OUT10_CLR	0x1e
-> +#define LP5036_OUT11_CLR	0x1f
-> +#define LP5036_OUT12_CLR	0x20
-> +#define LP5036_OUT13_CLR	0x21
-> +#define LP5036_OUT14_CLR	0x22
-> +#define LP5036_OUT15_CLR	0x23
-> +#define LP5036_OUT16_CLR	0x24
-> +#define LP5036_OUT17_CLR	0x25
-> +#define LP5036_OUT18_CLR	0x26
-> +#define LP5036_OUT19_CLR	0x27
-> +#define LP5036_OUT20_CLR	0x28
-> +#define LP5036_OUT21_CLR	0x29
-> +#define LP5036_OUT22_CLR	0x2a
-> +#define LP5036_OUT23_CLR	0x2b
-> +#define LP5036_OUT24_CLR	0x2c
-> +#define LP5036_OUT25_CLR	0x2d
-> +#define LP5036_OUT26_CLR	0x2e
-> +#define LP5036_OUT27_CLR	0x2f
-> +#define LP5036_OUT28_CLR	0x30
-> +#define LP5036_OUT29_CLR	0x31
-> +#define LP5036_OUT30_CLR	0x32
-> +#define LP5036_OUT31_CLR	0x33
-> +#define LP5036_OUT32_CLR	0x34
-> +#define LP5036_OUT33_CLR	0x35
-> +#define LP5036_OUT34_CLR	0x36
-> +#define LP5036_OUT35_CLR	0x37
-> +#define LP5036_RESET		0x38
-
-> +static const struct reg_default lp5012_reg_defs[] =3D {
-=2E..
-> +	{LP5012_OUT1_CLR, 0x00},
-> +	{LP5012_OUT2_CLR, 0x00},
-> +	{LP5012_OUT3_CLR, 0x00},
-> +	{LP5012_OUT4_CLR, 0x00},
-> +	{LP5012_OUT5_CLR, 0x00},
-> +	{LP5012_OUT6_CLR, 0x00},
-> +	{LP5012_OUT7_CLR, 0x00},
-> +	{LP5012_OUT8_CLR, 0x00},
-> +	{LP5012_OUT9_CLR, 0x00},
-> +	{LP5012_OUT10_CLR, 0x00},
-> +	{LP5012_OUT11_CLR, 0x00},
-> +	{LP5012_RESET, 0x00}
-> +};
-> +
-> +static const struct reg_default lp5024_reg_defs[] =3D {
-=2E..
-> +	{LP5024_OUT1_CLR, 0x00},
-> +	{LP5024_OUT2_CLR, 0x00},
-> +	{LP5024_OUT3_CLR, 0x00},
-> +	{LP5024_OUT4_CLR, 0x00},
-> +	{LP5024_OUT5_CLR, 0x00},
-> +	{LP5024_OUT6_CLR, 0x00},
-> +	{LP5024_OUT7_CLR, 0x00},
-> +	{LP5024_OUT8_CLR, 0x00},
-> +	{LP5024_OUT9_CLR, 0x00},
-> +	{LP5024_OUT10_CLR, 0x00},
-> +	{LP5024_OUT11_CLR, 0x00},
-> +	{LP5024_OUT12_CLR, 0x00},
-> +	{LP5024_OUT13_CLR, 0x00},
-> +	{LP5024_OUT14_CLR, 0x00},
-> +	{LP5024_OUT15_CLR, 0x00},
-> +	{LP5024_OUT16_CLR, 0x00},
-> +	{LP5024_OUT17_CLR, 0x00},
-> +	{LP5024_OUT18_CLR, 0x00},
-> +	{LP5024_OUT19_CLR, 0x00},
-> +	{LP5024_OUT20_CLR, 0x00},
-> +	{LP5024_OUT21_CLR, 0x00},
-> +	{LP5024_OUT22_CLR, 0x00},
-> +	{LP5024_OUT23_CLR, 0x00},
-> +	{LP5024_RESET, 0x00}
-> +};
-> +
-> +static const struct reg_default lp5036_reg_defs[] =3D {
-> +	{LP5036_OUT1_CLR, 0x00},
-> +	{LP5036_OUT2_CLR, 0x00},
-> +	{LP5036_OUT3_CLR, 0x00},
-> +	{LP5036_OUT4_CLR, 0x00},
-> +	{LP5036_OUT5_CLR, 0x00},
-> +	{LP5036_OUT6_CLR, 0x00},
-> +	{LP5036_OUT7_CLR, 0x00},
-> +	{LP5036_OUT8_CLR, 0x00},
-> +	{LP5036_OUT9_CLR, 0x00},
-> +	{LP5036_OUT10_CLR, 0x00},
-> +	{LP5036_OUT11_CLR, 0x00},
-> +	{LP5036_OUT12_CLR, 0x00},
-> +	{LP5036_OUT13_CLR, 0x00},
-> +	{LP5036_OUT14_CLR, 0x00},
-> +	{LP5036_OUT15_CLR, 0x00},
-> +	{LP5036_OUT16_CLR, 0x00},
-> +	{LP5036_OUT17_CLR, 0x00},
-> +	{LP5036_OUT18_CLR, 0x00},
-> +	{LP5036_OUT19_CLR, 0x00},
-> +	{LP5036_OUT20_CLR, 0x00},
-> +	{LP5036_OUT21_CLR, 0x00},
-> +	{LP5036_OUT22_CLR, 0x00},
-> +	{LP5036_OUT23_CLR, 0x00},
-> +	{LP5036_OUT24_CLR, 0x00},
-> +	{LP5036_OUT25_CLR, 0x00},
-> +	{LP5036_OUT26_CLR, 0x00},
-> +	{LP5036_OUT27_CLR, 0x00},
-> +	{LP5036_OUT28_CLR, 0x00},
-> +	{LP5036_OUT29_CLR, 0x00},
-> +	{LP5036_OUT30_CLR, 0x00},
-> +	{LP5036_OUT31_CLR, 0x00},
-> +	{LP5036_OUT32_CLR, 0x00},
-> +	{LP5036_OUT33_CLR, 0x00},
-> +	{LP5036_OUT34_CLR, 0x00},
-> +	{LP5036_OUT35_CLR, 0x00},
-> +	{LP5036_RESET, 0x00}
-> +};
-
-Actually... This is quite impressive ammount of code to
-zero-initialize few registers. Could the regmap be told to set the
-range to zero, or use loops to reduce ammount of code?
-
-Thanks,
-								Pavel
-
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---5gd3rgzruht2t34x
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EARECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXzJ41QAKCRAw5/Bqldv6
-8oD4AJ4ge2UwqpDybUf3vNQHCmAQL7JpNwCfbZMmXUCfubO2TUMRquAKgYI85LE=
-=E0YK
------END PGP SIGNATURE-----
-
---5gd3rgzruht2t34x--
+Puranjay Mohan
