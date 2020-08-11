@@ -2,179 +2,146 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D47F9C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 07:19:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F9B4C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 07:20:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0FFC20774
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 07:19:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E557A20774
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 07:20:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G8B0k6+g"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Dcy3MFYO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728296AbgHKHTT (ORCPT
+        id S1728325AbgHKHUX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 03:19:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41126 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726421AbgHKHTS (ORCPT
+        Tue, 11 Aug 2020 03:20:23 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:46292 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726421AbgHKHUX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 03:19:18 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E82DC06174A;
-        Tue, 11 Aug 2020 00:19:18 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id o22so8740714qtt.13;
-        Tue, 11 Aug 2020 00:19:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=QUV+RKelrGDMMeJLFdVFPbO5APkLi9wyQFp+5QMDpqo=;
-        b=G8B0k6+gHQyZJGZkIl+xEMk6z/IlDGgzjGX5y4LxNPYyppL8U7UKPd3gn+3fIKXHCo
-         l9kweqnqTiecZV2ppBXXk7umYr3ephBhbV8F21O/89WgTHoAW0RxLr7uNmAFB/jp7JAS
-         QkKwvX2oUHmDCy2WrQQG3Q7sOLr62fSGghzehtSVFW5dSIffIgKzCwEkKerIv2qsnz2j
-         6HXMeKJr7toegZllvqQbAmUtlY3qUIGrTZG3Sg/2nNGBCdCC+ot2LSIpg6JI8qB4/rcf
-         heYYSfK9onwXOq7o4LBJlO95mn//YsfsVAlK5QbjYbgU6M3+ZGw+qvxYy25G/3shbRUP
-         PgzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=QUV+RKelrGDMMeJLFdVFPbO5APkLi9wyQFp+5QMDpqo=;
-        b=p4TYkCfngNQqdBFFanB24evcfpGZq0BIQalVoXOcnLwwu1LafEtC9j9idH7CVh2JZw
-         vWerA09TTV/CzCDlbFaztm5IcSvuCo+7bNlLWqTuCpoQrzdJhuh7O3UWir+pd3na5kOy
-         LGc+nHCGMlfuwm/1WG2LDkj0u3vP3xxla9DCY7PAlF+3rKfLm7wRYLtoS8k8NAKtm4h6
-         HGsBMvRGr1xxwUOTrDDWobCkyP7rRBV6Tw1CAhUDsdwWFZOkjPVGUeGuM8ONqd9mNT4L
-         IMA2ZRfcHLbpu+vScYU9AwZ04qInkvi0CS/5hNhpYHMASFN5Uwgnh8I6hX+ZCt2j5NTA
-         LSUg==
-X-Gm-Message-State: AOAM531NMb9WGLRwtt/toG5yUiGOkkC8oXzK9rnRucdgGyrQZI9JOJz0
-        mMn/is+SNH/yqF6D3pcJ3Q==
-X-Google-Smtp-Source: ABdhPJxBd5Yw2qCQsEu0ftMM++sr6OpE6pVjh3+jCMAnheGuaNBmkGoWNWMr2U2MFEYgUmx3GtaNhw==
-X-Received: by 2002:ac8:454b:: with SMTP id z11mr32295102qtn.350.1597130357716;
-        Tue, 11 Aug 2020 00:19:17 -0700 (PDT)
-Received: from PWN (146-115-88-66.s3894.c3-0.sbo-ubr1.sbo.ma.cable.rcncustomer.com. [146.115.88.66])
-        by smtp.gmail.com with ESMTPSA id x67sm16866688qke.136.2020.08.11.00.19.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Aug 2020 00:19:17 -0700 (PDT)
-Date:   Tue, 11 Aug 2020 03:19:14 -0400
-From:   Peilin Ye <yepeilin.cs@gmail.com>
-To:     Julian Anastasov <ja@ssi.bg>
-Cc:     Cong Wang <xiyou.wangcong@gmail.com>,
-        Wensong Zhang <wensong@linux-vs.org>,
-        Simon Horman <horms@verge.net.au>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        lvs-devel@vger.kernel.org,
-        NetFilter <netfilter-devel@vger.kernel.org>,
-        coreteam@netfilter.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [Linux-kernel-mentees] [PATCH net] ipvs: Fix uninit-value in
- do_ip_vs_set_ctl()
-Message-ID: <20200811071914.GA832118@PWN>
-References: <20200810220703.796718-1-yepeilin.cs@gmail.com>
- <CAM_iQpWsQubVJ-AYaLHujHwz68+nsHBcbgbf8XPMEPD=Vu+zaA@mail.gmail.com>
- <20200811050929.GA821443@PWN>
- <alpine.LFD.2.23.451.2008110936570.3707@ja.home.ssi.bg>
+        Tue, 11 Aug 2020 03:20:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597130420;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=FGaxh+kOinw/6HrdSxhT3sR53DJWqah2hM32C/k3Sw0=;
+        b=Dcy3MFYOLKn8UBfg7DmMJf8dupGq1e+bFJ4k8/53Bm2UfM4UtQcL4AwLemXvs8k1hffPr3
+        MG9/+Pud26iRjRY2x78NWo/d4wRB5zUx+sg/+xupUMaOPMyl0o551pIk2SBqNXOd801bHF
+        wWf1jPQLY1GdbUHF2DVA8c5KKffSLxQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-417-WbnfaxK9OcSkFjOahLvu7A-1; Tue, 11 Aug 2020 03:20:18 -0400
+X-MC-Unique: WbnfaxK9OcSkFjOahLvu7A-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1BDC8107ACCA;
+        Tue, 11 Aug 2020 07:20:17 +0000 (UTC)
+Received: from [10.36.113.73] (ovpn-113-73.ams2.redhat.com [10.36.113.73])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 629A45D9D7;
+        Tue, 11 Aug 2020 07:20:11 +0000 (UTC)
+Subject: Re: [PATCH v4 0/6] mm / virtio-mem: support ZONE_MOVABLE
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, linux-mm@kvack.org,
+        Baoquan He <bhe@redhat.com>, Jason Wang <jasowang@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Qian Cai <cai@lca.pw>
+References: <20200804194142.28279-1-david@redhat.com>
+ <baaf5992-cf43-69c1-7257-a5aa0a470ab8@redhat.com>
+ <20200810192118.34a33d64e357ce5dd6f7614d@linux-foundation.org>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat GmbH
+Message-ID: <2ffb90c5-5803-658d-27b0-968b5e9bd3c5@redhat.com>
+Date:   Tue, 11 Aug 2020 09:20:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.LFD.2.23.451.2008110936570.3707@ja.home.ssi.bg>
+In-Reply-To: <20200810192118.34a33d64e357ce5dd6f7614d@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 09:58:46AM +0300, Julian Anastasov wrote:
+On 11.08.20 04:21, Andrew Morton wrote:
+> On Mon, 10 Aug 2020 09:56:32 +0200 David Hildenbrand <david@redhat.com> wrote:
 > 
-> 	Hello,
+>> On 04.08.20 21:41, David Hildenbrand wrote:
+>>> @Andrew can we give this a churn and consider it for v5.9 in case there
+>>> are no more comments?
+>>
+>> @Andrew, Ping, so I assume we'll target v5.10?
 > 
-> On Tue, 11 Aug 2020, Peilin Ye wrote:
+> Yep, sorry.  Merging a significant patch series during the merge
+> window(!) would be quite extraordinary and I don't think that anything
+> in this patchset justifies such an action?
 > 
-> > On Mon, Aug 10, 2020 at 08:57:19PM -0700, Cong Wang wrote:
-> > > On Mon, Aug 10, 2020 at 3:10 PM Peilin Ye <yepeilin.cs@gmail.com> wrote:
-> > > >
-> > > > do_ip_vs_set_ctl() is referencing uninitialized stack value when `len` is
-> > > > zero. Fix it.
-> > > 
-> > > Which exact 'cmd' is it here?
-> > > 
-> > > I _guess_ it is one of those uninitialized in set_arglen[], which is 0.
-> > 
-> > Yes, it was `IP_VS_SO_SET_NONE`, implicitly initialized to zero.
-> > 
-> > > But if that is the case, should it be initialized to
-> > > sizeof(struct ip_vs_service_user) instead because ip_vs_copy_usvc_compat()
-> > > is called anyway. Or, maybe we should just ban len==0 case.
-> > 
-> > I see. I think the latter would be easier, but we cannot ban all of
-> > them, since the function does something with `IP_VS_SO_SET_FLUSH`, which
-> > is a `len == 0` case.
-> > 
-> > Maybe we do something like this?
-> 
-> 	Yes, only IP_VS_SO_SET_FLUSH uses len 0. We can go with
-> this change but you do not need to target net tree, as the
-> problem is not fatal net-next works too. What happens is
-> that we may lookup services with random search keys which
-> is harmless.
 
-I see, I'll target net-next instead.
+Okay, now I know you are aware of this series :)
 
-> 	Another option is to add new block after this one:
-> 
->         } else if (cmd == IP_VS_SO_SET_TIMEOUT) {
->                 /* Set timeout values for (tcp tcpfin udp) */
->                 ret = ip_vs_set_timeout(ipvs, (struct ip_vs_timeout_user *)arg);
->                 goto out_unlock;
->         }
-> 
-> 	such as:
-> 
-> 	} else if (!len) {
-> 		/* No more commands with len=0 below */
-> 		ret = -EINVAL;
-> 		goto out_unlock;
-> 	}
-> 
-> 	It give more chance for future commands to use len=0
-> but the drawback is that the check happens under mutex. So, I'm
-> fine with both versions, it is up to you to decide :)
+First, I thought #1 would be worth for v5.9, but it looks like it's not
+actually necessary. I'll respin the whole series for v5.10.
 
-Ah, this seems much cleaner. I'll send v2 soon, thank you!
+-- 
+Thanks,
 
-Peilin Ye
+David / dhildenb
 
-> > @@ -2432,6 +2432,8 @@ do_ip_vs_set_ctl(struct sock *sk, int cmd, void __user *user, unsigned int len)
-> > 
-> >  	if (cmd < IP_VS_BASE_CTL || cmd > IP_VS_SO_SET_MAX)
-> >  		return -EINVAL;
-> > +	if (len == 0 && cmd != IP_VS_SO_SET_FLUSH)
-> > +		return -EINVAL;
-> >  	if (len != set_arglen[CMDID(cmd)]) {
-> >  		IP_VS_DBG(1, "set_ctl: len %u != %u\n",
-> >  			  len, set_arglen[CMDID(cmd)]);
-> > @@ -2547,9 +2549,6 @@ do_ip_vs_set_ctl(struct sock *sk, int cmd, void __user *user, unsigned int len)
-> >  		break;
-> >  	case IP_VS_SO_SET_DELDEST:
-> >  		ret = ip_vs_del_dest(svc, &udest);
-> > -		break;
-> > -	default:
-> > -		ret = -EINVAL;
-> >  	}
-> > 
-> >    out_unlock:
-> 
-> Regards
-> 
-> --
-> Julian Anastasov <ja@ssi.bg>
