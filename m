@@ -2,302 +2,53 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EDCEC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:27:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC1FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:27:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DA1920781
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:27:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Bc4KMCho"
+	by mail.kernel.org (Postfix) with ESMTP id 053ED20771
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:27:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729184AbgHKR1o (ORCPT
+        id S1729253AbgHKR15 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 13:27:44 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:56780 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729096AbgHKR1n (ORCPT
+        Tue, 11 Aug 2020 13:27:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50114 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729096AbgHKR15 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 13:27:43 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07BHRRci114491;
-        Tue, 11 Aug 2020 12:27:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1597166847;
-        bh=FGXj1s1bgapDbOhk+hV14xUat7NY8t3A4MWv2IcwDKU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Bc4KMChoLu7A1OZjgH/ujenQ0xGQgALEF6i7UouPSfEIV7CJ4bFasVdK7ENM4hVkY
-         cRuBXODeBCyla+wRJddggnR1JVQuOXefX1X8c8MwDYaG1gEJyOCxwxm7lfOyEvS6Jo
-         X5gZoGKV2UesvR5114mrDWMtA34GeLmTkzzgCt7M=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07BHRRxS047879
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 11 Aug 2020 12:27:27 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 11
- Aug 2020 12:27:27 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 11 Aug 2020 12:27:27 -0500
-Received: from [10.250.38.37] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07BHRQmi075923;
-        Tue, 11 Aug 2020 12:27:26 -0500
-Subject: Re: [PATCH v32 2/6] leds: lp50xx: Add the LP50XX family of the RGB
- LED driver
-To:     Pavel Machek <pavel@ucw.cz>
-CC:     <jacek.anaszewski@gmail.com>, <robh@kernel.org>,
-        <marek.behun@nic.cz>, <devicetree@vger.kernel.org>,
-        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20200722153146.8767-1-dmurphy@ti.com>
- <20200722153146.8767-3-dmurphy@ti.com>
- <20200811105413.r2m2f7bubuz55rrt@duo.ucw.cz>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <935119fa-6d1f-8e99-51f9-87966b4d03ad@ti.com>
-Date:   Tue, 11 Aug 2020 12:27:21 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200811105413.r2m2f7bubuz55rrt@duo.ucw.cz>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Tue, 11 Aug 2020 13:27:57 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37F5EC06174A;
+        Tue, 11 Aug 2020 10:27:57 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id A04E412880A3C;
+        Tue, 11 Aug 2020 10:11:10 -0700 (PDT)
+Date:   Tue, 11 Aug 2020 10:27:55 -0700 (PDT)
+Message-Id: <20200811.102755.1446456447757407019.davem@davemloft.net>
+To:     tim.froidcoeur@tessares.net
+Cc:     kuba@kernel.org, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        kaber@trash.net, hidden@balabit.hu, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net v3 0/2] net: initialize fastreuse on
+ inet_inherit_port
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200806123024.585212-1-tim.froidcoeur@tessares.net>
+References: <20200806123024.585212-1-tim.froidcoeur@tessares.net>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 11 Aug 2020 10:11:11 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello
 
-On 8/11/20 5:54 AM, Pavel Machek wrote:
-> Hi!
->
->> +/* LP5009 and LP5012 registers */
->> +#define LP5012_BNK_BRT		0x03
->> +#define LP5012_BNKA_CLR		0x04
->> +#define LP5012_BNKB_CLR		0x05
->> +#define LP5012_BNKC_CLR		0x06
->> +#define LP5012_LED0_BRT		0x07
->> +#define LP5012_LED1_BRT		0x08
->> +#define LP5012_LED2_BRT		0x09
->> +#define LP5012_LED3_BRT		0x0a
->> +#define LP5012_OUT0_CLR		0x0b
->> +#define LP5012_OUT1_CLR		0x0c
->> +#define LP5012_OUT2_CLR		0x0d
->> +#define LP5012_OUT3_CLR		0x0e
->> +#define LP5012_OUT4_CLR		0x0f
->> +#define LP5012_OUT5_CLR		0x10
->> +#define LP5012_OUT6_CLR		0x11
->> +#define LP5012_OUT7_CLR		0x12
->> +#define LP5012_OUT8_CLR		0x13
->> +#define LP5012_OUT9_CLR		0x14
->> +#define LP5012_OUT10_CLR	0x15
->> +#define LP5012_OUT11_CLR	0x16
->> +#define LP5012_RESET		0x17
->> +
->> +/* LP5018 and LP5024 registers */
->> +#define LP5024_BNK_BRT		0x03
->> +#define LP5024_BNKA_CLR		0x04
->> +#define LP5024_BNKB_CLR		0x05
->> +#define LP5024_BNKC_CLR		0x06
->> +#define LP5024_LED0_BRT		0x07
->> +#define LP5024_LED1_BRT		0x08
->> +#define LP5024_LED2_BRT		0x09
->> +#define LP5024_LED3_BRT		0x0a
->> +#define LP5024_LED4_BRT		0x0b
->> +#define LP5024_LED5_BRT		0x0c
->> +#define LP5024_LED6_BRT		0x0d
->> +#define LP5024_LED7_BRT		0x0e
->> +
->> +#define LP5024_OUT0_CLR		0x0f
->> +#define LP5024_OUT1_CLR		0x10
->> +#define LP5024_OUT2_CLR		0x11
->> +#define LP5024_OUT3_CLR		0x12
->> +#define LP5024_OUT4_CLR		0x13
->> +#define LP5024_OUT5_CLR		0x14
->> +#define LP5024_OUT6_CLR		0x15
->> +#define LP5024_OUT7_CLR		0x16
->> +#define LP5024_OUT8_CLR		0x17
->> +#define LP5024_OUT9_CLR		0x18
->> +#define LP5024_OUT10_CLR	0x19
->> +#define LP5024_OUT11_CLR	0x1a
->> +#define LP5024_OUT12_CLR	0x1b
->> +#define LP5024_OUT13_CLR	0x1c
->> +#define LP5024_OUT14_CLR	0x1d
->> +#define LP5024_OUT15_CLR	0x1e
->> +#define LP5024_OUT16_CLR	0x1f
->> +#define LP5024_OUT17_CLR	0x20
->> +#define LP5024_OUT18_CLR	0x21
->> +#define LP5024_OUT19_CLR	0x22
->> +#define LP5024_OUT20_CLR	0x23
->> +#define LP5024_OUT21_CLR	0x24
->> +#define LP5024_OUT22_CLR	0x25
->> +#define LP5024_OUT23_CLR	0x26
->> +#define LP5024_RESET		0x27
->> +
->> +/* LP5030 and LP5036 registers */
->> +#define LP5036_LED_CFG1		0x03
->> +#define LP5036_BNK_BRT		0x04
->> +#define LP5036_BNKA_CLR		0x05
->> +#define LP5036_BNKB_CLR		0x06
->> +#define LP5036_BNKC_CLR		0x07
->> +#define LP5036_LED0_BRT		0x08
->> +#define LP5036_LED1_BRT		0x09
->> +#define LP5036_LED2_BRT		0x0a
->> +#define LP5036_LED3_BRT		0x0b
->> +#define LP5036_LED4_BRT		0x0c
->> +#define LP5036_LED5_BRT		0x0d
->> +#define LP5036_LED6_BRT		0x0e
->> +#define LP5036_LED7_BRT		0x0f
->> +#define LP5036_LED8_BRT		0x10
->> +#define LP5036_LED9_BRT		0x11
->> +#define LP5036_LED10_BRT	0x12
->> +#define LP5036_LED11_BRT	0x13
->> +
->> +#define LP5036_OUT0_CLR		0x14
->> +#define LP5036_OUT1_CLR		0x15
->> +#define LP5036_OUT2_CLR		0x16
->> +#define LP5036_OUT3_CLR		0x17
->> +#define LP5036_OUT4_CLR		0x18
->> +#define LP5036_OUT5_CLR		0x19
->> +#define LP5036_OUT6_CLR		0x1a
->> +#define LP5036_OUT7_CLR		0x1b
->> +#define LP5036_OUT8_CLR		0x1c
->> +#define LP5036_OUT9_CLR		0x1d
->> +#define LP5036_OUT10_CLR	0x1e
->> +#define LP5036_OUT11_CLR	0x1f
->> +#define LP5036_OUT12_CLR	0x20
->> +#define LP5036_OUT13_CLR	0x21
->> +#define LP5036_OUT14_CLR	0x22
->> +#define LP5036_OUT15_CLR	0x23
->> +#define LP5036_OUT16_CLR	0x24
->> +#define LP5036_OUT17_CLR	0x25
->> +#define LP5036_OUT18_CLR	0x26
->> +#define LP5036_OUT19_CLR	0x27
->> +#define LP5036_OUT20_CLR	0x28
->> +#define LP5036_OUT21_CLR	0x29
->> +#define LP5036_OUT22_CLR	0x2a
->> +#define LP5036_OUT23_CLR	0x2b
->> +#define LP5036_OUT24_CLR	0x2c
->> +#define LP5036_OUT25_CLR	0x2d
->> +#define LP5036_OUT26_CLR	0x2e
->> +#define LP5036_OUT27_CLR	0x2f
->> +#define LP5036_OUT28_CLR	0x30
->> +#define LP5036_OUT29_CLR	0x31
->> +#define LP5036_OUT30_CLR	0x32
->> +#define LP5036_OUT31_CLR	0x33
->> +#define LP5036_OUT32_CLR	0x34
->> +#define LP5036_OUT33_CLR	0x35
->> +#define LP5036_OUT34_CLR	0x36
->> +#define LP5036_OUT35_CLR	0x37
->> +#define LP5036_RESET		0x38
->> +static const struct reg_default lp5012_reg_defs[] = {
-> ...
->> +	{LP5012_OUT1_CLR, 0x00},
->> +	{LP5012_OUT2_CLR, 0x00},
->> +	{LP5012_OUT3_CLR, 0x00},
->> +	{LP5012_OUT4_CLR, 0x00},
->> +	{LP5012_OUT5_CLR, 0x00},
->> +	{LP5012_OUT6_CLR, 0x00},
->> +	{LP5012_OUT7_CLR, 0x00},
->> +	{LP5012_OUT8_CLR, 0x00},
->> +	{LP5012_OUT9_CLR, 0x00},
->> +	{LP5012_OUT10_CLR, 0x00},
->> +	{LP5012_OUT11_CLR, 0x00},
->> +	{LP5012_RESET, 0x00}
->> +};
->> +
->> +static const struct reg_default lp5024_reg_defs[] = {
-> ...
->> +	{LP5024_OUT1_CLR, 0x00},
->> +	{LP5024_OUT2_CLR, 0x00},
->> +	{LP5024_OUT3_CLR, 0x00},
->> +	{LP5024_OUT4_CLR, 0x00},
->> +	{LP5024_OUT5_CLR, 0x00},
->> +	{LP5024_OUT6_CLR, 0x00},
->> +	{LP5024_OUT7_CLR, 0x00},
->> +	{LP5024_OUT8_CLR, 0x00},
->> +	{LP5024_OUT9_CLR, 0x00},
->> +	{LP5024_OUT10_CLR, 0x00},
->> +	{LP5024_OUT11_CLR, 0x00},
->> +	{LP5024_OUT12_CLR, 0x00},
->> +	{LP5024_OUT13_CLR, 0x00},
->> +	{LP5024_OUT14_CLR, 0x00},
->> +	{LP5024_OUT15_CLR, 0x00},
->> +	{LP5024_OUT16_CLR, 0x00},
->> +	{LP5024_OUT17_CLR, 0x00},
->> +	{LP5024_OUT18_CLR, 0x00},
->> +	{LP5024_OUT19_CLR, 0x00},
->> +	{LP5024_OUT20_CLR, 0x00},
->> +	{LP5024_OUT21_CLR, 0x00},
->> +	{LP5024_OUT22_CLR, 0x00},
->> +	{LP5024_OUT23_CLR, 0x00},
->> +	{LP5024_RESET, 0x00}
->> +};
->> +
->> +static const struct reg_default lp5036_reg_defs[] = {
->> +	{LP5036_OUT1_CLR, 0x00},
->> +	{LP5036_OUT2_CLR, 0x00},
->> +	{LP5036_OUT3_CLR, 0x00},
->> +	{LP5036_OUT4_CLR, 0x00},
->> +	{LP5036_OUT5_CLR, 0x00},
->> +	{LP5036_OUT6_CLR, 0x00},
->> +	{LP5036_OUT7_CLR, 0x00},
->> +	{LP5036_OUT8_CLR, 0x00},
->> +	{LP5036_OUT9_CLR, 0x00},
->> +	{LP5036_OUT10_CLR, 0x00},
->> +	{LP5036_OUT11_CLR, 0x00},
->> +	{LP5036_OUT12_CLR, 0x00},
->> +	{LP5036_OUT13_CLR, 0x00},
->> +	{LP5036_OUT14_CLR, 0x00},
->> +	{LP5036_OUT15_CLR, 0x00},
->> +	{LP5036_OUT16_CLR, 0x00},
->> +	{LP5036_OUT17_CLR, 0x00},
->> +	{LP5036_OUT18_CLR, 0x00},
->> +	{LP5036_OUT19_CLR, 0x00},
->> +	{LP5036_OUT20_CLR, 0x00},
->> +	{LP5036_OUT21_CLR, 0x00},
->> +	{LP5036_OUT22_CLR, 0x00},
->> +	{LP5036_OUT23_CLR, 0x00},
->> +	{LP5036_OUT24_CLR, 0x00},
->> +	{LP5036_OUT25_CLR, 0x00},
->> +	{LP5036_OUT26_CLR, 0x00},
->> +	{LP5036_OUT27_CLR, 0x00},
->> +	{LP5036_OUT28_CLR, 0x00},
->> +	{LP5036_OUT29_CLR, 0x00},
->> +	{LP5036_OUT30_CLR, 0x00},
->> +	{LP5036_OUT31_CLR, 0x00},
->> +	{LP5036_OUT32_CLR, 0x00},
->> +	{LP5036_OUT33_CLR, 0x00},
->> +	{LP5036_OUT34_CLR, 0x00},
->> +	{LP5036_OUT35_CLR, 0x00},
->> +	{LP5036_RESET, 0x00}
->> +};
-> Actually... This is quite impressive ammount of code to
-> zero-initialize few registers. Could the regmap be told to set the
-> range to zero, or use loops to reduce ammount of code?
-
-I am not aware of any regmap calls that will set a range of registers to 
-a certain value.
-
-Well it depends on where we want to create the default cache values.
-
-Either we run through a for..loop during driver probe and delay device 
-start up or we keep the simple arrays and increase the driver total size.
-
-I am not seeing an advantage or disadvantage of one over the other.  
-This is a simpler and more clear way to init the registers versus a loop.
-
-Dan
-
-> Thanks,
-> 								Pavel
->
->
+These patches do not apply cleanly to the current net tree.
