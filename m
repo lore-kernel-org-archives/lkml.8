@@ -2,96 +2,89 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C85C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 13:02:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E310CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 13:07:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97F8E2076B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 13:02:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6E9C2076C
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 13:07:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728677AbgHKNCV (ORCPT
+        id S1728670AbgHKNHI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 09:02:21 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42628 "EHLO mx2.suse.de"
+        Tue, 11 Aug 2020 09:07:08 -0400
+Received: from mga04.intel.com ([192.55.52.120]:31994 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728506AbgHKNCU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 09:02:20 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id A9857AE54;
-        Tue, 11 Aug 2020 13:02:39 +0000 (UTC)
-Date:   Tue, 11 Aug 2020 15:02:18 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Orson Zhai <orsonzhai@gmail.com>,
-        Prarit Bhargava <prarit@redhat.com>,
-        Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>, kexec@lists.infradead.org,
-        linux-kernel@vger.kernel.org, zhang.lyra@gmail.com,
-        ruifeng.zhang1@unisoc.com, cixi.geng1@unisoc.com,
-        Orson Zhai <orson.zhai@unisoc.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Steven Sistare <steven.sistare@oracle.com>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Jon DeVree <nuxi@vault24.org>,
-        Salvatore Bonaccorso <carnil@debian.org>,
-        John Ogness <john.ogness@linutronix.de>
-Subject: Re: [RFC PATCH] printk: Change timestamp to triplet as mono, boot
- and real
-Message-ID: <20200811130218.GI6215@alley>
-References: <1597120822-11999-1-git-send-email-orsonzhai@gmail.com>
- <20200811094413.GA12903@alley>
- <87zh7175hj.fsf@nanos.tec.linutronix.de>
+        id S1728619AbgHKNHI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 09:07:08 -0400
+IronPort-SDR: mdAPz45f+KJIjUrLrDy0EB983Bp8x5Yk0RENUClZhpoQjNIGJoZTR+ambye7tEJjMgXpO5oWEJ
+ s/S2rZCQfkQg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9709"; a="151159529"
+X-IronPort-AV: E=Sophos;i="5.75,461,1589266800"; 
+   d="scan'208";a="151159529"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2020 06:07:07 -0700
+IronPort-SDR: q7TSaGA3zgBY9VQdB2f9iIBrK8SgrW02ME3wO9czPhvx2EdQyeX/wTxVCBnXuDXkSzJDW7BQR5
+ c4tCTsddmv3g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,461,1589266800"; 
+   d="scan'208";a="398520755"
+Received: from kuha.fi.intel.com ([10.237.72.162])
+  by fmsmga001.fm.intel.com with SMTP; 11 Aug 2020 06:07:04 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 11 Aug 2020 16:07:03 +0300
+Date:   Tue, 11 Aug 2020 16:07:03 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Prashant Malani <pmalani@chromium.org>,
+        "Shaikh, Azhar" <azhar.shaikh@intel.com>
+Cc:     "bleung@chromium.org" <bleung@chromium.org>,
+        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
+        "groeck@chromium.org" <groeck@chromium.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Patel, Utkarsh H" <utkarsh.h.patel@intel.com>,
+        "Bowman, Casey G" <casey.g.bowman@intel.com>,
+        "Mani, Rajmohan" <rajmohan.mani@intel.com>
+Subject: Re: [PATCH v2 2/2] platform/chrome: cros_ec_typec: Avoid setting usb
+ role during disconnect
+Message-ID: <20200811130703.GA627773@kuha.fi.intel.com>
+References: <20200730225609.7395-1-azhar.shaikh@intel.com>
+ <20200730225609.7395-3-azhar.shaikh@intel.com>
+ <20200730230238.GD3145664@google.com>
+ <MWHPR11MB1518178C5B2335FC02CD36AE91710@MWHPR11MB1518.namprd11.prod.outlook.com>
+ <20200730232504.GG3145664@google.com>
+ <MWHPR11MB151867DF25664C80E99A326D914B0@MWHPR11MB1518.namprd11.prod.outlook.com>
+ <CACeCKaf6WuW6XbFBQoVEW55w=OHfaVmmDn1xepiYYeRyMzZFrA@mail.gmail.com>
+ <20200806113907.GX883641@kuha.fi.intel.com>
+ <CACeCKaeLmVudhssvnYrQGmnJiD-byW8jOas1QKyQj4gg0=sC4A@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87zh7175hj.fsf@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CACeCKaeLmVudhssvnYrQGmnJiD-byW8jOas1QKyQj4gg0=sC4A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 2020-08-11 14:05:12, Thomas Gleixner wrote:
-> Petr Mladek <pmladek@suse.com> writes:
-> > At least "crash" tool would need an update anyway. AFAIK, it checks
-> > the size of struct printk_log and refuses to read it when it changes.
-> >
-> > It means that the hack with VMCOREINFO_FIELD_OFFSET probably is not
-> > needed because we would need to update the crashdump-related tools anyway.
-> >
-> > Well, the timing is good. We are about to switch the printk ring
-> > buffer into a lockless one. It requires updating the crashdump tools
-> > as well. We could do this at the same time. The lockless ring buffer
-> > already is in linux-next. It is aimed for 5.10 or 5.11.
-> ...
-> > It would be great to synchronize all these changes changes of the
-> > printk log buffer structures.
+Hi,
+
+On Thu, Aug 06, 2020 at 11:39:08AM -0700, Prashant Malani wrote:
+> I would suggest:
+> - Merging Patch 1 (role set correction) and Patch 2 (moving the
+> usb_role_switch_set_role() inside cros_typec_configure_mux()
+> *but* keep it at the end to preserve existing ordering) into 1 patch.
+> - Add another patch which re-orders the calls and which in the commit
+> message lists out all the reasons why this re-ordering
+> needs to be done.
 > 
-> I agree that having one update is a good thing, but pretty please can we
-> finally make progress with this and not create yet another dependency?
+> Doing the above will help keep better track of why the changes were made.
 
-To make it clear. I definitely do not want to block lockless printk by
-this.
+So Azhar can you please prepare v3?
 
-BTW: I am not 100% convinced that storing all three timestamps is
-worth it. It increases the code complexity, metadata size. It needs
-an interface with the userspace that has to stay backward compatible.
 
-Also it still will be racy because the timestamp is taken when the message
-is printed. It might be "long" before or after the event that
-it talks about.
+thanks,
 
-There is still the alternative to print all three timestamps regularly
-for those interested. It is less user convenient but much easier
-to maintain.
-
-Best Regards,
-Petr
+-- 
+heikki
