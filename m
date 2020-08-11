@@ -2,218 +2,171 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D04C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 16:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC6CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 16:54:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80B3D2076B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 16:53:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ME5nK4ym"
+	by mail.kernel.org (Postfix) with ESMTP id 7BA792076B
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 16:54:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729138AbgHKQx6 (ORCPT
+        id S1729115AbgHKQym (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 12:53:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44848 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729046AbgHKQx5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 12:53:57 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CDD8C06174A;
-        Tue, 11 Aug 2020 09:53:57 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id z6so13403732iow.6;
-        Tue, 11 Aug 2020 09:53:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=nZ/k9Byto1826yL422aEJoOrFWeBEVpscC6FOqMA7kA=;
-        b=ME5nK4ymcdbDyMLRTGXIrkRc9MfpLvEQIypfQ6i7SLtjdscQ9yqRf5etWxP3lgzQqN
-         WCkmcuPrpUvn6+F/UgAMbFdy2ioyoNDmVgzF0QS1FGxqFSAOkkCSLmTLJsdgqovV43Yh
-         lsIttJxqv6oi4sSUl0Jj4ABVh2hC12n5rb5i/i9u8sW8J2LZu5FhSndWAhGTrcXLtaTl
-         kgCRiaY8APBt85uH9U77xmouwnOv60WHMEhmUTAFiGFFq1Tnhw4PgDWonLsxmE2+b0h0
-         lHKQSvaHkAmweqs6ezAoljmvb69FbqQsgTLRB7GGh0/+fuMNJayFdmoUOqa7vUawHp8i
-         jKcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=nZ/k9Byto1826yL422aEJoOrFWeBEVpscC6FOqMA7kA=;
-        b=Qdm9/EQH1JiG8GMHN+CxNKoZZ+vy6pRShArcbaJ4g5OWupAv6DFevb0b8rBU+9sUwe
-         mN69v5JpeWkDIboSBcgFzVOnjDrEZ3BZyuuj1MPTlbZgpBEZ6JU99nvIcsfUs1OBafE3
-         UJ+URG/sIe/GBKjMoOkCGvtCA8Q/kaPKjB2sV+1UbwhnRvHB4DwvzsMypydevX3ryqYU
-         RFskPsZqyBDZQPxgDV3zEAYc7cU1Q0OJiPKDKI8Cz+vBrQKvu/zRp4L/7FfvEQA5PD7t
-         BCnRzfpINTYCYT6eA17A/Cpo9++ZYFba2u4PaFQXshoWkrZE0+4o8ORh2qOMdadeLzRC
-         cHTw==
-X-Gm-Message-State: AOAM530xkVNveqhttKljVQ5JxhBIzt16Hp+bwgCJBDeZu2ucmF9an5zg
-        m1N9RERTtQjfTjhl8rAjHfw2k82IW6nQh3HFU9Q=
-X-Google-Smtp-Source: ABdhPJxuLtZbjgoEws5GBiRtQSrFjUhONQp+nc/PcBjemOv4wvx8B6pNySW1uABQ2h17VfUBda5qLktg0/VXklGmSR0=
-X-Received: by 2002:a6b:b888:: with SMTP id i130mr23575515iof.182.1597164836425;
- Tue, 11 Aug 2020 09:53:56 -0700 (PDT)
+        Tue, 11 Aug 2020 12:54:42 -0400
+Received: from mga12.intel.com ([192.55.52.136]:26275 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728962AbgHKQym (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 12:54:42 -0400
+IronPort-SDR: SXyN+1518Zs/4UK2pM6sjLiVJ879785iGvkq2hcphgBq3kkefsqs8Ur8MW0VIiCD1nOLFSpphO
+ Os6sa+eupjmw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9710"; a="133307073"
+X-IronPort-AV: E=Sophos;i="5.76,301,1592895600"; 
+   d="scan'208";a="133307073"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2020 09:54:41 -0700
+IronPort-SDR: R+rgW4VXEi6GPdVsNSPPelRJdde1YATjsp7hTZyCXnQW5hDkJKLhGtxzcFZx76HOtN6UvBV43J
+ NaFi2AsXBeTA==
+X-IronPort-AV: E=Sophos;i="5.76,301,1592895600"; 
+   d="scan'208";a="495211140"
+Received: from lwhitehe-mobl.amr.corp.intel.com (HELO [10.212.97.49]) ([10.212.97.49])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2020 09:54:39 -0700
+Subject: Re: [PATCH v3 2/2] ASoC: Intel: Add period size constraint on strago
+ board
+To:     Mark Brown <broonie@kernel.org>,
+        Yu-Hsuan Hsu <yuhsuan@chromium.org>
+Cc:     Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Takashi Iwai <tiwai@suse.de>,
+        "Rojewski, Cezary" <cezary.rojewski@intel.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Sam McNally <sammc@chromium.org>,
+        "yuhsuan@google.com" <yuhsuan@google.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Daniel Stuart <daniel.stuart14@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Lu, Brent" <brent.lu@intel.com>,
+        Damian van Soelen <dj.vsoelen@gmail.com>
+References: <6466847a-8aae-24f7-d727-36ba75e95f98@linux.intel.com>
+ <DM6PR11MB364259049769F6EF3B84AABD97480@DM6PR11MB3642.namprd11.prod.outlook.com>
+ <3f3baf5e-f73d-9cd6-cbfb-36746071e126@linux.intel.com>
+ <CAGvk5PohOP0Yv22tb53EX=ZLB9_vOMb=iujTh64OvHmjC1d4mg@mail.gmail.com>
+ <DM6PR11MB3642AC7F8EC47EB48B384D4797450@DM6PR11MB3642.namprd11.prod.outlook.com>
+ <CAGvk5PogmqfEnFRA8hzby+AGgbOSvbELamh_1=eA9KTpyBMPYQ@mail.gmail.com>
+ <s5htux939x1.wl-tiwai@suse.de>
+ <CAGvk5PpcmkZ2HarqeCDaXm4id=84wYs-u4vWxJunHaf09gj66g@mail.gmail.com>
+ <s5ho8nh37br.wl-tiwai@suse.de>
+ <CAGvk5PphzkdiNfW8hiDuqX+2eQO2FvrpzA0qR3=3VvqM3GBhAA@mail.gmail.com>
+ <20200811145353.GG6967@sirena.org.uk>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <d78f9adc-d583-f0f2-ce38-3c9175c939b8@linux.intel.com>
+Date:   Tue, 11 Aug 2020 11:54:38 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <CGME20200811112518eucas1p2a751f664a907ac7cd8e1dd235dc2fa54@eucas1p2.samsung.com>
- <20200811112507.24418-1-s.nawrocki@samsung.com> <CA+Ln22Hfys7r2EDstOsdks1X88Fuv77DLTuXLWDynTt4kmiCiQ@mail.gmail.com>
- <66c7330e-507e-d81f-1cb1-b509bf54d050@samsung.com>
-In-Reply-To: <66c7330e-507e-d81f-1cb1-b509bf54d050@samsung.com>
-From:   Tomasz Figa <tomasz.figa@gmail.com>
-Date:   Tue, 11 Aug 2020 18:53:44 +0200
-Message-ID: <CA+Ln22E4FPexE1R2dmV=u9U5UFWsAz=8kXgqBntEBgabnUEF+Q@mail.gmail.com>
-Subject: Re: [PATCH v2] clk: samsung: Prevent potential endless loop in the
- PLL set_rate ops
-To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc:     "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Mike Turquette <mturquette@baylibre.com>,
-        "moderated list:SAMSUNG SOC CLOCK DRIVERS" 
-        <linux-samsung-soc@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200811145353.GG6967@sirena.org.uk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020=E5=B9=B48=E6=9C=8811=E6=97=A5(=E7=81=AB) 18:45 Sylwester Nawrocki <s.n=
-awrocki@samsung.com>:
->
-> Hi Tomasz,
->
-> On 11.08.2020 14:59, Tomasz Figa wrote:
-> > 2020=E5=B9=B48=E6=9C=8811=E6=97=A5(=E7=81=AB) 13:25 Sylwester Nawrocki =
-<s.nawrocki@samsung.com>:
-> >>
-> >> In the .set_rate callback for some PLLs there is a loop polling state
-> >> of the PLL lock bit and it may become an endless loop when something
-> >> goes wrong with the PLL. For some PLLs there is already (a duplicated)
-> >> code for polling with timeout. This patch replaces that code with
-> >> the readl_relaxed_poll_timeout_atomic() macro and moves it to a common
-> >> helper function, which is then used for all the PLLs. The downside
-> >> of switching to the common macro is that we drop the cpu_relax() call.
-> >
-> > Tbh. I'm not sure what effect was exactly expected from cpu_relax() in
-> > the functions which already had timeout handling. Could someone shed
-> > some light on this?
-> >
-> >> Using a common helper function rather than the macro directly allows
-> >> to avoid repeating the error message in the code and to avoid the obje=
-ct
-> >> code size increase due to inlining.
-> >>
-> >> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> >> ---
-> >> Changes for v2:
-> >>  - use common readl_relaxed_poll_timeout_atomic() macro
-> >> ---
-> >>  drivers/clk/samsung/clk-pll.c | 92 +++++++++++++++-------------------=
----------
-> >>  1 file changed, 32 insertions(+), 60 deletions(-)
-> >>
-> >> diff --git a/drivers/clk/samsung/clk-pll.c b/drivers/clk/samsung/clk-p=
-ll.c
-> >> index ac70ad7..c3c1efe 100644
-> >> --- a/drivers/clk/samsung/clk-pll.c
-> >> +++ b/drivers/clk/samsung/clk-pll.c
-> >> @@ -9,13 +9,14 @@
->
-> >> -#define PLL_TIMEOUT_MS         10
-> >> +#define PLL_TIMEOUT_US         10000U
-> >
-> > I'm also wondering if 10ms is the universal value that would cover the
-> > oldest PLLs as well, but my loose recollection is that they should
-> > still lock much faster than that. Could you double check that in the
-> > documentation?
->
-> Thanks for your comments.
->
-> The oldest PLLs have a hard coded 300 us waiting time for PLL lock and
-> are not affected by the patch.
-> I have checked some of the PLLs and maximum observed lock time was around
-> 370 us and most of the time it was just a few us.
->
-> We calculate the lock time in each set_rate op, in the oscillator cycle
-> units, as a product of current P divider value and a constant PLL type
-> specific LOCK_FACTOR. Maximum possible P value is 64, maximum possible
-> LOCK_FACTOR is 3000. Assuming minimum VCO frequency of 24 MHz (which
-> I think will usually be much higher than that) maximum lock time
-> would be (64 x 3000) / 24 MHz =3D 8 ms. I think we can leave the current
-> 10 ms value.
 
-Sounds good to me. Thanks!
+>>> ... Why only 240?  That's the next logical question.
+>>> If you have a clarification for it, it may be the rigid reason to
+>>> introduce such a hw constraint.
+> 
+>> According to Brent, the DSP is using 240 period regardless the
+>> hw_param. If the period size is 256, DSP will read 256 samples each
+>> time but only consume 240 samples until the ring buffer of DSP is
+>> full. This behavior makes the samples in the ring buffer of kernel
+>> consumed quickly.
+> 
+>> Not sure whether the explanation is correct. Hi Brent, can you confirm it?
+> 
+> This seems to be going round and round in circles.  Userspace lets the
+> kernel pick the period size, if the period size isn't 240 (or a multiple
+> of it?) the DSP doesn't properly pay attention to that apparently due to
+> internal hard coding in the DSP firmware which we can't change so the
+> constraint logic needs to know about this DSP limitation - it seems like
+> none of this is going to change without something new going into the
+> mix?  We at least need a new question to ask about the DSP firmware I
+> think.
 
->
-> But there is other issue, it seems we can't really use the ktime API
-> in the set_rate callbacks, as these could be called early, before the
-> clocksource is initialized and ktime doesn't work yet. Below trace
-> is from a dump_stack() added to the samsung_pll_lock_wait() callback.
-> The PLL rate setting is triggered by assigned-clock* properties in
-> the clock supplier node.
-> I think we need to switch to a simple udelay() loop, as is done in
-> clk-tegra210 driver for instance.
->
-> [    0.000000] Hardware name: Samsung Exynos (Flattened Device Tree)
-> [    0.000000] [<c0111e9c>] (unwind_backtrace) from [<c010d0ec>] (show_st=
-ack+0x10/0x14)
-> [    0.000000] [<c010d0ec>] (show_stack) from [<c051d890>] (dump_stack+0x=
-ac/0xd8)
-> [    0.000000] [<c051d890>] (dump_stack) from [<c0578d94>] (samsung_pll_l=
-ock_wait+0x14/0x174)
-> [    0.000000] [<c0578d94>] (samsung_pll_lock_wait) from [<c057319c>] (cl=
-k_change_rate+0x1a8/0x8ac)
-> [    0.000000] [<c057319c>] (clk_change_rate) from [<c0573aec>] (clk_core=
-_set_rate_nolock+0x24c/0x268)
-> [    0.000000] [<c0573aec>] (clk_core_set_rate_nolock) from [<c0573b38>] =
-(clk_set_rate+0x30/0x64)
-> [    0.000000] [<c0573b38>] (clk_set_rate) from [<c0577df8>] (of_clk_set_=
-defaults+0x214/0x384)
-> [    0.000000] [<c0577df8>] (of_clk_set_defaults) from [<c0572f34>] (of_c=
-lk_add_hw_provider+0x98/0xd8)
-> [    0.000000] [<c0572f34>] (of_clk_add_hw_provider) from [<c1120278>] (s=
-amsung_clk_of_add_provider+0x1c/0x30)
-> [    0.000000] [<c1120278>] (samsung_clk_of_add_provider) from [<c1121844=
->] (exynos5250_clk_of_clk_init_driver+0x1f4/0x240)
-> [    0.000000] [<c1121844>] (exynos5250_clk_of_clk_init_driver) from [<c1=
-1200d0>] (of_clk_init+0x16c/0x218)
-> [    0.000000] [<c11200d0>] (of_clk_init) from [<c1104bdc>] (time_init+0x=
-24/0x30)
-> [    0.000000] [<c1104bdc>] (time_init) from [<c1100d20>] (start_kernel+0=
-x3b0/0x520)
+I just tested aplay -Dhw: on a Cyan Chromebook with the Ubuntu kernel 
+5.4, and I see no issues with the 240 sample period. Same with 432, 960, 
+9600, etc.
 
-Yeah... I should've thought about this. Interestingly enough, some of
-the existing implementations in drivers/clk/samsung/clk-pll.c use the
-ktime API. I guess they are lucky enough not to be called too early,
-i.e. are not needed for the initialization of timers.
+I also tried just for fun what happens with 256 samples, and I don't see 
+any underflows thrown either, so I am wondering what exactly the problem 
+is? Something's not adding up. I would definitively favor multiple of 
+1ms periods, since it's the only case that was productized, but there's 
+got to me something a side effect of how CRAS programs the hw_params.
 
-Best regards,
-Tomasz
+root@chrx:~# aplay -Dhw:0,0 --period-size=240 --buffer-size=480 -v 1.wav
+Playing WAVE '1.wav' : Signed 16 bit Little Endian, Rate 48000 Hz, Stereo
+Hardware PCM card 0 'chtmax98090' device 0 subdevice 0
+Its setup is:
+   stream       : PLAYBACK
+   access       : RW_INTERLEAVED
+   format       : S16_LE
+   subformat    : STD
+   channels     : 2
+   rate         : 48000
+   exact rate   : 48000 (48000/1)
+   msbits       : 16
+   buffer_size  : 480
+   period_size  : 240
+   period_time  : 5000
+   tstamp_mode  : NONE
+   tstamp_type  : MONOTONIC
+   period_step  : 1
+   avail_min    : 240
+   period_event : 0
+   start_threshold  : 480
+   stop_threshold   : 480
+   silence_threshold: 0
+   silence_size : 0
+   boundary     : 8646911284551352320
+   appl_ptr     : 0
+   hw_ptr       : 0
+
+root@chrx:~# aplay -Dhw:0,0 --period-size=256 --buffer-size=512 -v 1.wav
+Playing WAVE '1.wav' : Signed 16 bit Little Endian, Rate 48000 Hz, Stereo
+Hardware PCM card 0 'chtmax98090' device 0 subdevice 0
+Its setup is:
+   stream       : PLAYBACK
+   access       : RW_INTERLEAVED
+   format       : S16_LE
+   subformat    : STD
+   channels     : 2
+   rate         : 48000
+   exact rate   : 48000 (48000/1)
+   msbits       : 16
+   buffer_size  : 512
+   period_size  : 256
+   period_time  : 5333
+   tstamp_mode  : NONE
+   tstamp_type  : MONOTONIC
+   period_step  : 1
+   avail_min    : 256
+   period_event : 0
+   start_threshold  : 512
+   stop_threshold   : 512
+   silence_threshold: 0
+   silence_size : 0
+   boundary     : 4611686018427387904
+   appl_ptr     : 0
+   hw_ptr       : 0
 
 
-> [    0.000000] [<c1100d20>] (start_kernel) from [<00000000>] (0x0)
-> [    0.000000] samsung_pll_lock_wait: PLL fout_epll, lock time: 0 us, ret=
-: 0
-> [    0.000000] Exynos5250: clock setup completed, armclk=3D1700000000
-> [    0.000000] Switching to timer-based delay loop, resolution 41ns
-> [    0.000000] clocksource: mct-frc: mask: 0xffffffff max_cycles: 0xfffff=
-fff, max_idle_ns: 79635851949 ns
-> [    0.000003] sched_clock: 32 bits at 24MHz, resolution 41ns, wraps ever=
-y 89478484971ns
-> [    0.000032] genirq: irq_chip COMBINER did not update eff. affinity mas=
-k of irq 49
-> [    0.000523] arch_timer: cp15 timer(s) running at 24.00MHz (virt).
-> [    0.000536] clocksource: arch_sys_counter: mask: 0xffffffffffffff max_=
-cycles: 0x588fe9dc0, max_idle_ns: 440795202592 ns
-> [    0.000551] sched_clock: 56 bits at 24MHz, resolution 41ns, wraps ever=
-y 4398046511097ns
->
-> --
-> Regards,
-> Sylwester
