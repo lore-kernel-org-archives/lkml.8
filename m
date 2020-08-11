@@ -3,175 +3,134 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B809C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:52:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE4B6C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:52:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E895720756
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:52:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="IlWKI/fa"
+	by mail.kernel.org (Postfix) with ESMTP id 9084920756
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:52:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597161160;
+	bh=Md+DuKzkPkps098XTMNCHzY4udMS2jS0iQepiNGeuLA=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=wB6PMMYjUprGFUzCvm/BfVyuQE5sXhvYdISpnWkyB1eI006feOG9hJjZ6pdyrcEUH
+	 q2wDvBiKOw81amA6T2v/nxQACXNNPgImAgimLcVIab62ujttREWgxlTF+dIWDeVl8r
+	 95I7wbs/RTeKdKqMoilYFUghLQZvObSViIrdmBb4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728962AbgHKPwK (ORCPT
+        id S1728990AbgHKPwj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 11:52:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35334 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728800AbgHKPwH (ORCPT
+        Tue, 11 Aug 2020 11:52:39 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:38286 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728800AbgHKPwh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 11:52:07 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FA1AC06174A
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 08:52:06 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id z18so11942012wrm.12
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 08:52:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=9aCeAHh+tJpUW3mQW2V6JCgolza+sh48fpnGnwOnipk=;
-        b=IlWKI/fa9axZFDtAyM+nbd8f8M6K6q2uI3EF+7Oij+ty6MQl2FpMDa0V56rCfcgYJy
-         GPFbmS/eqnvpQSjFeoIcz9CErIRegacw40Q38xrhFAYWhY4mFO/HZNSKVvHM/38DuLVR
-         /Y9NCD0WavOjw+F1n4x5M61a2yLf6j0ZpAg4U=
+        Tue, 11 Aug 2020 11:52:37 -0400
+Received: by mail-wm1-f68.google.com with SMTP id t14so3320263wmi.3;
+        Tue, 11 Aug 2020 08:52:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=9aCeAHh+tJpUW3mQW2V6JCgolza+sh48fpnGnwOnipk=;
-        b=iv+hAlQyrV6jrZ03Ge04jTVV56mk0r/lrS4cp3Yfc8YRZrQwU9qHyYbbaHiAvNxkzs
-         e7qEAP8uSc+Tza40XrUmAiT7vTFBJpqpEHG9U6qk9hq3v5Bf05RwrfONGYfUgr0w/EG/
-         IYzEadoLgf8xwNGD2LyNPD3RwYiQn0+tGs9jgMW9Ak6FB4nPd+Me5T8e5dcbxI1Q58N3
-         ToQdoIF9i9bOOi/lbiBY5vMju3HILJQPQQfc3ESIyFCJP26auBJwH7ZBZcH9/ICogc8v
-         SKV5q4poVQlv6o01i39mrbhylTVmpA5r7ldACI3XlRaNO4hRZphsIigYnf26SOua1ai2
-         byjg==
-X-Gm-Message-State: AOAM530f4BXW4kT+oRp7Gn/iXHedUe+DwcXJ2GhDsXvJ9qhchcafb2nu
-        LpJjj1yNg/DsLtGgZ5ARK8sWeg==
-X-Google-Smtp-Source: ABdhPJwmQ09pbVIsm5G6JWGLVVkrdVRK9rctTlUrcLL274znvsX2IIRJ6wCEsi6XW2KeK56vvoHHtw==
-X-Received: by 2002:adf:fd41:: with SMTP id h1mr31876509wrs.124.1597161125115;
-        Tue, 11 Aug 2020 08:52:05 -0700 (PDT)
-Received: from [10.230.0.249] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id b203sm6013680wmc.22.2020.08.11.08.52.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Aug 2020 08:52:04 -0700 (PDT)
-Subject: Re: [PATCH v3] i2c: iproc: fix race between client unreg and isr
-To:     Dhananjay Phadke <dphadke@linux.microsoft.com>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Wolfram Sang <wsa@kernel.org>, Ray Jui <rjui@broadcom.com>
-Cc:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com
-References: <1597106560-79693-1-git-send-email-dphadke@linux.microsoft.com>
-From:   Ray Jui <ray.jui@broadcom.com>
-Message-ID: <c7ef0a9e-e3c1-abcf-160b-4df4f523fa04@broadcom.com>
-Date:   Tue, 11 Aug 2020 08:52:00 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=88Li6T5Kvmt1uKW639G+kKlxhB5o4hvW9Qv3b1Xe4fc=;
+        b=b+4udarGNc0ip9dRgLsZARTX7oyEnqaII0YzdqX8YY/wtjnu2/OsB3U0lCFLuyhYJ7
+         bURGxBn9QMt6EK4GLqCmrpFp1Gr8k8PvEHbo2zLp4zHViAb0RM/DDPOtpe9wTHFylVLN
+         EAX1ra8oFagQrW3OYmeOuUcmV3RzK8gsYpC6cTp5M3TiH1PC6HK2KhfW7gQIEeSuTRNJ
+         srqpU/lXkPUTso961GjCrIRKRfaFLnZUuqE4RKuaAPA/psdqPRT68EWsqOV7yzjcVJfD
+         vXmxo9nBb8L3hL02G1n7cpbbn40QoDrDjzH2B/ySFP+VYAHRL8nRtgR2uJPSvDwjxYKp
+         hScA==
+X-Gm-Message-State: AOAM533r9JlRHUAejhZqYUoivajKgk6ekjpUMGCnIHVb2MClWsVHBWh+
+        N0BQjB1Bl62XT/CneOyDQJs=
+X-Google-Smtp-Source: ABdhPJyzdO+JmvDCM9jhUwcbnTiLn2XLEM04kKLEy3PYPoJe0SBFCP6ecOG0QL0HA2H7u2pDAXa+bA==
+X-Received: by 2002:a1c:f416:: with SMTP id z22mr4367049wma.62.1597161155302;
+        Tue, 11 Aug 2020 08:52:35 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.117])
+        by smtp.googlemail.com with ESMTPSA id v11sm27603864wrr.10.2020.08.11.08.52.33
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 11 Aug 2020 08:52:34 -0700 (PDT)
+Date:   Tue, 11 Aug 2020 17:52:32 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Li Yang <leoyang.li@nxp.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 4/4] arm64: dts: imx8mm-var-som-symphony: Add Variscite
+ Symphony board with VAR-SOM-MX8MM
+Message-ID: <20200811155232.GA5960@kozik-lap>
+References: <20200811153916.5455-1-krzk@kernel.org>
+ <20200811153916.5455-4-krzk@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <1597106560-79693-1-git-send-email-dphadke@linux.microsoft.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20200811153916.5455-4-krzk@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 8/10/2020 5:42 PM, Dhananjay Phadke wrote:
-> When i2c client unregisters, synchronize irq before setting
-> iproc_i2c->slave to NULL.
+On Tue, Aug 11, 2020 at 05:39:16PM +0200, Krzysztof Kozlowski wrote:
+> Add a DTS for Variscite Symphony evaluation kit with VAR-SOM-MX8MM
+> System on Module.
 > 
-> (1) disable_irq()
-> (2) Mask event enable bits in control reg
-> (3) Erase slave address (avoid further writes to rx fifo)
-> (4) Flush tx and rx FIFOs
-> (5) Clear pending event (interrupt) bits in status reg
-> (6) enable_irq()
-> (7) Set client pointer to NULL
-> 
-> Unable to handle kernel NULL pointer dereference at virtual address 0000000000000318
-> 
-> [  371.020421] pc : bcm_iproc_i2c_isr+0x530/0x11f0
-> [  371.025098] lr : __handle_irq_event_percpu+0x6c/0x170
-> [  371.030309] sp : ffff800010003e40
-> [  371.033727] x29: ffff800010003e40 x28: 0000000000000060
-> [  371.039206] x27: ffff800010ca9de0 x26: ffff800010f895df
-> [  371.044686] x25: ffff800010f18888 x24: ffff0008f7ff3600
-> [  371.050165] x23: 0000000000000003 x22: 0000000001600000
-> [  371.055645] x21: ffff800010f18888 x20: 0000000001600000
-> [  371.061124] x19: ffff0008f726f080 x18: 0000000000000000
-> [  371.066603] x17: 0000000000000000 x16: 0000000000000000
-> [  371.072082] x15: 0000000000000000 x14: 0000000000000000
-> [  371.077561] x13: 0000000000000000 x12: 0000000000000001
-> [  371.083040] x11: 0000000000000000 x10: 0000000000000040
-> [  371.088519] x9 : ffff800010f317c8 x8 : ffff800010f317c0
-> [  371.093999] x7 : ffff0008f805b3b0 x6 : 0000000000000000
-> [  371.099478] x5 : ffff0008f7ff36a4 x4 : ffff8008ee43d000
-> [  371.104957] x3 : 0000000000000000 x2 : ffff8000107d64c0
-> [  371.110436] x1 : 00000000c00000af x0 : 0000000000000000
-> 
-> [  371.115916] Call trace:
-> [  371.118439]  bcm_iproc_i2c_isr+0x530/0x11f0
-> [  371.122754]  __handle_irq_event_percpu+0x6c/0x170
-> [  371.127606]  handle_irq_event_percpu+0x34/0x88
-> [  371.132189]  handle_irq_event+0x40/0x120
-> [  371.136234]  handle_fasteoi_irq+0xcc/0x1a0
-> [  371.140459]  generic_handle_irq+0x24/0x38
-> [  371.144594]  __handle_domain_irq+0x60/0xb8
-> [  371.148820]  gic_handle_irq+0xc0/0x158
-> [  371.152687]  el1_irq+0xb8/0x140
-> [  371.155927]  arch_cpu_idle+0x10/0x18
-> [  371.159615]  do_idle+0x204/0x290
-> [  371.162943]  cpu_startup_entry+0x24/0x60
-> [  371.166990]  rest_init+0xb0/0xbc
-> [  371.170322]  arch_call_rest_init+0xc/0x14
-> [  371.174458]  start_kernel+0x404/0x430
-> 
-> Fixes: c245d94ed106 ("i2c: iproc: Add multi byte read-write support for slave mode")
-> 
-> Signed-off-by: Dhananjay Phadke <dphadke@linux.microsoft.com>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 > ---
->  drivers/i2c/busses/i2c-bcm-iproc.c | 13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
+>  arch/arm64/boot/dts/freescale/Makefile        |   1 +
+>  .../dts/freescale/imx8mm-var-som-symphony.dts | 244 ++++++++++++++++++
+>  2 files changed, 245 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/freescale/imx8mm-var-som-symphony.dts
 > 
-> diff --git a/drivers/i2c/busses/i2c-bcm-iproc.c b/drivers/i2c/busses/i2c-bcm-iproc.c
-> index 8a3c98866fb7..688e92818821 100644
-> --- a/drivers/i2c/busses/i2c-bcm-iproc.c
-> +++ b/drivers/i2c/busses/i2c-bcm-iproc.c
-> @@ -1078,7 +1078,7 @@ static int bcm_iproc_i2c_unreg_slave(struct i2c_client *slave)
->  	if (!iproc_i2c->slave)
->  		return -EINVAL;
+> diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
+> index a39f0a1723e0..dcfb8750cd78 100644
+> --- a/arch/arm64/boot/dts/freescale/Makefile
+> +++ b/arch/arm64/boot/dts/freescale/Makefile
+> @@ -29,6 +29,7 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-qds.dtb
+>  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-rdb.dtb
 >  
-> -	iproc_i2c->slave = NULL;
-> +	disable_irq(iproc_i2c->irq);
->  
->  	/* disable all slave interrupts */
->  	tmp = iproc_i2c_rd_reg(iproc_i2c, IE_OFFSET);
-> @@ -1091,6 +1091,17 @@ static int bcm_iproc_i2c_unreg_slave(struct i2c_client *slave)
->  	tmp &= ~BIT(S_CFG_EN_NIC_SMB_ADDR3_SHIFT);
->  	iproc_i2c_wr_reg(iproc_i2c, S_CFG_SMBUS_ADDR_OFFSET, tmp);
->  
-> +	/* flush TX/RX FIFOs */
-> +	tmp = (BIT(S_FIFO_RX_FLUSH_SHIFT) | BIT(S_FIFO_TX_FLUSH_SHIFT));
-> +	iproc_i2c_wr_reg(iproc_i2c, S_FIFO_CTRL_OFFSET, tmp);
+>  dtb-$(CONFIG_ARCH_MXC) += imx8mm-evk.dtb
+> +dtb-$(CONFIG_ARCH_MXC) += imx8mm-var-som-symphony.dtb
+>  dtb-$(CONFIG_ARCH_MXC) += imx8mn-evk.dtb
+>  dtb-$(CONFIG_ARCH_MXC) += imx8mn-ddr4-evk.dtb
+>  dtb-$(CONFIG_ARCH_MXC) += imx8mp-evk.dtb
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mm-var-som-symphony.dts b/arch/arm64/boot/dts/freescale/imx8mm-var-som-symphony.dts
+> new file mode 100644
+> index 000000000000..5bfb650a04cc
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/freescale/imx8mm-var-som-symphony.dts
+> @@ -0,0 +1,244 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright (C) 2020 Krzysztof Kozlowski <krzk@kernel.org>
+> + */
 > +
-> +	/* clear all pending slave interrupts */
-> +	iproc_i2c_wr_reg(iproc_i2c, IS_OFFSET, ISR_MASK_SLAVE);
+> +/dts-v1/;
 > +
-> +	iproc_i2c->slave = NULL;
+> +#include "imx8mm-var-som.dtsi"
 > +
-> +	enable_irq(iproc_i2c->irq);
+> +/ {
+> +	model = "Variscite VAR-SOM-MX8MM Symphony evaluation board";
+> +	compatible = "variscite,var-som-mx8mm-symphony", "variscite,var-som-mx8mm", "fsl,imx8mm";
 > +
->  	return 0;
->  }
->  
-> 
+> +	leds {
+> +		compatible = "gpio-leds";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_gpio_led>;
+> +
+> +		status {
+> +			label = "status";
+> +			gpios = <&gpio3 16 GPIO_ACTIVE_HIGH>;
+> +			default-state = "on";
+> +		};
+> +	};
 
-Thanks again, Dhananjay! Looks good to me.
+I just spotted own mistake - this is a left-over and should be removed.
+I will send a v2 in few days, maybe after initial feedback.
 
-Acked-by: Ray Jui <ray.jui@broadcom.com>
+Best regards,
+Krzysztof
