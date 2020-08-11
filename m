@@ -2,171 +2,114 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89C42C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 21:08:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4376C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 21:09:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D708205CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 21:08:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEB1D20756
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 21:09:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=posk.io header.i=@posk.io header.b="HRk0SSPp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="noltbly0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726515AbgHKVIf (ORCPT
+        id S1726523AbgHKVI7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 17:08:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55944 "EHLO
+        Tue, 11 Aug 2020 17:08:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725987AbgHKVIe (ORCPT
+        with ESMTP id S1725987AbgHKVI7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 17:08:34 -0400
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C41F8C06174A
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 14:08:34 -0700 (PDT)
-Received: by mail-vs1-xe44.google.com with SMTP id n25so17810vsq.6
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 14:08:34 -0700 (PDT)
+        Tue, 11 Aug 2020 17:08:59 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1CA5C06174A;
+        Tue, 11 Aug 2020 14:08:58 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id e4so66033pjd.0;
+        Tue, 11 Aug 2020 14:08:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=posk.io; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TxR96oCE+wXLRBmlK1nLV/rdqqdlhyggKeJpYnzoNUE=;
-        b=HRk0SSPpJt5dml1HLDtiPyIZXHX705XuOl0ejBzmbNG5ZXtF/+ZMBIdAx+ZhN5A9Lq
-         uTETADwRcUHBT6p1dRfHeUHUGX4hiHxdIjRxtI7LsLqUCQlCsBAmaqRSuTjbwUY5pKgG
-         8asyNXqvmAHPzWXS88rRk4EiEP0ai5dqn0NT7fziUX9KEVcDe1vDl1fmx/h6s4ywomTp
-         svPoHhB94ndzXXCwxjH9jmro7/nsHCJBsp308PcgbJXKvkyUfZWYMTMJtVWzrqMyPiXW
-         n4cBZMFiUNCKsCB2sEIdxz+K6ZUx/Zdnf5lmzWHGEFGqm8FuB9itD7rp5LQ+JV9DCdKy
-         zJQA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MndcDzC/7AcUJRluxUgqjFCuSvCxnzh1AGFXbovDx5M=;
+        b=noltbly0zKrpOk/SZeDEHs3VqJnIemgq0K4S5/hbOHx1rrIgo5711lTz2awSjikBfz
+         5SeO5QIt37qI7/qXsIKttKFObQpZ1LN/725Z2XqnFj0Gtgt7bu2OfZ/D0g8VjAD9RyaI
+         UJLvwVf5hOGPnlYzVJPWdvpD7Wlmvn88hYBOVs9ynTEDRhglJdmRnBt+yNadEVFRZepo
+         r1nEmHabYv/7cBf2Vw8G5rdFHnYOZmdMLHlGOojo5CBs9FUqJAdsrG1TUJGmBJ7wf/cY
+         GZ0O7It4V3Rd66hTUvL4kZq0ZgEZlp7MWNakNS46uDYsjN45EUplATuK2iBPhJAB0k9T
+         O8zw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TxR96oCE+wXLRBmlK1nLV/rdqqdlhyggKeJpYnzoNUE=;
-        b=qH/Vu0oeQgdSN7TF4wTg87zWh820d5h43ZuqTCJuZWBfbBjGek2lf9R/IVp6cgCE6W
-         F0uHo9J3ma06wAkOxbd1coOPMsKeXZAzu1iib2sYuEPagXjPS3L3aQNLVH0iHZUKI96H
-         tO/e0vyoj+84HOTj5Q+u4u1971jal8yxeaO0r+AGStX98JD0K6w48MjX68K4aasSyUy8
-         YJBKRmg0twRI5lJbrze2M46yYK+UXsrB8VCYMobZeNzUE2lfA7AisEOl6aeEgTNBslb4
-         jOQrCJINXNJR1x0XZviDwYZ7RspXgj8TnKmnKDCT2kH87a3pc8lJIElkGswXTMNj6prY
-         8kIA==
-X-Gm-Message-State: AOAM5301bneJr/NO4xx/YhAoLsqjY806Yvy7dL2sNhQVYBZLjEHkPxw2
-        Ww6bzmk1gIZEnhadnYekqMiN7tyxR8obis6rMLncsg==
-X-Google-Smtp-Source: ABdhPJxk3zwRyya/a7EJByypWPbfkJX9g19ATCsI9lx45hB5jHG3kJ8RsEyc7xP4DqYcfycvLqk0dw/0QIVRiU+Hsb8=
-X-Received: by 2002:a05:6102:10c2:: with SMTP id t2mr24824591vsr.33.1597180113790;
- Tue, 11 Aug 2020 14:08:33 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MndcDzC/7AcUJRluxUgqjFCuSvCxnzh1AGFXbovDx5M=;
+        b=mMXIZ3l+PqVZ9UjEv7WbKG+3RaC2870lcxM/ZRZI/SMsmYAqDWcHTWe5u1EUUmnL61
+         7/9hC39oSsjN5n6D2qgSnY8/NR4kJJILAPiVgt9xpDu10cJ8TZ+YckFW31yumzWw8rnm
+         jkEuuWh9R0EPOJwn8YIgkQfevaelj98Ok7wgPspWk4stPOoyGWmXSD4se2OiXHTE95GB
+         zC5mOTfazPBXgv3iKijfsxP2+lIVLxzdSV7kMSh9UCjVO1g44APPW0G1/82EueDywtV1
+         LhddUgDM/J8eiClH8zY8A3CvQtCE7XuLhVGycHeK+pYiYb3bQfR3dnuxzxNGewUv8/ie
+         tvYA==
+X-Gm-Message-State: AOAM533EocbWgOSN1DXL3ltn5Mbqm7nQ9yQ0iGr2tqr6XBh6Pif2+joW
+        1zdcAyrpAisybD5H0N/orVo=
+X-Google-Smtp-Source: ABdhPJxQYo13BOHv9SR2FnAADb18QXpqroXf/pda53QGuHBM1XL/wjykqI6CGbWG6k9YJwfLrhDjWA==
+X-Received: by 2002:a17:902:b18b:: with SMTP id s11mr2646637plr.211.1597180138472;
+        Tue, 11 Aug 2020 14:08:58 -0700 (PDT)
+Received: from localhost (c-73-25-156-94.hsd1.or.comcast.net. [73.25.156.94])
+        by smtp.gmail.com with ESMTPSA id b63sm6060pfg.43.2020.08.11.14.08.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Aug 2020 14:08:56 -0700 (PDT)
+From:   Rob Clark <robdclark@gmail.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Rob Clark <robdclark@chromium.org>,
+        kernel test robot <lkp@intel.com>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Drew Davenport <ddavenport@chromium.org>,
+        Bernard <bernard@vivo.com>,
+        Kalyan Thota <kalyan_t@codeaurora.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Hongbo Yao <yaohongbo@huawei.com>,
+        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
+        freedreno@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
+        GPU), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] drm/msm/dpu: fix unitialized variable error
+Date:   Tue, 11 Aug 2020 14:09:35 -0700
+Message-Id: <20200811210938.552939-1-robdclark@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <20200811000959.2486636-1-posk@google.com> <20200811062733.GP3982@worktop.programming.kicks-ass.net>
-In-Reply-To: <20200811062733.GP3982@worktop.programming.kicks-ass.net>
-From:   Peter Oskolkov <posk@posk.io>
-Date:   Tue, 11 Aug 2020 14:08:22 -0700
-Message-ID: <CAFTs51XK0HLwCCvXCcfE5P7a4ExANPNPw7UvNigwHZ8sZVP+nQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2 v3] rseq/membarrier: add MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Peter Oskolkov <posk@google.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Paul Turner <pjt@google.com>,
-        Chris Kennelly <ckennelly@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 11:27 PM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Mon, Aug 10, 2020 at 05:09:58PM -0700, Peter Oskolkov wrote:
-> > @@ -27,6 +35,12 @@
-> >
-> >  static void ipi_mb(void *info)
-> >  {
->
-> The #ifdef wants to behere, otherwise you'll get a compile warning for
-> !RSEQ builds.
+From: Rob Clark <robdclark@chromium.org>
 
-Ack. Will do in the next version - for now waiting for the rest to be
-worked out.
+ drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c:817 dpu_crtc_enable() error: uninitialized symbol 'request_bandwidth'.
 
-[...]
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->
-> Mathieu did mention a few other points that I didn't see addressed:
->
->  - he didn't like abusing the @flags syscall argument for a CPUid;
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+index f272a8d0f95b..c2729f71e2fa 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+@@ -827,7 +827,7 @@ static void dpu_crtc_enable(struct drm_crtc *crtc,
+ {
+ 	struct dpu_crtc *dpu_crtc;
+ 	struct drm_encoder *encoder;
+-	bool request_bandwidth;
++	bool request_bandwidth = false;
+ 
+ 	if (!crtc) {
+ 		DPU_ERROR("invalid crtc\n");
+-- 
+2.26.2
 
-@flags is not used now; maybe just rename it to something more
-generic? @param? Or @options? Or maybe more specific, like @cpu_id?
-
->  - he wondered if we should support SYNC_CORE + RSEQ.
-
-It seems to me that CMD_PRIVATE_EXPEDITED_RSEQ is basically
-CMD_PRIVATE_EXPEDITED_SYNC_CORE with the extra "restart RSEQ CSs"
-behavior. Am I missing something? If not, what is the point of
-complicating the code as suggested below? Maybe just renaming
-CMD_PRIVATE_EXPEDITED_RSEQ to CMD_PRIVATE_EXPEDITED_SYNC_CORE_RSEQ
-will do?
-
->
->
-> Not sure we can easily change the syscall at this point, but the latter
-> point could be addressed with something like this.
->
-> ---
-> Index: linux-2.6/kernel/sched/membarrier.c
-> ===================================================================
-> --- linux-2.6.orig/kernel/sched/membarrier.c
-> +++ linux-2.6/kernel/sched/membarrier.c
-> @@ -374,8 +374,26 @@ static int membarrier_register_private_e
->   */
->  SYSCALL_DEFINE2(membarrier, int, cmd, int, flags)
->  {
-> +       int cflags = 0, int cpuid = -1;
-> +
->         if (unlikely(flags) && cmd != MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ)
->                 return -EINVAL;
-> +
-> +       if (cmd & (MEMBARRIER_CMD_PRIVATE_EXPEDITED |
-> +                  MEMBARRIER_CMD_PRIVATE_EXPEDITED_SYNC_CORE |
-> +                  MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ)) {
-> +
-> +               if (cmd & MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ)
-> +                       cflags |= MEMBARRIER_FLAG_RSEQ;
-> +
-> +               if (cmd & MEMBARRIER_CMD_PRIVATE_EXPEDITED_SYNC_CORE) {
-> +                       cflags |= MEMBARRIER_FLAG_SYNC_CORE;
-> +                       cpuid = flags;
-> +               }
-> +
-> +               cmd = MEMBARRIER_CMD_PRIVATE_EXPEDITED;
-> +       }
-> +
->         switch (cmd) {
->         case MEMBARRIER_CMD_QUERY:
->         {
-> @@ -396,18 +414,16 @@ SYSCALL_DEFINE2(membarrier, int, cmd, in
->                 return membarrier_global_expedited();
->         case MEMBARRIER_CMD_REGISTER_GLOBAL_EXPEDITED:
->                 return membarrier_register_global_expedited();
-> -       case MEMBARRIER_CMD_PRIVATE_EXPEDITED:
-> -               return membarrier_private_expedited(0, -1);
->         case MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED:
->                 return membarrier_register_private_expedited(0);
-> -       case MEMBARRIER_CMD_PRIVATE_EXPEDITED_SYNC_CORE:
-> -               return membarrier_private_expedited(MEMBARRIER_FLAG_SYNC_CORE, -1);
->         case MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED_SYNC_CORE:
->                 return membarrier_register_private_expedited(MEMBARRIER_FLAG_SYNC_CORE);
-> -       case MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ:
-> -               return membarrier_private_expedited(MEMBARRIER_FLAG_RSEQ, flags);
->         case MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED_RSEQ:
->                 return membarrier_register_private_expedited(MEMBARRIER_FLAG_RSEQ);
-> +
-> +       case MEMBARRIER_CMD_PRIVATE_EXPEDITED:
-> +               return membarrier_private_expedited(cflags, cpuid);
-> +
->         default:
->                 return -EINVAL;
->         }
->
