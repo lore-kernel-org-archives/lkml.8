@@ -2,159 +2,146 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9AD7C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 18:24:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5541C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 18:25:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 872112076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 18:24:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0B9720771
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 18:25:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kVR4/Hh2"
+	dkim=pass (2048-bit key) header.d=jrtc27.com header.i=@jrtc27.com header.b="FkfQGzpI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726235AbgHKSYs (ORCPT
+        id S1726355AbgHKSZj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 14:24:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58894 "EHLO
+        Tue, 11 Aug 2020 14:25:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725862AbgHKSYp (ORCPT
+        with ESMTP id S1725873AbgHKSZh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 14:24:45 -0400
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02A47C06174A
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 11:24:45 -0700 (PDT)
-Received: by mail-vs1-xe44.google.com with SMTP id j188so6078126vsd.2
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 11:24:44 -0700 (PDT)
+        Tue, 11 Aug 2020 14:25:37 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA228C061787
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 11:25:36 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id f7so12395186wrw.1
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 11:25:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0bbVhUdfyZzfrQXbmgWLydmB0LBLARZ5TVy9YQKsgx0=;
-        b=kVR4/Hh27NyUuG4f8zGbtHJDgMKzkYr2Wfjris9a177lbJBd4SK9pY856sHOYHjlWF
-         Ii1LXNVWskF7E3g5gYF7IysgSqB0IdrbpHcA0g8ZeYeoqhbS0X5ntXYytrjdUE33WkQ+
-         r39kXpLAm1oLmp1Zs/FSUv3RAPju9OzNldQ03V4QHJ64DHyrwNRRFs+W5CK6gDZbzp/S
-         5J+NOL3B1jGJ1ITwOm2O5zm5djiqWwgXdQzspvef2O9sWENrGDcAoABWVyLeHE6ZCt8j
-         /Kc0IgHdy+pkhUYr+eGVA5MPedWpqUlTaUzH7hRJdC/Tzey9goPXn3iorqn0MiYU6mDK
-         n+hQ==
+        d=jrtc27.com; s=gmail.jrtc27.user;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Kg0VF6ErX5lT4lkgbP5PbpghpVG9uMhPSEFo6VamS/k=;
+        b=FkfQGzpI44fbqgrcOaj1mgkIjSMLmbJv3+916pIl7eKyrNEb/q5Qf6pcbttxCIlXMC
+         soo0SglK/yG3GOLxSmMNYjNLmD7B9jzwqC5PD5sxiif9EaDqEngFD8CtscBayUAhhNdK
+         yzJHHOxgnoLpCozUcFjyDe3yvHFeV7Fn3ESp+MZ4cQDAjhBDUgjr02p9Q0Y5IoSjPOQF
+         zL0/wsPE7hZnmXCGQsn0tHiUM6Mqa2SMZqVY9ojuftOmgiDa6D0KYCDXNku/nfRfNG6/
+         rulqM/TzsVmO14H6DC6ye4zfwGMM3nqJRuTAR9EAcJgD8CBbRPrAElqfkAHRmLM2ctPW
+         +A/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0bbVhUdfyZzfrQXbmgWLydmB0LBLARZ5TVy9YQKsgx0=;
-        b=nbvSuDNlVTXkfX3R5T0uqZNaNXEzFELnAvT7U0+UOj3VdUGgK+FhaviEXoFwLtZu7c
-         KYNmw5n/HKoMZHJKGYHwDAn/gUkhzdhsXL/CNBJBojjSxg/cVNnt+JnObTia2yMKxRST
-         Wfc1TsOuAn9V25OpAbwh0GL41K3JRgH3/fw/29Mt6f9rZN0A+mwOt4TSw5RnLaZl3xPI
-         9OuvlX5gjfyrzDvU42KDX7FBcuSvhuxIk3JQQM1+uBe/LuzHd25/HB5diakUO+0JgkAH
-         UouuwDH2SCIbfKDU+m7uQK/wWm6/YmsI9r0ojPfjETF0MEnp9QQJG/dhxUJmH7riFc+w
-         vK9g==
-X-Gm-Message-State: AOAM533sovtic/J3jgFwEUBgmdilv4PoWQGxEEqEYaPwr+8fd+kEE72Z
-        VdbdZp1G6DR0EKNnKDm/gH7mIUrSNMQ/lteC5n6q+A==
-X-Google-Smtp-Source: ABdhPJyPdoWdzJvqIUBhLpZ2m3/RQ9sPpDgddJNs05BtKbWqMfhfIx6cyGW42JKuVd7/Hs/mRFPk3B+ha+RzscTvclg=
-X-Received: by 2002:a67:fbd1:: with SMTP id o17mr24263853vsr.19.1597170283940;
- Tue, 11 Aug 2020 11:24:43 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Kg0VF6ErX5lT4lkgbP5PbpghpVG9uMhPSEFo6VamS/k=;
+        b=EUqyYnvGTvHMLIQXBzOyK5fF6AmKct1krD46SgufRJtLhrnyCOEdu+VH8/aNT/doZh
+         yY5pW0EuoFA9zkjlof69IWq3LxstgmeCB20heCsFOmot7ugCDnri2CKCryLnBm4z5+Qf
+         sYWPewhYVo22v0QJR7nid46HcUFKt5hHNs8kXs2FHlCpoMO7eC6QY+F/R0gpqLz2qm8f
+         jpt3RNka+lXG9CBhZqkljZ5+5TUoaS7Up+lHZKrVdEIzIPK4DAKt0sSG2aVxNGLT4G/D
+         sNs8cPGAQnGLVcheRuEszCfPG1I9YQ87QbAx4okbCUp8cUB/MZhg+bx9Oj8sebl5jiTC
+         q9eA==
+X-Gm-Message-State: AOAM531BdiqJNeDcj8siG3nKakG0tbfc8WZXeBuUxJZoQ3nozjekbpXw
+        TDmOsLJkZBNy1ar3UuD8xsp1RQ==
+X-Google-Smtp-Source: ABdhPJx3xd5kWvkA/X2/NFNPoUCPO1s6nR2S1WU2LkG5uY9O7IMEyCUYrD8bC3Aplc8N5CFwdop0eg==
+X-Received: by 2002:a5d:6a8b:: with SMTP id s11mr29945727wru.222.1597170335629;
+        Tue, 11 Aug 2020 11:25:35 -0700 (PDT)
+Received: from Jessicas-MacBook.local (trinity-students-nat.trin.cam.ac.uk. [131.111.193.104])
+        by smtp.gmail.com with ESMTPSA id i4sm28401118wrw.26.2020.08.11.11.25.35
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 11 Aug 2020 11:25:35 -0700 (PDT)
+Received: by Jessicas-MacBook.local (Postfix, from userid 501)
+        id 6EE9C207EFCE4D; Tue, 11 Aug 2020 19:25:34 +0100 (BST)
+From:   Jessica Clarke <jrtc27@jrtc27.com>
+To:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc:     Jessica Clarke <jrtc27@jrtc27.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Tony Luck <tony.luck@intel.com>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
+        Anatoly Pugachev <matorola@gmail.com>,
+        Sergei Trofimovich <slyfox@gentoo.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Frank Scheiner <frank.scheiner@web.de>
+Subject: [PATCH v2] arch/ia64: Restore arch-specific pgd_offset_k implementation
+Date:   Tue, 11 Aug 2020 19:24:57 +0100
+Message-Id: <20200811182457.57957-1-jrtc27@jrtc27.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <fe587e09-2835-87b9-ceed-89cdb81f327c@physik.fu-berlin.de>
+References: <fe587e09-2835-87b9-ceed-89cdb81f327c@physik.fu-berlin.de> <fa71f38e-b191-597a-6359-502cba197050@physik.fu-berlin.de> <AA5E212C-56ED-4DB9-9CC1-EB13745DD5AF@jrtc27.com>
 MIME-Version: 1.0
-References: <20200811011126.130297-1-badhri@google.com> <ef32ea96-16c8-772b-2c80-8df43ee8f668@roeck-us.net>
-In-Reply-To: <ef32ea96-16c8-772b-2c80-8df43ee8f668@roeck-us.net>
-From:   Badhri Jagan Sridharan <badhri@google.com>
-Date:   Tue, 11 Aug 2020 11:24:07 -0700
-Message-ID: <CAPTae5Lhty3rJymi-4gANjUoz79_LujdjddS9oT=vpOxTSecdQ@mail.gmail.com>
-Subject: Re: [PATCH v1] usb: typec: tcpm: Fix TDA 2.2.1.1 and TDA 2.2.1.2 failures
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        USB <linux-usb@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 6:51 PM Guenter Roeck <linux@roeck-us.net> wrote:
->
-> On 8/10/20 6:11 PM, Badhri Jagan Sridharan wrote:
-> >>From the spec:
-> > "7.1.5 Response to Hard Resets
-> > Hard Reset Signaling indicates a communication failure has occurred and
-> > the Source Shall stop driving VCONN, Shall remove Rp from the VCONN pin
-> > and Shall drive VBUS to vSafe0V as shown in Figure 7-9. The USB connection
-> > May reset during a Hard Reset since the VBUS voltage will be less than
-> > vSafe5V for an extended period of time. After establishing the vSafe0V
-> > voltage condition on VBUS, the Source Shall wait tSrcRecover before
-> > re-applying VCONN and restoring VBUS to vSafe5V. A Source Shall conform
-> > to the VCONN timing as specified in [USB Type-C 1.3]."
-> >
-> > Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
-> > ---
-> >  drivers/usb/typec/tcpm/tcpm.c | 16 +++++++++++++---
-> >  1 file changed, 13 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
-> > index 3ef37202ee37..e41c4e5d3c71 100644
-> > --- a/drivers/usb/typec/tcpm/tcpm.c
-> > +++ b/drivers/usb/typec/tcpm/tcpm.c
-> > @@ -3372,13 +3372,19 @@ static void run_state_machine(struct tcpm_port *port)
-> >                       tcpm_set_state(port, SNK_HARD_RESET_SINK_OFF, 0);
-> >               break;
-> >       case SRC_HARD_RESET_VBUS_OFF:
-> > -             tcpm_set_vconn(port, true);
-> > +             /*
-> > +              * 7.1.5 Response to Hard Resets
-> > +              * Hard Reset Signaling indicates a communication failure has occurred and the
-> > +              * Source Shall stop driving VCONN, Shall remove Rp from the VCONN pin and Shall
-> > +              * drive VBUS to vSafe0V as shown in Figure 7-9.
-> > +              */
-> > +             tcpm_set_vconn(port, false);
-> >               tcpm_set_vbus(port, false);
-> >               tcpm_set_roles(port, port->self_powered, TYPEC_SOURCE,
-> >                              tcpm_data_role_for_source(port));
-> > -             tcpm_set_state(port, SRC_HARD_RESET_VBUS_ON, PD_T_SRC_RECOVER);
->
-> I am a bit concerned about this. If I understand correctly, it means that
-> we won't turn VBUS back on unless a SRC_HARD_RESET_VBUS_OFF PD event is received.
-> Is that correct ? What happens if that event is never received ?
->
-> Thanks,
-> Guenter
+IA-64 is special and treats pgd_offset_k differently from pgd_offset by
+not including the region number, and init_mm's PGD is such that it only
+points to the kernel's region's PGD. This was broken in 974b9b2c68 which
+unified the two and therefore included the region number, causing it to
+go way out of bounds of the kernel's PGD, which made the kernel hang
+during early boot. Thus, permit pgd_offset_k to be overridden like the
+other macros and override it on IA-64 with the old implementation. Also
+update the comment to clarify that this is not just an optimisation but
+a required implementation detail.
 
-The term PD event is a little ambiguous to me. Trying to summarize the workflow.
-Lower level tcpc driver would have to call tcpm_vbus_change which
-would in-turn trigger TCPM_VBUS_EVENT
-and queries port->tcpc->get_vbus to get the vbus status. It is not
-really a PD protocol driven event hence the
-confusion.
+Fixes: 974b9b2c68 ("mm: consolidate pte_index() and pte_offset_*() definitions")
+Reported-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Signed-off-by: Jessica Clarke <jrtc27@jrtc27.com>
+Tested-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+---
+Changes since v1:
+ * Fixed typo in commit message
+ * Slightly reworded commit message to sound less weird
+ * Included Adrian's Tested-by
 
-"What happens if that event is never received ?"
-Yeah TCPM would be in SRC_HARD_RESET_VBUS_OFF till the tcpc calls the
-tcpm_vbus_change.
-Do you suspect that existing tcpc would not have the capability to
-monitor vbus status while sourcing and call tcpm_vbus_change?
+ arch/ia64/include/asm/pgtable.h | 8 ++++++++
+ include/linux/pgtable.h         | 2 ++
+ 2 files changed, 10 insertions(+)
 
-Thanks,
-Badhri
+diff --git a/arch/ia64/include/asm/pgtable.h b/arch/ia64/include/asm/pgtable.h
+index 10850897a91c..2ac2199d99ce 100644
+--- a/arch/ia64/include/asm/pgtable.h
++++ b/arch/ia64/include/asm/pgtable.h
+@@ -366,6 +366,14 @@ pgd_index (unsigned long address)
+ }
+ #define pgd_index pgd_index
+ 
++/*
++ * In the kernel's mapped region we know everything is in region number 5, so
++ * as an optimisation its PGD already points to the area for that region, but
++ * that means not adding the region here is required, not just an optimisation.
++ */
++#define pgd_offset_k(addr) \
++	(init_mm.pgd + (((addr) >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1)))
++
+ /* Look up a pgd entry in the gate area.  On IA-64, the gate-area
+    resides in the kernel-mapped segment, hence we use pgd_offset_k()
+    here.  */
+diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+index 53e97da1e8e2..73c64fe098ba 100644
+--- a/include/linux/pgtable.h
++++ b/include/linux/pgtable.h
+@@ -117,7 +117,9 @@ static inline pgd_t *pgd_offset_pgd(pgd_t *pgd, unsigned long address)
+  * a shortcut which implies the use of the kernel's pgd, instead
+  * of a process's
+  */
++#ifndef pgd_offset_k
+ #define pgd_offset_k(address)		pgd_offset(&init_mm, (address))
++#endif
+ 
+ /*
+  * In many cases it is known that a virtual address is mapped at PMD or PTE
+-- 
+2.23.0
 
-
-> >               break;
-> >       case SRC_HARD_RESET_VBUS_ON:
-> > +             tcpm_set_vconn(port, true);
-> >               tcpm_set_vbus(port, true);
-> >               port->tcpc->set_pd_rx(port->tcpc, true);
-> >               tcpm_set_attached_state(port, true);
-> > @@ -3944,7 +3950,11 @@ static void _tcpm_pd_vbus_off(struct tcpm_port *port)
-> >               tcpm_set_state(port, SNK_HARD_RESET_WAIT_VBUS, 0);
-> >               break;
-> >       case SRC_HARD_RESET_VBUS_OFF:
-> > -             tcpm_set_state(port, SRC_HARD_RESET_VBUS_ON, 0);
-> > +             /*
-> > +              * After establishing the vSafe0V voltage condition on VBUS, the Source Shall wait
-> > +              * tSrcRecover before re-applying VCONN and restoring VBUS to vSafe5V.
-> > +              */
-> > +             tcpm_set_state(port, SRC_HARD_RESET_VBUS_ON, PD_T_SRC_RECOVER);
-> >               break;
-> >       case HARD_RESET_SEND:
-> >               break;
-> >
->
