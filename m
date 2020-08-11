@@ -2,167 +2,134 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC05C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:29:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34058C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:30:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA68C2078E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:29:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1096A204FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:30:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Cm1Tcc1Q"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="BhLpxWGA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728790AbgHKO3k (ORCPT
+        id S1728802AbgHKOat (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 10:29:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50804 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728737AbgHKO3i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 10:29:38 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E16EBC06174A
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 07:29:37 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id v12so13734781ljc.10
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 07:29:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KkzFrtv0c+qoPAhI6jwpG+PydA17UzEovGlcuGw1Sps=;
-        b=Cm1Tcc1QCdLhQB+oaKcHVbnlYt9sGsmFejuHFLKrI9QqSNl/Fse5iGu3VtFfWFDsVL
-         LaJZoICnAbnedb4SGXu5bdSED6k8LU8weTlxSQm2ZytW13SCmEDyW1aF2vQhRchu2b4X
-         QBa3FW9LTHR+lUp5HrNWKHC/u0rBwDQ1P24vRBZ79SRIMNPtOH6SnBB2JRla7wM1kFwM
-         M+2EfwC0j1xm+UOwmmQnQGMEwen81gnf482PeXuBfVRq0EmYU/uVd3M+ZShUxlhp5I//
-         Ctly+qbkrF0UN6hELmWq3OJKqAtfI2KN8HJTPxm8okIeDGWmXQ24pfW0E/JePUuaRLFW
-         Mi1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KkzFrtv0c+qoPAhI6jwpG+PydA17UzEovGlcuGw1Sps=;
-        b=Y9j824sBG4i9V827olDK7Yb1UNP6mN964rGj265cwuOP0nusXGisAqFzcvfGnD1kIV
-         yTYNrT2J64OIyc6yxtqAvxp57H/7u6EVU9tLePVOiDL8FusweGoEaqR9HK9Yp95mi+Bn
-         aEc+/AtwZH16nzoXO6gT+jVDk4Wti1stuKuo3IIh0uUxcnO3bAX6p4RD/gKmDSjHqTv5
-         uVw7nqxoe3bw8UsNgs9O/PvZUR5N2IAcDema5DQWARiqy2fdui1iQRQdlyJ6PJeFUsQS
-         sqSEcdcx7te5Y4RXbzV0SKrBjj+MYZemSGCIW38LLCI7u7pCrUZMh1u9i/Pfb3rVebrP
-         84lQ==
-X-Gm-Message-State: AOAM532n62jUS2j+CHuyTzemwJ4Ta6DK2MF/WrF+mcX05g4QTnsNKfks
-        vn+IuWdsCPXCayp8GME1hOx8cYNAwpWHNK5E9IFALA==
-X-Google-Smtp-Source: ABdhPJyJ1wnqNF5YPIO4kRwCd++xZfKyweClk+mQLcH6eO5yxlF+xzvevF4oQwGopn5tNZ3LQcm2T7AN3pLnJ1s2+Hs=
-X-Received: by 2002:a05:651c:1293:: with SMTP id 19mr3003077ljc.427.1597156176182;
- Tue, 11 Aug 2020 07:29:36 -0700 (PDT)
+        Tue, 11 Aug 2020 10:30:49 -0400
+Received: from mail-eopbgr60068.outbound.protection.outlook.com ([40.107.6.68]:37698
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728516AbgHKOas (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 10:30:48 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SbmWLfgM2JbicQnpDjC1jr1bVpA8T6PF4P8LFnIvL+wX651jvVW3i6HiW94FWYN4/Rq43hNJZgMZwzcntZJA3jgwyykNgW6UcUFElDWamJE9Z3THzXX1orsRAilvfHs/8xWF2bpsgn6piSnzHR7UgwuIgMwgS9bYOSUyRAcrBP22OecbTR3q8AMJ2mvJ1rU+7/pA7pTmW+PL0NMz0lhhexfTd0XLRZPIIcumX8LLejtgrEEMOskpz5d+/jLWAAKc3FCDlGteIQrlFVv/aDVHnGb6RQMzlehIjCa9DOgfgYqbnyCS8xN1qnAMAmYM57GRdwJB2mFlwf2vX2N1Jc3k3Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RMRCoDZK/hj/h8+Q0u0UPC93jqDj7VE46FRLrJq6DE8=;
+ b=oPlzpM+semcGvxZ+wJO/a7MIjE4MvLFHMCKUAVt1nUhC9ftkJI4siLbLLzpFWF5hXRMV+156Klz1JjCu06XHw9KzWbNgmP/jxuznUW1BybLQdPYfzHZ6wTsDohBek6UJjhKiUXOo0SHUVuApZWMosoz64L17ktSepzTQSmX/PZTj3SNmwUVlq3YsHESkI0O+XsU804TgJCeYhZwDqclM7pI3IGBqf1cMCGfrLzCggY6X+/ECMR5K/ZlBvWZ31npN5nQ6ke239m7HHuHe0ghzSvTZJwvO5RtHRDeZvTn6cLtvv7Bowk5W4S5UiIr6LWpb+9JSLosRUcWk8HuaVddvkw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RMRCoDZK/hj/h8+Q0u0UPC93jqDj7VE46FRLrJq6DE8=;
+ b=BhLpxWGAnQn2WH3KRf5/5JDijQpaQwyeWRlc7D0i/aaGsvtDUIrdcWUpY02KnrkFfb1hAEpJvDPIyitA7yZuP6QkZNcyTmKYr9NmyfiB9PDcIgpKbYROGaMchK+Bs2/uGC6ohG8eBom59xPJU06ai6yJzG2X6gLFTnf4vfGWdiw=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=nxp.com;
+Received: from VI1PR04MB4046.eurprd04.prod.outlook.com (2603:10a6:803:4d::29)
+ by VI1PR0402MB3422.eurprd04.prod.outlook.com (2603:10a6:803:6::26) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.16; Tue, 11 Aug
+ 2020 14:30:44 +0000
+Received: from VI1PR04MB4046.eurprd04.prod.outlook.com
+ ([fe80::8459:4be8:7034:7a81]) by VI1PR04MB4046.eurprd04.prod.outlook.com
+ ([fe80::8459:4be8:7034:7a81%6]) with mapi id 15.20.3261.024; Tue, 11 Aug 2020
+ 14:30:44 +0000
+Subject: Re: [PATCH RESEND 1/9] crypto: caam/jr - add fallback for XTS with
+ more than 8B IV
+To:     "Andrei Botila (OSS)" <andrei.botila@oss.nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200806163551.14395-1-andrei.botila@oss.nxp.com>
+ <20200806163551.14395-2-andrei.botila@oss.nxp.com>
+From:   =?UTF-8?Q?Horia_Geant=c4=83?= <horia.geanta@nxp.com>
+Message-ID: <fe251307-ba89-a4bc-23f5-205a1e1343ea@nxp.com>
+Date:   Tue, 11 Aug 2020 17:30:41 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+In-Reply-To: <20200806163551.14395-2-andrei.botila@oss.nxp.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: AM0PR10CA0118.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:208:e6::35) To VI1PR04MB4046.eurprd04.prod.outlook.com
+ (2603:10a6:803:4d::29)
 MIME-Version: 1.0
-References: <1595333413-30052-1-git-send-email-sumit.garg@linaro.org>
- <CAFA6WYMN=na4Pxnu1LYRVAAZRdV==5EwU-Vcq-QkRb_jaLiPmw@mail.gmail.com> <20200811135801.GA416071@kroah.com>
-In-Reply-To: <20200811135801.GA416071@kroah.com>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Tue, 11 Aug 2020 19:59:24 +0530
-Message-ID: <CAFA6WYMN8i96rEZuHLnskB+4k0o=K9vF1_we83P04h2BSoGjmQ@mail.gmail.com>
-Subject: Re: [RFC 0/5] Introduce NMI aware serial drivers
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-serial@vger.kernel.org, kgdb-bugreport@lists.sourceforge.net,
-        Jiri Slaby <jslaby@suse.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.0.129] (84.117.251.185) by AM0PR10CA0118.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:208:e6::35) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.16 via Frontend Transport; Tue, 11 Aug 2020 14:30:43 +0000
+X-Originating-IP: [84.117.251.185]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: fdc67255-8c1d-4e7d-227a-08d83e0321a0
+X-MS-TrafficTypeDiagnostic: VI1PR0402MB3422:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR0402MB342216ADC16D92B04F52A42298450@VI1PR0402MB3422.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: a0Irqe3KRqrki2xERZYObVPiYJcOUGUu4PI9/Jv/UZfXtCRr1xBFzwdXJwTjPes7/zo7p/VMpWZo9tVzq+frmr9MZRFduO6M2AsL7obGGx3TkVfHl38j0MuKMwpwwWGVsN+SYet0ykfZFZpp3ujfFNOspwDdBmdXrSyt6n8lMJShh9TgBUVnXBo5qSqEeWvyPa3OVZygKe7IVdqvPWrqEJc9DRW9wg1zk0Pc3ZU/oorY8PCuCP3iXO3T+M0vsTRrdzeGxwVhJNB8kjSaiFhouD7NIkwxIqrLp4KVihbvnqIJJt1n66adMAghRPZDYHMDlhnV4QwuqOupBc6KmJi4459Frjk72G3Jz3sbTL25hci0JNIk9nDX0C+J821wPH2B
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB4046.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(31696002)(498600001)(53546011)(31686004)(110136005)(8676002)(8936002)(54906003)(2906002)(66556008)(52116002)(2616005)(4326008)(956004)(36756003)(86362001)(16576012)(16526019)(83380400001)(66946007)(26005)(5660300002)(66476007)(6486002)(186003)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 0oyItuBqsqflXo+gFXl2kKKctHM54mDInJ2sm76HY0mSXHknZw2D++1OPSCYyeW3zA32em640lpHXedoMX1Eto4WyGpj72cl6xJbWLD6mWwnn3NBzmG51H22uvsZFkLIX/6m7JXUKuJ0IW2p96zbuGTMX2kk7dm3alc49/jjYogU9nSwIQXBpSPVVpbcPfTinfqEoShJZ8e17DraGjejJO/Io4gZpLDUY52dvqj2d7J54lTIAliGgpCAu5vzpCJq92ZV4chkudcDJlbTwHcKiup4jnlOcGFbwAZfVOFZQ6KuAGpfXv3Gykt+auCMhJ2i/sjPSUfRI4KBP+JrI+LQrZuq3Pn8/LA1Tx/U/TrDnYhdX++M0YnTLjNtl7nIUbwCyLzjEzeELYkx+xlzen16FUwdxJ5DMjdHaCei7rlwCxlFf0kh4xwKnXtRtF56fsCwR7M2l2lxLFSjKWPSjqIRIfJjiIGQ6IvlDSCSXEqkpjKUsg3c0YAGdvQ1HFDrhSJoFK+Dwy6aOmioAWpejpT9kxc8NMCpGEBJhPr/jqi192Q5aiSWVc+wqW4Juz7LgZ//Igpiv62csQvE+NZGnY73q/xe7Gptd+jvXh5YbQh47tDl3qJzMrC32W0avVuvlMTeca9hFPiec0SRc+pmaAEySg==
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fdc67255-8c1d-4e7d-227a-08d83e0321a0
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR04MB4046.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Aug 2020 14:30:44.5130
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ML2chZ0z3EAsPP1aryPn9SLsM9cB4jZU73cMLKWhUlIvIDT5OinfApifCzc2dgwmPkX/R0A5GXsuaX5Y+bU6hQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3422
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+On 8/6/2020 7:36 PM, Andrei Botila (OSS) wrote:
+> @@ -3344,12 +3382,30 @@ static int caam_cra_init(struct crypto_skcipher *tfm)
+>  	struct caam_skcipher_alg *caam_alg =
+>  		container_of(alg, typeof(*caam_alg), skcipher);
+>  	struct caam_ctx *ctx = crypto_skcipher_ctx(tfm);
+> +	u32 alg_aai = caam_alg->caam.class1_alg_type & OP_ALG_AAI_MASK;
+>  
+>  	crypto_skcipher_set_reqsize(tfm, sizeof(struct caam_skcipher_req_ctx));
+This is being called twice in case of XTS.
 
-Thanks for your comments.
+>  
+>  	ctx->enginectx.op.do_one_request = skcipher_do_one_req;
+>  
+> -	return caam_init_common(crypto_skcipher_ctx(tfm), &caam_alg->caam,
+> +	if (alg_aai == OP_ALG_AAI_XTS) {
+> +		const char *tfm_name = crypto_tfm_alg_name(&tfm->base);
+> +		struct crypto_skcipher *fallback;
+> +
+> +		fallback = crypto_alloc_skcipher(tfm_name, 0,
+> +						 CRYPTO_ALG_NEED_FALLBACK);
+Driver should select CRYPTO_XTS, such that at least the generic
+xts implementation is available.
 
-On Tue, 11 Aug 2020 at 19:27, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Tue, Aug 11, 2020 at 07:20:26PM +0530, Sumit Garg wrote:
-> > On Tue, 21 Jul 2020 at 17:40, Sumit Garg <sumit.garg@linaro.org> wrote:
-> > >
-> > > Make it possible for UARTs to trigger magic sysrq from an NMI. With the
-> > > advent of pseudo NMIs on arm64 it became quite generic to request serial
-> > > device interrupt as an NMI rather than IRQ. And having NMI driven serial
-> > > RX will allow us to trigger magic sysrq as an NMI and hence drop into
-> > > kernel debugger in NMI context.
-> > >
-> > > The major use-case is to add NMI debugging capabilities to the kernel
-> > > in order to debug scenarios such as:
-> > > - Primary CPU is stuck in deadlock with interrupts disabled and hence
-> > >   doesn't honor serial device interrupt. So having magic sysrq triggered
-> > >   as an NMI is helpful for debugging.
-> > > - Always enabled NMI based magic sysrq irrespective of whether the serial
-> > >   TTY port is active or not.
-> > >
-> > > Currently there is an existing kgdb NMI serial driver which provides
-> > > partial implementation in upstream to have a separate ttyNMI0 port but
-> > > that remained in silos with the serial core/drivers which made it a bit
-> > > odd to enable using serial device interrupt and hence remained unused. It
-> > > seems to be clearly intended to avoid almost all custom NMI changes to
-> > > the UART driver.
-> > >
-> > > But this patch-set allows the serial core/drivers to be NMI aware which
-> > > in turn provides NMI debugging capabilities via magic sysrq and hence
-> > > there is no specific reason to keep this special driver. So remove it
-> > > instead.
-> > >
-> > > Approach:
-> > > ---------
-> > >
-> > > The overall idea is to intercept serial RX characters in NMI context, if
-> > > those are specific to magic sysrq then allow corresponding handler to run
-> > > in NMI context. Otherwise, defer all other RX and TX operations onto IRQ
-> > > work queue in order to run those in normal interrupt context.
-> > >
-> > > This approach is demonstrated using amba-pl011 driver.
-> > >
-> > > Patch-wise description:
-> > > -----------------------
-> > >
-> > > Patch #1 prepares magic sysrq handler to be NMI aware.
-> > > Patch #2 adds NMI framework to serial core.
-> > > Patch #3 and #4 demonstrates NMI aware uart port using amba-pl011 driver.
-> > > Patch #5 removes kgdb NMI serial driver.
-> > >
-> > > Goal of this RFC:
-> > > -----------------
-> > >
-> > > My main reason for sharing this as an RFC is to help decide whether or
-> > > not to continue with this approach. The next step for me would to port
-> > > the work to a system with an 8250 UART.
-> > >
-> >
-> > A gentle reminder to seek feedback on this series.
->
-> It's the middle of the merge window, and I can't do anything.
->
-> Also, I almost never review RFC patches as I have have way too many
-> patches that people think are "right" to review first...
->
+> +		if (IS_ERR(fallback)) {
+> +			pr_err("Failed to allocate %s fallback: %ld\n",
+> +			       tfm_name, PTR_ERR(fallback));
+> +			return PTR_ERR(fallback);
+Shouldn't error out so early. It might be that the fallback won't be needed.
+Let's postpone this until we're sure fallback is required.
 
-Okay, I understand and I can definitely wait for your feedback.
-
-> I suggest you work to flesh this out first and submit something that you
-> feels works properly.
->
-
-IIUC, in order to make this approach substantial I need to make it
-work with 8250 UART (major serial driver), correct? As currently it
-works properly for amba-pl011 driver.
-
-> good luck!
->
-
-Thanks.
-
--Sumit
-
-> greg k-h
+Horia
