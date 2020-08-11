@@ -2,106 +2,105 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5945C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 07:27:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C615C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 07:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1D4120855
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 07:27:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597130869;
-	bh=Yp7tTxScjJcN9TlGZyF+AMlYhqZOQMFfSV9sDQelnCo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=yH4lKhphpfgDduv8evI193lwoO4ZKlOUAWzZrU+eolpCzuYEzBIfrtOP4SS5UXBtR
-	 ZDB0Os0AHzWlJoYr1mvFjqtOHxZHLFriN8uNsYzAQAo12AWEtWSm0N2rVLhcyEZh9z
-	 f/SJQ2VO3p9e+nEzA1UtyJdtxqH6V/bueKmrtY5I=
+	by mail.kernel.org (Postfix) with ESMTP id 19B6F20781
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 07:28:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="I4zF9BZf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728134AbgHKH1s (ORCPT
+        id S1728158AbgHKH2m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 03:27:48 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39785 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726421AbgHKH1s (ORCPT
+        Tue, 11 Aug 2020 03:28:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42566 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726421AbgHKH2l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 03:27:48 -0400
-Received: by mail-wr1-f68.google.com with SMTP id a5so10487821wrm.6
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 00:27:47 -0700 (PDT)
+        Tue, 11 Aug 2020 03:28:41 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A9BEC061787
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 00:28:41 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id w17so1234964edt.8
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 00:28:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VNS8rgxQTsSqkuQvisEfuQkArMcjZwTTMFnULFhcBtc=;
+        b=I4zF9BZfsZmsK7v24MOsVh7XvfpQcnthAJ+k+iaowWwFaGJKa8I19900B1KW4J28/g
+         QR7nxd0IiU11LQkTVy/3+d7XPpi7vGdQov5nIi0/DWk2Kvl23qwuigMTXNJztOHnjsoM
+         /thmEzj30fA5G4XJFAH1TYiYY+DDEeFHE12gU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=fQmYeMRo/8i/fFefwKmsFbqOCjEq2XgZj6c7soBcqwQ=;
-        b=ESWneI1h3BLstCM9p9Gw7eOyhtUADfn6HhGAza6I6o8g9nbIKNizUkNQd9r5kW5Rog
-         Q+6lYgWqmwM73tpu+BNtBISqDBSqbZ56Gav6xR8EIyL5qyL0weI5kEzSBFzTGxPpy4s/
-         LHWqG31b0HXk++czP3mPRe5nOPbCnL+yf+wAImX+ndpMJLcszj/RF5eHL3JQ9wAeN+SR
-         1V35G3kXp4nPEEkD1EnzRwjniYfruqlh0KX3Y88ab2k5GJHqRkpdMcnnKEUwoJpN2knW
-         GyhZgJQzCueAEQ0XS8zGYulrZgbydOZ+PQGsbdsmFQpylha23zKc5hUaetAZ5Zk8mF4J
-         vOrQ==
-X-Gm-Message-State: AOAM532BVXN/kBfoypn2Nr+z0LGvdjC9idqymeYbCk88Ko2XCnKusHJx
-        zplAh9oaYAIdhwxk1STkpvce7XSWijxGg8iGZEo=
-X-Google-Smtp-Source: ABdhPJwj0HUJHofr640Lcf0w9XJUTXq0v1iHW/wZNXIqdsfD12QrIoyD/JWDh07LoAnRzABJyaU10aB6teAMhxbjk4g=
-X-Received: by 2002:adf:ab55:: with SMTP id r21mr26903503wrc.332.1597130866854;
- Tue, 11 Aug 2020 00:27:46 -0700 (PDT)
+        bh=VNS8rgxQTsSqkuQvisEfuQkArMcjZwTTMFnULFhcBtc=;
+        b=AKdlMDbrpniZdwtE+mZfsfjnBx+nhaItMwWXWJWgLPhRWicHtsFuNn1iMcGrQw6KW7
+         UxR22ic/D267DH03WSm7UA2vwPTCbDBE5XzDy40LJNZ9uS+O7mGJGnayxx3TKvv06F1P
+         E8PKEtOjYP5LCh/nADcSV8cIHfSQ5Bw+PUTkkec+5GYB75EtHF4mtomDLryzewhgN7IO
+         71qjdO2uyo5C/rFnSy+ixe46pBo5vB5032tnVyiix6zMxH/F+2uulqstwT2j4M9Y176S
+         a7hdvQaUdjT+hnCafSWXSQpUYb7QjpRL5LZWumWx2b/oFng26wrrxxL3YZ9k5GvvxweW
+         gUaA==
+X-Gm-Message-State: AOAM531dKApvsvETtyp1CpvJ51umSLifbCHxVfsu5QKGwtJk2mz5rp1p
+        b0KKUGuCFnDcm22CeE8c7U4sojMSn0+Y5ZwWkWzMAA==
+X-Google-Smtp-Source: ABdhPJyDCtyNs+EX7nXIu9V8/MaQkjXI0d/Rvgm77fNHd3xXnjpWHunejPSvEPJyZoDtl5sSAwCP/jkQNo8TgvajC7g=
+X-Received: by 2002:a50:e004:: with SMTP id e4mr13096018edl.114.1597130919795;
+ Tue, 11 Aug 2020 00:28:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1597004831.git.agordeev@linux.ibm.com> <d949f5f48e17fc816f3beecf8479f1b2480345e4.1597004831.git.agordeev@linux.ibm.com>
-In-Reply-To: <d949f5f48e17fc816f3beecf8479f1b2480345e4.1597004831.git.agordeev@linux.ibm.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Tue, 11 Aug 2020 16:27:35 +0900
-Message-ID: <CAM9d7cijhLpaZWEn6=Gd-DQ08P0V0uEvFqzg_vD5kcNjPO9gBg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] perf bench numa: fix number of processes in
- "2x3-convergence" test
-To:     Alexander Gordeev <agordeev@linux.ibm.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>
+References: <1596012277-8448-1-git-send-email-weiyi.lu@mediatek.com>
+ <1596012277-8448-5-git-send-email-weiyi.lu@mediatek.com> <CANMq1KCG1xUan5-=DBZewvTqmUH=p7=nxy0Va=pdYBhAfYhhjQ@mail.gmail.com>
+ <1597128205.20627.14.camel@mtksdaap41>
+In-Reply-To: <1597128205.20627.14.camel@mtksdaap41>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Tue, 11 Aug 2020 15:28:29 +0800
+Message-ID: <CANMq1KDRwwFvR2v6ykpvV6Y72L+Ym+4NcZF0F7wYq2znKy4sqw@mail.gmail.com>
+Subject: Re: [PATCH v2 4/5] clk: mediatek: Add configurable enable control to mtk_pll_data
+To:     Weiyi Lu <weiyi.lu@mediatek.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        James Liao <jamesjj.liao@mediatek.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Wendell Lin <wendell.lin@mediatek.com>,
+        linux-clk@vger.kernel.org,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 3:22 PM Alexander Gordeev
-<agordeev@linux.ibm.com> wrote:
+On Tue, Aug 11, 2020 at 2:43 PM Weiyi Lu <weiyi.lu@mediatek.com> wrote:
+> [...]
+> > > +       writel(r, pll->en_addr);
+> > >
+> > >         r = readl(pll->pwr_addr) | CON0_ISO_EN;
+> > >         writel(r, pll->pwr_addr);
+> > > @@ -327,6 +327,10 @@ static struct clk *mtk_clk_register_pll(const struct mtk_pll_data *data,
+> > >                 pll->tuner_addr = base + data->tuner_reg;
+> > >         if (data->tuner_en_reg)
+> > >                 pll->tuner_en_addr = base + data->tuner_en_reg;
+> > > +       if (data->en_reg)
+> > > +               pll->en_addr = base + data->en_reg;
+> > > +       else
+> > > +               pll->en_addr = pll->base_addr + REG_CON0;
+> >
+> > Don't you need to set pll->data->pll_en_bit to CON0_BASE_EN here?
+> > (which probably means that you need to add a pll->en_bit field to
+> > struct mtk_clk_pll)
+> >
 >
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Jiri Olsa <jolsa@redhat.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
+> Because all mtk_clk_pll data are static variables, en_bit would be 0 if
+> NO value assigned.
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
-
-Thanks
-Namhyung
-
-> ---
->  tools/perf/bench/numa.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/tools/perf/bench/numa.c b/tools/perf/bench/numa.c
-> index 23e224e..90639c9 100644
-> --- a/tools/perf/bench/numa.c
-> +++ b/tools/perf/bench/numa.c
-> @@ -1754,7 +1754,7 @@ static int run_bench_numa(const char *name, const char **argv)
->     { " 1x3-convergence,", "mem",  "-p",  "1", "-t",  "3", "-P",  "512", OPT_CONV },
->     { " 1x4-convergence,", "mem",  "-p",  "1", "-t",  "4", "-P",  "512", OPT_CONV },
->     { " 1x6-convergence,", "mem",  "-p",  "1", "-t",  "6", "-P", "1020", OPT_CONV },
-> -   { " 2x3-convergence,", "mem",  "-p",  "3", "-t",  "3", "-P", "1020", OPT_CONV },
-> +   { " 2x3-convergence,", "mem",  "-p",  "2", "-t",  "3", "-P", "1020", OPT_CONV },
->     { " 3x3-convergence,", "mem",  "-p",  "3", "-t",  "3", "-P", "1020", OPT_CONV },
->     { " 4x4-convergence,", "mem",  "-p",  "4", "-t",  "4", "-P",  "512", OPT_CONV },
->     { " 4x4-convergence-NOTHP,",
-> --
-> 1.8.3.1
->
+Wow, you're right, but this is a little bit subtle. I wonder if it's
+worth adding a small comment? (either here or in struct mtk_pll_data)
