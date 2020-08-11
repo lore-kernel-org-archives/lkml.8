@@ -2,139 +2,85 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB35C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:38:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC82C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:38:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77DEA2065C
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:38:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OLa3xQZm"
+	by mail.kernel.org (Postfix) with ESMTP id 7D6CF2075D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:38:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728579AbgHKKia (ORCPT
+        id S1728637AbgHKKil convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 06:38:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43462 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728280AbgHKKi0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 06:38:26 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A14B6C06174A;
-        Tue, 11 Aug 2020 03:38:25 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id m22so12886544ljj.5;
-        Tue, 11 Aug 2020 03:38:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+bLBNXzgQroSX4+PzVIZrtth34ymbRY4TcegtKy4Abc=;
-        b=OLa3xQZm0JeZlgpQUICKoZbLqSN8onKQOVvymh0Gv4seL+2Xm6Mqd1Mbgq0iSpIRQu
-         gvfDSjYYdbt9X+mwKMNzNcRrCnXNVjsoknnDUCljJ/T6z4ETFsmhbETRnfKmHujJW5Ur
-         2I6pRO7vDYhJ9zdnKoeURN7iNd3bX6ePhf4tajNpU1QOqpYMK75v36ylkyZEfZOUIf0w
-         BZLwpeN5zn/xFPsL14uZj0mKOnNSBOOspd9g8PKzYbJ/VDmawQghHtPT14sFr+u5Gw9E
-         8A+8SSpMgCC0O8Q+E1r9J4Hg1k4zOA0JtRb1S9ugnU2yJI/wqc9WyDliXsey4kJGAtnk
-         BFIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+bLBNXzgQroSX4+PzVIZrtth34ymbRY4TcegtKy4Abc=;
-        b=e6dYNG7sVqUOoh2YinlusrBgrrk6fw84gIPKEwH1n3rQ5X6swf6X9A7EeOsHGPrszr
-         acF/R83KeZoeZK8VcUhJImMVtPeFsB3IL7qlLG3YZ6dB9FwaQU5q/J7/pUjS49V3+Lvz
-         t2LSjlWhJwrBcBgnwMX9gnENlQKJFNFt5RMUlhidQoi2ddgTZMF8KqdMH47/rB+A18Qo
-         POB8zJZJrkkkmgQsafafO0o09SOorjNUUtv2t+WTt/OKK8tyH2ATgt3T6WOgSDuSWfNT
-         2eKDzIRcP3XhyyKvVBymABMCG4Xm5R/dBUm/OVkY3350FbyaAc38uzBwrBpMd8QNJIzg
-         XxhQ==
-X-Gm-Message-State: AOAM530b7Tudxh/G9pj7EVviBtte0W2cCx9sjAwIjJ42dNjuXTUTrRIn
-        +as5eAAQApezY7ka5BG14u8dcPblFadxRbEX2gpY01qk
-X-Google-Smtp-Source: ABdhPJxJdqJPI5vPU+oq//e+QjYm5n5J7vMxbLpPbh+ipeXR5Q4QOw4TGWa64Ge0+IGZVaqJVGk0U5GnsSLm5r1YtGw=
-X-Received: by 2002:a2e:8956:: with SMTP id b22mr2677961ljk.189.1597142303157;
- Tue, 11 Aug 2020 03:38:23 -0700 (PDT)
+        Tue, 11 Aug 2020 06:38:41 -0400
+Received: from foss.arm.com ([217.140.110.172]:36576 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728590AbgHKKig (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 06:38:36 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4435F31B;
+        Tue, 11 Aug 2020 03:38:34 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E7FD43F22E;
+        Tue, 11 Aug 2020 03:38:32 -0700 (PDT)
+References: <20200810010009.92758-1-arch0.zheng@gmail.com> <jhjwo26gxlb.mognet@arm.com> <9425382c-2a42-57ca-512d-c93c589dc701@gmail.com>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Qi Zheng <arch0.zheng@gmail.com>
+Cc:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sched/fair: Remove the duplicate check from group_has_capacity()
+In-reply-to: <9425382c-2a42-57ca-512d-c93c589dc701@gmail.com>
+Date:   Tue, 11 Aug 2020 11:38:28 +0100
+Message-ID: <jhjv9hph3h7.mognet@arm.com>
 MIME-Version: 1.0
-References: <20200602080425.93712-1-kerneljasonxing@gmail.com>
- <20200604090014.23266-1-kerneljasonxing@gmail.com> <CANn89iKt=3iDZM+vUbCvO_aGuedXFhzdC6OtQMeVTMDxyp9bAg@mail.gmail.com>
- <CAL+tcoCU157eGmMMabT5icdFJTMEWymNUNxHBbxY1OTir0=0FQ@mail.gmail.com>
-In-Reply-To: <CAL+tcoCU157eGmMMabT5icdFJTMEWymNUNxHBbxY1OTir0=0FQ@mail.gmail.com>
-From:   Jason Xing <kerneljasonxing@gmail.com>
-Date:   Tue, 11 Aug 2020 18:37:46 +0800
-Message-ID: <CAL+tcoA9SYUfge02=0dGbVidO0098NtT2+Ab_=OpWXnM82=RWQ@mail.gmail.com>
-Subject: Re: [PATCH v2 4.19] tcp: fix TCP socks unreleased in BBR mode
-To:     Eric Dumazet <edumazet@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Neal Cardwell <ncardwell@google.com>,
-        David Miller <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        liweishi <liweishi@kuaishou.com>,
-        Shujin Li <lishujin@kuaishou.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi everyone,
 
-Could anyone take a look at this issue? I believe it is of high-importance.
-Though Eric gave the proper patch a few months ago, the stable branch
-still hasn't applied or merged this fix. It seems this patch was
-forgotten :(
+On 11/08/20 04:39, Qi Zheng wrote:
+> On 2020/8/11 上午2:33, Valentin Schneider wrote:
+>>
+>> On 10/08/20 02:00, Qi Zheng wrote:
+>>> 1. The group_has_capacity() function is only called in
+>>>     group_classify().
+>>> 2. The following inequality has already been checked in
+>>>     group_is_overloaded() which was also called in
+>>>     group_classify().
+>>>
+>>>        (sgs->group_capacity * imbalance_pct) <
+>>>                          (sgs->group_runnable * 100)
+>>>
+>>
+>> Consider group_is_overloaded() returns false because of the first
+>> condition:
+>>
+>>          if (sgs->sum_nr_running <= sgs->group_weight)
+>>                  return false;
+>>
+>> then group_has_capacity() would be the first place where the group_runnable
+>> vs group_capacity comparison would be done.
+>>
+>> Now in that specific case we'll actually only check it if
+>>
+>>    sgs->sum_nr_running == sgs->group_weight
+>>
+>> and the only case where the runnable vs capacity check can fail here is if
+>> there's significant capacity pressure going on. TBH this capacity pressure
+>> could be happening even when there are fewer tasks than CPUs, so I'm not
+>> sure how intentional that corner case is.
+>
+> Maybe some cpus in sg->cpumask are no longer active at the == case,
+> which causes the significant capacity pressure?
+>
 
-Thanks,
-Jason
-
-On Thu, Jun 4, 2020 at 9:47 PM Jason Xing <kerneljasonxing@gmail.com> wrote:
->
-> On Thu, Jun 4, 2020 at 9:10 PM Eric Dumazet <edumazet@google.com> wrote:
-> >
-> > On Thu, Jun 4, 2020 at 2:01 AM <kerneljasonxing@gmail.com> wrote:
-> > >
-> > > From: Jason Xing <kerneljasonxing@gmail.com>
-> > >
-> > > When using BBR mode, too many tcp socks cannot be released because of
-> > > duplicate use of the sock_hold() in the manner of tcp_internal_pacing()
-> > > when RTO happens. Therefore, this situation maddly increases the slab
-> > > memory and then constantly triggers the OOM until crash.
-> > >
-> > > Besides, in addition to BBR mode, if some mode applies pacing function,
-> > > it could trigger what we've discussed above,
-> > >
-> > > Reproduce procedure:
-> > > 0) cat /proc/slabinfo | grep TCP
-> > > 1) switch net.ipv4.tcp_congestion_control to bbr
-> > > 2) using wrk tool something like that to send packages
-> > > 3) using tc to increase the delay and loss to simulate the RTO case.
-> > > 4) cat /proc/slabinfo | grep TCP
-> > > 5) kill the wrk command and observe the number of objects and slabs in
-> > > TCP.
-> > > 6) at last, you could notice that the number would not decrease.
-> > >
-> > > v2: extend the timer which could cover all those related potential risks
-> > > (suggested by Eric Dumazet and Neal Cardwell)
-> > >
-> > > Signed-off-by: Jason Xing <kerneljasonxing@gmail.com>
-> > > Signed-off-by: liweishi <liweishi@kuaishou.com>
-> > > Signed-off-by: Shujin Li <lishujin@kuaishou.com>
-> >
-> > That is not how things work really.
-> >
-> > I will submit this properly so that stable teams do not have to guess
-> > how to backport this to various kernels.
-> >
-> > Changelog is misleading, this has nothing to do with BBR, we need to be precise.
-> >
->
-> Thanks for your help. I can finally apply this patch into my kernel.
->
-> Looking forward to your patchset :)
->
-> Jason
->
-> > Thank you.
+That can only happen in that short window between deactivating a CPU and
+not having rebuilt the sched_domains yet, which sounds quite elusive.
