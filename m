@@ -3,140 +3,113 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D520C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 05:09:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02246C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 05:10:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71A552073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 05:09:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDDAA20756
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 05:10:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eLBzjVCO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rtnKpYG9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726526AbgHKFJe (ORCPT
+        id S1726592AbgHKFKn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 01:09:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49290 "EHLO
+        Tue, 11 Aug 2020 01:10:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726134AbgHKFJd (ORCPT
+        with ESMTP id S1726020AbgHKFKm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 01:09:33 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47466C06174A;
-        Mon, 10 Aug 2020 22:09:33 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id l64so10640623qkb.8;
-        Mon, 10 Aug 2020 22:09:33 -0700 (PDT)
+        Tue, 11 Aug 2020 01:10:42 -0400
+Received: from mail-ot1-x32e.google.com (mail-ot1-x32e.google.com [IPv6:2607:f8b0:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6129DC06174A
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 22:10:42 -0700 (PDT)
+Received: by mail-ot1-x32e.google.com with SMTP id k12so9199180otr.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 22:10:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=bMSxjMPm7VjNJMk372pm84tQNgfCuUZD1VrmgkqYZCk=;
-        b=eLBzjVCO5YbxLczQR30kyge47su0iVcJrFjbDeldqpgB2hjXU5IW3vXcQ8JtxRodoF
-         qhbLl6bjXO7Jlw5cfCnfSLBt+UguSzjYM/bCiq6Xxpf+ZkzFhamxpFsXgZzbBx6bwrRb
-         AnpIjg5QVPT1+z+Qpl+qqYHwXJoByhiyqO//u5t9q3f2ygLnkR8e72dL3xFxHLsAbyRH
-         0oluLqNNUANwqEYLXSTn4UMI+9lJTfM97LFe+l/JXOJSCK689qf99iDm1Firfr0u/GSu
-         UpgsbvWWHqyyqD/O1gvgX4uLDpJCVFTDiHOJmuk2+ojKOft0M7v7IHvKcYcncAIGKVzp
-         EkZw==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=F5+wURy/A4YDS6wY0fj6phgud0oJQCJ/wIqXX3evj+A=;
+        b=rtnKpYG9jAlOJVwzxSln8VyBNjJz+m/vn647OUluBdYK1NY5fXDUCLgn2oEKaONZif
+         tbTmdRM9PxEUZm+kG2N9r2ci6m8E/3g/kDZvhzSXWN+HGnJ5Ffxwfxsnwfo7PulcpF8Q
+         okHQFEu/zhkWj+L4+vmpBiS7ZDNtxK2as0U+JZ8Z/rjHK0A0c/T2kB9ZqBSOExMcxB60
+         lXs4EwYaZTApDk/pHrtmR0e3Kjzvx/RnCn1yVNgtLWQIY2yglzlRapH9QIB98YHUXfWZ
+         rNCLfMQLA7aU1fFDTou0jij4LXwGnLXsU79wV+Ir/a0wulzaPbM9TG6Xp8pHvlDaRI/N
+         fB8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=bMSxjMPm7VjNJMk372pm84tQNgfCuUZD1VrmgkqYZCk=;
-        b=BTlPSmunqFwuBVPO3p9W4Q28xfTdbKstlBwuNWI81Q0pLMJDT6HinYuNM0rIAEU1DH
-         qN4d0dt21upQPUqchocGiLu+Nv6xurOKV0gjTXSLsdVGFQ/Sa10sWP4ZzHpSfzjRUb3u
-         mCMqN815UgcgHOyOYdY9Nino8YDEsU31zJB593i9VEasGDxU1L7fwAzQUbw15xcjp6OH
-         1IRGidtP3qYERWQcbdat5jbEa3eNGosa1ERzP1NMfcC/sVKwgVek0GCMQKBx5Mrphnv8
-         xucpN93awnxHfKRCQ/ugL7ZDzSd3SE8itwd9CJdstzz8JhyAu6lcyZGFOEVyvrjTue9o
-         yluQ==
-X-Gm-Message-State: AOAM533KN0JLoH61bKUB8TQKJiAicYkedFr6Ly4z7xtPKw5Dg/ciASGY
-        K4DY2B7d37Fe/twe1VJoAg==
-X-Google-Smtp-Source: ABdhPJx2Ee81fca74pCzQRr0gAjmwBmoPjLgb54zYmDsOm6OFBy2IQqatW+oGAXQ0UUv+/hmSrUZKA==
-X-Received: by 2002:ae9:f301:: with SMTP id p1mr28616754qkg.295.1597122572273;
-        Mon, 10 Aug 2020 22:09:32 -0700 (PDT)
-Received: from PWN (146-115-88-66.s3894.c3-0.sbo-ubr1.sbo.ma.cable.rcncustomer.com. [146.115.88.66])
-        by smtp.gmail.com with ESMTPSA id l189sm15659624qke.67.2020.08.10.22.09.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Aug 2020 22:09:31 -0700 (PDT)
-Date:   Tue, 11 Aug 2020 01:09:29 -0400
-From:   Peilin Ye <yepeilin.cs@gmail.com>
-To:     Cong Wang <xiyou.wangcong@gmail.com>
-Cc:     Wensong Zhang <wensong@linux-vs.org>,
-        Simon Horman <horms@verge.net.au>,
-        Julian Anastasov <ja@ssi.bg>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        lvs-devel@vger.kernel.org,
-        NetFilter <netfilter-devel@vger.kernel.org>,
-        coreteam@netfilter.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [Linux-kernel-mentees] [PATCH net] ipvs: Fix uninit-value in
- do_ip_vs_set_ctl()
-Message-ID: <20200811050929.GA821443@PWN>
-References: <20200810220703.796718-1-yepeilin.cs@gmail.com>
- <CAM_iQpWsQubVJ-AYaLHujHwz68+nsHBcbgbf8XPMEPD=Vu+zaA@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=F5+wURy/A4YDS6wY0fj6phgud0oJQCJ/wIqXX3evj+A=;
+        b=mdQmiElU7Qv6tGJNbYmD4qTK+kZvCqpiNqlosCdX1FS9p4MXu7fgnsYPHxo5Gsmm6a
+         6AyAJnLcY7SHheVRLlVtnm0aarvOCfjcr1peKXe2xR5Wob2VXh6ATqS1H2qxNQ/Q6uHk
+         Qu5ODsYp9r7a9ts1xFPeFPJd3iEj4X0+KOuBjyG3AOzW0nIjyvKMqFTNfB6gE+z4gPZs
+         gXCp1c1wZCvy9V1voBSwikeLe1ePJDrBil5Y2oqhmXizVjzeXZhtJ7c+3LGVpiz9ROTU
+         IDA3yZOkniiouP9lhS06CIbhfi7338codxT7uexwgsTwIAvJ2T+yB16djE7xYWraZ6ez
+         R+Yg==
+X-Gm-Message-State: AOAM5310lYnsTQWVMzYgdb5bBZ5sp50p/Ha01JwG3FueLjCkcUP2RLMe
+        S3dLg6CgxVeB/s+1LlzWYrihVYdupfPmbeesRYPtaQ==
+X-Google-Smtp-Source: ABdhPJw1n2sMR8gGKJ8k77vVLh7KbEuxWhsMdLj6KzhGYsJhLFgzZFWS0dVXhxSZopgfBzYdBjc+kTtrhLhL8dw0glc=
+X-Received: by 2002:a9d:6f8f:: with SMTP id h15mr3417697otq.221.1597122641623;
+ Mon, 10 Aug 2020 22:10:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAM_iQpWsQubVJ-AYaLHujHwz68+nsHBcbgbf8XPMEPD=Vu+zaA@mail.gmail.com>
+References: <s5hbljocbxl.wl-tiwai@suse.de> <CANcMJZCPPOOmKyRMKYRe5sRsqf-rrO6wXK5BPVwFrAPLZOEyMg@mail.gmail.com>
+ <4f3ead7e-992e-edec-e7b4-31566fc5e583@linaro.org>
+In-Reply-To: <4f3ead7e-992e-edec-e7b4-31566fc5e583@linaro.org>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Mon, 10 Aug 2020 22:10:30 -0700
+Message-ID: <CALAqxLVn2MBp8fy6RFLfWTFNj4X4Wm4JraFWtr3k5aU38X92qw@mail.gmail.com>
+Subject: Re: [GIT PULL] sound updates for 5.9
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     Takashi Iwai <tiwai@suse.de>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Amit Pundir <amit.pundir@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 08:57:19PM -0700, Cong Wang wrote:
-> On Mon, Aug 10, 2020 at 3:10 PM Peilin Ye <yepeilin.cs@gmail.com> wrote:
-> >
-> > do_ip_vs_set_ctl() is referencing uninitialized stack value when `len` is
-> > zero. Fix it.
-> 
-> Which exact 'cmd' is it here?
-> 
-> I _guess_ it is one of those uninitialized in set_arglen[], which is 0.
+On Mon, Aug 10, 2020 at 10:06 AM Srinivas Kandagatla
+<srinivas.kandagatla@linaro.org> wrote:
+>
+> Hi John,
+> Thanks for reporting this.
+>
+> On 08/08/2020 01:23, John Stultz wrote:
+> > q6routing remoteproc-adsp:glink-edge:apr:apr-service@8:routing: ASoC:
+> > error at soc_component_read_no_lock on
+> > remoteproc-adsp:glink-edge:apr:: -5
+>
+> This is an -EIO error which is reported when the ASoC component driver
+> does not have both regmap and read callback and someone is trying to
+> read a register!
+>
+> In q6routing case all the dapm widgets reuse reg field in
+> snd_soc_dapm_widget to store offset information or routing table indexs
+> or some DSP related id and so on... These are not real registers.
+>
+> I think the core is trying to read the state of these widgets during
+> startup, Which will fail in qdsp6 case as we do not have any regmap or
+> read callback associated with this ASoC component.
+>
+> Previously we never had chance to see these messages so we did not
+> implement any dummy read callback.
+>
+> Adding a dummy callback to q6routing and q6afe-dai ASoC component will
+> fix this issue at-least in Qualcomm case!
 
-Yes, it was `IP_VS_SO_SET_NONE`, implicitly initialized to zero.
+Yea, just to confirm.  The patch you sent me privately that does the
+above seems to work!
 
-> But if that is the case, should it be initialized to
-> sizeof(struct ip_vs_service_user) instead because ip_vs_copy_usvc_compat()
-> is called anyway. Or, maybe we should just ban len==0 case.
-
-I see. I think the latter would be easier, but we cannot ban all of
-them, since the function does something with `IP_VS_SO_SET_FLUSH`, which
-is a `len == 0` case.
-
-Maybe we do something like this?
-
-@@ -2432,6 +2432,8 @@ do_ip_vs_set_ctl(struct sock *sk, int cmd, void __user *user, unsigned int len)
-
- 	if (cmd < IP_VS_BASE_CTL || cmd > IP_VS_SO_SET_MAX)
- 		return -EINVAL;
-+	if (len == 0 && cmd != IP_VS_SO_SET_FLUSH)
-+		return -EINVAL;
- 	if (len != set_arglen[CMDID(cmd)]) {
- 		IP_VS_DBG(1, "set_ctl: len %u != %u\n",
- 			  len, set_arglen[CMDID(cmd)]);
-@@ -2547,9 +2549,6 @@ do_ip_vs_set_ctl(struct sock *sk, int cmd, void __user *user, unsigned int len)
- 		break;
- 	case IP_VS_SO_SET_DELDEST:
- 		ret = ip_vs_del_dest(svc, &udest);
--		break;
--	default:
--		ret = -EINVAL;
- 	}
-
-   out_unlock:
-
-Thank you,
-Peilin Ye
-
-> In either case, it does not look like you fix it correctly.
-> 
-> Thanks.
+Thanks so much!
+-john
