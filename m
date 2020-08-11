@@ -2,199 +2,1336 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B2CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 16:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DAC2C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 16:40:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FB472076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 16:39:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D857B20658
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 16:40:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729204AbgHKQjd (ORCPT
+        id S1729001AbgHKQkr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 12:39:33 -0400
-Received: from LLMX2.LL.MIT.EDU ([129.55.12.48]:50316 "EHLO llmx2.ll.mit.edu"
+        Tue, 11 Aug 2020 12:40:47 -0400
+Received: from mga14.intel.com ([192.55.52.115]:62149 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729011AbgHKQjc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 12:39:32 -0400
-Received: from LLE2K16-MBX04.mitll.ad.local (LLE2K16-MBX04.mitll.ad.local) by llmx2.ll.mit.edu (unknown) with ESMTPS id 07BGdGUE027627; Tue, 11 Aug 2020 12:39:22 -0400
-From:   "Burrow, Ryan - 0553 - MITLL" <Ryan.Burrow@ll.mit.edu>
-To:     Matthew Wilcox <willy@infradead.org>
-CC:     "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] Bug fix to ELF Loader which rejects valid ELFs
-Thread-Topic: [PATCH] Bug fix to ELF Loader which rejects valid ELFs
-Thread-Index: AdZv7VoCntoFb81nSwCB63C55Cc9WgAJP+mAAAb2XbA=
-Date:   Tue, 11 Aug 2020 16:39:20 +0000
-Message-ID: <a71dc0e54ef741dfa4d5599093cb26d1@ll.mit.edu>
-References: <c51feef9afbd4b82a3c718a072433a20@ll.mit.edu>
- <20200811150517.GR17456@casper.infradead.org>
-In-Reply-To: <20200811150517.GR17456@casper.infradead.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: yes
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.25.1.84]
-Content-Type: multipart/signed; protocol="application/x-pkcs7-signature";
-        micalg=SHA1; boundary="----=_NextPart_000_06BC_01D66FDC.6E28BC60"
+        id S1728844AbgHKQkr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 12:40:47 -0400
+IronPort-SDR: dQlBt3jbm6dFmratqRtSMGZDuUMwbAhjEbKbc/74dKYHdf+KKUYB4voiKShvjr+VM73YSEu46b
+ ezedw80MBC+A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9710"; a="152985396"
+X-IronPort-AV: E=Sophos;i="5.76,301,1592895600"; 
+   d="scan'208";a="152985396"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2020 09:30:45 -0700
+IronPort-SDR: gGW0dvPGOEtt+6AAlmqJlq8pUnwONv51zw896qvzYxr8NbH1cEc5+/TuMp2uMTKR/UpW6thI0L
+ /BjuEX8A7ZKw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,301,1592895600"; 
+   d="scan'208";a="317786489"
+Received: from txasoft-yocto.an.intel.com ([10.123.72.192])
+  by fmsmga004.fm.intel.com with ESMTP; 11 Aug 2020 09:30:44 -0700
+From:   Gage Eads <gage.eads@intel.com>
+To:     linux-kernel@vger.kernel.org, arnd@arndb.de,
+        gregkh@linuxfoundation.org
+Cc:     magnus.karlsson@intel.com, bjorn.topel@intel.com
+Subject: [PATCH v2 13/19] dlb2: add CQ interrupt support
+Date:   Tue, 11 Aug 2020 11:27:26 -0500
+Message-Id: <20200811162732.1369-14-gage.eads@intel.com>
+X-Mailer: git-send-email 2.13.6
+In-Reply-To: <20200811162732.1369-1-gage.eads@intel.com>
+References: <20200811162732.1369-1-gage.eads@intel.com>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-11_15:2020-08-11,2020-08-11 signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-2006250000 definitions=main-2008110115
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-------=_NextPart_000_06BC_01D66FDC.6E28BC60
-Content-Type: text/plain;
-	charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+DLB 2.0 supports interrupt-driven applications with per-CQ interrupts. A CQ
+interrupt is armed by user-space software by enqueueing a special command
+to the device through the port's MMIO window, and the interrupt fires when
+the armed CQ becomes non-empty.
 
-> -----Original Message-----
-> From: Matthew Wilcox <willy@infradead.org>
-> Sent: Tuesday, August 11, 2020 11:05 AM
-> To: Burrow, Ryan - 0553 - MITLL <Ryan.Burrow@ll.mit.edu>
-> Cc: linux-fsdevel@vger.kernel.org; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH] Bug fix to ELF Loader which rejects valid ELFs
-> 
-> On Tue, Aug 11, 2020 at 02:44:08PM +0000, Burrow, Ryan - 0553 - MITLL
-wrote:
-> >  	/* Sanity check the number of program headers... */
-> > -	/* ...and their total size. */
-> > -	size = sizeof(struct elf_phdr) * elf_ex->e_phnum;
-> > -	if (size == 0 || size > 65536 || size > ELF_MIN_ALIGN)
-> > +	if (elf_ex->e_phnum == 0 || elf_ex->phnum > 65535)
-> 
-> umm, did you compile-test this?
-> 
+All CQ interrupts use a single MSI-X interrupt vector, and the ISR reads
+bitmap registers to determine which CQ(s)'s interrupt fired. For each of
+these CQs, the driver wakes up a wait-queue -- on which user-space threads
+may be blocking waiting for the interrupt. User-space software calls a
+block-on-CQ-interrupt ioctl in order to block on the wait queue.
 
-My apologies, I had made these edits in the context of other changes which I
-didn't want to include in this patch - I replicated these changes
-individually and (mistakenly) assumed I had done so correctly.
+A CQ's interrupt is enabled when its port is configured, and interrupts are
+enabled/disabled when a port is enabled/disabled. If a port is disabled and
+a thread is blocked on the wait queue, the thread is woken and returned to
+user-space.
 
-> assuming you meant e_phnum, it's a 16-bit quantity, so it can't be bigger
-> than 65535.
-> 
-> >  		goto out;
-> >
-> > +	size = sizeof(struct elf_phdr) * elf_ex->e_phnum;
-> 
-> use array_size() here?
-> 
+Signed-off-by: Gage Eads <gage.eads@intel.com>
+Reviewed-by: Björn Töpel <bjorn.topel@intel.com>
+---
+ drivers/misc/dlb2/Makefile        |   1 +
+ drivers/misc/dlb2/dlb2_hw_types.h |  13 ++
+ drivers/misc/dlb2/dlb2_intr.c     | 130 ++++++++++++++++
+ drivers/misc/dlb2/dlb2_intr.h     |  29 ++++
+ drivers/misc/dlb2/dlb2_ioctl.c    |  70 +++++++++
+ drivers/misc/dlb2/dlb2_main.c     |  20 ++-
+ drivers/misc/dlb2/dlb2_main.h     |  43 ++++++
+ drivers/misc/dlb2/dlb2_pf_ops.c   | 211 ++++++++++++++++++++++++++
+ drivers/misc/dlb2/dlb2_resource.c | 306 ++++++++++++++++++++++++++++++++++++++
+ drivers/misc/dlb2/dlb2_resource.h | 128 ++++++++++++++++
+ include/uapi/linux/dlb2_user.h    |  37 +++++
+ 11 files changed, 987 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/misc/dlb2/dlb2_intr.c
+ create mode 100644 drivers/misc/dlb2/dlb2_intr.h
 
-That's a good catch - I had really just moved the previous allocation of
-size down to after the check, but I'll use array_size instead. Just to
-confirm the correct process, should I do an inline response with the updated
-commit, or submit a new patch email?
+diff --git a/drivers/misc/dlb2/Makefile b/drivers/misc/dlb2/Makefile
+index 12361461dcff..64ec27489b73 100644
+--- a/drivers/misc/dlb2/Makefile
++++ b/drivers/misc/dlb2/Makefile
+@@ -6,6 +6,7 @@ obj-$(CONFIG_INTEL_DLB2) := dlb2.o
+ 
+ dlb2-objs :=      \
+   dlb2_main.o     \
++  dlb2_intr.o     \
+   dlb2_file.o     \
+   dlb2_ioctl.o    \
+   dlb2_pf_ops.o   \
+diff --git a/drivers/misc/dlb2/dlb2_hw_types.h b/drivers/misc/dlb2/dlb2_hw_types.h
+index 7db59157da15..986d35cbeaf9 100644
+--- a/drivers/misc/dlb2/dlb2_hw_types.h
++++ b/drivers/misc/dlb2/dlb2_hw_types.h
+@@ -48,6 +48,19 @@
+ #define DLB2_MAX_QID_EMPTY_CHECK_LOOPS		(32 * 64 * 1024 * (800 / 30))
+ #define DLB2_HZ					800000000
+ 
++/* Interrupt related macros */
++#define DLB2_PF_NUM_NON_CQ_INTERRUPT_VECTORS 1
++#define DLB2_PF_NUM_CQ_INTERRUPT_VECTORS     64
++#define DLB2_PF_TOTAL_NUM_INTERRUPT_VECTORS \
++	(DLB2_PF_NUM_NON_CQ_INTERRUPT_VECTORS + \
++	 DLB2_PF_NUM_CQ_INTERRUPT_VECTORS)
++#define DLB2_PF_NUM_COMPRESSED_MODE_VECTORS \
++	(DLB2_PF_NUM_NON_CQ_INTERRUPT_VECTORS + 1)
++#define DLB2_PF_NUM_PACKED_MODE_VECTORS \
++	DLB2_PF_TOTAL_NUM_INTERRUPT_VECTORS
++#define DLB2_PF_COMPRESSED_MODE_CQ_VECTOR_ID \
++	DLB2_PF_NUM_NON_CQ_INTERRUPT_VECTORS
++
+ /*
+  * Hardware-defined base addresses. Those prefixed 'DLB2_DRV' are only used by
+  * the PF driver.
+diff --git a/drivers/misc/dlb2/dlb2_intr.c b/drivers/misc/dlb2/dlb2_intr.c
+new file mode 100644
+index 000000000000..0e20197e96fb
+--- /dev/null
++++ b/drivers/misc/dlb2/dlb2_intr.c
+@@ -0,0 +1,130 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/* Copyright(c) 2017-2020 Intel Corporation */
++
++#include <linux/interrupt.h>
++#include <linux/uaccess.h>
++
++#include "dlb2_intr.h"
++#include "dlb2_main.h"
++#include "dlb2_resource.h"
++
++void dlb2_wake_thread(struct dlb2_dev *dev,
++		      struct dlb2_cq_intr *intr,
++		      enum dlb2_wake_reason reason)
++{
++	switch (reason) {
++	case WAKE_CQ_INTR:
++		WRITE_ONCE(intr->wake, true);
++		break;
++	case WAKE_PORT_DISABLED:
++		WRITE_ONCE(intr->disabled, true);
++		break;
++	default:
++		break;
++	}
++
++	wake_up_interruptible(&intr->wq_head);
++}
++
++static inline bool wake_condition(struct dlb2_cq_intr *intr,
++				  struct dlb2_dev *dev,
++				  struct dlb2_domain *domain)
++{
++	return (READ_ONCE(intr->wake) || READ_ONCE(intr->disabled));
++}
++
++struct dlb2_dequeue_qe {
++	u8 rsvd0[15];
++	u8 cq_gen:1;
++	u8 rsvd1:7;
++} __packed;
++
++/**
++ * dlb2_cq_empty() - determine whether a CQ is empty
++ * @dev: struct dlb2_dev pointer.
++ * @user_cq_va: User VA pointing to next CQ entry.
++ * @cq_gen: Current CQ generation bit.
++ *
++ * Return:
++ * Returns 1 if empty, 0 if non-empty, or < 0 if an error occurs.
++ */
++static int dlb2_cq_empty(struct dlb2_dev *dev, u64 user_cq_va, u8 cq_gen)
++{
++	struct dlb2_dequeue_qe qe;
++
++	if (copy_from_user(&qe, (void __user *)user_cq_va, sizeof(qe)))
++		return -EFAULT;
++
++	return qe.cq_gen != cq_gen;
++}
++
++int dlb2_block_on_cq_interrupt(struct dlb2_dev *dev,
++			       struct dlb2_domain *dom,
++			       int port_id,
++			       bool is_ldb,
++			       u64 cq_va,
++			       u8 cq_gen,
++			       bool arm)
++{
++	struct dlb2_cq_intr *intr;
++	int ret = 0;
++
++	if (is_ldb && port_id >= DLB2_MAX_NUM_LDB_PORTS)
++		return -EINVAL;
++	if (!is_ldb && port_id >= DLB2_MAX_NUM_DIR_PORTS)
++		return -EINVAL;
++
++	if (is_ldb)
++		intr = &dev->intr.ldb_cq_intr[port_id];
++	else
++		intr = &dev->intr.dir_cq_intr[port_id];
++
++	if (!intr->configured || intr->domain_id != dom->id)
++		return -EINVAL;
++
++	/*
++	 * This function requires that only one thread process the CQ at a time.
++	 * Otherwise, the wake condition could become false in the time between
++	 * the ISR calling wake_up_interruptible() and the thread checking its
++	 * wake condition.
++	 */
++	mutex_lock(&intr->mutex);
++
++	/* Return early if the port's interrupt is disabled */
++	if (READ_ONCE(intr->disabled)) {
++		mutex_unlock(&intr->mutex);
++		return -EACCES;
++	}
++
++	dev_dbg(dev->dlb2_device,
++		"Thread is blocking on %s port %d's interrupt\n",
++		(is_ldb) ? "LDB" : "DIR", port_id);
++
++	/* Don't block if the CQ is non-empty */
++	ret = dlb2_cq_empty(dev, cq_va, cq_gen);
++	if (ret != 1)
++		goto error;
++
++	if (arm) {
++		ret = dev->ops->arm_cq_interrupt(dev, dom->id, port_id, is_ldb);
++		if (ret)
++			goto error;
++	}
++
++	ret = wait_event_interruptible(intr->wq_head,
++				       wake_condition(intr, dev, dom));
++
++	if (ret == 0 && READ_ONCE(intr->disabled))
++		ret = -EACCES;
++
++	WRITE_ONCE(intr->wake, false);
++
++	dev_dbg(dev->dlb2_device,
++		"Thread is unblocked from %s port %d's interrupt\n",
++		(is_ldb) ? "LDB" : "DIR", port_id);
++
++error:
++	mutex_unlock(&intr->mutex);
++
++	return ret;
++}
+diff --git a/drivers/misc/dlb2/dlb2_intr.h b/drivers/misc/dlb2/dlb2_intr.h
+new file mode 100644
+index 000000000000..613179795d8f
+--- /dev/null
++++ b/drivers/misc/dlb2/dlb2_intr.h
+@@ -0,0 +1,29 @@
++/* SPDX-License-Identifier: GPL-2.0-only
++ * Copyright(c) 2017-2020 Intel Corporation
++ */
++
++#ifndef __DLB2_INTR_H
++#define __DLB2_INTR_H
++
++#include <linux/pci.h>
++
++#include "dlb2_main.h"
++
++int dlb2_block_on_cq_interrupt(struct dlb2_dev *dev,
++			       struct dlb2_domain *domain,
++			       int port_id,
++			       bool is_ldb,
++			       u64 cq_va,
++			       u8 cq_gen,
++			       bool arm);
++
++enum dlb2_wake_reason {
++	WAKE_CQ_INTR,
++	WAKE_PORT_DISABLED,
++};
++
++void dlb2_wake_thread(struct dlb2_dev *dev,
++		      struct dlb2_cq_intr *intr,
++		      enum dlb2_wake_reason reason);
++
++#endif /* __DLB2_INTR_H */
+diff --git a/drivers/misc/dlb2/dlb2_ioctl.c b/drivers/misc/dlb2/dlb2_ioctl.c
+index 490c380670cc..010e67941cf9 100644
+--- a/drivers/misc/dlb2/dlb2_ioctl.c
++++ b/drivers/misc/dlb2/dlb2_ioctl.c
+@@ -7,6 +7,7 @@
+ #include <uapi/linux/dlb2_user.h>
+ 
+ #include "dlb2_file.h"
++#include "dlb2_intr.h"
+ #include "dlb2_ioctl.h"
+ #include "dlb2_main.h"
+ 
+@@ -75,6 +76,10 @@ static int dlb2_domain_ioctl_enable_ldb_port(struct dlb2_dev *dev,
+ 
+ 	ret = dev->ops->enable_ldb_port(&dev->hw, domain->id, &arg, &response);
+ 
++	/* Allow threads to block on this port's CQ interrupt */
++	if (!ret)
++		WRITE_ONCE(dev->intr.ldb_cq_intr[arg.port_id].disabled, false);
++
+ 	mutex_unlock(&dev->resource_mutex);
+ 
+ 	BUILD_BUG_ON(offsetof(typeof(arg), response) != 0);
+@@ -100,6 +105,10 @@ static int dlb2_domain_ioctl_enable_dir_port(struct dlb2_dev *dev,
+ 
+ 	ret = dev->ops->enable_dir_port(&dev->hw, domain->id, &arg, &response);
+ 
++	/* Allow threads to block on this port's CQ interrupt */
++	if (!ret)
++		WRITE_ONCE(dev->intr.dir_cq_intr[arg.port_id].disabled, false);
++
+ 	mutex_unlock(&dev->resource_mutex);
+ 
+ 	BUILD_BUG_ON(offsetof(typeof(arg), response) != 0);
+@@ -125,6 +134,15 @@ static int dlb2_domain_ioctl_disable_ldb_port(struct dlb2_dev *dev,
+ 
+ 	ret = dev->ops->disable_ldb_port(&dev->hw, domain->id, &arg, &response);
+ 
++	/*
++	 * Wake threads blocked on this port's CQ interrupt, and prevent
++	 * subsequent attempts to block on it.
++	 */
++	if (!ret)
++		dlb2_wake_thread(dev,
++				 &dev->intr.ldb_cq_intr[arg.port_id],
++				 WAKE_PORT_DISABLED);
++
+ 	mutex_unlock(&dev->resource_mutex);
+ 
+ 	BUILD_BUG_ON(offsetof(typeof(arg), response) != 0);
+@@ -150,6 +168,15 @@ static int dlb2_domain_ioctl_disable_dir_port(struct dlb2_dev *dev,
+ 
+ 	ret = dev->ops->disable_dir_port(&dev->hw, domain->id, &arg, &response);
+ 
++	/*
++	 * Wake threads blocked on this port's CQ interrupt, and prevent
++	 * subsequent attempts to block on it.
++	 */
++	if (!ret)
++		dlb2_wake_thread(dev,
++				 &dev->intr.dir_cq_intr[arg.port_id],
++				 WAKE_PORT_DISABLED);
++
+ 	mutex_unlock(&dev->resource_mutex);
+ 
+ 	BUILD_BUG_ON(offsetof(typeof(arg), response) != 0);
+@@ -197,6 +224,13 @@ static int dlb2_domain_ioctl_create_ldb_port(struct dlb2_dev *dev,
+ 	if (ret)
+ 		goto unlock;
+ 
++	ret = dev->ops->enable_ldb_cq_interrupts(dev,
++						 domain->id,
++						 response.id,
++						 arg.cq_depth_threshold);
++	if (ret)
++		goto unlock; /* Internal error, don't unwind port creation */
++
+ 	/* Fill out the per-port data structure */
+ 	dev->ldb_port[response.id].id = response.id;
+ 	dev->ldb_port[response.id].is_ldb = true;
+@@ -255,6 +289,13 @@ static int dlb2_domain_ioctl_create_dir_port(struct dlb2_dev *dev,
+ 	if (ret)
+ 		goto unlock;
+ 
++	dev->ops->enable_dir_cq_interrupts(dev,
++					   domain->id,
++					   response.id,
++					   arg.cq_depth_threshold);
++	if (ret)
++		goto unlock; /* Internal error, don't unwind port creation */
++
+ 	/* Fill out the per-port data structure */
+ 	dev->dir_port[response.id].id = response.id;
+ 	dev->dir_port[response.id].is_ldb = false;
+@@ -280,6 +321,33 @@ static int dlb2_domain_ioctl_create_dir_port(struct dlb2_dev *dev,
+ 	return ret;
+ }
+ 
++static int dlb2_domain_ioctl_block_on_cq_interrupt(struct dlb2_dev *dev,
++						   struct dlb2_domain *domain,
++						   unsigned long user_arg)
++{
++	struct dlb2_block_on_cq_interrupt_args arg;
++	struct dlb2_cmd_response response = {0};
++	int ret = 0;
++
++	if (copy_from_user(&arg, (void __user *)user_arg, sizeof(arg)))
++		return -EFAULT;
++
++	ret = dlb2_block_on_cq_interrupt(dev,
++					 domain,
++					 arg.port_id,
++					 arg.is_ldb,
++					 arg.cq_va,
++					 arg.cq_gen,
++					 arg.arm);
++
++	BUILD_BUG_ON(offsetof(typeof(arg), response) != 0);
++
++	if (copy_to_user((void __user *)user_arg, &response, sizeof(response)))
++		return -EFAULT;
++
++	return ret;
++}
++
+ static int dlb2_create_port_fd(struct dlb2_dev *dev,
+ 			       struct dlb2_domain *domain,
+ 			       const char *prefix,
+@@ -467,6 +535,8 @@ long dlb2_domain_ioctl(struct file *f, unsigned int cmd, unsigned long arg)
+ 		return dlb2_domain_ioctl_disable_ldb_port(dev, dom, arg);
+ 	case DLB2_IOC_DISABLE_DIR_PORT:
+ 		return dlb2_domain_ioctl_disable_dir_port(dev, dom, arg);
++	case DLB2_IOC_BLOCK_ON_CQ_INTERRUPT:
++		return dlb2_domain_ioctl_block_on_cq_interrupt(dev, dom, arg);
+ 	default:
+ 		return -ENOTTY;
+ 	}
+diff --git a/drivers/misc/dlb2/dlb2_main.c b/drivers/misc/dlb2/dlb2_main.c
+index 3fe59e99b402..b542c2c081a5 100644
+--- a/drivers/misc/dlb2/dlb2_main.c
++++ b/drivers/misc/dlb2/dlb2_main.c
+@@ -174,13 +174,20 @@ static void dlb2_release_device_memory(struct dlb2_dev *dev)
+ 
+ static int __dlb2_free_domain(struct dlb2_dev *dev, struct dlb2_domain *domain)
+ {
+-	int ret = 0;
++	int i, ret = 0;
+ 
+ 	ret = dev->ops->reset_domain(&dev->hw, domain->id);
+ 
+ 	/* Unpin and free all memory pages associated with the domain */
+ 	dlb2_release_domain_memory(dev, domain->id);
+ 
++	for (i = 0; i < DLB2_MAX_NUM_LDB_PORTS; i++)
++		if (dev->intr.ldb_cq_intr[i].domain_id == domain->id)
++			dev->intr.ldb_cq_intr[i].configured = false;
++	for (i = 0; i < DLB2_MAX_NUM_DIR_PORTS; i++)
++		if (dev->intr.dir_cq_intr[i].domain_id == domain->id)
++			dev->intr.dir_cq_intr[i].configured = false;
++
+ 	if (ret) {
+ 		dev->domain_reset_failed = true;
+ 		dev_err(dev->dlb2_device,
+@@ -430,6 +437,10 @@ static int dlb2_probe(struct pci_dev *pdev,
+ 	if (ret)
+ 		goto dlb2_reset_fail;
+ 
++	ret = dlb2_dev->ops->init_interrupts(dlb2_dev, pdev);
++	if (ret)
++		goto init_interrupts_fail;
++
+ 	ret = dlb2_resource_init(&dlb2_dev->hw);
+ 	if (ret)
+ 		goto resource_init_fail;
+@@ -458,6 +469,8 @@ static int dlb2_probe(struct pci_dev *pdev,
+ init_driver_state_fail:
+ 	dlb2_resource_free(&dlb2_dev->hw);
+ resource_init_fail:
++	dlb2_dev->ops->free_interrupts(dlb2_dev, pdev);
++init_interrupts_fail:
+ dlb2_reset_fail:
+ wait_for_device_ready_fail:
+ dma_set_mask_fail:
+@@ -497,6 +510,8 @@ static void dlb2_remove(struct pci_dev *pdev)
+ 
+ 	dlb2_resource_free(&dlb2_dev->hw);
+ 
++	dlb2_dev->ops->free_interrupts(dlb2_dev, pdev);
++
+ 	dlb2_release_device_memory(dlb2_dev);
+ 
+ 	dlb2_dev->ops->device_destroy(dlb2_dev, dlb2_class);
+@@ -521,6 +536,9 @@ static void dlb2_reset_hardware_state(struct dlb2_dev *dev)
+ {
+ 	dlb2_reset_device(dev->pdev);
+ 
++	/* Reinitialize interrupt configuration */
++	dev->ops->reinit_interrupts(dev);
++
+ 	/* Reinitialize any other hardware state */
+ 	dev->ops->init_hardware(dev);
+ }
+diff --git a/drivers/misc/dlb2/dlb2_main.h b/drivers/misc/dlb2/dlb2_main.h
+index 92e182603445..db462209fa6a 100644
+--- a/drivers/misc/dlb2/dlb2_main.h
++++ b/drivers/misc/dlb2/dlb2_main.h
+@@ -54,6 +54,21 @@ struct dlb2_device_ops {
+ 			dev_t base,
+ 			const struct file_operations *fops);
+ 	void (*cdev_del)(struct dlb2_dev *dlb2_dev);
++	int (*init_interrupts)(struct dlb2_dev *dev, struct pci_dev *pdev);
++	int (*enable_ldb_cq_interrupts)(struct dlb2_dev *dev,
++					int domain_id,
++					int port_id,
++					u16 thresh);
++	int (*enable_dir_cq_interrupts)(struct dlb2_dev *dev,
++					int domain_id,
++					int port_id,
++					u16 thresh);
++	int (*arm_cq_interrupt)(struct dlb2_dev *dev,
++				int domain_id,
++				int port_id,
++				bool is_ldb);
++	void (*reinit_interrupts)(struct dlb2_dev *dev);
++	void (*free_interrupts)(struct dlb2_dev *dev, struct pci_dev *pdev);
+ 	void (*enable_pm)(struct dlb2_dev *dev);
+ 	int (*wait_for_device_ready)(struct dlb2_dev *dev,
+ 				     struct pci_dev *pdev);
+@@ -152,6 +167,33 @@ struct dlb2_domain {
+ 	u8 id;
+ };
+ 
++struct dlb2_cq_intr {
++	wait_queue_head_t wq_head;
++	/*
++	 * The CQ interrupt mutex guarantees one thread is blocking on a CQ's
++	 * interrupt at a time.
++	 */
++	struct mutex mutex;
++	u8 wake;
++	u8 configured;
++	u8 domain_id;
++	/*
++	 * disabled is true if the port is disabled. In that
++	 * case, the driver doesn't allow applications to block on the
++	 * port's interrupt.
++	 */
++	u8 disabled;
++} ____cacheline_aligned;
++
++struct dlb2_intr {
++	struct dlb2_cq_intr ldb_cq_intr[DLB2_MAX_NUM_LDB_PORTS];
++	struct dlb2_cq_intr dir_cq_intr[DLB2_MAX_NUM_DIR_PORTS];
++	u8 isr_registered[DLB2_PF_NUM_CQ_INTERRUPT_VECTORS];
++	int num_vectors;
++	int base_vector;
++	int mode;
++};
++
+ struct dlb2_dev {
+ 	struct pci_dev *pdev;
+ 	struct dlb2_hw hw;
+@@ -167,6 +209,7 @@ struct dlb2_dev {
+ 	 * device file mappings.
+ 	 */
+ 	struct inode *inode;
++	struct dlb2_intr intr;
+ 	/*
+ 	 * The resource mutex serializes access to driver data structures and
+ 	 * hardware registers.
+diff --git a/drivers/misc/dlb2/dlb2_pf_ops.c b/drivers/misc/dlb2/dlb2_pf_ops.c
+index 8b1aac196073..23a1e9ba0226 100644
+--- a/drivers/misc/dlb2/dlb2_pf_ops.c
++++ b/drivers/misc/dlb2/dlb2_pf_ops.c
+@@ -4,6 +4,7 @@
+ #include <linux/delay.h>
+ #include <linux/pm_runtime.h>
+ 
++#include "dlb2_intr.h"
+ #include "dlb2_main.h"
+ #include "dlb2_regs.h"
+ #include "dlb2_resource.h"
+@@ -77,6 +78,210 @@ dlb2_pf_map_pci_bar_space(struct dlb2_dev *dlb2_dev,
+ 	return 0;
+ }
+ 
++/**********************************/
++/****** Interrupt management ******/
++/**********************************/
++
++static irqreturn_t
++dlb2_compressed_cq_intr_handler(int irq, void *hdlr_ptr)
++{
++	struct dlb2_dev *dev = (struct dlb2_dev *)hdlr_ptr;
++	u32 ldb_cq_interrupts[DLB2_MAX_NUM_LDB_PORTS / 32];
++	u32 dir_cq_interrupts[DLB2_MAX_NUM_DIR_PORTS / 32];
++	int i;
++
++	dlb2_read_compressed_cq_intr_status(&dev->hw,
++					    ldb_cq_interrupts,
++					    dir_cq_interrupts);
++
++	dlb2_ack_compressed_cq_intr(&dev->hw,
++				    ldb_cq_interrupts,
++				    dir_cq_interrupts);
++
++	for (i = 0; i < DLB2_MAX_NUM_LDB_PORTS; i++) {
++		if (!(ldb_cq_interrupts[i / 32] & (1 << (i % 32))))
++			continue;
++
++		dlb2_wake_thread(dev, &dev->intr.ldb_cq_intr[i], WAKE_CQ_INTR);
++	}
++
++	for (i = 0; i < DLB2_MAX_NUM_DIR_PORTS; i++) {
++		if (!(dir_cq_interrupts[i / 32] & (1 << (i % 32))))
++			continue;
++
++		dlb2_wake_thread(dev, &dev->intr.dir_cq_intr[i], WAKE_CQ_INTR);
++	}
++
++	return IRQ_HANDLED;
++}
++
++static int
++dlb2_init_compressed_mode_interrupts(struct dlb2_dev *dev,
++				     struct pci_dev *pdev)
++{
++	int ret, irq;
++
++	irq = pci_irq_vector(pdev, DLB2_PF_COMPRESSED_MODE_CQ_VECTOR_ID);
++
++	ret = devm_request_irq(&pdev->dev,
++			       irq,
++			       dlb2_compressed_cq_intr_handler,
++			       0,
++			       "dlb2_compressed_cq",
++			       dev);
++	if (ret)
++		return ret;
++
++	dev->intr.isr_registered[DLB2_PF_COMPRESSED_MODE_CQ_VECTOR_ID] = true;
++
++	dev->intr.mode = DLB2_MSIX_MODE_COMPRESSED;
++
++	dlb2_set_msix_mode(&dev->hw, DLB2_MSIX_MODE_COMPRESSED);
++
++	return 0;
++}
++
++static void
++dlb2_pf_free_interrupts(struct dlb2_dev *dev,
++			struct pci_dev *pdev)
++{
++	int i;
++
++	for (i = 0; i < dev->intr.num_vectors; i++) {
++		if (dev->intr.isr_registered[i])
++			devm_free_irq(&pdev->dev, pci_irq_vector(pdev, i), dev);
++	}
++
++	pci_free_irq_vectors(pdev);
++}
++
++static int
++dlb2_pf_init_interrupts(struct dlb2_dev *dev, struct pci_dev *pdev)
++{
++	int ret, i;
++
++	/*
++	 * DLB supports two modes for CQ interrupts:
++	 * - "compressed mode": all CQ interrupts are packed into a single
++	 *	vector. The ISR reads six interrupt status registers to
++	 *	determine the source(s).
++	 * - "packed mode" (unused): the hardware supports up to 64 vectors.
++	 */
++
++	ret = pci_alloc_irq_vectors(pdev,
++				    DLB2_PF_NUM_COMPRESSED_MODE_VECTORS,
++				    DLB2_PF_NUM_COMPRESSED_MODE_VECTORS,
++				    PCI_IRQ_MSIX);
++	if (ret < 0)
++		return ret;
++
++	dev->intr.num_vectors = ret;
++	dev->intr.base_vector = pci_irq_vector(pdev, 0);
++
++	ret = dlb2_init_compressed_mode_interrupts(dev, pdev);
++	if (ret) {
++		dlb2_pf_free_interrupts(dev, pdev);
++		return ret;
++	}
++
++	/*
++	 * Initialize per-CQ interrupt structures, such as wait queues that
++	 * threads will wait on until the CQ's interrupt fires.
++	 */
++	for (i = 0; i < DLB2_MAX_NUM_LDB_PORTS; i++) {
++		init_waitqueue_head(&dev->intr.ldb_cq_intr[i].wq_head);
++		mutex_init(&dev->intr.ldb_cq_intr[i].mutex);
++	}
++
++	for (i = 0; i < DLB2_MAX_NUM_DIR_PORTS; i++) {
++		init_waitqueue_head(&dev->intr.dir_cq_intr[i].wq_head);
++		mutex_init(&dev->intr.dir_cq_intr[i].mutex);
++	}
++
++	return 0;
++}
++
++/*
++ * If the device is reset during use, its interrupt registers need to be
++ * reinitialized.
++ */
++static void
++dlb2_pf_reinit_interrupts(struct dlb2_dev *dev)
++{
++	dlb2_set_msix_mode(&dev->hw, DLB2_MSIX_MODE_COMPRESSED);
++}
++
++static int
++dlb2_pf_enable_ldb_cq_interrupts(struct dlb2_dev *dev,
++				 int domain_id,
++				 int id,
++				 u16 thresh)
++{
++	int mode, vec;
++
++	if (dev->intr.mode == DLB2_MSIX_MODE_COMPRESSED) {
++		mode = DLB2_CQ_ISR_MODE_MSIX;
++		vec = 0;
++	} else {
++		mode = DLB2_CQ_ISR_MODE_MSIX;
++		vec = id % 64;
++	}
++
++	dev->intr.ldb_cq_intr[id].disabled = false;
++	dev->intr.ldb_cq_intr[id].configured = true;
++	dev->intr.ldb_cq_intr[id].domain_id = domain_id;
++
++	return dlb2_configure_ldb_cq_interrupt(&dev->hw, id, vec,
++					       mode, 0, 0, thresh);
++}
++
++static int
++dlb2_pf_enable_dir_cq_interrupts(struct dlb2_dev *dev,
++				 int domain_id,
++				 int id,
++				 u16 thresh)
++{
++	int mode, vec;
++
++	if (dev->intr.mode == DLB2_MSIX_MODE_COMPRESSED) {
++		mode = DLB2_CQ_ISR_MODE_MSIX;
++		vec = 0;
++	} else {
++		mode = DLB2_CQ_ISR_MODE_MSIX;
++		vec = id % 64;
++	}
++
++	dev->intr.dir_cq_intr[id].disabled = false;
++	dev->intr.dir_cq_intr[id].configured = true;
++	dev->intr.dir_cq_intr[id].domain_id = domain_id;
++
++	return dlb2_configure_dir_cq_interrupt(&dev->hw, id, vec,
++					       mode, 0, 0, thresh);
++}
++
++static int
++dlb2_pf_arm_cq_interrupt(struct dlb2_dev *dev,
++			 int domain_id,
++			 int port_id,
++			 bool is_ldb)
++{
++	int ret;
++
++	if (is_ldb)
++		ret = dev->ops->ldb_port_owned_by_domain(&dev->hw,
++							 domain_id,
++							 port_id);
++	else
++		ret = dev->ops->dir_port_owned_by_domain(&dev->hw,
++							 domain_id,
++							 port_id);
++
++	if (ret != 1)
++		return -EINVAL;
++
++	return dlb2_arm_cq_interrupt(&dev->hw, port_id, is_ldb, false, 0);
++}
++
+ /*******************************/
+ /****** Driver management ******/
+ /*******************************/
+@@ -414,6 +619,12 @@ struct dlb2_device_ops dlb2_pf_ops = {
+ 	.device_destroy = dlb2_pf_device_destroy,
+ 	.cdev_add = dlb2_pf_cdev_add,
+ 	.cdev_del = dlb2_pf_cdev_del,
++	.init_interrupts = dlb2_pf_init_interrupts,
++	.enable_ldb_cq_interrupts = dlb2_pf_enable_ldb_cq_interrupts,
++	.enable_dir_cq_interrupts = dlb2_pf_enable_dir_cq_interrupts,
++	.arm_cq_interrupt = dlb2_pf_arm_cq_interrupt,
++	.reinit_interrupts = dlb2_pf_reinit_interrupts,
++	.free_interrupts = dlb2_pf_free_interrupts,
+ 	.enable_pm = dlb2_pf_enable_pm,
+ 	.wait_for_device_ready = dlb2_pf_wait_for_device_ready,
+ 	.create_sched_domain = dlb2_pf_create_sched_domain,
+diff --git a/drivers/misc/dlb2/dlb2_resource.c b/drivers/misc/dlb2/dlb2_resource.c
+index 665841ca7919..bfe20864515d 100644
+--- a/drivers/misc/dlb2/dlb2_resource.c
++++ b/drivers/misc/dlb2/dlb2_resource.c
+@@ -237,6 +237,41 @@ static struct dlb2_hw_domain *dlb2_get_domain_from_id(struct dlb2_hw *hw,
+ 	return NULL;
+ }
+ 
++static struct dlb2_ldb_port *dlb2_get_ldb_port_from_id(struct dlb2_hw *hw,
++						       u32 id,
++						       bool vdev_req,
++						       unsigned int vdev_id)
++{
++	struct dlb2_function_resources *rsrcs;
++	struct dlb2_hw_domain *domain;
++	struct dlb2_ldb_port *port;
++	int i;
++
++	if (id >= DLB2_MAX_NUM_LDB_PORTS)
++		return NULL;
++
++	rsrcs = (vdev_req) ? &hw->vdev[vdev_id] : &hw->pf;
++
++	if (!vdev_req)
++		return &hw->rsrcs.ldb_ports[id];
++
++	DLB2_FUNC_LIST_FOR(rsrcs->used_domains, domain) {
++		for (i = 0; i < DLB2_NUM_COS_DOMAINS; i++) {
++			DLB2_DOM_LIST_FOR(domain->used_ldb_ports[i], port)
++				if (port->id.virt_id == id)
++					return port;
++		}
++	}
++
++	for (i = 0; i < DLB2_NUM_COS_DOMAINS; i++) {
++		DLB2_FUNC_LIST_FOR(rsrcs->avail_ldb_ports[i], port)
++			if (port->id.virt_id == id)
++				return port;
++	}
++
++	return NULL;
++}
++
+ static struct dlb2_ldb_port *
+ dlb2_get_domain_used_ldb_port(u32 id,
+ 			      bool vdev_req,
+@@ -289,6 +324,36 @@ dlb2_get_domain_ldb_port(u32 id,
+ 	return NULL;
+ }
+ 
++static struct dlb2_dir_pq_pair *dlb2_get_dir_pq_from_id(struct dlb2_hw *hw,
++							u32 id,
++							bool vdev_req,
++							unsigned int vdev_id)
++{
++	struct dlb2_function_resources *rsrcs;
++	struct dlb2_dir_pq_pair *port;
++	struct dlb2_hw_domain *domain;
++
++	if (id >= DLB2_MAX_NUM_DIR_PORTS)
++		return NULL;
++
++	rsrcs = (vdev_req) ? &hw->vdev[vdev_id] : &hw->pf;
++
++	if (!vdev_req)
++		return &hw->rsrcs.dir_pq_pairs[id];
++
++	DLB2_FUNC_LIST_FOR(rsrcs->used_domains, domain) {
++		DLB2_DOM_LIST_FOR(domain->used_dir_pq_pairs, port)
++			if (port->id.virt_id == id)
++				return port;
++	}
++
++	DLB2_FUNC_LIST_FOR(rsrcs->avail_dir_pq_pairs, port)
++		if (port->id.virt_id == id)
++			return port;
++
++	return NULL;
++}
++
+ static struct dlb2_dir_pq_pair *
+ dlb2_get_domain_used_dir_pq(u32 id,
+ 			    bool vdev_req,
+@@ -4685,6 +4750,247 @@ int dlb2_hw_disable_dir_port(struct dlb2_hw *hw,
+ 	return 0;
+ }
+ 
++void dlb2_set_msix_mode(struct dlb2_hw *hw, int mode)
++{
++	union dlb2_sys_msix_mode r0 = { {0} };
++
++	r0.field.mode = mode;
++
++	DLB2_CSR_WR(hw, DLB2_SYS_MSIX_MODE, r0.val);
++}
++
++int dlb2_configure_ldb_cq_interrupt(struct dlb2_hw *hw,
++				    int port_id,
++				    int vector,
++				    int mode,
++				    unsigned int vf,
++				    unsigned int owner_vf,
++				    u16 threshold)
++{
++	union dlb2_chp_ldb_cq_int_depth_thrsh r0 = { {0} };
++	union dlb2_chp_ldb_cq_int_enb r1 = { {0} };
++	union dlb2_sys_ldb_cq_isr r2 = { {0} };
++	struct dlb2_ldb_port *port;
++	bool vdev_req;
++
++	vdev_req = (mode == DLB2_CQ_ISR_MODE_MSI ||
++		    mode == DLB2_CQ_ISR_MODE_ADI);
++
++	port = dlb2_get_ldb_port_from_id(hw, port_id, vdev_req, vf);
++	if (!port) {
++		DLB2_HW_ERR(hw,
++			    "[%s()]: Internal error: failed to enable LDB CQ int\n\tport_id: %u, vdev_req: %u, vdev: %u\n",
++			    __func__, port_id, vdev_req, vf);
++		return -EINVAL;
++	}
++
++	/* Trigger the interrupt when threshold or more QEs arrive in the CQ */
++	r0.field.depth_threshold = threshold - 1;
++
++	DLB2_CSR_WR(hw,
++		    DLB2_CHP_LDB_CQ_INT_DEPTH_THRSH(port->id.phys_id),
++		    r0.val);
++
++	r1.field.en_depth = 1;
++
++	DLB2_CSR_WR(hw, DLB2_CHP_LDB_CQ_INT_ENB(port->id.phys_id), r1.val);
++
++	r2.field.vector = vector;
++	r2.field.vf = owner_vf;
++	r2.field.en_code = mode;
++
++	DLB2_CSR_WR(hw, DLB2_SYS_LDB_CQ_ISR(port->id.phys_id), r2.val);
++
++	return 0;
++}
++
++int dlb2_configure_dir_cq_interrupt(struct dlb2_hw *hw,
++				    int port_id,
++				    int vector,
++				    int mode,
++				    unsigned int vf,
++				    unsigned int owner_vf,
++				    u16 threshold)
++{
++	union dlb2_chp_dir_cq_int_depth_thrsh r0 = { {0} };
++	union dlb2_chp_dir_cq_int_enb r1 = { {0} };
++	union dlb2_sys_dir_cq_isr r2 = { {0} };
++	struct dlb2_dir_pq_pair *port;
++	bool vdev_req;
++
++	vdev_req = (mode == DLB2_CQ_ISR_MODE_MSI ||
++		    mode == DLB2_CQ_ISR_MODE_ADI);
++
++	port = dlb2_get_dir_pq_from_id(hw, port_id, vdev_req, vf);
++	if (!port) {
++		DLB2_HW_ERR(hw,
++			    "[%s()]: Internal error: failed to enable DIR CQ int\n\tport_id: %u, vdev_req: %u, vdev: %u\n",
++			    __func__, port_id, vdev_req, vf);
++		return -EINVAL;
++	}
++
++	/* Trigger the interrupt when threshold or more QEs arrive in the CQ */
++	r0.field.depth_threshold = threshold - 1;
++
++	DLB2_CSR_WR(hw,
++		    DLB2_CHP_DIR_CQ_INT_DEPTH_THRSH(port->id.phys_id),
++		    r0.val);
++
++	r1.field.en_depth = 1;
++
++	DLB2_CSR_WR(hw, DLB2_CHP_DIR_CQ_INT_ENB(port->id.phys_id), r1.val);
++
++	r2.field.vector = vector;
++	r2.field.vf = owner_vf;
++	r2.field.en_code = mode;
++
++	DLB2_CSR_WR(hw, DLB2_SYS_DIR_CQ_ISR(port->id.phys_id), r2.val);
++
++	return 0;
++}
++
++int dlb2_arm_cq_interrupt(struct dlb2_hw *hw,
++			  int port_id,
++			  bool is_ldb,
++			  bool vdev_req,
++			  unsigned int vdev_id)
++{
++	u32 val;
++	u32 reg;
++
++	if (vdev_req && is_ldb) {
++		struct dlb2_ldb_port *ldb_port;
++
++		ldb_port = dlb2_get_ldb_port_from_id(hw, port_id,
++						     true, vdev_id);
++
++		if (!ldb_port || !ldb_port->configured)
++			return -EINVAL;
++
++		port_id = ldb_port->id.phys_id;
++	} else if (vdev_req && !is_ldb) {
++		struct dlb2_dir_pq_pair *dir_port;
++
++		dir_port = dlb2_get_dir_pq_from_id(hw, port_id, true, vdev_id);
++
++		if (!dir_port || !dir_port->port_configured)
++			return -EINVAL;
++
++		port_id = dir_port->id.phys_id;
++	}
++
++	val = 1 << (port_id % 32);
++
++	if (is_ldb && port_id < 32)
++		reg = DLB2_CHP_LDB_CQ_INTR_ARMED0;
++	else if (is_ldb && port_id < 64)
++		reg = DLB2_CHP_LDB_CQ_INTR_ARMED1;
++	else if (!is_ldb && port_id < 32)
++		reg = DLB2_CHP_DIR_CQ_INTR_ARMED0;
++	else
++		reg = DLB2_CHP_DIR_CQ_INTR_ARMED1;
++
++	DLB2_CSR_WR(hw, reg, val);
++
++	dlb2_flush_csr(hw);
++
++	return 0;
++}
++
++void dlb2_read_compressed_cq_intr_status(struct dlb2_hw *hw,
++					 u32 *ldb_interrupts,
++					 u32 *dir_interrupts)
++{
++	/* Read every CQ's interrupt status */
++
++	ldb_interrupts[0] = DLB2_CSR_RD(hw,
++					DLB2_SYS_LDB_CQ_31_0_OCC_INT_STS);
++	ldb_interrupts[1] = DLB2_CSR_RD(hw,
++					DLB2_SYS_LDB_CQ_63_32_OCC_INT_STS);
++
++	dir_interrupts[0] = DLB2_CSR_RD(hw,
++					DLB2_SYS_DIR_CQ_31_0_OCC_INT_STS);
++	dir_interrupts[1] = DLB2_CSR_RD(hw,
++					DLB2_SYS_DIR_CQ_63_32_OCC_INT_STS);
++}
++
++static void dlb2_ack_msix_interrupt(struct dlb2_hw *hw, int vector)
++{
++	union dlb2_sys_msix_ack r0 = { {0} };
++
++	switch (vector) {
++	case 0:
++		r0.field.msix_0_ack = 1;
++		break;
++	case 1:
++		r0.field.msix_1_ack = 1;
++		/*
++		 * CSSY-1650
++		 * workaround h/w bug for lost MSI-X interrupts
++		 *
++		 * The recommended workaround for acknowledging
++		 * vector 1 interrupts is :
++		 *   1: set   MSI-X mask
++		 *   2: set   MSIX_PASSTHROUGH
++		 *   3: clear MSIX_ACK
++		 *   4: clear MSIX_PASSTHROUGH
++		 *   5: clear MSI-X mask
++		 *
++		 * The MSIX-ACK (step 3) is cleared for all vectors
++		 * below. We handle steps 1 & 2 for vector 1 here.
++		 *
++		 * The bitfields for MSIX_ACK and MSIX_PASSTHRU are
++		 * defined the same, so we just use the MSIX_ACK
++		 * value when writing to PASSTHRU.
++		 */
++
++		/* set MSI-X mask and passthrough for vector 1 */
++		DLB2_FUNC_WR(hw, DLB2_MSIX_MEM_VECTOR_CTRL(1), 1);
++		DLB2_CSR_WR(hw, DLB2_SYS_MSIX_PASSTHRU, r0.val);
++		break;
++	}
++
++	/* clear MSIX_ACK (write one to clear) */
++	DLB2_CSR_WR(hw, DLB2_SYS_MSIX_ACK, r0.val);
++
++	if (vector == 1) {
++		/*
++		 * finish up steps 4 & 5 of the workaround -
++		 * clear pasthrough and mask
++		 */
++		DLB2_CSR_WR(hw, DLB2_SYS_MSIX_PASSTHRU, 0);
++		DLB2_FUNC_WR(hw, DLB2_MSIX_MEM_VECTOR_CTRL(1), 0);
++	}
++
++	dlb2_flush_csr(hw);
++}
++
++void dlb2_ack_compressed_cq_intr(struct dlb2_hw *hw,
++				 u32 *ldb_interrupts,
++				 u32 *dir_interrupts)
++{
++	/* Write back the status regs to ack the interrupts */
++	if (ldb_interrupts[0])
++		DLB2_CSR_WR(hw,
++			    DLB2_SYS_LDB_CQ_31_0_OCC_INT_STS,
++			    ldb_interrupts[0]);
++	if (ldb_interrupts[1])
++		DLB2_CSR_WR(hw,
++			    DLB2_SYS_LDB_CQ_63_32_OCC_INT_STS,
++			    ldb_interrupts[1]);
++
++	if (dir_interrupts[0])
++		DLB2_CSR_WR(hw,
++			    DLB2_SYS_DIR_CQ_31_0_OCC_INT_STS,
++			    dir_interrupts[0]);
++	if (dir_interrupts[1])
++		DLB2_CSR_WR(hw,
++			    DLB2_SYS_DIR_CQ_63_32_OCC_INT_STS,
++			    dir_interrupts[1]);
++
++	dlb2_ack_msix_interrupt(hw, DLB2_PF_COMPRESSED_MODE_CQ_VECTOR_ID);
++}
++
+ static u32 dlb2_ldb_cq_inflight_count(struct dlb2_hw *hw,
+ 				      struct dlb2_ldb_port *port)
+ {
+diff --git a/drivers/misc/dlb2/dlb2_resource.h b/drivers/misc/dlb2/dlb2_resource.h
+index a78a8664eabc..5fd7a30a1c1b 100644
+--- a/drivers/misc/dlb2/dlb2_resource.h
++++ b/drivers/misc/dlb2/dlb2_resource.h
+@@ -445,6 +445,134 @@ int dlb2_hw_disable_dir_port(struct dlb2_hw *hw,
+ 			     unsigned int vdev_id);
+ 
+ /**
++ * dlb2_configure_ldb_cq_interrupt() - configure load-balanced CQ for
++ *					interrupts
++ * @hw: dlb2_hw handle for a particular device.
++ * @port_id: load-balanced port ID.
++ * @vector: interrupt vector ID. Should be 0 for MSI or compressed MSI-X mode,
++ *	    else a value up to 64.
++ * @mode: interrupt type (DLB2_CQ_ISR_MODE_MSI or DLB2_CQ_ISR_MODE_MSIX)
++ * @vf: If the port is VF-owned, the VF's ID. This is used for translating the
++ *	virtual port ID to a physical port ID. Ignored if mode is not MSI.
++ * @owner_vf: the VF to route the interrupt to. Ignore if mode is not MSI.
++ * @threshold: the minimum CQ depth at which the interrupt can fire. Must be
++ *	greater than 0.
++ *
++ * This function configures the DLB registers for load-balanced CQ's
++ * interrupts. This doesn't enable the CQ's interrupt; that can be done with
++ * dlb2_arm_cq_interrupt() or through an interrupt arm QE.
++ *
++ * Return:
++ * Returns 0 upon success, < 0 otherwise.
++ *
++ * Errors:
++ * EINVAL - The port ID is invalid.
++ */
++int dlb2_configure_ldb_cq_interrupt(struct dlb2_hw *hw,
++				    int port_id,
++				    int vector,
++				    int mode,
++				    unsigned int vf,
++				    unsigned int owner_vf,
++				    u16 threshold);
++
++/**
++ * dlb2_configure_dir_cq_interrupt() - configure directed CQ for interrupts
++ * @hw: dlb2_hw handle for a particular device.
++ * @port_id: load-balanced port ID.
++ * @vector: interrupt vector ID. Should be 0 for MSI or compressed MSI-X mode,
++ *	    else a value up to 64.
++ * @mode: interrupt type (DLB2_CQ_ISR_MODE_MSI or DLB2_CQ_ISR_MODE_MSIX)
++ * @vf: If the port is VF-owned, the VF's ID. This is used for translating the
++ *	virtual port ID to a physical port ID. Ignored if mode is not MSI.
++ * @owner_vf: the VF to route the interrupt to. Ignore if mode is not MSI.
++ * @threshold: the minimum CQ depth at which the interrupt can fire. Must be
++ *	greater than 0.
++ *
++ * This function configures the DLB registers for directed CQ's interrupts.
++ * This doesn't enable the CQ's interrupt; that can be done with
++ * dlb2_arm_cq_interrupt() or through an interrupt arm QE.
++ *
++ * Return:
++ * Returns 0 upon success, < 0 otherwise.
++ *
++ * Errors:
++ * EINVAL - The port ID is invalid.
++ */
++int dlb2_configure_dir_cq_interrupt(struct dlb2_hw *hw,
++				    int port_id,
++				    int vector,
++				    int mode,
++				    unsigned int vf,
++				    unsigned int owner_vf,
++				    u16 threshold);
++
++/**
++ * dlb2_set_msix_mode() - enable certain hardware alarm interrupts
++ * @hw: dlb2_hw handle for a particular device.
++ * @mode: MSI-X mode (DLB2_MSIX_MODE_PACKED or DLB2_MSIX_MODE_COMPRESSED)
++ *
++ * This function configures the hardware to use either packed or compressed
++ * mode. This function should not be called if using MSI interrupts.
++ */
++void dlb2_set_msix_mode(struct dlb2_hw *hw, int mode);
++
++/**
++ * dlb2_arm_cq_interrupt() - arm a CQ's interrupt
++ * @hw: dlb2_hw handle for a particular device.
++ * @port_id: port ID
++ * @is_ldb: true for load-balanced port, false for a directed port
++ * @vdev_request: indicates whether this request came from a vdev.
++ * @vdev_id: If vdev_request is true, this contains the vdev's ID.
++ *
++ * This function arms the CQ's interrupt. The CQ must be configured prior to
++ * calling this function.
++ *
++ * The function does no parameter validation; that is the caller's
++ * responsibility.
++ *
++ * A vdev can be either an SR-IOV virtual function or a Scalable IOV virtual
++ * device.
++ *
++ * Return: returns 0 upon success, <0 otherwise.
++ *
++ * EINVAL - Invalid port ID.
++ */
++int dlb2_arm_cq_interrupt(struct dlb2_hw *hw,
++			  int port_id,
++			  bool is_ldb,
++			  bool vdev_request,
++			  unsigned int vdev_id);
++
++/**
++ * dlb2_read_compressed_cq_intr_status() - read compressed CQ interrupt status
++ * @hw: dlb2_hw handle for a particular device.
++ * @ldb_interrupts: 2-entry array of u32 bitmaps
++ * @dir_interrupts: 4-entry array of u32 bitmaps
++ *
++ * This function can be called from a compressed CQ interrupt handler to
++ * determine which CQ interrupts have fired. The caller should take appropriate
++ * (such as waking threads blocked on a CQ's interrupt) then ack the interrupts
++ * with dlb2_ack_compressed_cq_intr().
++ */
++void dlb2_read_compressed_cq_intr_status(struct dlb2_hw *hw,
++					 u32 *ldb_interrupts,
++					 u32 *dir_interrupts);
++
++/**
++ * dlb2_ack_compressed_cq_intr_status() - ack compressed CQ interrupts
++ * @hw: dlb2_hw handle for a particular device.
++ * @ldb_interrupts: 2-entry array of u32 bitmaps
++ * @dir_interrupts: 4-entry array of u32 bitmaps
++ *
++ * This function ACKs compressed CQ interrupts. Its arguments should be the
++ * same ones passed to dlb2_read_compressed_cq_intr_status().
++ */
++void dlb2_ack_compressed_cq_intr(struct dlb2_hw *hw,
++				 u32 *ldb_interrupts,
++				 u32 *dir_interrupts);
++
++/**
+  * dlb2_reset_domain() - reset a scheduling domain
+  * @hw: dlb2_hw handle for a particular device.
+  * @domain_id: domain ID.
+diff --git a/include/uapi/linux/dlb2_user.h b/include/uapi/linux/dlb2_user.h
+index 00e9833bae1b..9edeff826e15 100644
+--- a/include/uapi/linux/dlb2_user.h
++++ b/include/uapi/linux/dlb2_user.h
+@@ -609,6 +609,38 @@ struct dlb2_disable_dir_port_args {
+ 	__u32 padding0;
+ };
+ 
++/*
++ * DLB2_DOMAIN_CMD_BLOCK_ON_CQ_INTERRUPT: Block on a CQ interrupt until a QE
++ *	arrives for the specified port. If a QE is already present, the ioctl
++ *	will immediately return.
++ *
++ *	Note: Only one thread can block on a CQ's interrupt at a time. Doing
++ *	otherwise can result in hung threads.
++ *
++ * Input parameters:
++ * - port_id: Port ID.
++ * - is_ldb: True if the port is load-balanced, false otherwise.
++ * - arm: Tell the driver to arm the interrupt.
++ * - cq_gen: Current CQ generation bit.
++ * - padding0: Reserved for future use.
++ * - cq_va: VA of the CQ entry where the next QE will be placed.
++ *
++ * Output parameters:
++ * - response.status: Detailed error code. In certain cases, such as if the
++ *	ioctl request arg is invalid, the driver won't set status.
++ */
++struct dlb2_block_on_cq_interrupt_args {
++	/* Output parameters */
++	struct dlb2_cmd_response response;
++	/* Input parameters */
++	__u32 port_id;
++	__u8 is_ldb;
++	__u8 arm;
++	__u8 cq_gen;
++	__u8 padding0;
++	__u64 cq_va;
++};
++
+ enum dlb2_domain_user_interface_commands {
+ 	DLB2_DOMAIN_CMD_CREATE_LDB_QUEUE,
+ 	DLB2_DOMAIN_CMD_CREATE_DIR_QUEUE,
+@@ -628,6 +660,7 @@ enum dlb2_domain_user_interface_commands {
+ 	DLB2_DOMAIN_CMD_ENABLE_DIR_PORT,
+ 	DLB2_DOMAIN_CMD_DISABLE_LDB_PORT,
+ 	DLB2_DOMAIN_CMD_DISABLE_DIR_PORT,
++	DLB2_DOMAIN_CMD_BLOCK_ON_CQ_INTERRUPT,
+ 
+ 	/* NUM_DLB2_DOMAIN_CMD must be last */
+ 	NUM_DLB2_DOMAIN_CMD,
+@@ -734,5 +767,9 @@ enum dlb2_domain_user_interface_commands {
+ 		_IOWR(DLB2_IOC_MAGIC,				\
+ 		      DLB2_DOMAIN_CMD_DISABLE_DIR_PORT,		\
+ 		      struct dlb2_disable_dir_port_args)
++#define DLB2_IOC_BLOCK_ON_CQ_INTERRUPT				\
++		_IOWR(DLB2_IOC_MAGIC,				\
++		      DLB2_DOMAIN_CMD_BLOCK_ON_CQ_INTERRUPT,	\
++		      struct dlb2_block_on_cq_interrupt_args)
+ 
+ #endif /* __DLB2_USER_H */
+-- 
+2.13.6
 
-
-------=_NextPart_000_06BC_01D66FDC.6E28BC60
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExCzAJBgUrDgMCGgUAMIAGCSqGSIb3DQEHAQAAoIISUTCCA4ow
-ggJyoAMCAQICAQEwDQYJKoZIhvcNAQELBQAwVjELMAkGA1UEBhMCVVMxHzAdBgNVBAoTFk1JVCBM
-aW5jb2xuIExhYm9yYXRvcnkxDDAKBgNVBAsTA1BLSTEYMBYGA1UEAxMPTUlUTEwgUm9vdCBDQS0y
-MB4XDTE2MDQyMDEyMDAwMFoXDTM1MDQxOTIzNTk1OVowVjELMAkGA1UEBhMCVVMxHzAdBgNVBAoT
-Fk1JVCBMaW5jb2xuIExhYm9yYXRvcnkxDDAKBgNVBAsTA1BLSTEYMBYGA1UEAxMPTUlUTEwgUm9v
-dCBDQS0yMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAv3WoBEGOOJtm4ucvaf6vKIFP
-s8watCd6Smwq/XeRNo7P3jPIxNPwF398RGDUmPJIXA7idzD6j0opFIW+kLqYye9e788PV0dqaJlX
-8818fNDbSE+8B6hieqKTR7VfOI74UVQEUKVRFuRFw6uVYuvgew2Tj/C2dEee37eruQl5nHkbV2Os
-WnZ7O+yt+etd6HRcaXLlP9q8WKgA3B7vkOVIMCKoAuaWj+BFq7K+WNkiyi/KdOH9JmOpbyRK4jcA
-7xbLnF8JFUSNg5c4Y1BJrFaZtkCeG6Nm9p524GllkRFzPgpj8VicV+AK+9rY07dTx02kYotTnKuy
-0YxBAwsUXxAQEwIDAQABo2MwYTAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBT/ycllTFOA8akM
-PCGugirH7vgy+zAfBgNVHSMEGDAWgBT/ycllTFOA8akMPCGugirH7vgy+zAOBgNVHQ8BAf8EBAMC
-AYYwDQYJKoZIhvcNAQELBQADggEBAHqYfEf/3J5aMKhlYQ0PnUAbMB8jZSr9/HvjfOF00crFUCfS
-rqG8JQwo+S/iq66gcp62FEgJ0fQkDgVg6m+C2ETo1LoWiSxhYCfcSIQECljlXwR8wFSayF822S69
-IqvHhdq4d58jU6gYi6ssjU4vwsvsVLRJKk/m/Cg/w8gW6YHM5ahBD6/5Ccel2fI7oSmskO991+ot
-rC11YfDwCFvz7Am0r+K9iVhSWta4hmIuV0YBia07eZKSO02LPgQ8YOz3ku0Yt+mh8VWRKux2CcYj
-Mpk+WDV0BMp75tqb6pqBFkcKvEBXqxg+8+G/umjii4H0c5kvJhaQyykbmOKmxO9IcJIwggTAMIID
-qKADAgECAgEGMA0GCSqGSIb3DQEBCwUAMFYxCzAJBgNVBAYTAlVTMR8wHQYDVQQKExZNSVQgTGlu
-Y29sbiBMYWJvcmF0b3J5MQwwCgYDVQQLEwNQS0kxGDAWBgNVBAMTD01JVExMIFJvb3QgQ0EtMjAe
-Fw0xNzAzMDIxMjAwMDBaFw0yNjAzMDIyMzU5NTlaMFExCzAJBgNVBAYTAlVTMR8wHQYDVQQKDBZN
-SVQgTGluY29sbiBMYWJvcmF0b3J5MQwwCgYDVQQLDANQS0kxEzARBgNVBAMMCk1JVExMIENBLTUw
-ggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCnmoMOvTkfw7nq19mrWazGaa+Q83Uv0+AT
-XT3q6kr+WExIMIZ87C74WCcRXpvO7uvx7HvMsYWAFHW93wQwhjytxHIOZgKNJ4VnGVDUl+KI7g0n
-9+Zjt3hB3HhHbcvbe9+Y4jz+XzCiLl2OaYvICKbxvbBSCLtPEeZQ6x6Tb6EK0ym0gvYeHO3kuuY+
-SJHJMltbrLnIVLxjZrNVS77zXKvu6Q3hSdkRIB7kJgEXfL+p/z/2p94bEEZ2TnQz0TkOjG+Jq7Ul
-XlFRtvsYcDPEQD3UNkZsWcXgC1hXG8TGknUcAhlGxVhlKlFLmNd7342seGy2s9YxNDnSE+eXTtb0
-I5LLAgMBAAGjggGcMIIBmDASBgNVHRMBAf8ECDAGAQH/AgEAMB0GA1UdDgQWBBQv77vGDR276Wr+
-rGfzBzsIdvZLWTAfBgNVHSMEGDAWgBT/ycllTFOA8akMPCGugirH7vgy+zAOBgNVHQ8BAf8EBAMC
-AYYwZwYIKwYBBQUHAQEEWzBZMC4GCCsGAQUFBzAChiJodHRwOi8vY3JsLmxsLm1pdC5lZHUvZ2V0
-dG8vTExSQ0EyMCcGCCsGAQUFBzABhhtodHRwOi8vb2NzcC5sbC5taXQuZWR1L29jc3AwNAYDVR0f
-BC0wKzApoCegJYYjaHR0cDovL2NybC5sbC5taXQuZWR1L2dldGNybC9MTFJDQTIwgZIGA1UdIASB
-ijCBhzANBgsqhkiG9xICAQMBBjANBgsqhkiG9xICAQMBCDANBgsqhkiG9xICAQMBBzANBgsqhkiG
-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
-ExZNSVQgTGluY29sbiBMYWJvcmF0b3J5MQ8wDQYDVQQLEwZQZW9wbGUxHzAdBgNVBAMTFkJ1cnJv
-dy5SeWFuLkQuNTAwMTg4MjMwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCYCXG0wovh
-RV3TzscKvTrHZRkdx+GKND/IGKfhFyIf5INb2Xp02vOjQahECWcRE9DiamtP46rz4iM8qosiD1Qn
-ef/JPkFI2OamVDEJiXW5qlttZTAuJvrm7uGfmsu4FRKW/7h2MkiKtxAOZqEuS3ooTJRjYxKG3Yry
-g6pIr+BbTK5h1CDlOW3MGfd0asgyJP0EcAJ+G42Pkf2IDkUe+IqzUNQzCbLEDcbq6612e7W5rzm0
-r0uAwgUK3g4KaORLKBzzTBnpuHzgiu8CcEagZsn/Yyj7rtcLp3Aa4BbBWCnur/MJaJB0SKR0Jdds
-tIre2ndfa17VaIMdbsdROyCUCGwxAgMBAAGjggG9MIIBuTAdBgNVHQ4EFgQUrBpm5oX7JpJOeCIZ
-Vwr37B0FiJUwDgYDVR0PAQH/BAQDAgUgMB8GA1UdIwQYMBaAFC/vu8YNHbvpav6sZ/MHOwh29ktZ
-MDMGA1UdHwQsMCowKKAmoCSGImh0dHA6Ly9jcmwubGwubWl0LmVkdS9nZXRjcmwvbGxjYTUwZgYI
-KwYBBQUHAQEEWjBYMC0GCCsGAQUFBzAChiFodHRwOi8vY3JsLmxsLm1pdC5lZHUvZ2V0dG8vbGxj
-YTUwJwYIKwYBBQUHMAGGG2h0dHA6Ly9vY3NwLmxsLm1pdC5lZHUvb2NzcDA9BgkrBgEEAYI3FQcE
-MDAuBiYrBgEEAYI3FQiDg+Udh+ynZoathxWD6vBFhbahHx2F69Bwg+vtIAIBZAIBCzAlBgNVHSUE
-HjAcBgRVHSUABggrBgEFBQcDBAYKKwYBBAGCNwoDBDAhBgNVHREEGjAYgRZSeWFuLkJ1cnJvd0Bs
-bC5taXQuZWR1MBgGA1UdIAQRMA8wDQYLKoZIhvcSAgEDAQgwJwYJKwYBBAGCNxQCBBoeGABMAEwA
-VQBzAGUAcgBFAG4AYwAtAFMAVzANBgkqhkiG9w0BAQsFAAOCAQEAMBJUVnSdRA1bG5Par4EhE+p/
-4t3khZTfNCA1dUA8XFS2N01q7kzAgeUMk3x2NQ7Hz0hheB/YISY0bwM07NkwfchEd/bs7ji/RvCw
-n/ZMpsKSC0l9iviX++EfuDG1at/9zrXu7gQBuyuCk95P7gp33Z/AgffLVb8sqi8AUgPNqOH2EPAA
-qNZzDke1zAg+eIpig+2aorVIutxTPH/JTiSZaj75NAlYCaUZ7VHL8IQpnSqRqrJPqwI9Bdd4jUIW
-qmwvB6wZMqpwzO8qZn0z3WeDwd/l79nEanDsyOabK8V4Q4bzIQ2dFD0rfrxGb0TGSFqi5ENFYcnM
-jnMFoRHPdytrwTGCAwowggMGAgEBMGgwUTELMAkGA1UEBhMCVVMxHzAdBgNVBAoMFk1JVCBMaW5j
-b2xuIExhYm9yYXRvcnkxDDAKBgNVBAsMA1BLSTETMBEGA1UEAwwKTUlUTEwgQ0EtNQITWQAEjcvg
-akRETRAewQAAAASNyzAJBgUrDgMCGgUAoIIBdzAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwG
-CSqGSIb3DQEJBTEPFw0yMDA4MTExNjM5MThaMCMGCSqGSIb3DQEJBDEWBBQRR2JFr7TBpgzCoUlv
-DszIHcAmwTAkBgkqhkiG9w0BCQ8xFzAVMAoGCCqGSIb3DQMHMAcGBSsOAwIaMHcGCSsGAQQBgjcQ
-BDFqMGgwUTELMAkGA1UEBhMCVVMxHzAdBgNVBAoMFk1JVCBMaW5jb2xuIExhYm9yYXRvcnkxDDAK
-BgNVBAsMA1BLSTETMBEGA1UEAwwKTUlUTEwgQ0EtNQITWQAEbsf741RncBA/+AAAAARuxzB5Bgsq
-hkiG9w0BCRACCzFqoGgwUTELMAkGA1UEBhMCVVMxHzAdBgNVBAoMFk1JVCBMaW5jb2xuIExhYm9y
-YXRvcnkxDDAKBgNVBAsMA1BLSTETMBEGA1UEAwwKTUlUTEwgQ0EtNQITWQAEbsf741RncBA/+AAA
-AARuxzANBgkqhkiG9w0BAQEFAASCAQCKfY4TB/2ZFMamIXy+JEMJRnxgot24bQaVvfAqSLzlPNZs
-wj+N90zLn9d264j+9qARTCepYxOFgvw5QtdsNTQGaF204qdLWxKn9B4dHIRKqm7+otl0oDrAYLjJ
-rqoQSpGasAe3Tkcbx+yJzDEJWUbEkqpj4ch+3GgnJLTl/ISia2Xd6Sz0hm6UMosa39HzBdpH7Ftw
-HJDCc5CG+fnndB/PLnfc7csVjgy8BKHKAi3/2wlYFLDtjCYBlcSLmTOjbVCA44YY0+7prq2JOMys
-3bm34j6pZGcomrEC7u3vKf5aCyIOQTVDAqzo+XzTiRhbxAOXREJSVwkTjKpLAhw6jz4oAAAAAAAA
-
-------=_NextPart_000_06BC_01D66FDC.6E28BC60--
