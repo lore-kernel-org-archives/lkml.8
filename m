@@ -2,92 +2,158 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 432D8C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:47:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0134C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:50:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2689920756
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:47:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CB89206DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:50:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597143028;
+	bh=3whMPcZEMBwo/8MBw6WpLUIM5Bv+7gtc1CnOTQoiTqk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=hI4Ptg3fy/HO1zEEmgQmRqAZbwOhxBvtd4ucR6hrKODMdSUxh+vNzolh09oza/quZ
+	 j0KAVKQiutV7Y8x4U8bd4OGGD49jq+b9E3t+gdxEUMr6tCsacx/cPqK23bYUW4TwTC
+	 GS11SkYQkb7f3sdfbwzcHCZNFXZXqdZC1k4oybik=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728557AbgHKKrv (ORCPT
+        id S1728555AbgHKKu1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 06:47:51 -0400
-Received: from foss.arm.com ([217.140.110.172]:36648 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728280AbgHKKrr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 06:47:47 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1BC0931B;
-        Tue, 11 Aug 2020 03:47:46 -0700 (PDT)
-Received: from [10.37.12.74] (unknown [10.37.12.74])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C7CEC3F22E;
-        Tue, 11 Aug 2020 03:47:42 -0700 (PDT)
-Subject: Re: [PATCH 2/2] KVM: arm64: Only reschedule if
- MMU_NOTIFIER_RANGE_BLOCKABLE is not set
-To:     will@kernel.org, kvmarm@lists.cs.columbia.edu,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     maz@kernel.org, james.morse@arm.com, tsbogend@alpha.franken.de,
-        paulus@ozlabs.org, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com, stable@vger.kernel.org
-References: <20200811102725.7121-1-will@kernel.org>
- <20200811102725.7121-3-will@kernel.org>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <1b326944-c4aa-eb52-b7dc-a77f9eecae63@arm.com>
-Date:   Tue, 11 Aug 2020 11:52:41 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        Tue, 11 Aug 2020 06:50:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45338 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728464AbgHKKu1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 06:50:27 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DEB0C06174A;
+        Tue, 11 Aug 2020 03:50:26 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id b11so6395363lfe.10;
+        Tue, 11 Aug 2020 03:50:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=itXXXyW5i1H7kJa+q7FRrhS32KPXcWAeeqv3XPQhNJo=;
+        b=It7IO5oPi05wwwGQhoKst5i0BiFfurtyCO+dkAQ7DZaG2EZuQLZjEvLD+NwLvyyv4i
+         wISREV9XWj5I0XEa3TNPTLwpwScKy0cTveIaRzGFOqxKf6YsUM2DNjyqZbTBHzCkrD0L
+         ONzGb/lus8eMLtKDc8yWbNJhxjd7vBmvdxFooycc7wlLgqaU2p6tKhv15lRRNM/LCpMR
+         /0d9k+WAK0hbOT7RAM8P9+fSkL6uJ6LdlH8OLNe3/ia0T7R7ZuzNkmvpPTHm22gai47j
+         CEGeJUW1Pd21quHX9wmbVP9g4L2NaX7nxfN/9mwtACqmHuGTsBszoGtfqW75p7NhZ3t3
+         8DvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=itXXXyW5i1H7kJa+q7FRrhS32KPXcWAeeqv3XPQhNJo=;
+        b=cIIicv6S8JSHss0aRYlRgL4iJ0a/uEQ/vh23I3v5bSvizrtcTzhOd1oelnux9n2SWr
+         sFwQFcpyEQyl08dVzwexT9/40A801CHXewJ3ao9izIWoaHDQ16XMirApmEYr8zVkz2jT
+         sdfS7ZfP7q2cUzU9C7081OK0ctB9SREJATKji3Gn3pPld+eTok4L+wc70EzhJLOiodvB
+         ZM74PldUEcJ3G5v7AT7GH9tomRLjvQz6iavxhkE1WTqdo+O2G7sHg8ggeBIs3BwwVjIM
+         z6ZOOUfs/SNJzt29i7CEIoVVu5jigyVtH1z0gxH3XkKEn87MIgY13pdC/fCF9ojzBLeO
+         lz9w==
+X-Gm-Message-State: AOAM531KnTQK1w3P77TmeAkyUZJOJj2FSIU1B0PeBgkvOP0zeJW5UHo/
+        wjR0dTWTf1ki7WQp+FeGcNg=
+X-Google-Smtp-Source: ABdhPJzBQkgcMck8wo0i1wUSYyiTkVCmJeEjNsemCRe808B9HyYMG2Phjl8ePTDM2XdHogFpyzVI1w==
+X-Received: by 2002:a19:102:: with SMTP id 2mr2940050lfb.54.1597143025007;
+        Tue, 11 Aug 2020 03:50:25 -0700 (PDT)
+Received: from saruman ([194.34.132.58])
+        by smtp.gmail.com with ESMTPSA id u6sm10006959ljg.105.2020.08.11.03.50.23
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 11 Aug 2020 03:50:23 -0700 (PDT)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Paras Sharma <parashar@codeaurora.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Jiri Slaby <jslaby@suse.com>, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paras Sharma <parashar@codeaurora.org>
+Subject: Re: [PATCH V2] serial: qcom_geni_serial: To correct QUP Version detection logic
+In-Reply-To: <1597131794-1076-1-git-send-email-parashar@codeaurora.org>
+References: <1597131794-1076-1-git-send-email-parashar@codeaurora.org>
+Date:   Tue, 11 Aug 2020 13:50:19 +0300
+Message-ID: <871rkdpic4.fsf@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200811102725.7121-3-will@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/11/2020 11:27 AM, Will Deacon wrote:
-> When an MMU notifier call results in unmapping a range that spans multiple
-> PGDs, we end up calling into cond_resched_lock() when crossing a PGD boundary,
-> since this avoids running into RCU stalls during VM teardown. Unfortunately,
-> if the VM is destroyed as a result of OOM, then blocking is not permitted
-> and the call to the scheduler triggers the following BUG():
-> 
->   | BUG: sleeping function called from invalid context at arch/arm64/kvm/mmu.c:394
->   | in_atomic(): 1, irqs_disabled(): 0, non_block: 1, pid: 36, name: oom_reaper
->   | INFO: lockdep is turned off.
->   | CPU: 3 PID: 36 Comm: oom_reaper Not tainted 5.8.0 #1
->   | Hardware name: QEMU QEMU Virtual Machine, BIOS 0.0.0 02/06/2015
->   | Call trace:
->   |  dump_backtrace+0x0/0x284
->   |  show_stack+0x1c/0x28
->   |  dump_stack+0xf0/0x1a4
->   |  ___might_sleep+0x2bc/0x2cc
->   |  unmap_stage2_range+0x160/0x1ac
->   |  kvm_unmap_hva_range+0x1a0/0x1c8
->   |  kvm_mmu_notifier_invalidate_range_start+0x8c/0xf8
->   |  __mmu_notifier_invalidate_range_start+0x218/0x31c
->   |  mmu_notifier_invalidate_range_start_nonblock+0x78/0xb0
->   |  __oom_reap_task_mm+0x128/0x268
->   |  oom_reap_task+0xac/0x298
->   |  oom_reaper+0x178/0x17c
->   |  kthread+0x1e4/0x1fc
->   |  ret_from_fork+0x10/0x30
-> 
-> Use the new 'flags' argument to kvm_unmap_hva_range() to ensure that we
-> only reschedule if MMU_NOTIFIER_RANGE_BLOCKABLE is set in the notifier
-> flags.
-> 
-> Cc: <stable@vger.kernel.org>
-> Fixes: 8b3405e345b5 ("kvm: arm/arm64: Fix locking for kvm_free_stage2_pgd")
-> Cc: Marc Zyngier <maz@kernel.org>
-> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Cc: James Morse <james.morse@arm.com>
-> Signed-off-by: Will Deacon <will@kernel.org>
-> ---
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+
+Hi,
+
+Paras Sharma <parashar@codeaurora.org> writes:
+> The current implementation reduces the sampling rate by half
+> if qup HW version greater is than 2.5 by checking if the geni
+                    ^^^^^^^^^^^^^^^
+                    is greater than
+
+could, possibly, be fixed while applying.
+
+> SE major version is greater than 2 and geni SE minor version
+> is greater than 5.
+>
+> This implementation fails when the version is 3 or greater.
+>
+> Hence by adding the another check for geni SE major version,
+> this problem can be solved.
+>
+> Signed-off-by: Paras Sharma <parashar@codeaurora.org>
+> ---
+>  drivers/tty/serial/qcom_geni_serial.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/q=
+com_geni_serial.c
+> index 3aa29d2..a9f92d8 100644
+> --- a/drivers/tty/serial/qcom_geni_serial.c
+> +++ b/drivers/tty/serial/qcom_geni_serial.c
+> @@ -995,7 +995,8 @@ static void qcom_geni_serial_set_termios(struct uart_=
+port *uport,
+>  	sampling_rate =3D UART_OVERSAMPLING;
+>  	/* Sampling rate is halved for IP versions >=3D 2.5 */
+>  	ver =3D geni_se_get_qup_hw_version(&port->se);
+> -	if (GENI_SE_VERSION_MAJOR(ver) >=3D 2 && GENI_SE_VERSION_MINOR(ver) >=
+=3D 5)
+> +	if ((GENI_SE_VERSION_MAJOR(ver) >=3D 2 && GENI_SE_VERSION_MINOR(ver) >=
+=3D 5)
+> +		|| GENI_SE_VERSION_MAJOR(ver) >=3D 3)
+
+it looks like having a single GENI_SE_VERSION() that returns MAJOR and
+MINOR without STEP would look better here. Then you could use:
+
+	if (GENI_SE_VERSION(ver) >=3D 0x20050000)
+
+and it would work for any future version. Not a strong opinion, though
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl8yd+sACgkQzL64meEa
+mQZtng/+ME8/MzGicCyBG2nyh/gkrqd24TNxjGISKjkK1uQsWLFOC6SnVdop1Dk9
+o20Wyp1hqcLebKQ5QKXagqYc7Wc8w9NxyeWeaqiJ+QX23NEFyQ+EKrgG+KzcyhuF
+90UNVhDlimcHlpUzNJESKgh4bHljYEJIrz0nODIUA5ipuvCfHL1SSEoZrFOBiKu6
+WJSAsELXv3DcKICvND3JqW8kNXkX/eAbwmfEoWuytdd8KnNmSv0tCvFGN2GNXpI4
+mrFrbtWBfBR3DYsP38dVT9VFMEhvUadj1bBaIoUW+wLR3Vmqc+tsq/Kg/C+vKrkN
+6ynWj6cvkmZANY3x9i4tTLc3eZN+I7ic5BQFR2ecMP9B9jVdiS+Y2sMgnoIGPpKN
+EAJtOZXAdmc8eLMYKPabvQTcdlLZ0d3I1/SCI7vLbmnOW0Mlq4KPfQPwjAPjZ89C
+CeeCDQvTHqc4kB3um9216CGT2gXEgZ7VpRQ96FI37o/uqSnw3HGc1fND3XmAwKeQ
+U8cfrdozff1KXLZTHQN3Oei7N/dNURMBbqwwSdpz9j6ryI0ONDeBmAesx/waOjhK
+UpCk9OgJZ5QwmAN/ycA4F+3703rWZw8rawFNrfBNAFZ3U1wS4QY52lSfr2M5TF/0
+bjhkNxaxkLW+l+WMNzC+dTqNLlmfmFDQ+NaRyp/wUWuUP5VDseA=
+=wvqF
+-----END PGP SIGNATURE-----
+--=-=-=--
