@@ -2,173 +2,148 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4F1AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 11:58:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 253FEC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 11:59:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BCC82075D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 11:58:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 015DB2075D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 11:59:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="P3BLAikV"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SNclY0Yy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728870AbgHKL61 (ORCPT
+        id S1728879AbgHKL71 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 07:58:27 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:15065 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728469AbgHKL6Z (ORCPT
+        Tue, 11 Aug 2020 07:59:27 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:58042 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728864AbgHKL70 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 07:58:25 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f3287d40000>; Tue, 11 Aug 2020 04:58:12 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 11 Aug 2020 04:58:25 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 11 Aug 2020 04:58:25 -0700
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 11 Aug
- 2020 11:58:25 +0000
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.174)
- by HQMAIL111.nvidia.com (172.20.187.18) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Tue, 11 Aug 2020 11:58:25 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Hl90s2MeFEmcQGDLUIC5C48oxHaBHpAq3hgYpWpFEgCmDSExArKZuXmeBxZWt+3Xdg5XbS/bZSXjE88hzPPEhLCUVVuSls93qfM/noXjyo8dSW8JX3WmNuykdeO4I1yv/j+VSGOxNxtAq9RmBkmpOlTDTfKclbF0amKzc+zZV62vWVUgErIqw/AvUm4gzoPYBs63SsTreffquO+ElJSYCjvdC7kIS36l9KZgBqQIwUpX/VLWQU2y3oT8LPQcbufDEFz7h+DORYjQ80lzocc79OB7wzkSlRvmW7TN26f9kowcsrgSAB6lJIFKtY87AUN53FWOGucpOTtpeFuwS79ryg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=f6ZQZFJWx5F3kfEGWwVFTMFrnC4Q9OeREi5+g2wW5p8=;
- b=GM9+pX9Zb1BP4m9K53TxSicqY7Aqij/dbmkT3S3UUkHjMQdSaIHaQ8r2y9CqxwfXfXSWgw+FStquKuHnduNzMG5BHBFHmkvREaii80J2FskPpnW1UXdFa+HVHKE9BTg0E+QPC8KdsdvnIt5L2Pi6kG/YFgUEuVrk5OFLCZ+MB3X/XXMx9qrY4cpPPiZ8dfwtjnWAEo+b4HrKK87eCuJy7kwsychS+QlwOQrBmp4m+64C+14ukbxpIpwLRGoZ/qgNYIfYM1MVf7ul9at+UOqxGmj2cQAijGE8YXwki2hyQEioaXwwXScXQ7nzcJKUTE8ychPfh93LrNNAaRC0Bjlwbw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Received: from BN8PR12MB3425.namprd12.prod.outlook.com (2603:10b6:408:61::28)
- by BN8PR12MB3124.namprd12.prod.outlook.com (2603:10b6:408:41::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.19; Tue, 11 Aug
- 2020 11:58:23 +0000
-Received: from BN8PR12MB3425.namprd12.prod.outlook.com
- ([fe80::8941:c1aa:1ab4:2e39]) by BN8PR12MB3425.namprd12.prod.outlook.com
- ([fe80::8941:c1aa:1ab4:2e39%6]) with mapi id 15.20.3261.024; Tue, 11 Aug 2020
- 11:58:23 +0000
-From:   Eli Cohen <elic@nvidia.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-CC:     Jason Wang <jasowang@redhat.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "eli@mellanox.com" <eli@mellanox.com>,
-        "lulu@redhat.com" <lulu@redhat.com>,
-        Majd Dibbiny <majd@nvidia.com>,
-        "Maor Dickman" <maord@nvidia.com>,
-        Shahaf Shuler <shahafs@mellanox.com>,
-        "Parav Pandit" <parav@mellanox.com>
-Subject: RE: VDPA Debug/Statistics
-Thread-Topic: VDPA Debug/Statistics
-Thread-Index: AdZv0SSA/p/JVf9BSJCSJo3Lye0OEAAAhW8AAADKLnA=
-Date:   Tue, 11 Aug 2020 11:58:23 +0000
-Message-ID: <BN8PR12MB34259F2AE1FDAF2D40E48C5BAB450@BN8PR12MB3425.namprd12.prod.outlook.com>
-References: <BN8PR12MB342559414BE03DFC992AD03DAB450@BN8PR12MB3425.namprd12.prod.outlook.com>
- <20200811073144-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20200811073144-mutt-send-email-mst@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=none action=none header.from=nvidia.com;
-x-originating-ip: [37.142.159.249]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 026cd186-1bf4-4009-e71a-08d83dedd97f
-x-ms-traffictypediagnostic: BN8PR12MB3124:
-x-ld-processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BN8PR12MB3124703A07615E0E89BE17FBAB450@BN8PR12MB3124.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: X1hjGoI4Gc0Qa5CD/tIjZJA6amEcMKuBQAV9AjcXtDaEgvXSuUai0ke20qNvXstkWGvellE/043d1773gVwVLb8xUy/mWMuMj25YXNZfw1MmjIAnPCadbvpFZbZkeN4pVcvS6YReWwf+cqmlOfxK1P/TplRdpcNcnsg431nmHfy/gWmKy3iKKh6S/NB6v2MXhef9L9zfqTi0ScEy32HG1QFJmg1JUWVp+oJobfdH8kTglIw7VNbM0r4kBIsymlCC06i3QHXwUQNBObDNziU2sUCblJJ7BQXYH2PGc4Zos90QhQftqklbE4JsXjbRvtg29Uhh+mlW4HUqMHgyC9/xOQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB3425.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(136003)(346002)(366004)(39860400002)(396003)(66556008)(64756008)(8676002)(76116006)(66476007)(66946007)(83380400001)(8936002)(66446008)(33656002)(71200400001)(86362001)(107886003)(6506007)(55016002)(3480700007)(5660300002)(4326008)(52536014)(54906003)(9686003)(2906002)(186003)(7696005)(478600001)(6916009)(316002)(26005);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: noRbEu3USd1MGB51yHIvemE1J7PRpaItdSmVAp86UqEKCW4AV49uUd+Ukslk2KMJt7R7jWW1Gtx/a2oYeUdlJ6Et9yb4j6ZkCoxWHM0r9mFpoOCCtDcS2z2aCPLLk2kyJbjRz8rndh02qzOuUKsoM9wEPBjCX79UcxNFsryCRMRIpreMPW+8bipsdebdBJ3s1oXjMdte9ciF6MnjV+zsukdQnB70M1oPX8Hsn0JQu2go7TOaLTVH5yV3hkBW5vfY73uxr4wGhLmSMuhjQADyefTwiDVvxn2hzPcL3RHgLs4/h2Bd11VxHaWBRyPJC0DJVrJNiWMOeCFDS5ezqHhpZewvcZvTFnpDhdyybOHKZBAywz+AJq2bT2uXOC1Bg5GM/IIoxjib2eySKoQp+Zjc+RKAVS7V+nQbIoth9pWdZ5QV7tIot7ogVFJw4hFs3fLzpgz0f/HA/gH1WZ68wN07ynlfLfqN/lG9fuKfQjRfga8A+iPKBVculbOCCg4/dqllkSMF9Xht7rHPYNC2DsXhTgRVnxbk6l+HMgmU9zLdVAkNcefF6vf3iSOH5OeZboKVfoPZoecG/nXeYzBUNHT4RTO6XTgEeOS3FDR3mZotd7l+CUZEJMQrH7IK6qPpIDvyTjfNvTDRPMSNHDPgwNuxBA==
-Content-Type: text/plain; charset="us-ascii"
+        Tue, 11 Aug 2020 07:59:26 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07BBuvOw114704;
+        Tue, 11 Aug 2020 11:59:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=Z2ArjTHKNc7GCKD0u7iKG+pvdERcNwoPF+GuSDrsHRE=;
+ b=SNclY0Yyq6dtFLnCQ4FT1lXDBKeNvlacEOUiL6vuI08cyuTDXFxDTXMA199ZJIE/u0mW
+ /JOUbCFv7XeVvqfOXCkWrQabzGvsRsfa6TujA5gxVXNXx7zTccR1hnQJezl0lBhJjPG2
+ RuijZcVd6N1Rwve8ADr3ldOlHpHRjG7TBg1+SiCnTVPy175Jq6+Klr2HCq8N5Camv6Pf
+ 3iJliD4YhoMh/wH38ePVL241STjQXVMXrwkXbqbra9v5kFVZ5zMUdb1CfkdsXFi9+Oev
+ 49QSzYOUY9vwUODOExIYJfaSOmMqmJukhoqTlUJBQIXBQ2bhCBSYdJtsFnU41cJYnWge pA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 32smpnc4g3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 11 Aug 2020 11:59:19 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07BBxHHZ067225;
+        Tue, 11 Aug 2020 11:59:18 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 32t5y3sxg0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 11 Aug 2020 11:59:18 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 07BBxF0N005209;
+        Tue, 11 Aug 2020 11:59:15 GMT
+Received: from localhost (/73.243.10.6)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 11 Aug 2020 11:59:15 +0000
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 14.0 \(3652.0.5.2.1\))
+Subject: Re: [PATCH] memremap: Convert devmap static branch to {inc,dec}
+From:   William Kucharski <william.kucharski@oracle.com>
+In-Reply-To: <20200810235319.2796597-1-ira.weiny@intel.com>
+Date:   Tue, 11 Aug 2020 05:59:14 -0600
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB3425.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 026cd186-1bf4-4009-e71a-08d83dedd97f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Aug 2020 11:58:23.8017
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Sh1TaJTzGiy8CvE8uUte9TOYrCoCQpdTsHeDQ+GkJ6XGj8cuf+fZlK1bIAMc97Gm
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3124
-X-OriginatorOrg: Nvidia.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1597147092; bh=f6ZQZFJWx5F3kfEGWwVFTMFrnC4Q9OeREi5+g2wW5p8=;
-        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
-         ARC-Authentication-Results:From:To:CC:Subject:Thread-Topic:
-         Thread-Index:Date:Message-ID:References:In-Reply-To:
-         Accept-Language:Content-Language:X-MS-Has-Attach:
-         X-MS-TNEF-Correlator:authentication-results:x-originating-ip:
-         x-ms-publictraffictype:x-ms-office365-filtering-correlation-id:
-         x-ms-traffictypediagnostic:x-ld-processed:
-         x-ms-exchange-transport-forked:x-microsoft-antispam-prvs:
-         x-ms-oob-tlc-oobclassifiers:x-ms-exchange-senderadcheck:
-         x-microsoft-antispam:x-microsoft-antispam-message-info:
-         x-forefront-antispam-report:x-ms-exchange-antispam-messagedata:
-         Content-Type:Content-Transfer-Encoding:MIME-Version:
-         X-MS-Exchange-CrossTenant-AuthAs:
-         X-MS-Exchange-CrossTenant-AuthSource:
-         X-MS-Exchange-CrossTenant-Network-Message-Id:
-         X-MS-Exchange-CrossTenant-originalarrivaltime:
-         X-MS-Exchange-CrossTenant-fromentityheader:
-         X-MS-Exchange-CrossTenant-id:X-MS-Exchange-CrossTenant-mailboxtype:
-         X-MS-Exchange-CrossTenant-userprincipalname:
-         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
-        b=P3BLAikVvSqIO4qoEGqR+PzaHyg8fkItfWCpFRUPAiAdUGC/23op/TjdPeuOIfTry
-         TfamnzXlZJ32YDtruH72hPOuxZhj169FHCyo3ijBA2kHCEi4HnNpbNbfG/wYKHUw46
-         E3tOcrxihMCr/7jjWvniyA1pjPO/QnBscpPDsnyIipgr5dY6G8gWYT6rs/fkIfbLxD
-         5/f1f2/LTwKcB424Mna6eJWNXgbwE77wXZW7Syfbs+k3DIziuMW8jbUqbzks+3hoz7
-         R56NrpybVphvduVmzPVTwWGOwPQgRShYzkLfKxL+tnq8X+duGreosCgw0g1U3ESHZk
-         ph5MLpq2haKZw==
+Message-Id: <4AF6A6E6-A098-448A-9CFD-86231D46032B@oracle.com>
+References: <20200810235319.2796597-1-ira.weiny@intel.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+X-Mailer: Apple Mail (2.3652.0.5.2.1)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9709 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0
+ suspectscore=0 mlxscore=0 adultscore=0 bulkscore=0 phishscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008110083
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9709 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 lowpriorityscore=0
+ bulkscore=0 impostorscore=0 phishscore=0 clxscore=1011 spamscore=0
+ malwarescore=0 adultscore=0 mlxlogscore=999 mlxscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008110083
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 11:26:20AM +0000, Eli Cohen wrote:
-> Hi All
->=20
-> Currently, the only statistics we get for a VDPA instance comes from the =
-virtio_net device instance. Since VDPA involves hardware acceleration, ther=
-e can be quite a lot of information that can be fetched from the underlying=
- device. Currently there is no generic method to fetch this information.
->=20
-> One way of doing this can be to create a the host, a net device for=20
-> each VDPA instance, and use it to get this information or do some=20
-> configuration. Ethtool can be used in such a case
->=20
-> I would like to hear what you think about this or maybe you have some oth=
-er ideas to address this topic.
->=20
-> Thanks,
-> Eli
+Looks good to me.
 
-Something I'm not sure I understand is how are vdpa instances created on me=
-llanox cards? There's a devlink command for that, is that right?
-Can that be extended for stats?
+Reviewed-by: William Kucharski <william.kucharski@oracle.com>
 
-Currently any VF will be probed as VDPA device. We're adding devlink suppor=
-t but I am not sure if devlink is suitable for displaying statistics. We wi=
-ll discuss internally but I wanted to know why you guys think.
-
---
-MST
+> On Aug 10, 2020, at 5:53 PM, ira.weiny@intel.com wrote:
+>=20
+> From: Ira Weiny <ira.weiny@intel.com>
+>=20
+> While reviewing Protection Key Supervisor support it was pointed out
+> that using a counter to track static branch enable was an anti-pattern
+> which was better solved using the provided static_branch_{inc,dec}
+> functions.[1]
+>=20
+> Fix up devmap_managed_key to work the same way.  Also this should be
+> safer because there is a very small (very unlikely) race when multiple
+> callers try to enable at the same time.
+>=20
+> [1] =
+https://lore.kernel.org/lkml/20200714194031.GI5523@worktop.programming.kic=
+ks-ass.net/
+>=20
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Vishal Verma <vishal.l.verma@intel.com>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> ---
+> mm/memremap.c | 7 ++-----
+> 1 file changed, 2 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/mm/memremap.c b/mm/memremap.c
+> index 03e38b7a38f1..9fb9ad500e78 100644
+> --- a/mm/memremap.c
+> +++ b/mm/memremap.c
+> @@ -40,12 +40,10 @@ EXPORT_SYMBOL_GPL(memremap_compat_align);
+> #ifdef CONFIG_DEV_PAGEMAP_OPS
+> DEFINE_STATIC_KEY_FALSE(devmap_managed_key);
+> EXPORT_SYMBOL(devmap_managed_key);
+> -static atomic_t devmap_managed_enable;
+>=20
+> static void devmap_managed_enable_put(void)
+> {
+> -	if (atomic_dec_and_test(&devmap_managed_enable))
+> -		static_branch_disable(&devmap_managed_key);
+> +	static_branch_dec(&devmap_managed_key);
+> }
+>=20
+> static int devmap_managed_enable_get(struct dev_pagemap *pgmap)
+> @@ -56,8 +54,7 @@ static int devmap_managed_enable_get(struct =
+dev_pagemap *pgmap)
+> 		return -EINVAL;
+> 	}
+>=20
+> -	if (atomic_inc_return(&devmap_managed_enable) =3D=3D 1)
+> -		static_branch_enable(&devmap_managed_key);
+> +	static_branch_inc(&devmap_managed_key);
+> 	return 0;
+> }
+> #else
+> --=20
+> 2.28.0.rc0.12.gb6a658bd00c9
+>=20
+>=20
 
