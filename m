@@ -5,75 +5,68 @@ X-Spam-Level:
 X-Spam-Status: No, score=-17.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB5BC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 05:32:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB4AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 05:32:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61A8C20678
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 05:32:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 367C320678
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 05:32:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OH7iWFoQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LnN5gFBn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728008AbgHKFcE (ORCPT
+        id S1728107AbgHKFcc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 01:32:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52938 "EHLO
+        Tue, 11 Aug 2020 01:32:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53012 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727909AbgHKFcD (ORCPT
+        with ESMTP id S1726170AbgHKFcc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 01:32:03 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63240C06174A
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 22:32:03 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id mt12so1264180pjb.4
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 22:32:03 -0700 (PDT)
+        Tue, 11 Aug 2020 01:32:32 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FBFCC06174A
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 22:32:31 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id u10so6252908plr.7
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 22:32:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=uDW8GZfBUCMf0R5RQS+TdRNbfrugle98/9+/xg/t7LA=;
-        b=OH7iWFoQpbu6NmweyZfdS27s0Vntsrcjoz+PaGa1fW60EAV87oThHj88yOe+Z/ryBU
-         9RLhq8Z69GLyBEx+jxLss9Vxq5nM0xoMmUqwv+Q5emej65DCgxLbJM4FqltxIU6j2778
-         WdFTAB/bjQg2fxVJDrEOiq2tiZ/xgMa+BKItTx6VU9u3IkAttgxqPjjrFweq+JhVWebO
-         BFHguhjRu8/qXQjc9Ta64Ds1gvtEyMbuTroYj1rFnwSl04frpFD9wKUA8PKJwduoE7fF
-         BzOP1pV0XR2t8GUOcnM+Er/TU+qlai2DO44pM/7xsErh0/wI1K+ieH4Ytr+VGhweaWEY
-         Mp/Q==
+        bh=Zxgy/RHetC/4Nqu0lkQtNXp/G1p8MLNQpVdRfU81oI8=;
+        b=LnN5gFBn0YM7ROSuSslomQjiSqItycEFq8rE+kvUmchUX8GXlKDYIZIBZg2j36y2yB
+         D2/1iPoqyLs660E80F8GOSZh5yK9Lcqp6vvZByKtruN2HmE8Mntt6nNi7YhYHoXz2rPj
+         w/mwJIo2kbpDqHoJan7XiFVjClWfoNj/XMi0UL+GELyldKuoLP5Xm2EzA3oLUcdGJuO/
+         1SwnYCSHBUmhn1FE8qfLChx5iU6gtJd3g1gbW07LxUsqS2HprYDxcXd8uU0o5ySp5u4Z
+         vFy87GWxy3xwXv6rGOexBUg4uScvJGoT0Mfz/Fqu4sxL9Go0EAYqdCW3efOhjZbaHHhq
+         jqgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=uDW8GZfBUCMf0R5RQS+TdRNbfrugle98/9+/xg/t7LA=;
-        b=TokY9zi2UCsDV6IbFxPUWHQLv87XEpcid71zdqcfgGY0uc+2vQlQX+asPeiIKMm5ur
-         tGQmPwvLSoaRCf2Vl2RYKINy97KKOKhMH/sIGifQzfLcYVmMV9HTjH7loi2/8zWDoT31
-         BjmdqFoiwwqsOQdLT7qQVbaldVCW0JmttfLH6uwvjZk3ixz/6DF0z7LTHG1kC11AKVJJ
-         md1Dp4cq0rHyq7wqqHUE9LQehA3tDDXrUqYrGrWbjQ+1gkyEZXMJaWGI9ifyiELgOcNz
-         HEpmnLzitC5kmJkcVnlFDknbV9ihoYXRGhuomxWz1dQPwF/S3KmeLiocOSD5y8U1YoAX
-         X5rw==
-X-Gm-Message-State: AOAM533wiEelKK8+dSLAUfFaCK3iMUeDjlF3mgfRGUKTDppHYcEdkf/u
-        Nx93N7NoWGPCRwSca3Z3oO8FJw==
-X-Google-Smtp-Source: ABdhPJwQeizbKdB05qhy5JyqYL8+85N/Npg2ikA79bowRXyqq7ncpibyfJDQxN6WOUsvu06x38oHRA==
-X-Received: by 2002:a17:90b:20d1:: with SMTP id ju17mr2807885pjb.219.1597123922861;
-        Mon, 10 Aug 2020 22:32:02 -0700 (PDT)
+        bh=Zxgy/RHetC/4Nqu0lkQtNXp/G1p8MLNQpVdRfU81oI8=;
+        b=AegI16kb94/aZ88mQEHE6b4BipXPosRn0ftMteSb+YB9P0lNq2ITYvG59xsL8EwTLS
+         Iu5GfK6QklhW9LgX1jKzzyxge+d14S+5vDeJYjd7lWzhYrndoVdUMHmV7/5rmOaQpvlE
+         sOYYkgGzXYjD558judIohUUfF1/a2pKBmAhZw+cA9hPM+8z9vcGn35sn4eopBi92N9MG
+         fFl/k58f6IZTitKndhWwVHWYn071dQXYO9ZvS3OJpsyI6Ij4dgmp/AzfnCRBaxAGCwJ5
+         rj3GVHIlGX5Rpgscx2sWF49lVoGbcK6KZZlArDmPd3ht6OQgCABhh/C0oaR3FdAolyFn
+         ShnA==
+X-Gm-Message-State: AOAM531ZwxPKFwYpvvqv4r7laF28/UR3GwSxBuvE4hhy5rqBDH1iZE+q
+        Pfo/xDFJ6usZ65aO1qJlzpL3Oy8eeg4=
+X-Google-Smtp-Source: ABdhPJzq3NKR2h5JnBJ8Rc91MFXcqN64qilmaX43GZVXhuLQcz1+okMtGU6RKrb6Fp5+V3rHDHa97Q==
+X-Received: by 2002:a17:90a:3627:: with SMTP id s36mr3123058pjb.70.1597123951165;
+        Mon, 10 Aug 2020 22:32:31 -0700 (PDT)
 Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id q7sm24048818pfl.156.2020.08.10.22.32.01
+        by smtp.gmail.com with ESMTPSA id na16sm1348389pjb.30.2020.08.10.22.32.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Aug 2020 22:32:02 -0700 (PDT)
+        Mon, 10 Aug 2020 22:32:30 -0700 (PDT)
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     Ohad Ben-Cohen <ohad@wizery.com>, linux-remoteproc@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Sibi Sankar <sibis@codeaurora.org>, Suman Anna <s-anna@ti.com>,
-        Rishabh Bhatnagar <rishabhb@codeaurora.org>,
-        Alex Elder <elder@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Siddharth Gupta <sidgup@codeaurora.org>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>
-Subject: [GIT PULL] remoteproc updates for v5.9
-Date:   Mon, 10 Aug 2020 22:28:32 -0700
-Message-Id: <20200811052832.404425-1-bjorn.andersson@linaro.org>
+        Ezequiel Garcia <ezequiel@collabora.com>
+Subject: [GIT PULL] hwspinlock updates for 5.9
+Date:   Mon, 10 Aug 2020 22:29:00 -0700
+Message-Id: <20200811052900.404638-1-bjorn.andersson@linaro.org>
 X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -88,170 +81,34 @@ The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
 
 are available in the Git repository at:
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/andersson/remoteproc.git tags/rproc-v5.9
+  https://git.kernel.org/pub/scm/linux/kernel/git/andersson/remoteproc.git tags/hwlock-v5.9
 
-for you to fetch changes up to 62b8f9e99329c92286534d05dac9dc0a6e0ba0cf:
+for you to fetch changes up to 35efb0e1d5c60e334ea719586ff2509fde2e613b:
 
-  remoteproc: core: Register the character device interface (2020-08-04 20:17:08 -0700)
-
-----------------------------------------------------------------
-remoteproc updates for v5.9
-
-This introduces a new "detached" state for remote processors that are
-deemed to be running at the time Linux boots and the infrastructure for
-"attaching" to these. It then introduces the support for performing this
-operation for the STM32 platform.
-
-The coredump functionality is moved out from the core file and gains
-support for an optional mode where the recovery phase awaits the
-notification from devcoredump that the dump should be released. This
-allows userspace to grab the coredump in scenarios where vmalloc space
-is too low for creating a complete copy of the coredump before handing
-this to devcoredump.
-
-A new character device based interface is introduced to allow tying the
-stoppage of a remote processor to the termination of a user space
-process. This is useful in situations when such process provides crucial
-resources/operations for the firmware running on the remote processor.
-
-The Texas Instrument K3 driver gains support for the C66x and C71x DSPs.
-
-Qualcomm remoteprocs gains support for stashing relocation information
-in IMEM, to aid post mortem debugging and the crash notification
-mechanism is generalized to be reusable in cases where loosely coupled
-drivers needs to know about the status of a remote processor. One such
-example is the IPA hardware block, which is jointly owned with the
-modem and migrated to this improved interface.
-
-It also introduces a number of bug fixes and debug improvements for the
-Qualcomm modem remoteproc driver.
-
-And it cleans up the inconsistent interface for remoteproc drivers to
-implement power management.
+  dt-bindings: hwlock: qcom: Remove invalid binding (2020-08-04 20:21:45 -0700)
 
 ----------------------------------------------------------------
-Alex Elder (2):
-      net: ipa: new notification infrastructure
-      remoteproc: kill IPA notify code
+hwspinlock updates for 5.9
 
+This introduces a new DT binding format to describe the Qualcomm
+hardware mutex block and deprecates the old, invalid, one.
+
+It also cleans up the Kconfig slightly.
+
+----------------------------------------------------------------
 Bjorn Andersson (4):
-      dt-bindings: remoteproc: Add Qualcomm PIL info binding
-      remoteproc: qcom: Introduce helper to store pil info in IMEM
-      remoteproc: qcom: Update PIL relocation info on load
-      remoteproc: qcom: pil-info: Fix shift overflow
+      dt-bindings: hwlock: qcom: Migrate binding to YAML
+      dt-bindings: hwlock: qcom: Allow device on mmio bus
+      hwspinlock: qcom: Allow mmio usage in addition to syscon
+      dt-bindings: hwlock: qcom: Remove invalid binding
 
-Guennadi Liakhovetski (1):
-      rpmsg: update documentation
+Ezequiel Garcia (1):
+      hwspinlock: Simplify Kconfig
 
-Kefeng Wang (1):
-      remoteproc: qcom: Add missing slab.h
-
-Lee Jones (2):
-      remoteproc: remoteproc_core: Use 'gnu_printf' format notation
-      remoteproc: qcom_sysmon: Solve function header bitrot issues
-
-Mathieu Poirier (22):
-      remoteproc: ingenic: Move clock handling to prepare/unprepare callbacks
-      Revert "remoteproc: Add support for runtime PM"
-      remoteproc: Add new RPROC_DETACHED state
-      remoteproc: Add new attach() remoteproc operation
-      remoteproc: Introducing function rproc_attach()
-      remoteproc: Introducing function rproc_actuate()
-      remoteproc: Introducing function rproc_validate()
-      remoteproc: Refactor function rproc_boot()
-      remoteproc: Refactor function rproc_trigger_auto_boot()
-      remoteproc: Refactor function rproc_free_vring()
-      remoteproc: Properly handle firmware name when attaching
-      remoteproc: stm32: Decouple rproc from memory translation
-      remoteproc: stm32: Request IRQ with platform device
-      remoteproc: stm32: Decouple rproc from DT parsing
-      remoteproc: stm32: Remove memory translation from DT parsing
-      remoteproc: stm32: Parse syscon that will manage M4 synchronisation
-      remoteproc: stm32: Properly set co-processor state when attaching
-      remoteproc: Make function rproc_resource_cleanup() public
-      remoteproc: stm32: Parse memory regions when attaching to M4
-      remoteproc: stm32: Properly handle the resource table when attaching
-      remoteproc: stm32: Introduce new attach() operation
-      remoteproc: stm32: Update M4 state in stm32_rproc_stop()
-
-Rishabh Bhatnagar (6):
-      remoteproc: qcom: Add per subsystem SSR notification
-      remoteproc: qcom: Add notification types to SSR
-      remoteproc: Move coredump functionality to a new file
-      remoteproc: Pass size and offset as arguments to segment dump function
-      remoteproc: Add inline coredump functionality
-      remoteproc: Add coredump debugfs entry
-
-Sibi Sankar (8):
-      remoteproc: qcom_q6v5_mss: Monitor MSS_STATUS for boot completion
-      remoteproc: qcom_q6v5_mss: Replace mask based tracking with size
-      remoteproc: qcom_q6v5_mss: Add MBA log extraction support
-      remoteproc: qcom_q6v5_mss: Validate MBA firmware size before load
-      remoteproc: qcom_q6v5_mss: Validate modem blob firmware size before load
-      remoteproc: qcom_q6v5_mss: Add modem debug policy support
-      remoteproc: qcom: q6v5: Update running state before requesting stop
-      remoteproc: qcom_q6v5_mss: Remove redundant running state
-
-Siddharth Gupta (2):
-      remoteproc: Add remoteproc character device interface
-      remoteproc: core: Register the character device interface
-
-Suman Anna (8):
-      dt-bindings: arm: keystone: Add common TI SCI bindings
-      remoteproc: Introduce rproc_of_parse_firmware() helper
-      remoteproc: k3: Add TI-SCI processor control helper functions
-      dt-bindings: remoteproc: Add bindings for C66x DSPs on TI K3 SoCs
-      remoteproc: k3-dsp: Add a remoteproc driver of K3 C66x DSPs
-      remoteproc: k3-dsp: Add support for L2RAM loading on C66x DSPs
-      dt-bindings: remoteproc: k3-dsp: Update bindings for C71x DSPs
-      remoteproc: k3-dsp: Add support for C71x DSPs
-
- .../bindings/arm/keystone/ti,k3-sci-common.yaml    |  44 ++
- .../bindings/remoteproc/qcom,pil-info.yaml         |  44 ++
- .../bindings/remoteproc/ti,k3-dsp-rproc.yaml       | 184 +++++
- Documentation/rpmsg.txt                            |   6 +-
- Documentation/userspace-api/ioctl/ioctl-number.rst |   1 +
- MAINTAINERS                                        |   1 +
- drivers/net/ipa/ipa.h                              |   3 +
- drivers/net/ipa/ipa_modem.c                        |  56 +-
- drivers/remoteproc/Kconfig                         |  34 +-
- drivers/remoteproc/Makefile                        |   5 +-
- drivers/remoteproc/ingenic_rproc.c                 |  84 +--
- drivers/remoteproc/qcom_common.c                   | 133 +++-
- drivers/remoteproc/qcom_common.h                   |   5 +-
- drivers/remoteproc/qcom_pil_info.c                 | 129 ++++
- drivers/remoteproc/qcom_pil_info.h                 |   9 +
- drivers/remoteproc/qcom_q6v5.c                     |   2 +
- drivers/remoteproc/qcom_q6v5_adsp.c                |  16 +-
- drivers/remoteproc/qcom_q6v5_ipa_notify.c          |  85 ---
- drivers/remoteproc/qcom_q6v5_mss.c                 | 157 ++--
- drivers/remoteproc/qcom_q6v5_pas.c                 |  15 +-
- drivers/remoteproc/qcom_q6v5_wcss.c                |  14 +-
- drivers/remoteproc/qcom_sysmon.c                   |   4 +-
- drivers/remoteproc/qcom_wcnss.c                    |  14 +-
- drivers/remoteproc/remoteproc_cdev.c               | 124 ++++
- drivers/remoteproc/remoteproc_core.c               | 457 ++++++------
- drivers/remoteproc/remoteproc_coredump.c           | 325 +++++++++
- drivers/remoteproc/remoteproc_debugfs.c            |  90 +++
- drivers/remoteproc/remoteproc_internal.h           |  42 ++
- drivers/remoteproc/remoteproc_sysfs.c              |  17 +-
- drivers/remoteproc/stm32_rproc.c                   | 214 +++++-
- drivers/remoteproc/ti_k3_dsp_remoteproc.c          | 787 +++++++++++++++++++++
- drivers/remoteproc/ti_sci_proc.h                   | 104 +++
- include/linux/remoteproc.h                         |  36 +-
- include/linux/remoteproc/qcom_q6v5_ipa_notify.h    |  82 ---
- include/linux/remoteproc/qcom_rproc.h              |  36 +-
- include/uapi/linux/remoteproc_cdev.h               |  37 +
- 36 files changed, 2795 insertions(+), 601 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/keystone/ti,k3-sci-common.yaml
- create mode 100644 Documentation/devicetree/bindings/remoteproc/qcom,pil-info.yaml
- create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
- create mode 100644 drivers/remoteproc/qcom_pil_info.c
- create mode 100644 drivers/remoteproc/qcom_pil_info.h
- delete mode 100644 drivers/remoteproc/qcom_q6v5_ipa_notify.c
- create mode 100644 drivers/remoteproc/remoteproc_cdev.c
- create mode 100644 drivers/remoteproc/remoteproc_coredump.c
- create mode 100644 drivers/remoteproc/ti_k3_dsp_remoteproc.c
- create mode 100644 drivers/remoteproc/ti_sci_proc.h
- delete mode 100644 include/linux/remoteproc/qcom_q6v5_ipa_notify.h
- create mode 100644 include/uapi/linux/remoteproc_cdev.h
+ .../devicetree/bindings/hwlock/qcom-hwspinlock.txt | 39 ------------
+ .../bindings/hwlock/qcom-hwspinlock.yaml           | 42 +++++++++++++
+ drivers/hwspinlock/Kconfig                         | 10 ++--
+ drivers/hwspinlock/qcom_hwspinlock.c               | 70 +++++++++++++++++-----
+ 4 files changed, 100 insertions(+), 61 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.txt
+ create mode 100644 Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.yaml
