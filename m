@@ -2,96 +2,106 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B024EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 04:44:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E53C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 04:48:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C885206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 04:44:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5709A20678
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 04:48:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="RAjKmqsT"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Qzl5bTDq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728115AbgHKEo5 (ORCPT
+        id S1726703AbgHKEs3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 00:44:57 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:30302 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725942AbgHKEox (ORCPT
+        Tue, 11 Aug 2020 00:48:29 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:43972 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726178AbgHKEs2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 00:44:53 -0400
-X-UUID: 8eb802f3faa042e88534f1e099ec2a97-20200811
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=xMfOcxXPIjQ8x1RL6vb8f9fzkRGTsMOc4csNnJ7zcjY=;
-        b=RAjKmqsTF+iGUBIcVHptes79Gmi09FbSYfNTRJFAHvWBkJznx9a6QgKe23gpILz/WoOz+UVM99xSmoLzbqGBkyQSQdFPQjSXibLIry+cJuvf1nKm3iVX3QQ9IfKYbaIfPrHYp4GPxz/++GdTn1quJoJ5JSEQ1yIhwgOIbZGwYZc=;
-X-UUID: 8eb802f3faa042e88534f1e099ec2a97-20200811
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <chinwen.chang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1932061379; Tue, 11 Aug 2020 12:44:48 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 11 Aug 2020 12:44:46 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 11 Aug 2020 12:44:46 +0800
-From:   Chinwen Chang <chinwen.chang@mediatek.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Michel Lespinasse <walken@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Davidlohr Bueso <dbueso@suse.de>,
-        Chinwen Chang <chinwen.chang@mediatek.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Steven Price <steven.price@arm.com>,
-        Song Liu <songliubraving@fb.com>,
-        Jimmy Assarsson <jimmyassarsson@gmail.com>,
-        Huang Ying <ying.huang@intel.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-fsdevel@vger.kernel.org>, <wsd_upstream@mediatek.com>
-Subject: [PATCH 0/2] Try to release mmap_lock temporarily in smaps_rollup
-Date:   Tue, 11 Aug 2020 12:42:33 +0800
-Message-ID: <1597120955-16495-1-git-send-email-chinwen.chang@mediatek.com>
-X-Mailer: git-send-email 1.9.1
+        Tue, 11 Aug 2020 00:48:28 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597121308; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=0cJt+WgRXB1nbIu2m8++kElnkIQWCS3PK5eceIKAvUk=; b=Qzl5bTDqN2qNflTHO9RLbXyMpFQYo5jiQCSYtRZVfe/Kzhk3I5dRwfp9ailoaqKFuYgKHyn5
+ nHqcsROxwY0Ipc5c5klqFXz3iAcL0ChLMXx6BbVgPI4Nmv4lT7jRDViu3laX7JFMt7QV8RMx
+ 2jVTNWVqB1UFJexMPamIrqDzJv4=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
+ 5f32231491f8def8b2098408 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 11 Aug 2020 04:48:20
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id AC99BC433CA; Tue, 11 Aug 2020 04:48:19 +0000 (UTC)
+Received: from [192.168.1.4] (unknown [122.170.228.200])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: gkohli)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2B6E8C433C9;
+        Tue, 11 Aug 2020 04:48:15 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2B6E8C433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=gkohli@codeaurora.org
+Subject: Re: [PATCH] arm64: Skip apply SSBS call for non SSBS system
+To:     will@kernel.org, linux-arm-kernel@lists.infradead.org,
+        maz@kernel.org, Catalin Marinas <catalin.marinas@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        neeraju@codeaurora.org
+References: <1596550484-11029-1-git-send-email-gkohli@codeaurora.org>
+From:   Gaurav Kohli <gkohli@codeaurora.org>
+Message-ID: <16e9b436-5919-39df-3f1a-a717d4229651@codeaurora.org>
+Date:   Tue, 11 Aug 2020 10:18:13 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: FECB1C8FBBC3155D664B844BB8EA23BAF81A4309A9540D60EDA9FF345C03F1222000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <1596550484-11029-1-git-send-email-gkohli@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-UmVjZW50bHksIHdlIGhhdmUgb2JzZXJ2ZWQgc29tZSBqYW5reSBpc3N1ZXMgY2F1c2VkIGJ5IHVu
-cGxlYXNhbnRseSBsb25nDQpjb250ZW50aW9uIG9uIG1tYXBfbG9jayB3aGljaCBpcyBoZWxkIGJ5
-IHNtYXBzX3JvbGx1cCB3aGVuIHByb2JpbmcgbGFyZ2UNCnByb2Nlc3Nlcy4gVG8gYWRkcmVzcyB0
-aGUgcHJvYmxlbSwgd2UgbGV0IHNtYXBzX3JvbGx1cCBkZXRlY3QgaWYgYW55b25lDQp3YW50cyB0
-byBhY3F1aXJlIG1tYXBfbG9jayBmb3Igd3JpdGUgYXR0ZW1wdHMuIElmIHllcywganVzdCByZWxl
-YXNlIHRoZQ0KbG9jayB0ZW1wb3JhcmlseSB0byBlYXNlIHRoZSBjb250ZW50aW9uLg0KDQpzbWFw
-c19yb2xsdXAgaXMgYSBwcm9jZnMgaW50ZXJmYWNlIHdoaWNoIGFsbG93cyB1c2VycyB0byBzdW1t
-YXJpemUgdGhlDQpwcm9jZXNzJ3MgbWVtb3J5IHVzYWdlIHdpdGhvdXQgdGhlIG92ZXJoZWFkIG9m
-IHNlcV8qIGNhbGxzLiBBbmRyb2lkIHVzZXMNCml0IHRvIHNhbXBsZSB0aGUgbWVtb3J5IHVzYWdl
-IG9mIHZhcmlvdXMgcHJvY2Vzc2VzIHRvIGJhbGFuY2UgaXRzIG1lbW9yeQ0KcG9vbCBzaXplcy4g
-SWYgbm8gb25lIHdhbnRzIHRvIHRha2UgdGhlIGxvY2sgZm9yIHdyaXRlIHJlcXVlc3RzLCBzbWFw
-c19yb2xsdXANCndpdGggdGhpcyBwYXRjaCB3aWxsIGJlaGF2ZSBsaWtlIHRoZSBvcmlnaW5hbCBv
-bmUuDQoNCkFsdGhvdWdoIHRoZXJlIGFyZSBvbi1nb2luZyBtbWFwX2xvY2sgb3B0aW1pemF0aW9u
-cyBsaWtlIHJhbmdlLWJhc2VkIGxvY2tzLA0KdGhlIGxvY2sgYXBwbGllZCB0byBzbWFwc19yb2xs
-dXAgd291bGQgYmUgdGhlIGNvYXJzZSBvbmUsIHdoaWNoIGlzIGhhcmQgdG8NCmF2b2lkIHRoZSBv
-Y2N1cnJlbmNlIG9mIGFmb3JlbWVudGlvbmVkIGlzc3Vlcy4gU28gdGhlIGRldGVjdGlvbiBhbmQg
-dGVtcG9yYXJ5DQpyZWxlYXNlIGZvciB3cml0ZSBhdHRlbXB0cyBvbiBtbWFwX2xvY2sgaW4gc21h
-cHNfcm9sbHVwIGlzIHN0aWxsIG5lY2Vzc2FyeS4NCg0KDQpDaGlud2VuIENoYW5nICgyKToNCiAg
-bW1hcCBsb2NraW5nIEFQSTogYWRkIG1tYXBfbG9ja19pc19jb250ZW5kZWQoKQ0KICBtbTogcHJv
-Yzogc21hcHNfcm9sbHVwOiBkbyBub3Qgc3RhbGwgd3JpdGUgYXR0ZW1wdHMgb24gbW1hcF9sb2Nr
-DQoNCiBmcy9wcm9jL3Rhc2tfbW11LmMgICAgICAgIHwgMjEgKysrKysrKysrKysrKysrKysrKysr
-DQogaW5jbHVkZS9saW51eC9tbWFwX2xvY2suaCB8ICA1ICsrKysrDQogMiBmaWxlcyBjaGFuZ2Vk
-LCAyNiBpbnNlcnRpb25zKCsp
+Hi,
 
+Please let us know, is below patch good to have
+or not for non ssbs systems.
+
+On 8/4/2020 7:44 PM, Gaurav Kohli wrote:
+> In a system where no cpu's implement SSBS, for
+> them no need to set pstate. This might help to save
+> few cpu cycles during context switch.
+> 
+> Signed-off-by: Gaurav Kohli <gkohli@codeaurora.org>
+> 
+> diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
+> index 6089638..79f80f1 100644
+> --- a/arch/arm64/kernel/process.c
+> +++ b/arch/arm64/kernel/process.c
+> @@ -477,6 +477,13 @@ static void ssbs_thread_switch(struct task_struct *next)
+>   	struct pt_regs *regs = task_pt_regs(next);
+>   
+>   	/*
+> +	 * For Targets which don't have SSBS support, they
+> +	 * can return from here.
+> +	 */
+> +	if (!IS_ENABLED(CONFIG_ARM64_SSBD))
+> +		return;
+> +
+> +	/*
+>   	 * Nothing to do for kernel threads, but 'regs' may be junk
+>   	 * (e.g. idle task) so check the flags and bail early.
+>   	 */
+> 
+
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center,
+Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project.
