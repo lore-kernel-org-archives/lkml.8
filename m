@@ -2,180 +2,137 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 734B8C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 06:56:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6386C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 06:58:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 460BE20772
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 06:56:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Xsp4+bSe"
+	by mail.kernel.org (Postfix) with ESMTP id 8DE8420774
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 06:58:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728310AbgHKG4l (ORCPT
+        id S1728266AbgHKG6q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 02:56:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37656 "EHLO
+        Tue, 11 Aug 2020 02:58:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728018AbgHKG4k (ORCPT
+        with ESMTP id S1728116AbgHKG6q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 02:56:40 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F87FC06174A
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 23:56:40 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id d19so6245854pgl.10
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 23:56:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1LqHl1iK9xIF/M1r8MveG/ZqJf0ZfRNzgBcKNGlpX+U=;
-        b=Xsp4+bSemAW3Pv7dsczgIa9RB9Ywpu9GL8X4M9AOq82zf2eCNJl8eNgm35Crk/ZJFj
-         fzk6uF5AKz6sVuQAZIQD1EkueKw8Nrbo0k/MHu1vGeGAMHxxXHbcrmliZWmpZhfnpoJx
-         K6Mp7Q0Q5bCw/8IBcCdP/W2EaYPh4qDrIcJvg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1LqHl1iK9xIF/M1r8MveG/ZqJf0ZfRNzgBcKNGlpX+U=;
-        b=EGG5gdd9UR/USzgQP9e1kakgIe9YErs9OuamPcANpfAYRrh2Uh1fVgN8gWTMzhyuZI
-         yUyEn9Gd3AshWRqsjoZmHdFh+kzT8IETOUw5iix/Fg/Pb9HZdHVuTIJLNMDHjChOa4hg
-         1jkY2fs7DZ4HtBLnrQX+6uBu/evG4bSAVspUOaUrg65chtp2MkT/pOkHSswjTkZGH9FY
-         77VeQirQi1lEJdv3RLtLbpiD9TarGWiyr7I+LkQR4DJHvOekFrcLS3PL/c6QhXpqBaCR
-         PMR9sBZH3PEdW8QaVm7Ucwv9W0F3coxMkXsVd4xRuGMRcLOUBAf/bzZLln3/0mM5RY0T
-         BwhQ==
-X-Gm-Message-State: AOAM531Wvk7BWN3VHJ0mq/XyXFemw7kcXeOKnR/fW1XejSzVVTOV0koc
-        E4+CFvKBlmnz9mA3xqe0QoYfJg==
-X-Google-Smtp-Source: ABdhPJz2AYrNAnCg/Oh/BX7v6pmWU+VuoLSFTAAGdVboDbHzaMxfcCDrqL4hehLHp57zH/jg6WMuoQ==
-X-Received: by 2002:a62:78d6:: with SMTP id t205mr5020638pfc.68.1597129000088;
-        Mon, 10 Aug 2020 23:56:40 -0700 (PDT)
-Received: from ikjn-p920.tpe.corp.google.com ([2401:fa00:1:10:f693:9fff:fef4:a8fc])
-        by smtp.gmail.com with ESMTPSA id h7sm1636832pjc.15.2020.08.10.23.56.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Aug 2020 23:56:39 -0700 (PDT)
-From:   Ikjoon Jang <ikjn@chromium.org>
-To:     Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Ikjoon Jang <ikjn@chromium.org>
-Subject: [PATCH v2 1/2] power: supply: sbs-battery: combine get_presence_and_health
-Date:   Tue, 11 Aug 2020 14:56:34 +0800
-Message-Id: <20200811065634.2099732-1-ikjn@chromium.org>
-X-Mailer: git-send-email 2.28.0.236.gb10cc79966-goog
+        Tue, 11 Aug 2020 02:58:46 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA3E9C06174A
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 23:58:45 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1k5OF5-0002vO-Lb; Tue, 11 Aug 2020 08:58:39 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1k5OF4-0007LF-CG; Tue, 11 Aug 2020 08:58:38 +0200
+Date:   Tue, 11 Aug 2020 08:58:38 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     thierry.reding@gmail.com, lee.jones@linaro.org,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-pwm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Linux-imx@nxp.com
+Subject: Re: [PATCH V2 3/3] pwm: imx1: Use dev_err_probe() to simplify error
+ handling
+Message-ID: <20200811065838.762prkrizjwelod6@pengutronix.de>
+References: <1597127072-26365-1-git-send-email-Anson.Huang@nxp.com>
+ <1597127072-26365-3-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="vzal7gs3glejz35a"
+Content-Disposition: inline
+In-Reply-To: <1597127072-26365-3-git-send-email-Anson.Huang@nxp.com>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch combines two different sbs_get_battery_presence_and_health()
-for reuse in the future. No functional changes.
 
-Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
----
- drivers/power/supply/sbs-battery.c | 73 +++++++++++++++---------------
- 1 file changed, 36 insertions(+), 37 deletions(-)
+--vzal7gs3glejz35a
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/power/supply/sbs-battery.c b/drivers/power/supply/sbs-battery.c
-index 83b9924033bd..6acb4ea25d2a 100644
---- a/drivers/power/supply/sbs-battery.c
-+++ b/drivers/power/supply/sbs-battery.c
-@@ -389,37 +389,6 @@ static bool sbs_bat_needs_calibration(struct i2c_client *client)
- 	return !!(ret & BIT(7));
- }
- 
--static int sbs_get_battery_presence_and_health(
--	struct i2c_client *client, enum power_supply_property psp,
--	union power_supply_propval *val)
--{
--	int ret;
--
--	/* Dummy command; if it succeeds, battery is present. */
--	ret = sbs_read_word_data(client, sbs_data[REG_STATUS].addr);
--
--	if (ret < 0) { /* battery not present*/
--		if (psp == POWER_SUPPLY_PROP_PRESENT) {
--			val->intval = 0;
--			return 0;
--		}
--		return ret;
--	}
--
--	if (psp == POWER_SUPPLY_PROP_PRESENT)
--		val->intval = 1; /* battery present */
--	else { /* POWER_SUPPLY_PROP_HEALTH */
--		if (sbs_bat_needs_calibration(client)) {
--			val->intval = POWER_SUPPLY_HEALTH_CALIBRATION_REQUIRED;
--		} else {
--			/* SBS spec doesn't have a general health command. */
--			val->intval = POWER_SUPPLY_HEALTH_UNKNOWN;
--		}
--	}
--
--	return 0;
--}
--
- static int sbs_get_ti_battery_presence_and_health(
- 	struct i2c_client *client, enum power_supply_property psp,
- 	union power_supply_propval *val)
-@@ -478,6 +447,41 @@ static int sbs_get_ti_battery_presence_and_health(
- 	return 0;
- }
- 
-+static int sbs_get_battery_presence_and_health(
-+	struct i2c_client *client, enum power_supply_property psp,
-+	union power_supply_propval *val)
-+{
-+	struct sbs_info *chip = i2c_get_clientdata(client);
-+	int ret;
-+
-+	if (chip->flags & SBS_FLAGS_TI_BQ20ZX5)
-+		return sbs_get_ti_battery_presence_and_health(client, psp, val);
-+
-+	/* Dummy command; if it succeeds, battery is present. */
-+	ret = sbs_read_word_data(client, sbs_data[REG_STATUS].addr);
-+
-+	if (ret < 0) { /* battery not present*/
-+		if (psp == POWER_SUPPLY_PROP_PRESENT) {
-+			val->intval = 0;
-+			return 0;
-+		}
-+		return ret;
-+	}
-+
-+	if (psp == POWER_SUPPLY_PROP_PRESENT)
-+		val->intval = 1; /* battery present */
-+	else { /* POWER_SUPPLY_PROP_HEALTH */
-+		if (sbs_bat_needs_calibration(client)) {
-+			val->intval = POWER_SUPPLY_HEALTH_CALIBRATION_REQUIRED;
-+		} else {
-+			/* SBS spec doesn't have a general health command. */
-+			val->intval = POWER_SUPPLY_HEALTH_UNKNOWN;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- static int sbs_get_battery_property(struct i2c_client *client,
- 	int reg_offset, enum power_supply_property psp,
- 	union power_supply_propval *val)
-@@ -780,12 +784,7 @@ static int sbs_get_property(struct power_supply *psy,
- 	switch (psp) {
- 	case POWER_SUPPLY_PROP_PRESENT:
- 	case POWER_SUPPLY_PROP_HEALTH:
--		if (chip->flags & SBS_FLAGS_TI_BQ20ZX5)
--			ret = sbs_get_ti_battery_presence_and_health(client,
--								     psp, val);
--		else
--			ret = sbs_get_battery_presence_and_health(client, psp,
--								  val);
-+		ret = sbs_get_battery_presence_and_health(client, psp, val);
- 
- 		/* this can only be true if no gpio is used */
- 		if (psp == POWER_SUPPLY_PROP_PRESENT)
--- 
-2.28.0.236.gb10cc79966-goog
+On Tue, Aug 11, 2020 at 02:24:32PM +0800, Anson Huang wrote:
+> dev_err_probe() can reduce code size, uniform error handling and record t=
+he
+> defer probe reason etc., use it to simplify the code.
+>=20
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> changes since V1:
+> 	- remove redundant return value print.
+> ---
+>  drivers/pwm/pwm-imx1.c | 21 ++++++---------------
+>  1 file changed, 6 insertions(+), 15 deletions(-)
+>=20
+> diff --git a/drivers/pwm/pwm-imx1.c b/drivers/pwm/pwm-imx1.c
+> index f8b2c2e..4877734 100644
+> --- a/drivers/pwm/pwm-imx1.c
+> +++ b/drivers/pwm/pwm-imx1.c
+> @@ -145,23 +145,14 @@ static int pwm_imx1_probe(struct platform_device *p=
+dev)
+>  	platform_set_drvdata(pdev, imx);
+> =20
+>  	imx->clk_ipg =3D devm_clk_get(&pdev->dev, "ipg");
+> -	if (IS_ERR(imx->clk_ipg)) {
+> -		dev_err(&pdev->dev, "getting ipg clock failed with %ld\n",
+> -				PTR_ERR(imx->clk_ipg));
+> -		return PTR_ERR(imx->clk_ipg);
+> -	}
+> +	if (IS_ERR(imx->clk_ipg))
+> +		return dev_err_probe(&pdev->dev, PTR_ERR(imx->clk_ipg),
+> +				     "getting ipg clock failed\n");
+> =20
+>  	imx->clk_per =3D devm_clk_get(&pdev->dev, "per");
+> -	if (IS_ERR(imx->clk_per)) {
+> -		int ret =3D PTR_ERR(imx->clk_per);
+> -
+> -		if (ret !=3D -EPROBE_DEFER)
+> -			dev_err(&pdev->dev,
+> -				"failed to get peripheral clock: %d\n",
+> -				ret);
+> -
+> -		return ret;
+> -	}
+> +	if (IS_ERR(imx->clk_per))
+> +		return dev_err_probe(&pdev->dev, PTR_ERR(imx->clk_per),
+> +				     "failed to get peripheral clock\n");
 
+Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--vzal7gs3glejz35a
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8yQZsACgkQwfwUeK3K
+7AkU/gf/RzD6QZWQLtf59YcqnBvDyQOp4YiSY/I5co86uL8WsI2dogTz0USL1Tfg
+50u3g/2aprZis+/E+7bIU8dyFdAYATiEunEm4OHCiM+YdPQcBpQ+yA2mg7KL4Maa
+fo22LS6uW1Y8JmYlU39tJ9huE1cMDV0pGoeysEw4ijbdRvYlC+TtyYMBa621Of7w
+lOOVibmvGybOOSesZ+KK2E1pAozWzHlMaQXtiPSZfHRhSZ3W1w3MXDyFZP04bzsX
+PADEJvTHW7b9sKgtZVjrsqtf+NRfznoDw/eR6n90WOb3p9FfOX08E5M7QcUcN9B/
+wVcbJqDKQWmVkp6LupV/l/gYlNns3w==
+=54ql
+-----END PGP SIGNATURE-----
+
+--vzal7gs3glejz35a--
