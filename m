@@ -2,47 +2,50 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5004EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 16:30:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE21AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 16:30:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3240820658
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 16:30:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B1EA20658
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 16:30:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729206AbgHKQao (ORCPT
+        id S1729224AbgHKQas (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 12:30:44 -0400
-Received: from mga09.intel.com ([134.134.136.24]:56166 "EHLO mga09.intel.com"
+        Tue, 11 Aug 2020 12:30:48 -0400
+Received: from mga14.intel.com ([192.55.52.115]:61573 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728947AbgHKQaj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 12:30:39 -0400
-IronPort-SDR: Kx1bLA7waBMFXomhpOxdJxyll5/5dAiVOHTFkIveBocsvq7XgFWPO1mtmvOi/oxyqIKnFTcAmP
- DnZgB03geBJQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9710"; a="154886241"
+        id S1729200AbgHKQap (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 12:30:45 -0400
+IronPort-SDR: t2IhDhDhXcIAUkHjHJcwIFJ4yNE/Cgj4s9PnwMpIj9dStWr5pJkzGqokNvIBrKHtIODDZ2/G4P
+ AsxzSjiYO1VA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9710"; a="152985370"
 X-IronPort-AV: E=Sophos;i="5.76,301,1592895600"; 
-   d="scan'208";a="154886241"
+   d="scan'208";a="152985370"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2020 09:30:35 -0700
-IronPort-SDR: n7m5PvQ7qBMYmivpjTzM4Kwhoj9PvWLzLHt+bOGew8nMPi1md3JXPALnwd1IFE+zLqxyspC5zq
- pQRkjyakXoXA==
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2020 09:30:41 -0700
+IronPort-SDR: HU6V+XSMI58jopp77XmX8puyGs5yxOoKqCfxto2bCYMPmA6v4MsWfYaqGIrqAmo0fL5Nd4zsNB
+ 8RhjYjNYJ0iw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.76,301,1592895600"; 
-   d="scan'208";a="317786363"
+   d="scan'208";a="317786446"
 Received: from txasoft-yocto.an.intel.com ([10.123.72.192])
-  by fmsmga004.fm.intel.com with ESMTP; 11 Aug 2020 09:30:34 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 11 Aug 2020 09:30:41 -0700
 From:   Gage Eads <gage.eads@intel.com>
 To:     linux-kernel@vger.kernel.org, arnd@arndb.de,
         gregkh@linuxfoundation.org
 Cc:     magnus.karlsson@intel.com, bjorn.topel@intel.com
-Subject: [PATCH v2 00/19] dlb2: introduce DLB 2.0 device driver
-Date:   Tue, 11 Aug 2020 11:27:13 -0500
-Message-Id: <20200811162732.1369-1-gage.eads@intel.com>
+Subject: [PATCH v2 10/19] dlb2: add start domain ioctl
+Date:   Tue, 11 Aug 2020 11:27:23 -0500
+Message-Id: <20200811162732.1369-11-gage.eads@intel.com>
 X-Mailer: git-send-email 2.13.6
+In-Reply-To: <20200811162732.1369-1-gage.eads@intel.com>
+References: <20200811162732.1369-1-gage.eads@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -51,156 +54,311 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit introduces a new misc device driver for the Intel(r) Dynamic
-Load Balancer 2.0 (Intel(r) DLB 2.0). The Intel DLB 2.0 is a PCIe device that
-provides load-balanced, prioritized scheduling of core-to-core communication.
+Once a scheduling domain and its resources have been configured, the start
+domain ioctl is called to enable its ports to begin enqueueing to the
+device. Once started, the domain's resources cannot be configured again
+until after the domain is reset.
 
-The Intel DLB 2.0 consists of queues and arbiters that connect producer cores
-and consumer cores. The device implements load-balanced queueing features
-including:
-- Lock-free multi-producer/multi-consumer operation.
-- Multiple priority levels for varying traffic types.
-- 'Direct' traffic (i.e. multi-producer/single-consumer)
-- Simple unordered load-balanced distribution.
-- Atomic lock free load balancing across multiple consumers.
-- Queue element reordering feature allowing ordered load-balanced
-  distribution.
+Signed-off-by: Gage Eads <gage.eads@intel.com>
+Reviewed-by: Björn Töpel <bjorn.topel@intel.com>
+---
+ drivers/misc/dlb2/dlb2_ioctl.c    |   3 +
+ drivers/misc/dlb2/dlb2_main.h     |   4 ++
+ drivers/misc/dlb2/dlb2_pf_ops.c   |  10 ++++
+ drivers/misc/dlb2/dlb2_resource.c | 120 ++++++++++++++++++++++++++++++++++++++
+ drivers/misc/dlb2/dlb2_resource.h |  30 ++++++++++
+ include/uapi/linux/dlb2_user.h    |  22 +++++++
+ 6 files changed, 189 insertions(+)
 
-Intel DLB 2.0 can be used in an event-driven programming model, such as DPDK's
-Event Device Library[2]. Such frameworks are commonly used in packet processing
-pipelines that benefit from the framework's multi-core scalability, dynamic
-load-balancing, and variety of packet distribution and synchronization schemes.
-
-These distribution schemes include "parallel" (packets are load-balanced
-across multiple cores and processed in parallel), "ordered" (similar to
-"parallel" but packets are reordered into ingress order by the device), and
-"atomic" (packet flows are scheduled to a single core at a time such that
-locks are not required to access per-flow data, and dynamically migrated to
-ensure load-balance).
-
-The fundamental unit of communication through the device is a queue entry
-(QE), which consists of 8B of data and 8B of metadata (destination queue,
-priority, etc.). The data field can be any type that fits within 8B.
-
-A core's interface to the device, a "port," consists of a memory-mappable
-region through which the core enqueues a queue entry, and an in-memory
-queue (the "consumer queue") to which the device schedules QEs. Each QE
-is enqueued to a device-managed queue, and from there scheduled to a port.
-Software specifies the "linking" of queues and ports; i.e. which ports the
-device is allowed to schedule to for a given queue. The device uses a
-credit scheme to prevent overflow of the on-device queue storage.
-
-Applications can interface directly with the device by mapping the port's
-memory and MMIO regions into the application's address space for enqueue
-and dequeue operations, but call into the kernel driver for configuration
-operations. An application can also be polling- or interrupt-driven;
-Intel DLB 2.0 supports both modes of operation.
-
-Device resources -- i.e. ports, queues, and credits -- are contained within
-a scheduling domain. Scheduling domains are isolated from one another; a
-port can only enqueue to and dequeue from queues within its scheduling
-domain. A scheduling domain's resources are configured through a scheduling
-domain file, which is acquired through an ioctl.
-
-Intel DLB 2.0 supports SR-IOV and Scalable IOV, and allows for a flexible
-division of its resources among the PF and its virtual devices. The virtual
-devices are incapable of configuring the device directly; they use a hardware
-mailbox to proxy configuration requests to the PF driver. This driver supports
-both PF and virtual devices, as there is significant code re-use between the
-two, with device-specific behavior handled through a callback interface.
-Virtualization support will be added in a later patch set.
-
-The dlb driver uses ioctls as its primary interface (it makes use of sysfs
-as well, to a lesser extent). The dlb device file supports a different
-ioctl interface than the scheduling domain file; the dlb device file
-is used for device-wide operations (including scheduling domain creation),
-and the scheduling domain file supports operations on the scheduling
-domain's resources (primarily resource configuration).
-
-[1] https://builders.intel.com/docs/networkbuilders/SKU-343247-001US-queue-management-and-load-balancing-on-intel-architecture.pdf
-[2] https://doc.dpdk.org/guides/prog_guide/eventdev.html
-
-v2:
-- Change driver license to GPLv2 only
-- Expand Kconfig help text and remove unnecessary (R)s
-- Remove unnecessary prints
-- Add a new entry in ioctl-number.rst
-- Convert the ioctl handler into a switch statement
-- Correct some instances of IOWR that should have been IOR
-- Align macro blocks
-- Don't break ioctl ABI when introducing new commands
-- Remove indirect pointers from ioctl data structures
-- Remove the get-sched-domain-fd ioctl command
-
-Gage Eads (19):
-  dlb2: add skeleton for DLB 2.0 driver
-  dlb2: initialize PF device
-  dlb2: add resource and device initialization
-  dlb2: add device ioctl layer and first three ioctls
-  dlb2: add sched domain config and reset support
-  dlb2: add runtime power-management support
-  dlb2: add queue create and queue-depth-get ioctls
-  dlb2: add ioctl to configure ports, query poll mode
-  dlb2: add port mmap support
-  dlb2: add start domain ioctl
-  dlb2: add queue map and unmap ioctls
-  dlb2: add port enable/disable ioctls
-  dlb2: add CQ interrupt support
-  dlb2: add domain alert support
-  dlb2: add sequence-number management ioctls
-  dlb2: add cos bandwidth get/set ioctls
-  dlb2: add device FLR support
-  dlb2: add basic PF sysfs interfaces
-  dlb2: add ingress error handling
-
- Documentation/ABI/testing/sysfs-driver-dlb2        |  202 +
- Documentation/misc-devices/dlb2.rst                |  310 +
- Documentation/misc-devices/index.rst               |    1 +
- Documentation/userspace-api/ioctl/ioctl-number.rst |    1 +
- MAINTAINERS                                        |    7 +
- drivers/misc/Kconfig                               |    1 +
- drivers/misc/Makefile                              |    1 +
- drivers/misc/dlb2/Kconfig                          |   17 +
- drivers/misc/dlb2/Makefile                         |   13 +
- drivers/misc/dlb2/dlb2_bitmap.h                    |  286 +
- drivers/misc/dlb2/dlb2_file.c                      |  133 +
- drivers/misc/dlb2/dlb2_file.h                      |   19 +
- drivers/misc/dlb2/dlb2_hw_types.h                  |  353 +
- drivers/misc/dlb2/dlb2_intr.c                      |  137 +
- drivers/misc/dlb2/dlb2_intr.h                      |   30 +
- drivers/misc/dlb2/dlb2_ioctl.c                     |  892 +++
- drivers/misc/dlb2/dlb2_ioctl.h                     |   14 +
- drivers/misc/dlb2/dlb2_main.c                      | 1091 +++
- drivers/misc/dlb2/dlb2_main.h                      |  285 +
- drivers/misc/dlb2/dlb2_pf_ops.c                    | 1286 ++++
- drivers/misc/dlb2/dlb2_regs.h                      | 3702 ++++++++++
- drivers/misc/dlb2/dlb2_resource.c                  | 7117 ++++++++++++++++++++
- drivers/misc/dlb2/dlb2_resource.h                  |  924 +++
- include/linux/pci_ids.h                            |    2 +
- include/uapi/linux/dlb2_user.h                     | 1045 +++
- 25 files changed, 17869 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-driver-dlb2
- create mode 100644 Documentation/misc-devices/dlb2.rst
- create mode 100644 drivers/misc/dlb2/Kconfig
- create mode 100644 drivers/misc/dlb2/Makefile
- create mode 100644 drivers/misc/dlb2/dlb2_bitmap.h
- create mode 100644 drivers/misc/dlb2/dlb2_file.c
- create mode 100644 drivers/misc/dlb2/dlb2_file.h
- create mode 100644 drivers/misc/dlb2/dlb2_hw_types.h
- create mode 100644 drivers/misc/dlb2/dlb2_intr.c
- create mode 100644 drivers/misc/dlb2/dlb2_intr.h
- create mode 100644 drivers/misc/dlb2/dlb2_ioctl.c
- create mode 100644 drivers/misc/dlb2/dlb2_ioctl.h
- create mode 100644 drivers/misc/dlb2/dlb2_main.c
- create mode 100644 drivers/misc/dlb2/dlb2_main.h
- create mode 100644 drivers/misc/dlb2/dlb2_pf_ops.c
- create mode 100644 drivers/misc/dlb2/dlb2_regs.h
- create mode 100644 drivers/misc/dlb2/dlb2_resource.c
- create mode 100644 drivers/misc/dlb2/dlb2_resource.h
- create mode 100644 include/uapi/linux/dlb2_user.h
-
-
-base-commit: 00e4db51259a5f936fec1424b884f029479d3981
+diff --git a/drivers/misc/dlb2/dlb2_ioctl.c b/drivers/misc/dlb2/dlb2_ioctl.c
+index 68db45842e34..5b6d3b4c3297 100644
+--- a/drivers/misc/dlb2/dlb2_ioctl.c
++++ b/drivers/misc/dlb2/dlb2_ioctl.c
+@@ -51,6 +51,7 @@ DLB2_DOMAIN_IOCTL_CALLBACK_TEMPLATE(create_ldb_queue)
+ DLB2_DOMAIN_IOCTL_CALLBACK_TEMPLATE(create_dir_queue)
+ DLB2_DOMAIN_IOCTL_CALLBACK_TEMPLATE(get_ldb_queue_depth)
+ DLB2_DOMAIN_IOCTL_CALLBACK_TEMPLATE(get_dir_queue_depth)
++DLB2_DOMAIN_IOCTL_CALLBACK_TEMPLATE(start_domain)
+ 
+ /*
+  * Port creation ioctls don't use the callback template macro because they have
+@@ -343,6 +344,8 @@ long dlb2_domain_ioctl(struct file *f, unsigned int cmd, unsigned long arg)
+ 		return dlb2_domain_ioctl_get_dir_port_pp_fd(dev, dom, arg);
+ 	case DLB2_IOC_GET_DIR_PORT_CQ_FD:
+ 		return dlb2_domain_ioctl_get_dir_port_cq_fd(dev, dom, arg);
++	case DLB2_IOC_START_DOMAIN:
++		return dlb2_domain_ioctl_start_domain(dev, dom, arg);
+ 	default:
+ 		return -ENOTTY;
+ 	}
+diff --git a/drivers/misc/dlb2/dlb2_main.h b/drivers/misc/dlb2/dlb2_main.h
+index 06b9130643cb..abe9808b4638 100644
+--- a/drivers/misc/dlb2/dlb2_main.h
++++ b/drivers/misc/dlb2/dlb2_main.h
+@@ -78,6 +78,10 @@ struct dlb2_device_ops {
+ 			       struct dlb2_create_dir_port_args *args,
+ 			       uintptr_t cq_dma_base,
+ 			       struct dlb2_cmd_response *resp);
++	int (*start_domain)(struct dlb2_hw *hw,
++			    u32 domain_id,
++			    struct dlb2_start_domain_args *args,
++			    struct dlb2_cmd_response *resp);
+ 	int (*get_num_resources)(struct dlb2_hw *hw,
+ 				 struct dlb2_get_num_resources_args *args);
+ 	int (*reset_domain)(struct dlb2_hw *hw, u32 domain_id);
+diff --git a/drivers/misc/dlb2/dlb2_pf_ops.c b/drivers/misc/dlb2/dlb2_pf_ops.c
+index 1e2e89d6945e..4ab4d9fe3f61 100644
+--- a/drivers/misc/dlb2/dlb2_pf_ops.c
++++ b/drivers/misc/dlb2/dlb2_pf_ops.c
+@@ -263,6 +263,15 @@ dlb2_pf_create_dir_port(struct dlb2_hw *hw,
+ }
+ 
+ static int
++dlb2_pf_start_domain(struct dlb2_hw *hw,
++		     u32 id,
++		     struct dlb2_start_domain_args *args,
++		     struct dlb2_cmd_response *resp)
++{
++	return dlb2_hw_start_domain(hw, id, args, resp, false, 0);
++}
++
++static int
+ dlb2_pf_get_num_resources(struct dlb2_hw *hw,
+ 			  struct dlb2_get_num_resources_args *args)
+ {
+@@ -349,6 +358,7 @@ struct dlb2_device_ops dlb2_pf_ops = {
+ 	.create_dir_queue = dlb2_pf_create_dir_queue,
+ 	.create_ldb_port = dlb2_pf_create_ldb_port,
+ 	.create_dir_port = dlb2_pf_create_dir_port,
++	.start_domain = dlb2_pf_start_domain,
+ 	.get_num_resources = dlb2_pf_get_num_resources,
+ 	.reset_domain = dlb2_pf_reset_domain,
+ 	.ldb_port_owned_by_domain = dlb2_pf_ldb_port_owned_by_domain,
+diff --git a/drivers/misc/dlb2/dlb2_resource.c b/drivers/misc/dlb2/dlb2_resource.c
+index 454a1aacfaf2..4d8b56a4b437 100644
+--- a/drivers/misc/dlb2/dlb2_resource.c
++++ b/drivers/misc/dlb2/dlb2_resource.c
+@@ -1303,6 +1303,34 @@ dlb2_verify_create_dir_port_args(struct dlb2_hw *hw,
+ 	return 0;
+ }
+ 
++static int dlb2_verify_start_domain_args(struct dlb2_hw *hw,
++					 u32 domain_id,
++					 struct dlb2_cmd_response *resp,
++					 bool vdev_req,
++					 unsigned int vdev_id)
++{
++	struct dlb2_hw_domain *domain;
++
++	domain = dlb2_get_domain_from_id(hw, domain_id, vdev_req, vdev_id);
++
++	if (!domain) {
++		resp->status = DLB2_ST_INVALID_DOMAIN_ID;
++		return -EINVAL;
++	}
++
++	if (!domain->configured) {
++		resp->status = DLB2_ST_DOMAIN_NOT_CONFIGURED;
++		return -EINVAL;
++	}
++
++	if (domain->started) {
++		resp->status = DLB2_ST_DOMAIN_STARTED;
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
+ static bool dlb2_port_find_slot(struct dlb2_ldb_port *port,
+ 				enum dlb2_qid_map_state state,
+ 				int *slot)
+@@ -3259,6 +3287,98 @@ int dlb2_hw_create_dir_port(struct dlb2_hw *hw,
+ 	return 0;
+ }
+ 
++static void dlb2_log_start_domain(struct dlb2_hw *hw,
++				  u32 domain_id,
++				  bool vdev_req,
++				  unsigned int vdev_id)
++{
++	DLB2_HW_DBG(hw, "DLB2 start domain arguments:\n");
++	if (vdev_req)
++		DLB2_HW_DBG(hw, "(Request from vdev %d)\n", vdev_id);
++	DLB2_HW_DBG(hw, "\tDomain ID: %d\n", domain_id);
++}
++
++/**
++ * dlb2_hw_start_domain() - Lock the domain configuration
++ * @hw:	Contains the current state of the DLB2 hardware.
++ * @domain_id: Domain ID
++ * @arg: User-provided arguments (unused, here for ioctl callback template).
++ * @resp: Response to user.
++ * @vdev_req: Request came from a virtual device.
++ * @vdev_id: If vdev_req is true, this contains the virtual device's ID.
++ *
++ * Return: returns < 0 on error, 0 otherwise. If the driver is unable to
++ * satisfy a request, resp->status will be set accordingly.
++ */
++int
++dlb2_hw_start_domain(struct dlb2_hw *hw,
++		     u32 domain_id,
++		     __attribute((unused)) struct dlb2_start_domain_args *arg,
++		     struct dlb2_cmd_response *resp,
++		     bool vdev_req,
++		     unsigned int vdev_id)
++{
++	struct dlb2_dir_pq_pair *dir_queue;
++	struct dlb2_ldb_queue *ldb_queue;
++	struct dlb2_hw_domain *domain;
++	int ret;
++
++	dlb2_log_start_domain(hw, domain_id, vdev_req, vdev_id);
++
++	ret = dlb2_verify_start_domain_args(hw,
++					    domain_id,
++					    resp,
++					    vdev_req,
++					    vdev_id);
++	if (ret)
++		return ret;
++
++	domain = dlb2_get_domain_from_id(hw, domain_id, vdev_req, vdev_id);
++	if (!domain) {
++		DLB2_HW_ERR(hw,
++			    "[%s():%d] Internal error: domain not found\n",
++			    __func__, __LINE__);
++		return -EFAULT;
++	}
++
++	/*
++	 * Enable load-balanced and directed queue write permissions for the
++	 * queues this domain owns. Without this, the DLB2 will drop all
++	 * incoming traffic to those queues.
++	 */
++	DLB2_DOM_LIST_FOR(domain->used_ldb_queues, ldb_queue) {
++		union dlb2_sys_ldb_vasqid_v r0 = { {0} };
++		unsigned int offs;
++
++		r0.field.vasqid_v = 1;
++
++		offs = domain->id.phys_id * DLB2_MAX_NUM_LDB_QUEUES +
++			ldb_queue->id.phys_id;
++
++		DLB2_CSR_WR(hw, DLB2_SYS_LDB_VASQID_V(offs), r0.val);
++	}
++
++	DLB2_DOM_LIST_FOR(domain->used_dir_pq_pairs, dir_queue) {
++		union dlb2_sys_dir_vasqid_v r0 = { {0} };
++		unsigned int offs;
++
++		r0.field.vasqid_v = 1;
++
++		offs = domain->id.phys_id * DLB2_MAX_NUM_DIR_PORTS +
++			dir_queue->id.phys_id;
++
++		DLB2_CSR_WR(hw, DLB2_SYS_DIR_VASQID_V(offs), r0.val);
++	}
++
++	dlb2_flush_csr(hw);
++
++	domain->started = true;
++
++	resp->status = 0;
++
++	return 0;
++}
++
+ static void
+ dlb2_domain_finish_unmap_port_slot(struct dlb2_hw *hw,
+ 				   struct dlb2_hw_domain *domain,
+diff --git a/drivers/misc/dlb2/dlb2_resource.h b/drivers/misc/dlb2/dlb2_resource.h
+index ffdc35ebbc1e..d5b554b701f5 100644
+--- a/drivers/misc/dlb2/dlb2_resource.h
++++ b/drivers/misc/dlb2/dlb2_resource.h
+@@ -209,6 +209,36 @@ int dlb2_hw_create_ldb_port(struct dlb2_hw *hw,
+ 			    unsigned int vdev_id);
+ 
+ /**
++ * dlb2_hw_start_domain() - start a scheduling domain
++ * @hw: dlb2_hw handle for a particular device.
++ * @domain_id: domain ID.
++ * @args: start domain arguments.
++ * @resp: response structure.
++ * @vdev_request: indicates whether this request came from a vdev.
++ * @vdev_id: If vdev_request is true, this contains the vdev's ID.
++ *
++ * This function starts a scheduling domain, which allows applications to send
++ * traffic through it. Once a domain is started, its resources can no longer be
++ * configured (besides QID remapping and port enable/disable).
++ *
++ * A vdev can be either an SR-IOV virtual function or a Scalable IOV virtual
++ * device.
++ *
++ * Return:
++ * Returns 0 upon success, < 0 otherwise. If an error occurs, resp->status is
++ * assigned a detailed error code from enum dlb2_error.
++ *
++ * Errors:
++ * EINVAL - the domain is not configured, or the domain is already started.
++ */
++int dlb2_hw_start_domain(struct dlb2_hw *hw,
++			 u32 domain_id,
++			 struct dlb2_start_domain_args *args,
++			 struct dlb2_cmd_response *resp,
++			 bool vdev_request,
++			 unsigned int vdev_id);
++
++/**
+  * dlb2_reset_domain() - reset a scheduling domain
+  * @hw: dlb2_hw handle for a particular device.
+  * @domain_id: domain ID.
+diff --git a/include/uapi/linux/dlb2_user.h b/include/uapi/linux/dlb2_user.h
+index 898ff4df3462..0eb9e14de11d 100644
+--- a/include/uapi/linux/dlb2_user.h
++++ b/include/uapi/linux/dlb2_user.h
+@@ -456,6 +456,23 @@ struct dlb2_get_port_fd_args {
+ 	__u32 padding0;
+ };
+ 
++/*
++ * DLB2_DOMAIN_CMD_START_DOMAIN: Mark the end of the domain configuration. This
++ *	must be called before passing QEs into the device, and no configuration
++ *	ioctls can be issued once the domain has started. Sending QEs into the
++ *	device before calling this ioctl will result in undefined behavior.
++ * Input parameters:
++ * - (None)
++ *
++ * Output parameters:
++ * - response.status: Detailed error code. In certain cases, such as if the
++ *	ioctl request arg is invalid, the driver won't set status.
++ */
++struct dlb2_start_domain_args {
++	/* Output parameters */
++	struct dlb2_cmd_response response;
++};
++
+ enum dlb2_domain_user_interface_commands {
+ 	DLB2_DOMAIN_CMD_CREATE_LDB_QUEUE,
+ 	DLB2_DOMAIN_CMD_CREATE_DIR_QUEUE,
+@@ -467,6 +484,7 @@ enum dlb2_domain_user_interface_commands {
+ 	DLB2_DOMAIN_CMD_GET_LDB_PORT_CQ_FD,
+ 	DLB2_DOMAIN_CMD_GET_DIR_PORT_PP_FD,
+ 	DLB2_DOMAIN_CMD_GET_DIR_PORT_CQ_FD,
++	DLB2_DOMAIN_CMD_START_DOMAIN,
+ 
+ 	/* NUM_DLB2_DOMAIN_CMD must be last */
+ 	NUM_DLB2_DOMAIN_CMD,
+@@ -541,5 +559,9 @@ enum dlb2_domain_user_interface_commands {
+ 		_IOWR(DLB2_IOC_MAGIC,				\
+ 		      DLB2_DOMAIN_CMD_GET_DIR_PORT_CQ_FD,	\
+ 		      struct dlb2_get_port_fd_args)
++#define DLB2_IOC_START_DOMAIN					\
++		_IOR(DLB2_IOC_MAGIC,				\
++		     DLB2_DOMAIN_CMD_START_DOMAIN,		\
++		     struct dlb2_start_domain_args)
+ 
+ #endif /* __DLB2_USER_H */
 -- 
 2.13.6
 
