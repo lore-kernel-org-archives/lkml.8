@@ -2,92 +2,129 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8060CC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:57:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3229CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:58:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F7F920658
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:57:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597143453;
-	bh=w1SsQDkEFJArMp12T4q8mF9pGg+dBfjuZ0E9vVCFUWw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DtFfP8RB4bDhbG9u8pa2Oz813KiKT3z8WvnVSYa3EtDLcAZlnKy/yCtSvdOq0xm+A
-	 h3t3cSXHCzpNXXypPDosr3gtuW2ntNnMfAEbZ18+RJe9OwPgD69g9MAKJ30ogcAPTP
-	 yoch+A4kU3ocmBxZCnMkg/Sj+sXNM3qTWE0CXafk=
+	by mail.kernel.org (Postfix) with ESMTP id 013E020656
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:58:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZHQtGDX2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728566AbgHKK5c (ORCPT
+        id S1728603AbgHKK6c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 06:57:32 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39015 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728416AbgHKK5b (ORCPT
+        Tue, 11 Aug 2020 06:58:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46590 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728416AbgHKK6c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 06:57:31 -0400
-Received: by mail-wm1-f68.google.com with SMTP id g75so1939521wme.4;
-        Tue, 11 Aug 2020 03:57:29 -0700 (PDT)
+        Tue, 11 Aug 2020 06:58:32 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6F54C06174A
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 03:58:31 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id o18so12608690eje.7
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 03:58:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8Mdhgy2g8j34bV9EDBbB+YPJSYmiPaq1UApYM7OjSXk=;
+        b=ZHQtGDX2EI+RREM5Bwzv6uSg1CEk5rSCRfXufWT0l75+UU8uz+ajv0/nWK3vdtsBut
+         zNNjX9B83cd2u7uT8+7qM9EE6aNoItCD8TQEuAdk99OVg8Os7o8XYrZoreK48bPCDi+R
+         8AHS4gOov1ma8bOQWNS3MEIoQ8e7wEA2Zp1VEGMQzOQfJHV73JSR9/bvUC/UJoc6N6Av
+         VNJdxF6vgIiIDGPXzfG3rVXhQOhUo6I0zQdT4fusEXgr07FsCQhYv+oKER8mAGSiavU9
+         ZR2cyFCvkmAUYeKoFmQvdsZlU1GQgIZkIhaOFIzLNz0Urb9vVE89qtfqEmy0qnNwKVRA
+         SfRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=X1j4nbOfxJc3XexsBz4p680H37CuZTs9tKZjltQ04x8=;
-        b=mZzmqtK0CKBU6bU4FzZoBpwqjiFkXqcyKRQEjoVjFQhzEXf6FPqleAsZb8S4yQGkLR
-         a46QmMdx4L7jOyZ/w9pyxQDSenBJ4Saru2hGf/8o61aYSWFYFIiBZnp/SpCYoaJb9XHL
-         rcwSIo0YiCtmsSokA3depGyI3wBnlgCC+rQ5QY6ah05PeK0F/MEUxvJeG0Ov9S6Zkh5c
-         hHCERA7hdYJr6xuCabOR5kdgaG0EM+yFWY/qF3eDp98qYH8dUY4KSqxaRMOOQjo9IwKe
-         OmukstXbCm/NqHjDIE2bqwAyL/WaE2PnAanvq8OJt43IGkSsSdHpObi+vDV4h31+P8oc
-         XDSA==
-X-Gm-Message-State: AOAM530MojrKAoyZZUppwxBl1yRcCENROJ0Zs/J5KXNO4ck1n+7QQq+Z
-        Kj1ZMG15mToCl2pH+s2kdPo=
-X-Google-Smtp-Source: ABdhPJxBJ9WKr3DgQX0cvWnvbLYtZuAYSo6tuw9dNaLRwaWC/X0djkd1O3v3XOd4gQXYD9ieuAgTfw==
-X-Received: by 2002:a1c:3886:: with SMTP id f128mr3422822wma.121.1597143449201;
-        Tue, 11 Aug 2020 03:57:29 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id d7sm27400711wra.29.2020.08.11.03.57.28
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8Mdhgy2g8j34bV9EDBbB+YPJSYmiPaq1UApYM7OjSXk=;
+        b=P3dU5FWKpEVih3OcgXkWuI6Lcu+wHRrSEQjbjbhL3qMLF0RNjt1p+KDip4/I/8z1Cq
+         jz7z6P5CZjGCng2LphoDWtp311IrjFSUquV1hpR88UK1QG1vxuFFjVg1wEkmWmZ7hhGr
+         ZyMBnYblGec+Wicj7uyzZY2tCqNU5onNvw2Mep5/yJQWpNcNcVkezmqpidm5cbKgYRQ6
+         gBWKV4GmmIoLpZuH0xQ0h6LE515OkxavPy4Tlvk5xL8btnkUVlwrnA1FZ2aET2y4jZy9
+         PY+6vKkJrBMesckaKo9dtlCNMEhjZ8eQO36ftgHtvMuGR555cgM1/jv4peN3pEJNu+xS
+         ZkGA==
+X-Gm-Message-State: AOAM5326rDXfTD65E6kSUb7v+QiM+dp2o8f5aRrV5FuKyt7w08XsBsEA
+        bm81DClVlLaoNaS0j8BknKnHNA==
+X-Google-Smtp-Source: ABdhPJwaUA9aebRz4I71p+CtFQOyjlyFO6qO7PpLBsUyccpKKuLHPYricqFnO59v9/xWlARFGEzN6Q==
+X-Received: by 2002:a17:907:4064:: with SMTP id nl4mr25602875ejb.342.1597143510319;
+        Tue, 11 Aug 2020 03:58:30 -0700 (PDT)
+Received: from srini-hackbox.lan (cpc86377-aztw32-2-0-cust226.18-1.cable.virginm.net. [92.233.226.227])
+        by smtp.gmail.com with ESMTPSA id e14sm14248436edl.86.2020.08.11.03.58.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Aug 2020 03:57:28 -0700 (PDT)
-Date:   Tue, 11 Aug 2020 10:57:27 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Michael Kelley <mikelley@microsoft.com>,
-        linux-kernel@vger.kernel.org, peterz@infradead.org,
-        kys@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
-        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
-        linux-hyperv@vger.kernel.org
-Subject: Re: [PATCH 1/1] x86/hyperv: Make hv_setup_sched_clock inline
-Message-ID: <20200811105727.hgcpqrha6hydp5zv@liuwe-devbox-debian-v2>
-References: <1597022991-24088-1-git-send-email-mikelley@microsoft.com>
- <87sgcuxnzq.fsf@nanos>
+        Tue, 11 Aug 2020 03:58:29 -0700 (PDT)
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To:     broonie@kernel.org
+Cc:     tiwai@suse.com, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, lgirdwood@gmail.com,
+        john.stultz@linaro.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH] ASoC: qcom: add a dedicated menuconfig
+Date:   Tue, 11 Aug 2020 11:58:18 +0100
+Message-Id: <20200811105818.7890-1-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87sgcuxnzq.fsf@nanos>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 10:08:41PM +0200, Thomas Gleixner wrote:
-> Michael Kelley <mikelley@microsoft.com> writes:
-> > Make hv_setup_sched_clock inline so the reference to pv_ops works
-> > correctly with objtool updates to detect noinstr violations.
-> > See https://lore.kernel.org/patchwork/patch/1283635/
-> >
-> > Signed-off-by: Michael Kelley <mikelley@microsoft.com>
-> 
-> Acked-by: Thomas Gleixner <tglx@linutronix.de>
+Currently list of Qualcomm drivers is growing, so put them in to a
+proper menu so that it does not mix up with other ASOC configs in menuconfig.
 
-Thomas and Peter, thank you for your acks.
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+---
+ sound/soc/qcom/Kconfig | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-I have applied to hyperv-fixes and plan to submit it to Linus in a few
-days' time.
+diff --git a/sound/soc/qcom/Kconfig b/sound/soc/qcom/Kconfig
+index 5d6b2466a2f2..be6b8d0e2f70 100644
+--- a/sound/soc/qcom/Kconfig
++++ b/sound/soc/qcom/Kconfig
+@@ -1,11 +1,13 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-config SND_SOC_QCOM
++menuconfig SND_SOC_QCOM
+ 	tristate "ASoC support for QCOM platforms"
+ 	depends on ARCH_QCOM || COMPILE_TEST
+ 	help
+ 	  Say Y or M if you want to add support to use audio devices
+ 	  in Qualcomm Technologies SOC-based platforms.
+ 
++if SND_SOC_QCOM
++
+ config SND_SOC_LPASS_CPU
+ 	tristate
+ 	select REGMAP_MMIO
+@@ -26,7 +28,6 @@ config SND_SOC_LPASS_APQ8016
+ 
+ config SND_SOC_STORM
+ 	tristate "ASoC I2S support for Storm boards"
+-	depends on SND_SOC_QCOM
+ 	select SND_SOC_LPASS_IPQ806X
+ 	select SND_SOC_MAX98357A
+ 	help
+@@ -35,7 +36,6 @@ config SND_SOC_STORM
+ 
+ config SND_SOC_APQ8016_SBC
+ 	tristate "SoC Audio support for APQ8016 SBC platforms"
+-	depends on SND_SOC_QCOM
+ 	select SND_SOC_LPASS_APQ8016
+ 	select SND_SOC_QCOM_COMMON
+ 	help
+@@ -110,3 +110,5 @@ config SND_SOC_SDM845
+ 	  To add support for audio on Qualcomm Technologies Inc.
+ 	  SDM845 SoC-based systems.
+ 	  Say Y if you want to use audio device on this SoCs.
++
++endif #SND_SOC_QCOM
+-- 
+2.21.0
 
-Thomas, let me know if you want this patch to go through the tip tree. I
-will revert it from hyperv-fixes if that's the case.
-
-Wei.
