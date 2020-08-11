@@ -2,142 +2,219 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF98C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 13:58:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45071C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:00:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B9F82076B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 13:58:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597154335;
-	bh=Y1lbVbdfo/u3kgJVXLeJEnxHkiYVqy6G6bUGXrD3d9Q=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=T3oj+GOBLv/5MaiFtckzVzMIfUDJtkHVkxU7KosLtB3fGe6cr+PA7VPkiF/DmGC/h
-	 wQ+FTxZHGXb81pbdW3RJFZj7axZ/Cpwvj26g4smwvtmmZ6Jmjz8CIscobOveg119gS
-	 FmZOoZucopGseIjrESIFP5tDNfQqBDp6s2oOcBEg=
+	by mail.kernel.org (Postfix) with ESMTP id 08FEE20658
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:00:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bPfvvhRz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728830AbgHKN6y (ORCPT
+        id S1728763AbgHKOA0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 09:58:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45232 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728705AbgHKN6w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 09:58:52 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5BD9204FD;
-        Tue, 11 Aug 2020 13:58:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597154331;
-        bh=Y1lbVbdfo/u3kgJVXLeJEnxHkiYVqy6G6bUGXrD3d9Q=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=hB9wtHwGE9UPTG58/aFDvuQNzT0EMsMPMhBrA/S2LVWwrrGn35w2oQmOzkPnricpy
-         mJLDdVnIwfkC7qU8usJa8FLTK1kkd1wVJVwwwiH+IwFWIAsYuXUlho4poJINI83OHx
-         JOD1K1smRBtzlF6ejrH0cwvJ8mv1a6HbTtM5opgE=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1k5Unh-001InR-VM; Tue, 11 Aug 2020 14:58:50 +0100
+        Tue, 11 Aug 2020 10:00:26 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:24011 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728668AbgHKOAX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 10:00:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597154421;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=P6YtH2/Jh7TinlxZts+K+ir2wkwOlY8OCnZ6CDUlQwA=;
+        b=bPfvvhRzryu7RuZMv+PqcZnUHA9ervRsfG8DrNMXe9ZmVJ8n0hfsvFWpvHJ5Qn+I58BlSo
+        RvuXfhA2sp6StRWlcHj6zXwZW60qGml3MbLl/VJHPVFMTt7FZbfsdCWxfOX2F6fKBUJYuO
+        JvyZweNKIGn1HVrRzOfhGF15bkplr/A=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-148-2TmvZT7ZMda4e3jgbaEnxQ-1; Tue, 11 Aug 2020 10:00:18 -0400
+X-MC-Unique: 2TmvZT7ZMda4e3jgbaEnxQ-1
+Received: by mail-wm1-f72.google.com with SMTP id u14so736200wml.0
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 07:00:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=P6YtH2/Jh7TinlxZts+K+ir2wkwOlY8OCnZ6CDUlQwA=;
+        b=VZOg8VyDsNuaaVnpQzFFmNJiwQ1HezXfOrAqdAdyXYk+dHZxP9QldrFXMntV8jRXMH
+         dDY3c5lv2BLy0fGMgQPhNxPOtauKxKqmy0o0WOzYCw5qglokpo6xQrNqz5moUVbyDQk/
+         NLCNo6BTdieBdwjfmzpwSrBLzyrlw4wS3L3yHfTdPqVicqG43ViPTqg5+uiN9o/ord1a
+         i98tPesl9kQxe6wzNq3TC3rn1BVbCr+8YpsgGA6icOZF/+GoVt416mUrc8Vrb+5eN7XF
+         FAI0hbIp5qpjbwgJ7Q18ympIlfO4+g9Fdb7sj5tnPnAzTmbMA5WYhweCPrqMntAjKBV/
+         2i7g==
+X-Gm-Message-State: AOAM532Fg30QKpUyazURhZI8h5DHAp3XAN8PxKhwDrNdhS+ePOihzfJ2
+        3nShyF9FQncUfAmPs2T180J6aHeuqJQeLS9Bcmf+hVdx6lDP/3NAr44H2AIEWOBqi+16ywPEjzO
+        LMsOiB/QNrvv5hGDlirFeBSSZ
+X-Received: by 2002:a5d:5086:: with SMTP id a6mr29414976wrt.304.1597154414565;
+        Tue, 11 Aug 2020 07:00:14 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwqO2qHTgVwuBQGD53fudeRY6iEmnwXD+kDn7EAgcSziwa8C1tq0azTtZCgq//cCqL55TTirg==
+X-Received: by 2002:a5d:5086:: with SMTP id a6mr29414943wrt.304.1597154414296;
+        Tue, 11 Aug 2020 07:00:14 -0700 (PDT)
+Received: from steredhat ([5.171.229.81])
+        by smtp.gmail.com with ESMTPSA id n24sm5388641wmi.36.2020.08.11.07.00.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Aug 2020 07:00:13 -0700 (PDT)
+Date:   Tue, 11 Aug 2020 16:00:10 +0200
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     syzbot <syzbot+996f91b6ec3812c48042@syzkaller.appspotmail.com>,
+        io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        viro@zeniv.linux.org.uk
+Subject: Re: possible deadlock in __io_queue_deferred
+Message-ID: <20200811140010.gigc2amchytqmrkk@steredhat>
+References: <00000000000035fdf505ac87b7f9@google.com>
+ <76cc7c43-2ebb-180d-c2c8-912972a3f258@kernel.dk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 11 Aug 2020 14:58:49 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Russell King <linux@arm.linux.org.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Valentin Schneider <Valentin.Schneider@arm.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Andrew Lunn <andrew@lunn.ch>, kernel-team@android.com
-Subject: Re: [PATCH v2 00/17] arm/arm64: Turning IPIs into normal interrupts
-In-Reply-To: <CAFA6WYNw7TgypuEdOVRQ4QzAe6BbOg8V0_6O-Xb1=8xybse=nQ@mail.gmail.com>
-References: <20200624195811.435857-1-maz@kernel.org>
- <CAFA6WYNw7TgypuEdOVRQ4QzAe6BbOg8V0_6O-Xb1=8xybse=nQ@mail.gmail.com>
-User-Agent: Roundcube Webmail/1.4.5
-Message-ID: <807e577b5e9a762d9ce7a4acc2e309c8@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: sumit.garg@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com, linux@arm.linux.org.uk, tglx@linutronix.de, jason@lakedaemon.net, Valentin.Schneider@arm.com, f.fainelli@gmail.com, gregory.clement@bootlin.com, andrew@lunn.ch, kernel-team@android.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <76cc7c43-2ebb-180d-c2c8-912972a3f258@kernel.dk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sumit,
-
-On 2020-08-11 14:15, Sumit Garg wrote:
-> Hi Marc,
+On Mon, Aug 10, 2020 at 09:55:17AM -0600, Jens Axboe wrote:
+> On 8/10/20 9:36 AM, syzbot wrote:
+> > Hello,
+> > 
+> > syzbot found the following issue on:
+> > 
+> > HEAD commit:    449dc8c9 Merge tag 'for-v5.9' of git://git.kernel.org/pub/..
+> > git tree:       upstream
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=14d41e02900000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=9d25235bf0162fbc
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=996f91b6ec3812c48042
+> > compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=133c9006900000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1191cb1a900000
+> > 
+> > IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> > Reported-by: syzbot+996f91b6ec3812c48042@syzkaller.appspotmail.com
 > 
-> On Thu, 25 Jun 2020 at 01:28, Marc Zyngier <maz@kernel.org> wrote:
->> 
->> For as long as SMP ARM has existed, IPIs have been handled as
->> something special. The arch code and the interrupt controller exchange
->> a couple of hooks (one to generate an IPI, another to handle it).
->> 
->> Although this is perfectly manageable, it prevents the use of features
->> that we could use if IPIs were Linux IRQs (such as pseudo-NMIs). It
->> also means that each interrupt controller driver has to follow an
->> architecture-specific interface instead of just implementing the base
->> irqchip functionalities. The arch code also duplicates a number of
->> things that the core irq code already does (such as calling
->> set_irq_regs(), irq_enter()...).
->> 
->> This series tries to remedy this on arm/arm64 by offering a new
->> registration interface where the irqchip gives the arch code a range
->> of interrupts to use for IPIs. The arch code requests these as normal
->> per-cpu interrupts.
->> 
->> The bulk of the work is at the interrupt controller level, where all 5
->> irqchips used on arm+SMP/arm64 get converted.
->> 
->> Finally, we drop the legacy registration interface as well as the
->> custom statistics accounting.
->> 
->> Note that I have had a look at providing a "generic" interface by
->> expanding the kernel/irq/ipi.c bag of helpers, but so far all
->> irqchips have very different requirements, so there is hardly anything
->> to consolidate for now. Maybe some as hip04 and the Marvell horror get
->> cleaned up (the latter certainly could do with a good dusting).
->> 
->> This has been tested on a bunch of 32 and 64bit guests (GICv2, GICv3),
->> as well as 64bit bare metal (GICv3). The RPi part has only been tested
->> in QEMU as a 64bit guest, while the HiSi and Marvell parts have only
->> been compile-tested.
-> 
-> This series works perfectly fine on Developerbox.
-> 
-> I just want to follow-up regarding when you are planning to push this
-> series upstream? Are you waiting for other irqchips (apart from GIC)
-> to be reviewed?
+> Thanks, the below should fix this one.
 
-I'd certainly like people to review (and maybe test if they have
-the HW at hand) the rest of the interrupt controller changes.
+Yeah, it seems right to me, since only __io_queue_deferred() (invoked by
+io_commit_cqring()) can be called with 'completion_lock' held.
 
-I'll probably repost the series around -rc1.
+Just out of curiosity, while exploring the code I noticed that we call
+io_commit_cqring() always with the 'completion_lock' held, except in the
+io_poll_* functions.
 
-> Actually mine work to turn IPI as a pseudo NMI [1] is dependent on
-> this patch-set.
-> 
-> [1] https://lkml.org/lkml/2020/5/20/488
-
-I'm aware of this.
+That's because then there can't be any concurrency?
 
 Thanks,
+Stefano
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+> 
+> 
+> diff --git a/fs/io_uring.c b/fs/io_uring.c
+> index 443eecdfeda9..f9be665d1c5e 100644
+> --- a/fs/io_uring.c
+> +++ b/fs/io_uring.c
+> @@ -898,6 +898,7 @@ static void io_put_req(struct io_kiocb *req);
+>  static void io_double_put_req(struct io_kiocb *req);
+>  static void __io_double_put_req(struct io_kiocb *req);
+>  static struct io_kiocb *io_prep_linked_timeout(struct io_kiocb *req);
+> +static void __io_queue_linked_timeout(struct io_kiocb *req);
+>  static void io_queue_linked_timeout(struct io_kiocb *req);
+>  static int __io_sqe_files_update(struct io_ring_ctx *ctx,
+>  				 struct io_uring_files_update *ip,
+> @@ -1179,7 +1180,7 @@ static void io_prep_async_link(struct io_kiocb *req)
+>  			io_prep_async_work(cur);
+>  }
+>  
+> -static void __io_queue_async_work(struct io_kiocb *req)
+> +static struct io_kiocb *__io_queue_async_work(struct io_kiocb *req)
+>  {
+>  	struct io_ring_ctx *ctx = req->ctx;
+>  	struct io_kiocb *link = io_prep_linked_timeout(req);
+> @@ -1187,16 +1188,19 @@ static void __io_queue_async_work(struct io_kiocb *req)
+>  	trace_io_uring_queue_async_work(ctx, io_wq_is_hashed(&req->work), req,
+>  					&req->work, req->flags);
+>  	io_wq_enqueue(ctx->io_wq, &req->work);
+> -
+> -	if (link)
+> -		io_queue_linked_timeout(link);
+> +	return link;
+>  }
+>  
+>  static void io_queue_async_work(struct io_kiocb *req)
+>  {
+> +	struct io_kiocb *link;
+> +
+>  	/* init ->work of the whole link before punting */
+>  	io_prep_async_link(req);
+> -	__io_queue_async_work(req);
+> +	link = __io_queue_async_work(req);
+> +
+> +	if (link)
+> +		io_queue_linked_timeout(link);
+>  }
+>  
+>  static void io_kill_timeout(struct io_kiocb *req)
+> @@ -1229,12 +1233,19 @@ static void __io_queue_deferred(struct io_ring_ctx *ctx)
+>  	do {
+>  		struct io_defer_entry *de = list_first_entry(&ctx->defer_list,
+>  						struct io_defer_entry, list);
+> +		struct io_kiocb *link;
+>  
+>  		if (req_need_defer(de->req, de->seq))
+>  			break;
+>  		list_del_init(&de->list);
+>  		/* punt-init is done before queueing for defer */
+> -		__io_queue_async_work(de->req);
+> +		link = __io_queue_async_work(de->req);
+> +		if (link) {
+> +			__io_queue_linked_timeout(link);
+> +			/* drop submission reference */
+> +			link->flags |= REQ_F_COMP_LOCKED;
+> +			io_put_req(link);
+> +		}
+>  		kfree(de);
+>  	} while (!list_empty(&ctx->defer_list));
+>  }
+> @@ -5945,15 +5956,12 @@ static enum hrtimer_restart io_link_timeout_fn(struct hrtimer *timer)
+>  	return HRTIMER_NORESTART;
+>  }
+>  
+> -static void io_queue_linked_timeout(struct io_kiocb *req)
+> +static void __io_queue_linked_timeout(struct io_kiocb *req)
+>  {
+> -	struct io_ring_ctx *ctx = req->ctx;
+> -
+>  	/*
+>  	 * If the list is now empty, then our linked request finished before
+>  	 * we got a chance to setup the timer
+>  	 */
+> -	spin_lock_irq(&ctx->completion_lock);
+>  	if (!list_empty(&req->link_list)) {
+>  		struct io_timeout_data *data = &req->io->timeout;
+>  
+> @@ -5961,6 +5969,14 @@ static void io_queue_linked_timeout(struct io_kiocb *req)
+>  		hrtimer_start(&data->timer, timespec64_to_ktime(data->ts),
+>  				data->mode);
+>  	}
+> +}
+> +
+> +static void io_queue_linked_timeout(struct io_kiocb *req)
+> +{
+> +	struct io_ring_ctx *ctx = req->ctx;
+> +
+> +	spin_lock_irq(&ctx->completion_lock);
+> +	__io_queue_linked_timeout(req);
+>  	spin_unlock_irq(&ctx->completion_lock);
+>  
+>  	/* drop submission reference */
+> 
+> -- 
+> Jens Axboe
+> 
+
