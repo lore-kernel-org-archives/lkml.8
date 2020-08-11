@@ -2,114 +2,155 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4376C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 21:09:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D562C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 21:09:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEB1D20756
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 21:09:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="noltbly0"
+	by mail.kernel.org (Postfix) with ESMTP id 480B920756
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 21:09:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597180175;
+	bh=yO8dq+GYzKI3pBmtfR9dJRqDFTQTGZRWKVu+t+LvkGY=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=QVkJUssdLK4H0iwxZJ/pqpLCUtdGsO51YU5G4Em0h+ielZrCKeGaIYVmqtxNjbyc+
+	 GutFNPF/CNoIs1kN3/QCUd3Wg8pZecV4zUScE7ooCGndBdh38c6M4Vb7RWsJhOMkBi
+	 R/5uCT++FCBvuU06scSIaovpdfIZZbGWQsoLLM9w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726523AbgHKVI7 (ORCPT
+        id S1726542AbgHKVJe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 17:08:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56006 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725987AbgHKVI7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 17:08:59 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1CA5C06174A;
-        Tue, 11 Aug 2020 14:08:58 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id e4so66033pjd.0;
-        Tue, 11 Aug 2020 14:08:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MndcDzC/7AcUJRluxUgqjFCuSvCxnzh1AGFXbovDx5M=;
-        b=noltbly0zKrpOk/SZeDEHs3VqJnIemgq0K4S5/hbOHx1rrIgo5711lTz2awSjikBfz
-         5SeO5QIt37qI7/qXsIKttKFObQpZ1LN/725Z2XqnFj0Gtgt7bu2OfZ/D0g8VjAD9RyaI
-         UJLvwVf5hOGPnlYzVJPWdvpD7Wlmvn88hYBOVs9ynTEDRhglJdmRnBt+yNadEVFRZepo
-         r1nEmHabYv/7cBf2Vw8G5rdFHnYOZmdMLHlGOojo5CBs9FUqJAdsrG1TUJGmBJ7wf/cY
-         GZ0O7It4V3Rd66hTUvL4kZq0ZgEZlp7MWNakNS46uDYsjN45EUplATuK2iBPhJAB0k9T
-         O8zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MndcDzC/7AcUJRluxUgqjFCuSvCxnzh1AGFXbovDx5M=;
-        b=mMXIZ3l+PqVZ9UjEv7WbKG+3RaC2870lcxM/ZRZI/SMsmYAqDWcHTWe5u1EUUmnL61
-         7/9hC39oSsjN5n6D2qgSnY8/NR4kJJILAPiVgt9xpDu10cJ8TZ+YckFW31yumzWw8rnm
-         jkEuuWh9R0EPOJwn8YIgkQfevaelj98Ok7wgPspWk4stPOoyGWmXSD4se2OiXHTE95GB
-         zC5mOTfazPBXgv3iKijfsxP2+lIVLxzdSV7kMSh9UCjVO1g44APPW0G1/82EueDywtV1
-         LhddUgDM/J8eiClH8zY8A3CvQtCE7XuLhVGycHeK+pYiYb3bQfR3dnuxzxNGewUv8/ie
-         tvYA==
-X-Gm-Message-State: AOAM533EocbWgOSN1DXL3ltn5Mbqm7nQ9yQ0iGr2tqr6XBh6Pif2+joW
-        1zdcAyrpAisybD5H0N/orVo=
-X-Google-Smtp-Source: ABdhPJxQYo13BOHv9SR2FnAADb18QXpqroXf/pda53QGuHBM1XL/wjykqI6CGbWG6k9YJwfLrhDjWA==
-X-Received: by 2002:a17:902:b18b:: with SMTP id s11mr2646637plr.211.1597180138472;
-        Tue, 11 Aug 2020 14:08:58 -0700 (PDT)
-Received: from localhost (c-73-25-156-94.hsd1.or.comcast.net. [73.25.156.94])
-        by smtp.gmail.com with ESMTPSA id b63sm6060pfg.43.2020.08.11.14.08.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Aug 2020 14:08:56 -0700 (PDT)
-From:   Rob Clark <robdclark@gmail.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Rob Clark <robdclark@chromium.org>,
-        kernel test robot <lkp@intel.com>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Drew Davenport <ddavenport@chromium.org>,
-        Bernard <bernard@vivo.com>,
-        Kalyan Thota <kalyan_t@codeaurora.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Hongbo Yao <yaohongbo@huawei.com>,
-        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
-        freedreno@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
-        GPU), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] drm/msm/dpu: fix unitialized variable error
-Date:   Tue, 11 Aug 2020 14:09:35 -0700
-Message-Id: <20200811210938.552939-1-robdclark@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        Tue, 11 Aug 2020 17:09:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47564 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725987AbgHKVJd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 17:09:33 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3EDE205CB;
+        Tue, 11 Aug 2020 21:09:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597180172;
+        bh=yO8dq+GYzKI3pBmtfR9dJRqDFTQTGZRWKVu+t+LvkGY=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=eabVjfNhhkM5oPD2ZYU8CFXQe9OethQy5zj/0wymPHd/AZuPQFcgFvb7/wkaLXEF7
+         nDhpYDRcHUrW1hOqn1EcW60ZFHF0EnXxkSBRCPDxwsmTX/avbFmTCum2lYYPsWMBoF
+         Xvfs32vaa6yEFdZYPRt6oS8b0WlAFALL7KuX72RM=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id DB696352308E; Tue, 11 Aug 2020 14:09:31 -0700 (PDT)
+Date:   Tue, 11 Aug 2020 14:09:31 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Michal Hocko <mhocko@suse.com>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
+Message-ID: <20200811210931.GZ4295@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200809204354.20137-1-urezki@gmail.com>
+ <20200809204354.20137-2-urezki@gmail.com>
+ <20200810123141.GF4773@dhcp22.suse.cz>
+ <20200810160739.GA29884@pc636>
+ <20200810192525.GG4773@dhcp22.suse.cz>
+ <87pn7x6y4a.fsf@nanos.tec.linutronix.de>
+ <20200811153327.GW4295@paulmck-ThinkPad-P72>
+ <87h7t96ve3.fsf@nanos.tec.linutronix.de>
+ <87eeod6kgx.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87eeod6kgx.fsf@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+On Tue, Aug 11, 2020 at 09:39:10PM +0200, Thomas Gleixner wrote:
+> Thomas Gleixner <tglx@linutronix.de> writes:
+> > "Paul E. McKenney" <paulmck@kernel.org> writes:
+> >> On Tue, Aug 11, 2020 at 04:44:21PM +0200, Thomas Gleixner wrote:
+> >>> Now RCU creates a new thing which enforces to make page allocation in
+> >>> atomic context possible on RT. What for?
+> >>> 
+> >>> What's the actual use case in truly atomic context for this new thing on
+> >>> an RT kernel?
+> >>
+> >> It is not just RT kernels.  CONFIG_PROVE_RAW_LOCK_NESTING=y propagates
+> >> this constraint to all configurations, and a patch in your new favorite
+> >> subsystem really did trigger this lockdep check in a non-RT kernel.
+> >>
+> >>> The actual RCU code disabling interrupts is an implementation detail
+> >>> which can easily be mitigated with a local lock.
+> >>
+> >> In this case, we are in raw-spinlock context on entry to kfree_rcu().
+> >
+> > Where?
+> 
+> And aside of the where, wasn't kfree_rcu() from within raw spinlock held
+> regions possible all the time? Either I'm missing something or you are
+> fundamentally changing RCU internals. kfree_rcu() saved RT in various
+> ways where invoking kfree() was just not an option. Confused...
 
- drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c:817 dpu_crtc_enable() error: uninitialized symbol 'request_bandwidth'.
+Back in the old days (months ago!), it was possible to invoke kfree_rcu()
+while holding a raw spinlock because kfree_rcu() didn't acquire any locks.
+It didn't need to because it was just a wrapper around call_rcu().
+And call_rcu(), along with the rest of RCU's internals, has used raw
+spinlocks since near the beginnings of RT, which meant that it wasn't
+a problem in the rare cases where call_rcu() needed to acquire one of
+RCU's locks (for example, when call_rcu() sees that the current CPU has
+accumulated more than 10,000 callbacks).
 
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
----
- drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+But one problem with the old kfree_rcu() approach is that the memory to
+be freed is almost always cold in the cache by the time that the grace
+period ends.  And this was made worse by the fact that the rcu_do_batch()
+function traverses the list of objects to be freed as a linked list,
+thus incurring a cache miss on each and every object.  The usual fix
+for this sort of performance problem is to use arrays of pointers,
+which on a 64-bit system with 64-byte cache lines reduces the number of
+cache misses by a factor of eight.  In addition, decreasing the number
+of post-grace-period cache misses increases the stability of RCU with
+respect to callback flooding:  Because the kfree()s happen faster, it
+is harder to overrun RCU with tight loops posting callbacks (as happened
+some time back with certain types of ACLs).
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-index f272a8d0f95b..c2729f71e2fa 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-@@ -827,7 +827,7 @@ static void dpu_crtc_enable(struct drm_crtc *crtc,
- {
- 	struct dpu_crtc *dpu_crtc;
- 	struct drm_encoder *encoder;
--	bool request_bandwidth;
-+	bool request_bandwidth = false;
- 
- 	if (!crtc) {
- 		DPU_ERROR("invalid crtc\n");
--- 
-2.26.2
+Hence Ulad's work on kfree_rcu().  The approach is to allocate a
+page-sized array to hold all the pointers, then fill in the rest of these
+pointers on each subsequent kfree_rcu() call.  These arrays of pointers
+also allows use of kfree_bulk() instead of kfree(), which can improve
+performance yet more.  It is no big deal if kfree_rcu()'s allocation
+attempts fail occasionally because it can simply fall back to the old
+linked-list approach.  And given that the various lockless caches in
+the memory allocator are almost never empty, in theory life is good.
 
+But in practice, mainline now has CONFIG_PROVE_RAW_LOCK_NESTING,
+and for good reason -- this Kconfig option makes it at least a
+little bit harder for mainline developers to mess up RT.  But with
+CONFIG_PROVE_RAW_LOCK_NESTING=y and lockdep enabled, mainline will now
+sometimes complain if you invoke kfree_rcu() while holding a raw spinlock.
+This happens when kfree_rcu() needs to invoke the memory allocator and
+the memory allocator's caches are empty, thus resulting in the memory
+allocator attempting to acquire a non-raw spinlock.
+
+Because kfree_rcu() has a fallback available (just using the old linked
+list), kfree_rcu() would work well given a way to tell the memory
+allocator to return NULL instead of acquiring a non-raw spinlock.
+Which is exactly what Ulad's recent patches are intended to do.
+
+Since then, this thread has discussed various other approaches,
+including using existing combinations of GFP_ flags, converting
+the allocator's zone lock to a raw spinlock, and so on.
+
+Does that help, or am I missing the point of your question?
+
+							Thanx, Paul
