@@ -2,99 +2,80 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF2B5C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 04:30:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A0DC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 04:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2D27206DA
+	by mail.kernel.org (Postfix) with ESMTP id F3E1520772
 	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 04:30:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597120206;
-	bh=HVa5a8fSarE3FjEzPI/tiTxOe2uPd2Fd/PzzU5E8/3M=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=U06u5RPASCQp0n6RUxKeumcOrPhFyCenCDTYUgSINFYCU1f8XaAECHozbXjtjzFXY
-	 fiDQ4oPU/ujdsnYRzMngUlppSXXBEtO4XEDDz1kKuF8NJ+ZYbueyxSvA3vhxczlh93
-	 mKQWeA5bKWfAZTFRjKeVa8iMHjIRYGNrQOhRmY4g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726114AbgHKE16 (ORCPT
+        id S1726483AbgHKEaF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 00:27:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45886 "EHLO mail.kernel.org"
+        Tue, 11 Aug 2020 00:30:05 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:58130 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725837AbgHKE15 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 00:27:57 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B09CE206DA;
-        Tue, 11 Aug 2020 04:27:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597120077;
-        bh=HVa5a8fSarE3FjEzPI/tiTxOe2uPd2Fd/PzzU5E8/3M=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=gIfikik50rH/Y4HMFk3aIcoToJ/0tTiPNEUlv8NUE+AEiM79Y9PA2333Y6aefP6UU
-         /dgCsVT51be2bS+OzVuRzzkGYXTeKuj5Ddu52sT6TWjCAsB05IW8+lUGz/GNybsJpE
-         7iX8Ft0Ic/34l9pmo4/4Yv8nFJbx7CCImclFWS0k=
-Date:   Mon, 10 Aug 2020 21:27:56 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     kernel test robot <lkp@intel.com>
-Cc:     Rikard Falkeborn <rikard.falkeborn@gmail.com>,
-        kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Peter Rosin <peda@axentia.se>
-Subject: Re: include/linux/bits.h:25:21: error: first argument to
- '__builtin_choose_expr' not a constant
-Message-Id: <20200810212756.04c006476aa9c663edb01f32@linux-foundation.org>
-In-Reply-To: <202008080833.zZnw48Gr%lkp@intel.com>
-References: <202008080833.zZnw48Gr%lkp@intel.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1725898AbgHKEaE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 00:30:04 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 66E65201DA9;
+        Tue, 11 Aug 2020 06:30:03 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 4F5E3201D9D;
+        Tue, 11 Aug 2020 06:29:59 +0200 (CEST)
+Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id E6026402A5;
+        Tue, 11 Aug 2020 06:29:53 +0200 (CEST)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH 2/2] irqchip/imx-irqsteer: Use dev_err_probe() to simplify error handling
+Date:   Tue, 11 Aug 2020 12:25:05 +0800
+Message-Id: <1597119905-7341-2-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1597119905-7341-1-git-send-email-Anson.Huang@nxp.com>
+References: <1597119905-7341-1-git-send-email-Anson.Huang@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 8 Aug 2020 08:03:38 +0800 kernel test robot <lkp@intel.com> wrote:
+dev_err_probe() can reduce code size, uniform error handling and record the
+defer probe reason etc., use it to simplify the code.
 
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> head:   30185b69a2d533c4ba6ca926b8390ce7de495e29
-> commit: 295bcca84916cb5079140a89fccb472bb8d1f6e2 linux/bits.h: add compile time sanity check of GENMASK inputs
-> date:   4 months ago
-> config: s390-randconfig-r001-20200808 (attached as .config)
-> compiler: s390-linux-gcc (GCC) 9.3.0
-> reproduce (this is a W=1 build):
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         git checkout 295bcca84916cb5079140a89fccb472bb8d1f6e2
->         # save the attached .config to linux build tree
->         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=s390 
-> 
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
-> 
-> All errors (new ones prefixed by >>):
-> 
->    drivers/mux/mmio.c: In function 'mux_mmio_probe':
->    drivers/mux/mmio.c:76:20: error: storage size of 'field' isn't known
->       76 |   struct reg_field field;
->          |                    ^~~~~
->    In file included from include/linux/bits.h:23,
->                     from include/linux/bitops.h:5,
->                     from drivers/mux/mmio.c:8:
-> >> include/linux/bits.h:25:21: error: first argument to '__builtin_choose_expr' not a constant
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ drivers/irqchip/irq-imx-irqsteer.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-I assume the first error is the cause of the second?
-
-struct reg_field is only defined if CONFIG_REGMAP, and that is unset in
-this .config.  Perhaps drivers/mux/mmio.c should depend on
-CONFIG_REGMAP?  (cc Peter).
-
+diff --git a/drivers/irqchip/irq-imx-irqsteer.c b/drivers/irqchip/irq-imx-irqsteer.c
+index 290531e..d8c740a 100644
+--- a/drivers/irqchip/irq-imx-irqsteer.c
++++ b/drivers/irqchip/irq-imx-irqsteer.c
+@@ -158,12 +158,10 @@ static int imx_irqsteer_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	data->ipg_clk = devm_clk_get(&pdev->dev, "ipg");
+-	if (IS_ERR(data->ipg_clk)) {
+-		ret = PTR_ERR(data->ipg_clk);
+-		if (ret != -EPROBE_DEFER)
+-			dev_err(&pdev->dev, "failed to get ipg clk: %d\n", ret);
+-		return ret;
+-	}
++	if (IS_ERR(data->ipg_clk))
++		return dev_err_probe(&pdev->dev, PTR_ERR(data->ipg_clk),
++				     "failed to get ipg clk: %ld\n",
++				     PTR_ERR(data->ipg_clk));
+ 
+ 	raw_spin_lock_init(&data->lock);
+ 
+-- 
+2.7.4
 
