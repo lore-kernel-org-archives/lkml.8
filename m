@@ -2,92 +2,99 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F57DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:12:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67ECBC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:13:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A8962076B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:12:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B7652076B
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:13:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Qiivl9DP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B4l35cES"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729116AbgHKRMy (ORCPT
+        id S1729184AbgHKRNT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 13:12:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47786 "EHLO
+        Tue, 11 Aug 2020 13:13:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729029AbgHKRMw (ORCPT
+        with ESMTP id S1729029AbgHKRNS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 13:12:52 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 781F2C06174A
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 10:12:52 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id m8so7959363pfh.3
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 10:12:52 -0700 (PDT)
+        Tue, 11 Aug 2020 13:13:18 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4279AC06174A;
+        Tue, 11 Aug 2020 10:13:18 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id z20so7113313plo.6;
+        Tue, 11 Aug 2020 10:13:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=EsxvtyjzAtXg5sUDRqzZVjThz8mBMWSIwRhZo+xufo4=;
-        b=Qiivl9DPtHJleh/lzS440/NKVhFXk3Yy1tWl92a2XnuJBOWGpKkpkGQl+QJmRmUPp0
-         sDzsmRLVz2R37jURWM0y4P3pazpzreDvZkb2OLaFUJlIpyR1cLyi7GqnTtnXBM0bio0o
-         bcboHwDwhb+GNzKUDQCnK2Y9fT3vbSkutIvV8=
+        bh=Ccr1YG+uUavAc3BLSL6SyQAEXgA3SXQDKm+kKYhlM4w=;
+        b=B4l35cESUVYYiGVibTB5Elvb0Gb9x+ZC/jCg8YfKLSGYU6rStZqtdsKrksLZW5+IQ+
+         7Boe6neBR0hw3PY+uHysGSMEEbbpgR4wLLmB9y+MLOwk/DGRP8K8e9Kzv3fkCMXL109E
+         PSYFGr8Kn8xZ9NA2iWFBhLOexL5UZL4t8jxhy7DrS/c5fmgvHDkl2vxwYzfdNEj1pnzB
+         1J5B6BrerOLONvlRt+83DBxVhMjiJBk1O51swkWdRODkFJS74XnGh4sHtkznOhvrLGag
+         HqSUZMSMCro1F5ZOEsH4C3zYYCS9pQ68NEa4b2nDKitTTdTglq5nx4Ds52O1WtH/Uz8D
+         GnbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=EsxvtyjzAtXg5sUDRqzZVjThz8mBMWSIwRhZo+xufo4=;
-        b=RChRewIoQVuJSjZO3O/FQcVOqan2rHh/ARmwCiLU2mgmB8Y387+x9L+VSN1D2qIfhm
-         Wt4om2sMbzVsB8IBv16DJPsN5hYSMGWTREFq7O0T8kj8Tv31t0kWSn5QJNu7yJ3QCp0Y
-         83/L/2xkm2xJfwMx02q4kfhj0sxGjHvXssXI5GFEYeuFGUKH5kDiNbLHKzNXuxUX3N+D
-         n66t/qYKtkX47sE/mfesBgwxDtSbSxgutwqqNPdIMj+wsLKfE65p5LAAErvFFjk5U8/z
-         q5DeRWBXasoLLinHv2vi2CvXQTW0FeEGTCFSuFYdOOGu7mtRw116mj8y9+/0F6WZEUFi
-         A5YQ==
-X-Gm-Message-State: AOAM5335CjQGQxk7AGyjDHxKbcM30KkVuYts4ay68qsCXGP/XaxUsAGj
-        bVb5iefltx3hbq9M+fZSr7HYjQ==
-X-Google-Smtp-Source: ABdhPJwCvHLKBQO7DAmqBUXQnYRCHWLQK/g0UXohIgdSsjGgJ0tacFUZGTDws11zC3WzqMh1Mwhn1Q==
-X-Received: by 2002:a63:ea41:: with SMTP id l1mr1644202pgk.419.1597165970845;
-        Tue, 11 Aug 2020 10:12:50 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:f693:9fff:fef4:e70a])
-        by smtp.gmail.com with ESMTPSA id mp1sm3589375pjb.27.2020.08.11.10.12.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Aug 2020 10:12:50 -0700 (PDT)
-Date:   Tue, 11 Aug 2020 10:12:49 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org,
-        viresh.kumar@linaro.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH] opp: Fix dev_pm_opp_set_rate() to not return early
-Message-ID: <20200811171249.GL3191083@google.com>
-References: <1597043179-17903-1-git-send-email-rnayak@codeaurora.org>
+        bh=Ccr1YG+uUavAc3BLSL6SyQAEXgA3SXQDKm+kKYhlM4w=;
+        b=RAimADjStAL3vIOqOjavrMBUDUY7Pxii6Ri3YI6pIqdSqmRyznX7/f65mjAUAm8+UR
+         JttpGFOQsmV8/cvBIE3W8/Jx7arcukBq2KdvUqBk1ME1Rpxye9FWd0f9n3+RPbMHKqC+
+         vZF/bPFzafx10PvufVYSCSkBVrJOy6vjPziDYDgRDzfXNyvVh4H0CD2VmNr7ds+l7KSV
+         FUCiXrm4hiJHlzhFqZcNnJNWxoXpJgI/mu5XN0z/93kwh+plYf8tx76vCOlLU+4/wiDw
+         lsuw3+Tm/v16xr8wYl18k6O/dyqbIwp1SjEOLu0Z1YdDOm/lqY3Z7L/NXsve/AbWrVFi
+         +uag==
+X-Gm-Message-State: AOAM532M0k3r2wuqYjXYCD+mur3RDrTQ73ObmlmqOOJYjx3SGmp1I7Hm
+        4SNxtcKpFb0s/WELDGtGYKeYJP77lzVTzw==
+X-Google-Smtp-Source: ABdhPJy800tC/x7FlqOOxjMO4tBXPXzIbpWJ/iVl4flqCxZo9vvRRlR0CoKLAPFwfKhKRVvpFii0tg==
+X-Received: by 2002:a17:902:b111:: with SMTP id q17mr1704052plr.202.1597165997683;
+        Tue, 11 Aug 2020 10:13:17 -0700 (PDT)
+Received: from arch ([27.255.176.246])
+        by smtp.gmail.com with ESMTPSA id y20sm26228569pfn.183.2020.08.11.10.13.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Aug 2020 10:13:16 -0700 (PDT)
+Date:   Tue, 11 Aug 2020 22:43:08 +0530
+From:   Puranjay Mohan <puranjay12@gmail.com>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Driver-API: Documentation: Replace deprecated :c:func:
+ Usage
+Message-ID: <20200811171308.GA69827@arch>
+References: <20200810182107.18577-1-puranjay12@gmail.com>
+ <20200811103640.19d3121a@lwn.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1597043179-17903-1-git-send-email-rnayak@codeaurora.org>
+In-Reply-To: <20200811103640.19d3121a@lwn.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 12:36:19PM +0530, Rajendra Nayak wrote:
-> dev_pm_opp_set_rate() can now be called with freq = 0 inorder
-> to either drop performance or bandwidth votes or to disable
-> regulators on platforms which support them.
-> In such cases, a subsequent call to dev_pm_opp_set_rate() with
-> the same frequency ends up returning early because 'old_freq == freq'
-> Instead make it fall through and put back the dropped performance
-> and bandwidth votes and/or enable back the regulators.
+On Tue, Aug 11, 2020 at 10:36:40AM -0600, Jonathan Corbet wrote:
+> On Mon, 10 Aug 2020 23:51:07 +0530
+> Puranjay Mohan <puranjay12@gmail.com> wrote:
 > 
-> Fixes: cd7ea582 ("opp: Make dev_pm_opp_set_rate() handle freq = 0 to drop performance votes")
-> Reported-by: Sajida Bhanu <sbhanu@codeaurora.org>
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> > Replace :c:func: with func() as the previous usage is deprecated.
+> > 
+> > Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
+> > ---
+> >  Documentation/driver-api/device-io.rst | 22 +++++++++++-----------
+> >  1 file changed, 11 insertions(+), 11 deletions(-)
+> 
+> I applied this patch from you in early July, and it's in mainline now...?
+this is a new patch with same name I think?, this is not that patch.
+> 
 
-Tested-by: Matthias Kaehlcke <mka@chromium.org>
+> jon
 
-Originally-reported-by: Matthias Kaehlcke <mka@chromium.org>
-  https://patchwork.kernel.org/patch/11675369/#23514895 :P
+thanks,
+puranjay
