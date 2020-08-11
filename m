@@ -2,109 +2,177 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB112C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 23:04:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAD0AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 23:10:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB21020774
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 23:04:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94F27206DC
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 23:10:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rLTy+RRO"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="p6YwdKzY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726469AbgHKXEy (ORCPT
+        id S1726310AbgHKXKY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 19:04:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45706 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726422AbgHKXEx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 19:04:53 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58968C061787
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 16:04:53 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id m8so41726pfh.3
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 16:04:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/jIVnC/ThBVmdAOVNCKzkgYvpkZs/3SaWOETF+/bDBw=;
-        b=rLTy+RROVIXKYHzRZBfjIkWOti+ozBxFxi1Y8dQbExBZaxXRu+MHpQylvMEgpB9YZk
-         8/Dxr4NCf7tnPzgiQd1HgYSPD4gTj+Wsm4gWGJzWRwEYiaMZuUyekuXE/Tx6gX7ctGC2
-         +bbLBDKDcwiruY43RjcxqxAj+jnjQJQtgCY6jLXyngqEQ1JphgIj+MRK/9U/GC1B4TIX
-         WpxLutHmu+HJcryDgWQzTr4ScFIpWrv7SilLHJm/NGRBsm3+QgZeAzr0o0T9suc/Zuwh
-         WQdc3YsohEnPfTVoVyGG7EsWSptfc1Vi+f9xbYbg2B1IGZFeoBkAMUtWIJaz0p/MwI+9
-         JX5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/jIVnC/ThBVmdAOVNCKzkgYvpkZs/3SaWOETF+/bDBw=;
-        b=L+PWotYuwWI7MgRZSgBoowk4z9K+aa24TEGmd25hvQujyEshhjQR+UXBKg612sqZ5J
-         7AlNABlWwp0QsYqrUdajE823w2Drb+5i5tg7cfJ7x1To+ZXziSF8AyJDTKTyhzDDMAIL
-         l4ybuVCGVkmhpGqPQnBdEbvSWoiyBDj8mcw9Af3hNfXMgw2W7op7d8w9lMfIJ6ixdz1E
-         djyiWjW32cNF3f3wPe6QFPjtIopHaT7Ou/uPgnopXCAdVk0NpwuV2sz36f+GNiBITkSP
-         3CGTrTAYm6DWZhLeHorrip1U/FZGFhxxOO/x3yYrmUD5Uie7SyNYYVd6pC0T3ajPRXr4
-         SiCA==
-X-Gm-Message-State: AOAM532aQD3VRT1zkzkV6OnTX4rsvs5u5kBDU2bO4ei0w+6JzNl+51yA
-        ep/MUWqUBDsqyLVe+xB4iKYyJmOicB+TwEmjmsbZAw==
-X-Google-Smtp-Source: ABdhPJygigo4EqPc+yqir+aRi30bS1mpvV1cF5plaBFBJoaeqBve89TpMGWKhtsUTAscu1yjyEjJDFo7iN0qttT88XU=
-X-Received: by 2002:a62:8081:: with SMTP id j123mr8666722pfd.80.1597187092283;
- Tue, 11 Aug 2020 16:04:52 -0700 (PDT)
+        Tue, 11 Aug 2020 19:10:24 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:47975 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726115AbgHKXKX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 19:10:23 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BR7pk00hmz9sTR;
+        Wed, 12 Aug 2020 09:10:21 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1597187422;
+        bh=AM6QLJKSoPTOWnFoSsN812sDOwIBi2sHVlPyFg4Yw2c=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=p6YwdKzYYdamETp5iHH5GApTxtTewijgWo+iIWUYHscXk5RT/Jw+3K2IXeWnksuXw
+         Cr45pMnD8S4dMFY97eElPOpjvtJau3eleWFrB8tpo8E3ljCXXwIPdaMgNopVMPLdj9
+         juXtYAEhsYLtjRTDolTpPuMsYaMAD+vzUHI/v6nnJnftqlTOMhAzQ2adCAnabRvWaC
+         ziIxmAlCGJX5E4tLwzaKT7uO6+OGZZv0StBtv74dcYyy4PHUu/hRJxqfgzpClMar11
+         RCvuPpNXz7Z71Y6RGGiCV7xQyLqxD92ZBrVhdQTjdmZKZkTBHMWDCXQU4mth0pxCnj
+         Ugtw4MskJyR/w==
+Date:   Wed, 12 Aug 2020 09:10:21 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Trond Myklebust <trondmy@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build warning after merge of the nfs tree
+Message-ID: <20200812091021.7865278d@canb.auug.org.au>
+In-Reply-To: <20200807103640.116e82f6@canb.auug.org.au>
+References: <20200807103640.116e82f6@canb.auug.org.au>
 MIME-Version: 1.0
-References: <CAKwvOd=ypa8xE-kaDa7XtzPsBH8=Xu_pZj2rnWaeawNs=3dDkw@mail.gmail.com>
- <20200811173655.1162093-1-nivedita@alum.mit.edu> <CAKwvOdnjLfQ0fWsrFYDJ2O+qFAfEFnTEEnW-aHrPha8G3_WTrg@mail.gmail.com>
- <20200811224436.GA1302731@rani.riverdale.lan>
-In-Reply-To: <20200811224436.GA1302731@rani.riverdale.lan>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 11 Aug 2020 16:04:40 -0700
-Message-ID: <CAKwvOdnvyVapAJBchivu8SxoQriKEu1bAimm8688EH=uq5YMqA@mail.gmail.com>
-Subject: Re: [PATCH] x86/boot/compressed: Disable relocation relaxation for
- non-pie link
-To:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
-Cc:     Fangrui Song <maskray@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        e5ten.arch@gmail.com,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "# 3.4.x" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/5Oph7D8GgpbtTAqk13z8q_l";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 3:44 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
->
-> On Tue, Aug 11, 2020 at 10:58:40AM -0700, Nick Desaulniers wrote:
-> > > Cc: stable@vger.kernel.org # 4.19.x
-> >
-> > Thanks Arvind, good write up.  Just curious about this stable tag, how
-> > come you picked 4.19?  I can see boot failures in our CI for x86+LLD
-> > back to 4.9.  Can we amend that tag to use `# 4.9`? I'd be happy to
-> > help submit backports should they fail to apply cleanly.
-> > https://travis-ci.com/github/ClangBuiltLinux/continuous-integration/builds/179237488
-> >
->
-> 4.19 renamed LDFLAGS to KBUILD_LDFLAGS. For 4.4, 4.9 and 4.14 the patch
-> needs to be modified, KBUILD_LDFLAGS -> LDFLAGS, so I figured we should
-> submit backports separately. For 4.19 onwards, it should apply without
-> changes I think.
+--Sig_/5Oph7D8GgpbtTAqk13z8q_l
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Cool, sounds good.  I'll keep an eye out for when stable goes to pick this up.
+Hi all,
 
-tglx, Ingo, BP, can we pretty please get this in tip/urgent for
-inclusion into 5.9?
--- 
-Thanks,
-~Nick Desaulniers
+On Fri, 7 Aug 2020 10:36:40 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
+rote:
+>
+> After merging the nfs tree, today's linux-next build (powerpc
+> ppc64_defconfig) produced this warning:
+>=20
+> In file included from include/trace/define_trace.h:102,
+>                  from fs/nfs/nfs4trace.h:2316,
+>                  from fs/nfs/nfs4trace.c:13:
+> fs/nfs/./nfs4trace.h: In function 'trace_event_raw_event_nfs4_read_event':
+> fs/nfs/./nfs4trace.h:1767:34: warning: unused variable 'lo' [-Wunused-var=
+iable]
+>  1767 |    const struct pnfs_layout_hdr *lo =3D lseg ?
+>       |                                  ^~
+> include/trace/trace_events.h:707:4: note: in definition of macro 'DECLARE=
+_EVENT_CLASS'
+>   707 |  { assign; }       \
+>       |    ^~~~~~
+> fs/nfs/./nfs4trace.h:1759:3: note: in expansion of macro 'TP_fast_assign'
+>  1759 |   TP_fast_assign(
+>       |   ^~~~~~~~~~~~~~
+> fs/nfs/./nfs4trace.h: In function 'trace_event_raw_event_nfs4_write_event=
+':
+> fs/nfs/./nfs4trace.h:1844:34: warning: unused variable 'lo' [-Wunused-var=
+iable]
+>  1844 |    const struct pnfs_layout_hdr *lo =3D lseg ?
+>       |                                  ^~
+> include/trace/trace_events.h:707:4: note: in definition of macro 'DECLARE=
+_EVENT_CLASS'
+>   707 |  { assign; }       \
+>       |    ^~~~~~
+> fs/nfs/./nfs4trace.h:1836:3: note: in expansion of macro 'TP_fast_assign'
+>  1836 |   TP_fast_assign(
+>       |   ^~~~~~~~~~~~~~
+> fs/nfs/./nfs4trace.h: In function 'trace_event_raw_event_nfs4_commit_even=
+t':
+> fs/nfs/./nfs4trace.h:1917:34: warning: unused variable 'lo' [-Wunused-var=
+iable]
+>  1917 |    const struct pnfs_layout_hdr *lo =3D lseg ?
+>       |                                  ^~
+> include/trace/trace_events.h:707:4: note: in definition of macro 'DECLARE=
+_EVENT_CLASS'
+>   707 |  { assign; }       \
+>       |    ^~~~~~
+> fs/nfs/./nfs4trace.h:1911:3: note: in expansion of macro 'TP_fast_assign'
+>  1911 |   TP_fast_assign(
+>       |   ^~~~~~~~~~~~~~
+> In file included from include/trace/define_trace.h:103,
+>                  from fs/nfs/nfs4trace.h:2316,
+>                  from fs/nfs/nfs4trace.c:13:
+> fs/nfs/./nfs4trace.h: In function 'perf_trace_nfs4_read_event':
+> fs/nfs/./nfs4trace.h:1767:34: warning: unused variable 'lo' [-Wunused-var=
+iable]
+>  1767 |    const struct pnfs_layout_hdr *lo =3D lseg ?
+>       |                                  ^~
+> include/trace/perf.h:66:4: note: in definition of macro 'DECLARE_EVENT_CL=
+ASS'
+>    66 |  { assign; }       \
+>       |    ^~~~~~
+> fs/nfs/./nfs4trace.h:1759:3: note: in expansion of macro 'TP_fast_assign'
+>  1759 |   TP_fast_assign(
+>       |   ^~~~~~~~~~~~~~
+> fs/nfs/./nfs4trace.h: In function 'perf_trace_nfs4_write_event':
+> fs/nfs/./nfs4trace.h:1844:34: warning: unused variable 'lo' [-Wunused-var=
+iable]
+>  1844 |    const struct pnfs_layout_hdr *lo =3D lseg ?
+>       |                                  ^~
+> include/trace/perf.h:66:4: note: in definition of macro 'DECLARE_EVENT_CL=
+ASS'
+>    66 |  { assign; }       \
+>       |    ^~~~~~
+> fs/nfs/./nfs4trace.h:1836:3: note: in expansion of macro 'TP_fast_assign'
+>  1836 |   TP_fast_assign(
+>       |   ^~~~~~~~~~~~~~
+> fs/nfs/./nfs4trace.h: In function 'perf_trace_nfs4_commit_event':
+> fs/nfs/./nfs4trace.h:1917:34: warning: unused variable 'lo' [-Wunused-var=
+iable]
+>  1917 |    const struct pnfs_layout_hdr *lo =3D lseg ?
+>       |                                  ^~
+> include/trace/perf.h:66:4: note: in definition of macro 'DECLARE_EVENT_CL=
+ASS'
+>    66 |  { assign; }       \
+>       |    ^~~~~~
+> fs/nfs/./nfs4trace.h:1911:3: note: in expansion of macro 'TP_fast_assign'
+>  1911 |   TP_fast_assign(
+>       |   ^~~~~~~~~~~~~~
+>=20
+> Introduced by commit
+>=20
+>   34daa637f2b2 ("NFS: Add layout segment info to pnfs read/write/commit t=
+racepoints")
+
+I am still getting this warning ...
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/5Oph7D8GgpbtTAqk13z8q_l
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8zJV0ACgkQAVBC80lX
+0Gw4xgf+IuWFaNVbzDiYqrE08lGLu84RY5ldldDIy+IJiKMXXUxOaHSScGkWUbJq
+LJDe6em7uWpCtgHfCEWbGr5z3i1V5xzvP8w2Zg8q8kn/ySY9/aQKVuhDRs4Ewicj
+JLarbUZczL6FAf6x222NMjR8JC8Ph4nbkkzwoC1AUUSb1BZYidsNO8QizPMmITGF
+ClMrc6FCnSX/7E2K7td9z6QeLEme4iBif0GUXLV54yFPuxG7ZE/Ui1GMfmXwYyIj
+Er8HKe1HRnfxJ0ONeI27FV23ikf3R2CHKRxh7+dDEmxsiSfiD7PZhfWzVMAoDVxY
+JOITuaAm+PowLfO6LukJuTDpA5Z4Lg==
+=603U
+-----END PGP SIGNATURE-----
+
+--Sig_/5Oph7D8GgpbtTAqk13z8q_l--
