@@ -2,84 +2,65 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D463C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:20:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC97C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:21:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C989206DC
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:20:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="FoiVyEyj"
+	by mail.kernel.org (Postfix) with ESMTP id 80FC520756
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:21:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729227AbgHKRUW (ORCPT
+        id S1729249AbgHKRVt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 13:20:22 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:13485 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729103AbgHKRUT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 13:20:19 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 4BR02n3kC7z2F;
-        Tue, 11 Aug 2020 19:20:17 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1597166417; bh=F5nSKhsvjTUBtJwjPwtJQjJY6T+oLbmyqCMMSTuSdBk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FoiVyEyj9CRAC+t3ymS7qShiDnTaG8Zq9HkYLyOEhohmJMGhNBHjXAsBRazhzol6m
-         eb1de1scOQrn5lk9V+rjZDLe1MFQ960476vCnJRUYUt3DGGRkLFTj2Opao0L+TisBP
-         wzonj57r0yWtBz4vK1Rscq9+nvWkZxMgJCuySOcVpgMYLha/kznxDThD3eSmAKJikX
-         UMVv47nQGrAWO/CfHBA50O6hpaXTn3+aDr2KMhZ//0lh/Rp4UzBmowb85DcW98LV3K
-         dvqHzYd8vrIusRB3ZH81rNKzk3BCTg1ly2qGC9OFMotpPBF8pp6hs2UX0EbbapqNEX
-         R8OBVRSk1YbwQ==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.4 at mail
-Date:   Tue, 11 Aug 2020 19:20:15 +0200
-From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
-        Vladimir Zapolskiy <vz@mleia.com>
-Subject: Re: [PATCH 1/7] regulator: push allocation in
- regulator_init_coupling() outside of lock
-Message-ID: <20200811172015.GA21273@qmqm.qmqm.pl>
-References: <cover.1597107682.git.mirq-linux@rere.qmqm.pl>
- <b305adf8bcde9417cdd5c9d84ef5ed99541f0e2c.1597107682.git.mirq-linux@rere.qmqm.pl>
- <0d61983a-ed11-e5c1-f2c8-954e5ae330f4@gmail.com>
- <b27219ff-6cd8-399b-5710-cb5c2d99b21f@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b27219ff-6cd8-399b-5710-cb5c2d99b21f@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 11 Aug 2020 13:21:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49174 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729103AbgHKRVs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 13:21:48 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF23FC06174A;
+        Tue, 11 Aug 2020 10:21:47 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id D6F0512880A09;
+        Tue, 11 Aug 2020 10:04:52 -0700 (PDT)
+Date:   Tue, 11 Aug 2020 10:21:37 -0700 (PDT)
+Message-Id: <20200811.102137.1449270134661337607.davem@davemloft.net>
+To:     ira.weiny@intel.com
+Cc:     borisp@mellanox.com, aviadye@mellanox.com,
+        john.fastabend@gmail.com, daniel@iogearbox.net, kuba@kernel.org,
+        ilyal@mellanox.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net/tls: Fix kmap usage
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200811000258.2797151-1-ira.weiny@intel.com>
+References: <20200811000258.2797151-1-ira.weiny@intel.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 11 Aug 2020 10:04:53 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 07:27:43PM +0300, Dmitry Osipenko wrote:
-> 11.08.2020 18:59, Dmitry Osipenko пишет:
-> > 11.08.2020 04:07, Michał Mirosław пишет:
-> >> Allocating memory with regulator_list_mutex held makes lockdep unhappy
-> >> when memory pressure makes the system do fs_reclaim on eg. eMMC using
-> >> a regulator. Push the lock inside regulator_init_coupling() after the
-> >> allocation.
-> > ...
-> > 
-> > Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-> On the other hand, couldn't it be better to just remove taking the
-> list_mutex from the regulator_lock_dependent()?
+From: ira.weiny@intel.com
+Date: Mon, 10 Aug 2020 17:02:58 -0700
+
+> From: Ira Weiny <ira.weiny@intel.com>
 > 
-> I think the list_mutex is only needed to protect from supply/couple
-> regulator being removed during of the locking process, but maybe this is
-> not something we should worry about?
+> When MSG_OOB is specified to tls_device_sendpage() the mapped page is
+> never unmapped.
+> 
+> Hold off mapping the page until after the flags are checked and the page
+> is actually needed.
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
-This is what I would like to see in the end, but it requires more
-thought, at least around interaction with regulator_resolve_coupling()
-and the regulator removal.
-
-Best Regards,
-Michał Mirosław
+Applied and queued up for -stable, thank you.
