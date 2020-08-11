@@ -2,454 +2,118 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A55C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 12:47:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3599AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 12:48:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7D542075D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 12:47:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1406C2076B
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 12:48:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728689AbgHKMr5 (ORCPT
+        id S1728709AbgHKMsR convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 08:47:57 -0400
-Received: from 8bytes.org ([81.169.241.247]:35512 "EHLO theia.8bytes.org"
+        Tue, 11 Aug 2020 08:48:17 -0400
+Received: from foss.arm.com ([217.140.110.172]:37270 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726966AbgHKMr4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 08:47:56 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 2347233E; Tue, 11 Aug 2020 14:47:55 +0200 (CEST)
-Date:   Tue, 11 Aug 2020 14:47:53 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
-Subject: [git pull] IOMMU Updates for Linux v5.9
-Message-ID: <20200811124747.GA13876@8bytes.org>
+        id S1726829AbgHKMsR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 08:48:17 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0B1E8D6E;
+        Tue, 11 Aug 2020 05:48:16 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AE0E53F575;
+        Tue, 11 Aug 2020 05:48:14 -0700 (PDT)
+References: <20200810010009.92758-1-arch0.zheng@gmail.com> <jhjwo26gxlb.mognet@arm.com> <9425382c-2a42-57ca-512d-c93c589dc701@gmail.com> <jhjv9hph3h7.mognet@arm.com> <01fe6a9b-fd3a-9b36-b2fa-6cea58415670@gmail.com>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Qi Zheng <arch0.zheng@gmail.com>
+Cc:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sched/fair: Remove the duplicate check from group_has_capacity()
+In-reply-to: <01fe6a9b-fd3a-9b36-b2fa-6cea58415670@gmail.com>
+Date:   Tue, 11 Aug 2020 13:48:09 +0100
+Message-ID: <jhjtux9gxh2.mognet@arm.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="h31gzZEtNLTqOjlF"
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---h31gzZEtNLTqOjlF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 11/08/20 12:44, Qi Zheng wrote:
+> On 2020/8/11 下午6:38, Valentin Schneider wrote:
+>>
+>> On 11/08/20 04:39, Qi Zheng wrote:
+>>> On 2020/8/11 上午2:33, Valentin Schneider wrote:
+>>>>
+>>>> On 10/08/20 02:00, Qi Zheng wrote:
+>>>>> 1. The group_has_capacity() function is only called in
+>>>>>      group_classify().
+>>>>> 2. The following inequality has already been checked in
+>>>>>      group_is_overloaded() which was also called in
+>>>>>      group_classify().
+>>>>>
+>>>>>         (sgs->group_capacity * imbalance_pct) <
+>>>>>                           (sgs->group_runnable * 100)
+>>>>>
+>>>>
+>>>> Consider group_is_overloaded() returns false because of the first
+>>>> condition:
+>>>>
+>>>>           if (sgs->sum_nr_running <= sgs->group_weight)
+>>>>                   return false;
+>>>>
+>>>> then group_has_capacity() would be the first place where the group_runnable
+>>>> vs group_capacity comparison would be done.
+>>>>
+>>>> Now in that specific case we'll actually only check it if
+>>>>
+>>>>     sgs->sum_nr_running == sgs->group_weight
+>>>>
+>>>> and the only case where the runnable vs capacity check can fail here is if
+>>>> there's significant capacity pressure going on. TBH this capacity pressure
+>>>> could be happening even when there are fewer tasks than CPUs, so I'm not
+>>>> sure how intentional that corner case is.
+>>>
+>>> Maybe some cpus in sg->cpumask are no longer active at the == case,
+>>> which causes the significant capacity pressure?
+>>>
+>>
+>> That can only happen in that short window between deactivating a CPU and
+>> not having rebuilt the sched_domains yet, which sounds quite elusive.
+>>
+>
+> In fact, at the beginning, I added unlikely() here to hint the compiler:
+>
+> -	if ((sgs->group_capacity * imbalance_pct) <
+> -			(sgs->group_runnable * 100))
+> +	if (unlikely((sgs->group_capacity * imbalance_pct) <
+> +			(sgs->group_runnable * 100)))
+>
+> The corresponding patch is as follows:
+>
+>       [PATCH]sched/core: add unlikely in group_has_capacity()
+>
+> Do you think it is necessary?
 
-Hi Linus,
+The "unlikely" approach has the benefit of keeping all corner cases in
+place. I was tempted to say it could still make sense to get rid of the
+extra check entirely, given that it has an impact only when:
 
-there is a tiny conflict with your tree because of the Kconfig changes
-this time. Please see my attached resolution. With that in mind:
+- sum_nr_running == group_weight
+- group capacity has been noticeably reduced
 
-The following changes since commit 92ed301919932f777713b9172e525674157e983d:
+If sum_nr_running < group_weight, we won't evaluate it.
+If sum_nr_running > group_weight, we either won't call into
+  group_has_capacity() or we'll have checked it already in
+  group_overloaded().
 
-  Linux 5.8-rc7 (2020-07-26 14:14:06 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git tags/iommu-u=
-pdates-v5.9
-
-for you to fetch changes up to e46b3c0d011eab9933c183d5b47569db8e377281:
-
-  Merge tag 'arm-smmu-updates' of git://git.kernel.org/pub/scm/linux/kernel=
-/git/will/linux into next (2020-07-29 14:47:37 +0200)
-
-----------------------------------------------------------------
-IOMMU Updates for Linux v5.9
-
-Including:
-
-	- Removal of the dev->archdata.iommu (or similar) pointers from
-	  most architectures. Only Sparc is left, but this is private to
-	  Sparc as their drivers don't use the IOMMU-API.
-
-	- ARM-SMMU Updates from Will Deacon:
-
-	  -  Support for SMMU-500 implementation in Marvell
-	     Armada-AP806 SoC
-
-	  - Support for SMMU-500 implementation in NVIDIA Tegra194 SoC
-
-	  - DT compatible string updates
-
-	  - Remove unused IOMMU_SYS_CACHE_ONLY flag
-
-	  - Move ARM-SMMU drivers into their own subdirectory
-
-	- Intel VT-d Updates from Lu Baolu:
-
-	  - Misc tweaks and fixes for vSVA
-
-	  - Report/response page request events
-
-	  - Cleanups
-
-	- Move the Kconfig and Makefile bits for the AMD and Intel
-	  drivers into their respective subdirectory.
-
-	- MT6779 IOMMU Support
-
-	- Support for new chipsets in the Renesas IOMMU driver
-
-	- Other misc cleanups and fixes (e.g. to improve compile test
-	  coverage)
-
-----------------------------------------------------------------
-Alexander A. Klimov (1):
-      iommu/omap: Replace HTTP links with HTTPS ones
-
-Baolin Wang (2):
-      iommu: Mark __iommu_map_sg() as static
-      iommu: Add gfp parameter to io_pgtable_ops->map()
-
-Chao Hao (10):
-      dt-bindings: mediatek: Add bindings for MT6779
-      iommu/mediatek: Rename the register STANDARD_AXI_MODE(0x48) to MISC_C=
-TRL
-      iommu/mediatek: Use a u32 flags to describe different HW features
-      iommu/mediatek: Setting MISC_CTRL register
-      iommu/mediatek: Move inv_sel_reg into the plat_data
-      iommu/mediatek: Add sub_comm id in translation fault
-      iommu/mediatek: Add REG_MMU_WR_LEN_CTRL register definition
-      iommu/mediatek: Extend protect pa alignment value
-      iommu/mediatek: Modify MMU_CTRL register setting
-      iommu/mediatek: Add mt6779 basic support
-
-Colin Ian King (1):
-      iommu/omap: Check for failure of a call to omap_iommu_dump_ctx
-
-Denis Efremov (1):
-      iommu/pamu: Use kzfree() in fsl_pamu_probe()
-
-Hanna Hawa (1):
-      iommu/arm-smmu: Workaround for Marvell Armada-AP806 SoC erratum #5827=
-43
-
-Jacob Pan (4):
-      iommu/vt-d: Remove global page support in devTLB flush
-      iommu/vt-d: Fix PASID devTLB invalidation
-      iommu/vt-d: Warn on out-of-range invalidation address
-      iommu/vt-d: Disable multiple GPASID-dev bind
-
-Jean-Philippe Brucker (1):
-      iommu: Allow page responses without PASID
-
-Jerry Snitselaar (3):
-      iommu: Add include/uapi/linux/iommu.h to MAINTAINERS file
-      iommu/vt-d: Move Kconfig and Makefile bits down into intel directory
-      iommu/amd: Move Kconfig and Makefile bits down into amd directory
-
-Joe Perches (1):
-      iommu/qcom: Change CONFIG_BIG_ENDIAN to CONFIG_CPU_BIG_ENDIAN
-
-Joerg Roedel (19):
-      Merge tag 'v5.8-rc3' into arm/qcom
-      iommu/amd: Add helper functions to update domain->pt_root
-      iommu/exynos: Use dev_iommu_priv_get/set()
-      iommu/vt-d: Use dev_iommu_priv_get/set()
-      iommu/msm: Use dev_iommu_priv_get/set()
-      iommu/omap: Use dev_iommu_priv_get/set()
-      iommu/rockchip: Use dev_iommu_priv_get/set()
-      iommu/tegra: Use dev_iommu_priv_get/set()
-      iommu/pamu: Use dev_iommu_priv_get/set()
-      iommu/mediatek: Do no use dev->archdata.iommu
-      x86: Remove dev->archdata.iommu pointer
-      ia64: Remove dev->archdata.iommu pointer
-      arm: Remove dev->archdata.iommu pointer
-      arm64: Remove dev->archdata.iommu pointer
-      powerpc/dma: Remove dev->archdata.iommu_domain
-      iommu/mediatek: Include liunx/dma-mapping.h
-      Merge tag 'arm-smmu-updates' of git://git.kernel.org/.../will/linux i=
-nto arm/smmu
-      Merge branches 'arm/renesas', 'arm/qcom', 'arm/mediatek', 'arm/omap',=
- 'arm/exynos', 'arm/smmu', 'ppc/pamu', 'x86/vt-d', 'x86/amd' and 'core' int=
-o next
-      Merge tag 'arm-smmu-updates' of git://git.kernel.org/.../will/linux i=
-nto next
-
-John Garry (1):
-      iommu/arm-smmu-v3: Fix trivial typo
-
-Jonathan Marek (2):
-      dt-bindings: arm-smmu: Add sm8150 and sm8250 compatible strings
-      iommu: arm-smmu-impl: Use qcom impl for sm8150 and sm8250 compatibles
-
-Krishna Reddy (5):
-      iommu/arm-smmu: move TLB timeout and spin count macros
-      iommu/arm-smmu: ioremap smmu mmio region before implementation init
-      iommu/arm-smmu: add NVIDIA implementation for ARM MMU-500 usage
-      dt-bindings: arm-smmu: add binding for Tegra194 SMMU
-      iommu/arm-smmu: Add global/context fault implementation hooks
-
-Lad Prabhakar (1):
-      iommu/ipmmu-vmsa: Add an entry for r8a77961 in soc_rcar_gen3[]
-
-Libing Zhou (1):
-      iommu/amd: Remove double zero check
-
-Liu Yi L (3):
-      iommu/vt-d: Enforce PASID devTLB field mask
-      iommu/vt-d: Handle non-page aligned address
-      iommu/vt-d: Fix devTLB flush for vSVA
-
-Lu Baolu (6):
-      iommu/vt-d: Refactor device_to_iommu() helper
-      iommu/vt-d: Add a helper to get svm and sdev for pasid
-      iommu/vt-d: Report page request faults for guest SVA
-      iommu/vt-d: Add page response ops support
-      iommu/vt-d: Rename intel-pasid.h to pasid.h
-      iommu/vt-d: Skip TE disabling on quirky gfx dedicated iommu
-
-Marek Szyprowski (1):
-      iommu: Move sg_table wrapper out of CONFIG_IOMMU_SUPPORT
-
-Marian-Cristian Rotariu (1):
-      iommu/ipmmu-vmsa: Hook up R8A774E1 DT matching code
-
-Ming-Fan Chen (2):
-      dt-bindings: mediatek: Add binding for MT6779 SMI
-      memory: mtk-smi: Add basic support for MT6779
-
-Paul Menzel (1):
-      iommu/amd: Print extended features in one line to fix divergent log l=
-evels
-
-Robin Murphy (5):
-      iommu/iova: Don't BUG on invalid PFNs
-      iommu/arm-smmu: Update impl quirks comment
-      iommu: Tidy up Kconfig for SoC IOMMUs
-      iommu/renesas: Expand COMPILE_TEST coverage
-      iommu/exynos: Rename update_pte()
-
-Shawn Guo (1):
-      iommu/qcom: add optional 'tbu' clock for TLB invalidate
-
-Tomasz Nowicki (2):
-      iommu/arm-smmu: Call configuration impl hook before consuming features
-      dt-bindings: arm-smmu: add compatible string for Marvell Armada-AP806=
- SMMU-500
-
-Wei Yongjun (1):
-      iommu: Make some functions static
-
-Will Deacon (2):
-      iommu: Remove unused IOMMU_SYS_CACHE_ONLY flag
-      iommu/arm-smmu: Move Arm SMMU drivers into their own subdirectory
-
-Yoshihiro Shimoda (2):
-      dt-bindings: iommu: renesas,ipmmu-vmsa: add r8a77961 support
-      iommu/renesas: Add support for r8a77961
-
- Documentation/arm64/silicon-errata.rst             |   3 +
- .../devicetree/bindings/iommu/arm,smmu.yaml        |  31 +-
- .../devicetree/bindings/iommu/mediatek,iommu.txt   |   2 +
- .../bindings/iommu/renesas,ipmmu-vmsa.yaml         |   1 +
- .../memory-controllers/mediatek,smi-common.txt     |   5 +-
- .../memory-controllers/mediatek,smi-larb.txt       |   3 +-
- MAINTAINERS                                        |   5 +-
- arch/arm/include/asm/device.h                      |   3 -
- arch/arm64/include/asm/device.h                    |   3 -
- arch/ia64/include/asm/device.h                     |   3 -
- arch/powerpc/include/asm/device.h                  |   3 -
- arch/x86/include/asm/device.h                      |   3 -
- drivers/gpu/drm/i915/selftests/mock_gem_device.c   |  10 +-
- drivers/gpu/drm/panfrost/panfrost_mmu.c            |   2 +-
- drivers/iommu/Kconfig                              | 145 +--------
- drivers/iommu/Makefile                             |  15 +-
- drivers/iommu/amd/Kconfig                          |  44 +++
- drivers/iommu/amd/Makefile                         |   4 +
- drivers/iommu/amd/init.c                           |  13 +-
- drivers/iommu/amd/iommu.c                          |  31 +-
- drivers/iommu/arm/Makefile                         |   2 +
- drivers/iommu/arm/arm-smmu-v3/Makefile             |   2 +
- drivers/iommu/{ =3D> arm/arm-smmu-v3}/arm-smmu-v3.c  |   4 +-
- drivers/iommu/arm/arm-smmu/Makefile                |   4 +
- drivers/iommu/{ =3D> arm/arm-smmu}/arm-smmu-impl.c   |  60 +++-
- drivers/iommu/arm/arm-smmu/arm-smmu-nvidia.c       | 278 +++++++++++++++++
- drivers/iommu/{ =3D> arm/arm-smmu}/arm-smmu-qcom.c   |   0
- drivers/iommu/{ =3D> arm/arm-smmu}/arm-smmu.c        |  42 ++-
- drivers/iommu/{ =3D> arm/arm-smmu}/arm-smmu.h        |   6 +
- drivers/iommu/{ =3D> arm/arm-smmu}/qcom_iommu.c      |  66 ++--
- drivers/iommu/exynos-iommu.c                       |  32 +-
- drivers/iommu/fsl_pamu.c                           |   5 +-
- drivers/iommu/fsl_pamu_domain.c                    |   8 +-
- drivers/iommu/intel/Kconfig                        |  86 ++++++
- drivers/iommu/intel/Makefile                       |   7 +
- drivers/iommu/intel/debugfs.c                      |   2 +-
- drivers/iommu/intel/dmar.c                         |  26 +-
- drivers/iommu/intel/iommu.c                        | 141 +++++----
- drivers/iommu/intel/pasid.c                        |  13 +-
- drivers/iommu/intel/{intel-pasid.h =3D> pasid.h}     |   2 +-
- drivers/iommu/intel/svm.c                          | 335 ++++++++++++++++-=
-----
- drivers/iommu/io-pgtable-arm-v7s.c                 |  18 +-
- drivers/iommu/io-pgtable-arm.c                     |  21 +-
- drivers/iommu/iommu.c                              |  37 ++-
- drivers/iommu/iova.c                               |   4 +-
- drivers/iommu/ipmmu-vmsa.c                         |  14 +-
- drivers/iommu/msm_iommu.c                          |   6 +-
- drivers/iommu/mtk_iommu.c                          | 112 +++++--
- drivers/iommu/mtk_iommu.h                          |  23 +-
- drivers/iommu/mtk_iommu_v1.c                       |  10 +-
- drivers/iommu/omap-iommu-debug.c                   |   3 +
- drivers/iommu/omap-iommu.c                         |  22 +-
- drivers/iommu/rockchip-iommu.c                     |   8 +-
- drivers/iommu/tegra-gart.c                         |   8 +-
- drivers/iommu/tegra-smmu.c                         |   8 +-
- drivers/media/platform/s5p-mfc/s5p_mfc_iommu.h     |   4 +-
- drivers/memory/mtk-smi.c                           |  22 ++
- include/dt-bindings/memory/mt6779-larb-port.h      | 206 +++++++++++++
- include/linux/dmar.h                               |   1 +
- include/linux/intel-iommu.h                        |  13 +-
- include/linux/io-pgtable.h                         |   2 +-
- include/linux/iommu.h                              |  38 +--
- include/uapi/linux/iommu.h                         |   6 +-
- 63 files changed, 1465 insertions(+), 571 deletions(-)
- create mode 100644 drivers/iommu/amd/Kconfig
- create mode 100644 drivers/iommu/amd/Makefile
- create mode 100644 drivers/iommu/arm/Makefile
- create mode 100644 drivers/iommu/arm/arm-smmu-v3/Makefile
- rename drivers/iommu/{ =3D> arm/arm-smmu-v3}/arm-smmu-v3.c (99%)
- create mode 100644 drivers/iommu/arm/arm-smmu/Makefile
- rename drivers/iommu/{ =3D> arm/arm-smmu}/arm-smmu-impl.c (72%)
- create mode 100644 drivers/iommu/arm/arm-smmu/arm-smmu-nvidia.c
- rename drivers/iommu/{ =3D> arm/arm-smmu}/arm-smmu-qcom.c (100%)
- rename drivers/iommu/{ =3D> arm/arm-smmu}/arm-smmu.c (98%)
- rename drivers/iommu/{ =3D> arm/arm-smmu}/arm-smmu.h (98%)
- rename drivers/iommu/{ =3D> arm/arm-smmu}/qcom_iommu.c (95%)
- create mode 100644 drivers/iommu/intel/Kconfig
- create mode 100644 drivers/iommu/intel/Makefile
- rename drivers/iommu/intel/{intel-pasid.h =3D> pasid.h} (98%)
- create mode 100644 include/dt-bindings/memory/mt6779-larb-port.h
-
-Please pull.
-
-Thanks,
-
-	Joerg
-
-diff --cc drivers/iommu/intel/Kconfig
-index 000000000000,877beec9d987..5337ee1584b0
-mode 000000,100644..100644
---- a/drivers/iommu/intel/Kconfig
-+++ b/drivers/iommu/intel/Kconfig
-@@@ -1,0 -1,86 +1,87 @@@
-+ # SPDX-License-Identifier: GPL-2.0-only
-+ # Intel IOMMU support
-+ config DMAR_TABLE
-+ 	bool
-+=20
-+ config INTEL_IOMMU
-+ 	bool "Support for Intel IOMMU using DMA Remapping Devices"
-+ 	depends on PCI_MSI && ACPI && (X86 || IA64)
-++	select DMA_OPS
-+ 	select IOMMU_API
-+ 	select IOMMU_IOVA
-+ 	select NEED_DMA_MAP_STATE
-+ 	select DMAR_TABLE
-+ 	select SWIOTLB
-+ 	select IOASID
-+ 	help
-+ 	  DMA remapping (DMAR) devices support enables independent address
-+ 	  translations for Direct Memory Access (DMA) from devices.
-+ 	  These DMA remapping devices are reported via ACPI tables
-+ 	  and include PCI device scope covered by these DMA
-+ 	  remapping devices.
-+=20
-+ config INTEL_IOMMU_DEBUGFS
-+ 	bool "Export Intel IOMMU internals in Debugfs"
-+ 	depends on INTEL_IOMMU && IOMMU_DEBUGFS
-+ 	help
-+ 	  !!!WARNING!!!
-+=20
-+ 	  DO NOT ENABLE THIS OPTION UNLESS YOU REALLY KNOW WHAT YOU ARE DOING!!!
-+=20
-+ 	  Expose Intel IOMMU internals in Debugfs.
-+=20
-+ 	  This option is -NOT- intended for production environments, and should
-+ 	  only be enabled for debugging Intel IOMMU.
-+=20
-+ config INTEL_IOMMU_SVM
-+ 	bool "Support for Shared Virtual Memory with Intel IOMMU"
-+ 	depends on INTEL_IOMMU && X86_64
-+ 	select PCI_PASID
-+ 	select PCI_PRI
-+ 	select MMU_NOTIFIER
-+ 	select IOASID
-+ 	help
-+ 	  Shared Virtual Memory (SVM) provides a facility for devices
-+ 	  to access DMA resources through process address space by
-+ 	  means of a Process Address Space ID (PASID).
-+=20
-+ config INTEL_IOMMU_DEFAULT_ON
-+ 	def_bool y
-+ 	prompt "Enable Intel DMA Remapping Devices by default"
-+ 	depends on INTEL_IOMMU
-+ 	help
-+ 	  Selecting this option will enable a DMAR device at boot time if
-+ 	  one is found. If this option is not selected, DMAR support can
-+ 	  be enabled by passing intel_iommu=3Don to the kernel.
-+=20
-+ config INTEL_IOMMU_BROKEN_GFX_WA
-+ 	bool "Workaround broken graphics drivers (going away soon)"
-+ 	depends on INTEL_IOMMU && BROKEN && X86
-+ 	help
-+ 	  Current Graphics drivers tend to use physical address
-+ 	  for DMA and avoid using DMA APIs. Setting this config
-+ 	  option permits the IOMMU driver to set a unity map for
-+ 	  all the OS-visible memory. Hence the driver can continue
-+ 	  to use physical addresses for DMA, at least until this
-+ 	  option is removed in the 2.6.32 kernel.
-+=20
-+ config INTEL_IOMMU_FLOPPY_WA
-+ 	def_bool y
-+ 	depends on INTEL_IOMMU && X86
-+ 	help
-+ 	  Floppy disk drivers are known to bypass DMA API calls
-+ 	  thereby failing to work when IOMMU is enabled. This
-+ 	  workaround will setup a 1:1 mapping for the first
-+ 	  16MiB to make floppy (an ISA device) work.
-+=20
-+ config INTEL_IOMMU_SCALABLE_MODE_DEFAULT_ON
-+ 	bool "Enable Intel IOMMU scalable mode by default"
-+ 	depends on INTEL_IOMMU
-+ 	help
-+ 	  Selecting this option will enable by default the scalable mode if
-+ 	  hardware presents the capability. The scalable mode is defined in
-+ 	  VT-d 3.0. The scalable mode capability could be checked by reading
-+ 	  /sys/devices/virtual/iommu/dmar*/intel-iommu/ecap. If this option
-+ 	  is not selected, scalable mode support could also be enabled by
-+ 	  passing intel_iommu=3Dsm_on to the kernel. If not sure, please use
-+ 	  the default value.
-
---h31gzZEtNLTqOjlF
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEr9jSbILcajRFYWYyK/BELZcBGuMFAl8yk3AACgkQK/BELZcB
-GuPpbA//ZiSP/LADgej3WpoNTAW1zA3wnYbLLwRT8mPEC/3sg2+SlnEwuxyd0CuF
-y15c2iehejr4IXVrXyU4N3njf7kNxiy3cRpnQ75zl54B1gL35qnIEUA0BtSTyVXp
-K3ReCkiQSVIKlulCuO/ZINeTOvDtC+RrzYr2LmqRC9T9vKwKVisqkOfGDi2ZXSEs
-f+oR5IIr2n/5ohaIlDE/I1MfNq/XgI0iDLvSH/VUw9RHRCwNL9W6Zc8tdSMkG3oa
-3HbZ8WRZTlmuLTKLGio6VXRghLYNjuAf/6ok9jcWHuNql06Wu1LDYJY5ffm2r+Dp
-yky6vO3VHJqAPTv/hN3bWZ34Uxndwa2iYdpbhClnhfwJr8PvRTo9Tm9Cw1qFo5cp
-1dGs0+pewKdIFTpy5kZ58P3+DJeIbE+RlVu/RnLOSrBO5Ziab4eWMAqDGs4paawv
-ILvqQPgaIXyeR7PHyO1ZVaZ9cr11685d7khGkIRWdvzmuoltocLz+fmvCb6MXr7Y
-yjj7xSMo1akjZUKnp9kZ5whaD2zg8I1vO+S0D0AZSOHYFbygXHmXik+TkXb46GUC
-sHQoUINl5iasPnTLDAl6xgs+qJ+AJ7mD1u5eBRBYra4R1Vl6iwSHAAnOKUYoGUC/
-nAYzhwtrQW7EMo/cmNHgOiPrXLX0GfiZXTQquLX40WOztpDK2ao=
-=kro7
------END PGP SIGNATURE-----
-
---h31gzZEtNLTqOjlF--
+That said, it does make very much sense to check it in that ==
+case. Vincent might have a different take on this, but right now I'd say
+the unlikely approach is the safest one of the two.
