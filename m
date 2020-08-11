@@ -2,236 +2,68 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77FDFC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 00:36:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9182AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 00:40:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53C222075D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 00:36:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="U/ZYWgTR"
+	by mail.kernel.org (Postfix) with ESMTP id 6FC4220734
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 00:40:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727845AbgHKAg4 (ORCPT
+        id S1727794AbgHKAkV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 20:36:56 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:47604 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726977AbgHKAgz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 20:36:55 -0400
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 0B85258;
-        Tue, 11 Aug 2020 02:36:50 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1597106211;
-        bh=WT68YabTY7ddQtfmBQDHNawp8dKMoR3tuUNkUHEYri8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=U/ZYWgTR0lteTac7vshe8KLcnDQhg18O1y4w88+HuaU7uRPqtIYegIMJcB/v6JOIn
-         1L2sfaJ7TL0nBT1s6YOu6MjZBAJzpOjpLarFFsmxPqyg6xIVlBh6dLQK0QhfmYvFOQ
-         VkGn6r82gLmg5Me9dGehE+y++xE70HnqcOPhnvSI=
-Date:   Tue, 11 Aug 2020 03:36:38 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Swapnil Jakhade <sjakhade@cadence.com>
-Cc:     airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org,
-        a.hajda@samsung.com, narmstrong@baylibre.com, jonas@kwiboo.se,
-        jernej.skrabec@siol.net, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mparab@cadence.com, yamonkar@cadence.com, tomi.valkeinen@ti.com,
-        jsarha@ti.com, nsekhar@ti.com, praneeth@ti.com
-Subject: Re: [PATCH v8 1/3] dt-bindings: drm/bridge: Document Cadence MHDP
- bridge bindings
-Message-ID: <20200811003638.GB13513@pendragon.ideasonboard.com>
-References: <1596713672-8146-1-git-send-email-sjakhade@cadence.com>
- <1596713672-8146-2-git-send-email-sjakhade@cadence.com>
+        Mon, 10 Aug 2020 20:40:21 -0400
+Received: from mga17.intel.com ([192.55.52.151]:53559 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726977AbgHKAkV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 20:40:21 -0400
+IronPort-SDR: 46ZXExrzJ/ll7OPK2kzYgeHrxGX4WoqdvkVEIwegrfM7tw1dlEnonZxcrSxO5OM+DVOeeGc8CB
+ gT9qw4UwChVA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9709"; a="133702729"
+X-IronPort-AV: E=Sophos;i="5.75,458,1589266800"; 
+   d="scan'208";a="133702729"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2020 17:40:20 -0700
+IronPort-SDR: E5ACDydB78ZTtmKqPFjjc/T7NXZzfQXL1T2KcA0mpBLtvUOdUehRFPvv4bAioQewFUHiiCZpn8
+ Rz8mRVIlDJFA==
+X-IronPort-AV: E=Sophos;i="5.75,458,1589266800"; 
+   d="scan'208";a="438873919"
+Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2020 17:40:19 -0700
+From:   ira.weiny@intel.com
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Ira Weiny <ira.weiny@intel.com>, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] Cyrpto: Clean up kmap() use
+Date:   Mon, 10 Aug 2020 17:40:13 -0700
+Message-Id: <20200811004015.2800392-1-ira.weiny@intel.com>
+X-Mailer: git-send-email 2.28.0.rc0.12.gb6a658bd00c9
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1596713672-8146-2-git-send-email-sjakhade@cadence.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Swapnil,
+From: Ira Weiny <ira.weiny@intel.com>
 
-Thank you for the patch.
+While going through kmap() users the following 2 issues were found via code
+inspection.
 
-On Thu, Aug 06, 2020 at 01:34:30PM +0200, Swapnil Jakhade wrote:
-> From: Yuti Amonkar <yamonkar@cadence.com>
-> 
-> Document the bindings used for the Cadence MHDP DPI/DP bridge in
-> yaml format.
-> 
-> Signed-off-by: Yuti Amonkar <yamonkar@cadence.com>
-> Signed-off-by: Swapnil Jakhade <sjakhade@cadence.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> ---
->  .../bindings/display/bridge/cdns,mhdp.yaml    | 139 ++++++++++++++++++
->  1 file changed, 139 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml b/Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml
-> new file mode 100644
-> index 000000000000..dabccefe0983
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml
-> @@ -0,0 +1,139 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/display/bridge/cdns,mhdp.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Cadence MHDP bridge
-> +
-> +maintainers:
-> +  - Swapnil Jakhade <sjakhade@cadence.com>
-> +  - Yuti Amonkar <yamonkar@cadence.com>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - cdns,mhdp8546
-> +      - ti,j721e-mhdp8546
-> +
-> +  reg:
-> +    minItems: 1
-> +    maxItems: 2
-> +    items:
-> +      - description:
-> +          Register block of mhdptx apb registers up to PHY mapped area (AUX_CONFIG_P).
-> +          The AUX and PMA registers are not part of this range, they are instead
-> +          included in the associated PHY.
-> +      - description:
-> +          Register block for DSS_EDP0_INTG_CFG_VP registers in case of TI J7 SoCs.
-> +
-> +  reg-names:
-> +    minItems: 1
-> +    maxItems: 2
-> +    items:
-> +      - const: mhdptx
-> +      - const: j721e-intg
-> +
-> +  clocks:
-> +    maxItems: 1
-> +    description:
-> +      DP bridge clock, used by the IP to know how to translate a number of
-> +      clock cycles into a time (which is used to comply with DP standard timings
-> +      and delays).
-> +
-> +  phys:
-> +    maxItems: 1
-> +    description:
-> +      phandle to the DisplayPort PHY.
-> +
-> +  ports:
-> +    type: object
-> +    description:
-> +      Ports as described in Documentation/devicetree/bindings/graph.txt.
-> +
-> +    properties:
-> +      '#address-cells':
-> +        const: 1
-> +
-> +      '#size-cells':
-> +        const: 0
-> +
-> +      port@0:
-> +        type: object
-> +        description:
-> +          Input port representing the DP bridge input.
-> +
-> +      port@1:
-> +        type: object
-> +        description:
-> +          Output port representing the DP bridge output.
+Ira Weiny (2):
+  crypto/ux500: Fix kmap() bug
+  crypto: Remove unused async iterators
 
-I've got a chance to study the J721E datasheet, and it shows the DP
-bridge has 4 inputs, to support MST. Shouldn't this already be reflected
-in the DT bindings ? I think it should be as simple as having 4 input
-ports (port@0 to port@3) and one output port (port@4).
-
-The bindings are ABI, so care must be taken to support all features and
-avoid future changes that would break backward compatibility. It's fine
-if the driver doesn't implement this feature yet.
-
-> +
-> +    required:
-> +      - port@0
-> +      - port@1
-> +      - '#address-cells'
-> +      - '#size-cells'
-> +
-> +allOf:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: ti,j721e-mhdp8546
-> +    then:
-> +      properties:
-> +        reg:
-> +          minItems: 2
-> +        reg-names:
-> +          minItems: 2
-> +    else:
-> +      properties:
-> +        reg:
-> +          maxItems: 1
-> +        reg-names:
-> +          maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - clocks
-> +  - reg
-> +  - reg-names
-> +  - phys
-> +  - ports
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    bus {
-> +        #address-cells = <2>;
-> +        #size-cells = <2>;
-> +
-> +        mhdp: dp-bridge@f0fb000000 {
-> +            compatible = "cdns,mhdp8546";
-> +            reg = <0xf0 0xfb000000 0x0 0x1000000>;
-> +            reg-names = "mhdptx";
-> +            clocks = <&mhdp_clock>;
-> +            phys = <&dp_phy>;
-> +
-> +            ports {
-> +                #address-cells = <1>;
-> +                #size-cells = <0>;
-> +
-> +                port@0 {
-> +                    reg = <0>;
-> +                    dp_bridge_input: endpoint {
-> +                        remote-endpoint = <&xxx_dpi_output>;
-> +                    };
-> +                };
-> +
-> +                port@1 {
-> +                    reg = <1>;
-> +                    dp_bridge_output: endpoint {
-> +                        remote-endpoint = <&xxx_dp_connector_input>;
-> +                    };
-> +                };
-> +            };
-> +        };
-> +    };
-> +...
+ crypto/ahash.c                        | 41 +++------------------------
+ drivers/crypto/ux500/hash/hash_core.c | 30 ++++++++++++--------
+ include/crypto/internal/hash.h        | 13 ---------
+ 3 files changed, 22 insertions(+), 62 deletions(-)
 
 -- 
-Regards,
+2.28.0.rc0.12.gb6a658bd00c9
 
-Laurent Pinchart
