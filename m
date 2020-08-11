@@ -2,72 +2,122 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A439FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:17:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24FDAC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:17:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A17720756
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:17:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E42F620756
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:17:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="hkHUyzl9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728506AbgHKKRe (ORCPT
+        id S1728520AbgHKKRv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 06:17:34 -0400
-Received: from foss.arm.com ([217.140.110.172]:36370 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728470AbgHKKRe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 06:17:34 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F302131B;
-        Tue, 11 Aug 2020 03:17:33 -0700 (PDT)
-Received: from e123648.arm.com (unknown [10.37.12.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id AA2543F22E;
-        Tue, 11 Aug 2020 03:17:31 -0700 (PDT)
-From:   Lukasz Luba <lukasz.luba@arm.com>
-To:     oss-self-reviewed-patches@listhost.cambridge.arm.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        krzk@kernel.org
-Cc:     kgene@kernel.org, b.zolnierkie@samsung.com, lukasz.luba@arm.com
-Subject: [PATCH] memory: samsung: exynos5422-dmc: Additional locking for 'curr_rate'
-Date:   Tue, 11 Aug 2020 11:17:27 +0100
-Message-Id: <20200811101727.3976-1-lukasz.luba@arm.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 11 Aug 2020 06:17:51 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:13120 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728346AbgHKKRv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 06:17:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1597141070; x=1628677070;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=pH/dqPFqn/5c/fFx2x7y3lTOdQqwfNkq66YZ1oLQHaE=;
+  b=hkHUyzl9kpqc6B6IDEkk2OnF4YXHCP/80VMugiyGJiKPcJZQfMzY8J2b
+   fabmugmKx7xD8+hfTJ+Lp2IJRRP99UwPfzOqJU2i9p+94QEwI7P5IrUf4
+   rJw8q0LbGCYyavr5XtDLnI/tAqqwv/cEO7uwHFeYtKCja2tJNWUaNJbdz
+   Q=;
+IronPort-SDR: /Jfizqq72H/cs+siuKEQ9MKFuSHy05tstZjjnB9QrOJfwKBi5ykGU6svTVGGSO0fjz/aJYFIea
+ qIxaItFYFA+Q==
+X-IronPort-AV: E=Sophos;i="5.75,460,1589241600"; 
+   d="scan'208";a="47084569"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 11 Aug 2020 10:17:49 +0000
+Received: from EX13MTAUEB002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com (Postfix) with ESMTPS id 34EF5A272D;
+        Tue, 11 Aug 2020 10:17:46 +0000 (UTC)
+Received: from EX13D16EUB001.ant.amazon.com (10.43.166.28) by
+ EX13MTAUEB002.ant.amazon.com (10.43.60.12) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 11 Aug 2020 10:17:46 +0000
+Received: from 38f9d34ed3b1.ant.amazon.com (10.43.162.140) by
+ EX13D16EUB001.ant.amazon.com (10.43.166.28) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 11 Aug 2020 10:17:36 +0000
+Subject: Re: [PATCH v6 10/18] nitro_enclaves: Add logic for getting the
+ enclave image load info
+To:     Alexander Graf <graf@amazon.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+CC:     Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        "David Duncan" <davdunc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        "David Woodhouse" <dwmw@amazon.co.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Karen Noel <knoel@redhat.com>,
+        "Martin Pohlack" <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Stewart Smith <trawets@amazon.com>,
+        Uwe Dannowski <uwed@amazon.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        kvm <kvm@vger.kernel.org>,
+        ne-devel-upstream <ne-devel-upstream@amazon.com>
+References: <20200805091017.86203-1-andraprs@amazon.com>
+ <20200805091017.86203-11-andraprs@amazon.com>
+ <70ec8010-cb3b-50a8-5472-a96c5aa2cf8d@amazon.de>
+From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
+Message-ID: <0ef970b1-eea2-916c-3546-fdc4f2595e99@amazon.com>
+Date:   Tue, 11 Aug 2020 13:17:31 +0300
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:78.0)
+ Gecko/20100101 Thunderbird/78.1.0
+MIME-Version: 1.0
+In-Reply-To: <70ec8010-cb3b-50a8-5472-a96c5aa2cf8d@amazon.de>
+Content-Language: en-US
+X-Originating-IP: [10.43.162.140]
+X-ClientProxiedBy: EX13D12UWC001.ant.amazon.com (10.43.162.78) To
+ EX13D16EUB001.ant.amazon.com (10.43.166.28)
+Content-Type: text/plain; charset="windows-1252"; format="flowed"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 'curr_rate' is protected by local 'dmc->lock' in various places, but
-not in a function exynos5_dmc_get_status(). The lock protects frequency
-(and voltage) change process and the corresponding value stored in
-'curr_rate'. Add the locking mechanism to protect the 'curr_rate' reading
-also in the exynos5_dmc_get_status().
 
-Suggested-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
----
- drivers/memory/samsung/exynos5422-dmc.c | 3 +++
- 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/memory/samsung/exynos5422-dmc.c b/drivers/memory/samsung/exynos5422-dmc.c
-index b9c7956e5031..952bc61e68f4 100644
---- a/drivers/memory/samsung/exynos5422-dmc.c
-+++ b/drivers/memory/samsung/exynos5422-dmc.c
-@@ -908,7 +908,10 @@ static int exynos5_dmc_get_status(struct device *dev,
- 	int ret;
- 
- 	if (dmc->in_irq_mode) {
-+		mutex_lock(&dmc->lock);
- 		stat->current_frequency = dmc->curr_rate;
-+		mutex_unlock(&dmc->lock);
-+
- 		stat->busy_time = dmc->load;
- 		stat->total_time = dmc->total;
- 	} else {
--- 
-2.17.1
+On 10/08/2020 12:57, Alexander Graf wrote:
+>
+>
+> On 05.08.20 11:10, Andra Paraschiv wrote:
+>> Before setting the memory regions for the enclave, the enclave image
+>> needs to be placed in memory. After the memory regions are set, this
+>> memory cannot be used anymore by the VM, being carved out.
+>>
+>> Add ioctl command logic to get the offset in enclave memory where to
+>> place the enclave image. Then the user space tooling copies the enclave
+>> image in the memory using the given memory offset.
+>>
+>> Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
+>
+> Reviewed-by: Alexander Graf <graf@amazon.com>
+
+Thanks for review. I included the tag for this one and the next 2 patches.
+
+Andra
+
+
+
+Amazon Development Center (Romania) S.R.L. registered office: 27A Sf. Lazar=
+ Street, UBC5, floor 2, Iasi, Iasi County, 700045, Romania. Registered in R=
+omania. Registration number J22/2621/2005.
 
