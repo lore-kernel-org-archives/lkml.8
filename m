@@ -7,40 +7,38 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A0DC433E3
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0107FC433E0
 	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 04:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3E1520772
+	by mail.kernel.org (Postfix) with ESMTP id E0DFA206DA
 	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 04:30:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbgHKEaF (ORCPT
+        id S1726329AbgHKEaE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 00:30:05 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:58130 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725898AbgHKEaE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 11 Aug 2020 00:30:04 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:58008 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725837AbgHKEaD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 00:30:03 -0400
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 66E65201DA9;
-        Tue, 11 Aug 2020 06:30:03 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 5C962201DA2;
+        Tue, 11 Aug 2020 06:30:02 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 4F5E3201D9D;
-        Tue, 11 Aug 2020 06:29:59 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 44236201D9C;
+        Tue, 11 Aug 2020 06:29:58 +0200 (CEST)
 Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id E6026402A5;
-        Tue, 11 Aug 2020 06:29:53 +0200 (CEST)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id DA64440243;
+        Tue, 11 Aug 2020 06:29:52 +0200 (CEST)
 From:   Anson Huang <Anson.Huang@nxp.com>
 To:     tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org,
         shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
         festevam@gmail.com, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
 Cc:     Linux-imx@nxp.com
-Subject: [PATCH 2/2] irqchip/imx-irqsteer: Use dev_err_probe() to simplify error handling
-Date:   Tue, 11 Aug 2020 12:25:05 +0800
-Message-Id: <1597119905-7341-2-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH 1/2] irqchip/imx-intmux: Use dev_err_probe() to simplify error handling
+Date:   Tue, 11 Aug 2020 12:25:04 +0800
+Message-Id: <1597119905-7341-1-git-send-email-Anson.Huang@nxp.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1597119905-7341-1-git-send-email-Anson.Huang@nxp.com>
-References: <1597119905-7341-1-git-send-email-Anson.Huang@nxp.com>
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -52,14 +50,14 @@ defer probe reason etc., use it to simplify the code.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- drivers/irqchip/irq-imx-irqsteer.c | 10 ++++------
+ drivers/irqchip/irq-imx-intmux.c | 10 ++++------
  1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/irqchip/irq-imx-irqsteer.c b/drivers/irqchip/irq-imx-irqsteer.c
-index 290531e..d8c740a 100644
---- a/drivers/irqchip/irq-imx-irqsteer.c
-+++ b/drivers/irqchip/irq-imx-irqsteer.c
-@@ -158,12 +158,10 @@ static int imx_irqsteer_probe(struct platform_device *pdev)
+diff --git a/drivers/irqchip/irq-imx-intmux.c b/drivers/irqchip/irq-imx-intmux.c
+index e35b7b0..2f51ec9 100644
+--- a/drivers/irqchip/irq-imx-intmux.c
++++ b/drivers/irqchip/irq-imx-intmux.c
+@@ -226,12 +226,10 @@ static int imx_intmux_probe(struct platform_device *pdev)
  	}
  
  	data->ipg_clk = devm_clk_get(&pdev->dev, "ipg");
@@ -74,8 +72,8 @@ index 290531e..d8c740a 100644
 +				     "failed to get ipg clk: %ld\n",
 +				     PTR_ERR(data->ipg_clk));
  
+ 	data->channum = channum;
  	raw_spin_lock_init(&data->lock);
- 
 -- 
 2.7.4
 
