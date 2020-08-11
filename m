@@ -2,205 +2,177 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-22.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B6A3C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:55:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9904C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:58:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0CFE20756
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:55:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88F9520768
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:58:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GVU/84/v"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hppMyx4Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726454AbgHKRzw (ORCPT
+        id S1726164AbgHKR6z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 13:55:52 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35297 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725837AbgHKRzl (ORCPT
+        Tue, 11 Aug 2020 13:58:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54878 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725889AbgHKR6w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 13:55:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597168539;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=e3RR92GMCJJZ0VC4He3sC0Sni2KlxaOUk8hIIS0dPFI=;
-        b=GVU/84/vu1jjJ7dK8DMS5763k236eUr5wtYFML2vspO/1EPUvc706WQ6d2fLcuy1lqCQMI
-        PaP8cQ5xSrGwkC+wDcrpQsxMNkXEksBaeanFKGb4wRcZpvP/Xg0yGZLZT9KxULwhrGh7aY
-        8TnXnUME0g6Ugcw431pDLkasnJF97zs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-267-hyVnyBmVOnem-EKPGZyuwg-1; Tue, 11 Aug 2020 13:55:38 -0400
-X-MC-Unique: hyVnyBmVOnem-EKPGZyuwg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0B84E8018A5;
-        Tue, 11 Aug 2020 17:55:37 +0000 (UTC)
-Received: from horse.redhat.com (ovpn-117-120.rdu2.redhat.com [10.10.117.120])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 399355FC01;
-        Tue, 11 Aug 2020 17:55:31 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id AB54C22036A; Tue, 11 Aug 2020 13:55:30 -0400 (EDT)
-Date:   Tue, 11 Aug 2020 13:55:30 -0400
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        virtio-fs@redhat.com, miklos@szeredi.hu, stefanha@redhat.com,
-        dgilbert@redhat.com
-Subject: Re: [PATCH v2 15/20] fuse, dax: Take ->i_mmap_sem lock during dax
- page fault
-Message-ID: <20200811175530.GB497326@redhat.com>
-References: <20200807195526.426056-1-vgoyal@redhat.com>
- <20200807195526.426056-16-vgoyal@redhat.com>
- <20200810222238.GD2079@dread.disaster.area>
+        Tue, 11 Aug 2020 13:58:52 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2924FC061788
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 10:58:52 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id k13so7152193plk.13
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 10:58:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PwLucdZe8Zl1sdg+rBs5gzd1/sOQ/Nnh9Dc69W2ZlPY=;
+        b=hppMyx4QKg2UJb3qxcOpI1jplSB7I/4IFRBebdNFDIqOIqmv+o7ixbitDdJGq3vcUG
+         /KLrDrbfIybVPxf4/FXQdluXL88QfJ4XeHlgDSolu6c9dhZgMa2k/A4bIO1QoVD7GpgV
+         Xwf3wYgXY3X/aoeA7y5BvM3uCAnmjfQ6O8cf/kfy+Jutrx4PW4ESll6hVdsA6UBh8a9o
+         HzLpmRdRsGUmK5Tgd0bGDdJBTbblNpmqczmsB0ax2StXBX0bj9yxckMDjNwn4O119Kqj
+         5QrM6y8TkZa3EXfv60POSf2PJEcWYUpNGyED/o7RYz4ryhrU01nYUgmZDFGPDTj1Clfs
+         Oy6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PwLucdZe8Zl1sdg+rBs5gzd1/sOQ/Nnh9Dc69W2ZlPY=;
+        b=DJmQAMAQf4BIghPFztv9AOPvbZeUDTPuWdxDGOalTetzcPKw9Tdsd5sRjXHhbShFNM
+         LRECmYFTXGrhg3BOaOWlspOAO9NGWdVMntzEf/8Z/Kng34qEoltWDw9b4Phta9c+uC4Q
+         iGP4fZVEvZb+VAnQnk2ZTa2OsTNS7C0HNUBHjHzV1MDmMb5JEAup3Mqz+XEYoMyHlQB7
+         umX9Bv36bh9tpe5Uk1rWtXdpYCdeJf1vD6+lTHIdA5PdHgKQpWK584SI/YFXnGhN9qi4
+         jKjl87/VnzKT+c317iqbjJ7UsVzg1OHHn1HIpC+p9FfIQvj9V+3wzvy4CZ1W2M6I2ze0
+         Uc0w==
+X-Gm-Message-State: AOAM533gX3XuBXGNm63ig28Q5YEnZllhXafczF5W9ZwgbbngDOEj+X6y
+        jFxIfYH6/LWLQ0Pf8/MPUO8ZyaMYIp68OtKJGljlZw==
+X-Google-Smtp-Source: ABdhPJxrSYKU0WVBLGO8gzWsZ4Pu3tdO1qmy4CCNWHjfKq3SyuYhth5Im8WYLZE7blUD1zlIfFUbNzPcZ9l5upHTYZ8=
+X-Received: by 2002:a17:90a:a10c:: with SMTP id s12mr2287166pjp.32.1597168731165;
+ Tue, 11 Aug 2020 10:58:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200810222238.GD2079@dread.disaster.area>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+References: <CAKwvOd=ypa8xE-kaDa7XtzPsBH8=Xu_pZj2rnWaeawNs=3dDkw@mail.gmail.com>
+ <20200811173655.1162093-1-nivedita@alum.mit.edu>
+In-Reply-To: <20200811173655.1162093-1-nivedita@alum.mit.edu>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 11 Aug 2020 10:58:40 -0700
+Message-ID: <CAKwvOdnjLfQ0fWsrFYDJ2O+qFAfEFnTEEnW-aHrPha8G3_WTrg@mail.gmail.com>
+Subject: Re: [PATCH] x86/boot/compressed: Disable relocation relaxation for
+ non-pie link
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Fangrui Song <maskray@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        e5ten.arch@gmail.com,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "# 3.4.x" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 08:22:38AM +1000, Dave Chinner wrote:
-> On Fri, Aug 07, 2020 at 03:55:21PM -0400, Vivek Goyal wrote:
-> > We need some kind of locking mechanism here. Normal file systems like
-> > ext4 and xfs seems to take their own semaphore to protect agains
-> > truncate while fault is going on.
-> > 
-> > We have additional requirement to protect against fuse dax memory range
-> > reclaim. When a range has been selected for reclaim, we need to make sure
-> > no other read/write/fault can try to access that memory range while
-> > reclaim is in progress. Once reclaim is complete, lock will be released
-> > and read/write/fault will trigger allocation of fresh dax range.
-> > 
-> > Taking inode_lock() is not an option in fault path as lockdep complains
-> > about circular dependencies. So define a new fuse_inode->i_mmap_sem.
-> 
-> That's precisely why filesystems like ext4 and XFS define their own
-> rwsem.
-> 
-> Note that this isn't a DAX requirement - the page fault
-> serialisation is actually a requirement of hole punching...
+On Tue, Aug 11, 2020 at 10:36 AM Arvind Sankar <nivedita@alum.mit.edu> wrote:
+>
+> The x86-64 psABI [0] specifies special relocation types
+> (R_X86_64_[REX_]GOTPCRELX) for indirection through the Global Offset
+> Table, semantically equivalent to R_X86_64_GOTPCREL, which the linker
+> can take advantage of for optimization (relaxation) at link time. This
+> is supported by LLD and binutils versions 2.26 onwards.
+>
+> The compressed kernel is position-independent code, however, when using
+> LLD or binutils versions before 2.27, it must be linked without the -pie
+> option. In this case, the linker may optimize certain instructions into
+> a non-position-independent form, by converting foo@GOTPCREL(%rip) to $foo.
+>
+> This potential issue has been present with LLD and binutils-2.26 for a
+> long time, but it has never manifested itself before now:
+> - LLD and binutils-2.26 only relax
+>         movq    foo@GOTPCREL(%rip), %reg
+>   to
+>         leaq    foo(%rip), %reg
+>   which is still position-independent, rather than
+>         mov     $foo, %reg
+>   which is permitted by the psABI when -pie is not enabled.
+> - gcc happens to only generate GOTPCREL relocations on mov instructions.
+> - clang does generate GOTPCREL relocations on non-mov instructions, but
+>   when building the compressed kernel, it uses its integrated assembler
+>   (due to the redefinition of KBUILD_CFLAGS dropping -no-integrated-as),
+>   which has so far defaulted to not generating the GOTPCRELX
+>   relocations.
+>
+> Nick Desaulniers reports [1,2]:
+>   A recent change [3] to a default value of configuration variable
+>   (ENABLE_X86_RELAX_RELOCATIONS OFF -> ON) in LLVM now causes Clang's
+>   integrated assembler to emit R_X86_64_GOTPCRELX/R_X86_64_REX_GOTPCRELX
+>   relocations. LLD will relax instructions with these relocations based
+>   on whether the image is being linked as position independent or not.
+>   When not, then LLD will relax these instructions to use absolute
+>   addressing mode (R_RELAX_GOT_PC_NOPIC). This causes kernels built with
+>   Clang and linked with LLD to fail to boot.
+>
+> Patch series [4] is a solution to allow the compressed kernel to be
+> linked with -pie unconditionally, but even if merged is unlikely to be
+> backported. As a simple solution that can be applied to stable as well,
+> prevent the assembler from generating the relaxed relocation types using
+> the -mrelax-relocations=no option.
+>
+> [0] https://gitlab.com/x86-psABIs/x86-64-ABI/-/blob/master/x86-64-ABI/linker-optimization.tex#L65
+> [1] https://lore.kernel.org/lkml/20200807194100.3570838-1-ndesaulniers@google.com/
+> [2] https://github.com/ClangBuiltLinux/linux/issues/1121
+> [3] https://reviews.llvm.org/rGc41a18cf61790fc898dcda1055c3efbf442c14c0
+> [4] https://lore.kernel.org/lkml/20200731202738.2577854-1-nivedita@alum.mit.edu/
+>
+> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+> Reported-by: Nick Desaulniers <ndesaulniers@google.com>
+> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+> Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+> Cc: stable@vger.kernel.org # 4.19.x
 
-Hi Dave,
+Thanks Arvind, good write up.  Just curious about this stable tag, how
+come you picked 4.19?  I can see boot failures in our CI for x86+LLD
+back to 4.9.  Can we amend that tag to use `# 4.9`? I'd be happy to
+help submit backports should they fail to apply cleanly.
+https://travis-ci.com/github/ClangBuiltLinux/continuous-integration/builds/179237488
 
-I noticed that fuse code currently does not seem to have a rwsem which
-can provide mutual exclusion between truncation/hole_punch path
-and page fault path. I am wondering does that mean there are issues
-with existing code or something else makes it unnecessary to provide
-this mutual exlusion.
+> ---
+>  arch/x86/boot/compressed/Makefile | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+> index 3962f592633d..c5449bea58ec 100644
+> --- a/arch/x86/boot/compressed/Makefile
+> +++ b/arch/x86/boot/compressed/Makefile
+> @@ -62,6 +62,12 @@ KBUILD_LDFLAGS += $(shell $(LD) --help 2>&1 | grep -q "\-z noreloc-overflow" \
+>  endif
+>  LDFLAGS_vmlinux := -T
+>
+> +# Disable relocation relaxation if not linking as PIE
+> +ifeq ($(filter -pie,$(KBUILD_LDFLAGS)),)
+> +KBUILD_CFLAGS += $(call as-option, -Wa$(comma)-mrelax-relocations=no)
+> +KBUILD_AFLAGS += $(call as-option, -Wa$(comma)-mrelax-relocations=no)
+> +endif
+> +
+>  hostprogs      := mkpiggy
+>  HOST_EXTRACFLAGS += -I$(srctree)/tools/include
+>
+> --
+> 2.26.2
+>
 
-> 
-> > Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
-> > ---
-> >  fs/fuse/dir.c    |  2 ++
-> >  fs/fuse/file.c   | 15 ++++++++++++---
-> >  fs/fuse/fuse_i.h |  7 +++++++
-> >  fs/fuse/inode.c  |  1 +
-> >  4 files changed, 22 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/fs/fuse/dir.c b/fs/fuse/dir.c
-> > index 26f028bc760b..f40766c0693b 100644
-> > --- a/fs/fuse/dir.c
-> > +++ b/fs/fuse/dir.c
-> > @@ -1609,8 +1609,10 @@ int fuse_do_setattr(struct dentry *dentry, struct iattr *attr,
-> >  	 */
-> >  	if ((is_truncate || !is_wb) &&
-> >  	    S_ISREG(inode->i_mode) && oldsize != outarg.attr.size) {
-> > +		down_write(&fi->i_mmap_sem);
-> >  		truncate_pagecache(inode, outarg.attr.size);
-> >  		invalidate_inode_pages2(inode->i_mapping);
-> > +		up_write(&fi->i_mmap_sem);
-> >  	}
-> >  
-> >  	clear_bit(FUSE_I_SIZE_UNSTABLE, &fi->state);
-> > diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-> > index be7d90eb5b41..00ad27216cc3 100644
-> > --- a/fs/fuse/file.c
-> > +++ b/fs/fuse/file.c
-> > @@ -2878,11 +2878,18 @@ static vm_fault_t __fuse_dax_fault(struct vm_fault *vmf,
-> >  
-> >  	if (write)
-> >  		sb_start_pagefault(sb);
-> > -
-> > +	/*
-> > +	 * We need to serialize against not only truncate but also against
-> > +	 * fuse dax memory range reclaim. While a range is being reclaimed,
-> > +	 * we do not want any read/write/mmap to make progress and try
-> > +	 * to populate page cache or access memory we are trying to free.
-> > +	 */
-> > +	down_read(&get_fuse_inode(inode)->i_mmap_sem);
-> >  	ret = dax_iomap_fault(vmf, pe_size, &pfn, NULL, &fuse_iomap_ops);
-> >  
-> >  	if (ret & VM_FAULT_NEEDDSYNC)
-> >  		ret = dax_finish_sync_fault(vmf, pe_size, pfn);
-> > +	up_read(&get_fuse_inode(inode)->i_mmap_sem);
-> >  
-> >  	if (write)
-> >  		sb_end_pagefault(sb);
-> > @@ -3849,9 +3856,11 @@ static long fuse_file_fallocate(struct file *file, int mode, loff_t offset,
-> >  			file_update_time(file);
-> >  	}
-> >  
-> > -	if (mode & FALLOC_FL_PUNCH_HOLE)
-> > +	if (mode & FALLOC_FL_PUNCH_HOLE) {
-> > +		down_write(&fi->i_mmap_sem);
-> >  		truncate_pagecache_range(inode, offset, offset + length - 1);
-> > -
-> > +		up_write(&fi->i_mmap_sem);
-> > +	}
-> >  	fuse_invalidate_attr(inode);
-> 
-> 
-> I'm not sure this is sufficient. You have to lock page faults out
-> for the entire time the hole punch is being performed, not just while
-> the mapping is being invalidated.
-> 
-> That is, once you've taken the inode lock and written back the dirty
-> data over the range being punched, you can then take a page fault
-> and dirty the page again. Then after you punch the hole out,
-> you have a dirty page with non-zero data in it, and that can get
-> written out before the page cache is truncated.
 
-Just for my better udnerstanding of the issue, I am wondering what
-problem will it lead to. If one process is doing punch_hole and
-other is writing in the range being punched, end result could be
-anything. Either we will read zeroes from punched_hole pages or
-we will read the data written by process writing to mmaped page, depending
-on in what order it got executed. 
-
-If that's the case, then holding fi->i_mmap_sem for the whole duration
-might not matter. What am I missing?
-
-Thanks
-Vivek
-
-> 
-> IOWs, to do a hole punch safely, you have to both lock the inode
-> and lock out page faults *before* you write back dirty data. Then
-> you can invalidate the page cache so you know there is no cached
-> data over the range about to be punched. Once the punch is done,
-> then you can drop all locks....
-> 
-> The same goes for any other operation that manipulates extents
-> directly (other fallocate ops, truncate, etc).
-> 
-> /me also wonders if there can be racing AIO+DIO in progress over the
-> range that is being punched and whether fuse needs to call
-> inode_dio_wait() before punching holes, running truncates, etc...
-> 
-> Cheers,
-> 
-> Dave.
-> -- 
-> Dave Chinner
-> david@fromorbit.com
-> 
-
+-- 
+Thanks,
+~Nick Desaulniers
