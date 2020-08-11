@@ -2,153 +2,109 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F1EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 18:54:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E37C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 18:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B763206B2
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 18:54:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F5FF206B2
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 18:57:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Sq1LZKKk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ghGOWq7P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726173AbgHKSym (ORCPT
+        id S1726258AbgHKS5k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 14:54:42 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:60540 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726023AbgHKSyl (ORCPT
+        Tue, 11 Aug 2020 14:57:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35740 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725886AbgHKS5i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 14:54:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597172079;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=fInOYw3oYFGypGBJ4zylH0Up62AYKcuG7tGEScNZDMo=;
-        b=Sq1LZKKkMkirbLWRlCc0VbyOkRP3k2I9IEzzErz6+LyndIatuiNF/GtQz7T/8bRntT9unR
-        UHFiUu8TO+CPy9stvksTKhOxSWvL0juaKw+9/C6+ijHPG4XGTCtnc5fdi1r0And21vzTdA
-        +o7fFS8Fihl1KUhDvWEInEFdFvMqEt0=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-128-7oxVF1X_NTqobXwxYl-Vdg-1; Tue, 11 Aug 2020 14:54:31 -0400
-X-MC-Unique: 7oxVF1X_NTqobXwxYl-Vdg-1
-Received: by mail-qv1-f72.google.com with SMTP id d1so10234395qvs.21
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 11:54:31 -0700 (PDT)
+        Tue, 11 Aug 2020 14:57:38 -0400
+Received: from mail-oo1-xc43.google.com (mail-oo1-xc43.google.com [IPv6:2607:f8b0:4864:20::c43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A189C06174A;
+        Tue, 11 Aug 2020 11:57:38 -0700 (PDT)
+Received: by mail-oo1-xc43.google.com with SMTP id u28so1728064ooe.12;
+        Tue, 11 Aug 2020 11:57:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=0q6pcldhorcj6nNNaBM6YAkqvTbJCDXZHgFjgiyBoRw=;
+        b=ghGOWq7PofyXLECDilGEwXF2TBqFOkBuirhuIoCCgn4iKoIymRa5RsaIlny/qqQcjZ
+         8OU0sfhfrIBWFFEDhrpmLJ5to5p2ByEZ82qhALHarDo0rMjQhsh1W6DmhXY/7gN+0RjR
+         RWVSBVi8uPj98ooMOHWZuW7UFgBV2xuRRQsXLX9Qx3qkW+ZabRJEa9xVcHaQEymDf07e
+         Phdg9weTFi6+e3B0AaE3HgSrR/Yh6ageVHO5Xt5PtitOHSQ0o+u2r/3AikpJcWD7sxSK
+         aYtilSKf/Eg/jvXRD7n5x4BX6iz2lkB7UtiMX9g/g0+qeHhVYSACN+lO99OP1nKtSKVg
+         FTMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=fInOYw3oYFGypGBJ4zylH0Up62AYKcuG7tGEScNZDMo=;
-        b=oJTnMpA+pNVKaqQbjkvdbOIfZ3R0fLhSXUlRMsGbLI8RPRnHmVsnLHpA5FO9iK8RJA
-         A7pobelcwRhr6zRDhWA1gOWCJmjqoMN70MLAX6LwprTUxsFoDEWCuLUveOOxqP6g/pRL
-         sS64QFrf4kLF0ea0BjnlD+tUL2w43g7JFun5pQ5Do5UsBdYATZ0a0ubl2+27+u8o1B4O
-         /Tb0+aJ8l6s7aTBYJMflHTaK6fkyu56qcoLAKty5fYtzEOK6/uob5gHmQ1nTv17JMc+q
-         BlIgqkJz/UszzbujlzX4iL69d6hXJmOOd6gBZdmjhbouhCTCIahVBEDf3Upqlxb614+P
-         1ngw==
-X-Gm-Message-State: AOAM530aJjHWevFXoG1KJP+i5SMfbnXEDKKTE38iu2y3NzJgTMBijjmj
-        HoCK0qyeg3PQ3+HA6ExGLIcQBiYfaF7Rsla0yYGXmgj+o/sKQ4zYrHbddsbs2WJxVnJU8wLBct1
-        VLs8wj1J2uefZbuKVbk7XtQGg
-X-Received: by 2002:a05:6214:d6c:: with SMTP id 12mr2778612qvs.208.1597172070775;
-        Tue, 11 Aug 2020 11:54:30 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwhIdf3k/kiqgEvNEVm+MbxhAR7X0h2rtExMsl83/gNaJZj3HZEL8fQ0t9ZdB7nf4VU7BF+AA==
-X-Received: by 2002:a05:6214:d6c:: with SMTP id 12mr2778599qvs.208.1597172070556;
-        Tue, 11 Aug 2020 11:54:30 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id l29sm8661915qtu.88.2020.08.11.11.54.29
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0q6pcldhorcj6nNNaBM6YAkqvTbJCDXZHgFjgiyBoRw=;
+        b=IUef4AQkTWaWlKOCfhryvYlTI/JKPHbxqJYO74y6MfyciHRoT9hheKJ/M9074zQgJ0
+         9hjWf1TSo8vaQLaG3xvprn2AMsqSqUkp7H3ZD4an3rNJ9LdKKRIUU7mePQoPcNseBjdm
+         POEhEoo4npdFRn4Xn6k/XDQaBObfFbC/ZDuumDtOkf0RXxhvjxgCXn3c2vK7s5K9gYG2
+         hcgMONmkNgK7KL0O3vZXggtZtsQO0UiHekJnPTAGd2q0OTGHmX01WDLj0b0zJaNtNAb/
+         25f9PBP80S7zXOn6LhLHTwEIg4PCeH03f0uf54BRUTpRnj4TY+06NWQ7yyF9UHOKMQPp
+         1X6A==
+X-Gm-Message-State: AOAM5311CqVOIVYSwNbkTJZF3/KGw7EvoWsO1Sz9xMoC+sGRCjKvfZPV
+        ybWkxAjQU+t5wtamX0gm90KWM8RI
+X-Google-Smtp-Source: ABdhPJzw3VfZCGfIDhpuRrVdMzhFukEAzvXDQ9hQJEq7pXE3fXjEgAzni89v4AYbR/+6juo15wfUmQ==
+X-Received: by 2002:a4a:9e41:: with SMTP id w1mr6546787ook.87.1597172257572;
+        Tue, 11 Aug 2020 11:57:37 -0700 (PDT)
+Received: from Davids-MacBook-Pro.local ([2601:282:803:7700:1c6:4d6a:d533:5f8b])
+        by smtp.googlemail.com with ESMTPSA id u17sm4482256oiv.14.2020.08.11.11.57.36
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Aug 2020 11:54:30 -0700 (PDT)
-Subject: Re: [PATCH] USB: realtek_cr: fix return check for dma functions
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     gregkh@linuxfoundation.org, acozzette@cs.hmc.edu,
-        linux-usb@vger.kernel.org, usb-storage@lists.one-eyed-alien.net,
-        linux-kernel@vger.kernel.org
-References: <20200811151505.12222-1-trix@redhat.com>
- <20200811160348.GD335280@rowland.harvard.edu>
- <1f7d5a64-f264-4fed-bf90-b64e2693652d@redhat.com>
- <20200811175338.GB339805@rowland.harvard.edu>
-From:   Tom Rix <trix@redhat.com>
-Message-ID: <c48fec19-fe2c-65c6-917b-8b8ba40e4c7e@redhat.com>
-Date:   Tue, 11 Aug 2020 11:54:28 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 11 Aug 2020 11:57:36 -0700 (PDT)
+Subject: Re: [PATCH] selftests: Add VRF icmp error route lookup test
+To:     David Miller <davem@davemloft.net>, mjeanson@efficios.com
+Cc:     dsahern@kernel.org, linux-kernel@vger.kernel.org,
+        mathieu.desnoyers@efficios.com, netdev@vger.kernel.org
+References: <42cb74c8-9391-cf4c-9e57-7a1d464f8706@gmail.com>
+ <20200806185121.19688-1-mjeanson@efficios.com>
+ <20200811.102856.864544731521589077.davem@davemloft.net>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <f43a9397-c506-9270-b423-efaf6f520a80@gmail.com>
+Date:   Tue, 11 Aug 2020 12:57:35 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <20200811175338.GB339805@rowland.harvard.edu>
+In-Reply-To: <20200811.102856.864544731521589077.davem@davemloft.net>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 8/11/20 11:28 AM, David Miller wrote:
+> From: Michael Jeanson <mjeanson@efficios.com>
+> Date: Thu,  6 Aug 2020 14:51:21 -0400
+> 
+>> The objective is to check that the incoming vrf routing table is selected
+>> to send an ICMP error back to the source when the ttl of a packet reaches 1
+>> while it is forwarded between different vrfs.
+>>
+>> The first test sends a ping with a ttl of 1 from h1 to h2 and parses the
+>> output of the command to check that a ttl expired error is received.
+>>
+>> [This may be flaky, I'm open to suggestions of a more robust approch.]
+>>
+>> The second test runs traceroute from h1 to h2 and parses the output to
+>> check for a hop on r1.
+>>
+>> Signed-off-by: Michael Jeanson <mjeanson@efficios.com>
+> 
+> This patch does not apply cleanly to the current net tree.
+> 
 
-On 8/11/20 10:53 AM, Alan Stern wrote:
-> On Tue, Aug 11, 2020 at 10:29:29AM -0700, Tom Rix wrote:
->> On 8/11/20 9:03 AM, Alan Stern wrote:
->>> On Tue, Aug 11, 2020 at 08:15:05AM -0700, trix@redhat.com wrote:
->>>> From: Tom Rix <trix@redhat.com>
->>>>
->>>> clang static analysis reports this representative problem
->>>>
->>>> realtek_cr.c:639:3: warning: The left expression of the compound
->>>>   assignment is an uninitialized value. The computed value will
->>>>   also be garbage
->>>>     SET_BIT(value, 2);
->>>>     ^~~~~~~~~~~~~~~~~
->>>>
->>>> value is set by a successful call to rts51x_read_mem()
->>>>
->>>> 	retval = rts51x_read_mem(us, 0xFE77, &value, 1);
->>>> 	if (retval < 0)
->>>> 		return -EIO;
->>>>
->>>> A successful call to rts51x_read_mem returns 0, failure can
->>>> return positive and negative values.  This check is wrong
->>>> for a number of functions.  Fix the retval check.
->>>>
->>>> Fixes: 065e60964e29 ("ums_realtek: do not use stack memory for DMA")
->>>> Signed-off-by: Tom Rix <trix@redhat.com>
->>>> ---
->>>>  drivers/usb/storage/realtek_cr.c | 36 ++++++++++++++++----------------
->>>>  1 file changed, 18 insertions(+), 18 deletions(-)
->>>>
->>>> diff --git a/drivers/usb/storage/realtek_cr.c b/drivers/usb/storage/realtek_cr.c
->>>> index 3789698d9d3c..b983753e2368 100644
->>>> --- a/drivers/usb/storage/realtek_cr.c
->>>> +++ b/drivers/usb/storage/realtek_cr.c
->>>> @@ -481,16 +481,16 @@ static int enable_oscillator(struct us_data *us)
->>>>  	u8 value;
->>>>  
->>>>  	retval = rts51x_read_mem(us, 0xFE77, &value, 1);
->>>> -	if (retval < 0)
->>>> +	if (retval != STATUS_SUCCESS)
->>>>  		return -EIO;
->>> Instead of changing all these call sites, wouldn't it be a lot easier 
->>> just to change rts51x_read_mem() to make it always return a negative 
->>> value (such as -EIO) when there's an error?
->>>
->>> Alan Stern
->> I thought about that but there was already existing (retval != 
->> STATUS_SUCCESS) checks for these calls.
-> The only values that routine currently returns are 
-> USB_STOR_TRANSPORT_ERROR, -EIO, and 0.  None of the callers distinguish 
-> between the first two values, so you can just change the first to the 
-> second.
->
-> Note that STATUS_SUCCESS is simply 0.
+It is also out of context since the tests fail on current net and net-next.
 
-Yes, i noted all of these already. My change is consistent with the existing correct checks.  consistency is important.  returning a neg value to reuse the exiting check should mean the STATUS_SUCCESS != 0 checks are changed to neg check.  i can do this larger change if required.
-
-Tom
-
->
-> Alan Stern
->
-
+The tests along with the patches that fix the problem should be sent
+together.
