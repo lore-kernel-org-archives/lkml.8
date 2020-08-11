@@ -2,134 +2,97 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9908BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:45:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 841B1C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:47:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74B302076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:45:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="sE1l4Jh9"
+	by mail.kernel.org (Postfix) with ESMTP id 4A3E32076C
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:47:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728894AbgHKOpt (ORCPT
+        id S1728847AbgHKOrJ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 10:45:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53356 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728833AbgHKOps (ORCPT
+        Tue, 11 Aug 2020 10:47:09 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:35581 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728788AbgHKOrI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 10:45:48 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 924E3C061788
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 07:45:48 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id u10so6908153plr.7
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 07:45:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0TKJ8QiOGw2cS0Spzetvjqqgie96cDTA3YQauzdWsow=;
-        b=sE1l4Jh9OMKhr6xkroUSS+SsiF3XTlxMVq54bvxBNHB0HnSBRmgi14cdjhUvy/fMtl
-         gdau5+ZUXd9R7E1FQD26A22G4PI6hs0d1cDOFFVFNLUWQpYYKdeKQTWk+LmlJvc3PpSj
-         NNboc4l12wzSTutNqGLd4oNJ9OxsfwP3ugQOa0LDf01ZD2l9kQQUnAio+1EI8/F6I90y
-         CBoOE14OjyFNaHXtsLxUWEkFLeYfyBzqp9C5rmJHYr87GWLRcJwzW4LskCOJSZhri+m0
-         0XIDSqFtVfWxMBbJUwblt5zoQxxSCllh59qRDLqYCf1N12aUch673H4de3PfwPlPUxMx
-         6eBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0TKJ8QiOGw2cS0Spzetvjqqgie96cDTA3YQauzdWsow=;
-        b=Fc8axcqs2t5LZj0ny5KWoTYneUPgJvRxinv0QON7BWHmvHFpzaJJbXCWiyS/M+p+SI
-         dKEq8g89LP7l8FOCUlkVZE05aleAt92YorZ83NDm02S43D19k8jvcvkvrdQGMR5eSWI5
-         vQcGuawcxkzoTUEjZHVIqEWSJWjTXd5SgNc1IaKSLIBAayeCOg0XNlasc7+PXV0tWDTh
-         HrxZ8P0tV4ZS2RDwnh84bq/372K28nQ6AMLB+5/Vz2ElA2F61cEAepzQv1/zbklRgXi4
-         lBLxzdrA32Z8yVG8YxWyVNND/Jx8NmAzB5kdbZmsDoOYmgUH+XnWGsg5DWQ8U7NqcBIj
-         C2zQ==
-X-Gm-Message-State: AOAM5326U6YFjxyvJfjBjvDbyUndFPvdnsqe6PqwbInb6kN88HkXIHnw
-        ArgUPdMaKrM5W0Vi6lfUrWK2lw==
-X-Google-Smtp-Source: ABdhPJzVUb/kkKz4xX9b2SpN/rk2/QXWukAxXF6jnULCHWiub9Vfnn7sZ2Fu/H7SPfgKF+vPez+WeQ==
-X-Received: by 2002:a17:90a:3ac5:: with SMTP id b63mr1480680pjc.3.1597157147934;
-        Tue, 11 Aug 2020 07:45:47 -0700 (PDT)
-Received: from [192.168.1.182] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id bv17sm3003751pjb.0.2020.08.11.07.45.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Aug 2020 07:45:47 -0700 (PDT)
-Subject: Re: possible deadlock in __io_queue_deferred
-To:     Stefano Garzarella <sgarzare@redhat.com>
-Cc:     syzbot <syzbot+996f91b6ec3812c48042@syzkaller.appspotmail.com>,
-        io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        viro@zeniv.linux.org.uk
-References: <00000000000035fdf505ac87b7f9@google.com>
- <76cc7c43-2ebb-180d-c2c8-912972a3f258@kernel.dk>
- <20200811140010.gigc2amchytqmrkk@steredhat>
- <504b4b08-30c1-4ca8-ab3b-c9f0b58f0cfa@kernel.dk>
- <20200811144419.blu4wufu7t4dfqin@steredhat>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <23b58871-b8b6-9f5c-2a7b-f4bade6dee6e@kernel.dk>
-Date:   Tue, 11 Aug 2020 08:45:46 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200811144419.blu4wufu7t4dfqin@steredhat>
-Content-Type: text/plain; charset=utf-8
+        Tue, 11 Aug 2020 10:47:08 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-226-_hQCXr5ePjqgERJk8Nfi3Q-1; Tue, 11 Aug 2020 15:47:04 +0100
+X-MC-Unique: _hQCXr5ePjqgERJk8Nfi3Q-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Tue, 11 Aug 2020 15:47:03 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Tue, 11 Aug 2020 15:47:03 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Andi Kleen' <ak@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+CC:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        "Arnaldo Carvalho de Melo" <acme@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        "alexey.budankov@linux.intel.com" <alexey.budankov@linux.intel.com>,
+        "adrian.hunter@intel.com" <adrian.hunter@intel.com>
+Subject: RE: [PATCH 1/2] perf: Add closing sibling events' file descriptors
+Thread-Topic: [PATCH 1/2] perf: Add closing sibling events' file descriptors
+Thread-Index: AQHWb+1snIoIlGwKoUSHzUM68Tmsxaky+9RQ
+Date:   Tue, 11 Aug 2020 14:47:03 +0000
+Message-ID: <9ff26c5231954e65bbd4873d54ebd727@AcuMS.aculab.com>
+References: <20200708151635.81239-1-alexander.shishkin@linux.intel.com>
+ <20200708151635.81239-2-alexander.shishkin@linux.intel.com>
+ <20200806083530.GV2674@hirez.programming.kicks-ass.net>
+ <20200806153205.GA1448395@tassilo.jf.intel.com>
+ <875z9q1u3g.fsf@ashishki-desk.ger.corp.intel.com>
+ <20200810144518.GB1448395@tassilo.jf.intel.com>
+ <20200810203632.GF3982@worktop.programming.kicks-ass.net>
+ <20200811142955.GC1448395@tassilo.jf.intel.com>
+In-Reply-To: <20200811142955.GC1448395@tassilo.jf.intel.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/11/20 8:44 AM, Stefano Garzarella wrote:
-> On Tue, Aug 11, 2020 at 08:21:12AM -0600, Jens Axboe wrote:
->> On 8/11/20 8:00 AM, Stefano Garzarella wrote:
->>> On Mon, Aug 10, 2020 at 09:55:17AM -0600, Jens Axboe wrote:
->>>> On 8/10/20 9:36 AM, syzbot wrote:
->>>>> Hello,
->>>>>
->>>>> syzbot found the following issue on:
->>>>>
->>>>> HEAD commit:    449dc8c9 Merge tag 'for-v5.9' of git://git.kernel.org/pub/..
->>>>> git tree:       upstream
->>>>> console output: https://syzkaller.appspot.com/x/log.txt?x=14d41e02900000
->>>>> kernel config:  https://syzkaller.appspot.com/x/.config?x=9d25235bf0162fbc
->>>>> dashboard link: https://syzkaller.appspot.com/bug?extid=996f91b6ec3812c48042
->>>>> compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
->>>>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=133c9006900000
->>>>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1191cb1a900000
->>>>>
->>>>> IMPORTANT: if you fix the issue, please add the following tag to the commit:
->>>>> Reported-by: syzbot+996f91b6ec3812c48042@syzkaller.appspotmail.com
->>>>
->>>> Thanks, the below should fix this one.
->>>
->>> Yeah, it seems right to me, since only __io_queue_deferred() (invoked by
->>> io_commit_cqring()) can be called with 'completion_lock' held.
->>
->> Right
->>
->>> Just out of curiosity, while exploring the code I noticed that we call
->>> io_commit_cqring() always with the 'completion_lock' held, except in the
->>> io_poll_* functions.
->>>
->>> That's because then there can't be any concurrency?
->>
->> Do you mean the iopoll functions? Because we're definitely holding it
->> for the io_poll_* functions.
+From: Andi Kleen
+> On Mon, Aug 10, 2020 at 10:36:32PM +0200, Peter Zijlstra wrote:
+> > On Mon, Aug 10, 2020 at 07:45:18AM -0700, Andi Kleen wrote:
+> >
+> > > Unfortunately we're kind of stuck with the old NFILE=1024 default
+> > > even though it makes little sense on modern servers.
+> >
+> > Why can't that be changed? It seems to me all of userspace changes all
+> > the time; heck that system-doofus thing flushed 20+ years of sysadmin
+> > experience down the drain, just cause. Why can't we up a file limit?
 > 
-> Right, the only one seems io_iopoll_complete().
-> 
-> So, IIUC, in this case we are actively polling the level below,
-> so there shouldn't be any asynchronous events, is it right?
+> We could try, but I believe it's hard coded in various places outside
+> the kernel.
 
-Right, that's serialized by itself.
+The place it really bites is select().
+Although the kernel supports large bitmaps glibc doesn't.
+The random bit overwrites are a PITA to debug.
 
--- 
-Jens Axboe
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
