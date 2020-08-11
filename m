@@ -2,225 +2,179 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99BA6C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 07:16:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D47F9C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 07:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56C8D20885
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 07:16:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0FFC20774
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 07:19:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fortanix.onmicrosoft.com header.i=@fortanix.onmicrosoft.com header.b="HglVHxhh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G8B0k6+g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728277AbgHKHQp (ORCPT
+        id S1728296AbgHKHTT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 03:16:45 -0400
-Received: from mail-bn7nam10on2099.outbound.protection.outlook.com ([40.107.92.99]:23425
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726397AbgHKHQo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 03:16:44 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Dcr4m/7QGuzimGuavmblvi+rsMT4meFR6FynX1PsLQA++oIQv/DFwQqYMOisqjBq2nOCORpjpf0fQTjHqshPrdPCz5hVkCvzhPFG6hbrzZglfVCH95YDwAWgudUGMuZX5Rgqoy5Fc4tCr6qPv38PYxaK0Vcj4e+Whv98tOR+1qOmSwda1qhugkyulm0CT43RevlJYqfg0Bm24DsYhVzTL/gKTjari8BFT8mf/xUQ3Rv0bsD1R4COPOrdcq1DGuG11QR22HUgSOAYMEWI2Ly9KzfZiR12uEPOOZtkp8hjhsrLrKA1ZNDr5O5NsiwGf+Y2N3RWG2AuxmZcR1w8hVy/8w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=i7VIaKamPFl/3nIlaPJu5aF+YmMSq8jJo0FZkqz5dRo=;
- b=As83dQBhMsfaU/N7+nIH1qlxdz30rANcb9MvcoZzQczEwTu8JJnhsGP9ehPxknsNemUhZMUgRUZQoR/WdOoYocW2Yy7a1m4aO7TNqMljXbQSNE7R1JQ+DJmxO0iZoeVVKMQMvPJ1CtYaWgGTitc+6NJFrDEHyqeNuVjQH9egKstq2MTpGqAzglOokA7I3et7O75AFoeJ6A2xNQKFdsnBe6JzO443KvxxU9Hvq9ck3nDk14UCBnDYtuHS2euGUY1m9hhteMafUloesqK2fCc2mdgEiAufeUwrj/6UDnmfyPjcp43p2q4y0s6GzjyoydJIQfb1DniBJjxRcdc8pwYJYw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fortanix.com; dmarc=pass action=none header.from=fortanix.com;
- dkim=pass header.d=fortanix.com; arc=none
+        Tue, 11 Aug 2020 03:19:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41126 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726421AbgHKHTS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 03:19:18 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E82DC06174A;
+        Tue, 11 Aug 2020 00:19:18 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id o22so8740714qtt.13;
+        Tue, 11 Aug 2020 00:19:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=fortanix.onmicrosoft.com; s=selector2-fortanix-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=i7VIaKamPFl/3nIlaPJu5aF+YmMSq8jJo0FZkqz5dRo=;
- b=HglVHxhhPvIObjIK6X8xgg1mnXNM0974q1a02n8GPztPD3PMl5gIGLXZWJ7HD41fd+ccgM457cihZASx64gtfiMASef0vvOTNNF3M1qePR7C7vqGS9mOboyjHs3gwZIuhJre1072GVzPdAO5TxPrYrDZFTW6HA2u2v5Tf96adFo=
-Authentication-Results: google.com; dkim=none (message not signed)
- header.d=none;google.com; dmarc=none action=none header.from=fortanix.com;
-Received: from BY5PR11MB4260.namprd11.prod.outlook.com (2603:10b6:a03:1ba::30)
- by BYAPR11MB3560.namprd11.prod.outlook.com (2603:10b6:a03:f8::29) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.18; Tue, 11 Aug
- 2020 07:16:39 +0000
-Received: from BY5PR11MB4260.namprd11.prod.outlook.com
- ([fe80::7d6c:d61b:95de:2f7c]) by BY5PR11MB4260.namprd11.prod.outlook.com
- ([fe80::7d6c:d61b:95de:2f7c%6]) with mapi id 15.20.3261.024; Tue, 11 Aug 2020
- 07:16:39 +0000
-Subject: Re: [PATCH v36 21/24] x86/vdso: Implement a vDSO for Intel SGX
- enclave call
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Nathaniel McCallum <npmccallum@redhat.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, x86@kernel.org,
-        linux-sgx@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Lutomirski <luto@amacapital.net>,
-        Cedric Xing <cedric.xing@intel.com>, akpm@linux-foundation.org,
-        andriy.shevchenko@linux.intel.com, asapek@google.com, bp@alien8.de,
-        chenalexchen@google.com, conradparker@google.com,
-        cyhanish@google.com, dave.hansen@intel.com,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Josh Triplett <josh@joshtriplett.org>, kai.huang@intel.com,
-        "Svahn, Kai" <kai.svahn@intel.com>, kmoy@google.com,
-        ludloff@google.com, luto@kernel.org,
-        Neil Horman <nhorman@redhat.com>,
-        Patrick Uiterwijk <puiterwijk@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>, yaozhangx@google.com
-References: <20200716135303.276442-1-jarkko.sakkinen@linux.intel.com>
- <20200716135303.276442-22-jarkko.sakkinen@linux.intel.com>
- <CAOASepOqRfUafSv_qjUv-jW_6n8G7kZ9yh-2z_Z9sjL_2zqNCg@mail.gmail.com>
- <20200810222317.GG14724@linux.intel.com>
-From:   Jethro Beekman <jethro@fortanix.com>
-Message-ID: <78ba0baf-8ffa-7221-4ac1-007dd9e7eb20@fortanix.com>
-Date:   Tue, 11 Aug 2020 09:16:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-In-Reply-To: <20200810222317.GG14724@linux.intel.com>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; boundary="------------ms060609020707000509080703"
-X-ClientProxiedBy: LO2P265CA0055.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:60::19) To BY5PR11MB4260.namprd11.prod.outlook.com
- (2603:10b6:a03:1ba::30)
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=QUV+RKelrGDMMeJLFdVFPbO5APkLi9wyQFp+5QMDpqo=;
+        b=G8B0k6+gHQyZJGZkIl+xEMk6z/IlDGgzjGX5y4LxNPYyppL8U7UKPd3gn+3fIKXHCo
+         l9kweqnqTiecZV2ppBXXk7umYr3ephBhbV8F21O/89WgTHoAW0RxLr7uNmAFB/jp7JAS
+         QkKwvX2oUHmDCy2WrQQG3Q7sOLr62fSGghzehtSVFW5dSIffIgKzCwEkKerIv2qsnz2j
+         6HXMeKJr7toegZllvqQbAmUtlY3qUIGrTZG3Sg/2nNGBCdCC+ot2LSIpg6JI8qB4/rcf
+         heYYSfK9onwXOq7o4LBJlO95mn//YsfsVAlK5QbjYbgU6M3+ZGw+qvxYy25G/3shbRUP
+         PgzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=QUV+RKelrGDMMeJLFdVFPbO5APkLi9wyQFp+5QMDpqo=;
+        b=p4TYkCfngNQqdBFFanB24evcfpGZq0BIQalVoXOcnLwwu1LafEtC9j9idH7CVh2JZw
+         vWerA09TTV/CzCDlbFaztm5IcSvuCo+7bNlLWqTuCpoQrzdJhuh7O3UWir+pd3na5kOy
+         LGc+nHCGMlfuwm/1WG2LDkj0u3vP3xxla9DCY7PAlF+3rKfLm7wRYLtoS8k8NAKtm4h6
+         HGsBMvRGr1xxwUOTrDDWobCkyP7rRBV6Tw1CAhUDsdwWFZOkjPVGUeGuM8ONqd9mNT4L
+         IMA2ZRfcHLbpu+vScYU9AwZ04qInkvi0CS/5hNhpYHMASFN5Uwgnh8I6hX+ZCt2j5NTA
+         LSUg==
+X-Gm-Message-State: AOAM531NMb9WGLRwtt/toG5yUiGOkkC8oXzK9rnRucdgGyrQZI9JOJz0
+        mMn/is+SNH/yqF6D3pcJ3Q==
+X-Google-Smtp-Source: ABdhPJxBd5Yw2qCQsEu0ftMM++sr6OpE6pVjh3+jCMAnheGuaNBmkGoWNWMr2U2MFEYgUmx3GtaNhw==
+X-Received: by 2002:ac8:454b:: with SMTP id z11mr32295102qtn.350.1597130357716;
+        Tue, 11 Aug 2020 00:19:17 -0700 (PDT)
+Received: from PWN (146-115-88-66.s3894.c3-0.sbo-ubr1.sbo.ma.cable.rcncustomer.com. [146.115.88.66])
+        by smtp.gmail.com with ESMTPSA id x67sm16866688qke.136.2020.08.11.00.19.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Aug 2020 00:19:17 -0700 (PDT)
+Date:   Tue, 11 Aug 2020 03:19:14 -0400
+From:   Peilin Ye <yepeilin.cs@gmail.com>
+To:     Julian Anastasov <ja@ssi.bg>
+Cc:     Cong Wang <xiyou.wangcong@gmail.com>,
+        Wensong Zhang <wensong@linux-vs.org>,
+        Simon Horman <horms@verge.net.au>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        lvs-devel@vger.kernel.org,
+        NetFilter <netfilter-devel@vger.kernel.org>,
+        coreteam@netfilter.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [Linux-kernel-mentees] [PATCH net] ipvs: Fix uninit-value in
+ do_ip_vs_set_ctl()
+Message-ID: <20200811071914.GA832118@PWN>
+References: <20200810220703.796718-1-yepeilin.cs@gmail.com>
+ <CAM_iQpWsQubVJ-AYaLHujHwz68+nsHBcbgbf8XPMEPD=Vu+zaA@mail.gmail.com>
+ <20200811050929.GA821443@PWN>
+ <alpine.LFD.2.23.451.2008110936570.3707@ja.home.ssi.bg>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [10.195.0.246] (212.61.132.179) by LO2P265CA0055.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:60::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.19 via Frontend Transport; Tue, 11 Aug 2020 07:16:32 +0000
-X-Originating-IP: [212.61.132.179]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: e8fce881-87a7-4ab3-4752-08d83dc67d2c
-X-MS-TrafficTypeDiagnostic: BYAPR11MB3560:
-X-Microsoft-Antispam-PRVS: <BYAPR11MB356083787160B4CD2DF5300BAA450@BYAPR11MB3560.namprd11.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Boa5kVwROyOpMIzfDSnfEozaRtRt9fpqssRQ3gb4UBJvyOUTe6g5pEijdyWmjdNEiUIS8VOQUom0nB4KN+pdq379nohuKK1ymfYgC/GqLLxItJv7/QdUbv4qSnM5pxN3Ym1GhhIW3RNXTpgaAZ65dmQyUyLSPJdR7Wy0OHXSgLG/cZObkxlS0K5/7ofz2kvQAL1J56qg6qxN1iRPcHN0xxMRblWDqORTFV8h8KYwrcDBpIshRysePyD8Mk+/Euldwzlq9n2WhF4LX2l8aynAp1ycvkanG7GeHYranfXeU490elmYpGG5U1cRCLHs632n71r2ESMafQFPTPyzolMHUqw0jgawjolYVDSpFdxKV9r7KTHQiPEYYJxdXTYXmcdt
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR11MB4260.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(39840400004)(366004)(346002)(136003)(396003)(8676002)(83380400001)(66556008)(66946007)(66476007)(33964004)(6486002)(31686004)(52116002)(36756003)(86362001)(4326008)(16526019)(2616005)(6666004)(53546011)(508600001)(235185007)(5660300002)(31696002)(7416002)(2906002)(16576012)(316002)(110136005)(26005)(956004)(54906003)(186003)(8936002)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: lesJvYX+vqmUnFeaXhQQwqnkB0IyB2QeS3w1uDoXXVtEpQkfn7VTcoGyETmy4ATdFdm+W9fmuHeIBkmW3L4J3JNzX84T1dwGKPNIv3fHuA7vUChXu+RVAwLFV2sCyoMSCv9SS6k32I9/CjncX29TTFBYKmmHigdpxbKbF+fy0q0xte2C+ndWCIhyEr6BDyBoYIkhWFGzoTd3OlDEsZ+tVaBlX0ZUqp9/07W0YFF3bNDB/h1OuDEArG7zJa9pnVMPC03KPMsdpqQ4ajZlv8V5k1wGT6ZhJJFzK7Xrx5TcpMDJsUFnmmKsxAbaYB4RUvKfVYG1AZ3WEz4kVO6Bm1D+mcGUmFkeuIUr6377rmz0wPd0p/pEBnTa7NlvNzw6Auxtj4f6Y9+UJz+gK/btZrwL04FgmGvwK/r+zhD8MT4r25R5ejCFoxE4keBaziGUIP4GYIGavKghvNHXYXRiYmWId5w7l1cFkUirsLgsOYUfjQ9UpkRa4zIYh+B1eHgQZk8syIPxSw+5oSLariD3SrKVvUpFMwabPKZi6B6HcTR5GJw0YviOkwdcs0ImYK1DnYWtoeoxFTJMB3oZVKSj56nekuv2V1CMdw+x9N6Dy5f6jkV08no97M/5HRAAUmREo3gLtjTUh6KdLzCcftKIbVjo2g==
-X-OriginatorOrg: fortanix.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e8fce881-87a7-4ab3-4752-08d83dc67d2c
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR11MB4260.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Aug 2020 07:16:38.9855
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: de7becae-4883-43e8-82c7-7dbdbb988ae6
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5pj6dmeex3nnq6PODCCv/ZIHyyeNN4tmy5UJJ4K2UbLFFexEVwA2J9vzc6g67HdZMb5jvzEbhyDc5hksKSByKw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB3560
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.LFD.2.23.451.2008110936570.3707@ja.home.ssi.bg>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---------------ms060609020707000509080703
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+On Tue, Aug 11, 2020 at 09:58:46AM +0300, Julian Anastasov wrote:
+> 
+> 	Hello,
+> 
+> On Tue, 11 Aug 2020, Peilin Ye wrote:
+> 
+> > On Mon, Aug 10, 2020 at 08:57:19PM -0700, Cong Wang wrote:
+> > > On Mon, Aug 10, 2020 at 3:10 PM Peilin Ye <yepeilin.cs@gmail.com> wrote:
+> > > >
+> > > > do_ip_vs_set_ctl() is referencing uninitialized stack value when `len` is
+> > > > zero. Fix it.
+> > > 
+> > > Which exact 'cmd' is it here?
+> > > 
+> > > I _guess_ it is one of those uninitialized in set_arglen[], which is 0.
+> > 
+> > Yes, it was `IP_VS_SO_SET_NONE`, implicitly initialized to zero.
+> > 
+> > > But if that is the case, should it be initialized to
+> > > sizeof(struct ip_vs_service_user) instead because ip_vs_copy_usvc_compat()
+> > > is called anyway. Or, maybe we should just ban len==0 case.
+> > 
+> > I see. I think the latter would be easier, but we cannot ban all of
+> > them, since the function does something with `IP_VS_SO_SET_FLUSH`, which
+> > is a `len == 0` case.
+> > 
+> > Maybe we do something like this?
+> 
+> 	Yes, only IP_VS_SO_SET_FLUSH uses len 0. We can go with
+> this change but you do not need to target net tree, as the
+> problem is not fatal net-next works too. What happens is
+> that we may lookup services with random search keys which
+> is harmless.
 
-On 2020-08-11 00:23, Sean Christopherson wrote:
-> Another thought would be to wrap sgx_enclave_exception in a struct to g=
-ive
-> room for supporting additional exit information (if such a thing ever p=
-ops
-> up) and to allow the caller to opt in to select behavior, e.g. Jethro's=
+I see, I'll target net-next instead.
 
-> request to invoke the exit handler on IRQ exits.  This is basically the=
+> 	Another option is to add new block after this one:
+> 
+>         } else if (cmd == IP_VS_SO_SET_TIMEOUT) {
+>                 /* Set timeout values for (tcp tcpfin udp) */
+>                 ret = ip_vs_set_timeout(ipvs, (struct ip_vs_timeout_user *)arg);
+>                 goto out_unlock;
+>         }
+> 
+> 	such as:
+> 
+> 	} else if (!len) {
+> 		/* No more commands with len=0 below */
+> 		ret = -EINVAL;
+> 		goto out_unlock;
+> 	}
+> 
+> 	It give more chance for future commands to use len=0
+> but the drawback is that the check happens under mutex. So, I'm
+> fine with both versions, it is up to you to decide :)
 
-> equivalent of "struct kvm_run", minus the vCPU/enclave state.
+Ah, this seems much cleaner. I'll send v2 soon, thank you!
 
-Actually, the flag I need is =E2=80=9Creturn from the vdso on IRQ exits=E2=
-=80=9D (See Andy's email about preferring returns over callbacks). But ma=
-ybe the flag should be =E2=80=9Cinterpret IRQ exit as a normal exit=E2=80=
-=9D and let it be handled the same as any other exit based on whether an =
-exit handler fnptr was passed or not.
+Peilin Ye
 
---
-Jethro Beekman | Fortanix
-
-
-
-
---------------ms060609020707000509080703
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCC
-C54wggVPMIIEN6ADAgECAhAFFr+cC0ZYZTtbKgQCBwyyMA0GCSqGSIb3DQEBCwUAMIGCMQsw
-CQYDVQQGEwJJVDEPMA0GA1UECAwGTWlsYW5vMQ8wDQYDVQQHDAZNaWxhbm8xIzAhBgNVBAoM
-GkFjdGFsaXMgUy5wLkEuLzAzMzU4NTIwOTY3MSwwKgYDVQQDDCNBY3RhbGlzIENsaWVudCBB
-dXRoZW50aWNhdGlvbiBDQSBHMTAeFw0xOTA5MTYwOTQ3MDlaFw0yMDA5MTYwOTQ3MDlaMB4x
-HDAaBgNVBAMME2pldGhyb0Bmb3J0YW5peC5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAw
-ggEKAoIBAQDHWEhcRGkEl1ZnImSqBt/OXNJ4AyDZ86CejuWI9jYpWbtf/gXBQO6iaaEKBDlj
-Vffk2QxH9wcifkYsvCYfxFgD15dU9TABO7YOwvHa8NtxanWr1xomufu/P1ApI336+S7ZXfSe
-qMnookNJUMHuF3Nxw2lI69LXqZLCdcVXquM4DY1lVSV+DXIwpTMtB+pMyqOWrsgmrISMZYFw
-EUJOqVDvtU8KewhpuGAYXAQSDVLcAl2nZg7C2Mex8vT8stBoslPTkRXxAgMbslDNDUiKhy8d
-E3I78P+stNHlFAgALgoYLBiVVLZkVBUPvgr2yUApR63yosztqp+jFhqfeHbjTRlLAgMBAAGj
-ggIiMIICHjAMBgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFH5g/Phspz09166ToXkCj7N0KTv1
-MEsGCCsGAQUFBwEBBD8wPTA7BggrBgEFBQcwAoYvaHR0cDovL2NhY2VydC5hY3RhbGlzLml0
-L2NlcnRzL2FjdGFsaXMtYXV0Y2xpZzEwHgYDVR0RBBcwFYETamV0aHJvQGZvcnRhbml4LmNv
-bTBHBgNVHSAEQDA+MDwGBiuBHwEYATAyMDAGCCsGAQUFBwIBFiRodHRwczovL3d3dy5hY3Rh
-bGlzLml0L2FyZWEtZG93bmxvYWQwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMIHo
-BgNVHR8EgeAwgd0wgZuggZiggZWGgZJsZGFwOi8vbGRhcDA1LmFjdGFsaXMuaXQvY24lM2RB
-Y3RhbGlzJTIwQ2xpZW50JTIwQXV0aGVudGljYXRpb24lMjBDQSUyMEcxLG8lM2RBY3RhbGlz
-JTIwUy5wLkEuLzAzMzU4NTIwOTY3LGMlM2RJVD9jZXJ0aWZpY2F0ZVJldm9jYXRpb25MaXN0
-O2JpbmFyeTA9oDugOYY3aHR0cDovL2NybDA1LmFjdGFsaXMuaXQvUmVwb3NpdG9yeS9BVVRI
-Q0wtRzEvZ2V0TGFzdENSTDAdBgNVHQ4EFgQUAXkM7yNq6pH6j+IC/7IsDPSTMnowDgYDVR0P
-AQH/BAQDAgWgMA0GCSqGSIb3DQEBCwUAA4IBAQC8z+2tLUwep0OhTQBgMaybrxTHCxRZ4/en
-XB0zGVrry94pItE4ro4To/t86Kfcic41ZsaX8/SFVUW2NNHjEodJu94UhYqPMDUVjO6Y14s2
-jznFHyKQdXMrhIBU5lzYqyh97w6s82Z/qoMy3OuLek+8rXirwju9ATSNLsFTzt2CEoyCSRtl
-yOmR7Z9wgSvD7C7XoBdGEFVdGCXwCy1t9AT7UCIHKssnguVaMGN9vWqLPVKOVTwc4g3RAQC7
-J1Aoo6U5d6wCIX4MxEZhICxnUgAKHULxsWMGjBfQAo3QGXjJ4wDEu7O/5KCyUfn6lyhRYa+t
-YgyFAX0ZU9Upovd+aOw0MIIGRzCCBC+gAwIBAgIILNSK07EeD4kwDQYJKoZIhvcNAQELBQAw
-azELMAkGA1UEBhMCSVQxDjAMBgNVBAcMBU1pbGFuMSMwIQYDVQQKDBpBY3RhbGlzIFMucC5B
-Li8wMzM1ODUyMDk2NzEnMCUGA1UEAwweQWN0YWxpcyBBdXRoZW50aWNhdGlvbiBSb290IENB
-MB4XDTE1MDUxNDA3MTQxNVoXDTMwMDUxNDA3MTQxNVowgYIxCzAJBgNVBAYTAklUMQ8wDQYD
-VQQIDAZNaWxhbm8xDzANBgNVBAcMBk1pbGFubzEjMCEGA1UECgwaQWN0YWxpcyBTLnAuQS4v
-MDMzNTg1MjA5NjcxLDAqBgNVBAMMI0FjdGFsaXMgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIENB
-IEcxMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwPzBiVbZiOL0BGW/zQk1qygp
-MP4MyvcnqxwR7oY9XeT1bES2DFczlZfeiIqNLanbkyqTxydXZ+kxoS9071qWsZ6zS+pxSqXL
-s+RTvndEaWx5hdHZcKNWGzhy5FiO4GZvGlFInFEiaY+dOEpjjWvSeXpvcDpnYw6M9AXuHo4J
-hjC3P/OK//5QFXnztTa4iU66RpLteOTgCtiRCwZNKx8EFeqqfTpYvfEb4H91E7n+Y61jm0d2
-E8fJ2wGTaSSwjc8nTI2ApXujoczukb2kHqwaGP3q5UuedWcnRZc65XUhK/Z6K32KvrQuNP32
-F/5MxkvEDnJpUnnt9iMExvEzn31zDQIDAQABo4IB1TCCAdEwQQYIKwYBBQUHAQEENTAzMDEG
-CCsGAQUFBzABhiVodHRwOi8vb2NzcDA1LmFjdGFsaXMuaXQvVkEvQVVUSC1ST09UMB0GA1Ud
-DgQWBBR+YPz4bKc9Pdeuk6F5Ao+zdCk79TAPBgNVHRMBAf8EBTADAQH/MB8GA1UdIwQYMBaA
-FFLYiDrIn3hm7YnzezhwlMkCAjbQMEUGA1UdIAQ+MDwwOgYEVR0gADAyMDAGCCsGAQUFBwIB
-FiRodHRwczovL3d3dy5hY3RhbGlzLml0L2FyZWEtZG93bmxvYWQwgeMGA1UdHwSB2zCB2DCB
-lqCBk6CBkIaBjWxkYXA6Ly9sZGFwMDUuYWN0YWxpcy5pdC9jbiUzZEFjdGFsaXMlMjBBdXRo
-ZW50aWNhdGlvbiUyMFJvb3QlMjBDQSxvJTNkQWN0YWxpcyUyMFMucC5BLiUyZjAzMzU4NTIw
-OTY3LGMlM2RJVD9jZXJ0aWZpY2F0ZVJldm9jYXRpb25MaXN0O2JpbmFyeTA9oDugOYY3aHR0
-cDovL2NybDA1LmFjdGFsaXMuaXQvUmVwb3NpdG9yeS9BVVRILVJPT1QvZ2V0TGFzdENSTDAO
-BgNVHQ8BAf8EBAMCAQYwDQYJKoZIhvcNAQELBQADggIBAE2TztUkvkEbShZYc19lifLZej5Y
-jLzLxA/lWxZnssFLpDPySfzMmndz3F06S51ltwDe+blTwcpdzUl3M2alKH3bOr855ku9Rr6u
-edya+HGQUT0OhqDo2K2CAE9nBcfANxifjfT8XzCoC3ctf9ux3og1WuE8WTcLZKgCMuNRBmJt
-e9C4Ug0w3iXqPzq8KuRRobNKqddPjk3EiK+QA+EFCCka1xOLh/7cPGTJMNta1/0u5oLiXaOA
-HeALt/nqeZ2kZ+lizK8oTv4in5avIf3ela3oL6vrwpTca7TZxTX90e805dZQN4qRVPdPbrBl
-WtNozH7SdLeLrcoN8l2EXO6190GAJYdynTc2E6EyrLVGcDKUX91VmCSRrqEppZ7W05TbWRLi
-6+wPjAzmTq2XSmKfajq7juTKgkkw7FFJByixa0NdSZosdQb3VkLqG8EOYOamZLqH+v7ua0+u
-lg7FOviFbeZ7YR9eRO81O8FC1uLgutlyGD2+GLjgQnsvneDsbNAWfkory+qqAxvVzX5PSaQp
-2pJ52AaIH1MN1i2/geRSP83TRMrFkwuIMzDhXxKFQvpspNc19vcTryzjtwP4xq0WNS4YWPS4
-U+9mW+U0Cgnsgx9fMiJNbLflf5qSb53j3AGHnjK/qJzPa39wFTXLXB648F3w1Qf9R7eZeTRJ
-fCQY/fJUMYID9jCCA/ICAQEwgZcwgYIxCzAJBgNVBAYTAklUMQ8wDQYDVQQIDAZNaWxhbm8x
-DzANBgNVBAcMBk1pbGFubzEjMCEGA1UECgwaQWN0YWxpcyBTLnAuQS4vMDMzNTg1MjA5Njcx
-LDAqBgNVBAMMI0FjdGFsaXMgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIENBIEcxAhAFFr+cC0ZY
-ZTtbKgQCBwyyMA0GCWCGSAFlAwQCAQUAoIICLzAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcB
-MBwGCSqGSIb3DQEJBTEPFw0yMDA4MTEwNzE2MjhaMC8GCSqGSIb3DQEJBDEiBCC5KPysMOy7
-QmNgDjOcs0EpEpW0RuxAySwJJbuF/NcJLjBsBgkqhkiG9w0BCQ8xXzBdMAsGCWCGSAFlAwQB
-KjALBglghkgBZQMEAQIwCgYIKoZIhvcNAwcwDgYIKoZIhvcNAwICAgCAMA0GCCqGSIb3DQMC
-AgFAMAcGBSsOAwIHMA0GCCqGSIb3DQMCAgEoMIGoBgkrBgEEAYI3EAQxgZowgZcwgYIxCzAJ
-BgNVBAYTAklUMQ8wDQYDVQQIDAZNaWxhbm8xDzANBgNVBAcMBk1pbGFubzEjMCEGA1UECgwa
-QWN0YWxpcyBTLnAuQS4vMDMzNTg1MjA5NjcxLDAqBgNVBAMMI0FjdGFsaXMgQ2xpZW50IEF1
-dGhlbnRpY2F0aW9uIENBIEcxAhAFFr+cC0ZYZTtbKgQCBwyyMIGqBgsqhkiG9w0BCRACCzGB
-mqCBlzCBgjELMAkGA1UEBhMCSVQxDzANBgNVBAgMBk1pbGFubzEPMA0GA1UEBwwGTWlsYW5v
-MSMwIQYDVQQKDBpBY3RhbGlzIFMucC5BLi8wMzM1ODUyMDk2NzEsMCoGA1UEAwwjQWN0YWxp
-cyBDbGllbnQgQXV0aGVudGljYXRpb24gQ0EgRzECEAUWv5wLRlhlO1sqBAIHDLIwDQYJKoZI
-hvcNAQEBBQAEggEAbAFtBn/88wswtv2XfUN7gdlUx6JWmza0SqwJc11TRvfdKNq05zMiGuWX
-VqCey/uTQkgSE9ztBK/MrRbhTQrT4fZKkA55YZEFPkRStLPApLY3tj4VpIjoNbcwjY4AcP9X
-QnzhJmFSc5encsL24qmt9imlscQBRu0vG0gsmi8EMvHPmbFPBLppn5hUm4MVeUj/X7LYwELe
-F85eIgb+KoSwha3I2kP9jCkMXqioz3hhYSJScGsV1B6tq0otFIvA7tn6N01ZvZipDcDnoS8c
-0HfVtXcjK1cuXJ+8JSS1h+/fultW3BE1hpgk9aAjuU8bmfEn/aooyIewzNE21NWGfBoIEQAA
-AAAAAA==
-
---------------ms060609020707000509080703--
+> > @@ -2432,6 +2432,8 @@ do_ip_vs_set_ctl(struct sock *sk, int cmd, void __user *user, unsigned int len)
+> > 
+> >  	if (cmd < IP_VS_BASE_CTL || cmd > IP_VS_SO_SET_MAX)
+> >  		return -EINVAL;
+> > +	if (len == 0 && cmd != IP_VS_SO_SET_FLUSH)
+> > +		return -EINVAL;
+> >  	if (len != set_arglen[CMDID(cmd)]) {
+> >  		IP_VS_DBG(1, "set_ctl: len %u != %u\n",
+> >  			  len, set_arglen[CMDID(cmd)]);
+> > @@ -2547,9 +2549,6 @@ do_ip_vs_set_ctl(struct sock *sk, int cmd, void __user *user, unsigned int len)
+> >  		break;
+> >  	case IP_VS_SO_SET_DELDEST:
+> >  		ret = ip_vs_del_dest(svc, &udest);
+> > -		break;
+> > -	default:
+> > -		ret = -EINVAL;
+> >  	}
+> > 
+> >    out_unlock:
+> 
+> Regards
+> 
+> --
+> Julian Anastasov <ja@ssi.bg>
