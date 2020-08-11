@@ -2,148 +2,123 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 253FEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 11:59:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 186B1C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 12:00:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 015DB2075D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 11:59:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D77D0206DC
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 12:00:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SNclY0Yy"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="KeP3iUwm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728879AbgHKL71 (ORCPT
+        id S1728882AbgHKMAs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 07:59:27 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:58042 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728864AbgHKL70 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 07:59:26 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07BBuvOw114704;
-        Tue, 11 Aug 2020 11:59:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=Z2ArjTHKNc7GCKD0u7iKG+pvdERcNwoPF+GuSDrsHRE=;
- b=SNclY0Yyq6dtFLnCQ4FT1lXDBKeNvlacEOUiL6vuI08cyuTDXFxDTXMA199ZJIE/u0mW
- /JOUbCFv7XeVvqfOXCkWrQabzGvsRsfa6TujA5gxVXNXx7zTccR1hnQJezl0lBhJjPG2
- RuijZcVd6N1Rwve8ADr3ldOlHpHRjG7TBg1+SiCnTVPy175Jq6+Klr2HCq8N5Camv6Pf
- 3iJliD4YhoMh/wH38ePVL241STjQXVMXrwkXbqbra9v5kFVZ5zMUdb1CfkdsXFi9+Oev
- 49QSzYOUY9vwUODOExIYJfaSOmMqmJukhoqTlUJBQIXBQ2bhCBSYdJtsFnU41cJYnWge pA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 32smpnc4g3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 11 Aug 2020 11:59:19 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07BBxHHZ067225;
-        Tue, 11 Aug 2020 11:59:18 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 32t5y3sxg0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 11 Aug 2020 11:59:18 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 07BBxF0N005209;
-        Tue, 11 Aug 2020 11:59:15 GMT
-Received: from localhost (/73.243.10.6)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 11 Aug 2020 11:59:15 +0000
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 14.0 \(3652.0.5.2.1\))
-Subject: Re: [PATCH] memremap: Convert devmap static branch to {inc,dec}
-From:   William Kucharski <william.kucharski@oracle.com>
-In-Reply-To: <20200810235319.2796597-1-ira.weiny@intel.com>
-Date:   Tue, 11 Aug 2020 05:59:14 -0600
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+        Tue, 11 Aug 2020 08:00:48 -0400
+Received: from mout.gmx.net ([212.227.15.18]:59749 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728469AbgHKMAr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 08:00:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1597147125;
+        bh=PiXz7T5Qow1zNWYr28KRUPG3sTkPX/Vka2nmt1UMH8E=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:References:Date:In-Reply-To;
+        b=KeP3iUwmr12O3R3rgxFQMEFGvBCAs8/h0qlVEfZ0yOtaViP391cACdcr3zHtXC+HK
+         Lt91Q7cE2AtDF+hhVqbdYNVsgAxlIbwR2AHiHXXUuYAECBvnFyLEyK1h98jzxMwHc0
+         zaW8AhllshMk9odyQDurGXnk8zOcxujb8EsQrwjk=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from strobe-jhalfs ([94.220.127.176]) by mail.gmx.com (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MwQT9-1kxYun3QA9-00sN3z; Tue, 11
+ Aug 2020 13:58:45 +0200
+From:   Stephen Berman <stephen.berman@gmx.net>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>
+Subject: Re: power-off delay/hang due to commit 6d25be57 (mainline)
+References: <20200616073827.vysntufld3ves666@linutronix.de>
+        <87o8pjh1i0.fsf@gmx.net>
+        <20200616155501.psduxnisltitodme@linutronix.de>
+        <871rmesqkk.fsf@gmx.net>
+        <20200617142734.mxwfoblufmo6li5e@linutronix.de>
+        <87ftatqu07.fsf@gmx.net>
+        <20200624201156.xu6hel3drnhno6c3@linutronix.de>
+        <87ftak2kxr.fsf@rub.de>
+        <20200714134410.3odqfvjq6rndjjf6@linutronix.de>
+        <CAJZ5v0hZSUkEMCszDADGWk-v0xNEiDE45B3CHLi05BX6rPfm6g@mail.gmail.com>
+        <20200714141135.47adndrsdgpiqfy4@linutronix.de>
+        <87blkbx1gt.fsf@gmx.net>
+Date:   Tue, 11 Aug 2020 13:58:39 +0200
+In-Reply-To: <87blkbx1gt.fsf@gmx.net> (Stephen Berman's message of "Sun, 19
+        Jul 2020 12:07:14 +0200")
+Message-ID: <87imdp5r80.fsf@rub.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Provags-ID: V03:K1:toB/Zjg2aFqGbWRcB8OrQogjKaiHFaN3+Ki9OvgitLebGHcz/aK
+ FDu4bAoS6ozbFuCbOIV/zaXuccj7wgsgP6jj85U+TydkVpcLUddr1qZwpXxB725BFdoZJvS
+ OYxVUWFhYxhT20yCRR7jqp+98hixUL7qttfOL7ldrRk8Fk6yC+GGYB140qQi773W+T+hFB7
+ yrs/uxiVFcZD2tq+t1F2g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:A+4W+E43X58=:DFKlBz5nwMtEWUzTpifZ0y
+ A347YaDxV9tnvPr46HyVuXUeuaXgKRculbJ/5bSeCG8b9em84IUFTuPMlutvQ+Pb3UdDYJiI2
+ 2TTr+Tc2F2Z8A4l22pMET58cxknjhvNLRN8PcLop1EIHc19YHhljLuf+EnvA5QXD+lldt5r9U
+ GhkeAyWrGsUSRVbRRBvc8IRJUqcgerlrZ5JydnmqFEFrmONe9AosOsoww4O+upG1t7nC16bTx
+ 3inXl3nNWOyDNtv/uX+e9fJhVPnT9AhDBpfEqvINJ/2zG3aDovbsF4vscj/onnW7ObP+slhE2
+ 9XcUTH9JFo4B+yaTgkLfSjS+zLTGz5wHaSd0ZNy7AOfzRJzfKnZ8HVVNGoIBsuM6mgflXNsz7
+ yu26dahE0I6fW/blqe0w1tXg1TnviiE7Uhm8q6P8PT774cM1SlM0Jb5sgoX+SeDUpWQPPFEpn
+ ZRqrlebo4koJA1yz8IyaLDS+pHkficAQAGbw9UNkJTnvOuyzBbgf9VZrEcIjNHnhKbw9XVpl+
+ ypXkM81JBhg500mIhaMFp/LfpY2CIs/qksuOdMxzUwKdYR725uUZ7mOzp+76T6IUw3gK0oA8e
+ F1DLE/1uQui3lpEFu1pmbmDI1Vp/j+14UZqLWenj0OWw4/QsqSA1Ru9gc6gaBcgX1ydOgO46/
+ Mfk3ueS81JPLN4NO66Gr5/g8xC+QgDJV/CanIRohyTj67FQ3DVKUqi75GGHY+iakQZqPvQnfD
+ 6qlWLHYyIbs8KVtPkGrO8x6wkwTwKpxJk1VZU1izwWaOel0GKkteV0auRx9BIRCDsafPnvb7r
+ eFoMkzyxH7h5VvsKaOYDH97L5gII7NZf2YrFyhFVsCr+rjuIJefe9RKhahlx5RP2xgRtex+cG
+ iNCbKkwkWQldCgspTGOSBIaToTnNeCEppN3YGWuYRUJ2Shg8oCYGefyEqydynBSP5x//wgh3Y
+ x5Ohm0yWX4kHXWoJotdALoIaXUTa8V5Yi8UKHVXUpfA0i4uaCHLHEtyX1gvRcm4SsZ30HU1th
+ ro3dpHU4czNzVCQvZqkmicdulPj31FqpG9C2iIlw3lmpFBe+/byfcoPyj/zh9fILRe7T8s+8n
+ JESrIfcls6qbRG2I5obMjfQndhK5yhrE5B+VwMWI6qBmVacD9yIHAuY8l7+xDkE+FDNLL5/Z1
+ j4PRQFX4w9v899WK16aYe2EZoVDn8kpcoAAP1xs1zQEwo4fRYSUujPPgW1vEXJjyYjbMH/SSh
+ R8wW4p8W0kWrxuhtkhq/w9XHBoXiciGUb7Jl93g==
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <4AF6A6E6-A098-448A-9CFD-86231D46032B@oracle.com>
-References: <20200810235319.2796597-1-ira.weiny@intel.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-X-Mailer: Apple Mail (2.3652.0.5.2.1)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9709 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0
- suspectscore=0 mlxscore=0 adultscore=0 bulkscore=0 phishscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008110083
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9709 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 lowpriorityscore=0
- bulkscore=0 impostorscore=0 phishscore=0 clxscore=1011 spamscore=0
- malwarescore=0 adultscore=0 mlxlogscore=999 mlxscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008110083
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks good to me.
+On Sun, 19 Jul 2020 12:07:14 +0200 Stephen Berman <stephen.berman@gmx.net>=
+ wrote:
 
-Reviewed-by: William Kucharski <william.kucharski@oracle.com>
+> On Tue, 14 Jul 2020 16:11:35 +0200 Sebastian Andrzej Siewior
+> <bigeasy@linutronix.de> wrote:
+>
+[...]
+>> Stephen, the patch attached adds a WARN_ON() statement which will
+>> produce a stack trace (4 or so). Could please run 'dmesg' after a while
+>> and send it back. There should be a
+>>     "WARNING in drivers/acpi/acpica/evmisc.c"
+>>
+>> statement or something along the lines.
+>
+> I've now rebuilt 5.6.4 with the new patch; sorry for the delay.  Output
+> of dmesg attached.
 
-> On Aug 10, 2020, at 5:53 PM, ira.weiny@intel.com wrote:
->=20
-> From: Ira Weiny <ira.weiny@intel.com>
->=20
-> While reviewing Protection Key Supervisor support it was pointed out
-> that using a counter to track static branch enable was an anti-pattern
-> which was better solved using the provided static_branch_{inc,dec}
-> functions.[1]
->=20
-> Fix up devmap_managed_key to work the same way.  Also this should be
-> safer because there is a very small (very unlikely) race when multiple
-> callers try to enable at the same time.
->=20
-> [1] =
-https://lore.kernel.org/lkml/20200714194031.GI5523@worktop.programming.kic=
-ks-ass.net/
->=20
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Vishal Verma <vishal.l.verma@intel.com>
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> ---
-> mm/memremap.c | 7 ++-----
-> 1 file changed, 2 insertions(+), 5 deletions(-)
->=20
-> diff --git a/mm/memremap.c b/mm/memremap.c
-> index 03e38b7a38f1..9fb9ad500e78 100644
-> --- a/mm/memremap.c
-> +++ b/mm/memremap.c
-> @@ -40,12 +40,10 @@ EXPORT_SYMBOL_GPL(memremap_compat_align);
-> #ifdef CONFIG_DEV_PAGEMAP_OPS
-> DEFINE_STATIC_KEY_FALSE(devmap_managed_key);
-> EXPORT_SYMBOL(devmap_managed_key);
-> -static atomic_t devmap_managed_enable;
->=20
-> static void devmap_managed_enable_put(void)
-> {
-> -	if (atomic_dec_and_test(&devmap_managed_enable))
-> -		static_branch_disable(&devmap_managed_key);
-> +	static_branch_dec(&devmap_managed_key);
-> }
->=20
-> static int devmap_managed_enable_get(struct dev_pagemap *pgmap)
-> @@ -56,8 +54,7 @@ static int devmap_managed_enable_get(struct =
-dev_pagemap *pgmap)
-> 		return -EINVAL;
-> 	}
->=20
-> -	if (atomic_inc_return(&devmap_managed_enable) =3D=3D 1)
-> -		static_branch_enable(&devmap_managed_key);
-> +	static_branch_inc(&devmap_managed_key);
-> 	return 0;
-> }
-> #else
-> --=20
-> 2.28.0.rc0.12.gb6a658bd00c9
->=20
->=20
+FWIW, while you were away I got an additional datapoint: someone who saw
+my original post about this problem to one of the Linux From Scratch
+mailing lists wrote me that he had the same problem, also getting
+messages about the cdrom timing out ("sr 3:0:0:0" in his case); I told
+him about your workaround of adding 'thermal.tzp=3D300' to the kernel
+commandline, and he replied that this works for him too.  And it turns
+out we have similar motherboards: I have a Gigabyte Z390 M Gaming
+Rev. 1001 board and he has Gigabyte Z390 Designare rev 1.0.
 
+Steve Berman
