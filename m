@@ -6,88 +6,75 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF1ABC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:40:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 404A6C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:42:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DE62206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:40:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E23D2076B
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:42:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728845AbgHKOky (ORCPT
+        id S1728850AbgHKOmy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 10:40:54 -0400
-Received: from mga02.intel.com ([134.134.136.20]:39417 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728750AbgHKOkx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 10:40:53 -0400
-IronPort-SDR: 53KUnZqTTqY2CHQMgStOOuKS0hr/4CZAP37o6C2N4Jf/1TFRjPv6cksQ94N/KW+8lviwfHpR0X
- Rdbx6Q9xRtJw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9710"; a="141595789"
-X-IronPort-AV: E=Sophos;i="5.76,461,1592895600"; 
-   d="scan'208";a="141595789"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2020 07:40:53 -0700
-IronPort-SDR: JGfBK8o+ksaoxfDMs5qMmlA6+A78FyKE42qHn7BbegCwAzsraHtXotUojVRJoqvgefCiLl6opJ
- NWwTNkEGnCuw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,461,1592895600"; 
-   d="scan'208";a="324777032"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
-  by orsmga008.jf.intel.com with ESMTP; 11 Aug 2020 07:40:53 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id C5847301CAF; Tue, 11 Aug 2020 07:29:55 -0700 (PDT)
-Date:   Tue, 11 Aug 2020 07:29:55 -0700
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        Jiri Olsa <jolsa@kernel.org>, alexey.budankov@linux.intel.com,
-        adrian.hunter@intel.com
-Subject: Re: [PATCH 1/2] perf: Add closing sibling events' file descriptors
-Message-ID: <20200811142955.GC1448395@tassilo.jf.intel.com>
-References: <20200708151635.81239-1-alexander.shishkin@linux.intel.com>
- <20200708151635.81239-2-alexander.shishkin@linux.intel.com>
- <20200806083530.GV2674@hirez.programming.kicks-ass.net>
- <20200806153205.GA1448395@tassilo.jf.intel.com>
- <875z9q1u3g.fsf@ashishki-desk.ger.corp.intel.com>
- <20200810144518.GB1448395@tassilo.jf.intel.com>
- <20200810203632.GF3982@worktop.programming.kicks-ass.net>
+        Tue, 11 Aug 2020 10:42:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52884 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728750AbgHKOmu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 10:42:50 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A912C06174A;
+        Tue, 11 Aug 2020 07:42:50 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k5VUF-00DcmR-2g; Tue, 11 Aug 2020 14:42:47 +0000
+Date:   Tue, 11 Aug 2020 15:42:47 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     linux-fsdevel@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Karel Zak <kzak@redhat.com>, Jeff Layton <jlayton@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Christian Brauner <christian@brauner.io>,
+        Lennart Poettering <lennart@poettering.net>,
+        Linux API <linux-api@vger.kernel.org>,
+        Ian Kent <raven@themaw.net>,
+        LSM <linux-security-module@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: file metadata via fs API (was: [GIT PULL] Filesystem Information)
+Message-ID: <20200811144247.GK1236603@ZenIV.linux.org.uk>
+References: <1845353.1596469795@warthog.procyon.org.uk>
+ <CAJfpegunY3fuxh486x9ysKtXbhTE0745ZCVHcaqs9Gww9RV2CQ@mail.gmail.com>
+ <ac1f5e3406abc0af4cd08d818fe920a202a67586.camel@themaw.net>
+ <CAJfpegu8omNZ613tLgUY7ukLV131tt7owR+JJ346Kombt79N0A@mail.gmail.com>
+ <CAJfpegtNP8rQSS4Z14Ja4x-TOnejdhDRTsmmDD-Cccy2pkfVVw@mail.gmail.com>
+ <20200811135419.GA1263716@miu.piliscsaba.redhat.com>
+ <20200811140833.GH1236603@ZenIV.linux.org.uk>
+ <CAJfpegsNj55pTXe97qE_i-=zFwca1=2W_NqFdn=rHqc_AJjr8Q@mail.gmail.com>
+ <20200811143107.GI1236603@ZenIV.linux.org.uk>
+ <CAJfpegvAVOYg03q7n24d6faX33rd16WWi5+LLDdfwj_gRYaJLQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200810203632.GF3982@worktop.programming.kicks-ass.net>
+In-Reply-To: <CAJfpegvAVOYg03q7n24d6faX33rd16WWi5+LLDdfwj_gRYaJLQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 10:36:32PM +0200, Peter Zijlstra wrote:
-> On Mon, Aug 10, 2020 at 07:45:18AM -0700, Andi Kleen wrote:
+On Tue, Aug 11, 2020 at 04:36:32PM +0200, Miklos Szeredi wrote:
+
+> > >  - strip off trailing part after first instance of ///
+> > >  - perform path lookup as normal
+> > >  - resolve meta path after /// on result of normal lookup
+> >
+> > ... and interpolation of relative symlink body into the pathname does change
+> > behaviour now, *including* the cases when said symlink body does not contain
+> > that triple-X^Hslash garbage.  Wonderful...
 > 
-> > Unfortunately we're kind of stuck with the old NFILE=1024 default
-> > even though it makes little sense on modern servers.
-> 
-> Why can't that be changed? It seems to me all of userspace changes all
-> the time; heck that system-doofus thing flushed 20+ years of sysadmin
-> experience down the drain, just cause. Why can't we up a file limit?
+> Can you please explain?
 
-We could try, but I believe it's hard coded in various places outside
-the kernel.
-
-But this wouldn't solve the problem of the unnecessary overhead of 
-the inode + file descriptor per event that the patch was trying
-to address. It would just waste more memory.
-
-And increasing it makes the worst case memory consumption you complained
-about event worse because the real limit per uid i
-RLIMIT_NPROC*RLIMIT_FILES.  Of course NPROC needs to be large enough too,
-so the total just becomes bigger and bigger.
-
-Ultimatively you need another accounting mechanism that actually
-works per uid without extra factors.
-
-Now perf already has one so it's still unclear to me why we can't use it.
-
--Andi
+Currently substituting the body of a relative symlink in place of its name
+results in equivalent pathname.  With your patch that is not just no longer
+true, it's no longer true even when the symlink body does not contain that
+/// kludge - it can come in part from the symlink body and in part from the
+rest of pathname.  I.e. you can't even tell if substitution is an equivalent
+replacement by looking at the symlink body alone.
