@@ -7,158 +7,137 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F27C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 11:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31DD0C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 11:11:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B3022075D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 11:11:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CBBE2075D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 11:11:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728714AbgHKLLI (ORCPT
+        id S1728721AbgHKLLN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 07:11:08 -0400
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:33792 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728661AbgHKLK6 (ORCPT
+        Tue, 11 Aug 2020 07:11:13 -0400
+Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:40342 "EHLO
+        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728469AbgHKLK6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 11 Aug 2020 07:10:58 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R681e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04427;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0U5TLMT5_1597144252;
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07484;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0U5TLMT5_1597144252;
 Received: from aliy80.localdomain(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U5TLMT5_1597144252)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 11 Aug 2020 19:10:53 +0800
+          Tue, 11 Aug 2020 19:10:52 +0800
 From:   Alex Shi <alex.shi@linux.alibaba.com>
 To:     akpm@linux-foundation.org
 Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Hugh Dickins <hughd@google.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: [Resend PATCH 3/6] mm/thp: move lru_add_page_tail func to huge_memory.c
-Date:   Tue, 11 Aug 2020 19:10:29 +0800
-Message-Id: <1597144232-11370-3-git-send-email-alex.shi@linux.alibaba.com>
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [Resend PATCH 1/6] mm/memcg: warning on !memcg after readahead page charged
+Date:   Tue, 11 Aug 2020 19:10:27 +0800
+Message-Id: <1597144232-11370-1-git-send-email-alex.shi@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1597144232-11370-1-git-send-email-alex.shi@linux.alibaba.com>
-References: <1597144232-11370-1-git-send-email-alex.shi@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The func is only used in huge_memory.c, defining it in other file with a
-CONFIG_TRANSPARENT_HUGEPAGE macro restrict just looks weird.
-
-Let's move it THP. And make it static as Hugh Dickin suggested.
+Since readahead page is charged on memcg too, in theory we don't have to
+check this exception now. Before safely remove them all, add a warning
+for the unexpected !memcg.
 
 Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Reviewed-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Michal Hocko <mhocko@suse.com>
 Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Hugh Dickins <hughd@google.com>
-Cc: linux-kernel@vger.kernel.org
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: cgroups@vger.kernel.org
 Cc: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org
 ---
- include/linux/swap.h |  2 --
- mm/huge_memory.c     | 30 ++++++++++++++++++++++++++++++
- mm/swap.c            | 33 ---------------------------------
- 3 files changed, 30 insertions(+), 35 deletions(-)
+ include/linux/mmdebug.h | 13 +++++++++++++
+ mm/memcontrol.c         | 15 ++++++++-------
+ 2 files changed, 21 insertions(+), 7 deletions(-)
 
-diff --git a/include/linux/swap.h b/include/linux/swap.h
-index 661046994db4..43e6b3458f58 100644
---- a/include/linux/swap.h
-+++ b/include/linux/swap.h
-@@ -338,8 +338,6 @@ extern void lru_note_cost(struct lruvec *lruvec, bool file,
- 			  unsigned int nr_pages);
- extern void lru_note_cost_page(struct page *);
- extern void lru_cache_add(struct page *);
--extern void lru_add_page_tail(struct page *page, struct page *page_tail,
--			 struct lruvec *lruvec, struct list_head *head);
- extern void activate_page(struct page *);
- extern void mark_page_accessed(struct page *);
- extern void lru_add_drain(void);
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 90733cefa528..bc905e7079bf 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -2315,6 +2315,36 @@ static void remap_page(struct page *page)
+diff --git a/include/linux/mmdebug.h b/include/linux/mmdebug.h
+index 2ad72d2c8cc5..4ed52879ce55 100644
+--- a/include/linux/mmdebug.h
++++ b/include/linux/mmdebug.h
+@@ -37,6 +37,18 @@
+ 			BUG();						\
+ 		}							\
+ 	} while (0)
++#define VM_WARN_ON_ONCE_PAGE(cond, page)	({			\
++	static bool __section(.data.once) __warned;			\
++	int __ret_warn_once = !!(cond);					\
++									\
++	if (unlikely(__ret_warn_once && !__warned)) {			\
++		dump_page(page, "VM_WARN_ON_ONCE_PAGE(" __stringify(cond)")");\
++		__warned = true;					\
++		WARN_ON(1);						\
++	}								\
++	unlikely(__ret_warn_once);					\
++})
++
+ #define VM_WARN_ON(cond) (void)WARN_ON(cond)
+ #define VM_WARN_ON_ONCE(cond) (void)WARN_ON_ONCE(cond)
+ #define VM_WARN_ONCE(cond, format...) (void)WARN_ONCE(cond, format)
+@@ -48,6 +60,7 @@
+ #define VM_BUG_ON_MM(cond, mm) VM_BUG_ON(cond)
+ #define VM_WARN_ON(cond) BUILD_BUG_ON_INVALID(cond)
+ #define VM_WARN_ON_ONCE(cond) BUILD_BUG_ON_INVALID(cond)
++#define VM_WARN_ON_ONCE_PAGE(cond, page)  BUILD_BUG_ON_INVALID(cond)
+ #define VM_WARN_ONCE(cond, format...) BUILD_BUG_ON_INVALID(cond)
+ #define VM_WARN(cond, format...) BUILD_BUG_ON_INVALID(cond)
+ #endif
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 130093bdf74b..299382fc55a9 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -1322,10 +1322,8 @@ struct lruvec *mem_cgroup_page_lruvec(struct page *page, struct pglist_data *pgd
  	}
- }
  
-+static void lru_add_page_tail(struct page *page, struct page *page_tail,
-+				struct lruvec *lruvec, struct list_head *list)
-+{
-+	VM_BUG_ON_PAGE(!PageHead(page), page);
-+	VM_BUG_ON_PAGE(PageCompound(page_tail), page);
-+	VM_BUG_ON_PAGE(PageLRU(page_tail), page);
-+	lockdep_assert_held(&lruvec_pgdat(lruvec)->lru_lock);
-+
-+	if (!list)
-+		SetPageLRU(page_tail);
-+
-+	if (likely(PageLRU(page)))
-+		list_add_tail(&page_tail->lru, &page->lru);
-+	else if (list) {
-+		/* page reclaim is reclaiming a huge page */
-+		get_page(page_tail);
-+		list_add_tail(&page_tail->lru, list);
-+	} else {
-+		/*
-+		 * Head page has not yet been counted, as an hpage,
-+		 * so we must account for each subpage individually.
-+		 *
-+		 * Put page_tail on the list at the correct position
-+		 * so they all end up in order.
-+		 */
-+		add_page_to_lru_list_tail(page_tail, lruvec,
-+					  page_lru(page_tail));
-+	}
-+}
-+
- static void __split_huge_page_tail(struct page *head, int tail,
- 		struct lruvec *lruvec, struct list_head *list)
- {
-diff --git a/mm/swap.c b/mm/swap.c
-index d16d65d9b4e0..c674fb441fe9 100644
---- a/mm/swap.c
-+++ b/mm/swap.c
-@@ -935,39 +935,6 @@ void __pagevec_release(struct pagevec *pvec)
- }
- EXPORT_SYMBOL(__pagevec_release);
+ 	memcg = page->mem_cgroup;
+-	/*
+-	 * Swapcache readahead pages are added to the LRU - and
+-	 * possibly migrated - before they are charged.
+-	 */
++	/* Readahead page is charged too, to see if other page uncharged */
++	VM_WARN_ON_ONCE_PAGE(!memcg, page);
+ 	if (!memcg)
+ 		memcg = root_mem_cgroup;
  
--#ifdef CONFIG_TRANSPARENT_HUGEPAGE
--/* used by __split_huge_page_refcount() */
--void lru_add_page_tail(struct page *page, struct page *page_tail,
--		       struct lruvec *lruvec, struct list_head *list)
--{
--	VM_BUG_ON_PAGE(!PageHead(page), page);
--	VM_BUG_ON_PAGE(PageCompound(page_tail), page);
--	VM_BUG_ON_PAGE(PageLRU(page_tail), page);
--	lockdep_assert_held(&lruvec_pgdat(lruvec)->lru_lock);
--
--	if (!list)
--		SetPageLRU(page_tail);
--
--	if (likely(PageLRU(page)))
--		list_add_tail(&page_tail->lru, &page->lru);
--	else if (list) {
--		/* page reclaim is reclaiming a huge page */
--		get_page(page_tail);
--		list_add_tail(&page_tail->lru, list);
--	} else {
--		/*
--		 * Head page has not yet been counted, as an hpage,
--		 * so we must account for each subpage individually.
--		 *
--		 * Put page_tail on the list at the correct position
--		 * so they all end up in order.
--		 */
--		add_page_to_lru_list_tail(page_tail, lruvec,
--					  page_lru(page_tail));
--	}
--}
--#endif /* CONFIG_TRANSPARENT_HUGEPAGE */
--
- static void __pagevec_lru_add_fn(struct page *page, struct lruvec *lruvec,
- 				 void *arg)
- {
+@@ -6906,8 +6904,9 @@ void mem_cgroup_migrate(struct page *oldpage, struct page *newpage)
+ 	if (newpage->mem_cgroup)
+ 		return;
+ 
+-	/* Swapcache readahead pages can get replaced before being charged */
+ 	memcg = oldpage->mem_cgroup;
++	/* Readahead page is charged too, to see if other page uncharged */
++	VM_WARN_ON_ONCE_PAGE(!memcg, oldpage);
+ 	if (!memcg)
+ 		return;
+ 
+@@ -7104,7 +7103,8 @@ void mem_cgroup_swapout(struct page *page, swp_entry_t entry)
+ 
+ 	memcg = page->mem_cgroup;
+ 
+-	/* Readahead page, never charged */
++	/* Readahead page is charged too, to see if other page uncharged */
++	VM_WARN_ON_ONCE_PAGE(!memcg, page);
+ 	if (!memcg)
+ 		return;
+ 
+@@ -7168,7 +7168,8 @@ int mem_cgroup_try_charge_swap(struct page *page, swp_entry_t entry)
+ 
+ 	memcg = page->mem_cgroup;
+ 
+-	/* Readahead page, never charged */
++	/* Readahead page is charged too, to see if other page uncharged */
++	VM_WARN_ON_ONCE_PAGE(!memcg, page);
+ 	if (!memcg)
+ 		return 0;
+ 
 -- 
 1.8.3.1
 
