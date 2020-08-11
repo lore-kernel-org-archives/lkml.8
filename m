@@ -2,118 +2,118 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F2D1C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 08:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05BB0C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 08:38:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D96B20658
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 08:36:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="vi6BpXWY";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IXJmmNKH"
+	by mail.kernel.org (Postfix) with ESMTP id DE9B3206B5
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 08:38:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728401AbgHKIg1 (ORCPT
+        id S1728346AbgHKIix (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 04:36:27 -0400
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:57687 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728237AbgHKIg0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 04:36:26 -0400
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
-        by mailout.nyi.internal (Postfix) with ESMTP id 654F55C00D0;
-        Tue, 11 Aug 2020 04:36:25 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute2.internal (MEProxy); Tue, 11 Aug 2020 04:36:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
-        message-id:subject:from:to:cc:date:in-reply-to:references
-        :content-type:mime-version:content-transfer-encoding; s=fm3; bh=
-        XmkOTDau3GA4XwOfKDAkmAamcy7pGy3Ial0qb8HMlms=; b=vi6BpXWYJtMTm5Hf
-        19E7qqoMJs/Q3bfqgUknAH/9oQl/znVXHDO7MjKpqHbnZlFLkdj6B/Eo2QCwa9ve
-        cnADb4ttKLgus55JqlPzel2K4v53c6B/9hGLgTdp7Ta5oHTiVpSFOkYi8LvHGL4i
-        1uM2PyEQnkgvLEFFP08afRPurP5KfeWJkXduVl9nl0kx6+P73W4G70Bn1AiKQEND
-        ZV58w0ALWuUfTxDpza4qnYyA4GdwiyWbT917OjgPyZT/8CvfQ6HEaxZjSZjmr7Tk
-        1F8XjXJ94mzIRLqdl1zyFNR53HRnaz6O7oNqLBq0Y3F7CFvRsKqAJ/v77YLEkkY2
-        PcEFSQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=XmkOTDau3GA4XwOfKDAkmAamcy7pGy3Ial0qb8HMl
-        ms=; b=IXJmmNKH0HQPxtPlxpnml0NXFCQHdZ7PlpuDGQS2rCWXceSJWsmGdFLzs
-        USoFcpA3r7lwtxDVQMb6Wk3owJdo4ICM2KLKW3QscsqxHiB0RaPik5AwXN8SQU/M
-        /UyOher5UPYYyF8gaakROT5Ids1ELU2dl5HXcd1HgYZXnkvoYZ0eNJRNCcNDrRMb
-        soj82EXXl8MF87L7rHTtURnEFAM6DbtbgRhgQEbiymhZiVipXd46bbM1n0kboC6A
-        veuUtPjzNktHJXzIKkBReq1sowVAcvGRRfyGa/euyRobG1TnBQNtvIhVJRMXJk5F
-        lNHkZuftnrSOaFv3CIskZY45kK9SA==
-X-ME-Sender: <xms:hlgyX6Z-HyEut2jhq-jqwW4SxaWz8XsFnQ2lB-llARYr3rhAFQG5hA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrledtgddtiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpefkrghnucfm
-    vghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqnecuggftrfgrthhtvghrnhepfe
-    efteetvdeguddvveefveeftedtffduudehueeihfeuvefgveehffeludeggfejnecukfhp
-    peehkedrjedrvddtfedruddugeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpehrrghvvghnsehthhgvmhgrfidrnhgvth
-X-ME-Proxy: <xmx:hlgyX9YsMGOWBMsaTs1_eHdDMvR-bMWkmTad6g8F8ns44w47c-kruQ>
-    <xmx:hlgyX0-zc2SrAzt-aAje5gQDYRePFB5CLYCJnvKi8vJexn6AxqcGwg>
-    <xmx:hlgyX8q-E8ykGbfUudosCG3hEoHdHD8zJy5meyDQPMYp-xsMmYOKjg>
-    <xmx:iVgyXy3YBsm-K8dxTSBZPJPgfRvLO2S28OHQaPi3SFv5e3OHaZkieA>
-Received: from mickey.themaw.net (58-7-203-114.dyn.iinet.net.au [58.7.203.114])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 57C9030600B7;
-        Tue, 11 Aug 2020 04:36:21 -0400 (EDT)
-Message-ID: <75e04b06be0561c3cec936cd3bbc44fe82ca73f4.camel@themaw.net>
-Subject: Re: [PATCH] fs: autofs: delete repeated words in comments
-From:   Ian Kent <raven@themaw.net>
-To:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org
-Cc:     autofs@vger.kernel.org
-Date:   Tue, 11 Aug 2020 16:36:17 +0800
-In-Reply-To: <20200811021817.24982-1-rdunlap@infradead.org>
-References: <20200811021817.24982-1-rdunlap@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Tue, 11 Aug 2020 04:38:53 -0400
+Received: from mx2.suse.de ([195.135.220.15]:32826 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728237AbgHKIix (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 04:38:53 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 9C3F0B1ED;
+        Tue, 11 Aug 2020 08:39:11 +0000 (UTC)
+Subject: Re: [PATCH] x86/paravirt: Add missing noinstr to arch_local*()
+ helpers
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Marco Elver <elver@google.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        fenghua.yu@intel.com, "H. Peter Anvin" <hpa@zytor.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        yu-cheng.yu@intel.com, sdeep@vmware.com,
+        virtualization@lists.linux-foundation.org,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        syzbot <syzbot+8db9e1ecde74e590a657@syzkaller.appspotmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Wei Liu <wei.liu@kernel.org>
+References: <CANpmjNO860SHpNve+vaoAOgarU1SWy8o--tUWCqNhn82OLCiew@mail.gmail.com>
+ <fe2bfa7f-132f-7581-a967-d01d58be1588@suse.com>
+ <20200807095032.GA3528289@elver.google.com>
+ <16671cf3-3885-eb06-79ff-4cbfaeeaea79@suse.com>
+ <20200807113838.GA3547125@elver.google.com>
+ <e5bf3e6a-efff-7170-5ee6-1798008393a2@suse.com>
+ <CANpmjNPau_DEYadey9OL+iFZKEaUTqnFnyFs1dU12o00mg7ofA@mail.gmail.com>
+ <20200807151903.GA1263469@elver.google.com>
+ <20200811074127.GR3982@worktop.programming.kicks-ass.net>
+ <a2dffeeb-04f0-8042-b39a-b839c4800d6f@suse.com>
+ <20200811081205.GV3982@worktop.programming.kicks-ass.net>
+From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Message-ID: <07f61573-fef1-e07c-03f2-a415c88dec6f@suse.com>
+Date:   Tue, 11 Aug 2020 10:38:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200811081205.GV3982@worktop.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-08-10 at 19:18 -0700, Randy Dunlap wrote:
-> Drop duplicated words {the, at} in comments.
+On 11.08.20 10:12, Peter Zijlstra wrote:
+> On Tue, Aug 11, 2020 at 09:57:55AM +0200, Jürgen Groß wrote:
+>> On 11.08.20 09:41, Peter Zijlstra wrote:
+>>> On Fri, Aug 07, 2020 at 05:19:03PM +0200, Marco Elver wrote:
+>>>
+>>>> My hypothesis here is simply that kvm_wait() may be called in a place
+>>>> where we get the same case I mentioned to Peter,
+>>>>
+>>>> 	raw_local_irq_save(); /* or other IRQs off without tracing */
+>>>> 	...
+>>>> 	kvm_wait() /* IRQ state tracing gets confused */
+>>>> 	...
+>>>> 	raw_local_irq_restore();
+>>>>
+>>>> and therefore, using raw variants in kvm_wait() works. It's also safe
+>>>> because it doesn't call any other libraries that would result in corrupt
+>>>
+>>> Yes, this is definitely an issue.
+>>>
+>>> Tracing, we also musn't call into tracing when using raw_local_irq_*().
+>>> Because then we re-intoduce this same issue all over again.
+>>>
+>>> Both halt() and safe_halt() are more paravirt calls, but given we're in
+>>> a KVM paravirt call already, I suppose we can directly use native_*()
+>>> here.
+>>>
+>>> Something like so then... I suppose, but then the Xen variants need TLC
+>>> too.
+>>
+>> Just to be sure I understand you correct:
+>>
+>> You mean that xen_qlock_kick() and xen_qlock_wait() and all functions
+>> called by those should gain the "notrace" attribute, right?
+>>
+>> I am not sure why the kick variants need it, though. IMO those are
+>> called only after the lock has been released, so they should be fine
+>> without notrace.
 > 
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Ian Kent <raven@themaw.net>
-> Cc: autofs@vger.kernel.org
-
-Acked-by: Ian Kent <raven@themaw.net>
-
-> ---
->  fs/autofs/dev-ioctl.c |    4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> The issue happens when someone uses arch_spinlock_t under
+> raw_local_irq_*().
 > 
-> --- linux-next-20200807.orig/fs/autofs/dev-ioctl.c
-> +++ linux-next-20200807/fs/autofs/dev-ioctl.c
-> @@ -20,7 +20,7 @@
->   * another mount. This situation arises when starting automount(8)
->   * or other user space daemon which uses direct mounts or offset
->   * mounts (used for autofs lazy mount/umount of nested mount trees),
-> - * which have been left busy at at service shutdown.
-> + * which have been left busy at service shutdown.
->   */
->  
->  typedef int (*ioctl_fn)(struct file *, struct autofs_sb_info *,
-> @@ -496,7 +496,7 @@ static int autofs_dev_ioctl_askumount(st
->   * located path is the root of a mount we return 1 along with
->   * the super magic of the mount or 0 otherwise.
->   *
-> - * In both cases the the device number (as returned by
-> + * In both cases the device number (as returned by
->   * new_encode_dev()) is also returned.
->   */
->  static int autofs_dev_ioctl_ismountpoint(struct file *fp,
+>> And again: we shouldn't forget the Hyper-V variants.
+> 
+> Bah, my grep failed :/ Also *groan*, that's calling apic->send_IPI().
 
+In case you don't want to do it I can send the patch for the Xen
+variants.
+
+
+Juergen
