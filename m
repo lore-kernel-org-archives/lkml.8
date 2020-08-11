@@ -2,470 +2,341 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F20C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 18:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85E57C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 18:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3824B2076B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 18:39:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EA852076B
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 18:40:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DjZ+a0ET"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726258AbgHKSje (ORCPT
+        id S1726424AbgHKSkC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 14:39:34 -0400
-Received: from mga06.intel.com ([134.134.136.31]:62008 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725862AbgHKSjd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 14:39:33 -0400
-IronPort-SDR: XtScYMvmNypHlON/sX23XvTpEn98ANlqsgFVb6/vO+D/NbjaoFEOesDHjmNBGB3UZMyFHEdRYd
- Ul99Dc2BfrgQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9710"; a="215320560"
-X-IronPort-AV: E=Sophos;i="5.76,301,1592895600"; 
-   d="scan'208";a="215320560"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2020 11:39:25 -0700
-IronPort-SDR: DSCptk9unTTsZolcqSeQUsixDuqqqM1xUH+RWpqa9c31Q5XdGVtt9F8AAkPVQQbVTfZZqZ4ygb
- 01W0QCw4hDiQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,301,1592895600"; 
-   d="scan'208";a="324841739"
-Received: from orsmsx601-2.jf.intel.com (HELO ORSMSX601.amr.corp.intel.com) ([10.22.229.81])
-  by orsmga008.jf.intel.com with ESMTP; 11 Aug 2020 11:39:24 -0700
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 11 Aug 2020 11:39:24 -0700
-Received: from orsmsx101.amr.corp.intel.com (10.22.225.128) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Tue, 11 Aug 2020 11:39:24 -0700
-Received: from [10.212.86.9] (10.212.86.9) by ORSMSX101.amr.corp.intel.com
- (10.22.225.128) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 11 Aug
- 2020 11:39:23 -0700
-Subject: Re: [PATCH RFC v2 02/18] irq/dev-msi: Add support for a new DEV_MSI
- irq domain
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-CC:     Marc Zyngier <maz@kernel.org>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Lin, Jing" <jing.lin@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "netanelg@mellanox.com" <netanelg@mellanox.com>,
-        "shahafs@mellanox.com" <shahafs@mellanox.com>,
-        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
-        "Hossain, Mona" <mona.hossain@intel.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-References: <87h7tcgbs2.fsf@nanos.tec.linutronix.de>
-From:   "Dey, Megha" <megha.dey@intel.com>
-Message-ID: <996854e7-ab11-b76b-64dc-b760b3ad2365@intel.com>
-Date:   Tue, 11 Aug 2020 11:39:21 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Tue, 11 Aug 2020 14:40:02 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20469 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725862AbgHKSkB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 14:40:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597171200;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=ehldQ7u2RFp9mhKtKspgyBES/eNp3K3u2HvNYnpxyMk=;
+        b=DjZ+a0ETY+hQ90/efkPFV91UtoChYOLHKX+IltzjWCVMmbz7k4m7WizmsoNvVbSgjwzCFh
+        21vfFspgCyvmiVFIZtFMs8lLm7d8WyNQy+ksOI/OT3kxhPjwkETbqXWA4A7UMkCw25IHLo
+        ME+ZYF8d6FmfNc2YI6Lrh2MFh0mMS0Y=
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com
+ [209.85.166.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-102-30_l_fi1O72Z8aZmhqIVog-1; Tue, 11 Aug 2020 14:39:55 -0400
+X-MC-Unique: 30_l_fi1O72Z8aZmhqIVog-1
+Received: by mail-io1-f69.google.com with SMTP id e73so4562513iof.5
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 11:39:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ehldQ7u2RFp9mhKtKspgyBES/eNp3K3u2HvNYnpxyMk=;
+        b=Hb5e6vnwmspsU2JmzAgnivONngmpd8XCIpmNwEh961bFYcJgLeM90D/ovtmyF8QFCo
+         ktFOS8kQ/dCoDLwbvNmbuQhc/1KHfSkKXY9gVIsXgYH1sw+L9vjfY1iqEOI0TmKyc1DT
+         pe86EUE9lghzH+GkVsd4ENJeeRBGnnXHFYF+ylp4j68EZGMPSMz0YFxO+lD5qraSNy9m
+         cWP5YAU/DmD3dGoeTmyIX+3NBMxaljUPfeiIWPsMsP36At6l07wxgA32AJ3OJ55tNFTA
+         6mTJcuvqz6IsFOHgnWjou1vr3hGsBVngB+rWKjG0zXd94XHb6JKK1jteh46XbyS3dlnZ
+         keJg==
+X-Gm-Message-State: AOAM530nmtXz56BDh9terI7UydiR0KQuSXnwSHrO8HXPAqL39oFTN1Fp
+        kNq6nvgSifVyFTQSTmRMuzNdCU34jXoPvcCfMIcppN6TknP6PwcMeEyq9LHsA+szfo4RN6ow+0Z
+        tD/9V8MHbfxCpUTtK4TpQW27N
+X-Received: by 2002:a92:1f4f:: with SMTP id i76mr24616587ile.226.1597171194629;
+        Tue, 11 Aug 2020 11:39:54 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJybSqRuf4y/mJQfGPNNf9rnhVxAmfLnpKyaH8o923KU+hMchJrC8pd6QdUfXzedlL1GyN1QPg==
+X-Received: by 2002:a92:1f4f:: with SMTP id i76mr24616564ile.226.1597171194326;
+        Tue, 11 Aug 2020 11:39:54 -0700 (PDT)
+Received: from localhost.localdomain (bras-vprn-toroon474qw-lp130-11-70-53-122-15.dsl.bell.ca. [70.53.122.15])
+        by smtp.gmail.com with ESMTPSA id v17sm13864621ilj.33.2020.08.11.11.39.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Aug 2020 11:39:52 -0700 (PDT)
+From:   Peter Xu <peterx@redhat.com>
+To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>, peterx@redhat.com,
+        Marty Mcfadden <mcfadden8@llnl.gov>,
+        "Maya B . Gokhale" <gokhale2@llnl.gov>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jann Horn <jannh@google.com>, Christoph Hellwig <hch@lst.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Kirill Shutemov <kirill@shutemov.name>, Jan Kara <jack@suse.cz>
+Subject: [PATCH v3] mm/gup: Allow real explicit breaking of COW
+Date:   Tue, 11 Aug 2020 14:39:50 -0400
+Message-Id: <20200811183950.10603-1-peterx@redhat.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <87h7tcgbs2.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Originating-IP: [10.212.86.9]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
+Starting from commit 17839856fd58 ("gup: document and work around "COW can
+break either way" issue", 2020-06-02), explicit copy-on-write behavior is
+enforced for private gup pages even if it's a read-only.  It is achieved by
+always passing FOLL_WRITE to emulate a write.
 
-On 8/8/2020 12:47 PM, Thomas Gleixner wrote:
-> Megha,
->
-> "Dey, Megha" <megha.dey@intel.com> writes:
->> On 8/7/2020 9:47 AM, Thomas Gleixner wrote:
->>> I'm all for sharing code and making the life of driver writers simple
->>> because that makes my life simple as well, but not by creating a layer
->>> at the wrong level and then hacking it into submission until it finally
->>> collapses.
->>>
->>> Designing the infrastructure following the clear layering rules of
->>> hierarchical domains so it works for IMS and also replaces the platform
->>> MSI hack is the only sane way to go forward, not the other way round.
->>   From what I've gathered, I need to:
->>
->> 1. Get rid of the mantra that "IMS" is an extension of platform-msi.
->> 2. Make this new infra devoid of any platform-msi references
-> See below.
-ok..
->
->> 3. Come up with a ground up approach which adheres to the layering
->> constraints of the IRQ subsystem
-> Yes. It's something which can be used by all devices which have:
->
->     1) A device specific irq chip implementation including a msi write function
->     2) Device specific resource management (slots in the IMS case)
->
-> The infrastructure you need is basically a wrapper around the core MSI
-> domain (similar to PCI, platform-MSI etc,) which provides the specific
-> functionality to handle the above.
+That should fix the COW issue that we were facing, however above commit could
+also break userfaultfd-wp and applications like umapsort [1,2].
 
-ok, i will create a per device irq chip which will directly have the 
-device specific callbacks instead of another layer of redirection.
+One general routine of umap-like program is: userspace library will manage page
+allocations, and it will evict the least recently used pages from memory to
+external storages (e.g., file systems).  Below are the general steps to evict
+an in-memory page in the uffd service thread when the page pool is full:
 
-This way i will get rid of the 'platform_msi_ops' data structure.
+  (1) UFFDIO_WRITEPROTECT with mode=WP on some to-be-evicted page P, so that
+      further writes to page P will block (keep page P clean)
+  (2) Copy page P to external storage (e.g. file system)
+  (3) MADV_DONTNEED to evict page P
 
-I am not sure what you mean by device specific resource management, are 
-you referring to dev_msi_alloc/free_irqs?
+Here step (1) makes sure that the page to dump will always be up-to-date, so
+that the page snapshot in the file system is consistent with the one that was
+in the memory.  However with commit 17839856fd58, step (2) can potentially hang
+itself because e.g. if we use write() to a file system fd to dump the page
+data, that will be a translated read gup request in the file system driver to
+read the page content, then the read gup will be translated to a write gup due
+to the new enforced COW behavior.  This write gup will further trigger
+handle_userfault() and hang the uffd service thread itself.
 
->> 4. Have common code (drivers/irqchip maybe??) where we put in all the
->> generic ims-specific bits for the IRQ chip and domain
->> which can be used by all device drivers belonging to this "IMS"class.
-> Yes, you can provide a common implementation for devices which share the
-> same irq chip and domain (slot management functionality)
-yeah i think most of the msi_domain_ops (msi_prepare, set_desc etc) are 
-common and can be moved into a common file.
->
->> 5. Have the device driver do the rest:
->>       create the chip/domain (one chip/domain per device?)
->>       provide device specific callbacks for masking, unmasking, write
->>   message
-> Correct, but you don't need any magic new data structures for that, the
-> existing msi_domain_info/msi_domain_ops and related structures are
-> either sufficient or can be extended when necessary.
->
-> So for the IDXD case you need:
->
->    1) An irq chip with mask/unmask callbacks and a write msg function
->    2) A slot allocation or association function and their 'free'
->       counterpart (irq_domain_ops)
+I think the problem will go away too if we replace the write() to the file
+system into a memory write to a mmaped region in the userspace library, because
+normal page faults will not enforce COW, only gup is affected.  However we
+cannot forbid users to use write() or any form of kernel level read gup.
 
-This is one part I didn't understand.
+One solution is actually already mentioned in commit 17839856fd58, which is to
+provide an explicit BREAK_COW scemantics for enforced COW.  Then we can still
+use FAULT_FLAG_WRITE to identify whether this is a "real write request" or an
+"enfornced COW (read) request".
 
-Currently my dev_msi_alloc_irqs is simply a wrapper over 
-platform_msi_domain_alloc_irqs which again mostly calls 
-msi_domain_alloc_irqs.
+With the enforced COW, we also need to inherit UFFD_WP bit during COW because
+now COW can happen with UFFD_WP enabled (previously, it cannot).
 
-When you say add a .alloc, .free, does this mean we should add a device 
-specific alloc/free and not use the default 
-msi_domain_alloc/msi_domain_free?
+Since at it, rename the variable in __handle_mm_fault() from "dirty" to "cow"
+to better suite its functionality.
 
-I don't see anything device specific to be done for IDXD atleast, can 
-you please let me know?
+[1] https://github.com/LLNL/umap-apps/blob/develop/src/umapsort/umapsort.cpp
+[2] https://github.com/LLNL/umap
 
->
-> The function and struct pointers go into the appropriate
-> msi_info/msi_ops structures along with the correct flags to set up the
-> whole thing and then the infrastructure creates your domain, fills in
-> the shared functions and sets the whole thing up.
->
-> That's all what a device driver needs to provide, i.e. stick the device
-> specific functionality into right data structures and let the common
-> infrastructure deal with it. The rest just works and the device specific
-> functions are invoked from the right places when required.
-yeah. makes sense..
->
->> So from the hierarchical domain standpoint, we will have:
->> - For DSA device: vector->intel-IR->IDXD
->> - For Jason's device: root domain-> domain A-> Jason's device's IRQ domain
->> - For any other intel IMS device in the future which
->>       does not require interrupt remapping: vector->new device IRQ domain
->>       requires interrupt remapping: vector->intel-IR->new device IRQ
->> domain (i.e. create a new domain even though IDXD is already present?)
-> What's special about IDXD? It's just one specific implementation of IMS
-> and any other device implementing IMS is completely independent and as
-> documented in the specification the IMS slot management and therefore
-> the mask/unmask functionality can and will be completely different. IDXD
-> has a storage array with slots, Jason's hardware puts the IMS slot into
-> the queue storage.
->
-> It does not matter whether a device comes from Intel or any other vendor,
-> it does neither matter whether the device works with direct vector
-> delivery or interrupt remapping.
->
-> IDXD is not any different from any other IMS capable device when you
-> look at it from the interrupt hierarchy. It's either:
->
->       vector -> IR -> device
-> or
->       vector -> device
->
-> The only point where this is differentiated is when the irq domain is
-> created. Anything else just falls into place.
-yeah, so I will create the IRQ domain in the IDXD driver with INTEL-IR 
-as the parent, instead of creating a common per IR unit domain
->
-> To answer Jason's question: No, the parent is never the PCI/MSI irq
-> domain because that sits at the same level as that device
-> domain. Remember the scheme:
->
->     vector --- DMAR-MSI
-> 	  |
-> 	  |-- ....
-> 	  |
-> 	  |-- IR-0 --- IO/APIC-0
-> 	  |        |
-> 	  |        |-- IO/APIC-1
-> 	  |        |
-> 	  |        |-- PCI/MSI-0
-> 	  |        |
-> 	  |        |-- HPET/MSI-0
-> 	  |        |
-> 	  |        |-- DEV-A/MSI-0
-> 	  |        |-- DEV-A/MSI-1
-> 	  |        |-- DEV-B/MSI-2
-> 	  |
-> 	  |-- IR-1 --- PCI/MSI-1
-> 	  |        |
-> 	  |        |-- DEV-C/MSI-3
->
-> The PCI/MSI domain(s) are dealing solely with PCI standard compliant
-> MSI/MSI-X. IMS or similar (platform-MSI being one variant) sit at the
-> same level as the PCI/MSI domains.
->
-> Why? It's how the hardware operates.
->
-> The PCI/MSI "irq chip" is configured by the PCI/MSI domain level and it
-> sends its message to the interrupt parent in the hierarchy, i.e. either
-> to the Interrupt Remap unit or to the configured vector of the target
-> CPU.
->
-> IMS does not send it to some magic PCI layer first at least not at the
-> conceptual level. The fact that the message is transported by PCIe does
-> not change that at all. PCIe in that case is solely the transport, but
-> the "irq chip" at the PCI/MSI level of the device is not involved at
-> all. If it were that would be a different story.
->
-> So now you might ask why we have a single PCI/MSI domain per IR unit and
-> why I want seperate IMS domains.
->
-> The answer is in the hardware again. PCI/MSI is uniform accross devices
-> so the irq chip and all of the domain functionality can be shared. But
-> then we have two PCI/MSI domains in the above example because again the
-> hardware has one connected to IR unit 0 and the other to IR unit 1.
-> IR 0 and IR 1 manage different resources (remap tables) so PCI/MSI-0
-> depends on IR-0 and PCI/MSI-1 on IR-1 which is reflected in the
-> parent/child relation ship of the domains.
->
-> There is another reason why we can spawn a single PCI/MSI domain per
-> root complex / IR unit. The PCI/MSI domains are not doing any resource
-> management at all. The resulting message is created from the allocated
-> vector (direct CPU delivery) or from the allocated Interrupt remapping
-> slot information. The domain just deals with the logic required to
-> handle PCI/MSI(X) and the necessary resources are provided by the parent
-> interrupt layers.
->
-> IMS is different. It needs device specific resource management to
-> allocate an IMS slot which is clearly part of the "irq chip" management
-> layer, aka. irq domain. If the IMS slot management would happen in a
-> global or per IR unit table and as a consequence the management, layout,
-> mask/unmask operations would be uniform then an IMS domain per system or
-> IR unit would be the right choice, but that's not how the hardware is
-> specified and implemented.
->
-> Now coming back to platform MSI. The way it looks is:
->
->   CPU --- (IR) ---- PLATFORM-MSI  --- PLATFORM-DEVICE-MSI-0
->                                   |-- PLATFORM-DEVICE-MSI-1
->                                   |...
->
-> PLATFORM-MSI is a common resource management which also provides a
-> shared interrupt chip which operates at the PLATFORM-MSI level with one
-> exception:
->
->    The irq_msi_write_msg() callback has an indirection so the actual
->    devices can provide their device specific msi_write_msg() function.
->
-> That's a borderline abuse of the hierarchy, but it makes sense to some
-> extent as the actual PLATFORM-MSI domain is a truly shared resource and
-> the only device specific functionality required is the message
-> write. But that message write is not something which has it's own
-> resource management, it's just a non uniform storage accessor. IOW, the
-> underlying PLATFORM-MSI domain does all resource management including
-> message creation and the quirk allows to write the message in the device
-> specific way. Not that I love it, but ...
->
-> That is the main difference between platform MSI and IMS. IMS is
-> completely non uniform and the devices do not share any common resource
-> or chip functionality. Each device has its own message store management,
-> slot allocation/assignment and a device specifc interrupt chip
-> functionality which goes way beyond the nasty write msg quirk.
-Thanks for giving such a detailed explanation! really helps :)
->
->> What I still don't understand fully is what if all the IMS devices
->> need the same domain ops and chip callbacks, we will be creating
->> various instances of the same IRQ chip and domain right? Is that ok?
-> Why would it be not ok? Are you really worried about a few hundred bytes
-> of memory required for this?
->
-> Sharing an instance only makes sense if the instance handles a shared or
-> uniform resource space, which is clearly not the case with IMS.
->
-> We create several PCI/MSI domains and several IO/APIC domains on larger
-> systems. They all share the code, but they are dealing with seperate
-> resources so they have seperate storage.
-ok, got it ..
->
->> Currently the creation of the IRQ domain happens at the IR level so that
->> we can reuse the same domain but if it advisable to have a per device
->> interrupt domain, I will shift this to the device driver.
-> Again. Look at the layering. What you created now is a pseudo shared
-> domain which needs
->
->     1) An indirection layer for providing device specific functions
->
->     2) An extra allocation layer in the device specific driver to assign
->        IMS slots completely outside of the domain allocation mechanism.
-hmmm, again I am not sure of which extra allocation layer you are 
-referring to..
->
->     In other words you try to make things which are neither uniform nor
->     share a resource space look the same way. That's the "all I have is a
->     hammer so everything is a nail" approach. That never worked out well.
->
-> With a per device domain/chip approach you get one consistent domain
-> per device which provides
->
->     1) The device specific resource management (i.e. slot allocation
->        becomes part of the irq domain operations)
->
->     2) The device specific irq chip functions at the correct point in the
->        layering without the horrid indirections
->
->     3) Consolidated data storage at the device level where the actual
->        data is managed.
->
->     This is of course sharing as much code as possible with the MSI core
->     implementation.
->
->     As a side effect any extension of this be it on the domain or the irq
->     chip side is just a matter of adding the functionality to that
->     particular incarnation and not by having yet another indirection
->     logic at the wrong place.
->
-> The price you pay is a bit of memory but you get a clean layering and
-> seperation of functionality as a reward. The amount of code in the
-> actual IMS device driver is not going to be much more than with the
-> approach you have now.
->
-> The infrastructure itself is not more than a thin wrapper around the
-> existing msi domain infrastructure and might even share code with
-> platform-msi.
+CC: Marty Mcfadden <mcfadden8@llnl.gov>
+CC: Maya B. Gokhale <gokhale2@llnl.gov>
+CC: Andrea Arcangeli <aarcange@redhat.com>
+CC: Linus Torvalds <torvalds@linux-foundation.org>
+CC: Andrew Morton <akpm@linux-foundation.org>
+CC: Jann Horn <jannh@google.com>
+CC: Christoph Hellwig <hch@lst.de>
+CC: Oleg Nesterov <oleg@redhat.com>
+CC: Kirill Shutemov <kirill@shutemov.name>
+CC: Jan Kara <jack@suse.cz>
+Fixes: 17839856fd588f4ab6b789f482ed3ffd7c403e1f
+Signed-off-by: Peter Xu <peterx@redhat.com>
+---
+v3:
+- inherit UFFD_WP bit for COW too
+- take care of huge page cases
+- more comments
+v2:
+- apply FAULT_FLAG_BREAK_COW correctly when FOLL_BREAK_COW [Christoph]
+- removed comments above do_wp_page which seems redundant
+---
+ include/linux/mm.h |  3 +++
+ mm/gup.c           |  6 ++++--
+ mm/huge_memory.c   | 12 +++++++++++-
+ mm/memory.c        | 39 +++++++++++++++++++++++++++++++--------
+ 4 files changed, 49 insertions(+), 11 deletions(-)
 
- From your explanation:
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index f6a82f9bccd7..a1f5c92b44cb 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -409,6 +409,7 @@ extern pgprot_t protection_map[16];
+  * @FAULT_FLAG_REMOTE: The fault is not for current task/mm.
+  * @FAULT_FLAG_INSTRUCTION: The fault was during an instruction fetch.
+  * @FAULT_FLAG_INTERRUPTIBLE: The fault can be interrupted by non-fatal signals.
++ * @FAULT_FLAG_BREAK_COW: Do COW explicitly for the fault (even for read).
+  *
+  * About @FAULT_FLAG_ALLOW_RETRY and @FAULT_FLAG_TRIED: we can specify
+  * whether we would allow page faults to retry by specifying these two
+@@ -439,6 +440,7 @@ extern pgprot_t protection_map[16];
+ #define FAULT_FLAG_REMOTE			0x80
+ #define FAULT_FLAG_INSTRUCTION  		0x100
+ #define FAULT_FLAG_INTERRUPTIBLE		0x200
++#define FAULT_FLAG_BREAK_COW			0x400
+ 
+ /*
+  * The default fault flags that should be used by most of the
+@@ -2756,6 +2758,7 @@ struct page *follow_page(struct vm_area_struct *vma, unsigned long address,
+ #define FOLL_SPLIT_PMD	0x20000	/* split huge pmd before returning */
+ #define FOLL_PIN	0x40000	/* pages must be released via unpin_user_page */
+ #define FOLL_FAST_ONLY	0x80000	/* gup_fast: prevent fall-back to slow gup */
++#define FOLL_BREAK_COW  0x100000 /* request for explicit COW (even for read) */
+ 
+ /*
+  * FOLL_PIN and FOLL_LONGTERM may be used in various combinations with each
+diff --git a/mm/gup.c b/mm/gup.c
+index d8a33dd1430d..c33e84ab9c36 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -870,6 +870,8 @@ static int faultin_page(struct task_struct *tsk, struct vm_area_struct *vma,
+ 		return -ENOENT;
+ 	if (*flags & FOLL_WRITE)
+ 		fault_flags |= FAULT_FLAG_WRITE;
++	if (*flags & FOLL_BREAK_COW)
++		fault_flags |= FAULT_FLAG_BREAK_COW;
+ 	if (*flags & FOLL_REMOTE)
+ 		fault_flags |= FAULT_FLAG_REMOTE;
+ 	if (locked)
+@@ -1076,7 +1078,7 @@ static long __get_user_pages(struct task_struct *tsk, struct mm_struct *mm,
+ 			}
+ 			if (is_vm_hugetlb_page(vma)) {
+ 				if (should_force_cow_break(vma, foll_flags))
+-					foll_flags |= FOLL_WRITE;
++					foll_flags |= FOLL_BREAK_COW;
+ 				i = follow_hugetlb_page(mm, vma, pages, vmas,
+ 						&start, &nr_pages, i,
+ 						foll_flags, locked);
+@@ -1095,7 +1097,7 @@ static long __get_user_pages(struct task_struct *tsk, struct mm_struct *mm,
+ 		}
+ 
+ 		if (should_force_cow_break(vma, foll_flags))
+-			foll_flags |= FOLL_WRITE;
++			foll_flags |= FOLL_BREAK_COW;
+ 
+ retry:
+ 		/*
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index 206f52b36ffb..c88f773d03af 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -1296,7 +1296,17 @@ vm_fault_t do_huge_pmd_wp_page(struct vm_fault *vmf, pmd_t orig_pmd)
+ 	if (reuse_swap_page(page, NULL)) {
+ 		pmd_t entry;
+ 		entry = pmd_mkyoung(orig_pmd);
+-		entry = maybe_pmd_mkwrite(pmd_mkdirty(entry), vma);
++		entry = pmd_mkdirty(entry);
++		if (pmd_uffd_wp(orig_pmd))
++			/*
++			 * This can happen when an uffd-wp protected page is
++			 * copied due to enfornced COW.  When it happens, we
++			 * need to keep the uffd-wp bit even after COW, and
++			 * make sure write bit is kept cleared.
++			 */
++			entry = pmd_mkuffd_wp(pmd_wrprotect(entry));
++		else
++			entry = maybe_pmd_mkwrite(entry, vma);
+ 		if (pmdp_set_access_flags(vma, haddr, vmf->pmd, entry, 1))
+ 			update_mmu_cache_pmd(vma, vmf->address, vmf->pmd);
+ 		unlock_page(page);
+diff --git a/mm/memory.c b/mm/memory.c
+index c39a13b09602..b27b555a9df8 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -2706,7 +2706,17 @@ static vm_fault_t wp_page_copy(struct vm_fault *vmf)
+ 		flush_cache_page(vma, vmf->address, pte_pfn(vmf->orig_pte));
+ 		entry = mk_pte(new_page, vma->vm_page_prot);
+ 		entry = pte_sw_mkyoung(entry);
+-		entry = maybe_mkwrite(pte_mkdirty(entry), vma);
++		entry = pte_mkdirty(entry);
++		if (pte_uffd_wp(vmf->orig_pte))
++			/*
++			 * This can happen when an uffd-wp protected page is
++			 * copied due to enfornced COW.  When it happens, we
++			 * need to keep the uffd-wp bit even after COW, and
++			 * make sure write bit is kept cleared.
++			 */
++			entry = pte_mkuffd_wp(pte_wrprotect(entry));
++		else
++			entry = maybe_mkwrite(entry, vma);
+ 		/*
+ 		 * Clear the pte entry and flush it first, before updating the
+ 		 * pte with the new entry. This will avoid a race condition
+@@ -2900,7 +2910,13 @@ static vm_fault_t do_wp_page(struct vm_fault *vmf)
+ {
+ 	struct vm_area_struct *vma = vmf->vma;
+ 
+-	if (userfaultfd_pte_wp(vma, *vmf->pte)) {
++	/*
++	 * Userfaultfd-wp only cares about real writes.  E.g., enforced COW for
++	 * read does not count.  When that happens, we will do the COW with the
++	 * UFFD_WP bit inherited from the original PTE/PMD.
++	 */
++	if ((vmf->flags & FAULT_FLAG_WRITE) &&
++	    userfaultfd_pte_wp(vma, *vmf->pte)) {
+ 		pte_unmap_unlock(vmf->pte, vmf->ptl);
+ 		return handle_userfault(vmf, VM_UFFD_WP);
+ 	}
+@@ -3290,7 +3306,7 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
+ 		put_page(swapcache);
+ 	}
+ 
+-	if (vmf->flags & FAULT_FLAG_WRITE) {
++	if (vmf->flags & (FAULT_FLAG_WRITE | FAULT_FLAG_BREAK_COW)) {
+ 		ret |= do_wp_page(vmf);
+ 		if (ret & VM_FAULT_ERROR)
+ 			ret &= VM_FAULT_ERROR;
+@@ -4117,7 +4133,14 @@ static inline vm_fault_t create_huge_pmd(struct vm_fault *vmf)
+ static inline vm_fault_t wp_huge_pmd(struct vm_fault *vmf, pmd_t orig_pmd)
+ {
+ 	if (vma_is_anonymous(vmf->vma)) {
+-		if (userfaultfd_huge_pmd_wp(vmf->vma, orig_pmd))
++		/*
++		 * Userfaultfd-wp only cares about real writes.  E.g., enforced
++		 * COW for read does not count.  When that happens, we will do
++		 * the COW with the UFFD_WP bit inherited from the original
++		 * PTE/PMD.
++		 */
++		if ((vmf->flags & FAULT_FLAG_WRITE) &&
++		    userfaultfd_huge_pmd_wp(vmf->vma, orig_pmd))
+ 			return handle_userfault(vmf, VM_UFFD_WP);
+ 		return do_huge_pmd_wp_page(vmf, orig_pmd);
+ 	}
+@@ -4241,7 +4264,7 @@ static vm_fault_t handle_pte_fault(struct vm_fault *vmf)
+ 		update_mmu_tlb(vmf->vma, vmf->address, vmf->pte);
+ 		goto unlock;
+ 	}
+-	if (vmf->flags & FAULT_FLAG_WRITE) {
++	if (vmf->flags & (FAULT_FLAG_WRITE | FAULT_FLAG_BREAK_COW)) {
+ 		if (!pte_write(entry))
+ 			return do_wp_page(vmf);
+ 		entry = pte_mkdirty(entry);
+@@ -4281,7 +4304,7 @@ static vm_fault_t __handle_mm_fault(struct vm_area_struct *vma,
+ 		.pgoff = linear_page_index(vma, address),
+ 		.gfp_mask = __get_fault_gfp_mask(vma),
+ 	};
+-	unsigned int dirty = flags & FAULT_FLAG_WRITE;
++	bool cow = flags & (FAULT_FLAG_WRITE | FAULT_FLAG_BREAK_COW);
+ 	struct mm_struct *mm = vma->vm_mm;
+ 	pgd_t *pgd;
+ 	p4d_t *p4d;
+@@ -4308,7 +4331,7 @@ static vm_fault_t __handle_mm_fault(struct vm_area_struct *vma,
+ 
+ 			/* NUMA case for anonymous PUDs would go here */
+ 
+-			if (dirty && !pud_write(orig_pud)) {
++			if (cow && !pud_write(orig_pud)) {
+ 				ret = wp_huge_pud(&vmf, orig_pud);
+ 				if (!(ret & VM_FAULT_FALLBACK))
+ 					return ret;
+@@ -4346,7 +4369,7 @@ static vm_fault_t __handle_mm_fault(struct vm_area_struct *vma,
+ 			if (pmd_protnone(orig_pmd) && vma_is_accessible(vma))
+ 				return do_huge_pmd_numa_page(&vmf, orig_pmd);
+ 
+-			if (dirty && !pmd_write(orig_pmd)) {
++			if (cow && !pmd_write(orig_pmd)) {
+ 				ret = wp_huge_pmd(&vmf, orig_pmd);
+ 				if (!(ret & VM_FAULT_FALLBACK))
+ 					return ret;
+-- 
+2.26.2
 
-
-In the device driver:
-
-
-static const struct irq_domain_ops idxd_irq_domain_ops = {
-
-.alloc= idxd_domain_alloc, //not sure what this should do
-
-.free= idxd_domain_free,
-
-};
-
-struct irq_chip idxd_irq_chip = {
-
-.name= "idxd"
-
-.irq_mask= idxd_irq_mask,
-
-.irq_unmask= idxd_irq_unmask,
-
-.irq_write_msg = idxd_irq_write_msg,
-
-.irq_ack= irq_chip_ack_parent,
-
-.irq_retrigger= irq_chip_retrigger_hierarchy,
-
-.flags= IRQCHIP_SKIP_SET_WAKE,
-
-}
-
-struct msi_domain_info idxd_domain_info = {
-
-.flags        =MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS,
-
-.ops          =&dev_msi_domain_ops,//can be common
-
-.chip         =&idxd_irq_chip //per device
-
-.handler= handle_edge_irq,
-
-.handler_name = "edge",
-
-}
-
-dev->msi_domain = dev_msi_create_irq_domain(iommu->ir_domain, 
-idxd_domain_info, idxd_irq_domain_ops)
-
-msi_domain_alloc_irqs(dev->msi_domain, dev, nvec);
-
-Common code:
-
-
-struct irq_domain *dev_msi_create_irq_domain(struct irq_domain *parent,
-
-struct msi_domain_info *dev_msi_domain_info,
-
-struct irq_domain_ops dev_msi_irq_domain_ops)
-
-{
-
-struct irq_domain *domain;
-
-         .......
-
-domain = irq_domain_create_hierarchy(parent, IRQ_DOMAIN_FLAG_MSI, 0,
-NULL, &dev_msi_irq_domain_ops, info);
-
-         .......
-
-return domain;
-
-}
-
-static struct msi_domain_ops dev_msi_domain_ops = {
-
-.set_desc= dev_msi_set_desc,
-
-.msi_prepare= dev_msi_prepare,
-
-.get_hwirq= dev_msi_get_hwirq,
-
-}; // can re-use platform-msi data structures
-
-
-except the alloc/free irq_domain_ops, does this look fine to you?
-
-
--Megha
-
->
-> Thanks,
->
->          tglx
