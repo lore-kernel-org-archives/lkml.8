@@ -2,178 +2,217 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B0AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 18:45:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49049C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 18:46:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A15E2076B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 18:45:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01326206B2
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 18:46:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LSgR+Kar"
+	dkim=pass (1024-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="N2D4pMFg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726173AbgHKSpL (ORCPT
+        id S1726366AbgHKSqF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 14:45:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33828 "EHLO
+        Tue, 11 Aug 2020 14:46:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725886AbgHKSpK (ORCPT
+        with ESMTP id S1725886AbgHKSqF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 14:45:10 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A978CC06174A;
-        Tue, 11 Aug 2020 11:45:09 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id f193so8085823pfa.12;
-        Tue, 11 Aug 2020 11:45:09 -0700 (PDT)
+        Tue, 11 Aug 2020 14:46:05 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2BFAC06174A
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 11:46:04 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id 9so3449450wmj.5
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 11:46:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Ysg6ArT/BdSqmf7uvpJsHiv9LSdfSfwOFM5PbYO/rU8=;
-        b=LSgR+KarMWtq0AS6v813KDDwXoZWtv0h74cggUKP1aDJIch6LWIDOcAsvpZY0NA5pE
-         UyO3bnasoHoCF8CzcU3BwNEAxOGcNbG/O0ltBd5nNdsX2uZzwr3hic0KNGQlaEYpvRuY
-         o7CCuPSTPV+BL614RlP8enhbb/uoHQq/MRKc175DmSl2WDhJwfM9t/LjaYuFWauz7res
-         pZzfqJnCmQMZRETAeuoche16GDpT8Owybd6ik9jUgH3uVWvvsoR/jUlh2qpNoonkrbzK
-         hcE85zub0KXajl67s+rPDp55DrPkyXp+DWA8mizecCYRmliAiYe7/pAMVLHe9Qm6wUXp
-         swrw==
+        d=atishpatra.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Rcqr7IEEdVp/PYIy+e4k4nefLJLdXAwPGWDE8E1RWjc=;
+        b=N2D4pMFgjGn4hATidL2UNDrGnhvfU/Y6zwGhWJT6Zf6uYI/CFGj7yAbBip75px+tZ2
+         KkaQYHfPWXBJUU4yDGnGFtcIsyfz+NcUcyOmopTF1woRUFTR+Po3U93bhye+hXr6InbU
+         dFBLQQsvYWzb5CkzGl/qmyq2biw3aDTyG50Qc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Ysg6ArT/BdSqmf7uvpJsHiv9LSdfSfwOFM5PbYO/rU8=;
-        b=Yb8f/KANkGRxfAIdjd1O1obxY8dhrGYbeBCViGwpCTXRkpNuGgzTlMLdfIcmzJ5kXa
-         PYSv0ZRCs5/0a5XGc1BAUNAySoTrrvCqksFhdZU+EwgzeoQ4FK8xJncXUCMdMUJW3wBs
-         NNvQfQywlgbp2NV3KFnzCXwx2UshVsJd2ELFVvFraLQKTRArilGjnJ+4MryAFgYS8Str
-         qKOsqkJZBpk/gLajW69iFDHTKq5yrJsNz+ZJA46w3d3leNQpIYjcPrfLtex2ceemaiJQ
-         mC6zaRGjKRQhIPvxyJYq/xAIgny2ztTjPT3TUQUnxZkaSQAacYQOcrHW7vKxPCCW25W8
-         cGMw==
-X-Gm-Message-State: AOAM533zvlhAWk6qWS/vZqyVYSGlFVc9YzyhyACthfEP/BHrPdtqnFAH
-        MegLjge3Cw5e8fakVKiwIpo=
-X-Google-Smtp-Source: ABdhPJyuW5P0qZ0pma2ZXlZZCwMXqoM94Oz94lKBCcP42JtpKXvVuHlL8WKRVOKRTnW6J+TY/z2RBQ==
-X-Received: by 2002:a63:3484:: with SMTP id b126mr1786309pga.297.1597171509154;
-        Tue, 11 Aug 2020 11:45:09 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id y72sm27623620pfg.58.2020.08.11.11.45.08
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 11 Aug 2020 11:45:08 -0700 (PDT)
-Date:   Tue, 11 Aug 2020 11:45:07 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Badhri Jagan Sridharan <badhri@google.com>
-Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        USB <linux-usb@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1] usb: typec: tcpm: Fix TDA 2.2.1.1 and TDA 2.2.1.2
- failures
-Message-ID: <20200811184507.GB86545@roeck-us.net>
-References: <20200811011126.130297-1-badhri@google.com>
- <ef32ea96-16c8-772b-2c80-8df43ee8f668@roeck-us.net>
- <CAPTae5Lhty3rJymi-4gANjUoz79_LujdjddS9oT=vpOxTSecdQ@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Rcqr7IEEdVp/PYIy+e4k4nefLJLdXAwPGWDE8E1RWjc=;
+        b=DLV2qIbSJ8MKr750BghBu9obN4YwxlZvqcFzzuKPeX6aHWX/GwCCb4KAPmfbCoGMc1
+         QQH0MtxXGngbTglBAfCvMwvAmtrkfxoTD+a1psAQ0CUpIezLuNc6bR/6pBBFrVK0gavQ
+         LKd4XbVH+09xNd2DQWlxttmRguZ15I7jwJgvloy3wpAvQ74mJw6ujVy7qsz1Zj03wH+1
+         3HhGki2I7XA79JMliop1Z7Zf/p4Hk8LRmgc4fZ4ppnULiEa3bNl6T+QjEnrtuMLi1Wxq
+         mj+JgOHSsxmOiRQ3AVIe9XE+H+LA6VCTARrlaD3LQ7BldK4geYb3echmRWfOSrfAUQg7
+         v5fQ==
+X-Gm-Message-State: AOAM5314XDIQzPh30q5mHCZ7bpjGrP1bpdAsBeq5SLqtvtB/GOLvSyo6
+        Gdsbsi9Cn0L9YxQKlYhH9ZAbCQOJohvGuH+dKQaH
+X-Google-Smtp-Source: ABdhPJysOcuj5YiKWDGh5hwJd0Sl52RDWE6niLmnCY6YAm9rQ8thDG8qu/k25x/glsPyyBm3TnzjZ9L//cSvLA5ajGI=
+X-Received: by 2002:a1c:ba42:: with SMTP id k63mr4982540wmf.31.1597171563533;
+ Tue, 11 Aug 2020 11:46:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPTae5Lhty3rJymi-4gANjUoz79_LujdjddS9oT=vpOxTSecdQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200811063659.284088-1-qiuwenbo@phytium.com.cn> <CAAhSdy1c=R6aUZ6EOggmJ_Bqm2O0VLKEku=zyFfabExSzOKErA@mail.gmail.com>
+In-Reply-To: <CAAhSdy1c=R6aUZ6EOggmJ_Bqm2O0VLKEku=zyFfabExSzOKErA@mail.gmail.com>
+From:   Atish Patra <atishp@atishpatra.org>
+Date:   Tue, 11 Aug 2020 11:45:52 -0700
+Message-ID: <CAOnJCUJiLVyzMFkn157Zmdrtm66Z=gWmQbXCJiMRY8LCJ3xkaw@mail.gmail.com>
+Subject: Re: [PATCH] riscv: Setup exception vector for K210 properly
+To:     Anup Patel <anup@brainfault.org>
+Cc:     Qiu Wenbo <qiuwenbo@phytium.com.cn>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Guo Ren <guoren@linux.alibaba.com>,
+        Vincent Chen <vincent.chen@sifive.com>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Atish Patra <atish.patra@wdc.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Zong Li <zong.li@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 11:24:07AM -0700, Badhri Jagan Sridharan wrote:
-> On Mon, Aug 10, 2020 at 6:51 PM Guenter Roeck <linux@roeck-us.net> wrote:
+On Tue, Aug 11, 2020 at 1:41 AM Anup Patel <anup@brainfault.org> wrote:
+>
+> On Tue, Aug 11, 2020 at 12:07 PM Qiu Wenbo <qiuwenbo@phytium.com.cn> wrote:
 > >
-> > On 8/10/20 6:11 PM, Badhri Jagan Sridharan wrote:
-> > >>From the spec:
-> > > "7.1.5 Response to Hard Resets
-> > > Hard Reset Signaling indicates a communication failure has occurred and
-> > > the Source Shall stop driving VCONN, Shall remove Rp from the VCONN pin
-> > > and Shall drive VBUS to vSafe0V as shown in Figure 7-9. The USB connection
-> > > May reset during a Hard Reset since the VBUS voltage will be less than
-> > > vSafe5V for an extended period of time. After establishing the vSafe0V
-> > > voltage condition on VBUS, the Source Shall wait tSrcRecover before
-> > > re-applying VCONN and restoring VBUS to vSafe5V. A Source Shall conform
-> > > to the VCONN timing as specified in [USB Type-C 1.3]."
-> > >
-> > > Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
-> > > ---
-> > >  drivers/usb/typec/tcpm/tcpm.c | 16 +++++++++++++---
-> > >  1 file changed, 13 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
-> > > index 3ef37202ee37..e41c4e5d3c71 100644
-> > > --- a/drivers/usb/typec/tcpm/tcpm.c
-> > > +++ b/drivers/usb/typec/tcpm/tcpm.c
-> > > @@ -3372,13 +3372,19 @@ static void run_state_machine(struct tcpm_port *port)
-> > >                       tcpm_set_state(port, SNK_HARD_RESET_SINK_OFF, 0);
-> > >               break;
-> > >       case SRC_HARD_RESET_VBUS_OFF:
-> > > -             tcpm_set_vconn(port, true);
-> > > +             /*
-> > > +              * 7.1.5 Response to Hard Resets
-> > > +              * Hard Reset Signaling indicates a communication failure has occurred and the
-> > > +              * Source Shall stop driving VCONN, Shall remove Rp from the VCONN pin and Shall
-> > > +              * drive VBUS to vSafe0V as shown in Figure 7-9.
-> > > +              */
-> > > +             tcpm_set_vconn(port, false);
-> > >               tcpm_set_vbus(port, false);
-> > >               tcpm_set_roles(port, port->self_powered, TYPEC_SOURCE,
-> > >                              tcpm_data_role_for_source(port));
-> > > -             tcpm_set_state(port, SRC_HARD_RESET_VBUS_ON, PD_T_SRC_RECOVER);
+> > Exception vector is missing on nommu platform and it is a big issue.
+> > This patch is tested in Sipeed MAIX Bit Dev Board.
 > >
-> > I am a bit concerned about this. If I understand correctly, it means that
-> > we won't turn VBUS back on unless a SRC_HARD_RESET_VBUS_OFF PD event is received.
-> > Is that correct ? What happens if that event is never received ?
-> >
-> > Thanks,
-> > Guenter
-> 
-> The term PD event is a little ambiguous to me. Trying to summarize the workflow.
-> Lower level tcpc driver would have to call tcpm_vbus_change which
-> would in-turn trigger TCPM_VBUS_EVENT
-> and queries port->tcpc->get_vbus to get the vbus status. It is not
-> really a PD protocol driven event hence the
-> confusion.
-> 
-> "What happens if that event is never received ?"
-> Yeah TCPM would be in SRC_HARD_RESET_VBUS_OFF till the tcpc calls the
-> tcpm_vbus_change.
-> Do you suspect that existing tcpc would not have the capability to
-> monitor vbus status while sourcing and call tcpm_vbus_change?
-> 
-That, or the driver might be buggy, or the hardware does't signal a status
-update, or the update gets lost. I think we should have some backup,
-to trigger if the event is not received in a reasonable amout of time.
-I don't know if the specification has some kind of maximum limit. If
-not, we should still have something.
+> > Fixes: 79b1feba5455 ("RISC-V: Setup exception vector early")
+> > Signed-off-by: Qiu Wenbo <qiuwenbo@phytium.com.cn>
 
-Thanks,
-Guenter
+Thanks for testing it on the kendryte board.
 
-> Thanks,
-> Badhri
-> 
-> 
-> > >               break;
-> > >       case SRC_HARD_RESET_VBUS_ON:
-> > > +             tcpm_set_vconn(port, true);
-> > >               tcpm_set_vbus(port, true);
-> > >               port->tcpc->set_pd_rx(port->tcpc, true);
-> > >               tcpm_set_attached_state(port, true);
-> > > @@ -3944,7 +3950,11 @@ static void _tcpm_pd_vbus_off(struct tcpm_port *port)
-> > >               tcpm_set_state(port, SNK_HARD_RESET_WAIT_VBUS, 0);
-> > >               break;
-> > >       case SRC_HARD_RESET_VBUS_OFF:
-> > > -             tcpm_set_state(port, SRC_HARD_RESET_VBUS_ON, 0);
-> > > +             /*
-> > > +              * After establishing the vSafe0V voltage condition on VBUS, the Source Shall wait
-> > > +              * tSrcRecover before re-applying VCONN and restoring VBUS to vSafe5V.
-> > > +              */
-> > > +             tcpm_set_state(port, SRC_HARD_RESET_VBUS_ON, PD_T_SRC_RECOVER);
-> > >               break;
-> > >       case HARD_RESET_SEND:
-> > >               break;
-> > >
+> > ---
+> >  arch/riscv/kernel/smpboot.c |  1 +
+> >  arch/riscv/kernel/traps.c   | 11 ++++++++++-
+> >  2 files changed, 11 insertions(+), 1 deletion(-)
 > >
+> > diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
+> > index 356825a57551..23cde0ceb39d 100644
+> > --- a/arch/riscv/kernel/smpboot.c
+> > +++ b/arch/riscv/kernel/smpboot.c
+> > @@ -154,6 +154,7 @@ asmlinkage __visible void smp_callin(void)
+> >         mmgrab(mm);
+> >         current->active_mm = mm;
+> >
+> > +       trap_init();
+> >         notify_cpu_starting(curr_cpuid);
+> >         update_siblings_masks(curr_cpuid);
+> >         set_cpu_online(curr_cpuid, 1);
+> > diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
+> > index ad14f4466d92..a390239818ae 100644
+> > --- a/arch/riscv/kernel/traps.c
+> > +++ b/arch/riscv/kernel/traps.c
+> > @@ -174,7 +174,16 @@ int is_valid_bugaddr(unsigned long pc)
+> >  }
+> >  #endif /* CONFIG_GENERIC_BUG */
+> >
+> > -/* stvec & scratch is already set from head.S */
+> > +/* stvec & scratch is already set from head.S when mmu is enabled */
+> >  void trap_init(void)
+> >  {
+> > +#ifndef CONFIG_MMU
+> > +       /*
+> > +        * Set sup0 scratch register to 0, indicating to exception vector
+> > +        * that we are presently executing in the kernel
+> > +        */
+> > +       csr_write(CSR_SCRATCH, 0);
+> > +       /* Set the exception vector address */
+> > +       csr_write(CSR_TVEC, &handle_exception);
+> > +#endif
+> >  }
+> > --
+> > 2.28.0
+> >
+>
+> This issue seems to be only on the latest master branch of
+> Linux stable tree so this fix need not be a stable fix.
+>
+> For MMU kernel, the CSR_TVEC is setup in relocate() function
+> called from secondary_start_common() function of head.S
+>
+> For NoMMU kernel, we should set CSR_TVEC directly in
+> secondary_start_common() function as "#else" case of the
+> "#ifdef CONFIG_MMU".
+>
+
+That would enable the trap only for secondary harts. But the exception
+vector on boot hart
+is still uninitialized. How about this change ?
+
+diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
+index d0c5c316e9bb..7822054dbd88 100644
+--- a/arch/riscv/kernel/head.S
++++ b/arch/riscv/kernel/head.S
+@@ -77,16 +77,6 @@ relocate:
+        csrw CSR_SATP, a0
+ .align 2
+ 1:
+-       /* Set trap vector to exception handler */
+-       la a0, handle_exception
+-       csrw CSR_TVEC, a0
+-
+-       /*
+-        * Set sup0 scratch register to 0, indicating to exception vector that
+-        * we are presently executing in kernel.
+-        */
+-       csrw CSR_SCRATCH, zero
+-
+        /* Reload the global pointer */
+ .option push
+ .option norelax
+@@ -144,9 +134,23 @@ secondary_start_common:
+        la a0, swapper_pg_dir
+        call relocate
+ #endif
++       call setup_trap_vector
+        tail smp_callin
+ #endif /* CONFIG_SMP */
+
++.align 2
++setup_trap_vector:
++       /* Set trap vector to exception handler */
++       la a0, handle_exception
++       csrw CSR_TVEC, a0
++
++       /*
++        * Set sup0 scratch register to 0, indicating to exception vector that
++        * we are presently executing in kernel.
++        */
++       csrw CSR_SCRATCH, zero
++       ret
++
+ .Lsecondary_park:
+        /* We lack SMP support or have too many harts, so park this hart */
+        wfi
+@@ -240,6 +244,7 @@ clear_bss_done:
+        call relocate
+ #endif /* CONFIG_MMU */
+
++       call setup_trap_vector
+        /* Restore C environment */
+        la tp, init_task
+        sw zero, TASK_TI_CPU(tp)
+
+
+> Regards,
+> Anup
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
+
+
+
+-- 
+Regards,
+Atish
