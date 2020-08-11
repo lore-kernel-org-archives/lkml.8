@@ -2,85 +2,111 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC82C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:38:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FEECC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:39:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D6CF2075D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:38:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D0D02065C
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:39:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WcGZoU5z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728637AbgHKKil convert rfc822-to-8bit (ORCPT
+        id S1728654AbgHKKjG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 06:38:41 -0400
-Received: from foss.arm.com ([217.140.110.172]:36576 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728590AbgHKKig (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 06:38:36 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4435F31B;
-        Tue, 11 Aug 2020 03:38:34 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E7FD43F22E;
-        Tue, 11 Aug 2020 03:38:32 -0700 (PDT)
-References: <20200810010009.92758-1-arch0.zheng@gmail.com> <jhjwo26gxlb.mognet@arm.com> <9425382c-2a42-57ca-512d-c93c589dc701@gmail.com>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Qi Zheng <arch0.zheng@gmail.com>
-Cc:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        Tue, 11 Aug 2020 06:39:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43564 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728588AbgHKKi4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 06:38:56 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B26D4C06174A
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 03:38:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=phuSQTyOsMMj+YYoUn41/VtyZh3faVfNjBlSMB4YUww=; b=WcGZoU5zZ2MtTWjOsUh8QPJH0u
+        eOTkqh5SntAUSb9R5gR68k1pGHG8qXKgEnLNDsZHx3ic2zKcd7om0T4RKCxBVOFJtlqmf7E2lFCM/
+        +qQznmZdNbSVGXQ/JzT9dLYyrRksmFroBrkSYMMO3//V2FoJ8a3udLa3aFgIWQvuIda/tUByCmkPz
+        Drj3io9M/O2hVPS5350ZDM4HpOWXrPhZW2t1IMuLY6wUvQl+WhIrAWxVAKuBvlBjCcbEAAuPOUWmn
+        Qq4amIQ5LHxiuJZ0gJ+XjPNXwyxjoM13QuuQ3uxT6sKSWgeAafLKa6ItAsCwDdImnaPAJ1hFyjpJs
+        53pU9URQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k5Rg4-0005pK-QK; Tue, 11 Aug 2020 10:38:45 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7C9003060AE;
+        Tue, 11 Aug 2020 12:38:41 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 62D4020BFC4E4; Tue, 11 Aug 2020 12:38:41 +0200 (CEST)
+Date:   Tue, 11 Aug 2020 12:38:41 +0200
+From:   peterz@infradead.org
+To:     Will Deacon <will@kernel.org>
+Cc:     linux@armlinux.org.uk, gregkh@linuxfoundation.org,
+        andre.przywara@arm.com, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sched/fair: Remove the duplicate check from group_has_capacity()
-In-reply-to: <9425382c-2a42-57ca-512d-c93c589dc701@gmail.com>
-Date:   Tue, 11 Aug 2020 11:38:28 +0100
-Message-ID: <jhjv9hph3h7.mognet@arm.com>
+Subject: Re: lockdep splat ("possible circular locking dependency detected")
+ with PL011 on 5.8
+Message-ID: <20200811103841.GC2674@hirez.programming.kicks-ass.net>
+References: <20200811101313.GA6970@willie-the-truck>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200811101313.GA6970@willie-the-truck>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Aug 11, 2020 at 11:13:13AM +0100, Will Deacon wrote:
+> Hi,
+> 
+> Using magic-sysrq via a keyboard interrupt over the serial console results in
+> the following lockdep splat with the PL011 UART driver on v5.8. I can reproduce
+> the issue under QEMU with arm64 defconfig + PROVE_LOCKING.
+> 
+> Any chance somebody could take a look, please? It's a little annoying,
+> because it means when I uses magic-sysrq to increase the loglevel prior
+> to testing something else, lockdep gets disabled as a result.
+> 
 
-On 11/08/20 04:39, Qi Zheng wrote:
-> On 2020/8/11 上午2:33, Valentin Schneider wrote:
->>
->> On 10/08/20 02:00, Qi Zheng wrote:
->>> 1. The group_has_capacity() function is only called in
->>>     group_classify().
->>> 2. The following inequality has already been checked in
->>>     group_is_overloaded() which was also called in
->>>     group_classify().
->>>
->>>        (sgs->group_capacity * imbalance_pct) <
->>>                          (sgs->group_runnable * 100)
->>>
->>
->> Consider group_is_overloaded() returns false because of the first
->> condition:
->>
->>          if (sgs->sum_nr_running <= sgs->group_weight)
->>                  return false;
->>
->> then group_has_capacity() would be the first place where the group_runnable
->> vs group_capacity comparison would be done.
->>
->> Now in that specific case we'll actually only check it if
->>
->>    sgs->sum_nr_running == sgs->group_weight
->>
->> and the only case where the runnable vs capacity check can fail here is if
->> there's significant capacity pressure going on. TBH this capacity pressure
->> could be happening even when there are fewer tasks than CPUs, so I'm not
->> sure how intentional that corner case is.
->
-> Maybe some cpus in sg->cpumask are no longer active at the == case,
-> which causes the significant capacity pressure?
->
+Going by msm_serial, the thing to do is something like this:
 
-That can only happen in that short window between deactivating a CPU and
-not having rebuilt the sched_domains yet, which sounds quite elusive.
+
+diff --git a/drivers/tty/serial/amba-pl011.c b/drivers/tty/serial/amba-pl011.c
+index 8efd7c2a34fe..1717790ece2b 100644
+--- a/drivers/tty/serial/amba-pl011.c
++++ b/drivers/tty/serial/amba-pl011.c
+@@ -308,8 +308,9 @@ static void pl011_write(unsigned int val, const struct uart_amba_port *uap,
+  */
+ static int pl011_fifo_to_tty(struct uart_amba_port *uap)
+ {
+-	u16 status;
+ 	unsigned int ch, flag, fifotaken;
++	int sysrq;
++	u16 status;
+ 
+ 	for (fifotaken = 0; fifotaken != 256; fifotaken++) {
+ 		status = pl011_read(uap, REG_FR);
+@@ -344,10 +345,12 @@ static int pl011_fifo_to_tty(struct uart_amba_port *uap)
+ 				flag = TTY_FRAME;
+ 		}
+ 
+-		if (uart_handle_sysrq_char(&uap->port, ch & 255))
+-			continue;
++		spin_unlock(&uap->port.lock);
++		sysrq = uart_handle_sysrq_char(&uap->port, ch & 255);
++		spin_lock(&uap->port.lock);
+ 
+-		uart_insert_char(&uap->port, ch, UART011_DR_OE, ch, flag);
++		if (!sysrq)
++			uart_insert_char(&uap->port, ch, UART011_DR_OE, ch, flag);
+ 	}
+ 
+ 	return fifotaken;
