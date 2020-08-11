@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75155C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:06:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 858ABC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:06:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D80120771
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:06:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A8A72076B
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:06:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729222AbgHKRGV (ORCPT
+        id S1729224AbgHKRGe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 13:06:21 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:51144 "EHLO
+        Tue, 11 Aug 2020 13:06:34 -0400
+Received: from mail-il1-f197.google.com ([209.85.166.197]:56271 "EHLO
         mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729099AbgHKRGS (ORCPT
+        with ESMTP id S1729163AbgHKRGT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 13:06:18 -0400
-Received: by mail-il1-f197.google.com with SMTP id t20so11019013ill.17
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 10:06:17 -0700 (PDT)
+        Tue, 11 Aug 2020 13:06:19 -0400
+Received: by mail-il1-f197.google.com with SMTP id q17so6135589ile.22
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 10:06:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=3Vhix2QlrP7+/gWO8RD9Xb0nh1rKeNHswNvEEXVVggk=;
-        b=XouC0hBMeM13UqedVGkDx1ue5BEK8SBndIbDSwi4XR6b7EtUo0hQA3tpEacWip8xE6
-         b6A3uGARzlLGYBUIkbRj4IyQJa4KnHLL80V2MFj32lYyKZqtkhpB+fTRpGSnu01zwfoh
-         oU9i2PuSNnO6QOBNXi5yHKKhEFnFHIqm6t/v+QWSFZ1EO964WdY9uBR/HZVYS6hYt7jT
-         iBv+h1jgndoIVqCPmaV713g1hdDKm2OFmhwXBlPeXw639neTj4R90GCYFNz/fpQaQ+QQ
-         ZrychKqqtq3AgZaVcmRN/x5bm7KZk3aqcWVPq5tD+/vyl/4smBgbLmEYeUiT7i8xO9oo
-         oU2Q==
-X-Gm-Message-State: AOAM531nmhjgJPRNw0848huvOTyHB07AfOu71rj9dOupeJJqqN+Jpso4
-        VcTdFCo1M1pkzs18nKq1pYjUBF2PuaDmnfPyQG9lQZLMHk1u
-X-Google-Smtp-Source: ABdhPJya4bXun/+NQ/qES9zRA+AQVNLy2Qz0OtAXqkV8v7oBezDW3rOulXZRMs+qHM9W8AjOsCoLdjJMu7AGJQaCF65y00BA+kfB
+        bh=G++ky09F079bG+vggjBA6cynULCbu9QPjUKnei+ThwM=;
+        b=V7qWAkjCz8dALX7HpXPKZzTLSrfk2JXUjx9v1HERuOadkJveNuiQZSR5JSki7Gr2Pg
+         qlRk4bJvwZ8owc8N2D5tFtga47gWSX9aBkycC3yMxyw3Aq31E9q2JjiL/kF4wRym8VLx
+         LPfNHB3Ldtwv14Al0QsmzC6scTT3bnRkMIxHMpwaMMk1y+GofuDRWAxPpJXEaAMbreMH
+         4Cs8s2cL1UqmaJvg0wVOpQ7NUosPmNNEvGl7ia2E1NUTmtls1pemYaaqH3dhEFs1efzm
+         +Yh1qKQVHumiw7CaO1RnnZtm3UkNiObcMpbS6D8TB2Dnng8OGMdcHDFctrow1a4H6AZa
+         xf5w==
+X-Gm-Message-State: AOAM5315lJlBnlfxEHLAldHa1CE6H0L5dl6+Vh5euKAAkHhVSJx8Hu51
+        NxFaPwcd/hmAg9NvrdpTR/lVDjdp+8sTp968abG65MFLymvW
+X-Google-Smtp-Source: ABdhPJzWBiD1vV1YIUh0HYvGBuu3An+mPYfzSYNhPPiYSJfIV8BjkblrqGdLukLkNfo6FlbhlL9D4pK1povrcfZt6+rGgzCBvUSm
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:2246:: with SMTP id o6mr23227895ioo.35.1597165577561;
+X-Received: by 2002:a02:29ca:: with SMTP id p193mr27622294jap.131.1597165577931;
  Tue, 11 Aug 2020 10:06:17 -0700 (PDT)
 Date:   Tue, 11 Aug 2020 10:06:17 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000e5ea9e05ac9d16c1@google.com>
-Subject: memory leak in do_seccomp
-From:   syzbot <syzbot+3ad9614a12f80994c32e@syzkaller.appspotmail.com>
-To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
-        daniel@iogearbox.net, john.fastabend@gmail.com, kafai@fb.com,
-        keescook@chromium.org, kpsingh@chromium.org,
-        linux-kernel@vger.kernel.org, luto@amacapital.net,
-        netdev@vger.kernel.org, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, wad@chromium.org, yhs@fb.com
+Message-ID: <000000000000eb931405ac9d164f@google.com>
+Subject: KMSAN: uninit-value in joydev_connect
+From:   syzbot <syzbot+6a1bb5a33a0b128085bc@syzkaller.appspotmail.com>
+To:     dmitry.torokhov@gmail.com, glider@google.com,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -61,140 +58,145 @@ Hello,
 
 syzbot found the following issue on:
 
-HEAD commit:    449dc8c9 Merge tag 'for-v5.9' of git://git.kernel.org/pub/..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15d816c2900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=4810fa4a53b3aa2c
-dashboard link: https://syzkaller.appspot.com/bug?extid=3ad9614a12f80994c32e
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=153d30e2900000
+HEAD commit:    ce8056d1 wip: changed copy_from_user where instrumented
+git tree:       https://github.com/google/kmsan.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=14b5da2c900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3afe005fb99591f
+dashboard link: https://syzkaller.appspot.com/bug?extid=6a1bb5a33a0b128085bc
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+userspace arch: i386
+
+Unfortunately, I don't have any reproducer for this issue yet.
 
 IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+3ad9614a12f80994c32e@syzkaller.appspotmail.com
+Reported-by: syzbot+6a1bb5a33a0b128085bc@syzkaller.appspotmail.com
 
-2020/08/09 00:29:47 executed programs: 3
-BUG: memory leak
-unreferenced object 0xffff88811310ea80 (size 96):
-  comm "syz-executor.0", pid 6688, jiffies 4294954707 (age 12.810s)
-  hex dump (first 32 bytes):
-    01 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 00 00 30 e0 00 00 c9 ff ff  .........0......
-  backtrace:
-    [<0000000073bb6e7d>] kmalloc include/linux/slab.h:554 [inline]
-    [<0000000073bb6e7d>] kzalloc include/linux/slab.h:666 [inline]
-    [<0000000073bb6e7d>] seccomp_prepare_filter kernel/seccomp.c:562 [inline]
-    [<0000000073bb6e7d>] seccomp_prepare_user_filter kernel/seccomp.c:604 [inline]
-    [<0000000073bb6e7d>] seccomp_set_mode_filter kernel/seccomp.c:1535 [inline]
-    [<0000000073bb6e7d>] do_seccomp+0x2ec/0xd40 kernel/seccomp.c:1649
-    [<00000000658618a4>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-    [<00000000b8258e4d>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+gtco 4-1:0.219: Collection level already at zero
+gtco 4-1:0.219: Not enough data (need 130, have 129)
+input: GTCO_CalComp as /devices/platform/dummy_hcd.3/usb4/4-1/4-1:0.219/input/input5
+=====================================================
+BUG: KMSAN: uninit-value in joydev_connect+0x10c0/0x1920 drivers/input/joydev.c:958
+CPU: 1 PID: 8715 Comm: kworker/1:3 Not tainted 5.8.0-rc5-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x21c/0x280 lib/dump_stack.c:118
+ kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:121
+ __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
+ joydev_connect+0x10c0/0x1920 drivers/input/joydev.c:958
+ input_attach_handler drivers/input/input.c:1031 [inline]
+ input_register_device+0x1d7b/0x21c0 drivers/input/input.c:2229
+ gtco_probe+0x32ce/0x39b0 drivers/input/tablet/gtco.c:990
+ usb_probe_interface+0xece/0x1550 drivers/usb/core/driver.c:374
+ really_probe+0xf20/0x20b0 drivers/base/dd.c:529
+ driver_probe_device+0x293/0x390 drivers/base/dd.c:701
+ __device_attach_driver+0x63f/0x830 drivers/base/dd.c:807
+ bus_for_each_drv+0x2ca/0x3f0 drivers/base/bus.c:431
+ __device_attach+0x4e2/0x7f0 drivers/base/dd.c:873
+ device_initial_probe+0x4a/0x60 drivers/base/dd.c:920
+ bus_probe_device+0x177/0x3d0 drivers/base/bus.c:491
+ device_add+0x3b0e/0x40d0 drivers/base/core.c:2680
+ usb_set_configuration+0x380f/0x3f10 drivers/usb/core/message.c:2032
+ usb_generic_driver_probe+0x138/0x300 drivers/usb/core/generic.c:241
+ usb_probe_device+0x311/0x490 drivers/usb/core/driver.c:272
+ really_probe+0xf20/0x20b0 drivers/base/dd.c:529
+ driver_probe_device+0x293/0x390 drivers/base/dd.c:701
+ __device_attach_driver+0x63f/0x830 drivers/base/dd.c:807
+ bus_for_each_drv+0x2ca/0x3f0 drivers/base/bus.c:431
+ __device_attach+0x4e2/0x7f0 drivers/base/dd.c:873
+ device_initial_probe+0x4a/0x60 drivers/base/dd.c:920
+ bus_probe_device+0x177/0x3d0 drivers/base/bus.c:491
+ device_add+0x3b0e/0x40d0 drivers/base/core.c:2680
+ usb_new_device+0x1bd4/0x2a30 drivers/usb/core/hub.c:2554
+ hub_port_connect drivers/usb/core/hub.c:5208 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5348 [inline]
+ port_event drivers/usb/core/hub.c:5494 [inline]
+ hub_event+0x5e7b/0x8a70 drivers/usb/core/hub.c:5576
+ process_one_work+0x1688/0x2140 kernel/workqueue.c:2269
+ worker_thread+0x10bc/0x2730 kernel/workqueue.c:2415
+ kthread+0x551/0x590 kernel/kthread.c:292
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
 
-BUG: memory leak
-unreferenced object 0xffffc90000e03000 (size 4096):
-  comm "syz-executor.0", pid 6688, jiffies 4294954707 (age 12.810s)
-  hex dump (first 32 bytes):
-    01 00 03 00 00 00 00 00 00 00 00 00 05 00 00 00  ................
-    2d 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  -...............
-  backtrace:
-    [<000000003b6a39af>] __vmalloc_node_range+0x2e1/0x3c0 mm/vmalloc.c:2520
-    [<00000000eee59e12>] __vmalloc_node mm/vmalloc.c:2552 [inline]
-    [<00000000eee59e12>] __vmalloc+0x49/0x50 mm/vmalloc.c:2566
-    [<000000006e13ac2a>] bpf_prog_alloc_no_stats+0x32/0x100 kernel/bpf/core.c:85
-    [<00000000cff3572c>] bpf_prog_alloc+0x1c/0xb0 kernel/bpf/core.c:111
-    [<000000003222ffa9>] bpf_prog_create_from_user+0x5f/0x2a0 net/core/filter.c:1409
-    [<00000000baa576ae>] seccomp_prepare_filter kernel/seccomp.c:567 [inline]
-    [<00000000baa576ae>] seccomp_prepare_user_filter kernel/seccomp.c:604 [inline]
-    [<00000000baa576ae>] seccomp_set_mode_filter kernel/seccomp.c:1535 [inline]
-    [<00000000baa576ae>] do_seccomp+0x32e/0xd40 kernel/seccomp.c:1649
-    [<00000000658618a4>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-    [<00000000b8258e4d>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Uninit was stored to memory at:
+ kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
+ kmsan_internal_chain_origin+0xad/0x130 mm/kmsan/kmsan.c:310
+ __msan_chain_origin+0x50/0x90 mm/kmsan/kmsan_instr.c:165
+ input_set_abs_params+0x331/0x540 drivers/input/input.c:514
+ gtco_setup_caps drivers/input/tablet/gtco.c:598 [inline]
+ gtco_probe+0x2800/0x39b0 drivers/input/tablet/gtco.c:966
+ usb_probe_interface+0xece/0x1550 drivers/usb/core/driver.c:374
+ really_probe+0xf20/0x20b0 drivers/base/dd.c:529
+ driver_probe_device+0x293/0x390 drivers/base/dd.c:701
+ __device_attach_driver+0x63f/0x830 drivers/base/dd.c:807
+ bus_for_each_drv+0x2ca/0x3f0 drivers/base/bus.c:431
+ __device_attach+0x4e2/0x7f0 drivers/base/dd.c:873
+ device_initial_probe+0x4a/0x60 drivers/base/dd.c:920
+ bus_probe_device+0x177/0x3d0 drivers/base/bus.c:491
+ device_add+0x3b0e/0x40d0 drivers/base/core.c:2680
+ usb_set_configuration+0x380f/0x3f10 drivers/usb/core/message.c:2032
+ usb_generic_driver_probe+0x138/0x300 drivers/usb/core/generic.c:241
+ usb_probe_device+0x311/0x490 drivers/usb/core/driver.c:272
+ really_probe+0xf20/0x20b0 drivers/base/dd.c:529
+ driver_probe_device+0x293/0x390 drivers/base/dd.c:701
+ __device_attach_driver+0x63f/0x830 drivers/base/dd.c:807
+ bus_for_each_drv+0x2ca/0x3f0 drivers/base/bus.c:431
+ __device_attach+0x4e2/0x7f0 drivers/base/dd.c:873
+ device_initial_probe+0x4a/0x60 drivers/base/dd.c:920
+ bus_probe_device+0x177/0x3d0 drivers/base/bus.c:491
+ device_add+0x3b0e/0x40d0 drivers/base/core.c:2680
+ usb_new_device+0x1bd4/0x2a30 drivers/usb/core/hub.c:2554
+ hub_port_connect drivers/usb/core/hub.c:5208 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5348 [inline]
+ port_event drivers/usb/core/hub.c:5494 [inline]
+ hub_event+0x5e7b/0x8a70 drivers/usb/core/hub.c:5576
+ process_one_work+0x1688/0x2140 kernel/workqueue.c:2269
+ worker_thread+0x10bc/0x2730 kernel/workqueue.c:2415
+ kthread+0x551/0x590 kernel/kthread.c:292
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
 
-BUG: memory leak
-unreferenced object 0xffff888113bc1c00 (size 1024):
-  comm "syz-executor.0", pid 6688, jiffies 4294954707 (age 12.810s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<000000000466b245>] kmalloc include/linux/slab.h:554 [inline]
-    [<000000000466b245>] kzalloc include/linux/slab.h:666 [inline]
-    [<000000000466b245>] bpf_prog_alloc_no_stats+0x73/0x100 kernel/bpf/core.c:89
-    [<00000000cff3572c>] bpf_prog_alloc+0x1c/0xb0 kernel/bpf/core.c:111
-    [<000000003222ffa9>] bpf_prog_create_from_user+0x5f/0x2a0 net/core/filter.c:1409
-    [<00000000baa576ae>] seccomp_prepare_filter kernel/seccomp.c:567 [inline]
-    [<00000000baa576ae>] seccomp_prepare_user_filter kernel/seccomp.c:604 [inline]
-    [<00000000baa576ae>] seccomp_set_mode_filter kernel/seccomp.c:1535 [inline]
-    [<00000000baa576ae>] do_seccomp+0x32e/0xd40 kernel/seccomp.c:1649
-    [<00000000658618a4>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-    [<00000000b8258e4d>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Uninit was stored to memory at:
+ kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
+ kmsan_internal_chain_origin+0xad/0x130 mm/kmsan/kmsan.c:310
+ __msan_chain_origin+0x50/0x90 mm/kmsan/kmsan_instr.c:165
+ parse_hid_report_descriptor drivers/input/tablet/gtco.c:330 [inline]
+ gtco_probe+0x1e56/0x39b0 drivers/input/tablet/gtco.c:935
+ usb_probe_interface+0xece/0x1550 drivers/usb/core/driver.c:374
+ really_probe+0xf20/0x20b0 drivers/base/dd.c:529
+ driver_probe_device+0x293/0x390 drivers/base/dd.c:701
+ __device_attach_driver+0x63f/0x830 drivers/base/dd.c:807
+ bus_for_each_drv+0x2ca/0x3f0 drivers/base/bus.c:431
+ __device_attach+0x4e2/0x7f0 drivers/base/dd.c:873
+ device_initial_probe+0x4a/0x60 drivers/base/dd.c:920
+ bus_probe_device+0x177/0x3d0 drivers/base/bus.c:491
+ device_add+0x3b0e/0x40d0 drivers/base/core.c:2680
+ usb_set_configuration+0x380f/0x3f10 drivers/usb/core/message.c:2032
+ usb_generic_driver_probe+0x138/0x300 drivers/usb/core/generic.c:241
+ usb_probe_device+0x311/0x490 drivers/usb/core/driver.c:272
+ really_probe+0xf20/0x20b0 drivers/base/dd.c:529
+ driver_probe_device+0x293/0x390 drivers/base/dd.c:701
+ __device_attach_driver+0x63f/0x830 drivers/base/dd.c:807
+ bus_for_each_drv+0x2ca/0x3f0 drivers/base/bus.c:431
+ __device_attach+0x4e2/0x7f0 drivers/base/dd.c:873
+ device_initial_probe+0x4a/0x60 drivers/base/dd.c:920
+ bus_probe_device+0x177/0x3d0 drivers/base/bus.c:491
+ device_add+0x3b0e/0x40d0 drivers/base/core.c:2680
+ usb_new_device+0x1bd4/0x2a30 drivers/usb/core/hub.c:2554
+ hub_port_connect drivers/usb/core/hub.c:5208 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5348 [inline]
+ port_event drivers/usb/core/hub.c:5494 [inline]
+ hub_event+0x5e7b/0x8a70 drivers/usb/core/hub.c:5576
+ process_one_work+0x1688/0x2140 kernel/workqueue.c:2269
+ worker_thread+0x10bc/0x2730 kernel/workqueue.c:2415
+ kthread+0x551/0x590 kernel/kthread.c:292
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
 
-BUG: memory leak
-unreferenced object 0xffff8881154cb860 (size 32):
-  comm "syz-executor.0", pid 6688, jiffies 4294954707 (age 12.810s)
-  hex dump (first 32 bytes):
-    01 00 73 74 65 6d 64 2d 00 5c d6 19 81 88 ff ff  ..stemd-.\......
-    65 72 76 69 63 65 00 00 00 00 00 00 00 00 00 00  ervice..........
-  backtrace:
-    [<00000000561d65d4>] kmalloc include/linux/slab.h:554 [inline]
-    [<00000000561d65d4>] bpf_prog_store_orig_filter+0x33/0xa0 net/core/filter.c:1131
-    [<000000005d9b7cd2>] bpf_prog_create_from_user+0xda/0x2a0 net/core/filter.c:1422
-    [<00000000baa576ae>] seccomp_prepare_filter kernel/seccomp.c:567 [inline]
-    [<00000000baa576ae>] seccomp_prepare_user_filter kernel/seccomp.c:604 [inline]
-    [<00000000baa576ae>] seccomp_set_mode_filter kernel/seccomp.c:1535 [inline]
-    [<00000000baa576ae>] do_seccomp+0x32e/0xd40 kernel/seccomp.c:1649
-    [<00000000658618a4>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-    [<00000000b8258e4d>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff888119d65c00 (size 32):
-  comm "syz-executor.0", pid 6688, jiffies 4294954707 (age 12.810s)
-  hex dump (first 32 bytes):
-    06 00 00 00 fb ff ff 7f 00 00 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<00000000ad603142>] kmemdup+0x23/0x50 mm/util.c:127
-    [<0000000001d3eabf>] kmemdup include/linux/string.h:479 [inline]
-    [<0000000001d3eabf>] bpf_prog_store_orig_filter+0x5e/0xa0 net/core/filter.c:1138
-    [<000000005d9b7cd2>] bpf_prog_create_from_user+0xda/0x2a0 net/core/filter.c:1422
-    [<00000000baa576ae>] seccomp_prepare_filter kernel/seccomp.c:567 [inline]
-    [<00000000baa576ae>] seccomp_prepare_user_filter kernel/seccomp.c:604 [inline]
-    [<00000000baa576ae>] seccomp_set_mode_filter kernel/seccomp.c:1535 [inline]
-    [<00000000baa576ae>] do_seccomp+0x32e/0xd40 kernel/seccomp.c:1649
-    [<00000000658618a4>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-    [<00000000b8258e4d>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff8881131ecb00 (size 96):
-  comm "syz-executor.0", pid 6688, jiffies 4294954707 (age 12.810s)
-  hex dump (first 32 bytes):
-    01 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00  ................
-    80 ea 10 13 81 88 ff ff 00 b0 d8 00 00 c9 ff ff  ................
-  backtrace:
-    [<0000000073bb6e7d>] kmalloc include/linux/slab.h:554 [inline]
-    [<0000000073bb6e7d>] kzalloc include/linux/slab.h:666 [inline]
-    [<0000000073bb6e7d>] seccomp_prepare_filter kernel/seccomp.c:562 [inline]
-    [<0000000073bb6e7d>] seccomp_prepare_user_filter kernel/seccomp.c:604 [inline]
-    [<0000000073bb6e7d>] seccomp_set_mode_filter kernel/seccomp.c:1535 [inline]
-    [<0000000073bb6e7d>] do_seccomp+0x2ec/0xd40 kernel/seccomp.c:1649
-    [<00000000658618a4>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-    [<00000000b8258e4d>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88811310e400 (size 96):
-  comm "syz-executor.0", pid 6702, jiffies 4294955242 (age 7.460s)
-  hex dump (first 32 bytes):
-    01 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 00 00 50 e1 00 00 c9 ff ff  .........P......
-  backtrace:
-    [<0000000073bb6e7d>] kmalloc include/linux/slab.h:554 [inline]
-    [<0000000073bb6e7d>] kzalloc include/linux/slab.h:666 [inline]
-    [<0000000073bb6e7d>] seccomp_prepare_filter kernel/seccomp.c:562 [inline]
-    [<0000000073bb6e7d>] seccomp_prepare_user_filter kernel/seccomp.c:604 [inline]
-    [<0000000073bb6e7d>] seccomp_set_mode_filter kernel/seccomp.c:1535 [inline]
-    [<0000000073bb6e7d>] do_seccomp+0x2ec/0xd40 kernel/seccomp.c:1649
-    [<00000000658618a4>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-    [<00000000b8258e4d>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
+Local variable ----globalval.i@gtco_probe created at:
+ parse_hid_report_descriptor drivers/input/tablet/gtco.c:221 [inline]
+ gtco_probe+0xda0/0x39b0 drivers/input/tablet/gtco.c:935
+ parse_hid_report_descriptor drivers/input/tablet/gtco.c:221 [inline]
+ gtco_probe+0xda0/0x39b0 drivers/input/tablet/gtco.c:935
+=====================================================
 
 
 ---
@@ -204,5 +206,3 @@ syzbot engineers can be reached at syzkaller@googlegroups.com.
 
 syzbot will keep track of this issue. See:
 https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this issue, for details see:
-https://goo.gl/tpsmEJ#testing-patches
