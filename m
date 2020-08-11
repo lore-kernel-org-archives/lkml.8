@@ -2,231 +2,177 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F171C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95FF1C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:17:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5869620771
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:16:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62ECE206DC
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:17:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="klLz6wKU"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AdEIj+b1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729202AbgHKRQG (ORCPT
+        id S1729175AbgHKRRU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 13:16:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48284 "EHLO
+        Tue, 11 Aug 2020 13:17:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48470 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729092AbgHKRQG (ORCPT
+        with ESMTP id S1729047AbgHKRRT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 13:16:06 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56C8DC06174A
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 10:16:04 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id n4so6380212vsl.10
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 10:16:04 -0700 (PDT)
+        Tue, 11 Aug 2020 13:17:19 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43A75C06174A
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 10:17:19 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id ep8so2192772pjb.3
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 10:17:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GcOJfgPH+kookjeNTFA/a55bCUyOIBtLpH9z1xzQ2Dk=;
-        b=klLz6wKUUtyx3zTEv9yLDqYfCzgIBog5o60iZxU1w4FeSRHRE0b71zp3P+GhyIdo5T
-         rChF30fNgQprCmJxLbQr1YPJFiBv6guVBUBCqfTSS5M8aXfntO6UJTZ/p6Op2XHdn7TR
-         o2TnLXcqhz88ByC7UnvSIlo/qFjwfFZF2Gawg=
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=33Hoffu/6HYF4B1Z8E9C6OhynQs2nu3DpzVn1XGkMVc=;
+        b=AdEIj+b1IS2QdZCjV3XTzWNayAPgqYLDmsKP9brnolbkaI4dIKmqJY4MGeAkOmuq70
+         pSXJkcMlr/LH728ATkIKVjscetox7XGBLMSlQIM/YW5toPeacZ+weXnWv4Z4KnlGCO0V
+         9A8RTyFW1Jz0V46LkrpmVomhcbsWUZncoXd+ninP8IvbEJMqyceOQMQcSy2RX8bD57wz
+         kgkf67bHdAWpNVdQRClaBwxzYZ4lxGJmFtWohBOFnWWZRfebqOuU98MNeSCbL8q56xqS
+         ByzghgJHO3KLXnsamkFxBOp3eyO8p3b3ED8vpWOjn3Yo6CjpiT6y6GdXgK2oEcyp6WNw
+         ZOIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GcOJfgPH+kookjeNTFA/a55bCUyOIBtLpH9z1xzQ2Dk=;
-        b=opotMCfjPP7GqRrBL1Rubqcayi0zNgOQj59CzJCnDi6u9ItV3YILvSdqw3z9NzRC4Q
-         gymzLRGnXd1e0oj8KwueZRnqF0MjgGc3d3ymI6ezKtF9WEHVwOpRkoX2sp1QoFeKdqlE
-         lviOifczo9+VK36BlKLAaVw74Lo/vNo0tYzS+krTuzDUl485NCCzZyoNDS92XsCeVIJZ
-         krYU/6Wld3vBYloNiJ71ddXUz9M61em3fvR65MfTy6GJg9siC/Y0lkF56JmjnL2WCfn3
-         Q3lRoWLN+Chnpu5kVLxOD6QgTyL0Qb8eQ1X9IFmqIyZe1LFzxhBcSpOjzxJ7Y3a4Jctn
-         BA3Q==
-X-Gm-Message-State: AOAM530RQh1DB+zOvPDfgvm1rYIDpUdfRA0qyrOb3AyAKeakdlgU1Z15
-        ZHLiGiBb4E/FLTGWFd0t7UyxBdmHnNk=
-X-Google-Smtp-Source: ABdhPJwoRtYaIUlRq9A8NDyLZIy+16xqqzcDBe+W4fTxwYOv4z0h/j6mZIzVdEAZUhucQYAXDWu7Lg==
-X-Received: by 2002:a67:2745:: with SMTP id n66mr7439880vsn.12.1597166161187;
-        Tue, 11 Aug 2020 10:16:01 -0700 (PDT)
-Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com. [209.85.222.43])
-        by smtp.gmail.com with ESMTPSA id y65sm7152786vsb.22.2020.08.11.10.15.59
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=33Hoffu/6HYF4B1Z8E9C6OhynQs2nu3DpzVn1XGkMVc=;
+        b=aTlXyPa5g/ZBQjMEP4X3wn5MdrzzxeU+PmSrZhmf30V53IKF/pG2lUs8UBSkaxXoCQ
+         Z+vfI9aBR+c9w5YBHZyjYwQC/PTCDisJeEKkqRLVt1Hjenbedj2jfE5bQ2Z9ZtfQyPRu
+         i+NSvv0W2xfl0ESdZHZc9ea9Dgc3rxQBpy6VhZ+nnPFTcj9W9Q4BTon4AaA3W3WANtrM
+         Et5t3zLT/iijttlvNF652wKrrZu6GnbksSNJ5pxtSDUCPmG6wO3u6ej75RPX0ppVPnr3
+         HfiS4+REEX/Wb+ClGl0wyDlFNWmgcNjt1iebSO+sZOvpV7EFbCyXF6r4Qs5YxLu19al4
+         TBvQ==
+X-Gm-Message-State: AOAM532BOzHOgjnHljk0qpTQlwCKihLn41nTHbWcSvgw/ZfqVgzIqYAh
+        h+bWWJNQm112h/wcgvGcMf4=
+X-Google-Smtp-Source: ABdhPJw3MlBcU9kBFTQ1zF90kaJv832K9A3Sbmi3onOx6kfPymH1/THYrO133+fe0FwBsxnsXEKkaw==
+X-Received: by 2002:a17:902:b686:: with SMTP id c6mr1779157pls.133.1597166238815;
+        Tue, 11 Aug 2020 10:17:18 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id v11sm21424322pgs.22.2020.08.11.10.17.17
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Aug 2020 10:16:00 -0700 (PDT)
-Received: by mail-ua1-f43.google.com with SMTP id v20so764367ual.4
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 10:15:59 -0700 (PDT)
-X-Received: by 2002:ab0:37d3:: with SMTP id e19mr24271569uav.64.1597166159205;
- Tue, 11 Aug 2020 10:15:59 -0700 (PDT)
+        Tue, 11 Aug 2020 10:17:18 -0700 (PDT)
+Subject: Re: [PATCH] hwmon: (pmbus/isl68137) remove READ_TEMPERATURE_1
+ telemetry for RAA228228
+To:     Grant Peltier <grantpeltier93@gmail.com>
+Cc:     grant.peltier.jg@renesas.com, linux-kernel@vger.kernel.org,
+        adam.vaughn.xh@renesas.com
+References: <20200810183627.GA5457@raspberrypi>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <47df1832-86f6-bb51-0488-d1d9ab0e0b6f@roeck-us.net>
+Date:   Tue, 11 Aug 2020 10:17:16 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <1595333413-30052-1-git-send-email-sumit.garg@linaro.org>
- <CAFA6WYMN=na4Pxnu1LYRVAAZRdV==5EwU-Vcq-QkRb_jaLiPmw@mail.gmail.com>
- <20200811135801.GA416071@kroah.com> <CAFA6WYMN8i96rEZuHLnskB+4k0o=K9vF1_we83P04h2BSoGjmQ@mail.gmail.com>
- <20200811145816.GA424033@kroah.com>
-In-Reply-To: <20200811145816.GA424033@kroah.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 11 Aug 2020 10:15:47 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=UD=cTn6jwpYS-C-=1ORd-4azZ8ZiBR6om++2sMS1nmMg@mail.gmail.com>
-Message-ID: <CAD=FV=UD=cTn6jwpYS-C-=1ORd-4azZ8ZiBR6om++2sMS1nmMg@mail.gmail.com>
-Subject: Re: [RFC 0/5] Introduce NMI aware serial drivers
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Sumit Garg <sumit.garg@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        linux-serial@vger.kernel.org, kgdb-bugreport@lists.sourceforge.net,
-        Jiri Slaby <jslaby@suse.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200810183627.GA5457@raspberrypi>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 8/10/20 11:36 AM, Grant Peltier wrote:
+> Per the RAA228228 datasheet, READ_TEMPERATURE_1 is not a supported PMBus
+> command.
+> 
+> Signed-off-by: Grant Peltier <grantpeltier93@gmail.com>
 
-On Tue, Aug 11, 2020 at 7:58 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Tue, Aug 11, 2020 at 07:59:24PM +0530, Sumit Garg wrote:
-> > Hi Greg,
-> >
-> > Thanks for your comments.
-> >
-> > On Tue, 11 Aug 2020 at 19:27, Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-> > >
-> > > On Tue, Aug 11, 2020 at 07:20:26PM +0530, Sumit Garg wrote:
-> > > > On Tue, 21 Jul 2020 at 17:40, Sumit Garg <sumit.garg@linaro.org> wrote:
-> > > > >
-> > > > > Make it possible for UARTs to trigger magic sysrq from an NMI. With the
-> > > > > advent of pseudo NMIs on arm64 it became quite generic to request serial
-> > > > > device interrupt as an NMI rather than IRQ. And having NMI driven serial
-> > > > > RX will allow us to trigger magic sysrq as an NMI and hence drop into
-> > > > > kernel debugger in NMI context.
-> > > > >
-> > > > > The major use-case is to add NMI debugging capabilities to the kernel
-> > > > > in order to debug scenarios such as:
-> > > > > - Primary CPU is stuck in deadlock with interrupts disabled and hence
-> > > > >   doesn't honor serial device interrupt. So having magic sysrq triggered
-> > > > >   as an NMI is helpful for debugging.
-> > > > > - Always enabled NMI based magic sysrq irrespective of whether the serial
-> > > > >   TTY port is active or not.
-> > > > >
-> > > > > Currently there is an existing kgdb NMI serial driver which provides
-> > > > > partial implementation in upstream to have a separate ttyNMI0 port but
-> > > > > that remained in silos with the serial core/drivers which made it a bit
-> > > > > odd to enable using serial device interrupt and hence remained unused. It
-> > > > > seems to be clearly intended to avoid almost all custom NMI changes to
-> > > > > the UART driver.
-> > > > >
-> > > > > But this patch-set allows the serial core/drivers to be NMI aware which
-> > > > > in turn provides NMI debugging capabilities via magic sysrq and hence
-> > > > > there is no specific reason to keep this special driver. So remove it
-> > > > > instead.
-> > > > >
-> > > > > Approach:
-> > > > > ---------
-> > > > >
-> > > > > The overall idea is to intercept serial RX characters in NMI context, if
-> > > > > those are specific to magic sysrq then allow corresponding handler to run
-> > > > > in NMI context. Otherwise, defer all other RX and TX operations onto IRQ
-> > > > > work queue in order to run those in normal interrupt context.
-> > > > >
-> > > > > This approach is demonstrated using amba-pl011 driver.
-> > > > >
-> > > > > Patch-wise description:
-> > > > > -----------------------
-> > > > >
-> > > > > Patch #1 prepares magic sysrq handler to be NMI aware.
-> > > > > Patch #2 adds NMI framework to serial core.
-> > > > > Patch #3 and #4 demonstrates NMI aware uart port using amba-pl011 driver.
-> > > > > Patch #5 removes kgdb NMI serial driver.
-> > > > >
-> > > > > Goal of this RFC:
-> > > > > -----------------
-> > > > >
-> > > > > My main reason for sharing this as an RFC is to help decide whether or
-> > > > > not to continue with this approach. The next step for me would to port
-> > > > > the work to a system with an 8250 UART.
-> > > > >
-> > > >
-> > > > A gentle reminder to seek feedback on this series.
+Please copy linux-hwmon@vger.kernel.org on hwmon patches. This patch is not
+in the hwmon patchwork, which in general almost guarantees that it gets lost
+since I usually pull patches from there. As it happens, you are lucky
+that I noticed. Patch applied.
 
-It's been on my list for a while.  I started it Friday but ran out of
-time.  This week hasn't been going as smoothly as I hoped but I'll
-prioritize this since it's been too long.
+Guenter
 
+> ---
+>  drivers/hwmon/pmbus/isl68137.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/hwmon/pmbus/isl68137.c b/drivers/hwmon/pmbus/isl68137.c
+> index 0c622711ef7e..58aa95a3c010 100644
+> --- a/drivers/hwmon/pmbus/isl68137.c
+> +++ b/drivers/hwmon/pmbus/isl68137.c
+> @@ -67,6 +67,7 @@ enum variants {
+>  	raa_dmpvr1_2rail,
+>  	raa_dmpvr2_1rail,
+>  	raa_dmpvr2_2rail,
+> +	raa_dmpvr2_2rail_nontc,
+>  	raa_dmpvr2_3rail,
+>  	raa_dmpvr2_hv,
+>  };
+> @@ -241,6 +242,10 @@ static int isl68137_probe(struct i2c_client *client,
+>  		info->pages = 1;
+>  		info->read_word_data = raa_dmpvr2_read_word_data;
+>  		break;
+> +	case raa_dmpvr2_2rail_nontc:
+> +		info->func[0] &= ~PMBUS_HAVE_TEMP;
+> +		info->func[1] &= ~PMBUS_HAVE_TEMP;
+> +		fallthrough;
+>  	case raa_dmpvr2_2rail:
+>  		info->pages = 2;
+>  		info->read_word_data = raa_dmpvr2_read_word_data;
+> @@ -304,7 +309,7 @@ static const struct i2c_device_id raa_dmpvr_id[] = {
+>  	{"raa228000", raa_dmpvr2_hv},
+>  	{"raa228004", raa_dmpvr2_hv},
+>  	{"raa228006", raa_dmpvr2_hv},
+> -	{"raa228228", raa_dmpvr2_2rail},
+> +	{"raa228228", raa_dmpvr2_2rail_nontc},
+>  	{"raa229001", raa_dmpvr2_2rail},
+>  	{"raa229004", raa_dmpvr2_2rail},
+>  	{}
+> 
 
-> > > It's the middle of the merge window, and I can't do anything.
-> > >
-> > > Also, I almost never review RFC patches as I have have way too many
-> > > patches that people think are "right" to review first...
-> > >
-> >
-> > Okay, I understand and I can definitely wait for your feedback.
->
-> My feedback here is this:
->
-> > > I suggest you work to flesh this out first and submit something that you
-> > > feels works properly.
->
-> :)
->
-> > IIUC, in order to make this approach substantial I need to make it
-> > work with 8250 UART (major serial driver), correct? As currently it
-> > works properly for amba-pl011 driver.
->
-> Yes, try to do that, or better yet, make it work with all serial drivers
-> automatically.
-
-A bit of early feedback...
-
-Although I'm not sure we can do Greg's "make it work everywhere
-automatically", it's possible you could get half of your patch done
-automatically.  Specifically, your patch really does two things:
-
-a) It leaves the serial port "active" all the time to look for sysrq.
-In other words even if there is no serial client it's always reading
-the port looking for characters.  IMO this concept should be separated
-out from the NMI concept and _could_ automatically work for all serial
-drivers.  You'd just need something in the serial core that acted like
-a default client if nobody else opened the serial port.  The nice
-thing here is that we go through all the normal code paths and don't
-need special cases in the driver.
-
-b) It enables NMI for your particular serial driver.  This seems like
-it'd be hard to do automatically because you can't do the same things
-at NMI that you could do in a normal interrupt handler.
-
-NOTE: to me, a) is more important than b) (though it'd be nice to have
-both).  This would be especially true the earlier you could make a)
-work since the main time when an "agetty" isn't running on my serial
-port to read characters is during bootup.
-
-Why is b) less important to me? Sure, it would let you drop into the
-debugger in the case where the CPU handling serial port interrupts is
-hung with IRQs disabled, but it _woudln't_ let you drop into the
-debugger in the case where a different CPU is hung with IRQs disabled.
-To get that we need NMI roundup (which, I know, you are also working
-on for arm64).  ...and, if we've got NMI roundup, presumably we can
-find our way into the debugger by either moving the serial interrupt
-to a different CPU ahead of time or using some type of lockup detector
-(which I know you are also working on for arm64).
-
-
-One last bit of feedback is that I noticed that you didn't try to
-implement the old "knock" functionality of the old NMI driver that's
-being deleted.  That is: your new patches don't provide an alternate
-way to drop into the debugger for systems where BREAK isn't hooked up.
-That's not a hard requirement, but I was kinda hoping for it since I
-have some systems that haven't routed BREAK properly.  ;-)
-
-
-I'll try to get some more detailed feedback in the next few days.
-
--Doug
