@@ -2,107 +2,126 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E66EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:42:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2211C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:44:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE1B3206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:42:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8205C206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:44:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BIjSpO0j"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pRHQzTnY";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ts3wdVRN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728862AbgHKOm4 (ORCPT
+        id S1728869AbgHKOo0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 10:42:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52886 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728783AbgHKOmu (ORCPT
+        Tue, 11 Aug 2020 10:44:26 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:58854 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728782AbgHKOoZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 10:42:50 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FACEC061787;
-        Tue, 11 Aug 2020 07:42:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=qDSQHCDBU4D3YRSldaGEKRiZu5f5C5HcKUrvXP1BRoo=; b=BIjSpO0jPg+gb45bDcxNRZ5Cvw
-        6TGXh918jACirRi/3Eo6jf/a9OrSgID5WPc9DYawF3ydNVOyu4YgdTblKd8HcyILobnac/x96bxeJ
-        tTAT+8GYuesYENvzgLd8tipOmbaw4V5NTuHn3EpMpFz+qSydXoGQ/PWDcPBLX8zmU5RR8kt3Q/ZhZ
-        uiuVgAi1f+STKDoAzmA1Xq7s/+qwntQftwuVrZrzTNawhyUW/V5/Z3Xc8yWkCnNpgwTOR46Y7/NQ9
-        tiR6XqCrcF6XWtN2yJG3iZAVG+moqBhIwTc1eEnSXVAonvU908HuZN/uxx/mvlVZMwPBMdeLQbcBH
-        oMMzoFeQ==;
-Received: from c-73-157-219-8.hsd1.or.comcast.net ([73.157.219.8] helo=[10.0.0.252])
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k5VUE-0000sS-UI; Tue, 11 Aug 2020 14:42:47 +0000
-Subject: Re: [PATCH] fs: autofs: delete repeated words in comments
-To:     Ian Kent <raven@themaw.net>, linux-kernel@vger.kernel.org
-Cc:     autofs@vger.kernel.org
-References: <20200811021817.24982-1-rdunlap@infradead.org>
- <75e04b06be0561c3cec936cd3bbc44fe82ca73f4.camel@themaw.net>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <811e011e-2f45-87c3-d92d-729680da5917@infradead.org>
-Date:   Tue, 11 Aug 2020 07:42:39 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 11 Aug 2020 10:44:25 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1597157062;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Vcln4Ca/4Fv4aIfCbdX1ilYpW3I83s8BkkosnjfF/9g=;
+        b=pRHQzTnYuDs8oyfJmawu+/oYkSua7IKYXTcGTem2SuZPjaR7H/f52+ylgGKu3ierp88ap6
+        0zA99s7nvYiY21pYwT8h4t6WQETbe8YpJTZ5V/12f+JWIf+UFUu1rBx+6gWYwoxfGdQ/zZ
+        1SioXawuDrbKnVWdloBAS6+uYn7ervKFI0HIunTzctLgXEdGs/JVx5hIjKzVNvhpELL/OS
+        E8L3T3hWa92ss0Ot4QeItyLe+3X7NYDmTka6Fb3tBlNOTq9lhIfkGUkciG9qiRqw2scN2w
+        ndW5WieIuemPfWW9LucSywm6Q1itFJuGsI9O7kfzEMklKxhp/szCg2ppQmchvA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1597157062;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Vcln4Ca/4Fv4aIfCbdX1ilYpW3I83s8BkkosnjfF/9g=;
+        b=Ts3wdVRNujK6Sly60+quuhFMSNlyCokdzwXFNRdRUmMuVX8Hj08DrORTsVjqYALSlwhDsB
+        OrB84dSJsEJX08AQ==
+To:     Michal Hocko <mhocko@suse.com>, Uladzislau Rezki <urezki@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
+In-Reply-To: <20200810192525.GG4773@dhcp22.suse.cz>
+References: <20200809204354.20137-1-urezki@gmail.com> <20200809204354.20137-2-urezki@gmail.com> <20200810123141.GF4773@dhcp22.suse.cz> <20200810160739.GA29884@pc636> <20200810192525.GG4773@dhcp22.suse.cz>
+Date:   Tue, 11 Aug 2020 16:44:21 +0200
+Message-ID: <87pn7x6y4a.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <75e04b06be0561c3cec936cd3bbc44fe82ca73f4.camel@themaw.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/11/20 1:36 AM, Ian Kent wrote:
-> On Mon, 2020-08-10 at 19:18 -0700, Randy Dunlap wrote:
->> Drop duplicated words {the, at} in comments.
->>
->> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
->> Cc: Ian Kent <raven@themaw.net>
->> Cc: autofs@vger.kernel.org
-> 
-> Acked-by: Ian Kent <raven@themaw.net>
+Michal Hocko <mhocko@suse.com> writes:
+> On Mon 10-08-20 18:07:39, Uladzislau Rezki wrote:
+>> > On Sun 09-08-20 22:43:53, Uladzislau Rezki (Sony) wrote:
+>> > Is there any fundamental problem to make zone raw_spin_lock?
+>> > 
+>> Good point. Converting a regular spinlock to the raw_* variant can solve 
+>> an issue and to me it seems partly reasonable. Because there are other
+>> questions if we do it:
+>> 
+>> a) what to do with kswapd and "wake-up path" that uses sleepable lock:
+>>     wakeup_kswapd() -> wake_up_interruptible(&pgdat->kswapd_wait).
+>
+> If there is no RT friendly variant for waking up process from the atomic
+> context then we might need to special case this for the RT tree.
 
-Hi Ian,
+That's a solvable problem.
 
-Since you are the listed maintainer of this file, does this mean
-that you will be merging it?
+>> b) How RT people reacts on it? I guess they will no be happy.
+>
+> zone->lock should be held for a very limited amount of time.
 
-thanks.
+Emphasis on should. free_pcppages_bulk() can hold it for quite some time
+when a large amount of pages are purged. We surely would have converted
+it to a raw lock long time ago otherwise.
 
-> 
->> ---
->>  fs/autofs/dev-ioctl.c |    4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> --- linux-next-20200807.orig/fs/autofs/dev-ioctl.c
->> +++ linux-next-20200807/fs/autofs/dev-ioctl.c
->> @@ -20,7 +20,7 @@
->>   * another mount. This situation arises when starting automount(8)
->>   * or other user space daemon which uses direct mounts or offset
->>   * mounts (used for autofs lazy mount/umount of nested mount trees),
->> - * which have been left busy at at service shutdown.
->> + * which have been left busy at service shutdown.
->>   */
->>  
->>  typedef int (*ioctl_fn)(struct file *, struct autofs_sb_info *,
->> @@ -496,7 +496,7 @@ static int autofs_dev_ioctl_askumount(st
->>   * located path is the root of a mount we return 1 along with
->>   * the super magic of the mount or 0 otherwise.
->>   *
->> - * In both cases the the device number (as returned by
->> + * In both cases the device number (as returned by
->>   * new_encode_dev()) is also returned.
->>   */
->>  static int autofs_dev_ioctl_ismountpoint(struct file *fp,
-> 
+For regular enterprise stuff a few hundred microseconds might qualify as
+a limited amount of time. For advanced RT applications that's way beyond
+tolerable..
 
--- 
-~Randy
+>> As i described before, calling the __get_free_page(0) with 0 as argument
+>> will solve the (a). How correctly is it? From my point of view the logic
+>> that bypass the wakeup path should be explicitly defined.
+>
+> gfp_mask == 0 is GFP_NOWAIT (aka an atomic allocation request) which
+> doesn't wake up kswapd. So if the wakeup is a problem then this would be
+> a way to go.
 
+The wakeup is the least of my worries.
+
+> To me it would make more sense to support atomic allocations also for
+> the RT tree. Having both GFP_NOWAIT and GFP_ATOMIC which do not really
+> work for atomic context in RT sounds subtle and wrong.
+
+Well, no. RT moves almost everything out of atomic context which means
+that GFP_ATOMIC is pretty meanlingless on a RT kernel. RT sacrifies
+performance for determinism. It's a known tradeoff.
+
+Now RCU creates a new thing which enforces to make page allocation in
+atomic context possible on RT. What for?
+
+What's the actual use case in truly atomic context for this new thing on
+an RT kernel?
+
+The actual RCU code disabling interrupts is an implementation detail
+which can easily be mitigated with a local lock.
+
+Thanks,
+
+        tglx
