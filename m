@@ -2,94 +2,101 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A088C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 02:18:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF5CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 02:19:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D60622083B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 02:18:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sazrgxW0"
+	by mail.kernel.org (Postfix) with ESMTP id DC002206DC
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 02:19:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728175AbgHKCSy (ORCPT
+        id S1728191AbgHKCTB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 22:18:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51354 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726473AbgHKCSx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 22:18:53 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C072C06174A
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 19:18:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=Io8apDkHl90fNuwfNfSyMnczqiJIuxxWPBPfjcKqWx4=; b=sazrgxW0+wrzKMrzxsFEeGMCO8
-        Pj9XSgdlBA1AQOJzjF1Bm3mwRxrJjO8wS0NsoU2zcsx7WcxKL71iePVO/GS4OeSYaigRfZ4pbSb3D
-        1uDm9pE4ccfPUD5nLohbiNnspvtTOM3hVbEEN/uai+r/OmIwUXj7CYe34DhK3LHemZxHGuyyie5UL
-        hOFK99hUdWSoPy1v386l/ToKXUd0RIrzISD6hqJK6YwrLxb8+POoycWtdAI89mJSFOCWbnMnLEbVK
-        /ZkQUhwt612qFHhkvEmxDiBIZaGiMdWxATEl8SPtuSIOyjWDb3DuSNBd2X7rQEz+yPk6vSU7JQ+qj
-        j3q6DVYg==;
-Received: from [2601:1c0:6280:3f0::19c2] (helo=smtpauth.infradead.org)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k5JsH-0006qe-3Y; Tue, 11 Aug 2020 02:18:50 +0000
-From:   Randy Dunlap <rdunlap@infradead.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        ocfs2-devel@oss.oracle.com
-Subject: [PATCH] fs: ocfs2: delete repeated words in comments
-Date:   Mon, 10 Aug 2020 19:18:45 -0700
-Message-Id: <20200811021845.25134-1-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.26.2
+        Mon, 10 Aug 2020 22:19:01 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:39364 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726473AbgHKCTB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 22:19:01 -0400
+Received: from [10.130.0.187] (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxf8cMADJf5CwHAA--.687S3;
+        Tue, 11 Aug 2020 10:18:53 +0800 (CST)
+Subject: Re: [PATCH] tools/objtool: Fix unnecessary jumps
+To:     Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+References: <1597032374-7936-1-git-send-email-tangyouling@loongson.cn>
+ <bbe25938-479d-7a84-b1ee-941ad8088a1c@linux.vnet.ibm.com>
+Cc:     linux-kernel@vger.kernel.org
+From:   Youling Tang <tangyouling@loongson.cn>
+Message-ID: <212704d1-792a-069c-c1f6-11eff5d19af5@loongson.cn>
+Date:   Tue, 11 Aug 2020 10:18:52 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <bbe25938-479d-7a84-b1ee-941ad8088a1c@linux.vnet.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf9Dxf8cMADJf5CwHAA--.687S3
+X-Coremail-Antispam: 1UD129KBjvdXoWrur4fAr18XrWrCFy3KryfWFg_yoWDZrX_W3
+        4vvF97WrZ5XFWIy3WDKFWFgr4kKF43ua15uFW0vr47J3WfJF15JF92krnI9rs8tF9YkF43
+        u348Za47Ars29jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbckYjsxI4VW3JwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I
+        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
+        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0
+        cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I
+        8E87Iv6xkF7I0E14v26r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
+        F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F
+        4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487
+        MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr
+        0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0E
+        wIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJV
+        W8JwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI
+        42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j2T5dUUUUU=
+X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drop duplicated words {the, and} in comments.
+Thank you for your reply and suggestions, I will remove
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: ocfs2-devel@oss.oracle.com
----
- fs/ocfs2/alloc.c      |    2 +-
- fs/ocfs2/localalloc.c |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+the "out" label code.
 
---- linux-next-20200807.orig/fs/ocfs2/alloc.c
-+++ linux-next-20200807/fs/ocfs2/alloc.c
-@@ -6013,7 +6013,7 @@ int __ocfs2_flush_truncate_log(struct oc
- 		goto out;
- 	}
- 
--	/* Appending truncate log(TA) and and flushing truncate log(TF) are
-+	/* Appending truncate log(TA) and flushing truncate log(TF) are
- 	 * two separated transactions. They can be both committed but not
- 	 * checkpointed. If crash occurs then, both two transaction will be
- 	 * replayed with several already released to global bitmap clusters.
---- linux-next-20200807.orig/fs/ocfs2/localalloc.c
-+++ linux-next-20200807/fs/ocfs2/localalloc.c
-@@ -677,7 +677,7 @@ int ocfs2_reserve_local_alloc_bits(struc
- 		/*
- 		 * Under certain conditions, the window slide code
- 		 * might have reduced the number of bits available or
--		 * disabled the the local alloc entirely. Re-check
-+		 * disabled the local alloc entirely. Re-check
- 		 * here and return -ENOSPC if necessary.
- 		 */
- 		status = -ENOSPC;
+Thanks,
+Youling
+
+
+On 08/10/2020 08:57 PM, Kamalesh Babulal wrote:
+> On 10/08/20 9:36 am, Youling Tang wrote:
+>> There is no need to jump to the "out" tag when "ret < 0", just return
+>> directly to "ret".
+>>
+>> Signed-off-by: Youling Tang <tangyouling@loongson.cn>
+>> ---
+>>   tools/objtool/check.c | 16 ++++++++--------
+>>   1 file changed, 8 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+>> index e034a8f..94b166d 100644
+>> --- a/tools/objtool/check.c
+>> +++ b/tools/objtool/check.c
+> [snip]
+>
+>>   	if (file.elf->changed) {
+>>   		ret = elf_write(file.elf);
+>>   		if (ret < 0)
+>> -			goto out;
+>> +			return ret;
+>>   	}
+>>
+>>   out:
+> the out label code is no more required with this change, so remove
+> it and return 0 for warnings for now.  Previously cleanup() function
+> was called under the out label for both fatal errors (ret < 0) and
+> warnings.  Now that cleanup() function is removed, the out label is
+> no longer required.
+>
+
