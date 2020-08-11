@@ -2,121 +2,90 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97569C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 13:48:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC92EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 13:48:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 626DD2076B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 13:48:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597153683;
-	bh=5yMEp9SyDxPuo/xXOdliP4xpnslVqaycciG2uRFajHk=;
-	h=Date:From:To:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=MPN+uY/oD/h1Hwtzd65P2zTw4rZE4di3HeDT0KdjXustbCLLMNAKojGH1fMLme0tF
-	 NVxogzp0e9U8T754GlB8LV+LLRhw5zWBjDn6gGjkgNJDJ9gY4Ox1UNNtuMb5Dr+dA9
-	 ZNOJU2Nfd1cwH5v1bbw4eDEfc+6W/RNxY7ZtbLE8=
+	by mail.kernel.org (Postfix) with ESMTP id 7F1622076B
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 13:48:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728709AbgHKNr4 (ORCPT
+        id S1728740AbgHKNsV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 09:47:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37572 "EHLO mail.kernel.org"
+        Tue, 11 Aug 2020 09:48:21 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:1630 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728532AbgHKNrr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 09:47:47 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B3462076B;
-        Tue, 11 Aug 2020 13:47:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597153666;
-        bh=5yMEp9SyDxPuo/xXOdliP4xpnslVqaycciG2uRFajHk=;
-        h=Date:From:To:Subject:Reply-To:References:In-Reply-To:From;
-        b=wtdh1lcpu2MOuXVkpZaTW+KsbfecM8PsgIi8ucIUwmgrSVpyJ0qQ/hHCVK6hApvLK
-         ONu2szekPDI4KmUgBtuvKcjhuSfczaU0kttSOsEJlJCmNwRxsB0w3uVCCeFBXw6PMd
-         e+d6+mU2CB1qjb0mSvl3OwsEYJ4FUiBqYNm8z+yI=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 26D473522FF7; Tue, 11 Aug 2020 06:47:46 -0700 (PDT)
-Date:   Tue, 11 Aug 2020 06:47:46 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     dsterba@suse.cz, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
-        linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 4.4 03/16] fs/btrfs: Add cond_resched() for
- try_release_extent_mapping() stalls
-Message-ID: <20200811134746.GV4295@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200810191443.3795581-1-sashal@kernel.org>
- <20200810191443.3795581-3-sashal@kernel.org>
- <20200811075720.GL2026@twin.jikos.cz>
+        id S1728532AbgHKNsQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 09:48:16 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 4BQvKy5jqDz9vCqH;
+        Tue, 11 Aug 2020 15:48:06 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id T6AfGy8k89Hu; Tue, 11 Aug 2020 15:48:06 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4BQvKy4SfWz9vCqD;
+        Tue, 11 Aug 2020 15:48:06 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3FD6A8BB86;
+        Tue, 11 Aug 2020 15:48:08 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id K8SJqBJ0A9aJ; Tue, 11 Aug 2020 15:48:08 +0200 (CEST)
+Received: from [172.25.230.100] (po15451.idsi0.si.c-s.fr [172.25.230.100])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id DD8758BB80;
+        Tue, 11 Aug 2020 15:48:07 +0200 (CEST)
+Subject: Re: [RFC PATCH v1] power: don't manage floating point regs when no
+ FPU
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <95c00a811897f6d9176d30bf2ac92dab8c9c8e95.1596816789.git.christophe.leroy@csgroup.eu>
+ <87o8nh9yjd.fsf@mpe.ellerman.id.au>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Message-ID: <9edf75a2-103d-ea01-2f53-dbb467047d13@csgroup.eu>
+Date:   Tue, 11 Aug 2020 15:48:07 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200811075720.GL2026@twin.jikos.cz>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <87o8nh9yjd.fsf@mpe.ellerman.id.au>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 09:57:20AM +0200, David Sterba wrote:
-> On Mon, Aug 10, 2020 at 03:14:30PM -0400, Sasha Levin wrote:
-> > From: "Paul E. McKenney" <paulmck@kernel.org>
-> > 
-> > [ Upstream commit 9f47eb5461aaeb6cb8696f9d11503ae90e4d5cb0 ]
-> > 
-> > Very large I/Os can cause the following RCU CPU stall warning:
-> > 
-> > RIP: 0010:rb_prev+0x8/0x50
-> > Code: 49 89 c0 49 89 d1 48 89 c2 48 89 f8 e9 e5 fd ff ff 4c 89 48 10 c3 4c =
-> > 89 06 c3 4c 89 40 10 c3 0f 1f 00 48 8b 0f 48 39 cf 74 38 <48> 8b 47 10 48 85 c0 74 22 48 8b 50 08 48 85 d2 74 0c 48 89 d0 48
-> > RSP: 0018:ffffc9002212bab0 EFLAGS: 00000287 ORIG_RAX: ffffffffffffff13
-> > RAX: ffff888821f93630 RBX: ffff888821f93630 RCX: ffff888821f937e0
-> > RDX: 0000000000000000 RSI: 0000000000102000 RDI: ffff888821f93630
-> > RBP: 0000000000103000 R08: 000000000006c000 R09: 0000000000000238
-> > R10: 0000000000102fff R11: ffffc9002212bac8 R12: 0000000000000001
-> > R13: ffffffffffffffff R14: 0000000000102000 R15: ffff888821f937e0
-> >  __lookup_extent_mapping+0xa0/0x110
-> >  try_release_extent_mapping+0xdc/0x220
-> >  btrfs_releasepage+0x45/0x70
-> >  shrink_page_list+0xa39/0xb30
-> >  shrink_inactive_list+0x18f/0x3b0
-> >  shrink_lruvec+0x38e/0x6b0
-> >  shrink_node+0x14d/0x690
-> >  do_try_to_free_pages+0xc6/0x3e0
-> >  try_to_free_mem_cgroup_pages+0xe6/0x1e0
-> >  reclaim_high.constprop.73+0x87/0xc0
-> >  mem_cgroup_handle_over_high+0x66/0x150
-> >  exit_to_usermode_loop+0x82/0xd0
-> >  do_syscall_64+0xd4/0x100
-> >  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > 
-> > On a PREEMPT=n kernel, the try_release_extent_mapping() function's
-> > "while" loop might run for a very long time on a large I/O.  This commit
-> > therefore adds a cond_resched() to this loop, providing RCU any needed
-> > quiescent states.
-> > 
-> > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> 
-> Paul,
-> 
-> this patch was well hidden in some huge RCU pile
-> (https://lore.kernel.org/lkml/20200623002147.25750-11-paulmck@kernel.org/)
-> 
-> I wonder why you haven't CCed linux-btrfs, I spotted the patch queued
-> for stable by incidentally. The timestamp is from June, that's quite
-> some time ago. We can deal with one more patch and I tend to reply with
-> acks quickly for easy patches like this to not block other peoples work
-> but I'm a bit disappointed by sidestepping maintained subsystems. It's
-> not just this patch, it happens from time time only to increase the
-> disapointement.
 
-My bad, and please accept my apologies.  I clearly left out the
-step of adding proper Cc: lines.  :-/
 
-							Thanx, Paul
+Le 11/08/2020 à 14:07, Michael Ellerman a écrit :
+> Christophe Leroy <christophe.leroy@csgroup.eu> writes:
+>> There is no point in copying floating point regs when there
+>> is no FPU and MATH_EMULATION is not selected.
+> 
+> Yeah I guess you're right. I've never touched a system with neither, but
+> if such a thing exists then it does seem silly to copy regs around that
+> can't be used.
+
+Yes that exists, because glibc implements floating point emulation and 
+it is definitely more efficient to rely of glibc emulation than kernel one.
+
+>>   10 files changed, 44 insertions(+), 1 deletion(-)
+> 
+> In general this looks fine.
+> 
+> It's a bit #ifdef heavy. Maybe some of those can be cleaned up a bit
+> with some wrapper inlines?
+> 
+
+Yes I'll try and respin, as part of a series I'm preparing to switch the 
+32 bits signal code to using user_access_begin() logic and 
+unsafe_put_user() and friends to reduce KUAP unlock/lock.
+
+Christophe
