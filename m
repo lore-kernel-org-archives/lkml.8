@@ -2,186 +2,143 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38745C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 08:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28EC7C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 08:40:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11AA9206B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 08:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F28FF206B5
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 08:40:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="DfUNFMfp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728370AbgHKIjI (ORCPT
+        id S1728366AbgHKIkz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 04:39:08 -0400
-Received: from mx2.suse.de ([195.135.220.15]:32886 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728237AbgHKIjG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 04:39:06 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id CB812B1ED;
-        Tue, 11 Aug 2020 08:39:25 +0000 (UTC)
-Date:   Tue, 11 Aug 2020 10:39:04 +0200
-Message-ID: <s5ho8nh37br.wl-tiwai@suse.de>
-From:   Takashi Iwai <tiwai@suse.de>
-To:     Yu-Hsuan Hsu <yuhsuan@chromium.org>
-Cc:     "Lu, Brent" <brent.lu@intel.com>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Rojewski, Cezary" <cezary.rojewski@intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Sam McNally <sammc@chromium.org>,
-        Mark Brown <broonie@kernel.org>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Daniel Stuart <daniel.stuart14@gmail.com>,
-        "yuhsuan@google.com" <yuhsuan@google.com>,
-        Damian van Soelen <dj.vsoelen@gmail.com>
-Subject: Re: [PATCH v3 2/2] ASoC: Intel: Add period size constraint on strago board
-In-Reply-To: <CAGvk5PpcmkZ2HarqeCDaXm4id=84wYs-u4vWxJunHaf09gj66g@mail.gmail.com>
-References: <1596020585-11517-1-git-send-email-brent.lu@intel.com>
-        <1596198365-10105-1-git-send-email-brent.lu@intel.com>
-        <1596198365-10105-3-git-send-email-brent.lu@intel.com>
-        <s5h5za3ajvb.wl-tiwai@suse.de>
-        <DM6PR11MB3642AE90DF98956CCEDE6C2F974F0@DM6PR11MB3642.namprd11.prod.outlook.com>
-        <s5hd04a90o4.wl-tiwai@suse.de>
-        <DM6PR11MB3642B5BC2E1E0708088526D8974D0@DM6PR11MB3642.namprd11.prod.outlook.com>
-        <63bca214-3434-16c6-1b60-adf323aec554@linux.intel.com>
-        <DM6PR11MB3642D9BE1E5DAAB8B78B84B0974D0@DM6PR11MB3642.namprd11.prod.outlook.com>
-        <s5hpn873by6.wl-tiwai@suse.de>
-        <DM6PR11MB36423A9D28134811AD5A911F974A0@DM6PR11MB3642.namprd11.prod.outlook.com>
-        <6466847a-8aae-24f7-d727-36ba75e95f98@linux.intel.com>
-        <DM6PR11MB364259049769F6EF3B84AABD97480@DM6PR11MB3642.namprd11.prod.outlook.com>
-        <3f3baf5e-f73d-9cd6-cbfb-36746071e126@linux.intel.com>
-        <CAGvk5PohOP0Yv22tb53EX=ZLB9_vOMb=iujTh64OvHmjC1d4mg@mail.gmail.com>
-        <DM6PR11MB3642AC7F8EC47EB48B384D4797450@DM6PR11MB3642.namprd11.prod.outlook.com>
-        <CAGvk5PogmqfEnFRA8hzby+AGgbOSvbELamh_1=eA9KTpyBMPYQ@mail.gmail.com>
-        <s5htux939x1.wl-tiwai@suse.de>
-        <CAGvk5PpcmkZ2HarqeCDaXm4id=84wYs-u4vWxJunHaf09gj66g@mail.gmail.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
- FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
- (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Tue, 11 Aug 2020 04:40:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53730 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728237AbgHKIkz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 04:40:55 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA476C06174A
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 01:40:54 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id 184so2042916wmb.0
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 01:40:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=btI/X9SDKoElUv2/KbWFVuLp06+/u9czm/CWpC6NJgM=;
+        b=DfUNFMfpPON2NYu/waf/PF+SlGLX8CkQ+mMAndAEpNpx87wEnHfnN27eF7Z/uUP9g3
+         yyhUUT27Nr3k/s69a26aPTv+/Z/2/XIOtF9AbKAv8xf6Mypww73jtjjUPINjcrZr00gU
+         OLx9q4Oh13ugyvCQbM0jh/RExazmLEbxEbQWwpVfSSnlCKgIxX1xWsk1Eq+JDbjyY5p0
+         8kjY9rydu4Fa2yGMvdELdhT7S81m/LyP/BAkCw7CtYuetWlVtiPRCb5U3x1yS+KXQkJO
+         9i4OVKk6eUhhiTbAnJhggCiQ41kfcaYmY1+PNoOlLkRUaFZBTODv3iK/YYybBc0jC4oC
+         v5ew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=btI/X9SDKoElUv2/KbWFVuLp06+/u9czm/CWpC6NJgM=;
+        b=H5OprcPfkoHMgHqnmQ2V0UOJ9JtRviuYdYYnhRrlgmRFKOSv8uHzo4MKeLXkuS/Qr6
+         RDz5rX0hquBtMHfMENaF5RrZnLAQEYPNK65EMUlrA3Qb33KnOIAN9eZW4lFczNvgGko+
+         hVmSPJbEwPOEaCOmod8GH0Xes8LMlX2PEr8XWmJ19/jVzK/2g4YSlreFXCT5grcGqJkc
+         Mnl4KN9WrQQwmAetLzol5KN45eZHImueBNXVRZXcGGlZ7xa9dokMwTcdXtiecmihLrfS
+         ZLFb48prVDsEHm2w66BxI2YH89wIUVK1PTBPSvsUIvCdhy7T53Cp+GQ06Vvr/adlPq2H
+         +0Sg==
+X-Gm-Message-State: AOAM531Y2yZ+seg+zWtpaccin9luZr3Qj/6CmBlgayN6TxouxoDvWuli
+        tz2dEh0oFdSEkcMB6AMgHaBJ3/kbJSoSbObwL0TfhQ==
+X-Google-Smtp-Source: ABdhPJwKFe83BF3AQ0z4SV1knXAKNB01wIW69Bz37C/c6uL0TzG5KeLfQwPSwrm/PjyYvIDjGptFuo+U3s5+nw7Kgmk=
+X-Received: by 2002:a1c:720e:: with SMTP id n14mr2964859wmc.152.1597135252525;
+ Tue, 11 Aug 2020 01:40:52 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200811063659.284088-1-qiuwenbo@phytium.com.cn>
+In-Reply-To: <20200811063659.284088-1-qiuwenbo@phytium.com.cn>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Tue, 11 Aug 2020 14:10:40 +0530
+Message-ID: <CAAhSdy1c=R6aUZ6EOggmJ_Bqm2O0VLKEku=zyFfabExSzOKErA@mail.gmail.com>
+Subject: Re: [PATCH] riscv: Setup exception vector for K210 properly
+To:     Qiu Wenbo <qiuwenbo@phytium.com.cn>
+Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Atish Patra <atish.patra@wdc.com>,
+        Guo Ren <guoren@linux.alibaba.com>,
+        Zong Li <zong.li@sifive.com>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        Vincent Chen <vincent.chen@sifive.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 11 Aug 2020 10:25:22 +0200,
-Yu-Hsuan Hsu wrote:
-> 
-> Takashi Iwai <tiwai@suse.de> 於 2020年8月11日 週二 下午3:43寫道：
-> >
-> > On Tue, 11 Aug 2020 04:29:24 +0200,
-> > Yu-Hsuan Hsu wrote:
-> > >
-> > > Lu, Brent <brent.lu@intel.com> 於 2020年8月11日 週二 上午10:17寫道：
-> > > >
-> > > > >
-> > > > > Sorry for the late reply. CRAS does not set the period size when using it.
-> > > > > The default period size is 256, which consumes the samples quickly(about 49627
-> > > > > fps when the rate is 48000 fps) at the beginning of the playback.
-> > > > > Since CRAS write samples with the fixed frequency, it triggers underruns
-> > > > > immidiately.
-> > > > >
-> > > > > According to Brent, the DSP is using 240 period regardless the hw_param. If the
-> > > > > period size is 256, DSP will read 256 samples each time but only consume 240
-> > > > > samples until the ring buffer of DSP is full. This behavior makes the samples in
-> > > > > the ring buffer of kernel consumed quickly. (Not sure whether the explanation is
-> > > > > correct. Need Brent to confirm it.)
-> > > > >
-> > > > > Unfortunately, we can not change the behavior of DSP. After some experiments,
-> > > > > we found that the issue can be fixed if we set the period size to 240. With the
-> > > > > same frequency as the DSP, the samples are consumed stably. Because everyone
-> > > > > can trigger this issue when using the driver without setting the period size, we
-> > > > > think it is a general issue that should be fixed in the kernel.
-> > > >
-> > > > I check the code and just realized CRAS does nothing but request maximum buffer
-> > > > size. As I know the application needs to decide the buffer time and period time so
-> > > > ALSA could generate a hw_param structure with proper period size instead of using
-> > > > fixed constraint in machine driver because driver has no idea about the latency you
-> > > > want.
-> > > >
-> > > > You can use snd_pcm_hw_params_set_buffer_time_near() and
-> > > > snd_pcm_hw_params_set_period_time_near() to get a proper configuration of
-> > > > buffer and period parameters according to the latency requirement. In the CRAS
-> > > > code, there is a UCM variable to support this: DmaPeriodMicrosecs. I tested it on
-> > > > Celes and it looks quite promising. It seems to me that adding constraint in machine
-> > > > driver is not necessary.
-> > > >
-> > > > SectionDevice."Speaker".0 {
-> > > >         Value {
-> > > >                 PlaybackPCM "hw:chtrt5650,0"
-> > > >                 DmaPeriodMicrosecs "5000"
-> > > > ...
-> > > >
-> > > > [   52.434761] sound pcmC1D0p: hw_param
-> > > > [   52.434767] sound pcmC1D0p:   ACCESS 0x1
-> > > > [   52.434770] sound pcmC1D0p:   FORMAT 0x4
-> > > > [   52.434772] sound pcmC1D0p:   SUBFORMAT 0x1
-> > > > [   52.434776] sound pcmC1D0p:   SAMPLE_BITS [16:16]
-> > > > [   52.434779] sound pcmC1D0p:   FRAME_BITS [32:32]
-> > > > [   52.434782] sound pcmC1D0p:   CHANNELS [2:2]
-> > > > [   52.434785] sound pcmC1D0p:   RATE [48000:48000]
-> > > > [   52.434788] sound pcmC1D0p:   PERIOD_TIME [5000:5000]
-> > > > [   52.434791] sound pcmC1D0p:   PERIOD_SIZE [240:240]
-> > > > [   52.434794] sound pcmC1D0p:   PERIOD_BYTES [960:960]
-> > > > [   52.434797] sound pcmC1D0p:   PERIODS [852:852]
-> > > > [   52.434799] sound pcmC1D0p:   BUFFER_TIME [4260000:4260000]
-> > > > [   52.434802] sound pcmC1D0p:   BUFFER_SIZE [204480:204480]
-> > > > [   52.434805] sound pcmC1D0p:   BUFFER_BYTES [817920:817920]
-> > > > [   52.434808] sound pcmC1D0p:   TICK_TIME [0:0]
-> > > >
-> > > > Regards,
-> > > > Brent
-> > > Hi Brent,
-> > >
-> > > Yes, I know we can do it to fix the issue as well. As I mentioned
-> > > before, we wanted to fix it in kernel because it is a real issue,
-> > > isn't it? Basically, a driver should work with any param it supports.
-> > > But in this case, everyone can trigger underrun if he or she does not
-> > > the period size to 240. If you still think it's not necessary, I can
-> > > modify UCM to make CRAS set the appropriate period size.
-> >
-> > How does it *not* work if you set other than period size 240, more
-> > exactly?
-> >
-> > The hw_constraint to a fixed period size must be really an exception.
-> > If you look at other drivers, you won't find any other doing such.
-> > It already indicates that something is wrong.
-> >
-> > Usually the fixed period size comes from the hardware limitation and
-> > defined in snd_pcm_hardware.  Or, sometimes it's an alignment issue.
-> > If you need more than that, you should doubt what's really not
-> > working.
-> >
-> >
-> > Takashi
-> Thank Takashi,
-> 
-> As I mentioned before, if the period size is set to 256, the measured
-> rate of sample-consuming will be around 49627 fps. It causes underrun
-> because the rate we set is 48000 fps.
+On Tue, Aug 11, 2020 at 12:07 PM Qiu Wenbo <qiuwenbo@phytium.com.cn> wrote:
+>
+> Exception vector is missing on nommu platform and it is a big issue.
+> This patch is tested in Sipeed MAIX Bit Dev Board.
+>
+> Fixes: 79b1feba5455 ("RISC-V: Setup exception vector early")
+> Signed-off-by: Qiu Wenbo <qiuwenbo@phytium.com.cn>
+> ---
+>  arch/riscv/kernel/smpboot.c |  1 +
+>  arch/riscv/kernel/traps.c   | 11 ++++++++++-
+>  2 files changed, 11 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
+> index 356825a57551..23cde0ceb39d 100644
+> --- a/arch/riscv/kernel/smpboot.c
+> +++ b/arch/riscv/kernel/smpboot.c
+> @@ -154,6 +154,7 @@ asmlinkage __visible void smp_callin(void)
+>         mmgrab(mm);
+>         current->active_mm = mm;
+>
+> +       trap_init();
+>         notify_cpu_starting(curr_cpuid);
+>         update_siblings_masks(curr_cpuid);
+>         set_cpu_online(curr_cpuid, 1);
+> diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
+> index ad14f4466d92..a390239818ae 100644
+> --- a/arch/riscv/kernel/traps.c
+> +++ b/arch/riscv/kernel/traps.c
+> @@ -174,7 +174,16 @@ int is_valid_bugaddr(unsigned long pc)
+>  }
+>  #endif /* CONFIG_GENERIC_BUG */
+>
+> -/* stvec & scratch is already set from head.S */
+> +/* stvec & scratch is already set from head.S when mmu is enabled */
+>  void trap_init(void)
+>  {
+> +#ifndef CONFIG_MMU
+> +       /*
+> +        * Set sup0 scratch register to 0, indicating to exception vector
+> +        * that we are presently executing in the kernel
+> +        */
+> +       csr_write(CSR_SCRATCH, 0);
+> +       /* Set the exception vector address */
+> +       csr_write(CSR_TVEC, &handle_exception);
+> +#endif
+>  }
+> --
+> 2.28.0
+>
 
-But this explanation rather sounds like the alignment problem.
-However...
+This issue seems to be only on the latest master branch of
+Linux stable tree so this fix need not be a stable fix.
 
-> This behavior also happen on the
-> other period rate except for 240.
+For MMU kernel, the CSR_TVEC is setup in relocate() function
+called from secondary_start_common() function of head.S
 
-... Why only 240?  That's the next logical question.
-If you have a clarification for it, it may be the rigid reason to
-introduce such a hw constraint.
+For NoMMU kernel, we should set CSR_TVEC directly in
+secondary_start_common() function as "#else" case of the
+"#ifdef CONFIG_MMU".
 
-
-Takashi
+Regards,
+Anup
