@@ -2,64 +2,48 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 976D6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 12:41:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FE80C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 12:43:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B76B20756
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 12:41:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="PFQNuX5m"
+	by mail.kernel.org (Postfix) with ESMTP id 626ED20756
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 12:43:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728622AbgHKMlS (ORCPT
+        id S1728637AbgHKMnF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 08:41:18 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:52328 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726829AbgHKMlR (ORCPT
+        Tue, 11 Aug 2020 08:43:05 -0400
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:52603 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726829AbgHKMnE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 08:41:17 -0400
-Received: from [192.168.254.32] (unknown [47.187.206.220])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 7A2A120B4908;
-        Tue, 11 Aug 2020 05:41:16 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7A2A120B4908
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1597149677;
-        bh=/01YYim8UON1WnW57/jtTiKZ9zMxYZQ09Mw9cbuIu4A=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=PFQNuX5mWMquO2HGENEzafqUyJUE7/be/jyBGj5BPS+LLzBuKDCp8oxu/gpMGiuzS
-         6nmE9EJ+VCIZo4ZznNZO0l1rypST2o/WGeVSn+KjlmzrdKh1od3CFRwpGX0UIvppY1
-         +3sGwRwS/5aecpkyVSZ45vXgzNz/7thzHMTdnYOE=
-Subject: Re: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, oleg@redhat.com,
-        x86@kernel.org
-References: <aefc85852ea518982e74b233e11e16d2e707bc32>
- <20200728131050.24443-1-madvenka@linux.microsoft.com>
- <20200731180955.GC67415@C02TD0UTHF1T.local>
- <6236adf7-4bed-534e-0956-fddab4fd96b6@linux.microsoft.com>
- <20200804143018.GB7440@C02TD0UTHF1T.local>
- <b3368692-afe6-89b5-d634-12f4f0a601f8@linux.microsoft.com>
- <20200808221748.GA1020@bug>
-From:   "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
-Message-ID: <6cca8eac-f767-b891-dc92-eaa7504a0e8b@linux.microsoft.com>
-Date:   Tue, 11 Aug 2020 07:41:15 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 11 Aug 2020 08:43:04 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04427;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0U5TNqJ4_1597149777;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U5TNqJ4_1597149777)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 11 Aug 2020 20:42:58 +0800
+Subject: Re: [Resend PATCH 2/6] mm/memcg: remove useless check on
+ page->mem_cgroup
+To:     Michal Hocko <mhocko@suse.com>
+Cc:     akpm@linux-foundation.org, Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <1597144232-11370-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1597144232-11370-2-git-send-email-alex.shi@linux.alibaba.com>
+ <20200811113008.GK4793@dhcp22.suse.cz>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <a1da796f-e42a-aaac-58e2-8b352fde4dc2@linux.alibaba.com>
+Date:   Tue, 11 Aug 2020 20:42:28 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200808221748.GA1020@bug>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200811113008.GK4793@dhcp22.suse.cz>
+Content-Type: text/plain; charset=gbk
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -67,64 +51,70 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 8/8/20 5:17 PM, Pavel Machek wrote:
-> Hi!
+ÔÚ 2020/8/11 ÏÂÎç7:30, Michal Hocko Ð´µÀ:
+> subject line looks like a left over. It doesn't match the path. Did you
+> mean
+> memcg: bail out early from swap accounting when memcg is disabled?
+
+It's much better, Thanks for correction!
+
 > 
->> Thanks for the lively discussion. I have tried to answer some of the
->> comments below.
+> Btw. if this patch was first in the series then you wouldn't need to
+> mention the warnings that would trigger based on your previous patch.
+> I am fine with both ways but mentioning the warning is usefule.
+
+Right. but the patch is very simple,  w/o warning message doesn't cuase trouble.
+So, removing the 'and keep WARN_ON monitor' make sense too.
+
+Do I need a resend for the commit log change?
+
+Thanks a lot!
+Alex
+
 > 
->>> There are options today, e.g.
->>>
->>> a) If the restriction is only per-alias, you can have distinct aliases
->>>    where one is writable and another is executable, and you can make it
->>>    hard to find the relationship between the two.
->>>
->>> b) If the restriction is only temporal, you can write instructions into
->>>    an RW- buffer, transition the buffer to R--, verify the buffer
->>>    contents, then transition it to --X.
->>>
->>> c) You can have two processes A and B where A generates instrucitons into
->>>    a buffer that (only) B can execute (where B may be restricted from
->>>    making syscalls like write, mprotect, etc).
+> On Tue 11-08-20 19:10:28, Alex Shi wrote:
+>> If we disabled memcg by cgroup_disable=memory, the swap charges are
+>> still called. Let's return from the funcs earlier and keep WARN_ON
+>> monitor.
 >>
->> The general principle of the mitigation is W^X. I would argue that
->> the above options are violations of the W^X principle. If they are
->> allowed today, they must be fixed. And they will be. So, we cannot
->> rely on them.
+>> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+>> Reviewed-by: Roman Gushchin <guro@fb.com>
+>> Acked-by: Michal Hocko <mhocko@suse.com>
+>> Cc: Johannes Weiner <hannes@cmpxchg.org>
+>> Cc: Michal Hocko <mhocko@kernel.org>
+>> Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: cgroups@vger.kernel.org
+>> Cc: linux-mm@kvack.org
+>> Cc: linux-kernel@vger.kernel.org
+>> ---
+>>  mm/memcontrol.c | 6 ++++++
+>>  1 file changed, 6 insertions(+)
+>>
+>> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+>> index 299382fc55a9..419cf565f40b 100644
+>> --- a/mm/memcontrol.c
+>> +++ b/mm/memcontrol.c
+>> @@ -7098,6 +7098,9 @@ void mem_cgroup_swapout(struct page *page, swp_entry_t entry)
+>>  	VM_BUG_ON_PAGE(PageLRU(page), page);
+>>  	VM_BUG_ON_PAGE(page_count(page), page);
+>>  
+>> +	if (mem_cgroup_disabled())
+>> +		return;
+>> +
+>>  	if (cgroup_subsys_on_dfl(memory_cgrp_subsys))
+>>  		return;
+>>  
+>> @@ -7163,6 +7166,9 @@ int mem_cgroup_try_charge_swap(struct page *page, swp_entry_t entry)
+>>  	struct mem_cgroup *memcg;
+>>  	unsigned short oldid;
+>>  
+>> +	if (mem_cgroup_disabled())
+>> +		return 0;
+>> +
+>>  	if (!cgroup_subsys_on_dfl(memory_cgrp_subsys))
+>>  		return 0;
+>>  
+>> -- 
+>> 1.8.3.1
 > 
-> Would you mind describing your threat model?
-> 
-> Because I believe you are using model different from everyone else.
-> 
-> In particular, I don't believe b) is a problem or should be fixed.
-
-It is a problem because a kernel that implements W^X properly
-will not allow it. It has no idea what has been done in userland.
-It has no idea that the user has checked and verified the buffer
-contents after transitioning the page to R--.
-
-
-> 
-> I'll add d), application mmaps a file(R--), and uses write syscall to change
-> trampolines in it.
-> 
-
-No matter how you do it, these are all user-level methods that can be
-hacked. The kernel cannot be sure that an attacker's code has
-not found its way into the file.
-
->> b) This is again a violation. The kernel should refuse to give execute
->> ???????? permission to a page that was writeable in the past and refuse to
->> ???????? give write permission to a page that was executable in the past.
-> 
-> Why?
-
-I don't know about the latter part. I guess I need to think about it.
-But the former is valid. When a page is RW-, a hacker could hack the
-page. Then it does not matter that the page is transitioned to R--.
-Again, the kernel cannot be sure that the user has verified the contents
-after R--.
-
-IMO, W^X needs to be enforced temporally as well.
-
-Madhavan
