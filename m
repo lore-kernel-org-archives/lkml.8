@@ -4,124 +4,98 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2852C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 20:04:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46024C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 20:05:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9AFB820756
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 20:04:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 227A620756
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 20:05:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gjXSyPyX"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f5EzKWiL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726517AbgHKUEj (ORCPT
+        id S1726472AbgHKUFo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 16:04:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46138 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725889AbgHKUEj (ORCPT
+        Tue, 11 Aug 2020 16:05:44 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:35155 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725889AbgHKUFo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 16:04:39 -0400
-Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0B47C06174A
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 13:04:38 -0700 (PDT)
-Received: by mail-vs1-xe41.google.com with SMTP id a1so6654581vsp.4
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 13:04:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vF7UMROFE+dAJKvt4jRLzJ1y/Thu+BCzQUX/As3ZgXM=;
-        b=gjXSyPyXZoPTlyrC5XR/K9JyfeE+I1aFx5WTng1nCFxKNi2DXwnibyuUdLyRZ/bzRz
-         yNxYdmLEWKclEDlwLKm+mxedlq9DiWpV4FxLYj19eUGHv9Z7PWwO+cbkPuMA8qjPxdYp
-         uZSF/mQuyDOMl+8Wy70Tl5CxdDML5f8yRR3GU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vF7UMROFE+dAJKvt4jRLzJ1y/Thu+BCzQUX/As3ZgXM=;
-        b=LVvgU6tOanrW6NmJI7/NpBLLzS+eQnH4qjIIJQeT95QpynctfNHGyMruT6b4God65D
-         ezguf75hUXlVyR0IS4cvyCwYy4jHPRRMq5fWL2E115zB0QXxgkMTVQxwwO0Y0YYpTHpL
-         4+atFH0OLEMSp7aIMvXshJDtlTDSFyLZqu5JCTHgHT7xuHRcInamoLONUB5HAwgJf2II
-         /cSmSl2JYNJFFNY8t1WJP/i0Sbm4vpo0lY0VxGCEdUIJfH0O4RQ2VFczoyK1A94KPRFS
-         qKnQoi6qJyx76VwF/+39OZqLIG0pP0tyROcj5Fw+IV9OZcFDk1eFWqnbsANvBIksHGCj
-         WEPg==
-X-Gm-Message-State: AOAM531MYSgDrrnVOLTOCRSVf2fuFiEpTyHJ9ZgQhU8VXcjdCMJBdV0T
-        45HXGt41p8y1j3OBGgV7eKHba0bN5f0=
-X-Google-Smtp-Source: ABdhPJzigjIqfGRIytLrDYvVLkQL2xvPAqVgs7TMLjXlxZrrbc/h0hjF4zgZcKeMN+FrPogyA8lEPQ==
-X-Received: by 2002:a67:f893:: with SMTP id h19mr24923632vso.158.1597176276381;
-        Tue, 11 Aug 2020 13:04:36 -0700 (PDT)
-Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com. [209.85.221.179])
-        by smtp.gmail.com with ESMTPSA id d9sm4391vko.15.2020.08.11.13.04.34
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Aug 2020 13:04:35 -0700 (PDT)
-Received: by mail-vk1-f179.google.com with SMTP id s81so10906vkb.3
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 13:04:34 -0700 (PDT)
-X-Received: by 2002:a1f:2fc1:: with SMTP id v184mr26376890vkv.42.1597176274522;
- Tue, 11 Aug 2020 13:04:34 -0700 (PDT)
+        Tue, 11 Aug 2020 16:05:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597176343;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=sgg37WZh69LSLwxGUtSXIG4MJ9CWasQ79mUGDw7UX14=;
+        b=f5EzKWiL66X1lVrXENcqa8jXLu8Yht7Th3yXr8Q8PpnYmoqx+0OslGX73QWcq6PMjuZZ7P
+        kJUUMv0m/lpm92SeIYaQDkmU+iQOKTemGMXyA9/oJfLEWR4s6HBaOvFeeBwtlhhSyOgT4Y
+        o2Xtk4mFrpJC6Ey4gH4Qm23NTFybGBA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-442-ahYqJW-DNBuT28W1k5_iUg-1; Tue, 11 Aug 2020 16:05:41 -0400
+X-MC-Unique: ahYqJW-DNBuT28W1k5_iUg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EA4EC1853DAB;
+        Tue, 11 Aug 2020 20:05:39 +0000 (UTC)
+Received: from Ruby.redhat.com (ovpn-119-184.rdu2.redhat.com [10.10.119.184])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AF1025D9DD;
+        Tue, 11 Aug 2020 20:05:38 +0000 (UTC)
+From:   Lyude Paul <lyude@redhat.com>
+To:     nouveau@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Cc:     Ben Skeggs <bskeggs@redhat.com>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [RFC 01/20] drm/nouveau/kms: Fix some indenting in nouveau_dp_detect()
+Date:   Tue, 11 Aug 2020 16:04:38 -0400
+Message-Id: <20200811200457.134743-2-lyude@redhat.com>
+In-Reply-To: <20200811200457.134743-1-lyude@redhat.com>
+References: <20200811200457.134743-1-lyude@redhat.com>
 MIME-Version: 1.0
-References: <1597058460-16211-1-git-send-email-mkshah@codeaurora.org> <1597058460-16211-2-git-send-email-mkshah@codeaurora.org>
-In-Reply-To: <1597058460-16211-2-git-send-email-mkshah@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 11 Aug 2020 13:04:23 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=U4YVAqQXoJ47KY78kEsdoK33ic0P0rADkFWe=yU1x1nQ@mail.gmail.com>
-Message-ID: <CAD=FV=U4YVAqQXoJ47KY78kEsdoK33ic0P0rADkFWe=yU1x1nQ@mail.gmail.com>
-Subject: Re: [PATCH v4 1/7] pinctrl: qcom: Add msmgpio irqchip flags
-To:     Maulik Shah <mkshah@codeaurora.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        LinusW <linus.walleij@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Srinivas Rao L <lsrao@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+---
+ drivers/gpu/drm/nouveau/nouveau_dp.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-On Mon, Aug 10, 2020 at 4:21 AM Maulik Shah <mkshah@codeaurora.org> wrote:
->
-> Add irqchip specific flags for msmgpio irqchip to mask non wakeirqs
-> during suspend and mask before setting irq type.
->
-> Masking before changing type should make sure any spurious interrupt
-> is not detected during this operation.
->
-> Fixes: e35a6ae0eb3a ("pinctrl/msm: Setup GPIO chip in hierarchy")
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-> ---
->  drivers/pinctrl/qcom/pinctrl-msm.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-> index a2567e7..90edf61 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-> @@ -1243,6 +1243,8 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
->         pctrl->irq_chip.irq_release_resources = msm_gpio_irq_relres;
->         pctrl->irq_chip.irq_set_affinity = msm_gpio_irq_set_affinity;
->         pctrl->irq_chip.irq_set_vcpu_affinity = msm_gpio_irq_set_vcpu_affinity;
-> +       pctrl->irq_chip.flags = IRQCHIP_MASK_ON_SUSPEND
-> +                               | IRQCHIP_SET_TYPE_MASKED;
->
->         np = of_parse_phandle(pctrl->dev->of_node, "wakeup-parent", 0);
->         if (np) {
+diff --git a/drivers/gpu/drm/nouveau/nouveau_dp.c b/drivers/gpu/drm/nouveau/nouveau_dp.c
+index 8a0f7994e1aeb..ee778ddc95fae 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_dp.c
++++ b/drivers/gpu/drm/nouveau/nouveau_dp.c
+@@ -76,10 +76,10 @@ nouveau_dp_detect(struct nouveau_encoder *nv_encoder)
+ 	nv_encoder->dp.link_nr = dpcd[2] & DP_MAX_LANE_COUNT_MASK;
+ 
+ 	NV_DEBUG(drm, "display: %dx%d dpcd 0x%02x\n",
+-		     nv_encoder->dp.link_nr, nv_encoder->dp.link_bw, dpcd[0]);
++		 nv_encoder->dp.link_nr, nv_encoder->dp.link_bw, dpcd[0]);
+ 	NV_DEBUG(drm, "encoder: %dx%d\n",
+-		     nv_encoder->dcb->dpconf.link_nr,
+-		     nv_encoder->dcb->dpconf.link_bw);
++		 nv_encoder->dcb->dpconf.link_nr,
++		 nv_encoder->dcb->dpconf.link_bw);
+ 
+ 	if (nv_encoder->dcb->dpconf.link_nr < nv_encoder->dp.link_nr)
+ 		nv_encoder->dp.link_nr = nv_encoder->dcb->dpconf.link_nr;
+@@ -87,7 +87,7 @@ nouveau_dp_detect(struct nouveau_encoder *nv_encoder)
+ 		nv_encoder->dp.link_bw = nv_encoder->dcb->dpconf.link_bw;
+ 
+ 	NV_DEBUG(drm, "maximum: %dx%d\n",
+-		     nv_encoder->dp.link_nr, nv_encoder->dp.link_bw);
++		 nv_encoder->dp.link_nr, nv_encoder->dp.link_bw);
+ 
+ 	nouveau_dp_probe_oui(dev, aux, dpcd);
+ 
+-- 
+2.26.2
 
-After taking Stephen's suggestion of improving the subject:
-
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
