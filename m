@@ -2,154 +2,665 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MIME_QP_LONG_LINE,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F65DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:39:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 734C3C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:39:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0798F20771
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:39:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="nHEtCEzA"
+	by mail.kernel.org (Postfix) with ESMTP id 3F6ED2076C
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:39:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597160380;
+	bh=aKYetmjDLCH1ihHJwJ/9Urtz5wn20hgTqkZOqKHPuu8=;
+	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=qwohvGROLPNpYVC2MKcSh3lmrNsO8upA1uteYD0YKndCsSSPsZWCarlME+gR+6g/g
+	 cByybtAcFM2rNd7i8BuXoTmal40EbBoYSRYcYahi3lZg16TiqtDmmdyMi1W3VbLaRu
+	 XDSIbxEfCFdUf58Bj2DS4KwkAJAnENYWwNtRROsM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728962AbgHKPjd (ORCPT
+        id S1729001AbgHKPjj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 11:39:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33386 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728883AbgHKPj3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 11:39:29 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAA87C06174A
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 08:39:28 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id r4so6998172pls.2
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 08:39:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=k5Vv6xhQn88lB15k7GWg1mV+u5XAmiBOD5QRLYqo0NY=;
-        b=nHEtCEzA+K3xCyhNyTZMcv8HcHHns+1Hk8pycDEXFieqNICHleSe+O63Dg8nrD0ywV
-         o9FxDHPVmLM0E84TppnHf8iG7S6jFvmUO80JLVLQouLtTWeM771ruHtVW5aDq9qPlFD/
-         nPvs2QyLb4JcANu1Lw9v6YsDaxc4gzzjaYoAo+A4op1aaTwKJdGjDEBtT2htvCkHP/QB
-         M2r/LMeVxfL75GbnkDd0Rr7a/6JSOT1h/M4gxH2FCh1IUGFdbam1qcqLH8k5yRdjSkoQ
-         WGIhvHaJscZeR6w7h6ionNs/EknZAEI60DlrcQnPgdDW7ZSAV7EvgtRxy0pWXvYZnNYr
-         I/wA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=k5Vv6xhQn88lB15k7GWg1mV+u5XAmiBOD5QRLYqo0NY=;
-        b=I1wubIo/pR/wo181VFR+UwXIVuhKXPmPb8OKNhdrSCkCqkOFuGnmfKUqIGzBA7ev8V
-         Cf0/rlR+rLBagxLkLrss0gN+d4IxhK4RZa4J3d8k60803wh8G07VzAP3ZWJhn3iruGK2
-         Q795LRjdIV0nul0Ej214a+8oRXQuPeJS8IpxpaOJ4+lJikIUoOYK2YB2JjufwuImLKva
-         y6k6oRq9zegtiIbQKRZ/O3ABdoO4Z8+hGSbdrOSOvdrazxYffUW8yk+0TQmVrWhgaaHs
-         UnO73oDRZ4NW0euntdsuvrqIikKe/IzeG6uFb7oSTuaD+7+/m34ezZFFvrCytvy+F/2k
-         rtdw==
-X-Gm-Message-State: AOAM530GMnhHaHtPA7cnBM/5G2XyUbMAzv2diEDi+S+/K4YTmc/KmM8w
-        StAAFKzBWbEiI+sowpqC6eZ9Kw==
-X-Google-Smtp-Source: ABdhPJy0yB+Dw1/CiiHffwfE44OfK3nBhmxE+9kmrh4+Xqbf7oNah664PCqIvEwN6uoP1FczdMwiuQ==
-X-Received: by 2002:a17:902:8693:: with SMTP id g19mr1455443plo.66.1597160368219;
-        Tue, 11 Aug 2020 08:39:28 -0700 (PDT)
-Received: from ?IPv6:2601:646:c200:1ef2:6127:e67c:651c:a994? ([2601:646:c200:1ef2:6127:e67c:651c:a994])
-        by smtp.gmail.com with ESMTPSA id 193sm25644247pfu.169.2020.08.11.08.39.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Aug 2020 08:39:27 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: file metadata via fs API (was: [GIT PULL] Filesystem Information)
-Date:   Tue, 11 Aug 2020 08:39:26 -0700
-Message-Id: <5C8E0FA8-274E-4B56-9B5A-88E768D01F3A@amacapital.net>
-References: <CAHk-=wjzLmMRf=QG-n+1HnxWCx4KTQn9+OhVvUSJ=ZCQd6Y1WA@mail.gmail.com>
-Cc:     Miklos Szeredi <miklos@szeredi.hu>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>, Karel Zak <kzak@redhat.com>,
-        Jeff Layton <jlayton@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Christian Brauner <christian@brauner.io>,
-        Lennart Poettering <lennart@poettering.net>,
-        Linux API <linux-api@vger.kernel.org>,
-        Ian Kent <raven@themaw.net>,
-        LSM <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-In-Reply-To: <CAHk-=wjzLmMRf=QG-n+1HnxWCx4KTQn9+OhVvUSJ=ZCQd6Y1WA@mail.gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-X-Mailer: iPhone Mail (17G68)
+        Tue, 11 Aug 2020 11:39:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45764 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728883AbgHKPjf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 11:39:35 -0400
+Received: from localhost.localdomain (unknown [194.230.155.117])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1A9220782;
+        Tue, 11 Aug 2020 15:39:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597160374;
+        bh=aKYetmjDLCH1ihHJwJ/9Urtz5wn20hgTqkZOqKHPuu8=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=gqfCDCK44FA4Fr7VXrtL6Wb6G4BXqtPCiNh16BSiUHz47N+pl2ptVR2ECQyoLJ0mz
+         VVlbFHTuj6EUHmkfjYQ2flt9GDCG2uuwVkWfID1L5WjytBFVpHgEQRLD8biHrFho9z
+         c9o7uLdRteGUEFaAi6u9la2DUFvdvgtB0gfrn7pM=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Li Yang <leoyang.li@nxp.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 3/4] arm64: dts: imx8mm-var-som: Add Variscite VAR-SOM-MX8MM System on Module
+Date:   Tue, 11 Aug 2020 17:39:15 +0200
+Message-Id: <20200811153916.5455-3-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200811153916.5455-1-krzk@kernel.org>
+References: <20200811153916.5455-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add DTSI of Variscite VAR-SOM-MX8MM System on Module in a basic version,
+delivered with Variscite Symphony Evaluation kit.  This version comes
+with:
+ - 2 GB of RAM,
+ - 16 GB eMMC,
+ - Gigabit Ethernet PHY,
+ - 802.11 ac/a/b/g/n WiFi with 4.2 Bluetooth (Cypress CYW43353),
+ - CAN bus,
+ - Audio codec (not yet configured in DTSI).
 
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ .../boot/dts/freescale/imx8mm-var-som.dtsi    | 579 ++++++++++++++++++
+ 1 file changed, 579 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8mm-var-som.dtsi
 
-> On Aug 11, 2020, at 8:20 AM, Linus Torvalds <torvalds@linux-foundation.org=
-> wrote:
->=20
-> =EF=BB=BF[ I missed the beginning of this discussion, so maybe this was al=
-ready
-> suggested ]
->=20
->> On Tue, Aug 11, 2020 at 6:54 AM Miklos Szeredi <miklos@szeredi.hu> wrote:=
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm-var-som.dtsi b/arch/arm64/boot/dts/freescale/imx8mm-var-som.dtsi
+new file mode 100644
+index 000000000000..c5b8f6db19b0
+--- /dev/null
++++ b/arch/arm64/boot/dts/freescale/imx8mm-var-som.dtsi
+@@ -0,0 +1,579 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright 2019 NXP
++ * Copyright (C) 2020 Krzysztof Kozlowski <krzk@kernel.org>
++ */
++
++#include "imx8mm.dtsi"
++
++/ {
++	model = "Variscite VAR-SOM-MX8MM module";
++	compatible = "variscite,var-som-mx8mm", "fsl,imx8mm";
++
++	chosen {
++		stdout-path = &uart4;
++	};
++
++	memory@40000000 {
++		device_type = "memory";
++		reg = <0x0 0x40000000 0 0x80000000>;
++	};
++
++	reg_eth_phy: regulator-0 {
++		compatible = "regulator-fixed";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_reg_eth_phy>;
++		regulator-name = "eth_phy_pwr";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		gpio = <&gpio2 9 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
++};
++
++&A53_0 {
++	cpu-supply = <&buck2_reg>;
++};
++
++&A53_1 {
++	cpu-supply = <&buck2_reg>;
++};
++
++&A53_2 {
++	cpu-supply = <&buck2_reg>;
++};
++
++&A53_3 {
++	cpu-supply = <&buck2_reg>;
++};
++
++&ddrc {
++	operating-points-v2 = <&ddrc_opp_table>;
++
++	ddrc_opp_table: opp-table {
++		compatible = "operating-points-v2";
++
++		opp-25M {
++			opp-hz = /bits/ 64 <25000000>;
++		};
++
++		opp-100M {
++			opp-hz = /bits/ 64 <100000000>;
++		};
++
++		opp-750M {
++			opp-hz = /bits/ 64 <750000000>;
++		};
++	};
++};
++
++&ecspi1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_ecspi1>;
++	cs-gpios = <&gpio1 14 GPIO_ACTIVE_HIGH>,
++		   <&gpio1  0 GPIO_ACTIVE_HIGH>;
++	fsl,spi-num-chipselects = <2>;
++	/delete-property/ dmas;
++	/delete-property/ dma-names;
++	status = "okay";
++
++	/* Resistive touch controller */
++	touchscreen@0 {
++		reg = <0>;
++		compatible = "ti,ads7846";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_restouch>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <3 IRQ_TYPE_EDGE_FALLING>;
++
++		spi-max-frequency = <1500000>;
++		pendown-gpio = <&gpio1 3 GPIO_ACTIVE_LOW>;
++
++		ti,x-min = /bits/ 16 <125>;
++		touchscreen-size-x = /bits/ 16 <4008>;
++		ti,y-min = /bits/ 16 <282>;
++		touchscreen-size-y = /bits/ 16 <3864>;
++		ti,x-plate-ohms = /bits/ 16 <180>;
++		touchscreen-max-pressure = /bits/ 16 <255>;
++		touchscreen-average-samples = /bits/ 16 <10>;
++		ti,debounce-tol = /bits/ 16 <3>;
++		ti,debounce-rep = /bits/ 16 <1>;
++		ti,settle-delay-usec = /bits/ 16 <150>;
++		ti,keep-vref-on;
++		wakeup-source;
++	};
++
++	can: can@1 {
++		/* TODO: binding not documented, patches on the LKML */
++		compatible = "microchip,mcp2517fd";
++		reg = <1>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_can>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <5 IRQ_TYPE_EDGE_FALLING>;
++		spi-max-frequency = <20000000>;
++	};
++};
++
++&fec1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_fec1>;
++	phy-mode = "rgmii";
++	phy-handle = <&ethphy>;
++	phy-supply = <&reg_eth_phy>;
++	phy-reset-gpios = <&gpio1 9 GPIO_ACTIVE_LOW>;
++	phy-reset-duration = <100>;
++	phy-reset-post-delay = <100>;
++	fsl,magic-packet;
++	status = "okay";
++
++	mdio {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		ethphy: ethernet-phy@4 {
++			compatible = "ethernet-phy-ieee802.3-c22";
++			reg = <4>;
++		};
++	};
++};
++
++&i2c1 {
++	clock-frequency = <400000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c1>;
++	status = "okay";
++
++	pmic@4b {
++		compatible = "rohm,bd71847";
++		reg = <0x4b>;
++		pinctrl-0 = <&pinctrl_pmic>;
++		interrupt-parent = <&gpio2>;
++		interrupts = <8 GPIO_ACTIVE_LOW>;
++		rohm,reset-snvs-powered;
++
++		regulators {
++			buck1_reg: BUCK1 {
++				regulator-name = "BUCK1";
++				regulator-min-microvolt = <700000>;
++				regulator-max-microvolt = <1300000>;
++				regulator-boot-on;
++				regulator-always-on;
++				regulator-ramp-delay = <1250>;
++			};
++
++			buck2_reg: BUCK2 {
++				regulator-name = "BUCK2";
++				regulator-min-microvolt = <700000>;
++				regulator-max-microvolt = <1300000>;
++				regulator-boot-on;
++				regulator-always-on;
++				regulator-ramp-delay = <1250>;
++				rohm,dvs-run-voltage = <1000000>;
++				rohm,dvs-idle-voltage = <900000>;
++			};
++
++			buck3_reg: BUCK3 {
++				regulator-name = "BUCK3";
++				regulator-min-microvolt = <700000>;
++				regulator-max-microvolt = <1350000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			buck4_reg: BUCK4 {
++				regulator-name = "BUCK4";
++				regulator-min-microvolt = <3000000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			buck5_reg: BUCK5 {
++				regulator-name = "BUCK5";
++				regulator-min-microvolt = <1605000>;
++				regulator-max-microvolt = <1995000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			buck6_reg: BUCK6 {
++				regulator-name = "BUCK6";
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <1400000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			ldo1_reg: LDO1 {
++				regulator-name = "LDO1";
++				regulator-min-microvolt = <1600000>;
++				regulator-max-microvolt = <1900000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			ldo2_reg: LDO2 {
++				regulator-name = "LDO2";
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <900000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			ldo3_reg: LDO3 {
++				regulator-name = "LDO3";
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			ldo4_reg: LDO4 {
++				regulator-name = "LDO4";
++				regulator-min-microvolt = <900000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			ldo5_reg: LDO5 {
++				regulator-compatible = "LDO5";
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-always-on;
++			};
++
++			ldo6_reg: LDO6 {
++				regulator-name = "LDO6";
++				regulator-min-microvolt = <900000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++		};
++	};
++};
++
++&i2c3 {
++	clock-frequency = <400000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c3>;
++	status = "okay";
++
++	/* TODO: configure audio, as of now just put a placeholder */
++	wm8904: codec@1a {
++		compatible = "wlf,wm8904";
++		reg = <0x1a>;
++		status = "disabled";
++	};
++};
++
++&snvs_pwrkey {
++	status = "okay";
++};
++
++/* Bluetooth */
++&uart2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart2>;
++	assigned-clocks = <&clk IMX8MM_CLK_UART2>;
++	assigned-clock-parents = <&clk IMX8MM_SYS_PLL1_80M>;
++	uart-has-rtscts;
++	status = "okay";
++};
++
++/* Console */
++&uart4 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart4>;
++	status = "okay";
++};
++
++&usbotg1 {
++	dr_mode = "otg";
++	usb-role-switch;
++	status = "okay";
++};
++
++&usbotg2 {
++	dr_mode = "otg";
++	usb-role-switch;
++	status = "okay";
++};
++
++/* WIFI */
++&usdhc1 {
++	#address-cells = <1>;
++	#size-cells = <0>;
++	pinctrl-names = "default", "state_100mhz", "state_200mhz";
++	pinctrl-0 = <&pinctrl_usdhc1>;
++	pinctrl-1 = <&pinctrl_usdhc1_100mhz>;
++	pinctrl-2 = <&pinctrl_usdhc1_200mhz>;
++	bus-width = <4>;
++	non-removable;
++	keep-power-in-suspend;
++	status = "okay";
++
++	brcmf: bcrmf@1 {
++		reg = <1>;
++		compatible = "brcm,bcm4329-fmac";
++	};
++};
++
++/* SD */
++&usdhc2 {
++	assigned-clocks = <&clk IMX8MM_CLK_USDHC2>;
++	assigned-clock-rates = <200000000>;
++	pinctrl-names = "default", "state_100mhz", "state_200mhz";
++	pinctrl-0 = <&pinctrl_usdhc2>, <&pinctrl_usdhc2_gpio>;
++	pinctrl-1 = <&pinctrl_usdhc2_100mhz>, <&pinctrl_usdhc2_gpio>;
++	pinctrl-2 = <&pinctrl_usdhc2_200mhz>, <&pinctrl_usdhc2_gpio>;
++	cd-gpios = <&gpio1 10 GPIO_ACTIVE_LOW>;
++	bus-width = <4>;
++	vmmc-supply = <&reg_usdhc2_vmmc>;
++	status = "okay";
++};
++
++/* eMMC */
++&usdhc3 {
++	assigned-clocks = <&clk IMX8MM_CLK_USDHC3_ROOT>;
++	assigned-clock-rates = <400000000>;
++	pinctrl-names = "default", "state_100mhz", "state_200mhz";
++	pinctrl-0 = <&pinctrl_usdhc3>;
++	pinctrl-1 = <&pinctrl_usdhc3_100mhz>;
++	pinctrl-2 = <&pinctrl_usdhc3_200mhz>;
++	bus-width = <8>;
++	non-removable;
++	status = "okay";
++};
++
++&wdog1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_wdog>;
++	fsl,ext-reset-output;
++	status = "okay";
++};
++
++&iomuxc {
++	pinctrl-names = "default";
++
++	pinctrl_can: cangrp {
++		fsl,pins = <
++			MX8MM_IOMUXC_GPIO1_IO05_GPIO1_IO5		0x16
++		>;
++	};
++
++	pinctrl_ecspi1: ecspi1grp {
++		fsl,pins = <
++			MX8MM_IOMUXC_ECSPI1_SCLK_ECSPI1_SCLK		0x13
++			MX8MM_IOMUXC_ECSPI1_MOSI_ECSPI1_MOSI		0x13
++			MX8MM_IOMUXC_ECSPI1_MISO_ECSPI1_MISO		0x13
++			MX8MM_IOMUXC_GPIO1_IO14_GPIO1_IO14		0x13
++			MX8MM_IOMUXC_GPIO1_IO00_GPIO1_IO0		0x13
++		>;
++	};
++
++	pinctrl_fec1: fec1grp {
++		fsl,pins = <
++			MX8MM_IOMUXC_ENET_MDC_ENET1_MDC			0x3
++			MX8MM_IOMUXC_ENET_MDIO_ENET1_MDIO		0x3
++			MX8MM_IOMUXC_ENET_TD3_ENET1_RGMII_TD3		0x1f
++			MX8MM_IOMUXC_ENET_TD2_ENET1_RGMII_TD2		0x1f
++			MX8MM_IOMUXC_ENET_TD1_ENET1_RGMII_TD1		0x1f
++			MX8MM_IOMUXC_ENET_TD0_ENET1_RGMII_TD0		0x1f
++			MX8MM_IOMUXC_ENET_RD3_ENET1_RGMII_RD3		0x91
++			MX8MM_IOMUXC_ENET_RD2_ENET1_RGMII_RD2		0x91
++			MX8MM_IOMUXC_ENET_RD1_ENET1_RGMII_RD1		0x91
++			MX8MM_IOMUXC_ENET_RD0_ENET1_RGMII_RD0		0x91
++			MX8MM_IOMUXC_ENET_TXC_ENET1_RGMII_TXC		0x1f
++			MX8MM_IOMUXC_ENET_RXC_ENET1_RGMII_RXC		0x91
++			MX8MM_IOMUXC_ENET_RX_CTL_ENET1_RGMII_RX_CTL	0x91
++			MX8MM_IOMUXC_ENET_TX_CTL_ENET1_RGMII_TX_CTL	0x1f
++			MX8MM_IOMUXC_GPIO1_IO09_GPIO1_IO9		0x19
++		>;
++	};
++
++	pinctrl_i2c1: i2c1grp {
++		fsl,pins = <
++			MX8MM_IOMUXC_I2C1_SCL_I2C1_SCL		0x400001c3
++			MX8MM_IOMUXC_I2C1_SDA_I2C1_SDA		0x400001c3
++		>;
++	};
++
++	pinctrl_i2c3: i2c3grp {
++		fsl,pins = <
++			MX8MM_IOMUXC_I2C3_SCL_I2C3_SCL		0x400001c3
++			MX8MM_IOMUXC_I2C3_SDA_I2C3_SDA		0x400001c3
++		>;
++	};
++
++	pinctrl_pcie0: pcie0grp {
++		fsl,pins = <
++			MX8MM_IOMUXC_SAI2_RXFS_GPIO4_IO21	0x41
++		>;
++	};
++
++	pinctrl_pmic: pmicirq {
++		fsl,pins = <
++			MX8MM_IOMUXC_SD1_DATA6_GPIO2_IO8	0x41
++		>;
++	};
++
++	pinctrl_reg_eth_phy: regethphygrp {
++		fsl,pins = <
++			MX8MM_IOMUXC_SD1_DATA7_GPIO2_IO9	0x41
++		>;
++	};
++
++	pinctrl_restouch: restouchgrp {
++		fsl,pins = <
++			MX8MM_IOMUXC_GPIO1_IO03_GPIO1_IO3	0x1c0
++		>;
++	};
++
++	pinctrl_uart2: uart2grp {
++		fsl,pins = <
++			MX8MM_IOMUXC_SAI3_TXFS_UART2_DCE_RX	0x140
++			MX8MM_IOMUXC_SAI3_TXC_UART2_DCE_TX	0x140
++			MX8MM_IOMUXC_SAI3_RXC_UART2_DCE_CTS_B	0x140
++			MX8MM_IOMUXC_SAI3_RXD_UART2_DCE_RTS_B	0x140
++		>;
++	};
++
++	pinctrl_uart4: uart4grp {
++		fsl,pins = <
++			MX8MM_IOMUXC_UART4_RXD_UART4_DCE_RX	0x140
++			MX8MM_IOMUXC_UART4_TXD_UART4_DCE_TX	0x140
++		>;
++	};
++
++	pinctrl_usdhc1: usdhc1grp {
++		fsl,pins = <
++			MX8MM_IOMUXC_SD1_CLK_USDHC1_CLK		0x190
++			MX8MM_IOMUXC_SD1_CMD_USDHC1_CMD		0x1d0
++			MX8MM_IOMUXC_SD1_DATA0_USDHC1_DATA0	0x1d0
++			MX8MM_IOMUXC_SD1_DATA1_USDHC1_DATA1	0x1d0
++			MX8MM_IOMUXC_SD1_DATA2_USDHC1_DATA2	0x1d0
++			MX8MM_IOMUXC_SD1_DATA3_USDHC1_DATA3	0x1d0
++		>;
++	};
++
++	pinctrl_usdhc1_100mhz: usdhc1grp100mhz {
++		fsl,pins = <
++			MX8MM_IOMUXC_SD1_CLK_USDHC1_CLK		0x194
++			MX8MM_IOMUXC_SD1_CMD_USDHC1_CMD		0x1d4
++			MX8MM_IOMUXC_SD1_DATA0_USDHC1_DATA0	0x1d4
++			MX8MM_IOMUXC_SD1_DATA1_USDHC1_DATA1	0x1d4
++			MX8MM_IOMUXC_SD1_DATA2_USDHC1_DATA2	0x1d4
++			MX8MM_IOMUXC_SD1_DATA3_USDHC1_DATA3	0x1d4
++		>;
++	};
++
++	pinctrl_usdhc1_200mhz: usdhc1grp200mhz {
++		fsl,pins = <
++			MX8MM_IOMUXC_SD1_CLK_USDHC1_CLK		0x196
++			MX8MM_IOMUXC_SD1_CMD_USDHC1_CMD		0x1d6
++			MX8MM_IOMUXC_SD1_DATA0_USDHC1_DATA0	0x1d6
++			MX8MM_IOMUXC_SD1_DATA1_USDHC1_DATA1	0x1d6
++			MX8MM_IOMUXC_SD1_DATA2_USDHC1_DATA2	0x1d6
++			MX8MM_IOMUXC_SD1_DATA3_USDHC1_DATA3	0x1d6
++		>;
++	};
++
++	pinctrl_usdhc2_gpio: usdhc2grpgpio {
++		fsl,pins = <
++			MX8MM_IOMUXC_GPIO1_IO10_GPIO1_IO10	0xc1
++		>;
++	};
++
++	pinctrl_usdhc2: usdhc2grp {
++		fsl,pins = <
++			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK		0x190
++			MX8MM_IOMUXC_SD2_CMD_USDHC2_CMD		0x1d0
++			MX8MM_IOMUXC_SD2_DATA0_USDHC2_DATA0	0x1d0
++			MX8MM_IOMUXC_SD2_DATA1_USDHC2_DATA1	0x1d0
++			MX8MM_IOMUXC_SD2_DATA2_USDHC2_DATA2	0x1d0
++			MX8MM_IOMUXC_SD2_DATA3_USDHC2_DATA3	0x1d0
++			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT	0x1d0
++		>;
++	};
++
++	pinctrl_usdhc2_100mhz: usdhc2grp100mhz {
++		fsl,pins = <
++			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK		0x194
++			MX8MM_IOMUXC_SD2_CMD_USDHC2_CMD		0x1d4
++			MX8MM_IOMUXC_SD2_DATA0_USDHC2_DATA0	0x1d4
++			MX8MM_IOMUXC_SD2_DATA1_USDHC2_DATA1	0x1d4
++			MX8MM_IOMUXC_SD2_DATA2_USDHC2_DATA2	0x1d4
++			MX8MM_IOMUXC_SD2_DATA3_USDHC2_DATA3	0x1d4
++			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT	0x1d0
++		>;
++	};
++
++	pinctrl_usdhc2_200mhz: usdhc2grp200mhz {
++		fsl,pins = <
++			MX8MM_IOMUXC_SD2_CLK_USDHC2_CLK		0x196
++			MX8MM_IOMUXC_SD2_CMD_USDHC2_CMD		0x1d6
++			MX8MM_IOMUXC_SD2_DATA0_USDHC2_DATA0	0x1d6
++			MX8MM_IOMUXC_SD2_DATA1_USDHC2_DATA1	0x1d6
++			MX8MM_IOMUXC_SD2_DATA2_USDHC2_DATA2	0x1d6
++			MX8MM_IOMUXC_SD2_DATA3_USDHC2_DATA3	0x1d6
++			MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT	0x1d0
++		>;
++	};
++
++	pinctrl_usdhc3: usdhc3grp {
++		fsl,pins = <
++			MX8MM_IOMUXC_NAND_WE_B_USDHC3_CLK	0x190
++			MX8MM_IOMUXC_NAND_WP_B_USDHC3_CMD	0x1d0
++			MX8MM_IOMUXC_NAND_DATA04_USDHC3_DATA0	0x1d0
++			MX8MM_IOMUXC_NAND_DATA05_USDHC3_DATA1	0x1d0
++			MX8MM_IOMUXC_NAND_DATA06_USDHC3_DATA2	0x1d0
++			MX8MM_IOMUXC_NAND_DATA07_USDHC3_DATA3	0x1d0
++			MX8MM_IOMUXC_NAND_RE_B_USDHC3_DATA4	0x1d0
++			MX8MM_IOMUXC_NAND_CE2_B_USDHC3_DATA5	0x1d0
++			MX8MM_IOMUXC_NAND_CE3_B_USDHC3_DATA6	0x1d0
++			MX8MM_IOMUXC_NAND_CLE_USDHC3_DATA7	0x1d0
++			MX8MM_IOMUXC_NAND_CE1_B_USDHC3_STROBE	0x190
++		>;
++	};
++
++	pinctrl_usdhc3_100mhz: usdhc3grp100mhz {
++		fsl,pins = <
++			MX8MM_IOMUXC_NAND_WE_B_USDHC3_CLK	0x194
++			MX8MM_IOMUXC_NAND_WP_B_USDHC3_CMD	0x1d4
++			MX8MM_IOMUXC_NAND_DATA04_USDHC3_DATA0	0x1d4
++			MX8MM_IOMUXC_NAND_DATA05_USDHC3_DATA1	0x1d4
++			MX8MM_IOMUXC_NAND_DATA06_USDHC3_DATA2	0x1d4
++			MX8MM_IOMUXC_NAND_DATA07_USDHC3_DATA3	0x1d4
++			MX8MM_IOMUXC_NAND_RE_B_USDHC3_DATA4	0x1d4
++			MX8MM_IOMUXC_NAND_CE2_B_USDHC3_DATA5	0x1d4
++			MX8MM_IOMUXC_NAND_CE3_B_USDHC3_DATA6	0x1d4
++			MX8MM_IOMUXC_NAND_CLE_USDHC3_DATA7	0x1d4
++			MX8MM_IOMUXC_NAND_CE1_B_USDHC3_STROBE	0x194
++		>;
++	};
++
++	pinctrl_usdhc3_200mhz: usdhc3grp200mhz {
++		fsl,pins = <
++			MX8MM_IOMUXC_NAND_WE_B_USDHC3_CLK	0x196
++			MX8MM_IOMUXC_NAND_WP_B_USDHC3_CMD	0x1d6
++			MX8MM_IOMUXC_NAND_DATA04_USDHC3_DATA0	0x1d6
++			MX8MM_IOMUXC_NAND_DATA05_USDHC3_DATA1	0x1d6
++			MX8MM_IOMUXC_NAND_DATA06_USDHC3_DATA2	0x1d6
++			MX8MM_IOMUXC_NAND_DATA07_USDHC3_DATA3	0x1d6
++			MX8MM_IOMUXC_NAND_RE_B_USDHC3_DATA4	0x1d6
++			MX8MM_IOMUXC_NAND_CE2_B_USDHC3_DATA5	0x1d6
++			MX8MM_IOMUXC_NAND_CE3_B_USDHC3_DATA6	0x1d6
++			MX8MM_IOMUXC_NAND_CLE_USDHC3_DATA7	0x1d6
++			MX8MM_IOMUXC_NAND_CE1_B_USDHC3_STROBE	0x196
++		>;
++	};
++
++	pinctrl_wdog: wdoggrp {
++		fsl,pins = <
++			MX8MM_IOMUXC_GPIO1_IO02_WDOG1_WDOG_B	0xc6
++		>;
++	};
++};
+-- 
+2.17.1
 
->>=20
->>>=20
->>> E.g.
->>>  openat(AT_FDCWD, "foo/bar//mnt/info", O_RDONLY | O_ALT);
->>=20
->> Proof of concept patch and test program below.
->=20
-> I don't think this works for the reasons Al says, but a slight
-> modification might.
->=20
-> IOW, if you do something more along the lines of
->=20
->       fd =3D open(""foo/bar", O_PATH);
->       metadatafd =3D openat(fd, "metadataname", O_ALT);
->=20
-> it might be workable.
->=20
-> So you couldn't do it with _one_ pathname, because that is always
-> fundamentally going to hit pathname lookup rules.
->=20
-> But if you start a new path lookup with new rules, that's fine.
->=20
-> This is what I think xattrs should always have done, because they are
-> broken garbage.
->=20
-> In fact, if we do it right, I think we could have "getxattr()" be 100%
-> equivalent to (modulo all the error handling that this doesn't do, of
-> course):
->=20
->  ssize_t getxattr(const char *path, const char *name,
->                        void *value, size_t size)
->  {
->     int fd, attrfd;
->=20
->     fd =3D open(path, O_PATH);
->     attrfd =3D openat(fd, name, O_ALT);
->     close(fd);
->     read(attrfd, value, size);
->     close(attrfd);
->  }
->=20
-> and you'd still use getxattr() and friends as a shorthand (and for
-> POSIX compatibility), but internally in the kernel we'd have a
-> interface around that "xattrs are just file handles" model.
->=20
->=20
-
-This is a lot like a less nutty version of NTFS streams, whereas the /// ide=
-a is kind of like an extra-nutty version of NTFS streams.
-
-I am personally not a fan of the in-band signaling implications of overloadi=
-ng /.  For example, there is plenty of code out there that thinks that (a + =E2=
-=80=9C/=E2=80=9C + b) concatenates paths. With /// overloaded, this stops be=
-ing true.=
