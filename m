@@ -2,136 +2,129 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 427CBC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 18:32:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6B98C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 18:33:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2568320774
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 18:32:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B017920774
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 18:33:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=tessares-net.20150623.gappssmtp.com header.i=@tessares-net.20150623.gappssmtp.com header.b="HwCjvu9g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726114AbgHKScc (ORCPT
+        id S1726402AbgHKSdf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 14:32:32 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59904 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725862AbgHKScc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 14:32:32 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 87132AC82;
-        Tue, 11 Aug 2020 18:32:51 +0000 (UTC)
-Date:   Tue, 11 Aug 2020 20:32:25 +0200
-From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-        Christoph Lameter <cl@linux.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
-        kernel-team@fb.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 4/5] mm: memcg: charge memcg percpu memory to the
- parent cgroup
-Message-ID: <20200811183225.GA62582@blackbook>
-References: <20200623184515.4132564-1-guro@fb.com>
- <20200623184515.4132564-5-guro@fb.com>
- <20200729171039.GA22229@blackbody.suse.cz>
- <20200806211603.195727c03995c3a25ffc6d76@linux-foundation.org>
- <20200807043717.GA1231562@carbon.DHCP.thefacebook.com>
- <20200811144754.GA45201@blackbook>
- <20200811165527.GA1507044@carbon.DHCP.thefacebook.com>
+        Tue, 11 Aug 2020 14:33:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60248 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726165AbgHKSdf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 14:33:35 -0400
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFF67C061787
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 11:33:34 -0700 (PDT)
+Received: by mail-ed1-x529.google.com with SMTP id c10so9817249edk.6
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 11:33:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zZoULUu91R536X4EAdla5O7lxYyN53fyTfSMXg980JA=;
+        b=HwCjvu9ghpisNveNU98mhTaa5Rf0+3FJ9gNm2hRpzVfma225oPoc2gPYcF2q2D1pR1
+         YYmgqNwmgmX1zPlIymaPGVmt2trY8d2pYZSDHPSWwyXRkdkObKNIEY3V867ufS7Mpj7h
+         Utp5LU3hpHbJsjB8w9yb4uBDXFl66gBFB/U9N/Shtbltr28JE286t8u4mUYu0pKEtJkB
+         0jL69PaRboLtUEbkNEG00NUiIS/yXLdBaSq5n5MprbJmgRQnZFETSguPl0avpdgl7SFU
+         2wjLcV6NwKr/rxEKExCN6lm3pTGYRi4KlDJoIX5D0wGEYDo7r0gnIg0BCpLTGGCz6ark
+         f1sQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zZoULUu91R536X4EAdla5O7lxYyN53fyTfSMXg980JA=;
+        b=Y8OLBSHNZ/P3DR1SJDyDyWnbKBShLBfdcZ/S2DFt2UBnAl2Tgoje3GnhInk2i3r9/l
+         5kxvL6Hp9cvxsSH50cr416sQZXq5Ut1fwvHiQSIKCVfvzOaW/wDYAHNILmAp2ZlpvOgh
+         31zhjiEYhTh2TOJUFmumsfza/wg0dazy4zUrRO30QnXqLvb4kfKseQltsNSxdc1zuf5v
+         /GN9WyAh9xhB57JFNk48mpGG/6wGzNar9Mf0O51zYl7fBr3UXqmUkgaBXPj3HS+rjsey
+         Qmiyd4CUN62w7J2RpZLLVcztTnOEXs8QuFMPUjDS49uvfJAkSkJZwwUhaJBrWG9nbQkG
+         5+jQ==
+X-Gm-Message-State: AOAM533GvqRFkt8wW5rwYIXvudq+tGpCtCmA4W8bBgABmop43mlu+AGB
+        PpIU7mBJnrLbQ+S5GF9G5A0eaCJMxLw=
+X-Google-Smtp-Source: ABdhPJyxZCxr6/SIExSpsGzhUSnyB2195KeNWWnXLp46nLap735+g4R9QYigNNzv9QnW3OYpjSa/Ng==
+X-Received: by 2002:a50:e611:: with SMTP id y17mr26554863edm.376.1597170812945;
+        Tue, 11 Aug 2020 11:33:32 -0700 (PDT)
+Received: from tim.froidcoeur.net (ptr-7tznw14xncxzsvibs41.18120a2.ip6.access.telenet.be. [2a02:1811:50e:f0f0:9d04:d01e:8e99:1111])
+        by smtp.gmail.com with ESMTPSA id ch24sm15350222ejb.7.2020.08.11.11.33.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Aug 2020 11:33:32 -0700 (PDT)
+From:   Tim Froidcoeur <tim.froidcoeur@tessares.net>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Patrick McHardy <kaber@trash.net>,
+        KOVACS Krisztian <hidden@balabit.hu>
+Cc:     Tim Froidcoeur <tim.froidcoeur@tessares.net>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net v4 0/2] net: initialize fastreuse on inet_inherit_port
+Date:   Tue, 11 Aug 2020 20:33:22 +0200
+Message-Id: <20200811183325.42748-1-tim.froidcoeur@tessares.net>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="k1lZvvs/B4yU6o8G"
-Content-Disposition: inline
-In-Reply-To: <20200811165527.GA1507044@carbon.DHCP.thefacebook.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+In the case of TPROXY, bind_conflict optimizations for SO_REUSEADDR or
+SO_REUSEPORT are broken, possibly resulting in O(n) instead of O(1) bind
+behaviour or in the incorrect reuse of a bind.
 
---k1lZvvs/B4yU6o8G
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+the kernel keeps track for each bind_bucket if all sockets in the
+bind_bucket support SO_REUSEADDR or SO_REUSEPORT in two fastreuse flags.
+These flags allow skipping the costly bind_conflict check when possible
+(meaning when all sockets have the proper SO_REUSE option).
 
-On Tue, Aug 11, 2020 at 09:55:27AM -0700, Roman Gushchin <guro@fb.com> wrot=
-e:
-> As I said, there are 2 problems with charging systemd (or a similar daemo=
-n):
-> 1) It often belongs to the root cgroup.
-This doesn't hold for systemd (if we agree that systemd is the most
-common case).
+For every socket added to a bind_bucket, these flags need to be updated.
+As soon as a socket that does not support reuse is added, the flag is
+set to false and will never go back to true, unless the bind_bucket is
+deleted.
 
-> 2) OOMing or failing some random memory allocations is a bad way
->    to "communicate" a memory shortage to the daemon.
->    What we really want is to prevent creating a huge number of cgroups
-There's cgroup.max.descendants for that...
+Note that there is no mechanism to re-evaluate these flags when a socket
+is removed (this might make sense when removing a socket that would not
+allow reuse; this leaves room for a future patch).
 
->    (including dying cgroups) in some specific sub-tree(s).
-=2E..oh, so is this limiting the number of cgroups or limiting resources
-used?
+For this optimization to work, it is mandatory that these flags are
+properly initialized and updated.
 
->    OOMing the daemon or returning -ENOMEM to some random syscalls
->    will not help us to reach the goal and likely will bring a bad
->    experience to a user.
-If we reach the situation when memory for cgroup operations is tight,
-it'll disappoint the user either way.
-My premise is that a running workload is more valuable than the
-accompanying manager.
+When a child socket is created from a listen socket in
+__inet_inherit_port, the TPROXY case could create a new bind bucket
+without properly initializing these flags, thus preventing the
+optimization to work. Alternatively, a socket not allowing reuse could
+be added to an existing bind bucket without updating the flags, causing
+bind_conflict to never be called as it should.
 
-> In a generic case I don't see how we can charge the cgroup which
-> creates cgroups without solving these problems first.
-In my understanding, "onbehalveness" is a concept useful for various
-kernel threads doing deferred work. Here it's promoted to user processes
-managing cgroups.
+Patch 1/2 refactors the fastreuse update code in inet_csk_get_port into a
+small helper function, making the actual fix tiny and easier to understand.
 
-> And if there is a very special case where we have to limit it,
-> we can just add an additional layer:
->=20
-> ` root or delegated root
->    ` manager-parent-cgroup-with-a-limit
->      ` manager-cgroup (systemd, docker, ...)
->    ` [aggregation group(s)]
->      ` job-group-1
->      ` ...
->      ` job-group-n
-If the charge goes to the parent of created cgroup (job-cgroup-i here),
-then the layer adds nothing. Am I missing something?
+Patch 2/2 calls this new helper when __inet_inherit_port decides to create
+a new bind_bucket or use a different bind_bucket than the one of the listen
+socket.
 
-> I'd definitely charge the parent cgroup in all similar cases.
-(This would mandate the controllers on the unified hierarchy, which is
-fine IMO.) Then the order of enabling controllers on a subtree (e.g.
-cpu,memory vs memory,cpu) by the manager would yield different charging.
-This seems wrong^W confusing to me.=20
+v4: - rebase on latest linux/net master branch
+v3: - remove company disclaimer from automatic signature
+v2: - remove unnecessary cast
 
+Tim Froidcoeur (2):
+  net: refactor bind_bucket fastreuse into helper
+  net: initialize fastreuse on inet_inherit_port
 
-Thanks,
-Michal
+ include/net/inet_connection_sock.h |  4 ++
+ net/ipv4/inet_connection_sock.c    | 97 ++++++++++++++++--------------
+ net/ipv4/inet_hashtables.c         |  1 +
+ 3 files changed, 58 insertions(+), 44 deletions(-)
 
---k1lZvvs/B4yU6o8G
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEEoQaUCWq8F2Id1tNia1+riC5qSgFAl8y5DUACgkQia1+riC5
-qShkEQ/+Nm08BsWmxXI72rR1oe/Tct4+M6N4pnmGnkh53373/NHFMIFRIVPANXyO
-bgafqQlVbpSnTT6wemU9fj/DCZp/CCR3fepcT7aoauQacOlPvlf579Hrhj7RU8hI
-h3PwqWwoUD9iK1V1hHZk+kEysHQx3y4N7UQfav4LtjlIqnHvzb9VfK8hjARtR1R+
-i2t15zS9EEscmctY5Fx1uvnjzbpllj6MSJH8fhOi/5axW8b5pCfrvZ4pFUnB2t9Q
-CuKwWSidDmg9+Q+/xegZ12h3t+X+a/T+O+g9uH2D0R/28VexpI0MpzaOtpsXlQIb
-V4CPOGK9Glx3iPNc4IAPl1NHcusink/2RWBHKRkzCPS8gTywLKDFrilAtQ11y010
-C0jjixQXO8of8OmktELfaqV7XUNgDru8TFpCQMAJOuyZ8Kt+1MxywRfNlieIsChJ
-NaMtXA6N72GrIIC+IFK1W+e4rTeuAnrolBg+KG7cgSAF1HgopyfyQvskaIlJcSzb
-qxawQebRsJx52Wz3NmHuHabefaua2n6Zuw8k/Ac0GBum4D7vxvmgpuKPXQjhqs5l
-plYP7ueHP3gxRSW32ho0sHtW9qB7+cReHPXN/FFTye7ICZ50N4bT4oWQpZh8vNBM
-ws9M9jzGjB+9QKDeECIDA7s0H9XJDMKVkXIS4RbdhLe2twuexOs=
-=4/65
------END PGP SIGNATURE-----
-
---k1lZvvs/B4yU6o8G--
+--
+2.25.1
