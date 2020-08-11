@@ -2,744 +2,457 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23781C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 13:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F7C0C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 13:55:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D48432078E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 13:54:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="QzBwN0u7"
+	by mail.kernel.org (Postfix) with ESMTP id 25BD2204FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 13:55:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728766AbgHKNyj (ORCPT
+        id S1728773AbgHKNzP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 09:54:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45400 "EHLO
+        Tue, 11 Aug 2020 09:55:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728709AbgHKNy3 (ORCPT
+        with ESMTP id S1728532AbgHKNy7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 09:54:29 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC696C061787
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 06:54:28 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id o23so13201979ejr.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 06:54:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=PaRKw4AkPFZb5y0XO1Ni5E6XdIZGKwOtbXJj+RQBtAg=;
-        b=QzBwN0u7bB8TheFfRAJtCdk0w7y3gXs9960+fr+7T1UiUxxnw6XIuVScQHjIHGtQaQ
-         Hx2DBSlxv+9MDOWHsJjoMB20rwQmz2XaBcOeNcGArYg936hPWfDZ6EMvKepD6T4LuI0H
-         bP0X5Pw/BnZf19bb0yTF0MYScpOdKAcH6b3W0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=PaRKw4AkPFZb5y0XO1Ni5E6XdIZGKwOtbXJj+RQBtAg=;
-        b=cEgsnUU6mOT68tIfxBMCZ/a35yKSZhRzSIWqvcTKHfd1vsXUdnGVzJxkgM9PXYIuI2
-         gQKvbFFjuTkq9KacAiKW4Y03tC3S1s0M7Sn+d7vnuUOeqEBAJVY3oB5JRpVru3jb18LA
-         RTzkAGDQsLwRC91FF5TSRuDA7zWOpd7vVZebKOK+UX4aJyxjxxoNZPE2+mLb8xpcA/DQ
-         0uOJbcxIaQdFPC5yacZvMO6yo1LFW86TU0O+UPIdx3BsxlgxoDcfAm+YzMWGeD35wjmb
-         HyHwMuwRCd4ctnzcy45d0liFMjlpf+/tod1DXk7vI3Cyj0fTZgQi04cvxmzyjpZJihfW
-         atGA==
-X-Gm-Message-State: AOAM532xTQmFDt0OU65phKMQVdHZRT58HBFngZUQctQKgTCe0Vv0qPVj
-        TQhFx40n7ITpof/2w37Raie6IA==
-X-Google-Smtp-Source: ABdhPJxgVl0CDmA8JYa8zYwCB+cWtxF0+cP5b6W9fP434Hc3CdQ6J8ApKCCYQdoaYvmHBzUq1VdwBw==
-X-Received: by 2002:a17:906:68b:: with SMTP id u11mr28213804ejb.143.1597154067285;
-        Tue, 11 Aug 2020 06:54:27 -0700 (PDT)
-Received: from miu.piliscsaba.redhat.com (catv-212-96-48-140.catv.broadband.hu. [212.96.48.140])
-        by smtp.gmail.com with ESMTPSA id s9sm8737495edt.36.2020.08.11.06.54.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Aug 2020 06:54:26 -0700 (PDT)
-Date:   Tue, 11 Aug 2020 15:54:19 +0200
-From:   Miklos Szeredi <miklos@szeredi.hu>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     David Howells <dhowells@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, Karel Zak <kzak@redhat.com>,
-        Jeff Layton <jlayton@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Christian Brauner <christian@brauner.io>,
-        Lennart Poettering <lennart@poettering.net>,
-        Linux API <linux-api@vger.kernel.org>,
-        Ian Kent <raven@themaw.net>,
-        LSM <linux-security-module@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: file metadata via fs API  (was: [GIT PULL] Filesystem
- Information)
-Message-ID: <20200811135419.GA1263716@miu.piliscsaba.redhat.com>
-References: <1842689.1596468469@warthog.procyon.org.uk>
- <1845353.1596469795@warthog.procyon.org.uk>
- <CAJfpegunY3fuxh486x9ysKtXbhTE0745ZCVHcaqs9Gww9RV2CQ@mail.gmail.com>
- <ac1f5e3406abc0af4cd08d818fe920a202a67586.camel@themaw.net>
- <CAJfpegu8omNZ613tLgUY7ukLV131tt7owR+JJ346Kombt79N0A@mail.gmail.com>
- <CAJfpegtNP8rQSS4Z14Ja4x-TOnejdhDRTsmmDD-Cccy2pkfVVw@mail.gmail.com>
+        Tue, 11 Aug 2020 09:54:59 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6410AC06174A
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 06:54:59 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1k5Ujt-0007X5-5j; Tue, 11 Aug 2020 15:54:53 +0200
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1k5Ujr-0000Ll-Cv; Tue, 11 Aug 2020 15:54:51 +0200
+Date:   Tue, 11 Aug 2020 15:54:51 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Sandeep Singh <Sandeep.Singh@amd.com>
+Cc:     jikos@kernel.org, benjamin.tissoires@redhat.com,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+        srinivas.pandruvada@linux.intel.com, jic23@kernel.org,
+        linux-iio@vger.kernel.org, hdegoede@redhat.com,
+        Nehal-bakulchandra.Shah@amd.com, andy.shevchenko@gmail.com,
+        mail@richard-neumann.de, rdunlap@infradead.org,
+        Shyam-sundar.S-k@amd.com
+Subject: Re: [PATCH v7 2/4] SFH: PCIe driver to add support of AMD sensor
+ fusion hub
+Message-ID: <20200811135451.atfcymsorrkh4xva@pengutronix.de>
+References: <20200810213055.103962-1-Sandeep.Singh@amd.com>
+ <20200810213055.103962-3-Sandeep.Singh@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CAJfpegtNP8rQSS4Z14Ja4x-TOnejdhDRTsmmDD-Cccy2pkfVVw@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200810213055.103962-3-Sandeep.Singh@amd.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 14:43:21 up 270 days,  4:01, 258 users,  load average: 0.02, 0.04,
+ 0.06
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 05, 2020 at 10:24:23AM +0200, Miklos Szeredi wrote:
-> On Tue, Aug 4, 2020 at 4:36 PM Miklos Szeredi <miklos@szeredi.hu> wrote:
+Hi Sandeep,
+
+On 20-08-10 21:30, Sandeep Singh wrote:
+> From: Sandeep Singh <sandeep.singh@amd.com>
 > 
-> > I think we already lost that with the xattr API, that should have been
-> > done in a way that fits this philosophy.  But given that we  have "/"
-> > as the only special purpose char in filenames, and even repetitions
-> > are allowed, it's hard to think of a good way to do that.  Pity.
-> 
-> One way this could be solved is to allow opting into an alternative
-> path resolution mode.
-> 
-> E.g.
->   openat(AT_FDCWD, "foo/bar//mnt/info", O_RDONLY | O_ALT);
+> AMD SFH uses HID over PCIe bus.SFH fw is part of MP2 processor
+> (MP2 which is an ARM® Cortex-M4 core based co-processor to x86) and
+> it runs on MP2 where in driver resides on X86. This part of module
+> will communicate with MP2 Firmware and provide that data into DRAM
 
-Proof of concept patch and test program below.
+IMO we should reword the commit message since it is a bit odd.
 
-Opted for triple slash in the hope that just maybe we could add a global
-/proc/sys/fs/resolve_alt knob to optionally turn on alternative (non-POSIX) path
-resolution without breaking too many things.  Will try that later...
+> diff --git a/drivers/hid/amd-sfh-hid/Makefile b/drivers/hid/amd-sfh-hid/Makefile
+> new file mode 100644
+> index 000000000000..a163c7f62b32
+> --- /dev/null
+> +++ b/drivers/hid/amd-sfh-hid/Makefile
+> @@ -0,0 +1,15 @@
+> +# SPDX-License-Identifier: GPL-2.0-or-later
+> +#
+> +# Makefile - AMD SFH HID drivers
+> +# Copyright (c) 2019-2020, Advanced Micro Devices, Inc.
+> +#
+> +#
+> +
+> +ccflags-m := -Werror
 
-Comments?
+Hm.. is this really needed? Don't get me wrong I'm a fan of no-warnings
+but only a few drivers set this flag.
 
-Thanks,
-Miklos
+> +   obj-$(CONFIG_AMD_SFH_HID) +=amd-sfhtp-hid.o
+> +   amd-sfhtp-hid-objs := amdsfh_hid.o
+> +   amd-sfhtp-hid-objs+= amdsfh_hid_client.o
+> +   amd-sfhtp-hid-objs+= amd_mp2_pcie.o
+> +   amd-sfhtp-hid-objs+= hid_descriptor/amd_sfh_hid_descriptor.o
 
-cat_alt.c:
--------- >8 --------
-#define _GNU_SOURCE
-#include <err.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <string.h>
-#include <stdlib.h>
-#include <linux/unistd.h>
-#include <linux/openat2.h>
+IMHO a patch should be self-contained. By that I mean that if uspstream
+apply just that patch it won't break things. This isn't the case here
+since you already added the support the other driver parts.
 
-#define RESOLVE_ALT		0x20 /* Alternative path walk mode where
-					multiple slashes have special meaning */
+Also please check indentation and whitespaces.
 
-int main(int argc, char *argv[])
-{
-	struct open_how how = {
-		.flags = O_RDONLY,
-		.resolve = RESOLVE_ALT,
-	};
-	int fd, res, i;
-	char buf[65536], *end;
-	const char *path = argv[1];
-	int dfd = AT_FDCWD;
+> +
+> +ccflags-y += -I$(srctree)/$(src)/
+> diff --git a/drivers/hid/amd-sfh-hid/amd_mp2_pcie.c b/drivers/hid/amd-sfh-hid/amd_mp2_pcie.c
+> new file mode 100644
+> index 000000000000..898157f4240b
+> --- /dev/null
+> +++ b/drivers/hid/amd-sfh-hid/amd_mp2_pcie.c
+> @@ -0,0 +1,164 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * AMD MP2 PCIe communication driver
+> + * Copyright 2020 Advanced Micro Devices, Inc.
+> + *
+> + * Authors: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> + *	    Sandeep Singh <Sandeep.singh@amd.com>
+> + */
+> +
+> +#include <linux/bitops.h>
+> +#include <linux/delay.h>
+> +#include <linux/dma-mapping.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io-64-nonatomic-lo-hi.h>
+> +#include <linux/module.h>
+> +#include <linux/pci.h>
+> +#include <linux/slab.h>
+> +#include <linux/delay.h>
+> +#include <linux/types.h>
+> +#include "amd_mp2_pcie.h"
+> +
+> +#define DRIVER_NAME	"pcie_mp2_amd"
+> +#define DRIVER_DESC	"AMD(R) PCIe MP2 Communication Driver"
+> +
+> +#define ACEL_EN		BIT(accel_idx)
+> +#define GYRO_EN		BIT(gyro_idx)
+> +#define MAGNO_EN	BIT(mag_idx)
+> +#define ALS_EN		BIT(als_idx)
+> +
+> +void amd_start_sensor(struct amd_mp2_dev *privdata, struct amd_mp2_sensor_info info)
+> +{
+> +	union sfh_cmd_param cmd_param;
+> +	union sfh_cmd_base cmd_base;
+> +
+> +	/* fill up command register */
+> +	cmd_base.ul = 0;
 
-	if (argc < 2 || argc > 4)
-		errx(1, "usage: %s path [dirfd] [--nofollow]", argv[0]);
+Why not memset()? Please see my below comments on the header.
 
+> +	cmd_base.s.cmd_id = enable_sensor;
+> +	cmd_base.s.period = info.period;
+> +	cmd_base.s.sensor_id = info.sensor_idx;
+> +
+> +	/* fill up command param register */
+> +	cmd_param.ul = 0;
+> +	cmd_param.s.buf_layout = 1;
+> +	cmd_param.s.buf_length = 16;
+> +
+> +	writeq(info.phys_address, privdata->mmio + AMD_C2P_MSG2);
+> +	writel(cmd_param.ul, privdata->mmio + AMD_C2P_MSG1);
+> +	writel(cmd_base.ul, privdata->mmio + AMD_C2P_MSG0);
+> +}
+> +
+> +void amd_stop_sensor(struct amd_mp2_dev *privdata, u16 sensor_idx)
 
-	for (i = 2; i < argc; i++) {
-		if (strcmp(argv[i], "--nofollow") == 0) {
-			how.flags |= O_NOFOLLOW;
-		} else {
-			dfd = strtoul(argv[i], &end, 0);
-			if (end == argv[i] || *end)
-				errx(1, "invalid dirfd: %s", argv[i]);
-		}
-	}
+Why has amd_stop_sensor() a complete different API than
+amd_start_sensor(). IMHO I would keep it in sync. Also u16 sensor_idx is
+to large. Just use the struct amd_mp2_sensor_info.
 
-	fd = syscall(__NR_openat2, dfd, path, &how, sizeof(how));
-	if (fd == -1)
-		err(1, "failed to open %s", argv[1]);
+> +{
+> +	union sfh_cmd_base cmd_base;
+> +
+> +	/* fill up command register */
+> +	cmd_base.ul = 0;
+> +	cmd_base.s.cmd_id = disable_sensor;
+> +	cmd_base.s.period = 0;
+> +	cmd_base.s.sensor_id = sensor_idx;
+> +
+> +	writeq(0x0, privdata->mmio + AMD_C2P_MSG2);
+> +	writel(cmd_base.ul, privdata->mmio + AMD_C2P_MSG0);
+> +}
+> +
+> +void amd_stop_all_sensors(struct amd_mp2_dev *privdata)
+> +{
+> +	union sfh_cmd_base cmd_base;
+> +
+> +	/* fill up command register */
+> +	cmd_base.ul = 0;
+> +	cmd_base.s.cmd_id = stop_all_sensors;
+> +	cmd_base.s.period = 0;
+> +	cmd_base.s.sensor_id = 0;
+> +
+> +	writel(cmd_base.ul, privdata->mmio + AMD_C2P_MSG0);
+> +}
+> +
+> +int amd_mp2_get_sensor_num(struct amd_mp2_dev *privdata, u8 *sensor_id)
+> +{
 
-	while (1) {
-		res = read(fd, buf, sizeof(buf));
-		if (res == -1)
-			err(1, "failed to read file");
-		if (res == 0)
-			break;
+Nit: Why not amd_get_sensor_num() to keep naming scheme? Also I would
+keep the API and make use of 'struct amd_mp2_sensor_info'.
 
-		write(1, buf, res);
-	}
-	close(fd);
-	return 0;
+> +	int activestatus, num_of_sensors = 0;
+> +
+> +	if (!sensor_id)
+> +		return -EINVAL;
+> +
+> +	privdata->activecontrolstatus = readl(privdata->mmio + AMD_P2C_MSG3);
+> +	activestatus = privdata->activecontrolstatus >> 4;
+
+Magical shift here? Please make use of FIELD_GET().
+
+> +	if (ACEL_EN  & activestatus)
+> +		sensor_id[num_of_sensors++] = accel_idx;
+> +
+> +	if (GYRO_EN & activestatus)
+> +		sensor_id[num_of_sensors++] = gyro_idx;
+> +
+> +	if (MAGNO_EN & activestatus)
+> +		sensor_id[num_of_sensors++] = mag_idx;
+> +
+> +	if (ALS_EN & activestatus)
+> +		sensor_id[num_of_sensors++] = als_idx;
+> +
+> +	return num_of_sensors;
+> +}
+> +
+> +static int amd_mp2_pci_init(struct amd_mp2_dev *privdata, struct pci_dev *pdev)
+> +{
+> +	int rc;
+> +
+> +	pci_set_drvdata(pdev, privdata);
+> +	rc = pcim_enable_device(pdev);
+> +	if (rc)
+> +		return rc;
+> +	pcim_iomap_regions(pdev, BIT(2), DRIVER_NAME);
+> +
+> +	privdata->mmio = pcim_iomap_table(pdev)[2];
+> +	pci_set_master(pdev);
+> +
+> +	rc = pci_set_dma_mask(pdev, DMA_BIT_MASK(64));
+> +	if (rc)
+> +		rc = pci_set_dma_mask(pdev, DMA_BIT_MASK(32));
+> +	return rc;
+> +}
+> +
+> +static int amd_mp2_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> +{
+> +	struct amd_mp2_dev *privdata;
+> +	int rc;
+> +
+> +	privdata = devm_kzalloc(&pdev->dev, sizeof(*privdata), GFP_KERNEL);
+> +	if (!privdata)
+> +		return -ENOMEM;
+> +	privdata->pdev = pdev;
+
+You don't need the pdev in this driver, why do you store it?
+
+> +	rc = amd_mp2_pci_init(privdata, pdev);
+> +	if (rc)
+> +		return rc;
+> +	rc = amd_sfh_hid_client_init(privdata);
+
+As I said, this is not self-contained.
+
+> +	if (rc)
+> +		return rc;
+> +	return 0;
+> +}
+> +
+> +static void amd_mp2_pci_remove(struct pci_dev *pdev)
+> +{
+> +	struct amd_mp2_dev *privdata = pci_get_drvdata(pdev);
+> +
+> +	amd_sfh_hid_client_deinit(privdata);
+> +	amd_stop_all_sensors(privdata);
+
+This actions can be done in a devm_add_action_or_reset() and avoids
+the remove() callback.
+
+> +}
+> +
+> +static const struct pci_device_id amd_mp2_pci_tbl[] = {
+> +	{ PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_MP2) },
+> +	{},
+
+Missing whitespace:
+        { },
+> +};
+> +MODULE_DEVICE_TABLE(pci, amd_mp2_pci_tbl);
+> +
+> +static struct pci_driver amd_mp2_pci_driver = {
+> +	.name		= DRIVER_NAME,
+> +	.id_table	= amd_mp2_pci_tbl,
+> +	.probe		= amd_mp2_pci_probe,
+> +	.remove		= amd_mp2_pci_remove,
+> +};
+> +module_pci_driver(amd_mp2_pci_driver);
+> +
+> +MODULE_DESCRIPTION(DRIVER_DESC);
+> +MODULE_LICENSE("Dual BSD/GPL");
+> +MODULE_AUTHOR("Shyam Sundar S K <Shyam-sundar.S-k@amd.com>");
+> +MODULE_AUTHOR("Sandeep Singh <Sandeep.singh@amd.com>");
+> diff --git a/drivers/hid/amd-sfh-hid/amd_mp2_pcie.h b/drivers/hid/amd-sfh-hid/amd_mp2_pcie.h
+> new file mode 100644
+> index 000000000000..a4ef604c4fe8
+> --- /dev/null
+> +++ b/drivers/hid/amd-sfh-hid/amd_mp2_pcie.h
+> @@ -0,0 +1,83 @@
+> +/* SPDX-License-Identifier: GPL-2.0-or-later */
+> +/*
+> + * AMD MP2 PCIe communication driver
+> + * Copyright 2020 Advanced Micro Devices, Inc.
+> + * Authors: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> + *	    Sandeep Singh <Sandeep.singh@amd.com>
+> + */
+> +
+> +#ifndef PCIE_MP2_AMD_H
+> +#define PCIE_MP2_AMD_H
+> +
+> +#include <linux/pci.h>
+> +#include <linux/types.h>
+> +
+> +#define PCI_DEVICE_ID_AMD_MP2	0x15E4
+> +
+> +/* MP2 C2P Message Registers */
+> +#define AMD_C2P_MSG0	0x10500
+> +#define AMD_C2P_MSG1	0x10504
+> +#define AMD_C2P_MSG2	0x10508
+> +
+> +/* MP2 P2C Message Registers */
+> +#define AMD_P2C_MSG3	0x1068C /* Supported Sensors info */
+> +
+> +/* SFH Command register */
+> +union sfh_cmd_base {
+> +	u32 ul;
+> +	struct {
+> +		u32 cmd_id : 8;
+> +		u32 sensor_id : 8;
+> +		u32 period : 16;
+> +	} s;
+> +};
+
+Why not just:
+struct sfh_cmd_base {
+	u8 cmd_id;
+	u8 sensor_id;
+	u16 period;
+};
+
+Please use the native data types. Furthermore the code in this driver
+assumes that the host(x86) and client(ARM) are using the same
+byte-order. I know that ARM is LE too but maybe this changes on newer
+ZEN-CPU's.
+
+> +union sfh_cmd_param {
+> +	u32 ul;
+> +	struct {
+> +		u32 buf_layout : 2;
+> +		u32 buf_length : 6;
+> +		u32 rsvd : 24;
+> +	} s;
+> +};
+
+This union is only used by amd_start_sensor() and the below struct which
+is used nowhere. I would rather drop this here and prepare the
+buf_layout and buf_length by FIELD_PREP().
+
+> +struct sfh_cmd_reg {
+> +	union sfh_cmd_base cmd_base;
+> +	union sfh_cmd_param cmd_param;
+> +	phys_addr_t phys_addr;
+> +};
+
+This struct is gets never used here.
+
+> +
+> +enum command_id {
+> +	enable_sensor = 1,
+> +	disable_sensor = 2,
+> +	stop_all_sensors = 8,
+> +	invalid_cmd = 0xf
+> +};
+
+Please use CAPITAL_NAMES, e.g.:
+
+enum command_id {
+	AMD_MP2_SENSOR_ENABLE = 1,
+	AMD_MP2_SENSOR_DISABLE = 2,
+	AMD_MP2_SENSOR_STOP_ALL = 8,
 }
--------- >8 --------
 
----
- fs/Makefile                  |    2 
- fs/file_table.c              |   70 ++++++++++++++--------
- fs/fsmeta.c                  |  135 +++++++++++++++++++++++++++++++++++++++++++
- fs/internal.h                |    9 ++
- fs/mount.h                   |    4 +
- fs/namei.c                   |   77 +++++++++++++++++++++---
- fs/namespace.c               |   12 +++
- fs/open.c                    |    2 
- fs/proc_namespace.c          |    2 
- include/linux/fcntl.h        |    2 
- include/linux/namei.h        |    3 
- include/uapi/linux/magic.h   |    1 
- include/uapi/linux/openat2.h |    2 
- 13 files changed, 282 insertions(+), 39 deletions(-)
+or use #define.
 
---- a/fs/Makefile
-+++ b/fs/Makefile
-@@ -13,7 +13,7 @@ obj-y :=	open.o read_write.o file_table.
- 		seq_file.o xattr.o libfs.o fs-writeback.o \
- 		pnode.o splice.o sync.o utimes.o d_path.o \
- 		stack.o fs_struct.o statfs.o fs_pin.o nsfs.o \
--		fs_types.o fs_context.o fs_parser.o fsopen.o
-+		fs_types.o fs_context.o fs_parser.o fsopen.o fsmeta.o \
- 
- ifeq ($(CONFIG_BLOCK),y)
- obj-y +=	buffer.o block_dev.o direct-io.o mpage.o
---- a/fs/file_table.c
-+++ b/fs/file_table.c
-@@ -178,22 +178,9 @@ struct file *alloc_empty_file_noaccount(
- 	return f;
- }
- 
--/**
-- * alloc_file - allocate and initialize a 'struct file'
-- *
-- * @path: the (dentry, vfsmount) pair for the new file
-- * @flags: O_... flags with which the new file will be opened
-- * @fop: the 'struct file_operations' for the new file
-- */
--static struct file *alloc_file(const struct path *path, int flags,
--		const struct file_operations *fop)
-+static void init_file(struct file *file, const struct path *path, int flags,
-+		      const struct file_operations *fop)
- {
--	struct file *file;
--
--	file = alloc_empty_file(flags, current_cred());
--	if (IS_ERR(file))
--		return file;
--
- 	file->f_path = *path;
- 	file->f_inode = path->dentry->d_inode;
- 	file->f_mapping = path->dentry->d_inode->i_mapping;
-@@ -209,31 +196,66 @@ static struct file *alloc_file(const str
- 	file->f_op = fop;
- 	if ((file->f_mode & (FMODE_READ | FMODE_WRITE)) == FMODE_READ)
- 		i_readcount_inc(path->dentry->d_inode);
-+}
-+
-+/**
-+ * alloc_file - allocate and initialize a 'struct file'
-+ *
-+ * @path: the (dentry, vfsmount) pair for the new file
-+ * @flags: O_... flags with which the new file will be opened
-+ * @fop: the 'struct file_operations' for the new file
-+ */
-+static struct file *alloc_file(const struct path *path, int flags,
-+		const struct file_operations *fop)
-+{
-+	struct file *file;
-+
-+	file = alloc_empty_file(flags, current_cred());
-+	if (IS_ERR(file))
-+		return file;
-+
-+	init_file(file, path, flags, fop);
-+
- 	return file;
- }
- 
--struct file *alloc_file_pseudo(struct inode *inode, struct vfsmount *mnt,
--				const char *name, int flags,
--				const struct file_operations *fops)
-+int init_file_pseudo(struct file *file, struct inode *inode,
-+		     struct vfsmount *mnt, const char *name, int flags,
-+		     const struct file_operations *fops)
- {
- 	static const struct dentry_operations anon_ops = {
- 		.d_dname = simple_dname
- 	};
- 	struct qstr this = QSTR_INIT(name, strlen(name));
- 	struct path path;
--	struct file *file;
- 
- 	path.dentry = d_alloc_pseudo(mnt->mnt_sb, &this);
- 	if (!path.dentry)
--		return ERR_PTR(-ENOMEM);
-+		return -ENOMEM;
- 	if (!mnt->mnt_sb->s_d_op)
- 		d_set_d_op(path.dentry, &anon_ops);
- 	path.mnt = mntget(mnt);
- 	d_instantiate(path.dentry, inode);
--	file = alloc_file(&path, flags, fops);
--	if (IS_ERR(file)) {
--		ihold(inode);
--		path_put(&path);
-+	init_file(file, &path, flags, fops);
-+
-+	return 0;
-+}
-+
-+struct file *alloc_file_pseudo(struct inode *inode, struct vfsmount *mnt,
-+				const char *name, int flags,
-+				const struct file_operations *fops)
-+{
-+	struct file *file;
-+	int err;
-+
-+	file = alloc_empty_file(flags, current_cred());
-+	if (IS_ERR(file))
-+		return file;
-+
-+	err = init_file_pseudo(file, inode, mnt, name, flags, fops);
-+	if (err) {
-+		fput(file);
-+		file = ERR_PTR(err);
- 	}
- 	return file;
- }
---- /dev/null
-+++ b/fs/fsmeta.c
-@@ -0,0 +1,135 @@
-+#include <linux/fs.h>
-+#include <linux/slab.h>
-+#include <linux/magic.h>
-+#include <linux/seq_file.h>
-+#include <linux/fs_struct.h>
-+#include <linux/pseudo_fs.h>
-+
-+#include "mount.h"
-+#include "internal.h"
-+
-+static struct vfsmount *fsmeta_mnt;
-+static struct inode *fsmeta_inode;
-+
-+
-+static struct vfsmount *fsmeta_mnt_info_get_mnt(struct seq_file *seq)
-+{
-+	struct proc_mounts *p = seq->private;
-+
-+	return &list_entry(p->cursor.mnt_list.next, struct mount, mnt_list)->mnt;
-+}
-+
-+static void *fsmeta_mnt_info_start(struct seq_file *seq, loff_t *pos)
-+{
-+	mnt_namespace_lock_read();
-+	return *pos == 0 ? fsmeta_mnt_info_get_mnt(seq) : NULL;
-+}
-+
-+static void *fsmeta_mnt_info_next(struct seq_file *seq, void *v, loff_t *pos)
-+{
-+	++*pos;
-+	return NULL;
-+}
-+
-+static void fsmeta_mnt_info_stop(struct seq_file *seq, void *v)
-+{
-+	mnt_namespace_unlock_read();
-+}
-+
-+static int fsmeta_mnt_info_show(struct seq_file *seq, void *v)
-+{
-+	return show_mountinfo(seq, v);
-+}
-+
-+static const struct seq_operations fsmeta_mnt_info_sops = {
-+	.start = fsmeta_mnt_info_start,
-+	.next = fsmeta_mnt_info_next,
-+	.stop = fsmeta_mnt_info_stop,
-+	.show = fsmeta_mnt_info_show,
-+};
-+
-+static int fsmeta_mnt_info_release(struct inode *inode, struct file *file)
-+{
-+	if (file->private_data) {
-+		struct seq_file *seq = file->private_data;
-+		struct proc_mounts *p = seq->private;
-+
-+		mntput(fsmeta_mnt_info_get_mnt(seq));
-+		path_put(&p->root);
-+
-+		return seq_release_private(inode, file);
-+	}
-+	return 0;
-+}
-+
-+static const struct file_operations fsmeta_mnt_info_fops = {
-+	.release = fsmeta_mnt_info_release,
-+	.read = seq_read,
-+	.llseek = no_llseek,
-+};
-+
-+static int fsmeta_mnt_info_open(struct file *file, const struct path *path,
-+				const struct open_flags *op)
-+{
-+	struct proc_mounts *p;
-+	int err;
-+
-+	err = init_file_pseudo(file, fsmeta_inode, fsmeta_mnt, "[mnt.info]",
-+			       op->open_flag, &fsmeta_mnt_info_fops);
-+	if (err)
-+		return err;
-+	/*
-+	 * This reference is now sunk in file->f_path.dentry->d_inode and will
-+	 * be released by fput()
-+	 */
-+	ihold(fsmeta_inode);
-+
-+	err = seq_open_private(file, &fsmeta_mnt_info_sops, sizeof(*p));
-+	if (err)
-+		return err;
-+
-+	p = ((struct seq_file *)file->private_data)->private;
-+	get_fs_root(current->fs, &p->root);
-+	p->cursor.mnt_list.next = &real_mount(mntget(path->mnt))->mnt_list;
-+
-+	return 0;
-+}
-+
-+int fsmeta_open(const char *meta_name, const struct path *path,
-+	      struct file *file, const struct open_flags *op)
-+{
-+	if (op->open_flag & ~(O_LARGEFILE | O_CLOEXEC | O_NOFOLLOW))
-+		return -EINVAL;
-+
-+	if (strcmp(meta_name, "mnt/info") == 0)
-+		return fsmeta_mnt_info_open(file, path, op);
-+
-+	pr_info("invalid fsmeta file <%s> on %pd4\n", meta_name, path->dentry);
-+	return -EINVAL;
-+}
-+
-+static int fsmeta_init_fs_context(struct fs_context *fc)
-+{
-+	return init_pseudo(fc, FSMETA_MAGIC) ? 0 : -ENOMEM;
-+}
-+
-+static struct file_system_type fsmeta_fs_type = {
-+	.name		= "fsmeta",
-+	.init_fs_context = fsmeta_init_fs_context,
-+	.kill_sb	= kill_anon_super,
-+};
-+
-+static int __init fsmeta_init(void)
-+{
-+	fsmeta_mnt = kern_mount(&fsmeta_fs_type);
-+	if (IS_ERR(fsmeta_mnt))
-+		panic("fsmeta_init() kernel mount failed (%ld)\n", PTR_ERR(fsmeta_mnt));
-+
-+	fsmeta_inode = alloc_anon_inode(fsmeta_mnt->mnt_sb);
-+	if (IS_ERR(fsmeta_inode))
-+		panic("fsmeta_init() inode allocation failed (%ld)\n", PTR_ERR(fsmeta_inode));
-+
-+	return 0;
-+}
-+fs_initcall(fsmeta_init);
-+
---- a/fs/internal.h
-+++ b/fs/internal.h
-@@ -99,6 +99,9 @@ extern void chroot_fs_refs(const struct
-  */
- extern struct file *alloc_empty_file(int, const struct cred *);
- extern struct file *alloc_empty_file_noaccount(int, const struct cred *);
-+extern int init_file_pseudo(struct file *file, struct inode *inode,
-+			    struct vfsmount *mnt, const char *name, int flags,
-+			    const struct file_operations *fops);
- 
- /*
-  * super.c
-@@ -185,3 +188,9 @@ int sb_init_dio_done_wq(struct super_blo
-  */
- int do_statx(int dfd, const char __user *filename, unsigned flags,
- 	     unsigned int mask, struct statx __user *buffer);
-+
-+/*
-+ * fs/fsmeta.c
-+ */
-+int fsmeta_open(const char *meta_name, const struct path *path,
-+		struct file *file, const struct open_flags *op);
---- a/fs/mount.h
-+++ b/fs/mount.h
-@@ -159,3 +159,7 @@ static inline bool is_anon_ns(struct mnt
- }
- 
- extern void mnt_cursor_del(struct mnt_namespace *ns, struct mount *cursor);
-+
-+void mnt_namespace_lock_read(void);
-+void mnt_namespace_unlock_read(void);
-+int show_mountinfo(struct seq_file *m, struct vfsmount *mnt);
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -2094,6 +2094,30 @@ static inline u64 hash_name(const void *
- 
- #endif
- 
-+static int lookup_alt(const char *name, struct nameidata *nd)
-+{
-+	if ((nd->flags & LOOKUP_RCU) && unlazy_walk(nd) != 0)
-+		return -ECHILD;
-+
-+	nd->last.name = name + 3;
-+	nd->last_type = LAST_META;
-+
-+	return 0;
-+}
-+
-+static bool is_alt(const char *name, struct nameidata *nd, int depth)
-+{
-+	if (!(nd->flags & LOOKUP_ALT))
-+		return false;
-+
-+	/* no alternative lookup inside symlinks */
-+	if (depth)
-+		return false;
-+
-+	/* name[0] has already been verified to be a slash */
-+	return name[1] == '/' && name[2] == '/' && name[3] != '/';
-+}
-+
- /*
-  * Name resolution.
-  * This is the basic name resolution function, turning a pathname into
-@@ -2111,8 +2135,13 @@ static int link_path_walk(const char *na
- 	nd->flags |= LOOKUP_PARENT;
- 	if (IS_ERR(name))
- 		return PTR_ERR(name);
--	while (*name=='/')
--		name++;
-+	if (*name == '/') {
-+		if (!is_alt(name, nd, depth)) {
-+			do {
-+				name++;
-+			} while (*name == '/');
-+		}
-+	}
- 	if (!*name)
- 		return 0;
- 
-@@ -2122,6 +2151,9 @@ static int link_path_walk(const char *na
- 		u64 hash_len;
- 		int type;
- 
-+		if (*name == '/')
-+			return lookup_alt(name, nd);
-+
- 		err = may_lookup(nd);
- 		if (err)
- 			return err;
-@@ -2163,6 +2195,13 @@ static int link_path_walk(const char *na
- 		 * If it wasn't NUL, we know it was '/'. Skip that
- 		 * slash, and continue until no more slashes.
- 		 */
-+		if (is_alt(name, nd, depth)) {
-+			link = walk_component(nd, WALK_TRAILING);
-+			if (unlikely(link))
-+				goto LINK;
-+
-+			return lookup_alt(name, nd);
-+		}
- 		do {
- 			name++;
- 		} while (unlikely(*name == '/'));
-@@ -2183,6 +2222,7 @@ static int link_path_walk(const char *na
- 			link = walk_component(nd, WALK_MORE);
- 		}
- 		if (unlikely(link)) {
-+LINK:
- 			if (IS_ERR(link))
- 				return PTR_ERR(link);
- 			/* a symlink to follow */
-@@ -2239,11 +2279,11 @@ static const char *path_init(struct name
- 	nd->path.dentry = NULL;
- 
- 	/* Absolute pathname -- fetch the root (LOOKUP_IN_ROOT uses nd->dfd). */
--	if (*s == '/' && !(flags & LOOKUP_IN_ROOT)) {
-+	if (*s == '/' && !is_alt(s, nd, 0) && !(flags & LOOKUP_IN_ROOT)) {
- 		error = nd_jump_root(nd);
- 		if (unlikely(error))
- 			return ERR_PTR(error);
--		return s;
-+		return s + 1;
- 	}
- 
- 	/* Relative pathname -- get the starting-point it is relative to. */
-@@ -2272,7 +2312,8 @@ static const char *path_init(struct name
- 
- 		dentry = f.file->f_path.dentry;
- 
--		if (*s && unlikely(!d_can_lookup(dentry))) {
-+		if (*s && unlikely(!d_can_lookup(dentry)) &&
-+		    !is_alt(s, nd, 0)) {
- 			fdput(f);
- 			return ERR_PTR(-ENOTDIR);
- 		}
-@@ -2303,6 +2344,9 @@ static const char *path_init(struct name
- 
- static inline const char *lookup_last(struct nameidata *nd)
- {
-+	if (nd->last_type == LAST_META)
-+		return ERR_PTR(-EINVAL);
-+
- 	if (nd->last_type == LAST_NORM && nd->last.name[nd->last.len])
- 		nd->flags |= LOOKUP_FOLLOW | LOOKUP_DIRECTORY;
- 
-@@ -2331,7 +2375,7 @@ static int path_lookupat(struct nameidat
- 
- 	while (!(err = link_path_walk(s, nd)) &&
- 	       (s = lookup_last(nd)) != NULL)
--		;
-+		nd->flags &= ~LOOKUP_ALT;
- 	if (!err)
- 		err = complete_walk(nd);
- 
-@@ -2410,9 +2454,15 @@ static struct filename *filename_parenta
- 	if (unlikely(retval == -ESTALE))
- 		retval = path_parentat(&nd, flags | LOOKUP_REVAL, parent);
- 	if (likely(!retval)) {
--		*last = nd.last;
--		*type = nd.last_type;
--		audit_inode(name, parent->dentry, AUDIT_INODE_PARENT);
-+		if (nd.last_type == LAST_META) {
-+			path_put(parent);
-+			putname(name);
-+			name = ERR_PTR(-EINVAL);
-+		} else {
-+			*last = nd.last;
-+			*type = nd.last_type;
-+			audit_inode(name, parent->dentry, AUDIT_INODE_PARENT);
-+		}
- 	} else {
- 		putname(name);
- 		name = ERR_PTR(retval);
-@@ -3123,6 +3173,10 @@ static const char *open_last_lookups(str
- 	nd->flags |= op->intent;
- 
- 	if (nd->last_type != LAST_NORM) {
-+		if (nd->last_type == LAST_META) {
-+			return ERR_PTR(fsmeta_open(nd->last.name, &nd->path,
-+						   file, op));
-+		}
- 		if (nd->depth)
- 			put_link(nd);
- 		return handle_dots(nd, nd->last_type);
-@@ -3206,6 +3260,9 @@ static int do_open(struct nameidata *nd,
- 	int acc_mode;
- 	int error;
- 
-+	if (nd->last_type == LAST_META)
-+		return 0;
-+
- 	if (!(file->f_mode & (FMODE_OPENED | FMODE_CREATED))) {
- 		error = complete_walk(nd);
- 		if (error)
-@@ -3355,7 +3412,7 @@ static struct file *path_openat(struct n
- 		const char *s = path_init(nd, flags);
- 		while (!(error = link_path_walk(s, nd)) &&
- 		       (s = open_last_lookups(nd, file, op)) != NULL)
--			;
-+			nd->flags &= ~LOOKUP_ALT;
- 		if (!error)
- 			error = do_open(nd, file, op);
- 		terminate_walk(nd);
---- a/fs/namespace.c
-+++ b/fs/namespace.c
-@@ -69,7 +69,7 @@ static DEFINE_IDA(mnt_group_ida);
- static struct hlist_head *mount_hashtable __read_mostly;
- static struct hlist_head *mountpoint_hashtable __read_mostly;
- static struct kmem_cache *mnt_cache __read_mostly;
--static DECLARE_RWSEM(namespace_sem);
-+DECLARE_RWSEM(namespace_sem);
- static HLIST_HEAD(unmounted);	/* protected by namespace_sem */
- static LIST_HEAD(ex_mountpoints); /* protected by namespace_sem */
- 
-@@ -1435,6 +1435,16 @@ static inline void namespace_lock(void)
- 	down_write(&namespace_sem);
- }
- 
-+void mnt_namespace_lock_read(void)
-+{
-+	down_read(&namespace_sem);
-+}
-+
-+void mnt_namespace_unlock_read(void)
-+{
-+	up_read(&namespace_sem);
-+}
-+
- enum umount_tree_flags {
- 	UMOUNT_SYNC = 1,
- 	UMOUNT_PROPAGATE = 2,
---- a/fs/open.c
-+++ b/fs/open.c
-@@ -1098,6 +1098,8 @@ inline int build_open_flags(const struct
- 		lookup_flags |= LOOKUP_BENEATH;
- 	if (how->resolve & RESOLVE_IN_ROOT)
- 		lookup_flags |= LOOKUP_IN_ROOT;
-+	if (how->resolve & RESOLVE_ALT)
-+		lookup_flags |= LOOKUP_ALT;
- 
- 	op->lookup_flags = lookup_flags;
- 	return 0;
---- a/fs/proc_namespace.c
-+++ b/fs/proc_namespace.c
-@@ -128,7 +128,7 @@ static int show_vfsmnt(struct seq_file *
- 	return err;
- }
- 
--static int show_mountinfo(struct seq_file *m, struct vfsmount *mnt)
-+int show_mountinfo(struct seq_file *m, struct vfsmount *mnt)
- {
- 	struct proc_mounts *p = m->private;
- 	struct mount *r = real_mount(mnt);
---- a/include/linux/fcntl.h
-+++ b/include/linux/fcntl.h
-@@ -19,7 +19,7 @@
- /* List of all valid flags for the how->resolve argument: */
- #define VALID_RESOLVE_FLAGS \
- 	(RESOLVE_NO_XDEV | RESOLVE_NO_MAGICLINKS | RESOLVE_NO_SYMLINKS | \
--	 RESOLVE_BENEATH | RESOLVE_IN_ROOT)
-+	 RESOLVE_BENEATH | RESOLVE_IN_ROOT | RESOLVE_ALT)
- 
- /* List of all open_how "versions". */
- #define OPEN_HOW_SIZE_VER0	24 /* sizeof first published struct */
---- a/include/linux/namei.h
-+++ b/include/linux/namei.h
-@@ -15,7 +15,7 @@ enum { MAX_NESTED_LINKS = 8 };
- /*
-  * Type of the last component on LOOKUP_PARENT
-  */
--enum {LAST_NORM, LAST_ROOT, LAST_DOT, LAST_DOTDOT};
-+enum {LAST_NORM, LAST_ROOT, LAST_DOT, LAST_DOTDOT, LAST_META};
- 
- /* pathwalk mode */
- #define LOOKUP_FOLLOW		0x0001	/* follow links at the end */
-@@ -27,6 +27,7 @@ enum {LAST_NORM, LAST_ROOT, LAST_DOT, LA
- 
- #define LOOKUP_REVAL		0x0020	/* tell ->d_revalidate() to trust no cache */
- #define LOOKUP_RCU		0x0040	/* RCU pathwalk mode; semi-internal */
-+#define LOOKUP_ALT		0x200000 /* Alternative path walk mode */
- 
- /* These tell filesystem methods that we are dealing with the final component... */
- #define LOOKUP_OPEN		0x0100	/* ... in open */
---- a/include/uapi/linux/magic.h
-+++ b/include/uapi/linux/magic.h
-@@ -88,6 +88,7 @@
- #define BPF_FS_MAGIC		0xcafe4a11
- #define AAFS_MAGIC		0x5a3c69f0
- #define ZONEFS_MAGIC		0x5a4f4653
-+#define FSMETA_MAGIC		0x9f8ea387
- 
- /* Since UDF 2.01 is ISO 13346 based... */
- #define UDF_SUPER_MAGIC		0x15013346
---- a/include/uapi/linux/openat2.h
-+++ b/include/uapi/linux/openat2.h
-@@ -35,5 +35,7 @@ struct open_how {
- #define RESOLVE_IN_ROOT		0x10 /* Make all jumps to "/" and ".."
- 					be scoped inside the dirfd
- 					(similar to chroot(2)). */
-+#define RESOLVE_ALT		0x20 /* Alternative path walk mode where
-+					multiple slashes have special meaning */
- 
- #endif /* _UAPI_LINUX_OPENAT2_H */
+> +
+> +enum sensor_idx {
+> +	accel_idx = 0,
+> +	gyro_idx = 1,
+> +	mag_idx = 2,
+> +	als_idx = 19
+> +};
+
+Same here.
+
+> +
+> +struct amd_mp2_dev {
+> +	struct pci_dev *pdev;
+
+pdev is never used.
+
+> +	struct amdtp_cl_data *cl_data;
+
+cl_data gets never set -> useless?
+
+> +	void __iomem *mmio;
+> +	u32 activecontrolstatus;
+
+The activecontrolstatus member is also never used.
+> +};
+> +
+> +struct amd_mp2_sensor_info {
+> +	u8 sensor_idx;
+> +	u32 period;
+
+The sfh_cmd_base defines it as u16.
+
+> +	phys_addr_t phys_address;
+> +};
+> +
+> +void amd_start_sensor(struct amd_mp2_dev *privdata, struct amd_mp2_sensor_info info);
+> +void amd_stop_sensor(struct amd_mp2_dev *privdata, u16 sensor_idx);
+> +void amd_stop_all_sensors(struct amd_mp2_dev *privdata);
+
+> +int amd_mp2_get_sensor_num(struct amd_mp2_dev *privdata, u8 *sensor_id);
+
+I would add this 
+
+> +int amd_sfh_hid_client_init(struct amd_mp2_dev *privdata);
+> +int amd_sfh_hid_client_deinit(struct amd_mp2_dev *privdata);
+
+Why are those functions included here?
+
+Regards,
+  Marco
+
+> +#endif
+> -- 
+> 2.25.1
