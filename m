@@ -2,108 +2,298 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFB95C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 23:12:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1730AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 23:12:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98E5220774
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 23:12:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D79552073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 23:12:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c+fmFqlT"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="v6Zyqzfy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726527AbgHKXMA (ORCPT
+        id S1726474AbgHKXMy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 19:12:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46806 "EHLO
+        Tue, 11 Aug 2020 19:12:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726507AbgHKXL7 (ORCPT
+        with ESMTP id S1726164AbgHKXMy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 19:11:59 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27414C06178C
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 16:11:59 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id z18so491436otk.6
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 16:11:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sGbgkpKabSRtvJFDP2cpGjFLq6qGka/uiZ+Vq9DL/Ow=;
-        b=c+fmFqlTRhySOXMlvaJbso581+GBoEadjNClaEYTZEpjECXyeroSqJz0uvu/2+65RS
-         GljkKHWebLTvyXe+LX5oUd7YPsah8EBUA6JHSjDQxpvFuhki5b7wMxRNSsUbXHUCJnqq
-         SiAdhBT/u5SkBV0BNPQrO+NNNl2c3K4iF1EOQzL9Ozj/7uZ20bTMLYgzOeFbGVTz33UJ
-         Io3yO/6ahoYdq8CmnNmVbeddS3V92417Yyv0lhIvmABUcQdBRbm5+lb3tq9/u6AX0IHE
-         4FTDr409qB7h2z4Ao2Z/8iqpBOElJ568n7exBhDKyQRsW0gXenyYLgx+TTbk0US7++/G
-         k5WA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sGbgkpKabSRtvJFDP2cpGjFLq6qGka/uiZ+Vq9DL/Ow=;
-        b=CrJijQJnuuaudW8O7ADnTBV/HLkTqMXJ3D3rmBmObJ1lnPuhuI4t0orz9WlP3ZrJ70
-         mprVhxtQKm3+Yi8QME5B6HHvambWbGPfBqfw9Sud58mDgeXw8EK7UfNpB/3uDVoH6svF
-         gengnA2Db4hYKXtBnhXwiaNQ+auBqXR/nHXlkA7NTavQBzZeAWhsVg/At8Vp+iMRe8yQ
-         xzG8iKnyx14dtKgnAv3ubk/xl17MAznVKWJtQEBS8aa3rjLSkLf3CoEZjcTSGPPKMeMH
-         I0dfi0qmIa51a8laWTJUIeD9q1cDsALdDBamkehZtv7oZE5Vko/qR2FYITmbdNdT6bCX
-         w4xg==
-X-Gm-Message-State: AOAM532l3oIWyjXdrOuhNx4a/n28+cG8oLM3GPYbyErgAAt7LhyzuD04
-        CVrXSdRktJ8suRC9M2qNarYWmiqEWuCJetu7sp22Zg==
-X-Google-Smtp-Source: ABdhPJz1l9i2eKeP99P0PVUqqfuqJ5MZWZKQYvADHHuV2THqxFZqfBLD5UUNVDPsADND7VkQzMhYIL9g7q6OWzOUHNI=
-X-Received: by 2002:a05:6830:3196:: with SMTP id p22mr7492118ots.102.1597187518112;
- Tue, 11 Aug 2020 16:11:58 -0700 (PDT)
+        Tue, 11 Aug 2020 19:12:54 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5407EC06174A
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 16:12:54 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id A36689A8;
+        Wed, 12 Aug 2020 01:12:52 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1597187572;
+        bh=bsZIpSrl5v4vESB1vCsrKXg6WuAzyrOEr1BzCY32iLQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=v6Zyqzfyn28EmLyu13Soj9xSC/hbhe5clYZwLV0Ju6xkVKlMRrfI2V6ej2Zrsp5dN
+         heGK+1ip4HSA9JBfRi3k8gBtOXVqcU8xKQdvbyQOZQLdgzzR5b7/ATlkVcld/p0TF1
+         jbMzHQs3SXkfjcUSiVh00K0zrVZWzVtrygXCdX3w=
+Date:   Wed, 12 Aug 2020 02:12:38 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Venkateshwar Rao Gannavarapu 
+        <venkateshwar.rao.gannavarapu@xilinx.com>
+Cc:     hyun.kwon@xilinx.com, dri-devel@lists.freedesktop.org,
+        airlied@linux.ie, daniel@ffwll.ch, linux-kernel@vger.kernel.org,
+        sandipk@xilinx.com, vgannava@xilinx.com
+Subject: Re: [RFC PATCH V2 1/2] dt-bindings: display: xlnx: dsi: This add a
+ DT binding for Xilinx DSI TX subsystem.
+Message-ID: <20200811231238.GA23600@pendragon.ideasonboard.com>
+References: <1597106777-30913-1-git-send-email-venkateshwar.rao.gannavarapu@xilinx.com>
+ <1597106777-30913-2-git-send-email-venkateshwar.rao.gannavarapu@xilinx.com>
 MIME-Version: 1.0
-References: <20190320094918.20234-1-rnayak@codeaurora.org> <20190320094918.20234-4-rnayak@codeaurora.org>
-In-Reply-To: <20190320094918.20234-4-rnayak@codeaurora.org>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Tue, 11 Aug 2020 16:11:46 -0700
-Message-ID: <CALAqxLV2TBk9ScUM6MeJMCkL8kJnCihjQ7ac5fLzcqOg1rREVQ@mail.gmail.com>
-Subject: Re: [RFC v2 03/11] tty: serial: qcom_geni_serial: Use OPP API to set
- clk/perf state
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-scsi@vger.kernel.org,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Doug Anderson <dianders@chromium.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-spi@vger.kernel.org, linux-serial@vger.kernel.org,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Amit Pundir <amit.pundir@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1597106777-30913-2-git-send-email-venkateshwar.rao.gannavarapu@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 20, 2019 at 2:49 AM Rajendra Nayak <rnayak@codeaurora.org> wrote:
->
-> geni serial needs to express a perforamnce state requirement on CX
-> depending on the frequency of the clock rates. Use OPP table from
-> DT to register with OPP framework and use dev_pm_opp_set_rate() to
-> set the clk/perf state.
->
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+Hi GVRao,
+
+Thank you for the patch.
+
+On Tue, Aug 11, 2020 at 06:16:16AM +0530, Venkateshwar Rao Gannavarapu wrote:
+> The Xilinx MIPI DSI (Display Serial Interface) Transmitter subsystem
+> implements the Mobile Industry Processor Interface (MIPI) based display
+> interface. It supports the interface with programmable logic (FPGA).
+> 
+> Signed-off-by: Venkateshwar Rao Gannavarapu <venkateshwar.rao.gannavarapu@xilinx.com>
 > ---
->  drivers/tty/serial/qcom_geni_serial.c | 15 +++++++++++++--
->  1 file changed, 13 insertions(+), 2 deletions(-)
->
+>  .../devicetree/bindings/display/xlnx/xlnx,dsi.yaml | 147 +++++++++++++++++++++
+>  1 file changed, 147 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/xlnx/xlnx,dsi.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/xlnx/xlnx,dsi.yaml b/Documentation/devicetree/bindings/display/xlnx/xlnx,dsi.yaml
+> new file mode 100644
+> index 0000000..73da0d8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/xlnx/xlnx,dsi.yaml
+> @@ -0,0 +1,147 @@
+> +# SPDX-License-Identifier: GPL-2.0
 
-Hey,
-  I just wanted to follow up on this patch, as I've bisected it
-(a5819b548af0) down as having broken qca bluetooth on the Dragonboard
-845c.
+New bindings must be licensed as (GPL-2.0-only OR BSD-2-Clause).
 
-I haven't yet had time to debug it yet, but wanted to raise the issue
-in case anyone else has seen similar trouble.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/xlnx/xlnx,dsi.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Xilinx Programmable DSI-TX Subsystem
+> +
+> +description: |
+> +  The programmable MIPI DSI controller of Xilinx implements display pipeline
+> +  based on DSI v1.3 specification. The subsystem includes multiple functional
+> +  blocks as below
+> +
+> +  +---------------+                +-----------------------------------------------+
+> +  |               |                |                      +------------------+     |
+> +  |               |                |         v----------->+AXI CROSBAR       |XXX  |
+> +  |FRAME BUFFER   | AXI STREAM     |         |            |                  X   X |
+> +  |(DMA)          |       +------->+    +------------+    +------------------+  XX |
+> +  |               +<------+        |    |MIPI        |                          X  |
+> +  |               |                |    |DSI-TX      |                          X  |
+> +  |               |                |    |Controller  |             +------------+  |
+> +  |               |                |    |            +------------->D-PHY       |  |
+> +  +---------------+                |    |            |             |            |  |
+> +                  S_AXIS_ACLK      |    +-------------<------------+            |  |
+> +                 +---------------->+                               |            |  |
+> +                                   |                               |            |  |
+> +                  DPHY_CLK_200M    |                               |            |  |
+> +                 +---------------->+                               |            |  |
+> +                 +                 |                               +------------+  |
+> +                                   |                                               |
+> +                                   | MIPI DSI TX SUBSYSTEM                         |
+> +                                   +-----------------------------------------------+
+> +
+> +  The DSI TX controller consists of multiple layers such as lane management layer,
+> +  low-level protocol and pixel-to-byte conversion. The DSI TX controller core
+> +  receives stream of image data through an input stream interface. The subsystem
+> +  driver supports upto 4 lane support and generates PPI trasfers towards DPHY
 
-thanks
--john
+DT bindings shouldn't mention drivers, you can just say "The subsystem
+supports up to 4 data lanes ...".
+
+s/trasfers/transfers/
+
+> +  with continuous clock. It supports Burst, non-burst modes and command modes.
+> +
+> +maintainers:
+> +  - Venkateshwar Rao Gannavarapu <venkateshwar.rao.gannavarapu@xilinx.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: xlnx,dsi-1.0
+
+I think calling it just "dsi-1.0" isn't specific enough, as it could
+also be a DSI RX. "xlnx,dsi-tx-1.0" would be a better value.
+
+Is this binding for v1.0 of the IP core ? There's a v2.0 too. Only v2.0
+supports command mode as far as I can tell, so with the
+xlnx,dsi-cmd-mode property below, this seems to match v2.0.
+
+> +
+> +  reg:
+> +    maxItems: 1
+
+This should specify in the description if only the DSI TX registers are
+covered, or if the D-PHY registers are included too.
+
+> +
+> +  clocks:
+> +    description: List of clock specifiers
+> +    items:
+> +      - description: AXI Lite clock
+> +      - description: Video DPHY clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: s_axis_aclk
+> +      - const: dphy_clk_200M
+> +
+> +  xlnx,dsi-num-lanes:
+> +    description: Maximum number of lanes that IP configured with.
+> +           possible values are 1, 2, 4.
+
+You can drop the second sentence as it's implied by the enum below.
+
+> +
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - enum: [1, 2, 4]
+
+Do we need this property ? The protocol configuration register has an
+Active Lanes field that reports the number of lanes. Could we read the
+information from the register, and drop this property ?
+
+> +
+> +  xlnx,dsi-data-type:
+> +    description: MIPI DSI pixel format.
+> +           possible values are 0, 1, 2, 3.
+
+Same here.
+
+> +
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - enum: [0, 1, 2, 3]
+
+Same comment as above, should this be read from the Pixel Format field
+instead of being specified in DT ?
+
+> +
+> +  xlnx,dsi-cmd-mode:
+> +    description: denotes command mode support
+> +
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - enum: [0, 1]
+
+I don't see a command mode user parameter in the datasheet, it seems
+that command mode is a runtime configuration parameter (bit 3 in the
+Core Configuration Register). It shouldn't be specified in DT, but
+queried at runtime from the connected panel.
+
+> +
+> +  ports:
+> +    type: object
+> +
+> +    properties:
+> +      port@0:
+> +        type: object
+> +        description: |
+> +          output / source port node, endpoint describing modules
+> +          connected the DSI TX subsystem
+> +
+> +        properties:
+> +          reg:
+> +            const: 0
+> +
+> +          endpoint:
+> +            type: object
+> +
+> +            properties:
+> +
+> +              remote-endpoint: true
+> +
+> +            required:
+> +              - remote-endpoint
+> +
+> +            additionalProperties: false
+> +
+> +        additionalProperties: false
+
+There should also be a port for the AXI4-Stream interface. The common
+practice is to number the input port@0 and the output port@1.
+
+Shouldn't ports specify
+
+    required:
+      - port@0
+      - port@1
+
+?
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - xlnx,dsi-num-lanes
+> +  - xlnx,dsi-data-type
+> +  - xlnx,dsi-cmd-mode
+> +  - ports
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> + -  |
+> +    mipi_dsi_tx_subsystem@80000000 {
+> +      compatible = "xlnx,dsi-1.0";
+> +      reg = <0x0 0x80000000 0x0 0x10000>;
+
+DT examples are compiled in a context where #address-cells and
+#size-cells are both set to 1. The reg property should thus be
+<0x80000000 0x10000>; in the example, even if it doesn't match the
+hardware.
+
+Could you please validate the bindings with
+
+	make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/xlnx/xlnx,dsi.yaml
+
+as explained in Documentation/devicetree/writing-schema.rst ? This will
+also compile the example to make sure that everything is right.
+
+> +      clocks = <&misc_clk_0>, <&misc_clk_1>;
+> +      clock-names = "s_axis_aclk", "dphy_clk_200M";
+> +      xlnx,dsi-num-lanes = <4>;
+> +      xlnx,dsi-data-type = <1>;
+> +      xlnx,dsi-cmd-mode = <0>;
+> +      ports {
+> +          #address-cells = <1>;
+> +          #size-cells = <0>;
+> +
+> +          port@0 {
+> +              reg = <0x0>;
+> +              dsi_tx_out: endpoint {
+> +                   remote-endpoint = <&panel_in>;
+> +              };
+> +          };
+> +      };
+> +    };
+> +
+> +...
+
+-- 
+Regards,
+
+Laurent Pinchart
