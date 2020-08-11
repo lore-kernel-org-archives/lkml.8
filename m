@@ -2,141 +2,122 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C23D5C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 18:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C199BC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 18:49:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DBA7206B2
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 18:46:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A11D92076B
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 18:49:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PsJbheuL";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OgiItwsr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726469AbgHKSqP (ORCPT
+        id S1726165AbgHKStH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 14:46:15 -0400
-Received: from mga04.intel.com ([192.55.52.120]:5951 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725886AbgHKSqP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 14:46:15 -0400
-IronPort-SDR: LSPeF3B+LX4vl1lWNcYbpxjiqfmUgbs8wZ3K+hnR5DBfFwT8i0THNRsVvdfyKuZ7cTnccptevQ
- i0BGJ/a6AXXQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9710"; a="151236838"
-X-IronPort-AV: E=Sophos;i="5.76,301,1592895600"; 
-   d="scan'208";a="151236838"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2020 11:46:13 -0700
-IronPort-SDR: 5aAcR8S72zxamrk1GkqcpkTcLHD6X+V0Qd8VhcPMwxe6NQm/ajJO1T7QBs6tN6/S8h9BEKMK9n
- htpZpANtoRxw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,301,1592895600"; 
-   d="scan'208";a="294806955"
-Received: from orsmsx602-2.jf.intel.com (HELO ORSMSX602.amr.corp.intel.com) ([10.22.229.82])
-  by orsmga006.jf.intel.com with ESMTP; 11 Aug 2020 11:46:13 -0700
-Received: from orsmsx602.amr.corp.intel.com (10.22.229.15) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 11 Aug 2020 11:46:13 -0700
-Received: from orsmsx101.amr.corp.intel.com (10.22.225.128) by
- orsmsx602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Tue, 11 Aug 2020 11:46:13 -0700
-Received: from [10.212.86.9] (10.212.86.9) by ORSMSX101.amr.corp.intel.com
- (10.22.225.128) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 11 Aug
- 2020 11:46:12 -0700
-Subject: Re: [PATCH RFC v2 02/18] irq/dev-msi: Add support for a new DEV_MSI
- irq domain
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-CC:     Marc Zyngier <maz@kernel.org>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Lin, Jing" <jing.lin@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "netanelg@mellanox.com" <netanelg@mellanox.com>,
-        "shahafs@mellanox.com" <shahafs@mellanox.com>,
-        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
-        "Hossain, Mona" <mona.hossain@intel.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        <xen-devel@lists.xenproject.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>
-References: <87h7tcgbs2.fsf@nanos.tec.linutronix.de> <87ft8uxjga.fsf@nanos>
- <87d03x5x0k.fsf@nanos.tec.linutronix.de>
-From:   "Dey, Megha" <megha.dey@intel.com>
-Message-ID: <8a8a853c-cbe6-b19c-f6ba-c8cdeda84a36@intel.com>
-Date:   Tue, 11 Aug 2020 11:46:10 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Tue, 11 Aug 2020 14:49:07 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:60896 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725889AbgHKStG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 14:49:06 -0400
+Date:   Tue, 11 Aug 2020 20:49:02 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1597171744;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=RwCD0bfL2AO9ImN2u7oI41Ra7cPPPpKJOGgaL2jx1Hs=;
+        b=PsJbheuLB+TB0qz3bco9sz/QmSvo6EAMMxbttJ/tIDnUitgm9vn4EI3XyivAKL0Tv4lM2E
+        M+sVD2rs5XINF7tFbA0a4Q9IJnBWUiVxa+lpKtathfONCaqGnFGyl5dHDRZJi75MMrQkOT
+        FNklLUkIdCij6W1B7jxgUx+ammke8172oRcgv8AZ18lx7SMpspxvoV3KxDrGSX7q6AAHA3
+        K2HfO5TiZJMOFlNdt+iimniyGfhIvkvyHhh6lWQKyfID9QSYY90Q2l/5u4AA4wqR3FjMm4
+        9Fzz27sfQA4fE1mwQUlXy1BzMt8lOdhpOISXK5rYMETXzw7JXPsF8/kWn3GQ7Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1597171744;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=RwCD0bfL2AO9ImN2u7oI41Ra7cPPPpKJOGgaL2jx1Hs=;
+        b=OgiItwsr/YUIAS8bO43cL5thnZ1bNYRQRZpkt0u7i6JfF7f4dyeXuHcB2BXS8ok+oPUo7h
+        I4rXhsWeULTTVpDQ==
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Stephen Berman <stephen.berman@gmx.net>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>
+Subject: Re: power-off delay/hang due to commit 6d25be57 (mainline)
+Message-ID: <20200811184902.2fm4eyprmpkfon2j@linutronix.de>
+References: <87ftak2kxr.fsf@rub.de>
+ <20200714134410.3odqfvjq6rndjjf6@linutronix.de>
+ <CAJZ5v0hZSUkEMCszDADGWk-v0xNEiDE45B3CHLi05BX6rPfm6g@mail.gmail.com>
+ <20200714141135.47adndrsdgpiqfy4@linutronix.de>
+ <87blkbx1gt.fsf@gmx.net>
+ <87imdp5r80.fsf@rub.de>
+ <20200811132955.wbt55ns7bu5mxouq@linutronix.de>
+ <CAJZ5v0h+n9VCz5=VixVbe_b=ZbTU3D=46stGhE9z7Y7yaUMJzw@mail.gmail.com>
+ <20200811152551.dmfw46urecbmeklr@linutronix.de>
+ <87ft8tayic.fsf@gmx.net>
 MIME-Version: 1.0
-In-Reply-To: <87d03x5x0k.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [10.212.86.9]
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <87ft8tayic.fsf@gmx.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
+On 2020-08-11 19:22:19 [+0200], Stephen Berman wrote:
+> Attached.
 
-On 8/11/2020 2:53 AM, Thomas Gleixner wrote:
-> Thomas Gleixner <tglx@linutronix.de> writes:
->
-> CC+: XEN folks
->
->> Thomas Gleixner <tglx@linutronix.de> writes:
->>> The infrastructure itself is not more than a thin wrapper around the
->>> existing msi domain infrastructure and might even share code with
->>> platform-msi.
->> And the annoying fact that you need XEN support which opens another can
->> of worms...
+ssdt6.dsl:
+|  ThermalZone (TZ10)
+|  {
+=E2=80=A6
+|      Method (_TSP, 0, Serialized)  // _TSP: Thermal Sampling Period
+|      {
+|          Return (0x0A)
+|      }
+|
+|      Method (_TZP, 0, Serialized)  // _TZP: Thermal Zone Polling
+|      {
+|          Return (0x0A)
+|      }
+|
+|      Method (_TMP, 0, Serialized)  // _TMP: Temperature
+|      {
+|          \GSA1.ZRC3 ()
+|          Sleep (0x03E8)
+|          Notify (\_TZ.TZ10, 0x81) // Thermal Trip Point Change
+|          Return (0x0B54)
+|      }
 
-hmm I am not sure why we need Xen support... are you referring to idxd 
-using xen?
+So if I read this correctly then TZ10 should be polled every second
+(check) and the temperature function contains a `sleep(1 second)' (which
+explains the mysteries delay) followed by the Notify() (which schedules
+the worker).
 
-> which needs some real cleanup first.
->
-> x86 still does not associate the irq domain to devices at device
-> discovery time, i.e. the device::msi_domain pointer is never populated.
->
-> So to support this new fangled device MSI stuff we'd need yet more
-> x86/xen specific arch_*msi_irqs() indirection and hackery, which is not
-> going to happen.
->
-> The right thing to do is to convert XEN MSI support over to proper irq
-> domains. This allows to populate device::msi_domain which makes a lot of
-> things simpler and also more consistent.
+Now I'm curious if Windows has the same ACPI tables and if so how they
+behave here. And what the actual plan here was. And where is the border
+when one is actual allowed to make fun of someone. So many questions.=20
 
-do you think this cleanup is to be a precursor to my patches? I could 
-look into it but I am not familiar with the background of Xen
+> Done as Bug 208877.
 
-and this stuff. Can you please provide further guidance on where to look?
+Thank you.
 
-> Thanks,
->
->          tglx
+> Steve Berman
+
+Sebastian
