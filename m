@@ -2,132 +2,124 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54C87C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 01:52:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A465C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 01:57:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30CF920716
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 01:52:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BE9620716
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 01:57:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="INWLARXj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PijYJW8U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728182AbgHKBwA (ORCPT
+        id S1728049AbgHKB5G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 21:52:00 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:30437 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727848AbgHKBv7 (ORCPT
+        Mon, 10 Aug 2020 21:57:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48022 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727985AbgHKB5F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 21:51:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597110718;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=B65NjOD6ipSRjE7zhOhhykThhsv5n+dkos2I3Rfjbvw=;
-        b=INWLARXjig+umfzMpo3V+DJTYBByRhIGjfg2wNkHk7/+6ISdDHn6VjdS3UW1UOgVNPb8mc
-        xmfkvViRo4V1NajOzcTL8N1P6oUDieV0d1zgWQoKv2mgmkXCJNHdPPXmbOYjGSmVU1OT0r
-        RiqWlhCfkZjA2f8RQ8T45thNbXFbYNg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-155-TQViRskyOaipOO4uc-UJCg-1; Mon, 10 Aug 2020 21:51:54 -0400
-X-MC-Unique: TQViRskyOaipOO4uc-UJCg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E1E898014D7;
-        Tue, 11 Aug 2020 01:51:52 +0000 (UTC)
-Received: from localhost (ovpn-13-96.pek2.redhat.com [10.72.13.96])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 000926111F;
-        Tue, 11 Aug 2020 01:51:51 +0000 (UTC)
-Date:   Tue, 11 Aug 2020 09:51:48 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-Cc:     Wei Yang <richard.weiyang@linux.alibaba.com>, mhocko@kernel.org,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 10/10] mm/hugetlb: not necessary to abuse temporary page
- to workaround the nasty free_huge_page
-Message-ID: <20200811015148.GA10792@MiWiFi-R3L-srv>
-References: <20200807091251.12129-1-richard.weiyang@linux.alibaba.com>
- <20200807091251.12129-11-richard.weiyang@linux.alibaba.com>
- <20200810021737.GV14854@MiWiFi-R3L-srv>
- <129cc03e-c6d5-24f8-2f3c-f5a3cc821e76@oracle.com>
+        Mon, 10 Aug 2020 21:57:05 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B893C06174A;
+        Mon, 10 Aug 2020 18:57:05 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id t6so5955075pgq.1;
+        Mon, 10 Aug 2020 18:57:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=8TNdl+C8uye8Ja5jd+YiNm9s++KEtit0cbi0OQRWSFY=;
+        b=PijYJW8UUZ4ppYLApZYvd5T3IzVvKdIZrU/doMYicvI2K1gt96P+DHyvD0/PT3zT9g
+         7ECqjPg/Y6nAmxapa4QURVDrnERrKz80gO6ghlrjgEAzcqRimMTvnw1XR38ajO0ih8CY
+         BRKQUF6f3ou95MP8jW78OvNhE1rsDVqqcYvkS6Os4afu5Q6+7lH+U2hsniG8VlzXKMbJ
+         ul/wplryuiyNWkDHYss8NOlVGmowDyHCVxtkrS2yKQjVqmxCV6ux53pD/6tvyyFmxVAJ
+         10zsmaV7zObAE4M+MJy0NJfGSJOuIMf8ZD0gl+Ejbc6/o8UfjWhXAQcRWWHqHLPeZmjN
+         LWdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=8TNdl+C8uye8Ja5jd+YiNm9s++KEtit0cbi0OQRWSFY=;
+        b=ksJTxLDGbfT1ZD63XTnOEeHtZYZywMkqSt/lDri3UQKL3XpZlRTMkaEAxi7EGhWqPo
+         9QeWcZjiNyvEuMLjghZvM39Yz/WW4UWG0SdcvYePGHSBTMjkfbXAoJvm4i70irF5Z7RY
+         LUc4CkQB7XW0pO1gCNH9G6KWBgyssIB8iG2dCN4YsdhX6MHAX1swRgfWPILaPOxZ9TaL
+         CffCdbKdtznboEsd1aWBPC0iSq5h5CCx00EgjNjWNs0UFBUj0cUvHl/8rWc6bKnkcchs
+         MYGx9yF+PLJwx8y+ClC55d0NY6IrkvnBEIZNfJzUmJbh29ds2LczbUGX4p+PTL7+2Pw0
+         yr9w==
+X-Gm-Message-State: AOAM5301G2EaQR2T20f7dTLm/QqQcz2cRuDSANBHKGlpumZ4E8dE946y
+        LFQ+ngNVS4Na21aGEye2XVf0auy0
+X-Google-Smtp-Source: ABdhPJzB+chc/PeTX5RV7BhujvSJA/PNj8ppEtLCvpPemnsswkVm/20b/HN5CTjcL7f/qjFDhzKlyg==
+X-Received: by 2002:a63:5213:: with SMTP id g19mr12981742pgb.44.1597111024494;
+        Mon, 10 Aug 2020 18:57:04 -0700 (PDT)
+Received: from sol (106-69-161-64.dyn.iinet.net.au. [106.69.161.64])
+        by smtp.gmail.com with ESMTPSA id b15sm19781452pgk.14.2020.08.10.18.57.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Aug 2020 18:57:03 -0700 (PDT)
+Date:   Tue, 11 Aug 2020 09:56:59 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        bgolaszewski@baylibre.com, linus.walleij@linaro.org
+Subject: Re: [PATCH v3 05/18] gpiolib: cdev: support GPIO_V2_GET_LINE_IOCTL
+ and GPIO_V2_LINE_GET_VALUES_IOCTL
+Message-ID: <20200811015659.GB25507@sol>
+References: <20200809132529.264312-1-warthog618@gmail.com>
+ <20200809132529.264312-6-warthog618@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <129cc03e-c6d5-24f8-2f3c-f5a3cc821e76@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <20200809132529.264312-6-warthog618@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/10/20 at 05:19pm, Mike Kravetz wrote:
-> On 8/9/20 7:17 PM, Baoquan He wrote:
-> > On 08/07/20 at 05:12pm, Wei Yang wrote:
-> >> Let's always increase surplus_huge_pages and so that free_huge_page
-> >> could decrease it at free time.
-> >>
-> >> Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
-> >> ---
-> >>  mm/hugetlb.c | 14 ++++++--------
-> >>  1 file changed, 6 insertions(+), 8 deletions(-)
-> >>
-> >> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> >> index 1f2010c9dd8d..a0eb81e0e4c5 100644
-> >> --- a/mm/hugetlb.c
-> >> +++ b/mm/hugetlb.c
-> >> @@ -1913,21 +1913,19 @@ static struct page *alloc_surplus_huge_page(struct hstate *h, gfp_t gfp_mask,
-> >>  		return NULL;
-> >>  
-> >>  	spin_lock(&hugetlb_lock);
-> >> +
-> >> +	h->surplus_huge_pages++;
-> >> +	h->surplus_huge_pages_node[page_to_nid(page)]++;
-> >> +
-> >>  	/*
-> >>  	 * We could have raced with the pool size change.
-> >>  	 * Double check that and simply deallocate the new page
-> >> -	 * if we would end up overcommiting the surpluses. Abuse
-> >> -	 * temporary page to workaround the nasty free_huge_page
-> >> -	 * codeflow
-> >> +	 * if we would end up overcommiting the surpluses.
-> >>  	 */
-> >> -	if (h->surplus_huge_pages >= h->nr_overcommit_huge_pages) {
-> >> -		SetPageHugeTemporary(page);
-> > 
-> > Hmm, the temporary page way is taken intentionally in
-> > commit 9980d744a0428 ("mm, hugetlb: get rid of surplus page accounting tricks").
-> > From code, this is done inside hugetlb_lock holding, and the code flow
-> > is straightforward, should be safe. Adding Michal to CC.
-> > 
+On Sun, Aug 09, 2020 at 09:25:16PM +0800, Kent Gibson wrote:
+> Add support for requesting lines using the GPIO_V2_GET_LINE_IOCTL, and
+> returning their current values using GPIO_V2_LINE_GET_VALUES_IOCTL.
 > 
-> I remember when the temporary page code was added for page migration.
-> The use of temporary page here was added at about the same time.  Temporary
-> page does have one advantage in that it will not CAUSE surplus count to
-> exceed overcommit.  This patch could cause surplus to exceed overcommit
-> for a very short period of time.  However, do note that for this to happen
-> the code needs to race with a pool resize which itself could cause surplus
-> to exceed overcommit.
+> Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> ---
 > 
-> IMO both approaches are valid.
-> - Advantage of temporary page is that it can not cause surplus to exceed
->   overcommit.  Disadvantage is as mentioned in the comment 'abuse of temporary
->   page'.
-> - Advantage of this patch is that it uses existing counters.  Disadvantage
->   is that it can momentarily cause surplus to exceed overcommit.
+[snip]
 
-Yeah, since it's all done inside hugetlb_lock, should be OK even
-though it may cause surplus to exceed overcommit.
-> 
-> Unless someone has a strong opinion, I prefer the changes in this patch.
+> +static long line_get_values(struct line *line, void __user *ip)
+> +{
+> +	struct gpio_v2_line_values lv;
+> +	DECLARE_BITMAP(vals, GPIO_V2_LINES_MAX);
+> +	DECLARE_BITMAP(mask, GPIO_V2_LINES_MAX);
+> +	struct gpio_desc **descs;
+> +	int ret, i, didx, num_get = 0;
+> +
+> +	/* NOTE: It's ok to read values of output lines. */
+> +	if (copy_from_user(&lv, ip, sizeof(lv)))
+> +		return -EFAULT;
+> +
+> +	if (lv.mask == 0)
+> +		return -EINVAL;
+> +
+> +	bitmap_from_u64(mask, lv.mask);
+> +	num_get = bitmap_weight(mask, line->num_descs);
 
-Agree, I also prefer the code change in this patch, to remove the
-unnecessary confusion about the temporary page.
+Nuts, that doesn't do what I intend, and is part of a failed experiment
+that I thought I had reverted.
 
+Assume that in the next version the mask handling will be similar to
+line_set_values_locked in patch 09.
+
+i.e. 
+	for (i = 0; i < line->num_descs; i++)
+		if (lv.mask & BIT_ULL(i))
+			num_get++;
+
+and the subsequent mask tests will be against lv.mask instead of the
+mask bitmap declared above (which will be gone).
+
+I won't do a v4 just yet though - there is sure to be other things
+to go in there.
+
+Cheers,
+Kent.
