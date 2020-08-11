@@ -2,168 +2,160 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FB65C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 22:06:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A23AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 22:07:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 744E8206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 22:06:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="J3AC+Xnp"
+	by mail.kernel.org (Postfix) with ESMTP id 7E5CA206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 22:07:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726368AbgHKWGt (ORCPT
+        id S1726521AbgHKWHJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 18:06:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36788 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726023AbgHKWGt (ORCPT
+        Tue, 11 Aug 2020 18:07:09 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:37304 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726023AbgHKWHJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 18:06:49 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFA62C06174A
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 15:06:48 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id j187so324323qke.11
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 15:06:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=IYtqmhJpymCz6j289iI5TeJwIC6OPAmI1DkbGnwCpRU=;
-        b=J3AC+XnpS+owb7bsJYRZ9ilnHowutIRLLZQ64zerloJwnU40cIWxmRQ71vL51CMHgU
-         GD+qcnVRYBpNL3kzm/cyx77Ep7oh3IsdPrT3uNnlAKjcsmJak3O8aPQ9Kx+p0O2KaJZh
-         j5t6kRoSk1rKilptFy75fFW2SvUybc0fnRNMlw9XL4YbmFB1Ml49zuHTnKWMlUt8XEhw
-         U7d+7O8s4fvZXScYiWQEMkqKP6TjRJ9MpQIiqSZM5AazE0jZ3cInujXul6Y+BAitFviw
-         jQz6x83vlSwqVB5GGuSxVZJnskm+/5+Y8ECW63o0X/7YdfM7bdt2Gn16Y/z5KsoV0gJX
-         5fqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=IYtqmhJpymCz6j289iI5TeJwIC6OPAmI1DkbGnwCpRU=;
-        b=effEMBjBp0/zc69iW/yoJ9uQOzvvyAsg1UmB7QDi1MFbzKz8xShFVReAHYEQWByKHf
-         rEBJc+qAxHgyNB1kgOtB9T69e8PCHZXqOV8ptr7tQKs154GGmx8ugh32mgobFI9LaqjO
-         4MDJX/tg5tRtVu00PivfUz7TnqzrlXT4I4ccRSsBja8/ZIZ12qzMoK78wF72HNjhZmWW
-         4AJRCvTZKWnqSRjbUv4AoV3PzEG9JyNt33t4Rjm7pI+G4fBmdmbRFMVtYg7k7iz8Qbo3
-         V4HQaSe0bOmAp7u4PQmRlR5OsZu7epLjPVqwyjV7+GncyM2Ue6N/vXfbZyQngnYisy6r
-         uiwA==
-X-Gm-Message-State: AOAM530x1Xe3O+hpgzJsPo6Lc8uCD4RfFJ/PHqxy3WyqWQOtcd6tEEch
-        61OTXRdTidYuMbG/BYgLkrFANQ==
-X-Google-Smtp-Source: ABdhPJzlQX2iQgZ+zmEjLq2klBTu0I+UrXgd/y4ywaEaAkTgEZVMISbhT+fJawCotQsHT2fFBf4jsg==
-X-Received: by 2002:a05:620a:1a:: with SMTP id j26mr3329668qki.183.1597183607773;
-        Tue, 11 Aug 2020 15:06:47 -0700 (PDT)
-Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id h55sm173972qte.16.2020.08.11.15.06.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Aug 2020 15:06:47 -0700 (PDT)
-Date:   Tue, 11 Aug 2020 18:06:44 -0400
-From:   Qian Cai <cai@lca.pw>
-To:     Naoya Horiguchi <nao.horiguchi@gmail.com>
-Cc:     HORIGUCHI =?utf-8?B?TkFPWUEo5aCA5Y+j44CA55u05LmfKQ==?= 
-        <naoya.horiguchi@nec.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "mhocko@kernel.org" <mhocko@kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "mike.kravetz@oracle.com" <mike.kravetz@oracle.com>,
-        "osalvador@suse.de" <osalvador@suse.de>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "david@redhat.com" <david@redhat.com>,
-        "aneesh.kumar@linux.vnet.ibm.com" <aneesh.kumar@linux.vnet.ibm.com>,
-        "zeil@yandex-team.ru" <zeil@yandex-team.ru>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will@kernel.org" <will@kernel.org>
-Subject: Re: [PATCH v6 00/12] HWPOISON: soft offline rework
-Message-ID: <20200811220643.GB39857@lca.pw>
-References: <20200806184923.7007-1-nao.horiguchi@gmail.com>
- <20200810152254.GC5307@lca.pw>
- <20200811031139.GA7145@hori.linux.bs1.fc.nec.co.jp>
- <20200811173923.GA39857@lca.pw>
- <20200811193201.GA1410457@u2004>
+        Tue, 11 Aug 2020 18:07:09 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 39D71299137
+Message-ID: <e46251bfd3a93a699a572286da1d5adb13ae2e9e.camel@collabora.com>
+Subject: Re: [PATCH v2 03/14] media: uapi: h264: Split prediction weight
+ parameters
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Jernej =?UTF-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>
+Cc:     linux-media <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Maxime Ripard <mripard@kernel.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Date:   Tue, 11 Aug 2020 19:06:57 -0300
+In-Reply-To: <3175824.PBOCjEjZKB@jernej-laptop>
+References: <20200806151310.98624-1-ezequiel@collabora.com>
+         <2153096.Em8KjNIPHG@jernej-laptop>
+         <1684df93a76cbd5e5f5435d876cf7fb88681b2ab.camel@collabora.com>
+         <3175824.PBOCjEjZKB@jernej-laptop>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3-1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200811193201.GA1410457@u2004>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 04:32:01AM +0900, Naoya Horiguchi wrote:
-> On Tue, Aug 11, 2020 at 01:39:24PM -0400, Qian Cai wrote:
-> > On Tue, Aug 11, 2020 at 03:11:40AM +0000, HORIGUCHI NAOYA(堀口 直也) wrote:
-> > > I'm still not sure why the test succeeded by reverting these because
-> > > current mainline kernel provides similar mechanism to prevent reuse of
-> > > soft offlined page. So this success seems to me something suspicious.
+Hi Jonas, Jernej and everyone :)
+
+> > > > > > > > +     {
+> > > > > > > > +             .cfg = {
+> > > > > > > > +                     .id     =
+> > > > > > > > V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHTS,
+> > > > > > > > +             },
+> > > > > > > > +             .codec          = CEDRUS_CODEC_H264,
+> > > > > > > > +             .required       = true,
+> > > > > > > 
+> > > > > > > This should probably be false if this control is to be optional as
+> > > > > > > implied
+> > > > > > > by the commit message.
+> > > > > > 
+> > > > > > Well, the control is optional if the driver implements it as
+> > > > > > optional,
+> > > > > > which Cedrus isn't currently doing :-)
+> > > > > 
+> > > > > Why do you think so? Prediction weights are filled only when they are
+> > > > > needed:https://elixir.bootlin.com/linux/latest/source/drivers/staging/
+> > > > > medi
+> > > > > a/ sunxi/cedrus/cedrus_h264.c#L370
+> > > > 
+> > > > Right, but that should be changed to be really optional.
+> > > > How does the driver reject/fail the request if the table is NULL?
 > > > 
-> > > To investigate more, I want to have additional info about the page states
-> > > of the relevant pages after soft offlining.  Could you collect it by the
-> > > following steps?
-> > > 
-> > >   - modify random.c not to run hotplug_memory() in migrate_huge_hotplug_memory(),
-> > >   - compile it and run "./random 1" once,
-> > >   - to collect page state with hwpoisoned pages, run "./page-types -Nlr -b hwpoison",
-> > >     where page-types is available under tools/vm in kernel source tree.
-> > >   - choose a few pfns of soft offlined pages from kernel message
-> > >     "Soft offlining pfn ...", and run "./page-types -Nlr -a <pfn>".
+> > > It's my understanding that pointer to this table can't be NULL. NULL would
+> > > mean that there is no control with that ID registered in the driver.
 > > 
-> > # ./page-types -Nlr -b hwpoison
-> > offset	len	flags
-> > 99a000	1	__________B________X_______________________
-> > 99c000	1	__________B________X_______________________
-> > 99e000	1	__________B________X_______________________
-> > 9a0000	1	__________B________X_______________________
-> > ba6000	1	__________B________X_______________________
-> > baa000	1	__________B________X_______________________
+> > Hm, I'm starting to think you are right. So, does this mean
+> > the default quantization matrix here is bogus?
+> > 
+> >         if (quantization && quantization->load_intra_quantiser_matrix)
+> >                 matrix = quantization->intra_quantiser_matrix;
+> >         else
+> >                 matrix = intra_quantization_matrix_default;
 > 
-> Thank you.  It only shows 6 lines of records, which is unexpected to me
-> because random.c iterates soft offline 2 hugepages with madvise() 1000 times.
-> Somehow (maybe in arch specific way?) other hwpoisoned pages might be cleared?
-> If they really are, the success of this test is a fake, and this patchset
-> can be considered as a fix.
+> No, not really. Userspace can set load_intra_quantiser_matrix flag to false.
+> 
 
-The test was designed to catch a previous bug (the latest patchset fixed that)
-where kernel will be enterting into an endless loop.
+The above made me revisit the current H264 semantics
+for the picture scaling matrix.
 
-https://lore.kernel.org/lkml/1570829564.5937.36.camel@lca.pw/
+As you can see, we currently have V4L2_H264_PPS_FLAG_PIC_SCALING_MATRIX_PRESENT,
+which we were expecting to match 1:1 the H264 PPS syntax element
+"pic_scaling_matrix_present_flag".
 
-However, I don't understand why mmap() does not return ENOMEM in the first
-place where overcommit_memory == 0 instead of munmap() or/and madvise()
-returning ENOMEM. I suppose that is the price to pay with heuristic, and I
-can't easily confirm if it is related to this patchset or not.
+However, after a bit of reflection and discussion with Nicolas, I believe
+it's not appropriate to have this flag as a 1:1 match with the PPS syntax element.
 
-		addr = mmap(NULL, length, PROT_READ | PROT_WRITE,
-			   MAP_PRIVATE | MAP_ANONYMOUS | MAP_HUGETLB, -1, 0);
-		if (addr == MAP_FAILED) {
-			if (i == 0 || errno != ENOMEM) {
-				perror("mmap");
-				return 1;
-			}
-			usleep(1000);
-			continue;
-		}
-		memset(addr, 0, length);
+A H264 scaling matrix can be first specified by the SPS and then modified
+by the PPS. We can expect the modification process to be solved by userspace.
+All we need in the uAPI is a flag that indicates
+if V4L2_CID_MPEG_VIDEO_H264_SCALING_MATRIX should be used or not.
 
-		code = madvise(addr, length, MADV_SOFT_OFFLINE);
-		if(safe_munmap(addr, length))
-			return 1;
+(As Jernej already pointed out, a initialized control shall never be NULL,
+so we want to flag if the control should be used or not) [1].
 
-		/* madvise() could return >= 0 on success. */
-		if (code < 0 && errno != EBUSY) {
-			perror("madvise");
-			return 1;
-		}
+Applications are expected to fill V4L2_CID_MPEG_VIDEO_H264_SCALING_MATRIX
+if a scaling matrix needs to be passed, which is the case is:
 
-Otherwise, our test will keep running and ignore ENOMEM correctly. I did also
-confirm that this patchset has a higher success rate of soft-offlining
-("page-types" shows 400+ lines) which changes the existing assumption (looks
-like in a good way in this case).
+sps->scaling_matrix_present_flag || pps->pic_scaling_matrix_present_flag
+
+So that is the meaning of the flag we want. [2]
+
+Moreover, Baseline, Main and Extended profiles are specified to have
+neither SPS scaling_matrix_present_flag nor PPS pic_scaling_matrix_present_flag
+syntax elements, so it makes sense to allow applications _not_ setting
+V4L2_CID_MPEG_VIDEO_H264_SCALING_MATRIX in a request.
+
+On the uAPI side, the only change needed is:
+
+-#define V4L2_H264_PPS_FLAG_PIC_SCALING_MATRIX_PRESENT                  0x0080
++#define V4L2_H264_PPS_FLAG_SCALING_MATRIX_PRESENT                      0x0080
+
+(just to avoid confusing the flag with the syntax element)
+
+Together with proper documentation to clarify what the flag is.
+
+Drivers can use this flag as (rkvdec as an example):
+
+-       /* always use the matrix sent from userspace */
+-       WRITE_PPS(1, SCALING_LIST_ENABLE_FLAG);
+-
++       WRITE_PPS(!!(pps->flags & V4L2_H264_PPS_FLAG_SCALING_MATRIX_PRESENT),
++                 SCALING_LIST_ENABLE_FLAG);
+
+Which also means the scaling matrix control is optional and won't be programmed
+to the hardware when the not present. [3]
+
+Thanks!
+Ezequiel
+
+[1] We may also check if a control is part of a request or not,
+but that seems more complex and more obscure than just checking a flag.
+
+[2] In theory, the uAPI could also have semantics to flag
+seq_scaling_list_present_flag[i] and pic_scaling_list_present_flag[i],
+for each scaling list. I think this makes things overly complicated.
+
+[3] We could add Flat_4x4_16 and Flat_8x8_16 in the kernel,
+but all the drivers we support, have a flag for scaling-matrix-not-present,
+so there's no need.
+
