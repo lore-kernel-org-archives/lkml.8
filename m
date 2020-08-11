@@ -2,97 +2,144 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E9BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 19:27:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C34C8C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 19:30:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FB0D20781
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 19:27:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="bQnjgjkX"
+	by mail.kernel.org (Postfix) with ESMTP id A991B20786
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 19:30:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726430AbgHKT1n (ORCPT
+        id S1726425AbgHKTaV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 15:27:43 -0400
-Received: from mail.efficios.com ([167.114.26.124]:51814 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725987AbgHKT1m (ORCPT
+        Tue, 11 Aug 2020 15:30:21 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:55228 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725889AbgHKTaU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 15:27:42 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id E2D012CF884;
-        Tue, 11 Aug 2020 15:27:41 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id EEcEEr-s-SrR; Tue, 11 Aug 2020 15:27:41 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id B8C212CF377;
-        Tue, 11 Aug 2020 15:27:41 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com B8C212CF377
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1597174061;
-        bh=1v1MPa4sJ4QtOimq78HFS1qQehsF7FDbbbQfoAzyZkM=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=bQnjgjkX6758iIL0rHhA5qtkYu5xRubBkmn5MdY20ijsZvNt8qk1pEybrbugWyHm5
-         nw7Lu3WvJDqrsGT/TSQEArM2JYyU+jE0R9oMVV+qWLeHsmemZBAubLAE91C9eqn2Xm
-         tt1fulxxgKxwlKgzT91D5DHaq0GvkCKu/cZmcrTSXxQOkQk56ZaYhPxJueIFaixbvj
-         LW4ewRCV8y+EBY1L7dzFLRMpYQGBVRvQPPLcPbt4JbHVVyhBGNjs46jKAv7kd5UIec
-         RPVW6YELbvGW1ELzh1+3/Yg02QAcgxVNqSExjvYjEl/FhhQ2KzoFK+UrsGx5EUZuVt
-         cS437scaSANrw==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id KqBoS2y1UI96; Tue, 11 Aug 2020 15:27:41 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id AD6852CF376;
-        Tue, 11 Aug 2020 15:27:41 -0400 (EDT)
-Date:   Tue, 11 Aug 2020 15:27:41 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     David Ahern <dsahern@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Michael Jeanson <mjeanson@efficios.com>,
-        David Ahern <dsahern@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-Message-ID: <731739593.4827.1597174061640.JavaMail.zimbra@efficios.com>
-In-Reply-To: <511074db-a005-9b64-9b5a-6367d1ac0af6@gmail.com>
-References: <42cb74c8-9391-cf4c-9e57-7a1d464f8706@gmail.com> <20200806185121.19688-1-mjeanson@efficios.com> <20200811.102856.864544731521589077.davem@davemloft.net> <f43a9397-c506-9270-b423-efaf6f520a80@gmail.com> <699475546.4794.1597173063863.JavaMail.zimbra@efficios.com> <511074db-a005-9b64-9b5a-6367d1ac0af6@gmail.com>
-Subject: Re: [PATCH] selftests: Add VRF icmp error route lookup test
+        Tue, 11 Aug 2020 15:30:20 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id B4DE61C0BDD; Tue, 11 Aug 2020 21:30:16 +0200 (CEST)
+Date:   Tue, 11 Aug 2020 21:30:16 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc:     Chuck Lever <chucklever@gmail.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        James Morris <jmorris@namei.org>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Sasha Levin <sashal@kernel.org>, snitzer@redhat.com,
+        dm-devel@redhat.com, tyhicks@linux.microsoft.com, agk@redhat.com,
+        Paul Moore <paul@paul-moore.com>,
+        Jonathan Corbet <corbet@lwn.net>, nramas@linux.microsoft.com,
+        serge@hallyn.com, pasha.tatashin@soleen.com,
+        Jann Horn <jannh@google.com>, linux-block@vger.kernel.org,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jens Axboe <axboe@kernel.dk>, mdsakib@microsoft.com,
+        open list <linux-kernel@vger.kernel.org>, eparis@redhat.com,
+        linux-security-module@vger.kernel.org, linux-audit@redhat.com,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-integrity@vger.kernel.org,
+        jaskarankhurana@linux.microsoft.com
+Subject: Re: [dm-devel] [RFC PATCH v5 00/11] Integrity Policy Enforcement LSM
+ (IPE)
+Message-ID: <20200811193016.bdwh5kq7ci3yeme4@duo.ucw.cz>
+References: <1596639689.3457.17.camel@HansenPartnership.com>
+ <alpine.LRH.2.21.2008050934060.28225@namei.org>
+ <b08ae82102f35936427bf138085484f75532cff1.camel@linux.ibm.com>
+ <329E8DBA-049E-4959-AFD4-9D118DEB176E@gmail.com>
+ <da6f54d0438ee3d3903b2c75fcfbeb0afdf92dc2.camel@linux.ibm.com>
+ <1597073737.3966.12.camel@HansenPartnership.com>
+ <6E907A22-02CC-42DD-B3CD-11D304F3A1A8@gmail.com>
+ <1597124623.30793.14.camel@HansenPartnership.com>
+ <16C3BF97-A7D3-488A-9D26-7C9B18AD2084@gmail.com>
+ <1597159969.4325.21.camel@HansenPartnership.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3959 (ZimbraWebClient - FF79 (Linux)/8.8.15_GA_3953)
-Thread-Topic: selftests: Add VRF icmp error route lookup test
-Thread-Index: FIir5KvbcOkTO8IkhWWlwDf7GMEQ3g==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="x335q3ph5liujtc7"
+Content-Disposition: inline
+In-Reply-To: <1597159969.4325.21.camel@HansenPartnership.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Aug 11, 2020, at 3:14 PM, David Ahern dsahern@gmail.com wrote:
 
-> On 8/11/20 1:11 PM, Mathieu Desnoyers wrote:
->> One thing I am missing before this series can be considered for upstreaming
->> is an Acked-by of the 2 fixes for ipv4 and ipv6 from you, as maintainer
->> of l3mdev, if you think the approach I am taking with those fixes makes sense.
-> 
-> Send the set, and I will review as vrf/l3mdev maintainer. I need working
-> tests and patches to see the before and after.
+--x335q3ph5liujtc7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Allright, I'm rebasing on the net tree as we speak, and the patches will
-be on their way shortly.
+Hi!
 
-Thanks,
+> > > > (eg, a specification) will be critical for remote filesystems.
+> > > >=20
+> > > > If any of this is to be supported by a remote filesystem, then we
+> > > > need an unencumbered description of the new metadata format
+> > > > rather than code. GPL-encumbered formats cannot be contributed to
+> > > > the NFS standard, and are probably difficult for other
+> > > > filesystems that are not Linux-native, like SMB, as well.
+> > >=20
+> > > I don't understand what you mean by GPL encumbered formats.  The
+> > > GPL is a code licence not a data or document licence.
+> >=20
+> > IETF contributions occur under a BSD-style license incompatible
+> > with the GPL.
+> >=20
+> > https://trustee.ietf.org/trust-legal-provisions.html
+> >=20
+> > Non-Linux implementers (of OEM storage devices) rely on such
+> > standards processes to indemnify them against licensing claims.
+>=20
+> Well, that simply means we won't be contributing the Linux
+> implementation, right? However, IETF doesn't require BSD for all
+> implementations, so that's OK.
+>=20
+> > Today, there is no specification for existing IMA metadata formats,
+> > there is only code. My lawyer tells me that because the code that
+> > implements these formats is under GPL, the formats themselves cannot
+> > be contributed to, say, the IETF without express permission from the
+> > authors of that code. There are a lot of authors of the Linux IMA
+> > code, so this is proving to be an impediment to contribution. That
+> > blocks the ability to provide a fully-specified NFS protocol
+> > extension to support IMA metadata formats.
+>=20
+> Well, let me put the counterpoint: I can write a book about how
+> linux
 
-Mathieu
+You should probably talk to your lawyer.
 
+> device drivers work (which includes describing the data formats), for
+> instance, without having to get permission from all the authors ... or
+> is your lawyer taking the view we should be suing Jonathan Corbet,
+> Alessandro Rubini, and Greg Kroah-Hartman for licence infringement?  In
+> fact do they think we now have a huge class action possibility against
+> O'Reilly  and a host of other publishers ...
 
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+Because yes, you can reverse engineer for compatibility reasons --
+doing clean room re-implementation (BIOS binary -> BIOS documentation
+-> BIOS sources under different license), but that was only tested in
+the US, is expensive, and I understand people might be uncomfortable
+doing that.
+
+Best regards,
+									Pavel
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--x335q3ph5liujtc7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EARECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXzLxyAAKCRAw5/Bqldv6
+8vgbAKCHpxkUI3bT9Vn41Tp5GJNZ+nv/SQCfRg4xUwALTQzmhch9Ig1sF0gdvc0=
+=c2f+
+-----END PGP SIGNATURE-----
+
+--x335q3ph5liujtc7--
