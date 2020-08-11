@@ -2,165 +2,161 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1745C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA9FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:33:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B633420768
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:32:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 140DA20768
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:33:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="XjfA1fqd";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="LWfToPsd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WRxdEfgw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729017AbgHKPcx (ORCPT
+        id S1729034AbgHKPdC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 11:32:53 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:41116 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728859AbgHKPcx (ORCPT
+        Tue, 11 Aug 2020 11:33:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60618 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728859AbgHKPdA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 11:32:53 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id E738F8EE19D;
-        Tue, 11 Aug 2020 08:32:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1597159972;
-        bh=wWrttx+iJhZF4TwfmlzLv+L9PM0TdD9Fc3uir7nFLMM=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=XjfA1fqdWroJDmq6NYLlvqAen2Eu9mx40k7dwajpO5cdqxz8OBHTAj7LtnXt5D77r
-         yHD8FpZ2B8DPuLh9B0vQ3+a4we6/g8GeUBH/MEhQmafs87XW0uTaOy4AkMr/y85xEu
-         no3iCijZ0aDY7SPirzPrfB1ZKiYDgL37sKqkoDNM=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id b3YM1B3UJc5Z; Tue, 11 Aug 2020 08:32:51 -0700 (PDT)
-Received: from [153.66.254.174] (c-73-35-198-56.hsd1.wa.comcast.net [73.35.198.56])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 7D8168EE149;
-        Tue, 11 Aug 2020 08:32:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1597159971;
-        bh=wWrttx+iJhZF4TwfmlzLv+L9PM0TdD9Fc3uir7nFLMM=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=LWfToPsdUAM4OHjosIhR5/dzJ35cRneHKHc+1ZzcbqKKxvJcvDFZvI6pjja2WIkmc
-         +K+U4TpQP2HX9w8ZGbglVlC1eURNIPwla3RFrIuEXR75FGSSeUnGceNMM64gUYwCq7
-         IZjHJh9XO1JkIu1Kj6UVNO92zS1mMzzP3p+jQrFY=
-Message-ID: <1597159969.4325.21.camel@HansenPartnership.com>
-Subject: Re: [dm-devel] [RFC PATCH v5 00/11] Integrity Policy Enforcement
- LSM (IPE)
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Chuck Lever <chucklever@gmail.com>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>, James Morris <jmorris@namei.org>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>,
-        snitzer@redhat.com, dm-devel@redhat.com,
-        tyhicks@linux.microsoft.com, agk@redhat.com,
-        Paul Moore <paul@paul-moore.com>,
-        Jonathan Corbet <corbet@lwn.net>, nramas@linux.microsoft.com,
-        serge@hallyn.com, pasha.tatashin@soleen.com,
-        Jann Horn <jannh@google.com>, linux-block@vger.kernel.org,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jens Axboe <axboe@kernel.dk>, mdsakib@microsoft.com,
-        open list <linux-kernel@vger.kernel.org>, eparis@redhat.com,
-        linux-security-module@vger.kernel.org, linux-audit@redhat.com,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-integrity@vger.kernel.org,
-        jaskarankhurana@linux.microsoft.com
-Date:   Tue, 11 Aug 2020 08:32:49 -0700
-In-Reply-To: <16C3BF97-A7D3-488A-9D26-7C9B18AD2084@gmail.com>
-References: <20200728213614.586312-1-deven.desai@linux.microsoft.com>
-         <20200802115545.GA1162@bug> <20200802140300.GA2975990@sasha-vm>
-         <20200802143143.GB20261@amd>
-         <1596386606.4087.20.camel@HansenPartnership.com>
-         <fb35a1f7-7633-a678-3f0f-17cf83032d2b@linux.microsoft.com>
-         <1596639689.3457.17.camel@HansenPartnership.com>
-         <alpine.LRH.2.21.2008050934060.28225@namei.org>
-         <b08ae82102f35936427bf138085484f75532cff1.camel@linux.ibm.com>
-         <329E8DBA-049E-4959-AFD4-9D118DEB176E@gmail.com>
-         <da6f54d0438ee3d3903b2c75fcfbeb0afdf92dc2.camel@linux.ibm.com>
-         <1597073737.3966.12.camel@HansenPartnership.com>
-         <6E907A22-02CC-42DD-B3CD-11D304F3A1A8@gmail.com>
-         <1597124623.30793.14.camel@HansenPartnership.com>
-         <16C3BF97-A7D3-488A-9D26-7C9B18AD2084@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
+        Tue, 11 Aug 2020 11:33:00 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85E66C06174A;
+        Tue, 11 Aug 2020 08:33:00 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id d188so7818997pfd.2;
+        Tue, 11 Aug 2020 08:33:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=37WdC2DpKlpkgPtRRbtnkLSeSTMLbkdYcrwujx0kflA=;
+        b=WRxdEfgwABYCWPxNXFQkp2sWJHfpiD+vbzCJPapYWGU8+JMlX0rUFqbPjg8MN1lxKn
+         iR7TMR8XzsWTPuJwdfzL464B6YS/406anYjnJ4agumJ4vW1aRln8gXduhVnUbjqu6vKe
+         FzAuPXHLDEt1O9qeiWz83rMO6Ovvikdc+StC2EDkV8/oJwRWiiF71jQrjY3OkduC/RGH
+         dIy1N/HW8TjSLG/RUE7ZiIeY627GxEUbT9yZFl1YvDwE05Mt4h+tuO6x+sc9VLwwZv/i
+         fY5bJb/i+LeDzCFy66/XuRPpFCnkTS/CxcYtFuFnIoNXCVIFrSIFcrAHpu8dcTfpz7gZ
+         evIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=37WdC2DpKlpkgPtRRbtnkLSeSTMLbkdYcrwujx0kflA=;
+        b=aHkm0BjGP1OtTN6AIZJtP6P/sFEZVZDsqt7TPDNqJMsEfEwD/q3upkzPedeJlCRlrS
+         /4JZDnYjWiDiuciq8t8XEIhJGZ2M/UgxdrWRLOL0oYPvptdF0HTNKnLrBjtSlEkcvO4O
+         ZTYW4Y7Yt91V2JfNF+27v/zHrw5+Sm2c6V8OH+YSjSWaX7qafQnRp51liO69QbUCtBb4
+         5YHvl0GChR1LM8rk+a1DL/K3VGH/mRzL3CIlpifEj/sewhPL50Ex2dHlkOhVuXe+fumk
+         DTUC5ABnEbxJ8IC/10z3Irjil4q71C+LVvdBLOM9xijEt+m4e1SIs18yGtg4dXdZMxWF
+         23kQ==
+X-Gm-Message-State: AOAM530c6LbJAY7c+R7dMS4zRoKGgtVJj3sMYjgakajAa9GrZZIPuVww
+        sJEVJAHtY3UoNXSBwzrlZztQz6ir
+X-Google-Smtp-Source: ABdhPJxXxMcM4WtijwyYUtIveBvV0Fh/XebCwvW9MnUglBFEzLNxOZi3ejJO0le6kOk/LK5ZmDlSwA==
+X-Received: by 2002:aa7:968b:: with SMTP id f11mr6655235pfk.63.1597159980059;
+        Tue, 11 Aug 2020 08:33:00 -0700 (PDT)
+Received: from [10.1.10.11] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
+        by smtp.gmail.com with ESMTPSA id m4sm2937988pfh.129.2020.08.11.08.32.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Aug 2020 08:32:59 -0700 (PDT)
+Subject: Re: [PATCH v2 4.19] tcp: fix TCP socks unreleased in BBR mode
+To:     Jason Xing <kerneljasonxing@gmail.com>,
+        Eric Dumazet <edumazet@google.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Neal Cardwell <ncardwell@google.com>,
+        David Miller <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        liweishi <liweishi@kuaishou.com>,
+        Shujin Li <lishujin@kuaishou.com>
+References: <20200602080425.93712-1-kerneljasonxing@gmail.com>
+ <20200604090014.23266-1-kerneljasonxing@gmail.com>
+ <CANn89iKt=3iDZM+vUbCvO_aGuedXFhzdC6OtQMeVTMDxyp9bAg@mail.gmail.com>
+ <CAL+tcoCU157eGmMMabT5icdFJTMEWymNUNxHBbxY1OTir0=0FQ@mail.gmail.com>
+ <CAL+tcoA9SYUfge02=0dGbVidO0098NtT2+Ab_=OpWXnM82=RWQ@mail.gmail.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <bcbaf21e-681e-2797-023e-000dbd6434d1@gmail.com>
+Date:   Tue, 11 Aug 2020 08:32:57 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
+MIME-Version: 1.0
+In-Reply-To: <CAL+tcoA9SYUfge02=0dGbVidO0098NtT2+Ab_=OpWXnM82=RWQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-08-11 at 10:48 -0400, Chuck Lever wrote:
-> > On Aug 11, 2020, at 1:43 AM, James Bottomley
-> > <James.Bottomley@HansenPartnership.com> wrote:
-> > On Mon, 2020-08-10 at 19:36 -0400, Chuck Lever wrote:
-[...]
-> > > Thanks for the help! I just want to emphasize that documentation
-> > > (eg, a specification) will be critical for remote filesystems.
-> > > 
-> > > If any of this is to be supported by a remote filesystem, then we
-> > > need an unencumbered description of the new metadata format
-> > > rather than code. GPL-encumbered formats cannot be contributed to
-> > > the NFS standard, and are probably difficult for other
-> > > filesystems that are not Linux-native, like SMB, as well.
-> > 
-> > I don't understand what you mean by GPL encumbered formats.  The
-> > GPL is a code licence not a data or document licence.
+
+
+On 8/11/20 3:37 AM, Jason Xing wrote:
+> Hi everyone,
 > 
-> IETF contributions occur under a BSD-style license incompatible
-> with the GPL.
+> Could anyone take a look at this issue? I believe it is of high-importance.
+> Though Eric gave the proper patch a few months ago, the stable branch
+> still hasn't applied or merged this fix. It seems this patch was
+> forgotten :(
+
+
+Sure, I'll take care of this shortly.
+
+Thanks.
+
 > 
-> https://trustee.ietf.org/trust-legal-provisions.html
+> Thanks,
+> Jason
 > 
-> Non-Linux implementers (of OEM storage devices) rely on such
-> standards processes to indemnify them against licensing claims.
-
-Well, that simply means we won't be contributing the Linux
-implementation, right? However, IETF doesn't require BSD for all
-implementations, so that's OK.
-
-> Today, there is no specification for existing IMA metadata formats,
-> there is only code. My lawyer tells me that because the code that
-> implements these formats is under GPL, the formats themselves cannot
-> be contributed to, say, the IETF without express permission from the
-> authors of that code. There are a lot of authors of the Linux IMA
-> code, so this is proving to be an impediment to contribution. That
-> blocks the ability to provide a fully-specified NFS protocol
-> extension to support IMA metadata formats.
-
-Well, let me put the counterpoint: I can write a book about how linux
-device drivers work (which includes describing the data formats), for
-instance, without having to get permission from all the authors ... or
-is your lawyer taking the view we should be suing Jonathan Corbet,
-Alessandro Rubini, and Greg Kroah-Hartman for licence infringement?  In
-fact do they think we now have a huge class action possibility against
-O'Reilly  and a host of other publishers ...
-
-> > The way the spec process works in Linux is that we implement or
-> > evolve a data format under a GPL implementaiton, but that
-> > implementation doesn't implicate the later standardisation of the
-> > data format and people are free to reimplement under any licence
-> > they choose.
-> 
-> That technology transfer can happen only if all the authors of that
-> prototype agree to contribute to a standard. That's much easier if
-> that agreement comes before an implementation is done. The current
-> IMA code base is more than a decade old, and there are more than a
-> hundred authors who have contributed to that base.
-> 
-> Thus IMO we want an unencumbered description of any IMA metadata
-> format that is to be contributed to an open standards body (as it
-> would have to be to extend, say, the NFS protocol).
-
-Fine, good grief, people who take a sensible view of this can write the
-data format down and publish it under any licence you like then you can
-pick it up again safely.  Would CC0 be OK? ... neither GPL nor BSD are
-document licences and we shouldn't perpetuate bad practice by licensing
-documentation under them.
-
-James
-
+> On Thu, Jun 4, 2020 at 9:47 PM Jason Xing <kerneljasonxing@gmail.com> wrote:
+>>
+>> On Thu, Jun 4, 2020 at 9:10 PM Eric Dumazet <edumazet@google.com> wrote:
+>>>
+>>> On Thu, Jun 4, 2020 at 2:01 AM <kerneljasonxing@gmail.com> wrote:
+>>>>
+>>>> From: Jason Xing <kerneljasonxing@gmail.com>
+>>>>
+>>>> When using BBR mode, too many tcp socks cannot be released because of
+>>>> duplicate use of the sock_hold() in the manner of tcp_internal_pacing()
+>>>> when RTO happens. Therefore, this situation maddly increases the slab
+>>>> memory and then constantly triggers the OOM until crash.
+>>>>
+>>>> Besides, in addition to BBR mode, if some mode applies pacing function,
+>>>> it could trigger what we've discussed above,
+>>>>
+>>>> Reproduce procedure:
+>>>> 0) cat /proc/slabinfo | grep TCP
+>>>> 1) switch net.ipv4.tcp_congestion_control to bbr
+>>>> 2) using wrk tool something like that to send packages
+>>>> 3) using tc to increase the delay and loss to simulate the RTO case.
+>>>> 4) cat /proc/slabinfo | grep TCP
+>>>> 5) kill the wrk command and observe the number of objects and slabs in
+>>>> TCP.
+>>>> 6) at last, you could notice that the number would not decrease.
+>>>>
+>>>> v2: extend the timer which could cover all those related potential risks
+>>>> (suggested by Eric Dumazet and Neal Cardwell)
+>>>>
+>>>> Signed-off-by: Jason Xing <kerneljasonxing@gmail.com>
+>>>> Signed-off-by: liweishi <liweishi@kuaishou.com>
+>>>> Signed-off-by: Shujin Li <lishujin@kuaishou.com>
+>>>
+>>> That is not how things work really.
+>>>
+>>> I will submit this properly so that stable teams do not have to guess
+>>> how to backport this to various kernels.
+>>>
+>>> Changelog is misleading, this has nothing to do with BBR, we need to be precise.
+>>>
+>>
+>> Thanks for your help. I can finally apply this patch into my kernel.
+>>
+>> Looking forward to your patchset :)
+>>
+>> Jason
+>>
+>>> Thank you.
