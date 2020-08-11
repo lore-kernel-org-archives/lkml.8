@@ -2,187 +2,148 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26EA2C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 22:21:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4309C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 22:22:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 000B6206DC
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 22:21:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82651206DC
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 22:22:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="NmOOEevh"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j2qZHmeg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726255AbgHKWVF (ORCPT
+        id S1726329AbgHKWWk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 18:21:05 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:21015 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726143AbgHKWVF (ORCPT
+        Tue, 11 Aug 2020 18:22:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39186 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726115AbgHKWWj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 18:21:05 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597184464; h=Message-ID: Subject: Cc: To: From: Date:
- Content-Transfer-Encoding: Content-Type: MIME-Version: Sender;
- bh=GkjVxjWcHd8v5LtDQt1A/M6EKaHCXRkAMU5b0RhlAIg=; b=NmOOEevhqAnZ3M/j+uEf3H6b4iDw5Hno/DDvjmqSy2t5LxiFTar6y5zkXDZw3sb8BEGCIGm+
- k04EvELRC/KJsoI9KW98vv8TU3tWgyrAT9uWofm0cyAJ7xKLwI2xkpuIg/QklfVM7qGwkDVf
- cTl8t4TWxWyMDs0CUgEqndx/JSU=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n14.prod.us-west-2.postgun.com with SMTP id
- 5f3319c22889723bf82fd5d1 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 11 Aug 2020 22:20:50
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D0AEEC433CA; Tue, 11 Aug 2020 22:20:49 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: cgoldswo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id BEF66C433C9;
-        Tue, 11 Aug 2020 22:20:47 +0000 (UTC)
+        Tue, 11 Aug 2020 18:22:39 -0400
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 240D8C061787
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 15:22:39 -0700 (PDT)
+Received: by mail-ot1-x344.google.com with SMTP id h16so399021oti.7
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 15:22:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=W/huS475fQsIt3TnWXWCkTB3aVVuQSvTxEVuKvlu6dg=;
+        b=j2qZHmegCEhDNspLauyB+kdVvkes8CWrlZcQqRI1LHyAMo5fB60/BzJDDlu07DLbob
+         izAX8Dc4i9szyBWt1R7ga4E4pS1VjAfpm1tUutFiNhm2UIc3kJn0W0O6RdI6wzEgnxlH
+         /MTvu4zc4HmX78TaVarH5jtHRol934wJjTOCOQDKvg4Bab1J3H96JCcd8SrN9CNNkd5C
+         581sNDvs/rxYEFOVfutD8+GyEyM3I25/3MgPbyRn/mfIpNb8EHVJ2YPWFJJz1UORjnNt
+         xM2nMDX3m73d0KHhVn4eQPEQXozuBcclCTfOZhc0JSuzY/69fgfuf7ytGCTrZ/E9lZlN
+         mslw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=W/huS475fQsIt3TnWXWCkTB3aVVuQSvTxEVuKvlu6dg=;
+        b=ZIjjMSf3ua7mdBDp+ylF55nRgX10ZxFyu8HCdV93IrwypUgf9yv2Yj49jqtyYcgFtF
+         nwd0YURw3RsJgN8w2b+qei2dp5NLO/iK5lZ82JO7YqOXY+OtgPMTCsULbdpxSwXK2K0B
+         MDA+4JkCXZ8c4rmrRkqb1/LNGO4oyxeS/n6AQfnf7iw7e726+udTmse4+Etip56ryrvP
+         oLW74aNKG8lMAkBoUD7HC0kre0pspm2LPiwU6YfqDS3cTor6qf5K1S7N/ZQafhvXaCF9
+         FZyg4Gq0oVXx3ZcC0K8XeFWcXKnpVbRrsa6uAMLpmk1oh57cfJAxrylG9qt4JG5vNGnt
+         OQLA==
+X-Gm-Message-State: AOAM5329+KwCuH9jk0TU0aDlq398P955V8EZgcLR2E6mo98g7IvvZuRD
+        FxrslqFUgPfciM0gaa6aYTHY5uLLsyZJANfMB/4Rng==
+X-Google-Smtp-Source: ABdhPJzo6xFt7EBwhEM5Yh8tY2Vg5XchQe6Al7fpjWcsazLjuKnluCY0+ec2TvIT8FBNQYO/kkPbCza3XAljg/go4qw=
+X-Received: by 2002:a9d:450a:: with SMTP id w10mr6980762ote.327.1597184557742;
+ Tue, 11 Aug 2020 15:22:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 11 Aug 2020 15:20:47 -0700
-From:   cgoldswo@codeaurora.org
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, pratikp@codeaurora.org,
-        pdaly@codeaurora.org, sudraja@codeaurora.org,
-        iamjoonsoo.kim@lge.com, linux-arm-msm-owner@vger.kernel.org
-Subject: Re: cma_alloc(), add sleep-and-retry for temporary page pinning
-Message-ID: <896f92e8c37936e7cb2914e79273e9e8@codeaurora.org>
-X-Sender: cgoldswo@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+References: <20200810213257.438861-1-urielguajardojr@gmail.com>
+ <20200810214328.GM3982@worktop.programming.kicks-ass.net> <CAG30EecPEzM7hkPxagCD8GQb=JUZhatyW50KAoaHjrHoj4BiFw@mail.gmail.com>
+ <20200811190517.GG2674@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200811190517.GG2674@hirez.programming.kicks-ass.net>
+From:   Uriel Guajardo <urielguajardo@google.com>
+Date:   Tue, 11 Aug 2020 17:22:26 -0500
+Message-ID: <CAG30EeehU=pjZSPDpzM81y1776sM-9XE_vrxJ44QaWU-kVJ=Ug@mail.gmail.com>
+Subject: Re: [PATCH] kunit: added lockdep support
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Uriel Guajardo <urielguajardojr@gmail.com>,
+        Brendan Higgins <brendanhiggins@google.com>, mingo@redhat.com,
+        will@kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, kunit-dev@googlegroups.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-06 18:31, Andrew Morton wrote:
-> On Wed,  5 Aug 2020 19:56:21 -0700 Chris Goldsworthy
-> <cgoldswo@codeaurora.org> wrote:
-> 
->> On mobile devices, failure to allocate from a CMA area constitutes a
->> functional failure.  Sometimes during CMA allocations, we have 
->> observed
->> that pages in a CMA area allocated through alloc_pages(), that we're 
->> trying
->> to migrate away to make room for a CMA allocation, are temporarily 
->> pinned.
->> This temporary pinning can occur when a process that owns the pinned 
->> page
->> is being forked (the example is explained further in the commit text).
->> This patch addresses this issue by adding a sleep-and-retry loop in
->> cma_alloc() . There's another example we know of similar to the above 
->> that
->> occurs during exit_mmap() (in zap_pte_range() specifically), but I 
->> need to
->> determine if this is still relevant today.
-> 
+On Tue, Aug 11, 2020 at 2:05 PM <peterz@infradead.org> wrote:
+>
+> On Tue, Aug 11, 2020 at 12:03:51PM -0500, Uriel Guajardo wrote:
+> > On Mon, Aug 10, 2020 at 4:43 PM Peter Zijlstra <peterz@infradead.org> wrote:
+> > >
+> > > On Mon, Aug 10, 2020 at 09:32:57PM +0000, Uriel Guajardo wrote:
+> > > > +static inline void kunit_check_locking_bugs(struct kunit *test,
+> > > > +                                         unsigned long saved_preempt_count)
+> > > > +{
+> > > > +     preempt_count_set(saved_preempt_count);
+> > > > +#ifdef CONFIG_TRACE_IRQFLAGS
+> > > > +     if (softirq_count())
+> > > > +             current->softirqs_enabled = 0;
+> > > > +     else
+> > > > +             current->softirqs_enabled = 1;
+> > > > +#endif
+> > > > +#if IS_ENABLED(CONFIG_LOCKDEP)
+> > > > +     local_irq_disable();
+> > > > +     if (!debug_locks) {
+> > > > +             kunit_set_failure(test);
+> > > > +             lockdep_reset();
+> > > > +     }
+> > > > +     local_irq_enable();
+> > > > +#endif
+> > > > +}
+> > >
+> > > Unless you can guarantee this runs before SMP brinup, that
+> > > lockdep_reset() is terminally broken.
+> >
+> > Good point. KUnit is initialized after SMP is set up, and KUnit can
+> > also be built as a module, so it's not a guarantee that we can make.
+>
+> Even if you could, there's still the question of wether throwing out all
+> the dependencies learned during boot is a sensible idea.
+>
+> > Is there any other way to turn lockdep back on after we detect a
+> > failure? It would be ideal if lockdep could still run in the next test
+> > case after a failure in a previous one.
+>
+> Not really; the moment lockdep reports a failure it turns off all
+> tracking and we instantly loose state.
+>
+> You'd have to:
+>
+>  - delete the 'mistaken' dependency from the graph such that we loose
+>    the cycle, otherwise it will continue to find and report the cycle.
+>
+>  - put every task through a known empty state which turns the tracking
+>    back on.
+>
+> Bart implemented most of what you need for the first item last year or
+> so, but the remaining bit and the second item would still be a fair
+> amount of work.
+>
+> Also, I'm really not sure it's worth it, the kernel should be free of
+> lock cycles, so just fix one, reboot and continue.
+>
+> > I suppose we could only display the first failure that occurs, similar
+> > to how lockdep does it. But it could also be useful to developers if
+> > they saw failures in subsequent test cases, with the knowledge that
+> > those failures may be unreliable.
+>
+> People already struggle with lockdep reports enough; I really don't want
+> to given them dodgy report to worry about.
 
-> Sounds fairly serious but boy, we're late for 5.9.
-> 
-> I can queue it for 5.10 with a cc:stable so that it gets backported
-> into earlier kernels a couple of months from now, if we think the
-> seriousness justifies backporting(?).
-> 
-
-Queuing this seems like the best way to proceed, if we were to pick up 
-this patch.
-I think we can forgo back-porting this, as this is something that will 
-only be
-needed as vendors such as our selves start using Google's Generic Kernel 
-Image
-(we've carried this patch in our tree for over four years).
-
-> 
-> And...  it really is a sad little patch, isn't it?  Instead of fixing
-> the problem, it reduces the problem's probability by 5x.  Can't we do
-> better than this?
-
-I have one alternative in mind.  I have been able to review the 
-exit_mmap()
-case, so before proceeding, let's do a breakdown of the problem: we can
-categorize the pinning issue we're trying to address here as being one 
-of
-(1) incrementing _refcount and getting context-switched out before
-incrementing _mapcount (applies to forking a process / copy_one_pte()), 
-and
-(2) decrementing _mapcount and getting context-switched out before
-decrementing _refcount (applies to tearing down a process / 
-exit_mmap()).
-So, one alternative would be to insert preempt_disable/enable() calls at
-affected sites. So, for the copy_one_pte() pinning case, we could do the
-following inside of copy_one_pte():
-
-         if (page) {
-+               preempt_disable();
-                 get_page(page);
-                 page_dup_rmap(page, false);
-+               preempt_enable();
-                 rss[mm_counter(page)]++;
-         }
-
-I'm not sure if this approach would be acceptable for the exit_mmap()
-pinning case (applicable when CONFIG_MMU_GATHER_NO_GATHER=y).  For the
-purposes of this discussion, we can look at two function calls inside of
-exit_mmap(), in the order they're called in, to show how the pinning is
-occuring:
-
-     1. Calling unmap_vmas(): this unmaps the pages in each VMA for an
-     exiting task, using zap_pte_range() - zap_pte_range() reduces the
-     _mapcount for each page in a VMA, using page_remove_rmap().  After
-     calling page_remove_rmap(), the page is placed into a list in
-     __tlb_remove_page().  This list of pages will be used when flushing
-     TLB entries later on during the process teardown.
-
-     2. Calling tlb_finish_mmu(): This is will flush the TLB entries
-     associated with pages, before calling put_page() on them, using the
-     previously collected pages from __tlb_remove_page() - the call flow 
-is
-     tlb_flush_mmu() > tlb_flush_mmu() > tlb_flush_mmu_free()
-     > tlb_batch_pages_flush() > free_pages_and_swap_cache() >
-     release_pages(), where release_pages() is described as a "batched
-     put_page()"
-
-The preempt_disable/enable() approach would entail doing the following
-inside of exit_mmap():
-
-+       preempt_disable();
-         unmap_vmas(&tlb, vma, 0, -1);
-         free_pgtables(&tlb, vma, FIRST_USER_ADDRESS, 
-USER_PGTABLES_CEILING);
-         tlb_finish_mmu(&tlb, 0, -1);
-+       preempt_enable();
-
-I'm not sure doing this is feasible, given how long it could take to do 
-the
-process teardown.
-
-The good thing about this patch is that it has been stable in our kernel
-for four years (though for some SoCs we increased the retry counts).  
-One
-thing to stress is that there are other instances of CMA page pinning, 
-that
-this patch isn't attempting to address. Please let me know if you're 
-okay
-with queuing this for the 5.10 merge window - if you are, I can add an
-option to configure the number of retries, and will resend the patch 
-once
-the 5.9 merge window closes.
-
-Thanks,
-
-Chris.
-
--- 
-The Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
-Forum,
-a Linux Foundation Collaborative Project
+Ah, ok! Fair enough, thanks for the info. Although resetting lockdep
+would be nice to have in the future, I think it's enough to only
+report the first failure and warn the user that further test cases
+will have lockdep disabled. People can then fix the issue and then
+re-run it. I'll follow up with a patch that does this.
