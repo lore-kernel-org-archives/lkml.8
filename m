@@ -2,137 +2,236 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3391EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 00:33:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77FDFC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 00:36:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F92420734
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 00:33:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53C222075D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 00:36:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="U/ZYWgTR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727809AbgHKAdq (ORCPT
+        id S1727845AbgHKAg4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 20:33:46 -0400
-Received: from mga09.intel.com ([134.134.136.24]:1633 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727031AbgHKAdp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 20:33:45 -0400
-IronPort-SDR: Zedm+Usn8+hojnSSWutvTtAVch1lxeNj3bemIYRvWB6hajyaScAwsSgdIkkdlgptLGPXpXdh2X
- y1Ft1Vdc2GoA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9709"; a="154762925"
-X-IronPort-AV: E=Sophos;i="5.75,458,1589266800"; 
-   d="scan'208";a="154762925"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2020 17:33:45 -0700
-IronPort-SDR: 063gzgdKOMgiZpAH8oQeS4Eoun0ey+Y6YAyXqhSoJ2Xy/jpw44JDX5GYo3wlJNkdMd++o2poa+
- JSAV91kDjSjQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,458,1589266800"; 
-   d="scan'208";a="290530529"
-Received: from lkp-server01.sh.intel.com (HELO 71729f5ca340) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 10 Aug 2020 17:33:44 -0700
-Received: from kbuild by 71729f5ca340 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1k5IEZ-0000HC-Nr; Tue, 11 Aug 2020 00:33:43 +0000
-Date:   Tue, 11 Aug 2020 08:33:36 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [rcu:dev.2020.08.07a] BUILD SUCCESS
- effe4b83a3d86ad17f82b332e1ad64a4d11df68f
-Message-ID: <5f31e760.BPSgVkMD+0BImrJw%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Mon, 10 Aug 2020 20:36:56 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:47604 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726977AbgHKAgz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 20:36:55 -0400
+Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 0B85258;
+        Tue, 11 Aug 2020 02:36:50 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1597106211;
+        bh=WT68YabTY7ddQtfmBQDHNawp8dKMoR3tuUNkUHEYri8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=U/ZYWgTR0lteTac7vshe8KLcnDQhg18O1y4w88+HuaU7uRPqtIYegIMJcB/v6JOIn
+         1L2sfaJ7TL0nBT1s6YOu6MjZBAJzpOjpLarFFsmxPqyg6xIVlBh6dLQK0QhfmYvFOQ
+         VkGn6r82gLmg5Me9dGehE+y++xE70HnqcOPhnvSI=
+Date:   Tue, 11 Aug 2020 03:36:38 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Swapnil Jakhade <sjakhade@cadence.com>
+Cc:     airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org,
+        a.hajda@samsung.com, narmstrong@baylibre.com, jonas@kwiboo.se,
+        jernej.skrabec@siol.net, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mparab@cadence.com, yamonkar@cadence.com, tomi.valkeinen@ti.com,
+        jsarha@ti.com, nsekhar@ti.com, praneeth@ti.com
+Subject: Re: [PATCH v8 1/3] dt-bindings: drm/bridge: Document Cadence MHDP
+ bridge bindings
+Message-ID: <20200811003638.GB13513@pendragon.ideasonboard.com>
+References: <1596713672-8146-1-git-send-email-sjakhade@cadence.com>
+ <1596713672-8146-2-git-send-email-sjakhade@cadence.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1596713672-8146-2-git-send-email-sjakhade@cadence.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  dev.2020.08.07a
-branch HEAD: effe4b83a3d86ad17f82b332e1ad64a4d11df68f  rcu: Execute RCU reader shortly after rcu_core for strict GPs
+Hi Swapnil,
 
-elapsed time: 722m
+Thank you for the patch.
 
-configs tested: 66
-configs skipped: 1
+On Thu, Aug 06, 2020 at 01:34:30PM +0200, Swapnil Jakhade wrote:
+> From: Yuti Amonkar <yamonkar@cadence.com>
+> 
+> Document the bindings used for the Cadence MHDP DPI/DP bridge in
+> yaml format.
+> 
+> Signed-off-by: Yuti Amonkar <yamonkar@cadence.com>
+> Signed-off-by: Swapnil Jakhade <sjakhade@cadence.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> ---
+>  .../bindings/display/bridge/cdns,mhdp.yaml    | 139 ++++++++++++++++++
+>  1 file changed, 139 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml b/Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml
+> new file mode 100644
+> index 000000000000..dabccefe0983
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml
+> @@ -0,0 +1,139 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/display/bridge/cdns,mhdp.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Cadence MHDP bridge
+> +
+> +maintainers:
+> +  - Swapnil Jakhade <sjakhade@cadence.com>
+> +  - Yuti Amonkar <yamonkar@cadence.com>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - cdns,mhdp8546
+> +      - ti,j721e-mhdp8546
+> +
+> +  reg:
+> +    minItems: 1
+> +    maxItems: 2
+> +    items:
+> +      - description:
+> +          Register block of mhdptx apb registers up to PHY mapped area (AUX_CONFIG_P).
+> +          The AUX and PMA registers are not part of this range, they are instead
+> +          included in the associated PHY.
+> +      - description:
+> +          Register block for DSS_EDP0_INTG_CFG_VP registers in case of TI J7 SoCs.
+> +
+> +  reg-names:
+> +    minItems: 1
+> +    maxItems: 2
+> +    items:
+> +      - const: mhdptx
+> +      - const: j721e-intg
+> +
+> +  clocks:
+> +    maxItems: 1
+> +    description:
+> +      DP bridge clock, used by the IP to know how to translate a number of
+> +      clock cycles into a time (which is used to comply with DP standard timings
+> +      and delays).
+> +
+> +  phys:
+> +    maxItems: 1
+> +    description:
+> +      phandle to the DisplayPort PHY.
+> +
+> +  ports:
+> +    type: object
+> +    description:
+> +      Ports as described in Documentation/devicetree/bindings/graph.txt.
+> +
+> +    properties:
+> +      '#address-cells':
+> +        const: 1
+> +
+> +      '#size-cells':
+> +        const: 0
+> +
+> +      port@0:
+> +        type: object
+> +        description:
+> +          Input port representing the DP bridge input.
+> +
+> +      port@1:
+> +        type: object
+> +        description:
+> +          Output port representing the DP bridge output.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+I've got a chance to study the J721E datasheet, and it shows the DP
+bridge has 4 inputs, to support MST. Shouldn't this already be reflected
+in the DT bindings ? I think it should be as simple as having 4 input
+ports (port@0 to port@3) and one output port (port@4).
 
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a005-20200810
-i386                 randconfig-a001-20200810
-i386                 randconfig-a002-20200810
-i386                 randconfig-a003-20200810
-i386                 randconfig-a006-20200810
-i386                 randconfig-a004-20200810
-x86_64               randconfig-a013-20200810
-x86_64               randconfig-a012-20200810
-x86_64               randconfig-a016-20200810
-x86_64               randconfig-a011-20200810
-x86_64               randconfig-a014-20200810
-x86_64               randconfig-a015-20200810
-i386                 randconfig-a016-20200810
-i386                 randconfig-a011-20200810
-i386                 randconfig-a015-20200810
-i386                 randconfig-a013-20200810
-i386                 randconfig-a012-20200810
-i386                 randconfig-a014-20200810
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
+The bindings are ABI, so care must be taken to support all features and
+avoid future changes that would break backward compatibility. It's fine
+if the driver doesn't implement this feature yet.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> +
+> +    required:
+> +      - port@0
+> +      - port@1
+> +      - '#address-cells'
+> +      - '#size-cells'
+> +
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: ti,j721e-mhdp8546
+> +    then:
+> +      properties:
+> +        reg:
+> +          minItems: 2
+> +        reg-names:
+> +          minItems: 2
+> +    else:
+> +      properties:
+> +        reg:
+> +          maxItems: 1
+> +        reg-names:
+> +          maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - clocks
+> +  - reg
+> +  - reg-names
+> +  - phys
+> +  - ports
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    bus {
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+> +
+> +        mhdp: dp-bridge@f0fb000000 {
+> +            compatible = "cdns,mhdp8546";
+> +            reg = <0xf0 0xfb000000 0x0 0x1000000>;
+> +            reg-names = "mhdptx";
+> +            clocks = <&mhdp_clock>;
+> +            phys = <&dp_phy>;
+> +
+> +            ports {
+> +                #address-cells = <1>;
+> +                #size-cells = <0>;
+> +
+> +                port@0 {
+> +                    reg = <0>;
+> +                    dp_bridge_input: endpoint {
+> +                        remote-endpoint = <&xxx_dpi_output>;
+> +                    };
+> +                };
+> +
+> +                port@1 {
+> +                    reg = <1>;
+> +                    dp_bridge_output: endpoint {
+> +                        remote-endpoint = <&xxx_dp_connector_input>;
+> +                    };
+> +                };
+> +            };
+> +        };
+> +    };
+> +...
+
+-- 
+Regards,
+
+Laurent Pinchart
