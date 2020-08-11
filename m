@@ -2,78 +2,92 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46CE1C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3987C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:04:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10F0A2076B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:03:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F5C720782
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 14:04:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728869AbgHKODP (ORCPT
+        id S1728870AbgHKOEG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 10:03:15 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53632 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728516AbgHKODP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 10:03:15 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 92157B0A5;
-        Tue, 11 Aug 2020 14:03:34 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 5B948DA83C; Tue, 11 Aug 2020 16:02:12 +0200 (CEST)
-Date:   Tue, 11 Aug 2020 16:02:11 +0200
-From:   David Sterba <dsterba@suse.cz>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: btrfs crash in kobject_del while running xfstest
-Message-ID: <20200811140211.GQ2026@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, John Hubbard <jhubbard@nvidia.com>,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-References: <200e5b49-5c51-bbe5-de93-c6bd6339bb7f@nvidia.com>
- <2a3eb48d-6ca1-61c6-20cf-ba2fbda21f45@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2a3eb48d-6ca1-61c6-20cf-ba2fbda21f45@nvidia.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+        Tue, 11 Aug 2020 10:04:06 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:61370 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728516AbgHKOEF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 10:04:05 -0400
+X-IronPort-AV: E=Sophos;i="5.75,461,1589209200"; 
+   d="scan'208";a="54159914"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie6.idc.renesas.com with ESMTP; 11 Aug 2020 23:04:03 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id EC2DF40031F3;
+        Tue, 11 Aug 2020 23:04:01 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v2] arm64: defconfig: Enable R-Car PCIe endpoint driver
+Date:   Tue, 11 Aug 2020 15:03:57 +0100
+Message-Id: <20200811140357.564-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 04:19:47AM -0700, John Hubbard wrote:
-> Somehow the copy-paste of Chris Mason's name failed (user error
-> on my end), sorry about that Chris!
-> 
-> On 8/11/20 4:17 AM, John Hubbard wrote:
-> > Hi,
-> > 
-> > Here's an early warning of a possible problem.
-> > 
-> > I'm seeing a new btrfs crash when running xfstests, as of
-> > 00e4db51259a5f936fec1424b884f029479d3981 ("Merge tag
-> > 'perf-tools-2020-08-10' of
-> > git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux") in linux.git.
-> > 
-> > This doesn't crash in v5.8, so I attempted to bisect, but ended up with
-> > the net-next merge commit as the offending one: commit
-> > 47ec5303d73ea344e84f46660fff693c57641386 ("Merge
-> > git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next"), which
-> > doesn't really help because it's 2088 files changed, of course.
+Enable R-Car PCIe endpoint driver on RZ/G2E board, including enabling
+endpoint configurations CONFIG_PCI_ENDPOINT, CONFIG_PCI_ENDPOINT_CONFIGFS,
+CONFIG_PCI_EPF_TEST and CONFIG_PCI_ENDPOINT_TEST required to use and test
+the driver.
 
-Thanks for the report, it's already known and patch is on the way to
-Linus' tree (ETA before rc1). You can apply
-https://lore.kernel.org/linux-btrfs/20200803062011.17291-1-wqu@suse.com/
-locally.
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+---
+v1->v2
+* Made CONFIG_PCI_EPF_TEST and CONFIG_PCI_ENDPOINT_TEST as modules
+---
+ arch/arm64/configs/defconfig | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 500b782b92df..a03cefd58799 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -208,6 +208,7 @@ CONFIG_HOTPLUG_PCI_ACPI=y
+ CONFIG_PCI_AARDVARK=y
+ CONFIG_PCI_TEGRA=y
+ CONFIG_PCIE_RCAR_HOST=y
++CONFIG_PCIE_RCAR_EP=y
+ CONFIG_PCI_HOST_GENERIC=y
+ CONFIG_PCI_XGENE=y
+ CONFIG_PCIE_ALTERA=y
+@@ -224,6 +225,9 @@ CONFIG_PCIE_ARMADA_8K=y
+ CONFIG_PCIE_KIRIN=y
+ CONFIG_PCIE_HISI_STB=y
+ CONFIG_PCIE_TEGRA194_HOST=m
++CONFIG_PCI_ENDPOINT=y
++CONFIG_PCI_ENDPOINT_CONFIGFS=y
++CONFIG_PCI_EPF_TEST=m
+ CONFIG_DEVTMPFS=y
+ CONFIG_DEVTMPFS_MOUNT=y
+ CONFIG_FW_LOADER_USER_HELPER=y
+@@ -254,6 +258,7 @@ CONFIG_BLK_DEV_NBD=m
+ CONFIG_VIRTIO_BLK=y
+ CONFIG_BLK_DEV_NVME=m
+ CONFIG_SRAM=y
++CONFIG_PCI_ENDPOINT_TEST=m
+ CONFIG_EEPROM_AT24=m
+ CONFIG_EEPROM_AT25=m
+ CONFIG_UACCE=m
+-- 
+2.17.1
+
