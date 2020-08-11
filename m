@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F29C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:02:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE7DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:02:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A3B820716
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:02:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B23420716
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 10:02:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728529AbgHKKCP (ORCPT
+        id S1728638AbgHKKCk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 06:02:15 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:41854 "EHLO inva021.nxp.com"
+        Tue, 11 Aug 2020 06:02:40 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:45670 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728451AbgHKKCK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 06:02:10 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 7B269201F1B;
-        Tue, 11 Aug 2020 12:02:08 +0200 (CEST)
+        id S1728526AbgHKKCP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 06:02:15 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 27E4B1A1972;
+        Tue, 11 Aug 2020 12:02:14 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3E93C201EF8;
-        Tue, 11 Aug 2020 12:02:01 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id AB44B1A1985;
+        Tue, 11 Aug 2020 12:02:06 +0200 (CEST)
 Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 20FD3402DF;
-        Tue, 11 Aug 2020 12:01:49 +0200 (CEST)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id C20E4402F3;
+        Tue, 11 Aug 2020 12:01:57 +0200 (CEST)
 From:   Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
 To:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
@@ -40,9 +40,9 @@ To:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
 Cc:     mingkai.hu@nxp.com, minghuan.Lian@nxp.com,
         Xiaowei Bao <xiaowei.bao@nxp.com>,
         Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Subject: [PATCHv7 03/12] PCI: designware-ep: Move the function of getting MSI capability forward
-Date:   Tue, 11 Aug 2020 17:54:32 +0800
-Message-Id: <20200811095441.7636-4-Zhiqiang.Hou@nxp.com>
+Subject: [PATCHv7 08/12] PCI: layerscape: Modify the MSIX to the doorbell mode
+Date:   Tue, 11 Aug 2020 17:54:37 +0800
+Message-Id: <20200811095441.7636-9-Zhiqiang.Hou@nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200811095441.7636-1-Zhiqiang.Hou@nxp.com>
 References: <20200811095441.7636-1-Zhiqiang.Hou@nxp.com>
@@ -54,9 +54,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Xiaowei Bao <xiaowei.bao@nxp.com>
 
-Move the function of getting MSI capability to the front of init
-function, because the init function of the EP platform driver will use
-the return value by the function of getting MSI capability.
+dw_pcie_ep_raise_msix_irq was never called in the exisitng driver
+before, because the ls1046a platform don't support the MSIX feature
+and msix_capable was always set to false.
+Now that add the ls1088a platform with MSIX support, use the doorbell
+method to support the MSIX feature.
 
 Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
 Reviewed-by: Andrew Murray <andrew.murray@arm.com>
@@ -65,35 +67,23 @@ Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 V7:
  - Rebase the patch without functionality change.
 
- drivers/pci/controller/dwc/pcie-designware-ep.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/pci/controller/dwc/pci-layerscape-ep.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index e76b504ed465..56bd1cd71f16 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -574,10 +574,6 @@ int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
- 		return -EIO;
- 	}
- 
--	ep->msi_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
--
--	ep->msix_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSIX);
--
- 	offset = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_REBAR);
- 	if (offset) {
- 		reg = dw_pcie_readl_dbi(pci, offset + PCI_REBAR_CTRL);
-@@ -664,6 +660,10 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
- 	if (ret < 0)
- 		epc->max_functions = 1;
- 
-+	ep->msi_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
-+
-+	ep->msix_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSIX);
-+
- 	if (ep->ops->ep_init)
- 		ep->ops->ep_init(ep);
- 
+diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+index 9601f9c09cb1..bfab1c694f00 100644
+--- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
++++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+@@ -79,7 +79,8 @@ static int ls_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
+ 	case PCI_EPC_IRQ_MSI:
+ 		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
+ 	case PCI_EPC_IRQ_MSIX:
+-		return dw_pcie_ep_raise_msix_irq(ep, func_no, interrupt_num);
++		return dw_pcie_ep_raise_msix_irq_doorbell(ep, func_no,
++							  interrupt_num);
+ 	default:
+ 		dev_err(pci->dev, "UNKNOWN IRQ type\n");
+ 		return -EINVAL;
 -- 
 2.17.1
 
