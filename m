@@ -2,184 +2,116 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFAD5C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:07:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9546FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:07:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62B632076B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:07:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 666122076B
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:07:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Tyan8PK9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729353AbgHKRH0 (ORCPT
+        id S1729363AbgHKRHn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 13:07:26 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:39974 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729103AbgHKRHP (ORCPT
+        Tue, 11 Aug 2020 13:07:43 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:47488 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729103AbgHKRHm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 13:07:15 -0400
-Received: by mail-io1-f69.google.com with SMTP id t22so10207255iob.7
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 10:07:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=3ZPRrfgd4U28dH7RCjAGl0xrthCHCi5aVcTRVhPqTvM=;
-        b=Dz91L7rKpiRWpl9SIcTLlxTXYIeN8PoB67rPuhj8nAvIzR5cQt6ffEz74fc4512FU7
-         L8KiStwl0rId1P9Qm7EnBEopgsPkz3SoXy0ak4avIsPbQl4m8T2s+/ca/PnMSnEpj+Pr
-         MGUvrmJYkParb50eqQ9s9Y7wXTqW7YE6joQD4rpIOIAzlNHcYlqea/7j8aNyStKk4sls
-         bb6x1r59sro7R1caHB+NLUr0RIPAXSqEmpnOQo3IApkCxu6/xf/s1GAf8C0wT3OCuGP4
-         DdekVpJ6uj5SYKRDIslTCQ14iiRkCZDITdtzkCOEaaYWWp8ENA/sHAZZ72qEVaPPpmRP
-         b4Eg==
-X-Gm-Message-State: AOAM533JwJh5T7IkvcgIIHJwKGW4tDE5xJMvrlE7gDsVHxada7nZhBc2
-        JgtRLUYs/u/rANsXUG+OUTw4yv+8q0eeo6NBuY4AB11m7HiG
-X-Google-Smtp-Source: ABdhPJxK0j2N8H15/HLiv2i5ZMHye9rsVOvMWhuPkrGjHecyzW74B0tXTaV6lYOkeo5F0GQWDSisUUJz/C8OpJqjHcxr0bZjG/ZI
+        Tue, 11 Aug 2020 13:07:42 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07BH7JbR038660;
+        Tue, 11 Aug 2020 12:07:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1597165639;
+        bh=0Uod0ZsKogiy0hAZ1QvXFWCmrhC6bXLrN4FQiX676XY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Tyan8PK9D4AkYSrOMQdfT/LbHRMOR8DHwioYL58bbUdjapkmaOnV+0NGhCemu8u+x
+         Ji6lH/Tp4aWKwqGXzGuqGmDpJC3duRB6MLCodSlnZBP8iH9ieiLD21+42Wv8Xi/Ry/
+         V1vdAw9EiK3j5vZNBS7KG1lPhoqDZ8L3FdTSaTSA=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07BH7JUb008455;
+        Tue, 11 Aug 2020 12:07:19 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 11
+ Aug 2020 12:07:19 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 11 Aug 2020 12:07:19 -0500
+Received: from [10.250.38.37] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07BH7JpU080863;
+        Tue, 11 Aug 2020 12:07:19 -0500
+Subject: Re: [PATCH v32 1/6] dt: bindings: lp50xx: Introduce the lp50xx family
+ of RGB drivers
+To:     Pavel Machek <pavel@ucw.cz>
+CC:     <jacek.anaszewski@gmail.com>, <robh@kernel.org>,
+        <marek.behun@nic.cz>, <devicetree@vger.kernel.org>,
+        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200722153146.8767-1-dmurphy@ti.com>
+ <20200722153146.8767-2-dmurphy@ti.com>
+ <20200811102028.tjea7oqbzb5jjqip@duo.ucw.cz>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <92d1448f-8b17-0ce6-0464-b60ff6a6eb16@ti.com>
+Date:   Tue, 11 Aug 2020 12:07:14 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-Received: by 2002:a92:d8d2:: with SMTP id l18mr21745562ilo.94.1597165634421;
- Tue, 11 Aug 2020 10:07:14 -0700 (PDT)
-Date:   Tue, 11 Aug 2020 10:07:14 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000004991e705ac9d1a83@google.com>
-Subject: inconsistent lock state in sco_conn_del
-From:   syzbot <syzbot+65684128cd7c35bc66a1@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, johan.hedberg@gmail.com, kuba@kernel.org,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        marcel@holtmann.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200811102028.tjea7oqbzb5jjqip@duo.ucw.cz>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Pavel
 
-syzbot found the following issue on:
+On 8/11/20 5:20 AM, Pavel Machek wrote:
+> Hi!
+> On Wed 2020-07-22 10:31:41, Dan Murphy wrote:
+>> Introduce the bindings for the Texas Instruments LP5036, LP5030, LP5024,
+>> LP5018, LP5012 and LP5009 RGB LED device driver.  The LP5036/30/24/18/12/9
+>> can control RGB LEDs individually or as part of a control bank group.
+>> These devices have the ability to adjust the mixing control for the RGB
+>> LEDs to obtain different colors independent of the overall brightness of
+>> the LED grouping.
+>>
+>> Datasheet:
+>> http://www.ti.com/lit/ds/symlink/lp5012.pdf
+>> http://www.ti.com/lit/ds/symlink/lp5024.pdf
+>> http://www.ti.com/lit/ds/symlink/lp5036.pdf
+>>
+>> Reviewed-by: Rob Herring <robh@kernel.org>
+>> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> Acked-by: Pavel Machek <pavel@ucw.cz>
+>
+>> +           multi-led@1 {
+>> +               #address-cells = <1>;
+>> +               #size-cells = <0>;
+>> +               reg = <0x1>;
+>> +               color = <LED_COLOR_ID_MULTI>;
+>> +               function = LED_FUNCTION_CHARGING;
+> These are just examples, but we should really separate "MULTI" colors
+> and "RGB".
 
-HEAD commit:    f80535b9 Add linux-next specific files for 20200810
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=152ffd8a900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=2055bd0d83d5ee16
-dashboard link: https://syzkaller.appspot.com/bug?extid=65684128cd7c35bc66a1
-compiler:       gcc (GCC) 10.1.0-syz 20200507
+If we do then the LP55xx was not updated when the change was made.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+I will change it to RGB since I have to touch this file and probably 
+submit the LP55xx patch as well.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+65684128cd7c35bc66a1@syzkaller.appspotmail.com
-
-================================
-WARNING: inconsistent lock state
-5.8.0-next-20200810-syzkaller #0 Not tainted
---------------------------------
-inconsistent {IN-SOFTIRQ-W} -> {SOFTIRQ-ON-W} usage.
-syz-executor.5/11793 [HC0[0]:SC0[0]:HE1:SE1] takes:
-ffff8880554ec0a0 (slock-AF_BLUETOOTH-BTPROTO_SCO){+.?.}-{2:2}, at: spin_lock include/linux/spinlock.h:354 [inline]
-ffff8880554ec0a0 (slock-AF_BLUETOOTH-BTPROTO_SCO){+.?.}-{2:2}, at: sco_conn_del+0x128/0x270 net/bluetooth/sco.c:176
-{IN-SOFTIRQ-W} state was registered at:
-  lock_acquire+0x1f1/0xad0 kernel/locking/lockdep.c:5005
-  __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-  _raw_spin_lock+0x2a/0x40 kernel/locking/spinlock.c:151
-  spin_lock include/linux/spinlock.h:354 [inline]
-  sco_sock_timeout+0x24/0x140 net/bluetooth/sco.c:83
-  call_timer_fn+0x1ac/0x760 kernel/time/timer.c:1413
-  expire_timers kernel/time/timer.c:1458 [inline]
-  __run_timers.part.0+0x67c/0xaa0 kernel/time/timer.c:1755
-  __run_timers kernel/time/timer.c:1736 [inline]
-  run_timer_softirq+0xae/0x1a0 kernel/time/timer.c:1768
-  __do_softirq+0x2de/0xa24 kernel/softirq.c:298
-  asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:706
-  __run_on_irqstack arch/x86/include/asm/irq_stack.h:22 [inline]
-  run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:48 [inline]
-  do_softirq_own_stack+0x9d/0xd0 arch/x86/kernel/irq_64.c:77
-  invoke_softirq kernel/softirq.c:393 [inline]
-  __irq_exit_rcu kernel/softirq.c:423 [inline]
-  irq_exit_rcu+0x1f3/0x230 kernel/softirq.c:435
-  sysvec_apic_timer_interrupt+0x51/0xf0 arch/x86/kernel/apic/apic.c:1090
-  asm_sysvec_apic_timer_interrupt+0x12/0x20 arch/x86/include/asm/idtentry.h:581
-  arch_local_irq_enable arch/x86/include/asm/paravirt.h:780 [inline]
-  __local_bh_enable_ip+0x101/0x190 kernel/softirq.c:200
-  spin_unlock_bh include/linux/spinlock.h:399 [inline]
-  batadv_nc_purge_paths+0x2a5/0x3a0 net/batman-adv/network-coding.c:470
-  batadv_nc_worker+0x868/0xe50 net/batman-adv/network-coding.c:721
-  process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
-  worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
-  kthread+0x3b5/0x4a0 kernel/kthread.c:292
-  ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
-irq event stamp: 33895
-hardirqs last  enabled at (33895): [<ffffffff81b4172d>] kfree+0x1cd/0x2c0 mm/slab.c:3757
-hardirqs last disabled at (33894): [<ffffffff81b415cf>] kfree+0x6f/0x2c0 mm/slab.c:3746
-softirqs last  enabled at (30344): [<ffffffff88000f2f>] asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:706
-softirqs last disabled at (30333): [<ffffffff88000f2f>] asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:706
-
-other info that might help us debug this:
- Possible unsafe locking scenario:
-
-       CPU0
-       ----
-  lock(slock-AF_BLUETOOTH-BTPROTO_SCO);
-  <Interrupt>
-    lock(slock-AF_BLUETOOTH-BTPROTO_SCO);
-
- *** DEADLOCK ***
-
-3 locks held by syz-executor.5/11793:
- #0: ffff88805b990f40 (&hdev->req_lock){+.+.}-{3:3}, at: hci_dev_do_close+0xf5/0x1080 net/bluetooth/hci_core.c:1720
- #1: ffff88805b990078 (&hdev->lock){+.+.}-{3:3}, at: hci_dev_do_close+0x253/0x1080 net/bluetooth/hci_core.c:1757
- #2: ffffffff8a9a5c28 (hci_cb_list_lock){+.+.}-{3:3}, at: hci_disconn_cfm include/net/bluetooth/hci_core.h:1435 [inline]
- #2: ffffffff8a9a5c28 (hci_cb_list_lock){+.+.}-{3:3}, at: hci_conn_hash_flush+0xc7/0x220 net/bluetooth/hci_conn.c:1557
-
-stack backtrace:
-CPU: 0 PID: 11793 Comm: syz-executor.5 Not tainted 5.8.0-next-20200810-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- print_usage_bug kernel/locking/lockdep.c:4020 [inline]
- valid_state kernel/locking/lockdep.c:3361 [inline]
- mark_lock_irq kernel/locking/lockdep.c:3560 [inline]
- mark_lock.cold+0x7a/0x7f kernel/locking/lockdep.c:4006
- mark_usage kernel/locking/lockdep.c:3923 [inline]
- __lock_acquire+0x8cd/0x5640 kernel/locking/lockdep.c:4380
- lock_acquire+0x1f1/0xad0 kernel/locking/lockdep.c:5005
- __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
- _raw_spin_lock+0x2a/0x40 kernel/locking/spinlock.c:151
- spin_lock include/linux/spinlock.h:354 [inline]
- sco_conn_del+0x128/0x270 net/bluetooth/sco.c:176
- sco_disconn_cfm net/bluetooth/sco.c:1178 [inline]
- sco_disconn_cfm+0x62/0x80 net/bluetooth/sco.c:1171
- hci_disconn_cfm include/net/bluetooth/hci_core.h:1438 [inline]
- hci_conn_hash_flush+0x114/0x220 net/bluetooth/hci_conn.c:1557
- hci_dev_do_close+0x5c6/0x1080 net/bluetooth/hci_core.c:1770
- hci_unregister_dev+0x1bd/0xe30 net/bluetooth/hci_core.c:3790
- vhci_release+0x70/0xe0 drivers/bluetooth/hci_vhci.c:340
- __fput+0x285/0x920 fs/file_table.c:281
- task_work_run+0xdd/0x190 kernel/task_work.c:135
- exit_task_work include/linux/task_work.h:25 [inline]
- do_exit+0xb7d/0x29f0 kernel/exit.c:806
- do_group_exit+0x125/0x310 kernel/exit.c:903
- get_signal+0x40b/0x1ee0 kernel/signal.c:2743
- arch_do_signal+0x82/0x2520 arch/x86/kernel/signal.c:811
- exit_to_user_mode_loop kernel/entry/common.c:135 [inline]
- exit_to_user_mode_prepare+0x15d/0x1c0 kernel/entry/common.c:166
- syscall_exit_to_user_mode+0x59/0x2b0 kernel/entry/common.c:241
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45ce69
-Code: Bad RIP value.
-RSP: 002b:00007fd132defcf8 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
-RAX: fffffffffffffe00 RBX: 000000000118bfc8 RCX: 000000000045ce69
-RDX: 0000000000000000 RSI: 0000000000000080 RDI: 000000000118bfc8
-RBP: 000000000118bfc0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 000000000118bfcc
-R13: 00007ffd9693ba5f R14: 00007fd132df09c0 R15: 000000000118bfcc
+Dan
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> Best regards,
+> 									Pavel
