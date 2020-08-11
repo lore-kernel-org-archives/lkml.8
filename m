@@ -2,124 +2,101 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A465C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 01:57:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27F75C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 01:57:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BE9620716
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 01:57:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PijYJW8U"
+	by mail.kernel.org (Postfix) with ESMTP id 0536120716
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 01:57:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728049AbgHKB5G (ORCPT
+        id S1728096AbgHKB5r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 21:57:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48022 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727985AbgHKB5F (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 21:57:05 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B893C06174A;
-        Mon, 10 Aug 2020 18:57:05 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id t6so5955075pgq.1;
-        Mon, 10 Aug 2020 18:57:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=8TNdl+C8uye8Ja5jd+YiNm9s++KEtit0cbi0OQRWSFY=;
-        b=PijYJW8UUZ4ppYLApZYvd5T3IzVvKdIZrU/doMYicvI2K1gt96P+DHyvD0/PT3zT9g
-         7ECqjPg/Y6nAmxapa4QURVDrnERrKz80gO6ghlrjgEAzcqRimMTvnw1XR38ajO0ih8CY
-         BRKQUF6f3ou95MP8jW78OvNhE1rsDVqqcYvkS6Os4afu5Q6+7lH+U2hsniG8VlzXKMbJ
-         ul/wplryuiyNWkDHYss8NOlVGmowDyHCVxtkrS2yKQjVqmxCV6ux53pD/6tvyyFmxVAJ
-         10zsmaV7zObAE4M+MJy0NJfGSJOuIMf8ZD0gl+Ejbc6/o8UfjWhXAQcRWWHqHLPeZmjN
-         LWdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=8TNdl+C8uye8Ja5jd+YiNm9s++KEtit0cbi0OQRWSFY=;
-        b=ksJTxLDGbfT1ZD63XTnOEeHtZYZywMkqSt/lDri3UQKL3XpZlRTMkaEAxi7EGhWqPo
-         9QeWcZjiNyvEuMLjghZvM39Yz/WW4UWG0SdcvYePGHSBTMjkfbXAoJvm4i70irF5Z7RY
-         LUc4CkQB7XW0pO1gCNH9G6KWBgyssIB8iG2dCN4YsdhX6MHAX1swRgfWPILaPOxZ9TaL
-         CffCdbKdtznboEsd1aWBPC0iSq5h5CCx00EgjNjWNs0UFBUj0cUvHl/8rWc6bKnkcchs
-         MYGx9yF+PLJwx8y+ClC55d0NY6IrkvnBEIZNfJzUmJbh29ds2LczbUGX4p+PTL7+2Pw0
-         yr9w==
-X-Gm-Message-State: AOAM5301G2EaQR2T20f7dTLm/QqQcz2cRuDSANBHKGlpumZ4E8dE946y
-        LFQ+ngNVS4Na21aGEye2XVf0auy0
-X-Google-Smtp-Source: ABdhPJzB+chc/PeTX5RV7BhujvSJA/PNj8ppEtLCvpPemnsswkVm/20b/HN5CTjcL7f/qjFDhzKlyg==
-X-Received: by 2002:a63:5213:: with SMTP id g19mr12981742pgb.44.1597111024494;
-        Mon, 10 Aug 2020 18:57:04 -0700 (PDT)
-Received: from sol (106-69-161-64.dyn.iinet.net.au. [106.69.161.64])
-        by smtp.gmail.com with ESMTPSA id b15sm19781452pgk.14.2020.08.10.18.57.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Aug 2020 18:57:03 -0700 (PDT)
-Date:   Tue, 11 Aug 2020 09:56:59 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        bgolaszewski@baylibre.com, linus.walleij@linaro.org
-Subject: Re: [PATCH v3 05/18] gpiolib: cdev: support GPIO_V2_GET_LINE_IOCTL
- and GPIO_V2_LINE_GET_VALUES_IOCTL
-Message-ID: <20200811015659.GB25507@sol>
-References: <20200809132529.264312-1-warthog618@gmail.com>
- <20200809132529.264312-6-warthog618@gmail.com>
+        Mon, 10 Aug 2020 21:57:47 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:33512 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727985AbgHKB5r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 21:57:47 -0400
+Received: from bogon.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9BxK+QS+zFf+ikHAA--.3177S2;
+        Tue, 11 Aug 2020 09:57:38 +0800 (CST)
+From:   Xingxing Su <suxingxing@loongson.cn>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, XingxingSu <suxingxing@loongson.cn>
+Subject: [PATCH] seqlock: Fix build errors
+Date:   Tue, 11 Aug 2020 09:57:29 +0800
+Message-Id: <1597111049-1950-1-git-send-email-suxingxing@loongson.cn>
+X-Mailer: git-send-email 2.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200809132529.264312-6-warthog618@gmail.com>
+Content-Type: text/plain; charset=y
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf9BxK+QS+zFf+ikHAA--.3177S2
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+        VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYA7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E
+        6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
+        kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8I
+        cVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4
+        A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487M2AExVAIFx02
+        aVAFz4v204v7Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWrXw
+        Av7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48J
+        M4x0x7Aq67IIx4CEVc8vx2IErcIFxwAKzVC20s0267AEwI8IwI0ExsIj0wCY02Avz4vE14
+        v_KwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
+        6r1j6r18MI8I3I0E7480Y4vE14v26r1j6r18MI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2
+        Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_
+        Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r1j6r
+        4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7VUj3rc3UU
+        UUU==
+X-CM-SenderInfo: pvx0x0xj0l0wo6or00hjvr0hdfq/1tbiAQAFC13QvMLgmQACsH
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 09, 2020 at 09:25:16PM +0800, Kent Gibson wrote:
-> Add support for requesting lines using the GPIO_V2_GET_LINE_IOCTL, and
-> returning their current values using GPIO_V2_LINE_GET_VALUES_IOCTL.
-> 
-> Signed-off-by: Kent Gibson <warthog618@gmail.com>
-> ---
-> 
-[snip]
+From: XingxingSu <suxingxing@loongson.cn>
 
-> +static long line_get_values(struct line *line, void __user *ip)
-> +{
-> +	struct gpio_v2_line_values lv;
-> +	DECLARE_BITMAP(vals, GPIO_V2_LINES_MAX);
-> +	DECLARE_BITMAP(mask, GPIO_V2_LINES_MAX);
-> +	struct gpio_desc **descs;
-> +	int ret, i, didx, num_get = 0;
-> +
-> +	/* NOTE: It's ok to read values of output lines. */
-> +	if (copy_from_user(&lv, ip, sizeof(lv)))
-> +		return -EFAULT;
-> +
-> +	if (lv.mask == 0)
-> +		return -EINVAL;
-> +
-> +	bitmap_from_u64(mask, lv.mask);
-> +	num_get = bitmap_weight(mask, line->num_descs);
+Fix the following build errors:
 
-Nuts, that doesn't do what I intend, and is part of a failed experiment
-that I thought I had reverted.
+In file included from ./include/linux/time.h:6:0,
+                 from ./include/linux/compat.h:10,
+                 from arch/mips/kernel/asm-offsets.c:12:
+./include/linux/seqlock.h: In function ‘write_seqcount_begin_nested’:
+./include/linux/seqlock.h:286:2: error: implicit declaration of function 
+ ‘raw_smp_processor_id’ [-Werror=implicit-function-declaration]
+  lockdep_assert_preemption_disabled();
+  ^
+./arch/mips/include/asm/smp.h: At top level:
+./arch/mips/include/asm/smp.h:28:19: error: static declaration of 
+ ‘raw_smp_processor_id’ follows non-static declaration
+ static inline int raw_smp_processor_id(void)
+                 ^
+cc1: some warnings being treated as errors
+scripts/Makefile.build:117: recipe for target 'arch/mips/kernel/asm-offsets.s' failed
+make[1]: *** [arch/mips/kernel/asm-offsets.s] Error 1
+arch/mips/Makefile:396: recipe for target 'archprepare' failed
+make: *** [archprepare] Error 2
 
-Assume that in the next version the mask handling will be similar to
-line_set_values_locked in patch 09.
 
-i.e. 
-	for (i = 0; i < line->num_descs; i++)
-		if (lv.mask & BIT_ULL(i))
-			num_get++;
+Signed-off-by: XingxingSu <suxingxing@loongson.cn>
+---
+ include/linux/seqlock.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-and the subsequent mask tests will be against lv.mask instead of the
-mask bitmap declared above (which will be gone).
+diff --git a/include/linux/seqlock.h b/include/linux/seqlock.h
+index 54bc204..4763c13 100644
+--- a/include/linux/seqlock.h
++++ b/include/linux/seqlock.h
+@@ -17,6 +17,7 @@
+ #include <linux/lockdep.h>
+ #include <linux/compiler.h>
+ #include <linux/kcsan-checks.h>
++#include <linux/smp.h>
+ #include <asm/processor.h>
+ 
+ /*
+-- 
+2.1.0
 
-I won't do a v4 just yet though - there is sure to be other things
-to go in there.
-
-Cheers,
-Kent.
