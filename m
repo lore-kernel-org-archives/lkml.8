@@ -2,586 +2,180 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CC8DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 16:58:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8BD5C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 16:59:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53C732076B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 16:58:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="TxLWT7jJ"
+	by mail.kernel.org (Postfix) with ESMTP id 8EBD62076C
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 16:59:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729271AbgHKQ6O (ORCPT
+        id S1729349AbgHKQ7h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 12:58:14 -0400
-Received: from mail-eopbgr130042.outbound.protection.outlook.com ([40.107.13.42]:24131
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729253AbgHKQ5i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 12:57:38 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JIeNru/YkNXeDKqdRBV/Qf9kUWXib93ZNpE/iZjHpRuwq9cH2MUFAi5pijoVeciYNrjTUTD4SigeM85LkLhC2jPNhO+bfiaUShtghwzZ9fzcJaxgJx8R/awNSw7Hc1kFEJ9MnEABNi7c1Xm87BnNuimc9r+uEmxdK5l8Ugc3ykP2avU21cSQTM1mpTd3IMObvFEROBKn357ceKsL+B5WEZSUKWcqiFCGH+N0/cTQK1NsKR96z6GXDd7hargyl4j8fTDs7my5b4PBoYLsT6W2mYkaHJRyAQTmDb1hBstla49vftvFgYG4JYOSHa2HUS8YgPAhtchg/+nLhz508fwu5Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/sLLe4aKx9uY5vx95LS9KGu/ZAh34CYYf6bXCMFpAn0=;
- b=CSJPcWpepQyL3ggXww02ZRRWhmkGMTWaZau0lReOJYTulMvWFN/UlN4X515F94YpK02sTPUc988L1mc78e4yRXtRSh2KMPW/E0IGYNc4WvEyn+LBuYr6+S7yAJQ//p1N+gERCHzd0sKnCvLROWHTxSO0GzHSFdjAvEKEuF92zWZoMapGcEzMVIIuifCtNy/2zsCur9OB82FvFympc0+a4sqLaHf9psbBLj3/38+ZVgnfHp/rSyjey172NCmghJAs/N+sVMA0Oh9tcrHNi1bUNhP0Hkacg1VCMML0D9dUCqkCmlJqe8ZYSfbjYiubAsboiY3HtVGMrrgQnw4S8HecyQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
- is 193.240.239.45) smtp.rcpttodomain=perex.cz smtp.mailfrom=diasemi.com;
- dmarc=fail (p=none sp=none pct=100) action=none header.from=diasemi.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=dialogsemiconductor.onmicrosoft.com;
- s=selector1-dialogsemiconductor-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/sLLe4aKx9uY5vx95LS9KGu/ZAh34CYYf6bXCMFpAn0=;
- b=TxLWT7jJ0PmRjvx6yWR0ENAYehWjUkbYlBcusXEeDMgljI2ATOh4vIvKfeFd+hugqU4JEgeWzYWhDlty/sqtKBl51smpStfNS0kAIe64jkzgdmmSXWwKPImQrsc3Y1SbZAznLkuXf7zMCOL2zGYDzw13V+aUktYy/kKoUeodTzQ=
-Received: from AM6PR02CA0018.eurprd02.prod.outlook.com (2603:10a6:20b:6e::31)
- by AM5PR1001MB1121.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:203:12::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.16; Tue, 11 Aug
- 2020 16:57:28 +0000
-Received: from HE1EUR02FT053.eop-EUR02.prod.protection.outlook.com
- (2603:10a6:20b:6e:cafe::76) by AM6PR02CA0018.outlook.office365.com
- (2603:10a6:20b:6e::31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.19 via Frontend
- Transport; Tue, 11 Aug 2020 16:57:28 +0000
-X-MS-Exchange-Authentication-Results: spf=softfail (sender IP is
- 193.240.239.45) smtp.mailfrom=diasemi.com; perex.cz; dkim=none (message not
- signed) header.d=none;perex.cz; dmarc=fail action=none
- header.from=diasemi.com;
-Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
- diasemi.com discourages use of 193.240.239.45 as permitted sender)
-Received: from mailrelay1.diasemi.com (193.240.239.45) by
- HE1EUR02FT053.mail.protection.outlook.com (10.152.11.109) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.3261.16 via Frontend Transport; Tue, 11 Aug 2020 16:57:27 +0000
-Received: from swsrvapps-01.diasemi.com (10.20.28.141) by
- NB-EX-CASHUB01.diasemi.com (10.1.16.140) with Microsoft SMTP Server id
- 14.3.468.0; Tue, 11 Aug 2020 18:57:24 +0200
-Received: by swsrvapps-01.diasemi.com (Postfix, from userid 22379)      id
- C87343FBA6; Tue, 11 Aug 2020 17:57:24 +0100 (BST)
-Message-ID: <f7603a4855647429b754ce76f887ec441622015c.1597164865.git.Adam.Thomson.Opensource@diasemi.com>
-In-Reply-To: <cover.1597164865.git.Adam.Thomson.Opensource@diasemi.com>
-References: <cover.1597164865.git.Adam.Thomson.Opensource@diasemi.com>
-From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Date:   Tue, 11 Aug 2020 17:57:24 +0100
-Subject: [PATCH 2/3] ASoC: da7219: Move soft reset handling to codec level
- probe
-To:     Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>
-CC:     Yong Zhi <yong.zhi@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        Support Opensource <support.opensource@diasemi.com>
+        Tue, 11 Aug 2020 12:59:37 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:53753 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729125AbgHKQ7T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 12:59:19 -0400
+Received: by mail-io1-f69.google.com with SMTP id f22so10177172iof.20
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 09:59:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=l3wlPqr6ipWe8Opm66dLPgisSNnhHiymwvjRBVgKADg=;
+        b=qxt1vA3NA9BRt0ZUy4xw0mSrrojYTAmyCTxgSZl24BQEc9J+VdmfOu0EeCvQLKSJ+S
+         0w1SY7Vh6RwD+E7EBFJkt9hmeHjgvdVj1QMUHtuUak6F9xTmwAVSKYo/JRuQnUm6yM6s
+         UN+wUoY+jXg4fxZvOg6E82PssrtdgoYBSBv5LasNJzjlAmOgWMvCG1oL82pUGElPoSyM
+         3QWK+eiy5DiLWGDgi4gA3o7d/h5+m3SpKVcGsDS+dQDqiPBthM8tMaKbiIonByfH7s+X
+         w0TAomFvEd2fUK4DDUUy4gj44E6I8iMfefR9SDnb6DeRbCGjaHPM1KqDAhlqvakIrMYL
+         9nYQ==
+X-Gm-Message-State: AOAM530RuObBdDIsDlx0A2boDDsTfTjsBK613NEyilpL9mBLyY28ePNF
+        RjHaHJc7s39qH663cxhmBmFVM9xLP5tZ02Xy5AehmsvEe5D0
+X-Google-Smtp-Source: ABdhPJxJQUhNpwViTKlqIYQHdVNHdSYbUVL2IQMxAttPZayrs+KLh/wyllEFuWMrDd47AXUX6rFXx/1jkrZkBqrw35YQnudVFt++
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: fbbe1430-16e2-4d1d-fd68-08d83e17a11d
-X-MS-TrafficTypeDiagnostic: AM5PR1001MB1121:
-X-Microsoft-Antispam-PRVS: <AM5PR1001MB112183D646B6D0D1BD9FD8B1A7450@AM5PR1001MB1121.EURPRD10.PROD.OUTLOOK.COM>
-X-MS-Oob-TLC-OOBClassifiers: OLM:63;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: TIX+eO2yfD+B2ersWHFpi7Zm2e63MFrZ0EinIEDkuVTI348T1W0dPyG/s8FmgwGd5ZaS6pbUoWc/bxoMdSlztg3gA08c7VDH7GpQN+1WGI9yB9+yqu5AThkuWY0tHOcg7QADRdTJD04+YHRryJos6BN6WI1y2wEQbY+DqEnRM2ZTte9aAAftRvLRitjwHx0clNxatz4xy9U6NI3XEkftePPa54Pe4iZweuCXOEr+O4/EGxiXKvgtGkyyORkDurnNbNQjBHE55rXwfcrc9QV/c8t+p8vUdBCmCK+n7PxZscp2ydbuEHQXwF9DSDq7pdMuxx+M+AyrrwXq6yo3UsLPPge8WCkihAdEOtvDEcI+cKLiayAKa5fQoYv3tuOXZtXdJ8JdOxzveEdwPnAUOwQgC9wIbG2kBoJhhDnTdm1TJ7Rf2xJjS7ZZwJkMnjRkvTq9+z0Yih0VlMXOiWO+L3sbgA==
-X-Forefront-Antispam-Report: CIP:193.240.239.45;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mailrelay1.diasemi.com;PTR:InfoDomainNonexistent;CAT:NONE;SFTY:;SFS:(4636009)(376002)(136003)(39850400004)(396003)(346002)(46966005)(4326008)(36756003)(336012)(47076004)(82740400003)(30864003)(426003)(33310700002)(81166007)(2906002)(83380400001)(478600001)(82310400002)(356005)(8676002)(8936002)(6266002)(107886003)(70586007)(70206006)(42186006)(186003)(5660300002)(110136005)(36906005)(86362001)(26005)(2616005)(316002)(54906003)(136400200001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: diasemi.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Aug 2020 16:57:27.8443
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: fbbe1430-16e2-4d1d-fd68-08d83e17a11d
-X-MS-Exchange-CrossTenant-Id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=511e3c0e-ee96-486e-a2ec-e272ffa37b7c;Ip=[193.240.239.45];Helo=[mailrelay1.diasemi.com]
-X-MS-Exchange-CrossTenant-AuthSource: HE1EUR02FT053.eop-EUR02.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR1001MB1121
+X-Received: by 2002:a02:c919:: with SMTP id t25mr27761316jao.38.1597165157907;
+ Tue, 11 Aug 2020 09:59:17 -0700 (PDT)
+Date:   Tue, 11 Aug 2020 09:59:17 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000e2852705ac9cfd73@google.com>
+Subject: KASAN: slab-out-of-bounds Read in lock_sock_nested
+From:   syzbot <syzbot+9a0875bc1b2ca466b484@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, johan.hedberg@gmail.com, kuba@kernel.org,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        marcel@holtmann.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As part of the reorganisation of the device level and codec
-level probe functionlity, the soft reset handling should really
-reside at the codec level and after the instantiation of supplies.
-This commit makes the relevant changes to support this change of
-scope including the remove of devm_* functions being called for
-regulator instantiation at the codec level.
+Hello,
 
-Signed-off-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+syzbot found the following issue on:
+
+HEAD commit:    bfdd5aaa Merge tag 'Smack-for-5.9' of git://github.com/csc..
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=167b4d3a900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7bb894f55faf8242
+dashboard link: https://syzkaller.appspot.com/bug?extid=9a0875bc1b2ca466b484
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+9a0875bc1b2ca466b484@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: slab-out-of-bounds in __lock_acquire+0x41d0/0x5640 kernel/locking/lockdep.c:4296
+Read of size 8 at addr ffff8880497850a0 by task kworker/1:2/23918
+
+CPU: 1 PID: 23918 Comm: kworker/1:2 Not tainted 5.8.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: events l2cap_chan_timeout
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xae/0x436 mm/kasan/report.c:383
+ __kasan_report mm/kasan/report.c:513 [inline]
+ kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
+ __lock_acquire+0x41d0/0x5640 kernel/locking/lockdep.c:4296
+ lock_acquire+0x1f1/0xad0 kernel/locking/lockdep.c:5005
+ __raw_spin_lock_bh include/linux/spinlock_api_smp.h:135 [inline]
+ _raw_spin_lock_bh+0x2f/0x40 kernel/locking/spinlock.c:175
+ spin_lock_bh include/linux/spinlock.h:359 [inline]
+ lock_sock_nested+0x3b/0x110 net/core/sock.c:3040
+ l2cap_sock_teardown_cb+0x88/0x400 net/bluetooth/l2cap_sock.c:1520
+ l2cap_chan_del+0xad/0x1300 net/bluetooth/l2cap_core.c:618
+ l2cap_chan_close+0x118/0xb10 net/bluetooth/l2cap_core.c:823
+ l2cap_chan_timeout+0x173/0x450 net/bluetooth/l2cap_core.c:436
+ process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
+ worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+ kthread+0x3b5/0x4a0 kernel/kthread.c:292
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+
+Allocated by task 3899:
+ save_stack+0x1b/0x40 mm/kasan/common.c:48
+ set_track mm/kasan/common.c:56 [inline]
+ __kasan_kmalloc.constprop.0+0xc2/0xd0 mm/kasan/common.c:494
+ __do_kmalloc mm/slab.c:3656 [inline]
+ __kmalloc+0x17a/0x340 mm/slab.c:3665
+ kmalloc include/linux/slab.h:560 [inline]
+ tomoyo_realpath_from_path+0xc3/0x620 security/tomoyo/realpath.c:254
+ tomoyo_get_realpath security/tomoyo/file.c:151 [inline]
+ tomoyo_check_open_permission+0x272/0x380 security/tomoyo/file.c:771
+ tomoyo_file_open security/tomoyo/tomoyo.c:313 [inline]
+ tomoyo_file_open+0xa3/0xd0 security/tomoyo/tomoyo.c:308
+ security_file_open+0x52/0x3f0 security/security.c:1574
+ do_dentry_open+0x3a0/0x1290 fs/open.c:815
+ do_open fs/namei.c:3243 [inline]
+ path_openat+0x1bb9/0x2750 fs/namei.c:3360
+ do_filp_open+0x17e/0x3c0 fs/namei.c:3387
+ do_sys_openat2+0x16f/0x3b0 fs/open.c:1179
+ do_sys_open fs/open.c:1195 [inline]
+ ksys_open include/linux/syscalls.h:1390 [inline]
+ __do_sys_open fs/open.c:1201 [inline]
+ __se_sys_open fs/open.c:1199 [inline]
+ __x64_sys_open+0x119/0x1c0 fs/open.c:1199
+ do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Freed by task 3899:
+ save_stack+0x1b/0x40 mm/kasan/common.c:48
+ set_track mm/kasan/common.c:56 [inline]
+ kasan_set_free_info mm/kasan/common.c:316 [inline]
+ __kasan_slab_free+0xf5/0x140 mm/kasan/common.c:455
+ __cache_free mm/slab.c:3426 [inline]
+ kfree+0x103/0x2c0 mm/slab.c:3757
+ tomoyo_realpath_from_path+0x191/0x620 security/tomoyo/realpath.c:291
+ tomoyo_get_realpath security/tomoyo/file.c:151 [inline]
+ tomoyo_check_open_permission+0x272/0x380 security/tomoyo/file.c:771
+ tomoyo_file_open security/tomoyo/tomoyo.c:313 [inline]
+ tomoyo_file_open+0xa3/0xd0 security/tomoyo/tomoyo.c:308
+ security_file_open+0x52/0x3f0 security/security.c:1574
+ do_dentry_open+0x3a0/0x1290 fs/open.c:815
+ do_open fs/namei.c:3243 [inline]
+ path_openat+0x1bb9/0x2750 fs/namei.c:3360
+ do_filp_open+0x17e/0x3c0 fs/namei.c:3387
+ do_sys_openat2+0x16f/0x3b0 fs/open.c:1179
+ do_sys_open fs/open.c:1195 [inline]
+ ksys_open include/linux/syscalls.h:1390 [inline]
+ __do_sys_open fs/open.c:1201 [inline]
+ __se_sys_open fs/open.c:1199 [inline]
+ __x64_sys_open+0x119/0x1c0 fs/open.c:1199
+ do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+The buggy address belongs to the object at ffff888049784000
+ which belongs to the cache kmalloc-4k of size 4096
+The buggy address is located 160 bytes to the right of
+ 4096-byte region [ffff888049784000, ffff888049785000)
+The buggy address belongs to the page:
+page:ffffea000125e100 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 head:ffffea000125e100 order:1 compound_mapcount:0
+flags: 0xfffe0000010200(slab|head)
+raw: 00fffe0000010200 ffffea0001c34088 ffffea000122f088 ffff8880aa002000
+raw: 0000000000000000 ffff888049784000 0000000100000001 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff888049784f80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888049785000: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>ffff888049785080: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+                               ^
+ ffff888049785100: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff888049785180: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+==================================================================
+
+
 ---
- sound/soc/codecs/da7219.c | 371 +++++++++++++++++++++++-----------------------
- 1 file changed, 188 insertions(+), 183 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/sound/soc/codecs/da7219.c b/sound/soc/codecs/da7219.c
-index 82d35bc..0d1c70f8 100644
---- a/sound/soc/codecs/da7219.c
-+++ b/sound/soc/codecs/da7219.c
-@@ -1844,19 +1844,19 @@ static int da7219_set_bias_level(struct snd_soc_component *component,
- 	[DA7219_SUPPLY_VDDIO] = "VDDIO",
- };
- 
--static int da7219_handle_supplies(struct snd_soc_component *component)
-+static int da7219_handle_supplies(struct snd_soc_component *component,
-+				  u8 *io_voltage_lvl)
- {
- 	struct da7219_priv *da7219 = snd_soc_component_get_drvdata(component);
- 	struct regulator *vddio;
--	u8 io_voltage_lvl = DA7219_IO_VOLTAGE_LEVEL_2_5V_3_6V;
- 	int i, ret;
- 
- 	/* Get required supplies */
- 	for (i = 0; i < DA7219_NUM_SUPPLIES; ++i)
- 		da7219->supplies[i].supply = da7219_supply_names[i];
- 
--	ret = devm_regulator_bulk_get(component->dev, DA7219_NUM_SUPPLIES,
--				      da7219->supplies);
-+	ret = regulator_bulk_get(component->dev, DA7219_NUM_SUPPLIES,
-+				 da7219->supplies);
- 	if (ret) {
- 		dev_err(component->dev, "Failed to get supplies");
- 		return ret;
-@@ -1868,21 +1868,18 @@ static int da7219_handle_supplies(struct snd_soc_component *component)
- 	if (ret < 1200000)
- 		dev_warn(component->dev, "Invalid VDDIO voltage\n");
- 	else if (ret < 2800000)
--		io_voltage_lvl = DA7219_IO_VOLTAGE_LEVEL_1_2V_2_8V;
-+		*io_voltage_lvl = DA7219_IO_VOLTAGE_LEVEL_1_2V_2_8V;
-+	else
-+		*io_voltage_lvl = DA7219_IO_VOLTAGE_LEVEL_2_5V_3_6V;
- 
- 	/* Enable main supplies */
- 	ret = regulator_bulk_enable(DA7219_NUM_SUPPLIES, da7219->supplies);
- 	if (ret) {
- 		dev_err(component->dev, "Failed to enable supplies");
-+		regulator_bulk_free(DA7219_NUM_SUPPLIES, da7219->supplies);
- 		return ret;
- 	}
- 
--	/* Ensure device in active mode */
--	snd_soc_component_write(component, DA7219_SYSTEM_ACTIVE, DA7219_SYSTEM_ACTIVE_MASK);
--
--	/* Update IO voltage level range */
--	snd_soc_component_write(component, DA7219_IO_CTRL, io_voltage_lvl);
--
- 	return 0;
- }
- 
-@@ -2248,6 +2245,142 @@ static void da7219_handle_pdata(struct snd_soc_component *component)
- 	}
- }
- 
-+
-+/*
-+ * Regmap configs
-+ */
-+
-+static struct reg_default da7219_reg_defaults[] = {
-+	{ DA7219_MIC_1_SELECT, 0x00 },
-+	{ DA7219_CIF_TIMEOUT_CTRL, 0x01 },
-+	{ DA7219_SR_24_48, 0x00 },
-+	{ DA7219_SR, 0x0A },
-+	{ DA7219_CIF_I2C_ADDR_CFG, 0x02 },
-+	{ DA7219_PLL_CTRL, 0x10 },
-+	{ DA7219_PLL_FRAC_TOP, 0x00 },
-+	{ DA7219_PLL_FRAC_BOT, 0x00 },
-+	{ DA7219_PLL_INTEGER, 0x20 },
-+	{ DA7219_DIG_ROUTING_DAI, 0x10 },
-+	{ DA7219_DAI_CLK_MODE, 0x01 },
-+	{ DA7219_DAI_CTRL, 0x28 },
-+	{ DA7219_DAI_TDM_CTRL, 0x40 },
-+	{ DA7219_DIG_ROUTING_DAC, 0x32 },
-+	{ DA7219_DAI_OFFSET_LOWER, 0x00 },
-+	{ DA7219_DAI_OFFSET_UPPER, 0x00 },
-+	{ DA7219_REFERENCES, 0x08 },
-+	{ DA7219_MIXIN_L_SELECT, 0x00 },
-+	{ DA7219_MIXIN_L_GAIN, 0x03 },
-+	{ DA7219_ADC_L_GAIN, 0x6F },
-+	{ DA7219_ADC_FILTERS1, 0x80 },
-+	{ DA7219_MIC_1_GAIN, 0x01 },
-+	{ DA7219_SIDETONE_CTRL, 0x40 },
-+	{ DA7219_SIDETONE_GAIN, 0x0E },
-+	{ DA7219_DROUTING_ST_OUTFILT_1L, 0x01 },
-+	{ DA7219_DROUTING_ST_OUTFILT_1R, 0x02 },
-+	{ DA7219_DAC_FILTERS5, 0x00 },
-+	{ DA7219_DAC_FILTERS2, 0x88 },
-+	{ DA7219_DAC_FILTERS3, 0x88 },
-+	{ DA7219_DAC_FILTERS4, 0x08 },
-+	{ DA7219_DAC_FILTERS1, 0x80 },
-+	{ DA7219_DAC_L_GAIN, 0x6F },
-+	{ DA7219_DAC_R_GAIN, 0x6F },
-+	{ DA7219_CP_CTRL, 0x20 },
-+	{ DA7219_HP_L_GAIN, 0x39 },
-+	{ DA7219_HP_R_GAIN, 0x39 },
-+	{ DA7219_MIXOUT_L_SELECT, 0x00 },
-+	{ DA7219_MIXOUT_R_SELECT, 0x00 },
-+	{ DA7219_MICBIAS_CTRL, 0x03 },
-+	{ DA7219_MIC_1_CTRL, 0x40 },
-+	{ DA7219_MIXIN_L_CTRL, 0x40 },
-+	{ DA7219_ADC_L_CTRL, 0x40 },
-+	{ DA7219_DAC_L_CTRL, 0x40 },
-+	{ DA7219_DAC_R_CTRL, 0x40 },
-+	{ DA7219_HP_L_CTRL, 0x40 },
-+	{ DA7219_HP_R_CTRL, 0x40 },
-+	{ DA7219_MIXOUT_L_CTRL, 0x10 },
-+	{ DA7219_MIXOUT_R_CTRL, 0x10 },
-+	{ DA7219_CHIP_ID1, 0x23 },
-+	{ DA7219_CHIP_ID2, 0x93 },
-+	{ DA7219_IO_CTRL, 0x00 },
-+	{ DA7219_GAIN_RAMP_CTRL, 0x00 },
-+	{ DA7219_PC_COUNT, 0x02 },
-+	{ DA7219_CP_VOL_THRESHOLD1, 0x0E },
-+	{ DA7219_DIG_CTRL, 0x00 },
-+	{ DA7219_ALC_CTRL2, 0x00 },
-+	{ DA7219_ALC_CTRL3, 0x00 },
-+	{ DA7219_ALC_NOISE, 0x3F },
-+	{ DA7219_ALC_TARGET_MIN, 0x3F },
-+	{ DA7219_ALC_TARGET_MAX, 0x00 },
-+	{ DA7219_ALC_GAIN_LIMITS, 0xFF },
-+	{ DA7219_ALC_ANA_GAIN_LIMITS, 0x71 },
-+	{ DA7219_ALC_ANTICLIP_CTRL, 0x00 },
-+	{ DA7219_ALC_ANTICLIP_LEVEL, 0x00 },
-+	{ DA7219_DAC_NG_SETUP_TIME, 0x00 },
-+	{ DA7219_DAC_NG_OFF_THRESH, 0x00 },
-+	{ DA7219_DAC_NG_ON_THRESH, 0x00 },
-+	{ DA7219_DAC_NG_CTRL, 0x00 },
-+	{ DA7219_TONE_GEN_CFG1, 0x00 },
-+	{ DA7219_TONE_GEN_CFG2, 0x00 },
-+	{ DA7219_TONE_GEN_CYCLES, 0x00 },
-+	{ DA7219_TONE_GEN_FREQ1_L, 0x55 },
-+	{ DA7219_TONE_GEN_FREQ1_U, 0x15 },
-+	{ DA7219_TONE_GEN_FREQ2_L, 0x00 },
-+	{ DA7219_TONE_GEN_FREQ2_U, 0x40 },
-+	{ DA7219_TONE_GEN_ON_PER, 0x02 },
-+	{ DA7219_TONE_GEN_OFF_PER, 0x01 },
-+	{ DA7219_ACCDET_IRQ_MASK_A, 0x00 },
-+	{ DA7219_ACCDET_IRQ_MASK_B, 0x00 },
-+	{ DA7219_ACCDET_CONFIG_1, 0xD6 },
-+	{ DA7219_ACCDET_CONFIG_2, 0x34 },
-+	{ DA7219_ACCDET_CONFIG_3, 0x0A },
-+	{ DA7219_ACCDET_CONFIG_4, 0x16 },
-+	{ DA7219_ACCDET_CONFIG_5, 0x21 },
-+	{ DA7219_ACCDET_CONFIG_6, 0x3E },
-+	{ DA7219_ACCDET_CONFIG_7, 0x01 },
-+	{ DA7219_SYSTEM_ACTIVE, 0x00 },
-+};
-+
-+static bool da7219_volatile_register(struct device *dev, unsigned int reg)
-+{
-+	switch (reg) {
-+	case DA7219_MIC_1_GAIN_STATUS:
-+	case DA7219_MIXIN_L_GAIN_STATUS:
-+	case DA7219_ADC_L_GAIN_STATUS:
-+	case DA7219_DAC_L_GAIN_STATUS:
-+	case DA7219_DAC_R_GAIN_STATUS:
-+	case DA7219_HP_L_GAIN_STATUS:
-+	case DA7219_HP_R_GAIN_STATUS:
-+	case DA7219_CIF_CTRL:
-+	case DA7219_PLL_SRM_STS:
-+	case DA7219_ALC_CTRL1:
-+	case DA7219_SYSTEM_MODES_INPUT:
-+	case DA7219_SYSTEM_MODES_OUTPUT:
-+	case DA7219_ALC_OFFSET_AUTO_M_L:
-+	case DA7219_ALC_OFFSET_AUTO_U_L:
-+	case DA7219_TONE_GEN_CFG1:
-+	case DA7219_ACCDET_STATUS_A:
-+	case DA7219_ACCDET_STATUS_B:
-+	case DA7219_ACCDET_IRQ_EVENT_A:
-+	case DA7219_ACCDET_IRQ_EVENT_B:
-+	case DA7219_ACCDET_CONFIG_8:
-+	case DA7219_SYSTEM_STATUS:
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
-+static const struct regmap_config da7219_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+
-+	.max_register = DA7219_SYSTEM_ACTIVE,
-+	.reg_defaults = da7219_reg_defaults,
-+	.num_reg_defaults = ARRAY_SIZE(da7219_reg_defaults),
-+	.volatile_reg = da7219_volatile_register,
-+	.cache_type = REGCACHE_RBTREE,
-+};
-+
- static struct reg_sequence da7219_rev_aa_patch[] = {
- 	{ DA7219_REFERENCES, 0x08 },
- };
-@@ -2255,18 +2388,56 @@ static void da7219_handle_pdata(struct snd_soc_component *component)
- static int da7219_probe(struct snd_soc_component *component)
- {
- 	struct da7219_priv *da7219 = snd_soc_component_get_drvdata(component);
--	unsigned int rev;
--	int ret;
-+	unsigned int system_active, system_status, rev;
-+	u8 io_voltage_lvl;
-+	int i, ret;
- 
- 	da7219->component = component;
- 	mutex_init(&da7219->ctrl_lock);
- 	mutex_init(&da7219->pll_lock);
- 
- 	/* Regulator configuration */
--	ret = da7219_handle_supplies(component);
-+	ret = da7219_handle_supplies(component, &io_voltage_lvl);
- 	if (ret)
- 		return ret;
- 
-+	regcache_cache_bypass(da7219->regmap, true);
-+
-+	/* Disable audio paths if still active from previous start */
-+	regmap_read(da7219->regmap, DA7219_SYSTEM_ACTIVE, &system_active);
-+	if (system_active) {
-+		regmap_write(da7219->regmap, DA7219_GAIN_RAMP_CTRL,
-+			     DA7219_GAIN_RAMP_RATE_NOMINAL);
-+		regmap_write(da7219->regmap, DA7219_SYSTEM_MODES_INPUT, 0x00);
-+		regmap_write(da7219->regmap, DA7219_SYSTEM_MODES_OUTPUT, 0x01);
-+
-+		for (i = 0; i < DA7219_SYS_STAT_CHECK_RETRIES; ++i) {
-+			regmap_read(da7219->regmap, DA7219_SYSTEM_STATUS,
-+				    &system_status);
-+			if (!system_status)
-+				break;
-+
-+			msleep(DA7219_SYS_STAT_CHECK_DELAY);
-+		}
-+	}
-+
-+	/* Soft reset component */
-+	regmap_write_bits(da7219->regmap, DA7219_ACCDET_CONFIG_1,
-+			  DA7219_ACCDET_EN_MASK, 0);
-+	regmap_write_bits(da7219->regmap, DA7219_CIF_CTRL,
-+			  DA7219_CIF_REG_SOFT_RESET_MASK,
-+			  DA7219_CIF_REG_SOFT_RESET_MASK);
-+	regmap_write_bits(da7219->regmap, DA7219_SYSTEM_ACTIVE,
-+			  DA7219_SYSTEM_ACTIVE_MASK, 0);
-+	regmap_write_bits(da7219->regmap, DA7219_SYSTEM_ACTIVE,
-+			  DA7219_SYSTEM_ACTIVE_MASK, 1);
-+
-+	regcache_cache_bypass(da7219->regmap, false);
-+	regmap_reinit_cache(da7219->regmap, &da7219_regmap_config);
-+
-+	/* Update IO voltage level range based on supply level */
-+	snd_soc_component_write(component, DA7219_IO_CTRL, io_voltage_lvl);
-+
- 	ret = regmap_read(da7219->regmap, DA7219_CHIP_REVISION, &rev);
- 	if (ret) {
- 		dev_err(component->dev, "Failed to read chip revision: %d\n", ret);
-@@ -2347,6 +2518,7 @@ static int da7219_probe(struct snd_soc_component *component)
- 
- err_disable_reg:
- 	regulator_bulk_disable(DA7219_NUM_SUPPLIES, da7219->supplies);
-+	regulator_bulk_free(DA7219_NUM_SUPPLIES, da7219->supplies);
- 
- 	return ret;
- }
-@@ -2369,6 +2541,7 @@ static void da7219_remove(struct snd_soc_component *component)
- 
- 	/* Supplies */
- 	regulator_bulk_disable(DA7219_NUM_SUPPLIES, da7219->supplies);
-+	regulator_bulk_free(DA7219_NUM_SUPPLIES, da7219->supplies);
- }
- 
- #ifdef CONFIG_PM
-@@ -2422,142 +2595,6 @@ static int da7219_resume(struct snd_soc_component *component)
- 
- 
- /*
-- * Regmap configs
-- */
--
--static struct reg_default da7219_reg_defaults[] = {
--	{ DA7219_MIC_1_SELECT, 0x00 },
--	{ DA7219_CIF_TIMEOUT_CTRL, 0x01 },
--	{ DA7219_SR_24_48, 0x00 },
--	{ DA7219_SR, 0x0A },
--	{ DA7219_CIF_I2C_ADDR_CFG, 0x02 },
--	{ DA7219_PLL_CTRL, 0x10 },
--	{ DA7219_PLL_FRAC_TOP, 0x00 },
--	{ DA7219_PLL_FRAC_BOT, 0x00 },
--	{ DA7219_PLL_INTEGER, 0x20 },
--	{ DA7219_DIG_ROUTING_DAI, 0x10 },
--	{ DA7219_DAI_CLK_MODE, 0x01 },
--	{ DA7219_DAI_CTRL, 0x28 },
--	{ DA7219_DAI_TDM_CTRL, 0x40 },
--	{ DA7219_DIG_ROUTING_DAC, 0x32 },
--	{ DA7219_DAI_OFFSET_LOWER, 0x00 },
--	{ DA7219_DAI_OFFSET_UPPER, 0x00 },
--	{ DA7219_REFERENCES, 0x08 },
--	{ DA7219_MIXIN_L_SELECT, 0x00 },
--	{ DA7219_MIXIN_L_GAIN, 0x03 },
--	{ DA7219_ADC_L_GAIN, 0x6F },
--	{ DA7219_ADC_FILTERS1, 0x80 },
--	{ DA7219_MIC_1_GAIN, 0x01 },
--	{ DA7219_SIDETONE_CTRL, 0x40 },
--	{ DA7219_SIDETONE_GAIN, 0x0E },
--	{ DA7219_DROUTING_ST_OUTFILT_1L, 0x01 },
--	{ DA7219_DROUTING_ST_OUTFILT_1R, 0x02 },
--	{ DA7219_DAC_FILTERS5, 0x00 },
--	{ DA7219_DAC_FILTERS2, 0x88 },
--	{ DA7219_DAC_FILTERS3, 0x88 },
--	{ DA7219_DAC_FILTERS4, 0x08 },
--	{ DA7219_DAC_FILTERS1, 0x80 },
--	{ DA7219_DAC_L_GAIN, 0x6F },
--	{ DA7219_DAC_R_GAIN, 0x6F },
--	{ DA7219_CP_CTRL, 0x20 },
--	{ DA7219_HP_L_GAIN, 0x39 },
--	{ DA7219_HP_R_GAIN, 0x39 },
--	{ DA7219_MIXOUT_L_SELECT, 0x00 },
--	{ DA7219_MIXOUT_R_SELECT, 0x00 },
--	{ DA7219_MICBIAS_CTRL, 0x03 },
--	{ DA7219_MIC_1_CTRL, 0x40 },
--	{ DA7219_MIXIN_L_CTRL, 0x40 },
--	{ DA7219_ADC_L_CTRL, 0x40 },
--	{ DA7219_DAC_L_CTRL, 0x40 },
--	{ DA7219_DAC_R_CTRL, 0x40 },
--	{ DA7219_HP_L_CTRL, 0x40 },
--	{ DA7219_HP_R_CTRL, 0x40 },
--	{ DA7219_MIXOUT_L_CTRL, 0x10 },
--	{ DA7219_MIXOUT_R_CTRL, 0x10 },
--	{ DA7219_CHIP_ID1, 0x23 },
--	{ DA7219_CHIP_ID2, 0x93 },
--	{ DA7219_IO_CTRL, 0x00 },
--	{ DA7219_GAIN_RAMP_CTRL, 0x00 },
--	{ DA7219_PC_COUNT, 0x02 },
--	{ DA7219_CP_VOL_THRESHOLD1, 0x0E },
--	{ DA7219_DIG_CTRL, 0x00 },
--	{ DA7219_ALC_CTRL2, 0x00 },
--	{ DA7219_ALC_CTRL3, 0x00 },
--	{ DA7219_ALC_NOISE, 0x3F },
--	{ DA7219_ALC_TARGET_MIN, 0x3F },
--	{ DA7219_ALC_TARGET_MAX, 0x00 },
--	{ DA7219_ALC_GAIN_LIMITS, 0xFF },
--	{ DA7219_ALC_ANA_GAIN_LIMITS, 0x71 },
--	{ DA7219_ALC_ANTICLIP_CTRL, 0x00 },
--	{ DA7219_ALC_ANTICLIP_LEVEL, 0x00 },
--	{ DA7219_DAC_NG_SETUP_TIME, 0x00 },
--	{ DA7219_DAC_NG_OFF_THRESH, 0x00 },
--	{ DA7219_DAC_NG_ON_THRESH, 0x00 },
--	{ DA7219_DAC_NG_CTRL, 0x00 },
--	{ DA7219_TONE_GEN_CFG1, 0x00 },
--	{ DA7219_TONE_GEN_CFG2, 0x00 },
--	{ DA7219_TONE_GEN_CYCLES, 0x00 },
--	{ DA7219_TONE_GEN_FREQ1_L, 0x55 },
--	{ DA7219_TONE_GEN_FREQ1_U, 0x15 },
--	{ DA7219_TONE_GEN_FREQ2_L, 0x00 },
--	{ DA7219_TONE_GEN_FREQ2_U, 0x40 },
--	{ DA7219_TONE_GEN_ON_PER, 0x02 },
--	{ DA7219_TONE_GEN_OFF_PER, 0x01 },
--	{ DA7219_ACCDET_IRQ_MASK_A, 0x00 },
--	{ DA7219_ACCDET_IRQ_MASK_B, 0x00 },
--	{ DA7219_ACCDET_CONFIG_1, 0xD6 },
--	{ DA7219_ACCDET_CONFIG_2, 0x34 },
--	{ DA7219_ACCDET_CONFIG_3, 0x0A },
--	{ DA7219_ACCDET_CONFIG_4, 0x16 },
--	{ DA7219_ACCDET_CONFIG_5, 0x21 },
--	{ DA7219_ACCDET_CONFIG_6, 0x3E },
--	{ DA7219_ACCDET_CONFIG_7, 0x01 },
--	{ DA7219_SYSTEM_ACTIVE, 0x00 },
--};
--
--static bool da7219_volatile_register(struct device *dev, unsigned int reg)
--{
--	switch (reg) {
--	case DA7219_MIC_1_GAIN_STATUS:
--	case DA7219_MIXIN_L_GAIN_STATUS:
--	case DA7219_ADC_L_GAIN_STATUS:
--	case DA7219_DAC_L_GAIN_STATUS:
--	case DA7219_DAC_R_GAIN_STATUS:
--	case DA7219_HP_L_GAIN_STATUS:
--	case DA7219_HP_R_GAIN_STATUS:
--	case DA7219_CIF_CTRL:
--	case DA7219_PLL_SRM_STS:
--	case DA7219_ALC_CTRL1:
--	case DA7219_SYSTEM_MODES_INPUT:
--	case DA7219_SYSTEM_MODES_OUTPUT:
--	case DA7219_ALC_OFFSET_AUTO_M_L:
--	case DA7219_ALC_OFFSET_AUTO_U_L:
--	case DA7219_TONE_GEN_CFG1:
--	case DA7219_ACCDET_STATUS_A:
--	case DA7219_ACCDET_STATUS_B:
--	case DA7219_ACCDET_IRQ_EVENT_A:
--	case DA7219_ACCDET_IRQ_EVENT_B:
--	case DA7219_ACCDET_CONFIG_8:
--	case DA7219_SYSTEM_STATUS:
--		return true;
--	default:
--		return false;
--	}
--}
--
--static const struct regmap_config da7219_regmap_config = {
--	.reg_bits = 8,
--	.val_bits = 8,
--
--	.max_register = DA7219_SYSTEM_ACTIVE,
--	.reg_defaults = da7219_reg_defaults,
--	.num_reg_defaults = ARRAY_SIZE(da7219_reg_defaults),
--	.volatile_reg = da7219_volatile_register,
--	.cache_type = REGCACHE_RBTREE,
--};
--
--
--/*
-  * I2C layer
-  */
- 
-@@ -2566,8 +2603,7 @@ static int da7219_i2c_probe(struct i2c_client *i2c,
- {
- 	struct device *dev = &i2c->dev;
- 	struct da7219_priv *da7219;
--	unsigned int system_active, system_status;
--	int i, ret;
-+	int ret;
- 
- 	da7219 = devm_kzalloc(dev, sizeof(struct da7219_priv),
- 			      GFP_KERNEL);
-@@ -2583,37 +2619,6 @@ static int da7219_i2c_probe(struct i2c_client *i2c,
- 		return ret;
- 	}
- 
--	regcache_cache_bypass(da7219->regmap, true);
--
--	/* Disable audio paths if still active from previous start */
--	regmap_read(da7219->regmap, DA7219_SYSTEM_ACTIVE, &system_active);
--	if (system_active) {
--		regmap_write(da7219->regmap, DA7219_GAIN_RAMP_CTRL,
--			     DA7219_GAIN_RAMP_RATE_NOMINAL);
--		regmap_write(da7219->regmap, DA7219_SYSTEM_MODES_INPUT, 0x00);
--		regmap_write(da7219->regmap, DA7219_SYSTEM_MODES_OUTPUT, 0x01);
--
--		for (i = 0; i < DA7219_SYS_STAT_CHECK_RETRIES; ++i) {
--			regmap_read(da7219->regmap, DA7219_SYSTEM_STATUS,
--				    &system_status);
--			if (!system_status)
--				break;
--
--			msleep(DA7219_SYS_STAT_CHECK_DELAY);
--		}
--	}
--
--	/* Soft reset component */
--	regmap_write_bits(da7219->regmap, DA7219_ACCDET_CONFIG_1,
--			  DA7219_ACCDET_EN_MASK, 0);
--	regmap_write_bits(da7219->regmap, DA7219_CIF_CTRL,
--			  DA7219_CIF_REG_SOFT_RESET_MASK,
--			  DA7219_CIF_REG_SOFT_RESET_MASK);
--	regmap_write_bits(da7219->regmap, DA7219_SYSTEM_ACTIVE,
--			  DA7219_SYSTEM_ACTIVE_MASK, 0);
--
--	regcache_cache_bypass(da7219->regmap, false);
--
- 	/* Retrieve DT/ACPI/Platform data */
- 	da7219->pdata = dev_get_platdata(dev);
- 	if (!da7219->pdata)
--- 
-1.9.1
-
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
