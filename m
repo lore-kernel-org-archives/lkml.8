@@ -2,85 +2,57 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E039C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 07:49:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EF1DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 07:50:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7795D20656
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 07:49:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F1f7ZE4K"
+	by mail.kernel.org (Postfix) with ESMTP id 23BA6205CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 07:50:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728266AbgHKHtT (ORCPT
+        id S1728295AbgHKHuF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 03:49:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45720 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728133AbgHKHtS (ORCPT
+        Tue, 11 Aug 2020 03:50:05 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:45855 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728133AbgHKHuF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 03:49:18 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4539C061787;
-        Tue, 11 Aug 2020 00:49:16 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id j10so5523284qvo.13;
-        Tue, 11 Aug 2020 00:49:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=OOMSJE9xSBil9mXDx2Lia4KUqWqXBp/e2t+xm7m3Qh8=;
-        b=F1f7ZE4KDjPF6dImWkq/5Gb5Ibw/zsrD+Y+bAFrUMb2y8iUJult1fm9hB0McdzouIP
-         JdDgEL1T2JKzUfHwWYdBwmkOObOmECVPSE43vBjnO8kfMo4FuMKCwhbmdiKeIPv5iz7L
-         IE25z3GCJwOCUWTeQCgIZMZ8PIMkHN+IFDgY8wMNCbsC3ngJJuI7/lB+STIlvY2ysxqF
-         ldKh+gEuY1fZUGum5vnuiVAGZ4fX/Dcx3RTT3RcYeK3t/7XuKa7ZhV+D86LSpYOVn+GG
-         d4Gr2ojxTkHSGSiIKscJVFKq+vyJBGOqJiFz5iMLUNPcjV+SCQjFLjVaYbqOvQ2CLPI0
-         j6gg==
+        Tue, 11 Aug 2020 03:50:05 -0400
+Received: by mail-lf1-f66.google.com with SMTP id b30so6141339lfj.12
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 00:50:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=OOMSJE9xSBil9mXDx2Lia4KUqWqXBp/e2t+xm7m3Qh8=;
-        b=flffocutCjA8Eh/YhJjeeEisxilaDpD54uIB0rnaNZKZhgAI+2mUwerOTKh5An2PZN
-         uAksgfqeCjsrnaXkxZ5Uj/vw1sztRuuqDNjsBObnL8DsbokzJ2YmEvQrMt5YCxewtSDh
-         W8lQ2VGHlKygEnEeqvHNC8wXbdDWzYTl4RthsM0OGW2vUF/a8PudBG/iSKb7UCHmahdu
-         5og7JaWHHQtwHWlxaFoUgp2Dwx45TgTSYTAXB/nrkxkEZ5yz05LsELPIeDwr8uGC7qZK
-         L7Axf3AOH++f2uKTWnNDstFyZeEJi+9U0DQwMKSVIaB1fHxEc2p4Cj85UgEG/NX6giwV
-         ri3Q==
-X-Gm-Message-State: AOAM532QgwnoCPJwf/LOypc3EMRh6W0/B23UvvQHcQ9fNADavzMj2ouz
-        aa7W7TY0Aa0buECBd7gC0Q==
-X-Google-Smtp-Source: ABdhPJyKvjIhgKI2nli71gIsO+GWvcApvoJ6Cm7TU2kBmCv9kYz8IAaCuRaLy8t1HOMGLqJIMFiQtA==
-X-Received: by 2002:ad4:44e5:: with SMTP id p5mr32058968qvt.197.1597132155990;
-        Tue, 11 Aug 2020 00:49:15 -0700 (PDT)
-Received: from localhost.localdomain (146-115-88-66.s3894.c3-0.sbo-ubr1.sbo.ma.cable.rcncustomer.com. [146.115.88.66])
-        by smtp.gmail.com with ESMTPSA id j16sm16693897qke.87.2020.08.11.00.49.14
+        bh=7c9LgDQzwFBP2P6ArJr6sk6r1j+llzDsGb6lR6H9a1Q=;
+        b=DXuM86OYRLMp5V2HM3q+kYMPcCYCpGkmJaowe6sielCBa7OevbluIZ4X39LLHV/mbT
+         /m3Lz8Wa3GdNQgKSuSrVbFj9dLDLhFxPCwZLMdrk8OOwLbM+v7MRIe/XXGFJ0qw0gZXV
+         7/XE3sriFbZGQ1E9WEXBJhEaXUChMT8hKNeJiFPjC6raWxHPJDXNMb4yEgg3ETVjYheB
+         PGTMmKqswhAOZjYo9XLpFSCd8+fcPpskTSWcHZgAco1nFtDWG9wzygRyOUemiOqmUchp
+         x3gUzzZNwSxPaLCcv7Pa7YNhjQjGyRSgVj2EX3yCBBTT95iQri0LlJPBLWclYRj4ITGR
+         cNmg==
+X-Gm-Message-State: AOAM533hsniEGTI+MYbTqjsDKtqVckAiDN+kKid4G2pYlrhtW0BCeV6J
+        oC+T8FEYBk0lYfmOF+dlkB/u0G9Z
+X-Google-Smtp-Source: ABdhPJxckJBrZD99vkzMZyK+yaa6woS9Ys9iCWecK6RVC95+nlUjQnGrP0mhZ4kjyiZEIGMSn83ang==
+X-Received: by 2002:ac2:4542:: with SMTP id j2mr2586816lfm.110.1597132202193;
+        Tue, 11 Aug 2020 00:50:02 -0700 (PDT)
+Received: from localhost.localdomain (broadband-37-110-38-130.ip.moscow.rt.ru. [37.110.38.130])
+        by smtp.googlemail.com with ESMTPSA id z25sm9918170ljz.13.2020.08.11.00.50.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Aug 2020 00:49:15 -0700 (PDT)
-From:   Peilin Ye <yepeilin.cs@gmail.com>
-To:     Wensong Zhang <wensong@linux-vs.org>,
-        Simon Horman <horms@verge.net.au>, Julian Anastasov <ja@ssi.bg>
-Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        netdev@vger.kernel.org, lvs-devel@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        syzkaller-bugs@googlegroups.com, linux-kernel@vger.kernel.org
-Subject: [Linux-kernel-mentees] [PATCH net-next v2] ipvs: Fix uninit-value in do_ip_vs_set_ctl()
-Date:   Tue, 11 Aug 2020 03:46:40 -0400
-Message-Id: <20200811074640.841693-1-yepeilin.cs@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200810220703.796718-1-yepeilin.cs@gmail.com>
-References: <20200810220703.796718-1-yepeilin.cs@gmail.com>
+        Tue, 11 Aug 2020 00:50:01 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     Julia Lawall <julia.lawall@inria.fr>
+Cc:     Denis Efremov <efremov@linux.com>, cocci@systeme.lip6.fr,
+        linux-kernel@vger.kernel.org, Eric Biggers <ebiggers@kernel.org>
+Subject: [PATCH] coccinelle: api: update kzfree script to kfree_sensitive
+Date:   Tue, 11 Aug 2020 10:49:53 +0300
+Message-Id: <20200811074953.73994-1-efremov@linux.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200604140805.111613-1-efremov@linux.com>
+References: <20200604140805.111613-1-efremov@linux.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -88,48 +60,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-do_ip_vs_set_ctl() is referencing uninitialized stack value when `len` is
-zero. Fix it.
+Commit 453431a54934 ("mm, treewide: rename kzfree() to kfree_sensitive()")
+renames kzfree to kfree_sensitive and uses memzero_explicit(...) instead of
+memset(..., 0, ...) internally. Update cocci script to reflect these
+changes.
 
-Reported-by: syzbot+23b5f9e7caf61d9a3898@syzkaller.appspotmail.com
-Link: https://syzkaller.appspot.com/bug?id=46ebfb92a8a812621a001ef04d90dfa459520fe2
-Suggested-by: Julian Anastasov <ja@ssi.bg>
-Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+Signed-off-by: Denis Efremov <efremov@linux.com>
 ---
-Changes in v2:
-    - Target net-next tree. (Suggested by Julian Anastasov <ja@ssi.bg>)
-    - Reject all `len == 0` requests except `IP_VS_SO_SET_FLUSH`, instead
-      of initializing `arg`. (Suggested by Cong Wang
-      <xiyou.wangcong@gmail.com>, Julian Anastasov <ja@ssi.bg>)
+Julia, I think you can squash this commit with original script, or I can
+resend the whole script since it's not merged to the mainline.
 
- net/netfilter/ipvs/ip_vs_ctl.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ .../{kzfree.cocci => kfree_sensitive.cocci}   | 29 +++++++++----------
+ 1 file changed, 13 insertions(+), 16 deletions(-)
+ rename scripts/coccinelle/api/{kzfree.cocci => kfree_sensitive.cocci} (70%)
 
-diff --git a/net/netfilter/ipvs/ip_vs_ctl.c b/net/netfilter/ipvs/ip_vs_ctl.c
-index 412656c34f20..beeafa42aad7 100644
---- a/net/netfilter/ipvs/ip_vs_ctl.c
-+++ b/net/netfilter/ipvs/ip_vs_ctl.c
-@@ -2471,6 +2471,10 @@ do_ip_vs_set_ctl(struct sock *sk, int cmd, void __user *user, unsigned int len)
- 		/* Set timeout values for (tcp tcpfin udp) */
- 		ret = ip_vs_set_timeout(ipvs, (struct ip_vs_timeout_user *)arg);
- 		goto out_unlock;
-+	} else if (!len) {
-+		/* No more commands with len == 0 below */
-+		ret = -EINVAL;
-+		goto out_unlock;
- 	}
+diff --git a/scripts/coccinelle/api/kzfree.cocci b/scripts/coccinelle/api/kfree_sensitive.cocci
+similarity index 70%
+rename from scripts/coccinelle/api/kzfree.cocci
+rename to scripts/coccinelle/api/kfree_sensitive.cocci
+index 33625bd7cec9..e4a066a0b77d 100644
+--- a/scripts/coccinelle/api/kzfree.cocci
++++ b/scripts/coccinelle/api/kfree_sensitive.cocci
+@@ -1,13 +1,13 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ ///
+-/// Use kzfree, kvfree_sensitive rather than memset or
+-/// memzero_explicit followed by kfree
++/// Use kfree_sensitive, kvfree_sensitive rather than memset or
++/// memzero_explicit followed by kfree.
+ ///
+ // Confidence: High
+ // Copyright: (C) 2020 Denis Efremov ISPRAS
+ // Options: --no-includes --include-headers
+ //
+-// Keywords: kzfree, kvfree_sensitive
++// Keywords: kfree_sensitive, kvfree_sensitive
+ //
  
- 	usvc_compat = (struct ip_vs_service_user *)arg;
-@@ -2547,9 +2551,6 @@ do_ip_vs_set_ctl(struct sock *sk, int cmd, void __user *user, unsigned int len)
- 		break;
- 	case IP_VS_SO_SET_DELDEST:
- 		ret = ip_vs_del_dest(svc, &udest);
--		break;
--	default:
--		ret = -EINVAL;
- 	}
+ virtual context
+@@ -18,7 +18,8 @@ virtual report
+ @initialize:python@
+ @@
+ # kmalloc_oob_in_memset uses memset to explicitly trigger out-of-bounds access
+-filter = frozenset(['kmalloc_oob_in_memset', 'kzfree', 'kvfree_sensitive'])
++filter = frozenset(['kmalloc_oob_in_memset',
++		    'kfree_sensitive', 'kvfree_sensitive'])
  
-   out_unlock:
+ def relevant(p):
+     return not (filter & {el.current_element for el in p})
+@@ -56,17 +57,13 @@ type T;
+ - memzero_explicit@m((T)E, size);
+   ... when != E
+       when strict
+-// TODO: uncomment when kfree_sensitive will be merged.
+-// Only this case is commented out because developers
+-// may not like patches like this since kzfree uses memset
+-// internally (not memzero_explicit).
+-//(
+-//- kfree(E)@p;
+-//+ kfree_sensitive(E);
+-//|
++(
++- kfree(E)@p;
+++ kfree_sensitive(E);
++|
+ - \(vfree\|kvfree\)(E)@p;
+ + kvfree_sensitive(E, size);
+-//)
++)
+ 
+ @rp_memset depends on patch@
+ expression E, size;
+@@ -80,7 +77,7 @@ type T;
+       when strict
+ (
+ - kfree(E)@p;
+-+ kzfree(E);
+++ kfree_sensitive(E);
+ |
+ - \(vfree\|kvfree\)(E)@p;
+ + kvfree_sensitive(E, size);
+@@ -91,11 +88,11 @@ p << r.p;
+ @@
+ 
+ coccilib.report.print_report(p[0],
+-  "WARNING: opportunity for kzfree/kvfree_sensitive")
++  "WARNING: opportunity for kfree_sensitive/kvfree_sensitive")
+ 
+ @script:python depends on org@
+ p << r.p;
+ @@
+ 
+ coccilib.org.print_todo(p[0],
+-  "WARNING: opportunity for kzfree/kvfree_sensitive")
++  "WARNING: opportunity for kfree_sensitive/kvfree_sensitive")
 -- 
-2.25.1
+2.26.2
 
