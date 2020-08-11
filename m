@@ -2,311 +2,156 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC77C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 11:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB625C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 11:26:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A643C20716
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 11:25:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93CA220716
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 11:26:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ginu5CJo"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Rt/DpGUz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728710AbgHKLZV (ORCPT
+        id S1728743AbgHKL0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 07:25:21 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:44407 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728423AbgHKLZV (ORCPT
+        Tue, 11 Aug 2020 07:26:25 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:7206 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728423AbgHKL0Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 07:25:21 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200811112519euoutp023e2e64ddc8037be16e1f0c5b2c6c5e62~qMwYUhixy1402614026euoutp02E
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 11:25:19 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200811112519euoutp023e2e64ddc8037be16e1f0c5b2c6c5e62~qMwYUhixy1402614026euoutp02E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1597145119;
-        bh=UetpTzb41uZXUqDRqGv81XPLqlICT89xD4sslekpfGQ=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=ginu5CJoRQi6elI72KRZE409VdLsA7tD4EBrXR20/3cMZ61D3bpwJjVlywaRpQqZ0
-         erm116PYTOae6fykPfF6ujtXUwzInds+2J1I7pkFxqCd8lkXGmlqYXBIfw5UnW0BkJ
-         dWO9gBioOHByx0af7vgLOhlJWnooQFyhU9UegiVs=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200811112518eucas1p1c44be5e3880db5cf0851e1e3f66cab4d~qMwYFHBuj3160631606eucas1p1f;
-        Tue, 11 Aug 2020 11:25:18 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 2F.99.06456.E10823F5; Tue, 11
-        Aug 2020 12:25:18 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200811112518eucas1p2a751f664a907ac7cd8e1dd235dc2fa54~qMwXpoyN42581625816eucas1p2v;
-        Tue, 11 Aug 2020 11:25:18 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200811112518eusmtrp15a7002b80ab6b3e3737a8ea40605fbf4~qMwXouTtc1876518765eusmtrp1d;
-        Tue, 11 Aug 2020 11:25:18 +0000 (GMT)
-X-AuditID: cbfec7f2-7efff70000001938-0d-5f32801ef5e0
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 73.41.06314.E10823F5; Tue, 11
-        Aug 2020 12:25:18 +0100 (BST)
-Received: from AMDC3061.digital.local (unknown [106.120.51.75]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200811112517eusmtip2a2872d544bab1a6283d97cc409af8286~qMwXHNgW-2649626496eusmtip27;
-        Tue, 11 Aug 2020 11:25:17 +0000 (GMT)
-From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
-To:     linux-clk@vger.kernel.org
-Cc:     tomasz.figa@gmail.com, cw00.choi@samsung.com, sboyd@kernel.org,
-        mturquette@baylibre.com, linux-samsung-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, b.zolnierkie@samsung.com,
-        m.szyprowski@samsung.com,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: [PATCH v2] clk: samsung: Prevent potential endless loop in the PLL
- set_rate ops
-Date:   Tue, 11 Aug 2020 13:25:07 +0200
-Message-Id: <20200811112507.24418-1-s.nawrocki@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrNIsWRmVeSWpSXmKPExsWy7djP87pyDUbxBiv+aVpsnLGe1eL6l+es
-        Fh977rFaXN41h81ixvl9TBZrj9xlt7h4ytXi8Jt2Vot/1zayWKza9YfRgcvj/Y1Wdo+ds+6y
-        e2xa1cnm0bdlFaPH501yAaxRXDYpqTmZZalF+nYJXBmrVqxkKXhjVDG9YQ5rA+M2zS5GDg4J
-        AROJSV8luxi5OIQEVjBKNL/4yd7FyAnkfGGUWPmoAsL+zCix9r0iiA1S/+x2CztEw3JGie7n
-        T6AcoIY/i44yg1SxCRhK9B7tYwSxRQRkJW4d+8kGUsQs0Mwk8bm/iQUkISwQJbHl+ho2EJtF
-        QFXiStsvsNW8AtYS//ZvZ4NYJy+xesMBZpBmCYHXbBIHrzxkhLjbRWL/T0uIGmGJV8e3sEPY
-        MhKnJ/ewQNQ3M0r07L7NDuFMYJS4f3wBI0SVtcSdc7/YQAYxC2hKrN+lDxF2lNj4+jozxHw+
-        iRtvBUHCzEDmpG3TocK8Eh1tQhDVKhK/V01ngrClJLqf/GeBsD0kjn1eyQQJuViJo/s+M01g
-        lJuFsGsBI+MqRvHU0uLc9NRiw7zUcr3ixNzi0rx0veT83E2MwCRx+t/xTzsYv15KOsQowMGo
-        xMNbYG0YL8SaWFZcmXuIUYKDWUmE1+ns6Tgh3pTEyqrUovz4otKc1OJDjNIcLErivMaLXsYK
-        CaQnlqRmp6YWpBbBZJk4OKUaGFUfTNLek3bww66m8InzbaVSrac+7e7cccfDnHHamuM2/zo+
-        cfA9ea+xOLryv8zWZ94BjSwhK2et3OcW681zJVspvu7J4t9NryK2lTJuFYjwCHwZk9yuXvRv
-        rkRTkoSggN6aroayhzkTnHnUZOtcpwr51y98u//qsfqwnPX1/9Lypt//xW68TImlOCPRUIu5
-        qDgRACk3CqAOAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrILMWRmVeSWpSXmKPExsVy+t/xe7pyDUbxBhsb+Sw2zljPanH9y3NW
-        i48991gtLu+aw2Yx4/w+Jou1R+6yW1w85Wpx+E07q8W/axtZLFbt+sPowOXx/kYru8fOWXfZ
-        PTat6mTz6NuyitHj8ya5ANYoPZui/NKSVIWM/OISW6VoQwsjPUNLCz0jE0s9Q2PzWCsjUyV9
-        O5uU1JzMstQifbsEvYxVK1ayFLwxqpjeMIe1gXGbZhcjJ4eEgInEs9st7CC2kMBSRom+WwFd
-        jBxAcSmJ+S1KECXCEn+udbFBlHxilPi4XB3EZhMwlOg92scIYosIyErcOvYTqIaLg1mgl0mi
-        /fsWFpCEsECERPfpE2DNLAKqElfafoHt4hWwlvi3fzsbxAJ5idUbDjBPYORZwMiwilEktbQ4
-        Nz232FCvODG3uDQvXS85P3cTIzA4tx37uXkH46WNwYcYBTgYlXh4C6wN44VYE8uKK3MPMUpw
-        MCuJ8DqdPR0nxJuSWFmVWpQfX1Sak1p8iNEUaPlEZinR5Hxg5OSVxBuaGppbWBqaG5sbm1ko
-        ifN2CByMERJITyxJzU5NLUgtgulj4uCUamBMOrZceMFkKZYjR09ne90IP/P6zcN1/Rm+ycyx
-        VoFSXB4eq3/a9dbPu3Br8rTFMz9Nv/9OZcWb08mzd88LZtt5+M2SQ4o9wYrXt/JMtp+sdzs1
-        TsMnc+8X5ynSL3JymDLvbK7N7n+1463YlwcxF8Vamzg/fPVxM3D4+P5lzBpv7nLBnxeEuSoq
-        lViKMxINtZiLihMBElvMRmQCAAA=
-X-CMS-MailID: 20200811112518eucas1p2a751f664a907ac7cd8e1dd235dc2fa54
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200811112518eucas1p2a751f664a907ac7cd8e1dd235dc2fa54
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200811112518eucas1p2a751f664a907ac7cd8e1dd235dc2fa54
-References: <CGME20200811112518eucas1p2a751f664a907ac7cd8e1dd235dc2fa54@eucas1p2.samsung.com>
+        Tue, 11 Aug 2020 07:26:24 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f32802a0000>; Tue, 11 Aug 2020 04:25:30 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 11 Aug 2020 04:26:24 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 11 Aug 2020 04:26:24 -0700
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 11 Aug
+ 2020 11:26:23 +0000
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.177)
+ by HQMAIL107.nvidia.com (172.20.187.13) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3 via Frontend Transport; Tue, 11 Aug 2020 11:26:23 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PT54Lv7Lj5GVTOdk3An7ZtgQR466RZLMswdffvHAuorsAcrMkWg198kQjkq3MwO+XCI4Y7Y6MVcKMBfZKie/qu5dXzeCOdDqHMmIqEDZKfqr6/Vg1nZqwVqa/YsP0DO6oX0nz6atuOqs3OxqTwD71gw6X6H13zJUu6ASFA1+ZUt8KS2HCIFwUFijE0l6NEmFkpRax8OmpNYzq/MTC6D7FWXMns7NkvUkyG1qmbI+P8R2bfF7xsSpJk+oS/LU9+tvkUXHL6lWWcpADXGf1Ah5OwsrKAcUELjauM7RXfSK9ayoWcqLApCfmgKkdf0YtB1m1dsyhl5CmY7pkDQZLNOjzg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Cvlcm8bIpJIzZmjcvYYNBnuPX4zNBpqCbgAxDft/c7Q=;
+ b=gXoK4uHwJdc7Q5OVGqAE8BxHVjVDY50/AKdYtlaiSGDw7tKIgzerG87kUjD6tniiNHirGAVzRXW9wpMnfQmoBypr+i1waP/inYClipDgME6UepSOUsNva4wmLIu5XPTKyi8qERIzbNYzdTLFR2upBcDASI049Xjwymo9VGg/+Lnus5i+Hwbs5meu9CK6iGIJjaZEo7KBL0q2CZ3P2jkDFUg2EcB1WXk7w7VE/P3jUbAe49SGOtb2E4dVQWTbNfjPUfJL+YuhdONpK6TVX4aprfXymLLHf/5fPcLE486Dj55TCcNW9V3WEgxR5LWPAK6mlNZgGhjlvp9xDYdJ0yfbSQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+Received: from BN8PR12MB3425.namprd12.prod.outlook.com (2603:10b6:408:61::28)
+ by BN6PR12MB1348.namprd12.prod.outlook.com (2603:10b6:404:1f::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.19; Tue, 11 Aug
+ 2020 11:26:21 +0000
+Received: from BN8PR12MB3425.namprd12.prod.outlook.com
+ ([fe80::8941:c1aa:1ab4:2e39]) by BN8PR12MB3425.namprd12.prod.outlook.com
+ ([fe80::8941:c1aa:1ab4:2e39%6]) with mapi id 15.20.3261.024; Tue, 11 Aug 2020
+ 11:26:21 +0000
+From:   Eli Cohen <elic@nvidia.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>
+CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "eli@mellanox.com" <eli@mellanox.com>,
+        "lulu@redhat.com" <lulu@redhat.com>,
+        Majd Dibbiny <majd@nvidia.com>,
+        "Maor Dickman" <maord@nvidia.com>,
+        Shahaf Shuler <shahafs@mellanox.com>
+Subject: VDPA Debug/Statistics 
+Thread-Topic: VDPA Debug/Statistics 
+Thread-Index: AdZv0SSA/p/JVf9BSJCSJo3Lye0OEA==
+Date:   Tue, 11 Aug 2020 11:26:20 +0000
+Message-ID: <BN8PR12MB342559414BE03DFC992AD03DAB450@BN8PR12MB3425.namprd12.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=none action=none header.from=nvidia.com;
+x-originating-ip: [37.142.159.249]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 98b0ba9a-67a8-4316-7428-08d83de95f8e
+x-ms-traffictypediagnostic: BN6PR12MB1348:
+x-ld-processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BN6PR12MB1348E1643B553221D8F55673AB450@BN6PR12MB1348.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: +UQz+tBV3MkozBW09Sqp1k3RfloUg7mGL5gC6Yip7+7CWHlJwspobH8r5np8QFtCODkwBWl/KbN/BaXPJ/xsMIn2ugVfmltVvOTi9RxCjp7zM3ftasz81BeySoBBfT8EX+oCUu/U8y3Di/jp+SNAi3lBoJonaT2EyrMvjNCRbCI2dXzO2R6cZGRR/Fgp7KyPj2jDjcpVWS1FcZMqLawyIOkJHQ8O3JlnwhLXGZw1tbZz+wfhBnhjT7oQLz3PQJuni/iiuKX1+DPBRkBGH4OtJUZUy2dbXailGuanFGOVbqbr8zRJ6l2uR6YZniC03WRNzxWUXdKxLGKFbnzXutFBmA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB3425.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(396003)(366004)(39860400002)(346002)(376002)(66476007)(64756008)(66446008)(52536014)(66556008)(4326008)(8676002)(2906002)(186003)(86362001)(4744005)(71200400001)(107886003)(33656002)(83380400001)(6506007)(5660300002)(54906003)(110136005)(55016002)(26005)(8936002)(7696005)(4743002)(316002)(3480700007)(9686003)(76116006)(478600001)(66946007);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: nYuHAcmJkwSUszewQEtAt5gChOtefuAmdxYfGoy/Xzm6WNIXnIU4gHmintedIEkPliWSkvDmEpvlUl5KBLmu3RacWiLIPz8iyEZ5C5jXGT6AkULAm+BMYa3OWdfh4kcFv7oGoqvd9Rdbv6ZLZ8P5JbJCwtK7RxOD7y9+hD58N6om/IYSuudw9t/pJOLtcgMTo3vSVnRIlz82rxGaTQRCgeO4cmUex3j+Nd50w1PSmU+V0sqw/fNcuPzmwsXstrS7kI3TTZmhiFLmcFGPb+yrnVeYWz3+72uOFV0vgO1/e0PCt2ua1RarBwrhX4T9Ra+lqe/gJ/ZrlswZNGSH3+tIr4cKc2bLTcyS6ShqBoDNgZ83h0q6Lj3XC/opuNAqb522i9DyzsEEr6WsQq5WQjqbB3RXKBNoGmgGU/uhInY7yVMMqFbRPIsYdhYdqgpDHtYxo/1maGhrTt7KQviQQhm7oWgH/5G0IWAVOqBvcXQHT8Vsd9ONd6eW4DUDCxIibuw5ypBZ+qE6RjCO859c392Q/qV6OvxvVZ80/ffRqJZHDojn6C5K0XhVsez7AgIDWfSZ6N6/l6RkP/GiNDxqptVYXX2ixCToIJ/aTs7kr/R7ZSIEqHwuuaVMH3DpzGTHxbBYSMoO/QFK2pJoK/UKtrMx+A==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB3425.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 98b0ba9a-67a8-4316-7428-08d83de95f8e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Aug 2020 11:26:21.2081
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Ib3EjQ0O7FAZdK8hRcj1T1kC2COHe20oaGUTrvOkt8+6Nsq3w/KsEO9LUYlx8AHK
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR12MB1348
+X-OriginatorOrg: Nvidia.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1597145130; bh=Cvlcm8bIpJIzZmjcvYYNBnuPX4zNBpqCbgAxDft/c7Q=;
+        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
+         ARC-Authentication-Results:From:To:CC:Subject:Thread-Topic:
+         Thread-Index:Date:Message-ID:Accept-Language:Content-Language:
+         X-MS-Has-Attach:X-MS-TNEF-Correlator:authentication-results:
+         x-originating-ip:x-ms-publictraffictype:
+         x-ms-office365-filtering-correlation-id:x-ms-traffictypediagnostic:
+         x-ld-processed:x-ms-exchange-transport-forked:
+         x-microsoft-antispam-prvs:x-ms-oob-tlc-oobclassifiers:
+         x-ms-exchange-senderadcheck:x-microsoft-antispam:
+         x-microsoft-antispam-message-info:x-forefront-antispam-report:
+         x-ms-exchange-antispam-messagedata:Content-Type:
+         Content-Transfer-Encoding:MIME-Version:
+         X-MS-Exchange-CrossTenant-AuthAs:
+         X-MS-Exchange-CrossTenant-AuthSource:
+         X-MS-Exchange-CrossTenant-Network-Message-Id:
+         X-MS-Exchange-CrossTenant-originalarrivaltime:
+         X-MS-Exchange-CrossTenant-fromentityheader:
+         X-MS-Exchange-CrossTenant-id:X-MS-Exchange-CrossTenant-mailboxtype:
+         X-MS-Exchange-CrossTenant-userprincipalname:
+         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
+        b=Rt/DpGUzm15S7awQ1fc/70TnpQNI1xwln0XrKzynW4AmSUhe0OWa2XT69/Icst18+
+         zDUx+JdJuqwHA61/AKBYsJ3EzRjB4/5Gy8NpXaXIVOLljFtSSK9RawACm07gubFRdF
+         OXgln8f4+LTlpwWTFv7kpaNbFJ8Ve2BMYy4AC51XrSqUgW9D5HWqzoyUKg6ySLkzcU
+         Z2N3X+UukQ4kCUItXK+xueYWEmpGm+n6GFindW2j1R1LSnS5GIuujsXVgP5GC2fiye
+         J+HOCHfBBABlF2+sE9IVtvAZxO/6AIJ7jQg0w/tYOhX5D3tknItNufCOJFjZ+k/hRf
+         6TvRmmqQA6PRA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the .set_rate callback for some PLLs there is a loop polling state
-of the PLL lock bit and it may become an endless loop when something
-goes wrong with the PLL. For some PLLs there is already (a duplicated)
-code for polling with timeout. This patch replaces that code with
-the readl_relaxed_poll_timeout_atomic() macro and moves it to a common
-helper function, which is then used for all the PLLs. The downside
-of switching to the common macro is that we drop the cpu_relax() call.
-Using a common helper function rather than the macro directly allows
-to avoid repeating the error message in the code and to avoid the object
-code size increase due to inlining.
+Hi All
 
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
----
-Changes for v2:
- - use common readl_relaxed_poll_timeout_atomic() macro
----
- drivers/clk/samsung/clk-pll.c | 92 +++++++++++++++----------------------------
- 1 file changed, 32 insertions(+), 60 deletions(-)
+Currently, the only statistics we get for a VDPA instance comes from the vi=
+rtio_net device instance. Since VDPA involves hardware acceleration, there =
+can be quite a lot of information that can be fetched from the underlying d=
+evice. Currently there is no generic method to fetch this information.
 
-diff --git a/drivers/clk/samsung/clk-pll.c b/drivers/clk/samsung/clk-pll.c
-index ac70ad7..c3c1efe 100644
---- a/drivers/clk/samsung/clk-pll.c
-+++ b/drivers/clk/samsung/clk-pll.c
-@@ -9,13 +9,14 @@
- #include <linux/errno.h>
- #include <linux/hrtimer.h>
- #include <linux/delay.h>
-+#include <linux/iopoll.h>
- #include <linux/slab.h>
- #include <linux/clk-provider.h>
- #include <linux/io.h>
- #include "clk.h"
- #include "clk-pll.h"
- 
--#define PLL_TIMEOUT_MS		10
-+#define PLL_TIMEOUT_US		10000U
- 
- struct samsung_clk_pll {
- 	struct clk_hw		hw;
-@@ -63,6 +64,22 @@ static long samsung_pll_round_rate(struct clk_hw *hw,
- 	return rate_table[i - 1].rate;
- }
- 
-+static int samsung_pll_lock_wait(struct samsung_clk_pll *pll,
-+				 unsigned int reg_mask)
-+{
-+	u32 val;
-+	int ret;
-+
-+	/* Wait until the PLL is in steady locked state */
-+	ret = readl_relaxed_poll_timeout_atomic(pll->con_reg, val,
-+					val & reg_mask, 0, PLL_TIMEOUT_US);
-+	if (ret < 0)
-+		pr_err("%s: Could not lock PLL %s\n",
-+		       __func__, clk_hw_get_name(&pll->hw));
-+
-+	return ret;
-+}
-+
- static int samsung_pll3xxx_enable(struct clk_hw *hw)
- {
- 	struct samsung_clk_pll *pll = to_clk_pll(hw);
-@@ -241,12 +258,9 @@ static int samsung_pll35xx_set_rate(struct clk_hw *hw, unsigned long drate,
- 	writel_relaxed(tmp, pll->con_reg);
- 
- 	/* Wait until the PLL is locked if it is enabled. */
--	if (tmp & BIT(pll->enable_offs)) {
--		do {
--			cpu_relax();
--			tmp = readl_relaxed(pll->con_reg);
--		} while (!(tmp & BIT(pll->lock_offs)));
--	}
-+	if (tmp & BIT(pll->enable_offs))
-+		return samsung_pll_lock_wait(pll, BIT(pll->lock_offs));
-+
- 	return 0;
- }
- 
-@@ -318,7 +332,7 @@ static int samsung_pll36xx_set_rate(struct clk_hw *hw, unsigned long drate,
- 					unsigned long parent_rate)
- {
- 	struct samsung_clk_pll *pll = to_clk_pll(hw);
--	u32 tmp, pll_con0, pll_con1;
-+	u32 pll_con0, pll_con1;
- 	const struct samsung_pll_rate_table *rate;
- 
- 	rate = samsung_get_pll_settings(pll, drate);
-@@ -356,13 +370,8 @@ static int samsung_pll36xx_set_rate(struct clk_hw *hw, unsigned long drate,
- 	pll_con1 |= rate->kdiv << PLL36XX_KDIV_SHIFT;
- 	writel_relaxed(pll_con1, pll->con_reg + 4);
- 
--	/* wait_lock_time */
--	if (pll_con0 & BIT(pll->enable_offs)) {
--		do {
--			cpu_relax();
--			tmp = readl_relaxed(pll->con_reg);
--		} while (!(tmp & BIT(pll->lock_offs)));
--	}
-+	if (pll_con0 & BIT(pll->enable_offs))
-+		return samsung_pll_lock_wait(pll, BIT(pll->lock_offs));
- 
- 	return 0;
- }
-@@ -437,7 +446,6 @@ static int samsung_pll45xx_set_rate(struct clk_hw *hw, unsigned long drate,
- 	struct samsung_clk_pll *pll = to_clk_pll(hw);
- 	const struct samsung_pll_rate_table *rate;
- 	u32 con0, con1;
--	ktime_t start;
- 
- 	/* Get required rate settings from table */
- 	rate = samsung_get_pll_settings(pll, drate);
-@@ -489,20 +497,7 @@ static int samsung_pll45xx_set_rate(struct clk_hw *hw, unsigned long drate,
- 	writel_relaxed(con0, pll->con_reg);
- 
- 	/* Wait for locking. */
--	start = ktime_get();
--	while (!(readl_relaxed(pll->con_reg) & PLL45XX_LOCKED)) {
--		ktime_t delta = ktime_sub(ktime_get(), start);
--
--		if (ktime_to_ms(delta) > PLL_TIMEOUT_MS) {
--			pr_err("%s: could not lock PLL %s\n",
--					__func__, clk_hw_get_name(hw));
--			return -EFAULT;
--		}
--
--		cpu_relax();
--	}
--
--	return 0;
-+	return samsung_pll_lock_wait(pll, PLL45XX_LOCKED);
- }
- 
- static const struct clk_ops samsung_pll45xx_clk_ops = {
-@@ -588,7 +583,6 @@ static int samsung_pll46xx_set_rate(struct clk_hw *hw, unsigned long drate,
- 	struct samsung_clk_pll *pll = to_clk_pll(hw);
- 	const struct samsung_pll_rate_table *rate;
- 	u32 con0, con1, lock;
--	ktime_t start;
- 
- 	/* Get required rate settings from table */
- 	rate = samsung_get_pll_settings(pll, drate);
-@@ -648,20 +642,7 @@ static int samsung_pll46xx_set_rate(struct clk_hw *hw, unsigned long drate,
- 	writel_relaxed(con1, pll->con_reg + 0x4);
- 
- 	/* Wait for locking. */
--	start = ktime_get();
--	while (!(readl_relaxed(pll->con_reg) & PLL46XX_LOCKED)) {
--		ktime_t delta = ktime_sub(ktime_get(), start);
--
--		if (ktime_to_ms(delta) > PLL_TIMEOUT_MS) {
--			pr_err("%s: could not lock PLL %s\n",
--					__func__, clk_hw_get_name(hw));
--			return -EFAULT;
--		}
--
--		cpu_relax();
--	}
--
--	return 0;
-+	return samsung_pll_lock_wait(pll, PLL46XX_LOCKED);
- }
- 
- static const struct clk_ops samsung_pll46xx_clk_ops = {
-@@ -1035,14 +1016,9 @@ static int samsung_pll2550xx_set_rate(struct clk_hw *hw, unsigned long drate,
- 			(rate->sdiv << PLL2550XX_S_SHIFT);
- 	writel_relaxed(tmp, pll->con_reg);
- 
--	/* wait_lock_time */
--	do {
--		cpu_relax();
--		tmp = readl_relaxed(pll->con_reg);
--	} while (!(tmp & (PLL2550XX_LOCK_STAT_MASK
--			<< PLL2550XX_LOCK_STAT_SHIFT)));
--
--	return 0;
-+	/* Wait for locking. */
-+	return samsung_pll_lock_wait(pll,
-+			PLL2550XX_LOCK_STAT_MASK << PLL2550XX_LOCK_STAT_SHIFT);
- }
- 
- static const struct clk_ops samsung_pll2550xx_clk_ops = {
-@@ -1132,13 +1108,9 @@ static int samsung_pll2650x_set_rate(struct clk_hw *hw, unsigned long drate,
- 	con1 |= ((rate->kdiv & PLL2650X_K_MASK) << PLL2650X_K_SHIFT);
- 	writel_relaxed(con1, pll->con_reg + 4);
- 
--	do {
--		cpu_relax();
--		con0 = readl_relaxed(pll->con_reg);
--	} while (!(con0 & (PLL2650X_LOCK_STAT_MASK
--			<< PLL2650X_LOCK_STAT_SHIFT)));
--
--	return 0;
-+	/* Wait for locking. */
-+	return samsung_pll_lock_wait(pll,
-+			PLL2650X_LOCK_STAT_MASK << PLL2650X_LOCK_STAT_SHIFT);
- }
- 
- static const struct clk_ops samsung_pll2650x_clk_ops = {
--- 
-2.7.4
+One way of doing this can be to create a the host, a net device for each VD=
+PA instance, and use it to get this information or do some configuration. E=
+thtool can be used in such a case
 
+I would like to hear what you think about this or maybe you have some other=
+ ideas to address this topic.
+
+Thanks,
+Eli
