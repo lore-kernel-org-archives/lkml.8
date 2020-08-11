@@ -2,196 +2,119 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9051EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 05:33:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD770C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 05:35:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67C1420678
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 05:33:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9F3F20678
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 05:35:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H6BRJHmo"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TOm8HnDE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728161AbgHKFdd (ORCPT
+        id S1727052AbgHKFf2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 01:33:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53166 "EHLO
+        Tue, 11 Aug 2020 01:35:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726438AbgHKFdb (ORCPT
+        with ESMTP id S1726301AbgHKFf1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 01:33:31 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C07CC06174A
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 22:33:31 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id 2so1263077pjx.5
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 22:33:31 -0700 (PDT)
+        Tue, 11 Aug 2020 01:35:27 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C77AC06174A
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 22:35:27 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id t6so6174699pgq.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 22:35:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=+xKWNhXUsJiYvk1+a8fEWrWaR7NXfzlzjTUeULn8Q6c=;
-        b=H6BRJHmok6rlDTDj9saLrefsrAuL4Q9ISG7Z+Wv5UL54l6u+0c85vTJOnAbCMaRvxt
-         2jqNfX4nxXqMM4Fte95OImp3GZbwcuOt+R2YciBsh81vvI69mxAIhs6EJPDve1fI5Xr9
-         4WJCJj8V+zJVFbNI+s9/MKAumHQauW6HrF2w+D7sfy0sQe38zsEZDRn1dMPPyhpmKCVW
-         KWJUZFv1TX1rj3UkVGLnaF+YG21sqklD4PQGKemjsRLKR1EUc63W8kKEe+lcJE+gHhQz
-         gJQEfSoU3bIps8oTXfDaGOPl9nXP4Q2V0Pk1zuwAnOH+1yOBu47ruNjJSgskxRxgFhJj
-         5CWQ==
+        h=from:to:cc:subject:date:message-id;
+        bh=244GqzY4/oX3NlWeCdM9jADJQeGD2iomYA6mMwXvC1k=;
+        b=TOm8HnDEYZxlXlH1umxFQbPTo9m/L/9vMgEGFGU0t+vcR/PERV/t6+0lVphpXoqOql
+         JZWl7z5I8Zk+/2XObpjxNu115hGuOJS2GdE4PDj0zXcpcVcAdG3DRgnh/63vQ+UmQO08
+         6mb+iDT3u/0V9z5uyUjKTxCvVzolESUqIVk2VK/qTyBlLjmJ18a8SaydaxMQ83Hf0Z/e
+         Cveikn9nlGAEmxnaXsTdZoTfn6HUxpoAmr2AQgG6xvKiJBX9FMRiLxZgIulO5O4tN3EF
+         jItngCeDk6LwiftHO3WTqcWI8/VZ/Ba5SOIv2LSPi8O2TvGzd/jo5FYvI/E7ecaVjApz
+         3GFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+xKWNhXUsJiYvk1+a8fEWrWaR7NXfzlzjTUeULn8Q6c=;
-        b=VEyH/lD0fCYhiygFvX1EHzGWA6F33RwqLwlgxUmCkets8Gjon1CPr9KlX/xn+vQTSO
-         aDkBZEn1k1zow8ux94ZFXsvvdt2DyBYGenbEcqZgeIjIaHxS48n4EqfxG1BJvjb7u4A3
-         8TMjrq2MlxlSYQjidsLc/1q9xnAh7YUrQj1yBfNlFWcGr+yi0HjFEoKb1AYNAcWV1E1T
-         GWDpZ2WyRfXsyur00sa4kgEnF256a4BA6H+A0IcUCEICF4ydMUgH1abS3OJics1Ds65P
-         NASxzflfGwjc05IZcKelGHJUqIGj5X5w9ntiUAhE7DanMQXc/uyaYUHREOiek20YjO9y
-         iFCg==
-X-Gm-Message-State: AOAM530n8SDWYReucPtarF+AyPiZAaan6ghi51lw/mhDj7jb0SuPBqiA
-        lLjxcQAsyn+52U6hW6STv9AdaA==
-X-Google-Smtp-Source: ABdhPJx3jQTkXncqgt4b+LbpuZnZD8+z5xDcuHUu4W3b7sBDGMZOWVPPuSU3CSXQ4D7jkwyqbhECDA==
-X-Received: by 2002:a17:90a:a65:: with SMTP id o92mr3032631pjo.104.1597124010736;
-        Mon, 10 Aug 2020 22:33:30 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id b20sm24140621pfo.88.2020.08.10.22.33.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Aug 2020 22:33:30 -0700 (PDT)
-Date:   Mon, 10 Aug 2020 22:29:59 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Todd Kjos <tkjos@google.com>,
-        Amit Pundir <amit.pundir@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-serial@vger.kernel.org
-Subject: Re: [RFC][PATCH] tty: serial: qcom_geni_serial: Drop __init from
- qcom_geni_console_setup
-Message-ID: <20200811052959.GJ20825@builder.lan>
-References: <20200811025044.70626-1-john.stultz@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200811025044.70626-1-john.stultz@linaro.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=244GqzY4/oX3NlWeCdM9jADJQeGD2iomYA6mMwXvC1k=;
+        b=BvSgnb9kSyXYJ6/Buh7phD/H466MFpNd0WuOjieevPqEfFNhQmzq2GbguT5WItLFEk
+         zR7DJeAlgguu1Um2co+tgl2Z3kw2PN8adPSnFn05ZS1GOtvEnb8hRFzxLudV8Y2ptHF2
+         MVufDcMMmW4O3Zu23A3NLMcGQzBDE8oNaNaC3IbO8TV3nxK23+Tsa+0Bw/TEKj0R+O+M
+         msryeygNHM577ZvVKBE8Hu6UZuwzI+oI/4WRE85QI/vHVwmH404+cfsEGm2rhsUxM0pK
+         CKiBl4eb2+3VHytfo9e9OmfxiCTDOdck+PnJr4Q5c7KzecduZ7VlQjcASJk2TE68QBVM
+         p6UQ==
+X-Gm-Message-State: AOAM532QGKuTnHTVUG7LvTup7zBxgsylxpGsmi/sCM4mm/xK96wxLgjc
+        KMZyXIp+0PczugesFksMm1ky+g==
+X-Google-Smtp-Source: ABdhPJzlUZErYDsrPhJG4ps7cBUwZqefZ/4PfhqeW7JXeCSe9O0FxZt3vZkYTRyeavR1/9EnPvyYmw==
+X-Received: by 2002:a63:6fc7:: with SMTP id k190mr24442812pgc.54.1597124126881;
+        Mon, 10 Aug 2020 22:35:26 -0700 (PDT)
+Received: from localhost ([2600:3c01::f03c:91ff:fe8a:bb03])
+        by smtp.gmail.com with ESMTPSA id l62sm1324921pjb.7.2020.08.10.22.35.25
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 10 Aug 2020 22:35:26 -0700 (PDT)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH] arm64: perf: Add general hardware LLC events for PMUv3
+Date:   Tue, 11 Aug 2020 13:35:05 +0800
+Message-Id: <20200811053505.21223-1-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 10 Aug 19:50 PDT 2020, John Stultz wrote:
+This patch is to add the general hardware last level cache (LLC) events
+for PMUv3: one event is for LLC access and another is for LLC miss.
 
-> When booting with heavily modularized config, the serial console
-> may not be able to load until after init when modules that
-> satisfy needed dependencies have time to load.
-> 
-> Unfortunately, as qcom_geni_console_setup is marked as __init,
-> the function may have been freed before we get to run it,
-> causing boot time crashes such as:
-> 
-> [    6.469057] Unable to handle kernel paging request at virtual address ffffffe645d4e6cc
-> [    6.481623] Mem abort info:
-> [    6.484466]   ESR = 0x86000007
-> [    6.487557]   EC = 0x21: IABT (current EL), IL = 32 bits
-> [    6.492929]   SET = 0, FnV = 0g
-> [    6.496016]   EA = 0, S1PTW = 0
-> [    6.499202] swapper pgtable: 4k pages, 39-bit VAs, pgdp=000000008151e000
-> [    6.501286] ufshcd-qcom 1d84000.ufshc: ufshcd_print_pwr_info:[RX, TX]: gear=[3, 3], lane[2, 2], pwr[FAST MODE, FAST MODE], rate = 2
-> [    6.505977] [ffffffe645d4e6cc] pgd=000000017df9f003, p4d=000000017df9f003, pud=000000017df9f003, pmd=000000017df9c003, pte=0000000000000000
-> [    6.505990] Internal error: Oops: 86000007 [#1] PREEMPT SMP
-> [    6.505995] Modules linked in: zl10353 zl10039 zl10036 zd1301_demod xc5000 xc4000 ves1x93 ves1820 tuner_xc2028 tuner_simple tuner_types tua9001 tua6100 1
-> [    6.506152]  isl6405
-> [    6.518104] ufshcd-qcom 1d84000.ufshc: ufshcd_find_max_sup_active_icc_level: Regulator capability was not set, actvIccLevel=0
-> [    6.530549]  horus3a helene fc2580 fc0013 fc0012 fc0011 ec100 e4000 dvb_pll ds3000 drxk drxd drx39xyj dib9000 dib8000 dib7000p dib7000m dib3000mc dibx003
-> [    6.624271] CPU: 7 PID: 148 Comm: kworker/7:2 Tainted: G        W       5.8.0-mainline-12021-g6defd37ba1cd #3455
-> [    6.624273] Hardware name: Thundercomm Dragonboard 845c (DT)
-> [    6.624290] Workqueue: events deferred_probe_work_func
-> [    6.624296] pstate: 40c00005 (nZcv daif +PAN +UAO BTYPE=--)
-> [    6.624307] pc : qcom_geni_console_setup+0x0/0x110
-> [    6.624316] lr : try_enable_new_console+0xa0/0x140
-> [    6.624318] sp : ffffffc010843a30
-> [    6.624320] x29: ffffffc010843a30 x28: ffffffe645c3e7d0
-> [    6.624325] x27: ffffff80f8022180 x26: ffffffc010843b28
-> [    6.637937] x25: 0000000000000000 x24: ffffffe6462a2000
-> [    6.637941] x23: ffffffe646398000 x22: 0000000000000000
-> [    6.637945] x21: 0000000000000000 x20: ffffffe6462a5ce8
-> [    6.637952] x19: ffffffe646398e38 x18: ffffffffffffffff
-> [    6.680296] x17: 0000000000000000 x16: ffffffe64492b900
-> [    6.680300] x15: ffffffe6461e9d08 x14: 69202930203d2064
-> [    6.680305] x13: 7561625f65736162 x12: 202c363331203d20
-> [    6.696434] x11: 0000000000000030 x10: 0101010101010101
-> [    6.696438] x9 : 4d4d20746120304d x8 : 7f7f7f7f7f7f7f7f
-> [    6.707249] x7 : feff4c524c787373 x6 : 0000000000008080
-> [    6.707253] x5 : 0000000000000000 x4 : 8080000000000000
-> [    6.707257] x3 : 0000000000000000 x2 : ffffffe645d4e6cc
-> [    6.744223] qcom_geni_serial 898000.serial: dev_pm_opp_set_rate: failed to find OPP for freq 102400000 (-34)
-> [    6.744966] x1 : fffffffefe74e174 x0 : ffffffe6462a5ce8
-> [    6.753580] qcom_geni_serial 898000.serial: dev_pm_opp_set_rate: failed to find OPP for freq 102400000 (-34)
-> [    6.761634] Call trace:
-> [    6.761639]  qcom_geni_console_setup+0x0/0x110
-> [    6.761645]  register_console+0x29c/0x2f8
-> [    6.767981] Bluetooth: hci0: Frame reassembly failed (-84)
-> [    6.775252]  uart_add_one_port+0x438/0x500
-> [    6.775258]  qcom_geni_serial_probe+0x2c4/0x4a8
-> [    6.775266]  platform_drv_probe+0x58/0xa8
-> [    6.855359]  really_probe+0xec/0x398
-> [    6.855362]  driver_probe_device+0x5c/0xb8
-> [    6.855367]  __device_attach_driver+0x98/0xb8
-> [    7.184945]  bus_for_each_drv+0x74/0xd8
-> [    7.188825]  __device_attach+0xec/0x148
-> [    7.192705]  device_initial_probe+0x24/0x30
-> [    7.196937]  bus_probe_device+0x9c/0xa8
-> [    7.200816]  deferred_probe_work_func+0x7c/0xb8
-> [    7.205398]  process_one_work+0x20c/0x4b0
-> [    7.209456]  worker_thread+0x48/0x460
-> [    7.213157]  kthread+0x14c/0x158
-> [    7.216432]  ret_from_fork+0x10/0x18
-> [    7.220049] Code: bad PC value
-> [    7.223139] ---[ end trace 73f3b21e251d5a70 ]---
-> 
-> Thus this patch removes the __init avoiding crash in such
-> configs.
-> 
-> Cc: Andy Gross <agross@kernel.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Jiri Slaby <jirislaby@kernel.org>
-> Cc: Saravana Kannan <saravanak@google.com>
-> Cc: Todd Kjos <tkjos@google.com>
-> Cc: Amit Pundir <amit.pundir@linaro.org>
-> Cc: linux-arm-msm@vger.kernel.org
-> Cc: linux-serial@vger.kernel.org
-> Suggested-by: Saravana Kannan <saravanak@google.com>
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
+With this change, perf tool can support last level cache profiling,
+below is an example to demonstrate the usage on Arm64:
 
-Good find, that's definitely broken.
+  $ perf stat -e LLC-load-misses -e LLC-loads -- \
+	  perf bench mem memcpy -s 1024MB -l 100 -f default
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+  [...]
 
-Regards,
-Bjorn
+    Performance counter stats for 'perf bench mem memcpy -s 1024MB -l 100 -f default':
 
-> ---
->  drivers/tty/serial/qcom_geni_serial.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
-> index 3aa29d201f54..f7c6c7466520 100644
-> --- a/drivers/tty/serial/qcom_geni_serial.c
-> +++ b/drivers/tty/serial/qcom_geni_serial.c
-> @@ -1098,7 +1098,7 @@ static unsigned int qcom_geni_serial_tx_empty(struct uart_port *uport)
->  }
->  
->  #ifdef CONFIG_SERIAL_QCOM_GENI_CONSOLE
-> -static int __init qcom_geni_console_setup(struct console *co, char *options)
-> +static int qcom_geni_console_setup(struct console *co, char *options)
->  {
->  	struct uart_port *uport;
->  	struct qcom_geni_serial_port *port;
-> -- 
-> 2.17.1
-> 
+        35,534,262      LLC-load-misses           #    2.16% of all LL-cache hits
+     1,643,946,443      LLC-loads
+
+  [...]
+
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+---
+ arch/arm64/kernel/perf_event.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
+index 462f9a9cc44b..86e2328b0c2e 100644
+--- a/arch/arm64/kernel/perf_event.c
++++ b/arch/arm64/kernel/perf_event.c
+@@ -69,6 +69,9 @@ static const unsigned armv8_pmuv3_perf_cache_map[PERF_COUNT_HW_CACHE_MAX]
+ 	[C(ITLB)][C(OP_READ)][C(RESULT_MISS)]	= ARMV8_PMUV3_PERFCTR_L1I_TLB_REFILL,
+ 	[C(ITLB)][C(OP_READ)][C(RESULT_ACCESS)]	= ARMV8_PMUV3_PERFCTR_L1I_TLB,
+ 
++	[C(LL)][C(OP_READ)][C(RESULT_MISS)]	= ARMV8_PMUV3_PERFCTR_LL_CACHE_MISS_RD,
++	[C(LL)][C(OP_READ)][C(RESULT_ACCESS)]	= ARMV8_PMUV3_PERFCTR_LL_CACHE_RD,
++
+ 	[C(BPU)][C(OP_READ)][C(RESULT_ACCESS)]	= ARMV8_PMUV3_PERFCTR_BR_PRED,
+ 	[C(BPU)][C(OP_READ)][C(RESULT_MISS)]	= ARMV8_PMUV3_PERFCTR_BR_MIS_PRED,
+ };
+-- 
+2.17.1
+
