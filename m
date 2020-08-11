@@ -2,232 +2,99 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6365DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 07:54:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BA9EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 07:54:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2AA9620658
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 07:54:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=melexis.com header.i=@melexis.com header.b="AWg5Or5Y"
+	by mail.kernel.org (Postfix) with ESMTP id E584C206B2
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 07:54:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728223AbgHKHyg (ORCPT
+        id S1728252AbgHKHyr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 03:54:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46534 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728133AbgHKHyd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 03:54:33 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BB02C06174A
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 00:54:33 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id y18so9786949ilp.10
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 00:54:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=melexis.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Z5wWPMoezqlPQW+XdXx9xDErG0vZ5Ug+GxrnTbtmQ7M=;
-        b=AWg5Or5YERYKPYus/eM6Psz/6DB+ozbeyIgm5BdkcNrz+qaXydnw5C9h2yoNvdDN5L
-         BVwNYvfnGupyhB3fNudXRx17vToJsrp/WuFz7OccXouv5EOMlCDhKyQf7arOLvEgKskr
-         CHcdKTyQDaZXTITMAdPG1+EqwrysS4FjRXFq250kG9RyuPLfOcHhaxHzbop867temC91
-         HgjqFt4KcdcPJmq7FOCUhWbGmRQXhBFFXtn4eYrvOXDDrYHUFDdiCo79izc/XOb+Nm1G
-         ZvIkJlOL1BHQdPwPAOneQ41ySPYmks5pmre/t7gxMA0veF6Q25TcnXlzhJ/O5GfmhkfZ
-         IhAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Z5wWPMoezqlPQW+XdXx9xDErG0vZ5Ug+GxrnTbtmQ7M=;
-        b=cN4CxCTp38xdDKWDcLWuKj0OKrJrb2/o61KBmhtnDFBUI3ryfCaSCfRcWB5UNOpibK
-         YfTv8PcORPcD2r1HTMUHpWt3Y05QM5y2P8nlcXgZX+atRLeYumxZtcVsQDlpZgzR5ziS
-         yYtNEQ58420iwdExA5gpVgM7WIkAWo61elwC1ytbzYxcll/Tsx2Ey2d2lIE+VYHsJl1Y
-         WaYfKXzTVpiALi+qJx10cBZ36KkXRNhVCLPgg5iaWLzl18CAJJ9LkkUwR1NF10hi0pzQ
-         A4HzPQ49K/cnOm/kRr4NyZlALw7M/9nbk2vtaebHEdL5zBfDvqMmogwnOBC1wL/8LpqG
-         pkzQ==
-X-Gm-Message-State: AOAM5334F54viOpSpAlyNyAlv6w5RT8CoC103Mh/tcNb2W9p+OhFL6+k
-        xQ33QhFWuIi6CA0Ih6NNHl51BRLPnZB9kUt0BFmAMw==
-X-Google-Smtp-Source: ABdhPJxwBM5O2lPH+oGFjeL1pKcmpnayR8cPQmg3NDuJvttcswQ8j93D3BnivaApSCPbShY8CtutkgmYHtHlOc5nIKM=
-X-Received: by 2002:a92:cb12:: with SMTP id s18mr5277285ilo.13.1597132470806;
- Tue, 11 Aug 2020 00:54:30 -0700 (PDT)
+        Tue, 11 Aug 2020 03:54:47 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:59264 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728133AbgHKHyp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 03:54:45 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 7D23CB3EBB3893400E5D;
+        Tue, 11 Aug 2020 15:54:40 +0800 (CST)
+Received: from [10.164.122.247] (10.164.122.247) by smtp.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server (TLS) id 14.3.487.0; Tue, 11 Aug
+ 2020 15:54:35 +0800
+Subject: Re: [f2fs-dev] [PATCH] f2fs: change virtual mapping way for
+ compression pages
+To:     Daeho Jeong <daeho43@gmail.com>
+CC:     Gao Xiang <hsiangkao@redhat.com>,
+        Daeho Jeong <daehojeong@google.com>, <kernel-team@android.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+References: <20200811033753.783276-1-daeho43@gmail.com>
+ <20200811071552.GA8365@xiangao.remote.csb>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <3059d7b0-cf50-4315-e5a9-8d9c00965a7c@huawei.com>
+Date:   Tue, 11 Aug 2020 15:54:35 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-References: <20200808121026.1300375-1-cmo@melexis.com> <20200808121026.1300375-3-cmo@melexis.com>
- <CAHp75VfWk7pCy4Osv0uY0UH4yFS=PRGbE1CNCakuRFTE33SDJg@mail.gmail.com>
- <CAKv63uv-+r6M=G2rviSedgdCUd_0nzHKWXK363bJNERTQHRYXA@mail.gmail.com>
- <20200809143222.4e19ea38@archlinux> <CAKv63uu1cRVCujM0nR5BstDYLZnCuGQTeFxhyUF0QK0mr0hvkQ@mail.gmail.com>
-In-Reply-To: <CAKv63uu1cRVCujM0nR5BstDYLZnCuGQTeFxhyUF0QK0mr0hvkQ@mail.gmail.com>
-From:   Crt Mori <cmo@melexis.com>
-Date:   Tue, 11 Aug 2020 09:53:55 +0200
-Message-ID: <CAKv63uuVYS5isAnhBzcqOJEJWhD5muSDBJzvYoJk1KkucrRnDA@mail.gmail.com>
-Subject: Re: [PATCH v4 2/4] iio:temperature:mlx90632: Adding extended
- calibration option
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200811071552.GA8365@xiangao.remote.csb>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.164.122.247]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 9 Aug 2020 at 23:05, Crt Mori <cmo@melexis.com> wrote:
->
-> On Sun, 9 Aug 2020 at 15:32, Jonathan Cameron <jic23@kernel.org> wrote:
-> >
-> > On Sat, 8 Aug 2020 23:57:59 +0200
-> > Crt Mori <cmo@melexis.com> wrote:
-> >
-> > > Hi,
-> > > I am very sorry you missed them, I thought you saw it (reply on v3 of
-> > > the patch). Maybe something happened to that mail, as it contained
-> > > link to datasheet, so I will omit it now.
-> > >
-> > > Except for the order, only the remarks below are still open (did you
-> > > get the polling trail I did?)
-> > >
-> > > On Sat, 8 Aug 2020 at 22:04, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> > > >
-> > > > On Sat, Aug 8, 2020 at 3:11 PM Crt Mori <cmo@melexis.com> wrote:
-> > > > >
-> > > > > For some time the market wants medical grade accuracy in medical range,
-> > > > > while still retaining the declared accuracy outside of the medical range
-> > > > > within the same sensor. That is why we created extended calibration
-> > > > > which is automatically switched to when object temperature is too high.
-> > > > >
-> > > > > This patch also introduces the object_ambient_temperature variable which
-> > > > > is needed for more accurate calculation of the object infra-red
-> > > > > footprint as sensor's ambient temperature might be totally different
-> > > > > than what the ambient temperature is at object and that is why we can
-> > > > > have some more errors which can be eliminated. Currently this temperature
-> > > > > is fixed at 25, but the interface to adjust it by user (with external
-> > > > > sensor or just IR measurement of the other object which acts as ambient),
-> > > > > will be introduced in another commit.
-> > > >
-> > > > The kernel doc patch should go before this patch.
-> > > >
-> > > > ...
-> > > >
-> > > > > +       *ambient_new_raw = (s16)read_tmp;
-> > > >
-> > > > > +       *ambient_old_raw = (s16)read_tmp;
-> > > >
-> > > > Sorry, did I miss your answer about these castings all over the patch?
-> > > >
-> > >
-> > > These castings are in fact needed. You read unsigned integer, but the
-> > > return value is signed integer. Without the cast it did not extend the
-> > > signed bit, but just wrote the value to signed. Also I find it more
-> > > obvious with casts, that I did not "accidentally" convert to signed.
-> >
-> > Should we perhaps be making this explicit for the cases where we
-> > are sign extending?  That doesn't include these two as the lvalue
-> > is s16, but does include some of the others.
-> >
-> > sign_extend32(read_tmp, 15)
-> >
->
-> So for you lines like
-> s32 read;
-> read = (read + (s16)read_tmp) / 2;
->
-> would actually be better as:
-> read = (read + sign_extend32(read_tmp, 15)) / 2;
->
-> Hm, strange. I would read that more align the read_tmp to 32 bit than
-> the value you have in read_tmp is actually a signed 16 bit integer...
->
+On 2020/8/11 15:15, Gao Xiang wrote:
+> On Tue, Aug 11, 2020 at 12:37:53PM +0900, Daeho Jeong wrote:
+>> From: Daeho Jeong <daehojeong@google.com>
+>>
+>> By profiling f2fs compression works, I've found vmap() callings are
+>> bottlenecks of f2fs decompression path. Changing these with
+>> vm_map_ram(), we can enhance f2fs decompression speed pretty much.
+>>
+>> [Verification]
+>> dd if=/dev/zero of=dummy bs=1m count=1000
+>> echo 3 > /proc/sys/vm/drop_caches
+>> dd if=dummy of=/dev/zero bs=512k
+>>
+>> - w/o compression -
+>> 1048576000 bytes (0.9 G) copied, 1.999384 s, 500 M/s
+>> 1048576000 bytes (0.9 G) copied, 2.035988 s, 491 M/s
+>> 1048576000 bytes (0.9 G) copied, 2.039457 s, 490 M/s
+>>
+>> - before patch -
+>> 1048576000 bytes (0.9 G) copied, 9.146217 s, 109 M/s
+>> 1048576000 bytes (0.9 G) copied, 9.997542 s, 100 M/s
+>> 1048576000 bytes (0.9 G) copied, 10.109727 s, 99 M/s
+>>
+>> - after patch -
+>> 1048576000 bytes (0.9 G) copied, 2.253441 s, 444 M/s
+>> 1048576000 bytes (0.9 G) copied, 2.739764 s, 365 M/s
+>> 1048576000 bytes (0.9 G) copied, 2.185649 s, 458 M/s
+> 
+> Indeed, vmap() approach has some impact on the whole
+> workflow. But I don't think the gap is such significant,
+> maybe it relates to unlocked cpufreq (and big little
+> core difference if it's on some arm64 board).
 
-OK, I did some trails without the casts and had deja-vu from the first
-series of patches I submitted.  I noticed that without a cast the
-value that ends up in variable is not extended to signed, but it is
-unsigned value truncated. This same finding leads to have these casts
-already in current ambient and object raw read functions.
+Agreed,
 
-So now only debate is if sign_extend32 is useful in this case, as read
-in the current case is 32 bit (before it was also 16 bit).
+I guess there should be other reason causing the large performance
+gap, scheduling, frequency, or something else.
 
-My preference is to leave unified across the driver.
-
-> > >
-> > > > ...
-> > > >
-> > > > > +       ret = regmap_read(regmap, MLX90632_RAM_1(17), &read_tmp);
-> > > > > +       ret = regmap_read(regmap, MLX90632_RAM_2(17), &read_tmp);
-> > > > > +       ret = regmap_read(regmap, MLX90632_RAM_1(18), &read_tmp);
-> > > > > +       ret = regmap_read(regmap, MLX90632_RAM_2(18), &read_tmp);
-> > > > > +       ret = regmap_read(regmap, MLX90632_RAM_1(19), &read_tmp);
-> > > > > +       ret = regmap_read(regmap, MLX90632_RAM_2(19), &read_tmp);
-> > > >
-> > > > What so special about these magic 17, 18, 19? Can you provide definitions?
-> > > >
-> > > When we started 0 to 19 were all open for access, from userspace, then
-> > > only 1 and 2 were used with calculations, and now we use 17, 18 and
-> > > 19. Matter of fact is, I can't provide a descriptive name as it
-> > > depends on DSP version and as you can see now within the same DSP
-> > > version, also on the ID part. While RAM3 vs RAM1 and RAM2 could be
-> > > named RAM_OBJECT1, RAM_OBJECT2, RAM_AMBIENT, knowing our development
-> > > that might not be true in the next configuration, so I rather keep the
-> > > naming as in the datasheet.
-> > Normal solution for that is to version the defines as well.
-> >
-> > MLX90632_FW3_RAM_1_AMBIENT etc
-> > When a new version changes this, then you introduced new defines to
-> > support that firmware.
-> >
->
-> OK will add those, but it is ending up as:
-> MLX90632_RAM_DSP5_AMBIENT
-> MLX90632_RAM_DSP5_EXTENDED_AMBIENT
-> MLX90632_RAM_DSP5_OBJECT_1
-> MLX90632_RAM_DSP5_EXTENDED_OBJECT_1
-> MLX90632_RAM_DSP5_OBJECT_2
-> MLX90632_RAM_DSP5_EXTENDED_OBJECT_2
->
-> ok?
-> > >
-> > > > ...
-> > > >
-> > > > > +       int tries = 4;
-> > > >
-> > > > > +       while (tries-- > 0) {
-> > > > > +               ret = mlx90632_perform_measurement(data);
-> > > > > +               if (ret < 0)
-> > > > > +                       goto read_unlock;
-> > > > > +
-> > > > > +               if (ret == 19)
-> > > > > +                       break;
-> > > > > +       }
-> > > > > +       if (tries < 0) {
-> > > > > +               ret = -ETIMEDOUT;
-> > > > > +               goto read_unlock;
-> > > > > +       }
-> > > >
-> > > > Please avoid ping-pong type of changes in the same series (similar way
-> > > > as for kernel doc), which means don't introduce something you are
-> > > > going to change later on. Patch to move to do {} while () should go
-> > > > before this one.
-> > >
-> > > OK, will fix that ordering in v5, but will wait till we solve also
-> > > above discussions to avoid adding new versions.
-> > >
-> > > >
-> > > > --
-> > > > With Best Regards,
-> > > > Andy Shevchenko
-> > >
-> > > And about that voodoo stuff with numbers:
-> > >
-> > > Honestly, the equation is in the datasheet[1] and this is just making
-> > > floating point to fixed point with proper intermediate scaling
-> > > (initially I had defines of TENTOX, but that was not desired). There
-> > > is no better explanation of this voodoo.
-> >
-> > We all love fixed point arithmetic :)
-> >
-> > Jonathan
+> 
+> 
+> 
+> _______________________________________________
+> Linux-f2fs-devel mailing list
+> Linux-f2fs-devel@lists.sourceforge.net
+> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
+> .
+> 
