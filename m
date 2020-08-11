@@ -2,118 +2,226 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D0BC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 08:17:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E64C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 08:17:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD691206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 08:17:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45005206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 08:17:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="rbxFIy2z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728297AbgHKIR1 (ORCPT
+        id S1728342AbgHKIRe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 04:17:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50072 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728254AbgHKIR0 (ORCPT
+        Tue, 11 Aug 2020 04:17:34 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:37290 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728254AbgHKIRe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 04:17:26 -0400
-Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [IPv6:2a02:1800:120:4::f00:13])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3B0FC06174A
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 01:17:25 -0700 (PDT)
-Received: from ramsan ([84.195.186.194])
-        by baptiste.telenet-ops.be with bizsmtp
-        id E8HH230014C55Sk018HHG0; Tue, 11 Aug 2020 10:17:20 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1k5PTA-0000UC-Tn; Tue, 11 Aug 2020 10:17:16 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1k5PTA-0001g9-RW; Tue, 11 Aug 2020 10:17:16 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Sergei Shtylyov <sergei.shtylyov@gmail.com>,
-        linux-ide@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        stable <stable@vger.kernel.org>
-Subject: [PATCH v2] ata: sata_rcar: Fix DMA boundary mask
-Date:   Tue, 11 Aug 2020 10:17:12 +0200
-Message-Id: <20200811081712.4981-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
+        Tue, 11 Aug 2020 04:17:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1597133854; x=1628669854;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=v7JpzSx2FavY0/FUZq+eRVDiZaVL9bvJQqJgwlhhNNE=;
+  b=rbxFIy2znfTIJbJ0aWVlNAQiyXOI36mRzAXGyTzBiw3lm0YB5/Wt2CwE
+   s16l6eWqnG0KzBs8xTqfukdbo8zyCaBvvbw+XnP19HBfkdL5W9vxPlX10
+   ADmZOGqPP+q3Vt5TnrUpykSbwqEtcpkfKF4n7G/BOhqXCN2WAMDIJQuBn
+   U=;
+IronPort-SDR: Ey/6A3yszZrQ8q8Gt+ljZsEc9sDOwZJ+JqPqCHuxy4ESyl3Jtmd8SjRfWjD9KPWOEZx/crBSVu
+ SbxzvYQtSDZQ==
+X-IronPort-AV: E=Sophos;i="5.75,460,1589241600"; 
+   d="scan'208";a="65828774"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2c-4e7c8266.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 11 Aug 2020 08:17:32 +0000
+Received: from EX13MTAUEB002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2c-4e7c8266.us-west-2.amazon.com (Postfix) with ESMTPS id 48EF1A21D7;
+        Tue, 11 Aug 2020 08:17:31 +0000 (UTC)
+Received: from EX13D16EUB001.ant.amazon.com (10.43.166.28) by
+ EX13MTAUEB002.ant.amazon.com (10.43.60.12) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 11 Aug 2020 08:16:34 +0000
+Received: from 38f9d34ed3b1.ant.amazon.com (10.43.160.156) by
+ EX13D16EUB001.ant.amazon.com (10.43.166.28) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 11 Aug 2020 08:16:25 +0000
+Subject: Re: [PATCH v6 08/18] nitro_enclaves: Add logic for creating an
+ enclave VM
+To:     Alexander Graf <graf@amazon.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+CC:     Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        "David Duncan" <davdunc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        "David Woodhouse" <dwmw@amazon.co.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Karen Noel <knoel@redhat.com>,
+        "Martin Pohlack" <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Stewart Smith <trawets@amazon.com>,
+        Uwe Dannowski <uwed@amazon.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        kvm <kvm@vger.kernel.org>,
+        ne-devel-upstream <ne-devel-upstream@amazon.com>
+References: <20200805091017.86203-1-andraprs@amazon.com>
+ <20200805091017.86203-9-andraprs@amazon.com>
+ <77f71395-d7ba-f198-56dc-3b0a954a98de@amazon.de>
+From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
+Message-ID: <666a72eb-0170-ea53-d8f6-6fb71835cd4e@amazon.com>
+Date:   Tue, 11 Aug 2020 11:16:20 +0300
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:78.0)
+ Gecko/20100101 Thunderbird/78.1.0
+MIME-Version: 1.0
+In-Reply-To: <77f71395-d7ba-f198-56dc-3b0a954a98de@amazon.de>
+Content-Language: en-US
+X-Originating-IP: [10.43.160.156]
+X-ClientProxiedBy: EX13D37UWA004.ant.amazon.com (10.43.160.23) To
+ EX13D16EUB001.ant.amazon.com (10.43.166.28)
+Content-Type: text/plain; charset="windows-1252"; format="flowed"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Before commit 9495b7e92f716ab2 ("driver core: platform: Initialize
-dma_parms for platform devices"), the R-Car SATA device didn't have DMA
-parameters.  Hence the DMA boundary mask supplied by its driver was
-silently ignored, as __scsi_init_queue() doesn't check the return value
-of dma_set_seg_boundary(), and the default value of 0xffffffff was used.
 
-Now the device has gained DMA parameters, the driver-supplied value is
-used, and the following warning is printed on Salvator-XS:
 
-    DMA-API: sata_rcar ee300000.sata: mapping sg segment across boundary [start=0x00000000ffffe000] [end=0x00000000ffffefff] [boundary=0x000000001ffffffe]
-    WARNING: CPU: 5 PID: 38 at kernel/dma/debug.c:1233 debug_dma_map_sg+0x298/0x300
+On 10/08/2020 09:11, Alexander Graf wrote:
+>
+>
+> On 05.08.20 11:10, Andra Paraschiv wrote:
+>> Add ioctl command logic for enclave VM creation. It triggers a slot
+>> allocation. The enclave resources will be associated with this slot and
+>> it will be used as an identifier for triggering enclave run.
+>>
+>> Return a file descriptor, namely enclave fd. This is further used by the
+>> associated user space enclave process to set enclave resources and
+>> trigger enclave termination.
+>>
+>> The poll function is implemented in order to notify the enclave process
+>> when an enclave exits without a specific enclave termination command
+>> trigger e.g. when an enclave crashes.
+>>
+>> Signed-off-by: Alexandru Vasile <lexnv@amazon.com>
+>> Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
+>> Reviewed-by: Alexander Graf <graf@amazon.com>
+>> ---
+>> Changelog
+>>
+>> v5 -> v6
+>>
+>> * Update the code base to init the ioctl function in this patch.
+>> * Update documentation to kernel-doc format.
+>>
+>> v4 -> v5
+>>
+>> * Release the reference to the NE PCI device on create VM error.
+>> * Close enclave fd on copy_to_user() failure; rename fd to enclave fd
+>> =A0=A0 while at it.
+>> * Remove sanity checks for situations that shouldn't happen, only if
+>> =A0=A0 buggy system or broken logic at all.
+>> * Remove log on copy_to_user() failure.
+>>
+>> v3 -> v4
+>>
+>> * Use dev_err instead of custom NE log pattern.
+>> * Update the NE ioctl call to match the decoupling from the KVM API.
+>> * Add metadata for the NUMA node for the enclave memory and CPUs.
+>>
+>> v2 -> v3
+>>
+>> * Remove the WARN_ON calls.
+>> * Update static calls sanity checks.
+>> * Update kzfree() calls to kfree().
+>> * Remove file ops that do nothing for now - open.
+>>
+>> v1 -> v2
+>>
+>> * Add log pattern for NE.
+>> * Update goto labels to match their purpose.
+>> * Remove the BUG_ON calls.
+>> ---
+>> =A0 drivers/virt/nitro_enclaves/ne_misc_dev.c | 229 ++++++++++++++++++++=
+++
+>> =A0 1 file changed, 229 insertions(+)
+>>
+>> diff --git a/drivers/virt/nitro_enclaves/ne_misc_dev.c =
 
-(the range of start/end values depend on whether IOMMU support is
- enabled or not)
+>> b/drivers/virt/nitro_enclaves/ne_misc_dev.c
+>> index 472850250220..6c8c12f65666 100644
+>> --- a/drivers/virt/nitro_enclaves/ne_misc_dev.c
+>> +++ b/drivers/virt/nitro_enclaves/ne_misc_dev.c
+>
+> [...]
+>
+>> +/**
+>> + * ne_ioctl() - Ioctl function provided by the NE misc device.
+>> + * @file:=A0=A0=A0 File associated with this ioctl function.
+>> + * @cmd:=A0=A0=A0 The command that is set for the ioctl call.
+>> + * @arg:=A0=A0=A0 The argument that is provided for the ioctl call.
+>> + *
+>> + * Context: Process context.
+>> + * Return:
+>> + * * Ioctl result (e.g. enclave file descriptor) on success.
+>> + * * Negative return value on failure.
+>> + */
+>> +static long ne_ioctl(struct file *file, unsigned int cmd, unsigned =
 
-The issue here is that SATA_RCAR_DMA_BOUNDARY doesn't have bit 0 set, so
-any typical end value, which is odd, will trigger the check.
+>> long arg)
+>> +{
+>> +=A0=A0=A0 switch (cmd) {
+>> +=A0=A0=A0 case NE_CREATE_VM: {
+>> +=A0=A0=A0=A0=A0=A0=A0 int enclave_fd =3D -1;
+>> +=A0=A0=A0=A0=A0=A0=A0 struct file *enclave_file =3D NULL;
+>> +=A0=A0=A0=A0=A0=A0=A0 struct ne_pci_dev *ne_pci_dev =3D NULL;
+>> +=A0=A0=A0=A0=A0=A0=A0 /* TODO: Find another way to get the NE PCI devic=
+e =
 
-Fix this by increasing the DMA boundary value by 1.
+>> reference. */
+>> +=A0=A0=A0=A0=A0=A0=A0 struct pci_dev *pdev =3D pci_get_device(PCI_VENDO=
+R_ID_AMAZON,
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0 PCI_DEVICE_ID_NE, NULL);
+>
+> This should go away if you set misc_dev.parent.
+>
+>> +=A0=A0=A0=A0=A0=A0=A0 int rc =3D -EINVAL;
+>> +=A0=A0=A0=A0=A0=A0=A0 u64 slot_uid =3D 0;
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0 ne_pci_dev =3D pci_get_drvdata(pdev);
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0 mutex_lock(&ne_pci_dev->enclaves_list_mutex);
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0 enclave_fd =3D ne_create_vm_ioctl(pdev, ne_pci_de=
+v, &slot_uid);
+>> +=A0=A0=A0=A0=A0=A0=A0 if (enclave_fd < 0) {
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 rc =3D enclave_fd;
+>> +
+>> + mutex_unlock(&ne_pci_dev->enclaves_list_mutex);
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 pci_dev_put(pdev);
+>
+> This should also disappear.
 
-Fixes: 8bfbeed58665dbbf ("sata_rcar: correct 'sata_rcar_sht'")
-Fixes: 9495b7e92f716ab2 ("driver core: platform: Initialize dma_parms for platform devices")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Reviewed-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Tested-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc: stable <stable@vger.kernel.org>
----
-v2:
-  - Add Reviewed-by, Tested-by, Cc.
+Correct. I'll follow the misc dev parent approach to get the PCI device =
 
-This is a fix for a regression in v5.7-rc5 that fell through the cracks.
-https://lore.kernel.org/linux-ide/20200513110426.22472-1-geert+renesas@glider.be/
+and include all the necessary code base updates in v7.
 
-As by default the DMA debug code prints the first error only, this issue
-may be hidden on plain v5.7-rc5, where the FCP driver triggers a similar
-warning.  Merging commit dd844fb8e50b12e6 ("media: platform: fcp: Set
-appropriate DMA parameters", in v5.8-rc1) from the media tree fixes the
-FCP issue, and exposes the SATA issue.
+Thanks,
+Andra
 
-I added the second fixes tag because that commit is already being
-backported to stable kernels, and this patch thus needs backporting,
-too.
----
- drivers/ata/sata_rcar.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/ata/sata_rcar.c b/drivers/ata/sata_rcar.c
-index 141ac600b64c87ef..44b0ed8f6bb8a120 100644
---- a/drivers/ata/sata_rcar.c
-+++ b/drivers/ata/sata_rcar.c
-@@ -120,7 +120,7 @@
- /* Descriptor table word 0 bit (when DTA32M = 1) */
- #define SATA_RCAR_DTEND			BIT(0)
- 
--#define SATA_RCAR_DMA_BOUNDARY		0x1FFFFFFEUL
-+#define SATA_RCAR_DMA_BOUNDARY		0x1FFFFFFFUL
- 
- /* Gen2 Physical Layer Control Registers */
- #define RCAR_GEN2_PHY_CTL1_REG		0x1704
--- 
-2.17.1
+
+Amazon Development Center (Romania) S.R.L. registered office: 27A Sf. Lazar=
+ Street, UBC5, floor 2, Iasi, Iasi County, 700045, Romania. Registered in R=
+omania. Registration number J22/2621/2005.
 
