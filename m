@@ -2,107 +2,141 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50086C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 22:44:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7F25C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 22:46:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D8192076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 22:44:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96BE8206DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 22:46:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o5zaAhUq"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A6gVIwrd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726469AbgHKWok (ORCPT
+        id S1726457AbgHKWqG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 18:44:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42586 "EHLO
+        Tue, 11 Aug 2020 18:46:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726023AbgHKWok (ORCPT
+        with ESMTP id S1726173AbgHKWqF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 18:44:40 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39558C06174A;
-        Tue, 11 Aug 2020 15:44:40 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id d14so392836qke.13;
-        Tue, 11 Aug 2020 15:44:40 -0700 (PDT)
+        Tue, 11 Aug 2020 18:46:05 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70EDFC061787
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 15:46:05 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id bh1so203393plb.12
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 15:46:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=mBWFL754Vrf9Z7Daog4EE5sGqx+K5IQ8vwyomqlrRJI=;
-        b=o5zaAhUqJ327OLvq3xcwTet2QBz6ptIqJGec9dThZqe3JHu2oKH0X7u2NrqYUdeBax
-         klJu3caL1SBP6UtY/8JTsip/amL/Dd/nR08uXZ7IHsPeqpRibuIPB07bgAYU7mrFPFFx
-         aoA+QOndg6Hf3G/O7EiWIHGMnikSTAoCXcxSk1FS40VE1SFsLABW1bVL+JBcKs8q3CJh
-         hnCWvvQ/o7wBBWP6Md4fSDms4XSWXAw+LV0FwLkH7F3bt98K5vOSLCxC3lCZfqjNMVAE
-         Xpfa8N0fYnPu19IYfTFd7lLmkqZttlKzZogGjVvaxaGKp91RSlMCMdDa9rj+PBhpG+pB
-         T2ww==
+        bh=AAlB7AADi1d+qrv8BbA2OuomHwJe1ObClWJvHdEt10k=;
+        b=A6gVIwrdYXgM7QuIVj86358/aLJZuUzMqDOEA2hxs/8xvFM9OPYJk0obw3ZJnmD3xp
+         D/DdcfbhvS/ihd/SPS7S19BbkHZstlgvWXsUWrfSeDFbhCS6t9B5cf/bAQ0zbHchu4h6
+         FNtwY2nTNAydaTiJtNHn2uzgajQJ/ZPeFhU3IL0tJ26PosnU2VHhDGlCsHbFHuFEdk4r
+         GsA6lk55x0ArSM9pvsKTlrD14YrJoChaExi1xNFDH+leFysVmIZ3WlQENBeVcki+T06u
+         K/ghB6dSSDzPHv9H7MvfeG9eb6qs1DxW8kaXGyDiemGrSvkqWlGQTdBxuZu8jVP8av3Z
+         9s4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=mBWFL754Vrf9Z7Daog4EE5sGqx+K5IQ8vwyomqlrRJI=;
-        b=ePj9ThDcoOtOkPSRt/lEMQxbdnv2M/S+fDVaBKycI5/D3q6vhnZ1E76yR79Zz5lY9W
-         hQ7mfQ4gqic7C3vlPM9ZO0yngxHOG7TUTJHib03Dh1m7Q9FYpGw1lPVd1lgst/J8qbKr
-         7KkzOgI1kEXTFVAIQTP+4TOR0ocHawa4kEbC49+pbMpmTbmE+IsOox1FjsKWxuAxlTBP
-         K7aLIEOzs29alKpeioimNqsdwoSJTiVE++u1zJqXR30qAaN4Gj70OeMf1R8GYf7kUHMk
-         XWC7H5nEjmEx6Bh3oFyAgs/qYMoy+z3vO5PHiIed3dItpAieJemqGvbeqr4muwdHzZ/Z
-         Oq5A==
-X-Gm-Message-State: AOAM5309HlVoWEMJ8zkNy7BHI5Pr4MYYAYul3ABxZiSl/oXOf82ft/uc
-        OFv5ypqKuIlVQfiaYjVz4cE=
-X-Google-Smtp-Source: ABdhPJxjGu75IPfS2IomHQ7bSZpXSQRBtxedTIEW4Me9v0itws5ygKikEp8UeompN5IHShWq633kBA==
-X-Received: by 2002:a37:556:: with SMTP id 83mr3379743qkf.208.1597185879356;
-        Tue, 11 Aug 2020 15:44:39 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id i7sm256301qkb.131.2020.08.11.15.44.38
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=AAlB7AADi1d+qrv8BbA2OuomHwJe1ObClWJvHdEt10k=;
+        b=JgTDP0iMaKbYOILGZ3tJTJ+ci/QRXXFi+BHqoRWMJMYcY/Z9gMopBZAASmno8SsppM
+         yQ8nZ3WvYq1UHbFj+5qbJZt2WsVlEctkXCy7i+Ua58cwteh6G0ZcMffk7940sxnVu3A9
+         gZiklwMuE5vuOLV+34jv/VsLvrRIXpuiwCSR+AzREIoC/9TgI/kaHp+u9DTIQNsILqGQ
+         WKUAHmJ/vNeltLew6ijPkxnlzjNt2htyI5wIXiFqXLR5vA109ACgAHHkv1kd4hNARrNQ
+         YsoUdCddVHL7fKmIRm5OfC/m8M97PvkNsG8gMfIHOsSZbznF3/CSS606C88EG214B61r
+         cqyQ==
+X-Gm-Message-State: AOAM531lIPZNxetHR1w4zLtRJ1tVgx27RGWDi4JBRcJR2tkNOlTeNkx1
+        7AIw9C+EzMG5UEV0uKJHWdRCwcjjxGM=
+X-Google-Smtp-Source: ABdhPJw139s9RYvi6HdwGiQP3oI8ROpCRG7hB09mor/U3JqJiqPAxtwLUcDJA7GP1pFhY8RzOlxcZg==
+X-Received: by 2002:a17:90a:202c:: with SMTP id n41mr3429775pjc.126.1597185964913;
+        Tue, 11 Aug 2020 15:46:04 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id s18sm195630pgj.3.2020.08.11.15.46.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Aug 2020 15:44:38 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Tue, 11 Aug 2020 18:44:36 -0400
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Fangrui Song <maskray@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        e5ten.arch@gmail.com,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "# 3.4.x" <stable@vger.kernel.org>
-Subject: Re: [PATCH] x86/boot/compressed: Disable relocation relaxation for
- non-pie link
-Message-ID: <20200811224436.GA1302731@rani.riverdale.lan>
-References: <CAKwvOd=ypa8xE-kaDa7XtzPsBH8=Xu_pZj2rnWaeawNs=3dDkw@mail.gmail.com>
- <20200811173655.1162093-1-nivedita@alum.mit.edu>
- <CAKwvOdnjLfQ0fWsrFYDJ2O+qFAfEFnTEEnW-aHrPha8G3_WTrg@mail.gmail.com>
+        Tue, 11 Aug 2020 15:46:04 -0700 (PDT)
+Date:   Tue, 11 Aug 2020 16:46:02 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     peng.fan@nxp.com
+Cc:     ohad@wizery.com, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, o.rempel@pengutronix.de, linux-imx@nxp.com,
+        linux-remoteproc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] remoteproc: imx_rproc: add elf memory hooks
+Message-ID: <20200811224602.GF3370567@xps15>
+References: <1595928673-26306-1-git-send-email-peng.fan@nxp.com>
+ <1595928673-26306-2-git-send-email-peng.fan@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKwvOdnjLfQ0fWsrFYDJ2O+qFAfEFnTEEnW-aHrPha8G3_WTrg@mail.gmail.com>
+In-Reply-To: <1595928673-26306-2-git-send-email-peng.fan@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 10:58:40AM -0700, Nick Desaulniers wrote:
-> > Cc: stable@vger.kernel.org # 4.19.x
+On Tue, Jul 28, 2020 at 05:31:13PM +0800, peng.fan@nxp.com wrote:
+> From: Peng Fan <peng.fan@nxp.com>
 > 
-> Thanks Arvind, good write up.  Just curious about this stable tag, how
-> come you picked 4.19?  I can see boot failures in our CI for x86+LLD
-> back to 4.9.  Can we amend that tag to use `# 4.9`? I'd be happy to
-> help submit backports should they fail to apply cleanly.
-> https://travis-ci.com/github/ClangBuiltLinux/continuous-integration/builds/179237488
+> Please not apply 2/2 for now, this 2/2 has not gone through
+> test on all i.MX8 platforms.
+
+Why sending patches to the mailing list if they are not ready to be applied?
+
 > 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+>  drivers/remoteproc/imx_rproc.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
+> index 8957ed271d20..8ad860c65256 100644
+> --- a/drivers/remoteproc/imx_rproc.c
+> +++ b/drivers/remoteproc/imx_rproc.c
+> @@ -6,6 +6,7 @@
+>  #include <linux/clk.h>
+>  #include <linux/err.h>
+>  #include <linux/interrupt.h>
+> +#include <linux/io.h>
+>  #include <linux/kernel.h>
+>  #include <linux/mfd/syscon.h>
+>  #include <linux/module.h>
+> @@ -241,10 +242,22 @@ static void *imx_rproc_da_to_va(struct rproc *rproc, u64 da, size_t len)
+>  	return va;
+>  }
+>  
+> +static void *imx_rproc_memcpy(struct rproc *rproc, void *dest, const void *src, size_t count)
+> +{
+> +       memcpy_toio((void * __iomem)dest, src, count);
+> +}
+> +
+> +static void *imx_rproc_memset(struct rproc *rproc, void *s, int c, size_t count)
+> +{
+> +	memset_io((void * __iomem)s, c, count);
+> +}
+> +
+>  static const struct rproc_ops imx_rproc_ops = {
+>  	.start		= imx_rproc_start,
+>  	.stop		= imx_rproc_stop,
+>  	.da_to_va       = imx_rproc_da_to_va,
+> +	.memset		= imx_rproc_memset,
+> +	.memcpy		= imx_rproc_memcpy,
 
-4.19 renamed LDFLAGS to KBUILD_LDFLAGS. For 4.4, 4.9 and 4.14 the patch
-needs to be modified, KBUILD_LDFLAGS -> LDFLAGS, so I figured we should
-submit backports separately. For 4.19 onwards, it should apply without
-changes I think.
+That won't work - you are modifying how _all_ the platforms out there are
+working.  As I indicated on the series on iMX8M, add a field to imx_rproc_dcfg
+and apply the correct memory accessor based on that.  
 
-Thanks.
+It might also suggest that it is time to split the iMX platform drivers, i.e
+older MCU and iMX8M.
+
+>  };
+>  
+>  static int imx_rproc_addr_init(struct imx_rproc *priv,
+> -- 
+> 2.16.4
+> 
