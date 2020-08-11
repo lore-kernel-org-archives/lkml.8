@@ -2,163 +2,180 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7798FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 00:52:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77069C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 00:56:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CA19206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 00:52:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44573206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 00:56:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="OsJTGrxZ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fUCRChqp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728021AbgHKAwg (ORCPT
+        id S1727848AbgHKA4t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 20:52:36 -0400
-Received: from mail-bn8nam11on2079.outbound.protection.outlook.com ([40.107.236.79]:18081
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725969AbgHKAwg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 20:52:36 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KT3CCVFsjJbrfc+CE15wpgu0udSjUtHEusra/vRfDjt/xcoK2+33GkZqrgGH1+qJwdTPP/STo582MXwUdOC8QndczLYRaTy59dMSM+U6XppW+bWkK2f1sUF+vZynv/DdWeLSj0USCSTaA1jc4oQ0gnUlPWQRs7lwHQ7pXS8HK9DEqFdA/zlQLzJ+CDEO2TkOJCV+hkIbSMfhXPuJtaMIO88AYAmeTM9P4RBSp9K84krxPIv58+5YvVPPeTNUc0VD6/ypSwqWQeL3INP+7WxH7l75Sa92/rcTucL+zamWL9vJhy0yO9sj4F7aEVMKFV/2mm0CVdFeFqKM4aYsck1NlQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=23o8zOI6FmQH4tYUVY7NuOnE0JvZu5Jrfpkr0giKIwI=;
- b=QZTNl0JSxG6yQZhJLHkk1Ym7+jFyfi39S3V6kPhrpJYSu2SmkWmx5l/rmulVHzlXI7rhl2dYhklvKi9w6KRQwojQOyfr8oWhbIH3QFmqMvgbwtQb7JTwlSrpTts80dBehJjTUEDS1ZYNQ6AH9P3rs4hXr/pvvniMRJb/C9DPDtEjiHE0Fvl8msiPjZ/IVGZQHshWFBCSTgflEP4R5e1nWBUwIC5mH6qPXeRSpvE0OA9nBfNG09vHY5JoM/NdlJz7LyDS+YMJ0uZPgonmHOS43vh3oKDOZfqDZu4Av5cFtiIeWzXU2oczUYaJPuuI6PkcUFc/A7WQDAJBHNg5GOsaWw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
+        Mon, 10 Aug 2020 20:56:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38832 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725969AbgHKA4t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 20:56:49 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C4DBC06174A
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 17:56:49 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id d4so957142pjx.5
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Aug 2020 17:56:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=23o8zOI6FmQH4tYUVY7NuOnE0JvZu5Jrfpkr0giKIwI=;
- b=OsJTGrxZ9szzCVSGl/46fJ0Ljo/S5V/qgcnxzSj1DltYAwtxILp1A8hOxZ1y39SPZ0xPtXOLlxMzlCMFe/B9TOToqpmWR3sOP3xDUIpQfj7TCyqivw4CcYC23k61YqWLVcZIRE+AMZV49/hoziAklRkizmNXnefgOvOpIThZfno=
-Received: from BN6PR2001CA0004.namprd20.prod.outlook.com
- (2603:10b6:404:b4::14) by BN7PR02MB4100.namprd02.prod.outlook.com
- (2603:10b6:406:fb::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.22; Tue, 11 Aug
- 2020 00:52:33 +0000
-Received: from BN1NAM02FT042.eop-nam02.prod.protection.outlook.com
- (2603:10b6:404:b4:cafe::6d) by BN6PR2001CA0004.outlook.office365.com
- (2603:10b6:404:b4::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.20 via Frontend
- Transport; Tue, 11 Aug 2020 00:52:33 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BN1NAM02FT042.mail.protection.outlook.com (10.13.2.153) with Microsoft SMTP
- Server id 15.20.3261.19 via Frontend Transport; Tue, 11 Aug 2020 00:52:33
- +0000
-Received: from [149.199.38.66] (port=50064 helo=smtp.xilinx.com)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
-        (envelope-from <venkateshwar.rao.gannavarapu@xilinx.com>)
-        id 1k5IWg-0006dO-ME; Mon, 10 Aug 2020 17:52:26 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <venkateshwar.rao.gannavarapu@xilinx.com>)
-        id 1k5IWn-0002TL-3k; Mon, 10 Aug 2020 17:52:33 -0700
-Received: from xsj-pvapsmtp01 (smtp2.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 07B0qNEB001814;
-        Mon, 10 Aug 2020 17:52:24 -0700
-Received: from [172.23.155.151] (helo=xhdengvm155151.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <venkateshwar.rao.gannavarapu@xilinx.com>)
-        id 1k5IWd-0002SD-DF; Mon, 10 Aug 2020 17:52:23 -0700
-From:   Venkateshwar Rao Gannavarapu 
-        <venkateshwar.rao.gannavarapu@xilinx.com>
-To:     hyun.kwon@xilinx.com, laurent.pinchart@ideasonboard.com,
-        dri-devel@lists.freedesktop.org
-Cc:     airlied@linux.ie, daniel@ffwll.ch, linux-kernel@vger.kernel.org,
-        sandipk@xilinx.com, vgannava@xilinx.com,
-        Venkateshwar Rao Gannavarapu 
-        <venkateshwar.rao.gannavarapu@xilinx.com>
-Subject: [RFC PATCH V2 0/2] Add Xilinx DSI TX driver
-Date:   Tue, 11 Aug 2020 06:22:19 +0530
-Message-Id: <1597107139-31477-1-git-send-email-venkateshwar.rao.gannavarapu@xilinx.com>
-X-Mailer: git-send-email 2.1.1
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-PublicTrafficType: Email
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HlvjiW8dzAbaXqfYGhMJcjxTaA+DNkDoINyYSnd/DVo=;
+        b=fUCRChqpCvKxHDjh2tf7S96iF59Nd5I9ylRN3PLFDQ5O5peyku0mLlvEOmVCX/kuet
+         lsac9BemHdN7GUSXCTosJqVFyS9etIetetQVJ1fHnjiGd+JArEHxu+tX7wCo6QRaJ02b
+         87LZM5jg3qKx6S+tCgmBfF3c6HZnN95SNc3/sJNZ5qTknRCQ/x8dVuUa+9c+whAa1jCM
+         PEJ6yyeNhltIG2PKOXwcsMqEtTBrxwB/wBA6gFjQI5LRuBa7s41MdHLod53Ey1a16ZO/
+         T0aiXOO6bZ/Qdry35b3wgNWxEnSEVIQ4QYr0ahzSmxH+ACe95lcbi15hP7NNg42aaomj
+         V9DQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HlvjiW8dzAbaXqfYGhMJcjxTaA+DNkDoINyYSnd/DVo=;
+        b=FOWLbnepya1iT/j3t5c6V5hhvEIMl5x45LeaHxx5P/JIreP6DvuR8M0NFKZMw1ykyI
+         w6IjRXdT+P+M2DQd2Ma9Q2R0pOuK+PgB6AUN41yZkGEBnEJb5kjtELPNb4IhnzbuW4CG
+         cnmqgwkln3M8b9ar/0eONq4UtwXiltzy+nFtzoads8Ab37xxKrt5/K975ZhXbjhpEuvr
+         VSe3XSqJXmEjuuxM+QkQuM7iyQjMLER/O1a9bCvtkw7BliB039ozBNL1JofSXxDm07QC
+         XjgdOdS4L4+X2vyh6xC9gRX9OAGJwBjezKiwt8b/jlrmCm4kL+meEJS5XyNTRXnSh4EF
+         WsPw==
+X-Gm-Message-State: AOAM530vkJH3rKQJdEATCduhJ2x8c8Ldtv120hN2H5APzdzrgdEa8pWm
+        r81ury1b73FkYlvQnaigteJPi3U9Qp3VRVKl8NF60Q==
+X-Google-Smtp-Source: ABdhPJz/BPa0yVxFqgAjew+Ms70nR0F6wLX6Tru9pqm9zlryrq+Ct6kROH12q49VPRXQjI1i8pYi50q7JVuhG9UUjEw=
+X-Received: by 2002:a17:902:be03:: with SMTP id r3mr5320207pls.244.1597107408243;
+ Mon, 10 Aug 2020 17:56:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: a71e961a-6175-44d7-dadb-08d83d90d533
-X-MS-TrafficTypeDiagnostic: BN7PR02MB4100:
-X-Microsoft-Antispam-PRVS: <BN7PR02MB4100337CC8F1FF0F685DBA99B1450@BN7PR02MB4100.namprd02.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: eMLIeZYy6ooRT5dOF4PR6QADBeO520KUdl3W6BHtXEYNzdrLsHWN/IoTULBZojX4/nuQk8JwktNuy/qb5sNnJTS1x3SYvoLhyWjD4mtbilSGEGgTl2PuSea0Rws470NkcOR8UQLCdbgR+TRN5VNjhdksBlxkuuWnnUeGqCX2uA/FVO9TersBCBeZRWhAFqdfO/yzhGdLAUpHrdNvWr/HFUy8U7aeID9Tb+p0NHGKt7WKqgYA1Mz/Dfm9G2xnWjwLXvHeHUu7ao1ZuMY77Qo3OqnsuowuhjIg8tffykKGmvMUXvDw1ZhDODMoQRod7CC8UhrBJUvS9+AMOTCNpG632Q25vcuR7fw1SfmmliMw6jr2xTuPLnyZBG+ggpnffnKyyaHTtPSj+seA1lymwnxs8A==
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(136003)(39860400002)(346002)(376002)(396003)(46966005)(70206006)(70586007)(5660300002)(47076004)(7696005)(316002)(478600001)(2616005)(8936002)(426003)(36756003)(4326008)(2906002)(26005)(8676002)(81166007)(9786002)(82310400002)(186003)(107886003)(6666004)(336012)(83380400001)(82740400003)(356005);DIR:OUT;SFP:1101;
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Aug 2020 00:52:33.4415
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a71e961a-6175-44d7-dadb-08d83d90d533
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-AuthSource: BN1NAM02FT042.eop-nam02.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR02MB4100
+References: <CALAqxLXBQ34FKs_0EX+D=iccJxBPCC4tJN1NP7e8OQy6q9Z_Fg@mail.gmail.com>
+In-Reply-To: <CALAqxLXBQ34FKs_0EX+D=iccJxBPCC4tJN1NP7e8OQy6q9Z_Fg@mail.gmail.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Mon, 10 Aug 2020 17:56:12 -0700
+Message-ID: <CAGETcx8=BAu62HWDmaoORTXt-_oHB9TPUG4gRRJmQbTi3Tyk4A@mail.gmail.com>
+Subject: Re: Regression: serial crash on db845c using modular config w/ 5.9-rc
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     Akash Asthana <akashast@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Amit Pundir <amit.pundir@linaro.org>,
+        Todd Kjos <tkjos@google.com>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Xilinx DSI-TX subsytem consists of DSI controller core, AXI crossbar
-and D-PHY as sub blocks. DSI TX subsystem driver supports multiple lanes
-upto 4, RGB color formats, video mode and command modes.
+On Mon, Aug 10, 2020 at 5:31 PM John Stultz <john.stultz@linaro.org> wrote:
+>
+> When testing with modular configs w/ mainline on db845c, I've been
+> running into an early boot crash (nothing on the console - but serial
+> drivers as built as modules - so not surprising). After setting the
+> CONFIG_SERIAL_QCOM_GENI=y (along with other QCOM_GENI configs) to
+> debug, I've found the backtrace below.
+>
+> I'm a little stumped as to what the issue might be. But wanted to
+> raise it in case anyone else is seeing similar. I don't see this issue
+> when using my non-modular config.
+>
+> I've tried reverting most of the geni changes since v5.8, but that
+> hasn't seemed to help much, making me suspicious it's something else.
+>
+> Any ideas?
+>
+> thanks
+> -john
+>
+>
+> [    6.469057] Unable to handle kernel paging request at virtual
+> address ffffffe645d4e6cc
+> [    6.481623] Mem abort info:
+> [    6.484466]   ESR = 0x86000007
+> [    6.487557]   EC = 0x21: IABT (current EL), IL = 32 bits
+> [    6.492929]   SET = 0, FnV = 0
+> [    6.496016]   EA = 0, S1PTW = 0
+> [    6.499202] swapper pgtable: 4k pages, 39-bit VAs, pgdp=000000008151e000
+> [    6.501286] ufshcd-qcom 1d84000.ufshc: ufshcd_print_pwr_info:[RX,
+> TX]: gear=[3, 3], lane[2, 2], pwr[FAST MODE, FAST MODE], rate = 2
+> [    6.505977] [ffffffe645d4e6cc] pgd=000000017df9f003,
+> p4d=000000017df9f003, pud=000000017df9f003, pmd=000000017df9c003,
+> pte=0000000000000000
+> [    6.505990] Internal error: Oops: 86000007 [#1] PREEMPT SMP
+> [    6.505995] Modules linked in: zl10353 zl10039 zl10036 zd1301_demod
+> xc5000 xc4000 ves1x93 ves1820 tuner_xc2028 tuner_simple tuner_types
+> tua9001 tua6100 1
+> [    6.506152]  isl6405
+> [    6.518104] ufshcd-qcom 1d84000.ufshc:
+> ufshcd_find_max_sup_active_icc_level: Regulator capability was not
+> set, actvIccLevel=0
+> [    6.530549]  horus3a helene fc2580 fc0013 fc0012 fc0011 ec100 e4000
+> dvb_pll ds3000 drxk drxd drx39xyj dib9000 dib8000 dib7000p dib7000m
+> dib3000mc dibx003
+> [    6.624271] CPU: 7 PID: 148 Comm: kworker/7:2 Tainted: G        W
+>       5.8.0-mainline-12021-g6defd37ba1cd #3455
+> [    6.624273] Hardware name: Thundercomm Dragonboard 845c (DT)
+> [    6.624290] Workqueue: events deferred_probe_work_func
+> [    6.624296] pstate: 40c00005 (nZcv daif +PAN +UAO BTYPE=--)
+> [    6.624307] pc : qcom_geni_console_setup+0x0/0x110
+> [    6.624316] lr : try_enable_new_console+0xa0/0x140
+> [    6.624318] sp : ffffffc010843a30
+> [    6.624320] x29: ffffffc010843a30 x28: ffffffe645c3e7d0
+> [    6.624325] x27: ffffff80f8022180 x26: ffffffc010843b28
+> [    6.637937] x25: 0000000000000000 x24: ffffffe6462a2000
+> [    6.637941] x23: ffffffe646398000 x22: 0000000000000000
+> [    6.637945] x21: 0000000000000000 x20: ffffffe6462a5ce8
+> [    6.637952] x19: ffffffe646398e38 x18: ffffffffffffffff
+> [    6.680296] x17: 0000000000000000 x16: ffffffe64492b900
+> [    6.680300] x15: ffffffe6461e9d08 x14: 69202930203d2064
+> [    6.680305] x13: 7561625f65736162 x12: 202c363331203d20
+> [    6.696434] x11: 0000000000000030 x10: 0101010101010101
+> [    6.696438] x9 : 4d4d20746120304d x8 : 7f7f7f7f7f7f7f7f
+> [    6.707249] x7 : feff4c524c787373 x6 : 0000000000008080
+> [    6.707253] x5 : 0000000000000000 x4 : 8080000000000000
+> [    6.707257] x3 : 0000000000000000 x2 : ffffffe645d4e6cc
+> [    6.744223] qcom_geni_serial 898000.serial: dev_pm_opp_set_rate:
+> failed to find OPP for freq 102400000 (-34)
+> [    6.744966] x1 : fffffffefe74e174 x0 : ffffffe6462a5ce8
+> [    6.753580] qcom_geni_serial 898000.serial: dev_pm_opp_set_rate:
+> failed to find OPP for freq 102400000 (-34)
+> [    6.761634] Call trace:
+> [    6.761639]  qcom_geni_console_setup+0x0/0x110
+> [    6.761645]  register_console+0x29c/0x2f8
+> [    6.767981] Bluetooth: hci0: Frame reassembly failed (-84)
+> [    6.775252]  uart_add_one_port+0x438/0x500
+> [    6.775258]  qcom_geni_serial_probe+0x2c4/0x4a8
+> [    6.775266]  platform_drv_probe+0x58/0xa8
+> [    6.855359]  really_probe+0xec/0x398
+> [    6.855362]  driver_probe_device+0x5c/0xb8
+> [    6.855367]  __device_attach_driver+0x98/0xb8
+> [    7.184945]  bus_for_each_drv+0x74/0xd8
+> [    7.188825]  __device_attach+0xec/0x148
+> [    7.192705]  device_initial_probe+0x24/0x30
+> [    7.196937]  bus_probe_device+0x9c/0xa8
+> [    7.200816]  deferred_probe_work_func+0x7c/0xb8
+> [    7.205398]  process_one_work+0x20c/0x4b0
+> [    7.209456]  worker_thread+0x48/0x460
+> [    7.213157]  kthread+0x14c/0x158
+> [    7.216432]  ret_from_fork+0x10/0x18
+> [    7.220049] Code: bad PC value
+> [    7.223139] ---[ end trace 73f3b21e251d5a70 ]---
 
-DSI-TX driver is implemented as an encoder driver, as it going to be
-the final node in display pipeline. Xilinx doesn't support any converter
-logic to make this as bridge driver. Xilinx doesn't have such
-use cases where end node can't be an encoder like DSI-TX. And Xilinx
-encoder drivers represents a subsystem where individual blocks can't be
-used with external components / encoders.
+Ugh... I've hit this before. I didn't expect upstream to have this
+issue so didn't bother checking. qcom_geni_console_setup is marked as
+__init. That's the problem.
 
-changes in v2:
- - converted bindings to .yaml format
- - updated compatible string with version number
- - addressed Laurent and Hyun's review comments
- - removed wrappers for enable/disable API's
- - few API's are inlined
- - fixes indent, extra spaces and alignments.
- - added generic long write command mode support
 
-Venkateshwar Rao Gannavarapu (2):
-  dt-bindings: display: xlnx: dsi: This add a DT binding for Xilinx DSI
-    TX     subsystem.
-  drm: xlnx: dsi: driver for Xilinx DSI TX subsystem
-
- .../devicetree/bindings/display/xlnx/xlnx,dsi.yaml | 147 +++++
- drivers/gpu/drm/xlnx/Kconfig                       |  11 +
- drivers/gpu/drm/xlnx/Makefile                      |   2 +
- drivers/gpu/drm/xlnx/xlnx_dsi.c                    | 701 +++++++++++++++++=
-++++
- 4 files changed, 861 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/xlnx/xlnx,dsi=
-.yaml
- create mode 100644 drivers/gpu/drm/xlnx/xlnx_dsi.c
-
---
-1.8.3.1
-
-This email and any attachments are intended for the sole use of the named r=
-ecipient(s) and contain(s) confidential information that may be proprietary=
-, privileged or copyrighted under applicable law. If you are not the intend=
-ed recipient, do not read, copy, or forward this email message or any attac=
-hments. Delete this email message and any attachments immediately.
+-Saravana
