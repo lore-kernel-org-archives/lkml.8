@@ -2,105 +2,128 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 107A1C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 06:15:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3DC5C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 06:18:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB5C1206B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 06:15:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="rVFvNdvD"
+	by mail.kernel.org (Postfix) with ESMTP id A7AF9206B5
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 06:18:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727975AbgHKGPZ (ORCPT
+        id S1727995AbgHKGSE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 02:15:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59578 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726154AbgHKGPY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 02:15:24 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC6C5C06174A;
-        Mon, 10 Aug 2020 23:15:23 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BQjHW61Pqz9sTM;
-        Tue, 11 Aug 2020 16:15:19 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1597126520;
-        bh=vmA+U6yYordllIlIbbA0NQplZPeDri+hoiMGp1wkbEM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=rVFvNdvDn+0X42UKxMtre6LFZycz0m0HXH2n0WFRWQRcQ1MZ0ga42i8Ev/4GGN8lw
-         gJDXFsgo1OwUATt9NCedr7N+sBd9p5GCHyU3O4ewmhU0wXa3kwLiLtNZgiguByjJ5P
-         b+cPlHiyw8iRsyQhnab+mX+ShF2qJW6WtWeIHZGlAJKWo3kUoe8Kq0om6YRcOoawmN
-         5YDjIz1btmZ2UNs8Nc53etiG2rshjvYlyJN0FBfcgnThzb3EWxyfONA8ny00FD0bwT
-         +tK1ZWbPukfWkvcqtUjDs8hm2wj8X94mTaSliePXUOiQPtILPMclAZwuOtexzF268L
-         ef+8mu0DXqqfg==
-Date:   Tue, 11 Aug 2020 16:15:18 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Trond Myklebust <trondmy@gmail.com>
-Subject: Re: Please pull NFS server updates for v5.9
-Message-ID: <20200811161518.0896c1e8@canb.auug.org.au>
-In-Reply-To: <EC1AA9E7-4AC1-49C6-B138-B6A3E4ED7A0B@oracle.com>
-References: <F9B8940D-9F7B-47F5-9946-D77C17CF959A@oracle.com>
-        <20200810090349.64bce58f@canb.auug.org.au>
-        <EC1AA9E7-4AC1-49C6-B138-B6A3E4ED7A0B@oracle.com>
+        Tue, 11 Aug 2020 02:18:04 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:34288 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726154AbgHKGSD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 02:18:03 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 63EBD988F5302519B287
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 14:17:59 +0800 (CST)
+Received: from [127.0.0.1] (10.174.177.157) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Tue, 11 Aug 2020
+ 14:17:49 +0800
+To:     <tglx@linutronix.de>
+CC:     Shiyuan Hu <hushiyuan@huawei.com>,
+        Hewenliang <hewenliang4@huawei.com>,
+        <linux-kernel@vger.kernel.org>
+From:   Yunfeng Ye <yeyunfeng@huawei.com>
+Subject: [PATCH] genirq/affinity: show managed irq affinity correctly
+Message-ID: <b55d8b8c-8afc-0046-44b6-514ad012936f@huawei.com>
+Date:   Tue, 11 Aug 2020 14:17:49 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/uT/4_Xdt=yeslqAXJ+Bf_QJ";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.177.157]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/uT/4_Xdt=yeslqAXJ+Bf_QJ
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+The "managed_irq" for isolcpus is supported after the commit
+11ea68f553e2 ("genirq, sched/isolation: Isolate from handling managed
+interrupts"), but the interrupt affinity shown in proc directory is
+still the original affinity.
 
-Hi Chuck,
+So modify the interrupt affinity correctly for managed_irq.
 
-On Mon, 10 Aug 2020 08:25:14 -0400 Chuck Lever <chuck.lever@oracle.com> wro=
-te:
->=20
-> Is there something I need to change? The public copy of the cel-testing
-> branch has had this content for the past 12 days.
+Signed-off-by: yeyunfeng <yeyunfeng@huawei.com>
+---
+ kernel/irq/manage.c | 38 ++++++++++++++++++++++++--------------
+ 1 file changed, 24 insertions(+), 14 deletions(-)
 
-You just need to keep your cel-next branch up to the top commit that is
-ready.  That is the branch you told me to fetch.  It is currently at commit
+diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
+index d55ba625d426..6ad4fe01942a 100644
+--- a/kernel/irq/manage.c
++++ b/kernel/irq/manage.c
+@@ -218,8 +218,8 @@ static inline void irq_init_effective_affinity(struct irq_data *data,
+ 					       const struct cpumask *mask) { }
+ #endif
 
-  0a8e7b7d0846 ("SUNRPC: Revert 241b1f419f0e ("SUNRPC: Remove xdr_buf_trim(=
-)")")
+-int irq_do_set_affinity(struct irq_data *data, const struct cpumask *mask,
+-			bool force)
++static int irq_chip_set_affinity(struct irq_data *data,
++				const struct cpumask *mask, bool force)
+ {
+ 	struct irq_desc *desc = irq_data_to_desc(data);
+ 	struct irq_chip *chip = irq_data_get_irq_chip(data);
+@@ -228,6 +228,26 @@ int irq_do_set_affinity(struct irq_data *data, const struct cpumask *mask,
+ 	if (!chip || !chip->irq_set_affinity)
+ 		return -EINVAL;
 
-It looks like that is what Linus merged into v5.7-rc2.
---=20
-Cheers,
-Stephen Rothwell
++	ret = chip->irq_set_affinity(data, mask, force);
++	switch (ret) {
++	case IRQ_SET_MASK_OK:
++	case IRQ_SET_MASK_OK_DONE:
++		cpumask_copy(desc->irq_common_data.affinity, mask);
++		/* fall through */
++	case IRQ_SET_MASK_OK_NOCOPY:
++		irq_validate_effective_affinity(data);
++		irq_set_thread_affinity(desc);
++		ret = 0;
++	}
++
++	return ret;
++}
++
++int irq_do_set_affinity(struct irq_data *data, const struct cpumask *mask,
++			bool force)
++{
++	int ret;
++
+ 	/*
+ 	 * If this is a managed interrupt and housekeeping is enabled on
+ 	 * it check whether the requested affinity mask intersects with
+@@ -262,20 +282,10 @@ int irq_do_set_affinity(struct irq_data *data, const struct cpumask *mask,
+ 			prog_mask = mask;
+ 		else
+ 			prog_mask = &tmp_mask;
+-		ret = chip->irq_set_affinity(data, prog_mask, force);
++		ret = irq_chip_set_affinity(data, prog_mask, force);
+ 		raw_spin_unlock(&tmp_mask_lock);
+ 	} else {
+-		ret = chip->irq_set_affinity(data, mask, force);
+-	}
+-	switch (ret) {
+-	case IRQ_SET_MASK_OK:
+-	case IRQ_SET_MASK_OK_DONE:
+-		cpumask_copy(desc->irq_common_data.affinity, mask);
+-		/* fall through */
+-	case IRQ_SET_MASK_OK_NOCOPY:
+-		irq_validate_effective_affinity(data);
+-		irq_set_thread_affinity(desc);
+-		ret = 0;
++		ret = irq_chip_set_affinity(data, mask, force);
+ 	}
 
---Sig_/uT/4_Xdt=yeslqAXJ+Bf_QJ
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+ 	return ret;
+-- 
+1.8.3.1
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8yN3YACgkQAVBC80lX
-0GwXGwf/X1xza4u2L2jJX6O8CmpIPjjZeO69GKzmnyVVRoOXVzjthv1JJk+wg+7l
-7FxHlD8dqgtxuxE+A2Y4OGzpnG+phqoA15e6k5dxscbV9r7LRcweAZNeNO1E/05q
-iXJgeV32+PTsRQFLuTQyfyCQjYZDqUt9H2Uh2m4F7xOot+FY8t9PTDw4gbwoYTPT
-rZJH1myqDPB++EIWdsZhb3xJuY6I6znFLIceYia+b55DMF7nCATpjOeZxq7sSHIo
-2gZlAv7pYw/eANhL+mSn9xgnsYS/VVdEu0BhDoWgJLKWMPjM3f8ZvzuEpaIkoguD
-qscoOtH3WIqd5h1S8GFUpOkM920XTA==
-=iHxj
------END PGP SIGNATURE-----
-
---Sig_/uT/4_Xdt=yeslqAXJ+Bf_QJ--
