@@ -2,104 +2,205 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C337C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 12:58:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D122C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 12:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6763E2076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 12:58:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D825A206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 12:58:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ej4csmqV"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Obr5opiZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728691AbgHKM6E (ORCPT
+        id S1728717AbgHKM6I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 08:58:04 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:45784 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728556AbgHKM5y (ORCPT
+        Tue, 11 Aug 2020 08:58:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36720 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728701AbgHKM6F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 08:57:54 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07BCvne9035021;
-        Tue, 11 Aug 2020 07:57:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1597150669;
-        bh=5kZ7YxttxebyfcrU+4BNO79A7QX0taIQyz6s3rEnSCQ=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=ej4csmqVFEdIurE/TC1VJTMdvzDhr7ANysL3S0q8E1nyr30K/viSgcaih5PKPwBuz
-         06Y5/oBkccD+rCNBawKDIcX3EoiyTDCOUD0dOEAoSTp53cK3qRnhFA2SnAhgltE8dB
-         vlD/YRtFSQdBaSHPFcQWKkPl0IX8Jtwpg27UVN0U=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07BCvndZ030038
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 11 Aug 2020 07:57:49 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 11
- Aug 2020 07:57:49 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 11 Aug 2020 07:57:49 -0500
-Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with SMTP id 07BCvnJ0003748;
-        Tue, 11 Aug 2020 07:57:49 -0500
-Date:   Tue, 11 Aug 2020 07:57:48 -0500
-From:   Benoit Parrot <bparrot@ti.com>
-To:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
-CC:     <skhan@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 19/20] media: platform: vpdma.c: fix comparison to bool
-Message-ID: <20200811125748.s3pdpwjmqmd5bffb@ti.com>
-References: <20200807083548.204360-19-dwlsalmeida@gmail.com>
+        Tue, 11 Aug 2020 08:58:05 -0400
+Received: from mail-vk1-xa42.google.com (mail-vk1-xa42.google.com [IPv6:2607:f8b0:4864:20::a42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AFFEC06178A
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 05:58:05 -0700 (PDT)
+Received: by mail-vk1-xa42.google.com with SMTP id x2so2601403vkd.8
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 05:58:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RBFHfl706h8Q/rIQEa117NC5OvZkkSKYk5SzCFZSYis=;
+        b=Obr5opiZuO2ryFJN5Sft0B2C2MHLQ7ZL/zDgEGPuxOTr85P1WaydVIimaASb/eZ80j
+         98/eZMLZHEIB5oct++4Zu9VYzBitp13gPamxYOcbradM9sfIVVIgSboowqFt9YjDLjgf
+         PVXsbzCIbV2FLjlLMIK0VmhJObzhkWjd5+s3iBU8jL2PcRcPVbNSWcobn+We+Xi4359s
+         UbNrKts1JWQLX5EwiV0GS7LQaSSJB6Wa+DcPXo4obiuxC0DWfUBwgVQVvDnonKDokD4n
+         a8ODAPNJlfoZsXNxaZIojz+9Xi0pDQPJOKKpJpXXrpNYTpNPt4P3uCU0UxUKXCXwpXmq
+         9WIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RBFHfl706h8Q/rIQEa117NC5OvZkkSKYk5SzCFZSYis=;
+        b=owZNqV6A/BWznkQa4Xj1d6guh1C/trEHIGb9FE/vMV2rbwoexKousyLxjlJ89GS0WW
+         B7vfRrwpUOrXOnus2exh8QE07R+uQO/piso20xRP+B8wTg0d4GtU/eqQvpbIh6YieLdC
+         5ddZhGvARvlN4d8Hv4FpCUzUmTy69pjhO1hDAA+28kwu9wtUFcISISlFIPMME2zUP1Q3
+         uLOjzOkVGOzSBD8rdcyoMwGAGKjNLqDpFEqsa+Ia9e+gaLy7GNACyF1+kxtkELb5u3mO
+         BqIqpti5KuODGoigPZtguS2ujM9IW3KUVF3/BMqc2GSmiY47+frPXBqisQlDvWTo7lGf
+         2vUA==
+X-Gm-Message-State: AOAM533Ci6xWmcQak/ptF+y+3h78NfzmxrWfdq7W94Qntf6S5JXD3RcG
+        GpkIn8qGm4hdfZXkvjZ1plAHzZNuEbLdcBdCBRMxuQ==
+X-Google-Smtp-Source: ABdhPJzDrXCZmbt9/m57eR99/eX0TO4r0pa0DE4iQxGP3NaiFrTboxgbCASK0cRRih00hTqSZictiDAc0M3qeyBgQrw=
+X-Received: by 2002:a1f:9048:: with SMTP id s69mr8450750vkd.73.1597150684496;
+ Tue, 11 Aug 2020 05:58:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200807083548.204360-19-dwlsalmeida@gmail.com>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200725181404.18951-1-ansuelsmth@gmail.com> <20200725181404.18951-3-ansuelsmth@gmail.com>
+In-Reply-To: <20200725181404.18951-3-ansuelsmth@gmail.com>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Tue, 11 Aug 2020 18:27:53 +0530
+Message-ID: <CAHLCerN_S+5G0oZrAjoui7U6H+H46uLeYHe3p3PVbmCDwJtC_Q@mail.gmail.com>
+Subject: Re: [RFC PATCH v5 2/7] drivers: thermal: tsens: Convert msm8960 to reg_field
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Daniel W. S. Almeida <dwlsalmeida@gmail.com> wrote on Fri [2020-Aug-07 05:35:46 -0300]:
-> From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
-> 
-> Fix the following coccinelle report:
-> 
-> drivers/media/platform/ti-vpe/vpdma.c:946:5-26: WARNING:
-> Comparison to bool
-> 
-> Found using - Coccinelle (http://coccinelle.lip6.fr)
-> 
-> Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
+On Sat, Jul 25, 2020 at 11:44 PM Ansuel Smith <ansuelsmth@gmail.com> wrote:
+>
+> Covert msm9860 driver to reg_filed to use the init_common
 
-Reviewed-by: Benoit Parrot <bparrot@ti.com>
+typo: field
 
+> function.
+>
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
 > ---
->  drivers/media/platform/ti-vpe/vpdma.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/media/platform/ti-vpe/vpdma.c b/drivers/media/platform/ti-vpe/vpdma.c
-> index 2e5148ae7a0f..de600ffffbbc 100644
-> --- a/drivers/media/platform/ti-vpe/vpdma.c
-> +++ b/drivers/media/platform/ti-vpe/vpdma.c
-> @@ -943,7 +943,7 @@ int vpdma_hwlist_alloc(struct vpdma_data *vpdma, void *priv)
->  
->  	spin_lock_irqsave(&vpdma->lock, flags);
->  	for (i = 0; i < VPDMA_MAX_NUM_LIST &&
-> -	    vpdma->hwlist_used[i] == true; i++)
-> +	    vpdma->hwlist_used[i]; i++)
->  		;
->  
->  	if (i < VPDMA_MAX_NUM_LIST) {
-> -- 
-> 2.28.0
-> 
+>  drivers/thermal/qcom/tsens-8960.c | 74 +++++++++++++++++++++++++++++++
+>  1 file changed, 74 insertions(+)
+>
+> diff --git a/drivers/thermal/qcom/tsens-8960.c b/drivers/thermal/qcom/tsens-8960.c
+> index 2a28a5af209e..45cd0cdff2f5 100644
+> --- a/drivers/thermal/qcom/tsens-8960.c
+> +++ b/drivers/thermal/qcom/tsens-8960.c
+> @@ -56,6 +56,18 @@
+>  #define TRDY_MASK              BIT(7)
+>  #define TIMEOUT_US             100
+>
+> +#define S0_STATUS_OFF          0x3628
+> +#define S1_STATUS_OFF          0x362c
+> +#define S2_STATUS_OFF          0x3630
+> +#define S3_STATUS_OFF          0x3634
+> +#define S4_STATUS_OFF          0x3638
+> +#define S5_STATUS_OFF          0x3664  /* Sensors 5 thru 10 found on apq8064/msm8960 */
+
+Run checkpatch and fix spelling. :-) Or just say 'sensor 5-10'
+
+> +#define S6_STATUS_OFF          0x3668
+> +#define S7_STATUS_OFF          0x366c
+> +#define S8_STATUS_OFF          0x3670
+> +#define S9_STATUS_OFF          0x3674
+> +#define S10_STATUS_OFF         0x3678
+> +
+>  static int suspend_8960(struct tsens_priv *priv)
+>  {
+>         int ret;
+> @@ -269,6 +281,66 @@ static int get_temp_8960(const struct tsens_sensor *s, int *temp)
+>         return -ETIMEDOUT;
+>  }
+>
+> +static struct tsens_features tsens_8960_feat = {
+> +       .ver_major      = VER_0,
+> +       .crit_int       = 0,
+> +       .adc            = 1,
+> +       .srot_split     = 0,
+> +       .max_sensors    = 11,
+
+Align the equal to like in other files please.
+
+> +};
+> +
+> +static const struct reg_field tsens_8960_regfields[MAX_REGFIELDS] = {
+> +       /* ----- SROT ------ */
+> +       /* No VERSION information */
+> +
+> +       /* CNTL */
+> +       [TSENS_EN]     = REG_FIELD(CNTL_ADDR,  0, 0),
+> +       [TSENS_SW_RST] = REG_FIELD(CNTL_ADDR,  1, 1),
+> +       /* 8960 has 5 sensors, 8660 has 11, we only handle 5 */
+> +       [SENSOR_EN]    = REG_FIELD(CNTL_ADDR,  3, 7),
+> +
+> +       /* ----- TM ------ */
+> +       /* INTERRUPT ENABLE */
+> +       // [INT_EN] = REG_FIELD(TM_INT_EN_OFF, 0, 0),
+
+Get rid of these comments and at the very least use C-style comments.
+
+> +
+> +       /* Single UPPER/LOWER TEMPERATURE THRESHOLD for all sensors */
+> +       [LOW_THRESH_0]   = REG_FIELD(THRESHOLD_ADDR,  0,  7),
+> +       [UP_THRESH_0]    = REG_FIELD(THRESHOLD_ADDR,  8, 15),
+> +       [MIN_THRESH_0]   = REG_FIELD(THRESHOLD_ADDR, 16, 23),
+> +       [MAX_THRESH_0]   = REG_FIELD(THRESHOLD_ADDR, 24, 31),
+> +
+> +       // /* UPPER/LOWER INTERRUPT [CLEAR/STATUS] */
+> +       // /* 1 == clear, 0 == normal operation */
+
+Get rid of these comments and at the very least use C-style comments.
+
+
+> +       [LOW_INT_CLEAR_0]   = REG_FIELD(CNTL_ADDR,  9,  9),
+> +       [UP_INT_CLEAR_0]    = REG_FIELD(CNTL_ADDR, 10, 10),
+> +
+> +       /* NO CRITICAL INTERRUPT SUPPORT on 8960 */
+> +
+> +       /* Sn_STATUS */
+> +       [LAST_TEMP_0]  = REG_FIELD(S0_STATUS_OFF,  0,  7),
+> +       [LAST_TEMP_1]  = REG_FIELD(S1_STATUS_OFF,  0,  7),
+> +       [LAST_TEMP_2]  = REG_FIELD(S2_STATUS_OFF,  0,  7),
+> +       [LAST_TEMP_3]  = REG_FIELD(S3_STATUS_OFF,  0,  7),
+> +       [LAST_TEMP_4]  = REG_FIELD(S4_STATUS_OFF,  0,  7),
+> +       [LAST_TEMP_5]  = REG_FIELD(S5_STATUS_OFF,  0,  7),
+> +       [LAST_TEMP_6]  = REG_FIELD(S6_STATUS_OFF,  0,  7),
+> +       [LAST_TEMP_7]  = REG_FIELD(S7_STATUS_OFF,  0,  7),
+> +       [LAST_TEMP_8]  = REG_FIELD(S8_STATUS_OFF,  0,  7),
+> +       [LAST_TEMP_9]  = REG_FIELD(S9_STATUS_OFF,  0,  7),
+> +       [LAST_TEMP_10] = REG_FIELD(S10_STATUS_OFF, 0,  7),
+> +
+> +       /* No VALID field on 8960 */
+> +       /* TSENS_INT_STATUS bits: 1 == threshold violated */
+> +       [MIN_STATUS_0] = REG_FIELD(INT_STATUS_ADDR, 0, 0),
+> +       [LOWER_STATUS_0] = REG_FIELD(INT_STATUS_ADDR, 1, 1),
+> +       [UPPER_STATUS_0] = REG_FIELD(INT_STATUS_ADDR, 2, 2),
+> +       /* No CRITICAL field on 8960 */
+> +       [MAX_STATUS_0] = REG_FIELD(INT_STATUS_ADDR, 3, 3),
+> +
+> +       /* TRDY: 1=ready, 0=in progress */
+> +       [TRDY] = REG_FIELD(INT_STATUS_ADDR, 7, 7),
+> +};
+> +
+>  static const struct tsens_ops ops_8960 = {
+>         .init           = init_8960,
+>         .calibrate      = calibrate_8960,
+> @@ -282,4 +354,6 @@ static const struct tsens_ops ops_8960 = {
+>  struct tsens_plat_data data_8960 = {
+>         .num_sensors    = 11,
+>         .ops            = &ops_8960,
+> +       .feat           = &tsens_8960_feat,
+> +       .fields         = tsens_8960_regfields,
+>  };
+> --
+> 2.27.0
+>
