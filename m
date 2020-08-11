@@ -2,148 +2,193 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB47C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 21:09:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1CC3C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 21:12:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6888F20771
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 21:09:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597180195;
-	bh=tRswQoz3Io4eMiflFk/mgoD1e+JXoOIFlknWdgL+hpY=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=0e/F5wBD/jupmEiedqsi4JJgUimVoU0BtR05n3yMOXIR4X/sSMnP/aNc2/Ze/1OC5
-	 GouSxhXFctidfzmbScsL7gi5GU8PTt+bXTLk71HE9Pw2g8sfeSmahQRxC4QJlAK1of
-	 9wFie21zdxTPvOHqc6JRkQyJ0o7WDtcR6FI8njA8=
+	by mail.kernel.org (Postfix) with ESMTP id 8C64320756
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 21:12:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="GKnVs4LQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726547AbgHKVJy (ORCPT
+        id S1726485AbgHKVMj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 17:09:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47704 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725987AbgHKVJx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 17:09:53 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBF7B20756;
-        Tue, 11 Aug 2020 21:09:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597180193;
-        bh=tRswQoz3Io4eMiflFk/mgoD1e+JXoOIFlknWdgL+hpY=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=WmURh5WkywPN/blLRM+aGB36g8bCzzVjMJpdf93L+PHOu3H1Ec6Dws0y5hOntY/NB
-         EzrviXE6f4BvXf0TjLYUbvZcWF8Qh7qv0iayQG2szwFLNFfSZsW6fLbu9HNSVW3Unj
-         XTnyr/QXj2bvdgtAiVza3O+LsVHICGzgxR3VGhZg=
-Content-Type: text/plain; charset="utf-8"
+        Tue, 11 Aug 2020 17:12:39 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:56550 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725987AbgHKVMi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 17:12:38 -0400
+Received: from [192.168.254.32] (unknown [47.187.206.220])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 350B220B4908;
+        Tue, 11 Aug 2020 14:12:36 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 350B220B4908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1597180356;
+        bh=4RKuxHHBb7b5iqoFVfv+liebsOKw+3ZpCCbnWU4Izrc=;
+        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
+        b=GKnVs4LQPwyJJDTbgh/E+llQavrF1igeYdqSs/KtlP37M/ixyQ49CNvUROa65XiKy
+         vY9P6pc4JVMLo39cfyxELw3Fs+HHxOWFipo7Z7h+KmYJb8bIKAvb4eskbhRZ2Qqhj+
+         uyNIBa/8urLrbQLYUanD11AtvTtlwu/mpJChgXgQ=
+Subject: Re: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
+From:   "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>, X86 ML <x86@kernel.org>
+References: <20200728131050.24443-1-madvenka@linux.microsoft.com>
+ <CALCETrVy5OMuUx04-wWk9FJbSxkrT2vMfN_kANinudrDwC4Cig@mail.gmail.com>
+ <3b916198-3a98-bd19-9a1c-f2d8d44febe8@linux.microsoft.com>
+ <CALCETrUJ2hBmJujyCtEqx4=pknRvjvi1-Gj9wfRcMMzejjKQsQ@mail.gmail.com>
+ <5f4e024b-cc14-8fe9-dc4a-df09da2a98ae@linux.microsoft.com>
+Message-ID: <5f621248-7deb-8c3d-d347-f481296037f5@linux.microsoft.com>
+Date:   Tue, 11 Aug 2020 16:12:35 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1597043179-17903-1-git-send-email-rnayak@codeaurora.org>
-References: <1597043179-17903-1-git-send-email-rnayak@codeaurora.org>
-Subject: Re: [PATCH] opp: Fix dev_pm_opp_set_rate() to not return early
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Rajendra Nayak <rnayak@codeaurora.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>, nm@ti.com,
-        viresh.kumar@linaro.org, vireshk@kernel.org
-Date:   Tue, 11 Aug 2020 14:09:51 -0700
-Message-ID: <159718019170.1360974.4800051292737590657@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+In-Reply-To: <5f4e024b-cc14-8fe9-dc4a-df09da2a98ae@linux.microsoft.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Rajendra Nayak (2020-08-10 00:06:19)
-> dev_pm_opp_set_rate() can now be called with freq =3D 0 inorder
-> to either drop performance or bandwidth votes or to disable
-> regulators on platforms which support them.
-> In such cases, a subsequent call to dev_pm_opp_set_rate() with
-> the same frequency ends up returning early because 'old_freq =3D=3D freq'
-> Instead make it fall through and put back the dropped performance
-> and bandwidth votes and/or enable back the regulators.
->=20
-> Fixes: cd7ea582 ("opp: Make dev_pm_opp_set_rate() handle freq =3D 0 to dr=
-op performance votes")
-> Reported-by: Sajida Bhanu <sbhanu@codeaurora.org>
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> ---
->  drivers/opp/core.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-> index 0c8c74a..a994f30 100644
-> --- a/drivers/opp/core.c
-> +++ b/drivers/opp/core.c
-> @@ -901,6 +901,9 @@ int dev_pm_opp_set_rate(struct device *dev, unsigned =
-long target_freq)
-> =20
->         /* Return early if nothing to do */
->         if (old_freq =3D=3D freq) {
-> +               if (opp_table->required_opp_tables || opp_table->regulato=
-rs ||
-> +                   opp_table->paths)
-> +                       goto skip_clk_only;
+I am working on version 2 of trampfd. Will send it out soon.
 
-This is a goto maze! Any chance we can clean this up?
+Thanks for all the comments so far!
 
-        if (!opp_table->required_opp_tables && !opp_table->regulators &&
-	    !opp_table->paths)
-	    if (old_freq =3D=3D freq) {
-		    ret =3D 0
-		    dev_dbg(..)
-	    } else if (!_get_opp_count(opp_table)) {
-		    ret =3D _generic_set_opp_clk_only(dev, clk, freq);
-	    }
-	} else {
-		temp_freq =3D old_freq;
-		old_opp =3D _find_freq_ceil(opp_table, &temp_freq);
-		...
-	        dev_pm_opp_put(opp);
-	put_old_opp:
-		if (!IS_ERR(old_opp))
-			dev_pm_opp_put(old_opp);
-	}
-put_opp_table:
-	dev_pm_opp_put_opp_table(opp_table);
+Madhavan
 
-And that stuff in the else should probably go to another function.
-
->                 dev_dbg(dev, "%s: old/new frequencies (%lu Hz) are same, =
-nothing to do\n",
->                         __func__, freq);
->                 ret =3D 0;
-> @@ -919,6 +922,7 @@ int dev_pm_opp_set_rate(struct device *dev, unsigned =
-long target_freq)
->                 goto put_opp_table;
->         }
-> =20
-> +skip_clk_only:
->         temp_freq =3D old_freq;
->         old_opp =3D _find_freq_ceil(opp_table, &temp_freq);
->         if (IS_ERR(old_opp)) {
-> @@ -954,8 +958,10 @@ int dev_pm_opp_set_rate(struct device *dev, unsigned=
- long target_freq)
->                                                  IS_ERR(old_opp) ? NULL :=
- old_opp->supplies,
->                                                  opp->supplies);
->         } else {
-> +               ret =3D 0;
->                 /* Only frequency scaling */
-> -               ret =3D _generic_set_opp_clk_only(dev, clk, freq);
-> +               if (freq !=3D old_freq)
-> +                       ret =3D _generic_set_opp_clk_only(dev, clk, freq);
->         }
-
-And write this as=20
-
-	else if (freq !=3D old_freq) {
-		ret =3D _generic_set_opp_clk_only(..)
-	} else {
-		ret =3D 0;
-	}
+On 8/10/20 12:34 PM, Madhavan T. Venkataraman wrote:
+> Resending because of mailer problems. Some of the recipients did not receive
+> my email. I apologize. Sigh.
+> 
+> Here is a redefinition of trampfd based on review comments.
+> 
+> I wanted to address dynamic code in 3 different ways:
+> 
+>     Remove the need for dynamic code where possible
+>     --------------------------------------------------------------------
+> 
+>     If the kernel itself can perform the work of some dynamic code, then
+>     the code can be replaced by the kernel.
+> 
+>     This is what I implemented in the patchset. But reviewers objected
+>     to the performance impact. One trip to the kernel was needed for each
+>     trampoline invocation. So, I have decided to defer this approach.
+> 
+>     Convert dynamic code to static code where possible
+>     ----------------------------------------------------------------------
+> 
+>     This is possible with help from the kernel. This has no performance
+>     impact and can be used in libffi, GCC nested functions, etc. I have
+>     described the approach below.
+> 
+>     Deal with code generation
+>     -----------------------------------
+> 
+>     For cases like generating JIT code from Java byte code, I wanted to
+>     establish a framework. However, reviewers felt that details are missing.
+> 
+>     Should the kernel generate code or should it use a user-level code generator?
+>     How do you make sure that a user level code generator can be trusted?
+>     How would the communication work? ABI details? Architecture support?
+>     Support for different types - JIT, DBT, etc?
+> 
+>     I have come to the conclusion that this is best done separately.
+> 
+> My main interest is to provide a way to convert dynamic code such as
+> trampolines to static code without any special architecture support.
+> This can be done with the kernel's help. Any code that gets written in
+> the future can conform to this as well.
+> 
+> So, in version 2 of the Trampfd RFC, I would like to simplify trampfd and
+> just address item 2. I will reimplement the support in libffi and present it.
+> 
+> Convert dynamic code to static code
+> ------------------------------------------------
+> 
+> One problem with dynamic code is that it cannot be verified or authenticated
+> by the kernel. The kernel cannot tell the difference between genuine dynamic
+> code and an attacker's code. Where possible, dynamic code should be converted
+> to static code and placed in the text segment of a binary file. This allows
+> the kernel to verify the code by verifying the signature of the file.
+> 
+> The other problem is using user-level methods to load and execute dynamic code
+> can potentially be exploited by an attacker to inject his code and have it be
+> executed. To prevent this, a system may enforce W^X. If W^X is enforced
+> properly, genuine dynamic code will not be able to run. This is another
+> reason to convert dynamic code to static code.
+> 
+> The issue in converting dynamic code to static code is that the data is
+> dynamic. The code does not know before hand where the data is going to be
+> at runtime.
+> 
+> Some architectures support PC-relative data references. So, if you co-locate
+> code and data, then the code can find the data at runtime. But this is not
+> supported on all architectures. When supported, there may be limitations to
+> deal with. Plus you have to take the trouble to co-locate code and data.
+> And, to deal with W^X, code and data need to be in different pages.
+> 
+> All architectures must be supported without any limitations. Fortunately,
+> the kernel can solve this problem quite easily. I suggest the following:
+> 
+> Convert dynamic code to static code like this:
+> 
+>     - Decide which register should point to the data that the code needs.
+>       Call it register R.
+> 
+>     - Write the static code assuming that R already points to the data.
+> 
+>     - Use trampfd and pass the following to the kernel:
+> 
+>         - pointers to the code and data
+>         - the name of the register R
+> 
+> The kernel will write the following instructions in a trampoline page
+> mapped into the caller's address space with R-X.
+> 
+>     - Load the data address in register R
+>     - Jump to the static code
+> 
+> Basically, the kernel provides a trampoline to jump to the user's code
+> and returns the kernel-provided trampoline's address to the user.
+> 
+> It is trivial to implement a trampoline table in the trampoline page to
+> conserve memory.
+> 
+> Issues raised previously
+> -------------------------------
+> 
+> I believe that the following issues that were raised by reviewers is not
+> a problem in this scheme. Please rereview.
+> 
+>     - Florian mentioned the libffi trampoline table. Trampoline tables can be
+>       implemented in this scheme easily.
+> 
+>     - Florian mentioned stack unwinders. I am not an expert on unwinders.
+>       But I don't see an issue with unwinders.
+> 
+>     - Mark Rutland mentioned Intel's CET and CFI. Don't see a problem there.
+> 
+>     - Mark Rutland mentioned PAC+BTI on ARM64. Don't see a problem there.
+> 
+> If I have missed addressing any previously raised issue, I apologize.
+> Please let me know.
+> 
+> Thanks!
+> 
+> Madhavan
+> 
+> 
