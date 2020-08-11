@@ -2,174 +2,243 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01973C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5631C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:55:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD99B2076B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:53:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4A2320756
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 17:55:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="UlWtQcV/"
+	dkim=pass (2048-bit key) header.d=foundries-io.20150623.gappssmtp.com header.i=@foundries-io.20150623.gappssmtp.com header.b="O9jcFWmV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726182AbgHKRxl (ORCPT
+        id S1726412AbgHKRzj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 13:53:41 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:19707 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726089AbgHKRxk (ORCPT
+        Tue, 11 Aug 2020 13:55:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54370 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725837AbgHKRzh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 13:53:40 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597168419; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=RiBYrC4coBFdgdw33ob3JmNciC8h4ndrnl6HX66f6BI=;
- b=UlWtQcV/vuoq5k2qM/K6IFxK8IVQqum3VE691PNubZIv1y9RT4QgCwNLXZ4CqLZHpKm+Ls1f
- ddlTISHRHpOWHotExvZYcF8jvTMs9QHINsqFHT9Vy+2R1ePpqJDQ+sEYwPllok9E3kXP2Dw9
- MkjJ9KBFbADX3AcdS73sXUsDyRY=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n19.prod.us-west-2.postgun.com with SMTP id
- 5f32db0cc85a1092b02ebe94 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 11 Aug 2020 17:53:16
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 6C697C433C9; Tue, 11 Aug 2020 17:53:16 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbhatt)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id AF65DC433C6;
-        Tue, 11 Aug 2020 17:53:15 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 11 Aug 2020 10:53:15 -0700
-From:   bbhatt@codeaurora.org
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, hemantk@codeaurora.org,
-        jhugo@codeaurora.org, linux-kernel@vger.kernel.org,
-        linux-kernel-owner@vger.kernel.org
-Subject: Re: [PATCH v7 00/11] Introduce features and debugfs/sysfs entries for
- MHI
-In-Reply-To: <20200811062625.GD2762@Mani-XPS-13-9360>
-References: <1597096865-19636-1-git-send-email-bbhatt@codeaurora.org>
- <20200811062625.GD2762@Mani-XPS-13-9360>
-Message-ID: <e010f079a4c5806e59f743f4d800afeb@codeaurora.org>
-X-Sender: bbhatt@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+        Tue, 11 Aug 2020 13:55:37 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3A84C061788
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 10:55:36 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id c15so12287269wrs.11
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 10:55:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=foundries-io.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=tRnNNG+EOiqKnsOW3JVBYP08XhjCezeVkvW5W8pYVGc=;
+        b=O9jcFWmVEfspmlgOb02iR4u1Q7xQgY1Md3YJprx0aU2Q6Hr8UjAYHga8I5V7E7uF6g
+         js3ZaCDaoTJ6w3csCcN81SroXwFCsh3GGIdA7d9h1jaGMOzoYVnzpCy+JqJpVqCKO65I
+         y2QqZ9zew4ZIrKvRhgIX/ZnOhn8Mslx/bgdG85caTrFnQ1oO2h37CraR71xFZEN70yqX
+         nrRGe4rHj2c9AV+KQdV7XqegZrJV+xuMhzRwP018ytjJ76t+ucjD9I9SbP3X+9bR3Qia
+         EfzB8ViTxMb+QeD1qRF1OhO4AYJTPKSBa5wgrLXhLDUgmSp6kVEfLv8vj6tQWnNZSGyA
+         1h/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=tRnNNG+EOiqKnsOW3JVBYP08XhjCezeVkvW5W8pYVGc=;
+        b=sEzXpTbExg5MdmBEq/rwks3DnYuBqq/Of5S0/2QTYFKaRQOa5A/oVRZ0R2TMMwvO1z
+         4GttFVsxT+/8UC0Vs57KhZrsdxzYHKhH2LtkvuDL7Q1XMmw2z4YbwGH7ndOwYD68Rvhv
+         vENgPGlExKe4dmrD/+AORBq5VYGRFUNpVu4iGm4AnklEBZ234FyKFRLMMfWNowdAJkkE
+         RbLSqvV1e0g57BElD/Qm3tltCYpuPv+FmMMQpC8a0dZLS3Wt+aAbEQ9JjLk7nvLc91qo
+         AWhqO3LE/VxWUd5HNuhD7IjgkxKv0XYl46MUbrPWhvuWojRsSceykLFtEdnHjY5yVpju
+         Vm5A==
+X-Gm-Message-State: AOAM533kLNAF8e7LNU63kcPJTWbY4EyCfWtrlShUzMia3aKUxTw1ja18
+        holfjqot0RAkPTlGsOJr7vxbUA==
+X-Google-Smtp-Source: ABdhPJwwSsYe5c7AVIdpdHaZ1eeCyhaua3DVghoLp4hfCbr9VUao0DIKHlnBdy3F4sH+HSlsgHGv6Q==
+X-Received: by 2002:a5d:6443:: with SMTP id d3mr29905083wrw.322.1597168535403;
+        Tue, 11 Aug 2020 10:55:35 -0700 (PDT)
+Received: from localhost.localdomain (239.red-83-34-184.dynamicip.rima-tde.net. [83.34.184.239])
+        by smtp.gmail.com with ESMTPSA id y203sm6958814wmc.29.2020.08.11.10.55.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Aug 2020 10:55:34 -0700 (PDT)
+From:   Jorge Ramirez-Ortiz <jorge@foundries.io>
+To:     jorge@foundries.io, jens.wiklander@linaro.org
+Cc:     sumit.garg@linaro.org, ricardo@foundries.io, mike@foundries.io,
+        tee-dev@lists.linaro.org, linux-kernel@vger.kernel.org
+Subject: [PATCHv7] drivers: optee: allow op-tee to access devices on the i2c bus
+Date:   Tue, 11 Aug 2020 19:55:31 +0200
+Message-Id: <20200811175531.10771-1-jorge@foundries.io>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-10 23:26, Manivannan Sadhasivam wrote:
-> Hi Bhaumik,
-> 
-> On Mon, Aug 10, 2020 at 03:00:54PM -0700, Bhaumik Bhatt wrote:
->> Save hardware information from BHI.
->> Allow reading and modifying some MHI variables for debug, test, and
->> informational purposes using debugfs.
->> Read values for device specific hardware information to be used by 
->> OEMs in
->> factory testing such as serial number and PK hash using sysfs.
->> 
->> This set of patches was tested on arm64 and x86.
->> 
-> 
-> Sorry for stretching the review so long. Will apply the series to 
-> mhi-next
-> once v5.9-rc1 is out.
-> 
-> Thanks,
-> Mani
-> 
-Awesome. Thank you for the thorough review.
->> v7:
->> -Added suggested-by and reviewed-by tags
->> -Fixed nitpick on removal of M3_fast counter as it was unused
->> -Updated sysfs documentation dates and intended kernel version
->> -Fixed minor debugfs formatting by removing an extra newline character
->> 
->> v6:
->> -Introduced APIs for allocating and freeing the MHI controller so as 
->> to ensure
->> that it is always zero-initialized
->> -Moved gerrits around for counter introduction
->> -Fixed documentation for sysfs
->> 
->> v5:
->> -Removed the debug entry to trigger reset and will be addressed in a 
->> seperate
->> patch
->> -Added patch bus: mhi: core: Use counters to track MHI device state 
->> transitions
->> -Updated helper API to trigger a non-blocking host resume
->> -Minor nitpicks also fixed
->> 
->> v4:
->> -Removed bus: mhi: core: Introduce independent voting mechanism patch
->> -Removed bus vote function from debugfs due to independent voting 
->> removal
->> -Added helper resume APIs to aid consolidation of spread out code
->> -Added a clean-up patch and a missing host resume in voting API
->> 
->> v3:
->> -Add patch to check for pending packets in suspend as a dependency for 
->> the
->> independent voting mechanism introduction
->> -Include register dump entry for debugfs to dump MHI, BHI, and BHIe 
->> registers
->> -Update commit message for the debugfs patch
->> -Updated Documentation/ABI with the required info for sysfs
->> -Updated debugfs patch to include a new KConfig entry and dependencies
->> -Updated reviewed-by for some patches
->> 
->> v2:
->> -Added a new debugfs.c file for specific debugfs entries and code
->> -Updated commit text and addressed some comments for voting change
->> -Made sure sysfs is only used for serial number and OEM PK hash usage
->> 
->> Bhaumik Bhatt (11):
->>   bus: mhi: core: Remove double occurrence for mhi_ctrl_ev_task()
->>     declaration
->>   bus: mhi: core: Abort suspends due to outgoing pending packets
->>   bus: mhi: core: Use helper API to trigger a non-blocking host resume
->>   bus: mhi: core: Trigger host resume if suspended during
->>     mhi_device_get()
->>   bus: mhi: core: Use generic name field for an MHI device
->>   bus: mhi: core: Introduce helper function to check device state
->>   bus: mhi: core: Introduce counters to track MHI device state
->>     transitions
->>   bus: mhi: core: Introduce debugfs entries for MHI
->>   bus: mhi: core: Read and save device hardware information from BHI
->>   bus: mhi: core: Introduce APIs to allocate and free the MHI 
->> controller
->>   bus: mhi: core: Introduce sysfs entries for MHI
->> 
->>  Documentation/ABI/stable/sysfs-bus-mhi |  21 ++
->>  MAINTAINERS                            |   1 +
->>  drivers/bus/mhi/Kconfig                |   8 +
->>  drivers/bus/mhi/core/Makefile          |   5 +-
->>  drivers/bus/mhi/core/boot.c            |  17 +-
->>  drivers/bus/mhi/core/debugfs.c         | 409 
->> +++++++++++++++++++++++++++++++++
->>  drivers/bus/mhi/core/init.c            |  81 ++++++-
->>  drivers/bus/mhi/core/internal.h        |  37 ++-
->>  drivers/bus/mhi/core/main.c            |  27 +--
->>  drivers/bus/mhi/core/pm.c              |  26 ++-
->>  include/linux/mhi.h                    |  30 ++-
->>  11 files changed, 623 insertions(+), 39 deletions(-)
->>  create mode 100644 Documentation/ABI/stable/sysfs-bus-mhi
->>  create mode 100644 drivers/bus/mhi/core/debugfs.c
->> 
->> --
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
->> Forum,
->> a Linux Foundation Collaborative Project
->> 
+Some secure elements like NXP's SE050 sit on I2C buses. For OP-TEE to
+control this type of cryptographic devices it needs coordinated access
+to the bus, so collisions and RUNTIME_PM dont get in the way.
+
+This trampoline driver allow OP-TEE to access them.
+
+Signed-off-by: Jorge Ramirez-Ortiz <jorge@foundries.io>
+---
+ v7: add support for ten bit i2c slave addressing
+ v6: compile out if CONFIG_I2C not enabled
+ v5: alphabetic order of includes
+ v4: remove unnecessary extra line in optee_msg.h
+ v3: use from/to msg param to support all types of memory
+     modify OPTEE_MSG_RPC_CMD_I2C_TRANSFER message id
+     
+ drivers/tee/optee/optee_msg.h | 21 ++++++++
+ drivers/tee/optee/rpc.c       | 95 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 116 insertions(+)
+
+diff --git a/drivers/tee/optee/optee_msg.h b/drivers/tee/optee/optee_msg.h
+index 795bc19ae17a..7b2d919da2ac 100644
+--- a/drivers/tee/optee/optee_msg.h
++++ b/drivers/tee/optee/optee_msg.h
+@@ -419,4 +419,25 @@ struct optee_msg_arg {
+  */
+ #define OPTEE_MSG_RPC_CMD_SHM_FREE	7
+ 
++/*
++ * Access a device on an i2c bus
++ *
++ * [in]  param[0].u.value.a		mode: RD(0), WR(1)
++ * [in]  param[0].u.value.b		i2c adapter
++ * [in]  param[0].u.value.c		i2c chip
++ *
++ * [in]  param[1].u.value.a		i2c control flags
++ *
++ * [in/out] memref[2]			buffer to exchange the transfer data
++ *					with the secure world
++ *
++ * [out]  param[3].u.value.a		bytes transferred by the driver
++ */
++#define OPTEE_MSG_RPC_CMD_I2C_TRANSFER 21
++/* I2C master transfer modes */
++#define OPTEE_MSG_RPC_CMD_I2C_TRANSFER_RD 0
++#define OPTEE_MSG_RPC_CMD_I2C_TRANSFER_WR 1
++/* I2C master control flags */
++#define OPTEE_MSG_RPC_CMD_I2C_FLAGS_TEN_BIT  BIT(0)
++
+ #endif /* _OPTEE_MSG_H */
+diff --git a/drivers/tee/optee/rpc.c b/drivers/tee/optee/rpc.c
+index b4ade54d1f28..b6178761d79f 100644
+--- a/drivers/tee/optee/rpc.c
++++ b/drivers/tee/optee/rpc.c
+@@ -7,6 +7,7 @@
+ 
+ #include <linux/delay.h>
+ #include <linux/device.h>
++#include <linux/i2c.h>
+ #include <linux/slab.h>
+ #include <linux/tee_drv.h>
+ #include "optee_private.h"
+@@ -49,6 +50,97 @@ static void handle_rpc_func_cmd_get_time(struct optee_msg_arg *arg)
+ 	arg->ret = TEEC_ERROR_BAD_PARAMETERS;
+ }
+ 
++#if IS_ENABLED(CONFIG_I2C)
++static void handle_rpc_func_cmd_i2c_transfer(struct tee_context *ctx,
++					     struct optee_msg_arg *arg)
++{
++	struct i2c_client client = { 0 };
++	struct tee_param *params;
++	int i, ret = -EOPNOTSUPP;
++	uint32_t attr[] = {
++		TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_INPUT,
++		TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_INPUT,
++		TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT,
++		TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_OUTPUT,
++	};
++
++	if (arg->num_params != ARRAY_SIZE(attr)) {
++		arg->ret = TEEC_ERROR_BAD_PARAMETERS;
++		return;
++	}
++
++	params = kmalloc_array(arg->num_params, sizeof(struct tee_param),
++			       GFP_KERNEL);
++	if (!params) {
++		arg->ret = TEEC_ERROR_OUT_OF_MEMORY;
++		return;
++	}
++
++	if (optee_from_msg_param(params, arg->num_params, arg->params))
++		goto bad;
++
++	for (i = 0; i < arg->num_params; i++) {
++		if ((params[i].attr & TEE_IOCTL_PARAM_ATTR_TYPE_MASK)
++		    != attr[i])
++			goto bad;
++	}
++
++	client.adapter = i2c_get_adapter(params[0].u.value.b);
++	if (!client.adapter)
++		goto bad;
++
++	if (params[1].u.value.a & OPTEE_MSG_RPC_CMD_I2C_FLAGS_TEN_BIT) {
++		if (!i2c_check_functionality(client.adapter,
++					     I2C_FUNC_10BIT_ADDR)) {
++			i2c_put_adapter(client.adapter);
++			goto bad;
++		}
++
++		client.flags = I2C_CLIENT_TEN;
++	}
++
++	client.addr = params[0].u.value.c;
++	snprintf(client.name, I2C_NAME_SIZE, "i2c%d", client.adapter->nr);
++
++	switch (params[0].u.value.a) {
++	case OPTEE_MSG_RPC_CMD_I2C_TRANSFER_RD:
++		ret = i2c_master_recv(&client, params[2].u.memref.shm->kaddr,
++				      params[2].u.memref.size);
++		break;
++	case OPTEE_MSG_RPC_CMD_I2C_TRANSFER_WR:
++		ret = i2c_master_send(&client, params[2].u.memref.shm->kaddr,
++				      params[2].u.memref.size);
++		break;
++	default:
++		i2c_put_adapter(client.adapter);
++		goto bad;
++	}
++
++	if (ret < 0) {
++		arg->ret = TEEC_ERROR_COMMUNICATION;
++	} else {
++		params[3].u.value.a = ret;
++		arg->ret = TEEC_SUCCESS;
++
++		if (optee_to_msg_param(arg->params, arg->num_params, params))
++			arg->ret = TEEC_ERROR_BAD_PARAMETERS;
++	}
++
++	i2c_put_adapter(client.adapter);
++	kfree(params);
++	return;
++bad:
++	kfree(params);
++	arg->ret = TEEC_ERROR_BAD_PARAMETERS;
++}
++#else
++static void handle_rpc_func_cmd_i2c_transfer(struct tee_context *ctx,
++					     struct optee_msg_arg *arg)
++{
++	arg->ret = TEEC_ERROR_COMMUNICATION;
++}
++#endif
++
+ static struct wq_entry *wq_entry_get(struct optee_wait_queue *wq, u32 key)
+ {
+ 	struct wq_entry *w;
+@@ -382,6 +474,9 @@ static void handle_rpc_func_cmd(struct tee_context *ctx, struct optee *optee,
+ 	case OPTEE_MSG_RPC_CMD_SHM_FREE:
+ 		handle_rpc_func_cmd_shm_free(ctx, arg);
+ 		break;
++	case OPTEE_MSG_RPC_CMD_I2C_TRANSFER:
++		handle_rpc_func_cmd_i2c_transfer(ctx, arg);
++		break;
+ 	default:
+ 		handle_rpc_supp_cmd(ctx, arg);
+ 	}
+-- 
+2.17.1
+
