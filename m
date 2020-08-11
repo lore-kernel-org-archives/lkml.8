@@ -2,94 +2,373 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20FA1C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 01:48:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91681C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 01:49:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0185320734
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 01:48:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="D5xe5xHA"
+	by mail.kernel.org (Postfix) with ESMTP id 6E0F320716
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 01:49:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728058AbgHKBsZ (ORCPT
+        id S1728127AbgHKBtz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Aug 2020 21:48:25 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:38721 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727985AbgHKBsY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Aug 2020 21:48:24 -0400
-X-UUID: e0bcfdbec32f4749bb90bb0cdf6668f2-20200811
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=wWsrLG80qkuNgSA4gGuAfus81URferVVdJm10Q2FyI0=;
-        b=D5xe5xHA5gYU4RjvI4svlu2vpiIEvWNSbxoNBMxV6fsBFEh7XUnCIzEhcxit2gjbmLb/SoG7QG199yCWvAiQ6iuLaXw/n65SADtIe80VB8oBog3MAKzSvAg1ncAtGNYPi5ZUkRBevl/4QRRai+erZaaYa1TFh1sXUnrG2mKdBK8=;
-X-UUID: e0bcfdbec32f4749bb90bb0cdf6668f2-20200811
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <yingjoe.chen@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 855901188; Tue, 11 Aug 2020 09:48:21 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- MTKMBS32N1.mediatek.inc (172.27.4.71) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 11 Aug 2020 09:48:18 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 11 Aug 2020 09:47:23 +0800
-Message-ID: <1597110443.22273.5.camel@mtksdaap41>
-Subject: Re: [PATCH v17 1/3] dt-bindings: Add bindings for Mediatek matrix
- keypad
-From:   Yingjoe Chen <yingjoe.chen@mediatek.com>
-To:     Fengping Yu <fengping.yu@mediatek.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        <linux-input@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Tue, 11 Aug 2020 09:47:23 +0800
-In-Reply-To: <20200810064058.6467-2-fengping.yu@mediatek.com>
-References: <20200810064058.6467-1-fengping.yu@mediatek.com>
-         <20200810064058.6467-2-fengping.yu@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Mon, 10 Aug 2020 21:49:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60734 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727985AbgHKBtz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Aug 2020 21:49:55 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C18CF20716;
+        Tue, 11 Aug 2020 01:49:53 +0000 (UTC)
+Date:   Mon, 10 Aug 2020 21:49:52 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "John Warthog9 Hawley" <warthog9@kernel.org>
+Subject: [GIT PULL] ktest: Updates for 5.9
+Message-ID: <20200810214952.394ccc78@oasis.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: B2CD043487BC2843B3826AD6DB0F9EC3DC55BA7D3B4D9836D2D5FCFBC9953D792000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksDQoNCg0KT24gTW9uLCAyMDIwLTA4LTEwIGF0IDE0OjQwICswODAwLCBGZW5ncGluZyBZdSB3
-cm90ZToNCj4gRnJvbTogImZlbmdwaW5nLnl1IiA8ZmVuZ3BpbmcueXVAbWVkaWF0ZWsuY29tPg0K
-PiANCj4gVGhpcyBwYXRjaCBhZGQgZGV2aWNldHJlZSBiaW5kaW5ncyBmb3IgTWVkaWF0ZWsgbWF0
-cml4IGtleXBhZCBkcml2ZXIuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBmZW5ncGluZy55dSA8ZmVu
-Z3BpbmcueXVAbWVkaWF0ZWsuY29tPg0KPiAtLS0NCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2lucHV0L210ay1rcGQueWFtbCAgICB8IDg3ICsrKysrKysrKysrKysrKysrKysNCj4gIDEgZmls
-ZSBjaGFuZ2VkLCA4NyBpbnNlcnRpb25zKCspDQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lucHV0L210ay1rcGQueWFtbA0KPiANCj4gZGlm
-ZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnB1dC9tdGsta3Bk
-LnlhbWwgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaW5wdXQvbXRrLWtwZC55
-YW1sDQo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+IGluZGV4IDAwMDAwMDAwMDAwMC4uZDc0ZGQ4
-YTZmYmRlDQoNCjwuLi4+DQoNCg0KPiArICBrZXlwYWQsbnVtLWNvbHVtbnM6DQo+ICsgICAgZGVz
-Y3JpcHRpb246IE51bWJlciBvZiBjb2x1bW4gbGluZXMgY29ubmVjdGVkIHRvIHRoZSBrZXlwYWQg
-Y29udHJvbGxlciwNCj4gKyAgICBpdCBpcyBub3QgZXF1YWwgdG8gUENCIGNvbHVtbnMgbnVtYmVy
-LCBpbnN0ZWFkIHlvdSBzaG91bGQgYWRkIHJlcXVpcmVkIHZhbHVlDQo+ICsgICAgZm9yIGVhY2gg
-SUMuIElmIG5vdCBzcGVjaWZpZWQsIHRoZSBkZWZhdWx0IHZhbHVlIGlzIDEuDQo+ICsNCj4gKyAg
-a2V5cGFkLG51bS1yb3dzOg0KPiArICAgIGRlc2NyaXB0aW9uOiBOdW1iZXIgb2Ygcm93IGxpbmVz
-IGNvbm5lY3RlZCB0byB0aGUga2V5cGFkIGNvbnRyb2xsZXIsIGl0IGlzDQo+ICsgICAgbm90IGVx
-dWFsIHRvIFBDQiByb3dzIG51bWJlciwgaW5zdGVhZCB5b3Ugc2hvdWxkIGFkZCByZXF1aXJlZCB2
-YWx1ZSBmb3IgZWFjaCBJQy4NCj4gKyAgICBJZiBub3Qgc3BlY2lmaWVkLCB0aGUgZGVmYXVsdCB2
-YWx1ZSBpcyAxLg0KDQpZb3VyIHNvdXJjZSBjb2RlIGNhbid0IHJlYWxseSBoYW5kbGUgZHRzIHdp
-dGhvdXQgcm93cy9jb2x1bW5zDQpwcm9wZXJ0aWVzLiBBbHNvLCB0aGUgZGVmYXVsdCB2YWx1ZSBk
-b2Vzbid0IG1ha2UgYW55IHNlbnNlLiBObyBJQyB3aWxsDQpoYXZlIHJvd3Mgb3IgY29sdW1ucyBz
-ZXQgdG8gMS4NCg0KU2luY2UgdGhlc2UgYXJlIElDIHNwZWNpZmllZCwgbm90IGJvYXJkIHNwZWNp
-ZmllZCwgSSB0aGluayB5b3Ugc2hvdWxkDQpqdXN0IGhhdmUgdGhlIGNvcnJlY3QgbnVtYmVycyBp
-biBkcml2ZXIuDQoNCkpvZS5DDQoNCg==
 
+Linus,
+
+Updates for ktest 5.9
+
+ - Have config-bisect save the good/bad configs at each step.
+ - Show log file location even on success
+ - Add PRE_TEST_DIE to kill test if the PRE_TEST fails
+ - Add a NOT operator for conditionals in config file
+ - Add the log output of the last test when emailing on failure.
+ - Other minor clean ups and small fixes.
+
+
+Please pull the latest ktest-v5.9 tree, which can be found at:
+
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-ktest.git
+ktest-v5.9
+
+Tag SHA1: 21202864dc2a2ac81997d6ad62f8f36839c7c578
+Head SHA1: ff131efff141fc679cccde28bc265f4c79cbe329
+
+
+Colin Ian King (1):
+      ktest.pl: Fix spelling mistake "Cant" -> "Can't"
+
+Steven Rostedt (VMware) (9):
+      ktest.pl: Have config-bisect save each config used in the bisect
+      ktest.pl: Always show log file location if defined even on success
+      ktest.pl: Define PRE_TEST_DIE to kill the test if the PRE_TEST fails
+      ktest.pl: Add a NOT operator
+      ktest.pl: Just open up the log file once
+      ktest.pl: Turn off buffering to the log file
+      ktest.pl: Add the log of last test in email on failure
+      ktest.pl: Add MAIL_MAX_SIZE to limit the amount of log emailed
+      ktest.pl: Change the logic to control the size of the log file emailed
+
+----
+ tools/testing/ktest/ktest.pl    | 103 +++++++++++++++++++++++++++++++++-------
+ tools/testing/ktest/sample.conf |  18 +++++++
+ 2 files changed, 105 insertions(+), 16 deletions(-)
+---------------------------
+diff --git a/tools/testing/ktest/ktest.pl b/tools/testing/ktest/ktest.pl
+index 7570e36d636d..cb16d2aac51c 100755
+--- a/tools/testing/ktest/ktest.pl
++++ b/tools/testing/ktest/ktest.pl
+@@ -11,6 +11,7 @@ use File::Path qw(mkpath);
+ use File::Copy qw(cp);
+ use FileHandle;
+ use FindBin;
++use IO::Handle;
+ 
+ my $VERSION = "0.2";
+ 
+@@ -81,6 +82,8 @@ my %default = (
+     "IGNORE_UNUSED"		=> 0,
+ );
+ 
++my $test_log_start = 0;
++
+ my $ktest_config = "ktest.conf";
+ my $version;
+ my $have_version = 0;
+@@ -98,6 +101,7 @@ my $final_post_ktest;
+ my $pre_ktest;
+ my $post_ktest;
+ my $pre_test;
++my $pre_test_die;
+ my $post_test;
+ my $pre_build;
+ my $post_build;
+@@ -223,6 +227,7 @@ my $dirname = $FindBin::Bin;
+ my $mailto;
+ my $mailer;
+ my $mail_path;
++my $mail_max_size;
+ my $mail_command;
+ my $email_on_error;
+ my $email_when_finished;
+@@ -259,6 +264,7 @@ my %option_map = (
+     "MAILTO"			=> \$mailto,
+     "MAILER"			=> \$mailer,
+     "MAIL_PATH"			=> \$mail_path,
++    "MAIL_MAX_SIZE"		=> \$mail_max_size,
+     "MAIL_COMMAND"		=> \$mail_command,
+     "EMAIL_ON_ERROR"		=> \$email_on_error,
+     "EMAIL_WHEN_FINISHED"	=> \$email_when_finished,
+@@ -273,6 +279,7 @@ my %option_map = (
+     "PRE_KTEST"			=> \$pre_ktest,
+     "POST_KTEST"		=> \$post_ktest,
+     "PRE_TEST"			=> \$pre_test,
++    "PRE_TEST_DIE"		=> \$pre_test_die,
+     "POST_TEST"			=> \$post_test,
+     "BUILD_TYPE"		=> \$build_type,
+     "BUILD_OPTIONS"		=> \$build_options,
+@@ -507,9 +514,7 @@ EOF
+ 
+ sub _logit {
+     if (defined($opt{"LOG_FILE"})) {
+-	open(OUT, ">> $opt{LOG_FILE}") or die "Can't write to $opt{LOG_FILE}";
+-	print OUT @_;
+-	close(OUT);
++	print LOG @_;
+     }
+ }
+ 
+@@ -909,6 +914,12 @@ sub process_expression {
+ 	}
+     }
+ 
++    if ($val =~ s/^\s*NOT\s+(.*)//) {
++	my $express = $1;
++	my $ret = process_expression($name, $express);
++	return !$ret;
++    }
++
+     if ($val =~ /^\s*0\s*$/) {
+ 	return 0;
+     } elsif ($val =~ /^\s*\d+\s*$/) {
+@@ -1485,8 +1496,32 @@ sub dodie {
+ 
+     if ($email_on_error) {
+ 	my $name = get_test_name;
++	my $log_file;
++
++	if (defined($opt{"LOG_FILE"})) {
++	    my $whence = 0; # beginning of file
++	    my $pos = $test_log_start;
++
++	    if (defined($mail_max_size)) {
++		my $log_size = tell LOG;
++		$log_size -= $test_log_start;
++		if ($log_size > $mail_max_size) {
++		    $whence = 2; # end of file
++		    $pos = - $mail_max_size;
++		}
++	    }
++	    $log_file = "$tmpdir/log";
++	    open (L, "$opt{LOG_FILE}") or die "Can't open $opt{LOG_FILE} to read)";
++	    open (O, "> $tmpdir/log") or die "Can't open $tmpdir/log\n";
++	    seek(L, $pos, $whence);
++	    while (<L>) {
++		print O;
++	    }
++	    close O;
++	    close L;
++	}
+         send_email("KTEST: critical failure for test $i [$name]",
+-                "Your test started at $script_start_time has failed with:\n@_\n");
++                "Your test started at $script_start_time has failed with:\n@_\n", $log_file);
+     }
+ 
+     if ($monitor_cnt) {
+@@ -1508,7 +1543,7 @@ sub create_pty {
+     my $TIOCGPTN = 0x80045430;
+ 
+     sysopen($ptm, "/dev/ptmx", O_RDWR | O_NONBLOCK) or
+-	dodie "Cant open /dev/ptmx";
++	dodie "Can't open /dev/ptmx";
+ 
+     # unlockpt()
+     $tmp = pack("i", 0);
+@@ -1772,8 +1807,6 @@ sub run_command {
+ 	(fail "unable to exec $command" and return 0);
+ 
+     if (defined($opt{"LOG_FILE"})) {
+-	open(LOG, ">>$opt{LOG_FILE}") or
+-	    dodie "failed to write to log";
+ 	$dolog = 1;
+     }
+ 
+@@ -1821,7 +1854,6 @@ sub run_command {
+     }
+ 
+     close(CMD);
+-    close(LOG) if ($dolog);
+     close(RD)  if ($dord);
+ 
+     $end_time = time;
+@@ -3188,6 +3220,8 @@ sub config_bisect_end {
+     doprint "***************************************\n\n";
+ }
+ 
++my $pass = 1;
++
+ sub run_config_bisect {
+     my ($good, $bad, $last_result) = @_;
+     my $reset = "";
+@@ -3210,11 +3244,15 @@ sub run_config_bisect {
+ 
+     $ret = run_config_bisect_test $config_bisect_type;
+     if ($ret) {
+-        doprint "NEW GOOD CONFIG\n";
++        doprint "NEW GOOD CONFIG ($pass)\n";
++	system("cp $output_config $tmpdir/good_config.tmp.$pass");
++	$pass++;
+ 	# Return 3 for good config
+ 	return 3;
+     } else {
+-        doprint "NEW BAD CONFIG\n";
++        doprint "NEW BAD CONFIG ($pass)\n";
++	system("cp $output_config $tmpdir/bad_config.tmp.$pass");
++	$pass++;
+ 	# Return 4 for bad config
+ 	return 4;
+     }
+@@ -4077,8 +4115,12 @@ if ($#new_configs >= 0) {
+     }
+ }
+ 
+-if ($opt{"CLEAR_LOG"} && defined($opt{"LOG_FILE"})) {
+-    unlink $opt{"LOG_FILE"};
++if (defined($opt{"LOG_FILE"})) {
++    if ($opt{"CLEAR_LOG"}) {
++	unlink $opt{"LOG_FILE"};
++    }
++    open(LOG, ">> $opt{LOG_FILE}") or die "Can't write to $opt{LOG_FILE}";
++    LOG->autoflush(1);
+ }
+ 
+ doprint "\n\nSTARTING AUTOMATED TESTS\n\n";
+@@ -4171,7 +4213,7 @@ sub find_mailer {
+ }
+ 
+ sub do_send_mail {
+-    my ($subject, $message) = @_;
++    my ($subject, $message, $file) = @_;
+ 
+     if (!defined($mail_path)) {
+ 	# find the mailer
+@@ -4181,16 +4223,30 @@ sub do_send_mail {
+ 	}
+     }
+ 
++    my $header_file = "$tmpdir/header";
++    open (HEAD, ">$header_file") or die "Can not create $header_file\n";
++    print HEAD "To: $mailto\n";
++    print HEAD "Subject: $subject\n\n";
++    print HEAD "$message\n";
++    close HEAD;
++
+     if (!defined($mail_command)) {
+ 	if ($mailer eq "mail" || $mailer eq "mailx") {
+-	    $mail_command = "\$MAIL_PATH/\$MAILER -s \'\$SUBJECT\' \$MAILTO <<< \'\$MESSAGE\'";
++	    $mail_command = "cat \$HEADER_FILE \$BODY_FILE | \$MAIL_PATH/\$MAILER -s \'\$SUBJECT\' \$MAILTO";
+ 	} elsif ($mailer eq "sendmail" ) {
+-	    $mail_command =  "echo \'Subject: \$SUBJECT\n\n\$MESSAGE\' | \$MAIL_PATH/\$MAILER -t \$MAILTO";
++	    $mail_command =  "cat \$HEADER_FILE \$BODY_FILE | \$MAIL_PATH/\$MAILER -t \$MAILTO";
+ 	} else {
+ 	    die "\nYour mailer: $mailer is not supported.\n";
+ 	}
+     }
+ 
++    if (defined($file)) {
++	$mail_command =~ s/\$BODY_FILE/$file/g;
++    } else {
++	$mail_command =~ s/\$BODY_FILE//g;
++    }
++
++    $mail_command =~ s/\$HEADER_FILE/$header_file/g;
+     $mail_command =~ s/\$MAILER/$mailer/g;
+     $mail_command =~ s/\$MAIL_PATH/$mail_path/g;
+     $mail_command =~ s/\$MAILTO/$mailto/g;
+@@ -4338,10 +4394,19 @@ for (my $i = 1; $i <= $opt{"NUM_TESTS"}; $i++) {
+     }
+ 
+     doprint "\n\n";
++
++    if (defined($opt{"LOG_FILE"})) {
++	$test_log_start = tell(LOG);
++    }
++
+     doprint "RUNNING TEST $i of $opt{NUM_TESTS}$name with option $test_type $run_type$installme\n\n";
+ 
+     if (defined($pre_test)) {
+-	run_command $pre_test;
++	my $ret = run_command $pre_test;
++	if (!$ret && defined($pre_test_die) &&
++	    $pre_test_die) {
++	    dodie "failed to pre_test\n";
++	}
+     }
+ 
+     unlink $dmesg;
+@@ -4441,4 +4506,10 @@ if ($email_when_finished) {
+     send_email("KTEST: Your test has finished!",
+             "$successes of $opt{NUM_TESTS} tests started at $script_start_time were successful!");
+ }
++
++if (defined($opt{"LOG_FILE"})) {
++    print "\n See $opt{LOG_FILE} for the record of results.\n\n";
++    close LOG;
++}
++
+ exit 0;
+diff --git a/tools/testing/ktest/sample.conf b/tools/testing/ktest/sample.conf
+index 27666b8007ed..5e7d1d729752 100644
+--- a/tools/testing/ktest/sample.conf
++++ b/tools/testing/ktest/sample.conf
+@@ -442,6 +442,19 @@
+ # Users can cancel the test by Ctrl^C
+ # (default 0)
+ #EMAIL_WHEN_CANCELED = 1
++#
++# If a test ends with an error and EMAIL_ON_ERROR is set as well
++# as a LOG_FILE is defined, then the log of the failing test will
++# be included in the email that is sent.
++# It is possible that the log may be very large, in which case,
++# only the last amount of the log should be sent. To limit how
++# much of the log is sent, set MAIL_MAX_SIZE. This will be the
++# size in bytes of the last portion of the log of the failed
++# test file. That is, if this is set to 100000, then only the
++# last 100 thousand bytes of the log file will be included in
++# the email.
++# (default undef)
++#MAIL_MAX_SIZE = 1000000
+ 
+ # Start a test setup. If you leave this off, all options
+ # will be default and the test will run once.
+@@ -557,6 +570,11 @@
+ # default (undefined)
+ #PRE_TEST = ${SSH} reboot_to_special_kernel
+ 
++# To kill the entire test if PRE_TEST is defined but fails set this
++# to 1.
++# (default 0)
++#PRE_TEST_DIE = 1
++
+ # If there is a command you want to run after the individual test case
+ # completes, then you can set this option.
+ #
