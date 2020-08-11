@@ -2,89 +2,119 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E310CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 13:07:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B6F1C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 13:08:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6E9C2076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 13:07:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 831672076C
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 13:08:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728670AbgHKNHI (ORCPT
+        id S1728701AbgHKNIl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 09:07:08 -0400
-Received: from mga04.intel.com ([192.55.52.120]:31994 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728619AbgHKNHI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 09:07:08 -0400
-IronPort-SDR: mdAPz45f+KJIjUrLrDy0EB983Bp8x5Yk0RENUClZhpoQjNIGJoZTR+ambye7tEJjMgXpO5oWEJ
- s/S2rZCQfkQg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9709"; a="151159529"
-X-IronPort-AV: E=Sophos;i="5.75,461,1589266800"; 
-   d="scan'208";a="151159529"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2020 06:07:07 -0700
-IronPort-SDR: q7TSaGA3zgBY9VQdB2f9iIBrK8SgrW02ME3wO9czPhvx2EdQyeX/wTxVCBnXuDXkSzJDW7BQR5
- c4tCTsddmv3g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,461,1589266800"; 
-   d="scan'208";a="398520755"
-Received: from kuha.fi.intel.com ([10.237.72.162])
-  by fmsmga001.fm.intel.com with SMTP; 11 Aug 2020 06:07:04 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 11 Aug 2020 16:07:03 +0300
-Date:   Tue, 11 Aug 2020 16:07:03 +0300
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Prashant Malani <pmalani@chromium.org>,
-        "Shaikh, Azhar" <azhar.shaikh@intel.com>
-Cc:     "bleung@chromium.org" <bleung@chromium.org>,
-        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
-        "groeck@chromium.org" <groeck@chromium.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Patel, Utkarsh H" <utkarsh.h.patel@intel.com>,
-        "Bowman, Casey G" <casey.g.bowman@intel.com>,
-        "Mani, Rajmohan" <rajmohan.mani@intel.com>
-Subject: Re: [PATCH v2 2/2] platform/chrome: cros_ec_typec: Avoid setting usb
- role during disconnect
-Message-ID: <20200811130703.GA627773@kuha.fi.intel.com>
-References: <20200730225609.7395-1-azhar.shaikh@intel.com>
- <20200730225609.7395-3-azhar.shaikh@intel.com>
- <20200730230238.GD3145664@google.com>
- <MWHPR11MB1518178C5B2335FC02CD36AE91710@MWHPR11MB1518.namprd11.prod.outlook.com>
- <20200730232504.GG3145664@google.com>
- <MWHPR11MB151867DF25664C80E99A326D914B0@MWHPR11MB1518.namprd11.prod.outlook.com>
- <CACeCKaf6WuW6XbFBQoVEW55w=OHfaVmmDn1xepiYYeRyMzZFrA@mail.gmail.com>
- <20200806113907.GX883641@kuha.fi.intel.com>
- <CACeCKaeLmVudhssvnYrQGmnJiD-byW8jOas1QKyQj4gg0=sC4A@mail.gmail.com>
+        Tue, 11 Aug 2020 09:08:41 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:41556 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728557AbgHKNIk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 09:08:40 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id C95DF1C0BD8; Tue, 11 Aug 2020 15:08:37 +0200 (CEST)
+Date:   Tue, 11 Aug 2020 15:08:37 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, oleg@redhat.com,
+        x86@kernel.org
+Subject: Re: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
+Message-ID: <20200811130837.hi6wllv6g67j5wds@duo.ucw.cz>
+References: <aefc85852ea518982e74b233e11e16d2e707bc32>
+ <20200728131050.24443-1-madvenka@linux.microsoft.com>
+ <20200731180955.GC67415@C02TD0UTHF1T.local>
+ <6236adf7-4bed-534e-0956-fddab4fd96b6@linux.microsoft.com>
+ <20200804143018.GB7440@C02TD0UTHF1T.local>
+ <b3368692-afe6-89b5-d634-12f4f0a601f8@linux.microsoft.com>
+ <20200808221748.GA1020@bug>
+ <6cca8eac-f767-b891-dc92-eaa7504a0e8b@linux.microsoft.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="yvr4rtdsyfwruwtq"
 Content-Disposition: inline
-In-Reply-To: <CACeCKaeLmVudhssvnYrQGmnJiD-byW8jOas1QKyQj4gg0=sC4A@mail.gmail.com>
+In-Reply-To: <6cca8eac-f767-b891-dc92-eaa7504a0e8b@linux.microsoft.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On Thu, Aug 06, 2020 at 11:39:08AM -0700, Prashant Malani wrote:
-> I would suggest:
-> - Merging Patch 1 (role set correction) and Patch 2 (moving the
-> usb_role_switch_set_role() inside cros_typec_configure_mux()
-> *but* keep it at the end to preserve existing ordering) into 1 patch.
-> - Add another patch which re-orders the calls and which in the commit
-> message lists out all the reasons why this re-ordering
-> needs to be done.
-> 
-> Doing the above will help keep better track of why the changes were made.
+--yvr4rtdsyfwruwtq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-So Azhar can you please prepare v3?
+Hi!
 
+> >> Thanks for the lively discussion. I have tried to answer some of the
+> >> comments below.
+> >=20
+> >>> There are options today, e.g.
+> >>>
+> >>> a) If the restriction is only per-alias, you can have distinct aliases
+> >>>    where one is writable and another is executable, and you can make =
+it
+> >>>    hard to find the relationship between the two.
+> >>>
+> >>> b) If the restriction is only temporal, you can write instructions in=
+to
+> >>>    an RW- buffer, transition the buffer to R--, verify the buffer
+> >>>    contents, then transition it to --X.
+> >>>
+> >>> c) You can have two processes A and B where A generates instrucitons =
+into
+> >>>    a buffer that (only) B can execute (where B may be restricted from
+> >>>    making syscalls like write, mprotect, etc).
+> >>
+> >> The general principle of the mitigation is W^X. I would argue that
+> >> the above options are violations of the W^X principle. If they are
+> >> allowed today, they must be fixed. And they will be. So, we cannot
+> >> rely on them.
+> >=20
+> > Would you mind describing your threat model?
+> >=20
+> > Because I believe you are using model different from everyone else.
+> >=20
+> > In particular, I don't believe b) is a problem or should be fixed.
+>=20
+> It is a problem because a kernel that implements W^X properly
+> will not allow it. It has no idea what has been done in userland.
+> It has no idea that the user has checked and verified the buffer
+> contents after transitioning the page to R--.
 
-thanks,
+No, it is not a problem. W^X is designed to protect from attackers
+doing buffer overflows, not attackers doing arbitrary syscalls.
 
--- 
-heikki
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--yvr4rtdsyfwruwtq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EARECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXzKYVQAKCRAw5/Bqldv6
+8ukgAJ9NvrVhKohEnNz0+UYVlo/02QCYaACgiTn7V4hdsKUqG2xCfqc/g1HOnV4=
+=VFJ2
+-----END PGP SIGNATURE-----
+
+--yvr4rtdsyfwruwtq--
