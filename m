@@ -2,355 +2,150 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C646C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 20:06:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19767C433E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 20:06:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BCB820FC3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 20:06:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dfREvYmv"
+	by mail.kernel.org (Postfix) with ESMTP id D87CC20756
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 20:06:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597176407;
+	bh=9kVJER9GnmAJgIf1v0EsXQx3cmVIVjyDJgu9AFSZDAs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=yMrU+NwTvTldr7CaxGVAZMd9/+BV8dypuhSvtWnl0Z+DzOdDkDrwo1EQ3VbHEJS6U
+	 vV8LGD3h7nWcezLXG1u0S1vvimRrklP3/sfMEW74lhfA59cRHC2vL3OaK2eeOsPdCu
+	 ILRPwjJeMc759Vy/SuviZv6o2Sr5U67v+vNos8KQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbgHKUGi (ORCPT
+        id S1726749AbgHKUG0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 16:06:38 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:33030 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726428AbgHKUGf (ORCPT
+        Tue, 11 Aug 2020 16:06:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46406 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726564AbgHKUGY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 16:06:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597176392;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=bQrLRzkmqAjmojfr9QpfevMihBC8AjtoB9png7TmsPM=;
-        b=dfREvYmvVFAeQzsTpnvDIcnyvVJbkXsYLTGFO0hU6TrDtzY3yI45I3j+rhcJMhtd4qazMU
-        EjAfMm6cCkoIT89r3VhRIEvReaqH24mulE7mXOM/9bd1H4Bic2vX7SzP7t7CB4UdA36LZX
-        rZ87wuFxbmU6pMFs8f1ajz8MeWiSZS0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-385-TUHR8MbhML227kW5qed5Eg-1; Tue, 11 Aug 2020 16:06:28 -0400
-X-MC-Unique: TUHR8MbhML227kW5qed5Eg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 49CD78B0084;
-        Tue, 11 Aug 2020 20:06:27 +0000 (UTC)
-Received: from Ruby.redhat.com (ovpn-119-184.rdu2.redhat.com [10.10.119.184])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D387E5D9D7;
-        Tue, 11 Aug 2020 20:06:22 +0000 (UTC)
-From:   Lyude Paul <lyude@redhat.com>
-To:     nouveau@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Cc:     Ben Skeggs <bskeggs@redhat.com>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [RFC 12/20] drm/nouveau/kms: Only use hpd_work for reprobing in HPD paths
-Date:   Tue, 11 Aug 2020 16:04:49 -0400
-Message-Id: <20200811200457.134743-13-lyude@redhat.com>
-In-Reply-To: <20200811200457.134743-1-lyude@redhat.com>
-References: <20200811200457.134743-1-lyude@redhat.com>
+        Tue, 11 Aug 2020 16:06:24 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37D62C06174A
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 13:06:24 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id z6so85804iow.6
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 13:06:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=x9Z56G7Sq+yoxF26YYsaVBF/VyvZNYi0ExatDmNcea8=;
+        b=CmHP/prH5/FP2ejP8hzk1TIK0ioM1mTElZ2Xxat1dgv6XbaDed3rUDQIZjKALmYmYW
+         M2Wpi1pa2zNkpS0Il8/Tlx3hEW8wDBHDDMl9j+p7tY795MeaYQkirp7mw2hLYW098fYa
+         mvwBVOUXNuGA+5s9y1TTFETU57MNRjCYyagQo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=x9Z56G7Sq+yoxF26YYsaVBF/VyvZNYi0ExatDmNcea8=;
+        b=DaIQEeQJnEMcsYY76U2/rNRBh0N81mrDO8GqvN/ETefX8fw8KjECJKuIYuQgXmIH2w
+         q8hWUhMF+Kg7W3BOIx+34ReK+wsDuRxOWIyg2m3qOubk0EMYI22CDZheeZofj+oNzLYb
+         fGcWbiJ8wGQudrWTKCcbVqk8FXQDF04+5qvxo+mLXduZw8dRSX3wlPwGgBfpGhMhUWuB
+         KMZ1li+E5CQEgXI6/qFvZjjzNU9HrENXyfcjVdWglbPh78bCEOGYDmZOSqZDhErYwf6v
+         Jh+pH7eUEXG5wkx2ZCpMFMKRcEtFMfjmEmrQ0yuOEdmhWh/fa/gjGHK/CPALVyYFKM7C
+         nJWQ==
+X-Gm-Message-State: AOAM532dn3mxRuFVqprsJVz0x03ezB8Np5wEez2w2m0Jgr4eFZCzA+tv
+        tUT+Gg9IzhXdEIXyFPOcl5THb6i9x3o=
+X-Google-Smtp-Source: ABdhPJxt7J4Yz+saDja0hs4hbbCY2wxkcPJTzkfMm3klrxtA/5R73fQ8qccYz0C7xutctQijFvlhyw==
+X-Received: by 2002:a05:6602:2d43:: with SMTP id d3mr24043574iow.39.1597176383128;
+        Tue, 11 Aug 2020 13:06:23 -0700 (PDT)
+Received: from mail-io1-f49.google.com (mail-io1-f49.google.com. [209.85.166.49])
+        by smtp.gmail.com with ESMTPSA id t26sm7007850ilb.80.2020.08.11.13.06.21
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Aug 2020 13:06:21 -0700 (PDT)
+Received: by mail-io1-f49.google.com with SMTP id z6so85527iow.6
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 13:06:21 -0700 (PDT)
+X-Received: by 2002:a02:9247:: with SMTP id y7mr26798836jag.140.1597176381447;
+ Tue, 11 Aug 2020 13:06:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+References: <20200811183950.10603-1-peterx@redhat.com> <CAHk-=whQM=m5td5tfbuxh1f_Gxjsa74XV962BYkjrbeDMAhBpA@mail.gmail.com>
+In-Reply-To: <CAHk-=whQM=m5td5tfbuxh1f_Gxjsa74XV962BYkjrbeDMAhBpA@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 11 Aug 2020 13:06:04 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wit7LDr0tA2eVn7yHHEH76oK=Lfm3tTs8_JxO8XEED4_g@mail.gmail.com>
+Message-ID: <CAHk-=wit7LDr0tA2eVn7yHHEH76oK=Lfm3tTs8_JxO8XEED4_g@mail.gmail.com>
+Subject: Re: [PATCH v3] mm/gup: Allow real explicit breaking of COW
+To:     Peter Xu <peterx@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>
+Cc:     Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Marty Mcfadden <mcfadden8@llnl.gov>,
+        "Maya B . Gokhale" <gokhale2@llnl.gov>,
+        Jann Horn <jannh@google.com>, Christoph Hellwig <hch@lst.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Kirill Shutemov <kirill@shutemov.name>, Jan Kara <jack@suse.cz>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently we perform both short IRQ handling for DP, and connector
-reprobing in the HPD IRQ handler. However since we need to grab
-connection_mutex in order to reprobe a connector, in theory we could
-accidentally block ourselves from handling any short IRQs until after a
-modeset completes if a connector hotplug happens to occur in parallel
-with a modeset.
+;
 
-I haven't seen this actually happen yet, but since we're cleaning up
-nouveau's hotplug handling code anyway and we already have a hpd worker,
-we can simply fix this by only relying on the HPD worker to actually
-reprobe connectors when we receive a HPD IRQ. We also add a mask to
-nouveau_drm to keep track of which connectors are waiting to be reprobed
-in response to an HPD IRQ.
+On Tue, Aug 11, 2020 at 12:24 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> Now I wonder if there's any other case of FOLL_WRITE that is missing.
 
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Reviewed-by: Ben Skeggs <bskeggs@redhat.com>
----
- drivers/gpu/drm/nouveau/nouveau_connector.c | 42 +++++--------
- drivers/gpu/drm/nouveau/nouveau_connector.h |  1 +
- drivers/gpu/drm/nouveau/nouveau_display.c   | 70 ++++++++++++++++++---
- drivers/gpu/drm/nouveau/nouveau_display.h   |  1 +
- drivers/gpu/drm/nouveau/nouveau_dp.c        |  2 +-
- drivers/gpu/drm/nouveau/nouveau_drm.c       |  4 +-
- drivers/gpu/drm/nouveau/nouveau_drv.h       |  2 +
- 7 files changed, 86 insertions(+), 36 deletions(-)
+Actually, now I wonder if we really should have tried to handle the
+wrong-way cow reuse case some other way entirely.
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_connector.c b/drivers/gpu/drm/nouveau/nouveau_connector.c
-index 4a29f691c08e4..637e91594fbe8 100644
---- a/drivers/gpu/drm/nouveau/nouveau_connector.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_connector.c
-@@ -1138,6 +1138,20 @@ nouveau_connector_funcs_lvds = {
- 	.early_unregister = nouveau_connector_early_unregister,
- };
- 
-+void
-+nouveau_connector_hpd(struct drm_connector *connector)
-+{
-+	struct nouveau_drm *drm = nouveau_drm(connector->dev);
-+	u32 mask = drm_connector_mask(connector);
-+
-+	mutex_lock(&drm->hpd_lock);
-+	if (!(drm->hpd_pending & mask)) {
-+		drm->hpd_pending |= mask;
-+		schedule_work(&drm->hpd_work);
-+	}
-+	mutex_unlock(&drm->hpd_lock);
-+}
-+
- static int
- nouveau_connector_hotplug(struct nvif_notify *notify)
- {
-@@ -1147,8 +1161,6 @@ nouveau_connector_hotplug(struct nvif_notify *notify)
- 	struct drm_device *dev = connector->dev;
- 	struct nouveau_drm *drm = nouveau_drm(dev);
- 	const struct nvif_notify_conn_rep_v0 *rep = notify->data;
--	const char *name = connector->name;
--	int ret;
- 	bool plugged = (rep->mask != NVIF_NOTIFY_CONN_V0_UNPLUG);
- 
- 	if (rep->mask & NVIF_NOTIFY_CONN_V0_IRQ) {
-@@ -1156,31 +1168,9 @@ nouveau_connector_hotplug(struct nvif_notify *notify)
- 		return NVIF_NOTIFY_KEEP;
- 	}
- 
--	ret = pm_runtime_get(drm->dev->dev);
--	if (ret == 0) {
--		/* We can't block here if there's a pending PM request
--		 * running, as we'll deadlock nouveau_display_fini() when it
--		 * calls nvif_put() on our nvif_notify struct. So, simply
--		 * defer the hotplug event until the device finishes resuming
--		 */
--		NV_DEBUG(drm, "Deferring HPD on %s until runtime resume\n",
--			 name);
--		schedule_work(&drm->hpd_work);
--
--		pm_runtime_put_noidle(drm->dev->dev);
--		return NVIF_NOTIFY_KEEP;
--	} else if (ret != 1 && ret != -EACCES) {
--		NV_WARN(drm, "HPD on %s dropped due to RPM failure: %d\n",
--			name, ret);
--		return NVIF_NOTIFY_DROP;
--	}
--
--	NV_DEBUG(drm, "%splugged %s\n", plugged ? "" : "un", name);
--
--	drm_helper_hpd_irq_event(connector->dev);
-+	NV_DEBUG(drm, "%splugged %s\n", plugged ? "" : "un", connector->name);
-+	nouveau_connector_hpd(connector);
- 
--	pm_runtime_mark_last_busy(drm->dev->dev);
--	pm_runtime_put_autosuspend(drm->dev->dev);
- 	return NVIF_NOTIFY_KEEP;
- }
- 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_connector.h b/drivers/gpu/drm/nouveau/nouveau_connector.h
-index d6de5cb8e2238..d0b859c4a80ea 100644
---- a/drivers/gpu/drm/nouveau/nouveau_connector.h
-+++ b/drivers/gpu/drm/nouveau/nouveau_connector.h
-@@ -187,6 +187,7 @@ nouveau_crtc_connector_get(struct nouveau_crtc *nv_crtc)
- 
- struct drm_connector *
- nouveau_connector_create(struct drm_device *, const struct dcb_output *);
-+void nouveau_connector_hpd(struct drm_connector *connector);
- 
- extern int nouveau_tv_disable;
- extern int nouveau_ignorelid;
-diff --git a/drivers/gpu/drm/nouveau/nouveau_display.c b/drivers/gpu/drm/nouveau/nouveau_display.c
-index 13016769a194b..bceb48a2dfca6 100644
---- a/drivers/gpu/drm/nouveau/nouveau_display.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_display.c
-@@ -457,16 +457,70 @@ static struct nouveau_drm_prop_enum_list dither_depth[] = {
- 	}                                                                      \
- } while(0)
- 
-+void
-+nouveau_display_hpd_resume(struct drm_device *dev)
-+{
-+	struct nouveau_drm *drm = nouveau_drm(dev);
-+
-+	mutex_lock(&drm->hpd_lock);
-+	drm->hpd_pending = ~0;
-+	mutex_unlock(&drm->hpd_lock);
-+
-+	schedule_work(&drm->hpd_work);
-+}
-+
- static void
- nouveau_display_hpd_work(struct work_struct *work)
- {
- 	struct nouveau_drm *drm = container_of(work, typeof(*drm), hpd_work);
-+	struct drm_device *dev = drm->dev;
-+	struct drm_connector *connector;
-+	struct drm_connector_list_iter conn_iter;
-+	u32 pending;
-+	bool changed = false;
-+
-+	pm_runtime_get_sync(dev->dev);
- 
--	pm_runtime_get_sync(drm->dev->dev);
-+	mutex_lock(&drm->hpd_lock);
-+	pending = drm->hpd_pending;
-+	drm->hpd_pending = 0;
-+	mutex_unlock(&drm->hpd_lock);
- 
--	drm_helper_hpd_irq_event(drm->dev);
-+	/* Nothing to do, exit early without updating the last busy counter */
-+	if (!pending)
-+		goto noop;
-+
-+	mutex_lock(&dev->mode_config.mutex);
-+	drm_connector_list_iter_begin(dev, &conn_iter);
-+
-+	nouveau_for_each_non_mst_connector_iter(connector, &conn_iter) {
-+		enum drm_connector_status old_status = connector->status;
-+		u64 old_epoch_counter = connector->epoch_counter;
-+
-+		if (!(pending & drm_connector_mask(connector)))
-+			continue;
-+
-+		connector->status = drm_helper_probe_detect(connector, NULL,
-+							    false);
-+		if (old_epoch_counter == connector->epoch_counter)
-+			continue;
-+
-+		changed = true;
-+		drm_dbg_kms(dev, "[CONNECTOR:%d:%s] status updated from %s to %s (epoch counter %llu->%llu)\n",
-+			    connector->base.id, connector->name,
-+			    drm_get_connector_status_name(old_status),
-+			    drm_get_connector_status_name(connector->status),
-+			    old_epoch_counter, connector->epoch_counter);
-+	}
-+
-+	drm_connector_list_iter_end(&conn_iter);
-+	mutex_unlock(&dev->mode_config.mutex);
-+
-+	if (changed)
-+		drm_kms_helper_hotplug_event(dev);
- 
- 	pm_runtime_mark_last_busy(drm->dev->dev);
-+noop:
- 	pm_runtime_put_sync(drm->dev->dev);
- }
- 
-@@ -490,12 +544,11 @@ nouveau_display_acpi_ntfy(struct notifier_block *nb, unsigned long val,
- 				 */
- 				pm_runtime_put_autosuspend(drm->dev->dev);
- 			} else if (ret == 0) {
--				/* This may be the only indication we receive
--				 * of a connector hotplug on a runtime
--				 * suspended GPU, schedule hpd_work to check.
-+				/* We've started resuming the GPU already, so
-+				 * it will handle scheduling a full reprobe
-+				 * itself
- 				 */
- 				NV_DEBUG(drm, "ACPI requested connector reprobe\n");
--				schedule_work(&drm->hpd_work);
- 				pm_runtime_put_noidle(drm->dev->dev);
- 			} else {
- 				NV_WARN(drm, "Dropped ACPI reprobe event due to RPM error: %d\n",
-@@ -686,6 +739,7 @@ nouveau_display_create(struct drm_device *dev)
- 	}
- 
- 	INIT_WORK(&drm->hpd_work, nouveau_display_hpd_work);
-+	mutex_init(&drm->hpd_lock);
- #ifdef CONFIG_ACPI
- 	drm->acpi_nb.notifier_call = nouveau_display_acpi_ntfy;
- 	register_acpi_notifier(&drm->acpi_nb);
-@@ -705,9 +759,10 @@ void
- nouveau_display_destroy(struct drm_device *dev)
- {
- 	struct nouveau_display *disp = nouveau_display(dev);
-+	struct nouveau_drm *drm = nouveau_drm(dev);
- 
- #ifdef CONFIG_ACPI
--	unregister_acpi_notifier(&nouveau_drm(dev)->acpi_nb);
-+	unregister_acpi_notifier(&drm->acpi_nb);
- #endif
- 
- 	drm_kms_helper_poll_fini(dev);
-@@ -719,6 +774,7 @@ nouveau_display_destroy(struct drm_device *dev)
- 	nvif_disp_dtor(&disp->disp);
- 
- 	nouveau_drm(dev)->display = NULL;
-+	mutex_destroy(&drm->hpd_lock);
- 	kfree(disp);
- }
- 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_display.h b/drivers/gpu/drm/nouveau/nouveau_display.h
-index 76ba93e01aff4..616c434270594 100644
---- a/drivers/gpu/drm/nouveau/nouveau_display.h
-+++ b/drivers/gpu/drm/nouveau/nouveau_display.h
-@@ -45,6 +45,7 @@ nouveau_display(struct drm_device *dev)
- int  nouveau_display_create(struct drm_device *dev);
- void nouveau_display_destroy(struct drm_device *dev);
- int  nouveau_display_init(struct drm_device *dev, bool resume, bool runtime);
-+void nouveau_display_hpd_resume(struct drm_device *dev);
- void nouveau_display_fini(struct drm_device *dev, bool suspend, bool runtime);
- int  nouveau_display_suspend(struct drm_device *dev, bool runtime);
- void nouveau_display_resume(struct drm_device *dev, bool runtime);
-diff --git a/drivers/gpu/drm/nouveau/nouveau_dp.c b/drivers/gpu/drm/nouveau/nouveau_dp.c
-index bb85d81c25244..c6a04d0ac99d1 100644
---- a/drivers/gpu/drm/nouveau/nouveau_dp.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_dp.c
-@@ -167,7 +167,7 @@ void nouveau_dp_irq(struct nouveau_drm *drm,
- 
- 	if (mstm && mstm->is_mst) {
- 		if (!nv50_mstm_service(drm, nv_connector, mstm))
--			schedule_work(&drm->hpd_work);
-+			nouveau_connector_hpd(connector);
- 	} else {
- 		drm_dp_cec_irq(&nv_connector->aux);
- 	}
-diff --git a/drivers/gpu/drm/nouveau/nouveau_drm.c b/drivers/gpu/drm/nouveau/nouveau_drm.c
-index 22d246acc5e52..42fc5c813a9bb 100644
---- a/drivers/gpu/drm/nouveau/nouveau_drm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
-@@ -953,7 +953,7 @@ nouveau_pmops_resume(struct device *dev)
- 	ret = nouveau_do_resume(drm_dev, false);
- 
- 	/* Monitors may have been connected / disconnected during suspend */
--	schedule_work(&nouveau_drm(drm_dev)->hpd_work);
-+	nouveau_display_hpd_resume(drm_dev);
- 
- 	return ret;
- }
-@@ -1036,7 +1036,7 @@ nouveau_pmops_runtime_resume(struct device *dev)
- 	drm_dev->switch_power_state = DRM_SWITCH_POWER_ON;
- 
- 	/* Monitors may have been connected / disconnected during suspend */
--	schedule_work(&nouveau_drm(drm_dev)->hpd_work);
-+	nouveau_display_hpd_resume(drm_dev);
- 
- 	return ret;
- }
-diff --git a/drivers/gpu/drm/nouveau/nouveau_drv.h b/drivers/gpu/drm/nouveau/nouveau_drv.h
-index f63ac72aa556f..73ebf5fba2fcd 100644
---- a/drivers/gpu/drm/nouveau/nouveau_drv.h
-+++ b/drivers/gpu/drm/nouveau/nouveau_drv.h
-@@ -198,6 +198,8 @@ struct nouveau_drm {
- 	struct nvbios vbios;
- 	struct nouveau_display *display;
- 	struct work_struct hpd_work;
-+	struct mutex hpd_lock;
-+	u32 hpd_pending;
- 	struct work_struct fbcon_work;
- 	int fbcon_new_state;
- #ifdef CONFIG_ACPI
--- 
-2.26.2
+When discussing this wrong-way-COW issue originally I looked at just doing
 
+        struct page *page = vmf->page;
+
+        if (page_count(page) != 1)
+                goto copy;
+        if (!trylock_page(page))
+                goto copy;
+        if (page_mapcount(page) != 1 && page_count(page) != 1) {
+                unlock_page(page);
+                goto copy;
+        }
+        /* Ok, we've got the only map reference, and the only
+         *  page count reference, and the page is locked,
+         * it's dark out, and we're wearing sunglasses. Hit it.
+         */
+        wp_page_reuse(vmf);
+        unlock_page(page);
+        return VM_FAULT_WRITE
+
+at the top of the PageAnon() case in do_wp_page(), and be entirely done with it.
+
+Make the rule be that we *only* re-use the page if there is no
+question what-so-ever that we're the only possible owner of it.
+Anything else at all - whether they be GUP users, other processes,
+KSM, hughepage collapsing, whatever: don't even try.
+
+That would possibly cause a lot of extra copies, but our rules for
+"can we re-use this page" are just crazy complicated. And now the
+"minimal" thing of just always breaking COW ends up causing
+complications of its own.
+
+IOW, maybe all of this falls under "yeah, we have historical reasons
+for all of it, but it's just not worth the pain".
+
+We do a _lot_ of complex stuff just to check whether we could possibly
+share the page.
+
+Maybe trying to reuse the page just isn't worth it?
+
+Adding Andrea to the cc (although he probably sees this through
+linux-mm anyway). Maybe he can go "naah, that will be horribly bad,
+because..."
+
+Then we could get rid of all the FAULT_FORCE_COW games again entirely,
+and people can point fingers at me and laugh behind my back because of
+what a bad idea it was.
+
+                    Linus
