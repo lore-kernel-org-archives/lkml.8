@@ -6,59 +6,60 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0799BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 21:23:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C25FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 21:23:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D40B220786
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 21:23:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE176206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 21:23:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597181006;
-	bh=sjZ/aEFvUXlyQShEB5RoOqRtoNhgwRY4rCEm/b9yDwE=;
+	s=default; t=1597181010;
+	bh=mr6YJD1V4dkwy/Iwhe/jxgg4pJipy7PDAUDoeF1s8c8=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=M1w3xubyAfKfTolleijAkcmQWML+FQ+FzdZT7uZBSoWwpPFB5ASnSR5aon0WLNDgD
-	 eodx7Ly9ozERBc4uv/+hCtFv60Bk65E4dcuZiafUAIHv3lkvewRB217DqbQyhGSrYn
-	 WkqaIb8wPddS7btiqFrirKp76fXBuEH5SfS53LYM=
+	b=sufrS89ZETPzYOSVTHErxwL2inw5wer2OP3Y9C1BvIJVTaQvcAJnAJ+sVHXTNtEg3
+	 oyKs8g2M8mjyhPyuJ0zV5oPW5M9l6yrO4XgZZUwFR1UZRY4K0HhOeTn7hrgzZQsa7g
+	 oimT0uohUBscOXXExaIf9P2eje0SO2eglxLjWsjo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726473AbgHKVXZ (ORCPT
+        id S1726573AbgHKVX3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 17:23:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50400 "EHLO mail.kernel.org"
+        Tue, 11 Aug 2020 17:23:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725987AbgHKVXZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 17:23:25 -0400
-Subject: Re: [GIT PULL] Backlight for v5.9
+        id S1725987AbgHKVX0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 17:23:26 -0400
+Subject: Re: [git pull] IOMMU Updates for Linux v5.9
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597181005;
-        bh=sjZ/aEFvUXlyQShEB5RoOqRtoNhgwRY4rCEm/b9yDwE=;
+        s=default; t=1597181006;
+        bh=mr6YJD1V4dkwy/Iwhe/jxgg4pJipy7PDAUDoeF1s8c8=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=y2Azh8nC9K2cf1xI6dSnLNh8LwAhcV765uiip45YY/Hz4Y+gSs2sp72+mjUV4343E
-         mrgGZR0a8VZeGCooyTRr5NmXmU56NNJpH2pH6pCqeFFsI31xLadyjXP9f3lUXv0hye
-         uSpVhju6M90jzSPwVAY7NlabScOhIrW7iogqznh8=
+        b=fwTW2X2J+0qYpKurzFhAD2TPfZWDUy0AJTjxF1gT59wBB3aSP7wnR4dmYBxriOQdw
+         xTtVPq9bzmNy6TCqdEB0cEOEMjHTUhAAlVBAluzQcykGACKfrlipurZjAFi6beSd0T
+         2cpbZJQG8UkwmVNa6kLgNc0Kvpl9avhn3/pJFkYM=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200811075049.GH4411@dell>
-References: <20200811075049.GH4411@dell>
+In-Reply-To: <20200811124747.GA13876@8bytes.org>
+References: <20200811124747.GA13876@8bytes.org>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200811075049.GH4411@dell>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/lee/backlight.git backlight-next-5.9
-X-PR-Tracked-Commit-Id: 7eb99a39ef767644bbfd2b3f12f139d13e3ee8b3
+X-PR-Tracked-Message-Id: <20200811124747.GA13876@8bytes.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git tags/iommu-updates-v5.9
+X-PR-Tracked-Commit-Id: e46b3c0d011eab9933c183d5b47569db8e377281
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 96f970feeb47003a8eba967f188bba4e75875c7a
-Message-Id: <159718100509.533.11237093849636295841.pr-tracker-bot@kernel.org>
-Date:   Tue, 11 Aug 2020 21:23:25 +0000
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org
+X-PR-Merge-Commit-Id: 952ace797c17d06e50ad2a738babd27159b8d7cc
+Message-Id: <159718100611.533.7037020432422807245.pr-tracker-bot@kernel.org>
+Date:   Tue, 11 Aug 2020 21:23:26 +0000
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue, 11 Aug 2020 08:50:49 +0100:
+The pull request you sent on Tue, 11 Aug 2020 14:47:53 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/lee/backlight.git backlight-next-5.9
+> git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git tags/iommu-updates-v5.9
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/96f970feeb47003a8eba967f188bba4e75875c7a
+https://git.kernel.org/torvalds/c/952ace797c17d06e50ad2a738babd27159b8d7cc
 
 Thank you!
 
