@@ -2,80 +2,96 @@ Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B1D6C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:56:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1179CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:58:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED7C420771
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:56:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gouB0RbV";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KHIRUkBT"
+	by mail.kernel.org (Postfix) with ESMTP id D81DB208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 15:58:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597161521;
+	bh=8n/01n12WvJeXrMtt8X3n/lThM/2bNJzmPG1/GiBxD4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=chnxrZjtxuwkbFh3tkj1c25xmEsWdJIxM25ho2b8OP8Qyjz3pNnyu35C4NfJ8W/0M
+	 1JnG8VdLL4Oxb/PTuzwsCYwCNuIxMdHaQ29RA/f835tOLygEY1A+qtRRqKEU+fYk/o
+	 b01W07CXK/XdSxyuHxFBAFYY+NP0dttoDiWb30zE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729050AbgHKP4b (ORCPT
+        id S1728955AbgHKP6k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 11:56:31 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:59918 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728783AbgHKP4a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 11:56:30 -0400
-Date:   Tue, 11 Aug 2020 17:56:27 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597161388;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=k8c8pkqGwrb51oWZfGypKhgzPBk4tDPq9OqUMb5M1Ws=;
-        b=gouB0RbVYfcv0nS3Fu1yr2utgTC/gJtdlJV/JwZhWvc10eSQdiAP+ynOw3SfI4ZLchDaTi
-        jf9umUeFWI9G8aiGIVXMwXdetMOLj80aNpKhd4tfPyym3Pp+7esD9LNedVA80etGiGD+gG
-        PLAPoiOCCwYPjOlfXwc6hmDY3y//ex944BNksXvFyOxVrDSvt6d3XtbHJiiH8Usfk58yEJ
-        GOWELOt7NHghllDF27Ieg+n8df3YIon57CSUr2s7YhRd+cwaVOcxmb0xeEo9RiISv5ijhu
-        mqjOzo+lxeiO8sbMz3YpQOPWMAN/XkJuHhgLL3CHdeEqaMWr9HD4FLHsU5+X/w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597161388;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=k8c8pkqGwrb51oWZfGypKhgzPBk4tDPq9OqUMb5M1Ws=;
-        b=KHIRUkBTbgou7Gab+cfKR0htx01eDtqS/sAgxNm286erHcmJYYhaliWn6gtv3ts31YhgqM
-        fQSs4DZgr0/Xc6Ag==
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     paulmck@kernel.org, Michal Hocko <mhocko@suse.com>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
-Message-ID: <20200811155627.npamhwvyhujab7qu@linutronix.de>
-References: <20200809204354.20137-1-urezki@gmail.com>
- <20200809204354.20137-2-urezki@gmail.com>
- <20200810123141.GF4773@dhcp22.suse.cz>
- <20200810160739.GA29884@pc636>
- <20200810192525.GG4773@dhcp22.suse.cz>
- <87pn7x6y4a.fsf@nanos.tec.linutronix.de>
- <20200811153327.GW4295@paulmck-ThinkPad-P72>
- <87h7t96ve3.fsf@nanos.tec.linutronix.de>
+        Tue, 11 Aug 2020 11:58:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53960 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728797AbgHKP6j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 11:58:39 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6473920756;
+        Tue, 11 Aug 2020 15:58:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597161519;
+        bh=8n/01n12WvJeXrMtt8X3n/lThM/2bNJzmPG1/GiBxD4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ehnKMjK+y2G4JLAfH72T5hWivRxjXsYnRitWYNtBDqBEJDjlWWy2wKsrLFmIhUmR7
+         61lovTjNqZdfPsccku6Jmhw6CSChuK2ieMkdeYot/cWu2UWE9piATQWpwhlNlFqYaQ
+         AuwxOaqy2wrscHjjr8nMCJPTJ/hAGuU1rYC6Pb60=
+Date:   Tue, 11 Aug 2020 16:58:10 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
+        Mayulong <mayulong1@huawei.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 02/33] spmi, regulator, mfd: add drivers for hikey970
+ SPMI PMIC
+Message-ID: <20200811155810.GH6967@sirena.org.uk>
+References: <cover.1597160086.git.mchehab+huawei@kernel.org>
+ <36a548c10ea8c75d13c3e796c4cee65132819ef1.1597160086.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="7J16OGEJ/mt06A90"
 Content-Disposition: inline
-In-Reply-To: <87h7t96ve3.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <36a548c10ea8c75d13c3e796c4cee65132819ef1.1597160086.git.mchehab+huawei@kernel.org>
+X-Cookie: Gravity is a myth, the Earth sucks.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-11 17:43:16 [+0200], Thomas Gleixner wrote:
-> Where?
 
-See commit 8ac88f7177c75 ("rcu/tree: Keep kfree_rcu() awake during lock contention")
+--7J16OGEJ/mt06A90
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Sebastian
+On Tue, Aug 11, 2020 at 05:41:28PM +0200, Mauro Carvalho Chehab wrote:
+
+>  drivers/mfd/hisi_pmic_spmi.c            | 759 ++++++++++++++++++++++++
+>  drivers/regulator/hisi_regulator_spmi.c | 741 +++++++++++++++++++++++
+>  drivers/spmi/hisi-spmi-controller.c     | 390 ++++++++++++
+>  include/linux/mfd/hisi_pmic.h           | 165 ++++++
+
+This is a single patch for three subsystems, please split it into per
+subsystem patches.
+
+--7J16OGEJ/mt06A90
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8ywBIACgkQJNaLcl1U
+h9B0Gwf/bkoBYa45gS5d+/J8udbJcc+WYRzVIKPxRylg0boztmS4vPcb8+5CtDfl
+GrbTgKABmZSFuRKtvtklBEO6yP0XWxFLr2TDMY8KNtWrGVHrQJjUGf9yiAajPHCa
+FNVWRx5W/G06HKz0O3m500FTHjoo1UZvgXUVFdeSIqXjzkPWslrqNBUVQYqdmaYR
+2r+gmSwkJbuBaF4tAu7u2+I7WoV2K3+cpD2qXlcH0hKoSq1iC4N832zbql7EDDXc
+gybUOo9smxzpZjSzw3Cl3o08PXDr7VCAHsUO8JOe81T61ayc3H58wCaLE40WTfT5
+JvnSzZonmPI3fyrOLqmJ3Djw32wn0A==
+=vU2i
+-----END PGP SIGNATURE-----
+
+--7J16OGEJ/mt06A90--
