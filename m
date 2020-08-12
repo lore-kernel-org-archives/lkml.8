@@ -2,177 +2,113 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B52BCC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:42:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB5AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89B92207DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:42:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="xLII+0kf";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="xLII+0kf"
+	by mail.kernel.org (Postfix) with ESMTP id 64A94207DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:43:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726578AbgHLPmc (ORCPT
+        id S1726604AbgHLPnf convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 11:42:32 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:56520 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726477AbgHLPmb (ORCPT
+        Wed, 12 Aug 2020 11:43:35 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:57707 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726226AbgHLPne (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 11:42:31 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 7E6238EE1DD;
-        Wed, 12 Aug 2020 08:42:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1597246949;
-        bh=UjcYuUcmKYlnECOJFMR+GyD6MJoGsB5ezQg+t/+kKdI=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=xLII+0kf/CLesZ7RqkPnkP+Fi4qQBxjTcyKa3nw9i0v76X4wMu6tIwBu45r/cU0W7
-         1Beb11EPHhciApYzYgOQ6sEj99EQbPGD3oV61R8/MQXG7oUlYQDHk/eZqy7KQ55Fy0
-         AF4BvQON0u+g5WlLRCFyFqSz4f1mzP57IVdksLgM=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id AHFsU6pG-8oB; Wed, 12 Aug 2020 08:42:29 -0700 (PDT)
-Received: from [153.66.254.174] (c-73-35-198-56.hsd1.wa.comcast.net [73.35.198.56])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 11FF68EE0C7;
-        Wed, 12 Aug 2020 08:42:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1597246949;
-        bh=UjcYuUcmKYlnECOJFMR+GyD6MJoGsB5ezQg+t/+kKdI=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=xLII+0kf/CLesZ7RqkPnkP+Fi4qQBxjTcyKa3nw9i0v76X4wMu6tIwBu45r/cU0W7
-         1Beb11EPHhciApYzYgOQ6sEj99EQbPGD3oV61R8/MQXG7oUlYQDHk/eZqy7KQ55Fy0
-         AF4BvQON0u+g5WlLRCFyFqSz4f1mzP57IVdksLgM=
-Message-ID: <1597246946.7293.9.camel@HansenPartnership.com>
-Subject: Re: [dm-devel] [RFC PATCH v5 00/11] Integrity Policy Enforcement
- LSM (IPE)
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Chuck Lever <chucklever@gmail.com>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>, James Morris <jmorris@namei.org>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>,
-        snitzer@redhat.com, dm-devel@redhat.com,
-        tyhicks@linux.microsoft.com, agk@redhat.com,
-        Paul Moore <paul@paul-moore.com>,
-        Jonathan Corbet <corbet@lwn.net>, nramas@linux.microsoft.com,
-        serge@hallyn.com, pasha.tatashin@soleen.com,
-        Jann Horn <jannh@google.com>, linux-block@vger.kernel.org,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jens Axboe <axboe@kernel.dk>, mdsakib@microsoft.com,
-        open list <linux-kernel@vger.kernel.org>, eparis@redhat.com,
-        linux-security-module@vger.kernel.org, linux-audit@redhat.com,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-integrity@vger.kernel.org,
-        jaskarankhurana@linux.microsoft.com
-Date:   Wed, 12 Aug 2020 08:42:26 -0700
-In-Reply-To: <2CA41152-6445-4716-B5EE-2D14E5C59368@gmail.com>
-References: <20200728213614.586312-1-deven.desai@linux.microsoft.com>
-         <20200802115545.GA1162@bug> <20200802140300.GA2975990@sasha-vm>
-         <20200802143143.GB20261@amd>
-         <1596386606.4087.20.camel@HansenPartnership.com>
-         <fb35a1f7-7633-a678-3f0f-17cf83032d2b@linux.microsoft.com>
-         <1596639689.3457.17.camel@HansenPartnership.com>
-         <alpine.LRH.2.21.2008050934060.28225@namei.org>
-         <b08ae82102f35936427bf138085484f75532cff1.camel@linux.ibm.com>
-         <329E8DBA-049E-4959-AFD4-9D118DEB176E@gmail.com>
-         <da6f54d0438ee3d3903b2c75fcfbeb0afdf92dc2.camel@linux.ibm.com>
-         <1597073737.3966.12.camel@HansenPartnership.com>
-         <6E907A22-02CC-42DD-B3CD-11D304F3A1A8@gmail.com>
-         <1597124623.30793.14.camel@HansenPartnership.com>
-         <16C3BF97-A7D3-488A-9D26-7C9B18AD2084@gmail.com>
-         <1597170509.4325.55.camel@HansenPartnership.com>
-         <2CA41152-6445-4716-B5EE-2D14E5C59368@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Wed, 12 Aug 2020 11:43:34 -0400
+Received: from mail-pg1-f200.google.com ([209.85.215.200])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1k5sua-0001uj-Cr
+        for linux-kernel@vger.kernel.org; Wed, 12 Aug 2020 15:43:32 +0000
+Received: by mail-pg1-f200.google.com with SMTP id h2so1851790pgc.19
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 08:43:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=bi7NxsjcH5FLItJoaT5RnTY7tEaw2OwMf3N159WZ0VQ=;
+        b=G/pu+1/r1VoNd1H6YhrwvY4uRLHShAdvtGOhVeKntFVN4uWRfxUo8YKv232K/w81gr
+         KzC7SKIrULX8bCwcZBk4dl8BaCqfsesfUOMKl877tCGML0q57CE8Hep3ZCY1o998gWiI
+         gDV0s3O3Z71bdDezeilDGnmJxY6nsCZsUri7OMLLPnAKPL/hslVf928szCBpKM8aiMUn
+         B1InXslj0EQVaVqvWa77o6KomvhBFPSURDn5tPymO1qF+HcvFfVsvi4DOc75DtIv9/J6
+         FxldcvtG70Bek34GHjA3lvzENe4qWquQ3Zyzw8osTyjo/h+NedKbDnIsFGTeyIx+3Z2a
+         S+fQ==
+X-Gm-Message-State: AOAM530+yhSUkWEpseoTI7nEV2Xslp8SkOw3HCWV3clRXMbQOYLpihwj
+        tMXiq1Bs7SYuSmykssA2NC8JQ2Y0+4OAkhDpd36KLOdQzZ5Mfur9oYpsE8uqsvi/UgkfpwLAehT
+        hZsL32AAIEJGUx2D4yUNfJQ7Wk8MqpF1bhliGxHMS1w==
+X-Received: by 2002:a17:902:264:: with SMTP id 91mr79130plc.88.1597247010867;
+        Wed, 12 Aug 2020 08:43:30 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzG49h0aM9tFV64seogfDK8Y70jGf7oGrMg4IRq6Jv05oEpnwun9XBdOJCwcOPg9ZrTGy0SBQ==
+X-Received: by 2002:a17:902:264:: with SMTP id 91mr79104plc.88.1597247010541;
+        Wed, 12 Aug 2020 08:43:30 -0700 (PDT)
+Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
+        by smtp.gmail.com with ESMTPSA id g10sm2972957pfb.82.2020.08.12.08.43.28
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 12 Aug 2020 08:43:29 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.1\))
+Subject: Re: [PATCH] ALSA: hda/hdmi: Use force connectivity quirk on another
+ HP desktop
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <20200811095336.32396-1-kai.heng.feng@canonical.com>
+Date:   Wed, 12 Aug 2020 23:43:27 +0800
+Cc:     Jaroslav Kysela <perex@perex.cz>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Nikhil Mahale <nmahale@nvidia.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Aaron Plattner <aplattner@nvidia.com>,
+        Harsha Priya <harshapriya.n@intel.com>,
+        "moderated list:SOUND" <alsa-devel@alsa-project.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <44573652-9ECF-4EC5-A234-DBB21FC90CC7@canonical.com>
+References: <20200811095336.32396-1-kai.heng.feng@canonical.com>
+To:     tiwai@suse.com
+X-Mailer: Apple Mail (2.3608.120.23.2.1)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-08-12 at 09:56 -0400, Chuck Lever wrote:
-> > On Aug 11, 2020, at 2:28 PM, James Bottomley <James.Bottomley@Hanse
-> > nPartnership.com> wrote:
-> > 
-> > On Tue, 2020-08-11 at 10:48 -0400, Chuck Lever wrote:
-> > > Mimi's earlier point is that any IMA metadata format that
-> > > involves unsigned digests is exposed to an alteration attack at
-> > > rest or in transit, thus will not provide a robust end-to-end
-> > > integrity guarantee.
-> > 
-> > I don't believe that is Mimi's point, because it's mostly not
-> > correct: the xattr mechanism does provide this today.  The point is
-> > the mechanism we use for storing IMA hashes and signatures today is
-> > xattrs because they have robust security properties for local
-> > filesystems that the kernel enforces.  This use goes beyond IMA,
-> > selinux labels for instance use this property as well.
+Hi,
+
+> On Aug 11, 2020, at 17:53, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
 > 
-> I don't buy this for a second. If storing a security label in a
-> local xattr is so secure, we wouldn't have any need for EVM.
-
-What don't you buy?  Security xattrs can only be updated by local root.
- If you trust local root, the xattr mechanism is fine ... it's the only
-one a lot of LSMs use, for instance.  If you don't trust local root or
-worry about offline backups, you use EVM.  A thing isn't secure or
-insecure, it depends on the threat model.  However, if you don't trust
-the NFS server it doesn't matter whether you do or don't trust local
-root, you can't believe the contents of the xattr.
-
-> > What I think you're saying is that NFS can't provide the robust
-> > security for xattrs we've been relying on, so you need some other
-> > mechanism for storing them.
+> There's another HP desktop has buggy BIOS which flags the Port
+> Connectivity bit as no connection.
 > 
-> For NFS, there's a network traversal which is an attack surface.
+> Apply force connectivity quirk to enable DP/HDMI audio.
 > 
-> A local xattr can be attacked as well: a device or bus malfunction
-> can corrupt the content of an xattr, or a privileged user can modify
-> it.
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+
+I guess this patch was omitted as well...
+
+Kai-Heng
+
+> ---
+> sound/pci/hda/patch_hdmi.c | 1 +
+> 1 file changed, 1 insertion(+)
 > 
-> How does that metadata get from the software provider to the end
-> user? It's got to go over a network, stored in various ways, some
-> of which will not be trusted. To attain an unbroken chain of
-> provenance, that metadata has to be signed.
+> diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
+> index 4bbd12d3b1b5..b8c8490e568b 100644
+> --- a/sound/pci/hda/patch_hdmi.c
+> +++ b/sound/pci/hda/patch_hdmi.c
+> @@ -1863,6 +1863,7 @@ static int hdmi_add_cvt(struct hda_codec *codec, hda_nid_t cvt_nid)
+> }
 > 
-> I don't think the question is the storage mechanism, but rather the
-> protection mechanism. Signing the metadata protects it in all of
-> these cases.
-
-I think we're saying about the same thing.  For most people the
-security mechanism of local xattrs is sufficient.  If you're paranoid,
-you don't believe it is and you use EVM.
-
-> > I think Mimi's other point is actually that IMA uses a flat hash
-> > which we derive by reading the entire file and then watching for
-> > mutations. Since you cannot guarantee we get notice of mutation
-> > with NFS, the entire IMA mechanism can't really be applied in its
-> > current form and we have to resort to chunk at a time verifications
-> > that a Merkel tree would provide.
+> static const struct snd_pci_quirk force_connect_list[] = {
+> +	SND_PCI_QUIRK(0x103c, 0x870f, "HP", 1),
+> 	SND_PCI_QUIRK(0x103c, 0x871a, "HP", 1),
+> 	{}
+> };
+> -- 
+> 2.17.1
 > 
-> I'm not sure what you mean by this. An NFS client relies on
-> notification of mutation to maintain the integrity of its cache of
-> NFS file content, and it's done that since the 1980s.
-
-Mutation detection is part of the current IMA security model.  If IMA
-sees a file mutate it has to be rehashed the next time it passes the
-gate.  If we can't trust the NFS server, we can't trust the NFS
-mutation notification and we have to have a different mechanism to
-check the file.
-
-> In addition to examining a file's mtime and ctime as maintained by
-> the NFS server, a client can rely on the file's NFSv4 change
-> attribute or an NFSv4 delegation.
-
-And that's secure in the face of a malicious or compromised server?
-
-The bottom line is still, I think we can't use linear hashes with an
-open/exec/mmap gate with NFS and we have to move to chunk at a time
-verification like that provided by a merkel tree.
-
-James
 
