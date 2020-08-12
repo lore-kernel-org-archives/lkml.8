@@ -2,84 +2,68 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB424C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:57:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9858C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:58:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E1C62080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:57:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAAF620838
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:58:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597262271;
-	bh=pl35spFWyZayApUk4yBF5pGkVHHLMwU3D8GZ3RO9ML4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TOpW2q/YyUQmPvf0aaTKeO2p9QKUAT69G0Yvo/Ej7LgYos8GK+tR6BfqN1nwsOV8x
-	 SjAt44rZSJHQIpRd0efh1IHZco9zsBDEte+am6BYv+mx9KvoQDe3ExsZcmrLQe+sJy
-	 JjcEw6E3kB0+VnxA8r0hs0pRCwXovHEvWysmvRHU=
+	s=default; t=1597262292;
+	bh=6sM8da5LoKdhSaDEe0PjHdmiWnItuePL6eAY8XKlK7U=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=jARJp00LNFwER+AlJ+YlbFpZ1Uq5ra7cnTqPYP+/C5GP96hcSFyI/rhBkh/j0DAZf
+	 IAs+aZ7Z3dYi7cF67TSW9VfHyns9MsCRUorOXrUT24VfDg4qcyY+hw014dYuDyll3Z
+	 5H6I9U1LeJ+DfmTobmPGVOrseyPfnVJziDcSOFno=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbgHLT5u (ORCPT
+        id S1726768AbgHLT6L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 15:57:50 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:42672 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbgHLT5u (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 15:57:50 -0400
-Received: by mail-io1-f68.google.com with SMTP id j8so4315276ioe.9;
-        Wed, 12 Aug 2020 12:57:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=kab3fJEGlaryZqDRGGlxJtcNETlXr7INQvI/406t8ks=;
-        b=EAPArnwhFis36563pJCNjGeQEWWNzY4Tfv2Vll8NHzCQrmhwXtJF4MUGWHjMmHLEyG
-         3jwuMuDlkssikY6JH52JGrC6H9t2Pvf0M5R8JzyknNBGt5KI0ihsrmhaxoigUJ0T3RVb
-         BbDmS5Ip/K2K9aRG+R3AVCJNTmWTqkp6viO6KC8dOXKSliE1uRsmU1ZII2mz0KC1U/Xo
-         pAQAsTjW4RpxaTOtjhdckb0GyT2f5NP52z73/Mv5MrCorMeXrFrpn61LmzBnH+xA+q79
-         fnKP1ICHQ0ER4Ejs6OmvLkVJG8dbhz5czftMo9JPkOc5qUkQjQNdyscPDIiOpjW+8sRG
-         9Stg==
-X-Gm-Message-State: AOAM530/Y5sRhxojVCg3FkhUaEDsRbwwYEu31b/+blBM8V27Q5f2hDOm
-        fJhfxE8jdsW9xakqjECTXg==
-X-Google-Smtp-Source: ABdhPJwzpL961/Irwkpqn3yX+BNDUPZybfwlzFyzjc/fzyX1p6PXT4P353J1oWl99TjZkpU5dwnvxA==
-X-Received: by 2002:a02:a905:: with SMTP id n5mr1230537jam.64.1597262269251;
-        Wed, 12 Aug 2020 12:57:49 -0700 (PDT)
-Received: from xps15 ([64.188.179.248])
-        by smtp.gmail.com with ESMTPSA id s26sm1426908ioc.13.2020.08.12.12.57.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Aug 2020 12:57:48 -0700 (PDT)
-Received: (nullmailer pid 2605750 invoked by uid 1000);
-        Wed, 12 Aug 2020 19:57:47 -0000
-Date:   Wed, 12 Aug 2020 13:57:47 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Eddie James <eajames@linux.ibm.com>
-Cc:     vishwa@linux.ibm.com, andy.shevchenko@gmail.com,
-        robh+dt@kernel.org, linux-leds@vger.kernel.org, pavel@ucw.cz,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dmurphy@ti.com, jacek.anaszewski@gmail.com
-Subject: Re: [PATCH v2 1/2] dt-bindings: leds: pca955x: Add IBM
- implementation compatible string
-Message-ID: <20200812195747.GA2605701@bogus>
-References: <20200803145055.5203-1-eajames@linux.ibm.com>
- <20200803145055.5203-2-eajames@linux.ibm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200803145055.5203-2-eajames@linux.ibm.com>
+        Wed, 12 Aug 2020 15:58:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47606 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726526AbgHLT6K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 15:58:10 -0400
+Subject: Re: [GIT PULL] More clk changes for the merge window
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597262290;
+        bh=6sM8da5LoKdhSaDEe0PjHdmiWnItuePL6eAY8XKlK7U=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=YeW11yVXog0J0AQbPneqrB0lC5kwfDw9MlRJeB2YgjjXGJfuzIaJ54jr+Q7Svmq1E
+         9CdIx0zj8bVg2fdRHUbwNDWgo52cYIcGeUAU7paC2itzUDjY7IdkZ7ZQg7HSsZdOjf
+         FgX74wEzCtWRrxgVVUU4YTfkr8jWlczj23pyyk4w=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200812173942.1753107-1-sboyd@kernel.org>
+References: <20200812173942.1753107-1-sboyd@kernel.org>
+X-PR-Tracked-List-Id: <linux-clk.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200812173942.1753107-1-sboyd@kernel.org>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git tags/clk-for-linus
+X-PR-Tracked-Commit-Id: dd9c697a944a02066877404b01e9fb7dcb3a2218
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 05a5b5d8a2cd82e2bf5a01ad064efa396ec7fbef
+Message-Id: <159726229004.30367.13323706155878500230.pr-tracker-bot@kernel.org>
+Date:   Wed, 12 Aug 2020 19:58:10 +0000
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 03 Aug 2020 09:50:54 -0500, Eddie James wrote:
-> IBM created an implementation of the PCA9552 on a PIC16F
-> microcontroller. Document the new compatible string for this device.
-> 
-> Signed-off-by: Eddie James <eajames@linux.ibm.com>
-> ---
->  Documentation/devicetree/bindings/leds/leds-pca955x.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
+The pull request you sent on Wed, 12 Aug 2020 10:39:42 -0700:
 
-Acked-by: Rob Herring <robh@kernel.org>
+> https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git tags/clk-for-linus
+
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/05a5b5d8a2cd82e2bf5a01ad064efa396ec7fbef
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
