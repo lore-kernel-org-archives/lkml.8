@@ -2,82 +2,64 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A2FC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 06:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C721C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 06:10:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2DF9206C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 06:02:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4CDB206C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 06:10:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oerSCwoH"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="crUot8sJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbgHLGCW (ORCPT
+        id S1726572AbgHLGKZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 02:02:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53206 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726483AbgHLGCV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 02:02:21 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44A1DC06174A;
-        Tue, 11 Aug 2020 23:02:21 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id l60so582826pjb.3;
-        Tue, 11 Aug 2020 23:02:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=HPIOK3rNviX7M7TkAWIwKVBAfKjkjAUG64sCRy5ZUtQ=;
-        b=oerSCwoH0WT1Ys/TiLkcsyScgiuNNILFBmNRtCQ/yoz7XwRPub46N6KYvGI0TgtCeb
-         4tApLHOil3cxXTgPkqY2/H2ON6bWDDDSATT0Zb6gHTu3PG9NdYsymAlq6Pf/eTPwsyS9
-         IM2cVO6E2lYEDfAdeBU0O+UnxLv5szBnMtN6UpVqPh2iQNbrLRN5ds1+N099oSFHFA3I
-         OImVlEakW/SjBvy/ajBGIJGSa4NxWunELgdagULj67G0Z8jHdud11QRbPRLNiFZa4fgJ
-         hMuEDN4A0sFlQKJXGo/lfwG9x62OyEpfXpN2PBvHyes5x0g60WD4eXdBXF4JWWoY2bKh
-         9FgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=HPIOK3rNviX7M7TkAWIwKVBAfKjkjAUG64sCRy5ZUtQ=;
-        b=nKMfyufzhzIG9Vqtbq7RMITjRYx9wi6C+CUVDQgFRZylkPVU++59dhBIKRbfVrcNHw
-         srGVgE+coxmP7W48B/hzFEcKkANyP5SJ2FN/SB8a9zkxNQn8X2nH0A9wIZWLpw4suhsI
-         xD4/zwbKOCvlZHdiBJYPZnyfkC5tZlAMk/q5qohrj8FJKi8AZ828an8Kn6Yjb3wifNON
-         hd6azkMK5Cx2F5Kza5T12xNDZ+bhCVRgTqOsi84qzhqbdQ2QN6O934oXK0kT47XmdYCj
-         G7nxQ4J4wudY2lwsmL+Rrim+BWN7GhpPtE/QdTGP77kjaIsP3w/bz7tvv2R7thj4ydTy
-         JezA==
-X-Gm-Message-State: AOAM532jbqwgcWIyJfayowB3e79ZsWJ/xOsl9QjRAIOgLnlBzmjnVKRV
-        RjHVNAsqCCuczhtysIEWUXW8Ee69
-X-Google-Smtp-Source: ABdhPJxt6PrZbuufcWM60ic9ghuriNAmfoiUIlaiuSxDKs4la8PmxHiY16CqR7uEquHSyRQ5gbO8Hg==
-X-Received: by 2002:a17:90b:c90:: with SMTP id o16mr4293425pjz.79.1597212140341;
-        Tue, 11 Aug 2020 23:02:20 -0700 (PDT)
-Received: from ?IPv6:2404:7a87:83e0:f800:5c24:508b:d8c0:f3b? ([2404:7a87:83e0:f800:5c24:508b:d8c0:f3b])
-        by smtp.gmail.com with ESMTPSA id s67sm1048954pfs.117.2020.08.11.23.02.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Aug 2020 23:02:19 -0700 (PDT)
-Subject: Re: [PATCH 2/2] exfat: unify name extraction
-To:     Sungjong Seo <sj1557.seo@samsung.com>
-Cc:     kohada.tetsuhiro@dc.mitsubishielectric.co.jp,
-        mori.takahiro@ab.mitsubishielectric.co.jp,
-        motai.hirotaka@aj.mitsubishielectric.co.jp,
-        'Namjae Jeon' <namjae.jeon@samsung.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200806055653.9329-1-kohada.t2@gmail.com>
- <CGME20200806055726epcas1p2f36810983abf14d3aa27f8a102bbbc4d@epcas1p2.samsung.com>
- <20200806055653.9329-2-kohada.t2@gmail.com>
- <000201d66da8$07a2c750$16e855f0$@samsung.com>
-From:   Tetsuhiro Kohada <kohada.t2@gmail.com>
-Message-ID: <bbd9355c-cd48-b961-0a91-771a702c03df@gmail.com>
-Date:   Wed, 12 Aug 2020 15:02:17 +0900
+        Wed, 12 Aug 2020 02:10:25 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:52878 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726255AbgHLGKY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 02:10:24 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597212624; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=w7DFpPJTUNfnqStvwlCVQRQJO4go+5/iJnCBBavzYZs=; b=crUot8sJOz6gzHKzydE2P86+iOPJ/9ByCdhDsfVqUg2knaO/HfZxXV9gk1NxxH/3v1IkxUYw
+ YeSNZ7dcokXm+uhd0XrwAB/J8SG9SqZzTo23bXGUVDOjyihHQWdP9Ih6qi20vD/ohYNt0W01
+ 0+QLz8tVWwPqn4hSRN6Murp/+KY=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n08.prod.us-east-1.postgun.com with SMTP id
+ 5f3387ced78a2e583357db18 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 12 Aug 2020 06:10:22
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 1C748C433C9; Wed, 12 Aug 2020 06:10:22 +0000 (UTC)
+Received: from [192.168.1.15] (unknown [61.1.229.169])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 99A5FC433C6;
+        Wed, 12 Aug 2020 06:10:19 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 99A5FC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH] OPP: Put opp table in dev_pm_opp_set_rate() all the time
+To:     Stephen Boyd <swboyd@chromium.org>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+References: <20200811212836.2531613-1-swboyd@chromium.org>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <006c62c2-e946-954b-6f11-2c5ab131d93d@codeaurora.org>
+Date:   Wed, 12 Aug 2020 11:40:16 +0530
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <000201d66da8$07a2c750$16e855f0$@samsung.com>
+In-Reply-To: <20200811212836.2531613-1-swboyd@chromium.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -86,59 +68,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for your reply.
 
-On 2020/08/09 2:19, Sungjong Seo wrote:
-> [snip]
->> @@ -963,80 +942,38 @@ int exfat_find_dir_entry(struct super_block *sb,
->> struct exfat_inode_info *ei,
->>   			num_empty = 0;
->>   			candi_empty.eidx = EXFAT_HINT_NONE;
->>
-> [snip]
->>
->> -			if (entry_type &
->> -					(TYPE_CRITICAL_SEC |
-> TYPE_BENIGN_SEC)) {
->> -				if (step == DIRENT_STEP_SECD) {
->> -					if (++order == num_ext)
->> -						goto found;
->> -					continue;
->> -				}
->> +			exfat_get_uniname_from_name_entries(es, &uni_name);
+On 8/12/2020 2:58 AM, Stephen Boyd wrote:
+> We get the opp_table pointer at the top of the function and so we should
+> put the pointer at the end of the function like all other exit paths
+> from this function do.
 > 
-> It is needed to check a return value.
+> Cc: Rajendra Nayak <rnayak@codeaurora.org>
+> Fixes: aca48b61f963 ("opp: Manage empty OPP tables with clk handle")
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 
-I'll fix it in v2.
+Thanks for the fix.
+Reviewed-by: Rajendra Nayak <rnayak@codeaurora.org>
 
-
->> +			exfat_free_dentry_set(es, false);
->> +
->> +			if (!exfat_uniname_ncmp(sb,
->> +						p_uniname->name,
->> +						uni_name.name,
->> +						name_len)) {
->> +				/* set the last used position as hint */
->> +				hint_stat->clu = clu.dir;
->> +				hint_stat->eidx = dentry;
+> ---
+>   drivers/opp/core.c | 8 +++++---
+>   1 file changed, 5 insertions(+), 3 deletions(-)
 > 
-> eidx and clu of hint_stat should have one for the next entry we'll start
-> looking for.
-> Did you intentionally change the concept?
+> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+> index 9d7fb45b1786..bdb028c7793d 100644
+> --- a/drivers/opp/core.c
+> +++ b/drivers/opp/core.c
+> @@ -893,8 +893,10 @@ int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq)
+>   		 * have OPP table for the device, while others don't and
+>   		 * opp_set_rate() just needs to behave like clk_set_rate().
+>   		 */
+> -		if (!_get_opp_count(opp_table))
+> -			return 0;
+> +		if (!_get_opp_count(opp_table)) {
+> +			ret = 0;
+> +			goto put_opp_table;
+> +		}
+>   
+>   		if (!opp_table->required_opp_tables && !opp_table->regulators &&
+>   		    !opp_table->paths) {
+> @@ -905,7 +907,7 @@ int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq)
+>   
+>   		ret = _set_opp_bw(opp_table, NULL, dev, true);
+>   		if (ret)
+> -			return ret;
+> +			goto put_opp_table;
+>   
+>   		if (opp_table->regulator_enabled) {
+>   			regulator_disable(opp_table->regulators[0]);
+> 
 
-Yes, this is intentional.
-Essentially, the "Hint" concept is to reduce the next seek cost with minimal cost.
-There is a difference in the position of the hint, but the concept is the same.
-As you can see, the patched code strategy doesn't move from current position.
-Basically, the original code strategy is advancing only one dentry.(It's the "minimum cost")
-However, when it reaches the cluster boundary, it gets the next cluster and error handling.
-Getting the next cluster The error handling already exists at the end of the while loop,
-so the code is duplicated.
-These costs should be paid next time and are no longer the "minimum cost".
-
-Should I add this to the commit-message?
-
-
-BR
----
-Tetsuhiro Kohada <kohada.t2@gmail.com>
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
