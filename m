@@ -2,86 +2,126 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE30DC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:12:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A82C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:13:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5B282078B
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:12:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FBB520825
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:13:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XDYJH3L/";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AyPrIXC4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727078AbgHLJMb (ORCPT
+        id S1727095AbgHLJNd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 05:12:31 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:33048 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726409AbgHLJMb (ORCPT
+        Wed, 12 Aug 2020 05:13:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54386 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726601AbgHLJNd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 05:12:31 -0400
-Received: by mail-oi1-f193.google.com with SMTP id 25so1226462oir.0;
-        Wed, 12 Aug 2020 02:12:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RHgYnKByHg5dhHsGT1IBu2QcKNIoIouHLZ5r2cTdlOs=;
-        b=cD5BRDOUvIJzh6bel3qQvhFw7FaXG1/dDhNPPocM3c5p791kgL7qyYogV/+zyc27am
-         WFPt7iKzb8kYrHhrSwrAn6ggqSWdCwh+XHQIxk5LZ1TOGCCde+B4rmbD+rGIuAjA2BTd
-         TwETpq+MpZe0OCK+Vs9LLoIIaZOSOiF1GTb87WPsWpclbBGP+2prh5yrlofmiRuunqOj
-         fDEO4S6HYvmO22ROhOwQXH5SSzAKuB7THyWDUa8vl2qhcoKsgpcPyue7LobscfF8a5Zb
-         HAluA57dG2VB1cdX+tmq4ekZ3j5dh9GSrHaLQPdorLFEQ5lUOstYZVzCrMPq21bxvnMZ
-         KmgQ==
-X-Gm-Message-State: AOAM530/Zum/YQAoGwfVcKXdjm+Ot4UL2CMtTHhUIhpAiVqFzzbAxA8/
-        cSo3DNNKYQblAtU3V/9TSI8t4+M5C7XE/XAb5vw=
-X-Google-Smtp-Source: ABdhPJyh3HdXy3ssU6NgUanxf31X/8KIztM8TZkSzCN0cHypQjdelZ3JgOtlJMfvNbHXn5OSNb8P2d46fzcQH4Z+Q0M=
-X-Received: by 2002:aca:4b54:: with SMTP id y81mr6709650oia.54.1597223550326;
- Wed, 12 Aug 2020 02:12:30 -0700 (PDT)
+        Wed, 12 Aug 2020 05:13:33 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F13AC06174A;
+        Wed, 12 Aug 2020 02:13:33 -0700 (PDT)
+Date:   Wed, 12 Aug 2020 09:13:29 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1597223610;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=YtQguOBpLy+ZK3wfcPbucBpUN9YGIesOWZl+59cOgmA=;
+        b=XDYJH3L/fJTg0uZURUWOUU+FVEp4y9Q5horXSNMatMdefHd1jv+UgT8Le2M/w/RfOP9MSJ
+        SI1rfnZJTuHqhu5fIU4MXl2rOgPuwrqj2g9V7BcODpkjuC6lYhX2mgMO2XujCjMJBzV3WZ
+        wOhRNZ0i7aqJMhdrZ9PO5UXsTxvaMQDmd9E71ytH6nTqRSYbFlXctNMYfPlw44HsxA37YQ
+        b1YZXQwb9RNZidSjbQ2t/onmpxzv8YxhawVjc8nrm/n2elte8y1UR7JK2rF4vjb//chuDJ
+        cacpm0uABDmad0SoVanJHuYST8qezvU621x3Ge+jZ7USxpOq+jGxD4y3aNUFNg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1597223610;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=YtQguOBpLy+ZK3wfcPbucBpUN9YGIesOWZl+59cOgmA=;
+        b=AyPrIXC4Sk8jefmqeGtnO19FKendAy/6eDAGN/BqMdNGtcNNVfBVkUiiP2Lia3qO3Xustq
+        7Sa1+e0IWXKs6MDA==
+From:   "tip-bot2 for Guenter Roeck" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: irq/urgent] genirq/PM: Always unlock IRQ descriptor in rearm_wake_irq()
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200811180001.80203-1-linux@roeck-us.net>
+References: <20200811180001.80203-1-linux@roeck-us.net>
 MIME-Version: 1.0
-References: <20200810174156.30880-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200810174156.30880-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20200810174156.30880-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 12 Aug 2020 11:12:19 +0200
-Message-ID: <CAMuHMdWJrrC8X1zfauGbpraEm0aO8szeZskNdPRCbwzp7cfZTQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] ARM: dts: r8a7742: Add PCIe Controller device node
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Chris Paterson <Chris.Paterson2@renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <159722360956.3192.16144465573431608980.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 7:42 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Add a device node for the PCIe controller on the Renesas
-> RZ/G1H (r8a7742) SoC.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+The following commit has been merged into the irq/urgent branch of tip:
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v5.10.
+Commit-ID:     e27b1636e9337d1a1d174b191e53d0f86421a822
+Gitweb:        https://git.kernel.org/tip/e27b1636e9337d1a1d174b191e53d0f86421a822
+Author:        Guenter Roeck <linux@roeck-us.net>
+AuthorDate:    Tue, 11 Aug 2020 11:00:01 -07:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Wed, 12 Aug 2020 11:04:05 +02:00
 
-Gr{oetje,eeting}s,
+genirq/PM: Always unlock IRQ descriptor in rearm_wake_irq()
 
-                        Geert
+rearm_wake_irq() does not unlock the irq descriptor if the interrupt
+is not suspended or if wakeup is not enabled on it.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Restucture the exit conditions so the unlock is always ensured.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Fixes: 3a79bc63d9075 ("PCI: irq: Introduce rearm_wake_irq()")
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200811180001.80203-1-linux@roeck-us.net
+
+---
+ kernel/irq/pm.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/irq/pm.c b/kernel/irq/pm.c
+index 8f557fa..c6c7e18 100644
+--- a/kernel/irq/pm.c
++++ b/kernel/irq/pm.c
+@@ -185,14 +185,18 @@ void rearm_wake_irq(unsigned int irq)
+ 	unsigned long flags;
+ 	struct irq_desc *desc = irq_get_desc_buslock(irq, &flags, IRQ_GET_DESC_CHECK_GLOBAL);
+ 
+-	if (!desc || !(desc->istate & IRQS_SUSPENDED) ||
+-	    !irqd_is_wakeup_set(&desc->irq_data))
++	if (!desc)
+ 		return;
+ 
++	if (!(desc->istate & IRQS_SUSPENDED) ||
++	    !irqd_is_wakeup_set(&desc->irq_data))
++		goto unlock;
++
+ 	desc->istate &= ~IRQS_SUSPENDED;
+ 	irqd_set(&desc->irq_data, IRQD_WAKEUP_ARMED);
+ 	__enable_irq(desc);
+ 
++unlock:
+ 	irq_put_desc_busunlock(desc, flags);
+ }
+ 
