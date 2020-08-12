@@ -2,46 +2,44 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CDF0C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 22:56:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE292C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 22:57:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04BB920781
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 22:56:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FB052224D
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 22:57:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597272995;
-	bh=lDSUqcZleiRS36fjIZi7JKKWrjlK6ctnU/z+2EfAe2Y=;
-	h=Date:From:To:Cc:Subject:Reply-To:List-ID:From;
-	b=RwvQGjIOb49EfmzhQqLt+5OHqixodbdPG6gSUvz9M25Kqjn8BspTe4Ne7GYj1X/fh
-	 E5g/gD7LAVf2rRCJdmOv31JD2F6BJSvqshUE4hvIniiqrwh+1CeGTdtlWf+MTAjAvi
-	 0rB6mpxQNeQPmXp4FBwvWUQaiX8OrvKaU2Z+6bRI=
+	s=default; t=1597273058;
+	bh=zy2r+61uBN1pJktsl9IlZc4fSFAY3znZwPcoLkq3Cks=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=VcYWDgqIq5AbplW9SlxjZSkplYXqtmTuRhbzazHZNt5Y3VlAg9uBu2mCabj/P90n8
+	 nJUUYB4LDpfjWvGDmy36rI9P5h2ugt+9GMl5rSEl/3qOL1tr69z4OXIOWhM3kGX+c2
+	 VKXzCnNBphVZ9qwgDbLAn6zsR6U/jIsEsnsV0XXo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726576AbgHLW4d (ORCPT
+        id S1726681AbgHLW5h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 18:56:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48142 "EHLO mail.kernel.org"
+        Wed, 12 Aug 2020 18:57:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726067AbgHLW4d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 18:56:33 -0400
+        id S1726510AbgHLW5f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 18:57:35 -0400
 Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C19920771;
-        Wed, 12 Aug 2020 22:56:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9CC620B1F;
+        Wed, 12 Aug 2020 22:57:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597272993;
-        bh=lDSUqcZleiRS36fjIZi7JKKWrjlK6ctnU/z+2EfAe2Y=;
-        h=Date:From:To:Cc:Subject:Reply-To:From;
-        b=U6I7hbtH/kW8zMaps+egDyHnpqK9BQfRx+bTNCW25ivZuQ0MUBEZqKpYOpLLVBBK+
-         ysFTKCCImqjnpotsH8OObbNLOTeGzO6hr6/OxoPTtvNJGgMC7gKl/ihBJoY+4Q5IpW
-         wDMM9O1febjfvqMcHHYy3vnm6/oP1RyyM0EaviTE=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id D7E593522615; Wed, 12 Aug 2020 15:56:32 -0700 (PDT)
-Date:   Wed, 12 Aug 2020 15:56:32 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
+        s=default; t=1597273055;
+        bh=zy2r+61uBN1pJktsl9IlZc4fSFAY3znZwPcoLkq3Cks=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=vxGaqD4DmxDokpJs2n5WPT9IROUgwWeJHCnNjedqnlRtj3b+uj2O622ohACXLb2Gj
+         S5W8zyuysfCLCA/bitzzDv3fIHDUrIPV/8WCbgPRChou2apmlxbe3FsXWd181euH1h
+         hGVp85bIted2Ei+MPnJndWvanlyb7kLRbbmDepGI=
+From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         jiangshanlai@gmail.com, dipankar@in.ibm.com,
@@ -49,74 +47,49 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        elver@google.com, dvyukov@google.com, jannh@google.com
-Subject: [PATCH tip/core/rcu 0/12] Add strict short-grace-period Kconfig
- option
-Message-ID: <20200812225632.GA19759@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        elver@google.com, dvyukov@google.com,
+        "Paul E. McKenney" <paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 03/12] rcu: Restrict default jiffies_till_first_fqs for strict RCU GPs
+Date:   Wed, 12 Aug 2020 15:57:23 -0700
+Message-Id: <20200812225732.20068-3-paulmck@kernel.org>
+X-Mailer: git-send-email 2.9.5
+In-Reply-To: <20200812225632.GA19759@paulmck-ThinkPad-P72>
+References: <20200812225632.GA19759@paulmck-ThinkPad-P72>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+From: "Paul E. McKenney" <paulmck@kernel.org>
 
-This series adds a CONFIG_RCU_STRICT_GRACE_PERIOD Kconfig option that
-causes RCU to strive for short grace periods even at great expense in
-terms of performance, scalability, and real-time response.  This option is
-therefore not for production use, but rather to allow tools such as KASAN
-to more readily detect pointer leaks from RCU read-side critical sections.
-Here is an example of such a pointer leak:
+If there are idle CPUs, RCU's grace-period kthread will wait several
+jiffies before even thinking about polling them.  This promotes
+efficiency, which is normally a good thing, but when the kernel
+has been built with CONFIG_RCU_STRICT_GRACE_PERIOD=y, we care more
+about short grace periods.  This commit therefore restricts the
+default jiffies_till_first_fqs value to zero in kernels built with
+CONFIG_RCU_STRICT_GRACE_PERIOD=y, which causes RCU's grace-period kthread
+to poll for idle CPUs immediately after starting a grace period.
 
-	rcu_read_lock();
-	p = rcu_dereference(gp);
-	do_something(p);
-	rcu_read_unlock(); // *p might be freed immediately!
-	do_something_else(p); // Potential use after free BUG!!!
+Reported-by Jann Horn <jannh@google.com>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+---
+ kernel/rcu/tree.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This series also adds a rcutree.rcu_unlock_delay kernel boot parameter
-that delays the specified number of microseconds after the outermost
-rcu_read_unlock() in an attempt to further bend the odds in KASAN's favor.
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 65e1b5e..d333f1b 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -471,7 +471,7 @@ module_param(qhimark, long, 0444);
+ module_param(qlowmark, long, 0444);
+ module_param(qovld, long, 0444);
+ 
+-static ulong jiffies_till_first_fqs = ULONG_MAX;
++static ulong jiffies_till_first_fqs = IS_ENABLED(CONFIG_RCU_STRICT_GRACE_PERIOD) ? 0 : ULONG_MAX;
+ static ulong jiffies_till_next_fqs = ULONG_MAX;
+ static bool rcu_kick_kthreads;
+ static int rcu_divisor = 7;
+-- 
+2.9.5
 
-The patches in this series are as follows:
-
-1.	Add Kconfig option for strict RCU grace periods.
-
-2.	Reduce leaf fanout for strict RCU grace periods.
-
-3.	Restrict default jiffies_till_first_fqs for strict RCU GPs.
-
-4.	Force DEFAULT_RCU_BLIMIT to 1000 for strict RCU GPs.
-
-5.	Always set .need_qs from __rcu_read_lock() for strict GPs.
-
-6.	Do full report for .need_qs for strict GPs.
-
-7.	Attempt QS when CPU discovers GP for strict GPs.
-
-8.	IPI all CPUs at GP start for strict GPs.
-
-9.	IPI all CPUs at GP end for strict GPs.
-
-10.	Provide optional RCU-reader exit delay for strict GPs.
-
-11.	Execute RCU reader shortly after rcu_core for strict GPs.
-
-12.	Report QS for outermost PREEMPT=n rcu_read_unlock() for strict GPs.
-
-							Thanx, Paul
-
-------------------------------------------------------------------------
-
- Documentation/admin-guide/kernel-parameters.txt |    9 +++
- include/linux/rcupdate.h                        |    7 ++
- kernel/rcu/Kconfig                              |    8 +-
- kernel/rcu/Kconfig.debug                        |   15 +++++
- kernel/rcu/tree.c                               |   65 +++++++++++++++++++++---
- kernel/rcu/tree.h                               |    1 
- kernel/rcu/tree_plugin.h                        |   47 +++++++++++++----
- 7 files changed, 132 insertions(+), 20 deletions(-)
