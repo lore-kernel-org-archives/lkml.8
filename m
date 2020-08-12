@@ -2,97 +2,83 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F12FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 10:34:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D742C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 10:37:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 400F020838
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 10:34:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3C3F20838
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 10:37:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="F9oHOFd2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KA3A4rKf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbgHLKd7 (ORCPT
+        id S1726983AbgHLKhR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 06:33:59 -0400
-Received: from mout.gmx.net ([212.227.17.21]:55981 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726404AbgHLKd6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 06:33:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1597228421;
-        bh=kyxDKOrNtFwAET7ssBuwQAdW/EMV3Yiruqvshw/MQC8=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=F9oHOFd2NE49uWlyTBzMzsO0oF/XRpAZ+oojzB4cv+rcTAaknj3nNAdioxWIXyE5K
-         fRs17zeH8O3XXiVG2KtZ3d+SQkt3yBESKsjN/l5voxMCdsdPOtQjXKSa1pWP2xBOSi
-         AHEzJVMgNHbMMrQpL1vTOBIbpsmi9BCaVUh2JTEE=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [185.53.41.139] ([185.53.41.139]) by web-mail.gmx.net
- (3c-app-gmx-bap56.server.lan [172.19.172.126]) (via HTTP); Wed, 12 Aug 2020
- 12:33:41 +0200
+        Wed, 12 Aug 2020 06:37:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39002 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726404AbgHLKhR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 06:37:17 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDFDCC06174A;
+        Wed, 12 Aug 2020 03:37:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=a6/dAk8hzb0WYY+kQF71Fgx1O3nwOedWBapk4f0aaOE=; b=KA3A4rKfqtBkAolbpGhZQn0gae
+        rIqsIfEejxM64L+YMTBJUSvg9fEFIfvHxwctOuhc9kOyfSdozptYsA0jAOiKaRSfUdNi72MKP9/pK
+        nkS/znp2LKbSteLjA3WozUbWSHli0WpEytH2VWZvz/eAOBqRX+XYtpWzwnEOCloZYCLFOC3afCNHm
+        rkq0HuJB3Rc7Zw8PRD3F29LxE2f6cEgqiZbZbThXq4+UEfKq9D08M/+swMXJRha+LvkLztxW2QGL2
+        ViWxhZVhOuYLHsAyeFHBmHL/uIcJ0MWeVdzlotQr4696vPqatWO8tc8k9EQnzrdgHJJkzsiPQxZg3
+        zd6QAwzg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k5o6c-0008Cw-Cp; Wed, 12 Aug 2020 10:36:12 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 911FF300DAE;
+        Wed, 12 Aug 2020 12:35:30 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 787BB2B412CB6; Wed, 12 Aug 2020 12:35:30 +0200 (CEST)
+Date:   Wed, 12 Aug 2020 12:35:30 +0200
+From:   peterz@infradead.org
+To:     Nicholas Piggin <npiggin@gmail.com>
+Cc:     Alexey Kardashevskiy <aik@ozlabs.ru>, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
+Subject: Re: [PATCH 1/2] lockdep: improve current->(hard|soft)irqs_enabled
+ synchronisation with actual irq state
+Message-ID: <20200812103530.GL2674@hirez.programming.kicks-ass.net>
+References: <20200723105615.1268126-1-npiggin@gmail.com>
+ <20200807111126.GI2674@hirez.programming.kicks-ass.net>
+ <1597220073.mbvcty6ghk.astroid@bobo.none>
 MIME-Version: 1.0
-Message-ID: <trinity-a4a4e709-ca8d-4867-8f90-d0ddbfca05cb-1597228420620@3c-app-gmx-bap56>
-From:   Frank Wunderlich <frank-w@public-files.de>
-To:     Wenbin Mei <wenbin.mei@mediatek.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Wenbin Mei <wenbin.mei@mediatek.com>,
-        srv_heupstream@mediatek.com, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Chaotian Jing <chaotian.jing@mediatek.com>,
-        stable@vger.kernel.org
-Subject: Aw: [PATCH 2/3] arm64: dts: mt7622: add reset node for mmc device
-Content-Type: text/plain; charset=UTF-8
-Date:   Wed, 12 Aug 2020 12:33:41 +0200
-Importance: normal
-Sensitivity: Normal
-In-Reply-To: <20200812093726.10123-3-wenbin.mei@mediatek.com>
-References: <20200812093726.10123-1-wenbin.mei@mediatek.com>
- <20200812093726.10123-3-wenbin.mei@mediatek.com>
-X-UI-Message-Type: mail
-X-Priority: 3
-X-Provags-ID: V03:K1:gfeTfH9cl5G8lIBSMXcX0ttEubv7Ajx1wwPT2iBKRJ8x3w1qe/q3Aq2pU6G5w045XTeaU
- X3ie2/s10R6kks7/xbD1Thbuozc+5ABCC2Am3V7c0VHKbNgHXHKbBPCnlOP3yA6NpDTgQGfnLfXq
- mt68050gHBqeVdojky2SpvZFPnuyuXuTIKNpYZQDJlmALzYVzEsr7oh5nBHW3UOVkKg9+6w/Yd7C
- mosrh9PR2Acwn92c2U2/n4y7rw6QPDbkY6e14wwmYMzPyk45sRS9ZKLVepc6Kb+jqmWobwfkqN7j
- Zk=
-X-UI-Out-Filterresults: notjunk:1;V03:K0:6zVhbMh56Ig=:LxG6KCEOEFw5ug8YyG4aUq
- I+jIPz9C525zCUaVy4FFHPQrjwvKyfNMVhdvoNAxO76lVanL4HNBm+m2p6TG4qr1wYnRk20f/
- ppp/o0zMRE4hRqy0nzwabB6XZjhs8iOj7iXl1FjT+atnR3DK6LvDSef+2nZKrAhrsgc1y6TtW
- rQJ4Glp5O2TaYSJv4vwZlMJT10hIPMxPDSspftOdzccie4sIdOWD03Y6nouD6rbdqpD6QfCS8
- 3a9K9GqPy9XTqO0THuFMFkBCjBGSGSv/gOc5N+4v0BqrF2CUmS7727+FbOXnBLX5G7Fnc3c0z
- URfCQ1gYwVCVU7g7VlQZSAyKjXDosXZJdPzJHgnpZB1esDMQjk4szyd6Fj3OiFR4BnW4Ylzdp
- EESsEPaiOwz1hOkfwJmnrhmIqch1bBhtFKzbXw+P6xMspti9EQAaHAr+hR5MyqCdDdjXPm3SR
- uHW5qbD2yIiwmCVxwq4sNXPwxj7wbgYJerkmBUy0Sfi5MAiKrm8sefwdJXxGO7Go9eWSM2HLi
- R3wE2hz33osl8exD//FrrkQitMLMrHexG7/6cOxFEZc1JTUXpnLdIOxLMMe5rCcWdi/zKiRut
- ggVUvJ162ZiXRbjBBpCIEaO2Qcf/mGKWRUDa+yGGCprJ9ERmqs6kh8XFXmoxGG3hDoE3ePiLc
- St+5o7ZXfgAdZQElB2i0R6/B+ExcHvo8wclRPylKghS3nXR+p3QK8eiWju9YQ1vWk6qc=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1597220073.mbvcty6ghk.astroid@bobo.none>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Gesendet: Mittwoch, 12. August 2020 um 11:37 Uhr
-> Von: "Wenbin Mei" <wenbin.mei@mediatek.com>
-> Betreff: [PATCH 3/3] mmc: mediatek: add optional module reset property
+On Wed, Aug 12, 2020 at 06:18:28PM +1000, Nicholas Piggin wrote:
+> Excerpts from peterz@infradead.org's message of August 7, 2020 9:11 pm:
+> > 
+> > What's wrong with something like this?
+> > 
+> > AFAICT there's no reason to actually try and add IRQ tracing here, it's
+> > just a hand full of instructions at the most.
+> 
+> Because we may want to use that in other places as well, so it would
+> be nice to have tracing.
+> 
+> Hmm... also, I thought NMI context was free to call local_irq_save/restore
+> anyway so the bug would still be there in those cases?
 
-> This patch adds a optional reset management for msdc.
-> Sometimes the bootloader does not bring msdc register
-> to default state, so need reset the msdc controller.
->
-> Signed-off-by: Wenbin Mei <wenbin.mei@mediatek.com>
-
-Thanks for posting the fix to Mainline
-same as 3/3, dts-patch is also needed for fixing eMMC-Issue on R64
-
-Fixes: 966580ad236e ("mmc: mediatek: add support for MT7622 SoC")
-Tested-By: Frank Wunderlich <frank-w@public-files.de>
-
-and it needs to be fixed at least for 5.4+, so adding stable-CC
-
-Cc: stable@vger.kernel.org
+NMI code has in_nmi() true, in which case the IRQ tracing is disabled
+(except for x86 which has CONFIG_TRACE_IRQFLAGS_NMI).
