@@ -2,220 +2,86 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A860AC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:50:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 874F1C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:50:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E8DC2076C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:50:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60F3B20656
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:50:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597251020;
-	bh=2L5jl3MJyeITaaOJqNnxoqmLn25pI/RwxLyurZ8cScw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Enl5ulERhBtU2R9DreQ81UUdqQgSXwhpHDMx8HrxD6/YxLMNpb9s8/UL7dRGPBqu+
-	 vXrUrzD8qPpjxd6DPI8Fwndkz5iflf62KQWzlQpmwLP6ht1iZkvqUHj4ltUrLof8aN
-	 7ayX/VLGjkoGxLncl+MqwLNVy8wStL6QGTdd5x2Q=
+	s=default; t=1597251031;
+	bh=d1y8d3X6Gye9u0mJ4HY9FyhQltB7BnKNoY+bges04bM=;
+	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=m8nMignRxSgkjn/TZdZbITlajonJiLpx9fGpVDYJ3CM3yb3A7r2LD6hYHbd5OglxY
+	 bUGtxko4QoX/hSv0kBx8BCe0JU6c06ZWFQGw3kaaYiWxtqoNHXu/PYZW/b15Beemmi
+	 CyVRl9xTbHAof7I1lq/KQK+77gcQKMSyFdmyOQrc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbgHLQuT (ORCPT
+        id S1726837AbgHLQu3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 12:50:19 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:42670 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726477AbgHLQuQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 12:50:16 -0400
-Received: by mail-il1-f195.google.com with SMTP id t13so2413627ile.9;
-        Wed, 12 Aug 2020 09:50:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=KmvUj2RP7x0iUw9ISiD5fI86GqOa49uHPsePtr35WU0=;
-        b=AL69Mh3naWZPoTVoLPHFFynmuA8U9BGTDVLZwZJrLkmJOJ44XcWDqKOF02M+bemgdR
-         8rKYwrjtpi4HapWU7hUY0Mmu5rCsiKMk6rUE8/RugUcNsOwxMtAINwkI5VIh7rtKVZX6
-         ti1idxP9cpxWKMJc+9Z63GHKkFCfW/VISPEom0qopsQm5FeVnxOfFcl0lU3G0YRaIt1t
-         TuwJ93fERmnDqh/2ZbL/HQhq2HoEYUjzuikrHAPLflj3Ib3lmUy6c+iDu5xvaF3G5Ej5
-         Ex49WQbkl7GQiNyJxWUWGNWE8zCXsqC4VuGAuvbsE2RR9mcA/9IBLdI3+xpauT9gH2TU
-         nmUw==
-X-Gm-Message-State: AOAM530vP51McZKmbHiSRdnkusTFV9cJ7G7aB/AfhVQXnMsUEC2Ry4vc
-        TSXZnIim4lWV1DuoZMz8fOMURzc=
-X-Google-Smtp-Source: ABdhPJyI0fKv0GoWsmRN7cXoaELouq5hh1WCI3bN8WWY04GIyX6iIVnHbkDaStL9MkOkPBFTHevxyw==
-X-Received: by 2002:a92:ad01:: with SMTP id w1mr542083ilh.301.1597251015120;
-        Wed, 12 Aug 2020 09:50:15 -0700 (PDT)
-Received: from xps15 ([64.188.179.248])
-        by smtp.gmail.com with ESMTPSA id u62sm1345653ilc.87.2020.08.12.09.50.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Aug 2020 09:50:13 -0700 (PDT)
-Received: (nullmailer pid 2356437 invoked by uid 1000);
-        Wed, 12 Aug 2020 16:50:12 -0000
-Date:   Wed, 12 Aug 2020 10:50:12 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Wesley Cheng <wcheng@codeaurora.org>
-Cc:     sboyd@kernel.org, heikki.krogerus@linux.intel.com,
-        agross@kernel.org, gregkh@linuxfoundation.org,
-        bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: Re: [PATCH v8 2/4] dt-bindings: usb: Add Qualcomm PMIC type C
- controller dt-binding
-Message-ID: <20200812165012.GA2350307@bogus>
-References: <20200812071925.315-1-wcheng@codeaurora.org>
- <20200812071925.315-3-wcheng@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200812071925.315-3-wcheng@codeaurora.org>
+        Wed, 12 Aug 2020 12:50:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33658 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726477AbgHLQuZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 12:50:25 -0400
+Received: from localhost.localdomain (unknown [194.230.155.117])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 888F120855;
+        Wed, 12 Aug 2020 16:50:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597251025;
+        bh=d1y8d3X6Gye9u0mJ4HY9FyhQltB7BnKNoY+bges04bM=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=PX4jmO9MFdaiJBkxcMih7RufEkrYLFe0hl5m9P8OUxLZV4ANSWqzllpQEhplARfQc
+         l5JwpGAEMZWME4399yM7jNCVdtZTc/LK6MOSmx0IhceM2LRonj3V3oH8OyOTnSDjD9
+         z3y1ADNYzBFlpv2s3pDVRjC5hbcAyTa+ksVQ0VJg=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Vijai Kumar K <vijaikumar.kanagarajan@gmail.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH 12/13] extcon: ptn5150: Convert to module_i2c_driver
+Date:   Wed, 12 Aug 2020 18:50:12 +0200
+Message-Id: <20200812165013.2699-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200812162958.6180-1-krzk@kernel.org>
+References: <20200812162958.6180-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 12:19:23AM -0700, Wesley Cheng wrote:
-> Introduce the dt-binding for enabling USB type C orientation and role
-> detection using the PM8150B.  The driver will be responsible for receiving
-> the interrupt at a state change on the CC lines, reading the
-> orientation/role, and communicating this information to the remote
-> clients, which can include a role switch node and a type C switch.
-> 
-> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
-> ---
->  .../bindings/usb/qcom,pmic-typec.yaml         | 112 ++++++++++++++++++
->  1 file changed, 112 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/qcom,pmic-typec.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/qcom,pmic-typec.yaml b/Documentation/devicetree/bindings/usb/qcom,pmic-typec.yaml
-> new file mode 100644
-> index 000000000000..d5173f88d429
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/qcom,pmic-typec.yaml
-> @@ -0,0 +1,112 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/usb/qcom,pmic-typec.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Qualcomm PMIC based USB type C Detection Driver
-> +
-> +maintainers:
-> +  - Wesley Cheng <wcheng@codeaurora.org>
-> +
-> +description: |
-> +  Qualcomm PMIC Type C Detect
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - qcom,pm8150b-usb-typec
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description: Type C base address
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +    description: CC change interrupt from PMIC
-> +
-> +  connector:
-> +    description: Connector type for remote endpoints
-> +    type: object
-> +
-> +    properties:
-> +      compatible:
-> +        $ref: /connector/usb-connector.yaml#/properties/compatible
+Use module_i2c_driver() to simplify driver init boilerplate.
 
-Still wrong. As I said in v7, under 'connector':
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ drivers/extcon/extcon-ptn5150.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-       $ref:  /connector/usb-connector.yaml#
+diff --git a/drivers/extcon/extcon-ptn5150.c b/drivers/extcon/extcon-ptn5150.c
+index fd9723f86d55..559e26214f48 100644
+--- a/drivers/extcon/extcon-ptn5150.c
++++ b/drivers/extcon/extcon-ptn5150.c
+@@ -338,12 +338,7 @@ static struct i2c_driver ptn5150_i2c_driver = {
+ 	.probe	= ptn5150_i2c_probe,
+ 	.id_table = ptn5150_i2c_id,
+ };
+-
+-static int __init ptn5150_i2c_init(void)
+-{
+-	return i2c_add_driver(&ptn5150_i2c_driver);
+-}
+-subsys_initcall(ptn5150_i2c_init);
++module_i2c_driver(ptn5150_i2c_driver);
+ 
+ MODULE_DESCRIPTION("NXP PTN5150 CC logic Extcon driver");
+ MODULE_AUTHOR("Vijai Kumar K <vijaikumar.kanagarajan@gmail.com>");
+-- 
+2.17.1
 
-And drop all these references.
-
-> +        enum:
-> +          - usb-c-connector
-> +
-> +      power-role: true
-> +      data-role: true
-> +
-> +      ports:
-> +        description: Remote endpoint connections
-> +        type: object
-> +        $ref: /connector/usb-connector.yaml#/properties/ports
-> +
-> +        properties:
-> +          port@0:
-> +            description: Remote endpoints for the High Speed path
-> +            type: object
-> +
-> +          port@1:
-> +            description: Remote endpoints for the Super Speed path
-> +            type: object
-> +
-> +            properties:
-> +              endpoint@0:
-> +                description: Connection to USB type C mux node
-> +                type: object
-> +
-> +              endpoint@1:
-> +                description: Connection to role switch node
-> +                type: object
-> +
-> +    required:
-> +      - compatible
-> +
-> +required:
-> +  - compatible
-> +  - interrupts
-> +  - connector
-
-'reg' not required?
-
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    pm8150b {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +        pm8150b_typec: typec@1500 {
-> +            compatible = "qcom,pm8150b-usb-typec";
-> +            reg = <0x1500>;
-> +            interrupts = <0x2 0x15 0x5 IRQ_TYPE_EDGE_RISING>;
-> +
-> +            connector {
-> +                compatible = "usb-c-connector";
-> +                power-role = "dual";
-> +                data-role = "dual";
-> +                ports {
-> +                    #address-cells = <1>;
-> +                    #size-cells = <0>;
-> +                    port@0 {
-> +                        reg = <0>;
-> +                    };
-> +                    port@1 {
-> +                        reg = <1>;
-> +                        #address-cells = <1>;
-> +                        #size-cells = <0>;
-> +                        usb3_data_ss: endpoint@0 {
-> +                            reg = <0>;
-> +                            remote-endpoint = <&qmp_ss_mux>;
-> +                        };
-> +                        usb3_role: endpoint@1 {
-> +                            reg = <1>;
-> +                            remote-endpoint = <&dwc3_drd_switch>;
-> +                        };
-> +                    };
-> +                };
-> +            };
-> +        };
-> +    };
-> +...
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
