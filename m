@@ -2,128 +2,163 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 534AAC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 00:12:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74582C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 00:13:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3193B2076C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 00:12:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AFC82076C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 00:13:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jt8w7KS0"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aHoygjWd";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="9gP+Z/SD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726485AbgHLAMJ (ORCPT
+        id S1726505AbgHLANa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 20:12:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56056 "EHLO
+        Tue, 11 Aug 2020 20:13:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56260 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726143AbgHLAMI (ORCPT
+        with ESMTP id S1726143AbgHLAN3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 20:12:08 -0400
-Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D330FC06174A
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 17:12:07 -0700 (PDT)
-Received: by mail-yb1-xb44.google.com with SMTP id i10so386110ybt.11
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 17:12:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ANisI7MawC30nrIBSjMSXLgYwLyr20x+LoTvwdtr3Sc=;
-        b=jt8w7KS0d9R8I0y6qYP7BXoLqMunGTkSfoLt7r1G+NWD3l+RBKwXgk1IAA53wxCn/b
-         cBWmSGimcl2Z7wRaumBNoisfrAz4a6QcDFhMXBWZjlO7d9igL9SLcfSzABjiNgpPo2dw
-         fbCEOvssdKwkVwxt8lcU4gD/7+sIrwGjJKUApqWqSTqXkHoEfK+4DMyNi1xWH20fXfgH
-         k5klOKWtNP95qArhsmn0ZgmZ72PzkVxlwfNeqpcA6BkJyt5JNDbVV/wIYPXPFFIYese3
-         uCFXrugVDiTa3rj3JguNOm9ukexFC7V9xjdOn8xSw9wTy8n5k3dAx4dMgsG0jab/JpeF
-         il0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ANisI7MawC30nrIBSjMSXLgYwLyr20x+LoTvwdtr3Sc=;
-        b=cgRYthsarEeq5QC3NeNgwn+QFNIDSnmfyEpi7GkeFdhJtdrbi8bKG7SWH+fCWsYYuD
-         MYLT7yZRYV3Y4zdlH0zFt7ti41NmIxHf3ATVl5pjUlBa8k4F/2M+Hx5NLaOqBoK4Wms4
-         44XVmcNs575mL4SAEcr0zkwnSzMLYyLXKzpGfdz7mRNHoqrYkzJ6MFcXFhrzqcuoXI6T
-         jKAbw1HKK+Q9EZqslDCaatSfHn0Vw+nqtgXKH7cQIVLhMoV4Yo/XVgkb0YkJ3nfa18mV
-         Vxr21DpzvFrMFEHeey9np42mWDY7dxL/NR7g1clNYT3mFUq/bhYYR6bvydr4JhA58yVV
-         8b+w==
-X-Gm-Message-State: AOAM530GmbNI/POvncC3GHFCcQMk5w+opteo3TFLQnKzzOraWFqZ6SHB
-        dxIuM0x7itzGapLUrquUG04dS4y0IkRPQZLAGvs=
-X-Google-Smtp-Source: ABdhPJwxJMEczs4u6ViJWr7Vt+u/2jmPSxvj3eAufTe/uJ56YXuOqV5u5G89FcccuYXQC7MGZw0EbpSDkyhLVL23HLY=
-X-Received: by 2002:a25:9c01:: with SMTP id c1mr26221367ybo.83.1597191126680;
- Tue, 11 Aug 2020 17:12:06 -0700 (PDT)
+        Tue, 11 Aug 2020 20:13:29 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48B7AC06174A;
+        Tue, 11 Aug 2020 17:13:29 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1597191205;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to; bh=9o2xocBmMKWGpKJOBWpYqCTq3dBqHfmmP5MZZ+TNn/k=;
+        b=aHoygjWdGZLlY8I2asIR9AK7/L1qaNlfnKbQF77c8rvEbH0zI4dH5SbFfMnzz+pShD31Hr
+        6FTMVMX69bLPxLQnGDRnq7P6FVSUcQ/r8et1bEoz9mgSTLYT/9ZuvEr83H8wsJLHwcHPw6
+        X0QM/TzIG1LZN3aGLkFcg5D8zadEXmq9q5RsnRkRa69xeYPS5W3ZfhbzwO8Gc1tiHtnve+
+        caiGNa0gySL2o171pqgUUT5lZTehMRpGl1Zvd+xLXYmYcR/N0e2Hu5gikapcZFIOJ+3bU+
+        xMQj0rNpG52+nR6yxYlQv+y3f9AVbBxYCE7fuJJGEsO86iRJFA07Odr+1msthA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1597191205;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to; bh=9o2xocBmMKWGpKJOBWpYqCTq3dBqHfmmP5MZZ+TNn/k=;
+        b=9gP+Z/SDK+tLZqCqOYjUwckIMb00/9iARm/1+28b1XjOnsTDRjNgOuOtlQi5M96ompf4ZV
+        7sTn42mKQdyuS2Bg==
+To:     paulmck@kernel.org
+Cc:     Michal Hocko <mhocko@suse.com>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
+In-Reply-To: <20200811210931.GZ4295@paulmck-ThinkPad-P72>
+Date:   Wed, 12 Aug 2020 02:13:25 +0200
+Message-ID: <874kp87mca.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <20200811200457.134743-1-lyude@redhat.com> <20200811200457.134743-11-lyude@redhat.com>
-In-Reply-To: <20200811200457.134743-11-lyude@redhat.com>
-From:   Ben Skeggs <skeggsb@gmail.com>
-Date:   Wed, 12 Aug 2020 10:11:55 +1000
-Message-ID: <CACAvsv6HZpgSC=gyJa_HyWLYAd70GefPp9j10ZOZ07CDQ70phA@mail.gmail.com>
-Subject: Re: [RFC 10/20] drm/nouveau/kms: Use new drm_dp_has_mst() helper for
- checking MST caps
-To:     Lyude Paul <lyude@redhat.com>
-Cc:     ML nouveau <nouveau@lists.freedesktop.org>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>,
-        David Airlie <airlied@linux.ie>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 12 Aug 2020 at 06:06, Lyude Paul <lyude@redhat.com> wrote:
->
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
-Reviewed-by: Ben Skeggs <bskeggs@redhat.com>
+"Paul E. McKenney" <paulmck@kernel.org> writes:
+> Hence Ulad's work on kfree_rcu().  The approach is to allocate a
+> page-sized array to hold all the pointers, then fill in the rest of these
+> pointers on each subsequent kfree_rcu() call.  These arrays of pointers
+> also allows use of kfree_bulk() instead of kfree(), which can improve
+> performance yet more.  It is no big deal if kfree_rcu()'s allocation
+> attempts fail occasionally because it can simply fall back to the old
+> linked-list approach.  And given that the various lockless caches in
+> the memory allocator are almost never empty, in theory life is good.
 
-> ---
->  drivers/gpu/drm/nouveau/nouveau_dp.c | 16 +++-------------
->  1 file changed, 3 insertions(+), 13 deletions(-)
+Of course, it's always the damned reality which ruins the fun.
+
+> But in practice, mainline now has CONFIG_PROVE_RAW_LOCK_NESTING,
+> and for good reason -- this Kconfig option makes it at least a
+> little bit harder for mainline developers to mess up RT.  But with
+> CONFIG_PROVE_RAW_LOCK_NESTING=y and lockdep enabled, mainline will now
+> sometimes complain if you invoke kfree_rcu() while holding a raw spinlock.
+> This happens when kfree_rcu() needs to invoke the memory allocator and
+> the memory allocator's caches are empty, thus resulting in the memory
+> allocator attempting to acquire a non-raw spinlock.
+
+Right.
+
+> Because kfree_rcu() has a fallback available (just using the old linked
+> list), kfree_rcu() would work well given a way to tell the memory
+> allocator to return NULL instead of acquiring a non-raw spinlock.
+> Which is exactly what Ulad's recent patches are intended to do.
+
+That much I understood, but I somehow failed to figure the why out
+despite the elaborate changelog. 2 weeks of 30+C seem to have cooked my
+brain :)
+
+> Since then, this thread has discussed various other approaches,
+> including using existing combinations of GFP_ flags, converting
+> the allocator's zone lock to a raw spinlock, and so on.
 >
-> diff --git a/drivers/gpu/drm/nouveau/nouveau_dp.c b/drivers/gpu/drm/nouveau/nouveau_dp.c
-> index d701f09aea645..bb85d81c25244 100644
-> --- a/drivers/gpu/drm/nouveau/nouveau_dp.c
-> +++ b/drivers/gpu/drm/nouveau/nouveau_dp.c
-> @@ -44,7 +44,6 @@ nouveau_dp_probe_dpcd(struct nouveau_connector *nv_connector,
->         struct nv50_mstm *mstm = NULL;
->         int ret;
->         u8 *dpcd = outp->dp.dpcd;
-> -       u8 tmp;
->
->         ret = drm_dp_dpcd_read(aux, DP_DPCD_REV, dpcd, DP_RECEIVER_CAP_SIZE);
->         if (ret == DP_RECEIVER_CAP_SIZE && dpcd[DP_DPCD_REV]) {
-> @@ -56,19 +55,10 @@ nouveau_dp_probe_dpcd(struct nouveau_connector *nv_connector,
->                 return connector_status_disconnected;
->         }
->
-> -       if (nouveau_mst)
-> +       if (nouveau_mst) {
->                 mstm = outp->dp.mstm;
-> -
-> -       if (mstm) {
-> -               if (dpcd[DP_DPCD_REV] >= DP_DPCD_REV_12) {
-> -                       ret = drm_dp_dpcd_readb(aux, DP_MSTM_CAP, &tmp);
-> -                       if (ret < 0)
-> -                               return connector_status_disconnected;
-> -
-> -                       mstm->can_mst = !!(tmp & DP_MST_CAP);
-> -               } else {
-> -                       mstm->can_mst = false;
-> -               }
-> +               if (mstm)
-> +                       mstm->can_mst = drm_dp_has_mst(aux, dpcd);
->         }
->
->         return connector_status_connected;
-> --
-> 2.26.2
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> Does that help, or am I missing the point of your question?
+
+Yes, that helps so far that I understand what the actual problem is. It
+does not really help to make me more happy. :)
+
+That said, we can support atomic allocations on RT up to the point where
+zone->lock comes into play. We don't know yet exactly where the
+zone->lock induced damage happens. Presumably it's inside
+free_pcppages_bulk() - at least that's where I have faint bad memories
+from 15+ years ago. Aside of that I seriously doubt that it can be made
+work within a reasonable time frame.
+
+But what makes me really unhappy is that my defense line against
+allocations from truly atomic contexts (from RT POV) which was enforced
+on RT gets a real big gap shot into it.
+
+It becomes pretty hard to argue why atomic allocations via kmalloc() or
+kmem_cache_alloc() should be treated any different. Technically they can
+work similar to the page allocations up to the point where regular
+spinlocks come into play or the slab cache is exhausted. Where to draw
+the line?
+
+It's also unclear for the page allocator case whether we can and should
+stick a limit on the number of pages and/or the pageorder.
+
+Myself and others spent a considerable amount of time to kill off these
+kind of allocations from various interesting places including the guts
+of send IPI, the affinity setting path and others where people just
+slapped allocations into them because the stack checker warned or
+because they happened to copy the code from some other place.
+
+RT was pretty much a quick crap detector whenever new incarnations of
+this got added and to some extent continuous education about these
+issues made them less prominent over the years. Using atomic allocations
+should always have a real good rationale, not only in the cases where
+they collide with RT.
+
+I can understand your rationale and what you are trying to solve. So, if
+we can actually have a distinct GFP variant:
+
+  GFP_I_ABSOLUTELY_HAVE_TO_DO_THAT_AND_I_KNOW_IT_CAN_FAIL_EARLY
+
+which is easy to grep for then having the page allocator go down to the
+point where zone lock gets involved is not the end of the world for
+RT in theory - unless that damned reality tells otherwise. :)
+
+The page allocator allocations should also have a limit on the number of
+pages and eventually also page order (need to stare at the code or let
+Michal educate me that the order does not matter).
+
+To make it consistent the same GFP_ variant should allow the slab
+allocator go to the point where the slab cache is exhausted.
+
+Having a distinct and clearly defined GFP_ variant is really key to
+chase down offenders and to make reviewers double check upfront why this
+is absolutely required.
+
+Thanks,
+
+        tglx
