@@ -2,121 +2,126 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DCE6C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:52:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CC4CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:53:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F6BD206B2
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:52:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="N+kSkmDi"
+	by mail.kernel.org (Postfix) with ESMTP id 0C681206B2
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:53:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728109AbgHLNwb (ORCPT
+        id S1728134AbgHLNxm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 09:52:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40746 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728079AbgHLNwW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 09:52:22 -0400
-Received: from mail-vk1-xa42.google.com (mail-vk1-xa42.google.com [IPv6:2607:f8b0:4864:20::a42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 804DBC061386
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 06:52:22 -0700 (PDT)
-Received: by mail-vk1-xa42.google.com with SMTP id x2so514857vkd.8
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 06:52:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8InXO4IHlwCJ/3LHKr2wC5cvoqCeqc4wxbX8rXjUiPg=;
-        b=N+kSkmDigJZm9bdYj2CCq6cRuTJusMts4MyrYLhaepzh1SFeONS44pX8HelNsXmkpt
-         Sar1XiJvk4yffabWSLuwN6z7snQ+dFjiNxSHvBEnAwmsfgNATsdM1HHNgVZ0t9hUvslm
-         ipOuT2PSmwUT1HfAGS8oOlizyFM9mh0PMN6DY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8InXO4IHlwCJ/3LHKr2wC5cvoqCeqc4wxbX8rXjUiPg=;
-        b=TIX0IF1qq4ZHsUjPnZuQiKwMVLqi99+2Jt688yYk8KmBSW8zuhtn6n5kNR27rY6XR0
-         Gq0fdU0Amt/dPDO08rFcvP/8IYM6tfbp05L3d/52BEi5n6h38w2hKEvq6h8p1kl8bB72
-         bH4fDksTxjYtYqrWKqtr+VsAd5G2NmFp5oOft5N+/nQWcVl+OfAfxxfgtq5SWSEot888
-         fkwiegL/c3jTNyQYSLqW7HeRViyGJTD0VdKvELyAZPs7nZHO7YRlhRWzCm7b0t7/QhrM
-         zs+jYgofyC08Q9FKRPlGl+fa2qN0q/4ZukWO4RbYi/VlrgOcnWMOXsrpGV/FifshhI//
-         B14Q==
-X-Gm-Message-State: AOAM531+gaQLOcnju1/OSjrHE/RanukGodz3MZsOgR36TFovfZayKeee
-        dporX78mallmzK1eiaU7KyLaG2KFOOA=
-X-Google-Smtp-Source: ABdhPJy5BptEkOvYBit6HD/fbMGCJIeyOSfISXeAQtSy4Gm9N2d9OacTYiQN0OG+s0eqThh1FldHsw==
-X-Received: by 2002:a1f:bdcd:: with SMTP id n196mr18488890vkf.10.1597240339254;
-        Wed, 12 Aug 2020 06:52:19 -0700 (PDT)
-Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com. [209.85.222.47])
-        by smtp.gmail.com with ESMTPSA id 81sm319013vky.52.2020.08.12.06.52.17
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Aug 2020 06:52:17 -0700 (PDT)
-Received: by mail-ua1-f47.google.com with SMTP id d20so614539ual.13
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 06:52:17 -0700 (PDT)
-X-Received: by 2002:ab0:3114:: with SMTP id e20mr27858800ual.104.1597240337098;
- Wed, 12 Aug 2020 06:52:17 -0700 (PDT)
+        Wed, 12 Aug 2020 09:53:42 -0400
+Received: from mga05.intel.com ([192.55.52.43]:22690 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726946AbgHLNxl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 09:53:41 -0400
+IronPort-SDR: 6SkX1R2m2falSbh9qKSr2l/3jj6/mVRU/PccIxZFw1z6eIflquUb3uoZf3FJXMLVb3j/SIePjD
+ Y9htXDrz1tSg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9711"; a="238800222"
+X-IronPort-AV: E=Sophos;i="5.76,304,1592895600"; 
+   d="scan'208";a="238800222"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2020 06:53:40 -0700
+IronPort-SDR: y1EYjWL3DTXKTLfmEutBi/BbxfrIhP0u7oY97M+y6nXDk8isFLMI9M6YXENoD0CQCo3d1bBWog
+ 7Yhqz91cC5Bg==
+X-IronPort-AV: E=Sophos;i="5.76,304,1592895600"; 
+   d="scan'208";a="291039440"
+Received: from hungngux-mobl.amr.corp.intel.com (HELO [10.254.80.79]) ([10.254.80.79])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2020 06:53:40 -0700
+Subject: Re: [PATCH V6 01/16] perf/core: Add PERF_SAMPLE_DATA_PAGE_SIZE
+To:     "Liang, Kan" <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     acme@kernel.org, mingo@redhat.com, linux-kernel@vger.kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, eranian@google.com, ak@linux.intel.com,
+        kirill.shutemov@linux.intel.com
+References: <20200810212436.8026-1-kan.liang@linux.intel.com>
+ <20200810212436.8026-2-kan.liang@linux.intel.com>
+ <b5422d70-f5d3-f2eb-0b39-4efd050d8828@intel.com>
+ <298cfc4d-4a9b-7886-1006-09f2bc24d789@linux.intel.com>
+ <20200810224734.GO3982@worktop.programming.kicks-ass.net>
+ <7a37a83a-fd30-3387-98b2-e3d23d36f69c@linux.intel.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+ z5cecg==
+Message-ID: <28c9fe5b-a19f-2d12-cf5a-83b1b36c37ed@intel.com>
+Date:   Wed, 12 Aug 2020 06:53:39 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200215021232.1149-1-mdtipton@codeaurora.org> <158378825407.66766.14135857856613969751@swboyd.mtv.corp.google.com>
-In-Reply-To: <158378825407.66766.14135857856613969751@swboyd.mtv.corp.google.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 12 Aug 2020 06:52:05 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WsD7w9oqbUUKJwWSRsfZ9qTLy9KyNp8i+BShi7S-R92w@mail.gmail.com>
-Message-ID: <CAD=FV=WsD7w9oqbUUKJwWSRsfZ9qTLy9KyNp8i+BShi7S-R92w@mail.gmail.com>
-Subject: Re: [PATCH] clk: qcom: clk-rpmh: Wait for completion when enabling clocks
-To:     Stephen Boyd <sboyd@kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Cc:     Mike Tipton <mdtipton@codeaurora.org>,
-        Taniya Das <tdas@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Andy Gross <agross@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <7a37a83a-fd30-3387-98b2-e3d23d36f69c@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 8/12/20 6:39 AM, Liang, Kan wrote:
+> I searched the vma_mmu_pagesize(). It seems that PowerPC is the only
+> one that defines a 'strong' function. In other words, the MMUPageSize
+> and KerelPageSize are the same for X86. However, it seems not true
+> for the above compound page cases. Is it a bug for smaps? Or am I
+> missed anything?
 
-On Mon, Mar 9, 2020 at 2:11 PM Stephen Boyd <sboyd@kernel.org> wrote:
->
-> Quoting Mike Tipton (2020-02-14 18:12:32)
-> > The current implementation always uses rpmh_write_async, which doesn't
-> > wait for completion. That's fine for disable requests since there's no
-> > immediate need for the clocks and they can be disabled in the
-> > background. However, for enable requests we need to ensure the clocks
-> > are actually enabled before returning to the client. Otherwise, clients
-> > can end up accessing their HW before the necessary clocks are enabled,
-> > which can lead to bus errors.
-> >
-> > Use the synchronous version of this API (rpmh_write) for enable requests
-> > in the active set to ensure completion.
-> >
-> > Completion isn't required for sleep/wake sets, since they don't take
-> > effect until after we enter sleep. All rpmh requests are automatically
-> > flushed prior to entering sleep.
-> >
-> > Fixes: 9c7e47025a6b ("clk: qcom: clk-rpmh: Add QCOM RPMh clock driver")
-> > Signed-off-by: Mike Tipton <mdtipton@codeaurora.org>
-> > ---
->
-> Applied to clk-next but I squashed in some changes to make it easier for
-> me to read.
+__weak unsigned long vma_mmu_pagesize(struct vm_area_struct *vma)
+{
+        return vma_kernel_pagesize(vma);
+}
 
-This landed upstream as commit dad4e7fda4bd ("clk: qcom: clk-rpmh:
-Wait for completion when enabling clocks") but seemed to have missed
-stable.  Can stable pick it up?  It has a Fixes tag so presumably it
-should be easy to track down where it needs to go.
+unsigned long vma_kernel_pagesize(struct vm_area_struct *vma)
+{
+        if (vma->vm_ops && vma->vm_ops->pagesize)
+                return vma->vm_ops->pagesize(vma);
+        return PAGE_SIZE;
+}
 
-Thanks!
-
--Doug
+It can be overridden with vm_ops too, not just a weak symbol.
