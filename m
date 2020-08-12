@@ -2,117 +2,91 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE1AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 11:28:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3283C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 11:32:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32F27207F7
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 11:28:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WTcPzYI1"
+	by mail.kernel.org (Postfix) with ESMTP id 7883D207DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 11:32:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597231946;
+	bh=slaVuferizKMyJwfA0CJIhbJqg/Sa/0C0gPvmAdJfQY=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=E0vHHJhJTf/nkHXOOmvllokVZaikeWr4Qutv19fPfjHU1F2JPsulykpFTeaLaBFN9
+	 ybbj1oDHDFjSmft5/fSLXsvzAtajaoH2u8Vcd/nRGDIeAXUcbcOeEWm7kYZcJQaqQf
+	 CtGswQhJVaAmjDbOYPDriPntc+E5qqwKwTX/mKu8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727821AbgHLL2j (ORCPT
+        id S1727061AbgHLLcY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 07:28:39 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39389 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726804AbgHLL2i (ORCPT
+        Wed, 12 Aug 2020 07:32:24 -0400
+Received: from mail-ej1-f67.google.com ([209.85.218.67]:35006 "EHLO
+        mail-ej1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726698AbgHLLcW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 07:28:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597231716;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=KjV6K3m7aYpDUqAWmC+w9QBoR6kWl/pmzBrtpDLCLfY=;
-        b=WTcPzYI1eRKJo1m7vvdk5jf0Bq3U2zRuUgcAd2Bn1JUnRoXFE+VdPwdNmDbOvSLr85GV7Z
-        U1ZrLVl5P/z1FaB9K4RGtkz1nOE+4Bdg8fSro6T74MIM4UFu5XNXKohLXigAfN28pLcQk/
-        QLMDDKj7NNOXiDSSG7sglUTb+O97iws=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-244-5J3rQyDiMHeKboA2VdWEqw-1; Wed, 12 Aug 2020 07:28:33 -0400
-X-MC-Unique: 5J3rQyDiMHeKboA2VdWEqw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 56817802B54;
-        Wed, 12 Aug 2020 11:28:31 +0000 (UTC)
-Received: from ws.net.home (unknown [10.40.193.69])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id CA50710013D7;
-        Wed, 12 Aug 2020 11:28:27 +0000 (UTC)
-Date:   Wed, 12 Aug 2020 13:28:25 +0200
-From:   Karel Zak <kzak@redhat.com>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     Steven Whitehouse <swhiteho@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Christian Brauner <christian@brauner.io>,
-        Lennart Poettering <lennart@poettering.net>,
-        Linux API <linux-api@vger.kernel.org>,
-        Ian Kent <raven@themaw.net>,
-        LSM <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: file metadata via fs API
-Message-ID: <20200812112825.b52tqeuro2lquxlw@ws.net.home>
-References: <CAJfpegu8omNZ613tLgUY7ukLV131tt7owR+JJ346Kombt79N0A@mail.gmail.com>
- <CAJfpegtNP8rQSS4Z14Ja4x-TOnejdhDRTsmmDD-Cccy2pkfVVw@mail.gmail.com>
- <20200811135419.GA1263716@miu.piliscsaba.redhat.com>
- <CAHk-=wjzLmMRf=QG-n+1HnxWCx4KTQn9+OhVvUSJ=ZCQd6Y1WA@mail.gmail.com>
- <52483.1597190733@warthog.procyon.org.uk>
- <CAJfpegt=cQ159kEH9zCYVHV7R_08jwMxF0jKrSUV5E=uBg4Lzw@mail.gmail.com>
- <98802.1597220949@warthog.procyon.org.uk>
- <CAJfpegsVJo9e=pHf3YGWkE16fT0QaNGhgkUdq4KUQypXaD=OgQ@mail.gmail.com>
- <d2d179c7-9b60-ca1a-0c9f-d308fc7af5ce@redhat.com>
- <CAJfpeguMjU+n-JXE6aUQQGeMpCS4bsy4HQ37NHJ8aD8Aeg2qhA@mail.gmail.com>
+        Wed, 12 Aug 2020 07:32:22 -0400
+Received: by mail-ej1-f67.google.com with SMTP id a26so1881214ejc.2;
+        Wed, 12 Aug 2020 04:32:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=brfsqhn404ISuUjobpKwYoB7OONsvgdICzG9pW1COa8=;
+        b=ox4/vLmOArkZIU4zP4UZRubOcRLb7izkW8U1E9ZcG9Z64pK3RJjP4ccYlG4esfIuoA
+         YvLy8h/VYwcQpurKpjlYL+3LpElUfn+0HdrcL6AIOj6/iXWwastgZLK1Oz/AsCcy2e2U
+         1PxlWr79bt/V94pFka1ipAKWALi37JQIGV/SlfRdLZDSrLqidMBrRGax/3g6e4BwI6YM
+         6abJ+gjIk6S9v3yy+FoAa9tgxEkTHvQTOoXQeVkSctoWXQRKDiro2gacoRDkjpvhHuYO
+         +fgwjLAcSm9kzbxSU25qtuJe77UBiNdier3iSL9ceqyMufTcpuGBn8lDmd/abUIA5UuJ
+         v2Gg==
+X-Gm-Message-State: AOAM530My2kX9SZEFimgLzFFbjKtgI8F5/6AHBawgaJkTbCTrx3iNHSV
+        sruEURGGD/3BbfneQkY7sWBCbTgs
+X-Google-Smtp-Source: ABdhPJwznBtRzEdV1RdC0CPkobZwQIGHVvjO+eisjr86rW5D2FGCrOzHZiHBUFz8C8OVUpOoQ54d9w==
+X-Received: by 2002:a17:906:4094:: with SMTP id u20mr30065707ejj.553.1597231940422;
+        Wed, 12 Aug 2020 04:32:20 -0700 (PDT)
+Received: from ?IPv6:2a0b:e7c0:0:107::70f? ([2a0b:e7c0:0:107::70f])
+        by smtp.gmail.com with ESMTPSA id y26sm1265142edu.96.2020.08.12.04.32.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Aug 2020 04:32:19 -0700 (PDT)
+Subject: Re: [PATCH 1/2] tty/sysrq: Extend the sysrq_key_table to cover
+ capital letters
+To:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-input@vger.kernel.org, kernel@collabora.com
+References: <20200804162402.2087-1-andrzej.p@collabora.com>
+ <20200804162402.2087-2-andrzej.p@collabora.com>
+From:   Jiri Slaby <jirislaby@kernel.org>
+Message-ID: <344cb9b6-c490-c1f5-18df-46e4215f361b@kernel.org>
+Date:   Wed, 12 Aug 2020 13:32:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJfpeguMjU+n-JXE6aUQQGeMpCS4bsy4HQ37NHJ8aD8Aeg2qhA@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <20200804162402.2087-2-andrzej.p@collabora.com>
+Content-Type: text/plain; charset=iso-8859-2
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 12:04:14PM +0200, Miklos Szeredi wrote:
-> On Wed, Aug 12, 2020 at 11:43 AM Steven Whitehouse <swhiteho@redhat.com> wrote:
-> >
-> > Hi,
-> >
-> > On 12/08/2020 09:37, Miklos Szeredi wrote:
-> > [snip]
-> > >
-> > > b) The awarded performance boost is not warranted for the use cases it
-> > > is designed for.
+On 04. 08. 20, 18:24, Andrzej Pietrasiewicz wrote:
+> All slots in sysrq_key_table[] are either used, reserved or at least
+> commented with their intended use. This patch adds capital letter versions
+> available, which means adding 26 more entries.
 > 
-> >
-> > This is a key point. One of the main drivers for this work is the
-> > efficiency improvement for large numbers of mounts. Ian and Karel have
-> > already provided performance measurements showing a significant benefit
-> > compared with what we have today. If you want to propose this
-> > alternative interface then you need to show that it can sustain similar
-> > levels of performance, otherwise it doesn't solve the problem. So
-> > performance numbers here would be helpful.
-> 
-> Definitely.   Will measure performance with the interface which Linus proposed.
+> For already existing SysRq operations the user presses Alt-SysRq-<key>, and
+> for the newly added ones Alt-Shift-SysRq-<key>.
 
-The proposal is based on paths and open(), how do you plan to deal
-with mount IDs? David's fsinfo() allows to ask for mount info by mount
-ID and it works well with mount notification where you get the ID. The
-collaboration with notification interface is critical for our use-cases.
+You need to update the help_msg of sysrq_drm_fb_helper_restore_op. It
+states sysrq-V (capital V) is the right one. From now on, it isn't
 
-    Karel
-
+thanks,
 -- 
- Karel Zak  <kzak@redhat.com>
- http://karelzak.blogspot.com
-
+js
+suse labs
