@@ -2,131 +2,110 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A62BC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7669CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:05:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1208520774
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:03:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42F8F206B2
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:05:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="F9jHTSF7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbgHLJDX (ORCPT
+        id S1726984AbgHLJFd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 05:03:23 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:43155 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726255AbgHLJDW (ORCPT
+        Wed, 12 Aug 2020 05:05:33 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:52308 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726572AbgHLJFc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 05:03:22 -0400
-Received: by mail-ot1-f67.google.com with SMTP id r21so1349040ota.10;
-        Wed, 12 Aug 2020 02:03:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gUAKmWocimbWFJByMnP/SETTkQ6pqljqZpa74N4jY3c=;
-        b=XjNLEWlrQRZukwK8sfGRYwjeXFvlWqbdNeZOZouWhNdlsqpT32oEFHPalzuRyuFH/V
-         QEb3B2JmPzHb5I1s7e5BUyy2Cqjvgx+JuG2Pv5L85GULQaxp+fFGIwEo9mdodKy8Jqib
-         O3mZY+fp0Yqwriz09a4hHAq8G+ns1Ve3WNIq1KozfIWlkkAD7P3UhuW9hntQAyGhG9xK
-         vj3sD5cpyozsoubYxRZ/PWqhiqgaCwrIzar2piHyle6yP8kYxK9B8AQpDGS8AkLVyLfL
-         SNPwF6YdB9Q9fSzt73NQoYUrdTc6McYxcRz5+vsnbwkyelsOcbR8gpIyaVA4CgXoGlKk
-         DLag==
-X-Gm-Message-State: AOAM532AzBmkInFQeefZKsmftV70ZHT7JVlxzYHLmc7bmipMISvK3JlH
-        9cQyqPOoIQVnFFkj6KF6chM9URehFgvtUtOZbw8=
-X-Google-Smtp-Source: ABdhPJzz/L+SWk+xdR5ktmbiR9Qq6v6uAoWmIpmjcT8Qrbb1QB5w0us/LpTaAW+Q/PdpbWdBGNPRSnKICnxnB4wQDU0=
-X-Received: by 2002:a9d:7d8c:: with SMTP id j12mr8529371otn.250.1597223001253;
- Wed, 12 Aug 2020 02:03:21 -0700 (PDT)
+        Wed, 12 Aug 2020 05:05:32 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597223132; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=iNoMFzi6wivdS43d2jnSYlOQT+G0stMjqpRwc/JfHtg=; b=F9jHTSF7x259KjTaq/dBnesNwMfOl5Kfv8S6I6P61UAxPlt/h2RkC3jZlJkRy/pXep3tIkXM
+ 1KhQzV3Gz6vEX1BwwmOn5YCZM4q6fWbXBaRsNOZwr1RjD6R3kJJy/Sx282plbfUVVafaG5dc
+ auzrRyQlfwVtBIefFEmFiVXrPfU=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n06.prod.us-west-2.postgun.com with SMTP id
+ 5f33b0ce4c787f237b791f7b (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 12 Aug 2020 09:05:18
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A205DC43395; Wed, 12 Aug 2020 09:05:18 +0000 (UTC)
+Received: from [10.206.24.160] (unknown [202.46.22.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sanm)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D234EC433C9;
+        Wed, 12 Aug 2020 09:05:13 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D234EC433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sanm@codeaurora.org
+Subject: Re: [PATCH v11 1/2] usb: dwc3: qcom: Add interconnect support in dwc3
+ driver
+To:     Felipe Balbi <balbi@kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+References: <1595869597-26049-1-git-send-email-sanm@codeaurora.org>
+ <1595869597-26049-2-git-send-email-sanm@codeaurora.org>
+ <20200727192050.GD3191083@google.com>
+ <cd5c6c99-d8ee-da59-1abf-e64e5f7f6f8f@codeaurora.org>
+ <87v9honyff.fsf@kernel.org>
+From:   "Sandeep Maheswaram (Temp)" <sanm@codeaurora.org>
+Message-ID: <322d193c-d4d2-789b-ffec-ebdee2730c1e@codeaurora.org>
+Date:   Wed, 12 Aug 2020 14:35:11 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-References: <20200811140357.564-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20200811140357.564-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 12 Aug 2020 11:03:09 +0200
-Message-ID: <CAMuHMdWZ+NPRWvDiM8V++UPKnvPP55OzPNHDhoP_RX0fb1Lx2Q@mail.gmail.com>
-Subject: Re: [PATCH v2] arm64: defconfig: Enable R-Car PCIe endpoint driver
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <87v9honyff.fsf@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar,
+Hi
 
-CC PCI endpoint people
-
-On Tue, Aug 11, 2020 at 4:04 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Enable R-Car PCIe endpoint driver on RZ/G2E board, including enabling
-> endpoint configurations CONFIG_PCI_ENDPOINT, CONFIG_PCI_ENDPOINT_CONFIGFS,
-> CONFIG_PCI_EPF_TEST and CONFIG_PCI_ENDPOINT_TEST required to use and test
-> the driver.
+On 8/12/2020 12:27 PM, Felipe Balbi wrote:
+> "Sandeep Maheswaram (Temp)" <sanm@codeaurora.org> writes:
 >
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
-> v1->v2
-> * Made CONFIG_PCI_EPF_TEST and CONFIG_PCI_ENDPOINT_TEST as modules
+>> Hi Felipe,
+>>
+>> On 7/28/2020 12:50 AM, Matthias Kaehlcke wrote:
+>>> On Mon, Jul 27, 2020 at 10:36:36PM +0530, Sandeep Maheswaram wrote:
+>>>> Add interconnect support in dwc3-qcom driver to vote for bus
+>>>> bandwidth.
+>>>>
+>>>> This requires for two different paths - from USB to
+>>>> DDR. The other is from APPS to USB.
+>>>>
+>>>> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+>>>> Signed-off-by: Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+>>> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+>> Please ack if you are ok with this patch.
+> What's the plan to get this upstream? Should I take dwc3-qcom patch and
+> ignore the rest? Is there a hard-dependency on something else?
+Yes take dwc3-qcom patch only,the dt change is already in linux-next.
 
-Thanks for the update!
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v5.10.
-
-However, as no core PCI code seems to depend on CONFIG_PCI_ENDPOINT, I
-would like to request the PCI endpoint people to consider making all PCI
-endpoint support tristate, so we can revisit this change to the arm64
-defconfig later.
-
-Thanks!
-
-> --- a/arch/arm64/configs/defconfig
-> +++ b/arch/arm64/configs/defconfig
-> @@ -208,6 +208,7 @@ CONFIG_HOTPLUG_PCI_ACPI=y
->  CONFIG_PCI_AARDVARK=y
->  CONFIG_PCI_TEGRA=y
->  CONFIG_PCIE_RCAR_HOST=y
-> +CONFIG_PCIE_RCAR_EP=y
->  CONFIG_PCI_HOST_GENERIC=y
->  CONFIG_PCI_XGENE=y
->  CONFIG_PCIE_ALTERA=y
-> @@ -224,6 +225,9 @@ CONFIG_PCIE_ARMADA_8K=y
->  CONFIG_PCIE_KIRIN=y
->  CONFIG_PCIE_HISI_STB=y
->  CONFIG_PCIE_TEGRA194_HOST=m
-> +CONFIG_PCI_ENDPOINT=y
-> +CONFIG_PCI_ENDPOINT_CONFIGFS=y
-> +CONFIG_PCI_EPF_TEST=m
->  CONFIG_DEVTMPFS=y
->  CONFIG_DEVTMPFS_MOUNT=y
->  CONFIG_FW_LOADER_USER_HELPER=y
-> @@ -254,6 +258,7 @@ CONFIG_BLK_DEV_NBD=m
->  CONFIG_VIRTIO_BLK=y
->  CONFIG_BLK_DEV_NVME=m
->  CONFIG_SRAM=y
-> +CONFIG_PCI_ENDPOINT_TEST=m
->  CONFIG_EEPROM_AT24=m
->  CONFIG_EEPROM_AT25=m
->  CONFIG_UACCE=m
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
