@@ -2,96 +2,208 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D9FAC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 00:19:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4A55C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 00:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E83920756
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 00:19:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF64220782
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 00:27:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="oxTXEciB"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="bOedF8cn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726611AbgHLATI (ORCPT
+        id S1726503AbgHLA1s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 20:19:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57124 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726143AbgHLATH (ORCPT
+        Tue, 11 Aug 2020 20:27:48 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:11622 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726310AbgHLA1q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 20:19:07 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C1ACC06174A
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 17:19:07 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id c19so3113351wmd.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 17:19:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=YEjwPZh5RXt3Ie4FbKarHOy1S3LP80s3dHh0ey0Ay4c=;
-        b=oxTXEciBXvnoM4ZLAb8X5sfDonmIlC+BBp8vPKTxI3GL6ri2Fp0SBg69HUYV0+50dy
-         hoaCxYBxWL7N/kYFMTRWL23dGWY4xtzMaBW6350pxKg9sD3t0bgXSyW9HkBBUNLB7+fn
-         kdqveXEEa+wJnIDhUOxFrGuQEMXkBEEDCGEKbTWTGByO2v8fpAIccs1LlsDE/8AG8Usy
-         lY7BnpqF3vUverHMsV+w5jpI/qoZaSHivLLBYPNlhT/bsdeljxKvF9vsyT8WDvdsEWM3
-         u1kQ82vIkN/EeQVy7U5o0WqyH57XTsmvXB4O8y8iiI+u4PzL8XRrHsECY4k8Cx3L/FWR
-         Wt2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=YEjwPZh5RXt3Ie4FbKarHOy1S3LP80s3dHh0ey0Ay4c=;
-        b=sHPtdy7y7Djcse1gPxRrnxABiwGsrm10pshRs7Mlc73hctYdowFFP0ZzNqAO7LPJgp
-         uHfPsWkdVSiSZcRJQExfHmKUgwwztI/30N+6d/629yKfbmxaoK326h70ZOv6r5EFLZja
-         vEx8+ywP6ckjq7iP+ycBxKjsxYJB3OosoMig2D4yG8/KdvNnPxX7rCZxkbqf07HcWI3r
-         L0thXfDYHQTcqUPBza/0GSBMOHGF/szmS4zusOx11wsdCFmsry7VlyVKTla1J+vImq9f
-         IIkf8v8hH3pi10eMBx8uQRy+HrIUlxn8lDovqSH1Ur08hH2y9+y/g9uG/XuZlADHucqc
-         Oz+w==
-X-Gm-Message-State: AOAM533smcHtwKyIaFNHNh6AU2sLe1n4+r4w+8RvEpXrJ3vNb0odF/2Y
-        oY0XXn1/yOqo2UnIux2TS28wfg==
-X-Google-Smtp-Source: ABdhPJx1rPs1jQi+VpfsboKy/mFx11ZgBxMh2H/MVyfAqyy8DznA/GYinlhj+AbBtVqFp1QrxeOV+A==
-X-Received: by 2002:a1c:2742:: with SMTP id n63mr5827207wmn.24.1597191546141;
-        Tue, 11 Aug 2020 17:19:06 -0700 (PDT)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.gmail.com with ESMTPSA id j5sm747480wmb.12.2020.08.11.17.19.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Aug 2020 17:19:05 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Sibi Sankar <sibis@codeaurora.org>, bjorn.andersson@linaro.org,
-        ulf.hansson@linaro.org, rjw@rjwysocki.net
-Cc:     agross@kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
-        gregkh@linuxfoundation.org, pavel@ucw.cz, len.brown@intel.com,
-        rnayak@codeaurora.org, dianders@chromium.org, khilman@kernel.org,
-        Sibi Sankar <sibis@codeaurora.org>
-Subject: Re: [PATCH 1/2] PM / Domains: Add GENPD_FLAG_SUSPEND_ON flag
-In-Reply-To: <20200811190252.10559-1-sibis@codeaurora.org>
-References: <20200811190252.10559-1-sibis@codeaurora.org>
-Date:   Tue, 11 Aug 2020 17:19:03 -0700
-Message-ID: <7heeoc3edk.fsf@baylibre.com>
+        Tue, 11 Aug 2020 20:27:46 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f3337170000>; Tue, 11 Aug 2020 17:25:59 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 11 Aug 2020 17:27:45 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 11 Aug 2020 17:27:45 -0700
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 12 Aug
+ 2020 00:27:44 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 12 Aug 2020 00:27:44 +0000
+Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.172.8]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5f33377f0002>; Tue, 11 Aug 2020 17:27:44 -0700
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
+        <helen.koike@collabora.com>
+CC:     <digetx@gmail.com>, <gregkh@linuxfoundation.org>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v10 00/10] Support for Tegra video capture from external sensor
+Date:   Tue, 11 Aug 2020 17:27:11 -0700
+Message-ID: <1597192041-16949-1-git-send-email-skomatineni@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1597191959; bh=BkaOfeVRfBeOWmVevZWhx7jAg2Xxe4mBlWb2vvEL8W4=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=bOedF8cnW/Em1W68vtfDlR6BuUIPfVnQ1Ll6rJspDfDywFnkGHPT6vVp+vz5j6T6f
+         24N6o/9/1UTQxVrkjhIH/CQWuSuyozLwoSuQ7UazBG/ZK9Dc/zSVtcMV67PSbIle0u
+         DARlCDmrW8sSTQuJdtJCNBE+llv6NC13wVs6aS17v8lBnur376aJPLmHp2EaDeOOSd
+         Uj8LhiQAP9PUInKpLrjY4X1NMEflkRyxN1Uoo1DLCr2RYdQYFrM+tP2BUaLTOkj+uZ
+         Qha64b9SWhfH0/a9VEJLAJj0duLXD3HZHGAKFxmTYTPgRZuOaf9GQfMprNonbBFmTx
+         Bdesmk6HEmq5Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sibi Sankar <sibis@codeaurora.org> writes:
+This series adds support for video capture from external camera sensor to
+Tegra video driver.
 
-> This is for power domains which needs to stay powered on for suspend
-> but can be powered on/off as part of runtime PM. This flag is aimed at
-> power domains coupled to remote processors which enter suspend states
-> independent to that of the application processor. Such power domains
-> are turned off only on remote processor crash/shutdown.
->
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+Jetson TX1 has camera expansion connector and supports custom camera module
+designed as per TX1 design specification.
 
-Seems like a useful use-case, but i think there should be a bit more
-description/documentation about what is the expected/desired behavior
-during system suspsend when a power-domain with this flag is already
-runtime-PM suspended.  Similarily, on system resume, what is the
-expected/desired behavior?
+This series also enables camera capture support for Jetson Nano which has
+Raspberry PI camera header.
 
-Kevin
+This series is tested with IMX274 and IMX219 camera sensors.
+
+This series include,
+
+Tegra video driver updates
+- TPG Vs Non-TPG based on Kconfig
+- Support for external sensor video capture based on device graph from DT
+- Support for selection ioctl operations
+- Tegra MIPI CSI pads calibration
+- CSI T-CLK and T-HS settle time computation based on clock rates
+- dt-binding doc update
+
+Host1x driver updates
+- Keep MIPI clock enabled till calibration is done
+
+Delta between patch versions:
+[v10]:	Includes
+	- Patch-0009: correction to error variable used in dev_warn message.
+
+[v9]:	Includes below fix
+	- Remove cancel_calibration() added during v4 and use
+	  finish_calibrate for pass/fail paths after start_calibrate.
+	- Fix to keep MIPI clock enabled and mutex locked till end of
+	  calibration along with 75usec wait time after calibration start
+	  to make sure it finishes its finite sequence codes before waiting
+	  for pads LP-11 state.
+
+[v8]:	Includes below minor changes
+	- Fixed missing of_node_put and updated error message to be
+	  more informative in tegra_csi_channels_alloc() and
+	  tegra_vi_channels_alloc()
+
+	Patch-0006 has compilation dependency on
+	https://patchwork.kernel.org/patch/11659521/
+
+[v7]:	Includes minor feedback from v6
+	- Patch-0009 has minor update
+
+	Note:
+	Patch-0006 has compilation dependency on
+	https://patchwork.kernel.org/patch/11659521/
+
+[v6]:	Includes below changes based on v5 feedback
+	- Patches are based on latest linux-next.
+	- separated stream enable and disable implementations into
+	  separate functions for tegra_channel_set_stream() and
+	  tegra_csi_s_stream().
+	- changed dev_err to dev_warn on MIPI calibration failure after
+	  sensor streaming as its not critical error.
+
+	Note:
+	Patch-0006 has compilation dependency on
+	https://patchwork.kernel.org/patch/11659521/
+
+[v5]:	Includes below minor change based on v4 feedback
+	Patch-0012: renames APIs to use calibration instead of calibrate.
+
+	Note:
+	Patch-0010 has compilation dependency on
+	https://patchwork.kernel.org/patch/11659521/
+
+[v4]:	Includes below fix based on v3 feedback
+	- Patches are based on latest linux-next.
+	- With split of tegra_mipi_calibrate() and tegra_mipi_wait(), mipi
+	  clock is not left enabled till calibration done. This series adds
+	  a patch to fix this by keeping clock enabled till calibration is
+	  done.
+
+	Note:
+	Patch-0010 has compilation dependency on
+	https://patchwork.kernel.org/patch/11659521/
+
+[v3]:	Includes v2 feedback
+	- Uses separate helper function for retrieving remote csi subdevice
+	  and source subdevice.
+	- Added check for presence of subdevice ops set/get_selection
+	- dropped vb2_queue_release from driver and using
+	  vb2_video_unregister_device instead of video_unregister_device.
+	- video device register should happen in the last after all video
+	  device related setup is done in the driver. This is being addressed
+	  in below RFC patch. Once proper implementation of this is available
+	  will update Tegra video driver to use split APIs and do all setup
+	  prior to device register. Added this as TODO in the driver.
+	  https://www.spinics.net/lists/linux-media/msg172761.html
+
+	Note:
+	Patch-0012 has compilation dependency on
+	https://patchwork.kernel.org/patch/11659521/
+
+
+[v2]:	Includes below changes based on v1 feedback
+	- dt-binding document and the driver update for device graph to use
+	  separate ports for sink endpoint and source endpoint for csi.
+	- Use data-lanes endpoint property for csi.
+	- Update tegra_mipi_request() to take device node pointer argument
+	  rather than adding extra API.
+	- Remove checking for clk pointer before clk_disable.
+
+
+Sowjanya Komatineni (10):
+  media: tegra-video: Fix channel format alignment
+  media: tegra-video: Enable TPG based on kernel config
+  media: tegra-video: Update format lookup to offset based
+  dt-bindings: tegra: Update VI and CSI bindings with port info
+  media: tegra-video: Separate CSI stream enable and disable
+    implementations
+  media: tegra-video: Add support for external sensor capture
+  media: tegra-video: Add support for selection ioctl ops
+  gpu: host1x: mipi: Keep MIPI clock enabled and mutex locked till
+    calibration done
+  media: tegra-video: Add CSI MIPI pads calibration
+  media: tegra-video: Compute settle times based on the clock rate
+
+ .../display/tegra/nvidia,tegra20-host1x.txt        |  92 ++-
+ drivers/gpu/drm/tegra/dsi.c                        |   4 +-
+ drivers/gpu/host1x/mipi.c                          |  22 +-
+ drivers/staging/media/tegra-video/Kconfig          |   7 +
+ drivers/staging/media/tegra-video/TODO             |   6 -
+ drivers/staging/media/tegra-video/csi.c            | 314 +++++++-
+ drivers/staging/media/tegra-video/csi.h            |   8 +
+ drivers/staging/media/tegra-video/tegra210.c       |  25 +-
+ drivers/staging/media/tegra-video/vi.c             | 840 +++++++++++++++++++--
+ drivers/staging/media/tegra-video/vi.h             |  25 +-
+ drivers/staging/media/tegra-video/video.c          |  23 +-
+ include/linux/host1x.h                             |   4 +-
+ 12 files changed, 1250 insertions(+), 120 deletions(-)
+
+-- 
+2.7.4
+
