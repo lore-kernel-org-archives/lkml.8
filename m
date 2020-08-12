@@ -2,104 +2,115 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF2DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:56:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 198E1C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:57:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 753F4207F7
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:56:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="ck1I2Xw5"
+	by mail.kernel.org (Postfix) with ESMTP id D537622B45
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:57:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597247823;
+	bh=oHFGCA4Xsb3f0Wc/G5uhBYxGg3jXhNGSQwInGaAMvGo=;
+	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
+	b=ORqAyuPH+3hop7F8rpm8uqBlICM6H4Xk/bGeSmAfGbAuRxVovp3puhiQX7gWWWFmz
+	 3h3Psp/63oVK1U2y7OxZ63QwPCSkyPtgC09KQE3R57CSxlo40k+TpVA+uqUqVUvg3n
+	 kIDkLb8ee7Hi96WfTA9OZdUSoEc5i0FLSVwmzapw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbgHLP4e (ORCPT
+        id S1726658AbgHLP5C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 11:56:34 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.51]:18906 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726150AbgHLP4e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 11:56:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1597247792;
-        s=strato-dkim-0002; d=gerhold.net;
-        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=OSjvd7G+zioql212JD4p59KZiEpBAmk13HwupraTamg=;
-        b=ck1I2Xw5jcVneUBZ9Qr+6SHMKqEva+gM1W5US6RC3aQ7FVnfrvXfqaphGLs/BL88Yf
-        WgZUGCCX9TxT7frWn7bVZ8bV1nX1OVrf+bYBYyMNODtYQOQQocWNIp0cMfWWz+zOvfmn
-        /DXo2zdgq4JgLAAiQ/dYLc8NLM8C5GrC3Z3HNEK9HywQXvtswVofBqHzYamPdKAGm5gd
-        k0wRN6GiXeQjX+PLyV8F8CksuFSh/8pWk1Tz93rznaXOwk65yDwDEnGZUt63Znjtreo4
-        XsJvscflepWZsY/IZ6gL/IpP9cKdyjFes2YVga+I0rgqVXUA1tPvuU8sF/OMjow9udU8
-        hvcg==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u26zEodhPgRDZ8j6Ic/MbIo="
-X-RZG-CLASS-ID: mo00
-Received: from gerhold.net
-        by smtp.strato.de (RZmta 46.10.5 DYNA|AUTH)
-        with ESMTPSA id Y0939ew7CFuUtTn
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Wed, 12 Aug 2020 17:56:30 +0200 (CEST)
-Date:   Wed, 12 Aug 2020 17:56:25 +0200
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
+        Wed, 12 Aug 2020 11:57:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45460 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726506AbgHLP5A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 11:57:00 -0400
+Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5367B20866;
+        Wed, 12 Aug 2020 15:56:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597247819;
+        bh=oHFGCA4Xsb3f0Wc/G5uhBYxGg3jXhNGSQwInGaAMvGo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=sgBb3qB0AGgiXkVzwMVzYfEozfRmAcmgKTcSwMaTODIplMAwO3AW4DSTb/zQDgWaS
+         iLD7Fihw8oORCWPZGJHCf5j7QHGuCJ/tfHyGSYyRJWveOrTUZbJMzMkIyfqxLMaYLX
+         rXHJ4ZyJu4epi7Y6iRHeCH4SnCHAmHv4j/WF0CjI=
+Received: from mchehab by mail.kernel.org with local (Exim 4.94)
+        (envelope-from <mchehab@kernel.org>)
+        id 1k5t7Z-005t5e-DE; Wed, 12 Aug 2020 17:56:57 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Niklas Cassel <nks@flawful.org>
-Subject: Re: [RFC PATCH 1/2] opp: Allow dev_pm_opp_get_opp_table() to return
- -EPROBE_DEFER
-Message-ID: <20200812155625.GA1048@gerhold.net>
-References: <20200727093047.8274-1-stephan@gerhold.net>
- <CAPDyKFq9bbMZD7ifF=ipfBD3ayiLuc6RPwW8_RWZBxMGv_WZkw@mail.gmail.com>
- <20200812105333.GA913@gerhold.net>
- <20200812150122.dennzvxfzk4fyxm2@vireshk-mac-ubuntu>
+        linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org
+Subject: [PATCH 03/44] staging: spmi: hisi-spmi-controller: fix it to probe successfully
+Date:   Wed, 12 Aug 2020 17:56:13 +0200
+Message-Id: <8c4b9401958345ebe76d2bd08d93528229d8af5a.1597247164.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <cover.1597247164.git.mchehab+huawei@kernel.org>
+References: <cover.1597247164.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200812150122.dennzvxfzk4fyxm2@vireshk-mac-ubuntu>
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Viresh,
+Add a MODULE_DEVICE_TABLE() to the driver.
 
-On Wed, Aug 12, 2020 at 08:31:22PM +0530, Viresh Kumar wrote:
-> On 12-08-20, 12:53, Stephan Gerhold wrote:
-> > I have another small build fix reported by the kernel test robot,
-> > but will wait with sending that out until Viresh had a chance to give
-> > some feedback on the basic idea. :)
-> 
-> What was the issue that was reported ? I may end up applying V1 only
-> with some of my changes.
-> 
+Also, the current logic calls platform_set_drvdata(pdev, NULL)
+if the driver succeeds loading.
 
-It was this build error on SH (for the second patch):
+While here, remove the .owner, as it is not needed upstream
+anymore.
 
->> drivers/cpufreq/cpufreq-dt.c:36:29: error: conflicting types for 'cpu_data'
-      36 | static struct private_data *cpu_data;
-         |                             ^~~~~~~~
-   In file included from arch/sh/include/asm/thread_info.h:27,
-                    from include/linux/thread_info.h:38,
-                    from include/asm-generic/current.h:5,
-                    from ./arch/sh/include/generated/asm/current.h:1,
-                    from include/linux/mutex.h:14,
-                    from include/linux/notifier.h:14,
-                    from include/linux/clk.h:14,
-                    from drivers/cpufreq/cpufreq-dt.c:11:
-   arch/sh/include/asm/processor.h:90:26: note: previous declaration of 'cpu_data' was here
-      90 | extern struct sh_cpuinfo cpu_data[];
-         |                          ^~~~~~~~
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ drivers/staging/hikey9xx/hisi-spmi-controller.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-I fixed it by renaming "cpu_data" to "cpufreq_dt_data". (I could not
-think of a better name so feel free to use something else...)
+diff --git a/drivers/staging/hikey9xx/hisi-spmi-controller.c b/drivers/staging/hikey9xx/hisi-spmi-controller.c
+index 3af0bd1b379f..bc6847f9a5e7 100644
+--- a/drivers/staging/hikey9xx/hisi-spmi-controller.c
++++ b/drivers/staging/hikey9xx/hisi-spmi-controller.c
+@@ -324,11 +324,14 @@ static int spmi_controller_probe(struct platform_device *pdev)
+ 	ctrl->write_cmd = spmi_write_cmd;
+ 
+ 	ret = spmi_controller_add(ctrl);
+-	if (ret) {
+-		dev_err(&pdev->dev, "spmi_add_controller failed!\n");
++	if (ret)
+ 		goto err_add_controller;
+-	}
++
++	dev_info(&pdev->dev, "spmi_add_controller initialized\n");
++	return 0;
++
+ err_add_controller:
++	dev_err(&pdev->dev, "spmi_add_controller failed!\n");
+ 	platform_set_drvdata(pdev, NULL);
+ 	return ret;
+ }
+@@ -347,13 +350,13 @@ static const struct of_device_id spmi_controller_match_table[] = {
+ 	},
+ 	{}
+ };
++MODULE_DEVICE_TABLE(of, spmi_controller_match_table);
+ 
+ static struct platform_driver spmi_controller_driver = {
+ 	.probe		= spmi_controller_probe,
+ 	.remove		= spmi_del_controller,
+ 	.driver		= {
+ 		.name	= SPMI_CONTROLLER_NAME,
+-		.owner	= THIS_MODULE,
+ 		.of_match_table = spmi_controller_match_table,
+ 	},
+ };
+-- 
+2.26.2
 
-Thanks!
-Stephan
