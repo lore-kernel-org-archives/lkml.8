@@ -2,216 +2,155 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC0EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 03:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 959B3C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 03:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B708320756
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 03:19:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=tencent.com header.i=@tencent.com header.b="bRtJhz5M"
+	by mail.kernel.org (Postfix) with ESMTP id 6AF4820675
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 03:23:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbgHLDTs (ORCPT
+        id S1726557AbgHLDXO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 23:19:48 -0400
-Received: from mail4.tencent.com ([183.57.53.109]:42698 "EHLO
-        mail4.tencent.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726333AbgHLDTr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 23:19:47 -0400
-Received: from EX-SZ020.tencent.com (unknown [10.28.6.40])
-        by mail4.tencent.com (Postfix) with ESMTP id 2E73B723D4;
-        Wed, 12 Aug 2020 11:19:39 +0800 (CST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tencent.com;
-        s=s202002; t=1597202379;
-        bh=BOlfSTGBApzP2Or/8GExSknV96/kZ5hx6nI5I8/7HNA=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=bRtJhz5MmpTPRAYHzjj3/9rFgIXmFKujPve+JFZR7U8TPKQtImqKRJkeFd6A4DwX7
-         9P3aJAsw/nIucCkzdf9E7DRyjNyYU87HCmx1LPSHkxYTC4OtjIVrd4do1opMVm+dw8
-         1dW2vqO0mc3sqFhSsP84aT62TKfJtwywg5FeHd0k=
-Received: from EX-SZ004.tencent.com (10.28.6.25) by EX-SZ020.tencent.com
- (10.28.6.40) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Wed, 12 Aug
- 2020 11:19:38 +0800
-Received: from EX-SZ012.tencent.com (10.28.6.36) by EX-SZ004.tencent.com
- (10.28.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Wed, 12 Aug
- 2020 11:19:38 +0800
-Received: from EX-SZ012.tencent.com ([fe80::f57b:8971:e6d4:fe6b]) by
- EX-SZ012.tencent.com ([fe80::f57b:8971:e6d4:fe6b%3]) with mapi id
- 15.01.1847.007; Wed, 12 Aug 2020 11:19:38 +0800
-From:   =?utf-8?B?YmVuYmppYW5nKOiSi+W9qik=?= <benbjiang@tencent.com>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-CC:     Jiang Biao <benbjiang@gmail.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
-        "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "bsegall@google.com" <bsegall@google.com>,
-        "mgorman@suse.de" <mgorman@suse.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] sched/fair: reduce preemption with IDLE tasks
- runable(Internet mail)
-Thread-Topic: [PATCH] sched/fair: reduce preemption with IDLE tasks
- runable(Internet mail)
-Thread-Index: AQHWZ6wckGsZD+WUv0OJdOJkfcOxRKklh1uAgAA1DACABNlRgIAAJ90AgAYgFwCAAL04gIAA/wuAgAC/bYA=
-Date:   Wed, 12 Aug 2020 03:19:38 +0000
-Message-ID: <70236E62-AA36-48C1-9382-86353649253C@tencent.com>
-References: <20200801023248.90104-1-benbjiang@gmail.com>
- <5ed0fd46-3a3d-3c1a-5d75-03a74864e640@arm.com>
- <592F24A7-BF43-457D-AC40-DC5E35279730@tencent.com>
- <8bef1f94-f9bf-08a5-2ff3-3485d7796a96@arm.com>
- <8629CB9F-AFC8-43D6-BD14-B60A0B85ADB3@tencent.com>
- <5f870781-1648-b4ac-6026-557dfc347109@arm.com>
- <CCA1D942-3669-4216-92BD-768967B1ECE5@tencent.com>
- <4964e359-afc5-a256-4950-853a9485eeff@arm.com>
-In-Reply-To: <4964e359-afc5-a256-4950-853a9485eeff@arm.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.14.87.198]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <80DA93D4B49CA34FA80DF09831FDAA92@tencent.com>
-Content-Transfer-Encoding: base64
+        Tue, 11 Aug 2020 23:23:14 -0400
+Received: from mga06.intel.com ([134.134.136.31]:41409 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726333AbgHLDXO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 23:23:14 -0400
+IronPort-SDR: Fwh8n7fy43aWXi/Gpi9Kr3MSYVXWqllrxJmJ0AZhHnq8IMsrimDU9Mq+Jtww71brxG/l8J59UE
+ yYJ2iglpNXZQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9710"; a="215396806"
+X-IronPort-AV: E=Sophos;i="5.76,302,1592895600"; 
+   d="scan'208";a="215396806"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2020 20:23:13 -0700
+IronPort-SDR: 8Ntqf9bKTlQ/6rSRI4Sr4fNm6XilpPALipbN+NNWVx33eAuERpOf0eGomaIU37KgSSYC7RpQQA
+ 9ICutRePGsvA==
+X-IronPort-AV: E=Sophos;i="5.76,302,1592895600"; 
+   d="scan'208";a="469658117"
+Received: from shao2-debian.sh.intel.com (HELO [10.239.13.3]) ([10.239.13.3])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2020 20:23:11 -0700
+Subject: Re: [kbuild-all] Re: arch/sparc/include/asm/cmpxchg_64.h:161:55:
+ sparse: sparse: cast truncates bits from constant value (ffffffffe0f510cc
+ becomes cc)
+To:     Gao Xiang <hsiangkao@redhat.com>, kernel test robot <lkp@intel.com>
+Cc:     Gao Xiang <hsiangkao@aol.com>, kbuild-all@lists.01.org,
+        linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <202008120933.YrVhHyoA%lkp@intel.com>
+ <20200812030956.GA17005@xiangao.remote.csb>
+From:   Rong Chen <rong.a.chen@intel.com>
+Message-ID: <b8dfa8cd-f3f9-d10c-fbd0-eac8067ee39c@intel.com>
+Date:   Wed, 12 Aug 2020 11:22:31 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <20200812030956.GA17005@xiangao.remote.csb>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksDQoNCj4gT24gQXVnIDExLCAyMDIwLCBhdCAxMTo1NCBQTSwgRGlldG1hciBFZ2dlbWFubiA8
-ZGlldG1hci5lZ2dlbWFubkBhcm0uY29tPiB3cm90ZToNCj4gDQo+IE9uIDExLzA4LzIwMjAgMDI6
-NDEsIGJlbmJqaWFuZyjokovlvaopIHdyb3RlOg0KPj4gSGksDQo+PiANCj4+PiBPbiBBdWcgMTAs
-IDIwMjAsIGF0IDk6MjQgUE0sIERpZXRtYXIgRWdnZW1hbm4gPGRpZXRtYXIuZWdnZW1hbm5AYXJt
-LmNvbT4gd3JvdGU6DQo+Pj4gDQo+Pj4gT24gMDYvMDgvMjAyMCAxNzo1MiwgYmVuYmppYW5nKOiS
-i+W9qikgd3JvdGU6DQo+Pj4+IEhpLCANCj4+Pj4gDQo+Pj4+PiBPbiBBdWcgNiwgMjAyMCwgYXQg
-OToyOSBQTSwgRGlldG1hciBFZ2dlbWFubiA8ZGlldG1hci5lZ2dlbWFubkBhcm0uY29tPiB3cm90
-ZToNCj4+Pj4+IA0KPj4+Pj4gT24gMDMvMDgvMjAyMCAxMzoyNiwgYmVuYmppYW5nKOiSi+W9qikg
-d3JvdGU6DQo+Pj4+Pj4gDQo+Pj4+Pj4gDQo+Pj4+Pj4+IE9uIEF1ZyAzLCAyMDIwLCBhdCA0OjE2
-IFBNLCBEaWV0bWFyIEVnZ2VtYW5uIDxkaWV0bWFyLmVnZ2VtYW5uQGFybS5jb20+IHdyb3RlOg0K
-Pj4+Pj4+PiANCj4+Pj4+Pj4gT24gMDEvMDgvMjAyMCAwNDozMiwgSmlhbmcgQmlhbyB3cm90ZToN
-Cj4+Pj4+Pj4+IEZyb206IEppYW5nIEJpYW8gPGJlbmJqaWFuZ0B0ZW5jZW50LmNvbT4NCj4gDQo+
-IFsuLi5dDQo+IA0KPj4+IEJlY2F1c2Ugb2YgdGhpcyB2ZXJ5IHNtYWxsIHdlaWdodCAod2VpZ2h0
-PTMpLCBjb21wYXJlZCB0byBhIFNDSEVEX05PUk1BTA0KPj4+IG5pY2UgMCB0YXNrICh3ZWlnaHQ9
-MTAyNCksIGEgU0NIRURfSURMRSB0YXNrIGlzIHBlbmFsaXplZCBieSBhIGh1Z2UNCj4+PiBzZS0+
-dnJ1bnRpbWUgdmFsdWUgKDEwMjQvMyBoaWdoZXIgdGhhbiBmb3IgYSBTQ0hFRF9OT1JNQUwgbmlj
-ZSAwIHRhc2spLg0KPj4+IFRoaXMgc2hvdWxkIG1ha2Ugc3VyZSBpdCBkb2Vzbid0IHRpY2sgcHJl
-ZW1wdCBhIFNDSEVEX05PUk1BTCBuaWNlIDAgdGFzay4NCj4+IENvdWxkIHlvdSBwbGVhc2UgZXhw
-bGFpbiBob3cgdGhlIGh1Z2UgcGVuYWxpemF0aW9uIG9mIHZydW50aW1lKDEwMjQvMykgY291bGQN
-Cj4+IG1ha2Ugc3VyZSBTQ0hFRF9JRExFIG5vdCB0aWNrIHByZWVtcHRpbmcgU0NIRURfTk9STUFM
-IG5pY2UgMCB0YXNrPw0KPj4gDQo+PiBUaGFua3MgYSBsb3QuDQo+IA0KPiBUcmFjZSBhIHJ1biBv
-ZiAyIFNDSEVEX09USEVSIChuaWNlIDApIHRhc2tzIGFuZCAxIFNDSEVEX0lETEUgdGFzayBvbiBh
-DQo+IHNpbmdsZSBDUFUgYW5kIHRyYWNlX3ByaW50ayB0aGUgY29uZGl0aW9ucyAgJ2lmIChkZWx0
-YSA8IDApJyBhbmQgJyBpZg0KPiAoZGVsdGEgPiBpZGVhbF9ydW50aW1lKScgaW4gY2hlY2tfcHJl
-ZW1wdF90aWNrKCkuDQo+IA0KPiBUaGVuIGRvIHRoZSBzYW1lIHdpdGggMyBTQ0hFRF9PVEhFUiAo
-bmljZSAwKSB0YXNrcy4gWW91IGNhbiBhbHNvIGNoYW5nZQ0KPiB0aGUgbmljZW5lc3Mgb2YgdGhl
-IDIgU0NIRURfT1RIRVIgdGFzayB0byAxOSB0byBzZWUgc29tZSBkaWZmZXJlbmNlcyBpbg0KPiB0
-aGUga2VybmVsc2hhcmsncyB0YXNrIGxheW91dC4NCj4gDQo+IHJ0LWFwcCAoaHR0cHM6Ly9naXRo
-dWIuY29tL3NjaGVkdWxlci10b29scy9ydC1hcHApIGlzIGEgbmljZSB0b29sIHRvDQo+IGNyYWZ0
-IHRob3NlIGFydGlmaWNpYWwgdXNlIGNhc2VzLg0KV2l0aCBydC1hcHAgdG9vbCwgc2NoZWRfc3dp
-dGNoIHRyYWNlZCBieSBmdHJhY2UsIHRoZSByZXN1bHQgaXMgYXMgd2hhdCBJIGV4cGVjdGVkLA0K
-DQoqKiAxbm9ybWFsKzFpZGxlOiBpZGxlIHByZWVtcHQgbm9ybWFsIGV2ZXJ5IDIwMG1zICoqDQog
-ICAgICAgICAgIDwuLi4+LTkyMDE2IFswMDJdIGQuLi4gMjM5ODA2Ni45MDI0Nzc6IHNjaGVkX3N3
-aXRjaDogcHJldl9jb21tPW5vcm1hbDAtMCBwcmV2X3BpZD05MjAxNiBwcmV2X3ByaW89MTIwIHBy
-ZXZfc3RhdGU9UyA9PT4gbmV4dF9jb21tPWlkbGUwLTAgbmV4dF9waWQ9OTE4MTQgbmV4dF9wcmlv
-PTEyMA0KICAgICAgICAgICA8Li4uPi05MTgxNCBbMDAyXSBkLi4uIDIzOTgwNjYuOTAyNTI3OiBz
-Y2hlZF9zd2l0Y2g6IHByZXZfY29tbT1pZGxlMC0wIHByZXZfcGlkPTkxODE0IHByZXZfcHJpbz0x
-MjAgcHJldl9zdGF0ZT1SID09PiBuZXh0X2NvbW09bm9ybWFsMC0wIG5leHRfcGlkPTkyMDE2IG5l
-eHRfcHJpbz0xMjANCiAgICAgICAgICAgPC4uLj4tOTIwMTYgWzAwMl0gZC4uLiAyMzk4MDY2Ljky
-MjQ3Mjogc2NoZWRfc3dpdGNoOiBwcmV2X2NvbW09bm9ybWFsMC0wIHByZXZfcGlkPTkyMDE2IHBy
-ZXZfcHJpbz0xMjAgcHJldl9zdGF0ZT1TID09PiBuZXh0X2NvbW09aWRsZTAtMCBuZXh0X3BpZD05
-MTgxNCBuZXh0X3ByaW89MTIwDQogICAgICAgICAgIDwuLi4+LTkxODE0IFswMDJdIGQuLi4gMjM5
-ODA2Ni45MjI1MjI6IHNjaGVkX3N3aXRjaDogcHJldl9jb21tPWlkbGUwLTAgcHJldl9waWQ9OTE4
-MTQgcHJldl9wcmlvPTEyMCBwcmV2X3N0YXRlPVIgPT0+IG5leHRfY29tbT1ub3JtYWwwLTAgbmV4
-dF9waWQ9OTIwMTYgbmV4dF9wcmlvPTEyMA0KICAgICAgICAgICA8Li4uPi05MjAxNiBbMDAyXSBk
-Li4uIDIzOTgwNjYuOTQyMjkyOiBzY2hlZF9zd2l0Y2g6IHByZXZfY29tbT1ub3JtYWwwLTAgcHJl
-dl9waWQ9OTIwMTYgcHJldl9wcmlvPTEyMCBwcmV2X3N0YXRlPVMgPT0+IG5leHRfY29tbT1pZGxl
-MC0wIG5leHRfcGlkPTkxODE0IG5leHRfcHJpbz0xMjANCiAgICAgICAgICAgPC4uLj4tOTE4MTQg
-WzAwMl0gZC4uLiAyMzk4MDY2Ljk0MjM0Mzogc2NoZWRfc3dpdGNoOiBwcmV2X2NvbW09aWRsZTAt
-MCBwcmV2X3BpZD05MTgxNCBwcmV2X3ByaW89MTIwIHByZXZfc3RhdGU9UiA9PT4gbmV4dF9jb21t
-PW5vcm1hbDAtMCBuZXh0X3BpZD05MjAxNiBuZXh0X3ByaW89MTIwDQogICAgICAgICAgIDwuLi4+
-LTkyMDE2IFswMDJdIGQuLi4gMjM5ODA2Ni45NjIzMzE6IHNjaGVkX3N3aXRjaDogcHJldl9jb21t
-PW5vcm1hbDAtMCBwcmV2X3BpZD05MjAxNiBwcmV2X3ByaW89MTIwIHByZXZfc3RhdGU9UyA9PT4g
-bmV4dF9jb21tPWlkbGUwLTAgbmV4dF9waWQ9OTE4MTQgbmV4dF9wcmlvPTEyMA0KDQoqKiAybm9y
-bWFsKzFpZGxlOiBpZGxlIHByZWVtcHQgbm9ybWFsIGV2ZXJ5IDYwMCttcyAqKg0KICAgICAgICAg
-ICAgPC4uLj4tNDkwMDkgWzAwMl0gZC4uLiAyNDAwNTYyLjc0NjY0MDogc2NoZWRfc3dpdGNoOiBw
-cmV2X2NvbW09bm9ybWFsMC0wIHByZXZfcGlkPTQ5MDA5IHByZXZfcHJpbz0xMjAgcHJldl9zdGF0
-ZT1SID09PiBuZXh0X2NvbW09aWRsZTAtMCBuZXh0X3BpZD0xODc0NjYgbmV4dF9wcmlvPTEyMA0K
-ICAgICAgICAgICA8Li4uPi0xODc0NjYgWzAwMl0gZC4uLiAyNDAwNTYyLjc0NzUwMjogc2NoZWRf
-c3dpdGNoOiBwcmV2X2NvbW09aWRsZTAtMCBwcmV2X3BpZD0xODc0NjYgcHJldl9wcmlvPTEyMCBw
-cmV2X3N0YXRlPVMgPT0+IG5leHRfY29tbT1ub3JtYWwxLTAgbmV4dF9waWQ9MTk4NjU4IG5leHRf
-cHJpbz0xMjANCiAgICAgICAgICAgPC4uLj4tMTk4NjU4IFswMDJdIGQuLi4gMjQwMDU2My4zMzUy
-NjI6IHNjaGVkX3N3aXRjaDogcHJldl9jb21tPW5vcm1hbDEtMCBwcmV2X3BpZD0xOTg2NTggcHJl
-dl9wcmlvPTEyMCBwcmV2X3N0YXRlPVIgPT0+IG5leHRfY29tbT1pZGxlMC0wIG5leHRfcGlkPTE4
-NzQ2NiBuZXh0X3ByaW89MTIwDQogICAgICAgICAgIDwuLi4+LTE4NzQ2NiBbMDAyXSBkLi4uIDI0
-MDA1NjMuMzM2MjU4OiBzY2hlZF9zd2l0Y2g6IHByZXZfY29tbT1pZGxlMC0wIHByZXZfcGlkPTE4
-NzQ2NiBwcmV2X3ByaW89MTIwIHByZXZfc3RhdGU9UiA9PT4gbmV4dF9jb21tPW5vcm1hbDAtMCBu
-ZXh0X3BpZD00OTAwOSBuZXh0X3ByaW89MTIwDQogICAgICAgICAgIDwuLi4+LTE5ODY1OCBbMDAy
-XSBkLi4uIDI0MDA1NjQuMDE3NjYzOiBzY2hlZF9zd2l0Y2g6IHByZXZfY29tbT1ub3JtYWwxLTAg
-cHJldl9waWQ9MTk4NjU4IHByZXZfcHJpbz0xMjAgcHJldl9zdGF0ZT1SID09PiBuZXh0X2NvbW09
-aWRsZTAtMCBuZXh0X3BpZD0xODc0NjYgbmV4dF9wcmlvPTEyMA0KICAgICAgICAgICA8Li4uPi0x
-ODc0NjYgWzAwMl0gZC4uLiAyNDAwNTY0LjAxODY2MTogc2NoZWRfc3dpdGNoOiBwcmV2X2NvbW09
-aWRsZTAtMCBwcmV2X3BpZD0xODc0NjYgcHJldl9wcmlvPTEyMCBwcmV2X3N0YXRlPVIgPT0+IG5l
-eHRfY29tbT1ub3JtYWwwLTAgbmV4dF9waWQ9NDkwMDkgbmV4dF9wcmlvPTEyMA0KICAgICAgICAg
-ICA8Li4uPi0xOTg2NTggWzAwMl0gZC4uLiAyNDAwNTY0LjcwMTA2Mzogc2NoZWRfc3dpdGNoOiBw
-cmV2X2NvbW09bm9ybWFsMS0wIHByZXZfcGlkPTE5ODY1OCBwcmV2X3ByaW89MTIwIHByZXZfc3Rh
-dGU9UiA9PT4gbmV4dF9jb21tPWlkbGUwLTAgbmV4dF9waWQ9MTg3NDY2IG5leHRfcHJpbz0xMjAN
-Cg0KKiogM25vcm1hbCtpZGxlOiBpZGxlIHByZWVtcHQgbm9ybWFsIGV2ZXJ5IDEwMDArbXMgKioN
-CiAgICAgICAgICAgPC4uLj4tMTk4NjU4IFswMDJdIGQuLi4gMjQwMDQxNS43ODA3MDE6IHNjaGVk
-X3N3aXRjaDogcHJldl9jb21tPW5vcm1hbDEtMCBwcmV2X3BpZD0xOTg2NTggcHJldl9wcmlvPTEy
-MCBwcmV2X3N0YXRlPVIgPT0+IG5leHRfY29tbT1pZGxlMC0wIG5leHRfcGlkPTE4NzQ2NiBuZXh0
-X3ByaW89MTIwDQogICAgICAgICAgIDwuLi4+LTE4NzQ2NiBbMDAyXSBkLi4uIDI0MDA0MTUuNzgx
-Njk5OiBzY2hlZF9zd2l0Y2g6IHByZXZfY29tbT1pZGxlMC0wIHByZXZfcGlkPTE4NzQ2NiBwcmV2
-X3ByaW89MTIwIHByZXZfc3RhdGU9UiA9PT4gbmV4dF9jb21tPW5vcm1hbDItMCBuZXh0X3BpZD00
-NjQ3OCBuZXh0X3ByaW89MTIwDQogICAgICAgICAgIDwuLi4+LTQ5MDA5IFswMDJdIGQuLi4gMjQw
-MDQxNi44MDYyOTg6IHNjaGVkX3N3aXRjaDogcHJldl9jb21tPW5vcm1hbDAtMCBwcmV2X3BpZD00
-OTAwOSBwcmV2X3ByaW89MTIwIHByZXZfc3RhdGU9UiA9PT4gbmV4dF9jb21tPWlkbGUwLTAgbmV4
-dF9waWQ9MTg3NDY2IG5leHRfcHJpbz0xMjANCiAgICAgICAgICAgPC4uLj4tMTg3NDY2IFswMDJd
-IGQuLi4gMjQwMDQxNi44MDcyOTc6IHNjaGVkX3N3aXRjaDogcHJldl9jb21tPWlkbGUwLTAgcHJl
-dl9waWQ9MTg3NDY2IHByZXZfcHJpbz0xMjAgcHJldl9zdGF0ZT1SID09PiBuZXh0X2NvbW09bm9y
-bWFsMi0wIG5leHRfcGlkPTQ2NDc4IG5leHRfcHJpbz0xMjANCiAgICAgICAgICAgPC4uLj4tMTk4
-NjU4IFswMDJdIGQuLi4gMjQwMDQxNy44MjY5MTA6IHNjaGVkX3N3aXRjaDogcHJldl9jb21tPW5v
-cm1hbDEtMCBwcmV2X3BpZD0xOTg2NTggcHJldl9wcmlvPTEyMCBwcmV2X3N0YXRlPVIgPT0+IG5l
-eHRfY29tbT1pZGxlMC0wIG5leHRfcGlkPTE4NzQ2NiBuZXh0X3ByaW89MTIwDQogICAgICAgICAg
-IDwuLi4+LTE4NzQ2NiBbMDAyXSBkLi4uIDI0MDA0MTcuODI3OTExOiBzY2hlZF9zd2l0Y2g6IHBy
-ZXZfY29tbT1pZGxlMC0wIHByZXZfcGlkPTE4NzQ2NiBwcmV2X3ByaW89MTIwIHByZXZfc3RhdGU9
-UiA9PT4gbmV4dF9jb21tPW5vcm1hbDItMCBuZXh0X3BpZD00NjQ3OCBuZXh0X3ByaW89MTIwDQog
-ICAgICAgICAgIDwuLi4+LTQ5MDA5IFswMDJdIGQuLi4gMjQwMDQxOC44NTc0OTc6IHNjaGVkX3N3
-aXRjaDogcHJldl9jb21tPW5vcm1hbDAtMCBwcmV2X3BpZD00OTAwOSBwcmV2X3ByaW89MTIwIHBy
-ZXZfc3RhdGU9UiA9PT4gbmV4dF9jb21tPWlkbGUwLTAgbmV4dF9waWQ9MTg3NDY2IG5leHRfcHJp
-bz0xMjANCg0KKiogMm5vcm1hbChuaWNlIDE5KSsxaWRsZShuaWNlIDApOiBpZGxlIHByZWVtcHQg
-bm9ybWFsIGV2ZXJ5IDMwK21zICoqDQogICAgICAgICAgIDwuLi4+LTE4NzQ2NiBbMDAyXSBkLi4u
-IDI0MDE3NDAuMTM0MjQ5OiBzY2hlZF9zd2l0Y2g6IHByZXZfY29tbT1pZGxlMC0wIHByZXZfcGlk
-PTE4NzQ2NiBwcmV2X3ByaW89MTIwIHByZXZfc3RhdGU9UiA9PT4gbmV4dF9jb21tPW5vcm1hbDAt
-MCBuZXh0X3BpZD00OTAwOSBuZXh0X3ByaW89MTM5DQogICAgICAgICAgIDwuLi4+LTE5ODY1OCBb
-MDAyXSBkLi4uIDI0MDE3NDAuMTYyMTgyOiBzY2hlZF9zd2l0Y2g6IHByZXZfY29tbT1ub3JtYWwx
-LTAgcHJldl9waWQ9MTk4NjU4IHByZXZfcHJpbz0xMzkgcHJldl9zdGF0ZT1SID09PiBuZXh0X2Nv
-bW09aWRsZTAtMCBuZXh0X3BpZD0xODc0NjYgbmV4dF9wcmlvPTEyMA0KICAgICAgICAgICA8Li4u
-Pi0xODc0NjYgWzAwMl0gZC4uLiAyNDAxNzQwLjE2NTE3Nzogc2NoZWRfc3dpdGNoOiBwcmV2X2Nv
-bW09aWRsZTAtMCBwcmV2X3BpZD0xODc0NjYgcHJldl9wcmlvPTEyMCBwcmV2X3N0YXRlPVIgPT0+
-IG5leHRfY29tbT1ub3JtYWwwLTAgbmV4dF9waWQ9NDkwMDkgbmV4dF9wcmlvPTEzOQ0KICAgICAg
-ICAgICA8Li4uPi00OTAwOSBbMDAyXSBkLi4uIDI0MDE3NDAuMTkzMTEwOiBzY2hlZF9zd2l0Y2g6
-IHByZXZfY29tbT1ub3JtYWwwLTAgcHJldl9waWQ9NDkwMDkgcHJldl9wcmlvPTEzOSBwcmV2X3N0
-YXRlPVIgPT0+IG5leHRfY29tbT1pZGxlMC0wIG5leHRfcGlkPTE4NzQ2NiBuZXh0X3ByaW89MTIw
-DQogICAgICAgICAgIDwuLi4+LTE4NzQ2NiBbMDAyXSBkLi4uIDI0MDE3NDAuMTk2MTA0OiBzY2hl
-ZF9zd2l0Y2g6IHByZXZfY29tbT1pZGxlMC0wIHByZXZfcGlkPTE4NzQ2NiBwcmV2X3ByaW89MTIw
-IHByZXZfc3RhdGU9UiA9PT4gbmV4dF9jb21tPW5vcm1hbDEtMCBuZXh0X3BpZD0xOTg2NTggbmV4
-dF9wcmlvPTEzOQ0KICAgICAgICAgICA8Li4uPi0xOTg2NTggWzAwMl0gZC4uLiAyNDAxNzQwLjIy
-ODAyOTogc2NoZWRfc3dpdGNoOiBwcmV2X2NvbW09bm9ybWFsMS0wIHByZXZfcGlkPTE5ODY1OCBw
-cmV2X3ByaW89MTM5IHByZXZfc3RhdGU9UiA9PT4gbmV4dF9jb21tPWlkbGUwLTAgbmV4dF9waWQ9
-MTg3NDY2IG5leHRfcHJpbz0xMjANCiAgICAgICAgICAgPC4uLj4tMTg3NDY2IFswMDJdIGQuLi4g
-MjQwMTc0MC4yMzEwMjI6IHNjaGVkX3N3aXRjaDogcHJldl9jb21tPWlkbGUwLTAgcHJldl9waWQ9
-MTg3NDY2IHByZXZfcHJpbz0xMjAgcHJldl9zdGF0ZT1SID09PiBuZXh0X2NvbW09bm9ybWFsMC0w
-IG5leHRfcGlkPTQ5MDA5IG5leHRfcHJpbz0xMzkNCiAgICAgICAgICAgPC4uLj4tMTk4NjU4IFsw
-MDJdIGQuLi4gMjQwMTc0MC4yNjI5NDY6IHNjaGVkX3N3aXRjaDogcHJldl9jb21tPW5vcm1hbDEt
-MCBwcmV2X3BpZD0xOTg2NTggcHJldl9wcmlvPTEzOSBwcmV2X3N0YXRlPVIgPT0+IG5leHRfY29t
-bT1pZGxlMC0wIG5leHRfcGlkPTE4NzQ2NiBuZXh0X3ByaW89MTIwDQoNClNDSEVEX0lETEUgdGFz
-a3MgZG8gdGljayBwcmVlbXB0IHJhcmVseSwgYnV0IGNhbiBub3QgYmUgYXZvaWRlZCB3aXRoIGEg
-d2VpZ2h0Lg0KDQpJIHdvbmRlciBpZiB0aGUgcmVzdWx0IGlzIHdoYXQgeW91IGV4cGVjdGVkPyA6
-KQ0KDQpUaGFua3MgYSBsb3QuIA0KUmVnYXJkcywNCkppYW5nDQoNCj4gDQo+IFsuLi5dDQoNCg==
+
+
+On 8/12/20 11:09 AM, Gao Xiang wrote:
+> Hi,
+>
+> On Wed, Aug 12, 2020 at 09:49:38AM +0800, kernel test robot wrote:
+>> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+>> head:   fb893de323e2d39f7a1f6df425703a2edbdf56ea
+>> commit: 47e4937a4a7ca4184fd282791dfee76c6799966a erofs: move erofs out of staging
+>> date:   12 months ago
+>> config: sparc64-randconfig-s032-20200812 (attached as .config)
+>> compiler: sparc64-linux-gcc (GCC) 9.3.0
+>> reproduce:
+>>          wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>>          chmod +x ~/bin/make.cross
+>>          # apt-get install sparse
+>>          # sparse version: v0.6.2-168-g9554805c-dirty
+>>          git checkout 47e4937a4a7ca4184fd282791dfee76c6799966a
+>>          # save the attached .config to linux build tree
+>>          COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' ARCH=sparc64
+>>
+>> If you fix the issue, kindly add following tag as appropriate
+>> Reported-by: kernel test robot <lkp@intel.com>
+>>
+>>
+>> sparse warnings: (new ones prefixed by >>)
+>>
+>>     fs/erofs/utils.c: note: in included file (through arch/sparc/include/asm/cmpxchg.h, arch/sparc/include/asm/atomic_64.h, arch/sparc/include/asm/atomic.h, ...):
+>>>> arch/sparc/include/asm/cmpxchg_64.h:161:55: sparse: sparse: cast truncates bits from constant value (ffffffffe0f510cc becomes cc)
+>> --
+>>     fs/erofs/zdata.c: note: in included file (through arch/sparc/include/asm/cmpxchg.h, arch/sparc/include/asm/atomic_64.h, arch/sparc/include/asm/atomic.h, ...):
+>>>> arch/sparc/include/asm/cmpxchg_64.h:161:55: sparse: sparse: cast truncates bits from constant value (ffffffffe0f510cc becomes cc)
+>>     arch/sparc/include/asm/cmpxchg_64.h:161:50: sparse: sparse: cast truncates bits from constant value (5f0ecafe becomes fe)
+>>     arch/sparc/include/asm/cmpxchg_64.h:161:50: sparse: sparse: cast truncates bits from constant value (5f0ecafe becomes fe)
+>>     arch/sparc/include/asm/cmpxchg_64.h:161:55: sparse: sparse: cast truncates bits from constant value (5f0edead becomes ad)
+>>
+>> vim +161 arch/sparc/include/asm/cmpxchg_64.h
+>>
+>> d550bbd40c0e10 David Howells 2012-03-28  155
+>> d550bbd40c0e10 David Howells 2012-03-28  156  static inline unsigned long
+>> d550bbd40c0e10 David Howells 2012-03-28  157  __cmpxchg(volatile void *ptr, unsigned long old, unsigned long new, int size)
+>> d550bbd40c0e10 David Howells 2012-03-28  158  {
+>> d550bbd40c0e10 David Howells 2012-03-28  159  	switch (size) {
+>> a12ee2349312d7 Babu Moger    2017-05-24  160  		case 1:
+>> a12ee2349312d7 Babu Moger    2017-05-24 @161  			return __cmpxchg_u8(ptr, old, new);
+>> d550bbd40c0e10 David Howells 2012-03-28  162  		case 4:
+>> d550bbd40c0e10 David Howells 2012-03-28  163  			return __cmpxchg_u32(ptr, old, new);
+>> d550bbd40c0e10 David Howells 2012-03-28  164  		case 8:
+>> d550bbd40c0e10 David Howells 2012-03-28  165  			return __cmpxchg_u64(ptr, old, new);
+>> d550bbd40c0e10 David Howells 2012-03-28  166  	}
+>> d550bbd40c0e10 David Howells 2012-03-28  167  	__cmpxchg_called_with_bad_pointer();
+>> d550bbd40c0e10 David Howells 2012-03-28  168  	return old;
+>> d550bbd40c0e10 David Howells 2012-03-28  169  }
+>> d550bbd40c0e10 David Howells 2012-03-28  170
+> Again, I have no idea how to deal with that in my current
+> gatekeeping code.
+>
+> I got these reports, but I cannot help to resolve that.
+> Even I don't know if that's another sparse issue (since I
+> only got such reports on sparc and alpha arch, but no x86
+> or arm64.)
+>
+> https://lore.kernel.org/r/202007251532.y5A10ZoO%25lkp@intel.com
+> https://lore.kernel.org/r/202007272132.1AgbBO3U%25lkp@intel.com
+> https://lore.kernel.org/r/202008100408.Wc6WGrac%25lkp@intel.com
+> https://lore.kernel.org/r/202008120933.YrVhHyoA%25lkp@intel.com
+>
+> If no one can help that, could you please silence such reports.
+> It really makes me confusing.
+
+
+Hi Gao Xiang,
+
+Sorry for the inconvenience, we'll silence the reports on this commit.
+
+Best Regards,
+Rong Chen
+
+>
+> Thanks,
+> Gao Xiang
+>
+>> :::::: The code at line 161 was first introduced by commit
+>> :::::: a12ee2349312d7112b9b7c6ac2e70c5ec2ca334e arch/sparc: Introduce cmpxchg_u8 SPARC
+>>
+>> :::::: TO: Babu Moger <babu.moger@oracle.com>
+>> :::::: CC: David S. Miller <davem@davemloft.net>
+>>
+>> ---
+>> 0-DAY CI Kernel Test Service, Intel Corporation
+>> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> _______________________________________________
+> kbuild-all mailing list -- kbuild-all@lists.01.org
+> To unsubscribe send an email to kbuild-all-leave@lists.01.org
+
