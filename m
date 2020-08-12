@@ -2,54 +2,54 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 475D5C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E817FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:58:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BDCD207F7
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:58:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8897207F7
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:58:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597247890;
-	bh=LlkIH0oWEJxTuayVV7j0/zZciq+D6+8D+x+9rzX0KEo=;
+	s=default; t=1597247894;
+	bh=7i6SE6Kw82bD0hGAG5F9HzSf31kKw7fF8t9Urr77uFo=;
 	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
-	b=1w9WMOLBVqfs+NeGhiEW6CelWfynbFY+tRR9c/UeKVh3Jfwu3p4fZl6L78RM6yIwJ
-	 nwCYOGjhZ5LmVM08lm8jqbH31eV5nmMJAxI8DtYAz80wa1Uh67t9q+X8kG5PMnmo/7
-	 Sb58seZ7swct8k+lffrltQRrj2u7ZgwaU+7DDgro=
+	b=eRdcNR9n7cuZ3vy+Z92Km3QeqMh86UhsMtl42Y98epgGQS7RfQ0cCSsiEO/jbcr3Q
+	 RK59LHqzC3MoLXGrX1NijZ6QkDWLChiyOAN6ZeRAajrm6RY6eEA3ZYvP6jZINJHEot
+	 xBActx3Y4s6pS5tptIHhmKELBbRfjLGlmffiVEDA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727021AbgHLP6A (ORCPT
+        id S1727050AbgHLP6N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 11:58:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46042 "EHLO mail.kernel.org"
+        Wed, 12 Aug 2020 11:58:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726707AbgHLP5F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 11:57:05 -0400
+        id S1726680AbgHLP5E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 11:57:04 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2956323102;
-        Wed, 12 Aug 2020 15:57:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9019422D70;
+        Wed, 12 Aug 2020 15:57:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597247821;
-        bh=LlkIH0oWEJxTuayVV7j0/zZciq+D6+8D+x+9rzX0KEo=;
+        s=default; t=1597247820;
+        bh=7i6SE6Kw82bD0hGAG5F9HzSf31kKw7fF8t9Urr77uFo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DZDL/pIWryhiDHhiYESf1TelqAQDPnZrxliRtzbRXG4onqmbPq0PpC0HVjSQYL8g0
-         q97Uk+QRYJAXtwidFeEbhxrD2giaStZ8TZDAWNkSVONeC0hvIilsmnrWdLAPAgXMJi
-         e00ifrir9+QNvLdShrY+QfhTr4mcSXz29Pe22J+g=
+        b=uxITBHnmKp6D1o/5LEMpk08IB7WintzYrX9d3wspXQsQXJskc6LesxbF2AG/t82dP
+         99Pl2ZY/cvUl7NsmJix8ZixB0I6Lyru7KvlUFy7+ZBEc7QABnx+x2k/KaDw8ZSAkQN
+         oMIiQer9+xOUNp8sQGmv7aIg1+QutmzKgRwWKpF8=
 Received: from mchehab by mail.kernel.org with local (Exim 4.94)
         (envelope-from <mchehab@kernel.org>)
-        id 1k5t7b-005t7L-9U; Wed, 12 Aug 2020 17:56:59 +0200
+        id 1k5t7a-005t6l-Mn; Wed, 12 Aug 2020 17:56:58 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org
-Subject: [PATCH 38/44] staging: regulator: hi6421v600-regulator: fix some coding style issues
-Date:   Wed, 12 Aug 2020 17:56:48 +0200
-Message-Id: <785cb5fe6033e641ac12cebe25aa5983aed204f7.1597247164.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 26/44] staging: regulator: hi6421v600-regulator: coding style fixups
+Date:   Wed, 12 Aug 2020 17:56:36 +0200
+Message-Id: <7d82a9b72e1fe5a413ea12b6014a733b71c21184.1597247164.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1597247164.git.mchehab+huawei@kernel.org>
 References: <cover.1597247164.git.mchehab+huawei@kernel.org>
@@ -61,122 +61,340 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the remaining issues complained by checkpatch.
+There are several issues on those drivers related to their
+coding style. Solve most of them.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../staging/hikey9xx/hi6421v600-regulator.c   | 28 +++++++++----------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+ .../staging/hikey9xx/hi6421v600-regulator.c   | 110 +++++++++---------
+ 1 file changed, 56 insertions(+), 54 deletions(-)
 
 diff --git a/drivers/staging/hikey9xx/hi6421v600-regulator.c b/drivers/staging/hikey9xx/hi6421v600-regulator.c
-index 72f51594b5ff..c80dfac1e4c3 100644
+index 904cb64b1dcd..5f6e4ba4b99e 100644
 --- a/drivers/staging/hikey9xx/hi6421v600-regulator.c
 +++ b/drivers/staging/hikey9xx/hi6421v600-regulator.c
-@@ -40,7 +40,7 @@
- #include <linux/spmi.h>
- 
- #define rdev_dbg(rdev, fmt, arg...)	\
--		 pr_debug("%s: %s: " fmt, rdev->desc->name, __func__, ##arg)
-+		 pr_debug("%s: %s: " fmt, (rdev)->desc->name, __func__, ##arg)
- 
- struct hi6421v600_regulator {
+@@ -1,3 +1,4 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  * Device driver for regulators in Hisi IC
+  *
+@@ -52,7 +53,7 @@ struct hisi_regulator {
+ 	u32 off_on_delay;
+ 	u32 eco_uA;
  	struct regulator_desc rdesc;
-@@ -105,7 +105,7 @@ static int hi6421_spmi_regulator_disable(struct regulator_dev *rdev)
- 		 rdev->desc->enable_reg, rdev->desc->enable_mask);
+-	int (*dt_parse)(struct hisi_regulator *, struct spmi_device *);
++	int (*dt_parse)(struct hisi_regulator *reg, struct spmi_device *spmi);
+ };
  
- 	hi6421_spmi_pmic_rmw(pmic, rdev->desc->enable_reg,
--		      rdev->desc->enable_mask, 0);
-+			     rdev->desc->enable_mask, 0);
+ static DEFINE_MUTEX(enable_mutex);
+@@ -77,8 +78,9 @@ static int hisi_regulator_is_enabled(struct regulator_dev *dev)
+ 	struct hisi_pmic *pmic = rdev_to_pmic(dev);
+ 
+ 	reg_val = hisi_pmic_read(pmic, sreg->register_info.ctrl_reg);
+-	pr_debug("<[%s]: ctrl_reg=0x%x,enable_state=%d>\n", __func__, sreg->register_info.ctrl_reg,\
+-			(reg_val & sreg->register_info.enable_mask));
++	pr_debug("<[%s]: ctrl_reg=0x%x,enable_state=%d>\n",
++		 __func__, sreg->register_info.ctrl_reg,
++		(reg_val & sreg->register_info.enable_mask));
+ 
+ 	return ((reg_val & sreg->register_info.enable_mask) != 0);
+ }
+@@ -98,14 +100,13 @@ static int hisi_regulator_enable(struct regulator_dev *dev)
+ 	usleep_range(HISI_REGS_ENA_PROTECT_TIME,
+ 		     HISI_REGS_ENA_PROTECT_TIME + 1000);
+ 
+-
+-
+ 	/* set enable register */
+ 	hisi_pmic_rmw(pmic, sreg->register_info.ctrl_reg,
+-				sreg->register_info.enable_mask,
++		      sreg->register_info.enable_mask,
+ 				sreg->register_info.enable_mask);
+-	pr_debug("<[%s]: ctrl_reg=0x%x,enable_mask=0x%x>\n", __func__, sreg->register_info.ctrl_reg,\
+-			sreg->register_info.enable_mask);
++	pr_debug("<[%s]: ctrl_reg=0x%x,enable_mask=0x%x>\n",
++		 __func__, sreg->register_info.ctrl_reg,
++		 sreg->register_info.enable_mask);
+ 
+ 	mutex_unlock(&enable_mutex);
+ 
+@@ -119,7 +120,7 @@ static int hisi_regulator_disable(struct regulator_dev *dev)
+ 
+ 	/* set enable register to 0 */
+ 	hisi_pmic_rmw(pmic, sreg->register_info.ctrl_reg,
+-				sreg->register_info.enable_mask, 0);
++		      sreg->register_info.enable_mask, 0);
  
  	return 0;
  }
-@@ -122,7 +122,7 @@ static int hi6421_spmi_regulator_get_voltage_sel(struct regulator_dev *rdev)
- 	selector = (reg_val & rdev->desc->vsel_mask) >>	(ffs(rdev->desc->vsel_mask) - 1);
+@@ -132,7 +133,8 @@ static int hisi_regulator_get_voltage(struct regulator_dev *dev)
  
- 	rdev_dbg(rdev,
--		"vsel_reg=0x%x, value=0x%x, entry=0x%x, voltage=%d mV\n",
-+		 "vsel_reg=0x%x, value=0x%x, entry=0x%x, voltage=%d mV\n",
- 		 rdev->desc->vsel_reg, reg_val, selector,
- 		rdev->desc->ops->list_voltage(rdev, selector) / 1000);
+ 	/* get voltage selector */
+ 	reg_val = hisi_pmic_read(pmic, sreg->register_info.vset_reg);
+-	pr_debug("<[%s]: vset_reg=0x%x>\n", __func__, sreg->register_info.vset_reg);
++	pr_debug("<[%s]: vset_reg=0x%x>\n",
++		 __func__, sreg->register_info.vset_reg);
  
-@@ -144,7 +144,7 @@ static int hi6421_spmi_regulator_set_voltage_sel(struct regulator_dev *rdev,
+ 	selector = (reg_val & sreg->register_info.vset_mask) >>
+ 				(ffs(sreg->register_info.vset_mask) - 1);
+@@ -141,7 +143,7 @@ static int hisi_regulator_get_voltage(struct regulator_dev *dev)
+ }
  
+ static int hisi_regulator_set_voltage(struct regulator_dev *dev,
+-				int min_uV, int max_uV, unsigned *selector)
++				      int min_uV, int max_uV, unsigned int *selector)
+ {
+ 	struct hisi_regulator *sreg = rdev_get_drvdata(dev);
+ 	struct hisi_pmic *pmic = rdev_to_pmic(dev);
+@@ -162,14 +164,14 @@ static int hisi_regulator_set_voltage(struct regulator_dev *dev,
+ 	*selector = vsel;
  	/* set voltage selector */
- 	rdev_dbg(rdev,
--		"vsel_reg=0x%x, mask=0x%x, value=0x%x, voltage=%d mV\n",
-+		 "vsel_reg=0x%x, mask=0x%x, value=0x%x, voltage=%d mV\n",
- 		 rdev->desc->vsel_reg, rdev->desc->vsel_mask, reg_val,
- 		 rdev->desc->ops->list_voltage(rdev, selector) / 1000);
+ 	hisi_pmic_rmw(pmic, sreg->register_info.vset_reg,
+-		sreg->register_info.vset_mask,
++		      sreg->register_info.vset_mask,
+ 		vsel << (ffs(sreg->register_info.vset_mask) - 1));
  
-@@ -169,7 +169,7 @@ static unsigned int hi6421_spmi_regulator_get_mode(struct regulator_dev *rdev)
- 		mode = REGULATOR_MODE_NORMAL;
+-	pr_debug("<[%s]: vset_reg=0x%x, vset_mask=0x%x, value=0x%x>\n", __func__,\
+-			sreg->register_info.vset_reg,\
+-			sreg->register_info.vset_mask,\
+-			vsel << (ffs(sreg->register_info.vset_mask) - 1)\
+-			);
++	pr_debug("<[%s]: vset_reg=0x%x, vset_mask=0x%x, value=0x%x>\n",
++		 __func__,
++		 sreg->register_info.vset_reg,
++		 sreg->register_info.vset_mask,
++		 vsel << (ffs(sreg->register_info.vset_mask) - 1));
  
- 	rdev_dbg(rdev,
--		"enable_reg=0x%x, eco_mode_mask=0x%x, reg_val=0x%x, %s mode\n",
-+		 "enable_reg=0x%x, eco_mode_mask=0x%x, reg_val=0x%x, %s mode\n",
- 		 rdev->desc->enable_reg, sreg->eco_mode_mask, reg_val,
- 		 mode == REGULATOR_MODE_IDLE ? "idle" : "normal");
- 
-@@ -177,7 +177,7 @@ static unsigned int hi6421_spmi_regulator_get_mode(struct regulator_dev *rdev)
- }
- 
- static int hi6421_spmi_regulator_set_mode(struct regulator_dev *rdev,
--				   unsigned int mode)
-+					  unsigned int mode)
- {
- 	struct hi6421v600_regulator *sreg = rdev_get_drvdata(rdev);
- 	struct hi6421_spmi_pmic *pmic = sreg->pmic;
-@@ -204,9 +204,10 @@ static int hi6421_spmi_regulator_set_mode(struct regulator_dev *rdev,
- 	return 0;
- }
- 
--static unsigned int hi6421_spmi_regulator_get_optimum_mode(struct regulator_dev *rdev,
--						    int input_uV, int output_uV,
--						    int load_uA)
-+static unsigned int
-+hi6421_spmi_regulator_get_optimum_mode(struct regulator_dev *rdev,
-+				       int input_uV, int output_uV,
-+				       int load_uA)
- {
- 	struct hi6421v600_regulator *sreg = rdev_get_drvdata(rdev);
- 
-@@ -220,7 +221,7 @@ static unsigned int hi6421_spmi_regulator_get_optimum_mode(struct regulator_dev
- }
- 
- static int hi6421_spmi_dt_parse(struct platform_device *pdev,
--			 struct hi6421v600_regulator *sreg,
-+				struct hi6421v600_regulator *sreg,
- 			 struct regulator_desc *rdesc)
- {
- 	struct device *dev = &pdev->dev;
-@@ -256,7 +257,7 @@ static int hi6421_spmi_dt_parse(struct platform_device *pdev,
- 		sreg->eco_uA = 0;
- 	} else {
- 		ret = of_property_read_u32(np, "eco-microamp",
--					&sreg->eco_uA);
-+					   &sreg->eco_uA);
- 		if (ret) {
- 			dev_err(dev, "missing eco-microamp property\n");
- 			return ret;
-@@ -331,8 +332,8 @@ static struct regulator_ops hi6421_spmi_ldo_rops = {
-  */
- 
- static int hi6421_spmi_regulator_probe_ldo(struct platform_device *pdev,
--				    struct device_node *np,
--				    struct hi6421_spmi_pmic *pmic)
-+					   struct device_node *np,
-+					   struct hi6421_spmi_pmic *pmic)
- {
- 	struct device *dev = &pdev->dev;
- 	struct regulator_desc *rdesc;
-@@ -404,7 +405,6 @@ static int hi6421_spmi_regulator_probe_ldo(struct platform_device *pdev,
  	return ret;
+ }
+@@ -181,10 +183,10 @@ static unsigned int hisi_regulator_get_mode(struct regulator_dev *dev)
+ 	u32 reg_val;
+ 
+ 	reg_val = hisi_pmic_read(pmic, sreg->register_info.ctrl_reg);
+-	pr_debug("<[%s]: reg_val=%d, ctrl_reg=0x%x, eco_mode_mask=0x%x>\n", __func__, reg_val,\
+-			sreg->register_info.ctrl_reg,\
+-			sreg->register_info.eco_mode_mask\
+-		   );
++	pr_debug("<[%s]: reg_val=%d, ctrl_reg=0x%x, eco_mode_mask=0x%x>\n",
++		 __func__, reg_val,
++		sreg->register_info.ctrl_reg,
++		sreg->register_info.eco_mode_mask);
+ 
+ 	if (reg_val & sreg->register_info.eco_mode_mask)
+ 		return REGULATOR_MODE_IDLE;
+@@ -193,7 +195,7 @@ static unsigned int hisi_regulator_get_mode(struct regulator_dev *dev)
+ }
+ 
+ static int hisi_regulator_set_mode(struct regulator_dev *dev,
+-						unsigned int mode)
++				   unsigned int mode)
+ {
+ 	struct hisi_regulator *sreg = rdev_get_drvdata(dev);
+ 	struct hisi_pmic *pmic = rdev_to_pmic(dev);
+@@ -212,31 +214,31 @@ static int hisi_regulator_set_mode(struct regulator_dev *dev,
+ 
+ 	/* set mode */
+ 	hisi_pmic_rmw(pmic, sreg->register_info.ctrl_reg,
++		      sreg->register_info.eco_mode_mask,
++		eco_mode << (ffs(sreg->register_info.eco_mode_mask) - 1));
++
++	pr_debug("<[%s]: ctrl_reg=0x%x, eco_mode_mask=0x%x, value=0x%x>\n",
++		 __func__,
++		sreg->register_info.ctrl_reg,
+ 		sreg->register_info.eco_mode_mask,
+ 		eco_mode << (ffs(sreg->register_info.eco_mode_mask) - 1));
+-
+-	pr_debug("<[%s]: ctrl_reg=0x%x, eco_mode_mask=0x%x, value=0x%x>\n", __func__,\
+-			sreg->register_info.ctrl_reg,\
+-			sreg->register_info.eco_mode_mask,\
+-			eco_mode << (ffs(sreg->register_info.eco_mode_mask) - 1)\
+-		   );
+ 	return 0;
  }
  
 -
- static int hi6421_spmi_regulator_probe(struct platform_device *pdev)
+-unsigned int hisi_regulator_get_optimum_mode(struct regulator_dev *dev,
+-			int input_uV, int output_uV, int load_uA)
++static unsigned int hisi_regulator_get_optimum_mode(struct regulator_dev *dev,
++						    int input_uV, int output_uV,
++						    int load_uA)
  {
- 	struct device *pmic_dev = pdev->dev.parent;
+ 	struct hisi_regulator *sreg = rdev_get_drvdata(dev);
+ 
+-	if ((load_uA == 0) || ((unsigned int)load_uA > sreg->eco_uA))
++	if (load_uA || ((unsigned int)load_uA > sreg->eco_uA))
+ 		return REGULATOR_MODE_NORMAL;
+ 	else
+ 		return REGULATOR_MODE_IDLE;
+ }
+ 
+ static int hisi_dt_parse_common(struct hisi_regulator *sreg,
+-					struct spmi_device *pdev)
++				struct spmi_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct device_node *np = dev->of_node;
+@@ -246,7 +248,7 @@ static int hisi_dt_parse_common(struct hisi_regulator *sreg,
+ 
+ 	/* parse .register_info.ctrl_reg */
+ 	ret = of_property_read_u32_array(np, "hisilicon,hisi-ctrl",
+-						register_info, 3);
++					 register_info, 3);
+ 	if (ret) {
+ 		dev_err(dev, "no hisilicon,hisi-ctrl property set\n");
+ 		goto dt_parse_common_end;
+@@ -257,7 +259,7 @@ static int hisi_dt_parse_common(struct hisi_regulator *sreg,
+ 
+ 	/* parse .register_info.vset_reg */
+ 	ret = of_property_read_u32_array(np, "hisilicon,hisi-vset",
+-						register_info, 2);
++					 register_info, 2);
+ 	if (ret) {
+ 		dev_err(dev, "no hisilicon,hisi-vset property set\n");
+ 		goto dt_parse_common_end;
+@@ -267,7 +269,7 @@ static int hisi_dt_parse_common(struct hisi_regulator *sreg,
+ 
+ 	/* parse .off-on-delay */
+ 	ret = of_property_read_u32(np, "hisilicon,hisi-off-on-delay-us",
+-						&sreg->off_on_delay);
++				   &sreg->off_on_delay);
+ 	if (ret) {
+ 		dev_err(dev, "no hisilicon,hisi-off-on-delay-us property set\n");
+ 		goto dt_parse_common_end;
+@@ -294,7 +296,7 @@ static int hisi_dt_parse_common(struct hisi_regulator *sreg,
+ }
+ 
+ static int hisi_dt_parse_ldo(struct hisi_regulator *sreg,
+-				struct spmi_device *pdev)
++			     struct spmi_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct device_node *np = dev->of_node;
+@@ -312,7 +314,7 @@ static int hisi_dt_parse_ldo(struct hisi_regulator *sreg,
+ 
+ 	/* alloc space for .volt_table */
+ 	v_table = devm_kzalloc(dev, sizeof(unsigned int) * rdesc->n_voltages,
+-								GFP_KERNEL);
++			       GFP_KERNEL);
+ 	if (unlikely(!v_table)) {
+ 		ret = -ENOMEM;
+ 		dev_err(dev, "no memory for .volt_table\n");
+@@ -320,7 +322,7 @@ static int hisi_dt_parse_ldo(struct hisi_regulator *sreg,
+ 	}
+ 
+ 	ret = of_property_read_u32_array(np, "hisilicon,hisi-vset-table",
+-						v_table, rdesc->n_voltages);
++					 v_table, rdesc->n_voltages);
+ 	if (ret) {
+ 		dev_err(dev, "no hisilicon,hisi-vset-table property set\n");
+ 		goto dt_parse_ldo_end1;
+@@ -362,7 +364,7 @@ static const struct hisi_regulator hisi_regulator_ldo = {
+ 	.dt_parse = hisi_dt_parse_ldo,
+ };
+ 
+-static struct of_device_id of_hisi_regulator_match_tbl[] = {
++static const struct of_device_id of_hisi_regulator_match_tbl[] = {
+ 	{
+ 		.compatible = "hisilicon-hisi-ldo",
+ 		.data = &hisi_regulator_ldo,
+@@ -388,14 +390,14 @@ static int hisi_regulator_probe(struct spmi_device *pdev)
+ 	int ret = 0;
+ 	/* to check which type of regulator this is */
+ 	match = of_match_device(of_hisi_regulator_match_tbl, &pdev->dev);
+-	if (NULL == match) {
++	if (!match) {
+ 		pr_err("get hisi regulator fail!\n\r");
+ 		return -EINVAL;
+ 	}
+ 
+ 	template = match->data;
+ 	initdata = of_get_regulator_init_data(dev, np, NULL);
+-	if (NULL == initdata) {
++	if (!initdata) {
+ 		pr_err("get regulator init data error !\n");
+ 		return -EINVAL;
+ 	}
+@@ -404,14 +406,14 @@ static int hisi_regulator_probe(struct spmi_device *pdev)
+ 	constraint = &initdata->constraints;
+ 
+ 	ret = of_property_read_u32_array(np, "hisilicon,valid-modes-mask",
+-						&(constraint->valid_modes_mask), 1);
++					 &constraint->valid_modes_mask, 1);
+ 	if (ret) {
+ 		pr_err("no hisilicon,valid-modes-mask property set\n");
+ 		ret = -ENODEV;
+ 		return ret;
+ 	}
+ 	ret = of_property_read_u32_array(np, "hisilicon,valid-idle-mask",
+-						&temp_modes, 1);
++					 &temp_modes, 1);
+ 	if (ret) {
+ 		pr_err("no hisilicon,valid-modes-mask property set\n");
+ 		ret = -ENODEV;
+@@ -420,18 +422,16 @@ static int hisi_regulator_probe(struct spmi_device *pdev)
+ 	constraint->valid_ops_mask |= temp_modes;
+ 
+ 	sreg = kmemdup(template, sizeof(*sreg), GFP_KERNEL);
+-	if (!sreg) {
+-		pr_err("template kememdup is fail. \n");
++	if (!sreg)
+ 		return -ENOMEM;
+-	}
++
+ 	sreg->name = initdata->constraints.name;
+ 	rdesc = &sreg->rdesc;
+ 	rdesc->name = sreg->name;
+ 	rdesc->min_uV = initdata->constraints.min_uV;
+ 	supplyname = of_get_property(np, "hisilicon,supply_name", NULL);
+-	if (supplyname != NULL) {
++	if (supplyname)
+ 		initdata->supply_regulator = supplyname;
+-	}
+ 
+ 	/* to parse device tree data for regulator specific */
+ 	ret = sreg->dt_parse(sreg, pdev);
+@@ -454,8 +454,9 @@ static int hisi_regulator_probe(struct spmi_device *pdev)
+ 		goto hisi_probe_end;
+ 	}
+ 
+-	pr_debug("[%s]:valid_modes_mask[0x%x], valid_ops_mask[0x%x]\n", rdesc->name,\
+-			constraint->valid_modes_mask, constraint->valid_ops_mask);
++	pr_debug("[%s]:valid_modes_mask[0x%x], valid_ops_mask[0x%x]\n",
++		 rdesc->name,
++		 constraint->valid_modes_mask, constraint->valid_ops_mask);
+ 
+ 	dev_set_drvdata(dev, rdev);
+ hisi_probe_end:
+@@ -477,11 +478,12 @@ static void hisi_regulator_remove(struct spmi_device *pdev)
+ 
+ 	kfree(sreg);
+ }
++
+ static int hisi_regulator_suspend(struct device *dev, pm_message_t state)
+ {
+ 	struct hisi_regulator *hisi_regulator = dev_get_drvdata(dev);
+ 
+-	if (NULL == hisi_regulator) {
++	if (!hisi_regulator) {
+ 		pr_err("%s:regulator is NULL\n", __func__);
+ 		return -ENOMEM;
+ 	}
+@@ -490,13 +492,13 @@ static int hisi_regulator_suspend(struct device *dev, pm_message_t state)
+ 	pr_info("%s:-\n", __func__);
+ 
+ 	return 0;
+-}/*lint !e715 */
++}
+ 
+ static int hisi_regulator_resume(struct device *dev)
+ {
+ 	struct hisi_regulator *hisi_regulator = dev_get_drvdata(dev);
+ 
+-	if (NULL == hisi_regulator) {
++	if (!hisi_regulator) {
+ 		pr_err("%s:regulator is NULL\n", __func__);
+ 		return -ENOMEM;
+ 	}
 -- 
 2.26.2
 
