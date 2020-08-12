@@ -2,114 +2,123 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94A70C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:07:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F287C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:07:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CF95208A9
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:07:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597234041;
-	bh=r4EgSqulkD3kSTPtlPX5p1ifrsxQh2mU+WuoS0dKHwc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kt0gaYrDswJaXMRAkyOzV4cUtm11DS2xRIiIE4HKsscCTzrwcy9HIrGi8earYFSDk
-	 psn4DLOFL0A6TMEvzqs3u3iw79eOTLGsa8a7VT4E286XZ2pVJHoz+ydtQqtlUKcimK
-	 VfLkLeVrP/b1AOSy+e/5mSnbck81VCNawmH3GVlw=
+	by mail.kernel.org (Postfix) with ESMTP id 0667D207F7
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:07:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728134AbgHLMHS (ORCPT
+        id S1728082AbgHLMGt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 08:07:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36544 "EHLO mail.kernel.org"
+        Wed, 12 Aug 2020 08:06:49 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:62924 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728038AbgHLMHL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 08:07:11 -0400
-Received: from quaco.ghostprotocols.net (179.176.8.134.dynamic.adsl.gvt.net.br [179.176.8.134])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9139D2080C;
-        Wed, 12 Aug 2020 12:07:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597234030;
-        bh=r4EgSqulkD3kSTPtlPX5p1ifrsxQh2mU+WuoS0dKHwc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=C5aIkdYpCVMetaX/bJQ+WzdOtT9R7q0MTKzTAn/XAEp09UOmnlfs0dPsYK6YX9vAu
-         xJ0/P6frWNUolCtS6dhofOVYagIzZ4FL7bo31Hr7wc+zkeUzyAFqBtKdGvbbgsWo2H
-         za8b4c1+/0lmIKNTDgIzPV8cWwXDujZvhhH4fyHk=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id D0A4C403C6; Wed, 12 Aug 2020 09:07:07 -0300 (-03)
-Date:   Wed, 12 Aug 2020 09:07:07 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Alexander Gordeev <agordeev@linux.ibm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH v2 2/3] perf bench numa: fix number of processes in
- "2x3-convergence" test
-Message-ID: <20200812120707.GB13995@kernel.org>
-References: <cover.1597004831.git.agordeev@linux.ibm.com>
- <d949f5f48e17fc816f3beecf8479f1b2480345e4.1597004831.git.agordeev@linux.ibm.com>
- <CAM9d7cijhLpaZWEn6=Gd-DQ08P0V0uEvFqzg_vD5kcNjPO9gBg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAM9d7cijhLpaZWEn6=Gd-DQ08P0V0uEvFqzg_vD5kcNjPO9gBg@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+        id S1727980AbgHLMGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 08:06:12 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 4BRT1s1nSGzB09Zt;
+        Wed, 12 Aug 2020 14:06:09 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id QCWa6f7c4hKp; Wed, 12 Aug 2020 14:06:09 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4BRT1s0p0czB09Zf;
+        Wed, 12 Aug 2020 14:06:09 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5D7F58B826;
+        Wed, 12 Aug 2020 14:06:10 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id pwBk8hGIuTTj; Wed, 12 Aug 2020 14:06:10 +0200 (CEST)
+Received: from po17688vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2849C8B7FC;
+        Wed, 12 Aug 2020 14:06:10 +0200 (CEST)
+Received: by po17688vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 0B57265C34; Wed, 12 Aug 2020 12:06:10 +0000 (UTC)
+Message-Id: <4ea86b6d9f4e3ba0126f9961b98407549d7f0294.1597233555.git.christophe.leroy@csgroup.eu>
+In-Reply-To: <cover.1597233555.git.christophe.leroy@csgroup.eu>
+References: <cover.1597233555.git.christophe.leroy@csgroup.eu>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: [RFC PATCH v1 18/19] powerpc/signal32: Add and use
+ unsafe_put_sigset_t()
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, ldv@altlinux.org,
+        viro@zeniv.linux.org.uk
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Wed, 12 Aug 2020 12:06:10 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Aug 11, 2020 at 04:27:35PM +0900, Namhyung Kim escreveu:
-> On Mon, Aug 10, 2020 at 3:22 PM Alexander Gordeev
-> <agordeev@linux.ibm.com> wrote:
-> >
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Cc: Ingo Molnar <mingo@redhat.com>
-> > Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> > Cc: Jiri Olsa <jolsa@redhat.com>
-> > Cc: Namhyung Kim <namhyung@kernel.org>
-> > Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
-> 
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
+put_sigset_t() calls copy_to_user() for copying two words.
 
-Thanks, applied,
+Because INLINE_COPY_TO_USER is not defined on powerpc,
+copy_to_user() doesn't get optimised and falls back to
+copy_tofrom_user() with the relevant glue. This is terribly
+inefficient for copying two words.
 
-- Arnaldo
+By switching to unsafe_put_user(), we end up with something as
+simple as:
+
+ 3cc:   81 3d 00 00     lwz     r9,0(r29)
+ 3d0:   91 26 00 b4     stw     r9,180(r6)
+ 3d4:   81 3d 00 04     lwz     r9,4(r29)
+ 3d8:   91 26 00 b8     stw     r9,184(r6)
+
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+---
+ arch/powerpc/kernel/signal_32.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
+
+diff --git a/arch/powerpc/kernel/signal_32.c b/arch/powerpc/kernel/signal_32.c
+index d03ba3d8eb68..6cbff0293ff4 100644
+--- a/arch/powerpc/kernel/signal_32.c
++++ b/arch/powerpc/kernel/signal_32.c
+@@ -87,6 +87,8 @@ static inline int put_sigset_t(compat_sigset_t __user *uset, sigset_t *set)
+ 	return put_compat_sigset(uset, set, sizeof(*uset));
+ }
  
-> Thanks
-> Namhyung
-> 
-> > ---
-> >  tools/perf/bench/numa.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/tools/perf/bench/numa.c b/tools/perf/bench/numa.c
-> > index 23e224e..90639c9 100644
-> > --- a/tools/perf/bench/numa.c
-> > +++ b/tools/perf/bench/numa.c
-> > @@ -1754,7 +1754,7 @@ static int run_bench_numa(const char *name, const char **argv)
-> >     { " 1x3-convergence,", "mem",  "-p",  "1", "-t",  "3", "-P",  "512", OPT_CONV },
-> >     { " 1x4-convergence,", "mem",  "-p",  "1", "-t",  "4", "-P",  "512", OPT_CONV },
-> >     { " 1x6-convergence,", "mem",  "-p",  "1", "-t",  "6", "-P", "1020", OPT_CONV },
-> > -   { " 2x3-convergence,", "mem",  "-p",  "3", "-t",  "3", "-P", "1020", OPT_CONV },
-> > +   { " 2x3-convergence,", "mem",  "-p",  "2", "-t",  "3", "-P", "1020", OPT_CONV },
-> >     { " 3x3-convergence,", "mem",  "-p",  "3", "-t",  "3", "-P", "1020", OPT_CONV },
-> >     { " 4x4-convergence,", "mem",  "-p",  "4", "-t",  "4", "-P",  "512", OPT_CONV },
-> >     { " 4x4-convergence-NOTHP,",
-> > --
-> > 1.8.3.1
-> >
-
++#define unsafe_put_sigset_t	unsafe_put_compat_sigset
++
+ static inline int get_sigset_t(sigset_t *set,
+ 			       const compat_sigset_t __user *uset)
+ {
+@@ -143,6 +145,13 @@ static inline int put_sigset_t(sigset_t __user *uset, sigset_t *set)
+ 	return copy_to_user(uset, set, sizeof(*uset));
+ }
+ 
++#define unsafe_put_sigset_t(uset, set, label) do { 			\
++	sigset_t __user *__us = uset	;				\
++	const sigset_t *__s = set;					\
++									\
++	unsafe_copy_to_user(__us, __s, sizeof(*__us), label);		\
++} while (0)
++
+ static inline int get_sigset_t(sigset_t *set, const sigset_t __user *uset)
+ {
+ 	return copy_from_user(set, uset, sizeof(*uset));
+@@ -820,10 +829,11 @@ int handle_rt_signal32(struct ksignal *ksig, sigset_t *oldset,
+ 	{
+ 		unsafe_put_user(0, &rt_sf->uc.uc_link, failed);
+ 	}
++
++	unsafe_put_sigset_t(&rt_sf->uc.uc_sigmask, oldset, failed);
++
+ 	user_write_access_end();
+ 
+-	if (put_sigset_t(&rt_sf->uc.uc_sigmask, oldset))
+-		goto badframe;
+ 	if (copy_siginfo_to_user(&rt_sf->info, &ksig->info))
+ 		goto badframe;
+ 
 -- 
+2.25.0
 
-- Arnaldo
