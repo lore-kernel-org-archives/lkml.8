@@ -2,109 +2,153 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D24C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 22:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A999CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 23:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7771D22BF5
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 22:58:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 856DC20675
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 23:05:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597273090;
-	bh=p6eLETLZRYgYan2ddKnQCwn/WJxewrAyq5jfA5ROAN8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nxCO+9s0STWHGyBqjYd4hsJRRVGKrMq67okErw6OCbQk32EzqWu50OdyOSUl0iwnJ
-	 bFa5Va2aVweUQNNeir8Iqp36Tno7JhvtSnW1mhDF1IBkNs13+jH7dK3GTiJjpSCkjV
-	 iC/GRT9LftWQFQY86TKn3XvGmAaKOAc6bdFNsx10=
+	s=default; t=1597273528;
+	bh=6kwxpshrOlbOHxWnmXC6+dWtt2L5X/Drj58h8rpdMCA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=XodB/smtICVU0v2+DVrd/6/VpMhwYT/JgNv3LylFSEUq6r5bkICXaSlhxXJL0PSo+
+	 amVZ7aDTH42P7ojQEVmuiSOz48Kx87GWNiYExY9q0gquJY0aHRlthe+6jcfjr17VXz
+	 lYGqPF26e7H4Ywcg/KnH6rkRniynEYnLGt1wxmqM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbgHLW6J (ORCPT
+        id S1726622AbgHLXFX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 18:58:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48940 "EHLO mail.kernel.org"
+        Wed, 12 Aug 2020 19:05:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726578AbgHLW5f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 18:57:35 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        id S1726533AbgHLXFV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 19:05:21 -0400
+Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E1C320866;
-        Wed, 12 Aug 2020 22:57:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B05822BF3;
+        Wed, 12 Aug 2020 23:05:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597273055;
-        bh=p6eLETLZRYgYan2ddKnQCwn/WJxewrAyq5jfA5ROAN8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZFIyMDWMKGs7fkdoK0DpEhYOUUYl0iUdYsfDAv+xCGVl3tPKAVDl6Q682ZlvVM0Nu
-         Pn8yAL9cL5KHPR7KOOCSVC4kU4PGmmCxKb17RDjqZbt40wMlKshno7HjaBXkayEjyu
-         saV9YtusV3spYIC9CKU+4PvW0tz7ca5vuD7q4HpQ=
-From:   paulmck@kernel.org
-To:     rcu@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        elver@google.com, dvyukov@google.com,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 04/12] rcu: Force DEFAULT_RCU_BLIMIT to 1000 for strict RCU GPs
-Date:   Wed, 12 Aug 2020 15:57:24 -0700
-Message-Id: <20200812225732.20068-4-paulmck@kernel.org>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <20200812225632.GA19759@paulmck-ThinkPad-P72>
-References: <20200812225632.GA19759@paulmck-ThinkPad-P72>
+        s=default; t=1597273520;
+        bh=6kwxpshrOlbOHxWnmXC6+dWtt2L5X/Drj58h8rpdMCA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=pXDZRt76CPWxVlpilBeAf66pO/Ch1+UOaSOgdUpIGMcw2xAS2mFHBEgkKJVucyrd/
+         hFrdQmO7EEU0DOv8a5XHHMAntvFEpH8ijK+mCysryubzOS2R2XGypW54K9swm6SsIs
+         b7zU39V5JMU64Uhe2oipgDLWWHGgSe5VXnIpigps=
+Received: by mail-oi1-f170.google.com with SMTP id u63so3384377oie.5;
+        Wed, 12 Aug 2020 16:05:20 -0700 (PDT)
+X-Gm-Message-State: AOAM531IZBzkm9SW7u4Ll0dz2BzE1TEIB7GJrdP7SZFkd9Fl6578K6/D
+        TZuN3gv5Y+jYhGEA04MJz9gQHCjYIc3va2d6mQ==
+X-Google-Smtp-Source: ABdhPJx2qQebZiNBPQzgE1fpdypeYG9ycnPVX3JxYluiX5nbkNkxeZlpxpCsMAonDMWnL7JIOVI286FePABwvHucHl8=
+X-Received: by 2002:aca:bb82:: with SMTP id l124mr1235268oif.106.1597273520003;
+ Wed, 12 Aug 2020 16:05:20 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200812203618.2656699-1-robh@kernel.org> <f5dedf2d8d8057de3eaa2f9126f44cebb0653b09.camel@perches.com>
+In-Reply-To: <f5dedf2d8d8057de3eaa2f9126f44cebb0653b09.camel@perches.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 12 Aug 2020 17:05:08 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKBzqMHMMRwBJUjomxOpZAop_+TXBjLCb6ntwZzNMy=3Q@mail.gmail.com>
+Message-ID: <CAL_JsqKBzqMHMMRwBJUjomxOpZAop_+TXBjLCb6ntwZzNMy=3Q@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: Whitespace clean-ups in schema files
+To:     Joe Perches <joe@perches.com>
+Cc:     devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
+        <linux-remoteproc@vger.kernel.org>,
+        Linux HWMON List <linux-hwmon@vger.kernel.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        Linux Input <linux-input@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        netdev <netdev@vger.kernel.org>,
+        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
+        <linux-rtc@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux USB List <linux-usb@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Paul E. McKenney" <paulmck@kernel.org>
+On Wed, Aug 12, 2020 at 4:32 PM Joe Perches <joe@perches.com> wrote:
+>
+> On Wed, 2020-08-12 at 14:36 -0600, Rob Herring wrote:
+> > Clean-up incorrect indentation, extra spaces, long lines, and missing
+> > EOF newline in schema files. Most of the clean-ups are for list
+> > indentation which should always be 2 spaces more than the preceding
+>                                      ^
+> > keyword.
 
-The value of DEFAULT_RCU_BLIMIT is normally set to 10, the idea being to
-avoid needless response-time degradation due to RCU callback invocation.
-However, when CONFIG_RCU_STRICT_GRACE_PERIOD=y it is better to avoid
-throttling callback execution in order to better detect pointer
-leaks from RCU read-side critical sections.  This commit therefore
-sets the value of DEFAULT_RCU_BLIMIT to 1000 in kernels built with
-CONFIG_RCU_STRICT_GRACE_PERIOD=y.
+keyword is the key part...
 
-Reported-by Jann Horn <jannh@google.com>
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
----
- kernel/rcu/tree.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+> []
+> > diff --git a/Documentation/devicetree/bindings/arm/arm,integrator.yaml b/Documentation/devicetree/bindings/arm/arm,integrator.yaml
+> > index 192ded470e32..f0daf990e077 100644
+> > --- a/Documentation/devicetree/bindings/arm/arm,integrator.yaml
+> > +++ b/Documentation/devicetree/bindings/arm/arm,integrator.yaml
+> > @@ -67,9 +67,9 @@ patternProperties:
+> >        compatible:
+> >          items:
+> >            - enum:
+> > -            - arm,integrator-ap-syscon
+> > -            - arm,integrator-cp-syscon
+> > -            - arm,integrator-sp-syscon
+> > +              - arm,integrator-ap-syscon
+> > +              - arm,integrator-cp-syscon
+> > +              - arm,integrator-sp-syscon
+>
+> Confused a bit here.
+>           - enum:
+>         10 spaces to dash
+> old line:
+>             - arm,integrator-ap-syscon
+>         12 spaces to dash
+> new line:
+>               - arm,integrator-ap-syscon
+>         14 spaces to dash
+>
+> Is it supposed to be 2 spaces more than the preceding line
+> or 4 more?
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index d333f1b..08cc91c 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -454,17 +454,18 @@ static int rcu_is_cpu_rrupt_from_idle(void)
- 	return __this_cpu_read(rcu_data.dynticks_nesting) == 0;
- }
- 
--#define DEFAULT_RCU_BLIMIT 10     /* Maximum callbacks per rcu_do_batch ... */
--#define DEFAULT_MAX_RCU_BLIMIT 10000 /* ... even during callback flood. */
-+#define DEFAULT_RCU_BLIMIT (IS_ENABLED(CONFIG_RCU_STRICT_GRACE_PERIOD) ? 1000 : 10)
-+				// Maximum callbacks per rcu_do_batch ...
-+#define DEFAULT_MAX_RCU_BLIMIT 10000 // ... even during callback flood.
- static long blimit = DEFAULT_RCU_BLIMIT;
--#define DEFAULT_RCU_QHIMARK 10000 /* If this many pending, ignore blimit. */
-+#define DEFAULT_RCU_QHIMARK 10000 // If this many pending, ignore blimit.
- static long qhimark = DEFAULT_RCU_QHIMARK;
--#define DEFAULT_RCU_QLOMARK 100   /* Once only this many pending, use blimit. */
-+#define DEFAULT_RCU_QLOMARK 100   // Once only this many pending, use blimit.
- static long qlowmark = DEFAULT_RCU_QLOMARK;
- #define DEFAULT_RCU_QOVLD_MULT 2
- #define DEFAULT_RCU_QOVLD (DEFAULT_RCU_QOVLD_MULT * DEFAULT_RCU_QHIMARK)
--static long qovld = DEFAULT_RCU_QOVLD; /* If this many pending, hammer QS. */
--static long qovld_calc = -1;	  /* No pre-initialization lock acquisitions! */
-+static long qovld = DEFAULT_RCU_QOVLD; // If this many pending, hammer QS.
-+static long qovld_calc = -1;	  // No pre-initialization lock acquisitions!
- 
- module_param(blimit, long, 0444);
- module_param(qhimark, long, 0444);
--- 
-2.9.5
+If the preceding line is a list entry (i.e. starts with '-'), then
+it's 4 more spaces. It's always 2 more spaces than the preceding
+keyword start (aka json-schema vocabulary).
 
+Arguably, this style is a bit inconsistent in that the '-' counts
+toward as indentation of the current line, but not the preceding line.
+However, I think this style is a bit less error prone and easier to
+review. With the other style (always N more spaces) it's harder to
+distinguish lists vs. dicts. For example, you can have something like
+this:
+
+- key:
+  - foo
+  - bar
+
+- key:
+    foo
+    bar
+
+- key:
+  - foo
+    bar
+
+All 3 of these could be valid. Which one was intended? (Can't really
+tell here, but you can with actual DT schema.)
+
+Rob
