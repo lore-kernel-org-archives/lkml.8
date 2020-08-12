@@ -2,140 +2,193 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB4BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 17:07:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0806C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 17:13:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 122F22076C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 17:07:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="PLIfautq"
+	by mail.kernel.org (Postfix) with ESMTP id ABCE52076C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 17:13:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726583AbgHLRHO (ORCPT
+        id S1726518AbgHLRN5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 13:07:14 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:33702 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726459AbgHLRHN (ORCPT
+        Wed, 12 Aug 2020 13:13:57 -0400
+Received: from smtprelay0172.hostedemail.com ([216.40.44.172]:33518 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725872AbgHLRN5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 13:07:13 -0400
-Received: from [10.137.106.139] (unknown [131.107.174.11])
-        by linux.microsoft.com (Postfix) with ESMTPSA id E097C20B4908;
-        Wed, 12 Aug 2020 10:07:04 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E097C20B4908
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1597252032;
-        bh=SIe2k0peitBjW17yZJXqD0TtHRPmDC1R6Lbe35xyn4c=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=PLIfautqDTtZvkV5njfOIjkAj6r6JznMM7OdDU7PlLhgZqfL4Pe2paFWOZNHYGde0
-         y2m6/Jc5+vr2IziCujXNmDEaBARiGhY57RfU99LHHeOdaXuDYd4ISc2lqnTHN222lU
-         zRHuYBYjX8OqIJoFSc8A8rzTUreTmp+o7KtpdsMg=
-Subject: Re: [dm-devel] [RFC PATCH v5 00/11] Integrity Policy Enforcement LSM
- (IPE)
-To:     Chuck Lever <chucklever@gmail.com>,
-        James Morris <jmorris@namei.org>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>,
-        snitzer@redhat.com, dm-devel@redhat.com,
-        tyhicks@linux.microsoft.com, agk@redhat.com,
-        Paul Moore <paul@paul-moore.com>,
-        Jonathan Corbet <corbet@lwn.net>, nramas@linux.microsoft.com,
-        serge@hallyn.com, pasha.tatashin@soleen.com,
-        Jann Horn <jannh@google.com>, linux-block@vger.kernel.org,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jens Axboe <axboe@kernel.dk>, mdsakib@microsoft.com,
-        open list <linux-kernel@vger.kernel.org>, eparis@redhat.com,
-        linux-security-module@vger.kernel.org, linux-audit@redhat.com,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-integrity@vger.kernel.org,
-        jaskarankhurana@linux.microsoft.com
-References: <20200728213614.586312-1-deven.desai@linux.microsoft.com>
- <20200802115545.GA1162@bug> <20200802140300.GA2975990@sasha-vm>
- <20200802143143.GB20261@amd> <1596386606.4087.20.camel@HansenPartnership.com>
- <fb35a1f7-7633-a678-3f0f-17cf83032d2b@linux.microsoft.com>
- <1596639689.3457.17.camel@HansenPartnership.com>
- <alpine.LRH.2.21.2008050934060.28225@namei.org>
- <b08ae82102f35936427bf138085484f75532cff1.camel@linux.ibm.com>
- <329E8DBA-049E-4959-AFD4-9D118DEB176E@gmail.com>
- <alpine.LRH.2.21.2008120643370.10591@namei.org>
- <70603A4E-A548-4ECB-97D4-D3102CE77701@gmail.com>
-From:   Deven Bowers <deven.desai@linux.microsoft.com>
-Message-ID: <5edd58e3-7f12-10af-ef1c-4c1b32cf99e4@linux.microsoft.com>
-Date:   Wed, 12 Aug 2020 10:07:04 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Wed, 12 Aug 2020 13:13:57 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 9308C18029144;
+        Wed, 12 Aug 2020 17:13:55 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: place34_20016de26fed
+X-Filterd-Recvd-Size: 6706
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf10.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 12 Aug 2020 17:13:52 +0000 (UTC)
+Message-ID: <305f0df155e89e0c626b8f7366c4ab5f6741aedd.camel@perches.com>
+Subject: Re: [PATCH 00/44] SPMI patches needed by Hikey 970
+From:   Joe Perches <joe@perches.com>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
+        Stephen Boyd <sboyd@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Wei Xu <xuwei5@hisilicon.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        Rob Herring <robh@kernel.org>, devel@driverdev.osuosl.org,
+        linux-arm-msm@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Date:   Wed, 12 Aug 2020 10:13:51 -0700
+In-Reply-To: <cover.1597247164.git.mchehab+huawei@kernel.org>
+References: <cover.1597247164.git.mchehab+huawei@kernel.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.4-0ubuntu1 
 MIME-Version: 1.0
-In-Reply-To: <70603A4E-A548-4ECB-97D4-D3102CE77701@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Perhaps these trivial bits on top:
+---
+ drivers/staging/hikey9xx/hi6421-spmi-pmic.c     |  5 +++--
+ drivers/staging/hikey9xx/hi6421v600-regulator.c |  6 +++---
+ drivers/staging/hikey9xx/hisi-spmi-controller.c | 21 +++++++++++++--------
+ 3 files changed, 19 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/staging/hikey9xx/hi6421-spmi-pmic.c b/drivers/staging/hikey9xx/hi6421-spmi-pmic.c
+index 76766e7b8bf9..9d73458ca65a 100644
+--- a/drivers/staging/hikey9xx/hi6421-spmi-pmic.c
++++ b/drivers/staging/hikey9xx/hi6421-spmi-pmic.c
+@@ -99,7 +99,7 @@ int hi6421_spmi_pmic_write(struct hi6421_spmi_pmic *pmic, int reg, u32 val)
+ EXPORT_SYMBOL(hi6421_spmi_pmic_write);
+ 
+ int hi6421_spmi_pmic_rmw(struct hi6421_spmi_pmic *pmic, int reg,
+-			  u32 mask, u32 bits)
++			 u32 mask, u32 bits)
+ {
+ 	unsigned long flags;
+ 	u32 data;
+@@ -130,7 +130,8 @@ static irqreturn_t hi6421_spmi_irq_handler(int irq, void *data)
+ 		hi6421_spmi_pmic_write(pmic, (i + pmic->irq_addr), pending);
+ 
+ 		/* solve powerkey order */
+-		if ((i == HISI_IRQ_KEY_NUM) && ((pending & HISI_IRQ_KEY_VALUE) == HISI_IRQ_KEY_VALUE)) {
++		if ((i == HISI_IRQ_KEY_NUM) &&
++		    ((pending & HISI_IRQ_KEY_VALUE) == HISI_IRQ_KEY_VALUE)) {
+ 			generic_handle_irq(pmic->irqs[HISI_IRQ_KEY_DOWN]);
+ 			generic_handle_irq(pmic->irqs[HISI_IRQ_KEY_UP]);
+ 			pending &= (~HISI_IRQ_KEY_VALUE);
+diff --git a/drivers/staging/hikey9xx/hi6421v600-regulator.c b/drivers/staging/hikey9xx/hi6421v600-regulator.c
+index 29ef6bcadd84..82635ff54a74 100644
+--- a/drivers/staging/hikey9xx/hi6421v600-regulator.c
++++ b/drivers/staging/hikey9xx/hi6421v600-regulator.c
+@@ -227,7 +227,7 @@ static int hi6421_spmi_dt_parse(struct platform_device *pdev,
+ 
+ 	ret = of_property_read_u32(np, "reg", &rdesc->enable_reg);
+ 	if (ret) {
+-		dev_err(dev, "missing reg property\nn");
++		dev_err(dev, "missing reg property\n");
+ 		return ret;
+ 	}
+ 
+@@ -303,13 +303,13 @@ static int hi6421_spmi_dt_parse(struct platform_device *pdev,
+ 	 */
+ 	rdesc->vsel_mask = (1 << (fls(rdesc->n_voltages) - 1)) - 1;
+ 
+-	dev_dbg(dev, "voltage selector settings: reg: 0x%x, mask: 0x%x",
++	dev_dbg(dev, "voltage selector settings: reg: 0x%x, mask: 0x%x\n",
+ 		rdesc->vsel_reg, rdesc->vsel_mask);
+ 
+ 	return 0;
+ }
+ 
+-static struct regulator_ops hi6421_spmi_ldo_rops = {
++static const struct regulator_ops hi6421_spmi_ldo_rops = {
+ 	.is_enabled = hi6421_spmi_regulator_is_enabled,
+ 	.enable = hi6421_spmi_regulator_enable,
+ 	.disable = hi6421_spmi_regulator_disable,
+diff --git a/drivers/staging/hikey9xx/hisi-spmi-controller.c b/drivers/staging/hikey9xx/hisi-spmi-controller.c
+index 583df10cbf1a..513d962b8bce 100644
+--- a/drivers/staging/hikey9xx/hisi-spmi-controller.c
++++ b/drivers/staging/hikey9xx/hisi-spmi-controller.c
+@@ -102,7 +102,7 @@ static int spmi_controller_wait_for_done(struct device *dev,
+ 			return 0;
+ 		}
+ 		udelay(1);
+-	}  while(timeout--);
++	} while (timeout--);
+ 
+ 	dev_err(dev, "%s: timeout, status 0x%x\n", __func__, status);
+ 	return -ETIMEDOUT;
+@@ -121,7 +121,7 @@ static int spmi_read_cmd(struct spmi_controller *ctrl,
+ 
+ 	if (bc > SPMI_CONTROLLER_MAX_TRANS_BYTES) {
+ 		dev_err(&ctrl->dev,
+-			"spmi_controller supports 1..%d bytes per trans, but:%ld requested",
++			"spmi_controller supports 1..%d bytes per trans, but:%ld requested\n",
+ 			SPMI_CONTROLLER_MAX_TRANS_BYTES, bc);
+ 		return  -EINVAL;
+ 	}
+@@ -137,7 +137,7 @@ static int spmi_read_cmd(struct spmi_controller *ctrl,
+ 		op_code = SPMI_CMD_EXT_REG_READ_L;
+ 		break;
+ 	default:
+-		dev_err(&ctrl->dev, "invalid read cmd 0x%x", opc);
++		dev_err(&ctrl->dev, "invalid read cmd 0x%x\n", opc);
+ 		return -EINVAL;
+ 	}
+ 
+@@ -157,7 +157,10 @@ static int spmi_read_cmd(struct spmi_controller *ctrl,
+ 		goto done;
+ 
+ 	for (i = 0; bc > i * SPMI_PER_DATAREG_BYTE; i++) {
+-		data = readl(spmi_controller->base + chnl_ofst + SPMI_SLAVE_OFFSET * slave_id + SPMI_APB_SPMI_RDATA0_BASE_ADDR + i * SPMI_PER_DATAREG_BYTE);
++		data = readl(spmi_controller->base + chnl_ofst +
++			     SPMI_SLAVE_OFFSET * slave_id +
++			     SPMI_APB_SPMI_RDATA0_BASE_ADDR +
++			     i * SPMI_PER_DATAREG_BYTE);
+ 		data = be32_to_cpu((__be32)data);
+ 		if ((bc - i * SPMI_PER_DATAREG_BYTE) >> 2) {
+ 			memcpy(buf, &data, sizeof(data));
+@@ -194,7 +197,7 @@ static int spmi_write_cmd(struct spmi_controller *ctrl,
+ 
+ 	if (bc > SPMI_CONTROLLER_MAX_TRANS_BYTES) {
+ 		dev_err(&ctrl->dev,
+-			"spmi_controller supports 1..%d bytes per trans, but:%ld requested",
++			"spmi_controller supports 1..%d bytes per trans, but:%ld requested\n",
+ 			SPMI_CONTROLLER_MAX_TRANS_BYTES, bc);
+ 		return  -EINVAL;
+ 	}
+@@ -210,7 +213,7 @@ static int spmi_write_cmd(struct spmi_controller *ctrl,
+ 		op_code = SPMI_CMD_EXT_REG_WRITE_L;
+ 		break;
+ 	default:
+-		dev_err(&ctrl->dev, "invalid write cmd 0x%x", opc);
++		dev_err(&ctrl->dev, "invalid write cmd 0x%x\n", opc);
+ 		return -EINVAL;
+ 	}
+ 
+@@ -234,8 +237,10 @@ static int spmi_write_cmd(struct spmi_controller *ctrl,
+ 		}
+ 
+ 		writel((u32)cpu_to_be32(data),
+-		       spmi_controller->base + chnl_ofst + SPMI_APB_SPMI_WDATA0_BASE_ADDR + SPMI_PER_DATAREG_BYTE * i);
+-	};
++		       spmi_controller->base + chnl_ofst +
++		       SPMI_APB_SPMI_WDATA0_BASE_ADDR +
++		       SPMI_PER_DATAREG_BYTE * i);
++	}
+ 
+ 	/* Start the transaction */
+ 	writel(cmd, spmi_controller->base + chnl_ofst + SPMI_APB_SPMI_CMD_BASE_ADDR);
 
 
-On 8/12/2020 7:18 AM, Chuck Lever wrote:
-> 
-> 
->> On Aug 11, 2020, at 5:03 PM, James Morris <jmorris@namei.org> wrote:
->>
->> On Sat, 8 Aug 2020, Chuck Lever wrote:
->>
->>> My interest is in code integrity enforcement for executables stored
->>> in NFS files.
->>>
->>> My struggle with IPE is that due to its dependence on dm-verity, it
->>> does not seem to able to protect content that is stored separately
->>> from its execution environment and accessed via a file access
->>> protocol (FUSE, SMB, NFS, etc).
->>
->> It's not dependent on DM-Verity, that's just one possible integrity
->> verification mechanism, and one of two supported in this initial
->> version. The other is 'boot_verified' for a verified or otherwise trusted
->> rootfs. Future versions will support FS-Verity, at least.
->>
->> IPE was designed to be extensible in this way, with a strong separation of
->> mechanism and policy.
-> 
-> I got that, but it looked to me like the whole system relied on having
-> access to the block device under the filesystem. That's not possible
-> for a remote filesystem like Ceph or NFS.
-
-Block device structure no, (though that's what the currently used, to be
-fair). It really has a hard dependency on the file structure,
-specifically the ability to determine whether that file structure can be 
-used to navigate back to the integrity claim provided by the mechanism.
-
-In the current world of IPE, the integrity claim is the root-hash or 
-root-hash-signature on the block device, provided by dm-verity's 
-setsecurity hooks (also introduced in this series).
-
-> 
-> I'm happy to take a closer look if someone can point me the right way.
-> 
-
-Sure, if you look at the 2nd patch, you want to look at the file 
-"security/ipe/ipe-property.h", it defines what methods are required to
-be implemented by a mechanism to work with IPE. It passes the engine
-context which is defined as:
-
-  struct ipe_engine_ctx {
-  	enum ipe_op op;
-  	enum ipe_hook hook;
-  	const struct file *file;
-  	const char *audit_pathname;
-	const struct ipe_bdev_blob *sec_bdev;
-  };
-
-Now, if the security blob existed for the block_device, it would be
-in sec_bdev, but that may be NULL, as well to be fair.
-
-If you want a more worked example of how integration works, patches 8
-and 10 introduce the dm-verity properties mentioned in this patch.
