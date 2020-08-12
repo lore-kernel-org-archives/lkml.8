@@ -2,128 +2,381 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD8ACC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:28:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41F1CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:30:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F50C2080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:28:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AF3E204FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:30:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Y8r2zRSU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727979AbgHLN15 (ORCPT
+        id S1727987AbgHLNak (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 09:27:57 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:59765 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726804AbgHLN1w (ORCPT
+        Wed, 12 Aug 2020 09:30:40 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:52876 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726829AbgHLNaf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 09:27:52 -0400
-Received: from [192.168.1.155] ([77.7.70.104]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1N2SXX-1kq4Il39SR-013vZ2; Wed, 12 Aug 2020 15:27:48 +0200
-Subject: Re: [Q] devicetree overlays
-To:     Sven Van Asbroeck <thesven73@gmail.com>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <CAGngYiVa9v9jGPNu4W+KHUnvemKU-BVE89-XNLcWOmoZjAPMTg@mail.gmail.com>
- <24f1687c-043a-a15e-0be4-8392e7b5c96b@metux.net>
- <CAGngYiVokqYkEiQTcqAMnvif3qEWkPOb1cAk+4rvwgxBKZ5Ukw@mail.gmail.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Message-ID: <1acc987a-d844-fca7-77eb-cf1d466f35c1@metux.net>
-Date:   Wed, 12 Aug 2020 15:27:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 12 Aug 2020 09:30:35 -0400
+Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 361999E7;
+        Wed, 12 Aug 2020 15:30:31 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1597239031;
+        bh=hvK4dzBajeoe/rdXqubJpi0SONuvp9/D+M8tNRvZMAM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Y8r2zRSUYRc8T4O8qje0J+fWTyAZMWBH3KTUCtoo1DXZ9ovFkYGlax8o6Lc1zVil5
+         50oaBa2qR3cFUqDT4mc4C+UTcT/iaBKlwouNQ0aQUqVUm6bv0CeTB9jz43qCQdPWu2
+         +a6AhUebFY/1Kp+a39XOKfEZImFBDGl1rYMpXqNI=
+Date:   Wed, 12 Aug 2020 16:30:17 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     crj <algea.cao@rock-chips.com>
+Cc:     a.hajda@samsung.com, kuankuan.y@gmail.com, hjc@rock-chips.com,
+        tzimmermann@suse.de, dri-devel@lists.freedesktop.org,
+        sam@ravnborg.org, airlied@linux.ie, heiko@sntech.de,
+        jernej.skrabec@siol.net, laurent.pinchart+renesas@ideasonboard.com,
+        jonas@kwiboo.se, mripard@kernel.org, darekm@google.com,
+        linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, cychiang@chromium.org,
+        linux-kernel@vger.kernel.org, narmstrong@baylibre.com,
+        jbrunet@baylibre.com, maarten.lankhorst@linux.intel.com,
+        daniel@ffwll.ch
+Subject: Re: [PATCH 4/6] drm/rockchip: dw_hdmi: Add vendor hdmi properties
+Message-ID: <20200812133017.GJ6057@pendragon.ideasonboard.com>
+References: <20200812083120.743-1-algea.cao@rock-chips.com>
+ <20200812083543.4231-1-algea.cao@rock-chips.com>
+ <20200812093315.GE6057@pendragon.ideasonboard.com>
+ <52cca26d-b2b3-22b2-f371-a8086f2e6336@rock-chips.com>
 MIME-Version: 1.0
-In-Reply-To: <CAGngYiVokqYkEiQTcqAMnvif3qEWkPOb1cAk+4rvwgxBKZ5Ukw@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: tl
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:MIsNc+6wckw0bhN3I+OPYIOG5NscHslgh+KIMp0EpXcmxLAo2UV
- PKF2oEMIqd5jUQCZwGV8YWpxNVDXZeqQOuagMgN1gyJULvjaMozkci2csfUQJNFf8qb7eBN
- 8/tGYAIAEe2/vwvK6LXg7ieiP8b91P73Zw4WOl4zHTWsSqMm6l+f+SZZCjNUR4IqSASFFqT
- yr1N4kJ7TGdZupAN628tw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ThtyLd1Fmwg=:tr/DyrIjMkrSSj6ONl15vD
- pq1HzKpqmn8sK/RxSFegjJtb9HSxrF4XYetGjWW8YEPtbfP/jZRiPUPW5TCvQ/JD7lwMZlbTW
- kQyAdFpMT9F+Vel9LRUE23hQgkK04chUPOvWpD8HMYT8MZuGlR8U6zthqTwku7NcqbZgUtUrA
- +C+KiwY0FyDNc0AGqQDWqYa6P2bUK0XH8p/f0+9+XXqLNP0y/Tv9uVVr3O73KJdkR8SRdwFOM
- 2CBk1gpshPvN6ImcinftK9eK5CFWYflmccc+L+XfMe6YWT3rEgvDdlFvfk7oQwiNw4aswK/h7
- 71ShuQemhmuWq89d9nWaS0VzMqB7G8AQPmw5DNIzE65b8UQL/nuLzPZJNXhu1Drv61G5nobqu
- iwV+ZJrQao1+mfNl1u32BNAvPi3qBk2NHA5WxBa+9Ej3zclh0oBqgewJcZRkdYa8EGc3VSJxv
- /7Go6fL5zF21pU7vvh9XMg5qhxougwlGFiavyZOi54lfRt/FZNQIHT1C02NlEJYcjqFhoH23B
- 3yJGj4reee2NCerYuZThDNrIT63YkqixJOe4iJbdg+GW9il4JbkxD/fD3efW1I2p8E5gTZU3B
- GZoYQ9N50wNwb2ReWyE9IKFWdd/iMrZWApumMJrJhwRuF5NX5The6z7fCUk0syTqBN7dhwWA9
- ByksmrF8LxZYgTuLWx8B5+9lcsO/1o4pkv9At32hAW7rB0AV9Wpb2EZETXVYak4K0sf4J+oa9
- VzCV3VzcnbIZEuteK3AmNC4TleZEDWjY+WkggDlBrDqqc3EWT3TeUdTat39jFhc/DGBnMlwO9
- dNGtrZgB5LiPMVVukFtJLUlDYSwFlQc8pYXr9KTakiHIMmW+TdPAjtVXhEVdW5+SpICDY3C
+In-Reply-To: <52cca26d-b2b3-22b2-f371-a8086f2e6336@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07.08.20 16:17, Sven Van Asbroeck wrote:
+Hi Algea,
 
-Hi,
-
-> I believe you're asking: "how do I associate device tree nodes to
-> devices on a dynamically discoverable bus such as USB or PCI" right ?
+On Wed, Aug 12, 2020 at 07:08:10PM +0800, crj wrote:
+> 在 2020/8/12 17:33, Laurent Pinchart 写道:
+> > On Wed, Aug 12, 2020 at 04:35:43PM +0800, Algea Cao wrote:
+> >> Introduce struct dw_hdmi_property_ops in plat_data to support
+> >> vendor hdmi property.
+> >>
+> >> Implement hdmi vendor properties color_depth_property and
+> >> hdmi_output_property to config hdmi output color depth and
+> >> color format.
+> >>
+> >> The property "hdmi_output_format", the possible value
+> >> could be:
+> >>           - RGB
+> >>           - YCBCR 444
+> >>           - YCBCR 422
+> >>           - YCBCR 420
+> >>
+> >> Default value of the property is set to 0 = RGB, so no changes if you
+> >> don't set the property.
+> >>
+> >> The property "hdmi_output_depth" possible value could be
+> >>           - Automatic
+> >>             This indicates prefer highest color depth, it is
+> >>             30bit on rockcip platform.
+> >>           - 24bit
+> >>           - 30bit
+> >> The default value of property is 24bit.
+> >>
+> >> Signed-off-by: Algea Cao <algea.cao@rock-chips.com>
+> >> ---
+> >>
+> >>   drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c | 174 ++++++++++++++++++++
+> >>   include/drm/bridge/dw_hdmi.h                |  22 +++
+> >>   2 files changed, 196 insertions(+)
+> >>
+> >> diff --git a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
+> >> index 23de359a1dec..8f22d9a566db 100644
+> >> --- a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
+> >> +++ b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
+> >> @@ -52,6 +52,27 @@
+> >>   
+> >>   #define HIWORD_UPDATE(val, mask)	(val | (mask) << 16)
+> >>   
+> >> +/* HDMI output pixel format */
+> >> +enum drm_hdmi_output_type {
+> >> +	DRM_HDMI_OUTPUT_DEFAULT_RGB, /* default RGB */
+> >> +	DRM_HDMI_OUTPUT_YCBCR444, /* YCBCR 444 */
+> >> +	DRM_HDMI_OUTPUT_YCBCR422, /* YCBCR 422 */
+> >> +	DRM_HDMI_OUTPUT_YCBCR420, /* YCBCR 420 */
+> >> +	DRM_HDMI_OUTPUT_YCBCR_HQ, /* Highest subsampled YUV */
+> >> +	DRM_HDMI_OUTPUT_YCBCR_LQ, /* Lowest subsampled YUV */
+> >> +	DRM_HDMI_OUTPUT_INVALID, /* Guess what ? */
+> >> +};
+> >
+> > Vendor-specific properties shouldn't use names starting with drm_ or
+> > DRM_, that's for the DRM core. But this doesn't seem specific to
+> > Rockchip at all, it should be a standard property. Additionally, new
+> > properties need to come with a userspace implementation showing their
+> > usage, in X.org, Weston, the Android DRM/KMS HW composer, or another
+> > relevant upstream project (a test tool is usually not enough).
 > 
-> I believe that already exists. You can describe the _expected_ pci or
-> usb topology in the
-> devicetree. If a device gets detected in a spot on the bus described
-> in the tree, that
-> snippet will be automatically associated with this device.
+> We use these properties only in Android HW composer, But we can't upstream
 > 
-> How to for usb:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/usb/usb-device.txt?h=v5.8
+> our HW composer code right now.  Can we use this properties as private 
+> property
 > 
-> How to for pci:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/pci/pci.txt?h=v5.8
+> and do not upstream HW composer for the time being?
 
-Thanks, that looks good.
+It's not my decision, it's a policy of the DRM subsystem to require an
+open implementation in userspace to validate all API additions.
 
-But I've still got another problem: how can I use DT along w/ ACPI ?
+In any case, I think selection of the output format should be done
+through a standard API (very likely a standard DRM property), possibly
+related to drm_mode_create_hdmi_colorspace_property(). There's nothing
+Rockchip-specific here.
 
-The scenario goes like this:
-
-* machine boots and probes normally w/ ACPI
-* device is detected via USB, PCI, DMI, etc -> driver gets active
-* driver loads (or carries) a DT snippet
-* devices on the bus are instantiated via this DT snippet
-
-(driver could also be some udev vodoo)
-
-Example a:
-
-* generic usb i2c dongle w/ some i2c devices attached behind it
-* config (or DT snippet) somewhere in the FS
-
-Example b:
-
-* x86 board driver (eg. apu2/3/4), probed via DMI
-* just instantiates a bunch of generic drivers and wires up
-  devices (gpio, leds, keys, ...)
-
-
-Do you think we can already do that ?
-Otherwise, what has to be done to achieve that ?	
-
-
---mtx
+> >> +
+> >> +enum dw_hdmi_rockchip_color_depth {
+> >> +	ROCKCHIP_HDMI_DEPTH_8,
+> >> +	ROCKCHIP_HDMI_DEPTH_10,
+> >> +	ROCKCHIP_HDMI_DEPTH_12,
+> >> +	ROCKCHIP_HDMI_DEPTH_16,
+> >> +	ROCKCHIP_HDMI_DEPTH_420_10,
+> >> +	ROCKCHIP_HDMI_DEPTH_420_12,
+> >> +	ROCKCHIP_HDMI_DEPTH_420_16
+> >> +};
+> >> +
+> >>   /**
+> >>    * struct rockchip_hdmi_chip_data - splite the grf setting of kind of chips
+> >>    * @lcdsel_grf_reg: grf register offset of lcdc select
+> >> @@ -73,6 +94,12 @@ struct rockchip_hdmi {
+> >>   	struct clk *grf_clk;
+> >>   	struct dw_hdmi *hdmi;
+> >>   	struct phy *phy;
+> >> +
+> >> +	struct drm_property *color_depth_property;
+> >> +	struct drm_property *hdmi_output_property;
+> >> +
+> >> +	unsigned int colordepth;
+> >> +	enum drm_hdmi_output_type hdmi_output;
+> >>   };
+> >>   
+> >>   #define to_rockchip_hdmi(x)	container_of(x, struct rockchip_hdmi, x)
+> >> @@ -327,6 +354,150 @@ static void dw_hdmi_rockchip_genphy_disable(struct dw_hdmi *dw_hdmi, void *data)
+> >>   	phy_power_off(hdmi->phy);
+> >>   }
+> >>   
+> >> +static const struct drm_prop_enum_list color_depth_enum_list[] = {
+> >> +	{ 0, "Automatic" }, /* Prefer highest color depth */
+> >> +	{ 8, "24bit" },
+> >> +	{ 10, "30bit" },
+> >> +};
+> >> +
+> >> +static const struct drm_prop_enum_list drm_hdmi_output_enum_list[] = {
+> >> +	{ DRM_HDMI_OUTPUT_DEFAULT_RGB, "output_rgb" },
+> >> +	{ DRM_HDMI_OUTPUT_YCBCR444, "output_ycbcr444" },
+> >> +	{ DRM_HDMI_OUTPUT_YCBCR422, "output_ycbcr422" },
+> >> +	{ DRM_HDMI_OUTPUT_YCBCR420, "output_ycbcr420" },
+> >> +	{ DRM_HDMI_OUTPUT_YCBCR_HQ, "output_ycbcr_high_subsampling" },
+> >> +	{ DRM_HDMI_OUTPUT_YCBCR_LQ, "output_ycbcr_low_subsampling" },
+> >> +	{ DRM_HDMI_OUTPUT_INVALID, "invalid_output" },
+> >> +};
+> >> +
+> >> +static void
+> >> +dw_hdmi_rockchip_attach_properties(struct drm_connector *connector,
+> >> +				   unsigned int color, int version,
+> >> +				   void *data)
+> >> +{
+> >> +	struct rockchip_hdmi *hdmi = (struct rockchip_hdmi *)data;
+> >> +	struct drm_property *prop;
+> >> +
+> >> +	switch (color) {
+> >> +	case MEDIA_BUS_FMT_RGB101010_1X30:
+> >> +		hdmi->hdmi_output = DRM_HDMI_OUTPUT_DEFAULT_RGB;
+> >> +		hdmi->colordepth = 10;
+> >> +		break;
+> >> +	case MEDIA_BUS_FMT_YUV8_1X24:
+> >> +		hdmi->hdmi_output = DRM_HDMI_OUTPUT_YCBCR444;
+> >> +		hdmi->colordepth = 8;
+> >> +		break;
+> >> +	case MEDIA_BUS_FMT_YUV10_1X30:
+> >> +		hdmi->hdmi_output = DRM_HDMI_OUTPUT_YCBCR444;
+> >> +		hdmi->colordepth = 10;
+> >> +		break;
+> >> +	case MEDIA_BUS_FMT_UYVY10_1X20:
+> >> +		hdmi->hdmi_output = DRM_HDMI_OUTPUT_YCBCR422;
+> >> +		hdmi->colordepth = 10;
+> >> +		break;
+> >> +	case MEDIA_BUS_FMT_UYVY8_1X16:
+> >> +		hdmi->hdmi_output = DRM_HDMI_OUTPUT_YCBCR422;
+> >> +		hdmi->colordepth = 8;
+> >> +		break;
+> >> +	case MEDIA_BUS_FMT_UYYVYY8_0_5X24:
+> >> +		hdmi->hdmi_output = DRM_HDMI_OUTPUT_YCBCR420;
+> >> +		hdmi->colordepth = 8;
+> >> +		break;
+> >> +	case MEDIA_BUS_FMT_UYYVYY10_0_5X30:
+> >> +		hdmi->hdmi_output = DRM_HDMI_OUTPUT_YCBCR420;
+> >> +		hdmi->colordepth = 10;
+> >> +		break;
+> >> +	default:
+> >> +		hdmi->hdmi_output = DRM_HDMI_OUTPUT_DEFAULT_RGB;
+> >> +		hdmi->colordepth = 8;
+> >> +	}
+> >> +
+> >> +	prop = drm_property_create_enum(connector->dev, 0,
+> >> +					"hdmi_output_depth",
+> >> +					color_depth_enum_list,
+> >> +					ARRAY_SIZE(color_depth_enum_list));
+> >> +	if (prop) {
+> >> +		hdmi->color_depth_property = prop;
+> >> +		drm_object_attach_property(&connector->base, prop, 0);
+> >> +	}
+> >> +
+> >> +	prop = drm_property_create_enum(connector->dev, 0, "hdmi_output_format",
+> >> +					drm_hdmi_output_enum_list,
+> >> +					ARRAY_SIZE(drm_hdmi_output_enum_list));
+> >> +	if (prop) {
+> >> +		hdmi->hdmi_output_property = prop;
+> >> +		drm_object_attach_property(&connector->base, prop, 0);
+> >> +	}
+> >> +}
+> >> +
+> >> +static void
+> >> +dw_hdmi_rockchip_destroy_properties(struct drm_connector *connector,
+> >> +				    void *data)
+> >> +{
+> >> +	struct rockchip_hdmi *hdmi = (struct rockchip_hdmi *)data;
+> >> +
+> >> +	if (hdmi->color_depth_property) {
+> >> +		drm_property_destroy(connector->dev,
+> >> +				     hdmi->color_depth_property);
+> >> +		hdmi->color_depth_property = NULL;
+> >> +	}
+> >> +
+> >> +	if (hdmi->hdmi_output_property) {
+> >> +		drm_property_destroy(connector->dev,
+> >> +				     hdmi->hdmi_output_property);
+> >> +		hdmi->hdmi_output_property = NULL;
+> >> +	}
+> >> +}
+> >> +
+> >> +static int
+> >> +dw_hdmi_rockchip_set_property(struct drm_connector *connector,
+> >> +			      struct drm_connector_state *state,
+> >> +			      struct drm_property *property,
+> >> +			      u64 val,
+> >> +			      void *data)
+> >> +{
+> >> +	struct rockchip_hdmi *hdmi = (struct rockchip_hdmi *)data;
+> >> +
+> >> +	if (property == hdmi->color_depth_property) {
+> >> +		hdmi->colordepth = val;
+> >> +		return 0;
+> >> +	} else if (property == hdmi->hdmi_output_property) {
+> >> +		hdmi->hdmi_output = val;
+> >> +		return 0;
+> >> +	}
+> >> +
+> >> +	DRM_ERROR("failed to set rockchip hdmi connector property\n");
+> >> +	return -EINVAL;
+> >> +}
+> >> +
+> >> +static int
+> >> +dw_hdmi_rockchip_get_property(struct drm_connector *connector,
+> >> +			      const struct drm_connector_state *state,
+> >> +			      struct drm_property *property,
+> >> +			      u64 *val,
+> >> +			      void *data)
+> >> +{
+> >> +	struct rockchip_hdmi *hdmi = (struct rockchip_hdmi *)data;
+> >> +
+> >> +	if (property == hdmi->color_depth_property) {
+> >> +		*val = hdmi->colordepth;
+> >> +		return 0;
+> >> +	} else if (property == hdmi->hdmi_output_property) {
+> >> +		*val = hdmi->hdmi_output;
+> >> +		return 0;
+> >> +	}
+> >> +
+> >> +	DRM_ERROR("failed to get rockchip hdmi connector property\n");
+> >> +	return -EINVAL;
+> >> +}
+> >> +
+> >> +static const struct dw_hdmi_property_ops dw_hdmi_rockchip_property_ops = {
+> >> +	.attach_properties	= dw_hdmi_rockchip_attach_properties,
+> >> +	.destroy_properties	= dw_hdmi_rockchip_destroy_properties,
+> >> +	.set_property		= dw_hdmi_rockchip_set_property,
+> >> +	.get_property		= dw_hdmi_rockchip_get_property,
+> >> +};
+> >> +
+> >>   static void dw_hdmi_rk3228_setup_hpd(struct dw_hdmi *dw_hdmi, void *data)
+> >>   {
+> >>   	struct rockchip_hdmi *hdmi = (struct rockchip_hdmi *)data;
+> >> @@ -511,6 +682,9 @@ static int dw_hdmi_rockchip_bind(struct device *dev, struct device *master,
+> >>   	hdmi->dev = &pdev->dev;
+> >>   	hdmi->chip_data = plat_data->phy_data;
+> >>   	plat_data->phy_data = hdmi;
+> >> +
+> >> +	plat_data->property_ops = &dw_hdmi_rockchip_property_ops;
+> >> +
+> >>   	encoder = &hdmi->encoder;
+> >>   
+> >>   	encoder->possible_crtcs = drm_of_find_possible_crtcs(drm, dev->of_node);
+> >> diff --git a/include/drm/bridge/dw_hdmi.h b/include/drm/bridge/dw_hdmi.h
+> >> index ea34ca146b82..dc561ebe7a9b 100644
+> >> --- a/include/drm/bridge/dw_hdmi.h
+> >> +++ b/include/drm/bridge/dw_hdmi.h
+> >> @@ -6,6 +6,7 @@
+> >>   #ifndef __DW_HDMI__
+> >>   #define __DW_HDMI__
+> >>   
+> >> +#include <drm/drm_property.h>
+> >>   #include <sound/hdmi-codec.h>
+> >>   
+> >>   struct drm_display_info;
+> >> @@ -123,6 +124,24 @@ struct dw_hdmi_phy_ops {
+> >>   	void (*setup_hpd)(struct dw_hdmi *hdmi, void *data);
+> >>   };
+> >>   
+> >> +struct dw_hdmi_property_ops {
+> >> +	void (*attach_properties)(struct drm_connector *connector,
+> >> +				  unsigned int color, int version,
+> >> +				  void *data);
+> >> +	void (*destroy_properties)(struct drm_connector *connector,
+> >> +				   void *data);
+> >> +	int (*set_property)(struct drm_connector *connector,
+> >> +			    struct drm_connector_state *state,
+> >> +			    struct drm_property *property,
+> >> +			    u64 val,
+> >> +			    void *data);
+> >> +	int (*get_property)(struct drm_connector *connector,
+> >> +			    const struct drm_connector_state *state,
+> >> +			    struct drm_property *property,
+> >> +			    u64 *val,
+> >> +			    void *data);
+> >> +};
+> >> +
+> >>   struct dw_hdmi_plat_data {
+> >>   	struct regmap *regm;
+> >>   
+> >> @@ -141,6 +160,9 @@ struct dw_hdmi_plat_data {
+> >>   					   const struct drm_display_info *info,
+> >>   					   const struct drm_display_mode *mode);
+> >>   
+> >> +	/* Vendor Property support */
+> >> +	const struct dw_hdmi_property_ops *property_ops;
+> >> +
+> >>   	/* Vendor PHY support */
+> >>   	const struct dw_hdmi_phy_ops *phy_ops;
+> >>   	const char *phy_name;
 
 -- 
----
-Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
-werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
-GPG/PGP-Schlüssel zu.
----
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+Regards,
+
+Laurent Pinchart
