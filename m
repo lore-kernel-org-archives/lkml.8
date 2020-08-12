@@ -2,87 +2,82 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D6C2C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:16:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A4BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:19:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F7E8207DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:16:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19D1D22B45
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:19:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597234758;
+	bh=2V8LC8Z0fyID40kPZ6gRZzu3p05ZGHbpAZ1Q92ev8l8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rd+372s0SdRmPRgvioihyytWJESU8NZ4vE0FrONzPyvtl/fmYu3s6HLpOS3+tyu20
+	 jW1i45a2HOse6ZUxeAvS7ct/8yJit1e7FSpOaEyt1ALnEW2jbN1eZuBE03qLaTJZFO
+	 Xb67mLD9k6jReRossvs0KX7rsL+9O/GvZk2mpdnk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727822AbgHLMQq (ORCPT
+        id S1727788AbgHLMTQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 08:16:46 -0400
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:39239 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726829AbgHLMQp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 08:16:45 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R751e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07484;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0U5ZBL.H_1597234598;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U5ZBL.H_1597234598)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 12 Aug 2020 20:16:39 +0800
-Subject: Re: [PATCH v17 14/21] mm/compaction: do page isolation first in
- compaction
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        kbuild test robot <lkp@intel.com>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
-        Shakeel Butt <shakeelb@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Rong Chen <rong.a.chen@intel.com>
-References: <1595681998-19193-1-git-send-email-alex.shi@linux.alibaba.com>
- <1595681998-19193-15-git-send-email-alex.shi@linux.alibaba.com>
- <CAKgT0UcbBv=QBK9ErqLKXoNLYxFz52L4fiiHy4h6zKdBs=YPOg@mail.gmail.com>
- <241ca157-104f-4f0d-7d5b-de394443788d@linux.alibaba.com>
- <CAKgT0UdSrarC8j+G=LYRSadcaG6yNCoCfeVpFjEiHRJb4A77-g@mail.gmail.com>
- <8dbd004e-8eba-f1ec-a5eb-5dc551978936@linux.alibaba.com>
- <CAKgT0UdK-fy+yYGLFK=YgE+maa_0_uecq0_8S_0kM8BiVgRO7g@mail.gmail.com>
- <d9818e06-95f1-9f21-05c0-98f29ea96d89@linux.alibaba.com>
- <CAKgT0Ues0ShkSbb1XtA7z7EYB8NCPgLGq8zZUjrXK_jcWn8mDQ@mail.gmail.com>
- <9581db48-cef3-788a-7f5a-8548fee56c13@linux.alibaba.com>
-Message-ID: <51249892-632b-4aaf-1f66-3bc0d5c5cbab@linux.alibaba.com>
-Date:   Wed, 12 Aug 2020 20:16:06 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        Wed, 12 Aug 2020 08:19:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40772 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726722AbgHLMTQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 08:19:16 -0400
+Received: from quaco.ghostprotocols.net (179.176.8.134.dynamic.adsl.gvt.net.br [179.176.8.134])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB5C12245C;
+        Wed, 12 Aug 2020 12:19:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597234756;
+        bh=2V8LC8Z0fyID40kPZ6gRZzu3p05ZGHbpAZ1Q92ev8l8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KqcQHKE0mA1l2AxKzD7GuM3IX83UVBGGj+K096Y8ZUH3XJLt5IV/tVtEwlZLAjI6s
+         0DAB1PiPrzEIUmaW6QuJpWnVub5r+h9/QFHlrxz0nNrJhav/s+a6XtD/r3gt2AldBA
+         RO5+TjYUrVI2HH+CvnuEyrGwJjbybzQPl0JPkrwU=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 84B7A403C6; Wed, 12 Aug 2020 09:19:13 -0300 (-03)
+Date:   Wed, 12 Aug 2020 09:19:13 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     David Ahern <dsahern@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Subject: Re: [PATCH 1/2] perf sched: Prefer sched_waking event when it exists
+Message-ID: <20200812121913.GF13995@kernel.org>
+References: <20200807164844.44870-1-dsahern@kernel.org>
+ <CAM9d7chu8VOWfQv0dF89U6AaTE7VvwQDJj+V39cMp12k0Q1s_A@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <9581db48-cef3-788a-7f5a-8548fee56c13@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAM9d7chu8VOWfQv0dF89U6AaTE7VvwQDJj+V39cMp12k0Q1s_A@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-在 2020/8/12 下午7:43, Alex Shi 写道:
->>> Sorry, I still can not follow you here. Compound code part is unchanged
->>> and follow the original logical. So would you like to pose a new code to
->>> see if its works?
->> No there are significant changes as you reordered all of the
->> operations. Prior to your change the LRU bit was checked, but not
->> cleared before testing for PageCompound. Now you are clearing it
->> before you are testing if it is a compound page. So if compaction is
->> running we will be seeing the pages in the LRU stay put, but the
->> compound bit flickering off and on if the compound page is encountered
->> with the wrong or NULL lruvec. What I was suggesting is that the
-
-> The lruvec could be wrong or NULL here, that is the base stone of whole
-> patchset.
+Em Tue, Aug 11, 2020 at 03:42:45PM +0900, Namhyung Kim escreveu:
+> Hi David,
 > 
-Sorry for typo. s/could/could not/
+> On Sat, Aug 8, 2020 at 1:48 AM David Ahern <dsahern@kernel.org> wrote:
+> >
+> > Commit fbd705a0c618 ("sched: Introduce the 'trace_sched_waking' tracepoint")
+> > added sched_waking tracepoint which should be preferred over sched_wakeup
+> > when analyzing scheduling delays.
+> >
+> > Update 'perf sched record' to collect sched_waking events if it exists
+> > and fallback to sched_wakeup if it does not. Similarly, update timehist
+> > command to skip sched_wakeup events if the session includes
+> > sched_waking (ie., sched_waking is preferred over sched_wakeup).
+> >
+> > Signed-off-by: David Ahern <dsahern@kernel.org>
+> 
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
+
+Thanks, applied.
+
+- Arnaldo
