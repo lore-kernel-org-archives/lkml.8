@@ -2,140 +2,293 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B1D3C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 21:09:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C7BAC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 21:10:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4714220774
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 21:09:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEF3C20774
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 21:10:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JJyY3xwd"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z5x0A4sY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbgHLVJS (ORCPT
+        id S1726576AbgHLVKd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 17:09:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51532 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726508AbgHLVJR (ORCPT
+        Wed, 12 Aug 2020 17:10:33 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:50119 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726030AbgHLVKd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 17:09:17 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 992BBC061384
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 14:09:17 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id f9so1733529pju.4
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 14:09:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=bAaQQ7e9aAoGDmzOJ51xKy0+RuDHeXB46TjNq9EcMXw=;
-        b=JJyY3xwd5EgGKBxKKs4dXLXjk5wiLbg072kKzLvv50o9mgzTqqrQJL+xdDaimziA1c
-         8lAJxeWVFouTjEHC3p+FJBHv9MkkQXebphjhv/87vMA03btiQzyISXigPijA5x2KQoW5
-         nUw89h2rmkM9A/ksku0Eaj3hOHIgdGgwzjFhnjtQSgNPwpja4IRE5ffrLMK8bI+rSdPx
-         zrd1zLC5Ud5n5igqgNzbn4hLLF+kvpQzPaA3G36KP5d616DBAw5ejnhDSpbZCyii00Ts
-         0nv+48h+3RkOCkQQ7zTOGGL8XFhl0NtwiI7rHihoXoga1nJQSXnDWdFxDtA0zFVtgo2u
-         58kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=bAaQQ7e9aAoGDmzOJ51xKy0+RuDHeXB46TjNq9EcMXw=;
-        b=H1V44ACisHHXf0Hn2Ec3AarnYrXAyyFvhTPCZMy4vyy1nj86lLIdX8o+X8DnVUoZqO
-         YKABRGC9VT9+bOfBjWfUMdUNYiiwgc7Dipp0dt2atbyC7M7uc1myUAXk443SQcIPtFIQ
-         q3+2CYfBX+yrxCcwu77cMcvb+363XMyrz9J2kzbUO6SW0PKhQoo9OnGy1wshELR0PGCj
-         8PkEfdFPtGUR24AffwKNO8B4aN/M2J9sKGc/n4xo8CXJv05G1lidoJMS1Zg4vEhJnGJ3
-         d8KhyxXU5WDebanOGbrGSWzPu9oHurBZS7YCEaQCnVyz7c0r814kYizslBYcui/tndb4
-         /sww==
-X-Gm-Message-State: AOAM530CmevVXzaVkQV9dzkAK/PmMcmI9BMUT8wgGX0GsgjFaC+270hR
-        MIqnfeFgebh74VWcRXL3WfZRCg==
-X-Google-Smtp-Source: ABdhPJzpIfuVpvNm7+wJPOKe1ryB9LzK23HxdnBP82RAznzjdf1L5AejEUEGRunqac7heeExlbSFHQ==
-X-Received: by 2002:a17:90a:2210:: with SMTP id c16mr1938422pje.65.1597266556824;
-        Wed, 12 Aug 2020 14:09:16 -0700 (PDT)
-Received: from google.com ([2620:15c:201:2:f693:9fff:fef4:1b6d])
-        by smtp.gmail.com with ESMTPSA id n1sm3437625pfu.2.2020.08.12.14.09.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Aug 2020 14:09:16 -0700 (PDT)
-Date:   Wed, 12 Aug 2020 14:09:09 -0700
-From:   Sami Tolvanen <samitolvanen@google.com>
-To:     Luca Stefani <luca.stefani.ge1@gmail.com>
-Cc:     Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
-        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] RAS/CEC: Fix cec_init prototype
-Message-ID: <20200812210909.GA3283093@google.com>
-References: <20200805045955.GB9127@nazgul.tnic>
- <20200805095708.83939-1-luca.stefani.ge1@gmail.com>
+        Wed, 12 Aug 2020 17:10:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597266630;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=lajmu4EexvaCOeWvbC8/EUC4iJVRcqbVaB2CSLh8m28=;
+        b=Z5x0A4sYjoqWcpcBlv39tOlDAAls5iQeT1aTvLeVnG8js1HHOQuFYrandiAUz2PGeSvPBI
+        ki2ZBs7onVCrwXc2H9XT0szz4EnOnqVB7bwwDvP//6preaAIeQ7zS1oDdRjTC16tpOVoDx
+        Kq5bHXNzI+IdNM8FVQhp9mk8atySxak=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-404-bZk2_DJxO-mIxuPXAOKWKg-1; Wed, 12 Aug 2020 17:10:21 -0400
+X-MC-Unique: bZk2_DJxO-mIxuPXAOKWKg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9EA0A57;
+        Wed, 12 Aug 2020 21:10:20 +0000 (UTC)
+Received: from horse.redhat.com (ovpn-118-134.rdu2.redhat.com [10.10.118.134])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 37A7719D7D;
+        Wed, 12 Aug 2020 21:10:13 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id BCBCC220264; Wed, 12 Aug 2020 17:10:12 -0400 (EDT)
+Date:   Wed, 12 Aug 2020 17:10:12 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        virtio-fs@redhat.com, miklos@szeredi.hu, stefanha@redhat.com,
+        dgilbert@redhat.com
+Subject: Re: [PATCH v2 15/20] fuse, dax: Take ->i_mmap_sem lock during dax
+ page fault
+Message-ID: <20200812211012.GA540706@redhat.com>
+References: <20200807195526.426056-1-vgoyal@redhat.com>
+ <20200807195526.426056-16-vgoyal@redhat.com>
+ <20200810222238.GD2079@dread.disaster.area>
+ <20200811175530.GB497326@redhat.com>
+ <20200812012345.GG2079@dread.disaster.area>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200805095708.83939-1-luca.stefani.ge1@gmail.com>
+In-Reply-To: <20200812012345.GG2079@dread.disaster.area>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Luca,
-
-On Wed, Aug 05, 2020 at 11:57:08AM +0200, Luca Stefani wrote:
-> * late_initcall expects a function that returns an integer
->   -> Update the function signature to match.
+On Wed, Aug 12, 2020 at 11:23:45AM +1000, Dave Chinner wrote:
+> On Tue, Aug 11, 2020 at 01:55:30PM -0400, Vivek Goyal wrote:
+> > On Tue, Aug 11, 2020 at 08:22:38AM +1000, Dave Chinner wrote:
+> > > On Fri, Aug 07, 2020 at 03:55:21PM -0400, Vivek Goyal wrote:
+> > > > We need some kind of locking mechanism here. Normal file systems like
+> > > > ext4 and xfs seems to take their own semaphore to protect agains
+> > > > truncate while fault is going on.
+> > > > 
+> > > > We have additional requirement to protect against fuse dax memory range
+> > > > reclaim. When a range has been selected for reclaim, we need to make sure
+> > > > no other read/write/fault can try to access that memory range while
+> > > > reclaim is in progress. Once reclaim is complete, lock will be released
+> > > > and read/write/fault will trigger allocation of fresh dax range.
+> > > > 
+> > > > Taking inode_lock() is not an option in fault path as lockdep complains
+> > > > about circular dependencies. So define a new fuse_inode->i_mmap_sem.
+> > > 
+> > > That's precisely why filesystems like ext4 and XFS define their own
+> > > rwsem.
+> > > 
+> > > Note that this isn't a DAX requirement - the page fault
+> > > serialisation is actually a requirement of hole punching...
+> > 
+> > Hi Dave,
+> > 
+> > I noticed that fuse code currently does not seem to have a rwsem which
+> > can provide mutual exclusion between truncation/hole_punch path
+> > and page fault path. I am wondering does that mean there are issues
+> > with existing code or something else makes it unnecessary to provide
+> > this mutual exlusion.
 > 
-> Fixes: 9554bfe403nd ("x86/mce: Convert the CEC to use the MCE notifier")
-> Signed-off-by: Luca Stefani <luca.stefani.ge1@gmail.com>
+> I don't know enough about the fuse implementation to say. What I'm
+> saying is that nothing in the core mm/ or VFS serilises page cache
+> access to the data against direct filesystem manipulations of the
+> underlying filesystem structures.
 
-Thank you for fixing this!
+Hi Dave,
 
-[Note that this v2 email never landed in my inbox, perhaps Gmail filtered
- it out due to a missing To: line?]
+Got it. I was checking nfs and they also seem to be calling filemap_fault
+and not taking any locks to block faults. fallocate() (nfs42_fallocate)
+seems to block read/write/aio/dio but does not seem to do anything
+about blocking faults. I am wondering if remote filesystem are
+little different in this aspect. Especially fuse does not maintain
+any filesystem block/extent data. It is file server which is doing
+all that.
 
-> ---
->  drivers/ras/cec.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
 > 
-> diff --git a/drivers/ras/cec.c b/drivers/ras/cec.c
-> index 569d9ad2c594..6939aa5b3dc7 100644
-> --- a/drivers/ras/cec.c
-> +++ b/drivers/ras/cec.c
-> @@ -553,20 +553,20 @@ static struct notifier_block cec_nb = {
->  	.priority	= MCE_PRIO_CEC,
->  };
->  
-> -static void __init cec_init(void)
-> +static int __init cec_init(void)
->  {
->  	if (ce_arr.disabled)
-> -		return;
-> +		return -ENODEV;
->  
->  	ce_arr.array = (void *)get_zeroed_page(GFP_KERNEL);
->  	if (!ce_arr.array) {
->  		pr_err("Error allocating CE array page!\n");
-> -		return;
-> +		return -ENOMEM;
->  	}
->  
->  	if (create_debugfs_nodes()) {
->  		free_page((unsigned long)ce_arr.array);
-> -		return;
-> +		return -ENOMEM;
->  	}
->  
->  	INIT_DELAYED_WORK(&cec_work, cec_work_fn);
-> @@ -575,6 +575,7 @@ static void __init cec_init(void)
->  	mce_register_decode_chain(&cec_nb);
->  
->  	pr_info("Correctable Errors collector initialized.\n");
-> +	return 0;
->  }
->  late_initcall(cec_init);
+> i.e. nothing in the VFS or page fault IO path prevents this race
+> condition:
+> 
+> P0				P1
+> fallocate
+> page cache invalidation
+> 				page fault
+> 				read data
+> punch out data extents
+> 				<data exposed to userspace is stale>
+> 				<data exposed to userspace has no
+> 				backing store allocated>
+> 
+> 
+> That's where the ext4 and XFS internal rwsem come into play:
+> 
+> fallocate
+> down_write(mmaplock)
+> page cache invalidation
+> 				page fault
+> 				down_read(mmaplock)
+> 				<blocks>
+> punch out data
+> up_write(mmaplock)
+> 				<unblocks>
+> 				<sees hole>
+> 				<allocates zeroed pages in page cache>
+> 
+> And there's not stale data exposure to userspace.
 
-The type mismatch broke allyesconfig in my test tree and your patch
-fixes the issue. Please feel free to add:
+Got it. I noticed that both fuse/nfs seem to have reversed the
+order of operation. They call server to punch out data first
+and then truncate page cache. And that should mean that even
+if mmap reader will not see stale data after fallocate(punch_hole)
+has finished.
 
-  Reviewed-and-tested-by: Sami Tolvanen <samitolvanen@google.com>
+> 
+> It's the same reason that we use the i_rwsem to prevent concurrent
+> IO while a truncate or hole punch is in progress. The IO could map
+> the extent, then block in the IO path, while the filesytsem
+> re-allocates and writes new data or metadata to those blocks. That's
+> another potential non-owner data exposure problem.
+> 
+> And if you don't drain AIO+DIO before truncate/hole punch, the
+> i_rwsem does not protect you against concurrent IO as that gets
+> dropped after the AIO is submitted and returns EIOCBQUEUED to the
+> AIO layer. Hence there's IO in flight that isn't tracked by the
+> i_rwsem or the MMAPLOCK, and if you punch out the blocks and
+> reallocate them while the IO is in flight....
+> 
+> > > > @@ -3849,9 +3856,11 @@ static long fuse_file_fallocate(struct file *file, int mode, loff_t offset,
+> > > >  			file_update_time(file);
+> > > >  	}
+> > > >  
+> > > > -	if (mode & FALLOC_FL_PUNCH_HOLE)
+> > > > +	if (mode & FALLOC_FL_PUNCH_HOLE) {
+> > > > +		down_write(&fi->i_mmap_sem);
+> > > >  		truncate_pagecache_range(inode, offset, offset + length - 1);
+> > > > -
+> > > > +		up_write(&fi->i_mmap_sem);
+> > > > +	}
+> > > >  	fuse_invalidate_attr(inode);
+> > > 
+> > > 
+> > > I'm not sure this is sufficient. You have to lock page faults out
+> > > for the entire time the hole punch is being performed, not just while
+> > > the mapping is being invalidated.
+> > > 
+> > > That is, once you've taken the inode lock and written back the dirty
+> > > data over the range being punched, you can then take a page fault
+> > > and dirty the page again. Then after you punch the hole out,
+> > > you have a dirty page with non-zero data in it, and that can get
+> > > written out before the page cache is truncated.
+> > 
+> > Just for my better udnerstanding of the issue, I am wondering what
+> > problem will it lead to.
+> > If one process is doing punch_hole and other is writing in the
+> > range being punched, end result could be anything. Either we will
+> > read zeroes from punched_hole pages or we will read the data
+> > written by process writing to mmaped page, depending on in what
+> > order it got executed. 
+> >
+> > If that's the case, then holding fi->i_mmap_sem for the whole
+> > duration might not matter. What am I missing?
+> 
+> That it is safe to invalidate the page cache after the hole has been
+> punched.
 
-Sami
+That's precisely both fuse and nfs seem to be doing. truncate page
+cache after server has hole punched the file. (nfs42_proc_deallocate()
+and fuse_file_fallocate()). I don't understand the nfs code, but
+that seems to be the case from a quick look.
+
+> 
+> There is nothing stopping, say, memory reclaim from reclaiming pages
+> over the range while the hole is being punched, then having the
+> application refault them while the backing store is being freed.
+> While the page fault read IO is in progress, there's nothing
+> stopping the filesystem from freeing those blocks, nor reallocating
+> them and writing something else to them (e.g. metadata). So they
+> could read someone elses data.
+> 
+> Even worse: the page fault is a write fault, it lands in a hole, has
+> space allocated, the page cache is zeroed, page marked dirty, and
+> then the hole punch calls truncate_pagecache_range() which tosses
+> away the zeroed page and the data the userspace application wrote
+> to the page.
+
+But isn't that supposed to happen. If fallocate(hole_punch) and mmaped
+write are happening at the same time, then there is no guarantee
+in what order they will execute. App might read back data it wrote
+or might read back zeros depdening on order it was executed. (Even
+with proper locking).
+
+> 
+> The application then refaults the page, reading stale data off
+> disk instead of seeing what it had already written to the page....
+> 
+> And unlike truncated pages, the mm/ code cannot reliably detect
+> invalidation races on lockless lookup of pages that are within EOF.
+> They rely on truncate changing the file size before page
+> invalidation to detect races as page->index then points beyond EOF.
+> Hole punching does not change inode size, so the page cache lookups
+> cannot tell the difference between a new page that just needs IO to
+> initialise the data and a page that has just been invalidated....
+> 
+> IOWs, there are many ways things can go wrong with hole punch, and
+> the only way to avoid them all is to do invalidate and lock out the
+> page cache before starting the fallocate operation. i.e.:
+> 
+> 	1. lock up the entire IO path (vfs and page fault)
+> 	2. drain the AIO+DIO path
+> 	3. write back dirty pages
+> 	4. invalidate the page cache
+
+I see that this is definitely safe. Stop all read/write/faults/aio/dio
+before proceeding with punching hole and invalidating page cache.
+
+I think for my purpose, I need to take fi->i_mmap_sem in memory
+range freeing path and need to exactly do all the above to make
+sure that no I/O, fault or AIO/DIO is going on before I take
+away the memory range I have allocated for that inode offset. This
+is I think very similar to assigning blocks/extents and taking
+these away. In that code path I am already taking care of
+taking inode lock as well as i_mmap_sem. But I have not taken
+care of AIO/DIO stuff. I will introduce that too.
+
+For the time being I will handle this fallocate/ftruncate possible
+races in a separate patch series. To me it makes sense to do what
+ext4/xfs are doing. But there might be more to it when it comes
+to remote filesystems... 
+
+Miklos, WDYT. Shall I modify fuse fallocate/ftruncate code to 
+block all faults/AIO/DIO as well before we get down to the
+task of writing back pages, truncating page cache and punching
+hole.
+
+> 
+> Because this is the only way we can guarantee that nothing can access
+> the filesystem's backing store for the range we are about to
+> directly manipulate the data in while we perform an "offloaded" data
+> transformation on that range...
+> 
+> This isn't just hole punch - the same problems exist with
+> FALLOC_FL_ZERO_RANGE and FALLOC_FL_{INSERT,COLLAPSE}_RANGE because
+> they change data with extent manipulations and/or hardware offloads
+> that provide no guarantees of specific data state or integrity until
+> they complete....
+
+Ok. As of now fuse seems to have blocked all extra fallocate operations
+like ZERO_RANGE, INSERT, COLLAPSE.
+
+Thanks
+Vivek
+
