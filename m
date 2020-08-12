@@ -2,138 +2,86 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A77C6C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:18:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36E67C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:19:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F08D20781
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:18:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E742C20781
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:19:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cRsT2ZGx"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="KjmsEoeh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbgHLOSq (ORCPT
+        id S1726703AbgHLOTa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 10:18:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44868 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726485AbgHLOSo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 10:18:44 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8B70C061383;
-        Wed, 12 Aug 2020 07:18:44 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id 77so1764476ilc.5;
-        Wed, 12 Aug 2020 07:18:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=48IsAeauuq9BcWaKpHbdNQ/tldBG5RElnWagtcAUqV4=;
-        b=cRsT2ZGxUqGKOyzMO0wNvu9c+MKHGwNtaL6WtkzcJzG2FycOznSzVRew0E6OYHFgux
-         fsIyKPl6ke8ScaAfvjEtSMjX/9nYkikjCzR9HUZnzR8ETeQxqgzT8T9m9tkPZXgOf2rz
-         QTa2ibKV/kc3wjS8YgXlIeurfSfb/bDJCAKxjA45Lso2Ku4KDO7jliyJhWJHeEhDFA7X
-         ReTwAvAMpfx0ApCdtT50EYjARYNFr2Pa0x4ybb5B05UqDaqofUj0hJUWtxBZFJZPdZOq
-         VTjf/jf3xqOmYG2RwMDDkJTrdk7iPHgg2+DhSezRHe/5imOjPJK1QaINlGCpBwHoXiux
-         1TmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=48IsAeauuq9BcWaKpHbdNQ/tldBG5RElnWagtcAUqV4=;
-        b=jDAFX//wlZ67ADG3BRoc+98oHpeUn1PkrsX26dCVeGKDRRPBup3obeJAuaOiYMIbCR
-         a9iWZ1Ixmd4rKaYTO9a7qUhqRuy3y/hE/klwkuoTnXP38yhvxernDptdOOZ/OPAObcZ0
-         6VG3d2Xx91WoPNA+E1zpCGTYV3490uFcffflct3GLTVVramOjjnfUfq1HKBva40INeWV
-         50Qt5h+zszbG5bX2ZM20lLfWXJQzKKtx2iSdyb04CCbjo/lAkVceldBJ4a4gTDdKCafk
-         OuMbd7Wnc/zmu9QEkRuXBCUzVDH2U2jDp6MohoIFcy870Fj1QYhk9LibeVcL82uf/WQ3
-         hayA==
-X-Gm-Message-State: AOAM532wUN5rEwsWt789RLQyCVJRltRw3Tr8BCd2LgsN6EC6lldeZk7T
-        ApzeZzY2nQkFsclluTDHq60=
-X-Google-Smtp-Source: ABdhPJzf/jasvT0zc9p1+CGDgqywSS+wUi9D5ewUAR1wjx5vZ+7v7igbj00P+ikLT5qiFiGJ2YZ2iA==
-X-Received: by 2002:a92:418b:: with SMTP id o133mr14743047ila.277.1597241924157;
-        Wed, 12 Aug 2020 07:18:44 -0700 (PDT)
-Received: from anon-dhcp-152.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id r8sm1129252ilt.54.2020.08.12.07.18.41
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 12 Aug 2020 07:18:42 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [dm-devel] [RFC PATCH v5 00/11] Integrity Policy Enforcement LSM
- (IPE)
-From:   Chuck Lever <chucklever@gmail.com>
-In-Reply-To: <alpine.LRH.2.21.2008120643370.10591@namei.org>
-Date:   Wed, 12 Aug 2020 10:18:41 -0400
-Cc:     Mimi Zohar <zohar@linux.ibm.com>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>,
-        snitzer@redhat.com, dm-devel@redhat.com,
-        tyhicks@linux.microsoft.com, agk@redhat.com,
-        Paul Moore <paul@paul-moore.com>,
-        Jonathan Corbet <corbet@lwn.net>, nramas@linux.microsoft.com,
-        serge@hallyn.com, pasha.tatashin@soleen.com,
-        Jann Horn <jannh@google.com>, linux-block@vger.kernel.org,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jens Axboe <axboe@kernel.dk>, mdsakib@microsoft.com,
-        open list <linux-kernel@vger.kernel.org>, eparis@redhat.com,
-        linux-security-module@vger.kernel.org, linux-audit@redhat.com,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-integrity@vger.kernel.org,
-        jaskarankhurana@linux.microsoft.com
-Content-Transfer-Encoding: 7bit
-Message-Id: <70603A4E-A548-4ECB-97D4-D3102CE77701@gmail.com>
-References: <20200728213614.586312-1-deven.desai@linux.microsoft.com>
- <20200802115545.GA1162@bug> <20200802140300.GA2975990@sasha-vm>
- <20200802143143.GB20261@amd> <1596386606.4087.20.camel@HansenPartnership.com>
- <fb35a1f7-7633-a678-3f0f-17cf83032d2b@linux.microsoft.com>
- <1596639689.3457.17.camel@HansenPartnership.com>
- <alpine.LRH.2.21.2008050934060.28225@namei.org>
- <b08ae82102f35936427bf138085484f75532cff1.camel@linux.ibm.com>
- <329E8DBA-049E-4959-AFD4-9D118DEB176E@gmail.com>
- <alpine.LRH.2.21.2008120643370.10591@namei.org>
-To:     James Morris <jmorris@namei.org>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Wed, 12 Aug 2020 10:19:30 -0400
+Received: from mout.gmx.net ([212.227.15.18]:48351 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726485AbgHLOT3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 10:19:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1597241944;
+        bh=2qIIIi+kVG7PNoSbul+CG9EF5Wr4xueF6mcdgIcW3EU=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=KjmsEoehBkJWt2WfLKDifatf+nhathRfdQWsUbieC3G4XEsJxHNktlZZq9HdNN4oE
+         JH2NtPH+SiluY9OBzFBhByu+/T+tMynOuKF+DqIGL7o3x6QsRhtkP/kGEvj31JOBEF
+         guug7jtkFazXpfY09Nqn46/088gEaBZ1+BAfB4to=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [185.53.41.139] ([185.53.41.139]) by web-mail.gmx.net
+ (3c-app-gmx-bs32.server.lan [172.19.170.84]) (via HTTP); Wed, 12 Aug 2020
+ 16:19:04 +0200
+MIME-Version: 1.0
+Message-ID: <trinity-b7a0d7ed-cbc7-421d-810d-162fd178a8f3-1597241944268@3c-app-gmx-bs32>
+From:   Frank Wunderlich <frank-w@public-files.de>
+To:     Wenbin Mei <wenbin.mei@mediatek.com>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Wenbin Mei <wenbin.mei@mediatek.com>,
+        srv_heupstream@mediatek.com, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Chaotian Jing <chaotian.jing@mediatek.com>
+Subject: Aw: [v2,3/3] mmc: mediatek: add optional module reset property
+Content-Type: text/plain; charset=UTF-8
+Date:   Wed, 12 Aug 2020 16:19:04 +0200
+Importance: normal
+Sensitivity: Normal
+In-Reply-To: <20200812130129.13519-4-wenbin.mei@mediatek.com>
+References: <20200812130129.13519-1-wenbin.mei@mediatek.com>
+ <20200812130129.13519-4-wenbin.mei@mediatek.com>
+X-UI-Message-Type: mail
+X-Priority: 3
+X-Provags-ID: V03:K1:DI9ytn25Mt7akP/u6K+zVHv5f9HCrC6Cv16qnII6teMTpW2XwfNpVoOFjsieNPVwxH/l4
+ cU9JOsQ/EywXacZma3nl2x+nLnZRWJetq0muKjnIFXHkClEF1/JKMVLhiQGD47pDpFys17mtusRl
+ IZj0JuYw2/1ZQNpDUsRUHTLewSnpAmCMNyaFY3QyL81a+Exg1Hd9W45f5B3QKDiXi8YPcFl3ujSC
+ htEJ6QIHlc+SwUugRjsLYSIYvPxrpe1U85FJ2oxUj1HDNAkgp5/kWi3ABWD/dfqso+NKIE0XQUAB
+ MA=
+X-UI-Out-Filterresults: notjunk:1;V03:K0:pT+4PmpTWt0=:MAHvXFTaSHTxJHOLIoWHrt
+ oieG5CBLtcg1W4OdS36hlQtCDvmdbxV16P+T5VgicjXog+nlR9AzaD1rc8OhGi9pfBxrkh6IF
+ N1BQtB/D649DurS3NpQSXn3DugHgBTDz8BIhxvccpJuvhkliYkmNM9ObXQmMTXrpsiFmYG3bX
+ K3ej55UX74QCj7oadVwk3Ml6YQ6+tB6DQ7Ab4eJjDDc9eSoIogYElzPQ4z//Zsvwq6VJgqFID
+ 7W+fnvwjUO6hUb5fE/Yct+QWj6rH46A/AEuGRsfBFDRUyytFj/ngG0b3WIXy8EvZHszgpO8nQ
+ i6jjqHuIJSZEZvlIbgfxHmQSMGVTfR3gcPfoFe6pcjkx/eRm6ZKIkCEJEshGVqTElrtikL3Yc
+ +mhl1GcwQcgkSYairRNGXtjkZvKH7A2/dALySYSkYWGa7UtZ8IwB03HXTPXe0VDJvcWRwJZ0n
+ YFcHDHDhLh+Ioyn9WTYMCTdsR3uCKjfrTHex4diVF1H9qMrsVBXNnHWcyMIL+G/dBt0nriNL8
+ o4NleJ1UuPAt05XXmA75uEJ0lMvjrMtGXBPetM3y+Mpzf6p5iupJ6PU4BXq38KLkvRmzXKccU
+ UdR+Ixupe4/pUkzw4pK7mJXlMxPvQZqdzZ3uMTb/5QFYmjQplOEtC9NeNEEH86EWZtWxHezUm
+ 5VjR2tYCGpgtxm3PBz4FgT28n6s4wMGzFHdRzJacbioG/hokFAsLHRZFufw2d3/VN8sI=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
+it looks like you missed Philipps comments in v1
 
+for stable i guess you need only add Cc: Stable-line to signed-off-area (not add it to CC of mail), sorry my mistake
 
-> On Aug 11, 2020, at 5:03 PM, James Morris <jmorris@namei.org> wrote:
-> 
-> On Sat, 8 Aug 2020, Chuck Lever wrote:
-> 
->> My interest is in code integrity enforcement for executables stored
->> in NFS files.
->> 
->> My struggle with IPE is that due to its dependence on dm-verity, it
->> does not seem to able to protect content that is stored separately
->> from its execution environment and accessed via a file access
->> protocol (FUSE, SMB, NFS, etc).
-> 
-> It's not dependent on DM-Verity, that's just one possible integrity 
-> verification mechanism, and one of two supported in this initial 
-> version. The other is 'boot_verified' for a verified or otherwise trusted 
-> rootfs. Future versions will support FS-Verity, at least.
-> 
-> IPE was designed to be extensible in this way, with a strong separation of 
-> mechanism and policy.
+Cc: stable@vger.kernel.org
 
-I got that, but it looked to me like the whole system relied on having
-access to the block device under the filesystem. That's not possible
-for a remote filesystem like Ceph or NFS.
-
-I'm happy to take a closer look if someone can point me the right way.
-
-
---
-Chuck Lever
-chucklever@gmail.com
-
-
-
+regards Frank
