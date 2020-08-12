@@ -2,92 +2,124 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAD07C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 07:12:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B764C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 07:13:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCC42205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 07:12:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65E7B205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 07:13:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ogAHVsF4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726803AbgHLHMu (ORCPT
+        id S1726841AbgHLHNL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 03:12:50 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:42446 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726673AbgHLHMu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 03:12:50 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 7EC1DE398E5F144B6222;
-        Wed, 12 Aug 2020 15:12:48 +0800 (CST)
-Received: from [127.0.0.1] (10.57.60.129) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Wed, 12 Aug 2020
- 15:12:38 +0800
-Subject: Re: [PATCH drm/hisilicon v2 0/3] hibmc clean up and code refactoring
-To:     Thomas Zimmermann <tzimmermann@suse.de>,
-        Tian Tao <tiantao6@hisilicon.com>, <airlied@linux.ie>,
-        <daniel@ffwll.ch>, <kraxel@redhat.com>,
-        <alexander.deucher@amd.com>, <tglx@linutronix.de>,
-        <dri-devel@lists.freedesktop.org>, <xinliang.liu@linaro.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <linuxarm@huawei.com>
-References: <1596415114-21175-1-git-send-email-tiantao6@hisilicon.com>
- <312b8060-f015-35ba-f4f6-ad992aa09aa9@suse.de>
-From:   "tiantao (H)" <tiantao6@huawei.com>
-Message-ID: <8f558a5c-61b6-303a-0c2f-e0f63e9faa10@huawei.com>
-Date:   Wed, 12 Aug 2020 15:12:37 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 12 Aug 2020 03:13:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35818 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726255AbgHLHNK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 03:13:10 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD679C06174A;
+        Wed, 12 Aug 2020 00:13:09 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id h21so776464qtp.11;
+        Wed, 12 Aug 2020 00:13:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=bR9Mjz2MSKMtLofIMu9kpQ50I2mmXBxYQjcRO1d1+ic=;
+        b=ogAHVsF4k9826ncKgfwB3w8sOpUpmpiXTNlpo35rzCOauhsgsnM73jQwe4vzxlfAWX
+         QK4fffGhMSN1vtu6O8mSD/ahDkeDP6Fw8sh5IH4cRZYY1pfuBucSmBQz4OJZFLVUHwbc
+         Nx0ccsINFymGnfXfPX9cYLFHy7+IN2HfcSa0yHqBAaLgyVkFeQh/IdsxFCCE60C2Ka7F
+         Ru3XxdkQO6M/UA3FjHpq/6tKklPtt/txLmiVIW/t7dhzbYIUdwA6vtXjc+WFXqlbULJi
+         hIK9Hd9a1PSrX9Va4m5qNOLxWmvTcGayoGUE4Gn7WKdimONvqpmcrR2+PEZtsGMqiIzZ
+         nKLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=bR9Mjz2MSKMtLofIMu9kpQ50I2mmXBxYQjcRO1d1+ic=;
+        b=ZGWcKkd/5qej8TBB8O61cMbmS6OwtKVALWOy5cQ9JhCtKmel4m8n/ty/yWGFTcp6GY
+         Ejd06tDax2zTWPgm68IfSKmxQk715mojfSGdbfJ49h/yVZHqHGwXAGTVeHtOztVOFiIw
+         ZF30j9iwIAyX0ezLUV8CIWDHVx80U1yYYeLZo/wlhd3HWH0vBIezz2UwFKYLOvFtvvyT
+         NIN/pJOWGvLtioRT1/VSaVrVC27ZP4RDp8OBDLEE7UVnXBYqCkxS7ibRcuUZ8K8Xtre7
+         8BkYZsgZ4YaajYICqRNeVQEXtjYEyX/8tRl2vVyv4HyqroQG09icorYIggqieBHvhEae
+         1bQw==
+X-Gm-Message-State: AOAM530xBeel/NH8sif53n7lFWRhW0ky5BZeZs85Pch/Y+LQC1DlrbGV
+        Qc6yGozYQnsTDjGDsmeb1aBCwJE=
+X-Google-Smtp-Source: ABdhPJyFnUSYc7AaO6sSE9ipUyhn/r5BfcOVESM7CPj+qN7j9ms5xjUtBES05y1B4QalEADanzOhwQ==
+X-Received: by 2002:ac8:3868:: with SMTP id r37mr4688956qtb.95.1597216389166;
+        Wed, 12 Aug 2020 00:13:09 -0700 (PDT)
+Received: from PWN (146-115-88-66.s3894.c3-0.sbo-ubr1.sbo.ma.cable.rcncustomer.com. [146.115.88.66])
+        by smtp.gmail.com with ESMTPSA id i20sm1342859qka.17.2020.08.12.00.13.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Aug 2020 00:13:08 -0700 (PDT)
+Date:   Wed, 12 Aug 2020 03:13:06 -0400
+From:   Peilin Ye <yepeilin.cs@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-fsdevel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        syzkaller-bugs@googlegroups.com, linux-kernel@vger.kernel.org
+Subject: Re: [Linux-kernel-mentees] [PATCH] hfs, hfsplus: Fix NULL pointer
+ dereference in hfs_find_init()
+Message-ID: <20200812071306.GA869606@PWN>
+References: <20200812065556.869508-1-yepeilin.cs@gmail.com>
+ <20200812070827.GA1304640@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <312b8060-f015-35ba-f4f6-ad992aa09aa9@suse.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.57.60.129]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200812070827.GA1304640@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Aug 12, 2020 at 09:08:27AM +0200, Greg Kroah-Hartman wrote:
+> On Wed, Aug 12, 2020 at 02:55:56AM -0400, Peilin Ye wrote:
+> > Prevent hfs_find_init() from dereferencing `tree` as NULL.
+> > 
+> > Reported-and-tested-by: syzbot+7ca256d0da4af073b2e2@syzkaller.appspotmail.com
+> > Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+> > ---
+> >  fs/hfs/bfind.c     | 3 +++
+> >  fs/hfsplus/bfind.c | 3 +++
+> >  2 files changed, 6 insertions(+)
+> > 
+> > diff --git a/fs/hfs/bfind.c b/fs/hfs/bfind.c
+> > index 4af318fbda77..880b7ea2c0fc 100644
+> > --- a/fs/hfs/bfind.c
+> > +++ b/fs/hfs/bfind.c
+> > @@ -16,6 +16,9 @@ int hfs_find_init(struct hfs_btree *tree, struct hfs_find_data *fd)
+> >  {
+> >  	void *ptr;
+> >  
+> > +	if (!tree)
+> > +		return -EINVAL;
+> > +
+> >  	fd->tree = tree;
+> >  	fd->bnode = NULL;
+> >  	ptr = kmalloc(tree->max_key_len * 2 + 4, GFP_KERNEL);
+> > diff --git a/fs/hfsplus/bfind.c b/fs/hfsplus/bfind.c
+> > index ca2ba8c9f82e..85bef3e44d7a 100644
+> > --- a/fs/hfsplus/bfind.c
+> > +++ b/fs/hfsplus/bfind.c
+> > @@ -16,6 +16,9 @@ int hfs_find_init(struct hfs_btree *tree, struct hfs_find_data *fd)
+> >  {
+> >  	void *ptr;
+> >  
+> > +	if (!tree)
+> > +		return -EINVAL;
+> > +
+> 
+> How can tree ever be NULL in these calls?  Shouldn't that be fixed as
+> the root problem here?
 
+I see, I will try to figure out what is going on with the reproducer.
 
-在 2020/8/12 15:04, Thomas Zimmermann 写道:
-> Hi
-> 
-> Am 03.08.20 um 02:38 schrieb Tian Tao:
->> patch #1 and #3 is clean up, patch #2 is for code refactoring
-> 
-> Sorry for all my reviews taking so long. Please merge patch #3 into
-> patch #2 and then the series is
-> 
-thanks,I will send v3 to fix this.
-> Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
-> 
-> I noticed that hibmc use DRM_ERROR in several places. A good follow-up
-> patchset would be the conversion to drm_info/drm_warn/drm_error/etc.
-> 
-I will send another patchset to fix this.
-> Best regards
-> Thomas
-> 
->>
->> Changes since v1:
->> - Rewrite the commits messages and patch name in #1
->> - Rewrite the commits message in #2.
->> - Add the new patch #3
->>
->> Tian Tao (3):
->>    drm/hisilicon: Remove the unused include statements
->>    drm/hisilicon: Code refactoring for hibmc_drv_de
->>    drm/hisilicon: Rename variables to represent the correct meaning
->>
->>   drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c   | 58 ++++++------------------
->>   drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c  |  5 --
->>   drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h  |  2 +
->>   drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c |  2 -
->>   4 files changed, 15 insertions(+), 52 deletions(-)
->>
-> 
-
+Thank you,
+Peilin Ye
