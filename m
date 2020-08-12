@@ -2,124 +2,77 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E154C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 18:55:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF02AC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 18:59:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3CD52080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 18:55:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597258532;
-	bh=iH2bntJ3heab/wBuNIHiZ2SrGEOTzKk8leH5YEXop+k=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=s8wSnzBp3p5+KckLyr//5cl+p3X2E2jm0/90enuWDyd2LyhtVTfGvUqtPt0syLyGv
-	 GZ0UjHizYt67cgKo5eXOMrGDhmxGjUQxg6xMiEUshnnrrutQPD2MUMzlEP2/vsp/gJ
-	 K9nAjEVUggP7RBv+2CvWUfQ4T+/DWm9CPIfGQkzw=
+	by mail.kernel.org (Postfix) with ESMTP id BD3EB20774
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 18:59:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbgHLSzc (ORCPT
+        id S1726567AbgHLS7B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 14:55:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43794 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726447AbgHLSzb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 14:55:31 -0400
-Received: from onda.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F091C20774;
-        Wed, 12 Aug 2020 18:55:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597258530;
-        bh=iH2bntJ3heab/wBuNIHiZ2SrGEOTzKk8leH5YEXop+k=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=nUHLzoNyKRckx10X8ij4rbPs1razktvIs2RtxSsCmQGfnw/qYpda/mLhHza7zgwGa
-         sUUmahLxbw0ge062C4Zl1AOcc5pVc8sNwTJRwrWWDjQTD32Q0MInF7rE7X06iqgGxW
-         k6WhMy7CKe2xeICz4aZr9F/GC48qJkXH5abK6zqk=
-Date:   Wed, 12 Aug 2020 15:55:26 -0300
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, linuxarm@huawei.com,
-        devicetree@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>, mauro.chehab@huawei.com
-Subject: Re: [PATCH 31/33] dt: document HiSilicon SPMI controller and
- mfd/regulator properties
-Message-ID: <20200812155526.220ec1c2@onda.lan>
-In-Reply-To: <20200812163036.GA2324764@bogus>
-References: <cover.1597160086.git.mchehab+huawei@kernel.org>
-        <176043f329dfa9889f014feec04e7e1553077873.1597160086.git.mchehab+huawei@kernel.org>
-        <20200812163036.GA2324764@bogus>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 12 Aug 2020 14:59:01 -0400
+Received: from smtprelay0165.hostedemail.com ([216.40.44.165]:54520 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726447AbgHLS7A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 14:59:00 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 78FAA100E86C6;
+        Wed, 12 Aug 2020 18:58:59 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: head53_0e1322226fed
+X-Filterd-Recvd-Size: 1835
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf03.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 12 Aug 2020 18:58:56 +0000 (UTC)
+Message-ID: <81cfca4309624b4f33cace78297872a526aa4763.camel@perches.com>
+Subject: Re: [PATCH 00/44] SPMI patches needed by Hikey 970
+From:   Joe Perches <joe@perches.com>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linuxarm@huawei.com, mauro.chehab@huawei.com,
+        Stephen Boyd <sboyd@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Wei Xu <xuwei5@hisilicon.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        Rob Herring <robh@kernel.org>, devel@driverdev.osuosl.org,
+        linux-arm-msm@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Date:   Wed, 12 Aug 2020 11:58:55 -0700
+In-Reply-To: <20200812154752.3223b9d8@onda.lan>
+References: <cover.1597247164.git.mchehab+huawei@kernel.org>
+         <305f0df155e89e0c626b8f7366c4ab5f6741aedd.camel@perches.com>
+         <20200812154752.3223b9d8@onda.lan>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.4-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, 12 Aug 2020 10:30:36 -0600
-Rob Herring <robh@kernel.org> escreveu:
+On Wed, 2020-08-12 at 15:47 -0300, Mauro Carvalho Chehab wrote:
+> Em Wed, 12 Aug 2020 10:13:51 -0700
+> Joe Perches <joe@perches.com> escreveu:
+> 
+> > Perhaps these trivial bits on top:
+> 
+> Sounds fine for me. Feel free to send it with your SOB, adding my reviewed by:
+> 
+> Reviewed-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-> On Tue, 11 Aug 2020 17:41:57 +0200, Mauro Carvalho Chehab wrote:
-> > Add documentation for the properties needed by the HiSilicon
-> > 6421v600 driver, and by the SPMI controller used to access
-> > the chipset.
-> > 
-> > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> > ---
-> >  .../mfd/hisilicon,hi6421-spmi-pmic.yaml       | 175 ++++++++++++++++++
-> >  .../spmi/hisilicon,hisi-spmi-controller.yaml  |  54 ++++++
-> >  2 files changed, 229 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.yaml
-> >  create mode 100644 Documentation/devicetree/bindings/spmi/hisilicon,hisi-spmi-controller.yaml
-> >   
-> 
-> 
-> My bot found errors running 'make dt_binding_check' on your patch:
-> 
-> Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.yaml: $id: relative path/filename doesn't match actual path or filename
-> 	expected: http://devicetree.org/schemas/mfd/hisilicon,hi6421-spmi-pmic.yaml#
-> Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.example.dts:34.15-28: Warning (reg_format): /example-0/pmic@0/regulators/ldo3@16:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
-> Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.example.dts:57.15-28: Warning (reg_format): /example-0/pmic@0/regulators/ldo4@17:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
-> Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.example.dt.yaml: Warning (pci_device_reg): Failed prerequisite 'reg_format'
-> Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.example.dt.yaml: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
-> Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.example.dt.yaml: Warning (simple_bus_reg): Failed prerequisite 'reg_format'
-> Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.example.dt.yaml: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
-> Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.example.dt.yaml: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
-> Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.example.dts:33.27-54.15: Warning (avoid_default_addr_size): /example-0/pmic@0/regulators/ldo3@16: Relying on default #address-cells value
-> Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.example.dts:33.27-54.15: Warning (avoid_default_addr_size): /example-0/pmic@0/regulators/ldo3@16: Relying on default #size-cells value
-> Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.example.dts:56.27-76.15: Warning (avoid_default_addr_size): /example-0/pmic@0/regulators/ldo4@17: Relying on default #address-cells value
-> Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.example.dts:56.27-76.15: Warning (avoid_default_addr_size): /example-0/pmic@0/regulators/ldo4@17: Relying on default #size-cells value
-> Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.example.dt.yaml: Warning (unique_unit_address): Failed prerequisite 'avoid_default_addr_size'
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/spmi/hisilicon,hisi-spmi-controller.example.dt.yaml: example-0: spmi@fff24000:reg:0: [0, 4294066176, 0, 4096] is too long
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/spmi/hisilicon,hisi-spmi-controller.example.dt.yaml: spmi@fff24000: spmi-channel:0: 'number of the SPMI channel where the PMIC is connected' was expected
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.example.dt.yaml: pmic@0: 'spmi-channel' is a required property
-> 
-> 
-> See https://patchwork.ozlabs.org/patch/1343370
-> 
-> If you already ran 'make dt_binding_check' and didn't see the above
-> error(s), then make sure dt-schema is up to date:
-> 
-> pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-> 
-> Please check and re-submit.
-> 
+I don't know that your original
+series is going to be applied as-is
+so I think you should carry it.
 
-Hi Rob,
-
-Fixed those at the newest version I submitted today via staging tree.
-
-At least here, dt_binding_check passes at the newest version.
-
-Regards,
-Mauro
-
-
+cheers, Joe
 
 
