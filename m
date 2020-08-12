@@ -2,208 +2,161 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A6AC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 21:22:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A9AC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 21:28:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62C7C2076B
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 21:22:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pR0+HwJS"
+	by mail.kernel.org (Postfix) with ESMTP id CAE472076B
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 21:28:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726583AbgHLVWA (ORCPT
+        id S1726573AbgHLV2Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 17:22:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53462 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726030AbgHLVWA (ORCPT
+        Wed, 12 Aug 2020 17:28:16 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:39065 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726030AbgHLV2P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 17:22:00 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5428C061383
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 14:21:59 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id h16so3136361oti.7
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 14:21:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0BIXtxMs1uVpUMl8PYh5p25ogjLLyRQhhYVMx6Aoh8s=;
-        b=pR0+HwJS/2QTypntnrIOKkTm9w0r/FJCWjbrEwwFI6w9bGdwxxZpiYPbK8ZMf6372B
-         fM3m7D9Uz2DIa5l//c3UeFCLyKvFweCQ/gD1p+fDc3mH/5OyTB4hchr/6SoVkDSgN0it
-         j/hV6PAVSwHRnnW96jx0IkThsj7SgOPgIUzul829mno7rhPeUJ537QfBMLk428mVNl2V
-         vehXxqfhgRPsEM2CoPjUBq3/PAFd+Szcnupc6QBMzWCrAyvigmHgT1GQJ+Of/DVpUdq5
-         0Z7sT71BU7LP/BabwrB6/9+QnW9iYdor6NmjZEFffL6xiq5TGW/U7GHEKrCEAho+kh0w
-         EaVg==
+        Wed, 12 Aug 2020 17:28:15 -0400
+Received: by mail-io1-f72.google.com with SMTP id v10so2535894iot.6
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 14:28:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0BIXtxMs1uVpUMl8PYh5p25ogjLLyRQhhYVMx6Aoh8s=;
-        b=UgdscPE6nv2hPVL2sTC1fySvVpNeHlIQXQLAN82AmrPFijE4LdPjeWfbPNZuzIL+xV
-         wwUNc2VWQNeRdtLs31VortXfz0mIGDTGvBl9dztBhcHhH6zKJrIjFsRYpacT5r3Ku+HS
-         Zs7HSL/1WUwlaH9i73wkJTgZ7LV+RvAVo3s3NlWMwSCosWImUOWKOJMkX8GyT3lvSRhV
-         H8axhLgaatFTTRqmQo45bILLg1Fu5eyNnMvHvLXAqKXLQu7emsfc2foHqrlSiZgXsF+7
-         mBxQ7VqR1i1qO9x6TN+yQtW4zUBrCjXVIfxUdkHRFyZCEfQBge9xSXyFPUkr7dXxE/wN
-         PJdA==
-X-Gm-Message-State: AOAM530koOPfMaaePVk0lROPSTuRdn4pwd6AADr/n3nzyI8J3uRpttF8
-        eaTyrIhA4m6L5IxsuW0tbBRAqn2b7h/75N29BgqFRQ==
-X-Google-Smtp-Source: ABdhPJwl8NAM3zLRfuNb9IBo7SE44CvbMl63n8/JNOZ46pw+YfzBgdWIbjs5rUI0Ga3ztQpX8hOEDwLsHRorJKCs04Y=
-X-Received: by 2002:a9d:22ca:: with SMTP id y68mr1520144ota.56.1597267318690;
- Wed, 12 Aug 2020 14:21:58 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=ilCTY64RuUG02GFuuWjDIx1Ci3e/PJFPZPYdOkrJo64=;
+        b=jpNBBn87S9jUH+XpCHQiVgZgH3IKyFRmEBAZn9G6ahvdudLU6EqrMp99FTuXOgIIW2
+         pkjWERvWuZFTUgJ2RzqtEvenMVMYQ9BwFyDDG+xqObQmcwX41NcAVICCU0V0x3DvQe9V
+         vnR8zEa1Escw/rFiBGBvPKgYv8v0zQDPq9eG5qCGa33BL3XxItEeW0JWGokOTNfAMIDx
+         v7St8ctar4RCJgXpwNJ7d8Vjzoz+0f1FgllfUjgPXOEc6UMKKr0PAGE/yMRUP4x2bX/Z
+         KThT6OQRInQZiViptSfjfbdRMW0zOeqgQLW6Ic0XG24x3N8UE2pvlAWgWmL9F8b+b709
+         HOwA==
+X-Gm-Message-State: AOAM532QlUxI/w0R2ADEg7spJNf7Tx9HoYxC5pRsjZ8q7NhmiGjfPfkX
+        /42kXhjJGjnQSt7TvqNDeOnZbJoGMruIdkoMhVQwaxvKvDje
+X-Google-Smtp-Source: ABdhPJw33yFNC2zXSn+p5lX5ZDyAPSvDLXh/be+FiUata4vDh7uXDJLRiUIDIPGB5q7w3Dy5crJD3YjdBt0+8CgnWYplEalN/W0s
 MIME-Version: 1.0
-References: <20200807084841.7112-1-chenyi.qiang@intel.com> <20200807084841.7112-3-chenyi.qiang@intel.com>
-In-Reply-To: <20200807084841.7112-3-chenyi.qiang@intel.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Wed, 12 Aug 2020 14:21:47 -0700
-Message-ID: <CALMp9eQiyRxJ0jkvVi+fWMZcDQbvyCcuTwH1wrYV-u_E004Bhg@mail.gmail.com>
-Subject: Re: [RFC 2/7] KVM: VMX: Expose IA32_PKRS MSR
-To:     Chenyi Qiang <chenyi.qiang@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+X-Received: by 2002:a92:aa4b:: with SMTP id j72mr1651939ili.141.1597267694581;
+ Wed, 12 Aug 2020 14:28:14 -0700 (PDT)
+Date:   Wed, 12 Aug 2020 14:28:14 -0700
+In-Reply-To: <000000000000f0724405aca59f64@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000008bfef305acb4ddee@google.com>
+Subject: Re: KASAN: use-after-free Read in path_init (2)
+From:   syzbot <syzbot+bbeb1c88016c7db4aa24@syzkaller.appspotmail.com>
+To:     arnd@arndb.de, christian.brauner@ubuntu.com, hch@lst.de,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux@dominikbrodowski.net,
+        syzkaller-bugs@googlegroups.com, torvalds@linux-foundation.org,
+        viro@zeniv.linux.org.uk
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 7, 2020 at 1:46 AM Chenyi Qiang <chenyi.qiang@intel.com> wrote:
->
-> Protection Keys for Supervisor Pages (PKS) uses IA32_PKRS MSR (PKRS) at
-> index 0x6E1 to allow software to manage supervisor protection key
-> rights. For performance consideration, PKRS intercept will be disabled
-> so that the guest can access the PKRS without VM exits.
-> PKS introduces dedicated control fields in VMCS to switch PKRS, which
-> only does the retore part. In addition, every VM exit saves PKRS into
-> the guest-state area in VMCS, while VM enter won't save the host value
-> due to the expectation that the host won't change the MSR often. Update
-> the host's value in VMCS manually if the MSR has been changed by the
-> kernel since the last time the VMCS was run.
-> The function get_current_pkrs() in arch/x86/mm/pkeys.c exports the
-> per-cpu variable pkrs_cache to avoid frequent rdmsr of PKRS.
->
-> Signed-off-by: Chenyi Qiang <chenyi.qiang@intel.com>
-> ---
+syzbot has found a reproducer for the following issue on:
 
-> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-> index 11e4df560018..df2c2e733549 100644
-> --- a/arch/x86/kvm/vmx/nested.c
-> +++ b/arch/x86/kvm/vmx/nested.c
-> @@ -289,6 +289,7 @@ static void vmx_sync_vmcs_host_state(struct vcpu_vmx *vmx,
->         dest->ds_sel = src->ds_sel;
->         dest->es_sel = src->es_sel;
->  #endif
-> +       dest->pkrs = src->pkrs;
+HEAD commit:    fb893de3 Merge tag 'tag-chrome-platform-for-v5.9' of git:/..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=16139be2900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f1fedc63022bf07e
+dashboard link: https://syzkaller.appspot.com/bug?extid=bbeb1c88016c7db4aa24
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15fa83e2900000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15920c4a900000
 
-Why isn't this (and other PKRS code) inside the #ifdef CONFIG_X86_64?
-PKRS isn't usable outside of long mode, is it?
+The issue was bisected to:
 
->  }
->
->  static void vmx_switch_vmcs(struct kvm_vcpu *vcpu, struct loaded_vmcs *vmcs)
-> diff --git a/arch/x86/kvm/vmx/vmcs.h b/arch/x86/kvm/vmx/vmcs.h
-> index 7a3675fddec2..39ec3d0c844b 100644
-> --- a/arch/x86/kvm/vmx/vmcs.h
-> +++ b/arch/x86/kvm/vmx/vmcs.h
-> @@ -40,6 +40,7 @@ struct vmcs_host_state {
->  #ifdef CONFIG_X86_64
->         u16           ds_sel, es_sel;
->  #endif
-> +       u32           pkrs;
+commit e24ab0ef689de43649327f54cd1088f3dad25bb3
+Author: Christoph Hellwig <hch@lst.de>
+Date:   Tue Jul 21 08:48:15 2020 +0000
 
-One thing that does seem odd throughout is that PKRS is a 64-bit
-resource, but we store and pass around only 32-bits. Yes, the top 32
-bits are currently reserved, but the same can be said of, say, cr4, a
-few lines above this. Yet, we store and pass around cr4 as 64-bits.
-How do we decide?
+    fs: push the getname from do_rmdir into the callers
 
->  };
->
->  struct vmcs_controls_shadow {
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=155f36c2900000
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=175f36c2900000
+console output: https://syzkaller.appspot.com/x/log.txt?x=135f36c2900000
 
-> @@ -1163,6 +1164,20 @@ void vmx_prepare_switch_to_guest(struct kvm_vcpu *vcpu)
->          */
->         host_state->ldt_sel = kvm_read_ldt();
->
-> +       /*
-> +        * Update the host pkrs vmcs field before vcpu runs.
-> +        * The setting of VM_EXIT_LOAD_IA32_PKRS can ensure
-> +        * kvm_cpu_cap_has(X86_FEATURE_PKS) &&
-> +        * guest_cpuid_has(vcpu, X86_FEATURE_VMX).
-> +        */
-> +       if (vm_exit_controls_get(vmx) & VM_EXIT_LOAD_IA32_PKRS) {
-> +               host_pkrs = get_current_pkrs();
-> +               if (unlikely(host_pkrs != host_state->pkrs)) {
-> +                       vmcs_write64(HOST_IA32_PKRS, host_pkrs);
-> +                       host_state->pkrs = host_pkrs;
-> +               }
-> +       }
-> +
->  #ifdef CONFIG_X86_64
->         savesegment(ds, host_state->ds_sel);
->         savesegment(es, host_state->es_sel);
-> @@ -1951,6 +1966,13 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->                 else
->                         msr_info->data = vmx->pt_desc.guest.addr_a[index / 2];
->                 break;
-> +       case MSR_IA32_PKRS:
-> +               if (!kvm_cpu_cap_has(X86_FEATURE_PKS) ||
-> +                   (!msr_info->host_initiated &&
-> +                   !guest_cpuid_has(vcpu, X86_FEATURE_PKS)))
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+bbeb1c88016c7db4aa24@syzkaller.appspotmail.com
+Fixes: e24ab0ef689d ("fs: push the getname from do_rmdir into the callers")
 
-Could this be simplified if we required
-kvm_cpu_cap_has(X86_FEATURE_PKS) as a prerequisite for
-guest_cpuid_has(vcpu, X86_FEATURE_PKS)? If not, what is the expected
-behavior if guest_cpuid_has(vcpu, X86_FEATURE_PKS) is true and
-kvm_cpu_cap_has(X86_FEATURE_PKS)  is false?
+==================================================================
+BUG: KASAN: use-after-free in path_init+0x116b/0x13c0 fs/namei.c:2207
+Read of size 8 at addr ffff8880950a8a80 by task syz-executor167/6821
 
-> +                       return 1;
-> +               msr_info->data = vmcs_read64(GUEST_IA32_PKRS);
-> +               break;
->         case MSR_TSC_AUX:
->                 if (!msr_info->host_initiated &&
->                     !guest_cpuid_has(vcpu, X86_FEATURE_RDTSCP))
+CPU: 0 PID: 6821 Comm: syz-executor167 Not tainted 5.8.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xae/0x497 mm/kasan/report.c:383
+ __kasan_report mm/kasan/report.c:513 [inline]
+ kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
+ path_init+0x116b/0x13c0 fs/namei.c:2207
+ path_parentat+0x22/0x1b0 fs/namei.c:2384
+ filename_parentat+0x188/0x560 fs/namei.c:2407
+ do_rmdir+0xa8/0x440 fs/namei.c:3732
+ do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x4403e9
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffd4e3bdb58 EFLAGS: 00000246 ORIG_RAX: 0000000000000054
+RAX: ffffffffffffffda RBX: 69662f7375622f2e RCX: 00000000004403e9
+RDX: 00000000004403e9 RSI: 00000000004403e9 RDI: 0000000020000080
+RBP: 2f31656c69662f2e R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401bf0
+R13: 0000000000401c80 R14: 0000000000000000 R15: 0000000000000000
 
-> @@ -7230,6 +7267,26 @@ static void update_intel_pt_cfg(struct kvm_vcpu *vcpu)
->                 vmx->pt_desc.ctl_bitmask &= ~(0xfULL << (32 + i * 4));
->  }
->
-> +static void vmx_update_pkrs_cfg(struct kvm_vcpu *vcpu)
-> +{
-> +       struct vcpu_vmx *vmx = to_vmx(vcpu);
-> +       unsigned long *msr_bitmap = vmx->vmcs01.msr_bitmap;
-> +       bool pks_supported = guest_cpuid_has(vcpu, X86_FEATURE_PKS);
-> +
-> +       /*
-> +        * set intercept for PKRS when the guest doesn't support pks
-> +        */
-> +       vmx_set_intercept_for_msr(msr_bitmap, MSR_IA32_PKRS, MSR_TYPE_RW, !pks_supported);
-> +
-> +       if (pks_supported) {
-> +               vm_entry_controls_setbit(vmx, VM_ENTRY_LOAD_IA32_PKRS);
-> +               vm_exit_controls_setbit(vmx, VM_EXIT_LOAD_IA32_PKRS);
-> +       } else {
-> +               vm_entry_controls_clearbit(vmx, VM_ENTRY_LOAD_IA32_PKRS);
-> +               vm_exit_controls_clearbit(vmx, VM_EXIT_LOAD_IA32_PKRS);
-> +       }
-> +}
+Allocated by task 6821:
+ kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
+ kasan_set_track mm/kasan/common.c:56 [inline]
+ __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:461
+ slab_post_alloc_hook mm/slab.h:518 [inline]
+ slab_alloc mm/slab.c:3312 [inline]
+ kmem_cache_alloc+0x138/0x3a0 mm/slab.c:3482
+ getname_flags.part.0+0x50/0x4f0 fs/namei.c:138
+ getname_flags include/linux/audit.h:320 [inline]
+ getname fs/namei.c:209 [inline]
+ __do_sys_rmdir fs/namei.c:3783 [inline]
+ __se_sys_rmdir fs/namei.c:3781 [inline]
+ __x64_sys_rmdir+0xb1/0x100 fs/namei.c:3781
+ do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Not just your change, but it is unclear to me what the expected
-behavior is when CPUID bits are modified while the guest is running.
-For example, it seems that this code results in immediate behavioral
-changes for an L1 guest; however, if an L2 guest is active, then there
-are no behavioral changes until the next emulated VM-entry from L1 to
-L2. Is that right?
+Freed by task 6821:
+ kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
+ kasan_set_track+0x1c/0x30 mm/kasan/common.c:56
+ kasan_set_free_info+0x1b/0x30 mm/kasan/generic.c:355
+ __kasan_slab_free+0xd8/0x120 mm/kasan/common.c:422
+ __cache_free mm/slab.c:3418 [inline]
+ kmem_cache_free.part.0+0x67/0x1f0 mm/slab.c:3693
+ putname+0xe1/0x120 fs/namei.c:259
+ do_rmdir+0x145/0x440 fs/namei.c:3773
+ do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-On a more general note, do you have any kvm-unit-tests that exercise
-the new code?
+The buggy address belongs to the object at ffff8880950a8a80
+ which belongs to the cache names_cache of size 4096
+The buggy address is located 0 bytes inside of
+ 4096-byte region [ffff8880950a8a80, ffff8880950a9a80)
+The buggy address belongs to the page:
+page:00000000c8532513 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x950a8
+head:00000000c8532513 order:1 compound_mapcount:0
+flags: 0xfffe0000010200(slab|head)
+raw: 00fffe0000010200 ffffea0002540e88 ffffea000251ef88 ffff88821bc47a00
+raw: 0000000000000000 ffff8880950a8a80 0000000100000001 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff8880950a8980: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff8880950a8a00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>ffff8880950a8a80: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                   ^
+ ffff8880950a8b00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8880950a8b80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
