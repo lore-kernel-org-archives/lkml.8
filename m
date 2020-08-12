@@ -2,92 +2,103 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B09C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:07:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08827C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:13:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C1E820866
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:07:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597259258;
-	bh=+2MX8lMPobxkg5Sd92d2N9QmRdXu/gmf1DtCDwVeNMc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=jU1TVjxFTa1jW9bCkV1BGu2E0APryKrHoGLfCSYeXI5+02Ced5Wz/mIKr/XqC8Xpd
-	 AK34IvEthBNEleXUYJhwlb2KZp5bqgg6XRCEkGcEQmWd7gRJoevg8cKTUqy1HpBxcS
-	 /x5+asxZZ5iL8C7pHgc80E32kMqlfhb6SKKp7DFM=
+	by mail.kernel.org (Postfix) with ESMTP id DE56020781
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:13:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="yBZ/lJsm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726611AbgHLTHh (ORCPT
+        id S1726574AbgHLTNB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 15:07:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36398 "EHLO mail.kernel.org"
+        Wed, 12 Aug 2020 15:13:01 -0400
+Received: from vern.gendns.com ([98.142.107.122]:33598 "EHLO vern.gendns.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726456AbgHLTHg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 15:07:36 -0400
-Received: from onda.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A4E420838;
-        Wed, 12 Aug 2020 19:07:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597259256;
-        bh=+2MX8lMPobxkg5Sd92d2N9QmRdXu/gmf1DtCDwVeNMc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=GGJWOUBHdHx6FYBQZUIF1C/maagqop8zENLGUFECJirYqYO7THLnB5L8mL2qZhWMH
-         /bk+NJSZeSNSAPBTE/soRkC21ws7Km2DH7YNNb0hBmuuD7LpbJ1Gy8CEzb2UTuWY9G
-         9gf8QWZCIv2NIBjtiDYQwSjQsac7gBG5saW6K1Ek=
-Date:   Wed, 12 Aug 2020 16:07:30 -0300
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linuxarm@huawei.com, mauro.chehab@huawei.com,
-        Stephen Boyd <sboyd@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Wei Xu <xuwei5@hisilicon.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        Rob Herring <robh@kernel.org>, devel@driverdev.osuosl.org,
-        linux-arm-msm@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH 00/44] SPMI patches needed by Hikey 970
-Message-ID: <20200812160730.292ae1d4@onda.lan>
-In-Reply-To: <81cfca4309624b4f33cace78297872a526aa4763.camel@perches.com>
-References: <cover.1597247164.git.mchehab+huawei@kernel.org>
-        <305f0df155e89e0c626b8f7366c4ab5f6741aedd.camel@perches.com>
-        <20200812154752.3223b9d8@onda.lan>
-        <81cfca4309624b4f33cace78297872a526aa4763.camel@perches.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        id S1726456AbgHLTNB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 15:13:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=qM5nPDBhBvPAsBEzD4c5quUlPti/t71UOuDeVlipCnk=; b=yBZ/lJsmAhiQfmQmFQIEb+kyby
+        zSVg2C/e6xITeR5yuLQq4dJPj10q3mXtqhetnbdZv6TnvOq0ZEhQdV4XMSqriFpA4Pg+rPXEP62Ar
+        zoY4yuXBq9V8Wu33TgCRzJ8pacTa3fDcE8TPcSlGaOZU8sidQKYDRMz9b4ck1eljH0fC3xspbgAe0
+        cKJ+jfNzJNU3cCScCelc+QL3j6buDMzsjCuTmZVsTDqA15qBpguRwom+i+bUFi35OhTMcWvyXYA6Y
+        iht3rpzso0bjtyrr6ha92pSh6odhuTQTGetN5aHyj8VvZb1IVUtbuVX4LC4BQb3uDSwPJERtP6BKi
+        eefhZqBQ==;
+Received: from [2600:1700:4830:165f::19e] (port=36036)
+        by vern.gendns.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <david@lechnology.com>)
+        id 1k5wBG-0008ER-Iu; Wed, 12 Aug 2020 15:12:58 -0400
+Subject: Re: [PATCH] power: supply: Add dependency to lego-ev3-battery Kconfig
+ options
+To:     Alex Dewar <alex.dewar90@gmail.com>
+Cc:     Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>,
+        Bartosz Go??aszewski <bgolaszewski@baylibre.com>
+References: <20200809185444.54247-1-alex.dewar90@gmail.com>
+ <d6c98ee6-f2f3-c55a-be16-3794ccf30a28@lechnology.com>
+ <20200812133711.ddwhxypmvr27pxdu@lenovo-laptop>
+ <ce0ae241-10e1-de5c-e694-2c00dc01a2c4@lechnology.com>
+ <20200812190253.zewvdfvyu6cnggcl@lenovo-laptop>
+From:   David Lechner <david@lechnology.com>
+Message-ID: <0927eaf0-62d6-adaf-c4b0-89d7f4cc7b4a@lechnology.com>
+Date:   Wed, 12 Aug 2020 14:12:57 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200812190253.zewvdfvyu6cnggcl@lenovo-laptop>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - vern.gendns.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lechnology.com
+X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, 12 Aug 2020 11:58:55 -0700
-Joe Perches <joe@perches.com> escreveu:
+On 8/12/20 2:02 PM, Alex Dewar wrote:
+> On Wed, Aug 12, 2020 at 10:24:30AM -0500, David Lechner wrote:
+>> On 8/12/20 8:37 AM, Alex Dewar wrote:
+>>> On Tue, Aug 11, 2020 at 09:24:10AM -0500, David Lechner wrote:
+>>>> On 8/9/20 1:54 PM, Alex Dewar wrote:
+>>>>> This battery appears only to be used by a single board (DA850), so it
+>>>>> makes sense to add this to the Kconfig file so that users don't build
+>>>>> the module unnecessarily. It currently seems to be built for the x86
+>>>>> Arch Linux kernel where it's probably not doing much good.
+>>>>
+>>>> It would probably also make sense to add "default n" since it only
+>>>> applies to one board in the entire arch.
+>>>
+>>> Ah ok. That makes sense. Would you like me to send a follow-on patch for
+>>> this?
+>>
+>> You can just send a v2 patch that includes the change below and the
+>> additional change.
+> 
+> I've just had a look at the documentation[1] and it seems that as there's
+> no "default y" there it'll default to n anyway. Have I got that right?
+> 
+> [1] https://www.kernel.org/doc/html/latest/kbuild/kconfig-language.html#menu-attributes
+> 
 
-> On Wed, 2020-08-12 at 15:47 -0300, Mauro Carvalho Chehab wrote:
-> > Em Wed, 12 Aug 2020 10:13:51 -0700
-> > Joe Perches <joe@perches.com> escreveu:
-> >   
-> > > Perhaps these trivial bits on top:  
-> > 
-> > Sounds fine for me. Feel free to send it with your SOB, adding my reviewed by:
-> > 
-> > Reviewed-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>  
-> 
-> I don't know that your original
-> series is going to be applied as-is
-> so I think you should carry it.
-
-
-Ok. I'll then add the hunks you wrote to the affected changesets.
-> 
-> cheers, Joe
-> 
-> 
+Yes, that seems right. That makes me wonder why this would have been enabled in
+the Arch Linux kernel for x86 then.
