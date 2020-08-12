@@ -2,63 +2,64 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA6FDC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 07:52:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E65F6C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 07:52:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E5ED206B5
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 07:52:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C325A20786
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 07:52:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mbm+Mb1L"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DiNNOJXJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726868AbgHLHwk (ORCPT
+        id S1726929AbgHLHwn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 03:52:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41954 "EHLO
+        Wed, 12 Aug 2020 03:52:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726479AbgHLHwk (ORCPT
+        with ESMTP id S1726891AbgHLHwl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 03:52:40 -0400
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F30EC06174A;
-        Wed, 12 Aug 2020 00:52:39 -0700 (PDT)
-Received: by mail-wr1-x430.google.com with SMTP id a15so1091128wrh.10;
-        Wed, 12 Aug 2020 00:52:39 -0700 (PDT)
+        Wed, 12 Aug 2020 03:52:41 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 091A0C061787;
+        Wed, 12 Aug 2020 00:52:41 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id a14so1110510wra.5;
+        Wed, 12 Aug 2020 00:52:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=k795cS87OwKuyVO3rujC6YZeCCmb5P0Upy5SIYYKgDo=;
-        b=mbm+Mb1LVfp1wM95jDePVO+4Hamx49VtFfDg2H0PzGP+/WEmkz02+JrVumPuF6Q1L0
-         OYcA4pXP6TREQEy5gDBSuOah5XNc45V0rBSUb/74QL6kM0YwPZqTSqJXqrMhh620kAr8
-         fF29dctU7W1XDf3NXrnbHVUlXZJ16xe52UH+76C8xU5/bmewRvh37Fk9EyGzhi+2FsNu
-         idYV/8sF4eo+vVaWDP2CBnBHMyrloUR8qjWkFzTeHELq7z8660xTcBaJJIO8FYpAxIno
-         QmDi9VodB1GQd5bjRwfzw5JuFS2pFdfA0dabJwRqYIuChqx4q5mssOFsxqxDxQPX4UOM
-         ocqw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=iijOtQzTjbRe4mA/CexBHb97gOz/Z+OsVx/AQcwvDAw=;
+        b=DiNNOJXJXaTW+ABRQmtR1th2MX9U94NA6zd3KZZS+jgtVznDR6sZ7FxP6OoK2AqFyM
+         o+tw2IhhEbm7R95pmPGRi4yNgWQWgJ2X6+sIFVVMF95iB47u3AAtx2eSyPRcsq1+T+8t
+         9gE6NyWxXRwzxqwmf2VQt+E+1LjIsQ1V2Ukz8DzcjypadrsDxnDwUAEfQxPEkRgCcyGn
+         gy2kiY64kFfX8YsOBFTxFJ4WV5WUZOKV0sua5b2MU+32VKgtdaVqwVgQjPz0qzhjrLSu
+         1oS8vuy80tWNJ31PFbmSU+dbFpMliOTH0nkAReV4w8ZowVFUxQ6gxfDfuHjma9LMjQiK
+         4F2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=k795cS87OwKuyVO3rujC6YZeCCmb5P0Upy5SIYYKgDo=;
-        b=HDDhreBPIJZawBydVG8ck/RjnjzZvmBrkhJA/BfpKzvbR6Kxp7C8odQe13nQ1/9yMj
-         JmkfoZylE7qAtKA0AKJ0d+icMtH0R2zgVegrAApn8sosW1ZBBpgEO8yD6E5HM3pMzHe1
-         6BEzilrvJBZaFm9G8uFOJ2Aygae/q8Ah/86zcfR1jSmUfGFRqY/ffRKupQx8lUQUr/QM
-         INSERIWLKcVdQ9g19LgY2YTFDO+RhVVVCiB8LRslJlXx9HsMaNTlrZdVb0v9oezSb28d
-         KO9HiALr6jMA80vSIHjn1KIRxJQwmEL9PJE5Sl5XApmKtDJJmnvMlhd1ZmQ5kwsqdqdo
-         kvCw==
-X-Gm-Message-State: AOAM532LHIW86quuvdOStKMRPEdlknsrWapU0EsyrjamOpBtnK+VABf4
-        v4iM0XNLsgTJ641vetN6AtE=
-X-Google-Smtp-Source: ABdhPJzknrzfXN9Tkt6EkQuzqcitN3D20GBfvMDx/Rx/iPuj3YEEifWby+hgjNx8nGBtZWji//sytw==
-X-Received: by 2002:adf:ed85:: with SMTP id c5mr32710290wro.307.1597218757537;
-        Wed, 12 Aug 2020 00:52:37 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=iijOtQzTjbRe4mA/CexBHb97gOz/Z+OsVx/AQcwvDAw=;
+        b=R2V0deCqaWrX4SY6D6B8mYOa7+9mu/aVf82HH2L3IFhqGbQCD4uAMEcOvBT1mIe4DM
+         +UStdWXhJMdOYipYjCPYjqhNUkKGgjGpNTznLCwwH2c4yAfsX/aklHk6kyWcNSFEoADl
+         yjewxtVn5sH3pXYFNFIEw2tSIjMfhDuLNiIQR2N78+voWsp8WjJZL/2h3274bih95MiC
+         aXWyTID6mazHwv8QMWl7u6SMvUo6mwCG7Uwr7qSdAUE8XL3Bv4BQJb+dNqXcN1MrZzRL
+         FgT1PKQuJMgyH3O1XwUvS4cjZCuhkmcuslukHkCQEJwgU/73e48NDzHC1YXXDKERIndO
+         mtzg==
+X-Gm-Message-State: AOAM531ZyhByTltldSP06mk38gDN4Dz54CDavq9rUFhgOPWtBDk65oJH
+        8D2fcjyJmRrK6xjAbf68ChQR3tzx
+X-Google-Smtp-Source: ABdhPJw/MzqLC1sVpBef84svRDLlMFkn3GHlyJmGdB8sKvQN8gX9ME9E7j+Rd6s6Z4hDGSlClHRUsg==
+X-Received: by 2002:adf:dd4f:: with SMTP id u15mr9434220wrm.275.1597218759671;
+        Wed, 12 Aug 2020 00:52:39 -0700 (PDT)
 Received: from skynet.lan (88.red-83-49-60.dynamicip.rima-tde.net. [83.49.60.88])
-        by smtp.gmail.com with ESMTPSA id 6sm2470984wmf.4.2020.08.12.00.52.36
+        by smtp.gmail.com with ESMTPSA id 6sm2470984wmf.4.2020.08.12.00.52.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Aug 2020 00:52:37 -0700 (PDT)
+        Wed, 12 Aug 2020 00:52:39 -0700 (PDT)
 From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
         <noltari@gmail.com>
 To:     tsbogend@alpha.franken.de, f.fainelli@gmail.com,
@@ -67,10 +68,12 @@ To:     tsbogend@alpha.franken.de, f.fainelli@gmail.com,
         linux-kernel@vger.kernel.org
 Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
         <noltari@gmail.com>
-Subject: [PATCH v4 0/5] MIPS: BCM63xx: board improvements
-Date:   Wed, 12 Aug 2020 09:52:30 +0200
-Message-Id: <20200812075235.366864-1-noltari@gmail.com>
+Subject: [PATCH v4 2/5] MIPS: BCM63xx: remove EHCI from BCM6348 boards
+Date:   Wed, 12 Aug 2020 09:52:32 +0200
+Message-Id: <20200812075235.366864-3-noltari@gmail.com>
 X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200812075235.366864-1-noltari@gmail.com>
+References: <20200812075235.366864-1-noltari@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -79,20 +82,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-v4: Split license change to a new patch.
-v3: Reword DWV-S0 board commit description to avoid possible confusions.
-v2: switch to SPDX license identifier.
+There's no EHCI controller on BCM6348.
 
-Álvaro Fernández Rojas (5):
-  MIPS: BCM63xx: remove duplicated new lines
-  MIPS: BCM63xx: remove EHCI from BCM6348 boards
-  MIPS: BCM63xx: enable EHCI for DWV-S0 board
-  MIPS: BCM63xx: refactor board declarations
-  MIPS: BCM63xx: switch to SPDX license identifier
+Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ v4: no changes.
+ v3: no changes.
+ v2: no changes.
 
- arch/mips/bcm63xx/boards/board_bcm963xx.c | 625 +++++++++++-----------
- 1 file changed, 306 insertions(+), 319 deletions(-)
+ arch/mips/bcm63xx/boards/board_bcm963xx.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
+diff --git a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards/board_bcm963xx.c
+index 744aa16bab12..45f1bc437245 100644
+--- a/arch/mips/bcm63xx/boards/board_bcm963xx.c
++++ b/arch/mips/bcm63xx/boards/board_bcm963xx.c
+@@ -285,7 +285,6 @@ static struct board_info __initdata board_96348gw_10 = {
+ 
+ 	.has_ohci0			= 1,
+ 	.has_pccard			= 1,
+-	.has_ehci0			= 1,
+ 
+ 	.leds = {
+ 		{
+@@ -338,7 +337,6 @@ static struct board_info __initdata board_96348gw_11 = {
+ 
+ 	.has_ohci0 = 1,
+ 	.has_pccard = 1,
+-	.has_ehci0 = 1,
+ 
+ 	.leds = {
+ 		{
+@@ -441,7 +439,6 @@ static struct board_info __initdata board_FAST2404 = {
+ 
+ 	.has_ohci0			= 1,
+ 	.has_pccard			= 1,
+-	.has_ehci0			= 1,
+ };
+ 
+ static struct board_info __initdata board_rta1025w_16 = {
 -- 
 2.28.0
 
