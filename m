@@ -2,137 +2,223 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A4DC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:28:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6CDBC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:30:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66C6020838
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:28:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E68820658
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:30:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="URNoeU+c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726778AbgHLT2N (ORCPT
+        id S1726587AbgHLTai (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 15:28:13 -0400
-Received: from mga18.intel.com ([134.134.136.126]:34390 "EHLO mga18.intel.com"
+        Wed, 12 Aug 2020 15:30:38 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:56654 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726512AbgHLT2B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 15:28:01 -0400
-IronPort-SDR: uXO1yVvLHv7LXUV6h9eUitPNVWd+7yqoBtOJl3dcGhSi4QOhIbDLdrMgtTfMxWmIR8SLnhluk0
- GmkKrTsm+keA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9711"; a="141673018"
-X-IronPort-AV: E=Sophos;i="5.76,305,1592895600"; 
-   d="scan'208";a="141673018"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2020 12:28:00 -0700
-IronPort-SDR: lTLyLtOnWsbRG0K6ufIt+Ejwpz7anR2tyryDANJHRmbi1hgJHYhQzir8rdlyC6COWfJ/JJucph
- ulo/l2BqN3OA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,305,1592895600"; 
-   d="scan'208";a="327304452"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.160])
-  by fmsmga002.fm.intel.com with ESMTP; 12 Aug 2020 12:27:59 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Peter Shier <pshier@google.com>,
-        Ben Gardon <bgardon@google.com>
-Subject: [PATCH v2 1/2] KVM: x86/mmu: Move flush logic from mmu_page_zap_pte() to FNAME(invlpg)
-Date:   Wed, 12 Aug 2020 12:27:57 -0700
-Message-Id: <20200812192758.25587-2-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200812192758.25587-1-sean.j.christopherson@intel.com>
-References: <20200812192758.25587-1-sean.j.christopherson@intel.com>
+        id S1726526AbgHLTah (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 15:30:37 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597260636; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=4+/wN/ZFlubPC8f06kWYCcnSStIOeSWNXCfdlUIBb6Q=;
+ b=URNoeU+cCCStWxW9WIwQAnxYQtJTNcQCgX8J8Uv2iA6M3Q9hPAO3K+R3bc6KYxDyIzFxUAjb
+ GMqalzSovhYxwcS9ETAfYKWo0BEhCejWcJRDX8UUL48NnCQgrJGOQD0JmXnkMmPSbdxZ03DV
+ WvwPdar8CMvvvJG8zt9EOAZiZ8I=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n07.prod.us-west-2.postgun.com with SMTP id
+ 5f3443514c787f237bb0c858 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 12 Aug 2020 19:30:25
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C1637C433C6; Wed, 12 Aug 2020 19:30:24 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: tanmay)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id DC4C6C433C9;
+        Wed, 12 Aug 2020 19:30:23 +0000 (UTC)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 12 Aug 2020 12:30:23 -0700
+From:   Tanmay Shah <tanmay@codeaurora.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-arm-msm@vger.kernel.org, robdclark@gmail.com,
+        airlied@linux.ie, linux-kernel@vger.kernel.org,
+        abhinavk@codeaurora.org, khsieh@codeaurora.org,
+        seanpaul@chromium.org, aravindh@codeaurora.org,
+        freedreno@lists.freedesktop.org,
+        dri-devel <dri-devel-bounces@lists.freedesktop.org>
+Subject: Re: [PATCH v5] arm64: dts: qcom: sc7180: Add Display Port dt node
+In-Reply-To: <159717422853.1360974.2200109790995932014@swboyd.mtv.corp.google.com>
+References: <20200811021553.25023-1-tanmay@codeaurora.org>
+ <159717422853.1360974.2200109790995932014@swboyd.mtv.corp.google.com>
+Message-ID: <70d8a4f073abf7a038c9830ec6586709@codeaurora.org>
+X-Sender: tanmay@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the logic that controls whether or not FNAME(invlpg) needs to flush
-fully into FNAME(invlpg) so that mmu_page_zap_pte() doesn't return a
-value.  This allows a future patch to redefine the return semantics for
-mmu_page_zap_pte() so that it can recursively zap orphaned child shadow
-pages for nested TDP MMUs.
+On 2020-08-11 12:30, Stephen Boyd wrote:
+> Quoting Tanmay Shah (2020-08-10 19:15:53)
+>> @@ -2440,6 +2447,71 @@ dsi_phy: dsi-phy@ae94400 {
+>> 
+>>                                 status = "disabled";
+>>                         };
+>> +
+>> +                       msm_dp: displayport-controller@ae90000 {
+>> +                               status = "disabled";
+>> +                               compatible = "qcom,sc7180-dp";
+>> +
+>> +                               reg = <0 0x0ae90000 0 0x1400>;
+>> +
+>> +                               interrupt-parent = <&mdss>;
+>> +                               interrupts = <12 IRQ_TYPE_NONE>;
+> 
+> Please drop the flags. It's not required per the binding. It should 
+> just
+> be a single number, i.e. <12>.
+> 
 
-No functional change intended.
+Sure. I will change DP-bindings accordingly as well.
 
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/x86/kvm/mmu/mmu.c         | 10 +++-------
- arch/x86/kvm/mmu/paging_tmpl.h |  7 +++++--
- 2 files changed, 8 insertions(+), 9 deletions(-)
+>> +
+>> +                               clocks = <&dispcc 
+>> DISP_CC_MDSS_AHB_CLK>,
+>> +                                        <&dispcc
+> DISP_CC_MDSS_DP_AUX_CLK>,
+>> +                                        <&dispcc
+> DISP_CC_MDSS_DP_LINK_CLK>,
+>> +                                        <&dispcc
+> DISP_CC_MDSS_DP_LINK_INTF_CLK>,
+>> +                                        <&dispcc
+> DISP_CC_MDSS_DP_PIXEL_CLK>;
+>> +                               clock-names = "core_iface", 
+>> "core_aux",
+> "ctrl_link",
+>> +                                             "ctrl_link_iface",
+> "stream_pixel";
+>> +                               #clock-cells = <1>;
+>> +                               assigned-clocks = <&dispcc
+> DISP_CC_MDSS_DP_LINK_CLK_SRC>,
+>> +                                                 <&dispcc
+> DISP_CC_MDSS_DP_PIXEL_CLK_SRC>;
+>> +                               assigned-clock-parents = <&msm_dp 0>,
+> <&msm_dp 1>;
+>> +
+>> +                               operating-points-v2 = <&dp_opp_table>;
+>> +                               power-domains = <&rpmhpd SC7180_CX>;
+> 
+> Can you send another patch to add the hpd pinctrl binding for the hpd
+> function? It would be useful to have that in the SoC level in case any
+> board wants to use the hpd pin on this SoC without having to implement
+> it themselves. It could be assigned here too as the pinctrl but I'm not
+> sure if that is correct. Probably better to just have it in the SoC 
+> file
+> and then let boards pick to use it.
+> 
 
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 4e03841f053de..38180befce321 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -2614,7 +2614,7 @@ static void validate_direct_spte(struct kvm_vcpu *vcpu, u64 *sptep,
- 	}
- }
- 
--static bool mmu_page_zap_pte(struct kvm *kvm, struct kvm_mmu_page *sp,
-+static void mmu_page_zap_pte(struct kvm *kvm, struct kvm_mmu_page *sp,
- 			     u64 *spte)
- {
- 	u64 pte;
-@@ -2630,13 +2630,9 @@ static bool mmu_page_zap_pte(struct kvm *kvm, struct kvm_mmu_page *sp,
- 			child = to_shadow_page(pte & PT64_BASE_ADDR_MASK);
- 			drop_parent_pte(child, spte);
- 		}
--		return true;
--	}
--
--	if (is_mmio_spte(pte))
-+	} else if (is_mmio_spte(pte)) {
- 		mmu_spte_clear_no_track(spte);
--
--	return false;
-+	}
- }
- 
- static void kvm_mmu_page_unlink_children(struct kvm *kvm,
-diff --git a/arch/x86/kvm/mmu/paging_tmpl.h b/arch/x86/kvm/mmu/paging_tmpl.h
-index 4dd6b1e5b8cf7..3bb624a3dda92 100644
---- a/arch/x86/kvm/mmu/paging_tmpl.h
-+++ b/arch/x86/kvm/mmu/paging_tmpl.h
-@@ -895,6 +895,7 @@ static void FNAME(invlpg)(struct kvm_vcpu *vcpu, gva_t gva, hpa_t root_hpa)
- {
- 	struct kvm_shadow_walk_iterator iterator;
- 	struct kvm_mmu_page *sp;
-+	u64 old_spte;
- 	int level;
- 	u64 *sptep;
- 
-@@ -917,7 +918,8 @@ static void FNAME(invlpg)(struct kvm_vcpu *vcpu, gva_t gva, hpa_t root_hpa)
- 		sptep = iterator.sptep;
- 
- 		sp = sptep_to_sp(sptep);
--		if (is_last_spte(*sptep, level)) {
-+		old_spte = *sptep;
-+		if (is_last_spte(old_spte, level)) {
- 			pt_element_t gpte;
- 			gpa_t pte_gpa;
- 
-@@ -927,7 +929,8 @@ static void FNAME(invlpg)(struct kvm_vcpu *vcpu, gva_t gva, hpa_t root_hpa)
- 			pte_gpa = FNAME(get_level1_sp_gpa)(sp);
- 			pte_gpa += (sptep - sp->spt) * sizeof(pt_element_t);
- 
--			if (mmu_page_zap_pte(vcpu->kvm, sp, sptep))
-+			mmu_page_zap_pte(vcpu->kvm, sp, sptep);
-+			if (is_shadow_present_pte(old_spte))
- 				kvm_flush_remote_tlbs_with_address(vcpu->kvm,
- 					sp->gfn, KVM_PAGES_PER_HPAGE(sp->role.level));
- 
--- 
-2.28.0
+We have tlmm node in sc7180.dtsi. We can define pinctrl definition for 
+"dp_hot" funtionality there.
 
+>> +
+>> +                               ports {
+>> +                                       #address-cells = <1>;
+>> +                                       #size-cells = <0>;
+>> +                                       port@0 {
+>> +                                               reg = <0>;
+>> +                                               dp_in: endpoint {
+>> +                                                       
+>> remote-endpoint
+> = <&dpu_intf0_out>;
+>> +                                               };
+>> +                                       };
+>> +
+>> +                                       port@1 {
+>> +                                               reg = <1>;
+>> +                                               dp_out: endpoint { };
+>> +                                       };
+>> +                               };
+>> +
+>> +                               dp_opp_table: dp-opp-table {
+> 
+> Can this be called opp-table? I don't see the need to make it more
+> specific given that it doesn't share the namespace at this level with
+> anything else that is an opp table.
+> 
+
+DSI and MDP's OPP table names were posted here:
+https://lore.kernel.org/dri-devel/1594292674-15632-4-git-send-email-rnayak@codeaurora.org/
+
+So, It makes sense to keep naming conventions similar to dsi and mdp's 
+opp table.
+
+>> +                                       compatible =
+> "operating-points-v2";
+>> +
+>> +                                       opp-160000000 {
+>> +                                               opp-hz = /bits/ 64
+> <160000000>;
+>> +                                               required-opps =
+> <&rpmhpd_opp_low_svs>;
+>> +                                       };
+>> +
+>> +                                       opp-270000000 {
+>> +                                               opp-hz = /bits/ 64
+> <270000000>;
+>> +                                               required-opps =
+> <&rpmhpd_opp_svs>;
+>> +                                       };
+>> +
+>> +                                       opp-540000000 {
+>> +                                               opp-hz = /bits/ 64
+> <540000000>;
+>> +                                               required-opps =
+> <&rpmhpd_opp_svs_l1>;
+>> +                                       };
+>> +
+>> +                                       opp-810000000 {
+>> +                                               opp-hz = /bits/ 64
+> <810000000>;
+>> +                                               required-opps =
+> <&rpmhpd_opp_nom>;
+>> +                                       };
+>> +                               };
+>> +                       };
+>>                 };
+>> 
+>>                 dispcc: clock-controller@af00000 {
+>> @@ -2449,8 +2521,8 @@ dispcc: clock-controller@af00000 {
+>>                                  <&gcc GCC_DISP_GPLL0_CLK_SRC>,
+>>                                  <&dsi_phy 0>,
+>>                                  <&dsi_phy 1>,
+>> -                                <0>,
+>> -                                <0>;
+>> +                                <&msm_dp 0>,
+>> +                                <&msm_dp 1>;
+> 
+> This bit will have to change when the DP phy is split off into the qmp
+> driver.
+> 
+
+Yes. It will be <&dp_phy 0> and <&dp_phy 1> assuming dp_phy is DP PHY 
+dts node name.
+
+>>                         clock-names = "bi_tcxo",
+>>                                       "gcc_disp_gpll0_clk_src",
+>>                                       "dsi0_phy_pll_out_byteclk",
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
