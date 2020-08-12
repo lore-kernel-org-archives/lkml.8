@@ -2,110 +2,150 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9955EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 18:06:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 607CEC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 18:07:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BF4920771
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 18:06:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BAB120771
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 18:07:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="dPPr77PP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726587AbgHLSGS (ORCPT
+        id S1726651AbgHLSHS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 14:06:18 -0400
-Received: from mga12.intel.com ([192.55.52.136]:43006 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726276AbgHLSGR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 14:06:17 -0400
-IronPort-SDR: FfZu0VQSB1bRIAF33KH8QyxXMRNMH9v7MGLC5u9oP6iL5MNIItLhN3Vz+lNvcEWq74XwzuayB1
- uxdhB+Fnoatg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9711"; a="133569778"
-X-IronPort-AV: E=Sophos;i="5.76,305,1592895600"; 
-   d="scan'208";a="133569778"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2020 11:06:17 -0700
-IronPort-SDR: gfBVxQ/FtmJxLpgjUjBFChXbTpXK9Kt0h2RZ4a53+i8J8dUxU2h9rPcImy/kVmVmz2ye9VkHF3
- hqRDBVNsFxUQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,305,1592895600"; 
-   d="scan'208";a="277908667"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.160])
-  by fmsmga008.fm.intel.com with ESMTP; 12 Aug 2020 11:06:17 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] KVM: nVMX: Add VM-Enter failed tracepoints for super early checks
-Date:   Wed, 12 Aug 2020 11:06:15 -0700
-Message-Id: <20200812180615.22372-1-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.28.0
+        Wed, 12 Aug 2020 14:07:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51804 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726554AbgHLSHQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 14:07:16 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52DE7C061384
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 11:07:16 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id b2so1442072qvp.9
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 11:07:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=FPM/BpxL7oHk5NwDUOl9GJEl4QuvKvovtaLxj5QbinM=;
+        b=dPPr77PPopJMkB3J1yt/ankUvINgjFbRtn7AMXcoTxgOv4Qnz8BmX18CGvnpDoNboC
+         RdBfGamTp+ItJYrXQOhA+ATgJhrWxC7oZXQM5Q3E+IC333XHrA35Xgpiz1g1+eCk0g5J
+         LHWdw0LwJi+FdGosEZll1xe5ub1affO7TItKtEmD4+bYgbMaujsZ0HkQBmx7hCRhE7gs
+         ASP2oWwiikGuPIVN/TUiCMTWTtuyO/dChqvWVOrNOEVrbSokdAWF52h4N0xNIypYkucn
+         Kw88wjXP6RrYAG/5c+SbZ7RH91UXZN+awliP03byg6ZCTl62qFsjos/SZlDNZZuljdig
+         wIhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=FPM/BpxL7oHk5NwDUOl9GJEl4QuvKvovtaLxj5QbinM=;
+        b=erVzlRoBUQ4SNCIYkyFvxcnT0WrAbKDvrAlSY8kj0sv9x+I9kxbPC9m/Vt80d2xuUo
+         A6cgYRmVRKVIr0I+9+t+idbNKPnwEMtIo2Pb3W7IJ8ZEkw/U6Xi8qWIXB72cc7zN2P2u
+         Sa382hu0eT98xjspCekwiUZeK2BRqpAKMgIjQd2Mp9enygv/qEcLDfYSfRoD4msqkNYk
+         97qPAYFQltHj0XbM7WAbhZW/LW+Xf7EexwfnoDUsDBMwMK1ZfFYEk/B0G0krV5nxJN5F
+         yz7T6t/54G7s3vVoGIetwNJSmItku8uXQy6v7iO0TAB7gOuoa8lRm0sUvHZvyTdh+jVa
+         kejA==
+X-Gm-Message-State: AOAM532zkH07KUWv0x9on8gdua2a9bmbOMqqwc924hCEG6k78M2Khlpu
+        pBs3Cd+7E8vVL9KpOf2EMTkPYoUna1RRMZZSf6WKdw==
+X-Google-Smtp-Source: ABdhPJxwuOgASIUMO9V8WJQloS5aDiVFEuzmNpHSIUm1BABcVUPU19igC0hVjhfl43zEzpgsO5DYTci6isBiqyb/YV4=
+X-Received: by 2002:ad4:5502:: with SMTP id az2mr839333qvb.148.1597255635563;
+ Wed, 12 Aug 2020 11:07:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200121134157.20396-1-sakari.ailus@linux.intel.com>
+ <20200121134157.20396-6-sakari.ailus@linux.intel.com> <CAMpxmJU5dG49N2FA0oSQsOfKrCr3KQ1BisON4c+nUJJmZQG=bQ@mail.gmail.com>
+ <20200311085555.GH5379@paasikivi.fi.intel.com> <CAMpxmJVPTKW+sYSJ3dnfF8nLAOKEa4Ob7bpxG0KD3Tkdm+rtYw@mail.gmail.com>
+ <20200323213101.GB21174@kekkonen.localdomain> <CAMpxmJVdyTkZMVuhSy0Ux8VUYTmQN_YEfH-akQsAL3zrwiz8Dw@mail.gmail.com>
+ <20200810082549.GD840@valkosipuli.retiisi.org.uk> <CAMpxmJUKSR-oCGnV1E5XiAMA2nYBy5f_f8=VSoMn0zf+qF39vg@mail.gmail.com>
+ <20200811080009.GE840@valkosipuli.retiisi.org.uk>
+In-Reply-To: <20200811080009.GE840@valkosipuli.retiisi.org.uk>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Wed, 12 Aug 2020 20:07:04 +0200
+Message-ID: <CAMpxmJWziqW-PiJPSm6aH5aXbYktMJfVjJfvfGxv8fdbWKydqg@mail.gmail.com>
+Subject: Re: [PATCH v4 5/6] at24: Support probing while off
+To:     Sakari Ailus <sakari.ailus@iki.fi>
+Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Wolfram Sang <wsa@the-dreams.de>, linux-acpi@vger.kernel.org,
+        Bingbu Cao <bingbu.cao@intel.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
+        Hyungwoo Yang <hyungwoo.yang@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rajmohan Mani <rajmohan.mani@intel.com>,
+        Tomasz Figa <tfiga@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add tracepoints for the early consistency checks in nested_vmx_run().
-The "VMLAUNCH vs. VMRESUME" check in particular is useful to trace, as
-there is no architectural way to check VMCS.LAUNCH_STATE, and subtle
-bugs such as VMCLEAR on the wrong HPA can lead to confusing errors in
-the L1 VMM.
+On Tue, Aug 11, 2020 at 10:00 AM Sakari Ailus <sakari.ailus@iki.fi> wrote:
+>
+> Hi Bartosz,
+>
+> On Mon, Aug 10, 2020 at 08:12:00PM +0200, Bartosz Golaszewski wrote:
+> > On Mon, Aug 10, 2020 at 10:26 AM Sakari Ailus <sakari.ailus@iki.fi> wro=
+te:
+> > >
+> >
+> > [snip]
+> >
+> > > >
+> > > > Rafael: I think that there are two issues with patch 1/5:
+> > > > 1. It adds a very specific boolean flag to a structure that's meant=
+ to
+> > > > be very general. As I pointed out in the i2c patch: at the very lea=
+st
+> > > > this could be made into an int storing flag values, instead of a
+> > > > boolean field. But rather than that - it looks to me more like a
+> > > > device (or bus) feature than a driver feature. Is there any ACPI fl=
+ag
+> > > > we could use to pass this information to the driver model without
+> > > > changing the driver structure?
+> > >
+> > > To my knowledge there isn't. The fact that I=E6=B6=8E devices are pow=
+ered on for
+> > > probe in ACPI based systems is specific to Linux kernel and not ACPI =
+as
+> > > such.
+> > >
+> > > The reason this needs to be in a generic struct is that the device's =
+power
+> > > state will be changed before any interaction with the driver takes pl=
+ace as
+> > > it's the I=E6=B6=8E framework that powers on the device.
+> > >
+> >
+> > I'm not sure I'm following. Looking at patch 1/6 struct device already
+> > exists so why can't this information be conveyed "per device" as
+> > opposed to "per driver"?
+>
+> It's both driver and device.
+>
+> Suppose there's no indication of driver support. If you add the property
+> telling the device shouldn't be powered on for probe, it won't be. And if
+> the driver doesn't support that, probe will fail. That could happen e.g.
+> when running an older kernel on a system that happens to specify this
+> property for a given device.
+>
+> You could view this as a driver bug of course. I still think it's better =
+to
+> make driver support for this explicit, and avoid making this a practical
+> problem anywhere.
+>
 
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/x86/kvm/vmx/nested.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+I see. I'm not sure this is the correct solution but let's see what
+Wolfram says. From my side: I'd prefer to see the
+disable_i2c_core_irq_mapping converted to flags first and then the
+flags extended with whatever you need. disable_i2c_core_irq_mapping
+could also be removed AFAICT - nobody uses it.
 
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 23b58c28a1c92..fb37f0972e78a 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -3468,11 +3468,11 @@ static int nested_vmx_run(struct kvm_vcpu *vcpu, bool launch)
- 	if (evmptrld_status == EVMPTRLD_ERROR) {
- 		kvm_queue_exception(vcpu, UD_VECTOR);
- 		return 1;
--	} else if (evmptrld_status == EVMPTRLD_VMFAIL) {
-+	} else if (CC(evmptrld_status == EVMPTRLD_VMFAIL)) {
- 		return nested_vmx_failInvalid(vcpu);
- 	}
- 
--	if (!vmx->nested.hv_evmcs && vmx->nested.current_vmptr == -1ull)
-+	if (CC(!vmx->nested.hv_evmcs && vmx->nested.current_vmptr == -1ull))
- 		return nested_vmx_failInvalid(vcpu);
- 
- 	vmcs12 = get_vmcs12(vcpu);
-@@ -3483,7 +3483,7 @@ static int nested_vmx_run(struct kvm_vcpu *vcpu, bool launch)
- 	 * rather than RFLAGS.ZF, and no error number is stored to the
- 	 * VM-instruction error field.
- 	 */
--	if (vmcs12->hdr.shadow_vmcs)
-+	if (CC(vmcs12->hdr.shadow_vmcs))
- 		return nested_vmx_failInvalid(vcpu);
- 
- 	if (vmx->nested.hv_evmcs) {
-@@ -3504,10 +3504,10 @@ static int nested_vmx_run(struct kvm_vcpu *vcpu, bool launch)
- 	 * for misconfigurations which will anyway be caught by the processor
- 	 * when using the merged vmcs02.
- 	 */
--	if (interrupt_shadow & KVM_X86_SHADOW_INT_MOV_SS)
-+	if (CC(interrupt_shadow & KVM_X86_SHADOW_INT_MOV_SS))
- 		return nested_vmx_fail(vcpu, VMXERR_ENTRY_EVENTS_BLOCKED_BY_MOV_SS);
- 
--	if (vmcs12->launch_state == launch)
-+	if (CC(vmcs12->launch_state == launch))
- 		return nested_vmx_fail(vcpu,
- 			launch ? VMXERR_VMLAUNCH_NONCLEAR_VMCS
- 			       : VMXERR_VMRESUME_NONLAUNCHED_VMCS);
--- 
-2.28.0
-
+Bart
