@@ -2,145 +2,124 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ACDCC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:32:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1BCDC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:32:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 318FC20885
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:32:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597224769;
-	bh=ikRO5317g1JTomZhkPieEwMdPdc6yb7MWeGDygUVu/Y=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=IqGWZTiQ08hYyIyRr4LXy2jrcW9RSRgSmTdqwE/Gs+b8Q+ItGurb/v4chuKxPRMxa
-	 +ItLLcZaoMqUkPVZI5zsriURDHcSuSuYMxCqFTvpaMfU5Db3hOtpHlV5oGSdRSR2ar
-	 lbKMA+pstFbUaAvBVPbQiIlOnB+eypGpKeV0lLl8=
+	by mail.kernel.org (Postfix) with ESMTP id 70A9D20885
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:32:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GBiV2Qte"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727791AbgHLJcr (ORCPT
+        id S1727834AbgHLJcy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 05:32:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57362 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726755AbgHLJcq (ORCPT
+        Wed, 12 Aug 2020 05:32:54 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:34411 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726755AbgHLJcw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 05:32:46 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEAB8C06174A;
-        Wed, 12 Aug 2020 02:32:45 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id v9so1467136ljk.6;
-        Wed, 12 Aug 2020 02:32:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=ikRO5317g1JTomZhkPieEwMdPdc6yb7MWeGDygUVu/Y=;
-        b=vUyHDSQQkg+zffYc5aA+4vVtl6rhVC0g/fpJmdxy0gIbFlEQXiGCpnItPScFwzGAop
-         rosPSHex6qTHBb5Si00mD9g20pFu5uYcAOsOi/N7vBXOBEL4wL9XFkZkxFHmoIz2/kQ8
-         n4+OvlfzbX8kD77eWHuXrZX3CixsJd0xAdvmsgXOY4tjyG4ZhQO0gJlTWZLlcWK+twha
-         XfKf0T5D0i6RoDacqbwaA7ELtkt14WUF00/qbr+9UneI65GjixwJj3nFF4HPKkWGJm/k
-         U1isUxGpWlERfWu2wBSRlAm8D8EWBL/6ZpvZHTMSuNu5rW4oyq48FTa+FAWy1ijZbHZI
-         q/Kw==
+        Wed, 12 Aug 2020 05:32:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597224771;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=McgSm4gZG0IJUDrzxF8YLSNKil+nQCTSx4aOJLvpZXU=;
+        b=GBiV2QtezXRBlNuQkXT6zj5dolK+YcbsxZlkQLKTJX6ZqPUuGjEQxZQ0gJv9rfuYkBjEd9
+        vfHiBg7WyE9RcULxNsD/p4nT3B2kpNsI34PzQcAuYESWdPWDBVf0e3b1dB3oEGP1r/9ron
+        kcKq0bX5wHgPNvKvZOomu2Gy+ZPHyVo=
+Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com
+ [209.85.210.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-113-RlO8wxyhMMi2tpqFBOJtug-1; Wed, 12 Aug 2020 05:32:49 -0400
+X-MC-Unique: RlO8wxyhMMi2tpqFBOJtug-1
+Received: by mail-pf1-f200.google.com with SMTP id r25so1379806pfg.4
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 02:32:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :date:message-id:mime-version;
-        bh=ikRO5317g1JTomZhkPieEwMdPdc6yb7MWeGDygUVu/Y=;
-        b=R4nbTdgZXLzPdpCPXpM3g4enwddY+6aG7/kH35gUZbjGG43ZK1ntswQxorYZPxGN9J
-         KD/28NMFRTxn05WdN1jjaWCa8vaQbLz/KmXEnlp56zpvYLaza/USvQ4KpGZNpCrXotnR
-         /cBdF4wK3hAXrU8Isk31NtKeAoA16+019FksUr50HOrlaDJovGLtfGLUOfeuPZ5EFelK
-         jyENR19KlulWHt3x7k6BwYM2oBnVbk1yRHtQcRahTqoUR7w5i2B2bomryUecKnFuMWj5
-         5WGf+qUGzw0zMIKKf7d1yUNpgkIFRMKITKyuh3qUBxdi7BTdYujPJEcEc8Bk+CqhiWVv
-         lGQA==
-X-Gm-Message-State: AOAM532Q7qnsy7PpopOqw6Dsr2RzZCKWgSVNkpokDr7KvOlNKyCnEwFt
-        eOGWP+h4rgkiVuXOPNaozJ0=
-X-Google-Smtp-Source: ABdhPJzr8SlpLA4gz+moz1FILxb2p8bIze9B0/QqnNBGx/GDRP+DopWHZPwBQofemKUkLLZkJBZwDA==
-X-Received: by 2002:a2e:2c18:: with SMTP id s24mr4675952ljs.260.1597224764335;
-        Wed, 12 Aug 2020 02:32:44 -0700 (PDT)
-Received: from saruman ([194.34.132.58])
-        by smtp.gmail.com with ESMTPSA id p9sm320265ljg.76.2020.08.12.02.32.42
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 12 Aug 2020 02:32:43 -0700 (PDT)
-From:   Felipe Balbi <balbi@kernel.org>
-To:     "Sandeep Maheswaram \(Temp\)" <sanm@codeaurora.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
-Subject: Re: [PATCH v11 1/2] usb: dwc3: qcom: Add interconnect support in dwc3 driver
-In-Reply-To: <322d193c-d4d2-789b-ffec-ebdee2730c1e@codeaurora.org>
-References: <1595869597-26049-1-git-send-email-sanm@codeaurora.org> <1595869597-26049-2-git-send-email-sanm@codeaurora.org> <20200727192050.GD3191083@google.com> <cd5c6c99-d8ee-da59-1abf-e64e5f7f6f8f@codeaurora.org> <87v9honyff.fsf@kernel.org> <322d193c-d4d2-789b-ffec-ebdee2730c1e@codeaurora.org>
-Date:   Wed, 12 Aug 2020 12:32:38 +0300
-Message-ID: <87sgcsnr9l.fsf@kernel.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=McgSm4gZG0IJUDrzxF8YLSNKil+nQCTSx4aOJLvpZXU=;
+        b=VeLn5Gb5+p8PJZBZkVVIhvGs/GEnSMjM7yYKt3kIIdb9nWIHlMA2UAGhyFiT/bR8OQ
+         t0OLA9wddtSbjFr+Y/k1aAAH6LSV5vVV6V5VZDXO0PQeQoV7wfeVb0vnb/X5lKEBP8Yt
+         Hl2I5FbKBSvaLQvLqNRohscn/elYHdrE52CoCyoi8lyI+ZTWYgPtcDMm8qAvFR4aRpzI
+         J+Z11MZb1Xbi4ohrHeMmONNQUyfNQXxuErVdktNyKMInG1cFnB+uLzEaquxIPLbd2ral
+         EBt6vm54vFCxnoFj8MCjAqbjpOsUq8VtiSzByoKGe/+VB2uyhWmCfbX/77ki/A/aYgKD
+         OgAw==
+X-Gm-Message-State: AOAM53298oQYLBtTgRo0sGoksp9SRuRk/BN777mBaNhsHPkhcAvOHrj5
+        rdylea5gijBisePY0Qxbso2KlZRgzSbe5qHv0JYUzNdaVNsum3HG2y7rnbk2ep3QqOsrtCOdplP
+        xEeUdjr+5MKgudNA6z5zVIpcE
+X-Received: by 2002:a65:614f:: with SMTP id o15mr4297313pgv.321.1597224768560;
+        Wed, 12 Aug 2020 02:32:48 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJx911sIO9/OZXyBonuONBWz+oLANJEAcEjx1Ld7BQlkUUtIu6DFXuiWv8TKBtMS/vO+GeEdAw==
+X-Received: by 2002:a65:614f:: with SMTP id o15mr4297295pgv.321.1597224768283;
+        Wed, 12 Aug 2020 02:32:48 -0700 (PDT)
+Received: from xiangao.remote.csb ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id y196sm1854702pfc.202.2020.08.12.02.32.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Aug 2020 02:32:47 -0700 (PDT)
+Date:   Wed, 12 Aug 2020 17:32:34 +0800
+From:   Gao Xiang <hsiangkao@redhat.com>
+To:     Daeho Jeong <daeho43@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com,
+        Daeho Jeong <daehojeong@google.com>
+Subject: Re: [f2fs-dev] [PATCH v3] f2fs: change virtual mapping way for
+ compression pages
+Message-ID: <20200812093234.GA759@xiangao.remote.csb>
+References: <20200812051711.2147716-1-daeho43@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200812051711.2147716-1-daeho43@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-
-"Sandeep Maheswaram (Temp)" <sanm@codeaurora.org> writes:
-
-> Hi
+On Wed, Aug 12, 2020 at 02:17:11PM +0900, Daeho Jeong wrote:
+> From: Daeho Jeong <daehojeong@google.com>
+> 
+> By profiling f2fs compression works, I've found vmap() callings have
+> unexpected hikes in the execution time in our test environment and
+> those are bottlenecks of f2fs decompression path. Changing these with
+> vm_map_ram(), we can enhance f2fs decompression speed pretty much.
+> 
+> [Verification]
+> Android Pixel 3(ARM64, 6GB RAM, 128GB UFS)
+> Turned on only 0-3 little cores(at 1.785GHz)
+> 
+> dd if=/dev/zero of=dummy bs=1m count=1000
+> echo 3 > /proc/sys/vm/drop_caches
+> dd if=dummy of=/dev/zero bs=512k
+> 
+> - w/o compression -
+> 1048576000 bytes (0.9 G) copied, 2.082554 s, 480 M/s
+> 1048576000 bytes (0.9 G) copied, 2.081634 s, 480 M/s
+> 1048576000 bytes (0.9 G) copied, 2.090861 s, 478 M/s
+> 
+> - before patch -
+> 1048576000 bytes (0.9 G) copied, 7.407527 s, 135 M/s
+> 1048576000 bytes (0.9 G) copied, 7.283734 s, 137 M/s
+> 1048576000 bytes (0.9 G) copied, 7.291508 s, 137 M/s
+> 
+> - after patch -
+> 1048576000 bytes (0.9 G) copied, 1.998959 s, 500 M/s
+> 1048576000 bytes (0.9 G) copied, 1.987554 s, 503 M/s
+> 1048576000 bytes (0.9 G) copied, 1.986380 s, 503 M/s
 >
-> On 8/12/2020 12:27 PM, Felipe Balbi wrote:
->> "Sandeep Maheswaram (Temp)" <sanm@codeaurora.org> writes:
->>
->>> Hi Felipe,
->>>
->>> On 7/28/2020 12:50 AM, Matthias Kaehlcke wrote:
->>>> On Mon, Jul 27, 2020 at 10:36:36PM +0530, Sandeep Maheswaram wrote:
->>>>> Add interconnect support in dwc3-qcom driver to vote for bus
->>>>> bandwidth.
->>>>>
->>>>> This requires for two different paths - from USB to
->>>>> DDR. The other is from APPS to USB.
->>>>>
->>>>> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
->>>>> Signed-off-by: Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
->>>> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
->>> Please ack if you are ok with this patch.
->> What's the plan to get this upstream? Should I take dwc3-qcom patch and
->> ignore the rest? Is there a hard-dependency on something else?
-> Yes take dwc3-qcom patch only,the dt change is already in linux-next.
 
-Thanks for confirming :-)
+The reason why I raised up this was that I once observed vmap() vs
+vm_map_ram() on arm64 kirin platform as well. it indeed had some
+impact (~10%) but not as huge as this. Anyway, such description
+with test environment looks ok.
 
-=2D-=20
-balbi
+Thanks,
+Gao Xiang
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+ 
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl8ztzYACgkQzL64meEa
-mQZqww/+Nh/OyjjF70wAKlgxreYyvAeXNRcYmLwKx8SenVcwYn3xsDNr5zck42Of
-4ImN2g/80ArjbgxHdXKpsvkly6wy1I8FX+WZj4jzp1pRo3XCR0Nccts+t1ETt+4j
-FEmzRMlzu4KDBVixhUUC+8YNpmPcG1pdJky5usr+5OQpx8PwuhSCKp3tjWAYkgiH
-w9SaCl8V78iUYJ0XdkEfmsf77r2gw4lpbcohpWkWaTZAWsQ2JITEEsDAYxP4YVm2
-Jrl3JmTRC/gTEMyYNlf0oNv6Sb8XKQROYT7EfVDHVkMuDUbP9QphQAsVFvgGJ0ZW
-O+zjG2yraLzMmwcZ+5wpWUh/i89+aBEOJBYsXB6GYO5ut27brckPQUR992IeE7ZS
-jzdQi3bLe2t5K1Be2y9VPNkaKhu3sdVB/WvhxLf4mjrdlW76nLKwyy+tx9LeLX6Q
-G30fBJwRdk1BmKfF6slk36GEhnpb+yU6x6+CqE9Z2Yod6hLSVAVfuJVimiBp/5dy
-JWQqx6ubA6ZTskM7lgI1e3W8u1HEQPcGLdwuUJKKKjITa5OECe1h+F5hxaltF6Y5
-BJ9+0DUehwBVWCVXeByC7cOCAXpDJ8u2qBofHnLSATMMp1wo7f3yEUpETboPwbTu
-xP09hkyCTMYR1d61hhvsG897UkAalAu8sZQCRukbM0yOos2lFFM=
-=UTp+
------END PGP SIGNATURE-----
---=-=-=--
