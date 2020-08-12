@@ -2,113 +2,96 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB8FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 08:18:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9908EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 08:20:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2617D20781
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 08:18:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597220325;
-	bh=DZe4rDhjzxljBRgO7VQ+ytJ53LFjK1MMm84lYaTTDBg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jUhz7QeG5hy0eF+qq12h4D0Eze+IKNPD3nMAwLARn2cdUT57My2pb8gWTE9DEHJw1
-	 LiUqJJxy6nfsvLM6x8u6ZW/52rpyrLUa7oqVlWxill++A1t8bzPbgxXYA/ne6+BUMM
-	 09xzwwV4LJpMHUd7U9eXgwp3E/AQM8fxB6UYJupM=
+	by mail.kernel.org (Postfix) with ESMTP id 6AB4720774
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 08:20:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ekQqof34"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726915AbgHLISo (ORCPT
+        id S1726929AbgHLIUT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 04:18:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46100 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726712AbgHLISn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 04:18:43 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5255620774;
-        Wed, 12 Aug 2020 08:18:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597220322;
-        bh=DZe4rDhjzxljBRgO7VQ+ytJ53LFjK1MMm84lYaTTDBg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aoTbN6qbRHC8oLTWGWsg1IOq4qT55TJQzev+Ml+0+6WYL2d5Rr5res40LMxOW9Stk
-         h6SlHs3E9bKMCM42TIdi3JvHICDxpR9+DIqlAw1cQrvA7JDwU6hA1GtOEVR1FymycK
-         dmyF1wg1RL7LMKxfQKwABHqtuEwdM/q+lI94p+ww=
-Date:   Wed, 12 Aug 2020 10:18:52 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Peilin Ye <yepeilin.cs@gmail.com>
-Cc:     linux-fsdevel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        syzkaller-bugs@googlegroups.com, linux-kernel@vger.kernel.org
-Subject: Re: [Linux-kernel-mentees] [PATCH] hfs, hfsplus: Fix NULL pointer
- dereference in hfs_find_init()
-Message-ID: <20200812081852.GA851575@kroah.com>
-References: <20200812065556.869508-1-yepeilin.cs@gmail.com>
- <20200812070827.GA1304640@kroah.com>
- <20200812071306.GA869606@PWN>
+        Wed, 12 Aug 2020 04:20:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46208 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726182AbgHLIUR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 04:20:17 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53E84C06174A
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 01:20:17 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id t10so750201plz.10
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 01:20:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=igrwOs5BXdzFng9lpBaC8fjOPPwu57+v42SpgMKbqgU=;
+        b=ekQqof34/jYII1w6eBa5yIVw96SVBqqiPBeqi1r8kNGotFvG8q3FaMHTpLsluhhoq/
+         ApxVRamFwOA/nterYJKvHNHF1SJQaIZc5AAJSgEXuPxNUbYw9x8Ig5LYe5k+A6iRXC5d
+         Y+L1ZRGSoRqHakcIZeh/nyGzfuZvlM2g/3g2jM73/1LwYrPpgWSIEYYO1aBDohQ1wBMl
+         5KyQux2z4InuWHfQJlZOdbFcuTTgJdoHl2VGxjf+aaH+WOnpAdTJ3QdrTW9MAQZCdR1E
+         f8snFe8Jn4hcZcWz56vApw3ValbNLHpqDan9voCXY3MrKmi5baBv8X1azIUcX1/4EaIH
+         JU0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=igrwOs5BXdzFng9lpBaC8fjOPPwu57+v42SpgMKbqgU=;
+        b=SZgxmeWYlKysDoJG+TCm/rjvWjcK7gpa2h6opMm1lwo/KtdPNyW94Ux2n+ikTGBSFb
+         bFqD0tanrv//oW2H2yK4+LiApH/708pvzF01YKGyHuzWJ/30suX0hVmYUfMgV7dRpsYU
+         DNdcBCA1YDgC1GJPmZIhXTnQ/tzW7FwPy/a7ZbMCslm8hQQBogXSVy1EFeikZ1Lpukzr
+         WP1KOXWB1ZxOF5DZq61UXwGjJRrhJuNnuDyexOn+cM4zNsZcID1lngW8nHXppj6T3q5V
+         nfJMbq0+ccvKICDahGgfPs+Qm8jjArv9fbKId2YXMWoPfctx6ZHLJamhoROqmyjdU9BZ
+         UUnA==
+X-Gm-Message-State: AOAM532iV2bmBqYYgPALuuy0+GQnHHerIUKlLc1sGM2s+yAIO5i4YAfn
+        3PA/VECsxMLwKGDKRJgntjW0QA==
+X-Google-Smtp-Source: ABdhPJxPwOmfgTz1iL8sWxWSIdNppBzTK3OVbY8JYR/pC5JUmKvQqsmT/mvySzfjGAVPo8AAxC5GVw==
+X-Received: by 2002:a17:90a:4e42:: with SMTP id t2mr4927711pjl.121.1597220416855;
+        Wed, 12 Aug 2020 01:20:16 -0700 (PDT)
+Received: from localhost ([122.161.126.124])
+        by smtp.gmail.com with ESMTPSA id o17sm1429142pgn.73.2020.08.12.01.20.15
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 12 Aug 2020 01:20:16 -0700 (PDT)
+Date:   Wed, 12 Aug 2020 13:50:13 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>
+Subject: Re: [PATCH] OPP: Put opp table in dev_pm_opp_set_rate() all the time
+Message-ID: <20200812082013.64xc6hmt4nchcmab@vireshk-mac-ubuntu>
+References: <20200811212836.2531613-1-swboyd@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200812071306.GA869606@PWN>
+In-Reply-To: <20200811212836.2531613-1-swboyd@chromium.org>
+User-Agent: NeoMutt/20170609 (1.8.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 03:13:06AM -0400, Peilin Ye wrote:
-> On Wed, Aug 12, 2020 at 09:08:27AM +0200, Greg Kroah-Hartman wrote:
-> > On Wed, Aug 12, 2020 at 02:55:56AM -0400, Peilin Ye wrote:
-> > > Prevent hfs_find_init() from dereferencing `tree` as NULL.
-> > > 
-> > > Reported-and-tested-by: syzbot+7ca256d0da4af073b2e2@syzkaller.appspotmail.com
-> > > Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
-> > > ---
-> > >  fs/hfs/bfind.c     | 3 +++
-> > >  fs/hfsplus/bfind.c | 3 +++
-> > >  2 files changed, 6 insertions(+)
-> > > 
-> > > diff --git a/fs/hfs/bfind.c b/fs/hfs/bfind.c
-> > > index 4af318fbda77..880b7ea2c0fc 100644
-> > > --- a/fs/hfs/bfind.c
-> > > +++ b/fs/hfs/bfind.c
-> > > @@ -16,6 +16,9 @@ int hfs_find_init(struct hfs_btree *tree, struct hfs_find_data *fd)
-> > >  {
-> > >  	void *ptr;
-> > >  
-> > > +	if (!tree)
-> > > +		return -EINVAL;
-> > > +
-> > >  	fd->tree = tree;
-> > >  	fd->bnode = NULL;
-> > >  	ptr = kmalloc(tree->max_key_len * 2 + 4, GFP_KERNEL);
-> > > diff --git a/fs/hfsplus/bfind.c b/fs/hfsplus/bfind.c
-> > > index ca2ba8c9f82e..85bef3e44d7a 100644
-> > > --- a/fs/hfsplus/bfind.c
-> > > +++ b/fs/hfsplus/bfind.c
-> > > @@ -16,6 +16,9 @@ int hfs_find_init(struct hfs_btree *tree, struct hfs_find_data *fd)
-> > >  {
-> > >  	void *ptr;
-> > >  
-> > > +	if (!tree)
-> > > +		return -EINVAL;
-> > > +
-> > 
-> > How can tree ever be NULL in these calls?  Shouldn't that be fixed as
-> > the root problem here?
-> 
-> I see, I will try to figure out what is going on with the reproducer.
+On 11-08-20, 14:28, Stephen Boyd wrote:
+> @@ -905,7 +907,7 @@ int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq)
+>  
+>  		ret = _set_opp_bw(opp_table, NULL, dev, true);
+>  		if (ret)
+> -			return ret;
+> +			goto put_opp_table;
 
-That's good to figure out.  Note, your patch might be the correct thing
-to do, as that might be an allowed way to call the function.  But in
-looking at all the callers, they seem to think they have a valid pointer
-at the moment, so perhaps if this check is added, some other root
-problem is papered over to be only found later on?
+This was broken by a different patch.
 
-thanks,
+Fixes: b00e667a6d8b ("opp: Remove bandwidth votes when target_freq is zero")
 
-greg k-h
+I did split the patch into two and applied the correct tags (not yet
+pushed though).
+
+-- 
+viresh
