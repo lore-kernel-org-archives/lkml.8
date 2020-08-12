@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CAB7C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 06:31:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFCF1C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 06:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55AD920768
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 06:31:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C142D20768
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 06:31:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SRL8iJ7u"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ix49EQpe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726920AbgHLGbr (ORCPT
+        id S1726945AbgHLGbw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 02:31:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57678 "EHLO
+        Wed, 12 Aug 2020 02:31:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57710 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726870AbgHLGbm (ORCPT
+        with ESMTP id S1726700AbgHLGbq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 02:31:42 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBFDAC06174A;
-        Tue, 11 Aug 2020 23:31:41 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id f18so3545448wmc.0;
-        Tue, 11 Aug 2020 23:31:41 -0700 (PDT)
+        Wed, 12 Aug 2020 02:31:46 -0400
+Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCEB6C06178A;
+        Tue, 11 Aug 2020 23:31:45 -0700 (PDT)
+Received: by mail-wm1-x330.google.com with SMTP id p14so795473wmg.1;
+        Tue, 11 Aug 2020 23:31:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=O8v9EWlaL1+UpeG5UNZKoPzBhsEGCp3MJW71PEO+6Vw=;
-        b=SRL8iJ7uN8g9bTyu0jzc3wqa/PO0SjIxNxl9bIrvo3ToLaHPeJyNrQVLEqIehUI8Md
-         sfJdg5OhiR/ZUS9Gr2tcUzC4w121LW58Y46FZXIFQbe0SMve4PQGqVZIGvu/oHeIW8aB
-         aeFa9NrcX/A+oZhcvd6lv1wba18LTyFifRHcHz8BhCxKih4JzW6xBnph1UaBAa977h6v
-         aLgKsFSVUgMhpyhwDLRVC52pDYbcfQiB2cP9vdmLvRFdDOGtlpYdN07CAx+m9jPaGgGP
-         vyt5fPy6VmSWmCu1ui0FbvKKomtDmzLz185YfGxxH0ELPsNu2ChbbW6zwiyK5f53IIeC
-         GZHA==
+        bh=iEe3JEgfnz2A3kmUc0tM9su+oVl6GCkvwLvkbVj9ZQM=;
+        b=Ix49EQpebB3I1Hc1k2ts6iAHUWHAYGwr/TfG28gZJnkN5IgszojXFmOGjuE5EGv2Xn
+         7IMKsNaGLJtiNsubcXb7gNj0S07h56gM04iOgqMemeF82SJxC+REsUCrOeaIh7WhAcPI
+         /CA4UFWgk9jOWcE36Q+yriBJYDzEUI/CCLcLuTuABXd95BpTq4fqYG8DOsW7oy++C6aS
+         1/z+pw9Oatcj3PDK6A2jUWnTM/nnEdVOCbjtEcjY4rfT5J9zUxtGM333i7fNLh2AtAWI
+         xeocleiu8HyT3maLyS0/ey6qGJC6GbTrzeE7Gms6WhKVWv8Qpt+HM4B0zYTNYjH0I++a
+         7rNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=O8v9EWlaL1+UpeG5UNZKoPzBhsEGCp3MJW71PEO+6Vw=;
-        b=UJQDp73J6k5qxyuboi8JGZsvNlfT/vFf4h1YAckYC723arz3Vn1GaEvGifeM5S19N+
-         zcF/UWzIn9hhKbIup9TULRUCMIcizIqLGm4LXrIX9BWmND7Vd9h5040CYxxCUiSB7DxZ
-         aWWDeKpNWHcUpY5+Im0j8HlIOnK7lsOzJNwbUYXQLPTecNRcrwtn4SMP9+wzS5HyM/zn
-         sGorKjIy8BlyaGYFYT5VdPHXpK6FRaaDk3g/NjGkYgMESNvg0qwKPrH3bJm14Cs6YSI3
-         KbKFJvEMhAni8FUdWOZS0dWv/AlTHx8CK9dT9n8pPErHav7ThVuWmjB4M8TfYOY5G5fZ
-         wo1g==
-X-Gm-Message-State: AOAM532d6s2xpnHh7I3LvXZUbapD5XoVNjWzLnoZGHQXhnAhat6CSReQ
-        pKNo/cduH8WBGW0L8YBNgh4=
-X-Google-Smtp-Source: ABdhPJz5cqrzBUzVzJTErfGQvvQw0EiWxFKMP1uInrg0Ruyw1zHCphjiXGM6V77Xj5IXqyNjGsEl+w==
-X-Received: by 2002:a05:600c:220b:: with SMTP id z11mr6932010wml.48.1597213900477;
-        Tue, 11 Aug 2020 23:31:40 -0700 (PDT)
+        bh=iEe3JEgfnz2A3kmUc0tM9su+oVl6GCkvwLvkbVj9ZQM=;
+        b=oyoX/saFyjM5nEMEdpXnrcLLmPOfbYY81VLh+sO24PJ+AtncAoT0TO1Q2XX460bBx1
+         6Nuqziw1VK/UOJf7fJZ0A3hPZ2GzXXpE0o2UyLVU7Qezb6gLRpiwXzWwF9PLo1/qmvKL
+         kARmsObpQOQtRieNv8uh/CWC9hx4llu/WDJf+2bsVwsRQcMsQMe6Et/lB1XsoblyGBwf
+         oxXfPPP6kv4QqlcmAsFDAcW1kH5MEt9mCgALuP2Rv6vd2/liYT+/VDblyeiIEqn9CDAM
+         xnf/7bcZlzj07S2PT5bfoPKD7ekQdXUf3D+IczR0X1o1Yqp3A+TydBj0ceQ4glVwsW9a
+         UyvA==
+X-Gm-Message-State: AOAM53146JWOrTJLQUcZiKCNbFAaqSit2Il1GKrtsbwSfkhBDr5ylALZ
+        IFJlAkzhz/y6IvKZEZvADZo=
+X-Google-Smtp-Source: ABdhPJyJnpF3wsEHm9PE9MkvpC1XShd5/s2KHvOKdG/H/fbMyiujb5ZGw3W7la1ZlIqoPlcmCWspzA==
+X-Received: by 2002:a1c:b487:: with SMTP id d129mr7468739wmf.185.1597213904542;
+        Tue, 11 Aug 2020 23:31:44 -0700 (PDT)
 Received: from skynet.lan (88.red-83-49-60.dynamicip.rima-tde.net. [83.49.60.88])
-        by smtp.gmail.com with ESMTPSA id m16sm2149945wrr.71.2020.08.11.23.31.39
+        by smtp.gmail.com with ESMTPSA id m16sm2149945wrr.71.2020.08.11.23.31.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Aug 2020 23:31:39 -0700 (PDT)
+        Tue, 11 Aug 2020 23:31:44 -0700 (PDT)
 From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
         <noltari@gmail.com>
 To:     f.fainelli@gmail.com, robh+dt@kernel.org,
@@ -68,9 +68,9 @@ To:     f.fainelli@gmail.com, robh+dt@kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
         <noltari@gmail.com>
-Subject: [PATCH 07/14] mips: bmips: add BCM6368 irq definitions
-Date:   Wed, 12 Aug 2020 08:31:22 +0200
-Message-Id: <20200812063129.361862-8-noltari@gmail.com>
+Subject: [PATCH 11/14] mips: bmips: bcm6358: include and use dt-bindings
+Date:   Wed, 12 Aug 2020 08:31:26 +0200
+Message-Id: <20200812063129.361862-12-noltari@gmail.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200812063129.361862-1-noltari@gmail.com>
 References: <20200812063129.361862-1-noltari@gmail.com>
@@ -82,92 +82,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add header with BCM6368 definitions in order to be able to include it from
-device tree files.
+Now that there are proper device tree bindings we can start using them.
 
 Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
 ---
- .../bcm6368-interrupt-controller.h            | 71 +++++++++++++++++++
- 1 file changed, 71 insertions(+)
- create mode 100644 include/dt-bindings/interrupt-controller/bcm6368-interrupt-controller.h
+ arch/mips/boot/dts/brcm/bcm6358.dtsi | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/include/dt-bindings/interrupt-controller/bcm6368-interrupt-controller.h b/include/dt-bindings/interrupt-controller/bcm6368-interrupt-controller.h
-new file mode 100644
-index 000000000000..988e368cc156
---- /dev/null
-+++ b/include/dt-bindings/interrupt-controller/bcm6368-interrupt-controller.h
-@@ -0,0 +1,71 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
+diff --git a/arch/mips/boot/dts/brcm/bcm6358.dtsi b/arch/mips/boot/dts/brcm/bcm6358.dtsi
+index f21176cac038..d149d062be80 100644
+--- a/arch/mips/boot/dts/brcm/bcm6358.dtsi
++++ b/arch/mips/boot/dts/brcm/bcm6358.dtsi
+@@ -1,4 +1,8 @@
+ // SPDX-License-Identifier: GPL-2.0
 +
-+#ifndef __DT_BINDINGS_INTERRUPT_CONTROLLER_BCM6368_H
-+#define __DT_BINDINGS_INTERRUPT_CONTROLLER_BCM6368_H
++#include "dt-bindings/clock/bcm6358-clock.h"
++#include "dt-bindings/interrupt-controller/bcm6358-interrupt-controller.h"
 +
-+#define BCM6368_IRQ_TIMER		0
-+#define BCM6368_IRQ_SPI			1
-+#define BCM6368_IRQ_UART0		2
-+#define BCM6368_IRQ_UART1		3
-+#define BCM6368_IRQ_XDSL		4
-+#define BCM6368_IRQ_OHCI		5
-+#define BCM6368_IRQ_IPSEC		6
-+#define BCM6368_IRQ_EHCI		7
-+#define BCM6368_IRQ_USBS		8
-+#define BCM6368_IRQ_RING_OSC		9
-+#define BCM6368_IRQ_NAND		10
-+#define BCM6368_IRQ_ATM			11
-+#define BCM6368_IRQ_PCM			12
-+#define BCM6368_IRQ_MPI			13
-+#define BCM6368_IRQ_DG			14
-+#define BCM6368_IRQ_EPHY		15
-+#define BCM6368_IRQ_EPHY_EN0		16
-+#define BCM6368_IRQ_EPHY_EN1		17
-+#define BCM6368_IRQ_EPHY_EN2		18
-+#define BCM6368_IRQ_EPHY_EN3		19
-+#define BCM6368_IRQ_EXT0		20
-+#define BCM6368_IRQ_EXT1		21
-+#define BCM6368_IRQ_EXT2		22
-+#define BCM6368_IRQ_EXT3		23
-+#define BCM6368_IRQ_EXT4		24
-+#define BCM6368_IRQ_EXT5		25
-+#define BCM6368_IRQ_USB_CTL_RX_DMA	26
-+#define BCM6368_IRQ_USB_CTL_TX_DMA	27
-+#define BCM6368_IRQ_USB_BULK_RX_DMA	28
-+#define BCM6368_IRQ_USB_BULK_TX_DMA	29
-+#define BCM6368_IRQ_USB_ISO_RX_DMA	30
-+#define BCM6368_IRQ_USB_ISO_TX_DMA	31
-+#define BCM6368_IRQ_ENETSW_RX_DMA0	32	
-+#define BCM6368_IRQ_ENETSW_RX_DMA1	33	
-+#define BCM6368_IRQ_ENETSW_RX_DMA2	34	
-+#define BCM6368_IRQ_ENETSW_RX_DMA3	35	
-+#define BCM6368_IRQ_ENETSW_TX_DMA0	36	
-+#define BCM6368_IRQ_ENETSW_TX_DMA1	37	
-+#define BCM6368_IRQ_ENETSW_TX_DMA2	38	
-+#define BCM6368_IRQ_ENETSW_TX_DMA3	39	
-+#define BCM6368_IRQ_ATM_DMA0		40
-+#define BCM6368_IRQ_ATM_DMA1		41
-+#define BCM6368_IRQ_ATM_DMA2		42
-+#define BCM6368_IRQ_ATM_DMA3		43
-+#define BCM6368_IRQ_ATM_DMA4		44
-+#define BCM6368_IRQ_ATM_DMA5		45
-+#define BCM6368_IRQ_ATM_DMA6		46
-+#define BCM6368_IRQ_ATM_DMA7		47
-+#define BCM6368_IRQ_ATM_DMA8		48
-+#define BCM6368_IRQ_ATM_DMA9		49
-+#define BCM6368_IRQ_ATM_DMA10		50
-+#define BCM6368_IRQ_ATM_DMA11		51
-+#define BCM6368_IRQ_ATM_DMA12		52
-+#define BCM6368_IRQ_ATM_DMA13		53
-+#define BCM6368_IRQ_ATM_DMA14		54
-+#define BCM6368_IRQ_ATM_DMA15		55
-+#define BCM6368_IRQ_ATM_DMA16		56
-+#define BCM6368_IRQ_ATM_DMA17		57
-+#define BCM6368_IRQ_ATM_DMA18		58
-+#define BCM6368_IRQ_ATM_DMA19		59
-+#define BCM6368_IRQ_IPSEC_DMA0		60
-+#define BCM6368_IRQ_IPSEC_DMA1		61
-+#define BCM6368_IRQ_PCM_DMA0		62
-+#define BCM6368_IRQ_PCM_DMA1		63
-+
-+#endif /* __DT_BINDINGS_INTERRUPT_CONTROLLER_BCM6368_H */
+ / {
+ 	#address-cells = <1>;
+ 	#size-cells = <1>;
+@@ -96,7 +100,7 @@ uart0: serial@fffe0100 {
+ 			reg = <0xfffe0100 0x18>;
+ 
+ 			interrupt-parent = <&periph_intc>;
+-			interrupts = <2>;
++			interrupts = <BCM6358_IRQ_UART0>;
+ 
+ 			clocks = <&periph_clk>;
+ 			clock-names = "refclk";
+@@ -109,7 +113,7 @@ uart1: serial@fffe0120 {
+ 			reg = <0xfffe0120 0x18>;
+ 
+ 			interrupt-parent = <&periph_intc>;
+-			interrupts = <3>;
++			interrupts = <BCM6358_IRQ_UART1>;
+ 
+ 			clocks = <&periph_clk>;
+ 			clock-names = "refclk";
+@@ -122,7 +126,7 @@ ehci: usb@fffe1300 {
+ 			reg = <0xfffe1300 0x100>;
+ 			big-endian;
+ 			interrupt-parent = <&periph_intc>;
+-			interrupts = <10>;
++			interrupts = <BCM6358_IRQ_EHCI>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -132,7 +136,7 @@ ohci: usb@fffe1400 {
+ 			big-endian;
+ 			no-big-frame-no;
+ 			interrupt-parent = <&periph_intc>;
+-			interrupts = <5>;
++			interrupts = <BCM6358_IRQ_OHCI>;
+ 			status = "disabled";
+ 		};
+ 	};
 -- 
 2.28.0
 
