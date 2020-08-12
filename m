@@ -2,230 +2,216 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D41AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 07:41:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7639BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 07:43:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D9242065C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 07:41:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 380692065C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 07:43:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="ie94EZvB"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hol+hh8J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726806AbgHLHlx (ORCPT
+        id S1726829AbgHLHnh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 03:41:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40256 "EHLO
+        Wed, 12 Aug 2020 03:43:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726517AbgHLHlw (ORCPT
+        with ESMTP id S1726255AbgHLHnf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 03:41:52 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4918BC06174A
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 00:41:52 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id p20so1105691wrf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 00:41:52 -0700 (PDT)
+        Wed, 12 Aug 2020 03:43:35 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B6A3C06174A
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 00:43:35 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id f12so1056169wru.13
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 00:43:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=atishpatra.org; s=google;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qcgI980fiRK7SzxZtdY0+aQKjgScVqiUUhN/ufIMkto=;
-        b=ie94EZvBjlMPBYC7v+ZULaM3vEkmlqRbQup1ISoqE7/k++/Nxg7Zo3hGSK6NGo6J2E
-         ov5MLZQyA7Ey345t2WDXVw8/jykGfhDUCDePGYVmEm2Z6AitQLrEVkQXtv6LRmrT4rHF
-         pSt/LUexc4sHFDschR7ooBgKqAcTMzk4XhZgY=
+         :cc:content-transfer-encoding;
+        bh=ga6T3Cy+kh1TnFrSU/BgLt86L1Ae+2hwNAjs8j02oF8=;
+        b=hol+hh8JjG7+8Td5Y3AZkrMiWi6c+FnjZIx0uZ4RnrL55vZ7MusPGjbo/QfAgeQmJ1
+         o9lkuGe+HE4Ohw3X382P5Kqpd3BPeuEwO8oeqL501BcCWdME9Mh4lbl96TzX4Gnjx1nb
+         yUMwCY92PsBTHeo7NxMJbPtWsyl6AgtUQfKrc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qcgI980fiRK7SzxZtdY0+aQKjgScVqiUUhN/ufIMkto=;
-        b=X9RdbjKy6yoLYcMkQxXOY+P0WJ0p0q9CIFSUxRX+De0fzsjVTnzGEdtxxWiSR1e+jl
-         ojgvEpZWDNCxYQFYYMAo1uwmFBvcszEzZZUZGuQPZbXAZ1jFGQhiuhx6Ej2YCEYG9d0/
-         Nucu0AG9LU/OwHJrziqnBB+a+M4EMN7wVeFBLOgAtcAZaTRPkgo+peqEE/KWA5rto/SO
-         HaPegIPr6VhHCcpZ+s8aNE7PBmqwCCgJhEF3s5n5ONjLJMHG6x0T6xZ9BUGz6zFe8czp
-         1f8PMEsIPb/odBAtdEWTZEeCgNFVj4jNnLgh0YGYEs3iDiLIDxx/O2r/0u0HQbDyzlkX
-         QP8w==
-X-Gm-Message-State: AOAM531USfeZdelPtM5tc6AndEXjbHTSS8wTkK9C0u0B67cl97xoqrj5
-        +H6Y2Hi0X9C7v0EOqQoJHrVsvnaMAAIM6jGTc2I5
-X-Google-Smtp-Source: ABdhPJxE9iPhEi+Ighffl+MyFz80beV70ynZhB9O2kOx/VILETEiMy0EHhp5f4+WmccEEZUdbbgH6SIO5ou6TM23tvY=
-X-Received: by 2002:adf:d84f:: with SMTP id k15mr31107746wrl.176.1597218110811;
- Wed, 12 Aug 2020 00:41:50 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ga6T3Cy+kh1TnFrSU/BgLt86L1Ae+2hwNAjs8j02oF8=;
+        b=U3V4CY994IA91V0eVC3VRuTXyjdxBwhKBcSTo7kJ+vKt8nCoHsxwqf8L6ciByNCIeS
+         N2c2qELquHSDHI0gxhNQJ353K+G82XnFlL1Fff1aVSinOU71fg+rgOqe37uhtgOYl+h6
+         jf7R7yX7jWh9iBSCClPQVDze6M1Y9yOpxxO8dQitbunAwjjY1TXqeVYz2jFeM9iKxPiH
+         ykhnyz/032+Qn9BVaa/9nQa9MBkJa8eECJLrPAuYFZGQn+HFMI6cmHYpxwarDEXAzK6v
+         U2d4g91eexXPzW3VP3CJlWko82BKMCa367GekO8zbeJA8oWfz+pzSAS0DjarEy0KSpYv
+         PKIQ==
+X-Gm-Message-State: AOAM531AgBq1TNGmZiIxOw+1OXfaXzVKjCNDVnZIrSfOOjrS/nQrPa8w
+        faYYOHaw6wRyVVblSgvq/e+FDxOdK4rKJDrI/xhMmA==
+X-Google-Smtp-Source: ABdhPJyoyVFNUCQzV+GdngHdYV/Kl2T2efj6sEyjpzqgjLkdb1V9rB0pF/Z+jW3c9VLxtezHJOrfD4PS+K7JdIvDJww=
+X-Received: by 2002:adf:c981:: with SMTP id f1mr32180609wrh.14.1597218213822;
+ Wed, 12 Aug 2020 00:43:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200811063659.284088-1-qiuwenbo@phytium.com.cn>
- <CAAhSdy1c=R6aUZ6EOggmJ_Bqm2O0VLKEku=zyFfabExSzOKErA@mail.gmail.com>
- <CAOnJCUJiLVyzMFkn157Zmdrtm66Z=gWmQbXCJiMRY8LCJ3xkaw@mail.gmail.com> <CAAhSdy0yV154R9EBbmQqR6mN-U7j02hGto76k+PY0W6xpJMW_A@mail.gmail.com>
-In-Reply-To: <CAAhSdy0yV154R9EBbmQqR6mN-U7j02hGto76k+PY0W6xpJMW_A@mail.gmail.com>
-From:   Atish Patra <atishp@atishpatra.org>
-Date:   Wed, 12 Aug 2020 00:41:39 -0700
-Message-ID: <CAOnJCULTwbmHta04VLqF=cTh=M68mTyF1bueSF8CQQV5XxFUCg@mail.gmail.com>
-Subject: Re: [PATCH] riscv: Setup exception vector for K210 properly
-To:     Anup Patel <anup@brainfault.org>
-Cc:     Qiu Wenbo <qiuwenbo@phytium.com.cn>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Guo Ren <guoren@linux.alibaba.com>,
-        Vincent Chen <vincent.chen@sifive.com>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        Atish Patra <atish.patra@wdc.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Zong Li <zong.li@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>
+References: <3f3baf5e-f73d-9cd6-cbfb-36746071e126@linux.intel.com>
+ <CAGvk5PohOP0Yv22tb53EX=ZLB9_vOMb=iujTh64OvHmjC1d4mg@mail.gmail.com>
+ <DM6PR11MB3642AC7F8EC47EB48B384D4797450@DM6PR11MB3642.namprd11.prod.outlook.com>
+ <CAGvk5PogmqfEnFRA8hzby+AGgbOSvbELamh_1=eA9KTpyBMPYQ@mail.gmail.com>
+ <s5htux939x1.wl-tiwai@suse.de> <CAGvk5PpcmkZ2HarqeCDaXm4id=84wYs-u4vWxJunHaf09gj66g@mail.gmail.com>
+ <s5ho8nh37br.wl-tiwai@suse.de> <CAGvk5PphzkdiNfW8hiDuqX+2eQO2FvrpzA0qR3=3VvqM3GBhAA@mail.gmail.com>
+ <20200811145353.GG6967@sirena.org.uk> <d78f9adc-d583-f0f2-ce38-3c9175c939b8@linux.intel.com>
+ <20200811172209.GM6967@sirena.org.uk> <CAGvk5PqGi7cXthLHFi4NyypxFiGnoHvD9vp+5nJdH-_VkVvcKw@mail.gmail.com>
+ <s5hr1scz908.wl-tiwai@suse.de> <CAGvk5Pp+Gk5Uk-iLdhVPWuCL0FiL9OhsaAtwkotay5JAYUNxdQ@mail.gmail.com>
+ <s5hlfikz6y8.wl-tiwai@suse.de>
+In-Reply-To: <s5hlfikz6y8.wl-tiwai@suse.de>
+From:   Yu-Hsuan Hsu <yuhsuan@chromium.org>
+Date:   Wed, 12 Aug 2020 15:43:22 +0800
+Message-ID: <CAGvk5Pq3rEGJX=WjriPfWg_sEAVWHGZ9S=4iySNfYaHX7Xcw0g@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] ASoC: Intel: Add period size constraint on strago board
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        "Rojewski, Cezary" <cezary.rojewski@intel.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Sam McNally <sammc@chromium.org>,
+        "yuhsuan@google.com" <yuhsuan@google.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Daniel Stuart <daniel.stuart14@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Lu, Brent" <brent.lu@intel.com>,
+        Damian van Soelen <dj.vsoelen@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 6:57 PM Anup Patel <anup@brainfault.org> wrote:
+Takashi Iwai <tiwai@suse.de> =E6=96=BC 2020=E5=B9=B48=E6=9C=8812=E6=97=A5 =
+=E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=882:58=E5=AF=AB=E9=81=93=EF=BC=9A
 >
-> On Wed, Aug 12, 2020 at 12:16 AM Atish Patra <atishp@atishpatra.org> wrote:
+> On Wed, 12 Aug 2020 08:53:42 +0200,
+> Yu-Hsuan Hsu wrote:
 > >
-> > On Tue, Aug 11, 2020 at 1:41 AM Anup Patel <anup@brainfault.org> wrote:
+> > Takashi Iwai <tiwai@suse.de> =E6=96=BC 2020=E5=B9=B48=E6=9C=8812=E6=97=
+=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=882:14=E5=AF=AB=E9=81=93=EF=BC=9A
 > > >
-> > > On Tue, Aug 11, 2020 at 12:07 PM Qiu Wenbo <qiuwenbo@phytium.com.cn> wrote:
+> > > On Wed, 12 Aug 2020 05:09:58 +0200,
+> > > Yu-Hsuan Hsu wrote:
 > > > >
-> > > > Exception vector is missing on nommu platform and it is a big issue.
-> > > > This patch is tested in Sipeed MAIX Bit Dev Board.
+> > > > Mark Brown <broonie@kernel.org> =E6=96=BC 2020=E5=B9=B48=E6=9C=8812=
+=E6=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8A=E5=8D=881:22=E5=AF=AB=E9=81=93=EF=BC=
+=9A
+> > > > >
+> > > > > On Tue, Aug 11, 2020 at 11:54:38AM -0500, Pierre-Louis Bossart wr=
+ote:
+> > > > >
+> > > > > > > constraint logic needs to know about this DSP limitation - it=
+ seems like
+> > > > > > > none of this is going to change without something new going i=
+nto the
+> > > > > > > mix?  We at least need a new question to ask about the DSP fi=
+rmware I
+> > > > > > > think.
+> > > > >
+> > > > > > I just tested aplay -Dhw: on a Cyan Chromebook with the Ubuntu =
+kernel 5.4,
+> > > > > > and I see no issues with the 240 sample period. Same with 432, =
+960, 9600,
+> > > > > > etc.
+> > > > >
+> > > > > > I also tried just for fun what happens with 256 samples, and I =
+don't see any
+> > > > > > underflows thrown either, so I am wondering what exactly the pr=
+oblem is?
+> > > > > > Something's not adding up. I would definitively favor multiple =
+of 1ms
+> > > > > > periods, since it's the only case that was productized, but the=
+re's got to
+> > > > > > me something a side effect of how CRAS programs the hw_params.
+> > > > >
+> > > > > Is it something that goes wrong with longer playbacks possibly (e=
+g,
+> > > > > someone watching a feature film or something)?
 > > > >
-> > > > Fixes: 79b1feba5455 ("RISC-V: Setup exception vector early")
-> > > > Signed-off-by: Qiu Wenbo <qiuwenbo@phytium.com.cn>
-> >
-> > Thanks for testing it on the kendryte board.
-> >
-> > > > ---
-> > > >  arch/riscv/kernel/smpboot.c |  1 +
-> > > >  arch/riscv/kernel/traps.c   | 11 ++++++++++-
-> > > >  2 files changed, 11 insertions(+), 1 deletion(-)
+> > > > Thanks for testing!
 > > > >
-> > > > diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
-> > > > index 356825a57551..23cde0ceb39d 100644
-> > > > --- a/arch/riscv/kernel/smpboot.c
-> > > > +++ b/arch/riscv/kernel/smpboot.c
-> > > > @@ -154,6 +154,7 @@ asmlinkage __visible void smp_callin(void)
-> > > >         mmgrab(mm);
-> > > >         current->active_mm = mm;
-> > > >
-> > > > +       trap_init();
-> > > >         notify_cpu_starting(curr_cpuid);
-> > > >         update_siblings_masks(curr_cpuid);
-> > > >         set_cpu_online(curr_cpuid, 1);
-> > > > diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
-> > > > index ad14f4466d92..a390239818ae 100644
-> > > > --- a/arch/riscv/kernel/traps.c
-> > > > +++ b/arch/riscv/kernel/traps.c
-> > > > @@ -174,7 +174,16 @@ int is_valid_bugaddr(unsigned long pc)
-> > > >  }
-> > > >  #endif /* CONFIG_GENERIC_BUG */
-> > > >
-> > > > -/* stvec & scratch is already set from head.S */
-> > > > +/* stvec & scratch is already set from head.S when mmu is enabled */
-> > > >  void trap_init(void)
-> > > >  {
-> > > > +#ifndef CONFIG_MMU
-> > > > +       /*
-> > > > +        * Set sup0 scratch register to 0, indicating to exception vector
-> > > > +        * that we are presently executing in the kernel
-> > > > +        */
-> > > > +       csr_write(CSR_SCRATCH, 0);
-> > > > +       /* Set the exception vector address */
-> > > > +       csr_write(CSR_TVEC, &handle_exception);
-> > > > +#endif
-> > > >  }
-> > > > --
-> > > > 2.28.0
-> > > >
+> > > > After doing some experiments, I think I can identify the problem mo=
+re precisely.
+> > > > 1. aplay can not reproduce this issue because it writes samples
+> > > > immediately when there are some space in the buffer. However, you c=
+an
+> > > > add --test-position to see how the delay grows with period size 256=
+.
+> > > > > aplay -Dhw:1,0 --period-size=3D256 --buffer-size=3D480 /dev/zero =
+-d 1 -f dat --test-position
+> > > > Playing raw data '/dev/zero' : Signed 16 bit Little Endian, Rate 48=
+000
+> > > > Hz, Stereo
+> > > > Suspicious buffer position (1 total): avail =3D 0, delay =3D 2064, =
+buffer =3D 512
+> > > > Suspicious buffer position (2 total): avail =3D 0, delay =3D 2064, =
+buffer =3D 512
+> > > > Suspicious buffer position (3 total): avail =3D 0, delay =3D 2096, =
+buffer =3D 512
+> > > > ...
 > > >
-> > > This issue seems to be only on the latest master branch of
-> > > Linux stable tree so this fix need not be a stable fix.
+> > > Isn't this about the alignment of the buffer size against the period
+> > > size, not the period size itself?  i.e. in the example above, the
+> > > buffer size isn't a multiple of period size, and DSP can't handle if
+> > > the position overlaps the buffer size in a half way.
 > > >
-> > > For MMU kernel, the CSR_TVEC is setup in relocate() function
-> > > called from secondary_start_common() function of head.S
+> > > If that's the problem (and it's an oft-seen restriction), the right
+> > > constraint is
+> > >   snd_pcm_hw_constraint_integer(runtime, SNDRV_PCM_HW_PARAM_PERIODS);
 > > >
-> > > For NoMMU kernel, we should set CSR_TVEC directly in
-> > > secondary_start_common() function as "#else" case of the
-> > > "#ifdef CONFIG_MMU".
 > > >
+> > > Takashi
+> > Oh sorry for my typo. The issue happens no matter what buffer size is
+> > set. Actually, even if I want to set 480, it will change to 512
+> > automatically.
+> > Suspicious buffer position (1 total): avail =3D 0, delay =3D 2064, buff=
+er
+> > =3D 512 <-this one is the buffer size
+>
+> OK, then it means that the buffer size alignment is already in place.
+>
+> And this large delay won't happen if you use period size 240?
+>
+>
+> Takashi
+Yes! If I set the period size to 240, it will not print "Suspicious
+buffer position ..."
+
+Yu-Hsuan
+
+>
+> > > > 2. Since many samples are moved to DSP(delay), the measured rate of
+> > > > the ring-buffer is high. (I measured it by alsa_conformance_test,
+> > > > which only test the sampling rate in the ring buffer of kernel not
+> > > > DSP)
+> > > >
+> > > > 3. Since CRAS writes samples with a fixed frequency, this behavior
+> > > > will take all samples from the ring buffer, which is seen as underr=
+un
+> > > > by CRAS. (It seems that it is not a real underrun because that avai=
+l
+> > > > does not larger than buffer size. Maybe CRAS should also take dalay
+> > > > into account.)
+> > > >
+> > > > 4. In spite of it is not a real underrun, the large delay is still =
+a
+> > > > big problem. Can we apply the constraint to fix it? Or any better
+> > > > idea?
+> > > >
+> > > > Thanks,
+> > > > Yu-Hsuan
+> > > >
 > >
-> > That would enable the trap only for secondary harts. But the exception
-> > vector on boot hart
-> > is still uninitialized. How about this change ?
-> >
-> > diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
-> > index d0c5c316e9bb..7822054dbd88 100644
-> > --- a/arch/riscv/kernel/head.S
-> > +++ b/arch/riscv/kernel/head.S
-> > @@ -77,16 +77,6 @@ relocate:
-> >         csrw CSR_SATP, a0
-> >  .align 2
-> >  1:
-> > -       /* Set trap vector to exception handler */
-> > -       la a0, handle_exception
-> > -       csrw CSR_TVEC, a0
-> > -
-> > -       /*
-> > -        * Set sup0 scratch register to 0, indicating to exception vector that
-> > -        * we are presently executing in kernel.
-> > -        */
-> > -       csrw CSR_SCRATCH, zero
-> > -
->
-> Instead of having no trap vector setup here, we should
-> at least have dummy trap vector (just like original code).
->
-
-Ahh yes. We should include that.
-
-> /* Set trap vector to spin forever to help debug */
-> la a0, .Lsecondary_park
-> csrw CSR_TVEC, a0
->
-> >         /* Reload the global pointer */
-> >  .option push
-> >  .option norelax
-> > @@ -144,9 +134,23 @@ secondary_start_common:
-> >         la a0, swapper_pg_dir
-> >         call relocate
-> >  #endif
-> > +       call setup_trap_vector
-> >         tail smp_callin
-> >  #endif /* CONFIG_SMP */
-> >
-> > +.align 2
-> > +setup_trap_vector:
-> > +       /* Set trap vector to exception handler */
-> > +       la a0, handle_exception
-> > +       csrw CSR_TVEC, a0
-> > +
-> > +       /*
-> > +        * Set sup0 scratch register to 0, indicating to exception vector that
-> > +        * we are presently executing in kernel.
-> > +        */
-> > +       csrw CSR_SCRATCH, zero
-> > +       ret
-> > +
-> >  .Lsecondary_park:
-> >         /* We lack SMP support or have too many harts, so park this hart */
-> >         wfi
-> > @@ -240,6 +244,7 @@ clear_bss_done:
-> >         call relocate
-> >  #endif /* CONFIG_MMU */
-> >
-> > +       call setup_trap_vector
-> >         /* Restore C environment */
-> >         la tp, init_task
-> >         sw zero, TASK_TI_CPU(tp)
->
-> Apart from above, this looks good.
->
-> Regards,
-> Anup
-
-
-
--- 
-Regards,
-Atish
