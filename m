@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD807C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C85C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:59:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A837F22B49
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:59:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FEBC2080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:59:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597247942;
-	bh=yeGeEeZElx9ji+9RbnVMpHixjFTYKMrkzQDTA1TA4/E=;
+	s=default; t=1597247955;
+	bh=vSP7pIbG/+aRsdn4TNYZedyhxbsUK7SK7J98dK9mzvw=;
 	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
-	b=IEIGTJVUyP1CKbsZb+bF3X43QSJ7N8GVC6GlFf4Aqm5vjAonGWJG/X5tc3DZQKpzN
-	 8/N+s8CB7nm3rBoP8xAPzfph9Et0lN4H8oWoofJCZpp/tJSAbvJSnrRLg5z6AtNVtl
-	 cpJ9QupX7KOGw9CIMhJmm6kTPP9Df1IMqZteLWwM=
+	b=x45UYTS8gm1w/Je7SGvpIgtPtv83AAGbTZUfk9RFlzwBDD2iDsNthcio3hZhFs+9u
+	 B+9YD4z8pPJHg30vQ5bRAzEZ+1Bi99gbcPadkeWn7W7CzwZs+ytf65t7WYJ9VOJqvs
+	 vdHdZA5ZQhuEnQzPu6Pm1OLvZSOKLf1Ksvf4v3jU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727880AbgHLP7A (ORCPT
+        id S1727830AbgHLP6y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 11:59:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45674 "EHLO mail.kernel.org"
+        Wed, 12 Aug 2020 11:58:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726664AbgHLP5C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 11:57:02 -0400
+        id S1726679AbgHLP5D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 11:57:03 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 097D322CE3;
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DCB822D6F;
         Wed, 12 Aug 2020 15:57:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1597247820;
-        bh=yeGeEeZElx9ji+9RbnVMpHixjFTYKMrkzQDTA1TA4/E=;
+        bh=vSP7pIbG/+aRsdn4TNYZedyhxbsUK7SK7J98dK9mzvw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0FDv+hL33JsTRubwh4mR1AZutkdYrNHgAiHHo5NKP2yFK/yTnfJ1X6SUzfPAC02Hp
-         6HxVxFpIMGIxPbvNLi53BD8XT7bIQP4VdwvVWgNnVFAnO9qdBuRpyPEBNIKXeKIhnQ
-         2yzFDdxCjYMAb0YeDimG4FmpeQj998lV/c+Zus2Q=
+        b=K/w6zL/dEREjNNCIV0pjmuEL9jAFqISYpsB2RIWi+2uBxzItOyBG4gmknM5dI0CqW
+         FxdhzBGxtMNWlUErKvsjESe8iwlqzmzDiEonAxO2/KYtz2s1ZFdgxYSRS+ueCaxd8E
+         A/BqB5nkxCkwUveyaWtmB21o4srE24ibcy9f+3NM=
 Received: from mchehab by mail.kernel.org with local (Exim 4.94)
         (envelope-from <mchehab@kernel.org>)
-        id 1k5t7a-005t6C-2Z; Wed, 12 Aug 2020 17:56:58 +0200
+        id 1k5t7a-005t6j-Lg; Wed, 12 Aug 2020 17:56:58 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org
-Subject: [PATCH 14/44] staging: mfd: hi6421-spmi-pmic: get rid of the static vars
-Date:   Wed, 12 Aug 2020 17:56:24 +0200
-Message-Id: <f5f0dfb0375ba9aaffb9ec9478d64e7b80a0c5bd.1597247164.git.mchehab+huawei@kernel.org>
+        linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org
+Subject: [PATCH 25/44] staging: regulator: hi6421v600-regulator: port it to upstream
+Date:   Wed, 12 Aug 2020 17:56:35 +0200
+Message-Id: <7af371daea3cbfa27dec63304a7ff8dca7168c56.1597247164.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1597247164.git.mchehab+huawei@kernel.org>
 References: <cover.1597247164.git.mchehab+huawei@kernel.org>
@@ -62,602 +61,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are several static vars inside this driver.
+The driver was originally written for Kernel 4.9. It needs to
+be ported to upstream:
 
-Get rid of them.
-
-While here, add a SPDX header file.
+	- Got rid of timeval;
+	- Removed a bogus dependency;
+	- Did cleanups at the header file.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- drivers/staging/hikey9xx/hi6421-spmi-pmic.c | 224 ++++++++------------
- include/linux/mfd/hi6421-spmi-pmic.h        |  20 +-
- 2 files changed, 97 insertions(+), 147 deletions(-)
+ .../staging/hikey9xx/hi6421v600-regulator.c   | 34 +++----------------
+ 1 file changed, 5 insertions(+), 29 deletions(-)
 
-diff --git a/drivers/staging/hikey9xx/hi6421-spmi-pmic.c b/drivers/staging/hikey9xx/hi6421-spmi-pmic.c
-index 8b87d48b88b5..be42fed16bd2 100644
---- a/drivers/staging/hikey9xx/hi6421-spmi-pmic.c
-+++ b/drivers/staging/hikey9xx/hi6421-spmi-pmic.c
-@@ -1,3 +1,4 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Device driver for regulators in HISI PMIC IC
-  *
-@@ -52,10 +53,7 @@
- /*define the first group interrupt register number*/
- #define HISI_PMIC_FIRST_GROUP_INT_NUM        2
- 
--static struct bit_info g_pmic_vbus = {0};
--static struct hisi_pmic *g_pmic;
--static unsigned int g_extinterrupt_flag  = 0;
--static struct of_device_id of_hisi_pmic_match_tbl[] = {
-+static const struct of_device_id of_hisi_pmic_match_tbl[] = {
- 	{
- 		.compatible = "hisilicon-hisi-pmic-spmi",
- 	},
-@@ -73,18 +71,14 @@ u32 hisi_pmic_read(struct hisi_pmic *pmic, int reg)
- 	u8 read_value = 0;
- 	struct spmi_device *pdev;
- 
--	if (!g_pmic) {
--		pr_err("%s: g_pmic is NULL\n", __func__);
--		return 0;
--	}
--
--	pdev = to_spmi_device(g_pmic->dev);
-+	pdev = to_spmi_device(pmic->dev);
- 	if (!pdev) {
- 		pr_err("%s: pdev get failed!\n", __func__);
- 		return 0;
- 	}
- 
--	ret = spmi_ext_register_readl(pdev, reg, (unsigned char*)&read_value, 1);/*lint !e734 !e732 */
-+	ret = spmi_ext_register_readl(pdev, reg,
-+				      (unsigned char *)&read_value, 1);
- 	if (ret) {
- 		pr_err("%s: spmi_ext_register_readl failed!\n", __func__);
- 		return 0;
-@@ -98,18 +92,13 @@ void hisi_pmic_write(struct hisi_pmic *pmic, int reg, u32 val)
- 	u32 ret;
- 	struct spmi_device *pdev;
- 
--	if (!g_pmic) {
--		pr_err("%s: g_pmic is NULL\n", __func__);
--		return;
--	}
--
--	pdev = to_spmi_device(g_pmic->dev);
-+	pdev = to_spmi_device(pmic->dev);
- 	if (!pdev) {
- 		pr_err("%s: pdev get failed!\n", __func__);
- 		return;
- 	}
- 
--	ret = spmi_ext_register_writel(pdev, reg, (unsigned char*)&val, 1);/*lint !e734 !e732 */
-+	ret = spmi_ext_register_writel(pdev, reg, (unsigned char *)&val, 1);
- 	if (ret) {
- 		pr_err("%s: spmi_ext_register_writel failed!\n", __func__);
- 		return;
-@@ -122,16 +111,11 @@ void hisi_pmic_rmw(struct hisi_pmic *pmic, int reg, u32 mask, u32 bits)
- 	u32 data;
- 	unsigned long flags;
- 
--	if (!g_pmic) {
--		pr_err("%s: g_pmic is NULL\n", __func__);
--		return;
--	}
--
--	spin_lock_irqsave(&g_pmic->lock, flags);
-+	spin_lock_irqsave(&pmic->lock, flags);
- 	data = hisi_pmic_read(pmic, reg) & ~mask;
- 	data |= mask & bits;
- 	hisi_pmic_write(pmic, reg, data);
--	spin_unlock_irqrestore(&g_pmic->lock, flags);
-+	spin_unlock_irqrestore(&pmic->lock, flags);
- }
- EXPORT_SYMBOL(hisi_pmic_rmw);
- 
-@@ -142,16 +126,15 @@ static irqreturn_t hisi_irq_handler(int irq, void *data)
- 	int i, offset;
- 
- 	for (i = 0; i < pmic->irqarray; i++) {
--		pending = hisi_pmic_read(g_pmic, (i + pmic->irq_addr.start_addr));
-+		pending = hisi_pmic_read(pmic, (i + pmic->irq_addr.start_addr));
- 		pending &= HISI_MASK_FIELD;
--		if (pending != 0) {
--			pr_info("pending[%d]=0x%lx\n\r", i, pending);
--		}
-+		if (pending != 0)
-+			pr_debug("pending[%d]=0x%lx\n\r", i, pending);
- 
--		hisi_pmic_write(g_pmic, (i + pmic->irq_addr.start_addr), pending);
-+		hisi_pmic_write(pmic, (i + pmic->irq_addr.start_addr), pending);
- 
--		/*solve powerkey order*/
--		if ((HISI_IRQ_KEY_NUM == i) && ((pending & HISI_IRQ_KEY_VALUE) == HISI_IRQ_KEY_VALUE)) {
-+		/* solve powerkey order */
-+		if ((i == HISI_IRQ_KEY_NUM) && ((pending & HISI_IRQ_KEY_VALUE) == HISI_IRQ_KEY_VALUE)) {
- 			generic_handle_irq(pmic->irqs[HISI_IRQ_KEY_DOWN]);
- 			generic_handle_irq(pmic->irqs[HISI_IRQ_KEY_UP]);
- 			pending &= (~HISI_IRQ_KEY_VALUE);
-@@ -159,25 +142,25 @@ static irqreturn_t hisi_irq_handler(int irq, void *data)
- 
- 		if (pending) {
- 			for_each_set_bit(offset, &pending, HISI_BITS)
--				generic_handle_irq(pmic->irqs[offset + i * HISI_BITS]);/*lint !e679 */
-+				generic_handle_irq(pmic->irqs[offset + i * HISI_BITS]);
- 		}
- 	}
- 
- 	/*Handle the second group irq if analysis the second group irq from dtsi*/
--	if (1 == g_extinterrupt_flag){
-+	if (pmic->g_extinterrupt_flag == 1) {
- 		for (i = 0; i < pmic->irqarray1; i++) {
--			pending = hisi_pmic_read(g_pmic, (i + pmic->irq_addr1.start_addr));
-+			pending = hisi_pmic_read(pmic, (i + pmic->irq_addr1.start_addr));
- 			pending &= HISI_MASK_FIELD;
--			if (pending != 0) {
--				pr_info("pending[%d]=0x%lx\n\r", i, pending);
--			}
-+			if (pending != 0)
-+				pr_debug("pending[%d]=0x%lx\n\r", i, pending);
- 
--			hisi_pmic_write(g_pmic, (i + pmic->irq_addr1.start_addr), pending);
-+			hisi_pmic_write(pmic, (i + pmic->irq_addr1.start_addr), pending);
- 
--			if (pending) {
--				for_each_set_bit(offset, &pending, HISI_BITS)
--					generic_handle_irq(pmic->irqs[offset + (i+HISI_PMIC_FIRST_GROUP_INT_NUM) * HISI_BITS]);/*lint !e679 */
--			}
-+			if (!pending)
-+				continue;
-+
-+			for_each_set_bit(offset, &pending, HISI_BITS)
-+				generic_handle_irq(pmic->irqs[offset + (i + HISI_PMIC_FIRST_GROUP_INT_NUM) * HISI_BITS]);
- 		}
- 	}
- 
-@@ -190,25 +173,25 @@ static void hisi_irq_mask(struct irq_data *d)
- 	u32 data, offset;
- 	unsigned long flags;
- 
--	if (NULL == g_pmic) {
--		pr_err(" g_pmic  is NULL\n");
--		return;
--	}
--
- 	offset = (irqd_to_hwirq(d) >> 3);
--	if (1==g_extinterrupt_flag){
--		if ( offset < HISI_PMIC_FIRST_GROUP_INT_NUM)
-+	if (pmic->g_extinterrupt_flag == 1) {
-+		if (offset < HISI_PMIC_FIRST_GROUP_INT_NUM) {
- 			offset += pmic->irq_mask_addr.start_addr;
--		else/*Change addr when irq num larger than 16 because interrupt addr is nonsequence*/
--			offset = offset+(pmic->irq_mask_addr1.start_addr)-HISI_PMIC_FIRST_GROUP_INT_NUM;
--	}else{
-+		} else {
-+			/*
-+			 * Change addr when irq num larger than 16 because
-+			 * interrupt addr is nonsequence
-+			 */
-+			offset = offset + (pmic->irq_mask_addr1.start_addr) - HISI_PMIC_FIRST_GROUP_INT_NUM;
-+		}
-+	} else {
- 		offset += pmic->irq_mask_addr.start_addr;
- 	}
--	spin_lock_irqsave(&g_pmic->lock, flags);
--	data = hisi_pmic_read(g_pmic, offset);
-+	spin_lock_irqsave(&pmic->lock, flags);
-+	data = hisi_pmic_read(pmic, offset);
- 	data |= (1 << (irqd_to_hwirq(d) & 0x07));
--	hisi_pmic_write(g_pmic, offset, data);
--	spin_unlock_irqrestore(&g_pmic->lock, flags);
-+	hisi_pmic_write(pmic, offset, data);
-+	spin_unlock_irqrestore(&pmic->lock, flags);
- }
- 
- static void hisi_irq_unmask(struct irq_data *d)
-@@ -217,25 +200,20 @@ static void hisi_irq_unmask(struct irq_data *d)
- 	u32 data, offset;
- 	unsigned long flags;
- 
--	if (NULL == g_pmic) {
--		pr_err(" g_pmic  is NULL\n");
--		return;
--	}
--
- 	offset = (irqd_to_hwirq(d) >> 3);
--	if (1==g_extinterrupt_flag){
--		if ( offset < HISI_PMIC_FIRST_GROUP_INT_NUM)
-+	if (pmic->g_extinterrupt_flag == 1) {
-+		if (offset < HISI_PMIC_FIRST_GROUP_INT_NUM)
- 			offset += pmic->irq_mask_addr.start_addr;
- 		else
--			offset = offset+(pmic->irq_mask_addr1.start_addr)-HISI_PMIC_FIRST_GROUP_INT_NUM;
--	}else{
-+			offset = offset + (pmic->irq_mask_addr1.start_addr) - HISI_PMIC_FIRST_GROUP_INT_NUM;
-+	} else {
- 		offset += pmic->irq_mask_addr.start_addr;
- 	}
--	spin_lock_irqsave(&g_pmic->lock, flags);
--	data = hisi_pmic_read(g_pmic, offset);
-+	spin_lock_irqsave(&pmic->lock, flags);
-+	data = hisi_pmic_read(pmic, offset);
- 	data &= ~(1 << (irqd_to_hwirq(d) & 0x07));
--	hisi_pmic_write(g_pmic, offset, data);
--	spin_unlock_irqrestore(&g_pmic->lock, flags);
-+	hisi_pmic_write(pmic, offset, data);
-+	spin_unlock_irqrestore(&pmic->lock, flags);
- }
- 
- static struct irq_chip hisi_pmu_irqchip = {
-@@ -247,7 +225,7 @@ static struct irq_chip hisi_pmu_irqchip = {
+diff --git a/drivers/staging/hikey9xx/hi6421v600-regulator.c b/drivers/staging/hikey9xx/hi6421v600-regulator.c
+index 7bc0ae27b110..904cb64b1dcd 100644
+--- a/drivers/staging/hikey9xx/hi6421v600-regulator.c
++++ b/drivers/staging/hikey9xx/hi6421v600-regulator.c
+@@ -49,7 +49,6 @@ struct hisi_regulator_register_info {
+ struct hisi_regulator {
+ 	const char *name;
+ 	struct hisi_regulator_register_info register_info;
+-	struct timeval last_off_time;
+ 	u32 off_on_delay;
+ 	u32 eco_uA;
+ 	struct regulator_desc rdesc;
+@@ -57,8 +56,6 @@ struct hisi_regulator {
  };
  
- static int hisi_irq_map(struct irq_domain *d, unsigned int virq,
--			  irq_hw_number_t hw)
-+			irq_hw_number_t hw)
- {
- 	struct hisi_pmic *pmic = d->host_data;
- 
-@@ -259,19 +237,18 @@ static int hisi_irq_map(struct irq_domain *d, unsigned int virq,
- 	return 0;
- }
- 
--static struct irq_domain_ops hisi_domain_ops = {
-+static const struct irq_domain_ops hisi_domain_ops = {
- 	.map	= hisi_irq_map,
- 	.xlate	= irq_domain_xlate_twocell,
- };
- 
--/*lint -e570 -e64*/
- static int get_pmic_device_tree_data(struct device_node *np, struct hisi_pmic *pmic)
- {
- 	int ret = 0;
- 
- 	/*get pmic irq num*/
- 	ret = of_property_read_u32_array(np, "hisilicon,hisi-pmic-irq-num",
--						&(pmic->irqnum), 1);
-+					 &pmic->irqnum, 1);
- 	if (ret) {
- 		pr_err("no hisilicon,hisi-pmic-irq-num property set\n");
- 		ret = -ENODEV;
-@@ -280,7 +257,7 @@ static int get_pmic_device_tree_data(struct device_node *np, struct hisi_pmic *p
- 
- 	/*get pmic irq array number*/
- 	ret = of_property_read_u32_array(np, "hisilicon,hisi-pmic-irq-array",
--						&(pmic->irqarray), 1);
-+					 &pmic->irqarray, 1);
- 	if (ret) {
- 		pr_err("no hisilicon,hisi-pmic-irq-array property set\n");
- 		ret = -ENODEV;
-@@ -289,7 +266,7 @@ static int get_pmic_device_tree_data(struct device_node *np, struct hisi_pmic *p
- 
- 	/*SOC_PMIC_IRQ_MASK_0_ADDR*/
- 	ret = of_property_read_u32_array(np, "hisilicon,hisi-pmic-irq-mask-addr",
--						(int *)&pmic->irq_mask_addr, 2);
-+					 (int *)&pmic->irq_mask_addr, 2);
- 	if (ret) {
- 		pr_err("no hisilicon,hisi-pmic-irq-mask-addr property set\n");
- 		ret = -ENODEV;
-@@ -298,24 +275,16 @@ static int get_pmic_device_tree_data(struct device_node *np, struct hisi_pmic *p
- 
- 	/*SOC_PMIC_IRQ0_ADDR*/
- 	ret = of_property_read_u32_array(np, "hisilicon,hisi-pmic-irq-addr",
--						(int *)&pmic->irq_addr, 2);
-+					 (int *)&pmic->irq_addr, 2);
- 	if (ret) {
- 		pr_err("no hisilicon,hisi-pmic-irq-addr property set\n");
- 		ret = -ENODEV;
- 		return ret;
- 	}
- 
--	ret = of_property_read_u32_array(np, "hisilicon,hisi-pmic-vbus",
--						(u32 *)&g_pmic_vbus, 2);
--	if (ret) {
--		pr_err("no hisilicon,hisi-pmic-vbus property\n");
--		ret = -ENODEV;
--		return ret;
--	}
+ static DEFINE_MUTEX(enable_mutex);
+-struct timeval last_enabled;
 -
- 	/*pmic lock*/
- 	ret = of_property_read_u32_array(np, "hisilicon,hisi-pmic-lock",
--						(int *)&pmic->normal_lock, 2);
-+					 (int *)&pmic->normal_lock, 2);
- 	if (ret) {
- 		pr_err("no hisilicon,hisi-pmic-lock property set\n");
- 		ret = -ENODEV;
-@@ -324,7 +293,7 @@ static int get_pmic_device_tree_data(struct device_node *np, struct hisi_pmic *p
  
- 	/*pmic debug lock*/
- 	ret = of_property_read_u32_array(np, "hisilicon,hisi-pmic-debug-lock",
--						(int *)&pmic->debug_lock, 2);
-+					 (int *)&pmic->debug_lock, 2);
- 	if (ret) {
- 		pr_err("no hisilicon,hisi-pmic-debug-lock property set\n");
- 		ret = -ENODEV;
-@@ -332,17 +301,15 @@ static int get_pmic_device_tree_data(struct device_node *np, struct hisi_pmic *p
- 	}
- 
- 	return ret;
--}/*lint -restore*/
-+}
- 
--
--/*lint -e570 -e64*/
- static int get_pmic_device_tree_data1(struct device_node *np, struct hisi_pmic *pmic)
+ static inline struct hisi_pmic *rdev_to_pmic(struct regulator_dev *dev)
  {
- 	int ret = 0;
- 
- 	/*get pmic irq num*/
- 	ret = of_property_read_u32_array(np, "hisilicon,hisi-pmic-irq-num1",
--						&(pmic->irqnum1), 1);
-+					 &pmic->irqnum1, 1);
- 	if (ret) {
- 		pr_err("no hisilicon,hisi-pmic-irq-num1 property set\n");
- 		ret = -ENODEV;
-@@ -352,7 +319,7 @@ static int get_pmic_device_tree_data1(struct device_node *np, struct hisi_pmic *
- 
- 	/*get pmic irq array number*/
- 	ret = of_property_read_u32_array(np, "hisilicon,hisi-pmic-irq-array1",
--						&(pmic->irqarray1), 1);
-+					 &pmic->irqarray1, 1);
- 	if (ret) {
- 		pr_err("no hisilicon,hisi-pmic-irq-array1 property set\n");
- 		ret = -ENODEV;
-@@ -361,7 +328,7 @@ static int get_pmic_device_tree_data1(struct device_node *np, struct hisi_pmic *
- 
- 	/*SOC_PMIC_IRQ_MASK_0_ADDR*/
- 	ret = of_property_read_u32_array(np, "hisilicon,hisi-pmic-irq-mask-addr1",
--						(int *)&pmic->irq_mask_addr1, 2);
-+					 (int *)&pmic->irq_mask_addr1, 2);
- 	if (ret) {
- 		pr_err("no hisilicon,hisi-pmic-irq-mask-addr1 property set\n");
- 		ret = -ENODEV;
-@@ -370,43 +337,48 @@ static int get_pmic_device_tree_data1(struct device_node *np, struct hisi_pmic *
- 
- 	/*SOC_PMIC_IRQ0_ADDR*/
- 	ret = of_property_read_u32_array(np, "hisilicon,hisi-pmic-irq-addr1",
--						(int *)&pmic->irq_addr1, 2);
-+					 (int *)&pmic->irq_addr1, 2);
- 	if (ret) {
- 		pr_err("no hisilicon,hisi-pmic-irq-addr1 property set\n");
- 		ret = -ENODEV;
- 		return ret;
- 	}
- 
--	g_extinterrupt_flag = 1;
-+	pmic->g_extinterrupt_flag = 1;
- 	return ret;
--}/*lint -restore*/
-+}
- 
- static void hisi_pmic_irq_prc(struct hisi_pmic *pmic)
- {
- 	int i;
--	for (i = 0 ; i < pmic->irq_mask_addr.array; i++) {
-+
-+	for (i = 0 ; i < pmic->irq_mask_addr.array; i++)
- 		hisi_pmic_write(pmic, pmic->irq_mask_addr.start_addr + i, HISI_MASK_STATE);
--	}
- 
- 	for (i = 0 ; i < pmic->irq_addr.array; i++) {
- 		unsigned int pending = hisi_pmic_read(pmic, pmic->irq_addr.start_addr + i);
--		pr_debug("PMU IRQ address value:irq[0x%x] = 0x%x\n", pmic->irq_addr.start_addr + i, pending);
-+
-+		pr_debug("PMU IRQ address value:irq[0x%x] = 0x%x\n",
-+			 pmic->irq_addr.start_addr + i, pending);
- 		hisi_pmic_write(pmic, pmic->irq_addr.start_addr + i, HISI_MASK_STATE);
- 	}
--
- }
- 
- static void hisi_pmic_irq1_prc(struct hisi_pmic *pmic)
- {
- 	int i;
--	if(1 == g_extinterrupt_flag){
--		for (i = 0 ; i < pmic->irq_mask_addr1.array; i++) {
-+	unsigned int pending1;
-+
-+	if (pmic->g_extinterrupt_flag == 1) {
-+		for (i = 0 ; i < pmic->irq_mask_addr1.array; i++)
- 			hisi_pmic_write(pmic, pmic->irq_mask_addr1.start_addr + i, HISI_MASK_STATE);
--		}
- 
- 		for (i = 0 ; i < pmic->irq_addr1.array; i++) {
--			unsigned int pending1 = hisi_pmic_read(pmic, pmic->irq_addr1.start_addr + i);
--			pr_debug("PMU IRQ address1 value:irq[0x%x] = 0x%x\n", pmic->irq_addr1.start_addr + i, pending1);
-+			pending1 = hisi_pmic_read(pmic, pmic->irq_addr1.start_addr + i);
-+
-+			pr_debug("PMU IRQ address1 value:irq[0x%x] = 0x%x\n",
-+				 pmic->irq_addr1.start_addr + i, pending1);
-+
- 			hisi_pmic_write(pmic, pmic->irq_addr1.start_addr + i, HISI_MASK_STATE);
- 		}
- 	}
-@@ -424,36 +396,32 @@ static int hisi_pmic_probe(struct spmi_device *pdev)
- 	unsigned int virq;
- 
- 	pmic = devm_kzalloc(dev, sizeof(*pmic), GFP_KERNEL);
--	if (!pmic) {
--		dev_err(dev, "cannot allocate hisi_pmic device info\n");
-+	if (!pmic)
- 		return -ENOMEM;
--	}
- 
- 	/*TODO: get pmic dts info*/
- 	ret = get_pmic_device_tree_data(np, pmic);
- 	if (ret) {
--		dev_err(&pdev->dev, "Error reading hisi pmic dts \n");
-+		dev_err(&pdev->dev, "Error reading hisi pmic dts\n");
- 		return ret;
- 	}
- 
- 	/*get pmic dts the second group irq*/
- 	ret = get_pmic_device_tree_data1(np, pmic);
--	if (ret) {
-+	if (ret)
- 		dev_err(&pdev->dev, "the platform don't support ext-interrupt.\n");
--	}
- 
- 	/* TODO: get and enable clk request */
- 	spin_lock_init(&pmic->lock);
- 
- 	pmic->dev = dev;
--	g_pmic = pmic;
--	ret = of_property_read_u32_array(np, "hisilicon,pmic_fpga_flag", &fpga_flag, 1);
--	if (ret) {
-+	ret = of_property_read_u32_array(np, "hisilicon,pmic_fpga_flag",
-+					 &fpga_flag, 1);
-+	if (ret)
- 		pr_err("no hisilicon,pmic_fpga_flag property set\n");
--	}
--	if (PMIC_FPGA_FLAG == fpga_flag) {
-+
-+	if (fpga_flag == PMIC_FPGA_FLAG)
- 		goto after_irq_register;
--	}
- 
- 	pmic->gpio = of_get_gpio_flags(np, 0, &flags);
- 	if (pmic->gpio < 0)
-@@ -477,12 +445,9 @@ static int hisi_pmic_probe(struct spmi_device *pdev)
- 
- 	pmic->irqnum += pmic->irqnum1;
- 
--	pmic->irqs = (unsigned int *)devm_kmalloc(dev, pmic->irqnum * sizeof(int), GFP_KERNEL);
--	if (!pmic->irqs) {
--		pr_err("%s:Failed to alloc memory for pmic irq number!\n", __func__);
-+	pmic->irqs = devm_kzalloc(dev, pmic->irqnum * sizeof(int), GFP_KERNEL);
-+	if (!pmic->irqs)
- 		goto irq_malloc;
--	}
--	memset(pmic->irqs, 0, pmic->irqnum);
- 
- 	pmic->domain = irq_domain_add_simple(np, pmic->irqnum, 0,
- 					     &hisi_domain_ops, pmic);
-@@ -504,7 +469,7 @@ static int hisi_pmic_probe(struct spmi_device *pdev)
- 	}
- 
- 	ret = request_threaded_irq(pmic->irq, hisi_irq_handler, NULL,
--				IRQF_TRIGGER_LOW | IRQF_SHARED | IRQF_NO_SUSPEND,
-+				   IRQF_TRIGGER_LOW | IRQF_SHARED | IRQF_NO_SUSPEND,
- 				   "pmic", pmic);
- 	if (ret < 0) {
- 		dev_err(dev, "could not claim pmic %d\n", ret);
-@@ -515,31 +480,28 @@ static int hisi_pmic_probe(struct spmi_device *pdev)
- after_irq_register:
- 	return 0;
- 
--
- request_theaded_irq:
- irq_create_mapping:
- irq_domain:
- irq_malloc:
- 	gpio_free(pmic->gpio);
--	g_pmic = NULL;
- 	return ret;
- }
- 
- static void hisi_pmic_remove(struct spmi_device *pdev)
- {
--
- 	struct hisi_pmic *pmic = dev_get_drvdata(&pdev->dev);
- 
- 	free_irq(pmic->irq, pmic);
- 	gpio_free(pmic->gpio);
- 	devm_kfree(&pdev->dev, pmic);
--
- }
-+
- static int hisi_pmic_suspend(struct device *dev, pm_message_t state)
- {
- 	struct hisi_pmic *pmic = dev_get_drvdata(dev);
- 
--	if (NULL == pmic) {
-+	if (!pmic) {
- 		pr_err("%s:pmic is NULL\n", __func__);
- 		return -ENOMEM;
- 	}
-@@ -548,13 +510,13 @@ static int hisi_pmic_suspend(struct device *dev, pm_message_t state)
- 	pr_info("%s:-\n", __func__);
- 
- 	return 0;
--}/*lint !e715 */
-+}
- 
- static int hisi_pmic_resume(struct device *dev)
- {
- 	struct hisi_pmic *pmic = dev_get_drvdata(dev);
- 
--	if (NULL == pmic) {
-+	if (!pmic) {
- 		pr_err("%s:pmic is NULL\n", __func__);
- 		return -ENOMEM;
- 	}
-@@ -588,10 +550,8 @@ static void __exit hisi_pmic_exit(void)
- 	spmi_driver_unregister(&hisi_pmic_driver);
- }
- 
--
- subsys_initcall_sync(hisi_pmic_init);
- module_exit(hisi_pmic_exit);
- 
- MODULE_DESCRIPTION("PMIC driver");
- MODULE_LICENSE("GPL v2");
--
-diff --git a/include/linux/mfd/hi6421-spmi-pmic.h b/include/linux/mfd/hi6421-spmi-pmic.h
-index 5be9b4d3f207..e0a8b50f95fc 100644
---- a/include/linux/mfd/hi6421-spmi-pmic.h
-+++ b/include/linux/mfd/hi6421-spmi-pmic.h
-@@ -1,3 +1,4 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Header file for device driver Hi6421 PMIC
-  *
-@@ -5,19 +6,6 @@
-  * Copyright (C) 2011 Hisilicon.
-  *
-  * Guodong Xu <guodong.xu@linaro.org>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License along
-- * with this program; if not, write to the Free Software Foundation, Inc.,
-- * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+@@ -72,27 +69,6 @@ static inline struct hisi_pmic *rdev_to_pmic(struct regulator_dev *dev)
+ /* helper function to ensure when it returns it is at least 'delay_us'
+  * microseconds after 'since'.
   */
+-static void ensured_time_after(struct timeval since, u32 delay_us)
+-{
+-	struct timeval now;
+-	u64 elapsed_ns64, delay_ns64;
+-	u32 actual_us32;
+-
+-	delay_ns64 = delay_us * NSEC_PER_USEC;
+-	do_gettimeofday(&now);
+-	elapsed_ns64 = timeval_to_ns(&now) - timeval_to_ns(&since);
+-	if (delay_ns64 > elapsed_ns64) {
+-		actual_us32 = ((u32)(delay_ns64 - elapsed_ns64) /
+-							NSEC_PER_USEC);
+-		if (actual_us32 >= 1000) {
+-			mdelay(actual_us32 / 1000); /*lint !e647 */
+-			udelay(actual_us32 % 1000);
+-		} else if (actual_us32 > 0) {
+-			udelay(actual_us32);
+-		}
+-	}
+-	return;
+-}
  
- #ifndef	__HISI_PMIC_H
-@@ -25,12 +13,12 @@
+ static int hisi_regulator_is_enabled(struct regulator_dev *dev)
+ {
+@@ -113,13 +89,16 @@ static int hisi_regulator_enable(struct regulator_dev *dev)
+ 	struct hisi_pmic *pmic = rdev_to_pmic(dev);
  
- #include <linux/irqdomain.h>
+ 	/* keep a distance of off_on_delay from last time disabled */
+-	ensured_time_after(sreg->last_off_time, sreg->off_on_delay);
++	usleep_range(sreg->off_on_delay, sreg->off_on_delay + 1000);
  
--#define HISI_REGS_ENA_PROTECT_TIME	(0) 	/* in microseconds */
-+#define HISI_REGS_ENA_PROTECT_TIME	(0)	/* in microseconds */
- #define HISI_ECO_MODE_ENABLE		(1)
- #define HISI_ECO_MODE_DISABLE		(0)
+ 	pr_debug("<[%s]: off_on_delay=%dus>\n", __func__, sreg->off_on_delay);
  
- typedef int (*pmic_ocp_callback)(char *);
--extern int hisi_pmic_special_ocp_register(char *power_name, pmic_ocp_callback handler);
-+int hisi_pmic_special_ocp_register(char *power_name, pmic_ocp_callback handler);
- 
- struct irq_mask_info {
- 	int start_addr;
-@@ -71,6 +59,8 @@ struct hisi_pmic {
- 	struct irq_info irq_addr1;
- 	struct write_lock normal_lock;
- 	struct write_lock debug_lock;
+ 	/* cannot enable more than one regulator at one time */
+ 	mutex_lock(&enable_mutex);
+-	ensured_time_after(last_enabled, HISI_REGS_ENA_PROTECT_TIME);
++	usleep_range(HISI_REGS_ENA_PROTECT_TIME,
++		     HISI_REGS_ENA_PROTECT_TIME + 1000);
 +
-+	unsigned int g_extinterrupt_flag;
- };
++
  
- /* 0:disable; 1:enable */
+ 	/* set enable register */
+ 	hisi_pmic_rmw(pmic, sreg->register_info.ctrl_reg,
+@@ -128,7 +107,6 @@ static int hisi_regulator_enable(struct regulator_dev *dev)
+ 	pr_debug("<[%s]: ctrl_reg=0x%x,enable_mask=0x%x>\n", __func__, sreg->register_info.ctrl_reg,\
+ 			sreg->register_info.enable_mask);
+ 
+-	do_gettimeofday(&last_enabled);
+ 	mutex_unlock(&enable_mutex);
+ 
+ 	return 0;
+@@ -143,8 +121,6 @@ static int hisi_regulator_disable(struct regulator_dev *dev)
+ 	hisi_pmic_rmw(pmic, sreg->register_info.ctrl_reg,
+ 				sreg->register_info.enable_mask, 0);
+ 
+-	do_gettimeofday(&sreg->last_off_time);
+-
+ 	return 0;
+ }
+ 
 -- 
 2.26.2
 
