@@ -2,219 +2,170 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 280EAC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:06:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC0ACC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:06:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AC182080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:06:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBC7020838
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:06:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597233986;
+	bh=MM8pmV2QgsjxdXSSM0B2DrSsgot2dM8rNva9Cu3oxH8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aMpn0k5tLjHbndnmJupHYHKYHa77hZ64MEguZugGglTGrnz6qKmJeBg1r4s/aBD7/
+	 z+Y+7wWxPM3CR75CHbGn7BwSllZGqEfHzN629H6rc2yFxs9cJ4fzo7St161u6tHfYf
+	 TN2HyBuMC5suGKNj6ygGYBEJlriSxxucveO+NBto=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728015AbgHLMGW (ORCPT
+        id S1728025AbgHLMGZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 08:06:22 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:62924 "EHLO pegase1.c-s.fr"
+        Wed, 12 Aug 2020 08:06:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726846AbgHLMGE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727947AbgHLMGE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 12 Aug 2020 08:06:04 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4BRT1j2VKqzB09Zd;
-        Wed, 12 Aug 2020 14:06:01 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id lFYajNwLs3_W; Wed, 12 Aug 2020 14:06:01 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4BRT1j1Z6LzB09ZZ;
-        Wed, 12 Aug 2020 14:06:01 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 92BBD8B826;
-        Wed, 12 Aug 2020 14:06:02 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id CblZYUPfLMKZ; Wed, 12 Aug 2020 14:06:02 +0200 (CEST)
-Received: from po17688vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id DC8F48B7FC;
-        Wed, 12 Aug 2020 14:06:01 +0200 (CEST)
-Received: by po17688vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id BD21565C34; Wed, 12 Aug 2020 12:06:01 +0000 (UTC)
-Message-Id: <6e3aa188066eb94473aa26754de280ffec7500ae.1597233555.git.christophe.leroy@csgroup.eu>
-In-Reply-To: <cover.1597233555.git.christophe.leroy@csgroup.eu>
-References: <cover.1597233555.git.christophe.leroy@csgroup.eu>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [RFC PATCH v1 10/19] powerpc/signal: Refactor bad frame logging
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, ldv@altlinux.org,
-        viro@zeniv.linux.org.uk
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Wed, 12 Aug 2020 12:06:01 +0000 (UTC)
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E78D4207F7;
+        Wed, 12 Aug 2020 12:06:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597233964;
+        bh=MM8pmV2QgsjxdXSSM0B2DrSsgot2dM8rNva9Cu3oxH8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jT2HBedN+7Xl2ZMqfco4gYuAi3jJlp6W72K6S+ofFy1AO5aUUC1zZeI5QwXPv89S+
+         JV0aP++AnLYNFZ7uvMw85wcAQJ7QwOTYxV2wD89dpQubayYvwWjJCwntESy3xnX3r1
+         0jrjy1RRyENK1rJGcsxsZdOpUos08yVoOzHs1NG8=
+Date:   Wed, 12 Aug 2020 13:05:37 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Jiaxin Yu <jiaxin.yu@mediatek.com>
+Cc:     matthias.bgg@gmail.com, robh+dt@kernel.org, tiwai@suse.com,
+        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, howie.huang@mediatek.com,
+        tzungbi@google.com, eason.yen@mediatek.com,
+        shane.chien@mediatek.com
+Subject: Re: [PATCH v2 1/2] ASoC: mediatek: mt6359: add codec driver
+Message-ID: <20200812120537.GA5545@sirena.org.uk>
+References: <1597028754-7732-1-git-send-email-jiaxin.yu@mediatek.com>
+ <1597028754-7732-2-git-send-email-jiaxin.yu@mediatek.com>
+ <20200810185933.GI6438@sirena.org.uk>
+ <1597217353.23246.45.camel@mhfsdcap03>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="yrj/dFKFPuw6o+aM"
+Content-Disposition: inline
+In-Reply-To: <1597217353.23246.45.camel@mhfsdcap03>
+X-Cookie: No purchase necessary.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The logging of bad frame appears half a dozen of times
-and is pretty similar.
 
-Create signal_fault() fonction to perform that logging.
+--yrj/dFKFPuw6o+aM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
----
- arch/powerpc/kernel/signal.c    | 11 +++++++++++
- arch/powerpc/kernel/signal.h    |  3 +++
- arch/powerpc/kernel/signal_32.c | 35 +++++----------------------------
- arch/powerpc/kernel/signal_64.c | 15 ++------------
- 4 files changed, 21 insertions(+), 43 deletions(-)
+On Wed, Aug 12, 2020 at 03:29:13PM +0800, Jiaxin Yu wrote:
+> On Mon, 2020-08-10 at 19:59 +0100, Mark Brown wrote:
+> > On Mon, Aug 10, 2020 at 11:05:53AM +0800, Jiaxin Yu wrote:
 
-diff --git a/arch/powerpc/kernel/signal.c b/arch/powerpc/kernel/signal.c
-index 5edded5c5d20..53b4987a45b5 100644
---- a/arch/powerpc/kernel/signal.c
-+++ b/arch/powerpc/kernel/signal.c
-@@ -355,3 +355,14 @@ static unsigned long get_tm_stackpointer(struct task_struct *tsk)
- #endif
- 	return ret;
- }
-+
-+static const char fmt32[] = KERN_INFO "%s[%d]: bad frame in %s: %p nip %08lx lr %08lx\n";
-+static const char fmt64[] = KERN_INFO "%s[%d]: bad frame in %s: %p nip %016lx lr %016lx\n";
-+
-+void signal_fault(struct task_struct *tsk, struct pt_regs *regs,
-+		  const char *where, void __user *ptr)
-+{
-+	if (show_unhandled_signals)
-+		printk_ratelimited(regs->msr & MSR_64BIT ? fmt64 : fmt32, tsk->comm,
-+				    task_pid_nr(tsk), where, ptr, regs->nip, regs->link);
-+}
-diff --git a/arch/powerpc/kernel/signal.h b/arch/powerpc/kernel/signal.h
-index fb98731348c3..f610cfafa478 100644
---- a/arch/powerpc/kernel/signal.h
-+++ b/arch/powerpc/kernel/signal.h
-@@ -93,4 +93,7 @@ static inline int handle_rt_signal64(struct ksignal *ksig, sigset_t *set,
- 
- #endif /* !defined(CONFIG_PPC64) */
- 
-+void signal_fault(struct task_struct *tsk, struct pt_regs *regs,
-+		  const char *where, void __user *ptr);
-+
- #endif  /* _POWERPC_ARCH_SIGNAL_H */
-diff --git a/arch/powerpc/kernel/signal_32.c b/arch/powerpc/kernel/signal_32.c
-index 3356f6aba4ae..d1087dd87174 100644
---- a/arch/powerpc/kernel/signal_32.c
-+++ b/arch/powerpc/kernel/signal_32.c
-@@ -837,12 +837,7 @@ int handle_rt_signal32(struct ksignal *ksig, sigset_t *oldset,
- 	return 0;
- 
- badframe:
--	if (show_unhandled_signals)
--		printk_ratelimited(KERN_INFO
--				   "%s[%d]: bad frame in handle_rt_signal32: "
--				   "%p nip %08lx lr %08lx\n",
--				   tsk->comm, tsk->pid,
--				   addr, regs->nip, regs->link);
-+	signal_fault(tsk, regs, "handle_rt_signal32", addr);
- 
- 	return 1;
- }
-@@ -1094,12 +1089,7 @@ SYSCALL_DEFINE0(rt_sigreturn)
- 	return 0;
- 
-  bad:
--	if (show_unhandled_signals)
--		printk_ratelimited(KERN_INFO
--				   "%s[%d]: bad frame in sys_rt_sigreturn: "
--				   "%p nip %08lx lr %08lx\n",
--				   current->comm, current->pid,
--				   rt_sf, regs->nip, regs->link);
-+	signal_fault(current, regs, "sys_rt_sigreturn", rt_sf);
- 
- 	force_sig(SIGSEGV);
- 	return 0;
-@@ -1183,12 +1173,7 @@ SYSCALL_DEFINE3(debug_setcontext, struct ucontext __user *, ctx,
- 	 * We kill the task with a SIGSEGV in this situation.
- 	 */
- 	if (do_setcontext(ctx, regs, 1)) {
--		if (show_unhandled_signals)
--			printk_ratelimited(KERN_INFO "%s[%d]: bad frame in "
--					   "sys_debug_setcontext: %p nip %08lx "
--					   "lr %08lx\n",
--					   current->comm, current->pid,
--					   ctx, regs->nip, regs->link);
-+		signal_fault(current, regs, "sys_debug_setcontext", ctx);
- 
- 		force_sig(SIGSEGV);
- 		goto out;
-@@ -1291,12 +1276,7 @@ int handle_signal32(struct ksignal *ksig, sigset_t *oldset,
- 	return 0;
- 
- badframe:
--	if (show_unhandled_signals)
--		printk_ratelimited(KERN_INFO
--				   "%s[%d]: bad frame in handle_signal32: "
--				   "%p nip %08lx lr %08lx\n",
--				   tsk->comm, tsk->pid,
--				   frame, regs->nip, regs->link);
-+	signal_fault(tsk, regs, "handle_signal32", frame);
- 
- 	return 1;
- }
-@@ -1367,12 +1347,7 @@ SYSCALL_DEFINE0(sigreturn)
- 	return 0;
- 
- badframe:
--	if (show_unhandled_signals)
--		printk_ratelimited(KERN_INFO
--				   "%s[%d]: bad frame in sys_sigreturn: "
--				   "%p nip %08lx lr %08lx\n",
--				   current->comm, current->pid,
--				   addr, regs->nip, regs->link);
-+	signal_fault(current, regs, "sys_sigreturn", addr);
- 
- 	force_sig(SIGSEGV);
- 	return 0;
-diff --git a/arch/powerpc/kernel/signal_64.c b/arch/powerpc/kernel/signal_64.c
-index 92d152c1155c..a10b0bb14131 100644
---- a/arch/powerpc/kernel/signal_64.c
-+++ b/arch/powerpc/kernel/signal_64.c
-@@ -66,11 +66,6 @@ struct rt_sigframe {
- 	char abigap[USER_REDZONE_SIZE];
- } __attribute__ ((aligned (16)));
- 
--static const char fmt32[] = KERN_INFO \
--	"%s[%d]: bad frame in %s: %08lx nip %08lx lr %08lx\n";
--static const char fmt64[] = KERN_INFO \
--	"%s[%d]: bad frame in %s: %016lx nip %016lx lr %016lx\n";
--
- /*
-  * This computes a quad word aligned pointer inside the vmx_reserve array
-  * element. For historical reasons sigcontext might not be quad word aligned,
-@@ -801,10 +796,7 @@ SYSCALL_DEFINE0(rt_sigreturn)
- 	return 0;
- 
- badframe:
--	if (show_unhandled_signals)
--		printk_ratelimited(regs->msr & MSR_64BIT ? fmt64 : fmt32,
--				   current->comm, current->pid, "rt_sigreturn",
--				   (long)uc, regs->nip, regs->link);
-+	signal_fault(current, regs, "rt_sigreturn", uc);
- 
- 	force_sig(SIGSEGV);
- 	return 0;
-@@ -913,10 +905,7 @@ int handle_rt_signal64(struct ksignal *ksig, sigset_t *set,
- 	return 0;
- 
- badframe:
--	if (show_unhandled_signals)
--		printk_ratelimited(regs->msr & MSR_64BIT ? fmt64 : fmt32,
--				   tsk->comm, tsk->pid, "setup_rt_frame",
--				   (long)frame, regs->nip, regs->link);
-+	signal_fault(current, regs, "handle_rt_signal64", frame);
- 
- 	return 1;
- }
--- 
-2.25.0
+> > > +void mt6359_set_playback_gpio(struct snd_soc_component *cmpnt)
+> > > +{
+> > > +	struct mt6359_priv *priv =3D snd_soc_component_get_drvdata(cmpnt);
 
+> > What are these, should they not be managed through gpiolib and/or
+> > pinctrl?
+
+> These are the functions that control the mux of input or output
+> signal. I refer to the other codec drivers, most of them are manipulate
+> the regs in their codec drivers also. Maybe it's easier to control?
+
+These functions are exported for other drivers to use rather than
+something done internally by the driver - if this were internal to the
+driver it'd not be a big deal but when it's for use by another driver
+it'd be better to go through standard interfaces.
+
+> > > +int mt6359_mtkaif_calibration_enable(struct snd_soc_pcm_runtime *rtd)
+> > > +{
+
+> > > +EXPORT_SYMBOL_GPL(mt6359_mtkaif_calibration_enable);
+
+> > Why is this exported?
+
+> This function is exported to machine driver to do calibration when
+> registering. The interface between MT6359 and MTK SoC is a special
+> interface that named MTKAIF. Therefore, if MT6359 is to be used
+> normally, it needs to rely on the platform for calibration when
+> registering.
+
+So this needs the SoC to do something as part of callibration?
+
+> > > +	switch (event) {
+> > > +	case SND_SOC_DAPM_PRE_PMU:
+> > > +		priv->dev_counter[device]++;
+> > > +		if (priv->dev_counter[device] > 1)
+> > > +			break;	/* already enabled, do nothing */
+> > > +		else if (priv->dev_counter[device] <=3D 0)
+
+> > Why are we doing additional refcounting on top of what DAPM is doing?
+> > This seems like there should be at least one widget representing the
+> > shared bits of the audio path.
+
+> We have "HPL Mux" and "HPR Mux", there will be two paths enabled when
+> playback throuh HP. But actually they share the same control sequences.
+> So in order to prevent setting it one more time we do additional
+> refcouting.
+
+That sounds like you should just have one output path defined in DAPM
+and merge the left and right signals together rather than maintaining
+them separately.
+
+> > > +	/* hp gain ctl default choose ZCD */
+> > > +	priv->hp_gain_ctl =3D HP_GAIN_CTL_ZCD;
+> > > +	hp_gain_ctl_select(priv, priv->hp_gain_ctl);
+
+> > Why not use the hardware default?
+
+> We have two ways to control the volume, there is to select ZCD. Because
+> the other one it not often used, ZCD is used by default.=20
+
+Why not just let the user pick at runtime?
+
+> > > +	ret =3D regulator_enable(priv->avdd_reg);
+> > > +	if (ret) {
+> > > +		dev_err(priv->dev, "%s(), failed to enable regulator!\n",
+> > > +			__func__);
+> > > +		return ret;
+> > > +	}
+
+> > Perhaps make this a DAPM widget?
+
+> "vaud18" needs to be always on so we enable it when codec probe.
+
+If it is just supposed to be left on all the time it's better to do this
+in the main device model probe rather than the component probe.  The
+component probe should usually only be used for things that need the
+rest of the card to be there.
+
+--yrj/dFKFPuw6o+aM
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8z2xAACgkQJNaLcl1U
+h9D7Wwf+OdwVBUD42cfqMOKbAwel1jObAQofx/ASxy8YgjsPQp8Jjkm39G6YSYyJ
+8nK3lQ1sz6qZtJ2KsZp6jG/aEOC5w7aBQdZszyRHXuneIp4KtvLG+AYHSO54DMXb
+ftsOw4EyQjzNY61qz0ZZ3H7vMObW+1o8uMEBKadB8MMz7oufbCUcV8auAps+K+L1
+si165INgJFZpfrKk/8YvNVqBAlcXMDjGpcZtO6gfEi9AuDQnZfJWte/1hOBgQynL
+84UFJWIEtkVCWadlYwBU1VcQD/3bOkpfyFMIoYII0BquCKBUqxmcLA2NxFV7Ami1
+U58UVe1qf4mt+vS7hAjBlmh6JTrUnw==
+=Fkwb
+-----END PGP SIGNATURE-----
+
+--yrj/dFKFPuw6o+aM--
