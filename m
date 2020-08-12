@@ -2,108 +2,169 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C901C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 08:38:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F0FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 08:39:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F7D020781
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 08:38:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7835820786
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 08:39:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbgHLIiT (ORCPT
+        id S1727017AbgHLIjO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 04:38:19 -0400
-Received: from mail1.windriver.com ([147.11.146.13]:55514 "EHLO
-        mail1.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726589AbgHLIiS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 04:38:18 -0400
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
-        by mail1.windriver.com (8.15.2/8.15.2) with ESMTPS id 07C8bw4R004857
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
-        Wed, 12 Aug 2020 01:37:58 -0700 (PDT)
-Received: from pek-qzhang2-d1.wrs.com (128.224.162.183) by
- ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 12 Aug 2020 01:37:58 -0700
-From:   <qiang.zhang@windriver.com>
-To:     <dan.j.williams@intel.com>, <vishal.l.verma@intel.com>,
-        <dave.jiang@intel.com>, <ira.weiny@intel.com>
-CC:     <linux-nvdimm@lists.01.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] libnvdimm: KASAN: global-out-of-bounds Read in internal_create_group
-Date:   Wed, 12 Aug 2020 16:37:55 +0800
-Message-ID: <20200812083755.30220-1-qiang.zhang@windriver.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 12 Aug 2020 04:39:14 -0400
+Received: from foss.arm.com ([217.140.110.172]:42788 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726712AbgHLIjN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 04:39:13 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AACB4D6E;
+        Wed, 12 Aug 2020 01:39:12 -0700 (PDT)
+Received: from [192.168.1.179] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6792E3F22E;
+        Wed, 12 Aug 2020 01:39:10 -0700 (PDT)
+Subject: Re: [PATCH 2/2] mm: proc: smaps_rollup: do not stall write attempts
+ on mmap_lock
+To:     Chinwen Chang <chinwen.chang@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Michel Lespinasse <walken@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Davidlohr Bueso <dbueso@suse.de>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Song Liu <songliubraving@fb.com>,
+        Jimmy Assarsson <jimmyassarsson@gmail.com>,
+        Huang Ying <ying.huang@intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+        wsd_upstream@mediatek.com
+References: <1597120955-16495-1-git-send-email-chinwen.chang@mediatek.com>
+ <1597120955-16495-3-git-send-email-chinwen.chang@mediatek.com>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <bf40676e-b14b-44cd-75ce-419c70194783@arm.com>
+Date:   Wed, 12 Aug 2020 09:39:09 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <1597120955-16495-3-git-send-email-chinwen.chang@mediatek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zqiang <qiang.zhang@windriver.com>
+On 11/08/2020 05:42, Chinwen Chang wrote:
+> smaps_rollup will try to grab mmap_lock and go through the whole vma
+> list until it finishes the iterating. When encountering large processes,
+> the mmap_lock will be held for a longer time, which may block other
+> write requests like mmap and munmap from progressing smoothly.
+> 
+> There are upcoming mmap_lock optimizations like range-based locks, but
+> the lock applied to smaps_rollup would be the coarse type, which doesn't
+> avoid the occurrence of unpleasant contention.
+> 
+> To solve aforementioned issue, we add a check which detects whether
+> anyone wants to grab mmap_lock for write attempts.
+> 
+> Signed-off-by: Chinwen Chang <chinwen.chang@mediatek.com>
+> ---
+>   fs/proc/task_mmu.c | 21 +++++++++++++++++++++
+>   1 file changed, 21 insertions(+)
+> 
+> diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+> index dbda449..4b51f25 100644
+> --- a/fs/proc/task_mmu.c
+> +++ b/fs/proc/task_mmu.c
+> @@ -856,6 +856,27 @@ static int show_smaps_rollup(struct seq_file *m, void *v)
+>   	for (vma = priv->mm->mmap; vma; vma = vma->vm_next) {
+>   		smap_gather_stats(vma, &mss);
+>   		last_vma_end = vma->vm_end;
+> +
+> +		/*
+> +		 * Release mmap_lock temporarily if someone wants to
+> +		 * access it for write request.
+> +		 */
+> +		if (mmap_lock_is_contended(mm)) {
+> +			mmap_read_unlock(mm);
+> +			ret = mmap_read_lock_killable(mm);
+> +			if (ret) {
+> +				release_task_mempolicy(priv);
+> +				goto out_put_mm;
+> +			}
+> +
+> +			/* Check whether current vma is available */
+> +			vma = find_vma(mm, last_vma_end - 1);
+> +			if (vma && vma->vm_start < last_vma_end)
 
-Because the last member of the "nvdimm_firmware_attributes" array
-was not assigned a null ptr, when traversal of "group" array is out of
-bounds in "internal_create_groups" func.
+I may be wrong, but this looks like it could return incorrect results. 
+For example if we start reading with the following VMAs:
 
-internal_create_groups:
-	->for (i = 0; groups[i]; i++)
-		->...
+  +------+------+-----------+
+  | VMA1 | VMA2 | VMA3      |
+  +------+------+-----------+
+  |      |      |           |
+4k     8k     16k         400k
 
-BUG: KASAN: global-out-of-bounds in create_files fs/sysfs/group.c:43 [inline]
-BUG: KASAN: global-out-of-bounds in internal_create_group+0x9d8/0xb20
-fs/sysfs/group.c:149
-Read of size 8 at addr ffffffff8a2e4cf0 by task kworker/u17:10/959
+Then after reading VMA2 we drop the lock due to contention. So:
 
-CPU: 2 PID: 959 Comm: kworker/u17:10 Not tainted 5.8.0-syzkaller #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009),
-BIOS rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
-Workqueue: events_unbound async_run_entry_fn
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0x5/0x497 mm/kasan/report.c:383
- __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
- create_files fs/sysfs/group.c:43 [inline]
- internal_create_group+0x9d8/0xb20 fs/sysfs/group.c:149
- internal_create_groups.part.0+0x90/0x140 fs/sysfs/group.c:189
- internal_create_groups fs/sysfs/group.c:185 [inline]
- sysfs_create_groups+0x25/0x50 fs/sysfs/group.c:215
- device_add_groups drivers/base/core.c:2024 [inline]
- device_add_attrs drivers/base/core.c:2178 [inline]
- device_add+0x7fd/0x1c40 drivers/base/core.c:2881
- nd_async_device_register+0x12/0x80 drivers/nvdimm/bus.c:506
- async_run_entry_fn+0x121/0x530 kernel/async.c:123
- process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
- worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
- kthread+0x3b5/0x4a0 kernel/kthread.c:292
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+   last_vma_end = 16k
 
-The buggy address belongs to the variable:
- nvdimm_firmware_attributes+0x10/0x40
+Then if VMA2 is freed while the lock is dropped, so we have:
 
-Reported-by: syzbot+1cf0ffe61aecf46f588f@syzkaller.appspotmail.com
-Signed-off-by: Zqiang <qiang.zhang@windriver.com>
----
- drivers/nvdimm/dimm_devs.c | 1 +
- 1 file changed, 1 insertion(+)
+  +------+      +-----------+
+  | VMA1 |      | VMA3      |
+  +------+      +-----------+
+  |      |      |           |
+4k     8k     16k         400k
 
-diff --git a/drivers/nvdimm/dimm_devs.c b/drivers/nvdimm/dimm_devs.c
-index 61374def5155..b59032e0859b 100644
---- a/drivers/nvdimm/dimm_devs.c
-+++ b/drivers/nvdimm/dimm_devs.c
-@@ -529,6 +529,7 @@ static DEVICE_ATTR_ADMIN_RW(activate);
- static struct attribute *nvdimm_firmware_attributes[] = {
- 	&dev_attr_activate.attr,
- 	&dev_attr_result.attr,
-+	NULL,
- };
- 
- static umode_t nvdimm_firmware_visible(struct kobject *kobj, struct attribute *a, int n)
--- 
-2.17.1
+find_vma(mm, 16k-1) will then return VMA3 and the condition vm_start < 
+last_vma_end will be false.
+
+> +				continue;
+> +
+> +			/* Current vma is not available, just break */
+> +			break;
+
+Which means we break out here and report an incomplete output (the 
+numbers will be much smaller than reality).
+
+Would it be better to have a loop like:
+
+	for (vma = priv->mm->mmap; vma;) {
+		smap_gather_stats(vma, &mss);
+		last_vma_end = vma->vm_end;
+
+		if (contended) {
+			/* drop/acquire lock */
+
+			vma = find_vma(mm, last_vma_end - 1);
+			if (!vma)
+				break;
+			if (vma->vm_start >= last_vma_end)
+				continue;
+		}
+		vma = vma->vm_next;
+	}
+
+that way if the VMA is removed while the lock is dropped the loop can 
+just continue from the next VMA.
+
+Or perhaps I missed something obvious? I haven't actually tested 
+anything above.
+
+Steve
+
+> +		}
+>   	}
+>   
+>   	show_vma_header_prefix(m, priv->mm->mmap->vm_start,
+> 
 
