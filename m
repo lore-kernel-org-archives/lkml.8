@@ -2,80 +2,101 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 507CAC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:38:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E4CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D9E920885
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:38:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="csPrVxKC"
+	by mail.kernel.org (Postfix) with ESMTP id E224C20885
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:43:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727911AbgHLJio (ORCPT
+        id S1726984AbgHLJnT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 05:38:44 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:29638 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727017AbgHLJib (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 05:38:31 -0400
-X-UUID: 3c61768a41c345b8939f8af611591b97-20200812
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=ogFDjQCtEcopOszOYsMoc/JjscsAanywEY3yR0IlUMY=;
-        b=csPrVxKCxTe5smr0IUeJCXH0eXxwjE4Gi1a0opIDhGIanfnvckAiYSEXULkadEVK2WTUB6mMl/t3CTWTrd2gZSaAHNshDpnOlLzE1mqmcslzErWAv0glO9RzBIi7maZTNyGabNB5aYVLVG2at2f2pqejHI6zZ5gX0Ixg2ZduhXs=;
-X-UUID: 3c61768a41c345b8939f8af611591b97-20200812
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
-        (envelope-from <wenbin.mei@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 178852734; Wed, 12 Aug 2020 17:38:27 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 12 Aug 2020 17:38:26 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 12 Aug 2020 17:38:25 +0800
-From:   Wenbin Mei <wenbin.mei@mediatek.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     Chaotian Jing <chaotian.jing@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <srv_heupstream@mediatek.com>,
-        Wenbin Mei <wenbin.mei@mediatek.com>
-Subject: [PATCH 2/3] arm64: dts: mt7622: add reset node for mmc device
-Date:   Wed, 12 Aug 2020 17:37:25 +0800
-Message-ID: <20200812093726.10123-3-wenbin.mei@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20200812093726.10123-1-wenbin.mei@mediatek.com>
-References: <20200812093726.10123-1-wenbin.mei@mediatek.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Wed, 12 Aug 2020 05:43:19 -0400
+Received: from mxhk.zte.com.cn ([63.217.80.70]:37356 "EHLO mxhk.zte.com.cn"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726409AbgHLJnT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 05:43:19 -0400
+Received: from mse-fl1.zte.com.cn (unknown [10.30.14.238])
+        by Forcepoint Email with ESMTPS id 68D2CE2067FFFE97BEB1;
+        Wed, 12 Aug 2020 17:43:16 +0800 (CST)
+Received: from notes_smtp.zte.com.cn (notes_smtp.zte.com.cn [10.30.1.239])
+        by mse-fl1.zte.com.cn with ESMTP id 07C9h3tN084104;
+        Wed, 12 Aug 2020 17:43:03 +0800 (GMT-8)
+        (envelope-from wang.yi59@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2020081217432418-4584713 ;
+          Wed, 12 Aug 2020 17:43:24 +0800 
+From:   Yi Wang <wang.yi59@zte.com.cn>
+To:     viro@zeniv.linux.org.uk
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn,
+        wang.liang82@zte.com.cn, Liao Pingfang <liao.pingfang@zte.com.cn>
+Subject: [PATCH] fs: Fix some comments in open.c and read_write.c
+Date:   Wed, 12 Aug 2020 17:46:28 +0800
+Message-Id: <1597225588-7737-1-git-send-email-wang.yi59@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2020-08-12 17:43:24,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2020-08-12 17:43:06,
+        Serialize complete at 2020-08-12 17:43:06
+X-MAIL: mse-fl1.zte.com.cn 07C9h3tN084104
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhpcyBjb21taXQgYWRkcyByZXNldCBub2RlIGZvciBtbWMgZGV2aWNlLg0KDQpTaWduZWQtb2Zm
-LWJ5OiBXZW5iaW4gTWVpIDx3ZW5iaW4ubWVpQG1lZGlhdGVrLmNvbT4NCi0tLQ0KIGFyY2gvYXJt
-NjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ3NjIyLmR0c2kgfCAyICsrDQogMSBmaWxlIGNoYW5nZWQs
-IDIgaW5zZXJ0aW9ucygrKQ0KDQpkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9tZWRp
-YXRlay9tdDc2MjIuZHRzaSBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ3NjIyLmR0
-c2kNCmluZGV4IDFhMzllMGVmNzc2Yi4uNWI5ZWMwMzJjZThkIDEwMDY0NA0KLS0tIGEvYXJjaC9h
-cm02NC9ib290L2R0cy9tZWRpYXRlay9tdDc2MjIuZHRzaQ0KKysrIGIvYXJjaC9hcm02NC9ib290
-L2R0cy9tZWRpYXRlay9tdDc2MjIuZHRzaQ0KQEAgLTY4Niw2ICs2ODYsOCBAQA0KIAkJY2xvY2tz
-ID0gPCZwZXJpY2ZnIENMS19QRVJJX01TREMzMF8wX1BEPiwNCiAJCQkgPCZ0b3Bja2dlbiBDTEtf
-VE9QX01TREM1MF8wX1NFTD47DQogCQljbG9jay1uYW1lcyA9ICJzb3VyY2UiLCAiaGNsayI7DQor
-CQlyZXNldHMgPSA8JnBlcmljZmcgTVQ3NjIyX1BFUklfTVNEQzBfU1dfUlNUPjsNCisJCXJlc2V0
-LW5hbWVzID0gImhyc3QiOw0KIAkJc3RhdHVzID0gImRpc2FibGVkIjsNCiAJfTsNCiANCi0tIA0K
-Mi4xOC4wDQo=
+From: Liao Pingfang <liao.pingfang@zte.com.cn>
+
+Correct comments in open.c, since the parameter(opened/cred)
+is not used anymore. Also correct size to maxsize in
+read_write.c.
+
+Signed-off-by: Liao Pingfang <liao.pingfang@zte.com.cn>
+Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
+---
+ fs/open.c       | 2 --
+ fs/read_write.c | 2 +-
+ 2 files changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/fs/open.c b/fs/open.c
+index c80e9f497e9b..fa54a7d313e9 100644
+--- a/fs/open.c
++++ b/fs/open.c
+@@ -875,7 +875,6 @@ static int do_dentry_open(struct file *f,
+  * @file: file pointer
+  * @dentry: pointer to dentry
+  * @open: open callback
+- * @opened: state of open
+  *
+  * This can be used to finish opening a file passed to i_op->atomic_open().
+  *
+@@ -929,7 +928,6 @@ EXPORT_SYMBOL(file_path);
+  * vfs_open - open the file at the given path
+  * @path: path to open
+  * @file: newly allocated file with f_flag initialized
+- * @cred: credentials to use
+  */
+ int vfs_open(const struct path *path, struct file *file)
+ {
+diff --git a/fs/read_write.c b/fs/read_write.c
+index 5db58b8c78d0..058563ee26fd 100644
+--- a/fs/read_write.c
++++ b/fs/read_write.c
+@@ -71,7 +71,7 @@ EXPORT_SYMBOL(vfs_setpos);
+  * @file:	file structure to seek on
+  * @offset:	file offset to seek to
+  * @whence:	type of seek
+- * @size:	max size of this file in file system
++ * @maxsize:	max size of this file in file system
+  * @eof:	offset used for SEEK_END position
+  *
+  * This is a variant of generic_file_llseek that allows passing in a custom
+-- 
+2.26.1
 
