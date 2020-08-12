@@ -2,212 +2,107 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C757C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:22:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC734C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB1B4207DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:22:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="RNDEHMva"
+	by mail.kernel.org (Postfix) with ESMTP id 9E2BF207DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:23:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727828AbgHLJWe (ORCPT
+        id S1727841AbgHLJXC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 05:22:34 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:48174 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726255AbgHLJWe (ORCPT
+        Wed, 12 Aug 2020 05:23:02 -0400
+Received: from 7.mo177.mail-out.ovh.net ([46.105.61.149]:46337 "EHLO
+        7.mo177.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727829AbgHLJXC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 05:22:34 -0400
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id CC848595;
-        Wed, 12 Aug 2020 11:22:30 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1597224151;
-        bh=WxR0bD/qesCEzDS1TUdLg+fPZgf/ua764mXYDcrsEP4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RNDEHMva105JzWO24cpP4ermJi5VqV6dodewcVqPLcIDJ/pBO+/p5kzEZaKMhjYGN
-         9EGTF3SHWxD+Wgc0hSWdWx9mT/q3jm/vhQgPReZnx373MefyA335m7BAw6Vrn//yMi
-         O/R/sFrA1PcdzDNmsEZzARurxNHIUFcs4cXZphEU=
-Date:   Wed, 12 Aug 2020 12:22:17 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Algea Cao <algea.cao@rock-chips.com>
-Cc:     a.hajda@samsung.com, kuankuan.y@gmail.com, hjc@rock-chips.com,
-        tzimmermann@suse.de, dri-devel@lists.freedesktop.org,
-        sam@ravnborg.org, airlied@linux.ie, heiko@sntech.de,
-        jernej.skrabec@siol.net, laurent.pinchart+renesas@ideasonboard.com,
-        jonas@kwiboo.se, mripard@kernel.org, darekm@google.com,
-        linux-rockchip@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, cychiang@chromium.org,
-        linux-kernel@vger.kernel.org, narmstrong@baylibre.com,
-        jbrunet@baylibre.com, maarten.lankhorst@linux.intel.com,
-        daniel@ffwll.ch
-Subject: Re: [PATCH 2/6] drm: bridge: dw-hdmi: Implement connector
- atomic_begin/atomic_flush
-Message-ID: <20200812092217.GC6057@pendragon.ideasonboard.com>
-References: <20200812083120.743-1-algea.cao@rock-chips.com>
- <20200812083433.934-1-algea.cao@rock-chips.com>
+        Wed, 12 Aug 2020 05:23:02 -0400
+Received: from player760.ha.ovh.net (unknown [10.108.42.170])
+        by mo177.mail-out.ovh.net (Postfix) with ESMTP id E142613DA0F
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 11:22:59 +0200 (CEST)
+Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
+        (Authenticated sender: steve@sk2.org)
+        by player760.ha.ovh.net (Postfix) with ESMTPSA id B3CDB15353C10;
+        Wed, 12 Aug 2020 09:22:52 +0000 (UTC)
+Authentication-Results: garm.ovh; auth=pass (GARM-95G001fc86ea76-4989-4d97-a23d-2b9d13cd592a,
+                    6B47CEF5255F3F5086931DB51E807497F854451F) smtp.auth=steve@sk2.org
+From:   Stephen Kitt <steve@sk2.org>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Stephen Kitt <steve@sk2.org>
+Subject: [PATCH] Fix references to nommu-mmap.rst
+Date:   Wed, 12 Aug 2020 11:22:30 +0200
+Message-Id: <20200812092230.27541-1-steve@sk2.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200812083433.934-1-algea.cao@rock-chips.com>
+Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 13038765346632781299
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduiedrledvgdduhecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepufhtvghphhgvnhcumfhithhtuceoshhtvghvvgesshhkvddrohhrgheqnecuggftrfgrthhtvghrnhepteegudfgleekieekteeggeetveefueefteeugfduieeitdfhhedtfeefkedvfeefnecukfhppedtrddtrddtrddtpdekvddrieehrddvhedrvddtudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehplhgrhigvrhejiedtrdhhrgdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepshhtvghvvgesshhkvddrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Algea,
+nommu-mmap.rst was moved to Documentation/admin-guide/mm; this patch
+updates the remaining stale references to Documentation/mm.
 
-Thank you for the patch.
+Fixes: 800c02f5d030 ("docs: move nommu-mmap.txt to admin-guide and rename to ReST")
+Signed-off-by: Stephen Kitt <steve@sk2.org>
+---
+ init/Kconfig | 2 +-
+ mm/Kconfig   | 2 +-
+ mm/nommu.c   | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-On Wed, Aug 12, 2020 at 04:34:33PM +0800, Algea Cao wrote:
-> Introduce dw_hdmi_connector_atomic_begin() and
-> dw_hdmi_connector_atomic_flush() to implement connector
-> atomic_begin/atomic_flush. When enc_out_bus_format or
-> enc_in_bus_format changed, dw_hdmi_setup is called.
-> 
-> To avoid screen flash when updating bus format, it's need
-> to send AVMUTE flag to make screen black, and clear flag
-> after bus format updated.
-> 
-> Signed-off-by: Algea Cao <algea.cao@rock-chips.com>
-> ---
-> 
->  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 65 +++++++++++++++++++++++
->  drivers/gpu/drm/bridge/synopsys/dw-hdmi.h |  4 ++
->  2 files changed, 69 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> index 6148a022569a..a1a81fc768c2 100644
-> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> @@ -108,6 +108,8 @@ struct hdmi_vmode {
->  };
->  
->  struct hdmi_data_info {
-> +	unsigned int prev_enc_in_bus_format;
-> +	unsigned int prev_enc_out_bus_format;
->  	unsigned int enc_in_bus_format;
->  	unsigned int enc_out_bus_format;
->  	unsigned int enc_in_encoding;
-> @@ -116,6 +118,7 @@ struct hdmi_data_info {
->  	unsigned int hdcp_enable;
->  	struct hdmi_vmode video_mode;
->  	bool rgb_limited_range;
-> +	bool update;
->  };
->  
->  struct dw_hdmi_i2c {
-> @@ -2401,6 +2404,60 @@ static int dw_hdmi_connector_get_modes(struct drm_connector *connector)
->  	return ret;
->  }
->  
-> +static void
-> +dw_hdmi_connector_atomic_begin(struct drm_connector *connector,
-> +			       struct drm_connector_state *conn_state)
-> +{
-> +	struct dw_hdmi *hdmi = container_of(connector, struct dw_hdmi,
-> +					    connector);
-> +	unsigned int enc_in_bus_fmt = hdmi->hdmi_data.enc_in_bus_format;
-> +	unsigned int enc_out_bus_fmt = hdmi->hdmi_data.enc_out_bus_format;
-> +	unsigned int prev_enc_in_bus_fmt =
-> +		hdmi->hdmi_data.prev_enc_in_bus_format;
-> +	unsigned int prev_enc_out_bus_fmt =
-> +		hdmi->hdmi_data.prev_enc_out_bus_format;
-> +
-> +	if (!conn_state->crtc)
-> +		return;
-> +
-> +	if (!hdmi->hdmi_data.video_mode.mpixelclock)
-> +		return;
-> +
-> +	if (enc_in_bus_fmt != prev_enc_in_bus_fmt ||
-> +	    enc_out_bus_fmt != prev_enc_out_bus_fmt) {
-> +		hdmi->hdmi_data.update = true;
-> +		hdmi_writeb(hdmi, HDMI_FC_GCP_SET_AVMUTE, HDMI_FC_GCP);
-> +		/* Add delay to make av mute work on sink*/
-> +		msleep(50);
-> +	} else {
-> +		hdmi->hdmi_data.update = false;
-> +	}
-> +}
-> +
-> +static void
-> +dw_hdmi_connector_atomic_flush(struct drm_connector *connector,
-> +			       struct drm_connector_state *conn_state)
-> +{
-> +	struct dw_hdmi *hdmi = container_of(connector, struct dw_hdmi,
-> +					     connector);
-> +
-> +	if (!conn_state->crtc)
-> +		return;
-> +
-> +	DRM_DEBUG("%s\n", __func__);
-> +
-> +	if (hdmi->hdmi_data.update) {
-> +		dw_hdmi_setup(hdmi, hdmi->curr_conn, &hdmi->previous_mode);
-> +		/*
-> +		 * Before clear AVMUTE, delay is needed to
-> +		 * prevent display flash.
-> +		 */
-> +		msleep(50);
-> +		hdmi_writeb(hdmi, HDMI_FC_GCP_CLEAR_AVMUTE, HDMI_FC_GCP);
-> +		hdmi->hdmi_data.update = false;
-> +	}
-> +}
-> +
->  static bool hdr_metadata_equal(const struct drm_connector_state *old_state,
->  			       const struct drm_connector_state *new_state)
->  {
-> @@ -2465,6 +2522,8 @@ static const struct drm_connector_funcs dw_hdmi_connector_funcs = {
->  static const struct drm_connector_helper_funcs dw_hdmi_connector_helper_funcs = {
->  	.get_modes = dw_hdmi_connector_get_modes,
->  	.atomic_check = dw_hdmi_connector_atomic_check,
-> +	.atomic_begin = dw_hdmi_connector_atomic_begin,
-> +	.atomic_flush = dw_hdmi_connector_atomic_flush,
->  };
->  
->  static int dw_hdmi_connector_create(struct dw_hdmi *hdmi)
-> @@ -2778,6 +2837,12 @@ static int dw_hdmi_bridge_atomic_check(struct drm_bridge *bridge,
->  {
->  	struct dw_hdmi *hdmi = bridge->driver_private;
->  
-> +	hdmi->hdmi_data.prev_enc_out_bus_format =
-> +			hdmi->hdmi_data.enc_out_bus_format;
-> +
-> +	hdmi->hdmi_data.prev_enc_in_bus_format =
-> +			hdmi->hdmi_data.enc_in_bus_format;
-> +
->  	hdmi->hdmi_data.enc_out_bus_format =
->  			bridge_state->output_bus_cfg.format;
->  
+diff --git a/init/Kconfig b/init/Kconfig
+index 2dd5531dae98..8d5fefd1f229 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -1957,7 +1957,7 @@ config MMAP_ALLOW_UNINITIALIZED
+ 	  userspace.  Since that isn't generally a problem on no-MMU systems,
+ 	  it is normally safe to say Y here.
+ 
+-	  See Documentation/mm/nommu-mmap.rst for more information.
++	  See Documentation/admin-guide/mm/nommu-mmap.rst for more information.
+ 
+ config SYSTEM_DATA_VERIFICATION
+ 	def_bool n
+diff --git a/mm/Kconfig b/mm/Kconfig
+index d41f3fa7e923..29e239497718 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -387,7 +387,7 @@ config NOMMU_INITIAL_TRIM_EXCESS
+ 	  This option specifies the initial value of this option.  The default
+ 	  of 1 says that all excess pages should be trimmed.
+ 
+-	  See Documentation/mm/nommu-mmap.rst for more information.
++	  See Documentation/admin-guide/mm/nommu-mmap.rst for more information.
+ 
+ config TRANSPARENT_HUGEPAGE
+ 	bool "Transparent Hugepage Support"
+diff --git a/mm/nommu.c b/mm/nommu.c
+index 64539971188b..e8e2c5bb6f0a 100644
+--- a/mm/nommu.c
++++ b/mm/nommu.c
+@@ -5,7 +5,7 @@
+  *  Replacement code for mm functions to support CPU's that don't
+  *  have any form of memory management unit (thus no virtual memory).
+  *
+- *  See Documentation/mm/nommu-mmap.rst
++ *  See Documentation/admin-guide/mm/nommu-mmap.rst
+  *
+  *  Copyright (c) 2004-2008 David Howells <dhowells@redhat.com>
+  *  Copyright (c) 2000-2003 David McCullough <davidm@snapgear.com>
 
-.atomic_check() isn't allowed to change the device state, neither the
-hardware state, nor the software state stored in struct dw_hdmi. You
-essentially need to treat the drm_bridge and dw_hdmi as const in the
-.atomic_check() operation.
-
-> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
-> index 1999db05bc3b..05182418efbb 100644
-> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
-> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
-> @@ -842,6 +842,10 @@ enum {
->  	HDMI_FC_AVICONF3_QUANT_RANGE_LIMITED = 0x00,
->  	HDMI_FC_AVICONF3_QUANT_RANGE_FULL = 0x04,
->  
-> +/* HDMI_FC_GCP */
-> +	HDMI_FC_GCP_SET_AVMUTE = 0x2,
-> +	HDMI_FC_GCP_CLEAR_AVMUTE = 0x1,
-> +
->  /* FC_DBGFORCE field values */
->  	HDMI_FC_DBGFORCE_FORCEAUDIO = 0x10,
->  	HDMI_FC_DBGFORCE_FORCEVIDEO = 0x1,
-
+base-commit: e176b7a3054eef44a22f6ca3d14168dcf9bad21e
 -- 
-Regards,
+2.20.1
 
-Laurent Pinchart
