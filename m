@@ -2,146 +2,114 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7112BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 08:57:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D812C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 08:57:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4650820786
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 08:57:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597222631;
-	bh=OpdSJrDe6VRA6KahHe+zVXP/Gug35Hv/eCOg8dbd9DY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=bQRzldmfsAatFjbKsr1FC6A/bWKxK0ZEnU9+l12MKKiraJMtf4hsVT9p4nuQOMLjd
-	 i4lBTH10AEmYZ7uyyBELErIyZOmfy4KhxhScF51SXagEk2SLa7Nh2HCGsq3CftZm+1
-	 FmdrjEG0zVrB01FMlEKcCwqLetjdYybuPN2OrJN0=
+	by mail.kernel.org (Postfix) with ESMTP id 668472076B
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 08:57:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oA0RL+AU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727795AbgHLI5K (ORCPT
+        id S1727797AbgHLI5u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 04:57:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44742 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726990AbgHLI5J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 04:57:09 -0400
-Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6611A2083B
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 08:57:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597222628;
-        bh=OpdSJrDe6VRA6KahHe+zVXP/Gug35Hv/eCOg8dbd9DY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Mq48PKcDAKPCs4uHN1OeOkS3bDpt771NTXFrCiRP7g1tQgfAQVG5PFzRN3n+6VQBj
-         52V+BNWhpbjp/CVcMwvCMFHhgDs9sLVoZyzgfJsO8aBnnaAHBx+YAhI7PQ3nMBysb3
-         6vutoL+B2atRXi/4iKBq6fUa2PLHAx6OnQeGiPQ0=
-Received: by mail-ot1-f45.google.com with SMTP id h22so1329546otq.11
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 01:57:08 -0700 (PDT)
-X-Gm-Message-State: AOAM531gvggMuAb7PpkIn5oTpl5JvwR3FFFf37MHLrPafFdLhjQSQTM3
-        JmkAlJFW3Jp/KxxCL4R14Pxj233dk8tIBdYAzY0=
-X-Google-Smtp-Source: ABdhPJwF0z1XdBIkc7lgzpT0TKJP7uCMbOPq4HE+7AdCj7tJjiyp1Nb5hK7VFoYBMlsVeraV9tugdkVFs+rdCdR9gxA=
-X-Received: by 2002:a9d:6251:: with SMTP id i17mr8034568otk.90.1597222627672;
- Wed, 12 Aug 2020 01:57:07 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200403171303.GK20760@hirez.programming.kicks-ass.net>
- <20200808101222.5103093e@coco.lan> <20200810092523.GA8612@linux-8ccs>
- <20200810150647.GB8612@linux-8ccs> <20200811163427.6edbf343@coco.lan>
- <20200811145524.GE2674@hirez.programming.kicks-ass.net> <20200811172738.2d632a09@coco.lan>
- <20200811160134.GA13652@linux-8ccs>
-In-Reply-To: <20200811160134.GA13652@linux-8ccs>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Wed, 12 Aug 2020 10:56:56 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXF8fm=9CdQykqDbgYCJSP88ezMs3EOosCW+SDi+Lve0zg@mail.gmail.com>
-Message-ID: <CAMj1kXF8fm=9CdQykqDbgYCJSP88ezMs3EOosCW+SDi+Lve0zg@mail.gmail.com>
-Subject: Re: [PATCH v2] module: Harden STRICT_MODULE_RWX
-To:     Jessica Yu <jeyu@kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Wed, 12 Aug 2020 04:57:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51962 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726595AbgHLI5t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 04:57:49 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 741C0C06174A
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 01:57:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=nuSjbKLmgFUpujyztO9pZIgg8RwXK/k205UIQiNkmjY=; b=oA0RL+AUZC/9NzFpw32e8YGbiG
+        0VcMjRTkK6gzyi6LHeQnGMZedrE247e0AD0iS9PuK19STFCes37/7sZrX2+QhWxirH2ub40je4iSp
+        eTVV6/KGsbaHq+ZjwBe0fSjKLulkT0uN3I1uNocq1V2rleacFT0UF1OA3jexfzOBZJuS/DI+oZDlq
+        cke/wCMKg4rXrUcFiI0Vwu+4dhGJukasRcaQhlVemsjENOmzGa5wH1E/hJztIE2IqScefyAxnVEd0
+        FHgbU+yagNuIlrDxAdcOW3YNd1gw/+VNhqX8mx0uvYlgj5jc1KnHHWYHoE5T0UnEnArqR0mQRo7p2
+        RtNwIp6Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k5mZT-0007yN-FP; Wed, 12 Aug 2020 08:57:19 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3137830753E;
+        Wed, 12 Aug 2020 10:57:17 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 0F43625D0D543; Wed, 12 Aug 2020 10:57:17 +0200 (CEST)
+Date:   Wed, 12 Aug 2020 10:57:17 +0200
+From:   peterz@infradead.org
+To:     Marco Elver <elver@google.com>
+Cc:     =?iso-8859-1?Q?J=FCrgen_Gro=DF?= <jgross@suse.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        fenghua.yu@intel.com, "H. Peter Anvin" <hpa@zytor.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Kees Cook <keescook@chromium.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Mark Rutland <mark.rutland@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+        "Luck, Tony" <tony.luck@intel.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        yu-cheng.yu@intel.com, sdeep@vmware.com,
+        virtualization@lists.linux-foundation.org,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        syzbot <syzbot+8db9e1ecde74e590a657@syzkaller.appspotmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Wei Liu <wei.liu@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH] x86/paravirt: Add missing noinstr to arch_local*()
+ helpers
+Message-ID: <20200812085717.GJ35926@hirez.programming.kicks-ass.net>
+References: <20200807151903.GA1263469@elver.google.com>
+ <20200811074127.GR3982@worktop.programming.kicks-ass.net>
+ <a2dffeeb-04f0-8042-b39a-b839c4800d6f@suse.com>
+ <20200811081205.GV3982@worktop.programming.kicks-ass.net>
+ <07f61573-fef1-e07c-03f2-a415c88dec6f@suse.com>
+ <20200811092054.GB2674@hirez.programming.kicks-ass.net>
+ <20200811094651.GH35926@hirez.programming.kicks-ass.net>
+ <20200811201755.GI35926@hirez.programming.kicks-ass.net>
+ <20200812080650.GA3894595@elver.google.com>
+ <20200812081832.GK2674@hirez.programming.kicks-ass.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200812081832.GK2674@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 11 Aug 2020 at 18:01, Jessica Yu <jeyu@kernel.org> wrote:
->
-> +++ Mauro Carvalho Chehab [11/08/20 17:27 +0200]:
-> >Em Tue, 11 Aug 2020 16:55:24 +0200
-> >peterz@infradead.org escreveu:
-> >
-> >> On Tue, Aug 11, 2020 at 04:34:27PM +0200, Mauro Carvalho Chehab wrote:
-> >> >   [33] .plt              PROGBITS         0000000000000340  00035c80
-> >> >        0000000000000001  0000000000000000 WAX       0     0     1
-> >> >   [34] .init.plt         NOBITS           0000000000000341  00035c81
-> >> >        0000000000000001  0000000000000000  WA       0     0     1
-> >> >   [35] .text.ftrace[...] PROGBITS         0000000000000342  00035c81
-> >> >        0000000000000001  0000000000000000 WAX       0     0     1
-> >>
-> >> .plt and .text.ftrace_tramplines are buggered.
-> >>
-> >> arch/arm64/kernel/module.lds even marks then as NOLOAD.
-> >
-> >Hmm... Shouldn't the code at module_enforce_rwx_sections() or at
-> >load_module() ignore such sections instead of just rejecting probing
-> >all modules?
-> >
-> >I mean, if the existing toolchain is not capable of excluding
-> >those sections, either the STRICT_MODULE_RWX hardening should be
-> >disabled, if a broken toolchain is detected or some runtime code
-> >should handle such sections on a different way.
->
-> Hi Mauro, thanks for providing the readelf output. The sections marked 'WAX'
-> are indeed the reason why the module loader is rejecting them.
->
-> Interesting, my cross-compiled modules do not have the executable flag -
->
->   [38] .plt              NOBITS           0000000000000340  00038fc0
->        0000000000000001  0000000000000000  WA       0     0     1
->   [39] .init.plt         NOBITS           0000000000000341  00038fc0
->        0000000000000001  0000000000000000  WA       0     0     1
->   [40] .text.ftrace_tram NOBITS           0000000000000342  00038fc0
->        0000000000000001  0000000000000000  WA       0     0     1
->
-> ld version:
->
->     GNU ld (GNU Binutils) 2.34
->     Copyright (C) 2020 Free Software Foundation, Inc.
->     This program is free software; you may redistribute it under the terms of
->     the GNU General Public License version 3 or (at your option) a later version.
->
-> And gcc:
->
->     aarch64-linux-gcc (GCC) 9.3.0
->     Copyright (C) 2019 Free Software Foundation, Inc.
->     This is free software; see the source for copying conditions.  There is NO
->     warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
->
-> I'm a bit confused about what NOLOAD actually implies in this context. From the
-> ld documentation - "The `(NOLOAD)' directive will mark a section to not be
-> loaded at run time." But these sections are marked SHF_ALLOC and are referenced
-> to in the module plt code. Or does it just tell the linker to not initialize it?
->
-> Adding Ard to CC, I'm sure he'd know more about the section flag specifics.
->
+On Wed, Aug 12, 2020 at 10:18:32AM +0200, peterz@infradead.org wrote:
+> > 	 trace_hardirqs_restore+0x59/0x80 kernel/trace/trace_preemptirq.c:106
+> > 	 rcu_irq_enter_irqson+0x43/0x70 kernel/rcu/tree.c:1074
+> > 	 trace_irq_enable_rcuidle+0x87/0x120 include/trace/events/preemptirq.h:40
+> > 	 trace_hardirqs_restore+0x59/0x80 kernel/trace/trace_preemptirq.c:106
+> > 	 rcu_irq_enter_irqson+0x43/0x70 kernel/rcu/tree.c:1074
+> > 	 trace_irq_enable_rcuidle+0x87/0x120 include/trace/events/preemptirq.h:40
+> > 	 trace_hardirqs_restore+0x59/0x80 kernel/trace/trace_preemptirq.c:106
+> > 	 rcu_irq_enter_irqson+0x43/0x70 kernel/rcu/tree.c:1074
+> > 	 trace_irq_enable_rcuidle+0x87/0x120 include/trace/events/preemptirq.h:40
+> > 	 trace_hardirqs_restore+0x59/0x80 kernel/trace/trace_preemptirq.c:106
+> > 	 rcu_irq_enter_irqson+0x43/0x70 kernel/rcu/tree.c:1074
+> > 
+> > 	<... repeated many many times ...>
+> > 
+> > 	 trace_irq_enable_rcuidle+0x87/0x120 include/trace/events/preemptirq.h:40
+> > 	 trace_hardirqs_restore+0x59/0x80 kernel/trace/trace_preemptirq.c:106
+> > 	 rcu_irq_enter_irqson+0x43/0x70 kernel/rcu/tree.c:1074
+> > 	Lost 500 message(s)!
+> > 	BUG: stack guard page was hit at 00000000cab483ba (stack is 00000000b1442365..00000000c26f9ad3)
+> > 	BUG: stack guard page was hit at 00000000318ff8d8 (stack is 00000000fd87d656..0000000058100136)
+> > 	---[ end trace 4157e0bb4a65941a ]---
+> 
+> Wheee... recursion! Let me try and see if I can make something of that.
 
-The module .lds has BYTE(0) in the section contents to prevent the
-linker from pruning them entirely. The (NOLOAD) is there to ensure
-that this byte does not end up in the .ko, which is more a matter of
-principle than anything else, so we can happily drop that if it helps.
-
-However, this should only affect the PROGBITS vs NOBITS designation,
-and so I am not sure whether it makes a difference.
-
-Depending on where the w^x check occurs, we might simply override the
-permissions of these sections, and strip the writable permission if it
-is set in the PLT handling init code, which manipulates the metadata
-of all these 3 sections before the module space is vmalloc'ed.
+All that's needed is enabling the preemptirq tracepoints. Lemme go fix.
