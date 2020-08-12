@@ -2,114 +2,125 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26159C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:25:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9D8FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:25:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0180F20756
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:25:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83EE320756
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:25:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S7YCoH5o"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="EBXQHQd4";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="DD3j5hLY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728058AbgHLNZp (ORCPT
+        id S1728087AbgHLNZu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 09:25:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36594 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728025AbgHLNZj (ORCPT
+        Wed, 12 Aug 2020 09:25:50 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:37269 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728021AbgHLNZk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 09:25:39 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5868FC06174A;
-        Wed, 12 Aug 2020 06:25:39 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id x15so1098657plr.11;
-        Wed, 12 Aug 2020 06:25:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=vsh9LbZS25VEwc0/PjxhGwt9OFiuf3IWSR0oj9yoXvw=;
-        b=S7YCoH5o5rRbjQDSAxwO7eUJunX0kiLLGSMwZIWFWHz47Qw4/FgRFtCSjTTRcdUSu8
-         9lVM94zWynKyrTS7KAxQji9qr/iZPkxY4fHzegWZJ354ByrUZiCkJ2NxJdk5h4ve4BMr
-         dhJsQbllIxeqa9vrvc0fjQMSspTj1JbpkyxswO+lmuv4DQUQuUgAALFv2d8NBmmOjCLA
-         Qe8JkUHBVvAg3IrdDM/mzYUoY8LDCNS4yX5wkPY0RGDX1FXJeNFhhey6Pkim+zPRJVz+
-         ccR56uyIIHgZODeNBFkhXmcGFmJ8YIK+D5kFCR9iRFuExidvNlX2ebarebvG+MuGptfp
-         KDoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vsh9LbZS25VEwc0/PjxhGwt9OFiuf3IWSR0oj9yoXvw=;
-        b=R7skH/JdBp8yvi1zTXeMpUUd6MZZO/G7xVE/1IiKfovUKs8YSL8bJq6pqjAduTHR+f
-         1zPQqwwKkNviIyCpGnIhT7gZLFwNWVuZFsUSkqnPMf5OUWdzKr+gdw4K/JDISRoWewi5
-         HpaeCWygHVGxmVI3xqev/k+Fa8xsHANiCZhdCQ04C40ipU5tuAl3SCP3hLZ8DIJ6yrA+
-         KHKVm7PYa4/oq48j3dea59JU9VSKTu6nNeZk4i527iW1BKL11hw8vcSG69xtMIVjSiGv
-         tRU0NV/cJT05N9OhxQulSMgIk3UwzdoZBL3fQ0qStP8TbViPoD6MgqpAXdymwXKlCRHy
-         I0Rg==
-X-Gm-Message-State: AOAM531hIQM07pEJ+X7IOWQ3bv2ZPPUKPHZJrq3pgKPsLMpedUG6uCld
-        lYTayh4e74TJLoIlB10rRjINuPyx
-X-Google-Smtp-Source: ABdhPJywf5fkn5zbDctc5x8qw8OsvqeoMPKQfTt9CtRGOb52x5SpB0j4fnR6UiwnM7F93mibL4bXdA==
-X-Received: by 2002:a17:902:8509:: with SMTP id bj9mr5285483plb.179.1597238738473;
-        Wed, 12 Aug 2020 06:25:38 -0700 (PDT)
-Received: from ?IPv6:2404:7a87:83e0:f800:5c24:508b:d8c0:f3b? ([2404:7a87:83e0:f800:5c24:508b:d8c0:f3b])
-        by smtp.gmail.com with ESMTPSA id q71sm2247255pjq.7.2020.08.12.06.25.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Aug 2020 06:25:38 -0700 (PDT)
-Subject: Re: [PATCH v3] exfat: integrates dir-entry getting and validation
-To:     Namjae Jeon <namjae.jeon@samsung.com>
-Cc:     kohada.tetsuhiro@dc.mitsubishielectric.co.jp,
-        mori.takahiro@ab.mitsubishielectric.co.jp,
-        motai.hirotaka@aj.mitsubishielectric.co.jp,
-        'Sungjong Seo' <sj1557.seo@samsung.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <CGME20200806010250epcas1p482847d6d906fbf0ccd618c7d1cacd12e@epcas1p4.samsung.com>
- <20200806010229.24690-1-kohada.t2@gmail.com>
- <003c01d66edc$edbb1690$c93143b0$@samsung.com>
-From:   Tetsuhiro Kohada <kohada.t2@gmail.com>
-Message-ID: <ca3b2b52-1abc-939c-aa11-8c7d12e4eb2e@gmail.com>
-Date:   Wed, 12 Aug 2020 22:25:34 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Wed, 12 Aug 2020 09:25:40 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailnew.nyi.internal (Postfix) with ESMTP id E19AB5803DD;
+        Wed, 12 Aug 2020 09:25:38 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Wed, 12 Aug 2020 09:25:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=8E1y/NnvHjfdOcfGM816z3reqbY
+        KZDOAgNdGXHxjGaw=; b=EBXQHQd4ryb+F9ZSaBv9Q4BavNlR/kSgNXRrWiDRI1M
+        rxeNQQFxG65rc1Yo47lPFN8Jyaf6x3tQTN9x5PxHbMiI8CZYVqj5mj7SpNIZ1+/v
+        i6JCDMCBxgm5UDsN0pRYM6PWGU4Pa6RXLBObLzVe8OSzopE/saG4c//y9c+OzA3/
+        g18/6YPPjk63YYfX/XAqBaw+lgydli57DeWdQkQuWRZXS/2RBOZk5VYR5rye/h2w
+        6kIhzTUVwyCw+EwEgwPLuKLwnP2WI7pJExI6SXmuj/+gc6vWIHlNOPnDZ1stzS+L
+        iZxMDCLnoVLMQtnEEBl6nTkd4V3BEPvNFCKywTJnKug==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=8E1y/N
+        nvHjfdOcfGM816z3reqbYKZDOAgNdGXHxjGaw=; b=DD3j5hLY3gCCHmltFjc/qD
+        4XSow+h2EY4M35Ttu0HlDWYygxXfBUz6ovouBxVz8QShSE/jLsjnbpBnE9rAhngP
+        m6d1gNp/PQhTe/AbC8cmC9ckDj1tIHwMQtJ2keG+TBowaNZ4DHZTQm0ch2JN0/E4
+        lISnpo6kthmnm+I3Ptf80NM3gAEKw6td2qEDNzEqJRszc9ZKshmMRoVXpyyVreho
+        Jz0kY/Fe3/fpI+G7f0Sn3SivkoIjRFBKVfZyXBF1ETnTRN19ML8GKx52ghO7FeMi
+        goclXhwsQYFOUFVhvPve1YmedholFb6yPO/OzRUOBfBLpThaxMDm0TIrV56hF+TQ
+        ==
+X-ME-Sender: <xms:0u0zXyalJ6S-Oy_DwzV1_DLJBLdT8_moKz1CeSKyFv0w6Gvxce2_XQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrledvgdeifecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghgucfm
+    jfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuggftrfgrthhtvghrnhepueelledthe
+    ekleethfeludduvdfhffeuvdffudevgeehkeegieffveehgeeftefgnecuffhomhgrihhn
+    pehkvghrnhgvlhdrohhrghenucfkphepkeefrdekiedrkeelrddutdejnecuvehluhhsth
+    gvrhfuihiivgepudenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghh
+    rdgtohhm
+X-ME-Proxy: <xmx:0u0zX1aRP_6XWlm8ufBhncwcIEifV7fQNN0vpHh8Zp8w4l2X1Iv3Bw>
+    <xmx:0u0zX899TOTDry5VHQUw8-EwbWyTN6zscayViVbfxj25jXWRDeP47w>
+    <xmx:0u0zX0r3UK9LEkh89x2oBMqz5hVf5FYhbB0o4HcRSSg7G5yWRiB_Vw>
+    <xmx:0u0zX41-GhDh1hDSkwwNTNcrmCmnfuvYrNMVBs-dNAq4868WjfJMJA>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 4BA133060717;
+        Wed, 12 Aug 2020 09:25:38 -0400 (EDT)
+Date:   Wed, 12 Aug 2020 15:25:49 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Wenbin Mei <wenbin.mei@mediatek.com>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Chaotian Jing <chaotian.jing@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, srv_heupstream@mediatek.com
+Subject: Re: [v2,1/3] mmc: dt-bindings: Add resets/reset-names for Mediatek
+ MMC bindings
+Message-ID: <20200812132549.GC2489711@kroah.com>
+References: <20200812130129.13519-1-wenbin.mei@mediatek.com>
+ <20200812130129.13519-2-wenbin.mei@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <003c01d66edc$edbb1690$c93143b0$@samsung.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200812130129.13519-2-wenbin.mei@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thank you for your reply.
+On Wed, Aug 12, 2020 at 09:01:27PM +0800, Wenbin Mei wrote:
+> Add description for resets/reset-names.
+> 
+> Signed-off-by: Wenbin Mei <wenbin.mei@mediatek.com>
+> ---
+>  Documentation/devicetree/bindings/mmc/mtk-sd.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/mtk-sd.txt b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
+> index 8a532f4453f2..15d42595a3f3 100644
+> --- a/Documentation/devicetree/bindings/mmc/mtk-sd.txt
+> +++ b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
+> @@ -49,6 +49,8 @@ Optional properties:
+>  		     error caused by stop clock(fifo full)
+>  		     Valid range = [0:0x7]. if not present, default value is 0.
+>  		     applied to compatible "mediatek,mt2701-mmc".
+> +- resets: Phandle and reset specifier pair to softreset line of MSDC IP.
+> +- reset-names: should be "hrst".
+>  
+>  Examples:
+>  mmc0: mmc@11230000 {
+> -- 
+> 2.18.0
 
->> @@ -171,7 +174,9 @@ struct exfat_entry_set_cache {
->>   	unsigned int start_off;
->>   	int num_bh;
->>   	struct buffer_head *bh[DIR_CACHE_SIZE];
->> -	unsigned int num_entries;
->> +	int num_entries;
->> +	struct exfat_de_file *de_file;
->> +	struct exfat_de_stream *de_stream;
-> I prefer to assign validated entries to **de and use it using enum value.
-> 	struct exfat_dentry **de;
+<formletter>
 
-I've tried several implementations that add a struct exfat_dentry type.(*de0 & *de1;  *de[2]; etc...)
-The problem with the struct exfat_dentry type is that it is too flexible for type.
-This means weak typing.
-Therefore, when using them,
-	de[XXX_FILE]->dentry.file.zzz ...
-It is necessary to re-specify the type. (against the DRY principle)
-Strong typing prevents use with wrong type, at compiling.
+This is not the correct way to submit patches for inclusion in the
+stable kernel tree.  Please read:
+    https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
+for how to do this properly.
 
-I think the approach of using de_file/de_stream could be strongly typed.
-I don't think we need excessive flexibility.
-
-
-BR
----
-Tetsuhiro Kohada <kohada.t2@gmail.com>
+</formletter>
