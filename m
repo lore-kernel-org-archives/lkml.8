@@ -2,109 +2,260 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47E78C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:48:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37836C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:54:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CB7320838
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:48:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DDC6206DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:54:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="tPI/LbM4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbgHLJsx (ORCPT
+        id S1727055AbgHLJyt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 05:48:53 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:45415 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726601AbgHLJsw (ORCPT
+        Wed, 12 Aug 2020 05:54:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60738 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726712AbgHLJys (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 05:48:52 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-88-BXravPHFN-CLpwv5q6iGKw-1; Wed, 12 Aug 2020 10:48:48 +0100
-X-MC-Unique: BXravPHFN-CLpwv5q6iGKw-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Wed, 12 Aug 2020 10:48:48 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Wed, 12 Aug 2020 10:48:48 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Miles Chen' <miles.chen@mediatek.com>
-CC:     'Christoph Hellwig' <hch@lst.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "wsd_upstream@mediatek.com" <wsd_upstream@mediatek.com>
-Subject: RE: [PATCH] net: untag pointer in sockptr_is_kernel
-Thread-Topic: [PATCH] net: untag pointer in sockptr_is_kernel
-Thread-Index: AQHWb9DKxxLX2AshVECOBLD3J//Za6kyxXFQgAFcawCAABZWMA==
-Date:   Wed, 12 Aug 2020 09:48:48 +0000
-Message-ID: <df130026160145f1abc1cbd63f11e8d3@AcuMS.aculab.com>
-References: <20200811102704.17875-1-miles.chen@mediatek.com>
-         <20200811111551.GA3958@lst.de>
-         <36e381c558e24185bc2f7e80a758d06a@AcuMS.aculab.com>
- <1597223732.5467.10.camel@mtkswgap22>
-In-Reply-To: <1597223732.5467.10.camel@mtkswgap22>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Wed, 12 Aug 2020 05:54:48 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFF38C06174A
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 02:54:45 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 84D26595;
+        Wed, 12 Aug 2020 11:54:32 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1597226072;
+        bh=LHqWYKsaLofHO0i8LcYbq9pwMdf80i4uyOKkmzxI25I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tPI/LbM48L2Elv36CKvAcaIzpObJ0c7ZOHSh/Q8Z8smu3LIFW0EmAMsyvCwfd68ua
+         zT0QO9eGhaQZBM39vOLzwZlJ+fQ3oTRk0xhh02n1sGecfldwyRNRMsGUS3I7fxWxZN
+         f1LGxn4VG8pYdZr4SfMVUWXigxX+nXKieNP8L/mw=
+Date:   Wed, 12 Aug 2020 12:54:18 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Vinay Simha BN <simhavcs@gmail.com>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/bridge/tc358775: Fixes bus formats read
+Message-ID: <20200812095418.GG6057@pendragon.ideasonboard.com>
+References: <1597217150-22911-1-git-send-email-simhavcs@gmail.com>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1597217150-22911-1-git-send-email-simhavcs@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogTWlsZXMgQ2hlbiA8bWlsZXMuY2hlbkBtZWRpYXRlay5jb20+DQo+IFNlbnQ6IDEyIEF1
-Z3VzdCAyMDIwIDEwOjE2DQo+IA0KPiBPbiBUdWUsIDIwMjAtMDgtMTEgYXQgMTE6NDQgKzAwMDAs
-IERhdmlkIExhaWdodCB3cm90ZToNCj4gPiA+IE9uIFR1ZSwgQXVnIDExLCAyMDIwIGF0IDA2OjI3
-OjA0UE0gKzA4MDAsIE1pbGVzIENoZW4gd3JvdGU6DQo+ID4gPiA+IEZyb206IE1pbGVzIENoZW4g
-PG1pbGVzLmNoZW5AbWVkaWF0ZWsuY29tPg0KPiA+ID4gPg0KPiA+ID4gPiBzb2NrcHRyX2lzX2tl
-cm5lbCgpIHVzZXMgKHNvY2twdHIua2VybmVsID49IFRBU0tfU0laRSkgdG8gdGVsbA0KPiA+ID4g
-PiBpZiB0aGUgcG9pbnRlciBpcyBrZXJuZWwgc3BhY2Ugb3IgdXNlciBzcGFjZS4gV2hlbiB1c2Vy
-IHNwYWNlIHVzZXMNCj4gPiA+ID4gdGhlICJ0b3AgYnl0ZSBpZ25vcmVkIiBmZWF0dXJlIHN1Y2gg
-YXMgSFdBc2FuLCB3ZSBtdXN0IHVudGFnDQo+ID4gPiA+IHRoZSBwb2ludGVyIGJlZm9yZSBjaGVj
-a2luZyBhZ2FpbnN0IFRBU0tfU0laRS4NCj4gPiA+ID4NCj4gPiA+ID4gc29ja3B0cl9pc19rZXJu
-ZWwoKSB3aWxsIHZpZXcgYSB0YWdnZWQgdXNlciBwb2ludGVyIGFzIGEga2VybmVsIHBvaW50ZXIN
-Cj4gPiA+ID4gYW5kIHVzZSBtZW1jcHkgZGlyZWN0bHkgYW5kIGNhdXNlcyBhIGtlcm5lbCBjcmFz
-aC4NCj4gPiA+DQo+ID4gPiBEYXZlIG1lcmdlZCBhIHBhdGNoIGZyb20gbWUgdG8gcmV2ZXIgdGhl
-IG9wdGltaXplZCBzb2NrcHRyDQo+ID4gPiBpbXBsZW1lbnRhdGlvbiBmb3Igbm93LiAgSWYgd2Ug
-YnJpbmcgaXQgYmFjayB3ZSBzaG91bGQgZm9sZCBpbiB5b3VyDQo+ID4gPiBmaXguDQo+ID4NCj4g
-PiBJIG1pc3NlZCB0aGF0IGdvaW5nIHRob3VnaCA6LSgNCj4gPiBJJ3ZlIGxvb2tlZCBmb3IgYSBm
-aXggdG8gdGhlIGFjY2Vzc19vayhrZXJuZWxfYWRkciwwKSBiZWluZyB0cnVlIGlzc3VlLg0KPiA+
-DQo+ID4gU2hvdWxkbid0IFRBU0tfU0laRSBiZSBpbmNyZWFzZWQgdG8gY292ZXIgYWxsIHRoZSAn
-dGFnZ2VkJyBhZGRyZXNzZXM/DQo+ID4gSVNUUiB0aGUgJ3RhZycgYml0cyBhcmUgdGhlICduZXh0
-JyA4IChvciBzbykgYWRkcmVzcyBiaXRzIGF0IHRoZSB0b3ANCj4gPiBvZiB2YWxpZCB1c2VyIGFk
-ZHJlc3Nlcy4NCj4gDQo+IA0KPiBJJ20gbm90IHN1cmUgaWYgdGhpcyBpcyBhIGdvb2QgaWRlYS4g
-VEFTS19TSVpFIGlzIGFuIGFyY2ggZGVwZW5kZW50DQo+IGNvbnN0YW50LCBpZiB3ZSBpbmNyZWFz
-ZSBUQVNLX1NJWkUgdG8gY292ZXIgdGhlICd0YWdnZWQnIGFkZHJlc3Mgc3BhY2UsDQo+IHRoZSBU
-QVNLX1NJWkUgd2lsbCBub3QgdGVsbCB1cyB0aGUgYWN0dWFsIHZpcnR1YWwgYWRkcmVzcyBzaXpl
-Lg0KPiANCj4gTWF5YmUgd2UgbmVlZCBhIG1hY3JvIHRvIHRlbGwgaWYgYSBwb2ludGVyIGlzIGlu
-IHVzZXIgc3BhY2Ugb3Igbm90IGFuZA0KPiBoYW5kbGUgdGhlIG1lbW9yeSB0YWcgdGhlcmUuDQo+
-IEJ1dCB0aGlzIG9ubHkgd29ya3MgZm9yIHRoZSAiaXMgdGhpcyBwb2ludGVyIGluIHVzZXIgc3Bh
-Y2UiIHByb2JsZW0uDQoNCldlbGwgVEFTS19TSVpFIGlzbid0IGEgY29uc3RhbnQsIGl0IGlzIHJl
-YWQgb3V0IG9mICdjdXJyZW50Jy4NClR5cGljYWxseSBpdCBpc24ndCBldmVuIHRoZSBsaW1pdCBv
-biB0aGUgYWRkcmVzcyBzcGFjZSBzaW5jZQ0KKGF0IGxlYXN0IGluIHg4NikgaXQgaXMgY2hhbmdl
-ZCBieSBzZXRmcyhLRVJORUxfRFMpIHNvIHRoYXQNCmFjY2Vzc19vaygpIGRvZXNuJ3QgcmVqZWN0
-IGtlcm5lbCBhZGRyZXNzZXMuDQoNCkl0IGlzIGFsbW9zdCBhcyBpZiBUQVNLX1NJWkUgaXMgb25s
-eSBhY3R1YWxseSB2YWxpZCBmb3IgdGhlDQpjaGVjayBpbiBhY2Nlc3Nfb2soKS4NCg0KSSdkIGFs
-c28gaGF2ZSB0aG91Z2h0IHlvdSdkIHdhbnQgdGhlIGtlcm5lbCB0byB1c2UgdGhlICd0YWdnZWQn
-DQphZGRyZXNzIHNvIHRoYXQgdGhlIGhhcmR3YXJlIGNoZWNrcyBpdCBtYXRjaGVzLg0KT3IgaXMg
-dGhlcmUgc29tZSBzY2hlbWUgZm9yIGhhdmluZyB1c2VycGFjZSB1c2UgdGFnZ2VkIHBvaW50ZXJz
-DQp3aXRob3V0IGhhcmR3YXJlIHN1cHBvcnQgLSBidXQgd291bGRuJ3QgdGhhdCByZXF1aXJlIG1h
-c2tpbmcNCmFuZC9vciBsYXJnZSBvZmZzZXRzIGFsbCBvdmVyIHRoZSB1c2VyIGNvZGU/DQoNCglE
-YXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91
-bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5
-NzM4NiAoV2FsZXMpDQo=
+Hi Vinay,
 
+Thank you for the patch.
+
+On Wed, Aug 12, 2020 at 12:55:50PM +0530, Vinay Simha BN wrote:
+> - bus formats read from drm_bridge_state.output_bus_cfg.format
+>   and .atomic_get_input_bus_fmts() instead of connector
+> 
+> Signed-off-by: Vinay Simha BN <simhavcs@gmail.com>
+> 
+> ---
+>  v1:
+>  * Laurent Pinchart review comments incorporated
+>    drm_bridge_state.output_bus_cfg.format
+>    instead of connector
+> ---
+>  drivers/gpu/drm/bridge/tc358775.c | 76 ++++++++++++++++++++++++++++++---------
+>  1 file changed, 59 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/bridge/tc358775.c b/drivers/gpu/drm/bridge/tc358775.c
+> index 7da15cd..5d8714a 100644
+> --- a/drivers/gpu/drm/bridge/tc358775.c
+> +++ b/drivers/gpu/drm/bridge/tc358775.c
+> @@ -271,6 +271,13 @@ struct tc_data {
+>  	struct gpio_desc	*stby_gpio;
+>  	u8			lvds_link; /* single-link or dual-link */
+>  	u8			bpc;
+> +	u32			output_bus_fmt;
+> +};
+> +
+> +static const u32 tc_lvds_out_bus_fmts[] = {
+> +	MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA,
+> +	MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
+> +	MEDIA_BUS_FMT_RGB666_1X7X3_SPWG,
+>  };
+>  
+>  static inline struct tc_data *bridge_to_tc(struct drm_bridge *b)
+> @@ -359,19 +366,6 @@ static void d2l_write(struct i2c_client *i2c, u16 addr, u32 val)
+>  			ret, addr);
+>  }
+>  
+> -/* helper function to access bus_formats */
+> -static struct drm_connector *get_connector(struct drm_encoder *encoder)
+> -{
+> -	struct drm_device *dev = encoder->dev;
+> -	struct drm_connector *connector;
+> -
+> -	list_for_each_entry(connector, &dev->mode_config.connector_list, head)
+> -		if (connector->encoder == encoder)
+> -			return connector;
+> -
+> -	return NULL;
+> -}
+> -
+>  static void tc_bridge_enable(struct drm_bridge *bridge)
+>  {
+>  	struct tc_data *tc = bridge_to_tc(bridge);
+> @@ -380,7 +374,6 @@ static void tc_bridge_enable(struct drm_bridge *bridge)
+>  	u32 val = 0;
+>  	u16 dsiclk, clkdiv, byteclk, t1, t2, t3, vsdelay;
+>  	struct drm_display_mode *mode;
+> -	struct drm_connector *connector = get_connector(bridge->encoder);
+>  
+>  	mode = &bridge->encoder->crtc->state->adjusted_mode;
+>  
+> @@ -451,14 +444,13 @@ static void tc_bridge_enable(struct drm_bridge *bridge)
+>  	d2l_write(tc->i2c, LVPHY0, LV_PHY0_PRBS_ON(4) | LV_PHY0_ND(6));
+>  
+>  	dev_dbg(tc->dev, "bus_formats %04x bpc %d\n",
+> -		connector->display_info.bus_formats[0],
+> +		tc->output_bus_fmt,
+>  		tc->bpc);
+>  	/*
+>  	 * Default hardware register settings of tc358775 configured
+>  	 * with MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA jeida-24 format
+>  	 */
+> -	if (connector->display_info.bus_formats[0] ==
+> -		MEDIA_BUS_FMT_RGB888_1X7X4_SPWG) {
+> +	if (tc->output_bus_fmt == MEDIA_BUS_FMT_RGB888_1X7X4_SPWG) {
+>  		/* VESA-24 */
+>  		d2l_write(tc->i2c, LV_MX0003, LV_MX(LVI_R0, LVI_R1, LVI_R2, LVI_R3));
+>  		d2l_write(tc->i2c, LV_MX0407, LV_MX(LVI_R4, LVI_R7, LVI_R5, LVI_G0));
+> @@ -590,6 +582,51 @@ static int tc358775_parse_dt(struct device_node *np, struct tc_data *tc)
+>  	return 0;
+>  }
+>  
+> +static int tc_bridge_atomic_check(struct drm_bridge *bridge,
+> +				  struct drm_bridge_state *bridge_state,
+> +				  struct drm_crtc_state *crtc_state,
+> +				  struct drm_connector_state *conn_state)
+> +{
+> +	struct tc_data *tc = bridge_to_tc(bridge);
+> +
+> +	tc->output_bus_fmt = bridge_state->output_bus_cfg.format;
+
+.atomic_check() isn't allowed to modify the device state, neither the
+hardware state nor the software state in drm_bridge or tc_data. You can
+instead access the bridge state directly in tc_bridge_enable(), with
+
+	struct drm_bridge_state *state =
+		drm_priv_to_bridge_state(bridge->base.state);
+
+> +
+> +	dev_dbg(tc->dev, "output_bus_fmt %04x\n", tc->output_bus_fmt);
+> +
+> +	return 0;
+> +}
+> +
+> +static u32 *
+> +tc_bridge_get_input_bus_fmts(struct drm_bridge *bridge,
+> +			     struct drm_bridge_state *bridge_state,
+> +			     struct drm_crtc_state *crtc_state,
+> +			     struct drm_connector_state *conn_state,
+> +			     u32 output_fmt,
+> +			     unsigned int *num_input_fmts)
+> +{
+> +	u32 *input_fmts = NULL;
+> +	int i;
+
+i only takes positive values, so it can be an unsigned int.
+
+> +
+> +	*num_input_fmts = 0;
+> +
+> +	for (i = 0 ; i < ARRAY_SIZE(tc_lvds_out_bus_fmts) ; ++i) {
+> +		if (output_fmt == tc_lvds_out_bus_fmts[i]) {
+> +			*num_input_fmts = 1;
+> +			input_fmts = kcalloc(*num_input_fmts,
+> +					     sizeof(*input_fmts),
+> +					     GFP_KERNEL);
+> +			if (!input_fmts)
+> +				return NULL;
+> +
+> +			input_fmts[0] = output_fmt;
+
+I don't think this is right, the input of the bridge isn't LVDS, is it ?
+As far as I can tell, the hardware support transcoding any of the
+supported input formats (RGB565, RGB666 or RGB888) to any of the
+supported output formats. How about the following ?
+
+static const u32 tc_lvds_in_bus_fmts[] = {
+	MEDIA_BUS_FMT_RGB565_1X16,
+	MEDIA_BUS_FMT_RGB666_1X18,
+	MEDIA_BUS_FMT_RBG888_1X24,
+};
+
+...
+
+	u32 *input_fmts;
+	unsigned int i;
+
+	*num_input_fmts = 0;
+
+	for (i = 0 ; i < ARRAY_SIZE(tc_lvds_out_bus_fmts) ; ++i) {
+		if (output_fmt == tc_lvds_out_bus_fmts[i])
+			break;
+	}
+
+	if (i == ARRAY_SIZE(tc_lvds_out_bus_fmts))
+		return NULL;
+
+	input_fmts = kcalloc(*num_input_fmts, ARRAY_SIZE(tc_lvds_in_bus_fmts),
+			     GFP_KERNEL);
+	if (!input_fmts)
+		return NULL;
+
+	for (i = 0; i < ARRAY_SIZE(tc_lvds_in_bus_fmts); ++i)
+		input_fmts[i] = tc_lvds_in_bus_fmts[i];
+
+	*num_inputs_fmts = ARRAY_SIZE(tc_lvds_in_bus_fmts);
+	return input_fmts;
+
+> +
+> +			break;
+> +		}
+> +	}
+> +
+> +	return input_fmts;
+> +}
+> +
+>  static int tc_bridge_attach(struct drm_bridge *bridge,
+>  			    enum drm_bridge_attach_flags flags)
+>  {
+> @@ -639,6 +676,11 @@ static int tc_bridge_attach(struct drm_bridge *bridge,
+>  }
+>  
+>  static const struct drm_bridge_funcs tc_bridge_funcs = {
+> +	.atomic_duplicate_state = drm_atomic_helper_bridge_duplicate_state,
+> +	.atomic_destroy_state = drm_atomic_helper_bridge_destroy_state,
+> +	.atomic_reset = drm_atomic_helper_bridge_reset,
+> +	.atomic_get_input_bus_fmts = tc_bridge_get_input_bus_fmts,
+> +	.atomic_check = tc_bridge_atomic_check,
+>  	.attach = tc_bridge_attach,
+>  	.pre_enable = tc_bridge_pre_enable,
+>  	.enable = tc_bridge_enable,
+
+-- 
+Regards,
+
+Laurent Pinchart
