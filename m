@@ -2,107 +2,158 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D20A3C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 10:08:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC4ECC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 10:11:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE8212083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 10:08:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85ADA20675
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 10:11:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="CVa57jyq"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WmcNrU3n";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eaPp95qw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727863AbgHLKI1 (ORCPT
+        id S1727771AbgHLKLB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 06:08:27 -0400
-Received: from mout.gmx.net ([212.227.17.21]:52737 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727066AbgHLKI1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 06:08:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1597226878;
-        bh=UkqjCxKKHV1HDyi41mZtq9yMhrKx967IftYVnHuBMGo=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=CVa57jyqOd+wAZ7HXJCaZTcWrbj9dKyv+WghkaTGAXpiP2JsIvR0EQYgZWjbrGYiO
-         lsBWgX1QG8ZF82HjYytXjIkoJrHZCMtWf3yQ1+ICaGkXnM6d6nfr+pmeun5MhEhTqE
-         zqpiozDA1NGXVxf3FFncbmNurNIBF6Kx6a5QKPTs=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [185.53.41.139] ([185.53.41.139]) by web-mail.gmx.net
- (3c-app-gmx-bap56.server.lan [172.19.172.126]) (via HTTP); Wed, 12 Aug 2020
- 12:07:58 +0200
+        Wed, 12 Aug 2020 06:11:01 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:51242 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726722AbgHLKK7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 06:10:59 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1597227057;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ytwwSb4p4vNvvu5wDB/51cVTcmm79nUaqk/OMkDkpOQ=;
+        b=WmcNrU3nHUhxvUAV0vvMCsCjW/O4drLyEB/NyCRHGmrDN0CCpL/KxbIP5/vsu6PO/bLKiP
+        ztrAbH9gf76Qey9C5vEgBP+H51mZP/vcLpAxiisdrYzLUSXWGC9T9oiMrE12THPGTHEsEC
+        5+XvnjTr7CJQNPaOKN8j666M6nlSq0M1gRpch+O7YBmFxSNeTbfqKx81zYX9TWhq/lYu7w
+        yhL8zfp0qdY3hq60w52u0WYdDy94C/MdY0i3yPmOA9WGPexN4hMB0XHPtdglbTUYvYvVp6
+        y6of6jVuY6JwiOK2SL5nkHHI3hG0cwccZgHA23gtTxZU3ovitjkVXo2YOEJ4WA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1597227057;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ytwwSb4p4vNvvu5wDB/51cVTcmm79nUaqk/OMkDkpOQ=;
+        b=eaPp95qw5oeZtYB9zOFUTirIityHYlVCJKnQQ8IPlZzg/lWrLmIRhYRbb8ow++h8yNRzy/
+        Eknjvgy38dD7BICg==
+To:     Qianli Zhao <zhaoqianligood@gmail.com>, axboe@kernel.dk,
+        akpm@linux-foundation.org, Felix.Kuehling@amd.com
+Cc:     john.stultz@linaro.org, sboyd@kernel.org,
+        ben.dooks@codethink.co.uk, bfields@redhat.com, cl@rock-chips.com,
+        linux-kernel@vger.kernel.org, zhaoqianli@xiaomi.com
+Subject: Re: [RFC V2] kthread: add object debug support
+In-Reply-To: <311159bc826dcca2848344fc277c0069cff0a164.1597207603.git.zhaoqianli@xiaomi.com>
+References: <311159bc826dcca2848344fc277c0069cff0a164.1597207603.git.zhaoqianli@xiaomi.com>
+Date:   Wed, 12 Aug 2020 12:10:56 +0200
+Message-ID: <87sgcs5g3z.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Message-ID: <trinity-5b810acf-eb8f-452e-b08a-30e1fe46226d-1597226878715@3c-app-gmx-bap56>
-From:   Frank Wunderlich <frank-w@public-files.de>
-To:     Wenbin Mei <wenbin.mei@mediatek.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Wenbin Mei <wenbin.mei@mediatek.com>,
-        srv_heupstream@mediatek.com, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Chaotian Jing <chaotian.jing@mediatek.com>,
-        stable@vger.kernel.org
-Subject: Aw: [PATCH 3/3] mmc: mediatek: add optional module reset property
-Content-Type: text/plain; charset=UTF-8
-Date:   Wed, 12 Aug 2020 12:07:58 +0200
-Importance: normal
-Sensitivity: Normal
-In-Reply-To: <20200812093726.10123-4-wenbin.mei@mediatek.com>
-References: <20200812093726.10123-1-wenbin.mei@mediatek.com>
- <20200812093726.10123-4-wenbin.mei@mediatek.com>
-X-UI-Message-Type: mail
-X-Priority: 3
-X-Provags-ID: V03:K1:t+v+dbXvTKFePvkpJQAkYHe5HoNVIemuMfLD56cl7pscYB573WfuroyNnOcU3eKU+Ux0w
- Bzr/Ckkf3ghFKTc0HwsL4hjb7JZpcAuLKIGlYRTDdvf/jlTHtulh0AIxWzbgZD0o/QUDiCzNjkkT
- sO5kefkm7G1UW6cNByINedYydy1x5x1KSNZ4caJ/jgdEUkwBF3dN/4r2t4BJSmLaKk6FpWb6i+m/
- LIO56ZvPG/DHOzaEApF96sk+MKAwEB1GS2joHA8xJDYDQNhmgLVskiKFp++wXff8gvYfNKazeZL8
- Bo=
-X-UI-Out-Filterresults: notjunk:1;V03:K0:1lebNj6ihXA=:yKrs1mlHJa1VH4DNmWf8T7
- QJv04DKWPHCKukADg6WgoibuSsh8OqnB3RcbFU3Hime9w81JXHzcUKJZhuZcawE6T0x8wLLKD
- JiDKf7eLoturt4bAUdUxm1LFnv2JmFegH1M35dhP0jeqQbe8FxWjYrS9hg53qbKvLsipJwhnN
- 92goZdJzEhOQbDBdxP8Vtq2F62SWwzwnixojAUFr8ieyEdQAojALTxVrP6q5a8gxqhCIDeoV4
- THzEuSaCf33VF+3EIRe59nHodktmpEc42dTqERD8uQWsd0cfPmh6Ieb5eSfhGbHDoScIK7EO6
- w/ETHBOlzdCYaknwVuG9lGJu2/gdYUID21RXu0CJSmF04V/4aALKHIAu/mGfRd0ykYkIfF3Ht
- pNwVjBCIqtZriHaxV+77szPbiiWBK2xEvReXULdqZwX5X0jZkYhtheoWT2z98SDx2hAiNEOUU
- MfPblapX0RDVVZ4p0+02p4WfY2rW2t5fSwFD9AZD9vHdyBxM6LOe3k5B05lY+Ehlp/YZv7UH3
- oBgrvgJ0On8H4UXi5FKrZ0xPqu9qxwDb+Yyre98Ot4FfxvMOUbCHGbQhW4tI71aH7TeLjWBvO
- rLnf0guUcE+asNRp8rcfkVl0RIBrEgcoDSf7iW8OvwIFa4C9I8a0hWHQ9y51edL70I44SAAMB
- zLSiW3Buc5mCvDUdGE+2uhCK5m2ifvaVV4mBafLf+nGumAfwR77CEoehMf1ob2y5Za+0=
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Gesendet: Mittwoch, 12. August 2020 um 11:37 Uhr
-> Von: "Wenbin Mei" <wenbin.mei@mediatek.com>
-> Betreff: [PATCH 3/3] mmc: mediatek: add optional module reset property
+Qianli,
 
-> This patch adds a optional reset management for msdc.
-> Sometimes the bootloader does not bring msdc register
-> to default state, so need reset the msdc controller.
->
-> Signed-off-by: Wenbin Mei <wenbin.mei@mediatek.com>
+Qianli Zhao <zhaoqianligood@gmail.com> writes:
 
-Thanks for posting the fix to Mainline
+> Add debugobject support to track the life time of kthread_work
+> which is used to detect reinitialization/free active object problems
+> Add kthread_init_work_onstack/kthread_init_delayed_work_onstack for
+> kthread onstack support
 
-imho this should contain a fixes-Tag as it fixes eMMC-Access on mt7622/Bpi=
--R64
+s/kthread/kthread_work/ ?
 
-before we got these Errors on mounting eMMC ion R64:
+It would also be nice to have an example output in the changelog.
 
-[   48.664925] blk_update_request: I/O error, dev mmcblk0, sector 204800 o=
-p 0x1:(WRITE) flags 0x800 phys_seg 1 prio class 0
-[   48.676019] Buffer I/O error on dev mmcblk0p1, logical block 0, lost sy=
-nc page write
+> +static struct debug_obj_descr kwork_debug_descr = {
+> +	.name		= "kthread_work",
+> +	.debug_hint	= kwork_debug_hint,
+> +	.is_static_object = kwork_is_static_object,
 
-Fixes: 966580ad236e ("mmc: mediatek: add support for MT7622 SoC")
-Tested-By: Frank Wunderlich <frank-w@public-files.de>
+Nitpick. You nicely aligned all the initializers except of this
+one. Just add another TAB to all of them and this becomes a perfect
+table.
 
-and it needs to be fixed at least for 5.4+, so adding stable-CC
+> +	.fixup_init	= kwork_fixup_init,
+> +	.fixup_free	= kwork_fixup_free,
 
-Cc: stable@vger.kernel.org
+This lacks:
+
+        .fixup_assert_init	= ....
+
+which catches cases where a non static object is used uninitialized.
+
+> @@ -698,6 +786,7 @@ int kthread_worker_fn(void *worker_ptr)
+>  		work = list_first_entry(&worker->work_list,
+>  					struct kthread_work, node);
+>  		list_del_init(&work->node);
+> +		debug_kwork_deactivate(work);
+
+Please move that before the list del. Deactivate debug cannot do much
+about the wreckage as there is no fixup function, but at least you get
+the message printed _before_ the list delete can cause havoc and crashes
+something else on a different CPU which makes the whole point of being
+able to debug this kind of problems moot.
+
+> @@ -835,8 +924,11 @@ static void kthread_insert_work(struct kthread_worker *worker,
+>  
+>  	list_add_tail(&work->node, pos);
+>  	work->worker = worker;
+> -	if (!worker->current_work && likely(worker->task))
+> +
+> +	if (!worker->current_work && likely(worker->task)) {
+> +		debug_kwork_activate(work);
+
+That's misplaced as well. The work is activated with list_add_tail() and
+you really want to call debug_kwork_activate() unconditionally before
+doing the list operation:
+
+  1) If the object is active or not initialized then the list operation
+     will cause memory corruption and the fixup function will operate on
+     already wreckaged state. Debug objects is about preventing the
+     wreckaged state and keeping the system alive so the debug info goes
+     out.
+
+  2) If the worker is busy (worker->current_worker != NULL) then the
+     newly queued work is not activated in the debug object tracker and
+     the deactivation will complain or a consequent free of the object
+     will fail to detect that it's still active.
+
+>  /**
+> @@ -1054,6 +1146,7 @@ static bool __kthread_cancel_work(struct kthread_work *work, bool is_dwork,
+>  	 */
+>  	if (!list_empty(&work->node)) {
+>  		list_del_init(&work->node);
+> +		debug_kwork_deactivate(work);
+
+See above.
+
+>  		return true;
+>  	}
+>  
+> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> index 9ad9210..8355984 100644
+> --- a/lib/Kconfig.debug
+> +++ b/lib/Kconfig.debug
+> @@ -540,6 +540,16 @@ config DEBUG_OBJECTS_WORK
+>  	  work queue routines to track the life time of work objects and
+>  	  validate the work operations.
+>  
+> +config DEBUG_OBJECTS_KTHREAD
+> +	bool "Debug kthread work objects"
+
+This is about debugging kthread_work, so can you please name the
+config option accordingly? It's not about debugging KTHREAD itself.
+
+Thanks,
+
+        tglx
