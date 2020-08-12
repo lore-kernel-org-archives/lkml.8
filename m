@@ -2,164 +2,149 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E30BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 07:35:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6BC8C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 07:36:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 089382065C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 07:35:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCA252065C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 07:36:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D1jFIJxP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V/H600jZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbgHLHfn (ORCPT
+        id S1726786AbgHLHgQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 03:35:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39280 "EHLO
+        Wed, 12 Aug 2020 03:36:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39380 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726255AbgHLHfm (ORCPT
+        with ESMTP id S1726255AbgHLHgQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 03:35:42 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4D88C06174A
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 00:35:41 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id k8so985753wma.2
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 00:35:41 -0700 (PDT)
+        Wed, 12 Aug 2020 03:36:16 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 158BEC06174A
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 00:36:16 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id g19so1549185ioh.8
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 00:36:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=XfihqZsdjcdv5tVC7wFsr1o1gj8RLJpLWlctKxN00t8=;
-        b=D1jFIJxPQA80z4Eomgeer1iZdbOW9i+Hnn/nDZS6eevvWKao7/cwonferaNNU0lDOn
-         R2PlHUawpbNnQy2lpSfhVmDKCpV5+3ZZrjVrht4ftusjDyemANZuF8poyrzzDdkZlrTP
-         NZWxV8t02OVEbriVK59+v/oTltvWcdYasg/x6cSmxX27Wg20UEftg5v0pjztSMFzgZdh
-         1a4OACCvYZAA6lgr4+CZ7aADb2ZEqDAMxLN4T6H+YvD3OwPPhY5yrXswYmBip4mAW08o
-         s32CNccl/Xgg1SNdFl8S9DlNGqKtX+ZK0qkzi6pf7thn24wUWViiOHhaojWLqpgSqA6A
-         oj9g==
+        bh=IoWosUMrqCTx2zIWiSt1q8d4gJ7znnfRYJ6dzYZoqvo=;
+        b=V/H600jZakKgVsyPX9ZxQa2CDFO10d91q7X5Cq4QBY6fulJ64VjnevknnUV6o60y4x
+         RYRLIpFnyWmqAbVdMt/Q7aOY7jvqs6I9MA2yunpCWT0Ri5ILmVX6oIjyUjBFtSFfXW7W
+         Jg+MHT8iK6CV1xZSca30sFDX0+gaYSh+//qaw0Mzpd8HcuR2FvxUuTb36YQm/4MYSM9n
+         Uof6PhBTLUADHgnWJOSqOviZ+WqfWpkg8LC4Rjtmgh+uISRNPkd0IILVUg3yU6XQmlmG
+         gZTF9tqlaAzLJMzrrwTELEiZv/LSBqSASZZASDO/jv5oI4XPUak123wBUOrknSDNodT2
+         cq5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=XfihqZsdjcdv5tVC7wFsr1o1gj8RLJpLWlctKxN00t8=;
-        b=T6XoNMVXv0f9ymP7Q6qxWd2J99aaI7B/UuDTlRXIHjDPtqpigzygViU+d3yQXv5a9h
-         X/GfnT2sVj/6OYNtvuQgGxYcBaIAqdvCtT4nCMP/obTnP6nEjyBWp/0AkrypLZC689mQ
-         sgJUICMnLDAYO+VilCa2CyRUtxeGOipmbeWokz03z6kv2Itr9M/ZX/+Ed/7131kH7R/D
-         izmzq7wggx9TUJKQ3dPovrZmZ+KrIABn2j+rTRVbDHpqss/rK/h6pk/mUk1WyNlnxd13
-         SiGpAqJsA7HlUemBQkTWUmGSLCZRUnfL7d93/yG4hKFfo4mj5ZkGWBYIIik09w2xgYMf
-         k3BA==
-X-Gm-Message-State: AOAM532MkuRAS8NeHUwAEsKV5pudmcNzYrgERHnEWdsl/9+DaBj1uks4
-        1rOeBuvmCrRMKzukcPfeubxwAuAkEJ3RuNDtIRJZuA==
-X-Google-Smtp-Source: ABdhPJzBNC/YM9uamzZ0gfpPsY6JeU/UxZmU8cQyqqtnB+YoX60CEAXzfjO07RBy0Wno5duRrD7MVej1m1/TUxoj2w8=
-X-Received: by 2002:a05:600c:2209:: with SMTP id z9mr7122422wml.70.1597217740367;
- Wed, 12 Aug 2020 00:35:40 -0700 (PDT)
+        bh=IoWosUMrqCTx2zIWiSt1q8d4gJ7znnfRYJ6dzYZoqvo=;
+        b=e+581BpuvOq2fg8BO26dEOPn0zpS21ByRtXdCKhatfoum/nF67lLCxYn+z41eXoW1v
+         378OVZV1RHyBiXkiBRzbiQ74iD2D59iPjeu5ZVTI5StQCWAxhmS4pnQ8iwJDmGtmEpKI
+         /ZZfPTzxJxIcz7H1OVC0d5dYXDRYm4QIj7/syvK11Z2z5/oHybgaLgarO7IW+QccfoGE
+         zMGe6ioT2jIlgiw9mloMyceSIwuazc1E+IEp6Y7nYUjW23xMtbzDSweemY/WDCMF4iNx
+         xYin4pbwxZKgtLGJzNlZxH/T2g2pRsEAnpxA8sWUhu00MyhHbuAl9SHPZ8Q066QxWq1I
+         cRRQ==
+X-Gm-Message-State: AOAM533s+uKFLHfuR4GH0npmjJCBdDmPXGgH5OpK40ir9/6y0kK5jhQu
+        hxAHEBqGuKfNLzWDjRZM/GN7DpD6tux1ec071ns=
+X-Google-Smtp-Source: ABdhPJySVLks5s4aT32oocarxaPUHfObJpAW5xAtQsRFmCR8/2B0N8OotSgLFT03V2Ez7/10+yFWNdZ8P/DPrrZ6pnw=
+X-Received: by 2002:a05:6602:15d3:: with SMTP id f19mr25983960iow.91.1597217774586;
+ Wed, 12 Aug 2020 00:36:14 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190320094918.20234-1-rnayak@codeaurora.org> <20190320094918.20234-4-rnayak@codeaurora.org>
- <CALAqxLV2TBk9ScUM6MeJMCkL8kJnCihjQ7ac5fLzcqOg1rREVQ@mail.gmail.com>
- <CALAqxLWg3jJKJFLnnne-mrQEnH=m7R_9azCGaGnEmFYR4EMh=A@mail.gmail.com> <ec5eeb21-48e4-5dcc-583a-ac9419659e44@codeaurora.org>
-In-Reply-To: <ec5eeb21-48e4-5dcc-583a-ac9419659e44@codeaurora.org>
-From:   Amit Pundir <amit.pundir@linaro.org>
-Date:   Wed, 12 Aug 2020 13:05:04 +0530
-Message-ID: <CAMi1Hd1O+3bjQN6c9WQr+t0YXGBAukfFzJWtkgXDp1Zcir-0-w@mail.gmail.com>
-Subject: Re: [RFC v2 03/11] tty: serial: qcom_geni_serial: Use OPP API to set
- clk/perf state
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-scsi@vger.kernel.org,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Doug Anderson <dianders@chromium.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-spi@vger.kernel.org, linux-serial@vger.kernel.org,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
+References: <1594388491-15129-1-git-send-email-simhavcs@gmail.com>
+ <1594388491-15129-2-git-send-email-simhavcs@gmail.com> <CAGWqDJ4P9dKzGngkiEtL_X1HRjjtU17WqNFM-qiv16tXwQNZTg@mail.gmail.com>
+ <CAGWqDJ4s3x5M7dGMTxYMpDbM4NBS7kfTb6-+7Fdx8Pe=CE58fA@mail.gmail.com>
+ <20200808213022.GW6186@pendragon.ideasonboard.com> <20200810175440.GC292825@ravnborg.org>
+ <20200811101942.GB6054@pendragon.ideasonboard.com> <20200811191704.GA524675@ravnborg.org>
+ <CAGWqDJ7bAjDyEr03UT-mfyOuD+xkbo9BG4GyWxbiK_c74eESYw@mail.gmail.com>
+In-Reply-To: <CAGWqDJ7bAjDyEr03UT-mfyOuD+xkbo9BG4GyWxbiK_c74eESYw@mail.gmail.com>
+From:   Vinay Simha B N <simhavcs@gmail.com>
+Date:   Wed, 12 Aug 2020 13:06:02 +0530
+Message-ID: <CAGWqDJ6O-EdCVeaCdRBtUTmNUFpPQErQzn1ihtVhXmFjPhnr5g@mail.gmail.com>
+Subject: Re: [PATCH v8 2/2] display/drm/bridge: TC358775 DSI/LVDS driver
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        David Airlie <airlied@linux.ie>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        Andrzej Hajda <a.hajda@samsung.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rajendra,
+sam/laurent,
 
-On Wed, 12 Aug 2020 at 11:18, Rajendra Nayak <rnayak@codeaurora.org> wrote:
->
->
-> On 8/12/2020 7:03 AM, John Stultz wrote:
-> > On Tue, Aug 11, 2020 at 4:11 PM John Stultz <john.stultz@linaro.org> wrote:
-> >>
-> >> On Wed, Mar 20, 2019 at 2:49 AM Rajendra Nayak <rnayak@codeaurora.org> wrote:
-> >>>
-> >>> geni serial needs to express a perforamnce state requirement on CX
-> >>> depending on the frequency of the clock rates. Use OPP table from
-> >>> DT to register with OPP framework and use dev_pm_opp_set_rate() to
-> >>> set the clk/perf state.
-> >>>
-> >>> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> >>> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> >>> ---
-> >>>   drivers/tty/serial/qcom_geni_serial.c | 15 +++++++++++++--
-> >>>   1 file changed, 13 insertions(+), 2 deletions(-)
-> >>>
-> >>
-> >> Hey,
-> >>    I just wanted to follow up on this patch, as I've bisected it
-> >> (a5819b548af0) down as having broken qca bluetooth on the Dragonboard
-> >> 845c.
-> >>
-> >> I haven't yet had time to debug it yet, but wanted to raise the issue
-> >> in case anyone else has seen similar trouble.
-> >
-> > So I dug in a bit further, and this chunk seems to be causing the issue:
-> >> @@ -961,7 +963,7 @@ static void qcom_geni_serial_set_termios(struct uart_port *uport,
-> >>                  goto out_restart_rx;
-> >>
-> >>          uport->uartclk = clk_rate;
-> >> -       clk_set_rate(port->se.clk, clk_rate);
-> >> +       dev_pm_opp_set_rate(port->dev, clk_rate);
-> >>          ser_clk_cfg = SER_CLK_EN;
-> >>          ser_clk_cfg |= clk_div << CLK_DIV_SHFT;
-> >>
-> >
-> >
-> > With that applied, I see the following errors in dmesg and bluetooth
-> > fails to function:
-> > [    4.763467] qcom_geni_serial 898000.serial: dev_pm_opp_set_rate:
-> > failed to find OPP for freq 102400000 (-34)
-> > [    4.773493] qcom_geni_serial 898000.serial: dev_pm_opp_set_rate:
-> > failed to find OPP for freq 102400000 (-34)
-> >
-> > With just that chunk reverted on linus/HEAD, bluetooth seems to work ok.
->
-> This seems like the same issue that was also reported on venus [1] because the
-> clock frequency tables apparently don;t exactly match the achievable clock
-> frequencies (which we also used to construct the OPP tables)
->
-> Can you try updating the OPP table for QUP to have 102400000 instead of the
-> current 100000000 and see if that fixes it?
+[PATCH] drm/bridge/tc358775: Fixes bus formats read
 
-That worked. Thanks.
-
-Should this change be common to base sdm845.dtsi or platform specific dts?
-For what it's worth, we see this BT breakage on PocoF1 phone too.
-
-Regards,
-Amit Pundir
+is on top of drm-misc-next.
 
 
+On Wed, Aug 12, 2020 at 7:50 AM Vinay Simha B N <simhavcs@gmail.com> wrote:
 >
-> [1] https://lkml.org/lkml/2020/7/27/507
+> Sam,
 >
-> >
-> > thanks
-> > -john
-> >
+> I will look into this and send the patch ASAP.
+>
+> On Wed, Aug 12, 2020 at 12:47 AM Sam Ravnborg <sam@ravnborg.org> wrote:
+>>
+>> Hi Vinay.
+>>
+>> > >
+>> > > If Laurent or others identify further things to improve we can take
+>> > > it in-tree.
+>> >
+>> > Just one thing, please see below.
+>> >
+>> > > > > >> +       d2l_write(tc->i2c, VTIM1, vtime1);
+>> > > > > >> +       d2l_write(tc->i2c, HTIM2, htime2);
+>> > > > > >> +       d2l_write(tc->i2c, VTIM2, vtime2);
+>> > > > > >> +
+>> > > > > >> +       d2l_write(tc->i2c, VFUEN, VFUEN_EN);
+>> > > > > >> +       d2l_write(tc->i2c, SYSRST, SYS_RST_LCD);
+>> > > > > >> +       d2l_write(tc->i2c, LVPHY0, LV_PHY0_PRBS_ON(4) | LV_PHY0_ND(6));
+>> > > > > >> +
+>> > > > > >> +       dev_dbg(tc->dev, "bus_formats %04x bpc %d\n",
+>> > > > > >> +               connector->display_info.bus_formats[0],
+>> > > > > >> +               tc->bpc);
+>> > > > > >> +       /*
+>> > > > > >> +        * Default hardware register settings of tc358775 configured
+>> > > > > >> +        * with MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA jeida-24 format
+>> > > > > >> +        */
+>> > > > > >> +       if (connector->display_info.bus_formats[0] ==
+>> > > > > >> +               MEDIA_BUS_FMT_RGB888_1X7X4_SPWG) {
+>> >
+>> > This shouldn't come from the connector, but from the
+>> > drm_bridge_state.output_bus_cfg.format. The drm_bridge_funcs
+>> > .atomic_get_input_bus_fmts() operation likely needs to be implemented.
+>>
+>> I trust you will look into this and submit a patch on top of
+>> drm-misc-next.
+>> Please add a proper "Fixes:" tag identifying the commit that introduced
+>> this bug - in this case the commit introducing the driver.
+>>
+>> Do not hesitate to reply to all if you have any questions.
+>> We will help you if we can.
+>>
+>>         Sam
+>
+>
 >
 > --
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
+> regards,
+> vinaysimha
+
+
+
+-- 
+regards,
+vinaysimha
