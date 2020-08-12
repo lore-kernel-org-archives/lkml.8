@@ -4,53 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C466CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:29:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA33C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96B7B208B3
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:29:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01E32207F7
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:29:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597235349;
-	bh=MH1bvUjYC37bx2LZsXr1vc95Xh18NFGKlhDeP1Az7Yk=;
+	s=default; t=1597235365;
+	bh=f3IsrBPjFZW9O/OhedYFTCoSyKNKxk+e2qJfKxrclSM=;
 	h=From:Cc:Subject:Date:To:List-ID:From;
-	b=N7NTUkOzRK1QXbYj1LzH+UVfi2AkyCmKUYN9OJ5QibAXT952Dii+k9vY7/VbTE3BO
-	 843ZjpW9Q5SRXfnd9axQDXfGHUIk88X12s+rpeTDmUTv5wVvsdC9ID49PU+pv9vMFg
-	 /9gk0h/J+GIIckes9uJes8kqg1A0FI9DiPHmyq8I=
+	b=wL2exLvuXC6rxDxvCBgL8wMh+pHX0mgD9sIzjavdiB2X7cQl3k5XS4Uo0Od6brbKo
+	 nlu87/UQDrJJGYrxTV+fH71OIve9WDVenrA28jz2Kt9QxEuxMaxtN3FRZqR2vLzRyj
+	 hsx9u1VvuerDDG+tlF3jijgpdwJA0D2T2A4P4+hw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbgHLM3I (ORCPT
+        id S1727909AbgHLM3Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 08:29:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47470 "EHLO mail.kernel.org"
+        Wed, 12 Aug 2020 08:29:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726804AbgHLM3H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 08:29:07 -0400
+        id S1726722AbgHLM3W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 08:29:22 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60BC8207DA;
-        Wed, 12 Aug 2020 12:29:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CAEF3207DA;
+        Wed, 12 Aug 2020 12:29:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597235347;
-        bh=MH1bvUjYC37bx2LZsXr1vc95Xh18NFGKlhDeP1Az7Yk=;
+        s=default; t=1597235362;
+        bh=f3IsrBPjFZW9O/OhedYFTCoSyKNKxk+e2qJfKxrclSM=;
         h=From:To:Cc:Subject:Date:From;
-        b=U2ZdjKoqMvxZ6bw27Fdv+EH1RuGUhKoEqxoMwdRkQ+BVRSwc3wfj4uXnVeG2K3TZj
-         PYVdVJe2YDxiMoEOxVRKlgs319noSudbizIrvP3Edx/2D3kTHEXOlB9sMkkdZXqsGf
-         /WxwExAPsQ1e3rFLhj9dY5l8ESMJGNz499awdLjc=
+        b=rNUF20X3nWg8kV4+NxvAKd+oCVMq6ffq/OhRQKtqqJiNfGaiM8Hdmx8fg6CwQjsBL
+         WVDFozhoWymmDysCBdVSGi0SEsvYwp60v2Gi0p/JHZ1yBKDCqUUJqulFH7B+Qp6dIz
+         7ue0qX2z4MgEu40CsS0I3IokL/gXWxg2T6kP2j7Q=
 Received: from mchehab by mail.kernel.org with local (Exim 4.94)
         (envelope-from <mchehab@kernel.org>)
-        id 1k5psP-005f6M-9m; Wed, 12 Aug 2020 14:29:05 +0200
+        id 1k5psd-005f7j-MJ; Wed, 12 Aug 2020 14:29:19 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH] mfd: Kconfig: fix a typo
-Date:   Wed, 12 Aug 2020 14:29:03 +0200
-Message-Id: <42221553381256444745b6c495bb74b97aa23464.1597235340.git.mchehab+huawei@kernel.org>
+        Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: [PATCH] spmi: get rid of a warning when built with W=1
+Date:   Wed, 12 Aug 2020 14:29:18 +0200
+Message-Id: <b7c07d7476697145bbd685d11a57b40d222f2c50.1597235356.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -58,26 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-individul -> individual
+The SPMI core complaing with this warning when built with W=1:
+
+	drivers/spmi/spmi.c: In function ‘spmi_controller_remove’:
+	drivers/spmi/spmi.c:548:6: warning: variable ‘dummy’ set but not used [-Wunused-but-set-variable]
+	  548 |  int dummy;
+	      |      ^~~~~
+
+As the dummy var isn't needed, remove it.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- drivers/mfd/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/spmi/spmi.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index a37d7d171382..e42d11849947 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -493,7 +493,7 @@ config MFD_HI6421_PMIC
- 	  Add support for HiSilicon Hi6421 PMIC. Hi6421 includes multi-
- 	  functions, such as regulators, RTC, codec, Coulomb counter, etc.
- 	  This driver includes core APIs _only_. You have to select
--	  individul components like voltage regulators under corresponding
-+	  individual components like voltage regulators under corresponding
- 	  menus in order to enable them.
- 	  We communicate with the Hi6421 via memory-mapped I/O.
+diff --git a/drivers/spmi/spmi.c b/drivers/spmi/spmi.c
+index c16b60f645a4..fd3ff6079b15 100644
+--- a/drivers/spmi/spmi.c
++++ b/drivers/spmi/spmi.c
+@@ -545,13 +545,10 @@ static int spmi_ctrl_remove_device(struct device *dev, void *data)
+  */
+ void spmi_controller_remove(struct spmi_controller *ctrl)
+ {
+-	int dummy;
+-
+ 	if (!ctrl)
+ 		return;
  
+-	dummy = device_for_each_child(&ctrl->dev, NULL,
+-				      spmi_ctrl_remove_device);
++	device_for_each_child(&ctrl->dev, NULL, spmi_ctrl_remove_device);
+ 	device_del(&ctrl->dev);
+ }
+ EXPORT_SYMBOL_GPL(spmi_controller_remove);
 -- 
 2.26.2
 
