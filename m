@@ -2,285 +2,115 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E593EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 11:43:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCEA7C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 11:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C73CE2080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 11:43:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 723612080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 11:45:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=prevas.dk header.i=@prevas.dk header.b="N4wFbFAi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727780AbgHLLn5 (ORCPT
+        id S1727834AbgHLLpK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 07:43:57 -0400
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:41322 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726404AbgHLLn5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 07:43:57 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0U5Z4q4C_1597232629;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U5Z4q4C_1597232629)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 12 Aug 2020 19:43:50 +0800
-Subject: Re: [PATCH v17 14/21] mm/compaction: do page isolation first in
- compaction
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        kbuild test robot <lkp@intel.com>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
-        Shakeel Butt <shakeelb@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Rong Chen <rong.a.chen@intel.com>
-References: <1595681998-19193-1-git-send-email-alex.shi@linux.alibaba.com>
- <1595681998-19193-15-git-send-email-alex.shi@linux.alibaba.com>
- <CAKgT0UcbBv=QBK9ErqLKXoNLYxFz52L4fiiHy4h6zKdBs=YPOg@mail.gmail.com>
- <241ca157-104f-4f0d-7d5b-de394443788d@linux.alibaba.com>
- <CAKgT0UdSrarC8j+G=LYRSadcaG6yNCoCfeVpFjEiHRJb4A77-g@mail.gmail.com>
- <8dbd004e-8eba-f1ec-a5eb-5dc551978936@linux.alibaba.com>
- <CAKgT0UdK-fy+yYGLFK=YgE+maa_0_uecq0_8S_0kM8BiVgRO7g@mail.gmail.com>
- <d9818e06-95f1-9f21-05c0-98f29ea96d89@linux.alibaba.com>
- <CAKgT0Ues0ShkSbb1XtA7z7EYB8NCPgLGq8zZUjrXK_jcWn8mDQ@mail.gmail.com>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <9581db48-cef3-788a-7f5a-8548fee56c13@linux.alibaba.com>
-Date:   Wed, 12 Aug 2020 19:43:17 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        Wed, 12 Aug 2020 07:45:10 -0400
+Received: from mail-eopbgr40136.outbound.protection.outlook.com ([40.107.4.136]:36310
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726404AbgHLLpI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 07:45:08 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AnAbf2btH/8q2j3KOYm7t6zdct0nGbOgTNR4Jbjjah3RAL0CyQwuh4TLyCMLrjeDTOTmnTYGGfzB7E05lUmG6ZdyEk798yPEty0Ly56/YxKxavuYvLR4Ygmwo9W22OLndbikz4pVSFY9RAb0q4Mdt4Et80oqTQ6cZlYQLu1ZOtgzKre74vBqS5jFOykXKqLtuCl784C/k1Zb2V/fG/zfwOzl1xNmT71k7hfTr6caAwvGcJx6J+dcQS7H4cj+YmfRMg9QDP6KMyenc6mtsdcVLtwsA0UFus2GV+XiCmXxcHlYvr7I9qeiijFt2AzDEe2iaVqx4YTZ2B30KuIa0h2O7w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CYriiuePpzG5FClKRl/mweBYjO5CI8ailf/iWbNfzf0=;
+ b=bvdWpRogUA09HTx99qYmMLlaaiHl+opz4sPg1qf8Kh7tOVx1rzEArE4ssgML2yZ8zRDou4Qu4Q/L5GB1m9dV8DDX0snGeMhZDBwbKydV1MGQp4Ubj4o8j0CpBIPd6vunLYGyxDwRW+zszoDUkf1bhIVI4qu/qeWEwdT/cTAuSl27s0QwX3W1h0tWNyWW0W4zU9319XUKSK7vSRpl13fbA1avLC786fU7FrgE9HcEKbbf3Wqq4bqU86t8WLCC4zc7V4z4F8kErCZFDTQORXTcTbLFTrjkJjA+Dm8aUUUCHPH35JMuWg/kg6xoonwzRpT6ce9HmJ445Y+4B/vsrmG+QQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=prevas.dk; dmarc=pass action=none header.from=prevas.dk;
+ dkim=pass header.d=prevas.dk; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prevas.dk;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CYriiuePpzG5FClKRl/mweBYjO5CI8ailf/iWbNfzf0=;
+ b=N4wFbFAi0daWoLXcOTb1mU2rTOJM+o/1tmkDy2B/WZWKQ2czLsXmKGjgo9Ihn8z2xzlMkvW4RJ9IxSbwXdM1m5aOByVPTLsANPLc1UXwslcnImL/4xYNc4l+E5lYt+9Xzt9see7wjg66PeTfMMaZrMidS8DKe5a17d8jyZiNgPA=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=prevas.dk;
+Received: from AM0PR10MB1874.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:208:3f::10)
+ by AM0PR10MB1940.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:208:45::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.16; Wed, 12 Aug
+ 2020 11:45:05 +0000
+Received: from AM0PR10MB1874.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::3cfb:a3e6:dfc0:37ec]) by AM0PR10MB1874.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::3cfb:a3e6:dfc0:37ec%3]) with mapi id 15.20.3261.025; Wed, 12 Aug 2020
+ 11:45:05 +0000
+Subject: Re: [PATCH linux-5.2.y-rt only] hrtimer: correct the logic for grab
+ expiry lock
+To:     zhantao.tang@windriver.com, linux-kernel@vger.kernel.org
+Cc:     bigeasy@linutronix.de, tglx@linutronix.de, rostedt@goodmis.org,
+        linux-rt-users@vger.kernel.org
+References: <20200812105053.602-1-zhantao.tang@windriver.com>
+From:   Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Message-ID: <86790e56-9cec-5cea-8387-f7010b88708b@prevas.dk>
+Date:   Wed, 12 Aug 2020 13:45:02 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+In-Reply-To: <20200812105053.602-1-zhantao.tang@windriver.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: AM4PR0501CA0061.eurprd05.prod.outlook.com
+ (2603:10a6:200:68::29) To AM0PR10MB1874.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:208:3f::10)
 MIME-Version: 1.0
-In-Reply-To: <CAKgT0Ues0ShkSbb1XtA7z7EYB8NCPgLGq8zZUjrXK_jcWn8mDQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [172.16.11.132] (81.216.59.226) by AM4PR0501CA0061.eurprd05.prod.outlook.com (2603:10a6:200:68::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.15 via Frontend Transport; Wed, 12 Aug 2020 11:45:04 +0000
+X-Originating-IP: [81.216.59.226]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 6fbf2f82-3b67-4c32-5eaa-08d83eb527a2
+X-MS-TrafficTypeDiagnostic: AM0PR10MB1940:
+X-Microsoft-Antispam-PRVS: <AM0PR10MB1940A7951A2D11770AF28B5C93420@AM0PR10MB1940.EURPRD10.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:635;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: iSeGKw1f4V4tPRcabv8hdUWoikZhG/ZyOT63yYaNc5x/RoBU2O97yRiBTlbEFMA0QBr3lNPfVt/DtYdxXgRk1RyPWwMJd1V3pjka/zd2NYqaR8hAqPzGLzOXmwmgnW7r2Mi4a19o35sH+M7X0QZKdPTo/2ID9Me2aQ6FrpdwRcG7d3H5XJEddwXAqbcr0cTdZu6XGG1IWnSThddfuySlLieFZsHZmoG0VSjjrd75iaq/ZQ+KCWm2M05awRE4FN/0XNi7m5aHSpisEh5+lylwqgqQ/nDTsC0G413s9rMMmBx8Kq0afb0Jr1ZPsxX7Oy854rchDeKV40dNWHn629lTxtemOhfQgeoYb1TGWASm3JhHn9GoqLPDx1AICylmaUv7qmEP/KTmzk2gBiD01jDVFrfLgLrZlxbmzEoB+lHBPHFDC9sUZBmQdMIbMsn+weDGE+Oc2l6K8TbfiLHjWw3BqA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR10MB1874.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(346002)(396003)(376002)(39840400004)(136003)(366004)(6486002)(2616005)(44832011)(956004)(478600001)(31686004)(966005)(4326008)(16576012)(26005)(316002)(186003)(16526019)(8676002)(8936002)(8976002)(2906002)(52116002)(4744005)(31696002)(86362001)(36756003)(66476007)(5660300002)(83380400001)(66556008)(66946007)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: K1bgaPI5cVQ9PrfIrtGiA4gP9fMRQa+g/virk0EM8rlSRRozOeWzvBzg0zz6/W9mczoOCLbSbY8h2O31Hr0JaAkrw/tLtXvxkTrMXlAeEAdNMY0cxOctmMGunAsNO4A9SnOo10Fsn/dAXiiNa/wWKu07GXd/xN3JfOSec+ZcgFIKRYePvlCWiZFXLxKMBH9CeBqVSmx10f51Lbkh5I1yNbfP/zgGVnURYoTmAJX3Og8fFh39Pro1LM/ecReyB8nOvtPJ/XkKBqAf1SII2IDJpkO+/zQzMML5N864II+Lx0cSGKbhZpXA4V1G5YYaNahfK/diacttUJXM3zzCy0j6EnODKlTvil/PwGXjOpzplKLHCUHm3A8DXBfe0+yDQAqJ7pLfmtjEgcjEjwZW8YQH+o3dHi1PoyFL9N9TH8lgilBZ47SWyXz1bezQyXdJaj7luvDTnrX05P0856pgLjDRa974QZadSJh75XIwpUKDFucS4V9ddaAsdzdWFLTRlkksl4b9flGxnkSTfjC6t4L/YrWDq5BxP3OA2lInowOWAgTioS27BuEVBpnP1seMMq+fcDXIhq7t8B1cD0cFfc56CPvymmROVKrHmrbtfUeYC7pAKpq7raQ2W3c3P6FXxh0y8Zih7B/QM6DU0jRVmxw/aQ==
+X-OriginatorOrg: prevas.dk
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6fbf2f82-3b67-4c32-5eaa-08d83eb527a2
+X-MS-Exchange-CrossTenant-AuthSource: AM0PR10MB1874.EURPRD10.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Aug 2020 11:45:04.9829
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: d350cf71-778d-4780-88f5-071a4cb1ed61
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: zih3rmY3ou6EFYwRSWjb6JlQQ2j/EnfBzRD7S1OLknvCV//7H0JfIFkVHbD1HiWOCQ/8j7EJhMfRCM2Ay8laRe9x6k7c6HvDayQMGJxqwtM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR10MB1940
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-在 2020/8/11 下午10:47, Alexander Duyck 写道:
-> On Tue, Aug 11, 2020 at 1:23 AM Alex Shi <alex.shi@linux.alibaba.com> wrote:
->>
->>
->>
->> 在 2020/8/10 下午10:41, Alexander Duyck 写道:
->>> On Mon, Aug 10, 2020 at 6:10 AM Alex Shi <alex.shi@linux.alibaba.com> wrote:
->>>>
->>>>
->>>>
->>>> 在 2020/8/7 下午10:51, Alexander Duyck 写道:
->>>>> I wonder if this entire section shouldn't be restructured. This is the
->>>>> only spot I can see where we are resetting the LRU flag instead of
->>>>> pulling the page from the LRU list with the lock held. Looking over
->>>>> the code it seems like something like that should be possible. I am
->>>>> not sure the LRU lock is really protecting us in either the
->>>>> PageCompound check nor the skip bits. It seems like holding a
->>>>> reference on the page should prevent it from switching between
->>>>> compound or not, and the skip bits are per pageblock with the LRU bits
->>>>> being per node/memcg which I would think implies that we could have
->>>>> multiple LRU locks that could apply to a single skip bit.
->>>>
->>>> Hi Alexander,
->>>>
->>>> I don't find problem yet on compound or skip bit usage. Would you clarify the
->>>> issue do you concerned?
->>>>
->>>> Thanks!
->>>
->>> The point I was getting at is that the LRU lock is being used to
->>> protect these and with your changes I don't think that makes sense
->>> anymore.
->>>
->>> The skip bits are per-pageblock bits. With your change the LRU lock is
->>> now per memcg first and then per node. As such I do not believe it
->>> really provides any sort of exclusive access to the skip bits. I still
->>> have to look into this more, but it seems like you need a lock per
->>> either section or zone that can be used to protect those bits and deal
->>> with this sooner rather than waiting until you have found an LRU page.
->>> The one part that is confusing though is that the definition of the
->>> skip bits seems to call out that they are a hint since they are not
->>> protected by a lock, but that is exactly what has been happening here.
->>>
->>
->> The skip bits are safe here, since even it race with other skip action,
->> It will still skip out. The skip action is try not to compaction too much,
->> not a exclusive action needs avoid race.
+On 12/08/2020 12.50, zhantao.tang@windriver.com wrote:
+> From: Zhantao Tang <zhantao.tang@windriver.com>
 > 
-> That would be the case if it didn't have the impact that they
-> currently do on the compaction process. What I am getting at is that a
-> race was introduced when you placed this test between the clearing of
-> the LRU flag and the actual pulling of the page from the LRU list. So
-> if you tested the skip bits before clearing the LRU flag then I would
-> be okay with the code, however because it is triggering an abort after
-
-Hi Alexander,
-
-Thanks a lot for comments and suggestions!
-
-I have tried your suggestion:
-
-Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
----
- mm/compaction.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
-
-diff --git a/mm/compaction.c b/mm/compaction.c
-index b99c96c4862d..6c881dee8c9a 100644
---- a/mm/compaction.c
-+++ b/mm/compaction.c
-@@ -988,6 +988,13 @@ static bool too_many_isolated(pg_data_t *pgdat)
- 		if (__isolate_lru_page_prepare(page, isolate_mode) != 0)
- 			goto isolate_fail_put;
-
-+		/* Try get exclusive access under lock */
-+		if (!skip_updated) {
-+			skip_updated = true;
-+			if (test_and_set_skip(cc, page, low_pfn))
-+				goto isolate_fail_put;
-+		}
-+
- 		/* Try isolate the page */
- 		if (!TestClearPageLRU(page))
- 			goto isolate_fail_put;
-@@ -1006,13 +1013,6 @@ static bool too_many_isolated(pg_data_t *pgdat)
-
- 			lruvec_memcg_debug(lruvec, page);
-
--			/* Try get exclusive access under lock */
--			if (!skip_updated) {
--				skip_updated = true;
--				if (test_and_set_skip(cc, page, low_pfn))
--					goto isolate_abort;
--			}
--
- 			/*
- 			 * Page become compound since the non-locked check,
- 			 * and it's on LRU. It can only be a THP so the order
---
-
-Performance of case-lru-file-mmap-read in vm-scalibity is dropped a bit. not
-helpful
-
-> the LRU flag is cleared then you are creating a situation where
-> multiple processes will be stomping all over each other as you can
-> have each thread essentially take a page via the LRU flag, but only
-> one thread will process a page and it could skip over all other pages
-> that preemptively had their LRU flag cleared.
-
-It increase a bit crowd here, but lru_lock do reduce some them, and skip_bit
-could stop each other in a array check(bitmap). So compare to whole node 
-lru_lock, the net profit is clear in patch 17.
-
+> In commit: 47b6de0b7f22 ("hrtimer: Add a missing bracket and hide `migration_base' on !SMP")
+> a inline function is_migration_base() is introduced. But
+> the logic of the hrtimer_grab_expiry_lock was changed.
 > 
-> If you take a look at the test_and_set_skip the function only acts on
-> the pageblock aligned PFN for a given range. WIth the changes you have
-> in place now that would mean that only one thread would ever actually
-> call this function anyway since the first PFN would take the LRU flag
-> so no other thread could follow through and test or set the bit as
-
-Is this good for only one process could do test_and_set_skip? is that 
-the 'skip' meaning to be?
-
-> well. The expectation before was that all threads would encounter this
-> test and either proceed after setting the bit for the first PFN or
-> abort after testing the first PFN. With you changes only the first
-> thread actually runs this test and then it and the others will likely
-> encounter multiple failures as they are all clearing LRU bits
-> simultaneously and tripping each other up. That is why the skip bit
-> must have a test and set done before you even get to the point of
-> clearing the LRU flag.
-
-It make the things warse in my machine, would you like to have a try by yourself?
-
-> 
->>> The point I was getting at with the PageCompound check is that instead
->>> of needing the LRU lock you should be able to look at PageCompound as
->>> soon as you call get_page_unless_zero() and preempt the need to set
->>> the LRU bit again. Instead of trying to rely on the LRU lock to
->>> guarantee that the page hasn't been merged you could just rely on the
->>> fact that you are holding a reference to it so it isn't going to
->>> switch between being compound or order 0 since it cannot be freed. It
->>> spoils the idea I originally had of combining the logic for
->>> get_page_unless_zero and TestClearPageLRU into a single function, but
->>> the advantage is you aren't clearing the LRU flag unless you are
->>> actually going to pull the page from the LRU list.
->>
->> Sorry, I still can not follow you here. Compound code part is unchanged
->> and follow the original logical. So would you like to pose a new code to
->> see if its works?
-> 
-> No there are significant changes as you reordered all of the
-> operations. Prior to your change the LRU bit was checked, but not
-> cleared before testing for PageCompound. Now you are clearing it
-> before you are testing if it is a compound page. So if compaction is
-> running we will be seeing the pages in the LRU stay put, but the
-> compound bit flickering off and on if the compound page is encountered
-> with the wrong or NULL lruvec. What I was suggesting is that the
-
-The lruvec could be wrong or NULL here, that is the base stone of whole
-patchset.
-
-> PageCompound test probably doesn't need to be concerned with the lock
-> after your changes. You could test it after you call
-> get_page_unless_zero() and before you call
-> __isolate_lru_page_prepare(). Instead of relying on the LRU lock to
-> protect us from the page switching between compound and not we would
-> be relying on the fact that we are holding a reference to the page so
-> it should not be freed and transition between compound or not.
+> This patch is to correct it.
 > 
 
-I have tried the patch as your suggested, it has no clear help on performance
-on above vm-scaliblity case. Maybe it's due to we checked the same thing
-before lock already.
+Yup, same patch sent back in April, which also had a fixes tag for 5.2.
 
-diff --git a/mm/compaction.c b/mm/compaction.c
-index b99c96c4862d..cf2ac5148001 100644
---- a/mm/compaction.c
-+++ b/mm/compaction.c
-@@ -985,6 +985,16 @@ static bool too_many_isolated(pg_data_t *pgdat)
- 		if (unlikely(!get_page_unless_zero(page)))
- 			goto isolate_fail;
+https://lore.kernel.org/lkml/20200428144026.5882-1-rasmus.villemoes@prevas.dk/
 
-+			/*
-+			 * Page become compound since the non-locked check,
-+			 * and it's on LRU. It can only be a THP so the order
-+			 * is safe to read and it's 0 for tail pages.
-+			 */
-+			if (unlikely(PageCompound(page) && !cc->alloc_contig)) {
-+				low_pfn += compound_nr(page) - 1;
-+				goto isolate_fail_put;
-+			}
-+
- 		if (__isolate_lru_page_prepare(page, isolate_mode) != 0)
- 			goto isolate_fail_put;
+It got picked up for 4.19-rt, dunno why it wasn't for 5.2-rt.
 
-@@ -1013,16 +1023,6 @@ static bool too_many_isolated(pg_data_t *pgdat)
- 					goto isolate_abort;
- 			}
-
--			/*
--			 * Page become compound since the non-locked check,
--			 * and it's on LRU. It can only be a THP so the order
--			 * is safe to read and it's 0 for tail pages.
--			 */
--			if (unlikely(PageCompound(page) && !cc->alloc_contig)) {
--				low_pfn += compound_nr(page) - 1;
--				SetPageLRU(page);
--				goto isolate_fail_put;
--			}
- 		} else
- 			rcu_read_unlock();
-
-Thanks
-Alex
+Rasmus
