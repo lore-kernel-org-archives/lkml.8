@@ -2,115 +2,265 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCEA7C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 11:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AFFEC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 11:45:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 723612080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 11:45:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=prevas.dk header.i=@prevas.dk header.b="N4wFbFAi"
+	by mail.kernel.org (Postfix) with ESMTP id D89B62065C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 11:45:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597232751;
+	bh=Hc6gZFvtchQLwcRhS2KtQhpaG6eNu6efrTQHTQJkcag=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=2OfeTyrIUs4hpJfnatVSS6d7Gro8gpp6Dps/cVHr1047Vd8cyinwAFbUg53AdyQff
+	 r0cGtuBOxz8zIN+nPPHp59OZ79/Lhfj/wNXOXqdUh5WGx6U/jY4Y/LNvL8ECLsAvQ7
+	 c98CuW6kYI5k0s0r12n6tRal1b28rJwtZDn+iLCM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbgHLLpK (ORCPT
+        id S1727864AbgHLLpu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 07:45:10 -0400
-Received: from mail-eopbgr40136.outbound.protection.outlook.com ([40.107.4.136]:36310
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726404AbgHLLpI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 07:45:08 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AnAbf2btH/8q2j3KOYm7t6zdct0nGbOgTNR4Jbjjah3RAL0CyQwuh4TLyCMLrjeDTOTmnTYGGfzB7E05lUmG6ZdyEk798yPEty0Ly56/YxKxavuYvLR4Ygmwo9W22OLndbikz4pVSFY9RAb0q4Mdt4Et80oqTQ6cZlYQLu1ZOtgzKre74vBqS5jFOykXKqLtuCl784C/k1Zb2V/fG/zfwOzl1xNmT71k7hfTr6caAwvGcJx6J+dcQS7H4cj+YmfRMg9QDP6KMyenc6mtsdcVLtwsA0UFus2GV+XiCmXxcHlYvr7I9qeiijFt2AzDEe2iaVqx4YTZ2B30KuIa0h2O7w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CYriiuePpzG5FClKRl/mweBYjO5CI8ailf/iWbNfzf0=;
- b=bvdWpRogUA09HTx99qYmMLlaaiHl+opz4sPg1qf8Kh7tOVx1rzEArE4ssgML2yZ8zRDou4Qu4Q/L5GB1m9dV8DDX0snGeMhZDBwbKydV1MGQp4Ubj4o8j0CpBIPd6vunLYGyxDwRW+zszoDUkf1bhIVI4qu/qeWEwdT/cTAuSl27s0QwX3W1h0tWNyWW0W4zU9319XUKSK7vSRpl13fbA1avLC786fU7FrgE9HcEKbbf3Wqq4bqU86t8WLCC4zc7V4z4F8kErCZFDTQORXTcTbLFTrjkJjA+Dm8aUUUCHPH35JMuWg/kg6xoonwzRpT6ce9HmJ445Y+4B/vsrmG+QQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=prevas.dk; dmarc=pass action=none header.from=prevas.dk;
- dkim=pass header.d=prevas.dk; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prevas.dk;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CYriiuePpzG5FClKRl/mweBYjO5CI8ailf/iWbNfzf0=;
- b=N4wFbFAi0daWoLXcOTb1mU2rTOJM+o/1tmkDy2B/WZWKQ2czLsXmKGjgo9Ihn8z2xzlMkvW4RJ9IxSbwXdM1m5aOByVPTLsANPLc1UXwslcnImL/4xYNc4l+E5lYt+9Xzt9see7wjg66PeTfMMaZrMidS8DKe5a17d8jyZiNgPA=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=prevas.dk;
-Received: from AM0PR10MB1874.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:208:3f::10)
- by AM0PR10MB1940.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:208:45::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.16; Wed, 12 Aug
- 2020 11:45:05 +0000
-Received: from AM0PR10MB1874.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::3cfb:a3e6:dfc0:37ec]) by AM0PR10MB1874.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::3cfb:a3e6:dfc0:37ec%3]) with mapi id 15.20.3261.025; Wed, 12 Aug 2020
- 11:45:05 +0000
-Subject: Re: [PATCH linux-5.2.y-rt only] hrtimer: correct the logic for grab
- expiry lock
-To:     zhantao.tang@windriver.com, linux-kernel@vger.kernel.org
-Cc:     bigeasy@linutronix.de, tglx@linutronix.de, rostedt@goodmis.org,
-        linux-rt-users@vger.kernel.org
-References: <20200812105053.602-1-zhantao.tang@windriver.com>
-From:   Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Message-ID: <86790e56-9cec-5cea-8387-f7010b88708b@prevas.dk>
-Date:   Wed, 12 Aug 2020 13:45:02 +0200
+        Wed, 12 Aug 2020 07:45:50 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:45944 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726404AbgHLLps (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 07:45:48 -0400
+Received: by mail-ed1-f66.google.com with SMTP id di22so1258527edb.12;
+        Wed, 12 Aug 2020 04:45:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=iTU/Dy21v99MwSHqqPqln63atgzchISHbIicoIdY0tk=;
+        b=iaxO3rPceLJ+Qj2uASzUgbrOtFJMqrYlolbtJTfxSaw6H/M4hNRFEWoZ6SH99xtlf7
+         gTR1szVb+3W6EY0xgMYBNVHMB8nYQ8zYT6PRCn5khbBV70oGSmXSkeQW1ipzWaomNsb6
+         qXLG0/kRmyyLIG3H9u5x0kbPYoH/wfgznYuVsJMd347nFU+qzjPKumqTaFVekTyTsqyx
+         /4KW0MHJUSyjoh31UVBE6fz4wRKi+kqIdUbTDobVuie3smYJVpVZNSe59NQGVKtd0/eN
+         M6WZNWvnBmCpaaQazG3g2OfAyzw62N1uKRGiT+qpsGZvBPc5fSptp7v1d9gFauEOUuif
+         sqew==
+X-Gm-Message-State: AOAM532aBH+u4OoMDofunyGYNGx5pDMCL1TBtCOL6MEjykzo0SZUG707
+        CKErMcGLBg4XA+/6ypcDxobP0lOR
+X-Google-Smtp-Source: ABdhPJyQYKB9lc6XsHvt9BA0UwESU/c4LN6Y2ZfWc0iT1x0hR74d4+JSLFM8jMPq4vnjCzXWoSGHtQ==
+X-Received: by 2002:a50:f288:: with SMTP id f8mr30925078edm.247.1597232746140;
+        Wed, 12 Aug 2020 04:45:46 -0700 (PDT)
+Received: from ?IPv6:2a0b:e7c0:0:107::70f? ([2a0b:e7c0:0:107::70f])
+        by smtp.gmail.com with ESMTPSA id d9sm755726edt.20.2020.08.12.04.45.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Aug 2020 04:45:45 -0700 (PDT)
+Subject: Re: [PATCH 2/2] tty/sysrq: Add configurable handler to execute a
+ compound action
+To:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-input@vger.kernel.org, kernel@collabora.com
+References: <20200804162402.2087-1-andrzej.p@collabora.com>
+ <20200804162402.2087-3-andrzej.p@collabora.com>
+From:   Jiri Slaby <jirislaby@kernel.org>
+Message-ID: <0280e30a-2e70-7d21-68a9-5a2c22d7f316@kernel.org>
+Date:   Wed, 12 Aug 2020 13:45:44 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
-In-Reply-To: <20200812105053.602-1-zhantao.tang@windriver.com>
-Content-Type: text/plain; charset=windows-1252
+MIME-Version: 1.0
+In-Reply-To: <20200804162402.2087-3-andrzej.p@collabora.com>
+Content-Type: text/plain; charset=iso-8859-2
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AM4PR0501CA0061.eurprd05.prod.outlook.com
- (2603:10a6:200:68::29) To AM0PR10MB1874.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:208:3f::10)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [172.16.11.132] (81.216.59.226) by AM4PR0501CA0061.eurprd05.prod.outlook.com (2603:10a6:200:68::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.15 via Frontend Transport; Wed, 12 Aug 2020 11:45:04 +0000
-X-Originating-IP: [81.216.59.226]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 6fbf2f82-3b67-4c32-5eaa-08d83eb527a2
-X-MS-TrafficTypeDiagnostic: AM0PR10MB1940:
-X-Microsoft-Antispam-PRVS: <AM0PR10MB1940A7951A2D11770AF28B5C93420@AM0PR10MB1940.EURPRD10.PROD.OUTLOOK.COM>
-X-MS-Oob-TLC-OOBClassifiers: OLM:635;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: iSeGKw1f4V4tPRcabv8hdUWoikZhG/ZyOT63yYaNc5x/RoBU2O97yRiBTlbEFMA0QBr3lNPfVt/DtYdxXgRk1RyPWwMJd1V3pjka/zd2NYqaR8hAqPzGLzOXmwmgnW7r2Mi4a19o35sH+M7X0QZKdPTo/2ID9Me2aQ6FrpdwRcG7d3H5XJEddwXAqbcr0cTdZu6XGG1IWnSThddfuySlLieFZsHZmoG0VSjjrd75iaq/ZQ+KCWm2M05awRE4FN/0XNi7m5aHSpisEh5+lylwqgqQ/nDTsC0G413s9rMMmBx8Kq0afb0Jr1ZPsxX7Oy854rchDeKV40dNWHn629lTxtemOhfQgeoYb1TGWASm3JhHn9GoqLPDx1AICylmaUv7qmEP/KTmzk2gBiD01jDVFrfLgLrZlxbmzEoB+lHBPHFDC9sUZBmQdMIbMsn+weDGE+Oc2l6K8TbfiLHjWw3BqA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR10MB1874.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(346002)(396003)(376002)(39840400004)(136003)(366004)(6486002)(2616005)(44832011)(956004)(478600001)(31686004)(966005)(4326008)(16576012)(26005)(316002)(186003)(16526019)(8676002)(8936002)(8976002)(2906002)(52116002)(4744005)(31696002)(86362001)(36756003)(66476007)(5660300002)(83380400001)(66556008)(66946007)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: K1bgaPI5cVQ9PrfIrtGiA4gP9fMRQa+g/virk0EM8rlSRRozOeWzvBzg0zz6/W9mczoOCLbSbY8h2O31Hr0JaAkrw/tLtXvxkTrMXlAeEAdNMY0cxOctmMGunAsNO4A9SnOo10Fsn/dAXiiNa/wWKu07GXd/xN3JfOSec+ZcgFIKRYePvlCWiZFXLxKMBH9CeBqVSmx10f51Lbkh5I1yNbfP/zgGVnURYoTmAJX3Og8fFh39Pro1LM/ecReyB8nOvtPJ/XkKBqAf1SII2IDJpkO+/zQzMML5N864II+Lx0cSGKbhZpXA4V1G5YYaNahfK/diacttUJXM3zzCy0j6EnODKlTvil/PwGXjOpzplKLHCUHm3A8DXBfe0+yDQAqJ7pLfmtjEgcjEjwZW8YQH+o3dHi1PoyFL9N9TH8lgilBZ47SWyXz1bezQyXdJaj7luvDTnrX05P0856pgLjDRa974QZadSJh75XIwpUKDFucS4V9ddaAsdzdWFLTRlkksl4b9flGxnkSTfjC6t4L/YrWDq5BxP3OA2lInowOWAgTioS27BuEVBpnP1seMMq+fcDXIhq7t8B1cD0cFfc56CPvymmROVKrHmrbtfUeYC7pAKpq7raQ2W3c3P6FXxh0y8Zih7B/QM6DU0jRVmxw/aQ==
-X-OriginatorOrg: prevas.dk
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6fbf2f82-3b67-4c32-5eaa-08d83eb527a2
-X-MS-Exchange-CrossTenant-AuthSource: AM0PR10MB1874.EURPRD10.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Aug 2020 11:45:04.9829
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: d350cf71-778d-4780-88f5-071a4cb1ed61
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zih3rmY3ou6EFYwRSWjb6JlQQ2j/EnfBzRD7S1OLknvCV//7H0JfIFkVHbD1HiWOCQ/8j7EJhMfRCM2Ay8laRe9x6k7c6HvDayQMGJxqwtM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR10MB1940
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/08/2020 12.50, zhantao.tang@windriver.com wrote:
-> From: Zhantao Tang <zhantao.tang@windriver.com>
+On 04. 08. 20, 18:24, Andrzej Pietrasiewicz wrote:
+> Userland might want to execute e.g. 'w' (show blocked tasks), followed
+> by 's' (sync), followed by 1000 ms delay and then followed by 'c' (crash)
+> upon a single magic SysRq. Or one might want to execute the famous "Raising
+> Elephants Is So Utterly Boring" action. This patch adds a configurable
+> handler, triggered with 'C', for this exact purpose. The user specifies the
+> composition of the compound action using syntax similar to getopt, where
+> each letter corresponds to an individual action and a colon followed by a
+> number corresponds to a delay of that many milliseconds, e.g.:
 > 
-> In commit: 47b6de0b7f22 ("hrtimer: Add a missing bracket and hide `migration_base' on !SMP")
-> a inline function is_migration_base() is introduced. But
-> the logic of the hrtimer_grab_expiry_lock was changed.
+> ws:1000c
 > 
-> This patch is to correct it.
+> or
 > 
+> r:100eis:1000ub
 
-Yup, same patch sent back in April, which also had a fixes tag for 5.2.
+I think I miss what's that good for, given I can do it one-by-one
+without setting such strings anywhere (I usually want to do different
+things on different kinds of crashes)?
 
-https://lore.kernel.org/lkml/20200428144026.5882-1-rasmus.villemoes@prevas.dk/
+> Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+> ---
+>  Documentation/admin-guide/sysrq.rst |  9 ++++
+>  drivers/tty/sysrq.c                 | 81 ++++++++++++++++++++++++++++-
+>  include/linux/sysrq.h               |  1 +
+>  3 files changed, 90 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/admin-guide/sysrq.rst b/Documentation/admin-guide/sysrq.rst
+> index 67dfa4c29093..80bdd8bf9636 100644
+> --- a/Documentation/admin-guide/sysrq.rst
+> +++ b/Documentation/admin-guide/sysrq.rst
+> @@ -32,6 +32,7 @@ to 1. Here is the list of possible values in /proc/sys/kernel/sysrq:
+>           64 =  0x40 - enable signalling of processes (term, kill, oom-kill)
+>          128 =  0x80 - allow reboot/poweroff
+>          256 = 0x100 - allow nicing of all RT tasks
+> +        512 = 0x200 - allow compound action
+>  
+>  You can set the value in the file by the following command::
+>  
+> @@ -148,6 +149,14 @@ Command	    Function
+>  
+>  ``z``	    Dump the ftrace buffer
+>  
+> +``C``	    Execute a predefined, compound action. The action is defined with
+> +	    sysrq.sysrq_compound_action module parameter, whose value contains known
+> +	    command keys (except ``C`` to prevent recursion). The command keys can
+> +	    be optionally followed by a colon and a number of milliseconds to wait
+> +	    after executing the last action. For example:
+> +
+> +	    sysrq.sysrq_compound_action=r:100eis:1000ub
+> +
+>  ``0``-``9`` Sets the console log level, controlling which kernel messages
+>              will be printed to your console. (``0``, for example would make
+>              it so that only emergency messages like PANICs or OOPSes would
+> diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
+> index 52e344bfe8c0..ffcda1316675 100644
+> --- a/drivers/tty/sysrq.c
+> +++ b/drivers/tty/sysrq.c
+> @@ -19,6 +19,7 @@
+>  #include <linux/sched/rt.h>
+>  #include <linux/sched/debug.h>
+>  #include <linux/sched/task.h>
+> +#include <linux/delay.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/mm.h>
+>  #include <linux/fs.h>
+> @@ -439,6 +440,15 @@ static const struct sysrq_key_op sysrq_unrt_op = {
+>  	.enable_mask	= SYSRQ_ENABLE_RTNICE,
+>  };
+>  
+> +static void sysrq_action_compound(int key);
+> +
+> +static struct sysrq_key_op sysrq_action_compound_op = {
+> +	.handler	= sysrq_action_compound,
+> +	.help_msg	= "execute-compound-action(C)",
+> +	.action_msg	= "Execute compound action",
+> +	.enable_mask	= SYSRQ_ENABLE_COMPOUND,
+> +};
+> +
+>  /* Key Operations table and lock */
+>  static DEFINE_SPINLOCK(sysrq_key_table_lock);
+>  
+> @@ -501,7 +511,7 @@ static const struct sysrq_key_op *sysrq_key_table[62] = {
+>  	&sysrq_ftrace_dump_op,		/* z */
+>  	NULL,				/* A */
+>  	NULL,				/* B */
+> -	NULL,				/* C */
+> +	&sysrq_action_compound_op,	/* C */
+>  	NULL,				/* D */
+>  	NULL,				/* E */
+>  	NULL,				/* F */
+> @@ -634,6 +644,7 @@ EXPORT_SYMBOL(handle_sysrq);
+>  
+>  #ifdef CONFIG_INPUT
+>  static int sysrq_reset_downtime_ms;
+> +static char *sysrq_compound_action;
+>  
+>  /* Simple translation table for the SysRq keys */
+>  static const unsigned char sysrq_xlate[KEY_CNT] =
+> @@ -787,6 +798,61 @@ static void sysrq_of_get_keyreset_config(void)
+>  {
+>  }
+>  #endif
+> +#define SYSRQ_COMPOUND_ACTION_VALIDATE	0
+> +#define SYSRQ_COMPOUND_ACTION_RUN	1
+> +
+> +static int sysrq_process_compound_action(int pass)
+> +{
+> +	const char *action = sysrq_compound_action;
+> +	const struct sysrq_key_op *op_p;
+> +	int ret, delay;
+> +
+> +	while (*action) {
+> +		op_p = __sysrq_get_key_op(*action);
+> +		if (!op_p)
+> +			return -EINVAL;
+> +
+> +		/* Don't allow calling ourselves recursively */
+> +		if (op_p == &sysrq_action_compound_op)
+> +			return -EINVAL;
+> +
+> +		if (pass == SYSRQ_COMPOUND_ACTION_RUN)
+> +			__handle_sysrq(*action, false);
+> +
+> +		if (*++action == ':') {
+> +			ret = sscanf(action++, ":%d", &delay);
 
-It got picked up for 4.19-rt, dunno why it wasn't for 5.2-rt.
+You likely want %u and unsigned int. No negative delays.
 
-Rasmus
+> +			if (ret < 1) /* we want at least ":[0-9]" => 1 item */
+> +				return -EINVAL;
+> +
+> +			while (*action >= '0' && *action <= '9')
+> +				++action;
+> +			if (pass == SYSRQ_COMPOUND_ACTION_RUN)
+> +				mdelay(delay);
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void sysrq_action_compound(int key)
+> +{
+> +	if (!sysrq_compound_action) {
+> +		pr_err("Unconfigured compound action for %s",
+> +		       sysrq_action_compound_op.help_msg);
+
+Missing \n.
+
+> +		return;
+> +	}
+> +
+> +	if (sysrq_process_compound_action(SYSRQ_COMPOUND_ACTION_VALIDATE)) {
+> +		pr_err("Incorrect compound action %s for %s",
+
+The same.
+
+> +		       sysrq_compound_action,
+> +		       sysrq_action_compound_op.help_msg);
+> +
+> +		return;
+> +	}
+> +
+> +	sysrq_process_compound_action(SYSRQ_COMPOUND_ACTION_RUN);
+> +}
+>  
+>  static void sysrq_reinject_alt_sysrq(struct work_struct *work)
+>  {
+> @@ -1079,8 +1145,21 @@ module_param_array_named(reset_seq, sysrq_reset_seq, sysrq_reset_seq,
+>  
+>  module_param_named(sysrq_downtime_ms, sysrq_reset_downtime_ms, int, 0644);
+>  
+> +module_param(sysrq_compound_action, charp, 0644);
+> +MODULE_PARM_DESC(sysrq_compound_action,
+> +	"Compound sysrq action to be executed on Alt-Shift-SysRq-C\n"
+> +	"The compound action definition consists of known SysRq action letters except 'C',\n"
+> +	"each letter can be optionally followed by a colon and a number of milliseconds to wait\n"
+> +	"after executing the last action.\n"
+> +	"Example:\n"
+> +	"To unRaw, wait 100ms, tErminate, kIll, Sync, wait 1000ms, Unmount, Boot\n"
+> +	"sysrq.sysrq_compound_action=r:100eis:1000ub");
+
+This looks bad in the output, use at least one \t at the start of a new
+line inside the string.
+
+-- 
+js
+suse labs
