@@ -2,117 +2,174 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71530C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1D53C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:32:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48D69204FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:31:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97A59204FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:32:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="c2AHu8++"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vW3XuBHq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728094AbgHLNb2 (ORCPT
+        id S1728118AbgHLNcX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 09:31:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37458 "EHLO
+        Wed, 12 Aug 2020 09:32:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728025AbgHLNbX (ORCPT
+        with ESMTP id S1727921AbgHLNcU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 09:31:23 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 184CEC06174A
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 06:31:21 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id d22so1035885pfn.5
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 06:31:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vlf2gQ258Yo0xeKkYNMeBOCIHVe3hvJX2SMEJPRuUbY=;
-        b=c2AHu8++qdSURlnEYQVRqISoN1mnzzPboyfje7CpVG4P/AdpneMgNGfx+vclZ3SmJZ
-         mrOFXwgOO3vK6Am/uNIgDP/uUcboRU3d7JhhPETV+s21RG7g1SXIG4mFstfweGJ23OE4
-         T0M8LDUAq/EplxYiiQNFOrdpjZd8vxugMAX9g=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vlf2gQ258Yo0xeKkYNMeBOCIHVe3hvJX2SMEJPRuUbY=;
-        b=sCRfqws5+lOehAifLEbYXZM3iXFNWGKng5axQmh5+pCVty9AotOFVSLuPpvqMcaEOg
-         jfopMTTRu6LAVi4GxgpiG/Wh+5gIJFQq3+l7hUwcr3Z6OXM9FLu5RYCqUhFWjbjP5Gd5
-         pBZzIIqCJBSnl/U42pXpMQens/VbbEN2M6qnB6XN/GBqaSBWkSuZS+Hk/iHb2YcHczr/
-         EjNRLaE5NnohOIcTB6fVXZ7cRTLXi+JE7x3ABLLm0eDXRHvxuUX5kGQwD8febGCi6NJ5
-         huofaSbI0sxaFbxdzsqS4cPpAkbo5gV8ERYdZy+ePB9eL9oK6QoYNuvsl62fABzoC43Y
-         fGXA==
-X-Gm-Message-State: AOAM530cKyqSII37ExcPN8Gl67C7BxgWKce/6vbdhxomCWja+4rpawCg
-        GnyPhIZ3g8C9U4uuftJsHsRCxA==
-X-Google-Smtp-Source: ABdhPJzpMXs76cDKrcxnEiUeiPgvpYo8pxBDIU68bf9PUiSC35Y94TDM35dGj/w0hCqzbdmyYT2Acw==
-X-Received: by 2002:aa7:9703:: with SMTP id a3mr11043496pfg.268.1597239079820;
-        Wed, 12 Aug 2020 06:31:19 -0700 (PDT)
-Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:1a60:24ff:fe89:3e93])
-        by smtp.gmail.com with ESMTPSA id b63sm2488143pfg.43.2020.08.12.06.31.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Aug 2020 06:31:19 -0700 (PDT)
-From:   Hsin-Yi Wang <hsinyi@chromium.org>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Support Opensource <support.opensource@diasemi.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
-        Tomasz Figa <tfiga@chromium.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Daniel Kurtz <djkurtz@chromium.org>
-Subject: [PATCH] regulator: da9211: add cache_type
-Date:   Wed, 12 Aug 2020 21:31:02 +0800
-Message-Id: <20200812133101.2513317-1-hsinyi@chromium.org>
-X-Mailer: git-send-email 2.28.0.236.gb10cc79966-goog
+        Wed, 12 Aug 2020 09:32:20 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 363F2C06174A;
+        Wed, 12 Aug 2020 06:32:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=/1yLg7wLxOieDTHuV1+QBNxA0Zsi0S/5XXV3uZhAujE=; b=vW3XuBHqyaPnhcVdiv1s45fxSR
+        B+4bL34CxRPANM/uvlEJDJsv5+UWQ6QREqWWrhFINjvVSx8ZhEM/Ug5d+diB28ApUJsplefzFQizU
+        78G9GWuRcggLewM71Qn1IDbAlRZc9VXSU/ROAw3JFaO0oMzDEWGjuRmCwnSkJCYdPPu12vKrMD+Iw
+        9wQ6+jc6H1uz5a7kyCWbZawzxVyL4+pmXh6jPOXVDiUkS/Zl6b2a9tZ7EqHcXDAVxi8yAs3DjMHeB
+        48FzkYG9XWl018sLJU7ltfauo3IFHURiCU7jzzFDUBuSfQBAlCpfpgLuhkWiDfcC7qExvTFy/JaGS
+        eV9dtNZQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k5qrC-0004VV-TW; Wed, 12 Aug 2020 13:31:55 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9D6B43060C5;
+        Wed, 12 Aug 2020 15:31:50 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 54DB42B76E7EB; Wed, 12 Aug 2020 15:31:50 +0200 (CEST)
+Date:   Wed, 12 Aug 2020 15:31:50 +0200
+From:   peterz@infradead.org
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Like Xu <like.xu@linux.intel.com>, Yao <yao.jin@linux.intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] KVM: x86/pmu: Add '.exclude_hv = 1' for guest perf_event
+Message-ID: <20200812133150.GQ2674@hirez.programming.kicks-ass.net>
+References: <20200812050722.25824-1-like.xu@linux.intel.com>
+ <5c41978e-8341-a179-b724-9aa6e7e8a073@redhat.com>
+ <20200812111115.GO2674@hirez.programming.kicks-ass.net>
+ <65eddd3c-c901-1c5a-681f-f0cb07b5fbb1@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <65eddd3c-c901-1c5a-681f-f0cb07b5fbb1@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add regmap_cache to reduce wakeups events of interrupt if regulator is
-accessed frequently. This results in saving more power.
+On Wed, Aug 12, 2020 at 01:32:58PM +0200, Paolo Bonzini wrote:
+> On 12/08/20 13:11, peterz@infradead.org wrote:
+> > Right, but we want to tighten the permission checks and not excluding_hv
+> > is just sloppy.
+> 
+> I would just document that it's ignored as it doesn't make sense.  ARM64
+> does that too, for new processors where the kernel is not itself split
+> between supervisor and hypervisor privilege levels.
 
-Suggested-by: Daniel Kurtz <djkurtz@chromium.org>
-Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
----
- drivers/regulator/da9211-regulator.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+This isn't about x86, I want these checks in generic code. We have the
+flag, it needs checking.
 
-diff --git a/drivers/regulator/da9211-regulator.c b/drivers/regulator/da9211-regulator.c
-index 297b3aa7c753..cffcefd0538d 100644
---- a/drivers/regulator/da9211-regulator.c
-+++ b/drivers/regulator/da9211-regulator.c
-@@ -51,10 +51,24 @@ static const struct regmap_range_cfg da9211_regmap_range[] = {
- 	},
- };
- 
-+static bool da9211_volatile_reg(struct device *dev, unsigned int reg)
-+{
-+	switch (reg) {
-+	case DA9211_REG_STATUS_A:
-+	case DA9211_REG_STATUS_B:
-+	case DA9211_REG_EVENT_A:
-+	case DA9211_REG_EVENT_B:
-+		return true;
-+	}
-+	return false;
-+}
-+
- static const struct regmap_config da9211_regmap_config = {
- 	.reg_bits = 8,
- 	.val_bits = 8,
- 	.max_register = 5 * 128,
-+	.volatile_reg = da9211_volatile_reg,
-+	.cache_type = REGCACHE_RBTREE,
- 	.ranges = da9211_regmap_range,
- 	.num_ranges = ARRAY_SIZE(da9211_regmap_range),
- };
--- 
-2.28.0.236.gb10cc79966-goog
+unpriv users have no busniess getting anything from a possible hv.
+
+> > The thing is, we very much do not want to allow unpriv user to be able
+> > to create: exclude_host=1, exclude_guest=0 counters (they currently
+> > can).
+> 
+> That would be the case of an unprivileged user that wants to measure
+> performance of its guests.  It's a scenario that makes a lot of sense,
+> are you worried about side channels?  Can perf-events on guests leak
+> more about the host than perf-events on a random userspace program?
+
+An unpriv user can run guests?
+
+> > Also, exclude_host is really poorly defined:
+> > 
+> >   https://lkml.kernel.org/r/20200806091827.GY2674@hirez.programming.kicks-ass.net
+> > 
+> >   "Suppose we have nested virt:
+> > 
+> > 	  L0-hv
+> > 	  |
+> > 	  G0/L1-hv
+> > 	     |
+> > 	     G1
+> > 
+> >   And we're running in G0, then:
+> > 
+> >   - 'exclude_hv' would exclude L0 events
+> >   - 'exclude_host' would ... exclude L1-hv events?
+> >   - 'exclude_guest' would ... exclude G1 events?
+> 
+> From the point of view of G0, L0 *does not exist at all*.  You just
+> cannot see L0 events if you're running in G0.
+
+On x86, probably, in general, I'm not at all sure, we have that
+exclude_hv flag after all.
+
+> exclude_host/exclude_guest are the right definition.
+
+For what? I still think exclude_host is absolute shit. If you set it,
+you'll not get anything even without virt.
+
+Run a native linux kernel, no kvm loaded, create a counter with
+exclude_host=1 and you'll get nothing, that's just really confusing IMO.
+There is no host, so excluding it should not affect anything.
+
+> >   Then the next question is, if G0 is a host, does the L1-hv run in
+> >   G0 userspace or G0 kernel space?
+> 
+> It's mostly kernel, but sometimes you're interested in events from QEMU
+> or whoever else has opened /dev/kvm.  In that case you care about G0
+> userspace too.
+
+I really don't think userspace helpers should be consideed part of
+the host, but whatever.
+
+> > The way it is implemented, you basically have to always set
+> > exclude_host=0, even if there is no virt at all and you want to measure
+> > your own userspace thing -- which is just weird.
+> 
+> I understand regretting having exclude_guest that way; include_guest
+> (defaulting to 0!) would have made more sense.  But defaulting to
+> exclude_host==0 makes sense: if there is no virt at all, memset(0) does
+> the right thing so it does not seem weird to me.
+
+Sure, but having exclude_host affect anything outside of kvm is still
+dodgy as heck.
+
+> > I suppose the 'best' option at this point is something like:
+> > 
+> > 	/*
+> > 	 * comment that explains the trainwreck.
+> > 	 */
+> > 	if (!exclude_host && !exclude_guest)
+> > 		exclude_guest = 1;
+> > 
+> > 	if ((!exclude_hv || !exclude_guest) && !perf_allow_kernel())
+> > 		return -EPERM;
+> > 
+> > But that takes away the possibility of actually having:
+> > 'exclude_host=0, exclude_guest=0' to create an event that measures both,
+> > which also sucks.
+> 
+> In fact both of the above "if"s suck. :(
+
+If, as you seem to imply above, that unpriv users can create guests,
+then maybe so, but if I look at /dev/kvm it seems to have 0660
+permissions and thus really requires privileges.
 
