@@ -2,86 +2,117 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36E67C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:19:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 811DCC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:19:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E742C20781
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:19:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52B2420781
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:19:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="KjmsEoeh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lp6jMlnl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbgHLOTa (ORCPT
+        id S1726777AbgHLOTx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 10:19:30 -0400
-Received: from mout.gmx.net ([212.227.15.18]:48351 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726485AbgHLOT3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 10:19:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1597241944;
-        bh=2qIIIi+kVG7PNoSbul+CG9EF5Wr4xueF6mcdgIcW3EU=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=KjmsEoehBkJWt2WfLKDifatf+nhathRfdQWsUbieC3G4XEsJxHNktlZZq9HdNN4oE
-         JH2NtPH+SiluY9OBzFBhByu+/T+tMynOuKF+DqIGL7o3x6QsRhtkP/kGEvj31JOBEF
-         guug7jtkFazXpfY09Nqn46/088gEaBZ1+BAfB4to=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [185.53.41.139] ([185.53.41.139]) by web-mail.gmx.net
- (3c-app-gmx-bs32.server.lan [172.19.170.84]) (via HTTP); Wed, 12 Aug 2020
- 16:19:04 +0200
+        Wed, 12 Aug 2020 10:19:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45034 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726485AbgHLOTu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 10:19:50 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF772C061383;
+        Wed, 12 Aug 2020 07:19:49 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id 185so2424788ljj.7;
+        Wed, 12 Aug 2020 07:19:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qaFF1cuZrCftEln/DvH88Nq1YmHTHq4hx2BD8n/L0fY=;
+        b=lp6jMlnl6BK6p0xieLueLjdqJUlck6HCCDZjySQqhQ39kDY6XdMKdlExwuw1eFNMj3
+         aDoK4waKQhJUA9ahJsaWTIrJCthhDRBjD6PDMJF9qgVmQBFT3/emqXHGfeOR+YkmC5LL
+         h4UL3SsFS+qk8sTx1opNUGN10Dn9OwtNISblR2fhtY0I0FODDy8GZd/wXSoyWAF1ySRN
+         uHV0RGU+34GehGuUjSPPg0hXOxEDv1q8EMXToql7vKQb5tq5kCeDRflnLNdwed5sHOuY
+         0FTbImxF8t1nuFJkLFAJtOdofP2xFfXecKtxrMbd41rttKfewXHqFLnpTJUw9qOeF/Nc
+         X8oQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qaFF1cuZrCftEln/DvH88Nq1YmHTHq4hx2BD8n/L0fY=;
+        b=bAqL26RdNfVMFgLRhfe7f6Kdh11cXqENBHiYN3oXe+KywmmLj4LovX40LFzmGXnEQs
+         SU1TTy7y5hLIkNzCN+g5lmxTS9sLTWdBekBf+itlXe68bwAFAoM0CSbbUatm03VfQXmv
+         tFWdg6oSF4rEp0ZR4DZFZ79rjuylu8pWyeV2P3c/mzIe3KN5VB1+zQp0NVAi8VkMINX+
+         dv0GahCMfDzmTq/kqdsPgl1RfHOA+Wy4QQFTqYEe0ruouNeInVhz0fHtbG6hBdX0E9qF
+         57/MfD/y6Sk6w5F5Xijh8qFPAxr1r60sL3EMsOrQ+2c5rYCunosT9N55IHy7uJV5zOsO
+         QvtQ==
+X-Gm-Message-State: AOAM532SYEl9idnHqL7BVYhNSVXYku2+StFC957me9Zi1Ly+JOjwTFs8
+        KyPyodte/bnHnJuMflCuht29Hk8y9Rj1M5PBqWw=
+X-Google-Smtp-Source: ABdhPJzmO9mppslO1BW3Hc8I1cyCZqztX+Oc6RwKl++4PtZHahW4B/NtkTBcXE5ywquMXs9+LlZeOr26GDvLTDbPM/M=
+X-Received: by 2002:a2e:9f02:: with SMTP id u2mr5549862ljk.128.1597241988380;
+ Wed, 12 Aug 2020 07:19:48 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <trinity-b7a0d7ed-cbc7-421d-810d-162fd178a8f3-1597241944268@3c-app-gmx-bs32>
-From:   Frank Wunderlich <frank-w@public-files.de>
-To:     Wenbin Mei <wenbin.mei@mediatek.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Wenbin Mei <wenbin.mei@mediatek.com>,
-        srv_heupstream@mediatek.com, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Chaotian Jing <chaotian.jing@mediatek.com>
-Subject: Aw: [v2,3/3] mmc: mediatek: add optional module reset property
-Content-Type: text/plain; charset=UTF-8
-Date:   Wed, 12 Aug 2020 16:19:04 +0200
-Importance: normal
-Sensitivity: Normal
-In-Reply-To: <20200812130129.13519-4-wenbin.mei@mediatek.com>
-References: <20200812130129.13519-1-wenbin.mei@mediatek.com>
- <20200812130129.13519-4-wenbin.mei@mediatek.com>
-X-UI-Message-Type: mail
-X-Priority: 3
-X-Provags-ID: V03:K1:DI9ytn25Mt7akP/u6K+zVHv5f9HCrC6Cv16qnII6teMTpW2XwfNpVoOFjsieNPVwxH/l4
- cU9JOsQ/EywXacZma3nl2x+nLnZRWJetq0muKjnIFXHkClEF1/JKMVLhiQGD47pDpFys17mtusRl
- IZj0JuYw2/1ZQNpDUsRUHTLewSnpAmCMNyaFY3QyL81a+Exg1Hd9W45f5B3QKDiXi8YPcFl3ujSC
- htEJ6QIHlc+SwUugRjsLYSIYvPxrpe1U85FJ2oxUj1HDNAkgp5/kWi3ABWD/dfqso+NKIE0XQUAB
- MA=
-X-UI-Out-Filterresults: notjunk:1;V03:K0:pT+4PmpTWt0=:MAHvXFTaSHTxJHOLIoWHrt
- oieG5CBLtcg1W4OdS36hlQtCDvmdbxV16P+T5VgicjXog+nlR9AzaD1rc8OhGi9pfBxrkh6IF
- N1BQtB/D649DurS3NpQSXn3DugHgBTDz8BIhxvccpJuvhkliYkmNM9ObXQmMTXrpsiFmYG3bX
- K3ej55UX74QCj7oadVwk3Ml6YQ6+tB6DQ7Ab4eJjDDc9eSoIogYElzPQ4z//Zsvwq6VJgqFID
- 7W+fnvwjUO6hUb5fE/Yct+QWj6rH46A/AEuGRsfBFDRUyytFj/ngG0b3WIXy8EvZHszgpO8nQ
- i6jjqHuIJSZEZvlIbgfxHmQSMGVTfR3gcPfoFe6pcjkx/eRm6ZKIkCEJEshGVqTElrtikL3Yc
- +mhl1GcwQcgkSYairRNGXtjkZvKH7A2/dALySYSkYWGa7UtZ8IwB03HXTPXe0VDJvcWRwJZ0n
- YFcHDHDhLh+Ioyn9WTYMCTdsR3uCKjfrTHex4diVF1H9qMrsVBXNnHWcyMIL+G/dBt0nriNL8
- o4NleJ1UuPAt05XXmA75uEJ0lMvjrMtGXBPetM3y+Mpzf6p5iupJ6PU4BXq38KLkvRmzXKccU
- UdR+Ixupe4/pUkzw4pK7mJXlMxPvQZqdzZ3uMTb/5QFYmjQplOEtC9NeNEEH86EWZtWxHezUm
- 5VjR2tYCGpgtxm3PBz4FgT28n6s4wMGzFHdRzJacbioG/hokFAsLHRZFufw2d3/VN8sI=
+References: <000000000000d4adc705ac87ba8e@google.com> <20200810183057.GF3399@localhost.localdomain>
+In-Reply-To: <20200810183057.GF3399@localhost.localdomain>
+From:   Jonas Falkevik <jonas.falkevik@gmail.com>
+Date:   Wed, 12 Aug 2020 16:19:37 +0200
+Message-ID: <CABUN9aDV4yKcoQvMf=griMsx40_tr5sEH9Dod2NnakoC6UwrJg@mail.gmail.com>
+Subject: Re: general protection fault in sctp_ulpevent_notify_peer_addr_change
+To:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Cc:     syzbot <syzbot+8f2165a7b1f2820feffc@syzkaller.appspotmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-sctp@vger.kernel.org,
+        network dev <netdev@vger.kernel.org>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        syzkaller-bugs@googlegroups.com,
+        Vlad Yasevich <vyasevich@gmail.com>,
+        Xin Long <lucien.xin@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-it looks like you missed Philipps comments in v1
+On Mon, Aug 10, 2020 at 8:31 PM Marcelo Ricardo Leitner
+<marcelo.leitner@gmail.com> wrote:
+>
+> On Mon, Aug 10, 2020 at 08:37:18AM -0700, syzbot wrote:
+> > Hello,
+> >
+> > syzbot found the following issue on:
+> >
+> > HEAD commit:    fffe3ae0 Merge tag 'for-linus-hmm' of git://git.kernel.org..
+> > git tree:       upstream
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=12f34d3a900000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=50463ec6729f9706
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=8f2165a7b1f2820feffc
+> > compiler:       gcc (GCC) 10.1.0-syz 20200507
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1517701c900000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11b7e0e2900000
+> >
+> > IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> > Reported-by: syzbot+8f2165a7b1f2820feffc@syzkaller.appspotmail.com
+> >
+> > general protection fault, probably for non-canonical address 0xdffffc000000004c: 0000 [#1] PREEMPT SMP KASAN
+> > KASAN: null-ptr-deref in range [0x0000000000000260-0x0000000000000267]
+> > CPU: 0 PID: 12765 Comm: syz-executor391 Not tainted 5.8.0-syzkaller #0
+> > Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
+> > RIP: 0010:sctp_ulpevent_notify_peer_addr_change+0xa9/0xad0 net/sctp/ulpevent.c:346
+>
+> Crashed in code added by 45ebf73ebcec ("sctp: check assoc before
+> SCTP_ADDR_{MADE_PRIM, ADDED} event"), but it would have crashed a
+> couple of instructions later on already anyway.
+>
+> I can't reproduce this crash, with the same commit and kernel config.
+> I'm not seeing how transport->asoc can be null at there.
+>
+I haven't been able to reproduce this yet either.
 
-for stable i guess you need only add Cc: Stable-line to signed-off-area (not add it to CC of mail), sorry my mistake
-
-Cc: stable@vger.kernel.org
-
-regards Frank
+Doesn't this report have similarities with "general protection fault
+in sctp_ulpevent_nofity_peer_addr_change" from 19 March 2020?
+https://syzkaller.appspot.com/bug?extid=3950016bd95c2ca0377b
