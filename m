@@ -2,124 +2,91 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C4D0C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 17:59:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F22CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 18:00:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 543582078B
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 17:59:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jI3J/b3s"
+	by mail.kernel.org (Postfix) with ESMTP id E32E120771
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 18:00:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726600AbgHLR7a (ORCPT
+        id S1726558AbgHLSAz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 13:59:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50604 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726276AbgHLR73 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 13:59:29 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EDFDC061383
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 10:59:28 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id m22so3226236eje.10
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 10:59:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1/cIJeE2yfgVM1ZrtP/9jp14hYxY3Vu0/YCadb84AWQ=;
-        b=jI3J/b3sbr7lMKeERD0GITknMh9Uxa+SplZKxUOvdDtzVOtMq4sbbMjULlVaTTjPsl
-         b6ZbrqiZvtr1sqNoBR0Z/OPksGY4OjXSaOovTptxM1hz6ZDb++D2GV0IE+GzOKqYA1mF
-         Rk5bbZ3M7f75UO+LZE8T1d84BJjKfgSc9gyZs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1/cIJeE2yfgVM1ZrtP/9jp14hYxY3Vu0/YCadb84AWQ=;
-        b=qz7OYEow/HR/reKI5BGOmj2Fdap+Wuy7UWGhFAWO4OshdBmEE0Sc89w7A/9SR+9SAm
-         Qqm5wSpm+FBCJGpO4mdRijRFz4dwcWEbal26uORk5btuz8553pEKcjtd9fh43NS02Svu
-         3l3wuOu0KbUE82h/XhaQEvf3KOLbv4vNBM08a3Vgy6adfESugZaKvodjlJCu3eC8Zqtt
-         RdFveiOhuTvkFXYTl0NjNujVNDQuOB1eD5sPscTC2JdgDBX+irIQeCCreHpCLDVCeZfn
-         AZG/qYUmMd/wjFCI2nYnNdzkZNEiiZ/sKel/1eY9PqDZrtBQ4EC/Yp3prgrKAiKITE+U
-         aWlw==
-X-Gm-Message-State: AOAM531ei5SxhU9oYDqUa2fEoKW4IpOaW2kHDl9d5ObsldDaAeJaTrh4
-        0Ux2S9JHqcCxheOrVi5MqnSG4GRCwicasw==
-X-Google-Smtp-Source: ABdhPJzPe5NyG0jl9WmdABKN6Aq9cHNXKcupjIZkztdQbLMRId6GTdQrq6UlPHcSaSLOJCzB8SSnzA==
-X-Received: by 2002:a17:906:bcf3:: with SMTP id op19mr944142ejb.1.1597255167034;
-        Wed, 12 Aug 2020 10:59:27 -0700 (PDT)
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com. [209.85.218.47])
-        by smtp.gmail.com with ESMTPSA id v5sm1932917ede.13.2020.08.12.10.59.25
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Aug 2020 10:59:25 -0700 (PDT)
-Received: by mail-ej1-f47.google.com with SMTP id m22so3226121eje.10
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 10:59:25 -0700 (PDT)
-X-Received: by 2002:a17:906:4d4f:: with SMTP id b15mr946622ejv.534.1597255164979;
- Wed, 12 Aug 2020 10:59:24 -0700 (PDT)
+        Wed, 12 Aug 2020 14:00:55 -0400
+Received: from mga07.intel.com ([134.134.136.100]:47124 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726276AbgHLSAz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 14:00:55 -0400
+IronPort-SDR: vYXl8eOpZEajZA6Fzv49i6NDEV90ZOGy1KffjOhNBX5OnhGWDRfE3rtAm81EhORYCiTsnUyBe2
+ yZuDSA2PaJCg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9711"; a="218365786"
+X-IronPort-AV: E=Sophos;i="5.76,305,1592895600"; 
+   d="scan'208";a="218365786"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2020 11:00:52 -0700
+IronPort-SDR: gx2r74QMlfV1c8e6Z9N3Vljq7qt84CboLVDYJPcajrNR0b0AHhGqN7dEJ6e+gaPsfyRpOwn8rS
+ 16xRZAaFuD1Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,305,1592895600"; 
+   d="scan'208";a="291118905"
+Received: from lkp-server01.sh.intel.com (HELO 7f1ebb311643) ([10.239.97.150])
+  by orsmga003.jf.intel.com with ESMTP; 12 Aug 2020 11:00:49 -0700
+Received: from kbuild by 7f1ebb311643 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1k5v3R-0000BX-8t; Wed, 12 Aug 2020 18:00:49 +0000
+Date:   Thu, 13 Aug 2020 01:59:58 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Valentin Schneider <valentin.schneider@arm.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     kbuild-all@lists.01.org, mingo@kernel.org, peterz@infradead.org,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        morten.rasmussen@arm.com, Quentin Perret <qperret@google.com>
+Subject: [PATCH] sched/debug: fix noderef.cocci warnings
+Message-ID: <20200812175958.GA94389@b1d876c4bf9f>
+References: <20200812125300.11889-7-valentin.schneider@arm.com>
 MIME-Version: 1.0
-References: <20200811222803.3224434-1-zwisler@google.com> <20200812014324.rtvlhvopifgkw4mi@yavin.dot.cyphar.com>
-In-Reply-To: <20200812014324.rtvlhvopifgkw4mi@yavin.dot.cyphar.com>
-From:   Ross Zwisler <zwisler@chromium.org>
-Date:   Wed, 12 Aug 2020 11:59:13 -0600
-X-Gmail-Original-Message-ID: <CAGRrVHwQ4EpZy73n4NTLhDZNGN4Gi_FUL4BjWw7ruEoGHENZEg@mail.gmail.com>
-Message-ID: <CAGRrVHwQ4EpZy73n4NTLhDZNGN4Gi_FUL4BjWw7ruEoGHENZEg@mail.gmail.com>
-Subject: Re: [PATCH v7] Add a "nosymfollow" mount option.
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Mattias Nissler <mnissler@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Benjamin Gordon <bmgordon@google.com>,
-        David Howells <dhowells@redhat.com>,
-        Dmitry Torokhov <dtor@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        linux-fsdevel@vger.kernel.org,
-        Matthew Wilcox <willy@infradead.org>,
-        Micah Morton <mortonm@google.com>,
-        Raul Rangel <rrangel@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200812125300.11889-7-valentin.schneider@arm.com>
+X-Patchwork-Hint: ignore
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 7:43 PM Aleksa Sarai <cyphar@cyphar.com> wrote:
-> On 2020-08-11, Ross Zwisler <zwisler@chromium.org> wrote:
-> > From: Mattias Nissler <mnissler@chromium.org>
-> >
-> > For mounts that have the new "nosymfollow" option, don't follow symlinks
-> > when resolving paths. The new option is similar in spirit to the
-> > existing "nodev", "noexec", and "nosuid" options, as well as to the
-> > LOOKUP_NO_SYMLINKS resolve flag in the openat2(2) syscall. Various BSD
-> > variants have been supporting the "nosymfollow" mount option for a long
-> > time with equivalent implementations.
-> >
-> > Note that symlinks may still be created on file systems mounted with
-> > the "nosymfollow" option present. readlink() remains functional, so
-> > user space code that is aware of symlinks can still choose to follow
-> > them explicitly.
-> >
-> > Setting the "nosymfollow" mount option helps prevent privileged
-> > writers from modifying files unintentionally in case there is an
-> > unexpected link along the accessed path. The "nosymfollow" option is
-> > thus useful as a defensive measure for systems that need to deal with
-> > untrusted file systems in privileged contexts.
-> >
-> > More information on the history and motivation for this patch can be
-> > found here:
-> >
-> > https://sites.google.com/a/chromium.org/dev/chromium-os/chromiumos-design-docs/hardening-against-malicious-stateful-data#TOC-Restricting-symlink-traversal
->
-> Looks good. Did you plan to add an in-tree test for this (you could
-> shove it in tools/testing/selftests/mount)?
+From: kernel test robot <lkp@intel.com>
 
-Sure, that sounds like a good idea.  I'll take a look.
+kernel/sched/debug.c:272:30-36: ERROR: application of sizeof to pointer
 
-> Reviewed-by: Aleksa Sarai <cyphar@cyphar.com>
+ sizeof when applied to a pointer typed expression gives the size of
+ the pointer
 
-Thank you for the review.
+Generated by: scripts/coccinelle/misc/noderef.cocci
+
+CC: Valentin Schneider <valentin.schneider@arm.com>
+Signed-off-by: kernel test robot <lkp@intel.com>
+---
+
+url:    https://github.com/0day-ci/linux/commits/Valentin-Schneider/sched-Instrument-sched-domain-flags/20200812-205638
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git 949bcb8135a96a6923e676646bd29cbe69e8350f
+
+ debug.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/kernel/sched/debug.c
++++ b/kernel/sched/debug.c
+@@ -269,7 +269,7 @@ static int sd_ctl_doflags(struct ctl_tab
+ 		return 0;
+ 	}
+ 
+-	tmp = kcalloc(data_size + 1, sizeof(tmp), GFP_KERNEL);
++	tmp = kcalloc(data_size + 1, sizeof(*tmp), GFP_KERNEL);
+ 	for_each_set_bit(idx, &flags, __SD_FLAG_CNT) {
+ 		char *name = sd_flag_debug[idx].name;
+ 
