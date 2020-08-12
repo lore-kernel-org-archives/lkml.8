@@ -2,74 +2,123 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE6EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD388C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:13:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89C962076B
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:13:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74EC92076B
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:13:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="HmDIkSAN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726637AbgHLQNA (ORCPT
+        id S1726685AbgHLQNP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 12:13:00 -0400
-Received: from smtprelay0087.hostedemail.com ([216.40.44.87]:46150 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726394AbgHLQM7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 12:12:59 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 03A5618224D6A;
+        Wed, 12 Aug 2020 12:13:15 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:37288 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726642AbgHLQNO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 12:13:14 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597248794; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=VfMixFtX/OTlr/zRJajyB7g4shFSBIZI0I68qcvTqMQ=;
+ b=HmDIkSANBYaNjIPk+Qxjd93e2nDkJcjCckPCd1UJizlqDtfuBp5NlrL+IipEAXJWOgNr2Bh5
+ ngPYfQXks4ke2bUpkmNdp25NFxcvhH6dS0SkugQqz0iKVQSL3ANZ5i0c1ljCLZd+FP+lf/KZ
+ 7O++bpKj5KlhHdKDd9vS4jmq++A=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n07.prod.us-west-2.postgun.com with SMTP id
+ 5f34150d46ed9966744cf82f (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 12 Aug 2020 16:13:01
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id B8738C433AF; Wed, 12 Aug 2020 16:13:00 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id AF06EC433C9;
         Wed, 12 Aug 2020 16:12:59 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: bikes50_180d8bd26fec
-X-Filterd-Recvd-Size: 1729
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf11.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 12 Aug 2020 16:12:57 +0000 (UTC)
-Message-ID: <89523042b8d574fa49e7d5c52ec12f1f5f848773.camel@perches.com>
-Subject: Re: [PATCH 20/44] staging: mfd: hi6421-spmi-pmic: fix some coding
- style issues
-From:   Joe Perches <joe@perches.com>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org
-Date:   Wed, 12 Aug 2020 09:12:56 -0700
-In-Reply-To: <867108ee50302f933fade56f8c25ef775ade36b3.1597247164.git.mchehab+huawei@kernel.org>
-References: <cover.1597247164.git.mchehab+huawei@kernel.org>
-         <867108ee50302f933fade56f8c25ef775ade36b3.1597247164.git.mchehab+huawei@kernel.org>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.4-0ubuntu1 
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Wed, 12 Aug 2020 21:42:59 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Kevin Hilman <khilman@baylibre.com>
+Cc:     bjorn.andersson@linaro.org, ulf.hansson@linaro.org,
+        rjw@rjwysocki.net, agross@kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+        gregkh@linuxfoundation.org, pavel@ucw.cz, len.brown@intel.com,
+        rnayak@codeaurora.org, dianders@chromium.org, khilman@kernel.org,
+        linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH 1/2] PM / Domains: Add GENPD_FLAG_SUSPEND_ON flag
+In-Reply-To: <7heeoc3edk.fsf@baylibre.com>
+References: <20200811190252.10559-1-sibis@codeaurora.org>
+ <7heeoc3edk.fsf@baylibre.com>
+Message-ID: <340a7aafcf0301ff3158a4e211992041@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-08-12 at 17:56 +0200, Mauro Carvalho Chehab wrote:
-> Checkpatch complains about some minor issues inside this
-> driver that were not addressed by the previous patch.
+Kevin,
+Thanks for taking time to review the
+series!
+
+On 2020-08-12 05:49, Kevin Hilman wrote:
+> Sibi Sankar <sibis@codeaurora.org> writes:
 > 
-> Address them.
-[]
-> diff --git a/include/linux/mfd/hi6421-spmi-pmic.h b/include/linux/mfd/hi6421-spmi-pmic.h
-[]
-> @@ -38,7 +38,8 @@ struct hi6421_spmi_pmic {
->  	unsigned int				*irqs;
->  	int					irqnum;
->  	int					irqarray;
-> -	struct hi6421_spmi_irq_mask_info 	irq_mask_addr;
-> +
-> +	struct hi6421_spmi_irq_mask_info	irq_mask_addr;
->  	struct hi6421_spmi_irq_info		irq_addr;
->  };
+>> This is for power domains which needs to stay powered on for suspend
+>> but can be powered on/off as part of runtime PM. This flag is aimed at
+>> power domains coupled to remote processors which enter suspend states
+>> independent to that of the application processor. Such power domains
+>> are turned off only on remote processor crash/shutdown.
+>> 
+>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> 
+> Seems like a useful use-case, but i think there should be a bit more
+> description/documentation about what is the expected/desired behavior
+> during system suspsend when a power-domain with this flag is already
+> runtime-PM suspended.  Similarily, on system resume, what is the
+> expected/desired behavior?
 
-Was adding a blank line one of checkpatch complaints?
-I doubt it. 
+SUSPEND_ON flag is only aimed at
+keeping power domains powered on
+across suspend (only if its already
+powered on). Also if the power domain
+is runtime-PM suspended we wouldn't
+want to power it on during resume.
 
+diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
+index 0a5afca250d03..547c091618008 100644
+--- a/drivers/base/power/domain.c
++++ b/drivers/base/power/domain.c
+@@ -1003,7 +1003,7 @@ static void genpd_sync_power_on(struct 
+generic_pm_domain *genpd, bool use_lock,
+  {
+         struct gpd_link *link;
+
+-       if (genpd_status_on(genpd))
++       if (genpd_status_on(genpd) || genpd_is_suspend_on(genpd))
+                 return;
+
+I'll add the ^^ diff in the next
+re-spin to prevent power on of
+a runtime-PM suspended power
+domain.
+
+> 
+> Kevin
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
