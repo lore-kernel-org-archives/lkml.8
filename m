@@ -2,190 +2,126 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B684C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 11:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D520C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 11:28:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A077207F7
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 11:27:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597231634;
-	bh=014WS9rytNGQq7H8Yl5XjDfv6VMOqc3NiFeQUb5YyJo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=u6hu1OUbsEyq0fhr7DqZ4x99arJbVfUfyQMzzcbmZWbRhmZktpVm5mst+gWVtWYBW
-	 LjvlXweMU1LvbDt2tAGVrBtgddzbjlpQ2H682x6Gl84BgTRciimHsyNDp5i5NvL/sQ
-	 WuSQ94c9pwQXNXJPvVx+eA94jM7H6fzltRXn7jOg=
+	by mail.kernel.org (Postfix) with ESMTP id 3328F207F7
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 11:28:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbgHLL1N (ORCPT
+        id S1727074AbgHLL2b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 07:27:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46618 "EHLO mail.kernel.org"
+        Wed, 12 Aug 2020 07:28:31 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55712 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727036AbgHLL1M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 07:27:12 -0400
-Received: from quaco.ghostprotocols.net (179.176.8.134.dynamic.adsl.gvt.net.br [179.176.8.134])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09756207F7;
-        Wed, 12 Aug 2020 11:27:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597231631;
-        bh=014WS9rytNGQq7H8Yl5XjDfv6VMOqc3NiFeQUb5YyJo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PVaqGAzGWrljkGytCQvrI3N6xOXfhBRHIrrTrlitTDF7AEHwL3Sssf5VSafMBBp9c
-         KZLIPST+noIxIe7fNGytpqlNly5TLM7spfVcN3GKn8yF3X9/MFEJfeuVKoUeBIqi2V
-         n0SNc01jTFjkO1TjIyM0i7EUP+B5B24ccFNGASms=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 6CC22403C6; Wed, 12 Aug 2020 08:27:08 -0300 (-03)
-Date:   Wed, 12 Aug 2020 08:27:08 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Jin Yao <yao.jin@linux.intel.com>,
-        Thomas Richter <tmricht@linux.ibm.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        heiko.carstens@de.ibm.com
-Subject: Re: [PATCH] Fix s390x compile error on F32 utils/stat-display.c
-Message-ID: <20200812112708.GA13995@kernel.org>
-References: <20200722092053.22345-1-tmricht@linux.ibm.com>
+        id S1726453AbgHLL2a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 07:28:30 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 191A1B6D5;
+        Wed, 12 Aug 2020 11:28:50 +0000 (UTC)
+Subject: Re: [PATCH 1/2] tty/sysrq: Extend the sysrq_key_table to cover
+ capital letters
+To:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-input@vger.kernel.org, kernel@collabora.com
+References: <20200804162402.2087-1-andrzej.p@collabora.com>
+ <20200804162402.2087-2-andrzej.p@collabora.com>
+From:   Jiri Slaby <jslaby@suse.com>
+Autocrypt: addr=jslaby@suse.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <bf903783-af28-98cb-dee1-75ba185d0a61@suse.com>
+Date:   Wed, 12 Aug 2020 13:28:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200722092053.22345-1-tmricht@linux.ibm.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20200804162402.2087-2-andrzej.p@collabora.com>
+Content-Type: text/plain; charset=iso-8859-2
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, Jul 22, 2020 at 11:20:53AM +0200, Thomas Richter escreveu:
-> Fix a compile error on F32 and gcc version 10.1 on s390 in file
-> utils/stat-display.c.  The error does not show up with make DEBUG=y.
-> In fact the issue shows up when using both compiler options
-> -O6 and -D_FORTIFY_SOURCE=2 (which are omitted with DEBUG=Y).
+On 04. 08. 20, 18:24, Andrzej Pietrasiewicz wrote:
+> All slots in sysrq_key_table[] are either used, reserved or at least
+> commented with their intended use. This patch adds capital letter versions
+> available, which means adding 26 more entries.
 > 
-> This is the offending call chain:
-> print_counter_aggr()
->   printout(config, -1, 0, ...)  with 2nd parm id set to -1
->     aggr_printout(config, x, id --> -1, ...) which leads to this code:
-> 		case AGGR_NONE:
->                 if (evsel->percore && !config->percore_show_thread) {
->                         ....
->                 } else {
->                         fprintf(config->output, "CPU%*d%s",
->                                 config->csv_output ? 0 : -7,
->                                 evsel__cpus(evsel)->map[id],
-> 				                        ^^ id is -1 !!!!
->                                 config->csv_sep);
->                 }
-> 
-> This is a compiler inlining issue which is detected on s390 but not on
-> other plattforms.
+> For already existing SysRq operations the user presses Alt-SysRq-<key>, and
+> for the newly added ones Alt-Shift-SysRq-<key>.
 
-What is the sequence of events that gets to this? I.e. is it valid to
-get a config->aggr_mode == AGGR_NONE, then have evsel not be percore and
-config->percore_show_thread to be false?
+And on some keyboards Alt-Fn-Shift-SysRq-<key>. Ugh.
 
-I wonder if this won't be papering over some bug :-\
+...
+> @@ -833,8 +873,13 @@ static bool sysrq_handle_keypress(struct sysrq_state *sysrq,
+>  
+>  	default:
+>  		if (sysrq->active && value && value != 2) {
+> +			unsigned char c = sysrq_xlate[code];
+> +
+>  			sysrq->need_reinject = false;
+> -			__handle_sysrq(sysrq_xlate[code], true);
+> +			if (sysrq->shift_use != KEY_RESERVED)
+> +				if (c >= 'a' && c <= 'z')
+> +					c &= ~(1 << 5); /* to uppercase */
 
-Jin?
+c = toupper(c);
+instead of the whole if.
 
-This is where this came from:
-commit 4fc4d8dfa056dfd48afe73b9ea3b7570ceb80b9c (tag: perf-core-for-mingo-5.2-20190517)
-Author: Jin Yao <yao.jin@linux.intel.com>
-Date:   Fri Apr 12 21:59:49 2019 +0800
-
-    perf stat: Support 'percore' event qualifier
-
-    With this patch, we can use the 'percore' event qualifier in perf-stat.
-
----
-
-Also please add at least Jiri and Namhyung on the CC list, having the
-person that added that array usage also helps.
-
-[acme@quaco perf]$ scripts/get_maintainer.pl tools/perf | grep reviewer
-Mark Rutland <mark.rutland@arm.com> (reviewer:PERFORMANCE EVENTS SUBSYSTEM)
-Alexander Shishkin <alexander.shishkin@linux.intel.com> (reviewer:PERFORMANCE EVENTS SUBSYSTEM)
-Jiri Olsa <jolsa@redhat.com> (reviewer:PERFORMANCE EVENTS SUBSYSTEM)
-Namhyung Kim <namhyung@kernel.org> (reviewer:PERFORMANCE EVENTS SUBSYSTEM)
-[acme@quaco perf]$
-
-Thanks,
-
-- Arnaldo
- 
-> Output before:
->  # make util/stat-display.o
->     .....
-> 
->   util/stat-display.c: In function ‘perf_evlist__print_counters’:
->   util/stat-display.c:121:4: error: array subscript -1 is below array
->       bounds of ‘int[]’ [-Werror=array-bounds]
->   121 |    fprintf(config->output, "CPU%*d%s",
->       |    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->   122 |     config->csv_output ? 0 : -7,
->       |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->   123 |     evsel__cpus(evsel)->map[id],
->       |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->   124 |     config->csv_sep);
->       |     ~~~~~~~~~~~~~~~~
->   In file included from util/evsel.h:13,
->                  from util/evlist.h:13,
->                  from util/stat-display.c:9:
->   /root/linux/tools/lib/perf/include/internal/cpumap.h:10:7:
->   note: while referencing ‘map’
->    10 |  int  map[];
->       |       ^~~
->   cc1: all warnings being treated as errors
->   mv: cannot stat 'util/.stat-display.o.tmp': No such file or directory
->   make[3]: *** [/root/linux/tools/build/Makefile.build:97: util/stat-display.o]
->   Error 1
->   make[2]: *** [Makefile.perf:716: util/stat-display.o] Error 2
->   make[1]: *** [Makefile.perf:231: sub-make] Error 2
->   make: *** [Makefile:110: util/stat-display.o] Error 2
->   [root@t35lp46 perf]#
-> 
-> Output after:
->   # make util/stat-display.o
->     .....
->   CC       util/stat-display.o
->   [root@t35lp46 perf]#
-> 
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> ---
->  tools/perf/util/stat-display.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
-> 
-> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-> index 57d0706e1330..e49e544188e4 100644
-> --- a/tools/perf/util/stat-display.c
-> +++ b/tools/perf/util/stat-display.c
-> @@ -118,10 +118,11 @@ static void aggr_printout(struct perf_stat_config *config,
->  				config->csv_output ? 0 : -3,
->  				cpu_map__id_to_cpu(id), config->csv_sep);
->  		} else {
-> -			fprintf(config->output, "CPU%*d%s",
-> -				config->csv_output ? 0 : -7,
-> -				evsel__cpus(evsel)->map[id],
-> -				config->csv_sep);
-> +			if (id > -1)
-> +				fprintf(config->output, "CPU%*d%s",
-> +					config->csv_output ? 0 : -7,
-> +					evsel__cpus(evsel)->map[id],
-> +					config->csv_sep);
+> +			__handle_sysrq(c, true);
 >  		}
 >  		break;
->  	case AGGR_THREAD:
-> -- 
-> 2.26.2
+>  	}
 > 
 
+thanks,
 -- 
-
-- Arnaldo
+js
+suse labs
