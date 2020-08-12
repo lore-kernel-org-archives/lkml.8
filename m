@@ -2,145 +2,110 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE3F4C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 17:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6ADEC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 17:49:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D09012076C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 17:48:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597254530;
-	bh=EYt4wh2alCuy+duhJyqAQ5V4dVUDjsYJIHkzlfrWUZE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=DRKtcee0kWviPLOyVIFRIbNmjL3DTVt3+wDMdaKI9YBCLaHscpJk1tZbRTxXrvr72
-	 6jEJriL9+zrhq+ReoO+ayrEOisCVnkzZsZ2CcniIIAn0ZKJ4eQicL2AnQk8dlXOFfs
-	 HdC0668HlLQON6eQ0zKyhVLdoR+FeHN1NHhZ1EZA=
+	by mail.kernel.org (Postfix) with ESMTP id C41462076C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 17:49:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="1tEVefoD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726546AbgHLRsu (ORCPT
+        id S1726604AbgHLRtG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 13:48:50 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:18504 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725993AbgHLRss (ORCPT
+        Wed, 12 Aug 2020 13:49:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49016 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726477AbgHLRtF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 13:48:48 -0400
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id 07CHmT0v012843;
-        Thu, 13 Aug 2020 02:48:30 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 07CHmT0v012843
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1597254510;
-        bh=Ij7DTc0+G5aYQMMUK117Wrc+BtKR/opUoeRVB4ysu5w=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=am32WSW9rM61TKdiGbvmyS2CXrjpgNA9SaPVnYT1DfLUKrxQguOocWKiKDbtEUMIN
-         +s7O9g3V4MXn4tX0YIlybIsLoKxRON8FpqAlyL9Aavdn9QIiWB6U9sUOCqB8jTwsQp
-         eORlnbjFwAfiXOk+sDkw3nGXrB6zcXa4bmsoM7Cr2azXy1j5S7py4xHJ4I7VC4IagF
-         ck1RmXWGprVNKqFEittzEAlal5wUpv5OBseFLORihFRyDwGdAlLCryFikGMakJr7do
-         mvwIk4OEvKGjfatxTRgkr6JEh8USkS7UFIi73ZamW90TJ3utOs2mV9iJ592/fFHfh/
-         aHYtrMcsxBGuQ==
-X-Nifty-SrcIP: [209.85.217.41]
-Received: by mail-vs1-f41.google.com with SMTP id k25so1525606vsm.11;
-        Wed, 12 Aug 2020 10:48:30 -0700 (PDT)
-X-Gm-Message-State: AOAM530LvdYc+Z+luQ5pzs7Id90an8aseLleWdr2kDdsR1Lx3w391uCO
-        sK/KPLCCoKph/1Rnr/zovWEFCTBkA+3Os515e9I=
-X-Google-Smtp-Source: ABdhPJzetrCFjWMWorlM78pluJ8mIRVZKqXRbqxC7kbwHtCysk4df/83X8LPmdlF0mAhagZ0k6VqVgyrCQKxB/8vY6U=
-X-Received: by 2002:a67:7c11:: with SMTP id x17mr254093vsc.155.1597254509215;
- Wed, 12 Aug 2020 10:48:29 -0700 (PDT)
+        Wed, 12 Aug 2020 13:49:05 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B088C061383
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 10:49:05 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id l13so1408100qvt.10
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 10:49:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=D31gvXwueiTQW0zOx6WQYb+FpRC9rVXNJ4C7VuyhJ1o=;
+        b=1tEVefoD7l/vL0aoMx+sEWhWifIrF4HpNaz+cqo0t8WUEXAQKbrMjqwNPZJ6hZisLN
+         igNElCrRIdGAPDhDjTpzCyjqWf8sxs7sqzgeNCLIFFjaVUkNn4LoaNyAsb22wB3lWCkB
+         Ka9Zp39azUXQA1li48UvI8rKs4kcMLEv4nj/D5HyIrQPDfm11N25yo9BeKtJU0IwlqOf
+         WiL8fBg58jhiEMM/oMGphDuPqlWKHBmBDctAadd/3zcEaoq98zs9tV1Cpojn5CGy5M3q
+         5c9b4+HctAqnE9BreK7flKjW+zN5GaH/usZi+aL1X5Cp5aM1ca/T6EQLayxwaVZp1zil
+         mzsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=D31gvXwueiTQW0zOx6WQYb+FpRC9rVXNJ4C7VuyhJ1o=;
+        b=ntXxxWFfMa4A59EinbfpiwA/sN8GqK0fzZTlikFmFCgXOiUvsUJDkZxv1wbO68jnw5
+         wWQViV9pNvV23oO2lEapq8L2emSUcClfUzdxw9d5pkaf2V7AVaiIN1u4usg/nE1hCMR8
+         kgeKJwCWHq7l/ZdMHvp6hIRxzZSjArQZyg/lbm3d1NAv/RgD7Oc4uEQ4XZ9cKykzjVMe
+         iHe1Vaad06HgYDBpNVoBSHsMUwtUafSJKgPDwmj6bNyBClpROw+0Xc1cZ7sXT+pypv3G
+         1d9bG7Z6kuyl5RjvFjwyTkslqm6JqmmkOh8C+j2uU2B6pYw7jOos4BrM4ant22Hf0LRb
+         G/RA==
+X-Gm-Message-State: AOAM531LuIk4aPVHbKnwtEe6ob2vvaqI7rLNTzdfEyz+hci/660ye0nW
+        NvVsrbeKBKqeosSxFnAMssU833b5/97R3tcRZrQR+Nrh
+X-Google-Smtp-Source: ABdhPJzUmKRjdyp7ZnZ6xpunrA6u4/Q6+rQyHfo/Kb5MT2x8R76uUR3KRSRWXOzP+aUMh4P8c7JfqxymnNoxp3/x+BY=
+X-Received: by 2002:ad4:5502:: with SMTP id az2mr763112qvb.148.1597254544478;
+ Wed, 12 Aug 2020 10:49:04 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAKwvOdnni_G2tw+0eCLQQvvdcz97Fy1-cBjzPvLwbBNDu1-KqQ@mail.gmail.com>
- <20200728004736.3590053-1-nhuck@google.com> <CAK7LNAT-AO9_Y-qunRvPbBYf7GZnoE6bxYKFNtcdKAKV8d_A+w@mail.gmail.com>
- <CAJkfWY5ywOtO6fAyPd0B2BjEWamJRRMgg4et0uVq2bpkJSECwA@mail.gmail.com>
- <CAK7LNAQVdhMraYejrTsGZSLFJDk4CVf6ke-bsQ7kaDUM2Lf4SA@mail.gmail.com> <CAJkfWY5kooS1cPFq+3s0oFT8=O_vszAMnJ8BBOmy084oi+4tgw@mail.gmail.com>
-In-Reply-To: <CAJkfWY5kooS1cPFq+3s0oFT8=O_vszAMnJ8BBOmy084oi+4tgw@mail.gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Thu, 13 Aug 2020 02:47:52 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASi+as9+2c=a9+cwbj4DjPfqpo50KxEp2EUFAc_Vs4yXg@mail.gmail.com>
-Message-ID: <CAK7LNASi+as9+2c=a9+cwbj4DjPfqpo50KxEp2EUFAc_Vs4yXg@mail.gmail.com>
-Subject: Re: [PATCH v7] Makefile: Add clang-tidy and static analyzer support
- to makefile
-To:     Nathan Huckleberry <nhuck@google.com>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Pirama Arumuga Nainar <pirama@google.com>,
-        Bill Wendling <morbo@google.com>
+References: <20200809132529.264312-1-warthog618@gmail.com> <20200809132529.264312-3-warthog618@gmail.com>
+ <CAMpxmJWe6Cjhwt3izuPLK-Xzvm=LqOy_nnZ7xg123+M_JgriLw@mail.gmail.com> <20200812015458.GA8760@sol>
+In-Reply-To: <20200812015458.GA8760@sol>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Wed, 12 Aug 2020 19:48:53 +0200
+Message-ID: <CAMpxmJVbVWKaY5QuUFn9XxhJQ2-YFRTowk13_Lnt9kyQT=+-WQ@mail.gmail.com>
+Subject: Re: [PATCH v3 02/18] gpio: uapi: define uAPI v2
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 10:24 AM 'Nathan Huckleberry' via Clang Built
-Linux <clang-built-linux@googlegroups.com> wrote:
+On Wed, Aug 12, 2020 at 3:55 AM Kent Gibson <warthog618@gmail.com> wrote:
 >
-> Sounds good. Do you think this patch is ready to land then?
+> On Tue, Aug 11, 2020 at 09:11:41PM +0200, Bartosz Golaszewski wrote:
+> > On Sun, Aug 9, 2020 at 3:26 PM Kent Gibson <warthog618@gmail.com> wrote:
+> > >
+> [snip]
+> > >
+> > > +/*
+> > > + * Maximum number of requested lines.
+> > > + *
+> > > + * Must be no greater than 64 as bitmaps are limited to 64-bits, and a
+> > > + * multiple of 2 to ensure 32/64-bit alignment of structs.
+> > > + */
+> > > +#define GPIO_V2_LINES_MAX 64
+> > > +
+> >
+> > If we refer to bitmaps for which helpers are defined in
+> > include/linux/bitmap.h then they're not limited to 64-bits. I'd just
+> > say here that we want to fit into 64-bit integers for simplicity.
+> >
+>
+> Strictly speaking, userspace doesn't know about include/linux/bitmap.h,
+> but I'm happy to remove any ambiguity.
+>
+> Does this work for you?:
+>
+>  * Must be no greater than 64, as bitmaps are restricted here to 64-bits
+>  * for simplicity, and a multiple of 2 to ensure 32/64-bit alignment of
+>  * structs.
+>
+> Cheers,
+> Kent.
 
+Yes, perfect.
 
-I do not think so.
-
-I pointed out the CC=clang check was not working.
-I see false positive errors from GCC commands.
-
-
-
-This patch does not use the benefit of Makefile.
-
-Makefile is used to describe the dependency
-between a target and its prerequisites,
-and how to update the target.
-
-Make compares the timestamps between the
-targets and prerequisites, then determines
-which targets need updating.
-
-
-See your code.
-
-
-clang-tidy:
-ifdef CONFIG_CC_IS_CLANG
-       $(PYTHON3) scripts/clang-tools/gen_compile_commands.py
-       $(PYTHON3) scripts/clang-tools/run-clang-tools.py clang-tidy
-compile_commands.json
-else
-       $(error clang-tidy requires CC=clang)
-endif
-
-
-This always runs two commands sequentially.
-It rebuilds compile_commands.json even if
-nothing in the source tree has been changed.
-
-If you do this, there is no strong reason to use Make,
-and actually you can rewrite it in a shell script:
-
-
-clang_tidy () {
-  if [ "$CONFIG_CC_IS_CLANG = "y" ]; then
-    $PYTHON3 scripts/clang-tools/gen_compile_commands.py
-    $PYTHON3 scripts/clang-tools/run-clang-tools.py clang-tidy
-compile_commands.json
-  else
-    echo "clang-tidy requires CC=clang"
-    exit 1
-  fi
-}
-
-
-
-
-I changed the rules to Makefile-ish style.
-
-https://patchwork.kernel.org/project/linux-kbuild/list/?series=331893
-
-
-I will wait for comments for the new version.
-
-
--- 
-Best Regards
-Masahiro Yamada
+Bart
