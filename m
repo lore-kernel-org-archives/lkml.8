@@ -2,99 +2,125 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 473C9C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:49:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7701C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:50:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E45D204FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:49:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597243795;
-	bh=D4aC0deIjWOcbNAKz5ZK44yUZtLAE7MFHApNt+iA1+w=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=EnxMsz8oYvcorrB7kNtxnYMZDoNRC4iSrd3t4Ib2QMaiKmjQpppvM+7GRckseWnyd
-	 19DPWj0Ha9rfNrth8oO+dXP6dvnLlP90/FXqbh7H7VtHXbVNA/9Kx+wem2TaF609mk
-	 TNrRakPCll1srfgVbqNRDI6yeTIYOskgkESSQSDk=
+	by mail.kernel.org (Postfix) with ESMTP id 8DBD420675
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:50:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="X124SN0F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbgHLOtx (ORCPT
+        id S1726664AbgHLOug (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 10:49:53 -0400
-Received: from conuserg-08.nifty.com ([210.131.2.75]:62323 "EHLO
-        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726505AbgHLOtw (ORCPT
+        Wed, 12 Aug 2020 10:50:36 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44688 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726488AbgHLOud (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 10:49:52 -0400
-Received: from oscar.flets-west.jp (softbank126025067101.bbtec.net [126.25.67.101]) (authenticated)
-        by conuserg-08.nifty.com with ESMTP id 07CEnQ1a030156;
-        Wed, 12 Aug 2020 23:49:27 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com 07CEnQ1a030156
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1597243767;
-        bh=DhmA+0HaX2aM2uWibI/FmSiCbk/WILIOdMgaK5iY8KA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=YXSY50s1jrpS6iR6SZGsAt3lUPqQL7rgDK2RC07FgqCQZ899VcpEVVF845u3RdSFp
-         qup/dUgcuu4rhPTUjQ5ojJTqQSpxoH24FiRY6lV9KGz0D5Txwx8GUHjmI7KddwKzll
-         9zorE6C08op6bPjf0yDLf5TEJbw1R9sQZbOJxRfnhK7u4F+P5d/q9PFIIUQolKYRrw
-         u+6LwT+56Pbq8IMR6ZwfYsSOcPGlJrskfgW/IJWHzVPWC45FAeEYDBAaUbx8WOuZrL
-         OFZYN0hRThho64oUuyPeJuDIv4KqBEEF0pAhajozZBQ6jXgxYjf+d4TuybAmm9r/uG
-         uXnH7iKBBGVXw==
-X-Nifty-SrcIP: [126.25.67.101]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] kbuild: remove redundant patterns in filter/filter-out
-Date:   Wed, 12 Aug 2020 23:49:23 +0900
-Message-Id: <20200812144923.1932593-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 12 Aug 2020 10:50:33 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07CEX1Dq118605;
+        Wed, 12 Aug 2020 10:50:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id; s=pp1;
+ bh=Nb7/F+qLmTp2iA3LuSjA0x4eScmWWq5g3dtL7AsyF7M=;
+ b=X124SN0FxsscGSskbNNSiMl1q2E4Q1SsIrDC5TK5nbbI5RLWsasKsAD8/WB2ljA1A7xy
+ flfVT/zGv9h3xarNmTyG9iqFn/IbbGMsWnBeyaoOCNO5FmJ7T8nG6kHVhxjBa703pcTR
+ DO28xHwPU73HDKdt/d8Bp0SdIHQGLqsOSc47tarO7SLTRzCsbxSMoyjAdv23FHrQctWf
+ LVuNJy3KPrFoP6i/Kd/U5e/NOVcddqk4AF/grZ2L0Fn1954jD1GsABT+5BrR3bi0IQvx
+ d+3LeuFEK24WVWJz7IY34RK6JJnuJtSvKDGMtZmWOt81bA9ZTE6NK91F2+7IsCTKDEoF +w== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32utn91aq0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 12 Aug 2020 10:50:26 -0400
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07CEX3YO118827;
+        Wed, 12 Aug 2020 10:50:26 -0400
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32utn91ap4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 12 Aug 2020 10:50:26 -0400
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07CEnuO8008418;
+        Wed, 12 Aug 2020 14:50:25 GMT
+Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
+        by ppma02wdc.us.ibm.com with ESMTP id 32skp9ab1x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 12 Aug 2020 14:50:25 +0000
+Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07CEoOe649152336
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 12 Aug 2020 14:50:24 GMT
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A049A28059;
+        Wed, 12 Aug 2020 14:50:24 +0000 (GMT)
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9D6B52805C;
+        Wed, 12 Aug 2020 14:50:21 +0000 (GMT)
+Received: from oc4221205838.ibm.com (unknown [9.163.7.238])
+        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
+        Wed, 12 Aug 2020 14:50:21 +0000 (GMT)
+From:   Matthew Rosato <mjrosato@linux.ibm.com>
+To:     alex.williamson@redhat.com, bhelgaas@google.com
+Cc:     schnelle@linux.ibm.com, pmorel@linux.ibm.com, mpe@ellerman.id.au,
+        oohall@gmail.com, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH] PCI: Identifying detached virtual functions
+Date:   Wed, 12 Aug 2020 10:50:16 -0400
+Message-Id: <1597243817-3468-1-git-send-email-mjrosato@linux.ibm.com>
+X-Mailer: git-send-email 1.8.3.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-12_06:2020-08-11,2020-08-12 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
+ malwarescore=0 bulkscore=0 mlxscore=0 suspectscore=0 mlxlogscore=789
+ clxscore=1011 impostorscore=0 priorityscore=1501 adultscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008120104
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The '%' in filter/filter-out matches to any number of any characters,
-including empty string.
+As discussed previously in a qemu-devel thread:
 
-So, '%config' matches to 'config', and '%install' to 'install'.
+https://www.mail-archive.com/qemu-devel@nongnu.org/msg725141.html
 
-Drop the redundant patterns.
+s390x has the notion of unlinked VFs being available at the LPAR-level
+(Virtual Functions where the kernel does not have access to the associated
+Physical Function).  These devices are currently not marked as is_virtfn.
+There seems to be some precedent (ex: in powerpc, eeh_debugfs_break_device())
+where pdev->is_virtfn && pdev->physfn == 0 is used to detect these sort of
+detached VFs.  We toyed with the idea of doing this but it causes additional
+fallout as various other areas of kernel code have an expectation that
+is_virtfn=1 implies there is a linked PF available to the kernel. 
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
+In the s390x case, the firmware layer underneath handles the VF emulation
+as it still has access to the PF that the LPAR (and thus the kernel) cannot
+see.  But one thing this firmware layer does not do is emulate the
+PCI_COMMAND_MEMORY bit, which was OK until vfio-pci started enforcing it
+via abafbc55.  The vfio-pci check is waived for VFs as of ebfa440c, but
+vfio-pci can't actually tell that these particular devices are VFs.
 
- Makefile | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+The proposed patch attempts to identify these detached VFs and subsequently
+provide this information to vfio-pci so that it knows to also accept the
+lack of PCI_COMMAND_MEMORY for these sorts of devices.  For now the bit is
+only set for s390x but other architectures could opt in to it as well if
+needed.
 
-diff --git a/Makefile b/Makefile
-index 952f833dc405..51212c3e3851 100644
---- a/Makefile
-+++ b/Makefile
-@@ -265,8 +265,7 @@ no-dot-config-targets := $(clean-targets) \
- 			 $(version_h) headers headers_% archheaders archscripts \
- 			 %asm-generic kernelversion %src-pkg dt_binding_check \
- 			 outputmakefile
--no-sync-config-targets := $(no-dot-config-targets) install %install \
--			   kernelrelease
-+no-sync-config-targets := $(no-dot-config-targets) %install kernelrelease
- single-targets := %.a %.i %.ko %.lds %.ll %.lst %.mod %.o %.s %.symtypes %/
- 
- config-build	:=
-@@ -292,7 +291,7 @@ ifneq ($(KBUILD_EXTMOD),)
- endif
- 
- ifeq ($(KBUILD_EXTMOD),)
--        ifneq ($(filter config %config,$(MAKECMDGOALS)),)
-+        ifneq ($(filter %config,$(MAKECMDGOALS)),)
- 		config-build := 1
-                 ifneq ($(words $(MAKECMDGOALS)),1)
- 			mixed-build := 1
+Matthew Rosato (1):
+  PCI: Introduce flag for detached virtual functions
+
+ arch/s390/pci/pci.c                | 8 ++++++++
+ drivers/vfio/pci/vfio_pci_config.c | 3 ++-
+ include/linux/pci.h                | 1 +
+ 3 files changed, 11 insertions(+), 1 deletion(-)
+
 -- 
-2.25.1
+1.8.3.1
 
