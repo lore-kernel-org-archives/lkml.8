@@ -2,101 +2,79 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43730C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:39:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EC05C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:40:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB91320756
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:39:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wrTJs/YO";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KQcwQp41"
+	by mail.kernel.org (Postfix) with ESMTP id 09BA420756
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:40:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726577AbgHLOjo (ORCPT
+        id S1726678AbgHLOkO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 10:39:44 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:52610 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726492AbgHLOjo (ORCPT
+        Wed, 12 Aug 2020 10:40:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48146 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726492AbgHLOkN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 10:39:44 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597243182;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=gtqjfrjk/gwIUo2z+x3Wlx6nrBpRl0eqdlnNtm5WIlE=;
-        b=wrTJs/YOqvIU6zzxlJwEc1R4Rs9XLE394co6fvG3qBwMyKh1ckhIi+W5iEMNHerTkYSpX6
-        /quBL1HAnncWZuAz7tpphQOEYxr/DDH9x1CPgx7tdNzM0dwYW5amMI66uk+9xKMl9oJEXp
-        JpuXpPOpBIA9iA7J+NAm7+7EALOIXRqC3IS3yjh7BTpVUGEG82rzSocwSXX2yPlsT2TwK8
-        vvQDtkQKQKb7KNPNWNMdH9CQz7ms5NQuVLxBUp/upCrcVkfATzu6xhfYj1ii0GCNZxOSyP
-        GLAK1VKFZPAnL7R/AVWAkIEYYbGumMqoy1WvFcdQ/CqHol1HLFMj0urDifbD/g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597243182;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=gtqjfrjk/gwIUo2z+x3Wlx6nrBpRl0eqdlnNtm5WIlE=;
-        b=KQcwQp41X3nIbc8yOoAdrGFBddQ312fnDY/gkBH6XUFmsRgbMv+F5b4zyyeqTqxZON1EH1
-        mjELv/9eYyb0adAw==
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        linux-kernel@vger.kernel.org
-Cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: Re: [PATCH] x86/alternatives: Let __text_poke() acquire the pte lock with enabled interrupts
-In-Reply-To: <20200706164215.2502730-1-bigeasy@linutronix.de>
-References: <20200706164215.2502730-1-bigeasy@linutronix.de>
-Date:   Wed, 12 Aug 2020 16:39:41 +0200
-Message-ID: <87eeoc53o2.fsf@nanos.tec.linutronix.de>
+        Wed, 12 Aug 2020 10:40:13 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D5F3C061383;
+        Wed, 12 Aug 2020 07:40:13 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k5rv3-00E7t1-1a; Wed, 12 Aug 2020 14:39:57 +0000
+Date:   Wed, 12 Aug 2020 15:39:57 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Jann Horn <jannh@google.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Karel Zak <kzak@redhat.com>, Jeff Layton <jlayton@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Christian Brauner <christian@brauner.io>,
+        Lennart Poettering <lennart@poettering.net>,
+        Linux API <linux-api@vger.kernel.org>,
+        Ian Kent <raven@themaw.net>,
+        LSM <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: file metadata via fs API (was: [GIT PULL] Filesystem Information)
+Message-ID: <20200812143957.GQ1236603@ZenIV.linux.org.uk>
+References: <CAHk-=wjzLmMRf=QG-n+1HnxWCx4KTQn9+OhVvUSJ=ZCQd6Y1WA@mail.gmail.com>
+ <5C8E0FA8-274E-4B56-9B5A-88E768D01F3A@amacapital.net>
+ <a6cd01ed-918a-0ed7-aa87-0585db7b6852@schaufler-ca.com>
+ <CAJfpegvUBpb+C2Ab=CLAwWffOaeCedr-b7ZZKZnKvF4ph1nJrw@mail.gmail.com>
+ <CAG48ez3Li+HjJ6-wJwN-A84WT2MFE131Dt+6YiU96s+7NO5wkQ@mail.gmail.com>
+ <CAJfpeguh5VaDBdVkV3FJtRsMAvXHWUcBfEpQrYPEuX9wYzg9dA@mail.gmail.com>
+ <CAHk-=whE42mFLi8CfNcdB6Jc40tXsG3sR+ThWAFihhBwfUbczA@mail.gmail.com>
+ <CAJfpegtXtj2Q1wsR-3eUNA0S=_skzHF0CEmcK_Krd8dtKkWkGA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJfpegtXtj2Q1wsR-3eUNA0S=_skzHF0CEmcK_Krd8dtKkWkGA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sebastian,
+On Wed, Aug 12, 2020 at 09:23:23AM +0200, Miklos Szeredi wrote:
 
-Sebastian Andrzej Siewior <bigeasy@linutronix.de> writes:
+> Anyway, starting with just introducing the alt namespace without
+> unification seems to be a good first step. If that turns out to be
+> workable, we can revisit unification later.
 
-sorry this fell through the cracks ...
+Start with coming up with answers to the questions on semantics
+upthread.  To spare you the joy of digging through the branches
+of that thread, how's that for starters?
 
-> The pte lock is never acquired from an IRQ-off region so it does not
-> require the interrupts to be disabled.
-
-I doubt that this is true. It surely is acquired within other locks
-which might be taken with spin_lock_irq(). Which is completely fine on
-RT.
-
-But that's not the point. The point is that pte_lock() does not require
-to be taken with interrupts disabled.
-
-Please be precise about these kind of things. Handwavy descriptions
-cause more problems than they solve.
-
-> RT complains here because the spinlock_t must not be acquired with
-> disabled interrupts.
->
-> use_temporary_mm() expects interrupts to be off because it invokes
-> switch_mm_irqs_off() and uses per-CPU (current active mm) data.
->
-> Move local_irq_save() after the the pte lock has been acquired. Move
-> local_irq_restore() after the pte lock has been released.
-
-While part 1 is correct, part 2 is the exact opposite of what the patch
-does.
-
-  Move the PTE lock handling outside the interrupt disabled region.
-
-describes precisely what this is about without any gory details which
-can be seen in the patch itself. Hmm?
-
-Thanks,
-
-        tglx
-
+"Can those suckers be passed to
+...at() as starting points?  Can they be bound in namespace?
+Can something be bound *on* them?  What do they have for inodes
+and what maintains their inumbers (and st_dev, while we are at
+it)?  Can _they_ have secondaries like that (sensu Swift)?
+Is that a flat space, or can they be directories?"
