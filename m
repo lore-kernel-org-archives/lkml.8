@@ -2,164 +2,248 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05EC2C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:57:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB9E2C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:58:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E21A0204FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:56:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7170204FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:58:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=omicronenergy.com header.i=@omicronenergy.com header.b="PTaPEzxo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728052AbgHLM47 (ORCPT
+        id S1727994AbgHLM6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 08:56:59 -0400
-Received: from mga18.intel.com ([134.134.136.126]:57977 "EHLO mga18.intel.com"
+        Wed, 12 Aug 2020 08:58:09 -0400
+Received: from ns.omicron.at ([212.183.10.25]:35464 "EHLO ns.omicron.at"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727977AbgHLM45 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 08:56:57 -0400
-IronPort-SDR: 4c5hsD7oNS8j//x5JDjKNcMPAzIj5A8mLL+QGUxVwCuJi6xKFhLRaI6U7GH13MjstRj+o/qXGv
- 66Psvvn9itQw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9710"; a="141565529"
-X-IronPort-AV: E=Sophos;i="5.76,304,1592895600"; 
-   d="scan'208";a="141565529"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2020 05:56:56 -0700
-IronPort-SDR: vb0plur+z9CHm3M4u+Sb1rVDBOrjsBMYZgDSSGvqYZ3vcsJFEZaJHxUVfkcENt3E4Dl3uuh9P+
- na8O+ccUp+uA==
-X-IronPort-AV: E=Sophos;i="5.76,304,1592895600"; 
-   d="scan'208";a="469812685"
-Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.255.29.234]) ([10.255.29.234])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2020 05:56:52 -0700
-Reply-To: like.xu@intel.com
-Subject: Re: [PATCH] KVM: x86/pmu: Add '.exclude_hv = 1' for guest perf_event
-To:     Paolo Bonzini <pbonzini@redhat.com>, peterz@infradead.org
-Cc:     Like Xu <like.xu@linux.intel.com>, Yao <yao.jin@linux.intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-References: <20200812050722.25824-1-like.xu@linux.intel.com>
- <5c41978e-8341-a179-b724-9aa6e7e8a073@redhat.com>
- <20200812111115.GO2674@hirez.programming.kicks-ass.net>
- <65eddd3c-c901-1c5a-681f-f0cb07b5fbb1@redhat.com>
-From:   "Xu, Like" <like.xu@intel.com>
-Organization: Intel OTC
-Message-ID: <b55afd09-77c8-398b-309b-6bd9f9cfc876@intel.com>
-Date:   Wed, 12 Aug 2020 20:56:50 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        id S1727808AbgHLM6H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 08:58:07 -0400
+X-Greylist: delayed 746 seconds by postgrey-1.27 at vger.kernel.org; Wed, 12 Aug 2020 08:58:05 EDT
+Received: from MGW02-ATKLA.omicron.at ([172.25.62.35])
+        by ns.omicron.at (8.15.2/8.15.2) with ESMTPS id 07CCjbiO001972
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 12 Aug 2020 14:45:37 +0200
+DKIM-Filter: OpenDKIM Filter v2.11.0 ns.omicron.at 07CCjbiO001972
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=omicronenergy.com;
+        s=default; t=1597236338;
+        bh=gTDzMPzqbhTVnvgvJgLCH+Lh7+XChOpn9UYNBDP8hFU=;
+        h=Subject:From:To:CC:Date:In-Reply-To:References:From;
+        b=PTaPEzxoeCAmuZ8zBYCrdEofuGMPWbr5po2ZsRojK5v4Q8Gs591pPteAh3h9jESR0
+         1pJWqP7au0P7gedPiy9Zt4S88mr0O6mqVnRqwZZLKQ5XRf2yEPuagnkqWjpiMlrn/K
+         DX6aOOSXbQwkTdqAktHgEQ7Z8Cnm4B8I9KocgQ+w=
+Received: from MGW02-ATKLA.omicron.at (localhost [127.0.0.1])
+        by MGW02-ATKLA.omicron.at (Postfix) with ESMTP id BD644A0077;
+        Wed, 12 Aug 2020 14:45:36 +0200 (CEST)
+Received: from MGW01-ATKLA.omicron.at (unknown [172.25.62.34])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by MGW02-ATKLA.omicron.at (Postfix) with ESMTPS id B7803A0053;
+        Wed, 12 Aug 2020 14:45:36 +0200 (CEST)
+Received: from EXC03-ATKLA.omicron.at ([172.22.100.188])
+        by MGW01-ATKLA.omicron.at  with ESMTP id 07CCjbHi028720-07CCjbHk028720
+        (version=TLSv1.2 cipher=AES256-SHA256 bits=256 verify=CAFAIL);
+        Wed, 12 Aug 2020 14:45:37 +0200
+Received: from thogra12.omicron.at (172.22.33.211) by EXC03-ATKLA.omicron.at
+ (172.22.100.188) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3; Wed, 12 Aug
+ 2020 14:45:30 +0200
+Subject: Re: Kernel crash due to memory corruption with v5.4.26-rt17 and
+ PowerPC e500
+From:   Thomas Graziadei <thomas.graziadei@omicronenergy.com>
+To:     "'Sebastian Andrzej Siewior'" <bigeasy@linutronix.de>,
+        Mark Marshall <markmarshall14@gmail.com>
+CC:     linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Mark Marshall <mark.marshall@omicronenergy.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>
+Date:   Wed, 12 Aug 2020 14:45:22 +0200
+In-Reply-To: <eeeae7d9-c028-47f0-ab5b-7983e32f36cb@EXC03-ATKLA.omicron.at>
+References: <CAD4b4WK9W+dNZZ_WPt-9ZNpSHvyxdwPW86Rtq4AKOONuvyR37A@mail.gmail.com>
+         <20200529131452.pgj7mx7xaz7n4kz3@linutronix.de>
+         <CAD4b4WLS36JKepz31m98Z3Ve05d63GnfBGsuuWRXpjXZqPoBrA@mail.gmail.com>
+         <20200529161518.svpxhkeljafbtdz2@linutronix.de>
+         <20200529163722.mdxzrj4n3lyzjtfu@linutronix.de>
+         <20200706165004.7m57fvspmwnjcjxh@linutronix.de>
+         <eeeae7d9-c028-47f0-ab5b-7983e32f36cb@EXC03-ATKLA.omicron.at>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
 MIME-Version: 1.0
-In-Reply-To: <65eddd3c-c901-1c5a-681f-f0cb07b5fbb1@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+X-Originating-IP: [172.22.33.211]
+X-ClientProxiedBy: EXC03-ATKLA.omicron.at (172.22.100.188) To
+ EXC03-ATKLA.omicron.at (172.22.100.188)
+Message-ID: <c1ef757b-4cd6-410e-a647-a3303cef4b1b@EXC03-ATKLA.omicron.at>
+X-FE-Policy-ID: 1:1:1:SYSTEM
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/8/12 19:32, Paolo Bonzini wrote:
-> On 12/08/20 13:11, peterz@infradead.org wrote:
->>> x86 does not have a hypervisor privilege level, so it never uses
->> Arguably it does when Xen, but I don't think we support that, so *phew*.
-> Yeah, I suppose you could imagine having paravirtualized perf counters
-> where the Xen privileged domain could ask Xen to run perf counters on
-> itself.
->
->>> exclude_hv; exclude_host already excludes all root mode activity for
->>> both ring0 and ring3.
->> Right, but we want to tighten the permission checks and not excluding_hv
->> is just sloppy.
-> I would just document that it's ignored as it doesn't make sense.  ARM64
-> does that too, for new processors where the kernel is not itself split
-> between supervisor and hypervisor privilege levels.
->
-> There are people that are trying to run Linux-based firmware and have
-> SMM handlers as part of the kernel.  Perhaps they could use exclude_hv
-> to exclude the SMM handlers from perf (if including them is possible at
-> all).
-Hi Paolo,
+Hi Sebastian,
 
-My proposal is to define:
-the "hypervisor privilege levels" events in the KVM/x86 context as
-all the host kernel events plus /dev/kvm user space events.
+any progress on your side?
 
-If we add ".exclude_hv = 1" in the pmc_reprogram_counter(),
-do you see any side effect to cover the above usages?
+Do you think the patch could be applied for the next versions?
 
-The fact that exclude_hv has never been used in x86 does help
-the generic perf code to handle permission checks in a more concise way.
+Regards,
+Thomas
 
-Thanks,
-Like Xu
->> The thing is, we very much do not want to allow unpriv user to be able
->> to create: exclude_host=1, exclude_guest=0 counters (they currently
->> can).
-> That would be the case of an unprivileged user that wants to measure
-> performance of its guests.  It's a scenario that makes a lot of sense,
-> are you worried about side channels?  Can perf-events on guests leak
-> more about the host than perf-events on a random userspace program?
->
->> Also, exclude_host is really poorly defined:
->>
->>    https://lkml.kernel.org/r/20200806091827.GY2674@hirez.programming.kicks-ass.net
->>
->>    "Suppose we have nested virt:
->>
->> 	  L0-hv
->> 	  |
->> 	  G0/L1-hv
->> 	     |
->> 	     G1
->>
->>    And we're running in G0, then:
->>
->>    - 'exclude_hv' would exclude L0 events
->>    - 'exclude_host' would ... exclude L1-hv events?
->>    - 'exclude_guest' would ... exclude G1 events?
->  From the point of view of G0, L0 *does not exist at all*.  You just
-> cannot see L0 events if you're running in G0.
->
-> exclude_host/exclude_guest are the right definition.
->
->>    Then the next question is, if G0 is a host, does the L1-hv run in
->>    G0 userspace or G0 kernel space?
-> It's mostly kernel, but sometimes you're interested in events from QEMU
-> or whoever else has opened /dev/kvm.  In that case you care about G0
-> userspace too.
->
->> The way it is implemented, you basically have to always set
->> exclude_host=0, even if there is no virt at all and you want to measure
->> your own userspace thing -- which is just weird.
-> I understand regretting having exclude_guest that way; include_guest
-> (defaulting to 0!) would have made more sense.  But defaulting to
-> exclude_host==0 makes sense: if there is no virt at all, memset(0) does
-> the right thing so it does not seem weird to me.
->
->> I suppose the 'best' option at this point is something like:
->>
->> 	/*
->> 	 * comment that explains the trainwreck.
->> 	 */
->> 	if (!exclude_host && !exclude_guest)
->> 		exclude_guest = 1;
->>
->> 	if ((!exclude_hv || !exclude_guest) && !perf_allow_kernel())
->> 		return -EPERM;
->>
->> But that takes away the possibility of actually having:
->> 'exclude_host=0, exclude_guest=0' to create an event that measures both,
->> which also sucks.
-> In fact both of the above "if"s suck. :(
->
-> Paolo
->
+On Fri, 2020-07-10 at 10:59 +0000, Thomas Graziadei wrote:
+> Hi Sebastian,
+>=20
+> thanks for looking into this.
+>=20
+> We could reproduce the issue with QEMU.
+> At runtime you need to set mdev as the kernel's hotplug client
+> (/proc/sys/kernel/hotplug) and give it a dummy /etc/mdev.conf like
+> (.* 1:1 777). Then just do a loop and insmod/rmmod crc4.ko and
+> crc7.ko.
+>=20
+> Swapping the mm assignment did not work -> exception after 1900
+> iterations
+> Your second suggestion with check.patch (attached to this email for
+> completeness, only protecting the exec_mmap function) did not work
+> eighter -> exception after 2600 iterations
+>=20
+> Your third suggestion (a modification to the original revert)
+> enclosed in this e-mail does seem to work. Still no problems after
+> 30000 iterations.
+>=20
+> By the way, as noticed in your kernel config, we would be quite
+> interested in a gcc 9 compiler for our platform. Is there a
+> mainline/maintained version or fork for this or another possibility
+> to get it?
+> =20
+> Regards,
+> Thomas
+>=20
+> -----Original Message-----
+> From: Sebastian Andrzej Siewior [mailto:bigeasy@linutronix.de]=20
+> Sent: Monday, July 06, 2020 6:50 PM
+> To: Mark Marshall <markmarshall14@gmail.com>
+> Cc: linux-rt-users <linux-rt-users@vger.kernel.org>; Mark Marshall <
+> mark.marshall@omicronenergy.com>; Thomas Graziadei <
+> thomas.graziadei@omicronenergy.com>; Thomas Gleixner <
+> tglx@linutronix.de>; linux-kernel@vger.kernel.org;=20
+> rostedt@goodmis.org
+> Subject: Re: Kernel crash due to memory corruption with v5.4.26-rt17
+> and PowerPC e500
+>=20
+> On 2020-05-29 18:37:22 [+0200], To Mark Marshall wrote:
+> > On 2020-05-29 18:15:18 [+0200], To Mark Marshall wrote:
+> > > In order to get it back into the RT queue I need to understand
+> > > why=20
+> > > it is required. What exactly is it fixing. Let me stare at for a=20
+> > > little=E2=80=A6
+> >=20
+> > it used to be local_irq_disable() which then became
+> > preempt_disable()
+> > local_irq_disable() due to ARM's limitation.
+>=20
+> Any luck on your side?
+>=20
+> I *think* if you swap the mm assignment in exec_mmap() then it should
+> be gone. Basically:
+> >         tsk->active_mm =3D mm;
+> >         tsk->mm =3D mm;
+>=20
+> However I think to apply something like this:
+>=20
+> diff --git a/fs/exec.c b/fs/exec.c
+> --- a/fs/exec.c
+> +++ b/fs/exec.c
+> @@ -1035,11 +1035,15 @@ static int exec_mmap(struct mm_struct *mm)
+>  		}
+>  	}
+>  	task_lock(tsk);
+> +
+> +	task_lock_mm();
+>  	active_mm =3D tsk->active_mm;
+>  	membarrier_exec_mmap(mm);
+>  	tsk->mm =3D mm;
+>  	tsk->active_mm =3D mm;
+>  	activate_mm(active_mm, mm);
+> +	task_unlock_mm();
+> +
+>  	tsk->mm->vmacache_seqnum =3D 0;
+>  	vmacache_flush(tsk);
+>  	task_unlock(tsk);
+> diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
+> --- a/include/linux/sched/task.h
+> +++ b/include/linux/sched/task.h
+> @@ -176,4 +176,31 @@ static inline void task_unlock(struct
+> task_struct *p)
+>  	spin_unlock(&p->alloc_lock);
+>  }
+> =20
+> +#ifdef CONFIG_PREEMPT_RT
+> +/*
+> + * Protects ->mm and ->active_mm.
+> + * Avoids scheduling so switch_mm() or enter_lazy_tlb() will not
+> read=20
+> +the
+> + * members while they are updated.
+> + */
+> +static inline void task_lock_mm(void)
+> +{
+> +	preempt_disable();
+> +}
+> +
+> +static inline void task_unlock_mm(void) {
+> +	preempt_enable();
+> +}
+> +
+> +#else
+> +
+> +static inline void task_lock_mm(void)
+> +{
+> +}
+> +
+> +static inline void task_unlock_mm(void) { } #endif
+> +
+>  #endif /* _LINUX_SCHED_TASK_H */
+> diff --git a/mm/mmu_context.c b/mm/mmu_context.c
+> --- a/mm/mmu_context.c
+> +++ b/mm/mmu_context.c
+> @@ -25,6 +25,7 @@ void use_mm(struct mm_struct *mm)
+>  	struct task_struct *tsk =3D current;
+> =20
+>  	task_lock(tsk);
+> +	task_lock_mm();
+>  	active_mm =3D tsk->active_mm;
+>  	if (active_mm !=3D mm) {
+>  		mmgrab(mm);
+> @@ -32,6 +33,7 @@ void use_mm(struct mm_struct *mm)
+>  	}
+>  	tsk->mm =3D mm;
+>  	switch_mm(active_mm, mm, tsk);
+> +	task_unlock_mm();
+>  	task_unlock(tsk);
+>  #ifdef finish_arch_post_lock_switch
+>  	finish_arch_post_lock_switch();
+> @@ -55,10 +57,12 @@ void unuse_mm(struct mm_struct *mm)
+>  	struct task_struct *tsk =3D current;
+> =20
+>  	task_lock(tsk);
+> +	task_lock_mm();
+>  	sync_mm_rss(mm);
+>  	tsk->mm =3D NULL;
+>  	/* active_mm is still 'mm' */
+>  	enter_lazy_tlb(mm, tsk);
+> +	task_unlock_mm();
+>  	task_unlock(tsk);
+>  }
+>  EXPORT_SYMBOL_GPL(unuse_mm);
+> --
+> 2.27.0
+>=20
+> > > > Best regards,
+> > > > Mark
+>=20
+> Sebastian
 
