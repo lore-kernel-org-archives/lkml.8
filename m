@@ -2,223 +2,61 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6CDBC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:30:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC6AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:31:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E68820658
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:30:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="URNoeU+c"
+	by mail.kernel.org (Postfix) with ESMTP id 732E020658
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:31:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726587AbgHLTai (ORCPT
+        id S1726673AbgHLTbK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 15:30:38 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:56654 "EHLO m43-7.mailgun.net"
+        Wed, 12 Aug 2020 15:31:10 -0400
+Received: from gate.crashing.org ([63.228.1.57]:40508 "EHLO gate.crashing.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726526AbgHLTah (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 15:30:37 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597260636; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=4+/wN/ZFlubPC8f06kWYCcnSStIOeSWNXCfdlUIBb6Q=;
- b=URNoeU+cCCStWxW9WIwQAnxYQtJTNcQCgX8J8Uv2iA6M3Q9hPAO3K+R3bc6KYxDyIzFxUAjb
- GMqalzSovhYxwcS9ETAfYKWo0BEhCejWcJRDX8UUL48NnCQgrJGOQD0JmXnkMmPSbdxZ03DV
- WvwPdar8CMvvvJG8zt9EOAZiZ8I=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n07.prod.us-west-2.postgun.com with SMTP id
- 5f3443514c787f237bb0c858 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 12 Aug 2020 19:30:25
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C1637C433C6; Wed, 12 Aug 2020 19:30:24 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: tanmay)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DC4C6C433C9;
-        Wed, 12 Aug 2020 19:30:23 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 12 Aug 2020 12:30:23 -0700
-From:   Tanmay Shah <tanmay@codeaurora.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-arm-msm@vger.kernel.org, robdclark@gmail.com,
-        airlied@linux.ie, linux-kernel@vger.kernel.org,
-        abhinavk@codeaurora.org, khsieh@codeaurora.org,
-        seanpaul@chromium.org, aravindh@codeaurora.org,
-        freedreno@lists.freedesktop.org,
-        dri-devel <dri-devel-bounces@lists.freedesktop.org>
-Subject: Re: [PATCH v5] arm64: dts: qcom: sc7180: Add Display Port dt node
-In-Reply-To: <159717422853.1360974.2200109790995932014@swboyd.mtv.corp.google.com>
-References: <20200811021553.25023-1-tanmay@codeaurora.org>
- <159717422853.1360974.2200109790995932014@swboyd.mtv.corp.google.com>
-Message-ID: <70d8a4f073abf7a038c9830ec6586709@codeaurora.org>
-X-Sender: tanmay@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+        id S1726526AbgHLTbK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 15:31:10 -0400
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 07CJUX3N023473;
+        Wed, 12 Aug 2020 14:30:33 -0500
+Received: (from segher@localhost)
+        by gate.crashing.org (8.14.1/8.14.1/Submit) id 07CJUWOw023470;
+        Wed, 12 Aug 2020 14:30:32 -0500
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date:   Wed, 12 Aug 2020 14:30:32 -0500
+From:   Segher Boessenkool <segher@kernel.crashing.org>
+To:     Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>, npiggin@gmail.com,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] powerpc/uaccess: Use flexible addressing with __put_user()/__get_user()
+Message-ID: <20200812193032.GU6753@gate.crashing.org>
+References: <c2addbd9d76212242d3d8554a2f7ff849fb08b85.1587040754.git.christophe.leroy@c-s.fr> <7b916759-1683-b4df-0d4b-b04b3fcd9a02@csgroup.eu> <878sg6862r.fsf@mpe.ellerman.id.au> <875zb98i5a.fsf@mpe.ellerman.id.au> <8b751738-a9d1-8f55-8f9b-9264c8ac7ed8@csgroup.eu> <faa6759a-8188-104b-a9f9-a5ff3b060cfa@csgroup.eu> <c827fd9b-984d-ca86-67e9-512ca10d118f@csgroup.eu> <0b63e2b8-a134-9a50-2106-8ff110cf9a31@csgroup.eu>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0b63e2b8-a134-9a50-2106-8ff110cf9a31@csgroup.eu>
+User-Agent: Mutt/1.4.2.3i
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-11 12:30, Stephen Boyd wrote:
-> Quoting Tanmay Shah (2020-08-10 19:15:53)
->> @@ -2440,6 +2447,71 @@ dsi_phy: dsi-phy@ae94400 {
->> 
->>                                 status = "disabled";
->>                         };
->> +
->> +                       msm_dp: displayport-controller@ae90000 {
->> +                               status = "disabled";
->> +                               compatible = "qcom,sc7180-dp";
->> +
->> +                               reg = <0 0x0ae90000 0 0x1400>;
->> +
->> +                               interrupt-parent = <&mdss>;
->> +                               interrupts = <12 IRQ_TYPE_NONE>;
-> 
-> Please drop the flags. It's not required per the binding. It should 
-> just
-> be a single number, i.e. <12>.
-> 
+On Wed, Aug 12, 2020 at 02:32:51PM +0200, Christophe Leroy wrote:
+> Anyway, it seems that GCC doesn't make much use of the "m<>" and the 
+> pre-update form.
 
-Sure. I will change DP-bindings accordingly as well.
+GCC does not use update form outside of inner loops much.  Did you
+expect anything else?
 
->> +
->> +                               clocks = <&dispcc 
->> DISP_CC_MDSS_AHB_CLK>,
->> +                                        <&dispcc
-> DISP_CC_MDSS_DP_AUX_CLK>,
->> +                                        <&dispcc
-> DISP_CC_MDSS_DP_LINK_CLK>,
->> +                                        <&dispcc
-> DISP_CC_MDSS_DP_LINK_INTF_CLK>,
->> +                                        <&dispcc
-> DISP_CC_MDSS_DP_PIXEL_CLK>;
->> +                               clock-names = "core_iface", 
->> "core_aux",
-> "ctrl_link",
->> +                                             "ctrl_link_iface",
-> "stream_pixel";
->> +                               #clock-cells = <1>;
->> +                               assigned-clocks = <&dispcc
-> DISP_CC_MDSS_DP_LINK_CLK_SRC>,
->> +                                                 <&dispcc
-> DISP_CC_MDSS_DP_PIXEL_CLK_SRC>;
->> +                               assigned-clock-parents = <&msm_dp 0>,
-> <&msm_dp 1>;
->> +
->> +                               operating-points-v2 = <&dp_opp_table>;
->> +                               power-domains = <&rpmhpd SC7180_CX>;
-> 
-> Can you send another patch to add the hpd pinctrl binding for the hpd
-> function? It would be useful to have that in the SoC level in case any
-> board wants to use the hpd pin on this SoC without having to implement
-> it themselves. It could be assigned here too as the pinctrl but I'm not
-> sure if that is correct. Probably better to just have it in the SoC 
-> file
-> and then let boards pick to use it.
-> 
+> Most of the benefit of flexible addressing seems to be 
+> achieved with patch 1 ie without the "m<>" constraint and update form.
 
-We have tlmm node in sc7180.dtsi. We can define pinctrl definition for 
-"dp_hot" funtionality there.
+Yes.
 
->> +
->> +                               ports {
->> +                                       #address-cells = <1>;
->> +                                       #size-cells = <0>;
->> +                                       port@0 {
->> +                                               reg = <0>;
->> +                                               dp_in: endpoint {
->> +                                                       
->> remote-endpoint
-> = <&dpu_intf0_out>;
->> +                                               };
->> +                                       };
->> +
->> +                                       port@1 {
->> +                                               reg = <1>;
->> +                                               dp_out: endpoint { };
->> +                                       };
->> +                               };
->> +
->> +                               dp_opp_table: dp-opp-table {
-> 
-> Can this be called opp-table? I don't see the need to make it more
-> specific given that it doesn't share the namespace at this level with
-> anything else that is an opp table.
-> 
 
-DSI and MDP's OPP table names were posted here:
-https://lore.kernel.org/dri-devel/1594292674-15632-4-git-send-email-rnayak@codeaurora.org/
-
-So, It makes sense to keep naming conventions similar to dsi and mdp's 
-opp table.
-
->> +                                       compatible =
-> "operating-points-v2";
->> +
->> +                                       opp-160000000 {
->> +                                               opp-hz = /bits/ 64
-> <160000000>;
->> +                                               required-opps =
-> <&rpmhpd_opp_low_svs>;
->> +                                       };
->> +
->> +                                       opp-270000000 {
->> +                                               opp-hz = /bits/ 64
-> <270000000>;
->> +                                               required-opps =
-> <&rpmhpd_opp_svs>;
->> +                                       };
->> +
->> +                                       opp-540000000 {
->> +                                               opp-hz = /bits/ 64
-> <540000000>;
->> +                                               required-opps =
-> <&rpmhpd_opp_svs_l1>;
->> +                                       };
->> +
->> +                                       opp-810000000 {
->> +                                               opp-hz = /bits/ 64
-> <810000000>;
->> +                                               required-opps =
-> <&rpmhpd_opp_nom>;
->> +                                       };
->> +                               };
->> +                       };
->>                 };
->> 
->>                 dispcc: clock-controller@af00000 {
->> @@ -2449,8 +2521,8 @@ dispcc: clock-controller@af00000 {
->>                                  <&gcc GCC_DISP_GPLL0_CLK_SRC>,
->>                                  <&dsi_phy 0>,
->>                                  <&dsi_phy 1>,
->> -                                <0>,
->> -                                <0>;
->> +                                <&msm_dp 0>,
->> +                                <&msm_dp 1>;
-> 
-> This bit will have to change when the DP phy is split off into the qmp
-> driver.
-> 
-
-Yes. It will be <&dp_phy 0> and <&dp_phy 1> assuming dp_phy is DP PHY 
-dts node name.
-
->>                         clock-names = "bi_tcxo",
->>                                       "gcc_disp_gpll0_clk_src",
->>                                       "dsi0_phy_pll_out_byteclk",
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Segher
