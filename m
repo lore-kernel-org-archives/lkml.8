@@ -2,184 +2,127 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DBD7C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:56:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB126C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:56:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF08A206B2
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:56:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pgS1Tr5u"
+	by mail.kernel.org (Postfix) with ESMTP id 8F516206B2
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:56:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728099AbgHLN4X (ORCPT
+        id S1728028AbgHLN4q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 09:56:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41362 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726804AbgHLN4V (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 09:56:21 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88409C061383;
-        Wed, 12 Aug 2020 06:56:21 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id p16so1701652ile.0;
-        Wed, 12 Aug 2020 06:56:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=L10aSxHQCG16LTPX2VDKvrZoq6RMS4QxZCBViQUa0lE=;
-        b=pgS1Tr5ueTVxZumiz4wki6pU3O7plai+CT/VVA46teg+WQ4G7PjFw9jXbAkPep9RIa
-         Qt0wI4PUBiBgdym8VglqLFW8DwHtKbEn+DJ12ycZHuBY1Hss9F4m/wniM5H6PPOyoPrr
-         aD1cP9CgF3plaa4a2rWA37vrYnNk36dBkvnN0CzxGf5V7CEDaL4rwXqc1PVCiSbQ1n3u
-         cYycOsymBZn+8+Ehk8H+x4wh9NSawJCwlPkYBa8Z/rsitOHLjQ9KDv+s1bD5Zhyjh+T4
-         bi4L+psJ7MGWE/aYjZx+bKzn5FstLg5haAZaUzahe8f8Oc9Ex0JzBt7j+4/BDOW+ev+K
-         eFog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=L10aSxHQCG16LTPX2VDKvrZoq6RMS4QxZCBViQUa0lE=;
-        b=J4jshY8n9JJCDSXNOImKEHpEeULokLFqrzFDjzkJDiQBi1tfS6bLeIkD121hUgejiZ
-         ejCQatumfnnXTDotKL2mjDgaZGL7fu2whO+OcEKUit8HQIVcUrvkDROQWljtkXDePbLj
-         wi+CmjtLXd1wlX59WKegUppAr6G8byZxMdvMxrgx01jOkRRFHjqEbJIhjFBsjV8UAFQ6
-         OmKTJhkQygyEJ4CI+JWBj86ubND2riKVMXGH1uhPglO/lM0xWeigdF7ZdJm4WT6hxV0W
-         ptnvANBzFqL/H+xsM3KUYazXgoezVSivknB54MH+otFsrOUq1vLQ4xxXfE0KzlnIkmYL
-         mgQg==
-X-Gm-Message-State: AOAM531jeD3O2pwdaznwOo0mqNujqw5Drjb58iY0ywoX+4u378tQXsfK
-        /BXL6+xqUN4prztmNdIkS6w=
-X-Google-Smtp-Source: ABdhPJx/cW3b6ZCypx93XUp2fbLhIViYbxQNo1qPh97cr/CWUQguPl3jz7RLGcshibVycc8x8OWdVg==
-X-Received: by 2002:a92:9adc:: with SMTP id c89mr6878133ill.272.1597240580818;
-        Wed, 12 Aug 2020 06:56:20 -0700 (PDT)
-Received: from anon-dhcp-152.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id u62sm1117047ilc.87.2020.08.12.06.56.18
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 12 Aug 2020 06:56:19 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [dm-devel] [RFC PATCH v5 00/11] Integrity Policy Enforcement LSM
- (IPE)
-From:   Chuck Lever <chucklever@gmail.com>
-In-Reply-To: <1597170509.4325.55.camel@HansenPartnership.com>
-Date:   Wed, 12 Aug 2020 09:56:17 -0400
-Cc:     Mimi Zohar <zohar@linux.ibm.com>, James Morris <jmorris@namei.org>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>,
-        snitzer@redhat.com, dm-devel@redhat.com,
-        tyhicks@linux.microsoft.com, agk@redhat.com,
-        Paul Moore <paul@paul-moore.com>,
-        Jonathan Corbet <corbet@lwn.net>, nramas@linux.microsoft.com,
-        serge@hallyn.com, pasha.tatashin@soleen.com,
-        Jann Horn <jannh@google.com>, linux-block@vger.kernel.org,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jens Axboe <axboe@kernel.dk>, mdsakib@microsoft.com,
-        open list <linux-kernel@vger.kernel.org>, eparis@redhat.com,
-        linux-security-module@vger.kernel.org, linux-audit@redhat.com,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-integrity@vger.kernel.org,
-        jaskarankhurana@linux.microsoft.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <2CA41152-6445-4716-B5EE-2D14E5C59368@gmail.com>
-References: <20200728213614.586312-1-deven.desai@linux.microsoft.com>
- <20200802115545.GA1162@bug> <20200802140300.GA2975990@sasha-vm>
- <20200802143143.GB20261@amd> <1596386606.4087.20.camel@HansenPartnership.com>
- <fb35a1f7-7633-a678-3f0f-17cf83032d2b@linux.microsoft.com>
- <1596639689.3457.17.camel@HansenPartnership.com>
- <alpine.LRH.2.21.2008050934060.28225@namei.org>
- <b08ae82102f35936427bf138085484f75532cff1.camel@linux.ibm.com>
- <329E8DBA-049E-4959-AFD4-9D118DEB176E@gmail.com>
- <da6f54d0438ee3d3903b2c75fcfbeb0afdf92dc2.camel@linux.ibm.com>
- <1597073737.3966.12.camel@HansenPartnership.com>
- <6E907A22-02CC-42DD-B3CD-11D304F3A1A8@gmail.com>
- <1597124623.30793.14.camel@HansenPartnership.com>
- <16C3BF97-A7D3-488A-9D26-7C9B18AD2084@gmail.com>
- <1597170509.4325.55.camel@HansenPartnership.com>
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Wed, 12 Aug 2020 09:56:46 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:44600 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726472AbgHLN4o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 09:56:44 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id DEF02FB04;
+        Wed, 12 Aug 2020 15:56:39 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id d1YLBnojmT0o; Wed, 12 Aug 2020 15:56:38 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id 8DD1A45770; Wed, 12 Aug 2020 15:56:37 +0200 (CEST)
+Date:   Wed, 12 Aug 2020 15:56:37 +0200
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc:     Swapnil Jakhade <sjakhade@cadence.com>, airlied@linux.ie,
+        daniel@ffwll.ch, Laurent.pinchart@ideasonboard.com,
+        robh+dt@kernel.org, a.hajda@samsung.com, narmstrong@baylibre.com,
+        jonas@kwiboo.se, jernej.skrabec@siol.net,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mparab@cadence.com,
+        yamonkar@cadence.com, praneeth@ti.com, nsekhar@ti.com,
+        jsarha@ti.com, sandor.yu@nxp.com
+Subject: Re: [PATCH v8 0/3] drm: Add support for Cadence MHDP DPI/DP bridge
+ and J721E wrapper.
+Message-ID: <20200812135637.GA107602@bogon.m.sigxcpu.org>
+References: <1596713672-8146-1-git-send-email-sjakhade@cadence.com>
+ <20200812083937.GA8816@bogon.m.sigxcpu.org>
+ <3bcbbb0b-ee04-0f1e-6c54-97b01c552d82@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3bcbbb0b-ee04-0f1e-6c54-97b01c552d82@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
+On Wed, Aug 12, 2020 at 01:47:42PM +0300, Tomi Valkeinen wrote:
+> Hi Guido,
+> 
+> On 12/08/2020 11:39, Guido Günther wrote:
+> > Hi,
+> > On Thu, Aug 06, 2020 at 01:34:29PM +0200, Swapnil Jakhade wrote:
+> >> This patch series adds new DRM bridge driver for Cadence MHDP DPI/DP
+> >> bridge. The Cadence Display Port IP is also referred as MHDP (Mobile High
+> >> Definition Link, High-Definition Multimedia Interface, Display Port).
+> >> Cadence Display Port complies with VESA DisplayPort (DP) and embedded
+> >> Display Port (eDP) standards.
+> > 
+> > Is there any relation to the cadence mhdp ip core used inthe imx8mq:
+> > 
+> >     https://lore.kernel.org/dri-devel/cover.1590982881.git.Sandor.yu@nxp.com/
+> > 
+> > It looks very similar in several places so should that use the same driver?
+> > Cheers,
+> >  -- Guido
+> 
+> Interesting.
+> 
+> So the original Cadence DP patches for TI SoCs did create a common driver with Rockchip's older mhdp
+> driver. And looks like the IMX series points to an early version of that patch ("drm/rockchip:
+> prepare common code for cdns and rk dpi/dp driver").
+> 
+> We gave up on that as the IPs did have differences and the firmwares used were apparently quite
+> different. The end result was very difficult to maintain, especially as (afaik) none of the people
+> involved had relevant Rockchip HW.
+
+Is the `struct mhdp_platform_ops` a leftover from that? Can that be dropped?
+
+> The idea was to get a stable DP driver for TI SoCs ready and upstream, and then carefully try to
+> create common parts with Rockchip's driver in small pieces.
+
+I wonder how imx8 would best blend into this? First thing will likely be
+to upstream the phy code in driveres/phy/ so a modified version of this bridge
+driver could call into that, then go and look for common patterns.
+
+> If the Rockchip and IMX mhdp have the same IP and same firmware, then they obviously should share
+> code as done in the series you point to.
+
+I'm pretty sure they use different firmware though - the imx8mq
+additionally supports HDMI with a different firmware on the same IP core
+(13.4 and 13.5 in the imx8mq ref manual).
+
+> Perhaps Cadence can clarify the differences between IMX, TI and
+> Rockchip IPs and FWs?
+
+That would be great!
+ -- Guido
 
 
-> On Aug 11, 2020, at 2:28 PM, James Bottomley =
-<James.Bottomley@HansenPartnership.com> wrote:
->=20
-> On Tue, 2020-08-11 at 10:48 -0400, Chuck Lever wrote:
->> Mimi's earlier point is that any IMA metadata format that involves
->> unsigned digests is exposed to an alteration attack at rest or in
->> transit, thus will not provide a robust end-to-end integrity
->> guarantee.
->=20
-> I don't believe that is Mimi's point, because it's mostly not correct:
-> the xattr mechanism does provide this today.  The point is the
-> mechanism we use for storing IMA hashes and signatures today is xattrs
-> because they have robust security properties for local filesystems =
-that
-> the kernel enforces.  This use goes beyond IMA, selinux labels for
-> instance use this property as well.
-
-I don't buy this for a second. If storing a security label in a
-local xattr is so secure, we wouldn't have any need for EVM.
-
-
-> What I think you're saying is that NFS can't provide the robust
-> security for xattrs we've been relying on, so you need some other
-> mechanism for storing them.
-
-For NFS, there's a network traversal which is an attack surface.
-
-A local xattr can be attacked as well: a device or bus malfunction
-can corrupt the content of an xattr, or a privileged user can modify
-it.
-
-How does that metadata get from the software provider to the end
-user? It's got to go over a network, stored in various ways, some
-of which will not be trusted. To attain an unbroken chain of
-provenance, that metadata has to be signed.
-
-I don't think the question is the storage mechanism, but rather the
-protection mechanism. Signing the metadata protects it in all of
-these cases.
-
-
-> I think Mimi's other point is actually that IMA uses a flat hash which
-> we derive by reading the entire file and then watching for mutations.=20=
-
-> Since you cannot guarantee we get notice of mutation with NFS, the
-> entire IMA mechanism can't really be applied in its current form and =
-we
-> have to resort to chunk at a time verifications that a Merkel tree
-> would provide.
-
-I'm not sure what you mean by this. An NFS client relies on notification
-of mutation to maintain the integrity of its cache of NFS file content,
-and it's done that since the 1980s.
-
-In addition to examining a file's mtime and ctime as maintained by
-the NFS server, a client can rely on the file's NFSv4 change attribute
-or an NFSv4 delegation.
-
-
-> Doesn't this make moot any thinking about
-> standardisation in NFS for the current IMA flat hash mechanism because
-> we simply can't use it ... If I were to construct a prototype I'd have
-> to work out and securely cache the hash of ever chunk when verifying
-> the flat hash so I could recheck on every chunk read.  I think that's
-> infeasible for large files.
->=20
-> James
->=20
-
---
-Chuck Lever
-chucklever@gmail.com
+> I'm worried that if there are IP differences, even if not great ones, and if the FWs are different
+> and developed separately, it'll be a constant "fix X for SoC A, and accidentally break Y for SoC B
+> and C", especially if too much code is shared.
+> 
+> In the long run I'm all for a single driver (or large shared parts), but I'm not sure if we should
+> start with that approach.
 
 
 
+
+> 
+>  Tomi
+> 
+> -- 
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> 
