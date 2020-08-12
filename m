@@ -2,90 +2,112 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D98CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:04:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB679C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:04:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7197207DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:04:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 874E320774
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:04:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="kLmhXN4/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="favdMBuQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728058AbgHLNEh (ORCPT
+        id S1727943AbgHLNEw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 09:04:37 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:15991 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726404AbgHLNEg (ORCPT
+        Wed, 12 Aug 2020 09:04:52 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:46081 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726871AbgHLNEu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 09:04:36 -0400
-X-UUID: 62e8e19434fb43649ef0c4e501fd66a5-20200812
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=2D2otIxOT5Y9TE/5sGqjyAubG2N6RpU+rS+XIzBvd5M=;
-        b=kLmhXN4/Tan9ZglFsXOgX+kzqXZbJbh+v1/7gyKF7l/4j5kW4PQ27hkyvmpyMat2x+aU1pszBdKY9ibRWOFfsqlZu3SDG2H5W0FiK2F7J3AeVxFx11JgdSEUjoXzMKraquRVIs6C/mtf8pOgLsthAVHSIhJKkU9jcCHl+t4Qp18=;
-X-UUID: 62e8e19434fb43649ef0c4e501fd66a5-20200812
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <wenbin.mei@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 328971815; Wed, 12 Aug 2020 21:04:27 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31DR.mediatek.inc
- (172.27.6.102) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 12 Aug
- 2020 21:04:25 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 12 Aug 2020 21:04:25 +0800
-Message-ID: <1597237413.10188.5.camel@mhfsdcap03>
-Subject: Re: [PATCH 1/3] mmc: dt-bindings: Add resets/reset-names for
- Mediatek MMC bindings
-From:   Wenbin Mei <wenbin.mei@mediatek.com>
-To:     Philipp Zabel <p.zabel@pengutronix.de>
-CC:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Chaotian Jing <chaotian.jing@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <srv_heupstream@mediatek.com>
-Date:   Wed, 12 Aug 2020 21:03:33 +0800
-In-Reply-To: <6e667ff6f5a1aae51b89d00e9ec5bba29852f683.camel@pengutronix.de>
-References: <20200812093726.10123-1-wenbin.mei@mediatek.com>
-         <20200812093726.10123-2-wenbin.mei@mediatek.com>
-         <6e667ff6f5a1aae51b89d00e9ec5bba29852f683.camel@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Wed, 12 Aug 2020 09:04:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597237488;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=3Fsgrw+mRjbdWES2GWusstFr/mr6OnkInf7T7tR1iuA=;
+        b=favdMBuQM9Qaxvle70A5xo/Fd9S0vPlNLvGEK9NCHXzp6ykG+AkaSdAg6qiStJqLpeDEdZ
+        LwH6mwijs1cHTZVlpBSjzy0LqnduARdSreTJZnQYPCbClMsudze5ITlP0rW1Xhee7kfjAQ
+        fZQrRkQ2C0rbJbUnFde6BRz8V/91IFE=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-135-mztFXmPzN-OG0VvnKo25qg-1; Wed, 12 Aug 2020 09:04:47 -0400
+X-MC-Unique: mztFXmPzN-OG0VvnKo25qg-1
+Received: by mail-wm1-f70.google.com with SMTP id c124so696945wme.0
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 06:04:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=3Fsgrw+mRjbdWES2GWusstFr/mr6OnkInf7T7tR1iuA=;
+        b=iT6BZ3EdoeU4pNyvE4MAJ8S7p53q4tme/+P39gKBdtctTrFnzNBLnfnk3cMP245DT2
+         q3KSQ6f+1X/Ht/h9O2V1jz94PJwyc3V8VWii4awtkR+xPt0s9AstPYAAFWJWJRsk2X2F
+         9g3csr4piBbaEi15GyyhPykDet/DlC8Kw6oG+Dv7+Cm9xA88Gulr6RXG5jyvbW10deiu
+         Vu0igrXR856Ri7LKUlfKGB9RXvXnlpqMMZk8+q/WtjRz9QF9vg7SCa5V7mi0bRPNgCov
+         P2orRAjD7uZY9QLCBTAEv1vAD2xJnHbjPpeYkhC58ekcLhm44MrDFnT5e7RnBX2OX4me
+         8DLA==
+X-Gm-Message-State: AOAM533OZMfI/BbPNs9cfOAGmJMn5qA6D4PK5RRR//g/iRQy2WCzUbCl
+        QzZO7C1wlmngNCPidc6LrIkgqi62A2VdxqkMvVzzWvdPgAGil41psU2T/Hsi9YZFLKsKrIY9Ny3
+        ODoh1Qf/CxBUGQvdo+cTeOE8g
+X-Received: by 2002:adf:ab55:: with SMTP id r21mr32322655wrc.332.1597237485840;
+        Wed, 12 Aug 2020 06:04:45 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyJcm6bs/kye85/P+Jyuc7cEjwoDZlomX2S0Ug3Q7nIk7qrF3w/nV2klKWLtDnO1ChUHk9xzA==
+X-Received: by 2002:adf:ab55:: with SMTP id r21mr32322639wrc.332.1597237485611;
+        Wed, 12 Aug 2020 06:04:45 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:fcdc:39e8:d361:7e30? ([2001:b07:6468:f312:fcdc:39e8:d361:7e30])
+        by smtp.gmail.com with ESMTPSA id k204sm3938274wma.21.2020.08.12.06.04.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Aug 2020 06:04:45 -0700 (PDT)
+Subject: Re: [PATCH] KVM: x86/pmu: Add '.exclude_hv = 1' for guest perf_event
+To:     like.xu@intel.com, peterz@infradead.org
+Cc:     Like Xu <like.xu@linux.intel.com>, Yao <yao.jin@linux.intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+References: <20200812050722.25824-1-like.xu@linux.intel.com>
+ <5c41978e-8341-a179-b724-9aa6e7e8a073@redhat.com>
+ <20200812111115.GO2674@hirez.programming.kicks-ass.net>
+ <65eddd3c-c901-1c5a-681f-f0cb07b5fbb1@redhat.com>
+ <b55afd09-77c8-398b-309b-6bd9f9cfc876@intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <8bdc60d5-c9ef-4e8f-6b73-b7bd012d9d30@redhat.com>
+Date:   Wed, 12 Aug 2020 15:04:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 88374733FA49679322C5DF06B0A77BFCA1834A5593A73B49D5804FC216869C7B2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <b55afd09-77c8-398b-309b-6bd9f9cfc876@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhhbmtzIGZvciB5b3VyIHJlcGx5Lg0KSSBoYXZlIGNoYW5nZWQgdGhpcyBpbiB2MiBwYXRjaC4N
-Ck9uIFdlZCwgMjAyMC0wOC0xMiBhdCAxNDowMyArMDIwMCwgUGhpbGlwcCBaYWJlbCB3cm90ZToN
-Cj4gT24gV2VkLCAyMDIwLTA4LTEyIGF0IDE3OjM3ICswODAwLCBXZW5iaW4gTWVpIHdyb3RlOg0K
-PiA+IEFkZCBkZXNjcmlwdGlvbiBmb3IgcmVzZXRzL3Jlc2V0LW5hbWVzLg0KPiA+IA0KPiA+IFNp
-Z25lZC1vZmYtYnk6IFdlbmJpbiBNZWkgPHdlbmJpbi5tZWlAbWVkaWF0ZWsuY29tPg0KPiA+IC0t
-LQ0KPiA+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbW1jL210ay1zZC50eHQg
-fCAyICsrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKykNCj4gPiANCj4gPiBk
-aWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21tYy9tdGstc2Qu
-dHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21tYy9tdGstc2QudHh0DQo+
-ID4gaW5kZXggOGE1MzJmNDQ1M2YyLi4zNWRhNzJkZTdhYWMgMTAwNjQ0DQo+ID4gLS0tIGEvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21tYy9tdGstc2QudHh0DQo+ID4gKysrIGIv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21tYy9tdGstc2QudHh0DQo+ID4gQEAg
-LTQ5LDYgKzQ5LDggQEAgT3B0aW9uYWwgcHJvcGVydGllczoNCj4gPiAgCQkgICAgIGVycm9yIGNh
-dXNlZCBieSBzdG9wIGNsb2NrKGZpZm8gZnVsbCkNCj4gPiAgCQkgICAgIFZhbGlkIHJhbmdlID0g
-WzA6MHg3XS4gaWYgbm90IHByZXNlbnQsIGRlZmF1bHQgdmFsdWUgaXMgMC4NCj4gPiAgCQkgICAg
-IGFwcGxpZWQgdG8gY29tcGF0aWJsZSAibWVkaWF0ZWssbXQyNzAxLW1tYyIuDQo+ID4gKy0gcmVz
-ZXRzOiBQaGFuZGxlIGFuZCByZXNldCBzcGVjaWZpZXIgcGFpciB0byBzb2Z0cmVzZXQgbGluZSBv
-ZiBNU0RDIElQLg0KPiA+ICstIHJlc2V0LW5hbWVzOiBSZXNldCBuYW1lcyBmb3IgTVNEQy4NCj4g
-DQo+IEkgdGhpbmsgdGhlIHJlc2V0LW5hbWVzIGRvY3VtZW50YXRpb24gc2hvdWxkIG1lbnRpb24g
-dGhlIGFjdHVhbCB2YWx1ZQ0KPiB0aGUgZHJpdmVyIHNob3VsZCBsb29rIGZvciwgImhyc3QiLg0K
-PiANCj4gcmVnYXJkcw0KPiBQaGlsaXBwDQoNCg==
+On 12/08/20 14:56, Xu, Like wrote:
+> 
+> My proposal is to define:
+> the "hypervisor privilege levels" events in the KVM/x86 context as
+> all the host kernel events plus /dev/kvm user space events.
+
+What are "/dev/kvm user space events"?  In any case, this patch should
+be included only in the series that adds exclude_hv support in arch/x86.
+
+Paolo
+
+> If we add ".exclude_hv = 1" in the pmc_reprogram_counter(),
+> do you see any side effect to cover the above usages?
+> 
+> The fact that exclude_hv has never been used in x86 does help
+> the generic perf code to handle permission checks in a more concise way.
 
