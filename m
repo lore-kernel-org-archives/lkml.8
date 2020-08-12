@@ -2,84 +2,151 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6471C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:44:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFFDBC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:47:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C36020771
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:44:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597250683;
-	bh=uD3QqhlIuXxEtei7q+YOBtI1fjTqa7gAuRIS2uNivAg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ds3pCgxsxfSPfhkgqnvs5EnUtsqmgOLft7Nmid51oNPZRZTwHBYPaEqiJJMrYPqy5
-	 KY1bPttzV0furWVJBjgAOyyHRQ50dCoxKQTIDHTI2DDUClMUGjkWFGtYrGqQOTNVea
-	 yR0qYjvpn2VXnmHqx2Qv4/OZNuBvgz2yq6r+4OPs=
+	by mail.kernel.org (Postfix) with ESMTP id D51DB2076C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:47:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726727AbgHLQom (ORCPT
+        id S1726564AbgHLQrL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 12:44:42 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:44514 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726503AbgHLQol (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 12:44:41 -0400
-Received: by mail-il1-f193.google.com with SMTP id j9so2384174ilc.11;
-        Wed, 12 Aug 2020 09:44:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=vd2lCK883RYVXk9yUMzFNuAN84iOpzHHcd6aV2A90eI=;
-        b=j6rMjmIcwnARnTzYV5KsiF+/m8D2Ovk2Uq7MsRZraR9lcYWQv2d8IA8xDg25GKHbEG
-         qJMuekvmrw95nxPC//39iEIq5ML/YdLSL9T5PjnHSeAXeNtMWhD/pwqpupqS7RQpmm1L
-         ext80SbAn/V/zR1jAg+OWkyopw2g16rz7Hd6zbbZ3sA79C3BNPSlPyEydLPUkb2farbE
-         noJRxcnpQOT+EZ9XFjzNXi7QhyuwpesYPxniGrnRDeJc1jrn7zwDydXL7L5y14tnup2d
-         nG81uVpEXJYQUuyRd4JfT8SzO4dMJV4wTQQlgLadHKb8X9zK19f44C+PXMNG3HK83+61
-         D91A==
-X-Gm-Message-State: AOAM530hhdgDCUoD0RpA4alIEgj0MxsgsrndLB6+jJZiuyUhu9uG91WB
-        Om8cvukiz5/oWwXK+wKaNw==
-X-Google-Smtp-Source: ABdhPJy2UKlfaNw+pWSw0cTLNMRo0qWo8T+zel7LF5arcYSnWIPpPpVStaucz+G2GRXXdsPmPSGkkQ==
-X-Received: by 2002:a92:414b:: with SMTP id o72mr495343ila.59.1597250679488;
-        Wed, 12 Aug 2020 09:44:39 -0700 (PDT)
-Received: from xps15 ([64.188.179.248])
-        by smtp.gmail.com with ESMTPSA id t5sm1317213ilp.15.2020.08.12.09.44.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Aug 2020 09:44:38 -0700 (PDT)
-Received: (nullmailer pid 2348541 invoked by uid 1000);
-        Wed, 12 Aug 2020 16:44:37 -0000
-Date:   Wed, 12 Aug 2020 10:44:37 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     alexandru.tachici@analog.com
-Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org,
-        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux@roeck-us.net
-Subject: Re: [PATCH v8 6/6] dt-bindings: hwmon: Add bindings for ADM1266
-Message-ID: <20200812164437.GA2348280@bogus>
-References: <20200812142055.9213-1-alexandru.tachici@analog.com>
- <20200812142055.9213-7-alexandru.tachici@analog.com>
+        Wed, 12 Aug 2020 12:47:11 -0400
+Received: from mga12.intel.com ([192.55.52.136]:33828 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726150AbgHLQrH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 12:47:07 -0400
+IronPort-SDR: 5uNKi1eEgsbnQ5RIsxQFKAd2F1AXS7aSty5sTOB6l00WqpZOKU7mzUxG8kXMEzYoUI94W5gGGf
+ ek6bOpWhHOEw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9711"; a="133538377"
+X-IronPort-AV: E=Sophos;i="5.76,305,1592895600"; 
+   d="scan'208";a="133538377"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2020 09:47:06 -0700
+IronPort-SDR: GeMpyFfscfPQ3/Q2X8U5RYDvZN6tyxMc4BPxsU+ouOvC1cUlcQTKNmslT6WEKl/MYmGx/4uGJC
+ EMebacxg9G+w==
+X-IronPort-AV: E=Sophos;i="5.76,305,1592895600"; 
+   d="scan'208";a="439442572"
+Received: from ticede-or-099.amr.corp.intel.com (HELO arch-ashland-svkelley.intel.com) ([10.254.58.97])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2020 09:47:04 -0700
+From:   Sean V Kelley <sean.v.kelley@intel.com>
+To:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
+        rjw@rjwysocki.net, ashok.raj@intel.com, tony.luck@intel.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com, qiuxu.zhuo@intel.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sean V Kelley <sean.v.kelley@intel.com>
+Subject: [PATCH v3 00/10] Add RCEC handling to PCI/AER
+Date:   Wed, 12 Aug 2020 09:46:49 -0700
+Message-Id: <20200812164659.1118946-1-sean.v.kelley@intel.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200812142055.9213-7-alexandru.tachici@analog.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 12 Aug 2020 17:20:55 +0300, alexandru.tachici@analog.com wrote:
-> From: Alexandru Tachici <alexandru.tachici@analog.com>
-> 
-> Add bindings for the Analog Devices ADM1266 sequencer.
-> 
-> Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
-> ---
->  .../bindings/hwmon/adi,adm1266.yaml           | 51 +++++++++++++++++++
->  1 file changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/adi,adm1266.yaml
-> 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Ongoing discussion on patch 4/9 [1]:
+
+[1] https://lore.kernel.org/linux-pci/20200810103252.00000318@Huawei.com/
+
+Changes since v2 [2]:
+
+- Fix comment header for get_port_device_capability().
+- Remove pcie_aer_is_native() check in pcie_do_recovery().
+- Fix wording of error message in aer_inject().
+- Use "non-native handling" in place of "firmware first"
+(Jonathan Cameron)
+
+- Prefer patches based on pci/master.
+- Correct order of tags, especially when using Co-developed-by.
+- Fix two patches ensuring that most important words appear early in one-liner.
+- Check on type for bitmap in pcie_walk_rciep_devfn(). However, due to use
+of for_each_set_bit() macro, const unsigned long is needed. Unchanged.
+- Matching pci_dev_put() needed where pci_get_slot() is used.
+- Read the RCEC Associated Endpoint Capabilities and cache them at enumeration
+time, e.g., pci_init_capabilities().
+- Remove unnecessary use of pci_find_bus() and corresponding check on value.
+- Replace use of pdev/pbus with dev/bus (preferred naming style).
+- Mention name of new function pci_walk_dev_affected() in 4/9.
+- Use "()" after function names in log for 4/9.
+- Fix width to wrap within 75 col for 4/9.
+- Use word "bridge" in place of "port" in function comment.
+- Fix style in conditional in pci_walk_dev_affected().
+(Bjorn Helgaas)
+
+[2] https://lore.kernel.org/linux-pci/20200804194052.193272-1-sean.v.kelley@intel.com/
+
+Root Complex Event Collectors (RCEC) provide support for terminating error
+and PME messages from Root Complex Integrated Endpoints (RCiEPs).  An RCEC
+resides on a Bus in the Root Complex. Multiple RCECs can in fact reside on
+a single bus. An RCEC will explicitly declare supported RCiEPs through the
+Root Complex Endpoint Association Extended Capability.
+
+(See PCIe 5.0-1, sections 1.3.2.3 (RCiEP), and 7.9.10 (RCEC Ext. Cap.))
+
+The kernel lacks handling for these RCECs and the error messages received
+from their respective associated RCiEPs. More recently, a new CPU
+interconnect, Compute eXpress Link (CXL) depends on RCEC capabilities for
+purposes of error messaging from CXL 1.1 supported RCiEP devices.
+
+DocLink: https://www.computeexpresslink.org/
+
+This use case is not limited to CXL. Existing hardware today includes
+support for RCECs, such as the Denverton microserver product
+family. Future hardware will be forthcoming.
+
+(See Intel Document, Order number: 33061-003US)
+
+So services such as AER or PME could be associated with an RCEC driver.
+In the case of CXL, if an RCiEP (i.e., CXL 1.1 device) is associated with a
+platform's RCEC it shall signal PME and AER error conditions through that
+RCEC.
+
+Towards the above use cases, add the missing RCEC class and extend the
+PCIe Root Port and service drivers to allow association of RCiEPs to their
+respective parent RCEC and facilitate handling of terminating error and PME
+messages.
+
+
+Jonathan Cameron (1):
+  PCI/AER: Extend AER error handling to RCECs
+
+Qiuxu Zhuo (6):
+  PCI/RCEC: Add RCEC class code and extended capability
+  PCI/RCEC: Bind RCEC devices to the Root Port driver
+  PCI/RCEC: Add pcie_walk_rcec() to walk associated RCiEPs
+  PCI/AER: Apply function level reset to RCiEP on fatal error
+  PCI: Add 'rcec' field to pci_dev for associated RCiEPs
+  PCI/AER: Add RCEC AER error injection support
+
+Sean V Kelley (3):
+  PCI/RCEC: Cache RCEC capabilities in pci_init_capabilities()
+  PCI/AER: Add RCEC AER handling
+  PCI/PME: Add RCEC PME handling
+
+ drivers/pci/pci.h               |  22 ++++++
+ drivers/pci/pcie/Makefile       |   2 +-
+ drivers/pci/pcie/aer.c          |  36 ++++++---
+ drivers/pci/pcie/aer_inject.c   |   5 +-
+ drivers/pci/pcie/err.c          |  85 +++++++++++++++++----
+ drivers/pci/pcie/pme.c          |  15 +++-
+ drivers/pci/pcie/portdrv_core.c |   8 +-
+ drivers/pci/pcie/portdrv_pci.c  |  20 ++++-
+ drivers/pci/pcie/rcec.c         | 128 ++++++++++++++++++++++++++++++++
+ drivers/pci/probe.c             |   2 +
+ include/linux/pci.h             |   5 ++
+ include/linux/pci_ids.h         |   1 +
+ include/uapi/linux/pci_regs.h   |   7 ++
+ 13 files changed, 300 insertions(+), 36 deletions(-)
+ create mode 100644 drivers/pci/pcie/rcec.c
+
+--
+2.28.0
+
