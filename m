@@ -2,152 +2,155 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA7ECC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 07:28:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6095C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 07:28:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABFE120781
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 07:28:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEA6A20768
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 07:28:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726778AbgHLH2t (ORCPT
+        id S1726846AbgHLH25 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 03:28:49 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57846 "EHLO mx2.suse.de"
+        Wed, 12 Aug 2020 03:28:57 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:44566 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726572AbgHLH2t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 03:28:49 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 82F8FB1EE;
-        Wed, 12 Aug 2020 07:29:08 +0000 (UTC)
-Subject: Re: [PATCH v4 2/2] xen: add helpers to allocate unpopulated memory
-To:     Roger Pau Monne <roger.pau@citrix.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>, Wei Liu <wl@xen.org>,
-        Yan Yankovskyi <yyankovskyi@gmail.com>,
-        dri-devel@lists.freedesktop.org, xen-devel@lists.xenproject.org,
-        linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>
-References: <20200811094447.31208-1-roger.pau@citrix.com>
- <20200811094447.31208-3-roger.pau@citrix.com>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <7c9a25fa-c52c-66d2-3b03-14a59e069ab6@suse.com>
-Date:   Wed, 12 Aug 2020 09:28:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1726182AbgHLH24 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 03:28:56 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 5564120003C;
+        Wed, 12 Aug 2020 09:28:54 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 45412200002;
+        Wed, 12 Aug 2020 09:28:54 +0200 (CEST)
+Received: from localhost (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 3092B2030A;
+        Wed, 12 Aug 2020 09:28:54 +0200 (CEST)
+Date:   Wed, 12 Aug 2020 10:28:54 +0300
+From:   Abel Vesa <abel.vesa@nxp.com>
+To:     Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>, Fugang Duan <fugang.duan@nxp.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 11/17] clk: imx: Add blk_ctrl combo driver
+Message-ID: <20200812072854.4r4d6cz5cprezlof@fsr-ub1664-175>
+References: <1596024483-21482-1-git-send-email-abel.vesa@nxp.com>
+ <1596024483-21482-12-git-send-email-abel.vesa@nxp.com>
+ <d44e88a1408add6491897a8793b57ee0090fa4c6.camel@pengutronix.de>
+ <20200730085508.ddxhb4rjnzwooh2z@fsr-ub1664-175>
+ <3f4fd963bdf58e61715524fdb246481fb2b2d137.camel@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200811094447.31208-3-roger.pau@citrix.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3f4fd963bdf58e61715524fdb246481fb2b2d137.camel@pengutronix.de>
+User-Agent: NeoMutt/20180622
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11.08.20 11:44, Roger Pau Monne wrote:
-> To be used in order to create foreign mappings. This is based on the
-> ZONE_DEVICE facility which is used by persistent memory devices in
-> order to create struct pages and kernel virtual mappings for the IOMEM
-> areas of such devices. Note that on kernels without support for
-> ZONE_DEVICE Xen will fallback to use ballooned pages in order to
-> create foreign mappings.
+On 20-07-30 11:39:22, Philipp Zabel wrote:
+> On Thu, 2020-07-30 at 11:55 +0300, Abel Vesa wrote:
+> > On 20-07-29 14:46:28, Philipp Zabel wrote:
+> > > Hi Abel,
+> > > 
+> > > On Wed, 2020-07-29 at 15:07 +0300, Abel Vesa wrote:
+> > > > On i.MX8MP, there is a new type of IP which is called BLK_CTRL in
+> > 
+> > [...]
+> > 
+> > > > +
+> > > > +static int imx_blk_ctrl_reset_set(struct reset_controller_dev *rcdev,
+> > > > +				  unsigned long id, bool assert)
+> > > > +{
+> > > > +	struct imx_blk_ctrl_drvdata *drvdata = container_of(rcdev,
+> > > > +			struct imx_blk_ctrl_drvdata, rcdev);
+> > > > +	unsigned int offset = drvdata->rst_hws[id].offset;
+> > > > +	unsigned int shift = drvdata->rst_hws[id].shift;
+> > > > +	unsigned int mask = drvdata->rst_hws[id].mask;
+> > > > +	void __iomem *reg_addr = drvdata->base + offset;
+> > > > +	unsigned long flags;
+> > > > +	u32 reg;
+> > > > +
+> > > > +	if (assert) {
+> > > > +		pm_runtime_get_sync(rcdev->dev);
+> > > > +		spin_lock_irqsave(&drvdata->lock, flags);
+> > > > +		reg = readl(reg_addr);
+> > > > +		writel(reg & ~(mask << shift), reg_addr);
+> > > > +		spin_unlock_irqrestore(&drvdata->lock, flags);
+> > > > +	} else {
+> > > > +		spin_lock_irqsave(&drvdata->lock, flags);
+> > > > +		reg = readl(reg_addr);
+> > > > +		writel(reg | (mask << shift), reg_addr);
+> > > > +		spin_unlock_irqrestore(&drvdata->lock, flags);
+> > > > +		pm_runtime_put(rcdev->dev);
+> > > 
+> > > This still has the issue of potentially letting exclusive reset control
+> > > users break the device usage counter.
+> > > 
+> > > Also shared reset control users start with deassert(), and you end probe
+> > > with pm_runtime_put(), so the first shared reset control user that
+> > > deasserts its reset will decrement the dev->power.usage_count to -1 ?
+> > > For multiple resets being initially deasserted this would decrement
+> > > multiple times.
+> > > 
+> > > I think you'll have to track the (number of) asserted reset bits in this
+> > > reset controller and limit when to call pm_runtime_get/put_sync().
+> > > 
+> > 
+> > Yes, you're right.
+> > 
+> > I'll add a mask, and for each assert, the according bit will get set, and 
+> > for each deasssert the same bit will get cleared.
 > 
-> The newly added helpers use the same parameters as the existing
-> {alloc/free}_xenballooned_pages functions, which allows for in-place
-> replacement of the callers. Once a memory region has been added to be
-> used as scratch mapping space it will no longer be released, and pages
-> returned are kept in a linked list. This allows to have a buffer of
-> pages and prevents resorting to frequent additions and removals of
-> regions.
+> > And when the mask has at least one bit set, the pm_runtime_get gets called
 > 
-> If enabled (because ZONE_DEVICE is supported) the usage of the new
-> functionality untangles Xen balloon and RAM hotplug from the usage of
-> unpopulated physical memory ranges to map foreign pages, which is the
-> correct thing to do in order to avoid mappings of foreign pages depend
-> on memory hotplug.
+> ^ When the mask was 0 before but now has a bit set.
 > 
-> Note the driver is currently not enabled on Arm platforms because it
-> would interfere with the identity mapping required on some platforms.
+> > and when the mask is 0, the pm_runtime_put_sync will be called.
 > 
-> Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
-> ---
-> Cc: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
-> Cc: David Airlie <airlied@linux.ie>
-> Cc: Daniel Vetter <daniel@ffwll.ch>
-> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-> Cc: Juergen Gross <jgross@suse.com>
-> Cc: Stefano Stabellini <sstabellini@kernel.org>
-> Cc: Dan Carpenter <dan.carpenter@oracle.com>
-> Cc: Roger Pau Monne <roger.pau@citrix.com>
-> Cc: Wei Liu <wl@xen.org>
-> Cc: Yan Yankovskyi <yyankovskyi@gmail.com>
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: xen-devel@lists.xenproject.org
-> Cc: linux-mm@kvack.org
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: Michal Hocko <mhocko@kernel.org>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> ---
-> Changes since v3:
->   - Introduce a Kconfig option that gates the addition of the
->     unpopulated alloc driver. This allows to easily disable it on Arm
->     platforms.
->   - Dropped Juergen RB due to the addition of the Kconfig option.
->   - Switched from MEMORY_DEVICE_DEVDAX to MEMORY_DEVICE_GENERIC.
+> ^ When the mask had a bit set but now is 0.
 > 
-> Changes since v2:
->   - Drop BUILD_BUG_ON regarding PVMMU page sizes.
->   - Use a SPDX license identifier.
->   - Call fill with only the minimum required number of pages.
->   - Include xen.h header in xen_drm_front_gem.c.
->   - Use less generic function names.
->   - Exit early from the init function if not a PV guest.
->   - Don't use all caps for region name.
-> ---
->   drivers/gpu/drm/xen/xen_drm_front_gem.c |   9 +-
->   drivers/xen/Kconfig                     |   4 +
->   drivers/xen/Makefile                    |   1 +
->   drivers/xen/balloon.c                   |   4 +-
->   drivers/xen/grant-table.c               |   4 +-
->   drivers/xen/privcmd.c                   |   4 +-
->   drivers/xen/unpopulated-alloc.c         | 185 ++++++++++++++++++++++++
->   drivers/xen/xenbus/xenbus_client.c      |   6 +-
->   drivers/xen/xlate_mmu.c                 |   4 +-
->   include/xen/xen.h                       |   9 ++
->   10 files changed, 215 insertions(+), 15 deletions(-)
->   create mode 100644 drivers/xen/unpopulated-alloc.c
+> > Does that sound OK ?
 > 
-> diff --git a/drivers/xen/Kconfig b/drivers/xen/Kconfig
-> index 1d339ef92422..018020b91baa 100644
-> --- a/drivers/xen/Kconfig
-> +++ b/drivers/xen/Kconfig
-> @@ -327,4 +327,8 @@ config XEN_HAVE_VPMU
->   config XEN_FRONT_PGDIR_SHBUF
->   	tristate
->   
-> +config XEN_UNPOPULATED_ALLOC
-> +	bool
-> +	default y if ZONE_DEVICE && !ARM && !ARM64
+> And the mask starts out as 0, as after the pm_runtime_put() in probe all
+> reset lines are deasserted?
+> 
 
-There is a current effort to enable Xen on RISC-V. Do we expect this
-option to be usable for this architecture? If yes, I'm fine with the
-exclusion of Arm, otherwise I'd opt for defaulting to yes only for
-X86.
+Yes, that is correct.
 
-Either way you can have my:
-
-Reviewed-by: Juergen Gross <jgross@suse.com>
-
-
-Juergen
+> > > > +	}
+> > > > +
+> > > > +	return 0;
+> > > > +}
+> > > > +
+> > > > +static int imx_blk_ctrl_reset_reset(struct reset_controller_dev *rcdev,
+> > > > +					   unsigned long id)
+> > > > +{
+> > > > +	imx_blk_ctrl_reset_set(rcdev, id, true);
+> > > > +	return imx_blk_ctrl_reset_set(rcdev, id, false);
+> > > 
+> > > Does this work for all peripherals? Are there none that require the
+> > > reset line to be asserted for a certain number of bus clocks or similar?
+> > 
+> > As of now, there is no user that calls reset. All the users call the assert
+> > and then deassert. As for the number of clocks for reset, I'll try to have a
+> > chat to the HW design team and then come back with the information.
+> 
+> Ok. If this is not required or can't be guaranteed to work, it may be
+> better to just leave it out.
+> 
+> regards
+> Philipp
