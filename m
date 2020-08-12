@@ -2,113 +2,82 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C457BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 02:29:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6345C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 02:30:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A18D92076C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 02:29:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 850A12065C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 02:30:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gF+6KkYS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pcMkHHU1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726542AbgHLC3r (ORCPT
+        id S1726568AbgHLCan (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 22:29:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48924 "EHLO
+        Tue, 11 Aug 2020 22:30:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726517AbgHLC3q (ORCPT
+        with ESMTP id S1726235AbgHLCan (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 22:29:46 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A216CC061787
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 19:29:46 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id w11so1160749ybi.23
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 19:29:46 -0700 (PDT)
+        Tue, 11 Aug 2020 22:30:43 -0400
+Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC38BC06174A;
+        Tue, 11 Aug 2020 19:30:42 -0700 (PDT)
+Received: by mail-pg1-x532.google.com with SMTP id o13so273257pgf.0;
+        Tue, 11 Aug 2020 19:30:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=+n1LUw8DJLUyTXbv9Oe2r81KbedmVRu6OMKCTfy3ZiQ=;
-        b=gF+6KkYSkPuCLW86O6juaBcdj4+WaTmJrk88Z0Ll9t0HKXakRLGtL2e+dhoGTjOnOR
-         kaUAbdEXQaR5k+Qbya8c5FHurzzHJN1LAkLzVFEolC2/dwXBzRVWyqiVLvuba/NVbUZJ
-         noY+rFhLK1Q9kfzlB8PDzkFSYMgTRB1JfbleLBaqnviMYn7MWW4CG7/xL6hjbElKNo14
-         gmJSvbOGWteTH8BIykzQFgef/ngKDt0Sg56ylSppx36Hki0V1gGdEPBJDrlV4lT7tq+k
-         uPsTKxJCjdk7QRkcXjgoMHmkaC7JaEpnFmoFuVb6hkzmNgrJwpdw3YQtKmaNsIywOXMQ
-         VHPg==
+        bh=RXlQ7DK9v+cF0bKIBVhay4AV+w1yPCPQuugUAYTYUVE=;
+        b=pcMkHHU1yB5tTz/vaGoHkNGJvh82GGUPwdcOWq/I14U80syCTq630UuvEy29Cro0It
+         aIiIr/BDVowsVwtZyt9ne67HK+SkGDm81MAiTMWHsCkbsf//liVzzNtPWLgnqXWNROeK
+         F0vBrCqsVjCjDe8jXJHhO/QrJ/LGY/XNJy20sXn7ojo3KLxYnw1mx2nsW/oYENzQn1bE
+         55lZHKzbfq28F6o1RmeG/x2wRkGUuV58cv+NyCzrk3dJuHKxanDwFVISr7fhEMY2JKjk
+         RkGpc+IQFwiyB+88RfcOtfww7q5cxCiZqSHp5eKFFNgw+UGDXcZ1zNpBmSVNsJgKe+0I
+         IE+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=+n1LUw8DJLUyTXbv9Oe2r81KbedmVRu6OMKCTfy3ZiQ=;
-        b=O7w7C5ijAkx/yllB7GKsYXZ58YG4kWTmFot6VDsO/+07+mcIn2RpdMbIH72tlHK2qr
-         CfkWXg+HIXHATon67ldzBbcMvREZKDb8xxN/+etemM3AjOGHfKGFAN/FC7f6qNWQ7ld7
-         XrFbM4IRjFjWSFjncDyyNaK+PVAQ7UVmS3B/6GgqMO9F1DDJYpkUuqFg9qE5X8DAyK38
-         vcg20g2juIDkFiTv40d3xY8XxNzGTgOSvF4qIEiX2bOln39sSv+41RrWe1aCh0wjpEse
-         pyzf6vKRC8WzWj3f/A19tetLbcK+/lMcCq7M9JfcM0GWwgcDtJZa4KrlYrdU4GcksW5d
-         cxXQ==
-X-Gm-Message-State: AOAM533edEWUrnBZe9QddqMijTizL2U84XOyorOdNJ0VnPA7rYCO2gf2
-        HtrtPXeUU2W8NdnPp40nkYR61ec22NE=
-X-Google-Smtp-Source: ABdhPJy4Ky3Al50cuQO6kqOXG7d2vNlasxYBXERWMS28MgJ0beqiTabAX+wsLbbYFzmtVPKC3nhGlkrYfuA=
-X-Received: by 2002:a25:f30c:: with SMTP id c12mr55236202ybs.471.1597199385901;
- Tue, 11 Aug 2020 19:29:45 -0700 (PDT)
-Date:   Tue, 11 Aug 2020 19:29:34 -0700
-In-Reply-To: <20200812022934.568134-1-badhri@google.com>
-Message-Id: <20200812022934.568134-2-badhri@google.com>
-Mime-Version: 1.0
-References: <20200812022934.568134-1-badhri@google.com>
-X-Mailer: git-send-email 2.28.0.236.gb10cc79966-goog
-Subject: [PATCH 2/2 v3] usb: typec: pd: Fix formatting in pd.h header
-From:   Badhri Jagan Sridharan <badhri@google.com>
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Badhri Jagan Sridharan <badhri@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RXlQ7DK9v+cF0bKIBVhay4AV+w1yPCPQuugUAYTYUVE=;
+        b=CTrrsF+B6lfCzQV2b0N/kOU/e8Gfu+ToFtC01r9vLt/sVIYiLIsWvWy/ixFgM3zstq
+         9HJqeTcBEcgm91B2ifCejbN56Bdh3TFNnNFHdfeaJ2B2zH4I56shVD6Lyzsyrv+PDZ4g
+         m//WhgLsf6PWPmXt1eWR2rdf+6sgPLc9+yIFVspu1Pd04tx5RH7VpiJ8YzoX7Kf4c2dU
+         UgVmEPTJCOwsPuXVHYmpHPAjN9pk01oy7YxnC5Q5XVqaSfW9hlfwf/BKt7HkTnvGTP9j
+         UAIHHcpb4d7IwODgAvJw3AeW291rMMJhJ1RY6rIGDx6KMiQS9IlXR73GC3fWzFvMH8uS
+         f2kA==
+X-Gm-Message-State: AOAM532iR4sfMzt62F/DULagNq1TNT8vGaSTSFaAtKlys/m5+qqThewB
+        PvB4g0s6wMUXNEaD6932fCW/PSKTmGAb27eH3yA=
+X-Google-Smtp-Source: ABdhPJxD6p41SG3pYPzcLo1hPzmwufqobCemJbHQfaIr7spsYscRYXsQInBFtVadQvtXzY9D0izksvxjQ823VWBpd58=
+X-Received: by 2002:a65:5a45:: with SMTP id z5mr3152133pgs.233.1597199442615;
+ Tue, 11 Aug 2020 19:30:42 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200809023548.684217-1-xie.he.0141@gmail.com> <20200811.103225.204767763010456044.davem@davemloft.net>
+In-Reply-To: <20200811.103225.204767763010456044.davem@davemloft.net>
+From:   Xie He <xie.he.0141@gmail.com>
+Date:   Tue, 11 Aug 2020 19:30:31 -0700
+Message-ID: <CAJht_EM9KAO24mPWHZJwcVEugzCrKq6ndiaxhai=-mTudYi3+A@mail.gmail.com>
+Subject: Re: [PATCH net] drivers/net/wan/x25_asy: Added needed_headroom and a
+ skb->len check
+To:     David Miller <davem@davemloft.net>
+Cc:     Jakub Kicinski <kuba@kernel.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux X25 <linux-x25@vger.kernel.org>,
+        Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+        Martin Schiller <ms@dev.tdt.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replacing spaces with tabs for PD_T_* constants.
+On Tue, Aug 11, 2020 at 10:32 AM David Miller <davem@davemloft.net> wrote:
+>
+> Applied, thank you.
 
-Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
----
-Change history:
-First version. Keeping the version number same as the parent.
-
----
- include/linux/usb/pd.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/include/linux/usb/pd.h b/include/linux/usb/pd.h
-index 1df895e4680b..f842e4589bd2 100644
---- a/include/linux/usb/pd.h
-+++ b/include/linux/usb/pd.h
-@@ -471,9 +471,10 @@ static inline unsigned int rdo_max_power(u32 rdo)
- #define PD_T_VCONN_SOURCE_ON	100
- #define PD_T_SINK_REQUEST	100	/* 100 ms minimum */
- #define PD_T_ERROR_RECOVERY	100	/* minimum 25 is insufficient */
--#define PD_T_SRCSWAPSTDBY      625     /* Maximum of 650ms */
--#define PD_T_NEWSRC            250     /* Maximum of 275ms */
-+#define PD_T_SRCSWAPSTDBY	625	/* Maximum of 650ms */
-+#define PD_T_NEWSRC		250	/* Maximum of 275ms */
- #define PD_T_SWAP_SRC_START	20	/* Minimum of 20ms */
-+#define PD_T_BIST_CONT_MODE	50	/* 30 - 60 ms */
- 
- #define PD_T_DRP_TRY		100	/* 75 - 150 ms */
- #define PD_T_DRP_TRYWAIT	600	/* 400 - 800 ms */
-@@ -484,5 +485,4 @@ static inline unsigned int rdo_max_power(u32 rdo)
- #define PD_N_CAPS_COUNT		(PD_T_NO_RESPONSE / PD_T_SEND_SOURCE_CAP)
- #define PD_N_HARD_RESET_COUNT	2
- 
--#define PD_T_BIST_CONT_MODE	50 /* 30 - 60 ms */
- #endif /* __LINUX_USB_PD_H */
--- 
-2.28.0.236.gb10cc79966-goog
-
+Thank you!
