@@ -2,194 +2,82 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12F86C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:37:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F201C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF2FB2224D
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:37:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 327EF20885
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:38:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="lEdPDb2l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbgHLJhp (ORCPT
+        id S1727846AbgHLJif (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 05:37:45 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:10388 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727048AbgHLJhn (ORCPT
+        Wed, 12 Aug 2020 05:38:35 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:5035 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726942AbgHLJib (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 05:37:43 -0400
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07C9IUGi019108;
-        Wed, 12 Aug 2020 05:37:41 -0400
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 32sry4d0bs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 12 Aug 2020 05:37:41 -0400
-Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 07C9bd99015869
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Wed, 12 Aug 2020 05:37:40 -0400
-Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by SCSQMBX11.ad.analog.com
- (10.77.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Wed, 12 Aug
- 2020 02:37:38 -0700
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
- (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Wed, 12 Aug 2020 02:37:38 -0700
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 07C9batL011908;
-        Wed, 12 Aug 2020 05:37:36 -0400
-From:   Cristian Pop <cristian.pop@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <jic23@kernel.org>, Cristian Pop <cristian.pop@analog.com>
-Subject: [RFC PATCH] iio: core: Add optional symbolic label to a device channel
-Date:   Wed, 12 Aug 2020 12:38:29 +0300
-Message-ID: <20200812093829.7354-1-cristian.pop@analog.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 12 Aug 2020 05:38:31 -0400
+X-UUID: 816964cb39464f43bae2a25323e408b8-20200812
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=nJC5LfTN/6T01ytb031u5VjOdx8ebwn9dtG+2//ns3g=;
+        b=lEdPDb2lT6tbgtVqTakidShlXPgybWACU6rz/tWRveWJ305LCU9p+zao+SrVO0uSuQC4zdVj148sESgr0ReUC/XI48oRWVOJ8SN7czXJtOxURRxdVc3pb7MfKMKJ+J9miruu7KERgFX6jNefj/utHjmbhi4mdJhpXvj7+C97oRs=;
+X-UUID: 816964cb39464f43bae2a25323e408b8-20200812
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
+        (envelope-from <wenbin.mei@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1470046484; Wed, 12 Aug 2020 17:38:27 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 12 Aug 2020 17:38:25 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 12 Aug 2020 17:38:24 +0800
+From:   Wenbin Mei <wenbin.mei@mediatek.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Chaotian Jing <chaotian.jing@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <srv_heupstream@mediatek.com>,
+        Wenbin Mei <wenbin.mei@mediatek.com>
+Subject: [PATCH 1/3] mmc: dt-bindings: Add resets/reset-names for Mediatek MMC bindings
+Date:   Wed, 12 Aug 2020 17:37:24 +0800
+Message-ID: <20200812093726.10123-2-wenbin.mei@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20200812093726.10123-1-wenbin.mei@mediatek.com>
+References: <20200812093726.10123-1-wenbin.mei@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-12_02:2020-08-11,2020-08-12 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 mlxscore=0
- lowpriorityscore=0 clxscore=1015 priorityscore=1501 adultscore=0
- phishscore=0 suspectscore=0 impostorscore=0 malwarescore=0 spamscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008120066
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If a label is defined in the device tree for this channel add that
-to the channel specific attributes. This is useful for userspace to
-be able to identify an individual channel.
-
-Signed-off-by: Cristian Pop <cristian.pop@analog.com>
----
- drivers/iio/industrialio-core.c | 45 +++++++++++++++++++++++++++++++--
- include/linux/iio/iio.h         |  2 ++
- include/linux/iio/types.h       |  1 +
- 3 files changed, 46 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-index 1527f01a44f1..d7c2405bc905 100644
---- a/drivers/iio/industrialio-core.c
-+++ b/drivers/iio/industrialio-core.c
-@@ -135,6 +135,7 @@ static const char * const iio_modifier_names[] = {
- /* relies on pairs of these shared then separate */
- static const char * const iio_chan_info_postfix[] = {
- 	[IIO_CHAN_INFO_RAW] = "raw",
-+	[IIO_CHAN_INFO_LABEL] = "label",
- 	[IIO_CHAN_INFO_PROCESSED] = "input",
- 	[IIO_CHAN_INFO_SCALE] = "scale",
- 	[IIO_CHAN_INFO_OFFSET] = "offset",
-@@ -653,14 +654,18 @@ static ssize_t iio_read_channel_info(struct device *dev,
- 	int ret;
- 	int val_len = 2;
- 
--	if (indio_dev->info->read_raw_multi)
-+	if (indio_dev->info->read_raw_multi) {
- 		ret = indio_dev->info->read_raw_multi(indio_dev, this_attr->c,
- 							INDIO_MAX_RAW_ELEMENTS,
- 							vals, &val_len,
- 							this_attr->address);
--	else
-+	} else {
- 		ret = indio_dev->info->read_raw(indio_dev, this_attr->c,
- 				    &vals[0], &vals[1], this_attr->address);
-+		if (ret < 0 && this_attr->address == IIO_CHAN_INFO_LABEL &&
-+			this_attr->c->label_name)
-+			return sprintf(buf, "%s\n", this_attr->c->label_name);
-+	}
- 
- 	if (ret < 0)
- 		return ret;
-@@ -1383,6 +1388,37 @@ static ssize_t iio_store_timestamp_clock(struct device *dev,
- 	return len;
- }
- 
-+static int iio_device_add_channel_label(struct iio_dev *indio_dev,
-+					struct device_node *np)
-+{
-+	unsigned int num_child;
-+	struct iio_chan_spec *chan;
-+	struct device_node *child;
-+	const char *label;
-+	int crt_ch = 0;
-+
-+	num_child = of_get_available_child_count(np);
-+	if (!num_child)
-+		return 0;
-+
-+	for_each_available_child_of_node(np, child) {
-+		if (of_property_read_u32(child, "reg", &crt_ch))
-+			continue;
-+
-+		if (crt_ch >= indio_dev->num_channels)
-+			continue;
-+
-+		if (of_property_read_string(child, "label", &label))
-+			continue;
-+
-+		chan = (struct iio_chan_spec *)&indio_dev->channels[crt_ch];
-+		chan->info_mask_separate |= BIT(IIO_CHAN_INFO_LABEL);
-+		chan->label_name = label;
-+	}
-+
-+	return 0;
-+}
-+
- static DEVICE_ATTR(current_timestamp_clock, S_IRUGO | S_IWUSR,
- 		   iio_show_timestamp_clock, iio_store_timestamp_clock);
- 
-@@ -1399,6 +1435,11 @@ static int iio_device_register_sysfs(struct iio_dev *indio_dev)
- 			attrcount_orig++;
- 	}
- 	attrcount = attrcount_orig;
-+
-+	ret = iio_device_add_channel_label(indio_dev, indio_dev->dev.parent->of_node);
-+	if (ret < 0)
-+		return ret;
-+
- 	/*
- 	 * New channel registration method - relies on the fact a group does
- 	 * not need to be initialized if its name is NULL.
-diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
-index a1be82e74c93..39209f3b62be 100644
---- a/include/linux/iio/iio.h
-+++ b/include/linux/iio/iio.h
-@@ -223,6 +223,7 @@ struct iio_event_spec {
-  *			correspond to the first name that the channel is referred
-  *			to by in the datasheet (e.g. IND), or the nearest
-  *			possible compound name (e.g. IND-INC).
-+ * @label_name:		Unique name to identify which channel this is.
-  * @modified:		Does a modifier apply to this channel. What these are
-  *			depends on the channel type.  Modifier is set in
-  *			channel2. Examples are IIO_MOD_X for axial sensors about
-@@ -260,6 +261,7 @@ struct iio_chan_spec {
- 	const struct iio_chan_spec_ext_info *ext_info;
- 	const char		*extend_name;
- 	const char		*datasheet_name;
-+	const char		*label_name;
- 	unsigned		modified:1;
- 	unsigned		indexed:1;
- 	unsigned		output:1;
-diff --git a/include/linux/iio/types.h b/include/linux/iio/types.h
-index e6fd3645963c..c8f65f476eb2 100644
---- a/include/linux/iio/types.h
-+++ b/include/linux/iio/types.h
-@@ -34,6 +34,7 @@ enum iio_available_type {
- 
- enum iio_chan_info_enum {
- 	IIO_CHAN_INFO_RAW = 0,
-+	IIO_CHAN_INFO_LABEL,
- 	IIO_CHAN_INFO_PROCESSED,
- 	IIO_CHAN_INFO_SCALE,
- 	IIO_CHAN_INFO_OFFSET,
--- 
-2.17.1
+QWRkIGRlc2NyaXB0aW9uIGZvciByZXNldHMvcmVzZXQtbmFtZXMuDQoNClNpZ25lZC1vZmYtYnk6
+IFdlbmJpbiBNZWkgPHdlbmJpbi5tZWlAbWVkaWF0ZWsuY29tPg0KLS0tDQogRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL21tYy9tdGstc2QudHh0IHwgMiArKw0KIDEgZmlsZSBjaGFu
+Z2VkLCAyIGluc2VydGlvbnMoKykNCg0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9tbWMvbXRrLXNkLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9tbWMvbXRrLXNkLnR4dA0KaW5kZXggOGE1MzJmNDQ1M2YyLi4zNWRhNzJkZTdhYWMg
+MTAwNjQ0DQotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbW1jL210ay1z
+ZC50eHQNCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tbWMvbXRrLXNk
+LnR4dA0KQEAgLTQ5LDYgKzQ5LDggQEAgT3B0aW9uYWwgcHJvcGVydGllczoNCiAJCSAgICAgZXJy
+b3IgY2F1c2VkIGJ5IHN0b3AgY2xvY2soZmlmbyBmdWxsKQ0KIAkJICAgICBWYWxpZCByYW5nZSA9
+IFswOjB4N10uIGlmIG5vdCBwcmVzZW50LCBkZWZhdWx0IHZhbHVlIGlzIDAuDQogCQkgICAgIGFw
+cGxpZWQgdG8gY29tcGF0aWJsZSAibWVkaWF0ZWssbXQyNzAxLW1tYyIuDQorLSByZXNldHM6IFBo
+YW5kbGUgYW5kIHJlc2V0IHNwZWNpZmllciBwYWlyIHRvIHNvZnRyZXNldCBsaW5lIG9mIE1TREMg
+SVAuDQorLSByZXNldC1uYW1lczogUmVzZXQgbmFtZXMgZm9yIE1TREMuDQogDQogRXhhbXBsZXM6
+DQogbW1jMDogbW1jQDExMjMwMDAwIHsNCi0tIA0KMi4xOC4wDQo=
 
