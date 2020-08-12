@@ -2,136 +2,87 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37239C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7706C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:44:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0067520756
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:43:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1A0220756
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:44:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eacYIhJJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VaA0+jQ7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726604AbgHLOn1 (ORCPT
+        id S1726567AbgHLOoM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 10:43:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48540 "EHLO
+        Wed, 12 Aug 2020 10:44:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48756 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726434AbgHLOms (ORCPT
+        with ESMTP id S1726434AbgHLOoL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 10:42:48 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAD95C061383;
-        Wed, 12 Aug 2020 07:42:48 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id bo3so2517846ejb.11;
-        Wed, 12 Aug 2020 07:42:48 -0700 (PDT)
+        Wed, 12 Aug 2020 10:44:11 -0400
+Received: from mail-ot1-x331.google.com (mail-ot1-x331.google.com [IPv6:2607:f8b0:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2385FC061383;
+        Wed, 12 Aug 2020 07:44:11 -0700 (PDT)
+Received: by mail-ot1-x331.google.com with SMTP id a65so2102395otc.8;
+        Wed, 12 Aug 2020 07:44:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=9OQv4e9NX7HX1bkO4ou+vTmkM5NleqGKG5z6kX3PyeQ=;
-        b=eacYIhJJXQkfMWSRFwYtMoSaOsoGksinGKdnca/KHMExhRSqCT0Xw3mNBwCTtNMQWr
-         K9OzZJeWsQtQJg2mEuRqSgpigM7TiF4CNRrKcCRqgpIMDljIpQUYh9DIu1L/YbPoYwcx
-         bZPJQJUjeT6DjXP/ts9Pdc4DHjAT/VwuTjJ1n7iCQHTbRAMTzxxfef1apG+e0Tw4/UCT
-         jNSlFZ35djFbUssdn8O2hdi54m3cBNGnRWfJxfX7rgz4EQWvTZPj7JfhzcFU99sz1Igk
-         uu2axHpXMGvVhJmMC6rHfRmVipJ2ujB4QI5A6NY5n+XGnv4O1qi1nzOio5XB88r6iGpW
-         q/OA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xHViXDWcaL5XfNSH272S9iDsrjwnvk4hUcO/qoZuaVs=;
+        b=VaA0+jQ74AeZSOrwygkYlWSRj0z7ACT7aZlVtDLpBi5z7N7CEUAlMJmjhsbvlcNBh+
+         gHU7bvyECTt/OMIXuH5HcA0paxBOB5E2E3mf1XwthH0vynG6EE1csykq0mpafmhxIg1k
+         i7p5lldt7ssk7xGcmKXT0igFJ328lQ6vkMyiNp7zXyeea5IZoI3rU4LOvOg5gnZxnc00
+         1QYjWT3Mo17KHjB12lXrmsBcPkNWHkWi0/49dhx70O9DGCzV+CjLuZVz/NI70lBQnH89
+         8yicIJz7L3lfR8C/2+3mhVMme/mhwecO84y9WAjYAk0WKYBugqPsvd3QNMa4DVXHCYa+
+         RtiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=9OQv4e9NX7HX1bkO4ou+vTmkM5NleqGKG5z6kX3PyeQ=;
-        b=XnUSJre4425vhmxT1cUV9wCqGou/pyM4YloyR34Wcp7zQ4Krx+ioBjDfGEcnW/WWGh
-         ucRGGx/VZ0dIwlTMpcsGObcunS9JYNEN0s2a+Sfep++oj1AQ19+lxe4pTdUMtfmMxCfE
-         PLagG/MzuyNKtstGGZF+qijJ6UKHvQYBuHNeXVIeUfOG7gCiKzoAMR8UcfRdWL/KKtOt
-         dvBppbcXMeVU3+XMT+x2iNJAru7s1TidxBvQa/j2kldZFgVUrosJWf4VtY4CLF6wKuTv
-         kzKBnmOxOSJ0zERkCIX4CjxFuhlZvDV+tQ3I+gPXmgcz+UEObYJ0/LEgmCnjc0vySgs/
-         eNjA==
-X-Gm-Message-State: AOAM530uc7mSF/+84AYpo597bUf0S3exqzXnW87tQChnLCJJ9SeKRYyX
-        E9Zh6ZZbSjOSxxeih+UdpUg=
-X-Google-Smtp-Source: ABdhPJwGWDqneDCYXgcdcVEsEM/xykXWlgadYriKMelN8TFZtF6EaeoY+ojV7y5DzTV49HgLQxnicA==
-X-Received: by 2002:a17:906:b2d0:: with SMTP id cf16mr107348ejb.514.1597243367238;
-        Wed, 12 Aug 2020 07:42:47 -0700 (PDT)
-Received: from ubuntu-laptop ([2a01:598:b90f:8e5c:44c:d55b:5f94:2fc4])
-        by smtp.googlemail.com with ESMTPSA id w9sm1741488ejk.62.2020.08.12.07.42.45
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 12 Aug 2020 07:42:46 -0700 (PDT)
-Message-ID: <4da0c324952861608bca14df77720e805be881e5.camel@gmail.com>
-Subject: Re: [PATCH v2 1/2] scsi: ufs: Cleanup completed request without
- interrupt notification
-From:   Bean Huo <huobean@gmail.com>
-To:     Stanley Chu <stanley.chu@mediatek.com>, avri.altman@wdc.com
-Cc:     alim.akhtar@samsung.com, asutoshd@codeaurora.org,
-        jejb@linux.ibm.com, martin.petersen@oracle.com, beanhuo@micron.com,
-        bvanassche@acm.org, tomas.winkler@intel.com, cang@codeaurora.org,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 12 Aug 2020 16:42:39 +0200
-In-Reply-To: <1597236472.26065.9.camel@mtkswgap22>
-References: <20200811141859.27399-1-huobean@gmail.com>
-         <20200811141859.27399-2-huobean@gmail.com>
-         <1597236472.26065.9.camel@mtkswgap22>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xHViXDWcaL5XfNSH272S9iDsrjwnvk4hUcO/qoZuaVs=;
+        b=I6hfwAjl9UROV9t8CnMfcGybGebwQ55xXYRgGDF2qxVDLOAUcPwvuy+Y4ZamGI+hqF
+         KDv15Fm7qNtdyg4HJZQFwlKFtETuDvwYR+z2pioE518PWXRg4PN8Y6uYdH1YulTQsbZv
+         JKNmnuSqKTiYgZ4zY+zLh+qwrpbI2RZtJPB0ASI6SK1HvN6SrTs+NFhLDwamTwxlAK53
+         /TkVMN9V7smydq+q43iv12/Y/qEgEOApl1NcWoZZsZDwvIn2KBo+4+L6R8P1CaKMRAB2
+         ebIluKl9RJcDEjbCdIhgHz1y4FEHOMUw9GKltckqAaLUzPz6iPRaTiT8+wlDKGa9bAfZ
+         N45g==
+X-Gm-Message-State: AOAM530lXDVITbJ2l9uWVX+gYRacWk64IAluuAdMyKpc1ivmBaAa33Yk
+        iFbMqydbVtx8Sw5FX1llpIJV8sj0p9vP6uwgMGU=
+X-Google-Smtp-Source: ABdhPJySHEBwiOi3qXSQCHV3l6a9l5hLKG96zwi1N2QEUT6FjWsrZwLXke9DhCaXu30Osnb4KgJRz45QoixNcPkNq00=
+X-Received: by 2002:a9d:22a5:: with SMTP id y34mr40314ota.0.1597243449856;
+ Wed, 12 Aug 2020 07:44:09 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAGngYiVa9v9jGPNu4W+KHUnvemKU-BVE89-XNLcWOmoZjAPMTg@mail.gmail.com>
+ <24f1687c-043a-a15e-0be4-8392e7b5c96b@metux.net> <CAGngYiVokqYkEiQTcqAMnvif3qEWkPOb1cAk+4rvwgxBKZ5Ukw@mail.gmail.com>
+ <1acc987a-d844-fca7-77eb-cf1d466f35c1@metux.net>
+In-Reply-To: <1acc987a-d844-fca7-77eb-cf1d466f35c1@metux.net>
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+Date:   Wed, 12 Aug 2020 10:43:58 -0400
+Message-ID: <CAGngYiUN4Cmf+bJDYJJwTi1DC1bZSa==AfATG+jdjmXqQxcL4A@mail.gmail.com>
+Subject: Re: [Q] devicetree overlays
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-08-12 at 20:47 +0800, Stanley Chu wrote:
-> Hi Avri, Bean,
-> 
-> On Tue, 2020-08-11 at 16:18 +0200, Bean Huo wrote:
-> > From: Stanley Chu <stanley.chu@mediatek.com>
-> > 
-> > If somehow no interrupt notification is raised for a completed
-> > request
-> > and its doorbell bit is cleared by host, UFS driver needs to
-> > cleanup
-> > its outstanding bit in ufshcd_abort(). Otherwise, system may behave
-> > abnormally by below flow:
-> > 
-> > After ufshcd_abort() returns, this request will be requeued by SCSI
-> > layer with its outstanding bit set. Any future completed request
-> > will trigger ufshcd_transfer_req_compl() to handle all "completed
-> > outstanding bits". In this time, the "abnormal outstanding bit"
-> > will be detected and the "requeued request" will be chosen to
-> > execute
-> > request post-processing flow. This is wrong because this request is
-> > still "alive".
-> > 
-> > Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-> > Reviewed-by: Can Guo <cang@codeaurora.org>
-> > Signed-off-by: Bean Huo <beanhuo@micron.com>
-> 
-> Thanks Bean's patch integration.
-> 
-> Like Avri's comment in https://patchwork.kernel.org/patch/11683381/
-> I think you could add Acked-by tag from Avri.
-> 
+On Wed, Aug 12, 2020 at 9:28 AM Enrico Weigelt, metux IT consult
+<lkml@metux.net> wrote:
+>
+> But I've still got another problem: how can I use DT along w/ ACPI ?
+>
 
-Hi Avri
-do I need to re-send the patchset to add your Acked-by tag?
-or you will sign your acked-by statement and append this patch?
-
-Thanks,
-Bean
-
-> 
-> 
-> Hi Avri,
-> 
-> Please correct above description if required.
-> Thanks for your review! : )
-> 
-> 
-> Thanks,
-> 
-> Stanley Chu
-> 
-
+That's a very good question. I focus on arm, so I'm unfamiliar with ACPI.
+Hopefully someone with ACPI knowledge can chime in.
