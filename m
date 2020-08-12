@@ -2,83 +2,163 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,WEIRD_PORT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02E33C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:25:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6CB1C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6C1D207DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:25:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3158207DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:27:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727899AbgHLMZc (ORCPT
+        id S1727953AbgHLM1A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 08:25:32 -0400
-Received: from mga01.intel.com ([192.55.52.88]:55658 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726453AbgHLMZ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 08:25:29 -0400
-IronPort-SDR: mLkhHWXda9mWsPCnYk8BXuRdokxp6Xa8iIvnDU6Hndkg/ps06y0qsyYWzh6lnqahgkmdFgVHvY
- Ubd6G80MailQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9710"; a="171981796"
-X-IronPort-AV: E=Sophos;i="5.76,304,1592895600"; 
-   d="scan'208";a="171981796"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2020 05:25:28 -0700
-IronPort-SDR: ywOfK2caexNoohfyuZvwPSk1dgtzJ6fZdA5v/MlqFPpcNGrWClgz2M45Tvihkln04HSWBEymfi
- TfkZqnwWzDSw==
-X-IronPort-AV: E=Sophos;i="5.76,304,1592895600"; 
-   d="scan'208";a="439376747"
-Received: from lhawrylk-desk.ger.corp.intel.com ([10.249.154.220])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2020 05:25:26 -0700
-From:   Lukasz Hawrylko <lukasz.hawrylko@linux.intel.com>
-To:     ning.sun@intel.com
-Cc:     Lukasz Hawrylko <lukasz.hawrylko@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH] MAINTAINERS: Update Intel TXT maintainer
-Date:   Wed, 12 Aug 2020 14:23:44 +0200
-Message-Id: <20200812122401.1751885-1-lukasz.hawrylko@linux.intel.com>
-X-Mailer: git-send-email 2.25.4
+        Wed, 12 Aug 2020 08:27:00 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2597 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726722AbgHLM04 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 08:26:56 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id DB8FA142F805B19C9470;
+        Wed, 12 Aug 2020 13:26:53 +0100 (IST)
+Received: from localhost (10.52.122.74) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Wed, 12 Aug
+ 2020 13:26:53 +0100
+Date:   Wed, 12 Aug 2020 13:25:24 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Nicholas Piggin <npiggin@gmail.com>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arch@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
+        "Catalin Marinas" <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        "Zefan Li" <lizefan@huawei.com>
+Subject: Re: [PATCH v3 8/8] mm/vmalloc: Hugepage vmalloc mappings
+Message-ID: <20200812132524.000067a6@Huawei.com>
+In-Reply-To: <20200810022732.1150009-9-npiggin@gmail.com>
+References: <20200810022732.1150009-1-npiggin@gmail.com>
+        <20200810022732.1150009-9-npiggin@gmail.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.52.122.74]
+X-ClientProxiedBy: lhreml728-chm.china.huawei.com (10.201.108.79) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As an effect of changes in Intel, I took resposibility for supporting
-Intel TXT in Linux from Ning Sun. This patch also replaces link to
-repository, as previous one became outdated.
+On Mon, 10 Aug 2020 12:27:32 +1000
+Nicholas Piggin <npiggin@gmail.com> wrote:
 
-Signed-off-by: Lukasz Hawrylko <lukasz.hawrylko@linux.intel.com>
----
- MAINTAINERS | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> On platforms that define HAVE_ARCH_HUGE_VMAP and support PMD vmaps,
+> vmalloc will attempt to allocate PMD-sized pages first, before falling
+> back to small pages.
+> 
+> Allocations which use something other than PAGE_KERNEL protections are
+> not permitted to use huge pages yet, not all callers expect this (e.g.,
+> module allocations vs strict module rwx).
+> 
+> This reduces TLB misses by nearly 30x on a `git diff` workload on a
+> 2-node POWER9 (59,800 -> 2,100) and reduces CPU cycles by 0.54%.
+> 
+> This can result in more internal fragmentation and memory overhead for a
+> given allocation, an option nohugevmap is added to disable at boot.
+> 
+> Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+Hi Nicholas,
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e627ed60d75a..cc70a40bba20 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9039,11 +9039,11 @@ F:	drivers/hwtracing/intel_th/
- F:	include/linux/intel_th.h
- 
- INTEL(R) TRUSTED EXECUTION TECHNOLOGY (TXT)
--M:	Ning Sun <ning.sun@intel.com>
-+M:	Lukasz Hawrylko <lukasz.hawrylko@linux.intel.com>
- L:	tboot-devel@lists.sourceforge.net
- S:	Supported
- W:	http://tboot.sourceforge.net
--T:	hg http://tboot.hg.sourceforge.net:8000/hgroot/tboot/tboot
-+T:	hg http://hg.code.sf.net/p/tboot/code
- F:	Documentation/x86/intel_txt.rst
- F:	arch/x86/kernel/tboot.c
- F:	include/linux/tboot.h
--- 
-2.25.4
+Busy afternoon, but a possible point of interest in line in the meantime.
+
+
+...
+
+> @@ -2701,22 +2760,45 @@ void *__vmalloc_node_range(unsigned long size, unsigned long align,
+>  			pgprot_t prot, unsigned long vm_flags, int node,
+>  			const void *caller)
+>  {
+> -	struct vm_struct *area;
+> +	struct vm_struct *area = NULL;
+>  	void *addr;
+>  	unsigned long real_size = size;
+> +	unsigned long real_align = align;
+> +	unsigned int shift = PAGE_SHIFT;
+>  
+>  	size = PAGE_ALIGN(size);
+>  	if (!size || (size >> PAGE_SHIFT) > totalram_pages())
+>  		goto fail;
+>  
+> -	area = __get_vm_area_node(real_size, align, VM_ALLOC | VM_UNINITIALIZED |
+> +	if (vmap_allow_huge && (pgprot_val(prot) == pgprot_val(PAGE_KERNEL))) {
+> +		unsigned long size_per_node;
+> +
+> +		/*
+> +		 * Try huge pages. Only try for PAGE_KERNEL allocations,
+> +		 * others like modules don't yet expect huge pages in
+> +		 * their allocations due to apply_to_page_range not
+> +		 * supporting them.
+> +		 */
+> +
+> +		size_per_node = size;
+> +		if (node == NUMA_NO_NODE)
+> +			size_per_node /= num_online_nodes();
+> +		if (size_per_node >= PMD_SIZE)
+> +			shift = PMD_SHIFT;
+> +	}
+> +
+> +again:
+> +	align = max(real_align, 1UL << shift);
+> +	size = ALIGN(real_size, align);
+
+So my suspicion is that the issue on arm64 is related to this.
+In the relevant call path, align is 32K whilst the size is 16K
+
+Previously I don't think we force size to be a multiple of align.
+
+I think this results in nr_pages being double what it was before.
+
+
+> +
+> +	area = __get_vm_area_node(size, align, VM_ALLOC | VM_UNINITIALIZED |
+>  				vm_flags, start, end, node, gfp_mask, caller);
+>  	if (!area)
+>  		goto fail;
+>  
+> -	addr = __vmalloc_area_node(area, gfp_mask, prot, node);
+> +	addr = __vmalloc_area_node(area, gfp_mask, prot, shift, node);
+>  	if (!addr)
+> -		return NULL;
+> +		goto fail;
+>  
+>  	/*
+>  	 * In this function, newly allocated vm_struct has VM_UNINITIALIZED
+> @@ -2730,8 +2812,16 @@ void *__vmalloc_node_range(unsigned long size, unsigned long align,
+>  	return addr;
+>  
+>  fail:
+> -	warn_alloc(gfp_mask, NULL,
+> +	if (shift > PAGE_SHIFT) {
+> +		shift = PAGE_SHIFT;
+> +		goto again;
+> +	}
+> +
+> +	if (!area) {
+> +		/* Warn for area allocation, page allocations already warn */
+> +		warn_alloc(gfp_mask, NULL,
+>  			  "vmalloc: allocation failure: %lu bytes", real_size);
+> +	}
+>  	return NULL;
+>  }
+>  
+
 
