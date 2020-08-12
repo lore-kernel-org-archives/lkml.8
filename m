@@ -2,148 +2,85 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10092C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:34:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52337C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:37:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E49F9206DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:34:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10F65206DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:37:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TAMILBsr"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=earth.li header.i=@earth.li header.b="FMeEhwrV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbgHLTe1 (ORCPT
+        id S1726596AbgHLThF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 15:34:27 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:52359 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726567AbgHLTe0 (ORCPT
+        Wed, 12 Aug 2020 15:37:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37342 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726512AbgHLThF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 15:34:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597260864;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=9pSEoniKEkFNSbD4TVkJ4Otoswkj5jDImE3i/ppi82o=;
-        b=TAMILBsrqXIGZSvSbutFexYOkO91UTG1s8g8GpQ/iaK2oaHiGsxWqj7R9QXYbFlQ/3uZoo
-        4/xaIYIErSSXflJ23de1ZXLTbfI86aiavW0TlaZBW8YamUnNEh9Mj662CpFRlI8vvUbwK8
-        UBwSTnPiMQRk99XNiEaWKgsCqVD6H7s=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-394-PsWf2ViBP-2ePLGug1Gcog-1; Wed, 12 Aug 2020 15:34:23 -0400
-X-MC-Unique: PsWf2ViBP-2ePLGug1Gcog-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B39E61902EB3;
-        Wed, 12 Aug 2020 19:34:20 +0000 (UTC)
-Received: from fogou.chygwyn.com (unknown [10.33.36.12])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 239A3100AE52;
-        Wed, 12 Aug 2020 19:34:13 +0000 (UTC)
-Subject: Re: file metadata via fs API
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>
-Cc:     Miklos Szeredi <miklos@szeredi.hu>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, Karel Zak <kzak@redhat.com>,
-        Jeff Layton <jlayton@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Christian Brauner <christian@brauner.io>,
-        Lennart Poettering <lennart@poettering.net>,
-        Linux API <linux-api@vger.kernel.org>,
-        Ian Kent <raven@themaw.net>,
-        LSM <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <1842689.1596468469@warthog.procyon.org.uk>
- <1845353.1596469795@warthog.procyon.org.uk>
- <CAJfpegunY3fuxh486x9ysKtXbhTE0745ZCVHcaqs9Gww9RV2CQ@mail.gmail.com>
- <ac1f5e3406abc0af4cd08d818fe920a202a67586.camel@themaw.net>
- <CAJfpegu8omNZ613tLgUY7ukLV131tt7owR+JJ346Kombt79N0A@mail.gmail.com>
- <CAJfpegtNP8rQSS4Z14Ja4x-TOnejdhDRTsmmDD-Cccy2pkfVVw@mail.gmail.com>
- <20200811135419.GA1263716@miu.piliscsaba.redhat.com>
- <CAHk-=wjzLmMRf=QG-n+1HnxWCx4KTQn9+OhVvUSJ=ZCQd6Y1WA@mail.gmail.com>
- <52483.1597190733@warthog.procyon.org.uk>
- <CAHk-=wiPx0UJ6Q1X=azwz32xrSeKnTJcH8enySwuuwnGKkHoPA@mail.gmail.com>
-From:   Steven Whitehouse <swhiteho@redhat.com>
-Message-ID: <066f9aaf-ee97-46db-022f-5d007f9e6edb@redhat.com>
-Date:   Wed, 12 Aug 2020 20:34:11 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 12 Aug 2020 15:37:05 -0400
+Received: from the.earth.li (the.earth.li [IPv6:2a00:1098:86:4d:c0ff:ee:15:900d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E51A5C061383;
+        Wed, 12 Aug 2020 12:37:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=earth.li;
+         s=the; h=Content-Type:MIME-Version:Message-ID:Subject:To:From:Date:Sender:
+        Reply-To:Cc:Content-Transfer-Encoding:Content-ID:Content-Description:
+        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=XqxBkx0fhTjErNZmjOmJ0k+Zy+sZA4pBOuNGrWDz6iI=; b=FMeEhwrV6De794yhR10herc21E
+        qdQvLTi+Nv2G9VZkkbfSUyNa3hH/0pMw7ZcvxmIanCTJR/cygmyBgGNaGMG7O9ymJm4SBlC9RnefP
+        8tXAq4QSkoI21sA2RFEMRQsyXdSRnpOUr4akPKkWNfzmCgNLP/zXN7M3DsWyRl6nErD+1O/IVKjap
+        EJAMRIxdFe+I40ckS63WCjDzAwaSBqS7ImhQ4FAsKqK763DYrN1c2ZzKWxcHhKU8lM0a7t4g6gS00
+        8t+GqPAoXn7pTPSQ7mFFT5QzAnUlBYUVlutQLETWTK4+2m//BBwBi9yQ+16e3ZfOIrRjeLTopfBk9
+        drVXFmRw==;
+Received: from noodles by the.earth.li with local (Exim 4.92)
+        (envelope-from <noodles@earth.li>)
+        id 1k5wYQ-0002nP-Bl; Wed, 12 Aug 2020 20:36:54 +0100
+Date:   Wed, 12 Aug 2020 20:36:54 +0100
+From:   Jonathan McDowell <noodles@earth.li>
+To:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net 0/2] net: stmmac: Fix multicast filter on IPQ806x
+Message-ID: <cover.1597260787.git.noodles@earth.li>
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wiPx0UJ6Q1X=azwz32xrSeKnTJcH8enySwuuwnGKkHoPA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+This pair of patches are the result of discovering a failure to
+correctly receive IPv6 multicast packets on such a device (in particular
+DHCPv6 requests and RA solicitations). Putting the device into
+promiscuous mode, or allmulti, both resulted in such packets correctly
+being received. Examination of the vendor driver (nss-gmac from the
+qsdk) shows that it does not enable the multicast filter and instead
+falls back to allmulti.
 
-On 12/08/2020 19:18, Linus Torvalds wrote:
-> On Tue, Aug 11, 2020 at 5:05 PM David Howells <dhowells@redhat.com> wrote:
->> Well, the start of it was my proposal of an fsinfo() system call.
-> Ugh. Ok, it's that thing.
->
-> This all seems *WAY* over-designed - both your fsinfo and Miklos' version.
->
-> What's wrong with fstatfs()? All the extra magic metadata seems to not
-> really be anything people really care about.
->
-> What people are actually asking for seems to be some unique mount ID,
-> and we have 16 bytes of spare information in 'struct statfs64'.
->
-> All the other fancy fsinfo stuff seems to be "just because", and like
-> complete overdesign.
->
-> Let's not add system calls just because we can.
->
->               Linus
->
+Extend the base dwmac1000 driver to fall back when there's no suitable
+hardware filter, and update the ipq806x platform to request this.
 
-The point of this is to give us the ability to monitor mounts from 
-userspace. The original inspiration was rtnetlink, in that we need a 
-"dump" operation to give us a snapshot of the current mount state, plus 
-then a stream of events which allow us to keep that state updated. The 
-tricky question is what happens in case of overflow of the events queue, 
-and just like netlink, that needs a resync of the current state to fix 
-that, since we can't block mounts, of course.
+Jonathan McDowell (2):
+  net: stmmac: dwmac1000: provide multicast filter fallback
+  net: ethernet: stmmac: Disable hardware multicast filter
 
-The fsinfo syscall was designed to be the "dump" operation in this 
-system. David's other patch set provides the stream of events. So the 
-two are designed to work together. We had the discussion on using 
-netlink, of whatever form a while back, and there are a number of 
-reasons why that doesn't work (namespace being one).
+ drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c  | 1 +
+ drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c | 3 +++
+ 2 files changed, 4 insertions(+)
 
-I think fstatfs might also suffer from the issue of not being easy to 
-call on things for which you have no path (e.g. over-mounted mounts) 
-Plus we need to know which paths to query, which is why we need to 
-enumerate the mounts in the first place - how would we get the fds for 
-each mount? It might give you some sb info, but it doesn't tell you the 
-options that the sb is mounted with, and it doesn't tell you where it is 
-mounted either.
-
-The overall aim is to solve some issues relating to scaling to large 
-numbers of mount in systemd and autofs, and also to provide a 
-generically useful interface that other tools may use to monitor mounts 
-in due course too. Currently parsing /proc/mounts is the only option, 
-and that tends to be slow and is certainly not atomic. Extension to 
-other sb related messages is a future goal, quota being one possible 
-application for the notifications.
-
-If there is a simpler way to get to that goal, then thats all to the 
-good, and we should definitely consider it,
-
-Steve.
-
-
-
+-- 
+2.20.1
 
