@@ -2,113 +2,107 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41A34C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:33:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B827C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:36:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EFB7207DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:33:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20D40207DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:36:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ifdemghE"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="FDBkzwfe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728151AbgHLNdW (ORCPT
+        id S1728021AbgHLNgi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 09:33:22 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:58008 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726829AbgHLNdV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 09:33:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597239200;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=NWN81718k5D1jMF9UtCdbu9hqX0kFHSaNB7Aldah82c=;
-        b=ifdemghE2u0Vt1oEkeybVJpvNgo6DDOhN8JilzZRosoFa8J5LcKTmXKJOPXCPni2s9JTot
-        i9ZoxLq62XethR52iwn4JGqflEm0mQVvHCQaRkvHMXHGGO1a4iiWnaoiKz/N5hEQrXcK1w
-        NX7DHRLAOPmoV1oy09kKQm5pMPu+tvo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-82-ig7PBHqSNSKE-wAwBjuKtw-1; Wed, 12 Aug 2020 09:33:18 -0400
-X-MC-Unique: ig7PBHqSNSKE-wAwBjuKtw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 12 Aug 2020 09:36:38 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:10274 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727854AbgHLNgg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 09:36:36 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597239396; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=EqmfoHwHYf9z8PU4YayuKnZvoScvaXacGH6oCTRqhOg=;
+ b=FDBkzwfeQFFR2sc8hJlER9MHXeq44qHhy2GcXiP1skxSiJ92vATRxm9syn5dSQHc/whHYc34
+ jpSoLCrKHWwmwSWlBoNfqOxI03Qz70QdzqB1tbvVJNCo+lKhmGpX1hXLAKFH01mBSdZVfkk+
+ fy/wS0JElF5VvmI3xj2pKXt7fdw=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
+ 5f33f05c247ccc308c1f0f06 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 12 Aug 2020 13:36:28
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 88453C433CA; Wed, 12 Aug 2020 13:36:27 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B8D0380183C;
-        Wed, 12 Aug 2020 13:33:16 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-127.rdu2.redhat.com [10.10.120.127])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D88E45D73A;
-        Wed, 12 Aug 2020 13:33:13 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAJfpegs4gzvJMBz=su8KgXXxX41tv8tVhO88Eap9pDeHRaSDPA@mail.gmail.com>
-References: <CAJfpegs4gzvJMBz=su8KgXXxX41tv8tVhO88Eap9pDeHRaSDPA@mail.gmail.com> <1842689.1596468469@warthog.procyon.org.uk> <1845353.1596469795@warthog.procyon.org.uk> <CAJfpegunY3fuxh486x9ysKtXbhTE0745ZCVHcaqs9Gww9RV2CQ@mail.gmail.com> <ac1f5e3406abc0af4cd08d818fe920a202a67586.camel@themaw.net> <CAJfpegu8omNZ613tLgUY7ukLV131tt7owR+JJ346Kombt79N0A@mail.gmail.com> <CAJfpegtNP8rQSS4Z14Ja4x-TOnejdhDRTsmmDD-Cccy2pkfVVw@mail.gmail.com> <20200811135419.GA1263716@miu.piliscsaba.redhat.com> <CAHk-=wjzLmMRf=QG-n+1HnxWCx4KTQn9+OhVvUSJ=ZCQd6Y1WA@mail.gmail.com> <20200812101405.brquf7xxt2q22dd3@ws.net.home>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     dhowells@redhat.com, Karel Zak <kzak@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Christian Brauner <christian@brauner.io>,
-        Lennart Poettering <lennart@poettering.net>,
-        Linux API <linux-api@vger.kernel.org>,
-        Ian Kent <raven@themaw.net>,
-        LSM <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: file metadata via fs API (was: [GIT PULL] Filesystem Information)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B3641C433C6;
+        Wed, 12 Aug 2020 13:36:26 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <133507.1597239193.1@warthog.procyon.org.uk>
-Date:   Wed, 12 Aug 2020 14:33:13 +0100
-Message-ID: <133508.1597239193@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 12 Aug 2020 19:06:26 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     bjorn.andersson@linaro.org, rjw@rjwysocki.net,
+        ulf.hansson@linaro.org, agross@kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-pm@vger.kernel.org, gregkh@linuxfoundation.org, pavel@ucw.cz,
+        len.brown@intel.com, rnayak@codeaurora.org, dianders@chromium.org,
+        khilman@kernel.org
+Subject: Re: [PATCH 1/2] PM / Domains: Add GENPD_FLAG_SUSPEND_ON flag
+In-Reply-To: <159718192589.1360974.15808376172581486987@swboyd.mtv.corp.google.com>
+References: <20200811190252.10559-1-sibis@codeaurora.org>
+ <159718192589.1360974.15808376172581486987@swboyd.mtv.corp.google.com>
+Message-ID: <4f87d7dfbee7553f3ea7a1a6e12b3fa7@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Miklos Szeredi <miklos@szeredi.hu> wrote:
+Hey Stephen,
+Thanks for taking time to review the
+series!
 
-> You said yourself, that what's really needed is e.g. consistent
-> snapshot of a complete mount tree topology.  And to get the complete
-> topology FSINFO_ATTR_MOUNT_TOPOLOGY and FSINFO_ATTR_MOUNT_CHILDREN are
-> needed for *each* individual mount.
+On 2020-08-12 03:08, Stephen Boyd wrote:
+> Quoting Sibi Sankar (2020-08-11 12:02:51)
+>> diff --git a/include/linux/pm_domain.h b/include/linux/pm_domain.h
+>> index ee11502a575b0..3002a2d68936a 100644
+>> --- a/include/linux/pm_domain.h
+>> +++ b/include/linux/pm_domain.h
+>> @@ -55,6 +55,10 @@
+>>   *
+>>   * GENPD_FLAG_RPM_ALWAYS_ON:   Instructs genpd to always keep the PM 
+>> domain
+>>   *                             powered on except for system suspend.
+>> + *
+>> + * GENPD_FLAG_SUSPEND_ON:      Instructs genpd to keep the PM domain 
+>> powered
+>> + *                             on during suspend and runtime PM 
+>> controlled
+> 
+> Maybe, "powered on across system suspend (if it is already powered on)"
+> to match the hunk above that talks about system suspend for
+> GENPD_FLAG_RPM_ALWAYS_ON. Otherwise someone may think that this powers
+> on the genpd during suspend or powers it on during runtime suspend.
 
-That's not entirely true.
+Sure, I'll add ^^ in the next re-spin.
 
-FSINFO_ATTR_MOUNT_ALL can be used instead of FSINFO_ATTR_MOUNT_CHILDREN if you
-want to scan an entire subtree in one go.  It returns the same record type.
+> 
+>> + *                             otherwise.
+>>   */
+>>  #define GENPD_FLAG_PM_CLK       (1U << 0)
+>>  #define GENPD_FLAG_IRQ_SAFE     (1U << 1)
 
-The result from ALL/CHILDREN includes sufficient information to build the
-tree.  That only requires the parent ID.  All the rest of the information
-TOPOLOGY exposes is to do with propagation.
-
-Now, granted, I didn't include all of the topology info in the records
-returned by ALL/CHILDREN because I don't expect it to change very often.  But
-you can check the event counter supplied with each record to see if it might
-have changed - and then call TOPOLOGY on the ones that changed.
-
-If it simplifies life, I could add the propagation info into ALL/CHILDREN so
-that you only need to call ALL to scan everything.  It requires larger
-buffers, however.
-
-> Adding a few generic binary interfaces is okay.   Adding many
-> specialized binary interfaces is a PITA.
-
-Text interfaces are also a PITA, especially when you may get multiple pieces
-of information returned in one buffer and especially when you throw in
-character escaping.  Of course, we can do it - and we do do it all over - but
-that doesn't make it efficient.
-
-David
-
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
