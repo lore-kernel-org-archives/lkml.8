@@ -2,222 +2,341 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-22.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BCAEC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 01:23:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D6E5C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 01:24:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F75B20678
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 01:23:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7176120678
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 01:24:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lZsU7VTC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726505AbgHLBXx (ORCPT
+        id S1726523AbgHLBYT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 21:23:53 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:33920 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726235AbgHLBXx (ORCPT
+        Tue, 11 Aug 2020 21:24:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38878 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726173AbgHLBYS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 21:23:53 -0400
-Received: from dread.disaster.area (pa49-180-53-24.pa.nsw.optusnet.com.au [49.180.53.24])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 898DB3A9005;
-        Wed, 12 Aug 2020 11:23:48 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1k5fUX-0000Xy-TX; Wed, 12 Aug 2020 11:23:45 +1000
-Date:   Wed, 12 Aug 2020 11:23:45 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Vivek Goyal <vgoyal@redhat.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        virtio-fs@redhat.com, miklos@szeredi.hu, stefanha@redhat.com,
-        dgilbert@redhat.com
-Subject: Re: [PATCH v2 15/20] fuse, dax: Take ->i_mmap_sem lock during dax
- page fault
-Message-ID: <20200812012345.GG2079@dread.disaster.area>
-References: <20200807195526.426056-1-vgoyal@redhat.com>
- <20200807195526.426056-16-vgoyal@redhat.com>
- <20200810222238.GD2079@dread.disaster.area>
- <20200811175530.GB497326@redhat.com>
+        Tue, 11 Aug 2020 21:24:18 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 750DFC06174A
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 18:24:18 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id x12so419685qtp.1
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 18:24:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ewSouZ9fpSEqZWpAjbpVyaVqXVUq6CVMjFsKBDahtnA=;
+        b=lZsU7VTCLsPtWPM/L3bqU+0m2kixqI2GJ46B2K+lUDagXWPvRVXoj1AdyZ6B4KoHJC
+         Cf1mMvr0sO7LIXAJ6d2BEvX5vE8RYJmmchMngdYY360bUtzyeydNsd7e1OecIXsA4FMb
+         CM9v3hRVaJzn4rbkz+gMPc0ZC/w/PoGCDNEwgb1SKDfAZisfk555leoGQxBS1AwHUyBb
+         PKCxR0emj9skP4EzKF3a/xPM72PYAa3moFbS3B301da8BI3b2gSeuZKGSjS6dywDYHAQ
+         TQdOU73hqhn6vse2RnmJ5Q7VrxWIsE99auT5DgwTSUx7oVgEPr38UuPrVwx85v7lswBd
+         vI2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ewSouZ9fpSEqZWpAjbpVyaVqXVUq6CVMjFsKBDahtnA=;
+        b=WtYVr9hsMnYkMKosi22URgS7uAx2PVauveXva2zdc6lPhRj/187F+rEIDz7uSNVu2D
+         J68YtJ8+Bf0ofw2vChSansfincMI96q94e4m2CcMXXb17EvOrdSxZ5yAr7G3vhW/gXhU
+         7ndI/hlanVJ6xGiP/oNmMbfQV/6Wowny5DZn3AZHeC0fT4jdSaDVy27y6A6fwkIq5wrF
+         ilTJ2KQaBZN3eD0uLzoKjezqx71T5JOZGG2M3Duy35UTeiUoAkfocx1gPg3giWQnMHA+
+         3O9RXrRPnrp7aZNkHeNlHLTWMq8YnTHy7mEsCzABM073q+eGd/MRzVtf5sW9M22llOk7
+         ZoQw==
+X-Gm-Message-State: AOAM531Z0mClaNw8r2/KKABj6hwNfuxT+ex992KRmZYVmIuqCPyMQrE+
+        +U0tY7Ksb6dxneVQBWgcaPw+Z7Hln1D38qtPjBS9Eg==
+X-Google-Smtp-Source: ABdhPJxSoECnj7cKPvhQqD6TsZLpmFHvnLieALQ4Afa1wq3Ducda4IRFPNWsrQs2hFst5g7YfcaqMWwn0Mk27rewDAk=
+X-Received: by 2002:ac8:7c87:: with SMTP id y7mr4131359qtv.375.1597195456411;
+ Tue, 11 Aug 2020 18:24:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200811175530.GB497326@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=QIgWuTDL c=1 sm=1 tr=0
-        a=moVtWZxmCkf3aAMJKIb/8g==:117 a=moVtWZxmCkf3aAMJKIb/8g==:17
-        a=kj9zAlcOel0A:10 a=y4yBn9ojGxQA:10 a=7-415B0cAAAA:8
-        a=cCKMqcOPnOhVYIV9LdMA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+References: <CAKwvOdnni_G2tw+0eCLQQvvdcz97Fy1-cBjzPvLwbBNDu1-KqQ@mail.gmail.com>
+ <20200728004736.3590053-1-nhuck@google.com> <CAK7LNAT-AO9_Y-qunRvPbBYf7GZnoE6bxYKFNtcdKAKV8d_A+w@mail.gmail.com>
+ <CAJkfWY5ywOtO6fAyPd0B2BjEWamJRRMgg4et0uVq2bpkJSECwA@mail.gmail.com> <CAK7LNAQVdhMraYejrTsGZSLFJDk4CVf6ke-bsQ7kaDUM2Lf4SA@mail.gmail.com>
+In-Reply-To: <CAK7LNAQVdhMraYejrTsGZSLFJDk4CVf6ke-bsQ7kaDUM2Lf4SA@mail.gmail.com>
+From:   Nathan Huckleberry <nhuck@google.com>
+Date:   Tue, 11 Aug 2020 20:24:04 -0500
+Message-ID: <CAJkfWY5kooS1cPFq+3s0oFT8=O_vszAMnJ8BBOmy084oi+4tgw@mail.gmail.com>
+Subject: Re: [PATCH v7] Makefile: Add clang-tidy and static analyzer support
+ to makefile
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Pirama Arumuga Nainar <pirama@google.com>,
+        Bill Wendling <morbo@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 01:55:30PM -0400, Vivek Goyal wrote:
-> On Tue, Aug 11, 2020 at 08:22:38AM +1000, Dave Chinner wrote:
-> > On Fri, Aug 07, 2020 at 03:55:21PM -0400, Vivek Goyal wrote:
-> > > We need some kind of locking mechanism here. Normal file systems like
-> > > ext4 and xfs seems to take their own semaphore to protect agains
-> > > truncate while fault is going on.
-> > > 
-> > > We have additional requirement to protect against fuse dax memory range
-> > > reclaim. When a range has been selected for reclaim, we need to make sure
-> > > no other read/write/fault can try to access that memory range while
-> > > reclaim is in progress. Once reclaim is complete, lock will be released
-> > > and read/write/fault will trigger allocation of fresh dax range.
-> > > 
-> > > Taking inode_lock() is not an option in fault path as lockdep complains
-> > > about circular dependencies. So define a new fuse_inode->i_mmap_sem.
-> > 
-> > That's precisely why filesystems like ext4 and XFS define their own
-> > rwsem.
-> > 
-> > Note that this isn't a DAX requirement - the page fault
-> > serialisation is actually a requirement of hole punching...
-> 
-> Hi Dave,
-> 
-> I noticed that fuse code currently does not seem to have a rwsem which
-> can provide mutual exclusion between truncation/hole_punch path
-> and page fault path. I am wondering does that mean there are issues
-> with existing code or something else makes it unnecessary to provide
-> this mutual exlusion.
+Sounds good. Do you think this patch is ready to land then?
 
-I don't know enough about the fuse implementation to say. What I'm
-saying is that nothing in the core mm/ or VFS serilises page cache
-access to the data against direct filesystem manipulations of the
-underlying filesystem structures.
-
-i.e. nothing in the VFS or page fault IO path prevents this race
-condition:
-
-P0				P1
-fallocate
-page cache invalidation
-				page fault
-				read data
-punch out data extents
-				<data exposed to userspace is stale>
-				<data exposed to userspace has no
-				backing store allocated>
-
-
-That's where the ext4 and XFS internal rwsem come into play:
-
-fallocate
-down_write(mmaplock)
-page cache invalidation
-				page fault
-				down_read(mmaplock)
-				<blocks>
-punch out data
-up_write(mmaplock)
-				<unblocks>
-				<sees hole>
-				<allocates zeroed pages in page cache>
-
-And there's not stale data exposure to userspace.
-
-It's the same reason that we use the i_rwsem to prevent concurrent
-IO while a truncate or hole punch is in progress. The IO could map
-the extent, then block in the IO path, while the filesytsem
-re-allocates and writes new data or metadata to those blocks. That's
-another potential non-owner data exposure problem.
-
-And if you don't drain AIO+DIO before truncate/hole punch, the
-i_rwsem does not protect you against concurrent IO as that gets
-dropped after the AIO is submitted and returns EIOCBQUEUED to the
-AIO layer. Hence there's IO in flight that isn't tracked by the
-i_rwsem or the MMAPLOCK, and if you punch out the blocks and
-reallocate them while the IO is in flight....
-
-> > > @@ -3849,9 +3856,11 @@ static long fuse_file_fallocate(struct file *file, int mode, loff_t offset,
-> > >  			file_update_time(file);
-> > >  	}
-> > >  
-> > > -	if (mode & FALLOC_FL_PUNCH_HOLE)
-> > > +	if (mode & FALLOC_FL_PUNCH_HOLE) {
-> > > +		down_write(&fi->i_mmap_sem);
-> > >  		truncate_pagecache_range(inode, offset, offset + length - 1);
-> > > -
-> > > +		up_write(&fi->i_mmap_sem);
-> > > +	}
-> > >  	fuse_invalidate_attr(inode);
-> > 
-> > 
-> > I'm not sure this is sufficient. You have to lock page faults out
-> > for the entire time the hole punch is being performed, not just while
-> > the mapping is being invalidated.
-> > 
-> > That is, once you've taken the inode lock and written back the dirty
-> > data over the range being punched, you can then take a page fault
-> > and dirty the page again. Then after you punch the hole out,
-> > you have a dirty page with non-zero data in it, and that can get
-> > written out before the page cache is truncated.
-> 
-> Just for my better udnerstanding of the issue, I am wondering what
-> problem will it lead to.
-> If one process is doing punch_hole and other is writing in the
-> range being punched, end result could be anything. Either we will
-> read zeroes from punched_hole pages or we will read the data
-> written by process writing to mmaped page, depending on in what
-> order it got executed. 
+On Thu, Aug 6, 2020 at 5:10 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
 >
-> If that's the case, then holding fi->i_mmap_sem for the whole
-> duration might not matter. What am I missing?
-
-That it is safe to invalidate the page cache after the hole has been
-punched.
-
-There is nothing stopping, say, memory reclaim from reclaiming pages
-over the range while the hole is being punched, then having the
-application refault them while the backing store is being freed.
-While the page fault read IO is in progress, there's nothing
-stopping the filesystem from freeing those blocks, nor reallocating
-them and writing something else to them (e.g. metadata). So they
-could read someone elses data.
-
-Even worse: the page fault is a write fault, it lands in a hole, has
-space allocated, the page cache is zeroed, page marked dirty, and
-then the hole punch calls truncate_pagecache_range() which tosses
-away the zeroed page and the data the userspace application wrote
-to the page.
-
-The application then refaults the page, reading stale data off
-disk instead of seeing what it had already written to the page....
-
-And unlike truncated pages, the mm/ code cannot reliably detect
-invalidation races on lockless lookup of pages that are within EOF.
-They rely on truncate changing the file size before page
-invalidation to detect races as page->index then points beyond EOF.
-Hole punching does not change inode size, so the page cache lookups
-cannot tell the difference between a new page that just needs IO to
-initialise the data and a page that has just been invalidated....
-
-IOWs, there are many ways things can go wrong with hole punch, and
-the only way to avoid them all is to do invalidate and lock out the
-page cache before starting the fallocate operation. i.e.:
-
-	1. lock up the entire IO path (vfs and page fault)
-	2. drain the AIO+DIO path
-	3. write back dirty pages
-	4. invalidate the page cache
-
-Because this is the only way we can guarantee that nothing can access
-the filesystem's backing store for the range we are about to
-directly manipulate the data in while we perform an "offloaded" data
-transformation on that range...
-
-This isn't just hole punch - the same problems exist with
-FALLOC_FL_ZERO_RANGE and FALLOC_FL_{INSERT,COLLAPSE}_RANGE because
-they change data with extent manipulations and/or hardware offloads
-that provide no guarantees of specific data state or integrity until
-they complete....
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+> On Fri, Aug 7, 2020 at 6:42 AM 'Nathan Huckleberry' via Clang Built
+> Linux <clang-built-linux@googlegroups.com> wrote:
+> >
+> > On Thu, Aug 6, 2020 at 3:44 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> > >
+> > > On Tue, Jul 28, 2020 at 9:47 AM Nathan Huckleberry <nhuck@google.com> wrote:
+> > > >
+> > > > This patch adds clang-tidy and the clang static-analyzer as make
+> > > > targets. The goal of this patch is to make static analysis tools
+> > > > usable and extendable by any developer or researcher who is familiar
+> > > > with basic c++.
+> > > >
+> > > > The current static analysis tools require intimate knowledge of the
+> > > > internal workings of the static analysis. Clang-tidy and the clang
+> > > > static analyzers expose an easy to use api and allow users unfamiliar
+> > > > with clang to write new checks with relative ease.
+> > > >
+> > > > ===Clang-tidy===
+> > > >
+> > > > Clang-tidy is an easily extendable 'linter' that runs on the AST.
+> > > > Clang-tidy checks are easy to write and understand. A check consists of
+> > > > two parts, a matcher and a checker. The matcher is created using a
+> > > > domain specific language that acts on the AST
+> > > > (https://clang.llvm.org/docs/LibASTMatchersReference.html).  When AST
+> > > > nodes are found by the matcher a callback is made to the checker. The
+> > > > checker can then execute additional checks and issue warnings.
+> > > >
+> > > > Here is an example clang-tidy check to report functions that have calls
+> > > > to local_irq_disable without calls to local_irq_enable and vice-versa.
+> > > > Functions flagged with __attribute((annotation("ignore_irq_balancing")))
+> > > > are ignored for analysis. (https://reviews.llvm.org/D65828)
+> > > >
+> > > > ===Clang static analyzer===
+> > > >
+> > > > The clang static analyzer is a more powerful static analysis tool that
+> > > > uses symbolic execution to find bugs. Currently there is a check that
+> > > > looks for potential security bugs from invalid uses of kmalloc and
+> > > > kfree. There are several more general purpose checks that are useful for
+> > > > the kernel.
+> > > >
+> > > > The clang static analyzer is well documented and designed to be
+> > > > extensible.
+> > > > (https://clang-analyzer.llvm.org/checker_dev_manual.html)
+> > > > (https://github.com/haoNoQ/clang-analyzer-guide/releases/download/v0.1/clang-analyzer-guide-v0.1.pdf)
+> > > >
+> > > > The main draw of the clang tools is how accessible they are. The clang
+> > > > documentation is very nice and these tools are built specifically to be
+> > > > easily extendable by any developer. They provide an accessible method of
+> > > > bug-finding and research to people who are not overly familiar with the
+> > > > kernel codebase.
+> > > >
+> > > > Signed-off-by: Nathan Huckleberry <nhuck@google.com>
+> > > > ---
+> > > > Changes v6->v7
+> > > > * Fix issues with relative paths
+> > > > * Additional style fixes
+> > > >  MAINTAINERS                                   |  1 +
+> > > >  Makefile                                      |  3 +
+> > > >  scripts/clang-tools/Makefile.clang-tools      | 23 ++++++
+> > > >  .../{ => clang-tools}/gen_compile_commands.py |  0
+> > > >  scripts/clang-tools/run-clang-tools.py        | 74 +++++++++++++++++++
+> > > >  5 files changed, 101 insertions(+)
+> > > >  create mode 100644 scripts/clang-tools/Makefile.clang-tools
+> > > >  rename scripts/{ => clang-tools}/gen_compile_commands.py (100%)
+> > > >  create mode 100755 scripts/clang-tools/run-clang-tools.py
+> > > >
+> > > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > > index 1d4aa7f942de..a444564e5572 100644
+> > > > --- a/MAINTAINERS
+> > > > +++ b/MAINTAINERS
+> > > > @@ -4198,6 +4198,7 @@ W:        https://clangbuiltlinux.github.io/
+> > > >  B:     https://github.com/ClangBuiltLinux/linux/issues
+> > > >  C:     irc://chat.freenode.net/clangbuiltlinux
+> > > >  F:     Documentation/kbuild/llvm.rst
+> > > > +F:     scripts/clang-tools/
+> > > >  K:     \b(?i:clang|llvm)\b
+> > > >
+> > > >  CLEANCACHE API
+> > > > diff --git a/Makefile b/Makefile
+> > > > index fe0164a654c7..3e2df010b342 100644
+> > > > --- a/Makefile
+> > > > +++ b/Makefile
+> > > > @@ -747,6 +747,7 @@ KBUILD_CFLAGS       += $(call cc-option,-fno-allow-store-data-races)
+> > > >
+> > > >  include scripts/Makefile.kcov
+> > > >  include scripts/Makefile.gcc-plugins
+> > > > +include scripts/clang-tools/Makefile.clang-tools
+> > > >
+> > > >  ifdef CONFIG_READABLE_ASM
+> > > >  # Disable optimizations that make assembler listings hard to read.
+> > > > @@ -1543,6 +1544,8 @@ help:
+> > > >         @echo  '  export_report   - List the usages of all exported symbols'
+> > > >         @echo  '  headerdep       - Detect inclusion cycles in headers'
+> > > >         @echo  '  coccicheck      - Check with Coccinelle'
+> > > > +       @echo  '  clang-analyzer  - Check with clang static analyzer'
+> > > > +       @echo  '  clang-tidy      - Check with clang-tidy'
+> > > >         @echo  ''
+> > > >         @echo  'Tools:'
+> > > >         @echo  '  nsdeps          - Generate missing symbol namespace dependencies'
+> > > > diff --git a/scripts/clang-tools/Makefile.clang-tools b/scripts/clang-tools/Makefile.clang-tools
+> > > > new file mode 100644
+> > > > index 000000000000..5c9d76f77595
+> > > > --- /dev/null
+> > > > +++ b/scripts/clang-tools/Makefile.clang-tools
+> > > > @@ -0,0 +1,23 @@
+> > > > +# SPDX-License-Identifier: GPL-2.0
+> > > > +#
+> > > > +# Copyright (C) Google LLC, 2020
+> > > > +#
+> > > > +# Author: Nathan Huckleberry <nhuck@google.com>
+> > > > +#
+> > > > +PHONY += clang-tidy
+> > > > +clang-tidy:
+> > > > +ifdef CONFIG_CC_IS_CLANG
+> > > > +       $(PYTHON3) scripts/clang-tools/gen_compile_commands.py
+> > > > +       $(PYTHON3) scripts/clang-tools/run-clang-tools.py clang-tidy compile_commands.json
+> > > > +else
+> > > > +       $(error clang-tidy requires CC=clang)
+> > > > +endif
+> > > > +
+> > > > +PHONY += clang-analyzer
+> > > > +clang-analyzer:
+> > > > +ifdef CONFIG_CC_IS_CLANG
+> > > > +       $(PYTHON3) scripts/clang-tools/gen_compile_commands.py
+> > > > +       $(PYTHON3) scripts/clang-tools/run-clang-tools.py clang-analyzer compile_commands.json
+> > > > +else
+> > > > +       $(error clang-analyzer requires CC=clang)
+> > > > +endif
+> > >
+> > >
+> > >
+> > > You can unify the almost same two rules.
+> > >
+> > > PHONY += clang-tidy clang-analyzer
+> > > clang-tidy clang-analyzer:
+> > > ifdef CONFIG_CC_IS_CLANG
+> > >         $(PYTHON3) scripts/clang-tools/gen_compile_commands.py
+> > >         $(PYTHON3) scripts/clang-tools/run-clang-tools.py $@
+> > > compile_commands.json
+> > > else
+> > >         $(error $@ requires CC=clang)
+> > > endif
+> > >
+> >
+> > I like this.
+> >
+> > >
+> > >
+> > >
+> > > But, before we proceed, please tell me
+> > > what this check is intended for.
+> > >
+> >
+> > Clang-tidy invokes clang using the command line
+> > options specified in the compile_commands.json file.
+> > Using gcc command line options causes a bunch of
+> > errors for unknown options.
+> >
+> > >
+> > >
+> > >
+> > >
+> > > Case 1)
+> > > Build the kernel with CC=clang,
+> > > and then run clang-tidy without CC=clang.
+> > >
+> > > $ make CC=clang defconfig
+> > > $ make CC=clang -j$(nproc)
+> > > $ make clang-tidy
+> > >
+> > > scripts/clang-tools/Makefile.clang-tools:13: *** clang-tidy requires
+> > > CC=clang.  Stop.
+> > >
+> >
+> > I suppose this case could allow clang-tidy to
+> > be run.
+> >
+> > >
+> > >
+> > >
+> > > Case 2)
+> > > Build the kernel using GCC,
+> > > and then run clang-tidy with CC=clang.
+> > >
+> > > $ make defconfig
+> > > $ make -j$(nproc)
+> > > $ make CC=clang clang-tidy
+> > >
+> > > This patch happily runs clang-tidy
+> > > although compile_commands.json
+> > > contains GCC commands.
+> > >
+> >
+> > This is the worst of the two cases. I'm not
+> > sure how to prevent this other than parsing the
+> > compiler invocation in run-clang-tools.py.
+> >
+> > I'm open to better suggestions.
+> >
+> > >
+> > >
+> > >
+> > >
+> > > So, it checks if you have passed CC=clang
+> > > to "make clang-tidy", where I do not see
+> > > any user of the $(CC) variable.
+> > >
+> > > It does not care whether you have built
+> > > the kernel with GCC or Clang.
+> > >
+> > >
+> > >
+> > > What happens if you run clang-tidy against
+> > > compile_commands.json that contains GCC
+> > > commands?
+> >
+> > Clang-tidy itself uses the command line options from
+> > compile_commands.json to invoke clang. If you run
+> > clang-tidy against GCC commands you get lots of
+> > errors similar to this
+> >
+> > Found compiler error(s).
+> > 12 warnings and 8 errors generated.
+> > Error while processing /usr/local/google/home/nhuck/linux/arch/x86/lib/iomem.c.
+> > error: unknown argument: '-fconserve-stack' [clang-diagnostic-error]
+> > error: unknown argument: '-fno-var-tracking-assignments'
+> > [clang-diagnostic-error]
+> > error: unknown argument: '-mindirect-branch-register' [clang-diagnostic-error]
+> > error: unknown argument: '-mindirect-branch=thunk-extern'
+> > [clang-diagnostic-error]
+> > error: unknown argument: '-mno-fp-ret-in-387' [clang-diagnostic-error]
+> > error: unknown argument: '-mpreferred-stack-boundary=3' [clang-diagnostic-error]
+> > error: unknown argument: '-mskip-rax-setup' [clang-diagnostic-error]
+> >
+> > >
+> > >
+> > > I also care about stale commands
+> > > in compile_commands.json.
+> > >
+> >
+> > I agree with this point, but it's more of a bug with
+> > gen_compile_commands.py. Maybe gen_compile_commands.py
+> > could emit a warning when stale commands are detected in the
+> > .*.cmd files.
+>
+>
+> Nathan, thanks for your comments.
+>
+> I can improve this
+> so compile_commands.json contains
+> only commands from the last build.
+>
+> Working on a patch.
+>
+> --
+> Best Regards
+> Masahiro Yamada
