@@ -2,119 +2,138 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC57C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 06:57:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6777AC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 06:58:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DB8220781
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 06:57:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IGAtMYD7"
+	by mail.kernel.org (Postfix) with ESMTP id 2E01C20781
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 06:58:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597215493;
+	bh=JDo/BACFUxJcnbPKuRjxysz+ibKnzqeL4/IU1qfe/OU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=0WTgdQkQp4GNz7F2B8XQrtas1Cv7++crfZ8XXP2Yx54kpnQ8deyKZtAF0s9LLMCpX
+	 nyWHi30iSIigCqK1ab7vwqEEYjlvUijB1KIS6P1MnS47SMmmqWIZWNok3jeDxM0oq7
+	 hCX8f0eqaqhjebspR7XYcfekwA9nTxJNIdTvF6eY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbgHLG5V (ORCPT
+        id S1726798AbgHLG6M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 02:57:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33406 "EHLO
+        Wed, 12 Aug 2020 02:58:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725845AbgHLG5U (ORCPT
+        with ESMTP id S1725845AbgHLG6K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 02:57:20 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5586DC06174A;
-        Tue, 11 Aug 2020 23:57:20 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id g26so1203482qka.3;
-        Tue, 11 Aug 2020 23:57:20 -0700 (PDT)
+        Wed, 12 Aug 2020 02:58:10 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9497C06174A;
+        Tue, 11 Aug 2020 23:58:09 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id v4so1066249ljd.0;
+        Tue, 11 Aug 2020 23:58:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KI7BZp5zTttMFtGMkC+4pvOiWlHe+6AI/MPo+ZZwpas=;
-        b=IGAtMYD7zZgYB8LMAhk7w6i22UZ1mKS3toxTCnRgwlZlDNbt2AH5uAmCVCalGs/TuH
-         vWGgjRIpKmFYq8rSWP2N/hvMjZHiTNzKKqUUnvic4JwixGz8XMwl+1s6hR9cKjpu4eqM
-         h74WI72K8BSmSTVgJfDsDLyorFb8OFYAkBcWRk6vOxY0dD/xAv/bkKQdWt/QXZ66cL0K
-         gLPrZsysiCo/G1VsvRrG+wZQaNirU2VXRFtU2bqyHp89G+kHHoSd2ymDHEad3XFoc98W
-         2m3ZdMl2Hkix7L0dU3G8OYEhIN7TSH8fetXW19qEjjma/r1/IRTd2Pw1l7USMv7Il0qe
-         ce0Q==
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=JDo/BACFUxJcnbPKuRjxysz+ibKnzqeL4/IU1qfe/OU=;
+        b=mz3OVwjODnqn65vdacVrQiFPA1vOaCAoYiB5WT6oEvEd8L8Sncni3/5D68IOlz+wTW
+         HdE/UzuLQnU7UK9TUNBXbidbYiXgREpSJYrREgKn+CguVrUFT0pzK0DPQ6mYlkasmdDN
+         BGxcpOZnQIBfdkcyc2lfXiq7ZNF5gWDgDlToFroW1rCbei4t90jCT5q/qO1RPDKneC58
+         QMJHSL/vAmCs7geoIDSh8nXGj7xFZFgJl9s7xc10WmohgX+GBozBVThWQlahkx29S++7
+         gO8DDZm9Yq2xCRtxh/2+93S0cektm0qmwB54UouGs9Nv50jYSyf13idwSRRL/XDb/7ry
+         rUMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KI7BZp5zTttMFtGMkC+4pvOiWlHe+6AI/MPo+ZZwpas=;
-        b=e5kJIzp51kiF7+EkrZma1U+uO42b6O5yPjDdq6nIK1lFXFrIQdjR6u5Nmm/n7nq12A
-         AimyAgxIW75OIUuiiJHtvUIj23k52A7wSDlFscOxekDMAve10OD1F9wajZW9D38eIXjZ
-         aMjXsvPCHXVragWniDpvAZ6tbFDC9oSqEHCYK7stsZcNfIFQRCuMgkaLQRIkmTF+VyxG
-         RtrYLZB45krwCgfdyqiAX6UuWsndd7P8r+iohcfZqalbNwPaqZlUHr++ncV8301xleR1
-         dUgY0+BxbUBMuWSIlQ7WifUSDxTfa2IbbLbOYw3okA6fnDKRftccm13VPGP+sS8y2qvW
-         YZPg==
-X-Gm-Message-State: AOAM532HpfU8mz/K5efuaatJBWltqxm2Rs0FE3zU9Jmv/ipY/nkHAamS
-        GTkTcNoo+hSkhOIrY5U09A==
-X-Google-Smtp-Source: ABdhPJwh3zs4PxkbtUyTGPeIlBrP2afDgGBq7e8XCXAqWc7ixYcdf11t9i33rTTDjzueIPcl95OdKw==
-X-Received: by 2002:a37:66d7:: with SMTP id a206mr4637727qkc.495.1597215439437;
-        Tue, 11 Aug 2020 23:57:19 -0700 (PDT)
-Received: from localhost.localdomain (146-115-88-66.s3894.c3-0.sbo-ubr1.sbo.ma.cable.rcncustomer.com. [146.115.88.66])
-        by smtp.gmail.com with ESMTPSA id d124sm1263978qkg.65.2020.08.11.23.57.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Aug 2020 23:57:19 -0700 (PDT)
-From:   Peilin Ye <yepeilin.cs@gmail.com>
-Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=JDo/BACFUxJcnbPKuRjxysz+ibKnzqeL4/IU1qfe/OU=;
+        b=sAFD5aFHkxJQSL0ORSMatdKa1c3ji9VBPgcDczqG5NNSnjkvJRUzKQEfINTddC9UVx
+         ATbofgPPwC8ASkvrm0xPcgithZoUJUX9CO0z1roa8wYkqEbn0vgypQBzaYLKbgWkKOIn
+         lpnCTtb+UA5LCFeZh7ibhlZ+BVTe5I0C7O9cp70Tr0+OHDuF/e66FPddN2zMb/IrQ1hQ
+         sQHU+w//r6Eqz4OZz5B5JJ3inZga9DHpn4KHs4+xw0WBLSWeAcQ3RkE2w/BwDM/uE8pT
+         EjQp7z/x0oFIOovFCjmZPhjECCVzKi/JXc9WaHx6WCMldKInosg0MfNTZcFMLosrx8nJ
+         fcNA==
+X-Gm-Message-State: AOAM531ax39K39AX7DiCyRvc0kqSMnVq7EYS42lSLsap/UkP23+oEXuR
+        E5SWYqe/0STT6zkmJuQubQMBGTJ2ROg=
+X-Google-Smtp-Source: ABdhPJx+BrV4abo+2L2SpPIELjzqPN1tFHwc9ZdV9OZvI8hh2TNoDpuM4R8+7/Do3EaLSNt66fHsxQ==
+X-Received: by 2002:a2e:85d3:: with SMTP id h19mr5005266ljj.363.1597215488366;
+        Tue, 11 Aug 2020 23:58:08 -0700 (PDT)
+Received: from saruman ([194.34.132.58])
+        by smtp.gmail.com with ESMTPSA id k12sm238314ljh.95.2020.08.11.23.58.05
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 11 Aug 2020 23:58:07 -0700 (PDT)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     "Sandeep Maheswaram \(Temp\)" <sanm@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-fsdevel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        syzkaller-bugs@googlegroups.com, linux-kernel@vger.kernel.org
-Subject: [Linux-kernel-mentees] [PATCH] hfs, hfsplus: Fix NULL pointer dereference in hfs_find_init()
-Date:   Wed, 12 Aug 2020 02:55:56 -0400
-Message-Id: <20200812065556.869508-1-yepeilin.cs@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+Subject: Re: [PATCH v11 1/2] usb: dwc3: qcom: Add interconnect support in dwc3 driver
+In-Reply-To: <cd5c6c99-d8ee-da59-1abf-e64e5f7f6f8f@codeaurora.org>
+References: <1595869597-26049-1-git-send-email-sanm@codeaurora.org> <1595869597-26049-2-git-send-email-sanm@codeaurora.org> <20200727192050.GD3191083@google.com> <cd5c6c99-d8ee-da59-1abf-e64e5f7f6f8f@codeaurora.org>
+Date:   Wed, 12 Aug 2020 09:57:56 +0300
+Message-ID: <87v9honyff.fsf@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Prevent hfs_find_init() from dereferencing `tree` as NULL.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Reported-and-tested-by: syzbot+7ca256d0da4af073b2e2@syzkaller.appspotmail.com
-Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
----
- fs/hfs/bfind.c     | 3 +++
- fs/hfsplus/bfind.c | 3 +++
- 2 files changed, 6 insertions(+)
+"Sandeep Maheswaram (Temp)" <sanm@codeaurora.org> writes:
 
-diff --git a/fs/hfs/bfind.c b/fs/hfs/bfind.c
-index 4af318fbda77..880b7ea2c0fc 100644
---- a/fs/hfs/bfind.c
-+++ b/fs/hfs/bfind.c
-@@ -16,6 +16,9 @@ int hfs_find_init(struct hfs_btree *tree, struct hfs_find_data *fd)
- {
- 	void *ptr;
- 
-+	if (!tree)
-+		return -EINVAL;
-+
- 	fd->tree = tree;
- 	fd->bnode = NULL;
- 	ptr = kmalloc(tree->max_key_len * 2 + 4, GFP_KERNEL);
-diff --git a/fs/hfsplus/bfind.c b/fs/hfsplus/bfind.c
-index ca2ba8c9f82e..85bef3e44d7a 100644
---- a/fs/hfsplus/bfind.c
-+++ b/fs/hfsplus/bfind.c
-@@ -16,6 +16,9 @@ int hfs_find_init(struct hfs_btree *tree, struct hfs_find_data *fd)
- {
- 	void *ptr;
- 
-+	if (!tree)
-+		return -EINVAL;
-+
- 	fd->tree = tree;
- 	fd->bnode = NULL;
- 	ptr = kmalloc(tree->max_key_len * 2 + 4, GFP_KERNEL);
--- 
-2.25.1
+> Hi Felipe,
+>
+> On 7/28/2020 12:50 AM, Matthias Kaehlcke wrote:
+>> On Mon, Jul 27, 2020 at 10:36:36PM +0530, Sandeep Maheswaram wrote:
+>>> Add interconnect support in dwc3-qcom driver to vote for bus
+>>> bandwidth.
+>>>
+>>> This requires for two different paths - from USB to
+>>> DDR. The other is from APPS to USB.
+>>>
+>>> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+>>> Signed-off-by: Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+>> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+> Please ack if you are ok with this patch.
 
+What's the plan to get this upstream? Should I take dwc3-qcom patch and
+ignore the rest? Is there a hard-dependency on something else?
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl8zkvYACgkQzL64meEa
+mQbfthAArA2X5kasW3EQ1RHkC0s8Kj6X9CHWtuc7UnHOJu2ulKa5ARoXPQN8p1fd
+mY/t/GcAZzZDppRMumqRnFEqTzNlpMMjnW9drd2F6mwo5+posxbLnaeSRf+xDS5D
+/08z/fpkE5t6HVPqU/WihWTVuprRcxWVxmToP1YxYvXwfOEU/6cJfgCi2CsXp0nm
+BM7FVGkMaU6aMfB/Alp34QvT81VxTr7Ex3NJpiyHvJRsp1AT1hzTxlX7BUjj15gZ
+Qp4l/6w7OG8kqQISj/08k7ljq990ldyc+P1oHpXxF8AAUUonZHnWLzWKgpMTcfNN
+ZpqrmdHWQrtduSz8eMCOA8Sho/kM+XGkPor/p8UGV+PtArIQ392n/+/fNcWwkh8x
+yvxieFM5LoTIIEpMX9FxxMtGS0HI/n0X/AziPonfpykW1EjwvxXAutBVN7tCq+Jk
+m4aLWJzTAvCkqzZm2BvInrLJvYpRNWkHvh149FEVDENh4rTWpO9lhpOjHvmJ/2M+
+pwakvMKM2KsmKNaxTW+uVWaNe10hQZ97LN66FcaqP7omOSoXeYaC8V2vjlUSEvEH
+PVOE797mwB+vU3yiS5DyZXBinpbucGTZ7yw8Z0A6Ud/vNWAdTBEX3sBFOu8mjBSF
+z4Ji6yAJe14TzrCZSblilGQ+vOkhlAauiOTDt200wHiJgMKU7NQ=
+=km0q
+-----END PGP SIGNATURE-----
+--=-=-=--
