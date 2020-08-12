@@ -2,124 +2,363 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1BCDC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:32:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E14CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:33:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70A9D20885
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:32:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E048520885
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:33:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GBiV2Qte"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="R8cuJyRV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbgHLJcy (ORCPT
+        id S1727843AbgHLJdd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 05:32:54 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:34411 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726755AbgHLJcw (ORCPT
+        Wed, 12 Aug 2020 05:33:33 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:48410 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726618AbgHLJdd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 05:32:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597224771;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=McgSm4gZG0IJUDrzxF8YLSNKil+nQCTSx4aOJLvpZXU=;
-        b=GBiV2QtezXRBlNuQkXT6zj5dolK+YcbsxZlkQLKTJX6ZqPUuGjEQxZQ0gJv9rfuYkBjEd9
-        vfHiBg7WyE9RcULxNsD/p4nT3B2kpNsI34PzQcAuYESWdPWDBVf0e3b1dB3oEGP1r/9ron
-        kcKq0bX5wHgPNvKvZOomu2Gy+ZPHyVo=
-Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com
- [209.85.210.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-113-RlO8wxyhMMi2tpqFBOJtug-1; Wed, 12 Aug 2020 05:32:49 -0400
-X-MC-Unique: RlO8wxyhMMi2tpqFBOJtug-1
-Received: by mail-pf1-f200.google.com with SMTP id r25so1379806pfg.4
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 02:32:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=McgSm4gZG0IJUDrzxF8YLSNKil+nQCTSx4aOJLvpZXU=;
-        b=VeLn5Gb5+p8PJZBZkVVIhvGs/GEnSMjM7yYKt3kIIdb9nWIHlMA2UAGhyFiT/bR8OQ
-         t0OLA9wddtSbjFr+Y/k1aAAH6LSV5vVV6V5VZDXO0PQeQoV7wfeVb0vnb/X5lKEBP8Yt
-         Hl2I5FbKBSvaLQvLqNRohscn/elYHdrE52CoCyoi8lyI+ZTWYgPtcDMm8qAvFR4aRpzI
-         J+Z11MZb1Xbi4ohrHeMmONNQUyfNQXxuErVdktNyKMInG1cFnB+uLzEaquxIPLbd2ral
-         EBt6vm54vFCxnoFj8MCjAqbjpOsUq8VtiSzByoKGe/+VB2uyhWmCfbX/77ki/A/aYgKD
-         OgAw==
-X-Gm-Message-State: AOAM53298oQYLBtTgRo0sGoksp9SRuRk/BN777mBaNhsHPkhcAvOHrj5
-        rdylea5gijBisePY0Qxbso2KlZRgzSbe5qHv0JYUzNdaVNsum3HG2y7rnbk2ep3QqOsrtCOdplP
-        xEeUdjr+5MKgudNA6z5zVIpcE
-X-Received: by 2002:a65:614f:: with SMTP id o15mr4297313pgv.321.1597224768560;
-        Wed, 12 Aug 2020 02:32:48 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJx911sIO9/OZXyBonuONBWz+oLANJEAcEjx1Ld7BQlkUUtIu6DFXuiWv8TKBtMS/vO+GeEdAw==
-X-Received: by 2002:a65:614f:: with SMTP id o15mr4297295pgv.321.1597224768283;
-        Wed, 12 Aug 2020 02:32:48 -0700 (PDT)
-Received: from xiangao.remote.csb ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id y196sm1854702pfc.202.2020.08.12.02.32.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Aug 2020 02:32:47 -0700 (PDT)
-Date:   Wed, 12 Aug 2020 17:32:34 +0800
-From:   Gao Xiang <hsiangkao@redhat.com>
-To:     Daeho Jeong <daeho43@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com,
-        Daeho Jeong <daehojeong@google.com>
-Subject: Re: [f2fs-dev] [PATCH v3] f2fs: change virtual mapping way for
- compression pages
-Message-ID: <20200812093234.GA759@xiangao.remote.csb>
-References: <20200812051711.2147716-1-daeho43@gmail.com>
+        Wed, 12 Aug 2020 05:33:33 -0400
+Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 8190A9E7;
+        Wed, 12 Aug 2020 11:33:29 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1597224809;
+        bh=gW/RdlVLg2uDtxAk51NM9xVzGiDHLcaiEfWssaPGu3Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=R8cuJyRViMDqhxVOSXvFGMGzwC1IKoZ0dn9N0oabm5o5Vvoj7oaA7b2c/PtstwDhV
+         d1k3LCiTYTaJGhskdZxkncwpSd52mfN1KRvpacBy00tVvaNoUL77nGO2qPCRJuckNR
+         U4fdpm0x+TR5qH7ytmnHZgltKaZxVddQvIl4tKx4=
+Date:   Wed, 12 Aug 2020 12:33:15 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Algea Cao <algea.cao@rock-chips.com>
+Cc:     a.hajda@samsung.com, kuankuan.y@gmail.com, hjc@rock-chips.com,
+        tzimmermann@suse.de, dri-devel@lists.freedesktop.org,
+        sam@ravnborg.org, airlied@linux.ie, heiko@sntech.de,
+        jernej.skrabec@siol.net, laurent.pinchart+renesas@ideasonboard.com,
+        jonas@kwiboo.se, mripard@kernel.org, darekm@google.com,
+        linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, cychiang@chromium.org,
+        linux-kernel@vger.kernel.org, narmstrong@baylibre.com,
+        jbrunet@baylibre.com, maarten.lankhorst@linux.intel.com,
+        daniel@ffwll.ch
+Subject: Re: [PATCH 4/6] drm/rockchip: dw_hdmi: Add vendor hdmi properties
+Message-ID: <20200812093315.GE6057@pendragon.ideasonboard.com>
+References: <20200812083120.743-1-algea.cao@rock-chips.com>
+ <20200812083543.4231-1-algea.cao@rock-chips.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200812051711.2147716-1-daeho43@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200812083543.4231-1-algea.cao@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 02:17:11PM +0900, Daeho Jeong wrote:
-> From: Daeho Jeong <daehojeong@google.com>
-> 
-> By profiling f2fs compression works, I've found vmap() callings have
-> unexpected hikes in the execution time in our test environment and
-> those are bottlenecks of f2fs decompression path. Changing these with
-> vm_map_ram(), we can enhance f2fs decompression speed pretty much.
-> 
-> [Verification]
-> Android Pixel 3(ARM64, 6GB RAM, 128GB UFS)
-> Turned on only 0-3 little cores(at 1.785GHz)
-> 
-> dd if=/dev/zero of=dummy bs=1m count=1000
-> echo 3 > /proc/sys/vm/drop_caches
-> dd if=dummy of=/dev/zero bs=512k
-> 
-> - w/o compression -
-> 1048576000 bytes (0.9 G) copied, 2.082554 s, 480 M/s
-> 1048576000 bytes (0.9 G) copied, 2.081634 s, 480 M/s
-> 1048576000 bytes (0.9 G) copied, 2.090861 s, 478 M/s
-> 
-> - before patch -
-> 1048576000 bytes (0.9 G) copied, 7.407527 s, 135 M/s
-> 1048576000 bytes (0.9 G) copied, 7.283734 s, 137 M/s
-> 1048576000 bytes (0.9 G) copied, 7.291508 s, 137 M/s
-> 
-> - after patch -
-> 1048576000 bytes (0.9 G) copied, 1.998959 s, 500 M/s
-> 1048576000 bytes (0.9 G) copied, 1.987554 s, 503 M/s
-> 1048576000 bytes (0.9 G) copied, 1.986380 s, 503 M/s
->
+Hi Algea,
 
-The reason why I raised up this was that I once observed vmap() vs
-vm_map_ram() on arm64 kirin platform as well. it indeed had some
-impact (~10%) but not as huge as this. Anyway, such description
-with test environment looks ok.
+Thank you for the patch.
 
-Thanks,
-Gao Xiang
+On Wed, Aug 12, 2020 at 04:35:43PM +0800, Algea Cao wrote:
+> Introduce struct dw_hdmi_property_ops in plat_data to support
+> vendor hdmi property.
+> 
+> Implement hdmi vendor properties color_depth_property and
+> hdmi_output_property to config hdmi output color depth and
+> color format.
+> 
+> The property "hdmi_output_format", the possible value
+> could be:
+>          - RGB
+>          - YCBCR 444
+>          - YCBCR 422
+>          - YCBCR 420
+> 
+> Default value of the property is set to 0 = RGB, so no changes if you
+> don't set the property.
+> 
+> The property "hdmi_output_depth" possible value could be
+>          - Automatic
+>            This indicates prefer highest color depth, it is
+>            30bit on rockcip platform.
+>          - 24bit
+>          - 30bit
+> The default value of property is 24bit.
+> 
+> Signed-off-by: Algea Cao <algea.cao@rock-chips.com>
+> ---
+> 
+>  drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c | 174 ++++++++++++++++++++
+>  include/drm/bridge/dw_hdmi.h                |  22 +++
+>  2 files changed, 196 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
+> index 23de359a1dec..8f22d9a566db 100644
+> --- a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
+> +++ b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
+> @@ -52,6 +52,27 @@
+>  
+>  #define HIWORD_UPDATE(val, mask)	(val | (mask) << 16)
+>  
+> +/* HDMI output pixel format */
+> +enum drm_hdmi_output_type {
+> +	DRM_HDMI_OUTPUT_DEFAULT_RGB, /* default RGB */
+> +	DRM_HDMI_OUTPUT_YCBCR444, /* YCBCR 444 */
+> +	DRM_HDMI_OUTPUT_YCBCR422, /* YCBCR 422 */
+> +	DRM_HDMI_OUTPUT_YCBCR420, /* YCBCR 420 */
+> +	DRM_HDMI_OUTPUT_YCBCR_HQ, /* Highest subsampled YUV */
+> +	DRM_HDMI_OUTPUT_YCBCR_LQ, /* Lowest subsampled YUV */
+> +	DRM_HDMI_OUTPUT_INVALID, /* Guess what ? */
+> +};
 
- 
+Vendor-specific properties shouldn't use names starting with drm_ or
+DRM_, that's for the DRM core. But this doesn't seem specific to
+Rockchip at all, it should be a standard property. Additionally, new
+properties need to come with a userspace implementation showing their
+usage, in X.org, Weston, the Android DRM/KMS HW composer, or another
+relevant upstream project (a test tool is usually not enough).
 
+> +
+> +enum dw_hdmi_rockchip_color_depth {
+> +	ROCKCHIP_HDMI_DEPTH_8,
+> +	ROCKCHIP_HDMI_DEPTH_10,
+> +	ROCKCHIP_HDMI_DEPTH_12,
+> +	ROCKCHIP_HDMI_DEPTH_16,
+> +	ROCKCHIP_HDMI_DEPTH_420_10,
+> +	ROCKCHIP_HDMI_DEPTH_420_12,
+> +	ROCKCHIP_HDMI_DEPTH_420_16
+> +};
+> +
+>  /**
+>   * struct rockchip_hdmi_chip_data - splite the grf setting of kind of chips
+>   * @lcdsel_grf_reg: grf register offset of lcdc select
+> @@ -73,6 +94,12 @@ struct rockchip_hdmi {
+>  	struct clk *grf_clk;
+>  	struct dw_hdmi *hdmi;
+>  	struct phy *phy;
+> +
+> +	struct drm_property *color_depth_property;
+> +	struct drm_property *hdmi_output_property;
+> +
+> +	unsigned int colordepth;
+> +	enum drm_hdmi_output_type hdmi_output;
+>  };
+>  
+>  #define to_rockchip_hdmi(x)	container_of(x, struct rockchip_hdmi, x)
+> @@ -327,6 +354,150 @@ static void dw_hdmi_rockchip_genphy_disable(struct dw_hdmi *dw_hdmi, void *data)
+>  	phy_power_off(hdmi->phy);
+>  }
+>  
+> +static const struct drm_prop_enum_list color_depth_enum_list[] = {
+> +	{ 0, "Automatic" }, /* Prefer highest color depth */
+> +	{ 8, "24bit" },
+> +	{ 10, "30bit" },
+> +};
+> +
+> +static const struct drm_prop_enum_list drm_hdmi_output_enum_list[] = {
+> +	{ DRM_HDMI_OUTPUT_DEFAULT_RGB, "output_rgb" },
+> +	{ DRM_HDMI_OUTPUT_YCBCR444, "output_ycbcr444" },
+> +	{ DRM_HDMI_OUTPUT_YCBCR422, "output_ycbcr422" },
+> +	{ DRM_HDMI_OUTPUT_YCBCR420, "output_ycbcr420" },
+> +	{ DRM_HDMI_OUTPUT_YCBCR_HQ, "output_ycbcr_high_subsampling" },
+> +	{ DRM_HDMI_OUTPUT_YCBCR_LQ, "output_ycbcr_low_subsampling" },
+> +	{ DRM_HDMI_OUTPUT_INVALID, "invalid_output" },
+> +};
+> +
+> +static void
+> +dw_hdmi_rockchip_attach_properties(struct drm_connector *connector,
+> +				   unsigned int color, int version,
+> +				   void *data)
+> +{
+> +	struct rockchip_hdmi *hdmi = (struct rockchip_hdmi *)data;
+> +	struct drm_property *prop;
+> +
+> +	switch (color) {
+> +	case MEDIA_BUS_FMT_RGB101010_1X30:
+> +		hdmi->hdmi_output = DRM_HDMI_OUTPUT_DEFAULT_RGB;
+> +		hdmi->colordepth = 10;
+> +		break;
+> +	case MEDIA_BUS_FMT_YUV8_1X24:
+> +		hdmi->hdmi_output = DRM_HDMI_OUTPUT_YCBCR444;
+> +		hdmi->colordepth = 8;
+> +		break;
+> +	case MEDIA_BUS_FMT_YUV10_1X30:
+> +		hdmi->hdmi_output = DRM_HDMI_OUTPUT_YCBCR444;
+> +		hdmi->colordepth = 10;
+> +		break;
+> +	case MEDIA_BUS_FMT_UYVY10_1X20:
+> +		hdmi->hdmi_output = DRM_HDMI_OUTPUT_YCBCR422;
+> +		hdmi->colordepth = 10;
+> +		break;
+> +	case MEDIA_BUS_FMT_UYVY8_1X16:
+> +		hdmi->hdmi_output = DRM_HDMI_OUTPUT_YCBCR422;
+> +		hdmi->colordepth = 8;
+> +		break;
+> +	case MEDIA_BUS_FMT_UYYVYY8_0_5X24:
+> +		hdmi->hdmi_output = DRM_HDMI_OUTPUT_YCBCR420;
+> +		hdmi->colordepth = 8;
+> +		break;
+> +	case MEDIA_BUS_FMT_UYYVYY10_0_5X30:
+> +		hdmi->hdmi_output = DRM_HDMI_OUTPUT_YCBCR420;
+> +		hdmi->colordepth = 10;
+> +		break;
+> +	default:
+> +		hdmi->hdmi_output = DRM_HDMI_OUTPUT_DEFAULT_RGB;
+> +		hdmi->colordepth = 8;
+> +	}
+> +
+> +	prop = drm_property_create_enum(connector->dev, 0,
+> +					"hdmi_output_depth",
+> +					color_depth_enum_list,
+> +					ARRAY_SIZE(color_depth_enum_list));
+> +	if (prop) {
+> +		hdmi->color_depth_property = prop;
+> +		drm_object_attach_property(&connector->base, prop, 0);
+> +	}
+> +
+> +	prop = drm_property_create_enum(connector->dev, 0, "hdmi_output_format",
+> +					drm_hdmi_output_enum_list,
+> +					ARRAY_SIZE(drm_hdmi_output_enum_list));
+> +	if (prop) {
+> +		hdmi->hdmi_output_property = prop;
+> +		drm_object_attach_property(&connector->base, prop, 0);
+> +	}
+> +}
+> +
+> +static void
+> +dw_hdmi_rockchip_destroy_properties(struct drm_connector *connector,
+> +				    void *data)
+> +{
+> +	struct rockchip_hdmi *hdmi = (struct rockchip_hdmi *)data;
+> +
+> +	if (hdmi->color_depth_property) {
+> +		drm_property_destroy(connector->dev,
+> +				     hdmi->color_depth_property);
+> +		hdmi->color_depth_property = NULL;
+> +	}
+> +
+> +	if (hdmi->hdmi_output_property) {
+> +		drm_property_destroy(connector->dev,
+> +				     hdmi->hdmi_output_property);
+> +		hdmi->hdmi_output_property = NULL;
+> +	}
+> +}
+> +
+> +static int
+> +dw_hdmi_rockchip_set_property(struct drm_connector *connector,
+> +			      struct drm_connector_state *state,
+> +			      struct drm_property *property,
+> +			      u64 val,
+> +			      void *data)
+> +{
+> +	struct rockchip_hdmi *hdmi = (struct rockchip_hdmi *)data;
+> +
+> +	if (property == hdmi->color_depth_property) {
+> +		hdmi->colordepth = val;
+> +		return 0;
+> +	} else if (property == hdmi->hdmi_output_property) {
+> +		hdmi->hdmi_output = val;
+> +		return 0;
+> +	}
+> +
+> +	DRM_ERROR("failed to set rockchip hdmi connector property\n");
+> +	return -EINVAL;
+> +}
+> +
+> +static int
+> +dw_hdmi_rockchip_get_property(struct drm_connector *connector,
+> +			      const struct drm_connector_state *state,
+> +			      struct drm_property *property,
+> +			      u64 *val,
+> +			      void *data)
+> +{
+> +	struct rockchip_hdmi *hdmi = (struct rockchip_hdmi *)data;
+> +
+> +	if (property == hdmi->color_depth_property) {
+> +		*val = hdmi->colordepth;
+> +		return 0;
+> +	} else if (property == hdmi->hdmi_output_property) {
+> +		*val = hdmi->hdmi_output;
+> +		return 0;
+> +	}
+> +
+> +	DRM_ERROR("failed to get rockchip hdmi connector property\n");
+> +	return -EINVAL;
+> +}
+> +
+> +static const struct dw_hdmi_property_ops dw_hdmi_rockchip_property_ops = {
+> +	.attach_properties	= dw_hdmi_rockchip_attach_properties,
+> +	.destroy_properties	= dw_hdmi_rockchip_destroy_properties,
+> +	.set_property		= dw_hdmi_rockchip_set_property,
+> +	.get_property		= dw_hdmi_rockchip_get_property,
+> +};
+> +
+>  static void dw_hdmi_rk3228_setup_hpd(struct dw_hdmi *dw_hdmi, void *data)
+>  {
+>  	struct rockchip_hdmi *hdmi = (struct rockchip_hdmi *)data;
+> @@ -511,6 +682,9 @@ static int dw_hdmi_rockchip_bind(struct device *dev, struct device *master,
+>  	hdmi->dev = &pdev->dev;
+>  	hdmi->chip_data = plat_data->phy_data;
+>  	plat_data->phy_data = hdmi;
+> +
+> +	plat_data->property_ops = &dw_hdmi_rockchip_property_ops;
+> +
+>  	encoder = &hdmi->encoder;
+>  
+>  	encoder->possible_crtcs = drm_of_find_possible_crtcs(drm, dev->of_node);
+> diff --git a/include/drm/bridge/dw_hdmi.h b/include/drm/bridge/dw_hdmi.h
+> index ea34ca146b82..dc561ebe7a9b 100644
+> --- a/include/drm/bridge/dw_hdmi.h
+> +++ b/include/drm/bridge/dw_hdmi.h
+> @@ -6,6 +6,7 @@
+>  #ifndef __DW_HDMI__
+>  #define __DW_HDMI__
+>  
+> +#include <drm/drm_property.h>
+>  #include <sound/hdmi-codec.h>
+>  
+>  struct drm_display_info;
+> @@ -123,6 +124,24 @@ struct dw_hdmi_phy_ops {
+>  	void (*setup_hpd)(struct dw_hdmi *hdmi, void *data);
+>  };
+>  
+> +struct dw_hdmi_property_ops {
+> +	void (*attach_properties)(struct drm_connector *connector,
+> +				  unsigned int color, int version,
+> +				  void *data);
+> +	void (*destroy_properties)(struct drm_connector *connector,
+> +				   void *data);
+> +	int (*set_property)(struct drm_connector *connector,
+> +			    struct drm_connector_state *state,
+> +			    struct drm_property *property,
+> +			    u64 val,
+> +			    void *data);
+> +	int (*get_property)(struct drm_connector *connector,
+> +			    const struct drm_connector_state *state,
+> +			    struct drm_property *property,
+> +			    u64 *val,
+> +			    void *data);
+> +};
+> +
+>  struct dw_hdmi_plat_data {
+>  	struct regmap *regm;
+>  
+> @@ -141,6 +160,9 @@ struct dw_hdmi_plat_data {
+>  					   const struct drm_display_info *info,
+>  					   const struct drm_display_mode *mode);
+>  
+> +	/* Vendor Property support */
+> +	const struct dw_hdmi_property_ops *property_ops;
+> +
+>  	/* Vendor PHY support */
+>  	const struct dw_hdmi_phy_ops *phy_ops;
+>  	const char *phy_name;
+
+-- 
+Regards,
+
+Laurent Pinchart
