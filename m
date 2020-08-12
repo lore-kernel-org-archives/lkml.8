@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8F31C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 06:32:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AD73C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 06:32:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CABB20786
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 06:32:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B4F920781
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 06:32:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e3L1nvYl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AYxms+aH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbgHLGcA (ORCPT
+        id S1726996AbgHLGcD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 02:32:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57724 "EHLO
+        Wed, 12 Aug 2020 02:32:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57718 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726870AbgHLGbu (ORCPT
+        with ESMTP id S1726819AbgHLGbs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 02:31:50 -0400
-Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4AD1C061787;
-        Tue, 11 Aug 2020 23:31:49 -0700 (PDT)
-Received: by mail-wm1-x334.google.com with SMTP id p14so795588wmg.1;
-        Tue, 11 Aug 2020 23:31:49 -0700 (PDT)
+        Wed, 12 Aug 2020 02:31:48 -0400
+Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F124EC06178B;
+        Tue, 11 Aug 2020 23:31:47 -0700 (PDT)
+Received: by mail-wr1-x429.google.com with SMTP id a15so910481wrh.10;
+        Tue, 11 Aug 2020 23:31:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=D46f/adlCIjpniP6tnf1wrpS0UQoP11QhV6d5bOfafw=;
-        b=e3L1nvYltlsN4gX2Mr5cVOySM3MrqG6k8RQGX+kKqEF0D5+2dgnQKPz/El9M9Lh6yI
-         JrdjMZ39Vwkw8AoCPSDEPgLwVrO76xp7tEiCM+l+iQawRZgCsHGX5fFlksE+f0rWPO4J
-         P52QlD69tZA61uaq7+V8/zSEnOFsjBpdoJD5AdNxsBpRA0tyooRp1ci6c55aX8cL8H1m
-         HoaTZb0VnefSoyWzqZ3rRWLNBlyaDWkqh9jEmMtTE/0T/eiNq8FZB0vX1aF4FxjZ3uop
-         cn52URI5463elHXI10dcBxaDSPbr7Ge1tXpB/EEyS8Wfch7PxFQ2vU7sSILteCueqLup
-         1HUQ==
+        bh=zxUxT0dnx3HVpCzQf3wWbQyXRNb4CKXHAPGk5+OKM58=;
+        b=AYxms+aHCUosJ3SHA2cHns3KhVnqeg6VXSY/vck5ur//Er8U0spDXqbHspOkSZMXsE
+         mOww/zzkkSRDHf9hzJ4a421dnDPMVJ6sWzj4oAMyy9owGi/4raLrXoM8bVDDWLjIOB39
+         vT92K1/Uw6/BgB6O3LFISVPLa6VR/YvWHr1syV0UF9BfsHsPyWcB0/H5F9tT3o4O5caS
+         3QjH/N5G2CKLxSWdpS0wIgcD3aSrzt8mqShGX4QN+JXj1uQAQ7oDyDFgMVLYwa5Q+v/V
+         fTZQkl6DCd0p0VLbzwmMVkttH1mZz+qyxvxy2xrs4CMQmzo45Vf6lb2WEHvau+ROrUO/
+         ZzFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=D46f/adlCIjpniP6tnf1wrpS0UQoP11QhV6d5bOfafw=;
-        b=XEOwNVmDgx+4SqHPLVrsBUcIuj3JBEYf6gBpC1QCvrpmg4NX6/w/NUOHstVt3pPpRE
-         1MHPbkjcEpukiiJjPnymLJxFkHkjiaTErK6mQdQ+dvmpFwi8FF3fgHt/MiMqU2kbsfEg
-         w7EI6PdenUKEYh5HbavWQHrJ0n/Ty/ZInArXHkC/CqE/RGT9XLcYDsKSaoy3Gi3b/r9U
-         vh0k+hwnd/eIQHuRIUeatm3z5WYgKJsK7201VQ56oXRR2nD5dVU2mW689z6u1Yif1kxE
-         ZQzk1Grjjz6Y/UOfNqPUHpP7My1skKD8MptWlwhgt0Mn7q01ZrCu/USbWQeTqR73ymMz
-         q3mA==
-X-Gm-Message-State: AOAM530POLOGFBzRnayrH8Zlw9yjKVA3W5Z2WQfJZDk5jnnPmqd0yYHT
-        Zt7hqvTLmO2jsPBRVVd+veE=
-X-Google-Smtp-Source: ABdhPJxFgsTbtzJqFrj0kqnGseZ/NPnoF9FvnAwozcsmV6x+B1pFI+zEeOpaa/xdQDhQ4a3QcJsJRg==
-X-Received: by 2002:a1c:7d55:: with SMTP id y82mr6926999wmc.186.1597213907659;
-        Tue, 11 Aug 2020 23:31:47 -0700 (PDT)
+        bh=zxUxT0dnx3HVpCzQf3wWbQyXRNb4CKXHAPGk5+OKM58=;
+        b=BeaF+gceOzO4PTUaqbPsGx8DDDZm73ybBrqPVUKImxnjfIXC0wK/m7EDE8Qjke9Ts5
+         b0KPtsMKwAxaP997JG6ebaUkU6BMUylrre9J3KWPHoqZuzBlWoC2sVCVw3iyu2SskNTB
+         h0noNow6lNGIKjbj9Nccef6wL5WXCNJ8ECcGyGDUFue2H/eKDqX2h2uwV6c3fvJqzLKn
+         CqxQiWv3gZ5sGFdcLNFDIh03n2d7G+hXSItutp6Y5/euV1KTG7op7BwrolRuZbHGAADV
+         sk0VfeL+9JEZDpAFW3LOI3oGeRBLL0BE92jY/O87+OBRonuRi72N8px45zRMWRZtLAmS
+         LKvg==
+X-Gm-Message-State: AOAM532fjVThBE5SVrUKIzSOdRyETdmCTDBcGJirPNg+J8E/595EgCUn
+        hmB4yQ6cR1uw5whuWWkZ3fg=
+X-Google-Smtp-Source: ABdhPJzWHV+/wfYN9iZPP0h+9Qc7PEzVok4j8yvFv/Pz0eYe6ojo9aLBIMfEqWsLebRnSI5FCgv4tA==
+X-Received: by 2002:adf:e911:: with SMTP id f17mr31919274wrm.397.1597213906593;
+        Tue, 11 Aug 2020 23:31:46 -0700 (PDT)
 Received: from skynet.lan (88.red-83-49-60.dynamicip.rima-tde.net. [83.49.60.88])
-        by smtp.gmail.com with ESMTPSA id m16sm2149945wrr.71.2020.08.11.23.31.46
+        by smtp.gmail.com with ESMTPSA id m16sm2149945wrr.71.2020.08.11.23.31.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Aug 2020 23:31:47 -0700 (PDT)
+        Tue, 11 Aug 2020 23:31:46 -0700 (PDT)
 From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
         <noltari@gmail.com>
 To:     f.fainelli@gmail.com, robh+dt@kernel.org,
@@ -68,9 +68,9 @@ To:     f.fainelli@gmail.com, robh+dt@kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
         <noltari@gmail.com>
-Subject: [PATCH 14/14] mips: bmips: bcm63268: include and use dt-bindings
-Date:   Wed, 12 Aug 2020 08:31:29 +0200
-Message-Id: <20200812063129.361862-15-noltari@gmail.com>
+Subject: [PATCH 13/14] mips: bmips: bcm6368: include and use dt-bindings
+Date:   Wed, 12 Aug 2020 08:31:28 +0200
+Message-Id: <20200812063129.361862-14-noltari@gmail.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200812063129.361862-1-noltari@gmail.com>
 References: <20200812063129.361862-1-noltari@gmail.com>
@@ -86,58 +86,58 @@ Now that there are proper device tree bindings we can start using them.
 
 Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
 ---
- arch/mips/boot/dts/brcm/bcm63268.dtsi | 12 ++++++++----
+ arch/mips/boot/dts/brcm/bcm6368.dtsi | 12 ++++++++----
  1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/arch/mips/boot/dts/brcm/bcm63268.dtsi b/arch/mips/boot/dts/brcm/bcm63268.dtsi
-index beec24145af7..17d744db8211 100644
---- a/arch/mips/boot/dts/brcm/bcm63268.dtsi
-+++ b/arch/mips/boot/dts/brcm/bcm63268.dtsi
+diff --git a/arch/mips/boot/dts/brcm/bcm6368.dtsi b/arch/mips/boot/dts/brcm/bcm6368.dtsi
+index 449c167dd892..62599d4e6abe 100644
+--- a/arch/mips/boot/dts/brcm/bcm6368.dtsi
++++ b/arch/mips/boot/dts/brcm/bcm6368.dtsi
 @@ -1,4 +1,8 @@
  // SPDX-License-Identifier: GPL-2.0
 +
-+#include "dt-bindings/clock/bcm63268-clock.h"
-+#include "dt-bindings/interrupt-controller/bcm63268-interrupt-controller.h"
++#include "dt-bindings/clock/bcm6368-clock.h"
++#include "dt-bindings/interrupt-controller/bcm6368-interrupt-controller.h"
 +
  / {
  	#address-cells = <1>;
  	#size-cells = <1>;
-@@ -87,7 +91,7 @@ uart0: serial@10000180 {
- 			reg = <0x10000180 0x18>;
+@@ -94,7 +98,7 @@ uart0: serial@10000100 {
+ 			compatible = "brcm,bcm6345-uart";
+ 			reg = <0x10000100 0x18>;
+ 			interrupt-parent = <&periph_intc>;
+-			interrupts = <2>;
++			interrupts = <BCM6368_IRQ_UART0>;
+ 			clocks = <&periph_clk>;
+ 			clock-names = "refclk";
+ 			status = "disabled";
+@@ -104,7 +108,7 @@ uart1: serial@10000120 {
+ 			compatible = "brcm,bcm6345-uart";
+ 			reg = <0x10000120 0x18>;
+ 			interrupt-parent = <&periph_intc>;
+-			interrupts = <3>;
++			interrupts = <BCM6368_IRQ_UART1>;
+ 			clocks = <&periph_clk>;
+ 			clock-names = "refclk";
+ 			status = "disabled";
+@@ -115,7 +119,7 @@ ehci: usb@10001500 {
+ 			reg = <0x10001500 0x100>;
+ 			big-endian;
+ 			interrupt-parent = <&periph_intc>;
+-			interrupts = <7>;
++			interrupts = <BCM6368_IRQ_EHCI>;
+ 			status = "disabled";
+ 		};
  
+@@ -125,7 +129,7 @@ ohci: usb@10001600 {
+ 			big-endian;
+ 			no-big-frame-no;
  			interrupt-parent = <&periph_intc>;
 -			interrupts = <5>;
-+			interrupts = <BCM63268_IRQ_UART0>;
- 
- 			clocks = <&periph_clk>;
- 			clock-names = "refclk";
-@@ -100,7 +104,7 @@ uart1: serial@100001a0 {
- 			reg = <0x100001a0 0x18>;
- 
- 			interrupt-parent = <&periph_intc>;
--			interrupts = <34>;
-+			interrupts = <BCM63268_IRQ_UART1>;
- 
- 			clocks = <&periph_clk>;
- 			clock-names = "refclk";
-@@ -123,7 +127,7 @@ ehci: usb@10002500 {
- 			big-endian;
- 
- 			interrupt-parent = <&periph_intc>;
--			interrupts = <10>;
-+			interrupts = <BCM63268_IRQ_EHCI>;
- 
++			interrupts = <BCM6368_IRQ_OHCI>;
  			status = "disabled";
  		};
-@@ -135,7 +139,7 @@ ohci: usb@10002600 {
- 			no-big-frame-no;
- 
- 			interrupt-parent = <&periph_intc>;
--			interrupts = <9>;
-+			interrupts = <BCM63268_IRQ_OHCI>;
- 
- 			status = "disabled";
- 		};
+ 	};
 -- 
 2.28.0
 
