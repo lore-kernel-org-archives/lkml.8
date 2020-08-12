@@ -6,225 +6,152 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85230C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:06:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 441C9C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:06:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 623BF2080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:06:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B6002080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:06:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728037AbgHLMG1 (ORCPT
+        id S1728087AbgHLMGv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 08:06:27 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:62924 "EHLO pegase1.c-s.fr"
+        Wed, 12 Aug 2020 08:06:51 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:19245 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727961AbgHLMGH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 08:06:07 -0400
+        id S1727976AbgHLMGL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 08:06:11 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4BRT1l6vpmzB09Zh;
-        Wed, 12 Aug 2020 14:06:03 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 4BRT1q2fXnzB09Zm;
+        Wed, 12 Aug 2020 14:06:07 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id f5S-0MMG1XSQ; Wed, 12 Aug 2020 14:06:03 +0200 (CEST)
+        with ESMTP id Cbs9yYywExs1; Wed, 12 Aug 2020 14:06:07 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4BRT1l5yQDzB09Zf;
-        Wed, 12 Aug 2020 14:06:03 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4BRT1q1s3jzB09Zf;
+        Wed, 12 Aug 2020 14:06:07 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 479288B828;
-        Wed, 12 Aug 2020 14:06:05 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 836C68B826;
+        Wed, 12 Aug 2020 14:06:08 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 9-76IkLFPNEl; Wed, 12 Aug 2020 14:06:05 +0200 (CEST)
+        with ESMTP id zXOsF_Bo41Q5; Wed, 12 Aug 2020 14:06:08 +0200 (CEST)
 Received: from po17688vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id EEEA08B7FC;
-        Wed, 12 Aug 2020 14:06:04 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1AACE8B7FC;
+        Wed, 12 Aug 2020 14:06:08 +0200 (CEST)
 Received: by po17688vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id D192A65C34; Wed, 12 Aug 2020 12:06:04 +0000 (UTC)
-Message-Id: <7f4b7bd7c7a62f72feb5e32c8e4250315a1a65e5.1597233555.git.christophe.leroy@csgroup.eu>
+        id F0C5D65C34; Wed, 12 Aug 2020 12:06:07 +0000 (UTC)
+Message-Id: <cbba9be0a6a69984b37ba023de38be362fa7bc0d.1597233555.git.christophe.leroy@csgroup.eu>
 In-Reply-To: <cover.1597233555.git.christophe.leroy@csgroup.eu>
 References: <cover.1597233555.git.christophe.leroy@csgroup.eu>
 From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [RFC PATCH v1 13/19] powerpc/signal32: Create 'unsafe' versions of
- copy_[ck][fpr/vsx]_to_user()
+Subject: [RFC PATCH v1 16/19] powerpc/signal32: Switch handle_rt_signal32() to
+ user_access_begin() logic
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>, ldv@altlinux.org,
         viro@zeniv.linux.org.uk
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Wed, 12 Aug 2020 12:06:04 +0000 (UTC)
+Date:   Wed, 12 Aug 2020 12:06:07 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For the non VSX version, that's trivial. Just use unsafe_copy_to_user()
-instead of __copy_to_user().
-
-For the VSX version, remove the intermediate step through a buffer and
-use unsafe_put_user() directly. This generates a far smaller code which
-is acceptable to inline, see below:
-
-Standard VSX version:
-
-0000000000000000 <.copy_fpr_to_user>:
-   0:	7c 08 02 a6 	mflr    r0
-   4:	fb e1 ff f8 	std     r31,-8(r1)
-   8:	39 00 00 20 	li      r8,32
-   c:	39 24 0b 80 	addi    r9,r4,2944
-  10:	7d 09 03 a6 	mtctr   r8
-  14:	f8 01 00 10 	std     r0,16(r1)
-  18:	f8 21 fe 71 	stdu    r1,-400(r1)
-  1c:	39 41 00 68 	addi    r10,r1,104
-  20:	e9 09 00 00 	ld      r8,0(r9)
-  24:	39 4a 00 08 	addi    r10,r10,8
-  28:	39 29 00 10 	addi    r9,r9,16
-  2c:	f9 0a 00 00 	std     r8,0(r10)
-  30:	42 00 ff f0 	bdnz    20 <.copy_fpr_to_user+0x20>
-  34:	e9 24 0d 80 	ld      r9,3456(r4)
-  38:	3d 42 00 00 	addis   r10,r2,0
-			3a: R_PPC64_TOC16_HA	.toc
-  3c:	eb ea 00 00 	ld      r31,0(r10)
-			3e: R_PPC64_TOC16_LO_DS	.toc
-  40:	f9 21 01 70 	std     r9,368(r1)
-  44:	e9 3f 00 00 	ld      r9,0(r31)
-  48:	81 29 00 20 	lwz     r9,32(r9)
-  4c:	2f 89 00 00 	cmpwi   cr7,r9,0
-  50:	40 9c 00 18 	bge     cr7,68 <.copy_fpr_to_user+0x68>
-  54:	4c 00 01 2c 	isync
-  58:	3d 20 40 00 	lis     r9,16384
-  5c:	79 29 07 c6 	rldicr  r9,r9,32,31
-  60:	7d 3d 03 a6 	mtspr   29,r9
-  64:	4c 00 01 2c 	isync
-  68:	38 a0 01 08 	li      r5,264
-  6c:	38 81 00 70 	addi    r4,r1,112
-  70:	48 00 00 01 	bl      70 <.copy_fpr_to_user+0x70>
-			70: R_PPC64_REL24	.__copy_tofrom_user
-  74:	60 00 00 00 	nop
-  78:	e9 3f 00 00 	ld      r9,0(r31)
-  7c:	81 29 00 20 	lwz     r9,32(r9)
-  80:	2f 89 00 00 	cmpwi   cr7,r9,0
-  84:	40 9c 00 18 	bge     cr7,9c <.copy_fpr_to_user+0x9c>
-  88:	4c 00 01 2c 	isync
-  8c:	39 20 ff ff 	li      r9,-1
-  90:	79 29 00 44 	rldicr  r9,r9,0,1
-  94:	7d 3d 03 a6 	mtspr   29,r9
-  98:	4c 00 01 2c 	isync
-  9c:	38 21 01 90 	addi    r1,r1,400
-  a0:	e8 01 00 10 	ld      r0,16(r1)
-  a4:	eb e1 ff f8 	ld      r31,-8(r1)
-  a8:	7c 08 03 a6 	mtlr    r0
-  ac:	4e 80 00 20 	blr
-
-'unsafe' simulated VSX version (The ... are only nops) using
-unsafe_copy_fpr_to_user() macro:
-
-unsigned long copy_fpr_to_user(void __user *to,
-			       struct task_struct *task)
-{
-	unsafe_copy_fpr_to_user(to, task, failed);
-	return 0;
-failed:
-	return 1;
-}
-
-0000000000000000 <.copy_fpr_to_user>:
-   0:	39 00 00 20 	li      r8,32
-   4:	39 44 0b 80 	addi    r10,r4,2944
-   8:	7d 09 03 a6 	mtctr   r8
-   c:	7c 69 1b 78 	mr      r9,r3
-...
-  20:	e9 0a 00 00 	ld      r8,0(r10)
-  24:	f9 09 00 00 	std     r8,0(r9)
-  28:	39 4a 00 10 	addi    r10,r10,16
-  2c:	39 29 00 08 	addi    r9,r9,8
-  30:	42 00 ff f0 	bdnz    20 <.copy_fpr_to_user+0x20>
-  34:	e9 24 0d 80 	ld      r9,3456(r4)
-  38:	f9 23 01 00 	std     r9,256(r3)
-  3c:	38 60 00 00 	li      r3,0
-  40:	4e 80 00 20 	blr
-...
-  50:	38 60 00 01 	li      r3,1
-  54:	4e 80 00 20 	blr
-
 Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 ---
- arch/powerpc/kernel/signal.h | 47 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
+ arch/powerpc/kernel/signal_32.c | 47 +++++++++++++++++++++------------
+ 1 file changed, 30 insertions(+), 17 deletions(-)
 
-diff --git a/arch/powerpc/kernel/signal.h b/arch/powerpc/kernel/signal.h
-index f610cfafa478..abe570f06c12 100644
---- a/arch/powerpc/kernel/signal.h
-+++ b/arch/powerpc/kernel/signal.h
-@@ -32,7 +32,49 @@ unsigned long copy_fpr_to_user(void __user *to, struct task_struct *task);
- unsigned long copy_ckfpr_to_user(void __user *to, struct task_struct *task);
- unsigned long copy_fpr_from_user(struct task_struct *task, void __user *from);
- unsigned long copy_ckfpr_from_user(struct task_struct *task, void __user *from);
-+
-+#define unsafe_copy_fpr_to_user(to, task, label)	do {		\
-+	u64 __user *buf = (u64 __user *)to;				\
-+	int i;								\
-+									\
-+	for (i = 0; i < ELF_NFPREG - 1 ; i++)				\
-+		unsafe_put_user(task->thread.TS_FPR(i), &buf[i], label);\
-+	unsafe_put_user(task->thread.fp_state.fpscr, &buf[i], label);	\
-+} while (0)
-+
-+#define unsafe_copy_vsx_to_user(to, task, label)	do {		\
-+	u64 __user *buf = (u64 __user *)to;				\
-+	int i;								\
-+									\
-+	for (i = 0; i < ELF_NVSRHALFREG ; i++)				\
-+		unsafe_put_user(task->thread.fp_state.fpr[i][TS_VSRLOWOFFSET], \
-+				&buf[i], label);\
-+} while (0)
+diff --git a/arch/powerpc/kernel/signal_32.c b/arch/powerpc/kernel/signal_32.c
+index 4ea83578ba9d..d03ba3d8eb68 100644
+--- a/arch/powerpc/kernel/signal_32.c
++++ b/arch/powerpc/kernel/signal_32.c
+@@ -58,8 +58,6 @@
+ #define mcontext	mcontext32
+ #define ucontext	ucontext32
+ 
+-#define __save_altstack __compat_save_altstack
+-
+ /*
+  * Userspace code may pass a ucontext which doesn't include VSX added
+  * at the end.  We need to check for this case.
+@@ -797,16 +795,36 @@ int handle_rt_signal32(struct ksignal *ksig, sigset_t *oldset,
+ 	/* Set up Signal Frame */
+ 	/* Put a Real Time Context onto stack */
+ 	rt_sf = get_sigframe(ksig, tsk, sizeof(*rt_sf), 1);
+-	if (!access_ok(rt_sf, sizeof(*rt_sf)))
++	if (!user_write_access_begin(rt_sf, sizeof(*rt_sf)))
+ 		goto badframe;
+ 
+ 	/* Put the siginfo & fill in most of the ucontext */
+-	if (copy_siginfo_to_user(&rt_sf->info, &ksig->info)
+-	    || __put_user(0, &rt_sf->uc.uc_flags)
+-	    || __save_altstack(&rt_sf->uc.uc_stack, regs->gpr[1])
+-	    || __put_user(to_user_ptr(&rt_sf->uc.uc_mcontext),
+-		    &rt_sf->uc.uc_regs)
+-	    || put_sigset_t(&rt_sf->uc.uc_sigmask, oldset))
++	unsafe_put_user(0, &rt_sf->uc.uc_flags, failed);
++#ifdef CONFIG_PPC64
++	unsafe_compat_save_altstack(&rt_sf->uc.uc_stack, regs->gpr[1], failed);
++#else
++	unsafe_save_altstack(&rt_sf->uc.uc_stack, regs->gpr[1], failed);
++#endif
++	unsafe_put_user(to_user_ptr(&rt_sf->uc.uc_mcontext), &rt_sf->uc.uc_regs, failed);
 +
 +#ifdef CONFIG_PPC_TRANSACTIONAL_MEM
-+#define unsafe_copy_ckfpr_to_user(to, task, label)	do {		\
-+	u64 __user *buf = (u64 __user *)to;				\
-+	int i;								\
-+									\
-+	for (i = 0; i < ELF_NFPREG - 1 ; i++)				\
-+		unsafe_put_user(task->thread.TS_CKFPR(i), &buf[i], label);\
-+	unsafe_put_user(task->thread.ckfp_state.fpscr, &buf[i], label);	\
-+} while (0)
-+
-+#define unsafe_copy_ckvsx_to_user(to, task, label)	do {		\
-+	u64 __user *buf = (u64 __user *)to;				\
-+	int i;								\
-+									\
-+	for (i = 0; i < ELF_NVSRHALFREG ; i++)				\
-+		unsafe_put_user(task->thread.ckfp_state.fpr[i][TS_VSRLOWOFFSET], \
-+				&buf[i], label);\
-+} while (0)
++	tm_frame = &rt_sf->uc_transact.uc_mcontext;
++	if (MSR_TM_ACTIVE(msr)) {
++		unsafe_put_user((unsigned long)&rt_sf->uc_transact,
++				&rt_sf->uc.uc_link, failed);
++		unsafe_put_user((unsigned long)tm_frame,
++				&rt_sf->uc_transact.uc_regs, failed);
++	}
++	else
 +#endif
- #elif defined(CONFIG_PPC_FPU_REGS)
++	{
++		unsafe_put_user(0, &rt_sf->uc.uc_link, failed);
++	}
++	user_write_access_end();
 +
-+#define unsafe_copy_fpr_to_user(to, task, label)	\
-+	unsafe_copy_to_user(to, task->thread.fp_state.fpr, ELF_NFPREG * sizeof(double), label)
-+
- static inline unsigned long
- copy_fpr_to_user(void __user *to, struct task_struct *task)
- {
-@@ -48,6 +90,9 @@ copy_fpr_from_user(struct task_struct *task, void __user *from)
- }
++	if (put_sigset_t(&rt_sf->uc.uc_sigmask, oldset))
++		goto badframe;
++	if (copy_siginfo_to_user(&rt_sf->info, &ksig->info))
+ 		goto badframe;
+ 
+ 	/* Save user registers on the stack */
+@@ -820,21 +838,13 @@ int handle_rt_signal32(struct ksignal *ksig, sigset_t *oldset,
+ 	}
  
  #ifdef CONFIG_PPC_TRANSACTIONAL_MEM
-+#define unsafe_copy_ckfpr_to_user(to, task, label)	\
-+	unsafe_copy_to_user(to, task->thread.ckfp_state.fpr, ELF_NFPREG * sizeof(double), label)
+-	tm_frame = &rt_sf->uc_transact.uc_mcontext;
+ 	if (MSR_TM_ACTIVE(msr)) {
+-		if (__put_user((unsigned long)&rt_sf->uc_transact,
+-			       &rt_sf->uc.uc_link) ||
+-		    __put_user((unsigned long)tm_frame,
+-			       &rt_sf->uc_transact.uc_regs))
+-			goto badframe;
+ 		if (save_tm_user_regs(regs, frame, tm_frame, sigret, msr))
+ 			goto badframe;
+ 	}
+ 	else
+ #endif
+ 	{
+-		if (__put_user(0, &rt_sf->uc.uc_link))
+-			goto badframe;
+ 		if (save_user_regs(regs, frame, tm_frame, sigret, 1))
+ 			goto badframe;
+ 	}
+@@ -861,6 +871,9 @@ int handle_rt_signal32(struct ksignal *ksig, sigset_t *oldset,
+ 	regs->msr |= (MSR_KERNEL & MSR_LE);
+ 	return 0;
+ 
++failed:
++	user_write_access_end();
 +
- inline unsigned long copy_ckfpr_to_user(void __user *to, struct task_struct *task)
- {
- 	return __copy_to_user(to, task->thread.ckfp_state.fpr,
-@@ -62,6 +107,8 @@ copy_ckfpr_from_user(struct task_struct *task, void __user *from)
- }
- #endif /* CONFIG_PPC_TRANSACTIONAL_MEM */
- #else
-+#define unsafe_copy_fpr_to_user(to, task, label) do { } while (0)
-+
- static inline unsigned long
- copy_fpr_to_user(void __user *to, struct task_struct *task)
- {
+ badframe:
+ 	signal_fault(tsk, regs, "handle_rt_signal32", rt_sf);
+ 
 -- 
 2.25.0
 
