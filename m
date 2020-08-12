@@ -2,102 +2,119 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 984A2C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 02:06:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF257C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 02:09:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6AD4E206DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 02:06:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9588206DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 02:09:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hRwaGE62"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JbNAZH2D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbgHLCGQ (ORCPT
+        id S1726505AbgHLCJf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 22:06:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45308 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726143AbgHLCGP (ORCPT
+        Tue, 11 Aug 2020 22:09:35 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:21475 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726255AbgHLCJf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 22:06:15 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75C01C06174A
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 19:06:15 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id b22so464467oic.8
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 19:06:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lbC/xnk+zoIlMr8AR4zX7C8E5HyHt5wuUCG1GuQ26BI=;
-        b=hRwaGE62EJNwc8VprIWo2PXefmpSvqiIQ71e1bUZyJmlKFzMCBnlDmvJMTCr053w7Z
-         Eq0SMtGmiJocJ/qjUXdNWxaJDGT/SKGCBFQ3I/1sJxQgpkT8wJQ+3s6tJsTq9OH2PQ5e
-         rmGgfhGza3n/PNEgW0nbBGZHNH9f95SXLDRWhkKJ+Y0J9a4ouwjE5/762kLRnkbEwfxe
-         +eA/xOLBAAdziLo7YsIl3v33kuMgRiCdVF/4ac6PMcB3wnTNC3wseY/E9DIUfp4Hk867
-         wBgTPVpRQsuUfO/dwJ1w7Rdfor2DuNzyr+CeyD+ld4g8jwnZnquOdJFr2LgFCIi/aXV2
-         ewiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lbC/xnk+zoIlMr8AR4zX7C8E5HyHt5wuUCG1GuQ26BI=;
-        b=ip/Qv3AITmcqeG9IdvCeIlr8Z9g2IJ77eG6wXKGc0fEnIsLRxNpNybuPWWq36AScIF
-         ZhKFQf+ge0Z4EjhCfIIEBcrTDRTWQ7/E8T6bP/am8wjTD4fLS5NkrI5ti/SANk+Bv/nQ
-         3ZYM3WROZ/DOwRwK3Vyoop3uiMO/vhW6Y3LzFYNrVDedptemsPnf6DPhYgtJKjFwJC/F
-         WjzekYxXNcSuWd4tIu8oZtnV4ZWOL8k/vIWleBcgUETSQmYFjMN+fx8kBXBldyYVQDJy
-         yADnmW7PjGFK//IPSvCbt9BUDqSdA9wXqjH2+9iGaX3BF89Aow4teriae9jibWOsVnUp
-         UnPg==
-X-Gm-Message-State: AOAM533bkihf2mSaqDZ1Udzr2SKC30NLqW9CV3nFBOH8Q2SD0054yED4
-        fM6dCOUuLkEJrm3GHzMf6YE6sK5D9cX9oww2mrIjjg==
-X-Google-Smtp-Source: ABdhPJx3TRX0Gwz1ar78DLMWbgZMau4UKE7Ax6fe96u9FtrMFQJJlyTadKZitcKb3lkK7CwNTVc3hbZeSHmn8RGqg60=
-X-Received: by 2002:aca:b50b:: with SMTP id e11mr6080825oif.10.1597197974841;
- Tue, 11 Aug 2020 19:06:14 -0700 (PDT)
+        Tue, 11 Aug 2020 22:09:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597198173;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=CjBAia3ospUg/zmTq94JkNk1GKssjuXqjxy8UFfaMgA=;
+        b=JbNAZH2De6VMBHVnkpb4TqPjkY0I9NjgAf/cjaS5U/J6qCdfrZpVFrp9Bp3qCuI2ajh+Ro
+        ZATBBZ1NfCcZfqw7ZPsPf8xrWvMF+FDwYBkmn3zK4QjyjMPQkaXxU7ctkPqiT9k1B3kBDb
+        H6VeiT7tlJUxsvTbyye/8QZPbR2ubFM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-350-hLK4A1mUMWylNewyGM9dsg-1; Tue, 11 Aug 2020 22:09:32 -0400
+X-MC-Unique: hLK4A1mUMWylNewyGM9dsg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9E88A102C7F5;
+        Wed, 12 Aug 2020 02:09:30 +0000 (UTC)
+Received: from [10.72.12.118] (ovpn-12-118.pek2.redhat.com [10.72.12.118])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EACC087D62;
+        Wed, 12 Aug 2020 02:09:23 +0000 (UTC)
+Subject: Re: VDPA Debug/Statistics
+To:     Eli Cohen <elic@nvidia.com>, "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "eli@mellanox.com" <eli@mellanox.com>,
+        "lulu@redhat.com" <lulu@redhat.com>,
+        Majd Dibbiny <majd@nvidia.com>,
+        Maor Dickman <maord@nvidia.com>,
+        Shahaf Shuler <shahafs@mellanox.com>,
+        Parav Pandit <parav@mellanox.com>
+References: <BN8PR12MB342559414BE03DFC992AD03DAB450@BN8PR12MB3425.namprd12.prod.outlook.com>
+ <20200811073144-mutt-send-email-mst@kernel.org>
+ <BN8PR12MB34259F2AE1FDAF2D40E48C5BAB450@BN8PR12MB3425.namprd12.prod.outlook.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <02c1cf02-40c7-80d7-60b5-19b691993018@redhat.com>
+Date:   Wed, 12 Aug 2020 10:09:22 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200811120205.21805-1-srinivas.kandagatla@linaro.org>
-In-Reply-To: <20200811120205.21805-1-srinivas.kandagatla@linaro.org>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Tue, 11 Aug 2020 19:06:03 -0700
-Message-ID: <CALAqxLUdMpnhHfLDYw-z0QEHdp+UtvdSt-m3+KqMUgcXP+PSNg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] ASoC: q6afe-dai: mark all widgets registers as SND_SOC_NOPM
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Stephan Gerhold <stephan@gerhold.net>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <BN8PR12MB34259F2AE1FDAF2D40E48C5BAB450@BN8PR12MB3425.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 5:02 AM Srinivas Kandagatla
-<srinivas.kandagatla@linaro.org> wrote:
+
+On 2020/8/11 下午7:58, Eli Cohen wrote:
+> On Tue, Aug 11, 2020 at 11:26:20AM +0000, Eli Cohen wrote:
+>> Hi All
+>>
+>> Currently, the only statistics we get for a VDPA instance comes from the virtio_net device instance. Since VDPA involves hardware acceleration, there can be quite a lot of information that can be fetched from the underlying device. Currently there is no generic method to fetch this information.
+>>
+>> One way of doing this can be to create a the host, a net device for
+>> each VDPA instance, and use it to get this information or do some
+>> configuration. Ethtool can be used in such a case
+
+
+The problems are:
+
+- vDPA is not net specific
+- vDPA should be transparent to host networking stack
+
+
+>>
+>> I would like to hear what you think about this or maybe you have some other ideas to address this topic.
+>>
+>> Thanks,
+>> Eli
+> Something I'm not sure I understand is how are vdpa instances created on mellanox cards? There's a devlink command for that, is that right?
+> Can that be extended for stats?
 >
-> Looks like the q6afe-dai dapm widget registers are set as "0",
-> which is a not correct.
+> Currently any VF will be probed as VDPA device. We're adding devlink support but I am not sure if devlink is suitable for displaying statistics. We will discuss internally but I wanted to know why you guys think.
+
+
+I agree with Michael, if it's possible, integrating stats with devlink 
+should be the best. Having another interface with is just for stats 
+looks not good.
+
+Thanks
+
+
 >
-> As this registers will be read by ASoC core during startup
-> which will throw up errors, Fix this by making the registers
-> as SND_SOC_NOPM as these should be never used.
->
-> With recent changes to ASoC core, every register read/write
-> failures are reported very verbosely. Prior to this fails to reads
-> are totally ignored, so we never saw any error messages.
->
-> Reported-by: John Stultz <john.stultz@linaro.org>
-> Fixes: 24c4cbcfac09 ("ASoC: qdsp6: q6afe: Add q6afe dai driver")
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
-> Changes since v1:
->         - replaced reg 0 with SND_SOC_NOPM and removed read callback
+> --
+> MST
 >
 
-For both patches:
-Tested-by: John Stultz <john.stultz@linaro.org>
-
-thanks!
--john
