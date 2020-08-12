@@ -2,107 +2,98 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AFCAC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:29:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 982BCC433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:29:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BB4D2076B
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:29:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ACFE207DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:29:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="rqOvwCMq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726684AbgHLQ3A (ORCPT
+        id S1726697AbgHLQ3q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 12:29:00 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40962 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726515AbgHLQ3A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 12:29:00 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 03110AE07;
-        Wed, 12 Aug 2020 16:29:20 +0000 (UTC)
-Date:   Wed, 12 Aug 2020 18:28:54 +0200
-From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-        Christoph Lameter <cl@linux.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
-        kernel-team@fb.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 4/5] mm: memcg: charge memcg percpu memory to the
- parent cgroup
-Message-ID: <20200812162854.GA19777@blackbody.suse.cz>
-References: <20200623184515.4132564-1-guro@fb.com>
- <20200623184515.4132564-5-guro@fb.com>
- <20200729171039.GA22229@blackbody.suse.cz>
- <20200806211603.195727c03995c3a25ffc6d76@linux-foundation.org>
- <20200807043717.GA1231562@carbon.DHCP.thefacebook.com>
- <20200811144754.GA45201@blackbook>
- <20200811165527.GA1507044@carbon.DHCP.thefacebook.com>
- <20200811183225.GA62582@blackbook>
- <20200811193228.GC1507044@carbon.DHCP.thefacebook.com>
+        Wed, 12 Aug 2020 12:29:46 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:54358 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725872AbgHLQ3p (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 12:29:45 -0400
+Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id EA4E39E7;
+        Wed, 12 Aug 2020 18:29:42 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1597249783;
+        bh=PlLgJBlNgcEsVC/aAOnVl2ZoYIkjcFM5Lt8dvxb7AB0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rqOvwCMqtY11PPydCh0Vy9nC3CpAevMAH1aaeYM6BeRfvNSrjENYjEiKz5wBwwHlH
+         Te1jdmFfNL9I/aQKUe3BXqnHUQIXfqN2jNzGGBr6LKhYwjhDnQ9yFD7Gqw4n7crUpD
+         L5267sOarF4BaoxLa2exxeKv/LXhMXp8tPSe5sgk=
+Date:   Wed, 12 Aug 2020 19:29:29 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Marian-Cristian Rotariu 
+        <marian-cristian.rotariu.rb@bp.renesas.com>
+Subject: Re: [PATCH 7/9] drm: rcar-du: lvds: Add support for R8A774E1 SoC
+Message-ID: <20200812162929.GR6057@pendragon.ideasonboard.com>
+References: <20200812140217.24251-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200812140217.24251-8-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="2oS5YaxWCcQjTEyO"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200811193228.GC1507044@carbon.DHCP.thefacebook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200812140217.24251-8-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Prabhakar,
 
---2oS5YaxWCcQjTEyO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thank you for the patch.
 
-On Tue, Aug 11, 2020 at 12:32:28PM -0700, Roman Gushchin <guro@fb.com> wrote:
-> If we'll limit init.slice (where systemd seems to reside), as you suggest,
-> we'll eventually create trashing in init.slice, followed by OOM.
-> I struggle to see how it makes the life of a user better?
-> [...]
-> The problem is that OOM-killing the accompanying manager won't release
-> resources and help to get rid of accumulated cgroups.
-I see your point now. I focused on the creator because of the live
-memcgs.
+On Wed, Aug 12, 2020 at 03:02:15PM +0100, Lad Prabhakar wrote:
+> From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> 
+> The LVDS encoder on RZ/G2H (R8A774E1) SoC is identical to R-Car Gen3 so
+> just reuse the rcar_lvds_gen3_info structure to hookup R8A774E1 to LVDS
+> encoder driver.
+> 
+> Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-When the issue are the dying memcgs (c), they were effectively released
-by their creator but are pinned by whatever remained after their life
-(LRU pages, slab->obj_cgroups). Since these pins were created _from
-within_ such a child (c), they're most readily removable by reclaiming
-(hierarchically) close to c. (It'd be achievable by limiting the lowest
-common ancestor of manager and its product (typically root) but that is
-more clumsy and less effective.)
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-This is the reasoning that justifies the remote charge.
+> ---
+>  drivers/gpu/drm/rcar-du/rcar_lvds.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_lvds.c b/drivers/gpu/drm/rcar-du/rcar_lvds.c
+> index ab0d49618cf9..424ca2b7d9ac 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_lvds.c
+> +++ b/drivers/gpu/drm/rcar-du/rcar_lvds.c
+> @@ -987,6 +987,7 @@ static const struct of_device_id rcar_lvds_of_table[] = {
+>  	{ .compatible = "renesas,r8a774a1-lvds", .data = &rcar_lvds_gen3_info },
+>  	{ .compatible = "renesas,r8a774b1-lvds", .data = &rcar_lvds_gen3_info },
+>  	{ .compatible = "renesas,r8a774c0-lvds", .data = &rcar_lvds_r8a77990_info },
+> +	{ .compatible = "renesas,r8a774e1-lvds", .data = &rcar_lvds_gen3_info },
+>  	{ .compatible = "renesas,r8a7790-lvds", .data = &rcar_lvds_gen2_info },
+>  	{ .compatible = "renesas,r8a7791-lvds", .data = &rcar_lvds_gen2_info },
+>  	{ .compatible = "renesas,r8a7793-lvds", .data = &rcar_lvds_gen2_info },
 
-Thanks!
-Michal
+-- 
+Regards,
 
---2oS5YaxWCcQjTEyO
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEEoQaUCWq8F2Id1tNia1+riC5qSgFAl80GMIACgkQia1+riC5
-qSh2FQ/7BWPW4IIs0OxCwGkMzqA43de67xmmtP3YfCPgCsnei4a1kX60z7VKOaUq
-slHtmgKJ5XipIOW33ierySBV3WiYH7jW13cIfM5xneld+iJZ7TLYWfbB6KL8jmpy
-4jkRqYXoYN1E/qAOMZ1Xw1wlNcrbM8yUy4seRF5ihXt5y2at/Vze4WGEkfMJ2c5Z
-hU0ECsZ/A22BO0DTYhXrziVzWvW5tKxYWHKiP7lk4jw/EQIQaVyeZY5kSoEYe9zi
-tJrEceVY0Ig693KkVCEl54tOJ9s+3QisKgTBKybbhf+7+TdRmy+qLGYOhFQE0bI2
-R2zRYQPSEkLNsfShLzcqa/sD0KjXYxP3qetffouyVv49RkViaZ6NBsl0Fekg/Hx2
-Caxc395K1Opo1gp+H3xwgMfBbeoboNZVnvPFqpigVsDu1XUddQeGL+PKF6c1FEHX
-Z3HnpRiTM6t5r0HHRtHzwIDkCnEfRXJxMNxezRvTPEorn9+6vC6w9JNxsvc+flUV
-tPDjn9tYvh8CfL0DoeUfu9HlynsS0JMZ2ASRxwATtE19Z05OS5Ij+o/yS5jMt4E2
-nCWeJ8v8xujJEQG95WRoVajr9WfFf2DuxiHRRnDZ9fSDu1FT81SS4IRX/lbLwe1f
-xxw4SvlDzI53itdajr6khrV1BFAA/3rPceGue25c8uplLZEBx/w=
-=oKPI
------END PGP SIGNATURE-----
-
---2oS5YaxWCcQjTEyO--
+Laurent Pinchart
