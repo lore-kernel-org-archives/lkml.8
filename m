@@ -2,95 +2,82 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D891C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:02:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DC19C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:02:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E816720774
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:02:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5048E20829
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:02:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ejh9JhTd"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="X795UlL2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727899AbgHLNCd (ORCPT
+        id S1727998AbgHLNCk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 09:02:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33030 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726829AbgHLNC3 (ORCPT
+        Wed, 12 Aug 2020 09:02:40 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:1258 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727834AbgHLNCg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 09:02:29 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B0E2C06174A
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 06:02:29 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id q9so1830549oth.5
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 06:02:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/FYTOQHYFNoSSfeNhMyajUD/P2m5h59FWjXl7Kq1d4Y=;
-        b=Ejh9JhTd9LtOhtE75SjvXpQnDSp7w66jJR1NQUvefFxvJxEft/FqE/PPqVJFAh50YM
-         fsYCldXZS49D+1TpHN+1+wdEQSTLJUufRT78xZVGgjFBHtij+oq1ndEXkrCxInRnvStQ
-         oYNQP/6wSLGd7hJ/JWp4afeodmgkalQwpryZ3L6ZjUDkljJ57PvdZlVrxoI0wURUzmNN
-         264O/jK9pvqqp7CTk94vsYLmF+yS1u79QdYSg0o4wEXy8Y0a7/Cr/5NhUIZfasb/tIz1
-         VwOgGJHWcVVJj2VVOe/du7c6iRFuo0iFKN7KrOstvfcptczohpx5kflIfJM/n5n8zgJY
-         ac3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/FYTOQHYFNoSSfeNhMyajUD/P2m5h59FWjXl7Kq1d4Y=;
-        b=ixgSIERdd7q/xhoyjHeuwshaIgCwmnzGsfUQLEvKJNitr/ElS5FK252TdX8koC5+Gk
-         b9KJffMX2K/HlsH8PjzY51ZGb4doURKz2v8WzbAMJsjqJSZ1/H50kxX/SsCHzZTq39zg
-         WVKPXDaNFvdq/k5bK08r3jb5G978DIjxyC11TQUkgLxpk2OTEVzX363V0RNJP2BXIBtg
-         4yrUooXnMElIcKtZvXUsJIfvwKYqATqS0Ry+1w0LZsh252wm0p59mqnc/wTOm9ScerFL
-         T6Z0rVACIZYNecl5kqoJxjLuCe/7uOdocttzV+cdSndvXHlhTygwZMXYEFDhdFSmH9IU
-         1u6Q==
-X-Gm-Message-State: AOAM533ct4rUikxRqtp6XQC+RWW4T7HC+ktd0ByV9Xkr4uR2Ko4s93Ep
-        kxBhQRH0vW1HHlAUbadVz4j+nf3w1fr39+flJcLGRQ==
-X-Google-Smtp-Source: ABdhPJwoTEkpCpRgvslk7SPBlvFttSnZw3FOWuQBpposC+jZpNWauxHblvEM5fYuhUHQ0Uct3sFok1vM6Q6D6qyFm1M=
-X-Received: by 2002:a9d:3da1:: with SMTP id l30mr9650285otc.233.1597237346320;
- Wed, 12 Aug 2020 06:02:26 -0700 (PDT)
+        Wed, 12 Aug 2020 09:02:36 -0400
+X-UUID: 1a18e545231d48dea80c2630aff1cb3e-20200812
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=dbv5n9ZrV/hPISdod9P90491MauUYffRqU2Ok68U9Ok=;
+        b=X795UlL2rDDAnNhYxp0U2S1K4MQwtDBOHV90pNs379VlgeDxGLnugetWomkAzyfWVi/RcHZSZdLv7GU1kkQIhjH+JPGdB+ZjSR3LdOlQoipSCAlwvIu8J2imkdHoJej766PcsQgpfGhr9VCOw5RmgjAsNoYypv8ASmfLs08S9zo=;
+X-UUID: 1a18e545231d48dea80c2630aff1cb3e-20200812
+Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw02.mediatek.com
+        (envelope-from <wenbin.mei@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1241049186; Wed, 12 Aug 2020 21:02:34 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 12 Aug 2020 21:02:31 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 12 Aug 2020 21:02:31 +0800
+From:   Wenbin Mei <wenbin.mei@mediatek.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Chaotian Jing <chaotian.jing@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
+        <srv_heupstream@mediatek.com>, Wenbin Mei <wenbin.mei@mediatek.com>
+Subject: [v2,1/3] mmc: dt-bindings: Add resets/reset-names for Mediatek MMC bindings
+Date:   Wed, 12 Aug 2020 21:01:27 +0800
+Message-ID: <20200812130129.13519-2-wenbin.mei@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20200812130129.13519-1-wenbin.mei@mediatek.com>
+References: <20200812130129.13519-1-wenbin.mei@mediatek.com>
 MIME-Version: 1.0
-References: <20200810080625.1428045-1-elver@google.com>
-In-Reply-To: <20200810080625.1428045-1-elver@google.com>
-From:   Marco Elver <elver@google.com>
-Date:   Wed, 12 Aug 2020 15:02:14 +0200
-Message-ID: <CANpmjNP5WpDyfXDc=v6cerd5=GpKyCmBKAKH+6qLT6JrBGPqnw@mail.gmail.com>
-Subject: Re: [PATCH] kcsan: Optimize debugfs stats counters
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 10 Aug 2020 at 10:06, Marco Elver <elver@google.com> wrote:
-> Remove kcsan_counter_inc/dec() functions, as they perform no other
-> logic, and are no longer needed.
->
-> This avoids several calls in kcsan_setup_watchpoint() and
-> kcsan_found_watchpoint(), as well as lets the compiler warn us about
-> potential out-of-bounds accesses as the array's size is known at all
-> usage sites at compile-time.
->
-> Signed-off-by: Marco Elver <elver@google.com>
-> ---
->  kernel/kcsan/core.c    | 22 +++++++++++-----------
->  kernel/kcsan/debugfs.c | 21 +++++----------------
->  kernel/kcsan/kcsan.h   | 12 ++++++------
->  kernel/kcsan/report.c  |  2 +-
->  4 files changed, 23 insertions(+), 34 deletions(-)
+QWRkIGRlc2NyaXB0aW9uIGZvciByZXNldHMvcmVzZXQtbmFtZXMuDQoNClNpZ25lZC1vZmYtYnk6
+IFdlbmJpbiBNZWkgPHdlbmJpbi5tZWlAbWVkaWF0ZWsuY29tPg0KLS0tDQogRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL21tYy9tdGstc2QudHh0IHwgMiArKw0KIDEgZmlsZSBjaGFu
+Z2VkLCAyIGluc2VydGlvbnMoKykNCg0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9tbWMvbXRrLXNkLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9tbWMvbXRrLXNkLnR4dA0KaW5kZXggOGE1MzJmNDQ1M2YyLi4xNWQ0MjU5NWEzZjMg
+MTAwNjQ0DQotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbW1jL210ay1z
+ZC50eHQNCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tbWMvbXRrLXNk
+LnR4dA0KQEAgLTQ5LDYgKzQ5LDggQEAgT3B0aW9uYWwgcHJvcGVydGllczoNCiAJCSAgICAgZXJy
+b3IgY2F1c2VkIGJ5IHN0b3AgY2xvY2soZmlmbyBmdWxsKQ0KIAkJICAgICBWYWxpZCByYW5nZSA9
+IFswOjB4N10uIGlmIG5vdCBwcmVzZW50LCBkZWZhdWx0IHZhbHVlIGlzIDAuDQogCQkgICAgIGFw
+cGxpZWQgdG8gY29tcGF0aWJsZSAibWVkaWF0ZWssbXQyNzAxLW1tYyIuDQorLSByZXNldHM6IFBo
+YW5kbGUgYW5kIHJlc2V0IHNwZWNpZmllciBwYWlyIHRvIHNvZnRyZXNldCBsaW5lIG9mIE1TREMg
+SVAuDQorLSByZXNldC1uYW1lczogc2hvdWxkIGJlICJocnN0Ii4NCiANCiBFeGFtcGxlczoNCiBt
+bWMwOiBtbWNAMTEyMzAwMDAgew0KLS0gDQoyLjE4LjANCg==
 
-Hi Paul,
-
-I think this one is good to apply. I do not expect conflicts with current -rcu.
-
-Thanks,
--- Marco
