@@ -2,110 +2,378 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7669CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:05:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57AD9C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:11:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42F8F206B2
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:05:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0327E2078B
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:11:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="F9jHTSF7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="USymMjrz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbgHLJFd (ORCPT
+        id S1727012AbgHLJLQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 05:05:33 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:52308 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726572AbgHLJFc (ORCPT
+        Wed, 12 Aug 2020 05:11:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54042 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726409AbgHLJLQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 05:05:32 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597223132; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=iNoMFzi6wivdS43d2jnSYlOQT+G0stMjqpRwc/JfHtg=; b=F9jHTSF7x259KjTaq/dBnesNwMfOl5Kfv8S6I6P61UAxPlt/h2RkC3jZlJkRy/pXep3tIkXM
- 1KhQzV3Gz6vEX1BwwmOn5YCZM4q6fWbXBaRsNOZwr1RjD6R3kJJy/Sx282plbfUVVafaG5dc
- auzrRyQlfwVtBIefFEmFiVXrPfU=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n06.prod.us-west-2.postgun.com with SMTP id
- 5f33b0ce4c787f237b791f7b (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 12 Aug 2020 09:05:18
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A205DC43395; Wed, 12 Aug 2020 09:05:18 +0000 (UTC)
-Received: from [10.206.24.160] (unknown [202.46.22.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sanm)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D234EC433C9;
-        Wed, 12 Aug 2020 09:05:13 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D234EC433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sanm@codeaurora.org
-Subject: Re: [PATCH v11 1/2] usb: dwc3: qcom: Add interconnect support in dwc3
- driver
-To:     Felipe Balbi <balbi@kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
-References: <1595869597-26049-1-git-send-email-sanm@codeaurora.org>
- <1595869597-26049-2-git-send-email-sanm@codeaurora.org>
- <20200727192050.GD3191083@google.com>
- <cd5c6c99-d8ee-da59-1abf-e64e5f7f6f8f@codeaurora.org>
- <87v9honyff.fsf@kernel.org>
-From:   "Sandeep Maheswaram (Temp)" <sanm@codeaurora.org>
-Message-ID: <322d193c-d4d2-789b-ffec-ebdee2730c1e@codeaurora.org>
-Date:   Wed, 12 Aug 2020 14:35:11 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Wed, 12 Aug 2020 05:11:16 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 174EEC06174A
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 02:11:16 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id c15so1286921wrs.11
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 02:11:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5JuupEkp5vod5HA205R9gxX6KMWGdIQCej3+1g8f03s=;
+        b=USymMjrzE5SS30e13s++ZulJ4UxF8cO7xOEECOXqe5PQdc4o/pM7q96P8uhG/K8JsR
+         vra5IZXOoU4ZU1ack01V3mvQ6LSvUyDe8VGmKu0E9wGUo6Wt39e2iowmhwwsz7AHGjsg
+         Vm69i4ZbFNSjhuYj7f57xSTxYjhNvwvscsMImG2BPP9969+HvDWu1WKXmBGN8FXQReVa
+         EIF1VJIjwjlLMlw4Yq9ukjVy8qzaoq9r/79AJ7htqqXtD6b4Mb8iQ7lIB6o+0VgNBRua
+         YlkUeYM5yJJUC44Ygu23l0z7DDQrYr+H2jc3uRHsg3+XMA1WBr4KfOWhSCGkticoikIz
+         EvxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5JuupEkp5vod5HA205R9gxX6KMWGdIQCej3+1g8f03s=;
+        b=crOTBNl/Q8cuA5j4XXWqMAPWbMbBA39o8Q71jFvY+LBAWXxvN0jkhizYXEdFRf57He
+         CzFh8PWfKlw2Ny/svj/w98PJmXhBtEcoam4zqDdeABs4cg75r9C/ZNm7y5CUghAfMd8H
+         8/UaqJ6T3SLyI+lj0vJBZseIoLmC8Iq+L70PuEqrFVAXMucXmSif/mfJC+37m+Gl8PzO
+         vm4A+CmXnYUrZoAa6DLCbuY34KBb/zsNwFmiUMkjCWzOP7QKW1oyfq1aqsGwFo4BCeCC
+         L9nsdqBbv1hhhN1+YP5J33zrBSdNtguSO/AuTEkUDlNONE7Mgc3uXRWS5pLvVOFxlyfX
+         og5w==
+X-Gm-Message-State: AOAM531rP2vrbmBu74hfAjdz1r1us/nxBmphtsF+yNbJPtlzS83+yO96
+        6Szfy0EbkfOo0TDzOmUxFxmMT5b3CjgcLezpE+Hr+w==
+X-Google-Smtp-Source: ABdhPJxSYn57aBvxRMTSZ5fhuCgjCRJB77iTZyOHH6wA5r3SVDJbWMSFqMbPNZVWfTwffREQggHHiadxZW8Jf1XYbgk=
+X-Received: by 2002:a05:6000:1203:: with SMTP id e3mr33611384wrx.324.1597223474540;
+ Wed, 12 Aug 2020 02:11:14 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <87v9honyff.fsf@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20200727093047.8274-1-stephan@gerhold.net>
+In-Reply-To: <20200727093047.8274-1-stephan@gerhold.net>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 12 Aug 2020 11:10:38 +0200
+Message-ID: <CAPDyKFq9bbMZD7ifF=ipfBD3ayiLuc6RPwW8_RWZBxMGv_WZkw@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/2] opp: Allow dev_pm_opp_get_opp_table() to return -EPROBE_DEFER
+To:     Stephan Gerhold <stephan@gerhold.net>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Niklas Cassel <nks@flawful.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
-
-On 8/12/2020 12:27 PM, Felipe Balbi wrote:
-> "Sandeep Maheswaram (Temp)" <sanm@codeaurora.org> writes:
+On Mon, 27 Jul 2020 at 11:31, Stephan Gerhold <stephan@gerhold.net> wrote:
 >
->> Hi Felipe,
->>
->> On 7/28/2020 12:50 AM, Matthias Kaehlcke wrote:
->>> On Mon, Jul 27, 2020 at 10:36:36PM +0530, Sandeep Maheswaram wrote:
->>>> Add interconnect support in dwc3-qcom driver to vote for bus
->>>> bandwidth.
->>>>
->>>> This requires for two different paths - from USB to
->>>> DDR. The other is from APPS to USB.
->>>>
->>>> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
->>>> Signed-off-by: Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
->>> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
->> Please ack if you are ok with this patch.
-> What's the plan to get this upstream? Should I take dwc3-qcom patch and
-> ignore the rest? Is there a hard-dependency on something else?
-Yes take dwc3-qcom patch only,the dt change is already in linux-next.
+> The OPP core manages various resources, e.g. clocks or interconnect paths.
+> These resources are looked up when the OPP table is allocated once
+> dev_pm_opp_get_opp_table() is called the first time (either directly
+> or indirectly through one of the many helper functions).
+>
+> At this point, the resources may not be available yet, i.e. looking them
+> up will result in -EPROBE_DEFER. Unfortunately, dev_pm_opp_get_opp_table()
+> is currently unable to propagate this error code since it only returns
+> the allocated OPP table or NULL.
+>
+> This means that all consumers of the OPP core are required to make sure
+> that all necessary resources are available. Usually this happens by
+> requesting them, checking the result and releasing them immediately after.
+>
+> For example, we have added "dev_pm_opp_of_find_icc_paths(dev, NULL)" to
+> several drivers now just to make sure the interconnect providers are
+> ready before the OPP table is allocated. If this call is missing,
+> the OPP core will only warn about this and then attempt to continue
+> without interconnect. This will eventually fail horribly, e.g.:
+>
+>     cpu cpu0: _allocate_opp_table: Error finding interconnect paths: -517
+>     ... later ...
+>     of: _read_bw: Mismatch between opp-peak-kBps and paths (1 0)
+>     cpu cpu0: _opp_add_static_v2: opp key field not found
+>     cpu cpu0: _of_add_opp_table_v2: Failed to add OPP, -22
+>
+> This example happens when trying to use interconnects for a CPU OPP
+> table together with qcom-cpufreq-nvmem.c. qcom-cpufreq-nvmem calls
+> dev_pm_opp_set_supported_hw(), which ends up allocating the OPP table
+> early. To fix the problem with the current approach we would need to add
+> yet another call to dev_pm_opp_of_find_icc_paths(dev, NULL).
+> But actually qcom-cpufreq-nvmem.c has nothing to do with interconnects...
+>
+> This commit attempts to make this more robust by allowing
+> dev_pm_opp_get_opp_table() to return an error pointer. Fixing all
+> the usages is trivial because the function is usually used indirectly
+> through another helper (e.g. dev_pm_opp_set_supported_hw() above).
+> These other helpers already return an error pointer.
+>
+> The example above then works correctly because set_supported_hw() will
+> return -EPROBE_DEFER, and qcom-cpufreq-nvmem.c already propagates that
+> error. It should also be possible to remove the remaining usages of
+> "dev_pm_opp_of_find_icc_paths(dev, NULL)" from other drivers as well.
+>
+> Note that this commit currently only handles -EPROBE_DEFER for the
+> clock/interconnects within _allocate_opp_table(). Other errors are just
+> ignored as before. Eventually those should be propagated as well.
+>
+> Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+> ---
+> I wasn't sure if the changes in drivers/base/power/domain.c
+> should be made in a separate commit, but they need to be made together
+> with the other changes.
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+I would suggest to move the changes in drivers/base/power/domain.c
+into a separate patch, still part of the series, but let it preceed
+$subject patch.
 
+>
+> Also note that this is RFC because this is just something I got really
+> frustrated about. There might be situations where this won't work correctly...?
+> ---
+>  drivers/base/power/domain.c | 28 ++++++++++++++++++-----
+
+The above changes look good to me.
+
+For the below, at a quick look I have no objections, but I am
+deferring to Viresh to have a closer look.
+
+Kind regards
+Uffe
+
+>  drivers/opp/core.c          | 45 ++++++++++++++++++++++---------------
+>  drivers/opp/of.c            |  8 +++----
+>  3 files changed, 53 insertions(+), 28 deletions(-)
+>
+> diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
+> index 2cb5e04cf86c..c50f2de952c4 100644
+> --- a/drivers/base/power/domain.c
+> +++ b/drivers/base/power/domain.c
+> @@ -2044,8 +2044,9 @@ int of_genpd_add_provider_simple(struct device_node *np,
+>         if (genpd->set_performance_state) {
+>                 ret = dev_pm_opp_of_add_table(&genpd->dev);
+>                 if (ret) {
+> -                       dev_err(&genpd->dev, "Failed to add OPP table: %d\n",
+> -                               ret);
+> +                       if (ret != -EPROBE_DEFER)
+> +                               dev_err(&genpd->dev, "Failed to add OPP table: %d\n",
+> +                                       ret);
+>                         goto unlock;
+>                 }
+>
+> @@ -2054,7 +2055,14 @@ int of_genpd_add_provider_simple(struct device_node *np,
+>                  * state.
+>                  */
+>                 genpd->opp_table = dev_pm_opp_get_opp_table(&genpd->dev);
+> -               WARN_ON(!genpd->opp_table);
+> +               if (IS_ERR(genpd->opp_table)) {
+> +                       if (PTR_ERR(genpd->opp_table) != -EPROBE_DEFER)
+> +                               dev_err(&genpd->dev, "Failed to get OPP table: %pe\n",
+> +                                       genpd->opp_table);
+> +
+> +                       dev_pm_opp_of_remove_table(&genpd->dev);
+> +                       goto unlock;
+> +               }
+>         }
+>
+>         ret = genpd_add_provider(np, genpd_xlate_simple, genpd);
+> @@ -2111,8 +2119,9 @@ int of_genpd_add_provider_onecell(struct device_node *np,
+>                 if (genpd->set_performance_state) {
+>                         ret = dev_pm_opp_of_add_table_indexed(&genpd->dev, i);
+>                         if (ret) {
+> -                               dev_err(&genpd->dev, "Failed to add OPP table for index %d: %d\n",
+> -                                       i, ret);
+> +                               if (ret != -EPROBE_DEFER)
+> +                                       dev_err(&genpd->dev, "Failed to add OPP table for index %d: %d\n",
+> +                                               i, ret);
+>                                 goto error;
+>                         }
+>
+> @@ -2121,7 +2130,14 @@ int of_genpd_add_provider_onecell(struct device_node *np,
+>                          * performance state.
+>                          */
+>                         genpd->opp_table = dev_pm_opp_get_opp_table_indexed(&genpd->dev, i);
+> -                       WARN_ON(!genpd->opp_table);
+> +                       if (IS_ERR(genpd->opp_table)) {
+> +                               if (PTR_ERR(genpd->opp_table) != -EPROBE_DEFER)
+> +                                       dev_err(&genpd->dev, "Failed to get OPP table: %pe\n",
+> +                                               genpd->opp_table);
+> +
+> +                               dev_pm_opp_of_remove_table(&genpd->dev);
+> +                               goto error;
+> +                       }
+>                 }
+>
+>                 genpd->provider = &np->fwnode;
+> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+> index 9d7fb45b1786..45d24de75e0e 100644
+> --- a/drivers/opp/core.c
+> +++ b/drivers/opp/core.c
+> @@ -1063,7 +1063,7 @@ static struct opp_table *_allocate_opp_table(struct device *dev, int index)
+>          */
+>         opp_table = kzalloc(sizeof(*opp_table), GFP_KERNEL);
+>         if (!opp_table)
+> -               return NULL;
+> +               return ERR_PTR(-ENOMEM);
+>
+>         mutex_init(&opp_table->lock);
+>         mutex_init(&opp_table->genpd_virt_dev_lock);
+> @@ -1074,8 +1074,8 @@ static struct opp_table *_allocate_opp_table(struct device *dev, int index)
+>
+>         opp_dev = _add_opp_dev(dev, opp_table);
+>         if (!opp_dev) {
+> -               kfree(opp_table);
+> -               return NULL;
+> +               ret = -ENOMEM;
+> +               goto err;
+>         }
+>
+>         _of_init_opp_table(opp_table, dev, index);
+> @@ -1087,13 +1087,18 @@ static struct opp_table *_allocate_opp_table(struct device *dev, int index)
+>                 if (ret != -EPROBE_DEFER)
+>                         dev_dbg(dev, "%s: Couldn't find clock: %d\n", __func__,
+>                                 ret);
+> +               else
+> +                       goto err;
+>         }
+>
+>         /* Find interconnect path(s) for the device */
+>         ret = dev_pm_opp_of_find_icc_paths(dev, opp_table);
+> -       if (ret)
+> +       if (ret) {
+> +               if (ret == -EPROBE_DEFER)
+> +                       goto err;
+>                 dev_warn(dev, "%s: Error finding interconnect paths: %d\n",
+>                          __func__, ret);
+> +       }
+>
+>         BLOCKING_INIT_NOTIFIER_HEAD(&opp_table->head);
+>         INIT_LIST_HEAD(&opp_table->opp_list);
+> @@ -1102,6 +1107,10 @@ static struct opp_table *_allocate_opp_table(struct device *dev, int index)
+>         /* Secure the device table modification */
+>         list_add(&opp_table->node, &opp_tables);
+>         return opp_table;
+> +
+> +err:
+> +       kfree(opp_table);
+> +       return ERR_PTR(ret);
+>  }
+>
+>  void _get_opp_table_kref(struct opp_table *opp_table)
+> @@ -1568,8 +1577,8 @@ struct opp_table *dev_pm_opp_set_supported_hw(struct device *dev,
+>         struct opp_table *opp_table;
+>
+>         opp_table = dev_pm_opp_get_opp_table(dev);
+> -       if (!opp_table)
+> -               return ERR_PTR(-ENOMEM);
+> +       if (IS_ERR(opp_table))
+> +               return opp_table;
+>
+>         /* Make sure there are no concurrent readers while updating opp_table */
+>         WARN_ON(!list_empty(&opp_table->opp_list));
+> @@ -1627,8 +1636,8 @@ struct opp_table *dev_pm_opp_set_prop_name(struct device *dev, const char *name)
+>         struct opp_table *opp_table;
+>
+>         opp_table = dev_pm_opp_get_opp_table(dev);
+> -       if (!opp_table)
+> -               return ERR_PTR(-ENOMEM);
+> +       if (IS_ERR(opp_table))
+> +               return opp_table;
+>
+>         /* Make sure there are no concurrent readers while updating opp_table */
+>         WARN_ON(!list_empty(&opp_table->opp_list));
+> @@ -1720,8 +1729,8 @@ struct opp_table *dev_pm_opp_set_regulators(struct device *dev,
+>         int ret, i;
+>
+>         opp_table = dev_pm_opp_get_opp_table(dev);
+> -       if (!opp_table)
+> -               return ERR_PTR(-ENOMEM);
+> +       if (IS_ERR(opp_table))
+> +               return opp_table;
+>
+>         /* This should be called before OPPs are initialized */
+>         if (WARN_ON(!list_empty(&opp_table->opp_list))) {
+> @@ -1830,8 +1839,8 @@ struct opp_table *dev_pm_opp_set_clkname(struct device *dev, const char *name)
+>         int ret;
+>
+>         opp_table = dev_pm_opp_get_opp_table(dev);
+> -       if (!opp_table)
+> -               return ERR_PTR(-ENOMEM);
+> +       if (IS_ERR(opp_table))
+> +               return opp_table;
+>
+>         /* This should be called before OPPs are initialized */
+>         if (WARN_ON(!list_empty(&opp_table->opp_list))) {
+> @@ -1898,8 +1907,8 @@ struct opp_table *dev_pm_opp_register_set_opp_helper(struct device *dev,
+>                 return ERR_PTR(-EINVAL);
+>
+>         opp_table = dev_pm_opp_get_opp_table(dev);
+> -       if (!opp_table)
+> -               return ERR_PTR(-ENOMEM);
+> +       if (!IS_ERR(opp_table))
+> +               return opp_table;
+>
+>         /* This should be called before OPPs are initialized */
+>         if (WARN_ON(!list_empty(&opp_table->opp_list))) {
+> @@ -1979,8 +1988,8 @@ struct opp_table *dev_pm_opp_attach_genpd(struct device *dev,
+>         const char **name = names;
+>
+>         opp_table = dev_pm_opp_get_opp_table(dev);
+> -       if (!opp_table)
+> -               return ERR_PTR(-ENOMEM);
+> +       if (IS_ERR(opp_table))
+> +               return opp_table;
+>
+>         /*
+>          * If the genpd's OPP table isn't already initialized, parsing of the
+> @@ -2150,8 +2159,8 @@ int dev_pm_opp_add(struct device *dev, unsigned long freq, unsigned long u_volt)
+>         int ret;
+>
+>         opp_table = dev_pm_opp_get_opp_table(dev);
+> -       if (!opp_table)
+> -               return -ENOMEM;
+> +       if (IS_ERR(opp_table))
+> +               return PTR_ERR(opp_table);
+>
+>         /* Fix regulator count for dynamic OPPs */
+>         opp_table->regulator_count = 1;
+> diff --git a/drivers/opp/of.c b/drivers/opp/of.c
+> index 0430290670ab..d8b623cc015a 100644
+> --- a/drivers/opp/of.c
+> +++ b/drivers/opp/of.c
+> @@ -947,8 +947,8 @@ int dev_pm_opp_of_add_table(struct device *dev)
+>         int ret;
+>
+>         opp_table = dev_pm_opp_get_opp_table_indexed(dev, 0);
+> -       if (!opp_table)
+> -               return -ENOMEM;
+> +       if (IS_ERR(opp_table))
+> +               return PTR_ERR(opp_table);
+>
+>         /*
+>          * OPPs have two version of bindings now. Also try the old (v1)
+> @@ -1002,8 +1002,8 @@ int dev_pm_opp_of_add_table_indexed(struct device *dev, int index)
+>         }
+>
+>         opp_table = dev_pm_opp_get_opp_table_indexed(dev, index);
+> -       if (!opp_table)
+> -               return -ENOMEM;
+> +       if (IS_ERR(opp_table))
+> +               return PTR_ERR(opp_table);
+>
+>         ret = _of_add_opp_table_v2(dev, opp_table);
+>         if (ret)
+> --
+> 2.27.0
+>
