@@ -2,207 +2,360 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F54C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 08:39:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F08CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 08:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3597520781
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 08:39:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69BB320781
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 08:40:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbgHLIjo (ORCPT
+        id S1727038AbgHLIkK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 04:39:44 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:37226 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726629AbgHLIjn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 04:39:43 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id F22C3FB03;
-        Wed, 12 Aug 2020 10:39:40 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id YTzYe0sNo_dQ; Wed, 12 Aug 2020 10:39:38 +0200 (CEST)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id BD74045770; Wed, 12 Aug 2020 10:39:37 +0200 (CEST)
-Date:   Wed, 12 Aug 2020 10:39:37 +0200
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-To:     Swapnil Jakhade <sjakhade@cadence.com>
-Cc:     airlied@linux.ie, daniel@ffwll.ch,
-        Laurent.pinchart@ideasonboard.com, robh+dt@kernel.org,
-        a.hajda@samsung.com, narmstrong@baylibre.com, jonas@kwiboo.se,
-        jernej.skrabec@siol.net, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mparab@cadence.com, yamonkar@cadence.com, praneeth@ti.com,
-        nsekhar@ti.com, jsarha@ti.com, tomi.valkeinen@ti.com,
-        sandor.yu@nxp.com
-Subject: Re: [PATCH v8 0/3] drm: Add support for Cadence MHDP DPI/DP bridge
- and J721E wrapper.
-Message-ID: <20200812083937.GA8816@bogon.m.sigxcpu.org>
-References: <1596713672-8146-1-git-send-email-sjakhade@cadence.com>
+        Wed, 12 Aug 2020 04:40:10 -0400
+Received: from lucky1.263xmail.com ([211.157.147.133]:47874 "EHLO
+        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726942AbgHLIkK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 04:40:10 -0400
+X-Greylist: delayed 317 seconds by postgrey-1.27 at vger.kernel.org; Wed, 12 Aug 2020 04:40:03 EDT
+Received: from localhost (unknown [192.168.167.209])
+        by lucky1.263xmail.com (Postfix) with ESMTP id 0969BC5F56;
+        Wed, 12 Aug 2020 16:35:52 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED: 0
+X-ANTISPAM-LEVEL: 2
+X-ABS-CHECKED: 0
+Received: from localhost.localdomain (unknown [103.29.142.67])
+        by smtp.263.net (postfix) whith ESMTP id P31771T140662701778688S1597221345736639_;
+        Wed, 12 Aug 2020 16:35:51 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <3650945d1eca47a8101cd35ca78c47f2>
+X-RL-SENDER: algea.cao@rock-chips.com
+X-SENDER: algea.cao@rock-chips.com
+X-LOGIN-NAME: algea.cao@rock-chips.com
+X-FST-TO: a.hajda@samsung.com
+X-SENDER-IP: 103.29.142.67
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+X-System-Flag: 0
+From:   Algea Cao <algea.cao@rock-chips.com>
+To:     a.hajda@samsung.com, kuankuan.y@gmail.com, hjc@rock-chips.com,
+        tzimmermann@suse.de, dri-devel@lists.freedesktop.org,
+        sam@ravnborg.org, airlied@linux.ie, heiko@sntech.de,
+        jernej.skrabec@siol.net, algea.cao@rock-chips.com,
+        Laurent.pinchart@ideasonboard.com,
+        laurent.pinchart+renesas@ideasonboard.com, jonas@kwiboo.se,
+        mripard@kernel.org, darekm@google.com,
+        linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, cychiang@chromium.org,
+        linux-kernel@vger.kernel.org, narmstrong@baylibre.com,
+        jbrunet@baylibre.com, maarten.lankhorst@linux.intel.com,
+        daniel@ffwll.ch
+Subject: [PATCH 4/6] drm/rockchip: dw_hdmi: Add vendor hdmi properties
+Date:   Wed, 12 Aug 2020 16:35:43 +0800
+Message-Id: <20200812083543.4231-1-algea.cao@rock-chips.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200812083120.743-1-algea.cao@rock-chips.com>
+References: <20200812083120.743-1-algea.cao@rock-chips.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1596713672-8146-1-git-send-email-sjakhade@cadence.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-On Thu, Aug 06, 2020 at 01:34:29PM +0200, Swapnil Jakhade wrote:
-> This patch series adds new DRM bridge driver for Cadence MHDP DPI/DP
-> bridge. The Cadence Display Port IP is also referred as MHDP (Mobile High
-> Definition Link, High-Definition Multimedia Interface, Display Port).
-> Cadence Display Port complies with VESA DisplayPort (DP) and embedded
-> Display Port (eDP) standards.
+Introduce struct dw_hdmi_property_ops in plat_data to support
+vendor hdmi property.
 
-Is there any relation to the cadence mhdp ip core used inthe imx8mq:
+Implement hdmi vendor properties color_depth_property and
+hdmi_output_property to config hdmi output color depth and
+color format.
 
-    https://lore.kernel.org/dri-devel/cover.1590982881.git.Sandor.yu@nxp.com/
+The property "hdmi_output_format", the possible value
+could be:
+         - RGB
+         - YCBCR 444
+         - YCBCR 422
+         - YCBCR 420
 
-It looks very similar in several places so should that use the same driver?
-Cheers,
- -- Guido
+Default value of the property is set to 0 = RGB, so no changes if you
+don't set the property.
 
-> 
-> The MHDP bridge driver currently implements Single Stream Transport (SST)
-> mode. It also adds Texas Instruments j721e SoC specific wrapper and adds
-> the device tree bindings in YAML format.
-> 
-> Some of the features that will be added later on include (but are not
-> limited to):
-> - Power Management (PM) support: We will implement the PM functions in
->   next stage once there will be a stable driver in upstream
-> - Audio and MST support
-> 
-> The patch series has three patches in the below sequence:
-> 1. 0001-dt-bindings-drm-bridge-Document-Cadence-MHDP-brid.patch
-> Documents the bindings in yaml format.
-> 2. 0002-drm-bridge-Add-support-for-Cadence-MHDP-DPI-DP-br.patch
-> This patch adds new DRM bridge driver for Cadence MHDP Display Port.
-> The patch implements support for single stream transport mode.
-> 3. 0003-drm-bridge-cdns-mhdp-Add-j721e-wrapper.patch
-> Adds Texas Instruments (TI) j721e wrapper for MHDP. The wrapper configures
-> MHDP clocks and muxes as required by SoC.
-> 
-> This patch series is dependent on PHY patch series [1] to add new PHY APIs
-> to get/set PHY attributes which is under review and not merged yet.
-> 
-> [1] https://lkml.org/lkml/2020/7/17/158
-> 
-> Version History:
-> 
-> v8:
-> 
-> In 1/3
-> - Fix error reported by dt_binding_check
-> - Fix indent in the example
-> - Fix other comments given for v7 patches.
-> 
-> In 2/3:
-> - Implement bridge connector operations .get_edid() and .detect().
-> - Make connector creation optional based on DRM_BRIDGE_ATTACH_NO_CONNECTOR
->   flag.
-> - Fix other comments given for v7 patches.
-> 
-> In 3/3
-> - Fix comments given for v7 patches.
-> 
-> v7:
-> 
-> In 1/3
-> - No change
-> 
-> In 2/3
-> - Switch to atomic versions of bridge operations
-> - Implement atomic_check() handler to perform all validation checks
-> - Add struct cdns_mhdp_bridge_state with subclassed bridge state
-> - Use PHY API[1] to get PHY attributes instead of reading from PHY DT node
-> - Updated HPD handling and link configuration in IRQ handler
-> - Add "link_mutex" protecting the access to all the link parameters
-> - Add support to check and print FW version information
-> - Add separate function to initialize host parameters to simplify probe
-> - Use waitqueue instead of manual loop in cdns_mhdp_remove
-> - Add forward declarations and header files in cdns-mhdp-core.h file
-> - Use bool instead of single bit values in struct cdns_mhdp_device
-> - Fix for other minor comments given for v6 patches
-> 
-> In 3/3
-> - Use of_device_is_compatible() to set compatible string specific values
-> - Move mhdp_ti_j721e_ops structure to cdns-mhdp-j721e.c
-> - Remove duplicate Copyright message
-> - Remove CONFIG_DRM_CDNS_MHDP_J721E check
-> - Add Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> 
-> v6:
-> - Added minor fixes in YAML file.
-> - Added Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
->   to the YAML patch.
-> - Removed all the FIXME comments which are invalid in drm driver.
-> - Reduced the mailbox timeout from 5s to 2s.
-> - Added Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
->   to the 003-drm-mhdp-add-j721e-wrapper patch.
-> - Added Signed-off all the module authors.
-> - Fixed the compiler error Reported-by: kbuild test robot <lkp@intel.com>.
-> 
-> v5:
-> - Added Signed-off-by: Jyri Sarha <jsarha@ti.com> tag to
->   the code patches.
-> 
-> v4:
-> - Added SPDX dual license tag to YAML bindings.
-> - Corrected indentation of the child node properties.
-> - Removed the maxItems in the conditional statement.
-> - Add Reviewed-by: Rob Herring <robh@kernel.org> tag to the
->   Document Cadence MHDP bridge bindings patch.
-> - Renamed the DRM driver executable name from mhdp8546 to cdns-mhdp in
->   Makefile.
-> - Renamed the DRM driver and header file from cdns-mhdp to cdns-mhdp-core.
-> 
-> v3:
-> - Added if / then clause to validate that the reg length is proper
->   based on the value of the compatible property.
-> - Updated phy property description in YAML to a generic one.
-> - Renamed num_lanes and max_bit_rate property strings to cdns,num-lanes
->   and cdns,max-bit-rate.
-> 
-> v2:
-> - Use enum in compatible property of YAML file.
-> - Add reg-names property to YAML file
-> - Add minItems and maxItems to reg property in YAML.
-> - Remove cdns_mhdp_link_probe function to remove
->   duplication of reading dpcd capabilities.
-> 
-> Swapnil Jakhade (2):
->   drm: bridge: Add support for Cadence MHDP DPI/DP bridge
->   drm: bridge: cdns-mhdp: Add j721e wrapper
-> 
-> Yuti Amonkar (1):
->   dt-bindings: drm/bridge: Document Cadence MHDP bridge bindings
-> 
->  .../bindings/display/bridge/cdns,mhdp.yaml    |  139 +
->  drivers/gpu/drm/bridge/Kconfig                |   24 +
->  drivers/gpu/drm/bridge/Makefile               |    4 +
->  drivers/gpu/drm/bridge/cdns-mhdp-core.c       | 2562 +++++++++++++++++
->  drivers/gpu/drm/bridge/cdns-mhdp-core.h       |  397 +++
->  drivers/gpu/drm/bridge/cdns-mhdp-j721e.c      |   72 +
->  drivers/gpu/drm/bridge/cdns-mhdp-j721e.h      |   19 +
->  7 files changed, 3217 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml
->  create mode 100644 drivers/gpu/drm/bridge/cdns-mhdp-core.c
->  create mode 100644 drivers/gpu/drm/bridge/cdns-mhdp-core.h
->  create mode 100644 drivers/gpu/drm/bridge/cdns-mhdp-j721e.c
->  create mode 100644 drivers/gpu/drm/bridge/cdns-mhdp-j721e.h
-> 
-> -- 
-> 2.26.1
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> 
+The property "hdmi_output_depth" possible value could be
+         - Automatic
+           This indicates prefer highest color depth, it is
+           30bit on rockcip platform.
+         - 24bit
+         - 30bit
+The default value of property is 24bit.
+
+Signed-off-by: Algea Cao <algea.cao@rock-chips.com>
+---
+
+ drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c | 174 ++++++++++++++++++++
+ include/drm/bridge/dw_hdmi.h                |  22 +++
+ 2 files changed, 196 insertions(+)
+
+diff --git a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
+index 23de359a1dec..8f22d9a566db 100644
+--- a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
++++ b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
+@@ -52,6 +52,27 @@
+ 
+ #define HIWORD_UPDATE(val, mask)	(val | (mask) << 16)
+ 
++/* HDMI output pixel format */
++enum drm_hdmi_output_type {
++	DRM_HDMI_OUTPUT_DEFAULT_RGB, /* default RGB */
++	DRM_HDMI_OUTPUT_YCBCR444, /* YCBCR 444 */
++	DRM_HDMI_OUTPUT_YCBCR422, /* YCBCR 422 */
++	DRM_HDMI_OUTPUT_YCBCR420, /* YCBCR 420 */
++	DRM_HDMI_OUTPUT_YCBCR_HQ, /* Highest subsampled YUV */
++	DRM_HDMI_OUTPUT_YCBCR_LQ, /* Lowest subsampled YUV */
++	DRM_HDMI_OUTPUT_INVALID, /* Guess what ? */
++};
++
++enum dw_hdmi_rockchip_color_depth {
++	ROCKCHIP_HDMI_DEPTH_8,
++	ROCKCHIP_HDMI_DEPTH_10,
++	ROCKCHIP_HDMI_DEPTH_12,
++	ROCKCHIP_HDMI_DEPTH_16,
++	ROCKCHIP_HDMI_DEPTH_420_10,
++	ROCKCHIP_HDMI_DEPTH_420_12,
++	ROCKCHIP_HDMI_DEPTH_420_16
++};
++
+ /**
+  * struct rockchip_hdmi_chip_data - splite the grf setting of kind of chips
+  * @lcdsel_grf_reg: grf register offset of lcdc select
+@@ -73,6 +94,12 @@ struct rockchip_hdmi {
+ 	struct clk *grf_clk;
+ 	struct dw_hdmi *hdmi;
+ 	struct phy *phy;
++
++	struct drm_property *color_depth_property;
++	struct drm_property *hdmi_output_property;
++
++	unsigned int colordepth;
++	enum drm_hdmi_output_type hdmi_output;
+ };
+ 
+ #define to_rockchip_hdmi(x)	container_of(x, struct rockchip_hdmi, x)
+@@ -327,6 +354,150 @@ static void dw_hdmi_rockchip_genphy_disable(struct dw_hdmi *dw_hdmi, void *data)
+ 	phy_power_off(hdmi->phy);
+ }
+ 
++static const struct drm_prop_enum_list color_depth_enum_list[] = {
++	{ 0, "Automatic" }, /* Prefer highest color depth */
++	{ 8, "24bit" },
++	{ 10, "30bit" },
++};
++
++static const struct drm_prop_enum_list drm_hdmi_output_enum_list[] = {
++	{ DRM_HDMI_OUTPUT_DEFAULT_RGB, "output_rgb" },
++	{ DRM_HDMI_OUTPUT_YCBCR444, "output_ycbcr444" },
++	{ DRM_HDMI_OUTPUT_YCBCR422, "output_ycbcr422" },
++	{ DRM_HDMI_OUTPUT_YCBCR420, "output_ycbcr420" },
++	{ DRM_HDMI_OUTPUT_YCBCR_HQ, "output_ycbcr_high_subsampling" },
++	{ DRM_HDMI_OUTPUT_YCBCR_LQ, "output_ycbcr_low_subsampling" },
++	{ DRM_HDMI_OUTPUT_INVALID, "invalid_output" },
++};
++
++static void
++dw_hdmi_rockchip_attach_properties(struct drm_connector *connector,
++				   unsigned int color, int version,
++				   void *data)
++{
++	struct rockchip_hdmi *hdmi = (struct rockchip_hdmi *)data;
++	struct drm_property *prop;
++
++	switch (color) {
++	case MEDIA_BUS_FMT_RGB101010_1X30:
++		hdmi->hdmi_output = DRM_HDMI_OUTPUT_DEFAULT_RGB;
++		hdmi->colordepth = 10;
++		break;
++	case MEDIA_BUS_FMT_YUV8_1X24:
++		hdmi->hdmi_output = DRM_HDMI_OUTPUT_YCBCR444;
++		hdmi->colordepth = 8;
++		break;
++	case MEDIA_BUS_FMT_YUV10_1X30:
++		hdmi->hdmi_output = DRM_HDMI_OUTPUT_YCBCR444;
++		hdmi->colordepth = 10;
++		break;
++	case MEDIA_BUS_FMT_UYVY10_1X20:
++		hdmi->hdmi_output = DRM_HDMI_OUTPUT_YCBCR422;
++		hdmi->colordepth = 10;
++		break;
++	case MEDIA_BUS_FMT_UYVY8_1X16:
++		hdmi->hdmi_output = DRM_HDMI_OUTPUT_YCBCR422;
++		hdmi->colordepth = 8;
++		break;
++	case MEDIA_BUS_FMT_UYYVYY8_0_5X24:
++		hdmi->hdmi_output = DRM_HDMI_OUTPUT_YCBCR420;
++		hdmi->colordepth = 8;
++		break;
++	case MEDIA_BUS_FMT_UYYVYY10_0_5X30:
++		hdmi->hdmi_output = DRM_HDMI_OUTPUT_YCBCR420;
++		hdmi->colordepth = 10;
++		break;
++	default:
++		hdmi->hdmi_output = DRM_HDMI_OUTPUT_DEFAULT_RGB;
++		hdmi->colordepth = 8;
++	}
++
++	prop = drm_property_create_enum(connector->dev, 0,
++					"hdmi_output_depth",
++					color_depth_enum_list,
++					ARRAY_SIZE(color_depth_enum_list));
++	if (prop) {
++		hdmi->color_depth_property = prop;
++		drm_object_attach_property(&connector->base, prop, 0);
++	}
++
++	prop = drm_property_create_enum(connector->dev, 0, "hdmi_output_format",
++					drm_hdmi_output_enum_list,
++					ARRAY_SIZE(drm_hdmi_output_enum_list));
++	if (prop) {
++		hdmi->hdmi_output_property = prop;
++		drm_object_attach_property(&connector->base, prop, 0);
++	}
++}
++
++static void
++dw_hdmi_rockchip_destroy_properties(struct drm_connector *connector,
++				    void *data)
++{
++	struct rockchip_hdmi *hdmi = (struct rockchip_hdmi *)data;
++
++	if (hdmi->color_depth_property) {
++		drm_property_destroy(connector->dev,
++				     hdmi->color_depth_property);
++		hdmi->color_depth_property = NULL;
++	}
++
++	if (hdmi->hdmi_output_property) {
++		drm_property_destroy(connector->dev,
++				     hdmi->hdmi_output_property);
++		hdmi->hdmi_output_property = NULL;
++	}
++}
++
++static int
++dw_hdmi_rockchip_set_property(struct drm_connector *connector,
++			      struct drm_connector_state *state,
++			      struct drm_property *property,
++			      u64 val,
++			      void *data)
++{
++	struct rockchip_hdmi *hdmi = (struct rockchip_hdmi *)data;
++
++	if (property == hdmi->color_depth_property) {
++		hdmi->colordepth = val;
++		return 0;
++	} else if (property == hdmi->hdmi_output_property) {
++		hdmi->hdmi_output = val;
++		return 0;
++	}
++
++	DRM_ERROR("failed to set rockchip hdmi connector property\n");
++	return -EINVAL;
++}
++
++static int
++dw_hdmi_rockchip_get_property(struct drm_connector *connector,
++			      const struct drm_connector_state *state,
++			      struct drm_property *property,
++			      u64 *val,
++			      void *data)
++{
++	struct rockchip_hdmi *hdmi = (struct rockchip_hdmi *)data;
++
++	if (property == hdmi->color_depth_property) {
++		*val = hdmi->colordepth;
++		return 0;
++	} else if (property == hdmi->hdmi_output_property) {
++		*val = hdmi->hdmi_output;
++		return 0;
++	}
++
++	DRM_ERROR("failed to get rockchip hdmi connector property\n");
++	return -EINVAL;
++}
++
++static const struct dw_hdmi_property_ops dw_hdmi_rockchip_property_ops = {
++	.attach_properties	= dw_hdmi_rockchip_attach_properties,
++	.destroy_properties	= dw_hdmi_rockchip_destroy_properties,
++	.set_property		= dw_hdmi_rockchip_set_property,
++	.get_property		= dw_hdmi_rockchip_get_property,
++};
++
+ static void dw_hdmi_rk3228_setup_hpd(struct dw_hdmi *dw_hdmi, void *data)
+ {
+ 	struct rockchip_hdmi *hdmi = (struct rockchip_hdmi *)data;
+@@ -511,6 +682,9 @@ static int dw_hdmi_rockchip_bind(struct device *dev, struct device *master,
+ 	hdmi->dev = &pdev->dev;
+ 	hdmi->chip_data = plat_data->phy_data;
+ 	plat_data->phy_data = hdmi;
++
++	plat_data->property_ops = &dw_hdmi_rockchip_property_ops;
++
+ 	encoder = &hdmi->encoder;
+ 
+ 	encoder->possible_crtcs = drm_of_find_possible_crtcs(drm, dev->of_node);
+diff --git a/include/drm/bridge/dw_hdmi.h b/include/drm/bridge/dw_hdmi.h
+index ea34ca146b82..dc561ebe7a9b 100644
+--- a/include/drm/bridge/dw_hdmi.h
++++ b/include/drm/bridge/dw_hdmi.h
+@@ -6,6 +6,7 @@
+ #ifndef __DW_HDMI__
+ #define __DW_HDMI__
+ 
++#include <drm/drm_property.h>
+ #include <sound/hdmi-codec.h>
+ 
+ struct drm_display_info;
+@@ -123,6 +124,24 @@ struct dw_hdmi_phy_ops {
+ 	void (*setup_hpd)(struct dw_hdmi *hdmi, void *data);
+ };
+ 
++struct dw_hdmi_property_ops {
++	void (*attach_properties)(struct drm_connector *connector,
++				  unsigned int color, int version,
++				  void *data);
++	void (*destroy_properties)(struct drm_connector *connector,
++				   void *data);
++	int (*set_property)(struct drm_connector *connector,
++			    struct drm_connector_state *state,
++			    struct drm_property *property,
++			    u64 val,
++			    void *data);
++	int (*get_property)(struct drm_connector *connector,
++			    const struct drm_connector_state *state,
++			    struct drm_property *property,
++			    u64 *val,
++			    void *data);
++};
++
+ struct dw_hdmi_plat_data {
+ 	struct regmap *regm;
+ 
+@@ -141,6 +160,9 @@ struct dw_hdmi_plat_data {
+ 					   const struct drm_display_info *info,
+ 					   const struct drm_display_mode *mode);
+ 
++	/* Vendor Property support */
++	const struct dw_hdmi_property_ops *property_ops;
++
+ 	/* Vendor PHY support */
+ 	const struct dw_hdmi_phy_ops *phy_ops;
+ 	const char *phy_name;
+-- 
+2.25.1
+
+
+
