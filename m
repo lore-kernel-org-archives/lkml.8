@@ -2,260 +2,143 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37836C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44880C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:58:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DDC6206DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:54:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="tPI/LbM4"
+	by mail.kernel.org (Postfix) with ESMTP id 27B97204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:58:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727055AbgHLJyt (ORCPT
+        id S1727115AbgHLJ6j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 05:54:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60738 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726712AbgHLJys (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 05:54:48 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFF38C06174A
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 02:54:45 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 84D26595;
-        Wed, 12 Aug 2020 11:54:32 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1597226072;
-        bh=LHqWYKsaLofHO0i8LcYbq9pwMdf80i4uyOKkmzxI25I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tPI/LbM48L2Elv36CKvAcaIzpObJ0c7ZOHSh/Q8Z8smu3LIFW0EmAMsyvCwfd68ua
-         zT0QO9eGhaQZBM39vOLzwZlJ+fQ3oTRk0xhh02n1sGecfldwyRNRMsGUS3I7fxWxZN
-         f1LGxn4VG8pYdZr4SfMVUWXigxX+nXKieNP8L/mw=
-Date:   Wed, 12 Aug 2020 12:54:18 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Vinay Simha BN <simhavcs@gmail.com>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm/bridge/tc358775: Fixes bus formats read
-Message-ID: <20200812095418.GG6057@pendragon.ideasonboard.com>
-References: <1597217150-22911-1-git-send-email-simhavcs@gmail.com>
+        Wed, 12 Aug 2020 05:58:39 -0400
+Received: from mga03.intel.com ([134.134.136.65]:38806 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726755AbgHLJ6i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 05:58:38 -0400
+IronPort-SDR: FikZYCu5QxUXRPwX0DshuyjNJf9YME71fPoQ0QWjtNjkDEUQA0bp/SrIevhscfeveaKf55pPvv
+ g7Y4ayGNK4RQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9710"; a="153891470"
+X-IronPort-AV: E=Sophos;i="5.76,303,1592895600"; 
+   d="scan'208";a="153891470"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2020 02:58:37 -0700
+IronPort-SDR: E8aE+WbLcn6LCu/ICRtamVDvaNjNxN2Qc+rwkKSyTriN6HqapQXN6nKVp1gBESSh5+MOVN8nUF
+ 6XQdFbxYnDVg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,303,1592895600"; 
+   d="scan'208";a="439346508"
+Received: from lkp-server01.sh.intel.com (HELO 7f1ebb311643) ([10.239.97.150])
+  by orsmga004.jf.intel.com with ESMTP; 12 Aug 2020 02:58:36 -0700
+Received: from kbuild by 7f1ebb311643 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1k5nWl-00001B-IF; Wed, 12 Aug 2020 09:58:35 +0000
+Date:   Wed, 12 Aug 2020 17:57:56 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [rcu:dev.2020.08.10a] BUILD SUCCESS
+ 9dd4d242c535c30266a08806314ea6b016f94617
+Message-ID: <5f33bd24.Gs5FxkDxP/MG38Ea%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1597217150-22911-1-git-send-email-simhavcs@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vinay,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  dev.2020.08.10a
+branch HEAD: 9dd4d242c535c30266a08806314ea6b016f94617  tools/memory-model: Document categories of ordering primitives
 
-Thank you for the patch.
+elapsed time: 724m
 
-On Wed, Aug 12, 2020 at 12:55:50PM +0530, Vinay Simha BN wrote:
-> - bus formats read from drm_bridge_state.output_bus_cfg.format
->   and .atomic_get_input_bus_fmts() instead of connector
-> 
-> Signed-off-by: Vinay Simha BN <simhavcs@gmail.com>
-> 
-> ---
->  v1:
->  * Laurent Pinchart review comments incorporated
->    drm_bridge_state.output_bus_cfg.format
->    instead of connector
-> ---
->  drivers/gpu/drm/bridge/tc358775.c | 76 ++++++++++++++++++++++++++++++---------
->  1 file changed, 59 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/bridge/tc358775.c b/drivers/gpu/drm/bridge/tc358775.c
-> index 7da15cd..5d8714a 100644
-> --- a/drivers/gpu/drm/bridge/tc358775.c
-> +++ b/drivers/gpu/drm/bridge/tc358775.c
-> @@ -271,6 +271,13 @@ struct tc_data {
->  	struct gpio_desc	*stby_gpio;
->  	u8			lvds_link; /* single-link or dual-link */
->  	u8			bpc;
-> +	u32			output_bus_fmt;
-> +};
-> +
-> +static const u32 tc_lvds_out_bus_fmts[] = {
-> +	MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA,
-> +	MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
-> +	MEDIA_BUS_FMT_RGB666_1X7X3_SPWG,
->  };
->  
->  static inline struct tc_data *bridge_to_tc(struct drm_bridge *b)
-> @@ -359,19 +366,6 @@ static void d2l_write(struct i2c_client *i2c, u16 addr, u32 val)
->  			ret, addr);
->  }
->  
-> -/* helper function to access bus_formats */
-> -static struct drm_connector *get_connector(struct drm_encoder *encoder)
-> -{
-> -	struct drm_device *dev = encoder->dev;
-> -	struct drm_connector *connector;
-> -
-> -	list_for_each_entry(connector, &dev->mode_config.connector_list, head)
-> -		if (connector->encoder == encoder)
-> -			return connector;
-> -
-> -	return NULL;
-> -}
-> -
->  static void tc_bridge_enable(struct drm_bridge *bridge)
->  {
->  	struct tc_data *tc = bridge_to_tc(bridge);
-> @@ -380,7 +374,6 @@ static void tc_bridge_enable(struct drm_bridge *bridge)
->  	u32 val = 0;
->  	u16 dsiclk, clkdiv, byteclk, t1, t2, t3, vsdelay;
->  	struct drm_display_mode *mode;
-> -	struct drm_connector *connector = get_connector(bridge->encoder);
->  
->  	mode = &bridge->encoder->crtc->state->adjusted_mode;
->  
-> @@ -451,14 +444,13 @@ static void tc_bridge_enable(struct drm_bridge *bridge)
->  	d2l_write(tc->i2c, LVPHY0, LV_PHY0_PRBS_ON(4) | LV_PHY0_ND(6));
->  
->  	dev_dbg(tc->dev, "bus_formats %04x bpc %d\n",
-> -		connector->display_info.bus_formats[0],
-> +		tc->output_bus_fmt,
->  		tc->bpc);
->  	/*
->  	 * Default hardware register settings of tc358775 configured
->  	 * with MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA jeida-24 format
->  	 */
-> -	if (connector->display_info.bus_formats[0] ==
-> -		MEDIA_BUS_FMT_RGB888_1X7X4_SPWG) {
-> +	if (tc->output_bus_fmt == MEDIA_BUS_FMT_RGB888_1X7X4_SPWG) {
->  		/* VESA-24 */
->  		d2l_write(tc->i2c, LV_MX0003, LV_MX(LVI_R0, LVI_R1, LVI_R2, LVI_R3));
->  		d2l_write(tc->i2c, LV_MX0407, LV_MX(LVI_R4, LVI_R7, LVI_R5, LVI_G0));
-> @@ -590,6 +582,51 @@ static int tc358775_parse_dt(struct device_node *np, struct tc_data *tc)
->  	return 0;
->  }
->  
-> +static int tc_bridge_atomic_check(struct drm_bridge *bridge,
-> +				  struct drm_bridge_state *bridge_state,
-> +				  struct drm_crtc_state *crtc_state,
-> +				  struct drm_connector_state *conn_state)
-> +{
-> +	struct tc_data *tc = bridge_to_tc(bridge);
-> +
-> +	tc->output_bus_fmt = bridge_state->output_bus_cfg.format;
+configs tested: 73
+configs skipped: 4
 
-.atomic_check() isn't allowed to modify the device state, neither the
-hardware state nor the software state in drm_bridge or tc_data. You can
-instead access the bridge state directly in tc_bridge_enable(), with
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-	struct drm_bridge_state *state =
-		drm_priv_to_bridge_state(bridge->base.state);
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                         axm55xx_defconfig
+powerpc                     ep8248e_defconfig
+arc                        nsim_700_defconfig
+arm                            hisi_defconfig
+arm                  colibri_pxa270_defconfig
+arm                       mainstone_defconfig
+sh                            shmin_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+c6x                              allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a006-20200811
+x86_64               randconfig-a001-20200811
+x86_64               randconfig-a003-20200811
+x86_64               randconfig-a005-20200811
+x86_64               randconfig-a004-20200811
+x86_64               randconfig-a002-20200811
+i386                 randconfig-a005-20200811
+i386                 randconfig-a001-20200811
+i386                 randconfig-a002-20200811
+i386                 randconfig-a003-20200811
+i386                 randconfig-a006-20200811
+i386                 randconfig-a004-20200811
+i386                 randconfig-a016-20200811
+i386                 randconfig-a011-20200811
+i386                 randconfig-a015-20200811
+i386                 randconfig-a013-20200811
+i386                 randconfig-a012-20200811
+i386                 randconfig-a014-20200811
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+x86_64                                   rhel
+x86_64                           allyesconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
 
-> +
-> +	dev_dbg(tc->dev, "output_bus_fmt %04x\n", tc->output_bus_fmt);
-> +
-> +	return 0;
-> +}
-> +
-> +static u32 *
-> +tc_bridge_get_input_bus_fmts(struct drm_bridge *bridge,
-> +			     struct drm_bridge_state *bridge_state,
-> +			     struct drm_crtc_state *crtc_state,
-> +			     struct drm_connector_state *conn_state,
-> +			     u32 output_fmt,
-> +			     unsigned int *num_input_fmts)
-> +{
-> +	u32 *input_fmts = NULL;
-> +	int i;
-
-i only takes positive values, so it can be an unsigned int.
-
-> +
-> +	*num_input_fmts = 0;
-> +
-> +	for (i = 0 ; i < ARRAY_SIZE(tc_lvds_out_bus_fmts) ; ++i) {
-> +		if (output_fmt == tc_lvds_out_bus_fmts[i]) {
-> +			*num_input_fmts = 1;
-> +			input_fmts = kcalloc(*num_input_fmts,
-> +					     sizeof(*input_fmts),
-> +					     GFP_KERNEL);
-> +			if (!input_fmts)
-> +				return NULL;
-> +
-> +			input_fmts[0] = output_fmt;
-
-I don't think this is right, the input of the bridge isn't LVDS, is it ?
-As far as I can tell, the hardware support transcoding any of the
-supported input formats (RGB565, RGB666 or RGB888) to any of the
-supported output formats. How about the following ?
-
-static const u32 tc_lvds_in_bus_fmts[] = {
-	MEDIA_BUS_FMT_RGB565_1X16,
-	MEDIA_BUS_FMT_RGB666_1X18,
-	MEDIA_BUS_FMT_RBG888_1X24,
-};
-
-...
-
-	u32 *input_fmts;
-	unsigned int i;
-
-	*num_input_fmts = 0;
-
-	for (i = 0 ; i < ARRAY_SIZE(tc_lvds_out_bus_fmts) ; ++i) {
-		if (output_fmt == tc_lvds_out_bus_fmts[i])
-			break;
-	}
-
-	if (i == ARRAY_SIZE(tc_lvds_out_bus_fmts))
-		return NULL;
-
-	input_fmts = kcalloc(*num_input_fmts, ARRAY_SIZE(tc_lvds_in_bus_fmts),
-			     GFP_KERNEL);
-	if (!input_fmts)
-		return NULL;
-
-	for (i = 0; i < ARRAY_SIZE(tc_lvds_in_bus_fmts); ++i)
-		input_fmts[i] = tc_lvds_in_bus_fmts[i];
-
-	*num_inputs_fmts = ARRAY_SIZE(tc_lvds_in_bus_fmts);
-	return input_fmts;
-
-> +
-> +			break;
-> +		}
-> +	}
-> +
-> +	return input_fmts;
-> +}
-> +
->  static int tc_bridge_attach(struct drm_bridge *bridge,
->  			    enum drm_bridge_attach_flags flags)
->  {
-> @@ -639,6 +676,11 @@ static int tc_bridge_attach(struct drm_bridge *bridge,
->  }
->  
->  static const struct drm_bridge_funcs tc_bridge_funcs = {
-> +	.atomic_duplicate_state = drm_atomic_helper_bridge_duplicate_state,
-> +	.atomic_destroy_state = drm_atomic_helper_bridge_destroy_state,
-> +	.atomic_reset = drm_atomic_helper_bridge_reset,
-> +	.atomic_get_input_bus_fmts = tc_bridge_get_input_bus_fmts,
-> +	.atomic_check = tc_bridge_atomic_check,
->  	.attach = tc_bridge_attach,
->  	.pre_enable = tc_bridge_pre_enable,
->  	.enable = tc_bridge_enable,
-
--- 
-Regards,
-
-Laurent Pinchart
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
