@@ -2,114 +2,108 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D3C3C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:03:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A63E7C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:06:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35336207DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:03:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D9B620838
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:06:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="haS8Xtlz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727796AbgHLODr (ORCPT
+        id S1726554AbgHLOF7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 10:03:47 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:17492 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726540AbgHLODK (ORCPT
+        Wed, 12 Aug 2020 10:05:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42864 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726485AbgHLOFz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 10:03:10 -0400
-X-IronPort-AV: E=Sophos;i="5.76,304,1592838000"; 
-   d="scan'208";a="54444344"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 12 Aug 2020 23:03:09 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 7D1734007553;
-        Wed, 12 Aug 2020 23:03:06 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Marian-Cristian Rotariu 
-        <marian-cristian.rotariu.rb@bp.renesas.com>
-Subject: [PATCH 6/9] arm64: dts: renesas: r8a774e1: Populate HDMI encoder node
-Date:   Wed, 12 Aug 2020 15:02:14 +0100
-Message-Id: <20200812140217.24251-7-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200812140217.24251-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20200812140217.24251-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Wed, 12 Aug 2020 10:05:55 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 948B3C061384
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 07:05:55 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id r2so2156578wrs.8
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 07:05:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VtilRrD53TAdMxjjX3JU/V35Hl/WvabSAv9hkR9mbIo=;
+        b=haS8XtlzDKF65bhoMUOPOYBmQNDeRR4FP8YUEZmz147Szkwx5jyNHWh/mdYZ41ycwI
+         uqSlTJO0Kn5Rpzh/SiEisSNWE5lifM7NYHue5MbbXLwrOA1OwYBYorokzGjrnd+uySHO
+         8Ct3jIDQt9BJcVlJ+yi6fuchImDf4cT1H7fejBFiwLNnmUSwiEkkNvRN1w6pAy1p+nyk
+         bcIk2OntG1j8Es3Zzw6QucVASC6RtQ1OArcoXxiOnQFndGu2e8NREIZzF5nYL2LL9hGm
+         IhTwaeYtQUjA/Sat9cebHCaFRdVGkHZjptoY1I45YdW7aDpzbXpQOWEZILCffcKjZydL
+         fkyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VtilRrD53TAdMxjjX3JU/V35Hl/WvabSAv9hkR9mbIo=;
+        b=MqRAfoHA3Xbco3KVQ52fO/aqIcPQPG0l4GAZNjKUYQsqQytpvI2eJjKKyqn1/aD8sL
+         gnwQLwu4RGrbWK7VpFMlzZBv++O65bKoqwYHOY3+bJT6DNsnmmMIKBDBJDzJDrhVsA2j
+         uQR8OH8GlzFZUSV3QABEehx0UtuPZmx9QXN8njQiqQEFiazP6TS0snYz123EoTk1VrIQ
+         sm9W0hCGI5gU59QzKJw6wkM9GUAdAtx6cI5qApzclZ/yRlKXNdtsp51fwAgkxo7UOAXr
+         lH0uaFqsrKCzek7y2EBkLmcZBbekYNvkkSojIn0cCVYg0AS5MEps7M4IavJFiEgvr5Mn
+         U6JQ==
+X-Gm-Message-State: AOAM531SMDWLxZkWkQv3mKSVqIDqDsqKHTodP8XgV2Wz8ohpcnQvrbuV
+        /GSPcFuhnV5zqsBenUVCloyz6Ae6Y4mga1DBVaLvrA==
+X-Google-Smtp-Source: ABdhPJytQgXxWxig/9l09GRJvMEY7a6NgMxWo4zz8fCCadHTu8T6hXjIQHA8VANPfPFXBXQm826jc5M8rHkK1oxIaVg=
+X-Received: by 2002:a05:6000:1203:: with SMTP id e3mr34708903wrx.324.1597241154142;
+ Wed, 12 Aug 2020 07:05:54 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200806181932.2253-1-krzk@kernel.org> <20200806182059.2431-2-krzk@kernel.org>
+In-Reply-To: <20200806182059.2431-2-krzk@kernel.org>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 12 Aug 2020 16:05:17 +0200
+Message-ID: <CAPDyKFpBYDrn9dFGSNw9vHjrvPaP5amxYdxjifLBEM2U+AdVTQ@mail.gmail.com>
+Subject: Re: [PATCH v2 02/41] mmc: s3cmci: Remove unneeded machine header include
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Ben Dooks <ben-linux@fluff.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+On Thu, 6 Aug 2020 at 20:21, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> The s3cmci driver does not use machine header mach/dma.h.
+>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Populate HDMI node properties in R8A774E1 SoC dtsi.
+If you want this to go through my mmc tree, then please tell me.
 
-Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- arch/arm64/boot/dts/renesas/r8a774e1.dtsi | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+Otherwise:
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a774e1.dtsi b/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
-index 4b57c1ea762c..79efcd73cc46 100644
---- a/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
-@@ -2601,22 +2601,32 @@
- 		};
- 
- 		hdmi0: hdmi@fead0000 {
-+			compatible = "renesas,r8a774e1-hdmi",
-+				     "renesas,rcar-gen3-hdmi";
- 			reg = <0 0xfead0000 0 0x10000>;
-+			interrupts = <GIC_SPI 389 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 729>,
-+				 <&cpg CPG_CORE R8A774E1_CLK_HDMI>;
-+			clock-names = "iahb", "isfr";
-+			power-domains = <&sysc R8A774E1_PD_ALWAYS_ON>;
-+			resets = <&cpg 729>;
- 			status = "disabled";
- 
--			/* placeholder */
--
- 			ports {
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 
- 				port@0 {
- 					reg = <0>;
-+					dw_hdmi0_in: endpoint {
-+						remote-endpoint = <&du_out_hdmi0>;
-+					};
- 				};
- 				port@1 {
- 					reg = <1>;
- 				};
- 				port@2 {
-+					/* HDMI sound */
- 					reg = <2>;
- 				};
- 			};
-@@ -2650,6 +2660,7 @@
- 				port@1 {
- 					reg = <1>;
- 					du_out_hdmi0: endpoint {
-+						remote-endpoint = <&dw_hdmi0_in>;
- 					};
- 				};
- 				port@2 {
--- 
-2.17.1
+Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
 
+Kind regards
+Uffe
+
+> ---
+>  drivers/mmc/host/s3cmci.c | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/drivers/mmc/host/s3cmci.c b/drivers/mmc/host/s3cmci.c
+> index b5df948f8155..60fc3fc30fb4 100644
+> --- a/drivers/mmc/host/s3cmci.c
+> +++ b/drivers/mmc/host/s3cmci.c
+> @@ -26,7 +26,6 @@
+>  #include <linux/mmc/slot-gpio.h>
+>
+>  #include <plat/gpio-cfg.h>
+> -#include <mach/dma.h>
+>  #include <mach/gpio-samsung.h>
+>
+>  #include <linux/platform_data/mmc-s3cmci.h>
+> --
+> 2.17.1
+>
