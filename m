@@ -2,142 +2,178 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 597ACC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:08:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63326C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:09:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BDA4207F7
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:08:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F6A32080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:09:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597234154;
+	bh=gBhTa1XmUXqnL+I+ENtHrIYjzEKTEzoi24Fs1EEN+Hs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nWQec8pE11AxJWfuopR9EMz4fvI91DsMX8bLCOautE5E3Joq83o3XZLXw9HuC4+1W
+	 PAjEkkofZOaV7g6+mO5NTr4xw19ZusrBPFzLjkDwZ+P3pgdI8OZpENWxXJi46Kd8ww
+	 UoKCqbGESDEAFkz5nTobS3ojAUHauu1rg5GOK/dY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727911AbgHLMI1 convert rfc822-to-8bit (ORCPT
+        id S1727945AbgHLMJN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 08:08:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52980 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726804AbgHLMI0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 08:08:26 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 558F3C06174A
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 05:08:26 -0700 (PDT)
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1k5pYK-0007Gt-NL; Wed, 12 Aug 2020 14:08:20 +0200
-Received: from pza by lupine with local (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1k5pYJ-00087Y-7J; Wed, 12 Aug 2020 14:08:19 +0200
-Message-ID: <f65aeebb6c372a7138e496a30ce39f879d4e24ed.camel@pengutronix.de>
-Subject: Re: [PATCH 3/3] mmc: mediatek: add optional module reset property
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Wenbin Mei <wenbin.mei@mediatek.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Chaotian Jing <chaotian.jing@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        srv_heupstream@mediatek.com
-Date:   Wed, 12 Aug 2020 14:08:19 +0200
-In-Reply-To: <20200812093726.10123-4-wenbin.mei@mediatek.com>
-References: <20200812093726.10123-1-wenbin.mei@mediatek.com>
-         <20200812093726.10123-4-wenbin.mei@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.30.5-1.1 
+        Wed, 12 Aug 2020 08:09:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37366 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726453AbgHLMJM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 08:09:12 -0400
+Received: from quaco.ghostprotocols.net (179.176.8.134.dynamic.adsl.gvt.net.br [179.176.8.134])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3952A207F7;
+        Wed, 12 Aug 2020 12:09:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597234151;
+        bh=gBhTa1XmUXqnL+I+ENtHrIYjzEKTEzoi24Fs1EEN+Hs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hMSImypoizhHfSsAqKy3THXcxN00/v9P6ykexlQd9dMsh9G5P0bN9lyf6JdzZo1ka
+         M/ztOEBVqbp+tIu9YZrSbPk01n2GRMqVGDrwh+nu4g8Pi9Idxk9ojl/lmDwg7b4tu8
+         +kjQK7Q+n871W78FGNqlJxwcJf+LJCcRCbDp6Mjg=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id E1829403C6; Wed, 12 Aug 2020 09:09:08 -0300 (-03)
+Date:   Wed, 12 Aug 2020 09:09:08 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Alexander Gordeev <agordeev@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Subject: Re: [PATCH v2 3/3] perf bench numa: fix benchmark names
+Message-ID: <20200812120908.GC13995@kernel.org>
+References: <cover.1597004831.git.agordeev@linux.ibm.com>
+ <6b6f2084f132ee8e9203dc7c32f9deb209b87a68.1597004831.git.agordeev@linux.ibm.com>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6b6f2084f132ee8e9203dc7c32f9deb209b87a68.1597004831.git.agordeev@linux.ibm.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-08-12 at 17:37 +0800, Wenbin Mei wrote:
-> This patch adds a optional reset management for msdc.
-> Sometimes the bootloader does not bring msdc register
-> to default state, so need reset the msdc controller.
+Em Mon, Aug 10, 2020 at 08:22:00AM +0200, Alexander Gordeev escreveu:
+> Standard benchmark names let users know the tests specifics.
+> For example "2x1-bw-process" name tells that two processes
+> one thread each are run and the RAM bandwidth is measured.
 > 
-> Signed-off-by: Wenbin Mei <wenbin.mei@mediatek.com>
+> Several benchmarks names do not correspond to their actual
+> running configuration. Fix that and also some whitespace
+> and comment inconsistencies.
+
+Looks, ok, applied.
+
+- Arnaldo
+ 
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Jiri Olsa <jolsa@redhat.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
 > ---
->  drivers/mmc/host/mtk-sd.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
+>  tools/perf/bench/numa.c | 35 +++++++++++++++++------------------
+>  1 file changed, 17 insertions(+), 18 deletions(-)
 > 
-> diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
-> index 39e7fc54c438..2b243c03c9b2 100644
-> --- a/drivers/mmc/host/mtk-sd.c
-> +++ b/drivers/mmc/host/mtk-sd.c
-> @@ -22,6 +22,7 @@
->  #include <linux/slab.h>
->  #include <linux/spinlock.h>
->  #include <linux/interrupt.h>
-> +#include <linux/reset.h>
+> diff --git a/tools/perf/bench/numa.c b/tools/perf/bench/numa.c
+> index 90639c9..3b4b63f 100644
+> --- a/tools/perf/bench/numa.c
+> +++ b/tools/perf/bench/numa.c
+> @@ -812,12 +812,12 @@ static u64 do_work(u8 *__data, long bytes, int nr, int nr_max, int loop, u64 val
+>  			}
+>  		}
+>  	} else if (!g->p.data_backwards || (nr + loop) & 1) {
+> +		/* Process data forwards: */
 >  
->  #include <linux/mmc/card.h>
->  #include <linux/mmc/core.h>
-> @@ -434,6 +435,7 @@ struct msdc_host {
->  	struct msdc_save_para save_para; /* used when gate HCLK */
->  	struct msdc_tune_para def_tune_para; /* default tune setting */
->  	struct msdc_tune_para saved_tune_para; /* tune result of CMD21/CMD19 */
-> +	struct reset_control *reset;
->  };
+>  		d0 = data + off;
+>  		d  = data + off + 1;
+>  		d1 = data + words;
 >  
->  static const struct mtk_mmc_compatible mt8135_compat = {
-> @@ -1516,6 +1518,12 @@ static void msdc_init_hw(struct msdc_host *host)
->  	u32 val;
->  	u32 tune_reg = host->dev_comp->pad_tune_reg;
+> -		/* Process data forwards: */
+>  		for (;;) {
+>  			if (unlikely(d >= d1))
+>  				d = data;
+> @@ -835,7 +835,6 @@ static u64 do_work(u8 *__data, long bytes, int nr, int nr_max, int loop, u64 val
+>  		d  = data + off - 1;
+>  		d1 = data + words;
 >  
-> +	if (!IS_ERR(host->reset)) {
-> +		reset_control_assert(host->reset);
-> +		usleep_range(10, 50);
-> +		reset_control_deassert(host->reset);
-> +	}
-> +
-
-This should be:
-
-	if (host->reset) {
-		reset_control_assert(host->reset);
-		usleep_range(10, 50);
-		reset_control_deassert(host->reset);
-	}
-
->  	/* Configure to MMC/SD mode, clock free running */
->  	sdr_set_bits(host->base + MSDC_CFG, MSDC_CFG_MODE | MSDC_CFG_CKPDN);
+> -		/* Process data forwards: */
+>  		for (;;) {
+>  			if (unlikely(d < data))
+>  				d = data + words-1;
+> @@ -1732,12 +1731,12 @@ static int run_bench_numa(const char *name, const char **argv)
+>   */
+>  static const char *tests[][MAX_ARGS] = {
+>     /* Basic single-stream NUMA bandwidth measurements: */
+> -   { "RAM-bw-local,",	  "mem",  "-p",  "1",  "-t",  "1", "-P", "1024",
+> +   { "RAM-bw-local,",     "mem",  "-p",  "1",  "-t",  "1", "-P", "1024",
+>  			  "-C" ,   "0", "-M",   "0", OPT_BW_RAM },
+>     { "RAM-bw-local-NOTHP,",
+>  			  "mem",  "-p",  "1",  "-t",  "1", "-P", "1024",
+>  			  "-C" ,   "0", "-M",   "0", OPT_BW_RAM_NOTHP },
+> -   { "RAM-bw-remote,",	  "mem",  "-p",  "1",  "-t",  "1", "-P", "1024",
+> +   { "RAM-bw-remote,",    "mem",  "-p",  "1",  "-t",  "1", "-P", "1024",
+>  			  "-C" ,   "0", "-M",   "1", OPT_BW_RAM },
 >  
-> @@ -2273,6 +2281,11 @@ static int msdc_drv_probe(struct platform_device *pdev)
->  	if (IS_ERR(host->src_clk_cg))
->  		host->src_clk_cg = NULL;
+>     /* 2-stream NUMA bandwidth measurements: */
+> @@ -1779,24 +1778,24 @@ static int run_bench_numa(const char *name, const char **argv)
+>  			  "mem",  "-p",  "8", "-t",  "1", "-P", " 512", OPT_BW_NOTHP },
+>     { "16x1-bw-process,",  "mem",  "-p", "16", "-t",  "1", "-P",  "256", OPT_BW },
 >  
-> +	host->reset = devm_reset_control_get_optional_exclusive(&pdev->dev,
-> +								"hrst");
-> +	if (PTR_ERR(host->reset) == -EPROBE_DEFER)
-> +		return PTR_ERR(host->reset);
-> +
+> -   { " 4x1-bw-thread,",	  "mem",  "-p",  "1", "-t",  "4", "-T",  "256", OPT_BW },
+> -   { " 8x1-bw-thread,",	  "mem",  "-p",  "1", "-t",  "8", "-T",  "256", OPT_BW },
+> -   { "16x1-bw-thread,",   "mem",  "-p",  "1", "-t", "16", "-T",  "128", OPT_BW },
+> -   { "32x1-bw-thread,",   "mem",  "-p",  "1", "-t", "32", "-T",   "64", OPT_BW },
+> +   { " 1x4-bw-thread,",   "mem",  "-p",  "1", "-t",  "4", "-T",  "256", OPT_BW },
+> +   { " 1x8-bw-thread,",   "mem",  "-p",  "1", "-t",  "8", "-T",  "256", OPT_BW },
+> +   { "1x16-bw-thread,",   "mem",  "-p",  "1", "-t", "16", "-T",  "128", OPT_BW },
+> +   { "1x32-bw-thread,",   "mem",  "-p",  "1", "-t", "32", "-T",   "64", OPT_BW },
+>  
+> -   { " 2x3-bw-thread,",	  "mem",  "-p",  "2", "-t",  "3", "-P",  "512", OPT_BW },
+> -   { " 4x4-bw-thread,",	  "mem",  "-p",  "4", "-t",  "4", "-P",  "512", OPT_BW },
+> -   { " 4x6-bw-thread,",	  "mem",  "-p",  "4", "-t",  "6", "-P",  "512", OPT_BW },
+> -   { " 4x8-bw-thread,",	  "mem",  "-p",  "4", "-t",  "8", "-P",  "512", OPT_BW },
+> -   { " 4x8-bw-thread-NOTHP,",
+> +   { " 2x3-bw-process,",  "mem",  "-p",  "2", "-t",  "3", "-P",  "512", OPT_BW },
+> +   { " 4x4-bw-process,",  "mem",  "-p",  "4", "-t",  "4", "-P",  "512", OPT_BW },
+> +   { " 4x6-bw-process,",  "mem",  "-p",  "4", "-t",  "6", "-P",  "512", OPT_BW },
+> +   { " 4x8-bw-process,",  "mem",  "-p",  "4", "-t",  "8", "-P",  "512", OPT_BW },
+> +   { " 4x8-bw-process-NOTHP,",
+>  			  "mem",  "-p",  "4", "-t",  "8", "-P",  "512", OPT_BW_NOTHP },
+> -   { " 3x3-bw-thread,",	  "mem",  "-p",  "3", "-t",  "3", "-P",  "512", OPT_BW },
+> -   { " 5x5-bw-thread,",	  "mem",  "-p",  "5", "-t",  "5", "-P",  "512", OPT_BW },
+> +   { " 3x3-bw-process,",  "mem",  "-p",  "3", "-t",  "3", "-P",  "512", OPT_BW },
+> +   { " 5x5-bw-process,",  "mem",  "-p",  "5", "-t",  "5", "-P",  "512", OPT_BW },
+>  
+> -   { "2x16-bw-thread,",   "mem",  "-p",  "2", "-t", "16", "-P",  "512", OPT_BW },
+> -   { "1x32-bw-thread,",   "mem",  "-p",  "1", "-t", "32", "-P", "2048", OPT_BW },
+> +   { "2x16-bw-process,",  "mem",  "-p",  "2", "-t", "16", "-P",  "512", OPT_BW },
+> +   { "1x32-bw-process,",  "mem",  "-p",  "1", "-t", "32", "-P", "2048", OPT_BW },
+>  
+> -   { "numa02-bw,",	  "mem",  "-p",  "1", "-t", "32", "-T",   "32", OPT_BW },
+> +   { "numa02-bw,",        "mem",  "-p",  "1", "-t", "32", "-T",   "32", OPT_BW },
+>     { "numa02-bw-NOTHP,",  "mem",  "-p",  "1", "-t", "32", "-T",   "32", OPT_BW_NOTHP },
+>     { "numa01-bw-thread,", "mem",  "-p",  "2", "-t", "16", "-T",  "192", OPT_BW },
+>     { "numa01-bw-thread-NOTHP,",
+> -- 
+> 1.8.3.1
+> 
 
-This should be:
+-- 
 
-	host->reset = devm_reset_control_get_optional_exclusive(&pdev->dev,
-								"hrst");
-	if (IS_ERR(host->reset))
-		return PTR_ERR(host->reset);
-
-If the reset is configured in DT then it should be used, even if the
-reset driver is loaded later.
-
-If the DT does not contain the reset-names = "hrst" property at all,
-devm_reset_control_get_optional_*() will return NULL.
-
-With these two changes,
-
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-
-regards
-Philipp
+- Arnaldo
