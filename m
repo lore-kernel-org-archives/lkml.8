@@ -2,150 +2,120 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F33DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 20:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C9BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 20:24:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72F68206DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 20:21:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A494E206DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 20:24:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n0hmcigv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726826AbgHLUVV (ORCPT
+        id S1726583AbgHLUYa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 16:21:21 -0400
-Received: from cmta20.telus.net ([209.171.16.93]:58207 "EHLO cmta20.telus.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726030AbgHLUVU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 16:21:20 -0400
-Received: from montezuma.home ([154.5.226.127])
-        by cmsmtp with SMTP
-        id 5xFLkg3D9ljNx5xFNkm9WQ; Wed, 12 Aug 2020 14:21:18 -0600
-X-Telus-Authed: none
-X-Authority-Analysis: v=2.3 cv=Z8aS40ZA c=1 sm=1 tr=0
- a=f8b3WT/FcTuUJCJtQO1udw==:117 a=f8b3WT/FcTuUJCJtQO1udw==:17
- a=kj9zAlcOel0A:10 a=x7bEGLp0ZPQA:10 a=COSDN44dAAMA:10 a=pGLkceISAAAA:8
- a=e5mUnYsNAAAA:8 a=XlkWa5Bfyw0YRDVwgmMA:9 a=CjuIK1q_8ugA:10
- a=Vxmtnl_E_bksehYqCbjh:22
-Date:   Wed, 12 Aug 2020 13:21:15 -0700 (PDT)
-From:   Zwane Mwaikambo <zwanem@gmail.com>
-To:     Lyude Paul <lyude@redhat.com>
-cc:     Daniel Vetter <daniel@ffwll.ch>, tcamuso@redhat.com,
-        dkwon@redhat.com, Linux Kernel <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Subject: Re: [PATCH] drm: assure aux_dev is nonzero before using it
-In-Reply-To: <a1141faf8c6a0a924d87132fb4a297cd6d47e09d.camel@redhat.com>
-Message-ID: <alpine.DEB.2.21.2008121314020.39850@montezuma.home>
-References: <alpine.DEB.2.21.2008101004110.27032@montezuma.home> <20200811085830.GZ2352366@phenom.ffwll.local> <alpine.DEB.2.21.2008111514210.35094@montezuma.home> <CAKMK7uHxikojLQNbsnnfDfGZ3tFP9CRUTzvr+DsZghzQupaBGg@mail.gmail.com>
- <a1141faf8c6a0a924d87132fb4a297cd6d47e09d.camel@redhat.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 12 Aug 2020 16:24:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44652 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726547AbgHLUY3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 16:24:29 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9B70C061383;
+        Wed, 12 Aug 2020 13:24:28 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id d27so2585185qtg.4;
+        Wed, 12 Aug 2020 13:24:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=0JwWTfgMUWwOG2VdFhmTHy70OqTVhWrEaTFFUPlZs44=;
+        b=n0hmcigv9AKqbYE9d8oRnL6p+38s8wXErBjMvc7vQCCJBe0VpT63Gr69kEk1wj3ME0
+         yOLvVHPCf2J/EXKXQf27oneydYsig124HqHtDulBSQ3+9KbNxXJnISSupJZUzu5ipGTz
+         Jnamunb7x2te6cWrDnOuw4sYtQ/YHYliT7mbida19VNs+QhkdUpLc8lPl3/ovy4AEYZ+
+         GPMqn5623Xp6d229Y9HVwiYkDjkHZqfJd2Egs8/WlWKnZ1qD22FTrBFTc3eVsEZUYgdp
+         li4oC3tz6AFGDf5YVoeDmCzoJZbr4KtogcOQL7d7vncFD9WmwUYs8jgx/eGt5JHb8XEr
+         +BNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=0JwWTfgMUWwOG2VdFhmTHy70OqTVhWrEaTFFUPlZs44=;
+        b=FMKu4j4xEEgWgACQi671eXJdMhBA7EP/hKVN7d+porQ/Mukie0r0uj0m+PvK8ScdsV
+         5uAMFcIomqICnqBKt3xMpuND+PCVUYP78/b5aCk2F26sBr4d8K/QT4CVXdIGIrScVMBC
+         VKSg86UD31MmrLNjbO4gaSXaljueeTQEjh5vH+ne4NQt+sZnHLBMT+7kk6IbMVZsaVIu
+         gNG2HFxIpm5a6jcU6qerjGIB3Igs0ffzSfMJk8yZb7iDlwtgmPIfayElQlkduQXZONTy
+         Zooe2qMrtRK7bXm6NCzd87wM4uWlR1xhz3g7X98iqaIjQ+rjQ4bpAMLzq0wORD0FLjpN
+         moPA==
+X-Gm-Message-State: AOAM533JKG6L2gMQVCuqCx/Eli44YShEMeQfMBa4WCBIY5vBL1Kr2mxF
+        wevNMYDjp5lWDK3k79smMMg=
+X-Google-Smtp-Source: ABdhPJxJeb9hHRLR88ZwXWiK4lyhVLzEuiWoV1JjpAi3EfuC1RgnZ8DUMsG4RsxsCQcL7hfoXHpeJg==
+X-Received: by 2002:ac8:7606:: with SMTP id t6mr1585661qtq.348.1597263867572;
+        Wed, 12 Aug 2020 13:24:27 -0700 (PDT)
+Received: from eaf ([190.19.79.86])
+        by smtp.gmail.com with ESMTPSA id g136sm3324516qke.82.2020.08.12.13.24.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Aug 2020 13:24:26 -0700 (PDT)
+Date:   Wed, 12 Aug 2020 17:24:20 -0300
+From:   Ernesto =?utf-8?Q?A=2E_Fern=C3=A1ndez?= 
+        <ernesto.mnd.fernandez@gmail.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        syzkaller-bugs@googlegroups.com, linux-kernel@vger.kernel.org
+Subject: Re: [Linux-kernel-mentees] [PATCH] hfs, hfsplus: Fix NULL pointer
+ dereference in hfs_find_init()
+Message-ID: <20200812202420.GA5873@eaf>
+References: <20200812065556.869508-1-yepeilin.cs@gmail.com>
+ <20200812070827.GA1304640@kroah.com>
+ <20200812071306.GA869606@PWN>
+ <20200812085904.GA16441@kadam>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-CMAE-Envelope: MS4wfIACCZgqsl7hQ/V5ALQdJOX5hoBiAWLWNHcOudD4WTPn27pItJZX8X3z7CohxBXrrnmVbaVKJ1vkhU+4zZjJ7AKb9xusq0tvYU4/rd2IBBDl2UckdrVI
- 8Fy3wRp8q91bY639t572MU5EMXzTonJlR0SP1ZBm3WkW4m9cxTOa755+52hL/qtPe8VatsObSBwi0IYiXFl5m0VkbUeK+JRa3LgnLbaTQuHiaamaLErspTaL
- /JkCF/m7hGoZQ7Nl1tzZNCrwB3nOzSHMaRd90owBpWkoBRY1EEbRf5UK/C4Ca3W1gL/9xOqK/8rIp2CYd/+E209mTSyDzQvFRISQ5GXohls=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200812085904.GA16441@kadam>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 12 Aug 2020, Lyude Paul wrote:
+Hi,
 
-> On Wed, 2020-08-12 at 16:10 +0200, Daniel Vetter wrote:
-> > On Wed, Aug 12, 2020 at 12:16 AM Zwane Mwaikambo <zwanem@gmail.com> wrote:
-> > > On Tue, 11 Aug 2020, Daniel Vetter wrote:
-> > > 
-> > > > On Mon, Aug 10, 2020 at 10:11:50AM -0700, Zwane Mwaikambo wrote:
-> > > > > Hi Folks,
-> > > > >     I know this thread eventually dropped off due to not identifying
-> > > > > the underlying issue. It's still occuring on 5.8 and in my case it
-> > > > > happened because the udev device nodes for the DP aux devices were not
-> > > > > cleaned up whereas the kernel had no association with them. I can
-> > > > > reproduce the bug just by creating a device node for a non-existent
-> > > > > minor
-> > > > > device and calling open().
-> > > > 
-> > > > Hm I don't have that thread anymore, but generally these bugs are solved
-> > > > by not registering the device before it's ready for use. We do have
-> > > > drm_connector->late_register for that stuff. Just a guess since I'm not
-> > > > seeing full details here.
-> > > 
-> > > In this particular case, the physical device disappeared before the nodes
-> > > were cleaned up. It involves putting a computer to sleep with a monitor
-> > > plugged in and then waking it up with the monitor unplugged.
-> > 
-> > We also have early_unregister for the reverse, but yes this sounds
-> > more tricky ... Adding Lyude who's been working on way too much
-> > lifetime fun around dp recently.
-> > -Daniel
-> > 
-> Hi-I think just checking whether the auxdev is NULL or not is a reasonable
-> fix, although I am curious as to how exactly the aux dev's parent is getting
-> destroyed before it's child, which I would have thought would be the only way
-> you could hit this?
-
-Here is what it looks like without (1) and with (2) monitor connected. In 
-the case where the monitor disappears during suspend, the device nodes 
-aux3,4 are still around
-
-1) No monitor connected
-ls -l /dev/drm*
-crw------- 1 root root 238, 0 Aug  6 22:32 /dev/drm_dp_aux0
-crw------- 1 root root 238, 1 Aug  6 22:32 /dev/drm_dp_aux1
-
-
-2) Monitor connected
-crw------- 1 root root 238, 0 Aug  6 22:32 /dev/drm_dp_aux0
-crw------- 1 root root 238, 1 Aug  6 22:32 /dev/drm_dp_aux1
-crw------- 1 root root 238, 2 Aug 11 14:51 /dev/drm_dp_aux2
-crw------- 1 root root 238, 3 Aug 11 14:51 /dev/drm_dp_aux3
-crw------- 1 root root 238, 4 Aug 11 14:51 /dev/drm_dp_aux4
-
-
-
+On Wed, Aug 12, 2020 at 11:59:04AM +0300, Dan Carpenter wrote:
+> Yeah, the patch doesn't work at all.  I looked at one call tree and it
+> is:
 > 
-> > > 
-> > > > > To me it still makes sense to just check aux_dev because the chardev
-> > > > > has
-> > > > > no way to check before calling.
-> > > > > 
-> > > > > (gdb) list *drm_dp_aux_dev_get_by_minor+0x29
-> > > > > 0x17b39 is in drm_dp_aux_dev_get_by_minor
-> > > > > (drivers/gpu/drm/drm_dp_aux_dev.c:65).
-> > > > > 60      static struct drm_dp_aux_dev
-> > > > > *drm_dp_aux_dev_get_by_minor(unsigned index)
-> > > > > 61      {
-> > > > > 62              struct drm_dp_aux_dev *aux_dev = NULL;
-> > > > > 63
-> > > > > 64              mutex_lock(&aux_idr_mutex);
-> > > > > 65              aux_dev = idr_find(&aux_idr, index);
-> > > > > 66              if (!kref_get_unless_zero(&aux_dev->refcount))
-> > > > > 67                      aux_dev = NULL;
-> > > > > 68              mutex_unlock(&aux_idr_mutex);
-> > > > > 69
-> > > > > (gdb) p/x &((struct drm_dp_aux_dev *)(0x0))->refcount
-> > > > > $8 = 0x18
-> > > > > 
-> > > > > static int auxdev_open(struct inode *inode, struct file *file)
-> > > > > {
-> > > > >     unsigned int minor = iminor(inode);
-> > > > >     struct drm_dp_aux_dev *aux_dev;
-> > > > > 
-> > > > >     aux_dev = drm_dp_aux_dev_get_by_minor(minor);
-> > > > >     if (!aux_dev)
-> > > > >         return -ENODEV;
-> > > > > 
-> > > > >     file->private_data = aux_dev;
-> > > > >     return 0;
-> > > > > }
-> > > > > 
-> > > > > 
-> > > > > _______________________________________________
-> > > > > dri-devel mailing list
-> > > > > dri-devel@lists.freedesktop.org
-> > > > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> > 
-> > 
+> hfs_mdb_get() tries to allocate HFS_SB(sb)->ext_tree.
 > 
+> 	HFS_SB(sb)->ext_tree = hfs_btree_open(sb, HFS_EXT_CNID, hfs_ext_keycmp);
+>                     ^^^^^^^^
+> 
+> hfs_btree_open() calls page = read_mapping_page(mapping, 0, NULL);
+> read_mapping_page() calls mapping->a_ops->readpage() which leads to
+> hfs_readpage() which leads to hfs_ext_read_extent() which calls
+> res = hfs_find_init(HFS_SB(inode->i_sb)->ext_tree, &fd);
+>                                          ^^^^^^^^
+> 
+> So we need ->ext_tree to be non-NULL before we can set ->ext_tree to be
+> non-NULL...  :/
+
+For HFS+, the first 8 extents for a file are kept inside its own fork data
+structure, not in the extent tree. So, in normal operation, you don't need
+to search the extent tree to find the first page of the extent tree itself.
+The HFS layout is different, but it should work the same way.
+
+Of course this sort of thing can still be triggered by crafted filesystems.
+If that's what the reproducer is about, I think just returning an error is
+reasonable. But these modules will never be safe against attacks such as
+this.
+
+> I wonder how long this has been broken and if we should just delete the
+> AFS file system.
+> 
+> regards,
+> dan carpenter
