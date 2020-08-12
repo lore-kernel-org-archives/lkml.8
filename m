@@ -2,93 +2,197 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 153FBC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 01:07:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5DAAC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 01:07:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3A9E2076C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 01:07:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90443206F2
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 01:07:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726479AbgHLBHH (ORCPT
+        id S1726506AbgHLBHO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 21:07:07 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:52023 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726420AbgHLBHG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 21:07:06 -0400
-Received: by mail-il1-f199.google.com with SMTP id c84so608674ila.18
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 18:07:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=X3NiX6nVSgp11EpijWT3pX7H1MOgqhCnBt3mOeEwKPI=;
-        b=sAFN9+4RcvCrcCzdWDoNj3y6ZSJnj1zbxLEm77+dMbX9SwQ+qOq4ulDsPnEd0QANBO
-         X5wy2AUOq1bh051J2cYI+31JfkIKyuUa7yNw6gB9rQpf3TBtp+7EvVYKG+WOefdgRLp6
-         X+D9DejUwBYWSBeISEdj1DBBvyNFTRJSgaatO4qbiAJpX6iO3X+e0dqBQ3lV/r4Uc/6r
-         ImM020+Ht0yI/yE4MbjT/3rpUJ4kzL8AqXgi1iTmnRUlvayVGPLRWJZffPNzW8BQJweN
-         wQhwnYTUMbEeWa4CPgE/ayrmM4RSTVIXiERWFr36faEkOmBMPNip4NAuJdJiVSe+IZYY
-         xdDw==
-X-Gm-Message-State: AOAM530C9EtPEl+uOjVFYIefiTEU6YcuxGGCHbRnM9Os8ZZGzvlvgsUH
-        MJ8mSdl9esE5kPJba/oZgdEeRBziAeE9fOS4d5O3p+Fc+j8Z
-X-Google-Smtp-Source: ABdhPJzflhizS6nniBWRSpW8mHijAZdmSAeiEp/VNDrTlrQJdIKYs08rqIEDvlb4OOzwu63y0W80MTCFDtmUkUL4JXTKE6e0ZT1S
+        Tue, 11 Aug 2020 21:07:14 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:44942 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726420AbgHLBHN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 21:07:13 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id B4164D85BC53D551978D;
+        Wed, 12 Aug 2020 09:07:06 +0800 (CST)
+Received: from vm107-89-192.huawei.com (100.107.89.192) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.487.0; Wed, 12 Aug 2020 09:06:56 +0800
+From:   Wei Li <liwei213@huawei.com>
+To:     <catalin.marinas@arm.com>, <will@kernel.org>
+CC:     <liwei213@huawei.com>, <saberlily.xia@hisilicon.com>,
+        <puck.chen@hisilicon.com>, <butao@hisilicon.com>,
+        <fengbaopeng2@hisilicon.com>, <nsaenzjulienne@suse.de>,
+        <steve.capper@arm.com>, <rppt@linux.ibm.com>,
+        <song.bao.hua@hisilicon.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <sujunfei2@hisilicon.com>
+Subject: [PATCH v2] arm64: mm: free unused memmap for sparse memory model that define VMEMMAP
+Date:   Wed, 12 Aug 2020 09:06:55 +0800
+Message-ID: <20200812010655.96339-1-liwei213@huawei.com>
+X-Mailer: git-send-email 2.15.0
 MIME-Version: 1.0
-X-Received: by 2002:a92:bbc6:: with SMTP id x67mr26231257ilk.235.1597194425363;
- Tue, 11 Aug 2020 18:07:05 -0700 (PDT)
-Date:   Tue, 11 Aug 2020 18:07:05 -0700
-In-Reply-To: <000000000000b6b450059870d703@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000005c72d405aca3ce17@google.com>
-Subject: Re: KASAN: global-out-of-bounds Read in precalculate_color
-From:   syzbot <syzbot+02d9172bf4c43104cd70@syzkaller.appspotmail.com>
-To:     a.darwish@linutronix.de, akpm@linux-foundation.org,
-        bsegall@google.com, changbin.du@intel.com,
-        clang-built-linux@googlegroups.com, davem@davemloft.net,
-        dietmar.eggemann@arm.com, dvyukov@google.com, elver@google.com,
-        ericvh@gmail.com, hverkuil-cisco@xs4all.nl, jpa@git.mail.kapsi.fi,
-        juri.lelli@redhat.com, kasan-dev@googlegroups.com,
-        keescook@chromium.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-sparse@vger.kernel.org, luc.vanoostenryck@gmail.com,
-        lucho@ionkov.net, mark.rutland@arm.com, masahiroy@kernel.org,
-        mchehab@kernel.org, mgorman@suse.de, mhiramat@kernel.org,
-        michal.lkml@markovi.net, miguel.ojeda.sandonis@gmail.com,
-        mingo@redhat.com, netdev@vger.kernel.org, paulmck@kernel.org,
-        peterz@infradead.org, rminnich@sandia.gov, rostedt@goodmis.org,
-        rppt@kernel.org, samitolvanen@google.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
-        v9fs-developer@lists.sourceforge.net, vincent.guittot@linaro.org,
-        viro@zeniv.linux.org.uk, vivek.kasireddy@intel.com,
-        will@kernel.org, yepeilin.cs@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [100.107.89.192]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot suspects this issue was fixed by commit:
+For the memory hole, sparse memory model that define SPARSEMEM_VMEMMAP
+do not free the reserved memory for the page map, this patch do it.
 
-commit dfd402a4c4baae42398ce9180ff424d589b8bffc
-Author: Marco Elver <elver@google.com>
-Date:   Thu Nov 14 18:02:54 2019 +0000
+Signed-off-by: Wei Li <liwei213@huawei.com>
+Signed-off-by: Chen Feng <puck.chen@hisilicon.com>
+Signed-off-by: Xia Qing <saberlily.xia@hisilicon.com>
 
-    kcsan: Add Kernel Concurrency Sanitizer infrastructure
+v2: fix the patch v1 compile errors that are not based on the latest mainline.
+---
+ arch/arm64/mm/init.c | 81 +++++++++++++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 71 insertions(+), 10 deletions(-)
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13eb65d6900000
-start commit:   46cf053e Linux 5.5-rc3
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ed9d672709340e35
-dashboard link: https://syzkaller.appspot.com/bug?extid=02d9172bf4c43104cd70
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=147e5ac1e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14b49e71e00000
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index 1e93cfc7c47a..600889945cd0 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -441,7 +441,48 @@ void __init bootmem_init(void)
+ 	memblock_dump_all();
+ }
 
-If the result looks correct, please mark the issue as fixed by replying with:
+-#ifndef CONFIG_SPARSEMEM_VMEMMAP
++#ifdef CONFIG_SPARSEMEM_VMEMMAP
++#define VMEMMAP_PAGE_INUSE 0xFD
++static inline void free_memmap(unsigned long start_pfn, unsigned long end_pfn)
++{
++	unsigned long addr, end;
++	unsigned long next;
++	pmd_t *pmd;
++	void *page_addr;
++	phys_addr_t phys_addr;
++
++	addr = (unsigned long)pfn_to_page(start_pfn);
++	end = (unsigned long)pfn_to_page(end_pfn);
++
++	pmd = pmd_off_k(addr);
++	for (; addr < end; addr = next, pmd++) {
++		next = pmd_addr_end(addr, end);
++
++		if (!pmd_present(*pmd))
++			continue;
++
++		if (IS_ALIGNED(addr, PMD_SIZE) &&
++			IS_ALIGNED(next, PMD_SIZE)) {
++			phys_addr = __pfn_to_phys(pmd_pfn(*pmd));
++			memblock_free(phys_addr, PMD_SIZE);
++			pmd_clear(pmd);
++		} else {
++			/* If here, we are freeing vmemmap pages. */
++			memset((void *)addr, VMEMMAP_PAGE_INUSE, next - addr);
++			page_addr = page_address(pmd_page(*pmd));
++
++			if (!memchr_inv(page_addr, VMEMMAP_PAGE_INUSE,
++				PMD_SIZE)) {
++				phys_addr = __pfn_to_phys(pmd_pfn(*pmd));
++				memblock_free(phys_addr, PMD_SIZE);
++				pmd_clear(pmd);
++			}
++		}
++	}
++
++	flush_tlb_all();
++}
++#else
+ static inline void free_memmap(unsigned long start_pfn, unsigned long end_pfn)
+ {
+ 	struct page *start_pg, *end_pg;
+@@ -468,31 +509,53 @@ static inline void free_memmap(unsigned long start_pfn, unsigned long end_pfn)
+ 		memblock_free(pg, pgend - pg);
+ }
 
-#syz fix: kcsan: Add Kernel Concurrency Sanitizer infrastructure
++#endif
++
+ /*
+  * The mem_map array can get very big. Free the unused area of the memory map.
+  */
+ static void __init free_unused_memmap(void)
+ {
+-	unsigned long start, prev_end = 0;
++	unsigned long start, cur_start, prev_end = 0;
+ 	struct memblock_region *reg;
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+ 	for_each_memblock(memory, reg) {
+-		start = __phys_to_pfn(reg->base);
++		cur_start = __phys_to_pfn(reg->base);
+
+ #ifdef CONFIG_SPARSEMEM
+ 		/*
+ 		 * Take care not to free memmap entries that don't exist due
+ 		 * to SPARSEMEM sections which aren't present.
+ 		 */
+-		start = min(start, ALIGN(prev_end, PAGES_PER_SECTION));
+-#endif
++		start = min(cur_start, ALIGN(prev_end, PAGES_PER_SECTION));
++
+ 		/*
+-		 * If we had a previous bank, and there is a space between the
+-		 * current bank and the previous, free it.
++		 * Free memory in the case of:
++		 * 1. if cur_start - prev_end <= PAGES_PER_SECTION,
++		 * free pre_end ~ cur_start.
++		 * 2. if cur_start - prev_end > PAGES_PER_SECTION,
++		 * free pre_end ~ ALIGN(prev_end, PAGES_PER_SECTION).
+ 		 */
+ 		if (prev_end && prev_end < start)
+ 			free_memmap(prev_end, start);
+
++		/*
++		 * Free memory in the case of:
++		 * if cur_start - prev_end > PAGES_PER_SECTION,
++		 * free ALIGN_DOWN(cur_start, PAGES_PER_SECTION) ~ cur_start.
++		 */
++		if (cur_start > start &&
++		    !IS_ALIGNED(cur_start, PAGES_PER_SECTION))
++			free_memmap(ALIGN_DOWN(cur_start, PAGES_PER_SECTION),
++				    cur_start);
++#else
++		/*
++		 * If we had a previous bank, and there is a space between the
++		 * current bank and the previous, free it.
++		 */
++		if (prev_end && prev_end < cur_start)
++			free_memmap(prev_end, cur_start);
++#endif
+ 		/*
+ 		 * Align up here since the VM subsystem insists that the
+ 		 * memmap entries are valid from the bank end aligned to
+@@ -507,7 +570,6 @@ static void __init free_unused_memmap(void)
+ 		free_memmap(prev_end, ALIGN(prev_end, PAGES_PER_SECTION));
+ #endif
+ }
+-#endif	/* !CONFIG_SPARSEMEM_VMEMMAP */
+
+ /*
+  * mem_init() marks the free areas in the mem_map and tells us how much memory
+@@ -524,9 +586,8 @@ void __init mem_init(void)
+
+ 	set_max_mapnr(max_pfn - PHYS_PFN_OFFSET);
+
+-#ifndef CONFIG_SPARSEMEM_VMEMMAP
+ 	free_unused_memmap();
+-#endif
++
+ 	/* this will put all unused low memory onto the freelists */
+ 	memblock_free_all();
+
+--
+2.15.0
+
