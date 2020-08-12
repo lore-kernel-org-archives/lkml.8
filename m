@@ -2,128 +2,212 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD3C1C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:22:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C757C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:22:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8508C2083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:22:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB1B4207DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:22:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="RNDEHMva"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727811AbgHLJWW (ORCPT
+        id S1727828AbgHLJWe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 05:22:22 -0400
-Received: from mga12.intel.com ([192.55.52.136]:51828 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726255AbgHLJWW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 05:22:22 -0400
-IronPort-SDR: jFnhjxRwcQ3aHPOchsz20rCN2MqpV+O0CJjE6JrZl/QHG5JoTal6W/P75edOeH5ltEQIh1p1AQ
- lffcaD8aEs3A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9710"; a="133448725"
-X-IronPort-AV: E=Sophos;i="5.76,303,1592895600"; 
-   d="scan'208";a="133448725"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2020 02:22:21 -0700
-IronPort-SDR: QzZvGoaNu725tcJ3kPSkdq+/bdS/VEYAMGvlLi7ua24oPzZQufo2dbS/0GPWcjIq40Pb9RDKf/
- IrY3MqhaP5bg==
-X-IronPort-AV: E=Sophos;i="5.76,303,1592895600"; 
-   d="scan'208";a="369227319"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2020 02:22:17 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id CEBC920859; Wed, 12 Aug 2020 12:22:15 +0300 (EEST)
-Date:   Wed, 12 Aug 2020 12:22:15 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Bingbu Cao <bingbu.cao@linux.intel.com>
-Cc:     linux-i2c@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-acpi@vger.kernel.org, Bingbu Cao <bingbu.cao@intel.com>,
-        linux-media@vger.kernel.org,
-        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
-        Hyungwoo Yang <hyungwoo.yang@intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        rajmohan.mani@intel.com, Tomasz Figa <tfiga@chromium.org>,
-        "Qiu, Tian Shu" <tian.shu.qiu@intel.com>
-Subject: Re: [PATCH v5 3/6] ov5670: Support probe whilst the device is in a
- low power state
-Message-ID: <20200812092215.GL16270@paasikivi.fi.intel.com>
-References: <20200810142747.12400-1-sakari.ailus@linux.intel.com>
- <20200810142747.12400-4-sakari.ailus@linux.intel.com>
- <7a1fa217-7fd1-1d36-0b1c-ad5d09ea11a0@linux.intel.com>
+        Wed, 12 Aug 2020 05:22:34 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:48174 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726255AbgHLJWe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 05:22:34 -0400
+Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id CC848595;
+        Wed, 12 Aug 2020 11:22:30 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1597224151;
+        bh=WxR0bD/qesCEzDS1TUdLg+fPZgf/ua764mXYDcrsEP4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RNDEHMva105JzWO24cpP4ermJi5VqV6dodewcVqPLcIDJ/pBO+/p5kzEZaKMhjYGN
+         9EGTF3SHWxD+Wgc0hSWdWx9mT/q3jm/vhQgPReZnx373MefyA335m7BAw6Vrn//yMi
+         O/R/sFrA1PcdzDNmsEZzARurxNHIUFcs4cXZphEU=
+Date:   Wed, 12 Aug 2020 12:22:17 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Algea Cao <algea.cao@rock-chips.com>
+Cc:     a.hajda@samsung.com, kuankuan.y@gmail.com, hjc@rock-chips.com,
+        tzimmermann@suse.de, dri-devel@lists.freedesktop.org,
+        sam@ravnborg.org, airlied@linux.ie, heiko@sntech.de,
+        jernej.skrabec@siol.net, laurent.pinchart+renesas@ideasonboard.com,
+        jonas@kwiboo.se, mripard@kernel.org, darekm@google.com,
+        linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, cychiang@chromium.org,
+        linux-kernel@vger.kernel.org, narmstrong@baylibre.com,
+        jbrunet@baylibre.com, maarten.lankhorst@linux.intel.com,
+        daniel@ffwll.ch
+Subject: Re: [PATCH 2/6] drm: bridge: dw-hdmi: Implement connector
+ atomic_begin/atomic_flush
+Message-ID: <20200812092217.GC6057@pendragon.ideasonboard.com>
+References: <20200812083120.743-1-algea.cao@rock-chips.com>
+ <20200812083433.934-1-algea.cao@rock-chips.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <7a1fa217-7fd1-1d36-0b1c-ad5d09ea11a0@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200812083433.934-1-algea.cao@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bingbu,
+Hi Algea,
 
-Thanks for the review.
+Thank you for the patch.
 
-On Wed, Aug 12, 2020 at 05:12:28PM +0800, Bingbu Cao wrote:
+On Wed, Aug 12, 2020 at 04:34:33PM +0800, Algea Cao wrote:
+> Introduce dw_hdmi_connector_atomic_begin() and
+> dw_hdmi_connector_atomic_flush() to implement connector
+> atomic_begin/atomic_flush. When enc_out_bus_format or
+> enc_in_bus_format changed, dw_hdmi_setup is called.
 > 
+> To avoid screen flash when updating bus format, it's need
+> to send AVMUTE flag to make screen black, and clear flag
+> after bus format updated.
 > 
-> On 8/10/20 10:27 PM, Sakari Ailus wrote:
-> > Tell ACPI device PM code that the driver supports the device being in a
-> > low power state when the driver's probe function is entered.
-> > 
-> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > ---
-> >  drivers/media/i2c/ov5670.c | 23 ++++++++++++++---------
-> >  1 file changed, 14 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/drivers/media/i2c/ov5670.c b/drivers/media/i2c/ov5670.c
-> > index f26252e35e08d..1f75b888d2a18 100644
-> > --- a/drivers/media/i2c/ov5670.c
-> > +++ b/drivers/media/i2c/ov5670.c
-> > @@ -2456,6 +2456,7 @@ static int ov5670_probe(struct i2c_client *client)
-> >  	struct ov5670 *ov5670;
-> >  	const char *err_msg;
-> >  	u32 input_clk = 0;
-> > +	bool low_power;
-> >  	int ret;
-> >  
-> >  	device_property_read_u32(&client->dev, "clock-frequency", &input_clk);
-> > @@ -2472,11 +2473,14 @@ static int ov5670_probe(struct i2c_client *client)
-> >  	/* Initialize subdev */
-> >  	v4l2_i2c_subdev_init(&ov5670->sd, client, &ov5670_subdev_ops);
-> >  
-> > -	/* Check module identity */
-> > -	ret = ov5670_identify_module(ov5670);
-> > -	if (ret) {
-> > -		err_msg = "ov5670_identify_module() error";
-> > -		goto error_print;
-> > +	low_power = acpi_dev_state_low_power(&client->dev);
-> > +	if (!low_power) {
-> > +		/* Check module identity */
-> > +		ret = ov5670_identify_module(ov5670);
-> > +		if (ret) {
-> > +			err_msg = "ov5670_identify_module() error";
-> > +			goto error_print;
-> > +	
+> Signed-off-by: Algea Cao <algea.cao@rock-chips.com>
+> ---
 > 
-> Sakari, thanks for your patch.
-> one question - With this change, there will be no chance for driver to guarantee
-> that the camera sensor plugged in is the camera that the matched driver actually
-> can drive until try to streaming the camera, so is it necessary to return
-> appropriate error in .s_stream ops to notify user it is not the hardware that
-> current driver can drive? if no other better way.
+>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 65 +++++++++++++++++++++++
+>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.h |  4 ++
+>  2 files changed, 69 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> index 6148a022569a..a1a81fc768c2 100644
+> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> @@ -108,6 +108,8 @@ struct hdmi_vmode {
+>  };
+>  
+>  struct hdmi_data_info {
+> +	unsigned int prev_enc_in_bus_format;
+> +	unsigned int prev_enc_out_bus_format;
+>  	unsigned int enc_in_bus_format;
+>  	unsigned int enc_out_bus_format;
+>  	unsigned int enc_in_encoding;
+> @@ -116,6 +118,7 @@ struct hdmi_data_info {
+>  	unsigned int hdcp_enable;
+>  	struct hdmi_vmode video_mode;
+>  	bool rgb_limited_range;
+> +	bool update;
+>  };
+>  
+>  struct dw_hdmi_i2c {
+> @@ -2401,6 +2404,60 @@ static int dw_hdmi_connector_get_modes(struct drm_connector *connector)
+>  	return ret;
+>  }
+>  
+> +static void
+> +dw_hdmi_connector_atomic_begin(struct drm_connector *connector,
+> +			       struct drm_connector_state *conn_state)
+> +{
+> +	struct dw_hdmi *hdmi = container_of(connector, struct dw_hdmi,
+> +					    connector);
+> +	unsigned int enc_in_bus_fmt = hdmi->hdmi_data.enc_in_bus_format;
+> +	unsigned int enc_out_bus_fmt = hdmi->hdmi_data.enc_out_bus_format;
+> +	unsigned int prev_enc_in_bus_fmt =
+> +		hdmi->hdmi_data.prev_enc_in_bus_format;
+> +	unsigned int prev_enc_out_bus_fmt =
+> +		hdmi->hdmi_data.prev_enc_out_bus_format;
+> +
+> +	if (!conn_state->crtc)
+> +		return;
+> +
+> +	if (!hdmi->hdmi_data.video_mode.mpixelclock)
+> +		return;
+> +
+> +	if (enc_in_bus_fmt != prev_enc_in_bus_fmt ||
+> +	    enc_out_bus_fmt != prev_enc_out_bus_fmt) {
+> +		hdmi->hdmi_data.update = true;
+> +		hdmi_writeb(hdmi, HDMI_FC_GCP_SET_AVMUTE, HDMI_FC_GCP);
+> +		/* Add delay to make av mute work on sink*/
+> +		msleep(50);
+> +	} else {
+> +		hdmi->hdmi_data.update = false;
+> +	}
+> +}
+> +
+> +static void
+> +dw_hdmi_connector_atomic_flush(struct drm_connector *connector,
+> +			       struct drm_connector_state *conn_state)
+> +{
+> +	struct dw_hdmi *hdmi = container_of(connector, struct dw_hdmi,
+> +					     connector);
+> +
+> +	if (!conn_state->crtc)
+> +		return;
+> +
+> +	DRM_DEBUG("%s\n", __func__);
+> +
+> +	if (hdmi->hdmi_data.update) {
+> +		dw_hdmi_setup(hdmi, hdmi->curr_conn, &hdmi->previous_mode);
+> +		/*
+> +		 * Before clear AVMUTE, delay is needed to
+> +		 * prevent display flash.
+> +		 */
+> +		msleep(50);
+> +		hdmi_writeb(hdmi, HDMI_FC_GCP_CLEAR_AVMUTE, HDMI_FC_GCP);
+> +		hdmi->hdmi_data.update = false;
+> +	}
+> +}
+> +
+>  static bool hdr_metadata_equal(const struct drm_connector_state *old_state,
+>  			       const struct drm_connector_state *new_state)
+>  {
+> @@ -2465,6 +2522,8 @@ static const struct drm_connector_funcs dw_hdmi_connector_funcs = {
+>  static const struct drm_connector_helper_funcs dw_hdmi_connector_helper_funcs = {
+>  	.get_modes = dw_hdmi_connector_get_modes,
+>  	.atomic_check = dw_hdmi_connector_atomic_check,
+> +	.atomic_begin = dw_hdmi_connector_atomic_begin,
+> +	.atomic_flush = dw_hdmi_connector_atomic_flush,
+>  };
+>  
+>  static int dw_hdmi_connector_create(struct dw_hdmi *hdmi)
+> @@ -2778,6 +2837,12 @@ static int dw_hdmi_bridge_atomic_check(struct drm_bridge *bridge,
+>  {
+>  	struct dw_hdmi *hdmi = bridge->driver_private;
+>  
+> +	hdmi->hdmi_data.prev_enc_out_bus_format =
+> +			hdmi->hdmi_data.enc_out_bus_format;
+> +
+> +	hdmi->hdmi_data.prev_enc_in_bus_format =
+> +			hdmi->hdmi_data.enc_in_bus_format;
+> +
+>  	hdmi->hdmi_data.enc_out_bus_format =
+>  			bridge_state->output_bus_cfg.format;
+>  
 
-Indeed sensor identification is now skipped in probe. I'll add that for v6
---- and check other drivers, too.
+.atomic_check() isn't allowed to change the device state, neither the
+hardware state, nor the software state stored in struct dw_hdmi. You
+essentially need to treat the drm_bridge and dw_hdmi as const in the
+.atomic_check() operation.
+
+> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
+> index 1999db05bc3b..05182418efbb 100644
+> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
+> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
+> @@ -842,6 +842,10 @@ enum {
+>  	HDMI_FC_AVICONF3_QUANT_RANGE_LIMITED = 0x00,
+>  	HDMI_FC_AVICONF3_QUANT_RANGE_FULL = 0x04,
+>  
+> +/* HDMI_FC_GCP */
+> +	HDMI_FC_GCP_SET_AVMUTE = 0x2,
+> +	HDMI_FC_GCP_CLEAR_AVMUTE = 0x1,
+> +
+>  /* FC_DBGFORCE field values */
+>  	HDMI_FC_DBGFORCE_FORCEAUDIO = 0x10,
+>  	HDMI_FC_DBGFORCE_FORCEVIDEO = 0x1,
 
 -- 
-Kind regards,
+Regards,
 
-Sakari Ailus
+Laurent Pinchart
