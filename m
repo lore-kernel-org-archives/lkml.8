@@ -2,224 +2,146 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61160C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 08:56:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7112BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 08:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 463C420786
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 08:56:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4650820786
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 08:57:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597222631;
+	bh=OpdSJrDe6VRA6KahHe+zVXP/Gug35Hv/eCOg8dbd9DY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=bQRzldmfsAatFjbKsr1FC6A/bWKxK0ZEnU9+l12MKKiraJMtf4hsVT9p4nuQOMLjd
+	 i4lBTH10AEmYZ7uyyBELErIyZOmfy4KhxhScF51SXagEk2SLa7Nh2HCGsq3CftZm+1
+	 FmdrjEG0zVrB01FMlEKcCwqLetjdYybuPN2OrJN0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727780AbgHLI4i (ORCPT
+        id S1727795AbgHLI5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 04:56:38 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:49170 "EHLO inva020.nxp.com"
+        Wed, 12 Aug 2020 04:57:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726965AbgHLI4f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 04:56:35 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 0C8241A006C;
-        Wed, 12 Aug 2020 10:56:33 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id EB0311A008A;
-        Wed, 12 Aug 2020 10:56:26 +0200 (CEST)
-Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 7AA08402DD;
-        Wed, 12 Aug 2020 10:56:19 +0200 (CEST)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, gregkh@linuxfoundation.org,
-        galak@codeaurora.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V2 4/5] dt-bindings: serial: Convert MXS auart to json-schema
-Date:   Wed, 12 Aug 2020 16:51:23 +0800
-Message-Id: <1597222284-32609-4-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1597222284-32609-1-git-send-email-Anson.Huang@nxp.com>
-References: <1597222284-32609-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1726990AbgHLI5J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 04:57:09 -0400
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6611A2083B
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 08:57:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597222628;
+        bh=OpdSJrDe6VRA6KahHe+zVXP/Gug35Hv/eCOg8dbd9DY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Mq48PKcDAKPCs4uHN1OeOkS3bDpt771NTXFrCiRP7g1tQgfAQVG5PFzRN3n+6VQBj
+         52V+BNWhpbjp/CVcMwvCMFHhgDs9sLVoZyzgfJsO8aBnnaAHBx+YAhI7PQ3nMBysb3
+         6vutoL+B2atRXi/4iKBq6fUa2PLHAx6OnQeGiPQ0=
+Received: by mail-ot1-f45.google.com with SMTP id h22so1329546otq.11
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 01:57:08 -0700 (PDT)
+X-Gm-Message-State: AOAM531gvggMuAb7PpkIn5oTpl5JvwR3FFFf37MHLrPafFdLhjQSQTM3
+        JmkAlJFW3Jp/KxxCL4R14Pxj233dk8tIBdYAzY0=
+X-Google-Smtp-Source: ABdhPJwF0z1XdBIkc7lgzpT0TKJP7uCMbOPq4HE+7AdCj7tJjiyp1Nb5hK7VFoYBMlsVeraV9tugdkVFs+rdCdR9gxA=
+X-Received: by 2002:a9d:6251:: with SMTP id i17mr8034568otk.90.1597222627672;
+ Wed, 12 Aug 2020 01:57:07 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200403171303.GK20760@hirez.programming.kicks-ass.net>
+ <20200808101222.5103093e@coco.lan> <20200810092523.GA8612@linux-8ccs>
+ <20200810150647.GB8612@linux-8ccs> <20200811163427.6edbf343@coco.lan>
+ <20200811145524.GE2674@hirez.programming.kicks-ass.net> <20200811172738.2d632a09@coco.lan>
+ <20200811160134.GA13652@linux-8ccs>
+In-Reply-To: <20200811160134.GA13652@linux-8ccs>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Wed, 12 Aug 2020 10:56:56 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXF8fm=9CdQykqDbgYCJSP88ezMs3EOosCW+SDi+Lve0zg@mail.gmail.com>
+Message-ID: <CAMj1kXF8fm=9CdQykqDbgYCJSP88ezMs3EOosCW+SDi+Lve0zg@mail.gmail.com>
+Subject: Re: [PATCH v2] module: Harden STRICT_MODULE_RWX
+To:     Jessica Yu <jeyu@kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kees Cook <keescook@chromium.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the MXS auart binding to DT schema format using json-schema.
+On Tue, 11 Aug 2020 at 18:01, Jessica Yu <jeyu@kernel.org> wrote:
+>
+> +++ Mauro Carvalho Chehab [11/08/20 17:27 +0200]:
+> >Em Tue, 11 Aug 2020 16:55:24 +0200
+> >peterz@infradead.org escreveu:
+> >
+> >> On Tue, Aug 11, 2020 at 04:34:27PM +0200, Mauro Carvalho Chehab wrote:
+> >> >   [33] .plt              PROGBITS         0000000000000340  00035c80
+> >> >        0000000000000001  0000000000000000 WAX       0     0     1
+> >> >   [34] .init.plt         NOBITS           0000000000000341  00035c81
+> >> >        0000000000000001  0000000000000000  WA       0     0     1
+> >> >   [35] .text.ftrace[...] PROGBITS         0000000000000342  00035c81
+> >> >        0000000000000001  0000000000000000 WAX       0     0     1
+> >>
+> >> .plt and .text.ftrace_tramplines are buggered.
+> >>
+> >> arch/arm64/kernel/module.lds even marks then as NOLOAD.
+> >
+> >Hmm... Shouldn't the code at module_enforce_rwx_sections() or at
+> >load_module() ignore such sections instead of just rejecting probing
+> >all modules?
+> >
+> >I mean, if the existing toolchain is not capable of excluding
+> >those sections, either the STRICT_MODULE_RWX hardening should be
+> >disabled, if a broken toolchain is detected or some runtime code
+> >should handle such sections on a different way.
+>
+> Hi Mauro, thanks for providing the readelf output. The sections marked 'WAX'
+> are indeed the reason why the module loader is rejecting them.
+>
+> Interesting, my cross-compiled modules do not have the executable flag -
+>
+>   [38] .plt              NOBITS           0000000000000340  00038fc0
+>        0000000000000001  0000000000000000  WA       0     0     1
+>   [39] .init.plt         NOBITS           0000000000000341  00038fc0
+>        0000000000000001  0000000000000000  WA       0     0     1
+>   [40] .text.ftrace_tram NOBITS           0000000000000342  00038fc0
+>        0000000000000001  0000000000000000  WA       0     0     1
+>
+> ld version:
+>
+>     GNU ld (GNU Binutils) 2.34
+>     Copyright (C) 2020 Free Software Foundation, Inc.
+>     This program is free software; you may redistribute it under the terms of
+>     the GNU General Public License version 3 or (at your option) a later version.
+>
+> And gcc:
+>
+>     aarch64-linux-gcc (GCC) 9.3.0
+>     Copyright (C) 2019 Free Software Foundation, Inc.
+>     This is free software; see the source for copying conditions.  There is NO
+>     warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+>
+> I'm a bit confused about what NOLOAD actually implies in this context. From the
+> ld documentation - "The `(NOLOAD)' directive will mark a section to not be
+> loaded at run time." But these sections are marked SHF_ALLOC and are referenced
+> to in the module plt code. Or does it just tell the linker to not initialize it?
+>
+> Adding Ard to CC, I'm sure he'd know more about the section flag specifics.
+>
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-changes since V1:
-	- update examples to align with i.MX23/i.MX28 clock bindings;
-	- add minItem to clocks/clock-names property as i.MX23/i.MX28 have optional clocks
-	  property with one item.
----
- .../devicetree/bindings/serial/fsl-mxs-auart.txt   | 53 -------------
- .../devicetree/bindings/serial/fsl-mxs-auart.yaml  | 91 ++++++++++++++++++++++
- 2 files changed, 91 insertions(+), 53 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/serial/fsl-mxs-auart.txt
- create mode 100644 Documentation/devicetree/bindings/serial/fsl-mxs-auart.yaml
+The module .lds has BYTE(0) in the section contents to prevent the
+linker from pruning them entirely. The (NOLOAD) is there to ensure
+that this byte does not end up in the .ko, which is more a matter of
+principle than anything else, so we can happily drop that if it helps.
 
-diff --git a/Documentation/devicetree/bindings/serial/fsl-mxs-auart.txt b/Documentation/devicetree/bindings/serial/fsl-mxs-auart.txt
-deleted file mode 100644
-index 5c96d41..0000000
---- a/Documentation/devicetree/bindings/serial/fsl-mxs-auart.txt
-+++ /dev/null
-@@ -1,53 +0,0 @@
--* Freescale MXS Application UART (AUART)
--
--Required properties for all SoCs:
--- compatible : Should be one of fallowing variants:
--	"fsl,imx23-auart" - Freescale i.MX23
--	"fsl,imx28-auart" - Freescale i.MX28
--	"alphascale,asm9260-auart" - Alphascale ASM9260
--- reg : Address and length of the register set for the device
--- interrupts : Should contain the auart interrupt numbers
--- dmas: DMA specifier, consisting of a phandle to DMA controller node
--  and AUART DMA channel ID.
--  Refer to dma.txt and fsl-mxs-dma.txt for details.
--- dma-names: "rx" for RX channel, "tx" for TX channel.
--
--Required properties for "alphascale,asm9260-auart":
--- clocks : the clocks feeding the watchdog timer. See clock-bindings.txt
--- clock-names : should be set to
--	"mod" - source for tick counter.
--	"ahb" - ahb gate.
--
--Optional properties:
--- uart-has-rtscts : Indicate the UART has RTS and CTS lines
--  for hardware flow control,
--	it also means you enable the DMA support for this UART.
--- {rts,cts,dtr,dsr,rng,dcd}-gpios: specify a GPIO for RTS/CTS/DTR/DSR/RI/DCD
--  line respectively. It will use specified PIO instead of the peripheral
--  function pin for the USART feature.
--  If unsure, don't specify this property.
--
--Example:
--auart0: serial@8006a000 {
--	compatible = "fsl,imx28-auart", "fsl,imx23-auart";
--	reg = <0x8006a000 0x2000>;
--	interrupts = <112>;
--	dmas = <&dma_apbx 8>, <&dma_apbx 9>;
--	dma-names = "rx", "tx";
--	cts-gpios = <&gpio1 15 GPIO_ACTIVE_LOW>;
--	dsr-gpios = <&gpio1 16 GPIO_ACTIVE_LOW>;
--	dcd-gpios = <&gpio1 17 GPIO_ACTIVE_LOW>;
--};
--
--Note: Each auart port should have an alias correctly numbered in "aliases"
--node.
--
--Example:
--
--aliases {
--	serial0 = &auart0;
--	serial1 = &auart1;
--	serial2 = &auart2;
--	serial3 = &auart3;
--	serial4 = &auart4;
--};
-diff --git a/Documentation/devicetree/bindings/serial/fsl-mxs-auart.yaml b/Documentation/devicetree/bindings/serial/fsl-mxs-auart.yaml
-new file mode 100644
-index 0000000..5c4fa75
---- /dev/null
-+++ b/Documentation/devicetree/bindings/serial/fsl-mxs-auart.yaml
-@@ -0,0 +1,91 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/serial/fsl-mxs-auart.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale MXS Application UART (AUART)
-+
-+maintainers:
-+  - Kumar Gala <galak@codeaurora.org>
-+
-+allOf:
-+  - $ref: "serial.yaml"
-+
-+properties:
-+  compatible:
-+    enum:
-+      - fsl,imx23-auart
-+      - fsl,imx28-auart
-+      - alphascale,asm9260-auart
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  dmas:
-+    items:
-+      - description: DMA controller phandle and request line for RX
-+      - description: DMA controller phandle and request line for TX
-+
-+  dma-names:
-+    items:
-+      - const: rx
-+      - const: tx
-+
-+  clocks:
-+    items:
-+      - description: mod clock
-+      - description: ahb clock
-+    minItems: 1
-+
-+  clock-names:
-+    items:
-+      - const: mod
-+      - const: ahb
-+    minItems: 1
-+
-+  uart-has-rtscts: true
-+  rts-gpios: true
-+  cts-gpios: true
-+  dtr-gpios: true
-+  dsr-gpios: true
-+  rng-gpios: true
-+  dcd-gpios: true
-+
-+if:
-+  properties:
-+    compatible:
-+      contains:
-+        enum:
-+          - alphascale,asm9260-auart
-+then:
-+  required:
-+    - clocks
-+    - clock-names
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - dmas
-+  - dma-names
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    aliases {
-+        serial0 = &auart0;
-+    };
-+
-+    auart0: serial@8006a000 {
-+        compatible = "fsl,imx28-auart";
-+        reg = <0x8006a000 0x2000>;
-+        interrupts = <112>;
-+        dmas = <&dma_apbx 8>, <&dma_apbx 9>;
-+        dma-names = "rx", "tx";
-+        clocks = <&clks 45>;
-+    };
--- 
-2.7.4
+However, this should only affect the PROGBITS vs NOBITS designation,
+and so I am not sure whether it makes a difference.
 
+Depending on where the w^x check occurs, we might simply override the
+permissions of these sections, and strip the writable permission if it
+is set in the PLT handling init code, which manipulates the metadata
+of all these 3 sections before the module space is vmalloc'ed.
