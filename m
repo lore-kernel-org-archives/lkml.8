@@ -2,180 +2,140 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 275AEC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 21:01:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B1D3C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 21:09:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F361B2087C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 21:01:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4714220774
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 21:09:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="UD0VLXTj"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JJyY3xwd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbgHLVB2 (ORCPT
+        id S1726554AbgHLVJS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 17:01:28 -0400
-Received: from ale.deltatee.com ([204.191.154.188]:38418 "EHLO
-        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726564AbgHLVB2 (ORCPT
+        Wed, 12 Aug 2020 17:09:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51532 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726508AbgHLVJR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 17:01:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=kGiEj/z+vdf+Ey+9R6ahin3vijWbPQNp/8asyFRpxHo=; b=UD0VLXTjuHTts8bUCzA8XKl0vD
-        15m73oV6oKBtjBUKkziwo3hSYECesrbvwqPYp9djMlLGyslrSKAxU41EK1ODx8Ekc4p3mIhqLTs1Y
-        YR8jzADiMdicWWk/tvdBdAnWJ3AJCx+jfyrg+qvXjnRH51kRl9PEUb8rKHYhGPNK7zGzYrbezcdDv
-        PzOCj/b0gV5S2k2kFG7etvvYkBGFqSFKBg99x13NG5bO7WODqzzqITOLr55JGuWFH3p/UuhAClPX2
-        +ZwllEa+NSgwbF5v+ZY8j2Oukezs+lKG6qB5cXBfJUkn9rrLRP4HsBe9q9ozcMW2HHKbmzX8PpH2R
-        rmQkjdNQ==;
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-        by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1k5xsD-0003Wb-D4; Wed, 12 Aug 2020 15:01:26 -0600
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1k5xsB-0001s9-84; Wed, 12 Aug 2020 15:01:23 -0600
-From:   Logan Gunthorpe <logang@deltatee.com>
-To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, Keith Busch <kbusch@kernel.org>
-Cc:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <keith.busch@wdc.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Logan Gunthorpe <logang@deltatee.com>
-Date:   Wed, 12 Aug 2020 15:01:19 -0600
-Message-Id: <20200812210119.7155-1-logang@deltatee.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 12 Aug 2020 17:09:17 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 992BBC061384
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 14:09:17 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id f9so1733529pju.4
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 14:09:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=bAaQQ7e9aAoGDmzOJ51xKy0+RuDHeXB46TjNq9EcMXw=;
+        b=JJyY3xwd5EgGKBxKKs4dXLXjk5wiLbg072kKzLvv50o9mgzTqqrQJL+xdDaimziA1c
+         8lAJxeWVFouTjEHC3p+FJBHv9MkkQXebphjhv/87vMA03btiQzyISXigPijA5x2KQoW5
+         nUw89h2rmkM9A/ksku0Eaj3hOHIgdGgwzjFhnjtQSgNPwpja4IRE5ffrLMK8bI+rSdPx
+         zrd1zLC5Ud5n5igqgNzbn4hLLF+kvpQzPaA3G36KP5d616DBAw5ejnhDSpbZCyii00Ts
+         0nv+48h+3RkOCkQQ7zTOGGL8XFhl0NtwiI7rHihoXoga1nJQSXnDWdFxDtA0zFVtgo2u
+         58kw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=bAaQQ7e9aAoGDmzOJ51xKy0+RuDHeXB46TjNq9EcMXw=;
+        b=H1V44ACisHHXf0Hn2Ec3AarnYrXAyyFvhTPCZMy4vyy1nj86lLIdX8o+X8DnVUoZqO
+         YKABRGC9VT9+bOfBjWfUMdUNYiiwgc7Dipp0dt2atbyC7M7uc1myUAXk443SQcIPtFIQ
+         q3+2CYfBX+yrxCcwu77cMcvb+363XMyrz9J2kzbUO6SW0PKhQoo9OnGy1wshELR0PGCj
+         8PkEfdFPtGUR24AffwKNO8B4aN/M2J9sKGc/n4xo8CXJv05G1lidoJMS1Zg4vEhJnGJ3
+         d8KhyxXU5WDebanOGbrGSWzPu9oHurBZS7YCEaQCnVyz7c0r814kYizslBYcui/tndb4
+         /sww==
+X-Gm-Message-State: AOAM530CmevVXzaVkQV9dzkAK/PmMcmI9BMUT8wgGX0GsgjFaC+270hR
+        MIqnfeFgebh74VWcRXL3WfZRCg==
+X-Google-Smtp-Source: ABdhPJzpIfuVpvNm7+wJPOKe1ryB9LzK23HxdnBP82RAznzjdf1L5AejEUEGRunqac7heeExlbSFHQ==
+X-Received: by 2002:a17:90a:2210:: with SMTP id c16mr1938422pje.65.1597266556824;
+        Wed, 12 Aug 2020 14:09:16 -0700 (PDT)
+Received: from google.com ([2620:15c:201:2:f693:9fff:fef4:1b6d])
+        by smtp.gmail.com with ESMTPSA id n1sm3437625pfu.2.2020.08.12.14.09.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Aug 2020 14:09:16 -0700 (PDT)
+Date:   Wed, 12 Aug 2020 14:09:09 -0700
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Luca Stefani <luca.stefani.ge1@gmail.com>
+Cc:     Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
+        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] RAS/CEC: Fix cec_init prototype
+Message-ID: <20200812210909.GA3283093@google.com>
+References: <20200805045955.GB9127@nazgul.tnic>
+ <20200805095708.83939-1-luca.stefani.ge1@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, kbusch@kernel.org, hch@lst.de, sagi@grimberg.me, keith.busch@wdc.com, axboe@kernel.dk, logang@deltatee.com
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [RESEND PATCH] nvme: Use spin_lock_irqsave() when taking the ctrl->lock
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200805095708.83939-1-luca.stefani.ge1@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When locking the ctrl->lock spinlock IRQs need to be disabled to avoid a
-dead lock. The new spin_lock() calls recently added produce the
-following lockdep warning when running the blktest nvme/003:
+Hi Luca,
 
-    ================================
-    WARNING: inconsistent lock state
-    --------------------------------
-    inconsistent {SOFTIRQ-ON-W} -> {IN-SOFTIRQ-W} usage.
-    ksoftirqd/2/22 [HC0[0]:SC1[1]:HE0:SE0] takes:
-    ffff888276a8c4c0 (&ctrl->lock){+.?.}-{2:2}, at: nvme_keep_alive_end_io+0x50/0xc0
-    {SOFTIRQ-ON-W} state was registered at:
-      lock_acquire+0x164/0x500
-      _raw_spin_lock+0x28/0x40
-      nvme_get_effects_log+0x37/0x1c0
-      nvme_init_identify+0x9e4/0x14f0
-      nvme_reset_work+0xadd/0x2360
-      process_one_work+0x66b/0xb70
-      worker_thread+0x6e/0x6c0
-      kthread+0x1e7/0x210
-      ret_from_fork+0x22/0x30
-    irq event stamp: 1449221
-    hardirqs last  enabled at (1449220): [<ffffffff81c58e69>] ktime_get+0xf9/0x140
-    hardirqs last disabled at (1449221): [<ffffffff83129665>] _raw_spin_lock_irqsave+0x25/0x60
-    softirqs last  enabled at (1449210): [<ffffffff83400447>] __do_softirq+0x447/0x595
-    softirqs last disabled at (1449215): [<ffffffff81b489b5>] run_ksoftirqd+0x35/0x50
+On Wed, Aug 05, 2020 at 11:57:08AM +0200, Luca Stefani wrote:
+> * late_initcall expects a function that returns an integer
+>   -> Update the function signature to match.
+> 
+> Fixes: 9554bfe403nd ("x86/mce: Convert the CEC to use the MCE notifier")
+> Signed-off-by: Luca Stefani <luca.stefani.ge1@gmail.com>
 
-    other info that might help us debug this:
-     Possible unsafe locking scenario:
+Thank you for fixing this!
 
-           CPU0
-           ----
-      lock(&ctrl->lock);
-      <Interrupt>
-        lock(&ctrl->lock);
+[Note that this v2 email never landed in my inbox, perhaps Gmail filtered
+ it out due to a missing To: line?]
 
-     *** DEADLOCK ***
+> ---
+>  drivers/ras/cec.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/ras/cec.c b/drivers/ras/cec.c
+> index 569d9ad2c594..6939aa5b3dc7 100644
+> --- a/drivers/ras/cec.c
+> +++ b/drivers/ras/cec.c
+> @@ -553,20 +553,20 @@ static struct notifier_block cec_nb = {
+>  	.priority	= MCE_PRIO_CEC,
+>  };
+>  
+> -static void __init cec_init(void)
+> +static int __init cec_init(void)
+>  {
+>  	if (ce_arr.disabled)
+> -		return;
+> +		return -ENODEV;
+>  
+>  	ce_arr.array = (void *)get_zeroed_page(GFP_KERNEL);
+>  	if (!ce_arr.array) {
+>  		pr_err("Error allocating CE array page!\n");
+> -		return;
+> +		return -ENOMEM;
+>  	}
+>  
+>  	if (create_debugfs_nodes()) {
+>  		free_page((unsigned long)ce_arr.array);
+> -		return;
+> +		return -ENOMEM;
+>  	}
+>  
+>  	INIT_DELAYED_WORK(&cec_work, cec_work_fn);
+> @@ -575,6 +575,7 @@ static void __init cec_init(void)
+>  	mce_register_decode_chain(&cec_nb);
+>  
+>  	pr_info("Correctable Errors collector initialized.\n");
+> +	return 0;
+>  }
+>  late_initcall(cec_init);
 
-    no locks held by ksoftirqd/2/22.
+The type mismatch broke allyesconfig in my test tree and your patch
+fixes the issue. Please feel free to add:
 
-    stack backtrace:
-    CPU: 2 PID: 22 Comm: ksoftirqd/2 Not tainted 5.8.0-rc4-eid-vmlocalyes-dbg-00157-g7236657c6b3a #1450
-    Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.12.0-1 04/01/2014
-    Call Trace:
-     dump_stack+0xc8/0x11a
-     print_usage_bug.cold.63+0x235/0x23e
-     mark_lock+0xa9c/0xcf0
-     __lock_acquire+0xd9a/0x2b50
-     lock_acquire+0x164/0x500
-     _raw_spin_lock_irqsave+0x40/0x60
-     nvme_keep_alive_end_io+0x50/0xc0
-     blk_mq_end_request+0x158/0x210
-     nvme_complete_rq+0x146/0x500
-     nvme_loop_complete_rq+0x26/0x30 [nvme_loop]
-     blk_done_softirq+0x187/0x1e0
-     __do_softirq+0x118/0x595
-     run_ksoftirqd+0x35/0x50
-     smpboot_thread_fn+0x1d3/0x310
-     kthread+0x1e7/0x210
-     ret_from_fork+0x22/0x30
+  Reviewed-and-tested-by: Sami Tolvanen <samitolvanen@google.com>
 
-Fixes: be93e87e7802 ("nvme: support for multiple Command Sets Supported and Effects log pages")
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
----
- drivers/nvme/host/core.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 15abc00db3d3..312614467adb 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -2971,15 +2971,16 @@ int nvme_get_log(struct nvme_ctrl *ctrl, u32 nsid, u8 log_page, u8 lsp, u8 csi,
- static struct nvme_cel *nvme_find_cel(struct nvme_ctrl *ctrl, u8 csi)
- {
- 	struct nvme_cel *cel, *ret = NULL;
-+	unsigned long flags;
-
--	spin_lock(&ctrl->lock);
-+	spin_lock_irqsave(&ctrl->lock, flags);
- 	list_for_each_entry(cel, &ctrl->cels, entry) {
- 		if (cel->csi == csi) {
- 			ret = cel;
- 			break;
- 		}
- 	}
--	spin_unlock(&ctrl->lock);
-+	spin_unlock_irqrestore(&ctrl->lock, flags);
-
- 	return ret;
- }
-@@ -2988,6 +2989,7 @@ static int nvme_get_effects_log(struct nvme_ctrl *ctrl, u8 csi,
- 				struct nvme_effects_log **log)
- {
- 	struct nvme_cel *cel = nvme_find_cel(ctrl, csi);
-+	unsigned long flags;
- 	int ret;
-
- 	if (cel)
-@@ -3006,9 +3008,9 @@ static int nvme_get_effects_log(struct nvme_ctrl *ctrl, u8 csi,
-
- 	cel->csi = csi;
-
--	spin_lock(&ctrl->lock);
-+	spin_lock_irqsave(&ctrl->lock, flags);
- 	list_add_tail(&cel->entry, &ctrl->cels);
--	spin_unlock(&ctrl->lock);
-+	spin_unlock_irqrestore(&ctrl->lock, flags);
- out:
- 	*log = &cel->log;
- 	return 0;
-
-base-commit: 4d3c0eaf0d44a4f8f7d53b7835e670eafc96c450
---
-2.20.1
+Sami
