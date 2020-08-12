@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F10DEC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:20:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64BE5C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:20:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC11620781
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:20:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31E8C20781
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:20:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726807AbgHLOUG (ORCPT
+        id S1726862AbgHLOUM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 10:20:06 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:62614 "EHLO
+        Wed, 12 Aug 2020 10:20:12 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:12010 "EHLO
         mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726485AbgHLOUE (ORCPT
+        by vger.kernel.org with ESMTP id S1726564AbgHLOUK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 10:20:04 -0400
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07CECObX020969;
-        Wed, 12 Aug 2020 10:20:03 -0400
+        Wed, 12 Aug 2020 10:20:10 -0400
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07CEAGCN027021;
+        Wed, 12 Aug 2020 10:19:57 -0400
 Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 32sry4drtr-1
+        by mx0a-00128a01.pphosted.com with ESMTP id 32snw5du9d-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 12 Aug 2020 10:20:03 -0400
+        Wed, 12 Aug 2020 10:19:56 -0400
 Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 07CEK2VJ013707
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 07CEJtZZ013655
         (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Wed, 12 Aug 2020 10:20:02 -0400
-Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
+        Wed, 12 Aug 2020 10:19:55 -0400
+Received: from ASHBCASHYB5.ad.analog.com (10.64.17.133) by
  ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Wed, 12 Aug 2020 10:20:01 -0400
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
- ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
+ 15.1.1779.2; Wed, 12 Aug 2020 10:19:54 -0400
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
+ ASHBCASHYB5.ad.analog.com (10.64.17.133) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Wed, 12 Aug 2020 10:20:01 -0400
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Wed, 12 Aug 2020 10:20:00 -0400
+ 15.1.1779.2; Wed, 12 Aug 2020 10:19:54 -0400
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Wed, 12 Aug 2020 10:19:54 -0400
 Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 07CEJoT1020255;
-        Wed, 12 Aug 2020 10:19:59 -0400
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 07CEJoSu020255;
+        Wed, 12 Aug 2020 10:19:52 -0400
 From:   <alexandru.tachici@analog.com>
 To:     <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <devicetree@vger.kernel.org>
 CC:     <robh+dt@kernel.org>, <linux@roeck-us.net>,
         Alexandru Tachici <alexandru.tachici@analog.com>
-Subject: [PATCH v8 6/6] dt-bindings: hwmon: Add bindings for ADM1266
-Date:   Wed, 12 Aug 2020 17:20:55 +0300
-Message-ID: <20200812142055.9213-7-alexandru.tachici@analog.com>
+Subject: [PATCH v8 1/6] hwmon: pmbus: adm1266: add support
+Date:   Wed, 12 Aug 2020 17:20:50 +0300
+Message-ID: <20200812142055.9213-2-alexandru.tachici@analog.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200812142055.9213-1-alexandru.tachici@analog.com>
 References: <20200812142055.9213-1-alexandru.tachici@analog.com>
@@ -62,9 +62,9 @@ Content-Type: text/plain
 X-ADIRoutedOnPrem: True
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-08-12_06:2020-08-11,2020-08-12 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 mlxscore=0
- lowpriorityscore=0 clxscore=1015 priorityscore=1501 adultscore=0
- phishscore=0 suspectscore=0 impostorscore=0 malwarescore=0 spamscore=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
+ clxscore=1015 impostorscore=0 mlxscore=0 adultscore=0 suspectscore=0
+ priorityscore=1501 lowpriorityscore=0 mlxlogscore=999 spamscore=0
  bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2006250000 definitions=main-2008120101
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,71 +74,180 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alexandru Tachici <alexandru.tachici@analog.com>
 
-Add bindings for the Analog Devices ADM1266 sequencer.
+Add pmbus probing driver for the adm1266 Cascadable
+Super Sequencer with Margin Control and Fault Recording.
+Driver is using the pmbus_core, creating sysfs files
+under hwmon for inputs: vh1->vh4 and vp1->vp13.
 
 Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
 ---
- .../bindings/hwmon/adi,adm1266.yaml           | 51 +++++++++++++++++++
- 1 file changed, 51 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwmon/adi,adm1266.yaml
+ Documentation/hwmon/adm1266.rst | 37 +++++++++++++++++++
+ Documentation/hwmon/index.rst   |  1 +
+ drivers/hwmon/pmbus/Kconfig     |  9 +++++
+ drivers/hwmon/pmbus/Makefile    |  1 +
+ drivers/hwmon/pmbus/adm1266.c   | 65 +++++++++++++++++++++++++++++++++
+ 5 files changed, 113 insertions(+)
+ create mode 100644 Documentation/hwmon/adm1266.rst
+ create mode 100644 drivers/hwmon/pmbus/adm1266.c
 
-diff --git a/Documentation/devicetree/bindings/hwmon/adi,adm1266.yaml b/Documentation/devicetree/bindings/hwmon/adi,adm1266.yaml
+diff --git a/Documentation/hwmon/adm1266.rst b/Documentation/hwmon/adm1266.rst
 new file mode 100644
-index 000000000000..43b4f4f57b49
+index 000000000000..9257f8a48650
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/adi,adm1266.yaml
-@@ -0,0 +1,51 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/hwmon/adi,adm1266.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/Documentation/hwmon/adm1266.rst
+@@ -0,0 +1,37 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
-+title: Analog Devices ADM1266 Cascadable Super Sequencer with Margin
-+  Control and Fault Recording
++Kernel driver adm1266
++=====================
 +
-+maintainers:
-+  - Alexandru Tachici <alexandru.tachici@analog.com>
++Supported chips:
++  * Analog Devices ADM1266
++    Prefix: 'adm1266'
++    Datasheet: https://www.analog.com/media/en/technical-documentation/data-sheets/ADM1266.pdf
 +
-+description: |
-+  Analog Devices ADM1266 Cascadable Super Sequencer with Margin
-+  Control and Fault Recording.
-+  https://www.analog.com/media/en/technical-documentation/data-sheets/ADM1266.pdf
++Author: Alexandru Tachici <alexandru.tachici@analog.com>
 +
-+properties:
-+  compatible:
-+    enum:
-+      - adi,adm1266
 +
-+  reg:
-+    description: |
-+      I2C address of slave device.
-+    items:
-+      minimum: 0x40
-+      maximum: 0x4F
++Description
++-----------
 +
-+  avcc-supply:
-+    description: |
-+      Phandle to the Avcc power supply.
++This driver supports hardware monitoring for Analog Devices ADM1266 sequencer.
 +
-+required:
-+  - compatible
-+  - reg
++ADM1266 is a sequencer that features voltage readback from 17 channels via an
++integrated 12 bit SAR ADC, accessed using a PMBus interface.
 +
-+additionalProperties: false
++The driver is a client driver to the core PMBus driver. Please see
++Documentation/hwmon/pmbus for details on PMBus client drivers.
 +
-+examples:
-+  - |
-+    i2c0 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
 +
-+        adm1266@40 {
-+                compatible = "adi,adm1266";
-+                reg = <0x40>;
-+        };
-+    };
-+...
++Sysfs entries
++-------------
++
++The following attributes are supported. Limits are read-write, history reset
++attributes are write-only, all other attributes are read-only.
++
++inX_label		"voutx"
++inX_input		Measured voltage.
++inX_min			Minimum Voltage.
++inX_max			Maximum voltage.
++inX_min_alarm		Voltage low alarm.
++inX_max_alarm		Voltage high alarm.
+diff --git a/Documentation/hwmon/index.rst b/Documentation/hwmon/index.rst
+index 55ff4b7c5349..056f7107d7b8 100644
+--- a/Documentation/hwmon/index.rst
++++ b/Documentation/hwmon/index.rst
+@@ -30,6 +30,7 @@ Hardware Monitoring Kernel Drivers
+    adm1026
+    adm1031
+    adm1177
++   adm1266
+    adm1275
+    adm9240
+    ads7828
+diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
+index a337195b1c39..da34083e1ffd 100644
+--- a/drivers/hwmon/pmbus/Kconfig
++++ b/drivers/hwmon/pmbus/Kconfig
+@@ -26,6 +26,15 @@ config SENSORS_PMBUS
+ 	  This driver can also be built as a module. If so, the module will
+ 	  be called pmbus.
+ 
++config SENSORS_ADM1266
++	tristate "Analog Devices ADM1266 Sequencer"
++	help
++	  If you say yes here you get hardware monitoring support for Analog
++	  Devices ADM1266 Cascadable Super Sequencer.
++
++	  This driver can also be built as a module. If so, the module will
++	  be called adm1266.
++
+ config SENSORS_ADM1275
+ 	tristate "Analog Devices ADM1275 and compatibles"
+ 	help
+diff --git a/drivers/hwmon/pmbus/Makefile b/drivers/hwmon/pmbus/Makefile
+index c4b15db996ad..da41d22be1c9 100644
+--- a/drivers/hwmon/pmbus/Makefile
++++ b/drivers/hwmon/pmbus/Makefile
+@@ -5,6 +5,7 @@
+ 
+ obj-$(CONFIG_PMBUS)		+= pmbus_core.o
+ obj-$(CONFIG_SENSORS_PMBUS)	+= pmbus.o
++obj-$(CONFIG_SENSORS_ADM1266)	+= adm1266.o
+ obj-$(CONFIG_SENSORS_ADM1275)	+= adm1275.o
+ obj-$(CONFIG_SENSORS_BEL_PFE)	+= bel-pfe.o
+ obj-$(CONFIG_SENSORS_IBM_CFFPS)	+= ibm-cffps.o
+diff --git a/drivers/hwmon/pmbus/adm1266.c b/drivers/hwmon/pmbus/adm1266.c
+new file mode 100644
+index 000000000000..79e8d90886b8
+--- /dev/null
++++ b/drivers/hwmon/pmbus/adm1266.c
+@@ -0,0 +1,65 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * ADM1266 - Cascadable Super Sequencer with Margin
++ * Control and Fault Recording
++ *
++ * Copyright 2020 Analog Devices Inc.
++ */
++
++#include <linux/i2c.h>
++#include <linux/init.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include "pmbus.h"
++#include <linux/slab.h>
++
++struct adm1266_data {
++	struct pmbus_driver_info info;
++	struct i2c_client *client;
++};
++
++static int adm1266_probe(struct i2c_client *client, const struct i2c_device_id *id)
++{
++	struct adm1266_data *data;
++	int i;
++
++	data = devm_kzalloc(&client->dev, sizeof(struct adm1266_data), GFP_KERNEL);
++	if (!data)
++		return -ENOMEM;
++
++	data->client = client;
++	data->info.pages = 17;
++	data->info.format[PSC_VOLTAGE_OUT] = linear;
++	for (i = 0; i < data->info.pages; i++)
++		data->info.func[i] = PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT;
++
++	return pmbus_do_probe(client, id, &data->info);
++}
++
++static const struct of_device_id adm1266_of_match[] = {
++	{ .compatible = "adi,adm1266" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, adm1266_of_match);
++
++static const struct i2c_device_id adm1266_id[] = {
++	{ "adm1266", 0 },
++	{ }
++};
++MODULE_DEVICE_TABLE(i2c, adm1266_id);
++
++static struct i2c_driver adm1266_driver = {
++	.driver = {
++		   .name = "adm1266",
++		   .of_match_table = adm1266_of_match,
++		  },
++	.probe = adm1266_probe,
++	.remove = pmbus_do_remove,
++	.id_table = adm1266_id,
++};
++
++module_i2c_driver(adm1266_driver);
++
++MODULE_AUTHOR("Alexandru Tachici <alexandru.tachici@analog.com>");
++MODULE_DESCRIPTION("PMBus driver for Analog Devices ADM1266");
++MODULE_LICENSE("GPL v2");
 -- 
 2.20.1
 
