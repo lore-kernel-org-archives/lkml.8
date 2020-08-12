@@ -2,280 +2,211 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD4A9C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 18:47:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91676C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 18:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A328F20774
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 18:47:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="lglW0NET"
+	by mail.kernel.org (Postfix) with ESMTP id 7247520774
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 18:48:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597258080;
+	bh=v/XlzfHL4Q72/njOg1/Q9GwW5syrcPhwcxwKUuKnTYo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=nOT2+IqZXFF0gNWqEUElQlF2kWqn7rvzNPKBzeD0iZXuGsci23H8btznbRvg3HLL2
+	 CjyxRXtKrHQgWokzLHuE4ZB0gcZeiLYOy5X9IExecvNuqqt8FSUS3s9saYhLQsIbI0
+	 u4UQpQFgnV4vDIvGSQf0GOUpB3Wk5DMxMBgdxhK4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726573AbgHLSrj (ORCPT
+        id S1726627AbgHLSr6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 14:47:39 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:46110 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726061AbgHLSri (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 14:47:38 -0400
-Received: from [192.168.254.32] (unknown [47.187.206.220])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 9B3FF20B4908;
-        Wed, 12 Aug 2020 11:47:35 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9B3FF20B4908
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1597258056;
-        bh=ZEYJ2skMtGmgwMikDvI3uIWWgJOx/B8qnK+vU4Qzxfs=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=lglW0NETwS/sXrB4/K4MPBOK8R2Ar9WMk5JjHbAx93S7Ot8eDgoXiDoFR1CsUeIlR
-         +1mTZkcYO4PWflsNOqdNmk00M1NDxBnFedUApWhrRyj3nVl41/nw29KYBqi596QwW5
-         8Qp8XRV6IFf4T7w3Pq6k8K/kwHXpfh+WyRhdHYoE=
-Subject: Re: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        Wed, 12 Aug 2020 14:47:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47408 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726061AbgHLSr6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 14:47:58 -0400
+Received: from onda.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DCF52087C;
+        Wed, 12 Aug 2020 18:47:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597258077;
+        bh=v/XlzfHL4Q72/njOg1/Q9GwW5syrcPhwcxwKUuKnTYo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=2Zp4sO+xad3AfisPsiq3F/tr7slWvRTc07BpTBjN4wft0fhXyo/2SFHBjHG5Jg0eb
+         xtzwHRcaFT3Jryk2XC7/2GdmmvIkziY3pT6L6613ow2VbIoDF2Hgd8GmAEsydhgCYZ
+         OJo+5Z+LPt7fWv6JGlDkjt5PCgmRU+IT4XMlR9r0=
+Date:   Wed, 12 Aug 2020 15:47:52 -0300
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linuxarm@huawei.com, mauro.chehab@huawei.com,
+        Stephen Boyd <sboyd@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, oleg@redhat.com,
-        x86@kernel.org
-References: <aefc85852ea518982e74b233e11e16d2e707bc32>
- <20200728131050.24443-1-madvenka@linux.microsoft.com>
- <20200731180955.GC67415@C02TD0UTHF1T.local>
- <6236adf7-4bed-534e-0956-fddab4fd96b6@linux.microsoft.com>
- <20200804143018.GB7440@C02TD0UTHF1T.local>
- <b3368692-afe6-89b5-d634-12f4f0a601f8@linux.microsoft.com>
- <20200812100650.GB28154@C02TD0UTHF1T.local>
-From:   "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
-Message-ID: <b05f16a9-d5c2-cdce-0905-f9881a9d9922@linux.microsoft.com>
-Date:   Wed, 12 Aug 2020 13:47:34 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wei Xu <xuwei5@hisilicon.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        Rob Herring <robh@kernel.org>, devel@driverdev.osuosl.org,
+        linux-arm-msm@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH 00/44] SPMI patches needed by Hikey 970
+Message-ID: <20200812154752.3223b9d8@onda.lan>
+In-Reply-To: <305f0df155e89e0c626b8f7366c4ab5f6741aedd.camel@perches.com>
+References: <cover.1597247164.git.mchehab+huawei@kernel.org>
+        <305f0df155e89e0c626b8f7366c4ab5f6741aedd.camel@perches.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200812100650.GB28154@C02TD0UTHF1T.local>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Em Wed, 12 Aug 2020 10:13:51 -0700
+Joe Perches <joe@perches.com> escreveu:
 
+> Perhaps these trivial bits on top:
 
-On 8/12/20 5:06 AM, Mark Rutland wrote:
-> [..]
->>
->> The general principle of the mitigation is W^X. I would argue that
->> the above options are violations of the W^X principle. If they are
->> allowed today, they must be fixed. And they will be. So, we cannot
->> rely on them.
+Sounds fine for me. Feel free to send it with your SOB, adding my reviewed by:
+
+Reviewed-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+
+> ---
+>  drivers/staging/hikey9xx/hi6421-spmi-pmic.c     |  5 +++--
+>  drivers/staging/hikey9xx/hi6421v600-regulator.c |  6 +++---
+>  drivers/staging/hikey9xx/hisi-spmi-controller.c | 21 +++++++++++++--------
+>  3 files changed, 19 insertions(+), 13 deletions(-)
 > 
-> Hold on.
+> diff --git a/drivers/staging/hikey9xx/hi6421-spmi-pmic.c b/drivers/staging/hikey9xx/hi6421-spmi-pmic.c
+> index 76766e7b8bf9..9d73458ca65a 100644
+> --- a/drivers/staging/hikey9xx/hi6421-spmi-pmic.c
+> +++ b/drivers/staging/hikey9xx/hi6421-spmi-pmic.c
+> @@ -99,7 +99,7 @@ int hi6421_spmi_pmic_write(struct hi6421_spmi_pmic *pmic, int reg, u32 val)
+>  EXPORT_SYMBOL(hi6421_spmi_pmic_write);
+>  
+>  int hi6421_spmi_pmic_rmw(struct hi6421_spmi_pmic *pmic, int reg,
+> -			  u32 mask, u32 bits)
+> +			 u32 mask, u32 bits)
+>  {
+>  	unsigned long flags;
+>  	u32 data;
+> @@ -130,7 +130,8 @@ static irqreturn_t hi6421_spmi_irq_handler(int irq, void *data)
+>  		hi6421_spmi_pmic_write(pmic, (i + pmic->irq_addr), pending);
+>  
+>  		/* solve powerkey order */
+> -		if ((i == HISI_IRQ_KEY_NUM) && ((pending & HISI_IRQ_KEY_VALUE) == HISI_IRQ_KEY_VALUE)) {
+> +		if ((i == HISI_IRQ_KEY_NUM) &&
+> +		    ((pending & HISI_IRQ_KEY_VALUE) == HISI_IRQ_KEY_VALUE)) {
+>  			generic_handle_irq(pmic->irqs[HISI_IRQ_KEY_DOWN]);
+>  			generic_handle_irq(pmic->irqs[HISI_IRQ_KEY_UP]);
+>  			pending &= (~HISI_IRQ_KEY_VALUE);
+> diff --git a/drivers/staging/hikey9xx/hi6421v600-regulator.c b/drivers/staging/hikey9xx/hi6421v600-regulator.c
+> index 29ef6bcadd84..82635ff54a74 100644
+> --- a/drivers/staging/hikey9xx/hi6421v600-regulator.c
+> +++ b/drivers/staging/hikey9xx/hi6421v600-regulator.c
+> @@ -227,7 +227,7 @@ static int hi6421_spmi_dt_parse(struct platform_device *pdev,
+>  
+>  	ret = of_property_read_u32(np, "reg", &rdesc->enable_reg);
+>  	if (ret) {
+> -		dev_err(dev, "missing reg property\nn");
+> +		dev_err(dev, "missing reg property\n");
+>  		return ret;
+>  	}
+>  
+> @@ -303,13 +303,13 @@ static int hi6421_spmi_dt_parse(struct platform_device *pdev,
+>  	 */
+>  	rdesc->vsel_mask = (1 << (fls(rdesc->n_voltages) - 1)) - 1;
+>  
+> -	dev_dbg(dev, "voltage selector settings: reg: 0x%x, mask: 0x%x",
+> +	dev_dbg(dev, "voltage selector settings: reg: 0x%x, mask: 0x%x\n",
+>  		rdesc->vsel_reg, rdesc->vsel_mask);
+>  
+>  	return 0;
+>  }
+>  
+> -static struct regulator_ops hi6421_spmi_ldo_rops = {
+> +static const struct regulator_ops hi6421_spmi_ldo_rops = {
+>  	.is_enabled = hi6421_spmi_regulator_is_enabled,
+>  	.enable = hi6421_spmi_regulator_enable,
+>  	.disable = hi6421_spmi_regulator_disable,
+> diff --git a/drivers/staging/hikey9xx/hisi-spmi-controller.c b/drivers/staging/hikey9xx/hisi-spmi-controller.c
+> index 583df10cbf1a..513d962b8bce 100644
+> --- a/drivers/staging/hikey9xx/hisi-spmi-controller.c
+> +++ b/drivers/staging/hikey9xx/hisi-spmi-controller.c
+> @@ -102,7 +102,7 @@ static int spmi_controller_wait_for_done(struct device *dev,
+>  			return 0;
+>  		}
+>  		udelay(1);
+> -	}  while(timeout--);
+> +	} while (timeout--);
+>  
+>  	dev_err(dev, "%s: timeout, status 0x%x\n", __func__, status);
+>  	return -ETIMEDOUT;
+> @@ -121,7 +121,7 @@ static int spmi_read_cmd(struct spmi_controller *ctrl,
+>  
+>  	if (bc > SPMI_CONTROLLER_MAX_TRANS_BYTES) {
+>  		dev_err(&ctrl->dev,
+> -			"spmi_controller supports 1..%d bytes per trans, but:%ld requested",
+> +			"spmi_controller supports 1..%d bytes per trans, but:%ld requested\n",
+>  			SPMI_CONTROLLER_MAX_TRANS_BYTES, bc);
+>  		return  -EINVAL;
+>  	}
+> @@ -137,7 +137,7 @@ static int spmi_read_cmd(struct spmi_controller *ctrl,
+>  		op_code = SPMI_CMD_EXT_REG_READ_L;
+>  		break;
+>  	default:
+> -		dev_err(&ctrl->dev, "invalid read cmd 0x%x", opc);
+> +		dev_err(&ctrl->dev, "invalid read cmd 0x%x\n", opc);
+>  		return -EINVAL;
+>  	}
+>  
+> @@ -157,7 +157,10 @@ static int spmi_read_cmd(struct spmi_controller *ctrl,
+>  		goto done;
+>  
+>  	for (i = 0; bc > i * SPMI_PER_DATAREG_BYTE; i++) {
+> -		data = readl(spmi_controller->base + chnl_ofst + SPMI_SLAVE_OFFSET * slave_id + SPMI_APB_SPMI_RDATA0_BASE_ADDR + i * SPMI_PER_DATAREG_BYTE);
+> +		data = readl(spmi_controller->base + chnl_ofst +
+> +			     SPMI_SLAVE_OFFSET * slave_id +
+> +			     SPMI_APB_SPMI_RDATA0_BASE_ADDR +
+> +			     i * SPMI_PER_DATAREG_BYTE);
+>  		data = be32_to_cpu((__be32)data);
+>  		if ((bc - i * SPMI_PER_DATAREG_BYTE) >> 2) {
+>  			memcpy(buf, &data, sizeof(data));
+> @@ -194,7 +197,7 @@ static int spmi_write_cmd(struct spmi_controller *ctrl,
+>  
+>  	if (bc > SPMI_CONTROLLER_MAX_TRANS_BYTES) {
+>  		dev_err(&ctrl->dev,
+> -			"spmi_controller supports 1..%d bytes per trans, but:%ld requested",
+> +			"spmi_controller supports 1..%d bytes per trans, but:%ld requested\n",
+>  			SPMI_CONTROLLER_MAX_TRANS_BYTES, bc);
+>  		return  -EINVAL;
+>  	}
+> @@ -210,7 +213,7 @@ static int spmi_write_cmd(struct spmi_controller *ctrl,
+>  		op_code = SPMI_CMD_EXT_REG_WRITE_L;
+>  		break;
+>  	default:
+> -		dev_err(&ctrl->dev, "invalid write cmd 0x%x", opc);
+> +		dev_err(&ctrl->dev, "invalid write cmd 0x%x\n", opc);
+>  		return -EINVAL;
+>  	}
+>  
+> @@ -234,8 +237,10 @@ static int spmi_write_cmd(struct spmi_controller *ctrl,
+>  		}
+>  
+>  		writel((u32)cpu_to_be32(data),
+> -		       spmi_controller->base + chnl_ofst + SPMI_APB_SPMI_WDATA0_BASE_ADDR + SPMI_PER_DATAREG_BYTE * i);
+> -	};
+> +		       spmi_controller->base + chnl_ofst +
+> +		       SPMI_APB_SPMI_WDATA0_BASE_ADDR +
+> +		       SPMI_PER_DATAREG_BYTE * i);
+> +	}
+>  
+>  	/* Start the transaction */
+>  	writel(cmd, spmi_controller->base + chnl_ofst + SPMI_APB_SPMI_CMD_BASE_ADDR);
 > 
-> Contemporary W^X means that a given virtual alias cannot be writeable
-> and executeable simultaneously, permitting (a) and (b). If you read the
-> references on the Wikipedia page for W^X you'll see the OpenBSD 3.3
-> release notes and related presentation make this clear, and further they
-> expect (b) to occur with JITS flipping W/X with mprotect().
 > 
-> Please don't conflate your assumed stronger semantics with the general
-> principle. It not matching you expectations does not necessarily mean
-> that it is wrong.
-> 
-> If you want a stronger W^X semantics, please refer to this specifically
-> with a distinct name.
-
-OK. Fair enough. We can give a different name to the stronger requirement.
-Just for the sake of this discussion and for the want of a better name,
-let us call it WX2.
-
-
-> 
->> a) This requires a remap operation. Two mappings point to the same
->>      physical page. One mapping has W and the other one has X. This
->>      is a violation of W^X.
->>
->> b) This is again a violation. The kernel should refuse to give execute
->>      permission to a page that was writeable in the past and refuse to
->>      give write permission to a page that was executable in the past.
->>
->> c) This is just a variation of (a).
-> 
-> As above, this is not true.
-> 
-> If you have a rationale for why this is desirable or necessary, please
-> justify that before using this as justification for additional features.
-> 
-
-I already supplied the justification. Any user level method can potentially
-be hijacked by an attacker for his purpose.
-
-WX does not prevent all of the methods. We need WX2.
-
-
->> In general, the problem with user-level methods to map and execute
->> dynamic code is that the kernel cannot tell if a genuine application is
->> using them or an attacker is using them or piggy-backing on them.
-> 
-> Yes, and as I pointed out the same is true for trampfd unless you can
-> somehow authenticate the calls are legitimate (in both callsite and the
-> set of arguments), and I don't see any reasonable way of doing that.
-> 
-
-I am afraid I am not in agreement with this. If WX2 is not implemented,
-an attacker can hack both code and data. If WX2 is implemented, an attacker
-can only attack data. The attack surface is reduced.
-
-Also, trampfd calls coming from code from a signed file can be authenticated.
-trampfd calls coming from an attacker's generated code cannot be authenticated.
-
-
-> If you relax your threat model to an attacker not being able to make
-> arbitrary syscalls, then your suggestion that userspace can perorm
-> chceks between syscalls may be sufficient, but as I pointed out that's
-> equally true for a sealed memfd or similar.
-> 
-
-Actually, I did not suggest that userspace can perform checks. I said that
-the kernel can perform checks.
-
-User space cannot reliably perform checks between calls. A clever hacker
-can cover his tracks.
-
-In any case, the kernel has no knowledge of these checks. So, when execute
-permissions are requested for a page, a properly implemented WX2 can refuse.
-
-
->> Off the top of my head, I have tried to identify some examples
->> where we can have more trust on dynamic code and have the kernel
->> permit its execution.
->>
->> 1. If the kernel can do the job, then that is one safe way. Here, the kernel
->>     is the code. There is no code generation involved. This is what I
->>     have presented in the patch series as the first cut.
-> 
-> This is sleight-of-hand; it doesn't matter where the logic is performed
-> if the power is identical. Practically speaking this is equivalent to
-> some dynamic code generation.
-> 
-> I think that it's misleading to say that because the kernel emulates
-> something it is safe when the provenance of the syscall arguments cannot
-> be verified.
-
-
-I submit that there are two aspects - code and data. In one case, both
-code and data can be hacked. So, an attacker can modify both code
-and data. In the other case, the attacker can only modify data.
-The power is not identical. The attack surface is not the same.
-
-Most of the times, security measures are mitigations. They are not a 100%.
-This approach of not allowing the user to do certain things that can be
-exploited and having the kernel doing them increases our confidence.
-From that perspective, the two approaches are different and it is worth
-pursuing a kernel based mitigation.
-
-
-> 
-> [...]
-> 
->> Anyway, these are just examples. The principle is - if we can identify
->> dynamic code that has a certain measure of trust, can the kernel
->> permit their execution?
-> 
-> My point generally is that the kernel cannot identify this, and if
-> usrspace code is trusted to dynamically generate trampfd arguments it
-> can equally be trusted to dyncamilly generate code.
-
-I am afraid not. See my previous response. Ability to hack only data
-gives an attacker fewer options as compared to the ability to hack
-both code and data.
-
-> 
-> [...]
-> 
->> As I have mentioned above, I intend to have the kernel generate code
->> only if the code generation is simple enough. For more complicated cases,
->> I plan to use a user-level code generator that is for exclusive kernel use.
->> I have yet to work out the details on how this would work. Need time.
-> 
-> This reads to me like trampfd is only dealing with a few special cases
-> and we know that we need a more general solution.
-> 
-> I hope I am mistaken, but I get the strong impression that you're trying
-> to justify your existing solution rather than trying to understand the
-> problem space.
-> 
-
-I do understand the problem space. I wanted to address dynamic code in 3
-different ways in separate phases starting from the easiest and working
-my way up to the more difficult ones.
-
-1. Remove dynamic code where possible
-
-   If the kernel can replace user level dynamic code, then do it.
-   This is what I did in version 1.
-
-2. Replace dynamic code with static code
-
-   Where you cannot do (1), replace dynamic code with static code with
-   the kernel's help. I wanted to do this later. But I have decided to
-   do this in version 2. This combined with signature verification of
-   files adds a measure or trust in the code.
-
-3. Deal with JIT, DBT, etc
-
-   In (1) and (2), we deal with machine code. In (3), there is some source
-   from which dynamic code needs to be generated using a code generator.
-   E.g., JIT code from Java byte code. Here, the solution I had in mind
-   had two parts:
-
-       - Make the source more trustworthy by requiring it to be part
-         of a signed file
-       - Design a code generator trusted and used exclusively by the kernel
-
-In this patchset, I wanted to lay a foundation for all 3 and attempt to
-solve (1) first. Once this was in place, I wanted to do (2) and then (3).
-
-In retrospect, I should have probably started with the big picture first
-instead of starting with just item (1). But I always had the big picture
-in mind. That said, I did not necessarily have all the details fleshed
-out for all the phases. (3) is complex.
-
-My focus was to define the API in a generic enough fashion so that all
-3 phases can be implemented. But I realize that it is a hard sell at this
-point to convince people that the API is adequate for phase 3. So,
-I have decided to do (1) and (2). (3) has to be done separately with
-more thought and details put into it.
-
-Also, it may be the case that there are some examples of dynamic code
-out there than can never be addressed. My goal is to try to address a
-majority of the dynamic code out there.
-
-
-> To be clear, my strong opinion is that we should not be trying to do
-> this sort of emulation or code generation within the kernel. I do think
-> it's worthwhile to look at mechanisms to make it harder to subvert
-> dynamic userspace code generation, but I think the code generation
-> itself needs to live in userspace (e.g. for ABI reasons I previously
-> mentioned).
-> 
-
-I completely agree that the kernel should not deal with the complexities
-of code generation and ABI details. My version 1 did not have any code
-generation. But since a performance issue was raised, I explored the idea
-of kernel code generation. To be honest, I was not really that
-comfortable with the idea.
-
-That is why I have decided to implement the second piece I had in
-my plan now. This piece does not have the code generation complexities
-or ABI issues. This piece can be used to solve libffi, GCC, etc.
-I will still write the code in such a way that I can use the first
-approach in the future if I really need it. But it will not involve any
-code generation from the kernel. It will only be used for cases that
-don't mind the extra trip to the kernel.
-
-Madhavan
