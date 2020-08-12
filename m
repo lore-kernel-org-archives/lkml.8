@@ -2,138 +2,160 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6777AC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 06:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AE79C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 06:58:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E01C20781
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 06:58:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597215493;
-	bh=JDo/BACFUxJcnbPKuRjxysz+ibKnzqeL4/IU1qfe/OU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=0WTgdQkQp4GNz7F2B8XQrtas1Cv7++crfZ8XXP2Yx54kpnQ8deyKZtAF0s9LLMCpX
-	 nyWHi30iSIigCqK1ab7vwqEEYjlvUijB1KIS6P1MnS47SMmmqWIZWNok3jeDxM0oq7
-	 hCX8f0eqaqhjebspR7XYcfekwA9nTxJNIdTvF6eY=
+	by mail.kernel.org (Postfix) with ESMTP id C12402076B
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 06:58:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbgHLG6M (ORCPT
+        id S1726818AbgHLG60 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 02:58:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33532 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725845AbgHLG6K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 02:58:10 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9497C06174A;
-        Tue, 11 Aug 2020 23:58:09 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id v4so1066249ljd.0;
-        Tue, 11 Aug 2020 23:58:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=JDo/BACFUxJcnbPKuRjxysz+ibKnzqeL4/IU1qfe/OU=;
-        b=mz3OVwjODnqn65vdacVrQiFPA1vOaCAoYiB5WT6oEvEd8L8Sncni3/5D68IOlz+wTW
-         HdE/UzuLQnU7UK9TUNBXbidbYiXgREpSJYrREgKn+CguVrUFT0pzK0DPQ6mYlkasmdDN
-         BGxcpOZnQIBfdkcyc2lfXiq7ZNF5gWDgDlToFroW1rCbei4t90jCT5q/qO1RPDKneC58
-         QMJHSL/vAmCs7geoIDSh8nXGj7xFZFgJl9s7xc10WmohgX+GBozBVThWQlahkx29S++7
-         gO8DDZm9Yq2xCRtxh/2+93S0cektm0qmwB54UouGs9Nv50jYSyf13idwSRRL/XDb/7ry
-         rUMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :date:message-id:mime-version;
-        bh=JDo/BACFUxJcnbPKuRjxysz+ibKnzqeL4/IU1qfe/OU=;
-        b=sAFD5aFHkxJQSL0ORSMatdKa1c3ji9VBPgcDczqG5NNSnjkvJRUzKQEfINTddC9UVx
-         ATbofgPPwC8ASkvrm0xPcgithZoUJUX9CO0z1roa8wYkqEbn0vgypQBzaYLKbgWkKOIn
-         lpnCTtb+UA5LCFeZh7ibhlZ+BVTe5I0C7O9cp70Tr0+OHDuF/e66FPddN2zMb/IrQ1hQ
-         sQHU+w//r6Eqz4OZz5B5JJ3inZga9DHpn4KHs4+xw0WBLSWeAcQ3RkE2w/BwDM/uE8pT
-         EjQp7z/x0oFIOovFCjmZPhjECCVzKi/JXc9WaHx6WCMldKInosg0MfNTZcFMLosrx8nJ
-         fcNA==
-X-Gm-Message-State: AOAM531ax39K39AX7DiCyRvc0kqSMnVq7EYS42lSLsap/UkP23+oEXuR
-        E5SWYqe/0STT6zkmJuQubQMBGTJ2ROg=
-X-Google-Smtp-Source: ABdhPJx+BrV4abo+2L2SpPIELjzqPN1tFHwc9ZdV9OZvI8hh2TNoDpuM4R8+7/Do3EaLSNt66fHsxQ==
-X-Received: by 2002:a2e:85d3:: with SMTP id h19mr5005266ljj.363.1597215488366;
-        Tue, 11 Aug 2020 23:58:08 -0700 (PDT)
-Received: from saruman ([194.34.132.58])
-        by smtp.gmail.com with ESMTPSA id k12sm238314ljh.95.2020.08.11.23.58.05
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 11 Aug 2020 23:58:07 -0700 (PDT)
-From:   Felipe Balbi <balbi@kernel.org>
-To:     "Sandeep Maheswaram \(Temp\)" <sanm@codeaurora.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
-Subject: Re: [PATCH v11 1/2] usb: dwc3: qcom: Add interconnect support in dwc3 driver
-In-Reply-To: <cd5c6c99-d8ee-da59-1abf-e64e5f7f6f8f@codeaurora.org>
-References: <1595869597-26049-1-git-send-email-sanm@codeaurora.org> <1595869597-26049-2-git-send-email-sanm@codeaurora.org> <20200727192050.GD3191083@google.com> <cd5c6c99-d8ee-da59-1abf-e64e5f7f6f8f@codeaurora.org>
-Date:   Wed, 12 Aug 2020 09:57:56 +0300
-Message-ID: <87v9honyff.fsf@kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+        Wed, 12 Aug 2020 02:58:26 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42366 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725845AbgHLG6Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 02:58:25 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 3C1C5AD4A;
+        Wed, 12 Aug 2020 06:58:45 +0000 (UTC)
+Date:   Wed, 12 Aug 2020 08:58:23 +0200
+Message-ID: <s5hlfikz6y8.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Yu-Hsuan Hsu <yuhsuan@chromium.org>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        "Rojewski, Cezary" <cezary.rojewski@intel.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Sam McNally <sammc@chromium.org>,
+        "yuhsuan@google.com" <yuhsuan@google.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Daniel Stuart <daniel.stuart14@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Lu, Brent" <brent.lu@intel.com>,
+        Damian van Soelen <dj.vsoelen@gmail.com>
+Subject: Re: [PATCH v3 2/2] ASoC: Intel: Add period size constraint on strago board
+In-Reply-To: <CAGvk5Pp+Gk5Uk-iLdhVPWuCL0FiL9OhsaAtwkotay5JAYUNxdQ@mail.gmail.com>
+References: <3f3baf5e-f73d-9cd6-cbfb-36746071e126@linux.intel.com>
+        <CAGvk5PohOP0Yv22tb53EX=ZLB9_vOMb=iujTh64OvHmjC1d4mg@mail.gmail.com>
+        <DM6PR11MB3642AC7F8EC47EB48B384D4797450@DM6PR11MB3642.namprd11.prod.outlook.com>
+        <CAGvk5PogmqfEnFRA8hzby+AGgbOSvbELamh_1=eA9KTpyBMPYQ@mail.gmail.com>
+        <s5htux939x1.wl-tiwai@suse.de>
+        <CAGvk5PpcmkZ2HarqeCDaXm4id=84wYs-u4vWxJunHaf09gj66g@mail.gmail.com>
+        <s5ho8nh37br.wl-tiwai@suse.de>
+        <CAGvk5PphzkdiNfW8hiDuqX+2eQO2FvrpzA0qR3=3VvqM3GBhAA@mail.gmail.com>
+        <20200811145353.GG6967@sirena.org.uk>
+        <d78f9adc-d583-f0f2-ce38-3c9175c939b8@linux.intel.com>
+        <20200811172209.GM6967@sirena.org.uk>
+        <CAGvk5PqGi7cXthLHFi4NyypxFiGnoHvD9vp+5nJdH-_VkVvcKw@mail.gmail.com>
+        <s5hr1scz908.wl-tiwai@suse.de>
+        <CAGvk5Pp+Gk5Uk-iLdhVPWuCL0FiL9OhsaAtwkotay5JAYUNxdQ@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On Wed, 12 Aug 2020 08:53:42 +0200,
+Yu-Hsuan Hsu wrote:
+> 
+> Takashi Iwai <tiwai@suse.de> 於 2020年8月12日 週三 下午2:14寫道：
+> >
+> > On Wed, 12 Aug 2020 05:09:58 +0200,
+> > Yu-Hsuan Hsu wrote:
+> > >
+> > > Mark Brown <broonie@kernel.org> 於 2020年8月12日 週三 上午1:22寫道：
+> > > >
+> > > > On Tue, Aug 11, 2020 at 11:54:38AM -0500, Pierre-Louis Bossart wrote:
+> > > >
+> > > > > > constraint logic needs to know about this DSP limitation - it seems like
+> > > > > > none of this is going to change without something new going into the
+> > > > > > mix?  We at least need a new question to ask about the DSP firmware I
+> > > > > > think.
+> > > >
+> > > > > I just tested aplay -Dhw: on a Cyan Chromebook with the Ubuntu kernel 5.4,
+> > > > > and I see no issues with the 240 sample period. Same with 432, 960, 9600,
+> > > > > etc.
+> > > >
+> > > > > I also tried just for fun what happens with 256 samples, and I don't see any
+> > > > > underflows thrown either, so I am wondering what exactly the problem is?
+> > > > > Something's not adding up. I would definitively favor multiple of 1ms
+> > > > > periods, since it's the only case that was productized, but there's got to
+> > > > > me something a side effect of how CRAS programs the hw_params.
+> > > >
+> > > > Is it something that goes wrong with longer playbacks possibly (eg,
+> > > > someone watching a feature film or something)?
+> > >
+> > > Thanks for testing!
+> > >
+> > > After doing some experiments, I think I can identify the problem more precisely.
+> > > 1. aplay can not reproduce this issue because it writes samples
+> > > immediately when there are some space in the buffer. However, you can
+> > > add --test-position to see how the delay grows with period size 256.
+> > > > aplay -Dhw:1,0 --period-size=256 --buffer-size=480 /dev/zero -d 1 -f dat --test-position
+> > > Playing raw data '/dev/zero' : Signed 16 bit Little Endian, Rate 48000
+> > > Hz, Stereo
+> > > Suspicious buffer position (1 total): avail = 0, delay = 2064, buffer = 512
+> > > Suspicious buffer position (2 total): avail = 0, delay = 2064, buffer = 512
+> > > Suspicious buffer position (3 total): avail = 0, delay = 2096, buffer = 512
+> > > ...
+> >
+> > Isn't this about the alignment of the buffer size against the period
+> > size, not the period size itself?  i.e. in the example above, the
+> > buffer size isn't a multiple of period size, and DSP can't handle if
+> > the position overlaps the buffer size in a half way.
+> >
+> > If that's the problem (and it's an oft-seen restriction), the right
+> > constraint is
+> >   snd_pcm_hw_constraint_integer(runtime, SNDRV_PCM_HW_PARAM_PERIODS);
+> >
+> >
+> > Takashi
+> Oh sorry for my typo. The issue happens no matter what buffer size is
+> set. Actually, even if I want to set 480, it will change to 512
+> automatically.
+> Suspicious buffer position (1 total): avail = 0, delay = 2064, buffer
+> = 512 <-this one is the buffer size
 
-"Sandeep Maheswaram (Temp)" <sanm@codeaurora.org> writes:
+OK, then it means that the buffer size alignment is already in place.
 
-> Hi Felipe,
->
-> On 7/28/2020 12:50 AM, Matthias Kaehlcke wrote:
->> On Mon, Jul 27, 2020 at 10:36:36PM +0530, Sandeep Maheswaram wrote:
->>> Add interconnect support in dwc3-qcom driver to vote for bus
->>> bandwidth.
->>>
->>> This requires for two different paths - from USB to
->>> DDR. The other is from APPS to USB.
->>>
->>> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
->>> Signed-off-by: Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
->> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-> Please ack if you are ok with this patch.
+And this large delay won't happen if you use period size 240?
 
-What's the plan to get this upstream? Should I take dwc3-qcom patch and
-ignore the rest? Is there a hard-dependency on something else?
 
-=2D-=20
-balbi
+Takashi
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl8zkvYACgkQzL64meEa
-mQbfthAArA2X5kasW3EQ1RHkC0s8Kj6X9CHWtuc7UnHOJu2ulKa5ARoXPQN8p1fd
-mY/t/GcAZzZDppRMumqRnFEqTzNlpMMjnW9drd2F6mwo5+posxbLnaeSRf+xDS5D
-/08z/fpkE5t6HVPqU/WihWTVuprRcxWVxmToP1YxYvXwfOEU/6cJfgCi2CsXp0nm
-BM7FVGkMaU6aMfB/Alp34QvT81VxTr7Ex3NJpiyHvJRsp1AT1hzTxlX7BUjj15gZ
-Qp4l/6w7OG8kqQISj/08k7ljq990ldyc+P1oHpXxF8AAUUonZHnWLzWKgpMTcfNN
-ZpqrmdHWQrtduSz8eMCOA8Sho/kM+XGkPor/p8UGV+PtArIQ392n/+/fNcWwkh8x
-yvxieFM5LoTIIEpMX9FxxMtGS0HI/n0X/AziPonfpykW1EjwvxXAutBVN7tCq+Jk
-m4aLWJzTAvCkqzZm2BvInrLJvYpRNWkHvh149FEVDENh4rTWpO9lhpOjHvmJ/2M+
-pwakvMKM2KsmKNaxTW+uVWaNe10hQZ97LN66FcaqP7omOSoXeYaC8V2vjlUSEvEH
-PVOE797mwB+vU3yiS5DyZXBinpbucGTZ7yw8Z0A6Ud/vNWAdTBEX3sBFOu8mjBSF
-z4Ji6yAJe14TzrCZSblilGQ+vOkhlAauiOTDt200wHiJgMKU7NQ=
-=km0q
------END PGP SIGNATURE-----
---=-=-=--
+> > > 2. Since many samples are moved to DSP(delay), the measured rate of
+> > > the ring-buffer is high. (I measured it by alsa_conformance_test,
+> > > which only test the sampling rate in the ring buffer of kernel not
+> > > DSP)
+> > >
+> > > 3. Since CRAS writes samples with a fixed frequency, this behavior
+> > > will take all samples from the ring buffer, which is seen as underrun
+> > > by CRAS. (It seems that it is not a real underrun because that avail
+> > > does not larger than buffer size. Maybe CRAS should also take dalay
+> > > into account.)
+> > >
+> > > 4. In spite of it is not a real underrun, the large delay is still a
+> > > big problem. Can we apply the constraint to fix it? Or any better
+> > > idea?
+> > >
+> > > Thanks,
+> > > Yu-Hsuan
+> > >
+> 
