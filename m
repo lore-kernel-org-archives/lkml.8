@@ -2,167 +2,104 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A102CC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:33:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B59ECC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:34:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B88D20774
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:33:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97335206DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:34:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JlUcE400"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="r4+Hnsvg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726684AbgHLTdk (ORCPT
+        id S1726710AbgHLTeN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 15:33:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36794 "EHLO
+        Wed, 12 Aug 2020 15:34:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726531AbgHLTdj (ORCPT
+        with ESMTP id S1726574AbgHLTeM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 15:33:39 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C29D2C061383;
-        Wed, 12 Aug 2020 12:33:39 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id l7so3059575ils.2;
-        Wed, 12 Aug 2020 12:33:39 -0700 (PDT)
+        Wed, 12 Aug 2020 15:34:12 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EF8BC061384
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 12:34:12 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id l64so3125473qkb.8
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 12:34:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=EMPXqA6KElOy9mfXuZUEQK9U18tItBra9DyDwcT007U=;
-        b=JlUcE400Wv5gGOj+v91SzzhnSOGILWTxbSzGyZbRPTuEa+Fuq/WKVyPLDfv595L0lQ
-         urPQXwqSoya21J31Cn0tQa3slFsu8lJk04GzEUUdY0nMYUzad6FuC/B6BKuOjVbHJjTk
-         p/t4OMS/BNdfzDkCZW1oJg1+ziHL+fvTckxz+b014YH852GmK10nvqtEz05jqbeTDtZP
-         0Ol5/x0k57h/Ixarw3sd61QDqA+mACRaAVPaEkd0qBfp3OFGWPEu9roWQi6nmwUe5VVk
-         PZv5DYYW5oER25CQSA/n2Kj+OuoS8o0bkeJsoUxCJLIUM4pGWMfzkBYPaWYt684RJ1Ea
-         NIQw==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UNDeeEu8OInqbqByJ2ZOXoAVRjNpv1vP3OHX17fDEvU=;
+        b=r4+HnsvgN0jJa837wtb65Cs7IAk9eOD6BOLmmqils8rqCozIQk8nMQH4UjLdQUceV9
+         FutaSFNF12VW1gYyIbe9bMf24E28UUKNTS6f63KvHph8c2/tf63EykMrCPjZt/rJMKyP
+         RaxNrHoQT9E7OaopVveRyAoLL6QVJf8wAhmhWB49gk6BoX+rXwkafWX5Zoulv8q6dL/B
+         xny5ju9y/uT9f5/nEsCGNUHC4HaGW+7DSeISwT/u9ENEk9nejSi2Y632D2xk/CzWEONt
+         +drlx/CsAIZPzWnSKOZ4LRiye5IwLqLGQ2YeCoSyTtxbIUcxoNsZP0gyIY7/VnO1F5dI
+         JR7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=EMPXqA6KElOy9mfXuZUEQK9U18tItBra9DyDwcT007U=;
-        b=lteDHtJkia2Lq/cpawOQ1lXabNisG33f1voUdy64u5xsUyDVF+6KSaEvdG2vqdhkVa
-         J77iNk23bwgO/atYKZDwjfmqmwtrsz6bUue4iYQRNWSMfKLkT1pfW7pBZUaS58WokQQT
-         krGwx8m4aseVnrQEFagqMd9RZO6QzNhf7iY3w4n4e6QKI7HQdPuBTg4HXyP8Ax4hBpcS
-         uBQBHhmK33nupeN96uQ17g1Q6+9S3RYYzTFnsJaD2Tcu25LjcELrXj3VKGbC3/HUUASf
-         8RSnUOx729lB2tmytFzak1COU/ZDSxg/H0aQUl0HFwr2hBjPfcTvl9wT9RFsVZOF1Zjn
-         ZWnQ==
-X-Gm-Message-State: AOAM532fYR4+zE5mgqKtPK/rigqcTDuyJvtQH6wpSh5vF1Lsn7a7kReQ
-        3jGuGWQ2YIWGBUu+XeoFdEKdZNPLrYI=
-X-Google-Smtp-Source: ABdhPJzJh26uQFJGVI4XvQUnIjeC86+s0Q/+NIbe/cRXBH+9IeuIdO0IOGlnQ2OAru/Wxfz2uL2jZQ==
-X-Received: by 2002:a92:9adc:: with SMTP id c89mr1151875ill.272.1597260819037;
-        Wed, 12 Aug 2020 12:33:39 -0700 (PDT)
-Received: from urieldev.c.googlers.com.com (243.199.238.35.bc.googleusercontent.com. [35.238.199.243])
-        by smtp.gmail.com with ESMTPSA id s15sm1548390ilp.13.2020.08.12.12.33.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Aug 2020 12:33:38 -0700 (PDT)
-From:   Uriel Guajardo <urielguajardojr@gmail.com>
-To:     brendanhiggins@google.com, peterz@infradead.org, mingo@redhat.com,
-        will@kernel.org
-Cc:     linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, urielguajardo@google.com,
-        Uriel Guajardo <urielguajardojr@gmail.com>
-Subject: [PATCH v2] kunit: added lockdep support
-Date:   Wed, 12 Aug 2020 19:33:32 +0000
-Message-Id: <20200812193332.954395-1-urielguajardojr@gmail.com>
-X-Mailer: git-send-email 2.28.0.236.gb10cc79966-goog
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UNDeeEu8OInqbqByJ2ZOXoAVRjNpv1vP3OHX17fDEvU=;
+        b=BL/1OS3YSfelmXn45Vm2Ocpx95aPVMVm9z/Pk3aBL27+hJaCCtzCVlif7zMqRv2MsZ
+         OlcT70gfPHtxHrLRnAHXH8cx9T51iZFcQBNSzmKdrYZNNKyhT6j23zkTbjSzune+ikGf
+         NNLJc5y2pz1GyNgCseK3tiJt8NIBp5ZrdMwkug02Fg3vooRQZO3VAP6eF80R2Xs2wM/o
+         HqtDPFzMXb5S34Sa7wfwPFH8fm9GQUs5vBL541UocASSicygkmATEO57chMeUEF8lkhf
+         0DBuvPNTWm1zOUdn3vzcKGNPHbINMuhPzmbp63zQ75Y23s2G2gONUvO8uyK17VdCjr2i
+         cR3w==
+X-Gm-Message-State: AOAM531Mfno/30qOlUXDvcLxD+tDlAI5S46pWPgWFF/7wtCtM38gZk6p
+        09nJ1XuW141lQYYhx+TxCr72/11KuGdmSv5GyXVA9g==
+X-Google-Smtp-Source: ABdhPJxPajgg+Gh2SZMQyrFoBo5ccaZiV7aSQ1OH1I03oez0nz6bNWlF+MeK2Mit08rZfVypEhouZhxdPgfg4YTfPjI=
+X-Received: by 2002:a37:a5c1:: with SMTP id o184mr1415589qke.323.1597260850654;
+ Wed, 12 Aug 2020 12:34:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200121134157.20396-6-sakari.ailus@linux.intel.com>
+ <CAMpxmJU5dG49N2FA0oSQsOfKrCr3KQ1BisON4c+nUJJmZQG=bQ@mail.gmail.com>
+ <20200311085555.GH5379@paasikivi.fi.intel.com> <CAMpxmJVPTKW+sYSJ3dnfF8nLAOKEa4Ob7bpxG0KD3Tkdm+rtYw@mail.gmail.com>
+ <20200323213101.GB21174@kekkonen.localdomain> <CAMpxmJVdyTkZMVuhSy0Ux8VUYTmQN_YEfH-akQsAL3zrwiz8Dw@mail.gmail.com>
+ <20200810082549.GD840@valkosipuli.retiisi.org.uk> <CAMpxmJUKSR-oCGnV1E5XiAMA2nYBy5f_f8=VSoMn0zf+qF39vg@mail.gmail.com>
+ <20200811080009.GE840@valkosipuli.retiisi.org.uk> <CAMpxmJWziqW-PiJPSm6aH5aXbYktMJfVjJfvfGxv8fdbWKydqg@mail.gmail.com>
+ <20200812192500.GA8942@ninjato>
+In-Reply-To: <20200812192500.GA8942@ninjato>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Wed, 12 Aug 2020 21:33:59 +0200
+Message-ID: <CAMpxmJXzaA7M94D7O5RB1WMVPz5dK61aVO_SOsu-TGTLtBZU6Q@mail.gmail.com>
+Subject: Re: [PATCH v4 5/6] at24: Support probing while off
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Sakari Ailus <sakari.ailus@iki.fi>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        linux-acpi@vger.kernel.org, Bingbu Cao <bingbu.cao@intel.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
+        Hyungwoo Yang <hyungwoo.yang@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rajmohan Mani <rajmohan.mani@intel.com>,
+        Tomasz Figa <tfiga@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-KUnit will fail tests upon observing a lockdep failure. Because lockdep
-turns itself off after its first failure, only fail the first test and
-warn users to not expect any future failures from lockdep.
+On Wed, Aug 12, 2020 at 9:25 PM Wolfram Sang <wsa@the-dreams.de> wrote:
+>
+>
+> > Wolfram says. From my side: I'd prefer to see the
+> > disable_i2c_core_irq_mapping converted to flags first and then the
+> > flags extended with whatever you need. disable_i2c_core_irq_mapping
+> > could also be removed AFAICT - nobody uses it.
+>
+> I haven't read the details here, just saying that
+> 'disable_i2c_core_irq_mapping' is already removed in -next and also
+> within the next days in Linus' tree.
+>
 
-Similar to lib/locking-selftest [1], we check if the status of
-debug_locks has changed after the execution of a test case. However, we
-do not reset lockdep afterwards.
+Ok, then nevermind my previous comment.
 
-Like the locking selftests, we also fix possible preemption count
-corruption from lock bugs.
-
-Depends on kunit: support failure from dynamic analysis tools [2]
-
-[1] https://elixir.bootlin.com/linux/v5.7.12/source/lib/locking-selftest.c#L1137
-
-[2] https://lore.kernel.org/linux-kselftest/20200806174326.3577537-1-urielguajardojr@gmail.com/
-
-Signed-off-by: Uriel Guajardo <urielguajardo@google.com>
----
-v2 Changes:
-- Removed lockdep_reset
-
-- Added warning to users about lockdep shutting off
----
- lib/kunit/test.c | 27 ++++++++++++++++++++++++++-
- 1 file changed, 26 insertions(+), 1 deletion(-)
-
-diff --git a/lib/kunit/test.c b/lib/kunit/test.c
-index d8189d827368..7e477482457b 100644
---- a/lib/kunit/test.c
-+++ b/lib/kunit/test.c
-@@ -11,6 +11,7 @@
- #include <linux/kref.h>
- #include <linux/sched/debug.h>
- #include <linux/sched.h>
-+#include <linux/debug_locks.h>
- 
- #include "debugfs.h"
- #include "string-stream.h"
-@@ -22,6 +23,26 @@ void kunit_fail_current_test(void)
- 		kunit_set_failure(current->kunit_test);
- }
- 
-+static void kunit_check_locking_bugs(struct kunit *test,
-+				     unsigned long saved_preempt_count,
-+				     bool saved_debug_locks)
-+{
-+	preempt_count_set(saved_preempt_count);
-+#ifdef CONFIG_TRACE_IRQFLAGS
-+	if (softirq_count())
-+		current->softirqs_enabled = 0;
-+	else
-+		current->softirqs_enabled = 1;
-+#endif
-+#if IS_ENABLED(CONFIG_LOCKDEP)
-+	if (saved_debug_locks && !debug_locks) {
-+		kunit_set_failure(test);
-+		kunit_warn(test, "Dynamic analysis tool failure from LOCKDEP.");
-+		kunit_warn(test, "Further tests will have LOCKDEP disabled.");
-+	}
-+#endif
-+}
-+
- static void kunit_print_tap_version(void)
- {
- 	static bool kunit_has_printed_tap_version;
-@@ -290,6 +311,9 @@ static void kunit_try_run_case(void *data)
- 	struct kunit_suite *suite = ctx->suite;
- 	struct kunit_case *test_case = ctx->test_case;
- 
-+	unsigned long saved_preempt_count = preempt_count();
-+	bool saved_debug_locks = debug_locks;
-+
- 	current->kunit_test = test;
- 
- 	/*
-@@ -298,7 +322,8 @@ static void kunit_try_run_case(void *data)
- 	 * thread will resume control and handle any necessary clean up.
- 	 */
- 	kunit_run_case_internal(test, suite, test_case);
--	/* This line may never be reached. */
-+	/* These lines may never be reached. */
-+	kunit_check_locking_bugs(test, saved_preempt_count, saved_debug_locks);
- 	kunit_run_case_cleanup(test, suite);
- }
- 
--- 
-2.28.0.236.gb10cc79966-goog
-
+Bart
