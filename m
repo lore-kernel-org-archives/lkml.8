@@ -2,92 +2,132 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C19A0C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:28:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CA21C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:28:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CA552080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:28:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597249686;
-	bh=I9L7cHpHrVvxSFWYMps8sy0c98kCT0nrA4/d/KoIgbM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wSf/GaxjS3R/Sq/NXFECMmejCFnf7lFOkWPu0YF4tt7ZzGR+IF+qwBSIdRQnHTHtA
-	 GCVc5qnuDPo9F6BGvGW1UWi0Dka4MYxvl9057NR0XEUBXsHXAsAGYHs5MGhvERA3JA
-	 ESeljyosYcdRVjKPJuEK4Th87Rtq/xFtMCJNtuKE=
+	by mail.kernel.org (Postfix) with ESMTP id 4E74D207DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:28:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="vg3305Ew"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726576AbgHLQ2F (ORCPT
+        id S1726673AbgHLQ2l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 12:28:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47422 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725872AbgHLQ2F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 12:28:05 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51D152076B;
-        Wed, 12 Aug 2020 16:28:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597249684;
-        bh=I9L7cHpHrVvxSFWYMps8sy0c98kCT0nrA4/d/KoIgbM=;
+        Wed, 12 Aug 2020 12:28:41 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:54324 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726456AbgHLQ2k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 12:28:40 -0400
+Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 579329E7;
+        Wed, 12 Aug 2020 18:28:38 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1597249718;
+        bh=uzFeii+3PI4OvTFWxc2HhIz9TI3kpJD/u8DiZLup8P4=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=S5dQoOWQCm7WCxvwcjjKEUJ8v0jMp2AZr6OEYrkdEoQJ+7mWvd5S3d1E3K6PdeFqq
-         +j11151WCDN2yepised6rW4edAk5hO/dfERaQZz5OmtNsRtB2BKRcj3PHEDt55inco
-         bvIFhxL6Ux07qSBp8Q0TDADNCFE5IyokThM314KU=
-Date:   Wed, 12 Aug 2020 18:28:14 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     devel@driverdev.osuosl.org, Mayulong <mayulong1@huawei.com>,
-        linuxarm@huawei.com, linux-kernel@vger.kernel.org,
-        mauro.chehab@huawei.com
-Subject: Re: [PATCH 01/44] staging: spmi: add Hikey 970 SPMI controller driver
-Message-ID: <20200812162814.GB2650123@kroah.com>
-References: <cover.1597247164.git.mchehab+huawei@kernel.org>
- <4305f945d257cf590646100cad752a0a6542a152.1597247164.git.mchehab+huawei@kernel.org>
+        b=vg3305EwVaNs9KQKwleqGTW/I+KSvMN4IfvXRuOsJGFtgabxLOoQmD+A9N56D/rEI
+         WA1fxhiq2FzUkNAbHZqxsH6GdwYBAWn1lqjsvBd3QR4biNuEkdCIRx8FvODxqNErE3
+         /SoNAwMDNORl6uo434n8Kr+yz3ls6UEdoG2vzU9w=
+Date:   Wed, 12 Aug 2020 19:28:24 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Marian-Cristian Rotariu 
+        <marian-cristian.rotariu.rb@bp.renesas.com>
+Subject: Re: [PATCH 6/9] arm64: dts: renesas: r8a774e1: Populate HDMI encoder
+ node
+Message-ID: <20200812162824.GQ6057@pendragon.ideasonboard.com>
+References: <20200812140217.24251-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200812140217.24251-7-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <4305f945d257cf590646100cad752a0a6542a152.1597247164.git.mchehab+huawei@kernel.org>
+In-Reply-To: <20200812140217.24251-7-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 05:56:11PM +0200, Mauro Carvalho Chehab wrote:
-> From: Mayulong <mayulong1@huawei.com>
+Hi Prabhakar,
+
+Thank you for the patch.
+
+On Wed, Aug 12, 2020 at 03:02:14PM +0100, Lad Prabhakar wrote:
+> From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 > 
-> Add the SPMI controller code required to use the Kirin 970
-> SPMI bus.
+> Populate HDMI node properties in R8A774E1 SoC dtsi.
 > 
-> [mchehab+huawei@kernel.org: added just the SPMI controller on this patch]
-> 
-> The complete patch is at:
-> 
-> 	https://github.com/96boards-hikey/linux/commit/08464419fba2
-> 
-> Signed-off-by: Mayulong <mayulong1@huawei.com>
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
 > ---
->  .../staging/hikey9xx/hisi-spmi-controller.c   | 390 ++++++++++++++++++
->  1 file changed, 390 insertions(+)
->  create mode 100644 drivers/staging/hikey9xx/hisi-spmi-controller.c
+>  arch/arm64/boot/dts/renesas/r8a774e1.dtsi | 15 +++++++++++++--
+>  1 file changed, 13 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/staging/hikey9xx/hisi-spmi-controller.c b/drivers/staging/hikey9xx/hisi-spmi-controller.c
-> new file mode 100644
-> index 000000000000..987526c8b49f
-> --- /dev/null
-> +++ b/drivers/staging/hikey9xx/hisi-spmi-controller.c
-> @@ -0,0 +1,390 @@
-> +
-> +#include <linux/delay.h>
+> diff --git a/arch/arm64/boot/dts/renesas/r8a774e1.dtsi b/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
+> index 4b57c1ea762c..79efcd73cc46 100644
+> --- a/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
+> @@ -2601,22 +2601,32 @@
+>  		};
+>  
+>  		hdmi0: hdmi@fead0000 {
+> +			compatible = "renesas,r8a774e1-hdmi",
+> +				     "renesas,rcar-gen3-hdmi";
+>  			reg = <0 0xfead0000 0 0x10000>;
+> +			interrupts = <GIC_SPI 389 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cpg CPG_MOD 729>,
+> +				 <&cpg CPG_CORE R8A774E1_CLK_HDMI>;
+> +			clock-names = "iahb", "isfr";
+> +			power-domains = <&sysc R8A774E1_PD_ALWAYS_ON>;
+> +			resets = <&cpg 729>;
+>  			status = "disabled";
+>  
+> -			/* placeholder */
+> -
+>  			ports {
+>  				#address-cells = <1>;
+>  				#size-cells = <0>;
+>  
+>  				port@0 {
+>  					reg = <0>;
+> +					dw_hdmi0_in: endpoint {
+> +						remote-endpoint = <&du_out_hdmi0>;
+> +					};
+>  				};
+>  				port@1 {
+>  					reg = <1>;
+>  				};
+>  				port@2 {
+> +					/* HDMI sound */
+>  					reg = <2>;
+>  				};
+>  			};
+> @@ -2650,6 +2660,7 @@
+>  				port@1 {
+>  					reg = <1>;
+>  					du_out_hdmi0: endpoint {
+> +						remote-endpoint = <&dw_hdmi0_in>;
+>  					};
+>  				};
+>  				port@2 {
 
-<snip>
+-- 
+Regards,
 
-No SPDX line at all?
-
-:(
+Laurent Pinchart
