@@ -7,33 +7,33 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56FA6C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D06FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:54:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E6FE20855
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:54:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84C3720838
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:54:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728182AbgHLMyL (ORCPT
+        id S1728071AbgHLMxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 08:54:11 -0400
-Received: from foss.arm.com ([217.140.110.172]:44684 "EHLO foss.arm.com"
+        Wed, 12 Aug 2020 08:53:30 -0400
+Received: from foss.arm.com ([217.140.110.172]:44610 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728082AbgHLMxc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 08:53:32 -0400
+        id S1728027AbgHLMxY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 08:53:24 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BACA012FC;
-        Wed, 12 Aug 2020 05:53:31 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 71AFE1424;
+        Wed, 12 Aug 2020 05:53:24 -0700 (PDT)
 Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 8654E3F70D;
-        Wed, 12 Aug 2020 05:53:30 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3AF7B3F70D;
+        Wed, 12 Aug 2020 05:53:23 -0700 (PDT)
 From:   Valentin Schneider <valentin.schneider@arm.com>
 To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, morten.rasmussen@arm.com,
-        Quentin Perret <qperret@google.com>
-Subject: [PATCH v5 13/17] sched/topology: Mark SD_SERIALIZE as SDF_NEEDS_GROUPS
-Date:   Wed, 12 Aug 2020 13:52:56 +0100
-Message-Id: <20200812125300.11889-14-valentin.schneider@arm.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>, mingo@kernel.org,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        morten.rasmussen@arm.com, Quentin Perret <qperret@google.com>
+Subject: [PATCH v5 08/17] sched/topology: Use prebuilt SD flag degeneration mask
+Date:   Wed, 12 Aug 2020 13:52:51 +0100
+Message-Id: <20200812125300.11889-9-valentin.schneider@arm.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200812125300.11889-1-valentin.schneider@arm.com>
 References: <20200812125300.11889-1-valentin.schneider@arm.com>
@@ -44,35 +44,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There would be no point in preserving a sched_domain with a single group
-just because it has this flag set. Add it to SD_DEGENERATE_GROUPS_MASK.
+Leverage SD_DEGENERATE_GROUPS_MASK in sd_degenerate() and
+sd_parent_degenerate().
 
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
 Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
 ---
- include/linux/sched/sd_flags.h | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ kernel/sched/topology.c | 20 ++++----------------
+ 1 file changed, 4 insertions(+), 16 deletions(-)
 
-diff --git a/include/linux/sched/sd_flags.h b/include/linux/sched/sd_flags.h
-index 9043d18ce418..6eb302528659 100644
---- a/include/linux/sched/sd_flags.h
-+++ b/include/linux/sched/sd_flags.h
-@@ -112,11 +112,12 @@ SD_FLAG(SD_SHARE_PKG_RESOURCES, SDF_SHARED_CHILD | SDF_NEEDS_GROUPS)
-  * Only a single load balancing instance
-  *
-  * SHARED_PARENT: Set for all NUMA levels above NODE. Could be set from a
-- * different level upwards, but it doesn't change that if a domain has this flag
-- * set, then all of its parents need to have it too (otherwise the serialization
-- * doesn't make sense).
-+ *                different level upwards, but it doesn't change that if a
-+ *                domain has this flag set, then all of its parents need to have
-+ *                it too (otherwise the serialization doesn't make sense).
-+ * NEEDS_GROUPS: No point in preserving domain if it has a single group.
-  */
--SD_FLAG(SD_SERIALIZE, SDF_SHARED_PARENT)
-+SD_FLAG(SD_SERIALIZE, SDF_SHARED_PARENT | SDF_NEEDS_GROUPS)
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index f128fcf46a41..5f2bc99ff659 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -160,15 +160,9 @@ static int sd_degenerate(struct sched_domain *sd)
+ 		return 1;
  
- /*
-  * Place busy tasks earlier in the domain
+ 	/* Following flags need at least 2 groups */
+-	if (sd->flags & (SD_BALANCE_NEWIDLE |
+-			 SD_BALANCE_FORK |
+-			 SD_BALANCE_EXEC |
+-			 SD_SHARE_CPUCAPACITY |
+-			 SD_ASYM_CPUCAPACITY |
+-			 SD_SHARE_PKG_RESOURCES)) {
+-		if (sd->groups != sd->groups->next)
+-			return 0;
+-	}
++	if ((sd->flags & SD_DEGENERATE_GROUPS_MASK) &&
++	    (sd->groups != sd->groups->next))
++		return 0;
+ 
+ 	/* Following flags don't use groups */
+ 	if (sd->flags & (SD_WAKE_AFFINE))
+@@ -190,13 +184,7 @@ sd_parent_degenerate(struct sched_domain *sd, struct sched_domain *parent)
+ 
+ 	/* Flags needing groups don't count if only 1 group in parent */
+ 	if (parent->groups == parent->groups->next) {
+-		pflags &= ~(SD_BALANCE_NEWIDLE |
+-			    SD_BALANCE_FORK |
+-			    SD_BALANCE_EXEC |
+-			    SD_ASYM_CPUCAPACITY |
+-			    SD_SHARE_CPUCAPACITY |
+-			    SD_SHARE_PKG_RESOURCES |
+-			    SD_PREFER_SIBLING);
++		pflags &= ~(SD_DEGENERATE_GROUPS_MASK | SD_PREFER_SIBLING);
+ 		if (nr_node_ids == 1)
+ 			pflags &= ~SD_SERIALIZE;
+ 	}
 -- 
 2.27.0
 
