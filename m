@@ -2,126 +2,120 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A82C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:13:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8AABC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:13:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FBB520825
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:13:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XDYJH3L/";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AyPrIXC4"
+	by mail.kernel.org (Postfix) with ESMTP id 9C9E0207DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:13:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgHLJNd (ORCPT
+        id S1727121AbgHLJNm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 05:13:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54386 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726601AbgHLJNd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 05:13:33 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F13AC06174A;
-        Wed, 12 Aug 2020 02:13:33 -0700 (PDT)
-Date:   Wed, 12 Aug 2020 09:13:29 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597223610;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=YtQguOBpLy+ZK3wfcPbucBpUN9YGIesOWZl+59cOgmA=;
-        b=XDYJH3L/fJTg0uZURUWOUU+FVEp4y9Q5horXSNMatMdefHd1jv+UgT8Le2M/w/RfOP9MSJ
-        SI1rfnZJTuHqhu5fIU4MXl2rOgPuwrqj2g9V7BcODpkjuC6lYhX2mgMO2XujCjMJBzV3WZ
-        wOhRNZ0i7aqJMhdrZ9PO5UXsTxvaMQDmd9E71ytH6nTqRSYbFlXctNMYfPlw44HsxA37YQ
-        b1YZXQwb9RNZidSjbQ2t/onmpxzv8YxhawVjc8nrm/n2elte8y1UR7JK2rF4vjb//chuDJ
-        cacpm0uABDmad0SoVanJHuYST8qezvU621x3Ge+jZ7USxpOq+jGxD4y3aNUFNg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597223610;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=YtQguOBpLy+ZK3wfcPbucBpUN9YGIesOWZl+59cOgmA=;
-        b=AyPrIXC4Sk8jefmqeGtnO19FKendAy/6eDAGN/BqMdNGtcNNVfBVkUiiP2Lia3qO3Xustq
-        7Sa1+e0IWXKs6MDA==
-From:   "tip-bot2 for Guenter Roeck" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/urgent] genirq/PM: Always unlock IRQ descriptor in rearm_wake_irq()
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        stable@vger.kernel.org, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200811180001.80203-1-linux@roeck-us.net>
-References: <20200811180001.80203-1-linux@roeck-us.net>
+        Wed, 12 Aug 2020 05:13:42 -0400
+Received: from mga18.intel.com ([134.134.136.126]:40183 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726601AbgHLJNm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 05:13:42 -0400
+IronPort-SDR: IfM3j/VTzCXBkQoI75MlQBxqfDzK01hSyuhaqHa7S2gAPk+o26uglB9/UJRKrEG+jR39aiW3GT
+ dd8+S8cZ1kAg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9710"; a="141534164"
+X-IronPort-AV: E=Sophos;i="5.76,303,1592895600"; 
+   d="scan'208";a="141534164"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2020 02:13:41 -0700
+IronPort-SDR: 52x4G4nxphbG7wbFf9Bhd4oVDxjk3eeTi2GzwyrdU60wWFA2d3CAQsChy4xOcdkN8m2MdKEtc0
+ MMvG43id3Lxw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,303,1592895600"; 
+   d="scan'208";a="318027426"
+Received: from ipu5-build.bj.intel.com (HELO [10.238.232.196]) ([10.238.232.196])
+  by fmsmga004.fm.intel.com with ESMTP; 12 Aug 2020 02:13:37 -0700
+Subject: Re: [PATCH v5 3/6] ov5670: Support probe whilst the device is in a
+ low power state
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-i2c@vger.kernel.org
+Cc:     Wolfram Sang <wsa@the-dreams.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-acpi@vger.kernel.org, Bingbu Cao <bingbu.cao@intel.com>,
+        linux-media@vger.kernel.org,
+        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
+        Hyungwoo Yang <hyungwoo.yang@intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        rajmohan.mani@intel.com, Tomasz Figa <tfiga@chromium.org>,
+        "Qiu, Tian Shu" <tian.shu.qiu@intel.com>
+References: <20200810142747.12400-1-sakari.ailus@linux.intel.com>
+ <20200810142747.12400-4-sakari.ailus@linux.intel.com>
+From:   Bingbu Cao <bingbu.cao@linux.intel.com>
+Message-ID: <7a1fa217-7fd1-1d36-0b1c-ad5d09ea11a0@linux.intel.com>
+Date:   Wed, 12 Aug 2020 17:12:28 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Message-ID: <159722360956.3192.16144465573431608980.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200810142747.12400-4-sakari.ailus@linux.intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the irq/urgent branch of tip:
 
-Commit-ID:     e27b1636e9337d1a1d174b191e53d0f86421a822
-Gitweb:        https://git.kernel.org/tip/e27b1636e9337d1a1d174b191e53d0f86421a822
-Author:        Guenter Roeck <linux@roeck-us.net>
-AuthorDate:    Tue, 11 Aug 2020 11:00:01 -07:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Wed, 12 Aug 2020 11:04:05 +02:00
 
-genirq/PM: Always unlock IRQ descriptor in rearm_wake_irq()
+On 8/10/20 10:27 PM, Sakari Ailus wrote:
+> Tell ACPI device PM code that the driver supports the device being in a
+> low power state when the driver's probe function is entered.
+> 
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> ---
+>  drivers/media/i2c/ov5670.c | 23 ++++++++++++++---------
+>  1 file changed, 14 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/media/i2c/ov5670.c b/drivers/media/i2c/ov5670.c
+> index f26252e35e08d..1f75b888d2a18 100644
+> --- a/drivers/media/i2c/ov5670.c
+> +++ b/drivers/media/i2c/ov5670.c
+> @@ -2456,6 +2456,7 @@ static int ov5670_probe(struct i2c_client *client)
+>  	struct ov5670 *ov5670;
+>  	const char *err_msg;
+>  	u32 input_clk = 0;
+> +	bool low_power;
+>  	int ret;
+>  
+>  	device_property_read_u32(&client->dev, "clock-frequency", &input_clk);
+> @@ -2472,11 +2473,14 @@ static int ov5670_probe(struct i2c_client *client)
+>  	/* Initialize subdev */
+>  	v4l2_i2c_subdev_init(&ov5670->sd, client, &ov5670_subdev_ops);
+>  
+> -	/* Check module identity */
+> -	ret = ov5670_identify_module(ov5670);
+> -	if (ret) {
+> -		err_msg = "ov5670_identify_module() error";
+> -		goto error_print;
+> +	low_power = acpi_dev_state_low_power(&client->dev);
+> +	if (!low_power) {
+> +		/* Check module identity */
+> +		ret = ov5670_identify_module(ov5670);
+> +		if (ret) {
+> +			err_msg = "ov5670_identify_module() error";
+> +			goto error_print;
+> +	
 
-rearm_wake_irq() does not unlock the irq descriptor if the interrupt
-is not suspended or if wakeup is not enabled on it.
+Sakari, thanks for your patch.
+one question - With this change, there will be no chance for driver to guarantee
+that the camera sensor plugged in is the camera that the matched driver actually
+can drive until try to streaming the camera, so is it necessary to return
+appropriate error in .s_stream ops to notify user it is not the hardware that
+current driver can drive? if no other better way.
 
-Restucture the exit conditions so the unlock is always ensured.
-
-Fixes: 3a79bc63d9075 ("PCI: irq: Introduce rearm_wake_irq()")
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200811180001.80203-1-linux@roeck-us.net
-
----
- kernel/irq/pm.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/irq/pm.c b/kernel/irq/pm.c
-index 8f557fa..c6c7e18 100644
---- a/kernel/irq/pm.c
-+++ b/kernel/irq/pm.c
-@@ -185,14 +185,18 @@ void rearm_wake_irq(unsigned int irq)
- 	unsigned long flags;
- 	struct irq_desc *desc = irq_get_desc_buslock(irq, &flags, IRQ_GET_DESC_CHECK_GLOBAL);
- 
--	if (!desc || !(desc->istate & IRQS_SUSPENDED) ||
--	    !irqd_is_wakeup_set(&desc->irq_data))
-+	if (!desc)
- 		return;
- 
-+	if (!(desc->istate & IRQS_SUSPENDED) ||
-+	    !irqd_is_wakeup_set(&desc->irq_data))
-+		goto unlock;
-+
- 	desc->istate &= ~IRQS_SUSPENDED;
- 	irqd_set(&desc->irq_data, IRQD_WAKEUP_ARMED);
- 	__enable_irq(desc);
- 
-+unlock:
- 	irq_put_desc_busunlock(desc, flags);
- }
- 
+-- 
+Best regards,
+Bingbu Cao
