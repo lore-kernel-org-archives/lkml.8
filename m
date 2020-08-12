@@ -2,265 +2,302 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AFFEC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 11:45:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75884C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 11:47:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D89B62065C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 11:45:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597232751;
-	bh=Hc6gZFvtchQLwcRhS2KtQhpaG6eNu6efrTQHTQJkcag=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=2OfeTyrIUs4hpJfnatVSS6d7Gro8gpp6Dps/cVHr1047Vd8cyinwAFbUg53AdyQff
-	 r0cGtuBOxz8zIN+nPPHp59OZ79/Lhfj/wNXOXqdUh5WGx6U/jY4Y/LNvL8ECLsAvQ7
-	 c98CuW6kYI5k0s0r12n6tRal1b28rJwtZDn+iLCM=
+	by mail.kernel.org (Postfix) with ESMTP id 4B1732065C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 11:47:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=foundries-io.20150623.gappssmtp.com header.i=@foundries-io.20150623.gappssmtp.com header.b="HgSh/kqP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727864AbgHLLpu (ORCPT
+        id S1727103AbgHLLrL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 07:45:50 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:45944 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726404AbgHLLps (ORCPT
+        Wed, 12 Aug 2020 07:47:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49732 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726404AbgHLLrK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 07:45:48 -0400
-Received: by mail-ed1-f66.google.com with SMTP id di22so1258527edb.12;
-        Wed, 12 Aug 2020 04:45:46 -0700 (PDT)
+        Wed, 12 Aug 2020 07:47:10 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13109C06174A
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 04:47:10 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id k8so1643500wma.2
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 04:47:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=foundries-io.20150623.gappssmtp.com; s=20150623;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=JZ2WleiWXa9fC0ZTk1OSJJ+GJAP9T1SN3/ZXfQMDOLk=;
+        b=HgSh/kqPjSSvsIHxsPaFSYLcjr+AA5fgHn2beoKerBATlOXE0aVZwHl9VRSGVoAh0h
+         uOMZHeGbMjaZtRUYGUJllM9ZaJaqud5IS6vqF4SA93SrkJwr+jQeKi2dZ7csCPQqBfn3
+         Q3hNPGUWzV2pfC8vwluqz1f95NPFCJMvlrZEgSvTXZuwouQP3MwdGoVRshvPCoJnBPAF
+         L3eUHFEvVfWTQ2D1q6ahjVp8aSATq7XSuyviaC8LfLmV6mPKNC+ekcJIAUIv2F24tLpC
+         oxCIk2fH9tk9NL5+5D3cVGr1FA6a5aaym0nDGr+T2nbl9VyoNGU9yf9hCUTqvRl/ZEXz
+         a1wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=iTU/Dy21v99MwSHqqPqln63atgzchISHbIicoIdY0tk=;
-        b=iaxO3rPceLJ+Qj2uASzUgbrOtFJMqrYlolbtJTfxSaw6H/M4hNRFEWoZ6SH99xtlf7
-         gTR1szVb+3W6EY0xgMYBNVHMB8nYQ8zYT6PRCn5khbBV70oGSmXSkeQW1ipzWaomNsb6
-         qXLG0/kRmyyLIG3H9u5x0kbPYoH/wfgznYuVsJMd347nFU+qzjPKumqTaFVekTyTsqyx
-         /4KW0MHJUSyjoh31UVBE6fz4wRKi+kqIdUbTDobVuie3smYJVpVZNSe59NQGVKtd0/eN
-         M6WZNWvnBmCpaaQazG3g2OfAyzw62N1uKRGiT+qpsGZvBPc5fSptp7v1d9gFauEOUuif
-         sqew==
-X-Gm-Message-State: AOAM532aBH+u4OoMDofunyGYNGx5pDMCL1TBtCOL6MEjykzo0SZUG707
-        CKErMcGLBg4XA+/6ypcDxobP0lOR
-X-Google-Smtp-Source: ABdhPJyQYKB9lc6XsHvt9BA0UwESU/c4LN6Y2ZfWc0iT1x0hR74d4+JSLFM8jMPq4vnjCzXWoSGHtQ==
-X-Received: by 2002:a50:f288:: with SMTP id f8mr30925078edm.247.1597232746140;
-        Wed, 12 Aug 2020 04:45:46 -0700 (PDT)
-Received: from ?IPv6:2a0b:e7c0:0:107::70f? ([2a0b:e7c0:0:107::70f])
-        by smtp.gmail.com with ESMTPSA id d9sm755726edt.20.2020.08.12.04.45.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Aug 2020 04:45:45 -0700 (PDT)
-Subject: Re: [PATCH 2/2] tty/sysrq: Add configurable handler to execute a
- compound action
-To:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JZ2WleiWXa9fC0ZTk1OSJJ+GJAP9T1SN3/ZXfQMDOLk=;
+        b=rOapevpYx2TQvQbIURybuRAnfforQ0dTzEZD7e0wyVa/PkCIY+u2WYz6jc1Ddod8jE
+         eFFCuyeNe+6Jf0u0UQLngqP9nH1/ndgbtzACICN3XFfpHMT6vzIHxp1Aeh4nZ81SfxLH
+         ynMtLYPmhBwmfQ2KIb07G0EtIkgdEx7W6YXnJkWotGaCiMThuEGPvA6hDHxW3MX1yHoV
+         ttfshRcWHLJWp1lwnkXdqjXCrJyiLGHZybSINdqDOTDkgXSl/vKhLM1Fis1//BT/Ppls
+         rsdB/f0JG4V/mKsrvrex0rH+MGxFRQ49qDBhdEtYpEUrbtOAYumrvnK5TgRbXas/+Yfv
+         wyMg==
+X-Gm-Message-State: AOAM531QnXSQRnqNoZcgBiB6ZCcYRX3Shsc86JNP18eMTTmVUL7Kq9ie
+        zdwzGyzKPdZUOfT9hQ+3gkLkuA==
+X-Google-Smtp-Source: ABdhPJyS/QSRySbRg/Y0F1PBJPf1hnw9Gn/GMDNvn0O9h2Lh8eLUgzqoCx/FgAvEdk5ubsFvL0hoOQ==
+X-Received: by 2002:a7b:cf3a:: with SMTP id m26mr8725370wmg.25.1597232828711;
+        Wed, 12 Aug 2020 04:47:08 -0700 (PDT)
+Received: from trex (239.red-83-34-184.dynamicip.rima-tde.net. [83.34.184.239])
+        by smtp.gmail.com with ESMTPSA id i4sm3869208wrw.26.2020.08.12.04.47.06
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 12 Aug 2020 04:47:08 -0700 (PDT)
+From:   "Jorge Ramirez-Ortiz, Foundries" <jorge@foundries.io>
+X-Google-Original-From: "Jorge Ramirez-Ortiz, Foundries" <JorgeRamirez-Ortiz>
+Date:   Wed, 12 Aug 2020 13:47:05 +0200
+To:     Jens Wiklander <jens.wiklander@linaro.org>
+Cc:     Jorge Ramirez-Ortiz <jorge@foundries.io>, sumit.garg@linaro.org,
+        ricardo@foundries.io, mike@foundries.io, tee-dev@lists.linaro.org,
         linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-input@vger.kernel.org, kernel@collabora.com
-References: <20200804162402.2087-1-andrzej.p@collabora.com>
- <20200804162402.2087-3-andrzej.p@collabora.com>
-From:   Jiri Slaby <jirislaby@kernel.org>
-Message-ID: <0280e30a-2e70-7d21-68a9-5a2c22d7f316@kernel.org>
-Date:   Wed, 12 Aug 2020 13:45:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+Subject: Re: [PATCHv7] drivers: optee: allow op-tee to access devices on the
+ i2c bus
+Message-ID: <20200812114705.GA16922@trex>
+References: <20200811175531.10771-1-jorge@foundries.io>
+ <20200812084403.GA19230@jade>
 MIME-Version: 1.0
-In-Reply-To: <20200804162402.2087-3-andrzej.p@collabora.com>
-Content-Type: text/plain; charset=iso-8859-2
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200812084403.GA19230@jade>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04. 08. 20, 18:24, Andrzej Pietrasiewicz wrote:
-> Userland might want to execute e.g. 'w' (show blocked tasks), followed
-> by 's' (sync), followed by 1000 ms delay and then followed by 'c' (crash)
-> upon a single magic SysRq. Or one might want to execute the famous "Raising
-> Elephants Is So Utterly Boring" action. This patch adds a configurable
-> handler, triggered with 'C', for this exact purpose. The user specifies the
-> composition of the compound action using syntax similar to getopt, where
-> each letter corresponds to an individual action and a colon followed by a
-> number corresponds to a delay of that many milliseconds, e.g.:
+On 12/08/20, Jens Wiklander wrote:
+> On Tue, Aug 11, 2020 at 07:55:31PM +0200, Jorge Ramirez-Ortiz wrote:
+> > Some secure elements like NXP's SE050 sit on I2C buses. For OP-TEE to
+> > control this type of cryptographic devices it needs coordinated access
+> > to the bus, so collisions and RUNTIME_PM dont get in the way.
+> > 
+> > This trampoline driver allow OP-TEE to access them.
+> > 
+> > Signed-off-by: Jorge Ramirez-Ortiz <jorge@foundries.io>
+> > ---
+> >  v7: add support for ten bit i2c slave addressing
+> >  v6: compile out if CONFIG_I2C not enabled
+> >  v5: alphabetic order of includes
+> >  v4: remove unnecessary extra line in optee_msg.h
+> >  v3: use from/to msg param to support all types of memory
+> >      modify OPTEE_MSG_RPC_CMD_I2C_TRANSFER message id
+> >      
+> >  drivers/tee/optee/optee_msg.h | 21 ++++++++
+> >  drivers/tee/optee/rpc.c       | 95 +++++++++++++++++++++++++++++++++++
+> >  2 files changed, 116 insertions(+)
+> > 
+> > diff --git a/drivers/tee/optee/optee_msg.h b/drivers/tee/optee/optee_msg.h
+> > index 795bc19ae17a..7b2d919da2ac 100644
+> > --- a/drivers/tee/optee/optee_msg.h
+> > +++ b/drivers/tee/optee/optee_msg.h
+> > @@ -419,4 +419,25 @@ struct optee_msg_arg {
+> >   */
+> >  #define OPTEE_MSG_RPC_CMD_SHM_FREE	7
+> >  
+> > +/*
+> > + * Access a device on an i2c bus
+> > + *
+> > + * [in]  param[0].u.value.a		mode: RD(0), WR(1)
+> > + * [in]  param[0].u.value.b		i2c adapter
+> > + * [in]  param[0].u.value.c		i2c chip
+> > + *
+> > + * [in]  param[1].u.value.a		i2c control flags
+> > + *
+> > + * [in/out] memref[2]			buffer to exchange the transfer data
+> > + *					with the secure world
+> > + *
+> > + * [out]  param[3].u.value.a		bytes transferred by the driver
+> > + */
+> > +#define OPTEE_MSG_RPC_CMD_I2C_TRANSFER 21
+> > +/* I2C master transfer modes */
+> > +#define OPTEE_MSG_RPC_CMD_I2C_TRANSFER_RD 0
+> > +#define OPTEE_MSG_RPC_CMD_I2C_TRANSFER_WR 1
+> > +/* I2C master control flags */
+> > +#define OPTEE_MSG_RPC_CMD_I2C_FLAGS_TEN_BIT  BIT(0)
+> > +
+> >  #endif /* _OPTEE_MSG_H */
+> > diff --git a/drivers/tee/optee/rpc.c b/drivers/tee/optee/rpc.c
+> > index b4ade54d1f28..b6178761d79f 100644
+> > --- a/drivers/tee/optee/rpc.c
+> > +++ b/drivers/tee/optee/rpc.c
+> > @@ -7,6 +7,7 @@
+> >  
+> >  #include <linux/delay.h>
+> >  #include <linux/device.h>
+> > +#include <linux/i2c.h>
+> >  #include <linux/slab.h>
+> >  #include <linux/tee_drv.h>
+> >  #include "optee_private.h"
+> > @@ -49,6 +50,97 @@ static void handle_rpc_func_cmd_get_time(struct optee_msg_arg *arg)
+> >  	arg->ret = TEEC_ERROR_BAD_PARAMETERS;
+> >  }
+> >  
+> > +#if IS_ENABLED(CONFIG_I2C)
+> > +static void handle_rpc_func_cmd_i2c_transfer(struct tee_context *ctx,
+> > +					     struct optee_msg_arg *arg)
+> > +{
+> > +	struct i2c_client client = { 0 };
+> > +	struct tee_param *params;
+> > +	int i, ret = -EOPNOTSUPP;
+> > +	uint32_t attr[] = {
+> uint32_t seems a randomly chosen type here. The
+> TEE_IOCTL_PARAM_ATTR_TYPE_* defines fit in a u8.
+> Consider u8 attr[] = { instead.
+
+ok
+
+
 > 
-> ws:1000c
+> > +		TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_INPUT,
+> > +		TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_INPUT,
+> > +		TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT,
+> > +		TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_OUTPUT,
+> > +	};
+> > +
+> > +	if (arg->num_params != ARRAY_SIZE(attr)) {
+> > +		arg->ret = TEEC_ERROR_BAD_PARAMETERS;
+> > +		return;
+> > +	}
+> > +
+> > +	params = kmalloc_array(arg->num_params, sizeof(struct tee_param),
+> > +			       GFP_KERNEL);
+> > +	if (!params) {
+> > +		arg->ret = TEEC_ERROR_OUT_OF_MEMORY;
+> > +		return;
+> > +	}
+> > +
+> > +	if (optee_from_msg_param(params, arg->num_params, arg->params))
+> > +		goto bad;
+> > +
+> > +	for (i = 0; i < arg->num_params; i++) {
+> arg->num_params has an unsigned type. Consider giving i an unsigned type
+> too.
+
+ok
+
 > 
-> or
+> > +		if ((params[i].attr & TEE_IOCTL_PARAM_ATTR_TYPE_MASK)
+> > +		    != attr[i])
+> It looks a bit funny with the comparison at the beginning of the line,
+> normally we try to leave those at the end of the line. But
+> optee_from_msg_param() doesn't set any higher bits in params[i].attr so
+> you could also simplify the expression as:
+> 		if (params[i].attr != attr[i])
+
+ok will do the above
+
+
 > 
-> r:100eis:1000ub
+> > +			goto bad;
+> > +	}
+> > +
+> > +	client.adapter = i2c_get_adapter(params[0].u.value.b);
+> > +	if (!client.adapter)
+> > +		goto bad;
+> > +
+> > +	if (params[1].u.value.a & OPTEE_MSG_RPC_CMD_I2C_FLAGS_TEN_BIT) {
+> > +		if (!i2c_check_functionality(client.adapter,
+> > +					     I2C_FUNC_10BIT_ADDR)) {
+> > +			i2c_put_adapter(client.adapter);
+> > +			goto bad;
+> > +		}
+> > +
+> > +		client.flags = I2C_CLIENT_TEN;
+> > +	}
+> > +
+> > +	client.addr = params[0].u.value.c;
+> > +	snprintf(client.name, I2C_NAME_SIZE, "i2c%d", client.adapter->nr);
+> > +
+> > +	switch (params[0].u.value.a) {
+> > +	case OPTEE_MSG_RPC_CMD_I2C_TRANSFER_RD:
+> > +		ret = i2c_master_recv(&client, params[2].u.memref.shm->kaddr,
+> > +				      params[2].u.memref.size);
+> > +		break;
+> > +	case OPTEE_MSG_RPC_CMD_I2C_TRANSFER_WR:
+> > +		ret = i2c_master_send(&client, params[2].u.memref.shm->kaddr,
+> > +				      params[2].u.memref.size);
+> > +		break;
+> > +	default:
+> > +		i2c_put_adapter(client.adapter);
+> > +		goto bad;
+> > +	}
+> > +
+> > +	if (ret < 0) {
+> > +		arg->ret = TEEC_ERROR_COMMUNICATION;
+> > +	} else {
+> > +		params[3].u.value.a = ret;
+> > +		arg->ret = TEEC_SUCCESS;
+> > +
+> > +		if (optee_to_msg_param(arg->params, arg->num_params, params))
+> > +			arg->ret = TEEC_ERROR_BAD_PARAMETERS;
+> Need
+> arg->ret = TEEC_SUCCESS;
+> when everything is OK.
 
-I think I miss what's that good for, given I can do it one-by-one
-without setting such strings anywhere (I usually want to do different
-things on different kinds of crashes)?
 
-> Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-> ---
->  Documentation/admin-guide/sysrq.rst |  9 ++++
->  drivers/tty/sysrq.c                 | 81 ++++++++++++++++++++++++++++-
->  include/linux/sysrq.h               |  1 +
->  3 files changed, 90 insertions(+), 1 deletion(-)
+it is already there.
+but will do an else so it is more evident
+
 > 
-> diff --git a/Documentation/admin-guide/sysrq.rst b/Documentation/admin-guide/sysrq.rst
-> index 67dfa4c29093..80bdd8bf9636 100644
-> --- a/Documentation/admin-guide/sysrq.rst
-> +++ b/Documentation/admin-guide/sysrq.rst
-> @@ -32,6 +32,7 @@ to 1. Here is the list of possible values in /proc/sys/kernel/sysrq:
->           64 =  0x40 - enable signalling of processes (term, kill, oom-kill)
->          128 =  0x80 - allow reboot/poweroff
->          256 = 0x100 - allow nicing of all RT tasks
-> +        512 = 0x200 - allow compound action
->  
->  You can set the value in the file by the following command::
->  
-> @@ -148,6 +149,14 @@ Command	    Function
->  
->  ``z``	    Dump the ftrace buffer
->  
-> +``C``	    Execute a predefined, compound action. The action is defined with
-> +	    sysrq.sysrq_compound_action module parameter, whose value contains known
-> +	    command keys (except ``C`` to prevent recursion). The command keys can
-> +	    be optionally followed by a colon and a number of milliseconds to wait
-> +	    after executing the last action. For example:
-> +
-> +	    sysrq.sysrq_compound_action=r:100eis:1000ub
-> +
->  ``0``-``9`` Sets the console log level, controlling which kernel messages
->              will be printed to your console. (``0``, for example would make
->              it so that only emergency messages like PANICs or OOPSes would
-> diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
-> index 52e344bfe8c0..ffcda1316675 100644
-> --- a/drivers/tty/sysrq.c
-> +++ b/drivers/tty/sysrq.c
-> @@ -19,6 +19,7 @@
->  #include <linux/sched/rt.h>
->  #include <linux/sched/debug.h>
->  #include <linux/sched/task.h>
-> +#include <linux/delay.h>
->  #include <linux/interrupt.h>
->  #include <linux/mm.h>
->  #include <linux/fs.h>
-> @@ -439,6 +440,15 @@ static const struct sysrq_key_op sysrq_unrt_op = {
->  	.enable_mask	= SYSRQ_ENABLE_RTNICE,
->  };
->  
-> +static void sysrq_action_compound(int key);
-> +
-> +static struct sysrq_key_op sysrq_action_compound_op = {
-> +	.handler	= sysrq_action_compound,
-> +	.help_msg	= "execute-compound-action(C)",
-> +	.action_msg	= "Execute compound action",
-> +	.enable_mask	= SYSRQ_ENABLE_COMPOUND,
-> +};
-> +
->  /* Key Operations table and lock */
->  static DEFINE_SPINLOCK(sysrq_key_table_lock);
->  
-> @@ -501,7 +511,7 @@ static const struct sysrq_key_op *sysrq_key_table[62] = {
->  	&sysrq_ftrace_dump_op,		/* z */
->  	NULL,				/* A */
->  	NULL,				/* B */
-> -	NULL,				/* C */
-> +	&sysrq_action_compound_op,	/* C */
->  	NULL,				/* D */
->  	NULL,				/* E */
->  	NULL,				/* F */
-> @@ -634,6 +644,7 @@ EXPORT_SYMBOL(handle_sysrq);
->  
->  #ifdef CONFIG_INPUT
->  static int sysrq_reset_downtime_ms;
-> +static char *sysrq_compound_action;
->  
->  /* Simple translation table for the SysRq keys */
->  static const unsigned char sysrq_xlate[KEY_CNT] =
-> @@ -787,6 +798,61 @@ static void sysrq_of_get_keyreset_config(void)
->  {
->  }
->  #endif
-> +#define SYSRQ_COMPOUND_ACTION_VALIDATE	0
-> +#define SYSRQ_COMPOUND_ACTION_RUN	1
-> +
-> +static int sysrq_process_compound_action(int pass)
-> +{
-> +	const char *action = sysrq_compound_action;
-> +	const struct sysrq_key_op *op_p;
-> +	int ret, delay;
-> +
-> +	while (*action) {
-> +		op_p = __sysrq_get_key_op(*action);
-> +		if (!op_p)
-> +			return -EINVAL;
-> +
-> +		/* Don't allow calling ourselves recursively */
-> +		if (op_p == &sysrq_action_compound_op)
-> +			return -EINVAL;
-> +
-> +		if (pass == SYSRQ_COMPOUND_ACTION_RUN)
-> +			__handle_sysrq(*action, false);
-> +
-> +		if (*++action == ':') {
-> +			ret = sscanf(action++, ":%d", &delay);
+> > +	}
+> > +
+> > +	i2c_put_adapter(client.adapter);
+> > +	kfree(params);
+> > +	return;
+> > +bad:
+> > +	kfree(params);
+> > +	arg->ret = TEEC_ERROR_BAD_PARAMETERS;
+> > +}
+> > +#else
+> > +static void handle_rpc_func_cmd_i2c_transfer(struct tee_context *ctx,
+> > +					     struct optee_msg_arg *arg)
+> > +{
+> > +	arg->ret = TEEC_ERROR_COMMUNICATION;
+> I'd prefer TEEC_ERROR_NOT_SUPPORTED here.
+> TEEC_ERROR_NOT_SUPPORTED would need to be defined as:
+> #define TEEC_ERROR_NOT_SUPPORTED        0xFFFF000A
+> in optee_private.h
 
-You likely want %u and unsigned int. No negative delays.
+ok
 
-> +			if (ret < 1) /* we want at least ":[0-9]" => 1 item */
-> +				return -EINVAL;
-> +
-> +			while (*action >= '0' && *action <= '9')
-> +				++action;
-> +			if (pass == SYSRQ_COMPOUND_ACTION_RUN)
-> +				mdelay(delay);
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void sysrq_action_compound(int key)
-> +{
-> +	if (!sysrq_compound_action) {
-> +		pr_err("Unconfigured compound action for %s",
-> +		       sysrq_action_compound_op.help_msg);
+thanks for the quick review on this
 
-Missing \n.
-
-> +		return;
-> +	}
-> +
-> +	if (sysrq_process_compound_action(SYSRQ_COMPOUND_ACTION_VALIDATE)) {
-> +		pr_err("Incorrect compound action %s for %s",
-
-The same.
-
-> +		       sysrq_compound_action,
-> +		       sysrq_action_compound_op.help_msg);
-> +
-> +		return;
-> +	}
-> +
-> +	sysrq_process_compound_action(SYSRQ_COMPOUND_ACTION_RUN);
-> +}
->  
->  static void sysrq_reinject_alt_sysrq(struct work_struct *work)
->  {
-> @@ -1079,8 +1145,21 @@ module_param_array_named(reset_seq, sysrq_reset_seq, sysrq_reset_seq,
->  
->  module_param_named(sysrq_downtime_ms, sysrq_reset_downtime_ms, int, 0644);
->  
-> +module_param(sysrq_compound_action, charp, 0644);
-> +MODULE_PARM_DESC(sysrq_compound_action,
-> +	"Compound sysrq action to be executed on Alt-Shift-SysRq-C\n"
-> +	"The compound action definition consists of known SysRq action letters except 'C',\n"
-> +	"each letter can be optionally followed by a colon and a number of milliseconds to wait\n"
-> +	"after executing the last action.\n"
-> +	"Example:\n"
-> +	"To unRaw, wait 100ms, tErminate, kIll, Sync, wait 1000ms, Unmount, Boot\n"
-> +	"sysrq.sysrq_compound_action=r:100eis:1000ub");
-
-This looks bad in the output, use at least one \t at the start of a new
-line inside the string.
-
--- 
-js
-suse labs
+> 
+> Cheers,
+> Jens
+> 
+> > +}
+> > +#endif
+> > +
+> >  static struct wq_entry *wq_entry_get(struct optee_wait_queue *wq, u32 key)
+> >  {
+> >  	struct wq_entry *w;
+> > @@ -382,6 +474,9 @@ static void handle_rpc_func_cmd(struct tee_context *ctx, struct optee *optee,
+> >  	case OPTEE_MSG_RPC_CMD_SHM_FREE:
+> >  		handle_rpc_func_cmd_shm_free(ctx, arg);
+> >  		break;
+> > +	case OPTEE_MSG_RPC_CMD_I2C_TRANSFER:
+> > +		handle_rpc_func_cmd_i2c_transfer(ctx, arg);
+> > +		break;
+> >  	default:
+> >  		handle_rpc_supp_cmd(ctx, arg);
+> >  	}
+> > -- 
+> > 2.17.1
+> > 
