@@ -2,119 +2,119 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA7BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 00:09:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 350DDC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 00:10:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D6902076C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 00:09:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B13B2076C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 00:10:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D8glpmb5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PfUxsu28"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726503AbgHLAJF (ORCPT
+        id S1726479AbgHLAKZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 20:09:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55592 "EHLO
+        Tue, 11 Aug 2020 20:10:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726422AbgHLAJE (ORCPT
+        with ESMTP id S1726164AbgHLAKZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 20:09:04 -0400
-Received: from mail-pl1-x64a.google.com (mail-pl1-x64a.google.com [IPv6:2607:f8b0:4864:20::64a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9085DC061787
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 17:09:04 -0700 (PDT)
-Received: by mail-pl1-x64a.google.com with SMTP id f4so487968plo.3
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 17:09:04 -0700 (PDT)
+        Tue, 11 Aug 2020 20:10:25 -0400
+Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D601C06174A
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 17:10:25 -0700 (PDT)
+Received: by mail-yb1-xb36.google.com with SMTP id x10so377210ybj.13
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 17:10:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=ZpqanX1uekkaNMZ08yYFYDvc0CW2tgz+aClfGg1TO1g=;
-        b=D8glpmb5WqJz7ppDPauIiHX6IcmeWzaqOufV1M73cok0q632O2khgu2afnO+tDpuKI
-         YnRmw4Q3IxOKQNkRoy99lB8vIL3ciQj7ygU8jmEsiper0TzL4eHrK+a/ywAmhGPgUdf1
-         aAoMU5nbhCCgf9hAPNk8dNTQKf6bbnUf4UNEJJVxAK8KrK1Cs16pbwhnkIfTipfExPXZ
-         UYiB2prYhq6Tz6X9h5QnkRjpCxDGIyHzMzCk4GyRppltjHedFla51yaa3Dg9Rzo66zCP
-         y67nw+WrWxTExSFmHgtGu/uE7jnDIwuRKqJRcpWoLLIGLccEmssdKzQTToPMgII8usiz
-         lHag==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8uOzj1voyuCKHRpxgq/4pDKuyjBgBLo5ZiC1tPpLll8=;
+        b=PfUxsu28J+k0tt2T60XuyfbMtFAitx9KdbRdPbiTevfHT9OuvszkOVp6HdNs4S0oHc
+         p6R5vS0fipF5cik14YFkQatdJ1zII7ViQJiLPTdNtuo80Ih5Oxj+nSWE7sn54rW9HK/x
+         H4oaP9zlZcL4EHAtrwmBJi6nrIqDYFWLD2Lez2KE9v4SgN/T0FWwAslu/rEqoaO1A97F
+         qRxcJfRsR14jofd7sYxL1YPYdlkYmYnyJD36utn+DAb5JYRb5jumHg9FEWV0Ov+00n9a
+         u/m6wYzHQp36O9NWnduDy7Y9apuqjWNkQ0iYWnts9RdUdvShjYPt7qOnRkdPfxdaUHIV
+         Cmnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=ZpqanX1uekkaNMZ08yYFYDvc0CW2tgz+aClfGg1TO1g=;
-        b=G4uj3nTMJEjnDlm9jHtyZ7V+tarznOJHESHxvfBqjcAe+PfK9q4OEX2HxdE7YjKKUz
-         ooFzjZsm3PzdKUvZN26oK2XPNtoRjZFHqdBVKtVxuAqt//SKCxfuNX8xX/MOaMPy8SQf
-         aKGfqx5pfd3HKPbttEHETrF1XS6oEzN6MKJqOBYYzHa4OofHhjjW+KRXqxOxHZRecP/k
-         1RpdvCDLKZnOP1l03tzowaCHiM1jc/SV56YNCS1lvYCihKmpLGGJhx85innKaczM/Sw5
-         qdKoZHQVBoP1cAMHHOhGV9gQqdMKSmPF1mgkms2yPKXuqHfoUpHGgdNTu0Zsmrs+6Ack
-         BsaQ==
-X-Gm-Message-State: AOAM531WhxNIlMjs5mOozMRvWheATtFnbRzNj6t1l1Qn2zaNA3igapWK
-        qlV02tdgSbWDWc3kxnUod9+lEU2pVwc=
-X-Google-Smtp-Source: ABdhPJyAoAFNgGqRiTvKp/WURNjiv5ZkyaVdAQV0Gtf9rEJk3MICDNXW1ef5laLWh37ybsijrLOThls1zbg=
-X-Received: by 2002:a17:90a:f014:: with SMTP id bt20mr365422pjb.0.1597190943694;
- Tue, 11 Aug 2020 17:09:03 -0700 (PDT)
-Date:   Tue, 11 Aug 2020 17:08:59 -0700
-Message-Id: <20200812000859.542332-1-badhri@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.28.0.236.gb10cc79966-goog
-Subject: [PATCH v1] tcpm: During PR_SWAP, source caps should be sent only
- after tSwapSourceStart
-From:   Badhri Jagan Sridharan <badhri@google.com>
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Badhri Jagan Sridharan <badhri@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8uOzj1voyuCKHRpxgq/4pDKuyjBgBLo5ZiC1tPpLll8=;
+        b=oitXUQBNUkyXXl/kNWivWjf7fUissw/vehN1S57mE+3g6jVlsOXheKQdGmv5i64k9o
+         bMiT9wLNnQbqOSRMDUeCnTwLoOaXkKmQiLBqADEjyRqEv4oZRtof0McFYX2rcoOMRNID
+         A5mid4KpdR+OJlSdLf4g/ShuaNySGArnwdJw1GithoQkwSnRDW73tDDV7X6BxWdvjGym
+         lax8XAHhbS/HQzqKUlyiODlQzsS2bXAsNGdA4/XnrpShtop1/oDYnQB3akCaBOzvLzRP
+         ctKSXgZImqY3G01zjUeBbPVaC1sPSHUYWt/dNwH9v+qGf9TQ3G9zZvd1+MJ5RO60dpTy
+         wXPg==
+X-Gm-Message-State: AOAM531PB9+406bNhJiK1h14BP2LwI6E3e5PmwDkUnzgz6jxvCxXsVo8
+        y+geqibaifvulQBEWBLWXKvOs/LkNzd68tmQ6no=
+X-Google-Smtp-Source: ABdhPJywz5Q/451nmNo3nqmKYvaDye1yBXeQ45F23UMljvWfQL6O7dMrT8GiEhMPtmxrhdR1cSHpFuq3PI9yzuM0z1Q=
+X-Received: by 2002:a25:2e12:: with SMTP id u18mr48009916ybu.200.1597191023984;
+ Tue, 11 Aug 2020 17:10:23 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200811200457.134743-1-lyude@redhat.com> <20200811200457.134743-2-lyude@redhat.com>
+In-Reply-To: <20200811200457.134743-2-lyude@redhat.com>
+From:   Ben Skeggs <skeggsb@gmail.com>
+Date:   Wed, 12 Aug 2020 10:10:13 +1000
+Message-ID: <CACAvsv5FnVom3Od=EfZO3Y1WhCXDhBvCSNwFx8bc_BNg75iL4g@mail.gmail.com>
+Subject: Re: [RFC 01/20] drm/nouveau/kms: Fix some indenting in nouveau_dp_detect()
+To:     Lyude Paul <lyude@redhat.com>
+Cc:     ML nouveau <nouveau@lists.freedesktop.org>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>,
+        David Airlie <airlied@linux.ie>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        open list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From the spec:
-"6.6.8.1 SwapSourceStartTimer
-The SwapSourceStartTimer Shall be used by the new Source, after a Power
-Role Swap or Fast Role Swap, to ensure that it does not send
-Source_Capabilities Message before the new Sink is ready to receive the
-Source_Capabilities Message. The new Source Shall Not send the
-Source_Capabilities Message earlier than tSwapSourceStart after the
-last bit of the EOP of GoodCRC Message sent in response to the PS_RDY
-Message sent by the new Source indicating that its power supply is
-ready."
+On Wed, 12 Aug 2020 at 06:05, Lyude Paul <lyude@redhat.com> wrote:
+>
+> Signed-off-by: Lyude Paul <lyude@redhat.com>
+Reviewed-by: Ben Skeggs <bskeggs@redhat.com>
 
-This fixes TD.PD.CP.E3, TD.PD.CP.E4, TD.PD.CP.E5 failures
-
-Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
----
- drivers/usb/typec/tcpm/tcpm.c | 2 +-
- include/linux/usb/pd.h        | 1 +
- 2 files changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
-index 3ef37202ee37..d38347bd3335 100644
---- a/drivers/usb/typec/tcpm/tcpm.c
-+++ b/drivers/usb/typec/tcpm/tcpm.c
-@@ -3555,7 +3555,7 @@ static void run_state_machine(struct tcpm_port *port)
- 		 */
- 		tcpm_set_pwr_role(port, TYPEC_SOURCE);
- 		tcpm_pd_send_control(port, PD_CTRL_PS_RDY);
--		tcpm_set_state(port, SRC_STARTUP, 0);
-+		tcpm_set_state(port, SRC_STARTUP, PD_T_SWAP_SRC_START);
- 		break;
- 
- 	case VCONN_SWAP_ACCEPT:
-diff --git a/include/linux/usb/pd.h b/include/linux/usb/pd.h
-index b6c233e79bd4..ea842ae862d4 100644
---- a/include/linux/usb/pd.h
-+++ b/include/linux/usb/pd.h
-@@ -473,6 +473,7 @@ static inline unsigned int rdo_max_power(u32 rdo)
- #define PD_T_ERROR_RECOVERY	100	/* minimum 25 is insufficient */
- #define PD_T_SRCSWAPSTDBY      625     /* Maximum of 650ms */
- #define PD_T_NEWSRC            250     /* Maximum of 275ms */
-+#define PD_T_SWAP_SRC_START	20
- 
- #define PD_T_DRP_TRY		100	/* 75 - 150 ms */
- #define PD_T_DRP_TRYWAIT	600	/* 400 - 800 ms */
--- 
-2.28.0.236.gb10cc79966-goog
-
+> ---
+>  drivers/gpu/drm/nouveau/nouveau_dp.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/nouveau/nouveau_dp.c b/drivers/gpu/drm/nouveau/nouveau_dp.c
+> index 8a0f7994e1aeb..ee778ddc95fae 100644
+> --- a/drivers/gpu/drm/nouveau/nouveau_dp.c
+> +++ b/drivers/gpu/drm/nouveau/nouveau_dp.c
+> @@ -76,10 +76,10 @@ nouveau_dp_detect(struct nouveau_encoder *nv_encoder)
+>         nv_encoder->dp.link_nr = dpcd[2] & DP_MAX_LANE_COUNT_MASK;
+>
+>         NV_DEBUG(drm, "display: %dx%d dpcd 0x%02x\n",
+> -                    nv_encoder->dp.link_nr, nv_encoder->dp.link_bw, dpcd[0]);
+> +                nv_encoder->dp.link_nr, nv_encoder->dp.link_bw, dpcd[0]);
+>         NV_DEBUG(drm, "encoder: %dx%d\n",
+> -                    nv_encoder->dcb->dpconf.link_nr,
+> -                    nv_encoder->dcb->dpconf.link_bw);
+> +                nv_encoder->dcb->dpconf.link_nr,
+> +                nv_encoder->dcb->dpconf.link_bw);
+>
+>         if (nv_encoder->dcb->dpconf.link_nr < nv_encoder->dp.link_nr)
+>                 nv_encoder->dp.link_nr = nv_encoder->dcb->dpconf.link_nr;
+> @@ -87,7 +87,7 @@ nouveau_dp_detect(struct nouveau_encoder *nv_encoder)
+>                 nv_encoder->dp.link_bw = nv_encoder->dcb->dpconf.link_bw;
+>
+>         NV_DEBUG(drm, "maximum: %dx%d\n",
+> -                    nv_encoder->dp.link_nr, nv_encoder->dp.link_bw);
+> +                nv_encoder->dp.link_nr, nv_encoder->dp.link_bw);
+>
+>         nouveau_dp_probe_oui(dev, aux, dpcd);
+>
+> --
+> 2.26.2
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
