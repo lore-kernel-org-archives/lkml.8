@@ -4,126 +4,140 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A0DDC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:07:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 597ACC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:08:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F1B620838
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:07:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BDA4207F7
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:08:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728147AbgHLMHh (ORCPT
+        id S1727911AbgHLMI1 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 08:07:37 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:32312 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726829AbgHLMF5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 08:05:57 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4BRT1Y5Cg6zB09ZV;
-        Wed, 12 Aug 2020 14:05:53 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id VB1jfKqmJQO8; Wed, 12 Aug 2020 14:05:53 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4BRT1Y4JJ7zB09ZQ;
-        Wed, 12 Aug 2020 14:05:53 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id E57E08B826;
-        Wed, 12 Aug 2020 14:05:54 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id MxtnbaLnGTzM; Wed, 12 Aug 2020 14:05:54 +0200 (CEST)
-Received: from po17688vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id AECB08B7FC;
-        Wed, 12 Aug 2020 14:05:54 +0200 (CEST)
-Received: by po17688vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 907A365C34; Wed, 12 Aug 2020 12:05:54 +0000 (UTC)
-Message-Id: <17430b14a0b2a9da8fc24dfaeca79aec0180df5c.1597233555.git.christophe.leroy@csgroup.eu>
-In-Reply-To: <cover.1597233555.git.christophe.leroy@csgroup.eu>
-References: <cover.1597233555.git.christophe.leroy@csgroup.eu>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [RFC PATCH v1 03/19] powerpc/ptrace: Consolidate reg index
- calculation
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, ldv@altlinux.org,
-        viro@zeniv.linux.org.uk
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Wed, 12 Aug 2020 12:05:54 +0000 (UTC)
+        Wed, 12 Aug 2020 08:08:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52980 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726804AbgHLMI0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 08:08:26 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 558F3C06174A
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 05:08:26 -0700 (PDT)
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1k5pYK-0007Gt-NL; Wed, 12 Aug 2020 14:08:20 +0200
+Received: from pza by lupine with local (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1k5pYJ-00087Y-7J; Wed, 12 Aug 2020 14:08:19 +0200
+Message-ID: <f65aeebb6c372a7138e496a30ce39f879d4e24ed.camel@pengutronix.de>
+Subject: Re: [PATCH 3/3] mmc: mediatek: add optional module reset property
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Wenbin Mei <wenbin.mei@mediatek.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Chaotian Jing <chaotian.jing@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        srv_heupstream@mediatek.com
+Date:   Wed, 12 Aug 2020 14:08:19 +0200
+In-Reply-To: <20200812093726.10123-4-wenbin.mei@mediatek.com>
+References: <20200812093726.10123-1-wenbin.mei@mediatek.com>
+         <20200812093726.10123-4-wenbin.mei@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.30.5-1.1 
+MIME-Version: 1.0
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Today we have:
+On Wed, 2020-08-12 at 17:37 +0800, Wenbin Mei wrote:
+> This patch adds a optional reset management for msdc.
+> Sometimes the bootloader does not bring msdc register
+> to default state, so need reset the msdc controller.
+> 
+> Signed-off-by: Wenbin Mei <wenbin.mei@mediatek.com>
+> ---
+>  drivers/mmc/host/mtk-sd.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
+> index 39e7fc54c438..2b243c03c9b2 100644
+> --- a/drivers/mmc/host/mtk-sd.c
+> +++ b/drivers/mmc/host/mtk-sd.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/spinlock.h>
+>  #include <linux/interrupt.h>
+> +#include <linux/reset.h>
+>  
+>  #include <linux/mmc/card.h>
+>  #include <linux/mmc/core.h>
+> @@ -434,6 +435,7 @@ struct msdc_host {
+>  	struct msdc_save_para save_para; /* used when gate HCLK */
+>  	struct msdc_tune_para def_tune_para; /* default tune setting */
+>  	struct msdc_tune_para saved_tune_para; /* tune result of CMD21/CMD19 */
+> +	struct reset_control *reset;
+>  };
+>  
+>  static const struct mtk_mmc_compatible mt8135_compat = {
+> @@ -1516,6 +1518,12 @@ static void msdc_init_hw(struct msdc_host *host)
+>  	u32 val;
+>  	u32 tune_reg = host->dev_comp->pad_tune_reg;
+>  
+> +	if (!IS_ERR(host->reset)) {
+> +		reset_control_assert(host->reset);
+> +		usleep_range(10, 50);
+> +		reset_control_deassert(host->reset);
+> +	}
+> +
 
-	#ifdef CONFIG_PPC32
-		index = addr >> 2;
-		if ((addr & 3) || child->thread.regs == NULL)
-	#else
-		index = addr >> 3;
-		if ((addr & 7))
-	#endif
+This should be:
 
-sizeof(long) has value 4 for PPC32 and value 8 for PPC64.
+	if (host->reset) {
+		reset_control_assert(host->reset);
+		usleep_range(10, 50);
+		reset_control_deassert(host->reset);
+	}
 
-Dividing by 4 is equivalent to >> 2 and dividing by 8 is equivalent
-to >> 3.
+>  	/* Configure to MMC/SD mode, clock free running */
+>  	sdr_set_bits(host->base + MSDC_CFG, MSDC_CFG_MODE | MSDC_CFG_CKPDN);
+>  
+> @@ -2273,6 +2281,11 @@ static int msdc_drv_probe(struct platform_device *pdev)
+>  	if (IS_ERR(host->src_clk_cg))
+>  		host->src_clk_cg = NULL;
+>  
+> +	host->reset = devm_reset_control_get_optional_exclusive(&pdev->dev,
+> +								"hrst");
+> +	if (PTR_ERR(host->reset) == -EPROBE_DEFER)
+> +		return PTR_ERR(host->reset);
+> +
 
-And 3 and 7 are respectively (sizeof(long) - 1).
+This should be:
 
-Use sizeof(long) to get rid of the #ifdef CONFIG_PPC32 and consolidate
-the calculation and checking.
+	host->reset = devm_reset_control_get_optional_exclusive(&pdev->dev,
+								"hrst");
+	if (IS_ERR(host->reset))
+		return PTR_ERR(host->reset);
 
-thread.regs have to be not NULL on both PPC32 and PPC64 so adding
-that test on PPC64 is harmless.
+If the reset is configured in DT then it should be used, even if the
+reset driver is loaded later.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
----
- arch/powerpc/kernel/ptrace/ptrace.c | 20 ++++----------------
- 1 file changed, 4 insertions(+), 16 deletions(-)
+If the DT does not contain the reset-names = "hrst" property at all,
+devm_reset_control_get_optional_*() will return NULL.
 
-diff --git a/arch/powerpc/kernel/ptrace/ptrace.c b/arch/powerpc/kernel/ptrace/ptrace.c
-index f6e51be47c6e..0b4645a7a1b4 100644
---- a/arch/powerpc/kernel/ptrace/ptrace.c
-+++ b/arch/powerpc/kernel/ptrace/ptrace.c
-@@ -55,14 +55,8 @@ long arch_ptrace(struct task_struct *child, long request,
- 
- 		ret = -EIO;
- 		/* convert to index and check */
--#ifdef CONFIG_PPC32
--		index = addr >> 2;
--		if ((addr & 3) || (index > PT_FPSCR)
--		    || (child->thread.regs == NULL))
--#else
--		index = addr >> 3;
--		if ((addr & 7) || (index > PT_FPSCR))
--#endif
-+		index = addr / sizeof(long);
-+		if ((addr & (sizeof(long) - 1)) || (index > PT_FPSCR) || !child->thread.regs)
- 			break;
- 
- 		CHECK_FULL_REGS(child->thread.regs);
-@@ -90,14 +84,8 @@ long arch_ptrace(struct task_struct *child, long request,
- 
- 		ret = -EIO;
- 		/* convert to index and check */
--#ifdef CONFIG_PPC32
--		index = addr >> 2;
--		if ((addr & 3) || (index > PT_FPSCR)
--		    || (child->thread.regs == NULL))
--#else
--		index = addr >> 3;
--		if ((addr & 7) || (index > PT_FPSCR))
--#endif
-+		index = addr / sizeof(long);
-+		if ((addr & (sizeof(long) - 1)) || (index > PT_FPSCR) || !child->thread.regs)
- 			break;
- 
- 		CHECK_FULL_REGS(child->thread.regs);
--- 
-2.25.0
+With these two changes,
 
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+
+regards
+Philipp
