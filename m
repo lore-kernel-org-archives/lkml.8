@@ -2,135 +2,120 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8521FC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 08:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66D91C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 08:33:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58E39206C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 08:32:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yWMINxLW";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="/j3AyygA"
+	by mail.kernel.org (Postfix) with ESMTP id 4A59D206C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 08:33:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727006AbgHLIcx (ORCPT
+        id S1726917AbgHLIdx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 04:32:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48122 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726264AbgHLIcw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 04:32:52 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D89EC06174A;
-        Wed, 12 Aug 2020 01:32:52 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597221170;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=MAwJcfEssf3mKlF+HdVBaVk4dp6ivOrkJynhQoue1SE=;
-        b=yWMINxLW+9od8/8sqEvNhnJrUK0Y+a0ar3rxTG28EJMccMKPYyKoUm4c1fyolm/zWG+0oj
-        ktvAb2eTOzWNgOK8y+wv3RjQzMsW5Lwz+Z0XeUI46CXMITYURDd/2H/o5TlsSw0g+9aobB
-        L2TQ5TU2ahGTrEABcrrbpvbl45/hxMZmPTFhIUCHCbb/BIx3dx3LVQ4pkpfWe2tIQcSgC9
-        XlO8R1er6wKFx3z2Kg6/wQJsyQGr/nFauZwKfBfng5qlPG8VPOQ3tFUG/WvrgTJ25zT2/W
-        Wdy38R8QK6UirADIlyFUL7ULLFKD+O7BuSO9ZKWmN41LcvBZZ9r2jjZ/g1ykZQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597221170;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=MAwJcfEssf3mKlF+HdVBaVk4dp6ivOrkJynhQoue1SE=;
-        b=/j3AyygAVKvcEW2Sit7ct2yF8hIlZL/rW92tWnbMxohm8wxnmzsw76/vyxqEigP3nmQElP
-        4t1imSePuF/DOrBA==
-To:     paulmck@kernel.org
-Cc:     Michal Hocko <mhocko@suse.com>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
-In-Reply-To: <20200812042945.GB4295@paulmck-ThinkPad-P72>
-References: <20200811210931.GZ4295@paulmck-ThinkPad-P72> <874kp87mca.fsf@nanos.tec.linutronix.de> <20200812042945.GB4295@paulmck-ThinkPad-P72>
-Date:   Wed, 12 Aug 2020 10:32:50 +0200
-Message-ID: <871rkc6z7x.fsf@nanos.tec.linutronix.de>
+        Wed, 12 Aug 2020 04:33:53 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57590 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726264AbgHLIdw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 04:33:52 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 6BD8DB5E8;
+        Wed, 12 Aug 2020 08:34:12 +0000 (UTC)
+Subject: Re: [PATCH drm/hisilicon v3 0/2] hibmc clean up and code refactoring
+To:     Tian Tao <tiantao6@hisilicon.com>, airlied@linux.ie,
+        daniel@ffwll.ch, kraxel@redhat.com, alexander.deucher@amd.com,
+        tglx@linutronix.de, dri-devel@lists.freedesktop.org,
+        xinliang.liu@linaro.org, linux-kernel@vger.kernel.org
+Cc:     linuxarm@huawei.com
+References: <1597218179-3938-1-git-send-email-tiantao6@hisilicon.com>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+Message-ID: <07634d88-13a7-8767-032d-24ba9b5f5f8b@suse.de>
+Date:   Wed, 12 Aug 2020 10:33:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <1597218179-3938-1-git-send-email-tiantao6@hisilicon.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="cADU4EOi8UINnvVNbIZnML821TzzfUywE"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Paul,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--cADU4EOi8UINnvVNbIZnML821TzzfUywE
+Content-Type: multipart/mixed; boundary="Mz5FlLSm8z4ugsRP0gL03sCCEZedpCSTW";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Tian Tao <tiantao6@hisilicon.com>, airlied@linux.ie, daniel@ffwll.ch,
+ kraxel@redhat.com, alexander.deucher@amd.com, tglx@linutronix.de,
+ dri-devel@lists.freedesktop.org, xinliang.liu@linaro.org,
+ linux-kernel@vger.kernel.org
+Cc: linuxarm@huawei.com
+Message-ID: <07634d88-13a7-8767-032d-24ba9b5f5f8b@suse.de>
+Subject: Re: [PATCH drm/hisilicon v3 0/2] hibmc clean up and code refactoring
+References: <1597218179-3938-1-git-send-email-tiantao6@hisilicon.com>
+In-Reply-To: <1597218179-3938-1-git-send-email-tiantao6@hisilicon.com>
 
-"Paul E. McKenney" <paulmck@kernel.org> writes:
-> On Wed, Aug 12, 2020 at 02:13:25AM +0200, Thomas Gleixner wrote:
->> That much I understood, but I somehow failed to figure the why out
->> despite the elaborate changelog. 2 weeks of 30+C seem to have cooked my
->> brain :)
->
-> Ouch!!!  And what on earth is Germany doing being that warm???
+--Mz5FlLSm8z4ugsRP0gL03sCCEZedpCSTW
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-The hot air exhaustion of politicians, managers and conspiracy
-mythomaniacs seens to have contributed extensivly to global warming
-lately.
+Merged into drm-misc-next
 
->> But what makes me really unhappy is that my defense line against
->> allocations from truly atomic contexts (from RT POV) which was enforced
->> on RT gets a real big gap shot into it.
->
-> Understood, and agreed:  We do need to keep the RT degradation in
-> check.
+Am 12.08.20 um 09:42 schrieb Tian Tao:
+> patch #1 and #3 is clean up, patch #2 is for code refactoring
+>=20
+> Changes since v1:
+> - Rewrite the commits messages and patch name in #1
+> - Rewrite the commits message in #2.
+> - Add the new patch #3
+>=20
+> Changes since v2:
+> - merge patch #3 into patch #2
+>=20
+> Tian Tao (2):
+>   drm/hisilicon: Remove the unused include statements
+>   drm/hisilicon: Code refactoring for hibmc_drv_de
+>=20
+>  drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c   | 58 ++++++----------=
+--------
+>  drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c  |  5 --
+>  drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h  |  2 +
+>  drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c |  2 -
+>  4 files changed, 15 insertions(+), 52 deletions(-)
+>=20
 
-Not only that. It's bad practice in general to do memory allocations
-from such contexts if not absolutely necessary and the majority of cases
-which we cleaned up over time were just from the "works for me and why
-should I care and start to think" departement.
+--=20
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+(HRB 36809, AG N=C3=BCrnberg)
+Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
 
->> I can understand your rationale and what you are trying to solve. So, if
->> we can actually have a distinct GFP variant:
->> 
->>   GFP_I_ABSOLUTELY_HAVE_TO_DO_THAT_AND_I_KNOW_IT_CAN_FAIL_EARLY
->> 
->> which is easy to grep for then having the page allocator go down to the
->> point where zone lock gets involved is not the end of the world for
->> RT in theory - unless that damned reality tells otherwise. :)
->
-> I have no objection to an otherwise objectionable name in this particular
-> case.  After all, we now have 100 characters per line, right?  ;-)
 
-Hehe. I can live with the proposed NO_LOCK name or anything distinct
-which the mm people can agree on.
+--Mz5FlLSm8z4ugsRP0gL03sCCEZedpCSTW--
 
->> To make it consistent the same GFP_ variant should allow the slab
->> allocator go to the point where the slab cache is exhausted.
->
-> Why not wait until someone has an extremely good reason for needing
-> this functionality from the slab allocators?  After all, leaving out
-> the slab allocators would provide a more robust defense line.  Yes,
-> consistent APIs are very good things as a general rule, but maybe this
-> situation is one of the exceptions to that rule.
+--cADU4EOi8UINnvVNbIZnML821TzzfUywE
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-Fair enough.
+-----BEGIN PGP SIGNATURE-----
 
->> Having a distinct and clearly defined GFP_ variant is really key to
->> chase down offenders and to make reviewers double check upfront why this
->> is absolutely required.
->
-> Checks for that GFP_ variant could be added to automation, though reality
-> might eventually prove that to be a mixed blessing.
+iQFIBAEBCAAyFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl8zqWsUHHR6aW1tZXJt
+YW5uQHN1c2UuZGUACgkQaA3BHVMLeiMmRQf+KrwSE3o3R6OiYW0liC6rO0ycoAO6
+WGP0gfJvbZ48xQUx0vu7zmUmTH9TslNfBGPRUb3S2IhPjohVEBJeIMk189EDWuzh
+TQIXkzbjAxP17WqzFUcyYpwnY4VNuQih0/l3VL4PBYskUaZYmTetxTQLv9WHLrMm
+B/44rFsPQphbvmWCxyOc7k1lBxN7sCAXCKXN5yi1MavS7iODjQCUt9L2mvZfse1S
+xcgKN+bUfctbbCjldUKV/yalBIHuZfqRsD+pENDYtecqrc7kRkSm4qTdF0S1vRuM
+HXuF6KBzbEhTjpQxeVwnZN7vdNNCTvWKgYNQjFWZ90i5wRNS2kuvb+d3LQ==
+=p+mv
+-----END PGP SIGNATURE-----
 
-Did you really have to remind me and destroy my illusions before I was
-able to marvel at them?
-
-Thanks,
-
-        tglx
+--cADU4EOi8UINnvVNbIZnML821TzzfUywE--
