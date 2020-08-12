@@ -2,193 +2,104 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7BA9C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 04:29:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB579C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 04:30:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 700C82078B
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 04:29:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B9FE2078B
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 04:30:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597206591;
-	bh=3oQg9EtXUNowZHv38guplGbXVFeap/2h3AXQPHoZPsU=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=Wi9XBVd31s3YFapmBzE1eNRDWIHSJP//uIJp9w+cIVS1iW20sXrk2BbpAInuTSlHC
-	 nC2reLpKYOyo9qRb8v4jmYfy+D4TckdCsMZnlpIP0ZK12zlOk7KFzg2I3QHaaK1PD2
-	 AF3a/tL59Uvo6d9uVlymY5GNdabTxIe5EZPq9J8k=
+	s=default; t=1597206610;
+	bh=FWGxR3p6taJf3ib+gtL++tslN6BYnHFi0l+/HsOqcDY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=lrLXf+syyDte9lJgR9/0LjGeKT3c8mMTxhPKSFnzrhyJzIWPRIgd0MfCuvp2w2ZGn
+	 9ej8cFYqerarMeMASI/f19o99RU4oVrsowRUnTf2Cn7YH44EFZd7+soy4tKkrOQe0s
+	 B+2n3s8IF9RA+SqsAAgdDqaXu+4ev6Pi7agFRXOA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbgHLE3r (ORCPT
+        id S1726595AbgHLEaJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 00:29:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44772 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725825AbgHLE3q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 00:29:46 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5263206C3;
-        Wed, 12 Aug 2020 04:29:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597206585;
-        bh=3oQg9EtXUNowZHv38guplGbXVFeap/2h3AXQPHoZPsU=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=f+CGjqAKbjSRhPUkCEjSmDJ/Ig6aPnZESaRy3UAVcEEOKyW/gPZc8LHQlHjpDUYyq
-         HDqBPsGSWq/uyqIpZo95q9psuLZUiQxwhH+0qv352iR8+cFxyhG4XqL1v0TKLtgaoj
-         ZXWbfwJhOkJRHiGgApKQuxtPva7Q5YOGqYUjluP0=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 8B88235230BE; Tue, 11 Aug 2020 21:29:45 -0700 (PDT)
-Date:   Tue, 11 Aug 2020 21:29:45 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Michal Hocko <mhocko@suse.com>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
-Message-ID: <20200812042945.GB4295@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200811210931.GZ4295@paulmck-ThinkPad-P72>
- <874kp87mca.fsf@nanos.tec.linutronix.de>
+        Wed, 12 Aug 2020 00:30:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39100 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726540AbgHLEaI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 00:30:08 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7FF7C061788
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 21:30:07 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id v9so735028ljk.6
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 21:30:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GDwgZeCfylHcfAPvU7+q1GMSHtKUMIYb5xnIYWrEEr4=;
+        b=B3aVSgoHTMeOnptotypuxeXwzcXLQNuaXirCFngMoQkYUX18nRwhqfYkwT5muF8NNb
+         UKxUK5N/shaIWvw0Xb4abZJVmXGDVkhZnbu8HKy2tFr+b4sjrnMDzzOW7KpvC5hKvofh
+         644/QVacgEmv5UDIs0jX0SLrxFZRlm9Rtr+/Y=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GDwgZeCfylHcfAPvU7+q1GMSHtKUMIYb5xnIYWrEEr4=;
+        b=Ki1WbBTexlZ8mvzbBJ/Tne+5JC8n0PNLDaDXfdYcL01GfgF6iWbbdVoQTf3YhJP4Ph
+         UV1TLCBj+HWaNW/j/omUcIho11TdTgzfa9VDKZWR92rVgta5RJH2i1VVPejr+JHbiDyz
+         ykg5DT2LRm8nNZTQjNQl2naTNED3UNZmnVVtWpPQpAf8CBlu3Jndkxb/nq+5rUVnOjdi
+         7GCOZmo/ZtJO4g16IlgRn+zQrFmjdrg+ghbR8l+Atln2w6DrRNe4jGHz6gxJa8B1gglI
+         uZqyQXB7rlPuLYcTeK3mHylneWDvryuUG7/ZYAPYaV262ggSVK0iPxgWEj0uHOktqwag
+         c1Lg==
+X-Gm-Message-State: AOAM532TKl1BZV0I6UiYX7sZUSdcRhlTcW4blCi4xCWGrrIGgyISQKZf
+        jo94J+bpGU87tZ8/MF5/IVd3oETVV1U=
+X-Google-Smtp-Source: ABdhPJzCYQzz6UJL6oh8w9Kwzl3d7awscI4c/xMDGe2VYT8Z2QxXfQlmuLK7tVZz2PcxDZ155yWenQ==
+X-Received: by 2002:a2e:2d12:: with SMTP id t18mr173116ljt.431.1597206605295;
+        Tue, 11 Aug 2020 21:30:05 -0700 (PDT)
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
+        by smtp.gmail.com with ESMTPSA id m20sm176041lfb.72.2020.08.11.21.30.03
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Aug 2020 21:30:04 -0700 (PDT)
+Received: by mail-lj1-f180.google.com with SMTP id w14so745659ljj.4
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 21:30:03 -0700 (PDT)
+X-Received: by 2002:a2e:92d0:: with SMTP id k16mr4153008ljh.70.1597206603371;
+ Tue, 11 Aug 2020 21:30:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <874kp87mca.fsf@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <000000000000f0724405aca59f64@google.com> <20200812041518.GO1236603@ZenIV.linux.org.uk>
+In-Reply-To: <20200812041518.GO1236603@ZenIV.linux.org.uk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 11 Aug 2020 21:29:47 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgHZF+GbPS0=+9C7NWb1QUw4sPKL0t90yPGs07jJ0eczQ@mail.gmail.com>
+Message-ID: <CAHk-=wgHZF+GbPS0=+9C7NWb1QUw4sPKL0t90yPGs07jJ0eczQ@mail.gmail.com>
+Subject: Re: [PATCH] Re: KASAN: use-after-free Read in path_init (2)
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        syzbot <syzbot+bbeb1c88016c7db4aa24@syzkaller.appspotmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 02:13:25AM +0200, Thomas Gleixner wrote:
-> "Paul E. McKenney" <paulmck@kernel.org> writes:
-> > Hence Ulad's work on kfree_rcu().  The approach is to allocate a
-> > page-sized array to hold all the pointers, then fill in the rest of these
-> > pointers on each subsequent kfree_rcu() call.  These arrays of pointers
-> > also allows use of kfree_bulk() instead of kfree(), which can improve
-> > performance yet more.  It is no big deal if kfree_rcu()'s allocation
-> > attempts fail occasionally because it can simply fall back to the old
-> > linked-list approach.  And given that the various lockless caches in
-> > the memory allocator are almost never empty, in theory life is good.
-> 
-> Of course, it's always the damned reality which ruins the fun.
+On Tue, Aug 11, 2020 at 9:15 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+>
+> fix breakage in do_rmdir()
+>
+> putname() should happen only after we'd *not* branched to
+> retry, same as it's done in do_unlinkat().
 
-Classic!!!  And yes, it always is!
+Looks obviously correct.
 
-> > But in practice, mainline now has CONFIG_PROVE_RAW_LOCK_NESTING,
-> > and for good reason -- this Kconfig option makes it at least a
-> > little bit harder for mainline developers to mess up RT.  But with
-> > CONFIG_PROVE_RAW_LOCK_NESTING=y and lockdep enabled, mainline will now
-> > sometimes complain if you invoke kfree_rcu() while holding a raw spinlock.
-> > This happens when kfree_rcu() needs to invoke the memory allocator and
-> > the memory allocator's caches are empty, thus resulting in the memory
-> > allocator attempting to acquire a non-raw spinlock.
-> 
-> Right.
-> 
-> > Because kfree_rcu() has a fallback available (just using the old linked
-> > list), kfree_rcu() would work well given a way to tell the memory
-> > allocator to return NULL instead of acquiring a non-raw spinlock.
-> > Which is exactly what Ulad's recent patches are intended to do.
-> 
-> That much I understood, but I somehow failed to figure the why out
-> despite the elaborate changelog. 2 weeks of 30+C seem to have cooked my
-> brain :)
+Do you want me to apply directly, or do you have other fixes pending
+and I'll get a pull request?
 
-Ouch!!!  And what on earth is Germany doing being that warm???
-
-I hate it when that happens...
-
-> > Since then, this thread has discussed various other approaches,
-> > including using existing combinations of GFP_ flags, converting
-> > the allocator's zone lock to a raw spinlock, and so on.
-> >
-> > Does that help, or am I missing the point of your question?
-> 
-> Yes, that helps so far that I understand what the actual problem is. It
-> does not really help to make me more happy. :)
-
-I must confess that I was not expecting to find anything resembling
-happiness anywhere down this road, whether for myself or anyone else...
-
-> That said, we can support atomic allocations on RT up to the point where
-> zone->lock comes into play. We don't know yet exactly where the
-> zone->lock induced damage happens. Presumably it's inside
-> free_pcppages_bulk() - at least that's where I have faint bad memories
-> from 15+ years ago. Aside of that I seriously doubt that it can be made
-> work within a reasonable time frame.
-
-I was not considering any approach other than return NULL just before
-the code would otherwise have acquired zone->lock.
-
-> But what makes me really unhappy is that my defense line against
-> allocations from truly atomic contexts (from RT POV) which was enforced
-> on RT gets a real big gap shot into it.
-
-Understood, and agreed:  We do need to keep the RT degradation in check.
-
-> It becomes pretty hard to argue why atomic allocations via kmalloc() or
-> kmem_cache_alloc() should be treated any different. Technically they can
-> work similar to the page allocations up to the point where regular
-> spinlocks come into play or the slab cache is exhausted. Where to draw
-> the line?
-> 
-> It's also unclear for the page allocator case whether we can and should
-> stick a limit on the number of pages and/or the pageorder.
-> 
-> Myself and others spent a considerable amount of time to kill off these
-> kind of allocations from various interesting places including the guts
-> of send IPI, the affinity setting path and others where people just
-> slapped allocations into them because the stack checker warned or
-> because they happened to copy the code from some other place.
-> 
-> RT was pretty much a quick crap detector whenever new incarnations of
-> this got added and to some extent continuous education about these
-> issues made them less prominent over the years. Using atomic allocations
-> should always have a real good rationale, not only in the cases where
-> they collide with RT.
-> 
-> I can understand your rationale and what you are trying to solve. So, if
-> we can actually have a distinct GFP variant:
-> 
->   GFP_I_ABSOLUTELY_HAVE_TO_DO_THAT_AND_I_KNOW_IT_CAN_FAIL_EARLY
-> 
-> which is easy to grep for then having the page allocator go down to the
-> point where zone lock gets involved is not the end of the world for
-> RT in theory - unless that damned reality tells otherwise. :)
-
-I have no objection to an otherwise objectionable name in this particular
-case.  After all, we now have 100 characters per line, right?  ;-)
-
-> The page allocator allocations should also have a limit on the number of
-> pages and eventually also page order (need to stare at the code or let
-> Michal educate me that the order does not matter).
-
-Understood.  I confess that I have but little understanding of that code.
-
-> To make it consistent the same GFP_ variant should allow the slab
-> allocator go to the point where the slab cache is exhausted.
-
-Why not wait until someone has an extremely good reason for needing
-this functionality from the slab allocators?  After all, leaving out
-the slab allocators would provide a more robust defense line.  Yes,
-consistent APIs are very good things as a general rule, but maybe this
-situation is one of the exceptions to that rule.
-
-> Having a distinct and clearly defined GFP_ variant is really key to
-> chase down offenders and to make reviewers double check upfront why this
-> is absolutely required.
-
-Checks for that GFP_ variant could be added to automation, though reality
-might eventually prove that to be a mixed blessing.
-
-							Thanx, Paul
+                  Linus
