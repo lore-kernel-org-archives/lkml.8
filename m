@@ -2,199 +2,132 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 906F8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 05:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FDBAC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 05:39:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6586D20771
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 05:38:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="NUQHENon"
+	by mail.kernel.org (Postfix) with ESMTP id 6B4F220771
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 05:39:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726572AbgHLFi3 (ORCPT
+        id S1726678AbgHLFjv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 01:38:29 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39606 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725941AbgHLFi2 (ORCPT
+        Wed, 12 Aug 2020 01:39:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49770 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726607AbgHLFju (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 01:38:28 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07C5WMY8040673;
-        Wed, 12 Aug 2020 01:38:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : reply-to : references : mime-version : content-type
- : in-reply-to; s=pp1; bh=UomPFfu1HTDoKDetkMceKR1argz9g58WcBrOknfWkxM=;
- b=NUQHENonin/WL8Ds8lhiirp/x0x0wVdigy0kH1pHIKxAilveJMMbhz7eIOI46j5qzwjx
- j9t/kk1Jbi+2Jiba9fUuTi/FUkI/z+LiDwXOG1BYBXHb3SKNQM4wBTPW4v9JW0Btnq4K
- 0gRzTRHfAF/O2X2nHPUO0ggKCD6DlgVZjU77IhgMCjnSu6Bv6UQZKkSYg23SA8RGtAw4
- FnQIMUx9hDBk1OndslHHGYUS0q1HuZ7pdm7w6u+AggskJhi8w6sJi8tPaDldxJBkFaJq
- ZzhRRM2n/dOlABH1JwZOBkaYKFmXglzOsa3wU9c5kRow0/YsPjey4xsQjuklKH3rdPbw wA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32v83bjpr4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 12 Aug 2020 01:38:06 -0400
-Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07C5WPMA041050;
-        Wed, 12 Aug 2020 01:38:05 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32v83bjpqx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 12 Aug 2020 01:38:05 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07C5ZEjP024626;
-        Wed, 12 Aug 2020 05:38:04 GMT
-Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
-        by ppma03dal.us.ibm.com with ESMTP id 32skp96udm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 12 Aug 2020 05:38:04 +0000
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07C5c0bJ31654338
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 12 Aug 2020 05:38:00 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 577D9C6055;
-        Wed, 12 Aug 2020 05:38:03 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 82ECDC6059;
-        Wed, 12 Aug 2020 05:38:02 +0000 (GMT)
-Received: from sofia.ibm.com (unknown [9.85.80.243])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Wed, 12 Aug 2020 05:38:02 +0000 (GMT)
-Received: by sofia.ibm.com (Postfix, from userid 1000)
-        id 7BBA32E2F09; Wed, 12 Aug 2020 11:07:49 +0530 (IST)
-Date:   Wed, 12 Aug 2020 11:07:49 +0530
-From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
-To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Anton Blanchard <anton@ozlabs.org>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Michael Neuling <mikey@neuling.org>,
-        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Jordan Niethe <jniethe5@gmail.com>,
-        Vaidyanathan Srinivasan <svaidy@linux.ibm.com>
-Subject: Re: [PATCH v5 06/10] powerpc/smp: Optimize start_secondary
-Message-ID: <20200812053749.GA17292@in.ibm.com>
-Reply-To: ego@linux.vnet.ibm.com
-References: <20200810071834.92514-1-srikar@linux.vnet.ibm.com>
- <20200810071834.92514-7-srikar@linux.vnet.ibm.com>
+        Wed, 12 Aug 2020 01:39:50 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77F66C061787
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 22:39:50 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1k5jUH-0001vV-48; Wed, 12 Aug 2020 07:39:45 +0200
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1k5jUF-0004fV-F7; Wed, 12 Aug 2020 07:39:43 +0200
+Date:   Wed, 12 Aug 2020 07:39:43 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     linux@rempel-privat.de, kernel@pengutronix.de, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, festevam@gmail.com,
+        linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
+Subject: Re: [PATCH] i2c: imx: Use dev_err_probe() to simplify error handling
+Message-ID: <20200812053943.oeiqz57turtdckal@pengutronix.de>
+References: <1597203954-1803-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="jijteoo6ouqerxuc"
 Content-Disposition: inline
-In-Reply-To: <20200810071834.92514-7-srikar@linux.vnet.ibm.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-11_19:2020-08-11,2020-08-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 mlxscore=0
- lowpriorityscore=0 spamscore=0 bulkscore=0 impostorscore=0 phishscore=0
- malwarescore=0 clxscore=1015 suspectscore=0 adultscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008120035
+In-Reply-To: <1597203954-1803-1-git-send-email-Anson.Huang@nxp.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 07:38:58 up 270 days, 20:57, 245 users,  load average: 0.02, 0.03,
+ 0.00
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Srikar,
 
-On Mon, Aug 10, 2020 at 12:48:30PM +0530, Srikar Dronamraju wrote:
-> In start_secondary, even if shared_cache was already set, system does a
-> redundant match for cpumask. This redundant check can be removed by
-> checking if shared_cache is already set.
-> 
-> While here, localize the sibling_mask variable to within the if
-> condition.
-> 
-> Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-> Cc: LKML <linux-kernel@vger.kernel.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Nicholas Piggin <npiggin@gmail.com>
-> Cc: Anton Blanchard <anton@ozlabs.org>
-> Cc: Oliver O'Halloran <oohall@gmail.com>
-> Cc: Nathan Lynch <nathanl@linux.ibm.com>
-> Cc: Michael Neuling <mikey@neuling.org>
-> Cc: Gautham R Shenoy <ego@linux.vnet.ibm.com>
-> Cc: Ingo Molnar <mingo@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Valentin Schneider <valentin.schneider@arm.com>
-> Cc: Jordan Niethe <jniethe5@gmail.com>
-> Cc: Vaidyanathan Srinivasan <svaidy@linux.ibm.com>
-> Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+--jijteoo6ouqerxuc
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The change looks good to me.
-
-Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
-
+On Wed, Aug 12, 2020 at 11:45:54AM +0800, Anson Huang wrote:
+> dev_err_probe() can reduce code size, uniform error handling and record t=
+he
+> defer probe reason etc., use it to simplify the code.
+>=20
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
-> Changelog v4 ->v5:
-> 	Retain cache domain, no need for generalization
-> 		 (Michael Ellerman, Peter Zijlstra,
-> 		 Valentin Schneider, Gautham R. Shenoy)
-> 
-> Changelog v1 -> v2:
-> 	Moved shared_cache topology fixup to fixup_topology (Gautham)
-> 
->  arch/powerpc/kernel/smp.c | 17 +++++++++++------
->  1 file changed, 11 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/powerpc/kernel/smp.c b/arch/powerpc/kernel/smp.c
-> index 0c960ce3be42..91cf5d05e7ec 100644
-> --- a/arch/powerpc/kernel/smp.c
-> +++ b/arch/powerpc/kernel/smp.c
-> @@ -851,7 +851,7 @@ static int powerpc_shared_cache_flags(void)
->   */
->  static const struct cpumask *shared_cache_mask(int cpu)
->  {
-> -	return cpu_l2_cache_mask(cpu);
-> +	return per_cpu(cpu_l2_cache_map, cpu);
->  }
-> 
->  #ifdef CONFIG_SCHED_SMT
-> @@ -1305,7 +1305,6 @@ static void add_cpu_to_masks(int cpu)
->  void start_secondary(void *unused)
->  {
->  	unsigned int cpu = smp_processor_id();
-> -	struct cpumask *(*sibling_mask)(int) = cpu_sibling_mask;
-> 
->  	mmgrab(&init_mm);
->  	current->active_mm = &init_mm;
-> @@ -1331,14 +1330,20 @@ void start_secondary(void *unused)
->  	/* Update topology CPU masks */
->  	add_cpu_to_masks(cpu);
-> 
-> -	if (has_big_cores)
-> -		sibling_mask = cpu_smallcore_mask;
->  	/*
->  	 * Check for any shared caches. Note that this must be done on a
->  	 * per-core basis because one core in the pair might be disabled.
->  	 */
-> -	if (!cpumask_equal(cpu_l2_cache_mask(cpu), sibling_mask(cpu)))
-> -		shared_caches = true;
-> +	if (!shared_caches) {
-> +		struct cpumask *(*sibling_mask)(int) = cpu_sibling_mask;
-> +		struct cpumask *mask = cpu_l2_cache_mask(cpu);
-> +
-> +		if (has_big_cores)
-> +			sibling_mask = cpu_smallcore_mask;
-> +
-> +		if (cpumask_weight(mask) > cpumask_weight(sibling_mask(cpu)))
-> +			shared_caches = true;
-> +	}
-> 
->  	set_numa_node(numa_cpu_lookup_table[cpu]);
->  	set_numa_mem(local_memory_node(numa_cpu_lookup_table[cpu]));
-> -- 
-> 2.18.2
-> 
+>  drivers/i2c/busses/i2c-imx.c | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
+> index 0ab5381..63f4367 100644
+> --- a/drivers/i2c/busses/i2c-imx.c
+> +++ b/drivers/i2c/busses/i2c-imx.c
+> @@ -1159,11 +1159,9 @@ static int i2c_imx_probe(struct platform_device *p=
+dev)
+> =20
+>  	/* Get I2C clock */
+>  	i2c_imx->clk =3D devm_clk_get(&pdev->dev, NULL);
+> -	if (IS_ERR(i2c_imx->clk)) {
+> -		if (PTR_ERR(i2c_imx->clk) !=3D -EPROBE_DEFER)
+> -			dev_err(&pdev->dev, "can't get I2C clock\n");
+> -		return PTR_ERR(i2c_imx->clk);
+> -	}
+> +	if (IS_ERR(i2c_imx->clk))
+> +		return dev_err_probe(&pdev->dev, PTR_ERR(i2c_imx->clk),
+> +				     "can't get I2C clock\n");
+> =20
+>  	ret =3D clk_prepare_enable(i2c_imx->clk);
+>  	if (ret) {
+> --=20
+
+Acked-by: Oleksij Rempel <o.rempel@pengutronix.de>
+
+--=20
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+--jijteoo6ouqerxuc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl8zgJYACgkQ4omh9DUa
+UbPa5A/+KlXDbb1pvMrWyT66unEtS9yFMs/oh2Yc4sCS/uN5d5fwEEcI+GRYqOxi
+IEpHJ/sihFh32RVMbY+YaL1RAcWOy8yZiYjwxCiWc6EreWsziuoC54gr4XAuH/h5
+mE2c0GKyrbr1jkBCh4rCWQvQSyopjnNNFVE3Xwq4gfl18//NCYfBccWJ86tJ4ZS1
+TKBOxu26BDbaqFo1xKuZaEQdtHY8ICnTrMtopOVFfH3Sn/BHn0en4KnyJ1oGdtbP
+8T5z4P0ML4IOaaorGmgPdvBwyEpSTLsuhrqpeC86t1EFw6yowZ5XQx34HETFvKPY
+AhbUE2m1d8ljKx3itj509+1lWamDVgFGZf0y1i+m/ihuLhfZca9cUjc9tDcduVSh
+PpVE9127XsM66aBRGQogMunu/G4qRshOp7Ockm+DoHaOaaqXr530MnYzCJJS1QqV
+NExxl7sHDaZ4Um0JapMc5ulinMOsK8kN1wJk4+/4Yxf/QBubcPS1cadmkTZQz+3V
+bQZBUccWCPuDG8HvDrLt1+xUsfyn6JMHSgDUpaxEer9zJZXIuOCbhMwLY/XORea0
+Xb2Ck4vcPrzKt6WE+/DugxN7k2JbTCzw5JxovT8WyFWSsVGQDIu4o79a90bZQI6c
+vAvMBDQZtlM4WsASHmHN6o+sBJiWe/9WGMsaBInRwRW6sP7Vcto=
+=MZ2A
+-----END PGP SIGNATURE-----
+
+--jijteoo6ouqerxuc--
