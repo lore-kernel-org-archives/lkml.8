@@ -2,112 +2,347 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98923C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:38:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C0EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:39:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7098220771
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:38:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2861B20771
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:39:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YbMT9U8t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726705AbgHLQi0 (ORCPT
+        id S1726789AbgHLQjH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 12:38:26 -0400
-Received: from mga12.intel.com ([192.55.52.136]:32724 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725872AbgHLQiZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 12:38:25 -0400
-IronPort-SDR: ZUPIy3kd2tV02Mk48MYVnqpMzHRJYWhF+5HgEBp3ur+8py+AsfVQiBUppmTCRDKADZIT+QoI62
- RLrcy7iVRLbQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9711"; a="133535379"
-X-IronPort-AV: E=Sophos;i="5.76,304,1592895600"; 
-   d="scan'208";a="133535379"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2020 09:38:25 -0700
-IronPort-SDR: Ot9t+RPuVM04ujHrIjA/yFHnd3j6C8ApNIb/yJnjh59NLl4QSLTBu2gl/mqJMJI5JAajkcvWiG
- vTaGQIgcteXQ==
-X-IronPort-AV: E=Sophos;i="5.76,304,1592895600"; 
-   d="scan'208";a="495572467"
-Received: from mbharapa-mobl.amr.corp.intel.com (HELO [10.212.31.62]) ([10.212.31.62])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2020 09:38:23 -0700
-Subject: Re: [PATCH v3 2/2] ASoC: Intel: Add period size constraint on strago
- board
-To:     "Lu, Brent" <brent.lu@intel.com>, Takashi Iwai <tiwai@suse.de>
-Cc:     Yu-Hsuan Hsu <yuhsuan@chromium.org>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Rojewski, Cezary" <cezary.rojewski@intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Sam McNally <sammc@chromium.org>,
-        Mark Brown <broonie@kernel.org>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Daniel Stuart <daniel.stuart14@gmail.com>,
-        "yuhsuan@google.com" <yuhsuan@google.com>,
-        Damian van Soelen <dj.vsoelen@gmail.com>
-References: <3f3baf5e-f73d-9cd6-cbfb-36746071e126@linux.intel.com>
- <CAGvk5PogmqfEnFRA8hzby+AGgbOSvbELamh_1=eA9KTpyBMPYQ@mail.gmail.com>
- <s5htux939x1.wl-tiwai@suse.de>
- <CAGvk5PpcmkZ2HarqeCDaXm4id=84wYs-u4vWxJunHaf09gj66g@mail.gmail.com>
- <s5ho8nh37br.wl-tiwai@suse.de>
- <CAGvk5PphzkdiNfW8hiDuqX+2eQO2FvrpzA0qR3=3VvqM3GBhAA@mail.gmail.com>
- <20200811145353.GG6967@sirena.org.uk>
- <d78f9adc-d583-f0f2-ce38-3c9175c939b8@linux.intel.com>
- <20200811172209.GM6967@sirena.org.uk>
- <CAGvk5PqGi7cXthLHFi4NyypxFiGnoHvD9vp+5nJdH-_VkVvcKw@mail.gmail.com>
- <s5hr1scz908.wl-tiwai@suse.de>
- <CAGvk5Pp+Gk5Uk-iLdhVPWuCL0FiL9OhsaAtwkotay5JAYUNxdQ@mail.gmail.com>
- <s5hlfikz6y8.wl-tiwai@suse.de>
- <CAGvk5Pq3rEGJX=WjriPfWg_sEAVWHGZ9S=4iySNfYaHX7Xcw0g@mail.gmail.com>
- <s5h8sekz4ox.wl-tiwai@suse.de>
- <e4cc6231-8b19-c145-1b18-91d3a00131d3@linux.intel.com>
- <s5hv9hnx6am.wl-tiwai@suse.de>
- <be45d821-57c6-6ca5-0864-ac3aa521d82e@linux.intel.com>
- <DM6PR11MB364242D3652EDC2F9B8B214897420@DM6PR11MB3642.namprd11.prod.outlook.com>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <0714b222-d3fc-5744-1147-bfac7df2651e@linux.intel.com>
-Date:   Wed, 12 Aug 2020 11:38:22 -0500
+        Wed, 12 Aug 2020 12:39:07 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:45370 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725872AbgHLQjG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 12:39:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597250344;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=O2TxeQcYLmFOSa3QGxxUf2YtMSxTVZ+kT++73kCtHNI=;
+        b=YbMT9U8tOLE2s0bvLF/OGTdG10oczvh/V4W2ksywTVwzNvMwjAhfT2a8y2+zPFsx3wNmZp
+        8rduk1y8CvqQN67iCQEljuiRoQl7v1GRaFpWOXOZFbOccnTOk2znjJDTrT47dFT3tKtAj1
+        aLK3hUA1W/gEgXjPRS/6JDucL/7t14c=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-155-GzCk6miZNj69IiXBtQwIvw-1; Wed, 12 Aug 2020 12:39:00 -0400
+X-MC-Unique: GzCk6miZNj69IiXBtQwIvw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 43EE3100AA21;
+        Wed, 12 Aug 2020 16:38:58 +0000 (UTC)
+Received: from [10.36.113.93] (ovpn-113-93.ams2.redhat.com [10.36.113.93])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E9AF760E1C;
+        Wed, 12 Aug 2020 16:38:51 +0000 (UTC)
+Subject: Re: [PATCH v7 1/7] docs: IOMMU user API
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>
+Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Jonathan Corbet <corbet@lwn.net>
+References: <1596068467-49322-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1596068467-49322-2-git-send-email-jacob.jun.pan@linux.intel.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <398b7773-bf59-70ca-07ad-ac0ebcc8ae30@redhat.com>
+Date:   Wed, 12 Aug 2020 18:38:50 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <DM6PR11MB364242D3652EDC2F9B8B214897420@DM6PR11MB3642.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <1596068467-49322-2-git-send-email-jacob.jun.pan@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Jacob,
 
-
-On 8/12/20 11:08 AM, Lu, Brent wrote:
->>>
->>> I also wonder what's really missing, too :)
->>>
->>> BTW, I took a look back at the thread, and CRAS seems using a very
->>> large buffer, namely:
->>> [   52.434791] sound pcmC1D0p:   PERIOD_SIZE [240:240]
->>> [   52.434802] sound pcmC1D0p:   BUFFER_SIZE [204480:204480]
->>
->> yes, that's 852 periods and 4.260 seconds. Never seen such values :-)
+On 7/30/20 2:21 AM, Jacob Pan wrote:
+> IOMMU UAPI is newly introduced to support communications between guest
+> virtual IOMMU and host IOMMU. There has been lots of discussions on how
+> it should work with VFIO UAPI and userspace in general.
 > 
-> CRAS calls snd_pcm_hw_params_set_buffer_size_max() to use as large
-> buffer as possible. So the period size is an arbitrary number in different
-> platforms. Atom SST platform happens to be 256, and CML SOF platform
-> is 1056 for example.
+> This document is intended to clarify the UAPI design and usage. The
+> mechanics of how future extensions should be achieved are also covered
+> in this documentation.
+> 
+> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> ---
+>  Documentation/userspace-api/iommu.rst | 212 ++++++++++++++++++++++++++++++++++
+>  MAINTAINERS                           |   1 +
+>  2 files changed, 213 insertions(+)
+>  create mode 100644 Documentation/userspace-api/iommu.rst
+> 
+> diff --git a/Documentation/userspace-api/iommu.rst b/Documentation/userspace-api/iommu.rst
+> new file mode 100644
+> index 000000000000..b2f5b3256d85
+> --- /dev/null
+> +++ b/Documentation/userspace-api/iommu.rst
+> @@ -0,0 +1,212 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +.. iommu:
+> +
+> +=====================================
+> +IOMMU Userspace API
+> +=====================================
+> +
+> +IOMMU UAPI is used for virtualization cases where communications are
+> +needed between physical and virtual IOMMU drivers. For baremetal
+> +usage, the IOMMU is a system device which does not need to communicate
+> +with user space directly.
+> +
+> +The primary use cases are guest Shared Virtual Address (SVA) and
+> +guest IO virtual address (IOVA), wherin the vIOMMU implementation
+> +relies on the physical IOMMU and for this reason requires interactions
+> +with the host driver.
+> +
+> +.. contents:: :local:
+> +
+> +Functionalities
+> +===============
+> +Communications of user and kernel involve both directions. The
+> +supported user-kernel APIs are as follows:
+> +
+> +1. Alloc/Free PASID
+> +2. Bind/unbind guest PASID (e.g. Intel VT-d)
+nit: s/unbind/Unbind to match above Free
+> +3. Bind/unbind guest PASID table (e.g. ARM SMMU)
+> +4. Invalidate IOMMU caches requested by guests
+s/requested by guests/upon guest requests
+> +5. Report errors to the guest and serve page requests
+> +
+> +Requirements
+> +============
+> +The IOMMU UAPIs are generic and extensible to meet the following
+> +requirements:
+> +
+> +1. Emulated and para-virtualised vIOMMUs
+> +2. Multiple vendors (Intel VT-d, ARM SMMU, etc.)
+> +3. Extensions to the UAPI shall not break existing user space
+> +
+> +Interfaces
+> +==========
+> +Although the data structures defined in IOMMU UAPI are self-contained,
+> +there is no user API functions introduced. Instead, IOMMU UAPI is
+> +designed to work with existing user driver frameworks such as VFIO.
+> +
+> +Extension Rules & Precautions
+> +-----------------------------
+> +When IOMMU UAPI gets extended, the data structures can *only* be
+> +modified in two ways:
+> +
+> +1. Adding new fields by re-purposing the padding[] field. No size change.
+> +2. Adding new union members at the end. May increase the structure sizes.
+> +
+> +No new fields can be added *after* the variable sized union in that it
+> +will break backward compatibility when offset moves. A new flag must
+> +be introduced whenever a change affects the structure using either
+> +method. The IOMMU driver processes the data based on flags which
+> +ensures backward compatibility.
+> +
+> +Version field is only reserved for the unlikely event of UAPI upgrade
+> +at its entirety.
+> +
+> +It's *always* the caller's responsibility to indicate the size of the
+> +structure passed by setting argsz appropriately.
+> +Though at the same time, argsz is user provided data which is not
+> +trusted. The argsz field allows the user app to indicate how much data
+> +it is providing, it's still the kernel's responsibility to validate
+> +whether it's correct and sufficient for the requested operation.
+> +
+> +Compatibility Checking
+> +----------------------
+> +When IOMMU UAPI extension results in some structure size increase,
+> +IOMMU UAPI code shall handle the following cases:
+> +
+> +1. User and kernel has exact size match
+> +2. An older user with older kernel header (smaller UAPI size) running on a
+> +   newer kernel (larger UAPI size)
+> +3. A newer user with newer kernel header (larger UAPI size) running
+> +   on an older kernel.
+> +4. A malicious/misbehaving user pass illegal/invalid size but within
+> +   range. The data may contain garbage.
+> +
+> +Feature Checking
+> +----------------
+> +While launching a guest with vIOMMU, it is important to ensure that host
+> +can support the UAPI data structures to be used for vIOMMU-pIOMMU
+> +communications. Without upfront compatibility checking, the future errors
+> +can lead to catastrophic failures for the users.
+I would rather say: it is strongly advised to check the compatibility
+upfront, as some subsequent errors happening during vIOMMU operation,
+such as cache invalidation failures cannot be nicely escaladated to the
+guest due to IOMMU specifications.
 
-ok, but earlier in this thread it was mentioned that values such as 432 
-are not suitable. the statement above seems to mean the period actual 
-value is a "don't care", so I don't quite see why this specific patch2 
-restricting the value to 240 is necessary. Patch1 is needed for sure, 
-Patch2 is where Takashi and I are not convinced.
+> +
+> +User applications such as QEMU are expected to import kernel UAPI
+> +headers. Backward compatibility is supported per feature flags.
+> +For example, an older QEMU (with older kernel header) can run on newer
+> +kernel. Newer QEMU (with new kernel header) may refuse to initialize
+> +on an older kernel if new feature flags are not supported by older
+> +kernel. Simply recompiling existing code with newer kernel header should
+> +not be an issue in that only existing flags are used.
+> +
+> +IOMMU vendor driver should report the below features to IOMMU UAPI
+> +consumers (e.g. via VFIO).
+> +
+> +1. IOMMU_NESTING_FEAT_SYSWIDE_PASID
+> +2. IOMMU_NESTING_FEAT_BIND_PGTBL
+> +3. IOMMU_NESTING_FEAT_BIND_PASID_TABLE
+> +4. IOMMU_NESTING_FEAT_CACHE_INVLD
+> +5. IOMMU_NESTING_FEAT_PAGE_REQUEST
+> +
+> +Take VFIO as example, upon request from VFIO user space (e.g. QEMU),
+> +VFIO kernel code shall query IOMMU vendor driver for the support of
+> +the above features. Query result can then be reported back to the
+> +user-space caller. Details can be found in
+> +Documentation/driver-api/vfio.rst.
+> +
+> +
+> +Data Passing Example with VFIO
+> +------------------------------
+> +As the ubiquitous userspace driver framework, VFIO is already IOMMU
+> +aware and shares many key concepts such as device model, group, and
+> +protection domain. Other user driver frameworks can also be extended
+> +to support IOMMU UAPI but it is outside the scope of this document.
+> +
+> +In this tight-knit VFIO-IOMMU interface, the ultimate consumer of the
+> +IOMMU UAPI data is the host IOMMU driver. VFIO facilitates user-kernel
+> +transport, capability checking, security, and life cycle management of
+> +process address space ID (PASID).
+> +
+> +Unlike normal user data passed via VFIO UAPI IOTCL, IOMMU driver is the
+> +ultimate consumer of its UAPI data.
+I would remove the above sentence as it sounds like a repetition of the
+above paragraph 1st sentence. You may simply say that VFIO mostly
+conveys the data structs downto the IOMMU driver.
+
+ At VFIO layer, the IOMMU UAPI data
+> +is wrapped in a VFIO UAPI data. It follows the
+> +pattern below::
+> +
+> +   struct {
+> +	__u32 argsz;
+> +	__u32 flags;
+> +	__u8  data[];
+> +   };
+> +
+> +Here data[] contains the IOMMU UAPI data structures. VFIO has the
+> +freedom to bundle the data as well as parse data size based on its own flags.
+> +
+> +In order to determine the size and feature set of the user data, argsz
+> +and flags (or the equivalent) are also embedded in the IOMMU UAPI data
+> +structures.
+> +
+> +A "__u32 argsz" field is *always* at the beginning of each structure.
+> +
+> +For example:
+> +::
+> +
+> +   struct iommu_cache_invalidate_info {
+> +	__u32	argsz;
+> +	#define IOMMU_CACHE_INVALIDATE_INFO_VERSION_1 1
+> +	__u32	version;
+> +	/* IOMMU paging structure cache */
+> +	#define IOMMU_CACHE_INV_TYPE_IOTLB	(1 << 0) /* IOMMU IOTLB */
+> +	#define IOMMU_CACHE_INV_TYPE_DEV_IOTLB	(1 << 1) /* Device IOTLB */
+> +	#define IOMMU_CACHE_INV_TYPE_PASID	(1 << 2) /* PASID cache */
+> +	#define IOMMU_CACHE_INV_TYPE_NR		(3)
+> +	__u8	cache;
+> +	__u8	granularity;
+> +	__u8	padding[6];
+> +	union {
+> +		struct iommu_inv_pasid_info pasid_info;
+> +		struct iommu_inv_addr_info addr_info;
+> +	} granu;
+> +   };
+> +
+> +VFIO is responsible for checking its own argsz and flags. It then
+> +invokes appropriate IOMMU UAPI functions. The user pointers are passed
+> +to the IOMMU layer for further processing. The responsibilities are
+> +divided as follows:
+> +
+> +- Generic IOMMU layer checks argsz range based on UAPI data in the
+> +  current kernel version
+> +
+> +- Generic IOMMU layer checks content of the UAPI data for non-zero
+> +  reserved bits in flags, padding fields, and unsupported version.
+> +  This is to ensure not breaking userspace in the future when these
+> +  fields or flags are used.
+> +
+> +- Vendor IOMMU driver checks argsz based on vendor flags, UAPI data
+> +  is consumed based on flags. Vendor driver has access to
+> +  unadulterated argsz value in case of vendor specific future
+> +  extensions. Currently, it does not perform the copy_from_user()
+> +  itself. A __user pointer can be provided in some future scenarios
+> +  where there's vendor data outside of the structure definition.
+> +
+> +IOMMU code treats UAPI data into two categories:
+> +
+> +- structure contains vendor data
+> +  (Example: iommu_uapi_cache_invalidate())
+> +
+> +- structure contains only generic data
+> +  (Example: iommu_uapi_sva_bind_gpasid())
+> +
+> +
+> +
+> +Sharing UAPI with in-kernel users
+> +---------------------------------
+> +For UAPIs that are shared with in-kernel users, a wrapper function is
+> +provided to distinguish the callers. For example,
+> +
+> +Userspace caller ::
+> +
+> +  int iommu_uapi_sva_unbind_gpasid(struct iommu_domain *domain,
+> +                                   struct device *dev,
+> +                                   void __user *udata)
+> +
+> +In-kernel caller ::
+> +
+> +  int iommu_sva_unbind_gpasid(struct iommu_domain *domain,
+> +                                   struct device *dev,
+> +                                   struct iommu_gpasid_bind_data *data)
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index d53db30d1365..11f907b11f12 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -9010,6 +9010,7 @@ L:	iommu@lists.linux-foundation.org
+>  S:	Maintained
+>  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git
+>  F:	Documentation/devicetree/bindings/iommu/
+> +F:	Documentation/userspace-api/iommu.rst
+>  F:	drivers/iommu/
+>  F:	include/linux/iommu.h
+>  F:	include/linux/iova.h
+> 
+Besides the above suggestions,
+
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
+
+Eric
+
