@@ -2,341 +2,94 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D6E5C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 01:24:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B07C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 01:28:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7176120678
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 01:24:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 692B02076C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 01:28:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lZsU7VTC"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="fNwu8mbE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726523AbgHLBYT (ORCPT
+        id S1726428AbgHLB2j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 21:24:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38878 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726173AbgHLBYS (ORCPT
+        Tue, 11 Aug 2020 21:28:39 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:1655 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726143AbgHLB2h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 21:24:18 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 750DFC06174A
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 18:24:18 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id x12so419685qtp.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 18:24:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ewSouZ9fpSEqZWpAjbpVyaVqXVUq6CVMjFsKBDahtnA=;
-        b=lZsU7VTCLsPtWPM/L3bqU+0m2kixqI2GJ46B2K+lUDagXWPvRVXoj1AdyZ6B4KoHJC
-         Cf1mMvr0sO7LIXAJ6d2BEvX5vE8RYJmmchMngdYY360bUtzyeydNsd7e1OecIXsA4FMb
-         CM9v3hRVaJzn4rbkz+gMPc0ZC/w/PoGCDNEwgb1SKDfAZisfk555leoGQxBS1AwHUyBb
-         PKCxR0emj9skP4EzKF3a/xPM72PYAa3moFbS3B301da8BI3b2gSeuZKGSjS6dywDYHAQ
-         TQdOU73hqhn6vse2RnmJ5Q7VrxWIsE99auT5DgwTSUx7oVgEPr38UuPrVwx85v7lswBd
-         vI2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ewSouZ9fpSEqZWpAjbpVyaVqXVUq6CVMjFsKBDahtnA=;
-        b=WtYVr9hsMnYkMKosi22URgS7uAx2PVauveXva2zdc6lPhRj/187F+rEIDz7uSNVu2D
-         J68YtJ8+Bf0ofw2vChSansfincMI96q94e4m2CcMXXb17EvOrdSxZ5yAr7G3vhW/gXhU
-         7ndI/hlanVJ6xGiP/oNmMbfQV/6Wowny5DZn3AZHeC0fT4jdSaDVy27y6A6fwkIq5wrF
-         ilTJ2KQaBZN3eD0uLzoKjezqx71T5JOZGG2M3Duy35UTeiUoAkfocx1gPg3giWQnMHA+
-         3O9RXrRPnrp7aZNkHeNlHLTWMq8YnTHy7mEsCzABM073q+eGd/MRzVtf5sW9M22llOk7
-         ZoQw==
-X-Gm-Message-State: AOAM531Z0mClaNw8r2/KKABj6hwNfuxT+ex992KRmZYVmIuqCPyMQrE+
-        +U0tY7Ksb6dxneVQBWgcaPw+Z7Hln1D38qtPjBS9Eg==
-X-Google-Smtp-Source: ABdhPJxSoECnj7cKPvhQqD6TsZLpmFHvnLieALQ4Afa1wq3Ducda4IRFPNWsrQs2hFst5g7YfcaqMWwn0Mk27rewDAk=
-X-Received: by 2002:ac8:7c87:: with SMTP id y7mr4131359qtv.375.1597195456411;
- Tue, 11 Aug 2020 18:24:16 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAKwvOdnni_G2tw+0eCLQQvvdcz97Fy1-cBjzPvLwbBNDu1-KqQ@mail.gmail.com>
- <20200728004736.3590053-1-nhuck@google.com> <CAK7LNAT-AO9_Y-qunRvPbBYf7GZnoE6bxYKFNtcdKAKV8d_A+w@mail.gmail.com>
- <CAJkfWY5ywOtO6fAyPd0B2BjEWamJRRMgg4et0uVq2bpkJSECwA@mail.gmail.com> <CAK7LNAQVdhMraYejrTsGZSLFJDk4CVf6ke-bsQ7kaDUM2Lf4SA@mail.gmail.com>
-In-Reply-To: <CAK7LNAQVdhMraYejrTsGZSLFJDk4CVf6ke-bsQ7kaDUM2Lf4SA@mail.gmail.com>
-From:   Nathan Huckleberry <nhuck@google.com>
-Date:   Tue, 11 Aug 2020 20:24:04 -0500
-Message-ID: <CAJkfWY5kooS1cPFq+3s0oFT8=O_vszAMnJ8BBOmy084oi+4tgw@mail.gmail.com>
-Subject: Re: [PATCH v7] Makefile: Add clang-tidy and static analyzer support
- to makefile
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Pirama Arumuga Nainar <pirama@google.com>,
-        Bill Wendling <morbo@google.com>
+        Tue, 11 Aug 2020 21:28:37 -0400
+X-UUID: 33676643d9964419b8fabf34a501bbcb-20200812
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=PSmyy6RB68QIlyE2RdAZ/dLjGNAiqe5NS8RADOChyZA=;
+        b=fNwu8mbEg/qvYXZ5W4yLrDB3JRk9UrylJwK4a2Ndk1tRRyy9vc1TilzsGdfOo/yEDL+Mw/FcfViBbsvb5syxTUFTlvhrujiZ98cZDHXUFFpG0uv+b8vxp3kDp/oUrnAaxl/VzCqrO1Znws+4rLUtIpOuuC7gixIbH633iqgRVnU=;
+X-UUID: 33676643d9964419b8fabf34a501bbcb-20200812
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1445121796; Wed, 12 Aug 2020 09:28:26 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS32DR.mediatek.inc
+ (172.27.6.104) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 12 Aug
+ 2020 09:28:19 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 12 Aug 2020 09:28:14 +0800
+Message-ID: <1597195610.21478.10.camel@mhfsdcap03>
+Subject: Re: [PATCH] usb: xhci-mtk: Fix typo
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Frank Wunderlich <linux@fw-web.de>
+CC:     <linux-mediatek@lists.infradead.org>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-usb@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Date:   Wed, 12 Aug 2020 09:26:50 +0800
+In-Reply-To: <20200808124906.89976-1-linux@fw-web.de>
+References: <20200808124906.89976-1-linux@fw-web.de>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+X-TM-SNTS-SMTP: 0D2B0029EF119CD7EB5464ABFEF244164C84DA1B3C0330CEACF56DF3E90248D72000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sounds good. Do you think this patch is ready to land then?
+T24gU2F0LCAyMDIwLTA4LTA4IGF0IDE0OjQ5ICswMjAwLCBGcmFuayBXdW5kZXJsaWNoIHdyb3Rl
+Og0KPiBGcm9tOiBGcmFuayBXdW5kZXJsaWNoIDxmcmFuay13QHB1YmxpYy1maWxlcy5kZT4NCj4g
+DQo+IGZpeCB0aGlzIHNtYWxsIHR5cG8gdTNfcG9ydHNfZGlzYWJlZCA9PiB1M19wb3J0c19kaXNh
+YmxlZA0KPiANCj4gRml4ZXM6IDU1YmE2ZTllMjVhNiAodXNiOiB4aGNpLW10azogc3VwcG9ydCBv
+cHRpb24gdG8gZGlzYWJsZSB1c2IzIHBvcnRzKQ0KPiBTaWduZWQtb2ZmLWJ5OiBGcmFuayBXdW5k
+ZXJsaWNoIDxmcmFuay13QHB1YmxpYy1maWxlcy5kZT4NCj4gLS0tDQo+ICBkcml2ZXJzL3VzYi9o
+b3N0L3hoY2ktbXRrLmMgfCA2ICsrKy0tLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9u
+cygrKSwgMyBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3VzYi9ob3N0
+L3hoY2ktbXRrLmMgYi9kcml2ZXJzL3VzYi9ob3N0L3hoY2ktbXRrLmMNCj4gaW5kZXggNDMxMWQ0
+YzliNjhkLi44ZjMyMWYzOWFiOTYgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvdXNiL2hvc3QveGhj
+aS1tdGsuYw0KPiArKysgYi9kcml2ZXJzL3VzYi9ob3N0L3hoY2ktbXRrLmMNCj4gQEAgLTc3LDcg
+Kzc3LDcgQEAgc3RhdGljIGludCB4aGNpX210a19ob3N0X2VuYWJsZShzdHJ1Y3QgeGhjaV9oY2Rf
+bXRrICptdGspDQo+ICB7DQo+ICAJc3RydWN0IG11M2NfaXBwY19yZWdzIF9faW9tZW0gKmlwcGMg
+PSBtdGstPmlwcGNfcmVnczsNCj4gIAl1MzIgdmFsdWUsIGNoZWNrX3ZhbDsNCj4gLQlpbnQgdTNf
+cG9ydHNfZGlzYWJlZCA9IDA7DQo+ICsJaW50IHUzX3BvcnRzX2Rpc2FibGVkID0gMDsNCj4gIAlp
+bnQgcmV0Ow0KPiAgCWludCBpOw0KPiAgDQo+IEBAIC05Miw3ICs5Miw3IEBAIHN0YXRpYyBpbnQg
+eGhjaV9tdGtfaG9zdF9lbmFibGUoc3RydWN0IHhoY2lfaGNkX210ayAqbXRrKQ0KPiAgCS8qIHBv
+d2VyIG9uIGFuZCBlbmFibGUgdTMgcG9ydHMgZXhjZXB0IHNraXBwZWQgb25lcyAqLw0KPiAgCWZv
+ciAoaSA9IDA7IGkgPCBtdGstPm51bV91M19wb3J0czsgaSsrKSB7DQo+ICAJCWlmICgoMHgxIDw8
+IGkpICYgbXRrLT51M3BfZGlzX21zaykgew0KPiAtCQkJdTNfcG9ydHNfZGlzYWJlZCsrOw0KPiAr
+CQkJdTNfcG9ydHNfZGlzYWJsZWQrKzsNCj4gIAkJCWNvbnRpbnVlOw0KPiAgCQl9DQo+ICANCj4g
+QEAgLTExNyw3ICsxMTcsNyBAQCBzdGF0aWMgaW50IHhoY2lfbXRrX2hvc3RfZW5hYmxlKHN0cnVj
+dCB4aGNpX2hjZF9tdGsgKm10aykNCj4gIAljaGVja192YWwgPSBTVFMxX1NZU1BMTF9TVEFCTEUg
+fCBTVFMxX1JFRl9SU1QgfA0KPiAgCQkJU1RTMV9TWVMxMjVfUlNUIHwgU1RTMV9YSENJX1JTVDsN
+Cj4gIA0KPiAtCWlmIChtdGstPm51bV91M19wb3J0cyA+IHUzX3BvcnRzX2Rpc2FiZWQpDQo+ICsJ
+aWYgKG10ay0+bnVtX3UzX3BvcnRzID4gdTNfcG9ydHNfZGlzYWJsZWQpDQo+ICAJCWNoZWNrX3Zh
+bCB8PSBTVFMxX1UzX01BQ19SU1Q7DQo+ICANCj4gIAlyZXQgPSByZWFkbF9wb2xsX3RpbWVvdXQo
+JmlwcGMtPmlwX3B3X3N0czEsIHZhbHVlLA0KDQpSZXZpZXdlZC1ieTogQ2h1bmZlbmcgWXVuIDxj
+aHVuZmVuZy55dW5AbWVkaWF0ZWsuY29tPg0KDQpUaGFua3MNCg0KDQo=
 
-On Thu, Aug 6, 2020 at 5:10 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> On Fri, Aug 7, 2020 at 6:42 AM 'Nathan Huckleberry' via Clang Built
-> Linux <clang-built-linux@googlegroups.com> wrote:
-> >
-> > On Thu, Aug 6, 2020 at 3:44 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> > >
-> > > On Tue, Jul 28, 2020 at 9:47 AM Nathan Huckleberry <nhuck@google.com> wrote:
-> > > >
-> > > > This patch adds clang-tidy and the clang static-analyzer as make
-> > > > targets. The goal of this patch is to make static analysis tools
-> > > > usable and extendable by any developer or researcher who is familiar
-> > > > with basic c++.
-> > > >
-> > > > The current static analysis tools require intimate knowledge of the
-> > > > internal workings of the static analysis. Clang-tidy and the clang
-> > > > static analyzers expose an easy to use api and allow users unfamiliar
-> > > > with clang to write new checks with relative ease.
-> > > >
-> > > > ===Clang-tidy===
-> > > >
-> > > > Clang-tidy is an easily extendable 'linter' that runs on the AST.
-> > > > Clang-tidy checks are easy to write and understand. A check consists of
-> > > > two parts, a matcher and a checker. The matcher is created using a
-> > > > domain specific language that acts on the AST
-> > > > (https://clang.llvm.org/docs/LibASTMatchersReference.html).  When AST
-> > > > nodes are found by the matcher a callback is made to the checker. The
-> > > > checker can then execute additional checks and issue warnings.
-> > > >
-> > > > Here is an example clang-tidy check to report functions that have calls
-> > > > to local_irq_disable without calls to local_irq_enable and vice-versa.
-> > > > Functions flagged with __attribute((annotation("ignore_irq_balancing")))
-> > > > are ignored for analysis. (https://reviews.llvm.org/D65828)
-> > > >
-> > > > ===Clang static analyzer===
-> > > >
-> > > > The clang static analyzer is a more powerful static analysis tool that
-> > > > uses symbolic execution to find bugs. Currently there is a check that
-> > > > looks for potential security bugs from invalid uses of kmalloc and
-> > > > kfree. There are several more general purpose checks that are useful for
-> > > > the kernel.
-> > > >
-> > > > The clang static analyzer is well documented and designed to be
-> > > > extensible.
-> > > > (https://clang-analyzer.llvm.org/checker_dev_manual.html)
-> > > > (https://github.com/haoNoQ/clang-analyzer-guide/releases/download/v0.1/clang-analyzer-guide-v0.1.pdf)
-> > > >
-> > > > The main draw of the clang tools is how accessible they are. The clang
-> > > > documentation is very nice and these tools are built specifically to be
-> > > > easily extendable by any developer. They provide an accessible method of
-> > > > bug-finding and research to people who are not overly familiar with the
-> > > > kernel codebase.
-> > > >
-> > > > Signed-off-by: Nathan Huckleberry <nhuck@google.com>
-> > > > ---
-> > > > Changes v6->v7
-> > > > * Fix issues with relative paths
-> > > > * Additional style fixes
-> > > >  MAINTAINERS                                   |  1 +
-> > > >  Makefile                                      |  3 +
-> > > >  scripts/clang-tools/Makefile.clang-tools      | 23 ++++++
-> > > >  .../{ => clang-tools}/gen_compile_commands.py |  0
-> > > >  scripts/clang-tools/run-clang-tools.py        | 74 +++++++++++++++++++
-> > > >  5 files changed, 101 insertions(+)
-> > > >  create mode 100644 scripts/clang-tools/Makefile.clang-tools
-> > > >  rename scripts/{ => clang-tools}/gen_compile_commands.py (100%)
-> > > >  create mode 100755 scripts/clang-tools/run-clang-tools.py
-> > > >
-> > > > diff --git a/MAINTAINERS b/MAINTAINERS
-> > > > index 1d4aa7f942de..a444564e5572 100644
-> > > > --- a/MAINTAINERS
-> > > > +++ b/MAINTAINERS
-> > > > @@ -4198,6 +4198,7 @@ W:        https://clangbuiltlinux.github.io/
-> > > >  B:     https://github.com/ClangBuiltLinux/linux/issues
-> > > >  C:     irc://chat.freenode.net/clangbuiltlinux
-> > > >  F:     Documentation/kbuild/llvm.rst
-> > > > +F:     scripts/clang-tools/
-> > > >  K:     \b(?i:clang|llvm)\b
-> > > >
-> > > >  CLEANCACHE API
-> > > > diff --git a/Makefile b/Makefile
-> > > > index fe0164a654c7..3e2df010b342 100644
-> > > > --- a/Makefile
-> > > > +++ b/Makefile
-> > > > @@ -747,6 +747,7 @@ KBUILD_CFLAGS       += $(call cc-option,-fno-allow-store-data-races)
-> > > >
-> > > >  include scripts/Makefile.kcov
-> > > >  include scripts/Makefile.gcc-plugins
-> > > > +include scripts/clang-tools/Makefile.clang-tools
-> > > >
-> > > >  ifdef CONFIG_READABLE_ASM
-> > > >  # Disable optimizations that make assembler listings hard to read.
-> > > > @@ -1543,6 +1544,8 @@ help:
-> > > >         @echo  '  export_report   - List the usages of all exported symbols'
-> > > >         @echo  '  headerdep       - Detect inclusion cycles in headers'
-> > > >         @echo  '  coccicheck      - Check with Coccinelle'
-> > > > +       @echo  '  clang-analyzer  - Check with clang static analyzer'
-> > > > +       @echo  '  clang-tidy      - Check with clang-tidy'
-> > > >         @echo  ''
-> > > >         @echo  'Tools:'
-> > > >         @echo  '  nsdeps          - Generate missing symbol namespace dependencies'
-> > > > diff --git a/scripts/clang-tools/Makefile.clang-tools b/scripts/clang-tools/Makefile.clang-tools
-> > > > new file mode 100644
-> > > > index 000000000000..5c9d76f77595
-> > > > --- /dev/null
-> > > > +++ b/scripts/clang-tools/Makefile.clang-tools
-> > > > @@ -0,0 +1,23 @@
-> > > > +# SPDX-License-Identifier: GPL-2.0
-> > > > +#
-> > > > +# Copyright (C) Google LLC, 2020
-> > > > +#
-> > > > +# Author: Nathan Huckleberry <nhuck@google.com>
-> > > > +#
-> > > > +PHONY += clang-tidy
-> > > > +clang-tidy:
-> > > > +ifdef CONFIG_CC_IS_CLANG
-> > > > +       $(PYTHON3) scripts/clang-tools/gen_compile_commands.py
-> > > > +       $(PYTHON3) scripts/clang-tools/run-clang-tools.py clang-tidy compile_commands.json
-> > > > +else
-> > > > +       $(error clang-tidy requires CC=clang)
-> > > > +endif
-> > > > +
-> > > > +PHONY += clang-analyzer
-> > > > +clang-analyzer:
-> > > > +ifdef CONFIG_CC_IS_CLANG
-> > > > +       $(PYTHON3) scripts/clang-tools/gen_compile_commands.py
-> > > > +       $(PYTHON3) scripts/clang-tools/run-clang-tools.py clang-analyzer compile_commands.json
-> > > > +else
-> > > > +       $(error clang-analyzer requires CC=clang)
-> > > > +endif
-> > >
-> > >
-> > >
-> > > You can unify the almost same two rules.
-> > >
-> > > PHONY += clang-tidy clang-analyzer
-> > > clang-tidy clang-analyzer:
-> > > ifdef CONFIG_CC_IS_CLANG
-> > >         $(PYTHON3) scripts/clang-tools/gen_compile_commands.py
-> > >         $(PYTHON3) scripts/clang-tools/run-clang-tools.py $@
-> > > compile_commands.json
-> > > else
-> > >         $(error $@ requires CC=clang)
-> > > endif
-> > >
-> >
-> > I like this.
-> >
-> > >
-> > >
-> > >
-> > > But, before we proceed, please tell me
-> > > what this check is intended for.
-> > >
-> >
-> > Clang-tidy invokes clang using the command line
-> > options specified in the compile_commands.json file.
-> > Using gcc command line options causes a bunch of
-> > errors for unknown options.
-> >
-> > >
-> > >
-> > >
-> > >
-> > > Case 1)
-> > > Build the kernel with CC=clang,
-> > > and then run clang-tidy without CC=clang.
-> > >
-> > > $ make CC=clang defconfig
-> > > $ make CC=clang -j$(nproc)
-> > > $ make clang-tidy
-> > >
-> > > scripts/clang-tools/Makefile.clang-tools:13: *** clang-tidy requires
-> > > CC=clang.  Stop.
-> > >
-> >
-> > I suppose this case could allow clang-tidy to
-> > be run.
-> >
-> > >
-> > >
-> > >
-> > > Case 2)
-> > > Build the kernel using GCC,
-> > > and then run clang-tidy with CC=clang.
-> > >
-> > > $ make defconfig
-> > > $ make -j$(nproc)
-> > > $ make CC=clang clang-tidy
-> > >
-> > > This patch happily runs clang-tidy
-> > > although compile_commands.json
-> > > contains GCC commands.
-> > >
-> >
-> > This is the worst of the two cases. I'm not
-> > sure how to prevent this other than parsing the
-> > compiler invocation in run-clang-tools.py.
-> >
-> > I'm open to better suggestions.
-> >
-> > >
-> > >
-> > >
-> > >
-> > > So, it checks if you have passed CC=clang
-> > > to "make clang-tidy", where I do not see
-> > > any user of the $(CC) variable.
-> > >
-> > > It does not care whether you have built
-> > > the kernel with GCC or Clang.
-> > >
-> > >
-> > >
-> > > What happens if you run clang-tidy against
-> > > compile_commands.json that contains GCC
-> > > commands?
-> >
-> > Clang-tidy itself uses the command line options from
-> > compile_commands.json to invoke clang. If you run
-> > clang-tidy against GCC commands you get lots of
-> > errors similar to this
-> >
-> > Found compiler error(s).
-> > 12 warnings and 8 errors generated.
-> > Error while processing /usr/local/google/home/nhuck/linux/arch/x86/lib/iomem.c.
-> > error: unknown argument: '-fconserve-stack' [clang-diagnostic-error]
-> > error: unknown argument: '-fno-var-tracking-assignments'
-> > [clang-diagnostic-error]
-> > error: unknown argument: '-mindirect-branch-register' [clang-diagnostic-error]
-> > error: unknown argument: '-mindirect-branch=thunk-extern'
-> > [clang-diagnostic-error]
-> > error: unknown argument: '-mno-fp-ret-in-387' [clang-diagnostic-error]
-> > error: unknown argument: '-mpreferred-stack-boundary=3' [clang-diagnostic-error]
-> > error: unknown argument: '-mskip-rax-setup' [clang-diagnostic-error]
-> >
-> > >
-> > >
-> > > I also care about stale commands
-> > > in compile_commands.json.
-> > >
-> >
-> > I agree with this point, but it's more of a bug with
-> > gen_compile_commands.py. Maybe gen_compile_commands.py
-> > could emit a warning when stale commands are detected in the
-> > .*.cmd files.
->
->
-> Nathan, thanks for your comments.
->
-> I can improve this
-> so compile_commands.json contains
-> only commands from the last build.
->
-> Working on a patch.
->
-> --
-> Best Regards
-> Masahiro Yamada
