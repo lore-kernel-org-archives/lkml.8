@@ -2,166 +2,128 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CEACC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:25:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD8ACC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:28:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6769A2080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:25:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="lIPY4fVS";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="j6q48Ofk"
+	by mail.kernel.org (Postfix) with ESMTP id 9F50C2080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:28:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728106AbgHLNZx (ORCPT
+        id S1727979AbgHLN15 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 09:25:53 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:54297 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728056AbgHLNZq (ORCPT
+        Wed, 12 Aug 2020 09:27:57 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:59765 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726804AbgHLN1w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 09:25:46 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailnew.nyi.internal (Postfix) with ESMTP id A6F7E5803D8;
-        Wed, 12 Aug 2020 09:25:44 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Wed, 12 Aug 2020 09:25:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=ogsRn8UJvYnJnHmnmoJD8EeRCxv
-        OuB0FI3xBqc0qcuQ=; b=lIPY4fVS/yyIBCu1HgDe/hcTkqorszv3Knz35oiXGxo
-        25RZMhsPABOSsbX5pqdYE7aD/GPKLPdNTxSqyNvdDo9EEEbwRTDiuckF00b9FEXL
-        PeLn/goTNMAHalcs/sK07UwI2HAcYuOn1xMso0zGO2ln5TLDAonjPwJeEd6ozHs1
-        mdUb3o/rg98N+6CK+/x1+5s5bT81wkZ/tR+oxA7TEezvyHXcUzidJUck18HaX13/
-        h/YcciJ92M359yzD5dqDq2t7+Ymn7fzfyx4yFfTH6HTXecZEtydoiDYROW3TOUaI
-        qFS/vw7gw248kdqHLwq5oqjRd1dI2BcTFMsFDK0LI7Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=ogsRn8
-        UJvYnJnHmnmoJD8EeRCxvOuB0FI3xBqc0qcuQ=; b=j6q48OfkZkL6IhRSVkrHag
-        3QhD/klT3dNA5dOCQ6K6Dw+8cNat4Zorh/qx+KOQC6dHElclKdVrD+TCLpivJevO
-        Obq6M0lG1E37fC814+uhcOWEQb2UyW4/vzUX4t8qT4CjmYRBJUSplSYookVg/WUD
-        6yiCdPsUORGpkNjZl773Pf1qSGEunmVf9zIt8LzJUUfTHoYztR/wuttth1VvdFix
-        NOFgCfDDfIw4DY9AhTWGDRjlRs7rQhTMZcGkclPmanxYH+BiOg2MicJspeRR26e+
-        R9pmxkLrx8SWNtOcuxs/bgMBPuY/PDsYFgY2KFZROy5ddQaPtNN+K55DhKRsrPyw
-        ==
-X-ME-Sender: <xms:2O0zX5T5Qj95O1-mTPmVA_mMJte538fKlYq_YAkw-8B3nNGF1rNeBg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrledvgdeifecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghgucfm
-    jfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuggftrfgrthhtvghrnhepueelledthe
-    ekleethfeludduvdfhffeuvdffudevgeehkeegieffveehgeeftefgnecuffhomhgrihhn
-    pehkvghrnhgvlhdrohhrghenucfkphepkeefrdekiedrkeelrddutdejnecuvehluhhsth
-    gvrhfuihiivgepvdenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghh
-    rdgtohhm
-X-ME-Proxy: <xmx:2O0zXyxYJdCmoSSma5ECQPwlNv1CvWD6_PNcNGK6vxqeJUkh0lcx5g>
-    <xmx:2O0zX-1qDpX9rRtegMpKmfcTRHbdD7_oC2X5UB3wbEXZVpmm6IsxPg>
-    <xmx:2O0zXxDhk8h2P_vhj0t36IKfEcnaHsbKL-pZhpw7yxGBmY1sosxbnQ>
-    <xmx:2O0zX9Nloy36PNgGgACebPlvIfM1zIlboHBNMPEWroLg42gjgO89EA>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 0A9F0328005D;
-        Wed, 12 Aug 2020 09:25:44 -0400 (EDT)
-Date:   Wed, 12 Aug 2020 15:25:55 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Wenbin Mei <wenbin.mei@mediatek.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Chaotian Jing <chaotian.jing@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, srv_heupstream@mediatek.com
-Subject: Re: [v2,3/3] mmc: mediatek: add optional module reset property
-Message-ID: <20200812132555.GD2489711@kroah.com>
-References: <20200812130129.13519-1-wenbin.mei@mediatek.com>
- <20200812130129.13519-4-wenbin.mei@mediatek.com>
+        Wed, 12 Aug 2020 09:27:52 -0400
+Received: from [192.168.1.155] ([77.7.70.104]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1N2SXX-1kq4Il39SR-013vZ2; Wed, 12 Aug 2020 15:27:48 +0200
+Subject: Re: [Q] devicetree overlays
+To:     Sven Van Asbroeck <thesven73@gmail.com>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <CAGngYiVa9v9jGPNu4W+KHUnvemKU-BVE89-XNLcWOmoZjAPMTg@mail.gmail.com>
+ <24f1687c-043a-a15e-0be4-8392e7b5c96b@metux.net>
+ <CAGngYiVokqYkEiQTcqAMnvif3qEWkPOb1cAk+4rvwgxBKZ5Ukw@mail.gmail.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Message-ID: <1acc987a-d844-fca7-77eb-cf1d466f35c1@metux.net>
+Date:   Wed, 12 Aug 2020 15:27:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200812130129.13519-4-wenbin.mei@mediatek.com>
+In-Reply-To: <CAGngYiVokqYkEiQTcqAMnvif3qEWkPOb1cAk+4rvwgxBKZ5Ukw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: tl
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:MIsNc+6wckw0bhN3I+OPYIOG5NscHslgh+KIMp0EpXcmxLAo2UV
+ PKF2oEMIqd5jUQCZwGV8YWpxNVDXZeqQOuagMgN1gyJULvjaMozkci2csfUQJNFf8qb7eBN
+ 8/tGYAIAEe2/vwvK6LXg7ieiP8b91P73Zw4WOl4zHTWsSqMm6l+f+SZZCjNUR4IqSASFFqT
+ yr1N4kJ7TGdZupAN628tw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ThtyLd1Fmwg=:tr/DyrIjMkrSSj6ONl15vD
+ pq1HzKpqmn8sK/RxSFegjJtb9HSxrF4XYetGjWW8YEPtbfP/jZRiPUPW5TCvQ/JD7lwMZlbTW
+ kQyAdFpMT9F+Vel9LRUE23hQgkK04chUPOvWpD8HMYT8MZuGlR8U6zthqTwku7NcqbZgUtUrA
+ +C+KiwY0FyDNc0AGqQDWqYa6P2bUK0XH8p/f0+9+XXqLNP0y/Tv9uVVr3O73KJdkR8SRdwFOM
+ 2CBk1gpshPvN6ImcinftK9eK5CFWYflmccc+L+XfMe6YWT3rEgvDdlFvfk7oQwiNw4aswK/h7
+ 71ShuQemhmuWq89d9nWaS0VzMqB7G8AQPmw5DNIzE65b8UQL/nuLzPZJNXhu1Drv61G5nobqu
+ iwV+ZJrQao1+mfNl1u32BNAvPi3qBk2NHA5WxBa+9Ej3zclh0oBqgewJcZRkdYa8EGc3VSJxv
+ /7Go6fL5zF21pU7vvh9XMg5qhxougwlGFiavyZOi54lfRt/FZNQIHT1C02NlEJYcjqFhoH23B
+ 3yJGj4reee2NCerYuZThDNrIT63YkqixJOe4iJbdg+GW9il4JbkxD/fD3efW1I2p8E5gTZU3B
+ GZoYQ9N50wNwb2ReWyE9IKFWdd/iMrZWApumMJrJhwRuF5NX5The6z7fCUk0syTqBN7dhwWA9
+ ByksmrF8LxZYgTuLWx8B5+9lcsO/1o4pkv9At32hAW7rB0AV9Wpb2EZETXVYak4K0sf4J+oa9
+ VzCV3VzcnbIZEuteK3AmNC4TleZEDWjY+WkggDlBrDqqc3EWT3TeUdTat39jFhc/DGBnMlwO9
+ dNGtrZgB5LiPMVVukFtJLUlDYSwFlQc8pYXr9KTakiHIMmW+TdPAjtVXhEVdW5+SpICDY3C
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 09:01:29PM +0800, Wenbin Mei wrote:
-> This patch fixs eMMC-Access on mt7622/Bpi-64.
-> Before we got these Errors on mounting eMMC ion R64:
-> [   48.664925] blk_update_request: I/O error, dev mmcblk0, sector 204800 op 0x1:(WRITE)
-> flags 0x800 phys_seg 1 prio class 0
-> [   48.676019] Buffer I/O error on dev mmcblk0p1, logical block 0, lost sync page write
-> 
-> This patch adds a optional reset management for msdc.
-> Sometimes the bootloader does not bring msdc register
-> to default state, so need reset the msdc controller.
-> 
-> Fixes: 966580ad236e ("mmc: mediatek: add support for MT7622 SoC")
-> Signed-off-by: Wenbin Mei <wenbin.mei@mediatek.com>
-> Tested-by: Frank Wunderlich <frank-w@public-files.de>
-> ---
->  drivers/mmc/host/mtk-sd.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-> diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
-> index 39e7fc54c438..2b243c03c9b2 100644
-> --- a/drivers/mmc/host/mtk-sd.c
-> +++ b/drivers/mmc/host/mtk-sd.c
-> @@ -22,6 +22,7 @@
->  #include <linux/slab.h>
->  #include <linux/spinlock.h>
->  #include <linux/interrupt.h>
-> +#include <linux/reset.h>
->  
->  #include <linux/mmc/card.h>
->  #include <linux/mmc/core.h>
-> @@ -434,6 +435,7 @@ struct msdc_host {
->  	struct msdc_save_para save_para; /* used when gate HCLK */
->  	struct msdc_tune_para def_tune_para; /* default tune setting */
->  	struct msdc_tune_para saved_tune_para; /* tune result of CMD21/CMD19 */
-> +	struct reset_control *reset;
->  };
->  
->  static const struct mtk_mmc_compatible mt8135_compat = {
-> @@ -1516,6 +1518,12 @@ static void msdc_init_hw(struct msdc_host *host)
->  	u32 val;
->  	u32 tune_reg = host->dev_comp->pad_tune_reg;
->  
-> +	if (!IS_ERR(host->reset)) {
-> +		reset_control_assert(host->reset);
-> +		usleep_range(10, 50);
-> +		reset_control_deassert(host->reset);
-> +	}
-> +
->  	/* Configure to MMC/SD mode, clock free running */
->  	sdr_set_bits(host->base + MSDC_CFG, MSDC_CFG_MODE | MSDC_CFG_CKPDN);
->  
-> @@ -2273,6 +2281,11 @@ static int msdc_drv_probe(struct platform_device *pdev)
->  	if (IS_ERR(host->src_clk_cg))
->  		host->src_clk_cg = NULL;
->  
-> +	host->reset = devm_reset_control_get_optional_exclusive(&pdev->dev,
-> +								"hrst");
-> +	if (PTR_ERR(host->reset) == -EPROBE_DEFER)
-> +		return PTR_ERR(host->reset);
-> +
->  	host->irq = platform_get_irq(pdev, 0);
->  	if (host->irq < 0) {
->  		ret = -EINVAL;
-> -- 
-> 2.18.0
+On 07.08.20 16:17, Sven Van Asbroeck wrote:
 
-<formletter>
+Hi,
 
-This is not the correct way to submit patches for inclusion in the
-stable kernel tree.  Please read:
-    https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
-for how to do this properly.
+> I believe you're asking: "how do I associate device tree nodes to
+> devices on a dynamically discoverable bus such as USB or PCI" right ?
+> 
+> I believe that already exists. You can describe the _expected_ pci or
+> usb topology in the
+> devicetree. If a device gets detected in a spot on the bus described
+> in the tree, that
+> snippet will be automatically associated with this device.
+> 
+> How to for usb:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/usb/usb-device.txt?h=v5.8
+> 
+> How to for pci:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/pci/pci.txt?h=v5.8
 
-</formletter>
+Thanks, that looks good.
+
+But I've still got another problem: how can I use DT along w/ ACPI ?
+
+The scenario goes like this:
+
+* machine boots and probes normally w/ ACPI
+* device is detected via USB, PCI, DMI, etc -> driver gets active
+* driver loads (or carries) a DT snippet
+* devices on the bus are instantiated via this DT snippet
+
+(driver could also be some udev vodoo)
+
+Example a:
+
+* generic usb i2c dongle w/ some i2c devices attached behind it
+* config (or DT snippet) somewhere in the FS
+
+Example b:
+
+* x86 board driver (eg. apu2/3/4), probed via DMI
+* just instantiates a bunch of generic drivers and wires up
+  devices (gpio, leds, keys, ...)
+
+
+Do you think we can already do that ?
+Otherwise, what has to be done to achieve that ?	
+
+
+--mtx
+
+-- 
+---
+Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
+werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
+GPG/PGP-Schlüssel zu.
+---
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
