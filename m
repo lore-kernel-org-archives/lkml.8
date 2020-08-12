@@ -2,141 +2,143 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 158D9C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 06:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A2FC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 06:02:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4B19206C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 06:01:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2DF9206C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 06:02:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="L3I3u9z7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oerSCwoH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726572AbgHLGBV (ORCPT
+        id S1726680AbgHLGCW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 02:01:21 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:31134 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725944AbgHLGBV (ORCPT
+        Wed, 12 Aug 2020 02:02:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53206 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726483AbgHLGCV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 02:01:21 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07C5mCij059518;
-        Wed, 12 Aug 2020 02:01:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : reply-to : references : mime-version : content-type
- : in-reply-to; s=pp1; bh=Flytr8k2939r01rScwjBxWieA0ZKAN00UvMze6baDuU=;
- b=L3I3u9z7Oj5Aj0x3Gjc8mkcJSMyILV1bwMDd6mSk/RPN8brB/+DRw6fZz5iyPaVbwcRq
- GypubXC0xCVf07SJwWpKxEscBe2baGJJovxo0XZMD+LdBBmYKGwQPxtLhrmbUEpKSbzS
- xkVeXWs/uIoYAUj4IVLaDlLkCnSiLCtLsaNOyil6yKpciwViD3GpR9FxO6kFWfbncG4x
- eJW8PIKgggfN+UfUWDdGl9DrEtRiAsDW1DTeCig3OTvMXmmZHOx1UnIc+0MGJivMYCvL
- 61+9AmjlBdcZutyN/v1pj8mo7AJLQbvOf+Fm4aKVg2iZNOLD668k64pGIsa4GzEKNg0C cA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32vakp07yd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 12 Aug 2020 02:01:10 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07C5t6EV075791;
-        Wed, 12 Aug 2020 02:01:09 -0400
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32vakp07x7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 12 Aug 2020 02:01:09 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07C5pVWk011342;
-        Wed, 12 Aug 2020 06:01:07 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma06ams.nl.ibm.com with ESMTP id 32skahc22b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 12 Aug 2020 06:01:06 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07C614ei26607962
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 12 Aug 2020 06:01:04 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 866B6AE05F;
-        Wed, 12 Aug 2020 06:01:04 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DEEC3AE05A;
-        Wed, 12 Aug 2020 06:01:01 +0000 (GMT)
-Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Wed, 12 Aug 2020 06:01:01 +0000 (GMT)
-Date:   Wed, 12 Aug 2020 11:31:01 +0530
-From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Michal Such?nek <msuchanek@suse.de>,
-        David Hildenbrand <david@redhat.com>,
-        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
-        Mel Gorman <mgorman@suse.de>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        linuxppc-dev@lists.ozlabs.org, Christopher Lameter <cl@linux.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCH v5 3/3] mm/page_alloc: Keep memoryless cpuless node 0
- offline
-Message-ID: <20200812060101.GB10992@linux.vnet.ibm.com>
-Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-References: <184102af-ecf2-c834-db46-173ab2e66f51@redhat.com>
- <20200701110145.GC17918@linux.vnet.ibm.com>
- <0468f965-8762-76a3-93de-3987cf859927@redhat.com>
- <12945273-d788-710d-e8d7-974966529c7d@redhat.com>
- <20200701122110.GT2369@dhcp22.suse.cz>
- <20200703091001.GJ21462@kitsune.suse.cz>
- <20200703092414.GR18446@dhcp22.suse.cz>
- <20200703105944.GS18446@dhcp22.suse.cz>
- <20200703125823.GA26243@linux.vnet.ibm.com>
- <20200806213211.6a6a56037fe771836e5abbe9@linux-foundation.org>
+        Wed, 12 Aug 2020 02:02:21 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44A1DC06174A;
+        Tue, 11 Aug 2020 23:02:21 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id l60so582826pjb.3;
+        Tue, 11 Aug 2020 23:02:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=HPIOK3rNviX7M7TkAWIwKVBAfKjkjAUG64sCRy5ZUtQ=;
+        b=oerSCwoH0WT1Ys/TiLkcsyScgiuNNILFBmNRtCQ/yoz7XwRPub46N6KYvGI0TgtCeb
+         4tApLHOil3cxXTgPkqY2/H2ON6bWDDDSATT0Zb6gHTu3PG9NdYsymAlq6Pf/eTPwsyS9
+         IM2cVO6E2lYEDfAdeBU0O+UnxLv5szBnMtN6UpVqPh2iQNbrLRN5ds1+N099oSFHFA3I
+         OImVlEakW/SjBvy/ajBGIJGSa4NxWunELgdagULj67G0Z8jHdud11QRbPRLNiFZa4fgJ
+         hMuEDN4A0sFlQKJXGo/lfwG9x62OyEpfXpN2PBvHyes5x0g60WD4eXdBXF4JWWoY2bKh
+         9FgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=HPIOK3rNviX7M7TkAWIwKVBAfKjkjAUG64sCRy5ZUtQ=;
+        b=nKMfyufzhzIG9Vqtbq7RMITjRYx9wi6C+CUVDQgFRZylkPVU++59dhBIKRbfVrcNHw
+         srGVgE+coxmP7W48B/hzFEcKkANyP5SJ2FN/SB8a9zkxNQn8X2nH0A9wIZWLpw4suhsI
+         xD4/zwbKOCvlZHdiBJYPZnyfkC5tZlAMk/q5qohrj8FJKi8AZ828an8Kn6Yjb3wifNON
+         hd6azkMK5Cx2F5Kza5T12xNDZ+bhCVRgTqOsi84qzhqbdQ2QN6O934oXK0kT47XmdYCj
+         G7nxQ4J4wudY2lwsmL+Rrim+BWN7GhpPtE/QdTGP77kjaIsP3w/bz7tvv2R7thj4ydTy
+         JezA==
+X-Gm-Message-State: AOAM532jbqwgcWIyJfayowB3e79ZsWJ/xOsl9QjRAIOgLnlBzmjnVKRV
+        RjHVNAsqCCuczhtysIEWUXW8Ee69
+X-Google-Smtp-Source: ABdhPJxt6PrZbuufcWM60ic9ghuriNAmfoiUIlaiuSxDKs4la8PmxHiY16CqR7uEquHSyRQ5gbO8Hg==
+X-Received: by 2002:a17:90b:c90:: with SMTP id o16mr4293425pjz.79.1597212140341;
+        Tue, 11 Aug 2020 23:02:20 -0700 (PDT)
+Received: from ?IPv6:2404:7a87:83e0:f800:5c24:508b:d8c0:f3b? ([2404:7a87:83e0:f800:5c24:508b:d8c0:f3b])
+        by smtp.gmail.com with ESMTPSA id s67sm1048954pfs.117.2020.08.11.23.02.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Aug 2020 23:02:19 -0700 (PDT)
+Subject: Re: [PATCH 2/2] exfat: unify name extraction
+To:     Sungjong Seo <sj1557.seo@samsung.com>
+Cc:     kohada.tetsuhiro@dc.mitsubishielectric.co.jp,
+        mori.takahiro@ab.mitsubishielectric.co.jp,
+        motai.hirotaka@aj.mitsubishielectric.co.jp,
+        'Namjae Jeon' <namjae.jeon@samsung.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200806055653.9329-1-kohada.t2@gmail.com>
+ <CGME20200806055726epcas1p2f36810983abf14d3aa27f8a102bbbc4d@epcas1p2.samsung.com>
+ <20200806055653.9329-2-kohada.t2@gmail.com>
+ <000201d66da8$07a2c750$16e855f0$@samsung.com>
+From:   Tetsuhiro Kohada <kohada.t2@gmail.com>
+Message-ID: <bbd9355c-cd48-b961-0a91-771a702c03df@gmail.com>
+Date:   Wed, 12 Aug 2020 15:02:17 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <20200806213211.6a6a56037fe771836e5abbe9@linux-foundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-11_19:2020-08-11,2020-08-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
- impostorscore=0 phishscore=0 mlxlogscore=999 lowpriorityscore=0
- bulkscore=0 spamscore=0 malwarescore=0 suspectscore=0 clxscore=1011
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008120039
+In-Reply-To: <000201d66da8$07a2c750$16e855f0$@samsung.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew, Michal, David
+Thanks for your reply.
 
-* Andrew Morton <akpm@linux-foundation.org> [2020-08-06 21:32:11]:
-
-> On Fri, 3 Jul 2020 18:28:23 +0530 Srikar Dronamraju <srikar@linux.vnet.ibm.com> wrote:
+On 2020/08/09 2:19, Sungjong Seo wrote:
+> [snip]
+>> @@ -963,80 +942,38 @@ int exfat_find_dir_entry(struct super_block *sb,
+>> struct exfat_inode_info *ei,
+>>   			num_empty = 0;
+>>   			candi_empty.eidx = EXFAT_HINT_NONE;
+>>
+> [snip]
+>>
+>> -			if (entry_type &
+>> -					(TYPE_CRITICAL_SEC |
+> TYPE_BENIGN_SEC)) {
+>> -				if (step == DIRENT_STEP_SECD) {
+>> -					if (++order == num_ext)
+>> -						goto found;
+>> -					continue;
+>> -				}
+>> +			exfat_get_uniname_from_name_entries(es, &uni_name);
 > 
-> > > The memory hotplug changes that somehow because you can hotremove numa
-> > > nodes and therefore make the nodemask sparse but that is not a common
-> > > case. I am not sure what would happen if a completely new node was added
-> > > and its corresponding node was already used by the renumbered one
-> > > though. It would likely conflate the two I am afraid. But I am not sure
-> > > this is really possible with x86 and a lack of a bug report would
-> > > suggest that nobody is doing that at least.
-> > > 
-> > 
-> > JFYI,
-> > Satheesh copied in this mailchain had opened a bug a year on crash with vcpu
-> > hotplug on memoryless node. 
-> > 
-> > https://bugzilla.kernel.org/show_bug.cgi?id=202187
+> It is needed to check a return value.
+
+I'll fix it in v2.
+
+
+>> +			exfat_free_dentry_set(es, false);
+>> +
+>> +			if (!exfat_uniname_ncmp(sb,
+>> +						p_uniname->name,
+>> +						uni_name.name,
+>> +						name_len)) {
+>> +				/* set the last used position as hint */
+>> +				hint_stat->clu = clu.dir;
+>> +				hint_stat->eidx = dentry;
 > 
-> So...  do we merge this patch or not?  Seems that the overall view is
-> "risky but nobody is likely to do anything better any time soon"?
+> eidx and clu of hint_stat should have one for the next entry we'll start
+> looking for.
+> Did you intentionally change the concept?
 
-Can we decide on this one way or the other?
+Yes, this is intentional.
+Essentially, the "Hint" concept is to reduce the next seek cost with minimal cost.
+There is a difference in the position of the hint, but the concept is the same.
+As you can see, the patched code strategy doesn't move from current position.
+Basically, the original code strategy is advancing only one dentry.(It's the "minimum cost")
+However, when it reaches the cluster boundary, it gets the next cluster and error handling.
+Getting the next cluster The error handling already exists at the end of the while loop,
+so the code is duplicated.
+These costs should be paid next time and are no longer the "minimum cost".
 
--- 
-Thanks and Regards
-Srikar Dronamraju
+Should I add this to the commit-message?
+
+
+BR
+---
+Tetsuhiro Kohada <kohada.t2@gmail.com>
