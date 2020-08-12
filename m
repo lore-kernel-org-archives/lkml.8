@@ -2,149 +2,185 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A12B8C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:57:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D637C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:57:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7EC7320855
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:57:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8D6220855
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:57:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597247855;
-	bh=YA6rDvPkB9plySCOtoMtymWrTx+8xxcc3Q+JZYeOX3A=;
-	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
-	b=hETpPOIo5P0eU5KC+Bl4gj2WEnwiTZpNOxChVDkimfcun8hfGJuAiopRh3enHkfBr
-	 D2NMkPsOQXFDnGoiu5VvVtSCSQurINmFl7T/9cP6MrTFReMshnCO2bMSfn6WOAmOc2
-	 669OskBgbExxBLNqYZsTOOKAb+6wPt6HB6ZtV/gY=
+	s=default; t=1597247858;
+	bh=qGFs9JrB+b04B2G3TVM5XfHPg3jI3+wg5+FVNEksffE=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=amCRE9PGM6HgE5Y/qe+kBr6WiKdyToMDrILtIzwqcr4NzpAXSYeW4nkaxcphgJ6XN
+	 JIp4dnfvJ7zoZK7iFQe79NN83/jJrXrpGCT1b57nv4sci2Gg9Sf3lDeYuy5dLRS9sQ
+	 pNeqaEiIzxRBv083YVd9tDmdT8JCMkUgOPKeEi9o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726778AbgHLP5H (ORCPT
+        id S1726749AbgHLP5G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 11:57:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45474 "EHLO mail.kernel.org"
+        Wed, 12 Aug 2020 11:57:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726512AbgHLP5A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726150AbgHLP5A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 12 Aug 2020 11:57:00 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65381208B3;
+        by mail.kernel.org (Postfix) with ESMTPSA id 47FC120838;
         Wed, 12 Aug 2020 15:56:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1597247819;
-        bh=YA6rDvPkB9plySCOtoMtymWrTx+8xxcc3Q+JZYeOX3A=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E8KJQ7FQAUzQjeNj8JKJtHOfkEmpbYb2Vu6s2gZEfM2aB5XYM53TpRzvoOQpY94+C
-         IvQ3/qzcmnF/ohMinB0eZPlLTVYpfSMamHB+SYMxNryVnJr9+PN99wQgfhRI30fB2r
-         jQUzqXrSjKwY/YD6+zRcK7qaRNFx851BfDAelAkY=
+        bh=qGFs9JrB+b04B2G3TVM5XfHPg3jI3+wg5+FVNEksffE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=TzdBsEB9byzsy6EPq+XQIImU+5yJfJMUWKP5jxM/oOsLe8KPTj9Oo3TfWjVAOFuZ0
+         VnDtAkyr/zyr04JBj3ZMcZOS63rN1LjU1H+tN8XpflmEQM31S9OXb4i7Byk+fObFwj
+         b8SXaSi8qZAuVVYq6PDsY5GITY28+xCc1TyV/Bv4=
 Received: from mchehab by mail.kernel.org with local (Exim 4.94)
         (envelope-from <mchehab@kernel.org>)
-        id 1k5t7Z-005t5j-HC; Wed, 12 Aug 2020 17:56:57 +0200
+        id 1k5t7Z-005t5W-4R; Wed, 12 Aug 2020 17:56:57 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org
-Subject: [PATCH 05/44] staging: spmi: hisi-spmi-controller: adjust whitespaces at defines
-Date:   Wed, 12 Aug 2020 17:56:15 +0200
-Message-Id: <0df3bc58fb2e35b32fc317eab0e26cebe87a52ea.1597247164.git.mchehab+huawei@kernel.org>
+        Stephen Boyd <sboyd@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Wei Xu <xuwei5@hisilicon.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        Rob Herring <robh@kernel.org>, devel@driverdev.osuosl.org,
+        linux-arm-msm@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 00/44] SPMI patches needed by Hikey 970
+Date:   Wed, 12 Aug 2020 17:56:10 +0200
+Message-Id: <cover.1597247164.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.1597247164.git.mchehab+huawei@kernel.org>
-References: <cover.1597247164.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some defines are not aligned with tab=8, which is the
-style defined on Linux. Adjust them.
+Hi Greg,
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- .../staging/hikey9xx/hisi-spmi-controller.c   | 26 ++++++++++---------
- 1 file changed, 14 insertions(+), 12 deletions(-)
+This patch series is part of a work I'm doing in order to be able to support
+a HiKey 970 board that I recently got on my hands.
 
-diff --git a/drivers/staging/hikey9xx/hisi-spmi-controller.c b/drivers/staging/hikey9xx/hisi-spmi-controller.c
-index 99cf757d76fe..7fae267a6062 100644
---- a/drivers/staging/hikey9xx/hisi-spmi-controller.c
-+++ b/drivers/staging/hikey9xx/hisi-spmi-controller.c
-@@ -18,10 +18,10 @@
- /*
-  * SPMI register addr
-  */
--#define SPMI_CHANNEL_OFFSET					0x0300
--#define SPMI_SLAVE_OFFSET						0x20
-+#define SPMI_CHANNEL_OFFSET				0x0300
-+#define SPMI_SLAVE_OFFSET				0x20
- 
--#define SPMI_APB_SPMI_CMD_BASE_ADDR				0x0100
-+#define SPMI_APB_SPMI_CMD_BASE_ADDR			0x0100
- 
- #define SPMI_APB_SPMI_WDATA0_BASE_ADDR			0x0104
- #define SPMI_APB_SPMI_WDATA1_BASE_ADDR			0x0108
-@@ -35,21 +35,21 @@
- #define SPMI_APB_SPMI_RDATA2_BASE_ADDR			0x020c
- #define SPMI_APB_SPMI_RDATA3_BASE_ADDR			0x0210
- 
--#define SPMI_PER_DATAREG_BYTE					4
-+#define SPMI_PER_DATAREG_BYTE				4
- /*
-  * SPMI cmd register
-  */
--#define SPMI_APB_SPMI_CMD_EN						BIT(31)
-+#define SPMI_APB_SPMI_CMD_EN				BIT(31)
- #define SPMI_APB_SPMI_CMD_TYPE_OFFSET			24
- #define SPMI_APB_SPMI_CMD_LENGTH_OFFSET			20
--#define SPMI_APB_SPMI_CMD_SLAVEID_OFFSET			16
--#define SPMI_APB_SPMI_CMD_ADDR_OFFSET				0
- 
- #define bswap_32(X)   \
-     ((((u32)(X) & 0xff000000) >> 24) | \
-      (((u32)(X) & 0x00ff0000) >> 8) | \
-      (((u32)(X) & 0x0000ff00) << 8) | \
-      (((u32)(X) & 0x000000ff) << 24))
-+#define SPMI_APB_SPMI_CMD_SLAVEID_OFFSET		16
-+#define SPMI_APB_SPMI_CMD_ADDR_OFFSET			0
- 
- /* Command Opcodes */
- 
-@@ -70,15 +70,15 @@ enum spmi_controller_cmd_op_code {
- /*
-  * SPMI status register
-  */
--#define SPMI_APB_TRANS_DONE						BIT(0)
--#define SPMI_APB_TRANS_FAIL						BIT(2)
-+#define SPMI_APB_TRANS_DONE			BIT(0)
-+#define SPMI_APB_TRANS_FAIL			BIT(2)
- 
- /* Command register fields */
- #define SPMI_CONTROLLER_CMD_MAX_BYTE_COUNT	16
- 
- /* Maximum number of support PMIC peripherals */
- #define SPMI_CONTROLLER_TIMEOUT_US		1000
--#define SPMI_CONTROLLER_MAX_TRANS_BYTES	(16)
-+#define SPMI_CONTROLLER_MAX_TRANS_BYTES		16
- 
- /*
-  * @base base address of the PMIC Arbiter core registers.
-@@ -114,8 +114,10 @@ static int spmi_controller_wait_for_done(struct spmi_controller_dev *ctrl_dev,
- {
- 	u32 status = 0;
- 	u32 timeout = SPMI_CONTROLLER_TIMEOUT_US;
--	u32 offset = SPMI_APB_SPMI_STATUS_BASE_ADDR + SPMI_CHANNEL_OFFSET * ctrl_dev->channel
--		+ SPMI_SLAVE_OFFSET * sid;
-+	u32 offset;
-+
-+	offset  = SPMI_APB_SPMI_STATUS_BASE_ADDR;
-+	offset += SPMI_CHANNEL_OFFSET * ctrl_dev->channel + SPMI_SLAVE_OFFSET * sid;
- 
- 	while (timeout--) {
- 		status = readl(base + offset);
+I received some freedback from Mark and from Jonathan on a first
+attempt I made to upstream this.
+
+I'm opting to submit it via staging, because I had to start from the
+patch that originally added this driver on a 4.9 Kernel tree:
+
+	https://github.com/96boards-hikey/linux/tree/hikey970-v4.9
+
+In order to preserve the original SOB from the driver's author.
+
+The patches following it are on the standard way: one patch per
+logical change.
+
+This is part of a bigger work whose goal is to have upstream support
+for USB and DRM/KMS on such boards. 
+
+I suspect that, maybe except for the DT part, those 3 specific drivers
+are more or less ready to be moved from staging, but the other
+drivers that are also part of this attempt aren't ready. Specially the
+DRM driver has some bugs that came from the OOT version.
+
+So, my current plan is to submit those drivers to staging for 5.9
+and move the ones that are ok out of staging on Kernel 5.10.
+
+Regards,
+Mauro.
+
+Mauro Carvalho Chehab (41):
+  staging: spmi: hisi-spmi-controller: coding style fixup
+  staging: spmi: hisi-spmi-controller: fix it to probe successfully
+  staging: spmi: hisi-spmi-controller: fix a typo
+  staging: spmi: hisi-spmi-controller: adjust whitespaces at defines
+  staging: spmi: hisi-spmi-controller: use le32 macros where needed
+  staging: spmi: hisi-spmi-controller: add debug when values are
+    read/write
+  staging: spmi: hisi-spmi-controller: fix the dev_foo() logic
+  staging: spmi: hisi-spmi-controller: add it to the building system
+  staging: spmi: hisi-spmi-controller: do some code cleanups
+  staging: mfd: hi6421-spmi-pmic: get rid of unused code
+  staging: mfd: hi6421-spmi-pmic: deal with non-static functions
+  staging: mfd: hi6421-spmi-pmic: get rid of the static vars
+  staging: mfd: hi6421-spmi-pmic: cleanup hi6421-spmi-pmic.h header
+  staging: mfd: hi6421-spmi-pmic: change the binding logic
+  staging: mfd: hi6421-spmi-pmic: get rid of unused OF properties
+  staging: mfd: hi6421-spmi-pmic: cleanup OF properties
+  staging: mfd: hi6421-spmi-pmic: change namespace on its functions
+  staging: mfd: hi6421-spmi-pmic: fix some coding style issues
+  staging: mfd: hi6421-spmi-pmic: add it to the building system
+  staging: mfd: hi6421-spmi-pmic: cleanup the code
+  staging: regulator: hi6421v600-regulator: get rid of unused code
+  staging: regulator: hi6421v600-regulator: port it to upstream
+  staging: regulator: hi6421v600-regulator: coding style fixups
+  staging: regulator: hi6421v600-regulator: change the binding logic
+  staging: regulator: hi6421v600-regulator: cleanup struct
+    hisi_regulator
+  staging: regulator: hi6421v600-regulator: cleanup debug messages
+  staging: regulator: hi6421v600-regulator: use shorter names for OF
+    properties
+  staging: regulator: hi6421v600-regulator: better handle modes
+  staging: regulator: hi6421v600-regulator: change namespace
+  staging: regulator: hi6421v600-regulator: convert to use get/set
+    voltage_sel
+  staging: regulator: hi6421v600-regulator: don't use usleep_range for
+    off_on_delay
+  staging: regulator: hi6421v600-regulator: add a driver-specific debug
+    macro
+  staging: regulator: hi6421v600-regulator: initialize ramp_delay
+  staging: regulator: hi6421v600-regulator: cleanup DT settings
+  staging: regulator: hi6421v600-regulator: fix some coding style issues
+  staging: regulator: hi6421v600-regulator: add it to the building
+    system
+  staging: regulator: hi6421v600-regulator: code cleanup
+  staging: hikey9xx: add a TODO list
+  MAINTAINERS: add an entry for HiSilicon 6421v600 drivers
+  dt: document HiSilicon SPMI controller and mfd/regulator properties
+  dt: hisilicon: add support for the PMIC found on Hikey 970
+
+Mayulong (3):
+  staging: spmi: add Hikey 970 SPMI controller driver
+  staging: mfd: add a PMIC driver for HiSilicon 6421 SPMI version
+  staging: regulator: add a regulator driver for HiSilicon 6421v600 SPMI
+    PMIC
+
+ .../mfd/hisilicon,hi6421-spmi-pmic.yaml       | 182 +++++++
+ .../spmi/hisilicon,hisi-spmi-controller.yaml  |  54 ++
+ MAINTAINERS                                   |   6 +
+ .../boot/dts/hisilicon/hi3670-hikey970.dts    |  16 +-
+ .../boot/dts/hisilicon/hikey970-pmic.dtsi     | 200 ++++++++
+ drivers/staging/Kconfig                       |   2 +
+ drivers/staging/Makefile                      |   1 +
+ drivers/staging/hikey9xx/Kconfig              |  35 ++
+ drivers/staging/hikey9xx/Makefile             |   5 +
+ drivers/staging/hikey9xx/TODO                 |   5 +
+ drivers/staging/hikey9xx/hi6421-spmi-pmic.c   | 381 ++++++++++++++
+ .../staging/hikey9xx/hi6421v600-regulator.c   | 479 ++++++++++++++++++
+ .../staging/hikey9xx/hisi-spmi-controller.c   | 351 +++++++++++++
+ include/linux/mfd/hi6421-spmi-pmic.h          |  68 +++
+ 14 files changed, 1773 insertions(+), 12 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.yaml
+ create mode 100644 Documentation/devicetree/bindings/spmi/hisilicon,hisi-spmi-controller.yaml
+ create mode 100644 arch/arm64/boot/dts/hisilicon/hikey970-pmic.dtsi
+ create mode 100644 drivers/staging/hikey9xx/Kconfig
+ create mode 100644 drivers/staging/hikey9xx/Makefile
+ create mode 100644 drivers/staging/hikey9xx/TODO
+ create mode 100644 drivers/staging/hikey9xx/hi6421-spmi-pmic.c
+ create mode 100644 drivers/staging/hikey9xx/hi6421v600-regulator.c
+ create mode 100644 drivers/staging/hikey9xx/hisi-spmi-controller.c
+ create mode 100644 include/linux/mfd/hi6421-spmi-pmic.h
+
 -- 
 2.26.2
+
 
