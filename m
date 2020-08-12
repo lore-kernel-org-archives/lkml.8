@@ -2,120 +2,115 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B308DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 18:18:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE03EC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 18:27:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9767E20781
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 18:18:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597256330;
-	bh=Xob0b9wfX/1/4X19lJ4MoqCGbw4npN7y22G8fVD+GbM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=WyLKegvHKmUfRWhKnU9+G9DU0vsBezbpuVbbGpM+khSK1iH35A3qdww5kdQmywtv/
-	 +xvpqs9l4U+hqW0tWePx+GFo9+eV2vEp1ukkz6/oNWU0GItYPIsolgn03YFo97lkVh
-	 xhjrFCOXi1QDbI5iIZ67AKk/FnqT9smgqTLy7dY8=
+	by mail.kernel.org (Postfix) with ESMTP id B1FC920781
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 18:27:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZQa7Biuq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726578AbgHLSSt (ORCPT
+        id S1726547AbgHLS16 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 14:18:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53566 "EHLO
+        Wed, 12 Aug 2020 14:27:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726554AbgHLSSr (ORCPT
+        with ESMTP id S1726447AbgHLS16 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 14:18:47 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 453ECC061384
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 11:18:46 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id v4so3343698ljd.0
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 11:18:46 -0700 (PDT)
+        Wed, 12 Aug 2020 14:27:58 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4EF3C061383
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 11:27:57 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id d4so1554949pjx.5
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 11:27:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=O5NX6kMDP5qmBpQCPkWzwhmOd6ct20g0CcQwpleYHFc=;
-        b=US2q3MwnTSjWfqpie9O3CRcizx9uSCz4S3vkL7p/ooj414+R066sTYC3Q4A4VD1OD6
-         WbBdeRdiPaC//fSZsRo3WOoZpu8gTtAt7k7tMZ8hwJVqEhGHjLO4oOIslMbvG22T1LrR
-         FvpBZZmDKWHcNGLeiM+6hKFDuuH8IvkNuF9T8=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Z12EV34czuh/q8HI4kW7uvaEJ50bFNuDIiyEV0Yi0MA=;
+        b=ZQa7BiuqEvG9sR814NBToxsuC6xwgsO5zCoPRnOjyDQOcRwn6dwO++9qNVlIe2GgHW
+         vAkVRjnVqajBGDnfo6wXpal0I77AFLqgB8Z11oDNVku7tfduXavYOwDIF2Z/xQtnEHX8
+         4e4fU3fuV+xjRSK6NxEx/7krWi6T33GHlodUA8pW4LrxlJHJXBZNXzRJmBHB/AozD2Z6
+         +3rdEY0whqSlw2AuFd5qz/pUA9m5NW96lZhW8bsneemqakEmLjRJdfrlqT/gXvrBsXMi
+         AOVN2n8Fpmj2LHX+1/HR6XfaC+yVUlCFJxYY/TggwoACz7G8FzowUGAomSPycBwQesnN
+         AjUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=O5NX6kMDP5qmBpQCPkWzwhmOd6ct20g0CcQwpleYHFc=;
-        b=ueFbTcW9omRsKdcd75cmf+KdnwuJDzy17bxma5pbJErB2doVeFs64oci5DNIYTWqAH
-         2Lb1o2vmADf10/W0ujwNdlbKDskgTlF3lOWRGpql29tk/jo9JptLxHsMrhqwOff34+Yl
-         Hyl952ERh78ehdGpT8k05SQpMVa2NzwEPIj5J65BMPFAYh4plnOBa4qjH04FXU5fpZoj
-         xsj4iTT6H5p/xavVYtIunQJQ3odVx9Hhs1iZHhumMjFhDjZBBkrKKHR7jqdCQYNwgYS8
-         jbC6bNsaEEjpWlrujztHACRGSLU/880+aFcbpErQvuwp0nUGVws5w7+6jq5rFT6Cg9TB
-         E24g==
-X-Gm-Message-State: AOAM533TsQ92gy4oxZX0LOpwK7mVasql2cITQvwvxBKYzrdtptypLoi1
-        q0Sn4OdPkFGLnqjhiDVx2xOJhNDLK3M=
-X-Google-Smtp-Source: ABdhPJw0MPz5BwxSvNzM3LItmCT85q3yUW+ehiSWGXaEYfx3tAbjcpvSSAcwhAzsOxFsGTI9kn+6mg==
-X-Received: by 2002:a05:651c:1396:: with SMTP id k22mr241312ljb.62.1597256324147;
-        Wed, 12 Aug 2020 11:18:44 -0700 (PDT)
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
-        by smtp.gmail.com with ESMTPSA id z20sm584964ljk.97.2020.08.12.11.18.40
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Aug 2020 11:18:41 -0700 (PDT)
-Received: by mail-lf1-f50.google.com with SMTP id j22so1678659lfm.2
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 11:18:40 -0700 (PDT)
-X-Received: by 2002:a19:408d:: with SMTP id n135mr315813lfa.192.1597256320205;
- Wed, 12 Aug 2020 11:18:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <1842689.1596468469@warthog.procyon.org.uk> <1845353.1596469795@warthog.procyon.org.uk>
- <CAJfpegunY3fuxh486x9ysKtXbhTE0745ZCVHcaqs9Gww9RV2CQ@mail.gmail.com>
- <ac1f5e3406abc0af4cd08d818fe920a202a67586.camel@themaw.net>
- <CAJfpegu8omNZ613tLgUY7ukLV131tt7owR+JJ346Kombt79N0A@mail.gmail.com>
- <CAJfpegtNP8rQSS4Z14Ja4x-TOnejdhDRTsmmDD-Cccy2pkfVVw@mail.gmail.com>
- <20200811135419.GA1263716@miu.piliscsaba.redhat.com> <CAHk-=wjzLmMRf=QG-n+1HnxWCx4KTQn9+OhVvUSJ=ZCQd6Y1WA@mail.gmail.com>
- <52483.1597190733@warthog.procyon.org.uk>
-In-Reply-To: <52483.1597190733@warthog.procyon.org.uk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 12 Aug 2020 11:18:23 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiPx0UJ6Q1X=azwz32xrSeKnTJcH8enySwuuwnGKkHoPA@mail.gmail.com>
-Message-ID: <CAHk-=wiPx0UJ6Q1X=azwz32xrSeKnTJcH8enySwuuwnGKkHoPA@mail.gmail.com>
-Subject: Re: file metadata via fs API (was: [GIT PULL] Filesystem Information)
-To:     David Howells <dhowells@redhat.com>
-Cc:     Miklos Szeredi <miklos@szeredi.hu>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, Karel Zak <kzak@redhat.com>,
-        Jeff Layton <jlayton@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Christian Brauner <christian@brauner.io>,
-        Lennart Poettering <lennart@poettering.net>,
-        Linux API <linux-api@vger.kernel.org>,
-        Ian Kent <raven@themaw.net>,
-        LSM <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Z12EV34czuh/q8HI4kW7uvaEJ50bFNuDIiyEV0Yi0MA=;
+        b=r0yajtKiaGA4OsbvaFttuysRsZQXh4xJM/Tv8aoH2TQk+kgvkyu/6VtdvrxMLA4j+O
+         59mPnjYZ1gOA7FHTWC+tMkmhlz8BUoU0V+Ekq67cuGcZRBNYzM82wvtF9FUs4bBUDpnr
+         WHzKD6MGnwOijahxHkYw8LF5UiBUVXmb3SHfeFHqY27UGeH7KgjXaAY78Yw0VxPHeqRi
+         m20xai9mdxV2TbNknF8Qx5PuAzATMyzc/Jcq5A1jGaJFCF3JA42vtl6qYR3RUekAJyts
+         WJboF/i7ziQlafWj2+9rf3h2Q6ksTrEis/Ox/mMh/L8ZH/nZcZnzfQhV8OBj3k9cm8RR
+         lvGA==
+X-Gm-Message-State: AOAM533D2zAr2sW6Eq0Iw7pRMjvRkhEqQai5Gy98qpkLVs/A4DnJajOL
+        CjbnAzrn3RaX2XmUWp0WgljVt3GvIaQ=
+X-Google-Smtp-Source: ABdhPJzPlb2wxupcRjoPW1RawrslTau6wu4VgTr4MXByZTXuj1r3POdksPr7H/AU0e+CXJ21iUq/9A==
+X-Received: by 2002:a17:902:8546:: with SMTP id d6mr659792plo.218.1597256877219;
+        Wed, 12 Aug 2020 11:27:57 -0700 (PDT)
+Received: from localhost.localdomain ([106.51.107.61])
+        by smtp.gmail.com with ESMTPSA id 80sm3128627pfy.147.2020.08.12.11.27.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Aug 2020 11:27:56 -0700 (PDT)
+From:   Sumera Priyadarsini <sylphrenadin@gmail.com>
+To:     Julia.Lawall@lip6.fr
+Cc:     Gilles.Muller@lip6.fr, nicolas.palix@imag.fr,
+        michal.lkml@markovi.net, cocci@systeme.lip6.fr,
+        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+        Sumera Priyadarsini <sylphrenadin@gmail.com>
+Subject: [PATCH] scripts: coccicheck: Change default value for parallelism
+Date:   Wed, 12 Aug 2020 23:57:22 +0530
+Message-Id: <20200812182722.4553-1-sylphrenadin@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 5:05 PM David Howells <dhowells@redhat.com> wrote:
->
-> Well, the start of it was my proposal of an fsinfo() system call.
+By default, coccicheck utilizes all available threads to implement
+parallelisation. However, when hyperthreading is enabled, this leads
+to all threads per core being occupied resulting in longer wall-clock
+times and higher power consumption. Hence, to improve performance,
+modify coccicheck to use only one thread per core atmost.
 
-Ugh. Ok, it's that thing.
+In the cases where the total number of threads is more than 8 and
+hyperthreading is enabled, it was observed that optimum performance
+is achieved around one-fourth of the total number of cores.
+Modify the script further to accommodate this use case.
 
-This all seems *WAY* over-designed - both your fsinfo and Miklos' version.
+Signed-off-by: Sumera Priyadarsini <sylphrenadin@gmail.com>
+---
+ scripts/coccicheck | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-What's wrong with fstatfs()? All the extra magic metadata seems to not
-really be anything people really care about.
+diff --git a/scripts/coccicheck b/scripts/coccicheck
+index e04d328210ac..dd228dcc915e 100755
+--- a/scripts/coccicheck
++++ b/scripts/coccicheck
+@@ -75,8 +75,17 @@ else
+         OPTIONS="--dir $KBUILD_EXTMOD $COCCIINCLUDE"
+     fi
+ 
++    # Use only one thread per core by default if hyperthreading is enabled
++    THREADS_PER_CORE=$(lscpu | grep "Thread(s) per core: " | tr -cd [:digit:])
+     if [ -z "$J" ]; then
+         NPROC=$(getconf _NPROCESSORS_ONLN)
++	if [ $THREADS_PER_CORE -gt 1 -a $NPROC -gt 2 ] ; then
++		if [ $NPROC -gt 8 ] ; then
++			NPROC=$((NPROC/4))
++		else
++			NPROC=$((NPROC/2))
++		fi
++	fi
+     else
+         NPROC="$J"
+     fi
+-- 
+2.17.1
 
-What people are actually asking for seems to be some unique mount ID,
-and we have 16 bytes of spare information in 'struct statfs64'.
-
-All the other fancy fsinfo stuff seems to be "just because", and like
-complete overdesign.
-
-Let's not add system calls just because we can.
-
-             Linus
