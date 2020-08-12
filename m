@@ -2,193 +2,184 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0806C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 17:13:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FB13C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 17:14:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABCE52076C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 17:13:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 793722076C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 17:14:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="PrLij+UH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726518AbgHLRN5 (ORCPT
+        id S1726531AbgHLROZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 13:13:57 -0400
-Received: from smtprelay0172.hostedemail.com ([216.40.44.172]:33518 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725872AbgHLRN5 (ORCPT
+        Wed, 12 Aug 2020 13:14:25 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:46926 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725872AbgHLROW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 13:13:57 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 9308C18029144;
-        Wed, 12 Aug 2020 17:13:55 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: place34_20016de26fed
-X-Filterd-Recvd-Size: 6706
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf10.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 12 Aug 2020 17:13:52 +0000 (UTC)
-Message-ID: <305f0df155e89e0c626b8f7366c4ab5f6741aedd.camel@perches.com>
-Subject: Re: [PATCH 00/44] SPMI patches needed by Hikey 970
-From:   Joe Perches <joe@perches.com>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
-        Stephen Boyd <sboyd@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Wei Xu <xuwei5@hisilicon.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        Rob Herring <robh@kernel.org>, devel@driverdev.osuosl.org,
-        linux-arm-msm@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Date:   Wed, 12 Aug 2020 10:13:51 -0700
-In-Reply-To: <cover.1597247164.git.mchehab+huawei@kernel.org>
-References: <cover.1597247164.git.mchehab+huawei@kernel.org>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.4-0ubuntu1 
+        Wed, 12 Aug 2020 13:14:22 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597252461; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=vmit0zvJ/+aQMlekx6GyOUAp2W179eJeRhhRLjR5tzE=;
+ b=PrLij+UHLoor7iV0lDhNQRYKc7TyWozV3zDHlqKfI0pCvWBx/Qq1BHbYVo5dVme9VfCgo/vb
+ BSl263/F1t9Adlqeu2YSJ6pVMH05JKJn+s1lmmYfZKw0IFidoHWfGVTFmTC23gUPmLpt4ojE
+ 9TNZjLr6CpxTdji1W2ZuBko0ZT4=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
+ 5f3420c1f2b697637a23c938 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 12 Aug 2020 17:02:57
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 010A8C433A0; Wed, 12 Aug 2020 17:02:55 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 03288C433C9;
+        Wed, 12 Aug 2020 17:02:54 +0000 (UTC)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Wed, 12 Aug 2020 22:32:54 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Andy Gross <agross@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Doug Anderson <dianders@chromium.org>,
+        linux-kernel-owner@vger.kernel.org,
+        Kevin Hilman <khilman@kernel.org>
+Subject: Re: [PATCH 1/2] PM / Domains: Add GENPD_FLAG_SUSPEND_ON flag
+In-Reply-To: <CAPDyKFqNMEtHwcJFxYQP5H1Yjrsr1T3UUZoXes69EthSjAYs2A@mail.gmail.com>
+References: <20200811190252.10559-1-sibis@codeaurora.org>
+ <CAPDyKFqNMEtHwcJFxYQP5H1Yjrsr1T3UUZoXes69EthSjAYs2A@mail.gmail.com>
+Message-ID: <1ba3e4d703dd0a52547d63fa014451eb@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Perhaps these trivial bits on top:
----
- drivers/staging/hikey9xx/hi6421-spmi-pmic.c     |  5 +++--
- drivers/staging/hikey9xx/hi6421v600-regulator.c |  6 +++---
- drivers/staging/hikey9xx/hisi-spmi-controller.c | 21 +++++++++++++--------
- 3 files changed, 19 insertions(+), 13 deletions(-)
+Uffe,
+Thanks for taking time to review the
+series!
 
-diff --git a/drivers/staging/hikey9xx/hi6421-spmi-pmic.c b/drivers/staging/hikey9xx/hi6421-spmi-pmic.c
-index 76766e7b8bf9..9d73458ca65a 100644
---- a/drivers/staging/hikey9xx/hi6421-spmi-pmic.c
-+++ b/drivers/staging/hikey9xx/hi6421-spmi-pmic.c
-@@ -99,7 +99,7 @@ int hi6421_spmi_pmic_write(struct hi6421_spmi_pmic *pmic, int reg, u32 val)
- EXPORT_SYMBOL(hi6421_spmi_pmic_write);
- 
- int hi6421_spmi_pmic_rmw(struct hi6421_spmi_pmic *pmic, int reg,
--			  u32 mask, u32 bits)
-+			 u32 mask, u32 bits)
- {
- 	unsigned long flags;
- 	u32 data;
-@@ -130,7 +130,8 @@ static irqreturn_t hi6421_spmi_irq_handler(int irq, void *data)
- 		hi6421_spmi_pmic_write(pmic, (i + pmic->irq_addr), pending);
- 
- 		/* solve powerkey order */
--		if ((i == HISI_IRQ_KEY_NUM) && ((pending & HISI_IRQ_KEY_VALUE) == HISI_IRQ_KEY_VALUE)) {
-+		if ((i == HISI_IRQ_KEY_NUM) &&
-+		    ((pending & HISI_IRQ_KEY_VALUE) == HISI_IRQ_KEY_VALUE)) {
- 			generic_handle_irq(pmic->irqs[HISI_IRQ_KEY_DOWN]);
- 			generic_handle_irq(pmic->irqs[HISI_IRQ_KEY_UP]);
- 			pending &= (~HISI_IRQ_KEY_VALUE);
-diff --git a/drivers/staging/hikey9xx/hi6421v600-regulator.c b/drivers/staging/hikey9xx/hi6421v600-regulator.c
-index 29ef6bcadd84..82635ff54a74 100644
---- a/drivers/staging/hikey9xx/hi6421v600-regulator.c
-+++ b/drivers/staging/hikey9xx/hi6421v600-regulator.c
-@@ -227,7 +227,7 @@ static int hi6421_spmi_dt_parse(struct platform_device *pdev,
- 
- 	ret = of_property_read_u32(np, "reg", &rdesc->enable_reg);
- 	if (ret) {
--		dev_err(dev, "missing reg property\nn");
-+		dev_err(dev, "missing reg property\n");
- 		return ret;
- 	}
- 
-@@ -303,13 +303,13 @@ static int hi6421_spmi_dt_parse(struct platform_device *pdev,
- 	 */
- 	rdesc->vsel_mask = (1 << (fls(rdesc->n_voltages) - 1)) - 1;
- 
--	dev_dbg(dev, "voltage selector settings: reg: 0x%x, mask: 0x%x",
-+	dev_dbg(dev, "voltage selector settings: reg: 0x%x, mask: 0x%x\n",
- 		rdesc->vsel_reg, rdesc->vsel_mask);
- 
- 	return 0;
- }
- 
--static struct regulator_ops hi6421_spmi_ldo_rops = {
-+static const struct regulator_ops hi6421_spmi_ldo_rops = {
- 	.is_enabled = hi6421_spmi_regulator_is_enabled,
- 	.enable = hi6421_spmi_regulator_enable,
- 	.disable = hi6421_spmi_regulator_disable,
-diff --git a/drivers/staging/hikey9xx/hisi-spmi-controller.c b/drivers/staging/hikey9xx/hisi-spmi-controller.c
-index 583df10cbf1a..513d962b8bce 100644
---- a/drivers/staging/hikey9xx/hisi-spmi-controller.c
-+++ b/drivers/staging/hikey9xx/hisi-spmi-controller.c
-@@ -102,7 +102,7 @@ static int spmi_controller_wait_for_done(struct device *dev,
- 			return 0;
- 		}
- 		udelay(1);
--	}  while(timeout--);
-+	} while (timeout--);
- 
- 	dev_err(dev, "%s: timeout, status 0x%x\n", __func__, status);
- 	return -ETIMEDOUT;
-@@ -121,7 +121,7 @@ static int spmi_read_cmd(struct spmi_controller *ctrl,
- 
- 	if (bc > SPMI_CONTROLLER_MAX_TRANS_BYTES) {
- 		dev_err(&ctrl->dev,
--			"spmi_controller supports 1..%d bytes per trans, but:%ld requested",
-+			"spmi_controller supports 1..%d bytes per trans, but:%ld requested\n",
- 			SPMI_CONTROLLER_MAX_TRANS_BYTES, bc);
- 		return  -EINVAL;
- 	}
-@@ -137,7 +137,7 @@ static int spmi_read_cmd(struct spmi_controller *ctrl,
- 		op_code = SPMI_CMD_EXT_REG_READ_L;
- 		break;
- 	default:
--		dev_err(&ctrl->dev, "invalid read cmd 0x%x", opc);
-+		dev_err(&ctrl->dev, "invalid read cmd 0x%x\n", opc);
- 		return -EINVAL;
- 	}
- 
-@@ -157,7 +157,10 @@ static int spmi_read_cmd(struct spmi_controller *ctrl,
- 		goto done;
- 
- 	for (i = 0; bc > i * SPMI_PER_DATAREG_BYTE; i++) {
--		data = readl(spmi_controller->base + chnl_ofst + SPMI_SLAVE_OFFSET * slave_id + SPMI_APB_SPMI_RDATA0_BASE_ADDR + i * SPMI_PER_DATAREG_BYTE);
-+		data = readl(spmi_controller->base + chnl_ofst +
-+			     SPMI_SLAVE_OFFSET * slave_id +
-+			     SPMI_APB_SPMI_RDATA0_BASE_ADDR +
-+			     i * SPMI_PER_DATAREG_BYTE);
- 		data = be32_to_cpu((__be32)data);
- 		if ((bc - i * SPMI_PER_DATAREG_BYTE) >> 2) {
- 			memcpy(buf, &data, sizeof(data));
-@@ -194,7 +197,7 @@ static int spmi_write_cmd(struct spmi_controller *ctrl,
- 
- 	if (bc > SPMI_CONTROLLER_MAX_TRANS_BYTES) {
- 		dev_err(&ctrl->dev,
--			"spmi_controller supports 1..%d bytes per trans, but:%ld requested",
-+			"spmi_controller supports 1..%d bytes per trans, but:%ld requested\n",
- 			SPMI_CONTROLLER_MAX_TRANS_BYTES, bc);
- 		return  -EINVAL;
- 	}
-@@ -210,7 +213,7 @@ static int spmi_write_cmd(struct spmi_controller *ctrl,
- 		op_code = SPMI_CMD_EXT_REG_WRITE_L;
- 		break;
- 	default:
--		dev_err(&ctrl->dev, "invalid write cmd 0x%x", opc);
-+		dev_err(&ctrl->dev, "invalid write cmd 0x%x\n", opc);
- 		return -EINVAL;
- 	}
- 
-@@ -234,8 +237,10 @@ static int spmi_write_cmd(struct spmi_controller *ctrl,
- 		}
- 
- 		writel((u32)cpu_to_be32(data),
--		       spmi_controller->base + chnl_ofst + SPMI_APB_SPMI_WDATA0_BASE_ADDR + SPMI_PER_DATAREG_BYTE * i);
--	};
-+		       spmi_controller->base + chnl_ofst +
-+		       SPMI_APB_SPMI_WDATA0_BASE_ADDR +
-+		       SPMI_PER_DATAREG_BYTE * i);
-+	}
- 
- 	/* Start the transaction */
- 	writel(cmd, spmi_controller->base + chnl_ofst + SPMI_APB_SPMI_CMD_BASE_ADDR);
+On 2020-08-12 15:15, Ulf Hansson wrote:
+> On Tue, 11 Aug 2020 at 21:03, Sibi Sankar <sibis@codeaurora.org> wrote:
+>> 
+>> This is for power domains which needs to stay powered on for suspend
+>> but can be powered on/off as part of runtime PM. This flag is aimed at
+>> power domains coupled to remote processors which enter suspend states
+>> independent to that of the application processor. Such power domains
+>> are turned off only on remote processor crash/shutdown.
+> 
+> As Kevin also requested, please elaborate more on the use case.
+> 
+> Why exactly must the PM domain stay powered on during system suspend?
+> Is there a wakeup configured that needs to be managed - or is there a
+> co-processor/FW behaviour that needs to be obeyed to?
 
+Yes this is a co-processor behavior that
+needs to be obeyed. Specifically application
+processor notifies the Always on Subsystem
+(AOSS) that a particular co-processor is up
+using the power domains exposed by AOSS QMP
+driver. AOSS uses this information to wait
+for the co-processors to suspend before
+starting its sleep sequence. The application
+processor powers off these power domains only
+if the co-processor has crashed or powered
+off.
 
+> 
+> Kind regards
+> Uffe
+> 
+>> 
+>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+>> ---
+>>  drivers/base/power/domain.c | 3 ++-
+>>  include/linux/pm_domain.h   | 5 +++++
+>>  2 files changed, 7 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
+>> index 2cb5e04cf86cd..ba78ac4a450d4 100644
+>> --- a/drivers/base/power/domain.c
+>> +++ b/drivers/base/power/domain.c
+>> @@ -129,6 +129,7 @@ static const struct genpd_lock_ops genpd_spin_ops 
+>> = {
+>>  #define genpd_is_active_wakeup(genpd)  (genpd->flags & 
+>> GENPD_FLAG_ACTIVE_WAKEUP)
+>>  #define genpd_is_cpu_domain(genpd)     (genpd->flags & 
+>> GENPD_FLAG_CPU_DOMAIN)
+>>  #define genpd_is_rpm_always_on(genpd)  (genpd->flags & 
+>> GENPD_FLAG_RPM_ALWAYS_ON)
+>> +#define genpd_is_suspend_on(genpd)     (genpd->flags & 
+>> GENPD_FLAG_SUSPEND_ON)
+>> 
+>>  static inline bool irq_safe_dev_in_no_sleep_domain(struct device 
+>> *dev,
+>>                 const struct generic_pm_domain *genpd)
+>> @@ -949,7 +950,7 @@ static void genpd_sync_power_off(struct 
+>> generic_pm_domain *genpd, bool use_lock,
+>>  {
+>>         struct gpd_link *link;
+>> 
+>> -       if (!genpd_status_on(genpd) || genpd_is_always_on(genpd))
+>> +       if (!genpd_status_on(genpd) || genpd_is_always_on(genpd) || 
+>> genpd_is_suspend_on(genpd))
+>>                 return;
+>> 
+>>         if (genpd->suspended_count != genpd->device_count
+>> diff --git a/include/linux/pm_domain.h b/include/linux/pm_domain.h
+>> index ee11502a575b0..3002a2d68936a 100644
+>> --- a/include/linux/pm_domain.h
+>> +++ b/include/linux/pm_domain.h
+>> @@ -55,6 +55,10 @@
+>>   *
+>>   * GENPD_FLAG_RPM_ALWAYS_ON:   Instructs genpd to always keep the PM 
+>> domain
+>>   *                             powered on except for system suspend.
+>> + *
+>> + * GENPD_FLAG_SUSPEND_ON:      Instructs genpd to keep the PM domain 
+>> powered
+>> + *                             on during suspend and runtime PM 
+>> controlled
+>> + *                             otherwise.
+>>   */
+>>  #define GENPD_FLAG_PM_CLK       (1U << 0)
+>>  #define GENPD_FLAG_IRQ_SAFE     (1U << 1)
+>> @@ -62,6 +66,7 @@
+>>  #define GENPD_FLAG_ACTIVE_WAKEUP (1U << 3)
+>>  #define GENPD_FLAG_CPU_DOMAIN   (1U << 4)
+>>  #define GENPD_FLAG_RPM_ALWAYS_ON (1U << 5)
+>> +#define GENPD_FLAG_SUSPEND_ON   (1U << 6)
+>> 
+>>  enum gpd_status {
+>>         GPD_STATE_ACTIVE = 0,   /* PM domain is active */
+>> --
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+>> Forum,
+>> a Linux Foundation Collaborative Project
+>> 
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
