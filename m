@@ -2,91 +2,99 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9327C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:23:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C588C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 980A620838
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:23:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597260238;
-	bh=srW2kulFvhXRcIZk8PnUNz7klBws/aLaxIdD9RzOmIo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GKiVnCprOg4g6GGgYRa1uuGuUdKgfWZ7jqDa/iRf/FArxFRHIfShz9XYYTZLbIx76
-	 cn81w+bj+i6phfZNk9aeoO7FLBjJDCQeBo+8wi4IuagiUn2W0zIbxoJ17s1EOlLiR2
-	 gZbCdgZvhErzhEULFMLKTOM2ZYmL+xzW5MNQLA8s=
+	by mail.kernel.org (Postfix) with ESMTP id 0803A20838
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:25:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726679AbgHLTX4 (ORCPT
+        id S1726631AbgHLTZM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 15:23:56 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:35249 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726512AbgHLTXz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 15:23:55 -0400
-Received: by mail-io1-f65.google.com with SMTP id s189so4296449iod.2;
-        Wed, 12 Aug 2020 12:23:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=CAWF7Jt4a9XH9KYO4dcyBdn0laPconrW8GiC39C5qmk=;
-        b=O59A/9vuIQ8aX09iSw2qD7fUk9fdrCA/papeWBrQg/Ut0WiQaA86nIj+iFNTaelGWs
-         ESHO8lkel2Az1SO5m5qSP4PgeB3GevpPbVXUVv7nSVknW180CuztqWoY1bhq1QWf7Uzy
-         6OsMDhbT3WnCqUr36okUxEpUg7gUNnymFR0iDRqt2TTgmQz1WaApG5hefntKCTMwewyo
-         SzWeKBT7ujPefNDNFKW3qYhJ2eDXV2xJKMFj/tw4WxydvObDc8/zchzcdnFycL+CIhDo
-         7EGqS6ltZ4Dk5fxAzWP32MNB+aZZC5AuVkCQ5hXVmiAi9aZb7oEwSy9cU7eMrwxozNnC
-         ClwQ==
-X-Gm-Message-State: AOAM533+InAr/xaqoTGPfCwkOCCVXwzVfYKSr6QSAozeigGaNlerlpcU
-        qO/S6G9jSAL7Or24nZXeLg==
-X-Google-Smtp-Source: ABdhPJy/vlGNYKad8kn1HY+zNDmhj32gPvXevOi1ZbKRT33+ddL1/5yDNmY9YEuLloWmlp3gX5Vmwg==
-X-Received: by 2002:a6b:e70d:: with SMTP id b13mr1270683ioh.141.1597260234242;
-        Wed, 12 Aug 2020 12:23:54 -0700 (PDT)
-Received: from xps15 ([64.188.179.248])
-        by smtp.gmail.com with ESMTPSA id e1sm1522784ilq.40.2020.08.12.12.23.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Aug 2020 12:23:53 -0700 (PDT)
-Received: (nullmailer pid 2560563 invoked by uid 1000);
-        Wed, 12 Aug 2020 19:23:51 -0000
-Date:   Wed, 12 Aug 2020 13:23:51 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3] dt-bindings: regulator: Convert sy8824x to json-schema
-Message-ID: <20200812192351.GA2560480@bogus>
-References: <20200803144436.5d2b7e54@xhacker.debian>
+        Wed, 12 Aug 2020 15:25:12 -0400
+Received: from sauhun.de ([88.99.104.3]:56170 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726512AbgHLTZM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 15:25:12 -0400
+Received: from localhost (p54b33361.dip0.t-ipconnect.de [84.179.51.97])
+        by pokefinder.org (Postfix) with ESMTPSA id 0CD802C0448;
+        Wed, 12 Aug 2020 21:25:09 +0200 (CEST)
+Date:   Wed, 12 Aug 2020 21:25:00 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Sakari Ailus <sakari.ailus@iki.fi>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        linux-acpi@vger.kernel.org, Bingbu Cao <bingbu.cao@intel.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
+        Hyungwoo Yang <hyungwoo.yang@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rajmohan Mani <rajmohan.mani@intel.com>,
+        Tomasz Figa <tfiga@chromium.org>
+Subject: Re: [PATCH v4 5/6] at24: Support probing while off
+Message-ID: <20200812192500.GA8942@ninjato>
+References: <20200121134157.20396-6-sakari.ailus@linux.intel.com>
+ <CAMpxmJU5dG49N2FA0oSQsOfKrCr3KQ1BisON4c+nUJJmZQG=bQ@mail.gmail.com>
+ <20200311085555.GH5379@paasikivi.fi.intel.com>
+ <CAMpxmJVPTKW+sYSJ3dnfF8nLAOKEa4Ob7bpxG0KD3Tkdm+rtYw@mail.gmail.com>
+ <20200323213101.GB21174@kekkonen.localdomain>
+ <CAMpxmJVdyTkZMVuhSy0Ux8VUYTmQN_YEfH-akQsAL3zrwiz8Dw@mail.gmail.com>
+ <20200810082549.GD840@valkosipuli.retiisi.org.uk>
+ <CAMpxmJUKSR-oCGnV1E5XiAMA2nYBy5f_f8=VSoMn0zf+qF39vg@mail.gmail.com>
+ <20200811080009.GE840@valkosipuli.retiisi.org.uk>
+ <CAMpxmJWziqW-PiJPSm6aH5aXbYktMJfVjJfvfGxv8fdbWKydqg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ReaqsoxgOBHFXBhH"
 Content-Disposition: inline
-In-Reply-To: <20200803144436.5d2b7e54@xhacker.debian>
+In-Reply-To: <CAMpxmJWziqW-PiJPSm6aH5aXbYktMJfVjJfvfGxv8fdbWKydqg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 03 Aug 2020 14:44:36 +0800, Jisheng Zhang wrote:
-> Convert the sy8824x binding to DT schema format using json-schema.
-> 
-> Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-> ---
-> Since v2:
->  - add $ref to regulator.yaml
->  - add unevaluatedProperties
-> 
-> Since v1:
->  - It seems there's something wrong with my last email, so send out a v2 with
->    another email account
-> 
->  .../bindings/regulator/silergy,sy8824x.yaml   | 45 +++++++++++++++++++
->  .../devicetree/bindings/regulator/sy8824x.txt | 24 ----------
->  2 files changed, 45 insertions(+), 24 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/regulator/silergy,sy8824x.yaml
->  delete mode 100644 Documentation/devicetree/bindings/regulator/sy8824x.txt
-> 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+--ReaqsoxgOBHFXBhH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+
+> Wolfram says. From my side: I'd prefer to see the
+> disable_i2c_core_irq_mapping converted to flags first and then the
+> flags extended with whatever you need. disable_i2c_core_irq_mapping
+> could also be removed AFAICT - nobody uses it.
+
+I haven't read the details here, just saying that
+'disable_i2c_core_irq_mapping' is already removed in -next and also
+within the next days in Linus' tree.
+
+
+--ReaqsoxgOBHFXBhH
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl80QggACgkQFA3kzBSg
+KbZAQhAArYLHgzgk1viHELEk2aemBZfyspk3fR/1E5DiRGmmzwTvApTVbCqWAIfK
+RAJ3EooeH+YZ4KDllbTg5WVDyPlObbil7Q08u9DwFbKijGBnJwpscB8xGAcUsRup
+/DJcMl0mwXk12sO3pgEnbbJb/hNnr0yY5Mb8M32aXNNdojNn78XEqVYCMNXZJLXO
+lBNtvNKwRgBnRfxg+R1BMMTQRtmsNtMUFE9xCUUZOIFUvWOTrrbrhtelg1cAxIHZ
+JemOZcIRUikpvc4PKI12c8urwT53GmgrvDBft7mBmCFH5EIRQUjtFHFmC/pzY01W
+97OcOVg9H7sCheilmvxgO8zzjVzaR9Xpw+C5StrmEfdcD7Sl/eEB7UBpcP0I29Vy
+tqwpEdW0nCpKgwexQse02Do/yWmHmlvaXKQsoi0tOOoPdYzAwgUPEktCHeEPh8vE
+tOc2ZIwK9F5c3+dEJDLuYSFWwoxmT+8LFkYr3tjLyU9FndqZA2FxEBuzhgx9TTbq
+Q3IWJoZWOtT3mvNzrq8Y1SCFnHb9VombQob6cFg7H37yZM8WM7mfhB8uz8iHZAm9
+Wj4H1LAxidd55WyvzslOTABupLA91nE2l8Kt17FfJZucV5gyRYiurYBRpj6/2NbF
+JDTi0eo2W/JuMyU17XYBjrZYMa1KfnZO8xUpoY+DTzDjEcO69Bo=
+=x2E6
+-----END PGP SIGNATURE-----
+
+--ReaqsoxgOBHFXBhH--
