@@ -2,106 +2,144 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF6FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 07:18:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA96C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 07:19:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BD5A20768
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 07:18:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBFBC20781
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 07:19:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EJMmkgr/"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="TprjlH/6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726806AbgHLHS2 (ORCPT
+        id S1726891AbgHLHT4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 03:18:28 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:36581 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726182AbgHLHS2 (ORCPT
+        Wed, 12 Aug 2020 03:19:56 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:61335 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726255AbgHLHTz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 03:18:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597216707;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=u5vnrGUSviiSyDo4A1Jti2cqm6vCb7k5wROaco57qD0=;
-        b=EJMmkgr/6Mu0bFQUhDE7Jiur2WgYyZyIPz9YWIZNqAXcyfJDeQzRydvyqrwfNCK71DUr1U
-        Ko/vTtYm/qCLgshpQEQW4xFaeOgI+Kop8TQ3r3H5W4xSNTi9kwpIN+JokeD9W4K6wiTi9l
-        IFqofjHPKYcaGv6FSMQVZX20SWQOdo8=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-279-3iO5BckCPYWyaiYagMySBg-1; Wed, 12 Aug 2020 03:18:25 -0400
-X-MC-Unique: 3iO5BckCPYWyaiYagMySBg-1
-Received: by mail-wm1-f71.google.com with SMTP id z1so541316wmf.9
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 00:18:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=u5vnrGUSviiSyDo4A1Jti2cqm6vCb7k5wROaco57qD0=;
-        b=QECnN/TrGK8laOX/dMYUXgeT13gnvi53X/2abjzeoDn5nyNuM1fW37BWtoibE5F++z
-         2V6LIcZk9WNj7WVRUBcktyuJG/0m/JfJIoVHBDNBMU/I2SX4Cbs/NDSRO/4N24n4Nkse
-         J1qHLH6TyjyRkTscq39K7TZl+9AuSKMeWAOft6UUX1dPewPtgrF03aSYwmnuy9qvadWI
-         yOLLg+4Skbw5SPIMy2iGCqxJBh1rZQmgYP2nB5gNIAFm2p+UfnUQy3ajpONyM71jqngT
-         zSqTiUXQc4LVAI5MBrmBS7MVNLDHqfIWk2OH55XOUqD1mNtL/GVt3pGL6HIiMRwGA14+
-         SYxg==
-X-Gm-Message-State: AOAM5307fO4bv/p6ymseLBvaGSPzNeF8N1ZitHtYpHTSGPKoM/NiNKqw
-        TN0f4xKxsBkJBA61KqDP3zBEShg0oPtyecPaW77I87oXugejVlngAdYqNtpLIIMJdrhHpP0BixL
-        YpnAESlymiEq9uKG+4MyRdmIP
-X-Received: by 2002:a1c:e0d7:: with SMTP id x206mr7833386wmg.91.1597216704439;
-        Wed, 12 Aug 2020 00:18:24 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwdYhlEIglOLVe6YV8jXLsNNRYYEwJBGXoch1voDOXD/WBMnFly08DgF2XM7EKR+k6oZDm1/g==
-X-Received: by 2002:a1c:e0d7:: with SMTP id x206mr7833366wmg.91.1597216704160;
-        Wed, 12 Aug 2020 00:18:24 -0700 (PDT)
-Received: from steredhat ([5.180.207.22])
-        by smtp.gmail.com with ESMTPSA id w1sm2236205wmc.18.2020.08.12.00.18.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Aug 2020 00:18:23 -0700 (PDT)
-Date:   Wed, 12 Aug 2020 09:17:42 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     David Miller <davem@davemloft.net>
-Cc:     jhansen@vmware.com, netdev@vger.kernel.org, kuba@kernel.org,
-        decui@microsoft.com, linux-kernel@vger.kernel.org,
-        stefanha@redhat.com
-Subject: Re: [PATCH net 0/2] vsock: fix null pointer dereference and cleanup
- in vsock_poll()
-Message-ID: <20200812071742.4zoxlvu44ivunsjd@steredhat>
-References: <20200811095504.25051-1-sgarzare@redhat.com>
- <20200811.102418.1200203139092745562.davem@davemloft.net>
+        Wed, 12 Aug 2020 03:19:55 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597216794; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=cZGt5u6crdZQn6DePSSB5wtmZuidIb+3i3BdUURPSf0=; b=TprjlH/6VxaNvQheEFlm6qsr9XOfMuSFLjDn/5TNs7GSMkmYBki5Z4OVI5POiq8xKau8EgCW
+ lpOX5kM9ez25CyXcUdgI+jL6KZ7MkW4quRGBFb0uvKQeEKBnSAKvQyWzgeszbM0KgmHtTARG
+ HYWocaDhek1JVCprDdXCiv4FQUk=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n09.prod.us-west-2.postgun.com with SMTP id
+ 5f33981ac85a1092b07c16e8 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 12 Aug 2020 07:19:54
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id DF087C433C9; Wed, 12 Aug 2020 07:19:53 +0000 (UTC)
+Received: from wcheng-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: wcheng)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BD29AC433C6;
+        Wed, 12 Aug 2020 07:19:52 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BD29AC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
+From:   Wesley Cheng <wcheng@codeaurora.org>
+To:     sboyd@kernel.org, heikki.krogerus@linux.intel.com,
+        agross@kernel.org, robh+dt@kernel.org, gregkh@linuxfoundation.org,
+        bjorn.andersson@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        Wesley Cheng <wcheng@codeaurora.org>
+Subject: [PATCH v8 0/4] Introduce PMIC based USB type C detection
+Date:   Wed, 12 Aug 2020 00:19:21 -0700
+Message-Id: <20200812071925.315-1-wcheng@codeaurora.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200811.102418.1200203139092745562.davem@davemloft.net>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 10:24:18AM -0700, David Miller wrote:
-> From: Stefano Garzarella <sgarzare@redhat.com>
-> Date: Tue, 11 Aug 2020 11:55:02 +0200
-> 
-> > The first patch fixes a potential null pointer dereference in vsock_poll()
-> > reported by syzbot.
-> > The second patch is a simple cleanup in the same block code. I put this later,
-> > to make it easier to backport the first patch in the stable branches.
-> 
-> Please do not mix cleanups and bug fixes into the same patch series.
+Changes in v8:
+ - Simplified some property definitions, and corrected the
+   connector reference in the dt binding.
 
-I did it because I was going through the same part of the code,
-but I won't do it again!
+Changes in v7:
+ - Fixups in qcom-pmic-typec.c to remove uncesscary includes, printk formatting,
+   and revising some logic operations. 
 
-> 
-> net-next is closed, so you should not be submitting non-bugfixes at
-> this time.
-> 
+Changes in v6:
+ - Removed qcom_usb_vbus-regulator.c and qcom,usb-vbus-regulator.yaml from the
+   series as they have been merged on regulator.git
+ - Added separate references to the usb-connector.yaml in qcom,pmic-typec.yaml
+   instead of referencing the entire schema.
 
-I'll resend only the first patch, sorry for the noise.
+Changes in v5:
+ - Fix dt_binding_check warning/error in qcom,pmic-typec.yaml
 
-Thanks,
-Stefano
+Changes in v4:
+ - Modified qcom,pmic-typec binding to include the SS mux and the DRD remote
+   endpoint nodes underneath port@1, which is assigned to the SSUSB path
+   according to usb-connector
+ - Added usb-connector reference to the typec dt-binding
+ - Added tags to the usb type c and vbus nodes
+ - Removed "qcom" tags from type c and vbus nodes
+ - Modified Kconfig module name, and removed module alias from the typec driver
+ 
+Changes in v3:
+ - Fix driver reference to match driver name in Kconfig for
+   qcom_usb_vbus-regulator.c
+ - Utilize regulator bitmap helpers for enable, disable and is enabled calls in
+   qcom_usb_vbus-regulator.c
+ - Use of_get_regulator_init_data() to initialize regulator init data, and to
+   set constraints in qcom_usb_vbus-regulator.c
+ - Remove the need for a local device structure in the vbus regulator driver
+ 
+Changes in v2:
+ - Use devm_kzalloc() in qcom_pmic_typec_probe()
+ - Add checks to make sure return value of typec_find_port_power_role() is
+   valid
+ - Added a VBUS output regulator driver, which will be used by the PMIC USB
+   type c driver to enable/disable the source
+ - Added logic to control vbus source from the PMIC type c driver when
+   UFP/DFP is detected
+ - Added dt-binding for this new regulator driver
+ - Fixed Kconfig typec notation to match others
+ - Leave type C block disabled until enabled by a platform DTS
+
+Add the required drivers for implementing type C orientation and role
+detection using the Qualcomm PMIC.  Currently, PMICs such as the PM8150B
+have an integrated type C block, which can be utilized for this.  This
+series adds the dt-binding, PMIC type C driver, and DTS nodes.
+
+The PMIC type C driver will register itself as a type C port w/ a
+registered type C switch for orientation, and will fetch a USB role switch
+handle for the role notifications.  It will also have the ability to enable
+the VBUS output to any connected devices based on if the device is behaving
+as a UFP or DFP.
+
+Wesley Cheng (4):
+  usb: typec: Add QCOM PMIC typec detection driver
+  dt-bindings: usb: Add Qualcomm PMIC type C controller dt-binding
+  arm64: boot: dts: qcom: pm8150b: Add node for USB type C block
+  arm64: boot: dts: qcom: pm8150b: Add DTS node for PMIC VBUS booster
+
+ .../bindings/usb/qcom,pmic-typec.yaml         | 112 ++++++++
+ arch/arm64/boot/dts/qcom/pm8150b.dtsi         |  13 +
+ arch/arm64/boot/dts/qcom/sm8150-mtp.dts       |   4 +
+ drivers/usb/typec/Kconfig                     |  12 +
+ drivers/usb/typec/Makefile                    |   1 +
+ drivers/usb/typec/qcom-pmic-typec.c           | 271 ++++++++++++++++++
+ 6 files changed, 413 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/qcom,pmic-typec.yaml
+ create mode 100644 drivers/usb/typec/qcom-pmic-typec.c
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
