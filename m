@@ -2,95 +2,104 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17685C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 20:34:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5637C433EB
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 20:36:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1AA62078B
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 20:34:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7AA020774
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 20:36:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JJYKq7rh"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="tLmaTwNs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbgHLUeS (ORCPT
+        id S1726684AbgHLUgs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 16:34:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46176 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726528AbgHLUeR (ORCPT
+        Wed, 12 Aug 2020 16:36:48 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:41003 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726030AbgHLUgm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 16:34:17 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CCD8C061383;
-        Wed, 12 Aug 2020 13:34:17 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id k18so2583390qtm.10;
-        Wed, 12 Aug 2020 13:34:17 -0700 (PDT)
+        Wed, 12 Aug 2020 16:36:42 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=8AbcIfen2Mh3O6xshAeb42qMiceFCwU8VY+DtJghWKc=;
-        b=JJYKq7rhGfoskc0IOYL0mQ2UgiV0NUPZnUMJqm0x4+mN+Jnr5eSGxbVsmV3va+QmiF
-         wjNsakLNmG8Snq4Ka54NHi+FMZOfkPc/P2UAnRuTKgJxYoDYNvYxnt9ubGhb/1D4XEbF
-         R5s86RQJgzcMqdEQLZP6mi/nb4RuLVBQmVI4891ly/7eIdpFM1zpDZkPWag8mXnTxtoy
-         vTo5GBX5MwVspiDm8HromEAg+ZMCdOxBmSjbfjM12ucPoyMLi6Jr1WBIZ8qAoOffTuuf
-         J8cG90cIOw+EUXScq3d98Z/wlHZasQ2HIKPuWFa0h1c1TvCj5gslLqFBv4AiKd9iNLAP
-         uURg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=8AbcIfen2Mh3O6xshAeb42qMiceFCwU8VY+DtJghWKc=;
-        b=tycdZcmC5Nl1nHB6OyuEARPt2aPmVtV8syu96FXmvgNm8dDnxqPJY/gP2HaCtbJpdj
-         FwztCMlmPikaHAkgOJahfsHWdsq+g0K0irxJUzyShoQqps0xaIKHAT+9AJIOwSGimPZb
-         fhPv6Opa6Ei7Xq0nSywy1SQVPwBia/see4R/WP6F8coMm/LqjTtQSmyIFeoGv1Poqmrp
-         JKptOLaJqMyzI3asCsPe5VV1/UYcnQWX7P9/Yx8u4zhjE4GLx3PBMT+4CAuSSGQBaI36
-         k6UcC71VXnJsgwqP40S0BXwFNwrpG51zD0fhY9HvsqeINbMgwBV6AtH6x7W8hjEGx4h0
-         1RKw==
-X-Gm-Message-State: AOAM532URhEC934L5k9ZH+nJXp09bWrVht5gPoC3UCrLMFJmsVbZ5U4D
-        4IiSJs0xkUHgkTAczjm8L+nevLHU
-X-Google-Smtp-Source: ABdhPJx64TW/NqTIbSDn9AtxCM0KEpE57asspn5bN7J15aOPfo8WvWruSQ6i+zwyQrbngY2hClZEPw==
-X-Received: by 2002:ac8:130a:: with SMTP id e10mr1710881qtj.38.1597264456887;
-        Wed, 12 Aug 2020 13:34:16 -0700 (PDT)
-Received: from eaf ([190.19.79.86])
-        by smtp.gmail.com with ESMTPSA id o13sm3651241qko.48.2020.08.12.13.34.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Aug 2020 13:34:16 -0700 (PDT)
-Date:   Wed, 12 Aug 2020 17:34:10 -0300
-From:   Ernesto =?utf-8?Q?A=2E_Fern=C3=A1ndez?= 
-        <ernesto.mnd.fernandez@gmail.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-fsdevel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        syzkaller-bugs@googlegroups.com, linux-kernel@vger.kernel.org
-Subject: Re: [Linux-kernel-mentees] [PATCH] hfs, hfsplus: Fix NULL pointer
- dereference in hfs_find_init()
-Message-ID: <20200812203410.GA6168@eaf>
-References: <20200812065556.869508-1-yepeilin.cs@gmail.com>
- <20200812070827.GA1304640@kroah.com>
- <20200812071306.GA869606@PWN>
- <20200812085904.GA16441@kadam>
- <20200812202420.GA5873@eaf>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1597264602; x=1628800602;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=NM3dgEvzc8AqCgv9SF3jY+ZEoUdRg81UVR//pTF6ST0=;
+  b=tLmaTwNs3fixjFqpg4HaTUxeVTBWYiFqn1i93LRwPkeQsktpAqfNPz4Z
+   0Or/BnicdAQHdwg+nqlc2Ll+VA34sFKQXtPQKXeaQJthbceAM9cHfc3XQ
+   Ojh5SpWsDHK3qeix+ijOzv5G3X+XSuEmI6v3WTNL8rRC8jLwxUXVyGsDK
+   w=;
+IronPort-SDR: 5YWVmavH7vj56eFNMR58KSQrhehIo3al0on02mUf/8xhPhAIa0uPs5GRg0fOjKNqnxFHtWJbkA
+ rnxY9drNeBJg==
+X-IronPort-AV: E=Sophos;i="5.76,305,1592870400"; 
+   d="scan'208";a="67567773"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-60ce1996.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 12 Aug 2020 20:36:33 +0000
+Received: from EX13MTAUEE001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2a-60ce1996.us-west-2.amazon.com (Postfix) with ESMTPS id 5B458A3250;
+        Wed, 12 Aug 2020 20:36:32 +0000 (UTC)
+Received: from EX13D08UEE004.ant.amazon.com (10.43.62.182) by
+ EX13MTAUEE001.ant.amazon.com (10.43.62.200) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 12 Aug 2020 20:36:31 +0000
+Received: from EX13MTAUEE002.ant.amazon.com (10.43.62.24) by
+ EX13D08UEE004.ant.amazon.com (10.43.62.182) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 12 Aug 2020 20:36:31 +0000
+Received: from dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com
+ (172.23.141.97) by mail-relay.amazon.com (10.43.62.224) with Microsoft SMTP
+ Server id 15.0.1497.2 via Frontend Transport; Wed, 12 Aug 2020 20:36:31 +0000
+Received: by dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com (Postfix, from userid 6262777)
+        id 5E986C352B; Wed, 12 Aug 2020 20:36:31 +0000 (UTC)
+Date:   Wed, 12 Aug 2020 20:36:31 +0000
+From:   Frank van der Linden <fllinden@amazon.com>
+To:     Alex Dewar <alex.dewar90@gmail.com>
+CC:     "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] nfsd: Remove unnecessary assignment in nfs4xdr.c
+Message-ID: <20200812203631.GA13358@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
+References: <20200812141252.21059-1-alex.dewar90@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200812202420.GA5873@eaf>
+In-Reply-To: <20200812141252.21059-1-alex.dewar90@gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 05:24:20PM -0300, Ernesto A. Fernández wrote:
-> If that's what the reproducer is about, I think just returning an error is
-> reasonable.
+On Wed, Aug 12, 2020 at 03:12:51PM +0100, Alex Dewar wrote:
+> 
+> In nfsd4_encode_listxattrs(), the variable p is assigned to at one point
+> but this value is never used before p is reassigned. Fix this.
+> 
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
+> ---
+>  fs/nfsd/nfs4xdr.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+> index 259d5ad0e3f47..1a0341fd80f9a 100644
+> --- a/fs/nfsd/nfs4xdr.c
+> +++ b/fs/nfsd/nfs4xdr.c
+> @@ -4859,7 +4859,7 @@ nfsd4_encode_listxattrs(struct nfsd4_compoundres *resp, __be32 nfserr,
+>                         goto out;
+>                 }
+> 
+> -               p = xdr_encode_opaque(p, sp, slen);
+> +               xdr_encode_opaque(p, sp, slen);
+> 
+>                 xdrleft -= xdrlen;
+>                 count++;
+> --
+> 2.28.0
+> 
 
-I guess it would be better to put a check inside hfsplus_inode_read_fork(),
-to verify that the first extent is always in the right place and wide
-enough.
+Yep, I guess my linting missed that, thanks for the fix.
+
+- Frank
