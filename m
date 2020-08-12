@@ -2,142 +2,158 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A79D4C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 02:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A60AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 03:10:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F7A62076C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 02:54:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D4A1206F2
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 03:10:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Lgtvz6oM"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ngSRzlum"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbgHLCyi (ORCPT
+        id S1726473AbgHLDKM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 22:54:38 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:18221 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726355AbgHLCyh (ORCPT
+        Tue, 11 Aug 2020 23:10:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55140 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726255AbgHLDKL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 22:54:37 -0400
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200812025435epoutp018c02b82807b3e36c476575eb85a15228~qZbvRH63a2024520245epoutp01k
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 02:54:35 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200812025435epoutp018c02b82807b3e36c476575eb85a15228~qZbvRH63a2024520245epoutp01k
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1597200875;
-        bh=SlJAjpqFM1tfamie3h/SxDvXSjGu2uPDYkxiOzNSqs0=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=Lgtvz6oMa2+4XGtQLEhngTNn113TGyGNj0PwsMoeqyIieoiSde042d7guDqn3Tk6F
-         spzpYh0IwbaynMutjBssqtInrf0S7vyuE/k2Fa9wAYca8XPt0Enl5fXgU30wUIEKAj
-         g+LhfU7VLCu4r5aMJMFTch2vDjnVazbWub4TEAo0=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200812025434epcas1p258c81b03f09994aa15ab8a2f37aca57d~qZbuvqMp32881628816epcas1p2D;
-        Wed, 12 Aug 2020 02:54:34 +0000 (GMT)
-Received: from epsmges1p1.samsung.com (unknown [182.195.40.159]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 4BRDnP16d9zMqYkX; Wed, 12 Aug
-        2020 02:54:33 +0000 (GMT)
-Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        AD.11.18978.8E9533F5; Wed, 12 Aug 2020 11:54:33 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200812025432epcas1p1b810c6b94adf533d5cae3ef6a24ca9a2~qZbtA0_1c3128531285epcas1p1z;
-        Wed, 12 Aug 2020 02:54:32 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200812025432epsmtrp1e3a8a18ae9206dbed1911565a638a19f~qZbtAKEDA0651206512epsmtrp1v;
-        Wed, 12 Aug 2020 02:54:32 +0000 (GMT)
-X-AuditID: b6c32a35-5edff70000004a22-90-5f3359e8ce6f
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        B7.38.08303.8E9533F5; Wed, 12 Aug 2020 11:54:32 +0900 (KST)
-Received: from localhost.localdomain (unknown [10.253.104.227]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200812025432epsmtip2bfa2b92c1c7b7927ee36aab22cf121ec~qZbszv2zm0979609796epsmtip2z;
-        Wed, 12 Aug 2020 02:54:32 +0000 (GMT)
-From:   Seungil Kang <sil.kang@samsung.com>
-To:     bhe@redhat.com, mingo@kernel.org
-Cc:     akpm@linux-foundation.org, gregkh@linuxfoundation.org,
-        herbert@gondor.apana.org.au, andriy.shevchenko@linux.intel.com,
-        tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        Seungil Kang <sil.kang@samsung.com>
-Subject: [PATCH] lib/cmdline: prevent unintented access to address
-Date:   Wed, 12 Aug 2020 11:54:02 +0900
-Message-Id: <20200812025402.15695-1-sil.kang@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrLKsWRmVeSWpSXmKPExsWy7bCmvu7LSON4g4UdzBZz1q9hs+htms5k
-        cf7BLzaL5sXr2Sy6X8lYXN41h81i9b9TjBYX9r9jsdi8aSqzA6fHtgOqHptWdbJ5vDt3jt3j
-        xIzfLB7zTgZ67J+7ht3j/b6rbB59W1YxenzeJBfAGZVjk5GamJJapJCal5yfkpmXbqvkHRzv
-        HG9qZmCoa2hpYa6kkJeYm2qr5OIToOuWmQN0oZJCWWJOKVAoILG4WEnfzqYov7QkVSEjv7jE
-        Vim1ICWnwNCgQK84Mbe4NC9dLzk/18rQwMDIFKgyISej8exF1oLdrBX9rQeZGhhXsXQxcnJI
-        CJhIXLl5mRnEFhLYwSix6JlgFyMXkP2JUeLk3ZVMEM5nRolHZ96ywXTse7eFDSKxi1Hi2orn
-        LBDOF0aJffd7weayCWhKLJ32lBXEFhFQkfh/fTsrSBGzwDVGiT1busEWCgs4Say8/BBsLIuA
-        qsSeZTvB4rwClhJ9d2axQqyTl1i94QAzSLOEwDV2ibd7dzFDJFwk9jV0QhUJS7w6voUdwpaS
-        eNnfxg7R0A70xfdDjBBOB6PE37O/oLqNJXp7LgDZHEA3aUqs36UPEVaU2Pl7LiOIzSzAJ/Hu
-        aw8rSImEAK9ER5sQRImSxMvjk6CmSEgsXHiDHaLEQ2L2gRxIQMZKPLjZwDSBUXYWwvwFjIyr
-        GMVSC4pz01OLDQsMkaNpEyM43WmZ7mCc+PaD3iFGJg7GQ4wSHMxKIrx2d/XjhXhTEiurUovy
-        44tKc1KLDzGaAgNsIrOUaHI+MOHmlcQbmhoZGxtbmJiZm5kaK4nzPrylEC8kkJ5YkpqdmlqQ
-        WgTTx8TBKdXAFLbJl9fo35uCj1sfP7S4Z/Vca/GBv99/HPSzdGrMzpg168zeSrv8WwmHyk7p
-        7ONjuX6X0zlJa53Jv+tPXnNZlx9tSi+88sajWldjtsG8RxpXnX9OPfuW4659ZpQH57+XKzYu
-        qdzb+XJ/SYJ8zYT4+TJlS++6G9Xd/OOaHnevf8+KuDu8T/om1G1ptrO7+36hhaYFe0jbrNii
-        kyE6y6QmllspH1zj+qTq4K7ZC+zPqG7dYc6pUXw/9x3b3pqFp1gbbk6T4ejSq1AT9SzYsXLr
-        feaDH+2mChVoVud67LD2LJDvDbygN9+COb6z9vTj7IkCnP5KKt8XMCXei/TYqJ5+8uwE+Un2
-        gemP+kMM+e72KbEUZyQaajEXFScCAIaHQv8ABAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFLMWRmVeSWpSXmKPExsWy7bCSvO6LSON4g4nPtSzmrF/DZtHbNJ3J
-        4vyDX2wWzYvXs1l0v5KxuLxrDpvF6n+nGC0u7H/HYrF501RmB06PbQdUPTat6mTzeHfuHLvH
-        iRm/WTzmnQz02D93DbvH+31X2Tz6tqxi9Pi8SS6AM4rLJiU1J7MstUjfLoEro/HsRdaC3awV
-        /a0HmRoYV7F0MXJySAiYSOx7t4Wti5GLQ0hgB6NE05WjrBAJCYkDrw8CFXEA2cIShw8XQ9R8
-        YpT4e383O0gNm4CmxNJpT8HqRQTUJPY9e8QMUsQscIdR4nXLA7ANwgJOEisvP2QDsVkEVCX2
-        LNvJDGLzClhK9N2ZBbVMXmL1hgPMExh5FjAyrGKUTC0ozk3PLTYsMMpLLdcrTswtLs1L10vO
-        z93ECA4+La0djHtWfdA7xMjEwXiIUYKDWUmE1+6ufrwQb0piZVVqUX58UWlOavEhRmkOFiVx
-        3q+zFsYJCaQnlqRmp6YWpBbBZJk4OKUamA6ZVcSaBi/+d2Z3gdT2R5UVPmX1V9UiJOofJ8u8
-        fttQevHRT40Njzfky5/bPe9n/pHTm94szHWM+FSUe6ohyCuhy9yX96bcjb+zLU2ZLA1/Wtln
-        N698efe4wNVfhxx/WsqVl3J1y7Zeu7n6PP+CBM06Ae6ZGqpnrrqW+yWnRd/W2bRzYVZg2rln
-        AnMc1kZO2Z5Q4epYONVj7jfTmzHtD1dMuJfS5Dn5wFlhy3+XJIuZ4qL8ls871NTIwKTSrWvd
-        77rWb/6FmdkOxzQ+Kmf9VbVv2hiym6f4W/u81WUi93zU2EsfheosUVSR2dcdsma5UZJaRlzr
-        jqA1TwLuHA5577TzYXypy1u2pQKrTnQ9V2Ipzkg01GIuKk4EAIqqSYitAgAA
-X-CMS-MailID: 20200812025432epcas1p1b810c6b94adf533d5cae3ef6a24ca9a2
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200812025432epcas1p1b810c6b94adf533d5cae3ef6a24ca9a2
-References: <CGME20200812025432epcas1p1b810c6b94adf533d5cae3ef6a24ca9a2@epcas1p1.samsung.com>
+        Tue, 11 Aug 2020 23:10:11 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 243DFC06174A
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 20:10:11 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id c19so3300271wmd.1
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 20:10:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=3hkg0qu6P9KQ5oYfn7DTQjSamGImaGuetOUyRL9DWkY=;
+        b=ngSRzlumHkb0IDY4Pr87hg0ZwDwyroTE0Ld40lvNSNKIijgNhqQpnM6zRj84dIcXj4
+         qQ0YIrqSSAk94RpkV98/z5snP7OuL/YSL97sskrxvMAJUeecU/LwDCYHJLTkNbYY6y4S
+         ag4+ErdhG3PO6Aaz/J7vZZktVSkGJgZVvQCYE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=3hkg0qu6P9KQ5oYfn7DTQjSamGImaGuetOUyRL9DWkY=;
+        b=WheSNRy1JvbXqd5voy3/q++qkeKWR2ATAdXfr6bCa47KEx9aGAOzw/pW28wiOfLU7v
+         MlOG+tzCpSHouzbd6niYtWiGH+MTVUO0GPPwWQYttwYrhuBSgk1vS6bMQrwDQXzaClsd
+         2di6dv5RhxMm3YVarBSngDe219sGuzLa/38ejEGjkCX/vb5vev02CKMgrDYGGmePO5m/
+         dng3cnyokxU5e3kyqv4qJbj9jQvy7u9l6LUMfPQ9gcGsniKn7aN8idipFizPRephFMMM
+         iUUH1re/fC1UhYJcCE/wFc8z71/IVx/SCRojHRo3BB+wpylC25hEskQhfkjBa0TPtY62
+         WVog==
+X-Gm-Message-State: AOAM53065SMXbA+ocuZq/QZjMGWGTSQUmXmzglbwlOUmsca6W6+sZApG
+        GtWYgSG5IJqFvwdePaaqynvB29MRUELo179JJ5wqfg==
+X-Google-Smtp-Source: ABdhPJxDOFrYjfmnL/EFseUjo4ptWPav8xuJ2FzYhPDiA/AQYuCzo4N45IBYUvbTgXJuvFyhWdUUCw3z9AyGGUry5Yc=
+X-Received: by 2002:a7b:c7c6:: with SMTP id z6mr6825647wmk.17.1597201809730;
+ Tue, 11 Aug 2020 20:10:09 -0700 (PDT)
+MIME-Version: 1.0
+References: <3f3baf5e-f73d-9cd6-cbfb-36746071e126@linux.intel.com>
+ <CAGvk5PohOP0Yv22tb53EX=ZLB9_vOMb=iujTh64OvHmjC1d4mg@mail.gmail.com>
+ <DM6PR11MB3642AC7F8EC47EB48B384D4797450@DM6PR11MB3642.namprd11.prod.outlook.com>
+ <CAGvk5PogmqfEnFRA8hzby+AGgbOSvbELamh_1=eA9KTpyBMPYQ@mail.gmail.com>
+ <s5htux939x1.wl-tiwai@suse.de> <CAGvk5PpcmkZ2HarqeCDaXm4id=84wYs-u4vWxJunHaf09gj66g@mail.gmail.com>
+ <s5ho8nh37br.wl-tiwai@suse.de> <CAGvk5PphzkdiNfW8hiDuqX+2eQO2FvrpzA0qR3=3VvqM3GBhAA@mail.gmail.com>
+ <20200811145353.GG6967@sirena.org.uk> <d78f9adc-d583-f0f2-ce38-3c9175c939b8@linux.intel.com>
+ <20200811172209.GM6967@sirena.org.uk>
+In-Reply-To: <20200811172209.GM6967@sirena.org.uk>
+From:   Yu-Hsuan Hsu <yuhsuan@chromium.org>
+Date:   Wed, 12 Aug 2020 11:09:58 +0800
+Message-ID: <CAGvk5PqGi7cXthLHFi4NyypxFiGnoHvD9vp+5nJdH-_VkVvcKw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] ASoC: Intel: Add period size constraint on strago board
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Takashi Iwai <tiwai@suse.de>,
+        "Rojewski, Cezary" <cezary.rojewski@intel.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Sam McNally <sammc@chromium.org>,
+        "yuhsuan@google.com" <yuhsuan@google.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Daniel Stuart <daniel.stuart14@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Lu, Brent" <brent.lu@intel.com>,
+        Damian van Soelen <dj.vsoelen@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When args = "\"\0", "i" will be 0 and args[i-1] is used (line:238)
-Because of "i" is an unsigned int type,
-the function will access at args[0xFFFFFFFF]
-It can make a crash
+Mark Brown <broonie@kernel.org> =E6=96=BC 2020=E5=B9=B48=E6=9C=8812=E6=97=
+=A5 =E9=80=B1=E4=B8=89 =E4=B8=8A=E5=8D=881:22=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> On Tue, Aug 11, 2020 at 11:54:38AM -0500, Pierre-Louis Bossart wrote:
+>
+> > > constraint logic needs to know about this DSP limitation - it seems l=
+ike
+> > > none of this is going to change without something new going into the
+> > > mix?  We at least need a new question to ask about the DSP firmware I
+> > > think.
+>
+> > I just tested aplay -Dhw: on a Cyan Chromebook with the Ubuntu kernel 5=
+.4,
+> > and I see no issues with the 240 sample period. Same with 432, 960, 960=
+0,
+> > etc.
+>
+> > I also tried just for fun what happens with 256 samples, and I don't se=
+e any
+> > underflows thrown either, so I am wondering what exactly the problem is=
+?
+> > Something's not adding up. I would definitively favor multiple of 1ms
+> > periods, since it's the only case that was productized, but there's got=
+ to
+> > me something a side effect of how CRAS programs the hw_params.
+>
+> Is it something that goes wrong with longer playbacks possibly (eg,
+> someone watching a feature film or something)?
 
-Signed-off-by: Seungil Kang <sil.kang@samsung.com>
----
- lib/cmdline.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks for testing!
 
-diff --git a/lib/cmdline.c b/lib/cmdline.c
-index fbb9981a04a4..2fd29d7723b2 100644
---- a/lib/cmdline.c
-+++ b/lib/cmdline.c
-@@ -200,7 +200,7 @@ bool parse_option_str(const char *str, const char *option)
-  */
- char *next_arg(char *args, char **param, char **val)
- {
--	unsigned int i, equals = 0;
-+	int i, equals = 0;
- 	int in_quote = 0, quoted = 0;
- 	char *next;
- 
--- 
-2.17.1
+After doing some experiments, I think I can identify the problem more preci=
+sely.
+1. aplay can not reproduce this issue because it writes samples
+immediately when there are some space in the buffer. However, you can
+add --test-position to see how the delay grows with period size 256.
+> aplay -Dhw:1,0 --period-size=3D256 --buffer-size=3D480 /dev/zero -d 1 -f =
+dat --test-position
+Playing raw data '/dev/zero' : Signed 16 bit Little Endian, Rate 48000
+Hz, Stereo
+Suspicious buffer position (1 total): avail =3D 0, delay =3D 2064, buffer =
+=3D 512
+Suspicious buffer position (2 total): avail =3D 0, delay =3D 2064, buffer =
+=3D 512
+Suspicious buffer position (3 total): avail =3D 0, delay =3D 2096, buffer =
+=3D 512
+...
 
+2. Since many samples are moved to DSP(delay), the measured rate of
+the ring-buffer is high. (I measured it by alsa_conformance_test,
+which only test the sampling rate in the ring buffer of kernel not
+DSP)
+
+3. Since CRAS writes samples with a fixed frequency, this behavior
+will take all samples from the ring buffer, which is seen as underrun
+by CRAS. (It seems that it is not a real underrun because that avail
+does not larger than buffer size. Maybe CRAS should also take dalay
+into account.)
+
+4. In spite of it is not a real underrun, the large delay is still a
+big problem. Can we apply the constraint to fix it? Or any better
+idea?
+
+Thanks,
+Yu-Hsuan
