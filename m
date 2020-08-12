@@ -2,123 +2,122 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0193C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 00:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A08FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 00:14:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93FA3207DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 00:14:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18EAA2078B
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 00:14:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q7mm1ell"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UJnDj1cP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726529AbgHLAOV (ORCPT
+        id S1726554AbgHLAOo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 20:14:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56402 "EHLO
+        Tue, 11 Aug 2020 20:14:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbgHLAOU (ORCPT
+        with ESMTP id S1726468AbgHLAOn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 20:14:20 -0400
-Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A619CC06174A
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 17:14:20 -0700 (PDT)
-Received: by mail-yb1-xb41.google.com with SMTP id q3so402304ybp.7
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 17:14:20 -0700 (PDT)
+        Tue, 11 Aug 2020 20:14:43 -0400
+Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DEF6C061787
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 17:14:43 -0700 (PDT)
+Received: by mail-qt1-x84a.google.com with SMTP id m13so383203qth.16
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 17:14:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EECTvhpW/4wcpyDgeePO+k8+09CeEjLorKKfjs56l98=;
-        b=Q7mm1elliLh/UHacUbs4AY6GzuGqv/sobvXgMmVVIShQYXgCmqnAGdxtfzkOMnC+U/
-         bhK/Rrt2OcBrfZTy4gWrnEhDbvLF3xeXFlxU9b7UYSEQhMjrrdMaDipYZ22OcBarKkPL
-         4xh+Ewx5xqfkO2AsIqAtBWeB1ddRjT64B5XOHmXlJRwzFCb6QSW58qMInr8KAKvj3rC1
-         RV1Z/2FdmkaULwxSy1edCGimjZcn4ylBhuKORFgccLca3NIpsg6q2p6AMhV+NdGOkPx6
-         n/Mb9EGoFCSOtrzG4rOpqtK7RDNmyYwSDJF49Soxc7v9kt1xLOuOhz1Bs6WpoQgnFKgX
-         fTyA==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=hGJKteDFRvmAoB5QUn3ibeow19jlpU6dAFKbgXDL7Hg=;
+        b=UJnDj1cP10bDZGsYcpJD/D9ftl4SJoVSzjN5Rctm40imEG+y111Ag8D0wRybxWR973
+         MntcgYeJ2sM2a674k2a/GxwlPdbPGmmq7R4cFFoZhecnEtgydi6t1TzZpGUkmZUQp2vv
+         aemYzVyjV3BEWIEPsuTadfo92pC0+jGRz/yrf255x2xXSjAiSoLK54k4sh/f7sgYnf3K
+         gIJC/a7iwK+3WamIFqnFsqAAQ7wZXJNWS8EChXspXoaALq9J4OFCEZxgO1wjS/3G7X9a
+         tnAPZvVseoBoLKPrv+LphFfiqBgYUt2fD+K4DFilcsgwfS+TepVUQ8Wo3tNRFa1i3kXI
+         rX8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EECTvhpW/4wcpyDgeePO+k8+09CeEjLorKKfjs56l98=;
-        b=aOe9Na5Mgfh1D0ggtAo1IH0uWJ5lgqR2YwzxtCRHMsge43JiLjR7gBrHi4bPxF8ahT
-         yKULqkRIHq03ZuOyJwpNnPjBUSyNZ/IG2rJc8HYbEqk5VYuvZo0d2VlAvjdW9sp132+B
-         KYHIH28vDgEKt6/pDVCC6WFcFmHzzcIEiFfiHwrAfPfMEqu52BEXQvg0QvuZ8tCbBr6T
-         4PKg9O7X0YN9/3NLNSXNTqkmjauCHypJ2bd06l5JaxHTuK24FtBGOb9FXaZjV8KUuSs/
-         7bqE0VPb+RqfrOntZpnPpb03OPFhOyLvUUe3wFA1izxJpFX5invV2+5e481nEabsxfBq
-         xbLg==
-X-Gm-Message-State: AOAM530ngINbDOhzUsccyNzTMMFu3/9KhZ0oVALnMYSv8D4+K8f2dbO9
-        k5/7ahwNcUuM1QoohIccHI3g8s61bko09+8mfRs=
-X-Google-Smtp-Source: ABdhPJz8vAYmgWrlaT2Xtt9QXJflCYBZrH/2sTBupWHilMsBAP29/w6/2o4L00xaJt4ODsqFKmzqgguw39l/xleeVQE=
-X-Received: by 2002:a25:9c01:: with SMTP id c1mr26232297ybo.83.1597191259687;
- Tue, 11 Aug 2020 17:14:19 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200811200457.134743-1-lyude@redhat.com> <20200811200457.134743-21-lyude@redhat.com>
-In-Reply-To: <20200811200457.134743-21-lyude@redhat.com>
-From:   Ben Skeggs <skeggsb@gmail.com>
-Date:   Wed, 12 Aug 2020 10:14:08 +1000
-Message-ID: <CACAvsv7cqKLa+wSz3JQhZ7sr8dDXeqZt1VjkpGY8E=E2xFaCCQ@mail.gmail.com>
-Subject: Re: [Nouveau] [RFC 20/20] drm/nouveau/kms: Start using drm_dp_read_dpcd_caps()
-To:     Lyude Paul <lyude@redhat.com>
-Cc:     ML nouveau <nouveau@lists.freedesktop.org>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>,
-        David Airlie <airlied@linux.ie>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        open list <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=hGJKteDFRvmAoB5QUn3ibeow19jlpU6dAFKbgXDL7Hg=;
+        b=jGp8MHRlbQDHrPuef4K+jaIre6IlEDoYRTYeNy8KPXcvNLBou6j+ppYvYsDV97mND4
+         ejrqRJAN7ZF5IhahyRipQX28nbbUokG50u+QKisie4urFKKmVx/o6oUKq8t5M7kJiL2g
+         cdYD64l9shkOtWkcfVNq9LnsRF4Na67z3AeFoGigiWqM4HyKPNjfG0yHNfdRTuP6PBlX
+         hoPxXVaVTPY6fpap1CxSUnFE6GLk+pqIK2pYmtgZYvsUo+Nuh7mwG0rik7vknIujIg6C
+         WF73Nyz9ZvU6EkAcMox/6JrPHZyHFYCgrL3kCS4YQIRb6UtMf+2c2bEtoNjhL/JWmPyX
+         o3wg==
+X-Gm-Message-State: AOAM530Z477E5lmwsbuoTREcgADdWZbbEN+g29iT9Onvc4hoS/B4f4sT
+        seDnwW/mZ8gOCA1IM6JapIN1GiRyy9g=
+X-Google-Smtp-Source: ABdhPJxKTXpolq6+IqC9ZDR48trH3huTbcnQfxPTsEi34Hb9n6iiXfgtn2elXy46WPCPliLwpOT7384PdFk=
+X-Received: by 2002:ad4:46ad:: with SMTP id br13mr4141980qvb.234.1597191282436;
+ Tue, 11 Aug 2020 17:14:42 -0700 (PDT)
+Date:   Tue, 11 Aug 2020 17:14:39 -0700
+Message-Id: <20200812001439.545655-1-badhri@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.236.gb10cc79966-goog
+Subject: [PATCH v2] tcpm: During PR_SWAP, source caps should be sent only
+ after tSwapSourceStart
+From:   Badhri Jagan Sridharan <badhri@google.com>
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Badhri Jagan Sridharan <badhri@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 12 Aug 2020 at 06:07, Lyude Paul <lyude@redhat.com> wrote:
->
-> Now that we've extracted i915's code for reading both the normal DPCD
-> caps and extended DPCD caps into a shared helper, let's start using this
-> in nouveau to enable us to start checking extended DPCD caps for free.
->
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
-Reviewed-by: Ben Skeggs <bskeggs@redhat.com>
+From the spec:
+"6.6.8.1 SwapSourceStartTimer
+The SwapSourceStartTimer Shall be used by the new Source, after a Power
+Role Swap or Fast Role Swap, to ensure that it does not send
+Source_Capabilities Message before the new Sink is ready to receive the
+Source_Capabilities Message. The new Source Shall Not send the
+Source_Capabilities Message earlier than tSwapSourceStart after the
+last bit of the EOP of GoodCRC Message sent in response to the PS_RDY
+Message sent by the new Source indicating that its power supply is
+ready."
 
-> ---
->  drivers/gpu/drm/nouveau/nouveau_dp.c | 14 ++++++--------
->  1 file changed, 6 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/gpu/drm/nouveau/nouveau_dp.c b/drivers/gpu/drm/nouveau/nouveau_dp.c
-> index f41fa513023fd..a4e07d116972f 100644
-> --- a/drivers/gpu/drm/nouveau/nouveau_dp.c
-> +++ b/drivers/gpu/drm/nouveau/nouveau_dp.c
-> @@ -55,15 +55,13 @@ nouveau_dp_probe_dpcd(struct nouveau_connector *nv_connector,
->         int ret;
->         u8 *dpcd = outp->dp.dpcd;
->
-> -       ret = drm_dp_dpcd_read(aux, DP_DPCD_REV, dpcd, DP_RECEIVER_CAP_SIZE);
-> -       if (ret == DP_RECEIVER_CAP_SIZE && dpcd[DP_DPCD_REV]) {
-> -               ret = drm_dp_read_desc(aux, &outp->dp.desc,
-> -                                      drm_dp_is_branch(dpcd));
-> -               if (ret < 0)
-> -                       goto out;
-> -       } else {
-> +       ret = drm_dp_read_dpcd_caps(aux, dpcd);
-> +       if (ret < 0)
-> +               goto out;
-> +
-> +       ret = drm_dp_read_desc(aux, &outp->dp.desc, drm_dp_is_branch(dpcd));
-> +       if (ret < 0)
->                 goto out;
-> -       }
->
->         if (nouveau_mst) {
->                 mstm = outp->dp.mstm;
-> --
-> 2.26.2
->
-> _______________________________________________
-> Nouveau mailing list
-> Nouveau@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/nouveau
+This fixes TD.PD.CP.E3, TD.PD.CP.E4, TD.PD.CP.E5 failures
+
+Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
+---
+Changes since V1:
+- Comment on the permissible values of tSwapSourceStart
+---
+ drivers/usb/typec/tcpm/tcpm.c | 2 +-
+ include/linux/usb/pd.h        | 1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
+index 3ef37202ee37..d38347bd3335 100644
+--- a/drivers/usb/typec/tcpm/tcpm.c
++++ b/drivers/usb/typec/tcpm/tcpm.c
+@@ -3555,7 +3555,7 @@ static void run_state_machine(struct tcpm_port *port)
+ 		 */
+ 		tcpm_set_pwr_role(port, TYPEC_SOURCE);
+ 		tcpm_pd_send_control(port, PD_CTRL_PS_RDY);
+-		tcpm_set_state(port, SRC_STARTUP, 0);
++		tcpm_set_state(port, SRC_STARTUP, PD_T_SWAP_SRC_START);
+ 		break;
+ 
+ 	case VCONN_SWAP_ACCEPT:
+diff --git a/include/linux/usb/pd.h b/include/linux/usb/pd.h
+index b6c233e79bd4..ed5eed73ccf8 100644
+--- a/include/linux/usb/pd.h
++++ b/include/linux/usb/pd.h
+@@ -473,6 +473,7 @@ static inline unsigned int rdo_max_power(u32 rdo)
+ #define PD_T_ERROR_RECOVERY	100	/* minimum 25 is insufficient */
+ #define PD_T_SRCSWAPSTDBY      625     /* Maximum of 650ms */
+ #define PD_T_NEWSRC            250     /* Maximum of 275ms */
++#define PD_T_SWAP_SRC_START	20     /* Minimum of 20ms */
+ 
+ #define PD_T_DRP_TRY		100	/* 75 - 150 ms */
+ #define PD_T_DRP_TRYWAIT	600	/* 400 - 800 ms */
+-- 
+2.28.0.236.gb10cc79966-goog
+
