@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE292C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 22:57:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E4D3C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 22:57:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FB052224D
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 22:57:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC49B22BF3
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 22:57:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597273058;
-	bh=zy2r+61uBN1pJktsl9IlZc4fSFAY3znZwPcoLkq3Cks=;
+	s=default; t=1597273062;
+	bh=XzBQoVrOnHgaqrHtYsCX/fntFyQ4dilXOfXZS7my/8Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VcYWDgqIq5AbplW9SlxjZSkplYXqtmTuRhbzazHZNt5Y3VlAg9uBu2mCabj/P90n8
-	 nJUUYB4LDpfjWvGDmy36rI9P5h2ugt+9GMl5rSEl/3qOL1tr69z4OXIOWhM3kGX+c2
-	 VKXzCnNBphVZ9qwgDbLAn6zsR6U/jIsEsnsV0XXo=
+	b=mdMkX6MlRY/pQmSbUM+l716KVe76SZxgRkH+iD3MyBUyHmTGrcAUSb0RE1TSqq3Xv
+	 miO0k95DAs/nlwRvtrCXysEgpBQhB6RcRt31+3NHWXjTKdCsEbCRiPppgKlqoaferQ
+	 yo3aiqNA7vMI3G/aI+nnvCXHDC+n/gbJTJPquG4o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726681AbgHLW5h (ORCPT
+        id S1726727AbgHLW5k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 18:57:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48906 "EHLO mail.kernel.org"
+        Wed, 12 Aug 2020 18:57:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726510AbgHLW5f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 18:57:35 -0400
+        id S1726664AbgHLW5h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 18:57:37 -0400
 Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9CC620B1F;
-        Wed, 12 Aug 2020 22:57:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78E122177B;
+        Wed, 12 Aug 2020 22:57:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597273055;
-        bh=zy2r+61uBN1pJktsl9IlZc4fSFAY3znZwPcoLkq3Cks=;
+        s=default; t=1597273056;
+        bh=XzBQoVrOnHgaqrHtYsCX/fntFyQ4dilXOfXZS7my/8Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vxGaqD4DmxDokpJs2n5WPT9IROUgwWeJHCnNjedqnlRtj3b+uj2O622ohACXLb2Gj
-         S5W8zyuysfCLCA/bitzzDv3fIHDUrIPV/8WCbgPRChou2apmlxbe3FsXWd181euH1h
-         hGVp85bIted2Ei+MPnJndWvanlyb7kLRbbmDepGI=
+        b=SLhBYCnJDgnkSfhV4S6eN+f2ftxsFj+VMCGXdhMZNRDf2Z7MNOtMBeQUYeWrMt3OH
+         7idvf6JN36kagVwQu/aK/4RMAJ4tgjJooHQV0X/+H6zUUAnB2L8v7aZ3PyYhHu867E
+         yWCUTQUkR11afs5yTa3zeH17Tp4Dn9loCvCSYwww=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -49,9 +49,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         elver@google.com, dvyukov@google.com,
         "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 03/12] rcu: Restrict default jiffies_till_first_fqs for strict RCU GPs
-Date:   Wed, 12 Aug 2020 15:57:23 -0700
-Message-Id: <20200812225732.20068-3-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 10/12] rcu: Provide optional RCU-reader exit delay for strict GPs
+Date:   Wed, 12 Aug 2020 15:57:30 -0700
+Message-Id: <20200812225732.20068-10-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200812225632.GA19759@paulmck-ThinkPad-P72>
 References: <20200812225632.GA19759@paulmck-ThinkPad-P72>
@@ -62,34 +62,75 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@kernel.org>
 
-If there are idle CPUs, RCU's grace-period kthread will wait several
-jiffies before even thinking about polling them.  This promotes
-efficiency, which is normally a good thing, but when the kernel
-has been built with CONFIG_RCU_STRICT_GRACE_PERIOD=y, we care more
-about short grace periods.  This commit therefore restricts the
-default jiffies_till_first_fqs value to zero in kernels built with
-CONFIG_RCU_STRICT_GRACE_PERIOD=y, which causes RCU's grace-period kthread
-to poll for idle CPUs immediately after starting a grace period.
+The goal of this series is to increase the probability of tools like
+KASAN detecting that an RCU-protected pointer was used outside of its
+RCU read-side critical section.  Thus far, the approach has been to make
+grace periods and callback processing happen faster.  Another approach
+is to delay the pointer leaker.  This commit therefore allows a delay
+to be applied to exit from RCU read-side critical sections.
+
+This slowdown is specified by a new rcutree.rcu_unlock_delay kernel boot
+parameter that specifies this delay in microseconds, defaulting to zero.
 
 Reported-by Jann Horn <jannh@google.com>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/tree.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/admin-guide/kernel-parameters.txt |  9 +++++++++
+ kernel/rcu/tree_plugin.h                        | 12 ++++++++++--
+ 2 files changed, 19 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 65e1b5e..d333f1b 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -471,7 +471,7 @@ module_param(qhimark, long, 0444);
- module_param(qlowmark, long, 0444);
- module_param(qovld, long, 0444);
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 60e2c6e..c532c70 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -4128,6 +4128,15 @@
+ 			This wake_up() will be accompanied by a
+ 			WARN_ONCE() splat and an ftrace_dump().
  
--static ulong jiffies_till_first_fqs = ULONG_MAX;
-+static ulong jiffies_till_first_fqs = IS_ENABLED(CONFIG_RCU_STRICT_GRACE_PERIOD) ? 0 : ULONG_MAX;
- static ulong jiffies_till_next_fqs = ULONG_MAX;
- static bool rcu_kick_kthreads;
- static int rcu_divisor = 7;
++	rcutree.rcu_unlock_delay= [KNL]
++			In CONFIG_RCU_STRICT_GRACE_PERIOD=y kernels,
++			this specifies an rcu_read_unlock()-time delay
++			in microseconds.  This defaults to zero.
++			Larger delays increase the probability of
++			catching RCU pointer leaks, that is, buggy use
++			of RCU-protected pointers after the relevant
++			rcu_read_unlock() has completed.
++
+ 	rcutree.sysrq_rcu= [KNL]
+ 			Commandeer a sysrq key to dump out Tree RCU's
+ 			rcu_node tree with an eye towards determining
+diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+index 1761ff4..25c9ee4 100644
+--- a/kernel/rcu/tree_plugin.h
++++ b/kernel/rcu/tree_plugin.h
+@@ -430,6 +430,12 @@ static bool rcu_preempt_has_tasks(struct rcu_node *rnp)
+ 	return !list_empty(&rnp->blkd_tasks);
+ }
+ 
++// Add delay to rcu_read_unlock() for strict grace periods.
++static int rcu_unlock_delay;
++#ifdef CONFIG_RCU_STRICT_GRACE_PERIOD
++module_param(rcu_unlock_delay, int, 0444);
++#endif
++
+ /*
+  * Report deferred quiescent states.  The deferral time can
+  * be quite short, for example, in the case of the call from
+@@ -460,10 +466,12 @@ rcu_preempt_deferred_qs_irqrestore(struct task_struct *t, unsigned long flags)
+ 	}
+ 	t->rcu_read_unlock_special.s = 0;
+ 	if (special.b.need_qs) {
+-		if (IS_ENABLED(CONFIG_RCU_STRICT_GRACE_PERIOD))
++		if (IS_ENABLED(CONFIG_RCU_STRICT_GRACE_PERIOD)) {
+ 			rcu_report_qs_rdp(rdp->cpu, rdp);
+-		else
++			udelay(rcu_unlock_delay);
++		} else {
+ 			rcu_qs();
++		}
+ 	}
+ 
+ 	/*
 -- 
 2.9.5
 
