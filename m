@@ -2,146 +2,150 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA779C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 20:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F33DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 20:21:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8604D206DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 20:21:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VoCPqFd+"
+	by mail.kernel.org (Postfix) with ESMTP id 72F68206DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 20:21:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbgHLUVC (ORCPT
+        id S1726826AbgHLUVV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 16:21:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44124 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726030AbgHLUVA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 16:21:00 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E62FDC061383;
-        Wed, 12 Aug 2020 13:20:59 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id m71so1597404pfd.1;
-        Wed, 12 Aug 2020 13:20:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ZlYqHVX3AGBBK6l8zlqS+306syUnx3hCohlnRD0iMkM=;
-        b=VoCPqFd+gsMxkaXdfyJpRc+EGaq7h9IdHKHP0UqWqYRVaj2o8TbQLuOd9xfTfR2owP
-         5IkYrInzMX6pXYMsBVviiI+fTrOsUvGGhACeEFZaoiwPB8tnp9NWEq/5NsSHG8CMTtEe
-         VVg/xILtjqdLbYXzEpjvawEHEQb/Ra/tLmhPvOamu7THENoobjlOvW2a43IKlsooY3Y7
-         IMyVBJ2kgYA3IvaH90Oygg100mq03hdWfdOYdxe/DXQXN0xnSlDVVvDcMncgzONGi7jo
-         rVc9eFvB+iioePiYMLOTXit6GSCr07dYX4WpUTifNOrp7xNsMMWkP09N4hfH0eHv33+W
-         9n/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=ZlYqHVX3AGBBK6l8zlqS+306syUnx3hCohlnRD0iMkM=;
-        b=jGAAJYn1kNOhqrzxd4ZQgk2PANAruR4eZts12WuHsbcI70ZfD44AItW2gKQbh4fOIM
-         tN4G/XjF+KpOktKwCzhNTelePvlD/fBkSVc7gIcyg4f5NbD4pt2IVxs3F/10W+eI1bwO
-         b/Q2L3mGAXmji1MTq+xmeZWdMyRbtGRLq6dGWa3dVqkp0F63G00+kR5lbXoF9RRuNxyL
-         zyip6fF5d4/KwsCS9fA7AI4EaWuTHamGJH1G7XAp+/6gWvxhasZNqH3rc6fgBzgoEMVc
-         WoM39spfsclcusL1sb0rD/u0vsXU7ffwO730Ws1hZ8KJr5mArbIPKouLzqSEfJuSInlT
-         DL9w==
-X-Gm-Message-State: AOAM530RJlIOm0ATpFPy9S6dyPLLeiCkRdj3YKJ9ZvTez+dKx7jTHhcM
-        Oc9HuFeC5FFRkPk+qgkU96yPa9Ap
-X-Google-Smtp-Source: ABdhPJxsfwcRaPxZjqTkOGUv/RiRbejbFGQa6SjbnNeOG9mjx+3XSgYAZ/9yDtcr1D/1pubSFz7z8w==
-X-Received: by 2002:aa7:92d7:: with SMTP id k23mr1057102pfa.295.1597263658793;
-        Wed, 12 Aug 2020 13:20:58 -0700 (PDT)
-Received: from stbsrv-and-01.and.broadcom.net ([192.19.231.250])
-        by smtp.gmail.com with ESMTPSA id 75sm3292999pfx.187.2020.08.12.13.20.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Aug 2020 13:20:58 -0700 (PDT)
-From:   Al Cooper <alcooperx@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Al Cooper <al.cooper@broadcom.com>,
-        Al Cooper <alcooperx@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH 3/3] usb: Add Kconfig and Makefile changes to build brcmstb-usb-pinmap
-Date:   Wed, 12 Aug 2020 16:20:18 -0400
-Message-Id: <20200812202018.49046-4-alcooperx@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200812202018.49046-1-alcooperx@gmail.com>
-References: <20200812202018.49046-1-alcooperx@gmail.com>
+        Wed, 12 Aug 2020 16:21:21 -0400
+Received: from cmta20.telus.net ([209.171.16.93]:58207 "EHLO cmta20.telus.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726030AbgHLUVU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 16:21:20 -0400
+Received: from montezuma.home ([154.5.226.127])
+        by cmsmtp with SMTP
+        id 5xFLkg3D9ljNx5xFNkm9WQ; Wed, 12 Aug 2020 14:21:18 -0600
+X-Telus-Authed: none
+X-Authority-Analysis: v=2.3 cv=Z8aS40ZA c=1 sm=1 tr=0
+ a=f8b3WT/FcTuUJCJtQO1udw==:117 a=f8b3WT/FcTuUJCJtQO1udw==:17
+ a=kj9zAlcOel0A:10 a=x7bEGLp0ZPQA:10 a=COSDN44dAAMA:10 a=pGLkceISAAAA:8
+ a=e5mUnYsNAAAA:8 a=XlkWa5Bfyw0YRDVwgmMA:9 a=CjuIK1q_8ugA:10
+ a=Vxmtnl_E_bksehYqCbjh:22
+Date:   Wed, 12 Aug 2020 13:21:15 -0700 (PDT)
+From:   Zwane Mwaikambo <zwanem@gmail.com>
+To:     Lyude Paul <lyude@redhat.com>
+cc:     Daniel Vetter <daniel@ffwll.ch>, tcamuso@redhat.com,
+        dkwon@redhat.com, Linux Kernel <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+Subject: Re: [PATCH] drm: assure aux_dev is nonzero before using it
+In-Reply-To: <a1141faf8c6a0a924d87132fb4a297cd6d47e09d.camel@redhat.com>
+Message-ID: <alpine.DEB.2.21.2008121314020.39850@montezuma.home>
+References: <alpine.DEB.2.21.2008101004110.27032@montezuma.home> <20200811085830.GZ2352366@phenom.ffwll.local> <alpine.DEB.2.21.2008111514210.35094@montezuma.home> <CAKMK7uHxikojLQNbsnnfDfGZ3tFP9CRUTzvr+DsZghzQupaBGg@mail.gmail.com>
+ <a1141faf8c6a0a924d87132fb4a297cd6d47e09d.camel@redhat.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+X-CMAE-Envelope: MS4wfIACCZgqsl7hQ/V5ALQdJOX5hoBiAWLWNHcOudD4WTPn27pItJZX8X3z7CohxBXrrnmVbaVKJ1vkhU+4zZjJ7AKb9xusq0tvYU4/rd2IBBDl2UckdrVI
+ 8Fy3wRp8q91bY639t572MU5EMXzTonJlR0SP1ZBm3WkW4m9cxTOa755+52hL/qtPe8VatsObSBwi0IYiXFl5m0VkbUeK+JRa3LgnLbaTQuHiaamaLErspTaL
+ /JkCF/m7hGoZQ7Nl1tzZNCrwB3nOzSHMaRd90owBpWkoBRY1EEbRf5UK/C4Ca3W1gL/9xOqK/8rIp2CYd/+E209mTSyDzQvFRISQ5GXohls=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Cooper <al.cooper@broadcom.com>
+On Wed, 12 Aug 2020, Lyude Paul wrote:
 
-Add Kconfig and Makefile changes to build brcmstb-usb-pinmap and
-update MAINTAINERS for the new driver.
+> On Wed, 2020-08-12 at 16:10 +0200, Daniel Vetter wrote:
+> > On Wed, Aug 12, 2020 at 12:16 AM Zwane Mwaikambo <zwanem@gmail.com> wrote:
+> > > On Tue, 11 Aug 2020, Daniel Vetter wrote:
+> > > 
+> > > > On Mon, Aug 10, 2020 at 10:11:50AM -0700, Zwane Mwaikambo wrote:
+> > > > > Hi Folks,
+> > > > >     I know this thread eventually dropped off due to not identifying
+> > > > > the underlying issue. It's still occuring on 5.8 and in my case it
+> > > > > happened because the udev device nodes for the DP aux devices were not
+> > > > > cleaned up whereas the kernel had no association with them. I can
+> > > > > reproduce the bug just by creating a device node for a non-existent
+> > > > > minor
+> > > > > device and calling open().
+> > > > 
+> > > > Hm I don't have that thread anymore, but generally these bugs are solved
+> > > > by not registering the device before it's ready for use. We do have
+> > > > drm_connector->late_register for that stuff. Just a guess since I'm not
+> > > > seeing full details here.
+> > > 
+> > > In this particular case, the physical device disappeared before the nodes
+> > > were cleaned up. It involves putting a computer to sleep with a monitor
+> > > plugged in and then waking it up with the monitor unplugged.
+> > 
+> > We also have early_unregister for the reverse, but yes this sounds
+> > more tricky ... Adding Lyude who's been working on way too much
+> > lifetime fun around dp recently.
+> > -Daniel
+> > 
+> Hi-I think just checking whether the auxdev is NULL or not is a reasonable
+> fix, although I am curious as to how exactly the aux dev's parent is getting
+> destroyed before it's child, which I would have thought would be the only way
+> you could hit this?
 
-refs #SWLINUX-5537
+Here is what it looks like without (1) and with (2) monitor connected. In 
+the case where the monitor disappears during suspend, the device nodes 
+aux3,4 are still around
 
-Signed-off-by: Al Cooper <al.cooper@broadcom.com>
----
- MAINTAINERS               | 8 ++++++++
- drivers/usb/host/Kconfig  | 4 ++++
- drivers/usb/host/Makefile | 1 +
- 3 files changed, 13 insertions(+)
+1) No monitor connected
+ls -l /dev/drm*
+crw------- 1 root root 238, 0 Aug  6 22:32 /dev/drm_dp_aux0
+crw------- 1 root root 238, 1 Aug  6 22:32 /dev/drm_dp_aux1
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f0569cf304ca..3a44ac61899b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3527,6 +3527,14 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml
- F:	drivers/usb/host/ehci-brcm.*
- 
-+BROADCOM BRCMSTB USB PIN MAP DRIVER
-+M:	Al Cooper <alcooperx@gmail.com>
-+L:	linux-usb@vger.kernel.org
-+L:	bcm-kernel-feedback-list@broadcom.com
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/usb/brcm,usb-pinmap.yaml
-+F:	drivers/usb/host/brcmstb-usb-pinmap.c
-+
- BROADCOM BRCMSTB USB2 and USB3 PHY DRIVER
- M:	Al Cooper <alcooperx@gmail.com>
- L:	linux-kernel@vger.kernel.org
-diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
-index 1cb3004ea7b2..9c285053bb0c 100644
---- a/drivers/usb/host/Kconfig
-+++ b/drivers/usb/host/Kconfig
-@@ -109,12 +109,16 @@ endif # USB_XHCI_HCD
- config USB_EHCI_BRCMSTB
-        tristate
- 
-+config BRCM_USB_PINMAP
-+       tristate
-+
- config USB_BRCMSTB
- 	tristate "Broadcom STB USB support"
- 	depends on (ARCH_BRCMSTB && PHY_BRCM_USB) || COMPILE_TEST
- 	select USB_OHCI_HCD_PLATFORM if USB_OHCI_HCD
- 	select USB_EHCI_BRCMSTB if USB_EHCI_HCD
- 	select USB_XHCI_PLATFORM if USB_XHCI_HCD
-+	select BRCM_USB_PINMAP
- 	help
- 	  Enables support for XHCI, EHCI and OHCI host controllers
- 	  found in Broadcom STB SoC's.
-diff --git a/drivers/usb/host/Makefile b/drivers/usb/host/Makefile
-index bc731332fed9..0e63ef94790d 100644
---- a/drivers/usb/host/Makefile
-+++ b/drivers/usb/host/Makefile
-@@ -90,3 +90,4 @@ obj-$(CONFIG_USB_HCD_BCMA)	+= bcma-hcd.o
- obj-$(CONFIG_USB_HCD_SSB)	+= ssb-hcd.o
- obj-$(CONFIG_USB_FOTG210_HCD)	+= fotg210-hcd.o
- obj-$(CONFIG_USB_MAX3421_HCD)	+= max3421-hcd.o
-+obj-$(CONFIG_BRCM_USB_PINMAP)	+= brcmstb-usb-pinmap.o
--- 
-2.17.1
 
+2) Monitor connected
+crw------- 1 root root 238, 0 Aug  6 22:32 /dev/drm_dp_aux0
+crw------- 1 root root 238, 1 Aug  6 22:32 /dev/drm_dp_aux1
+crw------- 1 root root 238, 2 Aug 11 14:51 /dev/drm_dp_aux2
+crw------- 1 root root 238, 3 Aug 11 14:51 /dev/drm_dp_aux3
+crw------- 1 root root 238, 4 Aug 11 14:51 /dev/drm_dp_aux4
+
+
+
+> 
+> > > 
+> > > > > To me it still makes sense to just check aux_dev because the chardev
+> > > > > has
+> > > > > no way to check before calling.
+> > > > > 
+> > > > > (gdb) list *drm_dp_aux_dev_get_by_minor+0x29
+> > > > > 0x17b39 is in drm_dp_aux_dev_get_by_minor
+> > > > > (drivers/gpu/drm/drm_dp_aux_dev.c:65).
+> > > > > 60      static struct drm_dp_aux_dev
+> > > > > *drm_dp_aux_dev_get_by_minor(unsigned index)
+> > > > > 61      {
+> > > > > 62              struct drm_dp_aux_dev *aux_dev = NULL;
+> > > > > 63
+> > > > > 64              mutex_lock(&aux_idr_mutex);
+> > > > > 65              aux_dev = idr_find(&aux_idr, index);
+> > > > > 66              if (!kref_get_unless_zero(&aux_dev->refcount))
+> > > > > 67                      aux_dev = NULL;
+> > > > > 68              mutex_unlock(&aux_idr_mutex);
+> > > > > 69
+> > > > > (gdb) p/x &((struct drm_dp_aux_dev *)(0x0))->refcount
+> > > > > $8 = 0x18
+> > > > > 
+> > > > > static int auxdev_open(struct inode *inode, struct file *file)
+> > > > > {
+> > > > >     unsigned int minor = iminor(inode);
+> > > > >     struct drm_dp_aux_dev *aux_dev;
+> > > > > 
+> > > > >     aux_dev = drm_dp_aux_dev_get_by_minor(minor);
+> > > > >     if (!aux_dev)
+> > > > >         return -ENODEV;
+> > > > > 
+> > > > >     file->private_data = aux_dev;
+> > > > >     return 0;
+> > > > > }
+> > > > > 
+> > > > > 
+> > > > > _______________________________________________
+> > > > > dri-devel mailing list
+> > > > > dri-devel@lists.freedesktop.org
+> > > > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> > 
+> > 
+> 
