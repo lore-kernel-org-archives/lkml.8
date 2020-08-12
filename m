@@ -2,189 +2,124 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 688CCC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 18:53:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E154C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 18:55:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3873B2080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 18:53:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3CD52080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 18:55:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597258419;
-	bh=ob0YNPXTTHZfIK1XdcvKuT/oboSKu10JmM4vnIxq/6o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dgnXwctPgspDb8b5r3/gV1BBOXuQgy2lszmN5TDDKzdYhGqCHI4lk/i93WJBM5eOa
-	 u7/YzFx7722dC4kDQUqcQl0FzHm4efaVWYp6AaFvuiqZwnobkA1VVOJUaZznNovhuj
-	 ztEWM2Eh5/abAMp6ePl1gac505H3PXh4N9w7kxqg=
+	s=default; t=1597258532;
+	bh=iH2bntJ3heab/wBuNIHiZ2SrGEOTzKk8leH5YEXop+k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=s8wSnzBp3p5+KckLyr//5cl+p3X2E2jm0/90enuWDyd2LyhtVTfGvUqtPt0syLyGv
+	 GZ0UjHizYt67cgKo5eXOMrGDhmxGjUQxg6xMiEUshnnrrutQPD2MUMzlEP2/vsp/gJ
+	 K9nAjEVUggP7RBv+2CvWUfQ4T+/DWm9CPIfGQkzw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726658AbgHLSxi (ORCPT
+        id S1726554AbgHLSzc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 14:53:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37676 "EHLO mail.kernel.org"
+        Wed, 12 Aug 2020 14:55:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726447AbgHLSxh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 14:53:37 -0400
-Received: from quaco.ghostprotocols.net (unknown [177.158.180.104])
+        id S1726447AbgHLSzb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 14:55:31 -0400
+Received: from onda.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5EAF20774;
-        Wed, 12 Aug 2020 18:53:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F091C20774;
+        Wed, 12 Aug 2020 18:55:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597258417;
-        bh=ob0YNPXTTHZfIK1XdcvKuT/oboSKu10JmM4vnIxq/6o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nsQ3aIi0mwCDiIEVxGfuQzhed3zoRC0TG//2lkCHxuQI8/z6hs+PBx7YC+U+cauOU
-         Jqi7/e/6ooGMMn97m88xS/h1AspMJ29YNKKGd/fF5QT0GwpOyjcSBP/TdFMalm3bpR
-         zpg91P3xLyWELyY3Up0vmAG+B+7cw0EPG6gLCcag=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 805644097F; Wed, 12 Aug 2020 15:53:34 -0300 (-03)
-Date:   Wed, 12 Aug 2020 15:53:34 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     Leo Yan <leo.yan@linaro.org>, Ian Rogers <irogers@google.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kemeng Shi <shikemeng@huawei.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        James Clark <james.clark@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 0/4] Perf tool: Enable Arm arch timer counter and
- arm-spe's timestamp
-Message-ID: <20200812185334.GN13995@kernel.org>
-References: <20200807071620.11907-1-leo.yan@linaro.org>
- <CANLsYkzR+DSrss0dzPjMPKW+4ZGMbD9V23PLDSZAJM1-SQU0CQ@mail.gmail.com>
+        s=default; t=1597258530;
+        bh=iH2bntJ3heab/wBuNIHiZ2SrGEOTzKk8leH5YEXop+k=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=nUHLzoNyKRckx10X8ij4rbPs1razktvIs2RtxSsCmQGfnw/qYpda/mLhHza7zgwGa
+         sUUmahLxbw0ge062C4Zl1AOcc5pVc8sNwTJRwrWWDjQTD32Q0MInF7rE7X06iqgGxW
+         k6WhMy7CKe2xeICz4aZr9F/GC48qJkXH5abK6zqk=
+Date:   Wed, 12 Aug 2020 15:55:26 -0300
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, linuxarm@huawei.com,
+        devicetree@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>, mauro.chehab@huawei.com
+Subject: Re: [PATCH 31/33] dt: document HiSilicon SPMI controller and
+ mfd/regulator properties
+Message-ID: <20200812155526.220ec1c2@onda.lan>
+In-Reply-To: <20200812163036.GA2324764@bogus>
+References: <cover.1597160086.git.mchehab+huawei@kernel.org>
+        <176043f329dfa9889f014feec04e7e1553077873.1597160086.git.mchehab+huawei@kernel.org>
+        <20200812163036.GA2324764@bogus>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANLsYkzR+DSrss0dzPjMPKW+4ZGMbD9V23PLDSZAJM1-SQU0CQ@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, Aug 12, 2020 at 10:06:53AM -0600, Mathieu Poirier escreveu:
-> Hi Arnaldo,
+Em Wed, 12 Aug 2020 10:30:36 -0600
+Rob Herring <robh@kernel.org> escreveu:
+
+> On Tue, 11 Aug 2020 17:41:57 +0200, Mauro Carvalho Chehab wrote:
+> > Add documentation for the properties needed by the HiSilicon
+> > 6421v600 driver, and by the SPMI controller used to access
+> > the chipset.
+> > 
+> > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> > ---
+> >  .../mfd/hisilicon,hi6421-spmi-pmic.yaml       | 175 ++++++++++++++++++
+> >  .../spmi/hisilicon,hisi-spmi-controller.yaml  |  54 ++++++
+> >  2 files changed, 229 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.yaml
+> >  create mode 100644 Documentation/devicetree/bindings/spmi/hisilicon,hisi-spmi-controller.yaml
+> >   
 > 
-> On Fri, 7 Aug 2020 at 01:16, Leo Yan <leo.yan@linaro.org> wrote:
-> >
-> > This patch set is to enable Arm arch timer counter and Arm SPE is the
-> > first customer to use arch timer counter for its timestamp.
-> >
-> > Patches 01 ~ 03 enables Arm arch timer counter in Perf tool; patch 01 is
-> > to retrieve arch timer's parameters from mmaped page; patch 02 provides
-> > APIs for the conversion between arch timer's counter and time; patch 03
-> > adds a test for patches 01 and 02.
-> >
-> > As the first customer to use Arm arch timer counter in perf tool, patch
-> > 04 is to generate sample's timestamp for ARM SPE AUX trace data.
-> >
-> > This patch set has been rebased on perf/core branch with the latest
-> > commit c4735d990268 ("perf evsel: Don't set
-> > sample_regs_intr/sample_regs_user for dummy event").
 > 
-> The ARM SPE perf tools code is orphan and I don't have the cycles to
-> pick it up.  Leo has spent a lot of time in that code and as such I
-> suggest that he starts maintaining it, probably following the same
-> kind of arrangement you and I have for coresight.
-
-Thats ok with me, I think we should reflect that on the MAINTAINERS
-file, right?
-
-We have this already:
-
-PERFORMANCE EVENTS SUBSYSTEM ARM64 PMU EVENTS
-R:      John Garry <john.garry@huawei.com>
-R:      Will Deacon <will@kernel.org>
-L:      linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-S:      Supported
-F:      tools/perf/pmu-events/arch/arm64/
-
-I think we should have entries for CoreSight and ARM SPE, one listing
-you as the maintainer and the other listing Leo, right?
-
-Leo, it would be good for you to try and find someone at your
-organization or elsewhere that could help with this, this way I would
-wait a bit, see if someone else Acks it, and collect those, processing
-it from you after a while if nobody chimes in.
-
-Please continue providing 'perf test' regression tests, etc, to help
-with maintaining this code being checked.
-
-- Arnaldo
- 
-> Thanks,
-> Mathieu
+> My bot found errors running 'make dt_binding_check' on your patch:
 > 
-> >
-> > After changes:
-> >
-> >   # perf test 67 -v
-> >     67: Convert perf time to arch timer counter
-> >     --- start ---
-> >     test child forked, pid 5463
-> >     mmap size 528384B
-> >     1st event perf time 2231755083020 arch timer cnt 113097053477
-> >     test time           2231755087460 arch timer cnt 113097053699
-> >     2nd event perf time 2231755090680 arch timer cnt 113097053860
-> >     test child finished with 0
-> >     ---- end ----
-> >
-> >   Reports the SPE sample with timestamp:
-> >
-> >   $ perf script -F,+time
-> >     dd  6799 [034] 25496.733475:          1              l1d-access:      ffff87f37b88 _dl_start+0x288 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
-> >     dd  6799 [034] 25496.733475:          1              tlb-access:      ffff87f37b88 _dl_start+0x288 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
-> >     dd  6799 [034] 25496.733479:          1              l1d-access:      ffff87f37c74 _dl_start+0x374 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
-> >     dd  6799 [034] 25496.733479:          1              tlb-access:      ffff87f37c74 _dl_start+0x374 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
-> >     dd  6799 [034] 25496.733485:          1              l1d-access:      ffff87f49af4 __GI___tunables_init+0x3c (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
-> >     dd  6799 [034] 25496.733485:          1              tlb-access:      ffff87f49af4 __GI___tunables_init+0x3c (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
-> >
-> > Changes from v1:
-> > * Rebased on the latest perf/core branch;
-> > * Added a testing for Arm timer counter conversion (Ian Rogers).
-> >
-> >
-> > Leo Yan (4):
-> >   perf tools: Support Arm arch timer counter
-> >   perf arm_arch_timer: Convert between counter and timestamp
-> >   perf arm_arch_timer: Test conversion between counter and timestamp
-> >   perf arm-spe: Enable timestamp with arch timer counter
-> >
-> >  tools/perf/arch/arm64/include/arch-tests.h    |   6 +
-> >  tools/perf/arch/arm64/tests/Build             |   1 +
-> >  tools/perf/arch/arm64/tests/arch-tests.c      |   4 +
-> >  .../tests/perf-time-to-arch-timer-counter.c   | 189 ++++++++++++++++++
-> >  tools/perf/arch/arm64/util/Build              |   1 +
-> >  tools/perf/arch/arm64/util/arch_timer.c       |  50 +++++
-> >  tools/perf/arch/arm64/util/arm-spe.c          |  17 ++
-> >  tools/perf/util/Build                         |   1 +
-> >  tools/perf/util/arm-spe.c                     |  16 +-
-> >  tools/perf/util/arm-spe.h                     |   5 +
-> >  tools/perf/util/arm_arch_timer.c              |  28 +++
-> >  tools/perf/util/arm_arch_timer.h              |  23 +++
-> >  12 files changed, 339 insertions(+), 2 deletions(-)
-> >  create mode 100644 tools/perf/arch/arm64/tests/perf-time-to-arch-timer-counter.c
-> >  create mode 100644 tools/perf/arch/arm64/util/arch_timer.c
-> >  create mode 100644 tools/perf/util/arm_arch_timer.c
-> >  create mode 100644 tools/perf/util/arm_arch_timer.h
-> >
-> > --
-> > 2.17.1
-> >
+> Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.yaml: $id: relative path/filename doesn't match actual path or filename
+> 	expected: http://devicetree.org/schemas/mfd/hisilicon,hi6421-spmi-pmic.yaml#
+> Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.example.dts:34.15-28: Warning (reg_format): /example-0/pmic@0/regulators/ldo3@16:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
+> Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.example.dts:57.15-28: Warning (reg_format): /example-0/pmic@0/regulators/ldo4@17:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
+> Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.example.dt.yaml: Warning (pci_device_reg): Failed prerequisite 'reg_format'
+> Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.example.dt.yaml: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
+> Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.example.dt.yaml: Warning (simple_bus_reg): Failed prerequisite 'reg_format'
+> Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.example.dt.yaml: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
+> Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.example.dt.yaml: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
+> Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.example.dts:33.27-54.15: Warning (avoid_default_addr_size): /example-0/pmic@0/regulators/ldo3@16: Relying on default #address-cells value
+> Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.example.dts:33.27-54.15: Warning (avoid_default_addr_size): /example-0/pmic@0/regulators/ldo3@16: Relying on default #size-cells value
+> Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.example.dts:56.27-76.15: Warning (avoid_default_addr_size): /example-0/pmic@0/regulators/ldo4@17: Relying on default #address-cells value
+> Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.example.dts:56.27-76.15: Warning (avoid_default_addr_size): /example-0/pmic@0/regulators/ldo4@17: Relying on default #size-cells value
+> Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.example.dt.yaml: Warning (unique_unit_address): Failed prerequisite 'avoid_default_addr_size'
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/spmi/hisilicon,hisi-spmi-controller.example.dt.yaml: example-0: spmi@fff24000:reg:0: [0, 4294066176, 0, 4096] is too long
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/spmi/hisilicon,hisi-spmi-controller.example.dt.yaml: spmi@fff24000: spmi-channel:0: 'number of the SPMI channel where the PMIC is connected' was expected
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.example.dt.yaml: pmic@0: 'spmi-channel' is a required property
+> 
+> 
+> See https://patchwork.ozlabs.org/patch/1343370
+> 
+> If you already ran 'make dt_binding_check' and didn't see the above
+> error(s), then make sure dt-schema is up to date:
+> 
+> pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+> 
+> Please check and re-submit.
+> 
 
--- 
+Hi Rob,
 
-- Arnaldo
+Fixed those at the newest version I submitted today via staging tree.
+
+At least here, dt_binding_check passes at the newest version.
+
+Regards,
+Mauro
+
+
+
+
