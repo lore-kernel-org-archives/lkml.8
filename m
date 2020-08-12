@@ -2,173 +2,107 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E596AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 10:06:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D20A3C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 10:08:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B978A20781
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 10:06:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE8212083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 10:08:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="CVa57jyq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727816AbgHLKG5 (ORCPT
+        id S1727863AbgHLKI1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 06:06:57 -0400
-Received: from foss.arm.com ([217.140.110.172]:43570 "EHLO foss.arm.com"
+        Wed, 12 Aug 2020 06:08:27 -0400
+Received: from mout.gmx.net ([212.227.17.21]:52737 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726722AbgHLKG5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 06:06:57 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AAB2AD6E;
-        Wed, 12 Aug 2020 03:06:55 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (unknown [10.57.41.8])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 521E23F22E;
-        Wed, 12 Aug 2020 03:06:53 -0700 (PDT)
-Date:   Wed, 12 Aug 2020 11:06:50 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
-Cc:     kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, oleg@redhat.com,
-        x86@kernel.org
-Subject: Re: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
-Message-ID: <20200812100650.GB28154@C02TD0UTHF1T.local>
-References: <aefc85852ea518982e74b233e11e16d2e707bc32>
- <20200728131050.24443-1-madvenka@linux.microsoft.com>
- <20200731180955.GC67415@C02TD0UTHF1T.local>
- <6236adf7-4bed-534e-0956-fddab4fd96b6@linux.microsoft.com>
- <20200804143018.GB7440@C02TD0UTHF1T.local>
- <b3368692-afe6-89b5-d634-12f4f0a601f8@linux.microsoft.com>
+        id S1727066AbgHLKI1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 06:08:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1597226878;
+        bh=UkqjCxKKHV1HDyi41mZtq9yMhrKx967IftYVnHuBMGo=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=CVa57jyqOd+wAZ7HXJCaZTcWrbj9dKyv+WghkaTGAXpiP2JsIvR0EQYgZWjbrGYiO
+         lsBWgX1QG8ZF82HjYytXjIkoJrHZCMtWf3yQ1+ICaGkXnM6d6nfr+pmeun5MhEhTqE
+         zqpiozDA1NGXVxf3FFncbmNurNIBF6Kx6a5QKPTs=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [185.53.41.139] ([185.53.41.139]) by web-mail.gmx.net
+ (3c-app-gmx-bap56.server.lan [172.19.172.126]) (via HTTP); Wed, 12 Aug 2020
+ 12:07:58 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b3368692-afe6-89b5-d634-12f4f0a601f8@linux.microsoft.com>
+Message-ID: <trinity-5b810acf-eb8f-452e-b08a-30e1fe46226d-1597226878715@3c-app-gmx-bap56>
+From:   Frank Wunderlich <frank-w@public-files.de>
+To:     Wenbin Mei <wenbin.mei@mediatek.com>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Wenbin Mei <wenbin.mei@mediatek.com>,
+        srv_heupstream@mediatek.com, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Chaotian Jing <chaotian.jing@mediatek.com>,
+        stable@vger.kernel.org
+Subject: Aw: [PATCH 3/3] mmc: mediatek: add optional module reset property
+Content-Type: text/plain; charset=UTF-8
+Date:   Wed, 12 Aug 2020 12:07:58 +0200
+Importance: normal
+Sensitivity: Normal
+In-Reply-To: <20200812093726.10123-4-wenbin.mei@mediatek.com>
+References: <20200812093726.10123-1-wenbin.mei@mediatek.com>
+ <20200812093726.10123-4-wenbin.mei@mediatek.com>
+X-UI-Message-Type: mail
+X-Priority: 3
+X-Provags-ID: V03:K1:t+v+dbXvTKFePvkpJQAkYHe5HoNVIemuMfLD56cl7pscYB573WfuroyNnOcU3eKU+Ux0w
+ Bzr/Ckkf3ghFKTc0HwsL4hjb7JZpcAuLKIGlYRTDdvf/jlTHtulh0AIxWzbgZD0o/QUDiCzNjkkT
+ sO5kefkm7G1UW6cNByINedYydy1x5x1KSNZ4caJ/jgdEUkwBF3dN/4r2t4BJSmLaKk6FpWb6i+m/
+ LIO56ZvPG/DHOzaEApF96sk+MKAwEB1GS2joHA8xJDYDQNhmgLVskiKFp++wXff8gvYfNKazeZL8
+ Bo=
+X-UI-Out-Filterresults: notjunk:1;V03:K0:1lebNj6ihXA=:yKrs1mlHJa1VH4DNmWf8T7
+ QJv04DKWPHCKukADg6WgoibuSsh8OqnB3RcbFU3Hime9w81JXHzcUKJZhuZcawE6T0x8wLLKD
+ JiDKf7eLoturt4bAUdUxm1LFnv2JmFegH1M35dhP0jeqQbe8FxWjYrS9hg53qbKvLsipJwhnN
+ 92goZdJzEhOQbDBdxP8Vtq2F62SWwzwnixojAUFr8ieyEdQAojALTxVrP6q5a8gxqhCIDeoV4
+ THzEuSaCf33VF+3EIRe59nHodktmpEc42dTqERD8uQWsd0cfPmh6Ieb5eSfhGbHDoScIK7EO6
+ w/ETHBOlzdCYaknwVuG9lGJu2/gdYUID21RXu0CJSmF04V/4aALKHIAu/mGfRd0ykYkIfF3Ht
+ pNwVjBCIqtZriHaxV+77szPbiiWBK2xEvReXULdqZwX5X0jZkYhtheoWT2z98SDx2hAiNEOUU
+ MfPblapX0RDVVZ4p0+02p4WfY2rW2t5fSwFD9AZD9vHdyBxM6LOe3k5B05lY+Ehlp/YZv7UH3
+ oBgrvgJ0On8H4UXi5FKrZ0xPqu9qxwDb+Yyre98Ot4FfxvMOUbCHGbQhW4tI71aH7TeLjWBvO
+ rLnf0guUcE+asNRp8rcfkVl0RIBrEgcoDSf7iW8OvwIFa4C9I8a0hWHQ9y51edL70I44SAAMB
+ zLSiW3Buc5mCvDUdGE+2uhCK5m2ifvaVV4mBafLf+nGumAfwR77CEoehMf1ob2y5Za+0=
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 06, 2020 at 12:26:02PM -0500, Madhavan T. Venkataraman wrote:
-> Thanks for the lively discussion. I have tried to answer some of the
-> comments below.
-> 
-> On 8/4/20 9:30 AM, Mark Rutland wrote:
-> >
-> >> So, the context is - if security settings in a system disallow a page to have
-> >> both write and execute permissions, how do you allow the execution of
-> >> genuine trampolines that are runtime generated and placed in a data
-> >> page or a stack page?
-> > There are options today, e.g.
-> >
-> > a) If the restriction is only per-alias, you can have distinct aliases
-> >    where one is writable and another is executable, and you can make it
-> >    hard to find the relationship between the two.
-> >
-> > b) If the restriction is only temporal, you can write instructions into
-> >    an RW- buffer, transition the buffer to R--, verify the buffer
-> >    contents, then transition it to --X.
-> >
-> > c) You can have two processes A and B where A generates instrucitons into
-> >    a buffer that (only) B can execute (where B may be restricted from
-> >    making syscalls like write, mprotect, etc).
-> 
-> The general principle of the mitigation is W^X. I would argue that
-> the above options are violations of the W^X principle. If they are
-> allowed today, they must be fixed. And they will be. So, we cannot
-> rely on them.
+> Gesendet: Mittwoch, 12. August 2020 um 11:37 Uhr
+> Von: "Wenbin Mei" <wenbin.mei@mediatek.com>
+> Betreff: [PATCH 3/3] mmc: mediatek: add optional module reset property
 
-Hold on.
+> This patch adds a optional reset management for msdc.
+> Sometimes the bootloader does not bring msdc register
+> to default state, so need reset the msdc controller.
+>
+> Signed-off-by: Wenbin Mei <wenbin.mei@mediatek.com>
 
-Contemporary W^X means that a given virtual alias cannot be writeable
-and executeable simultaneously, permitting (a) and (b). If you read the
-references on the Wikipedia page for W^X you'll see the OpenBSD 3.3
-release notes and related presentation make this clear, and further they
-expect (b) to occur with JITS flipping W/X with mprotect().
+Thanks for posting the fix to Mainline
 
-Please don't conflate your assumed stronger semantics with the general
-principle. It not matching you expectations does not necessarily mean
-that it is wrong.
+imho this should contain a fixes-Tag as it fixes eMMC-Access on mt7622/Bpi=
+-R64
 
-If you want a stronger W^X semantics, please refer to this specifically
-with a distinct name.
+before we got these Errors on mounting eMMC ion R64:
 
-> a) This requires a remap operation. Two mappings point to the same
->      physical page. One mapping has W and the other one has X. This
->      is a violation of W^X.
-> 
-> b) This is again a violation. The kernel should refuse to give execute
->      permission to a page that was writeable in the past and refuse to
->      give write permission to a page that was executable in the past.
-> 
-> c) This is just a variation of (a).
+[   48.664925] blk_update_request: I/O error, dev mmcblk0, sector 204800 o=
+p 0x1:(WRITE) flags 0x800 phys_seg 1 prio class 0
+[   48.676019] Buffer I/O error on dev mmcblk0p1, logical block 0, lost sy=
+nc page write
 
-As above, this is not true.
+Fixes: 966580ad236e ("mmc: mediatek: add support for MT7622 SoC")
+Tested-By: Frank Wunderlich <frank-w@public-files.de>
 
-If you have a rationale for why this is desirable or necessary, please
-justify that before using this as justification for additional features.
+and it needs to be fixed at least for 5.4+, so adding stable-CC
 
-> In general, the problem with user-level methods to map and execute
-> dynamic code is that the kernel cannot tell if a genuine application is
-> using them or an attacker is using them or piggy-backing on them.
-
-Yes, and as I pointed out the same is true for trampfd unless you can
-somehow authenticate the calls are legitimate (in both callsite and the
-set of arguments), and I don't see any reasonable way of doing that.
-
-If you relax your threat model to an attacker not being able to make
-arbitrary syscalls, then your suggestion that userspace can perorm
-chceks between syscalls may be sufficient, but as I pointed out that's
-equally true for a sealed memfd or similar.
-
-> Off the top of my head, I have tried to identify some examples
-> where we can have more trust on dynamic code and have the kernel
-> permit its execution.
-> 
-> 1. If the kernel can do the job, then that is one safe way. Here, the kernel
->     is the code. There is no code generation involved. This is what I
->     have presented in the patch series as the first cut.
-
-This is sleight-of-hand; it doesn't matter where the logic is performed
-if the power is identical. Practically speaking this is equivalent to
-some dynamic code generation.
-
-I think that it's misleading to say that because the kernel emulates
-something it is safe when the provenance of the syscall arguments cannot
-be verified.
-
-[...]
-
-> Anyway, these are just examples. The principle is - if we can identify
-> dynamic code that has a certain measure of trust, can the kernel
-> permit their execution?
-
-My point generally is that the kernel cannot identify this, and if
-usrspace code is trusted to dynamically generate trampfd arguments it
-can equally be trusted to dyncamilly generate code.
-
-[...]
-
-> As I have mentioned above, I intend to have the kernel generate code
-> only if the code generation is simple enough. For more complicated cases,
-> I plan to use a user-level code generator that is for exclusive kernel use.
-> I have yet to work out the details on how this would work. Need time.
-
-This reads to me like trampfd is only dealing with a few special cases
-and we know that we need a more general solution.
-
-I hope I am mistaken, but I get the strong impression that you're trying
-to justify your existing solution rather than trying to understand the
-problem space.
-
-To be clear, my strong opinion is that we should not be trying to do
-this sort of emulation or code generation within the kernel. I do think
-it's worthwhile to look at mechanisms to make it harder to subvert
-dynamic userspace code generation, but I think the code generation
-itself needs to live in userspace (e.g. for ABI reasons I previously
-mentioned).
-
-Mark.
+Cc: stable@vger.kernel.org
