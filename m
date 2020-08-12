@@ -2,141 +2,122 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7592CC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:51:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A1BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:53:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FA3E20B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:51:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB7F52080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:53:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Yy0O/4F0"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FSWju80b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbgHLTvO (ORCPT
+        id S1726609AbgHLTx3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 15:51:14 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:51570 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726639AbgHLTvG (ORCPT
+        Wed, 12 Aug 2020 15:53:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39876 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726546AbgHLTx1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 15:51:06 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07CJoque048116;
-        Wed, 12 Aug 2020 14:50:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1597261852;
-        bh=5DtYodbcELFvKoyVfWIDGdKf8jLd3lr9u9RLJrv6ZxA=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=Yy0O/4F0Uv6NdHRgGj4vlQfkKThq/zImKb+p+/ZN9D7LX3e09KnHZhyjAMmcIjEQq
-         yRNocdJGGgIDknFtCaY9+XkRAGF3iYVmoUIpGzxmgOV3mYH6aGRCbj8ru5yNbEpewV
-         x4HaNNK/ofC8x1iAlkWPpqb2tyrUviczPe9kJZWs=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07CJoqeQ048977
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 12 Aug 2020 14:50:52 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 12
- Aug 2020 14:50:52 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 12 Aug 2020 14:50:52 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07CJoqJB110063;
-        Wed, 12 Aug 2020 14:50:52 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh@kernel.org>,
-        <marek.behun@nic.cz>
-CC:     <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Dan Murphy <dmurphy@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH v33 6/6] ARM: dts: ste-href: Add reg property to the LP5521 channel nodes
-Date:   Wed, 12 Aug 2020 14:50:20 -0500
-Message-ID: <20200812195020.13568-7-dmurphy@ti.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200812195020.13568-1-dmurphy@ti.com>
-References: <20200812195020.13568-1-dmurphy@ti.com>
+        Wed, 12 Aug 2020 15:53:27 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91D1BC061383
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 12:53:27 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id a26so3635235ejc.2
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 12:53:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GmEw2lBQdSo1OmXLViAxouuUh1Sga07TNO5tCBoeOis=;
+        b=FSWju80bwOEltiHCw7tX99gPQ4f23rdiK+9U9OE6cbeApFclbDUtAJb8pXkcbF1jw+
+         HFVehzWGJbU5PGrV17qiayxw4nQ7+mjz21bnbn/NCLlp+l6uGWSjEXUrTlRlcv99rMA2
+         Mdx/PMdKNsGqZFZyedF1Z7kk2Fp7oIFZYcB5I=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GmEw2lBQdSo1OmXLViAxouuUh1Sga07TNO5tCBoeOis=;
+        b=RkGZdaOCRjnEt2Z0YiQt4JsEk0dGpJKpKjyVdQprPAg0SiQviklqqqdsrsBV4y2/kC
+         MgeK4kvoo3JXmIEELsLi/mkJTM/XKFqe5O+DGABdGba44I5QCJVy0nUNNmWzPL6rtC7B
+         319Nne7jxCnKVAFy6nfRCWLO2oZoiN6yUxGpBkkAHLaVYQoIVOnaKuM4n3r2vCbHnMb2
+         nXg3cZVOn5YcEfd1d9O9kOWHU3YT2d3kOqYPPSO79iedYO0c7xtEe5gTPZDGFDgkh8Cj
+         LdY2AoH9T0BOTFVnA7+XmWGF1WAPIh+Wc6eamxxajLC5UB9DV4OaxHRT0PHsLZA3bBKQ
+         991w==
+X-Gm-Message-State: AOAM532o7qjIPyj5k4kKlX+0g9+mAqM+ogb6mDzstK3lxT51GS3stDL/
+        7uS4zZSTUgdTeMuF5Sn8lrOWKQfKkUo=
+X-Google-Smtp-Source: ABdhPJzVKc6SuhpfIe8p+g/9G/yS8Mk16yrCkJojLKaEJimcZ9JCt4KFO1MDHd+JNYQwjTp1qS/ssg==
+X-Received: by 2002:a17:906:2e51:: with SMTP id r17mr1452227eji.308.1597262005878;
+        Wed, 12 Aug 2020 12:53:25 -0700 (PDT)
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com. [209.85.218.45])
+        by smtp.gmail.com with ESMTPSA id p16sm2185090ejd.27.2020.08.12.12.53.24
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Aug 2020 12:53:24 -0700 (PDT)
+Received: by mail-ej1-f45.google.com with SMTP id c16so3591853ejx.12
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 12:53:24 -0700 (PDT)
+X-Received: by 2002:a17:906:fa19:: with SMTP id lo25mr1471647ejb.456.1597262004337;
+ Wed, 12 Aug 2020 12:53:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200811222803.3224434-1-zwisler@google.com> <20200812183557.GB17456@casper.infradead.org>
+In-Reply-To: <20200812183557.GB17456@casper.infradead.org>
+From:   Ross Zwisler <zwisler@chromium.org>
+Date:   Wed, 12 Aug 2020 13:53:12 -0600
+X-Gmail-Original-Message-ID: <CAGRrVHwCYRXixfft1FCnwU-1UzuoUF3iVayRjD8G_QXX2+nOcQ@mail.gmail.com>
+Message-ID: <CAGRrVHwCYRXixfft1FCnwU-1UzuoUF3iVayRjD8G_QXX2+nOcQ@mail.gmail.com>
+Subject: Re: [PATCH v7] Add a "nosymfollow" mount option.
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Mattias Nissler <mnissler@chromium.org>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Benjamin Gordon <bmgordon@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Dmitry Torokhov <dtor@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        linux-fsdevel@vger.kernel.org, Micah Morton <mortonm@google.com>,
+        Raul Rangel <rrangel@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the reg property to each channel node.  This update is
-to accommodate the multicolor framework.  In addition to the
-accommodation this allows the LEDs to be placed on any channel
-and allow designs to skip channels as opposed to requiring
-sequential order.
+On Wed, Aug 12, 2020 at 12:36 PM Matthew Wilcox <willy@infradead.org> wrote:
+> On Tue, Aug 11, 2020 at 04:28:03PM -0600, Ross Zwisler wrote:
+> > diff --git a/include/uapi/linux/mount.h b/include/uapi/linux/mount.h
+> > index 96a0240f23fed..dd8306ea336c1 100644
+> > --- a/include/uapi/linux/mount.h
+> > +++ b/include/uapi/linux/mount.h
+> > @@ -16,6 +16,7 @@
+> >  #define MS_REMOUNT   32      /* Alter flags of a mounted FS */
+> >  #define MS_MANDLOCK  64      /* Allow mandatory locks on an FS */
+> >  #define MS_DIRSYNC   128     /* Directory modifications are synchronous */
+> > +#define MS_NOSYMFOLLOW       256     /* Do not follow symlinks */
+> >  #define MS_NOATIME   1024    /* Do not update access times. */
+> >  #define MS_NODIRATIME        2048    /* Do not update directory access times */
+> >  #define MS_BIND              4096
+>
+> Does this need to be added to MS_RMT_MASK too?
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
-CC: Linus Walleij <linus.walleij@linaro.org>
-Acked-by: Pavel Machek <pavel@ucw.cz>
----
- arch/arm/boot/dts/ste-href.dtsi | 22 ++++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
+I don't think so, because IIUC that is only for "superblock flags",
+i.e. flags which are part of the sb_flags definition in
+do_mount()/path_mount()?
 
-diff --git a/arch/arm/boot/dts/ste-href.dtsi b/arch/arm/boot/dts/ste-href.dtsi
-index 33e3b0b3c53d..ff47cbf6ed3b 100644
---- a/arch/arm/boot/dts/ste-href.dtsi
-+++ b/arch/arm/boot/dts/ste-href.dtsi
-@@ -58,16 +58,21 @@ lp5521@33 {
- 				reg = <0x33>;
- 				label = "lp5521_pri";
- 				clock-mode = /bits/ 8 <2>;
--				chan0 {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				chan@0 {
-+					reg = <0>;
- 					led-cur = /bits/ 8 <0x2f>;
- 					max-cur = /bits/ 8 <0x5f>;
- 					linux,default-trigger = "heartbeat";
- 				};
--				chan1 {
-+				chan@1 {
-+					reg = <1>;
- 					led-cur = /bits/ 8 <0x2f>;
- 					max-cur = /bits/ 8 <0x5f>;
- 				};
--				chan2 {
-+				chan@2 {
-+					reg = <2>;
- 					led-cur = /bits/ 8 <0x2f>;
- 					max-cur = /bits/ 8 <0x5f>;
- 				};
-@@ -77,15 +82,20 @@ lp5521@34 {
- 				reg = <0x34>;
- 				label = "lp5521_sec";
- 				clock-mode = /bits/ 8 <2>;
--				chan0 {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				chan@0 {
-+					reg = <0>;
- 					led-cur = /bits/ 8 <0x2f>;
- 					max-cur = /bits/ 8 <0x5f>;
- 				};
--				chan1 {
-+				chan@1 {
-+					reg = <1>;
- 					led-cur = /bits/ 8 <0x2f>;
- 					max-cur = /bits/ 8 <0x5f>;
- 				};
--				chan2 {
-+				chan@2 {
-+					reg = <2>;
- 					led-cur = /bits/ 8 <0x2f>;
- 					max-cur = /bits/ 8 <0x5f>;
- 				};
--- 
-2.28.0
+https://github.com/torvalds/linux/blob/master/fs/namespace.c#L3172
 
+With the current code I'm able to remount and flip nosymfollow both
+directions without issue.  Similarly, MS_NOEXEC can be turned on and
+off at will, and it's not part of MS_RMT_MASK nor sb_flags.
+
+Interestingly, though, if you change MS_RMT_MASK to be 0, I would
+expect us to be unable to twiddle all the flags which are currently
+part of it, but that isn't the case.   I was still able to change
+between RO/RW, and turn on lazytime.
+
+So, I think this flag is working as expected, but that there is
+probably a bug in there somewhere WRT the handling of MS_RMT_MASK.
