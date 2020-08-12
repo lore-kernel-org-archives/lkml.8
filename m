@@ -2,117 +2,239 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04000C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:44:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E440C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:44:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC25C2080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:44:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBAD52080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:44:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-watchdog.org header.i=@linux-watchdog.org header.b="azM+OjDW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727957AbgHLMoV (ORCPT
+        id S1727976AbgHLMoj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 08:44:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58496 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727871AbgHLMoU (ORCPT
+        Wed, 12 Aug 2020 08:44:39 -0400
+Received: from www.linux-watchdog.org ([185.87.125.42]:44182 "EHLO
+        www.linux-watchdog.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726829AbgHLMoh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 08:44:20 -0400
-Received: from smtp1-3.goneo.de (smtp1.goneo.de [IPv6:2001:1640:5::8:30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B874C06174A;
-        Wed, 12 Aug 2020 05:44:20 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-        by smtp1.goneo.de (Postfix) with ESMTP id 2766023EF78;
-        Wed, 12 Aug 2020 14:44:15 +0200 (CEST)
-X-Virus-Scanned: by goneo
-Received: from smtp1.goneo.de ([127.0.0.1])
-        by localhost (smtp1.goneo.de [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id xO6akWVDbA9M; Wed, 12 Aug 2020 14:44:13 +0200 (CEST)
-Received: from [192.168.1.127] (dyndsl-085-016-039-248.ewe-ip-backbone.de [85.16.39.248])
-        by smtp1.goneo.de (Postfix) with ESMTPSA id B225123F0A3;
-        Wed, 12 Aug 2020 14:44:13 +0200 (CEST)
-Subject: Re: Documentation: build failure with sphinx >= 3.0.0: exception:
- cannot import name 'c_funcptr_sig_re' from 'sphinx.domains.c'
-From:   Markus Heiser <markus.heiser@darmarit.de>
-To:     Salvatore Bonaccorso <carnil@debian.org>,
-        linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Cc:     Bhaskar Chowdhury <unixbhaskar@gmail.com>,
-        LinuxKernel <linux-kernel@vger.kernel.org>,
-        jforbes@fedoraproject.org
-References: <20200408113705.GB1924@ArchLinux>
- <20200408132505.52e595bc@lwn.net> <20200408233450.GA14923@debian>
- <20200809132327.GA145573@eldamar.local>
- <20200812073059.GA509953@eldamar.local>
- <579fbb36-515d-5af4-f7dc-c092d29fddd8@darmarit.de>
-Message-ID: <f14d2592-629d-0efe-a50a-fe3a6073c99b@darmarit.de>
-Date:   Wed, 12 Aug 2020 14:44:13 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 12 Aug 2020 08:44:37 -0400
+X-Greylist: delayed 348 seconds by postgrey-1.27 at vger.kernel.org; Wed, 12 Aug 2020 08:44:37 EDT
+Received: by www.linux-watchdog.org (Postfix, from userid 500)
+        id 395C3407AF; Wed, 12 Aug 2020 13:39:03 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 www.linux-watchdog.org 395C3407AF
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-watchdog.org;
+        s=odk20180602; t=1597232343;
+        bh=eJ+9TxHv79OCcPjS6SyOF3HAI3s+kCWErgOfkJljAfs=;
+        h=Date:From:To:Cc:Subject:From;
+        b=azM+OjDWCqJnQJ/XZIFmBgKsS2VUkScXNYF+oKHDN3ExviVkGh+LjtKW1ijtvykll
+         zaeZ6tng3eCq13X7OvJd4LOfNPcOZfg8WtgLspR/RQzWPzC+3eEvSkt1UUz1ORgk6j
+         PMD4wGwpBZjiz8FxbrA27kBKDV1l0O50EgPab77c=
+Date:   Wed, 12 Aug 2020 13:39:03 +0200
+From:   Wim Van Sebroeck <wim@linux-watchdog.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Ahmad Fatoum <a.fatoum@pengutronix.de>,
+        "Alexander A. Klimov" <grandmaster@al2klimov.de>,
+        Bumsik Kim <kbumsik@gmail.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Krzysztof Sobota <krzysztof.sobota@nokia.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Martin Wu <wuyan@allwinnertech.com>,
+        Michael Shych <michaelsh@mellanox.com>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Tero Kristo <t-kristo@ti.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Timothy Myers <timothy.myers@adtran.com>,
+        Wang Qing <wangqing@vivo.com>, Woody Lin <woodylin@google.com>,
+        Xu Wang <vulab@iscas.ac.cn>
+Subject: [GIT PULL REQUEST] watchdog - v5.9 Merge window
+Message-ID: <20200812113903.GA14481@www.linux-watchdog.org>
 MIME-Version: 1.0
-In-Reply-To: <579fbb36-515d-5af4-f7dc-c092d29fddd8@darmarit.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: de-DE
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.20 (2009-12-10)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Linus,
 
-Am 12.08.20 um 10:21 schrieb Markus Heiser:
-> 
-> Am 12.08.20 um 09:30 schrieb Salvatore Bonaccorso:
-> [..]
->>> The problem is actually related to changes happening in Sphinx 3.0.0.
->>> There is the followign issue filled upstream:
->>>
->>> https://github.com/sphinx-doc/sphinx/issues/7421
->>>
->>> 'c_funcptr_sig_re' was removed upstream in sphinx v3.0.0b1 and so the
->>> kernel documentation build fails. This is reproducible with a recent
->>> sphinx version (in attached case it is 3.2.0):
->>>
->>> $ make PYTHON=python3 xmldocs
->>>    SPHINX  xmldocs --> file:///home/build/linux/Documentation/output/xml
->>> make[2]: Nothing to be done for 'xml'.
->>> Running Sphinx v3.2.0
->>>
->>> Extension error:
->>> Could not import extension cdomain (exception: cannot import name 
->>> 'c_funcptr_sig_re' from 'sphinx.domains.c' 
->>> (/usr/lib/python3/dist-packages/sphinx/domains/c.py))
->>> make[1]: *** [Documentation/Makefile:115: xmldocs] Error 2
->>> make: *** [Makefile:1655: xmldocs] Error 2
->>>
->>> Distribution reports related to this issue:
->>> https://bugs.debian.org/963636
->>> https://bugs.archlinux.org/task/66178
->>> https://bugs.archlinux.org/task/66156
->>
->> As a workaround to make the documentation build again (but known that
->> parts of the documentation will be broken), we could drop the cdomain
->> extension.
->>
->> Regards,
->> Salvatore
-> 
-> @jon, do you have time to implement a patch?
-> .. sorry, I'am in a hurry :o
-> 
-> In the linked github issue you find also a patch that fixes a
-> cdomain.py.  I tested the patch (shee below) in the linux kernel.
-> 
->    For me it works.
+Please pull the watchdog changes for the v5.2 release cycle.
 
-Sorry, I have to correct:
+This series contains:
+* f71808e_wdt imporvements
+* dw_wdt improvements
+* mlx-wdt: support new watchdog type with longer timeout period
+* fallthrough pseudo-keyword replacements
+* overall small fixes and improvements
 
-   a Patch needs more work
+The output from git request-pull:
+----------------------------------------------------------------
+The following changes since commit 92ed301919932f777713b9172e525674157e983d:
 
-sphinx-doc has changed the way how domains are implemented [1].
+  Linux 5.8-rc7 (2020-07-26 14:14:06 -0700)
 
--- Markus --
+are available in the git repository at:
 
-[1] https://github.com/sphinx-doc/sphinx/commit/0f49e30c
+  git://www.linux-watchdog.org/linux-watchdog.git tags/linux-watchdog-5.9-rc1
+
+for you to fetch changes up to d5b29c2c5ba2bd5bbdb5b744659984185d17d079:
+
+  watchdog: rti-wdt: balance pm runtime enable calls (2020-08-05 18:43:03 +0200)
+
+----------------------------------------------------------------
+linux-watchdog 5.9-rc1 tag
+
+----------------------------------------------------------------
+Ahmad Fatoum (5):
+      docs: watchdog: codify ident.options as superset of possible status flags
+      watchdog: f71808e_wdt: indicate WDIOF_CARDRESET support in watchdog_info.options
+      watchdog: f71808e_wdt: remove use of wrong watchdog_info option
+      watchdog: f71808e_wdt: clear watchdog timeout occurred flag
+      watchdog: f71808e_wdt: do stricter parameter validation
+
+Alexander A. Klimov (1):
+      watchdog: Replace HTTP links with HTTPS ones
+
+Bumsik Kim (1):
+      watchdog: test_bit() => watchdog_active()
+
+Gustavo A. R. Silva (2):
+      watchdog: Use fallthrough pseudo-keyword
+      watchdog: scx200_wdt: Use fallthrough pseudo-keyword
+
+Krzysztof Sobota (1):
+      watchdog: initialize device before misc_register
+
+Lad Prabhakar (1):
+      dt-bindings: watchdog: renesas,wdt: Document r8a774e1 support
+
+Lukas Bulwahn (1):
+      MAINTAINERS: rectify entry in ARM SMC WATCHDOG DRIVER
+
+Martin Wu (1):
+      watchdog: sunxi_wdt: fix improper error exit code
+
+Michael Shych (4):
+      platform_data/mlxreg: support new watchdog type with longer timeout period
+      platform/x86: mlx-platform: support new watchdog type with longer timeout
+      watchdog: mlx-wdt: support new watchdog type with longer timeout period
+      docs: watchdog: mlx-wdt: Add description of new watchdog type 3
+
+Sai Prakash Ranjan (2):
+      dt-bindings: watchdog: Convert QCOM watchdog timer bindings to YAML
+      dt-bindings: watchdog: Add compatible for QCS404, SC7180, SDM845, SM8150
+
+Serge Semin (7):
+      dt-bindings: watchdog: Convert DW WDT binding to DT schema
+      dt-bindings: watchdog: dw-wdt: Support devices with asynch clocks
+      dt-bindings: watchdog: dw-wdt: Add watchdog TOPs array property
+      watchdog: dw_wdt: Support devices with non-fixed TOP values
+      watchdog: dw_wdt: Support devices with asynch clocks
+      watchdog: dw_wdt: Add pre-timeouts support
+      watchdog: dw_wdt: Add DebugFS files
+
+Tero Kristo (4):
+      watchdog: use __watchdog_ping in startup
+      watchdog: add support for adjusting last known HW keepalive time
+      watchdog: rti-wdt: attach to running watchdog during probe
+      watchdog: rti-wdt: balance pm runtime enable calls
+
+Tiezhu Yang (1):
+      watchdog: bcm_kona_wdt: Use correct return value for bcm_kona_wdt_probe()
+
+Timothy Myers (1):
+      watchdog: booke_wdt: Add common nowayout parameter driver
+
+Wang Qing (1):
+      watchdog: Use kobj_to_dev() API
+
+Woody Lin (1):
+      watchdog: softdog: Add options 'soft_reboot_cmd' and 'soft_active_on_boot'
+
+Xu Wang (1):
+      watchdog: pcwd_usb: remove needless check before usb_free_coherent()
+
+ .../devicetree/bindings/watchdog/davinci-wdt.txt   |   4 +-
+ .../devicetree/bindings/watchdog/dw_wdt.txt        |  24 --
+ .../devicetree/bindings/watchdog/qcom-wdt.txt      |  28 --
+ .../devicetree/bindings/watchdog/qcom-wdt.yaml     |  48 +++
+ .../devicetree/bindings/watchdog/renesas,wdt.yaml  |   1 +
+ .../devicetree/bindings/watchdog/snps,dw-wdt.yaml  |  90 +++++
+ Documentation/watchdog/mlx-wdt.rst                 |  10 +
+ Documentation/watchdog/watchdog-api.rst            |   2 +-
+ Documentation/watchdog/watchdog-kernel-api.rst     |  12 +
+ MAINTAINERS                                        |   2 +-
+ drivers/platform/x86/mlx-platform.c                | 106 +++++
+ drivers/watchdog/Kconfig                           |   2 +-
+ drivers/watchdog/advantechwdt.c                    |   2 +-
+ drivers/watchdog/alim1535_wdt.c                    |   2 +-
+ drivers/watchdog/alim7101_wdt.c                    |   2 +-
+ drivers/watchdog/ar7_wdt.c                         |   3 +-
+ drivers/watchdog/ath79_wdt.c                       |   2 +-
+ drivers/watchdog/bcm_kona_wdt.c                    |   2 +-
+ drivers/watchdog/booke_wdt.c                       |   6 +-
+ drivers/watchdog/dw_wdt.c                          | 439 +++++++++++++++++++--
+ drivers/watchdog/eurotechwdt.c                     |   2 +-
+ drivers/watchdog/f71808e_wdt.c                     |  54 ++-
+ drivers/watchdog/gef_wdt.c                         |   2 +-
+ drivers/watchdog/geodewdt.c                        |   2 +-
+ drivers/watchdog/ib700wdt.c                        |   2 +-
+ drivers/watchdog/it8712f_wdt.c                     |   2 +-
+ drivers/watchdog/ixp4xx_wdt.c                      |   2 +-
+ drivers/watchdog/m54xx_wdt.c                       |   2 +-
+ drivers/watchdog/machzwd.c                         |   2 +-
+ drivers/watchdog/mlx_wdt.c                         |  73 +++-
+ drivers/watchdog/mv64x60_wdt.c                     |   2 +-
+ drivers/watchdog/nv_tco.c                          |   4 +-
+ drivers/watchdog/nv_tco.h                          |   2 +-
+ drivers/watchdog/pc87413_wdt.c                     |   2 +-
+ drivers/watchdog/pcwd.c                            |   2 +-
+ drivers/watchdog/pcwd_pci.c                        |   2 +-
+ drivers/watchdog/pcwd_usb.c                        |   7 +-
+ drivers/watchdog/rc32434_wdt.c                     |   2 +-
+ drivers/watchdog/riowd.c                           |   2 +-
+ drivers/watchdog/rti_wdt.c                         | 114 +++++-
+ drivers/watchdog/sa1100_wdt.c                      |   2 +-
+ drivers/watchdog/sb_wdog.c                         |   2 +-
+ drivers/watchdog/sbc60xxwdt.c                      |   2 +-
+ drivers/watchdog/sbc7240_wdt.c                     |   2 +-
+ drivers/watchdog/sbc_fitpc2_wdt.c                  |   2 +-
+ drivers/watchdog/sc520_wdt.c                       |   2 +-
+ drivers/watchdog/sch311x_wdt.c                     |   2 +-
+ drivers/watchdog/scx200_wdt.c                      |   2 +-
+ drivers/watchdog/smsc37b787_wdt.c                  |   2 +-
+ drivers/watchdog/softdog.c                         |  57 +++
+ drivers/watchdog/sp5100_tco.c                      |   2 +-
+ drivers/watchdog/sunxi_wdt.c                       |   2 +-
+ drivers/watchdog/w83877f_wdt.c                     |   2 +-
+ drivers/watchdog/w83977f_wdt.c                     |   2 +-
+ drivers/watchdog/wafer5823wdt.c                    |   2 +-
+ drivers/watchdog/watchdog_dev.c                    |  73 +++-
+ drivers/watchdog/wdt.c                             |   2 +-
+ drivers/watchdog/wdt285.c                          |   2 +-
+ drivers/watchdog/wdt977.c                          |   2 +-
+ drivers/watchdog/wdt_pci.c                         |   2 +-
+ include/linux/platform_data/mlxreg.h               |   5 +-
+ include/linux/watchdog.h                           |   2 +
+ 62 files changed, 1032 insertions(+), 210 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/watchdog/dw_wdt.txt
+ delete mode 100644 Documentation/devicetree/bindings/watchdog/qcom-wdt.txt
+ create mode 100644 Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
+ create mode 100644 Documentation/devicetree/bindings/watchdog/snps,dw-wdt.yaml
+----------------------------------------------------------------
+
+Kind regards,
+Wim.
+
