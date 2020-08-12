@@ -2,90 +2,121 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 538F4C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 22:55:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CDF0C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 22:56:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2610520771
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 22:55:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="A+0wAnnZ"
+	by mail.kernel.org (Postfix) with ESMTP id 04BB920781
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 22:56:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597272995;
+	bh=lDSUqcZleiRS36fjIZi7JKKWrjlK6ctnU/z+2EfAe2Y=;
+	h=Date:From:To:Cc:Subject:Reply-To:List-ID:From;
+	b=RwvQGjIOb49EfmzhQqLt+5OHqixodbdPG6gSUvz9M25Kqjn8BspTe4Ne7GYj1X/fh
+	 E5g/gD7LAVf2rRCJdmOv31JD2F6BJSvqshUE4hvIniiqrwh+1CeGTdtlWf+MTAjAvi
+	 0rB6mpxQNeQPmXp4FBwvWUQaiX8OrvKaU2Z+6bRI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726546AbgHLWzm (ORCPT
+        id S1726576AbgHLW4d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 18:55:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39572 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbgHLWzl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 18:55:41 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9261AC061383
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 15:55:41 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id mt12so1849514pjb.4
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 15:55:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=d/KpAP02Xa1uBqBuQDwinbHXESDgjtCwQvrKW1vEk3M=;
-        b=A+0wAnnZ1NzudMlDqlkDRY6VeTQdyTuzPYepBr7Y2iR0rJh+jtdFd+Qb3RR1UBSIBi
-         pPkr9VJsTDT2VoXtxGdVutRg3atWYm/E2Eeuvjl5lq02ulnLztm8LQVFL1E9kG6yeVBu
-         OjmW1XfMz7RwCe2IaZ+6Dlsoe8UYtsZ0tYRIolIzmHfd65Y/KG/tS+3VaWuaLtTIgWu+
-         jLnVk8vvP1mfgGvV8NDlYwcSF2EaB2/FB1hR0x7OkKW/ZkvzS1SrHPWx1p1zR17ZsgiM
-         dn9QyMbWLahhRkZlLcgEpq0re7Q0tvVgXnxSUz2oqjAH3IdXok7G5NP6hztGux6SZjaw
-         DuMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=d/KpAP02Xa1uBqBuQDwinbHXESDgjtCwQvrKW1vEk3M=;
-        b=Pa56DBx594ec/v8Lbehwz2p8OHOsfe8XT64Z1NWdITVD9CBEFOQMycLwiRgJBaVcjg
-         iN4WFIFb6pFmu1BbC9mLPSE50iBhJJRM56q8TC2t6CQ4ClrTaJO3KWjT504KwSvWiRNC
-         JK4kIjMBXSpfeqrgqGjUo6Pq64U4cuzu8oylaDKm2nDvxyrM11pr3bEWGYcssDn0kuLG
-         oI68qO9JIKQ7xX9/dqrB2v9TqIRlXAXwCzVMWL5iGqiDAP8qGzXbGkWG+FY3pHjizNfM
-         omLXrEKTYbPZ8fFSrhWlMUpz1xQCRLzyKcGmEFoFbTM38RckIAVfUaPEQkjBSH/45JZi
-         gNbA==
-X-Gm-Message-State: AOAM5307y1U41Ph8rmcPoCo+3BZrwGzwhYj1Qwyzmwg44ie1SzMcf069
-        CpFsnmdVMIGzGENDuCGogR7ASkRF6LLOuui30bTQWw==
-X-Google-Smtp-Source: ABdhPJxyf/PlaUXc6AtvZUsahdrfU7MGf5TTtxmO9c8ZgkjNdDDFoStZHp+BPXCP19q55mnPNy69CjlAJrcWuFILh5A=
-X-Received: by 2002:a17:90a:fc98:: with SMTP id ci24mr2301691pjb.101.1597272940960;
- Wed, 12 Aug 2020 15:55:40 -0700 (PDT)
+        Wed, 12 Aug 2020 18:56:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48142 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726067AbgHLW4d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 18:56:33 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C19920771;
+        Wed, 12 Aug 2020 22:56:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597272993;
+        bh=lDSUqcZleiRS36fjIZi7JKKWrjlK6ctnU/z+2EfAe2Y=;
+        h=Date:From:To:Cc:Subject:Reply-To:From;
+        b=U6I7hbtH/kW8zMaps+egDyHnpqK9BQfRx+bTNCW25ivZuQ0MUBEZqKpYOpLLVBBK+
+         ysFTKCCImqjnpotsH8OObbNLOTeGzO6hr6/OxoPTtvNJGgMC7gKl/ihBJoY+4Q5IpW
+         wDMM9O1febjfvqMcHHYy3vnm6/oP1RyyM0EaviTE=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id D7E593522615; Wed, 12 Aug 2020 15:56:32 -0700 (PDT)
+Date:   Wed, 12 Aug 2020 15:56:32 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     rcu@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
+        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
+        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
+        elver@google.com, dvyukov@google.com, jannh@google.com
+Subject: [PATCH tip/core/rcu 0/12] Add strict short-grace-period Kconfig
+ option
+Message-ID: <20200812225632.GA19759@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
 MIME-Version: 1.0
-References: <20200812173958.2307251-1-masahiroy@kernel.org>
- <CAJkfWY6vhW9kNK-t+2vZQ7Rhn3HedykvT2du7AfO0_9oUAXvjw@mail.gmail.com> <CAKwvOdm3VTZ2QXXxf9pjM6n87UE=Lc-9Cx=V70sNsYGmHCb-hA@mail.gmail.com>
-In-Reply-To: <CAKwvOdm3VTZ2QXXxf9pjM6n87UE=Lc-9Cx=V70sNsYGmHCb-hA@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 12 Aug 2020 15:55:30 -0700
-Message-ID: <CAKwvOd=xpCnupJN+y-CVmsYMK7UpXT4xQDd-XgJNCmgQFpRKDg@mail.gmail.com>
-Subject: Re: [PATCH 0/3] kbuild: clang-tidy
-To:     Nathan Huckleberry <nhuck@google.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Tom Roeder <tmroeder@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Rob Herring <robh@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 3:52 PM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
->
-> I wasn't able to reproduce Masahiro's reported failure, but seeing as
-> he has `GEN` for compile_commands.json and I have `CHK`, I wonder if
+Hello!
 
-Nevermind, I misread the output from the build.
--- 
-Thanks,
-~Nick Desaulniers
+This series adds a CONFIG_RCU_STRICT_GRACE_PERIOD Kconfig option that
+causes RCU to strive for short grace periods even at great expense in
+terms of performance, scalability, and real-time response.  This option is
+therefore not for production use, but rather to allow tools such as KASAN
+to more readily detect pointer leaks from RCU read-side critical sections.
+Here is an example of such a pointer leak:
+
+	rcu_read_lock();
+	p = rcu_dereference(gp);
+	do_something(p);
+	rcu_read_unlock(); // *p might be freed immediately!
+	do_something_else(p); // Potential use after free BUG!!!
+
+This series also adds a rcutree.rcu_unlock_delay kernel boot parameter
+that delays the specified number of microseconds after the outermost
+rcu_read_unlock() in an attempt to further bend the odds in KASAN's favor.
+
+The patches in this series are as follows:
+
+1.	Add Kconfig option for strict RCU grace periods.
+
+2.	Reduce leaf fanout for strict RCU grace periods.
+
+3.	Restrict default jiffies_till_first_fqs for strict RCU GPs.
+
+4.	Force DEFAULT_RCU_BLIMIT to 1000 for strict RCU GPs.
+
+5.	Always set .need_qs from __rcu_read_lock() for strict GPs.
+
+6.	Do full report for .need_qs for strict GPs.
+
+7.	Attempt QS when CPU discovers GP for strict GPs.
+
+8.	IPI all CPUs at GP start for strict GPs.
+
+9.	IPI all CPUs at GP end for strict GPs.
+
+10.	Provide optional RCU-reader exit delay for strict GPs.
+
+11.	Execute RCU reader shortly after rcu_core for strict GPs.
+
+12.	Report QS for outermost PREEMPT=n rcu_read_unlock() for strict GPs.
+
+							Thanx, Paul
+
+------------------------------------------------------------------------
+
+ Documentation/admin-guide/kernel-parameters.txt |    9 +++
+ include/linux/rcupdate.h                        |    7 ++
+ kernel/rcu/Kconfig                              |    8 +-
+ kernel/rcu/Kconfig.debug                        |   15 +++++
+ kernel/rcu/tree.c                               |   65 +++++++++++++++++++++---
+ kernel/rcu/tree.h                               |    1 
+ kernel/rcu/tree_plugin.h                        |   47 +++++++++++++----
+ 7 files changed, 132 insertions(+), 20 deletions(-)
