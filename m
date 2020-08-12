@@ -2,94 +2,84 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B07C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 01:28:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 208F0C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 01:31:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 692B02076C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 01:28:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00AEF207F7
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 01:31:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="fNwu8mbE"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="alJCAr0f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726428AbgHLB2j (ORCPT
+        id S1726529AbgHLBbg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 21:28:39 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:1655 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726143AbgHLB2h (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 21:28:37 -0400
-X-UUID: 33676643d9964419b8fabf34a501bbcb-20200812
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=PSmyy6RB68QIlyE2RdAZ/dLjGNAiqe5NS8RADOChyZA=;
-        b=fNwu8mbEg/qvYXZ5W4yLrDB3JRk9UrylJwK4a2Ndk1tRRyy9vc1TilzsGdfOo/yEDL+Mw/FcfViBbsvb5syxTUFTlvhrujiZ98cZDHXUFFpG0uv+b8vxp3kDp/oUrnAaxl/VzCqrO1Znws+4rLUtIpOuuC7gixIbH633iqgRVnU=;
-X-UUID: 33676643d9964419b8fabf34a501bbcb-20200812
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1445121796; Wed, 12 Aug 2020 09:28:26 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS32DR.mediatek.inc
- (172.27.6.104) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 12 Aug
- 2020 09:28:19 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 12 Aug 2020 09:28:14 +0800
-Message-ID: <1597195610.21478.10.camel@mhfsdcap03>
-Subject: Re: [PATCH] usb: xhci-mtk: Fix typo
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Frank Wunderlich <linux@fw-web.de>
-CC:     <linux-mediatek@lists.infradead.org>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-usb@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Date:   Wed, 12 Aug 2020 09:26:50 +0800
-In-Reply-To: <20200808124906.89976-1-linux@fw-web.de>
-References: <20200808124906.89976-1-linux@fw-web.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Tue, 11 Aug 2020 21:31:36 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:26779 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726235AbgHLBbg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 21:31:36 -0400
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 4BRBxf0kNvz8r;
+        Wed, 12 Aug 2020 03:31:34 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1597195894; bh=KiohsbLXRM1ii8+BcDQdtCQAhTchsGUVHj1dkF0VDaE=;
+        h=Date:From:Subject:To:Cc:From;
+        b=alJCAr0fQw0M6FVX28BBbRtXKTOV4J/PvQwkNxVa1DF8r+rUqljXxZPlP87KMY0db
+         TXstkFi9pkMd59OlzCmiEvBOfiNajiKxohYxYAJohPz7ek+ZPEBWsiTt7v89fOqDH7
+         dYUNJ0/4jm41FOAzpKLrJib/Ehb41ZM0TcAH6cHFOurJXtf+IWPss7jrkTkPy4xv/l
+         O5waxQG+mqF8JU7rGZQGtdTNymFpBCtVxWNmeZHL7Bc4EYWhBbQ99Iom71kgGG97wx
+         UVTBocvLmlBkcesQSBH9E3iK68BSw9/YdjZl+QAo4g2KssS9TiBQ1siUAKsYhrxHk4
+         +347V+2njHwvA==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.4 at mail
+Date:   Wed, 12 Aug 2020 03:31:31 +0200
+Message-Id: <cover.1597195321.git.mirq-linux@rere.qmqm.pl>
+From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
+Subject: [PATCH v2 0/7] regulator: fix deadlock vs memory reclaim
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 0D2B0029EF119CD7EB5464ABFEF244164C84DA1B3C0330CEACF56DF3E90248D72000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Vladimir Zapolskiy <vz@mleia.com>
+Cc:     linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gU2F0LCAyMDIwLTA4LTA4IGF0IDE0OjQ5ICswMjAwLCBGcmFuayBXdW5kZXJsaWNoIHdyb3Rl
-Og0KPiBGcm9tOiBGcmFuayBXdW5kZXJsaWNoIDxmcmFuay13QHB1YmxpYy1maWxlcy5kZT4NCj4g
-DQo+IGZpeCB0aGlzIHNtYWxsIHR5cG8gdTNfcG9ydHNfZGlzYWJlZCA9PiB1M19wb3J0c19kaXNh
-YmxlZA0KPiANCj4gRml4ZXM6IDU1YmE2ZTllMjVhNiAodXNiOiB4aGNpLW10azogc3VwcG9ydCBv
-cHRpb24gdG8gZGlzYWJsZSB1c2IzIHBvcnRzKQ0KPiBTaWduZWQtb2ZmLWJ5OiBGcmFuayBXdW5k
-ZXJsaWNoIDxmcmFuay13QHB1YmxpYy1maWxlcy5kZT4NCj4gLS0tDQo+ICBkcml2ZXJzL3VzYi9o
-b3N0L3hoY2ktbXRrLmMgfCA2ICsrKy0tLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9u
-cygrKSwgMyBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3VzYi9ob3N0
-L3hoY2ktbXRrLmMgYi9kcml2ZXJzL3VzYi9ob3N0L3hoY2ktbXRrLmMNCj4gaW5kZXggNDMxMWQ0
-YzliNjhkLi44ZjMyMWYzOWFiOTYgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvdXNiL2hvc3QveGhj
-aS1tdGsuYw0KPiArKysgYi9kcml2ZXJzL3VzYi9ob3N0L3hoY2ktbXRrLmMNCj4gQEAgLTc3LDcg
-Kzc3LDcgQEAgc3RhdGljIGludCB4aGNpX210a19ob3N0X2VuYWJsZShzdHJ1Y3QgeGhjaV9oY2Rf
-bXRrICptdGspDQo+ICB7DQo+ICAJc3RydWN0IG11M2NfaXBwY19yZWdzIF9faW9tZW0gKmlwcGMg
-PSBtdGstPmlwcGNfcmVnczsNCj4gIAl1MzIgdmFsdWUsIGNoZWNrX3ZhbDsNCj4gLQlpbnQgdTNf
-cG9ydHNfZGlzYWJlZCA9IDA7DQo+ICsJaW50IHUzX3BvcnRzX2Rpc2FibGVkID0gMDsNCj4gIAlp
-bnQgcmV0Ow0KPiAgCWludCBpOw0KPiAgDQo+IEBAIC05Miw3ICs5Miw3IEBAIHN0YXRpYyBpbnQg
-eGhjaV9tdGtfaG9zdF9lbmFibGUoc3RydWN0IHhoY2lfaGNkX210ayAqbXRrKQ0KPiAgCS8qIHBv
-d2VyIG9uIGFuZCBlbmFibGUgdTMgcG9ydHMgZXhjZXB0IHNraXBwZWQgb25lcyAqLw0KPiAgCWZv
-ciAoaSA9IDA7IGkgPCBtdGstPm51bV91M19wb3J0czsgaSsrKSB7DQo+ICAJCWlmICgoMHgxIDw8
-IGkpICYgbXRrLT51M3BfZGlzX21zaykgew0KPiAtCQkJdTNfcG9ydHNfZGlzYWJlZCsrOw0KPiAr
-CQkJdTNfcG9ydHNfZGlzYWJsZWQrKzsNCj4gIAkJCWNvbnRpbnVlOw0KPiAgCQl9DQo+ICANCj4g
-QEAgLTExNyw3ICsxMTcsNyBAQCBzdGF0aWMgaW50IHhoY2lfbXRrX2hvc3RfZW5hYmxlKHN0cnVj
-dCB4aGNpX2hjZF9tdGsgKm10aykNCj4gIAljaGVja192YWwgPSBTVFMxX1NZU1BMTF9TVEFCTEUg
-fCBTVFMxX1JFRl9SU1QgfA0KPiAgCQkJU1RTMV9TWVMxMjVfUlNUIHwgU1RTMV9YSENJX1JTVDsN
-Cj4gIA0KPiAtCWlmIChtdGstPm51bV91M19wb3J0cyA+IHUzX3BvcnRzX2Rpc2FiZWQpDQo+ICsJ
-aWYgKG10ay0+bnVtX3UzX3BvcnRzID4gdTNfcG9ydHNfZGlzYWJsZWQpDQo+ICAJCWNoZWNrX3Zh
-bCB8PSBTVFMxX1UzX01BQ19SU1Q7DQo+ICANCj4gIAlyZXQgPSByZWFkbF9wb2xsX3RpbWVvdXQo
-JmlwcGMtPmlwX3B3X3N0czEsIHZhbHVlLA0KDQpSZXZpZXdlZC1ieTogQ2h1bmZlbmcgWXVuIDxj
-aHVuZmVuZy55dW5AbWVkaWF0ZWsuY29tPg0KDQpUaGFua3MNCg0KDQo=
+For systems that have eg. eMMC storage using voltage regulator, memory
+reclaim path might call back into regulator subsystem. This means we
+have to make sure no allocations happen with a regulator or regulator
+list locked.
+
+After this series I see no more lockdep complaints on my test system,
+but please review and test further.
+
+First four patches move allocations out of locked regions, next three
+came as a drive-by cleanups.
+
+---
+v2: fix bug in patch #4 spotted by kernel test robot
+    reworded commit #7 description
+
+Michał Mirosław (7):
+  regulator: push allocation in regulator_init_coupling() outside of
+    lock
+  regulator: push allocation in regulator_ena_gpio_request() out of lock
+  regulator: push allocations in create_regulator() outside of lock
+  regulator: push allocation in set_consumer_device_supply() out of lock
+  regulator: plug of_node leak in regulator_register()'s error path
+  regulator: cleanup regulator_ena_gpio_free()
+  regulator: remove superfluous lock in regulator_resolve_coupling()
+
+ drivers/regulator/core.c | 164 +++++++++++++++++++++------------------
+ 1 file changed, 87 insertions(+), 77 deletions(-)
+
+-- 
+2.20.1
 
