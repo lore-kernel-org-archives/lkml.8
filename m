@@ -2,90 +2,198 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 781F2C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:44:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D01C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:44:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D122206DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:44:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597261471;
-	bh=te33EoPc+Iz5uxZ9KIQiSsxB+yOdodisP4m1q+Ea38A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DkuoAKkLi6UfbJQ23KShz0QDozjpKPY9qkj5hAbgSDd5kreZaAyDpk6X4UUKQOaUt
-	 ijsOJ3rnIPJJecMY0S/fenjotlfa90j7yjZ+ScmmU2PzMrwj/Oh/bEttyfUCb1bYTK
-	 d9RwQSUSYjXoRojTnQaRiaVP5cthkvxHEOkmoaMU=
+	by mail.kernel.org (Postfix) with ESMTP id 027F8206DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:44:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="jLSBTUeS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726640AbgHLToa (ORCPT
+        id S1726688AbgHLToz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 15:44:30 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:41991 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726593AbgHLTo3 (ORCPT
+        Wed, 12 Aug 2020 15:44:55 -0400
+Received: from mail.efficios.com ([167.114.26.124]:39788 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726540AbgHLToy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 15:44:29 -0400
-Received: by mail-io1-f66.google.com with SMTP id j8so4275396ioe.9;
-        Wed, 12 Aug 2020 12:44:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=PI60pBGvyY4YK8WMXJBtlmGtDEkgGzmHg6VvPJsaQpE=;
-        b=VI8TkoCAWHmXRNWnVSOtPSHzOP19XClJNzHauG2MBv4GYmrB7c7Wh9Tlk5QShe0HSa
-         j0WnUHuaa5gP3rMEEhvc1uWlGY7h1VtTLCstorz17CFwZlyZvHNiyzLH6UzDzZjPSbcZ
-         UEOTBRLxPT8bTVjHmCzxsqNL5ObnvaA9+LKNY6rxYhizDGGdyluDQPZzYyZnYo30d4EW
-         AUiYW0qozM1Ov1Et8qRe2L5sL1xAMJMHEUrC6+kFaiFkseB1EF9rIn67nI5IrpJx5VQP
-         zdXIqibDymFpKTayZAIoa18es9BDK3BYkQNyoIn429noWMaIAwUbCID7iaFaRIuVAG4y
-         /sag==
-X-Gm-Message-State: AOAM531AwY8fiLPneBuhxDFPPtq+/anttgmYgwm5I6NKAEva2YvKyGbo
-        DXWNMLVaIHTdQ+rzGqceUA==
-X-Google-Smtp-Source: ABdhPJxtdZ8IsN1XGqyW7GSknz7VmFg9WPtG4jxsvpLrp0sWIqvvPreSCVcRhSyLZtRAjKXTfLscmA==
-X-Received: by 2002:a6b:6c13:: with SMTP id a19mr1392236ioh.31.1597261468379;
-        Wed, 12 Aug 2020 12:44:28 -0700 (PDT)
-Received: from xps15 ([64.188.179.248])
-        by smtp.gmail.com with ESMTPSA id m7sm1540808ilq.45.2020.08.12.12.44.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Aug 2020 12:44:27 -0700 (PDT)
-Received: (nullmailer pid 2587368 invoked by uid 1000);
-        Wed, 12 Aug 2020 19:44:23 -0000
-Date:   Wed, 12 Aug 2020 13:44:23 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Zhiyong Tao <zhiyong.tao@mediatek.com>
-Cc:     sean.wang@mediatek.com, matthias.bgg@gmail.com,
-        linus.walleij@linaro.org, srv_heupstream@mediatek.com,
-        jg_poxu@mediatek.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-gpio@vger.kernel.org, seiya.wang@mediatek.com,
-        eddie.huang@mediatek.com, biao.huang@mediatek.com,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        sin_jieyang@mediatek.com, erin.lo@mediatek.com,
-        sj.huang@mediatek.com, chuanjia.liu@mediatek.com,
-        devicetree@vger.kernel.org, sean.wang@kernel.org,
-        linux-arm-kernel@lists.infradead.org, hongzhou.yang@mediatek.com,
-        hui.liu@mediatek.com
-Subject: Re: [PATCH v3 1/3] dt-bindings: pinctrl: mt8192: add pinctrl file
-Message-ID: <20200812194423.GA2587320@bogus>
-References: <20200807074905.23468-1-zhiyong.tao@mediatek.com>
- <20200807074905.23468-2-zhiyong.tao@mediatek.com>
+        Wed, 12 Aug 2020 15:44:54 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id AAD4D2D929D;
+        Wed, 12 Aug 2020 15:44:52 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id bWQ-UzXqrOsE; Wed, 12 Aug 2020 15:44:52 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 53F4A2D8FC5;
+        Wed, 12 Aug 2020 15:44:52 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 53F4A2D8FC5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1597261492;
+        bh=27YeVv9LTcVA+WNghyxUs9/L79lcl7/RQBwB643XlH4=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=jLSBTUeSs5464E1gkJ7QKLaFNrvqBwdGbt3JW6cy9SfDaU4jyVeRyYVrxQnhggOdq
+         lZzrsKW5ajM3NqhdFDeUi+xelAR+1D5jP+E9NPTK7PjIMZXnEOvUQOhp8xDPFB/efF
+         RBnd+RsXExk7vuVbGWk1j2hxrVyvZN7ZV73hGM2zZAxOtYuVEFNq6dxZbnZirEc2N2
+         YgedSJ7TFC7cs2o7cncM0vIVnQ07Lttfwc6iAFcrokUZA5SQVTtAA24MDiU+q76q8y
+         7ht7Uju5f511xLBnhoC/v5D8JopPzrI3I/J7W8I/2CVAAe+8t6qmTCl1dnNzVAPOPF
+         0L0f9BTkww9xQ==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id xo32z08Mecvr; Wed, 12 Aug 2020 15:44:52 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id 461DF2D906D;
+        Wed, 12 Aug 2020 15:44:52 -0400 (EDT)
+Date:   Wed, 12 Aug 2020 15:44:52 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Peter Oskolkov <posk@posk.io>,
+        linux-arch <linux-arch@vger.kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Peter Oskolkov <posk@google.com>, paulmck <paulmck@kernel.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Paul Turner <pjt@google.com>,
+        Chris Kennelly <ckennelly@google.com>
+Message-ID: <1477195446.6156.1597261492255.JavaMail.zimbra@efficios.com>
+In-Reply-To: <CAFTs51XJhKXn7M2U2dZpFRsTrog4juy=UQfbtcdJfOj5TUSbqQ@mail.gmail.com>
+References: <20200811000959.2486636-1-posk@google.com> <20200811062733.GP3982@worktop.programming.kicks-ass.net> <CAFTs51XK0HLwCCvXCcfE5P7a4ExANPNPw7UvNigwHZ8sZVP+nQ@mail.gmail.com> <1003774683.6088.1597257002027.JavaMail.zimbra@efficios.com> <CAFTs51XJhKXn7M2U2dZpFRsTrog4juy=UQfbtcdJfOj5TUSbqQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2 v3] rseq/membarrier: add
+ MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200807074905.23468-2-zhiyong.tao@mediatek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3959 (ZimbraWebClient - FF79 (Linux)/8.8.15_GA_3953)
+Thread-Topic: rseq/membarrier: add MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ
+Thread-Index: PhnLhe0vwNWrPvX80tp/NjrejyMQtA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 07 Aug 2020 15:49:03 +0800, Zhiyong Tao wrote:
-> This patch adds pinctrl file for mt8192.
-> 
-> Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
-> ---
->  include/dt-bindings/pinctrl/mt8192-pinfunc.h | 1344 ++++++++++++++++++
->  1 file changed, 1344 insertions(+)
->  create mode 100644 include/dt-bindings/pinctrl/mt8192-pinfunc.h
-> 
+----- On Aug 12, 2020, at 2:48 PM, Peter Oskolkov posk@posk.io wrote:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+> On Wed, Aug 12, 2020 at 11:30 AM Mathieu Desnoyers
+> <mathieu.desnoyers@efficios.com> wrote:
+> 
+> [...]
+> 
+>> "flags" is there to allow extensibility without requiring to add new
+>> membarrier commands for every change. Even though it is not used now,
+>> I don't think re-purposing it is a good idea. What is wrong with just
+>> adding an additional "cpu" parameter to the system call ?
+> 
+> Can we do that? I thought adding an additional parameter means adding
+> another syscall (ABI => parameter types/count cannot change?)
+
+I was under the impression that adding parameters to a system call
+for new flags (or commands) was not an issue. One example is the
+clone system call which expects the ctid argument if the
+CLONE_CHILD_CLEARTID flag is set. But maybe it was OK at some earlier
+point in time, but it's not OK anymore ? (CCing linux-arch to ask for
+advice)
+
+> 
+>> A "flags" parameter is very common for system calls. I don't see why
+>> we should change its name, especially given it is already exposed and
+>> documented as "flags" in man pages.
+>>
+> 
+> [...]
+> 
+>> We basically have the following feature matrix:
+>>
+>> - private / global
+>> - expedited / non-expedited
+>> - sync-core / non-sync-core
+>> - rseq-fence / non-rseq-fence
+>>
+>> For a total of about 16 combinations in total if we want to support them
+>> all.
+>>
+>> We can continue to add separate commands for new combinations, but if we
+>> want to allow them to be combined, using flags rather than adding extra
+>> commands would have the advantage of keeping the number of commands
+>> manageable.
+>>
+>> However, if there is no actual use-case for combining a membarrier sync-core
+>> and a membarrier rseq-fence, then it limits the number of commands and maybe
+>> then it's acceptable to add the rseq-fence as a separate membarrier command.
+>>
+>> I prefer to have this discussion now rather than once we get to the point of
+>> having 40 membarrier commands for all possible combinations.
+> 
+> All commands are currently distinct bits, but are treated as separate commands.
+
+Indeed! I forgot about that. It was done so we can return a mask of supported
+commands with the MEMBARRIER_CMD_QUERY for feature discoverability. Those were
+never meant to be OR'd though, because then it's hard for user-space to discover
+what are the allowed command combinations.
+
+> One way of doing what you suggest is to allow some commands to be bitwise-ORed.
+> 
+> So, for example, the user could call
+> 
+> membarrier(CMD_PRIVATE_EXPEDITED_SYNC_CORE | CMD_PRIVATE_EXPEDITED_RSEQ, cpu_id)
+> 
+> Is this what you have in mind?
+
+Not really. This would not take care of the fact that we would end up multiplying
+the number of commands as we allow combinations. E.g. if we ever want to have RSEQ
+work in private and global, and in non-expedited and expedited, we end up needing:
+
+- CMD_REGISTER_PRIVATE_EXPEDITED_RSEQ
+- CMD_PRIVATE_EXPEDITED_RSEQ
+- CMD_PRIVATE_RSEQ
+- CMD_REGISTER_GLOBAL_EXPEDITED_RSEQ
+- CMD_GLOBAL_EXPEDITED_RSEQ
+- CMD_GLOBAL_RSEQ
+
+The only thing we would save by OR'ing it with the SYNC_CORE command is the additional
+list:
+
+- CMD_REGISTER_PRIVATE_EXPEDITED_RSEQ_SYNC_CORE
+- CMD_PRIVATE_EXPEDITED_RSEQ_SYNC_CORE
+- CMD_PRIVATE_RSEQ_SYNC_CORE
+- CMD_REGISTER_GLOBAL_EXPEDITED_RSEQ_SYNC_CORE
+- CMD_GLOBAL_EXPEDITED_RSEQ_SYNC_CORE
+- CMD_GLOBAL_RSEQ_SYNC_CORE
+
+But unless we receive feedback that doing a membarrier with RSEQ+sync_core all in
+one go is a significant use-case, I am tempted to leave out that scenario for now.
+If we go for new commands, this means we could add (for private-expedited-rseq):
+
+- MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED_RSEQ,
+- MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ,
+
+I do however have use-cases for using RSEQ across shared memory (between
+processes). Not currently for a rseq-fence, but for rseq acting as per-cpu
+atomic operations. If I ever end up needing rseq-fence across shared memory,
+that would result in the following new commands:
+
+- MEMBARRIER_CMD_REGISTER_GLOBAL_EXPEDITED_RSEQ,
+- MEMBARRIER_CMD_GLOBAL_EXPEDITED_RSEQ,
+
+The remaining open question is whether it would be OK to define a new
+membarrier flag=MEMBARRIER_FLAG_CPU, which would expect an additional
+@cpu parameter.
+
+Thanks,
+
+Mathieu
+
+> 
+> [...]
+> 
+> Thanks,
+> Peter
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
