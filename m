@@ -2,118 +2,153 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A226C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:43:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE37C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:45:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 282FF2076B
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:43:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A903C20838
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:45:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MvAgy4OJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O4fnuMvW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727074AbgHLJny (ORCPT
+        id S1727025AbgHLJpp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 05:43:54 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:24056 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726409AbgHLJnx (ORCPT
+        Wed, 12 Aug 2020 05:45:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59370 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726572AbgHLJpp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 05:43:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597225431;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=OdzUOSJMEbqrLIXBeiGU3Aa/BNw7IZScNhKdcrSD0Jw=;
-        b=MvAgy4OJZt4+1W3P50zRujnQtyNLV7VOKeMN8fgc5qVJFw2q2+znW9Odxt2CGuJGBQKE7B
-        QPkVU7ovwZX8qdZ3CZeluTgSeTKVmlQKNvt7Wgk4/0uhwNKerWu3AGi/pNWgAZmiKkVsOt
-        ROOzX2i1p+HG6HhuuhtQ85jXcwawgdw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-139-ws1TaZzyOwGDwINq-6ki_Q-1; Wed, 12 Aug 2020 05:43:50 -0400
-X-MC-Unique: ws1TaZzyOwGDwINq-6ki_Q-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4387279ED6;
-        Wed, 12 Aug 2020 09:43:48 +0000 (UTC)
-Received: from fogou.chygwyn.com (unknown [10.33.36.12])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7BCF019D7B;
-        Wed, 12 Aug 2020 09:43:33 +0000 (UTC)
-Subject: Re: file metadata via fs API
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     David Howells <dhowells@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, Karel Zak <kzak@redhat.com>,
-        Jeff Layton <jlayton@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Christian Brauner <christian@brauner.io>,
-        Lennart Poettering <lennart@poettering.net>,
-        Linux API <linux-api@vger.kernel.org>,
-        Ian Kent <raven@themaw.net>,
-        LSM <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <1842689.1596468469@warthog.procyon.org.uk>
- <1845353.1596469795@warthog.procyon.org.uk>
- <CAJfpegunY3fuxh486x9ysKtXbhTE0745ZCVHcaqs9Gww9RV2CQ@mail.gmail.com>
- <ac1f5e3406abc0af4cd08d818fe920a202a67586.camel@themaw.net>
- <CAJfpegu8omNZ613tLgUY7ukLV131tt7owR+JJ346Kombt79N0A@mail.gmail.com>
- <CAJfpegtNP8rQSS4Z14Ja4x-TOnejdhDRTsmmDD-Cccy2pkfVVw@mail.gmail.com>
- <20200811135419.GA1263716@miu.piliscsaba.redhat.com>
- <CAHk-=wjzLmMRf=QG-n+1HnxWCx4KTQn9+OhVvUSJ=ZCQd6Y1WA@mail.gmail.com>
- <52483.1597190733@warthog.procyon.org.uk>
- <CAJfpegt=cQ159kEH9zCYVHV7R_08jwMxF0jKrSUV5E=uBg4Lzw@mail.gmail.com>
- <98802.1597220949@warthog.procyon.org.uk>
- <CAJfpegsVJo9e=pHf3YGWkE16fT0QaNGhgkUdq4KUQypXaD=OgQ@mail.gmail.com>
-From:   Steven Whitehouse <swhiteho@redhat.com>
-Message-ID: <d2d179c7-9b60-ca1a-0c9f-d308fc7af5ce@redhat.com>
-Date:   Wed, 12 Aug 2020 10:43:24 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 12 Aug 2020 05:45:45 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6661C061787
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 02:45:44 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id z18so1377756wrm.12
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 02:45:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uTy4yxB/Sy2GGkpTfgcW5WshNn/nrvlwrV1YyVelTU4=;
+        b=O4fnuMvWm+m/y/xQ0sZI/HIuQwooizkMH82l/TS46A58WPBrGQ2fg1RcF7FPXOc/uN
+         wGvqCpbqCqZ94aojOfgfjR8gSTqFgSaPWYpwCLTXoskRKo+nASOq98bW4AGubTGej9xz
+         8KKXSAtg3QNIgTKlvF/fHwA7OyVUVO5PumRwCtfguGmzxiLLoqDWSQA4ueyXzTj0lPZR
+         uJyVkhOx+/09BOmXvnZCyHW1BLepSasJY6gnEXnqJ8hePPtH0KAFLS24Erk1233a6h6N
+         tRMZItKx6uepKGjsGt6n2V1ast7orB2wzRS6HFa0euRuxOgUAcqU91Bk0CY+m8Gmgqze
+         6uGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uTy4yxB/Sy2GGkpTfgcW5WshNn/nrvlwrV1YyVelTU4=;
+        b=ek1SgGB5XAeRf8VgzZNE5fr7EephpiRtMEzgEyDXY1I3pi3hsIzr6acpjBvtCj1Qhr
+         TP/TtR2MxPS/tbeBcTp5MfnEXJiidGLXzyrCACvzRbi7AjBHHwWpoN6snCDnayakUf2o
+         ijpmxtkC3b+Lt5MrqKkNgoAhJEYUXPVNOpRMzfw9XmNunBJWdhIF7NiUNk53UtS3x7Ob
+         4sZ2k8fxZLZvM7JkzLqK8ThRtkp224sZK2zphbhqXublpLehebVweZncJAROtn/Dw3XA
+         ceFun1Bsn8ZCnk0v1Ehp0nVUHUEAHZ4cqZHoHcjaxl3nn4b7RKvgLGwCRgUjFIDVoVUg
+         Ko0w==
+X-Gm-Message-State: AOAM532N2oDZ+/UXDI/03E4Q+wsUgLpXZhiw2t8/AEf7pX/hRfWVik/D
+        jzlnvR6sSpUefjnM+qH15h9vW+zv8mPB22GXnIxfrA==
+X-Google-Smtp-Source: ABdhPJweHtfwdTZ/38ShtwHpwcAIIJYfGimC5tyUNMlQ+k4jS8cib5W994DhMFiRcslMHtBRQJDioz2En/eBT/O5qWQ=
+X-Received: by 2002:a05:6000:1203:: with SMTP id e3mr33739356wrx.324.1597225543416;
+ Wed, 12 Aug 2020 02:45:43 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAJfpegsVJo9e=pHf3YGWkE16fT0QaNGhgkUdq4KUQypXaD=OgQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+References: <20200811190252.10559-1-sibis@codeaurora.org>
+In-Reply-To: <20200811190252.10559-1-sibis@codeaurora.org>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 12 Aug 2020 11:45:06 +0200
+Message-ID: <CAPDyKFqNMEtHwcJFxYQP5H1Yjrsr1T3UUZoXes69EthSjAYs2A@mail.gmail.com>
+Subject: Re: [PATCH 1/2] PM / Domains: Add GENPD_FLAG_SUSPEND_ON flag
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Andy Gross <agross@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Kevin Hilman <khilman@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 12/08/2020 09:37, Miklos Szeredi wrote:
-[snip]
+On Tue, 11 Aug 2020 at 21:03, Sibi Sankar <sibis@codeaurora.org> wrote:
 >
-> b) The awarded performance boost is not warranted for the use cases it
-> is designed for.
+> This is for power domains which needs to stay powered on for suspend
+> but can be powered on/off as part of runtime PM. This flag is aimed at
+> power domains coupled to remote processors which enter suspend states
+> independent to that of the application processor. Such power domains
+> are turned off only on remote processor crash/shutdown.
+
+As Kevin also requested, please elaborate more on the use case.
+
+Why exactly must the PM domain stay powered on during system suspend?
+Is there a wakeup configured that needs to be managed - or is there a
+co-processor/FW behaviour that needs to be obeyed to?
+
+Kind regards
+Uffe
+
 >
-> Thanks,
-> Miklos
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> ---
+>  drivers/base/power/domain.c | 3 ++-
+>  include/linux/pm_domain.h   | 5 +++++
+>  2 files changed, 7 insertions(+), 1 deletion(-)
 >
-
-This is a key point. One of the main drivers for this work is the 
-efficiency improvement for large numbers of mounts. Ian and Karel have 
-already provided performance measurements showing a significant benefit 
-compared with what we have today. If you want to propose this 
-alternative interface then you need to show that it can sustain similar 
-levels of performance, otherwise it doesn't solve the problem. So 
-performance numbers here would be helpful.
-
-Also - I may have missed this earlier in the discussion, what are the 
-atomicity guarantees with this proposal? This is the other key point for 
-the API, so it would be good to see that clearly stated (i.e. how does 
-one use it in combination with the notifications to provide an up to 
-date, consistent view of the kernel's mounts)
-
-Steve.
-
-
+> diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
+> index 2cb5e04cf86cd..ba78ac4a450d4 100644
+> --- a/drivers/base/power/domain.c
+> +++ b/drivers/base/power/domain.c
+> @@ -129,6 +129,7 @@ static const struct genpd_lock_ops genpd_spin_ops = {
+>  #define genpd_is_active_wakeup(genpd)  (genpd->flags & GENPD_FLAG_ACTIVE_WAKEUP)
+>  #define genpd_is_cpu_domain(genpd)     (genpd->flags & GENPD_FLAG_CPU_DOMAIN)
+>  #define genpd_is_rpm_always_on(genpd)  (genpd->flags & GENPD_FLAG_RPM_ALWAYS_ON)
+> +#define genpd_is_suspend_on(genpd)     (genpd->flags & GENPD_FLAG_SUSPEND_ON)
+>
+>  static inline bool irq_safe_dev_in_no_sleep_domain(struct device *dev,
+>                 const struct generic_pm_domain *genpd)
+> @@ -949,7 +950,7 @@ static void genpd_sync_power_off(struct generic_pm_domain *genpd, bool use_lock,
+>  {
+>         struct gpd_link *link;
+>
+> -       if (!genpd_status_on(genpd) || genpd_is_always_on(genpd))
+> +       if (!genpd_status_on(genpd) || genpd_is_always_on(genpd) || genpd_is_suspend_on(genpd))
+>                 return;
+>
+>         if (genpd->suspended_count != genpd->device_count
+> diff --git a/include/linux/pm_domain.h b/include/linux/pm_domain.h
+> index ee11502a575b0..3002a2d68936a 100644
+> --- a/include/linux/pm_domain.h
+> +++ b/include/linux/pm_domain.h
+> @@ -55,6 +55,10 @@
+>   *
+>   * GENPD_FLAG_RPM_ALWAYS_ON:   Instructs genpd to always keep the PM domain
+>   *                             powered on except for system suspend.
+> + *
+> + * GENPD_FLAG_SUSPEND_ON:      Instructs genpd to keep the PM domain powered
+> + *                             on during suspend and runtime PM controlled
+> + *                             otherwise.
+>   */
+>  #define GENPD_FLAG_PM_CLK       (1U << 0)
+>  #define GENPD_FLAG_IRQ_SAFE     (1U << 1)
+> @@ -62,6 +66,7 @@
+>  #define GENPD_FLAG_ACTIVE_WAKEUP (1U << 3)
+>  #define GENPD_FLAG_CPU_DOMAIN   (1U << 4)
+>  #define GENPD_FLAG_RPM_ALWAYS_ON (1U << 5)
+> +#define GENPD_FLAG_SUSPEND_ON   (1U << 6)
+>
+>  enum gpd_status {
+>         GPD_STATE_ACTIVE = 0,   /* PM domain is active */
+> --
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+>
