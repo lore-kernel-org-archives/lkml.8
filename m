@@ -2,63 +2,64 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C56F3C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 06:31:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83358C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 06:31:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1C8320781
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 06:31:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 605B820885
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 06:31:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h8Ljwbab"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="thVm+vNx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbgHLGbg (ORCPT
+        id S1726882AbgHLGbm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 02:31:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57666 "EHLO
+        Wed, 12 Aug 2020 02:31:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57672 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726572AbgHLGbf (ORCPT
+        with ESMTP id S1726572AbgHLGbh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 02:31:35 -0400
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2556BC06174A;
-        Tue, 11 Aug 2020 23:31:35 -0700 (PDT)
-Received: by mail-wr1-x434.google.com with SMTP id y3so938329wrl.4;
-        Tue, 11 Aug 2020 23:31:35 -0700 (PDT)
+        Wed, 12 Aug 2020 02:31:37 -0400
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8ED7FC06174A;
+        Tue, 11 Aug 2020 23:31:36 -0700 (PDT)
+Received: by mail-wr1-x433.google.com with SMTP id c15so902796wrs.11;
+        Tue, 11 Aug 2020 23:31:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=s+W2KNSfxt+TusGOoBlggzdrLIrra6LZ2EEZWr0qxxg=;
-        b=h8Ljwbab37d7TOBhq1tXfSegVssJHdWNOoI+wFqC4x5QurtELxYWxhPF2zqNq1mXVU
-         fJ9zbcTXGRB6SRZIpPWpNuwCE0wKl23/9JZh1JjVi//JHvUbCylMgww7xotqLJvf4+oC
-         bmK7ZXkxyVvhNg9PC4XPs+u1aVnGMQE1RHEUe/Go6yppEH393EbF9SZuXVps5n051g3i
-         j4jTBA5u89+fdow2n0Qlfv9L1dWFWgbXADLatGvDg0pxm80+ziooBJveZChdQSRXfn/T
-         vBNCyV5Dbiw77RB8wQ5tSq0SvxxTcoIaBw49XCheCok9S2T8LlZnd04pOIRWfyMOU2Ni
-         0HtA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=HfrH9XJIeIjW9MPHV3Q9JJJbPsSiUJeVFkAIIf3Fsl0=;
+        b=thVm+vNxzQibJ15/FXNsGM8X8eAsckiCxhPM+D01ZbzoSAEU6JochS1YD8dCAnRbk2
+         K4Wml/Y6OhlG537WBIM31z2Uxuu6X62FmkDJupDvnlNhvvkK59m+lG4yN2Ud7r0IMP3G
+         H8s6MHwUtvCVYmvh3SR+l7dOa8LG40DVN5FbYeBXup8/T9Or9XpAbuhzlf22REw993Nq
+         jMsjRxWYYs7UzUd3NO1dY+86IKQgOT0EC9LhxzfC/bL0p90E8za6K8aPtnaXUEHwX9wr
+         Nrbzt3d5Wx1pCiePPeeWJm2ZFRhbu+OjRCNMeFZ+xvB6x1e3MAdr6yrT8cqxX+WA+Fdd
+         aELg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=s+W2KNSfxt+TusGOoBlggzdrLIrra6LZ2EEZWr0qxxg=;
-        b=hNgNSPgavnw+WYkfnwJxoJ/i368ZdcdNatIPw0FChl58N0WjymYXrjyiA3LYpGbZFH
-         PvQPkFKdzV1xvFEfe4xO7kJoGZ7x44GGC2Q92hy9cVobtoXWYf2fwf6K8evFsWKngadS
-         O0Jf276esV31hzQEiQRuC710Z05MXD+RO1PN2Nc98zHYrkwbrQ3vzkQI2PyFIozwZb09
-         z1fqkylM2p7nECuMrgCt3y38cpNqSeZ2UW5z87V4oyVk8F3v4G6xSwSJvSv+QS/JKEIq
-         WBDON3ovDjQ5QWprVolZDtgC/0NPGpe+G6PYuHPW7PCQG0l+d6irdwOKzW7R3kR5hfFj
-         SMMA==
-X-Gm-Message-State: AOAM533aJ9L2fNcXQb45owCRjOfDMydlhZ9ASG3E+A68JLhpERkOKETB
-        7ysuTMfEmY6DuxWvNL52YhKSMbB+
-X-Google-Smtp-Source: ABdhPJzNHsi5MhhPLOLNTQvdztPaMWIkUFu8BCtXisQJFx8zkIGGBTVR5eZ5XcuYRe+eHs7QdYyhmQ==
-X-Received: by 2002:adf:ba52:: with SMTP id t18mr31838238wrg.26.1597213892758;
-        Tue, 11 Aug 2020 23:31:32 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=HfrH9XJIeIjW9MPHV3Q9JJJbPsSiUJeVFkAIIf3Fsl0=;
+        b=gHTdBOSAiP+KCwaDUNEGPK/CpE9BSbO04GtocGTkCkzCP0vuakjysMp6pZXspALLhS
+         W1SL8GKsJY6GfPaQdlOEEYohB7XC9eoMzVJDFghReS9D8CqxNsbBHqQdsFjDVlg8Ez7u
+         RxfRkFcYZAl2A2xCl1hhi29zRUR5A+TtTrMFn6oMM4lzqOflK3dln79Hy4SqZpDhttdb
+         wzZUCNUH7RKu/y91KbvstsHQKhBmSEKy6TfHmYRd6AxcEr/1Gb3LNpYO2Bzd8LYm/cGF
+         RoitCndV1KD4q2U7W8QtLZaGL7nk+mKY46kIvvxJM5DxoRjdJNHv/AhU9QS7vGcUxO0r
+         Gmuw==
+X-Gm-Message-State: AOAM533VmakjvhUZscuSqO8dw4RPOU8F4Rxf+UOGZzRxG2IIftYunRmG
+        wOIhdhaDK9d4ZxI5plfO+Xc=
+X-Google-Smtp-Source: ABdhPJw0Ro33dnofz1oLki58VUcsfiqtSUoBceaHpJxFxJ3ZVcLcltk40vjvS/eULcEa5M5lxRV5Jw==
+X-Received: by 2002:adf:9795:: with SMTP id s21mr31801505wrb.418.1597213895107;
+        Tue, 11 Aug 2020 23:31:35 -0700 (PDT)
 Received: from skynet.lan (88.red-83-49-60.dynamicip.rima-tde.net. [83.49.60.88])
-        by smtp.gmail.com with ESMTPSA id m16sm2149945wrr.71.2020.08.11.23.31.31
+        by smtp.gmail.com with ESMTPSA id m16sm2149945wrr.71.2020.08.11.23.31.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Aug 2020 23:31:31 -0700 (PDT)
+        Tue, 11 Aug 2020 23:31:34 -0700 (PDT)
 From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
         <noltari@gmail.com>
 To:     f.fainelli@gmail.com, robh+dt@kernel.org,
@@ -67,10 +68,12 @@ To:     f.fainelli@gmail.com, robh+dt@kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
         <noltari@gmail.com>
-Subject: [PATCH 00/14] mips: bmips: include dt-bindings headers
-Date:   Wed, 12 Aug 2020 08:31:15 +0200
-Message-Id: <20200812063129.361862-1-noltari@gmail.com>
+Subject: [PATCH 02/14] mips: bmips: add BCM3368 irq definitions
+Date:   Wed, 12 Aug 2020 08:31:17 +0200
+Message-Id: <20200812063129.361862-3-noltari@gmail.com>
 X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200812063129.361862-1-noltari@gmail.com>
+References: <20200812063129.361862-1-noltari@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -79,62 +82,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow including dt-bindings header files and use them for bcm63xx.
+Add header with BCM3368 definitions in order to be able to include it from
+device tree files.
 
-Álvaro Fernández Rojas (14):
-  mips: dts: brcm: allow including header files
-  mips: bmips: add BCM3368 irq definitions
-  mips: bmips: add BCM6318 irq definitions
-  mips: bmips: add BCM6328 irq definitions
-  mips: bmips: add BCM6358 irq definitions
-  mips: bmips: add BCM6362 irq definitions
-  mips: bmips: add BCM6368 irq definitions
-  mips: bmips: add BCM63268 irq definitions
-  mips: bmips: bcm3368: include and use dt-bindings
-  mips: bmips: bcm6328: include and use dt-bindings
-  mips: bmips: bcm6358: include and use dt-bindings
-  mips: bmips: bcm6362: include and use dt-bindings
-  mips: bmips: bcm6368: include and use dt-bindings
-  mips: bmips: bcm63268: include and use dt-bindings
-
- .../boot/dts/brcm/bcm3368-netgear-cvg834g.dts |  2 +-
- arch/mips/boot/dts/brcm/bcm3368.dtsi          |  8 +-
- .../dts/brcm/bcm63268-comtrend-vr-3032u.dts   |  2 +-
- arch/mips/boot/dts/brcm/bcm63268.dtsi         | 12 ++-
- arch/mips/boot/dts/brcm/bcm6328.dtsi          | 12 ++-
- .../dts/brcm/bcm6358-neufbox4-sercomm.dts     |  2 +-
- arch/mips/boot/dts/brcm/bcm6358.dtsi          | 12 ++-
- .../dts/brcm/bcm6362-neufbox6-sercomm.dts     |  2 +-
- arch/mips/boot/dts/brcm/bcm6362.dtsi          | 12 ++-
- arch/mips/boot/dts/brcm/bcm6368.dtsi          | 12 ++-
- arch/mips/boot/dts/brcm/bcm93384wvg.dts       |  2 +-
- arch/mips/boot/dts/brcm/bcm93384wvg_viper.dts |  2 +-
- arch/mips/boot/dts/brcm/bcm96368mvwg.dts      |  2 +-
- arch/mips/boot/dts/brcm/bcm97125cbmb.dts      |  2 +-
- arch/mips/boot/dts/brcm/bcm97346dbsmb.dts     |  4 +-
- arch/mips/boot/dts/brcm/bcm97358svmb.dts      |  4 +-
- arch/mips/boot/dts/brcm/bcm97360svmb.dts      |  2 +-
- arch/mips/boot/dts/brcm/bcm97362svmb.dts      |  4 +-
- arch/mips/boot/dts/brcm/bcm97420c.dts         |  2 +-
- arch/mips/boot/dts/brcm/bcm97425svmb.dts      |  4 +-
- arch/mips/boot/dts/brcm/bcm97435svmb.dts      |  4 +-
- arch/mips/boot/dts/brcm/bcm9ejtagprb.dts      |  2 +-
- .../bcm3368-interrupt-controller.h            | 19 ++++
- .../bcm6318-interrupt-controller.h            | 84 ++++++++++++++++++
- .../bcm63268-interrupt-controller.h           | 86 +++++++++++++++++++
- .../bcm6328-interrupt-controller.h            | 68 +++++++++++++++
- .../bcm6358-interrupt-controller.h            | 38 ++++++++
- .../bcm6362-interrupt-controller.h            | 71 +++++++++++++++
- .../bcm6368-interrupt-controller.h            | 71 +++++++++++++++
- 29 files changed, 504 insertions(+), 43 deletions(-)
+Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+---
+ .../bcm3368-interrupt-controller.h            | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
  create mode 100644 include/dt-bindings/interrupt-controller/bcm3368-interrupt-controller.h
- create mode 100644 include/dt-bindings/interrupt-controller/bcm6318-interrupt-controller.h
- create mode 100644 include/dt-bindings/interrupt-controller/bcm63268-interrupt-controller.h
- create mode 100644 include/dt-bindings/interrupt-controller/bcm6328-interrupt-controller.h
- create mode 100644 include/dt-bindings/interrupt-controller/bcm6358-interrupt-controller.h
- create mode 100644 include/dt-bindings/interrupt-controller/bcm6362-interrupt-controller.h
- create mode 100644 include/dt-bindings/interrupt-controller/bcm6368-interrupt-controller.h
 
+diff --git a/include/dt-bindings/interrupt-controller/bcm3368-interrupt-controller.h b/include/dt-bindings/interrupt-controller/bcm3368-interrupt-controller.h
+new file mode 100644
+index 000000000000..e269c1bb93ea
+--- /dev/null
++++ b/include/dt-bindings/interrupt-controller/bcm3368-interrupt-controller.h
+@@ -0,0 +1,19 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
++
++#ifndef __DT_BINDINGS_INTERRUPT_CONTROLLER_BCM3368_H
++#define __DT_BINDINGS_INTERRUPT_CONTROLLER_BCM3368_H
++
++#define BCM3368_IRQ_TIMER		0
++#define BCM3368_IRQ_SPI			1
++#define BCM3368_IRQ_UART0		2
++#define BCM3368_IRQ_UART1		3
++#define BCM3368_IRQ_ENET1		6
++#define BCM3368_IRQ_ENET0		8
++#define BCM3368_IRQ_ENET_PHY		9
++#define BCM3368_IRQ_ENET0_RX_DMA	15
++#define BCM3368_IRQ_ENET0_TX_DMA	16
++#define BCM3368_IRQ_ENET1_RX_DMA	17
++#define BCM3368_IRQ_ENET1_TX_DMA	18
++#define BCM3368_IRQ_PCI			31
++
++#endif /* __DT_BINDINGS_INTERRUPT_CONTROLLER_BCM3368_H */
 -- 
 2.28.0
 
