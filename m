@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 198E1C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:57:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FBD0C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D537622B45
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:57:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AC1820866
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:57:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597247823;
-	bh=oHFGCA4Xsb3f0Wc/G5uhBYxGg3jXhNGSQwInGaAMvGo=;
+	s=default; t=1597247831;
+	bh=Gpq5ix4ezroTt36b6Z1RuaTnByqc8WPwI1MtpDCopoQ=;
 	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
-	b=ORqAyuPH+3hop7F8rpm8uqBlICM6H4Xk/bGeSmAfGbAuRxVovp3puhiQX7gWWWFmz
-	 3h3Psp/63oVK1U2y7OxZ63QwPCSkyPtgC09KQE3R57CSxlo40k+TpVA+uqUqVUvg3n
-	 kIDkLb8ee7Hi96WfTA9OZdUSoEc5i0FLSVwmzapw=
+	b=IGVhQWUqU2wSTZTUGz1eglKs78wYfpjOg8Sh0v7+G8aaReA9tDlZdaflvWRBKt4if
+	 2ycezRyPrMJyGgVn0haaeawnH6aPv9KGsa0f2J4ZKsnIUzpZFOjQ9wJcJ+fufEUCpH
+	 5MznUOQLk0bbXw98NFspgrJwyKGQPiO66JlBsY8g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726658AbgHLP5C (ORCPT
+        id S1726816AbgHLP5J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 11:57:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45460 "EHLO mail.kernel.org"
+        Wed, 12 Aug 2020 11:57:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46170 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726506AbgHLP5A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 11:57:00 -0400
+        id S1726667AbgHLP5C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 11:57:02 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5367B20866;
-        Wed, 12 Aug 2020 15:56:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4922322D04;
+        Wed, 12 Aug 2020 15:57:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597247819;
-        bh=oHFGCA4Xsb3f0Wc/G5uhBYxGg3jXhNGSQwInGaAMvGo=;
+        s=default; t=1597247820;
+        bh=Gpq5ix4ezroTt36b6Z1RuaTnByqc8WPwI1MtpDCopoQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sgBb3qB0AGgiXkVzwMVzYfEozfRmAcmgKTcSwMaTODIplMAwO3AW4DSTb/zQDgWaS
-         iLD7Fihw8oORCWPZGJHCf5j7QHGuCJ/tfHyGSYyRJWveOrTUZbJMzMkIyfqxLMaYLX
-         rXHJ4ZyJu4epi7Y6iRHeCH4SnCHAmHv4j/WF0CjI=
+        b=ecVF+S00hrK+LBZLxx3QnnwVH38ERNtt8aS/rX4YLc8RunTl0o0WHK3SLFkDRXF2A
+         hSw0e9HIAlhJo2xqrsrWtZDqXI41h/tMpaVc5rq5zM5StlJITXZmQ4lSvrxg6K0UmB
+         TY39DkVUGrQsGz/b5gzml+kyWoNr5qV+OsZPOmT8=
 Received: from mchehab by mail.kernel.org with local (Exim 4.94)
         (envelope-from <mchehab@kernel.org>)
-        id 1k5t7Z-005t5e-DE; Wed, 12 Aug 2020 17:56:57 +0200
+        id 1k5t7a-005t6T-CZ; Wed, 12 Aug 2020 17:56:58 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org
-Subject: [PATCH 03/44] staging: spmi: hisi-spmi-controller: fix it to probe successfully
-Date:   Wed, 12 Aug 2020 17:56:13 +0200
-Message-Id: <8c4b9401958345ebe76d2bd08d93528229d8af5a.1597247164.git.mchehab+huawei@kernel.org>
+        Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org
+Subject: [PATCH 20/44] staging: mfd: hi6421-spmi-pmic: fix some coding style issues
+Date:   Wed, 12 Aug 2020 17:56:30 +0200
+Message-Id: <867108ee50302f933fade56f8c25ef775ade36b3.1597247164.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1597247164.git.mchehab+huawei@kernel.org>
 References: <cover.1597247164.git.mchehab+huawei@kernel.org>
@@ -61,56 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a MODULE_DEVICE_TABLE() to the driver.
+Checkpatch complains about some minor issues inside this
+driver that were not addressed by the previous patch.
 
-Also, the current logic calls platform_set_drvdata(pdev, NULL)
-if the driver succeeds loading.
-
-While here, remove the .owner, as it is not needed upstream
-anymore.
+Address them.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- drivers/staging/hikey9xx/hisi-spmi-controller.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/staging/hikey9xx/hi6421-spmi-pmic.c | 4 ++--
+ include/linux/mfd/hi6421-spmi-pmic.h        | 3 ++-
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/staging/hikey9xx/hisi-spmi-controller.c b/drivers/staging/hikey9xx/hisi-spmi-controller.c
-index 3af0bd1b379f..bc6847f9a5e7 100644
---- a/drivers/staging/hikey9xx/hisi-spmi-controller.c
-+++ b/drivers/staging/hikey9xx/hisi-spmi-controller.c
-@@ -324,11 +324,14 @@ static int spmi_controller_probe(struct platform_device *pdev)
- 	ctrl->write_cmd = spmi_write_cmd;
- 
- 	ret = spmi_controller_add(ctrl);
--	if (ret) {
--		dev_err(&pdev->dev, "spmi_add_controller failed!\n");
-+	if (ret)
- 		goto err_add_controller;
--	}
-+
-+	dev_info(&pdev->dev, "spmi_add_controller initialized\n");
-+	return 0;
-+
- err_add_controller:
-+	dev_err(&pdev->dev, "spmi_add_controller failed!\n");
- 	platform_set_drvdata(pdev, NULL);
- 	return ret;
- }
-@@ -347,13 +350,13 @@ static const struct of_device_id spmi_controller_match_table[] = {
- 	},
- 	{}
+diff --git a/drivers/staging/hikey9xx/hi6421-spmi-pmic.c b/drivers/staging/hikey9xx/hi6421-spmi-pmic.c
+index 09cedfa1e4bb..d8b84d64041e 100644
+--- a/drivers/staging/hikey9xx/hi6421-spmi-pmic.c
++++ b/drivers/staging/hikey9xx/hi6421-spmi-pmic.c
+@@ -189,7 +189,7 @@ static struct irq_chip hi6421_spmi_pmu_irqchip = {
  };
-+MODULE_DEVICE_TABLE(of, spmi_controller_match_table);
  
- static struct platform_driver spmi_controller_driver = {
- 	.probe		= spmi_controller_probe,
- 	.remove		= spmi_del_controller,
- 	.driver		= {
- 		.name	= SPMI_CONTROLLER_NAME,
--		.owner	= THIS_MODULE,
- 		.of_match_table = spmi_controller_match_table,
- 	},
+ static int hi6421_spmi_irq_map(struct irq_domain *d, unsigned int virq,
+-			irq_hw_number_t hw)
++			       irq_hw_number_t hw)
+ {
+ 	struct hi6421_spmi_pmic *pmic = d->host_data;
+ 
+@@ -350,7 +350,7 @@ static int hi6421_spmi_pmic_probe(struct spmi_device *pdev)
+ 	 * The logic below will rely that the pmic is already stored at
+ 	 * drvdata.
+ 	 */
+-	dev_dbg(&pdev->dev, "SPMI-PMIC: adding childs for %pOF\n",
++	dev_dbg(&pdev->dev, "SPMI-PMIC: adding children for %pOF\n",
+ 		pdev->dev.of_node);
+ 	ret = devm_mfd_add_devices(&pdev->dev, PLATFORM_DEVID_NONE,
+ 				   hi6421v600_devs, ARRAY_SIZE(hi6421v600_devs),
+diff --git a/include/linux/mfd/hi6421-spmi-pmic.h b/include/linux/mfd/hi6421-spmi-pmic.h
+index d12ad7484018..aeff96c4a37e 100644
+--- a/include/linux/mfd/hi6421-spmi-pmic.h
++++ b/include/linux/mfd/hi6421-spmi-pmic.h
+@@ -38,7 +38,8 @@ struct hi6421_spmi_pmic {
+ 	unsigned int				*irqs;
+ 	int					irqnum;
+ 	int					irqarray;
+-	struct hi6421_spmi_irq_mask_info 	irq_mask_addr;
++
++	struct hi6421_spmi_irq_mask_info	irq_mask_addr;
+ 	struct hi6421_spmi_irq_info		irq_addr;
  };
+ 
 -- 
 2.26.2
 
