@@ -2,107 +2,116 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26626C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:17:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C71FAC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F383F2076B
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:17:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ED9F2076B
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:18:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="oF4sLmzN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbgHLQRv (ORCPT
+        id S1726688AbgHLQSO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 12:17:51 -0400
-Received: from smtprelay0117.hostedemail.com ([216.40.44.117]:53540 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726456AbgHLQRv (ORCPT
+        Wed, 12 Aug 2020 12:18:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35058 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726456AbgHLQSO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 12:17:51 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 473701802E60D;
-        Wed, 12 Aug 2020 16:17:50 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: play11_200348126fec
-X-Filterd-Recvd-Size: 2835
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf09.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 12 Aug 2020 16:17:48 +0000 (UTC)
-Message-ID: <49f9d3c8dc8882e36bb8785ac9d6b75e5f35d77b.camel@perches.com>
-Subject: Re: [PATCH 10/44] staging: spmi: hisi-spmi-controller: do some code
- cleanups
-From:   Joe Perches <joe@perches.com>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Date:   Wed, 12 Aug 2020 09:17:47 -0700
-In-Reply-To: <49a517017f1efbfc97cb0e88f151dc2844d54351.1597247164.git.mchehab+huawei@kernel.org>
-References: <cover.1597247164.git.mchehab+huawei@kernel.org>
-         <49a517017f1efbfc97cb0e88f151dc2844d54351.1597247164.git.mchehab+huawei@kernel.org>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.4-0ubuntu1 
+        Wed, 12 Aug 2020 12:18:14 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD5BDC061383;
+        Wed, 12 Aug 2020 09:18:13 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 704659E7;
+        Wed, 12 Aug 2020 18:18:11 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1597249091;
+        bh=2+qRB0EDeJKOceT4aKdTruoVhWNyj1iPb3qSiAE6P+E=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oF4sLmzNmpVYuU2DgemwmQqHJOrzIjqj5WyaPjCinr3HvqAxG88mdmDT9POvzhZjm
+         vY4XOzk2KTZXFlA0mktOpM71pb99ITKrM7QycoRE+BGrJjJ30aY62f/IaSCmBi1X2R
+         iEI05bEW3Yh/N8+4WXgcxWmzZmtqdgWa8WOnx98s=
+Date:   Wed, 12 Aug 2020 19:17:57 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Marian-Cristian Rotariu 
+        <marian-cristian.rotariu.rb@bp.renesas.com>
+Subject: Re: [PATCH 4/9] dt-bindings: display: renesas,lvds: Document
+ r8a774e1 bindings
+Message-ID: <20200812161757.GN6057@pendragon.ideasonboard.com>
+References: <20200812140217.24251-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200812140217.24251-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200812140217.24251-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-08-12 at 17:56 +0200, Mauro Carvalho Chehab wrote:
-> There are several minor things that can be cleanup in
-> order to make this driver more prepared for leaving staging.
+Hi Prabhakar,
 
-trivial style notes:
+Thank you for the patch.
 
-> diff --git a/drivers/staging/hikey9xx/hisi-spmi-controller.c b/drivers/staging/hikey9xx/hisi-spmi-controller.c
-[]
-> @@ -106,14 +83,13 @@ static int spmi_controller_wait_for_done(struct device *dev,
->  					 struct spmi_controller_dev *ctrl_dev,
->  					 void __iomem *base, u8 sid, u16 addr)
->  {
-> -	u32 status = 0;
->  	u32 timeout = SPMI_CONTROLLER_TIMEOUT_US;
-> -	u32 offset;
-> +	u32 status, offset;
->  
->  	offset  = SPMI_APB_SPMI_STATUS_BASE_ADDR;
->  	offset += SPMI_CHANNEL_OFFSET * ctrl_dev->channel + SPMI_SLAVE_OFFSET * sid;
->  
-> -	while (timeout--) {
-> +	do {
->  		status = readl(base + offset);
->  
->  		if (status & SPMI_APB_TRANS_DONE) {
-> @@ -126,21 +102,21 @@ static int spmi_controller_wait_for_done(struct device *dev,
->  			return 0;
->  		}
->  		udelay(1);
-> -	}
-> +	}  while(timeout--);
+On Wed, Aug 12, 2020 at 03:02:12PM +0100, Lad Prabhakar wrote:
+> From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> 
+> Document the RZ/G2H (R8A774E1) LVDS bindings.
+> 
+> Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+>  .../devicetree/bindings/display/bridge/renesas,lvds.txt          | 1 +
 
-Odd spacing.
-Two spaces after close brace, none before open parenthesis.
+This binding has been converted to YAML. I'll apply the patch manually
+as it's a one-liner.
 
-> @@ -237,14 +217,13 @@ static int spmi_write_cmd(struct spmi_controller *ctrl,
-[]
-> -	i = 0;
-> -	do {
-> +	for (i = 0; bc > i * SPMI_PER_DATAREG_BYTE; i++) {
->  		data = 0;
->  		if ((bc - i * SPMI_PER_DATAREG_BYTE) >> 2) {
->  			memcpy(&data, buf, sizeof(data));
-> @@ -256,22 +235,22 @@ static int spmi_write_cmd(struct spmi_controller *ctrl,
->  
->  		writel((u32)cpu_to_be32(data),
->  		       spmi_controller->base + chnl_ofst + SPMI_APB_SPMI_WDATA0_BASE_ADDR + SPMI_PER_DATAREG_BYTE * i);
-> -		i++;
-> -	} while (bc > i * SPMI_PER_DATAREG_BYTE);
-> +	};
+diff --git a/Documentation/devicetree/bindings/display/bridge/renesas,lvds.yaml b/Documentation/devicetree/bindings/display/bridge/renesas,lvds.yaml
+index 4ca5a904b0ea..0fe0c49403f8 100644
+--- a/Documentation/devicetree/bindings/display/bridge/renesas,lvds.yaml
++++ b/Documentation/devicetree/bindings/display/bridge/renesas,lvds.yaml
+@@ -22,6 +22,7 @@ properties:
+       - renesas,r8a774a1-lvds # for RZ/G2M compatible LVDS encoders
+       - renesas,r8a774b1-lvds # for RZ/G2N compatible LVDS encoders
+       - renesas,r8a774c0-lvds # for RZ/G2E compatible LVDS encoders
++      - renesas,r8a774e1-lvds # for RZ/G2H compatible LVDS encoders
+       - renesas,r8a7790-lvds # for R-Car H2 compatible LVDS encoders
+       - renesas,r8a7791-lvds # for R-Car M2-W compatible LVDS encoders
+       - renesas,r8a7793-lvds # for R-Car M2-N compatible LVDS encoders
 
-Unnecessary semicolon after for loop close brace.
+If you see any issue there, please let me know.
 
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt b/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
+> index c62ce2494ed9..42743d0d24b3 100644
+> --- a/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
+> +++ b/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
+> @@ -12,6 +12,7 @@ Required properties:
+>    - "renesas,r8a774a1-lvds" for R8A774A1 (RZ/G2M) compatible LVDS encoders
+>    - "renesas,r8a774b1-lvds" for R8A774B1 (RZ/G2N) compatible LVDS encoders
+>    - "renesas,r8a774c0-lvds" for R8A774C0 (RZ/G2E) compatible LVDS encoders
+> +  - "renesas,r8a774e1-lvds" for R8A774E1 (RZ/G2H) compatible LVDS encoders
+>    - "renesas,r8a7790-lvds" for R8A7790 (R-Car H2) compatible LVDS encoders
+>    - "renesas,r8a7791-lvds" for R8A7791 (R-Car M2-W) compatible LVDS encoders
+>    - "renesas,r8a7793-lvds" for R8A7793 (R-Car M2-N) compatible LVDS encoders
 
+-- 
+Regards,
+
+Laurent Pinchart
