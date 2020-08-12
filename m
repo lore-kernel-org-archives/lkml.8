@@ -2,320 +2,232 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4619DC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:15:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E6ECC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:16:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14D9620781
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:15:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46A2C20781
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:16:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QY2+OpWE"
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="rI9zXoyy";
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="rI9zXoyy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726578AbgHLOP1 (ORCPT
+        id S1726615AbgHLOQs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 10:15:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44364 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726488AbgHLOP0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 10:15:26 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21051C061383;
-        Wed, 12 Aug 2020 07:15:26 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id j9so1727810ilc.11;
-        Wed, 12 Aug 2020 07:15:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=DDhY+P0lBC9pd05d4FvtB0mHakxKn00E1k9HqMtjaS8=;
-        b=QY2+OpWE8jh+LJzD58J/dVkZ7Cqx5rWlkahr1UzEIvOz+6rVVRk2DfB5n29TKwvJ0I
-         V6GZcPDm3kDdHo571/cKSN/n/9rx/FE0nV4t323nO1P1lad5MCHC4fUqOg2O/S+Ts+WM
-         0KtcH5Pc1dz8YCtw8IfQvfsPVHY3wZt0JtnWeMP0V16GENmBkOya5902dhIa4+BK0DTe
-         gYG7WyLVNzRzPaIPPrBhxWpb82j8+kv3l2dYCKnYva5hXfyjjl7B9DutFX0NhUd8vu2F
-         vRx9YNrxTbsVlXtC8ASPoeUfSkRL9ykiHEDoHoRmjreox7DrH99CRP9EphKEfmhixuip
-         fbiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=DDhY+P0lBC9pd05d4FvtB0mHakxKn00E1k9HqMtjaS8=;
-        b=KVMg/0Ji1OYXQ2rQv+z0SgrWw1OZSuzTRpwA/o6K2Lh5MdobGchCYsq/kgkB5Zb4Rl
-         cseo0FH4gfmtLnxPt2nEHsCimDI6kOyHJu3pANZlFczyNIoqKIuzxxEl77FT4fW5g+W5
-         Vf6y85fQVGY7fwSK1Q7imHU9nNQ4pRIAmZo43WShwNniTth8hYw6n0hzEByVc6gRCPxy
-         ogTOPcA/S8wSD9BZTo92XvgFEILmjmJQuRHM+vPzv2nYxUPll6OS85tqQSEwiI2wQ2PE
-         kRitaW9fJ/ziTQnuaZII8dgPV4Tdu/Yh3GHqyRzjWNk2AkuB/kIqM6vqxQMO2g4u7VA4
-         1szA==
-X-Gm-Message-State: AOAM532s5ARgrFT4eg02gWfj0lY0nEmta844q3BbgZZruMZrLHuijuLm
-        RHz5rVOie7IK9p1wOM4Xwv4=
-X-Google-Smtp-Source: ABdhPJx9YDj09YBZkQf3zY2davXEvExj+ZReUjqVBxlIJohvcx3Xwo772HhM3JKHvRwiBfLt/XdEhw==
-X-Received: by 2002:a92:d4cf:: with SMTP id o15mr29246989ilm.25.1597241725377;
-        Wed, 12 Aug 2020 07:15:25 -0700 (PDT)
-Received: from anon-dhcp-152.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
-        by smtp.gmail.com with ESMTPSA id v28sm1163544ili.27.2020.08.12.07.15.22
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 12 Aug 2020 07:15:24 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [dm-devel] [RFC PATCH v5 00/11] Integrity Policy Enforcement LSM
- (IPE)
-From:   Chuck Lever <chucklever@gmail.com>
-In-Reply-To: <1597161218.4325.38.camel@HansenPartnership.com>
-Date:   Wed, 12 Aug 2020 10:15:22 -0400
-Cc:     Mimi Zohar <zohar@linux.ibm.com>, James Morris <jmorris@namei.org>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>,
-        snitzer@redhat.com, dm-devel@redhat.com,
-        tyhicks@linux.microsoft.com, agk@redhat.com,
-        Paul Moore <paul@paul-moore.com>,
-        Jonathan Corbet <corbet@lwn.net>, nramas@linux.microsoft.com,
-        serge@hallyn.com, pasha.tatashin@soleen.com,
-        Jann Horn <jannh@google.com>, linux-block@vger.kernel.org,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jens Axboe <axboe@kernel.dk>, mdsakib@microsoft.com,
-        open list <linux-kernel@vger.kernel.org>, eparis@redhat.com,
-        linux-security-module@vger.kernel.org, linux-audit@redhat.com,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-integrity@vger.kernel.org,
-        jaskarankhurana@linux.microsoft.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <02D551EF-C975-4B91-86CA-356FA0FF515C@gmail.com>
-References: <20200728213614.586312-1-deven.desai@linux.microsoft.com>
- <20200802115545.GA1162@bug> <20200802140300.GA2975990@sasha-vm>
- <20200802143143.GB20261@amd> <1596386606.4087.20.camel@HansenPartnership.com>
- <fb35a1f7-7633-a678-3f0f-17cf83032d2b@linux.microsoft.com>
- <1596639689.3457.17.camel@HansenPartnership.com>
- <alpine.LRH.2.21.2008050934060.28225@namei.org>
- <b08ae82102f35936427bf138085484f75532cff1.camel@linux.ibm.com>
- <329E8DBA-049E-4959-AFD4-9D118DEB176E@gmail.com>
- <da6f54d0438ee3d3903b2c75fcfbeb0afdf92dc2.camel@linux.ibm.com>
- <1597073737.3966.12.camel@HansenPartnership.com>
- <6E907A22-02CC-42DD-B3CD-11D304F3A1A8@gmail.com>
- <1597124623.30793.14.camel@HansenPartnership.com>
- <16C3BF97-A7D3-488A-9D26-7C9B18AD2084@gmail.com>
- <1597161218.4325.38.camel@HansenPartnership.com>
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Wed, 12 Aug 2020 10:16:48 -0400
+Received: from mail-eopbgr40063.outbound.protection.outlook.com ([40.107.4.63]:27587
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726488AbgHLOQq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 10:16:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GeAs3CxtdJJ99/rZY44V7/YvDQ/bVMA3/ZJN/1D4ShY=;
+ b=rI9zXoyyuT2W7JC0A/yNfwpbUkuHDWaElSIC50U+CRS5E8YlGhvDUNxM669pM5nnX9Qt9TyW6sCckA4ymNN4tB30VD5UE0aM+hw8PouaQkhdf2CRGNH/q/80/CcZgJi0fkH51yRWJcKkWMmnhSMZ3LLPJrCkrd8Yx0YsYDvC6yQ=
+Received: from AM7PR03CA0024.eurprd03.prod.outlook.com (2603:10a6:20b:130::34)
+ by DB6PR08MB2648.eurprd08.prod.outlook.com (2603:10a6:6:17::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.15; Wed, 12 Aug
+ 2020 14:16:41 +0000
+Received: from AM5EUR03FT010.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:20b:130:cafe::25) by AM7PR03CA0024.outlook.office365.com
+ (2603:10a6:20b:130::34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.15 via Frontend
+ Transport; Wed, 12 Aug 2020 14:16:41 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=bestguesspass
+ action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
+ client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ AM5EUR03FT010.mail.protection.outlook.com (10.152.16.134) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3283.16 via Frontend Transport; Wed, 12 Aug 2020 14:16:41 +0000
+Received: ("Tessian outbound a0bffebca527:v64"); Wed, 12 Aug 2020 14:16:41 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: f5e2f5a6ff76f675
+X-CR-MTA-TID: 64aa7808
+Received: from f5ace8dfe987.1
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id F40675C1-35F2-47B4-AE90-F918059ACD9B.1;
+        Wed, 12 Aug 2020 14:16:04 +0000
+Received: from EUR03-DB5-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id f5ace8dfe987.1
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Wed, 12 Aug 2020 14:16:04 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IMXYNv/WNdvyfhoEYmAU22IGjDyToksT6glQBrU7jin64oKInJ8McvXeCzmvS+dO7gCH3MOM9LkolVrFibwsC3gyRztSFyLqFLmv33GVhudvJzCk7s7ki6A/J1513ACsCu4y2kDZbMmgsWsMKysknwuttTA8dXaTFQWP+1kx9bBZUX1NrxDroxcSD8UT1sAGjAKitrNPi8Yn574HdMdvIdJE2ffevYCNj/7XL8ag+tgEdGzS0GuvkdLqV6J3BbpvSwv/aHSVnC9kepn+DffCyTko/cp1tMdSd1o7Zn6liskp/8NxqUFiwON6FCxn8vNZTB/zpDPwzHF69+a5G2mLQQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GeAs3CxtdJJ99/rZY44V7/YvDQ/bVMA3/ZJN/1D4ShY=;
+ b=dt9hIVTcfxlSkx3Ck7QHVIyGMgE3asTZGZm3Vdd7OojViDarfaAtyJrWG0zG28XFPdZk7FWdZSDACwY+v+IXCbKBQ2X/pv99Li9AUbPTlpYTsl3vSiAXVinPNcrGRsP2jEGiKr6D6yPGcBD31VH4esxtshe+JcAXVL9rYa0SsuqRSN9gy7u01/UbWOZNX1AYm12mso7+2JPXveSOvylTpQt0Vx9PTdjtjwvYcC70c25DY3BPQx2rE9JllprBcWbpAjtu9oCWw6JPdo/XD+KOwLIIMhNDyV4GOA2Ys5wFTWp/HK9LKwV4tgOT28wmw3UyZVILsWbDsFyfct8hEUVhog==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GeAs3CxtdJJ99/rZY44V7/YvDQ/bVMA3/ZJN/1D4ShY=;
+ b=rI9zXoyyuT2W7JC0A/yNfwpbUkuHDWaElSIC50U+CRS5E8YlGhvDUNxM669pM5nnX9Qt9TyW6sCckA4ymNN4tB30VD5UE0aM+hw8PouaQkhdf2CRGNH/q/80/CcZgJi0fkH51yRWJcKkWMmnhSMZ3LLPJrCkrd8Yx0YsYDvC6yQ=
+Authentication-Results-Original: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=arm.com;
+Received: from AM6PR08MB3047.eurprd08.prod.outlook.com (2603:10a6:209:4c::23)
+ by AM5PR0801MB1810.eurprd08.prod.outlook.com (2603:10a6:203:3b::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.15; Wed, 12 Aug
+ 2020 14:16:02 +0000
+Received: from AM6PR08MB3047.eurprd08.prod.outlook.com
+ ([fe80::2404:de9f:78c0:313c]) by AM6PR08MB3047.eurprd08.prod.outlook.com
+ ([fe80::2404:de9f:78c0:313c%6]) with mapi id 15.20.3261.025; Wed, 12 Aug 2020
+ 14:16:02 +0000
+Date:   Wed, 12 Aug 2020 15:15:59 +0100
+From:   Szabolcs Nagy <szabolcs.nagy@arm.com>
+To:     Will Deacon <will@kernel.org>
+Cc:     peterz@infradead.org, Ard Biesheuvel <ardb@kernel.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kees Cook <keescook@chromium.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Mark Rutland <mark.rutland@arm.com>, nd@arm.com
+Subject: Re: [PATCH v2] module: Harden STRICT_MODULE_RWX
+Message-ID: <20200812141557.GQ14398@arm.com>
+References: <20200808101222.5103093e@coco.lan>
+ <20200810092523.GA8612@linux-8ccs>
+ <20200810150647.GB8612@linux-8ccs>
+ <20200811163427.6edbf343@coco.lan>
+ <20200811145524.GE2674@hirez.programming.kicks-ass.net>
+ <20200811172738.2d632a09@coco.lan>
+ <20200811160134.GA13652@linux-8ccs>
+ <CAMj1kXF8fm=9CdQykqDbgYCJSP88ezMs3EOosCW+SDi+Lve0zg@mail.gmail.com>
+ <20200812104005.GN2674@hirez.programming.kicks-ass.net>
+ <20200812125645.GA8675@willie-the-truck>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200812125645.GA8675@willie-the-truck>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: LO2P265CA0458.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:a2::14) To AM6PR08MB3047.eurprd08.prod.outlook.com
+ (2603:10a6:209:4c::23)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from arm.com (217.140.106.55) by LO2P265CA0458.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:a2::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.15 via Frontend Transport; Wed, 12 Aug 2020 14:16:01 +0000
+X-Originating-IP: [217.140.106.55]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 5a3d6801-fb47-4413-061c-08d83eca55c4
+X-MS-TrafficTypeDiagnostic: AM5PR0801MB1810:|DB6PR08MB2648:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DB6PR08MB26488A2C7974C6E921FC24BDED420@DB6PR08MB2648.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+NoDisclaimer: true
+X-MS-Oob-TLC-OOBClassifiers: OLM:2657;OLM:2657;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: BGOwkX1uyYOgKn1yxECNYBuydwsp3UQmdt+gkH0U7MpUXabo1NToaoxcNICLHt2B4m6J1roTzks5a5NclG4GFlyEYnRpUtuweIxNngzz31o0OBpaRdGOA72vew5aw1PXd8HR2zu4MvGIueTFnyfrUDHIXAZush3V2g7OhDC1IfP7cNQJGtZkN/ywIFwhTtMZaoI8m2Zw+GyLUa6wgGvYC6Cpe59eRkPIKYSewslLYf3gafNKCp2AiIjEtwa9d/EUWRmwzbXpnNlNcw3YY2FOo6lqDHkQKJD7or9eW47yDMcTQNoTp6WSjqdTgc+awvYLHxRU7tuP2WbJFTcUKbpJa0H1GKNJmGs0yLtq6uy4kGbPPD9JiroxPG2Vvh7s7PayCn184oWjQxtWZgjTfPoKHg==
+X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR08MB3047.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(136003)(366004)(396003)(376002)(39860400002)(186003)(478600001)(44832011)(8936002)(86362001)(66556008)(316002)(2616005)(16526019)(2906002)(1076003)(54906003)(8886007)(66946007)(8676002)(55016002)(36756003)(956004)(66476007)(26005)(52116002)(33656002)(4326008)(7696005)(966005)(6916009)(7416002)(5660300002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: qFvbvmhu45OX82buhY8a/6JYKQ+GJhXgo2Ay6n0rhXuYBj6KozxOSNohKVBQ00YjefbsNCD3fVBHRKkDHjR8NOa7dAvDo+aBsl2gDDXoXTDSsS7ZGTH+YkIeVe71fN00UB4sGk/axArhoaGeneYODIelvnwRkUNYNC85q5E84Xd9PwGAQDh9LA43CbsyxwBu8D/9ak9nTPsd0ZMh07xUpJ8TXNcpFQUUGeW0kIpvL9Gl/gVeubmJbEoqzC5aFmr5iaeZ1AIylAbEtDPKaViH4JU22qpgGiHNKmvt+kIpOoubkpouDT5FUZsG3EM/DAxYNCEFj4jlBOvNmFh42iz4jArEIp6XRI2/siztaTQTSs05ypQcRD6ygen2k+wJEnny7Q/gK1PD9gqy9khX3jB5m1MWr3D6UMqDBO0MIYw7P+pOeAEt7y0XmJB855+zU0cdmYUPOSnEpkZt6jGDEopWyKak3sReBhFJNkxNKO3evbgfp1VyfXRPHVneoM5txoE6Qogaf3DFYXzHIdcetYtmCstB0nIQF3zHwcL5YzkXLEcdQomNGISwRYPkRbp3tNTBi660Eu7v75uPNa2slBnfpVijxdVku4eyMKVT0EdW8T4veYrNDKvHIGQR+tLLHexdHn5e6RFiYRCAoSVHORUX9g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR0801MB1810
+Original-Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=arm.com;
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: AM5EUR03FT010.eop-EUR03.prod.protection.outlook.com
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 92b76b88-6ebf-47b4-b825-08d83eca3e0a
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: jtgWG668CPmU9Ixf26ZU7uCQyx+ykcp/RW2TC/D/1xeCs8mCbhC7VxFvJpuoigSR9wDDGZrqUMPtCHySQ97y2fdacOR7vjOLmOW1+j9RxibN0Y00nkrryL+KOixe4uy9i55eA7V40Ny5hq+EY1DUZ7KJzkcOKnP1TJS/t7zoWNv+9ePg7L0aZXvZhGYF3sVVlO+otoAKg5Depm1MsJYtxPfWnhwaeq4kBUIAJkcTP4mgwhtyqyzgqRXagst/fxiWHvJFQlhPL7y5Gw6+ZmqC+kA/5o2e9JUB1Fc0Ugag1uEGxAQEFAT6N+N3kPhkNB4ZTAZUXjzKVM2a7OCgnstU8HCU5LRoq7oVd7fmxhLd/HrxYDlb0J2DGV8vPdEOIbxsyFb6V9eRNroPDcNiQuGWNNAiW6jMbdqBop5gS09ve7nLOcTSynONDFY89CVXLHbvAWYh1hDd+ofb40RLBXgkHMiVHQLEiFMJ7yF/g9eyZ+w=
+X-Forefront-Antispam-Report: CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(39860400002)(396003)(136003)(346002)(376002)(46966005)(8936002)(47076004)(82740400003)(2616005)(956004)(478600001)(2906002)(356005)(8676002)(6862004)(33656002)(81166007)(55016002)(82310400002)(186003)(7696005)(16526019)(36756003)(316002)(966005)(54906003)(70206006)(5660300002)(8886007)(26005)(44832011)(1076003)(86362001)(336012)(4326008)(70586007)(36906005);DIR:OUT;SFP:1101;
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Aug 2020 14:16:41.5311
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5a3d6801-fb47-4413-061c-08d83eca55c4
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-AuthSource: AM5EUR03FT010.eop-EUR03.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR08MB2648
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The 08/12/2020 13:56, Will Deacon wrote:
+> On Wed, Aug 12, 2020 at 12:40:05PM +0200, peterz@infradead.org wrote:
+> > On Wed, Aug 12, 2020 at 10:56:56AM +0200, Ard Biesheuvel wrote:
+> > > The module .lds has BYTE(0) in the section contents to prevent the
+> > > linker from pruning them entirely. The (NOLOAD) is there to ensure
+> > > that this byte does not end up in the .ko, which is more a matter of
+> > > principle than anything else, so we can happily drop that if it helps.
+> > > 
+> > > However, this should only affect the PROGBITS vs NOBITS designation,
+> > > and so I am not sure whether it makes a difference.
+> > > 
+> > > Depending on where the w^x check occurs, we might simply override the
+> > > permissions of these sections, and strip the writable permission if it
+> > > is set in the PLT handling init code, which manipulates the metadata
+> > > of all these 3 sections before the module space is vmalloc'ed.
+> > 
+> > What's curious is that this seems the result of some recent binutils
+> > change. Every build with binutils-2.34 (or older) does not seem to
+> > generate these as WAX, but has the much more sensible WA.
+> > 
+> > I suppose we can change the kernel check and 'allow' W^X for 0 sized
+> > sections, but I think we should still figure out why binutils-2.35 is
+> > now generating WAX sections all of a sudden, it might come bite us
+> > elsewhere.
+> 
+> Agreed, I think it's important to figure out what's going on here before we
+> try to bodge around it.
+> 
+> Adding Szabolcs, in case he has any ideas.
+> 
+> To save him reading the whole thread, here's a summary:
+> 
+> AArch64 kernel modules built with binutils 2.35 end up with a couple of
+> ELF sections marked as SHF_WRITE | SHF_ALLOC | SHF_EXECINSTR:
+> 
+> [ 5] .plt PROGBITS 0000000000000388 01d000 000008 00 WAX  0   0  1
+> [ 6] .init.plt NOBITS 0000000000000390 01d008 000008 00  WA  0   0  1
+> [ 7] .text.ftrace_trampoline PROGBITS 0000000000000398 01d008 000008 00 WAX  0   0  1
+> 
+> This results in the module being rejected by our loader, because we don't
+> permit writable, executable mappings.
+> 
+> Our linker script for these entries uses NOLOAD, so it's odd to see PROGBITS
+> appearing in the readelf output above (and older binutils emits NOBITS
+> sections). Anyway, here's the linker script:
+> 
+> SECTIONS {
+> 	.plt (NOLOAD) : { BYTE(0) }
+> 	.init.plt (NOLOAD) : { BYTE(0) }
+> 	.text.ftrace_trampoline (NOLOAD) : { BYTE(0) }
+> }
+> 
+> It appears that the name of the section influences the behaviour, as
+> Jessica observed [1] that sections named .text.* end up with PROGBITS,
+> whereas random naming such as ".test" ends up with NOBITS, as before.
+> 
+> We've looked at the changelog between binutils 2.34 and 2.35, but nothing
+> stands out. Any clues? Is this intentional binutils behaviour?
 
+for me it bisects to
 
-> On Aug 11, 2020, at 11:53 AM, James Bottomley =
-<James.Bottomley@HansenPartnership.com> wrote:
->=20
-> On Tue, 2020-08-11 at 10:48 -0400, Chuck Lever wrote:
->>> On Aug 11, 2020, at 1:43 AM, James Bottomley <James.Bottomley@Hanse
->>> nPartnership.com> wrote:
->>>=20
->>> On Mon, 2020-08-10 at 19:36 -0400, Chuck Lever wrote:
->>>>> On Aug 10, 2020, at 11:35 AM, James Bottomley
->>>>> <James.Bottomley@HansenPartnership.com> wrote:
-> [...]
->>>>> The first basic is that a merkle tree allows unit at a time
->>>>> verification. First of all we should agree on the unit.  Since
->>>>> we always fault a page at a time, I think our merkle tree unit
->>>>> should be a page not a block.
->>>>=20
->>>> Remote filesystems will need to agree that the size of that unit
->>>> is the same everywhere, or the unit size could be stored in the
->>>> per-filemetadata.
->>>>=20
->>>>=20
->>>>> Next, we should agree where the check gates for the per page
->>>>> accesses should be ... definitely somewhere in readpage, I
->>>>> suspect and finally we should agree how the merkle tree is
->>>>> presented at the gate.  I think there are three ways:
->>>>>=20
->>>>> 1. Ahead of time transfer:  The merkle tree is transferred and
->>>>> verified
->>>>>    at some time before the accesses begin, so we already have
->>>>> a
->>>>>    verified copy and can compare against the lower leaf.
->>>>> 2. Async transfer:  We provide an async mechanism to transfer
->>>>> the
->>>>>    necessary components, so when presented with a unit, we
->>>>> check the
->>>>>    log n components required to get to the root
->>>>> 3. The protocol actually provides the capability of 2 (like
->>>>> the SCSI
->>>>>    DIF/DIX), so to IMA all the pieces get presented instead of
->>>>> IMA
->>>>>    having to manage the tree
->>>>=20
->>>> A Merkle tree is potentially large enough that it cannot be
->>>> stored in an extended attribute. In addition, an extended
->>>> attribute is not a byte stream that you can seek into or read
->>>> small parts of, it is retrieved in a single shot.
->>>=20
->>> Well you wouldn't store the tree would you, just the head
->>> hash.  The rest of the tree can be derived from the data.  You need
->>> to distinguish between what you *must* have to verify integrity
->>> (the head hash, possibly signed)
->>=20
->> We're dealing with an untrusted storage device, and for a remote
->> filesystem, an untrusted network.
->>=20
->> Mimi's earlier point is that any IMA metadata format that involves
->> unsigned digests is exposed to an alteration attack at rest or in
->> transit, thus will not provide a robust end-to-end integrity
->> guarantee.
->>=20
->> Therefore, tree root digests must be cryptographically signed to be
->> properly protected in these environments. Verifying that signature
->> should be done infrequently relative to reading a file's content.
->=20
-> I'm not disagreeing there has to be a way for the relying party to
-> trust the root hash.
->=20
->>> and what is nice to have to speed up the verification
->>> process.  The choice for the latter is cache or reconstruct
->>> depending on the resources available.  If the tree gets cached on
->>> the server, that would be a server implementation detail invisible
->>> to the client.
->>=20
->> We assume that storage targets (for block or file) are not trusted.
->> Therefore storage clients cannot rely on intermediate results (eg,
->> middle nodes in a Merkle tree) unless those results are generated
->> within the client's trust envelope.
->=20
-> Yes, they can ... because supplied nodes can be verified.  That's the
-> whole point of a merkle tree.  As long as I'm sure of the root hash I
-> can verify all the rest even if supplied by an untrusted source.  If
-> you consider a simple merkle tree covering 4 blocks:
->=20
->       R
->     /   \
->  H11     H12
->  / \     / \
-> H21 H22 H23 H24
-> |    |   |   |
-> B1   B2  B3  B4
->=20
-> Assume I have the verified root hash R.  If you supply B3 you also
-> supply H24 and H11 as proof.  I verify by hashing B3 to produce H23
-> then hash H23 and H24 to produce H12 and if H12 and your supplied H11
-> hash to R the tree is correct and the B3 you supplied must likewise be
-> correct.
+https://sourceware.org/git/?p=binutils-gdb.git;a=commit;h=8c803a2dd7d3d742a3d0071914f557ef465afe71
 
-I'm not sure what you are proving here. Obviously this has to work
-in order for a client to reconstruct the file's Merkle tree given
-only R and the file content.
+i will have to investigate further what's going on.
 
-It's the construction of the tree and verification of the hashes that
-are potentially expensive. The point of caching intermediate hashes
-is so that the client verifies them as few times as possible.  I
-don't see value in caching those hashes on an untrusted server --
-the client will have to reverify them anyway, and there will be no
-savings.
-
-Cache once, as close as you can to where the data will be used.
-
-
->> So: if the storage target is considered inside the client's trust
->> envelope, it can cache or store durably any intermediate parts of
->> the verification process. If not, the network and file storage is
->> considered untrusted, and the client has to rely on nothing but the
->> signed digest of the tree root.
->>=20
->> We could build a scheme around, say, fscache, that might save the
->> intermediate results durably and locally.
->=20
-> I agree we want caching on the client, but we can always page in from
-> the remote as long as we page enough to verify up to R, so we're =
-always
-> sure the remote supplied genuine information.
-
-Agreed.
-
-
->>>> For this reason, the idea was to save only the signature of the
->>>> tree's root on durable storage. The client would retrieve that
->>>> signature possibly at open time, and reconstruct the tree at that
->>>> time.
->>>=20
->>> Right that's the integrity data you must have.
->>>=20
->>>> Or the tree could be partially constructed on-demand at the time
->>>> each unit is to be checked (say, as part of 2. above).
->>>=20
->>> Whether it's reconstructed or cached can be an implementation
->>> detail. You clearly have to reconstruct once, but whether you have
->>> to do it again depends on the memory available for caching and all
->>> the other resource calls in the system.
->>>=20
->>>> The client would have to reconstruct that tree again if memory
->>>> pressure caused some or all of the tree to be evicted, so perhaps
->>>> an on-demand mechanism is preferable.
->>>=20
->>> Right, but I think that's implementation detail.  Probably what we
->>> need is a way to get the log(N) verification hashes from the server
->>> and it's up to the client whether it caches them or not.
->>=20
->> Agreed, these are implementation details. But see above about the
->> trustworthiness of the intermediate hashes. If they are conveyed
->> on an untrusted network, then they can't be trusted either.
->=20
-> Yes, they can, provided enough of them are asked for to verify.  If =
-you
-> look at the simple example above, suppose I have cached H11 and H12,
-> but I've lost the entire H2X layer.  I want to verify B3 so I also ask
-> you for your copy of H24.  Then I generate H23 from B3 and Hash H23 =
-and
-> H24.  If this doesn't hash to H12 I know either you supplied me the
-> wrong block or lied about H24.  However, if it all hashes correctly I
-> know you supplied me with both the correct B3 and the correct H24.
-
-My point is there is a difference between a trusted cache and an
-untrusted cache. I argue there is not much value in a cache where
-the hashes have to be verified again.
-
-
->>>>> There are also a load of minor things like how we get the head
->>>>> hash, which must be presented and verified ahead of time for
->>>>> each of the above 3.
->>>>=20
->>>> Also, changes to a file's content and its tree signature are not
->>>> atomic. If a file is mutable, then there is the period between
->>>> when the file content has changed and when the signature is
->>>> updated. Some discussion of how a client is to behave in those
->>>> situations will be necessary.
->>>=20
->>> For IMA, if you write to a checked file, it gets rechecked the next
->>> time the gate (open/exec/mmap) is triggered.  This means you must
->>> complete the update and have the new integrity data in-place before
->>> triggering the check.  I think this could apply equally to a merkel
->>> tree based system.  It's a sort of Doctor, Doctor it hurts when I
->>> do this situation.
->>=20
->> I imagine it's a common situation where a "yum update" process is
->> modifying executables while clients are running them. To prevent
->> a read from pulling refreshed content before the new tree root is
->> available, it would have to block temporarily until the verification
->> process succeeds with the updated tree root.
->=20
-> No ... it's not.  Yum specifically worries about that today because if
-> you update running binaries, it causes a crash.  Yum constructs the
-> entire new file then atomically links it into place and deletes the =
-old
-> inode to prevent these crashes.  It never allows you to get into the
-> situation where you can execute something that will be modified.=20
-> That's also why you have to restart stuff after a yum update because =
-if
-> you didn't it would still be attached to the deleted inode.
-
-Fair enough.
-
---
-Chuck Lever
-chucklever@gmail.com
-
-
-
+> 
+> Thanks,
+> 
+> Will
+> 
+> [1] https://lore.kernel.org/r/20200812114127.GA10824@linux-8ccs.fritz.box
