@@ -2,218 +2,152 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF2FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 23:08:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24715C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 23:13:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21B742076B
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 23:08:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D369A20771
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 23:13:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="cED+jLi2"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="x6M2QeVM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726564AbgHLXIw (ORCPT
+        id S1726574AbgHLXNs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 19:08:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42606 "EHLO
+        Wed, 12 Aug 2020 19:13:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbgHLXIw (ORCPT
+        with ESMTP id S1726518AbgHLXNs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 19:08:52 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15DE9C061383
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 16:08:52 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id s23so2905205qtq.12
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 16:08:52 -0700 (PDT)
+        Wed, 12 Aug 2020 19:13:48 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 431A1C061383
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 16:13:48 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id c10so3467875pjn.1
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 16:13:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=O09p7FBmkSC5bGt4yJC6JUfHRS16trGW04HihAW61QI=;
-        b=cED+jLi2wxGJ5jNf3hfzY7UYB1D/T5SPg+9q5PI0/A1zSo2s/2u6FnrlgbQ41nheam
-         wV5sMRbfBT0j+hcks46gxh35qt7po6+sEYaUIiBCl7sK/YpOa4OaTwuDD7DYecBmP7+X
-         mftXQ87YgNNWUpgepc752xesqMjItZAOsrejE=
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=b9wDu1zAPtNAxre/T+5M4GIuWs7X5c6GRL6Q/3of22I=;
+        b=x6M2QeVMZGbSL5gTLozabAiuxd2SXNztUx9ThEpwUQ05HV3mCBERljfties7hVtXlf
+         mYEEx+OzzvszK6jKi1+d19Bc7jlnL1VNVNgSu5CWJ4XbWs2PdZZN9HsejhCbhZD1xcM+
+         JujFnjfoqHpM3HJ9hPYl1kI6WmDgQGupfhBUUVQtldPOZ+4Ka11ARRwIlDqW42q+LShv
+         TJw0waYkk+whSUMx+l9i7YE6qbpyiW6xVtzrkla0lI3E9LjDTzib3E6IttBBnytXE+Bx
+         st70qK3tLVvEPJqH4yGpoiuAvxdY6cvyGpPfbaU6kMt2Ak33PQnn7QzX76Ndy1wZn4zZ
+         5S1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=O09p7FBmkSC5bGt4yJC6JUfHRS16trGW04HihAW61QI=;
-        b=thzE9gKZ4XaKj2dHb6KlF2zfi5zscAkp0ZnQw5FLv0EaoM04Zf454khk4uP0DK1HjH
-         TPlNvc3tcufVlS3Mdzt1sUfKs8P8hSITqOfOj9OVYLURFvFu/ayeQez9J7wTqV8VR2GF
-         YIUIHhkdHNfebFPZosJkZREHatUWGkoVYYNBNnA32FcEVsrf6ERrcU6rNmHsw4QFUSVl
-         gJfvAH6he3LJZm4T6LGXQFrGXRJheIJHAInFOCisVAUPf7uDlwI+r/91matFBfdWaAlL
-         vKKoziYYVeMEn6Ws4JWTsXKA4nQ1vG0bsHrDWzJwrDpLusvcIcXn4Q58Fw1EE2KyQ6XY
-         30NQ==
-X-Gm-Message-State: AOAM5334hU4YQGYydk86hXyq5TfDcn+GwA32JqSp8YjUgxQCxDhvZmNI
-        44doRUcbnZmdU5cjFfUHi9Lm0Q==
-X-Google-Smtp-Source: ABdhPJx7Qnn2THzxVwChuB1Pm240qxW2qSoUszK9W+Y1a3KYo3zz5BkQ9gGflr0TjO54oHPuDGBk7Q==
-X-Received: by 2002:ac8:4256:: with SMTP id r22mr2228530qtm.367.1597273731097;
-        Wed, 12 Aug 2020 16:08:51 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:cad3:ffff:feb3:bd59])
-        by smtp.gmail.com with ESMTPSA id l45sm4407826qtf.11.2020.08.12.16.08.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Aug 2020 16:08:50 -0700 (PDT)
-Date:   Wed, 12 Aug 2020 19:08:50 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Li, Aubrey" <aubrey.li@linux.intel.com>
-Cc:     viremana@linux.microsoft.com,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=b9wDu1zAPtNAxre/T+5M4GIuWs7X5c6GRL6Q/3of22I=;
+        b=Tc5b32BP/QJuRgDOLeD1uiqEJMT/+EsWjBqDzRpQ4frw5tY5ixC3/IbB2JpIBS2L6i
+         qYPsox3ittTpdazDHyNan8hnZhyCQTeWwDxf2UMsPSvwphexg/vF3YCuF/r0PE6vClA8
+         U6Wy+1DZinWCYWU66feZGqXquQcnahFtv9NYn4PUO+nrEmZWClSv0M18WCGmFyz8W8QD
+         NJir7XoDUJlCh+jBiXW+RCsaOjwC8wbPoGNisg4vcwmGKRrl7quNLeNJts5ZBlhqprWY
+         w7UXwSl+QNqnIOaG22Op6w1W3WEzoAmNIJisMTaV8bHt87DHiGURGwxpVxsk47DkQMPW
+         D/EQ==
+X-Gm-Message-State: AOAM532JCh8Kz/F0D++Vs0pLD//MqBkQD0Dwtjn/h9DPadNYId74gvsE
+        VomtKjiEe+0/uQGyRL0zEbL/dw4TH28=
+X-Google-Smtp-Source: ABdhPJwz/V/SrycSTwuG4kiDqATjY60TioZEnMgXbr7+2TH0jZ83SGqH1Kayz1pqQoNO8YWPR5Cj6w==
+X-Received: by 2002:a17:902:d30b:: with SMTP id b11mr1504288plc.107.1597274027592;
+        Wed, 12 Aug 2020 16:13:47 -0700 (PDT)
+Received: from [192.168.1.182] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id e8sm3507964pfd.34.2020.08.12.16.13.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Aug 2020 16:13:46 -0700 (PDT)
+Subject: Re: [PATCH] task_work: only grab task signal lock when needed
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Glexiner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vineeth Pillai <vineethrp@gmail.com>,
-        Chen Yu <yu.c.chen@intel.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        "Ning, Hongyu" <hongyu.ning@linux.intel.com>,
-        =?utf-8?B?YmVuYmppYW5nKOiSi+W9qik=?= <benbjiang@tencent.com>
-Subject: Re: [RFC PATCH 00/16] Core scheduling v6
-Message-ID: <20200812230850.GA3511387@google.com>
-References: <cover.1593530334.git.vpillai@digitalocean.com>
- <6d0f9fc0-2e34-f559-29bc-4143e6d3f751@linux.intel.com>
- <CAEXW_YS6oW_AAkmOuXNMCj_N5763aG9SXEcWz_onPhQQU2TZ0g@mail.gmail.com>
- <f986f5a9-5c97-10ed-1e44-84bbd929e605@linux.intel.com>
- <20200809164408.GA342447@google.com>
- <162a03cc-66c3-1999-83a2-deaad5aa04c8@linux.intel.com>
+        Jann Horn <jannh@google.com>
+References: <0028d3ea-4d05-405f-b457-75c83d381d89@kernel.dk>
+ <20200811152310.GF21797@redhat.com> <20200812145422.GA10232@redhat.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <7c0eca6b-a9aa-4228-6abf-2eb4372f8fa7@kernel.dk>
+Date:   Wed, 12 Aug 2020 17:13:44 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <162a03cc-66c3-1999-83a2-deaad5aa04c8@linux.intel.com>
+In-Reply-To: <20200812145422.GA10232@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 10:01:24AM +0800, Li, Aubrey wrote:
-> Hi Joel,
+On 8/12/20 8:54 AM, Oleg Nesterov wrote:
+> On 08/11, Oleg Nesterov wrote:
+>>
+>> On 08/11, Jens Axboe wrote:
+>>>
+>>> --- a/kernel/task_work.c
+>>> +++ b/kernel/task_work.c
+>>> @@ -42,7 +42,8 @@ task_work_add(struct task_struct *task, struct callback_head *work, int notify)
+>>>  		set_notify_resume(task);
+>>>  		break;
+>>>  	case TWA_SIGNAL:
+>>> -		if (lock_task_sighand(task, &flags)) {
+>>> +		if (!(READ_ONCE(task->jobctl) & JOBCTL_TASK_WORK) &&
+>>> +		    lock_task_sighand(task, &flags)) {
+>>
+>> Aaaaah, sorry Jens, now I think this is racy. So I am glad I didn't add
+>> this optimization into the initial version ;)
+>>
+>> It is possible that JOBCTL_TASK_WORK is set but ->task_works == NULL. Say,
+>> task_work_add(TWA_SIGNAL) + task_work_cancel(), or the target task can call
+>> task_work_run() before it enters get_signal().
+>>
+>> And in this case another task_work_add(tsk, TWA_SIGNAL) can actually race
+>> with get_signal() which does
+>>
+>> 	current->jobctl &= ~JOBCTL_TASK_WORK;
+>> 	if (unlikely(current->task_works)) {
+>> 		spin_unlock_irq(&sighand->siglock);
+>> 		task_work_run();
+>>
+>> nothing guarantees that get_signal() sees ->task_works != NULL. Probably
+>> this is what Jann meant.
+>>
+>> We can probably add a barrier into get_signal() but I didn't sleep today,
+>> I'll try to think tomorrow.
 > 
-> On 2020/8/10 0:44, Joel Fernandes wrote:
-> > Hi Aubrey,
-> > 
-> > Apologies for replying late as I was still looking into the details.
-> > 
-> > On Wed, Aug 05, 2020 at 11:57:20AM +0800, Li, Aubrey wrote:
-> > [...]
-> >> +/*
-> >> + * Core scheduling policy:
-> >> + * - CORE_SCHED_DISABLED: core scheduling is disabled.
-> >> + * - CORE_COOKIE_MATCH: tasks with same cookie can run
-> >> + *                     on the same core concurrently.
-> >> + * - CORE_COOKIE_TRUST: trusted task can run with kernel
-> >> 			thread on the same core concurrently. 
-> >> + * - CORE_COOKIE_LONELY: tasks with cookie can run only
-> >> + *                     with idle thread on the same core.
-> >> + */
-> >> +enum coresched_policy {
-> >> +       CORE_SCHED_DISABLED,
-> >> +       CORE_SCHED_COOKIE_MATCH,
-> >> +	CORE_SCHED_COOKIE_TRUST,
-> >> +       CORE_SCHED_COOKIE_LONELY,
-> >> +};
-> >>
-> >> We can set policy to CORE_COOKIE_TRUST of uperf cgroup and fix this kind
-> >> of performance regression. Not sure if this sounds attractive?
-> > 
-> > Instead of this, I think it can be something simpler IMHO:
-> > 
-> > 1. Consider all cookie-0 task as trusted. (Even right now, if you apply the
-> >    core-scheduling patchset, such tasks will share a core and sniff on each
-> >    other. So let us not pretend that such tasks are not trusted).
-> > 
-> > 2. All kernel threads and idle task would have a cookie 0 (so that will cover
-> >    ksoftirqd reported in your original issue).
-> > 
-> > 3. Add a config option (CONFIG_SCHED_CORE_DEFAULT_TASKS_UNTRUSTED). Default
-> >    enable it. Setting this option would tag all tasks that are forked from a
-> >    cookie-0 task with their own cookie. Later on, such tasks can be added to
-> >    a group. This cover's PeterZ's ask about having 'default untrusted').
-> >    (Users like ChromeOS that don't want to userspace system processes to be
-> >    tagged can disable this option so such tasks will be cookie-0).
-> > 
-> > 4. Allow prctl/cgroup interfaces to create groups of tasks and override the
-> >    above behaviors.
+> I see nothing better than the additional change below. Peter, do you see
+> another solution?
 > 
-> How does uperf in a cgroup work with ksoftirqd? Are you suggesting I set uperf's
-> cookie to be cookie-0 via prctl?
-
-Yes, but let me try to understand better. There are 2 problems here I think:
-
-1. ksoftirqd getting idled when HT is turned on, because uperf is sharing a
-core with it: This should not be any worse than SMT OFF, because even SMT OFF
-would also reduce ksoftirqd's CPU time just core sched is doing. Sure
-core-scheduling adds some overhead with IPIs but such a huge drop of perf is
-strange. Peter any thoughts on that?
-
-2. Interface: To solve the performance problem, you are saying you want uperf
-to share a core with ksoftirqd so that it is not forced into idle.  Why not
-just keep uperf out of the cgroup? Then it will have cookie 0 and be able to
-share core with kernel threads. About user-user isolation that you need, if
-you tag any "untrusted" threads by adding it to CGroup, then there will
-automatically isolated from uperf while allowing uperf to share CPU with
-kernel threads.
-
-Please let me know your thoughts and thanks,
-
- - Joel
-
+> This needs a comment to explain that this mb() pairs with another barrier
+> provided by cmpxchg() in task_work_add(). It ensures that either get_signal()
+> sees the new work added by task_work_add(), or task_work_add() sees the
+> result of "&= ~JOBCTL_TASK_WORK".
 > 
-> Thanks,
-> -Aubrey
-> > 
-> > 5. Document everything clearly so the semantics are clear both to the
-> >    developers of core scheduling and to system administrators.
-> > 
-> > Note that, with the concept of "system trusted cookie", we can also do
-> > optimizations like:
-> > 1. Disable STIBP when switching into trusted tasks.
-> > 2. Disable L1D flushing / verw stuff for L1TF/MDS issues, when switching into
-> >    trusted tasks.
-> > 
-> > At least #1 seems to be biting enabling HT on ChromeOS right now, and one
-> > other engineer requested I do something like #2 already.
-> > 
-> > Once we get full-syscall isolation working, threads belonging to a process
-> > can also share a core so those can just share a core with the task-group
-> > leader.
-> > 
-> >>> Is the uperf throughput worse with SMT+core-scheduling versus no-SMT ?
-> >>
-> >> This is a good question, from the data we measured by uperf,
-> >> SMT+core-scheduling is 28.2% worse than no-SMT, :(
-> > 
-> > This is worrying for sure. :-(. We ought to debug/profile it more to see what
-> > is causing the overhead. Me/Vineeth added it as a topic for LPC as well.
-> > 
-> > Any other thoughts from others on this?
-> > 
-> > thanks,
-> > 
-> >  - Joel
-> > 
-> > 
-> >>> thanks,
-> >>>
-> >>>  - Joel
-> >>> PS: I am planning to write a patch behind a CONFIG option that tags
-> >>> all processes (default untrusted) so everything gets a cookie which
-> >>> some folks said was how they wanted (have a whitelist instead of
-> >>> blacklist).
-> >>>
-> >>
+> Oleg.
 > 
+> --- x/kernel/signal.c
+> +++ x/kernel/signal.c
+> @@ -2541,7 +2541,7 @@ bool get_signal(struct ksignal *ksig)
+>  
+>  relock:
+>  	spin_lock_irq(&sighand->siglock);
+> -	current->jobctl &= ~JOBCTL_TASK_WORK;
+> +	smp_store_mb(current->jobctl, current->jobctl & ~JOBCTL_TASK_WORK);
+>  	if (unlikely(current->task_works)) {
+>  		spin_unlock_irq(&sighand->siglock);
+>  		task_work_run();
+> 
+
+I think this should work when paired with the READ_ONCE() on the
+task_work_add() side. I haven't managed to reproduce badness with the
+existing one that doesn't have the smp_store_mb() here, so can't verify
+much beyond that...
+
+Are you going to send this out as a complete patch?
+
+-- 
+Jens Axboe
+
