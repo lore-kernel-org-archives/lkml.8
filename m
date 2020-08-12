@@ -2,153 +2,321 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17678C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 17:51:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A00AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 17:53:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F24C120866
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 17:51:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 017102078B
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 17:53:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JtbFduNY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726557AbgHLRvd (ORCPT
+        id S1726606AbgHLRxo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 13:51:33 -0400
-Received: from mga11.intel.com ([192.55.52.93]:8711 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726013AbgHLRvc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 13:51:32 -0400
-IronPort-SDR: SetiZDw/HCyivUTQmI71Wi+DwV83LWLpBzQq87qJFMpfuwKEm6V+mkHq/GcGeNJNkCa3emO5ds
- yAppI9f+2Gug==
-X-IronPort-AV: E=McAfee;i="6000,8403,9711"; a="151683229"
-X-IronPort-AV: E=Sophos;i="5.76,305,1592895600"; 
-   d="scan'208";a="151683229"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2020 10:51:30 -0700
-IronPort-SDR: PaPn9eCBmBUz7md84VtPMA8A3zjis7ZWdVqCjt3lbfKIJiErQswbDanNY8VDImLLGFsDqt1LBW
- GkZ/ERpujdJw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,305,1592895600"; 
-   d="scan'208";a="277905359"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.160])
-  by fmsmga008.fm.intel.com with ESMTP; 12 Aug 2020 10:51:30 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Liran Alon <liran.alon@oracle.com>
-Subject: [PATCH] KVM: nVMX: Morph notification vector IRQ on nested VM-Enter to pending PI
-Date:   Wed, 12 Aug 2020 10:51:29 -0700
-Message-Id: <20200812175129.12172-1-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.28.0
+        Wed, 12 Aug 2020 13:53:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49722 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725993AbgHLRxm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 13:53:42 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79092C061383;
+        Wed, 12 Aug 2020 10:53:42 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id f10so1440970plj.8;
+        Wed, 12 Aug 2020 10:53:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=4TRq9T/m/yd34eFWk4fK0pYXfRDz275e+Tw84SAgUmQ=;
+        b=JtbFduNYz2VrGVe0kSPZWQcTDQr3torHiG0LJ0IJpzpjwgDsjQNpsx4lNA/aoHoP3H
+         arfQ8rU7pjGRGcsDVBTXoX4rexQ6rnepQiXlj3hyqT7zX35zJHf1ikSsKykEgQiv4wxD
+         PaHc7zeG6YZnDw7g0OAouesaXt8rt+TF4i2rLNeCgMlZDacX/jwuxqMBm9jLsaMWRyBV
+         Q0+R2oVZi/tfJQpvfAdmnzdmsfevK2DHfnHFY04PKpdhgJzgz9psqtv771q8JKaXy1wp
+         yr6TuwRYCB2RkMYLein4r7bl6FYyachY72mln/NqBdgebgEBmncFfN7+pJzFYKEX1hqL
+         ogEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=4TRq9T/m/yd34eFWk4fK0pYXfRDz275e+Tw84SAgUmQ=;
+        b=UwL5/dHLjBTzFskS7ZRWFopUYbuHfzO4sYBoL4mtYJkih2JRTzj56++RKxhEQQcl8s
+         YNS2PdHccgEG6EkUceo10qW7bl5TwmmqA1Vpcfbp+j+yqcie9P4dUpBvqVhEkyGkg5dI
+         mwLvErFgIqa4kaI10Bkd54vRtHOfds+4o8+obt2YQmcNSZXVpjbi/crdzWZDGsFa90zN
+         vgSNc90Pg0+n9JFqEyADWMGNLBC8Fw+0cRk3wMmsPoaKi4214L3v0j+ZoxFoNwnZ3lun
+         vr5urOV/kixkfWd4s7X19w+uKqkrscFpTzbqclnVyxU/57IbBwkXwKMbT4lAbYTgy+Hg
+         NYxw==
+X-Gm-Message-State: AOAM532LZEdom9EOWq//q5v18PCgsgDQroBB2k2PXWv02QGUF6AZ+DOl
+        rxMzbuiH2jH9XGPgjj7prPdhu+fbPxM=
+X-Google-Smtp-Source: ABdhPJxORjjyQzCLQrzUQhUqarJccv5EEUGVWBL0DRpIIvBqWHeHtT65s0v5/pOxw2OYC96EEusM8A==
+X-Received: by 2002:a17:90b:400a:: with SMTP id ie10mr1160280pjb.175.1597254821056;
+        Wed, 12 Aug 2020 10:53:41 -0700 (PDT)
+Received: from gmail.com ([2601:600:9b7f:872e:a655:30fb:7373:c762])
+        by smtp.gmail.com with ESMTPSA id a26sm2918927pgm.20.2020.08.12.10.53.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Aug 2020 10:53:40 -0700 (PDT)
+Date:   Wed, 12 Aug 2020 10:53:38 -0700
+From:   Andrei Vagin <avagin@gmail.com>
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc:     adobriyan@gmail.com, "Eric W. Biederman" <ebiederm@xmission.com>,
+        viro@zeniv.linux.org.uk, davem@davemloft.net,
+        akpm@linux-foundation.org, christian.brauner@ubuntu.com,
+        areber@redhat.com, serge@hallyn.com, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
+Subject: Re: [PATCH 00/23] proc: Introduce /proc/namespaces/ directory to
+ expose namespaces lineary
+Message-ID: <20200812175338.GA596568@gmail.com>
+References: <159611007271.535980.15362304262237658692.stgit@localhost.localdomain>
+ <87k0yl5axy.fsf@x220.int.ebiederm.org>
+ <56928404-f194-4194-5f2a-59acb15b1a04@virtuozzo.com>
+ <875za43b3w.fsf@x220.int.ebiederm.org>
+ <9ceb5049-6aea-1429-e35f-d86480f10d72@virtuozzo.com>
+ <20200806080540.GA18865@gmail.com>
+ <2d65ca28-bcfa-b217-e201-09163640ebc2@virtuozzo.com>
+ <20200810173431.GA68662@gmail.com>
+ <33565447-9b97-a820-bc2c-a4ff53a7675a@virtuozzo.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <33565447-9b97-a820-bc2c-a4ff53a7675a@virtuozzo.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On successful nested VM-Enter, check for pending interrupts and convert
-the highest priority interrupt to a pending posted interrupt if it
-matches L2's notification vector.  If the vCPU receives a notification
-interrupt before nested VM-Enter (assuming L1 disables IRQs before doing
-VM-Enter), the pending interrupt (for L1) should be recognized and
-processed as a posted interrupt when interrupts become unblocked after
-VM-Enter to L2.
+On Tue, Aug 11, 2020 at 01:23:35PM +0300, Kirill Tkhai wrote:
+> On 10.08.2020 20:34, Andrei Vagin wrote:
+> > On Fri, Aug 07, 2020 at 11:47:57AM +0300, Kirill Tkhai wrote:
+> >> On 06.08.2020 11:05, Andrei Vagin wrote:
+> >>> On Mon, Aug 03, 2020 at 01:03:17PM +0300, Kirill Tkhai wrote:
+> >>>> On 31.07.2020 01:13, Eric W. Biederman wrote:
+> >>>>> Kirill Tkhai <ktkhai@virtuozzo.com> writes:
+> >>>>>
+> >>>>>> On 30.07.2020 17:34, Eric W. Biederman wrote:
+> >>>>>>> Kirill Tkhai <ktkhai@virtuozzo.com> writes:
+> >>>>>>>
+> >>>>>>>> Currently, there is no a way to list or iterate all or subset of namespaces
+> >>>>>>>> in the system. Some namespaces are exposed in /proc/[pid]/ns/ directories,
+> >>>>>>>> but some also may be as open files, which are not attached to a process.
+> >>>>>>>> When a namespace open fd is sent over unix socket and then closed, it is
+> >>>>>>>> impossible to know whether the namespace exists or not.
+> >>>>>>>>
+> >>>>>>>> Also, even if namespace is exposed as attached to a process or as open file,
+> >>>>>>>> iteration over /proc/*/ns/* or /proc/*/fd/* namespaces is not fast, because
+> >>>>>>>> this multiplies at tasks and fds number.
+> >>>>>>>
+> >>>>>>> I am very dubious about this.
+> >>>>>>>
+> >>>>>>> I have been avoiding exactly this kind of interface because it can
+> >>>>>>> create rather fundamental problems with checkpoint restart.
+> >>>>>>
+> >>>>>> restart/restore :)
+> >>>>>>
+> >>>>>>> You do have some filtering and the filtering is not based on current.
+> >>>>>>> Which is good.
+> >>>>>>>
+> >>>>>>> A view that is relative to a user namespace might be ok.    It almost
+> >>>>>>> certainly does better as it's own little filesystem than as an extension
+> >>>>>>> to proc though.
+> >>>>>>>
+> >>>>>>> The big thing we want to ensure is that if you migrate you can restore
+> >>>>>>> everything.  I don't see how you will be able to restore these files
+> >>>>>>> after migration.  Anything like this without having a complete
+> >>>>>>> checkpoint/restore story is a non-starter.
+> >>>>>>
+> >>>>>> There is no difference between files in /proc/namespaces/ directory and /proc/[pid]/ns/.
+> >>>>>>
+> >>>>>> CRIU can restore open files in /proc/[pid]/ns, the same will be with /proc/namespaces/ files.
+> >>>>>> As a person who worked deeply for pid_ns and user_ns support in CRIU, I don't see any
+> >>>>>> problem here.
+> >>>>>
+> >>>>> An obvious diffference is that you are adding the inode to the inode to
+> >>>>> the file name.  Which means that now you really do have to preserve the
+> >>>>> inode numbers during process migration.
+> >>>>>
+> >>>>> Which means now we have to do all of the work to make inode number
+> >>>>> restoration possible.  Which means now we need to have multiple
+> >>>>> instances of nsfs so that we can restore inode numbers.
+> >>>>>
+> >>>>> I think this is still possible but we have been delaying figuring out
+> >>>>> how to restore inode numbers long enough that may be actual technical
+> >>>>> problems making it happen.
+> >>>>
+> >>>> Yeah, this matters. But it looks like here is not a dead end. We just need
+> >>>> change the names the namespaces are exported to particular fs and to support
+> >>>> rename().
+> >>>>
+> >>>> Before introduction a principally new filesystem type for this, can't
+> >>>> this be solved in current /proc?
+> >>>
+> >>> do you mean to introduce names for namespaces which users will be able
+> >>> to change? By default, this can be uuid.
+> >>
+> >> Yes, I mean this.
+> >>
+> >> Currently I won't give a final answer about UUID, but I planned to show some
+> >> default names, which based on namespace type and inode num. Completely custom
+> >> names for any /proc by default will waste too much memory.
+> >>
+> >> So, I think the good way will be:
+> >>
+> >> 1)Introduce a function, which returns a hash/uuid based on ino, ns type and some static
+> >> random seed, which is generated on boot;
+> >>
+> >> 2)Use the hash/uuid as default names in newly create /proc/namespaces: pid-{hash/uuid(ino, "pid")}
+> >>
+> >> 3)Allow rename, and allocate space only for renamed names.
+> >>
+> >> Maybe 2 and 3 will be implemented as shrinkable dentries and non-shrinkable.
+> >>
+> >>> And I have a suggestion about the structure of /proc/namespaces/.
+> >>>
+> >>> Each namespace is owned by one of user namespaces. Maybe it makes sense
+> >>> to group namespaces by their user-namespaces?
+> >>>
+> >>> /proc/namespaces/
+> >>>                  user
+> >>>                  mnt-X
+> >>>                  mnt-Y
+> >>>                  pid-X
+> >>>                  uts-Z
+> >>>                  user-X/
+> >>>                         user
+> >>>                         mnt-A
+> >>>                         mnt-B
+> >>>                         user-C
+> >>>                         user-C/
+> >>>                                user
+> >>>                  user-Y/
+> >>>                         user
+> >>
+> >> Hm, I don't think that user namespace is a generic key value for everybody.
+> >> For generic people tasks a user namespace is just a namespace among another
+> >> namespace types. For me it will look a bit strage to iterate some user namespaces
+> >> to build container net topology.
+> > 
+> > I can’t agree with you that the user namespace is one of others. It is
+> > the namespace for namespaces. It sets security boundaries in the system
+> > and we need to know them to understand the whole system.
+> > 
+> > If user namespaces are not used in the system or on a container, you
+> > will see all namespaces in one directory. But if the system has a more
+> > complicated structure, you will be able to build a full picture of it.
+> > 
+> > You said that one of the users of this feature is CRIU (the tool to
+> > checkpoint/restore containers)  and you said that it would be good if
+> > CRIU will be able to collect all container namespaces before dumping
+> > processes, sockets, files etc. But how will we be able to do this if we
+> > will list all namespaces in one directory?
+> 
+> There is no a problem, this looks rather simple. Two cases are possible:
+> 
+> 1)a container has dedicated namespaces set, and CRIU just has to iterate
+>   files in /proc/namespaces of root pid namespace of the container.
+>   The relationships between parents and childs of pid and user namespaces
+>   are founded via ioctl(NS_GET_PARENT).
+>   
+> 2)container has no dedicated namespaces set. Then CRIU just has to iterate
+>   all host namespaces. There is no another way to do that, because container
+>   may have any host namespaces, and hierarchy in /proc/namespaces won't
+>   help you.
+> 
+> > Here are my thoughts why we need to the suggested structure is better
+> > than just a list of namespaces:
+> > 
+> > * Users will be able to understand securies bondaries in the system.
+> >   Each namespace in the system is owned by one of user namespace and we
+> >   need to know these relationshipts to understand the whole system.
+> 
+> Here are already NS_GET_PARENT and NS_GET_USERNS. What is the problem to use
+> this interfaces?
 
-This fixes a bug where L1/L2 will get stuck in an infinite loop if L1 is
-trying to inject an interrupt into L2 by setting the appropriate bit in
-L2's PIR and sending a self-IPI prior to VM-Enter (as opposed to KVM's
-method of manually moving the vector from PIR->vIRR/RVI).  KVM will
-observe the IPI while the vCPU is in L1 context and so won't immediately
-morph it to a posted interrupt for L2.  The pending interrupt will be
-seen by vmx_check_nested_events(), cause KVM to force an immediate exit
-after nested VM-Enter, and eventually be reflected to L1 as a VM-Exit.
-After handling the VM-Exit, L1 will see that L2 has a pending interrupt
-in PIR, send another IPI, and repeat until L2 is killed.
+We can use these ioctl-s, but we will need to enumerate all namespaces in
+the system to build a view of the namespace hierarchy. This will be very
+expensive. The kernel can show this hierarchy without additional cost.
 
-Note, posted interrupts require virtual interrupt deliveriy, and virtual
-interrupt delivery requires exit-on-interrupt, ergo interrupts will be
-unconditionally unmasked on VM-Enter if posted interrupts are enabled.
+> 
+> > * This is simplify collecting namespaces which belong to one container.
+> > 
+> > For example, CRIU collects all namespaces before dumping file
+> > descriptors. Then it collects all sockets with socket-diag in network
+> > namespaces and collects mount points via /proc/pid/mountinfo in mount
+> > namesapces. Then these information is used to dump socket file
+> > descriptors and opened files.
+> 
+> This is just the thing I say. This allows to avoid writing recursive dump.
 
-Fixes: 705699a13994 ("KVM: nVMX: Enable nested posted interrupt processing")
-Cc: stable@vger.kernel.org
-Cc: Liran Alon <liran.alon@oracle.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
+I don't understand this. How are you going to collect namespaces in CRIU
+without knowing which are used by a dumped container?
 
-I am by no means 100% confident this the a complete, correct fix.  I also
-don't like exporting two low level LAPIC functions.  But, the fix does
-appear to work as intended.
+> But this has nothing about advantages of hierarchy in /proc/namespaces.
 
- arch/x86/kvm/lapic.c      | 7 +++++++
- arch/x86/kvm/lapic.h      | 1 +
- arch/x86/kvm/vmx/nested.c | 8 ++++++++
- 3 files changed, 16 insertions(+)
+Really? You said that you implemented this series to help CRIU dumping
+namespaces. I think we need to implement the CRIU part to prove that
+this interface is usable for this case. Right now, I have doubts about
+this.
 
-diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-index 5ccbee7165a21..ce37376bc96ec 100644
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -488,6 +488,12 @@ static inline void apic_clear_irr(int vec, struct kvm_lapic *apic)
- 	}
- }
- 
-+void kvm_apic_clear_irr(struct kvm_vcpu *vcpu, int vec)
-+{
-+	apic_clear_irr(vec, vcpu->arch.apic);
-+}
-+EXPORT_SYMBOL_GPL(kvm_apic_clear_irr);
-+
- static inline void apic_set_isr(int vec, struct kvm_lapic *apic)
- {
- 	struct kvm_vcpu *vcpu;
-@@ -2461,6 +2467,7 @@ int kvm_apic_has_interrupt(struct kvm_vcpu *vcpu)
- 	__apic_update_ppr(apic, &ppr);
- 	return apic_has_interrupt_for_ppr(apic, ppr);
- }
-+EXPORT_SYMBOL_GPL(kvm_apic_has_interrupt);
- 
- int kvm_apic_accept_pic_intr(struct kvm_vcpu *vcpu)
- {
-diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
-index 754f29beb83e3..4fb86e3a9dd3d 100644
---- a/arch/x86/kvm/lapic.h
-+++ b/arch/x86/kvm/lapic.h
-@@ -89,6 +89,7 @@ int kvm_lapic_reg_read(struct kvm_lapic *apic, u32 offset, int len,
- bool kvm_apic_match_dest(struct kvm_vcpu *vcpu, struct kvm_lapic *source,
- 			   int shorthand, unsigned int dest, int dest_mode);
- int kvm_apic_compare_prio(struct kvm_vcpu *vcpu1, struct kvm_vcpu *vcpu2);
-+void kvm_apic_clear_irr(struct kvm_vcpu *vcpu, int vec);
- bool __kvm_apic_update_irr(u32 *pir, void *regs, int *max_irr);
- bool kvm_apic_update_irr(struct kvm_vcpu *vcpu, u32 *pir, int *max_irr);
- void kvm_apic_update_ppr(struct kvm_vcpu *vcpu);
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 23b58c28a1c92..2acf33b110b5c 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -3528,6 +3528,14 @@ static int nested_vmx_run(struct kvm_vcpu *vcpu, bool launch)
- 	if (unlikely(status != NVMX_VMENTRY_SUCCESS))
- 		goto vmentry_failed;
- 
-+	/* Emulate processing of posted interrupts on VM-Enter. */
-+	if (nested_cpu_has_posted_intr(vmcs12) &&
-+	    kvm_apic_has_interrupt(vcpu) == vmx->nested.posted_intr_nv) {
-+		vmx->nested.pi_pending = true;
-+		kvm_make_request(KVM_REQ_EVENT, vcpu);
-+		kvm_apic_clear_irr(vcpu, vmx->nested.posted_intr_nv);
-+	}
-+
- 	/* Hide L1D cache contents from the nested guest.  */
- 	vmx->vcpu.arch.l1tf_flush_l1d = true;
- 
--- 
-2.28.0
+> 
+> > * We are going to assign names to namespaces. But this means that we
+> > need to guarantee that all names in one directory are unique. The
+> > initial proposal was to enumerate all namespaces in one proc directory,
+> > that means names of all namespaces have to be unique. This can be
+> > problematic in some cases. For example, we may want to dump a container
+> > and then restore it more than once on the same host. How are we going to
+> > avoid namespace name conficts in such cases?
+> 
+> Previous message I wrote about .rename of proc files, Alexey Dobriyan
+> said this is not a taboo. Are there problem which doesn't cover the case
+> you point?
 
+Yes, there is. Namespace names will be visible from a container, so they
+have to be restored. But this means that two containers can't be
+restored from the same snapshot due to namespace name conflicts.
+
+But if we will show namespaces how I suggest, each container will see
+only its sub-tree of namespaces and we will be able to specify any name
+for the container root user namespace.
+
+> 
+> > If we will have per-user-namespace directories, we will need to
+> > guarantee that names are unique only inside one user namespace.
+> 
+> Unique names inside one user namespace won't introduce a new /proc
+> mount. You can't pass a sub-directory of /proc/namespaces/ to a specific
+> container. To give a virtualized name you have to have a dedicated pid ns.
+> 
+> Let we have in one /proc mount:
+> 
+> /mnt1/proc/namespaces/userns1/.../[namespaceX_name1 -- inode XXX]
+> 
+> In another another /proc mount we have:
+> 
+> /mnt2/proc/namespaces/userns1/.../[namespaceX_name1_synonym -- inode XXX]
+> 
+> The virtualization is made per /proc (i.e., per pid ns). Container should
+> receive either /mnt1/proc or /mnt2/proc on restore as it's /proc.
+> 
+> There is no a sense of directory hierarchy for virtualization, since
+> you can't use specific sub-directory as a root directory of /proc/namespaces
+> to a container. You still have to introduce a new pid ns to have virtualized
+> /proc.
+
+I think we can figure out how to implement this. As the first idea, we
+can use the same way how /proc/net is implemented.
+
+> 
+> > * With the suggested structure, for each user namepsace, we will show
+> >   only its subtree of namespaces. This looks more natural than
+> >   filltering content of one directory.
+> 
+> It's rather subjectively I think. /proc is related to pid ns, and user ns
+> hierarchy does not look more natural for me.
+
+or /proc is wrong place for this.
