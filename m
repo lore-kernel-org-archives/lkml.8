@@ -2,107 +2,104 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB995C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 20:37:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD589C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 20:40:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C78BE20774
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 20:37:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 744DD20774
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 20:40:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="pnGgSXsY"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UySQ3jmV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbgHLUhp (ORCPT
+        id S1726574AbgHLUkV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 16:37:45 -0400
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:61758 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726531AbgHLUho (ORCPT
+        Wed, 12 Aug 2020 16:40:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47088 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726282AbgHLUkU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 16:37:44 -0400
+        Wed, 12 Aug 2020 16:40:20 -0400
+Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAB3FC061383
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 13:40:19 -0700 (PDT)
+Received: by mail-qv1-xf49.google.com with SMTP id h6so2335577qvz.14
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 13:40:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1597264664; x=1628800664;
-  h=date:from:to:cc:message-id:references:mime-version:
-   in-reply-to:subject;
-  bh=7ulsafoPFhSQH9wyvIktGiISa6bYClB/qBk7hlnLrwM=;
-  b=pnGgSXsYzLs1x7K+2Qms+cVFHi6v5PaNAB6Qn5b+gKajcDFLrrprP/rA
-   Xx/WLD6WKxtQCAV9IxsqutIMnpw2yL68swY0TeMX78TPF+spxVESjwDXN
-   xLyHBWq9s5xBzZ1SVnc0NgiFC/MIP5u6ZdQfhnGoPXqfzVaxM760OV6sD
-   4=;
-IronPort-SDR: /ABVB6UE24M2K2EsohF/scVIPaNl6yzm0MSblU07KxLPmGqKVpY4zVHUCQuMZVDMyrXxEbjRp2
- 3CdJYCpSHU3w==
-X-IronPort-AV: E=Sophos;i="5.76,305,1592870400"; 
-   d="scan'208";a="47636865"
-Subject: Re: [PATCH 2/2] nfsd: Fix typo in comment
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2c-1968f9fa.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 12 Aug 2020 20:37:42 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2c-1968f9fa.us-west-2.amazon.com (Postfix) with ESMTPS id 72842A2261;
-        Wed, 12 Aug 2020 20:37:41 +0000 (UTC)
-Received: from EX13D12UEA002.ant.amazon.com (10.43.61.107) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 12 Aug 2020 20:37:41 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (10.43.61.77) by
- EX13D12UEA002.ant.amazon.com (10.43.61.107) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 12 Aug 2020 20:37:40 +0000
-Received: from dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com
- (172.23.141.97) by mail-relay.amazon.com (10.43.61.169) with Microsoft SMTP
- Server id 15.0.1497.2 via Frontend Transport; Wed, 12 Aug 2020 20:37:40 +0000
-Received: by dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com (Postfix, from userid 6262777)
-        id 8E099C352B; Wed, 12 Aug 2020 20:37:40 +0000 (UTC)
-Date:   Wed, 12 Aug 2020 20:37:40 +0000
-From:   Frank van der Linden <fllinden@amazon.com>
-To:     Alex Dewar <alex.dewar90@gmail.com>
-CC:     "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Message-ID: <20200812203740.GB13358@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
-References: <20200812141252.21059-1-alex.dewar90@gmail.com>
- <20200812141252.21059-2-alex.dewar90@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200812141252.21059-2-alex.dewar90@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc:content-transfer-encoding;
+        bh=YD9oDnrG8Z6JcBpuq/UbNq0O9QuaBudpHcn6VsItfhQ=;
+        b=UySQ3jmVjIpx2pCRgTSQvOKRQVOTvf0/+OGgkB6+TLfojkHoJHsRLrmrOJljrFbci1
+         SUYriIRveJrHTEIXY9YxhN+wY55CeXbYoGZNDsfpWN4yHYV+zjY6xPMdOIx6qVZQ4oDB
+         zlGKu2pHN3iIE0D+PUtiRJ5DzE6uEbM7ZNBB6QWlWBlP8X2Oy1WR0qLpFfRPklx8jxKh
+         eLkm7YrgZxaRQ49hrsBiHJDIkIF7dVdpX8OV/7D/NXXal0nXxUk3oTfjb2uMXUHDOA0K
+         cnqgb48OPBL0Lxlfp18eu5pSeeoBU0CJyojSklYHmxup3iVRYGuGFlI85uG9Hsxi9RSt
+         BCjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc:content-transfer-encoding;
+        bh=YD9oDnrG8Z6JcBpuq/UbNq0O9QuaBudpHcn6VsItfhQ=;
+        b=mMbV8pzQBRsRlODZAaqVU4gFjNJXtXIBev8I9RJaQJMr95rHBpHwfa5Yo1BGscjslx
+         r7HtT367qEihaoW7ToMyeOfWhZAlDzBNx1cK1o7bSRSVSCnRTGqn0Q219rFV9gBjNxxf
+         bfwUmIz3NWutwW/jCzp9zA/Q7tc/IrjXmBetcEujTJv1vcUA+QxEXLLM8DtYMdEU5kFY
+         lgpGNhr+EZMd1WCY6kTcdejwZo4lIp4yejXx+SOx4AX12z0fPgWMnQW5sdJ4z+7uYFNi
+         3+ipIv6iID6wUoZfR7RCibP6QPd+2CpxUEoFxtdJ55zzq07vttOuZHBH52ZfdWkLcHi5
+         c9SQ==
+X-Gm-Message-State: AOAM533WL4S3qG5bynI5+l1hzuhiXsBpSBUVL8ArVBbQR+84TCv4GCKl
+        aN7Jf97cENaSOty5a3tIpfHSHaA=
+X-Google-Smtp-Source: ABdhPJxdubdXW4PwgJu9dM9xj0Z3AIPA09UhdEhSNfFkpA5hDk0es7P764u9/oCxXHhv8FsiOBCtnSc=
+X-Received: by 2002:ad4:5425:: with SMTP id g5mr1438708qvt.198.1597264818846;
+ Wed, 12 Aug 2020 13:40:18 -0700 (PDT)
+Date:   Wed, 12 Aug 2020 13:40:17 -0700
+In-Reply-To: <20200812140322.132844-1-Jianlin.Lv@arm.com>
+Message-Id: <20200812204017.GI184844@google.com>
+Mime-Version: 1.0
+References: <20200812140322.132844-1-Jianlin.Lv@arm.com>
+Subject: Re: [PATCH bpf-next] bpf: fix load XDP program error in test_xdp_vlan
+From:   sdf@google.com
+To:     Jianlin Lv <Jianlin.Lv@arm.com>
+Cc:     bpf@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
+        ast@kernel.org, daniel@iogearbox.net, yhs@fb.com, Song.Zhu@arm.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 03:12:52PM +0100, Alex Dewar wrote:
-> 
-> Fix typos in nfs4xdr.c.
-> 
-> Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
-> ---
->  fs/nfsd/nfs4xdr.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-> index 1a0341fd80f9a..3db789139a71f 100644
-> --- a/fs/nfsd/nfs4xdr.c
-> +++ b/fs/nfsd/nfs4xdr.c
-> @@ -4828,7 +4828,7 @@ nfsd4_encode_listxattrs(struct nfsd4_compoundres *resp, __be32 nfserr,
->                 slen = strlen(sp);
-> 
->                 /*
-> -                * Check if this a user. attribute, skip it if not.
-> +                * Check if this is a user attribute, skip it if not.
->                  */
->                 if (strncmp(sp, XATTR_USER_PREFIX, XATTR_USER_PREFIX_LEN))
->                         goto contloop;
-> --
-> 2.28.0
-> 
-
-"this a" should indeed by "this is a", but "user." is not a typo - it is
-talking about checking the prefix of the extended attribute, which is
-"user.", so the "." is intended to be there.
-
-Thanks,
-
-- Frank
+T24gMDgvMTIsIEppYW5saW4gTHYgd3JvdGU6DQo+IHRlc3RfeGRwX3ZsYW4uc2ggcmVwb3J0cyB0
+aGUgZXJyb3IgYXMgYmVsb3c6DQoNCj4gJCBzdWRvIC4vdGVzdF94ZHBfdmxhbl9tb2RlX25hdGl2
+ZS5zaA0KPiArICdbJyAteiB4ZHBfdmxhbl9tb2RlX25hdGl2ZSAnXScNCj4gKyBYRFBfTU9ERT14
+ZHBnZW5lcmljDQo+IOKApuKApg0KPiArIGV4cG9ydCBYRFBfUFJPRz14ZHBfdmxhbl9yZW1vdmVf
+b3V0ZXIyDQo+ICsgWERQX1BST0c9eGRwX3ZsYW5fcmVtb3ZlX291dGVyMg0KPiArIGlwIG5ldG5z
+IGV4ZWMgbnMxIGlwIGxpbmsgc2V0IHZldGgxIHhkcGRydiBvZmYNCj4gRXJyb3I6IFhEUCBwcm9n
+cmFtIGFscmVhZHkgYXR0YWNoZWQuDQoNCj4gaXAgd2lsbCB0aHJvdyBhbiBlcnJvciBpbiBjYXNl
+IGEgWERQIHByb2dyYW0gaXMgYWxyZWFkeSBhdHRhY2hlZCB0byB0aGUNCj4gbmV0d29ya2luZyBp
+bnRlcmZhY2UsIHRvIHByZXZlbnQgaXQgZnJvbSBiZWluZyBvdmVycmlkZGVuIGJ5IGFjY2lkZW50
+Lg0KPiBJbiBvcmRlciB0byByZXBsYWNlIHRoZSBjdXJyZW50bHkgcnVubmluZyBYRFAgcHJvZ3Jh
+bSB3aXRoIGEgbmV3IG9uZSwNCj4gdGhlIC1mb3JjZSBvcHRpb24gbXVzdCBiZSB1c2VkLg0KDQo+
+IFNpZ25lZC1vZmYtYnk6IEppYW5saW4gTHYgPEppYW5saW4uTHZAYXJtLmNvbT4NCj4gLS0tDQo+
+ICAgdG9vbHMvdGVzdGluZy9zZWxmdGVzdHMvYnBmL3Rlc3RfeGRwX3ZsYW4uc2ggfCAyICstDQo+
+ICAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pDQoNCj4gZGlm
+ZiAtLWdpdCBhL3Rvb2xzL3Rlc3Rpbmcvc2VsZnRlc3RzL2JwZi90ZXN0X3hkcF92bGFuLnNoICAN
+Cj4gYi90b29scy90ZXN0aW5nL3NlbGZ0ZXN0cy9icGYvdGVzdF94ZHBfdmxhbi5zaA0KPiBpbmRl
+eCBiYjhiMGRhOTE2ODYuLjAzNGU2MDNhZWI1MCAxMDA3NTUNCj4gLS0tIGEvdG9vbHMvdGVzdGlu
+Zy9zZWxmdGVzdHMvYnBmL3Rlc3RfeGRwX3ZsYW4uc2gNCj4gKysrIGIvdG9vbHMvdGVzdGluZy9z
+ZWxmdGVzdHMvYnBmL3Rlc3RfeGRwX3ZsYW4uc2gNCj4gQEAgLTIyMCw3ICsyMjAsNyBAQCBpcCBu
+ZXRucyBleGVjIG5zMSBwaW5nIC1pIDAuMiAtVyAyIC1jIDIgJElQQUREUjINCj4gICAjIEVUSF9Q
+XzgwMjFRIGluZGljYXRpb24sIGFuZCB0aGlzIGNhdXNlIG92ZXJ3cml0aW5nIG9mIG91ciBjaGFu
+Z2VzLg0KPiAgICMNCj4gICBleHBvcnQgWERQX1BST0c9eGRwX3ZsYW5fcmVtb3ZlX291dGVyMg0K
+PiAtaXAgbmV0bnMgZXhlYyBuczEgaXAgbGluayBzZXQgJERFVk5TMSAkWERQX01PREUgb2ZmDQo+
+ICtpcCBuZXRucyBleGVjIG5zMSBpcCAtZm9yY2UgbGluayBzZXQgJERFVk5TMSAkWERQX01PREUg
+b2ZmDQo+ICAgaXAgbmV0bnMgZXhlYyBuczEgaXAgbGluayBzZXQgJERFVk5TMSAkWERQX01PREUg
+b2JqZWN0ICRGSUxFIHNlY3Rpb24gIA0KPiAkWERQX1BST0cNCg0KPiAgICMgTm93IHRoZSBuYW1l
+c3BhY2VzIHNob3VsZCBzdGlsbCBiZSBhYmxlIHJlYWNoIGVhY2gtb3RoZXIsIHRlc3Qgd2l0aCAg
+DQo+IHBpbmc6DQo+IC0tDQo+IDIuMTcuMQ0KDQpUaGlzIHNob3VsZCBiZSBhbHJlYWR5IGZpeGVk
+IGJ5Og0KaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvYnBmL0NBS0g4cUJ1ejQ4V3c2Uz1EQ3pLUnIz
+ZjQ2RXEzTHlrbnZUakRHUF81UVJQeHRHWl9Id0BtYWlsLmdtYWlsLmNvbS9ULyN0DQo=
