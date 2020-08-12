@@ -2,124 +2,106 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B764C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 07:13:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF6FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 07:18:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65E7B205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 07:13:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BD5A20768
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 07:18:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ogAHVsF4"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EJMmkgr/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726841AbgHLHNL (ORCPT
+        id S1726806AbgHLHS2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 03:13:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35818 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726255AbgHLHNK (ORCPT
+        Wed, 12 Aug 2020 03:18:28 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:36581 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726182AbgHLHS2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 03:13:10 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD679C06174A;
-        Wed, 12 Aug 2020 00:13:09 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id h21so776464qtp.11;
-        Wed, 12 Aug 2020 00:13:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=bR9Mjz2MSKMtLofIMu9kpQ50I2mmXBxYQjcRO1d1+ic=;
-        b=ogAHVsF4k9826ncKgfwB3w8sOpUpmpiXTNlpo35rzCOauhsgsnM73jQwe4vzxlfAWX
-         QK4fffGhMSN1vtu6O8mSD/ahDkeDP6Fw8sh5IH4cRZYY1pfuBucSmBQz4OJZFLVUHwbc
-         Nx0ccsINFymGnfXfPX9cYLFHy7+IN2HfcSa0yHqBAaLgyVkFeQh/IdsxFCCE60C2Ka7F
-         Ru3XxdkQO6M/UA3FjHpq/6tKklPtt/txLmiVIW/t7dhzbYIUdwA6vtXjc+WFXqlbULJi
-         hIK9Hd9a1PSrX9Va4m5qNOLxWmvTcGayoGUE4Gn7WKdimONvqpmcrR2+PEZtsGMqiIzZ
-         nKLQ==
+        Wed, 12 Aug 2020 03:18:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597216707;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=u5vnrGUSviiSyDo4A1Jti2cqm6vCb7k5wROaco57qD0=;
+        b=EJMmkgr/6Mu0bFQUhDE7Jiur2WgYyZyIPz9YWIZNqAXcyfJDeQzRydvyqrwfNCK71DUr1U
+        Ko/vTtYm/qCLgshpQEQW4xFaeOgI+Kop8TQ3r3H5W4xSNTi9kwpIN+JokeD9W4K6wiTi9l
+        IFqofjHPKYcaGv6FSMQVZX20SWQOdo8=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-279-3iO5BckCPYWyaiYagMySBg-1; Wed, 12 Aug 2020 03:18:25 -0400
+X-MC-Unique: 3iO5BckCPYWyaiYagMySBg-1
+Received: by mail-wm1-f71.google.com with SMTP id z1so541316wmf.9
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 00:18:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=bR9Mjz2MSKMtLofIMu9kpQ50I2mmXBxYQjcRO1d1+ic=;
-        b=ZGWcKkd/5qej8TBB8O61cMbmS6OwtKVALWOy5cQ9JhCtKmel4m8n/ty/yWGFTcp6GY
-         Ejd06tDax2zTWPgm68IfSKmxQk715mojfSGdbfJ49h/yVZHqHGwXAGTVeHtOztVOFiIw
-         ZF30j9iwIAyX0ezLUV8CIWDHVx80U1yYYeLZo/wlhd3HWH0vBIezz2UwFKYLOvFtvvyT
-         NIN/pJOWGvLtioRT1/VSaVrVC27ZP4RDp8OBDLEE7UVnXBYqCkxS7ibRcuUZ8K8Xtre7
-         8BkYZsgZ4YaajYICqRNeVQEXtjYEyX/8tRl2vVyv4HyqroQG09icorYIggqieBHvhEae
-         1bQw==
-X-Gm-Message-State: AOAM530xBeel/NH8sif53n7lFWRhW0ky5BZeZs85Pch/Y+LQC1DlrbGV
-        Qc6yGozYQnsTDjGDsmeb1aBCwJE=
-X-Google-Smtp-Source: ABdhPJyFnUSYc7AaO6sSE9ipUyhn/r5BfcOVESM7CPj+qN7j9ms5xjUtBES05y1B4QalEADanzOhwQ==
-X-Received: by 2002:ac8:3868:: with SMTP id r37mr4688956qtb.95.1597216389166;
-        Wed, 12 Aug 2020 00:13:09 -0700 (PDT)
-Received: from PWN (146-115-88-66.s3894.c3-0.sbo-ubr1.sbo.ma.cable.rcncustomer.com. [146.115.88.66])
-        by smtp.gmail.com with ESMTPSA id i20sm1342859qka.17.2020.08.12.00.13.08
+        bh=u5vnrGUSviiSyDo4A1Jti2cqm6vCb7k5wROaco57qD0=;
+        b=QECnN/TrGK8laOX/dMYUXgeT13gnvi53X/2abjzeoDn5nyNuM1fW37BWtoibE5F++z
+         2V6LIcZk9WNj7WVRUBcktyuJG/0m/JfJIoVHBDNBMU/I2SX4Cbs/NDSRO/4N24n4Nkse
+         J1qHLH6TyjyRkTscq39K7TZl+9AuSKMeWAOft6UUX1dPewPtgrF03aSYwmnuy9qvadWI
+         yOLLg+4Skbw5SPIMy2iGCqxJBh1rZQmgYP2nB5gNIAFm2p+UfnUQy3ajpONyM71jqngT
+         zSqTiUXQc4LVAI5MBrmBS7MVNLDHqfIWk2OH55XOUqD1mNtL/GVt3pGL6HIiMRwGA14+
+         SYxg==
+X-Gm-Message-State: AOAM5307fO4bv/p6ymseLBvaGSPzNeF8N1ZitHtYpHTSGPKoM/NiNKqw
+        TN0f4xKxsBkJBA61KqDP3zBEShg0oPtyecPaW77I87oXugejVlngAdYqNtpLIIMJdrhHpP0BixL
+        YpnAESlymiEq9uKG+4MyRdmIP
+X-Received: by 2002:a1c:e0d7:: with SMTP id x206mr7833386wmg.91.1597216704439;
+        Wed, 12 Aug 2020 00:18:24 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwdYhlEIglOLVe6YV8jXLsNNRYYEwJBGXoch1voDOXD/WBMnFly08DgF2XM7EKR+k6oZDm1/g==
+X-Received: by 2002:a1c:e0d7:: with SMTP id x206mr7833366wmg.91.1597216704160;
+        Wed, 12 Aug 2020 00:18:24 -0700 (PDT)
+Received: from steredhat ([5.180.207.22])
+        by smtp.gmail.com with ESMTPSA id w1sm2236205wmc.18.2020.08.12.00.18.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Aug 2020 00:13:08 -0700 (PDT)
-Date:   Wed, 12 Aug 2020 03:13:06 -0400
-From:   Peilin Ye <yepeilin.cs@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-fsdevel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        syzkaller-bugs@googlegroups.com, linux-kernel@vger.kernel.org
-Subject: Re: [Linux-kernel-mentees] [PATCH] hfs, hfsplus: Fix NULL pointer
- dereference in hfs_find_init()
-Message-ID: <20200812071306.GA869606@PWN>
-References: <20200812065556.869508-1-yepeilin.cs@gmail.com>
- <20200812070827.GA1304640@kroah.com>
+        Wed, 12 Aug 2020 00:18:23 -0700 (PDT)
+Date:   Wed, 12 Aug 2020 09:17:42 +0200
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     David Miller <davem@davemloft.net>
+Cc:     jhansen@vmware.com, netdev@vger.kernel.org, kuba@kernel.org,
+        decui@microsoft.com, linux-kernel@vger.kernel.org,
+        stefanha@redhat.com
+Subject: Re: [PATCH net 0/2] vsock: fix null pointer dereference and cleanup
+ in vsock_poll()
+Message-ID: <20200812071742.4zoxlvu44ivunsjd@steredhat>
+References: <20200811095504.25051-1-sgarzare@redhat.com>
+ <20200811.102418.1200203139092745562.davem@davemloft.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200812070827.GA1304640@kroah.com>
+In-Reply-To: <20200811.102418.1200203139092745562.davem@davemloft.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 09:08:27AM +0200, Greg Kroah-Hartman wrote:
-> On Wed, Aug 12, 2020 at 02:55:56AM -0400, Peilin Ye wrote:
-> > Prevent hfs_find_init() from dereferencing `tree` as NULL.
-> > 
-> > Reported-and-tested-by: syzbot+7ca256d0da4af073b2e2@syzkaller.appspotmail.com
-> > Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
-> > ---
-> >  fs/hfs/bfind.c     | 3 +++
-> >  fs/hfsplus/bfind.c | 3 +++
-> >  2 files changed, 6 insertions(+)
-> > 
-> > diff --git a/fs/hfs/bfind.c b/fs/hfs/bfind.c
-> > index 4af318fbda77..880b7ea2c0fc 100644
-> > --- a/fs/hfs/bfind.c
-> > +++ b/fs/hfs/bfind.c
-> > @@ -16,6 +16,9 @@ int hfs_find_init(struct hfs_btree *tree, struct hfs_find_data *fd)
-> >  {
-> >  	void *ptr;
-> >  
-> > +	if (!tree)
-> > +		return -EINVAL;
-> > +
-> >  	fd->tree = tree;
-> >  	fd->bnode = NULL;
-> >  	ptr = kmalloc(tree->max_key_len * 2 + 4, GFP_KERNEL);
-> > diff --git a/fs/hfsplus/bfind.c b/fs/hfsplus/bfind.c
-> > index ca2ba8c9f82e..85bef3e44d7a 100644
-> > --- a/fs/hfsplus/bfind.c
-> > +++ b/fs/hfsplus/bfind.c
-> > @@ -16,6 +16,9 @@ int hfs_find_init(struct hfs_btree *tree, struct hfs_find_data *fd)
-> >  {
-> >  	void *ptr;
-> >  
-> > +	if (!tree)
-> > +		return -EINVAL;
-> > +
+On Tue, Aug 11, 2020 at 10:24:18AM -0700, David Miller wrote:
+> From: Stefano Garzarella <sgarzare@redhat.com>
+> Date: Tue, 11 Aug 2020 11:55:02 +0200
 > 
-> How can tree ever be NULL in these calls?  Shouldn't that be fixed as
-> the root problem here?
+> > The first patch fixes a potential null pointer dereference in vsock_poll()
+> > reported by syzbot.
+> > The second patch is a simple cleanup in the same block code. I put this later,
+> > to make it easier to backport the first patch in the stable branches.
+> 
+> Please do not mix cleanups and bug fixes into the same patch series.
 
-I see, I will try to figure out what is going on with the reproducer.
+I did it because I was going through the same part of the code,
+but I won't do it again!
 
-Thank you,
-Peilin Ye
+> 
+> net-next is closed, so you should not be submitting non-bugfixes at
+> this time.
+> 
+
+I'll resend only the first patch, sorry for the noise.
+
+Thanks,
+Stefano
+
