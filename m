@@ -2,135 +2,164 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A252BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:56:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05EC2C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:57:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D856204FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:56:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597237016;
-	bh=BGNPvffdTYH5cvHawxVaBWNHtXi/xbYebLv+GDhLXW4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vcNs5AQ1jx30UHk2k6GloQUBRoTqeQ0zyjfCcFhk7nYAqn0ybv+HchIX6GqK55r3l
-	 kwR4IVvANHoaNo4mrmKkpcjYaPQn483R/kNffIpfC0Zyxkncb8dK5SQNd2pCjgyAan
-	 e8i1eby7k1sXfieyeVVC2i7RtSlwv7nufgrTQfRM=
+	by mail.kernel.org (Postfix) with ESMTP id E21A0204FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:56:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728016AbgHLM4y (ORCPT
+        id S1728052AbgHLM47 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 08:56:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32908 "EHLO mail.kernel.org"
+        Wed, 12 Aug 2020 08:56:59 -0400
+Received: from mga18.intel.com ([134.134.136.126]:57977 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726698AbgHLM4v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 08:56:51 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51888204FD;
-        Wed, 12 Aug 2020 12:56:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597237011;
-        bh=BGNPvffdTYH5cvHawxVaBWNHtXi/xbYebLv+GDhLXW4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WYyUdzQWeFFSH6eebGJcAWuEf5bXLvxWmMx1FIe4GHVlm0PyG6MSNgVuVZJ90wZRv
-         mnReGhnLI/NQhUI7VP+SLK3Uz8BM0cSgbD6a8IoiXZWZ29MTZl+Ts/wsCQf5s2gHZr
-         rlBwSnqYPYQ/ygzsVlp+t6u9rFHiwQ7VSmZQkf2w=
-Date:   Wed, 12 Aug 2020 13:56:46 +0100
-From:   Will Deacon <will@kernel.org>
-To:     peterz@infradead.org, szabolcs.nagy@arm.com
-Cc:     Ard Biesheuvel <ardb@kernel.org>, Jessica Yu <jeyu@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kees Cook <keescook@chromium.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>,
+        id S1727977AbgHLM45 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 08:56:57 -0400
+IronPort-SDR: 4c5hsD7oNS8j//x5JDjKNcMPAzIj5A8mLL+QGUxVwCuJi6xKFhLRaI6U7GH13MjstRj+o/qXGv
+ 66Psvvn9itQw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9710"; a="141565529"
+X-IronPort-AV: E=Sophos;i="5.76,304,1592895600"; 
+   d="scan'208";a="141565529"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2020 05:56:56 -0700
+IronPort-SDR: vb0plur+z9CHm3M4u+Sb1rVDBOrjsBMYZgDSSGvqYZ3vcsJFEZaJHxUVfkcENt3E4Dl3uuh9P+
+ na8O+ccUp+uA==
+X-IronPort-AV: E=Sophos;i="5.76,304,1592895600"; 
+   d="scan'208";a="469812685"
+Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.255.29.234]) ([10.255.29.234])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2020 05:56:52 -0700
+Reply-To: like.xu@intel.com
+Subject: Re: [PATCH] KVM: x86/pmu: Add '.exclude_hv = 1' for guest perf_event
+To:     Paolo Bonzini <pbonzini@redhat.com>, peterz@infradead.org
+Cc:     Like Xu <like.xu@linux.intel.com>, Yao <yao.jin@linux.intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2] module: Harden STRICT_MODULE_RWX
-Message-ID: <20200812125645.GA8675@willie-the-truck>
-References: <20200403171303.GK20760@hirez.programming.kicks-ass.net>
- <20200808101222.5103093e@coco.lan>
- <20200810092523.GA8612@linux-8ccs>
- <20200810150647.GB8612@linux-8ccs>
- <20200811163427.6edbf343@coco.lan>
- <20200811145524.GE2674@hirez.programming.kicks-ass.net>
- <20200811172738.2d632a09@coco.lan>
- <20200811160134.GA13652@linux-8ccs>
- <CAMj1kXF8fm=9CdQykqDbgYCJSP88ezMs3EOosCW+SDi+Lve0zg@mail.gmail.com>
- <20200812104005.GN2674@hirez.programming.kicks-ass.net>
+References: <20200812050722.25824-1-like.xu@linux.intel.com>
+ <5c41978e-8341-a179-b724-9aa6e7e8a073@redhat.com>
+ <20200812111115.GO2674@hirez.programming.kicks-ass.net>
+ <65eddd3c-c901-1c5a-681f-f0cb07b5fbb1@redhat.com>
+From:   "Xu, Like" <like.xu@intel.com>
+Organization: Intel OTC
+Message-ID: <b55afd09-77c8-398b-309b-6bd9f9cfc876@intel.com>
+Date:   Wed, 12 Aug 2020 20:56:50 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200812104005.GN2674@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <65eddd3c-c901-1c5a-681f-f0cb07b5fbb1@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 12:40:05PM +0200, peterz@infradead.org wrote:
-> On Wed, Aug 12, 2020 at 10:56:56AM +0200, Ard Biesheuvel wrote:
-> > The module .lds has BYTE(0) in the section contents to prevent the
-> > linker from pruning them entirely. The (NOLOAD) is there to ensure
-> > that this byte does not end up in the .ko, which is more a matter of
-> > principle than anything else, so we can happily drop that if it helps.
-> > 
-> > However, this should only affect the PROGBITS vs NOBITS designation,
-> > and so I am not sure whether it makes a difference.
-> > 
-> > Depending on where the w^x check occurs, we might simply override the
-> > permissions of these sections, and strip the writable permission if it
-> > is set in the PLT handling init code, which manipulates the metadata
-> > of all these 3 sections before the module space is vmalloc'ed.
-> 
-> What's curious is that this seems the result of some recent binutils
-> change. Every build with binutils-2.34 (or older) does not seem to
-> generate these as WAX, but has the much more sensible WA.
-> 
-> I suppose we can change the kernel check and 'allow' W^X for 0 sized
-> sections, but I think we should still figure out why binutils-2.35 is
-> now generating WAX sections all of a sudden, it might come bite us
-> elsewhere.
+On 2020/8/12 19:32, Paolo Bonzini wrote:
+> On 12/08/20 13:11, peterz@infradead.org wrote:
+>>> x86 does not have a hypervisor privilege level, so it never uses
+>> Arguably it does when Xen, but I don't think we support that, so *phew*.
+> Yeah, I suppose you could imagine having paravirtualized perf counters
+> where the Xen privileged domain could ask Xen to run perf counters on
+> itself.
+>
+>>> exclude_hv; exclude_host already excludes all root mode activity for
+>>> both ring0 and ring3.
+>> Right, but we want to tighten the permission checks and not excluding_hv
+>> is just sloppy.
+> I would just document that it's ignored as it doesn't make sense.  ARM64
+> does that too, for new processors where the kernel is not itself split
+> between supervisor and hypervisor privilege levels.
+>
+> There are people that are trying to run Linux-based firmware and have
+> SMM handlers as part of the kernel.  Perhaps they could use exclude_hv
+> to exclude the SMM handlers from perf (if including them is possible at
+> all).
+Hi Paolo,
 
-Agreed, I think it's important to figure out what's going on here before we
-try to bodge around it.
+My proposal is to define:
+the "hypervisor privilege levels" events in the KVM/x86 context as
+all the host kernel events plus /dev/kvm user space events.
 
-Adding Szabolcs, in case he has any ideas.
+If we add ".exclude_hv = 1" in the pmc_reprogram_counter(),
+do you see any side effect to cover the above usages?
 
-To save him reading the whole thread, here's a summary:
-
-AArch64 kernel modules built with binutils 2.35 end up with a couple of
-ELF sections marked as SHF_WRITE | SHF_ALLOC | SHF_EXECINSTR:
-
-[ 5] .plt PROGBITS 0000000000000388 01d000 000008 00 WAX  0   0  1
-[ 6] .init.plt NOBITS 0000000000000390 01d008 000008 00  WA  0   0  1
-[ 7] .text.ftrace_trampoline PROGBITS 0000000000000398 01d008 000008 00 WAX  0   0  1
-
-This results in the module being rejected by our loader, because we don't
-permit writable, executable mappings.
-
-Our linker script for these entries uses NOLOAD, so it's odd to see PROGBITS
-appearing in the readelf output above (and older binutils emits NOBITS
-sections). Anyway, here's the linker script:
-
-SECTIONS {
-	.plt (NOLOAD) : { BYTE(0) }
-	.init.plt (NOLOAD) : { BYTE(0) }
-	.text.ftrace_trampoline (NOLOAD) : { BYTE(0) }
-}
-
-It appears that the name of the section influences the behaviour, as
-Jessica observed [1] that sections named .text.* end up with PROGBITS,
-whereas random naming such as ".test" ends up with NOBITS, as before.
-
-We've looked at the changelog between binutils 2.34 and 2.35, but nothing
-stands out. Any clues? Is this intentional binutils behaviour?
+The fact that exclude_hv has never been used in x86 does help
+the generic perf code to handle permission checks in a more concise way.
 
 Thanks,
+Like Xu
+>> The thing is, we very much do not want to allow unpriv user to be able
+>> to create: exclude_host=1, exclude_guest=0 counters (they currently
+>> can).
+> That would be the case of an unprivileged user that wants to measure
+> performance of its guests.  It's a scenario that makes a lot of sense,
+> are you worried about side channels?  Can perf-events on guests leak
+> more about the host than perf-events on a random userspace program?
+>
+>> Also, exclude_host is really poorly defined:
+>>
+>>    https://lkml.kernel.org/r/20200806091827.GY2674@hirez.programming.kicks-ass.net
+>>
+>>    "Suppose we have nested virt:
+>>
+>> 	  L0-hv
+>> 	  |
+>> 	  G0/L1-hv
+>> 	     |
+>> 	     G1
+>>
+>>    And we're running in G0, then:
+>>
+>>    - 'exclude_hv' would exclude L0 events
+>>    - 'exclude_host' would ... exclude L1-hv events?
+>>    - 'exclude_guest' would ... exclude G1 events?
+>  From the point of view of G0, L0 *does not exist at all*.  You just
+> cannot see L0 events if you're running in G0.
+>
+> exclude_host/exclude_guest are the right definition.
+>
+>>    Then the next question is, if G0 is a host, does the L1-hv run in
+>>    G0 userspace or G0 kernel space?
+> It's mostly kernel, but sometimes you're interested in events from QEMU
+> or whoever else has opened /dev/kvm.  In that case you care about G0
+> userspace too.
+>
+>> The way it is implemented, you basically have to always set
+>> exclude_host=0, even if there is no virt at all and you want to measure
+>> your own userspace thing -- which is just weird.
+> I understand regretting having exclude_guest that way; include_guest
+> (defaulting to 0!) would have made more sense.  But defaulting to
+> exclude_host==0 makes sense: if there is no virt at all, memset(0) does
+> the right thing so it does not seem weird to me.
+>
+>> I suppose the 'best' option at this point is something like:
+>>
+>> 	/*
+>> 	 * comment that explains the trainwreck.
+>> 	 */
+>> 	if (!exclude_host && !exclude_guest)
+>> 		exclude_guest = 1;
+>>
+>> 	if ((!exclude_hv || !exclude_guest) && !perf_allow_kernel())
+>> 		return -EPERM;
+>>
+>> But that takes away the possibility of actually having:
+>> 'exclude_host=0, exclude_guest=0' to create an event that measures both,
+>> which also sucks.
+> In fact both of the above "if"s suck. :(
+>
+> Paolo
+>
 
-Will
-
-[1] https://lore.kernel.org/r/20200812114127.GA10824@linux-8ccs.fritz.box
