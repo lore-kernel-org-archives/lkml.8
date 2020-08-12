@@ -2,233 +2,87 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 929C8C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 02:36:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D5DC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 02:44:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DECD206B2
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 02:36:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73E3B206B2
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 02:44:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="exl5FDCW"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="iGUfgGuL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726457AbgHLCge (ORCPT
+        id S1726489AbgHLCoP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 22:36:34 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:56919 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726235AbgHLCgd (ORCPT
+        Tue, 11 Aug 2020 22:44:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51174 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726402AbgHLCoO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 22:36:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597199791;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=w+xbO45pxEQ4RVFD3gdok49sH5sjhVfab6kjd9PTGOo=;
-        b=exl5FDCWsy8eWTiZV28fdN0BtUREVKmheQm3MO+gCWIBFvhBgjkvEsh9Em4E6gQNsnqfid
-        bUJQli5PNqXoorQcZvE3tO/2zwEbZoBs4HIXri8KoCfM+JfZPX0/Jgg9nfbmbtZCU/0nnX
-        GbE9eOiBbFjp7eEgxMcMAYh/gwdk3zg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-261-RWjOC2UOO6mb6G7yCv5Feg-1; Tue, 11 Aug 2020 22:36:28 -0400
-X-MC-Unique: RWjOC2UOO6mb6G7yCv5Feg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9D544802B43;
-        Wed, 12 Aug 2020 02:36:24 +0000 (UTC)
-Received: from x1.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DE0BB5C1BD;
-        Wed, 12 Aug 2020 02:36:18 +0000 (UTC)
-Date:   Tue, 11 Aug 2020 20:36:18 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>
-Cc:     Jason Gunthorpe <jgg@nvidia.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "Dey, Megha" <megha.dey@intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Lin, Jing" <jing.lin@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "netanelg@mellanox.com" <netanelg@mellanox.com>,
-        "shahafs@mellanox.com" <shahafs@mellanox.com>,
-        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
-        "Hossain, Mona" <mona.hossain@intel.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: Re: [PATCH RFC v2 00/18] Add VFIO mediated device support and
- DEV-MSI support for the idxd driver
-Message-ID: <20200811203618.41aa6031@x1.home>
-In-Reply-To: <MWHPR11MB16451E4BEC7BF29C241FD69C8C420@MWHPR11MB1645.namprd11.prod.outlook.com>
-References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com>
-        <20200721164527.GD2021248@mellanox.com>
-        <CY4PR11MB1638103EC73DD9C025F144C98C780@CY4PR11MB1638.namprd11.prod.outlook.com>
-        <20200724001930.GS2021248@mellanox.com>
-        <20200805192258.5ee7a05b@x1.home>
-        <20200807121955.GS16789@nvidia.com>
-        <MWHPR11MB16452EBE866E330A7E000AFC8C440@MWHPR11MB1645.namprd11.prod.outlook.com>
-        <20200811110036.7d337837@x1.home>
-        <MWHPR11MB16451E4BEC7BF29C241FD69C8C420@MWHPR11MB1645.namprd11.prod.outlook.com>
-Organization: Red Hat
+        Tue, 11 Aug 2020 22:44:14 -0400
+Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49558C06174A
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 19:44:14 -0700 (PDT)
+Received: by mail-pf1-x431.google.com with SMTP id u20so281521pfn.0
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 19:44:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=0tE7MUBsHJE0Mpx1+XVH5JlNGfMN16YjoWq2ffNV8zc=;
+        b=iGUfgGuLhp5glfj9+Q0pWAZxeqRc+45tVwKSXeadF0a/5VRBYSXZvzBjI/pIVeGlaY
+         r1jI++wR9oMMv/M07yVeSZEOdZVtzqAOPdYlBpG5XGo6OH0muGHWFxAVKCthjOlNRJHX
+         3gx3vhWjA71m9uwrn2dkm1NM+Kssj/QgzRu1no70ml1wAF88WA6TohQ6gN+CZQ2619nx
+         WK6o/OxsEA9Jet9ONq433Sq3fD5uD9HhGAIWPWZr3HaPHODpZlQOH3Serg9yTtSECxIi
+         0Kxvea5B+5SHfJigBC5SznJ5QKK7G5jER/Rnuwx6So2XCjXpv/u+vIHqJgVAOFFBsloU
+         o7Og==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0tE7MUBsHJE0Mpx1+XVH5JlNGfMN16YjoWq2ffNV8zc=;
+        b=PcRj+dwylpUwNxswULuKXdZ30xoMieSgZKtUgZQcUQbqtnCDkj9p7FCKxJQyCTh4At
+         26PBGRsB8yfuJN2j0dDuytcV6MBs+FDvdifWZgL6JRzAYVxdrj54EJkp6/DpYT9cygnd
+         sVWJrHfJtE2TJ4+q+cXlal8DsqaRJtP88raXYg+dtx4e4UMng72T4DxqQWMvvkmnv56r
+         9GIpYaqsk3umYGzHFc6rx0GOXR95RxOKCdZuOq2DZMUA3S85LmjFH4gzAvzIg07mJgVM
+         okMwseBtf4/CL/4afq4+eu972CYbuhPR4yDW4aNWdhDrhl1c9Yy/DVep03B/CLjwCTGS
+         GFnA==
+X-Gm-Message-State: AOAM5309dVaCQjGyWRHI8yJso3FiF4hMjOvJAK+XVzkhJYJgWQa9tQr0
+        JJn/C93eHd4+WwXRZrLJqc717eXujjY=
+X-Google-Smtp-Source: ABdhPJxIC7s/N3U1+eyQRUwRFQ1XN7DSLT80VYkwubWr1q+bYuMwnlIB4hpElOY20MAM3xaNdrea/w==
+X-Received: by 2002:a65:63d4:: with SMTP id n20mr3349103pgv.213.1597200253567;
+        Tue, 11 Aug 2020 19:44:13 -0700 (PDT)
+Received: from [192.168.1.182] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id 196sm455852pfc.178.2020.08.11.19.44.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Aug 2020 19:44:13 -0700 (PDT)
+Subject: Re: KASAN: use-after-free Read in __io_req_task_submit
+To:     syzbot <syzbot+3c72ce3136524268d7af@syzkaller.appspotmail.com>,
+        io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        viro@zeniv.linux.org.uk
+References: <000000000000e5b60405aca4c517@google.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <e6759a68-4789-e2de-30b4-8be0d34a099d@kernel.dk>
+Date:   Tue, 11 Aug 2020 20:44:11 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <000000000000e5b60405aca4c517@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 12 Aug 2020 01:58:00 +0000
-"Tian, Kevin" <kevin.tian@intel.com> wrote:
+#syz dup: KASAN: use-after-free Read in io_async_task_func
 
-> > From: Alex Williamson <alex.williamson@redhat.com>
-> > Sent: Wednesday, August 12, 2020 1:01 AM
-> > 
-> > On Mon, 10 Aug 2020 07:32:24 +0000
-> > "Tian, Kevin" <kevin.tian@intel.com> wrote:
-> >   
-> > > > From: Jason Gunthorpe <jgg@nvidia.com>
-> > > > Sent: Friday, August 7, 2020 8:20 PM
-> > > >
-> > > > On Wed, Aug 05, 2020 at 07:22:58PM -0600, Alex Williamson wrote:
-> > > >  
-> > > > > If you see this as an abuse of the framework, then let's identify those
-> > > > > specific issues and come up with a better approach.  As we've discussed
-> > > > > before, things like basic PCI config space emulation are acceptable
-> > > > > overhead and low risk (imo) and some degree of register emulation is
-> > > > > well within the territory of an mdev driver.  
-> > > >
-> > > > What troubles me is that idxd already has a direct userspace interface
-> > > > to its HW, and does userspace DMA. The purpose of this mdev is to
-> > > > provide a second direct userspace interface that is a little different
-> > > > and trivially plugs into the virtualization stack.  
-> > >
-> > > No. Userspace DMA and subdevice passthrough (what mdev provides)
-> > > are two distinct usages IMO (at least in idxd context). and this might
-> > > be the main divergence between us, thus let me put more words here.
-> > > If we could reach consensus in this matter, which direction to go
-> > > would be clearer.
-> > >
-> > > First, a passthrough interface requires some unique requirements
-> > > which are not commonly observed in an userspace DMA interface, e.g.:
-> > >
-> > > - Tracking DMA dirty pages for live migration;
-> > > - A set of interfaces for using SVA inside guest;
-> > > 	* PASID allocation/free (on some platforms);
-> > > 	* bind/unbind guest mm/page table (nested translation);
-> > > 	* invalidate IOMMU cache/iotlb for guest page table changes;
-> > > 	* report page request from device to guest;
-> > > 	* forward page response from guest to device;
-> > > - Configuring irqbypass for posted interrupt;
-> > > - ...
-> > >
-> > > Second, a passthrough interface requires delegating raw controllability
-> > > of subdevice to guest driver, while the same delegation might not be
-> > > required for implementing an userspace DMA interface (especially for
-> > > modern devices which support SVA). For example, idxd allows following
-> > > setting per wq (guest driver may configure them in any combination):
-> > > 	- put in dedicated or shared mode;
-> > > 	- enable/disable SVA;
-> > > 	- Associate guest-provided PASID to MSI/IMS entry;
-> > > 	- set threshold;
-> > > 	- allow/deny privileged access;
-> > > 	- allocate/free interrupt handle (enlightened for guest);
-> > > 	- collect error status;
-> > > 	- ...
-> > >
-> > > We plan to support idxd userspace DMA with SVA. The driver just needs
-> > > to prepare a wq with a predefined configuration (e.g. shared, SVA,
-> > > etc.), bind the process mm to IOMMU (non-nested) and then map
-> > > the portal to userspace. The goal that userspace can do DMA to
-> > > associated wq doesn't change the fact that the wq is still *owned*
-> > > and *controlled* by kernel driver. However as far as passthrough
-> > > is concerned, the wq is considered 'owned' by the guest driver thus
-> > > we need an interface which can support low-level *controllability*
-> > > from guest driver. It is sort of a mess in uAPI when mixing the
-> > > two together.
-> > >
-> > > Based on above two reasons, we see distinct requirements between
-> > > userspace DMA and passthrough interfaces, at least in idxd context
-> > > (though other devices may have less distinction in-between). Therefore,
-> > > we didn't see the value/necessity of reinventing the wheel that mdev
-> > > already handles well to evolve an simple application-oriented usespace
-> > > DMA interface to a complex guest-driver-oriented passthrough interface.
-> > > The complexity of doing so would incur far more kernel-side changes
-> > > than the portion of emulation code that you've been concerned about...
-> > >  
-> > > >
-> > > > I don't think VFIO should be the only entry point to
-> > > > virtualization. If we say the universe of devices doing user space DMA
-> > > > must also implement a VFIO mdev to plug into virtualization then it
-> > > > will be alot of mdevs.  
-> > >
-> > > Certainly VFIO will not be the only entry point. and This has to be a
-> > > case-by-case decision.  If an userspace DMA interface can be easily
-> > > adapted to be a passthrough one, it might be the choice. But for idxd,
-> > > we see mdev a much better fit here, given the big difference between
-> > > what userspace DMA requires and what guest driver requires in this hw.
-> > >  
-> > > >
-> > > > I would prefer to see that the existing userspace interface have the
-> > > > extra needed bits for virtualization (eg by having appropriate
-> > > > internal kernel APIs to make this easy) and all the emulation to build
-> > > > the synthetic PCI device be done in userspace.  
-> > >
-> > > In the end what decides the direction is the amount of changes that
-> > > we have to put in kernel, not whether we call it 'emulation'. For idxd,
-> > > adding special passthrough requirements (guest SVA, dirty tracking,
-> > > etc.) and raw controllability to the simple userspace DMA interface
-> > > is for sure making kernel more complex than reusing the mdev
-> > > framework (plus some degree of emulation mockup behind). Not to
-> > > mention the merit of uAPI compatibility with mdev...  
-> > 
-> > I agree with a lot of this argument, exposing a device through a
-> > userspace interface versus allowing user access to a device through a
-> > userspace interface are different levels of abstraction and control.
-> > In an ideal world, perhaps we could compose one from the other, but I
-> > don't think the existence of one is proof that the other is redundant.
-> > That's not to say that mdev/vfio isn't ripe for abuse in this space,
-> > but I'm afraid the test for that abuse is probably much more subtle.
-> > 
-> > I'll also remind folks that LPC is coming up in just a couple short
-> > weeks and this might be something we should discuss (virtually)
-> > in-person.  uconf CfPs are currently open. </plug>   Thanks,
-> >   
-> 
-> Yes, LPC is a good place to reach consensus. btw I saw there is 
-> already one VFIO topic called "device assignment/sub-assignment".
-> Do you think whether this can be covered under that topic, or
-> makes more sense to be a new one?
-
-All the things listed in the CFP are only potential topics to get ideas
-flowing, there is currently no proposal to talk about sub-assignment.
-I'd suggest submitting separate topics for each and if we run into time
-constraints we can ask that they might be combined together.  Thanks,
-
-Alex
+-- 
+Jens Axboe
 
