@@ -2,80 +2,145 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D785C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 18:36:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5861FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 18:39:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7158C2078B
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 18:36:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OLIptj6Y"
+	by mail.kernel.org (Postfix) with ESMTP id 3D4922078B
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 18:39:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726578AbgHLSgD (ORCPT
+        id S1726558AbgHLSjW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 14:36:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56208 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726447AbgHLSgD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 14:36:03 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7DA5C061383;
-        Wed, 12 Aug 2020 11:36:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=hGDWRQALLjCheB38NbQiHR7a1j5xW20CZsXUayNpcok=; b=OLIptj6YsBcNR6j1pcJkA8ZhKL
-        yfg7/ItMMMlyIqQRjjYLmzs/hUIjfbtCiv5fjcYgKPg8gIFmjeg/87g66tTYn4WAwUTeFslUAKdto
-        UyoUXilayDWaOai1f6QuliLcrFvy2gcIRTQBXZBveYaQffQkQGG2weRLVwOBcDT5GiIynw4xjYAPO
-        sW4v5/KP68ArJCf+k6LUznpy9gTF2pBtiGtkETMCmhtaQN1H4+qSB2k2UXe3IVidL46WIkupyc9ZU
-        XolWPZC9/0O+9BJ+178QsEEH0UzYiXWUYf7GndvXmXzit8hpEM56IBcwGxoAOVwSimZH2zr6/DcuW
-        VTui5j0w==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k5vbR-0001kf-Hg; Wed, 12 Aug 2020 18:35:57 +0000
-Date:   Wed, 12 Aug 2020 19:35:57 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Ross Zwisler <zwisler@chromium.org>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-kernel@vger.kernel.org,
-        Mattias Nissler <mnissler@chromium.org>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Benjamin Gordon <bmgordon@google.com>,
-        David Howells <dhowells@redhat.com>,
-        Dmitry Torokhov <dtor@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        linux-fsdevel@vger.kernel.org, Micah Morton <mortonm@google.com>,
-        Raul Rangel <rrangel@google.com>,
-        Ross Zwisler <zwisler@google.com>
-Subject: Re: [PATCH v7] Add a "nosymfollow" mount option.
-Message-ID: <20200812183557.GB17456@casper.infradead.org>
-References: <20200811222803.3224434-1-zwisler@google.com>
+        Wed, 12 Aug 2020 14:39:22 -0400
+Received: from foss.arm.com ([217.140.110.172]:47510 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726447AbgHLSjW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 14:39:22 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 50F3FD6E;
+        Wed, 12 Aug 2020 11:39:21 -0700 (PDT)
+Received: from [192.168.178.2] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E8D703F22E;
+        Wed, 12 Aug 2020 11:39:13 -0700 (PDT)
+Subject: Re: [PATCH] sched/fair: reduce preemption with IDLE tasks
+ runable(Internet mail)
+To:     =?UTF-8?B?YmVuYmppYW5nKOiSi+W9qik=?= <benbjiang@tencent.com>
+Cc:     Jiang Biao <benbjiang@gmail.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
+        "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "bsegall@google.com" <bsegall@google.com>,
+        "mgorman@suse.de" <mgorman@suse.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200801023248.90104-1-benbjiang@gmail.com>
+ <5ed0fd46-3a3d-3c1a-5d75-03a74864e640@arm.com>
+ <592F24A7-BF43-457D-AC40-DC5E35279730@tencent.com>
+ <8bef1f94-f9bf-08a5-2ff3-3485d7796a96@arm.com>
+ <8629CB9F-AFC8-43D6-BD14-B60A0B85ADB3@tencent.com>
+ <5f870781-1648-b4ac-6026-557dfc347109@arm.com>
+ <CCA1D942-3669-4216-92BD-768967B1ECE5@tencent.com>
+ <4964e359-afc5-a256-4950-853a9485eeff@arm.com>
+ <70236E62-AA36-48C1-9382-86353649253C@tencent.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <3a1047fc-a86a-014a-b17a-eae71f669da1@arm.com>
+Date:   Wed, 12 Aug 2020 20:39:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200811222803.3224434-1-zwisler@google.com>
+In-Reply-To: <70236E62-AA36-48C1-9382-86353649253C@tencent.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 04:28:03PM -0600, Ross Zwisler wrote:
-> diff --git a/include/uapi/linux/mount.h b/include/uapi/linux/mount.h
-> index 96a0240f23fed..dd8306ea336c1 100644
-> --- a/include/uapi/linux/mount.h
-> +++ b/include/uapi/linux/mount.h
-> @@ -16,6 +16,7 @@
->  #define MS_REMOUNT	32	/* Alter flags of a mounted FS */
->  #define MS_MANDLOCK	64	/* Allow mandatory locks on an FS */
->  #define MS_DIRSYNC	128	/* Directory modifications are synchronous */
-> +#define MS_NOSYMFOLLOW	256	/* Do not follow symlinks */
->  #define MS_NOATIME	1024	/* Do not update access times. */
->  #define MS_NODIRATIME	2048	/* Do not update directory access times */
->  #define MS_BIND		4096
+On 12/08/2020 05:19, benbjiang(蒋彪) wrote:
+> Hi,
+> 
+>> On Aug 11, 2020, at 11:54 PM, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+>>
+>> On 11/08/2020 02:41, benbjiang(蒋彪) wrote:
+>>> Hi,
+>>>
+>>>> On Aug 10, 2020, at 9:24 PM, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+>>>>
+>>>> On 06/08/2020 17:52, benbjiang(蒋彪) wrote:
+>>>>> Hi, 
+>>>>>
+>>>>>> On Aug 6, 2020, at 9:29 PM, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+>>>>>>
+>>>>>> On 03/08/2020 13:26, benbjiang(蒋彪) wrote:
+>>>>>>>
+>>>>>>>
+>>>>>>>> On Aug 3, 2020, at 4:16 PM, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+>>>>>>>>
+>>>>>>>> On 01/08/2020 04:32, Jiang Biao wrote:
+>>>>>>>>> From: Jiang Biao <benbjiang@tencent.com>
 
-Does this need to be added to MS_RMT_MASK too?
+[...]
+
+>> Trace a run of 2 SCHED_OTHER (nice 0) tasks and 1 SCHED_IDLE task on a
+>> single CPU and trace_printk the conditions  'if (delta < 0)' and ' if
+>> (delta > ideal_runtime)' in check_preempt_tick().
+>>
+>> Then do the same with 3 SCHED_OTHER (nice 0) tasks. You can also change
+>> the niceness of the 2 SCHED_OTHER task to 19 to see some differences in
+>> the kernelshark's task layout.
+>>
+>> rt-app (https://github.com/scheduler-tools/rt-app) is a nice tool to
+>> craft those artificial use cases.
+> With rt-app tool, sched_switch traced by ftrace, the result is as what I expected,
+
+I use: 
+
+{
+        "tasks" : {
+                "task_other" : {
+                        "instance" : 2,
+                        "loop" : 200,
+                        "policy" : "SCHED_OTHER",
+                        "run" : 8000,
+                        "timer" : { "ref" : "unique1" , "period" : 16000, "mode" : "absolute" },
+                        "priority" : 0
+                },
+                "task_idle" : {
+                        "instance" : 1,
+                        "loop" : 200,
+                        "policy" : "SCHED_IDLE",
+                        "run" : 8000,
+                        "timer" : { "ref" : "unique2" , "period" : 16000, "mode" : "absolute" }
+                }
+        },
+        "global" : {
+                "calibration" : 243, <-- Has to be calibrated against the CPU you run on !!!
+                "default_policy" : "SCHED_OTHER",
+                "duration" : -1
+        }
+}
+
+to have 2 (periodic) SCHED_OTHER and 1 SCHED_IDLE task. 
+
+> ** 2normal+1idle: idle preempt normal every 600+ms **
+
+During the 3.2s the 2 SCHED_OTHER tasks run, the SCHED_IDLE task is
+switched in only once, after ~2.5s.
+
+> ** 3normal+idle: idle preempt normal every 1000+ms **
+
+Ah, this was meant to be 3 SCHED_OTHER tasks only! To see the difference
+in behavior.
+
+> ** 2normal(nice 19)+1idle(nice 0): idle preempt normal every 30+ms **
+
+During the 3.2s the 2 SCHED_OTHER tasks run, the SCHED_IDLE task is
+switched in every ~45ms.
+
+[...]
