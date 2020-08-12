@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F40A9C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26256C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:54:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9CFA20855
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:54:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1017F20885
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:54:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728189AbgHLMyS (ORCPT
+        id S1727997AbgHLMxX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 08:54:18 -0400
-Received: from foss.arm.com ([217.140.110.172]:44628 "EHLO foss.arm.com"
+        Wed, 12 Aug 2020 08:53:23 -0400
+Received: from foss.arm.com ([217.140.110.172]:44516 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728037AbgHLMx0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 08:53:26 -0400
+        id S1727906AbgHLMxQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 08:53:16 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E4B2D142F;
-        Wed, 12 Aug 2020 05:53:25 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C677211B3;
+        Wed, 12 Aug 2020 05:53:15 -0700 (PDT)
 Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A7D493F70D;
-        Wed, 12 Aug 2020 05:53:24 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 778873F70D;
+        Wed, 12 Aug 2020 05:53:14 -0700 (PDT)
 From:   Valentin Schneider <valentin.schneider@arm.com>
 To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+Cc:     Russell King <linux@armlinux.org.uk>,
         Dietmar Eggemann <dietmar.eggemann@arm.com>, mingo@kernel.org,
-        vincent.guittot@linaro.org, morten.rasmussen@arm.com,
-        Quentin Perret <qperret@google.com>
-Subject: [PATCH v5 09/17] sched/topology: Remove SD_SERIALIZE degeneration special case
-Date:   Wed, 12 Aug 2020 13:52:52 +0100
-Message-Id: <20200812125300.11889-10-valentin.schneider@arm.com>
+        peterz@infradead.org, vincent.guittot@linaro.org,
+        morten.rasmussen@arm.com, Quentin Perret <qperret@google.com>
+Subject: [PATCH v5 02/17] ARM: Revert back to default scheduler topology.
+Date:   Wed, 12 Aug 2020 13:52:45 +0100
+Message-Id: <20200812125300.11889-3-valentin.schneider@arm.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200812125300.11889-1-valentin.schneider@arm.com>
 References: <20200812125300.11889-1-valentin.schneider@arm.com>
@@ -45,38 +45,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If there is only a single NUMA node in the system, the only NUMA topology
-level that will be generated will be NODE (identity distance), which
-doesn't have SD_SERIALIZE.
+The ARM-specific GMC level is meant to be built using the thread sibling
+mask, but no devicetree in arch/arm/boot/dts uses the 'thread' cpu-map
+binding. With SD_SHARE_POWERDOMAIN gone, this topology level can be
+removed, at which point ARM no longer benefits from having a custom defined
+topology table.
 
-This means we don't need this special case in sd_parent_degenerate(), as
-having the NODE level "naturally" covers it. Thus, remove it.
+Delete the GMC topology level by making ARM use the default scheduler
+topology table. This essentially reverts commit
 
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
+  fb2aa85564f4 ("sched, ARM: Create a dedicated scheduler topology table")
+
+Cc: Russell King <linux@armlinux.org.uk>
+Suggested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
 Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
 Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
 ---
- kernel/sched/topology.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ arch/arm/kernel/topology.c | 26 --------------------------
+ 1 file changed, 26 deletions(-)
 
-diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index 5f2bc99ff659..00ad7cef2ec1 100644
---- a/kernel/sched/topology.c
-+++ b/kernel/sched/topology.c
-@@ -183,11 +183,9 @@ sd_parent_degenerate(struct sched_domain *sd, struct sched_domain *parent)
- 		return 0;
+diff --git a/arch/arm/kernel/topology.c b/arch/arm/kernel/topology.c
+index 353f3ee660e4..ef0058de432b 100644
+--- a/arch/arm/kernel/topology.c
++++ b/arch/arm/kernel/topology.c
+@@ -177,15 +177,6 @@ static inline void parse_dt_topology(void) {}
+ static inline void update_cpu_capacity(unsigned int cpuid) {}
+ #endif
  
- 	/* Flags needing groups don't count if only 1 group in parent */
--	if (parent->groups == parent->groups->next) {
-+	if (parent->groups == parent->groups->next)
- 		pflags &= ~(SD_DEGENERATE_GROUPS_MASK | SD_PREFER_SIBLING);
--		if (nr_node_ids == 1)
--			pflags &= ~SD_SERIALIZE;
--	}
-+
- 	if (~cflags & pflags)
- 		return 0;
+-/*
+- * The current assumption is that we can power gate each core independently.
+- * This will be superseded by DT binding once available.
+- */
+-const struct cpumask *cpu_corepower_mask(int cpu)
+-{
+-	return &cpu_topology[cpu].thread_sibling;
+-}
+-
+ /*
+  * store_cpu_topology is called at boot when only one cpu is running
+  * and with the mutex cpu_hotplug.lock locked, when several cpus have booted,
+@@ -241,20 +232,6 @@ void store_cpu_topology(unsigned int cpuid)
+ 	update_siblings_masks(cpuid);
+ }
  
+-static inline int cpu_corepower_flags(void)
+-{
+-	return SD_SHARE_PKG_RESOURCES;
+-}
+-
+-static struct sched_domain_topology_level arm_topology[] = {
+-#ifdef CONFIG_SCHED_MC
+-	{ cpu_corepower_mask, cpu_corepower_flags, SD_INIT_NAME(GMC) },
+-	{ cpu_coregroup_mask, cpu_core_flags, SD_INIT_NAME(MC) },
+-#endif
+-	{ cpu_cpu_mask, SD_INIT_NAME(DIE) },
+-	{ NULL, },
+-};
+-
+ /*
+  * init_cpu_topology is called at boot when only one cpu is running
+  * which prevent simultaneous write access to cpu_topology array
+@@ -265,7 +242,4 @@ void __init init_cpu_topology(void)
+ 	smp_wmb();
+ 
+ 	parse_dt_topology();
+-
+-	/* Set scheduler topology descriptor */
+-	set_sched_topology(arm_topology);
+ }
 -- 
 2.27.0
 
