@@ -2,90 +2,97 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C8CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 07:52:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA6FDC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 07:52:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF7A420771
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 07:52:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597218756;
-	bh=lYGnGkLHu1hG+xc/o4ReH2xXsUyzFmXjEImOntyD4ws=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=Z8PeabkMvlnmwcGkWrQDYewPUBvRVrrTgo+9rUt6pFJStMqbzORbaDKm+EpRyNYdb
-	 VutbSNB4NN5CKX6hfnQT1jGqdZFAY+D+vZmgJZSp1cEzkeDZoqciTduN4r5/idHTW8
-	 aj3zaKgfhhL/xlNhW5b6MxBZ97Hh5SChZojIL3Uo=
+	by mail.kernel.org (Postfix) with ESMTP id 9E5ED206B5
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 07:52:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mbm+Mb1L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbgHLHwe (ORCPT
+        id S1726868AbgHLHwk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 03:52:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34898 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726479AbgHLHwd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 03:52:33 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65F02206B5;
-        Wed, 12 Aug 2020 07:52:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597218753;
-        bh=lYGnGkLHu1hG+xc/o4ReH2xXsUyzFmXjEImOntyD4ws=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=1p4LHA72BP10qSH06MuALxEGL+GU2nbkV9CWNkn7+vzYlWNNa2iKUE7l2t2sNjo87
-         097ws6IFpDJ2P3anL6PUXIcGnhWnHUm+WEEkiKkVvGdz9NhD2BwpbfB2/UyB/xievf
-         kX/NCz4f7O+i1NWsIh4cgBHOC7WzfgCLvMNrQO6c=
-Content-Type: text/plain; charset="utf-8"
+        Wed, 12 Aug 2020 03:52:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41954 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726479AbgHLHwk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 03:52:40 -0400
+Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F30EC06174A;
+        Wed, 12 Aug 2020 00:52:39 -0700 (PDT)
+Received: by mail-wr1-x430.google.com with SMTP id a15so1091128wrh.10;
+        Wed, 12 Aug 2020 00:52:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=k795cS87OwKuyVO3rujC6YZeCCmb5P0Upy5SIYYKgDo=;
+        b=mbm+Mb1LVfp1wM95jDePVO+4Hamx49VtFfDg2H0PzGP+/WEmkz02+JrVumPuF6Q1L0
+         OYcA4pXP6TREQEy5gDBSuOah5XNc45V0rBSUb/74QL6kM0YwPZqTSqJXqrMhh620kAr8
+         fF29dctU7W1XDf3NXrnbHVUlXZJ16xe52UH+76C8xU5/bmewRvh37Fk9EyGzhi+2FsNu
+         idYV/8sF4eo+vVaWDP2CBnBHMyrloUR8qjWkFzTeHELq7z8660xTcBaJJIO8FYpAxIno
+         QmDi9VodB1GQd5bjRwfzw5JuFS2pFdfA0dabJwRqYIuChqx4q5mssOFsxqxDxQPX4UOM
+         ocqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=k795cS87OwKuyVO3rujC6YZeCCmb5P0Upy5SIYYKgDo=;
+        b=HDDhreBPIJZawBydVG8ck/RjnjzZvmBrkhJA/BfpKzvbR6Kxp7C8odQe13nQ1/9yMj
+         JmkfoZylE7qAtKA0AKJ0d+icMtH0R2zgVegrAApn8sosW1ZBBpgEO8yD6E5HM3pMzHe1
+         6BEzilrvJBZaFm9G8uFOJ2Aygae/q8Ah/86zcfR1jSmUfGFRqY/ffRKupQx8lUQUr/QM
+         INSERIWLKcVdQ9g19LgY2YTFDO+RhVVVCiB8LRslJlXx9HsMaNTlrZdVb0v9oezSb28d
+         KO9HiALr6jMA80vSIHjn1KIRxJQwmEL9PJE5Sl5XApmKtDJJmnvMlhd1ZmQ5kwsqdqdo
+         kvCw==
+X-Gm-Message-State: AOAM532LHIW86quuvdOStKMRPEdlknsrWapU0EsyrjamOpBtnK+VABf4
+        v4iM0XNLsgTJ641vetN6AtE=
+X-Google-Smtp-Source: ABdhPJzknrzfXN9Tkt6EkQuzqcitN3D20GBfvMDx/Rx/iPuj3YEEifWby+hgjNx8nGBtZWji//sytw==
+X-Received: by 2002:adf:ed85:: with SMTP id c5mr32710290wro.307.1597218757537;
+        Wed, 12 Aug 2020 00:52:37 -0700 (PDT)
+Received: from skynet.lan (88.red-83-49-60.dynamicip.rima-tde.net. [83.49.60.88])
+        by smtp.gmail.com with ESMTPSA id 6sm2470984wmf.4.2020.08.12.00.52.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Aug 2020 00:52:37 -0700 (PDT)
+From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+To:     tsbogend@alpha.franken.de, f.fainelli@gmail.com,
+        jonas.gorski@gmail.com, bcm-kernel-feedback-list@broadcom.com,
+        linux-mips@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+Subject: [PATCH v4 0/5] MIPS: BCM63xx: board improvements
+Date:   Wed, 12 Aug 2020 09:52:30 +0200
+Message-Id: <20200812075235.366864-1-noltari@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200810044020.2063350-1-natechancellor@gmail.com>
-References: <20200810044020.2063350-1-natechancellor@gmail.com>
-Subject: Re: [PATCH] clk: rockchip: Fix initialization of mux_pll_src_4plls_p
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Heiko Stuebner <heiko@sntech.de>, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Date:   Wed, 12 Aug 2020 00:52:32 -0700
-Message-ID: <159721875227.33733.9237826555988566719@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Nathan Chancellor (2020-08-09 21:40:20)
-> A new warning in Clang points out that the initialization of
-> mux_pll_src_4plls_p appears incorrect:
->=20
-> ../drivers/clk/rockchip/clk-rk3228.c:140:58: warning: suspicious
-> concatenation of string literals in an array initialization; did you
-> mean to separate the elements with a comma? [-Wstring-concatenation]
-> PNAME(mux_pll_src_4plls_p)      =3D { "cpll", "gpll", "hdmiphy" "usb480m"=
- };
->                                                               ^
->                                                              ,
-> ../drivers/clk/rockchip/clk-rk3228.c:140:48: note: place parentheses
-> around the string literal to silence warning
-> PNAME(mux_pll_src_4plls_p)      =3D { "cpll", "gpll", "hdmiphy" "usb480m"=
- };
->                                                     ^
-> 1 warning generated.
->=20
-> Given the name of the variable and the same variable name in rv1108, it
-> seems that this should have been four distinct elements. Fix it up by
-> adding the comma as suggested.
->=20
-> Fixes: 307a2e9ac524 ("clk: rockchip: add clock controller for rk3228")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/1123
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> ---
+v4: Split license change to a new patch.
+v3: Reword DWV-S0 board commit description to avoid possible confusions.
+v2: switch to SPDX license identifier.
 
-Looks good to me. I can pick it up for clk-fixes if Heiko agrees.
+Álvaro Fernández Rojas (5):
+  MIPS: BCM63xx: remove duplicated new lines
+  MIPS: BCM63xx: remove EHCI from BCM6348 boards
+  MIPS: BCM63xx: enable EHCI for DWV-S0 board
+  MIPS: BCM63xx: refactor board declarations
+  MIPS: BCM63xx: switch to SPDX license identifier
+
+ arch/mips/bcm63xx/boards/board_bcm963xx.c | 625 +++++++++++-----------
+ 1 file changed, 306 insertions(+), 319 deletions(-)
+
+-- 
+2.28.0
+
