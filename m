@@ -2,54 +2,54 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65BD1C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED776C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:58:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38305207F7
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:58:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C18F5207F7
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:58:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597247897;
-	bh=wNH43mWKljx0ycRWpaEYS4YesUceEtgnpEjk+gClJcQ=;
+	s=default; t=1597247899;
+	bh=bGzkmzgI05bp9ifcfNkg5wxDXnHnHyvaIvD0PUvBTCQ=;
 	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
-	b=SfKSspcub8YTI+hT0xnHV5jvX5b8Ihm9tLVeJnrYH1z6yCNd1LhdhMGDU7k+2uJBH
-	 9p1snp/O1RyKeE7UEpPOmhCNZpVBp988Jp68MjidkRaILjTYcWs2uz00d21RFBwZZv
-	 VFPRhEs8BDzx+apzKc4Q3bhxFdyk2/gGeP2XkxgA=
+	b=NeAHibxsS2tznIw721YRoxNPfmyCA+8DQXCys0loRoN25Kx2c+VBw/YxrTxSZSTUi
+	 joBC7FBdDFNfGOTUcuJHX0ViNOsJUXO/uMh0M3NtKAnrdtkD1nV0FCFMRmpxB1cZQv
+	 urwxHNeB/VWbzgVbDOyI0hV7XXWZk8WhJ1V4At8U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727068AbgHLP6P (ORCPT
+        id S1727086AbgHLP6S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 11:58:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46240 "EHLO mail.kernel.org"
+        Wed, 12 Aug 2020 11:58:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726696AbgHLP5E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726685AbgHLP5E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 12 Aug 2020 11:57:04 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F25A622E01;
+        by mail.kernel.org (Postfix) with ESMTPSA id AC0D222D73;
         Wed, 12 Aug 2020 15:57:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597247821;
-        bh=wNH43mWKljx0ycRWpaEYS4YesUceEtgnpEjk+gClJcQ=;
+        s=default; t=1597247820;
+        bh=bGzkmzgI05bp9ifcfNkg5wxDXnHnHyvaIvD0PUvBTCQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LCXr7BmJSAW0zH1wneeaMcF7yPZSD+FfVY7DT/HffSLlF83lHDRg7SZY6R02PGCPt
-         MWTlQ41QiSdEqjEeELnsMeb8ui394KCoonDAd/2kYbsa8MHJphAKIvy3c2tk0D2HK9
-         b1BLAvRYKNeGNV2ndJ2mvGHo3Lsa8u5BGh/yqyZ0=
+        b=zphaPjQX3kzpq6eG0AtKj5zXZO4RVYXZ2lIX+ByreTkqivaAnxMscysoB74OwZC3Y
+         IC8UZP1Jl5JL84kr9/KlFENwKnWfgvGFRCU2hBk7VpxQ6/AyIeZi5xE5kVq8ZRayOo
+         E6QIPf/FU2Li7lhbdDxghiLzenWVMd0dC4LAqijM=
 Received: from mchehab by mail.kernel.org with local (Exim 4.94)
         (envelope-from <mchehab@kernel.org>)
-        id 1k5t7b-005t77-27; Wed, 12 Aug 2020 17:56:59 +0200
+        id 1k5t7a-005t6u-RD; Wed, 12 Aug 2020 17:56:58 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org
-Subject: [PATCH 33/44] staging: regulator: hi6421v600-regulator: convert to use get/set voltage_sel
-Date:   Wed, 12 Aug 2020 17:56:43 +0200
-Message-Id: <a3dcad042d1a9b2f549f7c8b6d6aacc9d97c7d86.1597247164.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 29/44] staging: regulator: hi6421v600-regulator: cleanup debug messages
+Date:   Wed, 12 Aug 2020 17:56:39 +0200
+Message-Id: <66d20dc7d6a9057639c3e6f1abc169b338807055.1597247164.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1597247164.git.mchehab+huawei@kernel.org>
 References: <cover.1597247164.git.mchehab+huawei@kernel.org>
@@ -61,124 +61,213 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As the supported LDOs on this driver are all using a selector,
-change the implementation to use get_voltage_sel and
-set_voltage_sel ops.
+- use dev_foo() instead of pr_foo();
+- cleanup the messages, making them more standard and easier
+  to understand.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../staging/hikey9xx/hi6421v600-regulator.c   | 58 +++++++------------
- 1 file changed, 22 insertions(+), 36 deletions(-)
+ .../staging/hikey9xx/hi6421v600-regulator.c   | 76 ++++++++++++-------
+ 1 file changed, 47 insertions(+), 29 deletions(-)
 
 diff --git a/drivers/staging/hikey9xx/hi6421v600-regulator.c b/drivers/staging/hikey9xx/hi6421v600-regulator.c
-index f77ecea78597..abd1f43dd5ec 100644
+index 7d82d11f4b52..2d1096ecb277 100644
 --- a/drivers/staging/hikey9xx/hi6421v600-regulator.c
 +++ b/drivers/staging/hikey9xx/hi6421v600-regulator.c
-@@ -86,8 +86,8 @@ static int hi6421_spmi_regulator_enable(struct regulator_dev *rdev)
+@@ -59,9 +59,11 @@ static int hisi_regulator_is_enabled(struct regulator_dev *rdev)
+ 	struct hisi_pmic *pmic = sreg->pmic;
  
- 	/* set enable register */
- 	hi6421_spmi_pmic_rmw(pmic, rdev->desc->enable_reg,
--		      rdev->desc->enable_mask,
--				rdev->desc->enable_mask);
-+			     rdev->desc->enable_mask,
-+			     rdev->desc->enable_mask);
- 	dev_dbg(&rdev->dev, "%s: enable_reg=0x%x, enable_mask=0x%x\n",
+ 	reg_val = hisi_pmic_read(pmic, rdev->desc->enable_reg);
+-	pr_debug("<[%s]: enable_reg=0x%x,enable_state=%d>\n",
++
++	dev_dbg(&rdev->dev,
++		"%s: enable_reg=0x%x, val= 0x%x, enable_state=%d\n",
+ 		 __func__, rdev->desc->enable_reg,
+-		(reg_val & rdev->desc->enable_mask));
++		reg_val, (reg_val & rdev->desc->enable_mask));
+ 
+ 	return ((reg_val & rdev->desc->enable_mask) != 0);
+ }
+@@ -74,7 +76,8 @@ static int hisi_regulator_enable(struct regulator_dev *rdev)
+ 	/* keep a distance of off_on_delay from last time disabled */
+ 	usleep_range(rdev->desc->off_on_delay, rdev->desc->off_on_delay + 1000);
+ 
+-	pr_debug("<[%s]: off_on_delay=%dus>\n", __func__, rdev->desc->off_on_delay);
++	dev_dbg(&rdev->dev, "%s: off_on_delay=%d us\n",
++		__func__, rdev->desc->off_on_delay);
+ 
+ 	/* cannot enable more than one regulator at one time */
+ 	mutex_lock(&enable_mutex);
+@@ -85,7 +88,7 @@ static int hisi_regulator_enable(struct regulator_dev *rdev)
+ 	hisi_pmic_rmw(pmic, rdev->desc->enable_reg,
+ 		      rdev->desc->enable_mask,
+ 				rdev->desc->enable_mask);
+-	pr_debug("<[%s]: enable_reg=0x%x,enable_mask=0x%x>\n",
++	dev_dbg(&rdev->dev, "%s: enable_reg=0x%x, enable_mask=0x%x\n",
  		 __func__, rdev->desc->enable_reg,
  		 rdev->desc->enable_mask);
-@@ -109,64 +109,49 @@ static int hi6421_spmi_regulator_disable(struct regulator_dev *rdev)
- 	return 0;
- }
  
--static int hi6421_spmi_regulator_get_voltage(struct regulator_dev *rdev)
-+static int hi6421_spmi_regulator_get_voltage_sel(struct regulator_dev *rdev)
- {
+@@ -111,16 +114,20 @@ static int hisi_regulator_get_voltage(struct regulator_dev *rdev)
  	struct hi6421v600_regulator *sreg = rdev_get_drvdata(rdev);
- 	struct hi6421_spmi_pmic *pmic = sreg->pmic;
+ 	struct hisi_pmic *pmic = sreg->pmic;
  	u32 reg_val, selector;
--	int vol;
++	int vol;
  
  	/* get voltage selector */
- 	reg_val = hi6421_spmi_pmic_read(pmic, rdev->desc->vsel_reg);
--	selector = (reg_val & rdev->desc->vsel_mask) >>
--				(ffs(rdev->desc->vsel_mask) - 1);
+ 	reg_val = hisi_pmic_read(pmic, rdev->desc->vsel_reg);
+-	pr_debug("<[%s]: vsel_reg=0x%x>\n",
+-		 __func__, rdev->desc->vsel_reg);
+-
+ 	selector = (reg_val & rdev->desc->vsel_mask) >>
+ 				(ffs(rdev->desc->vsel_mask) - 1);
  
--	vol = rdev->desc->ops->list_voltage(rdev, selector);
-+	selector = (reg_val & rdev->desc->vsel_mask) >>	(ffs(rdev->desc->vsel_mask) - 1);
- 
- 	dev_dbg(&rdev->dev,
--		"%s: vsel_reg=0x%x, val=0x%x, entry=0x%x, voltage=%d mV\n",
--		 __func__, rdev->desc->vsel_reg, reg_val, selector, vol/ 1000);
-+		"%s: vsel_reg=0x%x, value=0x%x, entry=0x%x, voltage=%d mV\n",
-+		 __func__, rdev->desc->vsel_reg, reg_val, selector,
-+		rdev->desc->ops->list_voltage(rdev, selector) / 1000);
- 
--	return vol;
-+	return selector;
+-	return rdev->desc->ops->list_voltage(rdev, selector);
++	vol = rdev->desc->ops->list_voltage(rdev, selector);
++
++	dev_dbg(&rdev->dev,
++		"%s: vsel_reg=0x%x, val=0x%x, entry=0x%x, voltage=%d mV\n",
++		 __func__, rdev->desc->vsel_reg, reg_val, selector, vol/ 1000);
++
++	return vol;
  }
  
--static int hi6421_spmi_regulator_set_voltage(struct regulator_dev *rdev,
--				      int min_uV, int max_uV, unsigned int *selector)
-+static int hi6421_spmi_regulator_set_voltage_sel(struct regulator_dev *rdev,
-+						 unsigned int selector)
+ static int hisi_regulator_set_voltage(struct regulator_dev *rdev,
+@@ -129,10 +136,14 @@ static int hisi_regulator_set_voltage(struct regulator_dev *rdev,
+ 	struct hi6421v600_regulator *sreg = rdev_get_drvdata(rdev);
+ 	struct hisi_pmic *pmic = sreg->pmic;
+ 	u32 vsel;
+-	int ret = 0;
++	int uV, ret = 0;
+ 
+ 	for (vsel = 0; vsel < rdev->desc->n_voltages; vsel++) {
+-		int uV = rdev->desc->volt_table[vsel];
++		uV = rdev->desc->volt_table[vsel];
++		dev_dbg(&rdev->dev,
++			"%s: min %d, max %d, value[%u] = %d\n",
++			__func__, min_uV, max_uV, vsel, uV);
++
+ 		/* Break at the first in-range value */
+ 		if (min_uV <= uV && uV <= max_uV)
+ 			break;
+@@ -146,13 +157,14 @@ static int hisi_regulator_set_voltage(struct regulator_dev *rdev,
+ 	/* set voltage selector */
+ 	hisi_pmic_rmw(pmic, rdev->desc->vsel_reg,
+ 		      rdev->desc->vsel_mask,
+-		vsel << (ffs(rdev->desc->vsel_mask) - 1));
++		      vsel << (ffs(rdev->desc->vsel_mask) - 1));
+ 
+-	pr_debug("<[%s]: vsel_reg=0x%x, vsel_mask=0x%x, value=0x%x>\n",
++	dev_dbg(&rdev->dev,
++		"%s: vsel_reg=0x%x, vsel_mask=0x%x, value=0x%x, voltage=%d mV\n",
+ 		 __func__,
+ 		 rdev->desc->vsel_reg,
+ 		 rdev->desc->vsel_mask,
+-		 vsel << (ffs(rdev->desc->vsel_mask) - 1));
++		 vsel << (ffs(rdev->desc->vsel_mask) - 1), uV / 1000);
+ 
+ 	return ret;
+ }
+@@ -162,17 +174,21 @@ static unsigned int hisi_regulator_get_mode(struct regulator_dev *rdev)
+ 	struct hi6421v600_regulator *sreg = rdev_get_drvdata(rdev);
+ 	struct hisi_pmic *pmic = sreg->pmic;
+ 	u32 reg_val;
++	unsigned int mode;
+ 
+ 	reg_val = hisi_pmic_read(pmic, rdev->desc->enable_reg);
+-	pr_debug("<[%s]: reg_val=%d, enable_reg=0x%x, eco_mode_mask=0x%x>\n",
+-		 __func__, reg_val,
+-		rdev->desc->enable_reg,
+-		sreg->eco_mode_mask);
+ 
+ 	if (reg_val & sreg->eco_mode_mask)
+-		return REGULATOR_MODE_IDLE;
++		mode = REGULATOR_MODE_IDLE;
+ 	else
+-		return REGULATOR_MODE_NORMAL;
++		mode = REGULATOR_MODE_NORMAL;
++
++	dev_dbg(&rdev->dev,
++		"%s: enable_reg=0x%x, eco_mode_mask=0x%x, reg_val=0x%x, %s mode\n",
++		 __func__, rdev->desc->enable_reg, sreg->eco_mode_mask, reg_val,
++		 mode == REGULATOR_MODE_IDLE ? "idle" : "normal");
++
++	return mode;
+ }
+ 
+ static int hisi_regulator_set_mode(struct regulator_dev *rdev,
+@@ -198,7 +214,8 @@ static int hisi_regulator_set_mode(struct regulator_dev *rdev,
+ 		      sreg->eco_mode_mask,
+ 		eco_mode << (ffs(sreg->eco_mode_mask) - 1));
+ 
+-	pr_debug("<[%s]: enable_reg=0x%x, eco_mode_mask=0x%x, value=0x%x>\n",
++	dev_dbg(&rdev->dev,
++		"%s: enable_reg=0x%x, eco_mode_mask=0x%x, value=0x%x\n",
+ 		 __func__,
+ 		rdev->desc->enable_reg,
+ 		sreg->eco_mode_mask,
+@@ -212,10 +229,13 @@ static unsigned int hisi_regulator_get_optimum_mode(struct regulator_dev *rdev,
  {
  	struct hi6421v600_regulator *sreg = rdev_get_drvdata(rdev);
- 	struct hi6421_spmi_pmic *pmic = sreg->pmic;
--	u32 vsel;
--	int uV, ret = 0;
--
--	for (vsel = 0; vsel < rdev->desc->n_voltages; vsel++) {
--		uV = rdev->desc->volt_table[vsel];
--		dev_dbg(&rdev->dev,
--			"%s: min %d, max %d, value[%u] = %d\n",
--			__func__, min_uV, max_uV, vsel, uV);
--
--		/* Break at the first in-range value */
--		if (min_uV <= uV && uV <= max_uV)
--			break;
--	}
-+	u32 reg_val;
  
- 	/* unlikely to happen. sanity test done by regulator core */
--	if (unlikely(vsel == rdev->desc->n_voltages))
-+	if (unlikely(selector >= rdev->desc->n_voltages))
- 		return -EINVAL;
- 
--	*selector = vsel;
-+	reg_val = selector << (ffs(rdev->desc->vsel_mask) - 1);
-+
- 	/* set voltage selector */
- 	hi6421_spmi_pmic_rmw(pmic, rdev->desc->vsel_reg,
--		      rdev->desc->vsel_mask,
--		      vsel << (ffs(rdev->desc->vsel_mask) - 1));
-+			     rdev->desc->vsel_mask, reg_val);
- 
- 	dev_dbg(&rdev->dev,
--		"%s: vsel_reg=0x%x, vsel_mask=0x%x, value=0x%x, voltage=%d mV\n",
-+		"%s: vsel_reg=0x%x, mask=0x%x, value=0x%x, voltage=%d mV\n",
- 		 __func__,
--		 rdev->desc->vsel_reg,
--		 rdev->desc->vsel_mask,
--		 vsel << (ffs(rdev->desc->vsel_mask) - 1), uV / 1000);
-+		 rdev->desc->vsel_reg, rdev->desc->vsel_mask, reg_val,
-+		 rdev->desc->ops->list_voltage(rdev, selector) / 1000);
- 
--	return ret;
-+	return 0;
+-	if (load_uA || ((unsigned int)load_uA > sreg->eco_uA))
++	if (load_uA || ((unsigned int)load_uA > sreg->eco_uA)) {
++		dev_dbg(&rdev->dev, "%s: normal mode", __func__);
+ 		return REGULATOR_MODE_NORMAL;
+-	else
++	} else {
++		dev_dbg(&rdev->dev, "%s: idle mode", __func__);
+ 		return REGULATOR_MODE_IDLE;
++	}
  }
  
- static unsigned int hi6421_spmi_regulator_get_mode(struct regulator_dev *rdev)
-@@ -315,8 +300,9 @@ static struct regulator_ops hi6421_spmi_ldo_rops = {
- 	.enable = hi6421_spmi_regulator_enable,
- 	.disable = hi6421_spmi_regulator_disable,
- 	.list_voltage = regulator_list_voltage_table,
--	.get_voltage = hi6421_spmi_regulator_get_voltage,
--	.set_voltage = hi6421_spmi_regulator_set_voltage,
-+	.map_voltage = regulator_map_voltage_iterate,
-+	.get_voltage_sel = hi6421_spmi_regulator_get_voltage_sel,
-+	.set_voltage_sel = hi6421_spmi_regulator_set_voltage_sel,
- 	.get_mode = hi6421_spmi_regulator_get_mode,
- 	.set_mode = hi6421_spmi_regulator_set_mode,
- 	.get_optimum_mode = hi6421_spmi_regulator_get_optimum_mode,
+ static int hisi_dt_parse(struct platform_device *pdev,
+@@ -333,7 +353,7 @@ static int hisi_regulator_probe_ldo(struct platform_device *pdev,
+ 
+ 	initdata = of_get_regulator_init_data(dev, np, NULL);
+ 	if (!initdata) {
+-		pr_err("get regulator init data error !\n");
++		dev_err(dev, "failed to get regulator data\n");
+ 		return -EINVAL;
+ 	}
+ 
+@@ -343,14 +363,14 @@ static int hisi_regulator_probe_ldo(struct platform_device *pdev,
+ 	ret = of_property_read_u32_array(np, "hisilicon,valid-modes-mask",
+ 					 &constraint->valid_modes_mask, 1);
+ 	if (ret) {
+-		pr_err("no hisilicon,valid-modes-mask property set\n");
++		dev_err(dev, "no valid modes mask\n");
+ 		ret = -ENODEV;
+ 		return ret;
+ 	}
+ 	ret = of_property_read_u32_array(np, "hisilicon,valid-idle-mask",
+ 					 &temp_modes, 1);
+ 	if (ret) {
+-		pr_err("no hisilicon,valid-modes-mask property set\n");
++		dev_err(dev, "no valid idle mask\n");
+ 		ret = -ENODEV;
+ 		return ret;
+ 	}
+@@ -374,10 +394,8 @@ static int hisi_regulator_probe_ldo(struct platform_device *pdev,
+ 
+ 	/* parse device tree data for regulator specific */
+ 	ret = hisi_dt_parse(pdev, sreg, rdesc);
+-	if (ret) {
+-		dev_err(dev, "device tree parameter parse error!\n");
++	if (ret)
+ 		goto hisi_probe_end;
+-	}
+ 
+ 	config.dev = &pdev->dev;
+ 	config.init_data = initdata;
+@@ -393,7 +411,7 @@ static int hisi_regulator_probe_ldo(struct platform_device *pdev,
+ 		goto hisi_probe_end;
+ 	}
+ 
+-	pr_debug("[%s]:valid_modes_mask[0x%x], valid_ops_mask[0x%x]\n",
++	dev_dbg(dev, "%s:valid_modes_mask: 0x%x, valid_ops_mask: 0x%x\n",
+ 		 rdesc->name,
+ 		 constraint->valid_modes_mask, constraint->valid_ops_mask);
+ 
 -- 
 2.26.2
 
