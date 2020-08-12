@@ -2,130 +2,143 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D7D6C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:01:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3D26C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:01:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB663207F7
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:01:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7537B20B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:01:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iwd0qAdV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PNs0HnXo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbgHLMBW (ORCPT
+        id S1727854AbgHLMBb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 08:01:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51854 "EHLO
+        Wed, 12 Aug 2020 08:01:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726804AbgHLMBG (ORCPT
+        with ESMTP id S1727050AbgHLMBI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 08:01:06 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 603E8C06174A
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 05:01:05 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id r4so1752484wrx.9
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 05:01:05 -0700 (PDT)
+        Wed, 12 Aug 2020 08:01:08 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AD69C06174A;
+        Wed, 12 Aug 2020 05:01:08 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id w25so1883233ljo.12;
+        Wed, 12 Aug 2020 05:01:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9uTnVX4KlkSTJGfD9l+RCsWAg2mdrZdTCdEjS+NMIBU=;
-        b=iwd0qAdVsJM8Jgp9ClV2qZQrQcUXhlAiEGF3YceffEeqhpzMHeYrcYF4PlZsjjydjV
-         OLiHhI5B5xGDQIrfyDZnFKoSvubfng9ZOid9lRMT1+aSJvUCUtF1PL8Sds6Dci1nljoc
-         Z102eolXPqwqkz8FzxOMJwScb59RdWco//uG3BpbRtQwWUtJTZ0fAnCMjV5fQreu6Fau
-         YPQRu35LW4LftnzBzt6Ohzgw74G+Z5DU7vq8XiOx8+F2o40eJgz9iswgHevVq8mxl4nz
-         S/DvM7JGQu+qlj51MH/uOp7BxD4hRbmMh0B7mVIiUwbXhmV6d/lz/CzCqANTyhkBk3rw
-         Ts1w==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8cTKu+htZubp78ZAwaP8QB3wTAzRATflGC/Oju/GBoQ=;
+        b=PNs0HnXoIuQSavbuR0nZpPKuJBn7jkw38v5RX/DSe9X5e9VxM4THmkG34NZEXV1Omk
+         OJ06uQdnDQ0ckzE2KoPkH2uanV08T0Zs2sNiK/1DdAYvs4bTU3ue+7Co0L5k2lfvQGcx
+         scgluk9Xh0xuLEItbBpkfumfjOgz5Wa3Ibo+ShIC3BvUYpecSDjrlEJlWib90hAzu+Ew
+         GShr3hJqmvcixrs+KRxCxo0k4lG2gEyf9M6ine7sHNWhSn0IynsQCRS3b4T8YGvX6s2D
+         8c8T8TFrPFn4EFB72EoXpDHCNVJCC+pDZ0xwbC2Ex5XACAHpsTDDJWDGQr2bizuszpgb
+         IoMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9uTnVX4KlkSTJGfD9l+RCsWAg2mdrZdTCdEjS+NMIBU=;
-        b=UF/NVvv2SKad+jQpqq+JUWPHmY1NRXQasYwwYqPYuHf9pDHb57dD+oq0JtPslh3LXY
-         3jxVj9lrUYC0RcMniGUa3HGfXH96wGEnbR2i14ZHMno7W+mry7yZHr5w+e0Z9gskvEM1
-         XDMUNMDIgR+/uXKjFJtJfAbeuEiQdh+axUHBgTVcDtBXFg7cOucOqCdnjjl98tLkUAb7
-         4V1HyAi8mwjVLL8FwPiG3JKNTiJkPce1FNLuPO/NJskOJCDtMqqp8sYQAFA13Bcl3fGp
-         unOL3Tcbj7wTgjx+zh/RKU3UhsKnGnakPaXNKVe17tksLK5ah5UXvRP3KBloqusaFQwb
-         FkKA==
-X-Gm-Message-State: AOAM533ikr+v73xa4UloBlbxB+3rQc5R0NwIzKiI2VzT8/72SRH6kwBA
-        p5FhL2n7qZSB1deND6xFryjhnk4Wmag0Er93sXCaZQ==
-X-Google-Smtp-Source: ABdhPJxmekv2xvQc+0+1EwwsRTu6N2DfJzEWIidmJOSFCOPFGwzDEvQJ0UFPQ0Kxc6EXXkgOmtQwsqErWSRliFDxPH4=
-X-Received: by 2002:adf:fc06:: with SMTP id i6mr33138098wrr.79.1597233663829;
- Wed, 12 Aug 2020 05:01:03 -0700 (PDT)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8cTKu+htZubp78ZAwaP8QB3wTAzRATflGC/Oju/GBoQ=;
+        b=M4WojzDUwUQbfHtLuCwCc9k85tHAuzffQV8rCpn42yLFMRqnu4+VVhVTd72Rhd57Z5
+         f/clryR1DDh9DVPIPBPKDk4FnmTlq287FH7G3mocQOu/+0rmYHJDXfZtxcATl1dnlmNn
+         3iklIrgm5vcHuse43hcZKpSyhIqXf9m7Ve0BZfviNvCkeDZhxRLEqU5Cpo8FjzQU5aYJ
+         wKm/La5UQo8BMs5OgfXobIQSUCP4n89FH8OoFeMRJhZywrIGg1ijSgJ+fLkDMkGMuVkh
+         uX/HcMJwktSU/P7R0GH+tLG+e27Z4DUIvohIs9uOe8jxtClKnr6qT8JVKtH277uu/QSQ
+         3CBw==
+X-Gm-Message-State: AOAM531/ajHzlA2/YkuITSfP6sk1CbDNPAZqCk4ql2uBCOh23O37FK2y
+        VQr5ZlsKLlVyYmM+V//A76g=
+X-Google-Smtp-Source: ABdhPJzYbg4UqNa6DvRtK4xe/DFexc1hdIB7+hv8LtGxv0zG6zIROOuT13ZFrpOtLkMp4cwkqsxHhQ==
+X-Received: by 2002:a2e:b4e1:: with SMTP id s1mr4942254ljm.433.1597233666372;
+        Wed, 12 Aug 2020 05:01:06 -0700 (PDT)
+Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id y21sm395029ljk.129.2020.08.12.05.01.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Aug 2020 05:01:05 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Wed, 12 Aug 2020 14:01:03 +0200
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Michal Hocko <mhocko@suse.com>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
+Message-ID: <20200812120103.GA17445@pc636>
+References: <20200809204354.20137-1-urezki@gmail.com>
+ <20200809204354.20137-2-urezki@gmail.com>
+ <20200810123141.GF4773@dhcp22.suse.cz>
+ <20200810160739.GA29884@pc636>
+ <20200810192525.GG4773@dhcp22.suse.cz>
+ <87pn7x6y4a.fsf@nanos.tec.linutronix.de>
+ <87k0y56wc1.fsf@nanos.tec.linutronix.de>
+ <87mu305c1w.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <1597227730-16477-1-git-send-email-rnayak@codeaurora.org>
-In-Reply-To: <1597227730-16477-1-git-send-email-rnayak@codeaurora.org>
-From:   Amit Pundir <amit.pundir@linaro.org>
-Date:   Wed, 12 Aug 2020 17:30:27 +0530
-Message-ID: <CAMi1Hd0Zx53E76+86vTDEFyKrxb31nKqJcq5q4sCvrv2L5Jx+A@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: sdm845: Fixup OPP table for all qup devices
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        dt <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        John Stultz <john.stultz@linaro.org>, tdas@codeaurora.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87mu305c1w.fsf@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 12 Aug 2020 at 15:52, Rajendra Nayak <rnayak@codeaurora.org> wrote:
->
-> This OPP table was based on the clock VDD-FMAX tables seen in
-> downstream code, however it turns out the downstream clock
-> driver does update these tables based on later/production
-> rev of the chip and whats seen in the tables belongs to an
-> early engineering rev of the SoC.
-> Fix up the OPP tables such that it now matches with the
-> production rev of sdm845 SoC.
->
-> Fixes: 13cadb34e593 ("arm64: dts: sdm845: Add OPP table for all qup
-> devices")
+On Wed, Aug 12, 2020 at 01:38:35PM +0200, Thomas Gleixner wrote:
+> Thomas Gleixner <tglx@linutronix.de> writes:
+> > Thomas Gleixner <tglx@linutronix.de> writes:
+> >> Michal Hocko <mhocko@suse.com> writes:
+> >>> zone->lock should be held for a very limited amount of time.
+> >>
+> >> Emphasis on should. free_pcppages_bulk() can hold it for quite some time
+> >> when a large amount of pages are purged. We surely would have converted
+> >> it to a raw lock long time ago otherwise.
+> >>
+> >> For regular enterprise stuff a few hundred microseconds might qualify as
+> >> a limited amount of time. For advanced RT applications that's way beyond
+> >> tolerable..
+> >
+> > Sebastian just tried with zone lock converted to a raw lock and maximum
+> > latencies go up by a factor of 7 when putting a bit of stress on the
+> > memory subsytem. Just a regular kernel compile kicks them up by a factor
+> > of 5. Way out of tolerance.
+> >
+> > We'll have a look whether it's solely free_pcppages_bulk() and if so we
+> > could get away with dropping the lock in the loop.
+> 
+> So even on !RT and just doing a kernel compile the time spent in
+> free_pcppages_bulk() is up to 270 usec.
+> 
+I suspect if you measure the latency of the zone->lock and its contention
+on any embedded device, i mean not powerful devices like PC, it could be
+milliseconds. IMHO.
 
-Fixes BT on Xiaomi Poco F1 phone running AOSP.
+>
+> It's not only the loop which processes a large pile of pages, part of it
+> is caused by lock contention on zone->lock. Dropping the lock after a
+> processing a couple of pages does not make it much better if enough CPUs
+> are contending on the lock.
+>
+Initially i have not proposed to convert the lock, because i suspected that
+from the RT point of view there could be problems. Also, like i mentioned before, 
+the GFP_ATOMIC is not meaningful anymore, that is a bit out of what GFP_ATOMIC
+stands for. But i see your point about "where is a stop line". 
 
-Tested-by: Amit Pundir <amit.pundir@linaro.org>
+That is why i proposed to bail out as later as possible: mm: Add __GFP_NO_LOCKS flag
+From the other hand we have been discussing other options, like converting. Just
+to cover as much as possible :)
 
-> Reported-by: John Stultz <john.stultz@linaro.org>
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> ---
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index 2884577..eca81cf 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -1093,8 +1093,8 @@
->                 qup_opp_table: qup-opp-table {
->                         compatible = "operating-points-v2";
->
-> -                       opp-19200000 {
-> -                               opp-hz = /bits/ 64 <19200000>;
-> +                       opp-50000000 {
-> +                               opp-hz = /bits/ 64 <50000000>;
->                                 required-opps = <&rpmhpd_opp_min_svs>;
->                         };
->
-> @@ -1107,6 +1107,11 @@
->                                 opp-hz = /bits/ 64 <100000000>;
->                                 required-opps = <&rpmhpd_opp_svs>;
->                         };
-> +
-> +                       opp-128000000 {
-> +                               opp-hz = /bits/ 64 <128000000>;
-> +                               required-opps = <&rpmhpd_opp_nom>;
-> +                       };
->                 };
->
->                 qupv3_id_0: geniqup@8c0000 {
-> --
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
->
+Thanks Thomas for valuable comments!
+
+--
+Vlad Rezki
