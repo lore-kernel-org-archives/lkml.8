@@ -2,143 +2,154 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1CDDC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 02:01:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 574C1C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 02:02:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9DDF206DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 02:01:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2596A206DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 02:02:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HDA4NFi9"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I9UocYj1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbgHLCBs (ORCPT
+        id S1726574AbgHLCCm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 22:01:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44618 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726235AbgHLCBs (ORCPT
+        Tue, 11 Aug 2020 22:02:42 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:23767 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726235AbgHLCCm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 22:01:48 -0400
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE9F7C06174A
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 19:01:47 -0700 (PDT)
-Received: by mail-vs1-xe44.google.com with SMTP id q13so315493vsn.9
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 19:01:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tFY4085plBY8G7tVD9MczcUSssYpeVWGX8Ah9xVqPOk=;
-        b=HDA4NFi9vQjtl12+Zmrjq+C3UnJr0mMBKrILh7t3fkK5hS5cNExIGL1+L1hIEprKFY
-         x+UHshB2qPRa7PC01fywLSFvj2iZvBI8hqCmFZw2kEf5oRNClRsIUrxtAvAsblH+J5zZ
-         2KMfqb4HX6ghLCBOoOUwyb66NWWlO71PVYBlukNa+PtZj04JAm3WukGJSpHHvXU83i97
-         KUshbPtCx7M+J8xGBUa0sZoKfukD3msvsdQJcyaAg0xhTazKRsXmH+VmGbgjrZRXESAv
-         00+tkEfI9xA9WQ2GwGdVUiB0Ui+CpKMCkIYXGEm/0rRQeSLupTNG+OkHlGJelIW/hVeP
-         B8sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tFY4085plBY8G7tVD9MczcUSssYpeVWGX8Ah9xVqPOk=;
-        b=AjHneJpBZjaNo1YB3/Zwzu+SJfvxFR0tm/KdfBc9cXkaSpwmltlflm2m0qdmkMnqrR
-         qHOOCMk9CzIMg2lquYsox96fC2+UVbYKFZuFKWMphiE/cxnDLCypZXODZyyHwIVdITBy
-         13IvgXz7Mg5ZjtNUpeFjyoVpuHe1CQXuI+0qHdKpVz1zxU0atALuQ1S9M2MnxuSGQt9m
-         WI8GnwO6n1ZbFFxcLWA5csh7uiFrQPEbJTwIgWixdnInRnZkXvyxqZ4EVQA6iEUI9uFf
-         AdlJlA/LQNNJNu0NLgGRcTdQ73/9mkprFsy/1Y5XmAm856o0anxLaenF0QNeow59PiT9
-         wXJQ==
-X-Gm-Message-State: AOAM533eLomwsM6Z79vNPEWdFCZqAaNc3A1OZ8GHasWFpZ9ymukSO/av
-        k9EuaaCNvpcVDCpmaGHWi6iP05w6A14VqbfW6LPIng==
-X-Google-Smtp-Source: ABdhPJw1XndaA/OYA/SoNpImfbiqj/XJo4rws0tFRMOxmiIgBDNA1xisgCnGslix67SfdNKWCiSpD/Z3IVj+nBpG8Rs=
-X-Received: by 2002:a67:f1c7:: with SMTP id v7mr10241022vsm.50.1597197706596;
- Tue, 11 Aug 2020 19:01:46 -0700 (PDT)
+        Tue, 11 Aug 2020 22:02:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597197760;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=HoZ/EBZIxsgZT3jW1Je1ueNMDaBxzDlPbn95xarnJ6M=;
+        b=I9UocYj1MQRM+pi23K0PWpoYyoiarzHYOEbp2/MFbkDGl0ig0dzPqpX53j85jSbZ78kIF8
+        4wIgHltOS8ieXJvX3B4UN/OcTLZmc5EPykQed0aaKikQAiRVB+XAKkCBNmE26Q+A7PUt8G
+        sk2td0E3xt0JdMLWziU4J2y799y/L/4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-471-odOuMVZWOCqDs1ztjQP2JA-1; Tue, 11 Aug 2020 22:02:38 -0400
+X-MC-Unique: odOuMVZWOCqDs1ztjQP2JA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E6AC5E921;
+        Wed, 12 Aug 2020 02:02:36 +0000 (UTC)
+Received: from [10.72.12.118] (ovpn-12-118.pek2.redhat.com [10.72.12.118])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 983C61A7CF;
+        Wed, 12 Aug 2020 02:02:27 +0000 (UTC)
+Subject: Re: [PATCH 1/4] vdpa: introduce config op to get valid iova range
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Eli Cohen <eli@mellanox.com>,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, rob.miller@broadcom.com,
+        lingshan.zhu@intel.com, eperezma@redhat.com, lulu@redhat.com,
+        shahafs@mellanox.com, hanand@xilinx.com, mhabets@solarflare.com,
+        gdawar@xilinx.com, saugatm@xilinx.com, vmireyno@marvell.com,
+        zhangweining@ruijie.com.cn
+References: <20200617032947.6371-1-jasowang@redhat.com>
+ <20200617032947.6371-2-jasowang@redhat.com>
+ <20200805085035-mutt-send-email-mst@kernel.org>
+ <20200806120354.GA171218@mtl-vdi-166.wap.labs.mlnx>
+ <20200806082727-mutt-send-email-mst@kernel.org>
+ <20200806124354.GA172661@mtl-vdi-166.wap.labs.mlnx>
+ <20200810080410-mutt-send-email-mst@kernel.org>
+ <2d1e6278-e57e-c340-399e-40ff102c74a3@redhat.com>
+ <20200811042733-mutt-send-email-mst@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <9effa14f-e305-2fa0-5aa6-83b146b969e0@redhat.com>
+Date:   Wed, 12 Aug 2020 10:02:26 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200812001439.545655-1-badhri@google.com> <20200812014319.GA116801@roeck-us.net>
-In-Reply-To: <20200812014319.GA116801@roeck-us.net>
-From:   Badhri Jagan Sridharan <badhri@google.com>
-Date:   Tue, 11 Aug 2020 19:01:10 -0700
-Message-ID: <CAPTae5Jw3ZysWnYj=s7cjU1Hnr3ib7vfCHsgV=1Qq_2EWcUNvg@mail.gmail.com>
-Subject: Re: [PATCH v2] tcpm: During PR_SWAP, source caps should be sent only
- after tSwapSourceStart
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        USB <linux-usb@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200811042733-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 6:43 PM Guenter Roeck <linux@roeck-us.net> wrote:
->
-> On Tue, Aug 11, 2020 at 05:14:39PM -0700, Badhri Jagan Sridharan wrote:
-> > From the spec:
-> > "6.6.8.1 SwapSourceStartTimer
-> > The SwapSourceStartTimer Shall be used by the new Source, after a Power
-> > Role Swap or Fast Role Swap, to ensure that it does not send
-> > Source_Capabilities Message before the new Sink is ready to receive the
-> > Source_Capabilities Message. The new Source Shall Not send the
-> > Source_Capabilities Message earlier than tSwapSourceStart after the
-> > last bit of the EOP of GoodCRC Message sent in response to the PS_RDY
-> > Message sent by the new Source indicating that its power supply is
-> > ready."
-> >
-> > This fixes TD.PD.CP.E3, TD.PD.CP.E4, TD.PD.CP.E5 failures
-> >
-> > Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
->
-> Nit below, otherwise
->
-> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
->
-> Note that I wasn't copied on this patch and only noticed it accidentally.
 
-Apologies Guenter ! Error on my side while performing the git
-send-email command.
-Will make sure that I double check next time.
+On 2020/8/11 下午4:29, Michael S. Tsirkin wrote:
+> On Tue, Aug 11, 2020 at 10:53:09AM +0800, Jason Wang wrote:
+>> On 2020/8/10 下午8:05, Michael S. Tsirkin wrote:
+>>> On Thu, Aug 06, 2020 at 03:43:54PM +0300, Eli Cohen wrote:
+>>>> On Thu, Aug 06, 2020 at 08:29:22AM -0400, Michael S. Tsirkin wrote:
+>>>>> On Thu, Aug 06, 2020 at 03:03:55PM +0300, Eli Cohen wrote:
+>>>>>> On Wed, Aug 05, 2020 at 08:51:56AM -0400, Michael S. Tsirkin wrote:
+>>>>>>> On Wed, Jun 17, 2020 at 11:29:44AM +0800, Jason Wang wrote:
+>>>>>>>> This patch introduce a config op to get valid iova range from the vDPA
+>>>>>>>> device.
+>>>>>>>>
+>>>>>>>> Signed-off-by: Jason Wang<jasowang@redhat.com>
+>>>>>>>> ---
+>>>>>>>>    include/linux/vdpa.h | 14 ++++++++++++++
+>>>>>>>>    1 file changed, 14 insertions(+)
+>>>>>>>>
+>>>>>>>> diff --git a/include/linux/vdpa.h b/include/linux/vdpa.h
+>>>>>>>> index 239db794357c..b7633ed2500c 100644
+>>>>>>>> --- a/include/linux/vdpa.h
+>>>>>>>> +++ b/include/linux/vdpa.h
+>>>>>>>> @@ -41,6 +41,16 @@ struct vdpa_device {
+>>>>>>>>    	unsigned int index;
+>>>>>>>>    };
+>>>>>>>> +/**
+>>>>>>>> + * vDPA IOVA range - the IOVA range support by the device
+>>>>>>>> + * @start: start of the IOVA range
+>>>>>>>> + * @end: end of the IOVA range
+>>>>>>>> + */
+>>>>>>>> +struct vdpa_iova_range {
+>>>>>>>> +	u64 start;
+>>>>>>>> +	u64 end;
+>>>>>>>> +};
+>>>>>>>> +
+>>>>>>> This is ambiguous. Is end in the range or just behind it?
+>>>>>>> How about first/last?
+>>>>>> It is customary in the kernel to use start-end where end corresponds to
+>>>>>> the byte following the last in the range. See struct vm_area_struct
+>>>>>> vm_start and vm_end fields
+>>>>> Exactly my point:
+>>>>>
+>>>>> include/linux/mm_types.h:       unsigned long vm_end;           /* The first byte after our end address
+>>>>>
+>>>>> in this case Jason wants it to be the last byte, not one behind.
+>>>>>
+>>>>>
+>>>> Maybe start, size? Not ambiguous, and you don't need to do annoying
+>>>> calculations like size = last - start + 1
+>>> Size has a bunch of issues: can overlap, can not cover the entire 64 bit
+>>> range. The requisite checks are arguably easier to get wrong than
+>>> getting the size if you need it.
+>> Yes, so do you still prefer first/last or just begin/end which is consistent
+>> with iommu_domain_geometry?
+>>
+>> Thanks
+> I prefer first/last I think, these are unambiguous.
+> E.g.
+>
+>          dma_addr_t aperture_start; /* First address that can be mapped    */
+>          dma_addr_t aperture_end;   /* Last address that can be mapped     */
+>
+> instead of addressing ambiguity with a comment, let's just name the field well.
+
+
+Ok, will do.
+
+Thanks
+
+
 
 >
-> Guenter
 >
-> > ---
-> > Changes since V1:
-> > - Comment on the permissible values of tSwapSourceStart
-> > ---
-> >  drivers/usb/typec/tcpm/tcpm.c | 2 +-
-> >  include/linux/usb/pd.h        | 1 +
-> >  2 files changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
-> > index 3ef37202ee37..d38347bd3335 100644
-> > --- a/drivers/usb/typec/tcpm/tcpm.c
-> > +++ b/drivers/usb/typec/tcpm/tcpm.c
-> > @@ -3555,7 +3555,7 @@ static void run_state_machine(struct tcpm_port *port)
-> >                */
-> >               tcpm_set_pwr_role(port, TYPEC_SOURCE);
-> >               tcpm_pd_send_control(port, PD_CTRL_PS_RDY);
-> > -             tcpm_set_state(port, SRC_STARTUP, 0);
-> > +             tcpm_set_state(port, SRC_STARTUP, PD_T_SWAP_SRC_START);
-> >               break;
-> >
-> >       case VCONN_SWAP_ACCEPT:
-> > diff --git a/include/linux/usb/pd.h b/include/linux/usb/pd.h
-> > index b6c233e79bd4..ed5eed73ccf8 100644
-> > --- a/include/linux/usb/pd.h
-> > +++ b/include/linux/usb/pd.h
-> > @@ -473,6 +473,7 @@ static inline unsigned int rdo_max_power(u32 rdo)
-> >  #define PD_T_ERROR_RECOVERY  100     /* minimum 25 is insufficient */
-> >  #define PD_T_SRCSWAPSTDBY      625     /* Maximum of 650ms */
-> >  #define PD_T_NEWSRC            250     /* Maximum of 275ms */
-> > +#define PD_T_SWAP_SRC_START  20     /* Minimum of 20ms */
 >
-> Odd alignment. Same as with the previous two lines which don't use tabs
-> either.
->
-> >
-> >  #define PD_T_DRP_TRY         100     /* 75 - 150 ms */
-> >  #define PD_T_DRP_TRYWAIT     600     /* 400 - 800 ms */
+
