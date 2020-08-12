@@ -2,374 +2,245 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0919C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:55:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61D5EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FD8E2076C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:55:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kgS3MYzW"
+	by mail.kernel.org (Postfix) with ESMTP id 3C5A12080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:57:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726587AbgHLOzl (ORCPT
+        id S1726558AbgHLO5F convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 10:55:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50514 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726447AbgHLOzh (ORCPT
+        Wed, 12 Aug 2020 10:57:05 -0400
+Received: from skedge04.snt-world.com ([91.208.41.69]:41074 "EHLO
+        skedge04.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726447AbgHLO5E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 10:55:37 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48784C061383
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 07:55:37 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id j8so2824925ioe.9
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 07:55:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=R4p5FZYPSEOigvGuXY0tarLG+EDadTpC3v0JMerbo7w=;
-        b=kgS3MYzW4QzCvYeR39FjArsSFKrj8XdmctbGjDTA4P+O6BYjfuG7Figh/wCOgYGIlo
-         At+xXKNAVZysCDkIjS3Qp7SsrScD0iMRZy4xHVhO9fyzB/2ENoWuPQLp+ubbcFYQeoFj
-         f/RHU44Dk8Kp6s8CX+3Nw3Py7HGeFDroS+r5tQgdPfjvrj0pu9dtNGOJ9XYAkKVcGAHD
-         VaIlPQ6/fyaPP6EyYml6Rv7ojkbT1yw8FZxoXmfXrLJRm4TrM/7rnTjM+FD3/PfnY/jC
-         jgMt7ShfoB0JXKm3NndA6ibAektig35N2G9beIuN3C3KxzIVhN0AFF9Rlv+xX73TAOTZ
-         zIkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=R4p5FZYPSEOigvGuXY0tarLG+EDadTpC3v0JMerbo7w=;
-        b=pAPuyBWCcNAGWczUJx1Ej0Vxu5rR0eSKhl1TFcPHrx+0qEthWsrn8QAE1Gcxu/8v6s
-         TWkv+qCiKqZaFW7gKvIKBN5VIWTgnsjq9IrQyoJqyI/KOZYJA1WHA5F6sMOWQf1XJfZo
-         PRhIUNINkBHOcOEwisJSv/gTz88YYaZjoZAn7fZLR/MuC5+0TCyousr3K0rCf9vCZ8ic
-         gWJZ6JBXQ3w4VYpyV4+TUUadyFqiezPlLUPPyivbshx08smJVKbFn8gB5A7UEcP7lpN6
-         AYTJ17HrrTV/bvSjL5MnvtQxUfIXcCrnStL22SllmjDsGzeLEoDeEsglhqpN16fpGPug
-         TMoQ==
-X-Gm-Message-State: AOAM533w2sYCorKQXR5rcm/zuQH0VqTBHOOm42UWAv/x6jLxFQn3a/ot
-        3sB7GeIjVSJO8W35ZCH7Gn+N0TsazQFrebMu+92j7vbSg/c=
-X-Google-Smtp-Source: ABdhPJzvGcub4TlXtrFZQKtOXNbA93Be9h42Atn6eZ4kqyHszYjCZw4bwo5gVeDa9MXL/yAQhmoxZLXyNFLSsoqCUjA=
-X-Received: by 2002:a05:6602:15d3:: with SMTP id f19mr137570iow.91.1597244135178;
- Wed, 12 Aug 2020 07:55:35 -0700 (PDT)
+        Wed, 12 Aug 2020 10:57:04 -0400
+X-Greylist: delayed 399 seconds by postgrey-1.27 at vger.kernel.org; Wed, 12 Aug 2020 10:57:03 EDT
+Received: from sntmail10s.snt-is.com (unknown [10.203.32.183])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by skedge04.snt-world.com (Postfix) with ESMTPS id 9226567A7D3;
+        Wed, 12 Aug 2020 16:50:22 +0200 (CEST)
+Received: from sntmail10s.snt-is.com (10.203.32.183) by sntmail10s.snt-is.com
+ (10.203.32.183) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Wed, 12 Aug
+ 2020 16:50:22 +0200
+Received: from sntmail10s.snt-is.com ([fe80::ad9b:dbfd:621d:166f]) by
+ sntmail10s.snt-is.com ([fe80::ad9b:dbfd:621d:166f%6]) with mapi id
+ 15.01.1913.007; Wed, 12 Aug 2020 16:50:22 +0200
+From:   Michael Brunner <Michael.Brunner@kontron.com>
+To:     "lee.jones@linaro.org" <lee.jones@linaro.org>
+CC:     "linux@roeck-us.net" <linux@roeck-us.net>,
+        "sameo@linux.intel.com" <sameo@linux.intel.com>,
+        "dvhart@linux.intel.com" <dvhart@linux.intel.com>,
+        "mibru@gmx.de" <mibru@gmx.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kevin.strasser@linux.intel.com" <kevin.strasser@linux.intel.com>
+Subject: [PATCH] mfd: Add ACPI support to Kontron PLD driver
+Thread-Topic: [PATCH] mfd: Add ACPI support to Kontron PLD driver
+Thread-Index: AQHWcLfnyQQDC2IYfEqK/svjxogCEQ==
+Date:   Wed, 12 Aug 2020 14:50:22 +0000
+Message-ID: <1e5ff295eacd5cb9eb2d888e1b0175fea62cf2ae.camel@kontron.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.36.3-0ubuntu1 
+x-originating-ip: [172.25.9.193]
+x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
+Content-Type: text/plain; charset="iso-8859-15"
+Content-ID: <307F3267C7C19446BAE44972F391EFB5@snt-world.com>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <1597217150-22911-1-git-send-email-simhavcs@gmail.com>
- <20200812095418.GG6057@pendragon.ideasonboard.com> <CAGWqDJ4i=t4Noi7wjGDDhUYkB_uuQ6A-WiMrh1ErKRi2HU9t9w@mail.gmail.com>
- <20200812131818.GI6057@pendragon.ideasonboard.com>
-In-Reply-To: <20200812131818.GI6057@pendragon.ideasonboard.com>
-From:   Vinay Simha B N <simhavcs@gmail.com>
-Date:   Wed, 12 Aug 2020 20:25:23 +0530
-Message-ID: <CAGWqDJ6eHCNXb5dMCUJ785iUp7gjdCk0bB=GuZesVesaVACucQ@mail.gmail.com>
-Subject: Re: [PATCH] drm/bridge/tc358775: Fixes bus formats read
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-SnT-MailScanner-Information: Please contact the ISP for more information
+X-SnT-MailScanner-ID: 9226567A7D3.AAAD3
+X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
+X-SnT-MailScanner-SpamCheck: 
+X-SnT-MailScanner-From: michael.brunner@kontron.com
+X-SnT-MailScanner-To: dvhart@linux.intel.com, kevin.strasser@linux.intel.com,
+        lee.jones@linaro.org, linux-kernel@vger.kernel.org,
+        linux@roeck-us.net, mibru@gmx.de, sameo@linux.intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-laurent,
+Recent Kontron COMe modules identify the PLD device using the hardware
+id KEM0001 in the ACPI table.
+This patch adds support for probing the device using the HID and also
+retrieving the resources.
 
-Video data input format :  RGB666 loosely packed 24 bits per pixel
-Can we use MEDIA_BUS_FMT_RGB666_1X24_CPADHI? There was no information
-wrt CPADHI or for loosely packed
+As this is not available for all products, the DMI based detection still
+needs to be around for older systems. It is executed if no matching ACPI
+HID is found during registering the platform driver or no specific
+device id is forced.
+If a device is detected using ACPI and no resource information is
+available, the default io resource is used.
 
-static const u32 tc_lvds_in_bus_fmts[] = {
-        MEDIA_BUS_FMT_RGB565_1X16,
-        MEDIA_BUS_FMT_RGB666_1X18,
-        MEDIA_BUS_FMT_RGB666_1X24_CPADHI,
-        MEDIA_BUS_FMT_RBG888_1X24,
-};
+Forcing a device id with the force_device_id parameter and therefore
+manually generating a platform device takes precedence over ACPI during
+probing.
 
-for (i = 0; i < ARRAY_SIZE(tc_lvds_in_bus_fmts); ++i)
-                input_fmts[i] = tc_lvds_in_bus_fmts[i];
->> This will have all the available input formats, but finally which video data input format chosen?
-Since dsi->format = MIPI_DSI_FMT_RGB888 is used does it chooses
-MEDIA_BUS_FMT_RBG888_1X24 by the drm pipeline
+Signed-off-by: Michael Brunner <michael.brunner@kontron.com>
+---
+ drivers/mfd/kempld-core.c | 97 ++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 91 insertions(+), 6 deletions(-)
 
-On Wed, Aug 12, 2020 at 6:48 PM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->
-> Hi Vinay,
->
-> On Wed, Aug 12, 2020 at 06:07:52PM +0530, Vinay Simha B N wrote:
-> > On Wed, Aug 12, 2020 at 3:24 PM Laurent Pinchart wrote:
-> > > On Wed, Aug 12, 2020 at 12:55:50PM +0530, Vinay Simha BN wrote:
-> > > > - bus formats read from drm_bridge_state.output_bus_cfg.format
-> > > >   and .atomic_get_input_bus_fmts() instead of connector
-> > > >
-> > > > Signed-off-by: Vinay Simha BN <simhavcs@gmail.com>
-> > > >
-> > > > ---
-> > > >  v1:
-> > > >  * Laurent Pinchart review comments incorporated
-> > > >    drm_bridge_state.output_bus_cfg.format
-> > > >    instead of connector
-> > > > ---
-> > > >  drivers/gpu/drm/bridge/tc358775.c | 76 ++++++++++++++++++++++++++++++---------
-> > > >  1 file changed, 59 insertions(+), 17 deletions(-)
-> > > >
-> > > > diff --git a/drivers/gpu/drm/bridge/tc358775.c b/drivers/gpu/drm/bridge/tc358775.c
-> > > > index 7da15cd..5d8714a 100644
-> > > > --- a/drivers/gpu/drm/bridge/tc358775.c
-> > > > +++ b/drivers/gpu/drm/bridge/tc358775.c
-> > > > @@ -271,6 +271,13 @@ struct tc_data {
-> > > >       struct gpio_desc        *stby_gpio;
-> > > >       u8                      lvds_link; /* single-link or dual-link */
-> > > >       u8                      bpc;
-> > > > +     u32                     output_bus_fmt;
-> > > > +};
-> > > > +
-> > > > +static const u32 tc_lvds_out_bus_fmts[] = {
-> > > > +     MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA,
-> > > > +     MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
-> > > > +     MEDIA_BUS_FMT_RGB666_1X7X3_SPWG,
-> > > >  };
-> > > >
-> > > >  static inline struct tc_data *bridge_to_tc(struct drm_bridge *b)
-> > > > @@ -359,19 +366,6 @@ static void d2l_write(struct i2c_client *i2c, u16 addr, u32 val)
-> > > >                       ret, addr);
-> > > >  }
-> > > >
-> > > > -/* helper function to access bus_formats */
-> > > > -static struct drm_connector *get_connector(struct drm_encoder *encoder)
-> > > > -{
-> > > > -     struct drm_device *dev = encoder->dev;
-> > > > -     struct drm_connector *connector;
-> > > > -
-> > > > -     list_for_each_entry(connector, &dev->mode_config.connector_list, head)
-> > > > -             if (connector->encoder == encoder)
-> > > > -                     return connector;
-> > > > -
-> > > > -     return NULL;
-> > > > -}
-> > > > -
-> > > >  static void tc_bridge_enable(struct drm_bridge *bridge)
-> > > >  {
-> > > >       struct tc_data *tc = bridge_to_tc(bridge);
-> > > > @@ -380,7 +374,6 @@ static void tc_bridge_enable(struct drm_bridge *bridge)
-> > > >       u32 val = 0;
-> > > >       u16 dsiclk, clkdiv, byteclk, t1, t2, t3, vsdelay;
-> > > >       struct drm_display_mode *mode;
-> > > > -     struct drm_connector *connector = get_connector(bridge->encoder);
-> > > >
-> > > >       mode = &bridge->encoder->crtc->state->adjusted_mode;
-> > > >
-> > > > @@ -451,14 +444,13 @@ static void tc_bridge_enable(struct drm_bridge *bridge)
-> > > >       d2l_write(tc->i2c, LVPHY0, LV_PHY0_PRBS_ON(4) | LV_PHY0_ND(6));
-> > > >
-> > > >       dev_dbg(tc->dev, "bus_formats %04x bpc %d\n",
-> > > > -             connector->display_info.bus_formats[0],
-> > > > +             tc->output_bus_fmt,
-> > > >               tc->bpc);
-> > > >       /*
-> > > >        * Default hardware register settings of tc358775 configured
-> > > >        * with MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA jeida-24 format
-> > > >        */
-> > > > -     if (connector->display_info.bus_formats[0] ==
-> > > > -             MEDIA_BUS_FMT_RGB888_1X7X4_SPWG) {
-> > > > +     if (tc->output_bus_fmt == MEDIA_BUS_FMT_RGB888_1X7X4_SPWG) {
-> > > >               /* VESA-24 */
-> > > >               d2l_write(tc->i2c, LV_MX0003, LV_MX(LVI_R0, LVI_R1, LVI_R2, LVI_R3));
-> > > >               d2l_write(tc->i2c, LV_MX0407, LV_MX(LVI_R4, LVI_R7, LVI_R5, LVI_G0));
-> > > > @@ -590,6 +582,51 @@ static int tc358775_parse_dt(struct device_node *np, struct tc_data *tc)
-> > > >       return 0;
-> > > >  }
-> > > >
-> > > > +static int tc_bridge_atomic_check(struct drm_bridge *bridge,
-> > > > +                               struct drm_bridge_state *bridge_state,
-> > > > +                               struct drm_crtc_state *crtc_state,
-> > > > +                               struct drm_connector_state *conn_state)
-> > > > +{
-> > > > +     struct tc_data *tc = bridge_to_tc(bridge);
-> > > > +
-> > > > +     tc->output_bus_fmt = bridge_state->output_bus_cfg.format;
-> > >
-> > > .atomic_check() isn't allowed to modify the device state, neither the
-> > > hardware state nor the software state in drm_bridge or tc_data. You can
-> > > instead access the bridge state directly in tc_bridge_enable(), with
-> > >
-> > >         struct drm_bridge_state *state =
-> > >                 drm_priv_to_bridge_state(bridge->base.state);
-> >
-> > Currently the driver is picking up from the dts panel
-> > (data-mapping = "vesa-24";) or jeida-24 or jeida-18.
-> >
-> > Does state->output_bus_cfg.format  get set from the data-mapping?
->
-> It should. The drm_panel should take care of that. In
-> panel_simple_get_non_edid_modes(), it calls
->
->         if (panel->desc->bus_format)
->                 drm_display_info_set_bus_formats(&connector->display_info,
->                                                  &panel->desc->bus_format, 1);
->
-> to initialize the bus format in display_info. Then, the DRM bridge
-> helper drm_atomic_bridge_chain_select_bus_fmts() retrieves the output
-> format by calling .atomic_get_output_bus_fmts() if implemented by the
-> last bridge in the chain, or directly from the connector display_info.
-> The last bridge in the chain is a DRM panel bridge, and doesn't
-> implement .atomic_get_output_bus_fmts(), so the format from display_info
-> is used, and is stored in the output_bus_cfg.format field of this bridge
-> in select_bus_fmt_recursive().
->
-> If something doesn't work according to the plan, I can help you
-> debugging.
->
-> > > > +
-> > > > +     dev_dbg(tc->dev, "output_bus_fmt %04x\n", tc->output_bus_fmt);
-> > > > +
-> > > > +     return 0;
-> > > > +}
-> > > > +
-> > > > +static u32 *
-> > > > +tc_bridge_get_input_bus_fmts(struct drm_bridge *bridge,
-> > > > +                          struct drm_bridge_state *bridge_state,
-> > > > +                          struct drm_crtc_state *crtc_state,
-> > > > +                          struct drm_connector_state *conn_state,
-> > > > +                          u32 output_fmt,
-> > > > +                          unsigned int *num_input_fmts)
-> > > > +{
-> > > > +     u32 *input_fmts = NULL;
-> > > > +     int i;
-> > >
-> > > i only takes positive values, so it can be an unsigned int.
-> > >
-> > > > +
-> > > > +     *num_input_fmts = 0;
-> > > > +
-> > > > +     for (i = 0 ; i < ARRAY_SIZE(tc_lvds_out_bus_fmts) ; ++i) {
-> > > > +             if (output_fmt == tc_lvds_out_bus_fmts[i]) {
-> > > > +                     *num_input_fmts = 1;
-> > > > +                     input_fmts = kcalloc(*num_input_fmts,
-> > > > +                                          sizeof(*input_fmts),
-> > > > +                                          GFP_KERNEL);
-> > > > +                     if (!input_fmts)
-> > > > +                             return NULL;
-> > > > +
-> > > > +                     input_fmts[0] = output_fmt;
-> > >
-> > > I don't think this is right, the input of the bridge isn't LVDS, is it ?
-> >
-> > Input to the bridge is DSI, format is already set
-> >
-> > dsi->format = MIPI_DSI_FMT_RGB888;
-> >
-> > enum mipi_dsi_pixel_format {
-> >         MIPI_DSI_FMT_RGB888,
-> >         MIPI_DSI_FMT_RGB666,
-> >         MIPI_DSI_FMT_RGB666_PACKED,
-> >         MIPI_DSI_FMT_RGB565,
-> > };
-> > include/drm/drm_mipi_dsi.h
-> >
-> > Why do we require this atomic_get_input_bus_fmts?
-> >
-> > Do i need to implement both atomic_get_input_bus_fmts and
-> > atomic_get_output_bus_fmts?
->
-> .atomic_get_output_bus_fmts() is only need for the last bridge in the
-> chain, and is not mandatory when that bridge supports a single format.
-> As this bridge can't be last (if the output is connect to a panel, there
-> will be a drm_bridge wrapping the drm_panel), you don't have to
-> implement that operation.
->
-> .atomic_get_input_bus_fmts() is used to negotiate formats along the
-> pipeline. The helps the DRM bridge helpers figure out what formats are
-> possible, with the help of bridges that must report what input formats
-> are compatible with a given output format. The DRM bridge helpers will
-> take care of the rest.
->
-> So, for this bridge, the input and output formats are decoupled. The
-> bridge can output any of the three supported LVDS formats, regardless of
-> what format it gets at its input. You should thus verify that the output
-> format you receive in this function is supported (and return NULL if it
-> isn't), and then return the list of supported input formats. If you
-> don't implement .atomic_get_input_bus_fmts(), then the DRM bridge
-> helpers will consider that the input and output formats are the same,
-> and will set the output format of the previous bridge to, for example,
-> MEDIA_BUS_FMT_RGB666_1X7X3_SPWG. It may work if the previous bridge
-> doesn't care about its output format, but if it does, then it will be
-> puzzled, as the previous bridge outputs DSI, not LVDS.
->
-> > > As far as I can tell, the hardware support transcoding any of the
-> > > supported input formats (RGB565, RGB666 or RGB888) to any of the
-> > > supported output formats. How about the following ?
-> > >
-> > > static const u32 tc_lvds_in_bus_fmts[] = {
-> > >         MEDIA_BUS_FMT_RGB565_1X16,
-> > >         MEDIA_BUS_FMT_RGB666_1X18,
-> > >         MEDIA_BUS_FMT_RBG888_1X24,
-> > > };
-> > >
-> > > ...
-> > >
-> > >         u32 *input_fmts;
-> > >         unsigned int i;
-> > >
-> > >         *num_input_fmts = 0;
-> > >
-> > >         for (i = 0 ; i < ARRAY_SIZE(tc_lvds_out_bus_fmts) ; ++i) {
-> > >                 if (output_fmt == tc_lvds_out_bus_fmts[i])
-> > >                         break;
-> > >         }
-> > >
-> > >         if (i == ARRAY_SIZE(tc_lvds_out_bus_fmts))
-> > >                 return NULL;
-> > >
-> > >         input_fmts = kcalloc(*num_input_fmts, ARRAY_SIZE(tc_lvds_in_bus_fmts),
-> > >                              GFP_KERNEL);
-> > >         if (!input_fmts)
-> > >                 return NULL;
-> > >
-> > >         for (i = 0; i < ARRAY_SIZE(tc_lvds_in_bus_fmts); ++i)
-> > >                 input_fmts[i] = tc_lvds_in_bus_fmts[i];
-> > >
-> > >         *num_inputs_fmts = ARRAY_SIZE(tc_lvds_in_bus_fmts);
-> > >         return input_fmts;
-> > >
-> > > > +
-> > > > +                     break;
-> > > > +             }
-> > > > +     }
-> > > > +
-> > > > +     return input_fmts;
-> > > > +}
-> > > > +
-> > > >  static int tc_bridge_attach(struct drm_bridge *bridge,
-> > > >                           enum drm_bridge_attach_flags flags)
-> > > >  {
-> > > > @@ -639,6 +676,11 @@ static int tc_bridge_attach(struct drm_bridge *bridge,
-> > > >  }
-> > > >
-> > > >  static const struct drm_bridge_funcs tc_bridge_funcs = {
-> > > > +     .atomic_duplicate_state = drm_atomic_helper_bridge_duplicate_state,
-> > > > +     .atomic_destroy_state = drm_atomic_helper_bridge_destroy_state,
-> > > > +     .atomic_reset = drm_atomic_helper_bridge_reset,
-> > > > +     .atomic_get_input_bus_fmts = tc_bridge_get_input_bus_fmts,
-> > > > +     .atomic_check = tc_bridge_atomic_check,
-> > > >       .attach = tc_bridge_attach,
-> > > >       .pre_enable = tc_bridge_pre_enable,
-> > > >       .enable = tc_bridge_enable,
->
-> --
-> Regards,
->
-> Laurent Pinchart
-
-
-
+diff --git a/drivers/mfd/kempld-core.c b/drivers/mfd/kempld-core.c
+index f48e21d8b97c..408cad1958d9 100644
+--- a/drivers/mfd/kempld-core.c
++++ b/drivers/mfd/kempld-core.c
+@@ -13,6 +13,7 @@
+ #include <linux/dmi.h>
+ #include <linux/io.h>
+ #include <linux/delay.h>
++#include <linux/acpi.h>
+ 
+ #define MAX_ID_LEN 4
+ static char force_device_id[MAX_ID_LEN + 1] = "";
+@@ -132,6 +133,7 @@ static const struct kempld_platform_data kempld_platform_data_generic = {
+ };
+ 
+ static struct platform_device *kempld_pdev;
++static bool kempld_acpi_mode;
+ 
+ static int kempld_create_platform_device(const struct dmi_system_id *id)
+ {
+@@ -434,13 +436,87 @@ static int kempld_detect_device(struct kempld_device_data *pld)
+ 	return ret;
+ }
+ 
++#ifdef CONFIG_ACPI
++static const struct acpi_device_id kempld_acpi_table[] = {
++	{ "KEM0001", (kernel_ulong_t)&kempld_platform_data_generic },
++	{}
++};
++MODULE_DEVICE_TABLE(acpi, kempld_acpi_table);
++
++static int kempld_get_acpi_data(struct platform_device *pdev)
++{
++	struct list_head resource_list;
++	struct resource *resources;
++	struct resource_entry *rentry;
++	struct device *dev = &pdev->dev;
++	struct acpi_device *acpi_dev = ACPI_COMPANION(dev);
++	const struct kempld_platform_data *pdata;
++	int ret;
++	int count;
++
++	pdata = acpi_device_get_match_data(dev);
++	ret = platform_device_add_data(pdev, pdata,
++				       sizeof(struct kempld_platform_data));
++	if (ret)
++		return ret;
++
++	INIT_LIST_HEAD(&resource_list);
++	ret = acpi_dev_get_resources(acpi_dev, &resource_list, NULL, NULL);
++	if (ret < 0)
++		goto out;
++
++	count = ret;
++
++	if (count > 0) {
++		resources = devm_kcalloc(&acpi_dev->dev, count,
++					  sizeof(struct resource), GFP_KERNEL);
++		if (!resources) {
++			ret = -ENOMEM;
++			goto out;
++		}
++
++		count = 0;
++		list_for_each_entry(rentry, &resource_list, node) {
++			memcpy(&resources[count], rentry->res,
++			       sizeof(*resources));
++			count++;
++		}
++		ret = platform_device_add_resources(pdev, resources, count);
++		if (ret)
++			goto out;
++	} else
++		ret = platform_device_add_resources(pdev, pdata->ioresource, 1);
++
++out:
++	acpi_dev_free_resource_list(&resource_list);
++
++	return ret;
++}
++#else
++static int kempld_get_acpi_data(struct platform_device *pdev)
++{
++	return -ENODEV;
++}
++#endif /* CONFIG_ACPI */
++
+ static int kempld_probe(struct platform_device *pdev)
+ {
+-	const struct kempld_platform_data *pdata =
+-		dev_get_platdata(&pdev->dev);
++	const struct kempld_platform_data *pdata;
+ 	struct device *dev = &pdev->dev;
+ 	struct kempld_device_data *pld;
+ 	struct resource *ioport;
++	int ret;
++
++	if (kempld_pdev == NULL) {
++		ret = kempld_get_acpi_data(pdev);
++		if (ret < 0)
++			return ret;
++		kempld_acpi_mode = true;
++	} else if (kempld_pdev != pdev) {
++		dev_notice(dev, "platform device exists - not using ACPI\n");
++		return -ENODEV;
++	}
++	pdata = dev_get_platdata(dev);
+ 
+ 	pld = devm_kzalloc(dev, sizeof(*pld), GFP_KERNEL);
+ 	if (!pld)
+@@ -482,6 +558,7 @@ static int kempld_remove(struct platform_device *pdev)
+ static struct platform_driver kempld_driver = {
+ 	.driver		= {
+ 		.name	= "kempld",
++		.acpi_match_table = ACPI_PTR(kempld_acpi_table),
+ 	},
+ 	.probe		= kempld_probe,
+ 	.remove		= kempld_remove,
+@@ -800,6 +877,7 @@ MODULE_DEVICE_TABLE(dmi, kempld_dmi_table);
+ static int __init kempld_init(void)
+ {
+ 	const struct dmi_system_id *id;
++	int ret;
+ 
+ 	if (force_device_id[0]) {
+ 		for (id = kempld_dmi_table;
+@@ -809,12 +887,19 @@ static int __init kempld_init(void)
+ 					break;
+ 		if (id->matches[0].slot == DMI_NONE)
+ 			return -ENODEV;
+-	} else {
+-		if (!dmi_check_system(kempld_dmi_table))
+-			return -ENODEV;
+ 	}
+ 
+-	return platform_driver_register(&kempld_driver);
++	ret = platform_driver_register(&kempld_driver);
++	if (ret)
++		return ret;
++
++	if (!kempld_pdev && !kempld_acpi_mode)
++		if (!dmi_check_system(kempld_dmi_table)) {
++			platform_driver_unregister(&kempld_driver);
++			return -ENODEV;
++		}
++
++	return 0;
+ }
+ 
+ static void __exit kempld_exit(void)
 -- 
-regards,
-vinaysimha
+2.25.1
+
