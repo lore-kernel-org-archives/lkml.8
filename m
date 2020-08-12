@@ -2,104 +2,103 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD589C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 20:40:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B03DC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 20:45:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 744DD20774
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 20:40:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UySQ3jmV"
+	by mail.kernel.org (Postfix) with ESMTP id D220E20675
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 20:45:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597265152;
+	bh=nsp30OjwJsZMirZS4TE87uFZBgzToOXBI+Ebs9g+O5I=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=BcfIVRzFyqHTidJu5WrfE5Cf2/crBVjc6Zh+lCbXm0xzle4HtwT1Sjr3SbvSvqfXW
+	 CuToL1otUi4LBmvLlMoNjrcTvlw00iiObcKPGLRE10tirbUOk5aRmNFhK4PAR2D10g
+	 LU8hPlrRWy/7ecwArAMmgZRx20GmUxpHleimX5Xk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726574AbgHLUkV (ORCPT
+        id S1726547AbgHLUpv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 16:40:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47088 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726282AbgHLUkU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 16:40:20 -0400
-Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAB3FC061383
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 13:40:19 -0700 (PDT)
-Received: by mail-qv1-xf49.google.com with SMTP id h6so2335577qvz.14
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 13:40:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc:content-transfer-encoding;
-        bh=YD9oDnrG8Z6JcBpuq/UbNq0O9QuaBudpHcn6VsItfhQ=;
-        b=UySQ3jmVjIpx2pCRgTSQvOKRQVOTvf0/+OGgkB6+TLfojkHoJHsRLrmrOJljrFbci1
-         SUYriIRveJrHTEIXY9YxhN+wY55CeXbYoGZNDsfpWN4yHYV+zjY6xPMdOIx6qVZQ4oDB
-         zlGKu2pHN3iIE0D+PUtiRJ5DzE6uEbM7ZNBB6QWlWBlP8X2Oy1WR0qLpFfRPklx8jxKh
-         eLkm7YrgZxaRQ49hrsBiHJDIkIF7dVdpX8OV/7D/NXXal0nXxUk3oTfjb2uMXUHDOA0K
-         cnqgb48OPBL0Lxlfp18eu5pSeeoBU0CJyojSklYHmxup3iVRYGuGFlI85uG9Hsxi9RSt
-         BCjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc:content-transfer-encoding;
-        bh=YD9oDnrG8Z6JcBpuq/UbNq0O9QuaBudpHcn6VsItfhQ=;
-        b=mMbV8pzQBRsRlODZAaqVU4gFjNJXtXIBev8I9RJaQJMr95rHBpHwfa5Yo1BGscjslx
-         r7HtT367qEihaoW7ToMyeOfWhZAlDzBNx1cK1o7bSRSVSCnRTGqn0Q219rFV9gBjNxxf
-         bfwUmIz3NWutwW/jCzp9zA/Q7tc/IrjXmBetcEujTJv1vcUA+QxEXLLM8DtYMdEU5kFY
-         lgpGNhr+EZMd1WCY6kTcdejwZo4lIp4yejXx+SOx4AX12z0fPgWMnQW5sdJ4z+7uYFNi
-         3+ipIv6iID6wUoZfR7RCibP6QPd+2CpxUEoFxtdJ55zzq07vttOuZHBH52ZfdWkLcHi5
-         c9SQ==
-X-Gm-Message-State: AOAM533WL4S3qG5bynI5+l1hzuhiXsBpSBUVL8ArVBbQR+84TCv4GCKl
-        aN7Jf97cENaSOty5a3tIpfHSHaA=
-X-Google-Smtp-Source: ABdhPJxdubdXW4PwgJu9dM9xj0Z3AIPA09UhdEhSNfFkpA5hDk0es7P764u9/oCxXHhv8FsiOBCtnSc=
-X-Received: by 2002:ad4:5425:: with SMTP id g5mr1438708qvt.198.1597264818846;
- Wed, 12 Aug 2020 13:40:18 -0700 (PDT)
-Date:   Wed, 12 Aug 2020 13:40:17 -0700
-In-Reply-To: <20200812140322.132844-1-Jianlin.Lv@arm.com>
-Message-Id: <20200812204017.GI184844@google.com>
-Mime-Version: 1.0
-References: <20200812140322.132844-1-Jianlin.Lv@arm.com>
-Subject: Re: [PATCH bpf-next] bpf: fix load XDP program error in test_xdp_vlan
-From:   sdf@google.com
-To:     Jianlin Lv <Jianlin.Lv@arm.com>
-Cc:     bpf@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
-        ast@kernel.org, daniel@iogearbox.net, yhs@fb.com, Song.Zhu@arm.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
-Content-Transfer-Encoding: base64
+        Wed, 12 Aug 2020 16:45:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57274 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726030AbgHLUpu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 16:45:50 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13CAC20675;
+        Wed, 12 Aug 2020 20:45:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597265150;
+        bh=nsp30OjwJsZMirZS4TE87uFZBgzToOXBI+Ebs9g+O5I=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=YWg7i33yEXOg+V+P7n+XXVzOg/eYJZZ/20UZDcXk7ojVeA/qdihAyIrY2lgQ4y+vf
+         OAfaSPXow/Z7Ce9l/gcTMjuNY5RAm/KlL9Y01a0mKCYerxOAIKl/c70CxJUt9L+b3B
+         sPlNqSclI2K7iBRgiWqV0j1U+xc11bg3VMDEN9p0=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id E5EE13522615; Wed, 12 Aug 2020 13:45:48 -0700 (PDT)
+Date:   Wed, 12 Aug 2020 13:45:48 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     kernel test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org
+Subject: Re: [rcu:dev.2020.08.10a 105/111] main.c:undefined reference to
+ `rcu_read_unlock_strict'
+Message-ID: <20200812204548.GK4295@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <202008120752.kdAks6DZ%lkp@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202008120752.kdAks6DZ%lkp@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMDgvMTIsIEppYW5saW4gTHYgd3JvdGU6DQo+IHRlc3RfeGRwX3ZsYW4uc2ggcmVwb3J0cyB0
-aGUgZXJyb3IgYXMgYmVsb3c6DQoNCj4gJCBzdWRvIC4vdGVzdF94ZHBfdmxhbl9tb2RlX25hdGl2
-ZS5zaA0KPiArICdbJyAteiB4ZHBfdmxhbl9tb2RlX25hdGl2ZSAnXScNCj4gKyBYRFBfTU9ERT14
-ZHBnZW5lcmljDQo+IOKApuKApg0KPiArIGV4cG9ydCBYRFBfUFJPRz14ZHBfdmxhbl9yZW1vdmVf
-b3V0ZXIyDQo+ICsgWERQX1BST0c9eGRwX3ZsYW5fcmVtb3ZlX291dGVyMg0KPiArIGlwIG5ldG5z
-IGV4ZWMgbnMxIGlwIGxpbmsgc2V0IHZldGgxIHhkcGRydiBvZmYNCj4gRXJyb3I6IFhEUCBwcm9n
-cmFtIGFscmVhZHkgYXR0YWNoZWQuDQoNCj4gaXAgd2lsbCB0aHJvdyBhbiBlcnJvciBpbiBjYXNl
-IGEgWERQIHByb2dyYW0gaXMgYWxyZWFkeSBhdHRhY2hlZCB0byB0aGUNCj4gbmV0d29ya2luZyBp
-bnRlcmZhY2UsIHRvIHByZXZlbnQgaXQgZnJvbSBiZWluZyBvdmVycmlkZGVuIGJ5IGFjY2lkZW50
-Lg0KPiBJbiBvcmRlciB0byByZXBsYWNlIHRoZSBjdXJyZW50bHkgcnVubmluZyBYRFAgcHJvZ3Jh
-bSB3aXRoIGEgbmV3IG9uZSwNCj4gdGhlIC1mb3JjZSBvcHRpb24gbXVzdCBiZSB1c2VkLg0KDQo+
-IFNpZ25lZC1vZmYtYnk6IEppYW5saW4gTHYgPEppYW5saW4uTHZAYXJtLmNvbT4NCj4gLS0tDQo+
-ICAgdG9vbHMvdGVzdGluZy9zZWxmdGVzdHMvYnBmL3Rlc3RfeGRwX3ZsYW4uc2ggfCAyICstDQo+
-ICAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pDQoNCj4gZGlm
-ZiAtLWdpdCBhL3Rvb2xzL3Rlc3Rpbmcvc2VsZnRlc3RzL2JwZi90ZXN0X3hkcF92bGFuLnNoICAN
-Cj4gYi90b29scy90ZXN0aW5nL3NlbGZ0ZXN0cy9icGYvdGVzdF94ZHBfdmxhbi5zaA0KPiBpbmRl
-eCBiYjhiMGRhOTE2ODYuLjAzNGU2MDNhZWI1MCAxMDA3NTUNCj4gLS0tIGEvdG9vbHMvdGVzdGlu
-Zy9zZWxmdGVzdHMvYnBmL3Rlc3RfeGRwX3ZsYW4uc2gNCj4gKysrIGIvdG9vbHMvdGVzdGluZy9z
-ZWxmdGVzdHMvYnBmL3Rlc3RfeGRwX3ZsYW4uc2gNCj4gQEAgLTIyMCw3ICsyMjAsNyBAQCBpcCBu
-ZXRucyBleGVjIG5zMSBwaW5nIC1pIDAuMiAtVyAyIC1jIDIgJElQQUREUjINCj4gICAjIEVUSF9Q
-XzgwMjFRIGluZGljYXRpb24sIGFuZCB0aGlzIGNhdXNlIG92ZXJ3cml0aW5nIG9mIG91ciBjaGFu
-Z2VzLg0KPiAgICMNCj4gICBleHBvcnQgWERQX1BST0c9eGRwX3ZsYW5fcmVtb3ZlX291dGVyMg0K
-PiAtaXAgbmV0bnMgZXhlYyBuczEgaXAgbGluayBzZXQgJERFVk5TMSAkWERQX01PREUgb2ZmDQo+
-ICtpcCBuZXRucyBleGVjIG5zMSBpcCAtZm9yY2UgbGluayBzZXQgJERFVk5TMSAkWERQX01PREUg
-b2ZmDQo+ICAgaXAgbmV0bnMgZXhlYyBuczEgaXAgbGluayBzZXQgJERFVk5TMSAkWERQX01PREUg
-b2JqZWN0ICRGSUxFIHNlY3Rpb24gIA0KPiAkWERQX1BST0cNCg0KPiAgICMgTm93IHRoZSBuYW1l
-c3BhY2VzIHNob3VsZCBzdGlsbCBiZSBhYmxlIHJlYWNoIGVhY2gtb3RoZXIsIHRlc3Qgd2l0aCAg
-DQo+IHBpbmc6DQo+IC0tDQo+IDIuMTcuMQ0KDQpUaGlzIHNob3VsZCBiZSBhbHJlYWR5IGZpeGVk
-IGJ5Og0KaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvYnBmL0NBS0g4cUJ1ejQ4V3c2Uz1EQ3pLUnIz
-ZjQ2RXEzTHlrbnZUakRHUF81UVJQeHRHWl9Id0BtYWlsLmdtYWlsLmNvbS9ULyN0DQo=
+On Wed, Aug 12, 2020 at 07:39:54AM +0800, kernel test robot wrote:
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev.2020.08.10a
+> head:   9dd4d242c535c30266a08806314ea6b016f94617
+> commit: 9e20110f8ef2745df8f4fe2d679114dccfaaa1af [105/111] rcu: Report QS for outermost PREEMPT=n rcu_read_unlock() for strict GPs
+> config: arm-mainstone_defconfig (attached as .config)
+> compiler: arm-linux-gnueabi-gcc (GCC) 9.3.0
+> reproduce (this is a W=1 build):
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         git checkout 9e20110f8ef2745df8f4fe2d679114dccfaaa1af
+>         # save the attached .config to linux build tree
+>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=arm 
+> 
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
+> 
+> All errors (new ones prefixed by >>):
+> 
+>    arm-linux-gnueabi-ld: init/main.o: in function `rest_init':
+> >> main.c:(.ref.text+0x34): undefined reference to `rcu_read_unlock_strict'
+> >> arm-linux-gnueabi-ld: main.c:(.ref.text+0x58): undefined reference to `rcu_read_unlock_strict'
+
+Good catch, broke single-CPU yet again!  ;-)
+
+Fixed, will be merge into original with attribution.
+
+							Thanx, Paul
+
+>    arm-linux-gnueabi-ld: kernel/fork.o: in function `get_mm_exe_file':
+> >> fork.c:(.text+0x3ac): undefined reference to `rcu_read_unlock_strict'
+>    arm-linux-gnueabi-ld: kernel/fork.o: in function `pidfd_poll':
+>    fork.c:(.text+0x650): undefined reference to `rcu_read_unlock_strict'
+>    arm-linux-gnueabi-ld: kernel/fork.o: in function `_do_fork':
+>    fork.c:(.text+0x2e10): undefined reference to `rcu_read_unlock_strict'
+>    arm-linux-gnueabi-ld: kernel/fork.o:fork.c:(.text+0x2e8c): more undefined references to `rcu_read_unlock_strict' follow
+> 
+> ---
+> 0-DAY CI Kernel Test Service, Intel Corporation
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+
+
