@@ -2,163 +2,88 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47E3EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:51:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E140EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:51:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23EB9206B5
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:51:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A54A1206B5
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:51:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SQ8nojyD"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3CKEgAVL";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="A87MKS8B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728004AbgHLNvW (ORCPT
+        id S1728072AbgHLNvt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 09:51:22 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:34767 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726946AbgHLNvV (ORCPT
+        Wed, 12 Aug 2020 09:51:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40650 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728016AbgHLNvt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 09:51:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597240279;
+        Wed, 12 Aug 2020 09:51:49 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0D07C061383;
+        Wed, 12 Aug 2020 06:51:48 -0700 (PDT)
+Date:   Wed, 12 Aug 2020 15:51:44 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1597240305;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=BDAp+ggb7oSFGFdMC5id6rMGnPA4tyUwDxMCjaPImAI=;
-        b=SQ8nojyDvoQE9b+0UOArqZLwiY4RTSFdYlIRsYIJQFdXAbHgYRx+OOXzpTMIIW7ctMJewJ
-        IDml1CMFDZa3eoNRwAw3Kg1mvpPZiEhh5bXF9W/WpsK7a9BpTC3vOTHBC93zQk8Vhw5bYp
-        O+OY0+3J7PCA4yTFrh5QAFn7kfYgvgc=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-312-SzOVGFGlOPCK4-C4tO-OZA-1; Wed, 12 Aug 2020 09:51:16 -0400
-X-MC-Unique: SzOVGFGlOPCK4-C4tO-OZA-1
-Received: by mail-wm1-f69.google.com with SMTP id d22so913866wmd.2
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 06:51:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=BDAp+ggb7oSFGFdMC5id6rMGnPA4tyUwDxMCjaPImAI=;
-        b=Rm+5Xu44LVrYzSDQl4fHFcjdqhMAQxfdYo1S/LP/cRPMJOKz+0jZJqQvMSkYqg1Ymb
-         RjokCYvh4ji8+UyVRshYl4UVuUec1Ar/KLs53vkFRKWmQ/qdSZ5F8GNChTRJvo48BlFK
-         mSyGoUxY34OMHNwDAt5e1nmDpogULzEMlz/O0v/B9DMn7CjdkhQXnkuauPROAGyKYEUW
-         5+nPQQJskckgzctmA+gbCnMFkL9NLjT4hg5kI8o+6m64KaAE/769lCWQ2/BX4/n3o98M
-         3MS8/TxVVY1NRFuPt+icFWcomds/HsUxYAj+4r5wYoT8slQ4KzcfAz7VEHcJvVwd8Bvv
-         1BSw==
-X-Gm-Message-State: AOAM5320SD+oXbuc0z5DAgA7rxUiYp6kZWJ6ZbbJq/AxEJk4gSzV754L
-        8asZF2p2h033nkHRkdZIs6zLbzFXlHiUJLTKyNKCGko91WxLGYoEagx9RuwXsM29nVSPJ3J6OXK
-        pw4JgSA9XvZfggtnkXjW4MHRx
-X-Received: by 2002:a5d:6381:: with SMTP id p1mr33077728wru.112.1597240275479;
-        Wed, 12 Aug 2020 06:51:15 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyV0DY2n7laMwZDQQRC9n0q+OBfOQbVOA063aLwgQMFyxIvC6lgf++6/c9GE8CTPUAZapSlfw==
-X-Received: by 2002:a5d:6381:: with SMTP id p1mr33077708wru.112.1597240275211;
-        Wed, 12 Aug 2020 06:51:15 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:fcdc:39e8:d361:7e30? ([2001:b07:6468:f312:fcdc:39e8:d361:7e30])
-        by smtp.gmail.com with ESMTPSA id h11sm4322603wrb.68.2020.08.12.06.51.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Aug 2020 06:51:14 -0700 (PDT)
-Subject: Re: [PATCH] KVM: x86/pmu: Add '.exclude_hv = 1' for guest perf_event
-To:     peterz@infradead.org
-Cc:     Like Xu <like.xu@linux.intel.com>, Yao <yao.jin@linux.intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-References: <20200812050722.25824-1-like.xu@linux.intel.com>
- <5c41978e-8341-a179-b724-9aa6e7e8a073@redhat.com>
- <20200812111115.GO2674@hirez.programming.kicks-ass.net>
- <65eddd3c-c901-1c5a-681f-f0cb07b5fbb1@redhat.com>
- <20200812133150.GQ2674@hirez.programming.kicks-ass.net>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <40005c08-27ec-edcd-503e-9d2eaac7d2a4@redhat.com>
-Date:   Wed, 12 Aug 2020 15:51:13 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        bh=+3kVoq9w4ldqVEl5dCV3XCb9BX8aAVM+5QyIJqtT2VM=;
+        b=3CKEgAVL9t6YI4g1rGc76lWIBGe1bW3Q9/dhUqA0Nslk4DPhrSnsvRTRsTU3vWZKP1VvLF
+        v06eZigwAm1zj4vY1KJCNmjAIYqzv7Nwnuxs1avq/J3gpmNL6iJrJ5PQFxzCn4VPf3Iw/q
+        vShMgA+aTsWWX8JbK/Q7BRJcavUAg8ltqBMfc7e/DBof5U/YPP/XmqMqK92B9gXFFJ5LM3
+        N3NN2BXj05RIdYyoc0vaPy97+YiTEs9Ls1mkMWW9jsD0jDG1MEh0/sRKA0c0KJh4DveIlv
+        mdXBfnSuWiB16t/O/im8Zv4dIlzMXE8XvCdEmFyECZA0geSU7Qr9FJLlF/JtXQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1597240305;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=+3kVoq9w4ldqVEl5dCV3XCb9BX8aAVM+5QyIJqtT2VM=;
+        b=A87MKS8BjGXHLbw5Coalz+9eS/4MKePNmq2StRQ1Wpm88yPjaCZNCm2EIgL8LEfYS+o1a4
+        6MgO/lYYsLitfYCQ==
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     David Miller <davem@davemloft.net>, Jiafei.Pan@nxp.com,
+        olteanv@gmail.com
+Cc:     kuba@kernel.org, netdev@vger.kernel.org, claudiu.manoil@nxp.com,
+        ioana.ciornei@nxp.com, yangbo.lu@nxp.com,
+        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+Subject: Re: [PATCH net-next 2/2] enetc: use napi_schedule to be compatible
+ with PREEMPT_RT
+Message-ID: <20200812135144.hpsfgxusojdrsewl@linutronix.de>
+References: <20200803201009.613147-1-olteanv@gmail.com>
+ <20200803201009.613147-2-olteanv@gmail.com>
+ <20200803.182145.2300252460016431673.davem@davemloft.net>
 MIME-Version: 1.0
-In-Reply-To: <20200812133150.GQ2674@hirez.programming.kicks-ass.net>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200803.182145.2300252460016431673.davem@davemloft.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/08/20 15:31, peterz@infradead.org wrote:
-> This isn't about x86, I want these checks in generic code. We have the
-> flag, it needs checking.
-> 
-> unpriv users have no busniess getting anything from a possible hv.
+On 2020-08-03 18:21:45 [-0700], David Miller wrote:
+> From: Vladimir Oltean <olteanv@gmail.com>
+> > The driver calls napi_schedule_irqoff() from a context where, in RT,
+> > hardirqs are not disabled, since the IRQ handler is force-threaded.
+=E2=80=A6
+> >=20
+> > Signed-off-by: Jiafei Pan <Jiafei.Pan@nxp.com>
+> > Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+>=20
+> Applied.
 
-Ah ok if it's generic that sounds good.
+Could these two patches be forwarded -stable, please? The changelog
+describes this as a problem on PREEMPT_RT but this also happens on !RT
+with the `threadirqs' commandline switch.
 
->> That would be the case of an unprivileged user that wants to measure
->> performance of its guests.
-> 
-> An unpriv user can run guests?
-
-Sure, on most distros /dev/kvm is either 0666 or 0660, usually with
-group kvm if it's 0660.  To run a guest you might have to be in group
-kvm, but it does not require either root or CAP_SOMETHING.
-
->>> Also, exclude_host is really poorly defined:
->>>
->>>   https://lkml.kernel.org/r/20200806091827.GY2674@hirez.programming.kicks-ass.net
->>>
->>>   "Suppose we have nested virt:
->>>
->>> 	  L0-hv
->>> 	  |
->>> 	  G0/L1-hv
->>> 	     |
->>> 	     G1
->>>
->>>   And we're running in G0, then:
->>>
->>>   - 'exclude_hv' would exclude L0 events
->>>   - 'exclude_host' would ... exclude L1-hv events?
->>>   - 'exclude_guest' would ... exclude G1 events?
->>
->> From the point of view of G0, L0 *does not exist at all*.  You just
->> cannot see L0 events if you're running in G0.
-> 
-> On x86, probably, in general, I'm not at all sure, we have that
-> exclude_hv flag after all.
-
-No, and you can quote me on that: exclude_hv is *not* about excluding
-the hypervisor from a guest.  It's about excluding the part of _your_
-kernel which runs in a "more privileged" level (EL2 on ARM, HV on POWER).
-
->> exclude_host/exclude_guest are the right definition.
-> 
-> For what?
-
-I meant in the nested virt case you drew above.
-
-> I still think exclude_host is absolute shit. If you set it,
-> you'll not get anything even without virt.
-
-If you dislike the name you can change it to only_guest.  Anybody who
-does not do virt just leaves it zero and is happy.  Anybody who does not
-do virt and sets it gets what they expect (or deserve).  But this
-definition is the same as exclude_host, and it's the correct one.
-
-> If, as you seem to imply above, that unpriv users can create guests,
-> then maybe so, but if I look at /dev/kvm it seems to have 0660
-> permissions and thus really requires privileges.
-
-Since you can be non-root and you don't need any capability either, it
-doesn't require what the kernel considers to be privilege.
-
-Paolo
-
+Sebastian
