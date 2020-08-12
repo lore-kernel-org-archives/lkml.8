@@ -6,114 +6,387 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA5BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:06:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83DD7C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 658A32080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:06:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6190A2080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:06:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728056AbgHLMG3 (ORCPT
+        id S1728048AbgHLMG2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 08:06:29 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:14758 "EHLO pegase1.c-s.fr"
+        Wed, 12 Aug 2020 08:06:28 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:52484 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727978AbgHLMGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 08:06:12 -0400
+        id S1727972AbgHLMGK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 08:06:10 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4BRT1r0XlgzB09Zs;
-        Wed, 12 Aug 2020 14:06:08 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 4BRT1n2lDTzB09Zj;
+        Wed, 12 Aug 2020 14:06:05 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id EYIVEdrFQatj; Wed, 12 Aug 2020 14:06:08 +0200 (CEST)
+        with ESMTP id Ci0e97ISQBUD; Wed, 12 Aug 2020 14:06:05 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4BRT1q6tkvzB09Zf;
-        Wed, 12 Aug 2020 14:06:07 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4BRT1n1vxSzB09Zf;
+        Wed, 12 Aug 2020 14:06:05 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 691C98B828;
-        Wed, 12 Aug 2020 14:06:09 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 84E8D8B828;
+        Wed, 12 Aug 2020 14:06:06 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id XALPXVlmoRZG; Wed, 12 Aug 2020 14:06:09 +0200 (CEST)
+        with ESMTP id a0sbNNuZ183H; Wed, 12 Aug 2020 14:06:06 +0200 (CEST)
 Received: from po17688vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 213CB8B7FC;
-        Wed, 12 Aug 2020 14:06:09 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 001548B7FC;
+        Wed, 12 Aug 2020 14:06:05 +0200 (CEST)
 Received: by po17688vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 03AD265C34; Wed, 12 Aug 2020 12:06:09 +0000 (UTC)
-Message-Id: <5fe96b182b49c03dd51659079ac0486436d696c4.1597233555.git.christophe.leroy@csgroup.eu>
+        id D6A8C65C34; Wed, 12 Aug 2020 12:06:05 +0000 (UTC)
+Message-Id: <79113c39409e0bfa2def8ae5f43001abfaa8a6a8.1597233555.git.christophe.leroy@csgroup.eu>
 In-Reply-To: <cover.1597233555.git.christophe.leroy@csgroup.eu>
 References: <cover.1597233555.git.christophe.leroy@csgroup.eu>
 From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [RFC PATCH v1 17/19] signal: Add unsafe_put_compat_sigset()
+Subject: [RFC PATCH v1 14/19] powerpc/signal32: Switch save_user_regs() and
+ save_tm_user_regs() to user_access_begin() logic
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>, ldv@altlinux.org,
         viro@zeniv.linux.org.uk
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Wed, 12 Aug 2020 12:06:09 +0000 (UTC)
+Date:   Wed, 12 Aug 2020 12:06:05 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement 'unsafe' version of put_compat_sigset()
-
-For the bigendian, use unsafe_put_user() directly
-to avoid intermediate copy through the stack.
-
-For the littleendian, use a straight unsafe_copy_to_user().
-
 Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Dmitry V. Levin <ldv@altlinux.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
 ---
- include/linux/compat.h | 32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+ arch/powerpc/kernel/signal_32.c | 168 ++++++++++++++++----------------
+ 1 file changed, 84 insertions(+), 84 deletions(-)
 
-diff --git a/include/linux/compat.h b/include/linux/compat.h
-index c4255d8a4a8a..bbe5f9658ed1 100644
---- a/include/linux/compat.h
-+++ b/include/linux/compat.h
-@@ -442,6 +442,38 @@ put_compat_sigset(compat_sigset_t __user *compat, const sigset_t *set,
- #endif
+diff --git a/arch/powerpc/kernel/signal_32.c b/arch/powerpc/kernel/signal_32.c
+index 2c3d5d4400ec..0d076c2a9f6c 100644
+--- a/arch/powerpc/kernel/signal_32.c
++++ b/arch/powerpc/kernel/signal_32.c
+@@ -98,7 +98,7 @@ static inline int get_sigset_t(sigset_t *set,
+ #define to_user_ptr(p)		ptr_to_compat(p)
+ #define from_user_ptr(p)	compat_ptr(p)
+ 
+-static inline int save_general_regs(struct pt_regs *regs,
++static __always_inline int save_general_regs(struct pt_regs *regs,
+ 		struct mcontext __user *frame)
+ {
+ 	elf_greg_t64 *gregs = (elf_greg_t64 *)regs;
+@@ -113,10 +113,12 @@ static inline int save_general_regs(struct pt_regs *regs,
+ 		else
+ 			val = gregs[i];
+ 
+-		if (__put_user(val, &frame->mc_gregs[i]))
+-			return -EFAULT;
++		unsafe_put_user(val, &frame->mc_gregs[i], failed);
+ 	}
+ 	return 0;
++
++failed:
++	return 1;
  }
  
-+#ifdef CONFIG_CPU_BIG_ENDIAN
-+#define unsafe_put_compat_sigset(compat, set, label) do { 		\
-+	compat_sigset_t __user *__c = compat;				\
-+	const sigset_t *__s = set;					\
-+									\
-+	switch (_NSIG_WORDS) {						\
-+	case 4:								\
-+		unsafe_put_user(__s->sig[3] >> 32, __c->sig[7], label);	\
-+		unsafe_put_user(__s->sig[3], __c->sig[6], label);	\
-+		fallthrough;						\
-+	case 3:								\
-+		unsafe_put_user(__s->sig[2] >> 32, __c->sig[5], label);	\
-+		unsafe_put_user(__s->sig[2], __c->sig[4], label);	\
-+		fallthrough;						\
-+	case 2:								\
-+		unsafe_put_user(__s->sig[1] >> 32, __c->sig[3], label);	\
-+		unsafe_put_user(__s->sig[1], __c->sig[2], label);	\
-+		fallthrough;						\
-+	case 1:								\
-+		unsafe_put_user(__s->sig[0] >> 32, __c->sig[1], label);	\
-+		unsafe_put_user(__s->sig[0], __c->sig[0], label);	\
-+	}								\
-+} while (0)
-+#else
-+#define unsafe_put_compat_sigset(compat, set, label) do { 		\
-+	compat_sigset_t __user *__c = compat;				\
-+	const sigset_t *__s = set;					\
-+									\
-+	unsafe_copy_to_user(__c, __s, sizeof(*__c), label);		\
-+} while (0)
-+#endif
+ static inline int restore_general_regs(struct pt_regs *regs,
+@@ -151,11 +153,15 @@ static inline int get_sigset_t(sigset_t *set, const sigset_t __user *uset)
+ #define to_user_ptr(p)		((unsigned long)(p))
+ #define from_user_ptr(p)	((void __user *)(p))
+ 
+-static inline int save_general_regs(struct pt_regs *regs,
++static __always_inline int save_general_regs(struct pt_regs *regs,
+ 		struct mcontext __user *frame)
+ {
+ 	WARN_ON(!FULL_REGS(regs));
+-	return __copy_to_user(&frame->mc_gregs, regs, GP_REGS_SIZE);
++	unsafe_copy_to_user(&frame->mc_gregs, regs, GP_REGS_SIZE, failed);
++	return 0;
 +
- extern int compat_ptrace_request(struct task_struct *child,
- 				 compat_long_t request,
- 				 compat_ulong_t addr, compat_ulong_t data);
++failed:
++	return 1;
+ }
+ 
+ static inline int restore_general_regs(struct pt_regs *regs,
+@@ -258,16 +264,18 @@ static int save_user_regs(struct pt_regs *regs, struct mcontext __user *frame,
+ 		flush_spe_to_thread(current);
+ #endif
+ 
++	if (!user_write_access_begin(frame, sizeof(*frame)))
++		return 1;
++
+ 	/* save general registers */
+ 	if (save_general_regs(regs, frame))
+-		return 1;
++		goto failed;
+ 
+ #ifdef CONFIG_ALTIVEC
+ 	/* save altivec registers */
+ 	if (current->thread.used_vr) {
+-		if (__copy_to_user(&frame->mc_vregs, &current->thread.vr_state,
+-				   ELF_NVRREG * sizeof(vector128)))
+-			return 1;
++		unsafe_copy_to_user(&frame->mc_vregs, &current->thread.vr_state,
++				    ELF_NVRREG * sizeof(vector128), failed);
+ 		/* set MSR_VEC in the saved MSR value to indicate that
+ 		   frame->mc_vregs contains valid data */
+ 		msr |= MSR_VEC;
+@@ -280,11 +288,9 @@ static int save_user_regs(struct pt_regs *regs, struct mcontext __user *frame,
+ 	 * most significant bits of that same vector. --BenH
+ 	 * Note that the current VRSAVE value is in the SPR at this point.
+ 	 */
+-	if (__put_user(current->thread.vrsave, (u32 __user *)&frame->mc_vregs[32]))
+-		return 1;
++	unsafe_put_user(current->thread.vrsave, (u32 __user *)&frame->mc_vregs[32], failed);
+ #endif /* CONFIG_ALTIVEC */
+-	if (copy_fpr_to_user(&frame->mc_fregs, current))
+-		return 1;
++	unsafe_copy_fpr_to_user(&frame->mc_fregs, current, failed);
+ 
+ 	/*
+ 	 * Clear the MSR VSX bit to indicate there is no valid state attached
+@@ -299,17 +305,15 @@ static int save_user_regs(struct pt_regs *regs, struct mcontext __user *frame,
+ 	 * contains valid data
+ 	 */
+ 	if (current->thread.used_vsr && ctx_has_vsx_region) {
+-		if (copy_vsx_to_user(&frame->mc_vsregs, current))
+-			return 1;
++		unsafe_copy_vsx_to_user(&frame->mc_vsregs, current, failed);
+ 		msr |= MSR_VSX;
+ 	}
+ #endif /* CONFIG_VSX */
+ #ifdef CONFIG_SPE
+ 	/* save spe registers */
+ 	if (current->thread.used_spe) {
+-		if (__copy_to_user(&frame->mc_vregs, current->thread.evr,
+-				   ELF_NEVRREG * sizeof(u32)))
+-			return 1;
++		unsafe_copy_to_user(&frame->mc_vregs, current->thread.evr,
++				    ELF_NEVRREG * sizeof(u32)), failed);
+ 		/* set MSR_SPE in the saved MSR value to indicate that
+ 		   frame->mc_vregs contains valid data */
+ 		msr |= MSR_SPE;
+@@ -317,19 +321,18 @@ static int save_user_regs(struct pt_regs *regs, struct mcontext __user *frame,
+ 	/* else assert((regs->msr & MSR_SPE) == 0) */
+ 
+ 	/* We always copy to/from spefscr */
+-	if (__put_user(current->thread.spefscr, (u32 __user *)&frame->mc_vregs + ELF_NEVRREG))
+-		return 1;
++	unsafe_put_user(current->thread.spefscr, (u32 __user *)&frame->mc_vregs + ELF_NEVRREG, failed);
+ #endif /* CONFIG_SPE */
+ 
+-	if (__put_user(msr, &frame->mc_gregs[PT_MSR]))
+-		return 1;
++	unsafe_put_user(msr, &frame->mc_gregs[PT_MSR], failed);
+ 
+ 	if (sigret) {
+ 		/* Set up the sigreturn trampoline: li 0,sigret; sc */
+-		if (__put_user(PPC_INST_ADDI + sigret, &frame->tramp[0])
+-		    || __put_user(PPC_INST_SC, &frame->tramp[1]))
+-			return 1;
++		unsafe_put_user(PPC_INST_ADDI + sigret, &frame->tramp[0], failed);
++		unsafe_put_user(PPC_INST_SC, &frame->tramp[1], failed);
+ 	}
++	user_write_access_end();
++
+ 	if (sigret)
+ 		flush_icache_range((unsigned long) &frame->tramp[0],
+ 				   (unsigned long) &frame->tramp[2]);
+@@ -341,6 +344,10 @@ static int save_user_regs(struct pt_regs *regs, struct mcontext __user *frame,
+ 		return 1;
+ 
+ 	return 0;
++
++failed:
++	user_write_access_end();
++	return 1;
+ }
+ 
+ #ifdef CONFIG_PPC_TRANSACTIONAL_MEM
+@@ -369,15 +376,17 @@ static int save_tm_user_regs(struct pt_regs *regs,
+ 		flush_spe_to_thread(current);
+ #endif
+ 
+-	if (save_general_regs(&current->thread.ckpt_regs, frame))
++	if (!user_write_access_begin(frame, sizeof(*frame)))
+ 		return 1;
+ 
++	if (save_general_regs(&current->thread.ckpt_regs, frame))
++		goto failed;
++
+ #ifdef CONFIG_ALTIVEC
+ 	/* save altivec registers */
+ 	if (current->thread.used_vr) {
+-		if (__copy_to_user(&frame->mc_vregs, &current->thread.ckvr_state,
+-				   ELF_NVRREG * sizeof(vector128)))
+-			return 1;
++		unsafe_copy_to_user(&frame->mc_vregs, &current->thread.ckvr_state,
++				    ELF_NVRREG * sizeof(vector128), failed);
+ 
+ 		/* set MSR_VEC in the saved MSR value to indicate that
+ 		 * frame->mc_vregs contains valid data
+@@ -390,13 +399,11 @@ static int save_tm_user_regs(struct pt_regs *regs,
+ 	 * significant bits of a vector, we "cheat" and stuff VRSAVE in the
+ 	 * most significant bits of that same vector. --BenH
+ 	 */
+-	if (__put_user(current->thread.ckvrsave,
+-		       (u32 __user *)&frame->mc_vregs[32]))
+-		return 1;
++	unsafe_put_user(current->thread.ckvrsave,
++		        (u32 __user *)&frame->mc_vregs[32], failed);
+ #endif /* CONFIG_ALTIVEC */
+ 
+-	if (copy_ckfpr_to_user(&frame->mc_fregs, current))
+-		return 1;
++	unsafe_copy_ckfpr_to_user(&frame->mc_fregs, current, failed);
+ #ifdef CONFIG_VSX
+ 	/*
+ 	 * Copy VSR 0-31 upper half from thread_struct to local
+@@ -405,8 +412,7 @@ static int save_tm_user_regs(struct pt_regs *regs,
+ 	 * contains valid data
+ 	 */
+ 	if (current->thread.used_vsr) {
+-		if (copy_ckvsx_to_user(&frame->mc_vsregs, current))
+-			return 1;
++		unsafe_copy_ckvsx_to_user(&frame->mc_vsregs, current, failed);
+ 		msr |= MSR_VSX;
+ 	}
+ #endif /* CONFIG_VSX */
+@@ -415,91 +421,85 @@ static int save_tm_user_regs(struct pt_regs *regs,
+ 	 * simply the same as in save_user_regs().
+ 	 */
+ 	if (current->thread.used_spe) {
+-		if (__copy_to_user(&frame->mc_vregs, current->thread.evr,
+-				   ELF_NEVRREG * sizeof(u32)))
+-			return 1;
++		unsafe_copy_to_user(&frame->mc_vregs, current->thread.evr,
++				    ELF_NEVRREG * sizeof(u32), failed);
+ 		/* set MSR_SPE in the saved MSR value to indicate that
+ 		 * frame->mc_vregs contains valid data */
+ 		msr |= MSR_SPE;
+ 	}
+ 
+ 	/* We always copy to/from spefscr */
+-	if (__put_user(current->thread.spefscr, (u32 __user *)&frame->mc_vregs + ELF_NEVRREG))
+-		return 1;
++	unsafe_put_user(current->thread.spefscr,
++			(u32 __user *)&frame->mc_vregs + ELF_NEVRREG, failed);
+ #endif /* CONFIG_SPE */
+ 
+-	if (__put_user(msr, &frame->mc_gregs[PT_MSR]))
+-		return 1;
++	unsafe_put_user(msr, &frame->mc_gregs[PT_MSR], failed);
++
+ 	if (sigret) {
+ 		/* Set up the sigreturn trampoline: li 0,sigret; sc */
+-		if (__put_user(PPC_INST_ADDI + sigret, &frame->tramp[0])
+-		    || __put_user(PPC_INST_SC, &frame->tramp[1]))
+-			return 1;
++		unsafe_put_user(PPC_INST_ADDI + sigret, &frame->tramp[0], failed);
++		unsafe_put_user(PPC_INST_SC, &frame->tramp[1], failed);
+ 	}
++	user_write_access_end();
++
+ 	if (sigret)
+ 		flush_icache_range((unsigned long) &frame->tramp[0],
+ 				   (unsigned long) &frame->tramp[2]);
+ 
+-	if (save_general_regs(regs, tm_frame))
++	if (!user_write_access_begin(tm_frame, sizeof(*tm_frame)))
+ 		return 1;
+ 
++	if (save_general_regs(regs, tm_frame))
++		goto failed;
++
+ 	/* Stash the top half of the 64bit MSR into the 32bit MSR word
+ 	 * of the transactional mcontext.  This way we have a backward-compatible
+ 	 * MSR in the 'normal' (checkpointed) mcontext and additionally one can
+ 	 * also look at what type of transaction (T or S) was active at the
+ 	 * time of the signal.
+ 	 */
+-	if (__put_user((msr >> 32), &tm_frame->mc_gregs[PT_MSR]))
+-		return 1;
++	unsafe_put_user((msr >> 32), &tm_frame->mc_gregs[PT_MSR], failed);
+ 
+ #ifdef CONFIG_ALTIVEC
+ 	if (current->thread.used_vr) {
+-		if (msr & MSR_VEC) {
+-			if (__copy_to_user(&tm_frame->mc_vregs,
+-					   &current->thread.vr_state,
+-					   ELF_NVRREG * sizeof(vector128)))
+-				return 1;
+-		} else {
+-			if (__copy_to_user(&tm_frame->mc_vregs,
+-					   &current->thread.ckvr_state,
+-					   ELF_NVRREG * sizeof(vector128)))
+-				return 1;
+-		}
++		if (msr & MSR_VEC)
++			unsafe_copy_to_user(&tm_frame->mc_vregs,
++					    &current->thread.vr_state,
++					    ELF_NVRREG * sizeof(vector128), failed);
++		else
++			unsafe_copy_to_user(&tm_frame->mc_vregs,
++					    &current->thread.ckvr_state,
++					    ELF_NVRREG * sizeof(vector128), failed);
+ 	}
+ 
+-	if (msr & MSR_VEC) {
+-		if (__put_user(current->thread.vrsave,
+-			       (u32 __user *)&tm_frame->mc_vregs[32]))
+-			return 1;
+-	} else {
+-		if (__put_user(current->thread.ckvrsave,
+-			       (u32 __user *)&tm_frame->mc_vregs[32]))
+-			return 1;
+-	}
++	if (msr & MSR_VEC)
++		unsafe_put_user(current->thread.vrsave,
++			        (u32 __user *)&tm_frame->mc_vregs[32], failed);
++	else
++		unsafe_put_user(current->thread.ckvrsave,
++			        (u32 __user *)&tm_frame->mc_vregs[32], failed);
+ #endif /* CONFIG_ALTIVEC */
+ 
+-	if (msr & MSR_FP) {
+-		if (copy_fpr_to_user(&tm_frame->mc_fregs, current))
+-			return 1;
+-	} else {
+-		if (copy_ckfpr_to_user(&tm_frame->mc_fregs, current))
+-			return 1;
+-	}
++	if (msr & MSR_FP)
++		unsafe_copy_fpr_to_user(&tm_frame->mc_fregs, current, failed);
++	else
++		unsafe_copy_ckfpr_to_user(&tm_frame->mc_fregs, current, failed);
+ 
+ #ifdef CONFIG_VSX
+ 	if (current->thread.used_vsr) {
+-		if (msr & MSR_VSX) {
+-			if (copy_vsx_to_user(&tm_frame->mc_vsregs,
+-						      current))
+-				return 1;
+-		} else {
+-			if (copy_ckvsx_to_user(&tm_frame->mc_vsregs, current))
+-				return 1;
+-		}
++		if (msr & MSR_VSX)
++			unsafe_copy_vsx_to_user(&tm_frame->mc_vsregs, current, failed);
++		else
++			unsafe_copy_ckvsx_to_user(&tm_frame->mc_vsregs, current, failed);
+ 	}
+ #endif /* CONFIG_VSX */
+ 
++	user_write_access_end();
+ 	return 0;
++
++failed:
++	user_write_access_end();
++	return 1;
+ }
+ #endif
+ 
 -- 
 2.25.0
 
