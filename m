@@ -2,88 +2,124 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 557C6C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AED38C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:05:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2438D20838
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:02:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78CBC20781
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:05:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G38vR3pq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726686AbgHLPCe (ORCPT
+        id S1726518AbgHLPFB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 11:02:34 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:41770 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726488AbgHLPC3 (ORCPT
+        Wed, 12 Aug 2020 11:05:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51972 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726226AbgHLPE4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 11:02:29 -0400
-X-IronPort-AV: E=Sophos;i="5.76,304,1592838000"; 
-   d="scan'208";a="54233369"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 13 Aug 2020 00:02:28 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id AD201400492E;
-        Thu, 13 Aug 2020 00:02:25 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>, linux-spi@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Chris Paterson <Chris.Paterson2@renesas.com>
-Subject: [PATCH 2/2] ARM: dts: r8a7742: Add QSPI support
-Date:   Wed, 12 Aug 2020 16:00:48 +0100
-Message-Id: <20200812150048.27721-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200812150048.27721-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20200812150048.27721-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Wed, 12 Aug 2020 11:04:56 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D0B5C061383;
+        Wed, 12 Aug 2020 08:04:56 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id ha11so1284860pjb.1;
+        Wed, 12 Aug 2020 08:04:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=GVj1Bd9vGqDIY2wrdhBDYL6yBxh1ELUeddi/DGvIx5k=;
+        b=G38vR3pqBUwt5RXS8vzmxUdhWHtQGuwRqevWTsPsEnVg3v5dHjxrpID0tijCkqwcEM
+         3ztWg5Abb16pfFllLw/BVmw8VU6d53QtySC/2r9eY4ZLOMjcLEszcmzNvb4n+1P0JBAE
+         /Cj0JV42HYvrUALogZ09D6lba8dsIMX9d1fZfKN2qj0vR5e4PDZsszERFGx122vqU9FH
+         hR1IFqDkktE27jzCMUeqdDglnAvEKEaM2KYWtL7UxS5l3YR66eHlX7e2iSXGJvGEeUn5
+         jepHxw6aU2tbcK/Buqov5pE1CYAQlG76jkSU2ngZsxssVP/iAihPHgSfuz/Lg/Q4wFjX
+         qPnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=GVj1Bd9vGqDIY2wrdhBDYL6yBxh1ELUeddi/DGvIx5k=;
+        b=GFG9m9KPzTbXrfibnBBJ1HH65dD5PuYKbEXNPHB+toAQRSNEuXR2DFRjehfH8fZbp5
+         +nq1TJ3Dm1Gr4kfB2yTi+74koDA2sVHFIqLY0H46rrmkfUhf1EPlzRFSmzLWxumK66C9
+         voM8KitXYcEd6Z1ryRNNZA3BUGPCulhwvFGaDbNdWs1Z6qlhvZouRy9jG1rBHBicYr5F
+         7kRsC/3M7yz2uKbXRImAjhaqihIy3XdJgE6Fc21qN3vL8c2aYFD6K2JPAgRknrPN/7LK
+         NTIAqfUh3vfy9RScJ0EbHr5ys94nkt8zKKPLy46Ta0TDURL6PRrjK1bivdxidcN4UETh
+         b/yg==
+X-Gm-Message-State: AOAM531CAxyt/9njivlSMYHem9UxixDqnCOA3xodDAOVpWS3gnCOYZX0
+        yTuJ5iGCNVXuaujTrwLgtmT/KabF
+X-Google-Smtp-Source: ABdhPJx97G0QkFJ2BuQRwud2BecWo0oHI4Dmm4mjXLbOCTIthuqJM+ZIcKGt2nJxTIrFQKRskhuUog==
+X-Received: by 2002:a17:90a:3488:: with SMTP id p8mr414522pjb.211.1597244695485;
+        Wed, 12 Aug 2020 08:04:55 -0700 (PDT)
+Received: from ?IPv6:2404:7a87:83e0:f800:5c24:508b:d8c0:f3b? ([2404:7a87:83e0:f800:5c24:508b:d8c0:f3b])
+        by smtp.gmail.com with ESMTPSA id d13sm2385311pjz.3.2020.08.12.08.04.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Aug 2020 08:04:54 -0700 (PDT)
+Subject: Re: [PATCH 1/2] exfat: add NameLength check when extracting name
+To:     Namjae Jeon <namjae.jeon@samsung.com>
+Cc:     kohada.tetsuhiro@dc.mitsubishielectric.co.jp,
+        mori.takahiro@ab.mitsubishielectric.co.jp,
+        motai.hirotaka@aj.mitsubishielectric.co.jp,
+        'Sungjong Seo' <sj1557.seo@samsung.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <CGME20200806055718epcas1p1763d92dbf47e2a331a74d0bb9ea03c15@epcas1p1.samsung.com>
+ <20200806055653.9329-1-kohada.t2@gmail.com>
+ <003d01d66edd$5baf4810$130dd830$@samsung.com>
+From:   Tetsuhiro Kohada <kohada.t2@gmail.com>
+Message-ID: <ed561c17-3b85-9bf1-e765-5d9a15786585@gmail.com>
+Date:   Thu, 13 Aug 2020 00:04:51 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
+MIME-Version: 1.0
+In-Reply-To: <003d01d66edd$5baf4810$130dd830$@samsung.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add QSPI DT node to R8A7742 SoC dtsi.
+Thank you for your reply.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+>> -static void exfat_get_uniname_from_ext_entry(struct super_block *sb,
+>> -		struct exfat_chain *p_dir, int entry, unsigned short *uniname)
+>> +static int exfat_get_uniname_from_name_entries(struct exfat_entry_set_cache *es,
+>> +		struct exfat_uni_name *uniname)
+>>   {
+>> -	int i;
+>> -	struct exfat_entry_set_cache *es;
+>> +	int n, l, i;
+>>   	struct exfat_dentry *ep;
+>>
+>> -	es = exfat_get_dentry_set(sb, p_dir, entry, ES_ALL_ENTRIES);
+>> -	if (!es)
+>> -		return;
+>> +	uniname->name_len = es->de_stream->name_len;
+>> +	if (uniname->name_len == 0)
+>> +		return -EIO;
+> Can we validate ->name_len and name entry ->type in exfat_get_dentry_set() ?
+
+Yes.
+As I wrote in a previous email, entry type validation, name-length validation, and name
+extraction should not be separated, so implement all of these in exfat_get_dentry_set().
+It can be easily implemented by adding uniname to exfat_entry_set_cache and calling
+exfat_get_uniname_from_name_entries() from exfat_get_dentry_set().
+
+However, that would be over-implementation.
+Not all callers of exfat_get_dentry_set() need a name.
+It is enough to validate the name when it is needed.
+This is a file-system driver, not fsck.
+Validation is possible in exfat_get_dentry_set(), but unnecessary.
+
+Why do you want to validate the name in exfat_get_dentry_set()?
+
+
+BR
 ---
- arch/arm/boot/dts/r8a7742.dtsi | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
-
-diff --git a/arch/arm/boot/dts/r8a7742.dtsi b/arch/arm/boot/dts/r8a7742.dtsi
-index 5070e2a87231..009827708bf4 100644
---- a/arch/arm/boot/dts/r8a7742.dtsi
-+++ b/arch/arm/boot/dts/r8a7742.dtsi
-@@ -701,6 +701,22 @@
- 			status = "disabled";
- 		};
- 
-+		qspi: spi@e6b10000 {
-+			compatible = "renesas,qspi-r8a7742", "renesas,qspi";
-+			reg = <0 0xe6b10000 0 0x2c>;
-+			interrupts = <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 917>;
-+			dmas = <&dmac0 0x17>, <&dmac0 0x18>,
-+			       <&dmac1 0x17>, <&dmac1 0x18>;
-+			dma-names = "tx", "rx", "tx", "rx";
-+			power-domains = <&sysc R8A7742_PD_ALWAYS_ON>;
-+			resets = <&cpg 917>;
-+			num-cs = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
- 		scifa0: serial@e6c40000 {
- 			compatible = "renesas,scifa-r8a7742",
- 				     "renesas,rcar-gen2-scifa", "renesas,scifa";
--- 
-2.17.1
-
+Tetsuhiro Kohada <kohada.t2@gmail.com>
