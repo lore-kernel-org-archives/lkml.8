@@ -2,164 +2,112 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E267C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 17:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B35C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 17:23:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 689F2207DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 17:20:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63CAE20771
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 17:23:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CPaqRHS0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dFJ4Hzkp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbgHLRUR (ORCPT
+        id S1726557AbgHLRXj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 13:20:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44606 "EHLO
+        Wed, 12 Aug 2020 13:23:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725993AbgHLRUQ (ORCPT
+        with ESMTP id S1725993AbgHLRXi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 13:20:16 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDA5CC061383;
-        Wed, 12 Aug 2020 10:20:15 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id c10so2113819edk.6;
-        Wed, 12 Aug 2020 10:20:15 -0700 (PDT)
+        Wed, 12 Aug 2020 13:23:38 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B060C061383;
+        Wed, 12 Aug 2020 10:23:38 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id b25so2096384qto.2;
+        Wed, 12 Aug 2020 10:23:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KTzNshNFSy3Sj5/6W3lHtq1l8S1Rm80+RX34NkgS2vs=;
-        b=CPaqRHS0ziOIE8hr2T9PgGbEUe8oipmtVe59P+3K1crSiuXahhb6nIBX/BEj1Igz2r
-         Ieh/5B6RPosM+sjACYkq3e2k0pOFbE9Vn2l3m1booZAhbx3n35LqsPm9j6xtzKFjcaFN
-         8FmLbA0D1gwI9GdL5ZutyF56i6imw7xwFiJm5q5mPAGSoeW4X1NtrIxRLUmRR9qnCZZL
-         DRjUpXlsegGWAVRT+eDQsA4m2y3MLxPGD819RvlMupUgffiX1YJw3pw6duLbN2VxG6Yn
-         Aj36t6/nddxjQgxwG7Syp0h+l/NBtH+mAChwPyokBWQFzxkKD5w3kUb3vBrmpYS43s+h
-         xKoQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=b1/lSRDVVen4Akj0ArLSHpTeWWjBzyPT/lPcsGI8nVw=;
+        b=dFJ4Hzkpz3+oD1F3BYZ++5nv2ELEguPwduttYcpO1TmDrzJuM9Ax88Q79LrVI8bY5T
+         ztlS80pGOR3RNeVGI+aJwJVw/s6i3L7vzx2gpE8EqA0TBKcfIwNMlH7RgMxGbN9W7+kl
+         0YiS7cWhlEEfudI/HDdLT8nnRL7SdDmV2bhMP2cDGc3UKjou0/0dfmbqmgdibZaO3wU0
+         9jMJ/97QpQJURODplJipq3Oo6vOsr5Fv8Sj9yJtLoTXX2i2PNpzJrU+gDXxm9o/drWMZ
+         XcVA0E1RwH8ce3jYImuE6NWeigHLURnv7ZdNqGUMQdyWYQ5Jxqkf5lil3GiOvTVlsSLA
+         kIUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KTzNshNFSy3Sj5/6W3lHtq1l8S1Rm80+RX34NkgS2vs=;
-        b=qFZF5cFDLUFMTcbst7xw1AhUdxvvkZnrIDvkYxm96ch7bzvvCYmJzFVbFzUcalFqLM
-         rTYK4DnfdUG2R6GaV79SOhZV12yipHFELx9yDml9e8Ni+j2UKBYiqvCq88798hCKIRuh
-         glpZoFGJQ471zYTCnY+N+VMJKyWYEqNOBvZn01OOlgCl8FMoyQbmGNFQIeyNjIDyr69o
-         ndYPOWQsI9fYBDaRKZbbIJzOhkkYoskVqm8PBr35XoXdfhubjswRnI/ptfFjLwOBUhX2
-         NbnXAeaAqqzWVANMidcMldSInnE4XLAUTtKZ79iIg8SsyTJbgJ7Sam6716stO8o3e3Yv
-         0gQA==
-X-Gm-Message-State: AOAM531ZFlqBpse+EIcrkFtRqawpB6iTpCHQaM4bLrJ1GmIY0LcjOFxe
-        FltRuO0lnSfLOJFP/jKH8uE=
-X-Google-Smtp-Source: ABdhPJw4bW+/sUNFbW7N+ztyYZhCCni4CXIKianTP1pfv6Gjx0cMbOD9RiLTAcxw0Z+eAOXZ4y++9A==
-X-Received: by 2002:a50:e109:: with SMTP id h9mr924787edl.47.1597252814430;
-        Wed, 12 Aug 2020 10:20:14 -0700 (PDT)
-Received: from kwango.local (ip-94-112-129-237.net.upcbroadband.cz. [94.112.129.237])
-        by smtp.gmail.com with ESMTPSA id g9sm1697619edk.97.2020.08.12.10.20.13
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=b1/lSRDVVen4Akj0ArLSHpTeWWjBzyPT/lPcsGI8nVw=;
+        b=UhT8Xr3y4FbRhsWXfcysmEOs3sNtYIOb8Qfk4AnjfeTxojFG5DTXLqRIhVDuKGfbQP
+         ogQvJEVtnk2VQK/oZGWyz/py9o7Zn4P0QlyXhg2wt0VapThdNcC/YtxGtQnqkkcNcGGE
+         I5rrOxMRBkwJn+7qJ0T+zA7H1LcDNGce8bHvYoqTY3nbOdYDojYZqYrI09cWsKYVSaWO
+         kpY1y5arDuMPCnDq9ladrR+4RllJMmpN9yvqBKFwJd2h9JaiX9J9yptCFeGOfKUikPmC
+         IBJm+UnbroODNsA/H7hsWInmw89P0UZgM5GoLzmRVauwnJ0fTKzU/ER1yEpNTUalptEh
+         7XYQ==
+X-Gm-Message-State: AOAM533aImqqPGnoBtDkcUknHvTbpp5ovR1/g+6TjeFmP1Vv4ZW/FF/W
+        LGqN5ZxRdm38VmZ/NM26Jw==
+X-Google-Smtp-Source: ABdhPJwBXCZnKid7yfKC88qAPcPezTXpTDi6LExmqjV/8+GD1684vmXYr/g16EHecwgYqZTah22aFA==
+X-Received: by 2002:ac8:7152:: with SMTP id h18mr756292qtp.44.1597253017585;
+        Wed, 12 Aug 2020 10:23:37 -0700 (PDT)
+Received: from PWN (146-115-88-66.s3894.c3-0.sbo-ubr1.sbo.ma.cable.rcncustomer.com. [146.115.88.66])
+        by smtp.gmail.com with ESMTPSA id i14sm3140849qtq.33.2020.08.12.10.23.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Aug 2020 10:20:13 -0700 (PDT)
-From:   Ilya Dryomov <idryomov@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Ceph updates for 5.9-rc1
-Date:   Wed, 12 Aug 2020 19:19:49 +0200
-Message-Id: <20200812171949.2882-1-idryomov@gmail.com>
-X-Mailer: git-send-email 2.19.2
+        Wed, 12 Aug 2020 10:23:37 -0700 (PDT)
+Date:   Wed, 12 Aug 2020 13:23:35 -0400
+From:   Peilin Ye <yepeilin.cs@gmail.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        syzkaller-bugs@googlegroups.com, linux-kernel@vger.kernel.org
+Subject: Re: [Linux-kernel-mentees] [PATCH] hfs, hfsplus: Fix NULL pointer
+ dereference in hfs_find_init()
+Message-ID: <20200812172335.GA897567@PWN>
+References: <20200812065556.869508-1-yepeilin.cs@gmail.com>
+ <20200812070827.GA1304640@kroah.com>
+ <20200812071306.GA869606@PWN>
+ <20200812085904.GA16441@kadam>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200812085904.GA16441@kadam>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Wed, Aug 12, 2020 at 11:59:04AM +0300, Dan Carpenter wrote:
+> Yeah, the patch doesn't work at all.  I looked at one call tree and it
+> is:
+> 
+> hfs_mdb_get() tries to allocate HFS_SB(sb)->ext_tree.
+> 
+> 	HFS_SB(sb)->ext_tree = hfs_btree_open(sb, HFS_EXT_CNID, hfs_ext_keycmp);
+>                     ^^^^^^^^
+> 
+> hfs_btree_open() calls page = read_mapping_page(mapping, 0, NULL);
+> read_mapping_page() calls mapping->a_ops->readpage() which leads to
+> hfs_readpage() which leads to hfs_ext_read_extent() which calls
+> res = hfs_find_init(HFS_SB(inode->i_sb)->ext_tree, &fd);
+>                                          ^^^^^^^^
 
-The following changes since commit bcf876870b95592b52519ed4aafcf9d95999bc9c:
+Thank you for pointing this out! I will try to come up with a better way
+to fix it.
 
-  Linux 5.8 (2020-08-02 14:21:45 -0700)
+Peilin Ye
 
-are available in the Git repository at:
-
-  https://github.com/ceph/ceph-client.git tags/ceph-for-5.9-rc1
-
-for you to fetch changes up to 02e37571f9e79022498fd0525c073b07e9d9ac69:
-
-  ceph: handle zero-length feature mask in session messages (2020-08-05 17:47:07 +0200)
-
-----------------------------------------------------------------
-Xiubo has completed his work on filesystem client metrics, they are
-sent to all available MDSes once per second now.  Other than that, we
-have a lot of fixes and cleanups all around the filesystem, including
-a tweak to cut down on MDS request resends in multi-MDS setups from
-Yanhu and fixups for SELinux symlink labeling and MClientSession
-message decoding from Jeff.
-
-----------------------------------------------------------------
-Alexander A. Klimov (1):
-      libceph: replace HTTP links with HTTPS ones
-
-Colin Ian King (1):
-      ceph: remove redundant initialization of variable mds
-
-Ilya Dryomov (2):
-      libceph: use target_copy() in send_linger()
-      libceph: dump class and method names on method calls
-
-Jeff Layton (5):
-      ceph: clean up and optimize ceph_check_delayed_caps()
-      libceph: just have osd_req_op_init() return a pointer
-      ceph: set sec_context xattr on symlink creation
-      ceph: move sb->wb_pagevec_pool to be a global mempool
-      ceph: handle zero-length feature mask in session messages
-
-Jia Yang (1):
-      ceph: remove unused variables in ceph_mdsmap_decode()
-
-Randy Dunlap (1):
-      ceph: delete repeated words in fs/ceph/
-
-Xiubo Li (9):
-      ceph: add check_session_state() helper and make it global
-      ceph: add global total_caps to count the mdsc's total caps number
-      ceph: switch to WARN_ON_ONCE in encode_supported_features()
-      ceph: fix potential mdsc use-after-free crash
-      ceph: do not access the kiocb after aio requests
-      ceph: check the sesion state and return false in case it is closed
-      ceph: periodically send perf metrics to MDSes
-      ceph: send client provided metric flags in client metadata
-      ceph: fix use-after-free for fsc->mdsc
-
-Xu Wang (1):
-      ceph: remove unnecessary cast in kfree()
-
-Yanhu Cao (1):
-      ceph: use frag's MDS in either mode
-
- fs/ceph/Kconfig                    |   2 +-
- fs/ceph/addr.c                     |  23 +++--
- fs/ceph/caps.c                     |  12 +--
- fs/ceph/debugfs.c                  |  16 +---
- fs/ceph/dir.c                      |   4 +
- fs/ceph/file.c                     |   5 +-
- fs/ceph/mds_client.c               | 184 +++++++++++++++++++++++++++++--------
- fs/ceph/mds_client.h               |   7 +-
- fs/ceph/mdsmap.c                   |  10 +-
- fs/ceph/metric.c                   | 149 ++++++++++++++++++++++++++++++
- fs/ceph/metric.h                   |  91 ++++++++++++++++++
- fs/ceph/super.c                    |  64 ++++++++++---
- fs/ceph/super.h                    |   6 +-
- fs/ceph/xattr.c                    |  12 +--
- include/linux/ceph/ceph_features.h |   2 +-
- include/linux/ceph/ceph_fs.h       |   1 +
- include/linux/ceph/libceph.h       |   1 +
- include/linux/ceph/osd_client.h    |   2 +-
- include/linux/crush/crush.h        |   2 +-
- net/ceph/Kconfig                   |   2 +-
- net/ceph/ceph_hash.c               |   2 +-
- net/ceph/crush/hash.c              |   2 +-
- net/ceph/crush/mapper.c            |   2 +-
- net/ceph/debugfs.c                 |   3 +
- net/ceph/osd_client.c              |  43 ++++-----
- 25 files changed, 511 insertions(+), 136 deletions(-)
+> So we need ->ext_tree to be non-NULL before we can set ->ext_tree to be
+> non-NULL...  :/
+> 
+> I wonder how long this has been broken and if we should just delete the
+> AFS file system.
+> 
+> regards,
+> dan carpenter
+> 
