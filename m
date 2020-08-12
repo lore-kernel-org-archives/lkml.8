@@ -4,45 +4,46 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF58C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:47:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E910C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:47:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F17B82076C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:47:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B4062076C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:47:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbgHLQrQ (ORCPT
+        id S1726506AbgHLQry (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 12:47:16 -0400
-Received: from mga12.intel.com ([192.55.52.136]:33828 "EHLO mga12.intel.com"
+        Wed, 12 Aug 2020 12:47:54 -0400
+Received: from mga12.intel.com ([192.55.52.136]:33856 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726394AbgHLQrI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 12:47:08 -0400
-IronPort-SDR: PkaV/d9bU5Pg7VW8qELaoiaL0yZQgM10zOxChMvPnQa0NXgL860tV1LrZfjN/szd1DKcIDbDwO
- a6ukUs1F4rwg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9711"; a="133538389"
+        id S1726816AbgHLQrY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 12:47:24 -0400
+IronPort-SDR: UIARZ50YjkfBY6Vz3RZzf61/I89sGxNBxb1HQKdGm2PqAeEmjdox+CoWIHtbqPFee/kuso+rm9
+ F28CXUO4xkhg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9711"; a="133538566"
 X-IronPort-AV: E=Sophos;i="5.76,305,1592895600"; 
-   d="scan'208";a="133538389"
+   d="scan'208";a="133538566"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2020 09:47:07 -0700
-IronPort-SDR: b8eOHR1NQzanN969njNyHEnzjMgpZlCLzkNOytP+y0XDTXVqBJC5puT4+W4bKt+RfK1WG0tqJ/
- /ulUp7ZNKvPA==
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2020 09:47:23 -0700
+IronPort-SDR: 7sgPFqLLhM0D6StT99Hvfk8YpH8q7PJOBXJ/iIFi941Gg5+u9AmuYZLlWJDacEuiscNW/d5c4e
+ u1gvFrpItoXA==
 X-IronPort-AV: E=Sophos;i="5.76,305,1592895600"; 
-   d="scan'208";a="439442595"
+   d="scan'208";a="439442708"
 Received: from ticede-or-099.amr.corp.intel.com (HELO arch-ashland-svkelley.intel.com) ([10.254.58.97])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2020 09:47:05 -0700
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2020 09:47:21 -0700
 From:   Sean V Kelley <sean.v.kelley@intel.com>
 To:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
         rjw@rjwysocki.net, ashok.raj@intel.com, tony.luck@intel.com,
         sathyanarayanan.kuppuswamy@linux.intel.com, qiuxu.zhuo@intel.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 01/10] PCI/RCEC: Add RCEC class code and extended capability
-Date:   Wed, 12 Aug 2020 09:46:50 -0700
-Message-Id: <20200812164659.1118946-2-sean.v.kelley@intel.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sean V Kelley <sean.v.kelley@intel.com>
+Subject: [PATCH v3 10/10] PCI/AER: Add RCEC AER error injection support
+Date:   Wed, 12 Aug 2020 09:46:59 -0700
+Message-Id: <20200812164659.1118946-11-sean.v.kelley@intel.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200812164659.1118946-1-sean.v.kelley@intel.com>
 References: <20200812164659.1118946-1-sean.v.kelley@intel.com>
@@ -55,52 +56,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
 
-A PCIe Root Complex Event Collector(RCEC) has the base class 0x08,
-sub-class 0x07, and programming interface 0x00. Add the class code
-0x0807 to identify RCEC devices and add the defines for the RCEC
-Endpoint Association Extended Capability.
-
-See PCI Express Base Specification, version 5.0-1, section "1.3.4
-Root Complex Event Collector" and section "7.9.10 Root Complex
-Event Collector Endpoint Association Extended Capability"
+The Root Complex Event Collectors(RCEC) appear as peers to Root Ports
+and also have the AER capability. So add RCEC support to the current AER
+error injection driver.
 
 Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Co-developed-by: Sean V Kelley <sean.v.kelley@intel.com>
+Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
 ---
- include/linux/pci_ids.h       | 1 +
- include/uapi/linux/pci_regs.h | 7 +++++++
- 2 files changed, 8 insertions(+)
+ drivers/pci/pcie/aer_inject.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index 0ad57693f392..de8dff1fb176 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -81,6 +81,7 @@
- #define PCI_CLASS_SYSTEM_RTC		0x0803
- #define PCI_CLASS_SYSTEM_PCI_HOTPLUG	0x0804
- #define PCI_CLASS_SYSTEM_SDHCI		0x0805
-+#define PCI_CLASS_SYSTEM_RCEC		0x0807
- #define PCI_CLASS_SYSTEM_OTHER		0x0880
- 
- #define PCI_BASE_CLASS_INPUT		0x09
-diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-index f9701410d3b5..f335f65f65d6 100644
---- a/include/uapi/linux/pci_regs.h
-+++ b/include/uapi/linux/pci_regs.h
-@@ -828,6 +828,13 @@
- #define  PCI_PWR_CAP_BUDGET(x)	((x) & 1)	/* Included in system budget */
- #define PCI_EXT_CAP_PWR_SIZEOF	16
- 
-+/* Root Complex Event Collector Endpoint Association  */
-+#define PCI_RCEC_RCIEP_BITMAP	4	/* Associated Bitmap for RCiEPs */
-+#define PCI_RCEC_BUSN		8	/* RCEC Associated Bus Numbers */
-+#define  PCI_RCEC_BUSN_REG_VER	0x02	/* Least capability version that BUSN present */
-+#define  PCI_RCEC_BUSN_NEXT(x)	(((x) >> 8) & 0xff)
-+#define  PCI_RCEC_BUSN_LAST(x)	(((x) >> 16) & 0xff)
-+
- /* Vendor-Specific (VSEC, PCI_EXT_CAP_ID_VNDR) */
- #define PCI_VNDR_HEADER		4	/* Vendor-Specific Header */
- #define  PCI_VNDR_HEADER_ID(x)	((x) & 0xffff)
+diff --git a/drivers/pci/pcie/aer_inject.c b/drivers/pci/pcie/aer_inject.c
+index 21cc3d3387f7..8107e782546a 100644
+--- a/drivers/pci/pcie/aer_inject.c
++++ b/drivers/pci/pcie/aer_inject.c
+@@ -333,8 +333,11 @@ static int aer_inject(struct aer_error_inj *einj)
+ 	if (!dev)
+ 		return -ENODEV;
+ 	rpdev = pcie_find_root_port(dev);
++	/* If Root port not found, try to find an RCEC */
++	if (!rpdev)
++		rpdev = dev->rcec;
+ 	if (!rpdev) {
+-		pci_err(dev, "Root port not found\n");
++		pci_err(dev, "Neither root port nor RCEC found\n");
+ 		ret = -ENODEV;
+ 		goto out_put;
+ 	}
 -- 
 2.28.0
 
