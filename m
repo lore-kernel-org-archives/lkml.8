@@ -2,111 +2,221 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E37A3C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 01:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 628BFC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 01:57:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6E0D206B2
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 01:55:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CA13206B5
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 01:57:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hyksJcD8"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="MtrgH4e6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726428AbgHLBzG (ORCPT
+        id S1726430AbgHLB5l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 21:55:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43594 "EHLO
+        Tue, 11 Aug 2020 21:57:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726143AbgHLBzG (ORCPT
+        with ESMTP id S1726143AbgHLB5k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 21:55:06 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13FA6C06174A;
-        Tue, 11 Aug 2020 18:55:06 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id m34so206914pgl.11;
-        Tue, 11 Aug 2020 18:55:06 -0700 (PDT)
+        Tue, 11 Aug 2020 21:57:40 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBC2FC06174A
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 18:57:39 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id x5so436511wmi.2
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 18:57:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=T2J49wpQMUHfRririMo+Rf4x9CizTCvRgC8ISOkSSfk=;
-        b=hyksJcD8gywt9zSZynx1ythhKvrfose5TqpyfpbtLU9jVYqSxYtHuLahi3Yq+LkQgd
-         /mAAFU50BpwYbDELFoko/1ZeC15ZOKH+AqpQS5ahQKoN3PpLNqcC9XLXa92ImiABubEk
-         rYMuwfZrDhdfu0bt5xjbNsrP6MBQrcpJo4tQaaGoDKTyeFDT5QN8gald0ebXI4Zpyym4
-         1BMyDhRifuJL3bl+7v8C0AXAPWZh4sE2144PwWunbJk0oELHPZTY9W655nm7FIJKa3m/
-         7BJd0ctZ4ETFdI5le+749HEFcbhn5NuoNhjw8leEGyPqrCTxKdQMQ+IDM0+xCV/bUXx5
-         TmQA==
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wCc2Gl+2ZTzj2s1NxZep6jFJoKEN1M3r6ckrO/cMZEo=;
+        b=MtrgH4e68InVhMQvBNFrmb+HAGSNG13qFb8CyTSJCmb0k9WC6LJcTKtaurJ0h3bvtg
+         we1YeNt+fVkQP1vC+8nGUh4yG83PbqsRs0TSMDuLPfAzjWJE6WJxx8fVU2c0aGZ6hdoL
+         yJLVsnpfeCe+xo3I/82ccIopkEGlV2XWig7rcszlLgSCN/gZusb8Tqne1dh7h9eibUWx
+         7VGxjHoBxqU+FYo7AhSEzTJJ0XawChqTtaMgsXcUyGHCZOEm21qxM+WyRfVKarc6w8Q1
+         A7qiCllGLKTyFma03Pe0vd1Al9TuWVFnd2BXJAE6MlXXCo3+UL+EQsAkcnQqiGyWm4GL
+         Npxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=T2J49wpQMUHfRririMo+Rf4x9CizTCvRgC8ISOkSSfk=;
-        b=QmDbuk8IMqMGWVCfu7zVhdGMTVTXVMkkRIBzgoKpXWn0ar+usT4qkF9qIfKeRn9Pxi
-         XWcTOJ//ag5XZQA8UmZpqsqp6vpatcS9qNZm4mg/gqla99cG1X2NqxZoC8agrcfWswFf
-         fSEy2bn5GSlC+fCLfPTuZbidDatNuQu9byUcMC2AWafDf6JM5xbp0YRvyTxwPmCKs5sq
-         5OGw0Zl/XOf2CqhW5hcBF+Qs9y4hKPF7e1ceRjiJ4737rZDfV7iZT4MrUCqMiqlubocR
-         2XCeofxJnH7AD45IfWV+dPmyFZOHLRsNn5z1JQvL9xFx0AxEx8xn+sFHUKhNq+zHS8ZT
-         VzTg==
-X-Gm-Message-State: AOAM532Lk6cANh6nz7AG98/uBeTOM54U1qiXFrBGzggCMc4S6yxnOYvy
-        2IjlJ49z+vWRlM7lIcPWjEc=
-X-Google-Smtp-Source: ABdhPJyCf4K/oGLH9l53KJJqPsYdALPiirscn2O3GPD4emqc4cfV1zPc6yyHhdsv3RWqwympyQ36ag==
-X-Received: by 2002:a62:f843:: with SMTP id c3mr8756574pfm.247.1597197305425;
-        Tue, 11 Aug 2020 18:55:05 -0700 (PDT)
-Received: from sol (106-69-161-64.dyn.iinet.net.au. [106.69.161.64])
-        by smtp.gmail.com with ESMTPSA id j5sm376129pfg.80.2020.08.11.18.55.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Aug 2020 18:55:04 -0700 (PDT)
-Date:   Wed, 12 Aug 2020 09:54:58 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3 02/18] gpio: uapi: define uAPI v2
-Message-ID: <20200812015458.GA8760@sol>
-References: <20200809132529.264312-1-warthog618@gmail.com>
- <20200809132529.264312-3-warthog618@gmail.com>
- <CAMpxmJWe6Cjhwt3izuPLK-Xzvm=LqOy_nnZ7xg123+M_JgriLw@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wCc2Gl+2ZTzj2s1NxZep6jFJoKEN1M3r6ckrO/cMZEo=;
+        b=jwNspxi+UABr9AlhaTaHwC2uSjynRK8fJuw3m0D83w/tJIQGBhIXup/teXOMCQEaFf
+         VsSf0JusPGhRMD2LWV4uGCPWfn0Jv+dZLR2Mxwh69x5EkrBgHCkzT/4OXZq9eSKiGJTP
+         6l+fQtCfBbL80aed2iiKpyYaTcvULBYMEkAuVzzT+sqN4+VijCx76sBWXCX3LN9iWnhV
+         /ewGH86nUU7Jg7LkvryqM6o9ni/2ObB59peWz2Zz0vpKMuL4FzyjWBb/p1k0v04lpTPa
+         OTCNz6G8MI9s1vIprDRyVU7ChNNF4d7OwKWPduXNR8SyzevTC3m0f0zWoc00QLKhuZ7K
+         7Zgw==
+X-Gm-Message-State: AOAM533xEC4fJcDD35piGkaohV/4Q55wuI1btmRPjXzqtmeqj0dNFAvZ
+        bbamk/rUFddp27lZtlPASX12rb3SrU7rJKjebBnGCA==
+X-Google-Smtp-Source: ABdhPJz95b1SCywW9YKLXjnSml+205qMM5HwcHslPl1JunI9ijY6bMGsFm70gRZfhcgms4KMTm0evXHaUy55A+Kolas=
+X-Received: by 2002:a1c:9c91:: with SMTP id f139mr6595552wme.134.1597197458091;
+ Tue, 11 Aug 2020 18:57:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMpxmJWe6Cjhwt3izuPLK-Xzvm=LqOy_nnZ7xg123+M_JgriLw@mail.gmail.com>
+References: <20200811063659.284088-1-qiuwenbo@phytium.com.cn>
+ <CAAhSdy1c=R6aUZ6EOggmJ_Bqm2O0VLKEku=zyFfabExSzOKErA@mail.gmail.com> <CAOnJCUJiLVyzMFkn157Zmdrtm66Z=gWmQbXCJiMRY8LCJ3xkaw@mail.gmail.com>
+In-Reply-To: <CAOnJCUJiLVyzMFkn157Zmdrtm66Z=gWmQbXCJiMRY8LCJ3xkaw@mail.gmail.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Wed, 12 Aug 2020 07:27:26 +0530
+Message-ID: <CAAhSdy0yV154R9EBbmQqR6mN-U7j02hGto76k+PY0W6xpJMW_A@mail.gmail.com>
+Subject: Re: [PATCH] riscv: Setup exception vector for K210 properly
+To:     Atish Patra <atishp@atishpatra.org>
+Cc:     Qiu Wenbo <qiuwenbo@phytium.com.cn>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Guo Ren <guoren@linux.alibaba.com>,
+        Vincent Chen <vincent.chen@sifive.com>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Atish Patra <atish.patra@wdc.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Zong Li <zong.li@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 09:11:41PM +0200, Bartosz Golaszewski wrote:
-> On Sun, Aug 9, 2020 at 3:26 PM Kent Gibson <warthog618@gmail.com> wrote:
+On Wed, Aug 12, 2020 at 12:16 AM Atish Patra <atishp@atishpatra.org> wrote:
+>
+> On Tue, Aug 11, 2020 at 1:41 AM Anup Patel <anup@brainfault.org> wrote:
 > >
-[snip]
+> > On Tue, Aug 11, 2020 at 12:07 PM Qiu Wenbo <qiuwenbo@phytium.com.cn> wrote:
+> > >
+> > > Exception vector is missing on nommu platform and it is a big issue.
+> > > This patch is tested in Sipeed MAIX Bit Dev Board.
+> > >
+> > > Fixes: 79b1feba5455 ("RISC-V: Setup exception vector early")
+> > > Signed-off-by: Qiu Wenbo <qiuwenbo@phytium.com.cn>
+>
+> Thanks for testing it on the kendryte board.
+>
+> > > ---
+> > >  arch/riscv/kernel/smpboot.c |  1 +
+> > >  arch/riscv/kernel/traps.c   | 11 ++++++++++-
+> > >  2 files changed, 11 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
+> > > index 356825a57551..23cde0ceb39d 100644
+> > > --- a/arch/riscv/kernel/smpboot.c
+> > > +++ b/arch/riscv/kernel/smpboot.c
+> > > @@ -154,6 +154,7 @@ asmlinkage __visible void smp_callin(void)
+> > >         mmgrab(mm);
+> > >         current->active_mm = mm;
+> > >
+> > > +       trap_init();
+> > >         notify_cpu_starting(curr_cpuid);
+> > >         update_siblings_masks(curr_cpuid);
+> > >         set_cpu_online(curr_cpuid, 1);
+> > > diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
+> > > index ad14f4466d92..a390239818ae 100644
+> > > --- a/arch/riscv/kernel/traps.c
+> > > +++ b/arch/riscv/kernel/traps.c
+> > > @@ -174,7 +174,16 @@ int is_valid_bugaddr(unsigned long pc)
+> > >  }
+> > >  #endif /* CONFIG_GENERIC_BUG */
+> > >
+> > > -/* stvec & scratch is already set from head.S */
+> > > +/* stvec & scratch is already set from head.S when mmu is enabled */
+> > >  void trap_init(void)
+> > >  {
+> > > +#ifndef CONFIG_MMU
+> > > +       /*
+> > > +        * Set sup0 scratch register to 0, indicating to exception vector
+> > > +        * that we are presently executing in the kernel
+> > > +        */
+> > > +       csr_write(CSR_SCRATCH, 0);
+> > > +       /* Set the exception vector address */
+> > > +       csr_write(CSR_TVEC, &handle_exception);
+> > > +#endif
+> > >  }
+> > > --
+> > > 2.28.0
+> > >
 > >
-> > +/*
-> > + * Maximum number of requested lines.
-> > + *
-> > + * Must be no greater than 64 as bitmaps are limited to 64-bits, and a
-> > + * multiple of 2 to ensure 32/64-bit alignment of structs.
-> > + */
-> > +#define GPIO_V2_LINES_MAX 64
-> > +
-> 
-> If we refer to bitmaps for which helpers are defined in
-> include/linux/bitmap.h then they're not limited to 64-bits. I'd just
-> say here that we want to fit into 64-bit integers for simplicity.
-> 
+> > This issue seems to be only on the latest master branch of
+> > Linux stable tree so this fix need not be a stable fix.
+> >
+> > For MMU kernel, the CSR_TVEC is setup in relocate() function
+> > called from secondary_start_common() function of head.S
+> >
+> > For NoMMU kernel, we should set CSR_TVEC directly in
+> > secondary_start_common() function as "#else" case of the
+> > "#ifdef CONFIG_MMU".
+> >
+>
+> That would enable the trap only for secondary harts. But the exception
+> vector on boot hart
+> is still uninitialized. How about this change ?
+>
+> diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
+> index d0c5c316e9bb..7822054dbd88 100644
+> --- a/arch/riscv/kernel/head.S
+> +++ b/arch/riscv/kernel/head.S
+> @@ -77,16 +77,6 @@ relocate:
+>         csrw CSR_SATP, a0
+>  .align 2
+>  1:
+> -       /* Set trap vector to exception handler */
+> -       la a0, handle_exception
+> -       csrw CSR_TVEC, a0
+> -
+> -       /*
+> -        * Set sup0 scratch register to 0, indicating to exception vector that
+> -        * we are presently executing in kernel.
+> -        */
+> -       csrw CSR_SCRATCH, zero
+> -
 
-Strictly speaking, userspace doesn't know about include/linux/bitmap.h,
-but I'm happy to remove any ambiguity.
+Instead of having no trap vector setup here, we should
+at least have dummy trap vector (just like original code).
 
-Does this work for you?:
+/* Set trap vector to spin forever to help debug */
+la a0, .Lsecondary_park
+csrw CSR_TVEC, a0
 
- * Must be no greater than 64, as bitmaps are restricted here to 64-bits
- * for simplicity, and a multiple of 2 to ensure 32/64-bit alignment of
- * structs.
+>         /* Reload the global pointer */
+>  .option push
+>  .option norelax
+> @@ -144,9 +134,23 @@ secondary_start_common:
+>         la a0, swapper_pg_dir
+>         call relocate
+>  #endif
+> +       call setup_trap_vector
+>         tail smp_callin
+>  #endif /* CONFIG_SMP */
+>
+> +.align 2
+> +setup_trap_vector:
+> +       /* Set trap vector to exception handler */
+> +       la a0, handle_exception
+> +       csrw CSR_TVEC, a0
+> +
+> +       /*
+> +        * Set sup0 scratch register to 0, indicating to exception vector that
+> +        * we are presently executing in kernel.
+> +        */
+> +       csrw CSR_SCRATCH, zero
+> +       ret
+> +
+>  .Lsecondary_park:
+>         /* We lack SMP support or have too many harts, so park this hart */
+>         wfi
+> @@ -240,6 +244,7 @@ clear_bss_done:
+>         call relocate
+>  #endif /* CONFIG_MMU */
+>
+> +       call setup_trap_vector
+>         /* Restore C environment */
+>         la tp, init_task
+>         sw zero, TASK_TI_CPU(tp)
 
-Cheers,
-Kent.
+Apart from above, this looks good.
+
+Regards,
+Anup
