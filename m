@@ -2,139 +2,202 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27797C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 00:46:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBE60C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 00:53:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB4A420756
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 00:46:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACFE120782
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 00:53:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pXGKT72c"
+	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="TQfG91XI";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="GKFvGOVt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726430AbgHLAqZ (ORCPT
+        id S1726469AbgHLAxy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 20:46:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33058 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726255AbgHLAqZ (ORCPT
+        Tue, 11 Aug 2020 20:53:54 -0400
+Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:53521 "EHLO
+        wnew2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726333AbgHLAxy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 20:46:25 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 584FDC06174A
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 17:46:25 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id p37so148555pgl.3
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 17:46:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=gA6HLegMT64phMFVQ7NsDC7fLVLgch73XTGsvFwXIgw=;
-        b=pXGKT72cahT5WV70cvriv9aH3+66DJ7j+Ttbt4+fL1ZubgYPJ0Z/DITZ8S5TDWDuHB
-         VD1XmynvU4x0GLHhw/IlXyoaFwezAkQCnx4mSGkUaET9SUH6lI6OR4fAUcmvNW8OwDrQ
-         EWkDa38ExEX59+uGVtyrOiLE4RYtvpPqkk+GJS5y2G08DL1KtZ9KdPFlAXAdNpgbi6u0
-         r0d2PuBNnHQCtcsq8uXhYVvCiy3mocH3DU5qCE7NDh4BIwBxTCS1bKAoAd8Z2RZzty8C
-         yIc/kgh16lBFjEFVtoTzeVwdwbAtUlVGilRnm0I1fV0ppJSdXYZrR4FeZIKk7rro9B7h
-         xSQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=gA6HLegMT64phMFVQ7NsDC7fLVLgch73XTGsvFwXIgw=;
-        b=jU0cnLPeXnS9QsWaSks8J6IOBmaXNC2qVrGVck+G+of/etJD6D6hij5Yl6a1bvcy5J
-         grciL12+PnRNNqeHmuS91/FQy6n1sYXsBYLa1yp1rR3x+F7ljynH1/HyT4656hzS0/by
-         6MX0s0cL76Tkn5PSj8aGYYq/cVf76S1Ep5ID2bTtDotZBUEXr+0TeQAyfHBLaxxbdqBC
-         1uk3xj8zNlkb2MMCvqdSK6i0n57eyKbgq8KinaavZcUsh3WEhyMvaiQ/Cjg+fcZFaeNg
-         MhSWM7414mXK2sZitMnPZ6VPsMbB++73ehbXlRxrX+dlXdjDZcfNfz4zQANIsLgUBLCP
-         eiHA==
-X-Gm-Message-State: AOAM533x8tuhdkXkequBU0Cnv7wOOgSf6ctuMX/VuhUcFKWOwOkKY6yR
-        lOwSdUeyubhlRDM4lWacSq9F9Srh
-X-Google-Smtp-Source: ABdhPJwbq0UEUcG155hy+w3lMEGqy9URmH6tXRoN7QcegvPvkorrERjM5drm4QT016fX1In3VqgHrQ==
-X-Received: by 2002:a65:60d4:: with SMTP id r20mr2892267pgv.436.1597193184659;
-        Tue, 11 Aug 2020 17:46:24 -0700 (PDT)
-Received: from [0.0.0.0] ([108.61.186.250])
-        by smtp.gmail.com with ESMTPSA id n3sm265067pfq.131.2020.08.11.17.46.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Aug 2020 17:46:24 -0700 (PDT)
-Subject: Re: [PATCH] sched/fair: Remove the duplicate check from
- group_has_capacity()
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        linux-kernel@vger.kernel.org
-References: <20200810010009.92758-1-arch0.zheng@gmail.com>
- <jhjwo26gxlb.mognet@arm.com> <9425382c-2a42-57ca-512d-c93c589dc701@gmail.com>
- <jhjv9hph3h7.mognet@arm.com> <01fe6a9b-fd3a-9b36-b2fa-6cea58415670@gmail.com>
- <jhjtux9gxh2.mognet@arm.com> <905d8887-e79c-daf6-cbce-80fd0509e37d@gmail.com>
- <jhjv9hp546d.mognet@arm.com>
-From:   Qi Zheng <arch0.zheng@gmail.com>
-Message-ID: <f41303b7-fca9-b70f-efff-3ff5e1fb786a@gmail.com>
-Date:   Wed, 12 Aug 2020 08:46:16 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 11 Aug 2020 20:53:54 -0400
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
+        by mailnew.west.internal (Postfix) with ESMTP id 57EADB10;
+        Tue, 11 Aug 2020 20:53:52 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute2.internal (MEProxy); Tue, 11 Aug 2020 20:53:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
+        message-id:subject:from:to:cc:date:in-reply-to:references
+        :content-type:mime-version:content-transfer-encoding; s=fm3; bh=
+        cPWWSWjp5+yRqK3+DqGTMH/lSARmGj5rks/w1/txg0w=; b=TQfG91XIX1ygqwLM
+        4sfnV7xe4g4iEY5T2ZgoPGIvuSUQw+4Hf0WlavPnkJH899yiUIYsRzhXtEorXMX6
+        JAjvuuyWT1VNZIPp5VFu+F/GckYHBFLgVBBlZX3enRz9VH6EXmkGNTuYIOF+Pfie
+        N0Nc+c2F1+NDnBuqWPJZrMqWJcOSrBnnqHlWAYHiuaTQdT9c6JPPrReJyKqTh2zm
+        No2QYEQU3HDNmmEoy/TTxJT8NjkMiNy7TnYqJSxosnnLuWRdzPKhyemSRNRdWOOX
+        nJv1YGH8vIspNblClS2yjsYAnEuDv2lO8WXcUJOh1kj5w7MnPoVwFwYeRZ8fIj/K
+        bsvHPA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=cPWWSWjp5+yRqK3+DqGTMH/lSARmGj5rks/w1/txg
+        0w=; b=GKFvGOVtMQ4f6ZSR6opBfHGjXI8/Gi3A9rXrmNwm17kxUUGeU/gCtQnQb
+        wLMCvOJHSAJMdDPy/WOUoEYBESKjUUr4GrKdc2/d2uTtoVhOhqYs9EY65Xy2ZMUO
+        Y8NBx/ctIdwH0H9DpWZet46rZr13YJby/IiCTlBYIQHDMaK0zOaTBxM+mCo2bCYg
+        pHXAnI3K+nqlWKfqrESxED1CKyXKT+2gR/zo/upH3VBlDaWgQ8pUkpzGQBwWAHBH
+        hoJXrRDIKWLWCQmMI/pm4/chCHou6osTKG0Kjdttd8wEHWZlv0b9Q8cTCHl1BK7a
+        zqEnQqzoM+HB0wWq+tPKpw17f3Tdg==
+X-ME-Sender: <xms:nz0zXzjMSOgJ2xYPBvOcU-Ha_7ok9jmXV1szTmzx9oAbUQylQwt_ig>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrledugdeflecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpefkrghnucfm
+    vghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqnecuggftrfgrthhtvghrnhepfe
+    efteetvdeguddvveefveeftedtffduudehueeihfeuvefgveehffeludeggfejnecukfhp
+    peehkedrjedrvddtfedruddugeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpehrrghvvghnsehthhgvmhgrfidrnhgvth
+X-ME-Proxy: <xmx:nz0zXwBgD2ob41umt3OPIRxuqE-g0HsfHsGO8Ae0YGqbihrt08cUNQ>
+    <xmx:nz0zXzE4LHDsOlcxqYR__fNM67Gt9hc6dTIOMjTlpFY0PrJeOvz26A>
+    <xmx:nz0zXwRfXw2PKoUB9Y2MCwNnLb_YXNKnq7azqZl4ax9OitEysQiqTw>
+    <xmx:nz0zX1q-mYvkP_QKgcFtn6lCIncYt0j7rJdpNseI8r85f0aJ5AKup7fACM4>
+Received: from mickey.themaw.net (58-7-203-114.dyn.iinet.net.au [58.7.203.114])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 4BC3F30600A6;
+        Tue, 11 Aug 2020 20:53:45 -0400 (EDT)
+Message-ID: <78ff6a85f5fc5f3e72f899728520a39b358b10c7.camel@themaw.net>
+Subject: Re: file metadata via fs API (was: [GIT PULL] Filesystem
+ Information)
+From:   Ian Kent <raven@themaw.net>
+To:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Miklos Szeredi <miklos@szeredi.hu>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>, Karel Zak <kzak@redhat.com>,
+        Jeff Layton <jlayton@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Christian Brauner <christian@brauner.io>,
+        Lennart Poettering <lennart@poettering.net>,
+        Linux API <linux-api@vger.kernel.org>,
+        LSM <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Wed, 12 Aug 2020 08:53:42 +0800
+In-Reply-To: <20200811193916.zcwebstmbyvushau@wittgenstein>
+References: <1842689.1596468469@warthog.procyon.org.uk>
+         <1845353.1596469795@warthog.procyon.org.uk>
+         <CAJfpegunY3fuxh486x9ysKtXbhTE0745ZCVHcaqs9Gww9RV2CQ@mail.gmail.com>
+         <ac1f5e3406abc0af4cd08d818fe920a202a67586.camel@themaw.net>
+         <CAJfpegu8omNZ613tLgUY7ukLV131tt7owR+JJ346Kombt79N0A@mail.gmail.com>
+         <CAJfpegtNP8rQSS4Z14Ja4x-TOnejdhDRTsmmDD-Cccy2pkfVVw@mail.gmail.com>
+         <20200811135419.GA1263716@miu.piliscsaba.redhat.com>
+         <CAHk-=wjzLmMRf=QG-n+1HnxWCx4KTQn9+OhVvUSJ=ZCQd6Y1WA@mail.gmail.com>
+         <CAJfpegtWai+5Tzxi1_G+R2wEZz0q66uaOFndNE0YEQSDjq0f_A@mail.gmail.com>
+         <CAHk-=wg_bfVf5eazwH2uXTG-auCYZUpq-xb1kDeNjY7yaXS7bw@mail.gmail.com>
+         <20200811193916.zcwebstmbyvushau@wittgenstein>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-In-Reply-To: <jhjv9hp546d.mognet@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/8/12 上午4:16, Valentin Schneider wrote:
+On Tue, 2020-08-11 at 21:39 +0200, Christian Brauner wrote:
+> On Tue, Aug 11, 2020 at 09:05:22AM -0700, Linus Torvalds wrote:
+> > On Tue, Aug 11, 2020 at 8:30 AM Miklos Szeredi <miklos@szeredi.hu>
+> > wrote:
+> > > What's the disadvantage of doing it with a single lookup WITH an
+> > > enabling flag?
+> > > 
+> > > It's definitely not going to break anything, so no backward
+> > > compatibility issues whatsoever.
+> > 
+> > No backwards compatibility issues for existing programs, no.
+> > 
+> > But your suggestion is fundamentally ambiguous, and you most
+> > definitely *can* hit that if people start using this in new
+> > programs.
+> > 
+> > Where does that "unified" pathname come from? It will be generated
+> > from "base filename + metadata name" in user space, and
+> > 
+> >  (a) the base filename might have double or triple slashes in it
+> > for
+> > whatever reasons.
+> > 
+> > This is not some "made-up gotcha" thing - I see double slashes
+> > *all*
+> > the time when we have things like Makefiles doing
+> > 
+> >     srctree=../../src/
+> > 
+> > and then people do "$(srctree)/". If you haven't seen that kind of
+> > pattern where the pathname has two (or sometimes more!) slashes in
+> > the
+> > middle, you've led a very sheltered life.
+> > 
+> >  (b) even if the new user space were to think about that, and
+> > remove
+> > those (hah! when have you ever seen user space do that?), as Al
+> > mentioned, the user *filesystem* might have pathnames with double
+> > slashes as part of symlinks.
+> > 
+> > So now we'd have to make sure that when we traverse symlinks, that
+> > O_ALT gets cleared. Which means that it's not a unified namespace
+> > after all, because you can't make symlinks point to metadata.
+> > 
+> > Or we'd retroactively change the semantics of a symlink, and that
+> > _is_
+> > a backwards compatibility issue. Not with old software, no, but it
+> > changes the meaning of old symlinks!
+> > 
+> > So no, I don't think a unified namespace ends up working.
+> > 
+> > And I say that as somebody who actually loves the concept. Ask Al:
+> > I
+> > have a few times pushed for "let's allow directory behavior on
+> > regular
+> > files", so that you could do things like a tar-filesystem, and
+> > access
+> > the contents of a tar-file by just doing
+> > 
+> >     cat my-file.tar/inside/the/archive.c
+> > 
+> > or similar.
+> > 
+> > Al has convinced me it's a horrible idea (and there you have a
+> > non-ambiguous marker: the slash at the end of a pathname that
+> > otherwise looks and acts as a non-directory)
+> > 
 > 
-> On 11/08/20 14:12, Qi Zheng wrote:
->> On 2020/8/11 下午8:48, Valentin Schneider wrote:
->>> On 11/08/20 12:44, Qi Zheng wrote:
->>>> In fact, at the beginning, I added unlikely() here to hint the compiler:
->>>>
->>>> -	if ((sgs->group_capacity * imbalance_pct) <
->>>> -			(sgs->group_runnable * 100))
->>>> +	if (unlikely((sgs->group_capacity * imbalance_pct) <
->>>> +			(sgs->group_runnable * 100)))
->>>>
->>>> The corresponding patch is as follows:
->>>>
->>>>         [PATCH]sched/core: add unlikely in group_has_capacity()
->>>>
->>>> Do you think it is necessary?
->>>
->>> The "unlikely" approach has the benefit of keeping all corner cases in
->>> place. I was tempted to say it could still make sense to get rid of the
->>> extra check entirely, given that it has an impact only when:
->>>
->>> - sum_nr_running == group_weight
->>> - group capacity has been noticeably reduced
->>>
->>> If sum_nr_running < group_weight, we won't evaluate it.
->>> If sum_nr_running > group_weight, we either won't call into
->>>     group_has_capacity() or we'll have checked it already in
->>>     group_overloaded().
->>>
->>> That said, it does make very much sense to check it in that ==
->>> case. Vincent might have a different take on this, but right now I'd say
->>> the unlikely approach is the safest one of the two.
->>>
->>
->> So what should I do next? Do I resubmit a patch with unlikely() or
->> add your email to the old patch([PATCH]sched/core: add unlikely in
->> group_has_capacity())? Or continue to wait for suggestions from
->> other maintainers?
+> Putting my kernel hat down, putting my userspace hat on.
 > 
-> I guess you can add a reply to the original thread where you had the
-> unlikely() to point out *removing* the check isn't 100% harmless.
-> 
-> Vincent might want to have a look at it, but AFAIA he's on holidays ATM.
-> 
+> I'm looking at this from a potential user of this interface.
+> I'm not a huge fan of the metadata fd approach I'd much rather have a
+> dedicated system call rather than opening a side-channel metadata fd
+> that I can read binary data from. Maybe I'm alone in this but I was
+> under the impression that other users including Ian, Lennart, and
+> Karel
+> have said on-list in some form that they would prefer this approach.
+> There are even patches for systemd and libmount, I thought?
 
-Okay, I will reply to the old patch and add your email to it.
-Thanks for your comments.
+Not quite sure what you mean here.
 
-Yours,
-Qi Zheng
+Karel (with some contributions by me) has implemented the interfaces
+for David's mount notifications and fsinfo() call in libmount. We
+still have a little more to do on that.
+
+I also have a systemd implementation that uses these libmount features
+for mount table handling that works quite well, with a couple more
+things to do to complete it, that Lennart has done an initial review
+for.
+
+It's no secret that I don't like the proc file system in general
+but it is really useful for many things, that's just the way it
+is.
+
+Ian
+
