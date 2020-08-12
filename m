@@ -2,193 +2,95 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D15CFC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 20:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17685C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 20:34:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FEE920774
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 20:33:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1AA62078B
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 20:34:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H8jRFroY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JJYKq7rh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbgHLUdE (ORCPT
+        id S1726635AbgHLUeS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 16:33:04 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22543 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726557AbgHLUdE (ORCPT
+        Wed, 12 Aug 2020 16:34:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46176 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726528AbgHLUeR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 16:33:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597264381;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6Nrc8DX2DPQVNxelk2BXjTZZut7+A4fYjP1T2AupKx4=;
-        b=H8jRFroYX42jaNHDaCzpW44IJhu7ET0VEj5j3lL7/eE1lO7TpmoT0mTbOAeVsiPWYlhzEL
-        rtVyy86e5h1bO+55BZlHjpUxZBC8up/fKZCDrwtis4N8fl0NmozfBt1GjppJ0/YLd5xrpK
-        Nfc9wt+3Wy444cu+hSVqO9JOPcgKdRA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-17-nuFdfxTSMGe6KBa0-yNnFw-1; Wed, 12 Aug 2020 16:32:57 -0400
-X-MC-Unique: nuFdfxTSMGe6KBa0-yNnFw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B61AD79ED5;
-        Wed, 12 Aug 2020 20:32:55 +0000 (UTC)
-Received: from x1.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D9CDA60E1C;
-        Wed, 12 Aug 2020 20:32:54 +0000 (UTC)
-Date:   Wed, 12 Aug 2020 14:32:54 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Matthew Rosato <mjrosato@linux.ibm.com>
-Cc:     bhelgaas@google.com, schnelle@linux.ibm.com, pmorel@linux.ibm.com,
-        mpe@ellerman.id.au, oohall@gmail.com, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: Introduce flag for detached virtual functions
-Message-ID: <20200812143254.2f080c38@x1.home>
-In-Reply-To: <1597260071-2219-2-git-send-email-mjrosato@linux.ibm.com>
-References: <1597260071-2219-1-git-send-email-mjrosato@linux.ibm.com>
-        <1597260071-2219-2-git-send-email-mjrosato@linux.ibm.com>
-Organization: Red Hat
+        Wed, 12 Aug 2020 16:34:17 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CCD8C061383;
+        Wed, 12 Aug 2020 13:34:17 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id k18so2583390qtm.10;
+        Wed, 12 Aug 2020 13:34:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=8AbcIfen2Mh3O6xshAeb42qMiceFCwU8VY+DtJghWKc=;
+        b=JJYKq7rhGfoskc0IOYL0mQ2UgiV0NUPZnUMJqm0x4+mN+Jnr5eSGxbVsmV3va+QmiF
+         wjNsakLNmG8Snq4Ka54NHi+FMZOfkPc/P2UAnRuTKgJxYoDYNvYxnt9ubGhb/1D4XEbF
+         R5s86RQJgzcMqdEQLZP6mi/nb4RuLVBQmVI4891ly/7eIdpFM1zpDZkPWag8mXnTxtoy
+         vTo5GBX5MwVspiDm8HromEAg+ZMCdOxBmSjbfjM12ucPoyMLi6Jr1WBIZ8qAoOffTuuf
+         J8cG90cIOw+EUXScq3d98Z/wlHZasQ2HIKPuWFa0h1c1TvCj5gslLqFBv4AiKd9iNLAP
+         uURg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=8AbcIfen2Mh3O6xshAeb42qMiceFCwU8VY+DtJghWKc=;
+        b=tycdZcmC5Nl1nHB6OyuEARPt2aPmVtV8syu96FXmvgNm8dDnxqPJY/gP2HaCtbJpdj
+         FwztCMlmPikaHAkgOJahfsHWdsq+g0K0irxJUzyShoQqps0xaIKHAT+9AJIOwSGimPZb
+         fhPv6Opa6Ei7Xq0nSywy1SQVPwBia/see4R/WP6F8coMm/LqjTtQSmyIFeoGv1Poqmrp
+         JKptOLaJqMyzI3asCsPe5VV1/UYcnQWX7P9/Yx8u4zhjE4GLx3PBMT+4CAuSSGQBaI36
+         k6UcC71VXnJsgwqP40S0BXwFNwrpG51zD0fhY9HvsqeINbMgwBV6AtH6x7W8hjEGx4h0
+         1RKw==
+X-Gm-Message-State: AOAM532URhEC934L5k9ZH+nJXp09bWrVht5gPoC3UCrLMFJmsVbZ5U4D
+        4IiSJs0xkUHgkTAczjm8L+nevLHU
+X-Google-Smtp-Source: ABdhPJx64TW/NqTIbSDn9AtxCM0KEpE57asspn5bN7J15aOPfo8WvWruSQ6i+zwyQrbngY2hClZEPw==
+X-Received: by 2002:ac8:130a:: with SMTP id e10mr1710881qtj.38.1597264456887;
+        Wed, 12 Aug 2020 13:34:16 -0700 (PDT)
+Received: from eaf ([190.19.79.86])
+        by smtp.gmail.com with ESMTPSA id o13sm3651241qko.48.2020.08.12.13.34.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Aug 2020 13:34:16 -0700 (PDT)
+Date:   Wed, 12 Aug 2020 17:34:10 -0300
+From:   Ernesto =?utf-8?Q?A=2E_Fern=C3=A1ndez?= 
+        <ernesto.mnd.fernandez@gmail.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        syzkaller-bugs@googlegroups.com, linux-kernel@vger.kernel.org
+Subject: Re: [Linux-kernel-mentees] [PATCH] hfs, hfsplus: Fix NULL pointer
+ dereference in hfs_find_init()
+Message-ID: <20200812203410.GA6168@eaf>
+References: <20200812065556.869508-1-yepeilin.cs@gmail.com>
+ <20200812070827.GA1304640@kroah.com>
+ <20200812071306.GA869606@PWN>
+ <20200812085904.GA16441@kadam>
+ <20200812202420.GA5873@eaf>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200812202420.GA5873@eaf>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 12 Aug 2020 15:21:11 -0400
-Matthew Rosato <mjrosato@linux.ibm.com> wrote:
+On Wed, Aug 12, 2020 at 05:24:20PM -0300, Ernesto A. Fernández wrote:
+> If that's what the reproducer is about, I think just returning an error is
+> reasonable.
 
-> s390x has the notion of providing VFs to the kernel in a manner
-> where the associated PF is inaccessible other than via firmware.
-> These are not treated as typical VFs and access to them is emulated
-> by underlying firmware which can still access the PF.  After
-> abafbc55 however these detached VFs were no longer able to work
-> with vfio-pci as the firmware does not provide emulation of the
-> PCI_COMMAND_MEMORY bit.  In this case, let's explicitly recognize
-> these detached VFs so that vfio-pci can allow memory access to
-> them again.
-> 
-
-Might as well include a fixes tag too.
-
-Fixes: abafbc551fdd ("vfio-pci: Invalidate mmaps and block MMIO access on disabled memory")
-
-You might also extend the sha1 in the log to 12 chars as well, or
-replace it with a reference to the fixes tag.
-
-> Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
-> ---
->  arch/s390/pci/pci.c                |  8 ++++++++
->  drivers/vfio/pci/vfio_pci_config.c | 11 +++++++----
->  include/linux/pci.h                |  1 +
->  3 files changed, 16 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/s390/pci/pci.c b/arch/s390/pci/pci.c
-> index 3902c9f..04ac76d 100644
-> --- a/arch/s390/pci/pci.c
-> +++ b/arch/s390/pci/pci.c
-> @@ -581,6 +581,14 @@ int pcibios_enable_device(struct pci_dev *pdev, int mask)
->  {
->  	struct zpci_dev *zdev = to_zpci(pdev);
->  
-> +	/*
-> +	 * If we have a VF on a non-multifunction bus, it must be a VF that is
-> +	 * detached from its parent PF.  We rely on firmware emulation to
-> +	 * provide underlying PF details.
-> +	 */
-> +	if (zdev->vfn && !zdev->zbus->multifunction)
-> +		pdev->detached_vf = 1;
-> +
->  	zpci_debug_init_device(zdev, dev_name(&pdev->dev));
->  	zpci_fmb_enable_device(zdev);
->  
-> diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
-> index d98843f..ee45216 100644
-> --- a/drivers/vfio/pci/vfio_pci_config.c
-> +++ b/drivers/vfio/pci/vfio_pci_config.c
-> @@ -406,7 +406,8 @@ bool __vfio_pci_memory_enabled(struct vfio_pci_device *vdev)
->  	 * PF SR-IOV capability, there's therefore no need to trigger
->  	 * faults based on the virtual value.
->  	 */
-> -	return pdev->is_virtfn || (cmd & PCI_COMMAND_MEMORY);
-> +	return pdev->is_virtfn || pdev->detached_vf ||
-> +	       (cmd & PCI_COMMAND_MEMORY);
->  }
->  
->  /*
-> @@ -420,7 +421,7 @@ static void vfio_bar_restore(struct vfio_pci_device *vdev)
->  	u16 cmd;
->  	int i;
->  
-> -	if (pdev->is_virtfn)
-> +	if (pdev->is_virtfn || pdev->detached_vf)
->  		return;
->  
->  	pci_info(pdev, "%s: reset recovery - restoring BARs\n", __func__);
-> @@ -521,7 +522,8 @@ static int vfio_basic_config_read(struct vfio_pci_device *vdev, int pos,
->  	count = vfio_default_config_read(vdev, pos, count, perm, offset, val);
->  
->  	/* Mask in virtual memory enable for SR-IOV devices */
-> -	if (offset == PCI_COMMAND && vdev->pdev->is_virtfn) {
-> +	if ((offset == PCI_COMMAND) &&
-> +	    (vdev->pdev->is_virtfn || vdev->pdev->detached_vf)) {
->  		u16 cmd = le16_to_cpu(*(__le16 *)&vdev->vconfig[PCI_COMMAND]);
->  		u32 tmp_val = le32_to_cpu(*val);
->  
-> @@ -1734,7 +1736,8 @@ int vfio_config_init(struct vfio_pci_device *vdev)
->  				 vconfig[PCI_INTERRUPT_PIN]);
->  
->  		vconfig[PCI_INTERRUPT_PIN] = 0; /* Gratuitous for good VFs */
-> -
-> +	}
-> +	if (pdev->is_virtfn || pdev->detached_vf) {
->  		/*
->  		 * VFs do no implement the memory enable bit of the COMMAND
->  		 * register therefore we'll not have it set in our initial
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 8355306..23a6972 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -445,6 +445,7 @@ struct pci_dev {
->  	unsigned int	is_probed:1;		/* Device probing in progress */
->  	unsigned int	link_active_reporting:1;/* Device capable of reporting link active */
->  	unsigned int	no_vf_scan:1;		/* Don't scan for VFs after IOV enablement */
-> +	unsigned int	detached_vf:1;		/* VF without local PF access */
-
-Is there too much implicit knowledge in defining a "detached VF"?  For
-example, why do we know that we can skip the portion of
-vfio_config_init() that copies the vendor and device IDs from the
-struct pci_dev into the virtual config space?  It's true on s390x, but
-I think that's because we know that firmware emulates those registers
-for us.  We also skip the INTx pin register sanity checking.  Do we do
-that because we haven't installed the broken device into an s390x
-system?  Because we know firmware manages that for us too?  Or simply
-because s390x doesn't support INTx anyway, and therefore it's another
-architecture implicit decision?
-
-If detached_vf is really equivalent to is_virtfn for all cases that
-don't care about referencing physfn on the pci_dev, then we should
-probably have a macro to that effect.  Otherwise, if we're just trying
-to describe that the memory bit of the command register is
-unimplemented but always enabled, like a VF, should we specifically
-describe that attribute instead?  If so, should we instead do that with
-pci_dev_flags_t?  Thanks,
-
-Alex
-
->  	pci_dev_flags_t dev_flags;
->  	atomic_t	enable_cnt;	/* pci_enable_device has been called */
->  
-
+I guess it would be better to put a check inside hfsplus_inode_read_fork(),
+to verify that the first extent is always in the right place and wide
+enough.
