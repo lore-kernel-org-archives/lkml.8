@@ -2,105 +2,169 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AE5FC433E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:48:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53A4AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:53:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 425CD2065C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:48:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="r+ciiD/G"
+	by mail.kernel.org (Postfix) with ESMTP id 2EAE920855
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:53:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727993AbgHLMsA (ORCPT
+        id S1727899AbgHLMxN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 08:48:00 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:33523 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727885AbgHLMr6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 08:47:58 -0400
-X-UUID: 0b668b7f44ec4903bd54273e02aa5c5b-20200812
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=bT/jAjwepiqYg+UqK+VnkcQWqBcqzhsrRXln3mLJ3OA=;
-        b=r+ciiD/GnTii08JDaHVytZ8jM8vU17/HHu/lSqiaPu0oCZj9D9FFAqcVV2tLqEkAEz8gS6t/MN1j8+V4I4dIMJTejjmY/46EdMPDXOEuQ/lwsh98AZNzJGRAmHmcqRStbuTF/F+r62oz9todaJRZw8h9CKLktJbLHx+G5MupRT4=;
-X-UUID: 0b668b7f44ec4903bd54273e02aa5c5b-20200812
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1794925368; Wed, 12 Aug 2020 20:47:54 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 12 Aug 2020 20:47:51 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by mtkcas07.mediatek.inc
- (172.21.101.84) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 12 Aug
- 2020 20:47:51 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 12 Aug 2020 20:47:50 +0800
-Message-ID: <1597236472.26065.9.camel@mtkswgap22>
-Subject: Re: [PATCH v2 1/2] scsi: ufs: Cleanup completed request without
- interrupt notification
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     Bean Huo <huobean@gmail.com>, <avri.altman@wdc.com>
-CC:     <alim.akhtar@samsung.com>, <avri.altman@wdc.com>,
-        <asutoshd@codeaurora.org>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>, <beanhuo@micron.com>,
-        <bvanassche@acm.org>, <tomas.winkler@intel.com>,
-        <cang@codeaurora.org>, <linux-scsi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Date:   Wed, 12 Aug 2020 20:47:52 +0800
-In-Reply-To: <20200811141859.27399-2-huobean@gmail.com>
-References: <20200811141859.27399-1-huobean@gmail.com>
-         <20200811141859.27399-2-huobean@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Wed, 12 Aug 2020 08:53:13 -0400
+Received: from foss.arm.com ([217.140.110.172]:44490 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726698AbgHLMxN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 08:53:13 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AFEE331B;
+        Wed, 12 Aug 2020 05:53:12 -0700 (PDT)
+Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7AA023F70D;
+        Wed, 12 Aug 2020 05:53:11 -0700 (PDT)
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, morten.rasmussen@arm.com,
+        Quentin Perret <qperret@google.com>
+Subject: [PATCH v5 00/17] sched: Instrument sched domain flags
+Date:   Wed, 12 Aug 2020 13:52:43 +0100
+Message-Id: <20200812125300.11889-1-valentin.schneider@arm.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQXZyaSwgQmVhbiwNCg0KT24gVHVlLCAyMDIwLTA4LTExIGF0IDE2OjE4ICswMjAwLCBCZWFu
-IEh1byB3cm90ZToNCj4gRnJvbTogU3RhbmxleSBDaHUgPHN0YW5sZXkuY2h1QG1lZGlhdGVrLmNv
-bT4NCj4gDQo+IElmIHNvbWVob3cgbm8gaW50ZXJydXB0IG5vdGlmaWNhdGlvbiBpcyByYWlzZWQg
-Zm9yIGEgY29tcGxldGVkIHJlcXVlc3QNCj4gYW5kIGl0cyBkb29yYmVsbCBiaXQgaXMgY2xlYXJl
-ZCBieSBob3N0LCBVRlMgZHJpdmVyIG5lZWRzIHRvIGNsZWFudXANCj4gaXRzIG91dHN0YW5kaW5n
-IGJpdCBpbiB1ZnNoY2RfYWJvcnQoKS4gT3RoZXJ3aXNlLCBzeXN0ZW0gbWF5IGJlaGF2ZQ0KPiBh
-Ym5vcm1hbGx5IGJ5IGJlbG93IGZsb3c6DQo+IA0KPiBBZnRlciB1ZnNoY2RfYWJvcnQoKSByZXR1
-cm5zLCB0aGlzIHJlcXVlc3Qgd2lsbCBiZSByZXF1ZXVlZCBieSBTQ1NJDQo+IGxheWVyIHdpdGgg
-aXRzIG91dHN0YW5kaW5nIGJpdCBzZXQuIEFueSBmdXR1cmUgY29tcGxldGVkIHJlcXVlc3QNCj4g
-d2lsbCB0cmlnZ2VyIHVmc2hjZF90cmFuc2Zlcl9yZXFfY29tcGwoKSB0byBoYW5kbGUgYWxsICJj
-b21wbGV0ZWQNCj4gb3V0c3RhbmRpbmcgYml0cyIuIEluIHRoaXMgdGltZSwgdGhlICJhYm5vcm1h
-bCBvdXRzdGFuZGluZyBiaXQiDQo+IHdpbGwgYmUgZGV0ZWN0ZWQgYW5kIHRoZSAicmVxdWV1ZWQg
-cmVxdWVzdCIgd2lsbCBiZSBjaG9zZW4gdG8gZXhlY3V0ZQ0KPiByZXF1ZXN0IHBvc3QtcHJvY2Vz
-c2luZyBmbG93LiBUaGlzIGlzIHdyb25nIGJlY2F1c2UgdGhpcyByZXF1ZXN0IGlzDQo+IHN0aWxs
-ICJhbGl2ZSIuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBTdGFubGV5IENodSA8c3RhbmxleS5jaHVA
-bWVkaWF0ZWsuY29tPg0KPiBSZXZpZXdlZC1ieTogQ2FuIEd1byA8Y2FuZ0Bjb2RlYXVyb3JhLm9y
-Zz4NCj4gU2lnbmVkLW9mZi1ieTogQmVhbiBIdW8gPGJlYW5odW9AbWljcm9uLmNvbT4NCg0KVGhh
-bmtzIEJlYW4ncyBwYXRjaCBpbnRlZ3JhdGlvbi4NCg0KTGlrZSBBdnJpJ3MgY29tbWVudCBpbiBo
-dHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzExNjgzMzgxLw0KSSB0aGluayB5b3Ug
-Y291bGQgYWRkIEFja2VkLWJ5IHRhZyBmcm9tIEF2cmkuDQoNCg0KDQpIaSBBdnJpLA0KDQpQbGVh
-c2UgY29ycmVjdCBhYm92ZSBkZXNjcmlwdGlvbiBpZiByZXF1aXJlZC4NClRoYW5rcyBmb3IgeW91
-ciByZXZpZXchIDogKQ0KDQoNClRoYW5rcywNCg0KU3RhbmxleSBDaHUNCg0KPiAtLS0NCj4gIGRy
-aXZlcnMvc2NzaS91ZnMvdWZzaGNkLmMgfCAzICsrLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5z
-ZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvc2Nz
-aS91ZnMvdWZzaGNkLmMgYi9kcml2ZXJzL3Njc2kvdWZzL3Vmc2hjZC5jDQo+IGluZGV4IDMwNzYy
-MjI4NDIzOS4uNjZmZTgxNGM4NzI1IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3Njc2kvdWZzL3Vm
-c2hjZC5jDQo+ICsrKyBiL2RyaXZlcnMvc2NzaS91ZnMvdWZzaGNkLmMNCj4gQEAgLTY0OTIsNyAr
-NjQ5Miw3IEBAIHN0YXRpYyBpbnQgdWZzaGNkX2Fib3J0KHN0cnVjdCBzY3NpX2NtbmQgKmNtZCkN
-Cj4gIAkJCS8qIGNvbW1hbmQgY29tcGxldGVkIGFscmVhZHkgKi8NCj4gIAkJCWRldl9lcnIoaGJh
-LT5kZXYsICIlczogY21kIGF0IHRhZyAlZCBzdWNjZXNzZnVsbHkgY2xlYXJlZCBmcm9tIERCLlxu
-IiwNCj4gIAkJCQlfX2Z1bmNfXywgdGFnKTsNCj4gLQkJCWdvdG8gb3V0Ow0KPiArCQkJZ290byBj
-bGVhbnVwOw0KPiAgCQl9IGVsc2Ugew0KPiAgCQkJZGV2X2VycihoYmEtPmRldiwNCj4gIAkJCQki
-JXM6IG5vIHJlc3BvbnNlIGZyb20gZGV2aWNlLiB0YWcgPSAlZCwgZXJyICVkXG4iLA0KPiBAQCAt
-NjUyNiw2ICs2NTI2LDcgQEAgc3RhdGljIGludCB1ZnNoY2RfYWJvcnQoc3RydWN0IHNjc2lfY21u
-ZCAqY21kKQ0KPiAgCQlnb3RvIG91dDsNCj4gIAl9DQo+ICANCj4gK2NsZWFudXA6DQo+ICAJc2Nz
-aV9kbWFfdW5tYXAoY21kKTsNCj4gIA0KPiAgCXNwaW5fbG9ja19pcnFzYXZlKGhvc3QtPmhvc3Rf
-bG9jaywgZmxhZ3MpOw0KDQo=
+Hi,
+
+I've repeatedly stared at an SD flag and asked myself "how should that be
+set up in the domain hierarchy anyway?". I figured that if we formalize our
+flags zoology a bit, we could also do some runtime assertions on them -
+this is what this series is all about.
+
+Patches
+=======
+
+The idea is to associate the flags with metaflags that describes how they
+should be set in a sched domain hierarchy ("if this SD has it, all its {parents,
+children} have it") or how they behave wrt degeneration - details are in the
+comments and commit logs. 
+
+The good thing is that the debugging bits go away when CONFIG_SCHED_DEBUG isn't
+set. The bad thing is that this replaces SD_* flags definitions with some
+unsavoury macros. This is mainly because I wanted to avoid having to duplicate
+work between declaring the flags and declaring their metaflags. Conceptually
+they are pretty close to the macros used for SCHED_FEAT.
+
+o Patches 1-2 remove a derelict flag and align the arm scheduler topology
+  with arm64's
+o Patches 3-8 instrument SD flags with metadata and add assertions
+o Patches 9-10 are additional topology cleanups
+o Patches 11-16 each add a new flag to SD_DEGENERATE_GROUPS_MASK
+o Patch 17 leverage the previous 6 patches to further factorize domain
+  degeneration
+
+Revisions
+=========
+
+v4 -> v5
+--------
+
+The final git diff between v4 and v5 isn't too big; there is no diff on the
+domain degeneration side of things, it has just been split up in more
+patches.
+
+o Shuffled the series around to facilitate bisection (Ingo)
+  I kept the arm bits at the start because that was a bit simpler, and in
+  the unlikely case that needs to be reverted it won't be too hard.
+o Split the degeneration mask tweak into individual commits per new flag
+  (Ingo)
+o Collected Reviewed-by from Dietmar; since I shuffled the whole lot I
+  didn't keep your Tested-by, sorry!
+
+o Turned the SD flags into an enum with automagic power of 2 assignment.
+  I poked the dwarves and they assured me the SD flag values haven't
+  changed.
+o [new patch] Made SD flag debug file output flag names
+
+v3 -> v4
+--------
+
+o Reordered the series to have fixes / cleanups first
+
+o Added SD_ASYM_CPUCAPACITY propagation (Quentin)
+o Made ARM revert back to the default sched topology (Dietmar)
+o Removed SD_SERIALIZE degeneration special case (Peter)
+
+o Made SD_NUMA and SD_SERIALIZE have SDF_NEEDS_GROUPS
+
+  As discussed on v3, I thought this wasn't required, but thinking some more
+  about it there can be cases where that changes the current behaviour. For
+  instance, in the following wacky triangle:
+
+      0\ 30
+      | \
+  20  |  2
+      | /
+      1/ 30
+
+  there are two unique distances thus two NUMA topology levels, however the
+  first one for node 2 would have the same span as its child domain and thus
+  should be degenerated. If we don't give SD_NUMA and SD_SERIALIZE
+  SDF_NEEDS_GROUPS, this domain wouldn't be denegerated since its child
+  *doesn't* have either SD_NUMA or SD_SERIALIZE (it's the first NUMA domain),
+  and we'd have this weird NUMA domain lingering with a single group.
+
+v2 -> v3
+--------
+
+o Reworded comment for SD_OVERLAP (it's about the groups, not the domains)
+
+o Added more flags to the SD degeneration mask
+o Added generation of an SD flag mask for the degeneration functions (Peter)
+
+RFC -> v2
+---------
+
+o Rebased on top of tip/sched/core
+o Aligned wording of comments between flags
+o Rectified some flag descriptions (Morten)
+o Added removal of SD_SHARE_POWERDOMAIN (Morten)
+
+Valentin Schneider (17):
+  ARM, sched/topology: Remove SD_SHARE_POWERDOMAIN
+  ARM: Revert back to default scheduler topology.
+  sched/topology: Split out SD_* flags declaration to its own file
+  sched/topology: Define and assign sched_domain flag metadata
+  sched/topology: Verify SD_* flags setup when sched_debug is on
+  sched/debug: Output SD flag names rather than their values
+  sched/topology: Introduce SD metaflag for flags needing > 1 groups
+  sched/topology: Use prebuilt SD flag degeneration mask
+  sched/topology: Remove SD_SERIALIZE degeneration special case
+  sched/topology: Propagate SD_ASYM_CPUCAPACITY upwards
+  sched/topology: Mark SD_PREFER_SIBLING as SDF_NEEDS_GROUPS
+  sched/topology: Mark SD_BALANCE_WAKE as SDF_NEEDS_GROUPS
+  sched/topology: Mark SD_SERIALIZE as SDF_NEEDS_GROUPS
+  sched/topology: Mark SD_ASYM_PACKING as SDF_NEEDS_GROUPS
+  sched/topology: Mark SD_OVERLAP as SDF_NEEDS_GROUPS
+  sched/topology: Mark SD_NUMA as SDF_NEEDS_GROUPS
+  sched/topology: Expand use of SD_DEGENERATE_GROUPS_MASK to flags not
+    needing groups
+
+ arch/arm/kernel/topology.c     |  26 ------
+ include/linux/sched/sd_flags.h | 156 +++++++++++++++++++++++++++++++++
+ include/linux/sched/topology.h |  45 +++++++---
+ kernel/sched/debug.c           |  53 ++++++++++-
+ kernel/sched/topology.c        |  54 ++++++------
+ 5 files changed, 265 insertions(+), 69 deletions(-)
+ create mode 100644 include/linux/sched/sd_flags.h
+
+--
+2.27.0
 
