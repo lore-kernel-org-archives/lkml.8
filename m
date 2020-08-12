@@ -1,165 +1,139 @@
-Return-Path: <SRS0=vr6t=BV=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 927FEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 23:55:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E1CEC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 00:03:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58EBF20575
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Aug 2020 23:55:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1860B2076C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 00:03:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cjNVqpi2"
+	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="NSCwOIJ+";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="uLS2UPQU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726420AbgHKXzy (ORCPT
+        id S1726430AbgHLADm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 19:55:54 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:55988 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726143AbgHKXzy (ORCPT
+        Tue, 11 Aug 2020 20:03:42 -0400
+Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:59485 "EHLO
+        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726143AbgHLADl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 19:55:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597190152;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=mnLMHaakfxc+cNWzhniTVkvXK0bv6PGfjmotkXoeg6A=;
-        b=cjNVqpi2Z6c7RHqB4GLxtB/ecGmnDmnUilPHRZlVBIdMKO6tUeV4dPGug9Am8nYVpTf0Ob
-        jxFGZq9YlayUaYPIlf9pfXvLO383Hgmu9eCg2rn1yMkzaknLn/4dtqbitDyiJawxNTeMIH
-        ilL1XyR6hmdHgWHIRV3dh8xxS2aaRQo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-38-I302rRN-MKCcX7WNVNUCYQ-1; Tue, 11 Aug 2020 19:55:50 -0400
-X-MC-Unique: I302rRN-MKCcX7WNVNUCYQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D8B1410059A2;
-        Tue, 11 Aug 2020 23:55:48 +0000 (UTC)
-Received: from localhost (ovpn-12-45.pek2.redhat.com [10.72.12.45])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 25BDB79CF3;
-        Tue, 11 Aug 2020 23:55:47 +0000 (UTC)
-Date:   Wed, 12 Aug 2020 07:55:45 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Michal Hocko <mhocko@suse.com>
-Cc:     Mike Kravetz <mike.kravetz@oracle.com>,
-        Wei Yang <richard.weiyang@linux.alibaba.com>,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 10/10] mm/hugetlb: not necessary to abuse temporary page
- to workaround the nasty free_huge_page
-Message-ID: <20200811235545.GY14854@MiWiFi-R3L-srv>
-References: <20200807091251.12129-1-richard.weiyang@linux.alibaba.com>
- <20200807091251.12129-11-richard.weiyang@linux.alibaba.com>
- <20200810021737.GV14854@MiWiFi-R3L-srv>
- <129cc03e-c6d5-24f8-2f3c-f5a3cc821e76@oracle.com>
- <20200811015148.GA10792@MiWiFi-R3L-srv>
- <20200811065406.GC4793@dhcp22.suse.cz>
+        Tue, 11 Aug 2020 20:03:41 -0400
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
+        by mailout.west.internal (Postfix) with ESMTP id AB3D5A90;
+        Tue, 11 Aug 2020 20:03:40 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute2.internal (MEProxy); Tue, 11 Aug 2020 20:03:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
+        message-id:subject:from:to:cc:date:in-reply-to:references
+        :content-type:mime-version:content-transfer-encoding; s=fm3; bh=
+        kGifzmVGohkcjzjJYIDd7v3omhl5y0GHMaOegwXuLr4=; b=NSCwOIJ+26IOv8Ny
+        q1bNKLh5XgI1duThB2HsZXSyn/DX6U4JxFo6pLYMUnGRDkOjxrukzZMq2XFWeT7U
+        LcrUSUaMqx5nBMw1kc108Wb6vIIY6DWhXAYnyJk6M91PoU4LkCJWMqwLeB2NMrtT
+        XaZeBQWa1oAYYtbLOlI6mFsB80aAKGNQ6TDcwMaRWrSpo+UpY2GXaKtW7gBhMBw8
+        I/CXDbZgWF6i880JlWoyTazD3Ke4eTShooQX8xfN+LHijuOdQt8a2yjUWaPx071K
+        WQXRBDZzi8UO1ZOvRGRhZNvopSeVQjIDumpyGhtPj5yOkR7mHHUTz33AtbJXvzvg
+        v+0+og==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=kGifzmVGohkcjzjJYIDd7v3omhl5y0GHMaOegwXuL
+        r4=; b=uLS2UPQUJgXX+yUdXMCtIrasj5hGV5znNtGp26pDIGvWfF2yZLVzm4xTP
+        lVcT8+80lrQf8jccUOX9CXleOGtgQrJXzUv5Aq7WeTlNE8bmNSR0B/y/0I+ORKYF
+        ueghXjgGA3xnmZLBmoVX/3iYfu6L990NdwgjWBrGDB1m04Vmx7gHq/z5wCCfpQL+
+        Ed6waam5qj2aA0UXCMpf29dKIrP3LdpzUDvsMs5CdNF13zCyfPz02JpC+TGF34yP
+        0LSwwgODxGeNiN/ldfq6AxFcckfTKnj4BYdxtZa5UchS2abWJBqjXaGc2Q+1a4li
+        46KCZl+rHw1hF0eVU2BBCu/7qstvw==
+X-ME-Sender: <xms:2zEzX6DvkQr1ZVs5eU7oDI0lDcOC2ik53f_CaJov5iY9kU0TmYbxsg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrledugddvkecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpefkrghnucfm
+    vghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqnecuggftrfgrthhtvghrnhepfe
+    efteetvdeguddvveefveeftedtffduudehueeihfeuvefgveehffeludeggfejnecukfhp
+    peehkedrjedrvddtfedruddugeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpehrrghvvghnsehthhgvmhgrfidrnhgvth
+X-ME-Proxy: <xmx:2zEzX0jj4oy2_FAPf0VaaykghkL7W28vX9tswo5EwBoFoXg76qByRQ>
+    <xmx:2zEzX9nNjcIV89QmeYvdVReUlleB3bByC9vqRBhPb9WFPhlT_ZjhRA>
+    <xmx:2zEzX4wHQXSdgqjexWumWNLoh-0LS2abP1J13uwsdkFqpgoML90DEw>
+    <xmx:3DEzXyM3lRXZzOFUDNtKUg5i2FIllDqwIeJx_dSEIqqCeo7YtgTi7w>
+Received: from mickey.themaw.net (58-7-203-114.dyn.iinet.net.au [58.7.203.114])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 6B8F13280060;
+        Tue, 11 Aug 2020 20:03:37 -0400 (EDT)
+Message-ID: <b597b764341317fd8b32345265e570dae3c25040.camel@themaw.net>
+Subject: Re: [PATCH] fs: autofs: delete repeated words in comments
+From:   Ian Kent <raven@themaw.net>
+To:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     autofs@vger.kernel.org
+Date:   Wed, 12 Aug 2020 08:03:33 +0800
+In-Reply-To: <811e011e-2f45-87c3-d92d-729680da5917@infradead.org>
+References: <20200811021817.24982-1-rdunlap@infradead.org>
+         <75e04b06be0561c3cec936cd3bbc44fe82ca73f4.camel@themaw.net>
+         <811e011e-2f45-87c3-d92d-729680da5917@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200811065406.GC4793@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/11/20 at 08:54am, Michal Hocko wrote:
-> On Tue 11-08-20 09:51:48, Baoquan He wrote:
-> > On 08/10/20 at 05:19pm, Mike Kravetz wrote:
-> > > On 8/9/20 7:17 PM, Baoquan He wrote:
-> > > > On 08/07/20 at 05:12pm, Wei Yang wrote:
-> > > >> Let's always increase surplus_huge_pages and so that free_huge_page
-> > > >> could decrease it at free time.
-> > > >>
-> > > >> Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
-> > > >> ---
-> > > >>  mm/hugetlb.c | 14 ++++++--------
-> > > >>  1 file changed, 6 insertions(+), 8 deletions(-)
-> > > >>
-> > > >> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> > > >> index 1f2010c9dd8d..a0eb81e0e4c5 100644
-> > > >> --- a/mm/hugetlb.c
-> > > >> +++ b/mm/hugetlb.c
-> > > >> @@ -1913,21 +1913,19 @@ static struct page *alloc_surplus_huge_page(struct hstate *h, gfp_t gfp_mask,
-> > > >>  		return NULL;
-> > > >>  
-> > > >>  	spin_lock(&hugetlb_lock);
-> > > >> +
-> > > >> +	h->surplus_huge_pages++;
-> > > >> +	h->surplus_huge_pages_node[page_to_nid(page)]++;
-> > > >> +
-> > > >>  	/*
-> > > >>  	 * We could have raced with the pool size change.
-> > > >>  	 * Double check that and simply deallocate the new page
-> > > >> -	 * if we would end up overcommiting the surpluses. Abuse
-> > > >> -	 * temporary page to workaround the nasty free_huge_page
-> > > >> -	 * codeflow
-> > > >> +	 * if we would end up overcommiting the surpluses.
-> > > >>  	 */
-> > > >> -	if (h->surplus_huge_pages >= h->nr_overcommit_huge_pages) {
-> > > >> -		SetPageHugeTemporary(page);
-> > > > 
-> > > > Hmm, the temporary page way is taken intentionally in
-> > > > commit 9980d744a0428 ("mm, hugetlb: get rid of surplus page accounting tricks").
-> > > > From code, this is done inside hugetlb_lock holding, and the code flow
-> > > > is straightforward, should be safe. Adding Michal to CC.
-> 
-> But the lock is not held during the migration, right?
-
-I see what I misunderstoold about the hugetlb_lock holding. The
-put_page() is called after releasing hugetlb_lock in
-alloc_surplus_huge_page(), I mistakenly got put_page() is inside
-hugetlb_lock. Yes, there's obviously a race window, and the temporary
-page way is an effective way to not mess up the surplus_huge_pages
-accounting.
-
-> 
-> > > I remember when the temporary page code was added for page migration.
-> > > The use of temporary page here was added at about the same time.  Temporary
-> > > page does have one advantage in that it will not CAUSE surplus count to
-> > > exceed overcommit.  This patch could cause surplus to exceed overcommit
-> > > for a very short period of time.  However, do note that for this to happen
-> > > the code needs to race with a pool resize which itself could cause surplus
-> > > to exceed overcommit.
-> 
-> Correct.
-> 
-> > > IMO both approaches are valid.
-> > > - Advantage of temporary page is that it can not cause surplus to exceed
-> > >   overcommit.  Disadvantage is as mentioned in the comment 'abuse of temporary
-> > >   page'.
-> > > - Advantage of this patch is that it uses existing counters.  Disadvantage
-> > >   is that it can momentarily cause surplus to exceed overcommit.
-> 
-> Do I remember correctly that this can cause an allocation failure due to
-> overcommit check? In other words it would be user space visible thing?
-> 
-> > Yeah, since it's all done inside hugetlb_lock, should be OK even
-> > though it may cause surplus to exceed overcommit.
+On Tue, 2020-08-11 at 07:42 -0700, Randy Dunlap wrote:
+> On 8/11/20 1:36 AM, Ian Kent wrote:
+> > On Mon, 2020-08-10 at 19:18 -0700, Randy Dunlap wrote:
+> > > Drop duplicated words {the, at} in comments.
 > > > 
-> > > Unless someone has a strong opinion, I prefer the changes in this patch.
+> > > Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> > > Cc: Ian Kent <raven@themaw.net>
+> > > Cc: autofs@vger.kernel.org
 > > 
-> > Agree, I also prefer the code change in this patch, to remove the
-> > unnecessary confusion about the temporary page.
+> > Acked-by: Ian Kent <raven@themaw.net>
 > 
-> I have managed to forgot all the juicy details since I have made that
-> change. All that remains is that the surplus pages accounting was quite
-> tricky and back then I didn't figure out a simpler method that would
-> achieve the consistent look at those counters. As mentioned above I
-> suspect this could lead to pre-mature allocation failures while the
-> migration is ongoing. Sure quite unlikely to happen and the race window
-> is likely very small. Maybe this is even acceptable but I would strongly
-> recommend to have all this thinking documented in the changelog.
-> -- 
-> Michal Hocko
-> SUSE Labs
+> Hi Ian,
 > 
+> Since you are the listed maintainer of this file, does this mean
+> that you will be merging it?
+
+I could but that would mean double handling since I would send it
+to Andrew anyway.
+
+Andrew, could you take this one please?
+
+> 
+> thanks.
+> 
+> > > ---
+> > >  fs/autofs/dev-ioctl.c |    4 ++--
+> > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > > 
+> > > --- linux-next-20200807.orig/fs/autofs/dev-ioctl.c
+> > > +++ linux-next-20200807/fs/autofs/dev-ioctl.c
+> > > @@ -20,7 +20,7 @@
+> > >   * another mount. This situation arises when starting
+> > > automount(8)
+> > >   * or other user space daemon which uses direct mounts or offset
+> > >   * mounts (used for autofs lazy mount/umount of nested mount
+> > > trees),
+> > > - * which have been left busy at at service shutdown.
+> > > + * which have been left busy at service shutdown.
+> > >   */
+> > >  
+> > >  typedef int (*ioctl_fn)(struct file *, struct autofs_sb_info *,
+> > > @@ -496,7 +496,7 @@ static int autofs_dev_ioctl_askumount(st
+> > >   * located path is the root of a mount we return 1 along with
+> > >   * the super magic of the mount or 0 otherwise.
+> > >   *
+> > > - * In both cases the the device number (as returned by
+> > > + * In both cases the device number (as returned by
+> > >   * new_encode_dev()) is also returned.
+> > >   */
+> > >  static int autofs_dev_ioctl_ismountpoint(struct file *fp,
 
