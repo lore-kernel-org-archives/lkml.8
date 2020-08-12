@@ -2,163 +2,82 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6CB1C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C466CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:29:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3158207DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:27:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96B7B208B3
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:29:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597235349;
+	bh=MH1bvUjYC37bx2LZsXr1vc95Xh18NFGKlhDeP1Az7Yk=;
+	h=From:Cc:Subject:Date:To:List-ID:From;
+	b=N7NTUkOzRK1QXbYj1LzH+UVfi2AkyCmKUYN9OJ5QibAXT952Dii+k9vY7/VbTE3BO
+	 843ZjpW9Q5SRXfnd9axQDXfGHUIk88X12s+rpeTDmUTv5wVvsdC9ID49PU+pv9vMFg
+	 /9gk0h/J+GIIckes9uJes8kqg1A0FI9DiPHmyq8I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727953AbgHLM1A (ORCPT
+        id S1727115AbgHLM3I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 08:27:00 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2597 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726722AbgHLM04 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 08:26:56 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id DB8FA142F805B19C9470;
-        Wed, 12 Aug 2020 13:26:53 +0100 (IST)
-Received: from localhost (10.52.122.74) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Wed, 12 Aug
- 2020 13:26:53 +0100
-Date:   Wed, 12 Aug 2020 13:25:24 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Nicholas Piggin <npiggin@gmail.com>
-CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arch@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
-        "Catalin Marinas" <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        "Zefan Li" <lizefan@huawei.com>
-Subject: Re: [PATCH v3 8/8] mm/vmalloc: Hugepage vmalloc mappings
-Message-ID: <20200812132524.000067a6@Huawei.com>
-In-Reply-To: <20200810022732.1150009-9-npiggin@gmail.com>
-References: <20200810022732.1150009-1-npiggin@gmail.com>
-        <20200810022732.1150009-9-npiggin@gmail.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Wed, 12 Aug 2020 08:29:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47470 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726804AbgHLM3H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 08:29:07 -0400
+Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60BC8207DA;
+        Wed, 12 Aug 2020 12:29:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597235347;
+        bh=MH1bvUjYC37bx2LZsXr1vc95Xh18NFGKlhDeP1Az7Yk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=U2ZdjKoqMvxZ6bw27Fdv+EH1RuGUhKoEqxoMwdRkQ+BVRSwc3wfj4uXnVeG2K3TZj
+         PYVdVJe2YDxiMoEOxVRKlgs319noSudbizIrvP3Edx/2D3kTHEXOlB9sMkkdZXqsGf
+         /WxwExAPsQ1e3rFLhj9dY5l8ESMJGNz499awdLjc=
+Received: from mchehab by mail.kernel.org with local (Exim 4.94)
+        (envelope-from <mchehab@kernel.org>)
+        id 1k5psP-005f6M-9m; Wed, 12 Aug 2020 14:29:05 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH] mfd: Kconfig: fix a typo
+Date:   Wed, 12 Aug 2020 14:29:03 +0200
+Message-Id: <42221553381256444745b6c495bb74b97aa23464.1597235340.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.52.122.74]
-X-ClientProxiedBy: lhreml728-chm.china.huawei.com (10.201.108.79) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 10 Aug 2020 12:27:32 +1000
-Nicholas Piggin <npiggin@gmail.com> wrote:
+individul -> individual
 
-> On platforms that define HAVE_ARCH_HUGE_VMAP and support PMD vmaps,
-> vmalloc will attempt to allocate PMD-sized pages first, before falling
-> back to small pages.
-> 
-> Allocations which use something other than PAGE_KERNEL protections are
-> not permitted to use huge pages yet, not all callers expect this (e.g.,
-> module allocations vs strict module rwx).
-> 
-> This reduces TLB misses by nearly 30x on a `git diff` workload on a
-> 2-node POWER9 (59,800 -> 2,100) and reduces CPU cycles by 0.54%.
-> 
-> This can result in more internal fragmentation and memory overhead for a
-> given allocation, an option nohugevmap is added to disable at boot.
-> 
-> Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
-Hi Nicholas,
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ drivers/mfd/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Busy afternoon, but a possible point of interest in line in the meantime.
-
-
-...
-
-> @@ -2701,22 +2760,45 @@ void *__vmalloc_node_range(unsigned long size, unsigned long align,
->  			pgprot_t prot, unsigned long vm_flags, int node,
->  			const void *caller)
->  {
-> -	struct vm_struct *area;
-> +	struct vm_struct *area = NULL;
->  	void *addr;
->  	unsigned long real_size = size;
-> +	unsigned long real_align = align;
-> +	unsigned int shift = PAGE_SHIFT;
->  
->  	size = PAGE_ALIGN(size);
->  	if (!size || (size >> PAGE_SHIFT) > totalram_pages())
->  		goto fail;
->  
-> -	area = __get_vm_area_node(real_size, align, VM_ALLOC | VM_UNINITIALIZED |
-> +	if (vmap_allow_huge && (pgprot_val(prot) == pgprot_val(PAGE_KERNEL))) {
-> +		unsigned long size_per_node;
-> +
-> +		/*
-> +		 * Try huge pages. Only try for PAGE_KERNEL allocations,
-> +		 * others like modules don't yet expect huge pages in
-> +		 * their allocations due to apply_to_page_range not
-> +		 * supporting them.
-> +		 */
-> +
-> +		size_per_node = size;
-> +		if (node == NUMA_NO_NODE)
-> +			size_per_node /= num_online_nodes();
-> +		if (size_per_node >= PMD_SIZE)
-> +			shift = PMD_SHIFT;
-> +	}
-> +
-> +again:
-> +	align = max(real_align, 1UL << shift);
-> +	size = ALIGN(real_size, align);
-
-So my suspicion is that the issue on arm64 is related to this.
-In the relevant call path, align is 32K whilst the size is 16K
-
-Previously I don't think we force size to be a multiple of align.
-
-I think this results in nr_pages being double what it was before.
-
-
-> +
-> +	area = __get_vm_area_node(size, align, VM_ALLOC | VM_UNINITIALIZED |
->  				vm_flags, start, end, node, gfp_mask, caller);
->  	if (!area)
->  		goto fail;
->  
-> -	addr = __vmalloc_area_node(area, gfp_mask, prot, node);
-> +	addr = __vmalloc_area_node(area, gfp_mask, prot, shift, node);
->  	if (!addr)
-> -		return NULL;
-> +		goto fail;
->  
->  	/*
->  	 * In this function, newly allocated vm_struct has VM_UNINITIALIZED
-> @@ -2730,8 +2812,16 @@ void *__vmalloc_node_range(unsigned long size, unsigned long align,
->  	return addr;
->  
->  fail:
-> -	warn_alloc(gfp_mask, NULL,
-> +	if (shift > PAGE_SHIFT) {
-> +		shift = PAGE_SHIFT;
-> +		goto again;
-> +	}
-> +
-> +	if (!area) {
-> +		/* Warn for area allocation, page allocations already warn */
-> +		warn_alloc(gfp_mask, NULL,
->  			  "vmalloc: allocation failure: %lu bytes", real_size);
-> +	}
->  	return NULL;
->  }
->  
-
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index a37d7d171382..e42d11849947 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -493,7 +493,7 @@ config MFD_HI6421_PMIC
+ 	  Add support for HiSilicon Hi6421 PMIC. Hi6421 includes multi-
+ 	  functions, such as regulators, RTC, codec, Coulomb counter, etc.
+ 	  This driver includes core APIs _only_. You have to select
+-	  individul components like voltage regulators under corresponding
++	  individual components like voltage regulators under corresponding
+ 	  menus in order to enable them.
+ 	  We communicate with the Hi6421 via memory-mapped I/O.
+ 
+-- 
+2.26.2
 
