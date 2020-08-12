@@ -2,113 +2,137 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE5DC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:40:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39319C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:40:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BCE320771
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:40:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597250404;
-	bh=tKEbUyJPjyerKiH4SY07mPFHoaydzR9owIqx719VQ6o=;
-	h=Date:From:List-Id:To:Subject:References:In-Reply-To:List-ID:From;
-	b=ZUyXD2vyBE2lpGmGqOy8oQqw053MbLXff/Y+xODMoxXFZSDyvAJNOEsPlcpXR8+Ie
-	 oEDitLBQL4KSXx17a9fU+E9HpsLzQJrjVw52ahDYdTlApbKnuDNRoI5UWcYahe+oO4
-	 gj9jdqKWfnycRbVnUdPAY7qUH1CVHI4vHMBMqjwQ=
+	by mail.kernel.org (Postfix) with ESMTP id EED5520771
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:40:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbgHLQkD (ORCPT
+        id S1726918AbgHLQkJ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 12:40:03 -0400
-Received: from mail-ej1-f67.google.com ([209.85.218.67]:38801 "EHLO
-        mail-ej1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726506AbgHLQkB (ORCPT
+        Wed, 12 Aug 2020 12:40:09 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:59809 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726510AbgHLQkE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 12:40:01 -0400
-Received: by mail-ej1-f67.google.com with SMTP id d6so2982530ejr.5;
-        Wed, 12 Aug 2020 09:40:00 -0700 (PDT)
+        Wed, 12 Aug 2020 12:40:04 -0400
+Received: from mail-pg1-f199.google.com ([209.85.215.199])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1k5tnF-0006GB-DC
+        for linux-kernel@vger.kernel.org; Wed, 12 Aug 2020 16:40:01 +0000
+Received: by mail-pg1-f199.google.com with SMTP id 36so1981300pgz.18
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 09:40:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kqb+z+n2O8TgGdU2lWAIFhyS4madYGtJhunwQOIFMyY=;
-        b=Wc51kWBh6XYfhiOJYJlntX0Tk1WqB61Rtm1dt/NJVJu+Z95hElvEwrXSklUgED8bd5
-         yAcwYbUwfrzjsojpL6dc0vypn/2ODMvp//8Os4wXC/6t0Lz415jslQ/f3QojRy7YQ+vp
-         t04Ncj/xjrKIfVlNzyN0rZX7ZXcCfecvsIP5xroIaPkBkKw/EOSzzH/XL1vzlpixGJ9q
-         RIf76AcK2qPQPhinJfTAZjIBwQd3M9Ur1me12JI6juOUuag3yTnrEPLZl+RnjVr2l0EE
-         VNkFj0RfsWmro/mQ91oBoyHoHhG4Nn0KwnvymWv18Sb2HRT4mVMdfOnmoiggJp2nfU/S
-         XLcg==
-X-Gm-Message-State: AOAM533FuaSYCEo2Gi+PAK6+AnwnQirM/zMzyhHH/8TtIXyCRPEFHAUC
-        53R0bDuEabSBUeEmF3l9P5I=
-X-Google-Smtp-Source: ABdhPJwdDcW+PWhhWe9wnBA/x6C3X1Y8Io+HJJcvcomMj8IZ5Nyk+XHJJfij1ezdNPM2WOnkSJkA2w==
-X-Received: by 2002:a17:906:1f88:: with SMTP id t8mr616839ejr.241.1597250399466;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=6Ji1lqucG/grb2OVN+O0IrjUWDOjIPmMeJi8EGBOR3U=;
+        b=Y4JbbOJK3/oI7lFKWIsUx+kIuTB6m186iEH0W3QajOttOeLQj+w0dJ5aR4lafw5BOE
+         enJ3+jbxRaJa/SBlK9hyeFPdFHeApbNrh+Gxv/XpikBRScnxZ1SVoPdCvVzOTJcLAhnK
+         mURmzvTqrWoE1Gm22vbOOFWqflUSvpAhRxn7W5iHxSp7zg36y1XjXu5eeHnKxz1xpkBW
+         auIkYC7vZo+CgQnqjGwzfq/Le8rpVFT7Zc+5vqPtqUAJn00yZvsj9MkAsrV/sSIIg4iE
+         SS/3l/XuUo4XWCXE3SEWwDbyd8+cNsii7BoN36kGjqveYNueQDY7V+fuy822NHPqSNjF
+         KPbQ==
+X-Gm-Message-State: AOAM532BKmHN1VXn7gys1p9hZX6jtE5CAZtL1feeHgY1A9fWtJl01FkP
+        ic24WmaAX2tjAHhd2QndVIOZQdVeQULvNZPfZs4GqwEts6qJP3WnLYolL78qYI6kTDc30nHYtuf
+        0tICWd2NumhDRmZFgIriYc0FFlsdCFWjJPqzfKYdpaw==
+X-Received: by 2002:a17:90b:817:: with SMTP id bk23mr886008pjb.46.1597250400073;
+        Wed, 12 Aug 2020 09:40:00 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJw53UL6r2FJ490XaYZR/YirtLM+MEb+vxIbXVyQDwdw7BkTzweu8CBj8oB5aCzPKtgJexKnhA==
+X-Received: by 2002:a17:90b:817:: with SMTP id bk23mr885980pjb.46.1597250399735;
         Wed, 12 Aug 2020 09:39:59 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.117])
-        by smtp.googlemail.com with ESMTPSA id f23sm1875212ejd.30.2020.08.12.09.39.57
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 12 Aug 2020 09:39:58 -0700 (PDT)
-Date:   Wed, 12 Aug 2020 18:39:56 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-List-Id: <soc.lore.kernel.org>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Li Yang <leoyang.li@nxp.com>, Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Olof Johansson <olof@lixom.net>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        arm@kernel.org, soc@kernel.org,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
-Subject: Re: [PATCH 2/2] arm64: defconfig: Enable ptn5150 extcon driver
-Message-ID: <20200812163956.GA6644@kozik-lap>
-References: <20200812163342.6547-1-krzk@kernel.org>
- <20200812163342.6547-2-krzk@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200812163342.6547-2-krzk@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
+        by smtp.gmail.com with ESMTPSA id p127sm2835148pfb.17.2020.08.12.09.39.57
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 12 Aug 2020 09:39:59 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.1\))
+Subject: Re: [PATCH] ALSA: hda/hdmi: Use force connectivity quirk on another
+ HP desktop
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <s5ho8nfx3v9.wl-tiwai@suse.de>
+Date:   Thu, 13 Aug 2020 00:39:56 +0800
+Cc:     tiwai@suse.com, Jaroslav Kysela <perex@perex.cz>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Nikhil Mahale <nmahale@nvidia.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Aaron Plattner <aplattner@nvidia.com>,
+        Harsha Priya <harshapriya.n@intel.com>,
+        "moderated list:SOUND" <alsa-devel@alsa-project.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <0466883E-8F02-4226-B153-F34558FC3A4A@canonical.com>
+References: <20200811095336.32396-1-kai.heng.feng@canonical.com>
+ <44573652-9ECF-4EC5-A234-DBB21FC90CC7@canonical.com>
+ <s5ho8nfx3v9.wl-tiwai@suse.de>
+To:     Takashi Iwai <tiwai@suse.de>
+X-Mailer: Apple Mail (2.3608.120.23.2.1)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 06:33:42PM +0200, Krzysztof Kozlowski wrote:
-> Enable the extcon driver for NXP PTN5150A chips (CC logic for USB Type-C
-> applications) present on some of i.MX8 evaluation boards (e.g. Variscite
-> Symphony board).
+
+
+> On Aug 12, 2020, at 23:47, Takashi Iwai <tiwai@suse.de> wrote:
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  arch/arm64/configs/defconfig | 1 +
->  1 file changed, 1 insertion(+)
+> On Wed, 12 Aug 2020 17:43:27 +0200,
+> Kai-Heng Feng wrote:
+>> 
+>> Hi,
+>> 
+>>> On Aug 11, 2020, at 17:53, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
+>>> 
+>>> There's another HP desktop has buggy BIOS which flags the Port
+>>> Connectivity bit as no connection.
+>>> 
+>>> Apply force connectivity quirk to enable DP/HDMI audio.
+>>> 
+>>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+>> 
+>> I guess this patch was omitted as well...
 > 
-> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> index 2b02a5a179d7..e2346ad6ba90 100644
-> --- a/arch/arm64/configs/defconfig
-> +++ b/arch/arm64/configs/defconfig
-> @@ -926,6 +926,7 @@ CONFIG_ARCH_TEGRA_194_SOC=y
->  CONFIG_ARCH_K3_AM6_SOC=y
->  CONFIG_ARCH_K3_J721E_SOC=y
->  CONFIG_TI_SCI_PM_DOMAINS=y
-> +CONFIG_EXTCON_PTN5150=y
+> Not omitted but applied to a wrong internal branch, sorry.
+> Now I rebased to the proper branch and pushed out.
 
-Ah, this should be a module. Works as =m as well, so either this could
-be fixed while applying or I can send a v2.
+Thanks a lot!
 
-Best regards,
-Krzysztof
+Kai-Heng
 
-
->  CONFIG_EXTCON_USB_GPIO=y
->  CONFIG_EXTCON_USBC_CROS_EC=y
->  CONFIG_IIO=y
-> -- 
-> 2.17.1
 > 
+> 
+> thanks,
+> 
+> Takashi
+> 
+>> 
+>> Kai-Heng
+>> 
+>>> ---
+>>> sound/pci/hda/patch_hdmi.c | 1 +
+>>> 1 file changed, 1 insertion(+)
+>>> 
+>>> diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
+>>> index 4bbd12d3b1b5..b8c8490e568b 100644
+>>> --- a/sound/pci/hda/patch_hdmi.c
+>>> +++ b/sound/pci/hda/patch_hdmi.c
+>>> @@ -1863,6 +1863,7 @@ static int hdmi_add_cvt(struct hda_codec *codec, hda_nid_t cvt_nid)
+>>> }
+>>> 
+>>> static const struct snd_pci_quirk force_connect_list[] = {
+>>> +	SND_PCI_QUIRK(0x103c, 0x870f, "HP", 1),
+>>> 	SND_PCI_QUIRK(0x103c, 0x871a, "HP", 1),
+>>> 	{}
+>>> };
+>>> -- 
+>>> 2.17.1
+>>> 
+>> 
+
