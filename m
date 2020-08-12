@@ -2,127 +2,61 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 605B7C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 21:36:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8AF9C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 21:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 392CB20781
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 21:36:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADB5520838
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 21:39:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726611AbgHLVg6 (ORCPT
+        id S1726574AbgHLVjE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 17:36:58 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:57795 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726490AbgHLVg5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 17:36:57 -0400
-X-Originating-IP: 90.66.108.79
-Received: from localhost (lfbn-lyo-1-1932-79.w90-66.abo.wanadoo.fr [90.66.108.79])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id E597120007;
-        Wed, 12 Aug 2020 21:36:55 +0000 (UTC)
-Date:   Wed, 12 Aug 2020 23:36:55 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] RTC for 5.9
-Message-ID: <20200812213655.GA81005@piout.net>
+        Wed, 12 Aug 2020 17:39:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50332 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726490AbgHLVjE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 17:39:04 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1110C20781;
+        Wed, 12 Aug 2020 21:39:02 +0000 (UTC)
+Date:   Wed, 12 Aug 2020 17:39:01 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     John Ogness <john.ogness@linutronix.de>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] printk: reduce LOG_BUF_SHIFT range for H8300
+Message-ID: <20200812173901.54708d9a@oasis.local.home>
+In-Reply-To: <20200812073122.25412-1-john.ogness@linutronix.de>
+References: <20200812073122.25412-1-john.ogness@linutronix.de>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Linus,
+On Wed, 12 Aug 2020 09:37:22 +0206
+John Ogness <john.ogness@linutronix.de> wrote:
 
-I'm sorry for the very late pull request. There is not much this cycle
-anyway, mostly non urgent fixes.
+> The .bss section for the h8300 is relatively small. A value of
+> CONFIG_LOG_BUF_SHIFT that is larger than 19 will create a static
+> printk ringbuffer that is too large. Limit the range appropriately
+> for the H8300.
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: John Ogness <john.ogness@linutronix.de>
 
-The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git tags/rtc-5.9
-
-for you to fetch changes up to 27006416be16b7887fb94b3b445f32453defb3f1:
-
-  rtc: pcf2127: fix alarm handling (2020-08-12 11:48:29 +0200)
-
-----------------------------------------------------------------
-RTC for 5.9
-
-Drivers:
- - ds1374: use watchdog core
- - pcf2127: add alarm and pcf2129 support
-
-----------------------------------------------------------------
-Alexander A. Klimov (1):
-      rtc: Replace HTTP links with HTTPS ones
-
-Alexandre Belloni (3):
-      rtc: ds1374: fix RTC_DRV_DS1374_WDT dependencies
-      rtc: ds1374: remove unused define
-      rtc: pcf2127: fix alarm handling
-
-Chris Packham (1):
-      rtc: ds1307: provide an indication that the watchdog has fired
-
-Huacai Chen (1):
-      rtc: goldfish: Enable interrupt in set_alarm() when necessary
-
-Johnson CH Chen (陳昭勳) (1):
-      rtc: ds1374: wdt: Use watchdog core for watchdog part
-
-Jon Hunter (1):
-      rtc: max77686: Fix wake-ups for max77620
-
-Krzysztof Kozlowski (1):
-      rtc: max77686: Do not allow interrupt to fire before system resume
-
-Liam Beguin (2):
-      rtc: pcf2127: add pca2129 device id
-      rtc: pcf2127: add alarm support
-
-Misono Tomohiro (1):
-      rtc: cleanup obsolete comment about struct rtc_class_ops
-
-Sebastian Reichel (1):
-      rtc: cpcap: fix range
-
-Sudeep Holla (1):
-      rtc: pl031: fix set_alarm by adding back call to alarm_irq_enable
-
-Tales L. da Aparecida (1):
-      rtc: imxdi: fix trivial typos
-
- .../devicetree/bindings/rtc/trivial-rtc.yaml       |   2 +
- drivers/rtc/Kconfig                                |   3 +-
- drivers/rtc/rtc-ab-b5ze-s3.c                       |   2 +-
- drivers/rtc/rtc-bq32k.c                            |   2 +-
- drivers/rtc/rtc-cpcap.c                            |   2 +-
- drivers/rtc/rtc-ds1307.c                           |   6 +
- drivers/rtc/rtc-ds1374.c                           | 262 +++++----------------
- drivers/rtc/rtc-goldfish.c                         |   1 +
- drivers/rtc/rtc-imxdi.c                            |   4 +-
- drivers/rtc/rtc-max77686.c                         |  23 +-
- drivers/rtc/rtc-mcp795.c                           |   2 +-
- drivers/rtc/rtc-pcf2127.c                          | 144 ++++++++++-
- drivers/rtc/rtc-pcf85063.c                         |   4 +-
- drivers/rtc/rtc-pl031.c                            |   1 +
- include/linux/rtc.h                                |   4 -
- 15 files changed, 244 insertions(+), 218 deletions(-)
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+-- Steve
