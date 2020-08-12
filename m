@@ -2,84 +2,162 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 480BAC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 00:37:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DCF2C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 00:42:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A0FC2078B
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 00:37:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EDF32080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 00:42:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eUizsHu8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726521AbgHLAh1 (ORCPT
+        id S1726441AbgHLAmC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 20:37:27 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:51294 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726143AbgHLAh0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 20:37:26 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1k5ekq-0007Xc-WE; Wed, 12 Aug 2020 10:36:34 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Wed, 12 Aug 2020 10:36:32 +1000
-Date:   Wed, 12 Aug 2020 10:36:32 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>
-Cc:     Eric Biggers <ebiggers@kernel.org>,
-        "Van Leeuwen, Pascal" <pvanleeuwen@rambus.com>,
-        "Andrei Botila (OSS)" <andrei.botila@oss.nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-arm-kernel@axis.com" <linux-arm-kernel@axis.com>,
-        Andrei Botila <andrei.botila@nxp.com>,
-        Antoine Tenart <antoine.tenart@bootlin.com>
-Subject: Re: [PATCH 19/22] crypto: inside-secure - add check for xts input
- length equal to zero
-Message-ID: <20200812003632.GB4166@gondor.apana.org.au>
-References: <20200807162010.18979-1-andrei.botila@oss.nxp.com>
- <20200807162010.18979-20-andrei.botila@oss.nxp.com>
- <CY4PR0401MB36528610C3ABF802F8CBF35FC3440@CY4PR0401MB3652.namprd04.prod.outlook.com>
- <20200810134500.GA22914@gondor.apana.org.au>
- <fd3e5862-3357-7dfc-6c75-30086ab19f82@nxp.com>
- <20200810170305.GA3352718@gmail.com>
- <d4a471e6-34c9-c702-63d6-1f6a3cba0ebe@nxp.com>
+        Tue, 11 Aug 2020 20:42:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60620 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726255AbgHLAmB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 20:42:01 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 794E9C06174A;
+        Tue, 11 Aug 2020 17:42:01 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id dd12so319777qvb.0;
+        Tue, 11 Aug 2020 17:42:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=xKVZMt/dePQM4MuKFNd6Ajk9D8rVSs9BrWtvNC9qc9Q=;
+        b=eUizsHu8R2pQS6jRVnAREKzRnltxbHGsHDlbgl5HiZ8T5WP5v7R/FdXEW5olp9Ng4m
+         l+bFua7uNOEktthT8oYm4yfGaNTfxvC66ef1WD9u+GtMj3ENvmgEKl9eOksAcY8lu8Qm
+         1K7I6by5x4eB0w4Iuf5XNtn5c90/CC9bdgZPoJ1GssLh3FVQGF4hZpbCur0oV53CKL8z
+         w930PnLmAWlzYH7IkdedzATG4omTW+TFM8xH8gI2nTzShFENKKPraETMzUBJjQrNCfHH
+         ccB/MSJUxR2xoQJzlWkIXPiAwqg7vVGVIW6H5gqZfugaLeHstlrWLHNy/BAlS+wUfQc3
+         L8Ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=xKVZMt/dePQM4MuKFNd6Ajk9D8rVSs9BrWtvNC9qc9Q=;
+        b=nTCMeobPWgHCvE30bJMnUr8OZ6EkjxWu1DcmndUfVT1wuC3Py/Zf907ky2hNkkRc6N
+         Q7goBzQ08na8IsOvHIUveh7g2N0tJfVyOyNHnfTPOBzFTDnYYILHA1gN5wnANZkrr/Jj
+         ZRjD9HBC5PBYMkNYms2We1V4JczIBoFHMhvoPz+BrkkaX0AxOpEvHct5dSqa8GShujTJ
+         WTrd9kuglRXafb6dbIRN0NM8tpVw3O+2z2ncFj/fB2W7AN/BrHVRkq1gEre8Hg7wZdHT
+         UbnkVwxKVOR1lH/kQQUvuiFfSAXXuhyPAS2tJ/gkvqD2MAgVu84EahVniAj2yhmFkNKZ
+         mEgQ==
+X-Gm-Message-State: AOAM530xNHexvhepuSnlUTSfpTF5heNU67dFXjFHl/YHhVekffjP+Qj6
+        ivVJISo3XqiYyGVUr1L1c+U=
+X-Google-Smtp-Source: ABdhPJzOLnPrJZZPql96/UdA/v/SB+X6pwhuRB/dd7/mwcEzvawX/rCxuGUowLW4sIq7ayJZcY9Wag==
+X-Received: by 2002:ad4:4089:: with SMTP id l9mr4196623qvp.175.1597192920425;
+        Tue, 11 Aug 2020 17:42:00 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id w58sm544891qth.95.2020.08.11.17.41.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Aug 2020 17:41:59 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Tue, 11 Aug 2020 20:41:58 -0400
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Fangrui Song <maskray@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        e5ten.arch@gmail.com,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "# 3.4.x" <stable@vger.kernel.org>
+Subject: Re: [PATCH] x86/boot/compressed: Disable relocation relaxation for
+ non-pie link
+Message-ID: <20200812004158.GA1447296@rani.riverdale.lan>
+References: <CAKwvOd=ypa8xE-kaDa7XtzPsBH8=Xu_pZj2rnWaeawNs=3dDkw@mail.gmail.com>
+ <20200811173655.1162093-1-nivedita@alum.mit.edu>
+ <CAKwvOdnjLfQ0fWsrFYDJ2O+qFAfEFnTEEnW-aHrPha8G3_WTrg@mail.gmail.com>
+ <20200811224436.GA1302731@rani.riverdale.lan>
+ <CAKwvOdnvyVapAJBchivu8SxoQriKEu1bAimm8688EH=uq5YMqA@mail.gmail.com>
+ <20200811234340.GA1318440@rani.riverdale.lan>
+ <CAKwvOdn5gCjcAVHZ3jHU+q=mD5rmFAHpEyHyLf7ixtdaQ3Z-PQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d4a471e6-34c9-c702-63d6-1f6a3cba0ebe@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAKwvOdn5gCjcAVHZ3jHU+q=mD5rmFAHpEyHyLf7ixtdaQ3Z-PQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 06:28:39PM +0300, Horia Geantă wrote:
->
-> What about, for example, CBC?
-> AFAICT cbc(aes) with input length = 0 is valid.
+On Tue, Aug 11, 2020 at 04:51:23PM -0700, Nick Desaulniers wrote:
+> On Tue, Aug 11, 2020 at 4:43 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
+> >
+> > On Tue, Aug 11, 2020 at 04:04:40PM -0700, Nick Desaulniers wrote:
+> > > On Tue, Aug 11, 2020 at 3:44 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
+> > > >
+> > > > On Tue, Aug 11, 2020 at 10:58:40AM -0700, Nick Desaulniers wrote:
+> > > > > > Cc: stable@vger.kernel.org # 4.19.x
+> > > > >
+> > > > > Thanks Arvind, good write up.  Just curious about this stable tag, how
+> > > > > come you picked 4.19?  I can see boot failures in our CI for x86+LLD
+> > > > > back to 4.9.  Can we amend that tag to use `# 4.9`? I'd be happy to
+> > > > > help submit backports should they fail to apply cleanly.
+> > > > > https://travis-ci.com/github/ClangBuiltLinux/continuous-integration/builds/179237488
+> > > > >
+> > > >
+> > > > 4.19 renamed LDFLAGS to KBUILD_LDFLAGS. For 4.4, 4.9 and 4.14 the patch
+> > > > needs to be modified, KBUILD_LDFLAGS -> LDFLAGS, so I figured we should
+> > > > submit backports separately. For 4.19 onwards, it should apply without
+> > > > changes I think.
+> > >
+> > > Cool, sounds good.  I'll keep an eye out for when stable goes to pick this up.
+> > >
+> > > tglx, Ingo, BP, can we pretty please get this in tip/urgent for
+> > > inclusion into 5.9?
+> > > --
+> > > Thanks,
+> > > ~Nick Desaulniers
+> >
+> > Another alternative is to just do this unconditionally instead of even
+> > checking for the -pie flag. None of the GOTPCRELs are in the
+> > decompressor, so they shouldn't be performance-sensitive at all.
+> >
+> > It still wouldn't apply cleanly to all the stable versions, but
+> > backporting would be even simpler.
+> >
+> > What do you think?
+> >
+> > diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+> > index 3962f592633d..10c2ba59d192 100644
+> > --- a/arch/x86/boot/compressed/Makefile
+> > +++ b/arch/x86/boot/compressed/Makefile
+> > @@ -43,6 +43,7 @@ KBUILD_CFLAGS += -Wno-pointer-sign
+> >  KBUILD_CFLAGS += $(call cc-option,-fmacro-prefix-map=$(srctree)/=)
+> >  KBUILD_CFLAGS += -fno-asynchronous-unwind-tables
+> >  KBUILD_CFLAGS += -D__DISABLE_EXPORTS
+> > +KBUILD_CFLAGS += $(call as-option,-Wa$(comma)-mrelax-relocations=no)
+> 
+> We'd still want it for KBUILD_AFLAGS, too, just to be safe. Maybe a
 
-That's just because CBC accepts any input which is a multiple
-of blocksize.
+KBUILD_CFLAGS gets included into KBUILD_AFLAGS, so this already does
+that.
 
-> Same for CTR (with the note that blocksize = 1) and several other algorithms
-> mentioned in the cover letter.
-
-CTR accepts any input size.
-
-> What's the rule in these cases?
-
-What input size is accepted depends on the algorithm.
-
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+> one line comment to the effect of `# remove me once we can link as
+> -pie` would help us rip off this band-aid in the future?  It's more
+> obvious that the added hunk can be reverted once -pie linkage is
+> achieved with the current patch; either are fine by me.  Thanks!
+> 
+> >
+> >  KBUILD_AFLAGS  := $(KBUILD_CFLAGS) -D__ASSEMBLY__
+> >  GCOV_PROFILE := n
+> 
+> 
+> 
+> -- 
+> Thanks,
+> ~Nick Desaulniers
