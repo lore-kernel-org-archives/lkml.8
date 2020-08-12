@@ -2,107 +2,223 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B853C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 18:59:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04853C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:01:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D16DF20866
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 18:59:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3B2D20838
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:01:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597258792;
-	bh=/wdga4UNSKTHfzzgL8b+sTrJQhQuvj60dfRwTV4au+I=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=pLZM0xAQwrdm9O/FRbU9HC0g7zJABac0U6npU26RVv3MRirRGOWyI+PuQVo3WIvNz
-	 6aRBHVMEDnWov08MK7SGnc1CXTYvkrQBkq5BhXjgGkVNwtkuvRX2x9mDyji/q4b7t7
-	 tc3t8U1czrXMNqGPDQvwrHOTyD6aMWbeI/Ok9jv4=
+	s=default; t=1597258865;
+	bh=Lyp6UJJuG/8lZ1akf0m3/bkg8Lo0dmkVxOXoHpckVtk=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=at0jhrn5zyzVdc+bZ3AqnGo8BK0vMgam1hKPzvCJtOgObJCy5YnEnH00dQGpKs19Y
+	 1kkAA03eLyDC45HSHni6qQf3L9KBzyzQEe65I91zCFTNYLQKhDtCaGmRAtvmvkkWaU
+	 tCrSi8nrem5fCUa48xs0BGYLZm1bI3VsHzZOoJVE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726637AbgHLS7v (ORCPT
+        id S1726600AbgHLTBE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 14:59:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60370 "EHLO mail.kernel.org"
+        Wed, 12 Aug 2020 15:01:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726447AbgHLS7v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 14:59:51 -0400
-Received: from onda.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
+        id S1726515AbgHLTBD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 15:01:03 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70AC720774;
-        Wed, 12 Aug 2020 18:59:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2D0120781;
+        Wed, 12 Aug 2020 19:01:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597258790;
-        bh=/wdga4UNSKTHfzzgL8b+sTrJQhQuvj60dfRwTV4au+I=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=w9VyCjMfLpHM6SJRTjzkW/Z5MxU+3eg1va9oDApDyOEJGq2zjgIuS1d4Rrq2pmVrB
-         Z+L6UcwoueIx/DEG0iCChjOgfiIVYPRx++/zS2gcCSx8ZXxHD6bfG89Lmh/VqPRN1a
-         tSosj6QHQDN/qPEVmRu+jJf/Eq5IIY6OYOEMSXnA=
-Date:   Wed, 12 Aug 2020 15:59:47 -0300
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     devel@driverdev.osuosl.org, Mayulong <mayulong1@huawei.com>,
-        linuxarm@huawei.com, linux-kernel@vger.kernel.org,
-        mauro.chehab@huawei.com
-Subject: Re: [PATCH 01/44] staging: spmi: add Hikey 970 SPMI controller
- driver
-Message-ID: <20200812155947.61479b84@onda.lan>
-In-Reply-To: <20200812162814.GB2650123@kroah.com>
-References: <cover.1597247164.git.mchehab+huawei@kernel.org>
-        <4305f945d257cf590646100cad752a0a6542a152.1597247164.git.mchehab+huawei@kernel.org>
-        <20200812162814.GB2650123@kroah.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        s=default; t=1597258862;
+        bh=Lyp6UJJuG/8lZ1akf0m3/bkg8Lo0dmkVxOXoHpckVtk=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=p2wByT2hjS3n5m9FNFn5UO79ntxtiIySENKTMv3UiLF42ono2E36CZCOST6ENiHHu
+         7u/FZdwqqOMr8pCTSAKzt+XvDq8qs7TNVS3LE5z+lj6gNUDdoMJN+fMfyCoraUw1Cl
+         +DqCyQEsyYjGwelaU24H+ajsnppS2Vy3Dvuzum24=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 936D43522615; Wed, 12 Aug 2020 12:01:02 -0700 (PDT)
+Date:   Wed, 12 Aug 2020 12:01:02 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, rcu@vger.kernel.org,
+        linux- stable <stable@vger.kernel.org>, srostedt@redhat.com,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        lkft-triage@lists.linaro.org, Basil Eljuse <Basil.Eljuse@arm.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        john.fastabend@gmail.com, jakub@cloudflare.com,
+        Andrii Nakryiko <andriin@fb.com>
+Subject: Re: WARNING: kernel/rcu/tree.c:618 rcu_eqs_enter.isra.67+0xd8
+Message-ID: <20200812190102.GI4295@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <CA+G9fYt9J3tzYjVMq2Z-i8+j3qHTNVX8zwVOJrzRbiJmei7OHw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYt9J3tzYjVMq2Z-i8+j3qHTNVX8zwVOJrzRbiJmei7OHw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, 12 Aug 2020 18:28:14 +0200
-Greg Kroah-Hartman <gregkh@linuxfoundation.org> escreveu:
-
-> On Wed, Aug 12, 2020 at 05:56:11PM +0200, Mauro Carvalho Chehab wrote:
-> > From: Mayulong <mayulong1@huawei.com>
-> > 
-> > Add the SPMI controller code required to use the Kirin 970
-> > SPMI bus.
-> > 
-> > [mchehab+huawei@kernel.org: added just the SPMI controller on this patch]
-> > 
-> > The complete patch is at:
-> > 
-> > 	https://github.com/96boards-hikey/linux/commit/08464419fba2
-> > 
-> > Signed-off-by: Mayulong <mayulong1@huawei.com>
-> > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> > ---
-> >  .../staging/hikey9xx/hisi-spmi-controller.c   | 390 ++++++++++++++++++
-> >  1 file changed, 390 insertions(+)
-> >  create mode 100644 drivers/staging/hikey9xx/hisi-spmi-controller.c
-> > 
-> > diff --git a/drivers/staging/hikey9xx/hisi-spmi-controller.c b/drivers/staging/hikey9xx/hisi-spmi-controller.c
-> > new file mode 100644
-> > index 000000000000..987526c8b49f
-> > --- /dev/null
-> > +++ b/drivers/staging/hikey9xx/hisi-spmi-controller.c
-> > @@ -0,0 +1,390 @@
-> > +
-> > +#include <linux/delay.h>  
+On Wed, Aug 12, 2020 at 09:43:35PM +0530, Naresh Kamboju wrote:
+> While running kselftests bpf test_verifier on arm64 juno-r2 device
+> the kernel BUG and WARNING noticed.
 > 
-> <snip>
+> metadata:
+>   git branch: linux-5.8.y
+>   git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+>   git commit: b30c8c9d42601af8ebeb3ad42085ff4134a111a0
+
+I don't see this commit in -stable.  Where should I be looking?
+
+git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git
+
+>   git describe: v5.8-39-gb30c8c9d4260
+>   make_kernelversion: 5.8.1-rc1
+>   kernel-config:
+> http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/juno/lkft/linux-stable-rc-5.8/3/config
 > 
-> No SPDX line at all?
+> [  102.671323]  bpf_prog_test_run_xdp+0xf4/0x1b0
+> [  102.675688]  __do_sys_bpf+0x708/0x1d18
+> [  102.679442]  __arm64_sys_bpf+0x28/0x38
+> [  102.683197]  el0_svc_common.constprop.3+0x7c/0x198
+> [  102.687995]  do_el0_svc+0x34/0xa0
+> [  102.691315]  el0_sync_handler+0x16c/0x210
+> [  102.695329]  el0_sync+0x140/0x180
+> [  102.698651] Code: d4202000 d4202000 d4202000 d4202000 (d4202000)
+> [  102.704758] ---[ end trace 14c3fdd625b93f51 ]---
+
+Whatever error prompted this last stack trace needs attention.
+
+> [  102.709383] note: test_verifier[740] exited with preempt_count 2
+
+Looks like there is a preempt_disable() that is lacking the
+corresponding preempt_disable() on some code path.
+
+Could you please try to bisect this?
+
+> [  102.715399] BUG: sleeping function called from invalid context at
+> /usr/src/kernel/include/linux/percpu-rwsem.h:49
+> [  102.725680] in_atomic(): 0, irqs_disabled(): 128, non_block: 0,
+
+As the "BUG:" message says...
+
+> pid: 740, name: test_verifier
+> [  102.734219] INFO: lockdep is turned off.
+> [  102.738146] irq event stamp: 4369860
+> [  102.741729] hardirqs last  enabled at (4369859):
+> [<ffff80001015ab18>] ktime_get+0xc0/0x178
+> [  102.750010] hardirqs last disabled at (4369860):
+> [<ffff800010029a04>] debug_exception_enter+0xac/0xe8
+> [  102.759249] softirqs last  enabled at (4369842):
+> [<ffff8000102161d4>] bpf_ksym_add+0x12c/0x148
+> [  102.767878] softirqs last disabled at (4369840):
+> [<ffff8000102160d4>] bpf_ksym_add+0x2c/0x148
+> [  102.776419] CPU: 2 PID: 740 Comm: test_verifier Tainted: G      D W
+>         5.8.1-rc1 #1
+> [  102.784523] Hardware name: ARM Juno development board (r2) (DT)
+> [  102.790451] Call trace:
+> [  102.792900]  dump_backtrace+0x0/0x1f8
+> [  102.796567]  show_stack+0x2c/0x38
+> [  102.799889]  dump_stack+0xf0/0x16c
+> [  102.803296]  ___might_sleep+0x144/0x208
+> [  102.807137]  __might_sleep+0x54/0x90
+> [  102.810719]  exit_signals+0x54/0x3e8
+> [  102.814301]  do_exit+0xc8/0xae0
+> [  102.817446]  die+0x200/0x268
+> [  102.820329]  arm64_notify_die+0xa0/0xc0
+> [  102.824172]  do_debug_exception+0xf0/0x128
+> [  102.828275]  el1_sync_handler+0x90/0xf0
+> [  102.832116]  el1_sync+0x7c/0x100
+> [  102.835347]  0xffff8000000129b8
+> [  102.838493]  bpf_prog_d53bb52e3f4483f9_F+0x38/0x8d0
+> [  102.843379]  bpf_dispatcher_xdp_func+0x30/0x40
+> [  102.847830]  bpf_test_run+0x180/0x570
+> [  102.851497]  bpf_prog_test_run_xdp+0xf4/0x1b0
+> [  102.855861]  __do_sys_bpf+0x708/0x1d18
+> [  102.859615]  __arm64_sys_bpf+0x28/0x38
+> [  102.863369]  el0_svc_common.constprop.3+0x7c/0x198
+> [  102.868167]  do_el0_svc+0x34/0xa0
+> [  102.871486]  el0_sync_handler+0x16c/0x210
+> [  102.875501]  el0_sync+0x140/0x180
+> [  102.886823] ------------[ cut here ]------------
+> [  102.887376] kauditd_printk_skb: 125 callbacks suppressed
+> [  102.887387] audit: type=1701 audit(1597081698.472:1942):
+> auid=4294967295 uid=0 gid=0 ses=4294967295 pid=738 comm=\"timeout\"
+> exe=\"/usr/bin/timeout.coreutils\" sig=11 res=1
 > 
-> :(
+> [  102.891463] WARNING: CPU: 2 PID: 0 at
+> /usr/src/kernel/kernel/rcu/tree.c:618 rcu_eqs_enter.isra.67+0xd8/0xe0
 
-This is added later on at this series. The first patch came from a 4.9
-tree, where such tags weren't used yet.
+If the line number matches -stable v5.8.1, this could be due
+to exception-handler entry/exit updates of RCU state not being
+set up properly.  For example, if some system-call-like entry from
+userspace failed to call rcu_user_exit() in a kernel built with context
+tracking, though there are many ways to make this sort of error appear.
+Historically, the most common cause has been a missing rcu_irq_enter()
+or rcu_irq_exit() call one one of the exception paths.
 
-The next patches on this series will add SPDX to all files.
+It is of course quite possible that this error is a consequence of
+earlier errors, so I would suggest focusing first on fixing the
+earlier errors.
 
-Regards,
-Mauro
+						Thanx, Paul
 
+> [  102.891467] Modules linked in: rfkill tda998x cec drm_kms_helper
+> drm crct10dif_ce fuse
+> [  102.891486] CPU: 2 PID: 0 Comm: swapper/2 Tainted: G      D W
+>   5.8.1-rc1 #1
+> [  102.891490] Hardware name: ARM Juno development board (r2) (DT)
+> [  102.891495] pstate: 200003c5 (nzCv DAIF -PAN -UAO BTYPE=--)
+> [  102.891501] pc : rcu_eqs_enter.isra.67+0xd8/0xe0
+> [  102.891511] lr : rcu_eqs_enter.isra.67+0x10/0xe0
+> [  102.957881] sp : ffff800013683f20
+> [  102.961198] x29: ffff800013683f20 x28: 0000000000000000
+> [  102.966519] x27: 0000000000000000 x26: ffff000973033800
+> [  102.971840] x25: ffff00097ef5fc80 x24: ffff800012651410
+> [  102.977162] x23: ffff800011f00c78 x22: ffff800012650000
+> [  102.982483] x21: ffff800012651000 x20: ffff800011f02000
+> [  102.987803] x19: ffff00097ef61ec0 x18: ffffffffffffffff
+> [  102.993124] x17: 0000000000000000 x16: 0000000000000000
+> [  102.998444] x15: 000000000000006c x14: 000000000000002a
+> [  103.003765] x13: 0000000000000002 x12: 0000000000000000
+> [  103.009086] x11: 0000000000000000 x10: ffff80001264b1c8
+> [  103.014406] x9 : 0000000000000000 x8 : ffff800012650a88
+> [  103.019727] x7 : ffff80001016d09c x6 : 0000000000000000
+> [  103.025048] x5 : 0000000000000000 x4 : 0000000000000000
+> [  103.030368] x3 : ffff800012650a88 x2 : 00000017f0129f00
+> [  103.035689] x1 : 4000000000000002 x0 : 4000000000000000
+> [  103.041011] Call trace:
+> [  103.043461]  rcu_eqs_enter.isra.67+0xd8/0xe0
+> [  103.047739]  rcu_idle_enter+0x44/0x70
+> [  103.051406]  do_idle+0x214/0x2c0
+> [  103.054637]  cpu_startup_entry+0x2c/0x70
+> [  103.058567]  secondary_start_kernel+0x1a8/0x200
+> [  103.063103] irq event stamp: 449856
+> [  103.066599] hardirqs last  enabled at (449855):
+> [<ffff80001016d1ec>] tick_nohz_idle_exit+0x64/0xd0
+> [  103.075574] hardirqs last disabled at (449856):
+> [<ffff800011329c08>] __schedule+0xf0/0x8f0
+> [  103.083853] softirqs last  enabled at (449814):
+> [<ffff8000100019bc>] __do_softirq+0x59c/0x5dc
+> [  103.092396] softirqs last disabled at (449803):
+> [<ffff80001008fbf4>] irq_exit+0x144/0x150
+> 
+> 
+> Full output log:
+> https://qa-reports.linaro.org/lkft/linux-stable-rc-5.8-oe/build/v5.8-39-gb30c8c9d4260/testrun/3049360/suite/linux-log-parser/test/check-kernel-exception-1657446/log
+> 
+> --
+> Linaro LKFT
+> https://lkft.linaro.org
