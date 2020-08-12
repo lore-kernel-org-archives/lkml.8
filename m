@@ -8,352 +8,213 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8207EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 05:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F5EEC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 05:17:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5030020768
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 05:14:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3E34206C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 05:17:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dD0G3wyu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T+hYaEb0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726637AbgHLFOY (ORCPT
+        id S1726657AbgHLFRV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 01:14:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45898 "EHLO
+        Wed, 12 Aug 2020 01:17:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725944AbgHLFOX (ORCPT
+        with ESMTP id S1725944AbgHLFRV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 01:14:23 -0400
+        Wed, 12 Aug 2020 01:17:21 -0400
 Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 117FAC06174A
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 22:14:23 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id e4so545235pjd.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 22:14:23 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DD67C06174A
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 22:17:21 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id l60so540070pjb.3
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 22:17:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=yqN/6PSKloXFvVVZs+NSVTFvKWCYyMKFMfiTSTyCzNY=;
-        b=dD0G3wyuEIpsh9NKhHAO9Z7jq1afFRQMImNsdJWhy/zG4rq7TaUKanptItHNKMEDju
-         +i85LkeBhfHswhorOPlfwSPCL5I2SkvdRrYcL8RaBPgMUDfHXhPvjZH3/Gc6SG/irSjV
-         6Uqntam6exSqTWaudiV0zzEjAJHLirwjZwZ8FpP1KyCJLg+IwQDFlwNJnL5TX0LER8lE
-         b1qJTxNdwYWyfZ02yocTwbPCnIgllJu7T4khwvFldhuug0lB0HlshJWeERDDQS4Z7u/9
-         icPg+RO4iC95jrjUNfb/ND7cdpuB+qapIzQEySwBUYhuwnDU8go2vVQ9y4WYYfDAOAx1
-         SwUQ==
+        bh=Po0Y4p2+iqQSTXjlLpva9c3LO+7SRYD5DhzkCojY0rw=;
+        b=T+hYaEb0HCElY2tWsbM5W2OErXBuUOKpwFlxWyU7GeFOuaA7VmANP6Sm/ojvkoW6Lj
+         ze6hRFfp+XqHCTjiR01H78yxPYc9QQGbTKy2M7wL09Aa38GzciSlWvcU8VSjoHkkUVVp
+         kQ860FhamX+2VAkRTCRGhiMh27zsRbsHVTV9W7zdGy25I4pS4R8fywWs438zzsIg00ZQ
+         3Z71uvfqJiztHgUc+wDKPCOten49RAnUM6uNI/CvSdwb0xNozlxG7q183B2aNkUk+ju2
+         ZbgdBcvPHOaDezWYuaW5ZyDcLYv9jDbOBY6HCslSNJgzBi+u51hlW0aTw6OPLLYZMUjU
+         PfEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=yqN/6PSKloXFvVVZs+NSVTFvKWCYyMKFMfiTSTyCzNY=;
-        b=PQnHFhfoUkcqc+Ju3cy/ptEE70ATra4+Ex0BBBaH2oxp7wtH/1USemWeXDo/lzgDCh
-         8R6xQlTB5vOMaM3Dtr+NiZMCPY3PQD+OOhE6vGeElA/POdYqW5MQA791GqJCVk/vCWhi
-         IH7Qk3n7BPQwzvPdIyPhCg2o2tmA4sl6CbXRBOwAZ0eRp4KtVTfEzmP+bj6ArVUfDlr5
-         X2gTmn3raqSDYyZecCcjhp9acZIFfYPvcezN0mtoQ8qXDKLBKbMF3fat76bAdoScu51q
-         qWhsK9m4rOgCdDwtThFVvMxNVK2R/FTWlAknykiINYiwU4oF2o+ArFF8HoFqgiLDhH9e
-         DRHA==
-X-Gm-Message-State: AOAM532FKUqpL76ttiSHKc04eM3VGBv1/YTtJomtMS8tX8rlDl6uGX/4
-        zXeztREIdxdrS3ZHtrPq6i4=
-X-Google-Smtp-Source: ABdhPJzAZhRtVwua/JRMRHzPojWjIEmywpvZIbtvMFbbDm8M7dic+xkimpUBAkJvql/TXFbwSPxg9A==
-X-Received: by 2002:a17:902:7004:: with SMTP id y4mr3767164plk.52.1597209262419;
-        Tue, 11 Aug 2020 22:14:22 -0700 (PDT)
-Received: from builder-PowerEdge-R730xd.mioffice.cn ([43.224.245.179])
-        by smtp.gmail.com with ESMTPSA id n3sm825813pfq.131.2020.08.11.22.14.19
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Aug 2020 22:14:22 -0700 (PDT)
-From:   Qianli Zhao <zhaoqianligood@gmail.com>
-To:     tglx@linutronix.de, axboe@kernel.dk, akpm@linux-foundation.org,
-        Felix.Kuehling@amd.com
-Cc:     john.stultz@linaro.org, sboyd@kernel.org,
-        ben.dooks@codethink.co.uk, bfields@redhat.com, cl@rock-chips.com,
-        linux-kernel@vger.kernel.org, zhaoqianli@xiaomi.com
-Subject: [RFC V2] kthread: add object debug support
-Date:   Wed, 12 Aug 2020 13:14:14 +0800
-Message-Id: <311159bc826dcca2848344fc277c0069cff0a164.1597207603.git.zhaoqianli@xiaomi.com>
-X-Mailer: git-send-email 2.7.4
+        bh=Po0Y4p2+iqQSTXjlLpva9c3LO+7SRYD5DhzkCojY0rw=;
+        b=d3XFEQjdPdTSh/u9mdURZmandFxGDkazgyyERp2m9DQrIzVajqFrAxFpHUwgnFgz4t
+         7MPm8lR3wUHQILTAhuQPyjfL8PXwvUMmtruBNeZbLSZdbEAVSwGZgrod/LXe7xjYwkME
+         efE69XvbKU3M1HZxcqjLGSdSo0JvLc4FN8RcfACX17FZGvmGWleYCqIwL8q8zaO0OIm2
+         DQ5fH9Nlko7ITBjn/Zp4tlNQd12to58yMyJ0m0C0rVdznCguNj3mGddjwHUZ9pD95pSJ
+         yGXZiA1l+s7DIh9jXd2Yjyb7nFqgDIALMTX0JUOOOrEcFxuS18FqZHUpbAYKlUJPBevZ
+         9HcA==
+X-Gm-Message-State: AOAM533I05YschGJgE36CXHLfFqvzQl+SDIItU8EUUuOLP99vdRt3k1T
+        Gwb1d9W+rOKr+f3LHywidctbGlLJdRg=
+X-Google-Smtp-Source: ABdhPJyeBNwymK1KUM8ISupJ71mP+GdrxXLlbOSEw6ff1QuP1H/mgJ4B+Fn1heF/hO7NcLul0DcWNQ==
+X-Received: by 2002:a17:90a:ee8d:: with SMTP id i13mr4604727pjz.19.1597209440187;
+        Tue, 11 Aug 2020 22:17:20 -0700 (PDT)
+Received: from daehojeong1.seo.corp.google.com ([2401:fa00:d:1:a6ae:11ff:fe18:6ce2])
+        by smtp.gmail.com with ESMTPSA id z6sm841051pfg.68.2020.08.11.22.17.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Aug 2020 22:17:19 -0700 (PDT)
+From:   Daeho Jeong <daeho43@gmail.com>
+To:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com
+Cc:     Daeho Jeong <daehojeong@google.com>
+Subject: [PATCH v3] f2fs: change virtual mapping way for compression pages
+Date:   Wed, 12 Aug 2020 14:17:11 +0900
+Message-Id: <20200812051711.2147716-1-daeho43@gmail.com>
+X-Mailer: git-send-email 2.28.0.236.gb10cc79966-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qianli Zhao <zhaoqianli@xiaomi.com>
+From: Daeho Jeong <daehojeong@google.com>
 
-Add debugobject support to track the life time of kthread_work
-which is used to detect reinitialization/free active object problems
-Add kthread_init_work_onstack/kthread_init_delayed_work_onstack for
-kthread onstack support
+By profiling f2fs compression works, I've found vmap() callings have
+unexpected hikes in the execution time in our test environment and
+those are bottlenecks of f2fs decompression path. Changing these with
+vm_map_ram(), we can enhance f2fs decompression speed pretty much.
 
-Signed-off-by: Qianli Zhao <zhaoqianli@xiaomi.com>
+[Verification]
+Android Pixel 3(ARM64, 6GB RAM, 128GB UFS)
+Turned on only 0-3 little cores(at 1.785GHz)
+
+dd if=/dev/zero of=dummy bs=1m count=1000
+echo 3 > /proc/sys/vm/drop_caches
+dd if=dummy of=/dev/zero bs=512k
+
+- w/o compression -
+1048576000 bytes (0.9 G) copied, 2.082554 s, 480 M/s
+1048576000 bytes (0.9 G) copied, 2.081634 s, 480 M/s
+1048576000 bytes (0.9 G) copied, 2.090861 s, 478 M/s
+
+- before patch -
+1048576000 bytes (0.9 G) copied, 7.407527 s, 135 M/s
+1048576000 bytes (0.9 G) copied, 7.283734 s, 137 M/s
+1048576000 bytes (0.9 G) copied, 7.291508 s, 137 M/s
+
+- after patch -
+1048576000 bytes (0.9 G) copied, 1.998959 s, 500 M/s
+1048576000 bytes (0.9 G) copied, 1.987554 s, 503 M/s
+1048576000 bytes (0.9 G) copied, 1.986380 s, 503 M/s
+
+Signed-off-by: Daeho Jeong <daehojeong@google.com>
 ---
-I got an crash issue since kthread_delayed_work reinitialization,crash log show us that is a timer NULL pointer exception
-[16238.089921] Unable to handle kernel paging request at virtual address dead000000000208
-[16238.090298] Call trace:
-[16238.090307]  run_timer_softirq+0x2d0/0xa30
-[16238.090318]  __do_softirq+0x1dc/0x384
-[16238.090328]  irq_exit+0xb4/0xb8
-[16238.090338]  __handle_domain_irq+0x84/0xc0
-[16238.090345]  gic_handle_irq+0x138/0x1bc
-[16238.090353]  el1_irq+0xb0/0x128
-[16238.090362]  queue_work_on+0x54/0x60
-[16238.090374]  _process_event_group+0x190/0x230
-[16238.090382]  kgsl_process_event_groups+0x44/0x70
-[16238.090391]  adreno_dispatcher_work+0x1e4/0xae8
-[16238.090400]  kthread_worker_fn+0xec/0x180
-[16238.090407]  kthread+0x118/0x128
-[16238.090415]  ret_from_fork+0x10/0x18
-
-It turns out that the problem is caused by the timer reinitialization,after enable CONFIG_DEBUG_OBJECTS_TIMERS,the reason for the problem is obvious.
-
-This timer belongs to kthread_delayed_work,from kernel log we also see list corruption WARNING:
-[30858.395766] list_del corruption. next->prev should be ffffffe388ebbf88, but was ffffffe388ebb588
-[30858.395788] WARNING: CPU: 2 PID: 387 at /home/work/data/miui_codes/build_home/kernel/msm-4.19/lib/list_debug.c:56 __list_del_entry_valid+0xc8/0xd0
-...
-[30858.405951] list_add corruption. next->prev should be prev (ffffffe389392620), but was ffffffe388ebbf88. (next=ffffffe388ebbf88).
-[30858.405977] WARNING: CPU: 0 PID: 7721 at /home/work/data/miui_codes/build_home/kernel/msm-4.19/lib/list_debug.c:25 __list_add_valid+0x7c/0xc8
-
-crash> struct kthread_worker.delayed_work_list 0xffffffe3893925f0
- [ffffffe389392620] delayed_work_list = {
-    next = 0xffffffe388ebbf88, 
-    prev = 0xffffffe388ebb588
-  }
-crash> list 0xffffffe388ebbf88
-ffffffe388ebbf88
-
-delayed_work_list is corruption,this work is reinitialized.if kthread_work reinitialized after move to work_list,this work will be carried out forever in kthread_worker_fn.
-
-Timer and workqueue both provide debugobject support，kthread_work similar with workqueue,so i think it is necessary to support objectdebug in kthread_work.
-
+Changes in v2:
+ - Added test environment description.
+Changes in v3:
+ - Re-tested using only ARM little cores and maximzing cpu clock.
 ---
- include/linux/kthread.h | 29 ++++++++++++++-
- include/linux/poison.h  |  3 ++
- kernel/kthread.c        | 95 ++++++++++++++++++++++++++++++++++++++++++++++++-
- lib/Kconfig.debug       | 10 ++++++
- 4 files changed, 135 insertions(+), 2 deletions(-)
+ fs/f2fs/compress.c | 42 ++++++++++++++++++++++++++++++++----------
+ 1 file changed, 32 insertions(+), 10 deletions(-)
 
-diff --git a/include/linux/kthread.h b/include/linux/kthread.h
-index 65b81e0..1530953 100644
---- a/include/linux/kthread.h
-+++ b/include/linux/kthread.h
-@@ -108,6 +108,16 @@ struct kthread_delayed_work {
- 	struct timer_list timer;
- };
- 
-+#ifdef CONFIG_DEBUG_OBJECTS_KTHREAD
-+extern void __init_kwork(struct kthread_work *kwork, int onstack);
-+extern void destroy_kwork_on_stack(struct kthread_work *kwork);
-+extern void destroy_delayed_kwork_on_stack(struct kthread_delayed_work *kdwork);
-+#else
-+static inline void __init_kwork(struct kthread_work *kwork, int onstack) { }
-+static inline void destroy_kwork_on_stack(struct kthread_work *kwork) { }
-+static inline void destroy_delayed_kwork_on_stack(struct kthread_delayed_work *kdwork) { }
-+#endif
-+
- #define KTHREAD_WORKER_INIT(worker)	{				\
- 	.lock = __RAW_SPIN_LOCK_UNLOCKED((worker).lock),		\
- 	.work_list = LIST_HEAD_INIT((worker).work_list),		\
-@@ -115,7 +125,7 @@ struct kthread_delayed_work {
- 	}
- 
- #define KTHREAD_WORK_INIT(work, fn)	{				\
--	.node = LIST_HEAD_INIT((work).node),				\
-+	.node = { .next = KWORK_ENTRY_STATIC },				\
- 	.func = (fn),							\
- 	}
- 
-@@ -160,6 +170,15 @@ extern void __kthread_init_worker(struct kthread_worker *worker,
- #define kthread_init_work(work, fn)					\
- 	do {								\
- 		memset((work), 0, sizeof(struct kthread_work));		\
-+		__init_kwork(work, 0);						\
-+		INIT_LIST_HEAD(&(work)->node);				\
-+		(work)->func = (fn);					\
-+	} while (0)
-+
-+#define kthread_init_work_onstack(work, fn)					\
-+	do {								\
-+		memset((work), 0, sizeof(struct kthread_work));		\
-+		__init_kwork(work, 1);						\
- 		INIT_LIST_HEAD(&(work)->node);				\
- 		(work)->func = (fn);					\
- 	} while (0)
-@@ -172,6 +191,14 @@ extern void __kthread_init_worker(struct kthread_worker *worker,
- 			     TIMER_IRQSAFE);				\
- 	} while (0)
- 
-+#define kthread_init_delayed_work_onstack(dwork, fn)				\
-+	do {								\
-+		kthread_init_work_onstack(&(dwork)->work, (fn));		\
-+		__init_timer_on_stack(&(dwork)->timer,				\
-+			     kthread_delayed_work_timer_fn,		\
-+			     TIMER_IRQSAFE);				\
-+	} while (0)
-+
- int kthread_worker_fn(void *worker_ptr);
- 
- __printf(2, 3)
-diff --git a/include/linux/poison.h b/include/linux/poison.h
-index df34330..2e6a370 100644
---- a/include/linux/poison.h
-+++ b/include/linux/poison.h
-@@ -86,4 +86,7 @@
- /********** security/ **********/
- #define KEY_DESTROY		0xbd
- 
-+/********** kernel/kthread **********/
-+#define KWORK_ENTRY_STATIC	((void *) 0x600 + POISON_POINTER_DELTA)
-+
- #endif
-diff --git a/kernel/kthread.c b/kernel/kthread.c
-index 132f84a..ca00bd2 100644
---- a/kernel/kthread.c
-+++ b/kernel/kthread.c
-@@ -67,6 +67,94 @@ enum KTHREAD_BITS {
- 	KTHREAD_SHOULD_PARK,
- };
- 
-+#ifdef CONFIG_DEBUG_OBJECTS_KTHREAD
-+static struct debug_obj_descr kwork_debug_descr;
-+
-+static void *kwork_debug_hint(void *addr)
-+{
-+	return ((struct kthread_work *) addr)->func;
-+}
-+
-+static bool kwork_is_static_object(void *addr)
-+{
-+	struct kthread_work *kwork = addr;
-+
-+	return (kwork->node.prev == NULL &&
-+		kwork->node.next == KWORK_ENTRY_STATIC);
-+}
-+
-+static bool kwork_fixup_init(void *addr, enum debug_obj_state state)
-+{
-+	struct kthread_work *kwork = addr;
-+
-+	switch (state) {
-+	case ODEBUG_STATE_ACTIVE:
-+		kthread_cancel_work_sync(kwork);
-+		debug_object_init(kwork, &kwork_debug_descr);
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
-+static bool kwork_fixup_free(void *addr, enum debug_obj_state state)
-+{
-+	struct kthread_work *kwork = addr;
-+
-+	switch (state) {
-+	case ODEBUG_STATE_ACTIVE:
-+		kthread_cancel_work_sync(kwork);
-+		debug_object_free(kwork, &kwork_debug_descr);
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
-+static struct debug_obj_descr kwork_debug_descr = {
-+	.name		= "kthread_work",
-+	.debug_hint	= kwork_debug_hint,
-+	.is_static_object = kwork_is_static_object,
-+	.fixup_init	= kwork_fixup_init,
-+	.fixup_free	= kwork_fixup_free,
-+};
-+
-+static inline void debug_kwork_activate(struct kthread_work *kwork)
-+{
-+	debug_object_activate(kwork, &kwork_debug_descr);
-+}
-+
-+static inline void debug_kwork_deactivate(struct kthread_work *kwork)
-+{
-+	debug_object_deactivate(kwork, &kwork_debug_descr);
-+}
-+
-+void __init_kwork(struct kthread_work *kwork, int onstack)
-+{
-+	if (onstack)
-+		debug_object_init_on_stack(kwork, &kwork_debug_descr);
-+	else
-+		debug_object_init(kwork, &kwork_debug_descr);
-+}
-+EXPORT_SYMBOL_GPL(__init_kwork);
-+
-+void destroy_kwork_on_stack(struct kthread_work *kwork)
-+{
-+	debug_object_free(kwork, &kwork_debug_descr);
-+}
-+EXPORT_SYMBOL_GPL(destroy_kwork_on_stack);
-+
-+void destroy_delayed_kwork_on_stack(struct kthread_delayed_work *kdwork)
-+{
-+	destroy_timer_on_stack(&kdwork->timer);
-+	debug_object_free(&kdwork->work, &kwork_debug_descr);
-+}
-+EXPORT_SYMBOL_GPL(destroy_delayed_kwork_on_stack);
-+#else
-+static inline void debug_kwork_activate(struct kthread_work *kwork) { }
-+static inline void debug_kwork_deactivate(struct kthread_work *kwork) { }
-+#endif
-+
- static inline void set_kthread_struct(void *kthread)
- {
- 	/*
-@@ -698,6 +786,7 @@ int kthread_worker_fn(void *worker_ptr)
- 		work = list_first_entry(&worker->work_list,
- 					struct kthread_work, node);
- 		list_del_init(&work->node);
-+		debug_kwork_deactivate(work);
- 	}
- 	worker->current_work = work;
- 	raw_spin_unlock_irq(&worker->lock);
-@@ -835,8 +924,11 @@ static void kthread_insert_work(struct kthread_worker *worker,
- 
- 	list_add_tail(&work->node, pos);
- 	work->worker = worker;
--	if (!worker->current_work && likely(worker->task))
-+
-+	if (!worker->current_work && likely(worker->task)) {
-+		debug_kwork_activate(work);
- 		wake_up_process(worker->task);
-+	}
+diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+index 6e7db450006c..46b7e359f313 100644
+--- a/fs/f2fs/compress.c
++++ b/fs/f2fs/compress.c
+@@ -554,6 +554,8 @@ static void f2fs_compress_free_page(struct page *page)
+ 	mempool_free(page, compress_page_pool);
  }
  
- /**
-@@ -1054,6 +1146,7 @@ static bool __kthread_cancel_work(struct kthread_work *work, bool is_dwork,
- 	 */
- 	if (!list_empty(&work->node)) {
- 		list_del_init(&work->node);
-+		debug_kwork_deactivate(work);
- 		return true;
++#define MAX_VMAP_RETRIES	3
++
+ static int f2fs_compress_pages(struct compress_ctx *cc)
+ {
+ 	struct f2fs_sb_info *sbi = F2FS_I_SB(cc->inode);
+@@ -590,13 +592,23 @@ static int f2fs_compress_pages(struct compress_ctx *cc)
+ 		}
  	}
  
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 9ad9210..8355984 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -540,6 +540,16 @@ config DEBUG_OBJECTS_WORK
- 	  work queue routines to track the life time of work objects and
- 	  validate the work operations.
+-	cc->rbuf = vmap(cc->rpages, cc->cluster_size, VM_MAP, PAGE_KERNEL_RO);
++	for (i = 0; i < MAX_VMAP_RETRIES; i++) {
++		cc->rbuf = vm_map_ram(cc->rpages, cc->cluster_size, -1);
++		if (cc->rbuf)
++			break;
++		vm_unmap_aliases();
++	}
+ 	if (!cc->rbuf) {
+ 		ret = -ENOMEM;
+ 		goto out_free_cpages;
+ 	}
  
-+config DEBUG_OBJECTS_KTHREAD
-+	bool "Debug kthread work objects"
-+	depends on DEBUG_OBJECTS
-+	help
-+	  If you say Y here, additional code will be inserted into the
-+	  kthread routines to track the life time of kthread objects and
-+	  validate the kthread operations.
-+
-+	  If unsure, say N.
-+
- config DEBUG_OBJECTS_RCU_HEAD
- 	bool "Debug RCU callbacks objects"
- 	depends on DEBUG_OBJECTS
+-	cc->cbuf = vmap(cc->cpages, cc->nr_cpages, VM_MAP, PAGE_KERNEL);
++	for (i = 0; i < MAX_VMAP_RETRIES; i++) {
++		cc->cbuf = vm_map_ram(cc->cpages, cc->nr_cpages, -1);
++		if (cc->cbuf)
++			break;
++		vm_unmap_aliases();
++	}
+ 	if (!cc->cbuf) {
+ 		ret = -ENOMEM;
+ 		goto out_vunmap_rbuf;
+@@ -624,8 +636,8 @@ static int f2fs_compress_pages(struct compress_ctx *cc)
+ 	memset(&cc->cbuf->cdata[cc->clen], 0,
+ 	       (nr_cpages * PAGE_SIZE) - (cc->clen + COMPRESS_HEADER_SIZE));
+ 
+-	vunmap(cc->cbuf);
+-	vunmap(cc->rbuf);
++	vm_unmap_ram(cc->cbuf, cc->nr_cpages);
++	vm_unmap_ram(cc->rbuf, cc->cluster_size);
+ 
+ 	for (i = nr_cpages; i < cc->nr_cpages; i++) {
+ 		f2fs_compress_free_page(cc->cpages[i]);
+@@ -642,9 +654,9 @@ static int f2fs_compress_pages(struct compress_ctx *cc)
+ 	return 0;
+ 
+ out_vunmap_cbuf:
+-	vunmap(cc->cbuf);
++	vm_unmap_ram(cc->cbuf, cc->nr_cpages);
+ out_vunmap_rbuf:
+-	vunmap(cc->rbuf);
++	vm_unmap_ram(cc->rbuf, cc->cluster_size);
+ out_free_cpages:
+ 	for (i = 0; i < cc->nr_cpages; i++) {
+ 		if (cc->cpages[i])
+@@ -715,13 +727,23 @@ void f2fs_decompress_pages(struct bio *bio, struct page *page, bool verity)
+ 			goto out_free_dic;
+ 	}
+ 
+-	dic->rbuf = vmap(dic->tpages, dic->cluster_size, VM_MAP, PAGE_KERNEL);
++	for (i = 0; i < MAX_VMAP_RETRIES; i++) {
++		dic->rbuf = vm_map_ram(dic->tpages, dic->cluster_size, -1);
++		if (dic->rbuf)
++			break;
++		vm_unmap_aliases();
++	}
+ 	if (!dic->rbuf) {
+ 		ret = -ENOMEM;
+ 		goto destroy_decompress_ctx;
+ 	}
+ 
+-	dic->cbuf = vmap(dic->cpages, dic->nr_cpages, VM_MAP, PAGE_KERNEL_RO);
++	for (i = 0; i < MAX_VMAP_RETRIES; i++) {
++		dic->cbuf = vm_map_ram(dic->cpages, dic->nr_cpages, -1);
++		if (dic->cbuf)
++			break;
++		vm_unmap_aliases();
++	}
+ 	if (!dic->cbuf) {
+ 		ret = -ENOMEM;
+ 		goto out_vunmap_rbuf;
+@@ -738,9 +760,9 @@ void f2fs_decompress_pages(struct bio *bio, struct page *page, bool verity)
+ 	ret = cops->decompress_pages(dic);
+ 
+ out_vunmap_cbuf:
+-	vunmap(dic->cbuf);
++	vm_unmap_ram(dic->cbuf, dic->nr_cpages);
+ out_vunmap_rbuf:
+-	vunmap(dic->rbuf);
++	vm_unmap_ram(dic->rbuf, dic->cluster_size);
+ destroy_decompress_ctx:
+ 	if (cops->destroy_decompress_ctx)
+ 		cops->destroy_decompress_ctx(dic);
 -- 
-2.7.4
+2.28.0.236.gb10cc79966-goog
 
