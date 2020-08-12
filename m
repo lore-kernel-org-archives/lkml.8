@@ -4,31 +4,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DA88C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 08:56:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E476C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 08:56:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D82D2076B
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 08:56:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43E6720781
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 08:56:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbgHLI4b (ORCPT
+        id S1727074AbgHLI4d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 04:56:31 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:49026 "EHLO inva020.nxp.com"
+        Wed, 12 Aug 2020 04:56:33 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:49094 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726572AbgHLI4b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726965AbgHLI4b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 12 Aug 2020 04:56:31 -0400
 Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A63AA1A0CAE;
-        Wed, 12 Aug 2020 10:56:28 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 158921A17FA;
+        Wed, 12 Aug 2020 10:56:30 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id CB74F1A004F;
-        Wed, 12 Aug 2020 10:56:22 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 399061A006C;
+        Wed, 12 Aug 2020 10:56:24 +0200 (CEST)
 Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 52DD14024E;
-        Wed, 12 Aug 2020 10:56:15 +0200 (CEST)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id B3C9C402BF;
+        Wed, 12 Aug 2020 10:56:16 +0200 (CEST)
 From:   Anson Huang <Anson.Huang@nxp.com>
 To:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
         shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
@@ -37,55 +37,48 @@ To:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
 Cc:     Linux-imx@nxp.com
-Subject: [PATCH V2 1/5] dt-bindings: clock: Update i.MX28 example
-Date:   Wed, 12 Aug 2020 16:51:20 +0800
-Message-Id: <1597222284-32609-1-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH V2 2/5] dt-bindings: clock: Update i.MX23 example
+Date:   Wed, 12 Aug 2020 16:51:21 +0800
+Message-Id: <1597222284-32609-2-git-send-email-Anson.Huang@nxp.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1597222284-32609-1-git-send-email-Anson.Huang@nxp.com>
+References: <1597222284-32609-1-git-send-email-Anson.Huang@nxp.com>
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update the i.MX28 clock example to align with MXS AUART binding doc to
+Update the i.MX23 clock example to align with MXS AUART binding doc to
 avoid below build error:
 
-Documentation/devicetree/bindings/clock/imx28-clock.example.dt.yaml:
-  serial@8006a000: clocks: [[4294967295, 45]] is too short
-Documentation/devicetree/bindings/clock/imx28-clock.example.dt.yaml:
-  serial@8006a000: compatible: Additional items are not allowed
-  ('fsl,imx23-auart' was unexpected)
-Documentation/devicetree/bindings/clock/imx28-clock.example.dt.yaml:
-  serial@8006a000: compatible: ['fsl,imx28-auart', 'fsl,imx23-auart']
-  is too long
-Documentation/devicetree/bindings/clock/imx28-clock.example.dt.yaml:
-  serial@8006a000: 'dmas' is a required property
-Documentation/devicetree/bindings/clock/imx28-clock.example.dt.yaml:
-  serial@8006a000: 'dma-names' is a required property
+Documentation/devicetree/bindings/clock/imx23-clock.example.dt.yaml:
+   serial@8006c000: clocks: [[4294967295, 32]] is too short
+Documentation/devicetree/bindings/clock/imx23-clock.example.dt.yaml:
+   serial@8006c000: 'dmas' is a required property
+Documentation/devicetree/bindings/clock/imx23-clock.example.dt.yaml:
+    serial@8006c000: 'dma-names' is a required property
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
 new patch.
 ---
- Documentation/devicetree/bindings/clock/imx28-clock.yaml | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/clock/imx23-clock.yaml | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/imx28-clock.yaml b/Documentation/devicetree/bindings/clock/imx28-clock.yaml
-index 72328d5..671b279 100644
---- a/Documentation/devicetree/bindings/clock/imx28-clock.yaml
-+++ b/Documentation/devicetree/bindings/clock/imx28-clock.yaml
-@@ -108,8 +108,10 @@ examples:
-     };
- 
-     serial@8006a000 {
--        compatible = "fsl,imx28-auart", "fsl,imx23-auart";
-+        compatible = "fsl,imx28-auart";
-         reg = <0x8006a000 0x2000>;
--        interrupts = <112 70 71>;
-+        interrupts = <112>;
-+        dmas = <&dma_apbx 8>, <&dma_apbx 9>;
+diff --git a/Documentation/devicetree/bindings/clock/imx23-clock.yaml b/Documentation/devicetree/bindings/clock/imx23-clock.yaml
+index 66cb238..4028c1f 100644
+--- a/Documentation/devicetree/bindings/clock/imx23-clock.yaml
++++ b/Documentation/devicetree/bindings/clock/imx23-clock.yaml
+@@ -87,6 +87,8 @@ examples:
+     serial@8006c000 {
+         compatible = "fsl,imx23-auart";
+         reg = <0x8006c000 0x2000>;
+-        interrupts = <24 25 23>;
++        interrupts = <24>;
+         clocks = <&clks 32>;
++        dmas = <&dma_apbx 6>, <&dma_apbx 7>;
 +        dma-names = "rx", "tx";
-         clocks = <&clks 45>;
      };
 -- 
 2.7.4
