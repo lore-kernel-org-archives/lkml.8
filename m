@@ -2,106 +2,169 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D880CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 03:12:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1571C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 03:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B442D206F2
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 03:12:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XwJrziSc"
+	by mail.kernel.org (Postfix) with ESMTP id 8B1E6206B2
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 03:17:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726552AbgHLDMQ (ORCPT
+        id S1726521AbgHLDRS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 23:12:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55456 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726255AbgHLDMQ (ORCPT
+        Tue, 11 Aug 2020 23:17:18 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:53607 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726333AbgHLDRR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 23:12:16 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DECAAC06174A
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 20:12:15 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id e11so863467otk.4
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 20:12:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=QvRwyqfBzSBusxVG0abxrCHTZbe0s1N2buN7nWa0Szc=;
-        b=XwJrziScHTqWx9Fqu0aY4Ltd+VHIGc9aInW0KHF02tjHpDykR7F9RT3l+pfey+BrcL
-         CZ+JWyi3mWH8jy2QrdcDsFYWCoV+FJ3ZGjOPSPqeUaaI7MVpNVw5rhOey4+FgNFN5nz3
-         W41p9wLK45Z6mxrejE73sgsub05gUF/KRvfCYu7BcNDNYOrEPiy7wZSlU2jCrjkltfb/
-         u3kM3ug6xbXTA9Cd/UuNeXZiC6z8bgwhOTpkhdFTo3RMfNprtky4Vu0dgndCLez3N9Me
-         UmvgYaKpalSCc2NDLXshPYD37THkMxL+AB+EUocm96NmdkiH42niPjOVH+aG45PLEIPl
-         5KsA==
+        Tue, 11 Aug 2020 23:17:17 -0400
+Received: by mail-io1-f71.google.com with SMTP id f22so622963iof.20
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 20:17:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=QvRwyqfBzSBusxVG0abxrCHTZbe0s1N2buN7nWa0Szc=;
-        b=RNADek4hs9ErRdp8PRojrM+JNg1GWZltRGw836+WGbo/X9vUilwAtT+RpJn1feu7E2
-         8mAlxhaYdiRXjNCfXcYZElKXQRqvvFf9cE5faFBmL0z6m9iowQ4GTQKHTxAMHfa+7m5b
-         CcrP1hbXHNiMa5BnV14f56zOESI/THORs5O6wV4Sgx+HAUl3eRsWf93UjJi5/etB5c/C
-         4eONL9poDmlsn7zuE7bIeOtA/1A5GXmz8wNGrDMAFCKX09k87pJnmgCFaZ8S3kT5taHA
-         q1NV4S/aS3UxEZ2tRqbocgRQ/xbo1hXCgKJvbVB4kYqR4K15mFN8l7LVUDQuVymfjxiu
-         K9Qg==
-X-Gm-Message-State: AOAM530/exJzDt+dNG3wUIBKh7LN/IgDo+A5YFEnDfmNlGNCPW7lW5vh
-        Ivrx3LVjSbabyUjpi+NSBGU=
-X-Google-Smtp-Source: ABdhPJwpoerVRGLdzSd1HDbEVT7xeh77OeDuTdgZ8TIDWGp4KEm5FcLDTNShZUc9tmBAq0Iw6g5pJw==
-X-Received: by 2002:a9d:b82:: with SMTP id 2mr7537873oth.202.1597201935255;
-        Tue, 11 Aug 2020 20:12:15 -0700 (PDT)
-Received: from Davids-MacBook-Pro.local ([2601:282:803:7700:c1d8:5dca:975d:16e])
-        by smtp.googlemail.com with ESMTPSA id d19sm225767oig.8.2020.08.11.20.12.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Aug 2020 20:12:14 -0700 (PDT)
-Subject: Re: [PATCH 2/2] perf sched timehist: Fix use of CPU list with summary
- option
-To:     Namhyung Kim <namhyung@kernel.org>,
-        David Ahern <dsahern@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-References: <20200807164937.44921-1-dsahern@kernel.org>
- <CAM9d7chXrXh1QfJfwsEJ_Tk0_EDNL9ajBE8H0QYCSn_yuLhNUA@mail.gmail.com>
-From:   David Ahern <dsahern@gmail.com>
-Message-ID: <47111ff4-c61a-3a12-adb6-748b98fd0be0@gmail.com>
-Date:   Tue, 11 Aug 2020 21:12:10 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.11.0
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=2FxaZz2wzxy2yGxxRulgV5SYGolbOKGdFSA96kJFpbE=;
+        b=kRPJB0qfLYefZYdZCpOPfJSeICaJ31t3oEIsZE8eWe/Zofw1Cf73943E7gAnt7aq39
+         tu5OXtefmUn1QdpSY1JFGFzzG2P2fw1M/qGvMn+xJLmSw4QaYf315zxIRDHDeHrGzusX
+         tIrpclUhErUPkgev4F182BmHO2DKRUHxXYJzw/b5n2tEdeR51X4sb/GUdmMuEgwwhWSz
+         8vtgPNIaXsEW5x2/B2waB2xrU4CosL0fE3l0zjvx4BVwmA12Y24Ba0qmo/LQOXmHHvph
+         RDCLiqJRNQ7vVnV36DT9w/A6K2l2QqQ6tAe6BCdLnQ3Rrbz+cfD48PFwugMLnaRUP6hy
+         pKLQ==
+X-Gm-Message-State: AOAM5336Es/R25L1KAchbe3oCxEYy52WWDVMfP4rpC09Q8ZctXlc9aW5
+        FVke+OkOo8TJMrBhe+FQEuQIp5ifS75rclgHseuYPvnALoqm
+X-Google-Smtp-Source: ABdhPJyhViwJRe11cEFZ/5sPX7qOSHXuy/RZXOu9nQNmAP9bJCnnNMWBXMKSc/bmO4qQY0ZfTyVqxMslTn2CbN8qkg+8DWhHrmfE
 MIME-Version: 1.0
-In-Reply-To: <CAM9d7chXrXh1QfJfwsEJ_Tk0_EDNL9ajBE8H0QYCSn_yuLhNUA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a5e:991a:: with SMTP id t26mr25266609ioj.7.1597202236468;
+ Tue, 11 Aug 2020 20:17:16 -0700 (PDT)
+Date:   Tue, 11 Aug 2020 20:17:16 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000f0724405aca59f64@google.com>
+Subject: KASAN: use-after-free Read in path_init (2)
+From:   syzbot <syzbot+bbeb1c88016c7db4aa24@syzkaller.appspotmail.com>
+To:     arnd@arndb.de, christian.brauner@ubuntu.com, hch@lst.de,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux@dominikbrodowski.net,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/11/20 12:42 AM, Namhyung Kim wrote:
->> @@ -2575,7 +2575,8 @@ static int timehist_sched_change_event(struct perf_tool *tool,
->>         }
->>
->>         if (!sched->idle_hist || thread->tid == 0) {
->> -               timehist_update_runtime_stats(tr, t, tprev);
->> +               if (!cpu_list || test_bit(sample->cpu, cpu_bitmap))
->> +                       timehist_update_runtime_stats(tr, t, tprev);
->>
->>                 if (sched->idle_hist) {
->>                         struct idle_thread_runtime *itr = (void *)tr;
->> @@ -2848,6 +2849,9 @@ static void timehist_print_summary(struct perf_sched *sched,
->>
->>         printf("\nIdle stats:\n");
->>         for (i = 0; i < idle_max_cpu; ++i) {
->> +               if (!test_bit(i, cpu_bitmap))
-> 
-> Shouldn't it check cpu_list as well?
-> 
+Hello,
 
-oh, right. will fix.
+syzbot found the following issue on:
+
+HEAD commit:    5631c5e0 Merge tag 'xfs-5.9-merge-7' of git://git.kernel.o..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=17076984900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=afba7c06f91e56eb
+dashboard link: https://syzkaller.appspot.com/bug?extid=bbeb1c88016c7db4aa24
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1502ce02900000
+
+The issue was bisected to:
+
+commit e24ab0ef689de43649327f54cd1088f3dad25bb3
+Author: Christoph Hellwig <hch@lst.de>
+Date:   Tue Jul 21 08:48:15 2020 +0000
+
+    fs: push the getname from do_rmdir into the callers
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=155f36c2900000
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=175f36c2900000
+console output: https://syzkaller.appspot.com/x/log.txt?x=135f36c2900000
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+bbeb1c88016c7db4aa24@syzkaller.appspotmail.com
+Fixes: e24ab0ef689d ("fs: push the getname from do_rmdir into the callers")
+
+==================================================================
+BUG: KASAN: use-after-free in path_init+0x116b/0x13c0 fs/namei.c:2207
+Read of size 8 at addr ffff88807853c940 by task syz-executor.2/8233
+
+CPU: 0 PID: 8233 Comm: syz-executor.2 Not tainted 5.8.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xae/0x436 mm/kasan/report.c:383
+ __kasan_report mm/kasan/report.c:513 [inline]
+ kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
+ path_init+0x116b/0x13c0 fs/namei.c:2207
+ path_parentat+0x22/0x1b0 fs/namei.c:2384
+ filename_parentat+0x188/0x560 fs/namei.c:2407
+ do_rmdir+0xa8/0x440 fs/namei.c:3732
+ do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x45ce79
+Code: 2d b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb b5 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f756fb2bc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000054
+RAX: ffffffffffffffda RBX: 00000000000260c0 RCX: 000000000045ce79
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00000000200000c0
+RBP: 000000000118bff0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 000000000118bfcc
+R13: 00007ffedeb9931f R14: 00007f756fb2c9c0 R15: 000000000118bfcc
+
+Allocated by task 8233:
+ save_stack+0x1b/0x40 mm/kasan/common.c:48
+ set_track mm/kasan/common.c:56 [inline]
+ __kasan_kmalloc.constprop.0+0xc2/0xd0 mm/kasan/common.c:494
+ slab_post_alloc_hook mm/slab.h:586 [inline]
+ slab_alloc mm/slab.c:3320 [inline]
+ kmem_cache_alloc+0x12c/0x3b0 mm/slab.c:3484
+ getname_flags.part.0+0x50/0x4f0 fs/namei.c:138
+ getname_flags include/linux/audit.h:320 [inline]
+ getname fs/namei.c:209 [inline]
+ __do_sys_rmdir fs/namei.c:3783 [inline]
+ __se_sys_rmdir fs/namei.c:3781 [inline]
+ __x64_sys_rmdir+0xb1/0x100 fs/namei.c:3781
+ do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Freed by task 8233:
+ save_stack+0x1b/0x40 mm/kasan/common.c:48
+ set_track mm/kasan/common.c:56 [inline]
+ kasan_set_free_info mm/kasan/common.c:316 [inline]
+ __kasan_slab_free+0xf5/0x140 mm/kasan/common.c:455
+ __cache_free mm/slab.c:3426 [inline]
+ kmem_cache_free+0x7f/0x310 mm/slab.c:3694
+ putname+0xe1/0x120 fs/namei.c:259
+ do_rmdir+0x145/0x440 fs/namei.c:3773
+ do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+The buggy address belongs to the object at ffff88807853c940
+ which belongs to the cache names_cache of size 4096
+The buggy address is located 0 bytes inside of
+ 4096-byte region [ffff88807853c940, ffff88807853d940)
+The buggy address belongs to the page:
+page:ffffea0001e14f00 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 head:ffffea0001e14f00 order:1 compound_mapcount:0
+flags: 0xfffe0000010200(slab|head)
+raw: 00fffe0000010200 ffffea0001e14e88 ffffea0001e14f88 ffff8880aa246380
+raw: 0000000000000000 ffff88807853c940 0000000100000001 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff88807853c800: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff88807853c880: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>ffff88807853c900: fc fc fc fc fc fc fc fc fb fb fb fb fb fb fb fb
+                                           ^
+ ffff88807853c980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff88807853ca00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
