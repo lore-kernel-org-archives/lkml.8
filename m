@@ -7,92 +7,173 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC6BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:50:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC4CC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:51:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03A2420781
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:50:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B6D120781
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:51:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="H5rqOfMt"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rtWKptdF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726685AbgHLTuz (ORCPT
+        id S1726705AbgHLTu6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 15:50:55 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:44540 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726640AbgHLTuw (ORCPT
+        Wed, 12 Aug 2020 15:50:58 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:51554 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726676AbgHLTu4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 15:50:52 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07CJobm6111032;
-        Wed, 12 Aug 2020 14:50:37 -0500
+        Wed, 12 Aug 2020 15:50:56 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07CJogaf048099;
+        Wed, 12 Aug 2020 14:50:42 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1597261837;
-        bh=zH737v8+ekxHxtS/IZ+9IoMs2IBqoic2gOwxmSErk7E=;
+        s=ti-com-17Q1; t=1597261842;
+        bh=2z7xNwdfXWieXVOs4evBowBdnRnrrLXJvVMfLZeYFcQ=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=H5rqOfMtDXmT2QWkyu3Qf2ueztmmK9HtzMRjBRSlPldCPPUrCLwb3UAfNYQ2KuMWg
-         ZDVSSjurEJN1zi/7zRfbiklFG0EFlQzNuRN839UF8AE0XSo5QORu2NFp8u1FBjK9hP
-         7zZRQbZTvPbe4yIAfddQ0okHHEzxIWWwUXXcN0bg=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07CJobbk126038;
-        Wed, 12 Aug 2020 14:50:37 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+        b=rtWKptdFbOtulEK9S7fi+zBa6kldP5e8Xgkm0gGCK2EcjHVvgPXnB0C2Z6kYMIOzW
+         Gg0fwIi8okMFtn9XXfV30RNtVFF8If5teXJG8s0NJWOCFMWxAyVBfCJExckJo7zx3t
+         dfcqLCykGUUNEoo/jlFwPCf76VQfB2XpGUd6IgQs=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07CJogRx080151
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 12 Aug 2020 14:50:42 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 12
- Aug 2020 14:50:36 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ Aug 2020 14:50:42 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 12 Aug 2020 14:50:36 -0500
+ Frontend Transport; Wed, 12 Aug 2020 14:50:42 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07CJoadx088033;
-        Wed, 12 Aug 2020 14:50:36 -0500
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07CJog0I088076;
+        Wed, 12 Aug 2020 14:50:42 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh@kernel.org>,
         <marek.behun@nic.cz>
 CC:     <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
-        Dan Murphy <dmurphy@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH v33 3/6] ARM: defconfig: u8500: Add LP55XX_COMMON config flag
-Date:   Wed, 12 Aug 2020 14:50:17 -0500
-Message-ID: <20200812195020.13568-4-dmurphy@ti.com>
+        Dan Murphy <dmurphy@ti.com>, Tony Lindgren <tony@atomide.com>,
+        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>
+Subject: [PATCH v33 4/6] ARM: dts: n900: Add reg property to the LP5523 channel node
+Date:   Wed, 12 Aug 2020 14:50:18 -0500
+Message-ID: <20200812195020.13568-5-dmurphy@ti.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200812195020.13568-1-dmurphy@ti.com>
 References: <20200812195020.13568-1-dmurphy@ti.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The dependencies for the LP55XX LED drivers have been updated so that
-the child devices (i.e. LP5521) now depends on the LP55XX_COMMON config
-flag as opposed to the device selecting the LP55XX_COMMON flag.  The
-LP55XX_COMMON needs to be set in the defconfig.
+Add the reg property to each channel node.  This update is
+to accommodate the multicolor framework.  In addition to the
+accommodation this allows the LEDs to be placed on any channel
+and allow designs to skip channels as opposed to requiring
+sequential order.
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Dan Murphy <dmurphy@ti.com>
+Acked-by: Tony Lindgren <tony@atomide.com>
+CC: Tony Lindgren <tony@atomide.com>
+CC: "Benoît Cousson" <bcousson@baylibre.com>
+Acked-by: Pavel Machek <pavel@ucw.cz>
 ---
- arch/arm/configs/u8500_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/omap3-n900.dts | 29 ++++++++++++++++++++---------
+ 1 file changed, 20 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm/configs/u8500_defconfig b/arch/arm/configs/u8500_defconfig
-index 28dd7cf56048..dea599e1c17e 100644
---- a/arch/arm/configs/u8500_defconfig
-+++ b/arch/arm/configs/u8500_defconfig
-@@ -113,6 +113,7 @@ CONFIG_NEW_LEDS=y
- CONFIG_LEDS_CLASS=y
- CONFIG_LEDS_LM3530=y
- CONFIG_LEDS_GPIO=y
-+CONFIG_LEDS_LP55XX_COMMON=y
- CONFIG_LEDS_LP5521=y
- CONFIG_LEDS_TRIGGER_HEARTBEAT=y
- CONFIG_RTC_CLASS=y
+diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n900.dts
+index 4089d97405c9..ebe93b06b4f7 100644
+--- a/arch/arm/boot/dts/omap3-n900.dts
++++ b/arch/arm/boot/dts/omap3-n900.dts
+@@ -618,63 +618,74 @@ indicator {
+ 	};
+ 
+ 	lp5523: lp5523@32 {
++		#address-cells = <1>;
++		#size-cells = <0>;
+ 		compatible = "national,lp5523";
+ 		reg = <0x32>;
+ 		clock-mode = /bits/ 8 <0>; /* LP55XX_CLOCK_AUTO */
+ 		enable-gpio = <&gpio2 9 GPIO_ACTIVE_HIGH>; /* 41 */
+ 
+-		chan0 {
++		chan@0 {
+ 			chan-name = "lp5523:kb1";
+ 			led-cur = /bits/ 8 <50>;
+ 			max-cur = /bits/ 8 <100>;
++			reg = <0>;
+ 		};
+ 
+-		chan1 {
++		chan@1 {
+ 			chan-name = "lp5523:kb2";
+ 			led-cur = /bits/ 8 <50>;
+ 			max-cur = /bits/ 8 <100>;
++			reg = <1>;
+ 		};
+ 
+-		chan2 {
++		chan@2 {
+ 			chan-name = "lp5523:kb3";
+ 			led-cur = /bits/ 8 <50>;
+ 			max-cur = /bits/ 8 <100>;
++			reg = <2>;
+ 		};
+ 
+-		chan3 {
++		chan@3 {
+ 			chan-name = "lp5523:kb4";
+ 			led-cur = /bits/ 8 <50>;
+ 			max-cur = /bits/ 8 <100>;
++			reg = <3>;
+ 		};
+ 
+-		chan4 {
++		chan@4 {
+ 			chan-name = "lp5523:b";
+ 			led-cur = /bits/ 8 <50>;
+ 			max-cur = /bits/ 8 <100>;
++			reg = <4>;
+ 		};
+ 
+-		chan5 {
++		chan@5 {
+ 			chan-name = "lp5523:g";
+ 			led-cur = /bits/ 8 <50>;
+ 			max-cur = /bits/ 8 <100>;
++			reg = <5>;
+ 		};
+ 
+-		chan6 {
++		chan@6 {
+ 			chan-name = "lp5523:r";
+ 			led-cur = /bits/ 8 <50>;
+ 			max-cur = /bits/ 8 <100>;
++			reg = <6>;
+ 		};
+ 
+-		chan7 {
++		chan@7 {
+ 			chan-name = "lp5523:kb5";
+ 			led-cur = /bits/ 8 <50>;
+ 			max-cur = /bits/ 8 <100>;
++			reg = <7>;
+ 		};
+ 
+-		chan8 {
++		chan@8 {
+ 			chan-name = "lp5523:kb6";
+ 			led-cur = /bits/ 8 <50>;
+ 			max-cur = /bits/ 8 <100>;
++			reg = <8>;
+ 		};
+ 	};
+ 
 -- 
 2.28.0
 
