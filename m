@@ -2,138 +2,291 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E1CEC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 00:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 649F0C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 00:05:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1860B2076C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 00:03:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18E522076C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 00:05:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="NSCwOIJ+";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="uLS2UPQU"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ox/Em/hO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726430AbgHLADm (ORCPT
+        id S1726489AbgHLAFn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 20:03:42 -0400
-Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:59485 "EHLO
-        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726143AbgHLADl (ORCPT
+        Tue, 11 Aug 2020 20:05:43 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32033 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726179AbgHLAFn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 20:03:41 -0400
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
-        by mailout.west.internal (Postfix) with ESMTP id AB3D5A90;
-        Tue, 11 Aug 2020 20:03:40 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute2.internal (MEProxy); Tue, 11 Aug 2020 20:03:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
-        message-id:subject:from:to:cc:date:in-reply-to:references
-        :content-type:mime-version:content-transfer-encoding; s=fm3; bh=
-        kGifzmVGohkcjzjJYIDd7v3omhl5y0GHMaOegwXuLr4=; b=NSCwOIJ+26IOv8Ny
-        q1bNKLh5XgI1duThB2HsZXSyn/DX6U4JxFo6pLYMUnGRDkOjxrukzZMq2XFWeT7U
-        LcrUSUaMqx5nBMw1kc108Wb6vIIY6DWhXAYnyJk6M91PoU4LkCJWMqwLeB2NMrtT
-        XaZeBQWa1oAYYtbLOlI6mFsB80aAKGNQ6TDcwMaRWrSpo+UpY2GXaKtW7gBhMBw8
-        I/CXDbZgWF6i880JlWoyTazD3Ke4eTShooQX8xfN+LHijuOdQt8a2yjUWaPx071K
-        WQXRBDZzi8UO1ZOvRGRhZNvopSeVQjIDumpyGhtPj5yOkR7mHHUTz33AtbJXvzvg
-        v+0+og==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=kGifzmVGohkcjzjJYIDd7v3omhl5y0GHMaOegwXuL
-        r4=; b=uLS2UPQUJgXX+yUdXMCtIrasj5hGV5znNtGp26pDIGvWfF2yZLVzm4xTP
-        lVcT8+80lrQf8jccUOX9CXleOGtgQrJXzUv5Aq7WeTlNE8bmNSR0B/y/0I+ORKYF
-        ueghXjgGA3xnmZLBmoVX/3iYfu6L990NdwgjWBrGDB1m04Vmx7gHq/z5wCCfpQL+
-        Ed6waam5qj2aA0UXCMpf29dKIrP3LdpzUDvsMs5CdNF13zCyfPz02JpC+TGF34yP
-        0LSwwgODxGeNiN/ldfq6AxFcckfTKnj4BYdxtZa5UchS2abWJBqjXaGc2Q+1a4li
-        46KCZl+rHw1hF0eVU2BBCu/7qstvw==
-X-ME-Sender: <xms:2zEzX6DvkQr1ZVs5eU7oDI0lDcOC2ik53f_CaJov5iY9kU0TmYbxsg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrledugddvkecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpefkrghnucfm
-    vghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqnecuggftrfgrthhtvghrnhepfe
-    efteetvdeguddvveefveeftedtffduudehueeihfeuvefgveehffeludeggfejnecukfhp
-    peehkedrjedrvddtfedruddugeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpehrrghvvghnsehthhgvmhgrfidrnhgvth
-X-ME-Proxy: <xmx:2zEzX0jj4oy2_FAPf0VaaykghkL7W28vX9tswo5EwBoFoXg76qByRQ>
-    <xmx:2zEzX9nNjcIV89QmeYvdVReUlleB3bByC9vqRBhPb9WFPhlT_ZjhRA>
-    <xmx:2zEzX4wHQXSdgqjexWumWNLoh-0LS2abP1J13uwsdkFqpgoML90DEw>
-    <xmx:3DEzXyM3lRXZzOFUDNtKUg5i2FIllDqwIeJx_dSEIqqCeo7YtgTi7w>
-Received: from mickey.themaw.net (58-7-203-114.dyn.iinet.net.au [58.7.203.114])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 6B8F13280060;
-        Tue, 11 Aug 2020 20:03:37 -0400 (EDT)
-Message-ID: <b597b764341317fd8b32345265e570dae3c25040.camel@themaw.net>
-Subject: Re: [PATCH] fs: autofs: delete repeated words in comments
-From:   Ian Kent <raven@themaw.net>
-To:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     autofs@vger.kernel.org
-Date:   Wed, 12 Aug 2020 08:03:33 +0800
-In-Reply-To: <811e011e-2f45-87c3-d92d-729680da5917@infradead.org>
-References: <20200811021817.24982-1-rdunlap@infradead.org>
-         <75e04b06be0561c3cec936cd3bbc44fe82ca73f4.camel@themaw.net>
-         <811e011e-2f45-87c3-d92d-729680da5917@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Tue, 11 Aug 2020 20:05:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597190740;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=2jvOO01wJQ7L+h65rqFuV46JFZcKV/98XxuqqDs02rY=;
+        b=Ox/Em/hOEgZVvcqmDducQa3e46V3oT+OU+8Elq0Zjo5Esbn+7oZB8SzCxjsGUNcsRf2uA+
+        FRlmUVm1rbrivh2wHaJbR0P///LJLi1jxTdf+ztTBXyfcTSVmqQqnKSMAuk3ig2zZbnUSm
+        LNrGfQwDhXe+X2rtsVN6Xxi0q7pcpOU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-488-lrrbiAU6MvS7mSu0Py8dfg-1; Tue, 11 Aug 2020 20:05:39 -0400
+X-MC-Unique: lrrbiAU6MvS7mSu0Py8dfg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3B5F680048A;
+        Wed, 12 Aug 2020 00:05:37 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-127.rdu2.redhat.com [10.10.120.127])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C2D5972ADE;
+        Wed, 12 Aug 2020 00:05:33 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAHk-=wjzLmMRf=QG-n+1HnxWCx4KTQn9+OhVvUSJ=ZCQd6Y1WA@mail.gmail.com>
+References: <CAHk-=wjzLmMRf=QG-n+1HnxWCx4KTQn9+OhVvUSJ=ZCQd6Y1WA@mail.gmail.com> <1842689.1596468469@warthog.procyon.org.uk> <1845353.1596469795@warthog.procyon.org.uk> <CAJfpegunY3fuxh486x9ysKtXbhTE0745ZCVHcaqs9Gww9RV2CQ@mail.gmail.com> <ac1f5e3406abc0af4cd08d818fe920a202a67586.camel@themaw.net> <CAJfpegu8omNZ613tLgUY7ukLV131tt7owR+JJ346Kombt79N0A@mail.gmail.com> <CAJfpegtNP8rQSS4Z14Ja4x-TOnejdhDRTsmmDD-Cccy2pkfVVw@mail.gmail.com> <20200811135419.GA1263716@miu.piliscsaba.redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     dhowells@redhat.com, Miklos Szeredi <miklos@szeredi.hu>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, Karel Zak <kzak@redhat.com>,
+        Jeff Layton <jlayton@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Christian Brauner <christian@brauner.io>,
+        Lennart Poettering <lennart@poettering.net>,
+        Linux API <linux-api@vger.kernel.org>,
+        Ian Kent <raven@themaw.net>,
+        LSM <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: file metadata via fs API (was: [GIT PULL] Filesystem Information)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date:   Wed, 12 Aug 2020 01:05:33 +0100
+Message-ID: <52483.1597190733@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-08-11 at 07:42 -0700, Randy Dunlap wrote:
-> On 8/11/20 1:36 AM, Ian Kent wrote:
-> > On Mon, 2020-08-10 at 19:18 -0700, Randy Dunlap wrote:
-> > > Drop duplicated words {the, at} in comments.
-> > > 
-> > > Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> > > Cc: Ian Kent <raven@themaw.net>
-> > > Cc: autofs@vger.kernel.org
-> > 
-> > Acked-by: Ian Kent <raven@themaw.net>
-> 
-> Hi Ian,
-> 
-> Since you are the listed maintainer of this file, does this mean
-> that you will be merging it?
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-I could but that would mean double handling since I would send it
-to Andrew anyway.
+> [ I missed the beginning of this discussion, so maybe this was already
+> suggested ]
 
-Andrew, could you take this one please?
+Well, the start of it was my proposal of an fsinfo() system call.  That at =
+its
+simplest takes an object reference (eg. a path) and an integer attribute ID=
+ (it
+could use a string instead, I suppose, but it would mean a bunch of strcmps
+instead of integer comparisons) and returns the value of the attribute.  Bu=
+t I
+allow you to do slightly more interesting things than that too.
 
-> 
-> thanks.
-> 
-> > > ---
-> > >  fs/autofs/dev-ioctl.c |    4 ++--
-> > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > > 
-> > > --- linux-next-20200807.orig/fs/autofs/dev-ioctl.c
-> > > +++ linux-next-20200807/fs/autofs/dev-ioctl.c
-> > > @@ -20,7 +20,7 @@
-> > >   * another mount. This situation arises when starting
-> > > automount(8)
-> > >   * or other user space daemon which uses direct mounts or offset
-> > >   * mounts (used for autofs lazy mount/umount of nested mount
-> > > trees),
-> > > - * which have been left busy at at service shutdown.
-> > > + * which have been left busy at service shutdown.
-> > >   */
-> > >  
-> > >  typedef int (*ioctl_fn)(struct file *, struct autofs_sb_info *,
-> > > @@ -496,7 +496,7 @@ static int autofs_dev_ioctl_askumount(st
-> > >   * located path is the root of a mount we return 1 along with
-> > >   * the super magic of the mount or 0 otherwise.
-> > >   *
-> > > - * In both cases the the device number (as returned by
-> > > + * In both cases the device number (as returned by
-> > >   * new_encode_dev()) is also returned.
-> > >   */
-> > >  static int autofs_dev_ioctl_ismountpoint(struct file *fp,
+Mikl=C3=B3s seems dead-set against adding a system call specifically for th=
+is -
+though he's proposed extending open in various ways and also proposed an
+additional syscall, readfile(), that does the open+read+close all in one st=
+ep.
+
+I think also at some point, he (or maybe James?) proposed adding a new magic
+filesystem mounted somewhere on proc (reflecting an open fd) that then had a
+bunch of symlinks to somewhere in sysfs (reflecting a mount).  The idea bei=
+ng
+that you did something like:
+
+	fd =3D open("/path/to/object", O_PATH);
+	sprintf(name, "/proc/self/fds/%u/attr1", fd);
+	attrfd =3D open(name, O_RDONLY);
+	read(attrfd, buf1, sizeof(buf1));
+	close(attrfd);
+	sprintf(name, "/proc/self/fds/%u/attr2", fd);
+	attrfd =3D open(name, O_RDONLY);
+	read(attrfd, buf2, sizeof(buf2));
+	close(attrfd);
+
+or:
+
+	sprintf(name, "/proc/self/fds/%u/attr1", fd);
+	readfile(name, buf1, sizeof(buf1));
+	sprintf(name, "/proc/self/fds/%u/attr2", fd);
+	readfile(name, buf2, sizeof(buf2));
+
+and then "/proc/self/fds/12/attr2" might then be a symlink to, say,
+"/sys/mounts/615/mount_attr".
+
+Mikl=C3=B3s's justification for this was that it could then be operated fro=
+m a shell
+script without the need for a utility - except that bash, at least, can't do
+O_PATH opens.
+
+James has proposed making fsconfig() able to retrieve attributes (though I'd
+prefer to give it a sibling syscall that does the retrieval rather than mak=
+ing
+fsconfig() do that too).
+
+>   {
+>      int fd, attrfd;
+>
+>      fd =3D open(path, O_PATH);
+>      attrfd =3D openat(fd, name, O_ALT);
+>      close(fd);
+>      read(attrfd, value, size);
+>      close(attrfd);
+>   }
+
+Please don't go down this path.  You're proposing five syscalls - including
+creating two file descriptors - to do what fsinfo() does in one.
+
+Do you have a particular objection to adding a syscall specifically for
+retrieving filesystem/VFS information?
+
+-~-
+
+Anyway, in case you're interested in what I want to get out of this - which=
+ is
+the reason for it being posted in the first place:
+
+ (*) The ability to retrieve various attributes of a filesystem/superblock,
+     including information on:
+
+	- Filesystem features: Does it support things like hard links, user
+          quotas, direct I/O.
+
+	- Filesystem limits: What's the maximum size of a file, an xattr, a
+          directory; how many files can it support.
+
+	- Supported API features: What FS_IOC_GETFLAGS does it support?  Which
+          can be set?  Does it have Windows file attributes available?  What
+          statx attributes are supported?  What do the timestamps support?
+          What sort of case handling is done on filenames?
+
+     Note that for a lot of cases, this stuff is fixed and can just be memc=
+py'd
+     from rodata.  Some of this is variable, however, in things like ext4 a=
+nd
+     xfs, depending on, say, mkfs configuration.  The situation is even more
+     complex with network filesystems as this may depend on the server they=
+'re
+     talking to.
+
+     But note also that some of this stuff might change file-to-file, even
+     within a superblock.
+
+ (*) The ability to retrieve attributes of a mount point, including informa=
+tion
+     on the flags, propagation settings and child lists.
+
+ (*) The ability to quickly retrieve a list of accessible mount point IDs,
+     with change event counters to permit userspace (eg. systemd) to quickly
+     determine if anything changed in the even of an overrun.
+
+ (*) The ability to find mounts/superblocks by mount ID.  Paths are not uni=
+que
+     identifiers for mountpoints.  You can stack multiple mounts on the same
+     directory, but a path only sees the top one.
+
+ (*) The ability to look inside a different mount namespace - one to which =
+you
+     have a reference fd.  This would allow a container manager to look ins=
+ide
+     the container it is managing.
+
+ (*) The ability to expose filesystem-specific attributes.  Network filesys=
+tems
+     can expose lists of servers and server addresses, for instance.
+
+ (*) The ability to use the object referenced to determine the namespace
+     (particularly the network namespace) to look in.  The problem with loo=
+king
+     in, say, /proc/net/... is that it looks at current's net namespace -
+     whether or not the object of interest is in the same one.
+
+ (*) The ability to query the context attached to the fd obtained from
+     fsopen().  Such a context may not have a superblock attached to it yet=
+ or
+     may not be mounted yet.
+
+     The aim is to allow a container manager to supervise a mount being mad=
+e in
+     a container.  It kind of pairs with fsconfig() in that respect.
+
+ (*) The ability to query mount and superblock event counters to help a
+     watching process handle overrun in the notifications queue.
+
+
+What I've done with fsinfo() is:
+
+ (*) Provided a number of ways to refer to the object to be queried (path,
+     dirfd+path, fd, mount ID - with others planned).
+
+ (*) Made it so that attibutes are referenced by a numeric ID to keep search
+     time minimal.  Numeric IDs must be declared in uapi/linux/fsinfo.h.
+
+ (*) Made it so that the core does most of the work.  Filesystems are given=
+ an
+     in-kernel buffer to copy into and don't get to see any userspace point=
+ers.
+
+ (*) Made it so that values are not, by and large, encoded as text if it ca=
+n be
+     avoided.  Backward and forward compatibility on binary structs is hand=
+led
+     by the core.  The filesystem just fills in the values in the UAPI stru=
+ct
+     in the buffer.  The core will zero-pad or truncate the data to match w=
+hat
+     userspace asked for.
+
+     The UAPI struct must be declared in uapi/linux/fsinfo.h.
+
+ (*) Made it so that, for some attributes, the core will fill in the data as
+     best it can from what's available in the superblock, mount struct or m=
+ount
+     namespace.  The filesystem can then amend this if it wants to.
+
+ (*) Made it so that attributes are typed.  The types are few: string, stru=
+ct,
+     list of struct, opaque.  Structs are extensible: the length is the
+     version, a new version is required to be a superset of the old version=
+ and
+     excess requestage is simply cleared by the kernel.
+
+     Information about the type of an attribute can be queried by fsinfo().
+
+
+What I want to avoid:
+
+ (*) Adding another magic filesystem.
+
+ (*) Adding symlinks from proc to sysfs.
+
+ (*) Having to use open to get an attribute.
+
+ (*) Having to use multiple opens to get an attribute.
+
+ (*) Having to pathwalk to get to the attribute from the object being queri=
+ed.
+
+ (*) Allocating another O_ open flag for this.
+
+ (*) Avoidable text encoding and decoding.
+
+ (*) Letting the filesystem access the userspace buffer.
+
+Note that I'm not against splitting fsinfo() into a set of sibling syscalls=
+ if
+that makes it more palatable, or even against using strings for the attribu=
+te
+IDs, though I'd prefer to avoid the strcmps.
+
+David
 
