@@ -2,98 +2,164 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 982BCC433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F172C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6ACFE207DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:29:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="rqOvwCMq"
+	by mail.kernel.org (Postfix) with ESMTP id 1F736207DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:30:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597249807;
+	bh=KNHjhQzMcYdz2g5TSJ6MQ1LSesLYWtv8i1t9BPqnPoU=;
+	h=From:To:Subject:Date:List-ID:From;
+	b=RvHlvvX9bXeJJ0fg4UJ71MTAhqgDg2bTn3ff51rMvsDI/A2w6X0QD0VF+QFQ2/Kz8
+	 Wlpi4GWzqiemIdge7PKv/X+heYgrMAm2QEnNkurZTxgkw35DNqqCntfYB2KBV7xTyG
+	 Jjl57JdsPqmXtBn6VzfOSFeRtZzlFdY+Dh2amXKM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726697AbgHLQ3q (ORCPT
+        id S1726713AbgHLQaG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 12:29:46 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:54358 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbgHLQ3p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 12:29:45 -0400
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id EA4E39E7;
-        Wed, 12 Aug 2020 18:29:42 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1597249783;
-        bh=PlLgJBlNgcEsVC/aAOnVl2ZoYIkjcFM5Lt8dvxb7AB0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rqOvwCMqtY11PPydCh0Vy9nC3CpAevMAH1aaeYM6BeRfvNSrjENYjEiKz5wBwwHlH
-         Te1jdmFfNL9I/aQKUe3BXqnHUQIXfqN2jNzGGBr6LKhYwjhDnQ9yFD7Gqw4n7crUpD
-         L5267sOarF4BaoxLa2exxeKv/LXhMXp8tPSe5sgk=
-Date:   Wed, 12 Aug 2020 19:29:29 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
+        Wed, 12 Aug 2020 12:30:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48498 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725872AbgHLQaF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 12:30:05 -0400
+Received: from localhost.localdomain (unknown [194.230.155.117])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 485AF2076B;
+        Wed, 12 Aug 2020 16:30:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597249805;
+        bh=KNHjhQzMcYdz2g5TSJ6MQ1LSesLYWtv8i1t9BPqnPoU=;
+        h=From:To:Subject:Date:From;
+        b=Evl+c2GBbQy/asVPy2CAJqy9HfXs8u8ue1EDDHfkHq+7zYrfKBbTRfeHO9xa588kS
+         YcqzyvEAeBg+ldqK/GiFh673DhoeCv92e/ztWxSWcQ+7zLLBXC8mUR+lOB7Dazsx5D
+         Z3GEeKExZ8bNvahBQXRYtQAqAO36PZGscKb04qbI=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Marian-Cristian Rotariu 
-        <marian-cristian.rotariu.rb@bp.renesas.com>
-Subject: Re: [PATCH 7/9] drm: rcar-du: lvds: Add support for R8A774E1 SoC
-Message-ID: <20200812162929.GR6057@pendragon.ideasonboard.com>
-References: <20200812140217.24251-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200812140217.24251-8-prabhakar.mahadev-lad.rj@bp.renesas.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200812140217.24251-8-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Vijai Kumar K <vijaikumar.kanagarajan@gmail.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH 01/11] dt-bindings: extcon: ptn5150: Convert binding to DT schema
+Date:   Wed, 12 Aug 2020 18:29:48 +0200
+Message-Id: <20200812162958.6180-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar,
+Convert the ptn-5150 extcon driver bindings to DT schema format using
+json-schema.  The differences with original bindings document:
+ - Use "gpios" suffix for the "int" and "vbus" gpio,
+ - Skip generic properties like "reg" or "pinctrl".
 
-Thank you for the patch.
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ .../bindings/extcon/extcon-ptn5150.txt        | 27 ----------
+ .../bindings/extcon/extcon-ptn5150.yaml       | 53 +++++++++++++++++++
+ 2 files changed, 53 insertions(+), 27 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/extcon/extcon-ptn5150.txt
+ create mode 100644 Documentation/devicetree/bindings/extcon/extcon-ptn5150.yaml
 
-On Wed, Aug 12, 2020 at 03:02:15PM +0100, Lad Prabhakar wrote:
-> From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> 
-> The LVDS encoder on RZ/G2H (R8A774E1) SoC is identical to R-Car Gen3 so
-> just reuse the rcar_lvds_gen3_info structure to hookup R8A774E1 to LVDS
-> encoder driver.
-> 
-> Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> ---
->  drivers/gpu/drm/rcar-du/rcar_lvds.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/gpu/drm/rcar-du/rcar_lvds.c b/drivers/gpu/drm/rcar-du/rcar_lvds.c
-> index ab0d49618cf9..424ca2b7d9ac 100644
-> --- a/drivers/gpu/drm/rcar-du/rcar_lvds.c
-> +++ b/drivers/gpu/drm/rcar-du/rcar_lvds.c
-> @@ -987,6 +987,7 @@ static const struct of_device_id rcar_lvds_of_table[] = {
->  	{ .compatible = "renesas,r8a774a1-lvds", .data = &rcar_lvds_gen3_info },
->  	{ .compatible = "renesas,r8a774b1-lvds", .data = &rcar_lvds_gen3_info },
->  	{ .compatible = "renesas,r8a774c0-lvds", .data = &rcar_lvds_r8a77990_info },
-> +	{ .compatible = "renesas,r8a774e1-lvds", .data = &rcar_lvds_gen3_info },
->  	{ .compatible = "renesas,r8a7790-lvds", .data = &rcar_lvds_gen2_info },
->  	{ .compatible = "renesas,r8a7791-lvds", .data = &rcar_lvds_gen2_info },
->  	{ .compatible = "renesas,r8a7793-lvds", .data = &rcar_lvds_gen2_info },
-
+diff --git a/Documentation/devicetree/bindings/extcon/extcon-ptn5150.txt b/Documentation/devicetree/bindings/extcon/extcon-ptn5150.txt
+deleted file mode 100644
+index 936fbdf12815..000000000000
+--- a/Documentation/devicetree/bindings/extcon/extcon-ptn5150.txt
++++ /dev/null
+@@ -1,27 +0,0 @@
+-* PTN5150 CC (Configuration Channel) Logic device
+-
+-PTN5150 is a small thin low power CC logic chip supporting the USB Type-C
+-connector application with CC control logic detection and indication functions.
+-It is interfaced to the host controller using an I2C interface.
+-
+-Required properties:
+-- compatible: should be "nxp,ptn5150"
+-- reg: specifies the I2C slave address of the device
+-- int-gpio: should contain a phandle and GPIO specifier for the GPIO pin
+-	connected to the PTN5150's INTB pin.
+-- vbus-gpio: should contain a phandle and GPIO specifier for the GPIO pin which
+-	is used to control VBUS.
+-- pinctrl-names : a pinctrl state named "default" must be defined.
+-- pinctrl-0 : phandle referencing pin configuration of interrupt and vbus
+-	control.
+-
+-Example:
+-	ptn5150@1d {
+-		compatible = "nxp,ptn5150";
+-		reg = <0x1d>;
+-		int-gpio = <&msmgpio 78 GPIO_ACTIVE_HIGH>;
+-		vbus-gpio = <&msmgpio 148 GPIO_ACTIVE_HIGH>;
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&ptn5150_default>;
+-		status = "okay";
+-	};
+diff --git a/Documentation/devicetree/bindings/extcon/extcon-ptn5150.yaml b/Documentation/devicetree/bindings/extcon/extcon-ptn5150.yaml
+new file mode 100644
+index 000000000000..f6316f12028b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/extcon/extcon-ptn5150.yaml
+@@ -0,0 +1,53 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/extcon/extcon-ptn5150.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: PTN5150 CC (Configuration Channel) Logic device
++
++maintainers:
++  - Krzysztof Kozlowski <krzk@kernel.org>
++
++description: |
++  PTN5150 is a small thin low power CC logic chip supporting the USB Type-C
++  connector application with CC control logic detection and indication
++  functions.  It is interfaced to the host controller using an I2C interface.
++
++properties:
++  compatible:
++    const: nxp,ptn5150
++
++  int-gpios:
++    description:
++      GPIO pin (input) connected to the PTN5150's INTB pin.
++
++  reg:
++    maxItems: 1
++
++  vbus-gpios:
++    description:
++      GPIO pin (output) used to control VBUS.
++
++required:
++  - compatible
++  - int-gpios
++  - reg
++  - vbus-gpios
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        ptn5150@1d {
++            compatible = "nxp,ptn5150";
++            reg = <0x1d>;
++            int-gpios = <&msmgpio 78 GPIO_ACTIVE_HIGH>;
++            vbus-gpios = <&msmgpio 148 GPIO_ACTIVE_HIGH>;
++        };
++    };
 -- 
-Regards,
+2.17.1
 
-Laurent Pinchart
