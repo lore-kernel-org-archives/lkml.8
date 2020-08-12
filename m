@@ -2,121 +2,103 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72D8AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 18:32:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E5EFC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 18:33:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5609E2078B
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 18:32:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QM7a50tw"
+	by mail.kernel.org (Postfix) with ESMTP id 6FD002078B
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 18:33:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726567AbgHLScy (ORCPT
+        id S1726639AbgHLSdl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 14:32:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55722 "EHLO
+        Wed, 12 Aug 2020 14:33:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726456AbgHLScx (ORCPT
+        with ESMTP id S1726557AbgHLSdk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 14:32:53 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCBFEC061383
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 11:32:52 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id r21so2735179ota.10
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 11:32:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Iq5zcoPvcN7T8KSX0uQQrVJaYxTlpMSMBxtNsvh1wuM=;
-        b=QM7a50twcijnq4/3ZW/O+9xjvW93ebFFEyQqVRJLyIZ1P87M+G7Is4tYI1VD0ikr6u
-         0mA8d7XC8wnH+xFw6v9UgSTx6AFTQ6x+Cj0HVkaFzv1gMKXdZD/UtV/qIhPQMljzkyib
-         r3+JIXdmwd0Ii9KO7oHfZWDxU40LNTbU8dIRmN49HnESDLoEHeGphhMZz2a628D21ah+
-         WtyTpWSDy8tRo5VWoi6aAcTbDWBqBTVDiDu+5yVSC3o8utQb08yOAmDEKl1NiIVD81uC
-         3yaWwt2pGL3Exg+IJUwVHKZ41zPInA3Jj0/c1/smWfrWzTh3n8OB6be1rdzqp1HnCCbp
-         M0GQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Iq5zcoPvcN7T8KSX0uQQrVJaYxTlpMSMBxtNsvh1wuM=;
-        b=dOk9y6gVdyK4dt69BCyD6XmI5mBibbqFGHumdkcSsJ8UuhG2BRmIlYJ9fpQIOk/DN3
-         aTTZY1ISuLyuNYICnJVkanVmGGsDlmvKFFPXljuzkkner0wOEupSu8Kv9BuJKTcQVCej
-         jkQxkDEp0JSgZczRXm2nkDdZtBp6N6xIm0rhBbW1qK3n+bi0lqlqyhQVavJ73uGeCoMW
-         zp8vhCn8d0we+zSWspXQmKcenD98GJjCNoTZZ+uJC6WQ2FkiUWOxHt3vi1Cppa1j0s9U
-         vDYd4uwLb5c9qhhwHlXDqX1+7AHoGE+hxGWlgWCoH6QLCuv2rRYSXZ0yPtgN8koxStDB
-         Y3IQ==
-X-Gm-Message-State: AOAM530VpUX4YBxbbX2TfiKdmlej8LvD8JUGv5POUTj5sQq57qBHXIav
-        cBJeEoDwRVTu6IOw1VZO8Xpmh1jzzrerv03tc8HJSQ==
-X-Google-Smtp-Source: ABdhPJz+lzTrWF2UOOoonvsdqjLKtgHh00A7xdKG2eO+qCNz+TiDu0I0jrDoHcVDQ8HHjErxXT8Rxhr9INaoK8a+Jns=
-X-Received: by 2002:a9d:ae9:: with SMTP id 96mr889573otq.241.1597257169977;
- Wed, 12 Aug 2020 11:32:49 -0700 (PDT)
+        Wed, 12 Aug 2020 14:33:40 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37BF8C061383;
+        Wed, 12 Aug 2020 11:33:40 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k5vZ0-00EEH8-Kk; Wed, 12 Aug 2020 18:33:26 +0000
+Date:   Wed, 12 Aug 2020 19:33:26 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Jann Horn <jannh@google.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Karel Zak <kzak@redhat.com>, Jeff Layton <jlayton@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Christian Brauner <christian@brauner.io>,
+        Lennart Poettering <lennart@poettering.net>,
+        Linux API <linux-api@vger.kernel.org>,
+        Ian Kent <raven@themaw.net>,
+        LSM <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: file metadata via fs API (was: [GIT PULL] Filesystem Information)
+Message-ID: <20200812183326.GU1236603@ZenIV.linux.org.uk>
+References: <CAJfpeguh5VaDBdVkV3FJtRsMAvXHWUcBfEpQrYPEuX9wYzg9dA@mail.gmail.com>
+ <CAHk-=whE42mFLi8CfNcdB6Jc40tXsG3sR+ThWAFihhBwfUbczA@mail.gmail.com>
+ <CAJfpegtXtj2Q1wsR-3eUNA0S=_skzHF0CEmcK_Krd8dtKkWkGA@mail.gmail.com>
+ <20200812143957.GQ1236603@ZenIV.linux.org.uk>
+ <CAJfpegvFBdp3v9VcCp-wNDjZnQF3q6cufb-8PJieaGDz14sbBg@mail.gmail.com>
+ <20200812150807.GR1236603@ZenIV.linux.org.uk>
+ <CAJfpegsQF1aN4XJ_8j977rnQESxc=Kcn7Z2C+LnVDWXo4PKhTQ@mail.gmail.com>
+ <20200812163347.GS1236603@ZenIV.linux.org.uk>
+ <CAJfpegv8MTnO9YAiFUJPjr3ryeT82=KWHUpLFmgRNOcQfeS17w@mail.gmail.com>
+ <20200812173911.GT1236603@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-References: <20200807084841.7112-1-chenyi.qiang@intel.com> <20200807084841.7112-8-chenyi.qiang@intel.com>
- <CALMp9eTAo3WO5Vk_LptTDZLzymJ_96=UhRipyzTXXLxWJRGdXg@mail.gmail.com> <20200812150017.GB6602@linux.intel.com>
-In-Reply-To: <20200812150017.GB6602@linux.intel.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Wed, 12 Aug 2020 11:32:38 -0700
-Message-ID: <CALMp9eTTZz+Wm-5onY2CF6VGHwtbaYtD9RZLyHZTUM2R4E6vbA@mail.gmail.com>
-Subject: Re: [RFC 7/7] KVM: VMX: Enable PKS for nested VM
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Chenyi Qiang <chenyi.qiang@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200812173911.GT1236603@ZenIV.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 8:00 AM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
->
-> On Mon, Aug 10, 2020 at 05:05:36PM -0700, Jim Mattson wrote:
-> > On Fri, Aug 7, 2020 at 1:47 AM Chenyi Qiang <chenyi.qiang@intel.com> wrote:
+On Wed, Aug 12, 2020 at 06:39:11PM +0100, Al Viro wrote:
+> On Wed, Aug 12, 2020 at 07:16:37PM +0200, Miklos Szeredi wrote:
+> > On Wed, Aug 12, 2020 at 6:33 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
 > > >
-> > > PKS MSR passes through guest directly. Configure the MSR to match the
-> > > L0/L1 settings so that nested VM runs PKS properly.
+> > > On Wed, Aug 12, 2020 at 05:13:14PM +0200, Miklos Szeredi wrote:
+> > 
+> > > > Why does it have to have a struct mount?  It does not have to use
+> > > > dentry/mount based path lookup.
 > > >
-> > > Signed-off-by: Chenyi Qiang <chenyi.qiang@intel.com>
-> > > ---
-> > >  arch/x86/kvm/vmx/nested.c | 32 ++++++++++++++++++++++++++++++++
-> > >  arch/x86/kvm/vmx/vmcs12.c |  2 ++
-> > >  arch/x86/kvm/vmx/vmcs12.h |  6 +++++-
-> > >  arch/x86/kvm/vmx/vmx.c    | 10 ++++++++++
-> > >  arch/x86/kvm/vmx/vmx.h    |  1 +
-> > >  5 files changed, 50 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-> > > index df2c2e733549..1f9823d21ecd 100644
-> > > --- a/arch/x86/kvm/vmx/nested.c
-> > > +++ b/arch/x86/kvm/vmx/nested.c
-> > > @@ -647,6 +647,12 @@ static inline bool nested_vmx_prepare_msr_bitmap(struct kvm_vcpu *vcpu,
-> > >                                         MSR_IA32_PRED_CMD,
-> > >                                         MSR_TYPE_W);
-> > >
-> > > +       if (!msr_write_intercepted_l01(vcpu, MSR_IA32_PKRS))
-> > > +               nested_vmx_disable_intercept_for_msr(
-> > > +                                       msr_bitmap_l1, msr_bitmap_l0,
-> > > +                                       MSR_IA32_PKRS,
-> > > +                                       MSR_TYPE_R | MSR_TYPE_W);
-> >
-> > What if L1 intercepts only *reads* of MSR_IA32_PKRS?
->
-> nested_vmx_disable_intercept_for_msr() handles merging L1's desires, the
-> (MSR_TYPE_R | MSR_TYPE_W) param is effectively L0's desire for L2.
+> > > What the fuck?  So we suddenly get an additional class of objects
+> > > serving as kinda-sorta analogues of dentries *AND* now struct file
+> > > might refer to that instead of a dentry/mount pair - all on the VFS
+> > > level?  And so do all the syscalls you want to allow for such "pathnames"?
+> > 
+> > The only syscall I'd want to allow is open, everything else would be
+> > on the open files themselves.
+> > 
+> > file->f_path can refer to an anon mount/inode, the real object is
+> > referred to by file->private_data.
+> > 
+> > The change to namei.c would be on the order of ~10 lines.  No other
+> > parts of the VFS would be affected.
+> 
+> If some of the things you open are directories (and you *have* said that
+> directories will be among those just upthread, and used references to
+> readdir() as argument in favour of your approach elsewhere in the thread),
+> you will have to do something about fchdir().  And that's the least of
+> the issues.
 
-I should know better than to assume that a function in kvm actually
-does anything like what its name implies, but I never seem to learn.
-:-(
+BTW, what would such opened files look like from /proc/*/fd/* POV?  And
+what would happen if you walk _through_ that symlink, with e.g. ".."
+following it?  Or with names of those attributes, for that matter...
+What about a normal open() of such a sucker?  It won't know where to
+look for your ->private_data...
 
-Thanks!
+FWIW, you keep refering to regularity of this stuff from the syscall
+POV, but it looks like you have no real idea of what subset of the
+things available for normal descriptors will be available for those.
