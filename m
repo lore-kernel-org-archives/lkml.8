@@ -2,163 +2,270 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C8AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:13:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27319C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:15:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63FA820781
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:13:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F23B620781
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:15:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j91ZT750"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RRZmS/K4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726660AbgHLPNf (ORCPT
+        id S1726681AbgHLPPU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 11:13:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53274 "EHLO
+        Wed, 12 Aug 2020 11:15:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726510AbgHLPN1 (ORCPT
+        with ESMTP id S1726489AbgHLPPT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 11:13:27 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 022C2C061384;
-        Wed, 12 Aug 2020 08:13:26 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id x12so1728842qtp.1;
-        Wed, 12 Aug 2020 08:13:26 -0700 (PDT)
+        Wed, 12 Aug 2020 11:15:19 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EC00C061383
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 08:15:19 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id m8so1187008pfh.3
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 08:15:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=jd+0O3rfZzFFL8LU24BOfuyCqms8qaWRv2Co74kbUzc=;
-        b=j91ZT750zKdCaCs4PQtHNGQx8b7SYeKNb5qzyJ5ohLQUEL3iCPkSC12yVA98Qd3XZA
-         aBwqrwl/PshYusq68OX1wPw/JOQboTCXOpwLBqSalmYjNfcMdx8AyiCi1xDaPGN+f9t9
-         4eiF04kqG8gzcHjhsd4cLYBV4lYgIuHLxUVuOQdsKSTdhjh0pTvCCXvTDaohVViR9Ppr
-         Hde4WwVtAclxGRzY2jqBNY48bQPAwtYh4Nwglua8IN7T/5V2kWZBvFnRxXRc2MyedgiG
-         O1TF8j5YSLdh+NcKTAgGbBv2zN5/7tUZGM6eJzMAve+tX3Q5uc/+58Emc1RQCUkIBXv0
-         b+aw==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=rhn3sqAjMO7fHW50VMJNtuaUppNZfZWxCntk8JftCgQ=;
+        b=RRZmS/K4r4bVHEUwf8n+9+7Ir4gT7POq7veOwiR/I9olsAHAhQKduUFHS1xvULIqMQ
+         QYZYafxj5Yph4zoWUZjHGyki2EPuKQx7c7Lgn59Rqg+qdkOgqjx1z61Kg1yKQCJIZhSV
+         B8NNy7735o8SLwnR4TEt8i/O05/V4RpgsJlOk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=jd+0O3rfZzFFL8LU24BOfuyCqms8qaWRv2Co74kbUzc=;
-        b=Z0ifID5BJZH11zKUAFT3mZ4Iq7nNsQBvmAvefgSdQosFDYsjdpCBFOot1l57w8FW+K
-         hTJJtzrU8tmOZACbbXp4amDClhh/ShDa9Zq5WA5nkiNqPsDwZ1y9fY3zAdBnfEhGIrYA
-         NWaJUk1g0k6WQUtjyCzGJ6bubFW0JcLWResk6c5xDmweqskewlgk6cppHizaf907bkDc
-         TetSoQ/3+Pjsri6ecofmbrGRFPBRN9Sl8U5bwsraLid9q9AW/ShBPfJIN/t/kjkjxfut
-         6XY62kBMRwRqjPWjBvRpmW5hjDxpkGhvchHd/LV42KWcslemltDoWDr2U+KMqf3pjo7E
-         IJuQ==
-X-Gm-Message-State: AOAM533kq9NaC8U3pP+aLuyZnJon9d/HByEO0dm3KlaZY9aVB20rbfp8
-        35rLKbbL2HJ9jkdU9mKuqSM=
-X-Google-Smtp-Source: ABdhPJwA+sy1dnYb6dWMech9eiLy3w6fKdLRQCmJZxZMNY8ySvEWD9H+y9uw6zP8ha5m9sVYRWMVBw==
-X-Received: by 2002:ac8:7606:: with SMTP id t6mr44005qtq.348.1597245205581;
-        Wed, 12 Aug 2020 08:13:25 -0700 (PDT)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id k5sm2695377qke.18.2020.08.12.08.13.24
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=rhn3sqAjMO7fHW50VMJNtuaUppNZfZWxCntk8JftCgQ=;
+        b=Iw7nSsDVQNOW9D/h7EUMSsGrvanUxfg0io4yroFqGA2zTiIiQQcPtcAIDSp7gY9C2B
+         8ltcN/EAJUxbWPz2eiX4sSiwgFGTmupzvHg4/8zRRiAyoyx/PUOhEf3ChhG7zhwx3qVP
+         yJIqdTATLhxu7rq0fs/57CCk6nBlEnW3j9Q/E92sDszIZs/iiVcEXrscbnHAz/zrEM+Z
+         02iXFZZwr+IvhR/q0PA6ZzkPzdvhBN4EwPD1vJURZQ+SQZgUVFBA2qYNMxJsOzq0zL9F
+         PEoLzfgiJxMhg5bUke8GLnClU+tGdLetdnYGo0kfTr+jhpAr135+b8BiVJgTLBXsP8XI
+         1ixw==
+X-Gm-Message-State: AOAM5339YBzsBx0oJEatMgPCAe0ZyMiwkFF5f4joRpzDMHo4nu3VMVJM
+        g8f2iWVD2YzjyVP3DVcN+y35sQ==
+X-Google-Smtp-Source: ABdhPJxH5BXx5vyPzseYMN/ZVukUoNGb3kc6hqCOuQZoIR/oTI0axPEFwCYRnee1zW2Uc3NQcQKRiw==
+X-Received: by 2002:aa7:93a6:: with SMTP id x6mr30835pff.37.1597245318477;
+        Wed, 12 Aug 2020 08:15:18 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:f693:9fff:fef4:e70a])
+        by smtp.gmail.com with ESMTPSA id h18sm2825713pfo.21.2020.08.12.08.15.16
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Aug 2020 08:13:25 -0700 (PDT)
-Subject: Re: [Q] devicetree overlays
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
-        Sven Van Asbroeck <thesven73@gmail.com>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <CAGngYiVa9v9jGPNu4W+KHUnvemKU-BVE89-XNLcWOmoZjAPMTg@mail.gmail.com>
- <24f1687c-043a-a15e-0be4-8392e7b5c96b@metux.net>
- <CAGngYiVokqYkEiQTcqAMnvif3qEWkPOb1cAk+4rvwgxBKZ5Ukw@mail.gmail.com>
- <1acc987a-d844-fca7-77eb-cf1d466f35c1@metux.net>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <fd63b1d4-086c-8bb2-0ba2-19cdf1709e08@gmail.com>
-Date:   Wed, 12 Aug 2020 10:13:24 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 12 Aug 2020 08:15:17 -0700 (PDT)
+Date:   Wed, 12 Aug 2020 08:15:16 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     sbhanu@codeaurora.org
+Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        robh+dt@kernel.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, rnayak@codeaurora.org,
+        Pradeep P V K <ppvk@codeaurora.org>,
+        devicetree-owner@vger.kernel.org
+Subject: Re: [PATCH V2] arm64: dts: qcom: sc7180: Add bandwidth votes for
+ eMMC and SDcard
+Message-ID: <20200812151516.GA2995789@google.com>
+References: <1595328381-29552-1-git-send-email-sbhanu@codeaurora.org>
+ <20200724171018.GZ3191083@google.com>
+ <7ffcb56e9e6723f4bae687e0f491cb93@codeaurora.org>
+ <20200727191029.GA3191083@google.com>
+ <e83f559bb8691cd602f35e3bd739e5c4@codeaurora.org>
+ <20200811170855.GK3191083@google.com>
+ <be51df4466bc92574555bc762ff002d5@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <1acc987a-d844-fca7-77eb-cf1d466f35c1@metux.net>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <be51df4466bc92574555bc762ff002d5@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-12 08:27, Enrico Weigelt, metux IT consult wrote:
-> On 07.08.20 16:17, Sven Van Asbroeck wrote:
+On Wed, Aug 12, 2020 at 04:26:08PM +0530, sbhanu@codeaurora.org wrote:
+> On 2020-08-11 22:38, Matthias Kaehlcke wrote:
+> > On Tue, Jul 28, 2020 at 04:49:05PM +0530, sbhanu@codeaurora.org wrote:
+> > > On 2020-07-28 00:40, Matthias Kaehlcke wrote:
+> > > > Hi,
+> > > >
+> > > > On Mon, Jul 27, 2020 at 12:20:38PM +0530, sbhanu@codeaurora.org wrote:
+> > > > > On 2020-07-24 22:40, Matthias Kaehlcke wrote:
+> > > > > > Hi Shaik,
+> > > > > >
+> > > > > > On Tue, Jul 21, 2020 at 04:16:21PM +0530, Shaik Sajida Bhanu wrote:
+> > > > > > > From: Pradeep P V K <ppvk@codeaurora.org>
+> > > > > > >
+> > > > > > > Add the bandwidth domain supporting performance state and
+> > > > > > > the corresponding OPP tables for the sdhc device on sc7180.
+> > > > > > >
+> > > > > > > Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
+> > > > > > > Signed-off-by: Shaik Sajida Bhanu <sbhanu@codeaurora.org>
+> > > > > > > ---
+> > > > > > >
+> > > > > > > Changes since V1:
+> > > > > > > 	- Incorporated review comments by Bjorn Andersson.
+> > > > > > > ---
+> > > > > > >  arch/arm64/boot/dts/qcom/sc7180.dtsi | 15 +++++++++++++++
+> > > > > > >  1 file changed, 15 insertions(+)
+> > > > > > >
+> > > > > > > diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > > > > > > b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > > > > > > index 68f9894..d78a066 100644
+> > > > > > > --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > > > > > > +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > > > > > > @@ -684,6 +684,9 @@
+> > > > > > >  			clocks = <&gcc GCC_SDCC1_APPS_CLK>,
+> > > > > > >  					<&gcc GCC_SDCC1_AHB_CLK>;
+> > > > > > >  			clock-names = "core", "iface";
+> > > > > > > +			interconnects = <&aggre1_noc MASTER_EMMC &mc_virt SLAVE_EBI1>,
+> > > > > > > +				<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_EMMC_CFG>;
+> > > > > > > +			interconnect-names = "sdhc-ddr","cpu-sdhc";
+> > > > > > >  			power-domains = <&rpmhpd SC7180_CX>;
+> > > > > > >  			operating-points-v2 = <&sdhc1_opp_table>;
+> > > > > > >
+> > > > > > > @@ -704,11 +707,15 @@
+> > > > > > >  				opp-100000000 {
+> > > > > > >  					opp-hz = /bits/ 64 <100000000>;
+> > > > > > >  					required-opps = <&rpmhpd_opp_low_svs>;
+> > > > > > > +					opp-peak-kBps = <100000 100000>;
+> > > > > > > +					opp-avg-kBps = <100000 50000>;
+> > > > > > >  				};
+> > > > > > >
+> > > > > > >  				opp-384000000 {
+> > > > > > >  					opp-hz = /bits/ 64 <384000000>;
+> > > > > > >  					required-opps = <&rpmhpd_opp_svs_l1>;
+> > > > > > > +					opp-peak-kBps = <600000 900000>;
+> > > > > > > +					opp-avg-kBps = <261438 300000>;
+> > > > > > >  				};
+> > > > > > >  			};
+> > > > > > >  		};
+> > > > > > > @@ -2476,6 +2483,10 @@
+> > > > > > >  			clocks = <&gcc GCC_SDCC2_APPS_CLK>,
+> > > > > > >  					<&gcc GCC_SDCC2_AHB_CLK>;
+> > > > > > >  			clock-names = "core", "iface";
+> > > > > > > +
+> > > > > > > +			interconnects = <&aggre1_noc MASTER_SDCC_2 &mc_virt SLAVE_EBI1>,
+> > > > > > > +				<&gem_noc MASTER_APPSS_PROC &config_noc	SLAVE_SDCC_2>;
+> > > > > > > +			interconnect-names = "sdhc-ddr","cpu-sdhc";
+> > > > > > >  			power-domains = <&rpmhpd SC7180_CX>;
+> > > > > > >  			operating-points-v2 = <&sdhc2_opp_table>;
+> > > > > > >
+> > > > > > > @@ -2489,11 +2500,15 @@
+> > > > > > >  				opp-100000000 {
+> > > > > > >  					opp-hz = /bits/ 64 <100000000>;
+> > > > > > >  					required-opps = <&rpmhpd_opp_low_svs>;
+> > > > > > > +					opp-peak-kBps = <160000 100000>;
+> > > > > > > +					opp-avg-kBps = <80000 50000>;
+> > > > > > >  				};
+> > > > > > >
+> > > > > > >  				opp-202000000 {
+> > > > > > >  					opp-hz = /bits/ 64 <202000000>;
+> > > > > > >  					required-opps = <&rpmhpd_opp_svs_l1>;
+> > > > > > > +					opp-peak-kBps = <200000	120000>;
+> > > > > > > +					opp-avg-kBps = <100000 60000>;
+> > > > > > >  				};
+> > > > > > >  			};
+> > > > > > >  		};
+> > > > > >
+> > > > > > Does the sdhci-msm driver actually have BW scaling support at this
+> > > > > > point?
+> > > > > >
+> > > > >
+> > > > > yes
+> > > > >
+> > > > > > There is commit 4ece9795be56 ("mmc: sdhci-msm: Add interconnect
+> > > > > > bandwidth scaling support"), whose commit message says "make sure
+> > > > > > interconnect driver is ready before handling interconnect scaling.".
+> > > > > >
+> > > > > > I haven't seen any patch adding the scaling support (supposedly by
+> > > > > > adding dev_pm_opp_set_bw() calls?). Did I miss it? If not it seems
+> > > > > > it would make sense to post it in a series together with this patch,
+> > > > > > as far as I can tell this patch alone does nothing in practical terms.
+> > > > > >
+> > > > > > grep sdhc /sys/kernel/debug/interconnect/interconnect_summary
+> > > > > >   8804000.sdhci                          0            0            0
+> > > > > >   7c4000.sdhci                           0            0            0
+> > > > > >   7c4000.sdhci                           0            0            0
+> > > > > >   8804000.sdhci                          0            0            0
+> > > > > >   ...
+> > > > >
+> > > > > "mmc: sdhci-msm: Use OPP API to set clk/perf
+> > > > > state"(https://lkml.org/lkml/2020/4/8/425) and "mmc: sdhci-msm: Add
+> > > > > interconnect bandwidth scaling
+> > > > > support"(https://lkml.org/lkml/2020/3/12/60)
+> > > > > with these two patches scaling will be supported for sdhci-msm driver.
+> > > >
+> > > > Are you testing with exactly these patches or with the ones that landed
+> > > > upstream? At least the second one changed substantially
+> > > >
+> > > > > the values  in  grep sdhc
+> > > > > /sys/kernel/debug/interconnect/interconnect_summary will be zero
+> > > > > during
+> > > > > device is in suspend state...
+> > > >
+> > > > Yes, I forgot to mention that I started MMC IO before looking at
+> > > > 'interconnect_summary'.
+> > > >
+> > > > > and the values in  grep sdhc
+> > > > > /sys/kernel/debug/interconnect/interconnect_summary during device in
+> > > > > resume
+> > > > > state will be like the following::
+> > > > >
+> > > > > cicalhost / # cat
+> > > > > /sys/kernel/debug/interconnect/interconnect_summary | grep
+> > > > > sdh
+> > > > >   8804000.sdhci                          0        60000       120000
+> > > > >   7c4000.sdhci                           0       300000       900000
+> > > > >   7c4000.sdhci                           0       300000       900000
+> > > > >   8804000.sdhci                          0        60000       120000
+> > > > >   8804000.sdhci                          0       100000       200000
+> > > > >   7c4000.sdhci                           0       261438       600000
+> > > > >   8804000.sdhci                          0        60000       120000
+> > > >
+> > > > On my system the bandwidth is never set:
+> > > >
+> > > > 3.590152] sdhci_msm 7c4000.sdhci: DBG: old/new frequencies (384000000
+> > > > Hz) are same, nothing to do
+> > > > https://elixir.bootlin.com/linux/v5.7.8/source/drivers/opp/core.c#L847
+> > > >
+> > > > This happens every time, even after the bandwith is set to 0. The
+> > > > problem
+> > > > seems to be that opp_table->clk doesn't change for target_freq = 0.
+> > > >
+> > > > My system is based on v5.4, so it is possible that my kernel is missing
+> > > > some
+> > > > relevant patch from upstream.
+> > > Hi matthias,
+> > > 
+> > > In order to aviod confusion this patch is continuation of the below
+> > > patch::
+> > > "mmc: sdhci-msm: Add interconnect bandwidth scaling support"
+> > > (https://lkml.org/lkml/2020/6/9/160).
+> > 
+> > My kernel contains this patch.
+> > 
+> > As you told me in private, the patch "opp: Fix dev_pm_opp_set_rate()
+> > to not return early" (https://patchwork.kernel.org/patch/11707003/) is
+> > needed, which fixes exactly the problem I described.
+> > 
+> > It seems the tree you tested was not based on the maintainer tree or
+> > upstream,
+> > please make that clear when someone reports issues. Since you said it
+> > works
+> > for you I wasted time trying to chase down a missing patch which did not
+> > exist
+> > (yet).
 > 
-> Hi,
 > 
->> I believe you're asking: "how do I associate device tree nodes to
->> devices on a dynamically discoverable bus such as USB or PCI" right ?
->>
->> I believe that already exists. You can describe the _expected_ pci or
->> usb topology in the
->> devicetree. If a device gets detected in a spot on the bus described
->> in the tree, that
->> snippet will be automatically associated with this device.
->>
->> How to for usb:
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/usb/usb-device.txt?h=v5.8
->>
->> How to for pci:
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/pci/pci.txt?h=v5.8
+> Hi Matthis,
 > 
-> Thanks, that looks good.
-> 
-> But I've still got another problem: how can I use DT along w/ ACPI ?
+> Can you confirm from your end the issue that you reported got fixed
+> with Rajendra patch or not. Once you confirm, I can ask Bjorn to pull
+> this dt change.
 
-Some answers from https://elinux.org/Device_tree_plumbers_2016_etherpad
+Yes, the issue is fixed with Rajendra's patch
 
-Question: what about device tree on x86
-
-    Answer: there's already support for DT on x86. But, we should not mix DT and ACPI.
-
-
-A controversial topic is ACPI overlays (putting DT in ACPI or ACPI in DT).
-
-    Don't want to have drivers that get part of their info from ACPI and part from DT. That's nuts.
-
-
-Question: Can you have ACPI and DT at the same time on x86?
-
-    Answer: No. Some ARM64 systems have support for both ACPI and DT, but the system selects one to use at runtime. They are not used at the same time.
-    You can run the DT unit tests on x86.
-
-
--Frank
-
-> 
-> The scenario goes like this:
-> 
-> * machine boots and probes normally w/ ACPI
-> * device is detected via USB, PCI, DMI, etc -> driver gets active
-> * driver loads (or carries) a DT snippet
-> * devices on the bus are instantiated via this DT snippet
-> 
-> (driver could also be some udev vodoo)
-> 
-> Example a:
-> 
-> * generic usb i2c dongle w/ some i2c devices attached behind it
-> * config (or DT snippet) somewhere in the FS
-> 
-> Example b:
-> 
-> * x86 board driver (eg. apu2/3/4), probed via DMI
-> * just instantiates a bunch of generic drivers and wires up
->   devices (gpio, leds, keys, ...)
-> 
-> 
-> Do you think we can already do that ?
-> Otherwise, what has to be done to achieve that ?	
-> 
-> 
-> --mtx
-> 
-
+Tested-by: Matthias Kaehlcke <mka@chromium.org>
