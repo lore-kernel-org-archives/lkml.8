@@ -2,146 +2,139 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DEC3C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 00:43:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27797C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 00:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 456412080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 00:43:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB4A420756
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 00:46:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pXGKT72c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726474AbgHLAnL (ORCPT
+        id S1726430AbgHLAqZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 20:43:11 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:33579 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726143AbgHLAnL (ORCPT
+        Tue, 11 Aug 2020 20:46:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33058 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726255AbgHLAqZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 20:43:11 -0400
-Received: by mail-qk1-f193.google.com with SMTP id p4so685734qkf.0;
-        Tue, 11 Aug 2020 17:43:10 -0700 (PDT)
+        Tue, 11 Aug 2020 20:46:25 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 584FDC06174A
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 17:46:25 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id p37so148555pgl.3
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Aug 2020 17:46:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=gA6HLegMT64phMFVQ7NsDC7fLVLgch73XTGsvFwXIgw=;
+        b=pXGKT72cahT5WV70cvriv9aH3+66DJ7j+Ttbt4+fL1ZubgYPJ0Z/DITZ8S5TDWDuHB
+         VD1XmynvU4x0GLHhw/IlXyoaFwezAkQCnx4mSGkUaET9SUH6lI6OR4fAUcmvNW8OwDrQ
+         EWkDa38ExEX59+uGVtyrOiLE4RYtvpPqkk+GJS5y2G08DL1KtZ9KdPFlAXAdNpgbi6u0
+         r0d2PuBNnHQCtcsq8uXhYVvCiy3mocH3DU5qCE7NDh4BIwBxTCS1bKAoAd8Z2RZzty8C
+         yIc/kgh16lBFjEFVtoTzeVwdwbAtUlVGilRnm0I1fV0ppJSdXYZrR4FeZIKk7rro9B7h
+         xSQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=GCDImrRgW3iCWcpk2/WqD39sC7GwesCsUaBl58SFiQk=;
-        b=PoH0BzxBnfdXZMDSBo6OEj5QWb5mst9LLE7YPEqOCButpr32c+Q0LmGFoAmlTfvTNT
-         lQFEqqjKUs2Xm5chKOoYo/qFRYYejqoNIdCzmcEOsoZ5LkP6Np4/lQFsFRiiZNLSftWO
-         uLsERcWu8zG+fSJrTVD6F1Bob/8isnTfyJ31uxLco/YVSmC/yvSTWIlDBs6gUzPru557
-         sy7WQS26f7JzNAgoReH2LX1OmYZulLvFqJFoAqHNerzh6JuUSxoH44fi+yG6FwCmtOGn
-         4dcEIHISfbKEdNaMOy59zNVppto4rqhgpklN5UwSz8jDiCQbhgBG5A/m/kmNjMk3hHSz
-         yrmQ==
-X-Gm-Message-State: AOAM532MxVBnByZGPyQ0hTIJYGHDWltSVpUzqrkq2v5piWQe0sxx2OxV
-        wnPG8tIq/ZoSwz/1oiM+IZQ=
-X-Google-Smtp-Source: ABdhPJzw++bT0HF3bP2CRKw/mU0GoHv5y3se5aR+Iut3/cRRo4mbJTF32+0nEvHbyQxtm+Wq5sUNtw==
-X-Received: by 2002:a37:a354:: with SMTP id m81mr3762457qke.277.1597192989829;
-        Tue, 11 Aug 2020 17:43:09 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id x13sm549749qts.23.2020.08.11.17.43.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Aug 2020 17:43:09 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Fangrui Song <maskray@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        e5ten.arch@gmail.com,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
-Subject: [PATCH v2] x86/boot/compressed: Disable relocation relaxation
-Date:   Tue, 11 Aug 2020 20:43:08 -0400
-Message-Id: <20200812004308.1448603-1-nivedita@alum.mit.edu>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200812004158.GA1447296@rani.riverdale.lan>
-References: <20200812004158.GA1447296@rani.riverdale.lan>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=gA6HLegMT64phMFVQ7NsDC7fLVLgch73XTGsvFwXIgw=;
+        b=jU0cnLPeXnS9QsWaSks8J6IOBmaXNC2qVrGVck+G+of/etJD6D6hij5Yl6a1bvcy5J
+         grciL12+PnRNNqeHmuS91/FQy6n1sYXsBYLa1yp1rR3x+F7ljynH1/HyT4656hzS0/by
+         6MX0s0cL76Tkn5PSj8aGYYq/cVf76S1Ep5ID2bTtDotZBUEXr+0TeQAyfHBLaxxbdqBC
+         1uk3xj8zNlkb2MMCvqdSK6i0n57eyKbgq8KinaavZcUsh3WEhyMvaiQ/Cjg+fcZFaeNg
+         MhSWM7414mXK2sZitMnPZ6VPsMbB++73ehbXlRxrX+dlXdjDZcfNfz4zQANIsLgUBLCP
+         eiHA==
+X-Gm-Message-State: AOAM533x8tuhdkXkequBU0Cnv7wOOgSf6ctuMX/VuhUcFKWOwOkKY6yR
+        lOwSdUeyubhlRDM4lWacSq9F9Srh
+X-Google-Smtp-Source: ABdhPJwbq0UEUcG155hy+w3lMEGqy9URmH6tXRoN7QcegvPvkorrERjM5drm4QT016fX1In3VqgHrQ==
+X-Received: by 2002:a65:60d4:: with SMTP id r20mr2892267pgv.436.1597193184659;
+        Tue, 11 Aug 2020 17:46:24 -0700 (PDT)
+Received: from [0.0.0.0] ([108.61.186.250])
+        by smtp.gmail.com with ESMTPSA id n3sm265067pfq.131.2020.08.11.17.46.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Aug 2020 17:46:24 -0700 (PDT)
+Subject: Re: [PATCH] sched/fair: Remove the duplicate check from
+ group_has_capacity()
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        linux-kernel@vger.kernel.org
+References: <20200810010009.92758-1-arch0.zheng@gmail.com>
+ <jhjwo26gxlb.mognet@arm.com> <9425382c-2a42-57ca-512d-c93c589dc701@gmail.com>
+ <jhjv9hph3h7.mognet@arm.com> <01fe6a9b-fd3a-9b36-b2fa-6cea58415670@gmail.com>
+ <jhjtux9gxh2.mognet@arm.com> <905d8887-e79c-daf6-cbce-80fd0509e37d@gmail.com>
+ <jhjv9hp546d.mognet@arm.com>
+From:   Qi Zheng <arch0.zheng@gmail.com>
+Message-ID: <f41303b7-fca9-b70f-efff-3ff5e1fb786a@gmail.com>
+Date:   Wed, 12 Aug 2020 08:46:16 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <jhjv9hp546d.mognet@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The x86-64 psABI [0] specifies special relocation types
-(R_X86_64_[REX_]GOTPCRELX) for indirection through the Global Offset
-Table, semantically equivalent to R_X86_64_GOTPCREL, which the linker
-can take advantage of for optimization (relaxation) at link time. This
-is supported by LLD and binutils versions 2.26 onwards.
+On 2020/8/12 上午4:16, Valentin Schneider wrote:
+> 
+> On 11/08/20 14:12, Qi Zheng wrote:
+>> On 2020/8/11 下午8:48, Valentin Schneider wrote:
+>>> On 11/08/20 12:44, Qi Zheng wrote:
+>>>> In fact, at the beginning, I added unlikely() here to hint the compiler:
+>>>>
+>>>> -	if ((sgs->group_capacity * imbalance_pct) <
+>>>> -			(sgs->group_runnable * 100))
+>>>> +	if (unlikely((sgs->group_capacity * imbalance_pct) <
+>>>> +			(sgs->group_runnable * 100)))
+>>>>
+>>>> The corresponding patch is as follows:
+>>>>
+>>>>         [PATCH]sched/core: add unlikely in group_has_capacity()
+>>>>
+>>>> Do you think it is necessary?
+>>>
+>>> The "unlikely" approach has the benefit of keeping all corner cases in
+>>> place. I was tempted to say it could still make sense to get rid of the
+>>> extra check entirely, given that it has an impact only when:
+>>>
+>>> - sum_nr_running == group_weight
+>>> - group capacity has been noticeably reduced
+>>>
+>>> If sum_nr_running < group_weight, we won't evaluate it.
+>>> If sum_nr_running > group_weight, we either won't call into
+>>>     group_has_capacity() or we'll have checked it already in
+>>>     group_overloaded().
+>>>
+>>> That said, it does make very much sense to check it in that ==
+>>> case. Vincent might have a different take on this, but right now I'd say
+>>> the unlikely approach is the safest one of the two.
+>>>
+>>
+>> So what should I do next? Do I resubmit a patch with unlikely() or
+>> add your email to the old patch([PATCH]sched/core: add unlikely in
+>> group_has_capacity())? Or continue to wait for suggestions from
+>> other maintainers?
+> 
+> I guess you can add a reply to the original thread where you had the
+> unlikely() to point out *removing* the check isn't 100% harmless.
+> 
+> Vincent might want to have a look at it, but AFAIA he's on holidays ATM.
+> 
 
-The compressed kernel is position-independent code, however, when using
-LLD or binutils versions before 2.27, it must be linked without the -pie
-option. In this case, the linker may optimize certain instructions into
-a non-position-independent form, by converting foo@GOTPCREL(%rip) to $foo.
+Okay, I will reply to the old patch and add your email to it.
+Thanks for your comments.
 
-This potential issue has been present with LLD and binutils-2.26 for a
-long time, but it has never manifested itself before now:
-- LLD and binutils-2.26 only relax
-	movq	foo@GOTPCREL(%rip), %reg
-  to
-	leaq	foo(%rip), %reg
-  which is still position-independent, rather than
-	mov	$foo, %reg
-  which is permitted by the psABI when -pie is not enabled.
-- gcc happens to only generate GOTPCREL relocations on mov instructions.
-- clang does generate GOTPCREL relocations on non-mov instructions, but
-  when building the compressed kernel, it uses its integrated assembler
-  (due to the redefinition of KBUILD_CFLAGS dropping -no-integrated-as),
-  which has so far defaulted to not generating the GOTPCRELX
-  relocations.
-
-Nick Desaulniers reports [1,2]:
-  A recent change [3] to a default value of configuration variable
-  (ENABLE_X86_RELAX_RELOCATIONS OFF -> ON) in LLVM now causes Clang's
-  integrated assembler to emit R_X86_64_GOTPCRELX/R_X86_64_REX_GOTPCRELX
-  relocations. LLD will relax instructions with these relocations based
-  on whether the image is being linked as position independent or not.
-  When not, then LLD will relax these instructions to use absolute
-  addressing mode (R_RELAX_GOT_PC_NOPIC). This causes kernels built with
-  Clang and linked with LLD to fail to boot.
-
-Patch series [4] is a solution to allow the compressed kernel to be
-linked with -pie unconditionally, but even if merged is unlikely to be
-backported. As a simple solution that can be applied to stable as well,
-prevent the assembler from generating the relaxed relocation types using
-the -mrelax-relocations=no option. For ease of backporting, do this
-unconditionally.
-
-[0] https://gitlab.com/x86-psABIs/x86-64-ABI/-/blob/master/x86-64-ABI/linker-optimization.tex#L65
-[1] https://lore.kernel.org/lkml/20200807194100.3570838-1-ndesaulniers@google.com/
-[2] https://github.com/ClangBuiltLinux/linux/issues/1121
-[3] https://reviews.llvm.org/rGc41a18cf61790fc898dcda1055c3efbf442c14c0
-[4] https://lore.kernel.org/lkml/20200731202738.2577854-1-nivedita@alum.mit.edu/
-
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-Reported-by: Nick Desaulniers <ndesaulniers@google.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Tested-by: Nick Desaulniers <ndesaulniers@google.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
----
- arch/x86/boot/compressed/Makefile | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-index 3962f592633d..ff7894f39e0e 100644
---- a/arch/x86/boot/compressed/Makefile
-+++ b/arch/x86/boot/compressed/Makefile
-@@ -43,6 +43,8 @@ KBUILD_CFLAGS += -Wno-pointer-sign
- KBUILD_CFLAGS += $(call cc-option,-fmacro-prefix-map=$(srctree)/=)
- KBUILD_CFLAGS += -fno-asynchronous-unwind-tables
- KBUILD_CFLAGS += -D__DISABLE_EXPORTS
-+# Disable relocation relaxation in case the link is not PIE.
-+KBUILD_CFLAGS += $(call as-option,-Wa$(comma)-mrelax-relocations=no)
- 
- KBUILD_AFLAGS  := $(KBUILD_CFLAGS) -D__ASSEMBLY__
- GCOV_PROFILE := n
--- 
-2.26.2
-
+Yours,
+Qi Zheng
