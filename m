@@ -2,139 +2,233 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBD7AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 03:26:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DDA9C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 03:28:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A26BD207F7
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 03:26:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9D9F207F7
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 03:28:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B3/gTjjS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726507AbgHLD0n (ORCPT
+        id S1726576AbgHLD2p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 23:26:43 -0400
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:56186 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726457AbgHLD0m (ORCPT
+        Tue, 11 Aug 2020 23:28:45 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:25980 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726469AbgHLD2o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 23:26:42 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R381e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0U5Wk7Ug_1597202786;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U5Wk7Ug_1597202786)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 12 Aug 2020 11:26:27 +0800
-Subject: Re: [Resend PATCH 2/6] mm/memcg: remove useless check on
- page->mem_cgroup
-To:     Michal Hocko <mhocko@suse.com>
-Cc:     akpm@linux-foundation.org, Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <1597144232-11370-1-git-send-email-alex.shi@linux.alibaba.com>
- <1597144232-11370-2-git-send-email-alex.shi@linux.alibaba.com>
- <20200811113008.GK4793@dhcp22.suse.cz>
- <776b0e6f-4129-9fb9-0f66-47757cf320d5@linux.alibaba.com>
- <20200811135626.GL4793@dhcp22.suse.cz>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <0b5e1ac3-c9c7-35e9-2661-b58430314d0a@linux.alibaba.com>
-Date:   Wed, 12 Aug 2020 11:25:53 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        Tue, 11 Aug 2020 23:28:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597202923;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=+AS7Kge0pM+bEArqAEDXssI6szpmV4WhiwYSaipqxiU=;
+        b=B3/gTjjSCgOE/p05RUYC721QgdtF4jp0xFEY55qQx77A3dGNrqfNpr8Bqhq7Pst3Rww+pg
+        TK53f89fRqcIEjiXiTVKvDFFi+YIZvT17eFycK1TsreuGfLpLjuagYMUzoM6dB2pBsziBc
+        Ys8bES3PzFdwRbAAJiOjiSXR4ruSG5k=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-98-Qmblxh4hMV-GBzs8Mry_hw-1; Tue, 11 Aug 2020 23:28:38 -0400
+X-MC-Unique: Qmblxh4hMV-GBzs8Mry_hw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BB9578017FB;
+        Wed, 12 Aug 2020 03:28:34 +0000 (UTC)
+Received: from [10.72.12.118] (ovpn-12-118.pek2.redhat.com [10.72.12.118])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5D23C5F1EF;
+        Wed, 12 Aug 2020 03:28:15 +0000 (UTC)
+Subject: Re: [PATCH RFC v2 00/18] Add VFIO mediated device support and DEV-MSI
+ support for the idxd driver
+To:     "Tian, Kevin" <kevin.tian@intel.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Alex Williamson <alex.williamson@redhat.com>
+Cc:     "Jiang, Dave" <dave.jiang@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "Dey, Megha" <megha.dey@intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Lin, Jing" <jing.lin@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "netanelg@mellanox.com" <netanelg@mellanox.com>,
+        "shahafs@mellanox.com" <shahafs@mellanox.com>,
+        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
+        "Hossain, Mona" <mona.hossain@intel.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com>
+ <20200721164527.GD2021248@mellanox.com>
+ <CY4PR11MB1638103EC73DD9C025F144C98C780@CY4PR11MB1638.namprd11.prod.outlook.com>
+ <20200724001930.GS2021248@mellanox.com> <20200805192258.5ee7a05b@x1.home>
+ <20200807121955.GS16789@nvidia.com>
+ <MWHPR11MB16452EBE866E330A7E000AFC8C440@MWHPR11MB1645.namprd11.prod.outlook.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <b59ce5b0-5530-1f30-9852-409f7c9f630a@redhat.com>
+Date:   Wed, 12 Aug 2020 11:28:12 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200811135626.GL4793@dhcp22.suse.cz>
-Content-Type: text/plain; charset=gbk
+In-Reply-To: <MWHPR11MB16452EBE866E330A7E000AFC8C440@MWHPR11MB1645.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+On 2020/8/10 ä¸‹åˆ3:32, Tian, Kevin wrote:
+>> From: Jason Gunthorpe <jgg@nvidia.com>
+>> Sent: Friday, August 7, 2020 8:20 PM
+>>
+>> On Wed, Aug 05, 2020 at 07:22:58PM -0600, Alex Williamson wrote:
+>>
+>>> If you see this as an abuse of the framework, then let's identify those
+>>> specific issues and come up with a better approach.  As we've discussed
+>>> before, things like basic PCI config space emulation are acceptable
+>>> overhead and low risk (imo) and some degree of register emulation is
+>>> well within the territory of an mdev driver.
+>> What troubles me is that idxd already has a direct userspace interface
+>> to its HW, and does userspace DMA. The purpose of this mdev is to
+>> provide a second direct userspace interface that is a little different
+>> and trivially plugs into the virtualization stack.
+> No. Userspace DMA and subdevice passthrough (what mdev provides)
+> are two distinct usages IMO (at least in idxd context). and this might
+> be the main divergence between us, thus let me put more words here.
+> If we could reach consensus in this matter, which direction to go
+> would be clearer.
+>
+> First, a passthrough interface requires some unique requirements
+> which are not commonly observed in an userspace DMA interface, e.g.:
+>
+> - Tracking DMA dirty pages for live migration;
+> - A set of interfaces for using SVA inside guest;
+> 	* PASID allocation/free (on some platforms);
+> 	* bind/unbind guest mm/page table (nested translation);
+> 	* invalidate IOMMU cache/iotlb for guest page table changes;
+> 	* report page request from device to guest;
+> 	* forward page response from guest to device;
+> - Configuring irqbypass for posted interrupt;
+> - ...
+>
+> Second, a passthrough interface requires delegating raw controllability
+> of subdevice to guest driver, while the same delegation might not be
+> required for implementing an userspace DMA interface (especially for
+> modern devices which support SVA). For example, idxd allows following
+> setting per wq (guest driver may configure them in any combination):
+> 	- put in dedicated or shared mode;
+> 	- enable/disable SVA;
+> 	- Associate guest-provided PASID to MSI/IMS entry;
+> 	- set threshold;
+> 	- allow/deny privileged access;
+> 	- allocate/free interrupt handle (enlightened for guest);
+> 	- collect error status;
+> 	- ...
+>
+> We plan to support idxd userspace DMA with SVA. The driver just needs
+> to prepare a wq with a predefined configuration (e.g. shared, SVA,
+> etc.), bind the process mm to IOMMU (non-nested) and then map
+> the portal to userspace. The goal that userspace can do DMA to
+> associated wq doesn't change the fact that the wq is still *owned*
+> and *controlled* by kernel driver. However as far as passthrough
+> is concerned, the wq is considered 'owned' by the guest driver thus
+> we need an interface which can support low-level *controllability*
+> from guest driver. It is sort of a mess in uAPI when mixing the
+> two together.
 
-ÔÚ 2020/8/11 ÏÂÎç9:56, Michal Hocko Ð´µÀ:
-> On Tue 11-08-20 20:54:18, Alex Shi wrote:
->> >From beeac61119ab39b1869c520c0f272fb8bab93765 Mon Sep 17 00:00:00 2001
->> From: Alex Shi <alex.shi@linux.alibaba.com>
->> Date: Wed, 5 Aug 2020 21:02:30 +0800
->> Subject: [PATCH 2/6] memcg: bail out early from swap accounting when memcg is
->>  disabled>>
->> If we disabled memcg by cgroup_disable=memory, the swap charges are
->> still called. Let's return from the funcs earlier.
-> They are not, are they? page->memcg will be NULL and so the charge is
-> skipped and that will trigger a warning with your current ordering.
 
-Hi Michal,
+So for userspace drivers like DPDK, it can use both of the two uAPIs?
 
-Thanks for comment! Looks like we both agree the memcg wasn't charged, but funcs
-just are called. :)
-  
-> 
-> Let me repeat again. Either you put it first in the series and argue
-> that we can bail out early or keep the ordering then this makes sure the
-> warning doesn't trigger.
-> 
 
-Is the following commit log fine?
+>
+> Based on above two reasons, we see distinct requirements between
+> userspace DMA and passthrough interfaces, at least in idxd context
+> (though other devices may have less distinction in-between). Therefore,
+> we didn't see the value/necessity of reinventing the wheel that mdev
+> already handles well to evolve an simple application-oriented usespace
+> DMA interface to a complex guest-driver-oriented passthrough interface.
+> The complexity of doing so would incur far more kernel-side changes
+> than the portion of emulation code that you've been concerned about...
+>   
+>> I don't think VFIO should be the only entry point to
+>> virtualization. If we say the universe of devices doing user space DMA
+>> must also implement a VFIO mdev to plug into virtualization then it
+>> will be alot of mdevs.
+> Certainly VFIO will not be the only entry point. and This has to be a
+> case-by-case decision.
 
-Thanks!
-Alex
 
-From 999b0fe5fc65865c3b59ff28500d45572a4a9570 Mon Sep 17 00:00:00 2001
-From: Alex Shi <alex.shi@linux.alibaba.com>
-Date: Wed, 5 Aug 2020 21:02:30 +0800
-Subject: [PATCH 2/6] mm/memcg: bail out early from swap accounting when memcg
- is disabled
+The problem is that if we tie all controls via VFIO uAPI, the other 
+subsystem like vDPA is likely to duplicate them. I wonder if there is a 
+way to decouple the vSVA out of VFIO uAPI?
 
-If we disabled memcg by cgroup_disable=memory, page->memcg will be NULL
-and so the charge is skipped and that will trigger a warning like below.
-Let's return from the funcs earlier.
 
- ---[ end trace f1f34bfc3b32ed2f ]---
- anon flags:0x5005b48008000d(locked|uptodate|dirty|swapbacked)
- raw: 005005b48008000d dead000000000100 dead000000000122 ffff8897c7c76ad1
- raw: 0000000000000022 0000000000000000 0000000200000000 0000000000000000
- page dumped because: VM_WARN_ON_ONCE_PAGE(!memcg)
+>   If an userspace DMA interface can be easily
+> adapted to be a passthrough one, it might be the choice.
 
-Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Reviewed-by: Roman Gushchin <guro@fb.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: cgroups@vger.kernel.org
-Cc: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org
----
- mm/memcontrol.c | 6 ++++++
- 1 file changed, 6 insertions(+)
 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 299382fc55a9..419cf565f40b 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -7098,6 +7098,9 @@ void mem_cgroup_swapout(struct page *page, swp_entry_t entry)
- 	VM_BUG_ON_PAGE(PageLRU(page), page);
- 	VM_BUG_ON_PAGE(page_count(page), page);
- 
-+	if (mem_cgroup_disabled())
-+		return;
-+
- 	if (cgroup_subsys_on_dfl(memory_cgrp_subsys))
- 		return;
- 
-@@ -7163,6 +7166,9 @@ int mem_cgroup_try_charge_swap(struct page *page, swp_entry_t entry)
- 	struct mem_cgroup *memcg;
- 	unsigned short oldid;
- 
-+	if (mem_cgroup_disabled())
-+		return 0;
-+
- 	if (!cgroup_subsys_on_dfl(memory_cgrp_subsys))
- 		return 0;
- 
--- 
-1.8.3.1
+It's not that easy even for VFIO which requires a lot of new uAPIs and 
+infrastructures(e.g mdev) to be invented.
+
+
+> But for idxd,
+> we see mdev a much better fit here, given the big difference between
+> what userspace DMA requires and what guest driver requires in this hw.
+
+
+A weak point for mdev is that it can't serve kernel subsystem other than 
+VFIO. In this case, you need some other infrastructures (like [1]) to do 
+this.
+
+(For idxd, you probably don't need this, but it's pretty common in the 
+case of networking or storage device.)
+
+Thanks
+
+[1] https://patchwork.kernel.org/patch/11280547/
+
+
+>
+>> I would prefer to see that the existing userspace interface have the
+>> extra needed bits for virtualization (eg by having appropriate
+>> internal kernel APIs to make this easy) and all the emulation to build
+>> the synthetic PCI device be done in userspace.
+> In the end what decides the direction is the amount of changes that
+> we have to put in kernel, not whether we call it 'emulation'. For idxd,
+> adding special passthrough requirements (guest SVA, dirty tracking,
+> etc.) and raw controllability to the simple userspace DMA interface
+> is for sure making kernel more complex than reusing the mdev
+> framework (plus some degree of emulation mockup behind). Not to
+> mention the merit of uAPI compatibility with mdev...
+>
+> Thanks
+> Kevin
+>
 
