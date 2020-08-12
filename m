@@ -2,264 +2,99 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F5B9C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 10:38:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D60C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 10:40:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37F7120838
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 10:38:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597228717;
-	bh=g6m2gf+6OBWGn05WPGw6L9qsMIa6by+okI+mSWeQnNo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=EpmmJGy8v2slRhiXn4TdIjojZevEmIkWri8eciTwKvYeu5Iq22YO9RMtqonrksGg2
-	 dZ8AN0g2E9kr06gBpTWRdcaAWvG+fv9ts+nQZ6G45BowjLd3oItUw8j0MUj2MFA+EA
-	 miAh+Mtai4a+DI83O+nKI2kFyu7yfg0HdZmHsLfc=
+	by mail.kernel.org (Postfix) with ESMTP id 6DFE3208A9
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 10:40:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="n2CVCFb/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727780AbgHLKif (ORCPT
+        id S1727032AbgHLKkV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 06:38:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52850 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726404AbgHLKi2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 06:38:28 -0400
-Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
+        Wed, 12 Aug 2020 06:40:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39468 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726404AbgHLKkU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 06:40:20 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2FDAC06174A
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 03:40:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=qDIF+049UNMS9jSAYb//dXeP/I6AXbYU/f1+M6xpD5s=; b=n2CVCFb/w6yNnbPb17XycbJZmO
+        Tj2B7+xz78H2FQGEZOTbbx1U45/N5KFY6TSzYXavM7/PiWmD0trtvC3zFCsSZi3zuKBgGpo8dNl0P
+        VEDEbinhZRP/c6uKIY7J0bAnA5WXeSinw5VBKN+ku6aovjE8pdkLb49wmLDVgQV4nf8cEG8vfRmIT
+        ND/Zx67w9XU0utCilvcaUa0gbdNWPFovdaP2QMiDkcQWp0QcAmmf0bvqV7avW9dh1VbXIs+Wggsu4
+        5TRITkz1h+9tKODAIxsPX6KOkZ1KqEztiuxFprM8SkSPin6CjIIoBPqlOkaRwmCzHA5iYZMrbgQrv
+        pnyC0dig==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k5oB1-0006Rg-9S; Wed, 12 Aug 2020 10:40:11 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7713720838;
-        Wed, 12 Aug 2020 10:38:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597228706;
-        bh=g6m2gf+6OBWGn05WPGw6L9qsMIa6by+okI+mSWeQnNo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=OZKhUZ1nNA7h16NoZvqKrSSMLoAEgHrDumMmmOAoE8cskcUXIGxGGF8/8f7q5bgBZ
-         xRuVMbeZ5p4FU0cj0sH3T1QqA1qHLpxuCTU6sIDSQo1G9UdFf7wSKUmW8q/QsXDoYn
-         dRvExUU7pzCJqAAIiy7ah4Bca9bihRA4tprKTgu0=
-Date:   Wed, 12 Aug 2020 12:38:20 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Rob Herring <robh@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, Mark Brown <broonie@kernel.org>,
-        Mayulong <mayulong1@huawei.com>, <linuxarm@huawei.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 00/33] Add driver for HiSilicon SPMI PMIC for Hikey 970
-Message-ID: <20200812123820.61fcdcc0@coco.lan>
-In-Reply-To: <20200812094353.00006311@huawei.com>
-References: <cover.1597160086.git.mchehab+huawei@kernel.org>
-        <20200811175429.748a69b6@coco.lan>
-        <20200811185111.00000648@Huawei.com>
-        <20200812094540.3ab13185@coco.lan>
-        <20200812094353.00006311@huawei.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5E7193028C8;
+        Wed, 12 Aug 2020 12:40:05 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 20D0F25D0D543; Wed, 12 Aug 2020 12:40:05 +0200 (CEST)
+Date:   Wed, 12 Aug 2020 12:40:05 +0200
+From:   peterz@infradead.org
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Jessica Yu <jeyu@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kees Cook <keescook@chromium.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2] module: Harden STRICT_MODULE_RWX
+Message-ID: <20200812104005.GN2674@hirez.programming.kicks-ass.net>
+References: <20200403171303.GK20760@hirez.programming.kicks-ass.net>
+ <20200808101222.5103093e@coco.lan>
+ <20200810092523.GA8612@linux-8ccs>
+ <20200810150647.GB8612@linux-8ccs>
+ <20200811163427.6edbf343@coco.lan>
+ <20200811145524.GE2674@hirez.programming.kicks-ass.net>
+ <20200811172738.2d632a09@coco.lan>
+ <20200811160134.GA13652@linux-8ccs>
+ <CAMj1kXF8fm=9CdQykqDbgYCJSP88ezMs3EOosCW+SDi+Lve0zg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXF8fm=9CdQykqDbgYCJSP88ezMs3EOosCW+SDi+Lve0zg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, 12 Aug 2020 09:43:53 +0100
-Jonathan Cameron <Jonathan.Cameron@huawei.com> escreveu:
-
-> On Wed, 12 Aug 2020 09:45:40 +0200
-> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
-> > > 
-> > > This is mixing and matching managed an unmanaged. Should be one or the other
-> > > or we might be hiding some race conditions.    
+On Wed, Aug 12, 2020 at 10:56:56AM +0200, Ard Biesheuvel wrote:
+> The module .lds has BYTE(0) in the section contents to prevent the
+> linker from pruning them entirely. The (NOLOAD) is there to ensure
+> that this byte does not end up in the .ko, which is more a matter of
+> principle than anything else, so we can happily drop that if it helps.
 > 
-> I intended this as a more localized comment, though the following answers
-> another question I had.
+> However, this should only affect the PROGBITS vs NOBITS designation,
+> and so I am not sure whether it makes a difference.
 > 
-> request_threaded_irq is not using devm_ whilst the add devices is.
-> As a result we might have a path in which the irq goes away before
-> the device cleanup happens.   
+> Depending on where the w^x check occurs, we might simply override the
+> permissions of these sections, and strip the writable permission if it
+> is set in the PLT handling init code, which manipulates the metadata
+> of all these 3 sections before the module space is vmalloc'ed.
 
-Ah, good point! I'll address it.
+What's curious is that this seems the result of some recent binutils
+change. Every build with binutils-2.34 (or older) does not seem to
+generate these as WAX, but has the much more sensible WA.
 
-> > Actually, it is just the opposite. It took me a lot of time to
-> > figure out a good solution that will prevent all race conditions at
-> > probe time.
-> > 
-> > See, the SPMI variant of HiSilicon 6421 requires the drivers to be
-> > probed on a very specific order:
-> > 
-> > - The SPMI controller should be loaded first, as it provides 
-> >   the low-level I/O access to the serial bus used to talk with the
-> >   PMICs. This bus is somewhat similar to the I2C bus.
-> > 
-> >   Once the controller is registered, the SPMI bus probes the PMIC
-> >   driver.
-> > 
-> > - Then, the MFD PMIC driver should be loaded. This adds support for
-> >   a high level set of I/O operations, which are used by the regulator
-> >   driver. Again, this approach is similar to the one taken by the
-> >   I2C Kernel drivers.
-> > 
-> > - Finally, the regulator drivers should come, as they rely on the
-> >   MFD I/O operations in order to talk with the SPMI bus.
-> > 
-> > The OOT driver probing was based on a some dirty hacks: it had an
-> > empty SPMI entry at the SoC, carrying on just the "compatible" line.
-> > 
-> > Then, another entry at DT with the real SPMI settings.
-> > 
-> > With such dirty hack, on Kernel 4.9, the PMIC driver were always 
-> > loading before the regulator ones, as the SPMI bus code were 
-> > serializing the probe there.
-> > 
-> > However, such settings were too fragile and broke after porting to
-> > upstream Kernels, because the regulator drivers were probed on
-> > a random order, typically before the MFD one (and sometimes even 
-> > before the SPMI controller driver). Adding EPROBE_DEFER didn't
-> > solve all the issues, and made a complex and hard to debug scenario.
-> > Also, regulators were probed on a random order, making harder to
-> > debug issues there.  
-> 
-> There are no ordering guarantees IIRC in mfd children coming up even
-> in the normal path.  It might currently happen in a particular order
-> but relying on that seems fragile to me.
-
-True, but in the case of SPMI controller and PMIC, there's no way
-to support them to be initialized on a random order.
-
-That's why the approach I took is serializing the probe.
-
-> > 
-> > So, I ended using the same solution used by the already-existing
-> > drivers/mfd/hi6421-pmic-core.c driver[1].
-> > 
-> > [1] This variant of the 6421 chipset is a lot simpler, as it
-> >     doesn't use the SPMI bus.
-> > 
-> > With such approach, the probing is warranted to happen the
-> > way it is expected by the driver:
-> > 
-> > SPMI controller code starts:
-> > 	[    0.416862] spmi_controller fff24000.spmi: HISI SPMI probe
-> > 	[    0.422419] spmi spmi-0: allocated controller 0x(____ptrval____) id 0
-> > 	[    0.428929] spmi_controller fff24000.spmi: spmi_add_controller base addr=0xffff800012055000!
-> > 	[    0.437480] spmi spmi-0: adding child /spmi@fff24000/pmic@0
-> > 	[    0.443109] spmi spmi-0: read usid 00
-> > 	[    0.446821] spmi 2-00: device 2-00 registered
-> > 	[    0.451220] spmi spmi-0: spmi-2 registered: dev:(____ptrval____)
-> > 	[    0.457286] spmi_controller fff24000.spmi: spmi_add_controller initialized
-> > 
-> > The PMIC probe happens sometime after spmi_controller registers itself
-> > at the SPMI bus:
-> > 
-> > 	[    1.955838] [hi6421_spmi_pmic_probe]. pmic->irqs[0] = 43
-> > ...
-> > 	[    2.036298] [hi6421_spmi_pmic_probe]. pmic->irqs[15] = 58
-> > 
-> > After being ready to handle I/O requests, it starts probing the
-> > regulators:
-> > 
-> > 	[    2.057815] hi6421v600-regulator hi6421v600-regulator: adding child /spmi@fff24000/pmic@0/regulators/ldo3@16
-> > 	[    2.199827] hi6421v600-regulator hi6421v600-regulator: adding child /spmi@fff24000/pmic@0/regulators/ldo4@17
-> > 	[    2.336284] hi6421v600-regulator hi6421v600-regulator: adding child /spmi@fff24000/pmic@0/regulators/ldo9@1C
-> > 	[    2.472675] hi6421v600-regulator hi6421v600-regulator: adding child /spmi@fff24000/pmic@0/regulators/ldo15@21
-> > 	[    2.609402] hi6421v600-regulator hi6421v600-regulator: adding child /spmi@fff24000/pmic@0/regulators/ldo16@22
-> > 	[    2.746378] hi6421v600-regulator hi6421v600-regulator: adding child /spmi@fff24000/pmic@0/regulators/ldo17@23
-> > 	[    2.846707] hi6421v600-regulator hi6421v600-regulator: adding child /spmi@fff24000/pmic@0/regulators/ldo33@32
-> > 	[    2.988646] hi6421v600-regulator hi6421v600-regulator: adding child /spmi@fff24000/pmic@0/regulators/ldo34@33
-> > 
-> > As the current code serializes the regulator probing, it ensured that
-> > they'll happen at the right order, avoiding race conditions at
-> > probe time.  
-> 
-> Why do we need the regulators to come up in a particular order?
-> That sounds suspicious as any relationships between different ones should be expressed
-> either in DT or in the order they are enabled in the drivers using them.
-
-There's no need for them to come up on a particular order.
-
-What I meant to say is that the that the SPMI controller and MFD
-should go first.
-
-- 
-
-Yet, incidentally, the current code also serializes the regulator
-probe. I could have written the code on a different way that
-would allow them to be probed in parallel, by moving a loop
-from the regulator driver to the PMIC one. However, I don't see any 
-advantage on doing that, as the regulator initialization code ends 
-calling the SPMI serial bus, whose access is already serialized by 
-a spinlock.
-
-So, there's no performance gain by allowing them to be probed
-in parallel, as most of the regulator's probing time is probably
-waiting for the relatively slow I/O serial transfers to happen. 
-
-Also, a nice a side effect of serializing the probe at the 
-regulator driver is that the devices are ordered according
-their LDO numbers, and the debug logs from probing time will
-be altogether, helping to debug potential issues over there.
-
-> > > > +static int hi6421_spmi_regulator_set_voltage_sel(struct regulator_dev *rdev,
-> > > > +						 unsigned int selector)
-> > > > +{
-> > > > +	struct hi6421v600_regulator *sreg = rdev_get_drvdata(rdev);
-> > > > +	struct hi6421_spmi_pmic *pmic = sreg->pmic;
-> > > > +	u32 reg_val;
-> > > > +
-> > > > +	/* unlikely to happen. sanity test done by regulator core */      
-> > > 
-> > > Unlikely or can't?
-> > >     
-> > > > +	if (unlikely(selector >= rdev->desc->n_voltages))
-> > > > +		return -EINVAL;    
-> > 
-> > Good question. I almost removed this check, but I didn't check the
-> > regulator code with enough care to be 100% sure. So, I opted to keep it
-> > here.  
-> 
-> I'd drop the comment then :)  If someone else wants to figure it out
-> in future then they are welcome to.
-
-Ok.
-
-> > > > +	if (load_uA || ((unsigned int)load_uA > sreg->eco_uA)) {
-> > > > +		rdev_dbg(rdev, "normal mode");      
-> > > 
-> > > Debug seems unnecessary to me, but maybe keep it if you want.    
-> > 
-> > I actually used this debug. There are some LDO lines which don't
-> > support eco mode. The original driver was hard to understand that.
-> > So, I ended by re-writing the part of the code which sets/uses it[1]:
-> > 
-> > +	/* hisi regulator supports two modes */
-> > +	constraint = &initdata->constraints;
-> > +
-> > +	constraint->valid_modes_mask = REGULATOR_MODE_NORMAL;
-> > +	if (sreg->eco_mode_mask) {
-> > +		constraint->valid_modes_mask |= REGULATOR_MODE_IDLE;
-> > +		constraint->valid_ops_mask |= REGULATOR_CHANGE_MODE;
-> > +	}
-> > +
-> > 
-> > [1] https://lore.kernel.org/lkml/176043f329dfa9889f014feec04e7e1553077873.1597160086.git.mchehab+huawei@kernel.org/T/#m337e09adf04e4b8ce56af93ba37e3720b2a3002b
-> > 
-> > Those debug messages are useful to double-check if something bad is
-> > not happening with the modes/ops masks.  
-> 
-> That's fine, but is it useful to have it upstream now you have debugged
-> those issues?  I'm not completely convinced it is and debug prints have
-> a habit of rotting just like comments.
-
-Good point. I'll do a review at the printks inside the driver anyway.
-
-I'll try to cleanup some things that doesn't make much sense
-after having the driver working properly.
-
-
-Thanks,
-Mauro
+I suppose we can change the kernel check and 'allow' W^X for 0 sized
+sections, but I think we should still figure out why binutils-2.35 is
+now generating WAX sections all of a sudden, it might come bite us
+elsewhere.
