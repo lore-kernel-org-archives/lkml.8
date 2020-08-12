@@ -2,183 +2,194 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 906A1C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:34:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE750C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:37:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4493020885
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:34:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB7C320885
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:37:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="hBYZrFO4"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="crr6oK1R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726629AbgHLJep (ORCPT
+        id S1727012AbgHLJhm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 05:34:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57668 "EHLO
+        Wed, 12 Aug 2020 05:37:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727788AbgHLJeo (ORCPT
+        with ESMTP id S1726712AbgHLJhl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 05:34:44 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DFDDC061787
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 02:34:44 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id v9so1472534ljk.6
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 02:34:44 -0700 (PDT)
+        Wed, 12 Aug 2020 05:37:41 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B45AEC06178A
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 02:37:40 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id f7so1403618wrw.1
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 02:37:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=kn22iNgLDoT2FylS2rp2aS0ljPEs4sl8pUcenyynzLc=;
-        b=hBYZrFO4My7bEJ67J/RTZHMceJ4pDA1vsETQ4pVBLoGZ02rc792kDvN16F2inJzPSE
-         aCn0piArp/T4z/EfRwNx9cb2SnUMuabP8T2wFEnZURgo0/sBc6SaDG3vx1TZ7yth/C2r
-         cPHe1g6y98imhFhfoSPA8dT5U+yQHARjwm0FQ=
+        bh=xUJA54KTzQJyhxDXIqR9ReX2WN+bK5CjNuAWDhsdb8w=;
+        b=crr6oK1RJrz1nT63FwEgbS3gquu/Ncq38lBd42GrnhhkTBXb4cMsIlG2foOG5WIA8O
+         WkSv44SczGIHDr0xQlOkRWLczZs2351YnlOSc/9gsjx0xFZJRC7wcaB7NoFJsWsGG+SN
+         SmsMBj7Jo5Dj4AXLZjJeu86fS842ynrwKjltjgDHVc97wIM0xMlbrGgFu23CA43WZEqK
+         JluWeEigpXi6/Zq/Dk5dOHooEgLZQJFZYbRixqFTNYsugm2NhqJb7gSCxy2lM10cX9e1
+         mT9KIr53nqS+l1kKtdPhUZ2wzeIcpbb64uuZIZ0X9Ks7YmGuJOwkG3Tl09d+rKzm2r/a
+         m42w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=kn22iNgLDoT2FylS2rp2aS0ljPEs4sl8pUcenyynzLc=;
-        b=Og/kgoHGEK19ZItpLvVJpUOm4NJRbs3FCrzlbkovPtYFd2t8BS1nJwIPiEUbqaXwW8
-         ygK9gfis1HvddSrcGTLuq1zI6cPdDhRQzi4FUdVjGQPyirTbYm3SD7o9aSj62139SgdG
-         Wby+dYf6naw7ODGVDoPx7Cob8Zr2Tj6FnCcGEPhIE2Z7PCTOTCkErZImWmQ5K8TM5k+I
-         j2vzra3VyeNcCgsZ1Rt8EoY9PVDPTYgUW2J6b2B+BNje+qPcaMpIYRtFYq6Go8Jwz1D2
-         DibSvWSoVvyYPu5e9oTasNeKhKG+T7UWwNMWOst+J/qGdcDG8IT0qmwBqnAhjhMgCI0a
-         cFFA==
-X-Gm-Message-State: AOAM533VlyMBo1BrinMPYz2J29Qlxx3n+75nZsFn+Rf4hwCrL7NgRObd
-        0npb6v//eU/pHB1c4EKQiW0xSXwFyT8zSAOIpZmZj1eJ/H0=
-X-Google-Smtp-Source: ABdhPJwU0yxulG1HBQCvdYfMzzVBm9t1Urj5zRA+7b8hNJ/06CUxaad9o0JJ2SxSER75I3iHVdcoq7vIXTieMeZTjXI=
-X-Received: by 2002:a2e:9010:: with SMTP id h16mr5056506ljg.316.1597224882556;
- Wed, 12 Aug 2020 02:34:42 -0700 (PDT)
+        bh=xUJA54KTzQJyhxDXIqR9ReX2WN+bK5CjNuAWDhsdb8w=;
+        b=DI5RErcAtTUejOkTvEWnYSUb4SgAXjHoSup0VZQ1swhOAPnVQCm4wbnR93ewu4oB+k
+         t6gW3vGM47Ed4DChhVHClsikvV0XAu2b/GsIiO9o2o3mmpLBG0QVUvAQv1cc2emugELB
+         Y7Qi7wRoW+9UqDlP2h/BXj82G5Bc9EkHOrxwVAoyligH9whmRpkYxf5TIcbdPSECwbJa
+         62D4EOE/ij+w2uTLUzISIG20xux7U1/UXCbAfzCM51RE4KqFCQBy9tg7dCbmi+hKILUB
+         GoP3DHW3eontM4vaCrTlGj1qH56tLpAr1zJNgIc1NHt+xvEsO2zYLqff7sm7oBENDoSp
+         Pq2A==
+X-Gm-Message-State: AOAM530mUk+Sjz17fZhiUczu7BUtdcXCqnJwHhmO2W2+4FfZgRdMadkZ
+        v1SugRwskA44KfXMT3URfzhvKYTOdW82vKPx+1zgCw==
+X-Google-Smtp-Source: ABdhPJzyVACqW0P5GX9T7WEr0tB2SFQ6077mmdaufTh9FO15OFL7AzToRKYCZQO33CyJbC41uGaJ5fCGYkTuz7UxjFw=
+X-Received: by 2002:a5d:43c4:: with SMTP id v4mr34386550wrr.426.1597225059226;
+ Wed, 12 Aug 2020 02:37:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <1595847753-2234-1-git-send-email-moshe@mellanox.com>
- <CAACQVJqNXh0B=oe5W7psiMGc6LzNPujNe2sypWi_SvH5sY=F3Q@mail.gmail.com>
- <a3e20b44-9399-93c1-210f-e3c1172bf60d@intel.com> <CAACQVJo+bAr_k=LjgdTKbOxFEkpbYAsaWbkSDjUepgO7_XQfNA@mail.gmail.com>
- <7a9c315f-fa29-7bd5-31be-3748b8841b29@mellanox.com> <CAACQVJpZZPfiWszZ36E0Awuo2Ad1w5=4C1rgG=d4qPiWVP609Q@mail.gmail.com>
- <7fd63d16-f9fa-9d55-0b30-fe190d0fb1cb@mellanox.com> <CAACQVJqXa-8v4TU+M1DWA2Tfv3ayrAobiH9Fajd=5MCgsfAA6A@mail.gmail.com>
- <da0e4997-73d7-9f3c-d877-f2d3bcc718b9@mellanox.com> <CAACQVJofS2B3y40H=QxBzNaccsa+gNnSqfmoATyML_S686ykfw@mail.gmail.com>
- <da7a2f2d-3ff5-0cd1-f166-79d7355f3df0@mellanox.com>
-In-Reply-To: <da7a2f2d-3ff5-0cd1-f166-79d7355f3df0@mellanox.com>
-From:   Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-Date:   Wed, 12 Aug 2020 15:04:31 +0530
-Message-ID: <CAACQVJqgoas2_pqBiphfHfZAdY5ysku=8AzDWf6Vde3j9Bxr8g@mail.gmail.com>
-Subject: Re: [PATCH net-next RFC 00/13] Add devlink reload level option
-To:     Moshe Shemesh <moshe@mellanox.com>
-Cc:     Jacob Keller <jacob.e.keller@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Netdev <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
+References: <1596541616-27688-1-git-send-email-rnayak@codeaurora.org> <1596541616-27688-3-git-send-email-rnayak@codeaurora.org>
+In-Reply-To: <1596541616-27688-3-git-send-email-rnayak@codeaurora.org>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 12 Aug 2020 11:37:03 +0200
+Message-ID: <CAPDyKFoRv49jKi-4UW6EVyAzo1emb=rs2h7CWavON+JoXXh1kA@mail.gmail.com>
+Subject: Re: [PATCH 2/3] PM / Domains: Add support for 'assigned-performance-states'
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 5, 2020 at 1:51 PM Moshe Shemesh <moshe@mellanox.com> wrote:
+On Tue, 4 Aug 2020 at 13:47, Rajendra Nayak <rnayak@codeaurora.org> wrote:
 >
+> For devices which have 'assigned-performance-states' specified in DT,
+> set the specified performance state during attach and drop it on detach.
+> Also drop/set as part of runtime suspend/resume callbacks.
+
+To allow flexibility, I would prefer to keep the performance state
+being orthogonal to the power on/off state for a genpd.
+
+Therefore, I am wondering if this is better handled by the consumer
+driver instead?
+
+Kind regards
+Uffe
+
 >
-> On 8/5/2020 9:55 AM, Vasundhara Volam wrote:
-> > On Wed, Aug 5, 2020 at 12:02 PM Moshe Shemesh <moshe@mellanox.com> wrote:
-> >>
-> >> On 8/4/2020 1:13 PM, Vasundhara Volam wrote:
-> >>> On Mon, Aug 3, 2020 at 7:23 PM Moshe Shemesh <moshe@mellanox.com> wrote:
-> >>>> On 8/3/2020 3:47 PM, Vasundhara Volam wrote:
-> >>>>> On Mon, Aug 3, 2020 at 5:47 PM Moshe Shemesh <moshe@mellanox.com> wrote:
-> >>>>>> On 8/3/2020 1:24 PM, Vasundhara Volam wrote:
-> >>>>>>> On Tue, Jul 28, 2020 at 10:13 PM Jacob Keller <jacob.e.keller@intel.com> wrote:
-> >>>>>>>> On 7/27/2020 10:25 PM, Vasundhara Volam wrote:
-> >>>>>>>>> On Mon, Jul 27, 2020 at 4:36 PM Moshe Shemesh <moshe@mellanox.com> wrote:
-> >>>>>>>>>> Introduce new option on devlink reload API to enable the user to select the
-> >>>>>>>>>> reload level required. Complete support for all levels in mlx5.
-> >>>>>>>>>> The following reload levels are supported:
-> >>>>>>>>>>       driver: Driver entities re-instantiation only.
-> >>>>>>>>>>       fw_reset: Firmware reset and driver entities re-instantiation.
-> >>>>>>>>> The Name is a little confusing. I think it should be renamed to
-> >>>>>>>>> fw_live_reset (in which both firmware and driver entities are
-> >>>>>>>>> re-instantiated).  For only fw_reset, the driver should not undergo
-> >>>>>>>>> reset (it requires a driver reload for firmware to undergo reset).
-> >>>>>>>>>
-> >>>>>>>> So, I think the differentiation here is that "live_patch" doesn't reset
-> >>>>>>>> anything.
-> >>>>>>> This seems similar to flashing the firmware and does not reset anything.
-> >>>>>> The live patch is activating fw change without reset.
-> >>>>>>
-> >>>>>> It is not suitable for any fw change but fw gaps which don't require reset.
-> >>>>>>
-> >>>>>> I can query the fw to check if the pending image change is suitable or
-> >>>>>> require fw reset.
-> >>>>> Okay.
-> >>>>>>>>>>       fw_live_patch: Firmware live patching only.
-> >>>>>>>>> This level is not clear. Is this similar to flashing??
-> >>>>>>>>>
-> >>>>>>>>> Also I have a basic query. The reload command is split into
-> >>>>>>>>> reload_up/reload_down handlers (Please correct me if this behaviour is
-> >>>>>>>>> changed with this patchset). What if the vendor specific driver does
-> >>>>>>>>> not support up/down and needs only a single handler to fire a firmware
-> >>>>>>>>> reset or firmware live reset command?
-> >>>>>>>> In the "reload_down" handler, they would trigger the appropriate reset,
-> >>>>>>>> and quiesce anything that needs to be done. Then on reload up, it would
-> >>>>>>>> restore and bring up anything quiesced in the first stage.
-> >>>>>>> Yes, I got the "reload_down" and "reload_up". Similar to the device
-> >>>>>>> "remove" and "re-probe" respectively.
-> >>>>>>>
-> >>>>>>> But our requirement is a similar "ethtool reset" command, where
-> >>>>>>> ethtool calls a single callback in driver and driver just sends a
-> >>>>>>> firmware command for doing the reset. Once firmware receives the
-> >>>>>>> command, it will initiate the reset of driver and firmware entities
-> >>>>>>> asynchronously.
-> >>>>>> It is similar to mlx5 case here for fw_reset. The driver triggers the fw
-> >>>>>> command to reset and all PFs drivers gets events to handle and do
-> >>>>>> re-initialization.  To fit it to the devlink reload_down and reload_up,
-> >>>>>> I wait for the event handler to complete and it stops at driver unload
-> >>>>>> to have the driver up by devlink reload_up. See patch 8 in this patchset.
-> >>>>>>
-> >>>>> Yes, I see reload_down is triggering the reset. In our driver, after
-> >>>>> triggering the reset through a firmware command, reset is done in
-> >>>>> another context as the driver initiates the reset only after receiving
-> >>>>> an ASYNC event from the firmware.
-> >>>> Same here.
-> >>>>
-> >>>>> Probably, we have to use reload_down() to send firmware command to
-> >>>>> trigger reset and do nothing in reload_up.
-> >>>> I had that in previous version, but its wrong to use devlink reload this
-> >>>> way, so I added wait with timeout for the event handling to complete
-> >>>> before unload_down function ends. See mlx5_fw_wait_fw_reset_done(). Also
-> >>>> the event handler stops before load back to have that done by devlink
-> >>>> reload_up.
-> >>> But "devlink dev reload" will be invoked by the user only on a single
-> >>> dev handler and all function drivers will be re-instantiated upon the
-> >>> ASYNC event. reload_down and reload_up are invoked only the function
-> >>> which the user invoked.
-> >>>
-> >>> Take an example of a 2-port (PF0 and PF1) adapter on a single host and
-> >>> with some VFs loaded on the device. User invokes "devlink dev reload"
-> >>> on PF0, ASYNC event is received on 2 PFs and VFs for reset. All the
-> >>> function drivers will be re-instantiated including PF0.
-> >>>
-> >>> If we wait for some time in reload_down() of PF0 and then call load in
-> >>> reload_up(), this code will be different from other function drivers.
-> >>
-> >> I see your point here, but the user run devlink reload command on one
-> >> PF, in this case of fw-reset it will influence other PFs, but that's a
-> >> result of the fw-reset, the user if asked for params change or namespace
-> >> change that was for this PF.
-> > Right, if any driver is implementing only fw-reset have to leave
-> > reload_up as an empty function.
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> ---
+>  drivers/base/power/domain.c | 27 +++++++++++++++++++++++++++
+>  include/linux/pm_domain.h   |  1 +
+>  2 files changed, 28 insertions(+)
 >
+> diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
+> index 0a01df60..8704823 100644
+> --- a/drivers/base/power/domain.c
+> +++ b/drivers/base/power/domain.c
+> @@ -810,6 +810,10 @@ static int genpd_runtime_suspend(struct device *dev)
+>         if (irq_safe_dev_in_no_sleep_domain(dev, genpd))
+>                 return 0;
 >
-> No, its not only up the driver. The netns option is implemented by
-> devlink and its running between reload_down and reload_up.
-What I mean is, driver will provide a reload_up handler but it will
-not do anything and simply return 0.
+> +       /* Drop the assigned performance state */
+> +       if (dev_gpd_data(dev)->assigned_pstate)
+> +               dev_pm_genpd_set_performance_state(dev, 0);
+> +
+>         genpd_lock(genpd);
+>         genpd_power_off(genpd, true, 0);
+>         genpd_unlock(genpd);
+> @@ -829,6 +833,7 @@ static int genpd_runtime_resume(struct device *dev)
+>  {
+>         struct generic_pm_domain *genpd;
+>         struct gpd_timing_data *td = &dev_gpd_data(dev)->td;
+> +       unsigned int assigned_pstate = dev_gpd_data(dev)->assigned_pstate;
+>         bool runtime_pm = pm_runtime_enabled(dev);
+>         ktime_t time_start;
+>         s64 elapsed_ns;
+> @@ -857,6 +862,9 @@ static int genpd_runtime_resume(struct device *dev)
+>         if (ret)
+>                 return ret;
 >
-> >>>>>     And returning from reload
-> >>>>> does not mean that reset is complete as it is done in another context
-> >>>>> and the driver notifies the health reporter once the reset is
-> >>>>> complete. devlink framework may have to allow drivers to implement
-> >>>>> reload_down only to look more clean or call reload_up only if the
-> >>>>> driver notifies the devlink once reset is completed from another
-> >>>>> context. Please suggest.
+> +       /* Set the assigned performance state */
+> +       if (assigned_pstate)
+> +               dev_pm_genpd_set_performance_state(dev, assigned_pstate);
+>   out:
+>         /* Measure resume latency. */
+>         time_start = 0;
+> @@ -890,6 +898,8 @@ static int genpd_runtime_resume(struct device *dev)
+>  err_poweroff:
+>         if (!pm_runtime_is_irq_safe(dev) ||
+>                 (pm_runtime_is_irq_safe(dev) && genpd_is_irq_safe(genpd))) {
+> +               if (assigned_pstate)
+> +                       dev_pm_genpd_set_performance_state(dev, 0);
+>                 genpd_lock(genpd);
+>                 genpd_power_off(genpd, true, 0);
+>                 genpd_unlock(genpd);
+> @@ -2405,6 +2415,12 @@ static void genpd_dev_pm_detach(struct device *dev, bool power_off)
+>
+>         dev_dbg(dev, "removing from PM domain %s\n", pd->name);
+>
+> +       /* Drop the assigned performance state */
+> +       if (dev_gpd_data(dev)->assigned_pstate) {
+> +               dev_pm_genpd_set_performance_state(dev, 0);
+> +               dev_gpd_data(dev)->assigned_pstate = 0;
+> +       }
+> +
+>         for (i = 1; i < GENPD_RETRY_MAX_MS; i <<= 1) {
+>                 ret = genpd_remove_device(pd, dev);
+>                 if (ret != -EAGAIN)
+> @@ -2442,6 +2458,7 @@ static void genpd_dev_pm_sync(struct device *dev)
+>  static int __genpd_dev_pm_attach(struct device *dev, struct device *base_dev,
+>                                  unsigned int index, bool power_on)
+>  {
+> +       unsigned int assigned_pstate;
+>         struct of_phandle_args pd_args;
+>         struct generic_pm_domain *pd;
+>         int ret;
+> @@ -2485,6 +2502,16 @@ static int __genpd_dev_pm_attach(struct device *dev, struct device *base_dev,
+>         if (ret)
+>                 genpd_remove_device(pd, dev);
+>
+> +       /* Set the assigned performance state */
+> +       if (!of_property_read_u32_index(base_dev->of_node,
+> +                                       "assigned-performance-states",
+> +                                       index, &assigned_pstate)) {
+> +               if (assigned_pstate) {
+> +                       dev_pm_genpd_set_performance_state(dev, assigned_pstate);
+> +                       dev_gpd_data(dev)->assigned_pstate = assigned_pstate;
+> +               }
+> +       }
+> +
+>         return ret ? -EPROBE_DEFER : 1;
+>  }
+>
+> diff --git a/include/linux/pm_domain.h b/include/linux/pm_domain.h
+> index 9ec78ee..4a415ee 100644
+> --- a/include/linux/pm_domain.h
+> +++ b/include/linux/pm_domain.h
+> @@ -180,6 +180,7 @@ struct generic_pm_domain_data {
+>         struct notifier_block nb;
+>         int cpu;
+>         unsigned int performance_state;
+> +       unsigned int assigned_pstate;
+>         void *data;
+>  };
+>
+> --
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
+>
