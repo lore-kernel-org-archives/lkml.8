@@ -2,114 +2,124 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F33C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 17:57:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C4D0C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 17:59:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F8A02078B
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 17:57:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 543582078B
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 17:59:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jI3J/b3s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726583AbgHLR5l (ORCPT
+        id S1726600AbgHLR7a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 13:57:41 -0400
-Received: from mga14.intel.com ([192.55.52.115]:26216 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726394AbgHLR5k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 13:57:40 -0400
-IronPort-SDR: +oJdrqhFuEDCDMhamysOFNL8q4gji2cCGT38C5lLCHBnNIAoxgxXWqm1zTK9DhCzoYVnxBCnqY
- 1rGrj7ucNl7A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9711"; a="153246798"
-X-IronPort-AV: E=Sophos;i="5.76,305,1592895600"; 
-   d="scan'208";a="153246798"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2020 10:57:39 -0700
-IronPort-SDR: xTwv1iZ79CTx+SFvA7fplLSaDcfHXYgp4Pk2hKuzjbS7gH+Hwac/c7TR2r1bbHXyT2ELcTVSMK
- de6WDfiV0l9w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,305,1592895600"; 
-   d="scan'208";a="439468014"
-Received: from kcaccard-mobl.amr.corp.intel.com (HELO kcaccard-mobl1.jf.intel.com) ([10.212.13.108])
-  by orsmga004.jf.intel.com with ESMTP; 12 Aug 2020 10:57:37 -0700
-From:   Kristen Carlson Accardi <kristen@linux.intel.com>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Kristen Carlson Accardi <kristen@linux.intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] objtool: support symtab_shndx during dump
-Date:   Wed, 12 Aug 2020 10:57:11 -0700
-Message-Id: <20200812175712.9462-1-kristen@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 12 Aug 2020 13:59:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50604 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726276AbgHLR73 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 13:59:29 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EDFDC061383
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 10:59:28 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id m22so3226236eje.10
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 10:59:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1/cIJeE2yfgVM1ZrtP/9jp14hYxY3Vu0/YCadb84AWQ=;
+        b=jI3J/b3sbr7lMKeERD0GITknMh9Uxa+SplZKxUOvdDtzVOtMq4sbbMjULlVaTTjPsl
+         b6ZbrqiZvtr1sqNoBR0Z/OPksGY4OjXSaOovTptxM1hz6ZDb++D2GV0IE+GzOKqYA1mF
+         Rk5bbZ3M7f75UO+LZE8T1d84BJjKfgSc9gyZs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1/cIJeE2yfgVM1ZrtP/9jp14hYxY3Vu0/YCadb84AWQ=;
+        b=qz7OYEow/HR/reKI5BGOmj2Fdap+Wuy7UWGhFAWO4OshdBmEE0Sc89w7A/9SR+9SAm
+         Qqm5wSpm+FBCJGpO4mdRijRFz4dwcWEbal26uORk5btuz8553pEKcjtd9fh43NS02Svu
+         3l3wuOu0KbUE82h/XhaQEvf3KOLbv4vNBM08a3Vgy6adfESugZaKvodjlJCu3eC8Zqtt
+         RdFveiOhuTvkFXYTl0NjNujVNDQuOB1eD5sPscTC2JdgDBX+irIQeCCreHpCLDVCeZfn
+         AZG/qYUmMd/wjFCI2nYnNdzkZNEiiZ/sKel/1eY9PqDZrtBQ4EC/Yp3prgrKAiKITE+U
+         aWlw==
+X-Gm-Message-State: AOAM531ei5SxhU9oYDqUa2fEoKW4IpOaW2kHDl9d5ObsldDaAeJaTrh4
+        0Ux2S9JHqcCxheOrVi5MqnSG4GRCwicasw==
+X-Google-Smtp-Source: ABdhPJzPe5NyG0jl9WmdABKN6Aq9cHNXKcupjIZkztdQbLMRId6GTdQrq6UlPHcSaSLOJCzB8SSnzA==
+X-Received: by 2002:a17:906:bcf3:: with SMTP id op19mr944142ejb.1.1597255167034;
+        Wed, 12 Aug 2020 10:59:27 -0700 (PDT)
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com. [209.85.218.47])
+        by smtp.gmail.com with ESMTPSA id v5sm1932917ede.13.2020.08.12.10.59.25
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Aug 2020 10:59:25 -0700 (PDT)
+Received: by mail-ej1-f47.google.com with SMTP id m22so3226121eje.10
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 10:59:25 -0700 (PDT)
+X-Received: by 2002:a17:906:4d4f:: with SMTP id b15mr946622ejv.534.1597255164979;
+ Wed, 12 Aug 2020 10:59:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200811222803.3224434-1-zwisler@google.com> <20200812014324.rtvlhvopifgkw4mi@yavin.dot.cyphar.com>
+In-Reply-To: <20200812014324.rtvlhvopifgkw4mi@yavin.dot.cyphar.com>
+From:   Ross Zwisler <zwisler@chromium.org>
+Date:   Wed, 12 Aug 2020 11:59:13 -0600
+X-Gmail-Original-Message-ID: <CAGRrVHwQ4EpZy73n4NTLhDZNGN4Gi_FUL4BjWw7ruEoGHENZEg@mail.gmail.com>
+Message-ID: <CAGRrVHwQ4EpZy73n4NTLhDZNGN4Gi_FUL4BjWw7ruEoGHENZEg@mail.gmail.com>
+Subject: Re: [PATCH v7] Add a "nosymfollow" mount option.
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Mattias Nissler <mnissler@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Benjamin Gordon <bmgordon@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Dmitry Torokhov <dtor@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        linux-fsdevel@vger.kernel.org,
+        Matthew Wilcox <willy@infradead.org>,
+        Micah Morton <mortonm@google.com>,
+        Raul Rangel <rrangel@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When getting the symbol index number, make sure to use the
-extended symbol table information in order to support symbol
-index's greater than 64K.
+On Tue, Aug 11, 2020 at 7:43 PM Aleksa Sarai <cyphar@cyphar.com> wrote:
+> On 2020-08-11, Ross Zwisler <zwisler@chromium.org> wrote:
+> > From: Mattias Nissler <mnissler@chromium.org>
+> >
+> > For mounts that have the new "nosymfollow" option, don't follow symlinks
+> > when resolving paths. The new option is similar in spirit to the
+> > existing "nodev", "noexec", and "nosuid" options, as well as to the
+> > LOOKUP_NO_SYMLINKS resolve flag in the openat2(2) syscall. Various BSD
+> > variants have been supporting the "nosymfollow" mount option for a long
+> > time with equivalent implementations.
+> >
+> > Note that symlinks may still be created on file systems mounted with
+> > the "nosymfollow" option present. readlink() remains functional, so
+> > user space code that is aware of symlinks can still choose to follow
+> > them explicitly.
+> >
+> > Setting the "nosymfollow" mount option helps prevent privileged
+> > writers from modifying files unintentionally in case there is an
+> > unexpected link along the accessed path. The "nosymfollow" option is
+> > thus useful as a defensive measure for systems that need to deal with
+> > untrusted file systems in privileged contexts.
+> >
+> > More information on the history and motivation for this patch can be
+> > found here:
+> >
+> > https://sites.google.com/a/chromium.org/dev/chromium-os/chromiumos-design-docs/hardening-against-malicious-stateful-data#TOC-Restricting-symlink-traversal
+>
+> Looks good. Did you plan to add an in-tree test for this (you could
+> shove it in tools/testing/selftests/mount)?
 
-Signed-off-by: Kristen Carlson Accardi <kristen@linux.intel.com>
----
- tools/objtool/orc_dump.c | 20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
+Sure, that sounds like a good idea.  I'll take a look.
 
-diff --git a/tools/objtool/orc_dump.c b/tools/objtool/orc_dump.c
-index fca46e006fc2..cf835069724a 100644
---- a/tools/objtool/orc_dump.c
-+++ b/tools/objtool/orc_dump.c
-@@ -74,7 +74,8 @@ int orc_dump(const char *_objname)
- 	GElf_Rela rela;
- 	GElf_Sym sym;
- 	Elf_Data *data, *symtab = NULL, *rela_orc_ip = NULL;
--
-+	Elf_Data *xsymtab = NULL;
-+	Elf32_Word shndx;
- 
- 	objname = _objname;
- 
-@@ -138,6 +139,8 @@ int orc_dump(const char *_objname)
- 			orc_ip_addr = sh.sh_addr;
- 		} else if (!strcmp(name, ".rela.orc_unwind_ip")) {
- 			rela_orc_ip = data;
-+		} else if (!strcmp(name, ".symtab_shndx")) {
-+			xsymtab = data;
- 		}
- 	}
- 
-@@ -157,13 +160,22 @@ int orc_dump(const char *_objname)
- 				return -1;
- 			}
- 
--			if (!gelf_getsym(symtab, GELF_R_SYM(rela.r_info), &sym)) {
--				WARN_ELF("gelf_getsym");
-+			if (!gelf_getsymshndx(symtab, xsymtab,
-+					      GELF_R_SYM(rela.r_info),
-+					      &sym, &shndx)) {
-+				WARN_ELF("gelf_getsymshndx");
- 				return -1;
- 			}
- 
- 			if (GELF_ST_TYPE(sym.st_info) == STT_SECTION) {
--				scn = elf_getscn(elf, sym.st_shndx);
-+				if ((sym.st_shndx > SHN_UNDEF &&
-+				     sym.st_shndx < SHN_LORESERVE) ||
-+				    (xsymtab && sym.st_shndx == SHN_XINDEX)) {
-+					if (sym.st_shndx != SHN_XINDEX)
-+						shndx = sym.st_shndx;
-+				}
-+
-+				scn = elf_getscn(elf, shndx);
- 				if (!scn) {
- 					WARN_ELF("elf_getscn");
- 					return -1;
--- 
-2.20.1
+> Reviewed-by: Aleksa Sarai <cyphar@cyphar.com>
 
+Thank you for the review.
