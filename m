@@ -2,135 +2,104 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21615C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:02:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E28C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:06:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0237522B45
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:02:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MjJD+VCK"
+	by mail.kernel.org (Postfix) with ESMTP id 2963C20838
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:06:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597259167;
+	bh=y3iRGvh4O4fsyQkFTMG80pi7bhD3FpwJs0LLfrRyRMI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=hSlJ0aKCLCO4gXvjiEYZ57SMZIXRgCPnFQHUq1xbktYlk9DgE/tpNZkN/JD+3jScN
+	 1yyIW9j6B6cBSn3TOQGaDntinc9Ue4z2oQ3rX9hHkfoN91aKNUAQ3nAwPSpRScZyvj
+	 4gWewnHUKcEbK498NcXOv9orcX6Jka+sWaFSgHc8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbgHLTC6 (ORCPT
+        id S1726546AbgHLTGG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 15:02:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60328 "EHLO
+        Wed, 12 Aug 2020 15:06:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726512AbgHLTC5 (ORCPT
+        with ESMTP id S1726456AbgHLTGF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 15:02:57 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34C5EC061383;
-        Wed, 12 Aug 2020 12:02:57 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id p14so2702647wmg.1;
-        Wed, 12 Aug 2020 12:02:57 -0700 (PDT)
+        Wed, 12 Aug 2020 15:06:05 -0400
+Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 187A3C061383
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 12:06:05 -0700 (PDT)
+Received: by mail-lj1-x233.google.com with SMTP id g6so3427318ljn.11
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 12:06:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=HaL2zh/WXFrk38V3//tUJzJt7K7m3lYKmEzICUwPAfg=;
-        b=MjJD+VCKfzYVsZgX5Dc+eN1Jv709nvN3ChxDOXcdlNW5r7rC9iK+eJmMaFx0Onw2UY
-         ZocoTU0dKjKxesgsr6graGWP86U2rbCTdf2ZjexlPcvEyT6eXskm76SQGdJUgNzXRYyx
-         s9zX6QdonMvB+vhc8voH/BKliyJjIeCSz79nZyONKCgJcYxfBX9aT7GYgIxFVcsCBe4r
-         Gtu6dbWIa3oRrkNTcTX7DCXZFb26cORK8OGHjnZpNXAfK+Y9XHwNAdu4qKRIkwerFx/4
-         UJWX5qxUVG2q5bgOSW/SErfjnXqgFel8xLY6+s9b2Xqvc6RtwPcNNi9tRGR3lXVOOmrA
-         h1Jg==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aI/FL8Tvc9ElqJ7Vjyb3qFum80s66LEZMcxmIKB+pHM=;
+        b=YeeHgDpVSVBgkET3Ky9UU2Ct8EvO3d1pyGPbHJPydkUtX6ammtgkcWFFIN7i+2ajf3
+         u/CQpP7JSmfuj/v2yXgZCtgLMX5s5RkoGMwFY/XSPTyF7WbTOQElnPyJ9y6MomJxsBjo
+         rSb1Ae8B2JHyu2fe4Uw8k7epl2fqomJhBOUzA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=HaL2zh/WXFrk38V3//tUJzJt7K7m3lYKmEzICUwPAfg=;
-        b=hrb2uG21RsXvDaCSUKJtNRda1U0mb3zZkMVdpDYD2I32rtB5oJZtYTqO67Hqs5FtaU
-         xwGH49u6coojSa2rOiLEeVG6XCerPdqLaAeOufztodAz6SERybzRLs9tRMpigjGAxfVn
-         I7T5P/X4R+3gqMJA/WaYscWhvIlrzwTJjoRL2NHSuSE8cElDLBhVmALja82EKukCNOku
-         w2U8KXsYL7HhwIQbvIhK07oBqpxQsBKxR+yAVBO1IL2tw6to7ujCN2gq4V1BoF4kAONu
-         plsrWRu5SWqDDhA8xQWYNHlsgeKu6bYD3mgr57ruf9xxXEYnA03DC/JNzzA7lpPGP5xL
-         Z7mA==
-X-Gm-Message-State: AOAM533+hTUUj1nwDSCrHqE4AHX9h7hlKfwXISp3r50Dt1BsJ5ISPGQ1
-        aauLG1iTtHv9bv41nfAZ8Yk=
-X-Google-Smtp-Source: ABdhPJzzb6/HsEpBtXZ/ASVQAMBc+auMcspov6YM7337Yaba/ksfKQK45O0cu92Ka+BJx44VCiCQxA==
-X-Received: by 2002:a05:600c:2116:: with SMTP id u22mr961700wml.35.1597258975940;
-        Wed, 12 Aug 2020 12:02:55 -0700 (PDT)
-Received: from lenovo-laptop (cpc83647-brig20-2-0-cust926.3-3.cable.virginm.net. [82.19.195.159])
-        by smtp.gmail.com with ESMTPSA id z7sm4811299wmk.6.2020.08.12.12.02.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Aug 2020 12:02:55 -0700 (PDT)
-From:   Alex Dewar <alex.dewar90@gmail.com>
-X-Google-Original-From: Alex Dewar <alex.dewar@gmx.co.uk>
-Date:   Wed, 12 Aug 2020 20:02:53 +0100
-To:     David Lechner <david@lechnology.com>
-Cc:     Alex Dewar <alex.dewar90@gmail.com>,
-        Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>,
-        Bartosz Go??aszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH] power: supply: Add dependency to lego-ev3-battery
- Kconfig options
-Message-ID: <20200812190253.zewvdfvyu6cnggcl@lenovo-laptop>
-References: <20200809185444.54247-1-alex.dewar90@gmail.com>
- <d6c98ee6-f2f3-c55a-be16-3794ccf30a28@lechnology.com>
- <20200812133711.ddwhxypmvr27pxdu@lenovo-laptop>
- <ce0ae241-10e1-de5c-e694-2c00dc01a2c4@lechnology.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aI/FL8Tvc9ElqJ7Vjyb3qFum80s66LEZMcxmIKB+pHM=;
+        b=fkH0hjXPpyfZ3F1sV8uXWZGnlloiLquCKEAQf9R+V/Gkfm3ekEknUpLesUPh/Zd7q3
+         gdHe3fv3kza+634uqQY6WZywgc5ZxnwIozIxatZwVJUgoXSl4DGxuENHzC69Cs405xec
+         PEj4hbgIsHtVuIcviY5g0V9XcGcHJWrh7hcAhH8vwIrPRBcungmNCVdhUe0nXNhwy4oh
+         7yXfDXPgrUtaqW4RfQ6vIACkt8+r8VkQJaGKrPgmLUCaTV2Rx2WmEsYc2gZa0OJixXzy
+         udP4XO/UIqgkSw5oHS2SlK3KHNNBlhJC19M1vZI9o5A/w5lH9C0fLSrdzAoSbFDE/ReG
+         WuVA==
+X-Gm-Message-State: AOAM530EZXDFqNwESLDswHxOWY+3Z5IiuhmvajhA7hMzbtPwGFsIzAln
+        SDcJ2WdimDK6aGKWLUpprssiS0sETcM=
+X-Google-Smtp-Source: ABdhPJwlwDSZcRG9J5bh3MPqRBCHSQRKPE9opFxWUBFcPs30xVgvb+MLhdi5G5WGG/fg+fWiUctcyg==
+X-Received: by 2002:a05:651c:88:: with SMTP id 8mr294547ljq.277.1597259159548;
+        Wed, 12 Aug 2020 12:05:59 -0700 (PDT)
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
+        by smtp.gmail.com with ESMTPSA id z15sm673913lfg.81.2020.08.12.12.05.58
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Aug 2020 12:05:58 -0700 (PDT)
+Received: by mail-lj1-f172.google.com with SMTP id v12so3449597ljc.10
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 12:05:58 -0700 (PDT)
+X-Received: by 2002:a2e:b008:: with SMTP id y8mr246876ljk.421.1597259157988;
+ Wed, 12 Aug 2020 12:05:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ce0ae241-10e1-de5c-e694-2c00dc01a2c4@lechnology.com>
+References: <20200811074637.GG4411@dell>
+In-Reply-To: <20200811074637.GG4411@dell>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 12 Aug 2020 12:05:42 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgF6Ld0-E0Ych_s=jyS4ssaabK08QR4NOzfRrde0LVHfg@mail.gmail.com>
+Message-ID: <CAHk-=wgF6Ld0-E0Ych_s=jyS4ssaabK08QR4NOzfRrde0LVHfg@mail.gmail.com>
+Subject: Re: MFD for v5.9
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 10:24:30AM -0500, David Lechner wrote:
-> On 8/12/20 8:37 AM, Alex Dewar wrote:
-> > On Tue, Aug 11, 2020 at 09:24:10AM -0500, David Lechner wrote:
-> > > On 8/9/20 1:54 PM, Alex Dewar wrote:
-> > > > This battery appears only to be used by a single board (DA850), so it
-> > > > makes sense to add this to the Kconfig file so that users don't build
-> > > > the module unnecessarily. It currently seems to be built for the x86
-> > > > Arch Linux kernel where it's probably not doing much good.
-> > > 
-> > > It would probably also make sense to add "default n" since it only
-> > > applies to one board in the entire arch.
-> > 
-> > Ah ok. That makes sense. Would you like me to send a follow-on patch for
-> > this?
-> 
-> You can just send a v2 patch that includes the change below and the
-> additional change.
+On Tue, Aug 11, 2020 at 12:46 AM Lee Jones <lee.jones@linaro.org> wrote:
+>
+> Enjoy!
 
-I've just had a look at the documentation[1] and it seems that as there's
-no "default y" there it'll default to n anyway. Have I got that right?
+No.
 
-[1] https://www.kernel.org/doc/html/latest/kbuild/kconfig-language.html#menu-attributes
+This causes new compiler warnings.
 
-> 
-> > 
-> > Alex
-> > 
-> > > 
-> > > BATTERY_LEGO_EV3 is already explicitly set to "m" in the appropriate
-> > > defconfig file, so I don't think it would break anything.
-> > > 
-> > > > 
-> > > > Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
-> > > > ---
-> > > >    drivers/power/supply/Kconfig | 2 +-
-> > > >    1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > 
-> > > > diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
-> > > > index faf2830aa1527..9f76e2f47ac6d 100644
-> > > > --- a/drivers/power/supply/Kconfig
-> > > > +++ b/drivers/power/supply/Kconfig
-> > > > @@ -164,7 +164,7 @@ config BATTERY_DS2782
-> > > >    config BATTERY_LEGO_EV3
-> > > >    	tristate "LEGO MINDSTORMS EV3 battery"
-> > > > -	depends on OF && IIO && GPIOLIB
-> > > > +	depends on OF && IIO && GPIOLIB && (ARCH_DAVINCI_DA850 || COMPILE_TEST)
-> > > >    	help
-> > > >    	  Say Y here to enable support for the LEGO MINDSTORMS EV3 battery.
-> > > > 
-> > > 
-> 
+I pulled, did a basic test-compile, and unpulled.
+
+I refuse to pull garbage that hasn't even seen the most trivial build-test.
+
+And no, "I built it but didn't check for warnings" is not a build
+test. That's just complete garbage. It's showing the code to the
+compiler, and not bothering to look at what the compiler said about
+it.
+
+You can try again next merge window, by now it's too late to send me
+completely untested garbage and try to fix it up.
+
+                  Linus
