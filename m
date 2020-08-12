@@ -2,64 +2,64 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83358C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 06:31:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DECA5C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 06:31:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 605B820885
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 06:31:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B93B920768
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 06:31:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="thVm+vNx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ya4Gpqyf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbgHLGbm (ORCPT
+        id S1726264AbgHLGbo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 02:31:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57672 "EHLO
+        Wed, 12 Aug 2020 02:31:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726572AbgHLGbh (ORCPT
+        with ESMTP id S1726841AbgHLGbk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 02:31:37 -0400
-Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8ED7FC06174A;
-        Tue, 11 Aug 2020 23:31:36 -0700 (PDT)
-Received: by mail-wr1-x433.google.com with SMTP id c15so902796wrs.11;
-        Tue, 11 Aug 2020 23:31:36 -0700 (PDT)
+        Wed, 12 Aug 2020 02:31:40 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B72A8C061787;
+        Tue, 11 Aug 2020 23:31:39 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id y3so938540wrl.4;
+        Tue, 11 Aug 2020 23:31:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=HfrH9XJIeIjW9MPHV3Q9JJJbPsSiUJeVFkAIIf3Fsl0=;
-        b=thVm+vNxzQibJ15/FXNsGM8X8eAsckiCxhPM+D01ZbzoSAEU6JochS1YD8dCAnRbk2
-         K4Wml/Y6OhlG537WBIM31z2Uxuu6X62FmkDJupDvnlNhvvkK59m+lG4yN2Ud7r0IMP3G
-         H8s6MHwUtvCVYmvh3SR+l7dOa8LG40DVN5FbYeBXup8/T9Or9XpAbuhzlf22REw993Nq
-         jMsjRxWYYs7UzUd3NO1dY+86IKQgOT0EC9LhxzfC/bL0p90E8za6K8aPtnaXUEHwX9wr
-         Nrbzt3d5Wx1pCiePPeeWJm2ZFRhbu+OjRCNMeFZ+xvB6x1e3MAdr6yrT8cqxX+WA+Fdd
-         aELg==
+        bh=YqwGurqd5uK7QVmb7fPtpy/V1kBXzGsqFOzo+2XH/LE=;
+        b=Ya4GpqyffcFtEdhtT4EwJFaQs1w1mR07dIWgvOunrPPtYrgJdgNWpSW4IVjb76dDG8
+         BbpYwM7FIs2FZoR07mMWlaUdKK6ieJNujijdUtJ/8cjfJvMSIvXCtZqwuLgW/8nlbx+v
+         VLBz0kGDs7t9GdgxhGL8T3bG4MMCR2wENqFk7GtbCJCk3Dl9cg/PGokcEUNrwnX4cum7
+         HTAplB+cJP9Bfmg2JBCvwT7M2NFS4re4Lm29LIXdsRYodfjNzsd0dd3go+qToxM+xQQg
+         +KEzUROhF9P0lTuHrOpbvYaww2YpBgeL8SqaBVdjj4PTojx7Rhm+hL15Wno8LMbZlY3P
+         4PQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=HfrH9XJIeIjW9MPHV3Q9JJJbPsSiUJeVFkAIIf3Fsl0=;
-        b=gHTdBOSAiP+KCwaDUNEGPK/CpE9BSbO04GtocGTkCkzCP0vuakjysMp6pZXspALLhS
-         W1SL8GKsJY6GfPaQdlOEEYohB7XC9eoMzVJDFghReS9D8CqxNsbBHqQdsFjDVlg8Ez7u
-         RxfRkFcYZAl2A2xCl1hhi29zRUR5A+TtTrMFn6oMM4lzqOflK3dln79Hy4SqZpDhttdb
-         wzZUCNUH7RKu/y91KbvstsHQKhBmSEKy6TfHmYRd6AxcEr/1Gb3LNpYO2Bzd8LYm/cGF
-         RoitCndV1KD4q2U7W8QtLZaGL7nk+mKY46kIvvxJM5DxoRjdJNHv/AhU9QS7vGcUxO0r
-         Gmuw==
-X-Gm-Message-State: AOAM533VmakjvhUZscuSqO8dw4RPOU8F4Rxf+UOGZzRxG2IIftYunRmG
-        wOIhdhaDK9d4ZxI5plfO+Xc=
-X-Google-Smtp-Source: ABdhPJw0Ro33dnofz1oLki58VUcsfiqtSUoBceaHpJxFxJ3ZVcLcltk40vjvS/eULcEa5M5lxRV5Jw==
-X-Received: by 2002:adf:9795:: with SMTP id s21mr31801505wrb.418.1597213895107;
-        Tue, 11 Aug 2020 23:31:35 -0700 (PDT)
+        bh=YqwGurqd5uK7QVmb7fPtpy/V1kBXzGsqFOzo+2XH/LE=;
+        b=DjuOsasjCmaQrYsQVX2i3kst4+a3v+z+lavRkLvK2F8OPPeKM5ObypwLo3aDm+Cu20
+         C2t5jpahJZj0tpDGFThxEzf56g0ohAW5+66o9bR5a3AlM0mi7OwE/qn6EXRCOT99GcCS
+         J8PMSSR9Q1k/e2+t9Vt9cU27ZVziYHaBKsxDIMEBgaiZya6MM/qCi1rfLWqQCysENONT
+         ObmUQvUdnZ+f18RdKV2s1dnMsTUdxYp8XjPHUMRvgJGiHXfx9vmKt5eiRDvbAYKYutfb
+         srpkStPm0cRqDvGh/PSi6mpRxzPs0dO9mCJ8AlfPfCyhvwSUa2QGcLlonTkjaL1I6o8u
+         A7nQ==
+X-Gm-Message-State: AOAM530fazvwFby09QwQiJx1VqXsHNYoPJKJPKWk+3OZ10lHzO7934LO
+        lAI1VlH9Ki2a7ex3wB4z8lI=
+X-Google-Smtp-Source: ABdhPJwLeiwOnaE9laWkXf+yqDocujm7szRtXNwqPNogkrcqwSG691Unbt51woCcoPgHwF3ea5qbaA==
+X-Received: by 2002:adf:90d1:: with SMTP id i75mr30932503wri.278.1597213898407;
+        Tue, 11 Aug 2020 23:31:38 -0700 (PDT)
 Received: from skynet.lan (88.red-83-49-60.dynamicip.rima-tde.net. [83.49.60.88])
-        by smtp.gmail.com with ESMTPSA id m16sm2149945wrr.71.2020.08.11.23.31.33
+        by smtp.gmail.com with ESMTPSA id m16sm2149945wrr.71.2020.08.11.23.31.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Aug 2020 23:31:34 -0700 (PDT)
+        Tue, 11 Aug 2020 23:31:37 -0700 (PDT)
 From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
         <noltari@gmail.com>
 To:     f.fainelli@gmail.com, robh+dt@kernel.org,
@@ -68,9 +68,9 @@ To:     f.fainelli@gmail.com, robh+dt@kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
         <noltari@gmail.com>
-Subject: [PATCH 02/14] mips: bmips: add BCM3368 irq definitions
-Date:   Wed, 12 Aug 2020 08:31:17 +0200
-Message-Id: <20200812063129.361862-3-noltari@gmail.com>
+Subject: [PATCH 05/14] mips: bmips: add BCM6358 irq definitions
+Date:   Wed, 12 Aug 2020 08:31:20 +0200
+Message-Id: <20200812063129.361862-6-noltari@gmail.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200812063129.361862-1-noltari@gmail.com>
 References: <20200812063129.361862-1-noltari@gmail.com>
@@ -82,40 +82,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add header with BCM3368 definitions in order to be able to include it from
+Add header with BCM6358 definitions in order to be able to include it from
 device tree files.
 
 Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
 ---
- .../bcm3368-interrupt-controller.h            | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 include/dt-bindings/interrupt-controller/bcm3368-interrupt-controller.h
+ .../bcm6358-interrupt-controller.h            | 38 +++++++++++++++++++
+ 1 file changed, 38 insertions(+)
+ create mode 100644 include/dt-bindings/interrupt-controller/bcm6358-interrupt-controller.h
 
-diff --git a/include/dt-bindings/interrupt-controller/bcm3368-interrupt-controller.h b/include/dt-bindings/interrupt-controller/bcm3368-interrupt-controller.h
+diff --git a/include/dt-bindings/interrupt-controller/bcm6358-interrupt-controller.h b/include/dt-bindings/interrupt-controller/bcm6358-interrupt-controller.h
 new file mode 100644
-index 000000000000..e269c1bb93ea
+index 000000000000..a098639dbe4e
 --- /dev/null
-+++ b/include/dt-bindings/interrupt-controller/bcm3368-interrupt-controller.h
-@@ -0,0 +1,19 @@
++++ b/include/dt-bindings/interrupt-controller/bcm6358-interrupt-controller.h
+@@ -0,0 +1,38 @@
 +/* SPDX-License-Identifier: GPL-2.0+ */
 +
-+#ifndef __DT_BINDINGS_INTERRUPT_CONTROLLER_BCM3368_H
-+#define __DT_BINDINGS_INTERRUPT_CONTROLLER_BCM3368_H
++#ifndef __DT_BINDINGS_INTERRUPT_CONTROLLER_BCM6358_H
++#define __DT_BINDINGS_INTERRUPT_CONTROLLER_BCM6358_H
 +
-+#define BCM3368_IRQ_TIMER		0
-+#define BCM3368_IRQ_SPI			1
-+#define BCM3368_IRQ_UART0		2
-+#define BCM3368_IRQ_UART1		3
-+#define BCM3368_IRQ_ENET1		6
-+#define BCM3368_IRQ_ENET0		8
-+#define BCM3368_IRQ_ENET_PHY		9
-+#define BCM3368_IRQ_ENET0_RX_DMA	15
-+#define BCM3368_IRQ_ENET0_TX_DMA	16
-+#define BCM3368_IRQ_ENET1_RX_DMA	17
-+#define BCM3368_IRQ_ENET1_TX_DMA	18
-+#define BCM3368_IRQ_PCI			31
++#define BCM6358_IRQ_TIMER		0
++#define BCM6358_IRQ_SPI			1
++#define BCM6358_IRQ_UART0		2
++#define BCM6358_IRQ_UART1		3
++#define BCM6358_IRQ_OHCI		5
++#define BCM6358_IRQ_EMAC1		6
++#define BCM6358_IRQ_USBS		7
++#define BCM6358_IRQ_EMAC0		8
++#define BCM6358_IRQ_EPHY		9
++#define BCM6358_IRQ_EHCI		10
++#define BCM6358_IRQ_USB_CTL_RX_DMA	11
++#define BCM6358_IRQ_USB_CTL_TX_DMA	12
++#define BCM6358_IRQ_USB_BULK_RX_DMA	13
++#define BCM6358_IRQ_USB_BULK_TX_DMA	14
++#define BCM6358_IRQ_EMAC0_RX_DMA	15
++#define BCM6358_IRQ_EMAC0_TX_DMA	16
++#define BCM6358_IRQ_EMAC1_RX_DMA	17
++#define BCM6358_IRQ_EMAC1_TX_DMA	18
++#define BCM6358_IRQ_ATM		        19
++#define BCM6358_IRQ_EXT4		20
++#define BCM6358_IRQ_EXT5		21
++#define BCM6358_IRQ_PCM			22
++#define BCM6358_IRQ_PCM_RX_DMA		23
++#define BCM6358_IRQ_PCM_TX_DMA		24
++#define BCM6358_IRQ_EXT0		25
++#define BCM6358_IRQ_EXT1		26
++#define BCM6358_IRQ_EXT2		27
++#define BCM6358_IRQ_EXT3		28
++#define BCM6358_IRQ_ADSL		29
++#define BCM6358_IRQ_DG			30
++#define BCM6358_IRQ_MPI			31
 +
-+#endif /* __DT_BINDINGS_INTERRUPT_CONTROLLER_BCM3368_H */
++#endif /* __DT_BINDINGS_INTERRUPT_CONTROLLER_BCM6358_H */
 -- 
 2.28.0
 
