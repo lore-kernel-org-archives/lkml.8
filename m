@@ -2,124 +2,111 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91956C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 08:54:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2774AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 08:56:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6AC982076B
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 08:54:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eZV8SOfT"
+	by mail.kernel.org (Postfix) with ESMTP id 00ACF2076B
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 08:56:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727017AbgHLIyY (ORCPT
+        id S1726942AbgHLI4S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 04:54:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51418 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726618AbgHLIyY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 04:54:24 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CECDC06174A
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 01:54:22 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id f7so1286289wrw.1
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 01:54:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nDDmL3/ds8QQCHr7yYQlwt5HIoUGQcvll/5Jm4Nj/NU=;
-        b=eZV8SOfT++JcZDWbZGOFPKgBc8EnckFjLKn0Viw6/71x8cx9KnAkUpyX/V2nx8COkQ
-         zQlB/OB1wRP6pMrRE9yJN+Smhb4ZY7oNjWxYK+841LJxbAsQ+hbwU+EnDxuG7nllptBh
-         kTFBJaY0ELC5hFKngUr4N7e64e5LHsz+8RTyapmjBNLyVhbCYlRTj8K3gPyBcNQqu/56
-         A0sA6RI/7uLTydnKJViPe7ScJUB7FlL5/noJyDh/QYsEOBf72693tlJmhwdtjEDYxUjI
-         FQm/Z/ep1iEMfNkmGmphrWOr8IeSQc8GBFMv5yh3ThO3kbJ9lv0IV6Pc5iwVfr61pd5A
-         qavQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nDDmL3/ds8QQCHr7yYQlwt5HIoUGQcvll/5Jm4Nj/NU=;
-        b=gZRxwsfcp94F8rkoN705hW+8zdK1cY66rY3bkMbhroxUWyCheLFen3uw0xIIv8Xphn
-         6nGFJpJTgATyZZ7isNq042bmtekyNRV/HrPEn+Bv5SMnUVeCZYWF7Jr3HV+Jxzo7Ssz3
-         1xTZB4fsJwK0h1Y3AqKL6ZT/tofjj0Zzk1MxNa79BMT5HiynapvF1PHDLtj8YtPxFizM
-         clDfrjePAQp0cTvUy2Kz4tvTaYY4C81r8PKkibM7flWSaloqhoARZzRW5a/td7TJmFJ8
-         TKDODrUxX6KrVKJt81CJtqWsBd7urGBeAVi8u9TBWYFtzs5fzSgDjJZfCNxQmVhg2qND
-         3whw==
-X-Gm-Message-State: AOAM533d2WNK7j/OInKndAdQAkXqPV3jAdG/ONP29sPYtTrnwOQe8BSb
-        47cEFZeTienuNUpwau9YKdDEXpxVteRa5W/10aik3A==
-X-Google-Smtp-Source: ABdhPJxgHkQRilAAOvDxUOE0ttC56I2wbbW0+aBiE/cDA/sPn42xpkcsDJURVoApPB+Kh0XCHSsmcVBjkOhxDPs0fKk=
-X-Received: by 2002:adf:bc45:: with SMTP id a5mr32002929wrh.215.1597222460695;
- Wed, 12 Aug 2020 01:54:20 -0700 (PDT)
+        Wed, 12 Aug 2020 04:56:18 -0400
+Received: from mail5.windriver.com ([192.103.53.11]:47840 "EHLO mail5.wrs.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726572AbgHLI4S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 04:56:18 -0400
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
+        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id 07C8tDEr000485
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
+        Wed, 12 Aug 2020 01:55:33 -0700
+Received: from pek-qzhang2-d1.wrs.com (128.224.162.183) by
+ ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server id
+ 14.3.487.0; Wed, 12 Aug 2020 01:55:03 -0700
+From:   <qiang.zhang@windriver.com>
+To:     <dan.j.williams@intel.com>, <vishal.l.verma@intel.com>,
+        <dave.jiang@intel.com>, <ira.weiny@intel.com>
+CC:     <linux-nvdimm@lists.01.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2] libnvdimm: KASAN: global-out-of-bounds Read in internal_create_group
+Date:   Wed, 12 Aug 2020 16:55:01 +0800
+Message-ID: <20200812085501.30963-1-qiang.zhang@windriver.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20200730080146.25185-1-stephan@gerhold.net>
-In-Reply-To: <20200730080146.25185-1-stephan@gerhold.net>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 12 Aug 2020 10:53:44 +0200
-Message-ID: <CAPDyKFqy5-qtfKy=8iyR+LZNUTVi8namLGk_juq4a9YZH8DVqg@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/3] opp: required_opps: Power on genpd, scale down in
- reverse order
-To:     Stephan Gerhold <stephan@gerhold.net>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Niklas Cassel <nks@flawful.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 Jul 2020 at 10:02, Stephan Gerhold <stephan@gerhold.net> wrote:
->
-> I'm trying to get CPR (Core Power Reduction, AVS) working for MSM8916 on mainline.
-> Shortly said there are two power domains that must be scaled with the CPU OPP table:
->
->   - (VDD)MX
->   - CPR
->
-> My idea for this was to add both as "required-opps" to the CPR OPP table
-> and let the OPP core take care of all the scaling.
->
-> There are two remaining problems that need to be addressed for that to work:
->
->   1. The power domains should be scaled down in reverse order
->      (MX, CPR when scaling up, CPR, MX when scaling down).
->   2. Something has to enable the virtual genpd devices to make the rpmpd driver
->      actually respect the performance states we vote for.
->
-> Both issues were briefly discussed before (see links in the patches),
-> but I think we did not agree on an exact solution yet. After some consideration,
-> I thought it would be best to address these directly in the OPP core.
->
-> However, note that this patch is RFC because it is just supposed to initiate
-> discussion if alternative solutions would be better. :)
+From: Zqiang <qiang.zhang@windriver.com>
 
-Ramping up since the holidays, so I might overlook something - but I
-think your suggestion solution makes perfect sense to me.
+Because the last member of the "nvdimm_firmware_attributes" array
+was not assigned a null ptr, when traversal of "grp->attrs" array
+is out of bounds in "create_files" func.
 
->
-> Stephan Gerhold (3):
->   opp: Reduce code duplication in _set_required_opps()
->   opp: Set required OPPs in reverse order when scaling down
->   opp: Power on (virtual) power domains managed by the OPP core
->
->  drivers/opp/core.c | 115 ++++++++++++++++++++++++++++++++++++---------
->  drivers/opp/opp.h  |   1 +
->  2 files changed, 93 insertions(+), 23 deletions(-)
->
-> --
-> 2.27.0
+func:
+	create_files:
+		->for (i = 0, attr = grp->attrs; *attr && !error; i++, attr++)
+			->....
 
-So, for the series:
+BUG: KASAN: global-out-of-bounds in create_files fs/sysfs/group.c:43 [inline]
+BUG: KASAN: global-out-of-bounds in internal_create_group+0x9d8/0xb20
+fs/sysfs/group.c:149
+Read of size 8 at addr ffffffff8a2e4cf0 by task kworker/u17:10/959
 
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+CPU: 2 PID: 959 Comm: kworker/u17:10 Not tainted 5.8.0-syzkaller #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009),
+BIOS rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
+Workqueue: events_unbound async_run_entry_fn
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0x5/0x497 mm/kasan/report.c:383
+ __kasan_report mm/kasan/report.c:513 [inline]
+ kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
+ create_files fs/sysfs/group.c:43 [inline]
+ internal_create_group+0x9d8/0xb20 fs/sysfs/group.c:149
+ internal_create_groups.part.0+0x90/0x140 fs/sysfs/group.c:189
+ internal_create_groups fs/sysfs/group.c:185 [inline]
+ sysfs_create_groups+0x25/0x50 fs/sysfs/group.c:215
+ device_add_groups drivers/base/core.c:2024 [inline]
+ device_add_attrs drivers/base/core.c:2178 [inline]
+ device_add+0x7fd/0x1c40 drivers/base/core.c:2881
+ nd_async_device_register+0x12/0x80 drivers/nvdimm/bus.c:506
+ async_run_entry_fn+0x121/0x530 kernel/async.c:123
+ process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
+ worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+ kthread+0x3b5/0x4a0 kernel/kthread.c:292
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
 
-Kind regards
-Uffe
+The buggy address belongs to the variable:
+ nvdimm_firmware_attributes+0x10/0x40
+
+Reported-by: syzbot+1cf0ffe61aecf46f588f@syzkaller.appspotmail.com
+Signed-off-by: Zqiang <qiang.zhang@windriver.com>
+---
+ v1->v2:
+ Modify the description of the error.
+
+ drivers/nvdimm/dimm_devs.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/nvdimm/dimm_devs.c b/drivers/nvdimm/dimm_devs.c
+index 61374def5155..b59032e0859b 100644
+--- a/drivers/nvdimm/dimm_devs.c
++++ b/drivers/nvdimm/dimm_devs.c
+@@ -529,6 +529,7 @@ static DEVICE_ATTR_ADMIN_RW(activate);
+ static struct attribute *nvdimm_firmware_attributes[] = {
+ 	&dev_attr_activate.attr,
+ 	&dev_attr_result.attr,
++	NULL,
+ };
+ 
+ static umode_t nvdimm_firmware_visible(struct kobject *kobj, struct attribute *a, int n)
+-- 
+2.17.1
+
