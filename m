@@ -2,105 +2,93 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F43AC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:37:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1925C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBE3020771
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:37:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="lMNRsLkz"
+	by mail.kernel.org (Postfix) with ESMTP id 7CA4C20771
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:38:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbgHLQhL (ORCPT
+        id S1726578AbgHLQiF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 12:37:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37966 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726394AbgHLQhK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 12:37:10 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 994EEC061383;
-        Wed, 12 Aug 2020 09:37:10 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 5D5F79E7;
-        Wed, 12 Aug 2020 18:37:08 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1597250228;
-        bh=QmJA0vmDc6NASV0Rz2czWAKrP/6tjXSocfENCDTPmtc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lMNRsLkztTjvknOfpJVv319ZRKiwiZKRWyWr9mvqNpnY/wY6+YB6PEIDkNBq9ulvx
-         LP7DCimL6MNyQO4cPPM5BeoElihJPmqiCZ/BFYkhd30JptlqsU+QgRQEctUv+cVvco
-         RmWbqUOPAj0RWQ2G9i/z+i2DpDw4gvOfSTmCCh+k=
-Date:   Wed, 12 Aug 2020 19:36:54 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH 9/9] arm64: dts: renesas: r8a774e1-hihope-rzg2h: Setup DU
- clocks
-Message-ID: <20200812163654.GT6057@pendragon.ideasonboard.com>
-References: <20200812140217.24251-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200812140217.24251-10-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Wed, 12 Aug 2020 12:38:05 -0400
+Received: from mga11.intel.com ([192.55.52.93]:64274 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726394AbgHLQiE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 12:38:04 -0400
+IronPort-SDR: 6XblZFf3JnuSl4GDovexY3pUSa5iELEWrP4fWQhffo8dp25MT+xJToNGVdEnUjyh/u0Xo9bfXF
+ XIPINRU/An3Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9711"; a="151658785"
+X-IronPort-AV: E=Sophos;i="5.76,304,1592895600"; 
+   d="scan'208";a="151658785"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2020 09:38:03 -0700
+IronPort-SDR: a390YBMeuM5i7xZAbQQ4UhnPUKERJ52ao3wjAL93JZmEVD0Y3/1HI2hkINV5yYgfYpn2Zk9z+6
+ rEDR8xVfFhQQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,304,1592895600"; 
+   d="scan'208";a="495572232"
+Received: from marshy.an.intel.com (HELO [10.122.105.159]) ([10.122.105.159])
+  by fmsmga005.fm.intel.com with ESMTP; 12 Aug 2020 09:38:02 -0700
+Subject: Re: [PATCHv1 2/2] crypto: add Intel SoCFPGA crypto service driver
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     davem@davemloft.net, gregkh@linuxfoundation.org,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dinguyen@kernel.org, richard.gong@intel.com
+References: <1597154182-26970-1-git-send-email-richard.gong@linux.intel.com>
+ <1597154182-26970-3-git-send-email-richard.gong@linux.intel.com>
+ <20200812003418.GA4166@gondor.apana.org.au>
+From:   Richard Gong <richard.gong@linux.intel.com>
+Message-ID: <7850a3e6-1ac2-c13e-94cb-64adfb6c6898@linux.intel.com>
+Date:   Wed, 12 Aug 2020 11:52:32 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200812140217.24251-10-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20200812003418.GA4166@gondor.apana.org.au>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar,
 
-Thank you for the patch.
+I will move them to drivers/misc.
 
-On Wed, Aug 12, 2020 at 03:02:17PM +0100, Lad Prabhakar wrote:
-> Setup up the required clocks for the DU to be functional.
-> 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
->  arch/arm64/boot/dts/renesas/r8a774e1-hihope-rzg2h.dts | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/renesas/r8a774e1-hihope-rzg2h.dts b/arch/arm64/boot/dts/renesas/r8a774e1-hihope-rzg2h.dts
-> index cdbe527e9340..12f9242e263b 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a774e1-hihope-rzg2h.dts
-> +++ b/arch/arm64/boot/dts/renesas/r8a774e1-hihope-rzg2h.dts
-> @@ -24,3 +24,14 @@
->  		reg = <0x5 0x00000000 0x0 0x80000000>;
->  	};
->  };
-> +
-> +&du {
-> +	clocks = <&cpg CPG_MOD 724>,
-> +		 <&cpg CPG_MOD 723>,
-> +		 <&cpg CPG_MOD 721>,
-> +		 <&versaclock5 1>,
-> +		 <&x302_clk>,
-> +		 <&versaclock5 2>;
-> +	clock-names = "du.0", "du.1", "du.3",
-> +		      "dclkin.0", "dclkin.1", "dclkin.3";
-
-I have no reason to doubt this is correct, but I also can't assess that
-as I don't have access to the schematics.
-
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> +};
-
--- 
 Regards,
+Richard
 
-Laurent Pinchart
+On 8/11/20 7:34 PM, Herbert Xu wrote:
+> On Tue, Aug 11, 2020 at 08:56:22AM -0500, richard.gong@linux.intel.com wrote:
+>> From: Richard Gong <richard.gong@intel.com>
+>>
+>> Add Intel FPGA crypto service (FCS) driver to support new crypto services
+>> on Intel SoCFPGA platforms.
+>>
+>> The crypto services include security certificate, image boot validation,
+>> security key cancellation, get provision data, random number generation,
+>> advance encrtption standard (AES) encryption and decryption services.
+>>
+>> To perform supporting crypto features on Intel SoCFPGA platforms, Linux
+>> user-space application interacts with FPGA crypto service (FCS) driver via
+>> structures defined in include/uapi/linux/intel_fcs-ioctl.h.
+>>
+>> The application allocates spaces for IOCTL structure to hold the contents
+>> or points to the data that FCS driver needs, uses IOCTL calls to passes
+>> data to kernel FCS driver for processing at low level firmware and get
+>> processed data or status back form the low level firmware via FCS driver.
+>>
+>> The user-space application named as fcs_client is at
+>> https://github.com/altera-opensource/fcs_apps/tree/fcs_client.
+>>
+>> Signed-off-by: Richard Gong <richard.gong@intel.com>
+> 
+> Nack.  This driver has nothing to do with the Crypto API.
+> 
