@@ -2,184 +2,101 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B9C9C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 11:33:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9254C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 11:38:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 655ED207DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 11:33:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8891D207DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 11:38:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DMG3ailN"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="p/bGv3Bb";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SD8voxuA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727870AbgHLLdI (ORCPT
+        id S1727050AbgHLLij (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 07:33:08 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:59711 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726698AbgHLLdF (ORCPT
+        Wed, 12 Aug 2020 07:38:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48402 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726453AbgHLLij (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 07:33:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597231983;
+        Wed, 12 Aug 2020 07:38:39 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04570C06174A;
+        Wed, 12 Aug 2020 04:38:38 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1597232315;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=RoczEJbTRhp4E6+m43og6G2+lF41l5//y8mz5TyVbNM=;
-        b=DMG3ailNkDHlTMsWzCJrO6l6TI+fwDh1IfCJgC0jPPZavwixLwWFh61EAeNs2Nb9OZ9BoH
-        EiasU7jjC7sE+CTWibN3ASXTkWwy2BrtlAsSGX+gOPk+5XjtC/YlU1OaICKj9I51EsA6BF
-        J3c8vyk3+anoSRSvDE+OuJd+cyE2bSA=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-104-6MV7vWY4MIOhoGY5s-RWIw-1; Wed, 12 Aug 2020 07:33:01 -0400
-X-MC-Unique: 6MV7vWY4MIOhoGY5s-RWIw-1
-Received: by mail-wr1-f72.google.com with SMTP id s23so792896wrb.12
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 04:33:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=RoczEJbTRhp4E6+m43og6G2+lF41l5//y8mz5TyVbNM=;
-        b=YHAna4li54OSa/cQS/ZgXcjF4OiYzicLSpy2XYvuRewa+zMqgyR3X0H1sCrpX2/Nwq
-         ayFVOxMOtDwHiGCiB+zOU8hQ1Ylfc4mZcYT9NlicjEIIg4zcvShOtB5q8KJaxMiIomuv
-         HrRIhLvEtSiTksWzHbP3RpTvQ1jj9eK2OpVVYWrT8ZgLr+xdJr5Wz7iELijM4qW1xYeG
-         0BJ9e2+BjHL3aRMpqUUGBHUskYLrzPZqw49PaJMFnyOy+pInYH+e+E+2dRLIOAr/phyk
-         WN9z14SLPtUqaab8CrEBiD3dsym4n6wr2dBU1x8L+Zxpb8VksUDjxD7+Hq1ZwPmqf0Rn
-         vH9Q==
-X-Gm-Message-State: AOAM533Yd0b/rqaWiI74JeR5+fKvCfIQX6R9sBhM02JFco3DoKA1/FPJ
-        i1ISF86hk+PkqslXSnkr1JVZbcggZ39B/xg8X9CGEkXb0PKO8f0BLN8/5RbumkRPNfZFxIXlHRb
-        wixOaQ7fDg2j0+fUdt5KQglwj
-X-Received: by 2002:a5d:4749:: with SMTP id o9mr33576518wrs.68.1597231980350;
-        Wed, 12 Aug 2020 04:33:00 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwE9vUSdqREh8t5yedMvEm4NGM9cHgKaJxXfAZaigvpsiyMMH7G3s3jyydBvrp2awjcZ69qRA==
-X-Received: by 2002:a5d:4749:: with SMTP id o9mr33576497wrs.68.1597231980079;
-        Wed, 12 Aug 2020 04:33:00 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:fcdc:39e8:d361:7e30? ([2001:b07:6468:f312:fcdc:39e8:d361:7e30])
-        by smtp.gmail.com with ESMTPSA id o3sm3596446wru.64.2020.08.12.04.32.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Aug 2020 04:32:59 -0700 (PDT)
-Subject: Re: [PATCH] KVM: x86/pmu: Add '.exclude_hv = 1' for guest perf_event
-To:     peterz@infradead.org
-Cc:     Like Xu <like.xu@linux.intel.com>, Yao <yao.jin@linux.intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-References: <20200812050722.25824-1-like.xu@linux.intel.com>
- <5c41978e-8341-a179-b724-9aa6e7e8a073@redhat.com>
- <20200812111115.GO2674@hirez.programming.kicks-ass.net>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <65eddd3c-c901-1c5a-681f-f0cb07b5fbb1@redhat.com>
-Date:   Wed, 12 Aug 2020 13:32:58 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        bh=y2rZT2cxtrg0Kg6rhVZsjk/yBTEz7j8kir5nfqAJhcE=;
+        b=p/bGv3BbO6JIPPoBx/asQQySa8mRBvK1GfMgknrvjm1Nd3VyZudDTxZyys5JQl0og1yOSh
+        whbHR6mMsOZf2wwvghTpPH+UJYrLiHriddiksRXMnhCb81BqVNkProumwg0AH3eWsC8ZN8
+        ZDVujhEn+J+ZFedD9XtMGXrwO/Toxr8sPvbJQ5skT+2sUXx28XCOHPNdI4YBAKTgUu35Hv
+        RfQ1baiIiCesXlL0nKZsq52MiIcI4UA9OwvvLyuGutRR7iEYiK8ju58Z/BEASJKL3kicPM
+        LEAzk4RFdU2TgPaHvD5NsnBqOpEJFat+GuX2mBlTEuDtfukdLD8T/UVQxqcfdA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1597232315;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=y2rZT2cxtrg0Kg6rhVZsjk/yBTEz7j8kir5nfqAJhcE=;
+        b=SD8voxuAKHjVeWQmzSvKyXeYwZahG8+8+rUcdpYKNKee8SHmSB0k0+JWcZNf8lO/UzidVG
+        qlXzlhY7QCwgGDCw==
+To:     Michal Hocko <mhocko@suse.com>, Uladzislau Rezki <urezki@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
+In-Reply-To: <87k0y56wc1.fsf@nanos.tec.linutronix.de>
+References: <20200809204354.20137-1-urezki@gmail.com> <20200809204354.20137-2-urezki@gmail.com> <20200810123141.GF4773@dhcp22.suse.cz> <20200810160739.GA29884@pc636> <20200810192525.GG4773@dhcp22.suse.cz> <87pn7x6y4a.fsf@nanos.tec.linutronix.de> <87k0y56wc1.fsf@nanos.tec.linutronix.de>
+Date:   Wed, 12 Aug 2020 13:38:35 +0200
+Message-ID: <87mu305c1w.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200812111115.GO2674@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/08/20 13:11, peterz@infradead.org wrote:
->> x86 does not have a hypervisor privilege level, so it never uses
-> 
-> Arguably it does when Xen, but I don't think we support that, so *phew*.
+Thomas Gleixner <tglx@linutronix.de> writes:
+> Thomas Gleixner <tglx@linutronix.de> writes:
+>> Michal Hocko <mhocko@suse.com> writes:
+>>> zone->lock should be held for a very limited amount of time.
+>>
+>> Emphasis on should. free_pcppages_bulk() can hold it for quite some time
+>> when a large amount of pages are purged. We surely would have converted
+>> it to a raw lock long time ago otherwise.
+>>
+>> For regular enterprise stuff a few hundred microseconds might qualify as
+>> a limited amount of time. For advanced RT applications that's way beyond
+>> tolerable..
+>
+> Sebastian just tried with zone lock converted to a raw lock and maximum
+> latencies go up by a factor of 7 when putting a bit of stress on the
+> memory subsytem. Just a regular kernel compile kicks them up by a factor
+> of 5. Way out of tolerance.
+>
+> We'll have a look whether it's solely free_pcppages_bulk() and if so we
+> could get away with dropping the lock in the loop.
 
-Yeah, I suppose you could imagine having paravirtualized perf counters
-where the Xen privileged domain could ask Xen to run perf counters on
-itself.
+So even on !RT and just doing a kernel compile the time spent in
+free_pcppages_bulk() is up to 270 usec.
 
->> exclude_hv; exclude_host already excludes all root mode activity for
->> both ring0 and ring3.
-> 
-> Right, but we want to tighten the permission checks and not excluding_hv
-> is just sloppy.
+It's not only the loop which processes a large pile of pages, part of it
+is caused by lock contention on zone->lock. Dropping the lock after a
+processing a couple of pages does not make it much better if enough CPUs
+are contending on the lock.
 
-I would just document that it's ignored as it doesn't make sense.  ARM64
-does that too, for new processors where the kernel is not itself split
-between supervisor and hypervisor privilege levels.
+Thanks,
 
-There are people that are trying to run Linux-based firmware and have
-SMM handlers as part of the kernel.  Perhaps they could use exclude_hv
-to exclude the SMM handlers from perf (if including them is possible at
-all).
-
-> The thing is, we very much do not want to allow unpriv user to be able
-> to create: exclude_host=1, exclude_guest=0 counters (they currently
-> can).
-
-That would be the case of an unprivileged user that wants to measure
-performance of its guests.  It's a scenario that makes a lot of sense,
-are you worried about side channels?  Can perf-events on guests leak
-more about the host than perf-events on a random userspace program?
-
-> Also, exclude_host is really poorly defined:
-> 
->   https://lkml.kernel.org/r/20200806091827.GY2674@hirez.programming.kicks-ass.net
-> 
->   "Suppose we have nested virt:
-> 
-> 	  L0-hv
-> 	  |
-> 	  G0/L1-hv
-> 	     |
-> 	     G1
-> 
->   And we're running in G0, then:
-> 
->   - 'exclude_hv' would exclude L0 events
->   - 'exclude_host' would ... exclude L1-hv events?
->   - 'exclude_guest' would ... exclude G1 events?
-
-From the point of view of G0, L0 *does not exist at all*.  You just
-cannot see L0 events if you're running in G0.
-
-exclude_host/exclude_guest are the right definition.
-
->   Then the next question is, if G0 is a host, does the L1-hv run in
->   G0 userspace or G0 kernel space?
-
-It's mostly kernel, but sometimes you're interested in events from QEMU
-or whoever else has opened /dev/kvm.  In that case you care about G0
-userspace too.
-
-> The way it is implemented, you basically have to always set
-> exclude_host=0, even if there is no virt at all and you want to measure
-> your own userspace thing -- which is just weird.
-
-I understand regretting having exclude_guest that way; include_guest
-(defaulting to 0!) would have made more sense.  But defaulting to
-exclude_host==0 makes sense: if there is no virt at all, memset(0) does
-the right thing so it does not seem weird to me.
-
-> I suppose the 'best' option at this point is something like:
-> 
-> 	/*
-> 	 * comment that explains the trainwreck.
-> 	 */
-> 	if (!exclude_host && !exclude_guest)
-> 		exclude_guest = 1;
-> 
-> 	if ((!exclude_hv || !exclude_guest) && !perf_allow_kernel())
-> 		return -EPERM;
-> 
-> But that takes away the possibility of actually having:
-> 'exclude_host=0, exclude_guest=0' to create an event that measures both,
-> which also sucks.
-
-In fact both of the above "if"s suck. :(
-
-Paolo
-
+        tglx
