@@ -2,150 +2,110 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 607CEC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 18:07:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2226EC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 18:10:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BAB120771
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 18:07:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="dPPr77PP"
+	by mail.kernel.org (Postfix) with ESMTP id 0407B20771
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 18:10:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbgHLSHS (ORCPT
+        id S1726567AbgHLSKr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 14:07:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51804 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726554AbgHLSHQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 14:07:16 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52DE7C061384
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 11:07:16 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id b2so1442072qvp.9
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 11:07:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=FPM/BpxL7oHk5NwDUOl9GJEl4QuvKvovtaLxj5QbinM=;
-        b=dPPr77PPopJMkB3J1yt/ankUvINgjFbRtn7AMXcoTxgOv4Qnz8BmX18CGvnpDoNboC
-         RdBfGamTp+ItJYrXQOhA+ATgJhrWxC7oZXQM5Q3E+IC333XHrA35Xgpiz1g1+eCk0g5J
-         LHWdw0LwJi+FdGosEZll1xe5ub1affO7TItKtEmD4+bYgbMaujsZ0HkQBmx7hCRhE7gs
-         ASP2oWwiikGuPIVN/TUiCMTWTtuyO/dChqvWVOrNOEVrbSokdAWF52h4N0xNIypYkucn
-         Kw88wjXP6RrYAG/5c+SbZ7RH91UXZN+awliP03byg6ZCTl62qFsjos/SZlDNZZuljdig
-         wIhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=FPM/BpxL7oHk5NwDUOl9GJEl4QuvKvovtaLxj5QbinM=;
-        b=erVzlRoBUQ4SNCIYkyFvxcnT0WrAbKDvrAlSY8kj0sv9x+I9kxbPC9m/Vt80d2xuUo
-         A6cgYRmVRKVIr0I+9+t+idbNKPnwEMtIo2Pb3W7IJ8ZEkw/U6Xi8qWIXB72cc7zN2P2u
-         Sa382hu0eT98xjspCekwiUZeK2BRqpAKMgIjQd2Mp9enygv/qEcLDfYSfRoD4msqkNYk
-         97qPAYFQltHj0XbM7WAbhZW/LW+Xf7EexwfnoDUsDBMwMK1ZfFYEk/B0G0krV5nxJN5F
-         yz7T6t/54G7s3vVoGIetwNJSmItku8uXQy6v7iO0TAB7gOuoa8lRm0sUvHZvyTdh+jVa
-         kejA==
-X-Gm-Message-State: AOAM532zkH07KUWv0x9on8gdua2a9bmbOMqqwc924hCEG6k78M2Khlpu
-        pBs3Cd+7E8vVL9KpOf2EMTkPYoUna1RRMZZSf6WKdw==
-X-Google-Smtp-Source: ABdhPJxwuOgASIUMO9V8WJQloS5aDiVFEuzmNpHSIUm1BABcVUPU19igC0hVjhfl43zEzpgsO5DYTci6isBiqyb/YV4=
-X-Received: by 2002:ad4:5502:: with SMTP id az2mr839333qvb.148.1597255635563;
- Wed, 12 Aug 2020 11:07:15 -0700 (PDT)
+        Wed, 12 Aug 2020 14:10:47 -0400
+Received: from mga18.intel.com ([134.134.136.126]:27523 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726276AbgHLSKo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 14:10:44 -0400
+IronPort-SDR: e7GrA8nnDos/9oVKkdc4CR9S2PwJxeeFIiAA6+OgvoXR9v/unp6Fh15ObYYix8VHpPqkRWkrhg
+ RK+pqhyWsZsw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9711"; a="141662149"
+X-IronPort-AV: E=Sophos;i="5.76,305,1592895600"; 
+   d="scan'208";a="141662149"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2020 11:10:43 -0700
+IronPort-SDR: 9CdmcRa1CII4ZcRJgunFyc1x+Aso+Cleiye+QJuKz0Suu0DXE6eS5ZcqE/rQO673V3YXpYsvUX
+ IdPiHkgvjCEQ==
+X-IronPort-AV: E=Sophos;i="5.76,305,1592895600"; 
+   d="scan'208";a="332881602"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.160])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2020 11:10:42 -0700
+Date:   Wed, 12 Aug 2020 11:10:41 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH 6/7] KVM: x86: Use common definition for
+ kvm_nested_vmexit tracepoint
+Message-ID: <20200812181041.GC6602@linux.intel.com>
+References: <20200718063854.16017-1-sean.j.christopherson@intel.com>
+ <20200718063854.16017-7-sean.j.christopherson@intel.com>
+ <87365mqgcg.fsf@vitty.brq.redhat.com>
+ <20200721002717.GC20375@linux.intel.com>
+ <87imehotp1.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-References: <20200121134157.20396-1-sakari.ailus@linux.intel.com>
- <20200121134157.20396-6-sakari.ailus@linux.intel.com> <CAMpxmJU5dG49N2FA0oSQsOfKrCr3KQ1BisON4c+nUJJmZQG=bQ@mail.gmail.com>
- <20200311085555.GH5379@paasikivi.fi.intel.com> <CAMpxmJVPTKW+sYSJ3dnfF8nLAOKEa4Ob7bpxG0KD3Tkdm+rtYw@mail.gmail.com>
- <20200323213101.GB21174@kekkonen.localdomain> <CAMpxmJVdyTkZMVuhSy0Ux8VUYTmQN_YEfH-akQsAL3zrwiz8Dw@mail.gmail.com>
- <20200810082549.GD840@valkosipuli.retiisi.org.uk> <CAMpxmJUKSR-oCGnV1E5XiAMA2nYBy5f_f8=VSoMn0zf+qF39vg@mail.gmail.com>
- <20200811080009.GE840@valkosipuli.retiisi.org.uk>
-In-Reply-To: <20200811080009.GE840@valkosipuli.retiisi.org.uk>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 12 Aug 2020 20:07:04 +0200
-Message-ID: <CAMpxmJWziqW-PiJPSm6aH5aXbYktMJfVjJfvfGxv8fdbWKydqg@mail.gmail.com>
-Subject: Re: [PATCH v4 5/6] at24: Support probing while off
-To:     Sakari Ailus <sakari.ailus@iki.fi>
-Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Wolfram Sang <wsa@the-dreams.de>, linux-acpi@vger.kernel.org,
-        Bingbu Cao <bingbu.cao@intel.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
-        Hyungwoo Yang <hyungwoo.yang@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rajmohan Mani <rajmohan.mani@intel.com>,
-        Tomasz Figa <tfiga@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87imehotp1.fsf@vitty.brq.redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 10:00 AM Sakari Ailus <sakari.ailus@iki.fi> wrote:
->
-> Hi Bartosz,
->
-> On Mon, Aug 10, 2020 at 08:12:00PM +0200, Bartosz Golaszewski wrote:
-> > On Mon, Aug 10, 2020 at 10:26 AM Sakari Ailus <sakari.ailus@iki.fi> wro=
-te:
-> > >
+On Tue, Jul 21, 2020 at 03:59:06PM +0200, Vitaly Kuznetsov wrote:
+> Sean Christopherson <sean.j.christopherson@intel.com> writes:
+> 
+> > On Mon, Jul 20, 2020 at 06:52:15PM +0200, Vitaly Kuznetsov wrote:
+> >> Sean Christopherson <sean.j.christopherson@intel.com> writes:
+> >> > +TRACE_EVENT_KVM_EXIT(kvm_nested_vmexit);
+> >> >  
+> >> >  /*
+> >> >   * Tracepoint for #VMEXIT reinjected to the guest
+> >> > diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+> >> > index fc70644b916ca..f437d99f4db09 100644
+> >> > --- a/arch/x86/kvm/vmx/nested.c
+> >> > +++ b/arch/x86/kvm/vmx/nested.c
+> >> > @@ -5912,10 +5912,7 @@ bool nested_vmx_reflect_vmexit(struct kvm_vcpu *vcpu)
+> >> >  	exit_intr_info = vmx_get_intr_info(vcpu);
+> >> >  	exit_qual = vmx_get_exit_qual(vcpu);
+> >> >  
+> >> > -	trace_kvm_nested_vmexit(vcpu, exit_reason, exit_qual,
+> >> > -				vmx->idt_vectoring_info, exit_intr_info,
+> >> > -				vmcs_read32(VM_EXIT_INTR_ERROR_CODE),
+> >> > -				KVM_ISA_VMX);
+> >> > +	trace_kvm_nested_vmexit(exit_reason, vcpu, KVM_ISA_VMX);
+> >> >  
+> >> >  	/* If L0 (KVM) wants the exit, it trumps L1's desires. */
+> >> >  	if (nested_vmx_l0_wants_exit(vcpu, exit_reason))
+> >> 
+> >> With so many lines removed I'm almost in love with the patch! However,
+> >> when testing on SVM (unrelated?) my trace log looks a bit ugly:
+> >> 
+> >>            <...>-315119 [010]  3733.092646: kvm_nested_vmexit:    CAN'T FIND FIELD "rip"<CANT FIND FIELD exit_code>vcpu 0 reason npf rip 0x400433 info1 0x0000000200000006 info2 0x0000000000641000 intr_info 0x00000000 error_code 0x00000000
+> >>            <...>-315119 [010]  3733.092655: kvm_nested_vmexit:    CAN'T FIND FIELD "rip"<CANT FIND FIELD exit_code>vcpu 0 reason npf rip 0x400433 info1 0x0000000100000014 info2 0x0000000000400000 intr_info 0x00000000 error_code 0x00000000
+> >> 
+> >> ...
+> >> 
+> >> but after staring at this for some time I still don't see where this
+> >> comes from :-( ... but reverting this commit helps:
 > >
-> > [snip]
+> > The CAN'T FIND FIELD blurb comes from tools/lib/traceevent/event-parse.c.
 > >
-> > > >
-> > > > Rafael: I think that there are two issues with patch 1/5:
-> > > > 1. It adds a very specific boolean flag to a structure that's meant=
- to
-> > > > be very general. As I pointed out in the i2c patch: at the very lea=
-st
-> > > > this could be made into an int storing flag values, instead of a
-> > > > boolean field. But rather than that - it looks to me more like a
-> > > > device (or bus) feature than a driver feature. Is there any ACPI fl=
-ag
-> > > > we could use to pass this information to the driver model without
-> > > > changing the driver structure?
-> > >
-> > > To my knowledge there isn't. The fact that I=E6=B6=8E devices are pow=
-ered on for
-> > > probe in ACPI based systems is specific to Linux kernel and not ACPI =
-as
-> > > such.
-> > >
-> > > The reason this needs to be in a generic struct is that the device's =
-power
-> > > state will be changed before any interaction with the driver takes pl=
-ace as
-> > > it's the I=E6=B6=8E framework that powers on the device.
-> > >
-> >
-> > I'm not sure I'm following. Looking at patch 1/6 struct device already
-> > exists so why can't this information be conveyed "per device" as
-> > opposed to "per driver"?
->
-> It's both driver and device.
->
-> Suppose there's no indication of driver support. If you add the property
-> telling the device shouldn't be powered on for probe, it won't be. And if
-> the driver doesn't support that, probe will fail. That could happen e.g.
-> when running an older kernel on a system that happens to specify this
-> property for a given device.
->
-> You could view this as a driver bug of course. I still think it's better =
-to
-> make driver support for this explicit, and avoid making this a practical
-> problem anywhere.
->
+> > I assume you are using tooling of some form to generate the trace, i.e. the
+> > issue doesn't show up in /sys/kernel/debug/tracing/trace.  If that's the
+> > case, this is more or less ABI breakage :-(
+> >  
+> 
+> Right you are,
+> 
+> the tool is called 'trace-cmd record -e kvm ...' / 'trace-cmd report'
 
-I see. I'm not sure this is the correct solution but let's see what
-Wolfram says. From my side: I'd prefer to see the
-disable_i2c_core_irq_mapping converted to flags first and then the
-flags extended with whatever you need. disable_i2c_core_irq_mapping
-could also be removed AFAICT - nobody uses it.
-
-Bart
+Paolo, any thoughts on how to proceed with this series?  E.g. merge KVM
+first and fix trace-cmd second?  Something else?
