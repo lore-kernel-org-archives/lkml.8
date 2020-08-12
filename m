@@ -2,104 +2,148 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B59ECC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:34:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10092C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:34:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97335206DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:34:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E49F9206DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:34:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="r4+Hnsvg"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TAMILBsr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726710AbgHLTeN (ORCPT
+        id S1726750AbgHLTe1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 15:34:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36892 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726574AbgHLTeM (ORCPT
+        Wed, 12 Aug 2020 15:34:27 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:52359 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726567AbgHLTe0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 15:34:12 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EF8BC061384
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 12:34:12 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id l64so3125473qkb.8
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 12:34:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UNDeeEu8OInqbqByJ2ZOXoAVRjNpv1vP3OHX17fDEvU=;
-        b=r4+HnsvgN0jJa837wtb65Cs7IAk9eOD6BOLmmqils8rqCozIQk8nMQH4UjLdQUceV9
-         FutaSFNF12VW1gYyIbe9bMf24E28UUKNTS6f63KvHph8c2/tf63EykMrCPjZt/rJMKyP
-         RaxNrHoQT9E7OaopVveRyAoLL6QVJf8wAhmhWB49gk6BoX+rXwkafWX5Zoulv8q6dL/B
-         xny5ju9y/uT9f5/nEsCGNUHC4HaGW+7DSeISwT/u9ENEk9nejSi2Y632D2xk/CzWEONt
-         +drlx/CsAIZPzWnSKOZ4LRiye5IwLqLGQ2YeCoSyTtxbIUcxoNsZP0gyIY7/VnO1F5dI
-         JR7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UNDeeEu8OInqbqByJ2ZOXoAVRjNpv1vP3OHX17fDEvU=;
-        b=BL/1OS3YSfelmXn45Vm2Ocpx95aPVMVm9z/Pk3aBL27+hJaCCtzCVlif7zMqRv2MsZ
-         OlcT70gfPHtxHrLRnAHXH8cx9T51iZFcQBNSzmKdrYZNNKyhT6j23zkTbjSzune+ikGf
-         NNLJc5y2pz1GyNgCseK3tiJt8NIBp5ZrdMwkug02Fg3vooRQZO3VAP6eF80R2Xs2wM/o
-         HqtDPFzMXb5S34Sa7wfwPFH8fm9GQUs5vBL541UocASSicygkmATEO57chMeUEF8lkhf
-         0DBuvPNTWm1zOUdn3vzcKGNPHbINMuhPzmbp63zQ75Y23s2G2gONUvO8uyK17VdCjr2i
-         cR3w==
-X-Gm-Message-State: AOAM531Mfno/30qOlUXDvcLxD+tDlAI5S46pWPgWFF/7wtCtM38gZk6p
-        09nJ1XuW141lQYYhx+TxCr72/11KuGdmSv5GyXVA9g==
-X-Google-Smtp-Source: ABdhPJxPajgg+Gh2SZMQyrFoBo5ccaZiV7aSQ1OH1I03oez0nz6bNWlF+MeK2Mit08rZfVypEhouZhxdPgfg4YTfPjI=
-X-Received: by 2002:a37:a5c1:: with SMTP id o184mr1415589qke.323.1597260850654;
- Wed, 12 Aug 2020 12:34:10 -0700 (PDT)
+        Wed, 12 Aug 2020 15:34:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597260864;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=9pSEoniKEkFNSbD4TVkJ4Otoswkj5jDImE3i/ppi82o=;
+        b=TAMILBsrqXIGZSvSbutFexYOkO91UTG1s8g8GpQ/iaK2oaHiGsxWqj7R9QXYbFlQ/3uZoo
+        4/xaIYIErSSXflJ23de1ZXLTbfI86aiavW0TlaZBW8YamUnNEh9Mj662CpFRlI8vvUbwK8
+        UBwSTnPiMQRk99XNiEaWKgsCqVD6H7s=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-394-PsWf2ViBP-2ePLGug1Gcog-1; Wed, 12 Aug 2020 15:34:23 -0400
+X-MC-Unique: PsWf2ViBP-2ePLGug1Gcog-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B39E61902EB3;
+        Wed, 12 Aug 2020 19:34:20 +0000 (UTC)
+Received: from fogou.chygwyn.com (unknown [10.33.36.12])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 239A3100AE52;
+        Wed, 12 Aug 2020 19:34:13 +0000 (UTC)
+Subject: Re: file metadata via fs API
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        David Howells <dhowells@redhat.com>
+Cc:     Miklos Szeredi <miklos@szeredi.hu>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, Karel Zak <kzak@redhat.com>,
+        Jeff Layton <jlayton@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Christian Brauner <christian@brauner.io>,
+        Lennart Poettering <lennart@poettering.net>,
+        Linux API <linux-api@vger.kernel.org>,
+        Ian Kent <raven@themaw.net>,
+        LSM <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <1842689.1596468469@warthog.procyon.org.uk>
+ <1845353.1596469795@warthog.procyon.org.uk>
+ <CAJfpegunY3fuxh486x9ysKtXbhTE0745ZCVHcaqs9Gww9RV2CQ@mail.gmail.com>
+ <ac1f5e3406abc0af4cd08d818fe920a202a67586.camel@themaw.net>
+ <CAJfpegu8omNZ613tLgUY7ukLV131tt7owR+JJ346Kombt79N0A@mail.gmail.com>
+ <CAJfpegtNP8rQSS4Z14Ja4x-TOnejdhDRTsmmDD-Cccy2pkfVVw@mail.gmail.com>
+ <20200811135419.GA1263716@miu.piliscsaba.redhat.com>
+ <CAHk-=wjzLmMRf=QG-n+1HnxWCx4KTQn9+OhVvUSJ=ZCQd6Y1WA@mail.gmail.com>
+ <52483.1597190733@warthog.procyon.org.uk>
+ <CAHk-=wiPx0UJ6Q1X=azwz32xrSeKnTJcH8enySwuuwnGKkHoPA@mail.gmail.com>
+From:   Steven Whitehouse <swhiteho@redhat.com>
+Message-ID: <066f9aaf-ee97-46db-022f-5d007f9e6edb@redhat.com>
+Date:   Wed, 12 Aug 2020 20:34:11 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20200121134157.20396-6-sakari.ailus@linux.intel.com>
- <CAMpxmJU5dG49N2FA0oSQsOfKrCr3KQ1BisON4c+nUJJmZQG=bQ@mail.gmail.com>
- <20200311085555.GH5379@paasikivi.fi.intel.com> <CAMpxmJVPTKW+sYSJ3dnfF8nLAOKEa4Ob7bpxG0KD3Tkdm+rtYw@mail.gmail.com>
- <20200323213101.GB21174@kekkonen.localdomain> <CAMpxmJVdyTkZMVuhSy0Ux8VUYTmQN_YEfH-akQsAL3zrwiz8Dw@mail.gmail.com>
- <20200810082549.GD840@valkosipuli.retiisi.org.uk> <CAMpxmJUKSR-oCGnV1E5XiAMA2nYBy5f_f8=VSoMn0zf+qF39vg@mail.gmail.com>
- <20200811080009.GE840@valkosipuli.retiisi.org.uk> <CAMpxmJWziqW-PiJPSm6aH5aXbYktMJfVjJfvfGxv8fdbWKydqg@mail.gmail.com>
- <20200812192500.GA8942@ninjato>
-In-Reply-To: <20200812192500.GA8942@ninjato>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 12 Aug 2020 21:33:59 +0200
-Message-ID: <CAMpxmJXzaA7M94D7O5RB1WMVPz5dK61aVO_SOsu-TGTLtBZU6Q@mail.gmail.com>
-Subject: Re: [PATCH v4 5/6] at24: Support probing while off
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     Sakari Ailus <sakari.ailus@iki.fi>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        linux-acpi@vger.kernel.org, Bingbu Cao <bingbu.cao@intel.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
-        Hyungwoo Yang <hyungwoo.yang@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rajmohan Mani <rajmohan.mani@intel.com>,
-        Tomasz Figa <tfiga@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAHk-=wiPx0UJ6Q1X=azwz32xrSeKnTJcH8enySwuuwnGKkHoPA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 9:25 PM Wolfram Sang <wsa@the-dreams.de> wrote:
+Hi,
+
+On 12/08/2020 19:18, Linus Torvalds wrote:
+> On Tue, Aug 11, 2020 at 5:05 PM David Howells <dhowells@redhat.com> wrote:
+>> Well, the start of it was my proposal of an fsinfo() system call.
+> Ugh. Ok, it's that thing.
 >
+> This all seems *WAY* over-designed - both your fsinfo and Miklos' version.
 >
-> > Wolfram says. From my side: I'd prefer to see the
-> > disable_i2c_core_irq_mapping converted to flags first and then the
-> > flags extended with whatever you need. disable_i2c_core_irq_mapping
-> > could also be removed AFAICT - nobody uses it.
+> What's wrong with fstatfs()? All the extra magic metadata seems to not
+> really be anything people really care about.
 >
-> I haven't read the details here, just saying that
-> 'disable_i2c_core_irq_mapping' is already removed in -next and also
-> within the next days in Linus' tree.
+> What people are actually asking for seems to be some unique mount ID,
+> and we have 16 bytes of spare information in 'struct statfs64'.
+>
+> All the other fancy fsinfo stuff seems to be "just because", and like
+> complete overdesign.
+>
+> Let's not add system calls just because we can.
+>
+>               Linus
 >
 
-Ok, then nevermind my previous comment.
+The point of this is to give us the ability to monitor mounts from 
+userspace. The original inspiration was rtnetlink, in that we need a 
+"dump" operation to give us a snapshot of the current mount state, plus 
+then a stream of events which allow us to keep that state updated. The 
+tricky question is what happens in case of overflow of the events queue, 
+and just like netlink, that needs a resync of the current state to fix 
+that, since we can't block mounts, of course.
 
-Bart
+The fsinfo syscall was designed to be the "dump" operation in this 
+system. David's other patch set provides the stream of events. So the 
+two are designed to work together. We had the discussion on using 
+netlink, of whatever form a while back, and there are a number of 
+reasons why that doesn't work (namespace being one).
+
+I think fstatfs might also suffer from the issue of not being easy to 
+call on things for which you have no path (e.g. over-mounted mounts) 
+Plus we need to know which paths to query, which is why we need to 
+enumerate the mounts in the first place - how would we get the fds for 
+each mount? It might give you some sb info, but it doesn't tell you the 
+options that the sb is mounted with, and it doesn't tell you where it is 
+mounted either.
+
+The overall aim is to solve some issues relating to scaling to large 
+numbers of mount in systemd and autofs, and also to provide a 
+generically useful interface that other tools may use to monitor mounts 
+in due course too. Currently parsing /proc/mounts is the only option, 
+and that tends to be slow and is certainly not atomic. Extension to 
+other sb related messages is a future goal, quota being one possible 
+application for the notifications.
+
+If there is a simpler way to get to that goal, then thats all to the 
+good, and we should definitely consider it,
+
+Steve.
+
+
+
+
