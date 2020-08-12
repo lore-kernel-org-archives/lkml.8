@@ -2,186 +2,195 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F6E5C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:26:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A1CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:27:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D575206C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:26:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1281206C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:27:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="d20ue8ZG"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="FhhRn0pD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727891AbgHLJ02 (ORCPT
+        id S1727890AbgHLJ1B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 05:26:28 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:64557 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727829AbgHLJ01 (ORCPT
+        Wed, 12 Aug 2020 05:27:01 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:48260 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726722AbgHLJ1A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 05:26:27 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597224385; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: References: Cc: To: From:
- Subject: Sender; bh=Ut7UsXyyt3w1ZkSYeaLSTk9Ej6vXqnbWm3dpszGQbYk=; b=d20ue8ZG+WnVsgznsTyLSMkrNVmrN1V0RWSyg4BGAZaSVelC/JqE1l1oPQYl4fMcP7yaXcpG
- O1yzklwDHur+sJf1WOxIsi8m2epuw1YGbv8FyM6oWE95msaN3oC3jINQlupT6V7MEda3679e
- AKYhoWosGDgy3YYA5TAXPSQ0k9g=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n13.prod.us-east-1.postgun.com with SMTP id
- 5f33b5c1247ccc308cb55ffe (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 12 Aug 2020 09:26:25
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 9D184C433A0; Wed, 12 Aug 2020 09:26:24 +0000 (UTC)
-Received: from [192.168.1.16] (unknown [61.1.229.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B0A60C433CA;
-        Wed, 12 Aug 2020 09:26:19 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B0A60C433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [RFC v2 03/11] tty: serial: qcom_geni_serial: Use OPP API to set
- clk/perf state
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-To:     Amit Pundir <amit.pundir@linaro.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-scsi@vger.kernel.org,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Doug Anderson <dianders@chromium.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-spi@vger.kernel.org, linux-serial@vger.kernel.org,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-References: <20190320094918.20234-1-rnayak@codeaurora.org>
- <20190320094918.20234-4-rnayak@codeaurora.org>
- <CALAqxLV2TBk9ScUM6MeJMCkL8kJnCihjQ7ac5fLzcqOg1rREVQ@mail.gmail.com>
- <CALAqxLWg3jJKJFLnnne-mrQEnH=m7R_9azCGaGnEmFYR4EMh=A@mail.gmail.com>
- <ec5eeb21-48e4-5dcc-583a-ac9419659e44@codeaurora.org>
- <CAMi1Hd1O+3bjQN6c9WQr+t0YXGBAukfFzJWtkgXDp1Zcir-0-w@mail.gmail.com>
- <aab760b8-2a06-ae96-584a-301d5326fc0d@codeaurora.org>
-Message-ID: <fb5b6abf-b26a-5db2-1f8f-23d457c7235e@codeaurora.org>
-Date:   Wed, 12 Aug 2020 14:56:17 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Wed, 12 Aug 2020 05:27:00 -0400
+Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id AF121595;
+        Wed, 12 Aug 2020 11:26:57 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1597224417;
+        bh=nd5A/NqoRz9D4axjoXf+5BPmPqiCH64mLqHlBQHchh4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FhhRn0pDKz3bSWG2BnT8nNTJnN+GudPkL7FMrhlnR6+lR63Dis82E2gYeSOFBNUIO
+         Wxb4wC+1NR7QG6lCsUVzRz7kVl8kvMHk+oCoqfzlexvQ6UKnHirkHkmn201FKqpYp8
+         86TdYdvoLd08QDp1h4AndE5aCwImLoUEcQlke33I=
+Date:   Wed, 12 Aug 2020 12:26:44 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Algea Cao <algea.cao@rock-chips.com>
+Cc:     a.hajda@samsung.com, kuankuan.y@gmail.com, hjc@rock-chips.com,
+        tzimmermann@suse.de, dri-devel@lists.freedesktop.org,
+        sam@ravnborg.org, airlied@linux.ie, heiko@sntech.de,
+        jernej.skrabec@siol.net, laurent.pinchart+renesas@ideasonboard.com,
+        jonas@kwiboo.se, mripard@kernel.org, darekm@google.com,
+        linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, cychiang@chromium.org,
+        linux-kernel@vger.kernel.org, narmstrong@baylibre.com,
+        jbrunet@baylibre.com, maarten.lankhorst@linux.intel.com,
+        daniel@ffwll.ch
+Subject: Re: [PATCH 1/6] drm: Add connector atomic_begin/atomic_flush
+Message-ID: <20200812092644.GD6057@pendragon.ideasonboard.com>
+References: <20200812083120.743-1-algea.cao@rock-chips.com>
+ <20200812083407.856-1-algea.cao@rock-chips.com>
 MIME-Version: 1.0
-In-Reply-To: <aab760b8-2a06-ae96-584a-301d5326fc0d@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200812083407.856-1-algea.cao@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Algea,
 
-On 8/12/2020 1:09 PM, Rajendra Nayak wrote:
-> 
-> On 8/12/2020 1:05 PM, Amit Pundir wrote:
->> Hi Rajendra,
->>
->> On Wed, 12 Aug 2020 at 11:18, Rajendra Nayak <rnayak@codeaurora.org> wrote:
->>>
->>>
->>> On 8/12/2020 7:03 AM, John Stultz wrote:
->>>> On Tue, Aug 11, 2020 at 4:11 PM John Stultz <john.stultz@linaro.org> wrote:
->>>>>
->>>>> On Wed, Mar 20, 2019 at 2:49 AM Rajendra Nayak <rnayak@codeaurora.org> wrote:
->>>>>>
->>>>>> geni serial needs to express a perforamnce state requirement on CX
->>>>>> depending on the frequency of the clock rates. Use OPP table from
->>>>>> DT to register with OPP framework and use dev_pm_opp_set_rate() to
->>>>>> set the clk/perf state.
->>>>>>
->>>>>> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
->>>>>> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
->>>>>> ---
->>>>>>    drivers/tty/serial/qcom_geni_serial.c | 15 +++++++++++++--
->>>>>>    1 file changed, 13 insertions(+), 2 deletions(-)
->>>>>>
->>>>>
->>>>> Hey,
->>>>>     I just wanted to follow up on this patch, as I've bisected it
->>>>> (a5819b548af0) down as having broken qca bluetooth on the Dragonboard
->>>>> 845c.
->>>>>
->>>>> I haven't yet had time to debug it yet, but wanted to raise the issue
->>>>> in case anyone else has seen similar trouble.
->>>>
->>>> So I dug in a bit further, and this chunk seems to be causing the issue:
->>>>> @@ -961,7 +963,7 @@ static void qcom_geni_serial_set_termios(struct uart_port *uport,
->>>>>                   goto out_restart_rx;
->>>>>
->>>>>           uport->uartclk = clk_rate;
->>>>> -       clk_set_rate(port->se.clk, clk_rate);
->>>>> +       dev_pm_opp_set_rate(port->dev, clk_rate);
->>>>>           ser_clk_cfg = SER_CLK_EN;
->>>>>           ser_clk_cfg |= clk_div << CLK_DIV_SHFT;
->>>>>
->>>>
->>>>
->>>> With that applied, I see the following errors in dmesg and bluetooth
->>>> fails to function:
->>>> [    4.763467] qcom_geni_serial 898000.serial: dev_pm_opp_set_rate:
->>>> failed to find OPP for freq 102400000 (-34)
->>>> [    4.773493] qcom_geni_serial 898000.serial: dev_pm_opp_set_rate:
->>>> failed to find OPP for freq 102400000 (-34)
->>>>
->>>> With just that chunk reverted on linus/HEAD, bluetooth seems to work ok.
->>>
->>> This seems like the same issue that was also reported on venus [1] because the
->>> clock frequency tables apparently don;t exactly match the achievable clock
->>> frequencies (which we also used to construct the OPP tables)
->>>
->>> Can you try updating the OPP table for QUP to have 102400000 instead of the
->>> current 100000000 and see if that fixes it?
->>
->> That worked. Thanks.
->>
->> Should this change be common to base sdm845.dtsi or platform specific dts?
->> For what it's worth, we see this BT breakage on PocoF1 phone too.
-> 
-> Thanks for confirming, it will have to be part of the SoC dtsi, and I am
-> guessing a similar change is perhaps also needed on sc7180.
-> I will send a patch out to fix the OPP tables for both.
+Thank you for the patch.
 
-I spent some more time looking at this and it does not look like this is the
-rounding issues with clock FMAX tables. I had these tables picked from downstream
-clock code and it turns out these tables were reworked at clock init based on
-the silicon rev, so I need to fix up the OPP tables accordingly which will add
-a new OPP entry for 102.4Mhz. I'll post a patch shortly.
+On Wed, Aug 12, 2020 at 04:34:07PM +0800, Algea Cao wrote:
+> In some situations, connector should get some work done
+> when plane is updating. Such as when change output color
+> format, hdmi should send AVMUTE to make screen black before
+> crtc updating color format, or screen may flash. After color
+> updating, hdmi should clear AVMUTE bring screen back to normal.
+> 
+> The process is as follows:
+> AVMUTE -> Update CRTC -> Update HDMI -> Clear AVMUTE
+> 
+> So we introduce connector atomic_begin/atomic_flush.
 
+Implementing this through .atomic_begin() and .atomic_flush() seems like
+a pretty big hack to me. Furthermore, I think this should be implemented
+as bridge operations, not at the connector level, as the HDMI encoder
+may not be the component that implements the drm_connector.
+
+> Signed-off-by: Algea Cao <algea.cao@rock-chips.com>
 > 
->>
->> Regards,
->> Amit Pundir
->>
->>
->>>
->>> [1] https://lkml.org/lkml/2020/7/27/507
->>>
->>>>
->>>> thanks
->>>> -john
->>>>
->>>
->>> -- 
->>> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
->>> of Code Aurora Forum, hosted by The Linux Foundation
+> ---
 > 
+>  drivers/gpu/drm/drm_atomic_helper.c      | 46 ++++++++++++++++++++++++
+>  include/drm/drm_modeset_helper_vtables.h | 19 ++++++++++
+>  2 files changed, 65 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
+> index f68c69a45752..f4abd700d2c4 100644
+> --- a/drivers/gpu/drm/drm_atomic_helper.c
+> +++ b/drivers/gpu/drm/drm_atomic_helper.c
+> @@ -2471,6 +2471,8 @@ void drm_atomic_helper_commit_planes(struct drm_device *dev,
+>  				     struct drm_atomic_state *old_state,
+>  				     uint32_t flags)
+>  {
+> +	struct drm_connector *connector;
+> +	struct drm_connector_state *old_connector_state, *new_connector_state;
+>  	struct drm_crtc *crtc;
+>  	struct drm_crtc_state *old_crtc_state, *new_crtc_state;
+>  	struct drm_plane *plane;
+> @@ -2479,6 +2481,28 @@ void drm_atomic_helper_commit_planes(struct drm_device *dev,
+>  	bool active_only = flags & DRM_PLANE_COMMIT_ACTIVE_ONLY;
+>  	bool no_disable = flags & DRM_PLANE_COMMIT_NO_DISABLE_AFTER_MODESET;
+>  
+> +	for_each_oldnew_connector_in_state(old_state, connector,
+> +					   old_connector_state,
+> +					   new_connector_state, i) {
+> +		const struct drm_connector_helper_funcs *funcs;
+> +
+> +		if (!connector->state->crtc)
+> +			continue;
+> +
+> +		if (!connector->state->crtc->state->active)
+> +			continue;
+> +
+> +		funcs = connector->helper_private;
+> +
+> +		if (!funcs || !funcs->atomic_begin)
+> +			continue;
+> +
+> +		DRM_DEBUG_ATOMIC("flush beginning [CONNECTOR:%d:%s]\n",
+> +				 connector->base.id, connector->name);
+> +
+> +		funcs->atomic_begin(connector, old_connector_state);
+> +	}
+> +
+>  	for_each_oldnew_crtc_in_state(old_state, crtc, old_crtc_state, new_crtc_state, i) {
+>  		const struct drm_crtc_helper_funcs *funcs;
+>  
+> @@ -2550,6 +2574,28 @@ void drm_atomic_helper_commit_planes(struct drm_device *dev,
+>  
+>  		funcs->atomic_flush(crtc, old_crtc_state);
+>  	}
+> +
+> +	for_each_oldnew_connector_in_state(old_state, connector,
+> +					   old_connector_state,
+> +					   new_connector_state, i) {
+> +		const struct drm_connector_helper_funcs *funcs;
+> +
+> +		if (!connector->state->crtc)
+> +			continue;
+> +
+> +		if (!connector->state->crtc->state->active)
+> +			continue;
+> +
+> +		funcs = connector->helper_private;
+> +
+> +		if (!funcs || !funcs->atomic_flush)
+> +			continue;
+> +
+> +		DRM_DEBUG_ATOMIC("flushing [CONNECTOR:%d:%s]\n",
+> +				 connector->base.id, connector->name);
+> +
+> +		funcs->atomic_flush(connector, old_connector_state);
+> +	}
+>  }
+>  EXPORT_SYMBOL(drm_atomic_helper_commit_planes);
+>  
+> diff --git a/include/drm/drm_modeset_helper_vtables.h b/include/drm/drm_modeset_helper_vtables.h
+> index 421a30f08463..10f3f2e2fe28 100644
+> --- a/include/drm/drm_modeset_helper_vtables.h
+> +++ b/include/drm/drm_modeset_helper_vtables.h
+> @@ -1075,6 +1075,25 @@ struct drm_connector_helper_funcs {
+>  	void (*atomic_commit)(struct drm_connector *connector,
+>  			      struct drm_connector_state *state);
+>  
+> +	/**
+> +	 * @atomic_begin:
+> +	 *
+> +	 * flush atomic update
+> +	 *
+> +	 * This callback is used by the atomic modeset helpers but it is optional.
+> +	 */
+> +	void (*atomic_begin)(struct drm_connector *connector,
+> +			     struct drm_connector_state *state);
+> +
+> +	/**
+> +	 * @atomic_begin:
+> +	 *
+> +	 * begin atomic update
+> +	 *
+> +	 * This callback is used by the atomic modeset helpers but it is optional.
+> +	 */
+> +	void (*atomic_flush)(struct drm_connector *connector,
+> +			     struct drm_connector_state *state);
+>  	/**
+>  	 * @prepare_writeback_job:
+>  	 *
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Regards,
+
+Laurent Pinchart
