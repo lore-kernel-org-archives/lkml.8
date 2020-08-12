@@ -2,165 +2,163 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6FF4C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:13:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C8AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:13:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C43902080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:13:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63FA820781
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:13:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="VndYFHLs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j91ZT750"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726634AbgHLPNa (ORCPT
+        id S1726660AbgHLPNf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 11:13:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53272 "EHLO
+        Wed, 12 Aug 2020 11:13:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726226AbgHLPN1 (ORCPT
+        with ESMTP id S1726510AbgHLPN1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 12 Aug 2020 11:13:27 -0400
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B92FAC061383
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 08:13:26 -0700 (PDT)
-Received: by mail-ed1-x52a.google.com with SMTP id t15so1772954edq.13
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 08:13:26 -0700 (PDT)
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 022C2C061384;
+        Wed, 12 Aug 2020 08:13:26 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id x12so1728842qtp.1;
+        Wed, 12 Aug 2020 08:13:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VN6ir83bMjgYQIdeAbdj93K7AbOe8f4BRPi3nEgO7zE=;
-        b=VndYFHLsjboSueemTm/gTWyU/6d+bUbeH7HKxWM99Yng+XUQUYNG/AbXbblBZBH/An
-         /D674H4Y7QIjzxINCgZkEWjRdtLus6PyQhylX/IDuaUQ2j/48lydT4RO0vFLUPvqjs0i
-         laNjZmgU04BRpDmsumDv8mvr+p3mwHETI4Oyo=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=jd+0O3rfZzFFL8LU24BOfuyCqms8qaWRv2Co74kbUzc=;
+        b=j91ZT750zKdCaCs4PQtHNGQx8b7SYeKNb5qzyJ5ohLQUEL3iCPkSC12yVA98Qd3XZA
+         aBwqrwl/PshYusq68OX1wPw/JOQboTCXOpwLBqSalmYjNfcMdx8AyiCi1xDaPGN+f9t9
+         4eiF04kqG8gzcHjhsd4cLYBV4lYgIuHLxUVuOQdsKSTdhjh0pTvCCXvTDaohVViR9Ppr
+         Hde4WwVtAclxGRzY2jqBNY48bQPAwtYh4Nwglua8IN7T/5V2kWZBvFnRxXRc2MyedgiG
+         O1TF8j5YSLdh+NcKTAgGbBv2zN5/7tUZGM6eJzMAve+tX3Q5uc/+58Emc1RQCUkIBXv0
+         b+aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VN6ir83bMjgYQIdeAbdj93K7AbOe8f4BRPi3nEgO7zE=;
-        b=sa4wGV6kxBUxidRXAtRWgl/PtaKTwyxr/lfrZlLYfoJmWhk/SXd/IVUo4ZT1u8pAMl
-         5G5Kate+xZ//07yUzyitFP9/bdwoo0zq3cgDqA0bH4XD1PXw/nVeHdare0b3Hz62Im8n
-         5BJlwgIUpbLUJhS/GyD69w+L52TZYz2nCqClfLvvresX1HmDVJ9lNhluoOmsErD+FO5P
-         MePVASCivw2xMUDQ/K9biWx9KOjU/l6wysfERg7+kvWwmL6yBBHD4CYifN5M0zerEpfA
-         YjcABJ49U8CzbJC95UHD1k/7/hZn9M5YZdowcuP3UJLOO0S74lBs/mMLKcLWkZ+ckoOi
-         3rVA==
-X-Gm-Message-State: AOAM533NWxMINTLEpUqxz7D1ct3dQvW8+brG3/0qfRq+rC/llakyeQvM
-        lG6oe/vyEV5n0Jnq/Wx1Bb9rE25pyLuOlCaIFG/AnQ==
-X-Google-Smtp-Source: ABdhPJx4u1q1FLW556zPlIsLcP302q5ujVZaE+rGeWv7TC31XhI4j+ua8W7rg17I4ZmHnOSV4oPmxDB/frsEThGPkcc=
-X-Received: by 2002:a05:6402:13d4:: with SMTP id a20mr368514edx.161.1597245205349;
- Wed, 12 Aug 2020 08:13:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAHk-=wjzLmMRf=QG-n+1HnxWCx4KTQn9+OhVvUSJ=ZCQd6Y1WA@mail.gmail.com>
- <5C8E0FA8-274E-4B56-9B5A-88E768D01F3A@amacapital.net> <a6cd01ed-918a-0ed7-aa87-0585db7b6852@schaufler-ca.com>
- <CAJfpegvUBpb+C2Ab=CLAwWffOaeCedr-b7ZZKZnKvF4ph1nJrw@mail.gmail.com>
- <CAG48ez3Li+HjJ6-wJwN-A84WT2MFE131Dt+6YiU96s+7NO5wkQ@mail.gmail.com>
- <CAJfpeguh5VaDBdVkV3FJtRsMAvXHWUcBfEpQrYPEuX9wYzg9dA@mail.gmail.com>
- <CAHk-=whE42mFLi8CfNcdB6Jc40tXsG3sR+ThWAFihhBwfUbczA@mail.gmail.com>
- <CAJfpegtXtj2Q1wsR-3eUNA0S=_skzHF0CEmcK_Krd8dtKkWkGA@mail.gmail.com>
- <20200812143957.GQ1236603@ZenIV.linux.org.uk> <CAJfpegvFBdp3v9VcCp-wNDjZnQF3q6cufb-8PJieaGDz14sbBg@mail.gmail.com>
- <20200812150807.GR1236603@ZenIV.linux.org.uk>
-In-Reply-To: <20200812150807.GR1236603@ZenIV.linux.org.uk>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Wed, 12 Aug 2020 17:13:14 +0200
-Message-ID: <CAJfpegsQF1aN4XJ_8j977rnQESxc=Kcn7Z2C+LnVDWXo4PKhTQ@mail.gmail.com>
-Subject: Re: file metadata via fs API (was: [GIT PULL] Filesystem Information)
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Jann Horn <jannh@google.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Karel Zak <kzak@redhat.com>, Jeff Layton <jlayton@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Christian Brauner <christian@brauner.io>,
-        Lennart Poettering <lennart@poettering.net>,
-        Linux API <linux-api@vger.kernel.org>,
-        Ian Kent <raven@themaw.net>,
-        LSM <linux-security-module@vger.kernel.org>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=jd+0O3rfZzFFL8LU24BOfuyCqms8qaWRv2Co74kbUzc=;
+        b=Z0ifID5BJZH11zKUAFT3mZ4Iq7nNsQBvmAvefgSdQosFDYsjdpCBFOot1l57w8FW+K
+         hTJJtzrU8tmOZACbbXp4amDClhh/ShDa9Zq5WA5nkiNqPsDwZ1y9fY3zAdBnfEhGIrYA
+         NWaJUk1g0k6WQUtjyCzGJ6bubFW0JcLWResk6c5xDmweqskewlgk6cppHizaf907bkDc
+         TetSoQ/3+Pjsri6ecofmbrGRFPBRN9Sl8U5bwsraLid9q9AW/ShBPfJIN/t/kjkjxfut
+         6XY62kBMRwRqjPWjBvRpmW5hjDxpkGhvchHd/LV42KWcslemltDoWDr2U+KMqf3pjo7E
+         IJuQ==
+X-Gm-Message-State: AOAM533kq9NaC8U3pP+aLuyZnJon9d/HByEO0dm3KlaZY9aVB20rbfp8
+        35rLKbbL2HJ9jkdU9mKuqSM=
+X-Google-Smtp-Source: ABdhPJwA+sy1dnYb6dWMech9eiLy3w6fKdLRQCmJZxZMNY8ySvEWD9H+y9uw6zP8ha5m9sVYRWMVBw==
+X-Received: by 2002:ac8:7606:: with SMTP id t6mr44005qtq.348.1597245205581;
+        Wed, 12 Aug 2020 08:13:25 -0700 (PDT)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id k5sm2695377qke.18.2020.08.12.08.13.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Aug 2020 08:13:25 -0700 (PDT)
+Subject: Re: [Q] devicetree overlays
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
+        Sven Van Asbroeck <thesven73@gmail.com>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        devicetree <devicetree@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+References: <CAGngYiVa9v9jGPNu4W+KHUnvemKU-BVE89-XNLcWOmoZjAPMTg@mail.gmail.com>
+ <24f1687c-043a-a15e-0be4-8392e7b5c96b@metux.net>
+ <CAGngYiVokqYkEiQTcqAMnvif3qEWkPOb1cAk+4rvwgxBKZ5Ukw@mail.gmail.com>
+ <1acc987a-d844-fca7-77eb-cf1d466f35c1@metux.net>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <fd63b1d4-086c-8bb2-0ba2-19cdf1709e08@gmail.com>
+Date:   Wed, 12 Aug 2020 10:13:24 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <1acc987a-d844-fca7-77eb-cf1d466f35c1@metux.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 5:08 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
->
-> On Wed, Aug 12, 2020 at 04:46:20PM +0200, Miklos Szeredi wrote:
->
-> > > "Can those suckers be passed to
-> > > ...at() as starting points?
-> >
-> > No.
->
-> Lovely.  And what of fchdir() to those?
+On 2020-08-12 08:27, Enrico Weigelt, metux IT consult wrote:
+> On 07.08.20 16:17, Sven Van Asbroeck wrote:
+> 
+> Hi,
+> 
+>> I believe you're asking: "how do I associate device tree nodes to
+>> devices on a dynamically discoverable bus such as USB or PCI" right ?
+>>
+>> I believe that already exists. You can describe the _expected_ pci or
+>> usb topology in the
+>> devicetree. If a device gets detected in a spot on the bus described
+>> in the tree, that
+>> snippet will be automatically associated with this device.
+>>
+>> How to for usb:
+>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/usb/usb-device.txt?h=v5.8
+>>
+>> How to for pci:
+>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/pci/pci.txt?h=v5.8
+> 
+> Thanks, that looks good.
+> 
+> But I've still got another problem: how can I use DT along w/ ACPI ?
 
-Not allowed.
+Some answers from https://elinux.org/Device_tree_plumbers_2016_etherpad
 
-> Are they all non-directories?
-> Because the starting point of ...at() can be simulated that way...
->
-> > >  Can they be bound in namespace?
-> >
-> > No.
-> >
-> > > Can something be bound *on* them?
-> >
-> > No.
-> >
-> > >  What do they have for inodes
-> > > and what maintains their inumbers (and st_dev, while we are at
-> > > it)?
-> >
-> > Irrelevant.  Can be some anon dev + shared inode.
-> >
-> > The only attribute of an attribute that I can think of that makes
-> > sense would be st_size, but even that is probably unimportant.
-> >
-> > >  Can _they_ have secondaries like that (sensu Swift)?
-> >
-> > Reference?
->
-> http://www.online-literature.com/swift/3515/
->         So, naturalists observe, a flea
->         Has smaller fleas that on him prey;
->         And these have smaller still to bite 'em,
->         And so proceed ad infinitum.
-> of course ;-)
-> IOW, can the things in those trees have secondary trees on them, etc.?
-> Not "will they have it in your originally intended use?" - "do we need
-> the architecture of the entire thing to be capable to deal with that?"
+Question: what about device tree on x86
 
-No.
+    Answer: there's already support for DT on x86. But, we should not mix DT and ACPI.
 
->
-> > > Is that a flat space, or can they be directories?"
-> >
-> > Yes it has a directory tree.   But you can't mkdir, rename, link,
-> > symlink, etc on anything in there.
->
-> That kills the "shared inode" part - you'll get deadlocks from
-> hell that way.
 
-No.  The shared inode is not for lookup, just for the open file.
+A controversial topic is ACPI overlays (putting DT in ACPI or ACPI in DT).
 
->  "Can't mkdir" doesn't save you from that.  BTW,
-> what of unlink()?  If the tree shape is not a hardwired constant,
-> you get to decide how it's initially populated...
->
-> Next: what will that tree be attached to?  As in, "what's the parent
-> of its root"?  And while we are at it, what will be the struct mount
-> used with those - same as the original file, something different
-> attached to it, something created on the fly for each pathwalk and
-> lazy-umounted?  And see above re fchdir() - if they can be directories,
-> it's very much in the game.
+    Don't want to have drivers that get part of their info from ACPI and part from DT. That's nuts.
 
-Why does it have to have a struct mount?  It does not have to use
-dentry/mount based path lookup.
 
-Thanks,
-Miklos
+Question: Can you have ACPI and DT at the same time on x86?
+
+    Answer: No. Some ARM64 systems have support for both ACPI and DT, but the system selects one to use at runtime. They are not used at the same time.
+    You can run the DT unit tests on x86.
+
+
+-Frank
+
+> 
+> The scenario goes like this:
+> 
+> * machine boots and probes normally w/ ACPI
+> * device is detected via USB, PCI, DMI, etc -> driver gets active
+> * driver loads (or carries) a DT snippet
+> * devices on the bus are instantiated via this DT snippet
+> 
+> (driver could also be some udev vodoo)
+> 
+> Example a:
+> 
+> * generic usb i2c dongle w/ some i2c devices attached behind it
+> * config (or DT snippet) somewhere in the FS
+> 
+> Example b:
+> 
+> * x86 board driver (eg. apu2/3/4), probed via DMI
+> * just instantiates a bunch of generic drivers and wires up
+>   devices (gpio, leds, keys, ...)
+> 
+> 
+> Do you think we can already do that ?
+> Otherwise, what has to be done to achieve that ?	
+> 
+> 
+> --mtx
+> 
+
