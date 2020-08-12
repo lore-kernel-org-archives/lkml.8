@@ -2,132 +2,361 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DDE3C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 23:55:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF31AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 23:59:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F5A2206C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 23:55:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92F90206C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 23:59:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="lVebb30R"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nVBhsFMc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726546AbgHLXzw (ORCPT
+        id S1726568AbgHLX7c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 19:55:52 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:36232 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726078AbgHLXzw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 19:55:52 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597276551; h=Content-Transfer-Encoding: MIME-Version:
- Message-Id: Date: Subject: Cc: To: From: Sender;
- bh=jmWOs7dUstJ+xpaEhBZheCFEL5CtWJqUMAkhh10xqGo=; b=lVebb30RLkOb2azkQhm5AXMFx/TQecC5OwGPEPFarHWZbsv/CTRj/qknpCZ0hHnqTgtSOvUf
- LiLYmjqasSbZjwnQNYFI682QiH7cmRpSFbikMOduNOzZrISMsEUUVqtGjzjyEeU9l/pENiRc
- VJ/jur4NzzwdBMRH6JmiYjuD+n4=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
- 5f3481862b87d6604943c0c2 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 12 Aug 2020 23:55:50
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C7632C4339C; Wed, 12 Aug 2020 23:55:49 +0000 (UTC)
-Received: from jordan-laptop.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B14B0C433C9;
-        Wed, 12 Aug 2020 23:55:47 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B14B0C433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Gustavo Padovan <gustavo@padovan.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
-Subject: [RFC PATCH v1] dma-fence-array: Deal with sub-fences that are signaled late
-Date:   Wed, 12 Aug 2020 17:55:44 -0600
-Message-Id: <20200812235544.2289895-1-jcrouse@codeaurora.org>
-X-Mailer: git-send-email 2.25.1
+        Wed, 12 Aug 2020 19:59:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50300 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726518AbgHLX7b (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 19:59:31 -0400
+Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1DFBC061384
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 16:59:31 -0700 (PDT)
+Received: by mail-vs1-xe41.google.com with SMTP id 1so2031613vsl.1
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 16:59:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=u7qNOlp2Vur+MwulA2oWBik1rL7NYguSARiGZDfJ2/c=;
+        b=nVBhsFMc9jj0d4x5674347fTxX3ZWCz7PoqyAZ3t4pLNTapgA+qAg0Ha14vSlYc17u
+         pexzSXEHiqxSbuE9Uto+K3yGQQEENH9un3Pv+jWCrHHFn35CJt+XbMLBl3UTxwHX7Hbe
+         clzGbjWjvHz8LaC1tEgMBA+xIeti+12RxvWQo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=u7qNOlp2Vur+MwulA2oWBik1rL7NYguSARiGZDfJ2/c=;
+        b=BBWiT/iOB3Mr4BTD0ZhFFAH06LA6kydBY/r9n9j6DnnveMsTNuGatW4pkGucx6ZNKe
+         cirJy9L4uWXfqKnA6f/fLgdn9KzWWuR5s6CiHvclT7adA4I6fhS2IjwJ/xpVFgqgBH6Y
+         j4tcGtW60W+N2WDEAtynXKigODRuuEUZMrkSIBDYIDv831Mb0fu6s3ecmXnu8Qw3b6WT
+         2UexxdyDrfm04c+gAIctE4iYjv468mTdO4vvY0tty2D4ndNyk2/3JzMeAPsUpmm41xee
+         Y+JPJlOdurcQNrAKTluEtuJIIOknCG+wxXkcqPatgaOCSJuylPEJMlZ0SvQRy91cgnSb
+         uEJw==
+X-Gm-Message-State: AOAM532kEFr+kuSxXKOEwuMlC3pQUcr9EuhFIX9Pfg1wEKE8PrNGO7V5
+        196A0BVb0fhtBjVYTSh0QvYljUcDRHQ=
+X-Google-Smtp-Source: ABdhPJxVYrzjFZbEAruVi+OSaMw+D9AJXqAHsB89Vrqq1PqigVbm0FrKUH06517DgyHRXsRqhifbIg==
+X-Received: by 2002:a05:6102:214c:: with SMTP id h12mr1310104vsg.218.1597276770027;
+        Wed, 12 Aug 2020 16:59:30 -0700 (PDT)
+Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com. [209.85.217.46])
+        by smtp.gmail.com with ESMTPSA id t136sm548604vkb.38.2020.08.12.16.59.28
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Aug 2020 16:59:28 -0700 (PDT)
+Received: by mail-vs1-f46.google.com with SMTP id a1so2027808vsp.4
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 16:59:28 -0700 (PDT)
+X-Received: by 2002:a67:f44f:: with SMTP id r15mr1290216vsn.42.1597276767938;
+ Wed, 12 Aug 2020 16:59:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1595333413-30052-1-git-send-email-sumit.garg@linaro.org> <1595333413-30052-5-git-send-email-sumit.garg@linaro.org>
+In-Reply-To: <1595333413-30052-5-git-send-email-sumit.garg@linaro.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Wed, 12 Aug 2020 16:59:16 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=XjKgbT0df-4AKo7B4Mgn2+oiOtVe3_umQH2FWTMTjsGg@mail.gmail.com>
+Message-ID: <CAD=FV=XjKgbT0df-4AKo7B4Mgn2+oiOtVe3_umQH2FWTMTjsGg@mail.gmail.com>
+Subject: Re: [RFC 4/5] serial: amba-pl011: Enable NMI aware uart port
+To:     Sumit Garg <sumit.garg@linaro.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        linux-serial@vger.kernel.org, kgdb-bugreport@lists.sourceforge.net,
+        Jiri Slaby <jslaby@suse.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an RFC because I'm still trying to grok the correct behavior.
+Hi,
 
-Consider a dma_fence_array created two two fence and signal_on_any is true.
-A reference to dma_fence_array is taken for each waiting fence.
+On Tue, Jul 21, 2020 at 5:11 AM Sumit Garg <sumit.garg@linaro.org> wrote:
+>
+> Allow serial device interrupt to be requested as an NMI during
+> initialization in polling mode. If the irqchip doesn't support serial
+> device interrupt as an NMI then fallback to it being as a normal IRQ.
+>
+> Currently this NMI aware uart port only supports NMI driven programmed
+> IO operation whereas DMA operation isn't supported.
+>
+> And while operating in NMI mode, RX always remains active irrespective
+> of whether corresponding TTY port is active or not. So we directly bail
+> out of startup, shutdown and rx_stop APIs if NMI mode is active.
+>
+> Also, get rid of modification to interrupts enable mask in pl011_hwinit()
+> as now we have a proper way to enable interrupts for NMI entry using
+> pl011_enable_interrupts().
+>
+> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> ---
+>  drivers/tty/serial/amba-pl011.c | 124 ++++++++++++++++++++++++++++++++++++----
+>  1 file changed, 113 insertions(+), 11 deletions(-)
 
-When the client calls dma_fence_wait() only one of the fences is signaled.
-The client returns successfully from the wait and puts it's reference to
-the array fence but the array fence still remains because of the remaining
-un-signaled fence.
+Overall: I ran out of time to do a super full review, but presumably
+you're going to spin this series anyway and I'll look at it again
+then.  For now a few things I noticed below...
 
-Now consider that the unsignaled fence is signaled while the timeline is being
-destroyed much later. The timeline destroy calls dma_fence_signal_locked(). The
-following sequence occurs:
 
-1) dma_fence_array_cb_func is called
+> diff --git a/drivers/tty/serial/amba-pl011.c b/drivers/tty/serial/amba-pl011.c
+> index 0983c5e..5df1c07 100644
+> --- a/drivers/tty/serial/amba-pl011.c
+> +++ b/drivers/tty/serial/amba-pl011.c
+> @@ -41,6 +41,8 @@
+>  #include <linux/sizes.h>
+>  #include <linux/io.h>
+>  #include <linux/acpi.h>
+> +#include <linux/irq.h>
+> +#include <linux/irqdesc.h>
+>
+>  #include "amba-pl011.h"
+>
+> @@ -347,6 +349,10 @@ static int pl011_fifo_to_tty(struct uart_amba_port *uap)
+>                 if (uart_handle_sysrq_char(&uap->port, ch & 255))
+>                         continue;
+>
+> +               if (uart_nmi_handle_char(&uap->port, ch, UART011_DR_OE, ch,
+> +                                        flag))
+> +                       continue;
+> +
+>                 uart_insert_char(&uap->port, ch, UART011_DR_OE, ch, flag);
+>         }
+>
+> @@ -1316,6 +1322,9 @@ static void pl011_stop_rx(struct uart_port *port)
+>         struct uart_amba_port *uap =
+>             container_of(port, struct uart_amba_port, port);
+>
+> +       if (uart_nmi_active(port))
+> +               return;
+> +
+>         uap->im &= ~(UART011_RXIM|UART011_RTIM|UART011_FEIM|
+>                      UART011_PEIM|UART011_BEIM|UART011_OEIM);
+>         pl011_write(uap->im, uap, REG_IMSC);
+> @@ -1604,13 +1613,6 @@ static int pl011_hwinit(struct uart_port *port)
+>                     UART011_FEIS | UART011_RTIS | UART011_RXIS,
+>                     uap, REG_ICR);
+>
+> -       /*
+> -        * Save interrupts enable mask, and enable RX interrupts in case if
+> -        * the interrupt is used for NMI entry.
+> -        */
+> -       uap->im = pl011_read(uap, REG_IMSC);
+> -       pl011_write(UART011_RTIM | UART011_RXIM, uap, REG_IMSC);
+> -
+>         if (dev_get_platdata(uap->port.dev)) {
+>                 struct amba_pl011_data *plat;
+>
+> @@ -1711,6 +1713,96 @@ static void pl011_put_poll_char(struct uart_port *port,
+>         pl011_write(ch, uap, REG_DR);
+>  }
+>
+> +static irqreturn_t pl011_nmi_int(int irq, void *dev_id)
+> +{
 
-2) array->num_pending is 0 (because it was set to 1 due to signal_on_any) so the
-callback function calls dma_fence_put() instead of triggering the irq work
+I wish there was a better way to share code between this and
+pl011_int(), but I guess it'd be too ugly?  If nothing else it feels
+like you should do something to make it more obvious to anyone looking
+at them that they are sister functions and any change to one of them
+should be reflected in the other.  Maybe they should be logically next
+to each other?
 
-3) The array fence is released which in turn puts the lingering fence which is
-then released
 
-4) deadlock with the timeline
+> +       struct uart_amba_port *uap = dev_id;
+> +       unsigned int status, pass_counter = AMBA_ISR_PASS_LIMIT;
+> +       int handled = 0;
+> +
+> +       status = pl011_read(uap, REG_MIS);
+> +       if (status) {
+> +               do {
+> +                       check_apply_cts_event_workaround(uap);
+> +
+> +                       pl011_write(status, uap, REG_ICR);
+> +
+> +                       if (status & (UART011_RTIS|UART011_RXIS)) {
+> +                               pl011_fifo_to_tty(uap);
+> +                               irq_work_queue(&uap->port.nmi_state.rx_work);
 
-I think that we can fix this with the attached patch. Once the fence is
-signaled signaling it again in the irq worker shouldn't hurt anything. The only
-gotcha might be how the error is propagated - I wasn't quite sure the intent of
-clearing it only after getting to the irq worker.
+It feels like it might be beneficial to not call irq_work_queue() in a
+loop.  It doesn't hurt but it feels like, at least, it's going to keep
+doing a bunch of atomic operations.  It's not like it'll cause the
+work to run any sooner because it has to run on the same CPU, right?
 
-Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
----
 
- drivers/dma-buf/dma-fence-array.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+> +                       }
+> +
+> +                       if (status & UART011_TXIS)
+> +                               irq_work_queue(&uap->port.nmi_state.tx_work);
 
-diff --git a/drivers/dma-buf/dma-fence-array.c b/drivers/dma-buf/dma-fence-array.c
-index d3fbd950be94..b8829b024255 100644
---- a/drivers/dma-buf/dma-fence-array.c
-+++ b/drivers/dma-buf/dma-fence-array.c
-@@ -46,8 +46,6 @@ static void irq_dma_fence_array_work(struct irq_work *wrk)
- {
- 	struct dma_fence_array *array = container_of(wrk, typeof(*array), work);
- 
--	dma_fence_array_clear_pending_error(array);
--
- 	dma_fence_signal(&array->base);
- 	dma_fence_put(&array->base);
- }
-@@ -61,10 +59,10 @@ static void dma_fence_array_cb_func(struct dma_fence *f,
- 
- 	dma_fence_array_set_pending_error(array, f->error);
- 
--	if (atomic_dec_and_test(&array->num_pending))
--		irq_work_queue(&array->work);
--	else
--		dma_fence_put(&array->base);
-+	if (!atomic_dec_and_test(&array->num_pending))
-+		dma_fence_array_set_pending_error(array, f->error);
-+
-+	irq_work_queue(&array->work);
- }
- 
- static bool dma_fence_array_enable_signaling(struct dma_fence *fence)
--- 
-2.25.1
+Here too...
 
+
+> +
+> +                       if (pass_counter-- == 0)
+> +                               break;
+> +
+> +                       status = pl011_read(uap, REG_MIS);
+> +               } while (status != 0);
+> +               handled = 1;
+> +       }
+> +
+> +       return IRQ_RETVAL(handled);
+> +}
+> +
+> +static int pl011_allocate_nmi(struct uart_amba_port *uap)
+> +{
+> +       int ret;
+> +
+> +       irq_set_status_flags(uap->port.irq, IRQ_NOAUTOEN);
+> +       ret = request_nmi(uap->port.irq, pl011_nmi_int, IRQF_PERCPU,
+> +                         "uart-pl011", uap);
+> +       if (ret) {
+> +               irq_clear_status_flags(uap->port.irq, IRQ_NOAUTOEN);
+> +               return ret;
+> +       }
+> +
+> +       enable_irq(uap->port.irq);
+> +
+> +       return ret;
+> +}
+> +
+> +static void pl011_tx_irq_callback(struct uart_port *port)
+> +{
+> +       struct uart_amba_port *uap =
+> +           container_of(port, struct uart_amba_port, port);
+> +
+> +       spin_lock(&port->lock);
+> +       pl011_tx_chars(uap, true);
+> +       spin_unlock(&port->lock);
+> +}
+> +
+> +static int pl011_poll_init(struct uart_port *port)
+> +{
+> +       struct uart_amba_port *uap =
+> +           container_of(port, struct uart_amba_port, port);
+> +       int retval;
+> +
+> +       retval = pl011_hwinit(port);
+> +       if (retval)
+> +               goto clk_dis;
+
+I don't think you want "goto clk_dis" here.
+
+
+> +
+> +       /* In case NMI isn't supported, fallback to normal interrupt mode */
+> +       retval = pl011_allocate_nmi(uap);
+> +       if (retval)
+> +               return 0;
+> +
+> +       retval = uart_nmi_state_init(port);
+> +       if (retval)
+> +               goto clk_dis;
+
+Wouldn't you also need to to somehow call free_nmi() in the error case?
+
+
+> +       port->nmi_state.tx_irq_callback = pl011_tx_irq_callback;
+> +       uart_set_nmi_active(port, true);
+> +
+> +       pl011_enable_interrupts(uap);
+> +
+> +       return 0;
+> +
+> + clk_dis:
+> +       clk_disable_unprepare(uap->clk);
+> +       return retval;
+> +}
+> +
+>  #endif /* CONFIG_CONSOLE_POLL */
+>
+>  static bool pl011_split_lcrh(const struct uart_amba_port *uap)
+> @@ -1736,8 +1828,6 @@ static void pl011_write_lcr_h(struct uart_amba_port *uap, unsigned int lcr_h)
+>
+>  static int pl011_allocate_irq(struct uart_amba_port *uap)
+>  {
+> -       pl011_write(uap->im, uap, REG_IMSC);
+> -
+>         return request_irq(uap->port.irq, pl011_int, IRQF_SHARED, "uart-pl011", uap);
+>  }
+>
+> @@ -1748,6 +1838,9 @@ static int pl011_startup(struct uart_port *port)
+>         unsigned int cr;
+>         int retval;
+>
+> +       if (uart_nmi_active(port))
+> +               return 0;
+> +
+>         retval = pl011_hwinit(port);
+>         if (retval)
+>                 goto clk_dis;
+> @@ -1790,6 +1883,9 @@ static int sbsa_uart_startup(struct uart_port *port)
+>                 container_of(port, struct uart_amba_port, port);
+>         int retval;
+>
+> +       if (uart_nmi_active(port))
+> +               return 0;
+> +
+>         retval = pl011_hwinit(port);
+>         if (retval)
+>                 return retval;
+> @@ -1859,6 +1955,9 @@ static void pl011_shutdown(struct uart_port *port)
+>         struct uart_amba_port *uap =
+>                 container_of(port, struct uart_amba_port, port);
+>
+> +       if (uart_nmi_active(port))
+> +               return;
+> +
+>         pl011_disable_interrupts(uap);
+>
+>         pl011_dma_shutdown(uap);
+> @@ -1891,6 +1990,9 @@ static void sbsa_uart_shutdown(struct uart_port *port)
+>         struct uart_amba_port *uap =
+>                 container_of(port, struct uart_amba_port, port);
+>
+> +       if (uart_nmi_active(port))
+> +               return;
+> +
+>         pl011_disable_interrupts(uap);
+>
+>         free_irq(uap->port.irq, uap);
+> @@ -2142,7 +2244,7 @@ static const struct uart_ops amba_pl011_pops = {
+>         .config_port    = pl011_config_port,
+>         .verify_port    = pl011_verify_port,
+>  #ifdef CONFIG_CONSOLE_POLL
+> -       .poll_init     = pl011_hwinit,
+> +       .poll_init     = pl011_poll_init,
+
+Do we need to add a "free" at this point?
+
+
+
+>         .poll_get_char = pl011_get_poll_char,
+>         .poll_put_char = pl011_put_poll_char,
+>  #endif
+> @@ -2173,7 +2275,7 @@ static const struct uart_ops sbsa_uart_pops = {
+>         .config_port    = pl011_config_port,
+>         .verify_port    = pl011_verify_port,
+>  #ifdef CONFIG_CONSOLE_POLL
+> -       .poll_init     = pl011_hwinit,
+> +       .poll_init     = pl011_poll_init,
+>         .poll_get_char = pl011_get_poll_char,
+>         .poll_put_char = pl011_put_poll_char,
+>  #endif
+> --
+> 2.7.4
+>
