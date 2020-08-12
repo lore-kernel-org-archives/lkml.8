@@ -2,280 +2,169 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-22.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECFFBC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 17:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06DA3C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 17:42:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C981620781
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 17:41:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597254099;
-	bh=H7SmPrQFcNVHreCvHfdy3YNxTUfjnZHYw2FXjY44OZw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nfROzrEy1KatXGSAZEhajTZrlp4Ve5BwtfAFzwoixD+xOIRoLRQIF9A8TyMAhu9ut
-	 jI+gjIsgfxEhgGb1QlWBE21FVt8hwr+1JyNjuAD7Ep4879DrTmeNA7gxBv/u+BLuOC
-	 mwSaP6cxQ/EYYW6EADJKnRXKjEZQ+54df37CsVn4=
+	by mail.kernel.org (Postfix) with ESMTP id C6BB120781
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 17:42:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jahJjF01"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726506AbgHLRlh (ORCPT
+        id S1726631AbgHLRms (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 13:41:37 -0400
-Received: from conuserg-11.nifty.com ([210.131.2.78]:55774 "EHLO
-        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726394AbgHLRlg (ORCPT
+        Wed, 12 Aug 2020 13:42:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48060 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726276AbgHLRmr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 13:41:36 -0400
-Received: from oscar.flets-west.jp (softbank126025067101.bbtec.net [126.25.67.101]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id 07CHeC4F012279;
-        Thu, 13 Aug 2020 02:40:15 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 07CHeC4F012279
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1597254015;
-        bh=WQk02UTNvMLHboDAPexx7WW+ma2p9oZsZaIcALTQcys=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LksSuEbYD9yqSRwqWiMIp9LwGB78uPMC8MqqbvYFmpa8JVUXdwWQ+djgfeYX/qLhy
-         6GJXs7kzrmmpw5+wVCH1GTgejzvA/SadrQXqDUmIaXo8aC/lPpu5LAmZ/MJLiOWpLD
-         YjsvAATI7tuKJNdBOnDxZwO+3MXk94NcvoCZ9m06xap6MI+B1b6I0b0kCKRLGf9IWf
-         ldVTAiNp7Mc7vfWOByC9TWK69PuPG5xDeAcxKi+m3wAE3qoCebvE12q81nG5LbQ+80
-         8RvR5Qz112w5M+StyW+sbrJCGvcOMhgGcBDJe5SwKIPYjSgW2eDCmhKWYracpcto11
-         TRmD89Len33gg==
-X-Nifty-SrcIP: [126.25.67.101]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Nathan Huckleberry <nhuck@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Roeder <tmroeder@google.com>,
-        clang-built-linux@googlegroups.com,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] Makefile: Add clang-tidy and static analyzer support to makefile
-Date:   Thu, 13 Aug 2020 02:39:58 +0900
-Message-Id: <20200812173958.2307251-4-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200812173958.2307251-1-masahiroy@kernel.org>
-References: <20200812173958.2307251-1-masahiroy@kernel.org>
+        Wed, 12 Aug 2020 13:42:47 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4769C061384
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 10:42:45 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id f10so1428210plj.8
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 10:42:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=a7lVOCmkI+O7/barsvdFAonBSJY77xfLcdY4hWtrU8E=;
+        b=jahJjF019IWeZ+BNfrxeznJTrfR1c2QYGhhSLhuAHR5iJp24yKoX7RP6BGWItP1ekC
+         ERyp/j0bljsW8ojmOumYe2oGwKKa9OcJgL4uQMtWduQgWjYFs6BYMCLdcpUfiUVi1RwI
+         bHzFigpwBmCXiYSQMlqhPv5daXMIYO8Z+USVnvoK5XP143Iu1bWnt66+F3POP8uJA8GH
+         lPFBb4y2pG5a2ovbbl325favh4TsFqlLDXfZGYcs/lKzrdvrCt8TWdsNGX/hQAJYWxtS
+         duqPqvQRKZYysxAkjEQGTuebp/R3BBcgE8Q7wr3bKtX3AyAXmQvwbO8eQQtWN0ceqSR9
+         WJxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=a7lVOCmkI+O7/barsvdFAonBSJY77xfLcdY4hWtrU8E=;
+        b=rYgllQlotVMxL3+sB+m0oGNloFFBh2GupDq3YCKXHKFGK3HFMVo9L3fYPyrYBDd8vT
+         5V1NN3wBen7nntnOVE6sPmFnfcUbgTCNrFHbDPbttfY/NfDWU/L2Q/u6fH3Da1YVeNaZ
+         6/2W6TPLVAz1Erk/YznZ9SHtPqRGdUdMba8zTneS2+zknNZdsS6TxgCu1Rx8Hi9SSW4i
+         nQ+G/tyvvJGo8Xoc8YBfVgTuCgjDGR0A8dKxsXylWCfpkUFPzkmMFlCF82eHaXVJbNht
+         7zdBqPJv7z5ZiaS43j9twjLMk4moUMEkhP433BWmfUy7BKkxPTVl02luR+c4yGzsAXC+
+         SVGA==
+X-Gm-Message-State: AOAM531AtSTZxPAruCTp93vi/iCufxPYL6eBgnqhGtyuOlsqE6DVw2nx
+        SPEno8HgN2/agMu9mIAMjej9gNKZq6Htgw3hN84jcA==
+X-Google-Smtp-Source: ABdhPJxU0a+JqCX/ZqStj24HUP9zNoor7jR8UWBY+W4ekdzMs7E+T9VovrtJW7ZoWh9PxIgaBi55OH0pPDC1sAobhI4=
+X-Received: by 2002:a17:90a:3ad1:: with SMTP id b75mr1067394pjc.25.1597254165017;
+ Wed, 12 Aug 2020 10:42:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200812004158.GA1447296@rani.riverdale.lan> <20200812004308.1448603-1-nivedita@alum.mit.edu>
+In-Reply-To: <20200812004308.1448603-1-nivedita@alum.mit.edu>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 12 Aug 2020 10:42:34 -0700
+Message-ID: <CAKwvOd==e69E82FY937E5cSX5tPGgLGTLenWQR-GUUVFN9=epA@mail.gmail.com>
+Subject: Re: [PATCH v2] x86/boot/compressed: Disable relocation relaxation
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Fangrui Song <maskray@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        e5ten.arch@gmail.com,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "# 3.4.x" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Huckleberry <nhuck@google.com>
+On Tue, Aug 11, 2020 at 5:43 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
+>
+> The x86-64 psABI [0] specifies special relocation types
+> (R_X86_64_[REX_]GOTPCRELX) for indirection through the Global Offset
+> Table, semantically equivalent to R_X86_64_GOTPCREL, which the linker
+> can take advantage of for optimization (relaxation) at link time. This
+> is supported by LLD and binutils versions 2.26 onwards.
+>
+> The compressed kernel is position-independent code, however, when using
+> LLD or binutils versions before 2.27, it must be linked without the -pie
+> option. In this case, the linker may optimize certain instructions into
+> a non-position-independent form, by converting foo@GOTPCREL(%rip) to $foo.
+>
+> This potential issue has been present with LLD and binutils-2.26 for a
+> long time, but it has never manifested itself before now:
+> - LLD and binutils-2.26 only relax
+>         movq    foo@GOTPCREL(%rip), %reg
+>   to
+>         leaq    foo(%rip), %reg
+>   which is still position-independent, rather than
+>         mov     $foo, %reg
+>   which is permitted by the psABI when -pie is not enabled.
+> - gcc happens to only generate GOTPCREL relocations on mov instructions.
+> - clang does generate GOTPCREL relocations on non-mov instructions, but
+>   when building the compressed kernel, it uses its integrated assembler
+>   (due to the redefinition of KBUILD_CFLAGS dropping -no-integrated-as),
+>   which has so far defaulted to not generating the GOTPCRELX
+>   relocations.
+>
+> Nick Desaulniers reports [1,2]:
+>   A recent change [3] to a default value of configuration variable
+>   (ENABLE_X86_RELAX_RELOCATIONS OFF -> ON) in LLVM now causes Clang's
+>   integrated assembler to emit R_X86_64_GOTPCRELX/R_X86_64_REX_GOTPCRELX
+>   relocations. LLD will relax instructions with these relocations based
+>   on whether the image is being linked as position independent or not.
+>   When not, then LLD will relax these instructions to use absolute
+>   addressing mode (R_RELAX_GOT_PC_NOPIC). This causes kernels built with
+>   Clang and linked with LLD to fail to boot.
+>
+> Patch series [4] is a solution to allow the compressed kernel to be
+> linked with -pie unconditionally, but even if merged is unlikely to be
+> backported. As a simple solution that can be applied to stable as well,
+> prevent the assembler from generating the relaxed relocation types using
+> the -mrelax-relocations=no option. For ease of backporting, do this
+> unconditionally.
+>
+> [0] https://gitlab.com/x86-psABIs/x86-64-ABI/-/blob/master/x86-64-ABI/linker-optimization.tex#L65
+> [1] https://lore.kernel.org/lkml/20200807194100.3570838-1-ndesaulniers@google.com/
+> [2] https://github.com/ClangBuiltLinux/linux/issues/1121
+> [3] https://reviews.llvm.org/rGc41a18cf61790fc898dcda1055c3efbf442c14c0
+> [4] https://lore.kernel.org/lkml/20200731202738.2577854-1-nivedita@alum.mit.edu/
+>
+> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+> Reported-by: Nick Desaulniers <ndesaulniers@google.com>
+> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+> Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
 
-This patch adds clang-tidy and the clang static-analyzer as make
-targets. The goal of this patch is to make static analysis tools
-usable and extendable by any developer or researcher who is familiar
-with basic c++.
+LGTM
 
-The current static analysis tools require intimate knowledge of the
-internal workings of the static analysis. Clang-tidy and the clang
-static analyzers expose an easy to use api and allow users unfamiliar
-with clang to write new checks with relative ease.
+> ---
+>  arch/x86/boot/compressed/Makefile | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+> index 3962f592633d..ff7894f39e0e 100644
+> --- a/arch/x86/boot/compressed/Makefile
+> +++ b/arch/x86/boot/compressed/Makefile
+> @@ -43,6 +43,8 @@ KBUILD_CFLAGS += -Wno-pointer-sign
+>  KBUILD_CFLAGS += $(call cc-option,-fmacro-prefix-map=$(srctree)/=)
+>  KBUILD_CFLAGS += -fno-asynchronous-unwind-tables
+>  KBUILD_CFLAGS += -D__DISABLE_EXPORTS
+> +# Disable relocation relaxation in case the link is not PIE.
+> +KBUILD_CFLAGS += $(call as-option,-Wa$(comma)-mrelax-relocations=no)
+>
+>  KBUILD_AFLAGS  := $(KBUILD_CFLAGS) -D__ASSEMBLY__
+>  GCOV_PROFILE := n
+> --
+> 2.26.2
+>
 
-===Clang-tidy===
 
-Clang-tidy is an easily extendable 'linter' that runs on the AST.
-Clang-tidy checks are easy to write and understand. A check consists of
-two parts, a matcher and a checker. The matcher is created using a
-domain specific language that acts on the AST
-(https://clang.llvm.org/docs/LibASTMatchersReference.html).  When AST
-nodes are found by the matcher a callback is made to the checker. The
-checker can then execute additional checks and issue warnings.
-
-Here is an example clang-tidy check to report functions that have calls
-to local_irq_disable without calls to local_irq_enable and vice-versa.
-Functions flagged with __attribute((annotation("ignore_irq_balancing")))
-are ignored for analysis. (https://reviews.llvm.org/D65828)
-
-===Clang static analyzer===
-
-The clang static analyzer is a more powerful static analysis tool that
-uses symbolic execution to find bugs. Currently there is a check that
-looks for potential security bugs from invalid uses of kmalloc and
-kfree. There are several more general purpose checks that are useful for
-the kernel.
-
-The clang static analyzer is well documented and designed to be
-extensible.
-(https://clang-analyzer.llvm.org/checker_dev_manual.html)
-(https://github.com/haoNoQ/clang-analyzer-guide/releases/download/v0.1/clang-analyzer-guide-v0.1.pdf)
-
-The main draw of the clang tools is how accessible they are. The clang
-documentation is very nice and these tools are built specifically to be
-easily extendable by any developer. They provide an accessible method of
-bug-finding and research to people who are not overly familiar with the
-kernel codebase.
-
-Signed-off-by: Nathan Huckleberry <nhuck@google.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Tested-by: Nick Desaulniers <ndesaulniers@google.com>
-Tested-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
-
- MAINTAINERS                                   |  1 +
- Makefile                                      | 20 ++++-
- .../{ => clang-tools}/gen_compile_commands.py |  0
- scripts/clang-tools/run-clang-tools.py        | 74 +++++++++++++++++++
- 4 files changed, 93 insertions(+), 2 deletions(-)
- rename scripts/{ => clang-tools}/gen_compile_commands.py (100%)
- create mode 100755 scripts/clang-tools/run-clang-tools.py
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f77df02e4121..7ffddfecc711 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4246,6 +4246,7 @@ W:	https://clangbuiltlinux.github.io/
- B:	https://github.com/ClangBuiltLinux/linux/issues
- C:	irc://chat.freenode.net/clangbuiltlinux
- F:	Documentation/kbuild/llvm.rst
-+F:	scripts/clang-tools/
- K:	\b(?i:clang|llvm)\b
- 
- CLEANCACHE API
-diff --git a/Makefile b/Makefile
-index 4d65affb6917..95cdbffa29e5 100644
---- a/Makefile
-+++ b/Makefile
-@@ -634,7 +634,7 @@ endif
- # in addition to whatever we do anyway.
- # Just "make" or "make all" shall build modules as well
- 
--ifneq ($(filter all modules nsdeps %compile_commands.json,$(MAKECMDGOALS)),)
-+ifneq ($(filter all modules nsdeps %compile_commands.json clang-%,$(MAKECMDGOALS)),)
-   KBUILD_MODULES := 1
- endif
- 
-@@ -1572,6 +1572,8 @@ help:
- 	@echo  '  export_report   - List the usages of all exported symbols'
- 	@echo  '  headerdep       - Detect inclusion cycles in headers'
- 	@echo  '  coccicheck      - Check with Coccinelle'
-+	@echo  '  clang-analyzer  - Check with clang static analyzer'
-+	@echo  '  clang-tidy      - Check with clang-tidy'
- 	@echo  ''
- 	@echo  'Tools:'
- 	@echo  '  nsdeps          - Generate missing symbol namespace dependencies'
-@@ -1837,13 +1839,27 @@ nsdeps: modules
- quiet_cmd_gen_compile_commands = GEN     $@
-       cmd_gen_compile_commands = $(PYTHON3) $< -a $(AR) -o $@ $(filter-out $<, $(real-prereqs))
- 
--$(extmod-prefix)compile_commands.json: scripts/gen_compile_commands.py \
-+$(extmod-prefix)compile_commands.json: scripts/clang-tools/gen_compile_commands.py \
- 	$(if $(KBUILD_EXTMOD),,$(KBUILD_VMLINUX_OBJS) $(KBUILD_VMLINUX_LIBS)) \
- 	$(if $(CONFIG_MODULES), $(MODORDER)) FORCE
- 	$(call if_changed,gen_compile_commands)
- 
- targets += $(extmod-prefix)compile_commands.json
- 
-+PHONY += clang-tidy clang-analyzer
-+
-+ifdef CONFIG_CC_IS_CLANG
-+quiet_cmd_clang_tools = CHECK   $<
-+      cmd_clang_tools = $(PYTHON3) $(srctree)/scripts/clang-tools/run-clang-tools.py $@ $<
-+
-+clang-tidy clang-analyzer: $(extmod-prefix)compile_commands.json
-+	$(call cmd,clang_tools)
-+else
-+clang-tidy clang-analyzer:
-+	@echo "$@ requires CC=clang" >&2
-+	@false
-+endif
-+
- # Scripts to check various things for consistency
- # ---------------------------------------------------------------------------
- 
-diff --git a/scripts/gen_compile_commands.py b/scripts/clang-tools/gen_compile_commands.py
-similarity index 100%
-rename from scripts/gen_compile_commands.py
-rename to scripts/clang-tools/gen_compile_commands.py
-diff --git a/scripts/clang-tools/run-clang-tools.py b/scripts/clang-tools/run-clang-tools.py
-new file mode 100755
-index 000000000000..fa7655c7cec0
---- /dev/null
-+++ b/scripts/clang-tools/run-clang-tools.py
-@@ -0,0 +1,74 @@
-+#!/usr/bin/env python
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Copyright (C) Google LLC, 2020
-+#
-+# Author: Nathan Huckleberry <nhuck@google.com>
-+#
-+"""A helper routine run clang-tidy and the clang static-analyzer on
-+compile_commands.json.
-+"""
-+
-+import argparse
-+import json
-+import multiprocessing
-+import os
-+import subprocess
-+import sys
-+
-+
-+def parse_arguments():
-+    """Set up and parses command-line arguments.
-+    Returns:
-+        args: Dict of parsed args
-+        Has keys: [path, type]
-+    """
-+    usage = """Run clang-tidy or the clang static-analyzer on a
-+        compilation database."""
-+    parser = argparse.ArgumentParser(description=usage)
-+
-+    type_help = "Type of analysis to be performed"
-+    parser.add_argument("type",
-+                        choices=["clang-tidy", "clang-analyzer"],
-+                        help=type_help)
-+    path_help = "Path to the compilation database to parse"
-+    parser.add_argument("path", type=str, help=path_help)
-+
-+    return parser.parse_args()
-+
-+
-+def init(l, a):
-+    global lock
-+    global args
-+    lock = l
-+    args = a
-+
-+
-+def run_analysis(entry):
-+    # Disable all checks, then re-enable the ones we want
-+    checks = "-checks=-*,"
-+    if args.type == "clang-tidy":
-+        checks += "linuxkernel-*"
-+    else:
-+        checks += "clang-analyzer-*"
-+    p = subprocess.run(["clang-tidy", "-p", args.path, checks, entry["file"]],
-+                       stdout=subprocess.PIPE,
-+                       stderr=subprocess.STDOUT,
-+                       cwd=entry["directory"])
-+    with lock:
-+        sys.stderr.buffer.write(p.stdout)
-+
-+
-+def main():
-+    args = parse_arguments()
-+
-+    lock = multiprocessing.Lock()
-+    pool = multiprocessing.Pool(initializer=init, initargs=(lock, args))
-+    # Read JSON data into the datastore variable
-+    with open(args.path, "r") as f:
-+        datastore = json.load(f)
-+        pool.map(run_analysis, datastore)
-+
-+
-+if __name__ == "__main__":
-+    main()
 -- 
-2.25.1
-
+Thanks,
+~Nick Desaulniers
