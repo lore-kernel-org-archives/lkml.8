@@ -2,127 +2,112 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB126C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:56:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD84C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F516206B2
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:56:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A5E0206B2
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:58:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="OSWjkt3m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728028AbgHLN4q (ORCPT
+        id S1726673AbgHLN6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 09:56:46 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:44600 "EHLO honk.sigxcpu.org"
+        Wed, 12 Aug 2020 09:58:09 -0400
+Received: from mout.gmx.net ([212.227.17.21]:49623 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726472AbgHLN4o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 09:56:44 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id DEF02FB04;
-        Wed, 12 Aug 2020 15:56:39 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id d1YLBnojmT0o; Wed, 12 Aug 2020 15:56:38 +0200 (CEST)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 8DD1A45770; Wed, 12 Aug 2020 15:56:37 +0200 (CEST)
-Date:   Wed, 12 Aug 2020 15:56:37 +0200
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc:     Swapnil Jakhade <sjakhade@cadence.com>, airlied@linux.ie,
-        daniel@ffwll.ch, Laurent.pinchart@ideasonboard.com,
-        robh+dt@kernel.org, a.hajda@samsung.com, narmstrong@baylibre.com,
-        jonas@kwiboo.se, jernej.skrabec@siol.net,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mparab@cadence.com,
-        yamonkar@cadence.com, praneeth@ti.com, nsekhar@ti.com,
-        jsarha@ti.com, sandor.yu@nxp.com
-Subject: Re: [PATCH v8 0/3] drm: Add support for Cadence MHDP DPI/DP bridge
- and J721E wrapper.
-Message-ID: <20200812135637.GA107602@bogon.m.sigxcpu.org>
-References: <1596713672-8146-1-git-send-email-sjakhade@cadence.com>
- <20200812083937.GA8816@bogon.m.sigxcpu.org>
- <3bcbbb0b-ee04-0f1e-6c54-97b01c552d82@ti.com>
+        id S1726492AbgHLN6I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 09:58:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1597240675;
+        bh=9VcFNbLqkkrfNbCLxuWEXQ2U74fNHzcMjg2FPaMwkKs=;
+        h=X-UI-Sender-Class:Date:From:To:Subject;
+        b=OSWjkt3mfoOzAdjZDs2unwg+edBufwHL4umdD2e/1qEiR3KCBsmTBvdIiS4tgF7Uk
+         NTnOzi/O73e7E6xu/vtsRHZ8gceQ/yi8ThsiyKXPMC3hK3CIVLy1mSrvgWig42alcg
+         znSbdPVdHGjpBPGU+DJQfvOoqM5VHknpl9iUqXLY=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from ls3530.fritz.box ([92.116.153.63]) by mail.gmx.com (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1M6UZl-1k3NEI2cZN-006xEf; Wed, 12
+ Aug 2020 15:57:55 +0200
+Date:   Wed, 12 Aug 2020 15:57:50 +0200
+From:   Helge Deller <deller@gmx.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        John David Anglin <dave.anglin@bell.net>
+Subject: [GIT PULL] parisc architecture updates for kernel v5.9
+Message-ID: <20200812135750.GA17014@ls3530.fritz.box>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3bcbbb0b-ee04-0f1e-6c54-97b01c552d82@ti.com>
+X-Provags-ID: V03:K1:/y1QGhODqNeXS1fXn+2WMCfX7ZEgRCD54/dnx4wD74wKJOBqkf0
+ qKiP2IM2YyEAjVAvIRFufQhxaxXLmUKGphrkLMqA7isW4PIe8ZVXunVDS/nWakpJswg5gpw
+ CiA9O8obbqIUL01nfWqxlba6B56yjJsHeUbZuuXYiE1c/4R+LLmF4Q1plezV/4kqDU/EDDW
+ UCZcudgVTAS7lAIFeb48A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:qzVejtT3Pw4=:7o1UnmIZxuvgnkb9+dAaV7
+ 61Yyy0WzTyM4Y3RcaPxkckLk5eAWKC0fmKD3R+KMMnKQOumCJswM50xa7E/aZbfwuDJa3IT5D
+ aPDjX23Ey375OziJ+oJbEbjgMoHeBLJFLc/8aGD5DgSKMHePVFzU7UPxhhXd99F7CAehBo8By
+ aRKzxKqrrr/vAOCoMzAQjni9IUQR5zClS//1Oz0Yxs7LyJswBEHJq9M64sKeZjKK3DejFqi+J
+ 46/OWtE9rbbFtyUpROPVP1TXO/nofr1p+BALZ1ewHs9S0P8updImcnmqziYSiWg86HyHRsby1
+ q/vKVW1J/IILQ8XMJeWWwMIK+GPRNgK8ji8tL1csJvIFufGrmECqm4GiTDxe+2BTtxuoHJ+A0
+ 7QnfKfMcep8Lq3IEFv9ZXe8qBarhhZwOmSoO1+FQJbncqWQ2aiEiIDv3PaqPR3NpYKPfKe+uI
+ h6+rWnt2meDvojcfOX/memSCZUJfzWQUAoJZTJcQTpMnCWRWQOtiygtwbfZDd4/xrgB6UVJly
+ Nlg5kGJtrr8rx1WE+/LPGiTdrPqABL1Z6ANLKhNW7zBaIAc+SIBCWVVAvROEAfpy4m8s0ycjz
+ MkETTIrUUJC8ZDWDR0HDGfFl7+FycCd/6gUabKD77BaTphb3D6mnBcdj0HpuhKyeJXJCOSokm
+ 7TNqAIO7eoSskH0hSKjMH1+sCjWaTZJQVxaMQRKOn5hB9Qnwd5+p14vhLxWxxzjY8Ya5yORHo
+ PF6ZsSz01IPpNeCTOyBvO8VAs6mDU1XmoeB69JZ2d936ooCy+nEyKVUbZOG3jpxFsSFzQEBbL
+ 0Lt/QUMqN5TrFTzUztBg5c5EJC/9NfKIz2bJyxUBnKBGtXmYADxLhnKAFiRJOZ8QyNf727u5q
+ ejzXhW80nGl3gWipYZXBRCfL3qlrbMkOecnClXoeJo7WYfPtdErTaF15BB15F0bXcjj1uG6PU
+ dJpEG2vofSuXmtY5ORC7NPDJ8sU8Ke2dRvc1A/x/s1fMuqCs7U//1Kp4t3PqEW/57biBv3+1U
+ PcjlbmMgH3LbLE5DEDbN1gPbz96xx3rmT1tf5hq+Z6iGownblKhEvsPJOH+t0HAdURCP95+pU
+ IxTOrOn9xopY4KgAbAJaMPwGVcWW+6haHt1krxw+kVvJP+nmadKtXKgMWFie4YgwzEkDzKi5U
+ YchjMVtNVAF53vOpqWw3RFmhADt7jYl3W0VNWP+yo5R0wm80f2F0oZsyBuz5+6jNHC460YP66
+ Pw85O/K+mTZTnM1nO
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-On Wed, Aug 12, 2020 at 01:47:42PM +0300, Tomi Valkeinen wrote:
-> Hi Guido,
-> 
-> On 12/08/2020 11:39, Guido Günther wrote:
-> > Hi,
-> > On Thu, Aug 06, 2020 at 01:34:29PM +0200, Swapnil Jakhade wrote:
-> >> This patch series adds new DRM bridge driver for Cadence MHDP DPI/DP
-> >> bridge. The Cadence Display Port IP is also referred as MHDP (Mobile High
-> >> Definition Link, High-Definition Multimedia Interface, Display Port).
-> >> Cadence Display Port complies with VESA DisplayPort (DP) and embedded
-> >> Display Port (eDP) standards.
-> > 
-> > Is there any relation to the cadence mhdp ip core used inthe imx8mq:
-> > 
-> >     https://lore.kernel.org/dri-devel/cover.1590982881.git.Sandor.yu@nxp.com/
-> > 
-> > It looks very similar in several places so should that use the same driver?
-> > Cheers,
-> >  -- Guido
-> 
-> Interesting.
-> 
-> So the original Cadence DP patches for TI SoCs did create a common driver with Rockchip's older mhdp
-> driver. And looks like the IMX series points to an early version of that patch ("drm/rockchip:
-> prepare common code for cdns and rk dpi/dp driver").
-> 
-> We gave up on that as the IPs did have differences and the firmwares used were apparently quite
-> different. The end result was very difficult to maintain, especially as (afaik) none of the people
-> involved had relevant Rockchip HW.
+Hi Linus,
 
-Is the `struct mhdp_platform_ops` a leftover from that? Can that be dropped?
+please pull another set of patches for the parisc architecture for kernel 5.9-rc1 from:
 
-> The idea was to get a stable DP driver for TI SoCs ready and upstream, and then carefully try to
-> create common parts with Rockchip's driver in small pieces.
+  git://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux.git parisc-5.9-2
 
-I wonder how imx8 would best blend into this? First thing will likely be
-to upstream the phy code in driveres/phy/ so a modified version of this bridge
-driver could call into that, then go and look for common patterns.
+This patchset includes:
+- Oscar Carter contributed a patch which fixes parisc's usage of
+  dereference_function_descriptor() and thus will allow using the
+  -Wcast-function-type compiler option in the top-level Makefile
+- Sven Schnelle fixed a bug in the SBA code to prevent crashes during kexec
+- John David Anglin provided implementations for __smp_store_release() and
+  __smp_load_acquire barriers() which avoids using the sync assembler
+  instruction and thus speeds up barrier paths
+- Some whitespace cleanups in parisc's atomic.h header file
 
-> If the Rockchip and IMX mhdp have the same IP and same firmware, then they obviously should share
-> code as done in the series you point to.
+Thanks,
+Helge
 
-I'm pretty sure they use different firmware though - the imx8mq
-additionally supports HDMI with a different firmware on the same IP core
-(13.4 and 13.5 in the imx8mq ref manual).
+----------------------------------------------------------------
+Helge Deller (2):
+      sections.h: dereference_function_descriptor() returns void pointer
+      parisc: Whitespace cleanups in atomic.h
 
-> Perhaps Cadence can clarify the differences between IMX, TI and
-> Rockchip IPs and FWs?
+John David Anglin (1):
+      parisc: Implement __smp_store_release and __smp_load_acquire barriers
 
-That would be great!
- -- Guido
+Oscar Carter (1):
+      parisc/kernel/ftrace: Remove function callback casts
 
+Sven Schnelle (1):
+      parisc: mask out enable and reserved bits from sba imask
 
-> I'm worried that if there are IP differences, even if not great ones, and if the FWs are different
-> and developed separately, it'll be a constant "fix X for SoC A, and accidentally break Y for SoC B
-> and C", especially if too much code is shared.
-> 
-> In the long run I'm all for a single driver (or large shared parts), but I'm not sure if we should
-> start with that approach.
-
-
-
-
-> 
->  Tomi
-> 
-> -- 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-> 
+ arch/parisc/include/asm/atomic.h  |  8 ++---
+ arch/parisc/include/asm/barrier.h | 61 +++++++++++++++++++++++++++++++++++++++
+ arch/parisc/kernel/ftrace.c       |  3 +-
+ drivers/parisc/sba_iommu.c        |  2 +-
+ include/asm-generic/sections.h    |  4 +--
+ 5 files changed, 70 insertions(+), 8 deletions(-)
