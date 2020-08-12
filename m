@@ -2,110 +2,131 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B50FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 08:59:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A62BC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:03:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A6452076B
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 08:59:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="z95BENQn"
+	by mail.kernel.org (Postfix) with ESMTP id 1208520774
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:03:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727055AbgHLI7S (ORCPT
+        id S1726946AbgHLJDX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 04:59:18 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:57430 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726572AbgHLI7R (ORCPT
+        Wed, 12 Aug 2020 05:03:23 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:43155 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726255AbgHLJDW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 04:59:17 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07C8pwEP159483;
-        Wed, 12 Aug 2020 08:59:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=fX5Hq12QB3O54zKi56LfEX/5PhMYcRNizebtS1uhJZQ=;
- b=z95BENQnuCk+9ZFmipY4ugqKKVuN5wdZa3NCOnxx8GsoNTFsTNUGlUUwRGwlJl6oq0h0
- 6DZY0KCiVtzVp/Q/gGx07HLD5UDiVXf6ffX80cbrR9My/cF85N9pfEpF4cbut05WaQy8
- 5ISY+hiv86gIwjC0VbQaLZ2GKwrbQsvMxGCH2ETye018Y7Ln6V+GTtYi1XqwiZ3dFx25
- +uQzAO8NTZZxtcWvKzwvPN98rxrnnRyYhyADWJHtS8MfKQAWHZjDPE8AERycH92HoDZH
- z0RKErQKqsotkdHJk8ta3suUVlezia62jBO0WSSNFNnWp/RaH/qd/JYpIdgEtSH6gk2G iw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 32t2ydqunn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 12 Aug 2020 08:59:12 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07C8rLm8092500;
-        Wed, 12 Aug 2020 08:59:11 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 32t5y6cah2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 12 Aug 2020 08:59:11 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 07C8xAgB015682;
-        Wed, 12 Aug 2020 08:59:11 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 12 Aug 2020 08:59:10 +0000
-Date:   Wed, 12 Aug 2020 11:59:04 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Peilin Ye <yepeilin.cs@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-fsdevel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        syzkaller-bugs@googlegroups.com, linux-kernel@vger.kernel.org
-Subject: Re: [Linux-kernel-mentees] [PATCH] hfs, hfsplus: Fix NULL pointer
- dereference in hfs_find_init()
-Message-ID: <20200812085904.GA16441@kadam>
-References: <20200812065556.869508-1-yepeilin.cs@gmail.com>
- <20200812070827.GA1304640@kroah.com>
- <20200812071306.GA869606@PWN>
+        Wed, 12 Aug 2020 05:03:22 -0400
+Received: by mail-ot1-f67.google.com with SMTP id r21so1349040ota.10;
+        Wed, 12 Aug 2020 02:03:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gUAKmWocimbWFJByMnP/SETTkQ6pqljqZpa74N4jY3c=;
+        b=XjNLEWlrQRZukwK8sfGRYwjeXFvlWqbdNeZOZouWhNdlsqpT32oEFHPalzuRyuFH/V
+         QEb3B2JmPzHb5I1s7e5BUyy2Cqjvgx+JuG2Pv5L85GULQaxp+fFGIwEo9mdodKy8Jqib
+         O3mZY+fp0Yqwriz09a4hHAq8G+ns1Ve3WNIq1KozfIWlkkAD7P3UhuW9hntQAyGhG9xK
+         vj3sD5cpyozsoubYxRZ/PWqhiqgaCwrIzar2piHyle6yP8kYxK9B8AQpDGS8AkLVyLfL
+         SNPwF6YdB9Q9fSzt73NQoYUrdTc6McYxcRz5+vsnbwkyelsOcbR8gpIyaVA4CgXoGlKk
+         DLag==
+X-Gm-Message-State: AOAM532AzBmkInFQeefZKsmftV70ZHT7JVlxzYHLmc7bmipMISvK3JlH
+        9cQyqPOoIQVnFFkj6KF6chM9URehFgvtUtOZbw8=
+X-Google-Smtp-Source: ABdhPJzz/L+SWk+xdR5ktmbiR9Qq6v6uAoWmIpmjcT8Qrbb1QB5w0us/LpTaAW+Q/PdpbWdBGNPRSnKICnxnB4wQDU0=
+X-Received: by 2002:a9d:7d8c:: with SMTP id j12mr8529371otn.250.1597223001253;
+ Wed, 12 Aug 2020 02:03:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200812071306.GA869606@PWN>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9710 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0
- suspectscore=0 mlxscore=0 adultscore=0 bulkscore=0 phishscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008120064
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9710 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 priorityscore=1501
- malwarescore=0 impostorscore=0 lowpriorityscore=0 mlxscore=0 bulkscore=0
- suspectscore=0 phishscore=0 adultscore=0 spamscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008120064
+References: <20200811140357.564-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20200811140357.564-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 12 Aug 2020 11:03:09 +0200
+Message-ID: <CAMuHMdWZ+NPRWvDiM8V++UPKnvPP55OzPNHDhoP_RX0fb1Lx2Q@mail.gmail.com>
+Subject: Re: [PATCH v2] arm64: defconfig: Enable R-Car PCIe endpoint driver
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Yeah, the patch doesn't work at all.  I looked at one call tree and it
-is:
+Hi Prabhakar,
 
-hfs_mdb_get() tries to allocate HFS_SB(sb)->ext_tree.
+CC PCI endpoint people
 
-	HFS_SB(sb)->ext_tree = hfs_btree_open(sb, HFS_EXT_CNID, hfs_ext_keycmp);
-                    ^^^^^^^^
+On Tue, Aug 11, 2020 at 4:04 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Enable R-Car PCIe endpoint driver on RZ/G2E board, including enabling
+> endpoint configurations CONFIG_PCI_ENDPOINT, CONFIG_PCI_ENDPOINT_CONFIGFS,
+> CONFIG_PCI_EPF_TEST and CONFIG_PCI_ENDPOINT_TEST required to use and test
+> the driver.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+> v1->v2
+> * Made CONFIG_PCI_EPF_TEST and CONFIG_PCI_ENDPOINT_TEST as modules
 
-hfs_btree_open() calls page = read_mapping_page(mapping, 0, NULL);
-read_mapping_page() calls mapping->a_ops->readpage() which leads to
-hfs_readpage() which leads to hfs_ext_read_extent() which calls
-res = hfs_find_init(HFS_SB(inode->i_sb)->ext_tree, &fd);
-                                         ^^^^^^^^
+Thanks for the update!
 
-So we need ->ext_tree to be non-NULL before we can set ->ext_tree to be
-non-NULL...  :/
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v5.10.
 
-I wonder how long this has been broken and if we should just delete the
-AFS file system.
+However, as no core PCI code seems to depend on CONFIG_PCI_ENDPOINT, I
+would like to request the PCI endpoint people to consider making all PCI
+endpoint support tristate, so we can revisit this change to the arm64
+defconfig later.
 
-regards,
-dan carpenter
+Thanks!
 
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -208,6 +208,7 @@ CONFIG_HOTPLUG_PCI_ACPI=y
+>  CONFIG_PCI_AARDVARK=y
+>  CONFIG_PCI_TEGRA=y
+>  CONFIG_PCIE_RCAR_HOST=y
+> +CONFIG_PCIE_RCAR_EP=y
+>  CONFIG_PCI_HOST_GENERIC=y
+>  CONFIG_PCI_XGENE=y
+>  CONFIG_PCIE_ALTERA=y
+> @@ -224,6 +225,9 @@ CONFIG_PCIE_ARMADA_8K=y
+>  CONFIG_PCIE_KIRIN=y
+>  CONFIG_PCIE_HISI_STB=y
+>  CONFIG_PCIE_TEGRA194_HOST=m
+> +CONFIG_PCI_ENDPOINT=y
+> +CONFIG_PCI_ENDPOINT_CONFIGFS=y
+> +CONFIG_PCI_EPF_TEST=m
+>  CONFIG_DEVTMPFS=y
+>  CONFIG_DEVTMPFS_MOUNT=y
+>  CONFIG_FW_LOADER_USER_HELPER=y
+> @@ -254,6 +258,7 @@ CONFIG_BLK_DEV_NBD=m
+>  CONFIG_VIRTIO_BLK=y
+>  CONFIG_BLK_DEV_NVME=m
+>  CONFIG_SRAM=y
+> +CONFIG_PCI_ENDPOINT_TEST=m
+>  CONFIG_EEPROM_AT24=m
+>  CONFIG_EEPROM_AT25=m
+>  CONFIG_UACCE=m
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
