@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C77EC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 07:52:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A021C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 07:52:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B6C4206B5
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 07:52:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5367620771
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 07:52:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j2DilTxD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cp93HeWB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbgHLHwr (ORCPT
+        id S1727012AbgHLHwv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 03:52:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41966 "EHLO
+        Wed, 12 Aug 2020 03:52:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726897AbgHLHwm (ORCPT
+        with ESMTP id S1726955AbgHLHwo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 03:52:42 -0400
+        Wed, 12 Aug 2020 03:52:44 -0400
 Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB87FC06174A;
-        Wed, 12 Aug 2020 00:52:41 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id g75so1018903wme.4;
-        Wed, 12 Aug 2020 00:52:41 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFFECC061787;
+        Wed, 12 Aug 2020 00:52:43 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id f18so3675283wmc.0;
+        Wed, 12 Aug 2020 00:52:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=929+dh1AtIEgfaabT2Jpl1udW5ZWOmPGilo19Uc2jmE=;
-        b=j2DilTxDdjXBrTJ81JgbsPZzICYwPhEhS4YUdSJVX7UpvQggnn4XCuLBZCXeAyg8KY
-         80euFMKmsPIJABMahJS30bBS/ILN3k24ClHqU1TKNsekx5NrFVyzGyV9UYi3NAs44Z+C
-         ed0Hs/I4GhhKIl8jNuJtuAHwB8/i0WQ9V2+8H855/qUsK0Zu6g2uq1k3iERgVJnl9mdI
-         nKMiYunXW8XQC/jqVIzSQqpDIcgw3Xcz+TsAZNGGZxbsL5/ieAk+/N94fak06aV8FptR
-         rJLow17yxeethnbj9ncyd1RzdykqrZq0dvyj9nYaGx6ABhCu2Y5hSRhnYOJrm1t2V+Bx
-         np9g==
+        bh=qwUjwkfqICRHh42RRckTZulCKoTgiXL8sF/Vq2ZOcio=;
+        b=cp93HeWBHmLrhvB/k2i1QpBuR8xBJWl32nubDbYh/J7WapTEBYyGoVRZvIzqVlRJBD
+         DDuijVtYrK+PSr4PUvrXyAXkFtTkcFC88izA/Q3+D3Y1SYXJi1/gsQVCf9HFjgRu27Fe
+         KnK71VX4Kq1PV2zdxjNj5cSs/hZJlDs9h1jTn8lyciTH5N9hcZ/sriK3ovr9cTbPKjqk
+         3uB/oOltzRhXhth11ycTy+3StUnM2mgqRyNBieiTUQ+vRs/ykcUs9L3gPzdf4rSFPC1Y
+         aF/BoPADDEfvmdk0ToAaMuxhfyq0rEXexFoi5KiJkyitBgg/rjBHlw+IxMCFM9mMvr3N
+         7VjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=929+dh1AtIEgfaabT2Jpl1udW5ZWOmPGilo19Uc2jmE=;
-        b=LvDo1uuNrVDhtTt2qQMm+99OvWwMsQARIny6FiwiYqaqOe6BzlvwskO4kyWK23F92c
-         ZiPjMEDISpmQeUY4n0nVmtAXjBA7fvdpWAXcLIToJ77kQKVU2gOO9YVnQ9Tjj4BfOLHU
-         Yl0vvOgpyXLWSSBgUF52L+ckkx4gQpOFiWwZ2jE21ohHpiW+W3+TFk9rkLZLrjtSVHH6
-         fOrlIhxO98lraaj5EBL2Hjq+jSQvGZQljnnOQKRqIJaqIPmJmy0QWhXAYmbgT4t110rz
-         1/D8mLpnOmegSZng2JnXdiLvXEcymqqgeYH9/CY8C12ptS2sfGjiChkAR2xT/B4chYig
-         VmMg==
-X-Gm-Message-State: AOAM5303QNuxqhtGlmH7bjOIIF39QrlaH81gX+tTGKK6baks+O1HovGR
-        w3MsJ46CwMHHZcPs5o21hC4=
-X-Google-Smtp-Source: ABdhPJx6YFEZgpPsw2QZ2xccLbfaZGwYAy9W2nrDDP2RyS8jW/lP1NnZEw8dgkaLijW7mxzMmdlNfA==
-X-Received: by 2002:a1c:24c4:: with SMTP id k187mr7251153wmk.148.1597218760577;
-        Wed, 12 Aug 2020 00:52:40 -0700 (PDT)
+        bh=qwUjwkfqICRHh42RRckTZulCKoTgiXL8sF/Vq2ZOcio=;
+        b=VizegPwD9ePsJTJXKsaFnS6ikEoz/p5KBcf770V6DYexU8RAfAmVNZ6oeuaRn0TL7m
+         h5YY0N0HFB1VU5qKYqa55JnKIMG5fVYN8YymAw9O7o6E6ENsZWLrPx5ylCNX/pCwQMbZ
+         YbQN2LegRnjGEsO6m9UFQVVg9FzsjT5eIiv0tyd3lBMQdYNtyK6yMpkvyok6cTY7ehzP
+         QXCdoV+GDbUpUKlllkl6Uz/7widxJ6YCOcbxz0Td266o5duIhlJYtMAL/ZzveG6ASWfq
+         JdH9W23CciptLqgqCsDgiisciLzleEDsDzZ2mmnJnsvsg3GSz7/GrQ4QLqaqq9FQmV22
+         oT0w==
+X-Gm-Message-State: AOAM530CBjXl6adKr0u05OnQLvd9I6rngreoFwnF2oe9mBki8/J0N96a
+        g8WmABuTsyKWqTg40lJ87yA=
+X-Google-Smtp-Source: ABdhPJxvUAOFT5BOCYK6fO4FCKOU+WOiJ/CtC83HWGoRTX1vBqGPpOdZuwLP/FkuTTuq2QIfZ2/fmg==
+X-Received: by 2002:a7b:c2aa:: with SMTP id c10mr7262505wmk.86.1597218762490;
+        Wed, 12 Aug 2020 00:52:42 -0700 (PDT)
 Received: from skynet.lan (88.red-83-49-60.dynamicip.rima-tde.net. [83.49.60.88])
-        by smtp.gmail.com with ESMTPSA id 6sm2470984wmf.4.2020.08.12.00.52.39
+        by smtp.gmail.com with ESMTPSA id 6sm2470984wmf.4.2020.08.12.00.52.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Aug 2020 00:52:40 -0700 (PDT)
+        Wed, 12 Aug 2020 00:52:42 -0700 (PDT)
 From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
         <noltari@gmail.com>
 To:     tsbogend@alpha.franken.de, f.fainelli@gmail.com,
@@ -68,9 +68,9 @@ To:     tsbogend@alpha.franken.de, f.fainelli@gmail.com,
         linux-kernel@vger.kernel.org
 Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
         <noltari@gmail.com>
-Subject: [PATCH v4 3/5] MIPS: BCM63xx: enable EHCI for DWV-S0 board
-Date:   Wed, 12 Aug 2020 09:52:33 +0200
-Message-Id: <20200812075235.366864-4-noltari@gmail.com>
+Subject: [PATCH v4 5/5] MIPS: BCM63xx: switch to SPDX license identifier
+Date:   Wed, 12 Aug 2020 09:52:35 +0200
+Message-Id: <20200812075235.366864-6-noltari@gmail.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200812075235.366864-1-noltari@gmail.com>
 References: <20200812075235.366864-1-noltari@gmail.com>
@@ -82,31 +82,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-BCM6358 SoCs have OHCI and EHCI controllers that share the same USB ports.
-Therefore, the board should also have EHCI enabled.
+Use SPDX license indentifier instead of local reference to COPYING.
 
 Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- v4: no changes.
- v3: Reword commit description to avoid possible confusions.
- v2: no changes.
+ v4: add new patch with SPDX license change.
 
- arch/mips/bcm63xx/boards/board_bcm963xx.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/mips/bcm63xx/boards/board_bcm963xx.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
 diff --git a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards/board_bcm963xx.c
-index 45f1bc437245..ac9570b66f37 100644
+index fa0acf003a46..01aff80a5967 100644
 --- a/arch/mips/bcm63xx/boards/board_bcm963xx.c
 +++ b/arch/mips/bcm63xx/boards/board_bcm963xx.c
-@@ -645,6 +645,7 @@ static struct board_info __initdata board_DWVS0 = {
- 	},
- 
- 	.has_ohci0			= 1,
-+	.has_ehci0			= 1,
- };
- #endif /* CONFIG_BCM63XX_CPU_6358 */
- 
+@@ -1,8 +1,5 @@
++// SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * This file is subject to the terms and conditions of the GNU General Public
+- * License.  See the file "COPYING" in the main directory of this archive
+- * for more details.
+- *
+  * Copyright (C) 2008 Maxime Bizon <mbizon@freebox.fr>
+  * Copyright (C) 2008 Florian Fainelli <florian@openwrt.org>
+  */
 -- 
 2.28.0
 
