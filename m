@@ -2,144 +2,142 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 623F0C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:01:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D44A2C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:02:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38DC120866
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:01:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="aJsgvdX3"
+	by mail.kernel.org (Postfix) with ESMTP id B2A8A20866
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:02:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597258936;
+	bh=tcY6udWchzBZ1TgyOQ4yi1x0QvjedIv7AcaF/nWHFes=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=eOr+7ta7uPNS2IlCSHOIHei3vsV5Abn2Lz11Q2zrX6NGWMDe2a27WMHwvUYb/M9yI
+	 5Ax4wbyybS2mcH8nMt3CB1R+l3xlZkvOJxII/K/NB6zb3GezHnlBwwfSg3QBnIOisL
+	 NS0SZND7CJZM09PQkqPSfy0bhiz59tYvnoiXvt2E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726667AbgHLTBN (ORCPT
+        id S1726632AbgHLTCP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 15:01:13 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:10348 "EHLO m43-7.mailgun.net"
+        Wed, 12 Aug 2020 15:02:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726447AbgHLTBL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 15:01:11 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597258871; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=YB3svXCePUiS5tgWQnq52Bt6we3skoJuqs/h1jJFAkA=; b=aJsgvdX3DlhzSVv8kTPQmnI/cNebiRAOxbOfAoHK2A7VouHvs8p6x7c0zPr4aR73km5GF3aP
- 4Fj6NuFA9PVVnC66AJfiC7TPpBCCnkoTKBsyUPYWNFypBL9x0xAGgiFwmRZgNtQzkl2HntlD
- n2qe5riutybtZ/eIPx9ZmNR2VTo=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
- 5f343c4a91f8def8b23b19e7 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 12 Aug 2020 19:00:26
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id DF19BC433CB; Wed, 12 Aug 2020 19:00:25 +0000 (UTC)
-Received: from localhost (unknown [202.46.22.19])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        id S1726447AbgHLTCP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 15:02:15 -0400
+Received: from onda.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: prsood)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8B1A5C433C6;
-        Wed, 12 Aug 2020 19:00:24 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8B1A5C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=prsood@codeaurora.org
-From:   Prateek Sood <prsood@codeaurora.org>
-To:     mcgrof@kernel.org, tiwai@suse.de, gregkh@linuxfoundation.org,
-        rafael@kernel.org
-Cc:     linux-kernel@vger.kernel.org, Prateek Sood <prsood@codeaurora.org>
-Subject: [PATCH] firmware_loader: fix memory leak for paged buffer
-Date:   Thu, 13 Aug 2020 00:30:19 +0530
-Message-Id: <1597258819-14080-1-git-send-email-prsood@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B3C720838;
+        Wed, 12 Aug 2020 19:02:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597258934;
+        bh=tcY6udWchzBZ1TgyOQ4yi1x0QvjedIv7AcaF/nWHFes=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=0kRPMrl9CzThgdYBaFfV/CeW206xUfNuZc+LwfiHb5rNwIuXoIcVQvwqlQVmTJHiH
+         urxL1hofoU2/jGF04F4BPzi4r089PAXsS0jWOL2OKyaOcmjgV6yEPc81j2FkKYyEEo
+         JtJm8nM1hws9yA+4HSGLf5Xm7I/39p7xNX5QrOck=
+Date:   Wed, 12 Aug 2020 16:02:09 -0300
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org
+Subject: Re: [PATCH 06/44] staging: spmi: hisi-spmi-controller: use le32
+ macros where needed
+Message-ID: <20200812160209.4871e90d@onda.lan>
+In-Reply-To: <fa2d01411982f3f0873a895f4790ce65d9d6d185.camel@perches.com>
+References: <cover.1597247164.git.mchehab+huawei@kernel.org>
+        <910eeee38f1a13b5dc1d423aed3f7dc74bc48029.1597247164.git.mchehab+huawei@kernel.org>
+        <fa2d01411982f3f0873a895f4790ce65d9d6d185.camel@perches.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-vfree() is being called on paged buffer allocated
-using alloc_page() and mapped using vmap().
+Em Wed, 12 Aug 2020 09:21:54 -0700
+Joe Perches <joe@perches.com> escreveu:
 
-Freeing of pages in vfree() relies on nr_pages of
-struct vm_struct. vmap() does not update nr_pages.
-It can lead to memory leaks.
+> On Wed, 2020-08-12 at 17:56 +0200, Mauro Carvalho Chehab wrote:
+> > Instead of manually using bswap_32(), just use the
+> > le32 macros.  
+> 
+> Are you certain this code will now work on any endian cpu?
+> 
+> Maybe just use __swab32 instead
 
-Signed-off-by: Prateek Sood <prsood@codeaurora.org>
----
- drivers/base/firmware_loader/firmware.h |  2 ++
- drivers/base/firmware_loader/main.c     | 17 +++++++++++------
- 2 files changed, 13 insertions(+), 6 deletions(-)
+Well, I didn't test, because this driver is for an specific
+hardware (arm64). Yet, what happens in practice is that just
+one byte is written by the PMIC drivers. If the order is not
+LE, the byte written at the buffer will always be zero.
 
-diff --git a/drivers/base/firmware_loader/firmware.h b/drivers/base/firmware_loader/firmware.h
-index 933e2192..d08efc7 100644
---- a/drivers/base/firmware_loader/firmware.h
-+++ b/drivers/base/firmware_loader/firmware.h
-@@ -142,10 +142,12 @@ static inline void fw_state_done(struct fw_priv *fw_priv)
- void fw_free_paged_buf(struct fw_priv *fw_priv);
- int fw_grow_paged_buf(struct fw_priv *fw_priv, int pages_needed);
- int fw_map_paged_buf(struct fw_priv *fw_priv);
-+bool fw_is_paged_buf(struct fw_priv *fw_priv);
- #else
- static inline void fw_free_paged_buf(struct fw_priv *fw_priv) {}
- static inline int fw_grow_paged_buf(struct fw_priv *fw_priv, int pages_needed) { return -ENXIO; }
- static inline int fw_map_paged_buf(struct fw_priv *fw_priv) { return -ENXIO; }
-+static inline bool fw_is_paged_buf(struct fw_priv *fw_priv) { return false; }
- #endif
- 
- #endif /* __FIRMWARE_LOADER_H */
-diff --git a/drivers/base/firmware_loader/main.c b/drivers/base/firmware_loader/main.c
-index ca871b1..36bf455 100644
---- a/drivers/base/firmware_loader/main.c
-+++ b/drivers/base/firmware_loader/main.c
-@@ -252,9 +252,11 @@ static void __free_fw_priv(struct kref *ref)
- 	list_del(&fw_priv->list);
- 	spin_unlock(&fwc->lock);
- 
--	fw_free_paged_buf(fw_priv); /* free leftover pages */
--	if (!fw_priv->allocated_size)
-+	if (fw_is_paged_buf(fw_priv))
-+		fw_free_paged_buf(fw_priv);
-+	else if (!fw_priv->allocated_size)
- 		vfree(fw_priv->data);
-+
- 	kfree_const(fw_priv->fw_name);
- 	kfree(fw_priv);
- }
-@@ -268,6 +270,11 @@ static void free_fw_priv(struct fw_priv *fw_priv)
- }
- 
- #ifdef CONFIG_FW_LOADER_PAGED_BUF
-+bool fw_is_paged_buf(struct fw_priv *fw_priv)
-+{
-+	return fw_priv->is_paged_buf;
-+}
-+
- void fw_free_paged_buf(struct fw_priv *fw_priv)
- {
- 	int i;
-@@ -275,6 +282,8 @@ void fw_free_paged_buf(struct fw_priv *fw_priv)
- 	if (!fw_priv->pages)
- 		return;
- 
-+	vunmap(fw_priv->data);
-+
- 	for (i = 0; i < fw_priv->nr_pages; i++)
- 		__free_page(fw_priv->pages[i]);
- 	kvfree(fw_priv->pages);
-@@ -328,10 +337,6 @@ int fw_map_paged_buf(struct fw_priv *fw_priv)
- 	if (!fw_priv->data)
- 		return -ENOMEM;
- 
--	/* page table is no longer needed after mapping, let's free */
--	kvfree(fw_priv->pages);
--	fw_priv->pages = NULL;
--
- 	return 0;
- }
- #endif
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., 
-is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
-
+> 
+> > diff --git a/drivers/staging/hikey9xx/hisi-spmi-controller.c b/drivers/staging/hikey9xx/hisi-spmi-controller.c  
+> []
+> > @@ -43,11 +42,6 @@
+> >  #define SPMI_APB_SPMI_CMD_TYPE_OFFSET			24
+> >  #define SPMI_APB_SPMI_CMD_LENGTH_OFFSET			20
+> >  
+> > -#define bswap_32(X)   \
+> > -    ((((u32)(X) & 0xff000000) >> 24) | \
+> > -     (((u32)(X) & 0x00ff0000) >> 8) | \
+> > -     (((u32)(X) & 0x0000ff00) << 8) | \
+> > -     (((u32)(X) & 0x000000ff) << 24))
+> >  #define SPMI_APB_SPMI_CMD_SLAVEID_OFFSET		16
+> >  #define SPMI_APB_SPMI_CMD_ADDR_OFFSET			0
+> >  
+> > @@ -179,14 +173,15 @@ static int spmi_read_cmd(struct spmi_controller *ctrl,
+> >  
+> >  	writel(cmd, spmi_controller->base + chnl_ofst + SPMI_APB_SPMI_CMD_BASE_ADDR);
+> >  
+> > -	rc = spmi_controller_wait_for_done(spmi_controller, spmi_controller->base, sid, addr);
+> > +	rc = spmi_controller_wait_for_done(spmi_controller,
+> > +					   spmi_controller->base, sid, addr);
+> >  	if (rc)
+> >  		goto done;
+> >  
+> >  	i = 0;
+> >  	do {
+> >  		data = readl(spmi_controller->base + chnl_ofst + SPMI_SLAVE_OFFSET * sid + SPMI_APB_SPMI_RDATA0_BASE_ADDR + i * SPMI_PER_DATAREG_BYTE);
+> > -		data = bswap_32(data);
+> > +		data = be32_to_cpu((__be32)data);
+> >  		if ((bc - i * SPMI_PER_DATAREG_BYTE) >> 2) {
+> >  			memcpy(buf, &data, sizeof(data));
+> >  			buf += sizeof(data);
+> > @@ -210,8 +205,7 @@ static int spmi_write_cmd(struct spmi_controller *ctrl,
+> >  {
+> >  	struct spmi_controller_dev *spmi_controller = dev_get_drvdata(&ctrl->dev);
+> >  	unsigned long flags;
+> > -	u32 cmd;
+> > -	u32 data = 0;
+> > +	u32 cmd, data;
+> >  	int rc;
+> >  	u32 chnl_ofst = SPMI_CHANNEL_OFFSET * spmi_controller->channel;
+> >  	u8 op_code, i;
+> > @@ -246,7 +240,7 @@ static int spmi_write_cmd(struct spmi_controller *ctrl,
+> >  
+> >  	i = 0;
+> >  	do {
+> > -		memset(&data, 0, sizeof(data));
+> > +		data = 0;
+> >  		if ((bc - i * SPMI_PER_DATAREG_BYTE) >> 2) {
+> >  			memcpy(&data, buf, sizeof(data));
+> >  			buf += sizeof(data);
+> > @@ -255,8 +249,8 @@ static int spmi_write_cmd(struct spmi_controller *ctrl,
+> >  			buf += (bc % SPMI_PER_DATAREG_BYTE);
+> >  		}
+> >  
+> > -		data = bswap_32(data);
+> > -		writel(data, spmi_controller->base + chnl_ofst + SPMI_APB_SPMI_WDATA0_BASE_ADDR + SPMI_PER_DATAREG_BYTE * i);
+> > +		writel((u32)cpu_to_be32(data),
+> > +		       spmi_controller->base + chnl_ofst + SPMI_APB_SPMI_WDATA0_BASE_ADDR + SPMI_PER_DATAREG_BYTE * i);
+> >  		i++;
+> >  	} while (bc > i * SPMI_PER_DATAREG_BYTE);
+> >    
+> 
