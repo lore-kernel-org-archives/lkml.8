@@ -7,30 +7,30 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADEAEC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 00:15:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6912CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 00:15:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82AF420756
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 00:15:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F44D20756
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 00:15:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="T1UJo69k"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="NU/goe7e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbgHLAPn (ORCPT
+        id S1726648AbgHLAPv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Aug 2020 20:15:43 -0400
-Received: from crapouillou.net ([89.234.176.41]:52106 "EHLO crapouillou.net"
+        Tue, 11 Aug 2020 20:15:51 -0400
+Received: from crapouillou.net ([89.234.176.41]:52116 "EHLO crapouillou.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726430AbgHLAPm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Aug 2020 20:15:42 -0400
+        id S1726221AbgHLAPu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Aug 2020 20:15:50 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1597191321; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1597191322; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=7XO3v5AyYseHPAuYJbHPtlC6RLhhlxBPb915QBBXoYI=;
-        b=T1UJo69k6Tptfm1mvT//hUF9Rwt3NPqtzd+7pXyrJxIkmGLwOj2q51Rv2jTgeEGyc53v7U
-        AWL2uapUkQD76a3COcDfBOluKxuW/E6NSf5RH+BLIoPaxyfnyb15E6IGV5NWW2gu2muKuI
-        y30Ws/F74S03eoHn7mYpb+RlwYE+w1w=
+        bh=TBJe4O2M/Bbm5bjKqrnbx2BYaBZ10Szr3hxvh+t6njs=;
+        b=NU/goe7ePwRJozFH4jO7+eFRrwTUmlQa36jGnk6XzeelT3vOEta76RJHuMHX1+U/zvlSOV
+        vw/vARQRkJ9XBrfJT+1HLMvmfREQvmis8KXsbWM224raudrmEPFQW5/f+iMW3MBUF8qLIs
+        MeEl70BTZJRHVyuLKi2weCSpa0aFPis=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Cc:     Paul Burton <paulburton@kernel.org>,
@@ -38,9 +38,9 @@ Cc:     Paul Burton <paulburton@kernel.org>,
         =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0?= <zhouyanjie@wanyeetech.com>,
         od@zcrc.me, linux-kernel@vger.kernel.org,
         linux-mips@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v2 03/13] MIPS: cpu-probe: ingenic: Fix broken BUG_ON
-Date:   Wed, 12 Aug 2020 02:15:00 +0200
-Message-Id: <20200812001510.460382-4-paul@crapouillou.net>
+Subject: [PATCH v2 04/13] MIPS: Kconfig: add MIPS_GENERIC_KERNEL symbol
+Date:   Wed, 12 Aug 2020 02:15:01 +0200
+Message-Id: <20200812001510.460382-5-paul@crapouillou.net>
 In-Reply-To: <20200812001510.460382-1-paul@crapouillou.net>
 References: <20200812001510.460382-1-paul@crapouillou.net>
 MIME-Version: 1.0
@@ -50,20 +50,13 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The previous code was doing:
-BUG_ON(!__builtin_constant_p(cpu_has_counter) || cpu_has_counter);
+The MIPS_GENERIC symbol now won't select any other configuration option.
+The MIPS_GENERIC_KERNEL will select all the options that the previous
+MIPS_GENERIC option did select, and will select MIPS_GENERIC as well.
 
-This only worked as the "cpu_has_counter" macro was overridden in
-<cpu-feature-overrides.h>. The default "cpu_has_counter" macro is
-non-constant, which triggered the BUG_ON() independently of the value
-returned by the macro.
-
-What we want to check here, is that *if* the macro was overridden to a
-compile-time constant, then must be defined to zero, otherwise it's a
-bug.
-
-So the correct check is:
-BUG_ON(__builtin_constant_p(cpu_has_counter) && cpu_has_counter);
+The whole point of this, is that it now becomes possible to compile a
+kernel for a SoC supported by the arch/mips/generic/ code, without
+making that kernel generic itself.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
@@ -71,22 +64,46 @@ Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 Notes:
     v2: No change
 
- arch/mips/kernel/cpu-probe.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/mips/Kconfig         | 8 ++++++--
+ arch/mips/generic/Kconfig | 2 +-
+ 2 files changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/arch/mips/kernel/cpu-probe.c b/arch/mips/kernel/cpu-probe.c
-index a07e66a6e063..6be23f205e74 100644
---- a/arch/mips/kernel/cpu-probe.c
-+++ b/arch/mips/kernel/cpu-probe.c
-@@ -2123,7 +2123,7 @@ static inline void cpu_probe_ingenic(struct cpuinfo_mips *c, unsigned int cpu)
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index 880680c0df31..8d146794de1e 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -94,14 +94,18 @@ config MIPS
+ config MIPS_FIXUP_BIGPHYS_ADDR
+ 	bool
  
- 	/* XBurst does not implement the CP0 counter. */
- 	c->options &= ~MIPS_CPU_COUNTER;
--	BUG_ON(!__builtin_constant_p(cpu_has_counter) || cpu_has_counter);
-+	BUG_ON(__builtin_constant_p(cpu_has_counter) && cpu_has_counter);
++config MIPS_GENERIC
++	bool
++
+ menu "Machine selection"
  
- 	/* XBurst has virtually tagged icache */
- 	c->icache.flags |= MIPS_CACHE_VTAG;
+ choice
+ 	prompt "System type"
+-	default MIPS_GENERIC
++	default MIPS_GENERIC_KERNEL
+ 
+-config MIPS_GENERIC
++config MIPS_GENERIC_KERNEL
+ 	bool "Generic board-agnostic MIPS kernel"
++	select MIPS_GENERIC
+ 	select BOOT_RAW
+ 	select BUILTIN_DTB
+ 	select CEVT_R4K
+diff --git a/arch/mips/generic/Kconfig b/arch/mips/generic/Kconfig
+index fd6019802657..5216c850b7e2 100644
+--- a/arch/mips/generic/Kconfig
++++ b/arch/mips/generic/Kconfig
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
+-if MIPS_GENERIC
++if MIPS_GENERIC_KERNEL
+ 
+ config LEGACY_BOARDS
+ 	bool
 -- 
 2.28.0
 
