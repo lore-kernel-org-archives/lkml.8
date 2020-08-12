@@ -2,65 +2,85 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8AABC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:13:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 965E3C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:15:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C9E0207DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:13:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F4DE206C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:15:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t2wsHSUq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbgHLJNm (ORCPT
+        id S1727066AbgHLJPn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 05:13:42 -0400
-Received: from mga18.intel.com ([134.134.136.126]:40183 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726601AbgHLJNm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 05:13:42 -0400
-IronPort-SDR: IfM3j/VTzCXBkQoI75MlQBxqfDzK01hSyuhaqHa7S2gAPk+o26uglB9/UJRKrEG+jR39aiW3GT
- dd8+S8cZ1kAg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9710"; a="141534164"
-X-IronPort-AV: E=Sophos;i="5.76,303,1592895600"; 
-   d="scan'208";a="141534164"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2020 02:13:41 -0700
-IronPort-SDR: 52x4G4nxphbG7wbFf9Bhd4oVDxjk3eeTi2GzwyrdU60wWFA2d3CAQsChy4xOcdkN8m2MdKEtc0
- MMvG43id3Lxw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,303,1592895600"; 
-   d="scan'208";a="318027426"
-Received: from ipu5-build.bj.intel.com (HELO [10.238.232.196]) ([10.238.232.196])
-  by fmsmga004.fm.intel.com with ESMTP; 12 Aug 2020 02:13:37 -0700
-Subject: Re: [PATCH v5 3/6] ov5670: Support probe whilst the device is in a
- low power state
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-i2c@vger.kernel.org
-Cc:     Wolfram Sang <wsa@the-dreams.de>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-acpi@vger.kernel.org, Bingbu Cao <bingbu.cao@intel.com>,
-        linux-media@vger.kernel.org,
-        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
-        Hyungwoo Yang <hyungwoo.yang@intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        rajmohan.mani@intel.com, Tomasz Figa <tfiga@chromium.org>,
-        "Qiu, Tian Shu" <tian.shu.qiu@intel.com>
-References: <20200810142747.12400-1-sakari.ailus@linux.intel.com>
- <20200810142747.12400-4-sakari.ailus@linux.intel.com>
-From:   Bingbu Cao <bingbu.cao@linux.intel.com>
-Message-ID: <7a1fa217-7fd1-1d36-0b1c-ad5d09ea11a0@linux.intel.com>
-Date:   Wed, 12 Aug 2020 17:12:28 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 12 Aug 2020 05:15:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54736 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726595AbgHLJPm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 05:15:42 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09322C06174A;
+        Wed, 12 Aug 2020 02:15:42 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id t23so1433820ljc.3;
+        Wed, 12 Aug 2020 02:15:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/3bbT+znQtvhBvyL05XoYG/sT1t/szYIcY75YFFqv74=;
+        b=t2wsHSUquV599ok7d7bCW6Ei5aL5mUDcxse9EkUaWZA6DDac8xIGsia/1RrFy0M6e0
+         tuM/DI8zi7D5/OgIcr6nEWZmVIb/SL2T3+h+ZOL3y5eSUTF9c1ZajUu1KH/kQxiLErog
+         fpjVPHqL4svpzM2QMPUs4qkbdAL/G4jBoi+c1ago8RYhyCE6PoUgiXyspAaqMmkIE5zb
+         EwinRv2r5DUdKlAdgWqZHUOliL23wWQ9s3TFSd97ec9j4uVQero1R7FxBsuvJja9NQRG
+         aFSpaaeMkniSdabQ5iYDw/Bn7ftlzGmp3MO38deO9etGxCI6DdS6X1EXesV3txXmQkC4
+         2fTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=/3bbT+znQtvhBvyL05XoYG/sT1t/szYIcY75YFFqv74=;
+        b=kFYurdZaIoOi7b33LxIzmeNxk0nyJUfztOfMHW3hQAhdzKuCBA8xBPog7Y2AIw+x2b
+         LMVudNSeEy62+6ornsQ6d/tIQrhTT5pMM8fG6unwz9U5HA/KOx+c6z6TfgmJRytWR7G8
+         UrexeOB1oZWSQj7uDiK68LJrlBIsGiqQL/3Nr6PJKptyO7YZmi0mEb9Rl4jrvqv6iOAw
+         px+tA9q4XT4E9ZbB24E4Rlm/zdty8KlZELrbeNpr1hSQ8gC2xZkCW0VB+mcD4o66MWZu
+         IDug4pgexuMZX3N5+1zDAFpq0Mg4+zSjDup3plY9u+P2znAhTiAdIcDsPIvIXltkNxzW
+         2W8g==
+X-Gm-Message-State: AOAM532SC6dUjgwu1v1MMrUzPTpD/6j/UD5966IdSMzdjfRt1F8iz5S2
+        HVgKTq1nBTqbtFdKeObfwd/Evw8NCSo=
+X-Google-Smtp-Source: ABdhPJzEnrexISBTxARVq2yOEqceqeSZvwAJY9hy/o23qvF9pO4LaoPbBKSxndRFqx54Qsam925pgA==
+X-Received: by 2002:a2e:a16f:: with SMTP id u15mr5210687ljl.5.1597223740380;
+        Wed, 12 Aug 2020 02:15:40 -0700 (PDT)
+Received: from ?IPv6:2a00:1fa0:41b:98d0:14d2:8cca:fcf5:be6? ([2a00:1fa0:41b:98d0:14d2:8cca:fcf5:be6])
+        by smtp.gmail.com with ESMTPSA id e25sm310460ljp.47.2020.08.12.02.15.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Aug 2020 02:15:39 -0700 (PDT)
+Subject: Re: [PATCH v2 07/13] MIPS: generic: Support booting with built-in or
+ appended DTB
+To:     Paul Cercueil <paul@crapouillou.net>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     Paul Burton <paulburton@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        =?UTF-8?B?5ZGo55Cw5p2w?= <zhouyanjie@wanyeetech.com>, od@zcrc.me,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org
+References: <20200812001510.460382-1-paul@crapouillou.net>
+ <20200812001510.460382-8-paul@crapouillou.net>
+From:   Sergei Shtylyov <sergei.shtylyov@gmail.com>
+Organization: Brain-dead Software
+Message-ID: <1380509b-6479-3f1b-9e5b-7eb14f7ab158@gmail.com>
+Date:   Wed, 12 Aug 2020 12:15:33 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <20200810142747.12400-4-sakari.ailus@linux.intel.com>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <20200812001510.460382-8-paul@crapouillou.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -68,54 +88,21 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello!
 
+On 12.08.2020 3:15, Paul Cercueil wrote:
 
-On 8/10/20 10:27 PM, Sakari Ailus wrote:
-> Tell ACPI device PM code that the driver supports the device being in a
-> low power state when the driver's probe function is entered.
+> The plat_get_fdt() checked that the kernel was booted using UHI before
+> reading the 'fw_passed_dtb' variable. However, this variable is also set
+> when the kernel has been appended, or when it has been built into the
+
+    s/kernel/DT/?
+
+> kernel.
 > 
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> ---
->  drivers/media/i2c/ov5670.c | 23 ++++++++++++++---------
->  1 file changed, 14 insertions(+), 9 deletions(-)
+> Support these usecases by removing the UHI check.
 > 
-> diff --git a/drivers/media/i2c/ov5670.c b/drivers/media/i2c/ov5670.c
-> index f26252e35e08d..1f75b888d2a18 100644
-> --- a/drivers/media/i2c/ov5670.c
-> +++ b/drivers/media/i2c/ov5670.c
-> @@ -2456,6 +2456,7 @@ static int ov5670_probe(struct i2c_client *client)
->  	struct ov5670 *ov5670;
->  	const char *err_msg;
->  	u32 input_clk = 0;
-> +	bool low_power;
->  	int ret;
->  
->  	device_property_read_u32(&client->dev, "clock-frequency", &input_clk);
-> @@ -2472,11 +2473,14 @@ static int ov5670_probe(struct i2c_client *client)
->  	/* Initialize subdev */
->  	v4l2_i2c_subdev_init(&ov5670->sd, client, &ov5670_subdev_ops);
->  
-> -	/* Check module identity */
-> -	ret = ov5670_identify_module(ov5670);
-> -	if (ret) {
-> -		err_msg = "ov5670_identify_module() error";
-> -		goto error_print;
-> +	low_power = acpi_dev_state_low_power(&client->dev);
-> +	if (!low_power) {
-> +		/* Check module identity */
-> +		ret = ov5670_identify_module(ov5670);
-> +		if (ret) {
-> +			err_msg = "ov5670_identify_module() error";
-> +			goto error_print;
-> +	
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+[...]
 
-Sakari, thanks for your patch.
-one question - With this change, there will be no chance for driver to guarantee
-that the camera sensor plugged in is the camera that the matched driver actually
-can drive until try to streaming the camera, so is it necessary to return
-appropriate error in .s_stream ops to notify user it is not the hardware that
-current driver can drive? if no other better way.
-
--- 
-Best regards,
-Bingbu Cao
+MBR, Sergei
