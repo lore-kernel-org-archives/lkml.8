@@ -2,239 +2,231 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E440C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:44:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F0DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBAD52080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:44:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-watchdog.org header.i=@linux-watchdog.org header.b="azM+OjDW"
+	by mail.kernel.org (Postfix) with ESMTP id 5C58A207F7
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:46:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597236418;
+	bh=ilhcDmgMlsDXN38LhqCS7AxhDTnahSaoCo+rTTF26kg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hmqLQpvvQvALWVXXIDRuPQLkiF++r608zEhsV/RCWpCsLD30mpY8ia9l8ulRLP1Rk
+	 yPvwd+VJqmbUjP1H07xGenrGOQZQAqdm4ZjPhf1IYnrEsWziZWhWT0X+DHKdrjrC/T
+	 slqdGTJHhZ8XetbFuoJujD8g/u8WWjuBMuCZUVng=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727976AbgHLMoj (ORCPT
+        id S1727879AbgHLMq5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 08:44:39 -0400
-Received: from www.linux-watchdog.org ([185.87.125.42]:44182 "EHLO
-        www.linux-watchdog.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726829AbgHLMoh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 08:44:37 -0400
-X-Greylist: delayed 348 seconds by postgrey-1.27 at vger.kernel.org; Wed, 12 Aug 2020 08:44:37 EDT
-Received: by www.linux-watchdog.org (Postfix, from userid 500)
-        id 395C3407AF; Wed, 12 Aug 2020 13:39:03 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 www.linux-watchdog.org 395C3407AF
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-watchdog.org;
-        s=odk20180602; t=1597232343;
-        bh=eJ+9TxHv79OCcPjS6SyOF3HAI3s+kCWErgOfkJljAfs=;
-        h=Date:From:To:Cc:Subject:From;
-        b=azM+OjDWCqJnQJ/XZIFmBgKsS2VUkScXNYF+oKHDN3ExviVkGh+LjtKW1ijtvykll
-         zaeZ6tng3eCq13X7OvJd4LOfNPcOZfg8WtgLspR/RQzWPzC+3eEvSkt1UUz1ORgk6j
-         PMD4wGwpBZjiz8FxbrA27kBKDV1l0O50EgPab77c=
-Date:   Wed, 12 Aug 2020 13:39:03 +0200
-From:   Wim Van Sebroeck <wim@linux-watchdog.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Ahmad Fatoum <a.fatoum@pengutronix.de>,
-        "Alexander A. Klimov" <grandmaster@al2klimov.de>,
-        Bumsik Kim <kbumsik@gmail.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Krzysztof Sobota <krzysztof.sobota@nokia.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Martin Wu <wuyan@allwinnertech.com>,
-        Michael Shych <michaelsh@mellanox.com>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Tero Kristo <t-kristo@ti.com>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Timothy Myers <timothy.myers@adtran.com>,
-        Wang Qing <wangqing@vivo.com>, Woody Lin <woodylin@google.com>,
-        Xu Wang <vulab@iscas.ac.cn>
-Subject: [GIT PULL REQUEST] watchdog - v5.9 Merge window
-Message-ID: <20200812113903.GA14481@www.linux-watchdog.org>
+        Wed, 12 Aug 2020 08:46:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55492 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726804AbgHLMq4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 08:46:56 -0400
+Received: from quaco.ghostprotocols.net (179.176.8.134.dynamic.adsl.gvt.net.br [179.176.8.134])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEFCF2065C;
+        Wed, 12 Aug 2020 12:46:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597236416;
+        bh=ilhcDmgMlsDXN38LhqCS7AxhDTnahSaoCo+rTTF26kg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=yjOeU+YulkpftLdBJvffYsy54G+zjMeRiSqWHp4vd52zGY9JIuNNKGhzouEMxzq3i
+         ApRjWkXD3ugIL07VtZJmwT9xmbsn0ZCQ4CyK5wnfS+KxCiTuCds3PB9U1/NaVTUCi9
+         DYbWJLjlLBivSSxJpK5tgadkl0z2GLhKwpkAS9Qc=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 7FEB34097F; Wed, 12 Aug 2020 09:46:53 -0300 (-03)
+Date:   Wed, 12 Aug 2020 09:46:53 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Subject: Re: [PATCH] libperf: Fix man page typos
+Message-ID: <20200812124653.GK13995@kernel.org>
+References: <20200807193241.3904545-1-robh@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.5.20 (2009-12-10)
+In-Reply-To: <20200807193241.3904545-1-robh@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Em Fri, Aug 07, 2020 at 01:32:41PM -0600, Rob Herring escreveu:
+> Fix various typos and inconsistent capitalization of CPU in the libperf
+> man pages.
 
-Please pull the watchdog changes for the v5.2 release cycle.
+Thanks, applied,
 
-This series contains:
-* f71808e_wdt imporvements
-* dw_wdt improvements
-* mlx-wdt: support new watchdog type with longer timeout period
-* fallthrough pseudo-keyword replacements
-* overall small fixes and improvements
+- Arnaldo
+ 
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Jiri Olsa <jolsa@redhat.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  tools/lib/perf/Documentation/libperf-counting.txt | 14 ++++++++------
+>  tools/lib/perf/Documentation/libperf-sampling.txt | 13 +++++++------
+>  tools/lib/perf/Documentation/libperf.txt          |  4 ++--
+>  3 files changed, 17 insertions(+), 14 deletions(-)
+> 
+> diff --git a/tools/lib/perf/Documentation/libperf-counting.txt b/tools/lib/perf/Documentation/libperf-counting.txt
+> index cae9757f49c1..8b75efcd67ce 100644
+> --- a/tools/lib/perf/Documentation/libperf-counting.txt
+> +++ b/tools/lib/perf/Documentation/libperf-counting.txt
+> @@ -7,13 +7,13 @@ libperf-counting - counting interface
+>  
+>  DESCRIPTION
+>  -----------
+> -The counting interface provides API to meassure and get count for specific perf events.
+> +The counting interface provides API to measure and get count for specific perf events.
+>  
+>  The following test tries to explain count on `counting.c` example.
+>  
+>  It is by no means complete guide to counting, but shows libperf basic API for counting.
+>  
+> -The `counting.c` comes with libbperf package and can be compiled and run like:
+> +The `counting.c` comes with libperf package and can be compiled and run like:
+>  
+>  [source,bash]
+>  --
+> @@ -26,7 +26,8 @@ count 176242, enabled 176242, run 176242
+>  It requires root access, because of the `PERF_COUNT_SW_CPU_CLOCK` event,
+>  which is available only for root.
+>  
+> -The `counting.c` example monitors two events on the current process and displays their count, in a nutshel it:
+> +The `counting.c` example monitors two events on the current process and displays
+> +their count, in a nutshell it:
+>  
+>  * creates events
+>  * adds them to the event list
+> @@ -152,7 +153,7 @@ Configure event list with the thread map and open events:
+>  --
+>  
+>  Both events are created as disabled (note the `disabled = 1` assignment above),
+> -so we need to enable the whole list explicitely (both events).
+> +so we need to enable the whole list explicitly (both events).
+>  
+>  From this moment events are counting and we can do our workload.
+>  
+> @@ -167,7 +168,8 @@ When we are done we disable the events list.
+>   79         perf_evlist__disable(evlist);
+>  --
+>  
+> -Now we need to get the counts from events, following code iterates throught the events list and read counts:
+> +Now we need to get the counts from events, following code iterates through the
+> +events list and read counts:
+>  
+>  [source,c]
+>  --
+> @@ -178,7 +180,7 @@ Now we need to get the counts from events, following code iterates throught the
+>   85         }
+>  --
+>  
+> -And finaly cleanup.
+> +And finally cleanup.
+>  
+>  We close the whole events list (both events) and remove it together with the threads map:
+>  
+> diff --git a/tools/lib/perf/Documentation/libperf-sampling.txt b/tools/lib/perf/Documentation/libperf-sampling.txt
+> index d71a7b4fcf5f..d6ca24f6ef78 100644
+> --- a/tools/lib/perf/Documentation/libperf-sampling.txt
+> +++ b/tools/lib/perf/Documentation/libperf-sampling.txt
+> @@ -8,13 +8,13 @@ libperf-sampling - sampling interface
+>  
+>  DESCRIPTION
+>  -----------
+> -The sampling interface provides API to meassure and get count for specific perf events.
+> +The sampling interface provides API to measure and get count for specific perf events.
+>  
+>  The following test tries to explain count on `sampling.c` example.
+>  
+>  It is by no means complete guide to sampling, but shows libperf basic API for sampling.
+>  
+> -The `sampling.c` comes with libbperf package and can be compiled and run like:
+> +The `sampling.c` comes with libperf package and can be compiled and run like:
+>  
+>  [source,bash]
+>  --
+> @@ -33,7 +33,8 @@ cpu   0, pid   4465, tid   4470, ip         7f84fe0ebebf, period             176
+>  
+>  It requires root access, because it uses hardware cycles event.
+>  
+> -The `sampling.c` example profiles/samples all CPUs with hardware cycles, in a nutshel it:
+> +The `sampling.c` example profiles/samples all CPUs with hardware cycles, in a
+> +nutshell it:
+>  
+>  - creates events
+>  - adds them to the event list
+> @@ -90,7 +91,7 @@ Once the setup is complete we start by defining cycles event using the `struct p
+>   36         };
+>  --
+>  
+> -Next step is to prepare cpus map.
+> +Next step is to prepare CPUs map.
+>  
+>  In this case we will monitor all the available CPUs:
+>  
+> @@ -152,7 +153,7 @@ Once the events list is open, we can create memory maps AKA perf ring buffers:
+>  --
+>  
+>  The event is created as disabled (note the `disabled = 1` assignment above),
+> -so we need to enable the events list explicitely.
+> +so we need to enable the events list explicitly.
+>  
+>  From this moment the cycles event is sampling.
+>  
+> @@ -212,7 +213,7 @@ Each sample needs to get parsed:
+>  106                                 cpu, pid, tid, ip, period);
+>  --
+>  
+> -And finaly cleanup.
+> +And finally cleanup.
+>  
+>  We close the whole events list (both events) and remove it together with the threads map:
+>  
+> diff --git a/tools/lib/perf/Documentation/libperf.txt b/tools/lib/perf/Documentation/libperf.txt
+> index 5a6bb512789d..0c74c30ed23a 100644
+> --- a/tools/lib/perf/Documentation/libperf.txt
+> +++ b/tools/lib/perf/Documentation/libperf.txt
+> @@ -29,7 +29,7 @@ SYNOPSIS
+>    void libperf_init(libperf_print_fn_t fn);
+>  --
+>  
+> -*API to handle cpu maps:*
+> +*API to handle CPU maps:*
+>  
+>  [source,c]
+>  --
+> @@ -217,7 +217,7 @@ Following objects are key to the libperf interface:
+>  
+>  [horizontal]
+>  
+> -struct perf_cpu_map:: Provides a cpu list abstraction.
+> +struct perf_cpu_map:: Provides a CPU list abstraction.
+>  
+>  struct perf_thread_map:: Provides a thread list abstraction.
+>  
+> -- 
+> 2.25.1
+> 
 
-The output from git request-pull:
-----------------------------------------------------------------
-The following changes since commit 92ed301919932f777713b9172e525674157e983d:
+-- 
 
-  Linux 5.8-rc7 (2020-07-26 14:14:06 -0700)
-
-are available in the git repository at:
-
-  git://www.linux-watchdog.org/linux-watchdog.git tags/linux-watchdog-5.9-rc1
-
-for you to fetch changes up to d5b29c2c5ba2bd5bbdb5b744659984185d17d079:
-
-  watchdog: rti-wdt: balance pm runtime enable calls (2020-08-05 18:43:03 +0200)
-
-----------------------------------------------------------------
-linux-watchdog 5.9-rc1 tag
-
-----------------------------------------------------------------
-Ahmad Fatoum (5):
-      docs: watchdog: codify ident.options as superset of possible status flags
-      watchdog: f71808e_wdt: indicate WDIOF_CARDRESET support in watchdog_info.options
-      watchdog: f71808e_wdt: remove use of wrong watchdog_info option
-      watchdog: f71808e_wdt: clear watchdog timeout occurred flag
-      watchdog: f71808e_wdt: do stricter parameter validation
-
-Alexander A. Klimov (1):
-      watchdog: Replace HTTP links with HTTPS ones
-
-Bumsik Kim (1):
-      watchdog: test_bit() => watchdog_active()
-
-Gustavo A. R. Silva (2):
-      watchdog: Use fallthrough pseudo-keyword
-      watchdog: scx200_wdt: Use fallthrough pseudo-keyword
-
-Krzysztof Sobota (1):
-      watchdog: initialize device before misc_register
-
-Lad Prabhakar (1):
-      dt-bindings: watchdog: renesas,wdt: Document r8a774e1 support
-
-Lukas Bulwahn (1):
-      MAINTAINERS: rectify entry in ARM SMC WATCHDOG DRIVER
-
-Martin Wu (1):
-      watchdog: sunxi_wdt: fix improper error exit code
-
-Michael Shych (4):
-      platform_data/mlxreg: support new watchdog type with longer timeout period
-      platform/x86: mlx-platform: support new watchdog type with longer timeout
-      watchdog: mlx-wdt: support new watchdog type with longer timeout period
-      docs: watchdog: mlx-wdt: Add description of new watchdog type 3
-
-Sai Prakash Ranjan (2):
-      dt-bindings: watchdog: Convert QCOM watchdog timer bindings to YAML
-      dt-bindings: watchdog: Add compatible for QCS404, SC7180, SDM845, SM8150
-
-Serge Semin (7):
-      dt-bindings: watchdog: Convert DW WDT binding to DT schema
-      dt-bindings: watchdog: dw-wdt: Support devices with asynch clocks
-      dt-bindings: watchdog: dw-wdt: Add watchdog TOPs array property
-      watchdog: dw_wdt: Support devices with non-fixed TOP values
-      watchdog: dw_wdt: Support devices with asynch clocks
-      watchdog: dw_wdt: Add pre-timeouts support
-      watchdog: dw_wdt: Add DebugFS files
-
-Tero Kristo (4):
-      watchdog: use __watchdog_ping in startup
-      watchdog: add support for adjusting last known HW keepalive time
-      watchdog: rti-wdt: attach to running watchdog during probe
-      watchdog: rti-wdt: balance pm runtime enable calls
-
-Tiezhu Yang (1):
-      watchdog: bcm_kona_wdt: Use correct return value for bcm_kona_wdt_probe()
-
-Timothy Myers (1):
-      watchdog: booke_wdt: Add common nowayout parameter driver
-
-Wang Qing (1):
-      watchdog: Use kobj_to_dev() API
-
-Woody Lin (1):
-      watchdog: softdog: Add options 'soft_reboot_cmd' and 'soft_active_on_boot'
-
-Xu Wang (1):
-      watchdog: pcwd_usb: remove needless check before usb_free_coherent()
-
- .../devicetree/bindings/watchdog/davinci-wdt.txt   |   4 +-
- .../devicetree/bindings/watchdog/dw_wdt.txt        |  24 --
- .../devicetree/bindings/watchdog/qcom-wdt.txt      |  28 --
- .../devicetree/bindings/watchdog/qcom-wdt.yaml     |  48 +++
- .../devicetree/bindings/watchdog/renesas,wdt.yaml  |   1 +
- .../devicetree/bindings/watchdog/snps,dw-wdt.yaml  |  90 +++++
- Documentation/watchdog/mlx-wdt.rst                 |  10 +
- Documentation/watchdog/watchdog-api.rst            |   2 +-
- Documentation/watchdog/watchdog-kernel-api.rst     |  12 +
- MAINTAINERS                                        |   2 +-
- drivers/platform/x86/mlx-platform.c                | 106 +++++
- drivers/watchdog/Kconfig                           |   2 +-
- drivers/watchdog/advantechwdt.c                    |   2 +-
- drivers/watchdog/alim1535_wdt.c                    |   2 +-
- drivers/watchdog/alim7101_wdt.c                    |   2 +-
- drivers/watchdog/ar7_wdt.c                         |   3 +-
- drivers/watchdog/ath79_wdt.c                       |   2 +-
- drivers/watchdog/bcm_kona_wdt.c                    |   2 +-
- drivers/watchdog/booke_wdt.c                       |   6 +-
- drivers/watchdog/dw_wdt.c                          | 439 +++++++++++++++++++--
- drivers/watchdog/eurotechwdt.c                     |   2 +-
- drivers/watchdog/f71808e_wdt.c                     |  54 ++-
- drivers/watchdog/gef_wdt.c                         |   2 +-
- drivers/watchdog/geodewdt.c                        |   2 +-
- drivers/watchdog/ib700wdt.c                        |   2 +-
- drivers/watchdog/it8712f_wdt.c                     |   2 +-
- drivers/watchdog/ixp4xx_wdt.c                      |   2 +-
- drivers/watchdog/m54xx_wdt.c                       |   2 +-
- drivers/watchdog/machzwd.c                         |   2 +-
- drivers/watchdog/mlx_wdt.c                         |  73 +++-
- drivers/watchdog/mv64x60_wdt.c                     |   2 +-
- drivers/watchdog/nv_tco.c                          |   4 +-
- drivers/watchdog/nv_tco.h                          |   2 +-
- drivers/watchdog/pc87413_wdt.c                     |   2 +-
- drivers/watchdog/pcwd.c                            |   2 +-
- drivers/watchdog/pcwd_pci.c                        |   2 +-
- drivers/watchdog/pcwd_usb.c                        |   7 +-
- drivers/watchdog/rc32434_wdt.c                     |   2 +-
- drivers/watchdog/riowd.c                           |   2 +-
- drivers/watchdog/rti_wdt.c                         | 114 +++++-
- drivers/watchdog/sa1100_wdt.c                      |   2 +-
- drivers/watchdog/sb_wdog.c                         |   2 +-
- drivers/watchdog/sbc60xxwdt.c                      |   2 +-
- drivers/watchdog/sbc7240_wdt.c                     |   2 +-
- drivers/watchdog/sbc_fitpc2_wdt.c                  |   2 +-
- drivers/watchdog/sc520_wdt.c                       |   2 +-
- drivers/watchdog/sch311x_wdt.c                     |   2 +-
- drivers/watchdog/scx200_wdt.c                      |   2 +-
- drivers/watchdog/smsc37b787_wdt.c                  |   2 +-
- drivers/watchdog/softdog.c                         |  57 +++
- drivers/watchdog/sp5100_tco.c                      |   2 +-
- drivers/watchdog/sunxi_wdt.c                       |   2 +-
- drivers/watchdog/w83877f_wdt.c                     |   2 +-
- drivers/watchdog/w83977f_wdt.c                     |   2 +-
- drivers/watchdog/wafer5823wdt.c                    |   2 +-
- drivers/watchdog/watchdog_dev.c                    |  73 +++-
- drivers/watchdog/wdt.c                             |   2 +-
- drivers/watchdog/wdt285.c                          |   2 +-
- drivers/watchdog/wdt977.c                          |   2 +-
- drivers/watchdog/wdt_pci.c                         |   2 +-
- include/linux/platform_data/mlxreg.h               |   5 +-
- include/linux/watchdog.h                           |   2 +
- 62 files changed, 1032 insertions(+), 210 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/watchdog/dw_wdt.txt
- delete mode 100644 Documentation/devicetree/bindings/watchdog/qcom-wdt.txt
- create mode 100644 Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
- create mode 100644 Documentation/devicetree/bindings/watchdog/snps,dw-wdt.yaml
-----------------------------------------------------------------
-
-Kind regards,
-Wim.
-
+- Arnaldo
