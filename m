@@ -2,142 +2,135 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D44A2C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:02:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21615C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:02:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2A8A20866
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:02:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597258936;
-	bh=tcY6udWchzBZ1TgyOQ4yi1x0QvjedIv7AcaF/nWHFes=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=eOr+7ta7uPNS2IlCSHOIHei3vsV5Abn2Lz11Q2zrX6NGWMDe2a27WMHwvUYb/M9yI
-	 5Ax4wbyybS2mcH8nMt3CB1R+l3xlZkvOJxII/K/NB6zb3GezHnlBwwfSg3QBnIOisL
-	 NS0SZND7CJZM09PQkqPSfy0bhiz59tYvnoiXvt2E=
+	by mail.kernel.org (Postfix) with ESMTP id 0237522B45
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 19:02:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MjJD+VCK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbgHLTCP (ORCPT
+        id S1726680AbgHLTC6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 15:02:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42052 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726447AbgHLTCP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 15:02:15 -0400
-Received: from onda.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B3C720838;
-        Wed, 12 Aug 2020 19:02:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597258934;
-        bh=tcY6udWchzBZ1TgyOQ4yi1x0QvjedIv7AcaF/nWHFes=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=0kRPMrl9CzThgdYBaFfV/CeW206xUfNuZc+LwfiHb5rNwIuXoIcVQvwqlQVmTJHiH
-         urxL1hofoU2/jGF04F4BPzi4r089PAXsS0jWOL2OKyaOcmjgV6yEPc81j2FkKYyEEo
-         JtJm8nM1hws9yA+4HSGLf5Xm7I/39p7xNX5QrOck=
-Date:   Wed, 12 Aug 2020 16:02:09 -0300
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org
-Subject: Re: [PATCH 06/44] staging: spmi: hisi-spmi-controller: use le32
- macros where needed
-Message-ID: <20200812160209.4871e90d@onda.lan>
-In-Reply-To: <fa2d01411982f3f0873a895f4790ce65d9d6d185.camel@perches.com>
-References: <cover.1597247164.git.mchehab+huawei@kernel.org>
-        <910eeee38f1a13b5dc1d423aed3f7dc74bc48029.1597247164.git.mchehab+huawei@kernel.org>
-        <fa2d01411982f3f0873a895f4790ce65d9d6d185.camel@perches.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 12 Aug 2020 15:02:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60328 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726512AbgHLTC5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 15:02:57 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34C5EC061383;
+        Wed, 12 Aug 2020 12:02:57 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id p14so2702647wmg.1;
+        Wed, 12 Aug 2020 12:02:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=HaL2zh/WXFrk38V3//tUJzJt7K7m3lYKmEzICUwPAfg=;
+        b=MjJD+VCKfzYVsZgX5Dc+eN1Jv709nvN3ChxDOXcdlNW5r7rC9iK+eJmMaFx0Onw2UY
+         ZocoTU0dKjKxesgsr6graGWP86U2rbCTdf2ZjexlPcvEyT6eXskm76SQGdJUgNzXRYyx
+         s9zX6QdonMvB+vhc8voH/BKliyJjIeCSz79nZyONKCgJcYxfBX9aT7GYgIxFVcsCBe4r
+         Gtu6dbWIa3oRrkNTcTX7DCXZFb26cORK8OGHjnZpNXAfK+Y9XHwNAdu4qKRIkwerFx/4
+         UJWX5qxUVG2q5bgOSW/SErfjnXqgFel8xLY6+s9b2Xqvc6RtwPcNNi9tRGR3lXVOOmrA
+         h1Jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=HaL2zh/WXFrk38V3//tUJzJt7K7m3lYKmEzICUwPAfg=;
+        b=hrb2uG21RsXvDaCSUKJtNRda1U0mb3zZkMVdpDYD2I32rtB5oJZtYTqO67Hqs5FtaU
+         xwGH49u6coojSa2rOiLEeVG6XCerPdqLaAeOufztodAz6SERybzRLs9tRMpigjGAxfVn
+         I7T5P/X4R+3gqMJA/WaYscWhvIlrzwTJjoRL2NHSuSE8cElDLBhVmALja82EKukCNOku
+         w2U8KXsYL7HhwIQbvIhK07oBqpxQsBKxR+yAVBO1IL2tw6to7ujCN2gq4V1BoF4kAONu
+         plsrWRu5SWqDDhA8xQWYNHlsgeKu6bYD3mgr57ruf9xxXEYnA03DC/JNzzA7lpPGP5xL
+         Z7mA==
+X-Gm-Message-State: AOAM533+hTUUj1nwDSCrHqE4AHX9h7hlKfwXISp3r50Dt1BsJ5ISPGQ1
+        aauLG1iTtHv9bv41nfAZ8Yk=
+X-Google-Smtp-Source: ABdhPJzzb6/HsEpBtXZ/ASVQAMBc+auMcspov6YM7337Yaba/ksfKQK45O0cu92Ka+BJx44VCiCQxA==
+X-Received: by 2002:a05:600c:2116:: with SMTP id u22mr961700wml.35.1597258975940;
+        Wed, 12 Aug 2020 12:02:55 -0700 (PDT)
+Received: from lenovo-laptop (cpc83647-brig20-2-0-cust926.3-3.cable.virginm.net. [82.19.195.159])
+        by smtp.gmail.com with ESMTPSA id z7sm4811299wmk.6.2020.08.12.12.02.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Aug 2020 12:02:55 -0700 (PDT)
+From:   Alex Dewar <alex.dewar90@gmail.com>
+X-Google-Original-From: Alex Dewar <alex.dewar@gmx.co.uk>
+Date:   Wed, 12 Aug 2020 20:02:53 +0100
+To:     David Lechner <david@lechnology.com>
+Cc:     Alex Dewar <alex.dewar90@gmail.com>,
+        Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>,
+        Bartosz Go??aszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH] power: supply: Add dependency to lego-ev3-battery
+ Kconfig options
+Message-ID: <20200812190253.zewvdfvyu6cnggcl@lenovo-laptop>
+References: <20200809185444.54247-1-alex.dewar90@gmail.com>
+ <d6c98ee6-f2f3-c55a-be16-3794ccf30a28@lechnology.com>
+ <20200812133711.ddwhxypmvr27pxdu@lenovo-laptop>
+ <ce0ae241-10e1-de5c-e694-2c00dc01a2c4@lechnology.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ce0ae241-10e1-de5c-e694-2c00dc01a2c4@lechnology.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, 12 Aug 2020 09:21:54 -0700
-Joe Perches <joe@perches.com> escreveu:
-
-> On Wed, 2020-08-12 at 17:56 +0200, Mauro Carvalho Chehab wrote:
-> > Instead of manually using bswap_32(), just use the
-> > le32 macros.  
+On Wed, Aug 12, 2020 at 10:24:30AM -0500, David Lechner wrote:
+> On 8/12/20 8:37 AM, Alex Dewar wrote:
+> > On Tue, Aug 11, 2020 at 09:24:10AM -0500, David Lechner wrote:
+> > > On 8/9/20 1:54 PM, Alex Dewar wrote:
+> > > > This battery appears only to be used by a single board (DA850), so it
+> > > > makes sense to add this to the Kconfig file so that users don't build
+> > > > the module unnecessarily. It currently seems to be built for the x86
+> > > > Arch Linux kernel where it's probably not doing much good.
+> > > 
+> > > It would probably also make sense to add "default n" since it only
+> > > applies to one board in the entire arch.
+> > 
+> > Ah ok. That makes sense. Would you like me to send a follow-on patch for
+> > this?
 > 
-> Are you certain this code will now work on any endian cpu?
-> 
-> Maybe just use __swab32 instead
+> You can just send a v2 patch that includes the change below and the
+> additional change.
 
-Well, I didn't test, because this driver is for an specific
-hardware (arm64). Yet, what happens in practice is that just
-one byte is written by the PMIC drivers. If the order is not
-LE, the byte written at the buffer will always be zero.
+I've just had a look at the documentation[1] and it seems that as there's
+no "default y" there it'll default to n anyway. Have I got that right?
+
+[1] https://www.kernel.org/doc/html/latest/kbuild/kconfig-language.html#menu-attributes
 
 > 
-> > diff --git a/drivers/staging/hikey9xx/hisi-spmi-controller.c b/drivers/staging/hikey9xx/hisi-spmi-controller.c  
-> []
-> > @@ -43,11 +42,6 @@
-> >  #define SPMI_APB_SPMI_CMD_TYPE_OFFSET			24
-> >  #define SPMI_APB_SPMI_CMD_LENGTH_OFFSET			20
-> >  
-> > -#define bswap_32(X)   \
-> > -    ((((u32)(X) & 0xff000000) >> 24) | \
-> > -     (((u32)(X) & 0x00ff0000) >> 8) | \
-> > -     (((u32)(X) & 0x0000ff00) << 8) | \
-> > -     (((u32)(X) & 0x000000ff) << 24))
-> >  #define SPMI_APB_SPMI_CMD_SLAVEID_OFFSET		16
-> >  #define SPMI_APB_SPMI_CMD_ADDR_OFFSET			0
-> >  
-> > @@ -179,14 +173,15 @@ static int spmi_read_cmd(struct spmi_controller *ctrl,
-> >  
-> >  	writel(cmd, spmi_controller->base + chnl_ofst + SPMI_APB_SPMI_CMD_BASE_ADDR);
-> >  
-> > -	rc = spmi_controller_wait_for_done(spmi_controller, spmi_controller->base, sid, addr);
-> > +	rc = spmi_controller_wait_for_done(spmi_controller,
-> > +					   spmi_controller->base, sid, addr);
-> >  	if (rc)
-> >  		goto done;
-> >  
-> >  	i = 0;
-> >  	do {
-> >  		data = readl(spmi_controller->base + chnl_ofst + SPMI_SLAVE_OFFSET * sid + SPMI_APB_SPMI_RDATA0_BASE_ADDR + i * SPMI_PER_DATAREG_BYTE);
-> > -		data = bswap_32(data);
-> > +		data = be32_to_cpu((__be32)data);
-> >  		if ((bc - i * SPMI_PER_DATAREG_BYTE) >> 2) {
-> >  			memcpy(buf, &data, sizeof(data));
-> >  			buf += sizeof(data);
-> > @@ -210,8 +205,7 @@ static int spmi_write_cmd(struct spmi_controller *ctrl,
-> >  {
-> >  	struct spmi_controller_dev *spmi_controller = dev_get_drvdata(&ctrl->dev);
-> >  	unsigned long flags;
-> > -	u32 cmd;
-> > -	u32 data = 0;
-> > +	u32 cmd, data;
-> >  	int rc;
-> >  	u32 chnl_ofst = SPMI_CHANNEL_OFFSET * spmi_controller->channel;
-> >  	u8 op_code, i;
-> > @@ -246,7 +240,7 @@ static int spmi_write_cmd(struct spmi_controller *ctrl,
-> >  
-> >  	i = 0;
-> >  	do {
-> > -		memset(&data, 0, sizeof(data));
-> > +		data = 0;
-> >  		if ((bc - i * SPMI_PER_DATAREG_BYTE) >> 2) {
-> >  			memcpy(&data, buf, sizeof(data));
-> >  			buf += sizeof(data);
-> > @@ -255,8 +249,8 @@ static int spmi_write_cmd(struct spmi_controller *ctrl,
-> >  			buf += (bc % SPMI_PER_DATAREG_BYTE);
-> >  		}
-> >  
-> > -		data = bswap_32(data);
-> > -		writel(data, spmi_controller->base + chnl_ofst + SPMI_APB_SPMI_WDATA0_BASE_ADDR + SPMI_PER_DATAREG_BYTE * i);
-> > +		writel((u32)cpu_to_be32(data),
-> > +		       spmi_controller->base + chnl_ofst + SPMI_APB_SPMI_WDATA0_BASE_ADDR + SPMI_PER_DATAREG_BYTE * i);
-> >  		i++;
-> >  	} while (bc > i * SPMI_PER_DATAREG_BYTE);
-> >    
+> > 
+> > Alex
+> > 
+> > > 
+> > > BATTERY_LEGO_EV3 is already explicitly set to "m" in the appropriate
+> > > defconfig file, so I don't think it would break anything.
+> > > 
+> > > > 
+> > > > Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
+> > > > ---
+> > > >    drivers/power/supply/Kconfig | 2 +-
+> > > >    1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > 
+> > > > diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
+> > > > index faf2830aa1527..9f76e2f47ac6d 100644
+> > > > --- a/drivers/power/supply/Kconfig
+> > > > +++ b/drivers/power/supply/Kconfig
+> > > > @@ -164,7 +164,7 @@ config BATTERY_DS2782
+> > > >    config BATTERY_LEGO_EV3
+> > > >    	tristate "LEGO MINDSTORMS EV3 battery"
+> > > > -	depends on OF && IIO && GPIOLIB
+> > > > +	depends on OF && IIO && GPIOLIB && (ARCH_DAVINCI_DA850 || COMPILE_TEST)
+> > > >    	help
+> > > >    	  Say Y here to enable support for the LEGO MINDSTORMS EV3 battery.
+> > > > 
+> > > 
 > 
