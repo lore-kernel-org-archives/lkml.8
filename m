@@ -2,99 +2,128 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D60C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 10:40:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D8BBC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 10:48:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DFE3208A9
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 10:40:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0148E20781
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 10:48:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="n2CVCFb/"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FLCDAVbv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbgHLKkV (ORCPT
+        id S1727022AbgHLKsV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 06:40:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39468 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726404AbgHLKkU (ORCPT
+        Wed, 12 Aug 2020 06:48:21 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:38822 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726698AbgHLKsV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 06:40:20 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2FDAC06174A
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 03:40:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=qDIF+049UNMS9jSAYb//dXeP/I6AXbYU/f1+M6xpD5s=; b=n2CVCFb/w6yNnbPb17XycbJZmO
-        Tj2B7+xz78H2FQGEZOTbbx1U45/N5KFY6TSzYXavM7/PiWmD0trtvC3zFCsSZi3zuKBgGpo8dNl0P
-        VEDEbinhZRP/c6uKIY7J0bAnA5WXeSinw5VBKN+ku6aovjE8pdkLb49wmLDVgQV4nf8cEG8vfRmIT
-        ND/Zx67w9XU0utCilvcaUa0gbdNWPFovdaP2QMiDkcQWp0QcAmmf0bvqV7avW9dh1VbXIs+Wggsu4
-        5TRITkz1h+9tKODAIxsPX6KOkZ1KqEztiuxFprM8SkSPin6CjIIoBPqlOkaRwmCzHA5iYZMrbgQrv
-        pnyC0dig==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k5oB1-0006Rg-9S; Wed, 12 Aug 2020 10:40:11 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5E7193028C8;
-        Wed, 12 Aug 2020 12:40:05 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 20D0F25D0D543; Wed, 12 Aug 2020 12:40:05 +0200 (CEST)
-Date:   Wed, 12 Aug 2020 12:40:05 +0200
-From:   peterz@infradead.org
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Jessica Yu <jeyu@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kees Cook <keescook@chromium.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2] module: Harden STRICT_MODULE_RWX
-Message-ID: <20200812104005.GN2674@hirez.programming.kicks-ass.net>
-References: <20200403171303.GK20760@hirez.programming.kicks-ass.net>
- <20200808101222.5103093e@coco.lan>
- <20200810092523.GA8612@linux-8ccs>
- <20200810150647.GB8612@linux-8ccs>
- <20200811163427.6edbf343@coco.lan>
- <20200811145524.GE2674@hirez.programming.kicks-ass.net>
- <20200811172738.2d632a09@coco.lan>
- <20200811160134.GA13652@linux-8ccs>
- <CAMj1kXF8fm=9CdQykqDbgYCJSP88ezMs3EOosCW+SDi+Lve0zg@mail.gmail.com>
+        Wed, 12 Aug 2020 06:48:21 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07CAllRr030912;
+        Wed, 12 Aug 2020 05:47:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1597229267;
+        bh=evki6dI5ts5KOmGlF8qCX59wMWhwGQMc/ZNVJhMADKg=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=FLCDAVbve+oTVJhXUk7KB9Nf1N8Y5hv2YdvDJfrw1FlDnAjzXHCfuyeJByBhGI5VC
+         IRk6YOcrYOzn50dLMDMAAUNtsDpxbJe1ntKJBfo4mxBorMFfFWdsFwycdn86j+IJ8L
+         ZGVk/Vu1l5zcx7oB8QZkFkIBnkfHCFzIrC1ZStKw=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07CAll8W063305
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 12 Aug 2020 05:47:47 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 12
+ Aug 2020 05:47:47 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 12 Aug 2020 05:47:47 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07CAlhX8025723;
+        Wed, 12 Aug 2020 05:47:43 -0500
+Subject: Re: [PATCH v8 0/3] drm: Add support for Cadence MHDP DPI/DP bridge
+ and J721E wrapper.
+To:     =?UTF-8?Q?Guido_G=c3=bcnther?= <agx@sigxcpu.org>,
+        Swapnil Jakhade <sjakhade@cadence.com>
+CC:     <airlied@linux.ie>, <daniel@ffwll.ch>,
+        <Laurent.pinchart@ideasonboard.com>, <robh+dt@kernel.org>,
+        <a.hajda@samsung.com>, <narmstrong@baylibre.com>,
+        <jonas@kwiboo.se>, <jernej.skrabec@siol.net>,
+        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <mparab@cadence.com>,
+        <yamonkar@cadence.com>, <praneeth@ti.com>, <nsekhar@ti.com>,
+        <jsarha@ti.com>, <sandor.yu@nxp.com>
+References: <1596713672-8146-1-git-send-email-sjakhade@cadence.com>
+ <20200812083937.GA8816@bogon.m.sigxcpu.org>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <3bcbbb0b-ee04-0f1e-6c54-97b01c552d82@ti.com>
+Date:   Wed, 12 Aug 2020 13:47:42 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXF8fm=9CdQykqDbgYCJSP88ezMs3EOosCW+SDi+Lve0zg@mail.gmail.com>
+In-Reply-To: <20200812083937.GA8816@bogon.m.sigxcpu.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 10:56:56AM +0200, Ard Biesheuvel wrote:
-> The module .lds has BYTE(0) in the section contents to prevent the
-> linker from pruning them entirely. The (NOLOAD) is there to ensure
-> that this byte does not end up in the .ko, which is more a matter of
-> principle than anything else, so we can happily drop that if it helps.
-> 
-> However, this should only affect the PROGBITS vs NOBITS designation,
-> and so I am not sure whether it makes a difference.
-> 
-> Depending on where the w^x check occurs, we might simply override the
-> permissions of these sections, and strip the writable permission if it
-> is set in the PLT handling init code, which manipulates the metadata
-> of all these 3 sections before the module space is vmalloc'ed.
+Hi Guido,
 
-What's curious is that this seems the result of some recent binutils
-change. Every build with binutils-2.34 (or older) does not seem to
-generate these as WAX, but has the much more sensible WA.
+On 12/08/2020 11:39, Guido Günther wrote:
+> Hi,
+> On Thu, Aug 06, 2020 at 01:34:29PM +0200, Swapnil Jakhade wrote:
+>> This patch series adds new DRM bridge driver for Cadence MHDP DPI/DP
+>> bridge. The Cadence Display Port IP is also referred as MHDP (Mobile High
+>> Definition Link, High-Definition Multimedia Interface, Display Port).
+>> Cadence Display Port complies with VESA DisplayPort (DP) and embedded
+>> Display Port (eDP) standards.
+> 
+> Is there any relation to the cadence mhdp ip core used inthe imx8mq:
+> 
+>     https://lore.kernel.org/dri-devel/cover.1590982881.git.Sandor.yu@nxp.com/
+> 
+> It looks very similar in several places so should that use the same driver?
+> Cheers,
+>  -- Guido
 
-I suppose we can change the kernel check and 'allow' W^X for 0 sized
-sections, but I think we should still figure out why binutils-2.35 is
-now generating WAX sections all of a sudden, it might come bite us
-elsewhere.
+Interesting.
+
+So the original Cadence DP patches for TI SoCs did create a common driver with Rockchip's older mhdp
+driver. And looks like the IMX series points to an early version of that patch ("drm/rockchip:
+prepare common code for cdns and rk dpi/dp driver").
+
+We gave up on that as the IPs did have differences and the firmwares used were apparently quite
+different. The end result was very difficult to maintain, especially as (afaik) none of the people
+involved had relevant Rockchip HW.
+
+The idea was to get a stable DP driver for TI SoCs ready and upstream, and then carefully try to
+create common parts with Rockchip's driver in small pieces.
+
+If the Rockchip and IMX mhdp have the same IP and same firmware, then they obviously should share
+code as done in the series you point to.
+
+Perhaps Cadence can clarify the differences between IMX, TI and Rockchip IPs and FWs?
+
+I'm worried that if there are IP differences, even if not great ones, and if the FWs are different
+and developed separately, it'll be a constant "fix X for SoC A, and accidentally break Y for SoC B
+and C", especially if too much code is shared.
+
+In the long run I'm all for a single driver (or large shared parts), but I'm not sure if we should
+start with that approach.
+
+ Tomi
+
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
