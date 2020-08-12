@@ -2,129 +2,102 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4496DC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EEC5C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:13:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BC71207DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:11:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED581207DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:13:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="Ev5v2cO1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PDBU2thu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726592AbgHLOLK (ORCPT
+        id S1726567AbgHLONF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 10:11:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43696 "EHLO
+        Wed, 12 Aug 2020 10:13:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726543AbgHLOLJ (ORCPT
+        with ESMTP id S1726488AbgHLONF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 10:11:09 -0400
-Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10E5CC061385
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 07:11:09 -0700 (PDT)
-Received: by mail-ej1-x62f.google.com with SMTP id p24so2391736ejf.13
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 07:11:08 -0700 (PDT)
+        Wed, 12 Aug 2020 10:13:05 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4A03C061383;
+        Wed, 12 Aug 2020 07:13:04 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id k20so2089012wmi.5;
+        Wed, 12 Aug 2020 07:13:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iAI5XSM3iLSzZtbpzf+lyAZodExx8Fv/UVCtkgNqIpw=;
-        b=Ev5v2cO14QrSiyYcOC/Fz6swER260kegAoQqygVAc1l4xp7iWj9y1sNUklptY5fWyh
-         UpTrThzpnTLffpSrHOf2H63dAcVssZmBeRiLgorfycUPPCMMTFGXSVEqYOgJikBrkCYO
-         UVuT7X9u60ilNRyU6Ttwt5duD6hAUjAYWcjFk=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3JSWXdvJKypcewGZSL+FLA89GNbkLI8DDuSajPdeI90=;
+        b=PDBU2thuP7mGuehMwtGHU4dcvMwcHV2wHS5Fz6ERcv+PFycF9hHs89nJnf3Ro6X4LZ
+         8CKf3LZMB+B1OK5DFcChRayeL3G+pr2+Qdrfx9nHpNm79DF33ZPufWd5bl/7aDvNW2eA
+         LdneA30b4Qb49jOsRpWSz3rMEhOJ52mRdIAIDorz6qjd2XSVXi4urt3HTbgPgtA0yP1a
+         Ekdf2g1B1V4h7b7XuD7hH5nLZ0AbO+wuU79ppJxLJ/nDy3w5ooBKMvfhv1W2DirFwGDV
+         QSKgMcUaVIhLhvRo5VID1PCfrFtTaOm9e0mRHnfQHwqjRBt0aAkIwWXJd2KyEglKw2rf
+         VoSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iAI5XSM3iLSzZtbpzf+lyAZodExx8Fv/UVCtkgNqIpw=;
-        b=JMGjZWPOeA8lPQnqsANcGcm+rVpSPX7hELyMm5O0saM7qeSEtkIoltKfjHhj76gJsx
-         L1drFhiCcjup1Coclm8//AwAtyL6kbitYqjx5ly4cm2ITaAkt8m7rJxcJSAvvWNslDaz
-         1CJUfjYppEbQLXtnfc5Ao9U6mPZIL53dw7bR1+E+U/r3/0uYgOpIfEimvLcvMIXkWOE1
-         nUs3wbbQMZioqHqZ2euuS+Rx+7TfXZQKYrttfZ4IAC/e92h8k3az2voaVkGgkFnynvL/
-         AULtHzEICnwmPE2iIlh8ue1+nYfCpW8GPdSNhfqF54OU486HHWA/QW/3gcCaOJIl+lb6
-         yTlg==
-X-Gm-Message-State: AOAM5331yEr5r8cWbCEfgHulgz3/k78CKuHv4Y09pn89yQ9TvHeFk/5n
-        58zBpgfpJKTnuuLQIlyxg0voQ48glng5N/cI9AOWbQ==
-X-Google-Smtp-Source: ABdhPJx3PJ9aL5obqkNAu7vPQ/SqsQ9TATEfUryRI39r11CbP3IrD6FZDXg7ftvqa1wiyALQ92/dDqI6E8aZplVgzoI=
-X-Received: by 2002:a17:906:4e4f:: with SMTP id g15mr16755594ejw.443.1597241467668;
- Wed, 12 Aug 2020 07:11:07 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3JSWXdvJKypcewGZSL+FLA89GNbkLI8DDuSajPdeI90=;
+        b=mkrgBCyHgfMiw8E/kf+K7499ZVhLEToOkoqB6Vv2Ix0YQH0XlFw5tqx5xFBcfts8Dq
+         Ploa2LQu6mNbhlj5RQi4SGNUCQSDXXVTAcKv0ZOhJKSrbIWvjWkX2X2IAfa5j84Da7o7
+         cUA/KeRvn8hl9M4LNGzDFwZDlIpSUnPlPSr13L1ZlYg5Yb15EvNcbuoTJAFuRddeHZah
+         WGTgMYk01muZ3bEi1nvA82fMTWDrLOmc9dKEnvEwdpANC6Jl9CaGbItSB5NHwMRe6AK0
+         Dr7CIeNHNKB8T/NE9zmk1zP6vBPSFk/t0etgyP1N38R0xtIGMWmldDv9hKDh18S/bl/V
+         gzFQ==
+X-Gm-Message-State: AOAM530lRqgHas/deQsXt62ivtvWsaJvncq+ZL/JvQgCzm1/v2td5VpE
+        mBTmIUBwCEBQ87AAsNkwwJc=
+X-Google-Smtp-Source: ABdhPJxLI+bpIIToGSoBCnC9gRUo94x6QghuJnyl1w5jZGtqfmNYNhSgWQpHPGGpQ35ecsDKBnh62A==
+X-Received: by 2002:a1c:678b:: with SMTP id b133mr9401362wmc.117.1597241583696;
+        Wed, 12 Aug 2020 07:13:03 -0700 (PDT)
+Received: from localhost.localdomain (cpc83647-brig20-2-0-cust926.3-3.cable.virginm.net. [82.19.195.159])
+        by smtp.gmail.com with ESMTPSA id g14sm3818331wmk.37.2020.08.12.07.13.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Aug 2020 07:13:02 -0700 (PDT)
+From:   Alex Dewar <alex.dewar90@gmail.com>
+To:     "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Alex Dewar <alex.dewar90@gmail.com>
+Subject: [PATCH 1/2] nfsd: Remove unnecessary assignment in nfs4xdr.c
+Date:   Wed, 12 Aug 2020 15:12:51 +0100
+Message-Id: <20200812141252.21059-1-alex.dewar90@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-References: <1842689.1596468469@warthog.procyon.org.uk> <1845353.1596469795@warthog.procyon.org.uk>
- <CAJfpegunY3fuxh486x9ysKtXbhTE0745ZCVHcaqs9Gww9RV2CQ@mail.gmail.com>
- <ac1f5e3406abc0af4cd08d818fe920a202a67586.camel@themaw.net>
- <CAJfpegu8omNZ613tLgUY7ukLV131tt7owR+JJ346Kombt79N0A@mail.gmail.com>
- <CAJfpegtNP8rQSS4Z14Ja4x-TOnejdhDRTsmmDD-Cccy2pkfVVw@mail.gmail.com>
- <20200811135419.GA1263716@miu.piliscsaba.redhat.com> <CAHk-=wjzLmMRf=QG-n+1HnxWCx4KTQn9+OhVvUSJ=ZCQd6Y1WA@mail.gmail.com>
- <135551.1597240486@warthog.procyon.org.uk>
-In-Reply-To: <135551.1597240486@warthog.procyon.org.uk>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Wed, 12 Aug 2020 16:10:56 +0200
-Message-ID: <CAJfpegvLaoQHZTm1-QKorzsL3ZDnTOcHpcAJn36yF=n-YymCow@mail.gmail.com>
-Subject: Re: file metadata via fs API (was: [GIT PULL] Filesystem Information)
-To:     David Howells <dhowells@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, Karel Zak <kzak@redhat.com>,
-        Jeff Layton <jlayton@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Christian Brauner <christian@brauner.io>,
-        Lennart Poettering <lennart@poettering.net>,
-        Linux API <linux-api@vger.kernel.org>,
-        Ian Kent <raven@themaw.net>,
-        LSM <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 3:54 PM David Howells <dhowells@redhat.com> wrote:
->
-> Linus Torvalds <torvalds@linux-foundation.org> wrote:
->
-> > IOW, if you do something more along the lines of
-> >
-> >        fd = open(""foo/bar", O_PATH);
-> >        metadatafd = openat(fd, "metadataname", O_ALT);
-> >
-> > it might be workable.
->
-> What is it going to walk through?  You need to end up with an inode and dentry
-> from somewhere.
->
-> It sounds like this would have to open up a procfs-like magic filesystem, and
-> walk into it.  But how would that actually work?  Would you create a new
-> superblock each time you do this, labelled with the starting object (say the
-> dentry for "foo/bar" in this case), and then walk from the root?
->
-> An alternative, maybe, could be to make a new dentry type, say, and include it
-> in the superblock of the object being queried - and let the filesystems deal
-> with it.  That would mean that non-dir dentries would then have virtual
-> children.  You could then even use this to implement resource forks...
->
-> Another alternative would be to note O_ALT and then skip pathwalk entirely,
-> but just use the name as a key to the attribute, creating an anonfd to read
-> it.  But then why use openat() at all?  You could instead do:
->
->         metadatafd = openmeta(fd, "metadataname");
->
-> and save the page flag.  You could even merge the two opens and do:
->
->         metadatafd = openmeta("foo/bar", "metadataname");
->
-> Why not even combine this with Miklos's readfile() idea:
->
->         readmeta(AT_FDCWD, "foo/bar", "metadataname", buf, sizeof(buf));
+In nfsd4_encode_listxattrs(), the variable p is assigned to at one point
+but this value is never used before p is reassigned. Fix this.
 
-And writemeta() and createmeta() and readdirmeta() and ...
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
+---
+ fs/nfsd/nfs4xdr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The point is that generic operations already exist and no need to add
-new, specialized ones to access metadata.
+diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+index 259d5ad0e3f47..1a0341fd80f9a 100644
+--- a/fs/nfsd/nfs4xdr.c
++++ b/fs/nfsd/nfs4xdr.c
+@@ -4859,7 +4859,7 @@ nfsd4_encode_listxattrs(struct nfsd4_compoundres *resp, __be32 nfserr,
+ 			goto out;
+ 		}
+ 
+-		p = xdr_encode_opaque(p, sp, slen);
++		xdr_encode_opaque(p, sp, slen);
+ 
+ 		xdrleft -= xdrlen;
+ 		count++;
+-- 
+2.28.0
 
-Thanks,
-Miklos
