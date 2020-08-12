@@ -2,208 +2,175 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8185CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 07:39:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7047C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 07:40:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5098C2065C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 07:39:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3DD72065C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 07:40:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YS7LHI77"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="cQiKsjlS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726755AbgHLHjd (ORCPT
+        id S1726846AbgHLHk2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 03:39:33 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41325 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726255AbgHLHja (ORCPT
+        Wed, 12 Aug 2020 03:40:28 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:33570 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726745AbgHLHk2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 03:39:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597217968;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=OHEoD0OL9TMKDoEtwEodFChTT/XNznBR9noWaAASTjY=;
-        b=YS7LHI776V+SxPrqpAHgUfAZEcwXPWdTo5kowiUPOWz4u+jAmY1shd0e9jW+ABJHFfqFoV
-        6W/Py6MOZciU7Z6Gd9oB13H+p0IfunMjAcGxWcrJfV80Q5iCqkHtZSxz7i+22oPwDiT0Q7
-        R+QfnKfctrpEIaZOblVXUSg2ApMUHhU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-381-eDlGBmfsMUmbX0Rua8QoeA-1; Wed, 12 Aug 2020 03:39:24 -0400
-X-MC-Unique: eDlGBmfsMUmbX0Rua8QoeA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 12 Aug 2020 03:40:28 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597218027; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=2L3L1433xPSIuFOwgxbwV9jFqwSQQyfGabN9mWsVC/c=; b=cQiKsjlSUIs/CFHJaLaYwQOySrRvz0mlD2LeXxUrJnIbNUQ3a6BL4/iWtRPvgWNU4v85vBSs
+ w3m34mtsPkKK5Wv85OJavuoaTdYA4PBMw0amQZilyTQeaEhGqaMq6cfH2WlriO3olxsWLspj
+ K1jT94S1nTSNYhVysm6gI1KGUTg=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n11.prod.us-west-2.postgun.com with SMTP id
+ 5f339cca46ed996674559e70 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 12 Aug 2020 07:39:54
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id EABE1C43391; Wed, 12 Aug 2020 07:39:53 +0000 (UTC)
+Received: from [192.168.1.15] (unknown [61.1.229.169])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3BDE280183C;
-        Wed, 12 Aug 2020 07:39:23 +0000 (UTC)
-Received: from [10.36.110.45] (unknown [10.36.110.45])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3C8C38BB13;
-        Wed, 12 Aug 2020 07:39:19 +0000 (UTC)
-Subject: Re: [PATCH 1/2] vdpa: ifcvf: return err when fail to request config
- irq
-To:     Jason Wang <jasowang@redhat.com>, mst@redhat.com,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Cc:     Zhu Lingshan <lingshan.zhu@intel.com>
-References: <20200723091254.20617-1-jasowang@redhat.com>
-From:   Maxime Coquelin <maxime.coquelin@redhat.com>
-Autocrypt: addr=maxime.coquelin@redhat.com; keydata=
- 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
- Mwqu3GQ=
-Message-ID: <b65b8a30-c629-e1d8-184e-7f9996b75614@redhat.com>
-Date:   Wed, 12 Aug 2020 09:39:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id DD3D9C433CA;
+        Wed, 12 Aug 2020 07:39:47 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DD3D9C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [RFC v2 03/11] tty: serial: qcom_geni_serial: Use OPP API to set
+ clk/perf state
+To:     Amit Pundir <amit.pundir@linaro.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-scsi@vger.kernel.org,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Doug Anderson <dianders@chromium.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-spi@vger.kernel.org, linux-serial@vger.kernel.org,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+References: <20190320094918.20234-1-rnayak@codeaurora.org>
+ <20190320094918.20234-4-rnayak@codeaurora.org>
+ <CALAqxLV2TBk9ScUM6MeJMCkL8kJnCihjQ7ac5fLzcqOg1rREVQ@mail.gmail.com>
+ <CALAqxLWg3jJKJFLnnne-mrQEnH=m7R_9azCGaGnEmFYR4EMh=A@mail.gmail.com>
+ <ec5eeb21-48e4-5dcc-583a-ac9419659e44@codeaurora.org>
+ <CAMi1Hd1O+3bjQN6c9WQr+t0YXGBAukfFzJWtkgXDp1Zcir-0-w@mail.gmail.com>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <aab760b8-2a06-ae96-584a-301d5326fc0d@codeaurora.org>
+Date:   Wed, 12 Aug 2020 13:09:44 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <20200723091254.20617-1-jasowang@redhat.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <CAMi1Hd1O+3bjQN6c9WQr+t0YXGBAukfFzJWtkgXDp1Zcir-0-w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On 7/23/20 11:12 AM, Jason Wang wrote:
-> We ignore the err of requesting config interrupt, fix this.
+On 8/12/2020 1:05 PM, Amit Pundir wrote:
+> Hi Rajendra,
 > 
-> Fixes: e7991f376a4d ("ifcvf: implement config interrupt in IFCVF")
-> Cc: Zhu Lingshan <lingshan.zhu@intel.com>
-> Signed-off-by: Jason Wang <jasowang@redhat.com>
-> ---
->  drivers/vdpa/ifcvf/ifcvf_main.c | 4 ++++
->  1 file changed, 4 insertions(+)
+> On Wed, 12 Aug 2020 at 11:18, Rajendra Nayak <rnayak@codeaurora.org> wrote:
+>>
+>>
+>> On 8/12/2020 7:03 AM, John Stultz wrote:
+>>> On Tue, Aug 11, 2020 at 4:11 PM John Stultz <john.stultz@linaro.org> wrote:
+>>>>
+>>>> On Wed, Mar 20, 2019 at 2:49 AM Rajendra Nayak <rnayak@codeaurora.org> wrote:
+>>>>>
+>>>>> geni serial needs to express a perforamnce state requirement on CX
+>>>>> depending on the frequency of the clock rates. Use OPP table from
+>>>>> DT to register with OPP framework and use dev_pm_opp_set_rate() to
+>>>>> set the clk/perf state.
+>>>>>
+>>>>> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+>>>>> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+>>>>> ---
+>>>>>    drivers/tty/serial/qcom_geni_serial.c | 15 +++++++++++++--
+>>>>>    1 file changed, 13 insertions(+), 2 deletions(-)
+>>>>>
+>>>>
+>>>> Hey,
+>>>>     I just wanted to follow up on this patch, as I've bisected it
+>>>> (a5819b548af0) down as having broken qca bluetooth on the Dragonboard
+>>>> 845c.
+>>>>
+>>>> I haven't yet had time to debug it yet, but wanted to raise the issue
+>>>> in case anyone else has seen similar trouble.
+>>>
+>>> So I dug in a bit further, and this chunk seems to be causing the issue:
+>>>> @@ -961,7 +963,7 @@ static void qcom_geni_serial_set_termios(struct uart_port *uport,
+>>>>                   goto out_restart_rx;
+>>>>
+>>>>           uport->uartclk = clk_rate;
+>>>> -       clk_set_rate(port->se.clk, clk_rate);
+>>>> +       dev_pm_opp_set_rate(port->dev, clk_rate);
+>>>>           ser_clk_cfg = SER_CLK_EN;
+>>>>           ser_clk_cfg |= clk_div << CLK_DIV_SHFT;
+>>>>
+>>>
+>>>
+>>> With that applied, I see the following errors in dmesg and bluetooth
+>>> fails to function:
+>>> [    4.763467] qcom_geni_serial 898000.serial: dev_pm_opp_set_rate:
+>>> failed to find OPP for freq 102400000 (-34)
+>>> [    4.773493] qcom_geni_serial 898000.serial: dev_pm_opp_set_rate:
+>>> failed to find OPP for freq 102400000 (-34)
+>>>
+>>> With just that chunk reverted on linus/HEAD, bluetooth seems to work ok.
+>>
+>> This seems like the same issue that was also reported on venus [1] because the
+>> clock frequency tables apparently don;t exactly match the achievable clock
+>> frequencies (which we also used to construct the OPP tables)
+>>
+>> Can you try updating the OPP table for QUP to have 102400000 instead of the
+>> current 100000000 and see if that fixes it?
 > 
-> diff --git a/drivers/vdpa/ifcvf/ifcvf_main.c b/drivers/vdpa/ifcvf/ifcvf_main.c
-> index f5a60c14b979..ae7110955a44 100644
-> --- a/drivers/vdpa/ifcvf/ifcvf_main.c
-> +++ b/drivers/vdpa/ifcvf/ifcvf_main.c
-> @@ -76,6 +76,10 @@ static int ifcvf_request_irq(struct ifcvf_adapter *adapter)
->  	ret = devm_request_irq(&pdev->dev, irq,
->  			       ifcvf_config_changed, 0,
->  			       vf->config_msix_name, vf);
-> +	if (ret) {
-> +		IFCVF_ERR(pdev, "Failed to request config irq\n");
-> +		return ret;
-> +	}
->  
->  	for (i = 0; i < IFCVF_MAX_QUEUE_PAIRS * 2; i++) {
->  		snprintf(vf->vring[i].msix_name, 256, "ifcvf[%s]-%d\n",
+> That worked. Thanks.
 > 
+> Should this change be common to base sdm845.dtsi or platform specific dts?
+> For what it's worth, we see this BT breakage on PocoF1 phone too.
 
-This series fixes below Kernel BUG I faced while doing some experiments:
+Thanks for confirming, it will have to be part of the SoC dtsi, and I am
+guessing a similar change is perhaps also needed on sc7180.
+I will send a patch out to fix the OPP tables for both.
 
-[ 1398.695362] kernel BUG at drivers/pci/msi.c:375!
-[ 1398.700561] invalid opcode: 0000 [#1] SMP PTI
-[ 1398.705423] CPU: 0 PID: 25110 Comm: dpdk-testpmd Not tainted
-5.8.0-amorenoz-vdpa+ #2
-[ 1398.714063] Hardware name: Dell Inc. PowerEdge R730/072T6D, BIOS
-2.4.3 01/17/2017
-[ 1398.722415] RIP: 0010:free_msi_irqs+0x189/0x1c0
-[ 1398.727470] Code: 14 85 c0 0f 84 cc fe ff ff 31 ed eb 0f 83 c5 01 39
-6b 14 0f 86 bc fe ff ff 8b 7b 10 01 ef e8 7e 94 b9 ff 48 83 78 70 00d
-[ 1398.748426] RSP: 0018:ffffb48ac5dd3db8 EFLAGS: 00010286
-[ 1398.754257] RAX: ffff9ab298b85400 RBX: ffff9ab285d97100 RCX:
-0000000000000000
-[ 1398.762219] RDX: 0000000000000000 RSI: 0000000000000073 RDI:
-ffffffffac65e8a0
-[ 1398.770182] RBP: 0000000000000000 R08: ffff9ab298b85400 R09:
-ffff9ab74a8c3d98
-[ 1398.778145] R10: ffff9ab74a8c3f58 R11: 0000000000000000 R12:
-ffff9ab719fd82e0
-[ 1398.786107] R13: ffff9ab719fd8000 R14: ffff9ab719fd8000 R15:
-ffff9ab719fd80b0
-[ 1398.794069] FS:  00007efc5dea9000(0000) GS:ffff9ab75fc00000(0000)
-knlGS:0000000000000000
-[ 1398.803099] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 1398.809508] CR2: 000000c000079ff8 CR3: 000000038283e005 CR4:
-00000000003606f0
-[ 1398.817471] DR0: 0000000000000000 DR1: 0000000000000000 DR2:
-0000000000000000
-[ 1398.825434] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7:
-0000000000000400
-[ 1398.833394] Call Trace:
-[ 1398.836127]  pci_disable_msix+0xf7/0x120
-[ 1398.840504]  pci_free_irq_vectors+0xe/0x20
-[ 1398.845074]  ifcvf_vdpa_set_status+0xda/0x301
-[ 1398.849938]  vhost_vdpa_unlocked_ioctl+0x61d/0x790
-[ 1398.855277]  ? vhost_vdpa_process_iotlb_msg+0x2f0/0x2f0
-[ 1398.861109]  ksys_ioctl+0x87/0xc0
-[ 1398.864808]  __x64_sys_ioctl+0x16/0x20
-[ 1398.868992]  do_syscall_64+0x52/0x90
-[ 1398.872982]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[ 1398.878610] RIP: 0033:0x7efc5df9ff9b
-[ 1398.882598] Code: 0f 1e fa 48 8b 05 ed ce 0c 00 64 c7 00 26 00 00 00
-48 c7 c0 ff ff ff ff c3 66 0f 1f 44 00 00 f3 0f 1e fa b8 10 00 00 008
-[ 1398.903551] RSP: 002b:00007ffd0948e378 EFLAGS: 00000283 ORIG_RAX:
-0000000000000010
-[ 1398.911998] RAX: ffffffffffffffda RBX: 0000000000000000 RCX:
-00007efc5df9ff9b
-[ 1398.919960] RDX: 00007ffd0948e3d4 RSI: 000000004001af72 RDI:
-000000000000002c
-[ 1398.927921] RBP: 00007ffd0948e3c0 R08: 0000000002651bf8 R09:
-0000000000000000
-[ 1398.935883] R10: 00007ffd0948e417 R11: 0000000000000283 R12:
-0000000000408950
-[ 1398.943845] R13: 00007ffd0948e6a0 R14: 0000000000000000 R15:
-0000000000000000
-[ 1398.951809] Modules linked in: vxlan ip6_udp_tunnel udp_tunnel
-ip_vs_sh ip_vs_wrr ip_vs_rr ip_vs xt_comment xt_mark nf_tables xt_nat vetht
-[ 1398.951847]  ghash_clmulni_intel iTCO_vendor_support mlx5_core dcdbas
-rapl intel_cstate intel_uncore ipmi_ssif pcspkr mxm_wmi mlxfw virtii
+> 
+> Regards,
+> Amit Pundir
+> 
+> 
+>>
+>> [1] https://lkml.org/lkml/2020/7/27/507
+>>
+>>>
+>>> thanks
+>>> -john
+>>>
+>>
+>> --
+>> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+>> of Code Aurora Forum, hosted by The Linux Foundation
 
-Tested-by: Maxime Coquelin <maxime.coquelin@redhat.com>
-
-Thanks,
-Maxime
-
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
