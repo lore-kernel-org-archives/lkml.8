@@ -2,276 +2,84 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5127C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F8CEC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78A9920838
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:11:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2B4C20781
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:13:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o12pXmbS"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="E5c7MUw1";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KWDVxnDT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726547AbgHLPLs (ORCPT
+        id S1726574AbgHLPNN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 11:11:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53016 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726488AbgHLPLr (ORCPT
+        Wed, 12 Aug 2020 11:13:13 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:52774 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726226AbgHLPNL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 11:11:47 -0400
-Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D09FC061383;
-        Wed, 12 Aug 2020 08:11:47 -0700 (PDT)
-Received: by mail-ua1-x942.google.com with SMTP id x17so701990uao.5;
-        Wed, 12 Aug 2020 08:11:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=87Qzao6Lbi8v1XuUSAX3Tg/795D/ih1dtdkKHUQH4EU=;
-        b=o12pXmbSJgy6Kb8rM+Q1GLD30rQ0DfGlqy0FfWtEJYD+NkuWhIIZLvB3HxaQNOiJo5
-         N0mLWdFGKXlXIIBK1w6Ir6DcRvOZ//mQ5PPZb138PQfUd8ugWylkU1g+M+TBaEtLamr9
-         fac9KVUyeYnmMWodhf4ovl2Z2SxGYuiNVmampTcQWcRsKDgRT6OBB6LhL6hxXrmJ4i5I
-         qH2+9PqNhUi7I/1vRPJjuwMv2LZ5xIt+NyFPD8zkdY0C+uGtuaiBGMvda0Pxo38+1k3z
-         ond1Ye60wqtOkZheEdFwPDphlwAw24CBYxGjvOjeKNcd11od6PxqtQuEz+6Uk1zFUvPW
-         c3Bw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=87Qzao6Lbi8v1XuUSAX3Tg/795D/ih1dtdkKHUQH4EU=;
-        b=FM/eNSJVzf+2NPhAQB4aggBVQ7gfqXMKpWZaka0IoYcBWYfUd09GIIRBV9d5y8P4Wk
-         FsgNiiCg6+wxYeq3mZzQk4yxxaKrO+1Q+GstUJ+TLLT0obH5VCEKtw3ojLsUVkSi6W6v
-         UG1wbgA7EjEwTp8MmUIwR9k2vRUF5YnRmwFbPCEH82yEg7I1YecKYDJvEOzr2oFY32Cq
-         u2EFzL44XlAFbfoNA2c+sp6ERuuldHMpVKe1+cza4YtL7w0Qi2sLubFeJlWzL8scnmK5
-         PEHTf72deUoOxpIdQh6iNphaZiQmW1Y1+TTXmg/Feiu43NZkOjN9//j56K4xwe/h8wZT
-         +E4w==
-X-Gm-Message-State: AOAM530LqCiBFGjr6wb55hEfQ9W9hxo1aiXu4fFUfRQxUYQes3RSXLXa
-        wAfDHZ1kYBG5/FVWC9xWMpAsC9KdDVwYZEul7r8=
-X-Google-Smtp-Source: ABdhPJxqvBm82GiqDiF3SeDSnoY1CCXU9ByjEolMYJ9VBN/Ks2i+ZvwQZB98JvxYxhODvym11bq0XgZFpIvG241po/o=
-X-Received: by 2002:ab0:14c8:: with SMTP id f8mr4437385uae.23.1597245106319;
- Wed, 12 Aug 2020 08:11:46 -0700 (PDT)
+        Wed, 12 Aug 2020 11:13:11 -0400
+Date:   Wed, 12 Aug 2020 17:13:08 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1597245189;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=JCJiGTxrDLupMg+yO16LXfFAQR4TCNL4cbGhGUmaS3M=;
+        b=E5c7MUw1hAOabGrMJkz+wUkYVb56y1C4pjThhNvYaG6Q8BgCxdbQ/Ni5NAIotJ4EdulYfu
+        d6Mh+sUGSzLRCNKj/AVlPwX72cS4JldmQhwouevP++LzPFol6RE5PeujWW4mh77d4r370N
+        vBHHnQkv1zmGZt1Sp886jsExRJdft+75MppzZ6B8gzIgucIorIsKI+6BH4cYsA/Z5QqUmV
+        vhXZSalaX/k82WiW1BqS1esQMG89itxhJoL703lB0GPhdLwUuEgBQWOsCwskSha8Oes01t
+        tTBUgdS5nqlho55R2+yMcYok5QPdqNIiDPO1VpSgf0ZNvzpWp2J8frTXeHln2A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1597245189;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=JCJiGTxrDLupMg+yO16LXfFAQR4TCNL4cbGhGUmaS3M=;
+        b=KWDVxnDT6R0PBhPUaht+xH0ck7102Z1DAAFSU8vI3t6hA23W9wEBpaSHasL5DhW8Bz4oVe
+        Qeit6hPBPPLtAbBg==
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     David Miller <davem@davemloft.net>, Jiafei.Pan@nxp.com,
+        kuba@kernel.org, netdev@vger.kernel.org, claudiu.manoil@nxp.com,
+        ioana.ciornei@nxp.com, yangbo.lu@nxp.com,
+        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+Subject: Re: [PATCH net-next 2/2] enetc: use napi_schedule to be compatible
+ with PREEMPT_RT
+Message-ID: <20200812151308.rlbtrbxycxfu7tvi@linutronix.de>
+References: <20200803201009.613147-1-olteanv@gmail.com>
+ <20200803201009.613147-2-olteanv@gmail.com>
+ <20200803.182145.2300252460016431673.davem@davemloft.net>
+ <20200812135144.hpsfgxusojdrsewl@linutronix.de>
+ <20200812143430.xuzg2ddsl7ouhn5m@skbuf>
 MIME-Version: 1.0
-References: <20200807200957.1269454-9-jim.cromie@gmail.com> <20200809043537.GB30891@shao2-debian>
-In-Reply-To: <20200809043537.GB30891@shao2-debian>
-From:   jim.cromie@gmail.com
-Date:   Wed, 12 Aug 2020 09:11:19 -0600
-Message-ID: <CAJfuBxyKVXwL+UU12EhZ8V7Omf_gGjzyYo8MezRC+1LnqG6pGQ@mail.gmail.com>
-Subject: Re: [dyndbg] 4397a3e7bf: BUG:sleeping_function_called_from_invalid_context_at_mm/slab.h
-To:     kernel test robot <lkp@intel.com>
-Cc:     Jason Baron <jbaron@akamai.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org, lkp@lists.01.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200812143430.xuzg2ddsl7ouhn5m@skbuf>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 8, 2020 at 10:36 PM kernel test robot <lkp@intel.com> wrote:
->
->
-> If you fix the issue, kindly add following tag
-> Reported-by: kernel test robot <lkp@intel.com>
->
->
-> [   29.668135] BUG: sleeping function called from invalid context at mm/slab.h:567
-> [   29.668942] in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 1, name: swapper/0
-> [   29.669798] 4 locks held by swapper/0/1:
-> [   29.670263]  #0: ffff8fe0d5065040 (&zspage->lock){.+.+}-{2:2}, at: zs_map_object+0x82/0x330
-> [   29.671178]  #1: ffff8fe0d5065040 (&zspage->lock){.+.+}-{2:2}, at: zs_map_object+0x82/0x330
-> [   29.672091]  #2: ffff8fe0d5065040 (&zspage->lock){.+.+}-{2:2}, at: zs_map_object+0x82/0x330
-> [   29.672988]  #3: ffff8fe0d5065040 (&zspage->lock){.+.+}-{2:2}, at: zs_map_object+0x82/0x330
-> [   29.673892] Preemption disabled at:
-> [   29.673894] [<ffffffff97bcb678>] zs_map_object+0x38/0x330
+On 2020-08-12 17:34:30 [+0300], Vladimir Oltean wrote:
+> I expect the driver maintainers to have something to say about this. I
+> didn't test on stable kernels, and at least for dpaa2-eth, the change
+> would need to go pretty deep down the stable line.
 
-So, this looks worrying.
-I mean, 4 locks taken by same code.
-Its feeling like an api misunderstanding.
+Yes, each affected and maintained stable kernel. This would also ensure
+that it is part stable-RT trees.
 
-so 1st question:  is zpool / zmalloc not intended for use / setup
-during __init ?
-I seem to be breaking basic rules.
-my zpool is filled with a late_initcall, I also tried
-late_initcall_sync to try to
-wait out all the other init stuff, that didnt work.
+> Also, not really sure who is using the threadirqs option except for
+> testing purposes.
 
-the point of this patch was to not retire every mapping right after it is used,
-but to keep those for enabled callsites.
-all these are mapped RO
-It appears those locks are held across the map-unmap interval ??
-I wouldnt expect that much pr-debug traffic, nor any parellelism at
-all (no -smp qemu args)
+Oh.
 
-Id also add that Ive seen a bunch of different lockdep reports
-from different configurations, all more complicated than this one.
-
-
-
-> [   29.674897] CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.8.0-10185-g4397a3e7bf020 #1
-> [   29.675728] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
-> [   29.676622] Call Trace:
-> [   29.676956]  dump_stack+0x96/0xd0
-> [   29.677358]  ___might_sleep.cold+0xff/0x115
-> [   29.677831]  ? getname_kernel+0x25/0x110
-> [   29.678281]  kmem_cache_alloc+0x212/0x2d0
-> [   29.678739]  getname_kernel+0x25/0x110
-> [   29.679175]  ? rest_init+0x23e/0x23e
-> [   29.679598]  kernel_execve+0x19/0x1c0
-> [   29.680034]  kernel_init+0x6e/0x112
-> [   29.680450]  ret_from_fork+0x22/0x30
-> [   29.680905]
-> [   29.681171] =============================
-> [   29.681629] [ BUG: Invalid wait context ]
-> [   29.682087] 5.8.0-10185-g4397a3e7bf020 #1 Tainted: G        W
-> [   29.682741] -----------------------------
-> [   29.683200] swapper/0/1 is trying to lock:
-> [   29.683663] ffff8fe003808128 (&mm->mmap_lock#2){++++}-{3:3}, at: alloc_bprm+0x126/0x2b0
-> [   29.684537] other info that might help us debug this:
-> [   29.685079] context-{4:4}
-> [   29.685426] 4 locks held by swapper/0/1:
-> [   29.685876]  #0: ffff8fe0d5065040 (&zspage->lock){.+.+}-{2:2}, at: zs_map_object+0x82/0x330
-> [   29.686767]  #1: ffff8fe0d5065040 (&zspage->lock){.+.+}-{2:2}, at: zs_map_object+0x82/0x330
-> [   29.687659]  #2: ffff8fe0d5065040 (&zspage->lock){.+.+}-{2:2}, at: zs_map_object+0x82/0x330
-> [   29.688557]  #3: ffff8fe0d5065040 (&zspage->lock){.+.+}-{2:2}, at: zs_map_object+0x82/0x330
-> [   29.689449] stack backtrace:
-> [   29.689817] CPU: 1 PID: 1 Comm: swapper/0 Tainted: G        W         5.8.0-10185-g4397a3e7bf020 #1
-> [   29.690762] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
-> [   29.691651] Call Trace:
-> [   29.691990]  dump_stack+0x96/0xd0
-> [   29.692396]  __lock_acquire.cold+0xc4/0x1a5
-> [   29.692870]  lock_acquire+0xab/0x390
-> [   29.693295]  ? alloc_bprm+0x126/0x2b0
-> [   29.693728]  down_write_killable+0x3d/0xa0
-> [   29.695267]  ? alloc_bprm+0x126/0x2b0
-> [   29.695701]  alloc_bprm+0x126/0x2b0
-> [   29.696125]  ? rest_init+0x23e/0x23e
-> [   29.696551]  kernel_execve+0x38/0x1c0
-> [   29.696983]  kernel_init+0x6e/0x112
-> [   29.697401]  ret_from_fork+0x22/0x30
-> [   29.697888] BUG: scheduling while atomic: swapper/0/1/0x00000011
-> [   29.698541] INFO: lockdep is turned off.
-> [   29.699000] Modules linked in:
-> [   29.699396] Preemption disabled at:
-> [   29.699398] [<ffffffff97bcb678>] zs_map_object+0x38/0x330
-> [   29.700414] CPU: 1 PID: 1 Comm: swapper/0 Tainted: G        W         5.8.0-10185-g4397a3e7bf020 #1
-> [   29.701373] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
-> [   29.702268] Call Trace:
-> [   29.702604]  dump_stack+0x96/0xd0
-> [   29.703012]  __schedule_bug.cold+0xa1/0xb2
-> [   29.703482]  __schedule+0x8e3/0xa90
-> [   29.703906]  ? try_to_wake_up+0x1d0/0x860
-> [   29.704371]  ? wait_for_completion+0x81/0x110
-> [   29.704861]  schedule+0x53/0x100
-> [   29.705259]  schedule_timeout+0x205/0x2b0
-> [   29.705722]  ? try_to_wake_up+0x7d/0x860
-> [   29.706176]  ? _raw_spin_unlock_irq+0x24/0x50
-> [   29.706666]  ? wait_for_completion+0x81/0x110
-> [   29.707155]  ? wait_for_completion+0x81/0x110
-> [   29.707646]  wait_for_completion+0xab/0x110
-> [   29.708130]  stop_one_cpu+0x87/0xb0
-> [   29.708551]  ? set_cpus_allowed_ptr+0x20/0x20
-> [   29.709044]  ? _raw_spin_unlock_irqrestore+0x41/0x70
-> [   29.709581]  sched_exec+0x98/0xd0
-> [   29.709989]  bprm_execve+0x1d7/0x3a0
-> [   29.710416]  ? rest_init+0x23e/0x23e
-> [   29.710844]  kernel_execve+0x135/0x1c0
-> [   29.711284]  kernel_init+0x6e/0x112
-> [   29.711703]  ret_from_fork+0x22/0x30
-> [   29.712298] Failed to execute /init (error -14)
-> [   29.713523] Run /sbin/init as init process
-> [   29.714612]   with arguments:
-> [   29.715484]     /sbin/init
-> [   29.716328]   with environment:
-> [   29.717235]     HOME=/
-> [   29.717983]     TERM=linux
-> [   29.718801]     user=lkp
-> [   29.719587]     job=/lkp/jobs/scheduled/vm-snb-151/boot-1-aliyun-x86_64-20190626.cgz-4397a3e7bf020ef040be371dcc178db258b928b4-20200808-11882-w8z2ep-10.yaml
-> [   29.721551]     ARCH=x86_64
-> [   29.721986]     kconfig=x86_64-rhel-7.6-kselftests
-> [   29.722623]     branch=linux-review/Jim-Cromie/dyndbg-WIP-diet-plan/20200808-041343
-> [   29.723634]     commit=4397a3e7bf020ef040be371dcc178db258b928b4
-> [   29.724395]     BOOT_IMAGE=/pkg/linux/x86_64-rhel-7.6-kselftests/gcc-9/4397a3e7bf020ef040be371dcc178db258b928b4/vmlinuz-5.8.0-10185-g4397a3e7bf020
-> [   29.725943]     max_uptime=600
-> [   29.726406]     RESULT_ROOT=/result/boot/1/vm-snb/aliyun-x86_64-20190626.cgz/x86_64-rhel-7.6-kselftests/gcc-9/4397a3e7bf020ef040be371dcc178db258b928b4/8
-> [   29.728009]     LKP_SERVER=inn
-> [   29.728475]     softlockup_panic=1
-> [   29.728969]     prompt_ramdisk=0
-> [   29.729449]     vga=normal
-> [   29.729967] Starting init: /sbin/init exists but couldn't execute it (error -14)
-> [   29.730967] Run /etc/init as init process
-> [   29.731526]   with arguments:
-> [   29.731986]     /etc/init
-> [   29.732410]   with environment:
-> [   29.732880]     HOME=/
-> [   29.733277]     TERM=linux
-> [   29.733711]     user=lkp
-> [   29.734125]     job=/lkp/jobs/scheduled/vm-snb-151/boot-1-aliyun-x86_64-20190626.cgz-4397a3e7bf020ef040be371dcc178db258b928b4-20200808-11882-w8z2ep-10.yaml
-> [   29.735762]     ARCH=x86_64
-> [   29.736211]     kconfig=x86_64-rhel-7.6-kselftests
-> [   29.736844]     branch=linux-review/Jim-Cromie/dyndbg-WIP-diet-plan/20200808-041343
-> [   29.737860]     commit=4397a3e7bf020ef040be371dcc178db258b928b4
-> [   29.738609]     BOOT_IMAGE=/pkg/linux/x86_64-rhel-7.6-kselftests/gcc-9/4397a3e7bf020ef040be371dcc178db258b928b4/vmlinuz-5.8.0-10185-g4397a3e7bf020
-> [   29.740172]     max_uptime=600
-> [   29.740634]     RESULT_ROOT=/result/boot/1/vm-snb/aliyun-x86_64-20190626.cgz/x86_64-rhel-7.6-kselftests/gcc-9/4397a3e7bf020ef040be371dcc178db258b928b4/8
-> [   29.742238]     LKP_SERVER=inn
-> [   29.742699]     softlockup_panic=1
-> [   29.743202]     prompt_ramdisk=0
-> [   29.743680]     vga=normal
-> [   29.744156] Run /bin/init as init process
-> [   29.744719]   with arguments:
-> [   29.745179]     /bin/init
-> [   29.745599]   with environment:
-> [   29.746074]     HOME=/
-> [   29.746468]     TERM=linux
-> [   29.746894]     user=lkp
-> [   29.747309]     job=/lkp/jobs/scheduled/vm-snb-151/boot-1-aliyun-x86_64-20190626.cgz-4397a3e7bf020ef040be371dcc178db258b928b4-20200808-11882-w8z2ep-10.yaml
-> [   29.748964]     ARCH=x86_64
-> [   29.749406]     kconfig=x86_64-rhel-7.6-kselftests
-> [   29.750047]     branch=linux-review/Jim-Cromie/dyndbg-WIP-diet-plan/20200808-041343
-> [   29.751067]     commit=4397a3e7bf020ef040be371dcc178db258b928b4
-> [   29.751818]     BOOT_IMAGE=/pkg/linux/x86_64-rhel-7.6-kselftests/gcc-9/4397a3e7bf020ef040be371dcc178db258b928b4/vmlinuz-5.8.0-10185-g4397a3e7bf020
-> [   29.753381]     max_uptime=600
-> [   29.753845]     RESULT_ROOT=/result/boot/1/vm-snb/aliyun-x86_64-20190626.cgz/x86_64-rhel-7.6-kselftests/gcc-9/4397a3e7bf020ef040be371dcc178db258b928b4/8
-> [   29.755455]     LKP_SERVER=inn
-> [   29.755923]     softlockup_panic=1
-> [   29.756425]     prompt_ramdisk=0
-> [   29.756905]     vga=normal
-> [   29.757375] Run /bin/sh as init process
-> [   29.757921]   with arguments:
-> [   29.758380]     /bin/sh
-> [   29.758782]   with environment:
-> [   29.759256]     HOME=/
-> [   29.759650]     TERM=linux
-> [   29.760089]     user=lkp
-> [   29.760501]     job=/lkp/jobs/scheduled/vm-snb-151/boot-1-aliyun-x86_64-20190626.cgz-4397a3e7bf020ef040be371dcc178db258b928b4-20200808-11882-w8z2ep-10.yaml
-> [   29.762137]     ARCH=x86_64
-> [   29.762574]     kconfig=x86_64-rhel-7.6-kselftests
-> [   29.763213]     branch=linux-review/Jim-Cromie/dyndbg-WIP-diet-plan/20200808-041343
-> [   29.764255]     commit=4397a3e7bf020ef040be371dcc178db258b928b4
-> [   29.765006]     BOOT_IMAGE=/pkg/linux/x86_64-rhel-7.6-kselftests/gcc-9/4397a3e7bf020ef040be371dcc178db258b928b4/vmlinuz-5.8.0-10185-g4397a3e7bf020
-> [   29.766567]     max_uptime=600
->
->
-> To reproduce:
->
->         # build kernel
->         cd linux
->         cp config-5.8.0-10185-g4397a3e7bf020 .config
->         make HOSTCC=gcc-9 CC=gcc-9 ARCH=x86_64 olddefconfig prepare modules_prepare bzImage
->
->         git clone https://github.com/intel/lkp-tests.git
->         cd lkp-tests
->         bin/lkp qemu -k <bzImage> job-script # job-script is attached in this email
->
->
->
 > Thanks,
-> lkp
->
+> -Vladimir
+
+Sebastian
