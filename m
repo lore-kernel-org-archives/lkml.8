@@ -2,152 +2,99 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54C66C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:22:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2FA6C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:25:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30EE2207DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:22:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D198520756
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:25:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K8oKxBl+"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="sHdXFrps";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="nnd9aDAe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727961AbgHLNWI (ORCPT
+        id S1727964AbgHLNZ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 09:22:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36054 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726722AbgHLNWG (ORCPT
+        Wed, 12 Aug 2020 09:25:28 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:47113 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726946AbgHLNZZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 09:22:06 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A124C06174A
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 06:22:05 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id k23so2423082iom.10
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 06:22:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=LqyDHTGklklfaDmwpguz/tusuYDRoAks+1hcszFn1HY=;
-        b=K8oKxBl+BWXQaDynneB6u8gUp94iZ62ttkbLOTUSEQ3fVIrUDUpqml1C71vir15wv6
-         d1tSUUou4apOwCAtU/WyzRIR5mEFUDSJb5K4qoU37r9pSbU4ToLI4a+ZqJ518A864Et1
-         LpHTZNczIbXES1HPwPv2LPnshBGgIAr1/Ee+Q7jzGKvx9yHBWaKMc6UJ7ofvGXMIkHuv
-         v+8IHU4dHdNNU5l/pVe42DdmgQ9RqrX3wPeVcxq0ULVDfxXTXgfmalZ3aBC30Tg6qQe8
-         FForRPaXQgU9OXDZclXVYu1cY3CO2yiSh4bieeW/8oY5xBenI/espD9KnTXQk9pHiPnv
-         bXyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=LqyDHTGklklfaDmwpguz/tusuYDRoAks+1hcszFn1HY=;
-        b=K0D2YZskESnlVRXeAzh/n3yRitY5MSChWRBjNqBDa1fg39syJgtClL4GDKX0+hpOnv
-         1Ehd6dsb9a/GPyUDqPs5U9ToMKfhyxhhCjXFPyL6tox1EksMtNbycuy7KZWbO0T7T4y/
-         oe8TlOT+PU8LXplRJjeMU25AgYKZwh26iAB/xWufFjFB0VHFzZg08VqK8UvllD9pC9h/
-         yWmmzoEhiZbVeTQr083peVmpPPuqIIOWDBB/XguDTambzbk6N4wgTDly/gu+YWcRcdYj
-         TUSFEQh5MpeSn+WwZ/66h1aXVywvT+2w4hLOWA/ZeK0BjQUqzAY2WlAIODMUSOywh8qJ
-         fLFQ==
-X-Gm-Message-State: AOAM5310XNJVlTfYRO537uugFcwjTIS+311xYBNbmPGdqx5ChRXu6dlT
-        kArte8CksZUijD+HC/XOrgwYhYM0vpJPo6zB8kEeHA==
-X-Google-Smtp-Source: ABdhPJxMI8PBL/gzOuJ3w4Fk/3jDcdg99s5Cj/ZlFKIwt7gwA3a6WpJGb3wD4Se/P66zWaPqiUEYX3hEzdsvoyG3SwE=
-X-Received: by 2002:a05:6602:2c08:: with SMTP id w8mr28417120iov.129.1597238525008;
- Wed, 12 Aug 2020 06:22:05 -0700 (PDT)
+        Wed, 12 Aug 2020 09:25:25 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 846665803D8;
+        Wed, 12 Aug 2020 09:25:24 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Wed, 12 Aug 2020 09:25:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=RMHVXbkkQR++heuoiM+MhmJ5JCS
+        XfwoEAJZmcGdv5E0=; b=sHdXFrpsqDivqXytN+mzcwAC3wK/gl+f3WcRAdi4PaB
+        sjBoxrF9Boeho/UE8NeaElNM904QP2qfQ4bmZWXB/Qp30yvvbgrA+EPaIq+FTnDK
+        wt5pIW3mc9j5tKdVfxRQuC9x1qnlESsQ8iRw8T/JSNtJklXaoxnr2lcry2E1Pyf6
+        v9ZlJYuCygryjOncMiv5ayI6NuEKb3ptP4Irv+fLDrvMksC0+9ggJ/ltFC+9nB2q
+        pR28PmWbdx5WkeVOkBeA2B/09xFDjwcXb3OwhZhTlp7BjlDOtcyEsXU4iM0gI7+t
+        bvN7fqncVQAN84gy38LQoJRHpibad+9a8/DZyeJURiQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=RMHVXb
+        kkQR++heuoiM+MhmJ5JCSXfwoEAJZmcGdv5E0=; b=nnd9aDAe3uRQZt9RpaQ3Yu
+        wXsVSELMVioDXhKTOICCCFPEO7GsjChFyug1hRhArcNR+ZCXW7oQv9wxJtxWzOwG
+        KIBkmiHjcDm17hbNGxTXkjXPi1qz+F4TpEnZHB6hVmUIgRAAR+K+c7YSc3oL2R0g
+        Xw7yiXKH9+XgDS5DGUlhRsp9s99FpYNx4UIsTNxQ+vm+ByeXOCLrwD/VJB6nJKKN
+        WSWyO3jMLXV9cgou1hCG9wYMpxeibTuDqaj5mjNH0A5EHeLjjjY3287LqQaBKASG
+        //nrliteazYATIz15qc3lU5d7lnVR5tSrQfA5hfk7y1MwLjafSdcqtjS5Ft+nHXA
+        ==
+X-ME-Sender: <xms:w-0zXytFvE8q2H6PMYuY_EqkoCHuNVtkGcK9x_YovuSpVRhHJjfITw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrledvgdeifecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghgucfm
+    jfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuggftrfgrthhtvghrnhepveeuheejgf
+    ffgfeivddukedvkedtleelleeghfeljeeiueeggeevueduudekvdetnecukfhppeekfedr
+    keeirdekledruddtjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrih
+    hlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomh
+X-ME-Proxy: <xmx:w-0zX3cx6G6iRvRDAbPdS5a1hZVce8CKcQNLbhWnX2z2wWyZGkgw-w>
+    <xmx:w-0zX9xRYphP1JT1ZNcglcxX468swkKT88cgkP81AJNnxJXMgdZyqg>
+    <xmx:w-0zX9PuG7srrDgRJ2e-MbIoGN5MdAFrsGnXoRy3yA6jvTmvtXVvWA>
+    <xmx:xO0zX1Zqpi7Juq1WK7UB5WMHyl88blX6ITnH77B8nyMCgvEPIe4VQA>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id A9C0D328005E;
+        Wed, 12 Aug 2020 09:25:22 -0400 (EDT)
+Date:   Wed, 12 Aug 2020 15:25:32 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Wenbin Mei <wenbin.mei@mediatek.com>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Chaotian Jing <chaotian.jing@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, srv_heupstream@mediatek.com
+Subject: Re: [v2,0/3] add optional reset property arm64: dts: mt7622: add
+ reset node for mmc device  mmc: mediatek: add optional module reset property
+ Documentation/devicetree/bindings/mmc/mtk-sd.txt |  2 ++
+ arch/arm64/boot/dts/mediatek/mt7622.dtsi         |  2 ++
+ drivers/mmc/host/mtk-sd.c                        | 13 +++++++++++++ 3 files
+ changed, 17 insertions(+)
+Message-ID: <20200812132532.GA2489711@kroah.com>
+References: <20200812130129.13519-1-wenbin.mei@mediatek.com>
 MIME-Version: 1.0
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 12 Aug 2020 18:51:53 +0530
-Message-ID: <CA+G9fYsiNgoh09h0paf1+UTKhPnn490QCoLB2dRFhMT+Cjh9RA@mail.gmail.com>
-Subject: BUG: unable to handle page fault for address: fe80c000 - EIP: memcpy+0xf/0x20
-To:     Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, X86 ML <x86@kernel.org>
-Cc:     lkft-triage@lists.linaro.org,
-        Andrew Morton <akpm@linux-foundation.org>, ardb@kernel.org,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Brian Gerst <brgerst@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Michel Lespinasse <walken@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        daniel.m.jordan@oracle.com, Borislav Petkov <bp@alien8.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200812130129.13519-1-wenbin.mei@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While testng LTP CVE cve-2017-17053 test case the kernel BUG triggered
-on qemu_i386.
-Not easily reproducible BUG.
+On Wed, Aug 12, 2020 at 09:01:26PM +0800, Wenbin Mei wrote:
+> --
+> 2.18.0
 
-metadata:
-  git branch: master
-  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-  git commit: 4c9b89d8981be3b9032f94d0c4dc7eb9c7967a32
-  git describe: next-20200811
-  make_kernelversion: 5.8.0
-  kernel-config:
-https://builds.tuxbuild.com/Y9BHRF7J_qXysFPxUoVmBA/kernel.config
-
-
-[ 1083.853006] BUG: unable to handle page fault for address: fe80c000
-[ 1083.853850] #PF: supervisor write access in kernel mode
-[ 1083.854577] #PF: error_code(0x0002) - not-present page
-[ 1083.855074] *pde = 33183067 *pte = a8648163
-[ 1083.855074] Oops: 0002 [#1] SMP
-[ 1083.855951] CPU: 1 PID: 13514 Comm: cve-2017-17053 Tainted: G
- W         5.8.0-next-20200811 #1
-[ 1083.857088] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
-BIOS 1.12.0-1 04/01/2014
-[ 1083.857771] EIP: memcpy+0xf/0x20
-[ 1083.857771] Code: 68 d0 7d ee d6 e8 11 1c c7 ff 0f 31 31 c3 59 58
-eb 80 cc cc cc cc cc cc cc cc cc 55 89 e5 57 89 c7 56 89 d6 53 89 cb
-c1 e9 02 <f3> a5 89 d9 83 e1 03 74 02 f3 a4 5b 5e 5f 5d c3 90 55 89 e5
-57 89
-[ 1083.860096] EAX: fe80c000 EBX: 00010000 ECX: 00004000 EDX: fbfbd000
-[ 1083.860096] ESI: fbfbd000 EDI: fe80c000 EBP: f11f1e2c ESP: f11f1e20
-[ 1083.860096] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010216
-[ 1083.860096] CR0: 80050033 CR2: fe80c000 CR3: 314c0000 CR4: 003506d0
-[ 1083.860096] DR0: 00000000 DR1: 00000000 DR2: 00000000 DR3: 00000000
-[ 1083.860096] DR6: ffff4ff0 DR7: 00000400
-[ 1083.860096] Call Trace:
-[ 1083.860096]  ldt_dup_context+0x66/0x80
-[ 1083.860096]  dup_mm+0x2b3/0x480
-[ 1083.866900]  copy_process+0x133b/0x15c0
-[ 1083.866900]  _do_fork+0x94/0x3e0
-[ 1083.866900]  __ia32_sys_clone+0x67/0x80
-[ 1083.866900]  __do_fast_syscall_32+0x3f/0x70
-[ 1083.866900]  do_fast_syscall_32+0x29/0x60
-[ 1083.866900]  do_SYSENTER_32+0x15/0x20
-[ 1083.866900]  entry_SYSENTER_32+0x9f/0xf2
-[ 1083.866900] EIP: 0xb7eef549
-[ 1083.866900] Code: 03 74 c0 01 10 05 03 74 b8 01 10 06 03 74 b4 01
-10 07 03 74 b0 01 10 08 03 74 d8 01 00 00 00 00 00 51 52 55 89 e5 0f
-34 cd 80 <5d> 5a 59 c3 90 90 90 90 8d 76 00 58 b8 77 00 00 00 cd 80 90
-8d 76
-[ 1083.866900] EAX: ffffffda EBX: 01200011 ECX: 00000000 EDX: 00000000
-[ 1083.866900] ESI: 00000000 EDI: b7cf1ba8 EBP: b7cf1348 ESP: b7cf12f0
-[ 1083.866900] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00000246
-[ 1083.866900] Modules linked in: algif_hash
-[ 1083.866900] CR2: 00000000fe80c000
-[ 1083.866900] ---[ end trace b07b25e6d94bccb1 ]---
-[ 1083.866900] EIP: memcpy+0xf/0x20
-[ 1083.866900] Code: 68 d0 7d ee d6 e8 11 1c c7 ff 0f 31 31 c3 59 58
-eb 80 cc cc cc cc cc cc cc cc cc 55 89 e5 57 89 c7 56 89 d6 53 89 cb
-c1 e9 02 <f3> a5 89 d9 83 e1 03 74 02 f3 a4 5b 5e 5f 5d c3 90 55 89 e5
-57 89
-[ 1083.866900] EAX: fe80c000 EBX: 00010000 ECX: 00004000 EDX: fbfbd000
-[ 1083.866900] ESI: fbfbd000 EDI: fe80c000 EBP: f11f1e2c ESP: f11f1e20
-[ 1083.866900] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010216
-[ 1083.866900] CR0: 80050033 CR2: fe80c000 CR3: 314c0000 CR4: 003506d0
-[ 1083.866900] DR0: 00000000 DR1: 00000000 DR2: 00000000 DR3: 00000000
-[ 1083.866900] DR6: ffff4ff0 DR7: 00000400
-
-
-Full test log link,
-https://qa-reports.linaro.org/lkft/linux-next-oe/build/next-20200811/testrun/3052660/suite/linux-log-parser/test/check-kernel-bug-1659337/log
-
--- 
-Linaro LKFT
-https://lkft.linaro.org
+I think something is wrong with your subject line :(
