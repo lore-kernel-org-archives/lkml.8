@@ -2,149 +2,191 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6BC8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 07:36:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD9EFC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 07:38:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCA252065C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 07:36:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81BC62065C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 07:38:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V/H600jZ"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="YguUNolP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbgHLHgQ (ORCPT
+        id S1726621AbgHLHix (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 03:36:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39380 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726255AbgHLHgQ (ORCPT
+        Wed, 12 Aug 2020 03:38:53 -0400
+Received: from esa4.hc3370-68.iphmx.com ([216.71.155.144]:47694 "EHLO
+        esa4.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726255AbgHLHix (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 03:36:16 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 158BEC06174A
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 00:36:16 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id g19so1549185ioh.8
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 00:36:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IoWosUMrqCTx2zIWiSt1q8d4gJ7znnfRYJ6dzYZoqvo=;
-        b=V/H600jZakKgVsyPX9ZxQa2CDFO10d91q7X5Cq4QBY6fulJ64VjnevknnUV6o60y4x
-         RYRLIpFnyWmqAbVdMt/Q7aOY7jvqs6I9MA2yunpCWT0Ri5ILmVX6oIjyUjBFtSFfXW7W
-         Jg+MHT8iK6CV1xZSca30sFDX0+gaYSh+//qaw0Mzpd8HcuR2FvxUuTb36YQm/4MYSM9n
-         Uof6PhBTLUADHgnWJOSqOviZ+WqfWpkg8LC4Rjtmgh+uISRNPkd0IILVUg3yU6XQmlmG
-         gZTF9tqlaAzLJMzrrwTELEiZv/LSBqSASZZASDO/jv5oI4XPUak123wBUOrknSDNodT2
-         cq5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IoWosUMrqCTx2zIWiSt1q8d4gJ7znnfRYJ6dzYZoqvo=;
-        b=e+581BpuvOq2fg8BO26dEOPn0zpS21ByRtXdCKhatfoum/nF67lLCxYn+z41eXoW1v
-         378OVZV1RHyBiXkiBRzbiQ74iD2D59iPjeu5ZVTI5StQCWAxhmS4pnQ8iwJDmGtmEpKI
-         /ZZfPTzxJxIcz7H1OVC0d5dYXDRYm4QIj7/syvK11Z2z5/oHybgaLgarO7IW+QccfoGE
-         zMGe6ioT2jIlgiw9mloMyceSIwuazc1E+IEp6Y7nYUjW23xMtbzDSweemY/WDCMF4iNx
-         xYin4pbwxZKgtLGJzNlZxH/T2g2pRsEAnpxA8sWUhu00MyhHbuAl9SHPZ8Q066QxWq1I
-         cRRQ==
-X-Gm-Message-State: AOAM533s+uKFLHfuR4GH0npmjJCBdDmPXGgH5OpK40ir9/6y0kK5jhQu
-        hxAHEBqGuKfNLzWDjRZM/GN7DpD6tux1ec071ns=
-X-Google-Smtp-Source: ABdhPJySVLks5s4aT32oocarxaPUHfObJpAW5xAtQsRFmCR8/2B0N8OotSgLFT03V2Ez7/10+yFWNdZ8P/DPrrZ6pnw=
-X-Received: by 2002:a05:6602:15d3:: with SMTP id f19mr25983960iow.91.1597217774586;
- Wed, 12 Aug 2020 00:36:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <1594388491-15129-1-git-send-email-simhavcs@gmail.com>
- <1594388491-15129-2-git-send-email-simhavcs@gmail.com> <CAGWqDJ4P9dKzGngkiEtL_X1HRjjtU17WqNFM-qiv16tXwQNZTg@mail.gmail.com>
- <CAGWqDJ4s3x5M7dGMTxYMpDbM4NBS7kfTb6-+7Fdx8Pe=CE58fA@mail.gmail.com>
- <20200808213022.GW6186@pendragon.ideasonboard.com> <20200810175440.GC292825@ravnborg.org>
- <20200811101942.GB6054@pendragon.ideasonboard.com> <20200811191704.GA524675@ravnborg.org>
- <CAGWqDJ7bAjDyEr03UT-mfyOuD+xkbo9BG4GyWxbiK_c74eESYw@mail.gmail.com>
-In-Reply-To: <CAGWqDJ7bAjDyEr03UT-mfyOuD+xkbo9BG4GyWxbiK_c74eESYw@mail.gmail.com>
-From:   Vinay Simha B N <simhavcs@gmail.com>
-Date:   Wed, 12 Aug 2020 13:06:02 +0530
-Message-ID: <CAGWqDJ6O-EdCVeaCdRBtUTmNUFpPQErQzn1ihtVhXmFjPhnr5g@mail.gmail.com>
-Subject: Re: [PATCH v8 2/2] display/drm/bridge: TC358775 DSI/LVDS driver
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
+        Wed, 12 Aug 2020 03:38:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1597217931;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=ShS55PgjfRlFMa0DNNlsr2fNiXMtncLBQuylfP4nMGg=;
+  b=YguUNolPD2jCAK+7MU0rvIJxQezvWSL2K6zqNjG38/AvlgCZ1IbO+XZd
+   wULZOAPMXD2rZ+GM2PgPT5nJNo6M0tRxniuAMbf1TF6tQHNYCMVtvVnNQ
+   7qblF+JEXTQXpRYMrol1iQVeSdWlpdLyMUcz1JX2nrWj2d1t/yiG9033O
+   0=;
+Authentication-Results: esa4.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none
+IronPort-SDR: Zs2JsfV+aYnUe+nzG0vfzUdX+ziwoLc3xTEPPEd+NVtYmHmJw+DPYdtS53l1QsrvC/Zxz4eN0/
+ A0/nYWVhhDhtycBIX5cmj7XnFzCd0Cbb9CH7NwXunAwDyHJJYQcc69T5BEuEcNMl8PWfoSXX+s
+ P7nimTSw40cj4SIbcq/qPkr5JpUauoYCGPpqjzp636wYVroZhErGaj15aTi03BxPwveV7Lcj6n
+ s5xgeyApZtCvlmTWosFQMCqnPUJNCVpRHE5Lz4/jbls9uJTBhbW/oNcnDDvw5BOIArvG6fykiH
+ 5D8=
+X-SBRS: 2.7
+X-MesageID: 25254199
+X-Ironport-Server: esa4.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.76,303,1592884800"; 
+   d="scan'208";a="25254199"
+Date:   Wed, 12 Aug 2020 09:38:40 +0200
+From:   Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
+To:     =?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
         David Airlie <airlied@linux.ie>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        Andrzej Hajda <a.hajda@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
+        "Daniel Vetter" <daniel@ffwll.ch>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>, Wei Liu <wl@xen.org>,
+        Yan Yankovskyi <yyankovskyi@gmail.com>,
+        <dri-devel@lists.freedesktop.org>,
+        <xen-devel@lists.xenproject.org>, <linux-mm@kvack.org>,
+        David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH v4 2/2] xen: add helpers to allocate unpopulated memory
+Message-ID: <20200812073840.GA975@Air-de-Roger>
+References: <20200811094447.31208-1-roger.pau@citrix.com>
+ <20200811094447.31208-3-roger.pau@citrix.com>
+ <7c9a25fa-c52c-66d2-3b03-14a59e069ab6@suse.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7c9a25fa-c52c-66d2-3b03-14a59e069ab6@suse.com>
+X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
+ AMSPEX02CL02.citrite.net (10.69.22.126)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-sam/laurent,
+On Wed, Aug 12, 2020 at 09:28:45AM +0200, Jürgen Groß wrote:
+> On 11.08.20 11:44, Roger Pau Monne wrote:
+> > To be used in order to create foreign mappings. This is based on the
+> > ZONE_DEVICE facility which is used by persistent memory devices in
+> > order to create struct pages and kernel virtual mappings for the IOMEM
+> > areas of such devices. Note that on kernels without support for
+> > ZONE_DEVICE Xen will fallback to use ballooned pages in order to
+> > create foreign mappings.
+> > 
+> > The newly added helpers use the same parameters as the existing
+> > {alloc/free}_xenballooned_pages functions, which allows for in-place
+> > replacement of the callers. Once a memory region has been added to be
+> > used as scratch mapping space it will no longer be released, and pages
+> > returned are kept in a linked list. This allows to have a buffer of
+> > pages and prevents resorting to frequent additions and removals of
+> > regions.
+> > 
+> > If enabled (because ZONE_DEVICE is supported) the usage of the new
+> > functionality untangles Xen balloon and RAM hotplug from the usage of
+> > unpopulated physical memory ranges to map foreign pages, which is the
+> > correct thing to do in order to avoid mappings of foreign pages depend
+> > on memory hotplug.
+> > 
+> > Note the driver is currently not enabled on Arm platforms because it
+> > would interfere with the identity mapping required on some platforms.
+> > 
+> > Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
+> > ---
+> > Cc: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
+> > Cc: David Airlie <airlied@linux.ie>
+> > Cc: Daniel Vetter <daniel@ffwll.ch>
+> > Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+> > Cc: Juergen Gross <jgross@suse.com>
+> > Cc: Stefano Stabellini <sstabellini@kernel.org>
+> > Cc: Dan Carpenter <dan.carpenter@oracle.com>
+> > Cc: Roger Pau Monne <roger.pau@citrix.com>
+> > Cc: Wei Liu <wl@xen.org>
+> > Cc: Yan Yankovskyi <yyankovskyi@gmail.com>
+> > Cc: dri-devel@lists.freedesktop.org
+> > Cc: xen-devel@lists.xenproject.org
+> > Cc: linux-mm@kvack.org
+> > Cc: David Hildenbrand <david@redhat.com>
+> > Cc: Michal Hocko <mhocko@kernel.org>
+> > Cc: Dan Williams <dan.j.williams@intel.com>
+> > ---
+> > Changes since v3:
+> >   - Introduce a Kconfig option that gates the addition of the
+> >     unpopulated alloc driver. This allows to easily disable it on Arm
+> >     platforms.
+> >   - Dropped Juergen RB due to the addition of the Kconfig option.
+> >   - Switched from MEMORY_DEVICE_DEVDAX to MEMORY_DEVICE_GENERIC.
+> > 
+> > Changes since v2:
+> >   - Drop BUILD_BUG_ON regarding PVMMU page sizes.
+> >   - Use a SPDX license identifier.
+> >   - Call fill with only the minimum required number of pages.
+> >   - Include xen.h header in xen_drm_front_gem.c.
+> >   - Use less generic function names.
+> >   - Exit early from the init function if not a PV guest.
+> >   - Don't use all caps for region name.
+> > ---
+> >   drivers/gpu/drm/xen/xen_drm_front_gem.c |   9 +-
+> >   drivers/xen/Kconfig                     |   4 +
+> >   drivers/xen/Makefile                    |   1 +
+> >   drivers/xen/balloon.c                   |   4 +-
+> >   drivers/xen/grant-table.c               |   4 +-
+> >   drivers/xen/privcmd.c                   |   4 +-
+> >   drivers/xen/unpopulated-alloc.c         | 185 ++++++++++++++++++++++++
+> >   drivers/xen/xenbus/xenbus_client.c      |   6 +-
+> >   drivers/xen/xlate_mmu.c                 |   4 +-
+> >   include/xen/xen.h                       |   9 ++
+> >   10 files changed, 215 insertions(+), 15 deletions(-)
+> >   create mode 100644 drivers/xen/unpopulated-alloc.c
+> > 
+> > diff --git a/drivers/xen/Kconfig b/drivers/xen/Kconfig
+> > index 1d339ef92422..018020b91baa 100644
+> > --- a/drivers/xen/Kconfig
+> > +++ b/drivers/xen/Kconfig
+> > @@ -327,4 +327,8 @@ config XEN_HAVE_VPMU
+> >   config XEN_FRONT_PGDIR_SHBUF
+> >   	tristate
+> > +config XEN_UNPOPULATED_ALLOC
+> > +	bool
+> > +	default y if ZONE_DEVICE && !ARM && !ARM64
+> 
+> There is a current effort to enable Xen on RISC-V. Do we expect this
+> option to be usable for this architecture?
 
-[PATCH] drm/bridge/tc358775: Fixes bus formats read
+It will depend on whether the Xen RISC-V implementation mandates an
+IOMMU, for example Arm doesn't and hence uses an identity p2m for
+dom0. If RISC-V does the same then I would assume this won't be
+suitable as-is (not that it couldn't be made to work).
 
-is on top of drm-misc-next.
+IMO it wasn't clear from the community call what was the RISC-V port
+position regarding this, but IIRC the IOMMU spec for RISC-V was behind
+the virtualization one, so it's likely that quite a lot of hardware
+will have hardware virtualization support but no IOMMU, in which case
+I think it's likely the RISC-V port will follow Arm and implement an
+identity p2m.
 
+> If yes, I'm fine with the
+> exclusion of Arm, otherwise I'd opt for defaulting to yes only for
+> X86.
+> 
+> Either way you can have my:
+> 
+> Reviewed-by: Juergen Gross <jgross@suse.com>
 
-On Wed, Aug 12, 2020 at 7:50 AM Vinay Simha B N <simhavcs@gmail.com> wrote:
->
-> Sam,
->
-> I will look into this and send the patch ASAP.
->
-> On Wed, Aug 12, 2020 at 12:47 AM Sam Ravnborg <sam@ravnborg.org> wrote:
->>
->> Hi Vinay.
->>
->> > >
->> > > If Laurent or others identify further things to improve we can take
->> > > it in-tree.
->> >
->> > Just one thing, please see below.
->> >
->> > > > > >> +       d2l_write(tc->i2c, VTIM1, vtime1);
->> > > > > >> +       d2l_write(tc->i2c, HTIM2, htime2);
->> > > > > >> +       d2l_write(tc->i2c, VTIM2, vtime2);
->> > > > > >> +
->> > > > > >> +       d2l_write(tc->i2c, VFUEN, VFUEN_EN);
->> > > > > >> +       d2l_write(tc->i2c, SYSRST, SYS_RST_LCD);
->> > > > > >> +       d2l_write(tc->i2c, LVPHY0, LV_PHY0_PRBS_ON(4) | LV_PHY0_ND(6));
->> > > > > >> +
->> > > > > >> +       dev_dbg(tc->dev, "bus_formats %04x bpc %d\n",
->> > > > > >> +               connector->display_info.bus_formats[0],
->> > > > > >> +               tc->bpc);
->> > > > > >> +       /*
->> > > > > >> +        * Default hardware register settings of tc358775 configured
->> > > > > >> +        * with MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA jeida-24 format
->> > > > > >> +        */
->> > > > > >> +       if (connector->display_info.bus_formats[0] ==
->> > > > > >> +               MEDIA_BUS_FMT_RGB888_1X7X4_SPWG) {
->> >
->> > This shouldn't come from the connector, but from the
->> > drm_bridge_state.output_bus_cfg.format. The drm_bridge_funcs
->> > .atomic_get_input_bus_fmts() operation likely needs to be implemented.
->>
->> I trust you will look into this and submit a patch on top of
->> drm-misc-next.
->> Please add a proper "Fixes:" tag identifying the commit that introduced
->> this bug - in this case the commit introducing the driver.
->>
->> Do not hesitate to reply to all if you have any questions.
->> We will help you if we can.
->>
->>         Sam
->
->
->
-> --
-> regards,
-> vinaysimha
+Thanks. Feel free to change the 'ZONE_DEVICE && !ARM && !ARM64' to
+'ZONE_DEVICE && X86' if you think it's safer.
 
-
-
--- 
-regards,
-vinaysimha
+Roger.
