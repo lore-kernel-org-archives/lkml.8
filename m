@@ -7,135 +7,93 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6AD7C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:06:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0591FC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:06:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7829A20639
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:06:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D51EB207F7
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:06:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cWor6SLf"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aLcEqKgy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728092AbgHLNGA (ORCPT
+        id S1728028AbgHLNGj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 09:06:00 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:51898 "EHLO
+        Wed, 12 Aug 2020 09:06:39 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:58899 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728028AbgHLNF3 (ORCPT
+        with ESMTP id S1726829AbgHLNGh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 09:05:29 -0400
+        Wed, 12 Aug 2020 09:06:37 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597237525;
+        s=mimecast20190719; t=1597237593;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=+ksdIEzAumaIrjq79KXqgfvDcQg8WBIlI9c7pSMGN7s=;
-        b=cWor6SLfOdhniR9cPcxrd61s6V1szTejkXcAqbM648cxXHlgXR19lg6qzONvqxvGUIwPL/
-        VKpoA2KImVnyFatHS8s8XDtGcxGvP3Q00VGNYjb17Xhae/hM0gBwz6ioFVkHLpAD+WleEU
-        Q794966KhF6cWD/HIrDv50bFVGZjILM=
+        bh=4WKj+EyxU40YOue4LK4S3MO6lm+DalQD8muSGHaR5fw=;
+        b=aLcEqKgyd0L9T+S1WoJqHS2KLJkcR3QyAOU7Lh0tWdGa7xrm7dFuqKoEY4wI3k0PraKrsH
+        wfnw0G72tNHwH5T0BslYQxZ03Fp3/J9OUUf5xdNt2PV7LtenZ6fqUZRd5Y0qPLndC5eaL9
+        P3nmaFFsU2vSiRRnykzzxyVXRZz+lAQ=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-382-hr9UxgMkPhyi_FTkxI23Bg-1; Wed, 12 Aug 2020 09:05:23 -0400
-X-MC-Unique: hr9UxgMkPhyi_FTkxI23Bg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+ us-mta-320-_TjpIsNMMFaXBv8PSKNPhg-1; Wed, 12 Aug 2020 09:06:31 -0400
+X-MC-Unique: _TjpIsNMMFaXBv8PSKNPhg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6FA1610199A7;
-        Wed, 12 Aug 2020 13:05:21 +0000 (UTC)
-Received: from krava.homenet.telecomitalia.it (unknown [10.40.192.161])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 2BDF919D7C;
-        Wed, 12 Aug 2020 13:05:18 +0000 (UTC)
-Date:   Wed, 12 Aug 2020 15:05:17 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [RFC] libperf: Add support for user space counter access
-Message-ID: <20200812130517.GB4872@krava.homenet.telecomitalia.it>
-References: <20200807230517.57114-1-robh@kernel.org>
- <20200808102208.GA619980@krava>
- <CAL_Jsq+gfqyqCx3Yuc6TsbXjYSLfJQhhPUnwRVjpJgwL24v1Qg@mail.gmail.com>
- <20200811105027.GD699846@krava>
- <CAL_Jsq+tsTrYCddSSb5d2vC7TTKUZTgjBQr4FHXBKCePo-beZQ@mail.gmail.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8D391E923;
+        Wed, 12 Aug 2020 13:06:29 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-127.rdu2.redhat.com [10.10.120.127])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 553C01001B07;
+        Wed, 12 Aug 2020 13:06:26 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAJfpegv4sC2zm+N5tvEmYaEFvvWJRHfdGqXUoBzbeKj81uNCvQ@mail.gmail.com>
+References: <CAJfpegv4sC2zm+N5tvEmYaEFvvWJRHfdGqXUoBzbeKj81uNCvQ@mail.gmail.com> <CAJfpegu8omNZ613tLgUY7ukLV131tt7owR+JJ346Kombt79N0A@mail.gmail.com> <CAJfpegtNP8rQSS4Z14Ja4x-TOnejdhDRTsmmDD-Cccy2pkfVVw@mail.gmail.com> <20200811135419.GA1263716@miu.piliscsaba.redhat.com> <CAHk-=wjzLmMRf=QG-n+1HnxWCx4KTQn9+OhVvUSJ=ZCQd6Y1WA@mail.gmail.com> <52483.1597190733@warthog.procyon.org.uk> <CAJfpegt=cQ159kEH9zCYVHV7R_08jwMxF0jKrSUV5E=uBg4Lzw@mail.gmail.com> <98802.1597220949@warthog.procyon.org.uk> <CAJfpegsVJo9e=pHf3YGWkE16fT0QaNGhgkUdq4KUQypXaD=OgQ@mail.gmail.com> <d2d179c7-9b60-ca1a-0c9f-d308fc7af5ce@redhat.com> <CAJfpeguMjU+n-JXE6aUQQGeMpCS4bsy4HQ37NHJ8aD8Aeg2qhA@mail.gmail.com> <20200812112825.b52tqeuro2lquxlw@ws.net.home>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     dhowells@redhat.com, Karel Zak <kzak@redhat.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Christian Brauner <christian@brauner.io>,
+        Lennart Poettering <lennart@poettering.net>,
+        Linux API <linux-api@vger.kernel.org>,
+        Ian Kent <raven@themaw.net>,
+        LSM <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: file metadata via fs API
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+tsTrYCddSSb5d2vC7TTKUZTgjBQr4FHXBKCePo-beZQ@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <131357.1597237585.1@warthog.procyon.org.uk>
+Date:   Wed, 12 Aug 2020 14:06:25 +0100
+Message-ID: <131358.1597237585@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 10:49:30AM -0600, Rob Herring wrote:
-> On Tue, Aug 11, 2020 at 4:50 AM Jiri Olsa <jolsa@redhat.com> wrote:
-> >
-> > On Mon, Aug 10, 2020 at 12:11:23PM -0600, Rob Herring wrote:
-> > > On Sat, Aug 8, 2020 at 4:22 AM Jiri Olsa <jolsa@redhat.com> wrote:
-> > > >
-> > > > On Fri, Aug 07, 2020 at 05:05:17PM -0600, Rob Herring wrote:
-> > > > > x86 and arm64 can both support direct access of event counters in
-> > > > > userspace. The access sequence is less than trivial and currently exists
-> > > > > in perf test code (tools/perf/arch/x86/tests/rdpmc.c) with copies in
-> > > > > projects such as PAPI and libpfm4.
-> > > > >
-> > > > > Patches to add arm64 userspace support are pending[1].
-> > > > >
-> > > > > For this RFC, looking for a yes, seems like a good idea, or no, go away we
-> > > > > don't want this in libperf.
-> > > >
-> > > > hi,
-> > > > looks great!
-> > > >
-> > > > I wanted to add this for very long time.. so yes, we want this ;-)
-> > >
-> > > Thanks for the quick feedback. Would this be better implemented as a
-> > > fast path for perf_evsel__read()? If so, how to get the mmap data
-> >
-> > if it works for all events, which I'm not sure of
-> >
-> > > which is associated with a evlist rather than a evsel?
-> >
-> > not sure what you mean, you can mmap evsel, not evlist
-> 
-> While yes the mmap is created from an evsel fd, they are ultimately
-> associated with the evlist struct and are per thread or cpu. If
-> there's more than 1 evsel, then the additional ones are set to the 1st
-> mmap with PERF_EVENT_IOC_SET_OUTPUT. Which I now realize means this
-> RFC only works for the first evsel. So I guess the API needs to work
-> something like this:
-> 
-> threads = perf_thread_map__new_dummy();
-> perf_thread_map__set_pid(threads, 0, 0);
-> 
-> evsel = perf_evsel__new(&attr);
-> perf_evsel__open(evsel, NULL, threads);
-> 
+Miklos Szeredi <miklos@szeredi.hu> wrote:
 
-hum, I wonder we should remove maps from perf_evsel__open
-args and factor out some perf_evsel__set_map function..
+> That presumably means the mount ID <-> mount path mapping already
+> exists, which means it's just possible to use the open(mount_path,
+> O_PATH) to obtain the base fd.
 
-> perf_evsel__mmap(evsel);    <--- *new*
+No, you can't.  A path more correspond to multiple mounts stacked on top of
+each other, e.g.:
 
-.. because you'll need those maps in here, right?
+	mount -t tmpfs none /mnt
+	mount -t tmpfs none /mnt
+	mount -t tmpfs none /mnt
 
-> 
-> perf_evsel__read(evsel, 0, 0, &counts);  // If we have an mmap, then
-> try a direct read
-> 
-> 
-> Perhaps some refactoring of the mmap code in evlist.c will be needed,
-> but the usage seems pretty orthogonal. I'd propose that mmapping via
-> perf_evlist__mmap() behavior remain unchanged and direct access is not
-> supported in that case.
+Now you have three co-located mounts and you can't use the path to
+differentiate them.  I think this might be an issue in autofs, but Ian would
+need to comment on that.
 
-seems ok to me, perf_evlist__mmap and perf_evsel__mmap would
-mean to mutually exclusive usages
-
-thanks,
-jirka
+David
 
