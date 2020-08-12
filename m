@@ -2,85 +2,138 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77952C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:18:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A77C6C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:18:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C528207DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:18:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F08D20781
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:18:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cRsT2ZGx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726660AbgHLOSF (ORCPT
+        id S1726700AbgHLOSq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 10:18:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36132 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726468AbgHLOSE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 10:18:04 -0400
-Received: from home.goodmis.org (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA5B420781;
-        Wed, 12 Aug 2020 14:18:02 +0000 (UTC)
-Date:   Wed, 12 Aug 2020 10:17:55 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Christian =?iso-8859-1?Q?K=F6nig?= 
-        <ckoenig.leichtzumerken@gmail.com>
-Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, Shashank.Sharma@amd.com,
-        daniel.vetter@ffwll.ch, alexander.deucher@amd.com
-Subject: Re: [PATCH] drm/amdgpu: adjust the pid in the grab_id trace point
-Message-ID: <20200812141755.GA8136@home.goodmis.org>
-References: <20200807133658.1866-1-christian.koenig@amd.com>
- <20200807133658.1866-2-christian.koenig@amd.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200807133658.1866-2-christian.koenig@amd.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 12 Aug 2020 10:18:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44868 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726485AbgHLOSo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 10:18:44 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8B70C061383;
+        Wed, 12 Aug 2020 07:18:44 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id 77so1764476ilc.5;
+        Wed, 12 Aug 2020 07:18:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=48IsAeauuq9BcWaKpHbdNQ/tldBG5RElnWagtcAUqV4=;
+        b=cRsT2ZGxUqGKOyzMO0wNvu9c+MKHGwNtaL6WtkzcJzG2FycOznSzVRew0E6OYHFgux
+         fsIyKPl6ke8ScaAfvjEtSMjX/9nYkikjCzR9HUZnzR8ETeQxqgzT8T9m9tkPZXgOf2rz
+         QTa2ibKV/kc3wjS8YgXlIeurfSfb/bDJCAKxjA45Lso2Ku4KDO7jliyJhWJHeEhDFA7X
+         ReTwAvAMpfx0ApCdtT50EYjARYNFr2Pa0x4ybb5B05UqDaqofUj0hJUWtxBZFJZPdZOq
+         VTjf/jf3xqOmYG2RwMDDkJTrdk7iPHgg2+DhSezRHe/5imOjPJK1QaINlGCpBwHoXiux
+         1TmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=48IsAeauuq9BcWaKpHbdNQ/tldBG5RElnWagtcAUqV4=;
+        b=jDAFX//wlZ67ADG3BRoc+98oHpeUn1PkrsX26dCVeGKDRRPBup3obeJAuaOiYMIbCR
+         a9iWZ1Ixmd4rKaYTO9a7qUhqRuy3y/hE/klwkuoTnXP38yhvxernDptdOOZ/OPAObcZ0
+         6VG3d2Xx91WoPNA+E1zpCGTYV3490uFcffflct3GLTVVramOjjnfUfq1HKBva40INeWV
+         50Qt5h+zszbG5bX2ZM20lLfWXJQzKKtx2iSdyb04CCbjo/lAkVceldBJ4a4gTDdKCafk
+         OuMbd7Wnc/zmu9QEkRuXBCUzVDH2U2jDp6MohoIFcy870Fj1QYhk9LibeVcL82uf/WQ3
+         hayA==
+X-Gm-Message-State: AOAM532wUN5rEwsWt789RLQyCVJRltRw3Tr8BCd2LgsN6EC6lldeZk7T
+        ApzeZzY2nQkFsclluTDHq60=
+X-Google-Smtp-Source: ABdhPJzf/jasvT0zc9p1+CGDgqywSS+wUi9D5ewUAR1wjx5vZ+7v7igbj00P+ikLT5qiFiGJ2YZ2iA==
+X-Received: by 2002:a92:418b:: with SMTP id o133mr14743047ila.277.1597241924157;
+        Wed, 12 Aug 2020 07:18:44 -0700 (PDT)
+Received: from anon-dhcp-152.1015granger.net (c-68-61-232-219.hsd1.mi.comcast.net. [68.61.232.219])
+        by smtp.gmail.com with ESMTPSA id r8sm1129252ilt.54.2020.08.12.07.18.41
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 12 Aug 2020 07:18:42 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [dm-devel] [RFC PATCH v5 00/11] Integrity Policy Enforcement LSM
+ (IPE)
+From:   Chuck Lever <chucklever@gmail.com>
+In-Reply-To: <alpine.LRH.2.21.2008120643370.10591@namei.org>
+Date:   Wed, 12 Aug 2020 10:18:41 -0400
+Cc:     Mimi Zohar <zohar@linux.ibm.com>,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>,
+        snitzer@redhat.com, dm-devel@redhat.com,
+        tyhicks@linux.microsoft.com, agk@redhat.com,
+        Paul Moore <paul@paul-moore.com>,
+        Jonathan Corbet <corbet@lwn.net>, nramas@linux.microsoft.com,
+        serge@hallyn.com, pasha.tatashin@soleen.com,
+        Jann Horn <jannh@google.com>, linux-block@vger.kernel.org,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jens Axboe <axboe@kernel.dk>, mdsakib@microsoft.com,
+        open list <linux-kernel@vger.kernel.org>, eparis@redhat.com,
+        linux-security-module@vger.kernel.org, linux-audit@redhat.com,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-integrity@vger.kernel.org,
+        jaskarankhurana@linux.microsoft.com
+Content-Transfer-Encoding: 7bit
+Message-Id: <70603A4E-A548-4ECB-97D4-D3102CE77701@gmail.com>
+References: <20200728213614.586312-1-deven.desai@linux.microsoft.com>
+ <20200802115545.GA1162@bug> <20200802140300.GA2975990@sasha-vm>
+ <20200802143143.GB20261@amd> <1596386606.4087.20.camel@HansenPartnership.com>
+ <fb35a1f7-7633-a678-3f0f-17cf83032d2b@linux.microsoft.com>
+ <1596639689.3457.17.camel@HansenPartnership.com>
+ <alpine.LRH.2.21.2008050934060.28225@namei.org>
+ <b08ae82102f35936427bf138085484f75532cff1.camel@linux.ibm.com>
+ <329E8DBA-049E-4959-AFD4-9D118DEB176E@gmail.com>
+ <alpine.LRH.2.21.2008120643370.10591@namei.org>
+To:     James Morris <jmorris@namei.org>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 07, 2020 at 03:36:58PM +0200, Christian König wrote:
-> Trace something useful instead of the pid of a kernel thread here.
+
+
+> On Aug 11, 2020, at 5:03 PM, James Morris <jmorris@namei.org> wrote:
 > 
-> Signed-off-by: Christian König <christian.koenig@amd.com>
-> ---
->  drivers/gpu/drm/amd/amdgpu/amdgpu_trace.h | 1 +
->  1 file changed, 1 insertion(+)
+> On Sat, 8 Aug 2020, Chuck Lever wrote:
 > 
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_trace.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_trace.h
-> index 5da20fc166d9..07f99ef69d91 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_trace.h
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_trace.h
-> @@ -228,6 +228,7 @@ TRACE_EVENT(amdgpu_vm_grab_id,
->  			     ),
->  
->  	    TP_fast_assign(
-> +			   __entry->ent.pid = vm->task_info.pid;
+>> My interest is in code integrity enforcement for executables stored
+>> in NFS files.
+>> 
+>> My struggle with IPE is that due to its dependence on dm-verity, it
+>> does not seem to able to protect content that is stored separately
+>> from its execution environment and accessed via a file access
+>> protocol (FUSE, SMB, NFS, etc).
+> 
+> It's not dependent on DM-Verity, that's just one possible integrity 
+> verification mechanism, and one of two supported in this initial 
+> version. The other is 'boot_verified' for a verified or otherwise trusted 
+> rootfs. Future versions will support FS-Verity, at least.
+> 
+> IPE was designed to be extensible in this way, with a strong separation of 
+> mechanism and policy.
 
-If the ent.pid is not the pid you are interested in for this trace event, just
-add a "pid" field to the trace event and place it there. Do not modify the
-generic pid that is recorded, as we would like that to be consistent for all
-trace events.
+I got that, but it looked to me like the whole system relied on having
+access to the block device under the filesystem. That's not possible
+for a remote filesystem like Ceph or NFS.
 
-The "ent.pid" turns into "common_pid" in the field, leaving "pid" free to use.
-Other trace events (like sched_waking) record a pid field that is not the same
-as the pid of the executing task.
-
-The "ent.pid" should always be the pid of the task that executed the event.
-
--- Steve
+I'm happy to take a closer look if someone can point me the right way.
 
 
->  			   __entry->pasid = vm->pasid;
->  			   __assign_str(ring, ring->name)
->  			   __entry->vmid = job->vmid;
-> -- 
-> 2.17.1
+--
+Chuck Lever
+chucklever@gmail.com
+
+
+
