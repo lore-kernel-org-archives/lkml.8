@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C85C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:59:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E2D3C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FEBC2080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:59:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0CBE2177B
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:59:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597247955;
-	bh=vSP7pIbG/+aRsdn4TNYZedyhxbsUK7SK7J98dK9mzvw=;
+	s=default; t=1597247958;
+	bh=F4/0N358UMInRTChm1W025kSLWvagEEmCODOlEavrPA=;
 	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
-	b=x45UYTS8gm1w/Je7SGvpIgtPtv83AAGbTZUfk9RFlzwBDD2iDsNthcio3hZhFs+9u
-	 B+9YD4z8pPJHg30vQ5bRAzEZ+1Bi99gbcPadkeWn7W7CzwZs+ytf65t7WYJ9VOJqvs
-	 vdHdZA5ZQhuEnQzPu6Pm1OLvZSOKLf1Ksvf4v3jU=
+	b=2mjoPso965mkkQodk12ZDdQCN2WXzhK70ykoH39cjM/vM2I55DiXsbkgguTjZXXtu
+	 HBLiXDqhiOmTVx+i+Cp9oP8jjrrY4wbzaB3UD7jZrc7Cu/qifCCNze7CPtS7EeGIFx
+	 n06l/qYX0lK/XoCsPXbPUDo23MC/cb6COdqcufNg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727830AbgHLP6y (ORCPT
+        id S1727113AbgHLP7R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 11:58:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46038 "EHLO mail.kernel.org"
+        Wed, 12 Aug 2020 11:59:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726679AbgHLP5D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 11:57:03 -0400
+        id S1726660AbgHLP5C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 11:57:02 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DCB822D6F;
+        by mail.kernel.org (Postfix) with ESMTPSA id 3728922B49;
         Wed, 12 Aug 2020 15:57:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1597247820;
-        bh=vSP7pIbG/+aRsdn4TNYZedyhxbsUK7SK7J98dK9mzvw=;
+        bh=F4/0N358UMInRTChm1W025kSLWvagEEmCODOlEavrPA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K/w6zL/dEREjNNCIV0pjmuEL9jAFqISYpsB2RIWi+2uBxzItOyBG4gmknM5dI0CqW
-         FxdhzBGxtMNWlUErKvsjESe8iwlqzmzDiEonAxO2/KYtz2s1ZFdgxYSRS+ueCaxd8E
-         A/BqB5nkxCkwUveyaWtmB21o4srE24ibcy9f+3NM=
+        b=Owpp0QA19AC4Hs0o7VUlHXmV0MZOhFhBA6a7EJpbjzEEB0OuGT0scQ+QtjzoYkbp6
+         Mc8vtK35EgOjCFtd0vd1cLkRSreu4Gll4ZQlkDn3hHDeO2T0AqP1Ni7P07Sw97Dwy0
+         Qc93PbwQv87Ixzq1es0BC6HP1MpUR2lVmbdBMpgE=
 Received: from mchehab by mail.kernel.org with local (Exim 4.94)
         (envelope-from <mchehab@kernel.org>)
-        id 1k5t7a-005t6j-Lg; Wed, 12 Aug 2020 17:56:58 +0200
+        id 1k5t7a-005t6N-9b; Wed, 12 Aug 2020 17:56:58 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org
-Subject: [PATCH 25/44] staging: regulator: hi6421v600-regulator: port it to upstream
-Date:   Wed, 12 Aug 2020 17:56:35 +0200
-Message-Id: <7af371daea3cbfa27dec63304a7ff8dca7168c56.1597247164.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 18/44] staging: mfd: hi6421-spmi-pmic: cleanup OF properties
+Date:   Wed, 12 Aug 2020 17:56:28 +0200
+Message-Id: <64e7e7d39b4fd738a9202d970b42b01b7bf49069.1597247164.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1597247164.git.mchehab+huawei@kernel.org>
 References: <cover.1597247164.git.mchehab+huawei@kernel.org>
@@ -61,103 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver was originally written for Kernel 4.9. It needs to
-be ported to upstream:
-
-	- Got rid of timeval;
-	- Removed a bogus dependency;
-	- Did cleanups at the header file.
+Simplify the names of the DT properties and do some cleanups,
+in order to better document them.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../staging/hikey9xx/hi6421v600-regulator.c   | 34 +++----------------
- 1 file changed, 5 insertions(+), 29 deletions(-)
+ drivers/staging/hikey9xx/hi6421-spmi-pmic.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/staging/hikey9xx/hi6421v600-regulator.c b/drivers/staging/hikey9xx/hi6421v600-regulator.c
-index 7bc0ae27b110..904cb64b1dcd 100644
---- a/drivers/staging/hikey9xx/hi6421v600-regulator.c
-+++ b/drivers/staging/hikey9xx/hi6421v600-regulator.c
-@@ -49,7 +49,6 @@ struct hisi_regulator_register_info {
- struct hisi_regulator {
- 	const char *name;
- 	struct hisi_regulator_register_info register_info;
--	struct timeval last_off_time;
- 	u32 off_on_delay;
- 	u32 eco_uA;
- 	struct regulator_desc rdesc;
-@@ -57,8 +56,6 @@ struct hisi_regulator {
- };
+diff --git a/drivers/staging/hikey9xx/hi6421-spmi-pmic.c b/drivers/staging/hikey9xx/hi6421-spmi-pmic.c
+index f523b2d844b9..aed2d3ec2227 100644
+--- a/drivers/staging/hikey9xx/hi6421-spmi-pmic.c
++++ b/drivers/staging/hikey9xx/hi6421-spmi-pmic.c
+@@ -209,37 +209,37 @@ static int get_pmic_device_tree_data(struct device_node *np, struct hisi_pmic *p
+ 	int ret = 0;
  
- static DEFINE_MUTEX(enable_mutex);
--struct timeval last_enabled;
--
+ 	/*get pmic irq num*/
+-	ret = of_property_read_u32_array(np, "hisilicon,hisi-pmic-irq-num",
++	ret = of_property_read_u32_array(np, "irq-num",
+ 					 &pmic->irqnum, 1);
+ 	if (ret) {
+-		pr_err("no hisilicon,hisi-pmic-irq-num property set\n");
++		pr_err("no irq-num property set\n");
+ 		ret = -ENODEV;
+ 		return ret;
+ 	}
  
- static inline struct hisi_pmic *rdev_to_pmic(struct regulator_dev *dev)
- {
-@@ -72,27 +69,6 @@ static inline struct hisi_pmic *rdev_to_pmic(struct regulator_dev *dev)
- /* helper function to ensure when it returns it is at least 'delay_us'
-  * microseconds after 'since'.
-  */
--static void ensured_time_after(struct timeval since, u32 delay_us)
--{
--	struct timeval now;
--	u64 elapsed_ns64, delay_ns64;
--	u32 actual_us32;
--
--	delay_ns64 = delay_us * NSEC_PER_USEC;
--	do_gettimeofday(&now);
--	elapsed_ns64 = timeval_to_ns(&now) - timeval_to_ns(&since);
--	if (delay_ns64 > elapsed_ns64) {
--		actual_us32 = ((u32)(delay_ns64 - elapsed_ns64) /
--							NSEC_PER_USEC);
--		if (actual_us32 >= 1000) {
--			mdelay(actual_us32 / 1000); /*lint !e647 */
--			udelay(actual_us32 % 1000);
--		} else if (actual_us32 > 0) {
--			udelay(actual_us32);
--		}
--	}
--	return;
--}
+ 	/*get pmic irq array number*/
+-	ret = of_property_read_u32_array(np, "hisilicon,hisi-pmic-irq-array",
++	ret = of_property_read_u32_array(np, "irq-array",
+ 					 &pmic->irqarray, 1);
+ 	if (ret) {
+-		pr_err("no hisilicon,hisi-pmic-irq-array property set\n");
++		pr_err("no irq-array property set\n");
+ 		ret = -ENODEV;
+ 		return ret;
+ 	}
  
- static int hisi_regulator_is_enabled(struct regulator_dev *dev)
- {
-@@ -113,13 +89,16 @@ static int hisi_regulator_enable(struct regulator_dev *dev)
- 	struct hisi_pmic *pmic = rdev_to_pmic(dev);
+ 	/*SOC_PMIC_IRQ_MASK_0_ADDR*/
+-	ret = of_property_read_u32_array(np, "hisilicon,hisi-pmic-irq-mask-addr",
++	ret = of_property_read_u32_array(np, "irq-mask-addr",
+ 					 (int *)&pmic->irq_mask_addr, 2);
+ 	if (ret) {
+-		pr_err("no hisilicon,hisi-pmic-irq-mask-addr property set\n");
++		pr_err("no irq-mask-addr property set\n");
+ 		ret = -ENODEV;
+ 		return ret;
+ 	}
  
- 	/* keep a distance of off_on_delay from last time disabled */
--	ensured_time_after(sreg->last_off_time, sreg->off_on_delay);
-+	usleep_range(sreg->off_on_delay, sreg->off_on_delay + 1000);
- 
- 	pr_debug("<[%s]: off_on_delay=%dus>\n", __func__, sreg->off_on_delay);
- 
- 	/* cannot enable more than one regulator at one time */
- 	mutex_lock(&enable_mutex);
--	ensured_time_after(last_enabled, HISI_REGS_ENA_PROTECT_TIME);
-+	usleep_range(HISI_REGS_ENA_PROTECT_TIME,
-+		     HISI_REGS_ENA_PROTECT_TIME + 1000);
-+
-+
- 
- 	/* set enable register */
- 	hisi_pmic_rmw(pmic, sreg->register_info.ctrl_reg,
-@@ -128,7 +107,6 @@ static int hisi_regulator_enable(struct regulator_dev *dev)
- 	pr_debug("<[%s]: ctrl_reg=0x%x,enable_mask=0x%x>\n", __func__, sreg->register_info.ctrl_reg,\
- 			sreg->register_info.enable_mask);
- 
--	do_gettimeofday(&last_enabled);
- 	mutex_unlock(&enable_mutex);
- 
- 	return 0;
-@@ -143,8 +121,6 @@ static int hisi_regulator_disable(struct regulator_dev *dev)
- 	hisi_pmic_rmw(pmic, sreg->register_info.ctrl_reg,
- 				sreg->register_info.enable_mask, 0);
- 
--	do_gettimeofday(&sreg->last_off_time);
--
- 	return 0;
- }
- 
+ 	/*SOC_PMIC_IRQ0_ADDR*/
+-	ret = of_property_read_u32_array(np, "hisilicon,hisi-pmic-irq-addr",
++	ret = of_property_read_u32_array(np, "irq-addr",
+ 					 (int *)&pmic->irq_addr, 2);
+ 	if (ret) {
+-		pr_err("no hisilicon,hisi-pmic-irq-addr property set\n");
++		pr_err("no irq-addr property set\n");
+ 		ret = -ENODEV;
+ 		return ret;
+ 	}
 -- 
 2.26.2
 
