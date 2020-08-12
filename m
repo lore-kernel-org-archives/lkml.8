@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36854C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 22:57:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC6DC433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 22:58:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 157C722C9F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 22:57:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5258D22BF5
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 22:58:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597273077;
-	bh=CW/aiQFmNWSWU6f2QI56vpnzZ0xECq7LXPOVqeXxrh0=;
+	s=default; t=1597273081;
+	bh=RT8zUpvBeGSNkpNMBCtjwCvDmhV5N9JXCZ8P2M0fqTM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WbN4ErLm7BHHhxSVnUFz6p7kPnfk0nesRmJAKSU8p+GobKfmIey/IGw/N64vao3ik
-	 lv/YA7o0iOKOvXzpu+dBSCtfa7IGK+TjSRq0qGFvyDGKa0s253I1M1PM1QNboGDx4E
-	 rOspDnELUiSVNXNQRL8R9/i1XjzXYGm5ZgGFahgE=
+	b=Tci93c5j+Hwk7gfbohabP4bQYM7d4hjZEOc3If+ogal8DwkO64Uyp9YT+XmOu9esN
+	 czYN/6v5lSibMaQ8onNW1tz7bdx+/9w+a1YlynQzXCQXw/Bqy15ckqUxzBF1xP/MCb
+	 VBkpK5ncdGJn40sZkbbKDwC18A0qbQ8jjnwDFGgo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726807AbgHLW5z (ORCPT
+        id S1726640AbgHLW5g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 18:57:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48940 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726627AbgHLW5g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 12 Aug 2020 18:57:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48874 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726505AbgHLW5f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 18:57:35 -0400
 Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB25A22B43;
-        Wed, 12 Aug 2020 22:57:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A436B2087C;
+        Wed, 12 Aug 2020 22:57:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597273055;
-        bh=CW/aiQFmNWSWU6f2QI56vpnzZ0xECq7LXPOVqeXxrh0=;
+        s=default; t=1597273054;
+        bh=RT8zUpvBeGSNkpNMBCtjwCvDmhV5N9JXCZ8P2M0fqTM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CF18Bh5zZd1ef4p5C5HDp8ufrUjEmyeKyoVdapM3e1bCEUAObxp5rBWTv1jo2/oWv
-         ukvFHokvenfhcEC0SGMBzh4/JWHzYQzyMHgp4/NUl3tPFPwXlnHWAhF0cHLUnvhU/g
-         fnyIA3vfrdyiBFhSPhtHk1XIlY6e3ME39sq2UpRE=
+        b=vVBQ5v8ht3AldFaYv+sgpkD9ie/sgsu/0j3LYSwlN3n17ET0q5njvsSqKHCw1fE4I
+         X6tipr9077q6tmwnn2TmcndJcZsLy3LxEwBQhkIk9zqgXvnSjcd0PeEG5n2Cj2RoZZ
+         6pJiA8Uk8dBRQTJ5RRfEhNCRp954ePyS+3APW+RA=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -49,9 +49,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         elver@google.com, dvyukov@google.com,
         "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 07/12] rcu: Attempt QS when CPU discovers GP for strict GPs
-Date:   Wed, 12 Aug 2020 15:57:27 -0700
-Message-Id: <20200812225732.20068-7-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 02/12] rcu: Reduce leaf fanout for strict RCU grace periods
+Date:   Wed, 12 Aug 2020 15:57:22 -0700
+Message-Id: <20200812225732.20068-2-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200812225632.GA19759@paulmck-ThinkPad-P72>
 References: <20200812225632.GA19759@paulmck-ThinkPad-P72>
@@ -62,58 +62,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@kernel.org>
 
-A given CPU normally notes a new grace period during one RCU_SOFTIRQ,
-but avoids reporting the corresponding quiescent state until some later
-RCU_SOFTIRQ.  This leisurly approach improves efficiency by increasing
-the number of update requests served by each grace period, but is not
-what is needed for kernels built with CONFIG_RCU_STRICT_GRACE_PERIOD=y.
+Because strict RCU grace periods will complete more quickly, they will
+experience greater lock contention on each leaf rcu_node structure's
+->lock.  This commit therefore reduces the leaf fanout in order to reduce
+this lock contention.
 
-This commit therefore adds a new rcu_strict_gp_check_qs() function
-which, in CONFIG_RCU_STRICT_GRACE_PERIOD=y kernels, simply enters and
-immediately exist an RCU read-side critical section.  If the CPU is
-in a quiescent state, the rcu_read_unlock() will attempt to report an
-immediate quiescent state.  This rcu_strict_gp_check_qs() function is
-invoked from note_gp_changes(), so that a CPU just noticing a new grace
-period might immediately report a quiescent state for that grace period.
+Note that this also has the effect of reducing the number of CPUs
+supported to 16 in the case of CONFIG_RCU_FANOUT_LEAF=2 or 81 in the
+case of CONFIG_RCU_FANOUT_LEAF=3.  However, greater numbers of CPUs are
+probably a bad idea when using CONFIG_RCU_STRICT_GRACE_PERIOD=y.  Those
+wishing to live dangerously are free to edit their kernel/rcu/Kconfig
+files accordingly.
 
 Reported-by Jann Horn <jannh@google.com>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/tree.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ kernel/rcu/Kconfig | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 08cc91c..4353a1a 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -1557,6 +1557,19 @@ static void __maybe_unused rcu_advance_cbs_nowake(struct rcu_node *rnp,
- }
+diff --git a/kernel/rcu/Kconfig b/kernel/rcu/Kconfig
+index 0ebe15a..b71e21f 100644
+--- a/kernel/rcu/Kconfig
++++ b/kernel/rcu/Kconfig
+@@ -135,10 +135,12 @@ config RCU_FANOUT
  
- /*
-+ * In CONFIG_RCU_STRICT_GRACE_PERIOD=y kernels, attempt to generate a
-+ * quiescent state.  This is intended to be invoked when the CPU notices
-+ * a new grace period.
-+ */
-+static void rcu_strict_gp_check_qs(void)
-+{
-+	if (IS_ENABLED(CONFIG_RCU_STRICT_GRACE_PERIOD)) {
-+		rcu_read_lock();
-+		rcu_read_unlock();
-+	}
-+}
-+
-+/*
-  * Update CPU-local rcu_data state to record the beginnings and ends of
-  * grace periods.  The caller must hold the ->lock of the leaf rcu_node
-  * structure corresponding to the current CPU, and must have irqs disabled.
-@@ -1626,6 +1639,7 @@ static void note_gp_changes(struct rcu_data *rdp)
- 	}
- 	needwake = __note_gp_changes(rnp, rdp);
- 	raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
-+	rcu_strict_gp_check_qs();
- 	if (needwake)
- 		rcu_gp_kthread_wake();
- }
+ config RCU_FANOUT_LEAF
+ 	int "Tree-based hierarchical RCU leaf-level fanout value"
+-	range 2 64 if 64BIT
+-	range 2 32 if !64BIT
++	range 2 64 if 64BIT && !RCU_STRICT_GRACE_PERIOD
++	range 2 32 if !64BIT && !RCU_STRICT_GRACE_PERIOD
++	range 2 3 if RCU_STRICT_GRACE_PERIOD
+ 	depends on TREE_RCU && RCU_EXPERT
+-	default 16
++	default 16 if !RCU_STRICT_GRACE_PERIOD
++	default 2 if RCU_STRICT_GRACE_PERIOD
+ 	help
+ 	  This option controls the leaf-level fanout of hierarchical
+ 	  implementations of RCU, and allows trading off cache misses
 -- 
 2.9.5
 
