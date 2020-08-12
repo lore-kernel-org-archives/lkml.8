@@ -2,118 +2,80 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B174C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:00:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35848C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:06:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56F1520658
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:00:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC90520675
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:06:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="H9w2mY6f"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="nDjgx0ta"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726796AbgHLQAq (ORCPT
+        id S1726526AbgHLQGu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 12:00:46 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:44740 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726540AbgHLQAp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 12:00:45 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07CG0T8O050082;
-        Wed, 12 Aug 2020 11:00:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1597248029;
-        bh=02ZEbPG60T+9TFX2JsaFFkktquPFZf1Si0VmO18RfTI=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=H9w2mY6fm2wsqTgq5ZDyXKbESuoPz5xCTPTw7JcD1v+0frmNswa+/P16xRDrueRTq
-         BxxFRwmDae62UFwrI9pzsW/wOURR2wYtkG3oZNYI7RGKvUfxmRGQXdkeCabpSxLYXz
-         u0UE60yVj57QY2U2dVV0MljMtnwdtj0hAe30Rsus=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07CG0Tlf109184
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 12 Aug 2020 11:00:29 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 12
- Aug 2020 11:00:29 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 12 Aug 2020 11:00:29 -0500
-Received: from [10.250.38.37] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07CG0Sa2007723;
-        Wed, 12 Aug 2020 11:00:29 -0500
-Subject: Re: [PATCH v32 2/6] leds: lp50xx: Add the LP50XX family of the RGB
- LED driver
-To:     Pavel Machek <pavel@ucw.cz>
-CC:     <jacek.anaszewski@gmail.com>, <robh@kernel.org>,
-        <marek.behun@nic.cz>, <devicetree@vger.kernel.org>,
-        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20200722153146.8767-1-dmurphy@ti.com>
- <20200722153146.8767-3-dmurphy@ti.com>
- <20200811105413.r2m2f7bubuz55rrt@duo.ucw.cz>
- <935119fa-6d1f-8e99-51f9-87966b4d03ad@ti.com> <20200811220109.GA9105@amd>
- <3ce38a31-a4f0-4cd7-ad09-6bdad27e6756@ti.com> <20200811222602.GA10181@amd>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <5efcba1b-995e-b6fd-9004-fbafaae5b8a3@ti.com>
-Date:   Wed, 12 Aug 2020 11:00:23 -0500
+        Wed, 12 Aug 2020 12:06:50 -0400
+Received: from vern.gendns.com ([98.142.107.122]:44788 "EHLO vern.gendns.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726456AbgHLQGq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 12:06:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=E7W/4qlrWr36rTWtmYlZDWrVvvfKDlYHlV9Dn3Enrm8=; b=nDjgx0tamXa1PABTwLrsO1NWYa
+        BmTCnFvoU1PcRCt0sEP4aA9hPBnpZw7RuH3nOhyLfW+JqHPtV8ABDSvVSpVpISL9732uZceRN3bsx
+        WTT9P+ccgq0RoXjfAdPkMBw+DEkuNhBiswT+GdICGyWCPKQGjLuP7rSel2kyPxqJGQ/cQtoOg4dMV
+        LwfO5SECQGfbj3NyrYuySPWYFKDJKvNmUW0A8kPmEPK/ACFSRWOGx8cB+ipDECaxJtb4aZUdK06GI
+        Hpp1CvC2IplELyGuScZ4/uoMgZBZlI7qdkaFyx200Tksku0LZZ0biAhH2yZnufWImgSLCc1/NO/v9
+        jc0Kat4Q==;
+Received: from [2600:1700:4830:165f::19e] (port=56864)
+        by vern.gendns.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <david@lechnology.com>)
+        id 1k5tH1-0001qD-RD; Wed, 12 Aug 2020 12:06:43 -0400
+Subject: Re: [PATCH] clk: davinci: Use the correct size when allocating memory
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>, nsekhar@ti.com,
+        mturquette@baylibre.com, sboyd@kernel.org
+Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+References: <20200809144959.747986-1-christophe.jaillet@wanadoo.fr>
+From:   David Lechner <david@lechnology.com>
+Message-ID: <4327a171-a937-c62e-ebad-9f92c0dea65d@lechnology.com>
+Date:   Wed, 12 Aug 2020 11:06:42 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200811222602.GA10181@amd>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200809144959.747986-1-christophe.jaillet@wanadoo.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - vern.gendns.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lechnology.com
+X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pavel
+On 8/9/20 9:49 AM, Christophe JAILLET wrote:
+> 'sizeof(*pllen)' should be used in place of 'sizeof(*pllout)' to avoid a
+> small over-allocation.
+> 
+> Fixes: 2d1726915159 ("clk: davinci: New driver for davinci PLL clocks")
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
 
-On 8/11/20 5:26 PM, Pavel Machek wrote:
-> Hi!
->
->>>> Well it depends on where we want to create the default cache values.
->>>>
->>>> Either we run through a for..loop during driver probe and delay device start
->>>> up or we keep the simple arrays and increase the driver total size.
->>> for loop will be better.
->>>
->>> Plus, REGCACHE_RBTREE is very likely overkill.
->> Well if I eliminate the reg_cache then I can eliminate the defaults too.
-> I'm not asking for that. But please investigate REGCACHE_FLAT.
->
-> 									Pavel
-
-After looking at this a loop makes no sense here.  The regmap call back 
-values are determined at build time not during runtime.
-
-Adding a loop here makes the code more complex just to reduce the 
-overall LoC.  In adding the loop the reg_default array will have to be 
-re-allocated and copied at run time and then be expanded to include the 
-additional values.
-
-And the regmap defaults call backs will need to be updated to reflect 
-the new values.  And these are part of a const struct because the 
-devm_regmap_init declares the config as a const.
-
-     .reg_defaults = lp5012_reg_defs,
-     .num_reg_defaults = ARRAY_SIZE(lp5012_reg_defs),
-
-So I am not sure that adding a loop here just to eliminate some LoC is 
-adding any value here.  I can remove the #defines for the unused runtime 
-registers and hard code the additional register addresses in the default 
-array.  That will at least eliminate some LoC and reduce the object size.
-
-I have no issue with using the REGCACHE_FLAT so I will make that change.
-
-Dan
-
+Reviewed-by: David Lechner <david@lechnology.com>
