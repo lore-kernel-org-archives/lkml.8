@@ -7,33 +7,33 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69526C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 08:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61EA2C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 08:44:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DF53206C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 08:44:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36DA920781
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 08:44:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727045AbgHLIoG (ORCPT
+        id S1727020AbgHLIoF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 04:44:06 -0400
-Received: from lucky1.263xmail.com ([211.157.147.133]:51770 "EHLO
-        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726589AbgHLIoF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 12 Aug 2020 04:44:05 -0400
-Received: from localhost (unknown [192.168.167.235])
-        by lucky1.263xmail.com (Postfix) with ESMTP id 61B75C5C84;
-        Wed, 12 Aug 2020 16:36:11 +0800 (CST)
+Received: from lucky1.263xmail.com ([211.157.147.133]:51812 "EHLO
+        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726565AbgHLIoE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 04:44:04 -0400
+Received: from localhost (unknown [192.168.167.16])
+        by lucky1.263xmail.com (Postfix) with ESMTP id F163AC5ED8;
+        Wed, 12 Aug 2020 16:34:44 +0800 (CST)
 X-MAIL-GRAY: 0
 X-MAIL-DELIVERY: 1
 X-ADDR-CHECKED: 0
 X-ANTISPAM-LEVEL: 2
 X-ABS-CHECKED: 0
 Received: from localhost.localdomain (unknown [103.29.142.67])
-        by smtp.263.net (postfix) whith ESMTP id P12148T140383488132864S1597221366062844_;
-        Wed, 12 Aug 2020 16:36:10 +0800 (CST)
+        by smtp.263.net (postfix) whith ESMTP id P18983T140547726436096S1597221280087704_;
+        Wed, 12 Aug 2020 16:34:44 +0800 (CST)
 X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <4d9e7216a08741cb642cd53bd73f90d4>
+X-UNIQUE-TAG: <aabb62171f4c56eb93f47e37d26bd229>
 X-RL-SENDER: algea.cao@rock-chips.com
 X-SENDER: algea.cao@rock-chips.com
 X-LOGIN-NAME: algea.cao@rock-chips.com
@@ -55,9 +55,9 @@ To:     a.hajda@samsung.com, kuankuan.y@gmail.com, hjc@rock-chips.com,
         linux-kernel@vger.kernel.org, narmstrong@baylibre.com,
         jbrunet@baylibre.com, maarten.lankhorst@linux.intel.com,
         daniel@ffwll.ch
-Subject: [PATCH 5/6] drm/rockchip: dw_hdmi: Add get_output_bus_format
-Date:   Wed, 12 Aug 2020 16:36:03 +0800
-Message-Id: <20200812083603.4320-1-algea.cao@rock-chips.com>
+Subject: [PATCH 2/6] drm: bridge: dw-hdmi: Implement connector atomic_begin/atomic_flush
+Date:   Wed, 12 Aug 2020 16:34:33 +0800
+Message-Id: <20200812083433.934-1-algea.cao@rock-chips.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200812083120.743-1-algea.cao@rock-chips.com>
 References: <20200812083120.743-1-algea.cao@rock-chips.com>
@@ -68,102 +68,141 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add get_output_bus_format in dw_hdmi_plat_data to get
-hdmi output bus format. The output bus format is determined
-by color format and depth, which can be set by rockchip
-hdmi properties.
+Introduce dw_hdmi_connector_atomic_begin() and
+dw_hdmi_connector_atomic_flush() to implement connector
+atomic_begin/atomic_flush. When enc_out_bus_format or
+enc_in_bus_format changed, dw_hdmi_setup is called.
+
+To avoid screen flash when updating bus format, it's need
+to send AVMUTE flag to make screen black, and clear flag
+after bus format updated.
 
 Signed-off-by: Algea Cao <algea.cao@rock-chips.com>
 ---
 
- drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c | 47 +++++++++++++++++++++
- include/drm/bridge/dw_hdmi.h                |  1 +
- 2 files changed, 48 insertions(+)
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 65 +++++++++++++++++++++++
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi.h |  4 ++
+ 2 files changed, 69 insertions(+)
 
-diff --git a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
-index 8f22d9a566db..a602d25639a7 100644
---- a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
-+++ b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
-@@ -100,6 +100,7 @@ struct rockchip_hdmi {
- 
- 	unsigned int colordepth;
- 	enum drm_hdmi_output_type hdmi_output;
-+	unsigned long output_bus_format;
+diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+index 6148a022569a..a1a81fc768c2 100644
+--- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
++++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+@@ -108,6 +108,8 @@ struct hdmi_vmode {
  };
  
- #define to_rockchip_hdmi(x)	container_of(x, struct rockchip_hdmi, x)
-@@ -498,6 +499,50 @@ static const struct dw_hdmi_property_ops dw_hdmi_rockchip_property_ops = {
- 	.get_property		= dw_hdmi_rockchip_get_property,
+ struct hdmi_data_info {
++	unsigned int prev_enc_in_bus_format;
++	unsigned int prev_enc_out_bus_format;
+ 	unsigned int enc_in_bus_format;
+ 	unsigned int enc_out_bus_format;
+ 	unsigned int enc_in_encoding;
+@@ -116,6 +118,7 @@ struct hdmi_data_info {
+ 	unsigned int hdcp_enable;
+ 	struct hdmi_vmode video_mode;
+ 	bool rgb_limited_range;
++	bool update;
  };
+ 
+ struct dw_hdmi_i2c {
+@@ -2401,6 +2404,60 @@ static int dw_hdmi_connector_get_modes(struct drm_connector *connector)
+ 	return ret;
+ }
  
 +static void
-+dw_hdmi_rockchip_output_bus_format_select(struct rockchip_hdmi *hdmi)
++dw_hdmi_connector_atomic_begin(struct drm_connector *connector,
++			       struct drm_connector_state *conn_state)
 +{
-+	unsigned long bus_format;
++	struct dw_hdmi *hdmi = container_of(connector, struct dw_hdmi,
++					    connector);
++	unsigned int enc_in_bus_fmt = hdmi->hdmi_data.enc_in_bus_format;
++	unsigned int enc_out_bus_fmt = hdmi->hdmi_data.enc_out_bus_format;
++	unsigned int prev_enc_in_bus_fmt =
++		hdmi->hdmi_data.prev_enc_in_bus_format;
++	unsigned int prev_enc_out_bus_fmt =
++		hdmi->hdmi_data.prev_enc_out_bus_format;
 +
-+	if (hdmi->hdmi_output == DRM_HDMI_OUTPUT_YCBCR420) {
-+		if (hdmi->colordepth > 8)
-+			bus_format = MEDIA_BUS_FMT_UYYVYY10_0_5X30;
-+		else
-+			bus_format = MEDIA_BUS_FMT_UYYVYY8_0_5X24;
-+	} else if (hdmi->hdmi_output == DRM_HDMI_OUTPUT_YCBCR422) {
-+		if (hdmi->colordepth == 12)
-+			bus_format = MEDIA_BUS_FMT_UYVY12_1X24;
-+		else if (hdmi->colordepth == 10)
-+			bus_format = MEDIA_BUS_FMT_UYVY10_1X20;
-+		else
-+			bus_format = MEDIA_BUS_FMT_UYVY8_1X16;
++	if (!conn_state->crtc)
++		return;
++
++	if (!hdmi->hdmi_data.video_mode.mpixelclock)
++		return;
++
++	if (enc_in_bus_fmt != prev_enc_in_bus_fmt ||
++	    enc_out_bus_fmt != prev_enc_out_bus_fmt) {
++		hdmi->hdmi_data.update = true;
++		hdmi_writeb(hdmi, HDMI_FC_GCP_SET_AVMUTE, HDMI_FC_GCP);
++		/* Add delay to make av mute work on sink*/
++		msleep(50);
 +	} else {
-+		if (hdmi->colordepth > 8) {
-+			if (hdmi->hdmi_output != DRM_HDMI_OUTPUT_DEFAULT_RGB)
-+				bus_format = MEDIA_BUS_FMT_YUV10_1X30;
-+			else
-+				bus_format = MEDIA_BUS_FMT_RGB101010_1X30;
-+		} else {
-+			if (hdmi->hdmi_output != DRM_HDMI_OUTPUT_DEFAULT_RGB)
-+				bus_format = MEDIA_BUS_FMT_YUV8_1X24;
-+			else
-+				bus_format = MEDIA_BUS_FMT_RGB888_1X24;
-+		}
++		hdmi->hdmi_data.update = false;
 +	}
-+
-+	hdmi->output_bus_format = bus_format;
 +}
 +
-+static unsigned long
-+dw_hdmi_rockchip_get_output_bus_format(void *data)
++static void
++dw_hdmi_connector_atomic_flush(struct drm_connector *connector,
++			       struct drm_connector_state *conn_state)
 +{
-+	struct rockchip_hdmi *hdmi = (struct rockchip_hdmi *)data;
++	struct dw_hdmi *hdmi = container_of(connector, struct dw_hdmi,
++					     connector);
 +
-+	dw_hdmi_rockchip_output_bus_format_select(hdmi);
++	if (!conn_state->crtc)
++		return;
 +
-+	return hdmi->output_bus_format;
++	DRM_DEBUG("%s\n", __func__);
++
++	if (hdmi->hdmi_data.update) {
++		dw_hdmi_setup(hdmi, hdmi->curr_conn, &hdmi->previous_mode);
++		/*
++		 * Before clear AVMUTE, delay is needed to
++		 * prevent display flash.
++		 */
++		msleep(50);
++		hdmi_writeb(hdmi, HDMI_FC_GCP_CLEAR_AVMUTE, HDMI_FC_GCP);
++		hdmi->hdmi_data.update = false;
++	}
 +}
 +
- static void dw_hdmi_rk3228_setup_hpd(struct dw_hdmi *dw_hdmi, void *data)
+ static bool hdr_metadata_equal(const struct drm_connector_state *old_state,
+ 			       const struct drm_connector_state *new_state)
  {
- 	struct rockchip_hdmi *hdmi = (struct rockchip_hdmi *)data;
-@@ -685,6 +730,8 @@ static int dw_hdmi_rockchip_bind(struct device *dev, struct device *master,
- 
- 	plat_data->property_ops = &dw_hdmi_rockchip_property_ops;
- 
-+	plat_data->get_output_bus_format =
-+		dw_hdmi_rockchip_get_output_bus_format;
- 	encoder = &hdmi->encoder;
- 
- 	encoder->possible_crtcs = drm_of_find_possible_crtcs(drm, dev->of_node);
-diff --git a/include/drm/bridge/dw_hdmi.h b/include/drm/bridge/dw_hdmi.h
-index dc561ebe7a9b..13495f810328 100644
---- a/include/drm/bridge/dw_hdmi.h
-+++ b/include/drm/bridge/dw_hdmi.h
-@@ -175,6 +175,7 @@ struct dw_hdmi_plat_data {
- 	const struct dw_hdmi_phy_config *phy_config;
- 	int (*configure_phy)(struct dw_hdmi *hdmi, void *data,
- 			     unsigned long mpixelclock);
-+	unsigned long (*get_output_bus_format)(void *data);
+@@ -2465,6 +2522,8 @@ static const struct drm_connector_funcs dw_hdmi_connector_funcs = {
+ static const struct drm_connector_helper_funcs dw_hdmi_connector_helper_funcs = {
+ 	.get_modes = dw_hdmi_connector_get_modes,
+ 	.atomic_check = dw_hdmi_connector_atomic_check,
++	.atomic_begin = dw_hdmi_connector_atomic_begin,
++	.atomic_flush = dw_hdmi_connector_atomic_flush,
  };
  
- struct dw_hdmi *dw_hdmi_probe(struct platform_device *pdev,
+ static int dw_hdmi_connector_create(struct dw_hdmi *hdmi)
+@@ -2778,6 +2837,12 @@ static int dw_hdmi_bridge_atomic_check(struct drm_bridge *bridge,
+ {
+ 	struct dw_hdmi *hdmi = bridge->driver_private;
+ 
++	hdmi->hdmi_data.prev_enc_out_bus_format =
++			hdmi->hdmi_data.enc_out_bus_format;
++
++	hdmi->hdmi_data.prev_enc_in_bus_format =
++			hdmi->hdmi_data.enc_in_bus_format;
++
+ 	hdmi->hdmi_data.enc_out_bus_format =
+ 			bridge_state->output_bus_cfg.format;
+ 
+diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
+index 1999db05bc3b..05182418efbb 100644
+--- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
++++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
+@@ -842,6 +842,10 @@ enum {
+ 	HDMI_FC_AVICONF3_QUANT_RANGE_LIMITED = 0x00,
+ 	HDMI_FC_AVICONF3_QUANT_RANGE_FULL = 0x04,
+ 
++/* HDMI_FC_GCP */
++	HDMI_FC_GCP_SET_AVMUTE = 0x2,
++	HDMI_FC_GCP_CLEAR_AVMUTE = 0x1,
++
+ /* FC_DBGFORCE field values */
+ 	HDMI_FC_DBGFORCE_FORCEAUDIO = 0x10,
+ 	HDMI_FC_DBGFORCE_FORCEVIDEO = 0x1,
 -- 
 2.25.1
 
