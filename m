@@ -2,107 +2,184 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4523C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 11:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B9C9C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 11:33:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 818E2207DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 11:33:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 655ED207DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 11:33:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="svUM0Ptl"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DMG3ailN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727841AbgHLLdE (ORCPT
+        id S1727870AbgHLLdI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 07:33:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47552 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726804AbgHLLdE (ORCPT
+        Wed, 12 Aug 2020 07:33:08 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:59711 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726698AbgHLLdF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 07:33:04 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DEC0C06174A;
-        Wed, 12 Aug 2020 04:33:03 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id r21so1610951ota.10;
-        Wed, 12 Aug 2020 04:33:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Em9Sp8XmzIpv/p2/XIEVSGX1+QelGDXMy8mBEoKzQGA=;
-        b=svUM0PtlSc/BsJ398hEypGo/dtDceKxpkxJL2XapJiufbso1e8LfFI4bXYobnoySJa
-         SRjvv9f/48b5GJPA7fHwECXPGN7eO/ub5qQngsk3EUO83vMzAXxkqcbbp5j1xemvZIq9
-         s5mftpWisvt6SbOmNG3lr1AFiu06MFhrdLN47I42cpfWHFnGFPC0kmoM7pnxUZpSyLQj
-         +N4Js6sN6aumylIuGGMt2QsXP+hkf1Ol4GBV8Uuo8S00kvpt2DD1ugHsd9sXoZ13vg/2
-         3wLqiAgbMsq3tbjK6M6brM8AX2Uig0dYIzJF4KNHkRmKijkDxBWgQ34F0o2mtUai8o4g
-         hCHA==
+        Wed, 12 Aug 2020 07:33:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597231983;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=RoczEJbTRhp4E6+m43og6G2+lF41l5//y8mz5TyVbNM=;
+        b=DMG3ailNkDHlTMsWzCJrO6l6TI+fwDh1IfCJgC0jPPZavwixLwWFh61EAeNs2Nb9OZ9BoH
+        EiasU7jjC7sE+CTWibN3ASXTkWwy2BrtlAsSGX+gOPk+5XjtC/YlU1OaICKj9I51EsA6BF
+        J3c8vyk3+anoSRSvDE+OuJd+cyE2bSA=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-104-6MV7vWY4MIOhoGY5s-RWIw-1; Wed, 12 Aug 2020 07:33:01 -0400
+X-MC-Unique: 6MV7vWY4MIOhoGY5s-RWIw-1
+Received: by mail-wr1-f72.google.com with SMTP id s23so792896wrb.12
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 04:33:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Em9Sp8XmzIpv/p2/XIEVSGX1+QelGDXMy8mBEoKzQGA=;
-        b=uU9fnuYM3xvqv6N6V5WwapZ5O7kRbjc4Hp+lGA3cRh01/bXAsVrKF7RHOw8CWuhkXd
-         a/D9YSmqqJBB63Hl3teNWjlDOYF4Hl19mIBKh4r7klyT0Gbk/aowKc2uAcLdKLf8DFb9
-         jJkSoPon5cpwccJhHKkN3DAcaJvrSVrulqQoCTSsTzHZKVWZT9iwXG30e5Mel7ckoKHT
-         EzzxYM+3SoXsMdj1yYYw3Hxq6RWQfiaGm0hfJWUT1GOjwLVjZd8N8rSo5UmwIwDo/a62
-         StrdjAoUZ3BKDj/awLrkAB25cgyFpMgb/ggNsAV3KH91ZpcbcxuUDvOO7rUoDcXKSe+1
-         LIew==
-X-Gm-Message-State: AOAM531/OOF2cNjWO1nugWBXLLtTUpZXelRLUvdAqk0K09lMuL3Q8+BW
-        ZP/dSK+If+b4jKnaIQkRFNZC796z9ht4lTatyA4=
-X-Google-Smtp-Source: ABdhPJyApW1cAsqfCZE8viTLCHhX3eA/ksSTGjILeL6+zxKJ5TOuIeeZt8iyPAiUApQEScansB5N2ki5ANp9kIXSCiU=
-X-Received: by 2002:a9d:128c:: with SMTP id g12mr8585420otg.242.1597231982871;
- Wed, 12 Aug 2020 04:33:02 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=RoczEJbTRhp4E6+m43og6G2+lF41l5//y8mz5TyVbNM=;
+        b=YHAna4li54OSa/cQS/ZgXcjF4OiYzicLSpy2XYvuRewa+zMqgyR3X0H1sCrpX2/Nwq
+         ayFVOxMOtDwHiGCiB+zOU8hQ1Ylfc4mZcYT9NlicjEIIg4zcvShOtB5q8KJaxMiIomuv
+         HrRIhLvEtSiTksWzHbP3RpTvQ1jj9eK2OpVVYWrT8ZgLr+xdJr5Wz7iELijM4qW1xYeG
+         0BJ9e2+BjHL3aRMpqUUGBHUskYLrzPZqw49PaJMFnyOy+pInYH+e+E+2dRLIOAr/phyk
+         WN9z14SLPtUqaab8CrEBiD3dsym4n6wr2dBU1x8L+Zxpb8VksUDjxD7+Hq1ZwPmqf0Rn
+         vH9Q==
+X-Gm-Message-State: AOAM533Yd0b/rqaWiI74JeR5+fKvCfIQX6R9sBhM02JFco3DoKA1/FPJ
+        i1ISF86hk+PkqslXSnkr1JVZbcggZ39B/xg8X9CGEkXb0PKO8f0BLN8/5RbumkRPNfZFxIXlHRb
+        wixOaQ7fDg2j0+fUdt5KQglwj
+X-Received: by 2002:a5d:4749:: with SMTP id o9mr33576518wrs.68.1597231980350;
+        Wed, 12 Aug 2020 04:33:00 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwE9vUSdqREh8t5yedMvEm4NGM9cHgKaJxXfAZaigvpsiyMMH7G3s3jyydBvrp2awjcZ69qRA==
+X-Received: by 2002:a5d:4749:: with SMTP id o9mr33576497wrs.68.1597231980079;
+        Wed, 12 Aug 2020 04:33:00 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:fcdc:39e8:d361:7e30? ([2001:b07:6468:f312:fcdc:39e8:d361:7e30])
+        by smtp.gmail.com with ESMTPSA id o3sm3596446wru.64.2020.08.12.04.32.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Aug 2020 04:32:59 -0700 (PDT)
+Subject: Re: [PATCH] KVM: x86/pmu: Add '.exclude_hv = 1' for guest perf_event
+To:     peterz@infradead.org
+Cc:     Like Xu <like.xu@linux.intel.com>, Yao <yao.jin@linux.intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+References: <20200812050722.25824-1-like.xu@linux.intel.com>
+ <5c41978e-8341-a179-b724-9aa6e7e8a073@redhat.com>
+ <20200812111115.GO2674@hirez.programming.kicks-ass.net>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <65eddd3c-c901-1c5a-681f-f0cb07b5fbb1@redhat.com>
+Date:   Wed, 12 Aug 2020 13:32:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200716030847.1564131-1-keescook@chromium.org>
- <87h7tpa3hg.fsf@nanos.tec.linutronix.de> <202007301113.45D24C9D@keescook>
- <CAOMdWSJQKHAWY1P297b9koOLd8sVtezEYEyWGtymN1YeY27M6A@mail.gmail.com>
- <202008111427.D00FCCF@keescook> <s5hpn7wz8o6.wl-tiwai@suse.de>
-In-Reply-To: <s5hpn7wz8o6.wl-tiwai@suse.de>
-From:   Allen <allen.lkml@gmail.com>
-Date:   Wed, 12 Aug 2020 17:02:50 +0530
-Message-ID: <CAOMdWS+FJm0NZfbj+yyShX2edX6_9w5K+rA+_u+Z6-rrjcwucg@mail.gmail.com>
-Subject: Re: [PATCH 0/3] Modernize tasklet callback API
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     Kees Cook <keescook@chromium.org>, devel@driverdev.osuosl.org,
-        linux-s390@vger.kernel.org, alsa-devel@alsa-project.org,
-        Oscar Carter <oscar.carter@gmx.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-input@vger.kernel.org,
-        kgdb-bugreport@lists.sourceforge.net,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Romain Perier <romain.perier@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200812111115.GO2674@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->
-> I have a patch set to convert the remaining tasklet usage in sound
-> drivers to either the threaded IRQ or the work, but it wasn't
-> submitted / merged for 5.8 due to the obvious conflict with your API
-> changes.
-> Each conversion is rather simple, but it's always a question of the
-> nature of each tasklet usage which alternative is the best fit.
->
-> FWIW, the current version is found in test/kill-tasklet branch of
-> sound git tree
->   git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git
+On 12/08/20 13:11, peterz@infradead.org wrote:
+>> x86 does not have a hypervisor privilege level, so it never uses
+> 
+> Arguably it does when Xen, but I don't think we support that, so *phew*.
 
-Great. Currently my tree has these converted to use the new
-tasklet_setup() api. I will add these to my threaded IRQ/work tree
-(which is still wip).
+Yeah, I suppose you could imagine having paravirtualized perf counters
+where the Xen privileged domain could ask Xen to run perf counters on
+itself.
 
-Thanks.
+>> exclude_hv; exclude_host already excludes all root mode activity for
+>> both ring0 and ring3.
+> 
+> Right, but we want to tighten the permission checks and not excluding_hv
+> is just sloppy.
 
+I would just document that it's ignored as it doesn't make sense.  ARM64
+does that too, for new processors where the kernel is not itself split
+between supervisor and hypervisor privilege levels.
 
--- 
-       - Allen
+There are people that are trying to run Linux-based firmware and have
+SMM handlers as part of the kernel.  Perhaps they could use exclude_hv
+to exclude the SMM handlers from perf (if including them is possible at
+all).
+
+> The thing is, we very much do not want to allow unpriv user to be able
+> to create: exclude_host=1, exclude_guest=0 counters (they currently
+> can).
+
+That would be the case of an unprivileged user that wants to measure
+performance of its guests.  It's a scenario that makes a lot of sense,
+are you worried about side channels?  Can perf-events on guests leak
+more about the host than perf-events on a random userspace program?
+
+> Also, exclude_host is really poorly defined:
+> 
+>   https://lkml.kernel.org/r/20200806091827.GY2674@hirez.programming.kicks-ass.net
+> 
+>   "Suppose we have nested virt:
+> 
+> 	  L0-hv
+> 	  |
+> 	  G0/L1-hv
+> 	     |
+> 	     G1
+> 
+>   And we're running in G0, then:
+> 
+>   - 'exclude_hv' would exclude L0 events
+>   - 'exclude_host' would ... exclude L1-hv events?
+>   - 'exclude_guest' would ... exclude G1 events?
+
+From the point of view of G0, L0 *does not exist at all*.  You just
+cannot see L0 events if you're running in G0.
+
+exclude_host/exclude_guest are the right definition.
+
+>   Then the next question is, if G0 is a host, does the L1-hv run in
+>   G0 userspace or G0 kernel space?
+
+It's mostly kernel, but sometimes you're interested in events from QEMU
+or whoever else has opened /dev/kvm.  In that case you care about G0
+userspace too.
+
+> The way it is implemented, you basically have to always set
+> exclude_host=0, even if there is no virt at all and you want to measure
+> your own userspace thing -- which is just weird.
+
+I understand regretting having exclude_guest that way; include_guest
+(defaulting to 0!) would have made more sense.  But defaulting to
+exclude_host==0 makes sense: if there is no virt at all, memset(0) does
+the right thing so it does not seem weird to me.
+
+> I suppose the 'best' option at this point is something like:
+> 
+> 	/*
+> 	 * comment that explains the trainwreck.
+> 	 */
+> 	if (!exclude_host && !exclude_guest)
+> 		exclude_guest = 1;
+> 
+> 	if ((!exclude_hv || !exclude_guest) && !perf_allow_kernel())
+> 		return -EPERM;
+> 
+> But that takes away the possibility of actually having:
+> 'exclude_host=0, exclude_guest=0' to create an event that measures both,
+> which also sucks.
+
+In fact both of the above "if"s suck. :(
+
+Paolo
+
