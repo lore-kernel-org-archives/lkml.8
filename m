@@ -2,134 +2,95 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5297DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:02:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D891C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:02:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31A6F207F7
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:02:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E816720774
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 13:02:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ejh9JhTd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727817AbgHLNCU (ORCPT
+        id S1727899AbgHLNCd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 09:02:20 -0400
-Received: from mga17.intel.com ([192.55.52.151]:39389 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726404AbgHLNCT (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 09:02:19 -0400
-IronPort-SDR: tSTPUCxX4Mx+lb5gQtDAXpnvnk7/EzokzeaHtPIGMGgoDAAIB9nglPd0Z41Fx+dakVzfjasoYs
- 394vDcuk3gmw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9710"; a="133999652"
-X-IronPort-AV: E=Sophos;i="5.76,304,1592895600"; 
-   d="scan'208";a="133999652"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2020 06:02:18 -0700
-IronPort-SDR: /TojppMMq/iufcGRp5r0elCweGvp4iDvZC17WPVdvLLHP8gqovcGGSmvCH0FlUm9VXg0Lkyeec
- C8VK89u8PqUw==
-X-IronPort-AV: E=Sophos;i="5.76,304,1592895600"; 
-   d="scan'208";a="469814362"
-Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.255.29.234]) ([10.255.29.234])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2020 06:02:13 -0700
-Subject: Re: [PATCH] perf parse-events: Set exclude_guest for user-space
- counting
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jin Yao <yao.jin@linux.intel.com>
-Cc:     jolsa@kernel.org, peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@linux.intel.com, Linux-kernel@vger.kernel.org,
-        ak@linux.intel.com, kan.liang@intel.com, yao.jin@intel.com
-References: <20200812065953.22143-1-yao.jin@linux.intel.com>
- <20200812121504.GE13995@kernel.org>
-From:   Like Xu <like.xu@linux.intel.com>
-Organization: Intel OTC
-Message-ID: <74097816-3f36-abea-1eaa-8942aedd7322@linux.intel.com>
-Date:   Wed, 12 Aug 2020 21:02:10 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Wed, 12 Aug 2020 09:02:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33030 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726829AbgHLNC3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 09:02:29 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B0E2C06174A
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 06:02:29 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id q9so1830549oth.5
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 06:02:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/FYTOQHYFNoSSfeNhMyajUD/P2m5h59FWjXl7Kq1d4Y=;
+        b=Ejh9JhTd9LtOhtE75SjvXpQnDSp7w66jJR1NQUvefFxvJxEft/FqE/PPqVJFAh50YM
+         fsYCldXZS49D+1TpHN+1+wdEQSTLJUufRT78xZVGgjFBHtij+oq1ndEXkrCxInRnvStQ
+         oYNQP/6wSLGd7hJ/JWp4afeodmgkalQwpryZ3L6ZjUDkljJ57PvdZlVrxoI0wURUzmNN
+         264O/jK9pvqqp7CTk94vsYLmF+yS1u79QdYSg0o4wEXy8Y0a7/Cr/5NhUIZfasb/tIz1
+         VwOgGJHWcVVJj2VVOe/du7c6iRFuo0iFKN7KrOstvfcptczohpx5kflIfJM/n5n8zgJY
+         ac3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/FYTOQHYFNoSSfeNhMyajUD/P2m5h59FWjXl7Kq1d4Y=;
+        b=ixgSIERdd7q/xhoyjHeuwshaIgCwmnzGsfUQLEvKJNitr/ElS5FK252TdX8koC5+Gk
+         b9KJffMX2K/HlsH8PjzY51ZGb4doURKz2v8WzbAMJsjqJSZ1/H50kxX/SsCHzZTq39zg
+         WVKPXDaNFvdq/k5bK08r3jb5G978DIjxyC11TQUkgLxpk2OTEVzX363V0RNJP2BXIBtg
+         4yrUooXnMElIcKtZvXUsJIfvwKYqATqS0Ry+1w0LZsh252wm0p59mqnc/wTOm9ScerFL
+         T6Z0rVACIZYNecl5kqoJxjLuCe/7uOdocttzV+cdSndvXHlhTygwZMXYEFDhdFSmH9IU
+         1u6Q==
+X-Gm-Message-State: AOAM533ct4rUikxRqtp6XQC+RWW4T7HC+ktd0ByV9Xkr4uR2Ko4s93Ep
+        kxBhQRH0vW1HHlAUbadVz4j+nf3w1fr39+flJcLGRQ==
+X-Google-Smtp-Source: ABdhPJwoTEkpCpRgvslk7SPBlvFttSnZw3FOWuQBpposC+jZpNWauxHblvEM5fYuhUHQ0Uct3sFok1vM6Q6D6qyFm1M=
+X-Received: by 2002:a9d:3da1:: with SMTP id l30mr9650285otc.233.1597237346320;
+ Wed, 12 Aug 2020 06:02:26 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200812121504.GE13995@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200810080625.1428045-1-elver@google.com>
+In-Reply-To: <20200810080625.1428045-1-elver@google.com>
+From:   Marco Elver <elver@google.com>
+Date:   Wed, 12 Aug 2020 15:02:14 +0200
+Message-ID: <CANpmjNP5WpDyfXDc=v6cerd5=GpKyCmBKAKH+6qLT6JrBGPqnw@mail.gmail.com>
+Subject: Re: [PATCH] kcsan: Optimize debugfs stats counters
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/8/12 20:15, Arnaldo Carvalho de Melo wrote:
-> Em Wed, Aug 12, 2020 at 02:59:53PM +0800, Jin Yao escreveu:
->> Currently if we run 'perf record -e cycles:u', exclude_guest is 0.
->>
->> But it doesn't make sense that we request for user-space counting
->> but we also get the guest report.
->>
+On Mon, 10 Aug 2020 at 10:06, Marco Elver <elver@google.com> wrote:
+> Remove kcsan_counter_inc/dec() functions, as they perform no other
+> logic, and are no longer needed.
+>
+> This avoids several calls in kcsan_setup_watchpoint() and
+> kcsan_found_watchpoint(), as well as lets the compiler warn us about
+> potential out-of-bounds accesses as the array's size is known at all
+> usage sites at compile-time.
+>
+> Signed-off-by: Marco Elver <elver@google.com>
+> ---
+>  kernel/kcsan/core.c    | 22 +++++++++++-----------
+>  kernel/kcsan/debugfs.c | 21 +++++----------------
+>  kernel/kcsan/kcsan.h   | 12 ++++++------
+>  kernel/kcsan/report.c  |  2 +-
+>  4 files changed, 23 insertions(+), 34 deletions(-)
 
-Please hold the horse and allow this possibility.
+Hi Paul,
 
-Some authorized perf users on the host may
-only want to count (KVM) guest user space events.
+I think this one is good to apply. I do not expect conflicts with current -rcu.
 
 Thanks,
-Like Xu
-
->> To keep perf semantics consistent and clear, this patch sets
->> exclude_guest for user-space counting.
-> 
-> Applied, and also added this, that you should consider doing in the
-> future (modulo the "Committer testing:" header :) ):
-> 
-> Committer testing:
-> 
-> Before:
-> 
->    # perf record -e cycles:u
->    ^C[ perf record: Woken up 1 times to write data ]
->    [ perf record: Captured and wrote 1.231 MB perf.data (91 samples) ]
->    #
->    # perf evlist -v
->    cycles:u: size: 120, { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|ID|CPU|PERIOD, read_format: ID, disabled: 1, inherit: 1, exclude_kernel: 1, exclude_hv: 1, freq: 1, sample_id_all: 1
->    <SNIP>
->    #
-> 
-> After:
-> 
->    # perf record -e cycles:u
->    ^C[ perf record: Woken up 1 times to write data ]
->    [ perf record: Captured and wrote 1.263 MB perf.data (403 samples) ]
->    #
->    # perf evlist -v
->    cycles:u: size: 120, { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|ID|CPU|PERIOD, read_format: ID, disabled: 1, inherit: 1, exclude_kernel: 1, exclude_hv: 1, freq: 1, sample_id_all: 1, exclude_guest: 1
->    #
-> 
-> ----
-> 
-> I.e. show actual command output before and after that demonstrates the
-> problem and then the solution.
-> 
->> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
->> ---
->>   tools/perf/util/parse-events.c | 2 ++
->>   1 file changed, 2 insertions(+)
->>
->> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
->> index 9f7260e69113..4d809f1fe269 100644
->> --- a/tools/perf/util/parse-events.c
->> +++ b/tools/perf/util/parse-events.c
->> @@ -1794,6 +1794,8 @@ static int get_event_modifier(struct event_modifier *mod, char *str,
->>   		if (*str == 'u') {
->>   			if (!exclude)
->>   				exclude = eu = ek = eh = 1;
->> +			if (!exclude_GH)
->> +				eG = 1;
->>   			eu = 0;
->>   		} else if (*str == 'k') {
->>   			if (!exclude)
->> -- 
->> 2.17.1
->>
-> 
-
+-- Marco
