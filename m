@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CC65C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 06:32:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DDC6C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 06:32:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05D342078B
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 06:32:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5216D20781
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 06:32:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T8uABufn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ede5anAH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727084AbgHLGcb (ORCPT
+        id S1727108AbgHLGcg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 02:32:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57678 "EHLO
+        Wed, 12 Aug 2020 02:32:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726820AbgHLGbi (ORCPT
+        with ESMTP id S1726634AbgHLGbf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 02:31:38 -0400
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D61BC061787;
-        Tue, 11 Aug 2020 23:31:37 -0700 (PDT)
-Received: by mail-wr1-x435.google.com with SMTP id a14so928711wra.5;
-        Tue, 11 Aug 2020 23:31:37 -0700 (PDT)
+        Wed, 12 Aug 2020 02:31:35 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B30EC061787;
+        Tue, 11 Aug 2020 23:31:35 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id l2so919877wrc.7;
+        Tue, 11 Aug 2020 23:31:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=qvgG81hCCayASn7++fbBybaRbwz/aRiFuxpMk+uHNx4=;
-        b=T8uABufnPRqgrSPEf1GWM8So4J/qO4auXIWAaQ/Mnw3ic2wE0DwuG1rs+UqHfnZSK/
-         5Skjbl6j3YDqgOVE01QkYpwX2DGzEeP2DKS4TlwbLANyafDqCmldUVdS4O342nFaaOkt
-         d145fhQ8NXQhswoxeGZ3RKGb8IPE9oc7rimN9QqOzCyLrdpl3VSnQ24QOUveNh5MXbSK
-         wH9JPlq5aMKPIj6nZQ/uw0Y3RFmw0h0qFcvwdpzVkQODptpenWvNW8SCJfwuXLmrw9wg
-         htI0lFvHukP0BxgfvVIjXvxmevbDYmyafP888UxvNIeNYOEIp6x0cmeXcZ6ZFIAwxaL6
-         s7QQ==
+        bh=jAiHwMnOPDo8GdW4OpJqCPwuUyomPqMUpFNc5HXUXbQ=;
+        b=Ede5anAHzvM+Z/8K+VioqgIlszBQMLS4PY08g2uB7PCbdx0S1obu0CJHyB4sbvcAb7
+         Vd9Lc4Skp8sPzWetRJqFzkHp5cPqfMvJqhpLWMiZVZXE1YvA98m1NEvNhGqLlW5WsHMU
+         V1CE5xC2BGRfC46e1uCOER4HChhZHtL1KZyTZcuO/3XaQxHYX3S465bkK/FJsgRiVnaH
+         HuhLFNsRb6WQ3lh0sj5P9l63gxklsdoalcYzn2bw2IiEUrO8DPwBEbDkfOvQEh6FJI//
+         VorTGLnu6j1e8UW65HW/DocaAP2TIUn1i+GpsGpQid1O17B7AcltNpvzVJk19dpCGPP4
+         FZwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=qvgG81hCCayASn7++fbBybaRbwz/aRiFuxpMk+uHNx4=;
-        b=A5qAwLX/o4rQHfiZ72TseAWLVgyHLvxg3+yVXCFxrKcgSyWXX0PX0+tRZdMPsxhbs2
-         4LmtPFyvdhYTZhHeBiTQzlVxc0FpmEVQGKAvXVrR0AymfAwcoto6PYKV3Dpj/n3/K3S3
-         SeuHVBOQ7Do2jPmYpcDjwFwuYiggMuvG8JITFpcNxPsgjgIoLf62UgLYSt4InGP6AnqU
-         qKhvnlCRbB4FY8e0ioeuqbXBjIgUEiwfwTcoHY8PQ1uKA+iMZjK3yPgNPIax0esRQmGg
-         8JtMTPiTojB8saKYecDoj1LyXXGoJPID6V1fUSwYVWPrqnYR2cENK2YKS+8+R0BNLLu1
-         19tw==
-X-Gm-Message-State: AOAM533ZQ185bcI/94snST8QqHbw1Zjg0eJ1UsliTdSrlWw3SHAzDZVA
-        WBXmNDa+NwkR+StbhznS/oQ=
-X-Google-Smtp-Source: ABdhPJzwt6cmxHfcL85cJm2H+Xct2uRi9zXHaXEIAeSIkEox54MnIkzSg8iPBhA8LJHlavTq7I+LUg==
-X-Received: by 2002:adf:9361:: with SMTP id 88mr35230681wro.403.1597213896167;
-        Tue, 11 Aug 2020 23:31:36 -0700 (PDT)
+        bh=jAiHwMnOPDo8GdW4OpJqCPwuUyomPqMUpFNc5HXUXbQ=;
+        b=WNHW7fPOluuKf48+t6cb1KgaSORUUbWGNKcLhh8TZo+uv3Q+DInjqZ4MqJfSBNV3AC
+         t/QrULr0QNB4oiTCgTl4XXwb8587FGLgadXMqy/yJuG+mDwYwitFyEqoxt+hl/bRAD+I
+         bvXcsqR0CllrS1DNfTc0eqaqrBTLP1kZVXe8c+wF/58J0z1b3kGZR62aTYtHsiYQ6HBH
+         KSOMXZ6N/UVXAAAx4IABpiHmK7N6EqNYmVhRFgkFhrn+c6zvU9i/LiLqLu7+u2fchhu7
+         DeJAo+mKBqS3gHC5MTICPTTCyqmHWE2m58QV9lseHezoL4RXU+16BWWuQajkDVkKH8YX
+         GRyQ==
+X-Gm-Message-State: AOAM533YPWF7welkNnipBWrfFdwe4ZN6b4AZAL+a/iecnmQX5sZL78OZ
+        9eNSZRvLjtXNvx4LGJTv3IQ=
+X-Google-Smtp-Source: ABdhPJz0rWF9v83Lhc7heAUxipoQpxmokvmh5ZnZ6VrkH/pCaqg55ZU089SW59VAXPthyD+QU5L0NA==
+X-Received: by 2002:a05:6000:118e:: with SMTP id g14mr33385345wrx.139.1597213893931;
+        Tue, 11 Aug 2020 23:31:33 -0700 (PDT)
 Received: from skynet.lan (88.red-83-49-60.dynamicip.rima-tde.net. [83.49.60.88])
-        by smtp.gmail.com with ESMTPSA id m16sm2149945wrr.71.2020.08.11.23.31.35
+        by smtp.gmail.com with ESMTPSA id m16sm2149945wrr.71.2020.08.11.23.31.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Aug 2020 23:31:35 -0700 (PDT)
+        Tue, 11 Aug 2020 23:31:33 -0700 (PDT)
 From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
         <noltari@gmail.com>
 To:     f.fainelli@gmail.com, robh+dt@kernel.org,
@@ -68,9 +68,9 @@ To:     f.fainelli@gmail.com, robh+dt@kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
         <noltari@gmail.com>
-Subject: [PATCH 03/14] mips: bmips: add BCM6318 irq definitions
-Date:   Wed, 12 Aug 2020 08:31:18 +0200
-Message-Id: <20200812063129.361862-4-noltari@gmail.com>
+Subject: [PATCH 01/14] mips: dts: brcm: allow including header files
+Date:   Wed, 12 Aug 2020 08:31:16 +0200
+Message-Id: <20200812063129.361862-2-noltari@gmail.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200812063129.361862-1-noltari@gmail.com>
 References: <20200812063129.361862-1-noltari@gmail.com>
@@ -82,105 +82,247 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add header with BCM6318 definitions in order to be able to include it from
-device tree files.
+Change /include/ with #include in order to be able to include header files
+from dt-bindings.
 
 Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
 ---
- .../bcm6318-interrupt-controller.h            | 84 +++++++++++++++++++
- 1 file changed, 84 insertions(+)
- create mode 100644 include/dt-bindings/interrupt-controller/bcm6318-interrupt-controller.h
+ arch/mips/boot/dts/brcm/bcm3368-netgear-cvg834g.dts    | 2 +-
+ arch/mips/boot/dts/brcm/bcm63268-comtrend-vr-3032u.dts | 2 +-
+ arch/mips/boot/dts/brcm/bcm6358-neufbox4-sercomm.dts   | 2 +-
+ arch/mips/boot/dts/brcm/bcm6362-neufbox6-sercomm.dts   | 2 +-
+ arch/mips/boot/dts/brcm/bcm93384wvg.dts                | 2 +-
+ arch/mips/boot/dts/brcm/bcm93384wvg_viper.dts          | 2 +-
+ arch/mips/boot/dts/brcm/bcm96368mvwg.dts               | 2 +-
+ arch/mips/boot/dts/brcm/bcm97125cbmb.dts               | 2 +-
+ arch/mips/boot/dts/brcm/bcm97346dbsmb.dts              | 4 ++--
+ arch/mips/boot/dts/brcm/bcm97358svmb.dts               | 4 ++--
+ arch/mips/boot/dts/brcm/bcm97360svmb.dts               | 2 +-
+ arch/mips/boot/dts/brcm/bcm97362svmb.dts               | 4 ++--
+ arch/mips/boot/dts/brcm/bcm97420c.dts                  | 2 +-
+ arch/mips/boot/dts/brcm/bcm97425svmb.dts               | 4 ++--
+ arch/mips/boot/dts/brcm/bcm97435svmb.dts               | 4 ++--
+ arch/mips/boot/dts/brcm/bcm9ejtagprb.dts               | 2 +-
+ 16 files changed, 21 insertions(+), 21 deletions(-)
 
-diff --git a/include/dt-bindings/interrupt-controller/bcm6318-interrupt-controller.h b/include/dt-bindings/interrupt-controller/bcm6318-interrupt-controller.h
-new file mode 100644
-index 000000000000..7882dcb279c4
---- /dev/null
-+++ b/include/dt-bindings/interrupt-controller/bcm6318-interrupt-controller.h
-@@ -0,0 +1,84 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
-+
-+#ifndef __DT_BINDINGS_INTERRUPT_CONTROLLER_BCM6318_H
-+#define __DT_BINDINGS_INTERRUPT_CONTROLLER_BCM6318_H
-+
-+#define BCM6318_IRQ_TIMER0		0
-+#define BCM6318_IRQ_TIMER1		1
-+#define BCM6318_IRQ_TIMER2		2
-+#define BCM6318_IRQ_TIMER3		3
-+#define BCM6318_IRQ_USBS		4
-+#define BCM6318_IRQ_USB_CTL_RX_DMA	5
-+#define BCM6318_IRQ_USB_CTL_TX_DMA	6
-+#define BCM6318_IRQ_USB_BULK_RX_DMA	7
-+#define BCM6318_IRQ_USB_BULK_TX_DMA	8
-+#define BCM6318_IRQ_USB_ISO_RX_DMA	9
-+#define BCM6318_IRQ_USB_ISO_TX_DMA	10
-+#define BCM6318_IRQ_DG			11
-+#define BCM6318_IRQ_EPHY		12
-+#define BCM6318_IRQ_EPHY_EN0N		13
-+#define BCM6318_IRQ_EPHY_EN1N		14
-+#define BCM6318_IRQ_EPHY_EN2N		15
-+#define BCM6318_IRQ_EPHY_EN3N		16
-+#define BCM6318_IRQ_EPHY_EN0		17
-+#define BCM6318_IRQ_EPHY_EN1		18
-+#define BCM6318_IRQ_EPHY_EN2		19
-+#define BCM6318_IRQ_EPHY_EN3		20
-+#define BCM6318_IRQ_XDSL		21
-+#define BCM6318_IRQ_SDR			22
-+#define BCM6318_IRQ_PCIE_RC		23
-+#define BCM6318_IRQ_EXT0		24
-+#define BCM6318_IRQ_EXT1		25
-+#define BCM6318_IRQ_EXT2		26
-+#define BCM6318_IRQ_EXT3		27
-+#define BCM6318_IRQ_UART0		28
-+#define BCM6318_IRQ_HSSPI		29
-+#define BCM6318_IRQ_WAKE_ON_IRQ		30
-+#define BCM6318_IRQ_TIMER		31
-+#define BCM6318_IRQ_ENETSW_RX_DMA0	32
-+#define BCM6318_IRQ_ENETSW_RX_DMA1	33
-+#define BCM6318_IRQ_ENETSW_RX_DMA2	34
-+#define BCM6318_IRQ_ENETSW_RX_DMA3	35
-+#define BCM6318_IRQ_WDTIMER		37
-+#define BCM6318_IRQ_ENETSW		40
-+#define BCM6318_IRQ_OHCI		41
-+#define BCM6318_IRQ_EHCI		42
-+#define BCM6318_IRQ_ATM_DMA0		43
-+#define BCM6318_IRQ_ATM_DMA1		44
-+#define BCM6318_IRQ_ATM_DMA2		45
-+#define BCM6318_IRQ_ATM_DMA3		46
-+#define BCM6318_IRQ_ATM_DMA4		47
-+#define BCM6318_IRQ_ATM_DMA5		48
-+#define BCM6318_IRQ_ATM_DMA6		49
-+#define BCM6318_IRQ_ATM_DMA7		50
-+#define BCM6318_IRQ_ATM_DMA8		51
-+#define BCM6318_IRQ_ATM_DMA9		52
-+#define BCM6318_IRQ_ATM_DMA10		53
-+#define BCM6318_IRQ_ATM_DMA11		54
-+#define BCM6318_IRQ_ATM_DMA12		55
-+#define BCM6318_IRQ_ATM_DMA13		56
-+#define BCM6318_IRQ_ATM_DMA14		57
-+#define BCM6318_IRQ_ATM_DMA15		58
-+#define BCM6318_IRQ_ATM_DMA16		59
-+#define BCM6318_IRQ_ATM_DMA17		60
-+#define BCM6318_IRQ_ATM_DMA18		61
-+#define BCM6318_IRQ_ATM_DMA19		62
-+#define BCM6318_IRQ_SAR			63
-+#define BCM6318_IRQ_ADSL_ENERGY		64
-+#define BCM6318_IRQ_ADSL_ENERGY_N	65
-+#define BCM6318_IRQ_USB_ENERGY_ON	66
-+#define BCM6318_IRQ_USB_ENERGY_OFF	67
-+#define BCM6318_IRQ_PVTMON_TEMP		68
-+#define BCM6318_IRQ_SYSPLL_LOCK		69
-+#define BCM6318_IRQ_LCPLL_LOCK		70
-+#define BCM6318_IRQ_PMU_STABLE		71
-+#define BCM6318_IRQ_ENETSW_TX_DMA0	72
-+#define BCM6318_IRQ_ENETSW_TX_DMA1	73
-+#define BCM6318_IRQ_ENETSW_TX_DMA2	74
-+#define BCM6318_IRQ_ENETSW_TX_DMA3	75
-+#define BCM6318_IRQ_EPHY0_IDDQ_ENERGY	76
-+#define BCM6318_IRQ_EPHY1_IDDQ_ENERGY	77
-+#define BCM6318_IRQ_EPHY2_IDDQ_ENERGY	78
-+#define BCM6318_IRQ_EPHY3_IDDQ_ENERGY	79
-+
-+#endif /* __DT_BINDINGS_INTERRUPT_CONTROLLER_BCM6318_H */
+diff --git a/arch/mips/boot/dts/brcm/bcm3368-netgear-cvg834g.dts b/arch/mips/boot/dts/brcm/bcm3368-netgear-cvg834g.dts
+index ed6023a91763..d702a843c74a 100644
+--- a/arch/mips/boot/dts/brcm/bcm3368-netgear-cvg834g.dts
++++ b/arch/mips/boot/dts/brcm/bcm3368-netgear-cvg834g.dts
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /dts-v1/;
+ 
+-/include/ "bcm3368.dtsi"
++#include "bcm3368.dtsi"
+ 
+ / {
+ 	compatible = "netgear,cvg834g", "brcm,bcm3368";
+diff --git a/arch/mips/boot/dts/brcm/bcm63268-comtrend-vr-3032u.dts b/arch/mips/boot/dts/brcm/bcm63268-comtrend-vr-3032u.dts
+index 8d010b919de2..b511bc7125d5 100644
+--- a/arch/mips/boot/dts/brcm/bcm63268-comtrend-vr-3032u.dts
++++ b/arch/mips/boot/dts/brcm/bcm63268-comtrend-vr-3032u.dts
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /dts-v1/;
+ 
+-/include/ "bcm63268.dtsi"
++#include "bcm63268.dtsi"
+ 
+ / {
+ 	compatible = "comtrend,vr-3032u", "brcm,bcm63268";
+diff --git a/arch/mips/boot/dts/brcm/bcm6358-neufbox4-sercomm.dts b/arch/mips/boot/dts/brcm/bcm6358-neufbox4-sercomm.dts
+index 53e57cc29291..c646690ee3df 100644
+--- a/arch/mips/boot/dts/brcm/bcm6358-neufbox4-sercomm.dts
++++ b/arch/mips/boot/dts/brcm/bcm6358-neufbox4-sercomm.dts
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /dts-v1/;
+ 
+-/include/ "bcm6358.dtsi"
++#include "bcm6358.dtsi"
+ 
+ / {
+ 	compatible = "sfr,nb4-ser", "brcm,bcm6358";
+diff --git a/arch/mips/boot/dts/brcm/bcm6362-neufbox6-sercomm.dts b/arch/mips/boot/dts/brcm/bcm6362-neufbox6-sercomm.dts
+index 3e83bee5b91e..f83d95ca0514 100644
+--- a/arch/mips/boot/dts/brcm/bcm6362-neufbox6-sercomm.dts
++++ b/arch/mips/boot/dts/brcm/bcm6362-neufbox6-sercomm.dts
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /dts-v1/;
+ 
+-/include/ "bcm6362.dtsi"
++#include "bcm6362.dtsi"
+ 
+ / {
+ 	compatible = "sfr,nb6-ser", "brcm,bcm6362";
+diff --git a/arch/mips/boot/dts/brcm/bcm93384wvg.dts b/arch/mips/boot/dts/brcm/bcm93384wvg.dts
+index 601e4d9293ab..7d3f181b8980 100644
+--- a/arch/mips/boot/dts/brcm/bcm93384wvg.dts
++++ b/arch/mips/boot/dts/brcm/bcm93384wvg.dts
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /dts-v1/;
+ 
+-/include/ "bcm3384_zephyr.dtsi"
++#include "bcm3384_zephyr.dtsi"
+ 
+ / {
+ 	compatible = "brcm,bcm93384wvg", "brcm,bcm3384";
+diff --git a/arch/mips/boot/dts/brcm/bcm93384wvg_viper.dts b/arch/mips/boot/dts/brcm/bcm93384wvg_viper.dts
+index 938a8e66128c..f845faa0d682 100644
+--- a/arch/mips/boot/dts/brcm/bcm93384wvg_viper.dts
++++ b/arch/mips/boot/dts/brcm/bcm93384wvg_viper.dts
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /dts-v1/;
+ 
+-/include/ "bcm3384_viper.dtsi"
++#include "bcm3384_viper.dtsi"
+ 
+ / {
+ 	compatible = "brcm,bcm93384wvg-viper", "brcm,bcm3384-viper";
+diff --git a/arch/mips/boot/dts/brcm/bcm96368mvwg.dts b/arch/mips/boot/dts/brcm/bcm96368mvwg.dts
+index 6d772c394e41..f5e955085308 100644
+--- a/arch/mips/boot/dts/brcm/bcm96368mvwg.dts
++++ b/arch/mips/boot/dts/brcm/bcm96368mvwg.dts
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /dts-v1/;
+ 
+-/include/ "bcm6368.dtsi"
++#include "bcm6368.dtsi"
+ 
+ / {
+ 	compatible = "brcm,bcm96368mvwg", "brcm,bcm6368";
+diff --git a/arch/mips/boot/dts/brcm/bcm97125cbmb.dts b/arch/mips/boot/dts/brcm/bcm97125cbmb.dts
+index 79e9769f7e00..bda5f796251a 100644
+--- a/arch/mips/boot/dts/brcm/bcm97125cbmb.dts
++++ b/arch/mips/boot/dts/brcm/bcm97125cbmb.dts
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /dts-v1/;
+ 
+-/include/ "bcm7125.dtsi"
++#include "bcm7125.dtsi"
+ 
+ / {
+ 	compatible = "brcm,bcm97125cbmb", "brcm,bcm7125";
+diff --git a/arch/mips/boot/dts/brcm/bcm97346dbsmb.dts b/arch/mips/boot/dts/brcm/bcm97346dbsmb.dts
+index 28370ff77eeb..9f73735e815c 100644
+--- a/arch/mips/boot/dts/brcm/bcm97346dbsmb.dts
++++ b/arch/mips/boot/dts/brcm/bcm97346dbsmb.dts
+@@ -1,8 +1,8 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /dts-v1/;
+ 
+-/include/ "bcm7346.dtsi"
+-/include/ "bcm97xxx-nand-cs1-bch24.dtsi"
++#include "bcm7346.dtsi"
++#include "bcm97xxx-nand-cs1-bch24.dtsi"
+ 
+ / {
+ 	compatible = "brcm,bcm97346dbsmb", "brcm,bcm7346";
+diff --git a/arch/mips/boot/dts/brcm/bcm97358svmb.dts b/arch/mips/boot/dts/brcm/bcm97358svmb.dts
+index 41c1b510c230..522f2c40d6e6 100644
+--- a/arch/mips/boot/dts/brcm/bcm97358svmb.dts
++++ b/arch/mips/boot/dts/brcm/bcm97358svmb.dts
+@@ -1,8 +1,8 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /dts-v1/;
+ 
+-/include/ "bcm7358.dtsi"
+-/include/ "bcm97xxx-nand-cs1-bch4.dtsi"
++#include "bcm7358.dtsi"
++#include "bcm97xxx-nand-cs1-bch4.dtsi"
+ 
+ / {
+ 	compatible = "brcm,bcm97358svmb", "brcm,bcm7358";
+diff --git a/arch/mips/boot/dts/brcm/bcm97360svmb.dts b/arch/mips/boot/dts/brcm/bcm97360svmb.dts
+index 9f6c6c9b7ea7..01f215b08dba 100644
+--- a/arch/mips/boot/dts/brcm/bcm97360svmb.dts
++++ b/arch/mips/boot/dts/brcm/bcm97360svmb.dts
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /dts-v1/;
+ 
+-/include/ "bcm7360.dtsi"
++#include "bcm7360.dtsi"
+ 
+ / {
+ 	compatible = "brcm,bcm97360svmb", "brcm,bcm7360";
+diff --git a/arch/mips/boot/dts/brcm/bcm97362svmb.dts b/arch/mips/boot/dts/brcm/bcm97362svmb.dts
+index df8b755c390f..97aeb51b6831 100644
+--- a/arch/mips/boot/dts/brcm/bcm97362svmb.dts
++++ b/arch/mips/boot/dts/brcm/bcm97362svmb.dts
+@@ -1,8 +1,8 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /dts-v1/;
+ 
+-/include/ "bcm7362.dtsi"
+-/include/ "bcm97xxx-nand-cs1-bch4.dtsi"
++#include "bcm7362.dtsi"
++#include "bcm97xxx-nand-cs1-bch4.dtsi"
+ 
+ / {
+ 	compatible = "brcm,bcm97362svmb", "brcm,bcm7362";
+diff --git a/arch/mips/boot/dts/brcm/bcm97420c.dts b/arch/mips/boot/dts/brcm/bcm97420c.dts
+index 086faeaa384a..cc70c2dd4d85 100644
+--- a/arch/mips/boot/dts/brcm/bcm97420c.dts
++++ b/arch/mips/boot/dts/brcm/bcm97420c.dts
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /dts-v1/;
+ 
+-/include/ "bcm7420.dtsi"
++#include "bcm7420.dtsi"
+ 
+ / {
+ 	compatible = "brcm,bcm97420c", "brcm,bcm7420";
+diff --git a/arch/mips/boot/dts/brcm/bcm97425svmb.dts b/arch/mips/boot/dts/brcm/bcm97425svmb.dts
+index 0ed22217bf3a..9efecfe1e05c 100644
+--- a/arch/mips/boot/dts/brcm/bcm97425svmb.dts
++++ b/arch/mips/boot/dts/brcm/bcm97425svmb.dts
+@@ -1,8 +1,8 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /dts-v1/;
+ 
+-/include/ "bcm7425.dtsi"
+-/include/ "bcm97xxx-nand-cs1-bch24.dtsi"
++#include "bcm7425.dtsi"
++#include "bcm97xxx-nand-cs1-bch24.dtsi"
+ 
+ / {
+ 	compatible = "brcm,bcm97425svmb", "brcm,bcm7425";
+diff --git a/arch/mips/boot/dts/brcm/bcm97435svmb.dts b/arch/mips/boot/dts/brcm/bcm97435svmb.dts
+index 2c145a883aef..b653c6ff74b5 100644
+--- a/arch/mips/boot/dts/brcm/bcm97435svmb.dts
++++ b/arch/mips/boot/dts/brcm/bcm97435svmb.dts
+@@ -1,8 +1,8 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /dts-v1/;
+ 
+-/include/ "bcm7435.dtsi"
+-/include/ "bcm97xxx-nand-cs1-bch24.dtsi"
++#include "bcm7435.dtsi"
++#include "bcm97xxx-nand-cs1-bch24.dtsi"
+ 
+ / {
+ 	compatible = "brcm,bcm97435svmb", "brcm,bcm7435";
+diff --git a/arch/mips/boot/dts/brcm/bcm9ejtagprb.dts b/arch/mips/boot/dts/brcm/bcm9ejtagprb.dts
+index 8d58c1971b30..615d2b97770e 100644
+--- a/arch/mips/boot/dts/brcm/bcm9ejtagprb.dts
++++ b/arch/mips/boot/dts/brcm/bcm9ejtagprb.dts
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /dts-v1/;
+ 
+-/include/ "bcm6328.dtsi"
++#include "bcm6328.dtsi"
+ 
+ / {
+ 	compatible = "brcm,bcm9ejtagprb", "brcm,bcm6328";
 -- 
 2.28.0
 
