@@ -2,270 +2,133 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27319C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:15:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C79A1C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:15:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F23B620781
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:15:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 997BB207F7
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:15:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RRZmS/K4"
+	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="rfqINGjT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726681AbgHLPPU (ORCPT
+        id S1726697AbgHLPPg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 11:15:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53576 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726489AbgHLPPT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 11:15:19 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EC00C061383
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 08:15:19 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id m8so1187008pfh.3
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 08:15:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=rhn3sqAjMO7fHW50VMJNtuaUppNZfZWxCntk8JftCgQ=;
-        b=RRZmS/K4r4bVHEUwf8n+9+7Ir4gT7POq7veOwiR/I9olsAHAhQKduUFHS1xvULIqMQ
-         QYZYafxj5Yph4zoWUZjHGyki2EPuKQx7c7Lgn59Rqg+qdkOgqjx1z61Kg1yKQCJIZhSV
-         B8NNy7735o8SLwnR4TEt8i/O05/V4RpgsJlOk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=rhn3sqAjMO7fHW50VMJNtuaUppNZfZWxCntk8JftCgQ=;
-        b=Iw7nSsDVQNOW9D/h7EUMSsGrvanUxfg0io4yroFqGA2zTiIiQQcPtcAIDSp7gY9C2B
-         8ltcN/EAJUxbWPz2eiX4sSiwgFGTmupzvHg4/8zRRiAyoyx/PUOhEf3ChhG7zhwx3qVP
-         yJIqdTATLhxu7rq0fs/57CCk6nBlEnW3j9Q/E92sDszIZs/iiVcEXrscbnHAz/zrEM+Z
-         02iXFZZwr+IvhR/q0PA6ZzkPzdvhBN4EwPD1vJURZQ+SQZgUVFBA2qYNMxJsOzq0zL9F
-         PEoLzfgiJxMhg5bUke8GLnClU+tGdLetdnYGo0kfTr+jhpAr135+b8BiVJgTLBXsP8XI
-         1ixw==
-X-Gm-Message-State: AOAM5339YBzsBx0oJEatMgPCAe0ZyMiwkFF5f4joRpzDMHo4nu3VMVJM
-        g8f2iWVD2YzjyVP3DVcN+y35sQ==
-X-Google-Smtp-Source: ABdhPJxH5BXx5vyPzseYMN/ZVukUoNGb3kc6hqCOuQZoIR/oTI0axPEFwCYRnee1zW2Uc3NQcQKRiw==
-X-Received: by 2002:aa7:93a6:: with SMTP id x6mr30835pff.37.1597245318477;
-        Wed, 12 Aug 2020 08:15:18 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:f693:9fff:fef4:e70a])
-        by smtp.gmail.com with ESMTPSA id h18sm2825713pfo.21.2020.08.12.08.15.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Aug 2020 08:15:17 -0700 (PDT)
-Date:   Wed, 12 Aug 2020 08:15:16 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     sbhanu@codeaurora.org
-Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        robh+dt@kernel.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, rnayak@codeaurora.org,
-        Pradeep P V K <ppvk@codeaurora.org>,
-        devicetree-owner@vger.kernel.org
-Subject: Re: [PATCH V2] arm64: dts: qcom: sc7180: Add bandwidth votes for
- eMMC and SDcard
-Message-ID: <20200812151516.GA2995789@google.com>
-References: <1595328381-29552-1-git-send-email-sbhanu@codeaurora.org>
- <20200724171018.GZ3191083@google.com>
- <7ffcb56e9e6723f4bae687e0f491cb93@codeaurora.org>
- <20200727191029.GA3191083@google.com>
- <e83f559bb8691cd602f35e3bd739e5c4@codeaurora.org>
- <20200811170855.GK3191083@google.com>
- <be51df4466bc92574555bc762ff002d5@codeaurora.org>
+        Wed, 12 Aug 2020 11:15:36 -0400
+Received: from mta-02.yadro.com ([89.207.88.252]:37138 "EHLO mta-01.yadro.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726512AbgHLPPd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 11:15:33 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-01.yadro.com (Postfix) with ESMTP id D351F4C89B;
+        Wed, 12 Aug 2020 15:15:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
+        content-type:content-type:content-transfer-encoding:mime-version
+        :references:in-reply-to:x-mailer:message-id:date:date:subject
+        :subject:from:from:received:received:received; s=mta-01; t=
+        1597245330; x=1599059731; bh=ii5ADmQuzyNneIFBkHAT3wYiVuvXA+hEUPb
+        eRSzRgzU=; b=rfqINGjT9icIxLFgFxT8cX/Thy5VZHXf5nEh4LesToTEK16IV0c
+        0iBufZefntN4zeYmVgyQdKflEi6szQYsY+r0b/TQcIMF1qcgjKnQepM9zFaJ7AQB
+        pVHKZ6fIvW6S7Wksr/zIqqGGoj7zzem6L4ZdBLl9PyECCUBjwX6MLZW4=
+X-Virus-Scanned: amavisd-new at yadro.com
+Received: from mta-01.yadro.com ([127.0.0.1])
+        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id TuBAypmAdOG7; Wed, 12 Aug 2020 18:15:30 +0300 (MSK)
+Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mta-01.yadro.com (Postfix) with ESMTPS id 4FAC64C8AA;
+        Wed, 12 Aug 2020 18:15:30 +0300 (MSK)
+Received: from localhost.dev.yadro.com (10.199.2.34) by
+ T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
+ 15.1.669.32; Wed, 12 Aug 2020 18:15:29 +0300
+From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
+CC:     Ivan Mikhaylov <i.mikhaylov@yadro.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH 1/2] mtd: spi-nor: do not touch TB bit without SPI_NOR_HAS_TB
+Date:   Wed, 12 Aug 2020 18:18:17 +0300
+Message-ID: <20200812151818.16699-2-i.mikhaylov@yadro.com>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200812151818.16699-1-i.mikhaylov@yadro.com>
+References: <20200812151818.16699-1-i.mikhaylov@yadro.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <be51df4466bc92574555bc762ff002d5@codeaurora.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.199.2.34]
+X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
+ T-EXCH-02.corp.yadro.com (172.17.10.102)
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 04:26:08PM +0530, sbhanu@codeaurora.org wrote:
-> On 2020-08-11 22:38, Matthias Kaehlcke wrote:
-> > On Tue, Jul 28, 2020 at 04:49:05PM +0530, sbhanu@codeaurora.org wrote:
-> > > On 2020-07-28 00:40, Matthias Kaehlcke wrote:
-> > > > Hi,
-> > > >
-> > > > On Mon, Jul 27, 2020 at 12:20:38PM +0530, sbhanu@codeaurora.org wrote:
-> > > > > On 2020-07-24 22:40, Matthias Kaehlcke wrote:
-> > > > > > Hi Shaik,
-> > > > > >
-> > > > > > On Tue, Jul 21, 2020 at 04:16:21PM +0530, Shaik Sajida Bhanu wrote:
-> > > > > > > From: Pradeep P V K <ppvk@codeaurora.org>
-> > > > > > >
-> > > > > > > Add the bandwidth domain supporting performance state and
-> > > > > > > the corresponding OPP tables for the sdhc device on sc7180.
-> > > > > > >
-> > > > > > > Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
-> > > > > > > Signed-off-by: Shaik Sajida Bhanu <sbhanu@codeaurora.org>
-> > > > > > > ---
-> > > > > > >
-> > > > > > > Changes since V1:
-> > > > > > > 	- Incorporated review comments by Bjorn Andersson.
-> > > > > > > ---
-> > > > > > >  arch/arm64/boot/dts/qcom/sc7180.dtsi | 15 +++++++++++++++
-> > > > > > >  1 file changed, 15 insertions(+)
-> > > > > > >
-> > > > > > > diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> > > > > > > b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> > > > > > > index 68f9894..d78a066 100644
-> > > > > > > --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> > > > > > > +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> > > > > > > @@ -684,6 +684,9 @@
-> > > > > > >  			clocks = <&gcc GCC_SDCC1_APPS_CLK>,
-> > > > > > >  					<&gcc GCC_SDCC1_AHB_CLK>;
-> > > > > > >  			clock-names = "core", "iface";
-> > > > > > > +			interconnects = <&aggre1_noc MASTER_EMMC &mc_virt SLAVE_EBI1>,
-> > > > > > > +				<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_EMMC_CFG>;
-> > > > > > > +			interconnect-names = "sdhc-ddr","cpu-sdhc";
-> > > > > > >  			power-domains = <&rpmhpd SC7180_CX>;
-> > > > > > >  			operating-points-v2 = <&sdhc1_opp_table>;
-> > > > > > >
-> > > > > > > @@ -704,11 +707,15 @@
-> > > > > > >  				opp-100000000 {
-> > > > > > >  					opp-hz = /bits/ 64 <100000000>;
-> > > > > > >  					required-opps = <&rpmhpd_opp_low_svs>;
-> > > > > > > +					opp-peak-kBps = <100000 100000>;
-> > > > > > > +					opp-avg-kBps = <100000 50000>;
-> > > > > > >  				};
-> > > > > > >
-> > > > > > >  				opp-384000000 {
-> > > > > > >  					opp-hz = /bits/ 64 <384000000>;
-> > > > > > >  					required-opps = <&rpmhpd_opp_svs_l1>;
-> > > > > > > +					opp-peak-kBps = <600000 900000>;
-> > > > > > > +					opp-avg-kBps = <261438 300000>;
-> > > > > > >  				};
-> > > > > > >  			};
-> > > > > > >  		};
-> > > > > > > @@ -2476,6 +2483,10 @@
-> > > > > > >  			clocks = <&gcc GCC_SDCC2_APPS_CLK>,
-> > > > > > >  					<&gcc GCC_SDCC2_AHB_CLK>;
-> > > > > > >  			clock-names = "core", "iface";
-> > > > > > > +
-> > > > > > > +			interconnects = <&aggre1_noc MASTER_SDCC_2 &mc_virt SLAVE_EBI1>,
-> > > > > > > +				<&gem_noc MASTER_APPSS_PROC &config_noc	SLAVE_SDCC_2>;
-> > > > > > > +			interconnect-names = "sdhc-ddr","cpu-sdhc";
-> > > > > > >  			power-domains = <&rpmhpd SC7180_CX>;
-> > > > > > >  			operating-points-v2 = <&sdhc2_opp_table>;
-> > > > > > >
-> > > > > > > @@ -2489,11 +2500,15 @@
-> > > > > > >  				opp-100000000 {
-> > > > > > >  					opp-hz = /bits/ 64 <100000000>;
-> > > > > > >  					required-opps = <&rpmhpd_opp_low_svs>;
-> > > > > > > +					opp-peak-kBps = <160000 100000>;
-> > > > > > > +					opp-avg-kBps = <80000 50000>;
-> > > > > > >  				};
-> > > > > > >
-> > > > > > >  				opp-202000000 {
-> > > > > > >  					opp-hz = /bits/ 64 <202000000>;
-> > > > > > >  					required-opps = <&rpmhpd_opp_svs_l1>;
-> > > > > > > +					opp-peak-kBps = <200000	120000>;
-> > > > > > > +					opp-avg-kBps = <100000 60000>;
-> > > > > > >  				};
-> > > > > > >  			};
-> > > > > > >  		};
-> > > > > >
-> > > > > > Does the sdhci-msm driver actually have BW scaling support at this
-> > > > > > point?
-> > > > > >
-> > > > >
-> > > > > yes
-> > > > >
-> > > > > > There is commit 4ece9795be56 ("mmc: sdhci-msm: Add interconnect
-> > > > > > bandwidth scaling support"), whose commit message says "make sure
-> > > > > > interconnect driver is ready before handling interconnect scaling.".
-> > > > > >
-> > > > > > I haven't seen any patch adding the scaling support (supposedly by
-> > > > > > adding dev_pm_opp_set_bw() calls?). Did I miss it? If not it seems
-> > > > > > it would make sense to post it in a series together with this patch,
-> > > > > > as far as I can tell this patch alone does nothing in practical terms.
-> > > > > >
-> > > > > > grep sdhc /sys/kernel/debug/interconnect/interconnect_summary
-> > > > > >   8804000.sdhci                          0            0            0
-> > > > > >   7c4000.sdhci                           0            0            0
-> > > > > >   7c4000.sdhci                           0            0            0
-> > > > > >   8804000.sdhci                          0            0            0
-> > > > > >   ...
-> > > > >
-> > > > > "mmc: sdhci-msm: Use OPP API to set clk/perf
-> > > > > state"(https://lkml.org/lkml/2020/4/8/425) and "mmc: sdhci-msm: Add
-> > > > > interconnect bandwidth scaling
-> > > > > support"(https://lkml.org/lkml/2020/3/12/60)
-> > > > > with these two patches scaling will be supported for sdhci-msm driver.
-> > > >
-> > > > Are you testing with exactly these patches or with the ones that landed
-> > > > upstream? At least the second one changed substantially
-> > > >
-> > > > > the values  in  grep sdhc
-> > > > > /sys/kernel/debug/interconnect/interconnect_summary will be zero
-> > > > > during
-> > > > > device is in suspend state...
-> > > >
-> > > > Yes, I forgot to mention that I started MMC IO before looking at
-> > > > 'interconnect_summary'.
-> > > >
-> > > > > and the values in  grep sdhc
-> > > > > /sys/kernel/debug/interconnect/interconnect_summary during device in
-> > > > > resume
-> > > > > state will be like the following::
-> > > > >
-> > > > > cicalhost / # cat
-> > > > > /sys/kernel/debug/interconnect/interconnect_summary | grep
-> > > > > sdh
-> > > > >   8804000.sdhci                          0        60000       120000
-> > > > >   7c4000.sdhci                           0       300000       900000
-> > > > >   7c4000.sdhci                           0       300000       900000
-> > > > >   8804000.sdhci                          0        60000       120000
-> > > > >   8804000.sdhci                          0       100000       200000
-> > > > >   7c4000.sdhci                           0       261438       600000
-> > > > >   8804000.sdhci                          0        60000       120000
-> > > >
-> > > > On my system the bandwidth is never set:
-> > > >
-> > > > 3.590152] sdhci_msm 7c4000.sdhci: DBG: old/new frequencies (384000000
-> > > > Hz) are same, nothing to do
-> > > > https://elixir.bootlin.com/linux/v5.7.8/source/drivers/opp/core.c#L847
-> > > >
-> > > > This happens every time, even after the bandwith is set to 0. The
-> > > > problem
-> > > > seems to be that opp_table->clk doesn't change for target_freq = 0.
-> > > >
-> > > > My system is based on v5.4, so it is possible that my kernel is missing
-> > > > some
-> > > > relevant patch from upstream.
-> > > Hi matthias,
-> > > 
-> > > In order to aviod confusion this patch is continuation of the below
-> > > patch::
-> > > "mmc: sdhci-msm: Add interconnect bandwidth scaling support"
-> > > (https://lkml.org/lkml/2020/6/9/160).
-> > 
-> > My kernel contains this patch.
-> > 
-> > As you told me in private, the patch "opp: Fix dev_pm_opp_set_rate()
-> > to not return early" (https://patchwork.kernel.org/patch/11707003/) is
-> > needed, which fixes exactly the problem I described.
-> > 
-> > It seems the tree you tested was not based on the maintainer tree or
-> > upstream,
-> > please make that clear when someone reports issues. Since you said it
-> > works
-> > for you I wasted time trying to chase down a missing patch which did not
-> > exist
-> > (yet).
-> 
-> 
-> Hi Matthis,
-> 
-> Can you confirm from your end the issue that you reported got fixed
-> with Rajendra patch or not. Once you confirm, I can ask Bjorn to pull
-> this dt change.
+Some chips like macronix don't have TB(Top/Bottom protection)
+bit in the status register. Do not write tb_mask inside status
+register, unless SPI_NOR_HAS_TB is present for the chip.
 
-Yes, the issue is fixed with Rajendra's patch
+Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
+---
+ drivers/mtd/spi-nor/core.c | 22 ++++++++++++++++------
+ 1 file changed, 16 insertions(+), 6 deletions(-)
 
-Tested-by: Matthias Kaehlcke <mka@chromium.org>
+diff --git a/drivers/mtd/spi-nor/core.c b/drivers/mtd/spi-nor/core.c
+index 0369d98b2d12..f9853dd566dc 100644
+--- a/drivers/mtd/spi-nor/core.c
++++ b/drivers/mtd/spi-nor/core.c
+@@ -1735,13 +1735,18 @@ static int spi_nor_sr_lock(struct spi_nor *nor, loff_t ofs, uint64_t len)
+ 			return -EINVAL;
+ 	}
+ 
+-	status_new = (status_old & ~mask & ~tb_mask) | val;
++	if (nor->flags & SNOR_F_HAS_SR_TB)
++		status_new = (status_old & ~mask & ~tb_mask) | val;
++	else
++		status_new = (status_old & ~mask) | val;
+ 
+ 	/* Disallow further writes if WP pin is asserted */
+ 	status_new |= SR_SRWD;
+ 
+-	if (!use_top)
+-		status_new |= tb_mask;
++	if (!use_top) {
++		if (nor->flags & SNOR_F_HAS_SR_TB)
++			status_new |= tb_mask;
++	}
+ 
+ 	/* Don't bother if they're the same */
+ 	if (status_new == status_old)
+@@ -1817,14 +1822,19 @@ static int spi_nor_sr_unlock(struct spi_nor *nor, loff_t ofs, uint64_t len)
+ 			return -EINVAL;
+ 	}
+ 
+-	status_new = (status_old & ~mask & ~tb_mask) | val;
++	if (nor->flags & SNOR_F_HAS_SR_TB)
++		status_new = (status_old & ~mask & ~tb_mask) | val;
++	else
++		status_new = (status_old & ~mask) | val;
+ 
+ 	/* Don't protect status register if we're fully unlocked */
+ 	if (lock_len == 0)
+ 		status_new &= ~SR_SRWD;
+ 
+-	if (!use_top)
+-		status_new |= tb_mask;
++	if (!use_top) {
++		if (nor->flags & SNOR_F_HAS_SR_TB)
++			status_new |= tb_mask;
++	}
+ 
+ 	/* Don't bother if they're the same */
+ 	if (status_new == status_old)
+-- 
+2.21.1
+
