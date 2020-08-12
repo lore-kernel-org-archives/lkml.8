@@ -2,158 +2,67 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 490EFC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:50:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A45C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C35920675
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:50:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="teV8h0Us"
+	by mail.kernel.org (Postfix) with ESMTP id 990422076C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:52:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726627AbgHLOuf (ORCPT
+        id S1726680AbgHLOwe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 10:50:35 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:46048 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726503AbgHLOuc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 10:50:32 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07CEX1S6118587;
-        Wed, 12 Aug 2020 10:50:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references; s=pp1;
- bh=039f5qc7xIoBm0mLLd+ro4GakzTvU9FxjbxkKBFcWq4=;
- b=teV8h0UsYdgI4HNEedRDJddNbNxikRFFtFF1M5i2xyRxVt6mEvLDz9Q/YvHi72wCefM4
- zqVl+phDonHFY2H2vYMLaqiJ3sC8lXXi+ZwMTZOQbib64TntlGcvpPgVtA/kNsrREz8Z
- PBM/wM5IQm4t9QOLUb/FOqPwbha3meQQOElTsmdH5BXNA6EXuqjXc/Gg+1v0y6AI5DAR
- XkC3eTio3DiVpvnZBFEFZbrBlkUo/oDsDLuKmg3bRgYnck08eiFhAxfDFzn7LL4uDMQZ
- orBbQM5OPzuCLmnAGAdTc5fTvHytyN+f9mEjgwhmAYU6T0X/V6+Bq4593f4/Sif6NK97 WA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32utn91asb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 12 Aug 2020 10:50:30 -0400
-Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07CEX9pq119294;
-        Wed, 12 Aug 2020 10:50:29 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32utn91arj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 12 Aug 2020 10:50:29 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07CEjJVg011139;
-        Wed, 12 Aug 2020 14:50:28 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma03dal.us.ibm.com with ESMTP id 32skp9awwv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 12 Aug 2020 14:50:28 +0000
-Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07CEoR6K42795350
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 12 Aug 2020 14:50:27 GMT
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B978228058;
-        Wed, 12 Aug 2020 14:50:27 +0000 (GMT)
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4723828064;
-        Wed, 12 Aug 2020 14:50:25 +0000 (GMT)
-Received: from oc4221205838.ibm.com (unknown [9.163.7.238])
-        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed, 12 Aug 2020 14:50:24 +0000 (GMT)
-From:   Matthew Rosato <mjrosato@linux.ibm.com>
-To:     alex.williamson@redhat.com, bhelgaas@google.com
-Cc:     schnelle@linux.ibm.com, pmorel@linux.ibm.com, mpe@ellerman.id.au,
-        oohall@gmail.com, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: [PATCH] PCI: Introduce flag for detached virtual functions
-Date:   Wed, 12 Aug 2020 10:50:17 -0400
-Message-Id: <1597243817-3468-2-git-send-email-mjrosato@linux.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1597243817-3468-1-git-send-email-mjrosato@linux.ibm.com>
-References: <1597243817-3468-1-git-send-email-mjrosato@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-12_06:2020-08-11,2020-08-12 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
- malwarescore=0 bulkscore=0 mlxscore=0 suspectscore=0 mlxlogscore=999
- clxscore=1015 impostorscore=0 priorityscore=1501 adultscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008120104
+        Wed, 12 Aug 2020 10:52:34 -0400
+Received: from elvis.franken.de ([193.175.24.41]:44772 "EHLO elvis.franken.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726485AbgHLOwe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 10:52:34 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1k5s7D-00065F-00; Wed, 12 Aug 2020 16:52:31 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id 59A69C0D52; Wed, 12 Aug 2020 16:52:21 +0200 (CEST)
+Date:   Wed, 12 Aug 2020 16:52:21 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-mips@linux-mips.org, Hauke Mehrtens <hauke@hauke-m.de>,
+        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
+        "open list:BROADCOM BCM47XX MIPS ARCHITECTURE" 
+        <linux-mips@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/2] firmware: bcm47xx_sprom: Fix -Wmissing-prototypes
+ warnings
+Message-ID: <20200812145221.GA12964@alpha.franken.de>
+References: <20200726041521.5398-1-f.fainelli@gmail.com>
+ <62385d10-a552-25a7-4c49-63eed22a97c1@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <62385d10-a552-25a7-4c49-63eed22a97c1@gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-s390x has the notion of providing VFs to the kernel in a manner
-where the associated PF is inaccessible other than via firmware.
-These are not treated as typical VFs and access to them is emulated
-by underlying firmware which can still access the PF.  After
-abafbc55 however these detached VFs were no longer able to work
-with vfio-pci as the firmware does not provide emulation of the
-PCI_COMMAND_MEMORY bit.  In this case, let's explicitly recognize
-these detached VFs so that vfio-pci can allow memory access to
-them again.
+On Fri, Aug 07, 2020 at 11:37:43AM -0700, Florian Fainelli wrote:
+> 
+> 
+> On 7/25/2020 9:15 PM, Florian Fainelli wrote:
+> > Hi Thomas,
+> > 
+> > This patch series fixes W=1 -Wmissing-prototypes warnings for the
+> > bcm47xx_sprom.c firmware file.
+> 
+> Thomas, can you apply these patches if you are fine with them? Thanks
 
-Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
-Reviewed-by: Pierre Morel <pmorel@linux.ibm.com>
-Reviewed-by: Niklas Schnelle <schnelle@linux.ibm.com>
----
- arch/s390/pci/pci.c                | 8 ++++++++
- drivers/vfio/pci/vfio_pci_config.c | 3 ++-
- include/linux/pci.h                | 1 +
- 3 files changed, 11 insertions(+), 1 deletion(-)
+I was unsure about the maintainer status of drivers/firmware/broadcom, but
+I'll apply it to mips-next after merge window.
 
-diff --git a/arch/s390/pci/pci.c b/arch/s390/pci/pci.c
-index 3902c9f..04ac76d 100644
---- a/arch/s390/pci/pci.c
-+++ b/arch/s390/pci/pci.c
-@@ -581,6 +581,14 @@ int pcibios_enable_device(struct pci_dev *pdev, int mask)
- {
- 	struct zpci_dev *zdev = to_zpci(pdev);
- 
-+	/*
-+	 * If we have a VF on a non-multifunction bus, it must be a VF that is
-+	 * detached from its parent PF.  We rely on firmware emulation to
-+	 * provide underlying PF details.
-+	 */
-+	if (zdev->vfn && !zdev->zbus->multifunction)
-+		pdev->detached_vf = 1;
-+
- 	zpci_debug_init_device(zdev, dev_name(&pdev->dev));
- 	zpci_fmb_enable_device(zdev);
- 
-diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
-index d98843f..17845fc 100644
---- a/drivers/vfio/pci/vfio_pci_config.c
-+++ b/drivers/vfio/pci/vfio_pci_config.c
-@@ -406,7 +406,8 @@ bool __vfio_pci_memory_enabled(struct vfio_pci_device *vdev)
- 	 * PF SR-IOV capability, there's therefore no need to trigger
- 	 * faults based on the virtual value.
- 	 */
--	return pdev->is_virtfn || (cmd & PCI_COMMAND_MEMORY);
-+	return pdev->is_virtfn || pdev->detached_vf ||
-+	       (cmd & PCI_COMMAND_MEMORY);
- }
- 
- /*
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 8355306..23a6972 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -445,6 +445,7 @@ struct pci_dev {
- 	unsigned int	is_probed:1;		/* Device probing in progress */
- 	unsigned int	link_active_reporting:1;/* Device capable of reporting link active */
- 	unsigned int	no_vf_scan:1;		/* Don't scan for VFs after IOV enablement */
-+	unsigned int	detached_vf:1;		/* VF without local PF access */
- 	pci_dev_flags_t dev_flags;
- 	atomic_t	enable_cnt;	/* pci_enable_device has been called */
- 
+Thomas.
+
 -- 
-1.8.3.1
-
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
