@@ -2,87 +2,508 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD8FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA2CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:25:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 415B6207DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:24:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8981F206C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:25:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n9UaiMW4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbgHLJYn (ORCPT
+        id S1727821AbgHLJZy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 05:24:43 -0400
-Received: from mga14.intel.com ([192.55.52.115]:34512 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726409AbgHLJYm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 05:24:42 -0400
-IronPort-SDR: MZ3hK8Y7KKdghSIaftY57W8NUS7C36LlpH/zNL5XObp5OP3Uo0N1vDKgZgT9INAeseBMeJoBxj
- 9gV+RWvMFJ4g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9710"; a="153141205"
-X-IronPort-AV: E=Sophos;i="5.76,303,1592895600"; 
-   d="scan'208";a="153141205"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2020 02:24:42 -0700
-IronPort-SDR: OlSgHJrGutoTjUF2OKbQZWiX7nMYIKSUKS5+mJul17WvlApBrqmEG5LxrBAA5fxOqUt9lwV1TY
- VACcfbcmJlfw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,303,1592895600"; 
-   d="scan'208";a="325021329"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 12 Aug 2020 02:24:40 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1k5mTw-008Aey-TZ; Wed, 12 Aug 2020 11:51:36 +0300
-Date:   Wed, 12 Aug 2020 11:51:36 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Seungil Kang <sil.kang@samsung.com>
-Cc:     bhe@redhat.com, mingo@kernel.org, akpm@linux-foundation.org,
-        gregkh@linuxfoundation.org, herbert@gondor.apana.org.au,
-        tglx@linutronix.de, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] lib/cmdline: prevent unintented access to address
-Message-ID: <20200812085136.GH1891694@smile.fi.intel.com>
-References: <CGME20200812025432epcas1p1b810c6b94adf533d5cae3ef6a24ca9a2@epcas1p1.samsung.com>
- <20200812025402.15695-1-sil.kang@samsung.com>
+        Wed, 12 Aug 2020 05:25:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56304 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726409AbgHLJZx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 05:25:53 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4733EC06174A
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 02:25:53 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id f18so3832624wmc.0
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 02:25:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SvfFqPMBYHrIBngvtKGyeRUH8F4npQzcI9U5KAItnhs=;
+        b=n9UaiMW4ZPenoCeeKXhhAhpZn7yEMBJYCgDMSeNC2frPa7mh0beU01XNVCrphshei+
+         U4FzQHE/0Dj6m0Qhu5591Kt2vn+Q0GsMlGdLY2G04SBUQvxnlNkYX5cQeNnY+1ozClC6
+         /W7r5qVT01i8N69LPejgyhsauTf8eM9iVponY82AvRQdyGoaErXEskVz1soec/NnNizv
+         z9fsThWN6mWQ3/Tg02xL9IpW3QAy0IJ3T4lgP2tbEriv688ExcUhxXud+E1VyFmNdn3F
+         rog35negzbsd5rsJhjSBGJyf3VxEEXKbB7ccO30qkxmdqkUtXl3j2Jk0uhKCtVr0dYr9
+         aZnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SvfFqPMBYHrIBngvtKGyeRUH8F4npQzcI9U5KAItnhs=;
+        b=g7ppLzfg3hSenCv0I+z7dnh9QtSxudq+kR6NLWuXRKEsJcjZ+C2cuHa56LqOA7hWZE
+         ner3GG+5jZ3gBlosLO0FqzDeoeTFQwXJlPBJd2YhsqnqnRtt8uP9CBz0G0NLCaJoaweC
+         RAVBbKHbGZWeoxzAKZkYNFUtRZhsy/T75EBnBFe2uVAqPgeeqg8+pfb4RNAHDcuIrmLA
+         o+d5XyZQkQYuDiHknWPx/LSUoNiCI3ds31JCkKuwHgJdEjPrO0IPA7IE4eSIs7gvZF9y
+         hlaPaJub6aAmtatfWkRYg9V5MyxfO5euNy+m4lZeNfU1hGXdj6nU9qMUonhM0sQq66lf
+         zhOw==
+X-Gm-Message-State: AOAM5332vkdiOyjLSzARxMRr0bJSlNX5jBJp93x7C7GU0V3aQNOqzKBV
+        6fp40sb9J9Vi+VIDFACg5zubQH3ub9/zzMETbdd4Kg==
+X-Google-Smtp-Source: ABdhPJxjn+fo768OEogx63fWH7VDmBt9D0oBJBEehNtMfHTAnbcVln0rj3JKOMoHL2S3zYREX2gp28pDsaf1k+8Y3Ik=
+X-Received: by 2002:a1c:a385:: with SMTP id m127mr8201295wme.189.1597224351619;
+ Wed, 12 Aug 2020 02:25:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200812025402.15695-1-sil.kang@samsung.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <2672940.cHDmkauF2A@kreacher>
+In-Reply-To: <2672940.cHDmkauF2A@kreacher>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 12 Aug 2020 11:25:15 +0200
+Message-ID: <CAPDyKFqLOHL46Mb2PQ=hCpEhxKXtNE-t7KbrmYXD8aL=UeLyVg@mail.gmail.com>
+Subject: Re: [PATCH] PM: runtime: Add kerneldoc comments to multiple helpers
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Wolfram Sang <wsa@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 11:54:02AM +0900, Seungil Kang wrote:
+On Fri, 31 Jul 2020 at 19:03, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+>
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>
+> Add kerneldoc comments to multiple PM-runtime helper functions
+> defined as static inline wrappers around lower-level routines to
+> provide quick reference decumentation of their behavior.
+>
+> Some of them are similar to each other with subtle differences only
+> and the behavior of some of them may appear as counter-intuitive, so
+> clarify all that to avoid confusion.
+>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Thanks for the patch, my comments below.
+Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
 
-> When args = "\"\0", "i" will be 0 and args[i-1] is used (line:238)
+Kind regards
+Uffe
 
-Can you be less ambiguous with the args value? (Perhaps provide a hexdump of it
-for better understanding)
-
-> Because of "i" is an unsigned int type,
-> the function will access at args[0xFFFFFFFF]
-> It can make a crash
-
-Please, use proper punctuation, I'm lost where is the sentence and what are the
-logical parts of them.
-
-Can you point out to the code that calls this and leads to a crash?
-
->  lib/cmdline.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-
-Can you provide a KUnit test module which can check the case?
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> ---
+>  include/linux/pm_runtime.h |  246 +++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 246 insertions(+)
+>
+> Index: linux-pm/include/linux/pm_runtime.h
+> ===================================================================
+> --- linux-pm.orig/include/linux/pm_runtime.h
+> +++ linux-pm/include/linux/pm_runtime.h
+> @@ -60,58 +60,151 @@ extern void pm_runtime_put_suppliers(str
+>  extern void pm_runtime_new_link(struct device *dev);
+>  extern void pm_runtime_drop_link(struct device *dev);
+>
+> +/**
+> + * pm_runtime_get_if_in_use - Conditionally bump up runtime PM usage counter.
+> + * @dev: Target device.
+> + *
+> + * Increment the runtime PM usage counter of @dev if its runtime PM status is
+> + * %RPM_ACTIVE and its runtime PM usage counter is greater than 0.
+> + */
+>  static inline int pm_runtime_get_if_in_use(struct device *dev)
+>  {
+>         return pm_runtime_get_if_active(dev, false);
+>  }
+>
+> +/**
+> + * pm_suspend_ignore_children - Set runtime PM behavior regarding children.
+> + * @dev: Target device.
+> + * @enable: Whether or not to ignore possible dependencies on children.
+> + *
+> + * The dependencies of @dev on its children will not be taken into account by
+> + * the runtime PM framework going forward if @enable is %true, or they will
+> + * be taken into account otherwise.
+> + */
+>  static inline void pm_suspend_ignore_children(struct device *dev, bool enable)
+>  {
+>         dev->power.ignore_children = enable;
+>  }
+>
+> +/**
+> + * pm_runtime_get_noresume - Bump up runtime PM usage counter of a device.
+> + * @dev: Target device.
+> + */
+>  static inline void pm_runtime_get_noresume(struct device *dev)
+>  {
+>         atomic_inc(&dev->power.usage_count);
+>  }
+>
+> +/**
+> + * pm_runtime_put_noidle - Drop runtime PM usage counter of a device.
+> + * @dev: Target device.
+> + *
+> + * Decrement the runtime PM usage counter of @dev unless it is 0 already.
+> + */
+>  static inline void pm_runtime_put_noidle(struct device *dev)
+>  {
+>         atomic_add_unless(&dev->power.usage_count, -1, 0);
+>  }
+>
+> +/**
+> + * pm_runtime_suspended - Check whether or not a device is runtime-suspended.
+> + * @dev: Target device.
+> + *
+> + * Return %true if runtime PM is enabled for @dev and its runtime PM status is
+> + * %RPM_SUSPENDED, or %false otherwise.
+> + *
+> + * Note that the return value of this function can only be trusted if it is
+> + * called under the runtime PM lock of @dev or under conditions in which
+> + * runtime PM cannot be either disabled or enabled for @dev and its runtime PM
+> + * status cannot change.
+> + */
+>  static inline bool pm_runtime_suspended(struct device *dev)
+>  {
+>         return dev->power.runtime_status == RPM_SUSPENDED
+>                 && !dev->power.disable_depth;
+>  }
+>
+> +/**
+> + * pm_runtime_active - Check whether or not a device is runtime-active.
+> + * @dev: Target device.
+> + *
+> + * Return %true if runtime PM is enabled for @dev and its runtime PM status is
+> + * %RPM_ACTIVE, or %false otherwise.
+> + *
+> + * Note that the return value of this function can only be trusted if it is
+> + * called under the runtime PM lock of @dev or under conditions in which
+> + * runtime PM cannot be either disabled or enabled for @dev and its runtime PM
+> + * status cannot change.
+> + */
+>  static inline bool pm_runtime_active(struct device *dev)
+>  {
+>         return dev->power.runtime_status == RPM_ACTIVE
+>                 || dev->power.disable_depth;
+>  }
+>
+> +/**
+> + * pm_runtime_status_suspended - Check if runtime PM status is "suspended".
+> + * @dev: Target device.
+> + *
+> + * Return %true if the runtime PM status of @dev is %RPM_SUSPENDED, or %false
+> + * otherwise, regardless of whether or not runtime PM has been enabled for @dev.
+> + *
+> + * Note that the return value of this function can only be trusted if it is
+> + * called under the runtime PM lock of @dev or under conditions in which the
+> + * runtime PM status of @dev cannot change.
+> + */
+>  static inline bool pm_runtime_status_suspended(struct device *dev)
+>  {
+>         return dev->power.runtime_status == RPM_SUSPENDED;
+>  }
+>
+> +/**
+> + * pm_runtime_enabled - Check if runtime PM is enabled.
+> + * @dev: Target device.
+> + *
+> + * Return %true if runtime PM is enabled for @dev or %false otherwise.
+> + *
+> + * Note that the return value of this function can only be trusted if it is
+> + * called under the runtime PM lock of @dev or under conditions in which
+> + * runtime PM cannot be either disabled or enabled for @dev.
+> + */
+>  static inline bool pm_runtime_enabled(struct device *dev)
+>  {
+>         return !dev->power.disable_depth;
+>  }
+>
+> +/**
+> + * pm_runtime_has_no_callbacks - Check if runtime PM callbacks may be present.
+> + * @dev: Target device.
+> + *
+> + * Return %true if @dev is a special device without runtime PM callbacks or
+> + * %false otherwise.
+> + */
+>  static inline bool pm_runtime_has_no_callbacks(struct device *dev)
+>  {
+>         return dev->power.no_callbacks;
+>  }
+>
+> +/**
+> + * pm_runtime_mark_last_busy - Update the last access time of a device.
+> + * @dev: Target device.
+> + *
+> + * Update the last access time of @dev used by the runtime PM autosuspend
+> + * mechanism to the current time as returned by ktime_get_mono_fast_ns().
+> + */
+>  static inline void pm_runtime_mark_last_busy(struct device *dev)
+>  {
+>         WRITE_ONCE(dev->power.last_busy, ktime_get_mono_fast_ns());
+>  }
+>
+> +/**
+> + * pm_runtime_is_irq_safe - Check if runtime PM can work in interrupt context.
+> + * @dev: Target device.
+> + *
+> + * Return %true if @dev has been marked as an "IRQ-safe" device (with respect
+> + * to runtime PM), in which case its runtime PM callabcks can be expected to
+> + * work correctly when invoked from interrupt handlers.
+> + */
+>  static inline bool pm_runtime_is_irq_safe(struct device *dev)
+>  {
+>         return dev->power.irq_safe;
+> @@ -191,97 +284,250 @@ static inline void pm_runtime_drop_link(
+>
+>  #endif /* !CONFIG_PM */
+>
+> +/**
+> + * pm_runtime_idle - Conditionally set up autosuspend of a device or suspend it.
+> + * @dev: Target device.
+> + *
+> + * Invoke the "idle check" callback of @dev and, depending on its return value,
+> + * set up autosuspend of @dev or suspend it (depending on whether or not
+> + * autosuspend has been enabled for it).
+> + */
+>  static inline int pm_runtime_idle(struct device *dev)
+>  {
+>         return __pm_runtime_idle(dev, 0);
+>  }
+>
+> +/**
+> + * pm_runtime_suspend - Suspend a device synchronously.
+> + * @dev: Target device.
+> + */
+>  static inline int pm_runtime_suspend(struct device *dev)
+>  {
+>         return __pm_runtime_suspend(dev, 0);
+>  }
+>
+> +/**
+> + * pm_runtime_autosuspend - Set up autosuspend of a device or suspend it.
+> + * @dev: Target device.
+> + *
+> + * Set up autosuspend of @dev or suspend it (depending on whether or not
+> + * autosuspend is enabled for it) without engaging its "idle check" callback.
+> + */
+>  static inline int pm_runtime_autosuspend(struct device *dev)
+>  {
+>         return __pm_runtime_suspend(dev, RPM_AUTO);
+>  }
+>
+> +/**
+> + * pm_runtime_resume - Resume a device synchronously.
+> + * @dev: Target device.
+> + */
+>  static inline int pm_runtime_resume(struct device *dev)
+>  {
+>         return __pm_runtime_resume(dev, 0);
+>  }
+>
+> +/**
+> + * pm_request_idle - Queue up "idle check" execution for a device.
+> + * @dev: Target device.
+> + *
+> + * Queue up a work item to run an equivalent of pm_runtime_idle() for @dev
+> + * asynchronously.
+> + */
+>  static inline int pm_request_idle(struct device *dev)
+>  {
+>         return __pm_runtime_idle(dev, RPM_ASYNC);
+>  }
+>
+> +/**
+> + * pm_request_resume - Queue up runtime-resume of a device.
+> + * @dev: Target device.
+> + */
+>  static inline int pm_request_resume(struct device *dev)
+>  {
+>         return __pm_runtime_resume(dev, RPM_ASYNC);
+>  }
+>
+> +/**
+> + * pm_request_autosuspend - Queue up autosuspend of a device.
+> + * @dev: Target device.
+> + *
+> + * Queue up a work item to run an equivalent pm_runtime_autosuspend() for @dev
+> + * asynchronously.
+> + */
+>  static inline int pm_request_autosuspend(struct device *dev)
+>  {
+>         return __pm_runtime_suspend(dev, RPM_ASYNC | RPM_AUTO);
+>  }
+>
+> +/**
+> + * pm_runtime_get - Bump up usage counter and queue up resume of a device.
+> + * @dev: Target device.
+> + *
+> + * Bump up the runtime PM usage counter of @dev and queue up a work item to
+> + * carry out runtime-resume of it.
+> + */
+>  static inline int pm_runtime_get(struct device *dev)
+>  {
+>         return __pm_runtime_resume(dev, RPM_GET_PUT | RPM_ASYNC);
+>  }
+>
+> +/**
+> + * pm_runtime_get_sync - Bump up usage counter of a device and resume it.
+> + * @dev: Target device.
+> + *
+> + * Bump up the runtime PM usage counter of @dev and carry out runtime-resume of
+> + * it synchronously.
+> + *
+> + * The possible return values of this function are the same as for
+> + * pm_runtime_resume() and the runtime PM usage counter of @dev remains
+> + * incremented in all cases, even if it returns an error code.
+> + */
+>  static inline int pm_runtime_get_sync(struct device *dev)
+>  {
+>         return __pm_runtime_resume(dev, RPM_GET_PUT);
+>  }
+>
+> +/**
+> + * pm_runtime_put - Drop device usage counter and queue up "idle check" if 0.
+> + * @dev: Target device.
+> + *
+> + * Decrement the runtime PM usage counter of @dev and if it turns out to be
+> + * equal to 0, queue up a work item for @dev like in pm_request_idle().
+> + */
+>  static inline int pm_runtime_put(struct device *dev)
+>  {
+>         return __pm_runtime_idle(dev, RPM_GET_PUT | RPM_ASYNC);
+>  }
+>
+> +/**
+> + * pm_runtime_put_autosuspend - Drop device usage counter and queue autosuspend if 0.
+> + * @dev: Target device.
+> + *
+> + * Decrement the runtime PM usage counter of @dev and if it turns out to be
+> + * equal to 0, queue up a work item for @dev like in pm_request_autosuspend().
+> + */
+>  static inline int pm_runtime_put_autosuspend(struct device *dev)
+>  {
+>         return __pm_runtime_suspend(dev,
+>             RPM_GET_PUT | RPM_ASYNC | RPM_AUTO);
+>  }
+>
+> +/**
+> + * pm_runtime_put_sync - Drop device usage counter and run "idle check" if 0.
+> + * @dev: Target device.
+> + *
+> + * Decrement the runtime PM usage counter of @dev and if it turns out to be
+> + * equal to 0, invoke the "idle check" callback of @dev and, depending on its
+> + * return value, set up autosuspend of @dev or suspend it (depending on whether
+> + * or not autosuspend has been enabled for it).
+> + *
+> + * The possible return values of this function are the same as for
+> + * pm_runtime_idle() and the runtime PM usage counter of @dev remains
+> + * decremented in all cases, even if it returns an error code.
+> + */
+>  static inline int pm_runtime_put_sync(struct device *dev)
+>  {
+>         return __pm_runtime_idle(dev, RPM_GET_PUT);
+>  }
+>
+> +/**
+> + * pm_runtime_put_sync_suspend - Drop device usage counter and suspend if 0.
+> + * @dev: Target device.
+> + *
+> + * Decrement the runtime PM usage counter of @dev and if it turns out to be
+> + * equal to 0, carry out runtime-suspend of @dev synchronously.
+> + *
+> + * The possible return values of this function are the same as for
+> + * pm_runtime_suspend() and the runtime PM usage counter of @dev remains
+> + * decremented in all cases, even if it returns an error code.
+> + */
+>  static inline int pm_runtime_put_sync_suspend(struct device *dev)
+>  {
+>         return __pm_runtime_suspend(dev, RPM_GET_PUT);
+>  }
+>
+> +/**
+> + * pm_runtime_put_sync_autosuspend - Drop device usage counter and autosuspend if 0.
+> + * @dev: Target device.
+> + *
+> + * Decrement the runtime PM usage counter of @dev and if it turns out to be
+> + * equal to 0, set up autosuspend of @dev or suspend it synchronously (depending
+> + * on whether or not autosuspend has been enabled for it).
+> + *
+> + * The possible return values of this function are the same as for
+> + * pm_runtime_autosuspend() and the runtime PM usage counter of @dev remains
+> + * decremented in all cases, even if it returns an error code.
+> + */
+>  static inline int pm_runtime_put_sync_autosuspend(struct device *dev)
+>  {
+>         return __pm_runtime_suspend(dev, RPM_GET_PUT | RPM_AUTO);
+>  }
+>
+> +/**
+> + * pm_runtime_set_active - Set runtime PM status to "active".
+> + * @dev: Target device.
+> + *
+> + * Set the runtime PM status of @dev to %RPM_ACTIVE and ensure that dependencies
+> + * of it will be taken into account.
+> + *
+> + * It is not valid to call this function for devices with runtime PM enabled.
+> + */
+>  static inline int pm_runtime_set_active(struct device *dev)
+>  {
+>         return __pm_runtime_set_status(dev, RPM_ACTIVE);
+>  }
+>
+> +/**
+> + * pm_runtime_set_suspended - Set runtime PM status to "active".
+> + * @dev: Target device.
+> + *
+> + * Set the runtime PM status of @dev to %RPM_SUSPENDED and ensure that
+> + * dependencies of it will be taken into account.
+> + *
+> + * It is not valid to call this function for devices with runtime PM enabled.
+> + */
+>  static inline int pm_runtime_set_suspended(struct device *dev)
+>  {
+>         return __pm_runtime_set_status(dev, RPM_SUSPENDED);
+>  }
+>
+> +/**
+> + * pm_runtime_disable - Disable runtime PM for a device.
+> + * @dev: Target device.
+> + *
+> + * Prevent the runtime PM framework from working with @dev (by incrementing its
+> + * "blocking" counter).
+> + *
+> + * For each invocation of this function for @dev there must be a matching
+> + * pm_runtime_enable() call in order for runtime PM to be enabled for it.
+> + */
+>  static inline void pm_runtime_disable(struct device *dev)
+>  {
+>         __pm_runtime_disable(dev, true);
+>  }
+>
+> +/**
+> + * pm_runtime_use_autosuspend - Allow autosuspend to be used for a device.
+> + * @dev: Target device.
+> + *
+> + * Allow the runtime PM autosuspend mechanism to be used for @dev whenever
+> + * requested (or "autosuspend" will be handled as direct runtime-suspend for
+> + * it).
+> + */
+>  static inline void pm_runtime_use_autosuspend(struct device *dev)
+>  {
+>         __pm_runtime_use_autosuspend(dev, true);
+>  }
+>
+> +/**
+> + * pm_runtime_dont_use_autosuspend - Prevent autosuspend from being used.
+> + * @dev: Target device.
+> + *
+> + * Prevent the runtime PM autosuspend mechanism from being used for @dev which
+> + * means that "autosuspend" will be handled as direct runtime-suspend for it
+> + * going forward.
+> + */
+>  static inline void pm_runtime_dont_use_autosuspend(struct device *dev)
+>  {
+>         __pm_runtime_use_autosuspend(dev, false);
+>
+>
+>
