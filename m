@@ -2,170 +2,272 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1AB0C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:07:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F311C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:07:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD64F2076B
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:07:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49BC92076B
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 16:07:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="U9YYrwNo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ubhnaz54"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726568AbgHLQHG (ORCPT
+        id S1726600AbgHLQHz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 12:07:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33344 "EHLO
+        Wed, 12 Aug 2020 12:07:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726512AbgHLQHF (ORCPT
+        with ESMTP id S1726512AbgHLQHy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 12:07:05 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27161C061383
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 09:07:05 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id t15so3358951iob.3
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 09:07:05 -0700 (PDT)
+        Wed, 12 Aug 2020 12:07:54 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AEF3C061383
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 09:07:53 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id t10so2860635ejs.8
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 09:07:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3e4JFYXjF6q1OvbGcA6aKU4QTCIuU0l1tBCEJAmdwPg=;
-        b=U9YYrwNo4SvHPhj96etFtH0UXHQfnKJYQOY2ST1j/yonEtY+tpxc6DdQ94vqrKX+Pm
-         noXhrZ06X8sOwgF34zPNDSAFybAIG2SYutewjECVamEdKxoy0ndv3/P/xU9URWhlwli4
-         n8lOAuh4EYqmvD57GxGlj+/XpCQxvQ4QJsmkbybbx94eyijkn3kewUHCH+pZoVh1K5bk
-         Lj1NrcYMXyx+c7kJBzpRVsUyVadQCGAmfp/HFQbtJVlQHMVExdvrFULZvfmwzAb3dmDv
-         AwuFJAnbgQ+p1dY+rwRYq77XgSMDAQAgswMfk2zp3tLt/T/oL7yOXfaFTX29+JFAafRQ
-         Byqw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=roFWW4idZSPrkc+cb/iYIWliDRvt+NhQWTQEf1GtCyw=;
+        b=ubhnaz54GTYc6qTGiyUNH9W+bQXnxPga4CQ3bqcohpsujpPNoRj/xyZ/EiTr+4kaVs
+         NgmDOE61mDvVuxyy3Aj+rJ4nyxVHVWbINKaXxrehiJnjGKibfOdzGDyYRojKj9h/wHqf
+         AZOOrWTwpLOjO2FcyyZSa1J/CZpLiQcfSFJ4N4YHX78rix1NI+XpAFhe/6wY+Smi/bYY
+         gW+bW5IgxUvNYTkR7KMVsvnc3lUO7DeFxZc6UoLF6stt1QQFuv8Q2A4XTG5DQI88zcDL
+         EIie5be8TpZYv6vxXHuz+7TLj5N3UlqcJCs46PTpppRIahRI62vVp5ituRaozhO0K1Dh
+         AcDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3e4JFYXjF6q1OvbGcA6aKU4QTCIuU0l1tBCEJAmdwPg=;
-        b=IBL2zX08Lp/31f3YmF93sgO6w3Z9zx2puZ+9Ehu11hDJH+gT7PyGOQ0QTk5MomjzEQ
-         psVWoxCF6KJ2Xb8ePvevA/aht8QSV4FNeceGV4rL58WQjNCcHP4m59TjxWP1N+ws9065
-         8eIWaeCj2uU9cN1YD9a9oQ2k3W5u8l0giW6ZiZNj2deaq4SPzeShEHCl2Acs5DBJ/MH9
-         po1J64TXAUpjnGPt2xdFopHViAGWBd+l8vGWNV+73UG5m40evpmDV5WVVYGTEjyhVEnx
-         4XSCG8Xwyd7yevfLMiWmo0gkfswCVImAIF//93bfkRML2Q/49R1V+9dsbHqCKhe06vQy
-         8bCQ==
-X-Gm-Message-State: AOAM530h2VLYt0XkTm46w5Qp7OQtoWvnOCplzPV93M/JUO1P9QmpGQ2b
-        2l0Ts85FNq7jeGXHQeB94INAGj2jB0Di2STMZPMndA==
-X-Google-Smtp-Source: ABdhPJyzPwmi6uJ4fRtjlctMeIfdwLLcFUCoZcOBr2Uv8ZAVYVfbVdqGmFAbApqklo5dPm6YVvsgWnElJnmn57d7sXA=
-X-Received: by 2002:a02:866d:: with SMTP id e100mr107951jai.83.1597248424496;
- Wed, 12 Aug 2020 09:07:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200807071620.11907-1-leo.yan@linaro.org>
-In-Reply-To: <20200807071620.11907-1-leo.yan@linaro.org>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Wed, 12 Aug 2020 10:06:53 -0600
-Message-ID: <CANLsYkzR+DSrss0dzPjMPKW+4ZGMbD9V23PLDSZAJM1-SQU0CQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/4] Perf tool: Enable Arm arch timer counter and
- arm-spe's timestamp
-To:     Leo Yan <leo.yan@linaro.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>, Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kemeng Shi <shikemeng@huawei.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        James Clark <james.clark@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=roFWW4idZSPrkc+cb/iYIWliDRvt+NhQWTQEf1GtCyw=;
+        b=hS/sh+9EM9UYjZnmKn1/Qbv0CKeUrB75FKq4DdfEvQvuVsHvQbYN6ovhC2gupTA+ZV
+         L/mm83ubceJLVXY4scyH+GElVQXdT2umTz/q8bvWfK4TnzeHE/6JMz2ZDt7938TA0UdG
+         uilJi9yFQ3EDuGD/1a73crWicKzH5zA9XmbsX9CuekiXXm3EC47A5E8IBBhVISxBEV3+
+         uSyBTrnfbk+TbhVQCDfJAUlzcJtUnBk3IQeI1nafm/ShwiDVuO2LdLHNBbDbV4H1Bl/K
+         I8+ZSXqyQ+yvD+45qhlKDAYL7F5lZMEuQnO1XjLFu7iVht8zxphy0gRYAv/IT7umSPbZ
+         G9Rg==
+X-Gm-Message-State: AOAM530D1MhnnYsLlk8SNW5uNSOo2fGUUYIqHHKvjlbg9p9e/4vD7vyE
+        VIFlSA/MR36Oh9xp0Jp/QXk=
+X-Google-Smtp-Source: ABdhPJwrSR6wbm8JIlxtPyFsKHUfOigzmG1n/hbWAdHohIrsTMtzqcSLbTnAspzlbzTVDYPig5r/Kw==
+X-Received: by 2002:a17:906:1a0f:: with SMTP id i15mr500757ejf.293.1597248471360;
+        Wed, 12 Aug 2020 09:07:51 -0700 (PDT)
+Received: from localhost.localdomain ([2001:8f8:1821:74c4:6c84:35b4:48ac:419a])
+        by smtp.gmail.com with ESMTPSA id b9sm1948823ejz.57.2020.08.12.09.07.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Aug 2020 09:07:50 -0700 (PDT)
+From:   Mohammed Rushad <mohammedrushad@gmail.com>
+To:     gregkh@linuxfoundation.org, john.oldman@polehill.co.uk,
+        kai.heng.feng@canonical.com, luk@wybcz.pl, vkor@vkten.in,
+        nachukannan@gmail.com, mohammedrushad@gmail.com,
+        hdegoede@redhat.com
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: rtl8723bs: os_dep: fix function-name print using __func__
+Date:   Wed, 12 Aug 2020 21:37:45 +0530
+Message-Id: <20200812160745.7215-1-mohammedrushad@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnaldo,
+This patch to the os_intfs.c fixes the printing of function names using
+the preferred '"%s...", __func__' and alignment issues as pointed out by
+the checkpatch.pl tool.
 
-On Fri, 7 Aug 2020 at 01:16, Leo Yan <leo.yan@linaro.org> wrote:
->
-> This patch set is to enable Arm arch timer counter and Arm SPE is the
-> first customer to use arch timer counter for its timestamp.
->
-> Patches 01 ~ 03 enables Arm arch timer counter in Perf tool; patch 01 is
-> to retrieve arch timer's parameters from mmaped page; patch 02 provides
-> APIs for the conversion between arch timer's counter and time; patch 03
-> adds a test for patches 01 and 02.
->
-> As the first customer to use Arm arch timer counter in perf tool, patch
-> 04 is to generate sample's timestamp for ARM SPE AUX trace data.
->
-> This patch set has been rebased on perf/core branch with the latest
-> commit c4735d990268 ("perf evsel: Don't set
-> sample_regs_intr/sample_regs_user for dummy event").
+Signed-off-by: Mohammed Rushad <mohammedrushad@gmail.com>
+---
+ drivers/staging/rtl8723bs/os_dep/os_intfs.c | 56 +++++++++++----------
+ 1 file changed, 29 insertions(+), 27 deletions(-)
 
-The ARM SPE perf tools code is orphan and I don't have the cycles to
-pick it up.  Leo has spent a lot of time in that code and as such I
-suggest that he starts maintaining it, probably following the same
-kind of arrangement you and I have for coresight.
+diff --git a/drivers/staging/rtl8723bs/os_dep/os_intfs.c b/drivers/staging/rtl8723bs/os_dep/os_intfs.c
+index 27f990a01a23..0460db4ae660 100644
+--- a/drivers/staging/rtl8723bs/os_dep/os_intfs.c
++++ b/drivers/staging/rtl8723bs/os_dep/os_intfs.c
+@@ -400,17 +400,17 @@ u16 rtw_recv_select_queue(struct sk_buff *skb)
+ 	memcpy(&eth_type, pdata + (ETH_ALEN << 1), 2);
+ 
+ 	switch (be16_to_cpu(eth_type)) {
+-		case ETH_P_IP:
++	case ETH_P_IP:
+ 
+-			piphdr = (struct iphdr *)(pdata + ETH_HLEN);
++		piphdr = (struct iphdr *)(pdata + ETH_HLEN);
+ 
+-			dscp = piphdr->tos & 0xfc;
++		dscp = piphdr->tos & 0xfc;
+ 
+-			priority = dscp >> 5;
++		priority = dscp >> 5;
+ 
+-			break;
+-		default:
+-			priority = 0;
++		break;
++	default:
++		priority = 0;
+ 	}
+ 
+ 	return rtw_1d_to_queue[priority];
+@@ -539,7 +539,7 @@ u32 rtw_start_drv_threads(struct adapter *padapter)
+ {
+ 	u32 _status = _SUCCESS;
+ 
+-	RT_TRACE(_module_os_intfs_c_, _drv_info_, ("+rtw_start_drv_threads\n"));
++	RT_TRACE(_module_os_intfs_c_, _drv_info_, ("+%s\n", __func__));
+ 	padapter->xmitThread = kthread_run(rtw_xmit_thread, padapter, "RTW_XMIT_THREAD");
+ 	if (IS_ERR(padapter->xmitThread))
+ 		_status = _FAIL;
+@@ -556,7 +556,7 @@ u32 rtw_start_drv_threads(struct adapter *padapter)
+ 
+ void rtw_stop_drv_threads(struct adapter *padapter)
+ {
+-	RT_TRACE(_module_os_intfs_c_, _drv_info_, ("+rtw_stop_drv_threads\n"));
++	RT_TRACE(_module_os_intfs_c_, _drv_info_, ("+%s\n", __func__));
+ 
+ 	rtw_stop_cmd_thread(padapter);
+ 
+@@ -710,7 +710,7 @@ u8 rtw_init_drv_sw(struct adapter *padapter)
+ {
+ 	u8 ret8 = _SUCCESS;
+ 
+-	RT_TRACE(_module_os_intfs_c_, _drv_info_, ("+rtw_init_drv_sw\n"));
++	RT_TRACE(_module_os_intfs_c_, _drv_info_, ("+%s\n", __func__));
+ 
+ 	rtw_init_default_value(padapter);
+ 
+@@ -773,29 +773,29 @@ u8 rtw_init_drv_sw(struct adapter *padapter)
+ 
+ exit:
+ 
+-	RT_TRACE(_module_os_intfs_c_, _drv_info_, ("-rtw_init_drv_sw\n"));
++	RT_TRACE(_module_os_intfs_c_, _drv_info_, ("-%s\n", __func__));
+ 
+ 	return ret8;
+ }
+ 
+ void rtw_cancel_all_timer(struct adapter *padapter)
+ {
+-	RT_TRACE(_module_os_intfs_c_, _drv_info_, ("+rtw_cancel_all_timer\n"));
++	RT_TRACE(_module_os_intfs_c_, _drv_info_, ("+%s\n", __func__));
+ 
+ 	del_timer_sync(&padapter->mlmepriv.assoc_timer);
+-	RT_TRACE(_module_os_intfs_c_, _drv_info_, ("rtw_cancel_all_timer:cancel association timer complete!\n"));
++	RT_TRACE(_module_os_intfs_c_, _drv_info_, ("%s:cancel association timer complete!\n", __func__));
+ 
+ 	del_timer_sync(&padapter->mlmepriv.scan_to_timer);
+-	RT_TRACE(_module_os_intfs_c_, _drv_info_, ("rtw_cancel_all_timer:cancel scan_to_timer!\n"));
++	RT_TRACE(_module_os_intfs_c_, _drv_info_, ("%s:cancel scan_to_timer!\n", __func__));
+ 
+ 	del_timer_sync(&padapter->mlmepriv.dynamic_chk_timer);
+-	RT_TRACE(_module_os_intfs_c_, _drv_info_, ("rtw_cancel_all_timer:cancel dynamic_chk_timer!\n"));
++	RT_TRACE(_module_os_intfs_c_, _drv_info_, ("%s:cancel dynamic_chk_timer!\n", __func__));
+ 
+ 	del_timer_sync(&(adapter_to_pwrctl(padapter)->pwr_state_check_timer));
+ 
+ 	del_timer_sync(&padapter->mlmepriv.set_scan_deny_timer);
+ 	rtw_clear_scan_deny(padapter);
+-	RT_TRACE(_module_os_intfs_c_, _drv_info_, ("rtw_cancel_all_timer:cancel set_scan_deny_timer!\n"));
++	RT_TRACE(_module_os_intfs_c_, _drv_info_, ("%s:cancel set_scan_deny_timer!\n", __func__));
+ 
+ 	del_timer_sync(&padapter->recvpriv.signal_stat_timer);
+ 
+@@ -805,7 +805,7 @@ void rtw_cancel_all_timer(struct adapter *padapter)
+ 
+ u8 rtw_free_drv_sw(struct adapter *padapter)
+ {
+-	RT_TRACE(_module_os_intfs_c_, _drv_info_, ("==>rtw_free_drv_sw"));
++	RT_TRACE(_module_os_intfs_c_, _drv_info_, ("==>%s", __func__));
+ 
+ 	free_mlme_ext_priv(&padapter->mlmeextpriv);
+ 
+@@ -829,7 +829,7 @@ u8 rtw_free_drv_sw(struct adapter *padapter)
+ 
+ 	rtw_hal_free_data(padapter);
+ 
+-	RT_TRACE(_module_os_intfs_c_, _drv_info_, ("<==rtw_free_drv_sw\n"));
++	RT_TRACE(_module_os_intfs_c_, _drv_info_, ("<==%s\n", __func__));
+ 
+ 	/* free the old_pnetdev */
+ 	if (padapter->rereg_nd_name_priv.old_pnetdev) {
+@@ -841,7 +841,7 @@ u8 rtw_free_drv_sw(struct adapter *padapter)
+ 	if (padapter->pbuddy_adapter != NULL)
+ 		padapter->pbuddy_adapter->pbuddy_adapter = NULL;
+ 
+-	RT_TRACE(_module_os_intfs_c_, _drv_info_, ("-rtw_free_drv_sw\n"));
++	RT_TRACE(_module_os_intfs_c_, _drv_info_, ("-%s\n", __func__));
+ 
+ 	return _SUCCESS;
+ }
+@@ -994,7 +994,7 @@ static int  ips_netdrv_open(struct adapter *padapter)
+ 
+ 	status = rtw_hal_init(padapter);
+ 	if (status == _FAIL) {
+-		RT_TRACE(_module_os_intfs_c_, _drv_err_, ("ips_netdrv_open(): Can't init h/w!\n"));
++		RT_TRACE(_module_os_intfs_c_, _drv_err_, ("%s(): Can't init h/w!\n", __func__));
+ 		goto netdev_open_error;
+ 	}
+ 
+@@ -1007,7 +1007,7 @@ static int  ips_netdrv_open(struct adapter *padapter)
+ 
+ netdev_open_error:
+ 	/* padapter->bup = false; */
+-	DBG_871X("-ips_netdrv_open - drv_open failure, bup =%d\n", padapter->bup);
++	DBG_871X("-%s - drv_open failure, bup =%d\n", __func__, padapter->bup);
+ 
+ 	return _FAIL;
+ }
+@@ -1016,24 +1016,25 @@ static int  ips_netdrv_open(struct adapter *padapter)
+ int rtw_ips_pwr_up(struct adapter *padapter)
+ {
+ 	int result;
+-	DBG_871X("===>  rtw_ips_pwr_up..............\n");
++
++	DBG_871X("===>  %s..............\n", __func__);
+ 
+ 	result = ips_netdrv_open(padapter);
+ 
+-	DBG_871X("<===  rtw_ips_pwr_up..............\n");
++	DBG_871X("<===  %s..............\n", __func__);
+ 	return result;
+ }
+ 
+ void rtw_ips_pwr_down(struct adapter *padapter)
+ {
+-	DBG_871X("===> rtw_ips_pwr_down...................\n");
++	DBG_871X("===> %s...................\n", __func__);
+ 
+ 	padapter->bCardDisableWOHSM = true;
+ 	padapter->net_closed = true;
+ 
+ 	rtw_ips_dev_unload(padapter);
+ 	padapter->bCardDisableWOHSM = false;
+-	DBG_871X("<=== rtw_ips_pwr_down.....................\n");
++	DBG_871X("<=== %s.....................\n", __func__);
+ }
+ 
+ void rtw_ips_dev_unload(struct adapter *padapter)
+@@ -1087,7 +1088,8 @@ static int netdev_close(struct net_device *pnetdev)
+ 
+ 		rtw_dev_unload(padapter);
+ 	}
+-	else*/
++	else
++*/
+ 	if (pwrctl->rf_pwrstate == rf_on) {
+ 		DBG_871X("(2)871x_drv - drv_close, bup =%d, hw_init_completed =%d\n", padapter->bup, padapter->hw_init_completed);
+ 
+@@ -1144,7 +1146,7 @@ void rtw_dev_unload(struct adapter *padapter)
+ 		if (padapter->intf_stop)
+ 			padapter->intf_stop(padapter);
+ 
+-		RT_TRACE(_module_hci_intfs_c_, _drv_notice_, ("@ rtw_dev_unload: stop intf complete!\n"));
++		RT_TRACE(_module_hci_intfs_c_, _drv_notice_, ("@ %s: stop intf complete!\n", __func__));
+ 
+ 		if (!pwrctl->bInternalAutoSuspend)
+ 			rtw_stop_drv_threads(padapter);
+-- 
+2.17.1
 
-Thanks,
-Mathieu
-
->
-> After changes:
->
->   # perf test 67 -v
->     67: Convert perf time to arch timer counter
->     --- start ---
->     test child forked, pid 5463
->     mmap size 528384B
->     1st event perf time 2231755083020 arch timer cnt 113097053477
->     test time           2231755087460 arch timer cnt 113097053699
->     2nd event perf time 2231755090680 arch timer cnt 113097053860
->     test child finished with 0
->     ---- end ----
->
->   Reports the SPE sample with timestamp:
->
->   $ perf script -F,+time
->     dd  6799 [034] 25496.733475:          1              l1d-access:      ffff87f37b88 _dl_start+0x288 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
->     dd  6799 [034] 25496.733475:          1              tlb-access:      ffff87f37b88 _dl_start+0x288 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
->     dd  6799 [034] 25496.733479:          1              l1d-access:      ffff87f37c74 _dl_start+0x374 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
->     dd  6799 [034] 25496.733479:          1              tlb-access:      ffff87f37c74 _dl_start+0x374 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
->     dd  6799 [034] 25496.733485:          1              l1d-access:      ffff87f49af4 __GI___tunables_init+0x3c (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
->     dd  6799 [034] 25496.733485:          1              tlb-access:      ffff87f49af4 __GI___tunables_init+0x3c (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
->
-> Changes from v1:
-> * Rebased on the latest perf/core branch;
-> * Added a testing for Arm timer counter conversion (Ian Rogers).
->
->
-> Leo Yan (4):
->   perf tools: Support Arm arch timer counter
->   perf arm_arch_timer: Convert between counter and timestamp
->   perf arm_arch_timer: Test conversion between counter and timestamp
->   perf arm-spe: Enable timestamp with arch timer counter
->
->  tools/perf/arch/arm64/include/arch-tests.h    |   6 +
->  tools/perf/arch/arm64/tests/Build             |   1 +
->  tools/perf/arch/arm64/tests/arch-tests.c      |   4 +
->  .../tests/perf-time-to-arch-timer-counter.c   | 189 ++++++++++++++++++
->  tools/perf/arch/arm64/util/Build              |   1 +
->  tools/perf/arch/arm64/util/arch_timer.c       |  50 +++++
->  tools/perf/arch/arm64/util/arm-spe.c          |  17 ++
->  tools/perf/util/Build                         |   1 +
->  tools/perf/util/arm-spe.c                     |  16 +-
->  tools/perf/util/arm-spe.h                     |   5 +
->  tools/perf/util/arm_arch_timer.c              |  28 +++
->  tools/perf/util/arm_arch_timer.h              |  23 +++
->  12 files changed, 339 insertions(+), 2 deletions(-)
->  create mode 100644 tools/perf/arch/arm64/tests/perf-time-to-arch-timer-counter.c
->  create mode 100644 tools/perf/arch/arm64/util/arch_timer.c
->  create mode 100644 tools/perf/util/arm_arch_timer.c
->  create mode 100644 tools/perf/util/arm_arch_timer.h
->
-> --
-> 2.17.1
->
