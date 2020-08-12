@@ -2,96 +2,124 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02720C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 21:31:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77666C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 21:31:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C89782080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 21:30:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C36920781
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 21:31:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="PYFxoLIa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726578AbgHLVa7 (ORCPT
+        id S1726606AbgHLVbr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 17:30:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54832 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726030AbgHLVa6 (ORCPT
+        Wed, 12 Aug 2020 17:31:47 -0400
+Received: from ale.deltatee.com ([204.191.154.188]:38670 "EHLO
+        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726030AbgHLVbr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 17:30:58 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11F36C061383;
-        Wed, 12 Aug 2020 14:30:58 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k5yKX-00EISw-Ml; Wed, 12 Aug 2020 21:30:41 +0000
-Date:   Wed, 12 Aug 2020 22:30:41 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Jann Horn <jannh@google.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Karel Zak <kzak@redhat.com>, Jeff Layton <jlayton@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Christian Brauner <christian@brauner.io>,
-        Lennart Poettering <lennart@poettering.net>,
-        Linux API <linux-api@vger.kernel.org>,
-        Ian Kent <raven@themaw.net>,
-        LSM <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: file metadata via fs API (was: [GIT PULL] Filesystem Information)
-Message-ID: <20200812213041.GV1236603@ZenIV.linux.org.uk>
-References: <CAHk-=whE42mFLi8CfNcdB6Jc40tXsG3sR+ThWAFihhBwfUbczA@mail.gmail.com>
- <CAJfpegtXtj2Q1wsR-3eUNA0S=_skzHF0CEmcK_Krd8dtKkWkGA@mail.gmail.com>
- <20200812143957.GQ1236603@ZenIV.linux.org.uk>
- <CAJfpegvFBdp3v9VcCp-wNDjZnQF3q6cufb-8PJieaGDz14sbBg@mail.gmail.com>
- <20200812150807.GR1236603@ZenIV.linux.org.uk>
- <CAJfpegsQF1aN4XJ_8j977rnQESxc=Kcn7Z2C+LnVDWXo4PKhTQ@mail.gmail.com>
- <20200812163347.GS1236603@ZenIV.linux.org.uk>
- <CAJfpegv8MTnO9YAiFUJPjr3ryeT82=KWHUpLFmgRNOcQfeS17w@mail.gmail.com>
- <20200812173911.GT1236603@ZenIV.linux.org.uk>
- <20200812183326.GU1236603@ZenIV.linux.org.uk>
+        Wed, 12 Aug 2020 17:31:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Sender:
+        Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+        :Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=wZUfbWD2oBKIbcbRhn2MlHBlsAt09/GiRlxjIAJiqj0=; b=PYFxoLIaaTeOjTA6L1Grk2PoP/
+        oohcnDZvDLUWM3SgcIGGzS4nkSYAtfAnxIS6aFMahUYZF47lYeFrz+VfJ7GuY6p/l2y5lIRLd63xQ
+        oVKpTYqHf6uB5PJJnJB8KGqv7PtbkXi3pwCZcIjLMBafrFmICRXavdYfSDTZFcJ/Fmk9dHli/pJgb
+        rl+Mya1p0IC6PZ7hVkZX6RjYy5XM8lb9/+U89MjMZPrOcFRUbnoSzSZRcO5G4kwbIKYscZ9lCWA7C
+        94R53Wby5ZDUGd5WMlZws5yT/VJ+J7EnRhOD2B7FD4YpLeqoWoiNRJwhBIWZcJlF/odoaxs7NDWif
+        gfcmEjvg==;
+Received: from s01060023bee90a7d.cg.shawcable.net ([24.64.145.4] helo=[192.168.0.10])
+        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1k5yLW-0004Gg-PO; Wed, 12 Aug 2020 15:31:43 -0600
+To:     Keith Busch <kbusch@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <keith.busch@wdc.com>, Jens Axboe <axboe@kernel.dk>
+References: <20200812210119.7155-1-logang@deltatee.com>
+ <20200812211959.GA1238450@dhcp-10-100-145-180.wdl.wdc.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <b86772c1-17ed-ec44-1b60-7f2ad80bd73c@deltatee.com>
+Date:   Wed, 12 Aug 2020 15:31:41 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200812183326.GU1236603@ZenIV.linux.org.uk>
+In-Reply-To: <20200812211959.GA1238450@dhcp-10-100-145-180.wdl.wdc.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 24.64.145.4
+X-SA-Exim-Rcpt-To: axboe@kernel.dk, keith.busch@wdc.com, sagi@grimberg.me, hch@lst.de, linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, kbusch@kernel.org
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [RESEND PATCH] nvme: Use spin_lock_irqsave() when taking the
+ ctrl->lock
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 07:33:26PM +0100, Al Viro wrote:
 
-> BTW, what would such opened files look like from /proc/*/fd/* POV?  And
-> what would happen if you walk _through_ that symlink, with e.g. ".."
-> following it?  Or with names of those attributes, for that matter...
-> What about a normal open() of such a sucker?  It won't know where to
-> look for your ->private_data...
+
+On 2020-08-12 3:19 p.m., Keith Busch wrote:
+> On Wed, Aug 12, 2020 at 03:01:19PM -0600, Logan Gunthorpe wrote:
+>> @@ -2971,15 +2971,16 @@ int nvme_get_log(struct nvme_ctrl *ctrl, u32 nsid, u8 log_page, u8 lsp, u8 csi,
+>>  static struct nvme_cel *nvme_find_cel(struct nvme_ctrl *ctrl, u8 csi)
+>>  {
+>>  	struct nvme_cel *cel, *ret = NULL;
+>> +	unsigned long flags;
+>>
+>> -	spin_lock(&ctrl->lock);
+>> +	spin_lock_irqsave(&ctrl->lock, flags);
+>>  	list_for_each_entry(cel, &ctrl->cels, entry) {
+>>  		if (cel->csi == csi) {
+>>  			ret = cel;
+>>  			break;
+>>  		}
+>>  	}
+>> -	spin_unlock(&ctrl->lock);
+>> +	spin_unlock_irqrestore(&ctrl->lock, flags);
+>>
+>>  	return ret;
+>>  }
+>> @@ -2988,6 +2989,7 @@ static int nvme_get_effects_log(struct nvme_ctrl *ctrl, u8 csi,
+>>  				struct nvme_effects_log **log)
+>>  {
+>>  	struct nvme_cel *cel = nvme_find_cel(ctrl, csi);
+>> +	unsigned long flags;
+>>  	int ret;
+>>
+>>  	if (cel)
+>> @@ -3006,9 +3008,9 @@ static int nvme_get_effects_log(struct nvme_ctrl *ctrl, u8 csi,
+>>
+>>  	cel->csi = csi;
+>>
+>> -	spin_lock(&ctrl->lock);
+>> +	spin_lock_irqsave(&ctrl->lock, flags);
+>>  	list_add_tail(&cel->entry, &ctrl->cels);
+>> -	spin_unlock(&ctrl->lock);
+>> +	spin_unlock_irqrestore(&ctrl->lock, flags);
+>>  out:
+>>  	*log = &cel->log;
+>>  	return 0;
+>>
 > 
-> FWIW, you keep refering to regularity of this stuff from the syscall
-> POV, but it looks like you have no real idea of what subset of the
-> things available for normal descriptors will be available for those.
+> Neither of these are ever called from an interrupt disabled context,
+> correct? If so, you can just use spin_lock_irq() without saving the
+> current irq state.
 
-Another question: what should happen with that sucker on umount of
-the filesystem holding the underlying object?  Should it be counted
-as pinning that fs?
+Yes, I believe that is correct. I'll send a v2 shortly.
 
-Who controls what's in that tree?  If we plan to have xattrs there,
-will they be in a flat tree, or should it mirror the hierarchy of
-xattrs?  When is it populated?  open() time?  What happens if we
-add/remove an xattr after that point?
+Thanks,
 
-If we open the same file several times, what should we get?  A full
-copy of the tree every time, with all coherency being up to whatever's
-putting attributes there?
-
-What are the permissions needed to do lookups in that thing?
-
-All of that is about semantics and the answers are needed before we
-start looking into implementations.  "Whatever my implementation
-does" is _not_ a good way to go, especially since that'll be cast
-in stone as soon as API becomes exposed to userland...
+Logan
