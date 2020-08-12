@@ -2,152 +2,215 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F21C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:34:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E875C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:41:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 317C6207DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:34:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DDF7207DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 15:41:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m0CKfSDr"
+	dkim=pass (2048-bit key) header.d=eclypsium.com header.i=@eclypsium.com header.b="HXcUj/8n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726521AbgHLPeB (ORCPT
+        id S1726518AbgHLPlu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 11:34:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56490 "EHLO
+        Wed, 12 Aug 2020 11:41:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726226AbgHLPeA (ORCPT
+        with ESMTP id S1726489AbgHLPls (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 11:34:00 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F1ACC061383
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 08:34:00 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id c16so2714047ejx.12
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 08:34:00 -0700 (PDT)
+        Wed, 12 Aug 2020 11:41:48 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B289C061384
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 08:41:48 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id r19so1198090qvw.11
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 08:41:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=reply-to:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=m+2qVHlDZpY7hx9L3KMg3fe8c3A5JPSpPG3a+ctXXAY=;
-        b=m0CKfSDryPPtkng12FCAgfBja3BVI2AmhARiFxnpFU8MkvZk8n4EV6onExKL8Ln0jS
-         xmf0JKUtBAI3yHddlf3Ej0jYPr0ylVMYE5B5LAB12sAS0HNzbRZpMaot7KnmbPvcqEMg
-         2yfTjklAnGlK5+g/+zzqdob2UEdKQM8ScIqAGJQL73cHnfU+O8UXlkdCNiHDd2zYGJGW
-         pdJGsxs6rJFu7mb9WrJiqQPjF1ZAdIONSfFNACGIydJspHOpsHqnfQVOBEH3b337aSIH
-         mFMgRh/dos+z2zLWYum63y5ceaJvFFv0WINBSViZOKtcN4RqoC/73xgVegG82uMECTZd
-         wudA==
+        d=eclypsium.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=haCZp8d7OZAFbRh0ccsZ5DNIkLr16Zii89E0sXPAORI=;
+        b=HXcUj/8nYPyuiRt/bdiw2udHv9wTKOG/PYcKO9Gdsa/+oPPJKPsPVQcmvC83jET7Om
+         Jsq1HYXsoxblYI/Zm1SvjAW6qzpb5YPSSHii/6rBssU7Wu2MYDzwZ30Zj3UbS9tu7Ljj
+         JDPTUz7lxQdbQkDwDjISjIGUU4mVfXRTgGTdMoa+N04kYDTE82ai1MVZfo249Owbho6G
+         5tQqbEnl7yoCIuRT9DFSTclrP8ex43bu6ik/16p5EnaVOtdiPN8hIonEiHZl92rX+IPW
+         teGtTYpyvkc8LTR+YbHG6/V3vPaKJ84ZEeySq3IDVJmQA8L3Lf0Wew4fTri8X8Tu5yXL
+         2ecA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:reply-to:subject:to:cc:references:from
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-transfer-encoding:content-language;
-        bh=m+2qVHlDZpY7hx9L3KMg3fe8c3A5JPSpPG3a+ctXXAY=;
-        b=B4Jjj/r1LOYAb6eFmwitmOMSAcDq6gBFjYRwyCcknI9039o87a+Av1J5/0r4XbkUiZ
-         jSTueE4bIiGE62mKBvo6ZGKRdSbe7bbY4/oV817WiotPUomQ+1gkDfAzUBt9QNHYL7Oz
-         lRrJbp6Imo8QWBlM+o6kXXx1ofYixmzWLQhtu4e2oiYryM5vO9FcEziRq2X+dRzvl02l
-         HJP0fEDPpnnf25QNkibqIdzf0LPzf/WhrozIw+sYpvNChZSscc+GMY5ag/LDWG2T6u4I
-         BcGLcNC7GPwIlPIZmyAva2m8CZqF5JXJT79JSG52tXgSIYgl9mOlEQqPXLDvnfBvPmi2
-         75IA==
-X-Gm-Message-State: AOAM532XFZICCz1l6Nt3rIbjzFSVLA+y2WTRwlXxPC0Hy0M91hP4MO6d
-        tNexmTt5cZWsV/IqZE9SFf0=
-X-Google-Smtp-Source: ABdhPJzPWeKt4CeauJw6Lhyn5G4LPcMjQUCGwNmBjAvHlQ3upLq09MpfkXFz5KzwkqWy22XqHbGIBw==
-X-Received: by 2002:a17:906:1986:: with SMTP id g6mr372317ejd.404.1597246438814;
-        Wed, 12 Aug 2020 08:33:58 -0700 (PDT)
-Received: from ?IPv6:2a02:908:1252:fb60:be8a:bd56:1f94:86e7? ([2a02:908:1252:fb60:be8a:bd56:1f94:86e7])
-        by smtp.gmail.com with ESMTPSA id gl20sm1826200ejb.86.2020.08.12.08.33.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Aug 2020 08:33:58 -0700 (PDT)
-Reply-To: christian.koenig@amd.com
-Subject: Re: [PATCH] drm/amdgpu: adjust the pid in the grab_id trace point
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     christian.koenig@amd.com, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Shashank.Sharma@amd.com, daniel.vetter@ffwll.ch,
-        alexander.deucher@amd.com
-References: <20200807133658.1866-1-christian.koenig@amd.com>
- <20200807133658.1866-2-christian.koenig@amd.com>
- <20200812141755.GA8136@home.goodmis.org>
- <e48b6300-7ba7-f2fc-b7f7-a205d32607a4@gmail.com>
- <20200812111920.06efa663@oasis.local.home>
-From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <ckoenig.leichtzumerken@gmail.com>
-Message-ID: <8f262830-7e73-09aa-e790-7222ab66038d@gmail.com>
-Date:   Wed, 12 Aug 2020 17:33:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=haCZp8d7OZAFbRh0ccsZ5DNIkLr16Zii89E0sXPAORI=;
+        b=ElfCSPAkRRt7SBFnc0u+U7gbLzFuneNLTlhDxX2SlhpntBW/FVA8GfLv77c/j9wnU8
+         h0k2ssK8xVHa0lLKnrvekZFPO3XroFntHlEsFToCNPLG9Zd4ACoid8frU9OMrU9lnssx
+         1SQXOb8QATTtbaDIsK/9bvMw9kigJDfdpghQ1Fz5tPxJwqtq/NjAjNRn7Ixl3YEijr7l
+         PdI1hrTN1j71mixzP+YMS3CqihMNU61KFt8Zga99lDwOty4hdyCpLC1FdlIthSbkVRmQ
+         vHDWFQSQ+DHImwh9mv86nzPVyyeXut57h2cFfEww/YBcH814rMrn1ZBJSPqQij37ZuG6
+         9HVQ==
+X-Gm-Message-State: AOAM531zx5NNiNnKQDbhVwtXymnbM2wRB2Dqok6fELFC3IDXv1gSsbRM
+        vaNyir4i5/DIfGDvk6NW9eAPemcEbhm1PVXCbKwz4g==
+X-Google-Smtp-Source: ABdhPJzXAxewiJp6SpmJoqd5oXPp1B2xCxwmqfuOwpOLAawT9RWGc8YhA071QWN3Hamy52lLh5Ro0K3VQnLOSTRCjNI=
+X-Received: by 2002:ad4:55ca:: with SMTP id bt10mr172844qvb.200.1597246906738;
+ Wed, 12 Aug 2020 08:41:46 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200812111920.06efa663@oasis.local.home>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20200804135817.5495-1-daniel.gutson@eclypsium.com>
+ <CAK8P3a0_fJ0BfD5Qvxdo0s7CbjPWaGA8QTgYhbXR=omafOHH4Q@mail.gmail.com>
+ <CAFmMkTHEm8k+5GZkVJbDZMEhMwpsqVKRb-hGskSpBstdLRuFyA@mail.gmail.com>
+ <CAK8P3a27bTYyn3N+tX=i_6f4KrQkOmkUA1zUQfvCW7qw6smSkQ@mail.gmail.com>
+ <CAFmMkTF9eVm0tpOKEy2rzdX=Scr3RwqHDFy_i24R3F5ok-4=eA@mail.gmail.com>
+ <CAK8P3a3mf8_Y4DWe3WuBO-Xo0N4Jj=-rrtFzD6w0TriGZPu1_g@mail.gmail.com> <CAFmMkTFzmC=aY0gR6urLu-8Oq8aeHBUWi-TodG8XhXKCcC057A@mail.gmail.com>
+In-Reply-To: <CAFmMkTFzmC=aY0gR6urLu-8Oq8aeHBUWi-TodG8XhXKCcC057A@mail.gmail.com>
+From:   Daniel Gutson <daniel@eclypsium.com>
+Date:   Wed, 12 Aug 2020 12:41:35 -0300
+Message-ID: <CAFmMkTE+2Qxo43bZkwCszEYbXFV22YdpLJD40gB6LgvnPbvdSA@mail.gmail.com>
+Subject: Re: [PATCH] mtd: spi-nor: intel-spi: Do not try to make the SPI flash
+ chip writable
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alex Bazhaniuk <alex@eclypsium.com>,
+        Richard Hughes <hughsient@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 12.08.20 um 17:19 schrieb Steven Rostedt:
-> On Wed, 12 Aug 2020 16:36:36 +0200
-> Christian König <ckoenig.leichtzumerken@gmail.com> wrote:
->
->> Am 12.08.20 um 16:17 schrieb Steven Rostedt:
->>> On Fri, Aug 07, 2020 at 03:36:58PM +0200, Christian König wrote:
->>>> Trace something useful instead of the pid of a kernel thread here.
->>>>
->>>> Signed-off-by: Christian König <christian.koenig@amd.com>
->>>> ---
->>>>    drivers/gpu/drm/amd/amdgpu/amdgpu_trace.h | 1 +
->>>>    1 file changed, 1 insertion(+)
->>>>
->>>> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_trace.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_trace.h
->>>> index 5da20fc166d9..07f99ef69d91 100644
->>>> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_trace.h
->>>> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_trace.h
->>>> @@ -228,6 +228,7 @@ TRACE_EVENT(amdgpu_vm_grab_id,
->>>>    			     ),
->>>>    
->>>>    	    TP_fast_assign(
->>>> +			   __entry->ent.pid = vm->task_info.pid;
->>> If the ent.pid is not the pid you are interested in for this trace event, just
->>> add a "pid" field to the trace event and place it there. Do not modify the
->>> generic pid that is recorded, as we would like that to be consistent for all
->>> trace events.
->> The problem my userspace guys have is that this doesn't work with
->> "trace-cmd -P $pid".
->>
->> But I think I can teach them how filters work :)
-> Yep, trace-cmd record -e event -f "pid == $pid"
->
->>> The "ent.pid" turns into "common_pid" in the field, leaving "pid" free to use.
->>> Other trace events (like sched_waking) record a pid field that is not the same
->>> as the pid of the executing task.
->> Yes, we thought about this alternative as well.
->>
->>> The "ent.pid" should always be the pid of the task that executed the event.
->> Why? For the case here we just execute a work item in the background for
->> an userspace process.
->>
->> Tracing the pid of the worker pool which executes it doesn't seem to
->> make to much sense.
-> Maybe not for you, but it does for me. All trace events show what
-> happened when it happened and who executed it. I like to see what
-> worker threads are executing. I may filter on the worker thread, and by
-> changing the ent.pid, I wont see what it is doing.
+ping
 
-That's enough explanation for me. Going with the separate pid field then.
-
-Thanks,
-Christian.
-
+On Tue, Aug 4, 2020 at 6:26 PM Daniel Gutson <daniel@eclypsium.com> wrote:
 >
-> That said, I think I may add a feature to a trace evnt for a special filter
-> to say, "test field to the set_event_pid", and if it exists in that
-> file to include that event in the filtered trace. This would include
-> sched_waking trace events as well.
+> On Tue, Aug 4, 2020 at 5:46 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> >
+> > On Tue, Aug 4, 2020 at 9:57 PM Daniel Gutson <daniel@eclypsium.com> wrote:
+> > > On Tue, Aug 4, 2020 at 4:06 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> > > > On Tue, Aug 4, 2020 at 5:49 PM Daniel Gutson <daniel@eclypsium.com> wrote:
+> > > > > On Tue, Aug 4, 2020 at 12:21 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> > > > >> On Tue, Aug 4, 2020 at 3:58 PM Daniel Gutson
+> > > > >> <daniel.gutson@eclypsium.com> wrote:
+> > > > >
+> > > > > What about just saying
+> > > > >
+> > > > > "This patch removes the attempt by the intel-spi-pci driver to
+> > > > > make the chip always writable."
+> > > >
+> > > > Yes, that is much better, though it still sounds like it would at the
+> > > > moment allow writing to the device from software without also
+> > > > setting the module parameter. I would say something like
+> > > >
+> > > > "Disallow overriding the write protection in the PCI driver
+> > > > with a module parameter and instead honor the current
+> > > > state of the write protection as set by the firmware."
+> > >
+> > > But wait, Mika, the author of the file, asked earlier not to remove
+> > > the module parameter of intel-spi, and just remove the unconditional
+> > > attempt to turn the chip writable in intle-spi-pci.
+> >
+> > Yes, and I think that is fine (aside from the inconsistency with bay trail
+> > that you have not commented on),
 >
-> That way "trace-cmd record -P $pid" will still work for your case.
+> There are two inconsistencies before any of my patches:
+> 1) in intel-spi.c: uses the module parameter only for bay trail.
+> 2) intel-spi.c uses a module parameter whereas intel-spi-pci doesn't
 >
-> -- Steve
+> My initial patch addressed #2 by also adding a module parameter to
+> intel-spi-pci,
+> but then some of you discouraged me to use module parameters.
+> Mika showed up and suggested to leave intel-spi.c as is (with its
+> module parameter),
+> and remove the code in intel-spi-pci that tried to turn the SPI chip
+> writable if the BIOS
+> was unlocked.
+>
+> > but that only touches the hardware
+> > write-protection, which doesn't really have any effect unless user
+> > space also configures the driver module to allow writing to the
+> > mtd device.
+> >
+> > > So I'm not touching intel-pci, just removing that code from
+> > > intel-spi-pci without adding a new module parameter.
+> > >
+> > > Are you aligned on this?
+> >
+> > One of us is still very confused about what the driver does.
+> > You seem to have gone back to saying that without the
+> > change a user could just write to the device even without
+> > passing the module parameter to intel-spi.ko?
+>
+> What I'm trying to say is that, if the BIOS is unlocked
+> (no driver involvement here), the intel-spi-pci turns the
+> chip writable even without changing the module parameter of intel-spi.
+> This is because the attempt to turn the chip writable occurs in
+> the probing of intel-spi-pci, that is, earlier than the intel-spi
+> initialization.
+>
+> >
+> > Maybe you should start by explaining what scenario you
+> > actually want to prevent here. Is it
+>
+> Was it clear from above?
+>
+> Before commenting below, it's important to note again that
+> the driver will succeed in turning the chip writable only if the
+> BIOS is unlocked by its build time specification.
+> The WPD field (Write Protect Disable) bit only has effect if
+> the BIOS is not locked. This WPD bit is the one that the intel-spi-pci
+> driver tries to set unconditionally. If the BIOS is locked, it will cause
+> no effect. But if the BIOS is not locked, the chip will
+> end up in Write Protect Disabled state.
+> My latest patch simply leaves alone the WPD bit in intel-spi-pci,
+> not trying to set it to 1.
+>
+> I'm not sure the options below are now fully compatible
+> with my explanation above.
+>
+> >
+> > a) the hardware write-protect bit getting changed, which
+> >     introduces the possibility of corrupting the flash even
+> >     if nothing tries to write to it,
+> >
+> > b) root users setting the device writable with the intention
+> >    of writing to it even though firmware has politely asked
+> >    for this not to be done (by setting the write-protect bit
+> >    but not preventing it from being disabled again), or
+> >
+> > c) a writeable mtd device showing up even without
+> >     the module parameter being set at all?
+> >
+> > I thought the initial patch was about c) which turned out
+> > to be a non-issue, and then the later patch being about b).
+> >
+> >      Arnd
+>
+>
+>
+> --
+> Daniel Gutson
+> Argentina Site Director
+> Enginieering Director
+> Eclypsium
+>
+> Below The Surface: Get the latest threat research and insights on
+> firmware and supply chain threats from the research team at Eclypsium.
+> https://eclypsium.com/research/#threatreport
 
+
+
+-- 
+Daniel Gutson
+Argentina Site Director
+Enginieering Director
+Eclypsium
+
+Below The Surface: Get the latest threat research and insights on
+firmware and supply chain threats from the research team at Eclypsium.
+https://eclypsium.com/research/#threatreport
