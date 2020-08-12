@@ -2,105 +2,128 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFCD1C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:21:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD3C1C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:22:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD1F321775
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:21:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8508C2083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:22:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727768AbgHLJVs convert rfc822-to-8bit (ORCPT
+        id S1727811AbgHLJWW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 05:21:48 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:3114 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726255AbgHLJVr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 05:21:47 -0400
-Received: from dggeme754-chm.china.huawei.com (unknown [172.30.72.54])
-        by Forcepoint Email with ESMTP id 182CEAA35F889125B018;
-        Wed, 12 Aug 2020 17:21:37 +0800 (CST)
-Received: from dggeme753-chm.china.huawei.com (10.3.19.99) by
- dggeme754-chm.china.huawei.com (10.3.19.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Wed, 12 Aug 2020 17:21:36 +0800
-Received: from dggeme753-chm.china.huawei.com ([10.7.64.70]) by
- dggeme753-chm.china.huawei.com ([10.7.64.70]) with mapi id 15.01.1913.007;
- Wed, 12 Aug 2020 17:21:36 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     David Miller <davem@davemloft.net>,
-        "xiyou.wangcong@gmail.com" <xiyou.wangcong@gmail.com>
-CC:     "kuba@kernel.org" <kuba@kernel.org>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "kafai@fb.com" <kafai@fb.com>,
-        "daniel@iogearbox.net" <daniel@iogearbox.net>,
-        "jakub@cloudflare.com" <jakub@cloudflare.com>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "zhang.lin16@zte.com.cn" <zhang.lin16@zte.com.cn>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] net: Fix potential memory leak in proto_register()
-Thread-Topic: [PATCH] net: Fix potential memory leak in proto_register()
-Thread-Index: AdZwUsoSFctrm9tgR62RlU4Cwvd7hw==
-Date:   Wed, 12 Aug 2020 09:21:36 +0000
-Message-ID: <a139c6e194974321822b4ef3d469aefe@huawei.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.174.176.252]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Wed, 12 Aug 2020 05:22:22 -0400
+Received: from mga12.intel.com ([192.55.52.136]:51828 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726255AbgHLJWW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 05:22:22 -0400
+IronPort-SDR: jFnhjxRwcQ3aHPOchsz20rCN2MqpV+O0CJjE6JrZl/QHG5JoTal6W/P75edOeH5ltEQIh1p1AQ
+ lffcaD8aEs3A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9710"; a="133448725"
+X-IronPort-AV: E=Sophos;i="5.76,303,1592895600"; 
+   d="scan'208";a="133448725"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2020 02:22:21 -0700
+IronPort-SDR: QzZvGoaNu725tcJ3kPSkdq+/bdS/VEYAMGvlLi7ua24oPzZQufo2dbS/0GPWcjIq40Pb9RDKf/
+ IrY3MqhaP5bg==
+X-IronPort-AV: E=Sophos;i="5.76,303,1592895600"; 
+   d="scan'208";a="369227319"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2020 02:22:17 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id CEBC920859; Wed, 12 Aug 2020 12:22:15 +0300 (EEST)
+Date:   Wed, 12 Aug 2020 12:22:15 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Bingbu Cao <bingbu.cao@linux.intel.com>
+Cc:     linux-i2c@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-acpi@vger.kernel.org, Bingbu Cao <bingbu.cao@intel.com>,
+        linux-media@vger.kernel.org,
+        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
+        Hyungwoo Yang <hyungwoo.yang@intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        rajmohan.mani@intel.com, Tomasz Figa <tfiga@chromium.org>,
+        "Qiu, Tian Shu" <tian.shu.qiu@intel.com>
+Subject: Re: [PATCH v5 3/6] ov5670: Support probe whilst the device is in a
+ low power state
+Message-ID: <20200812092215.GL16270@paasikivi.fi.intel.com>
+References: <20200810142747.12400-1-sakari.ailus@linux.intel.com>
+ <20200810142747.12400-4-sakari.ailus@linux.intel.com>
+ <7a1fa217-7fd1-1d36-0b1c-ad5d09ea11a0@linux.intel.com>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7a1fa217-7fd1-1d36-0b1c-ad5d09ea11a0@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all:
-David Miller <davem@davemloft.net> wrote:
->From: Cong Wang <xiyou.wangcong@gmail.com>
->Date: Tue, 11 Aug 2020 16:02:51 -0700
->
->>> @@ -3406,6 +3406,16 @@ static void sock_inuse_add(struct net *net, 
->>> int val)  }  #endif
->>>
->>> +static void tw_prot_cleanup(struct timewait_sock_ops *twsk_prot) {
->>> +       if (!twsk_prot)
->>> +               return;
->>> +       kfree(twsk_prot->twsk_slab_name);
->>> +       twsk_prot->twsk_slab_name = NULL;
->>> +       kmem_cache_destroy(twsk_prot->twsk_slab);
->> 
->> Hmm, are you sure you can free the kmem cache name before 
->> kmem_cache_destroy()? To me, it seems kmem_cache_destroy() frees the 
->> name via slab_kmem_cache_release() via kfree_const().
->> With your patch, we have a double-free on the name?
->> 
->> Or am I missing anything?
->
->Yep, there is a double free here.
->
->Please fix this.
+Hi Bingbu,
 
-Many thanks for both of you to point this issue out. But I'am not really understand, could you please explain it more?
-As far as I can see, the double free path is:
-1. kfree(twsk_prot->twsk_slab_name)
-2. kmem_cache_destroy 
-	--> shutdown_memcg_caches
-		--> shutdown_cache
-			--> slab_kmem_cache_release
-				--> kfree_const(s->name)
-But twsk_prot->twsk_slab_name is allocated from kasprintf via kmalloc_track_caller while twsk_prot->twsk_slab->name is allocated 
-via kstrdup_const. So I think twsk_prot->twsk_slab_name and twsk_prot->twsk_slab->name point to different memory, and there is no double free.
+Thanks for the review.
 
-Or am I missing anything?
+On Wed, Aug 12, 2020 at 05:12:28PM +0800, Bingbu Cao wrote:
+> 
+> 
+> On 8/10/20 10:27 PM, Sakari Ailus wrote:
+> > Tell ACPI device PM code that the driver supports the device being in a
+> > low power state when the driver's probe function is entered.
+> > 
+> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > ---
+> >  drivers/media/i2c/ov5670.c | 23 ++++++++++++++---------
+> >  1 file changed, 14 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/drivers/media/i2c/ov5670.c b/drivers/media/i2c/ov5670.c
+> > index f26252e35e08d..1f75b888d2a18 100644
+> > --- a/drivers/media/i2c/ov5670.c
+> > +++ b/drivers/media/i2c/ov5670.c
+> > @@ -2456,6 +2456,7 @@ static int ov5670_probe(struct i2c_client *client)
+> >  	struct ov5670 *ov5670;
+> >  	const char *err_msg;
+> >  	u32 input_clk = 0;
+> > +	bool low_power;
+> >  	int ret;
+> >  
+> >  	device_property_read_u32(&client->dev, "clock-frequency", &input_clk);
+> > @@ -2472,11 +2473,14 @@ static int ov5670_probe(struct i2c_client *client)
+> >  	/* Initialize subdev */
+> >  	v4l2_i2c_subdev_init(&ov5670->sd, client, &ov5670_subdev_ops);
+> >  
+> > -	/* Check module identity */
+> > -	ret = ov5670_identify_module(ov5670);
+> > -	if (ret) {
+> > -		err_msg = "ov5670_identify_module() error";
+> > -		goto error_print;
+> > +	low_power = acpi_dev_state_low_power(&client->dev);
+> > +	if (!low_power) {
+> > +		/* Check module identity */
+> > +		ret = ov5670_identify_module(ov5670);
+> > +		if (ret) {
+> > +			err_msg = "ov5670_identify_module() error";
+> > +			goto error_print;
+> > +	
+> 
+> Sakari, thanks for your patch.
+> one question - With this change, there will be no chance for driver to guarantee
+> that the camera sensor plugged in is the camera that the matched driver actually
+> can drive until try to streaming the camera, so is it necessary to return
+> appropriate error in .s_stream ops to notify user it is not the hardware that
+> current driver can drive? if no other better way.
 
-By the way, req_prot_cleanup() do the same things, i.e. free the slab_name before involve kmem_cache_destroy(). If there is a double
-free, so as here?
+Indeed sensor identification is now skipped in probe. I'll add that for v6
+--- and check other drivers, too.
 
-Thanks.
+-- 
+Kind regards,
 
+Sakari Ailus
