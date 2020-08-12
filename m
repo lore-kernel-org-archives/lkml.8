@@ -2,194 +2,194 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE750C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12F86C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:37:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB7C320885
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:37:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="crr6oK1R"
+	by mail.kernel.org (Postfix) with ESMTP id EF2FB2224D
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 09:37:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbgHLJhm (ORCPT
+        id S1727115AbgHLJhp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 05:37:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58120 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726712AbgHLJhl (ORCPT
+        Wed, 12 Aug 2020 05:37:45 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:10388 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727048AbgHLJhn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 05:37:43 -0400
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07C9IUGi019108;
         Wed, 12 Aug 2020 05:37:41 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B45AEC06178A
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 02:37:40 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id f7so1403618wrw.1
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 02:37:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xUJA54KTzQJyhxDXIqR9ReX2WN+bK5CjNuAWDhsdb8w=;
-        b=crr6oK1RJrz1nT63FwEgbS3gquu/Ncq38lBd42GrnhhkTBXb4cMsIlG2foOG5WIA8O
-         WkSv44SczGIHDr0xQlOkRWLczZs2351YnlOSc/9gsjx0xFZJRC7wcaB7NoFJsWsGG+SN
-         SmsMBj7Jo5Dj4AXLZjJeu86fS842ynrwKjltjgDHVc97wIM0xMlbrGgFu23CA43WZEqK
-         JluWeEigpXi6/Zq/Dk5dOHooEgLZQJFZYbRixqFTNYsugm2NhqJb7gSCxy2lM10cX9e1
-         mT9KIr53nqS+l1kKtdPhUZ2wzeIcpbb64uuZIZ0X9Ks7YmGuJOwkG3Tl09d+rKzm2r/a
-         m42w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xUJA54KTzQJyhxDXIqR9ReX2WN+bK5CjNuAWDhsdb8w=;
-        b=DI5RErcAtTUejOkTvEWnYSUb4SgAXjHoSup0VZQ1swhOAPnVQCm4wbnR93ewu4oB+k
-         t6gW3vGM47Ed4DChhVHClsikvV0XAu2b/GsIiO9o2o3mmpLBG0QVUvAQv1cc2emugELB
-         Y7Qi7wRoW+9UqDlP2h/BXj82G5Bc9EkHOrxwVAoyligH9whmRpkYxf5TIcbdPSECwbJa
-         62D4EOE/ij+w2uTLUzISIG20xux7U1/UXCbAfzCM51RE4KqFCQBy9tg7dCbmi+hKILUB
-         GoP3DHW3eontM4vaCrTlGj1qH56tLpAr1zJNgIc1NHt+xvEsO2zYLqff7sm7oBENDoSp
-         Pq2A==
-X-Gm-Message-State: AOAM530mUk+Sjz17fZhiUczu7BUtdcXCqnJwHhmO2W2+4FfZgRdMadkZ
-        v1SugRwskA44KfXMT3URfzhvKYTOdW82vKPx+1zgCw==
-X-Google-Smtp-Source: ABdhPJzyVACqW0P5GX9T7WEr0tB2SFQ6077mmdaufTh9FO15OFL7AzToRKYCZQO33CyJbC41uGaJ5fCGYkTuz7UxjFw=
-X-Received: by 2002:a5d:43c4:: with SMTP id v4mr34386550wrr.426.1597225059226;
- Wed, 12 Aug 2020 02:37:39 -0700 (PDT)
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 32sry4d0bs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 12 Aug 2020 05:37:41 -0400
+Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 07C9bd99015869
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Wed, 12 Aug 2020 05:37:40 -0400
+Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Wed, 12 Aug
+ 2020 02:37:38 -0700
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
+ (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Wed, 12 Aug 2020 02:37:38 -0700
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 07C9batL011908;
+        Wed, 12 Aug 2020 05:37:36 -0400
+From:   Cristian Pop <cristian.pop@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <jic23@kernel.org>, Cristian Pop <cristian.pop@analog.com>
+Subject: [RFC PATCH] iio: core: Add optional symbolic label to a device channel
+Date:   Wed, 12 Aug 2020 12:38:29 +0300
+Message-ID: <20200812093829.7354-1-cristian.pop@analog.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <1596541616-27688-1-git-send-email-rnayak@codeaurora.org> <1596541616-27688-3-git-send-email-rnayak@codeaurora.org>
-In-Reply-To: <1596541616-27688-3-git-send-email-rnayak@codeaurora.org>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 12 Aug 2020 11:37:03 +0200
-Message-ID: <CAPDyKFoRv49jKi-4UW6EVyAzo1emb=rs2h7CWavON+JoXXh1kA@mail.gmail.com>
-Subject: Re: [PATCH 2/3] PM / Domains: Add support for 'assigned-performance-states'
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-12_02:2020-08-11,2020-08-12 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 mlxscore=0
+ lowpriorityscore=0 clxscore=1015 priorityscore=1501 adultscore=0
+ phishscore=0 suspectscore=0 impostorscore=0 malwarescore=0 spamscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008120066
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 4 Aug 2020 at 13:47, Rajendra Nayak <rnayak@codeaurora.org> wrote:
->
-> For devices which have 'assigned-performance-states' specified in DT,
-> set the specified performance state during attach and drop it on detach.
-> Also drop/set as part of runtime suspend/resume callbacks.
+If a label is defined in the device tree for this channel add that
+to the channel specific attributes. This is useful for userspace to
+be able to identify an individual channel.
 
-To allow flexibility, I would prefer to keep the performance state
-being orthogonal to the power on/off state for a genpd.
+Signed-off-by: Cristian Pop <cristian.pop@analog.com>
+---
+ drivers/iio/industrialio-core.c | 45 +++++++++++++++++++++++++++++++--
+ include/linux/iio/iio.h         |  2 ++
+ include/linux/iio/types.h       |  1 +
+ 3 files changed, 46 insertions(+), 2 deletions(-)
 
-Therefore, I am wondering if this is better handled by the consumer
-driver instead?
+diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+index 1527f01a44f1..d7c2405bc905 100644
+--- a/drivers/iio/industrialio-core.c
++++ b/drivers/iio/industrialio-core.c
+@@ -135,6 +135,7 @@ static const char * const iio_modifier_names[] = {
+ /* relies on pairs of these shared then separate */
+ static const char * const iio_chan_info_postfix[] = {
+ 	[IIO_CHAN_INFO_RAW] = "raw",
++	[IIO_CHAN_INFO_LABEL] = "label",
+ 	[IIO_CHAN_INFO_PROCESSED] = "input",
+ 	[IIO_CHAN_INFO_SCALE] = "scale",
+ 	[IIO_CHAN_INFO_OFFSET] = "offset",
+@@ -653,14 +654,18 @@ static ssize_t iio_read_channel_info(struct device *dev,
+ 	int ret;
+ 	int val_len = 2;
+ 
+-	if (indio_dev->info->read_raw_multi)
++	if (indio_dev->info->read_raw_multi) {
+ 		ret = indio_dev->info->read_raw_multi(indio_dev, this_attr->c,
+ 							INDIO_MAX_RAW_ELEMENTS,
+ 							vals, &val_len,
+ 							this_attr->address);
+-	else
++	} else {
+ 		ret = indio_dev->info->read_raw(indio_dev, this_attr->c,
+ 				    &vals[0], &vals[1], this_attr->address);
++		if (ret < 0 && this_attr->address == IIO_CHAN_INFO_LABEL &&
++			this_attr->c->label_name)
++			return sprintf(buf, "%s\n", this_attr->c->label_name);
++	}
+ 
+ 	if (ret < 0)
+ 		return ret;
+@@ -1383,6 +1388,37 @@ static ssize_t iio_store_timestamp_clock(struct device *dev,
+ 	return len;
+ }
+ 
++static int iio_device_add_channel_label(struct iio_dev *indio_dev,
++					struct device_node *np)
++{
++	unsigned int num_child;
++	struct iio_chan_spec *chan;
++	struct device_node *child;
++	const char *label;
++	int crt_ch = 0;
++
++	num_child = of_get_available_child_count(np);
++	if (!num_child)
++		return 0;
++
++	for_each_available_child_of_node(np, child) {
++		if (of_property_read_u32(child, "reg", &crt_ch))
++			continue;
++
++		if (crt_ch >= indio_dev->num_channels)
++			continue;
++
++		if (of_property_read_string(child, "label", &label))
++			continue;
++
++		chan = (struct iio_chan_spec *)&indio_dev->channels[crt_ch];
++		chan->info_mask_separate |= BIT(IIO_CHAN_INFO_LABEL);
++		chan->label_name = label;
++	}
++
++	return 0;
++}
++
+ static DEVICE_ATTR(current_timestamp_clock, S_IRUGO | S_IWUSR,
+ 		   iio_show_timestamp_clock, iio_store_timestamp_clock);
+ 
+@@ -1399,6 +1435,11 @@ static int iio_device_register_sysfs(struct iio_dev *indio_dev)
+ 			attrcount_orig++;
+ 	}
+ 	attrcount = attrcount_orig;
++
++	ret = iio_device_add_channel_label(indio_dev, indio_dev->dev.parent->of_node);
++	if (ret < 0)
++		return ret;
++
+ 	/*
+ 	 * New channel registration method - relies on the fact a group does
+ 	 * not need to be initialized if its name is NULL.
+diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
+index a1be82e74c93..39209f3b62be 100644
+--- a/include/linux/iio/iio.h
++++ b/include/linux/iio/iio.h
+@@ -223,6 +223,7 @@ struct iio_event_spec {
+  *			correspond to the first name that the channel is referred
+  *			to by in the datasheet (e.g. IND), or the nearest
+  *			possible compound name (e.g. IND-INC).
++ * @label_name:		Unique name to identify which channel this is.
+  * @modified:		Does a modifier apply to this channel. What these are
+  *			depends on the channel type.  Modifier is set in
+  *			channel2. Examples are IIO_MOD_X for axial sensors about
+@@ -260,6 +261,7 @@ struct iio_chan_spec {
+ 	const struct iio_chan_spec_ext_info *ext_info;
+ 	const char		*extend_name;
+ 	const char		*datasheet_name;
++	const char		*label_name;
+ 	unsigned		modified:1;
+ 	unsigned		indexed:1;
+ 	unsigned		output:1;
+diff --git a/include/linux/iio/types.h b/include/linux/iio/types.h
+index e6fd3645963c..c8f65f476eb2 100644
+--- a/include/linux/iio/types.h
++++ b/include/linux/iio/types.h
+@@ -34,6 +34,7 @@ enum iio_available_type {
+ 
+ enum iio_chan_info_enum {
+ 	IIO_CHAN_INFO_RAW = 0,
++	IIO_CHAN_INFO_LABEL,
+ 	IIO_CHAN_INFO_PROCESSED,
+ 	IIO_CHAN_INFO_SCALE,
+ 	IIO_CHAN_INFO_OFFSET,
+-- 
+2.17.1
 
-Kind regards
-Uffe
-
->
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> ---
->  drivers/base/power/domain.c | 27 +++++++++++++++++++++++++++
->  include/linux/pm_domain.h   |  1 +
->  2 files changed, 28 insertions(+)
->
-> diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
-> index 0a01df60..8704823 100644
-> --- a/drivers/base/power/domain.c
-> +++ b/drivers/base/power/domain.c
-> @@ -810,6 +810,10 @@ static int genpd_runtime_suspend(struct device *dev)
->         if (irq_safe_dev_in_no_sleep_domain(dev, genpd))
->                 return 0;
->
-> +       /* Drop the assigned performance state */
-> +       if (dev_gpd_data(dev)->assigned_pstate)
-> +               dev_pm_genpd_set_performance_state(dev, 0);
-> +
->         genpd_lock(genpd);
->         genpd_power_off(genpd, true, 0);
->         genpd_unlock(genpd);
-> @@ -829,6 +833,7 @@ static int genpd_runtime_resume(struct device *dev)
->  {
->         struct generic_pm_domain *genpd;
->         struct gpd_timing_data *td = &dev_gpd_data(dev)->td;
-> +       unsigned int assigned_pstate = dev_gpd_data(dev)->assigned_pstate;
->         bool runtime_pm = pm_runtime_enabled(dev);
->         ktime_t time_start;
->         s64 elapsed_ns;
-> @@ -857,6 +862,9 @@ static int genpd_runtime_resume(struct device *dev)
->         if (ret)
->                 return ret;
->
-> +       /* Set the assigned performance state */
-> +       if (assigned_pstate)
-> +               dev_pm_genpd_set_performance_state(dev, assigned_pstate);
->   out:
->         /* Measure resume latency. */
->         time_start = 0;
-> @@ -890,6 +898,8 @@ static int genpd_runtime_resume(struct device *dev)
->  err_poweroff:
->         if (!pm_runtime_is_irq_safe(dev) ||
->                 (pm_runtime_is_irq_safe(dev) && genpd_is_irq_safe(genpd))) {
-> +               if (assigned_pstate)
-> +                       dev_pm_genpd_set_performance_state(dev, 0);
->                 genpd_lock(genpd);
->                 genpd_power_off(genpd, true, 0);
->                 genpd_unlock(genpd);
-> @@ -2405,6 +2415,12 @@ static void genpd_dev_pm_detach(struct device *dev, bool power_off)
->
->         dev_dbg(dev, "removing from PM domain %s\n", pd->name);
->
-> +       /* Drop the assigned performance state */
-> +       if (dev_gpd_data(dev)->assigned_pstate) {
-> +               dev_pm_genpd_set_performance_state(dev, 0);
-> +               dev_gpd_data(dev)->assigned_pstate = 0;
-> +       }
-> +
->         for (i = 1; i < GENPD_RETRY_MAX_MS; i <<= 1) {
->                 ret = genpd_remove_device(pd, dev);
->                 if (ret != -EAGAIN)
-> @@ -2442,6 +2458,7 @@ static void genpd_dev_pm_sync(struct device *dev)
->  static int __genpd_dev_pm_attach(struct device *dev, struct device *base_dev,
->                                  unsigned int index, bool power_on)
->  {
-> +       unsigned int assigned_pstate;
->         struct of_phandle_args pd_args;
->         struct generic_pm_domain *pd;
->         int ret;
-> @@ -2485,6 +2502,16 @@ static int __genpd_dev_pm_attach(struct device *dev, struct device *base_dev,
->         if (ret)
->                 genpd_remove_device(pd, dev);
->
-> +       /* Set the assigned performance state */
-> +       if (!of_property_read_u32_index(base_dev->of_node,
-> +                                       "assigned-performance-states",
-> +                                       index, &assigned_pstate)) {
-> +               if (assigned_pstate) {
-> +                       dev_pm_genpd_set_performance_state(dev, assigned_pstate);
-> +                       dev_gpd_data(dev)->assigned_pstate = assigned_pstate;
-> +               }
-> +       }
-> +
->         return ret ? -EPROBE_DEFER : 1;
->  }
->
-> diff --git a/include/linux/pm_domain.h b/include/linux/pm_domain.h
-> index 9ec78ee..4a415ee 100644
-> --- a/include/linux/pm_domain.h
-> +++ b/include/linux/pm_domain.h
-> @@ -180,6 +180,7 @@ struct generic_pm_domain_data {
->         struct notifier_block nb;
->         int cpu;
->         unsigned int performance_state;
-> +       unsigned int assigned_pstate;
->         void *data;
->  };
->
-> --
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
->
