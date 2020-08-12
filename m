@@ -2,32 +2,32 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0353C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:03:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14EEFC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A94820855
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:03:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E794320829
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 14:03:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726648AbgHLODT (ORCPT
+        id S1727006AbgHLODY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 10:03:19 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:40645 "EHLO
+        Wed, 12 Aug 2020 10:03:24 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:3074 "EHLO
         relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726897AbgHLODO (ORCPT
+        by vger.kernel.org with ESMTP id S1726976AbgHLODV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 10:03:14 -0400
+        Wed, 12 Aug 2020 10:03:21 -0400
 X-IronPort-AV: E=Sophos;i="5.76,304,1592838000"; 
-   d="scan'208";a="54444354"
+   d="scan'208";a="54444371"
 Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 12 Aug 2020 23:03:13 +0900
+  by relmlie5.idc.renesas.com with ESMTP; 12 Aug 2020 23:03:19 +0900
 Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id D9AE34007553;
-        Wed, 12 Aug 2020 23:03:09 +0900 (JST)
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 1A18A40078D1;
+        Wed, 12 Aug 2020 23:03:16 +0900 (JST)
 From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
@@ -39,12 +39,10 @@ To:     Geert Uytterhoeven <geert+renesas@glider.be>,
 Cc:     dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Prabhakar <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Marian-Cristian Rotariu 
-        <marian-cristian.rotariu.rb@bp.renesas.com>
-Subject: [PATCH 7/9] drm: rcar-du: lvds: Add support for R8A774E1 SoC
-Date:   Wed, 12 Aug 2020 15:02:15 +0100
-Message-Id: <20200812140217.24251-8-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 9/9] arm64: dts: renesas: r8a774e1-hihope-rzg2h: Setup DU clocks
+Date:   Wed, 12 Aug 2020 15:02:17 +0100
+Message-Id: <20200812140217.24251-10-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200812140217.24251-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 References: <20200812140217.24251-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
@@ -53,30 +51,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+Setup up the required clocks for the DU to be functional.
 
-The LVDS encoder on RZ/G2H (R8A774E1) SoC is identical to R-Car Gen3 so
-just reuse the rcar_lvds_gen3_info structure to hookup R8A774E1 to LVDS
-encoder driver.
-
-Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 ---
- drivers/gpu/drm/rcar-du/rcar_lvds.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/renesas/r8a774e1-hihope-rzg2h.dts | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/gpu/drm/rcar-du/rcar_lvds.c b/drivers/gpu/drm/rcar-du/rcar_lvds.c
-index ab0d49618cf9..424ca2b7d9ac 100644
---- a/drivers/gpu/drm/rcar-du/rcar_lvds.c
-+++ b/drivers/gpu/drm/rcar-du/rcar_lvds.c
-@@ -987,6 +987,7 @@ static const struct of_device_id rcar_lvds_of_table[] = {
- 	{ .compatible = "renesas,r8a774a1-lvds", .data = &rcar_lvds_gen3_info },
- 	{ .compatible = "renesas,r8a774b1-lvds", .data = &rcar_lvds_gen3_info },
- 	{ .compatible = "renesas,r8a774c0-lvds", .data = &rcar_lvds_r8a77990_info },
-+	{ .compatible = "renesas,r8a774e1-lvds", .data = &rcar_lvds_gen3_info },
- 	{ .compatible = "renesas,r8a7790-lvds", .data = &rcar_lvds_gen2_info },
- 	{ .compatible = "renesas,r8a7791-lvds", .data = &rcar_lvds_gen2_info },
- 	{ .compatible = "renesas,r8a7793-lvds", .data = &rcar_lvds_gen2_info },
+diff --git a/arch/arm64/boot/dts/renesas/r8a774e1-hihope-rzg2h.dts b/arch/arm64/boot/dts/renesas/r8a774e1-hihope-rzg2h.dts
+index cdbe527e9340..12f9242e263b 100644
+--- a/arch/arm64/boot/dts/renesas/r8a774e1-hihope-rzg2h.dts
++++ b/arch/arm64/boot/dts/renesas/r8a774e1-hihope-rzg2h.dts
+@@ -24,3 +24,14 @@
+ 		reg = <0x5 0x00000000 0x0 0x80000000>;
+ 	};
+ };
++
++&du {
++	clocks = <&cpg CPG_MOD 724>,
++		 <&cpg CPG_MOD 723>,
++		 <&cpg CPG_MOD 721>,
++		 <&versaclock5 1>,
++		 <&x302_clk>,
++		 <&versaclock5 2>;
++	clock-names = "du.0", "du.1", "du.3",
++		      "dclkin.0", "dclkin.1", "dclkin.3";
++};
 -- 
 2.17.1
 
