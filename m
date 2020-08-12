@@ -2,81 +2,138 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C099C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 07:00:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6536C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 07:01:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7870D204FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 07:00:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4AAE204FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 07:01:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="aTSr7viQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726756AbgHLHAb (ORCPT
+        id S1726830AbgHLHBe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 03:00:31 -0400
-Received: from mga14.intel.com ([192.55.52.115]:19560 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726430AbgHLHAT (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 03:00:19 -0400
-IronPort-SDR: IBaa/VuVjyzLqfEzBc+/KKDSLWa2BwpfElKUXd8IxrmzwIr6IUYBfFg7bFTw12tfPOteu9iefK
- T0EHgwBS8pRg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9710"; a="153123237"
-X-IronPort-AV: E=Sophos;i="5.76,303,1592895600"; 
-   d="scan'208";a="153123237"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2020 00:00:18 -0700
-IronPort-SDR: rkDGsL7AV1TKr1aeAiGEWGhM+jb9xINC8K3vDWH4vhPZkUIUvxQH7p9JDx/0atYOxUl5G69f04
- CCBnrBYnl68Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,303,1592895600"; 
-   d="scan'208";a="494932590"
-Received: from kbl-ppc.sh.intel.com ([10.239.159.55])
-  by fmsmga006.fm.intel.com with ESMTP; 12 Aug 2020 00:00:16 -0700
-From:   Jin Yao <yao.jin@linux.intel.com>
-To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com
-Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com, like.xu@linux.intel.com,
-        Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH] perf parse-events: Set exclude_guest for user-space counting
-Date:   Wed, 12 Aug 2020 14:59:53 +0800
-Message-Id: <20200812065953.22143-1-yao.jin@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 12 Aug 2020 03:01:34 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:35640 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726784AbgHLHBe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 03:01:34 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597215693; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=1lYd7mEpSaT77nxAeNLUtAPE92rtIeFulVxU9PJ93dc=; b=aTSr7viQ2G6b7kNqdnxe23PB0xaT/Cj5AJ0Rj2aWBx/tJue/9qjBBCn/N5F/+0T+iedMBzhE
+ spKMxg+GbF7Y7TFOsKfUxoZQD1n9GmgMC8lQW4o1omrHgPXHoEFkDIgsPLuINjPqdAFtRolo
+ gZ766wNBwZFgJW492yeEf3jF0+k=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n08.prod.us-west-2.postgun.com with SMTP id
+ 5f339390668ab3fef6158581 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 12 Aug 2020 07:00:32
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 8BD0BC43395; Wed, 12 Aug 2020 07:00:31 +0000 (UTC)
+Received: from [10.110.76.76] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: wcheng)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 375A2C433C6;
+        Wed, 12 Aug 2020 07:00:30 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 375A2C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
+Subject: Re: [RFC v4 1/3] usb: dwc3: Resize TX FIFOs to meet EP bursting
+ requirements
+To:     Peter Chen <hzpeterchen@gmail.com>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, balbi@kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        robh+dt@kernel.org, lkml <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        USB list <linux-usb@vger.kernel.org>, jackp@codeaurora.org
+References: <20200624022848.7765-1-wcheng@codeaurora.org>
+ <20200624022848.7765-2-wcheng@codeaurora.org>
+ <CAL411-qvuCTib1VBV9uRwL-rEHkefFLm1x-WLLP4kYzcNtQd_g@mail.gmail.com>
+From:   Wesley Cheng <wcheng@codeaurora.org>
+Message-ID: <47f1568e-ba8f-b7f2-9f67-a891c0e06541@codeaurora.org>
+Date:   Wed, 12 Aug 2020 00:00:29 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
+MIME-Version: 1.0
+In-Reply-To: <CAL411-qvuCTib1VBV9uRwL-rEHkefFLm1x-WLLP4kYzcNtQd_g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently if we run 'perf record -e cycles:u', exclude_guest is 0.
 
-But it doesn't make sense that we request for user-space counting
-but we also get the guest report.
 
-To keep perf semantics consistent and clear, this patch sets
-exclude_guest for user-space counting.
+On 8/11/2020 7:22 PM, Peter Chen wrote:
+> On Wed, Jun 24, 2020 at 10:31 AM Wesley Cheng <wcheng@codeaurora.org> wrote:
+>>
+>> Some devices have USB compositions which may require multiple endpoints
+>> that support EP bursting.  HW defined TX FIFO sizes may not always be
+>> sufficient for these compositions.  By utilizing flexible TX FIFO
+>> allocation, this allows for endpoints to request the required FIFO depth to
+>> achieve higher bandwidth.  With some higher bMaxBurst configurations, using
+>> a larger TX FIFO size results in better TX throughput.
+>>
+>> Ensure that one TX FIFO is reserved for every IN endpoint.  This allows for
+>> the FIFO logic to prevent running out of FIFO space.
+>>
+> 
+> You may do this for only allocated endpoints, but you need override
+> default .match_ep
+> API. See cdns3/gadget.c and cdns3/ep0.c as an example.
+> 
+> Peter
+> 
 
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
----
- tools/perf/util/parse-events.c | 2 ++
- 1 file changed, 2 insertions(+)
+Hi Peter,
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 9f7260e69113..4d809f1fe269 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -1794,6 +1794,8 @@ static int get_event_modifier(struct event_modifier *mod, char *str,
- 		if (*str == 'u') {
- 			if (!exclude)
- 				exclude = eu = ek = eh = 1;
-+			if (!exclude_GH)
-+				eG = 1;
- 			eu = 0;
- 		} else if (*str == 'k') {
- 			if (!exclude)
+Thank you for your input.  I've actually considered doing some
+matching/resizing in the .match_ep route as well, but it doesn't work
+well for situations where multiple configurations are in play. The
+reason being that if you look at the epautoconf APIs, the configfs
+driver will use the usb_ep_autoconfig_reset() to reset the endpoints
+claimed between initialization of each configuration.  This means that
+the epautoconf driver expects to re-use the usb_endpoints:
+
+static int configfs_composite_bind(struct usb_gadget *gadget,
+	struct usb_gadget_driver *gdriver)
+{
+...
+
+/* Go through all configs, attach all functions */
+list_for_each_entry(c, &gi->cdev.configs, list) {
+...
+list_for_each_entry_safe(f, tmp, &cfg->func_list, list) {
+	list_del(&f->list);
+	ret = usb_add_function(c, f);
+	if (ret) {
+		list_add(&f->list, &cfg->func_list);
+		goto err_purge_funcs;
+	}
+}
+usb_ep_autoconfig_reset(cdev->gadget);
+}
+
+So in this situation, I wouldn't want the dwc3 gadget driver to assign a
+different dwc3 ep for endpoints in each configuration, when we know that
+only one set of EPs will be active when the host chooses.  I hope I
+understood your feedback correctly, and definitely appreciate the input!
+
+Thanks
+Wesley
+
 -- 
-2.17.1
-
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
