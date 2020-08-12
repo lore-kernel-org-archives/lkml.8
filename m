@@ -2,153 +2,218 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A999CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 23:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF2FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 23:08:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 856DC20675
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 23:05:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597273528;
-	bh=6kwxpshrOlbOHxWnmXC6+dWtt2L5X/Drj58h8rpdMCA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=XodB/smtICVU0v2+DVrd/6/VpMhwYT/JgNv3LylFSEUq6r5bkICXaSlhxXJL0PSo+
-	 amVZ7aDTH42P7ojQEVmuiSOz48Kx87GWNiYExY9q0gquJY0aHRlthe+6jcfjr17VXz
-	 lYGqPF26e7H4Ywcg/KnH6rkRniynEYnLGt1wxmqM=
+	by mail.kernel.org (Postfix) with ESMTP id 21B742076B
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 23:08:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="cED+jLi2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726622AbgHLXFX (ORCPT
+        id S1726564AbgHLXIw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 19:05:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56976 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726533AbgHLXFV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 19:05:21 -0400
-Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B05822BF3;
-        Wed, 12 Aug 2020 23:05:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597273520;
-        bh=6kwxpshrOlbOHxWnmXC6+dWtt2L5X/Drj58h8rpdMCA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=pXDZRt76CPWxVlpilBeAf66pO/Ch1+UOaSOgdUpIGMcw2xAS2mFHBEgkKJVucyrd/
-         hFrdQmO7EEU0DOv8a5XHHMAntvFEpH8ijK+mCysryubzOS2R2XGypW54K9swm6SsIs
-         b7zU39V5JMU64Uhe2oipgDLWWHGgSe5VXnIpigps=
-Received: by mail-oi1-f170.google.com with SMTP id u63so3384377oie.5;
-        Wed, 12 Aug 2020 16:05:20 -0700 (PDT)
-X-Gm-Message-State: AOAM531IZBzkm9SW7u4Ll0dz2BzE1TEIB7GJrdP7SZFkd9Fl6578K6/D
-        TZuN3gv5Y+jYhGEA04MJz9gQHCjYIc3va2d6mQ==
-X-Google-Smtp-Source: ABdhPJx2qQebZiNBPQzgE1fpdypeYG9ycnPVX3JxYluiX5nbkNkxeZlpxpCsMAonDMWnL7JIOVI286FePABwvHucHl8=
-X-Received: by 2002:aca:bb82:: with SMTP id l124mr1235268oif.106.1597273520003;
- Wed, 12 Aug 2020 16:05:20 -0700 (PDT)
+        Wed, 12 Aug 2020 19:08:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42606 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726518AbgHLXIw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 19:08:52 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15DE9C061383
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 16:08:52 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id s23so2905205qtq.12
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 16:08:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=O09p7FBmkSC5bGt4yJC6JUfHRS16trGW04HihAW61QI=;
+        b=cED+jLi2wxGJ5jNf3hfzY7UYB1D/T5SPg+9q5PI0/A1zSo2s/2u6FnrlgbQ41nheam
+         wV5sMRbfBT0j+hcks46gxh35qt7po6+sEYaUIiBCl7sK/YpOa4OaTwuDD7DYecBmP7+X
+         mftXQ87YgNNWUpgepc752xesqMjItZAOsrejE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=O09p7FBmkSC5bGt4yJC6JUfHRS16trGW04HihAW61QI=;
+        b=thzE9gKZ4XaKj2dHb6KlF2zfi5zscAkp0ZnQw5FLv0EaoM04Zf454khk4uP0DK1HjH
+         TPlNvc3tcufVlS3Mdzt1sUfKs8P8hSITqOfOj9OVYLURFvFu/ayeQez9J7wTqV8VR2GF
+         YIUIHhkdHNfebFPZosJkZREHatUWGkoVYYNBNnA32FcEVsrf6ERrcU6rNmHsw4QFUSVl
+         gJfvAH6he3LJZm4T6LGXQFrGXRJheIJHAInFOCisVAUPf7uDlwI+r/91matFBfdWaAlL
+         vKKoziYYVeMEn6Ws4JWTsXKA4nQ1vG0bsHrDWzJwrDpLusvcIcXn4Q58Fw1EE2KyQ6XY
+         30NQ==
+X-Gm-Message-State: AOAM5334hU4YQGYydk86hXyq5TfDcn+GwA32JqSp8YjUgxQCxDhvZmNI
+        44doRUcbnZmdU5cjFfUHi9Lm0Q==
+X-Google-Smtp-Source: ABdhPJx7Qnn2THzxVwChuB1Pm240qxW2qSoUszK9W+Y1a3KYo3zz5BkQ9gGflr0TjO54oHPuDGBk7Q==
+X-Received: by 2002:ac8:4256:: with SMTP id r22mr2228530qtm.367.1597273731097;
+        Wed, 12 Aug 2020 16:08:51 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:cad3:ffff:feb3:bd59])
+        by smtp.gmail.com with ESMTPSA id l45sm4407826qtf.11.2020.08.12.16.08.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Aug 2020 16:08:50 -0700 (PDT)
+Date:   Wed, 12 Aug 2020 19:08:50 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     "Li, Aubrey" <aubrey.li@linux.intel.com>
+Cc:     viremana@linux.microsoft.com,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Glexiner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vineeth Pillai <vineethrp@gmail.com>,
+        Chen Yu <yu.c.chen@intel.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        "Ning, Hongyu" <hongyu.ning@linux.intel.com>,
+        =?utf-8?B?YmVuYmppYW5nKOiSi+W9qik=?= <benbjiang@tencent.com>
+Subject: Re: [RFC PATCH 00/16] Core scheduling v6
+Message-ID: <20200812230850.GA3511387@google.com>
+References: <cover.1593530334.git.vpillai@digitalocean.com>
+ <6d0f9fc0-2e34-f559-29bc-4143e6d3f751@linux.intel.com>
+ <CAEXW_YS6oW_AAkmOuXNMCj_N5763aG9SXEcWz_onPhQQU2TZ0g@mail.gmail.com>
+ <f986f5a9-5c97-10ed-1e44-84bbd929e605@linux.intel.com>
+ <20200809164408.GA342447@google.com>
+ <162a03cc-66c3-1999-83a2-deaad5aa04c8@linux.intel.com>
 MIME-Version: 1.0
-References: <20200812203618.2656699-1-robh@kernel.org> <f5dedf2d8d8057de3eaa2f9126f44cebb0653b09.camel@perches.com>
-In-Reply-To: <f5dedf2d8d8057de3eaa2f9126f44cebb0653b09.camel@perches.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 12 Aug 2020 17:05:08 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKBzqMHMMRwBJUjomxOpZAop_+TXBjLCb6ntwZzNMy=3Q@mail.gmail.com>
-Message-ID: <CAL_JsqKBzqMHMMRwBJUjomxOpZAop_+TXBjLCb6ntwZzNMy=3Q@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: Whitespace clean-ups in schema files
-To:     Joe Perches <joe@perches.com>
-Cc:     devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
-        <linux-remoteproc@vger.kernel.org>,
-        Linux HWMON List <linux-hwmon@vger.kernel.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        Linux Input <linux-input@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        MTD Maling List <linux-mtd@lists.infradead.org>,
-        netdev <netdev@vger.kernel.org>,
-        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
-        <linux-rtc@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Linux USB List <linux-usb@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <162a03cc-66c3-1999-83a2-deaad5aa04c8@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 4:32 PM Joe Perches <joe@perches.com> wrote:
->
-> On Wed, 2020-08-12 at 14:36 -0600, Rob Herring wrote:
-> > Clean-up incorrect indentation, extra spaces, long lines, and missing
-> > EOF newline in schema files. Most of the clean-ups are for list
-> > indentation which should always be 2 spaces more than the preceding
->                                      ^
-> > keyword.
+On Wed, Aug 12, 2020 at 10:01:24AM +0800, Li, Aubrey wrote:
+> Hi Joel,
+> 
+> On 2020/8/10 0:44, Joel Fernandes wrote:
+> > Hi Aubrey,
+> > 
+> > Apologies for replying late as I was still looking into the details.
+> > 
+> > On Wed, Aug 05, 2020 at 11:57:20AM +0800, Li, Aubrey wrote:
+> > [...]
+> >> +/*
+> >> + * Core scheduling policy:
+> >> + * - CORE_SCHED_DISABLED: core scheduling is disabled.
+> >> + * - CORE_COOKIE_MATCH: tasks with same cookie can run
+> >> + *                     on the same core concurrently.
+> >> + * - CORE_COOKIE_TRUST: trusted task can run with kernel
+> >> 			thread on the same core concurrently. 
+> >> + * - CORE_COOKIE_LONELY: tasks with cookie can run only
+> >> + *                     with idle thread on the same core.
+> >> + */
+> >> +enum coresched_policy {
+> >> +       CORE_SCHED_DISABLED,
+> >> +       CORE_SCHED_COOKIE_MATCH,
+> >> +	CORE_SCHED_COOKIE_TRUST,
+> >> +       CORE_SCHED_COOKIE_LONELY,
+> >> +};
+> >>
+> >> We can set policy to CORE_COOKIE_TRUST of uperf cgroup and fix this kind
+> >> of performance regression. Not sure if this sounds attractive?
+> > 
+> > Instead of this, I think it can be something simpler IMHO:
+> > 
+> > 1. Consider all cookie-0 task as trusted. (Even right now, if you apply the
+> >    core-scheduling patchset, such tasks will share a core and sniff on each
+> >    other. So let us not pretend that such tasks are not trusted).
+> > 
+> > 2. All kernel threads and idle task would have a cookie 0 (so that will cover
+> >    ksoftirqd reported in your original issue).
+> > 
+> > 3. Add a config option (CONFIG_SCHED_CORE_DEFAULT_TASKS_UNTRUSTED). Default
+> >    enable it. Setting this option would tag all tasks that are forked from a
+> >    cookie-0 task with their own cookie. Later on, such tasks can be added to
+> >    a group. This cover's PeterZ's ask about having 'default untrusted').
+> >    (Users like ChromeOS that don't want to userspace system processes to be
+> >    tagged can disable this option so such tasks will be cookie-0).
+> > 
+> > 4. Allow prctl/cgroup interfaces to create groups of tasks and override the
+> >    above behaviors.
+> 
+> How does uperf in a cgroup work with ksoftirqd? Are you suggesting I set uperf's
+> cookie to be cookie-0 via prctl?
 
-keyword is the key part...
+Yes, but let me try to understand better. There are 2 problems here I think:
 
-> []
-> > diff --git a/Documentation/devicetree/bindings/arm/arm,integrator.yaml b/Documentation/devicetree/bindings/arm/arm,integrator.yaml
-> > index 192ded470e32..f0daf990e077 100644
-> > --- a/Documentation/devicetree/bindings/arm/arm,integrator.yaml
-> > +++ b/Documentation/devicetree/bindings/arm/arm,integrator.yaml
-> > @@ -67,9 +67,9 @@ patternProperties:
-> >        compatible:
-> >          items:
-> >            - enum:
-> > -            - arm,integrator-ap-syscon
-> > -            - arm,integrator-cp-syscon
-> > -            - arm,integrator-sp-syscon
-> > +              - arm,integrator-ap-syscon
-> > +              - arm,integrator-cp-syscon
-> > +              - arm,integrator-sp-syscon
->
-> Confused a bit here.
->           - enum:
->         10 spaces to dash
-> old line:
->             - arm,integrator-ap-syscon
->         12 spaces to dash
-> new line:
->               - arm,integrator-ap-syscon
->         14 spaces to dash
->
-> Is it supposed to be 2 spaces more than the preceding line
-> or 4 more?
+1. ksoftirqd getting idled when HT is turned on, because uperf is sharing a
+core with it: This should not be any worse than SMT OFF, because even SMT OFF
+would also reduce ksoftirqd's CPU time just core sched is doing. Sure
+core-scheduling adds some overhead with IPIs but such a huge drop of perf is
+strange. Peter any thoughts on that?
 
-If the preceding line is a list entry (i.e. starts with '-'), then
-it's 4 more spaces. It's always 2 more spaces than the preceding
-keyword start (aka json-schema vocabulary).
+2. Interface: To solve the performance problem, you are saying you want uperf
+to share a core with ksoftirqd so that it is not forced into idle.  Why not
+just keep uperf out of the cgroup? Then it will have cookie 0 and be able to
+share core with kernel threads. About user-user isolation that you need, if
+you tag any "untrusted" threads by adding it to CGroup, then there will
+automatically isolated from uperf while allowing uperf to share CPU with
+kernel threads.
 
-Arguably, this style is a bit inconsistent in that the '-' counts
-toward as indentation of the current line, but not the preceding line.
-However, I think this style is a bit less error prone and easier to
-review. With the other style (always N more spaces) it's harder to
-distinguish lists vs. dicts. For example, you can have something like
-this:
+Please let me know your thoughts and thanks,
 
-- key:
-  - foo
-  - bar
+ - Joel
 
-- key:
-    foo
-    bar
-
-- key:
-  - foo
-    bar
-
-All 3 of these could be valid. Which one was intended? (Can't really
-tell here, but you can with actual DT schema.)
-
-Rob
+> 
+> Thanks,
+> -Aubrey
+> > 
+> > 5. Document everything clearly so the semantics are clear both to the
+> >    developers of core scheduling and to system administrators.
+> > 
+> > Note that, with the concept of "system trusted cookie", we can also do
+> > optimizations like:
+> > 1. Disable STIBP when switching into trusted tasks.
+> > 2. Disable L1D flushing / verw stuff for L1TF/MDS issues, when switching into
+> >    trusted tasks.
+> > 
+> > At least #1 seems to be biting enabling HT on ChromeOS right now, and one
+> > other engineer requested I do something like #2 already.
+> > 
+> > Once we get full-syscall isolation working, threads belonging to a process
+> > can also share a core so those can just share a core with the task-group
+> > leader.
+> > 
+> >>> Is the uperf throughput worse with SMT+core-scheduling versus no-SMT ?
+> >>
+> >> This is a good question, from the data we measured by uperf,
+> >> SMT+core-scheduling is 28.2% worse than no-SMT, :(
+> > 
+> > This is worrying for sure. :-(. We ought to debug/profile it more to see what
+> > is causing the overhead. Me/Vineeth added it as a topic for LPC as well.
+> > 
+> > Any other thoughts from others on this?
+> > 
+> > thanks,
+> > 
+> >  - Joel
+> > 
+> > 
+> >>> thanks,
+> >>>
+> >>>  - Joel
+> >>> PS: I am planning to write a patch behind a CONFIG option that tags
+> >>> all processes (default untrusted) so everything gets a cookie which
+> >>> some folks said was how they wanted (have a whitelist instead of
+> >>> blacklist).
+> >>>
+> >>
+> 
