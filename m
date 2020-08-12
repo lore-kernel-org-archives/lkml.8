@@ -2,116 +2,135 @@ Return-Path: <SRS0=ZArZ=BW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 260E2C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:56:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A252BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:56:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2F9A20829
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:56:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Dtgd6HtN"
+	by mail.kernel.org (Postfix) with ESMTP id 7D856204FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Aug 2020 12:56:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597237016;
+	bh=BGNPvffdTYH5cvHawxVaBWNHtXi/xbYebLv+GDhLXW4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vcNs5AQ1jx30UHk2k6GloQUBRoTqeQ0zyjfCcFhk7nYAqn0ybv+HchIX6GqK55r3l
+	 kwR4IVvANHoaNo4mrmKkpcjYaPQn483R/kNffIpfC0Zyxkncb8dK5SQNd2pCjgyAan
+	 e8i1eby7k1sXfieyeVVC2i7RtSlwv7nufgrTQfRM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727976AbgHLM4m (ORCPT
+        id S1728016AbgHLM4y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 08:56:42 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:59217 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726698AbgHLM4g (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 08:56:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597236990;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=wtUEuaiFxIPvaNcjkG30c2D0ZFttoyb0SDwoRwrTnz8=;
-        b=Dtgd6HtNyu0jQuyVmijRBgXKDSytj/1bWgp/uLTgiHuILdzrh7UpuvSaFDY3106szDOkeQ
-        4lQQLOzYz8oeA8k9X9U/bXc8DGxqHOYOaNg/O6EuSobCjqIXBfSJR6M2wsuIuZytrji6Bk
-        3HIXfesZRhbUJt0kHvg544sUXvT+wz8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-447-yYuXOglJOHOU5GhVukWnIQ-1; Wed, 12 Aug 2020 08:56:17 -0400
-X-MC-Unique: yYuXOglJOHOU5GhVukWnIQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 12 Aug 2020 08:56:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32908 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726698AbgHLM4v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Aug 2020 08:56:51 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CDE2379EC0;
-        Wed, 12 Aug 2020 12:56:15 +0000 (UTC)
-Received: from steredhat.redhat.com (ovpn-113-97.ams2.redhat.com [10.36.113.97])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C4F9260C84;
-        Wed, 12 Aug 2020 12:56:04 +0000 (UTC)
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     davem@davemloft.net
-Cc:     linux-kernel@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
-        netdev@vger.kernel.org, Stefan Hajnoczi <stefanha@redhat.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jorgen Hansen <jhansen@vmware.com>,
-        Stefano Garzarella <sgarzare@redhat.com>
-Subject: [PATCH net v2] vsock: fix potential null pointer dereference in vsock_poll()
-Date:   Wed, 12 Aug 2020 14:56:02 +0200
-Message-Id: <20200812125602.96598-1-sgarzare@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 51888204FD;
+        Wed, 12 Aug 2020 12:56:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597237011;
+        bh=BGNPvffdTYH5cvHawxVaBWNHtXi/xbYebLv+GDhLXW4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WYyUdzQWeFFSH6eebGJcAWuEf5bXLvxWmMx1FIe4GHVlm0PyG6MSNgVuVZJ90wZRv
+         mnReGhnLI/NQhUI7VP+SLK3Uz8BM0cSgbD6a8IoiXZWZ29MTZl+Ts/wsCQf5s2gHZr
+         rlBwSnqYPYQ/ygzsVlp+t6u9rFHiwQ7VSmZQkf2w=
+Date:   Wed, 12 Aug 2020 13:56:46 +0100
+From:   Will Deacon <will@kernel.org>
+To:     peterz@infradead.org, szabolcs.nagy@arm.com
+Cc:     Ard Biesheuvel <ardb@kernel.org>, Jessica Yu <jeyu@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kees Cook <keescook@chromium.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2] module: Harden STRICT_MODULE_RWX
+Message-ID: <20200812125645.GA8675@willie-the-truck>
+References: <20200403171303.GK20760@hirez.programming.kicks-ass.net>
+ <20200808101222.5103093e@coco.lan>
+ <20200810092523.GA8612@linux-8ccs>
+ <20200810150647.GB8612@linux-8ccs>
+ <20200811163427.6edbf343@coco.lan>
+ <20200811145524.GE2674@hirez.programming.kicks-ass.net>
+ <20200811172738.2d632a09@coco.lan>
+ <20200811160134.GA13652@linux-8ccs>
+ <CAMj1kXF8fm=9CdQykqDbgYCJSP88ezMs3EOosCW+SDi+Lve0zg@mail.gmail.com>
+ <20200812104005.GN2674@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200812104005.GN2674@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot reported this issue where in the vsock_poll() we find the
-socket state at TCP_ESTABLISHED, but 'transport' is null:
-  general protection fault, probably for non-canonical address 0xdffffc0000000012: 0000 [#1] PREEMPT SMP KASAN
-  KASAN: null-ptr-deref in range [0x0000000000000090-0x0000000000000097]
-  CPU: 0 PID: 8227 Comm: syz-executor.2 Not tainted 5.8.0-rc7-syzkaller #0
-  Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-  RIP: 0010:vsock_poll+0x75a/0x8e0 net/vmw_vsock/af_vsock.c:1038
-  Call Trace:
-   sock_poll+0x159/0x460 net/socket.c:1266
-   vfs_poll include/linux/poll.h:90 [inline]
-   do_pollfd fs/select.c:869 [inline]
-   do_poll fs/select.c:917 [inline]
-   do_sys_poll+0x607/0xd40 fs/select.c:1011
-   __do_sys_poll fs/select.c:1069 [inline]
-   __se_sys_poll fs/select.c:1057 [inline]
-   __x64_sys_poll+0x18c/0x440 fs/select.c:1057
-   do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+On Wed, Aug 12, 2020 at 12:40:05PM +0200, peterz@infradead.org wrote:
+> On Wed, Aug 12, 2020 at 10:56:56AM +0200, Ard Biesheuvel wrote:
+> > The module .lds has BYTE(0) in the section contents to prevent the
+> > linker from pruning them entirely. The (NOLOAD) is there to ensure
+> > that this byte does not end up in the .ko, which is more a matter of
+> > principle than anything else, so we can happily drop that if it helps.
+> > 
+> > However, this should only affect the PROGBITS vs NOBITS designation,
+> > and so I am not sure whether it makes a difference.
+> > 
+> > Depending on where the w^x check occurs, we might simply override the
+> > permissions of these sections, and strip the writable permission if it
+> > is set in the PLT handling init code, which manipulates the metadata
+> > of all these 3 sections before the module space is vmalloc'ed.
+> 
+> What's curious is that this seems the result of some recent binutils
+> change. Every build with binutils-2.34 (or older) does not seem to
+> generate these as WAX, but has the much more sensible WA.
+> 
+> I suppose we can change the kernel check and 'allow' W^X for 0 sized
+> sections, but I think we should still figure out why binutils-2.35 is
+> now generating WAX sections all of a sudden, it might come bite us
+> elsewhere.
 
-This issue can happen if the TCP_ESTABLISHED state is set after we read
-the vsk->transport in the vsock_poll().
+Agreed, I think it's important to figure out what's going on here before we
+try to bodge around it.
 
-We could put barriers to synchronize, but this can only happen during
-connection setup, so we can simply check that 'transport' is valid.
+Adding Szabolcs, in case he has any ideas.
 
-Fixes: c0cfa2d8a788 ("vsock: add multi-transports support")
-Reported-and-tested-by: syzbot+a61bac2fcc1a7c6623fe@syzkaller.appspotmail.com
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
----
-v2:
- - removed cleanups patch from the series [David]
+To save him reading the whole thread, here's a summary:
 
-v1: https://patchwork.ozlabs.org/project/netdev/cover/20200811095504.25051-1-sgarzare@redhat.com/
----
- net/vmw_vsock/af_vsock.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+AArch64 kernel modules built with binutils 2.35 end up with a couple of
+ELF sections marked as SHF_WRITE | SHF_ALLOC | SHF_EXECINSTR:
 
-diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
-index 27bbcfad9c17..9e93bc201cc0 100644
---- a/net/vmw_vsock/af_vsock.c
-+++ b/net/vmw_vsock/af_vsock.c
-@@ -1032,7 +1032,7 @@ static __poll_t vsock_poll(struct file *file, struct socket *sock,
- 		}
- 
- 		/* Connected sockets that can produce data can be written. */
--		if (sk->sk_state == TCP_ESTABLISHED) {
-+		if (transport && sk->sk_state == TCP_ESTABLISHED) {
- 			if (!(sk->sk_shutdown & SEND_SHUTDOWN)) {
- 				bool space_avail_now = false;
- 				int ret = transport->notify_poll_out(
--- 
-2.26.2
+[ 5] .plt PROGBITS 0000000000000388 01d000 000008 00 WAX  0   0  1
+[ 6] .init.plt NOBITS 0000000000000390 01d008 000008 00  WA  0   0  1
+[ 7] .text.ftrace_trampoline PROGBITS 0000000000000398 01d008 000008 00 WAX  0   0  1
 
+This results in the module being rejected by our loader, because we don't
+permit writable, executable mappings.
+
+Our linker script for these entries uses NOLOAD, so it's odd to see PROGBITS
+appearing in the readelf output above (and older binutils emits NOBITS
+sections). Anyway, here's the linker script:
+
+SECTIONS {
+	.plt (NOLOAD) : { BYTE(0) }
+	.init.plt (NOLOAD) : { BYTE(0) }
+	.text.ftrace_trampoline (NOLOAD) : { BYTE(0) }
+}
+
+It appears that the name of the section influences the behaviour, as
+Jessica observed [1] that sections named .text.* end up with PROGBITS,
+whereas random naming such as ".test" ends up with NOBITS, as before.
+
+We've looked at the changelog between binutils 2.34 and 2.35, but nothing
+stands out. Any clues? Is this intentional binutils behaviour?
+
+Thanks,
+
+Will
+
+[1] https://lore.kernel.org/r/20200812114127.GA10824@linux-8ccs.fritz.box
