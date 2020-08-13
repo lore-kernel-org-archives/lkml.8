@@ -2,142 +2,135 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC6FDC433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 05:26:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C50FC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 05:30:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8D1520715
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 05:26:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nERanXOE"
+	by mail.kernel.org (Postfix) with ESMTP id 6DBD720715
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 05:30:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbgHMF01 (ORCPT
+        id S1726522AbgHMFaD convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 01:26:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43602 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725891AbgHMF00 (ORCPT
+        Thu, 13 Aug 2020 01:30:03 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:52968 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725949AbgHMFaD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 01:26:26 -0400
-Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB5EEC061757
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 22:26:25 -0700 (PDT)
-Received: by mail-ua1-x943.google.com with SMTP id v20so1293336ual.4
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 22:26:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1rCJ4q+KoNSXFkFuWqVDiKXpOMoV1SjKATNbbYf89MU=;
-        b=nERanXOEelRjMIEt3IHqFWvSp9Zgn371nAANhRijyP8pGdoXeNmNMvcYL3i+6BS4TA
-         stwfvcRTCqqq+ULufLYkL7IKvKAxxFD7LFbv98VIKPsP79Oovh7PW5IAa/zuhzrY+IJu
-         tm1REjtH6S62Grx3JmA1usq0/EZBDxrsaqIaY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1rCJ4q+KoNSXFkFuWqVDiKXpOMoV1SjKATNbbYf89MU=;
-        b=jLdVDtpYZUZf0sPAIP6PB9HhNfVflZP2mrO774rrFMlUwzNDSbi3uHSl2dcwDby+Zp
-         Up4tikCR/2RX4nGYlxgm3FBfZxfC9iR5FOkwrOrZ1ZSlZBHqrwIeDg+GY6zEaTntUh18
-         iWNPKeLzki1cgd5E7RghQi4dbayBm2iE2V2xGDERE9cd7PXE0+guGDkjqb41H3ym3eQO
-         u2N1NXuWuaWuZAZG+Baatlm01J48iZZ7XRW2Cu482NXj8UDYfrufBpxWyblwXjWO3Eyo
-         S6vk7dqsUr6mwqXsBW6U4/iuG5jBP143h+u2mujk3XjGDv5goW6Ui5KvsF6eMXoh4L1P
-         DBxw==
-X-Gm-Message-State: AOAM531dSv+iNRSbpgnwTGv42MMxe+4y9XNg++BrKinpRVYXVAMYXNao
-        hKCuYutM6aJZVBlJBSiJv55xN+U7/dHnfj4VDZDwnA==
-X-Google-Smtp-Source: ABdhPJxQsB0ulqavL6/Gla0u7Eswn9tjRqoMOHD+9KlFXl+HJTVxLZUHENDVltOOlWttivWvwVq8hTI13yLrdQvkYYI=
-X-Received: by 2002:ab0:1696:: with SMTP id e22mr1910356uaf.1.1597296384671;
- Wed, 12 Aug 2020 22:26:24 -0700 (PDT)
+        Thu, 13 Aug 2020 01:30:03 -0400
+Received: from 1.general.jvosburgh.us.vpn ([10.172.68.206] helo=famine.localdomain)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <jay.vosburgh@canonical.com>)
+        id 1k65oL-00043S-Tt; Thu, 13 Aug 2020 05:29:58 +0000
+Received: by famine.localdomain (Postfix, from userid 1000)
+        id 3D5635FDD5; Wed, 12 Aug 2020 22:29:56 -0700 (PDT)
+Received: from famine (localhost [127.0.0.1])
+        by famine.localdomain (Postfix) with ESMTP id 3758B9FB5C;
+        Wed, 12 Aug 2020 22:29:56 -0700 (PDT)
+From:   Jay Vosburgh <jay.vosburgh@canonical.com>
+To:     Jarod Wilson <jarod@redhat.com>
+cc:     linux-kernel@vger.kernel.org, Veaceslav Falico <vfalico@gmail.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+Subject: Re: [PATCH net] bonding: show saner speed for broadcast mode
+In-reply-to: <20200813035509.739-1-jarod@redhat.com>
+References: <20200813035509.739-1-jarod@redhat.com>
+Comments: In-reply-to Jarod Wilson <jarod@redhat.com>
+   message dated "Wed, 12 Aug 2020 23:55:09 -0400."
+X-Mailer: MH-E 8.6+git; nmh 1.6; GNU Emacs 27.0.50
 MIME-Version: 1.0
-References: <0200811065307.2094930-1-ikjn@chromium.org> <20200813051008.3461515-1-ikjn@chromium.org>
- <20200813051008.3461515-3-ikjn@chromium.org>
-In-Reply-To: <20200813051008.3461515-3-ikjn@chromium.org>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Thu, 13 Aug 2020 13:26:09 +0800
-Message-ID: <CANMq1KBtTj3LqPBS4P7-njo=JobFN+2WSAzAAi6tb7O_7gBYGw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] power: supply: sbs-battery: don't assume i2c
- errors as battery disconnect
-To:     Ikjoon Jang <ikjn@chromium.org>
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <27388.1597296596.1@famine>
+Content-Transfer-Encoding: 8BIT
+Date:   Wed, 12 Aug 2020 22:29:56 -0700
+Message-ID: <27389.1597296596@famine>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 1:11 PM Ikjoon Jang <ikjn@chromium.org> wrote:
->
-> Current sbs-battery considers all smbus errors as disconnection events
-> when battery-detect pin isn't supplied, and restored to present state back
-> when any successful transaction is made.
->
-> This can lead to unlimited state changes between present and !present
-> when one unsupported command was requested and other following commands
-> were successful, e.g. udev rules tries to read multiple properties.
->
-> This patch checks battery presence by reading known good command to
-> check battery existence.
->
-> Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
+Jarod Wilson <jarod@redhat.com> wrote:
 
-Looks good now, AFAICT. Thanks!
+>Broadcast mode bonds transmit a copy of all traffic simultaneously out of
+>all interfaces, so the "speed" of the bond isn't really the aggregate of
+>all interfaces, but rather, the speed of the lowest active interface.
 
-Reviewed-by: Nicolas Boichat <drinkcat@chromium.org>
+	Did you mean "slowest" here?
 
-> ---
->  drivers/power/supply/sbs-battery.c | 25 +++++++++++++++++--------
->  1 file changed, 17 insertions(+), 8 deletions(-)
+>Also, the type of the speed field is u32, not unsigned long, so adjust
+>that accordingly, as required to make min() function here without
+>complaining about mismatching types.
 >
-> diff --git a/drivers/power/supply/sbs-battery.c b/drivers/power/supply/sbs-battery.c
-> index 6acb4ea25d2a..2e32fde04628 100644
-> --- a/drivers/power/supply/sbs-battery.c
-> +++ b/drivers/power/supply/sbs-battery.c
-> @@ -878,10 +878,17 @@ static int sbs_get_property(struct power_supply *psy,
->         if (!chip->enable_detection)
->                 goto done;
+>Fixes: bb5b052f751b ("bond: add support to read speed and duplex via ethtool")
+>CC: Jay Vosburgh <j.vosburgh@gmail.com>
+>CC: Veaceslav Falico <vfalico@gmail.com>
+>CC: Andy Gospodarek <andy@greyhouse.net>
+>CC: "David S. Miller" <davem@davemloft.net>
+>CC: netdev@vger.kernel.org
+>Signed-off-by: Jarod Wilson <jarod@redhat.com>
+
+	Did you notice this by inspection, or did it come up in use
+somewhere?  I can't recall ever hearing of anyone using broadcast mode,
+so I'm curious if there is a use for it, but this change seems
+reasonable enough regardless.
+
+	-J
+
+Acked-by: Jay Vosburgh <jay.vosburgh@canonical.com>
+
+
+>---
+> drivers/net/bonding/bond_main.c | 21 ++++++++++++++++++---
+> 1 file changed, 18 insertions(+), 3 deletions(-)
 >
-> -       if (!chip->gpio_detect &&
-> -               chip->is_present != (ret >= 0)) {
-> -               sbs_update_presence(chip, (ret >= 0));
-> -               power_supply_changed(chip->power_supply);
-> +       if (!chip->gpio_detect && chip->is_present != (ret >= 0)) {
-> +               bool old_present = chip->is_present;
-> +               union power_supply_propval val;
-> +
-> +               ret = sbs_get_battery_presence_and_health(
-> +                               client, POWER_SUPPLY_PROP_PRESENT, &val);
-> +
-> +               sbs_update_presence(chip, !ret && val.intval);
-> +
-> +               if (old_present != chip->is_present)
-> +                       power_supply_changed(chip->power_supply);
->         }
->
->  done:
-> @@ -1067,11 +1074,13 @@ static int sbs_probe(struct i2c_client *client)
->          * to the battery.
->          */
->         if (!(force_load || chip->gpio_detect)) {
-> -               rc = sbs_read_word_data(client, sbs_data[REG_STATUS].addr);
-> +               union power_supply_propval val;
->
-> -               if (rc < 0) {
-> -                       dev_err(&client->dev, "%s: Failed to get device status\n",
-> -                               __func__);
-> +               rc = sbs_get_battery_presence_and_health(
-> +                               client, POWER_SUPPLY_PROP_PRESENT, &val);
-> +               if (rc < 0 || !val.intval) {
-> +                       dev_err(&client->dev, "Failed to get present status\n");
-> +                       rc = -ENODEV;
->                         goto exit_psupply;
->                 }
->         }
-> --
-> 2.28.0.236.gb10cc79966-goog
+>diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+>index 5ad43aaf76e5..c853ca67058c 100644
+>--- a/drivers/net/bonding/bond_main.c
+>+++ b/drivers/net/bonding/bond_main.c
+>@@ -4552,13 +4552,23 @@ static netdev_tx_t bond_start_xmit(struct sk_buff *skb, struct net_device *dev)
+> 	return ret;
+> }
+> 
+>+static u32 bond_mode_bcast_speed(struct slave *slave, u32 speed)
+>+{
+>+	if (speed == 0 || speed == SPEED_UNKNOWN)
+>+		speed = slave->speed;
+>+	else
+>+		speed = min(speed, slave->speed);
+>+
+>+	return speed;
+>+}
+>+
+> static int bond_ethtool_get_link_ksettings(struct net_device *bond_dev,
+> 					   struct ethtool_link_ksettings *cmd)
+> {
+> 	struct bonding *bond = netdev_priv(bond_dev);
+>-	unsigned long speed = 0;
+> 	struct list_head *iter;
+> 	struct slave *slave;
+>+	u32 speed = 0;
+> 
+> 	cmd->base.duplex = DUPLEX_UNKNOWN;
+> 	cmd->base.port = PORT_OTHER;
+>@@ -4570,8 +4580,13 @@ static int bond_ethtool_get_link_ksettings(struct net_device *bond_dev,
+> 	 */
+> 	bond_for_each_slave(bond, slave, iter) {
+> 		if (bond_slave_can_tx(slave)) {
+>-			if (slave->speed != SPEED_UNKNOWN)
+>-				speed += slave->speed;
+>+			if (slave->speed != SPEED_UNKNOWN) {
+>+				if (BOND_MODE(bond) == BOND_MODE_BROADCAST)
+>+					speed = bond_mode_bcast_speed(slave,
+>+								      speed);
+>+				else
+>+					speed += slave->speed;
+>+			}
+> 			if (cmd->base.duplex == DUPLEX_UNKNOWN &&
+> 			    slave->duplex != DUPLEX_UNKNOWN)
+> 				cmd->base.duplex = slave->duplex;
+>-- 
+>2.20.1
 >
