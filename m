@@ -2,533 +2,153 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BAC2C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 11:21:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF984C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 11:21:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BAF920791
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 11:21:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CD8E20791
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 11:21:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uqSSJl1Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbgHMLVS (ORCPT
+        id S1726787AbgHMLV2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 07:21:18 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:59229 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726100AbgHMLVR (ORCPT
+        Thu, 13 Aug 2020 07:21:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41502 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726100AbgHMLVZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 07:21:17 -0400
-Received: from fsav404.sakura.ne.jp (fsav404.sakura.ne.jp [133.242.250.103])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 07DBKk4b096355;
-        Thu, 13 Aug 2020 20:20:46 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav404.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav404.sakura.ne.jp);
- Thu, 13 Aug 2020 20:20:45 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav404.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 07DBKjgx096342
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Thu, 13 Aug 2020 20:20:45 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: INFO: task hung in pipe_read (2)
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-To:     Andrea Arcangeli <aarcange@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        syzbot <syzbot+96cc7aba7e969b1d305c@syzkaller.appspotmail.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <00000000000045b3fe05abcced2f@google.com>
- <fc097a54-0384-9d21-323f-c3ca52cdb956@I-love.SAKURA.ne.jp>
- <CAHk-=wj15SDiHjP2wPiC=Ru-RrUjOuT4AoULj6N_9pVvSXaWiw@mail.gmail.com>
- <20200807053148.GA10409@redhat.com>
- <e673cccb-1b67-802a-84e3-6aeea4513a09@i-love.sakura.ne.jp>
- <20200810192941.GA16925@redhat.com>
- <d1e83b55-eb09-45e0-95f1-ece41251b036@i-love.sakura.ne.jp>
-Message-ID: <dc9b2681-3b84-eb74-8c88-3815beaff7f8@i-love.sakura.ne.jp>
-Date:   Thu, 13 Aug 2020 20:20:45 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Thu, 13 Aug 2020 07:21:25 -0400
+Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44291C061383;
+        Thu, 13 Aug 2020 04:21:25 -0700 (PDT)
+Received: by mail-yb1-xb43.google.com with SMTP id e14so3122038ybf.4;
+        Thu, 13 Aug 2020 04:21:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0SrbfwtjCL+Ch70ZV12lTDvT9PgGCIle5pOe2njGh38=;
+        b=uqSSJl1QBhCjyTIGGHPmllHzdNyHwp5crRG08NLkDMIuGqMzYtAS9sZ9UmerNqbuC8
+         RoVhDM8VWhxNtjfUpiP1IJs09F00r59FavT3pGpMyD0stSqPf5tuZ2Sqp55V7YMz7/k/
+         fMrtqojnocJHva2BoZ/XPyQXoSI3DnuL383sQhJhO+ehsq0xQlS7ZTJIfID6quVv8KPo
+         JBX+FSPxQwb1qeD0jnC1k96eXtgIGnXv4YnnYUcy48Qq64qLQedxvBaVZnBGEftXhQoj
+         RmeEz+SnUkpI6Ful0FLbfd0ugGEirEBWRPIgTvV7f/0NmNLGaxjV+a/uupC9fWTwrvaJ
+         0xnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0SrbfwtjCL+Ch70ZV12lTDvT9PgGCIle5pOe2njGh38=;
+        b=Tv78kA6FEBegQ/JtteKmLI4iZuTL+dU6laAgmx9ZNRijkzrNEOHsqkrcRQitlaf+0n
+         IFGQ6pA21FP4sVzAhHWA9TlOOC/09Z1IgbPOLO5PBLGrtYZ9d0BzoljbKQ92xlidCAuO
+         LlpdwZcXMrSLQpflm6lE/9g78qXtuZ9QxHroz0BjWuKqDlrJ5nx3Sve5EYaAcymJx9H7
+         bHwQLJ+eKrpgVwepneYXfxdM81jzMVrW0C4npdSPUGTwhPmgegN2F771S5nToVXKFdVC
+         NC921g14vhv0qvY6urskyz6TMMGaQwsRgCeZY2cPtlU4c9GeVKnaOavlOee49HqkaqBS
+         LeJQ==
+X-Gm-Message-State: AOAM5317o7iUJbZ/3QZfUfom0znBjxAKXvp3mulF99xl6za7Oe3+pcQ2
+        PflkzKMzeYhijAqbVG9SeFDU2GKwnYmjT49/lG4=
+X-Google-Smtp-Source: ABdhPJxx5+KUKPX1w0oAy96kpCKRHE3RSshStqR59IK1IKnc/G77Uin05ciyk051/7IYQ6oWt+QgwrIFPasAmhFEqe4=
+X-Received: by 2002:a25:c743:: with SMTP id w64mr5638674ybe.127.1597317684356;
+ Thu, 13 Aug 2020 04:21:24 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <d1e83b55-eb09-45e0-95f1-ece41251b036@i-love.sakura.ne.jp>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200812140217.24251-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200812140217.24251-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAMuHMdV4Tp=kz57pAJk0u5hVpbiEdVzTWDvK+F1AZ5TjGmLbMQ@mail.gmail.com>
+ <CA+V-a8svAuDx51vuTCH4w5g0oF9qf8sWAEjMDMm+0+9u-UQhQw@mail.gmail.com>
+ <20200813105910.GB6057@pendragon.ideasonboard.com> <CA+V-a8sRQ_R4UGkSjrZ7Rq5nUqTwPtbvuuT0t69mM8M8ZeTkRQ@mail.gmail.com>
+ <20200813111123.GD6057@pendragon.ideasonboard.com>
+In-Reply-To: <20200813111123.GD6057@pendragon.ideasonboard.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Thu, 13 Aug 2020 12:20:58 +0100
+Message-ID: <CA+V-a8toVwB+_=RmQ4DjhRaTyHoMOPHW2a42NTEUqW+FSv1tmg@mail.gmail.com>
+Subject: Re: [PATCH 1/9] dt-bindings: display: renesas,du: Document r8a774e1 bindings
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/08/13 16:00, Tetsuo Handa wrote:
-> On 2020/08/11 4:29, Andrea Arcangeli wrote:
->> However once the mutex is killable there's no concern anymore and the
->> hangcheck timer is correct also not reporting any misbehavior anymore.
-> 
-> Do you mean something like below untested patch? I think that the difficult
-> part is that mutex for close() operation can't become killable. And I worry
-> that syzbot soon reports a hung task at pipe_release() instead of pipe_read()
-> or pipe_write(). If pagefault with locks held can be avoided, there will be no
-> such worry.
+Hi Laurent,
 
-Hmm, the difficult part is not limited to close() operation. While some of them
-are low hanging fruits, the rest seems to be subtle or complicated. Al, do you
-think that we can make all pipe mutex killable?
+On Thu, Aug 13, 2020 at 12:11 PM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>
+> Hi Prabhakar,
+>
+> On Thu, Aug 13, 2020 at 12:08:58PM +0100, Lad, Prabhakar wrote:
+> > On Thu, Aug 13, 2020 at 11:59 AM Laurent Pinchart wrote:
+> > > On Thu, Aug 13, 2020 at 11:38:03AM +0100, Lad, Prabhakar wrote:
+> > >> On Thu, Aug 13, 2020 at 10:05 AM Geert Uytterhoeven wrote:
+> > >>> On Wed, Aug 12, 2020 at 4:02 PM Lad Prabhakar wrote:
+> > >>>> From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> > >>>>
+> > >>>> Document the RZ/G2H (a.k.a. r8a774e1) SoC in the R-Car DU bindings.
+> > >>>>
+> > >>>> Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> > >>>> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > >>>> ---
+> > >>>>  Documentation/devicetree/bindings/display/renesas,du.txt | 2 ++
+> > >>>>  1 file changed, 2 insertions(+)
+> > >>>>
+> > >>>> diff --git a/Documentation/devicetree/bindings/display/renesas,du.txt b/Documentation/devicetree/bindings/display/renesas,du.txt
+> > >>>> index 51cd4d162770..67cded5ad827 100644
+> > >>>> --- a/Documentation/devicetree/bindings/display/renesas,du.txt
+> > >>>> +++ b/Documentation/devicetree/bindings/display/renesas,du.txt
+> > >>>> @@ -10,6 +10,7 @@ Required Properties:
+> > >>>>      - "renesas,du-r8a774a1" for R8A774A1 (RZ/G2M) compatible DU
+> > >>>>      - "renesas,du-r8a774b1" for R8A774B1 (RZ/G2N) compatible DU
+> > >>>>      - "renesas,du-r8a774c0" for R8A774C0 (RZ/G2E) compatible DU
+> > >>>> +    - "renesas,du-r8a774e1" for R8A774E1 (RZ/G2H) compatible DU
+> > >>>>      - "renesas,du-r8a7779" for R8A7779 (R-Car H1) compatible DU
+> > >>>>      - "renesas,du-r8a7790" for R8A7790 (R-Car H2) compatible DU
+> > >>>>      - "renesas,du-r8a7791" for R8A7791 (R-Car M2-W) compatible DU
+> > >>>> @@ -75,6 +76,7 @@ corresponding to each DU output.
+> > >>>>   R8A774A1 (RZ/G2M)      DPAD 0         HDMI 0         LVDS 0         -
+> > >>>>   R8A774B1 (RZ/G2N)      DPAD 0         HDMI 0         LVDS 0         -
+> > >>>>   R8A774C0 (RZ/G2E)      DPAD 0         LVDS 0         LVDS 1         -
+> > >>>> + R8A774E1 (RZ/G2H)      DPAD 0         HDMI 0         LVDS 0         -
+> > >>>
+> > >>> As LVDS 0 is the fourth channel (DU3), should it be listed under port 3
+> > >>> instead of port 2?
+> > >>>
+> > >>> I know we did it the same for R-Car M3-N and RZ/G2N.
+> > >>> But my main worry is adding support for R-Car H3-N later.
+> > >
+> > > Why should we do so ? The port number here isn't tied to the DU channel
+> > > number. It only identifies the output port. Many DUs can route DU
+> > > channel outputs to different output ports.
+> > >
+> > The binding document (renesas,du.txt) does state that "The following
+> > table lists for each supported model the port number corresponding to
+> > each DU output.", hence the confusion.
+>
+> It can be a bit confusing indeed. "DU output" here refers to the output
+> of the whoel DU, made of individual DU channels. Each DU channel is
+> listed as a DU device in the datasheet, and collectively they are the DU
+> device that Linux handles.
+>
+Thanks for the clarification, that clears up the confusion.
 
- fs/pipe.c                 | 104 +++++++++++++++++++++++++++++++-------
- fs/splice.c               |  60 +++++++++++++++-------
- include/linux/pipe_fs_i.h |   5 +-
- 3 files changed, 134 insertions(+), 35 deletions(-)
-
-diff --git a/fs/pipe.c b/fs/pipe.c
-index 60dbee457143..f21c420dc7c7 100644
---- a/fs/pipe.c
-+++ b/fs/pipe.c
-@@ -66,6 +66,13 @@ static void pipe_lock_nested(struct pipe_inode_info *pipe, int subclass)
- 		mutex_lock_nested(&pipe->mutex, subclass);
- }
- 
-+static int __must_check pipe_lock_killable_nested(struct pipe_inode_info *pipe, int subclass)
-+{
-+	if (pipe->files)
-+		return mutex_lock_killable_nested(&pipe->mutex, subclass);
-+	return 0;
-+}
-+
- void pipe_lock(struct pipe_inode_info *pipe)
- {
- 	/*
-@@ -75,6 +82,14 @@ void pipe_lock(struct pipe_inode_info *pipe)
- }
- EXPORT_SYMBOL(pipe_lock);
- 
-+int pipe_lock_killable(struct pipe_inode_info *pipe)
-+{
-+	/*
-+	 * pipe_lock() nests non-pipe inode locks (for writing to a file)
-+	 */
-+	return pipe_lock_killable_nested(pipe, I_MUTEX_PARENT);
-+}
-+
- void pipe_unlock(struct pipe_inode_info *pipe)
- {
- 	if (pipe->files)
-@@ -87,23 +102,37 @@ static inline void __pipe_lock(struct pipe_inode_info *pipe)
- 	mutex_lock_nested(&pipe->mutex, I_MUTEX_PARENT);
- }
- 
-+static inline int __must_check __pipe_lock_killable(struct pipe_inode_info *pipe)
-+{
-+	return mutex_lock_killable_nested(&pipe->mutex, I_MUTEX_PARENT);
-+}
-+
- static inline void __pipe_unlock(struct pipe_inode_info *pipe)
- {
- 	mutex_unlock(&pipe->mutex);
- }
- 
--void pipe_double_lock(struct pipe_inode_info *pipe1,
--		      struct pipe_inode_info *pipe2)
-+int pipe_double_lock_killable(struct pipe_inode_info *pipe1,
-+			      struct pipe_inode_info *pipe2)
- {
- 	BUG_ON(pipe1 == pipe2);
- 
- 	if (pipe1 < pipe2) {
--		pipe_lock_nested(pipe1, I_MUTEX_PARENT);
--		pipe_lock_nested(pipe2, I_MUTEX_CHILD);
-+		if (pipe_lock_killable_nested(pipe1, I_MUTEX_PARENT))
-+			return -ERESTARTSYS;
-+		if (pipe_lock_killable_nested(pipe2, I_MUTEX_CHILD)) {
-+			pipe_unlock(pipe1);
-+			return -ERESTARTSYS;
-+		}
- 	} else {
--		pipe_lock_nested(pipe2, I_MUTEX_PARENT);
--		pipe_lock_nested(pipe1, I_MUTEX_CHILD);
-+		if (pipe_lock_killable_nested(pipe2, I_MUTEX_PARENT))
-+			return -ERESTARTSYS;
-+		if (pipe_lock_killable_nested(pipe1, I_MUTEX_CHILD)) {
-+			pipe_unlock(pipe2);
-+			return -ERESTARTSYS;
-+		}
- 	}
-+	return 0;
- }
- 
- /* Drop the inode semaphore and wait for a pipe event, atomically */
-@@ -125,6 +154,24 @@ void pipe_wait(struct pipe_inode_info *pipe)
- 	pipe_lock(pipe);
- }
- 
-+int pipe_wait_killable(struct pipe_inode_info *pipe)
-+{
-+	DEFINE_WAIT(rdwait);
-+	DEFINE_WAIT(wrwait);
-+
-+	/*
-+	 * Pipes are system-local resources, so sleeping on them
-+	 * is considered a noninteractive wait:
-+	 */
-+	prepare_to_wait(&pipe->rd_wait, &rdwait, TASK_INTERRUPTIBLE);
-+	prepare_to_wait(&pipe->wr_wait, &wrwait, TASK_INTERRUPTIBLE);
-+	pipe_unlock(pipe);
-+	schedule();
-+	finish_wait(&pipe->rd_wait, &rdwait);
-+	finish_wait(&pipe->wr_wait, &wrwait);
-+	return pipe_lock_killable(pipe);
-+}
-+
- static void anon_pipe_buf_release(struct pipe_inode_info *pipe,
- 				  struct pipe_buffer *buf)
- {
-@@ -244,7 +291,8 @@ pipe_read(struct kiocb *iocb, struct iov_iter *to)
- 		return 0;
- 
- 	ret = 0;
--	__pipe_lock(pipe);
-+	if (__pipe_lock_killable(pipe))
-+		return -ERESTARTSYS;
- 
- 	/*
- 	 * We only wake up writers if the pipe was full when we started
-@@ -381,7 +429,8 @@ pipe_read(struct kiocb *iocb, struct iov_iter *to)
- 		if (wait_event_interruptible_exclusive(pipe->rd_wait, pipe_readable(pipe)) < 0)
- 			return -ERESTARTSYS;
- 
--		__pipe_lock(pipe);
-+		if (__pipe_lock_killable(pipe))
-+			return -ERESTARTSYS;
- 		was_full = pipe_full(pipe->head, pipe->tail, pipe->max_usage);
- 		wake_next_reader = true;
- 	}
-@@ -432,7 +481,8 @@ pipe_write(struct kiocb *iocb, struct iov_iter *from)
- 	if (unlikely(total_len == 0))
- 		return 0;
- 
--	__pipe_lock(pipe);
-+	if (__pipe_lock_killable(pipe))
-+		return -ERESTARTSYS;
- 
- 	if (!pipe->readers) {
- 		send_sig(SIGPIPE, current, 0);
-@@ -577,7 +627,14 @@ pipe_write(struct kiocb *iocb, struct iov_iter *from)
- 			kill_fasync(&pipe->fasync_readers, SIGIO, POLL_IN);
- 		}
- 		wait_event_interruptible_exclusive(pipe->wr_wait, pipe_writable(pipe));
--		__pipe_lock(pipe);
-+		if (__pipe_lock_killable(pipe)) {
-+			if (!ret)
-+				ret = -ERESTARTSYS;
-+			/* Extra notification is better than missing notification? */
-+			was_empty = true;
-+			wake_next_writer = true;
-+			goto out_unlocked;
-+		}
- 		was_empty = pipe_empty(pipe->head, pipe->tail);
- 		wake_next_writer = true;
- 	}
-@@ -586,6 +643,7 @@ pipe_write(struct kiocb *iocb, struct iov_iter *from)
- 		wake_next_writer = false;
- 	__pipe_unlock(pipe);
- 
-+out_unlocked:
- 	/*
- 	 * If we do do a wakeup event, we do a 'sync' wakeup, because we
- 	 * want the reader to start processing things asap, rather than
-@@ -617,7 +675,8 @@ static long pipe_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
- 
- 	switch (cmd) {
- 	case FIONREAD:
--		__pipe_lock(pipe);
-+		if (__pipe_lock_killable(pipe))
-+			return -ERESTARTSYS;
- 		count = 0;
- 		head = pipe->head;
- 		tail = pipe->tail;
-@@ -634,7 +693,8 @@ static long pipe_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
- #ifdef CONFIG_WATCH_QUEUE
- 	case IOC_WATCH_QUEUE_SET_SIZE: {
- 		int ret;
--		__pipe_lock(pipe);
-+		if (__pipe_lock_killable(pipe))
-+			return -ERESTARTSYS;
- 		ret = watch_queue_set_size(pipe, arg);
- 		__pipe_unlock(pipe);
- 		return ret;
-@@ -719,6 +779,10 @@ pipe_release(struct inode *inode, struct file *file)
- {
- 	struct pipe_inode_info *pipe = file->private_data;
- 
-+	/*
-+	 * This lock can't be killable. How to avoid deadlock if page fault
-+	 * with pipe mutex held does not finish quickly?
-+	 */
- 	__pipe_lock(pipe);
- 	if (file->f_mode & FMODE_READ)
- 		pipe->readers--;
-@@ -744,7 +808,8 @@ pipe_fasync(int fd, struct file *filp, int on)
- 	struct pipe_inode_info *pipe = filp->private_data;
- 	int retval = 0;
- 
--	__pipe_lock(pipe);
-+	if (__pipe_lock_killable(pipe)) /* Can this be safely killable? */
-+		return -ERESTARTSYS;
- 	if (filp->f_mode & FMODE_READ)
- 		retval = fasync_helper(fd, filp, on, &pipe->fasync_readers);
- 	if ((filp->f_mode & FMODE_WRITE) && retval >= 0) {
-@@ -1040,6 +1105,7 @@ static int wait_for_partner(struct pipe_inode_info *pipe, unsigned int *cnt)
- 	int cur = *cnt;
- 
- 	while (cur == *cnt) {
-+		/* Can't become killable, for need to lock before return. */
- 		pipe_wait(pipe);
- 		if (signal_pending(current))
- 			break;
-@@ -1083,10 +1149,13 @@ static int fifo_open(struct inode *inode, struct file *filp)
- 			spin_unlock(&inode->i_lock);
- 		}
- 	}
--	filp->private_data = pipe;
--	/* OK, we have a pipe and it's pinned down */
- 
--	__pipe_lock(pipe);
-+	/* OK, we have a pipe and it's pinned down */
-+	if (__pipe_lock_killable(pipe)) {
-+		put_pipe_info(inode, pipe);
-+		return -ERESTARTSYS;
-+	}
-+	filp->private_data = pipe;
- 
- 	/* We can only do regular read/write on fifos */
- 	stream_open(inode, filp);
-@@ -1349,7 +1418,8 @@ long pipe_fcntl(struct file *file, unsigned int cmd, unsigned long arg)
- 	if (!pipe)
- 		return -EBADF;
- 
--	__pipe_lock(pipe);
-+	if (__pipe_lock_killable(pipe))
-+		return -ERESTARTSYS;
- 
- 	switch (cmd) {
- 	case F_SETPIPE_SZ:
-diff --git a/fs/splice.c b/fs/splice.c
-index d7c8a7c4db07..30069937b063 100644
---- a/fs/splice.c
-+++ b/fs/splice.c
-@@ -563,6 +563,10 @@ static int splice_from_pipe_next(struct pipe_inode_info *pipe, struct splice_des
- 			sd->need_wakeup = false;
- 		}
- 
-+		/*
-+		 * Can't become killable for now, for call dependency is
-+		 * complicated.
-+		 */
- 		pipe_wait(pipe);
- 	}
- 
-@@ -657,7 +661,8 @@ ssize_t splice_from_pipe(struct pipe_inode_info *pipe, struct file *out,
- 		.u.file = out,
- 	};
- 
--	pipe_lock(pipe);
-+	if (pipe_lock_killable(pipe))
-+		return -ERESTARTSYS;
- 	ret = __splice_from_pipe(pipe, &sd, actor);
- 	pipe_unlock(pipe);
- 
-@@ -696,7 +701,10 @@ iter_file_splice_write(struct pipe_inode_info *pipe, struct file *out,
- 	if (unlikely(!array))
- 		return -ENOMEM;
- 
--	pipe_lock(pipe);
-+	if (pipe_lock_killable(pipe)) {
-+		kfree(array);
-+		return -ERESTARTSYS;
-+	}
- 
- 	splice_from_pipe_begin(&sd);
- 	while (sd.total_len) {
-@@ -1064,8 +1072,9 @@ long do_splice_direct(struct file *in, loff_t *ppos, struct file *out,
- }
- EXPORT_SYMBOL(do_splice_direct);
- 
--static int wait_for_space(struct pipe_inode_info *pipe, unsigned flags)
-+static int wait_for_space(struct pipe_inode_info *pipe, unsigned flags, bool *locked)
- {
-+	*locked = true;
- 	for (;;) {
- 		if (unlikely(!pipe->readers)) {
- 			send_sig(SIGPIPE, current, 0);
-@@ -1077,7 +1086,10 @@ static int wait_for_space(struct pipe_inode_info *pipe, unsigned flags)
- 			return -EAGAIN;
- 		if (signal_pending(current))
- 			return -ERESTARTSYS;
--		pipe_wait(pipe);
-+		if (pipe_wait_killable(pipe)) {
-+			*locked = false;
-+			return -ERESTARTSYS;
-+		}
- 	}
- }
- 
-@@ -1153,6 +1165,8 @@ long do_splice(struct file *in, loff_t __user *off_in,
- 	}
- 
- 	if (opipe) {
-+		bool locked;
-+
- 		if (off_out)
- 			return -ESPIPE;
- 		if (off_in) {
-@@ -1167,8 +1181,9 @@ long do_splice(struct file *in, loff_t __user *off_in,
- 		if (out->f_flags & O_NONBLOCK)
- 			flags |= SPLICE_F_NONBLOCK;
- 
--		pipe_lock(opipe);
--		ret = wait_for_space(opipe, flags);
-+		if (pipe_lock_killable(opipe))
-+			return -ERESTARTSYS;
-+		ret = wait_for_space(opipe, flags, &locked);
- 		if (!ret) {
- 			unsigned int p_space;
- 
-@@ -1178,7 +1193,8 @@ long do_splice(struct file *in, loff_t __user *off_in,
- 
- 			ret = do_splice_to(in, &offset, opipe, len, flags);
- 		}
--		pipe_unlock(opipe);
-+		if (locked)
-+			pipe_unlock(opipe);
- 		if (ret > 0)
- 			wakeup_pipe_readers(opipe);
- 		if (!off_in)
-@@ -1264,7 +1280,8 @@ static long vmsplice_to_user(struct file *file, struct iov_iter *iter,
- 		return -EBADF;
- 
- 	if (sd.total_len) {
--		pipe_lock(pipe);
-+		if (pipe_lock_killable(pipe))
-+			return -ERESTARTSYS;
- 		ret = __splice_from_pipe(pipe, &sd, pipe_to_user);
- 		pipe_unlock(pipe);
- 	}
-@@ -1283,6 +1300,7 @@ static long vmsplice_to_pipe(struct file *file, struct iov_iter *iter,
- 	struct pipe_inode_info *pipe;
- 	long ret = 0;
- 	unsigned buf_flag = 0;
-+	bool locked;
- 
- 	if (flags & SPLICE_F_GIFT)
- 		buf_flag = PIPE_BUF_FLAG_GIFT;
-@@ -1291,11 +1309,13 @@ static long vmsplice_to_pipe(struct file *file, struct iov_iter *iter,
- 	if (!pipe)
- 		return -EBADF;
- 
--	pipe_lock(pipe);
--	ret = wait_for_space(pipe, flags);
-+	if (pipe_lock_killable(pipe))
-+		return -ERESTARTSYS;
-+	ret = wait_for_space(pipe, flags, &locked);
- 	if (!ret)
- 		ret = iter_to_pipe(iter, pipe, buf_flag);
--	pipe_unlock(pipe);
-+	if (locked)
-+		pipe_unlock(pipe);
- 	if (ret > 0)
- 		wakeup_pipe_readers(pipe);
- 	return ret;
-@@ -1441,7 +1461,8 @@ static int ipipe_prep(struct pipe_inode_info *pipe, unsigned int flags)
- 		return 0;
- 
- 	ret = 0;
--	pipe_lock(pipe);
-+	if (pipe_lock_killable(pipe))
-+		return -ERESTARTSYS;
- 
- 	while (pipe_empty(pipe->head, pipe->tail)) {
- 		if (signal_pending(current)) {
-@@ -1454,7 +1475,8 @@ static int ipipe_prep(struct pipe_inode_info *pipe, unsigned int flags)
- 			ret = -EAGAIN;
- 			break;
- 		}
--		pipe_wait(pipe);
-+		if (pipe_wait_killable(pipe))
-+			return -ERESTARTSYS;
- 	}
- 
- 	pipe_unlock(pipe);
-@@ -1477,7 +1499,8 @@ static int opipe_prep(struct pipe_inode_info *pipe, unsigned int flags)
- 		return 0;
- 
- 	ret = 0;
--	pipe_lock(pipe);
-+	if (pipe_lock_killable(pipe))
-+		return -ERESTARTSYS;
- 
- 	while (pipe_full(pipe->head, pipe->tail, pipe->max_usage)) {
- 		if (!pipe->readers) {
-@@ -1493,7 +1516,8 @@ static int opipe_prep(struct pipe_inode_info *pipe, unsigned int flags)
- 			ret = -ERESTARTSYS;
- 			break;
- 		}
--		pipe_wait(pipe);
-+		if (pipe_wait_killable(pipe))
-+			return -ERESTARTSYS;
- 	}
- 
- 	pipe_unlock(pipe);
-@@ -1529,7 +1553,8 @@ static int splice_pipe_to_pipe(struct pipe_inode_info *ipipe,
- 	 * grabbing by pipe info address. Otherwise two different processes
- 	 * could deadlock (one doing tee from A -> B, the other from B -> A).
- 	 */
--	pipe_double_lock(ipipe, opipe);
-+	if (pipe_double_lock_killable(ipipe, opipe))
-+		return -ERESTARTSYS;
- 
- 	i_tail = ipipe->tail;
- 	i_mask = ipipe->ring_size - 1;
-@@ -1655,7 +1680,8 @@ static int link_pipe(struct pipe_inode_info *ipipe,
- 	 * grabbing by pipe info address. Otherwise two different processes
- 	 * could deadlock (one doing tee from A -> B, the other from B -> A).
- 	 */
--	pipe_double_lock(ipipe, opipe);
-+	if (pipe_double_lock_killable(ipipe, opipe))
-+		return -ERESTARTSYS;
- 
- 	i_tail = ipipe->tail;
- 	i_mask = ipipe->ring_size - 1;
-diff --git a/include/linux/pipe_fs_i.h b/include/linux/pipe_fs_i.h
-index 50afd0d0084c..eb99c18fc12d 100644
---- a/include/linux/pipe_fs_i.h
-+++ b/include/linux/pipe_fs_i.h
-@@ -233,8 +233,10 @@ static inline bool pipe_buf_try_steal(struct pipe_inode_info *pipe,
- 
- /* Pipe lock and unlock operations */
- void pipe_lock(struct pipe_inode_info *);
-+int __must_check pipe_lock_killable(struct pipe_inode_info *pipe);
- void pipe_unlock(struct pipe_inode_info *);
--void pipe_double_lock(struct pipe_inode_info *, struct pipe_inode_info *);
-+int __must_check pipe_double_lock_killable(struct pipe_inode_info *pipe1,
-+					   struct pipe_inode_info *pipe2);
- 
- extern unsigned int pipe_max_size;
- extern unsigned long pipe_user_pages_hard;
-@@ -242,6 +244,7 @@ extern unsigned long pipe_user_pages_soft;
- 
- /* Drop the inode semaphore and wait for a pipe event, atomically */
- void pipe_wait(struct pipe_inode_info *pipe);
-+int __must_check pipe_wait_killable(struct pipe_inode_info *pipe);
- 
- struct pipe_inode_info *alloc_pipe_info(void);
- void free_pipe_info(struct pipe_inode_info *);
--- 
-2.18.4
-
+Cheers,
+Prabhakar
