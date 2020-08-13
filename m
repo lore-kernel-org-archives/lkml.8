@@ -2,81 +2,61 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA8D7C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 04:47:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06650C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 04:54:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9655620771
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 04:47:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y8LL+CRJ"
+	by mail.kernel.org (Postfix) with ESMTP id D608C20829
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 04:54:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726072AbgHMErk (ORCPT
+        id S1726082AbgHMEy3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 00:47:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37668 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbgHMErk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 00:47:40 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B33CC061757;
-        Wed, 12 Aug 2020 21:47:40 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id u63so3960184oie.5;
-        Wed, 12 Aug 2020 21:47:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=P5qGXqY4B6jxs45zEVwsoy58xzyNkr68QDhLB9YgyZY=;
-        b=Y8LL+CRJ4cXTSKp/XCADQUXdcZb9KVdYxJ4iMgbDchHwjW+nYtivIH2ODZ1PYLIDeg
-         HtL8+sB36igoD+Etu/8qf3/tbZpBIAyL7TJg9hlneZMe5c0FrgOBNhJicKzOyBIPV39d
-         A1TLWoF8A9w5NySrqZlaDR2jKwrauk2ejRD0KkC8WEBE80Tl70MN8Rr/q4wYZu7ivx/H
-         4t2EiPE/T3feJt4PPwLTDvX31ru2lCu7OtJbTHQaReR9x9ZB4uLMmOyd/yz30CmzRT2U
-         Muqz/vFEuuNSoeuvIr/NQDvbPuwWtuj7kAv3ujFrXTzp//Zl8i1i6gcU28zkCLgJeuIl
-         AtZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=P5qGXqY4B6jxs45zEVwsoy58xzyNkr68QDhLB9YgyZY=;
-        b=nb+qsxoGXxvBoJWsJ6xDRWLTWkA+YBnCUFm7ScPAh1c2TVbcJfGxNbG4qJDWjU4GTc
-         fyD5v2x03CbzYGH2019QIGR3h/7KuaqAcmcNkr4O6UUFQA0KjK//SsmMnOOgnxQX7ytl
-         90YqFy5vmuQuXka8eq/Y8Hd90qcGAyXvybLgXvyrPo/83kVw4q5Rg3Z/t98yX39SlKIA
-         F0+dkWCjLUC0crCL3NazwC7/Ej4MZDzxxK1CXow1p9cdlsSSb3YPjwv4dag8gfbpyHjx
-         H9UQF4WtS8p9RTXQkc588YgmKFszQPJCJflS0FG1UmJYT//xLajfVOwpEbAyDMrPgIJm
-         itqw==
-X-Gm-Message-State: AOAM5334ML2iFgu4vaLWoz/b03S+Semqg5+sVSAuPnm3StuM6Zzqhhgr
-        jt9vLGdjm0nE3wZnecKkqGa9Tz0ZH+Y=
-X-Google-Smtp-Source: ABdhPJx07O7Chz+nhvVjdMSTSv2nuLsJZgjaip302sCRH7Uo8XBe5jeAfF7CErYD8Wv5mFQ6F6hzTg==
-X-Received: by 2002:aca:4b54:: with SMTP id y81mr2041475oia.54.1597294059320;
-        Wed, 12 Aug 2020 21:47:39 -0700 (PDT)
-Received: from Davids-MacBook-Pro.local ([2601:282:803:7700:c1d8:5dca:975d:16e])
-        by smtp.googlemail.com with ESMTPSA id f138sm977933oig.17.2020.08.12.21.47.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Aug 2020 21:47:38 -0700 (PDT)
-Subject: Re: [RFC PATCH 0/5] Introduce /proc/all/ to gather stats from all
- processes
-To:     Andrei Vagin <avagin@gmail.com>,
-        Eugene Lubarsky <elubarsky.linux@gmail.com>
-Cc:     linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, adobriyan@gmail.com
-References: <20200810145852.9330-1-elubarsky.linux@gmail.com>
- <20200812075135.GA191218@gmail.com>
-From:   David Ahern <dsahern@gmail.com>
-Message-ID: <ffc908a7-c94b-56e6-8bb6-c47c52747d77@gmail.com>
-Date:   Wed, 12 Aug 2020 22:47:32 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.11.0
+        Thu, 13 Aug 2020 00:54:29 -0400
+Received: from mga02.intel.com ([134.134.136.20]:63538 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725747AbgHMEy3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 00:54:29 -0400
+IronPort-SDR: ImVL/sZbYaeo8e+K5Gan+SNc3rBEUb0Pmp1dx1YGNNaLnp2gOE6LcZwgjhOWaccP58PKAQp/zg
+ T6wCV+nxhDug==
+X-IronPort-AV: E=McAfee;i="6000,8403,9711"; a="142001557"
+X-IronPort-AV: E=Sophos;i="5.76,307,1592895600"; 
+   d="scan'208";a="142001557"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2020 21:54:28 -0700
+IronPort-SDR: mLOlVFMGG1+lMAWVCHxdsWhNcEll08QkHk3MO5+6k0H92Vp3SeZE22GlGR040akuQfCvqJSkkL
+ nZxkCWHafZxw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,307,1592895600"; 
+   d="scan'208";a="325296166"
+Received: from cqiang-mobl.ccr.corp.intel.com (HELO [10.238.2.93]) ([10.238.2.93])
+  by orsmga008.jf.intel.com with ESMTP; 12 Aug 2020 21:54:26 -0700
+Subject: Re: [RFC 7/7] KVM: VMX: Enable PKS for nested VM
+To:     Jim Mattson <jmattson@google.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20200807084841.7112-1-chenyi.qiang@intel.com>
+ <20200807084841.7112-8-chenyi.qiang@intel.com>
+ <CALMp9eTAo3WO5Vk_LptTDZLzymJ_96=UhRipyzTXXLxWJRGdXg@mail.gmail.com>
+From:   Chenyi Qiang <chenyi.qiang@intel.com>
+Message-ID: <1481a482-c20b-5531-736c-de0c5d3d611c@intel.com>
+Date:   Thu, 13 Aug 2020 12:52:40 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <20200812075135.GA191218@gmail.com>
-Content-Type: text/plain; charset=koi8-r
+In-Reply-To: <CALMp9eTAo3WO5Vk_LptTDZLzymJ_96=UhRipyzTXXLxWJRGdXg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -84,128 +64,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/12/20 1:51 AM, Andrei Vagin wrote:
-> 
-> I rebased the task_diag patches on top of v5.8:
-> https://github.com/avagin/linux-task-diag/tree/v5.8-task-diag
 
-Thanks for updating the patches.
 
+On 8/11/2020 8:05 AM, Jim Mattson wrote:
+> On Fri, Aug 7, 2020 at 1:47 AM Chenyi Qiang <chenyi.qiang@intel.com> wrote:
+>>
+>> PKS MSR passes through guest directly. Configure the MSR to match the
+>> L0/L1 settings so that nested VM runs PKS properly.
+>>
+>> Signed-off-by: Chenyi Qiang <chenyi.qiang@intel.com>
+>> ---
+>>   arch/x86/kvm/vmx/nested.c | 32 ++++++++++++++++++++++++++++++++
+>>   arch/x86/kvm/vmx/vmcs12.c |  2 ++
+>>   arch/x86/kvm/vmx/vmcs12.h |  6 +++++-
+>>   arch/x86/kvm/vmx/vmx.c    | 10 ++++++++++
+>>   arch/x86/kvm/vmx/vmx.h    |  1 +
+>>   5 files changed, 50 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+>> index df2c2e733549..1f9823d21ecd 100644
+>> --- a/arch/x86/kvm/vmx/nested.c
+>> +++ b/arch/x86/kvm/vmx/nested.c
+>> @@ -647,6 +647,12 @@ static inline bool nested_vmx_prepare_msr_bitmap(struct kvm_vcpu *vcpu,
+>>                                          MSR_IA32_PRED_CMD,
+>>                                          MSR_TYPE_W);
+>>
+>> +       if (!msr_write_intercepted_l01(vcpu, MSR_IA32_PKRS))
+>> +               nested_vmx_disable_intercept_for_msr(
+>> +                                       msr_bitmap_l1, msr_bitmap_l0,
+>> +                                       MSR_IA32_PKRS,
+>> +                                       MSR_TYPE_R | MSR_TYPE_W);
 > 
-> /proc/pid files have three major limitations:
-> * Requires at least three syscalls per process per file
->   open(), read(), close()
-> * Variety of formats, mostly text based
->   The kernel spent time to encode binary data into a text format and
->   then tools like top and ps spent time to decode them back to a binary
->   format.
-> * Sometimes slow due to extra attributes
->   For example, /proc/PID/smaps contains a lot of useful informations
->   about memory mappings and memory consumption for each of them. But
->   even if we don't need memory consumption fields, the kernel will
->   spend time to collect this information.
+> What if L1 intercepts only *reads* of MSR_IA32_PKRS?
+> 
+>>          kvm_vcpu_unmap(vcpu, &to_vmx(vcpu)->nested.msr_bitmap_map, false);
+>>
+>>          return true;
+> 
+>> @@ -2509,6 +2519,11 @@ static int prepare_vmcs02(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12,
+>>          if (kvm_mpx_supported() && (!vmx->nested.nested_run_pending ||
+>>              !(vmcs12->vm_entry_controls & VM_ENTRY_LOAD_BNDCFGS)))
+>>                  vmcs_write64(GUEST_BNDCFGS, vmx->nested.vmcs01_guest_bndcfgs);
+>> +
+>> +       if (kvm_cpu_cap_has(X86_FEATURE_PKS) &&
+> 
+> Is the above check superfluous? I would assume that the L1 guest can't
+> set VM_ENTRY_LOAD_IA32_PKRS unless this is true.
+> 
 
-that's what I recall as well.
+I enforce this check to ensure vmcs_write to the Guest_IA32_PKRS without 
+error. if deleted, vmcs_write to GUEST_IA32_PKRS may executed when PKS 
+is unsupported.
 
+>> +           (!vmx->nested.nested_run_pending ||
+>> +            !(vmcs12->vm_entry_controls & VM_ENTRY_LOAD_IA32_PKRS)))
+>> +               vmcs_write64(GUEST_IA32_PKRS, vmx->nested.vmcs01_guest_pkrs);
 > 
-> More details and numbers are in this article:
-> https://avagin.github.io/how-fast-is-procfs
+> This doesn't seem right to me. On the target of a live migration, with
+> L2 active at the time the snapshot was taken (i.e.,
+> vmx->nested.nested_run_pending=0), it looks like we're going to try to
+> overwrite the current L2 PKRS value with L1's PKRS value (except that
+> in this situation, vmx->nested.vmcs01_guest_pkrs should actually be
+> 0). Am I missing something?
 > 
-> This new interface doesn't have only one of these limitations, but
-> task_diag doesn't have all of them.
-> 
-> And I compared how fast each of these interfaces:
-> 
-> The test environment:
-> CPU: Intel(R) Core(TM) i5-6300U CPU @ 2.40GHz
-> RAM: 16GB
-> kernel: v5.8 with task_diag and /proc/all patches.
-> 100K processes:
-> $ ps ax | wc -l
-> 10228
 
-100k processes but showing 10k here??
+We overwrite the L2 PKRS with L1's value when L2 doesn't support PKS. 
+Because the L1's VM_ENTRY_LOAD_IA32_PKRS is off, we need to migrate L1's 
+PKRS to L2.
 
-> 
-> $ time cat /proc/all/status > /dev/null
-> 
-> real	0m0.577s
-> user	0m0.017s
-> sys	0m0.559s
-> 
-> task_proc_all is used to read /proc/pid/status for all tasks:
-> https://github.com/avagin/linux-task-diag/blob/master/tools/testing/selftests/task_diag/task_proc_all.c
-> 
-> $ time ./task_proc_all status
-> tasks: 100230
-> 
-> real	0m0.924s
-> user	0m0.054s
-> sys	0m0.858s
+>>          vmx_set_rflags(vcpu, vmcs12->guest_rflags);
+>>
+>>          /* EXCEPTION_BITMAP and CR0_GUEST_HOST_MASK should basically be the
 > 
 > 
-> /proc/all/status is about 40% faster than /proc/*/status.
+>> @@ -3916,6 +3943,8 @@ static void sync_vmcs02_to_vmcs12_rare(struct kvm_vcpu *vcpu,
+>>                  vmcs_readl(GUEST_PENDING_DBG_EXCEPTIONS);
+>>          if (kvm_mpx_supported())
+>>                  vmcs12->guest_bndcfgs = vmcs_read64(GUEST_BNDCFGS);
+>> +       if (kvm_cpu_cap_has(X86_FEATURE_PKS))
 > 
-> Now let's take a look at the perf output:
+> Shouldn't we be checking to see if the *virtual* CPU supports PKS
+> before writing anything into vmcs12->guest_ia32_pkrs?
 > 
-> $ time perf record -g cat /proc/all/status > /dev/null
-> $ perf report
-> -   98.08%     1.38%  cat      [kernel.vmlinux]  [k] entry_SYSCALL_64
->    - 96.70% entry_SYSCALL_64
->       - do_syscall_64
->          - 94.97% ksys_read
->             - 94.80% vfs_read
->                - 94.58% proc_reg_read
->                   - seq_read
->                      - 87.95% proc_pid_status
->                         + 13.10% seq_put_decimal_ull_width
->                         - 11.69% task_mem
->                            + 9.48% seq_put_decimal_ull_width
->                         + 10.63% seq_printf
->                         - 10.35% cpuset_task_status_allowed
->                            + seq_printf
->                         - 9.84% render_sigset_t
->                              1.61% seq_putc
->                            + 1.61% seq_puts
->                         + 4.99% proc_task_name
->                         + 4.11% seq_puts
->                         - 3.76% render_cap_t
->                              2.38% seq_put_hex_ll
->                            + 1.25% seq_puts
->                           2.64% __task_pid_nr_ns
->                         + 1.54% get_task_mm
->                         + 1.34% __lock_task_sighand
->                         + 0.70% from_kuid_munged
->                           0.61% get_task_cred
->                           0.56% seq_putc
->                           0.52% hugetlb_report_usage
->                           0.52% from_kgid_munged
->                      + 4.30% proc_all_next
->                      + 0.82% _copy_to_user 
-> 
-> We can see that the kernel spent more than 50% of the time to encode binary
-> data into a text format.
-> 
-> Now let's see how fast task_diag:
-> 
-> $ time ./task_diag_all all -c -q
-> 
-> real	0m0.087s
-> user	0m0.001s
-> sys	0m0.082s
-> 
-> Maybe we need resurrect the task_diag series instead of inventing
-> another less-effective interface...
 
-I think the netlink message design is the better way to go. As system
-sizes continue to increase (> 100 cpus is common now) you need to be
-able to pass the right data to userspace as fast as possible to keep up
-with what can be a very dynamic userspace and set of processes.
+Yes, It's reasonable.
 
-When you first proposed this idea I was working on systems with >= 1k
-cpus and the netlink option was able to keep up with a 'make -j N' on
-those systems. `perf record` walking /proc would never finish
-initializing - I had to add a "done initializing" message to know when
-to start a test. With the task_diag approach, perf could collect the
-data in short order and move on to recording data.
-
+>> +               vmcs12->guest_ia32_pkrs = vmcs_read64(GUEST_IA32_PKRS);
+>>
+>>          vmx->nested.need_sync_vmcs02_to_vmcs12_rare = false;
+>>   }
