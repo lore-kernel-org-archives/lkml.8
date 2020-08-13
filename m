@@ -2,196 +2,229 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A885BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:31:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1EAAC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:32:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86C3320781
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:31:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB72B20781
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:32:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FGbnnhSH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726685AbgHMPba (ORCPT
+        id S1726696AbgHMPcB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 11:31:30 -0400
-Received: from smtp-bc0c.mail.infomaniak.ch ([45.157.188.12]:53121 "EHLO
-        smtp-bc0c.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726486AbgHMPb2 (ORCPT
+        Thu, 13 Aug 2020 11:32:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52076 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726334AbgHMPb7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 11:31:28 -0400
-Received: from smtp-3-0001.mail.infomaniak.ch (unknown [10.4.36.108])
-        by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4BS9XG4mmCzlhLv2;
-        Thu, 13 Aug 2020 17:31:26 +0200 (CEST)
-Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
-        by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4BS9XC0vpZzlh8T5;
-        Thu, 13 Aug 2020 17:31:23 +0200 (CEST)
-Subject: Re: [PATCH v7 3/7] exec: Move path_noexec() check earlier
-To:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Thibaut Sautereau <thibaut.sautereau@clip-os.org>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-References: <20200723171227.446711-1-mic@digikod.net>
- <20200723171227.446711-4-mic@digikod.net>
- <87a6z1m0u1.fsf@x220.int.ebiederm.org>
-From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
-Message-ID: <89b6bb7f-d841-cf0a-8d5c-26c611b56ae7@digikod.net>
-Date:   Thu, 13 Aug 2020 17:31:22 +0200
-User-Agent: 
-MIME-Version: 1.0
-In-Reply-To: <87a6z1m0u1.fsf@x220.int.ebiederm.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
-X-Antivirus-Code: 0x100000
+        Thu, 13 Aug 2020 11:31:59 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7C6EC061757
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 08:31:58 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id f5so2772216plr.9
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 08:31:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=1LEusT9oa0L+q3BIsPrMMq4pG+6qT2ZmHiLBsZn4HGE=;
+        b=FGbnnhSH6cfKYN3u4+YOy8mBz3vPAnoWPkXX0A8ALZqSEW7UkJRXmyNT3Rey0B5EbS
+         D0wLgqb7vd7CXUxNgq0Ffv3zwFFbcyruuZNss8A+6md3fCyAZr9GZSlC+7l8RBjSuRob
+         217twVJaBLKu6evVJ1ntryGbbJJ8TXo5s+kV8DH2bT9biH7dw2KzM9/AbIAlP1QSvjdT
+         BVUByhWWjshyUXgIYvJFrWe+Txrf/CRgIzA/xQ06yPcpKSONbhQPEp2KaR5rZRczzZH4
+         Fls7ABA+AW/6Y3rB93hLkeL3CIYWEOYQJKz69AqKs6rDabIUtSsg99ZVs1ebenBEgkum
+         4sqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=1LEusT9oa0L+q3BIsPrMMq4pG+6qT2ZmHiLBsZn4HGE=;
+        b=moB1/uUCxuPanYJAVZHEDTuZz2zS59FiCsb0vn1erqv2M5m/SCm3l89n5KW3F4YfGX
+         /oHcG74vQFMdt2qbUqkNUDVJfX5/de1ol/UvpSzewvkoom2fBLtTN7UyUTK9GYV54aDh
+         I33VJTA/We6yLTJyMPeGIty/em01niYmYgxavSm4nTsAjb1Znbt2L+WKfhx6Tl0fW8Oc
+         gY0s/DJqmbQ0Ma1V9M4yDtdHfuneRhTnuqp1KDjosNz1g1ACEHD0whEqCp24eZWqPXaF
+         Cdza1153j19Su+/MvH3QtmkHu5OxKvXyD0Kogyf/8JrBuUb71MekqK0jOIn3HiLh/qQe
+         rVbg==
+X-Gm-Message-State: AOAM530zOE2YazDdi/DhBxKV1kmUcM4RIuhApc/6HP2rK6PvrSt600qy
+        +dJqMmu713X+NAytb/InejPJ84138t4=
+X-Google-Smtp-Source: ABdhPJxQDSrZyCASJdEXe4r1OePxEki+gNmooht0uyTMPChsOUS8l0VZpXPidd7yAIoUVJa9u5yf7w==
+X-Received: by 2002:a17:902:40a:: with SMTP id 10mr4553478ple.260.1597332716468;
+        Thu, 13 Aug 2020 08:31:56 -0700 (PDT)
+Received: from inforce-server-Z9PE-D8-WS.routereb3c90.com ([106.51.138.45])
+        by smtp.gmail.com with ESMTPSA id s8sm5532689pju.54.2020.08.13.08.31.53
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 13 Aug 2020 08:31:55 -0700 (PDT)
+From:   Vinay Simha BN <simhavcs@gmail.com>
+Cc:     Vinay Simha BN <simhavcs@gmail.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org (open list:DRM DRIVERS),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2] drm/bridge/tc358775: Fixes bus formats read
+Date:   Thu, 13 Aug 2020 21:01:26 +0530
+Message-Id: <1597332687-23938-1-git-send-email-simhavcs@gmail.com>
+X-Mailer: git-send-email 2.7.4
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kees Cook wrote this patch, which is in Andrew Morton's tree, but I
-think you're talking about O_MAYEXEC, not this patch specifically.
+- atomic_check removed
+- video data input and output formats added
+- bus formats read from drm_bridge_state.output_bus_cfg.format
+  and .atomic_get_input_bus_fmts() instead of connector
 
-On 11/08/2020 21:36, Eric W. Biederman wrote:
-> Mickaël Salaün <mic@digikod.net> writes:
-> 
->> From: Kees Cook <keescook@chromium.org>
->>
->> The path_noexec() check, like the regular file check, was happening too
->> late, letting LSMs see impossible execve()s. Check it earlier as well
->> in may_open() and collect the redundant fs/exec.c path_noexec() test
->> under the same robustness comment as the S_ISREG() check.
->>
->> My notes on the call path, and related arguments, checks, etc:
-> 
-> A big question arises, that I think someone already asked.
+Signed-off-by: Vinay Simha BN <simhavcs@gmail.com>
 
-Al Viro and Jann Horn expressed such concerns for O_MAYEXEC:
-https://lore.kernel.org/lkml/0cc94c91-afd3-27cd-b831-8ea16ca8ca93@digikod.net/
+---
+v1:
+ * Laurent Pinchart review comments incorporated
+   drm_bridge_state.output_bus_cfg.format
+   instead of connector
+v2:
+ * Laurent Pinchart review comments incorporated
+   atomic_check removed
+   video data input and output formats added
+---
+ drivers/gpu/drm/bridge/tc358775.c | 75 ++++++++++++++++++++++++++++++---------
+ 1 file changed, 58 insertions(+), 17 deletions(-)
 
-> 
-> Why perform this test in may_open directly instead of moving
-> it into inode_permission.  That way the code can be shared with
-> faccessat, and any other code path that wants it?
+diff --git a/drivers/gpu/drm/bridge/tc358775.c b/drivers/gpu/drm/bridge/tc358775.c
+index 7da15cd..58f87ec 100644
+--- a/drivers/gpu/drm/bridge/tc358775.c
++++ b/drivers/gpu/drm/bridge/tc358775.c
+@@ -271,6 +271,20 @@ struct tc_data {
+ 	struct gpio_desc	*stby_gpio;
+ 	u8			lvds_link; /* single-link or dual-link */
+ 	u8			bpc;
++	u32			output_bus_fmt;
++};
++
++static const u32 tc_lvds_in_bus_fmts[] = {
++	MEDIA_BUS_FMT_RGB565_1X16,
++	MEDIA_BUS_FMT_RGB666_1X18,
++	MEDIA_BUS_FMT_RGB666_1X24_CPADHI,
++	MEDIA_BUS_FMT_RBG888_1X24,
++};
++
++static const u32 tc_lvds_out_bus_fmts[] = {
++	MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA,
++	MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
++	MEDIA_BUS_FMT_RGB666_1X7X3_SPWG,
+ };
+ 
+ static inline struct tc_data *bridge_to_tc(struct drm_bridge *b)
+@@ -359,19 +373,6 @@ static void d2l_write(struct i2c_client *i2c, u16 addr, u32 val)
+ 			ret, addr);
+ }
+ 
+-/* helper function to access bus_formats */
+-static struct drm_connector *get_connector(struct drm_encoder *encoder)
+-{
+-	struct drm_device *dev = encoder->dev;
+-	struct drm_connector *connector;
+-
+-	list_for_each_entry(connector, &dev->mode_config.connector_list, head)
+-		if (connector->encoder == encoder)
+-			return connector;
+-
+-	return NULL;
+-}
+-
+ static void tc_bridge_enable(struct drm_bridge *bridge)
+ {
+ 	struct tc_data *tc = bridge_to_tc(bridge);
+@@ -380,7 +381,10 @@ static void tc_bridge_enable(struct drm_bridge *bridge)
+ 	u32 val = 0;
+ 	u16 dsiclk, clkdiv, byteclk, t1, t2, t3, vsdelay;
+ 	struct drm_display_mode *mode;
+-	struct drm_connector *connector = get_connector(bridge->encoder);
++	struct drm_bridge_state *state =
++			drm_priv_to_bridge_state(bridge->base.state);
++
++	tc->output_bus_fmt = state->output_bus_cfg.format;
+ 
+ 	mode = &bridge->encoder->crtc->state->adjusted_mode;
+ 
+@@ -451,14 +455,13 @@ static void tc_bridge_enable(struct drm_bridge *bridge)
+ 	d2l_write(tc->i2c, LVPHY0, LV_PHY0_PRBS_ON(4) | LV_PHY0_ND(6));
+ 
+ 	dev_dbg(tc->dev, "bus_formats %04x bpc %d\n",
+-		connector->display_info.bus_formats[0],
++		tc->output_bus_fmt,
+ 		tc->bpc);
+ 	/*
+ 	 * Default hardware register settings of tc358775 configured
+ 	 * with MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA jeida-24 format
+ 	 */
+-	if (connector->display_info.bus_formats[0] ==
+-		MEDIA_BUS_FMT_RGB888_1X7X4_SPWG) {
++	if (tc->output_bus_fmt == MEDIA_BUS_FMT_RGB888_1X7X4_SPWG) {
+ 		/* VESA-24 */
+ 		d2l_write(tc->i2c, LV_MX0003, LV_MX(LVI_R0, LVI_R1, LVI_R2, LVI_R3));
+ 		d2l_write(tc->i2c, LV_MX0407, LV_MX(LVI_R4, LVI_R7, LVI_R5, LVI_G0));
+@@ -590,6 +593,40 @@ static int tc358775_parse_dt(struct device_node *np, struct tc_data *tc)
+ 	return 0;
+ }
+ 
++static u32 *
++tc_bridge_get_input_bus_fmts(struct drm_bridge *bridge,
++			     struct drm_bridge_state *bridge_state,
++			     struct drm_crtc_state *crtc_state,
++			     struct drm_connector_state *conn_state,
++			     u32 output_fmt,
++			     unsigned int *num_input_fmts)
++{
++	u32 *input_fmts = NULL;
++	u8 i;
++
++	*num_input_fmts = 0;
++
++	for (i = 0 ; i < ARRAY_SIZE(tc_lvds_out_bus_fmts) ; ++i) {
++		if (output_fmt == tc_lvds_out_bus_fmts[i])
++			break;
++	}
++
++	if (i == ARRAY_SIZE(tc_lvds_out_bus_fmts))
++		return NULL;
++
++	*num_input_fmts = ARRAY_SIZE(tc_lvds_in_bus_fmts);
++
++	input_fmts = kcalloc(*num_input_fmts, ARRAY_SIZE(tc_lvds_in_bus_fmts),
++			     GFP_KERNEL);
++	if (!input_fmts)
++		return NULL;
++
++	for (i = 0; i < ARRAY_SIZE(tc_lvds_in_bus_fmts); ++i)
++		input_fmts[i] = tc_lvds_in_bus_fmts[i];
++
++	return input_fmts;
++}
++
+ static int tc_bridge_attach(struct drm_bridge *bridge,
+ 			    enum drm_bridge_attach_flags flags)
+ {
+@@ -639,6 +676,10 @@ static int tc_bridge_attach(struct drm_bridge *bridge,
+ }
+ 
+ static const struct drm_bridge_funcs tc_bridge_funcs = {
++	.atomic_duplicate_state = drm_atomic_helper_bridge_duplicate_state,
++	.atomic_destroy_state = drm_atomic_helper_bridge_destroy_state,
++	.atomic_reset = drm_atomic_helper_bridge_reset,
++	.atomic_get_input_bus_fmts = tc_bridge_get_input_bus_fmts,
+ 	.attach = tc_bridge_attach,
+ 	.pre_enable = tc_bridge_pre_enable,
+ 	.enable = tc_bridge_enable,
+-- 
+2.7.4
 
-This patch is just a refactoring.
-
-About O_MAYEXEC, path-based LSM, IMA and IPE need to work on a struct
-file, whereas inode_permission() only gives a struct inode. However,
-faccessat2(2) (with extended flags) seems to be the perfect candidate if
-we want to be able to check file descriptors.
-
-> 
-> That would look to provide a more maintainable kernel.
-
-Why would it be more maintainable?
-
-> 
-> Eric
-> 
-> 
->> do_open_execat()
->>     struct open_flags open_exec_flags = {
->>         .open_flag = O_LARGEFILE | O_RDONLY | __FMODE_EXEC,
->>         .acc_mode = MAY_EXEC,
->>         ...
->>     do_filp_open(dfd, filename, open_flags)
->>         path_openat(nameidata, open_flags, flags)
->>             file = alloc_empty_file(open_flags, current_cred());
->>             do_open(nameidata, file, open_flags)
->>                 may_open(path, acc_mode, open_flag)
->>                     /* new location of MAY_EXEC vs path_noexec() test */
->>                     inode_permission(inode, MAY_OPEN | acc_mode)
->>                         security_inode_permission(inode, acc_mode)
->>                 vfs_open(path, file)
->>                     do_dentry_open(file, path->dentry->d_inode, open)
->>                         security_file_open(f)
->>                         open()
->>     /* old location of path_noexec() test */
->>
->> Signed-off-by: Mickaël Salaün <mic@digikod.net>
->> Signed-off-by: Kees Cook <keescook@chromium.org>
->> Link: https://lore.kernel.org/r/20200605160013.3954297-4-keescook@chromium.org
->> ---
->>  fs/exec.c  | 12 ++++--------
->>  fs/namei.c |  4 ++++
->>  2 files changed, 8 insertions(+), 8 deletions(-)
->>
->> diff --git a/fs/exec.c b/fs/exec.c
->> index bdc6a6eb5dce..4eea20c27b01 100644
->> --- a/fs/exec.c
->> +++ b/fs/exec.c
->> @@ -147,10 +147,8 @@ SYSCALL_DEFINE1(uselib, const char __user *, library)
->>  	 * and check again at the very end too.
->>  	 */
->>  	error = -EACCES;
->> -	if (WARN_ON_ONCE(!S_ISREG(file_inode(file)->i_mode)))
->> -		goto exit;
->> -
->> -	if (path_noexec(&file->f_path))
->> +	if (WARN_ON_ONCE(!S_ISREG(file_inode(file)->i_mode) ||
->> +			 path_noexec(&file->f_path)))
->>  		goto exit;
->>  
->>  	fsnotify_open(file);
->> @@ -897,10 +895,8 @@ static struct file *do_open_execat(int fd, struct filename *name, int flags)
->>  	 * and check again at the very end too.
->>  	 */
->>  	err = -EACCES;
->> -	if (WARN_ON_ONCE(!S_ISREG(file_inode(file)->i_mode)))
->> -		goto exit;
->> -
->> -	if (path_noexec(&file->f_path))
->> +	if (WARN_ON_ONCE(!S_ISREG(file_inode(file)->i_mode) ||
->> +			 path_noexec(&file->f_path)))
->>  		goto exit;
->>  
->>  	err = deny_write_access(file);
->> diff --git a/fs/namei.c b/fs/namei.c
->> index a559ad943970..ddc9b25540fe 100644
->> --- a/fs/namei.c
->> +++ b/fs/namei.c
->> @@ -2863,6 +2863,10 @@ static int may_open(const struct path *path, int acc_mode, int flag)
->>  			return -EACCES;
->>  		flag &= ~O_TRUNC;
->>  		break;
->> +	case S_IFREG:
->> +		if ((acc_mode & MAY_EXEC) && path_noexec(path))
->> +			return -EACCES;
->> +		break;
->>  	}
->>  
->>  	error = inode_permission(inode, MAY_OPEN | acc_mode);
