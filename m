@@ -2,111 +2,112 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C29C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 17:52:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F7AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 17:58:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAA6520829
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 17:52:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72E2E2078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 17:58:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HHUdhxL4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NICIimap"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726604AbgHMRwY (ORCPT
+        id S1726564AbgHMR66 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 13:52:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45508 "EHLO
+        Thu, 13 Aug 2020 13:58:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726174AbgHMRwY (ORCPT
+        with ESMTP id S1726167AbgHMR66 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 13:52:24 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22BD8C061383
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 10:52:24 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id q9so5504561oth.5
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 10:52:24 -0700 (PDT)
+        Thu, 13 Aug 2020 13:58:58 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E249C061757;
+        Thu, 13 Aug 2020 10:58:58 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id e11so5528554otk.4;
+        Thu, 13 Aug 2020 10:58:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=k8yck4RdxUV1UPISOKBseddHGlGtyaOeMcKpGKtvB5c=;
-        b=HHUdhxL4MGJXkKRiv5isZeF1DkyMTSw2yBABrfsO4Xva8T2zhq3GQMK3f5sW7YoGHx
-         23D2UVUUIlyJxdJ9o+ngPoLZFL2OGto96L5+Ip2NErBzR3s56SJDTnDE3I25F+BBDKSv
-         yse8+HTv56nArcjdoR3nUsOhVt9Y/WtgQ7ysCncj6YtFq3Lv2SR5fCloxjrzlmVxNewQ
-         ki1AxnIxj2wq/I6qJUvqVOmFawfFSLrqwta/oi/0Eh6h91Oyhz+5GVyMHarpmpJNGI4q
-         A2m9I7im1yC7QJBtfj/4m+diDBkN5enPS2zyUR8cW/jvYpB3sSt3PLx3EsfP8zLBTlTK
-         vszg==
+        bh=D4q+Wr31o49gOBLsJFiOWZgVO2qtVCG5nZzCULshtek=;
+        b=NICIimapC4xks9d1b1WGN9gFIbckG9/NSIarZxjqRA0Hk6P2HCPjk+f77hpXQrGn9q
+         taEeHKuYlsZQbt9+ko31tELfwtj30a807GI96Vvu9V6r+K4uDZgW0J3yr1lPmjyWIayx
+         HsSIR+xO+MX8O5wPWAUdxTy3GfbEtarqv0x2v08tMI5E4bM5l2e/C4L/1WtitHP4tC3U
+         dKQkRlOoAWbg4VGsXfVKn9Owfdn9ZsUOIoYVU567XvlT68f+hmA+4zLAdt7OhdHKf/zQ
+         ZAsa1uPeuAOvzm1lPs7CS/j+uQlj5ZQQLgy4GgwZbm3ZnfIPpWupaAPh81xQYx21rcG9
+         ifew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=k8yck4RdxUV1UPISOKBseddHGlGtyaOeMcKpGKtvB5c=;
-        b=ukSzLqA8oc8VlV0XKrAR6Ci2rbCgeJBFkKbLcm16QkjFZobWpzy3v19m8fSoPLo5ny
-         +NZG3sGmZuZGjlOJ0oaycPCAMMpT4eAb9gC90M4Ueh1f0J3DrsDZ0CfyT5OPiyP8y11l
-         LmMIgqDbgp+MVlKiNzxbbfSVpMP5RtNuFjn6yrEQvnzCGF3ziQk6udgf4C6qhM1WhXlE
-         vKJbKYb/lIRBBUWPRS09VEJRzq9tE9S/UlTth8Z+myIXRmFSdVp/R8aAuYjX/UJdcCwl
-         SQzpXtzkzhfZenZiEL0/BG6Eve/1uaPVUkuXQ2JyTjI5iZxo2LfEH229Y08ajeXP7Um5
-         iY+Q==
-X-Gm-Message-State: AOAM531mgd9pBD8hSQWLX0BuFG+HJZgLuom4CNC2kIG41u855R0OwsnV
-        HsagrE7BXjQfgzH6VKpsVoEb190DYu3LXJhg236fLA==
-X-Google-Smtp-Source: ABdhPJyEFFAL1NxJEK/txJK2vu6Y2XY3X3D1k5/2k0C7zRHTi5Vb1j4WYuZEzG0GPL9KBEF4kKGfI6p6awvXRFkM4Q8=
-X-Received: by 2002:a9d:22ca:: with SMTP id y68mr5263764ota.56.1597341143209;
- Thu, 13 Aug 2020 10:52:23 -0700 (PDT)
+        bh=D4q+Wr31o49gOBLsJFiOWZgVO2qtVCG5nZzCULshtek=;
+        b=opsZt2HLt/NCJBQxeSUku78nPcRcuJ7cPbV8opL/J57Yz4/W0nDgCElEFDAJIvDgh/
+         RxjdwQ3+RlNB+GflToQ6PTqw2TY3hHeKjSrjqtQEll1Jyh+8e2pFwmn4uPYxkUhan3gR
+         uw7qZVolODxJfk4IXpTUFt2/zjsxyDCrKr6uSCJp1ca5FcFEwh8SxjUWa3TzUjh1NCtO
+         ZIb+MbxnV2f2rUDyoLiSuASLDf0qEJGO8ni4AS157+uSrm8zP6Bff1hi/Ev/O07hKI1l
+         a5f/w5GWGLjON8bzgnn0iZC7dJTH8uX7b0VBW0Gtkk2HGZ7ZeRMxtUlSXtUMKkhpAI8w
+         S7dw==
+X-Gm-Message-State: AOAM533FIB66Sskj/JsaCNa0y6jm/9RaDhEgnUvLHIEchLF/vDYRbYZo
+        W8XgZchnwMZ65s5bo74xxUH/lzn+o+SecYmmuEk=
+X-Google-Smtp-Source: ABdhPJxB9IFGGJpCpA7o0FMlikVRIzRUmWUrrE6kAwcupxXeo+xO20t31/hfkgmbXGPY2ZeSxXOT7X3vjTGCp6vlk2U=
+X-Received: by 2002:a9d:67d3:: with SMTP id c19mr5500387otn.162.1597341537454;
+ Thu, 13 Aug 2020 10:58:57 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200807084841.7112-1-chenyi.qiang@intel.com> <20200807084841.7112-8-chenyi.qiang@intel.com>
- <CALMp9eTAo3WO5Vk_LptTDZLzymJ_96=UhRipyzTXXLxWJRGdXg@mail.gmail.com> <1481a482-c20b-5531-736c-de0c5d3d611c@intel.com>
-In-Reply-To: <1481a482-c20b-5531-736c-de0c5d3d611c@intel.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Thu, 13 Aug 2020 10:52:11 -0700
-Message-ID: <CALMp9eQ5HhhXaEVKwnn6N6xxd2QOkNkE7ysiwq+3P=HB-Y1uzg@mail.gmail.com>
-Subject: Re: [RFC 7/7] KVM: VMX: Enable PKS for nested VM
-To:     Chenyi Qiang <chenyi.qiang@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20200813170707.2659-1-nramas@linux.microsoft.com>
+ <20200813170707.2659-3-nramas@linux.microsoft.com> <5f738fd8-fe28-5358-b3d8-b671b45caa7f@gmail.com>
+ <7315b7e8-2c53-2555-bc2e-aae42e16aaa2@linux.microsoft.com>
+In-Reply-To: <7315b7e8-2c53-2555-bc2e-aae42e16aaa2@linux.microsoft.com>
+From:   Stephen Smalley <stephen.smalley.work@gmail.com>
+Date:   Thu, 13 Aug 2020 13:58:46 -0400
+Message-ID: <CAEjxPJ6sZdm2w=bbkL0uJyEkHw0gCT_y812WQBZPtLCJzO6r3A@mail.gmail.com>
+Subject: Re: [PATCH 2/2] SELinux: Measure state and hash of policy using IMA
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Cc:     Mimi Zohar <zohar@linux.ibm.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Tyler Hicks <tyhicks@linux.microsoft.com>,
+        tusharsu@linux.microsoft.com, sashal@kernel.org,
+        James Morris <jmorris@namei.org>,
+        linux-integrity@vger.kernel.org,
+        SElinux list <selinux@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        paul Moore <paul@paul-moore.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 9:54 PM Chenyi Qiang <chenyi.qiang@intel.com> wrote:
+On Thu, Aug 13, 2020 at 1:52 PM Lakshmi Ramasubramanian
+<nramas@linux.microsoft.com> wrote:
 >
+> On 8/13/20 10:42 AM, Stephen Smalley wrote:
 >
+> >> diff --git a/security/selinux/measure.c b/security/selinux/measure.c
+> >> new file mode 100644
+> >> index 000000000000..f21b7de4e2ae
+> >> --- /dev/null
+> >> +++ b/security/selinux/measure.c
+> >> @@ -0,0 +1,204 @@
+> >> +static int selinux_hash_buffer(void *buf, size_t buf_len,
+> >> +                   void **buf_hash, int *buf_hash_len)
+> >> +{
+> >> +    struct crypto_shash *tfm;
+> >> +    struct shash_desc *desc = NULL;
+> >> +    void *digest = NULL;
+> >> +    int desc_size;
+> >> +    int digest_size;
+> >> +    int ret = 0;
+> >> +
+> >> +    tfm = crypto_alloc_shash("sha256", 0, 0);
+> >> +    if (IS_ERR(tfm))
+> >> +        return PTR_ERR(tfm);
+> > Can we make the algorithm selectable via kernel parameter and/or writing
+> > to a new selinuxfs node?
 >
-> On 8/11/2020 8:05 AM, Jim Mattson wrote:
-> > On Fri, Aug 7, 2020 at 1:47 AM Chenyi Qiang <chenyi.qiang@intel.com> wrote:
-> >>
-> >> PKS MSR passes through guest directly. Configure the MSR to match the
-> >> L0/L1 settings so that nested VM runs PKS properly.
-> >>
-> >> Signed-off-by: Chenyi Qiang <chenyi.qiang@intel.com>
-> >> ---
+> I can add a kernel parameter to select this hash algorithm.
 
-> >> +           (!vmx->nested.nested_run_pending ||
-> >> +            !(vmcs12->vm_entry_controls & VM_ENTRY_LOAD_IA32_PKRS)))
-> >> +               vmcs_write64(GUEST_IA32_PKRS, vmx->nested.vmcs01_guest_pkrs);
-> >
-> > This doesn't seem right to me. On the target of a live migration, with
-> > L2 active at the time the snapshot was taken (i.e.,
-> > vmx->nested.nested_run_pending=0), it looks like we're going to try to
-> > overwrite the current L2 PKRS value with L1's PKRS value (except that
-> > in this situation, vmx->nested.vmcs01_guest_pkrs should actually be
-> > 0). Am I missing something?
-> >
->
-> We overwrite the L2 PKRS with L1's value when L2 doesn't support PKS.
-> Because the L1's VM_ENTRY_LOAD_IA32_PKRS is off, we need to migrate L1's
-> PKRS to L2.
-
-I'm thinking of the case where vmx->nested.nested_run_pending is
-false, and we are processing a KVM_SET_NESTED_STATE ioctl, yet
-VM_ENTRY_LOAD_IA32_PKRS *is* set in the vmcs12.
+Also can we provide a Kconfig option for the default value like IMA does?
