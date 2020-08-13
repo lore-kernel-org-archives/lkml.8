@@ -2,85 +2,104 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E3D7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 21:10:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17F59C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 21:16:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5575B205CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 21:10:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9F6920774
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 21:16:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597353410;
+	bh=2Ooihe4KSVD79vIEoof3mvIQPzL5hsPzGEIKiY4N0hY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Xt1s7DWPhFiPasMf3kpLkl3+8MV/OKr8lrolzfoqC6iaPFSblPq8crlTkBgCD0l0b
+	 EI0K1BWOeBS/PnTsNASeOettDvqIXNIiPaftAH4cibVFa9JdHw70JSfy6cZIdWw5F/
+	 bLHmdWPqL/hum4B/f2ZTBpZW0Rl+wELpJ6RW+KR8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726648AbgHMVKt (ORCPT
+        id S1726583AbgHMVQu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 17:10:49 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:33712 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726529AbgHMVKs (ORCPT
+        Thu, 13 Aug 2020 17:16:50 -0400
+Received: from mail-ej1-f66.google.com ([209.85.218.66]:46942 "EHLO
+        mail-ej1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726192AbgHMVQs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 17:10:48 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-266-cZsCGIe9PGK2zEA8sCYUDA-1; Thu, 13 Aug 2020 22:10:44 +0100
-X-MC-Unique: cZsCGIe9PGK2zEA8sCYUDA-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Thu, 13 Aug 2020 22:10:43 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Thu, 13 Aug 2020 22:10:43 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Josef Bacik' <josef@toxicpanda.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@lst.de>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "kernel-team@fb.com" <kernel-team@fb.com>,
-        "willy@infradead.org" <willy@infradead.org>
-Subject: RE: [PATCH][v2] proc: use vmalloc for our kernel buffer
-Thread-Topic: [PATCH][v2] proc: use vmalloc for our kernel buffer
-Thread-Index: AQHWcZXlpXFy9nu730SSUfZHxwd5cKk2h+wQ
-Date:   Thu, 13 Aug 2020 21:10:43 +0000
-Message-ID: <3612878ce143427b89a70de3abfb657d@AcuMS.aculab.com>
-References: <20200813145305.805730-1-josef@toxicpanda.com>
- <20200813153356.857625-1-josef@toxicpanda.com>
- <20200813153722.GA13844@lst.de>
- <974e469e-e73d-6c3e-9167-fad003f1dfb9@toxicpanda.com>
- <20200813154117.GA14149@lst.de> <20200813162002.GX1236603@ZenIV.linux.org.uk>
- <9e4d3860-5829-df6f-aad4-44d07c62535b@toxicpanda.com>
-In-Reply-To: <9e4d3860-5829-df6f-aad4-44d07c62535b@toxicpanda.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Thu, 13 Aug 2020 17:16:48 -0400
+Received: by mail-ej1-f66.google.com with SMTP id p24so7684140ejf.13;
+        Thu, 13 Aug 2020 14:16:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NqgP8/kqqaBWz0T8s13lcZ2MzqpMIhm25KCZWBaRfQQ=;
+        b=O4BrTjnCxNHmbaIlJbV3CNZU6Ku0En9//7EOiQBlZhjrZtRjYe5Etv2ynovBTsI5Wx
+         smObhat0BS5Ydo3RSbDBoYDA6SJRp5rKL9+E7yRVUpmRWQXLPqBRNwDo3I33hpTeIW3J
+         Jp9Tzzk/ftCKj3lNozxk8U8ySTV5Dr0KQiQ6TAehFdDGdulM14OH76dmddea4o0Jkxo1
+         L7ybM8CTy2IwPRA3rxPx2IV9B7RhybTGVIv3U37z0srzsXN7Y5v1Dx6t3mslzH1bi2rF
+         lr1M7A0Q0k6WRXrlIjZEdJokuNMPX7M4Q3HhMj+99Na5nT0OR47TqLzuFHUUXNWDFcbU
+         NZrw==
+X-Gm-Message-State: AOAM530pJrS6Doi3uGP0V1bot1zw9r99BSeZB9UuNx2Qt3vCAQfLyORL
+        /M1KeXwOKZVeULij1MeZ6kCosFrjWcHslWriG90=
+X-Google-Smtp-Source: ABdhPJyjpf8YQQq9CUV59pcQHNLsIPVil2cwEyvmjMXjDvOvyLLSsyOWGLrV0/6ONfvQrzwLqKyf9ZrgfMmtA9Ofub4=
+X-Received: by 2002:a17:907:2082:: with SMTP id pv2mr1374764ejb.188.1597353406609;
+ Thu, 13 Aug 2020 14:16:46 -0700 (PDT)
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0.001
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+References: <20200326203637.1892-1-dsmythies@telus.net>
+In-Reply-To: <20200326203637.1892-1-dsmythies@telus.net>
+From:   Len Brown <lenb@kernel.org>
+Date:   Thu, 13 Aug 2020 17:16:35 -0400
+Message-ID: <CAJvTdKnyeTvJ_iP=XTet0ggs7FqswWQsfYQr5crnPPwOTfBMRg@mail.gmail.com>
+Subject: Re: [PATCH] tools/power/x86/turbostat: Always print idle in the
+ system configuration header
+To:     Doug Smythies <doug.smythies@gmail.com>
+Cc:     Doug Smythies <dsmythies@telus.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogSm9zZWYgQmFjaWsNCj4gU2VudDogMTMgQXVndXN0IDIwMjAgMTg6MTkNCi4uLg0KPiBX
-ZSB3b3VsZG4ndCBldmVuIG5lZWQgdGhlIGV4dHJhICsxIHBhcnQsIHNpbmNlIHdlJ3JlIG9ubHkg
-Y29weWluZyBpbiBob3cgbXVjaA0KPiB0aGUgdXNlciB3YW50cyBhbnl3YXksIHdlIGNvdWxkIGp1
-c3QgZ28gYWhlYWQgYW5kIGNvbnZlcnQgdGhpcyB0bw0KPiANCj4gbGVmdCAtPSBzbnByaW50Zihi
-dWZmZXIsIGxlZnQsICIweCUwNHhcbiIsICoodW5zaWduZWQgaW50ICopIHRhYmxlLT5kYXRhKTsN
-Cj4gDQo+IGFuZCBiZSBmaW5lLCByaWdodD8gIE9yIGFtIEkgbWlzdW5kZXJzdGFuZGluZyB3aGF0
-IHlvdSdyZSBsb29raW5nIGZvcj8gIFRoYW5rcywNCg0KRG9lc24ndCB0aGF0IG5lZWQgdG8gYmUg
-c2NucHJpbnRmKCk/DQpJSVJDIHNucHJpbnRmKCkgcmV0dXJucyB0aGUgbnVtYmVyIG9mIGJ5dGVz
-IHRoYXQgd291bGQgaGF2ZSBiZWVuDQp3cml0dGVuIHdlcmUgdGhlIGJ1ZmZlciBpbmZpbml0ZSBz
-aXplPw0KKEkgc3VzcGVjdCB0aGlzIGlzIGFuICdhY2NpZGVudGFsJyByZXR1cm4gdmFsdWUgZnJv
-bSB0aGUgb3JpZ2luYWwNClNZU1Y/IHVzZXJzcGFjZSBpbXBsZW1lbnRhdGlvbiB0aGF0IGp1c3Qg
-ZHVtcGVkIGNoYXJhY3RlcnMgdGhhdA0Kd291bGRuJ3QgZml0IGluIHRoZSBidWZmZXIgc29tZXdo
-ZXJlLikNCg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxl
-eSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0
-aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
+Applied.
 
+thanks!
+-Len
+
+On Thu, Mar 26, 2020 at 4:36 PM Doug Smythies <doug.smythies@gmail.com> wrote:
+>
+> If the --quiet option is not used, turbostat prints a useful system
+> configuration header during startup. Inclusion of idle system configuration
+> information is a function of inclusion in the columns choosen to be displayed.
+>
+> Always list the idle system configuration.
+>
+> Signed-off-by: Doug Smythies <dsmythies@telus.net>
+> ---
+>  tools/power/x86/turbostat/turbostat.c | 3 ---
+>  1 file changed, 3 deletions(-)
+>
+> diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
+> index 33b370865d16..834b86676d00 100644
+> --- a/tools/power/x86/turbostat/turbostat.c
+> +++ b/tools/power/x86/turbostat/turbostat.c
+> @@ -3530,9 +3530,6 @@ dump_sysfs_cstate_config(void)
+>         int state;
+>         char *sp;
+>
+> -       if (!DO_BIC(BIC_sysfs))
+> -               return;
+> -
+>         if (access("/sys/devices/system/cpu/cpuidle", R_OK)) {
+>                 fprintf(outf, "cpuidle not loaded\n");
+>                 return;
+> --
+> 2.25.1
+>
+
+
+-- 
+Len Brown, Intel Open Source Technology Center
