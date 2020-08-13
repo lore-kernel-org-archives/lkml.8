@@ -2,262 +2,223 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41A80C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:58:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A70FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:58:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1763720768
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:58:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597312716;
-	bh=9RgQzuhqlRmtPEcH71/uI/W3vda4Hj2yojosYlaMzQc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=O2snJ7N9jFx8vDtanmtTs3W2EhAfEGXtTYfTzSAgUc/9SY+RQjbHNLn+4Sz8eAavI
-	 C/esIrS3CYUyIeJKVHJn3IuwZYwB9kDi8FZGp7H7b3lFyjZhwQ8V4tMAyFLSLc6ZN1
-	 mfmrSYFN7ddE/3XJZCNi2yZlLWKpFp8nGgoY2kyU=
+	by mail.kernel.org (Postfix) with ESMTP id 59D96206A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:58:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c8hKs/8h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726249AbgHMJ6e (ORCPT
+        id S1726526AbgHMJ6t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 05:58:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35862 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726048AbgHMJ6d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 05:58:33 -0400
-Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8385206A4;
-        Thu, 13 Aug 2020 09:58:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597312712;
-        bh=9RgQzuhqlRmtPEcH71/uI/W3vda4Hj2yojosYlaMzQc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=XfTzQarbNsyDPeTzjsFu2xl1etxDXCqda8LvDEXpdjegidj0Xgsr2kj27WVGm6slM
-         o8qXDSNIz8t27fK7IrRxoLEY5xrWvi+vTNigaxxqamJKt4vRAGMO9Ag7XojLkptG8B
-         OIGlea/1wskhl5ANMK5MBT5wraJ2/dxIfgFnj16o=
-Date:   Thu, 13 Aug 2020 11:58:23 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linuxarm@huawei.com, mauro.chehab@huawei.com,
-        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Wei Xu <xuwei5@hisilicon.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        Rob Herring <robh@kernel.org>, devel@driverdev.osuosl.org,
-        linux-arm-msm@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH 00/44] SPMI patches needed by Hikey 970
-Message-ID: <20200813115823.70f9016a@coco.lan>
-In-Reply-To: <20200813075827.GH4354@dell>
-References: <cover.1597247164.git.mchehab+huawei@kernel.org>
-        <20200813075827.GH4354@dell>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 13 Aug 2020 05:58:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57046 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726048AbgHMJ6q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 05:58:46 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A42B5C061757;
+        Thu, 13 Aug 2020 02:58:45 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id k13so2733490lfo.0;
+        Thu, 13 Aug 2020 02:58:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=UyyZZE/2hrI5pOfNwgwq2kKxJCRXXA9GaoM4CUdPbWE=;
+        b=c8hKs/8hkf2jlLMx0WeO2/5GuDxqu/gz/W0NzFQoCPFOu4e1T9fu6sb92SeNYwzBSl
+         xggYJ+ivOFmVs7j6uHkuWs2dJP+uzgWHHlxopt9NiqvpwHgWuFvVZex96OvQrdqO5z0B
+         +LI23MRb4y1glgWJEIYXSnoneKIrp7n5llO4wSkSA62yHc0Z2aCOOyrHm45IUFxgC4CP
+         fch7DzAHjc7QfsFsknW0ifXdBardqVqcF5XPqcUop7rrijW3elzer/DfW90qRYemuzNS
+         jXkbr3inhiD/SOqegoMK6qan6sZnUxcNhDiMqc5YnF0ts5oVVm2MLcwOV0v9IZX0SmFF
+         rwaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UyyZZE/2hrI5pOfNwgwq2kKxJCRXXA9GaoM4CUdPbWE=;
+        b=AersgUssqlo25kjy8iwr4bjeHLe6iLZdgaEv5ThK9Vh80XsT+K308t4nU+nJNKiaEQ
+         XSMTvJ65T/YqcFjUUeT4b5r40rZ+GZTeYIfOkdETx9oKSskqiq57DvGiA7cQgkUN9sxL
+         mxO12rbVEIN045ncSh5L/YnkolIEpLSKCTODjJZD5P+W/in50BeZCceR7qWpLzOYQqBY
+         VJ2l7j7OOILgL8RRp45nECOwNI3C6CdBFTpU0dWSAsuD8ua82VztT4oheetay/Z9k9SD
+         kwomSXm+mwYaBhJLSHM4GEQLXKQ1/MFJymgJZGd7pyAhiteK0JIGMCCGIAyCAzq4zuLw
+         eDmQ==
+X-Gm-Message-State: AOAM532cda4zHu7sROL30WKQjfyfj2SGYyg3jyVVvdEq/w0/6fzUL4hB
+        hSLNqhFtSGYbJ3UMDSDoWxw=
+X-Google-Smtp-Source: ABdhPJydSxOq14pRCC7Z1xGIoLHsTQL8sgZTHIB1VWhJ2SA/bS6uvom/XmEPWazXYm35FgdTMMDIJA==
+X-Received: by 2002:a19:710:: with SMTP id 16mr1777646lfh.171.1597312723157;
+        Thu, 13 Aug 2020 02:58:43 -0700 (PDT)
+Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id y13sm991374ljd.19.2020.08.13.02.58.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Aug 2020 02:58:42 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Thu, 13 Aug 2020 11:58:40 +0200
+To:     Michal Hocko <mhocko@suse.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, paulmck@kernel.org,
+        Uladzislau Rezki <urezki@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
+Message-ID: <20200813095840.GA25268@pc636>
+References: <20200811210931.GZ4295@paulmck-ThinkPad-P72>
+ <874kp87mca.fsf@nanos.tec.linutronix.de>
+ <20200813075027.GD9477@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200813075027.GD9477@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lee,
+On Thu, Aug 13, 2020 at 09:50:27AM +0200, Michal Hocko wrote:
+> On Wed 12-08-20 02:13:25, Thomas Gleixner wrote:
+> [...]
+> > I can understand your rationale and what you are trying to solve. So, if
+> > we can actually have a distinct GFP variant:
+> > 
+> >   GFP_I_ABSOLUTELY_HAVE_TO_DO_THAT_AND_I_KNOW_IT_CAN_FAIL_EARLY
+> 
+> Even if we cannot make the zone->lock raw I would prefer to not
+> introduce a new gfp flag. Well we can do an alias for easier grepping
+> #define GFP_RT_SAFE	0
+> 
+> that would imply nowait semantic and would exclude waking up kswapd as
+> well. If we can make wake up safe under RT then the alias would reflect
+> that without any code changes.
+> 
+> The second, and the more important part, would be to bail out anytime
+> the page allocator is to take a lock which is not allowed in the current
+> RT context. Something like 
+> 	
+> diff --git a/include/linux/gfp.h b/include/linux/gfp.h
+> index 67a0774e080b..3ef3ac82d110 100644
+> --- a/include/linux/gfp.h
+> +++ b/include/linux/gfp.h
+> @@ -237,6 +237,9 @@ struct vm_area_struct;
+>   * that subsystems start with one of these combinations and then set/clear
+>   * %__GFP_FOO flags as necessary.
+>   *
+> + * %GFP_RT_SAFE users can not sleep and they are running under RT atomic context
+> + * e.g. under raw_spin_lock. Failure of an allocation is to be expected.
+> + *
+>   * %GFP_ATOMIC users can not sleep and need the allocation to succeed. A lower
+>   * watermark is applied to allow access to "atomic reserves"
+>   *
+> @@ -293,6 +296,7 @@ struct vm_area_struct;
+>   * version does not attempt reclaim/compaction at all and is by default used
+>   * in page fault path, while the non-light is used by khugepaged.
+>   */
+> +#define GFP_RT_SAFE	0
+>  #define GFP_ATOMIC	(__GFP_HIGH|__GFP_ATOMIC|__GFP_KSWAPD_RECLAIM)
+>  #define GFP_KERNEL	(__GFP_RECLAIM | __GFP_IO | __GFP_FS)
+>  #define GFP_KERNEL_ACCOUNT (GFP_KERNEL | __GFP_ACCOUNT)
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index e028b87ce294..268ae872cc2a 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -2824,6 +2824,13 @@ static int rmqueue_bulk(struct zone *zone, unsigned int order,
+>  {
+>  	int i, alloced = 0;
+>  
+> +	/*
+> +	 * Hard atomic contexts are not supported by the allocator for
+> +	 * anything but pcp requests
+> +	 */
+> +	if (!preemtable())
+> +		return 0;
+> +
+>  	spin_lock(&zone->lock);
+>  	for (i = 0; i < count; ++i) {
+>  		struct page *page = __rmqueue(zone, order, migratetype,
+> @@ -3371,6 +3378,13 @@ struct page *rmqueue(struct zone *preferred_zone,
+>  		goto out;
+>  	}
+>  
+> +	/*
+> +	 * Hard atomic contexts are not supported by the allocator for high
+> +	 * order requests
+> +	 */
+> +	if (WARN_ON_ONCE(!preemtable()))
+> +		reurn NULL;
+> +
+>  	/*
+>  	 * We most definitely don't want callers attempting to
+>  	 * allocate greater than order-1 page units with __GFP_NOFAIL.
+> @@ -4523,6 +4537,12 @@ __alloc_pages_slowpath(gfp_t gfp_mask, unsigned int order,
+>  				(__GFP_ATOMIC|__GFP_DIRECT_RECLAIM)))
+>  		gfp_mask &= ~__GFP_ATOMIC;
+>  
+> +	/* Hard atomic contexts support is very limited to the fast path */
+> +	if (!preemtable()) {
+> +		WARN_ON_ONCE(gfp_mask != GFP_RT_SAFE);
+> +		return NULL;
+> +	}
+> +
+>  retry_cpuset:
+>  	compaction_retries = 0;
+>  	no_progress_loops = 0;
+> 
+> What do you think?
+>  
+> > which is easy to grep for then having the page allocator go down to the
+> > point where zone lock gets involved is not the end of the world for
+> > RT in theory - unless that damned reality tells otherwise. :)
+> > 
+> > The page allocator allocations should also have a limit on the number of
+> > pages and eventually also page order (need to stare at the code or let
+> > Michal educate me that the order does not matter).
+> 
+> In practice anything but order 0 is out of question because we need
+> zone->lock for that currently. Maybe we can introduce pcp lists for
+> higher orders in the future - I have a vague recollection Mel was
+> playing with that some time ago.
+> 
+> > To make it consistent the same GFP_ variant should allow the slab
+> > allocator go to the point where the slab cache is exhausted.
+> > 
+> > Having a distinct and clearly defined GFP_ variant is really key to
+> > chase down offenders and to make reviewers double check upfront why this
+> > is absolutely required.
+> 
+> Having a high level and recognizable gfp mask is OK but I would really
+> like not to introduce a dedicated flag. The page allocator should be
+> able to recognize the context which cannot be handled. 
+>
+Sorry for jumping in. We can rely on preemptable() for sure, if CONFIG_PREEMPT_RT
+is enabled, something like below:
 
-Em Thu, 13 Aug 2020 08:58:27 +0100
-Lee Jones <lee.jones@linaro.org> escreveu:
+if (IS_ENABLED_RT && preemptebale())
 
-> On Wed, 12 Aug 2020, Mauro Carvalho Chehab wrote:
->=20
-> > Hi Greg,
-> >=20
-> > This patch series is part of a work I'm doing in order to be able to su=
-pport
-> > a HiKey 970 board that I recently got on my hands.
-> >=20
-> > I received some freedback from Mark and from Jonathan on a first
-> > attempt I made to upstream this.
-> >=20
-> > I'm opting to submit it via staging, because I had to start from the
-> > patch that originally added this driver on a 4.9 Kernel tree:
-> >=20
-> > 	https://github.com/96boards-hikey/linux/tree/hikey970-v4.9
-> >=20
-> > In order to preserve the original SOB from the driver's author.
-> >=20
-> > The patches following it are on the standard way: one patch per
-> > logical change.
-> >=20
-> > This is part of a bigger work whose goal is to have upstream support
-> > for USB and DRM/KMS on such boards.=20
-> >=20
-> > I suspect that, maybe except for the DT part, those 3 specific drivers
-> > are more or less ready to be moved from staging, but the other
-> > drivers that are also part of this attempt aren't ready. Specially the
-> > DRM driver has some bugs that came from the OOT version.
-> >=20
-> > So, my current plan is to submit those drivers to staging for 5.9
-> > and move the ones that are ok out of staging on Kernel 5.10. =20
->=20
-> What a mess.  This is no way to upstream a new driver.
->=20
-> Firstly, could you please add versioning to your submissions.  I know
-> this at least version 2.  Were there previous submissions?  Is this
-> the latest?
+Also i have a question about pcp-lists. Can we introduce and use all allowed 
+MIGRATE_PCPTYPES? If called with GFP_RT_SAFE? If not please elaborate.
+According to my tests it really helps when it comes to: succeed(return the page) or NULL.
+Because on of the list of below types:
+ MIGRATE_UNMOVABLE,
+ MIGRATE_MOVABLE,
+ MIGRATE_RECLAIMABLE,
 
-Yeah, that's the second attempt. The first one was:
+can have a page making allocation succeed.
 
-	https://lore.kernel.org/lkml/176043f329dfa9889f014feec04e7e1553077873.1597=
-160086.git.mchehab+huawei@kernel.org/T/#u
+Thanks!
 
-I was in doubt about adding a v2 in this specific case or not,=20
-since I ended submitting it to the staging tree.
-
-> Secondly and more importantly, you have submitted what looks like a
-> new driver (bearing in mind that I'm only concerning myself with the
-> MFD related changes), then in the same submission you are adding and
-> removing large chunks.  Please just submit the new driver, on its own
-> as a single patch, complete with its associated Makefile and Kconfig
-> changes.
-
-I can't do like that because I'm not the author of the original patch that
-added the driver.
-
-The original patch came from the 96board's android-kernel based 4.9 tree:
-
-	https://github.com/96boards-hikey/linux/tree/hikey970-v4.9
-
-> What are your reasons for submitting this via Staging?=20
-
-The main reason is to preserve both the patch authorship and its
-history.
-
-After the original patch, I wrote several incremental changes cleaning
-up the original driver and stripping parts of it that aren't needed.
-
-By preserving the history, if someone wants to restore some removed
-functionality, it is just a matter of reverting a patch.
-
-For example, the original driver had its own sysfs interface for
-debugging the regulator driver.=20
-
-This is not needed for it to work. Also, the right interface for such=20
-things is via configfs. Yet, someone could think on restoring such=20
-feat and start from the existing code, instead of coming with=20
-something else from scratch.
-
-> Is it not ready yet?=20
-
-=46rom my side, I believe that, after my changes, the code now meets
-upstream requirements, maybe except for DT (and the parsing code).
-There are a few things at the DT properties on this driver that could=20
-be named on a different (more standard way).=20
-
-Yet, I'm not a regular contributor for mfd/regulator/spmi. So,
-I may have missed something.
-
-> Are the resultant components not at a high enough level of
-> quality or enablement to go straight into the subsystems, which is
-> more typical?  From an MFD perspective, I would be reviewing the
-> driver as a whole when (if) it moves from Staging into MFD anyway, so
-> why are you jumping through hoops with this additional, seemingly
-> superfluous step?
-
-I'm OK if this gets reviewed by MFD people only after moving it out of
-staging. Assuming that this would be merged for Kernel 5.10, I'll
-likely send a patch moving it out of staging for 5.11. Then,
-you can do a comprehensive review.
-
-> Finally, the subject of authorship is often a contentious one, but
-> this is a problem you need to work out with the original author, not
-> something that should require special handing by upstream.  You have a
-> couple of choices, but bear in mind that upstreaming a non-suitable
-> driver then bringing it up to standard is not one of them.
->=20
-> 1. Keep the original author's authorship and SoB, make your changes
->    and get them to review to ensure they are still happy about being
->    associated with the resultant code.  Ensure you mention all of the
->    changes you make in the commit message and follow-up by adding your
->    own SoB.
->=20
-> 2. This is the contentious bit.  If you've made enough changes, there
->    is an argument for you to adopt authorship.  You should discuss
->    with the original author whether they are happy for you to retain
->    their SoB.  My suggestion is always try to keep the SoB as a bare
->    minimum to preserve patch history and out of pure courtesy.
-
-It is not only the above. Both the original author and anyone
-touching the code should comply with applicable internal policies.
-
-=46rom my experience, dealing with such things takes a lot more of time
-then coding, as it require talking with legal departments on different
-continents, and with developers and with their bosses in order to be
-able to do things like that.=20
-
-This can also be a very frustrating process. During almost 20 years of
-being the media maintainer, I've seen several cases where trying to
-enforce a folded initial patch caused devs to receive NACKS, preventing=20
-them so submit otherwise good stuff.
-
-So, at the media subsystem, I'm perfectly fine if someone starts from=20
-the original OOT driver, preserving its original authorships. We're
-also dealing there with the patches sent to drivers/staging/media.
-
-I'm not saying that other subsystem maintainers should do the same.
-Dealing with staging is time consuming, and I completely understand
-that most maintainers prefer to stay out of it ;-)
-
--=20
-
-Since when staging tree started, if someone has to start from the
-original patch, such things can be merged at staging. Then,
-incremental patches are applied at the top until it reaches what's
-required to be promoted.
-
-That's said, there's no hush to have those drivers out of staging.
-My end goal is to have DRM/KMS and USB support for Hikey 970.=20
-
-The patchsets I have so far are at:
-
-	https://github.com/mchehab/linux/commits/hikey970/to_upstream-2.0-v1.1
-
-(this branch has the v1 of my patchset)
-
-Porting this driver is part of such effort. While this driver is
-on a good situation, the other ones may require some time to
-mature.
-
-The DRM/KMS driver for example, is not ready to be merged outside=20
-staging, as it carries several bugs that came from the original
-driver and are present at the official tree at 96boards. For example,
-there is a a very dirty hack that enforces the HDMI chipset to
-only work with a limited set of resolutions that are known to work:
-
-	https://github.com/96boards-hikey/linux/blob/hikey970-v4.9/drivers/gpu/drm=
-/hisilicon/kirin9xx/hdmi/adv7535.c#L869
-
-It also has problems reading the frequencies via EDID interface.
-Due to that, the driver fakes an EDID table:
-
-	https://github.com/96boards-hikey/linux/blob/hikey970-v4.9/drivers/gpu/drm=
-/hisilicon/kirin9xx/hdmi/adv7535.c#L463
-
-It sounds to me that some clocks are not properly set for a random
-resolution, but fixing it is not trivial and requires deep knowledge
-about how the display registers should be tuned to better support
-resolutions. The current settings cause underflows with 1080p,
-which in turn makes the display driver to (silently) stop working.
-
-So, in summary, I believe that some drivers from my port will
-require being at staging for a while. While I was planning to
-do that on my next patch submission, placing the PM drivers
-there won't make much difference from my side, as I'll need to
-be submitting patches anyway moving drivers out of staging as
-they become ready.
-
-Thanks,
-Mauro
+--
+Vlad Rezki
