@@ -2,144 +2,116 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 698CCC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A711DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:46:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5097F204FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:46:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8276D2224D
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:46:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bEywIbIK";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XEDJQTTr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726612AbgHMKqF (ORCPT
+        id S1726637AbgHMKqO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 06:46:05 -0400
-Received: from mga11.intel.com ([192.55.52.93]:47395 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726072AbgHMKqD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 06:46:03 -0400
-IronPort-SDR: Kd+uSJREK7F4EET0WxhWqIvNiKShIH/Gqr4aTM+J7ckAO9xlXMzElprV5HKH+YBYOSuj4yUPob
- N9g9OgpNkR/w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9711"; a="151840375"
-X-IronPort-AV: E=Sophos;i="5.76,308,1592895600"; 
-   d="scan'208";a="151840375"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2020 03:46:00 -0700
-IronPort-SDR: hktEVOi24EWaz3LqR5XMj8Xgak5ZmhDfH0chKZE0YQ3MfNnM76i9h0KmV0ojpHJl30wFzGo1lk
- iEo6MdXXlD/Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,308,1592895600"; 
-   d="scan'208";a="291351476"
-Received: from lkp-server01.sh.intel.com (HELO 7f1ebb311643) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 13 Aug 2020 03:45:59 -0700
-Received: from kbuild by 7f1ebb311643 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1k6AkA-0000ZU-U1; Thu, 13 Aug 2020 10:45:58 +0000
-Date:   Thu, 13 Aug 2020 18:44:56 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [rcu:dev.2020.08.11a] BUILD SUCCESS
- 9030fc13639a71b15466520f09ca07b80fc30ed1
-Message-ID: <5f3519a8.STIoSSGFi7JfPovQ%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Thu, 13 Aug 2020 06:46:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36056 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726621AbgHMKqH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 06:46:07 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06AACC061757
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 03:46:07 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1597315565;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=HCg1ZdtTl1KhAjawebiFvNnjllljAIdwgNvbFA5RkDM=;
+        b=bEywIbIK22XdO0ai4D1Bx5DPlNeBk5voSqr1vXsP7AVobytK6wgdxdlRVmMkzuluT+WZVx
+        MDloLbbbkcCw5CYBGSqNJnqOP8wLSBb/i1z9Pu72J2vywDadD+M24YBHPspCFrFRlvPekG
+        ht4wyZ3kWRvi0+eoeLZPIX9yFEn9oNmFg9L3tgIkYe3TwlyIkQYXx7vohIewPzrZjxYvMK
+        1RtPof3s4s5hVkx1bniz52OVM69jGptBpmwKGm0OwFJfTd8dfefh2BJbR9fZlgOsbGbDZw
+        tajT9V9wYYJLv6pX3PxRuB1fBjHLbFL268WOHVjZ5sHYR7LW6WcoSseCUxgGTw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1597315565;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=HCg1ZdtTl1KhAjawebiFvNnjllljAIdwgNvbFA5RkDM=;
+        b=XEDJQTTrOA+Ajl0PYX6L2bHeRYagwpHbpMD6GjEmX5RnhID6Q16IBfPaZLonVzbv8Bm8QM
+        1oIdgPsL0mAp4JDA==
+To:     Qianli Zhao <zhaoqianligood@gmail.com>, john.stultz@linaro.org,
+        sboyd@kernel.org
+Cc:     linux-kernel@vger.kernel.org, zhaoqianli@xiaomi.com
+Subject: Re: [PATCH] timer: mask unnecessary set of flags in do_init_timer
+In-Reply-To: <1596767378-27241-1-git-send-email-zhaoqianligood@gmail.com>
+References: <1596767378-27241-1-git-send-email-zhaoqianligood@gmail.com>
+Date:   Thu, 13 Aug 2020 12:46:05 +0200
+Message-ID: <87h7t6lt76.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  dev.2020.08.11a
-branch HEAD: 9030fc13639a71b15466520f09ca07b80fc30ed1  squash! rcu: Report QS for outermost PREEMPT=n rcu_read_unlock() for strict GPs
+Qianli Zhao <zhaoqianligood@gmail.com> writes:
 
-elapsed time: 720m
+Please start the first word after the colon with an upper case letter.
 
-configs tested: 74
-configs skipped: 2
+> do_init_timer can specify flags of timer_list,
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Please write do_init_timer() so it's entirely clear that this is about a
+function.
 
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                         axm55xx_defconfig
-powerpc                     ep8248e_defconfig
-arc                        nsim_700_defconfig
-arm                            hisi_defconfig
-arm                  colibri_pxa270_defconfig
-sh                           se7722_defconfig
-powerpc                             defconfig
-mips                      malta_kvm_defconfig
-mips                         mpc30x_defconfig
-arm                          ixp4xx_defconfig
-nds32                            alldefconfig
-mips                malta_kvm_guest_defconfig
-powerpc                 mpc8272_ads_defconfig
-powerpc                mpc7448_hpc2_defconfig
-c6x                        evmc6472_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a005-20200812
-i386                 randconfig-a001-20200812
-i386                 randconfig-a002-20200812
-i386                 randconfig-a003-20200812
-i386                 randconfig-a006-20200812
-i386                 randconfig-a004-20200812
-i386                 randconfig-a016-20200812
-i386                 randconfig-a011-20200812
-i386                 randconfig-a013-20200812
-i386                 randconfig-a015-20200812
-i386                 randconfig-a012-20200812
-i386                 randconfig-a014-20200812
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
+> but this function does not expect to specify the CPU or idx.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+or idx does not mean anything unless someone looks at the
+code. Changelogs want to explain things so they can be understood
+without staring at the code.
+
+> If user invoking do_init_timer and specify CPU,
+> The result may not what we expected.
+
+Right. And which caller exactly hands in crappy flags?
+
+> E.g:
+> do_init_timer invoked in core2,and specify flags 0x1
+> final result flags is 0x3.If the specified CPU number
+> exceeds the actual number,more serious problems will happen
+
+More serious problems is not a really helpful technical explanation and
+0x3 does not make sense for a changelog reader either because it again
+requires to look up the code.
+
+>  	timer->entry.pprev = NULL;
+>  	timer->function = func;
+> -	timer->flags = flags | raw_smp_processor_id();
+> +	timer->flags = (flags & ~TIMER_BASEMASK & ~TIMER_ARRAYMASK) |
+> raw_smp_processor_id();
+
+If the caller hands in invalid flags then silently fixing them up is
+fundamentally wrong. So this wants to be:
+
+   if (WARN_ON(flags & ~TIMER_INIT_FLAGS))
+   	flags &= TIMER_INIT_FLAGS;
+
+and TIMER_INIT_FLAGS wants to be exactly the set of flags which are
+valid for being handed in by a caller, i.e.:
+
+      TIMER_DEFFERABLE, TIMER_PINNED, TIMER_IRQSAFE
+
+Guess what happens when the caller hands in TIMER_MIGRATING?
+
+If we do sanity checking then we do it correct and not just silently
+papering over the particular problem which you ran into.
+
+Thanks,
+
+        tglx
