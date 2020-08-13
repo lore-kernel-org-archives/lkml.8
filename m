@@ -2,78 +2,60 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE31CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 14:35:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16117C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 14:35:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B150A2078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 14:35:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=labbott.name header.i=@labbott.name header.b="nl7SX9v7"
+	by mail.kernel.org (Postfix) with ESMTP id F0BF12078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 14:35:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726570AbgHMOfo (ORCPT
+        id S1726600AbgHMOfr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 10:35:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43368 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726244AbgHMOfn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 10:35:43 -0400
-Received: from mail-qt1-x82b.google.com (mail-qt1-x82b.google.com [IPv6:2607:f8b0:4864:20::82b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41B50C061757
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 07:35:43 -0700 (PDT)
-Received: by mail-qt1-x82b.google.com with SMTP id s23so4468669qtq.12
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 07:35:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=labbott.name; s=google;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=lQt/KK7RT37IrSgEa18imoxvr9tlPUAJNuDDhRvQ5SI=;
-        b=nl7SX9v7zkGfMpMrUeibIPpRP5LWNEeWEw45GPwxVg4EYOC+JtaVgJH9qDlJpvXu4v
-         XfvMt9GKh9fRncAvqDYk1tMUu1eZLB9906lACOb/BUNqsJuezw/tPhkxED004P2P2xQf
-         Sh9hK5XTRg82tD689UUn2VlWT0CZ4yR6ePUyA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=lQt/KK7RT37IrSgEa18imoxvr9tlPUAJNuDDhRvQ5SI=;
-        b=TL+s/9m4tQJmFkvNTMl9eL3+VJ7nJqEmS/UrfOp54BNKVQaerSmfYXg0/WARerEoJp
-         ah2IMWawB6vUn6clLKmKhAnYluZ2vv446Ohiu2vEUb4mNybxUOO1TpScfH6qxIJCD/Zs
-         DsLS+DeAau2UqAR+1GhHMEcotSni0Rh/C4cbhgQMDAtm0lwUGUmtdWxCGVfMnFkBAMgI
-         TGdIVvkjLGVCog07C1ZPdH+7zJPp7Vk8bjaV5CPVzFz6yiy0FEOjfAjdMsX09c+hDGX3
-         BxxZPtzZB84cS7BBdnpjjl0AIBf9MXZJxeF6+QmUVD37wmv/dkL77eSvuAt+qTwhTS20
-         zU6A==
-X-Gm-Message-State: AOAM533y7iTOupP4APD/XHGF7UDY2QpjiXkx7XyLCzsbRC3uR5ZPAUKZ
-        oZuFSOY+lDZeOMrCYVCAVPD54b8yIsXOgQ==
-X-Google-Smtp-Source: ABdhPJx3DznpNuE75T0GJs1km/z5AcwrxG7exOyNYbLfmR6GRmxwYYKuHztEOTxB+3tXXUmTf0LfJA==
-X-Received: by 2002:aed:3b7a:: with SMTP id q55mr5694906qte.78.1597329342146;
-        Thu, 13 Aug 2020 07:35:42 -0700 (PDT)
-Received: from [192.168.1.168] (pool-74-109-246-95.pitbpa.fios.verizon.net. [74.109.246.95])
-        by smtp.gmail.com with ESMTPSA id p34sm7577331qte.79.2020.08.13.07.35.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Aug 2020 07:35:41 -0700 (PDT)
-Subject: Re: [Ksummit-discuss] Linux Foundation Technical Advisory Board
- Elections -- voting procedures
-To:     Johannes Berg <johannes@sipsolutions.net>,
-        "tech-board-discuss@lists.linuxfoundation.org" 
-        <tech-board-discuss@lists.linuxfoundation.org>,
-        "ksummit-discuss@lists.linuxfoundation.org" 
-        <ksummit-discuss@lists.linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <ade3420c-89fd-bed0-52e3-a0396eaeda2d@labbott.name>
- <fdee2bf96e207a45d0e88e4a5f05044a112d6ba5.camel@sipsolutions.net>
-From:   Laura Abbott <laura@labbott.name>
-Message-ID: <2ad7e1c5-ed68-a93e-62fe-bf9100557f41@labbott.name>
-Date:   Thu, 13 Aug 2020 10:35:41 -0400
+        Thu, 13 Aug 2020 10:35:47 -0400
+Received: from mga17.intel.com ([192.55.52.151]:44561 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726244AbgHMOfq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 10:35:46 -0400
+IronPort-SDR: F9143Rouw6DKGlwVM54s29Ot/p2OFbAiFu/SyCUnmqBYXRAA5gNLjWBsCTeG4KFW7X9DLhJUF7
+ +Ovj5+Ey7SPQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9711"; a="134279725"
+X-IronPort-AV: E=Sophos;i="5.76,308,1592895600"; 
+   d="scan'208";a="134279725"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2020 07:35:46 -0700
+IronPort-SDR: sMiil9/2RLXm+J/PBnbkqew4A0wxJWaabcQ5kuwmyetPUk8ahLy6nNScw6BTLVFsiOXCl8bXIq
+ 4rEu3Nfby4cg==
+X-IronPort-AV: E=Sophos;i="5.76,308,1592895600"; 
+   d="scan'208";a="333124546"
+Received: from jsdraege-mobl1.amr.corp.intel.com (HELO [10.209.128.166]) ([10.209.128.166])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2020 07:35:45 -0700
+Subject: Re: [PATCH] [v2] ASoC: intel: Fix memleak in sst_media_open
+To:     Dinghao Liu <dinghao.liu@zju.edu.cn>, kjlu@umn.edu
+Cc:     Cezary Rojewski <cezary.rojewski@intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        "Subhransu S. Prusty" <subhransu.s.prusty@intel.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+References: <20200813084112.26205-1-dinghao.liu@zju.edu.cn>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <0add5326-d182-c456-0f8b-1d70bb67a2fc@linux.intel.com>
+Date:   Thu, 13 Aug 2020 07:52:20 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <fdee2bf96e207a45d0e88e4a5f05044a112d6ba5.camel@sipsolutions.net>
+In-Reply-To: <20200813084112.26205-1-dinghao.liu@zju.edu.cn>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -82,30 +64,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/13/20 10:31 AM, Johannes Berg wrote:
-> Hi Laura,
-> 
-> Seeing your reminder reminded me :)
-> 
->> We will be using the electronic voting method that we used in 2019. All
->> Linux Plumbers Attendees will automatically receive a ballot. Anyone
->> who is otherwise eligible to vote should e-mail
->> tab-elections@lists.linuxfoundation.org to request a ballot. The deadline
->> for requesting a ballot is August 17, 00:00 UTC (one week before
->> Linux Plumbers)
-> 
-> Will you be sending out some kind of voting tokens for the ballot? And
-> if so, when is that supposed to happen? I (believe I) have requested a
-> ballot, but didn't get a response so far.
-> 
-> Thanks,
-> Johannes
-> 
 
-The voting itself will be taking place during the week of Linux
-Plumbers/Kernel summit, August 24-28. Keep an eye out for the
-ballot during that time period. We'll send out another e-mail
-when the ballots go out.
 
-Thanks,
-Laura
+On 8/13/20 3:41 AM, Dinghao Liu wrote:
+> When power_up_sst() fails, stream needs to be freed
+> just like when try_module_get() fails. However, current
+> code is returning directly and ends up leaking memory.
+> 
+> Fixes: 0121327c1a68b ("ASoC: Intel: mfld-pcm: add control for powering up/down dsp")
+> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+
+Thanks for spotting this!
+
+> ---
+> 
+> Changelog:
+> 
+> v2: - Add a new label 'out_power_up' to unify code style.
+> ---
+>   sound/soc/intel/atom/sst-mfld-platform-pcm.c | 5 +++--
+>   1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/sound/soc/intel/atom/sst-mfld-platform-pcm.c b/sound/soc/intel/atom/sst-mfld-platform-pcm.c
+> index 49b9f18472bc..b1cac7abdc0a 100644
+> --- a/sound/soc/intel/atom/sst-mfld-platform-pcm.c
+> +++ b/sound/soc/intel/atom/sst-mfld-platform-pcm.c
+> @@ -331,7 +331,7 @@ static int sst_media_open(struct snd_pcm_substream *substream,
+>   
+>   	ret_val = power_up_sst(stream);
+>   	if (ret_val < 0)
+> -		return ret_val;
+> +		goto out_power_up;
+>   
+>   	/* Make sure, that the period size is always even */
+>   	snd_pcm_hw_constraint_step(substream->runtime, 0,
+> @@ -340,8 +340,9 @@ static int sst_media_open(struct snd_pcm_substream *substream,
+>   	return snd_pcm_hw_constraint_integer(runtime,
+>   			 SNDRV_PCM_HW_PARAM_PERIODS);
+>   out_ops:
+> -	kfree(stream);
+>   	mutex_unlock(&sst_lock);
+> +out_power_up:
+> +	kfree(stream);
+>   	return ret_val;
+>   }
+>   
+> 
