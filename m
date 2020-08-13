@@ -2,209 +2,164 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D42C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:50:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05BABC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:50:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D7C120716
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:50:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E015920716
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:50:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbgHMHuF (ORCPT
+        id S1726680AbgHMHub (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 03:50:05 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:39082 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726106AbgHMHtX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 03:49:23 -0400
-Authenticated-By: 
-X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 07D7n9fO5028965, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexmb06.realtek.com.tw[172.21.6.99])
-        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 07D7n9fO5028965
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Thu, 13 Aug 2020 15:49:09 +0800
-Received: from RTEXDAG02.realtek.com.tw (172.21.6.101) by
- RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Thu, 13 Aug 2020 15:49:09 +0800
-Received: from RTEXMB05.realtek.com.tw (172.21.6.98) by
- RTEXDAG02.realtek.com.tw (172.21.6.101) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Thu, 13 Aug 2020 15:49:09 +0800
-Received: from localhost.localdomain (172.21.252.101) by
- RTEXMB01.realtek.com.tw (172.21.6.98) with Microsoft SMTP Server id
- 15.1.1779.2 via Frontend Transport; Thu, 13 Aug 2020 15:49:09 +0800
-From:   TY Chang <tychang@realtek.com>
-To:     <linux-realtek-soc@lists.infradead.org>, <afaerber@suse.de>
-CC:     <linus.walleij@linaro.org>, <linux-gpio@vger.kernel.org>,
-        <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 4/9] dt-bindings: pinctrl: realtek: Add Realtek DHC SoC rtd1195
-Date:   Thu, 13 Aug 2020 15:49:03 +0800
-Message-ID: <20200813074908.889-5-tychang@realtek.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200813074908.889-1-tychang@realtek.com>
-References: <20200813074908.889-1-tychang@realtek.com>
+        Thu, 13 Aug 2020 03:50:31 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36444 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726112AbgHMHua (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 03:50:30 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 38EBAAF82;
+        Thu, 13 Aug 2020 07:50:50 +0000 (UTC)
+Date:   Thu, 13 Aug 2020 09:50:27 +0200
+From:   Michal Hocko <mhocko@suse.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     paulmck@kernel.org, Uladzislau Rezki <urezki@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
+Message-ID: <20200813075027.GD9477@dhcp22.suse.cz>
+References: <20200811210931.GZ4295@paulmck-ThinkPad-P72>
+ <874kp87mca.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <874kp87mca.fsf@nanos.tec.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add device tree binding Documentation for rtd1195
-pinctrl driver.
+On Wed 12-08-20 02:13:25, Thomas Gleixner wrote:
+[...]
+> I can understand your rationale and what you are trying to solve. So, if
+> we can actually have a distinct GFP variant:
+> 
+>   GFP_I_ABSOLUTELY_HAVE_TO_DO_THAT_AND_I_KNOW_IT_CAN_FAIL_EARLY
 
-Signed-off-by: TY Chang <tychang@realtek.com>
----
- .../pinctrl/realtek,rtd1195-pinctrl.yaml      | 133 ++++++++++++++++++
- 1 file changed, 133 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/realtek,rtd1195-pinctrl.yaml
+Even if we cannot make the zone->lock raw I would prefer to not
+introduce a new gfp flag. Well we can do an alias for easier grepping
+#define GFP_RT_SAFE	0
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/realtek,rtd1195-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/realtek,rtd1195-pinctrl.yaml
-new file mode 100644
-index 000000000000..8a088f10a3e4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/realtek,rtd1195-pinctrl.yaml
-@@ -0,0 +1,133 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pinctrl/realtek,rtd1195-pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+that would imply nowait semantic and would exclude waking up kswapd as
+well. If we can make wake up safe under RT then the alias would reflect
+that without any code changes.
+
+The second, and the more important part, would be to bail out anytime
+the page allocator is to take a lock which is not allowed in the current
+RT context. Something like 
+	
+diff --git a/include/linux/gfp.h b/include/linux/gfp.h
+index 67a0774e080b..3ef3ac82d110 100644
+--- a/include/linux/gfp.h
++++ b/include/linux/gfp.h
+@@ -237,6 +237,9 @@ struct vm_area_struct;
+  * that subsystems start with one of these combinations and then set/clear
+  * %__GFP_FOO flags as necessary.
+  *
++ * %GFP_RT_SAFE users can not sleep and they are running under RT atomic context
++ * e.g. under raw_spin_lock. Failure of an allocation is to be expected.
++ *
+  * %GFP_ATOMIC users can not sleep and need the allocation to succeed. A lower
+  * watermark is applied to allow access to "atomic reserves"
+  *
+@@ -293,6 +296,7 @@ struct vm_area_struct;
+  * version does not attempt reclaim/compaction at all and is by default used
+  * in page fault path, while the non-light is used by khugepaged.
+  */
++#define GFP_RT_SAFE	0
+ #define GFP_ATOMIC	(__GFP_HIGH|__GFP_ATOMIC|__GFP_KSWAPD_RECLAIM)
+ #define GFP_KERNEL	(__GFP_RECLAIM | __GFP_IO | __GFP_FS)
+ #define GFP_KERNEL_ACCOUNT (GFP_KERNEL | __GFP_ACCOUNT)
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index e028b87ce294..268ae872cc2a 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -2824,6 +2824,13 @@ static int rmqueue_bulk(struct zone *zone, unsigned int order,
+ {
+ 	int i, alloced = 0;
+ 
++	/*
++	 * Hard atomic contexts are not supported by the allocator for
++	 * anything but pcp requests
++	 */
++	if (!preemtable())
++		return 0;
 +
-+title: Realtek DHC RTD1195 pin control
+ 	spin_lock(&zone->lock);
+ 	for (i = 0; i < count; ++i) {
+ 		struct page *page = __rmqueue(zone, order, migratetype,
+@@ -3371,6 +3378,13 @@ struct page *rmqueue(struct zone *preferred_zone,
+ 		goto out;
+ 	}
+ 
++	/*
++	 * Hard atomic contexts are not supported by the allocator for high
++	 * order requests
++	 */
++	if (WARN_ON_ONCE(!preemtable()))
++		reurn NULL;
 +
-+maintainers:
-+  - Andreas Farber <afaerber@suse.de>
+ 	/*
+ 	 * We most definitely don't want callers attempting to
+ 	 * allocate greater than order-1 page units with __GFP_NOFAIL.
+@@ -4523,6 +4537,12 @@ __alloc_pages_slowpath(gfp_t gfp_mask, unsigned int order,
+ 				(__GFP_ATOMIC|__GFP_DIRECT_RECLAIM)))
+ 		gfp_mask &= ~__GFP_ATOMIC;
+ 
++	/* Hard atomic contexts support is very limited to the fast path */
++	if (!preemtable()) {
++		WARN_ON_ONCE(gfp_mask != GFP_RT_SAFE);
++		return NULL;
++	}
 +
-+properties:
-+  compatible:
-+    enum:
-+      - realtek,rtd1195-iso-pinctrl
-+      - realtek,rtd1195-crt-pinctrl
-+  reg:
-+    maxItems: 1
-+
-+#PIN CONFIGURATION NODES
-+patternProperties:
-+  '(-pin|-pins)$':
-+    type: object
-+    description:
-+      Pinctrl node's client devices use subnodes for desired pin configuration.
-+      Client device subnodes use below standard properties.
-+    allOf:
-+      - $ref: "/schemas/pinctrl/pincfg-node.yaml"
-+
-+    properties:
-+      pins:
-+        items:
-+          enum: [ iso_gpio_0, iso_gpio_1, usb0, usb1, vfd_cs_n,
-+          vfd_clk, vfd_d, ir_rx, ir_tx, ur0_rx, ur0_tx,
-+          ur1_rx, ur1_tx, ur1_cts_n, ur1_rts_n, i2c_scl_0,
-+          i2c_sda_0, etn_led_link, etn_led_rxtx,
-+          i2c_scl_6, i2c_sda_6, ai_loc, ejtag_avcpu_loc,
-+          ur1_loc, pwm_01_open_drain, pwm_23_open_drain,
-+          gpio_0, gpio_1, gpio_2, gpio_3, gpio_4, gpio_5,
-+          gpio_6, gpio_7, gpio_8, nf_dd_0, nf_dd_1,
-+          nf_dd_2, nf_dd_3, nf_dd_4, nf_dd_5, nf_dd_6,
-+          nf_dd_7, nf_rdy, nf_rd_n, nf_wr_n, nf_ale,
-+          nf_cle, nf_ce_n_0, nf_ce_n_1, mmc_data_0,
-+          mmc_data_1, mmc_data_2, mmc_data_3, mmc_clk,
-+          mmc_cmd, mmc_wp, mmc_cd, sdio_clk, sdio_data_0,
-+          sdio_data_1, sdio_data_2, sdio_data_3, sdio_cmd,
-+          i2c_scl_5, i2c_sda_5, tp1_data, tp1_clk,
-+          tp1_valid, tp1_sync, tp0_data, tp0_clk,
-+          tp0_valid, tp0_sync, usb_id, hdmi_hpd, spdif,
-+          i2c_scl_1, i2c_sda_1, i2c_scl_4, i2c_sda_4,
-+          sensor_cko_0, sensor_cko_1, sensor_rst,
-+          sensor_stb_0, sensor_stb_1, ejtag_scpu_loc,
-+          hif_loc, ao_loc ]
-+        minItems: 1
-+
-+      groups:
-+        items:
-+          enum: [ iso_gpio_0, iso_gpio_1, usb0, usb1, vfd_cs_n,
-+          vfd_clk, vfd_d, ir_rx, ir_tx, ur0_rx, ur0_tx,
-+          ur1_rx, ur1_tx, ur1_cts_n, ur1_rts_n, i2c_scl_0,
-+          i2c_sda_0, etn_led_link, etn_led_rxtx,
-+          i2c_scl_6, i2c_sda_6, ai_loc, ejtag_avcpu_loc,
-+          ur1_loc, pwm_01_open_drain, pwm_23_open_drain,
-+          gpio_0, gpio_1, gpio_2, gpio_3, gpio_4, gpio_5,
-+          gpio_6, gpio_7, gpio_8, nf_dd_0, nf_dd_1,
-+          nf_dd_2, nf_dd_3, nf_dd_4, nf_dd_5, nf_dd_6,
-+          nf_dd_7, nf_rdy, nf_rd_n, nf_wr_n, nf_ale,
-+          nf_cle, nf_ce_n_0, nf_ce_n_1, mmc_data_0,
-+          mmc_data_1, mmc_data_2, mmc_data_3, mmc_clk,
-+          mmc_cmd, mmc_wp, mmc_cd, sdio_clk, sdio_data_0,
-+          sdio_data_1, sdio_data_2, sdio_data_3, sdio_cmd,
-+          i2c_scl_5, i2c_sda_5, tp1_data, tp1_clk,
-+          tp1_valid, tp1_sync, tp0_data, tp0_clk,
-+          tp0_valid, tp0_sync, usb_id, hdmi_hpd, spdif,
-+          i2c_scl_1, i2c_sda_1, i2c_scl_4, i2c_sda_4,
-+          sensor_cko_0, sensor_cko_1, sensor_rst,
-+          sensor_stb_0, sensor_stb_1, ejtag_scpu_loc,
-+          hif_loc, ao_loc ]
-+        minItems: 1
-+
-+      function:
-+        enum: [ gpio, ai_ur1, ai_vfd, avcpu_ejtag_iso,
-+        avcpu_ejtag_misc_loc, etn_led, i2c0, i2c2,
-+        i2c3, i2c6, ir_rx, ir_tx, pwm, standby_dbg,
-+        uart0, uart1, ur1_misc, vfd, pwm_01_normal,
-+        pwm_23_normal, pwm_01_open_drain, pwm_23_open_drain,
-+        ao_tp0, ao_gpio, avcpu_ejtag_misc, cpu_loop, emmc,
-+        gspi, hif_misc, hif_nf, i2c1, i2c2, i2c3,
-+        i2c4, i2c5, mmc, nand, scpu_ejtag_gpio,
-+        scpu_ejtag_cr, sdio, sensor, spdif, tp0, tp1,
-+        uart1, usb ]
-+
-+      drive-strength:
-+        enum: [2, 4, 8]
-+
-+      bias-pull-down: true
-+
-+      bias-pull-up: true
-+
-+      bias-disable: true
-+
-+      input-schmitt-disable: true
-+
-+      input-schmitt-enable: true
-+
-+    oneOf:
-+      - required:
-+        - pins
-+      - required:
-+        - groups
-+
-+    additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    iso_pinctrl: pinctrl@300 {
-+        compatible = "realtek,rtd1195-iso-pinctrl";
-+        reg = <0x300 0x14>;
-+
-+        i2c0_pins: i2c0-pins {
-+            function = "i2c0";
-+            groups = "i2c_scl_0", "i2c_sda_0";
-+            drive-strength = <4>;
-+            bias-disable;
-+        };
-+    };
-+
+ retry_cpuset:
+ 	compaction_retries = 0;
+ 	no_progress_loops = 0;
+
+What do you think?
+ 
+> which is easy to grep for then having the page allocator go down to the
+> point where zone lock gets involved is not the end of the world for
+> RT in theory - unless that damned reality tells otherwise. :)
+> 
+> The page allocator allocations should also have a limit on the number of
+> pages and eventually also page order (need to stare at the code or let
+> Michal educate me that the order does not matter).
+
+In practice anything but order 0 is out of question because we need
+zone->lock for that currently. Maybe we can introduce pcp lists for
+higher orders in the future - I have a vague recollection Mel was
+playing with that some time ago.
+
+> To make it consistent the same GFP_ variant should allow the slab
+> allocator go to the point where the slab cache is exhausted.
+> 
+> Having a distinct and clearly defined GFP_ variant is really key to
+> chase down offenders and to make reviewers double check upfront why this
+> is absolutely required.
+
+Having a high level and recognizable gfp mask is OK but I would really
+like not to introduce a dedicated flag. The page allocator should be
+able to recognize the context which cannot be handled. 
 -- 
-2.28.0
-
+Michal Hocko
+SUSE Labs
