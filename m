@@ -2,140 +2,173 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14D8EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 21:56:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76B13C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 22:02:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D93F2204EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 21:56:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ze4erFzx"
+	by mail.kernel.org (Postfix) with ESMTP id 5EAEA20771
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 22:02:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726707AbgHMV4q (ORCPT
+        id S1726574AbgHMWCd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 17:56:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54810 "EHLO
+        Thu, 13 Aug 2020 18:02:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726647AbgHMV4d (ORCPT
+        with ESMTP id S1726205AbgHMWCd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 17:56:33 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55D38C061757;
-        Thu, 13 Aug 2020 14:56:33 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id w14so7854948ljj.4;
-        Thu, 13 Aug 2020 14:56:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ZsQa4/wa/hr0FMOOmoE7ekivRXN/hVmPW68FrHf8SvM=;
-        b=Ze4erFzxVZru3NYe8ZT3q5z8yGB9elgvo7xXqLgr3HyM8VAXlGsbMRFGm7Vn0nukuD
-         iYkmKOCclAEFhHkuONXsFf4vwblr1D366Z/GpDydV78x0rFZ0xoftTPfHf0M+UPcdJ+3
-         vavJIqbINSp9T0P/TWNnKjPBg7ekVbBb/O4OnuJI3AYepEXXeN2StzEEmQ4Y5Qhxtil1
-         FGfUGs6TCMe8snfF/qGLwUDYVXjU10xrvffpLo1XNOQqx3FFHtJfK3TFq2rxd6JhrJm4
-         SOJqamOllhCBPM/6/+oNf83P9OjcrYz72AC/oz0hj/bILw0v9VtBvgAhJWimfZ5COcoL
-         olxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ZsQa4/wa/hr0FMOOmoE7ekivRXN/hVmPW68FrHf8SvM=;
-        b=BuZ7KsaY+skJhG1DpcqNIMPz7x1Sud4UPvpdhmPDoSWXM2Wnte541u6jrxlsuFXSys
-         kyVTIW2Axc1cCNcKMYApDZQlzZri5L5hg11EIBF78Zm/CKcAyD/15kStnn3ewtlXNjpy
-         8ySES4bkWztB3Zw/4pmckrKvOzYbYy5hH1rKoZOD4GyDQ87DYqkQSaDy+Qfj6Zhr87yz
-         rOkMJOqjb2RJvXMBdcTw1L+zoZd3UFBc0rFj5ErosWOoiE1Z1yfSUGaRTQZZbv4FZerT
-         0xo38sLK0tKkk6OOUPcT0sif3ngOVlgGDVz78URuaAiSuoaDElTBRxiKQJSnGWypZQEd
-         rKmg==
-X-Gm-Message-State: AOAM533uDuzK1NT8F5V4loUsfEQpg51eyr2RHXZ9ye1K6o3yXHHl0UBb
-        B8X3yFSA7GN+IvakQqe7APc=
-X-Google-Smtp-Source: ABdhPJxF5FcrTFOve8Js3QSlq60WT7ItL6LDIqEAG+J+TDbZvERjyEBqiXw7AdoTfQFFusczr4OHvg==
-X-Received: by 2002:a2e:7c0f:: with SMTP id x15mr3055969ljc.205.1597355791880;
-        Thu, 13 Aug 2020 14:56:31 -0700 (PDT)
-Received: from localhost.localdomain (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.gmail.com with ESMTPSA id z20sm1349977ljk.97.2020.08.13.14.56.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Aug 2020 14:56:31 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Derek Basehore <dbasehore@chromium.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sean Paul <sean@poorly.run>, Daniel Vetter <daniel@ffwll.ch>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        Daniel Stone <daniel@fooishbar.org>
-Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND v12 2/4] drm/panel: Read panel orientation for BOE TV101WUM-NL6
-Date:   Fri, 14 Aug 2020 00:56:07 +0300
-Message-Id: <20200813215609.28643-3-digetx@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200813215609.28643-1-digetx@gmail.com>
-References: <20200813215609.28643-1-digetx@gmail.com>
+        Thu, 13 Aug 2020 18:02:33 -0400
+Received: from hillosipuli.retiisi.org.uk (hillosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::81:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BD3EC061757;
+        Thu, 13 Aug 2020 15:02:33 -0700 (PDT)
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id DA3A9634C87;
+        Fri, 14 Aug 2020 01:01:47 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1k6LIB-0001jd-Hd; Fri, 14 Aug 2020 01:01:47 +0300
+Date:   Fri, 14 Aug 2020 01:01:47 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, luca@lucaceresoli.net,
+        leonl@leopardimaging.com, robh+dt@kernel.org, lgirdwood@gmail.com,
+        broonie@kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/3] media: i2c: imx274: Add IMX274 power on and off
+ sequence
+Message-ID: <20200813220147.GJ840@valkosipuli.retiisi.org.uk>
+References: <1595264494-2400-1-git-send-email-skomatineni@nvidia.com>
+ <1595264494-2400-3-git-send-email-skomatineni@nvidia.com>
+ <20200731162611.GB6401@valkosipuli.retiisi.org.uk>
+ <b8819080-6585-c953-e7ad-9b0a10f1d821@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b8819080-6585-c953-e7ad-9b0a10f1d821@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Derek Basehore <dbasehore@chromium.org>
+Hi Sowjanya,
 
-This reads the DT setting for the panel rotation to set the panel
-orientation in the get_modes callback.
+On Fri, Jul 31, 2020 at 09:34:15AM -0700, Sowjanya Komatineni wrote:
+> 
+> On 7/31/20 9:26 AM, Sakari Ailus wrote:
+> > Hi Sowjanya,
+> > 
+> > Thanks for the patch.
+> > 
+> > On Mon, Jul 20, 2020 at 10:01:34AM -0700, Sowjanya Komatineni wrote:
+> > > IMX274 has VANA analog 2.8V supply, VDIG digital core 1.8V supply,
+> > > and VDDL digital io 1.2V supply which are optional based on camera
+> > > module design.
+> > > 
+> > > IMX274 also need external 24Mhz clock and is optional based on
+> > > camera module design.
+> > The sensor appears to be able to use other frequencies, too. Could you
+> > check in the driver the frequency is correct? This should be found in DT
+> > bindings, too.
+> 
+> External input clock is not in DT. So added it as part of this series.
+> 
+> We are mostly using 24Mhz I/P with IMX274 on designs we have and also on
+> leopard module which has onboard XTAL for 24Mhz
 
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: Derek Basehore <dbasehore@chromium.org>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+Yes. This information still should be found in DT as the xtal isn't part of
+the sensor.
 
-diff --git a/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c b/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
-index e320aa30b9ae..6824363fcff1 100644
---- a/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
-+++ b/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
-@@ -11,6 +11,7 @@
- #include <linux/of_device.h>
- #include <linux/regulator/consumer.h>
- 
-+#include <drm/drm_connector.h>
- #include <drm/drm_crtc.h>
- #include <drm/drm_mipi_dsi.h>
- #include <drm/drm_panel.h>
-@@ -43,6 +44,7 @@ struct boe_panel {
- 
- 	const struct panel_desc *desc;
- 
-+	enum drm_panel_orientation orientation;
- 	struct regulator *pp1800;
- 	struct regulator *avee;
- 	struct regulator *avdd;
-@@ -740,6 +742,7 @@ static int boe_panel_get_modes(struct drm_panel *panel,
- 	connector->display_info.width_mm = boe->desc->size.width_mm;
- 	connector->display_info.height_mm = boe->desc->size.height_mm;
- 	connector->display_info.bpc = boe->desc->bpc;
-+	drm_connector_set_panel_orientation(connector, boe->orientation);
- 
- 	return 1;
- }
-@@ -779,6 +782,9 @@ static int boe_panel_add(struct boe_panel *boe)
- 
- 	drm_panel_init(&boe->base, dev, &boe_panel_funcs,
- 		       DRM_MODE_CONNECTOR_DSI);
-+	err = of_drm_get_panel_orientation(dev->of_node, &boe->orientation);
-+	if (err < 0)
-+		return err;
- 
- 	err = drm_panel_of_backlight(&boe->base);
- 	if (err)
+> 
+> > > This patch adds support for IMX274 power on and off to enable and
+> > > disable these supplies and external clock.
+> > > 
+> > > Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> > > ---
+> > >   drivers/media/i2c/imx274.c | 132 +++++++++++++++++++++++++++++++++++++++++++--
+> > >   1 file changed, 129 insertions(+), 3 deletions(-)
+> > > 
+> > > diff --git a/drivers/media/i2c/imx274.c b/drivers/media/i2c/imx274.c
+> > > index 55869ff..7157b1d 100644
+> > > --- a/drivers/media/i2c/imx274.c
+> > > +++ b/drivers/media/i2c/imx274.c
+> > > @@ -19,6 +19,7 @@
+> > >   #include <linux/module.h>
+> > >   #include <linux/of_gpio.h>
+> > >   #include <linux/regmap.h>
+> > > +#include <linux/regulator/consumer.h>
+> > >   #include <linux/slab.h>
+> > >   #include <linux/v4l2-mediabus.h>
+> > >   #include <linux/videodev2.h>
+> > > @@ -131,6 +132,15 @@
+> > >   #define IMX274_TABLE_WAIT_MS			0
+> > >   #define IMX274_TABLE_END			1
+> > > +/* regulator supplies */
+> > > +static const char * const imx274_supply_names[] = {
+> > > +	"VDDL",  /* IF (1.2V) supply */
+> > > +	"VDIG",  /* Digital Core (1.8V) supply */
+> > > +	"VANA",  /* Analog (2.8V) supply */
+> > > +};
+> > > +
+> > > +#define IMX274_NUM_SUPPLIES ARRAY_SIZE(imx274_supply_names)
+> > Please use ARRAY_SIZE() directly.
+> > 
+> > > +
+> > >   /*
+> > >    * imx274 I2C operation related structure
+> > >    */
+> > > @@ -501,6 +511,8 @@ struct imx274_ctrls {
+> > >    * @frame_rate: V4L2 frame rate structure
+> > >    * @regmap: Pointer to regmap structure
+> > >    * @reset_gpio: Pointer to reset gpio
+> > > + * @supplies: imx274 analog and digital supplies
+> > > + * @inck: input clock to imx274
+> > >    * @lock: Mutex structure
+> > >    * @mode: Parameters for the selected readout mode
+> > >    */
+> > > @@ -514,6 +526,8 @@ struct stimx274 {
+> > >   	struct v4l2_fract frame_interval;
+> > >   	struct regmap *regmap;
+> > >   	struct gpio_desc *reset_gpio;
+> > > +	struct regulator *supplies[IMX274_NUM_SUPPLIES];
+> > > +	struct clk *inck;
+> > >   	struct mutex lock; /* mutex lock for operations */
+> > >   	const struct imx274_mode *mode;
+> > >   };
+> > > @@ -767,6 +781,99 @@ static void imx274_reset(struct stimx274 *priv, int rst)
+> > >   	usleep_range(IMX274_RESET_DELAY1, IMX274_RESET_DELAY2);
+> > >   }
+> > > +/*
+> > > + * imx274_power_on - Function called to power on the sensor
+> > > + * @imx274: Pointer to device structure
+> > > + */
+> > > +static int imx274_power_on(struct device *dev)
+> > > +{
+> > > +	struct i2c_client *client = to_i2c_client(dev);
+> > > +	struct v4l2_subdev *sd = i2c_get_clientdata(client);
+> > > +	struct stimx274 *imx274 = to_imx274(sd);
+> > > +	int i, ret;
+> > > +
+> > > +	ret = clk_prepare_enable(imx274->inck);
+> > > +	if (ret) {
+> > > +		dev_err(&imx274->client->dev,
+> > > +			"Failed to enable input clock: %d\n", ret);
+> > > +		return ret;
+> > > +	}
+> > > +
+> > Could you use regulator_bulk_enable() instead? Same for disable.
+> 
+> Using regulator_bulk_enable() makes these regulators mandatory.
+
+How? regulator_bulk_enable() simply does call regulator_enable() on all the
+regulators.
+
 -- 
-2.27.0
-
+Sakari Ailus
