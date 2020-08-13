@@ -2,110 +2,113 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA340C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 18:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7812CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 18:33:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E24A2078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 18:31:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48CC82078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 18:33:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OABqsCGb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qiDYdQnu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726653AbgHMSbh (ORCPT
+        id S1726604AbgHMSdY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 14:31:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51508 "EHLO
+        Thu, 13 Aug 2020 14:33:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726167AbgHMSbg (ORCPT
+        with ESMTP id S1726167AbgHMSdX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 14:31:36 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C7E6C061757;
-        Thu, 13 Aug 2020 11:31:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=SH9o16/Qf0/iPL9rM1LGxVVZdzQj3ynCJRzANMbMLh8=; b=OABqsCGbsESN3jXxQUyFvsjtkH
-        Trbqm8qEElLJ+OBn/xH1496gay5z4y2bWGu+yakc/VBmK6oj1HYPkZEID8voaWSpzi5WstQDz9Ad9
-        mcEeXP+y4WcGjuPCYmG7caPiU0Qhp3KMixtAtoLsYaEax+P/iPVYKrrHAfBjNGeMjRh0HRUfsfOOY
-        E+rUEqRQQ2LcwdmvSiUdQ+LcaHY8TTrjkH5wFJJ3/oU/s1/PGZK2+51nfIi1W3zHQDzXIXASm4Qc7
-        3DvNaqO++o1tXrkKZffjdR//a+dY2E2odqWzH0ZLqnb9tfuwo/KITb0YEnfUTQhxhu7MyJYUWM3GD
-        xssnZqGw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k6I0Z-00020f-Fv; Thu, 13 Aug 2020 18:31:23 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C7E2B304D58;
-        Thu, 13 Aug 2020 20:31:21 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B5A0A2B929A4A; Thu, 13 Aug 2020 20:31:21 +0200 (CEST)
-Date:   Thu, 13 Aug 2020 20:31:21 +0200
-From:   peterz@infradead.org
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Michal Hocko <mhocko@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
-Message-ID: <20200813183121.GY2674@hirez.programming.kicks-ass.net>
-References: <20200813095840.GA25268@pc636>
- <874kp6llzb.fsf@nanos.tec.linutronix.de>
- <20200813133308.GK9477@dhcp22.suse.cz>
- <87sgcqty0e.fsf@nanos.tec.linutronix.de>
- <20200813145335.GN9477@dhcp22.suse.cz>
- <20200813154159.GR4295@paulmck-ThinkPad-P72>
- <20200813155412.GP9477@dhcp22.suse.cz>
- <20200813160442.GV4295@paulmck-ThinkPad-P72>
- <20200813161357.GQ9477@dhcp22.suse.cz>
- <20200813162904.GX4295@paulmck-ThinkPad-P72>
+        Thu, 13 Aug 2020 14:33:23 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0ACADC061757;
+        Thu, 13 Aug 2020 11:33:23 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id h8so3548275lfp.9;
+        Thu, 13 Aug 2020 11:33:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=sIbcE5ODjfrhDYPnzvl33BGmc5yNcFjg9cy67ZxLYb0=;
+        b=qiDYdQnu5JW6I3kVj6Zc2O7cgctSak2P8gJSzLteZd8tmtwLPc2Ce+eNpfLha8OaVK
+         tiThwyNMddL1zgmyiYU118jJJRBtAquzNdqtsVlAKHxoCSh/wEvb3+pP3hZmctEq1lXn
+         F6LLnQwhpn1zb+ef9J6wzl/FHQ4XndA+jgVqER+Wi4o5n6EvirvQ/skMPY0C3XLs3jx3
+         zp5IXAsyxLu1VtPK00SFCKg1NkdXGlrrXF25AuyGr2YdLt4hEL8vRk/UezAJFyK6z8tV
+         ZZ/cyPQhYA4FHiVIVjcZV/Ux8nL88Phx9u9DQWDzy8WkdCs/ya20LW1ewTUmvCai0msf
+         3alg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=sIbcE5ODjfrhDYPnzvl33BGmc5yNcFjg9cy67ZxLYb0=;
+        b=XK/Oyl5U2GzmRCKboHR2OEIt+qoOzdgGBTcZY2IJn8+vKvRUVkZUDff97BVXqOKoTT
+         Fdo2s/H9JAja8ef4+mhjgkWV3HVZjOhMLMYGP0bofOxTjkNEp6bwToMflSWKr5n6aCdx
+         MX0TMFMzkQUgeeXsR4tQ+inloIzrXV+IyceUNL5q4lC8lrBhHXRCQAlwVwz/HQrLovUU
+         IR4T5c8ZS7aQdeQSnIQ7vqvCR4MTTShKIL7MzoHL5WofybmqUeH9+eOSE75XfmUpi5Kg
+         CrErNbxxrx5jKI0vrdbS2tqtyZLNgpFfyMm6Z60Md7r2xa+DKzpXu5OeNgRjUA32Bosr
+         KTMg==
+X-Gm-Message-State: AOAM532jCdqMGSsH3c/iftkHTV3isKDQGbfKv10B8+kvP8Nw3WLf5xj/
+        4yWvQOwr+4ImM7aufzbpd4/MVEm2
+X-Google-Smtp-Source: ABdhPJyFi7uYvAVNZzf4OFvdyC4AV38HSkoRdisRnK6CknK8QmcqYiOyXvGK65vmVDII8vs4f4XbIw==
+X-Received: by 2002:a19:24c2:: with SMTP id k185mr2838964lfk.120.1597343601268;
+        Thu, 13 Aug 2020 11:33:21 -0700 (PDT)
+Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.googlemail.com with ESMTPSA id o25sm1285044ljg.45.2020.08.13.11.33.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Aug 2020 11:33:20 -0700 (PDT)
+Subject: Re: [PATCH v6 5/5] input: mt: cleanup open-coded __set_bit()
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     Henrik Rydberg <rydberg@bitmath.org>,
+        James Chen <james.chen@emc.com.tw>,
+        Johnny Chuang <johnny.chuang@emc.com.tw>,
+        Scott Liu <scott.liu@emc.com.tw>, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1594599118.git.mirq-linux@rere.qmqm.pl>
+ <cf1dda3a372896cb01033ce084a7deb9620df7aa.1594599118.git.mirq-linux@rere.qmqm.pl>
+ <20200716003047.GA1665100@dtor-ws>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <eddb596c-dfd0-b32f-344f-7a494e78a43f@gmail.com>
+Date:   Thu, 13 Aug 2020 21:33:19 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200813162904.GX4295@paulmck-ThinkPad-P72>
+In-Reply-To: <20200716003047.GA1665100@dtor-ws>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 09:29:04AM -0700, Paul E. McKenney wrote:
-> OK.  So the current situation requires a choice between these these
-> alternatives, each of which has shortcomings that have been mentioned
-> earlier in this thread:
+16.07.2020 03:30, Dmitry Torokhov пишет:
+> On Mon, Jul 13, 2020 at 02:24:55AM +0200, Michał Mirosław wrote:
+>> Replace open-coded __set_bit() with the function.
+>>
+>> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 > 
-> 1.	Prohibit invoking allocators from raw atomic context, such
-> 	as when holding a raw spinlock.
-
-This! This has always been the case, why are we even considering change
-here?
-
-> 2.	Adding a GFP_ flag.
-
-The patch 1/2 in this thread is horrendous crap.
-
-> 3.	Reusing existing GFP_ flags/values/whatever to communicate
-> 	the raw-context information that was to be communicated by
-> 	the new GFP_ flag.
+> Applied, thank you.
 > 
-> 4.	Making lockdep forgive acquiring spinlocks while holding
-> 	raw spinlocks, but only in CONFIG_PREEMPT_NONE=y kernels.
-> 
-> Am I missing anything?
 
-How would 4 solve anything?
+Hello, Dmitry!
 
+Could you please let us know how we could proceed with applying the rest
+of the patches?
 
-In other words, what is the actual friggin problem? I've not seen one
-described anywhere.
+The device-tree for Nexus 7 2012 [1] has been merged into upcoming v5.9
+and I'd want to add the touchscreen support.
+
+[1]
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=2720008f4239cf36d57b8d0b3cb2a49d4368a378
+
+The missing elants_i2c driver functionality doesn't really block making
+a device-tree change since elants_i2c.yaml DT binding already supports
+the ektf3624 TS model, but will be nice to get a full featured support.
+
+Thanks in advance!
