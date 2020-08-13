@@ -2,166 +2,209 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0E40C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 06:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00410C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 06:47:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 952D7205CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 06:45:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF79A20656
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 06:47:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="AkUXHOBK"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="O5fll75C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726427AbgHMGpX (ORCPT
+        id S1726106AbgHMGrA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 02:45:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55640 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725960AbgHMGpW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 02:45:22 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81E17C061757
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 23:45:22 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id k8so4056143wma.2
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 23:45:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=atishpatra.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=15/mwsQoBEuD1UnQg0WuQ5I0KeUnjP+2eB9N9GgL8EQ=;
-        b=AkUXHOBKHkEJbIl8DXGc+JE/8Q+P3+MPn2+ghNpogZBAlbVu83PZnqRAjk6ld34dpo
-         H398Iy2p5q7orn9oKHCWeBpd07JymChd2v8bDjaQ89t6j+H9MEXoSrG1cqpmTXim7WT8
-         8Z7GGanzTaBc1OSLTocvV4QR75gsL+txbYnxU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=15/mwsQoBEuD1UnQg0WuQ5I0KeUnjP+2eB9N9GgL8EQ=;
-        b=WznuHyPB1bj9xEEpIaJG/2PeSQJXI0XGHC8SWTwbrM+qzDoUt8pQL88jW58tpmol4+
-         mTTx6T5KbOGcX8a2Wp+2645ILO7PyBXDEYXDtpIGhGAhlZBjD4XDZWkqAIvs+7Qm2+46
-         wxi9SdclP9EG4To+JeGepABkKjeFkhu+Eu6Ls48UuQa8NY8xUlpJbrz4FhY/+wHQvqnb
-         WAkB3V7PoCaff3jubOoyBzib0zxcf/keu43sEv8OH6RlwNrIH9vY4sMJ36/WpcqYKO4f
-         F7qVKLDjhhIlSZMEzyaPKPGTliLZ2rdS+R2W00V5FjiVpJ9IK4/CZTv+7kLcg8TysqAG
-         NsSQ==
-X-Gm-Message-State: AOAM530bxh//lHGK06m6R4dj73skEAWHWiI+jV7+St6JDl2nPFAP/7ws
-        Fe5LYlpFXBus8iEI7Zr7DNGzuMhpmGc7hm8w6dsD
-X-Google-Smtp-Source: ABdhPJxtTMvTIOuyXnTDOzi8O0hbnzjAJe/bIvZreckJCf7i0Tl/K4mmhwfObr+Wqzr7pbVb8Ow7xHg/HWrcMsHfljI=
-X-Received: by 2002:a1c:4d12:: with SMTP id o18mr2880135wmh.55.1597301120774;
- Wed, 12 Aug 2020 23:45:20 -0700 (PDT)
+        Thu, 13 Aug 2020 02:47:00 -0400
+Received: from ozlabs.org ([203.11.71.1]:56159 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725978AbgHMGrA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 02:47:00 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BRxv43MBsz9sTH;
+        Thu, 13 Aug 2020 16:46:56 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1597301217;
+        bh=HtgJ1t1rqLeW9In5EvrkzFZ0cdaEeChP6vEYzct7nw8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=O5fll75Ct0fL71RbDgY5wy2RLZvT0fAnVuaPnuEjEUtppDi4QUI5ejJ0AshEvjdgA
+         MCalQuOuV3KbtdcRsPHGhVCgvYYXpIVWOP3QSDA4ucD86R97ikArdpa0lzSlLfRzvX
+         8HPeC0BH8/bjYUBEETc7WwEg9XCAO/VbHLXr05re2+QCuPxTLNorPeMC09uawQ7rAU
+         UdK+ZN2KBOo8pbTthFt01UxfQ1QNrg7vqPOtYKKOeF2Kb5LScCFPI9N8TFAIXPUzyL
+         GagtQrEbfVZmX88sECtQdTYDNoAivTQQGFC9K36Q4wy+NMiK6WsFS5sgQiNZzGZcsY
+         XVnjwr51OiFmg==
+Date:   Thu, 13 Aug 2020 16:46:54 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Roman Gushchin <guro@fb.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PowerPC Mailing List <linuxppc-dev@lists.ozlabs.org>
+Subject: linux-next: runtime warning in Linus' tree
+Message-ID: <20200813164654.061dbbd3@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20200813033807.19556-1-qiuwenbo@phytium.com.cn> <CY4PR04MB3751ECCFBE6B590E9D0850B0E7430@CY4PR04MB3751.namprd04.prod.outlook.com>
-In-Reply-To: <CY4PR04MB3751ECCFBE6B590E9D0850B0E7430@CY4PR04MB3751.namprd04.prod.outlook.com>
-From:   Atish Patra <atishp@atishpatra.org>
-Date:   Wed, 12 Aug 2020 23:45:09 -0700
-Message-ID: <CAOnJCUJTR_FEmjvs+L1KV6UJNbsZKrrVr7noWHUi8gG6qoWHxA@mail.gmail.com>
-Subject: Re: [PATCH v2] riscv: Setup exception vector for nommu platform
-To:     Damien Le Moal <Damien.LeMoal@wdc.com>
-Cc:     Qiu Wenbo <qiuwenbo@phytium.com.cn>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        Anup Patel <anup@brainfault.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Anup Patel <Anup.Patel@wdc.com>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/eDCBOtPvZTwfaOIIDj=Yg_u";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 10:44 PM Damien Le Moal <Damien.LeMoal@wdc.com> wrote:
->
-> On 2020/08/13 12:40, Qiu Wenbo wrote:
-> > Exception vector is missing on nommu platform and that is an issue.
-> > This patch is tested in Sipeed Maix Bit Dev Board.
-> >
-> > Fixes: 79b1feba5455 ("RISC-V: Setup exception vector early")
-> > Suggested-by: Anup Patel <anup@brainfault.org>
-> > Suggested-by: Atish Patra <atishp@atishpatra.org>
-> > Signed-off-by: Qiu Wenbo <qiuwenbo@phytium.com.cn>
->
-> Please add a cc stable #5.8 tag. Kendryte support is in 5.8 stable.
->
+--Sig_/eDCBOtPvZTwfaOIIDj=Yg_u
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-That won't be necessary as the patch that broke nommu (79b1feba5455) was
-part of the 1st PR sent towards 5.9-rc1.
+Hi all,
 
+Testing Linus' tree today, my qemu runs (PowerPC
+powerpc_pseries_le_defconfig) produce the following WARNING:
 
-> > ---
-> >  arch/riscv/kernel/head.S | 25 +++++++++++++++++--------
-> >  1 file changed, 17 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
-> > index d0c5c316e9bb..0a4e81b8dc79 100644
-> > --- a/arch/riscv/kernel/head.S
-> > +++ b/arch/riscv/kernel/head.S
-> > @@ -77,16 +77,10 @@ relocate:
-> >       csrw CSR_SATP, a0
-> >  .align 2
-> >  1:
-> > -     /* Set trap vector to exception handler */
-> > -     la a0, handle_exception
-> > +     /* Set trap vector to spin forever to help debug */
-> > +     la a0, .Lsecondary_park
-> >       csrw CSR_TVEC, a0
-> >
-> > -     /*
-> > -      * Set sup0 scratch register to 0, indicating to exception vector that
-> > -      * we are presently executing in kernel.
-> > -      */
-> > -     csrw CSR_SCRATCH, zero
-> > -
-> >       /* Reload the global pointer */
-> >  .option push
-> >  .option norelax
-> > @@ -144,9 +138,23 @@ secondary_start_common:
-> >       la a0, swapper_pg_dir
-> >       call relocate
-> >  #endif
-> > +     call setup_trap_vector
-> >       tail smp_callin
-> >  #endif /* CONFIG_SMP */
-> >
-> > +.align 2
-> > +setup_trap_vector:
-> > +     /* Set trap vector to exception handler */
-> > +     la a0, handle_exception
-> > +     csrw CSR_TVEC, a0
-> > +
-> > +     /*
-> > +      * Set sup0 scratch register to 0, indicating to exception vector that
-> > +      * we are presently executing in kernel.
-> > +      */
-> > +     csrw CSR_SCRATCH, zero
-> > +     ret
-> > +
-> >  .Lsecondary_park:
-> >       /* We lack SMP support or have too many harts, so park this hart */
-> >       wfi
-> > @@ -240,6 +248,7 @@ clear_bss_done:
-> >       call relocate
-> >  #endif /* CONFIG_MMU */
-> >
-> > +     call setup_trap_vector
-> >       /* Restore C environment */
-> >       la tp, init_task
-> >       sw zero, TASK_TI_CPU(tp)
-> >
->
->
-> --
-> Damien Le Moal
-> Western Digital Research
+[    0.021401][    T0] Mount-cache hash table entries: 8192 (order: 0, 6553=
+6 bytes, linear)
+[    0.021529][    T0] Mountpoint-cache hash table entries: 8192 (order: 0,=
+ 65536 bytes, linear)
+[    0.053969][    T0] ------------[ cut here ]------------
+[    0.055220][    T0] WARNING: CPU: 0 PID: 0 at mm/memcontrol.c:5220 mem_c=
+group_css_alloc+0x350/0x904
+[    0.055355][    T0] Modules linked in:
+[    0.055812][    T0] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.8.0 #5
+[    0.055976][    T0] NIP:  c000000000410010 LR: c00000000040fd68 CTR: 000=
+0000000000000
+[    0.056097][    T0] REGS: c0000000011e7ab0 TRAP: 0700   Not tainted  (5.=
+8.0)
+[    0.056162][    T0] MSR:  8000000002029033 <SF,VEC,EE,ME,IR,DR,RI,LE>  C=
+R: 24000888  XER: 00000000
+[    0.056449][    T0] CFAR: c00000000040fd80 IRQMASK: 0=20
+[    0.056449][    T0] GPR00: c00000000040fd68 c0000000011e7d40 c0000000011=
+e8300 0000000000000001=20
+[    0.056449][    T0] GPR04: 0000000000000228 0000000000000000 00000000000=
+00001 ffffffffffffffff=20
+[    0.056449][    T0] GPR08: c00000007d003208 0000000000000000 00000000000=
+00000 c00000007d002fe8=20
+[    0.056449][    T0] GPR12: 0000000000000001 c0000000013d0000 00000000000=
+00000 00000000011dd528=20
+[    0.056449][    T0] GPR16: 00000000011dd840 00000000011dd690 00000000000=
+00018 0000000000000003=20
+[    0.056449][    T0] GPR20: 0000000000000001 c0000000010cbcf8 00000000000=
+00003 c0000000010cd540=20
+[    0.056449][    T0] GPR24: c0000000010e8778 c0000000010e9080 c0000000010=
+cbcd8 0000000000000000=20
+[    0.056449][    T0] GPR28: 0000000000000000 c00000007e2a1000 c0000000010=
+cbcc8 c00000000118ea00=20
+[    0.057109][    T0] NIP [c000000000410010] mem_cgroup_css_alloc+0x350/0x=
+904
+[    0.057177][    T0] LR [c00000000040fd68] mem_cgroup_css_alloc+0xa8/0x904
+[    0.057394][    T0] Call Trace:
+[    0.057534][    T0] [c0000000011e7d40] [c00000000040fd68] mem_cgroup_css=
+_alloc+0xa8/0x904 (unreliable)
+[    0.057814][    T0] [c0000000011e7dc0] [c000000000f5b13c] cgroup_init_su=
+bsys+0xbc/0x210
+[    0.057903][    T0] [c0000000011e7e10] [c000000000f5b690] cgroup_init+0x=
+220/0x598
+[    0.057973][    T0] [c0000000011e7ee0] [c000000000f34354] start_kernel+0=
+x67c/0x6ec
+[    0.058047][    T0] [c0000000011e7f90] [c00000000000cb88] start_here_com=
+mon+0x1c/0x614
+[    0.058241][    T0] Instruction dump:
+[    0.058420][    T0] eac10030 eae10038 eb410050 eb610058 4bffff60 6000000=
+0 60000000 60000000=20
+[    0.058550][    T0] 3be00100 4bfffdfc 60000000 60000000 <0fe00000> 4bfff=
+d70 60000000 60000000=20
+[    0.059381][    T0] ---[ end trace cb2d79b4994ef1fe ]---
+[    0.059810][    T0] ------------[ cut here ]------------
+[    0.059872][    T0] WARNING: CPU: 0 PID: 0 at mm/memcontrol.c:5135 mem_c=
+group_css_alloc+0x750/0x904
+[    0.059930][    T0] Modules linked in:
+[    0.060053][    T0] CPU: 0 PID: 0 Comm: swapper/0 Tainted: G        W   =
+      5.8.0 #5
+[    0.060113][    T0] NIP:  c000000000410410 LR: c00000000040ff2c CTR: 000=
+0000000000000
+[    0.060171][    T0] REGS: c0000000011e7ab0 TRAP: 0700   Tainted: G      =
+  W          (5.8.0)
+[    0.060229][    T0] MSR:  8000000002029033 <SF,VEC,EE,ME,IR,DR,RI,LE>  C=
+R: 24000880  XER: 00000000
+[    0.060332][    T0] CFAR: c00000000040fe48 IRQMASK: 0=20
+[    0.060332][    T0] GPR00: c00000000040ff2c c0000000011e7d40 c0000000011=
+e8300 c00000007e234c00=20
+[    0.060332][    T0] GPR04: 0000000000000000 0000000000000000 c00000007e2=
+35000 0000000000000013=20
+[    0.060332][    T0] GPR08: 000000007ec00000 0000000000000000 00000000000=
+00000 0000000000000001=20
+[    0.060332][    T0] GPR12: 0000000000000000 c0000000013d0000 00000000000=
+00000 00000000011dd528=20
+[    0.060332][    T0] GPR16: 00000000011dd840 00000000011dd690 00000000000=
+00018 0000000000000003=20
+[    0.060332][    T0] GPR20: c000000001223300 c000000000e95900 c0000000011=
+8ea00 c0000000012232c0=20
+[    0.060332][    T0] GPR24: c0000000010e8778 c0000000010e9080 00000000004=
+00cc0 0000000000000000=20
+[    0.060332][    T0] GPR28: 0000000000000000 c00000007e2a1000 c00000007e2=
+34c00 0000000000000000=20
+[    0.060855][    T0] NIP [c000000000410410] mem_cgroup_css_alloc+0x750/0x=
+904
+[    0.060911][    T0] LR [c00000000040ff2c] mem_cgroup_css_alloc+0x26c/0x9=
+04
+[    0.060958][    T0] Call Trace:
+[    0.061003][    T0] [c0000000011e7d40] [c00000000040ff2c] mem_cgroup_css=
+_alloc+0x26c/0x904 (unreliable)
+[    0.061081][    T0] [c0000000011e7dc0] [c000000000f5b13c] cgroup_init_su=
+bsys+0xbc/0x210
+[    0.061165][    T0] [c0000000011e7e10] [c000000000f5b690] cgroup_init+0x=
+220/0x598
+[    0.061233][    T0] [c0000000011e7ee0] [c000000000f34354] start_kernel+0=
+x67c/0x6ec
+[    0.061303][    T0] [c0000000011e7f90] [c00000000000cb88] start_here_com=
+mon+0x1c/0x614
+[    0.061364][    T0] Instruction dump:
+[    0.061408][    T0] ebe1fff8 7c0803a6 4e800020 60000000 60000000 3d22000=
+4 e929d230 7c3c4800=20
+[    0.061508][    T0] 41820190 e93c03d2 4bfffc80 60000000 <0fe00000> 4bfff=
+a38 60000000 60000000=20
+[    0.061630][    T0] ---[ end trace cb2d79b4994ef1ff ]---
+[    0.096387][    T1] EEH: pSeries platform initialized
+[    0.097232][    T1] POWER8 performance monitor hardware support register=
+ed
 
+[The line numbers in the final linux next are 5226 and 5141 due to
+later patches.]
 
+Introduced (or exposed) by commit
 
---
-Regards,
-Atish
+  3e38e0aaca9e ("mm: memcg: charge memcg percpu memory to the parent cgroup=
+")
+
+This commit actually adds the WARN_ON, so it either adds the bug that
+sets it off, or the bug already existed.
+
+Unfotunately, the version of this patch in linux-next up tuntil today
+is different.  :-(
+
+I have left this as I have no idea how to fix it :-)
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/eDCBOtPvZTwfaOIIDj=Yg_u
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl804d4ACgkQAVBC80lX
+0GxBwwgAjYJd1+rhj+ieQ5IOxjMycF9KJIZwMYz91Qgtejm6V+CAmCSJXiwStSIM
+1sR/fr8oJB5/cY+XsInVF6fRfGzsc+fMc9z571Q7nf9JwZAevf7+kdK6rckR5Qcm
+bDe+juyu06kCdhpHm8cswmYlBoD//gtzfpaeVdo4wpJGkdDXvR8kLasrZd7IDX2n
+s/pjBrL8nX3GauKtd0c0JmlXSSVYhvbbie0zBdn6TB+q5R7QL7M6p6i2ANmqfzTU
+e/yGTp+Zk3H/t2v2/YPmL9Y4wZfC/egSyoh5bw28tq/Ma9TZBI0DsU2cIeEnoYfT
+aZRpNYH5kl6J5JqbGVxegz5NLf0r7g==
+=aHEW
+-----END PGP SIGNATURE-----
+
+--Sig_/eDCBOtPvZTwfaOIIDj=Yg_u--
