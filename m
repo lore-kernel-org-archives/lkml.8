@@ -2,88 +2,75 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA7C7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 12:14:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DF91C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 12:14:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 764F020791
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 12:14:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="g4chzfeo"
+	by mail.kernel.org (Postfix) with ESMTP id 1030D22B4E
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 12:14:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbgHMMOT (ORCPT
+        id S1726642AbgHMMOg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 08:14:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49670 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726587AbgHMMOR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 08:14:17 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1747FC061757
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 05:14:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=/u7Zk4bCfLx2PXXzkWP/0h7HLrlp3BATVK4KXPDFv64=; b=g4chzfeoFqDUrpAlhFb4Qt0Egj
-        JBZbxodNdrryqRciYEEph8Q+wD4FKGduxdCB2aleaJ4CxSRzlaFKvp17NJ4iPV65HD+zy78yPwEkg
-        XOV0K1u5vV67J6nsiu26n4sMCdotaRhkFEkBEx132usMYkf/m9TGwxlQncchDK272u1Zpa1CLG+vc
-        e8rdYvFbU/zOZ2oFxz52zs9bBePN4wC8+TGLJOwFyRS6s33ZlKh0BomDEJIlKh/i9iaYNjlIx83tj
-        IQixJA/TbMgTZNJJmCPwOCEtLOAQ/qiQOwp/MiuSR53VdnGCRJbZyivOmd9Q1HNJmVx73+sRG9KTZ
-        LaeT5f+g==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k6C7P-0004Sm-92; Thu, 13 Aug 2020 12:14:03 +0000
-Date:   Thu, 13 Aug 2020 13:14:03 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH 1/5] powerpc: Remove flush_instruction_cache for book3s/32
-Message-ID: <20200813121403.GB16237@infradead.org>
-References: <11a330af231af22874c006302a945388846f8112.1597313510.git.christophe.leroy@csgroup.eu>
- <20200813121308.GA16237@infradead.org>
+        Thu, 13 Aug 2020 08:14:36 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:58782 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726583AbgHMMOb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 08:14:31 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 00BB8D67E5A4D6550FBD;
+        Thu, 13 Aug 2020 20:14:26 +0800 (CST)
+Received: from huawei.com (10.175.104.175) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.487.0; Thu, 13 Aug 2020
+ 20:14:15 +0800
+From:   Miaohe Lin <linmiaohe@huawei.com>
+To:     <davem@davemloft.net>, <kuba@kernel.org>, <fw@strlen.de>,
+        <martin.varghese@nokia.com>, <pshelar@ovn.org>,
+        <dcaratti@redhat.com>, <edumazet@google.com>,
+        <steffen.klassert@secunet.com>, <pabeni@redhat.com>,
+        <shmulik@metanetworks.com>, <kyk.segfault@gmail.com>,
+        <sowmini.varadhan@oracle.com>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linmiaohe@huawei.com>
+Subject: [PATCH] net: add missing skb_uarg refcount increment in pskb_carve_inside_header()
+Date:   Thu, 13 Aug 2020 08:13:10 -0400
+Message-ID: <20200813121310.23016-1-linmiaohe@huawei.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200813121308.GA16237@infradead.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.104.175]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 01:13:08PM +0100, Christoph Hellwig wrote:
-> On Thu, Aug 13, 2020 at 10:12:00AM +0000, Christophe Leroy wrote:
-> > -#ifndef CONFIG_PPC_8xx
-> > +#if !defined(CONFIG_PPC_8xx) && !defined(CONFIG_PPC_BOOK3S_32)
-> >  _GLOBAL(flush_instruction_cache)
-> >  #if defined(CONFIG_4xx)
-> >  	lis	r3, KERNELBASE@h
-> > @@ -290,18 +289,11 @@ _GLOBAL(flush_instruction_cache)
-> >  	mfspr	r3,SPRN_L1CSR1
-> >  	ori	r3,r3,L1CSR1_ICFI|L1CSR1_ICLFR
-> >  	mtspr	SPRN_L1CSR1,r3
-> > -#elif defined(CONFIG_PPC_BOOK3S_601)
-> > -	blr			/* for 601, do nothing */
-> > -#else
-> > -	/* 603/604 processor - use invalidate-all bit in HID0 */
-> > -	mfspr	r3,SPRN_HID0
-> > -	ori	r3,r3,HID0_ICFI
-> > -	mtspr	SPRN_HID0,r3
-> >  #endif /* CONFIG_4xx */
-> >  	isync
-> >  	blr
-> >  EXPORT_SYMBOL(flush_instruction_cache)
-> > -#endif /* CONFIG_PPC_8xx */
-> > +#endif /* CONFIG_PPC_8xx || CONFIG_PPC_BOOK3S_32 */
-> 
-> What about untangling this into entirely separate versions instead
-> of the ifdef mess?  Also the export does not seem to be needed at all.
+If the skb is zcopied, we should increase the skb_uarg refcount before we
+involve skb_release_data(). See pskb_expand_head() as a reference.
 
-Ok, I see that you do that later, sorry.
+Fixes: 6fa01ccd8830 ("skbuff: Add pskb_extract() helper function")
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+---
+ net/core/skbuff.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+index 475f9aa51b57..975600558e8b 100644
+--- a/net/core/skbuff.c
++++ b/net/core/skbuff.c
+@@ -5842,6 +5842,8 @@ static int pskb_carve_inside_header(struct sk_buff *skb, const u32 off,
+ 			kfree(data);
+ 			return -ENOMEM;
+ 		}
++		if (skb_zcopy(skb))
++			refcount_inc(&skb_uarg(skb)->refcnt);
+ 		for (i = 0; i < skb_shinfo(skb)->nr_frags; i++)
+ 			skb_frag_ref(skb, i);
+ 		if (skb_has_frag_list(skb))
+-- 
+2.19.1
+
