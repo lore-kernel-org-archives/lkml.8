@@ -2,127 +2,199 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 870F5C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:29:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6006C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:29:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C5D020781
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:29:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7FB62078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:29:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DK5yRnBY"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Vzk+YeoE";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="b9PXrdqW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726567AbgHMJ3X (ORCPT
+        id S1726522AbgHMJ3W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 05:29:23 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28958 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726048AbgHMJ3W (ORCPT
+        Thu, 13 Aug 2020 05:29:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52550 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726131AbgHMJ3W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 13 Aug 2020 05:29:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597310961;
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8910BC061757;
+        Thu, 13 Aug 2020 02:29:21 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1597310959;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=DuW+niP5miqE6IU1aSrvItfHXK36bjH0nUEUiC5ZcoE=;
-        b=DK5yRnBY3gAauOSTThQ6cK88P8P/YVeOPb4gwmH6xXDN3uO2YUgwu2rm3lhHQTv2DqWtp9
-        8YbGkcaarMiucS6+wM+Y/5mjUp8P170eUFqOpDppwKM7o7xA0FQbSc6c4LT09CMVsNUGzt
-        lrhevViaa9npEnvNlxtgEvcItOEIA3k=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-130-xxSP7HqAMUiNawIogS2kFQ-1; Thu, 13 Aug 2020 05:29:17 -0400
-X-MC-Unique: xxSP7HqAMUiNawIogS2kFQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 511711854FC7;
-        Thu, 13 Aug 2020 09:29:15 +0000 (UTC)
-Received: from [10.36.113.93] (ovpn-113-93.ams2.redhat.com [10.36.113.93])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8E3F7600C5;
-        Thu, 13 Aug 2020 09:29:06 +0000 (UTC)
-Subject: Re: [PATCH v7 3/7] iommu/uapi: Introduce enum type for PASID data
- format
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>
-Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Jonathan Corbet <corbet@lwn.net>
-References: <1596068467-49322-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1596068467-49322-4-git-send-email-jacob.jun.pan@linux.intel.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <98781b4e-fe8e-fa65-4b77-c5221d241821@redhat.com>
-Date:   Thu, 13 Aug 2020 11:29:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        bh=c5wCQOX25aaOsWpq5c0leMLJU3ShjXx6gzZ+lkhN/m0=;
+        b=Vzk+YeoEP4LH28amktQIViJ8D9qMr/DHRfX/C89rl4+p8WIQ7HxIwKIZi1GnX9ILYvvox7
+        ikl+xVRjiDXBraLXEcZqYAKR+G0Vpg5CBw7Iskmlslxe70tBQ+95nKOHzjvpjGFagzxS4B
+        TFAKUTKl5Yt9PN9e0M7DLx2ak/iQoS6hrCwcMnsPeEhoLAYDEHYOYs19nZJUzAUcd+jVHG
+        4ypxj9WucKRV6r6CFoguKAjXQcZCZVllHyd9ZkIis4O4hUsISUcEYxXvLLW68jFPAsYpcj
+        wjgTJ6Q5/xzow0FdoX9MRoFoxAbfh1hGMftqFhkqCGRgt8evsh/XPFeHx1slgg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1597310959;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=c5wCQOX25aaOsWpq5c0leMLJU3ShjXx6gzZ+lkhN/m0=;
+        b=b9PXrdqWDzOqx5rZ1FfLBRohEdSAf3TXIS2lBOlq7JURbLGYkOh1eSvgitaTkmQyNf/VvX
+        bnbJBkyqO+25WDCw==
+To:     Maulik Shah <mkshah@codeaurora.org>, bjorn.andersson@linaro.org,
+        maz@kernel.org, linus.walleij@linaro.org, swboyd@chromium.org,
+        evgreen@chromium.org, mka@chromium.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, agross@kernel.org,
+        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org,
+        Maulik Shah <mkshah@codeaurora.org>
+Subject: Re: [PATCH v4 3/7] genirq: Introduce irq_suspend_one() and irq_resume_one() callbacks
+In-Reply-To: <1597058460-16211-4-git-send-email-mkshah@codeaurora.org>
+References: <1597058460-16211-1-git-send-email-mkshah@codeaurora.org> <1597058460-16211-4-git-send-email-mkshah@codeaurora.org>
+Date:   Thu, 13 Aug 2020 11:29:18 +0200
+Message-ID: <87pn7ulwr5.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <1596068467-49322-4-git-send-email-jacob.jun.pan@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacob,
+Maulik Shah <mkshah@codeaurora.org> writes:
+> From: Douglas Anderson <dianders@chromium.org>
+>
+> The "struct irq_chip" has two callbacks in it: irq_suspend() and
+> irq_resume().  These two callbacks are interesting because sometimes
+> an irq chip needs to know about suspend/resume, but they are a bit
+> awkward because:
+> 1. They are called once for the whole irq_chip, not once per IRQ.
+>    It's passed data for one of the IRQs enabled on that chip.  That
+>    means it's up to the irq_chip driver to aggregate.
+> 2. They are only called if you're using "generic-chip", which not
+>    everyone is.
+> 3. The implementation uses syscore ops, which apparently have problems
+>    with s2idle.
 
-On 7/30/20 2:21 AM, Jacob Pan wrote:
-> There can be multiple vendor-specific PASID data formats used in UAPI
-> structures. This patch adds enum type with a last entry which makes
-> range checking much easier.
-> 
-> Suggested-by: Alex Williamson <alex.williamson@redhat.com>
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> ---
->  include/uapi/linux/iommu.h | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
-> index d5e9014f690e..abf4455a3495 100644
-> --- a/include/uapi/linux/iommu.h
-> +++ b/include/uapi/linux/iommu.h
-> @@ -294,11 +294,16 @@ struct iommu_gpasid_bind_data_vtd {
->  					 IOMMU_SVA_VTD_GPASID_PCD |  \
->  					 IOMMU_SVA_VTD_GPASID_PWT)
->  
-> +enum iommu_pasid_data_format {
-> +	IOMMU_PASID_FORMAT_INTEL_VTD = 1,
-> +	IOMMU_PASID_FORMAT_LAST,
-> +};
+The main point is that these callbacks are specific to generic chip and
+not used anywhere else.
+
+> Probably the old irq_suspend() and irq_resume() callbacks should be
+> deprecated.
+
+You need to analyze first what these callbacks actually do. :)
+
+> Let's introcuce a nicer API that works for all irq_chip devices.
+
+s/Let's intro/Intro/
+
+Let's is pretty useless in a changelog especially if you read it some
+time after the patch got applied.
+
+> This will be called by the core and is called once per IRQ.  The core
+> will call the suspend callback after doing its normal suspend
+> operations and the resume before its normal resume operations.
+
+Will be? You are adding the code which calls that unconditionally even.
+
+> +void suspend_one_irq(struct irq_desc *desc)
+> +{
+> +	struct irq_chip *chip = desc->irq_data.chip;
 > +
->  /**
->   * struct iommu_gpasid_bind_data - Information about device and guest PASID binding
->   * @argsz:	User filled size of this data
->   * @version:	Version of this data structure
-> - * @format:	PASID table entry format
-> + * @format:	PASID table entry format of enum iommu_pasid_data_format type
->   * @flags:	Additional information on guest bind request
->   * @gpgd:	Guest page directory base of the guest mm to bind
->   * @hpasid:	Process address space ID used for the guest mm in host IOMMU
-> @@ -317,7 +322,6 @@ struct iommu_gpasid_bind_data {
->  	__u32 argsz;
->  #define IOMMU_GPASID_BIND_VERSION_1	1
->  	__u32 version;
-> -#define IOMMU_PASID_FORMAT_INTEL_VTD	1
->  	__u32 format;
->  	__u32 addr_width;
->  #define IOMMU_SVA_GPASID_VAL	(1 << 0) /* guest PASID valid */
-> 
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
+> +	if (chip->irq_suspend_one)
+> +		chip->irq_suspend_one(&desc->irq_data);
+> +}
+> +
+> +void resume_one_irq(struct irq_desc *desc)
+> +{
+> +	struct irq_chip *chip = desc->irq_data.chip;
+> +
+> +	if (chip->irq_resume_one)
+> +		chip->irq_resume_one(&desc->irq_data);
+> +}
 
-Eric
+There not much of a point to have these in chip.c. The functionality is
+clearly pm.c only.
 
+>  static bool suspend_device_irq(struct irq_desc *desc)
+>  {
+> +	bool sync = false;
+> +
+>  	if (!desc->action || irq_desc_is_chained(desc) ||
+>  	    desc->no_suspend_depth)
+> -		return false;
+> +		goto exit;
+
+What?
+
+If no_suspend_depth is > 0 why would you try to tell the irq chip
+that this line needs to be suspended?
+
+If there is no action, then the interrupt line is in shut down
+state. What's the point of suspending it?
+
+Chained interrupts are special and you really have to think hard whether
+calling suspend for them unconditionally is a good idea. What if a
+wakeup irq is connected to this chained thing?
+
+>  	if (irqd_is_wakeup_set(&desc->irq_data)) {
+>  		irqd_set(&desc->irq_data, IRQD_WAKEUP_ARMED);
+> +
+>  		/*
+>  		 * We return true here to force the caller to issue
+>  		 * synchronize_irq(). We need to make sure that the
+>  		 * IRQD_WAKEUP_ARMED is visible before we return from
+>  		 * suspend_device_irqs().
+>  		 */
+> -		return true;
+> +		sync = true;
+> +		goto exit;
+
+So again. This interrupt is a wakeup source. What's the point of
+suspending it unconditionally.
+
+>  	}
+>  
+>  	desc->istate |= IRQS_SUSPENDED;
+> @@ -95,7 +99,10 @@ static bool suspend_device_irq(struct irq_desc *desc)
+>  	 */
+>  	if (irq_desc_get_chip(desc)->flags & IRQCHIP_MASK_ON_SUSPEND)
+>  		mask_irq(desc);
+> -	return true;
+> +
+> +exit:
+> +	suspend_one_irq(desc);
+> +	return sync;
+
+So what happens in this case:
+
+   CPU0                         CPU1
+   interrupt                    suspend_device_irq()
+     handle()                     chip->suspend_one()
+       action()                 ...              
+       chip->fiddle();
+
+????
+
+What is the logic here and how is this going to work under all
+circumstances without having magic hacks in the irq chip to handle all
+the corner cases?
+
+This needs way more thoughts vs. the various states and sync
+requirements. Just adding callbacks, invoking them unconditionally, not
+giving any rationale how the whole thing is supposed to work and then
+let everyone figure out how to deal with the state and corner case
+handling at the irq chip driver level does not cut it, really.
+
+State handling is core functionality and if irq chip drivers have
+special requirements then they want to be communicated with flags and/or
+specialized callbacks.
+
+Thanks,
+
+        tglx
