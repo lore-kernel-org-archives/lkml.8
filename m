@@ -2,117 +2,69 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7932AC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 13:33:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E58A7C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 13:39:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53C982078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 13:33:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C94BF2078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 13:39:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726529AbgHMNdM (ORCPT
+        id S1726224AbgHMNj5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 09:33:12 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51250 "EHLO mx2.suse.de"
+        Thu, 13 Aug 2020 09:39:57 -0400
+Received: from foss.arm.com ([217.140.110.172]:54718 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726102AbgHMNdL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 09:33:11 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id C000EAC48;
-        Thu, 13 Aug 2020 13:33:31 +0000 (UTC)
-Date:   Thu, 13 Aug 2020 15:33:08 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Uladzislau Rezki <urezki@gmail.com>, paulmck@kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
-Message-ID: <20200813133308.GK9477@dhcp22.suse.cz>
-References: <20200811210931.GZ4295@paulmck-ThinkPad-P72>
- <874kp87mca.fsf@nanos.tec.linutronix.de>
- <20200813075027.GD9477@dhcp22.suse.cz>
- <20200813095840.GA25268@pc636>
- <874kp6llzb.fsf@nanos.tec.linutronix.de>
+        id S1726053AbgHMNj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 09:39:56 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 81F211063;
+        Thu, 13 Aug 2020 06:39:55 -0700 (PDT)
+Received: from [10.37.8.11] (unknown [10.37.8.11])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EA7B63F6CF;
+        Thu, 13 Aug 2020 06:39:53 -0700 (PDT)
+Subject: Re: [PATCH v2] coresight: etm4x: Add Support for HiSilicon ETM device
+To:     liuqi115@huawei.com, gregkh@linuxfoundation.org,
+        mathieu.poirier@linaro.org, mike.leach@linaro.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linuxarm@huawei.com
+References: <1597323562-3706-1-git-send-email-liuqi115@huawei.com>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <aa4ac117-c378-5b2c-c685-6ed3d1c6ffb9@arm.com>
+Date:   Thu, 13 Aug 2020 14:44:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <874kp6llzb.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <1597323562-3706-1-git-send-email-liuqi115@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 13-08-20 15:22:00, Thomas Gleixner wrote:
-> Uladzislau Rezki <urezki@gmail.com> writes:
-> > On Thu, Aug 13, 2020 at 09:50:27AM +0200, Michal Hocko wrote:
-> >> On Wed 12-08-20 02:13:25, Thomas Gleixner wrote:
-> >> [...]
-> >> > I can understand your rationale and what you are trying to solve. So, if
-> >> > we can actually have a distinct GFP variant:
-> >> > 
-> >> >   GFP_I_ABSOLUTELY_HAVE_TO_DO_THAT_AND_I_KNOW_IT_CAN_FAIL_EARLY
-> >> 
-> >> Even if we cannot make the zone->lock raw I would prefer to not
-> >> introduce a new gfp flag. Well we can do an alias for easier grepping
-> >> #define GFP_RT_SAFE	0
+On 08/13/2020 01:59 PM, Qi Liu wrote:
+> Add ETMv4 periperhal ID for HiSilicon Hip08 and Hip09 platform. Hip08
+> contains ETMv4.2 device and Hip09 contains ETMv4.5 device.
 > 
-> Just using 0 is sneaky but yes, that's fine :)
+> Signed-off-by: Qi Liu <liuqi115@huawei.com>
+> ---
+>   drivers/hwtracing/coresight/coresight-etm4x.c | 2 ++
+>   1 file changed, 2 insertions(+)
 > 
-> Bikeshedding: GFP_RT_NOWAIT or such might be more obvious.
+> diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
+> index 6d7d216..7797a57 100644
+> --- a/drivers/hwtracing/coresight/coresight-etm4x.c
+> +++ b/drivers/hwtracing/coresight/coresight-etm4x.c
+> @@ -1587,6 +1587,8 @@ static const struct amba_id etm4_ids[] = {
+>   	CS_AMBA_UCI_ID(0x000bb805, uci_id_etm4),/* Qualcomm Kryo 4XX Cortex-A55 */
+>   	CS_AMBA_UCI_ID(0x000bb804, uci_id_etm4),/* Qualcomm Kryo 4XX Cortex-A76 */
+>   	CS_AMBA_UCI_ID(0x000cc0af, uci_id_etm4),/* Marvell ThunderX2 */
+> +	CS_AMBA_UCI_ID(0x000b6d01, uci_id_etm4),/* HiSilicon-Hip08 */
+> +	CS_AMBA_UCI_ID(0x000b6d02, uci_id_etm4),/* HiSilicon-Hip09 */
 
-Sounds goood.
-
-> >> that would imply nowait semantic and would exclude waking up kswapd as
-> >> well. If we can make wake up safe under RT then the alias would reflect
-> >> that without any code changes.
-> 
-> It basically requires to convert the wait queue to something else. Is
-> the waitqueue strict single waiter?
-
-I would have to double check. From what I remember only kswapd should
-ever sleep on it.
-
-> >> The second, and the more important part, would be to bail out anytime
-> >> the page allocator is to take a lock which is not allowed in the current
-> >> RT context. Something like
-> 
-> >> +	/*
-> >> +	 * Hard atomic contexts are not supported by the allocator for
-> >> +	 * anything but pcp requests
-> >> +	 */
-> >> +	if (!preemtable())
-> 
-> If you make that preemtible() it might even compile, but that still wont
-> work because if CONFIG_PREEMPT_COUNT=n then preemptible() is always
-> false.
-
-It would be nice to hide all that behind a helper and guarded by
-PREEMPT_RT. That would imply PREEMPT_COUNT automatically, right?
-
-> 
-> So that should be:
-> 
-> 	if (!preemptible() && gfp == GFP_RT_NOWAIT)
-> 
-> which is limiting the damage to those callers which hand in
-> GFP_RT_NOWAIT.
-> 
-> lockdep will yell at invocations with gfp != GFP_RT_NOWAIT when it hits
-> zone->lock in the wrong context. And we want to know about that so we
-> can look at the caller and figure out how to solve it.
-
-Yes, that would have to somehow need to annotate the zone_lock to be ok
-in those paths so that lockdep doesn't complain.
--- 
-Michal Hocko
-SUSE Labs
+Acked-by: Suzuki K Poulose <suzuki.oulose@arm.com>
