@@ -2,151 +2,75 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E84FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 06:39:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A41C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 06:39:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63EAB2078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 06:39:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="ZDQ0Aoqv"
+	by mail.kernel.org (Postfix) with ESMTP id 88BCA2078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 06:39:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726082AbgHMGjt (ORCPT
+        id S1726131AbgHMGjv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 13 Aug 2020 02:39:51 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:12296 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725964AbgHMGjt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 13 Aug 2020 02:39:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54788 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725954AbgHMGjs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 02:39:48 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CDBEC061757
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 23:39:47 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id v9so4954904ljk.6
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 23:39:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=DGJizY94NWmpnKm3GAJouLUxDuyTMohNxnOXsjH4jLI=;
-        b=ZDQ0Aoqv6FnTD3/bfGlR9gICLkiVY5WvKr3dWfAUck7qO+8DZ8teafppmock/Y4qT7
-         DFDnilfEVDSRSYLuy+2glK+2sknNkQlhtrXXYppwzznVaC5E6zwPYNNl9AB+GXsjvIpI
-         yUpzwG3XoJofGSMPE4xmHuFsCDfBH2SA9srBI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=DGJizY94NWmpnKm3GAJouLUxDuyTMohNxnOXsjH4jLI=;
-        b=Nhi9H2kIuLe4aD49Extz4x3usmDcagGCDSEjaHH5WbIyL1h9iCm2gJGn2P05GZl9kw
-         iUXo62AzQTQJBZATI9Zw1PvQx5suq6I2tV5q5H8Y/gh8Mu1t2EY0VFhaoDnFz6wd/K8d
-         RN5684FelXly4Mw4pbyHscmj6s9Fv68+gVT1mkaC1rmhKzJIoEOrzlPFA4PNaz4vA9EB
-         E9Q+lA7J7xKo5xrTSGw0En/qrcUj3Ph0HCzoQVOC43Fg4VgvLm5AwkZpMexsZ+4FG9nt
-         NNt21xu6Her4ut9aupMp15nwyJOxHzq+r5wmIfrR1bhQ564/uC42tnCMyNv4uro2KOj+
-         k2Eg==
-X-Gm-Message-State: AOAM531Rb6w9Zw4gwWHXJyAptVKk7ze4O99+ofI2dJFltX4S2uWXdT+O
-        z88Xcl11SE51OkEV6x/Ed6K03Q==
-X-Google-Smtp-Source: ABdhPJw6LZZ+Ms96aQHHbPrKTPxSWnVJUIZegwrkkTpmSBZCxYRwf6p+3bl6zuFL7Rpcoi3F+H4+qw==
-X-Received: by 2002:a2e:8697:: with SMTP id l23mr1231973lji.190.1597300785847;
-        Wed, 12 Aug 2020 23:39:45 -0700 (PDT)
-Received: from [172.16.11.132] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id b17sm916732ljp.9.2020.08.12.23.39.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Aug 2020 23:39:45 -0700 (PDT)
-Subject: Re: [PATCH] overflow: Add __must_check attribute to check_*() helpers
-To:     Kees Cook <keescook@chromium.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Leon Romanovsky <leon@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com
-References: <202008121450.405E4A3@keescook>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <f7b6ad2f-4b35-1ca8-0137-05b27a0eb574@rasmusvillemoes.dk>
-Date:   Thu, 13 Aug 2020 08:39:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+Received: by ajax-webmail-mail-app2 (Coremail) ; Thu, 13 Aug 2020 14:39:19
+ +0800 (GMT+08:00)
+X-Originating-IP: [10.192.85.18]
+Date:   Thu, 13 Aug 2020 14:39:19 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From:   dinghao.liu@zju.edu.cn
+To:     "Takashi Iwai" <tiwai@suse.de>
+Cc:     kjlu@umn.edu, "Jaroslav Kysela" <perex@perex.cz>,
+        "Takashi Iwai" <tiwai@suse.com>,
+        "Pierre-Louis Bossart" <pierre-louis.bossart@linux.intel.com>,
+        "Eliot Blennerhassett" <eblennerhassett@audioscience.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: Re: Re: [PATCH] ALSA: pci/asihpi: Fix memory leak in
+ snd_card_asihpi_capture_open()
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
+ Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
+In-Reply-To: <s5h5z9r6l8e.wl-tiwai@suse.de>
+References: <20200810063957.13692-1-dinghao.liu@zju.edu.cn>
+ <s5h5z9r6l8e.wl-tiwai@suse.de>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 MIME-Version: 1.0
-In-Reply-To: <202008121450.405E4A3@keescook>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Message-ID: <77ed04d7.569ba.173e68b5d88.Coremail.dinghao.liu@zju.edu.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: by_KCgBnEJ4X4DRfsRnOAQ--.39889W
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgMKBlZdtPhtIQADsF
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUblIS07vEb7Iv0x
+        C_JF4lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
+        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
+        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
+        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW0oVCq3wCS07vE84ACjcxK6I8E87Iv67AKxVW0oV
+        Cq3wCS07vE84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DMIAIbVAS0I0E0xvYzxvE52x0
+        82IY62kv0487MIAIbVAqx4xG64xvF2IEw4CE5I8CrVC2j2WlV2xY6cIj6xIIjxv20xvE14
+        v26r1j6r18MIAIbVAv7VC2z280aVAFwI0_Jr0_Gr1lV2xY6cvjeVCFs4IE7xkEbVWUJVW8
+        JwCS07vE7I0Y64k_MIAIbVCY0x0Ix7I2Y4AK64vIr41lV2xY6xAIw28IcVCjz48v1sIEY2
+        0_GFWkJr1UJwCS07vE4x8a6x804xWlV2xY6xC20s026xCaFVCjc4AY6r1j6r4UMIAIbVC2
+        0s026c02F40E14v26r1j6r18MIAIbVC20s026x8GjcxK67AKxVWUGVWUWwCS07vEx4CE17
+        CEb7AF67AKxVWUtVW8ZwCS07vEIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCS07vEIxAIcVC0
+        I7IYx2IY6xkF7I0E14v26r1j6r4UMIAIbVCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3w
+        CS07vEIxAIcVC2z280aVAFwI0_Jr0_Gr1lV2xY6IIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_
+        GrUvcSsGvfC2KfnxnUU==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/08/2020 23.51, Kees Cook wrote:
-> Since the destination variable of the check_*_overflow() helpers will
-> contain a wrapped value on failure, it would be best to make sure callers
-> really did check the return result of the helper. Adjust the macros to use
-> a bool-wrapping static inline that is marked with __must_check. This means
-> the macros can continue to have their type-agnostic behavior while gaining
-> the function attribute (that cannot be applied directly to macros).
-> 
-> Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  include/linux/overflow.h | 51 +++++++++++++++++++++++-----------------
->  1 file changed, 30 insertions(+), 21 deletions(-)
-> 
-> diff --git a/include/linux/overflow.h b/include/linux/overflow.h
-> index 93fcef105061..ef7d538c2d08 100644
-> --- a/include/linux/overflow.h
-> +++ b/include/linux/overflow.h
-> @@ -43,6 +43,16 @@
->  #define is_non_negative(a) ((a) > 0 || (a) == 0)
->  #define is_negative(a) (!(is_non_negative(a)))
->  
-> +/*
-> + * Allows to effectively us apply __must_check to a macro so we can have
-
-word ordering?
-
-> + * both the type-agnostic benefits of the macros while also being able to
-> + * enforce that the return value is, in fact, checked.
-> + */
-> +static inline bool __must_check __must_check_bool(bool condition)
-> +{
-> +	return unlikely(condition);
-> +}
-> +
->  #ifdef COMPILER_HAS_GENERIC_BUILTIN_OVERFLOW
->  /*
->   * For simplicity and code hygiene, the fallback code below insists on
-> @@ -52,32 +62,32 @@
->   * alias for __builtin_add_overflow, but add type checks similar to
->   * below.
->   */
-> -#define check_add_overflow(a, b, d) ({		\
-> +#define check_add_overflow(a, b, d) __must_check_bool(({	\
->  	typeof(a) __a = (a);			\
->  	typeof(b) __b = (b);			\
->  	typeof(d) __d = (d);			\
->  	(void) (&__a == &__b);			\
->  	(void) (&__a == __d);			\
->  	__builtin_add_overflow(__a, __b, __d);	\
-> -})
-> +}))
-
-Sorry, I meant to send this before your cooking was done but forgot
-about it again. Not a big deal, but it occurred to me it might be better
-to rename the existing check_*_overflow to __check_*_overflow (in both
-branches of the COMPILER_HAS_GENERIC_BUILTIN_OVERFLOW), and then
-
-#define check_*_overflow(a, b, d)
-__must_check_bool(__check_*_overflow(a, b, d))
-
-Mostly because it gives less whitespace churn, but it might also be
-handy to have the dunder versions available (if nothing else then
-perhaps in some test code).
-
-But as I said, no biggie, I'm fine either way. Now I'm just curious if
-0-day is going to find some warning introduced by this :)
-
-Rasmus
+PiBPbiBNb24sIDEwIEF1ZyAyMDIwIDA4OjM5OjU1ICswMjAwLAo+IERpbmdoYW8gTGl1IHdyb3Rl
+Ogo+ID4gCj4gPiBXaGVuIHNuZF9wY21faHdfY29uc3RyYWludF9wb3cyKCkgZmFpbHMsIGRwY20g
+c2hvdWxkIGJlIGZyZWVkCj4gPiBqdXN0IGxpa2Ugd2hlbiBocGlfaW5zdHJlYW1fb3BlbigpICBm
+YWlscy4KPiAKPiBJdCB3aWxsIGJlIGNsZWFuZWQgdXAgdmlhIHJ1bnRpbWUtPnByaXZhdGVfZnJl
+ZSBjYWxsIGluIHRoZSBjYWxsZXIKPiBzaWRlIChzbmRfcGNtX29wZW4gLT4gc25kX3BjbV9yZWxl
+YXNlX3N1YnN0cmVhbSAtPgo+IHNuZF9wY21fZGV0YWNoX3N1YnN0cmVhbSksIGhlbmNlIHRoaXMg
+d291bGQgcmVzdWx0IGluIGRvdWJsZS1mcmVlLgo+IAoKSXQncyBjbGVhciB0byBtZSwgdGhhbmtz
+IQoKUmVnYXJkcywKRGluZ2hhbw==
