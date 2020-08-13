@@ -2,82 +2,117 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 162E7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 17:35:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A35DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 17:36:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD1962078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 17:35:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15D562078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 17:36:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="sh9bDuKN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726529AbgHMRfH (ORCPT
+        id S1726567AbgHMRgQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 13:35:07 -0400
-Received: from smtp03.smtpout.orange.fr ([80.12.242.125]:59965 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726244AbgHMRfH (ORCPT
+        Thu, 13 Aug 2020 13:36:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43044 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726244AbgHMRgP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 13:35:07 -0400
-Received: from localhost.localdomain ([93.22.150.113])
-        by mwinf5d58 with ME
-        id F5b1230022T2WRZ035b16U; Thu, 13 Aug 2020 19:35:04 +0200
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Thu, 13 Aug 2020 19:35:04 +0200
-X-ME-IP: 93.22.150.113
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     gregkh@linuxfoundation.org, stephen@brennan.io,
-        rohitsarkar5398@gmail.com, pterjan@google.com,
-        paulo.miguel.almeida.rodenas@gmail.com, okash.khawaja@gmail.com
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] staging: rtl8192u: Do not use GFP_KERNEL in atomic context
-Date:   Thu, 13 Aug 2020 19:34:58 +0200
-Message-Id: <20200813173458.758284-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.25.1
+        Thu, 13 Aug 2020 13:36:15 -0400
+Received: from mail-qt1-x82f.google.com (mail-qt1-x82f.google.com [IPv6:2607:f8b0:4864:20::82f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CF5EC061757
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 10:36:15 -0700 (PDT)
+Received: by mail-qt1-x82f.google.com with SMTP id k18so4954922qtm.10
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 10:36:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=9jlgVFW8cz8UnSK84wDsTo/KXIXNWwrMl6cC3LnDPv4=;
+        b=sh9bDuKNQMwxUwVp6W0+Ns5Wb6IFR/6zaqA7W8oYXVDOzc057MiRpQRRowgHDaiTcB
+         9Ya1PtztpYgdTWwe0T5BJj1i51Hhtk0jvbtA5BKV74/xlz4I9cQyMnn4o6QzfCRbrpNG
+         QDr/OjEW6cURvv2WL7nwGhwuF9yXQTvCSA4zVOnhtS2e/t9IK/Vx7TftKDprRdCQ6syW
+         6CGAOl+bKUHCHZorXS+ITQ5uEj3Ti482H7qSNPceuvvgtrKbIEJpjtbbWw0GwCqhL2Ag
+         vDXyRamOoNmA41Zw66ARN1ICqsdSyYiQxfy6odqZ7QA0eqjl1352w9f47ZmRS8Ci/uIg
+         XFiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=9jlgVFW8cz8UnSK84wDsTo/KXIXNWwrMl6cC3LnDPv4=;
+        b=NkNbvway6CE8K9Pb9AYRIugQmI7Fi6JZGvnkHpNMBuez3iJHKhcxsTcyZc9uWzbXKj
+         TJu11FrUpMSb1wvw70x6lof9AneJgWD0R+8oSrbIBT0QR6ViqBK/1Rw4pa4x6g+QjkmN
+         L51BxFTppkM1nDaQkfd8TetquUkzDt1HNv0aFmIICGu/WwIXAwHCLojE9S4hS+Qe1YOs
+         OvMqzc78uuNa61lbBMIoEgJqrhEAOM7YWDV/9M+FIGfnXOs+qH3YTxxNJHCVbj7lhhae
+         K4pwsfRBSAIotkoTK2zIpO8dAwAhXi+gtOUmHxClfFMTTRm5+AJ6bGyOFM2I8zUSjbWG
+         fekw==
+X-Gm-Message-State: AOAM5307+EG1q3GI8UMc41sQ2W8s5IAqTxup/zLKUF8Md2P98ZG95zff
+        AeRA6Sxjapxpp7EAWvX+sgm9xQ==
+X-Google-Smtp-Source: ABdhPJwcBT77VtkJvOLSXrChnmBFxnV8JMfwBEiMNmK4kd7czs7VLFEY5kTfvotc/2tTVE70a5XNIg==
+X-Received: by 2002:ac8:349a:: with SMTP id w26mr6584026qtb.263.1597340171930;
+        Thu, 13 Aug 2020 10:36:11 -0700 (PDT)
+Received: from ?IPv6:2620:10d:c0a8:11d9::10a7? ([2620:10d:c091:480::1:fe9c])
+        by smtp.gmail.com with ESMTPSA id i68sm6007004qkb.58.2020.08.13.10.36.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Aug 2020 10:36:10 -0700 (PDT)
+Subject: Re: [PATCH][v2] proc: use vmalloc for our kernel buffer
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, kernel-team@fb.com,
+        willy@infradead.org
+References: <20200813145305.805730-1-josef@toxicpanda.com>
+ <20200813153356.857625-1-josef@toxicpanda.com>
+ <20200813153722.GA13844@lst.de>
+ <974e469e-e73d-6c3e-9167-fad003f1dfb9@toxicpanda.com>
+ <20200813154117.GA14149@lst.de> <20200813162002.GX1236603@ZenIV.linux.org.uk>
+ <9e4d3860-5829-df6f-aad4-44d07c62535b@toxicpanda.com>
+ <20200813173155.GZ1236603@ZenIV.linux.org.uk>
+From:   Josef Bacik <josef@toxicpanda.com>
+Message-ID: <34b2d8f2-d10a-a9fd-3b5e-470cb8c4251d@toxicpanda.com>
+Date:   Thu, 13 Aug 2020 13:36:09 -0400
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200813173155.GZ1236603@ZenIV.linux.org.uk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-'rtl8192_irq_rx_tasklet()' is a tasklet initialized in
-'rtl8192_init_priv_task()'.
-From this function it is possible to allocate some memory with the
-GFP_KERNEL flag, which is not allowed in the atomic context of a tasklet.
+On 8/13/20 1:31 PM, Al Viro wrote:
+> On Thu, Aug 13, 2020 at 01:19:18PM -0400, Josef Bacik wrote:
+> 
+>>> in sunrpc proc_dodebug() turns into
+>>> 		left -= snprintf(buffer, left, "0x%04x\n",
+> 					 ^^^^
+> 					 left + 1, that is.
+> 
+>>> 				 *(unsigned int *) table->data);
+>>> and that's not the only example.
+>>>
+>>
+>> We wouldn't even need the extra +1 part, since we're only copying in how
+>> much the user wants anyway, we could just go ahead and convert this to
+>>
+>> left -= snprintf(buffer, left, "0x%04x\n", *(unsigned int *) table->data);
+>>
+>> and be fine, right?  Or am I misunderstanding what you're looking for?  Thanks,
+> 
+> snprintf() always produces a NUL-terminated string.  And if you are passing 7 as
+> len, you want 0xf0ad\n to be copied to user.  For that you need 8 passed to
+> snprintf, and 8-byte buffer given to it.
+> 
 
-Use GFP_ATOMIC instead.
+Right, gotcha.  I'll rig that up and see how it looks.  I'd recommend looking 
+through what I do with a fine tooth comb, I'm obviously not batting 1000 today. 
+Thanks,
 
-The call chain is:
-  rtl8192_irq_rx_tasklet            (in r8192U_core.c)
-    --> rtl8192_rx_nomal            (in r8192U_core.c)
-      --> ieee80211_rx              (in ieee80211/ieee80211_rx.c)
-        --> RxReorderIndicatePacket (in ieee80211/ieee80211_rx.c)
-
-Fixes: 79a5ccd97209 ("staging: rtl8192u: fix large frame size compiler warning")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
- drivers/staging/rtl8192u/ieee80211/ieee80211_rx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/staging/rtl8192u/ieee80211/ieee80211_rx.c b/drivers/staging/rtl8192u/ieee80211/ieee80211_rx.c
-index 195d963c4fbb..b6fee7230ce0 100644
---- a/drivers/staging/rtl8192u/ieee80211/ieee80211_rx.c
-+++ b/drivers/staging/rtl8192u/ieee80211/ieee80211_rx.c
-@@ -597,7 +597,7 @@ static void RxReorderIndicatePacket(struct ieee80211_device *ieee,
- 
- 	prxbIndicateArray = kmalloc_array(REORDER_WIN_SIZE,
- 					  sizeof(struct ieee80211_rxb *),
--					  GFP_KERNEL);
-+					  GFP_ATOMIC);
- 	if (!prxbIndicateArray)
- 		return;
- 
--- 
-2.25.1
-
+Josef
