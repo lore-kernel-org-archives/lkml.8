@@ -2,74 +2,163 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05AD4C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 13:55:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB32C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 13:57:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D28002087C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 13:55:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E76E20855
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 13:57:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="UaD+LFOR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DZc9ySxO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbgHMNz5 (ORCPT
+        id S1726604AbgHMN5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 09:55:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37252 "EHLO
+        Thu, 13 Aug 2020 09:57:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37434 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbgHMNz4 (ORCPT
+        with ESMTP id S1726053AbgHMN5J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 09:55:56 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5930EC061757;
-        Thu, 13 Aug 2020 06:55:56 -0700 (PDT)
-Received: from [10.207.149.13] (x2f7f10d.dyn.telefonica.de [2.247.241.13])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 190881EC0114;
-        Thu, 13 Aug 2020 15:55:52 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1597326953;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=2z/QHuddfnPiYCOkwErP9Q7A8zbLlz2m298BDod3Gqs=;
-        b=UaD+LFORpUZ94jY7wvDLxFlm+VMlPhvsi1PBR9sXzJ++KhbSthWiGp5ZKlL8PN9afnuNDq
-        LfVu4MDdZ/K1otCuLxZXG98l8r3co4/Y+r47t2+Dgu9mOvE912ovATuq9v+mTTRrOUvJB1
-        WIAjMV0yL0zoxjwpazwpwMKv7ittolg=
-Date:   Thu, 13 Aug 2020 16:55:50 +0300
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20200813134406.23dvvsulfxend5jx@redhat.com>
-References: <1594923911-10885-1-git-send-email-jbaron@akamai.com> <20200813134406.23dvvsulfxend5jx@redhat.com>
+        Thu, 13 Aug 2020 09:57:09 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 459FFC061757;
+        Thu, 13 Aug 2020 06:57:09 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id 184so5148260wmb.0;
+        Thu, 13 Aug 2020 06:57:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ZL42NDAwRyqFSgHd9+LPNZsn853QbpqMscEZvhiYWzM=;
+        b=DZc9ySxOXmzqhLq8wmbQNIP8qC3GDOlMAZXwH7T9qCDObVYdxITsnlnU7bMMNL0I2v
+         8lwS7+qRhmzNhfUwwC0kNFVA8VZtzhOKjDROTB3vtPBcNcTcYjxuoURPglFJn45b2mgn
+         dnUGwPgc6LU4AEVPxf/jffEers4VwtF2ItE5gO9UUBy6QeE3kRF9mgP8QaLA6zi5aNj8
+         qbn1Q9yNmgEcfilN2hl4qfiHdQKqYejDnn/EhxGdOJL6+bOTWQiKbknzYBcjQnLzS6Vp
+         Q1q+E+nufJFqn8GO5egocKKELypeNx1wr8X2QMpEra5OR1Ndc0rUl/zoTuqIXLLdF5fN
+         V51g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ZL42NDAwRyqFSgHd9+LPNZsn853QbpqMscEZvhiYWzM=;
+        b=gSrlB0FcPa1fsKpSv/CD+cuX/ebAK6DdP946YBlkY0WpjxML6rDS3UKFBKhvSsC98R
+         cSebHRYpjjFbSNOnakJ54Xl2NUz74ZnHFYEEv4dl/sLHDh4uMP5UyunLAW4V1Fm/zENb
+         gd+u/xg2h6pBSdh/dDR2UctDnv415FCAri9k1lKfFmzx/iG8uGYdh3B6GIZMWi+wN87w
+         VQQ3NtF1C647zoChBiRuLK3XtbL9gCyzLgoIurS4z2pGTw9THuK9giSYqULXCjvrAHzB
+         +dTAJ3G0YYgqNhYfnJC0UZwQ8FzBohS3WlLULSwSgtl8gBbCWHSOxH8PyXBMurKVGvzj
+         VO5A==
+X-Gm-Message-State: AOAM5335jSLV/EhsHbyoYcdhAMjHA4qU4tT/hcRZUoyG/ELD2xQHY0F6
+        lDK9QYrIh6EKRquhFp1mSg2apLn2QRs=
+X-Google-Smtp-Source: ABdhPJxZvSJM5CEE+rwyY2plMtVpFbesLgpk5SnfITkTmQSlBIrtVpTBoa601/n+g2520vvERC4vGw==
+X-Received: by 2002:a1c:1b93:: with SMTP id b141mr4598606wmb.150.1597327027636;
+        Thu, 13 Aug 2020 06:57:07 -0700 (PDT)
+Received: from ziggy.stardust ([213.195.117.232])
+        by smtp.gmail.com with ESMTPSA id n11sm5016409wmi.15.2020.08.13.06.57.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Aug 2020 06:57:06 -0700 (PDT)
+Subject: Re: [RESEND,v4,3/3] mmc: mediatek: add optional module reset property
+To:     Wenbin Mei <wenbin.mei@mediatek.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Chaotian Jing <chaotian.jing@mediatek.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        srv_heupstream@mediatek.com, stable@vger.kernel.org
+References: <20200813093811.28606-1-wenbin.mei@mediatek.com>
+ <20200813093811.28606-4-wenbin.mei@mediatek.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Message-ID: <7337a174-169d-2dd1-ed91-f05291d4f3a6@gmail.com>
+Date:   Thu, 13 Aug 2020 15:57:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] EDAC/ie31200: fallback if host bridge device is already initialized
-To:     Aristeu Rozanski <aris@redhat.com>, Jason Baron <jbaron@akamai.com>
-CC:     linux-kernel@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        linux-edac <linux-edac@vger.kernel.org>
-From:   Boris Petkov <bp@alien8.de>
-Message-ID: <FE8145F7-A6A9-446F-A13F-3A14CF6E1934@alien8.de>
+In-Reply-To: <20200813093811.28606-4-wenbin.mei@mediatek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On August 13, 2020 4:44:06 PM GMT+03:00, Aristeu Rozanski <aris@redhat=2Eco=
-m> wrote:
->We tested this inside in machines having this issue and it works=2E
->Patch looks good to me=2E
->
->Acked-by: Aristeu Rozanski <aris@redhat=2Ecom>
-
-So Tested-by: you ?
 
 
---=20
-Sent from a small device: formatting sux and brevity is inevitable=2E 
+On 13/08/2020 11:38, Wenbin Mei wrote:
+> This patch fixs eMMC-Access on mt7622/Bpi-64.
+> Before we got these Errors on mounting eMMC ion R64:
+> [   48.664925] blk_update_request: I/O error, dev mmcblk0, sector 204800 op 0x1:(WRITE)
+> flags 0x800 phys_seg 1 prio class 0
+> [   48.676019] Buffer I/O error on dev mmcblk0p1, logical block 0, lost sync page write
+> 
+> This patch adds a optional reset management for msdc.
+> Sometimes the bootloader does not bring msdc register
+> to default state, so need reset the msdc controller.
+> 
+> Cc: <stable@vger.kernel.org> # v5.4+
+> Fixes: 966580ad236e ("mmc: mediatek: add support for MT7622 SoC")
+> Signed-off-by: Wenbin Mei <wenbin.mei@mediatek.com>
+> Tested-by: Frank Wunderlich <frank-w@public-files.de>
+
+I think you missed to add Philipp Zabels Reviewed-by tag.
+
+Regards,
+Matthias
+
+
+> ---
+>   drivers/mmc/host/mtk-sd.c | 13 +++++++++++++
+>   1 file changed, 13 insertions(+)
+> 
+> diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
+> index 39e7fc54c438..fc97d5bf3a20 100644
+> --- a/drivers/mmc/host/mtk-sd.c
+> +++ b/drivers/mmc/host/mtk-sd.c
+> @@ -22,6 +22,7 @@
+>   #include <linux/slab.h>
+>   #include <linux/spinlock.h>
+>   #include <linux/interrupt.h>
+> +#include <linux/reset.h>
+>   
+>   #include <linux/mmc/card.h>
+>   #include <linux/mmc/core.h>
+> @@ -434,6 +435,7 @@ struct msdc_host {
+>   	struct msdc_save_para save_para; /* used when gate HCLK */
+>   	struct msdc_tune_para def_tune_para; /* default tune setting */
+>   	struct msdc_tune_para saved_tune_para; /* tune result of CMD21/CMD19 */
+> +	struct reset_control *reset;
+>   };
+>   
+>   static const struct mtk_mmc_compatible mt8135_compat = {
+> @@ -1516,6 +1518,12 @@ static void msdc_init_hw(struct msdc_host *host)
+>   	u32 val;
+>   	u32 tune_reg = host->dev_comp->pad_tune_reg;
+>   
+> +	if (host->reset) {
+> +		reset_control_assert(host->reset);
+> +		usleep_range(10, 50);
+> +		reset_control_deassert(host->reset);
+> +	}
+> +
+>   	/* Configure to MMC/SD mode, clock free running */
+>   	sdr_set_bits(host->base + MSDC_CFG, MSDC_CFG_MODE | MSDC_CFG_CKPDN);
+>   
+> @@ -2273,6 +2281,11 @@ static int msdc_drv_probe(struct platform_device *pdev)
+>   	if (IS_ERR(host->src_clk_cg))
+>   		host->src_clk_cg = NULL;
+>   
+> +	host->reset = devm_reset_control_get_optional_exclusive(&pdev->dev,
+> +								"hrst");
+> +	if (IS_ERR(host->reset))
+> +		return PTR_ERR(host->reset);
+> +
+>   	host->irq = platform_get_irq(pdev, 0);
+>   	if (host->irq < 0) {
+>   		ret = -EINVAL;
+> 
