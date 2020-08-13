@@ -2,217 +2,119 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC2D9C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 08:59:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF636C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:00:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0E8520771
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 08:59:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NvVLdkis"
+	by mail.kernel.org (Postfix) with ESMTP id C3A852053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:00:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597309215;
+	bh=nxJfY0GDp7W2K3CU3jLZpVw53XoSNI4mAsvj9BpugmI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OtSLHwsMLmFhX38J/n9hBvbUCeoHlCkc69NUv2+eplUfnMuvbx8riTkZkEzdce80D
+	 WWIAs5SRKUlVYIEKWPaLZKg6mlpuUa527RklAfgfvrMxcsOgSDEMOsSomp1WaU3fOF
+	 KmB373Nmqzn/ZW6j1plgPGF/m8ZrnY5COzEvEkhA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726570AbgHMI7K (ORCPT
+        id S1726596AbgHMJAO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 04:59:10 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:33840 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726053AbgHMI7K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 04:59:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597309148;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xplidKiAunMjEmfmobXpSZSbiqFpNVbmoHS76yAqyR4=;
-        b=NvVLdkish7ChXd6EjG2ia7GZ0fbnpJDDuXLz5rXFv0LBnwQOR8xDwofS3tPhqQ2sjTZgtd
-        46Kuf88Ed2uLchJ82DuMCWyK7ZaVdQlOa7jABoLV6Bih4sEVKjPkPE2U6GqXlp0XW/fLyY
-        L0DrqpjVflMEVhiVjOCYxmyYAhkc2mw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-348-tnH2_dRBMLeGslfaYettJA-1; Thu, 13 Aug 2020 04:59:04 -0400
-X-MC-Unique: tnH2_dRBMLeGslfaYettJA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 13 Aug 2020 05:00:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36610 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726249AbgHMJAN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 05:00:13 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 602011005E5B;
-        Thu, 13 Aug 2020 08:59:01 +0000 (UTC)
-Received: from [10.36.113.93] (ovpn-113-93.ams2.redhat.com [10.36.113.93])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0E7D370106;
-        Thu, 13 Aug 2020 08:58:54 +0000 (UTC)
-Subject: Re: [PATCH v7 5/7] iommu/uapi: Rename uapi functions
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>
-Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Jonathan Corbet <corbet@lwn.net>
-References: <1596068467-49322-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1596068467-49322-6-git-send-email-jacob.jun.pan@linux.intel.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <310ebf1c-02d6-b31f-e92e-619d46fa94aa@redhat.com>
-Date:   Thu, 13 Aug 2020 10:58:53 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E8DE20771;
+        Thu, 13 Aug 2020 09:00:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597309212;
+        bh=nxJfY0GDp7W2K3CU3jLZpVw53XoSNI4mAsvj9BpugmI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=06aQ79qZAgWaNvqgB0OTgqnkPG6MnwOgAcbZ3bzg4T0gaJY+GsoEcBFtrXPsO6gho
+         PzT2SHsSVrS3t3Se8GYVNxhiA9y0k8mM3jsX/txeWROkFCQZuO2LTmVxfMRZVWHyFk
+         9Bb7tSPDxOVc+duio7n5WE3Lv6Jph+Bo8mlXBu2Y=
+Date:   Thu, 13 Aug 2020 10:00:06 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Szabolcs Nagy <szabolcs.nagy@arm.com>
+Cc:     Ard Biesheuvel <ardb@kernel.org>, Jessica Yu <jeyu@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kees Cook <keescook@chromium.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Mark Rutland <mark.rutland@arm.com>, nd <nd@arm.com>
+Subject: Re: [PATCH v2] module: Harden STRICT_MODULE_RWX
+Message-ID: <20200813090006.GA9829@willie-the-truck>
+References: <20200811145524.GE2674@hirez.programming.kicks-ass.net>
+ <20200811172738.2d632a09@coco.lan>
+ <20200811160134.GA13652@linux-8ccs>
+ <CAMj1kXF8fm=9CdQykqDbgYCJSP88ezMs3EOosCW+SDi+Lve0zg@mail.gmail.com>
+ <20200812104005.GN2674@hirez.programming.kicks-ass.net>
+ <20200812125645.GA8675@willie-the-truck>
+ <20200812141557.GQ14398@arm.com>
+ <20200812160017.GA30302@linux-8ccs>
+ <CAMj1kXFfSLvujJYk4Em6T+UvAUDW3VX0BibsD43z30Q_TSsehg@mail.gmail.com>
+ <20200812164205.GS14398@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <1596068467-49322-6-git-send-email-jacob.jun.pan@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200812164205.GS14398@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacob,
-
-On 7/30/20 2:21 AM, Jacob Pan wrote:
-> User APIs such as iommu_sva_unbind_gpasid() may also be used by the
-> kernel. Since we introduced user pointer to the UAPI functions,
-Practically this is done in the next patch. What about something like:
-
-We plan to have two flavors of the same API functions, one called
-through ioctls, carrying a user pointer and one called directly with
-valid IOMMU UAPI structs. To differentiate both, let's rename existing
-functions with an iommu_uapi_ prefix.
-
-Besides
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
-
-
-Thanks
-
-Eric
-> in-kernel callers cannot share the same APIs. In-kernel callers are also
-> trusted, there is no need to validate the data.
+On Wed, Aug 12, 2020 at 05:42:05PM +0100, Szabolcs Nagy wrote:
+> The 08/12/2020 18:37, Ard Biesheuvel wrote:
+> > On Wed, 12 Aug 2020 at 18:00, Jessica Yu <jeyu@kernel.org> wrote:
+> > > +++ Szabolcs Nagy [12/08/20 15:15 +0100]:
+> > > >for me it bisects to
+> > > >
+> > > >https://sourceware.org/git/?p=binutils-gdb.git;a=commit;h=8c803a2dd7d3d742a3d0071914f557ef465afe71
+> > > >
+> > > >i will have to investigate further what's going on.
+> > >
+> > > Thanks for the hint. I'm almost certain it's due to this excerpt from
+> > > the changelog: "we now init sh_type and sh_flags for all known ABI sections
+> > > in _bfd_elf_new_section_hook."
+> > >
+> > > Indeed, .plt and .text.* are listed as special sections in bfd/elf.c.
+> > > The former requires an exact match and the latter only has to match
+> > > the prefix ".text." Since the code considers ".plt" and
+> > > ".text.ftrace_trampoline" special sections, their sh_type and sh_flags
+> > > are now set by default. Now I guess the question is whether this can
+> > > be overriden by a linker script..
+> > >
+> > 
+> > If this is even possible to begin with, doing this in a way that is
+> > portable across the various linkers that we claim to support is going
+> > to be tricky.
+> > 
+> > I suppose this is the downside of using partially linked objects as
+> > our module format - using ordinary shared libraries (along with the
+> > appropriate dynamic relocations which are mostly portable across
+> > architectures) would get rid of most of the PLT and trampoline issues,
+> > and of a lot of complex static relocation processing code.
+> > 
+> > I know there is little we can do at this point, apart from ignoring
+> > the permissions - perhaps we should just defer the w^x check until
+> > after calling module_frob_arch_sections()?
 > 
-> This patch renames all UAPI functions with iommu_uapi_ prefix such that
-> is clear to the intended callers.
+> i opened
 > 
-> Suggested-by: Alex Williamson <alex.williamson@redhat.com>
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> ---
->  drivers/iommu/iommu.c | 18 +++++++++---------
->  include/linux/iommu.h | 31 ++++++++++++++++---------------
->  2 files changed, 25 insertions(+), 24 deletions(-)
+> https://sourceware.org/bugzilla/show_bug.cgi?id=26378
 > 
-> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-> index b6858adc4f17..3a913ce94a3d 100644
-> --- a/drivers/iommu/iommu.c
-> +++ b/drivers/iommu/iommu.c
-> @@ -1950,35 +1950,35 @@ int iommu_attach_device(struct iommu_domain *domain, struct device *dev)
->  }
->  EXPORT_SYMBOL_GPL(iommu_attach_device);
->  
-> -int iommu_cache_invalidate(struct iommu_domain *domain, struct device *dev,
-> -			   struct iommu_cache_invalidate_info *inv_info)
-> +int iommu_uapi_cache_invalidate(struct iommu_domain *domain, struct device *dev,
-> +				struct iommu_cache_invalidate_info *inv_info)
->  {
->  	if (unlikely(!domain->ops->cache_invalidate))
->  		return -ENODEV;
->  
->  	return domain->ops->cache_invalidate(domain, dev, inv_info);
->  }
-> -EXPORT_SYMBOL_GPL(iommu_cache_invalidate);
-> +EXPORT_SYMBOL_GPL(iommu_uapi_cache_invalidate);
->  
-> -int iommu_sva_bind_gpasid(struct iommu_domain *domain,
-> -			   struct device *dev, struct iommu_gpasid_bind_data *data)
-> +int iommu_uapi_sva_bind_gpasid(struct iommu_domain *domain,
-> +			       struct device *dev, struct iommu_gpasid_bind_data *data)
->  {
->  	if (unlikely(!domain->ops->sva_bind_gpasid))
->  		return -ENODEV;
->  
->  	return domain->ops->sva_bind_gpasid(domain, dev, data);
->  }
-> -EXPORT_SYMBOL_GPL(iommu_sva_bind_gpasid);
-> +EXPORT_SYMBOL_GPL(iommu_uapi_sva_bind_gpasid);
->  
-> -int iommu_sva_unbind_gpasid(struct iommu_domain *domain, struct device *dev,
-> -			     ioasid_t pasid)
-> +int iommu_uapi_sva_unbind_gpasid(struct iommu_domain *domain, struct device *dev,
-> +				 ioasid_t pasid)
->  {
->  	if (unlikely(!domain->ops->sva_unbind_gpasid))
->  		return -ENODEV;
->  
->  	return domain->ops->sva_unbind_gpasid(dev, pasid);
->  }
-> -EXPORT_SYMBOL_GPL(iommu_sva_unbind_gpasid);
-> +EXPORT_SYMBOL_GPL(iommu_uapi_sva_unbind_gpasid);
->  
->  static void __iommu_detach_device(struct iommu_domain *domain,
->  				  struct device *dev)
-> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-> index 5f0b7859d2eb..2dcc1a33f6dc 100644
-> --- a/include/linux/iommu.h
-> +++ b/include/linux/iommu.h
-> @@ -430,13 +430,13 @@ extern int iommu_attach_device(struct iommu_domain *domain,
->  			       struct device *dev);
->  extern void iommu_detach_device(struct iommu_domain *domain,
->  				struct device *dev);
-> -extern int iommu_cache_invalidate(struct iommu_domain *domain,
-> -				  struct device *dev,
-> -				  struct iommu_cache_invalidate_info *inv_info);
-> -extern int iommu_sva_bind_gpasid(struct iommu_domain *domain,
-> -		struct device *dev, struct iommu_gpasid_bind_data *data);
-> -extern int iommu_sva_unbind_gpasid(struct iommu_domain *domain,
-> -				struct device *dev, ioasid_t pasid);
-> +extern int iommu_uapi_cache_invalidate(struct iommu_domain *domain,
-> +				       struct device *dev,
-> +				       struct iommu_cache_invalidate_info *inv_info);
-> +extern int iommu_uapi_sva_bind_gpasid(struct iommu_domain *domain,
-> +				      struct device *dev, struct iommu_gpasid_bind_data *data);
-> +extern int iommu_uapi_sva_unbind_gpasid(struct iommu_domain *domain,
-> +					struct device *dev, ioasid_t pasid);
->  extern struct iommu_domain *iommu_get_domain_for_dev(struct device *dev);
->  extern struct iommu_domain *iommu_get_dma_domain(struct device *dev);
->  extern int iommu_map(struct iommu_domain *domain, unsigned long iova,
-> @@ -1054,21 +1054,22 @@ static inline int iommu_sva_get_pasid(struct iommu_sva *handle)
->  	return IOMMU_PASID_INVALID;
->  }
->  
-> -static inline int
-> -iommu_cache_invalidate(struct iommu_domain *domain,
-> -		       struct device *dev,
-> -		       struct iommu_cache_invalidate_info *inv_info)
-> +static inline int iommu_uapi_cache_invalidate(struct iommu_domain *domain,
-> +					      struct device *dev,
-> +					      struct iommu_cache_invalidate_info *inv_info)
->  {
->  	return -ENODEV;
->  }
-> -static inline int iommu_sva_bind_gpasid(struct iommu_domain *domain,
-> -				struct device *dev, struct iommu_gpasid_bind_data *data)
-> +
-> +static inline int iommu_uapi_sva_bind_gpasid(struct iommu_domain *domain,
-> +					     struct device *dev,
-> +					     struct iommu_gpasid_bind_data *data)
->  {
->  	return -ENODEV;
->  }
->  
-> -static inline int iommu_sva_unbind_gpasid(struct iommu_domain *domain,
-> -					   struct device *dev, int pasid)
-> +static inline int iommu_uapi_sva_unbind_gpasid(struct iommu_domain *domain,
-> +					       struct device *dev, int pasid)
->  {
->  	return -ENODEV;
->  }
-> 
+> and waiting for binutils maintainers if this is intentional.
 
+Thanks, Szabolcs. It's looking this is intentional behaviour (a bug fix),
+so we'll have to suck it up in the module loader.
+
+Will
