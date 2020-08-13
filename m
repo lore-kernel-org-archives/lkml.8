@@ -2,82 +2,123 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 295CAC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 08:08:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7684C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 08:08:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3F9120781
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 08:08:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACCFD20781
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 08:08:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iCF8GCR+";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hGxrqA03"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726574AbgHMIIZ (ORCPT
+        id S1726611AbgHMIIt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 04:08:25 -0400
-Received: from mga11.intel.com ([192.55.52.93]:31081 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726048AbgHMIIZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 04:08:25 -0400
-IronPort-SDR: 2UEceZJ7BT5XbioCmkxS/dXjKJTofHUFRQ5uaLFbFaKDiNJBHLk+f5l+fD7AN1MCupLYpmMjz4
- ZHmHQI3mn7dQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9711"; a="151825505"
-X-IronPort-AV: E=Sophos;i="5.76,307,1592895600"; 
-   d="scan'208";a="151825505"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2020 01:08:24 -0700
-IronPort-SDR: 4LEJ3i2StXviShvyGgDfxT5+5ADtHCl7puZLj8WUzJyASpiwl9PoJcUGjt+Lx9GTEUAgYx2+uy
- HdZLe5cNIvsg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,307,1592895600"; 
-   d="scan'208";a="399094202"
-Received: from kuha.fi.intel.com ([10.237.72.162])
-  by fmsmga001.fm.intel.com with SMTP; 13 Aug 2020 01:08:22 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Thu, 13 Aug 2020 11:08:21 +0300
-Date:   Thu, 13 Aug 2020 11:08:21 +0300
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Badhri Jagan Sridharan <badhri@google.com>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] usb: typec: tcpm: Fix TDA 2.2.1.1 and TDA 2.2.1.2
- failures
-Message-ID: <20200813080821.GD1169992@kuha.fi.intel.com>
-References: <20200812025126.574519-1-badhri@google.com>
+        Thu, 13 Aug 2020 04:08:49 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:56930 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726048AbgHMIIt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 04:08:49 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1597306127;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=okLOdd4hFigu3F8BJVOWQHTTv93/xVX4l7N8L/QNtPw=;
+        b=iCF8GCR+vz1Zr7a4sw4CrWOwg2Coe+3Atwa6XZPGJ0vulQKW6CQUFKKZP0YDkWp3PSMSuG
+        +zny4uqgT9R6l2B0v3H0EPq9l2OK/2Cs+PbGgr0SIIUkhZ0MkKpzFqPSqUtrSZienATRje
+        2YBCbWKWZSYRGyD2FlYbcTeuB7SQ0QTwnzf1qoRXklulR0d/ig/rY+XLyTnWFYoqzh9Ulk
+        TgAqGrzTn0cqmWI59vFs2ijjh1g2K+AsPgpGUzLECSM0d5E9rTDe9JkqrbGzlX71qo1wJy
+        f2EHkKUqrSl52F+CtofuBBJOU3dMAafSuNjw7OLbkNwfFgZj6hBi+nrOLNyunA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1597306127;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=okLOdd4hFigu3F8BJVOWQHTTv93/xVX4l7N8L/QNtPw=;
+        b=hGxrqA03ITU7sVs4lNkl0pqnF8U5L9oMk/Y4jeyWjWhLA1NsXUyJNymgQNxPt7ncUOTsYB
+        88k+ATL2WPToHoCw==
+To:     Yunfeng Ye <yeyunfeng@huawei.com>
+Cc:     Shiyuan Hu <hushiyuan@huawei.com>,
+        Hewenliang <hewenliang4@huawei.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] genirq/affinity: show managed irq affinity correctly
+In-Reply-To: <b55d8b8c-8afc-0046-44b6-514ad012936f@huawei.com>
+References: <b55d8b8c-8afc-0046-44b6-514ad012936f@huawei.com>
+Date:   Thu, 13 Aug 2020 10:08:46 +0200
+Message-ID: <877du355o1.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200812025126.574519-1-badhri@google.com>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Yunfeng Ye <yeyunfeng@huawei.com> writes:
 
-On Tue, Aug 11, 2020 at 07:51:26PM -0700, Badhri Jagan Sridharan wrote:
-> >From the spec:
-> "7.1.5 Response to Hard Resets
-> Hard Reset Signaling indicates a communication failure has occurred and
-> the Source Shall stop driving VCONN, Shall remove Rp from the VCONN pin
-> and Shall drive VBUS to vSafe0V as shown in Figure 7-9. The USB connection
-> May reset during a Hard Reset since the VBUS voltage will be less than
-> vSafe5V for an extended period of time. After establishing the vSafe0V
-> voltage condition on VBUS, the Source Shall wait tSrcRecover before
-> re-applying VCONN and restoring VBUS to vSafe5V. A Source Shall conform
-> to the VCONN timing as specified in [USB Type-C 1.3]."
+> The "managed_irq" for isolcpus is supported after the commit
+> 11ea68f553e2 ("genirq, sched/isolation: Isolate from handling managed
+> interrupts"), but the interrupt affinity shown in proc directory is
+> still the original affinity.
+>
+> So modify the interrupt affinity correctly for managed_irq.
 
-I really think you need to explain the patch at least a little.
-Consider people who don't understand that much about USB PD. Open it
-up somehow instead of just quoting the spec.
+I really have no idea what you are trying to achieve here.
 
-Can you please start by explaining what exactly is TDA 2.2.1.1 and TDA
-2.2.1.2. Perhaps you could also consider a better subject line for
-this?
+1) Why are you moving the !chip !chip->irq_set_affinity check out of
+   irq_do_set_affinity() ?
 
-thanks,
+   Just that the whole computation happens for nothing and then returns
+   an error late.
 
--- 
-heikki
+2) Modifying irqdata->common->affinity is wrong to begin with. It's the
+   possible affinity mask. Your change causes the managed affinity mask
+   to become invalid in the worst case.
+
+      irq->affinity = 0x0C;        // CPU 2 - 3
+      hkmask   = 0x07;             // CPU 0 - 2
+
+   Invocation #1:
+      online_mask = 0xFF;          // CPU 0 - 7
+
+      cpumask_and(&tmp_mask, mask, hk_mask);
+         -->   tmp_mask == 0x04    // CPU 2
+
+      irq->affinity = tmp_mask;	   // CPU 2
+
+   CPU 2 goes offline
+
+   migrate_one_irq()
+
+      affinity = irq->affinity;	  // CPU 2
+      online_mask = 0xFB;         // CPU 0-1, 3-7
+
+      if (cpumask_any_and(affinity, cpu_online_mask) >= nr_cpu_ids) {
+		/*
+		 * If the interrupt is managed, then shut it down and leave
+		 * the affinity untouched.
+		 */
+		if (irqd_affinity_is_managed(d)) {
+			irqd_set_managed_shutdown(d);
+			irq_shutdown_and_deactivate(desc);
+			return false;
+		}
+
+  So the interrupt is shut down which is incorrect. The isolation
+  logic in irq_do_set_affinity() was clearly designed to prefer
+  housekeeping CPUs and not to remove them.
+    
+You are looking at the wrong file. /proc/irq/$IRQ/smp_affinity* is the
+possible mask. If you want to know to which CPU an interrupt is affine
+then look at /proc/irq/$IRQ/effective_affinity*
+
+If effective_affinity* is not showing the correct value, then the irq
+chip affinity setter is broken and needs to be fixed.
+
+Thanks,
+
+        tglx
