@@ -2,117 +2,122 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B569CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:46:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 328A6C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:47:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 639F42078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:46:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XEX2+JsC"
+	by mail.kernel.org (Postfix) with ESMTP id 020D120716
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:47:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726587AbgHMHqd (ORCPT
+        id S1726605AbgHMHrF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 03:46:33 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:40902 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726048AbgHMHqc (ORCPT
+        Thu, 13 Aug 2020 03:47:05 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:57701 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726499AbgHMHrF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 03:46:32 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07D7g8vu134750;
-        Thu, 13 Aug 2020 07:46:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=1MX3Zx2lAV/2UR78cqQ4np2FmrbW68MrXye6TvNF6z8=;
- b=XEX2+JsCOP1FjleAxNmKy6cPA1aTpr1Z4OyqsAMbOpR1U9kQf9by8BeNhbZvc4kqcFh1
- 4vOjOyd1fjK+72rPNgPcGr+w9e6JIvZqfpk1NXgiK/iBlJlYd4uEsL7FlWNqC511EBOT
- xB2P0g4XD5gqZi/e57oxndVb122DQ/laY4yuIa+q135HAHhJ5QhW3LI5MnqW3hTr53Lp
- b8OU0Y99hecJjRiOEyM3kB3bp0r96UTrvj0VFCmf87qZZ/0aP5D+ufUdI0t0EhAzHZYu
- m29xKqSo1KFjftHQC3jKk8j1fAbWwRmi1zD/0kidNxc00WfTUU4NvCO0TFHhNCKdG1hK vA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 32t2ydwdn0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 13 Aug 2020 07:46:23 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07D7bZUY014534;
-        Thu, 13 Aug 2020 07:46:23 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 32u3h4vbse-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 13 Aug 2020 07:46:23 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07D7kKTL008965;
-        Thu, 13 Aug 2020 07:46:22 GMT
-Received: from [10.191.2.179] (/10.191.2.179)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 13 Aug 2020 07:46:20 +0000
-Subject: Re: [PATCH] block: insert a general SMP memory barrier before
- wake_up_bit()
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>
-References: <20200813024438.13170-1-jian.w.wen@oracle.com>
- <20200813073115.GA15436@infradead.org>
-From:   Jacob Wen <jian.w.wen@oracle.com>
-Message-ID: <0a1d9db5-dc5f-5718-048d-861385ce2832@oracle.com>
-Date:   Thu, 13 Aug 2020 15:46:15 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 13 Aug 2020 03:47:05 -0400
+Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1k67wu-0004u4-Gj; Thu, 13 Aug 2020 07:46:56 +0000
+Date:   Thu, 13 Aug 2020 09:46:55 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     hui yang <yanghui.def@gmail.com>
+Cc:     christian@brauner.io, peterz@infradead.org, christian@kellner.me,
+        tglx@linutronix.de, linux-kernel@vger.kernel.org, wad@chromium.org
+Subject: Re: [PATCH v2] mm: LMK, adjust oom_score_adj when fork a new process
+Message-ID: <20200813074655.vypcjscabep2cpri@wittgenstein>
+References: <1597287211-4291-1-git-send-email-yanghui.def@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200813073115.GA15436@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9711 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=999 mlxscore=0
- malwarescore=0 spamscore=0 suspectscore=0 phishscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008130058
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9711 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 priorityscore=1501
- malwarescore=0 impostorscore=0 lowpriorityscore=0 mlxscore=0 bulkscore=0
- suspectscore=0 phishscore=0 adultscore=0 spamscore=0 clxscore=1011
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008130058
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1597287211-4291-1-git-send-email-yanghui.def@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Aug 13, 2020 at 10:53:31AM +0800, hui yang wrote:
+> From: YangHui <yanghui.def@gmail.com>
+> 
+> Also it rely on inheritance,But there are some things you need't inheriting
+> if all children oom_score_adj is -1000,the oom is meaningless
 
-On 8/13/20 3:31 PM, Christoph Hellwig wrote:
-> On Thu, Aug 13, 2020 at 10:44:38AM +0800, Jacob Wen wrote:
->> wake_up_bit() uses waitqueue_active() that needs the explicit smp_mb().
-> Sounds like the barrier should go into wake_up_bit then..
+I can just reapeat what I said before: we will not be changing
+inheritance behavior. It will break userspace.
 
-wake_up_bit() doesn't know which one to chose: smp_mb__after_atomic() or 
-smp_mb().
+And there's more problems.
+Changing oom_score_adj is usually guarded by CAP_SYS_RESOURCE. It
+doesn't seem like the change here adresses that in the code or in the
+commit message. So from what I can tell this change here means, that a
+parent process that has a "always kill" or "never kill" oom score can
+spawn children that don't. That's at least surprising and at worst a
+potential security issue.
 
->
->> Signed-off-by: Jacob Wen <jian.w.wen@oracle.com>
->> ---
->>   fs/block_dev.c | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/fs/block_dev.c b/fs/block_dev.c
->> index 0ae656e022fd..e74980848a2a 100644
->> --- a/fs/block_dev.c
->> +++ b/fs/block_dev.c
->> @@ -1175,6 +1175,7 @@ static void bd_clear_claiming(struct block_device *whole, void *holder)
->>   	/* tell others that we're done */
->>   	BUG_ON(whole->bd_claiming != holder);
->>   	whole->bd_claiming = NULL;
->> +	smp_mb();
->>   	wake_up_bit(&whole->bd_claiming, 0);
->>   }
->>   
->> -- 
->> 2.17.1
->>
-> ---end quoted text---
+In addition, given that you assign OOM_SCORE_ADJ_MIN to
+oom_score_adj_min you also seem to basically allow the child process to
+set /proc/<pid>/oom_score_adj to whatever low value after fork the
+process sees fit without requiring CAP_SYS_RESOURCE basically enabling a
+process to set itself to never be killed even though it's parent might
+have been in "always kill" mode. See in fs/proc/base.c:
+
+if ((short)oom_adj < task->signal->oom_score_adj_min &&
+		!capable(CAP_SYS_RESOURCE)) {
+	err = -EACCES;
+	goto err_unlock;
+}
+
+Excuse my french but that's crazy and a security issue imho.
+
+So we won't be taking this patch, sorry!
+
+For future patches, you should also explain why you need this change.
+The commit message here makes it seem you're asking for that change
+without any specific reason. That's not just against expectations but
+also problematic here because this is a uapi change where we're usually
+very strict.
+
+Christian
+
+> 
+> Signed-off-by: YangHui <yanghui.def@gmail.com>
+> ---
+>  include/uapi/linux/oom.h | 1 +
+>  kernel/fork.c            | 4 ++--
+>  2 files changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/uapi/linux/oom.h b/include/uapi/linux/oom.h
+> index 750b1c5..0251f23 100644
+> --- a/include/uapi/linux/oom.h
+> +++ b/include/uapi/linux/oom.h
+> @@ -8,6 +8,7 @@
+>   */
+>  #define OOM_SCORE_ADJ_MIN	(-1000)
+>  #define OOM_SCORE_ADJ_MAX	1000
+> +#define OOM_SCORE_ADJ_DEFAULT  0
+>  
+>  /*
+>   * /proc/<pid>/oom_adj set to -17 protects from the oom killer for legacy
+> diff --git a/kernel/fork.c b/kernel/fork.c
+> index 4d32190..9dfa388 100644
+> --- a/kernel/fork.c
+> +++ b/kernel/fork.c
+> @@ -1584,8 +1584,8 @@ static int copy_signal(unsigned long clone_flags, struct task_struct *tsk)
+>  	tty_audit_fork(sig);
+>  	sched_autogroup_fork(sig);
+>  
+> -	sig->oom_score_adj = current->signal->oom_score_adj;
+> -	sig->oom_score_adj_min = current->signal->oom_score_adj_min;
+> +	sig->oom_score_adj = OOM_SCORE_ADJ_DEFAULT;
+> +	sig->oom_score_adj_min = OOM_SCORE_ADJ_MIN;
+>  
+>  	mutex_init(&sig->cred_guard_mutex);
+>  	mutex_init(&sig->exec_update_mutex);
+> -- 
+> 2.7.4
+> 
