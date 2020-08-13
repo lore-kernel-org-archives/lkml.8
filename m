@@ -2,120 +2,242 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7106C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 08:53:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D52C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 08:55:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C26102078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 08:53:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88D8920771
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 08:55:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZbUslsAH"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="rbDCoRQk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726244AbgHMIxI (ORCPT
+        id S1726249AbgHMIzR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 04:53:08 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:54104 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726081AbgHMIxH (ORCPT
+        Thu, 13 Aug 2020 04:55:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47348 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726081AbgHMIzQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 04:53:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597308786;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=bHxBlhSxxa/67DKNkFk3S3CDohJlBQmN8kkHMo7F2jw=;
-        b=ZbUslsAHu3sgveWvWXm2hALTSdsK9dX/3JkGXB4b+UCMKx822LO3HPQV9I4yGSxgUF9euO
-        bo5LAD/dXjbcOct/IgncvqNQanaouLkcjbWY1RvKP/LVCCQecivyu46ZbAUQU4wRzHYklM
-        ee7FHFmRuas+pu7o89+BI6yeugZGu+Q=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-170-g7xpvjS9Pg-ZPkk-XNFWnQ-1; Thu, 13 Aug 2020 04:53:01 -0400
-X-MC-Unique: g7xpvjS9Pg-ZPkk-XNFWnQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6D1BF80046F;
-        Thu, 13 Aug 2020 08:52:59 +0000 (UTC)
-Received: from ws.net.home (unknown [10.40.193.69])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8FE145D9F3;
-        Thu, 13 Aug 2020 08:52:55 +0000 (UTC)
-Date:   Thu, 13 Aug 2020 10:52:52 +0200
-From:   Karel Zak <kzak@redhat.com>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     Steven Whitehouse <swhiteho@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Christian Brauner <christian@brauner.io>,
-        Lennart Poettering <lennart@poettering.net>,
-        Linux API <linux-api@vger.kernel.org>,
-        Ian Kent <raven@themaw.net>,
-        LSM <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: file metadata via fs API
-Message-ID: <20200813085252.ezwd46ahyjiz4flh@ws.net.home>
-References: <20200811135419.GA1263716@miu.piliscsaba.redhat.com>
- <CAHk-=wjzLmMRf=QG-n+1HnxWCx4KTQn9+OhVvUSJ=ZCQd6Y1WA@mail.gmail.com>
- <52483.1597190733@warthog.procyon.org.uk>
- <CAJfpegt=cQ159kEH9zCYVHV7R_08jwMxF0jKrSUV5E=uBg4Lzw@mail.gmail.com>
- <98802.1597220949@warthog.procyon.org.uk>
- <CAJfpegsVJo9e=pHf3YGWkE16fT0QaNGhgkUdq4KUQypXaD=OgQ@mail.gmail.com>
- <d2d179c7-9b60-ca1a-0c9f-d308fc7af5ce@redhat.com>
- <CAJfpeguMjU+n-JXE6aUQQGeMpCS4bsy4HQ37NHJ8aD8Aeg2qhA@mail.gmail.com>
- <20200812112825.b52tqeuro2lquxlw@ws.net.home>
- <CAJfpegv4sC2zm+N5tvEmYaEFvvWJRHfdGqXUoBzbeKj81uNCvQ@mail.gmail.com>
+        Thu, 13 Aug 2020 04:55:16 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80127C061757
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 01:55:16 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id g8so4009740wmk.3
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 01:55:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JKYiLYK7bURAphGtstRcLZdMB577DXsbKaLESGsrXLQ=;
+        b=rbDCoRQkhTNh2AkfUqDQYaSQIV049YTK/6K7NEeRbaYAkewMaelZsPAFKBgCPxLcJi
+         Sb61f2o+AxREPTsiSGtrQyWHhM0pWYyibmFZw1eLX84itLQTn/P91+xeGrcQPjTdjpha
+         L5edI88QvqmODIHcmfvwtrFOdKkYkUPuxQBxHKQnVP7Vkb+tEX1pqchRGpjvjO6vXatL
+         jRYa27sFfBAqBiNmR44b4QxCeL+0Zp9nnlesoKFOv791plAujVCApsN/1iTxK9cMH6sO
+         5n9tiOjOLi+KsCvaxzCxq/KGgYjMC2Qsp2wqTLt148Q3LiGK/o5gEvZRvftwM4zBZRwf
+         lQuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JKYiLYK7bURAphGtstRcLZdMB577DXsbKaLESGsrXLQ=;
+        b=pE9SilyEGzV1wqp2EBN7iMO7k8ucA6cluVCDy7CvAvNE7FHHYZ8Wmd5CXmWKoQoAux
+         qOYzhP2fTVO+cFSGzBkbKV8G5lBEIeNkqmkmLrhW33X0QbKe62vt+sILTfGRHT5joPWJ
+         uhWK3bweYSjY8jVh2FH5uxY4V0lSfnjjFe9lzbhJ0Zd8K2ISwZTXh+ciJQDoNba8RQ+n
+         avpwwNxJy7scF2ju7pW+Rblqnx//cOZPlHmvcsSYdnPFhoRO52CyuPiUF0CpyTYdwvpv
+         zwlmfCJBh26RdPdZXZrQx5bUayU4x46qjKDCoMbJnZj/M5aXlBwrQdEcRP0iSttrJgTf
+         tFrQ==
+X-Gm-Message-State: AOAM532j9AFkYREpS+RBr59GRsFlu2QPKIpLIoDN3+yDG1n0TfWpnPFn
+        ddqfRsR+CIoH2cyhUGFHIz0wZpK1Ct7vC+MBKdsnJQ==
+X-Google-Smtp-Source: ABdhPJxN5KnUnDP/cDmL4rhsc6+uNbIZmHZJqCKCT1BvEMOaQybj8EP2yzNnHJKNSMOCAJ3sR+wTAGYp+9en0GoVMaU=
+X-Received: by 2002:a7b:c4d5:: with SMTP id g21mr3586072wmk.185.1597308915101;
+ Thu, 13 Aug 2020 01:55:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJfpegv4sC2zm+N5tvEmYaEFvvWJRHfdGqXUoBzbeKj81uNCvQ@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+References: <20200812234758.3563-1-atish.patra@wdc.com> <20200812234758.3563-3-atish.patra@wdc.com>
+In-Reply-To: <20200812234758.3563-3-atish.patra@wdc.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Thu, 13 Aug 2020 14:25:02 +0530
+Message-ID: <CAAhSdy0PyE3UoS-+7-ei15TgA_qEPAUcutTQ_51DTEjbHdO1YA@mail.gmail.com>
+Subject: Re: [PATCH v5 2/9] RISC-V: Add early ioremap support
+To:     Atish Patra <atish.patra@wdc.com>
+Cc:     "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alistair Francis <alistair.francis@wdc.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Anup Patel <anup.patel@wdc.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Borislav Petkov <bp@suse.de>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        fwts-devel@lists.ubuntu.com, Mao Han <han_mao@c-sky.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Steven Price <steven.price@arm.com>,
+        Waiman Long <longman@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Daniel Schaefer <daniel.schaefer@hpe.com>,
+        "abner.chang@hpe.com" <abner.chang@hpe.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 02:43:32PM +0200, Miklos Szeredi wrote:
-> On Wed, Aug 12, 2020 at 1:28 PM Karel Zak <kzak@redhat.com> wrote:
-> 
-> > The proposal is based on paths and open(), how do you plan to deal
-> > with mount IDs? David's fsinfo() allows to ask for mount info by mount
-> > ID and it works well with mount notification where you get the ID. The
-> > collaboration with notification interface is critical for our use-cases.
-> 
-> One would use the notification to keep an up to date set of attributes
-> for each watched mount, right?
-> 
-> That presumably means the mount ID <-> mount path mapping already
-> exists, which means it's just possible to use the open(mount_path,
-> O_PATH) to obtain the base fd.
+On Thu, Aug 13, 2020 at 5:18 AM Atish Patra <atish.patra@wdc.com> wrote:
+>
+> UEFI uses early IO or memory mappings for runtime services before
+> normal ioremap() is usable. Add the necessary fixmap bindings and
+> pmd mappings for generic ioremap support to work.
+>
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> ---
+>  arch/riscv/Kconfig              |  1 +
+>  arch/riscv/include/asm/Kbuild   |  1 +
+>  arch/riscv/include/asm/fixmap.h | 13 +++++++++++++
+>  arch/riscv/include/asm/io.h     |  1 +
+>  arch/riscv/kernel/setup.c       |  1 +
+>  arch/riscv/mm/init.c            | 33 +++++++++++++++++++++++++++++++++
+>  6 files changed, 50 insertions(+)
+>
+> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> index 7b5905529146..15597f5f504f 100644
+> --- a/arch/riscv/Kconfig
+> +++ b/arch/riscv/Kconfig
+> @@ -37,6 +37,7 @@ config RISCV
+>         select GENERIC_ARCH_TOPOLOGY if SMP
+>         select GENERIC_ATOMIC64 if !64BIT
+>         select GENERIC_CLOCKEVENTS
+> +       select GENERIC_EARLY_IOREMAP
+>         select GENERIC_GETTIMEOFDAY if HAVE_GENERIC_VDSO
+>         select GENERIC_IOREMAP
+>         select GENERIC_IRQ_MULTI_HANDLER
+> diff --git a/arch/riscv/include/asm/Kbuild b/arch/riscv/include/asm/Kbuild
+> index 3d9410bb4de0..59dd7be55005 100644
+> --- a/arch/riscv/include/asm/Kbuild
+> +++ b/arch/riscv/include/asm/Kbuild
+> @@ -1,4 +1,5 @@
+>  # SPDX-License-Identifier: GPL-2.0
+> +generic-y += early_ioremap.h
+>  generic-y += extable.h
+>  generic-y += flat.h
+>  generic-y += kvm_para.h
+> diff --git a/arch/riscv/include/asm/fixmap.h b/arch/riscv/include/asm/fixmap.h
+> index 11613f38228a..54cbf07fb4e9 100644
+> --- a/arch/riscv/include/asm/fixmap.h
+> +++ b/arch/riscv/include/asm/fixmap.h
+> @@ -27,6 +27,19 @@ enum fixed_addresses {
+>         FIX_TEXT_POKE1,
+>         FIX_TEXT_POKE0,
+>         FIX_EARLYCON_MEM_BASE,
+> +
+> +       __end_of_permanent_fixed_addresses,
+> +       /*
+> +        * Temporary boot-time mappings, used by early_ioremap(),
+> +        * before ioremap() is functional.
+> +        */
+> +#define NR_FIX_BTMAPS          (SZ_256K / PAGE_SIZE)
+> +#define FIX_BTMAPS_SLOTS       7
+> +#define TOTAL_FIX_BTMAPS       (NR_FIX_BTMAPS * FIX_BTMAPS_SLOTS)
+> +
+> +       FIX_BTMAP_END = __end_of_permanent_fixed_addresses,
+> +       FIX_BTMAP_BEGIN = FIX_BTMAP_END + TOTAL_FIX_BTMAPS - 1,
+> +
+>         __end_of_fixed_addresses
+>  };
+>
+> diff --git a/arch/riscv/include/asm/io.h b/arch/riscv/include/asm/io.h
+> index 3835c3295dc5..c025a746a148 100644
+> --- a/arch/riscv/include/asm/io.h
+> +++ b/arch/riscv/include/asm/io.h
+> @@ -14,6 +14,7 @@
+>  #include <linux/types.h>
+>  #include <linux/pgtable.h>
+>  #include <asm/mmiowb.h>
+> +#include <asm/early_ioremap.h>
+>
+>  /*
+>   * MMIO access functions are separated out to break dependency cycles
+> diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
+> index 6a0ee2405813..c71788e6aff4 100644
+> --- a/arch/riscv/kernel/setup.c
+> +++ b/arch/riscv/kernel/setup.c
+> @@ -72,6 +72,7 @@ void __init setup_arch(char **cmdline_p)
+>
+>         *cmdline_p = boot_command_line;
+>
+> +       early_ioremap_setup();
+>         parse_early_param();
+>
+>         setup_bootmem();
+> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+> index 2b651f63f5c4..b75ebe8e7a92 100644
+> --- a/arch/riscv/mm/init.c
+> +++ b/arch/riscv/mm/init.c
+> @@ -403,6 +403,9 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
+>         uintptr_t load_pa = (uintptr_t)(&_start);
+>         uintptr_t load_sz = (uintptr_t)(&_end) - load_pa;
+>         uintptr_t map_size = best_map_size(load_pa, MAX_EARLY_MAPPING_SIZE);
+> +#ifndef __PAGETABLE_PMD_FOLDED
+> +       pmd_t fix_bmap_spmd, fix_bmap_epmd;
+> +#endif
+>
+>         va_pa_offset = PAGE_OFFSET - load_pa;
+>         pfn_base = PFN_DOWN(load_pa);
+> @@ -456,6 +459,36 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
+>                            pa + PGDIR_SIZE, PGDIR_SIZE, PAGE_KERNEL);
+>         dtb_early_va = (void *)DTB_EARLY_BASE_VA + (dtb_pa & (PGDIR_SIZE - 1));
+>         dtb_early_pa = dtb_pa;
+> +
+> +       /*
+> +        * Bootime fixmap only can handle PMD_SIZE mapping. Thus, boot-ioremap
+> +        * range can not span multiple pmds.
+> +        */
+> +       BUILD_BUG_ON((__fix_to_virt(FIX_BTMAP_BEGIN) >> PMD_SHIFT)
+> +                    != (__fix_to_virt(FIX_BTMAP_END) >> PMD_SHIFT));
+> +
+> +#ifndef __PAGETABLE_PMD_FOLDED
+> +       /*
+> +        * Early ioremap fixmap is already created as it lies within first 2MB
+> +        * of fixmap region. We always map PMD_SIZE. Thus, both FIX_BTMAP_END
+> +        * FIX_BTMAP_BEGIN should lie in the same pmd. Verify that and warn
+> +        * the user if not.
+> +        */
+> +       fix_bmap_spmd = fixmap_pmd[pmd_index(__fix_to_virt(FIX_BTMAP_BEGIN))];
+> +       fix_bmap_epmd = fixmap_pmd[pmd_index(__fix_to_virt(FIX_BTMAP_END))];
+> +       if (pmd_val(fix_bmap_spmd) != pmd_val(fix_bmap_epmd)) {
+> +               WARN_ON(1);
+> +               pr_warn("fixmap btmap start [%08lx] != end [%08lx]\n",
+> +                       pmd_val(fix_bmap_spmd), pmd_val(fix_bmap_epmd));
+> +               pr_warn("fix_to_virt(FIX_BTMAP_BEGIN): %08lx\n",
+> +                       fix_to_virt(FIX_BTMAP_BEGIN));
+> +               pr_warn("fix_to_virt(FIX_BTMAP_END):   %08lx\n",
+> +                       fix_to_virt(FIX_BTMAP_END));
+> +
+> +               pr_warn("FIX_BTMAP_END:       %d\n", FIX_BTMAP_END);
+> +               pr_warn("FIX_BTMAP_BEGIN:     %d\n", FIX_BTMAP_BEGIN);
+> +       }
+> +#endif
+>  }
+>
+>  static void __init setup_vm_final(void)
+> --
+> 2.24.0
+>
 
-The notification also reports new mount nodes, so we have no mount ID
-<-> mount path mapping in userspace yet.
+Looks good to me.
 
-The another problem is that open(path) cannot be used if you have multiple
-filesystems on the same mount point -- in this case (at least in theory)
-you can get ID for by-path inaccessible filesystem.
+Reviewed-by: Anup Patel <anup@brainfault.org>
 
-> A new syscall that returns an fd pointing to the root of the mount
-> might be the best solution:
-> 
->    int open_mount(int root_fd, u64 mntid, int flags);
-
-Yes, something like this is necessary. You do not want to depend
-on paths if you want to read information about mountpoints.
-
- Karel
-
--- 
- Karel Zak  <kzak@redhat.com>
- http://karelzak.blogspot.com
-
+Regards,
+Anup
