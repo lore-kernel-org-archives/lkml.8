@@ -2,86 +2,124 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB4BC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 17:30:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8162BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 17:31:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B8EC2078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 17:30:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B7F92078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 17:31:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="J4FW/VJ/"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="puw3EcPE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726570AbgHMRav (ORCPT
+        id S1726604AbgHMRb4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 13:30:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42204 "EHLO
+        Thu, 13 Aug 2020 13:31:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726174AbgHMRar (ORCPT
+        with ESMTP id S1726174AbgHMRby (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 13:30:47 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41F8BC061757
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 10:30:47 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id y206so3145844pfb.10
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 10:30:47 -0700 (PDT)
+        Thu, 13 Aug 2020 13:31:54 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 885A2C061757
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 10:31:54 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id j7so5740731oij.9
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 10:31:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=IQWrnc5WTjN5BGhjD79oWFAreGfAyr0fF03GP4y/EJc=;
-        b=J4FW/VJ/5Gm/uGxIvsKY0pgjS5GJQD4+qrHZfRsVHK5wdsyB8b8HWq/eKVzJ28VJhk
-         XhvfA6PAP6az3ZSC1pCga9JY/wqo314HR4RrxOw2OsGoGnDEA8Z/etubkHBtiCVImxVW
-         okPPjPrUdC5Bpklt9WKuuXuMMj0/DAanBshEQ=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=S0mJn9glHvgBKds8mjTmLlgE2xICxjsY+0mNXnuT3Ps=;
+        b=puw3EcPEVQASOhNPkfKBnDy0DJDfSfmsG10pcPqII3pGaR2Mq+QDu53CRMvu7GYsZa
+         CWnR1VoAkCEBTwsuz4qnYc0f2Dkxl5UEf303i9cMjsPQsj4fL45kjOM+y191JNCli56+
+         l4E0N8LVQgGc3YvdpYYBSLRp0DzYMID7u3N5cnV8xfRgqoZY0+V5KnaYqrLxazLsTRRz
+         kmIOERZUpI6fXf3ElJiREa3seR1LoULHwYPmo8AgxTWVUxbtv8aOJ6o+yR5lJWdQZc+O
+         ms7pRxvjpZOUetuUyUf7+1DEakazTxV5qDW4zFJPMUBKoFMDrTaqB/x7hc5OtbnRlrBw
+         5VbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=IQWrnc5WTjN5BGhjD79oWFAreGfAyr0fF03GP4y/EJc=;
-        b=VyfYBeegoBFpHH1w2XLhMggSB3eylh2pOoZfc0oG0wqJGSQXgHnw2kf/Ei6xhY5YSp
-         qHvOL+mtZfeg84zB1WZHcmo+NMkSVSzTUx8psUy7O02dV/RvbAYa++2u8AxbB+jrCEzR
-         UMmAR4xmvoL2vF1zk4vxqp/aMJmIbI/zBfBbaPXL8rq4TsUGwJsjJsgcCv0EE/Gi005i
-         epCS/fScd4nRnlWm9OT3UW/pVT8xWQ2jjA+03ufr88E8/TANWFoYoIHtq9aVF5948ZZM
-         nQI3Ytsn+Qg9zNXfws1jBlT2zbgNzUrhbhMBJ+Mi2OMIM1tmEKXUj1V6nPCdr/+ZjZLh
-         iPow==
-X-Gm-Message-State: AOAM532zLRch7NZWhUsBqsbz4I0o10ZCOBYk1F9Y282LpXP/5/nUFU7Y
-        xy1Sc9g6SeoHsaoO9YI0YiEtgg==
-X-Google-Smtp-Source: ABdhPJweW89Ig89uR5/m0KMwV5c4I9rCPAnO8YqfXCB+1jfphuUuhjbDDVIu4WezzSDaq5TVBNp+Rg==
-X-Received: by 2002:a63:4859:: with SMTP id x25mr4713141pgk.422.1597339846771;
-        Thu, 13 Aug 2020 10:30:46 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
-        by smtp.gmail.com with ESMTPSA id g10sm5563584pjs.20.2020.08.13.10.30.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Aug 2020 10:30:46 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=S0mJn9glHvgBKds8mjTmLlgE2xICxjsY+0mNXnuT3Ps=;
+        b=UB7j2sWqAxbsBIFpXVO+3BhTv7HYuoo4qfGzd3oDfWgfhISMOFXa1p47qAqNghKWH/
+         YWcCEd6gbPp4Rlv2ARtTrJu0kq2p/lsHApClEZ+zgZavd5SiSxfVPku9Z27O/kDehgWG
+         zkSIV/vQaaFOReoDd5Nsr5+5AFfuFuon7t5AvEkLmA5zO/BkI96qwPg6SVCfA1aRJ0Bd
+         JIM50blJPZ0vZVZMLxQDZ5ybIuJmJCtuBrt/rb1MMag3GOk3iJDxn82gWJzK77Oh78jy
+         uwFJTHWfwR/8LukDsdqKU/3LTmCwCUSrIAY/YLzibxTokffCjEnP0g/62ATgKH+ZIJL0
+         zW+g==
+X-Gm-Message-State: AOAM5325KgbgZirHrTgS0F3t21M+eP/YnsqNxXUEZLoxGCfzZ/Bkv4cP
+        h9Lrd1N61zAP+NKHgVP9QFudGBFbmDA2ZJgTre5oVg==
+X-Google-Smtp-Source: ABdhPJwdR5FTDq9CbRiChGWtu1ufGfl7Dalv+5O3zt5gsgcAhuL6wrIBY2QfOF+CMmFX5XWI9yNir9yFzeBAldvL6Xo=
+X-Received: by 2002:aca:670b:: with SMTP id z11mr4137097oix.6.1597339912244;
+ Thu, 13 Aug 2020 10:31:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200813080345.1.I85bb28f9ea3fa3bf797ecaf0a5218ced4cfaa6e2@changeid>
-References: <20200813080345.1.I85bb28f9ea3fa3bf797ecaf0a5218ced4cfaa6e2@changeid>
-Subject: Re: [PATCH] soc: qcom: socinfo: add SC7180 entry to soc_id array
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     saiprakash.ranjan@codeaurora.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>
-Date:   Thu, 13 Aug 2020 10:30:44 -0700
-Message-ID: <159733984474.33733.17347167062662610672@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+References: <20200807084841.7112-1-chenyi.qiang@intel.com> <20200807084841.7112-3-chenyi.qiang@intel.com>
+ <CALMp9eQiyRxJ0jkvVi+fWMZcDQbvyCcuTwH1wrYV-u_E004Bhg@mail.gmail.com> <34b083be-b9d5-fd85-b42d-af0549e3b002@intel.com>
+In-Reply-To: <34b083be-b9d5-fd85-b42d-af0549e3b002@intel.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Thu, 13 Aug 2020 10:31:40 -0700
+Message-ID: <CALMp9eS=dO7=JvvmGp-nt-LBO9evH-bLd2LQMO9wdYJ5V6S0_Q@mail.gmail.com>
+Subject: Re: [RFC 2/7] KVM: VMX: Expose IA32_PKRS MSR
+To:     Chenyi Qiang <chenyi.qiang@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Douglas Anderson (2020-08-13 08:03:52)
-> Add an entry for SC7180 SoC.
->=20
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
+On Wed, Aug 12, 2020 at 10:42 PM Chenyi Qiang <chenyi.qiang@intel.com> wrote:
+>
+>
+>
+> On 8/13/2020 5:21 AM, Jim Mattson wrote:
+> > On Fri, Aug 7, 2020 at 1:46 AM Chenyi Qiang <chenyi.qiang@intel.com> wrote:
+> >>
+> >> Protection Keys for Supervisor Pages (PKS) uses IA32_PKRS MSR (PKRS) at
+> >> index 0x6E1 to allow software to manage supervisor protection key
+> >> rights. For performance consideration, PKRS intercept will be disabled
+> >> so that the guest can access the PKRS without VM exits.
+> >> PKS introduces dedicated control fields in VMCS to switch PKRS, which
+> >> only does the retore part. In addition, every VM exit saves PKRS into
+> >> the guest-state area in VMCS, while VM enter won't save the host value
+> >> due to the expectation that the host won't change the MSR often. Update
+> >> the host's value in VMCS manually if the MSR has been changed by the
+> >> kernel since the last time the VMCS was run.
+> >> The function get_current_pkrs() in arch/x86/mm/pkeys.c exports the
+> >> per-cpu variable pkrs_cache to avoid frequent rdmsr of PKRS.
+> >>
+> >> Signed-off-by: Chenyi Qiang <chenyi.qiang@intel.com>
+> >> ---
+> >
+> >> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+> >> index 11e4df560018..df2c2e733549 100644
+> >> --- a/arch/x86/kvm/vmx/nested.c
+> >> +++ b/arch/x86/kvm/vmx/nested.c
+> >> @@ -289,6 +289,7 @@ static void vmx_sync_vmcs_host_state(struct vcpu_vmx *vmx,
+> >>          dest->ds_sel = src->ds_sel;
+> >>          dest->es_sel = src->es_sel;
+> >>   #endif
+> >> +       dest->pkrs = src->pkrs;
+> >
+> > Why isn't this (and other PKRS code) inside the #ifdef CONFIG_X86_64?
+> > PKRS isn't usable outside of long mode, is it?
+> >
+>
+> Yes, I'm also thinking about whether to put all pks code into
+> CONFIG_X86_64. The kernel implementation also wrap its pks code inside
+> CONFIG_ARCH_HAS_SUPERVISOR_PKEYS which has dependency with CONFIG_X86_64.
+> However, maybe this can help when host kernel disable PKS but the guest
+> enable it. What do you think about this?
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+I see no problem in exposing PKRS to the guest even if the host
+doesn't have CONFIG_ARCH_HAS_SUPERVISOR_PKEYS.
