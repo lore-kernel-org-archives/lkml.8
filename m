@@ -2,114 +2,108 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE2CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 23:23:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 284A7C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 23:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27CE820838
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 23:23:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597360995;
-	bh=EF/BQjTohXyx9VE5DQ/ITuXE4RPxFZdWjxUAUMPQgis=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=UIKiQC6yTk61MQEDnG0A2KtX3WCbec9GaB8FD8fJP+UA6csD5dcixwUzmg08ZSAeC
-	 3sPL5l0CI/usHl9tdtpnCCykFJMoEn8AicsQoyXQ8ytqDdUC2DzqBjmbKPmqz+0NFk
-	 3gXZZn3KFFCTDmNGGldyi0t+FqxjP7rwsg2Kizsk=
+	by mail.kernel.org (Postfix) with ESMTP id EFFED2224D
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 23:25:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="eWcVOK9z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbgHMXXN (ORCPT
+        id S1726622AbgHMXZL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 19:23:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49204 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726205AbgHMXXM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 19:23:12 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 13 Aug 2020 19:25:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40196 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726205AbgHMXZK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 19:25:10 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 735DBC061757;
+        Thu, 13 Aug 2020 16:25:09 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CE6F2078B;
-        Thu, 13 Aug 2020 23:23:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597360992;
-        bh=EF/BQjTohXyx9VE5DQ/ITuXE4RPxFZdWjxUAUMPQgis=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=OaolggrC6srwXS8tGt+JS42uCRCpec88GQCLh5QhHajIEVXDFMShzGP7TW190sPDr
-         pE+gnLxrebTbmEzgL+JxQ/PdE7R008T4SWLfTEVxp0xpcNg+0fiBEUqmrspPhUKZ3v
-         OoXglsjuwb9N5DsG9S6DlUNTRtGdWbr5XqFwVD8w=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id E3E15352279C; Thu, 13 Aug 2020 16:23:11 -0700 (PDT)
-Date:   Thu, 13 Aug 2020 16:23:11 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     peterz@infradead.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Michal Hocko <mhocko@suse.com>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
-Message-ID: <20200813232311.GJ4295@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200811210931.GZ4295@paulmck-ThinkPad-P72>
- <874kp87mca.fsf@nanos.tec.linutronix.de>
- <20200813075027.GD9477@dhcp22.suse.cz>
- <20200813095840.GA25268@pc636>
- <874kp6llzb.fsf@nanos.tec.linutronix.de>
- <20200813133308.GK9477@dhcp22.suse.cz>
- <87sgcqty0e.fsf@nanos.tec.linutronix.de>
- <20200813182618.GX2674@hirez.programming.kicks-ass.net>
- <20200813185257.GF4295@paulmck-ThinkPad-P72>
- <20200813220619.GA2674@hirez.programming.kicks-ass.net>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BSN2m19kFz9sTN;
+        Fri, 14 Aug 2020 09:25:03 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1597361105;
+        bh=aXgzpd9CFe3IkARlfe+AQV0Aqs2X036V+1GWrROBFIw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=eWcVOK9z+WZHI2OSKf4O5f3bZCO0P9ZWucX8p2GDqQ2Vac9SxRm9Dz80wNoFDpW4W
+         FvaExKdF+vWiy+dZQg24ztR/kYUmE1/QNvApo5z/2DYSLO7MQ8qVAaMZfFxV8QdBhW
+         g+hZ2cAIY465Ab2gFdJDbWWwHTxDBK1XZTlvGiptdMOP9QQXauk+wLB/ADwPEFkbV2
+         d6290J0NUD7bDtta9hK2/A0E8MZa9yZA8/Yh03fgfQ42Co/zWRU4FEEF6DUq29UUn7
+         Etx8KfnLycpcsUULQiVzhwEJ9dpUBMz+MgpjZaONzc0h3xqX9MVSbzi30cnIUd0CTO
+         6+Jg0zNuuPZkg==
+Date:   Fri, 14 Aug 2020 09:25:02 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     syzbot <syzbot+f96cbc69d9803e663664@syzkaller.appspotmail.com>
+Cc:     akpm@linux-foundation.org, cgroups@vger.kernel.org,
+        hannes@cmpxchg.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@kernel.org,
+        syzkaller-bugs@googlegroups.com, vdavydov.dev@gmail.com
+Subject: Re: linux-next boot error: WARNING in mem_cgroup_css_alloc
+Message-ID: <20200814092502.34c48995@canb.auug.org.au>
+In-Reply-To: <0000000000001c467c05acbf3196@google.com>
+References: <0000000000001c467c05acbf3196@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200813220619.GA2674@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: multipart/signed; boundary="Sig_/krubGEnJdNa0L.7SdKkKDu_";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 12:06:19AM +0200, peterz@infradead.org wrote:
-> On Thu, Aug 13, 2020 at 11:52:57AM -0700, Paul E. McKenney wrote:
-> > On Thu, Aug 13, 2020 at 08:26:18PM +0200, peterz@infradead.org wrote:
-> 
-> > > I thought the rule was:
-> > > 
-> > >  - No allocators (alloc/free) inside raw_spinlock_t, full-stop.
-> > > 
-> > > Why are we trying to craft an exception?
-> > 
-> > So that we can reduce post-grace-period cache misses by a factor of
-> > eight when invoking RCU callbacks.  This reduction in cache misses also
-> > makes it more difficult to overrun RCU with floods of either call_rcu()
-> > or kfree_rcu() invocations.
-> > 
-> > The idea is to allocate page-sized arrays of pointers so that the callback
-> > invocation can sequence through the array instead of walking a linked
-> > list, hence the reduction in cache misses.
-> 
-> I'm still not getting it, how do we end up trying to allocate memory
-> from under raw spinlocks if you're not allowed to use kfree_rcu() under
-> one ?
+--Sig_/krubGEnJdNa0L.7SdKkKDu_
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-You are indeed not allowed to use kfree() under a raw spinlock, given
-that it can acquire a non-raw spinlock.
+Hi,
 
-But kfree_rcu() was just a wrapper around call_rcu(), which can be and
-is called from raw atomic context.
+On Thu, 13 Aug 2020 02:47:26 -0700 syzbot <syzbot+f96cbc69d9803e663664@syzk=
+aller.appspotmail.com> wrote:
+>
+> syzbot found the following issue on:
+>=20
+> HEAD commit:    e6d113ac Add linux-next specific files for 20200813
+> git tree:       linux-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=3D11db9fd6900000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=3D2055bd0d83d5e=
+e16
+> dashboard link: https://syzkaller.appspot.com/bug?extid=3Df96cbc69d9803e6=
+63664
+> compiler:       gcc (GCC) 10.1.0-syz 20200507
+>=20
+> IMPORTANT: if you fix the issue, please add the following tag to the comm=
+it:
+> Reported-by: syzbot+f96cbc69d9803e663664@syzkaller.appspotmail.com
 
-> Can someone please spell out the actual problem?
+#syz fix: mm: memcontrol: fix warning when allocating the root cgroup
 
-And as noted above, reducing the kfree()-time cache misses would be
-a good thing.
+--=20
+Cheers,
+Stephen Rothwell
 
-						Thanx, Paul
+--Sig_/krubGEnJdNa0L.7SdKkKDu_
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl81y84ACgkQAVBC80lX
+0Gx3uQf/cE5sU5zeLP79spf/R6yO7PvwNO1YLwQmnE4CA4b4g0MysfpTq8s1a0A1
+o21sS9jpRfKECBmfzY6C15EubWYulmjB8IUpBUXIKT1Gy71gucsA9VlNQyeVQ/Wf
+DWIQTx5BrVOH1pzTz1BH/cIpg/XHJ2FV9+uKeICmMEAJE/ZbKgH1jF5d8dkKgKjD
+e1hZW+PQ9zxqReE5KVYZezq7WDCfz5jtis8mQQg5U2km4T31asNzA1KhV2abTluL
+lKinlQ2TiPpsaBJu0DRoiqqO/h/gItgXe9Y5LrzX7JW52AN7SeNo6SeHXyK7UwdB
+wAhg3+q30hcai1t3HnYdxru+9aLIcA==
+=uE3e
+-----END PGP SIGNATURE-----
+
+--Sig_/krubGEnJdNa0L.7SdKkKDu_--
