@@ -2,117 +2,123 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A35DC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 17:36:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C489C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 17:37:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15D562078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 17:36:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="sh9bDuKN"
+	by mail.kernel.org (Postfix) with ESMTP id 1A92C20838
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 17:37:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597340224;
+	bh=sgRlp7dCUrfOBC/9uX9nn5O+stnmV3MDjAHKYBmKnFk=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=tsEKFgNfHmfrwFK6OQJbOiaZss8J6bav76VVgT7ua/0T0kjhz4yg5D7KbYi6KNnNH
+	 aPPsxIEPT9qKD9hyNMU1zfF9gexTiKoBMm8lfqvldwKA5Tb7cI5OqmbZXQ+GczJuoY
+	 Ln1wPGcTMBWpZZ6VRe9llHGjMEVu5ryi3eE/B9GM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726567AbgHMRgQ (ORCPT
+        id S1726583AbgHMRhC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 13:36:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43044 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726244AbgHMRgP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 13:36:15 -0400
-Received: from mail-qt1-x82f.google.com (mail-qt1-x82f.google.com [IPv6:2607:f8b0:4864:20::82f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CF5EC061757
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 10:36:15 -0700 (PDT)
-Received: by mail-qt1-x82f.google.com with SMTP id k18so4954922qtm.10
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 10:36:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=9jlgVFW8cz8UnSK84wDsTo/KXIXNWwrMl6cC3LnDPv4=;
-        b=sh9bDuKNQMwxUwVp6W0+Ns5Wb6IFR/6zaqA7W8oYXVDOzc057MiRpQRRowgHDaiTcB
-         9Ya1PtztpYgdTWwe0T5BJj1i51Hhtk0jvbtA5BKV74/xlz4I9cQyMnn4o6QzfCRbrpNG
-         QDr/OjEW6cURvv2WL7nwGhwuF9yXQTvCSA4zVOnhtS2e/t9IK/Vx7TftKDprRdCQ6syW
-         6CGAOl+bKUHCHZorXS+ITQ5uEj3Ti482H7qSNPceuvvgtrKbIEJpjtbbWw0GwCqhL2Ag
-         vDXyRamOoNmA41Zw66ARN1ICqsdSyYiQxfy6odqZ7QA0eqjl1352w9f47ZmRS8Ci/uIg
-         XFiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=9jlgVFW8cz8UnSK84wDsTo/KXIXNWwrMl6cC3LnDPv4=;
-        b=NkNbvway6CE8K9Pb9AYRIugQmI7Fi6JZGvnkHpNMBuez3iJHKhcxsTcyZc9uWzbXKj
-         TJu11FrUpMSb1wvw70x6lof9AneJgWD0R+8oSrbIBT0QR6ViqBK/1Rw4pa4x6g+QjkmN
-         L51BxFTppkM1nDaQkfd8TetquUkzDt1HNv0aFmIICGu/WwIXAwHCLojE9S4hS+Qe1YOs
-         OvMqzc78uuNa61lbBMIoEgJqrhEAOM7YWDV/9M+FIGfnXOs+qH3YTxxNJHCVbj7lhhae
-         K4pwsfRBSAIotkoTK2zIpO8dAwAhXi+gtOUmHxClfFMTTRm5+AJ6bGyOFM2I8zUSjbWG
-         fekw==
-X-Gm-Message-State: AOAM5307+EG1q3GI8UMc41sQ2W8s5IAqTxup/zLKUF8Md2P98ZG95zff
-        AeRA6Sxjapxpp7EAWvX+sgm9xQ==
-X-Google-Smtp-Source: ABdhPJwcBT77VtkJvOLSXrChnmBFxnV8JMfwBEiMNmK4kd7czs7VLFEY5kTfvotc/2tTVE70a5XNIg==
-X-Received: by 2002:ac8:349a:: with SMTP id w26mr6584026qtb.263.1597340171930;
-        Thu, 13 Aug 2020 10:36:11 -0700 (PDT)
-Received: from ?IPv6:2620:10d:c0a8:11d9::10a7? ([2620:10d:c091:480::1:fe9c])
-        by smtp.gmail.com with ESMTPSA id i68sm6007004qkb.58.2020.08.13.10.36.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Aug 2020 10:36:10 -0700 (PDT)
-Subject: Re: [PATCH][v2] proc: use vmalloc for our kernel buffer
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, kernel-team@fb.com,
-        willy@infradead.org
-References: <20200813145305.805730-1-josef@toxicpanda.com>
- <20200813153356.857625-1-josef@toxicpanda.com>
- <20200813153722.GA13844@lst.de>
- <974e469e-e73d-6c3e-9167-fad003f1dfb9@toxicpanda.com>
- <20200813154117.GA14149@lst.de> <20200813162002.GX1236603@ZenIV.linux.org.uk>
- <9e4d3860-5829-df6f-aad4-44d07c62535b@toxicpanda.com>
- <20200813173155.GZ1236603@ZenIV.linux.org.uk>
-From:   Josef Bacik <josef@toxicpanda.com>
-Message-ID: <34b2d8f2-d10a-a9fd-3b5e-470cb8c4251d@toxicpanda.com>
-Date:   Thu, 13 Aug 2020 13:36:09 -0400
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.11.0
+        Thu, 13 Aug 2020 13:37:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50216 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726305AbgHMRhC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 13:37:02 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67A4F2078D;
+        Thu, 13 Aug 2020 17:37:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597340221;
+        bh=sgRlp7dCUrfOBC/9uX9nn5O+stnmV3MDjAHKYBmKnFk=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=YaIq9HkxNQBD6ZFFhRQEhkyXCaKX/Fe/zWNt6WXuCmUiFxNpF1qWgtEvSfCJtW7pI
+         sftR4/wMzkqUTo73pjFjJj9yU4NPiTyyz7b+SngYLm0fN7j7IogMQhIVpl7zKYTP4v
+         1KXLqIipuHYLWTkgzvPqd+8ZCZztiBWKvDLjkep4=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 12287352279C; Thu, 13 Aug 2020 10:37:01 -0700 (PDT)
+Date:   Thu, 13 Aug 2020 10:37:01 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Ingo Molnar <mingo@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        Kees Cook <keescook@chromium.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juergen Gross <jgross@suse.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Will Deacon <will@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH] x86: work around clang IAS bug referencing __force_order
+Message-ID: <20200813173701.GC4295@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200527135329.1172644-1-arnd@arndb.de>
+ <878serh1b9.fsf@nanos.tec.linutronix.de>
+ <CAKwvOdnOh3H3ga2qpTktywvcgfXW5QJaB7r4XMhigmDzLhDNeA@mail.gmail.com>
+ <87h7t6tpye.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200813173155.GZ1236603@ZenIV.linux.org.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87h7t6tpye.fsf@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/13/20 1:31 PM, Al Viro wrote:
-> On Thu, Aug 13, 2020 at 01:19:18PM -0400, Josef Bacik wrote:
+On Thu, Aug 13, 2020 at 07:28:57PM +0200, Thomas Gleixner wrote:
+> Nick Desaulniers <ndesaulniers@google.com> writes:
+> > On Thu, Aug 6, 2020 at 3:11 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> >> > + *
+> >> > + * Clang sometimes fails to kill the reference to the dummy variable, so
+> >> > + * provide an actual copy.
+> >>
+> >> Can that compiler be fixed instead?
+> >
+> > I don't think so. The logic in the compiler whether to emit an
 > 
->>> in sunrpc proc_dodebug() turns into
->>> 		left -= snprintf(buffer, left, "0x%04x\n",
-> 					 ^^^^
-> 					 left + 1, that is.
+> Forget that I asked. Heat induced brain damaged.
 > 
->>> 				 *(unsigned int *) table->data);
->>> and that's not the only example.
->>>
->>
->> We wouldn't even need the extra +1 part, since we're only copying in how
->> much the user wants anyway, we could just go ahead and convert this to
->>
->> left -= snprintf(buffer, left, "0x%04x\n", *(unsigned int *) table->data);
->>
->> and be fine, right?  Or am I misunderstanding what you're looking for?  Thanks,
+> > I'd much rather remove all of __force_order.
 > 
-> snprintf() always produces a NUL-terminated string.  And if you are passing 7 as
-> len, you want 0xf0ad\n to be copied to user.  For that you need 8 passed to
-> snprintf, and 8-byte buffer given to it.
+> Right.
 > 
+> > Not sure about the comment in arch/x86/include/asm/special_insns.h
+> > either; smells fishy like a bug with a compiler from a long time ago.
+> > It looks like it was introduced in:
+> > commit d3ca901f94b32 ("x86: unify paravirt parts of system.h")
+> > Lore has this thread:
+> > https://lore.kernel.org/lkml/4755A809.4050305@qumranet.com/
+> > Patch 4: https://lore.kernel.org/lkml/11967844071346-git-send-email-gcosta@redhat.com/
+> > It seems like there was a discussion about %cr8, but no one asked
+> > "what's going on here with __force_order, is that right?"
+> 
+> Correct and the changelog is uselss in this regard.
+> 
+> > Quick boot test of the below works for me, though I should probably
+> > test hosting a virtualized guest since d3ca901f94b32 refers to
+> > paravirt.  Thoughts?
+> 
+> Let me ask (hopefully) useful questions this time:
+> 
+>   Is a compiler allowed to reorder two 'asm volatile()'?
+> 
+>   Are there compilers (gcc >= 4.9 or other supported ones) which do that?
 
-Right, gotcha.  I'll rig that up and see how it looks.  I'd recommend looking 
-through what I do with a fine tooth comb, I'm obviously not batting 1000 today. 
-Thanks,
+I would hope that the answer to both of these questions is "no"!
 
-Josef
+But I freely confess that I have been disappointed before on this sort
+of thing.  :-/
+
+							Thanx, Paul
