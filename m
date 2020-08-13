@@ -2,156 +2,192 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA083C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 17:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C0FEC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 17:20:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81C9920774
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 17:19:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B80920715
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 17:20:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="YL0Vf/We"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y+gd0VU0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726578AbgHMRTX (ORCPT
+        id S1726583AbgHMRUk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 13:19:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40446 "EHLO
+        Thu, 13 Aug 2020 13:20:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726334AbgHMRTX (ORCPT
+        with ESMTP id S1726248AbgHMRUh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 13:19:23 -0400
+        Thu, 13 Aug 2020 13:20:37 -0400
 Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEB30C061757
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 10:19:22 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id y11so2988680qvl.4
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 10:19:22 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 983C0C061757
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 10:20:37 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id o2so2979515qvk.6
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 10:20:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=gG3QhBSmvxEmkeggBu4YpeOeDbfqTTnXI4PDot46vj4=;
-        b=YL0Vf/WekjB5AM1fC7TEY+E6+AVRqgLtZXfd25s9QHxsEHencNoK4s9J8XEWbUDCyW
-         eipm4TQKkJVy8x2OpmcGo/sSjuWf6h1Ph9avHZp3SteAHGcWiS94x3uw7HzqpCzxgTIE
-         D+FH60umOiEqnTrvVxKMqMaOflUpIvT5m6kMH+MLbYn1/puoRaw2wFJmWDCBJkinxKHj
-         axsDdmko2LluqA+kzh89WeY+fF+/RFduhpJHvBSQ4nddTp2aOnUXLZ2wtToC5hYz14dz
-         XUBVgKD4pu9wtN/UovuOeR8caAetpMTxc5RWl/MaEC9UKQv3mEKOai25E/h/okkbAbxs
-         BnGg==
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Kye36mnZDsF2A6OcubUre0+uzmNqlOm7WRuMdcfkesA=;
+        b=Y+gd0VU0+PNGE4nZn2za4afrKim2/I9YdwL/sPzGIkTEc2MUGIysOzgGy7feckj5VD
+         K3+BrTDIulRa0gOl/ziHZk+qND59+M5dpO9PdFzukFBw+Nm9Z0ygrAD0+m5ap1B0FulS
+         3ExiXNKzorVusfAawuC/btv7N6LJwQbnj6zSHKsulAdRxUx8DVtsXP/gccnU9gAhzdiL
+         VnvIadBFug2DJVlJpbjcLKU6oCAAGXBi2O+CBKVewy103XsNkRbTqCL0KTXgbSK+QD/Y
+         ynuaw19m3tClRjrn+T7PI+sfBK7i+cUbV2707Qj4c0eyJ3hH2yI94/KmGAv/r4oPGc3k
+         7z5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=gG3QhBSmvxEmkeggBu4YpeOeDbfqTTnXI4PDot46vj4=;
-        b=e89ezVQESVlir0IM2TiMDEUQvk9xk2KVKeSErN+mnvERNs7RczZufXLrKDHz9Nr8Ao
-         XjJSRB+YZjfEIHop8W23Mlj7Sn6w0g+RoyF9i236lSsss5Nu9ziVICBA3NcmQk+6jPpP
-         T0IFf0OCIGzRXkJu0PTLRSiz4R5P7iwT2z/QK+TG8YmGMLdngq7qG0gTxF0LO+EhthP2
-         JehshVlpuc64y8SRbTR65p9rxxebwQVLdt9V61EDJJp3rrh1yz65EG5cf31Jz3QvP6KB
-         ZqhrqhpIA0TpI+qBksuU9EKtHV9yOsQ+D6Tpd7cwqxZTkuJmu8uLgX/dZ09DyY8XYiIP
-         PdZQ==
-X-Gm-Message-State: AOAM530gLrCVBNBUXitW9e0BVgME4hOPm8iMzI8yscik6FqsEGOA5YcT
-        1aQid2QwVroZ1gfXB3jrO6EJqyQ0HC6ApA==
-X-Google-Smtp-Source: ABdhPJwWp3EFYJ40IG50E8vXi2UTR2lQo5LyYbQiLWLmjIS0cYtoZwiOj9S4sgM/8CXPlK0MQJKrYg==
-X-Received: by 2002:a0c:f64a:: with SMTP id s10mr5666652qvm.196.1597339160681;
-        Thu, 13 Aug 2020 10:19:20 -0700 (PDT)
-Received: from ?IPv6:2620:10d:c0a8:11d9::10a7? ([2620:10d:c091:480::1:fe9c])
-        by smtp.gmail.com with ESMTPSA id l13sm6749820qth.77.2020.08.13.10.19.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Aug 2020 10:19:19 -0700 (PDT)
-Subject: Re: [PATCH][v2] proc: use vmalloc for our kernel buffer
-To:     Al Viro <viro@zeniv.linux.org.uk>, Christoph Hellwig <hch@lst.de>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        kernel-team@fb.com, willy@infradead.org
-References: <20200813145305.805730-1-josef@toxicpanda.com>
- <20200813153356.857625-1-josef@toxicpanda.com>
- <20200813153722.GA13844@lst.de>
- <974e469e-e73d-6c3e-9167-fad003f1dfb9@toxicpanda.com>
- <20200813154117.GA14149@lst.de> <20200813162002.GX1236603@ZenIV.linux.org.uk>
-From:   Josef Bacik <josef@toxicpanda.com>
-Message-ID: <9e4d3860-5829-df6f-aad4-44d07c62535b@toxicpanda.com>
-Date:   Thu, 13 Aug 2020 13:19:18 -0400
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.11.0
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=Kye36mnZDsF2A6OcubUre0+uzmNqlOm7WRuMdcfkesA=;
+        b=JfaAnOnHeHRHQ2AC703Dv+LItE0B66hw5VAiHTWZ+6cuCM9BDP1LnHzHB1/DUQABTQ
+         MWy1piIYQHe8V1sH1AIWys/oDHkNsoHkuIClbNhld34VINNgX77sFyrZbnmg2UBju9Yz
+         HkS9ENWbtYJD1aHsGUMXHo3lglTwf2A2sl1w3FZtkuePQqVOZ1sOyLUD1HOW2cnmCJrY
+         WdXqzjFJbmQ2W1Jc/iSa+SrvK1YPCha2DMzEB2jo5dKmby6OdKbvRPVs/JY/Y/ZGlMd+
+         jiwnbplJLhg0Ssa5b4J1vla2/8DkN08huxVP14VMYCd3MbWOq9zt0yuSPcWHboKZygeZ
+         gRKA==
+X-Gm-Message-State: AOAM532s6rPfEY66zqLnWhJUAt6RxqgqQ6wqLqaf8HYOXP3jS1UGhkvs
+        gyiTpjgY8Js7Q8N/bXQSHIQ=
+X-Google-Smtp-Source: ABdhPJxeh3ZaEzqucQk5lEYPyrMrgD2UlodqXbchhxvVnwhApLDjU/898cmQTGidwq/cA4eDrtXnfg==
+X-Received: by 2002:ad4:438f:: with SMTP id s15mr5884726qvr.164.1597339236714;
+        Thu, 13 Aug 2020 10:20:36 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id k5sm6197671qke.18.2020.08.13.10.20.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Aug 2020 10:20:36 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Thu, 13 Aug 2020 13:20:34 -0400
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        Kees Cook <keescook@chromium.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juergen Gross <jgross@suse.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH] x86: work around clang IAS bug referencing __force_order
+Message-ID: <20200813172034.GA500410@rani.riverdale.lan>
+References: <20200527135329.1172644-1-arnd@arndb.de>
+ <878serh1b9.fsf@nanos.tec.linutronix.de>
+ <CAKwvOdnOh3H3ga2qpTktywvcgfXW5QJaB7r4XMhigmDzLhDNeA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200813162002.GX1236603@ZenIV.linux.org.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAKwvOdnOh3H3ga2qpTktywvcgfXW5QJaB7r4XMhigmDzLhDNeA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/13/20 12:20 PM, Al Viro wrote:
-> On Thu, Aug 13, 2020 at 05:41:17PM +0200, Christoph Hellwig wrote:
->> On Thu, Aug 13, 2020 at 11:40:00AM -0400, Josef Bacik wrote:
->>> On 8/13/20 11:37 AM, Christoph Hellwig wrote:
->>>> On Thu, Aug 13, 2020 at 11:33:56AM -0400, Josef Bacik wrote:
->>>>> Since
->>>>>
->>>>>     sysctl: pass kernel pointers to ->proc_handler
->>>>>
->>>>> we have been pre-allocating a buffer to copy the data from the proc
->>>>> handlers into, and then copying that to userspace.  The problem is this
->>>>> just blind kmalloc()'s the buffer size passed in from the read, which in
->>>>> the case of our 'cat' binary was 64kib.  Order-4 allocations are not
->>>>> awesome, and since we can potentially allocate up to our maximum order,
->>>>> use vmalloc for these buffers.
->>>>>
->>>>> Fixes: 32927393dc1c ("sysctl: pass kernel pointers to ->proc_handler")
->>>>> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
->>>>> ---
->>>>> v1->v2:
->>>>> - Make vmemdup_user_nul actually do the right thing...sorry about that.
->>>>>
->>>>>    fs/proc/proc_sysctl.c  |  6 +++---
->>>>>    include/linux/string.h |  1 +
->>>>>    mm/util.c              | 27 +++++++++++++++++++++++++++
->>>>>    3 files changed, 31 insertions(+), 3 deletions(-)
->>>>>
->>>>> diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
->>>>> index 6c1166ccdaea..207ac6e6e028 100644
->>>>> --- a/fs/proc/proc_sysctl.c
->>>>> +++ b/fs/proc/proc_sysctl.c
->>>>> @@ -571,13 +571,13 @@ static ssize_t proc_sys_call_handler(struct file *filp, void __user *ubuf,
->>>>>    		goto out;
->>>>>      	if (write) {
->>>>> -		kbuf = memdup_user_nul(ubuf, count);
->>>>> +		kbuf = vmemdup_user_nul(ubuf, count);
->>>>
->>>> Given that this can also do a kmalloc and thus needs to be paired
->>>> with kvfree shouldn't it be kvmemdup_user_nul?
->>>>
->>>
->>> There's an existing vmemdup_user that does kvmalloc, so I followed the
->>> existing naming convention.  Do you want me to change them both?  Thanks,
->>
->> I personally would, and given that it only has a few users it might
->> even be feasible.
+On Wed, Aug 12, 2020 at 05:12:34PM -0700, Nick Desaulniers wrote:
+> On Thu, Aug 6, 2020 at 3:11 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> >
+> > Arnd Bergmann <arnd@arndb.de> writes:
+> > > When using the clang integrated assembler, we get a reference
+> > > to __force_order that should normally get ignored in a few
+> > > rare cases:
+> > >
+> > > ERROR: modpost: "__force_order" [drivers/cpufreq/powernow-k6.ko] undefined!
+> > >
+> > > Add a 'static' definition so any file in which this happens can
+> > > have a local copy.
+> >
+> > That's a horrible hack.
 > 
-> FWIW, how about following or combining that with "allocate count + 1 bytes on
-> the read side"?  Allows some nice cleanups - e.g.
->                  len = sprintf(tmpbuf, "0x%04x", *(unsigned int *) table->data);
->                  if (len > left)
->                          len = left;
->                  memcpy(buffer, tmpbuf, len);
->                  if ((left -= len) > 0) {
->                          *((char *)buffer + len) = '\n';
->                          left--;
->                  }
-> in sunrpc proc_dodebug() turns into
-> 		left -= snprintf(buffer, left, "0x%04x\n",
-> 				 *(unsigned int *) table->data);
-> and that's not the only example.
+> Agreed.  And static means everyone gets their own copy, rather than
+> sharing one memory address.  I guess no one actually writes to it, so
+> it doesn't really matter, but __force_order just seems so strange to
+> me.
 > 
+> > And the only reason why it does not trigger -Wunused-variable warnings
+> > all over the place is because it's "referenced" in unused inline
+> > functions and then optimized out along with the unused inlines.
+> >
+> > >   * It is not referenced from the code, but GCC < 5 with -fPIE would fail
+> > >   * due to an undefined symbol. Define it to make these ancient GCCs
+> > >   work.
+> >
+> > Bah, we really should have moved straight to GCC5 instead of upping it
+> > just to 4.9
+> >
+> > > + *
+> > > + * Clang sometimes fails to kill the reference to the dummy variable, so
+> > > + * provide an actual copy.
+> >
+> > Can that compiler be fixed instead?
+> 
+> I don't think so. The logic in the compiler whether to emit an
+> "address is significant" assembler directive is based on whether the
+> variable is "used."  The "use" of `__force_order` is as output of all
+> of these control register read/write functions' inline asm, even
+> though the inline asm doesn't actually write to them.  We'd have to
+> peek inside of the inline asm and build "use/def chains" for the
+> inline asm, to see that you don't actually use the output variable.
+> Best we can do is see it listed as an output to the inline asm
+> statement.  And if you reference an `extern` variable, it should be no
+> wonder that you can get undefined symbol linkage failures.
+> 
+> I'd much rather remove all of __force_order.
+> 
+> >
+> > Aside of that is there a reason to make this 'static' thing wrapped in
+> > #ifdeffery? A quick check with GCC8.3 just works. But maybe 4.9 gets
+> > unhappy. Can't say due to: -ENOANCIENTCOMPILER :)
+> 
+> >From the comment in arch/x86/boot/compressed/pgtable_64.c, there's a
+> hint that maybe gcc < 5 and -pie (CONFIG_RANDOMIZE_BASE?) would fail
+> due to undefined symbol, though I'm not sure which symbol the comment
+> is referring to.  If it's __force_order, then removing outright likely
+> fixes that issue.
 
-We wouldn't even need the extra +1 part, since we're only copying in how much 
-the user wants anyway, we could just go ahead and convert this to
+Yes, it's __force_order. Compressed kernel is always -fPIE, and gcc <5
+and clang will generate mov instructions with GOTPCREL relocations to
+load the address of __force_order into a register for use by the inline
+asm. gcc-5+ works because it doesn't use GOTPCREL for global variables,
+instead relying on the linker inserting copy relocations if necessary.
 
-left -= snprintf(buffer, left, "0x%04x\n", *(unsigned int *) table->data);
+> 
+> Not sure about the comment in arch/x86/include/asm/special_insns.h
+> either; smells fishy like a bug with a compiler from a long time ago.
+> It looks like it was introduced in:
+> commit d3ca901f94b32 ("x86: unify paravirt parts of system.h")
+> Lore has this thread:
+> https://lore.kernel.org/lkml/4755A809.4050305@qumranet.com/
+> Patch 4: https://lore.kernel.org/lkml/11967844071346-git-send-email-gcosta@redhat.com/
+> It seems like there was a discussion about %cr8, but no one asked
+> "what's going on here with __force_order, is that right?"
+> Latest GCC release on December 4 2007 would have been GCC 4.2.2 according to:
+> https://gcc.gnu.org/releases.html
+> 
+> Quick boot test of the below works for me, though I should probably
+> test hosting a virtualized guest since d3ca901f94b32 refers to
+> paravirt.  Thoughts?
 
-and be fine, right?  Or am I misunderstanding what you're looking for?  Thanks,
+It's unclear if there was a real problem this fixes, but if there was
+I'd expect it on native, not paravirt, given it's native that has this
+__force_order hack?
 
-Josef
+gcc's documentation of volatile extended asm includes a caveat.
+
+https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html#Volatile
+
+Near the end of 6.47.2.1:
+"Note that the compiler can move even volatile asm instructions relative
+to other code, including across jump instructions."
+
+and it provides an example of unexpected code motion, with the fix being
+adding an artificial dependency to the asm.
+
+So it might do something silly like reversing the order of two
+%crn writes, maybe?
