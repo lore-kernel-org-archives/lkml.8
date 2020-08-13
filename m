@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85CE3C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 02:25:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55733C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 02:25:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 623BB20829
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 02:25:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33FC920829
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 02:25:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="DGM41s1V"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="s9iB4hk7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726685AbgHMCZI (ORCPT
+        id S1726698AbgHMCZJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 22:25:08 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:61427 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726568AbgHMCZH (ORCPT
+        Wed, 12 Aug 2020 22:25:09 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:20081 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726419AbgHMCZH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 12 Aug 2020 22:25:07 -0400
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200813022504epoutp03fa398f1bd31b1f98090d48c3730cca80~qsrQMS4eM3253432534epoutp03R
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200813022504epoutp0420dc90287d97cc2f7b7dade922b75335~qsrQGNz2i2335623356epoutp04c
         for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 02:25:04 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200813022504epoutp03fa398f1bd31b1f98090d48c3730cca80~qsrQMS4eM3253432534epoutp03R
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200813022504epoutp0420dc90287d97cc2f7b7dade922b75335~qsrQGNz2i2335623356epoutp04c
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
         s=mail20170921; t=1597285504;
-        bh=6FW9BUn7hT5lceD/kAcb3ERCZXuG0FNm5Vrm1zFkDyQ=;
+        bh=bBoSIYfYUVBe91z7Hl3yBvlXhwhzlVC2LnJY5UtikfE=;
         h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-        b=DGM41s1VNdnTmYzW6lEqmJPqIdQSgDKdMjD9ZeizKfwsPb3npNQxeoUjk9ahIpAO3
-         ICxIFzgOJMKiVvDNh5yaS91uKny6aBlyt1MTyVu6EzZ3+xIVsdEl5StkAwsUTl+te9
-         4z6bEotNUNbp6obR6RgOkE24wkAJutZoLKBAgJhE=
+        b=s9iB4hk7yXizxTQtC9T5ImjEwFr9TW4T2/lS/JSMaBdzdD5eOBD9xlGIrt1BJ8zqV
+         p2Jfh2rCP8flZAu1TCPibyLeG4lxsl9S/DYn6o7UQ6lJTAONAldAFartLdm4zDKWZ4
+         fMuF2k11XzVUzUOxpfO1rkPVmVRlOvgAg1wv14PU=
 Received: from epcpadp1 (unknown [182.195.40.11]) by epcas1p1.samsung.com
         (KnoxPortal) with ESMTP id
-        20200813022503epcas1p10f24f43a65a4d4551fb9875850d6c0e7~qsrPzhOjM2360423604epcas1p1G;
+        20200813022503epcas1p1d9386e2dfbde1e0d35e9c397f0670723~qsrPo9Klz3219232192epcas1p1K;
         Thu, 13 Aug 2020 02:25:03 +0000 (GMT)
 Mime-Version: 1.0
-Subject: Re: [PATCH v8 1/4] scsi: ufs: Add UFS feature related parameter
+Subject: Re: [PATCH v8 2/4] scsi: ufs: Introduce HPB feature
 Reply-To: daejun7.park@samsung.com
 From:   Daejun Park <daejun7.park@samsung.com>
 To:     Bart Van Assche <bvanassche@acm.org>,
@@ -63,15 +63,15 @@ CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
         BoRam Shin <boram.shin@samsung.com>
 X-Priority: 3
 X-Content-Kind-Code: NORMAL
-In-Reply-To: <adb044b2-67e0-b451-332c-37789ded99f9@acm.org>
+In-Reply-To: <4a91d02c-488c-86cd-325c-5e0ad9addd0b@acm.org>
 X-CPGS-Detection: blocking_info_exchange
 X-Drm-Type: N,general
 X-Msg-Generator: Mail
 X-Msg-Type: PERSONAL
 X-Reply-Demand: N
-Message-ID: <1431530910.81597285503798.JavaMail.epsvc@epcpadp1>
-Date:   Thu, 13 Aug 2020 11:16:25 +0900
-X-CMS-MailID: 20200813021625epcms2p6a4b743bce7ef961ab06d20615293e2f4
+Message-ID: <1239183618.61597285503620.JavaMail.epsvc@epcpadp1>
+Date:   Thu, 13 Aug 2020 11:13:09 +0900
+X-CMS-MailID: 20200813021309epcms2p3d87ce0c4c54389cc3d30b876684936d0
 Content-Transfer-Encoding: 7bit
 Content-Type: text/plain; charset="utf-8"
 X-Sendblock-Type: AUTO_CONFIDENTIAL
@@ -79,10 +79,11 @@ X-CPGSPASS: Y
 X-CPGSPASS: Y
 X-Hop-Count: 3
 X-CMS-RootMailID: 20200806073257epcms2p61564ed62e02fc42fc3c2b18fa92a038d
-References: <adb044b2-67e0-b451-332c-37789ded99f9@acm.org>
-        <231786897.01596704281715.JavaMail.epsvc@epcpadp2>
+References: <4a91d02c-488c-86cd-325c-5e0ad9addd0b@acm.org>
         <231786897.01596705001840.JavaMail.epsvc@epcpadp1>
-        <CGME20200806073257epcms2p61564ed62e02fc42fc3c2b18fa92a038d@epcms2p6>
+        <231786897.01596704281715.JavaMail.epsvc@epcpadp2>
+        <231786897.01596705302142.JavaMail.epsvc@epcpadp1>
+        <CGME20200806073257epcms2p61564ed62e02fc42fc3c2b18fa92a038d@epcms2p3>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -90,31 +91,88 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi Bart,
 
-> On 2020-08-06 02:02, Daejun Park wrote:
-> > @@ -537,6 +548,7 @@ struct ufs_dev_info {
-> >      u8 *model;
-> >      u16 wspecversion;
-> >      u32 clk_gating_wait_us;
-> > +    u8 b_ufs_feature_sup;
-> >      u32 d_ext_ufs_feature_sup;
-> >      u8 b_wb_buffer_type;
-> >      u32 d_wb_alloc_units;
-> > 
+On 2020-08-06 02:11, Daejun Park wrote:
+> > +static void ufshpb_issue_hpb_reset_query(struct ufs_hba *hba)
+> > +{
+> > +    int err;
+> > +    int retries;
+> > +
+> > +    for (retries = 0; retries < HPB_RESET_REQ_RETRIES; retries++) {
+> > +        err = ufshcd_query_flag(hba, UPIU_QUERY_OPCODE_SET_FLAG,
+> > +                QUERY_FLAG_IDN_HPB_RESET, 0, NULL);
+> > +        if (err)
+> > +            dev_dbg(hba->dev,
+> > +                "%s: failed with error %d, retries %d\n",
+> > +                __func__, err, retries);
+> > +        else
+> > +            break;
+> > +    }
+> > +
+> > +    if (err) {
+> > +        dev_err(hba->dev,
+> > +            "%s setting fHpbReset flag failed with error %d\n",
+> > +            __func__, err);
+> > +        return;
+> > +    }
+> > +}
 > 
-> Hmm ... shouldn't this variable be introduced in the patch that introduces
-> the code that sets and uses this variable?
+> Please change the "break" into an early return, remove the last
+> occurrence "if (err)" and remove the final return statement.
 
-OK, I will move this variable to 2/4 patch.
+OK, I will.
 
-> How about making it clear in the patch subject that this patch adds protocol
-> constants related to HPB?
-
-The subject will be changed :
-"Add UFS feature related parameter -> Adds constants related to HPB"
- 
-> Otherwise this patch looks good to me.
 > 
-> Bart.
+> > +static void ufshpb_check_hpb_reset_query(struct ufs_hba *hba)
+> > +{
+> > +    int err;
+> > +    bool flag_res = true;
+> > +    int try = 0;
+> > +
+> > +    /* wait for the device to complete HPB reset query */
+> > +    do {
+> > +        if (++try == HPB_RESET_REQ_RETRIES)
+> > +            break;
+> > +
+> > +        dev_info(hba->dev,
+> > +            "%s start flag reset polling %d times\n",
+> > +            __func__, try);
+> > +
+> > +        /* Poll fHpbReset flag to be cleared */
+> > +        err = ufshcd_query_flag(hba, UPIU_QUERY_OPCODE_READ_FLAG,
+> > +                QUERY_FLAG_IDN_HPB_RESET, 0, &flag_res);
+> > +        usleep_range(1000, 1100);
+> > +    } while (flag_res);
+> > +
+> > +    if (err) {
+> > +        dev_err(hba->dev,
+> > +            "%s reading fHpbReset flag failed with error %d\n",
+> > +            __func__, err);
+> > +        return;
+> > +    }
+> > +
+> > +    if (flag_res) {
+> > +        dev_err(hba->dev,
+> > +            "%s fHpbReset was not cleared by the device\n",
+> > +            __func__);
+> > +    }
+> > +}
+> 
+> Should "polling %d times" perhaps be changed into "attempt %d"?
+
+I will change it.
+
+> The "if (err)" statement may be reached without "err" having been
+> initialized. Please fix.
+
+OK, I will initialize err to 0.
+
+> Additionally, please change the do-while loop into a for-loop, e.g. as
+> follows:
+> 
+>     for (try = 0; try < HPB_RESET_REQ_RETRIES; try++)
+>         ...
+
+OK, I will change do-while to for-loop.
 
 Thanks,
 
