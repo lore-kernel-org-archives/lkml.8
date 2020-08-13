@@ -2,157 +2,68 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD87C433ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 21:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FCCCC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 21:36:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 280B8206A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 21:35:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ddXLjfWd"
+	by mail.kernel.org (Postfix) with ESMTP id 38C1420768
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 21:36:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbgHMVfS (ORCPT
+        id S1726947AbgHMVgQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 17:35:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51440 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726698AbgHMVef (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 17:34:35 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58F22C061757;
-        Thu, 13 Aug 2020 14:34:35 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id w25so7768217ljo.12;
-        Thu, 13 Aug 2020 14:34:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=O0yugzvKqUofOFg3gQRSvSu6LWWdYaLpdIpz8+ZfmFw=;
-        b=ddXLjfWdJqtVi9h0B0q10kZwaUeFC21Cmph08cYVhcYpcRipvwLkeLriefbwYCcpfX
-         rTbmC4KnsQCFYU1rdDlTWecPjwDSsDLO0G9zds2gZZnxBSQJhpBB8eZyzGKKcrfUsMP5
-         Wgjm8jGtpOif/83zPKkw4ljD/qMIMU83AwkYSQHDVKGr3Bq4R65FeRZtz6yKlyBPyrlM
-         UqtZt738ZsXQNjSx4hnPkugPw2chvbDcI55NsFClym66wv7t5DhKasIYMvBFadijib66
-         0/TKzIYHWVHIZ0T6/IJWuQIIFqb/5/pdyLklEFcHBXmO4h1/5+WakWOaLYVwEnp62K2/
-         ctrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=O0yugzvKqUofOFg3gQRSvSu6LWWdYaLpdIpz8+ZfmFw=;
-        b=AaFxAwx3nuyXBGW7x+TZQ6dRu87S/cERD+71sfmvaJ+vkysbU65q1B6eMXPXAD/DRf
-         HANBl7yKd0Lzzd2npDcr3rDHG/69zCWrACU1puwG0ewKUajyzp1z4okPhh9x9ZGaTKZA
-         5eLsIKEw8PNOwhg6Lw4p6J0I9T6gPbKE4nHEIMZ1X+aUs1SfFwvjqwtx3BEyA1REfZIk
-         TogQPEeQXxYuIHmGWY6fBM4Vyn1PjQuJGEdMbOwritLLrIMhqmAW+LQn1x6T4ZcJ/SwS
-         Z7dc43Exw2Sx92bb6zV30GrQSEZSfDssR1GXC49baCZrl2h/C7/53E6wXMRxqmhQ9cyh
-         mPng==
-X-Gm-Message-State: AOAM532m+TRPHsz4q51w3Wx4zukBgqae9llOy2ZqlGrictq6FSyxliyZ
-        Hc7rwyMCybe0uj/uFctADXU=
-X-Google-Smtp-Source: ABdhPJznWI2df852Z9LPq9Z2Nw9rDffTl31+GknxyxBxb5ZTU/I2CWkvoOOdoGCj8Zd191VQqU6etw==
-X-Received: by 2002:a2e:9449:: with SMTP id o9mr3142556ljh.403.1597354473868;
-        Thu, 13 Aug 2020 14:34:33 -0700 (PDT)
-Received: from localhost.localdomain (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.gmail.com with ESMTPSA id j2sm1345309ljb.98.2020.08.13.14.34.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Aug 2020 14:34:33 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        David Heidelberg <david@ixit.cz>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Bruce E . Robertson" <bruce.e.robertson@intel.com>
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Jonghwa Lee <jonghwa3.lee@samsung.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Vinay Simha BN <simhavcs@gmail.com>,
-        linux-tegra@vger.kernel.org
-Subject: [PATCH v3 03/10] power: supply: Support battery temperature device-tree properties
-Date:   Fri, 14 Aug 2020 00:34:02 +0300
-Message-Id: <20200813213409.24222-4-digetx@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200813213409.24222-1-digetx@gmail.com>
-References: <20200813213409.24222-1-digetx@gmail.com>
+        Thu, 13 Aug 2020 17:36:16 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57660 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726522AbgHMVgP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 17:36:15 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 4A2C7AD89;
+        Thu, 13 Aug 2020 21:36:36 +0000 (UTC)
+Received: by localhost (Postfix, from userid 1000)
+        id 703E57F447; Thu, 13 Aug 2020 23:36:13 +0200 (CEST)
+Date:   Thu, 13 Aug 2020 23:36:13 +0200
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     Jay Vosburgh <jay.vosburgh@canonical.com>
+Cc:     Jarod Wilson <jarod@redhat.com>, linux-kernel@vger.kernel.org,
+        Veaceslav Falico <vfalico@gmail.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+Subject: Re: [PATCH net] bonding: show saner speed for broadcast mode
+Message-ID: <20200813213613.qvem7gv4ri2trfvv@carpenter>
+References: <20200813035509.739-1-jarod@redhat.com>
+ <27389.1597296596@famine>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <27389.1597296596@famine>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The generic battery temperature properties are already supported by the
-power-supply core. Let's support parsing of the common battery temperature
-properties from a device-tree.
+On Wed, Aug 12, 2020 at 10:29:56PM -0700, Jay Vosburgh wrote:
+> 	Did you notice this by inspection, or did it come up in use
+> somewhere?  I can't recall ever hearing of anyone using broadcast mode,
+> so I'm curious if there is a use for it, but this change seems
+> reasonable enough regardless.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/power/supply/power_supply_core.c | 19 +++++++++++++++++++
- include/linux/power_supply.h             |  6 ++++++
- 2 files changed, 25 insertions(+)
+I did actually encountered our customers using broadcast mode twice. But
+I have to disappoint you, their "use for it" was rather an abuse.
 
-diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/supply/power_supply_core.c
-index ccbad435ed12..38e3aa642131 100644
---- a/drivers/power/supply/power_supply_core.c
-+++ b/drivers/power/supply/power_supply_core.c
-@@ -579,6 +579,12 @@ int power_supply_get_battery_info(struct power_supply *psy,
- 	info->charge_term_current_ua         = -EINVAL;
- 	info->constant_charge_current_max_ua = -EINVAL;
- 	info->constant_charge_voltage_max_uv = -EINVAL;
-+	info->temp_ambient_alert_min         = INT_MIN;
-+	info->temp_ambient_alert_max         = INT_MAX;
-+	info->temp_alert_min                 = INT_MIN;
-+	info->temp_alert_max                 = INT_MAX;
-+	info->temp_min                       = INT_MIN;
-+	info->temp_max                       = INT_MAX;
- 	info->factory_internal_resistance_uohm  = -EINVAL;
- 	info->resist_table = NULL;
- 
-@@ -639,6 +645,19 @@ int power_supply_get_battery_info(struct power_supply *psy,
- 	of_property_read_u32(battery_np, "factory-internal-resistance-micro-ohms",
- 			     &info->factory_internal_resistance_uohm);
- 
-+	of_property_read_u32_index(battery_np, "ambient-celsius",
-+				   0, &info->temp_ambient_alert_min);
-+	of_property_read_u32_index(battery_np, "ambient-celsius",
-+				   1, &info->temp_ambient_alert_max);
-+	of_property_read_u32_index(battery_np, "alert-celsius",
-+				   0, &info->temp_alert_min);
-+	of_property_read_u32_index(battery_np, "alert-celsius",
-+				   1, &info->temp_alert_max);
-+	of_property_read_u32_index(battery_np, "operating-range-celsius",
-+				   0, &info->temp_min);
-+	of_property_read_u32_index(battery_np, "operating-range-celsius",
-+				   1, &info->temp_max);
-+
- 	len = of_property_count_u32_elems(battery_np, "ocv-capacity-celsius");
- 	if (len < 0 && len != -EINVAL) {
- 		err = len;
-diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-index 97cc4b85bf61..d0684362a392 100644
---- a/include/linux/power_supply.h
-+++ b/include/linux/power_supply.h
-@@ -365,6 +365,12 @@ struct power_supply_battery_info {
- 	int constant_charge_voltage_max_uv; /* microVolts */
- 	int factory_internal_resistance_uohm;   /* microOhms */
- 	int ocv_temp[POWER_SUPPLY_OCV_TEMP_MAX];/* celsius */
-+	int temp_ambient_alert_min;             /* celsius */
-+	int temp_ambient_alert_max;             /* celsius */
-+	int temp_alert_min;                     /* celsius */
-+	int temp_alert_max;                     /* celsius */
-+	int temp_min;                           /* celsius */
-+	int temp_max;                           /* celsius */
- 	struct power_supply_battery_ocv_table *ocv_table[POWER_SUPPLY_OCV_TEMP_MAX];
- 	int ocv_table_size[POWER_SUPPLY_OCV_TEMP_MAX];
- 	struct power_supply_resistance_temp_table *resist_table;
--- 
-2.27.0
+One of them had a number of hosts, each having two NICs in broadcast
+mode bond, one connected to one switch and one connected to another
+switch (with no direct connection between the switches). Having each
+packet duplicated when everything worked triggered some corner cases in
+networking stack (IIRC one issue in fragment reassembly and one in TCP
+lockless listener). Thankfully I was eventually able to convince them
+that this kind of redundancy does not really work if one host loses
+connection to one switch and another host to the other.
 
+I don't remember the other use case from the top of my head but I'm
+quite sure it made even less sense.
+
+Michal
