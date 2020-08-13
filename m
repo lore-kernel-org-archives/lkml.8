@@ -2,160 +2,215 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23387C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 17:27:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F05EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 17:28:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBC6320781
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 17:27:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597339679;
-	bh=1J9DGzv1tvKPIFHOskjX9pySZrD3/jFzJAYWaDPvh3Y=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=F2qVfbCOgWehzHEBga0xhE4ET8JvdFLkX8TU7IxUoEhuSUxmN4MEJiC9Tqu6XpSI5
-	 MAD+8DxIsY+ciOR/K3Bivjx0Mmjk/UJRcXQHwsjNCSRMn3GQK3JjlRjvzMds3rWWzH
-	 dt3KSXQLvzbwpIuQzrqWyBlFHPfcq8LqBO404eVU=
+	by mail.kernel.org (Postfix) with ESMTP id 62D3620774
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 17:28:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726622AbgHMR15 (ORCPT
+        id S1726623AbgHMR22 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 13:27:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48390 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726522AbgHMR14 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 13:27:56 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 027BC20774;
-        Thu, 13 Aug 2020 17:27:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597339675;
-        bh=1J9DGzv1tvKPIFHOskjX9pySZrD3/jFzJAYWaDPvh3Y=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=Bc/A3/sr8cu5ewCaN5zT7oIyt4YTgCBU/BIJi7D/mJcv0NDb5xv/dNEVPnFUAWpHt
-         h5nBGRlU5PeRUpqAXuh20MC9QZSTQ88JNRDnJxR0yg2ZGpGXbZzDAg87p4v2Wi1lwr
-         bVonXjFFXd+IzTtnH01nD1vNEaFm+L3DpNpK4zAA=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id B8A30352279C; Thu, 13 Aug 2020 10:27:54 -0700 (PDT)
-Date:   Thu, 13 Aug 2020 10:27:54 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Michal Hocko <mhocko@suse.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
-Message-ID: <20200813172754.GA4295@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <874kp6llzb.fsf@nanos.tec.linutronix.de>
- <20200813133308.GK9477@dhcp22.suse.cz>
- <87sgcqty0e.fsf@nanos.tec.linutronix.de>
- <20200813145335.GN9477@dhcp22.suse.cz>
- <20200813154159.GR4295@paulmck-ThinkPad-P72>
- <20200813155412.GP9477@dhcp22.suse.cz>
- <20200813160442.GV4295@paulmck-ThinkPad-P72>
- <20200813161357.GQ9477@dhcp22.suse.cz>
- <20200813162904.GX4295@paulmck-ThinkPad-P72>
- <20200813171211.GT9477@dhcp22.suse.cz>
+        Thu, 13 Aug 2020 13:28:28 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:41835 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726384AbgHMR2Y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 13:28:24 -0400
+Received: by mail-io1-f69.google.com with SMTP id e12so4556462ioc.8
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 10:28:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=ldpXwfigXaNaYABjkX+Qet8HDUWG+klcFP4raS2Jo7A=;
+        b=JqGlgxjnsDI9iron3aXcLEH1GeJ78xcLnRs6pmneuGeh1Jom6NCtZtSwZNtl7U1BQY
+         9gfP1WeS3oPjfEd3P8akMn4DryCu/QwTut+nu4ZwiWDiHAE5C11GUrSuER7z/PPaQDlY
+         FK5p6TSKQAPDiW0JYipYtvRFbBwyjSx8DNDkuyHGZMc25KkuNBazATZtiQDkuhBnn8mP
+         hBI9eU68KBPXOCGoMe+NVR5Id5jVwuG1w3XzJiD29iMDPy4d0XRhKqLqxV1hFWVAksvU
+         WFHTEZvbaXES9DIVxOP/2t4heoMYwX4Zh6XuObJnZ3Rvf702EWi7nZBq5xqEwurSgf57
+         hqLg==
+X-Gm-Message-State: AOAM5331ztmbxkgndvpBJrIpQmTrc9VIKYP/ATd85/oDJjAsKwLbSTL+
+        jEKgJEOYxGPl/H2HedQnbbniy0Ri1YCGa7VvCqDB+EKnSfQ3
+X-Google-Smtp-Source: ABdhPJwbgt9PtKppPlYaFBH6G6aIb7jTr/Ctd9L+MfCY7sbdaIrxp7xhpQHysBI5O4lbn8iuGlizudWC0obKLgG3JC6lB+qLSQWk
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200813171211.GT9477@dhcp22.suse.cz>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Received: by 2002:a05:6638:1005:: with SMTP id r5mr6363265jab.116.1597339702885;
+ Thu, 13 Aug 2020 10:28:22 -0700 (PDT)
+Date:   Thu, 13 Aug 2020 10:28:22 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000093837f05acc5a11f@google.com>
+Subject: KASAN: use-after-free Read in idr_for_each
+From:   syzbot <syzbot+25d82ed5cc4b474f1df8@syzkaller.appspotmail.com>
+To:     axboe@kernel.dk, io-uring@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 07:12:11PM +0200, Michal Hocko wrote:
-> On Thu 13-08-20 09:29:04, Paul E. McKenney wrote:
-> > On Thu, Aug 13, 2020 at 06:13:57PM +0200, Michal Hocko wrote:
-> > > On Thu 13-08-20 09:04:42, Paul E. McKenney wrote:
-> > > > On Thu, Aug 13, 2020 at 05:54:12PM +0200, Michal Hocko wrote:
-> > > [...]
-> > > > > If the whole bailout is guarded by CONFIG_PREEMPT_RT specific atomicity
-> > > > > check then there is no functional problem - GFP_RT_SAFE would still be
-> > > > > GFP_NOWAIT so functional wise the allocator will still do the right
-> > > > > thing.
-> > > > 
-> > > > Perhaps it was just me getting confused, early hour Pacific Time and
-> > > > whatever other excuses might apply.  But I thought that you still had
-> > > > an objection to GFP_RT_SAFE based on changes in allocator semantics for
-> > > > other users.
-> > > 
-> > > There is still that problem with lockdep complaining about raw->regular
-> > > spinlock on !PREEMPT_RT that would need to get resolved somehow. Thomas
-> > > is not really keen on adding some lockdep annotation mechanism and
-> > > unfortunatelly I do not have a different idea how to get rid of those.
-> > 
-> > OK.  So the current situation requires a choice between these these
-> > alternatives, each of which has shortcomings that have been mentioned
-> > earlier in this thread:
-> > 
-> > 1.	Prohibit invoking allocators from raw atomic context, such
-> > 	as when holding a raw spinlock.
-> > 
-> > 2.	Adding a GFP_ flag.
-> 
-> Which would implemente a completely new level atomic allocation for all
-> preemption models
-> 
-> > 
-> > 3.	Reusing existing GFP_ flags/values/whatever to communicate
-> > 	the raw-context information that was to be communicated by
-> > 	the new GFP_ flag.
-> 
-> this would have to be RT specific to not change the semantic for
-> existing users. In other words make NOWAIT semantic working for
-> RT atomic contexts.
-> 
-> > 
-> > 4.	Making lockdep forgive acquiring spinlocks while holding
-> > 	raw spinlocks, but only in CONFIG_PREEMPT_NONE=y kernels.
-> 
-> and this would have to go along with 3 to remove false positives on !RT.
+Hello,
 
-OK, let's fill in the issues, then:
+syzbot found the following issue on:
 
-1.	Prohibit invoking allocators from raw atomic context, such
-	as when holding a raw spinlock.
+HEAD commit:    fb893de3 Merge tag 'tag-chrome-platform-for-v5.9' of git:/..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=167ed216900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f1fedc63022bf07e
+dashboard link: https://syzkaller.appspot.com/bug?extid=25d82ed5cc4b474f1df8
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=107bc222900000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17a09d06900000
 
-	o	This would prevent an important cache-locality
-		optimization.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+25d82ed5cc4b474f1df8@syzkaller.appspotmail.com
 
-2.	Adding a GFP_ flag.
+==================================================================
+BUG: KASAN: use-after-free in radix_tree_next_slot include/linux/radix-tree.h:421 [inline]
+BUG: KASAN: use-after-free in idr_for_each+0x206/0x220 lib/idr.c:202
+Read of size 8 at addr ffff888082058c78 by task syz-executor999/3765
 
-	o	Requires a new level atomic allocation for all preemption
-		models, namely, confined to the allocator's lockless
-		caches.
+CPU: 1 PID: 3765 Comm: syz-executor999 Not tainted 5.8.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xae/0x497 mm/kasan/report.c:383
+ __kasan_report mm/kasan/report.c:513 [inline]
+ kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
+ radix_tree_next_slot include/linux/radix-tree.h:421 [inline]
+ idr_for_each+0x206/0x220 lib/idr.c:202
+ io_ring_ctx_wait_and_kill+0x374/0x600 fs/io_uring.c:7810
+ io_uring_release+0x3e/0x50 fs/io_uring.c:7829
+ __fput+0x285/0x920 fs/file_table.c:281
+ task_work_run+0xdd/0x190 kernel/task_work.c:135
+ exit_task_work include/linux/task_work.h:25 [inline]
+ do_exit+0xb7d/0x29f0 kernel/exit.c:806
+ do_group_exit+0x125/0x310 kernel/exit.c:903
+ get_signal+0x40b/0x1ee0 kernel/signal.c:2743
+ arch_do_signal+0x82/0x2520 arch/x86/kernel/signal.c:811
+ exit_to_user_mode_loop kernel/entry/common.c:135 [inline]
+ exit_to_user_mode_prepare+0x172/0x1d0 kernel/entry/common.c:166
+ syscall_exit_to_user_mode+0x59/0x2b0 kernel/entry/common.c:241
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x447179
+Code: Bad RIP value.
+RSP: 002b:00007f049661dcf8 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
+RAX: fffffffffffffe00 RBX: 00000000006dbc38 RCX: 0000000000447179
+RDX: 0000000000000000 RSI: 0000000000000080 RDI: 00000000006dbc38
+RBP: 00000000006dbc30 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dbc3c
+R13: 00007ffd1e2340df R14: 00007f049661e9c0 R15: 0000000000000001
 
-3.	Reusing existing GFP_ flags/values/whatever to communicate
-	the raw-context information that was to be communicated by
-	the new GFP_ flag.
+Allocated by task 3747:
+ kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
+ kasan_set_track mm/kasan/common.c:56 [inline]
+ __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:461
+ slab_post_alloc_hook mm/slab.h:518 [inline]
+ slab_alloc mm/slab.c:3312 [inline]
+ kmem_cache_alloc+0x138/0x3a0 mm/slab.c:3482
+ radix_tree_node_alloc.constprop.0+0x7c/0x320 lib/radix-tree.c:275
+ idr_get_free+0x4b0/0x8e0 lib/radix-tree.c:1505
+ idr_alloc_u32+0x170/0x2d0 lib/idr.c:46
+ idr_alloc_cyclic+0x102/0x230 lib/idr.c:125
+ io_register_personality fs/io_uring.c:8454 [inline]
+ __io_uring_register fs/io_uring.c:8575 [inline]
+ __do_sys_io_uring_register+0x606/0x33f0 fs/io_uring.c:8615
+ do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-	o	There are existing users of all combinations that might
-		be unhappy with a change of semantics.
+Freed by task 16:
+ kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
+ kasan_set_track+0x1c/0x30 mm/kasan/common.c:56
+ kasan_set_free_info+0x1b/0x30 mm/kasan/generic.c:355
+ __kasan_slab_free+0xd8/0x120 mm/kasan/common.c:422
+ __cache_free mm/slab.c:3418 [inline]
+ kmem_cache_free.part.0+0x67/0x1f0 mm/slab.c:3693
+ rcu_do_batch kernel/rcu/tree.c:2428 [inline]
+ rcu_core+0x5c7/0x1190 kernel/rcu/tree.c:2656
+ __do_softirq+0x2de/0xa24 kernel/softirq.c:298
 
-	o	But Michal is OK with this if usage is restricted to RT.
-		Except that this requires #4 below:
+Last call_rcu():
+ kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
+ kasan_record_aux_stack+0x82/0xb0 mm/kasan/generic.c:346
+ __call_rcu kernel/rcu/tree.c:2894 [inline]
+ call_rcu+0x14f/0x7e0 kernel/rcu/tree.c:2968
+ radix_tree_node_free lib/radix-tree.c:309 [inline]
+ delete_node+0x587/0x8a0 lib/radix-tree.c:572
+ __radix_tree_delete+0x190/0x370 lib/radix-tree.c:1378
+ radix_tree_delete_item+0xe7/0x230 lib/radix-tree.c:1429
+ io_remove_personalities+0x1b/0xb0 fs/io_uring.c:7769
+ idr_for_each+0x113/0x220 lib/idr.c:208
+ io_ring_ctx_wait_and_kill+0x374/0x600 fs/io_uring.c:7810
+ io_uring_release+0x3e/0x50 fs/io_uring.c:7829
+ __fput+0x285/0x920 fs/file_table.c:281
+ task_work_run+0xdd/0x190 kernel/task_work.c:135
+ exit_task_work include/linux/task_work.h:25 [inline]
+ do_exit+0xb7d/0x29f0 kernel/exit.c:806
+ do_group_exit+0x125/0x310 kernel/exit.c:903
+ get_signal+0x40b/0x1ee0 kernel/signal.c:2743
+ arch_do_signal+0x82/0x2520 arch/x86/kernel/signal.c:811
+ exit_to_user_mode_loop kernel/entry/common.c:135 [inline]
+ exit_to_user_mode_prepare+0x172/0x1d0 kernel/entry/common.c:166
+ syscall_exit_to_user_mode+0x59/0x2b0 kernel/entry/common.c:241
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-4.	Making lockdep forgive acquiring spinlocks while holding
-	raw spinlocks, but only in CONFIG_PREEMPT_NONE=y kernels.
+Second to last call_rcu():
+ kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
+ kasan_record_aux_stack+0x82/0xb0 mm/kasan/generic.c:346
+ __call_rcu kernel/rcu/tree.c:2894 [inline]
+ call_rcu+0x14f/0x7e0 kernel/rcu/tree.c:2968
+ radix_tree_node_free lib/radix-tree.c:309 [inline]
+ delete_node+0x587/0x8a0 lib/radix-tree.c:572
+ __radix_tree_delete+0x190/0x370 lib/radix-tree.c:1378
+ radix_tree_delete_item+0xe7/0x230 lib/radix-tree.c:1429
+ io_remove_personalities+0x1b/0xb0 fs/io_uring.c:7769
+ idr_for_each+0x113/0x220 lib/idr.c:208
+ io_ring_ctx_wait_and_kill+0x374/0x600 fs/io_uring.c:7810
+ io_uring_release+0x3e/0x50 fs/io_uring.c:7829
+ __fput+0x285/0x920 fs/file_table.c:281
+ task_work_run+0xdd/0x190 kernel/task_work.c:135
+ exit_task_work include/linux/task_work.h:25 [inline]
+ do_exit+0xb7d/0x29f0 kernel/exit.c:806
+ do_group_exit+0x125/0x310 kernel/exit.c:903
+ get_signal+0x40b/0x1ee0 kernel/signal.c:2743
+ arch_do_signal+0x82/0x2520 arch/x86/kernel/signal.c:811
+ exit_to_user_mode_loop kernel/entry/common.c:135 [inline]
+ exit_to_user_mode_prepare+0x172/0x1d0 kernel/entry/common.c:166
+ syscall_exit_to_user_mode+0x59/0x2b0 kernel/entry/common.c:241
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-	o	This would allow latency degradation and other bad coding
-		practices to creep in, per Thomas's recent email.
+The buggy address belongs to the object at ffff888082058c40
+ which belongs to the cache radix_tree_node of size 576
+The buggy address is located 56 bytes inside of
+ 576-byte region [ffff888082058c40, ffff888082058e80)
+The buggy address belongs to the page:
+page:0000000023bf3329 refcount:1 mapcount:0 mapping:0000000000000000 index:0xffff888082058ffb pfn:0x82058
+flags: 0xfffe0000000200(slab)
+raw: 00fffe0000000200 ffffea0002080ac8 ffffea0002080cc8 ffff8880aa06f000
+raw: ffff888082058ffb ffff888082058140 0000000100000005 0000000000000000
+page dumped because: kasan: bad access detected
 
-Again, am I missing anything?
+Memory state around the buggy address:
+ ffff888082058b00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888082058b80: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+>ffff888082058c00: fc fc fc fc fc fc fc fc fa fb fb fb fb fb fb fb
+                                                                ^
+ ffff888082058c80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888082058d00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
 
-							Thanx, Paul
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
