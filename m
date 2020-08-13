@@ -2,131 +2,138 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55247C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 19:18:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C5FC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 19:21:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25B2820774
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 19:18:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a79/AUvR"
+	by mail.kernel.org (Postfix) with ESMTP id CAAF620774
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 19:21:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597346479;
+	bh=FQN0B/ey4O8Rwk6F4qaKsP92DVc8fZlCG5oN82cz/E8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=L887KndZS8ZI8XgXIa7sFkgy9lokQN0pazniwd2GaeJ6p+Tj+Yf/YUCo0M0kIcUAe
+	 Xa2voeV7dMFfXPoBkUOtmgl0O82bVmYBszh8S5yadXkVcMcUsbvcezxXQPxWxeaJ1o
+	 M8uf1GvxxeMA8YcP2wLEB2HPS6zXu+YsyhuEc4UU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726637AbgHMTR7 (ORCPT
+        id S1726557AbgHMTVS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 15:17:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58708 "EHLO
+        Thu, 13 Aug 2020 15:21:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59216 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726167AbgHMTR5 (ORCPT
+        with ESMTP id S1726244AbgHMTVR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 15:17:57 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B68E4C061757;
-        Thu, 13 Aug 2020 12:17:57 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id bh1so3042319plb.12;
-        Thu, 13 Aug 2020 12:17:57 -0700 (PDT)
+        Thu, 13 Aug 2020 15:21:17 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D9ADC061757
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 12:21:17 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id bo3so7354061ejb.11
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 12:21:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=MRBROfM/QBivW8ITTVd4EQniWeWw4srWwUDl7cbY79M=;
-        b=a79/AUvRNlzhxoYRRiRjU/REDITgIVZwQ8KSUq6mp6KWaxNElskr7pI6PVmMUqCZqV
-         0Tp/JJwX3NHhHE8S6GN5zHMEHGcVobWI55uow67/ZsRCxTbmSKs9WAmeRI7yokTUhVVX
-         v3aq7I4wUgV5kUYc9jUYB8OS0TdTI3MBUn/4DZ92C6B6BuzWHM2sa5M+TSnA/b0qWuL+
-         1EGEIfdZp4YjokBlOm+ZW93mEtT5qqG8k/VhYPHZlyYMxYQOdIYtG0yHTVch0lLmpRUI
-         oKR86FiBwdRKUh8xtoF1rawB371nal9ZVF4vNyLuvm+mQnDD2mK8D32SRf1PAND71K9T
-         KdNA==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=XVrQlhbY2LBFm8eHP/4vv+LthPgeA+gEbL08m7IjfDA=;
+        b=dFl7oWZFR+WUBCcPOXjfJ3ft448yYTYqwF2qOidfjPsC1xtdhVVADigmDF3GxG9fFl
+         TbzxunMt0NuLbOuobQ2aS+8kI40a0dZdQak9HqDE5HaI11NTOCCCssmQrTAJRIK1KaK1
+         7k4aim5YRDKz7Y5x6EbZ9JjjrIXlCc6GRfRN9mhHrTCOcRzfaRKnvvirs6vz9rh1cYIB
+         iFpF61K5/O9xmgiAf7CFlPxMB0ZFAPsaks1KAfosSE3B4u8xzP/JpQ+9t+LvE+bIF+p3
+         C8hwP9t3fGRvbTxonruJU5+oPT1lBUzO8f9nT9gk6edreGFptjOX2yVlOZpPTbpkafC8
+         x3dw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=MRBROfM/QBivW8ITTVd4EQniWeWw4srWwUDl7cbY79M=;
-        b=Gh4J964UJX855nINQA9+ZEhrd7U/FdnZ4Qx2E0X6ByYgV/o2mEeIjtN74QfEpHzN6+
-         bbyxPHklojTBWAwzjj0BB4fHYcJUQ0uSGgvtHsy2tf4FmGVBKH9yaaXwAwx9rnxbR26c
-         pke7BJIbJzE/tiAwCKwwpPZ70FEbCYCYQLPPdNmVoOO7utBFOVRbvLyQNCstrL23akze
-         F3SArAJzKQuaOMh5gPDvLiFJdDy0KCc4Qm6iCxqI1A45poEFq1UTjLkBFDa5utSeY/Fm
-         hOPiuTdfxK/y250ze6wP47cOOda3YdnkCwPbbGggdCkSfNyKhY4ZOb1KBLGSEHYOKLcl
-         IajA==
-X-Gm-Message-State: AOAM530wCrdR4y7rNich9DnGLzjeqsCyHXXd9FvvBqRyOrt7idQd9QaX
-        o1iL5Jv9Zv+XtVH+KWAbEzE=
-X-Google-Smtp-Source: ABdhPJymJYAhCqS1VHSM4jCf+0y4gpw76umObdiyThw611Sp2sMl958GDsw/3zig9eaBh7mJgPM/Og==
-X-Received: by 2002:a17:90a:fb4b:: with SMTP id iq11mr6623955pjb.127.1597346277159;
-        Thu, 13 Aug 2020 12:17:57 -0700 (PDT)
-Received: from [10.230.30.107] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id q2sm6162517pgs.90.2020.08.13.12.17.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Aug 2020 12:17:56 -0700 (PDT)
-Subject: Re: [PATCH v5 0/9] Raspberry Pi 4 USB firmware initialization rework
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        gregkh@linuxfoundation.org, robh@kernel.org, wahrenst@gmx.net,
-        p.zabel@pengutronix.de, andy.shevchenko@gmail.com
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
-        linux-pci@vger.kernel.org, helgaas@kernel.org,
-        mathias.nyman@linux.intel.com, lorenzo.pieralisi@arm.com
-References: <20200629161845.6021-1-nsaenzjulienne@suse.de>
- <a6aecb7a4d270cb23430d25850c85a332555af55.camel@suse.de>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <01e4b87c-d287-fd72-9f9c-545539127a50@gmail.com>
-Date:   Thu, 13 Aug 2020 12:17:49 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Firefox/78.0 Thunderbird/78.1.1
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=XVrQlhbY2LBFm8eHP/4vv+LthPgeA+gEbL08m7IjfDA=;
+        b=tlXfJ+21NgPkJpObb4NZ15pkYLVuG0/Ao0zx6+5yiSsJqXxKm8aqLBOQ9sbgo2ArF9
+         SnuU0/VmX75qJuzWumZm9s9X9wy3knClwPoJhjqxETpp49ycuMrXbKvk7m2WILKcq1gb
+         2LSUDVpyZSRXfx6Df7yFfAAuIyny0+R3MnCMQ6LEMTWqvGvd5pJK7udlWfV5Z6hYLDFf
+         +z0DnSkLFNBva3p3/hekQRFwaEtw4HlKeYIc1RFvWj5DLU26VVkT81chs1eZuGgRpn+i
+         qLUDQvEWH14+ETssLM5MjLZtf0oevHf0TNfgMpt1Ai6KfOUO8VOMFjfIPXny+49+YuUW
+         jjWg==
+X-Gm-Message-State: AOAM533v0A0AnIfg8FH7sPGoqn1pecL1086Ccz0DQIW/rOURf7yIy5hU
+        AqMb8oWck3OsIiMN0mklkdw=
+X-Google-Smtp-Source: ABdhPJyAxeKX9NGt9vH1NFQKDb9fsfPKL5yAtXSLMvjIPvLl2BhhjZr1lnZA1Atv3Q8e+/BuOWeRZg==
+X-Received: by 2002:a17:906:2a04:: with SMTP id j4mr6566953eje.440.1597346476253;
+        Thu, 13 Aug 2020 12:21:16 -0700 (PDT)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id t3sm4674617edq.26.2020.08.13.12.21.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Aug 2020 12:21:15 -0700 (PDT)
+Date:   Thu, 13 Aug 2020 21:21:13 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Mike Rapoport <rppt@linux.ibm.com>
+Cc:     Dave Hansen <dave.hansen@intel.com>,
+        Joerg Roedel <joro@8bytes.org>, x86@kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, hpa@zytor.com,
+        Joerg Roedel <jroedel@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jason@zx2c4.com, Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org,
+        "Shutemov, Kirill" <kirill.shutemov@intel.com>
+Subject: Re: [PATCH] x86/mm/64: Do not dereference non-present PGD entries
+Message-ID: <20200813192113.GA2338781@gmail.com>
+References: <20200807084013.7090-1-joro@8bytes.org>
+ <165106f9-392f-9ca5-52c8-8d58c41c5f79@intel.com>
+ <20200810155359.GV163101@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <a6aecb7a4d270cb23430d25850c85a332555af55.camel@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200810155359.GV163101@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+* Mike Rapoport <rppt@linux.ibm.com> wrote:
 
-On 8/13/2020 3:01 AM, Nicolas Saenz Julienne wrote:
-> Hi everyone.
+> On Mon, Aug 10, 2020 at 07:27:33AM -0700, Dave Hansen wrote:
+> > ... adding Kirill
+> > 
+> > On 8/7/20 1:40 AM, Joerg Roedel wrote:
+> > > +		lvl = "p4d";
+> > > +		p4d = p4d_alloc(&init_mm, pgd, addr);
+> > > +		if (!p4d)
+> > > +			goto failed;
+> > >  
+> > > +		/*
+> > > +		 * With 5-level paging the P4D level is not folded. So the PGDs
+> > > +		 * are now populated and there is no need to walk down to the
+> > > +		 * PUD level.
+> > > +		 */
+> > >  		if (pgtable_l5_enabled())
+> > >  			continue;
+> > 
+> > It's early and I'm a coffee or two short of awake, but I had to stare at
+> > the comment for a but to make sense of it.
+> > 
+> > It feels wrong, I think, because the 5-level code usually ends up doing
+> > *more* allocations and in this case, it is _appearing_ to do fewer.
+> > Would something like this make sense?
 > 
-> On Mon, 2020-06-29 at 18:18 +0200, Nicolas Saenz Julienne wrote:
->> On the Raspberry Pi 4, after a PCI reset, VL805's firmware may either be
->> loaded directly from an EEPROM or, if not present, by the SoC's
->> co-processor, VideoCore. This series reworks how we handle this.
->>
->> The previous solution makes use of PCI quirks and exporting platform
->> specific functions. Albeit functional it feels pretty shoehorned. This
->> proposes an alternative way of handling the triggering of the xHCI chip
->> initialization trough means of a reset controller.
->>
->> The benefits are pretty evident: less platform churn in core xHCI code,
->> and no explicit device dependency management in pcie-brcmstb.
->>
->> Note that patch #1 depends on another series[1], that was just applied
->> into the clk maintainer's tree.
->>
->> The series is based on v5.8-rc3
->>
->> v3: https://www.spinics.net/lists/arm-kernel/msg813612.html
->> v2: https://lkml.org/lkml/2020/6/9/875
->> v1: https://lore.kernel.org/linux-usb/20200608192701.18355-1-nsaenzjulienne@suse.de/T/#t
->>
->> [1] https://lore.kernel.org/linux-clk/159304773261.62212.983376627029743900@swboyd.mtv.corp.google.com/T/#t
->>
->> ---
+> Unless I miss something, with 5 levels vmalloc mappings are shared at
+> p4d level, so allocating a p4d page would be enough. With 4 levels,
+> p4d_alloc() is a nop and pud is the first actually populated level below
+> pgd.
 > 
-> We were waiting on a dependency to be merged upstream to get this. They are now
-> in, so could we move things forward?
-> 
-> I can take the device tree patches, I guess philipp can take the reset
-> controller code. But I'm not so sure who should be taking the PCI/USB
-> counterparts.
+> > 		/*
+> > 		 * The goal here is to allocate all possibly required
+> > 		 * hardware page tables pointed to by the top hardware
+> > 		 * level.
+> > 		 *
+> > 		 * On 4-level systems, the p4d layer is folded away and
+> > 		 * the above code does no preallocation.  Below, go down
+> > 		 * to the pud _software_ level to ensure the second
+> > 		 * hardware level is allocated.
+> > 		 */
 
-Should we route everything through the USB tree since that is where the 
-changes that do require synchronization with other subsystems and DTS is 
-needed the most?
--- 
-Florian
+Would be nice to integrate all these explanations into the comment itself?
+
+Thanks,
+
+	Ingo
