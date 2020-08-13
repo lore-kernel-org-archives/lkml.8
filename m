@@ -2,102 +2,128 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C10CBC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E68C433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:36:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BEF1206A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:36:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD4BB206A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:36:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iVUntBDc"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YjVN439y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726546AbgHMKgZ (ORCPT
+        id S1726596AbgHMKg6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 06:36:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34566 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbgHMKgY (ORCPT
+        Thu, 13 Aug 2020 06:36:58 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:33641 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726252AbgHMKg5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 06:36:24 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C670C061757;
-        Thu, 13 Aug 2020 03:36:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=9hnbVDwhrL8TE76gwR/KK7IaS55JjZNnoo+tIvGIEU0=; b=iVUntBDcQRBcXmCxiAuZxmiaCO
-        fMcOPwDOVL2SBc93pNJSxLMHLWma1GFmTjcW2w4c0jezZrp57rlDytNxiQ6cIc8zzH77hvI0zSj7T
-        4wU24ELLmQ7/gXUm6C0FwP08SvK0qlPgwetTYFomhwYv0KvgT0eqaH5J+T8lE7ZbT185Rq3dAm2Qa
-        z2Zs++d0zdYjPJ+ZdVrN2Dlo1l8nOjHHi8cC6hncvLTSnrn1xKHLsyuTaR964sgSIbF5T2TJjxFkK
-        6A+gITKwEoH4VbOR3QsDSUFze9MVTbAFzyHX67d2Cdf6mDiJ2A0/4NBP/DpeYkOGDN49wxEkn+kRJ
-        OxFXHUNw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k6Aan-00078D-57; Thu, 13 Aug 2020 10:36:17 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1D9F6300238;
-        Thu, 13 Aug 2020 12:36:16 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 05CC62C217FD8; Thu, 13 Aug 2020 12:36:16 +0200 (CEST)
-Date:   Thu, 13 Aug 2020 12:36:15 +0200
-From:   peterz@infradead.org
-To:     Uriel Guajardo <urielguajardojr@gmail.com>
-Cc:     brendanhiggins@google.com, mingo@redhat.com, will@kernel.org,
-        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, urielguajardo@google.com
-Subject: Re: [PATCH v2] kunit: added lockdep support
-Message-ID: <20200813103615.GT2674@hirez.programming.kicks-ass.net>
-References: <20200812193332.954395-1-urielguajardojr@gmail.com>
+        Thu, 13 Aug 2020 06:36:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597315015;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=nHTuFVTalfQfPA2SgrXd36xvN0GI3IA7pVeXYZFZfuE=;
+        b=YjVN439ywW+xeseIOdy7uo7XDhoznvbxmO6YF9QAe+czVHGS2K/iMP7E0lb8uOqGyRFDiE
+        589VYv5VonE03yhr2yPN2syUbqGzAPoqu8G3kxlutbzQqs+AOdH/4TfiGuBBYK4+56DiuA
+        1t+zWLZH/pvPSaOBM5zi2MR29w0he3U=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-213-BabCGu27OAmcOQkv6mZDEg-1; Thu, 13 Aug 2020 06:36:52 -0400
+X-MC-Unique: BabCGu27OAmcOQkv6mZDEg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 28E848BF8A4;
+        Thu, 13 Aug 2020 10:36:41 +0000 (UTC)
+Received: from ws.net.home (unknown [10.40.193.69])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5A4CF6760B;
+        Thu, 13 Aug 2020 10:36:37 +0000 (UTC)
+Date:   Thu, 13 Aug 2020 12:36:34 +0200
+From:   Karel Zak <kzak@redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Steven Whitehouse <swhiteho@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Christian Brauner <christian@brauner.io>,
+        Lennart Poettering <lennart@poettering.net>,
+        Linux API <linux-api@vger.kernel.org>,
+        Ian Kent <raven@themaw.net>,
+        LSM <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: file metadata via fs API
+Message-ID: <20200813103634.ey2xxwgbn3e4lhdr@ws.net.home>
+References: <CAJfpegunY3fuxh486x9ysKtXbhTE0745ZCVHcaqs9Gww9RV2CQ@mail.gmail.com>
+ <ac1f5e3406abc0af4cd08d818fe920a202a67586.camel@themaw.net>
+ <CAJfpegu8omNZ613tLgUY7ukLV131tt7owR+JJ346Kombt79N0A@mail.gmail.com>
+ <CAJfpegtNP8rQSS4Z14Ja4x-TOnejdhDRTsmmDD-Cccy2pkfVVw@mail.gmail.com>
+ <20200811135419.GA1263716@miu.piliscsaba.redhat.com>
+ <CAHk-=wjzLmMRf=QG-n+1HnxWCx4KTQn9+OhVvUSJ=ZCQd6Y1WA@mail.gmail.com>
+ <52483.1597190733@warthog.procyon.org.uk>
+ <CAHk-=wiPx0UJ6Q1X=azwz32xrSeKnTJcH8enySwuuwnGKkHoPA@mail.gmail.com>
+ <066f9aaf-ee97-46db-022f-5d007f9e6edb@redhat.com>
+ <CAHk-=wgz5H-xYG4bOrHaEtY7rvFA1_6+mTSpjrgK8OsNbfF+Pw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200812193332.954395-1-urielguajardojr@gmail.com>
+In-Reply-To: <CAHk-=wgz5H-xYG4bOrHaEtY7rvFA1_6+mTSpjrgK8OsNbfF+Pw@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 07:33:32PM +0000, Uriel Guajardo wrote:
-> KUnit will fail tests upon observing a lockdep failure. Because lockdep
-> turns itself off after its first failure, only fail the first test and
-> warn users to not expect any future failures from lockdep.
-> 
-> Similar to lib/locking-selftest [1], we check if the status of
-> debug_locks has changed after the execution of a test case. However, we
-> do not reset lockdep afterwards.
-> 
-> Like the locking selftests, we also fix possible preemption count
-> corruption from lock bugs.
+On Wed, Aug 12, 2020 at 12:50:28PM -0700, Linus Torvalds wrote:
+> Convince me otherwise. AGAIN. This is the exact same issue I had with
+> the notification queues that I really wanted actual use-cases for, and
+> feedback from actual outside users.
 
-> +static void kunit_check_locking_bugs(struct kunit *test,
-> +				     unsigned long saved_preempt_count,
-> +				     bool saved_debug_locks)
-> +{
-> +	preempt_count_set(saved_preempt_count);
-> +#ifdef CONFIG_TRACE_IRQFLAGS
-> +	if (softirq_count())
-> +		current->softirqs_enabled = 0;
-> +	else
-> +		current->softirqs_enabled = 1;
-> +#endif
+I thought (in last 10 years) we all agree that /proc/self/mountinfo is
+the expensive, ineffective and fragile way how to deliver information to
+userspace.
 
-Urgh, don't silently change these... if they're off that's a hard fail.
+We have systems with thousands of mountpoints and compose mountinfo in
+kernel and again parse it in userspace takes time and it's strange if
+you need info about just one mountpoint. 
 
-	if (DEBUG_LOCKS_WARN_ON(preempt_count() != saved_preempt_count))
-		preempt_count_set(saved_preempt_count);
+Unfortunately, the same systems modify the huge mount table extremely
+often, because it starts/stops large number of containers and every 
+container means a mount operation(s).
 
-And by using DEBUG_LOCKS_WARN_ON() it will kill IRQ tracing and trigger
-the below fail.
+In this crazy environment, we have userspace tools like systemd or udisk 
+which react to VFS changes and there is no elegant way how to get
+details about a modified mount node from kernel.
 
-> +	if (saved_debug_locks && !debug_locks) {
-> +		kunit_set_failure(test);
-> +		kunit_warn(test, "Dynamic analysis tool failure from LOCKDEP.");
-> +		kunit_warn(test, "Further tests will have LOCKDEP disabled.");
-> +	}
-> +}
+And of course we already have negative feedback from users who
+maintain large systems -- mountinfo returns inconsistent data if you
+read it by more read() calls (hopefully fixed by recent Miklos'
+mountinfo cursors); system is pretty busy to compose+parse mountinfo,
+etc.
+
+> I really think this is engineering for its own sake, rather than
+> responding to actual user concerns.
+
+We're too old and too lazy for "engineering for its own sake" :-)
+there is pressure from users ...
+
+Maybe David's fsinfo() sucks, but it does not mean that
+/proc/self/mountinfo is something cool. Right?
+
+We have to dig deep grave for /proc/self/mountinfo ...
+
+    Karel
+
+-- 
+ Karel Zak  <kzak@redhat.com>
+ http://karelzak.blogspot.com
+
