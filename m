@@ -2,92 +2,100 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C542C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 18:58:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB3AEC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 19:01:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D0AF2177B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 18:58:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6155420838
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 19:01:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="GNrbWj8C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726612AbgHMS6Q (ORCPT
+        id S1726568AbgHMTBZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 14:58:16 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:42514 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726359AbgHMS6O (ORCPT
+        Thu, 13 Aug 2020 15:01:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56158 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726167AbgHMTBY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 14:58:14 -0400
-Received: by mail-qt1-f195.google.com with SMTP id c12so5176663qtn.9;
-        Thu, 13 Aug 2020 11:58:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=+GH4hjr+KtlyXRPJQ7rmAwftHj2VvTfyj8hXxXoMFuY=;
-        b=RIUTiOKF654q7oexEIvEhJVIVZBX82gdEiSNXnbTkQp7VyWgJl5sgE8wdI5C8B7Uca
-         bDdJsdLFtv+vMKooENpijT2n5ghDPI9x7wV3dwcvqjfdLlVnM/XzBz/WGoEgUkmFaOCN
-         ht2Pag8+y/CZvSiMnrv6Dfr4sjJ3pvKqEtDZE8YeX8LGuqq7kYVSkYOgm7fLKMk0DHAf
-         /dx29JpChiJ4SYjwutLnaQRPOPXaH9Emamywkmv86gjz5MjyRodjohFAYuLpeOsDJ3VO
-         4z+mxg8LSf89Wj5dGJakbY76GXgk2LXasQWKl9FklDTM1eepf6QKpf9CJObey2QKw1kp
-         ZnWg==
-X-Gm-Message-State: AOAM533/L/aUYwVtnR25Lsb0c7JwpxwqlTl6aXEFEnnJM2bDtdrZ+xHW
-        P3WBdulOmTQYXoTreeVzdxqYhuT9
-X-Google-Smtp-Source: ABdhPJyWhUAkCXpZL1VDPN/OtyACJnk0nF/Csxqr5jYpSNHVsE5iwWV4ayGAD6OgCBxaKRVJ9gWldw==
-X-Received: by 2002:ac8:2ab9:: with SMTP id b54mr6754004qta.323.1597345093442;
-        Thu, 13 Aug 2020 11:58:13 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id c9sm5994563qkm.44.2020.08.13.11.58.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Aug 2020 11:58:12 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-To:     Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] efi/libstub: Handle NULL cmdline
-Date:   Thu, 13 Aug 2020 14:58:10 -0400
-Message-Id: <20200813185811.554051-3-nivedita@alum.mit.edu>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200813185811.554051-1-nivedita@alum.mit.edu>
-References: <20200813185811.554051-1-nivedita@alum.mit.edu>
+        Thu, 13 Aug 2020 15:01:24 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99BE2C061757;
+        Thu, 13 Aug 2020 12:01:24 -0700 (PDT)
+Received: from [192.168.0.20] (cpc89244-aztw30-2-0-cust3082.18-1.cable.virginm.net [86.31.172.11])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id ACDE2B8F;
+        Thu, 13 Aug 2020 21:01:07 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1597345270;
+        bh=WEkPZuLQ3Yk3M0K2VRndc7Z3Rc4ZPMvM9CG/B6V3QvE=;
+        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=GNrbWj8CEq2RF15ZYjarEVZ+0nUuHnr13JaHoqNOi/NBqnS0rj6cYllXe8Vb9TfSg
+         z78freDQf3mVscR/eXfm3I/gXKEWC0PT0OfIZTpP8dEdDrVU5aSm44dEsRWcBGgtwv
+         3O9eOobdoPME8opm7chwdPMzp0HVEgCkZgMEgNYw=
+Reply-To: kieran.bingham+renesas@ideasonboard.com
+Subject: Re: linux-next: Tree for Aug 13 (drivers/media/i2c/max9286.c)
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        =?UTF-8?Q?Niklas_S=c3=b6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>
+References: <20200813165846.27887669@canb.auug.org.au>
+ <17a1c5aa-2f38-c84d-bf2d-485862dc0615@infradead.org>
+From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Organization: Ideas on Board
+Message-ID: <3262a9fc-46e2-3109-3764-e7153edf486d@ideasonboard.com>
+Date:   Thu, 13 Aug 2020 20:01:01 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <17a1c5aa-2f38-c84d-bf2d-485862dc0615@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Treat a NULL cmdline the same as empty. Although this is unlikely to
-happen in practice, the x86 kernel entry does check for NULL cmdline and
-handles it, so do it here as well.
+Hi Randy,
 
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
----
- drivers/firmware/efi/libstub/efi-stub-helper.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+On 13/08/2020 19:35, Randy Dunlap wrote:
+> On 8/12/20 11:58 PM, Stephen Rothwell wrote:
+>> Hi all,
+>>
+>> News: The merge window has opened, so please do not add any v5.10
+>> related material to your linux-next included branches until after the
+>> merge window closes again.
+>>
+>> Changes since 20200812:
+>>
+> 
+> on x86_64:
+> 
+> # CONFIG_GPIOLIB is not set
+> 
+> ../drivers/media/i2c/max9286.c: In function 'max9286_register_gpio':
+> ../drivers/media/i2c/max9286.c:1033:6: error: 'struct gpio_chip' has no member named 'of_node'
+>   gpio->of_node = dev->of_node;
+> 
 
-diff --git a/drivers/firmware/efi/libstub/efi-stub-helper.c b/drivers/firmware/efi/libstub/efi-stub-helper.c
-index 37ff34e7b85e..f53652a3a106 100644
---- a/drivers/firmware/efi/libstub/efi-stub-helper.c
-+++ b/drivers/firmware/efi/libstub/efi-stub-helper.c
-@@ -187,10 +187,14 @@ int efi_printk(const char *fmt, ...)
-  */
- efi_status_t efi_parse_options(char const *cmdline)
- {
--	size_t len = strlen(cmdline) + 1;
-+	size_t len;
- 	efi_status_t status;
- 	char *str, *buf;
- 
-+	if (!cmdline)
-+		return EFI_SUCCESS;
-+
-+	len = strlen(cmdline) + 1;
- 	status = efi_bs_call(allocate_pool, EFI_LOADER_DATA, len, (void **)&buf);
- 	if (status != EFI_SUCCESS)
- 		return status;
--- 
-2.26.2
+Thanks for the report, Sakari has already submitted a fix [0] for this.
+I assume it just needs a nudge to get picked up via Mauro's tree.
 
+[0]
+https://lore.kernel.org/linux-media/20200803090935.23619-1-sakari.ailus@linux.intel.com/
+
+Thanks
+--
+Kieran
