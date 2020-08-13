@@ -2,193 +2,109 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ED5EC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:08:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A94CC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:10:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CB872080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:08:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 014CB2080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:10:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597313338;
-	bh=nsoK2lVbOKDQ4GSO14CBSj3EPe+//8yAv/WHujwP4Jk=;
+	s=default; t=1597313445;
+	bh=8S6jKUx46BaOyd6AEOnq4IBcGElO3fsBbXuThZ9ef9Y=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=TIaH9L1zyYSxKsstnVgvioUbKQFf/0NoCJu4+DJbQiUTfYx63FV/0WY9U93Ac/cLW
-	 3OvRp+5BnNtyaWVq4CuIrciBGetgSmiiJX9BnWMKwCj17IzKypI2pxqvW5QzNnsrwP
-	 ve3LJBHn2ux6AKxWD0/8vzrU7Ojy200HPHk35Ylk=
+	b=MiI+chMlrVu/usjxt7MqAYKOcB3UUxyriusbDEobNIlgG9sSZsvDtRNSOfKi7Io3B
+	 e42owTnm/Fn+pD45KYwxryKODiGuF05wtvc0PcgvFOxTYTQXRPRlYAgWe0UzeAHpn/
+	 fV5cBA+42qBkisNy5yYgoXcGC/NZp4nOnvcK2lG4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726244AbgHMKI4 (ORCPT
+        id S1726253AbgHMKKn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 06:08:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38348 "EHLO mail.kernel.org"
+        Thu, 13 Aug 2020 06:10:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726048AbgHMKI4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 06:08:56 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        id S1726048AbgHMKKn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 06:10:43 -0400
+Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE2CC20781;
-        Thu, 13 Aug 2020 10:08:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D96E520781;
+        Thu, 13 Aug 2020 10:10:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597313336;
-        bh=nsoK2lVbOKDQ4GSO14CBSj3EPe+//8yAv/WHujwP4Jk=;
+        s=default; t=1597313442;
+        bh=8S6jKUx46BaOyd6AEOnq4IBcGElO3fsBbXuThZ9ef9Y=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=OJ+zI1X3X0dfUgs29Jm/QGJTVyzT4CufV1NIRx15ih+0h3wzlVKKRQf9ZZBZcaRH0
-         UI9UPmVyj2SbGvZUX+Yw9S5rGvROaBqeuzGlKyuVIN6H3781Us0hGUE5sEb4RuchfK
-         lFWI2RgPgBwVzeLKfEnppRfA34/emwBv7Xts62Js=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1k6AAI-001ko4-CX; Thu, 13 Aug 2020 11:08:54 +0100
+        b=B/O/ZSqBYDBJzorx/2d7HlkU1ilrHm2wLKnb0Tq0ft8UhED82Fpxw1SNCHwYh01ML
+         Po/6cfpStrpfdUTWfs88AqPqQmiQ0YmuAF/abzvBdZNJxeM+xHCpuUICNvqymCze1u
+         rOq0O+poRpNHojmOg34CDYSTSI1vXxT+A1T2QV10=
+Date:   Thu, 13 Aug 2020 12:10:36 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org
+Subject: Re: [PATCH 35/44] staging: regulator: hi6421v600-regulator: add a
+ driver-specific debug macro
+Message-ID: <20200813121036.126c4797@coco.lan>
+In-Reply-To: <6a424468eb61e2eb9b014817819dd4da61f2ada1.camel@perches.com>
+References: <cover.1597247164.git.mchehab+huawei@kernel.org>
+        <7cb10b3910e9fa3e52d36e4e416030175cc761ab.1597247164.git.mchehab+huawei@kernel.org>
+        <6a424468eb61e2eb9b014817819dd4da61f2ada1.camel@perches.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Date:   Thu, 13 Aug 2020 11:08:54 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Jason Liu <jason.hui.liu@nxp.com>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>, catalin.marinas@arm.com,
-        will@kernel.org, sashal@kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/1] arm64: kexec: no need to do irq_chip->irq_mask if it
- already masked
-In-Reply-To: <VI1PR0402MB3824B4D3BF37335FE48A12F1AE430@VI1PR0402MB3824.eurprd04.prod.outlook.com>
-References: <20200804085657.10776-1-jason.hui.liu@nxp.com>
- <b4444c737f9d6fd8fd99dbb809d35a0f@kernel.org> <20200804113850.GB15199@bogus>
- <VI1PR0402MB38243230C51FDB1C3F490853AE4B0@VI1PR0402MB3824.eurprd04.prod.outlook.com>
- <3c63ae0cc3a7b5bad5d4638a9870340e@kernel.org>
- <VI1PR0402MB38249815EA37338953E8AAC1AE480@VI1PR0402MB3824.eurprd04.prod.outlook.com>
- <1e4496c263e486be3438f2797630164a@kernel.org>
- <VI1PR0402MB3824B4D3BF37335FE48A12F1AE430@VI1PR0402MB3824.eurprd04.prod.outlook.com>
-User-Agent: Roundcube Webmail/1.4.5
-Message-ID: <01b7091e69d2b4e51f280b05f6218a65@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: jason.hui.liu@nxp.com, sudeep.holla@arm.com, catalin.marinas@arm.com, will@kernel.org, sashal@kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-13 07:03, Jason Liu wrote:
->> -----Original Message-----
->> From: Marc Zyngier <maz@kernel.org>
->> Sent: Thursday, August 6, 2020 8:26 PM
->> To: Jason Liu <jason.hui.liu@nxp.com>
->> Cc: Sudeep Holla <sudeep.holla@arm.com>; catalin.marinas@arm.com;
->> will@kernel.org; sashal@kernel.org; linux-kernel@vger.kernel.org;
->> linux-arm-kernel@lists.infradead.org
->> Subject: Re: [PATCH 1/1] arm64: kexec: no need to do 
->> irq_chip->irq_mask if it
->> already masked
->> 
->> On 2020-08-06 11:05, Jason Liu wrote:
->> >> -----Original Message-----
->> >> From: Marc Zyngier <maz@kernel.org>
->> 
->> [...]
->> 
->> >> > No, this patch is not papering over a much deeper issue in the driver.
->> >> > This is just to make things better for the ARM64 kexec.
->> >>
->> >> Yes, I'm sure it is... However:
->> >>
->> >> request_irq()
->> >> <goes into suspend, panic somewhere after having turned the irqchip
->> >> clock off> if (chip->irq_mask && !irqd_irq_masked(&desc->irq_data))
->> >>      <explodes, as the interrupt isn't masked>
->> >>
->> >> This is because the PM in the irqsteer driver is completely busted:
->> >> request_irq() should get a reference on the driver to prevent it from
->> >> being suspended. Since you don't implement it correctly, this doesn't
->> >> happen and your "improvement" doesn't help at all.
->> >
->> > The request_irq will get a reference to prevent the irqchip from being
->> > suspended due to it call irq_chip_pm_get(). I am pretty sure we have
->> > implemented correctly and that is also the common Linux code.
->> 
->> Then it seems you cannot read your own driver. At no point do you set 
->> the
->> parent_device that would give you a fighting chance to get the device 
->> clocked
->> and powered on. How does it work? Magic?
->> 
->> > In order to save power and let the irqchip enter into runtime SUSPEND
->> > mode, the driver will call free_irq() When it was not used(idle). Then
->> > free_irq() will decrease the reference and let the irqchip enter
->> > suspend state.
->> 
->> The reference count on *what*? There is nothing to take a reference 
->> on. So yes,
->> you understand how the core kernel works. But you don't seem to notice 
->> that
->> there is no link between the irq and the device that implements the 
->> controller.
+Em Wed, 12 Aug 2020 09:10:29 -0700
+Joe Perches <joe@perches.com> escreveu:
+
+> On Wed, 2020-08-12 at 17:56 +0200, Mauro Carvalho Chehab wrote:
+> > Using dev_dbg() is not too nice, as, instead of printing the
+> > name of the regulator, it prints "regulator.<number>", making
+> > harder to associate what is happening with each ldo line.
+> > 
+> > So, add a debug-specific macro, which will print the rdev's
+> > name, just like the regulator core.  
 > 
-> See the code, it will call irq_chip_pm_put(&desc->irq_data)
+> Seems sensible, but trivially:
 > 
-> /*
->  * Internal function to unregister an irqaction - used to free
->  * regular and special interrupts that are part of the architecture.
->  */
-> static struct irqaction *__free_irq(struct irq_desc *desc, void 
-> *dev_id)
-> {
-> ..
->         irq_chip_pm_put(&desc->irq_data);
->         module_put(desc->owner);
->         kfree(action->secondary);
->         return action;
-> }
-
-This is getting tiresome. You want to play the code-quote game?
-
-int irq_chip_pm_put(struct irq_data *data)
-{
-	int retval = 0;
-
-	if (IS_ENABLED(CONFIG_PM) && data->chip->parent_device)
-		retval = pm_runtime_put(data->chip->parent_device);
-
-	return (retval < 0) ? retval : 0;
-}
-
-What is parent_device set to in your driver? Oh wait... Nothing.
-So what does the code you quoted do? Not much.
-
->> > So, when the irqchip entered suspend, which means there is no user for
->> > the irqchip and all the irqs were DISABLED + MASKED.
->> > Due to the runtimePM support for the irqchip, when kexec runs, it will
->> > sometimes meet the situation that the irqchip is suspend due to no
->> > users for it. So from either the performance(time cost) or coding
->> > logic, the machine_kexec_mask_interrupts() should not do double mask
->> > for the irqs which already masked.
->> 
->> I strongly suggest you start by fixing the damn driver first.
+> > diff --git a/drivers/staging/hikey9xx/hi6421v600-regulator.c b/drivers/staging/hikey9xx/hi6421v600-regulator.c  
+> []
+> > @@ -209,10 +212,10 @@ static unsigned int hi6421_spmi_regulator_get_optimum_mode(struct regulator_dev
+> >  	struct hi6421v600_regulator *sreg = rdev_get_drvdata(rdev);
+> >  
+> >  	if (load_uA || ((unsigned int)load_uA > sreg->eco_uA)) {
+> > -		dev_dbg(&rdev->dev, "%s: normal mode", __func__);
+> > +		rdev_dbg(rdev, "normal mode");
+> >  		return REGULATOR_MODE_NORMAL;
+> >  	} else {
+> > -		dev_dbg(&rdev->dev, "%s: idle mode", __func__);
+> > +		rdev_dbg(rdev, "idle mode");  
 > 
-> Our driver does not have issue at all. What to fix?
+> missing terminating newlines
 
-[I've censored myself here...]
+As per request from Jonathan, I ended dropping those rdev_dbg()
+on a followup patch.
 
-> 
->> 
->> In the meantime, NAK to this patch.
-> 
-> Anyway, it seems don't really understand this issue and you just
-> simply reject one reasonable fix. Sounds not good at all.
+Btw, after this changeset:
 
-I reject it because your approach is flawed, and that you are
-papering over a glaring bug in your driver that you are refusing
-to fix.
+	commit 563873318d328d9bbab4b00dfd835ac7c7e28697
+	Merge: 24532f768121 bfd8d3f23b51
+	Author: Linus Torvalds <torvalds@linux-foundation.org>
+	Date:   Mon Oct 10 09:29:50 2016 -0700
 
-Maybe the right thing to do is to remove this driver from the code
-base altogether. I will prepare a patch to that effect.
+	    Merge branch 'printk-cleanups'
+    
+	    Merge my system logging cleanups, triggered by the broken '\n' patches.
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+the printk lib will add a line feed if a "\n" is missing. I had
+to get rid of pr_cont() & friends on that time on media, due to that. 
+
+Thanks,
+Mauro
