@@ -2,153 +2,293 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D216C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 05:12:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EEDBC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 05:12:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B65920768
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 05:12:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB8F220768
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 05:12:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726578AbgHMFMW (ORCPT
+        id S1726600AbgHMFMt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 01:12:22 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:44810 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725915AbgHMFMV (ORCPT
+        Thu, 13 Aug 2020 01:12:49 -0400
+Received: from mail108.syd.optusnet.com.au ([211.29.132.59]:37228 "EHLO
+        mail108.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725915AbgHMFMs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 01:12:21 -0400
-Received: by mail-il1-f199.google.com with SMTP id z15so3541199ile.11
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 22:12:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=jXaa6f30UjZ+KgTcwoAEIKRrU8me7hO1ssQHO/9rkbY=;
-        b=aoN9FbEwlGAy55fyQMjH+AbSNNtYh2p4bv1cIlDNfX00nwo/J+uaTOSvY3FbYcc51g
-         75boMU6cl/FczL8EkPE6eue/D3nx2Lkc87aDhpsqYGZPnDrRCWYAu7GZrGxzSduruS8m
-         XNNI/HK89sFsZPHx4aVQdFV/RIXiw1194IwjYYYqeLa+hALShzxLG297qETPW8SDbgX3
-         9Kwgy4rWm87iAAh1ZwL19tKRch++5ma2HIYNgxIaut5GDPHt6zr7+3zgX4lTq7iE9+Fv
-         AH0LKTJN/A/xbTUHeJBs5pk014CYfrHx2VqZ35DrzGFqXTKE9HwPABqsTLHZddPSU2Vz
-         fpvg==
-X-Gm-Message-State: AOAM530/4pyIo78m3M+kkK/kz+vA5ZyxfxaBCpEaRlcRcckSU5XHNekd
-        oQ9nvckKWHOmEYpA+6UjCQ0wk9GNTJnLE44Lq2leuvE3214z
-X-Google-Smtp-Source: ABdhPJy0dXezTISQ9rWm2hLbHY+mB2ToOBqf7JKyY3/kOoYGG3UGHRn7IhU62DNKGaQhBBPqj0ImI/NP9yysx5Ox9WTfhkh5Clm2
+        Thu, 13 Aug 2020 01:12:48 -0400
+Received: from dread.disaster.area (pa49-180-53-24.pa.nsw.optusnet.com.au [49.180.53.24])
+        by mail108.syd.optusnet.com.au (Postfix) with ESMTPS id B14EA1A8D4F;
+        Thu, 13 Aug 2020 15:12:40 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1k65Xa-0001Uw-B8; Thu, 13 Aug 2020 15:12:38 +1000
+Date:   Thu, 13 Aug 2020 15:12:38 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Vivek Goyal <vgoyal@redhat.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        virtio-fs@redhat.com, miklos@szeredi.hu, stefanha@redhat.com,
+        dgilbert@redhat.com
+Subject: Re: [PATCH v2 15/20] fuse, dax: Take ->i_mmap_sem lock during dax
+ page fault
+Message-ID: <20200813051238.GA3339@dread.disaster.area>
+References: <20200807195526.426056-1-vgoyal@redhat.com>
+ <20200807195526.426056-16-vgoyal@redhat.com>
+ <20200810222238.GD2079@dread.disaster.area>
+ <20200811175530.GB497326@redhat.com>
+ <20200812012345.GG2079@dread.disaster.area>
+ <20200812211012.GA540706@redhat.com>
 MIME-Version: 1.0
-X-Received: by 2002:a02:820b:: with SMTP id o11mr3217959jag.136.1597295540129;
- Wed, 12 Aug 2020 22:12:20 -0700 (PDT)
-Date:   Wed, 12 Aug 2020 22:12:20 -0700
-In-Reply-To: <000000000000c3cfbd05ac744f16@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000004553bf05acbb592b@google.com>
-Subject: Re: KMSAN: uninit-value in can_receive (2)
-From:   syzbot <syzbot+3f3837e61a48d32b495f@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, glider@google.com, kuba@kernel.org,
-        linux-can@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mkl@pengutronix.de, netdev@vger.kernel.org, socketcan@hartkopp.net,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200812211012.GA540706@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=LPwYv6e9 c=1 sm=1 tr=0
+        a=moVtWZxmCkf3aAMJKIb/8g==:117 a=moVtWZxmCkf3aAMJKIb/8g==:17
+        a=kj9zAlcOel0A:10 a=y4yBn9ojGxQA:10 a=7-415B0cAAAA:8
+        a=dml2hL0GLVIsGKko77gA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following issue on:
+On Wed, Aug 12, 2020 at 05:10:12PM -0400, Vivek Goyal wrote:
+> On Wed, Aug 12, 2020 at 11:23:45AM +1000, Dave Chinner wrote:
+> > On Tue, Aug 11, 2020 at 01:55:30PM -0400, Vivek Goyal wrote:
+> > > On Tue, Aug 11, 2020 at 08:22:38AM +1000, Dave Chinner wrote:
+> > > > On Fri, Aug 07, 2020 at 03:55:21PM -0400, Vivek Goyal wrote:
+> > > > > We need some kind of locking mechanism here. Normal file systems like
+> > > > > ext4 and xfs seems to take their own semaphore to protect agains
+> > > > > truncate while fault is going on.
+> > > > > 
+> > > > > We have additional requirement to protect against fuse dax memory range
+> > > > > reclaim. When a range has been selected for reclaim, we need to make sure
+> > > > > no other read/write/fault can try to access that memory range while
+> > > > > reclaim is in progress. Once reclaim is complete, lock will be released
+> > > > > and read/write/fault will trigger allocation of fresh dax range.
+> > > > > 
+> > > > > Taking inode_lock() is not an option in fault path as lockdep complains
+> > > > > about circular dependencies. So define a new fuse_inode->i_mmap_sem.
+> > > > 
+> > > > That's precisely why filesystems like ext4 and XFS define their own
+> > > > rwsem.
+> > > > 
+> > > > Note that this isn't a DAX requirement - the page fault
+> > > > serialisation is actually a requirement of hole punching...
+> > > 
+> > > Hi Dave,
+> > > 
+> > > I noticed that fuse code currently does not seem to have a rwsem which
+> > > can provide mutual exclusion between truncation/hole_punch path
+> > > and page fault path. I am wondering does that mean there are issues
+> > > with existing code or something else makes it unnecessary to provide
+> > > this mutual exlusion.
+> > 
+> > I don't know enough about the fuse implementation to say. What I'm
+> > saying is that nothing in the core mm/ or VFS serilises page cache
+> > access to the data against direct filesystem manipulations of the
+> > underlying filesystem structures.
+> 
+> Hi Dave,
+> 
+> Got it. I was checking nfs and they also seem to be calling filemap_fault
+> and not taking any locks to block faults. fallocate() (nfs42_fallocate)
+> seems to block read/write/aio/dio but does not seem to do anything
+> about blocking faults. I am wondering if remote filesystem are
+> little different in this aspect. Especially fuse does not maintain
+> any filesystem block/extent data. It is file server which is doing
+> all that.
 
-HEAD commit:    ce8056d1 wip: changed copy_from_user where instrumented
-git tree:       https://github.com/google/kmsan.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=1041a3be900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3afe005fb99591f
-dashboard link: https://syzkaller.appspot.com/bug?extid=3f3837e61a48d32b495f
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=160fbd06900000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12a14e6e900000
+I suspect they have all the same problems, and worse, the behaviour
+will largely be dependent on the server side behaviour that is out
+of the user's control.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+3f3837e61a48d32b495f@syzkaller.appspotmail.com
+Essentially, nobody except us XFS folks seem to regard hole punching
+corrupting data or exposing stale data as being a problem that needs
+to be avoided or fixed. The only reason ext4 has the i_mmap_sem is
+because ext4 wanted to support DAX, and us XFS developers said "DAX
+absolutely requires that the filesystem can lock out physical access
+to the storage" and so they had no choice in the matter.
 
-=====================================================
-BUG: KMSAN: uninit-value in can_receive+0x26b/0x630 net/can/af_can.c:650
-CPU: 1 PID: 8475 Comm: syz-executor984 Not tainted 5.8.0-rc5-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- <IRQ>
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x21c/0x280 lib/dump_stack.c:118
- kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:121
- __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
- can_receive+0x26b/0x630 net/can/af_can.c:650
- can_rcv+0x1fb/0x410 net/can/af_can.c:686
- __netif_receive_skb_one_core net/core/dev.c:5281 [inline]
- __netif_receive_skb+0x265/0x670 net/core/dev.c:5395
- process_backlog+0x50d/0xba0 net/core/dev.c:6239
- napi_poll+0x43b/0xfd0 net/core/dev.c:6684
- net_rx_action+0x35c/0xd40 net/core/dev.c:6752
- __do_softirq+0x2ea/0x7f5 kernel/softirq.c:293
- asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:711
- </IRQ>
- __run_on_irqstack arch/x86/include/asm/irq_stack.h:23 [inline]
- run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:50 [inline]
- do_softirq_own_stack+0x7c/0xa0 arch/x86/kernel/irq_64.c:77
- invoke_softirq kernel/softirq.c:390 [inline]
- __irq_exit_rcu+0x226/0x270 kernel/softirq.c:420
- irq_exit_rcu+0xe/0x10 kernel/softirq.c:432
- sysvec_apic_timer_interrupt+0x107/0x130 arch/x86/kernel/apic/apic.c:1091
- asm_sysvec_apic_timer_interrupt+0x12/0x20 arch/x86/include/asm/idtentry.h:593
-RIP: 0010:_raw_spin_unlock_irqrestore+0x4b/0x70 kernel/locking/spinlock.c:192
-Code: 00 8b b8 88 0c 00 00 48 8b 00 48 85 c0 75 28 48 89 df e8 b8 6e 4b f1 c6 00 00 c6 03 00 4d 85 e4 75 1c 4c 89 7d d8 ff 75 d8 9d <48> 83 c4 08 5b 41 5c 41 5e 41 5f 5d c3 e8 53 74 4b f1 eb d1 44 89
-RSP: 0018:ffff8880b8b0f880 EFLAGS: 00000282
-RAX: ffff88821fd3bc00 RBX: ffff88812fd1dc00 RCX: 000000021fc9cc00
-RDX: ffff88821fc9cc00 RSI: 00000000000004a0 RDI: ffff88812fd1dc00
-RBP: ffff8880b8b0f8a8 R08: ffffea000000000f R09: ffff88812fffa000
-R10: 0000000000000004 R11: 0000000000000000 R12: 0000000000000000
-R13: ffff8880b656c2e8 R14: 0000000000000000 R15: 0000000000000282
- unlock_hrtimer_base kernel/time/hrtimer.c:898 [inline]
- hrtimer_start_range_ns+0x459/0x4e0 kernel/time/hrtimer.c:1136
- hrtimer_start include/linux/hrtimer.h:421 [inline]
- j1939_tp_schedule_txtimer+0x132/0x1b0 net/can/j1939/transport.c:671
- j1939_sk_send_loop net/can/j1939/socket.c:1047 [inline]
- j1939_sk_sendmsg+0x1cc0/0x2950 net/can/j1939/socket.c:1160
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg net/socket.c:672 [inline]
- ____sys_sendmsg+0xc82/0x1240 net/socket.c:2352
- ___sys_sendmsg net/socket.c:2406 [inline]
- __sys_sendmsg+0x6d1/0x840 net/socket.c:2439
- __do_sys_sendmsg net/socket.c:2448 [inline]
- __se_sys_sendmsg+0x97/0xb0 net/socket.c:2446
- __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2446
- do_syscall_64+0xad/0x160 arch/x86/entry/common.c:386
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x443559
-Code: Bad RIP value.
-RSP: 002b:00007ffffdad8558 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000443559
-RDX: 0000000000000000 RSI: 0000000020000180 RDI: 0000000000000003
-RBP: 00007ffffdad8560 R08: 0000000001bbbbbb R09: 0000000001bbbbbb
-R10: 0000000001bbbbbb R11: 0000000000000246 R12: 00007ffffdad8570
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+Other than that, nobody really seems to understand or care about all
+these nasty little mmap() corner cases that we've seen corrupt user
+data or expose stale data to users over many years.....
 
-Uninit was created at:
- kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
- kmsan_internal_poison_shadow+0x66/0xd0 mm/kmsan/kmsan.c:127
- kmsan_slab_alloc+0x8a/0xe0 mm/kmsan/kmsan_hooks.c:80
- slab_alloc_node mm/slub.c:2839 [inline]
- __kmalloc_node_track_caller+0xeab/0x12e0 mm/slub.c:4478
- __kmalloc_reserve net/core/skbuff.c:142 [inline]
- __alloc_skb+0x35f/0xb30 net/core/skbuff.c:210
- alloc_skb include/linux/skbuff.h:1083 [inline]
- j1939_tp_tx_dat_new net/can/j1939/transport.c:568 [inline]
- j1939_xtp_do_tx_ctl net/can/j1939/transport.c:628 [inline]
- j1939_tp_tx_ctl net/can/j1939/transport.c:646 [inline]
- j1939_session_tx_rts net/can/j1939/transport.c:714 [inline]
- j1939_xtp_txnext_transmiter net/can/j1939/transport.c:832 [inline]
- j1939_tp_txtimer+0x402c/0x6980 net/can/j1939/transport.c:1095
- __run_hrtimer+0x7cd/0xf00 kernel/time/hrtimer.c:1520
- __hrtimer_run_queues kernel/time/hrtimer.c:1584 [inline]
- hrtimer_run_softirq+0x3bf/0x690 kernel/time/hrtimer.c:1601
- __do_softirq+0x2ea/0x7f5 kernel/softirq.c:293
-=====================================================
+> > i.e. nothing in the VFS or page fault IO path prevents this race
+> > condition:
+> > 
+> > P0				P1
+> > fallocate
+> > page cache invalidation
+> > 				page fault
+> > 				read data
+> > punch out data extents
+> > 				<data exposed to userspace is stale>
+> > 				<data exposed to userspace has no
+> > 				backing store allocated>
+> > 
+> > 
+> > That's where the ext4 and XFS internal rwsem come into play:
+> > 
+> > fallocate
+> > down_write(mmaplock)
+> > page cache invalidation
+> > 				page fault
+> > 				down_read(mmaplock)
+> > 				<blocks>
+> > punch out data
+> > up_write(mmaplock)
+> > 				<unblocks>
+> > 				<sees hole>
+> > 				<allocates zeroed pages in page cache>
+> > 
+> > And there's not stale data exposure to userspace.
+> 
+> Got it. I noticed that both fuse/nfs seem to have reversed the
+> order of operation. They call server to punch out data first
+> and then truncate page cache. And that should mean that even
+> if mmap reader will not see stale data after fallocate(punch_hole)
+> has finished.
 
+Yes, but that doesn't prevent page fault races from occuring, it
+just changes the nature of them.. Such as.....
+
+> > There is nothing stopping, say, memory reclaim from reclaiming pages
+> > over the range while the hole is being punched, then having the
+> > application refault them while the backing store is being freed.
+> > While the page fault read IO is in progress, there's nothing
+> > stopping the filesystem from freeing those blocks, nor reallocating
+> > them and writing something else to them (e.g. metadata). So they
+> > could read someone elses data.
+> > 
+> > Even worse: the page fault is a write fault, it lands in a hole, has
+> > space allocated, the page cache is zeroed, page marked dirty, and
+> > then the hole punch calls truncate_pagecache_range() which tosses
+> > away the zeroed page and the data the userspace application wrote
+> > to the page.
+> 
+> But isn't that supposed to happen.
+
+Right, it isn;'t supposed to happen, but it can happen if
+page_mkwrite doesn't serialise against fallocate(). i.e. without a
+i_mmap_sem, nothing in the mm page fault paths serialise the page
+fault against the filesystem fallocate operation in progress.
+
+Indeed, looking at fuse_page_mkwrite(), it just locks the page,
+checks the page->mapping hasn't changed (that's one of those
+"doesn't work for hole punching page invalidation" checks that I
+mentioned!) and then it waits for page writeback to complete. IOWs,
+fuse will allow a clean page in cache to be dirtied without the
+filesystem actually locking anything or doing any sort of internal
+serialisation operation.
+
+IOWs, there is nothing stopping an application on fuse from hitting
+this data corruption when a concurrent hole punch is run:
+
+ P0				P1
+ <read() loop to find zeros>
+ fallocate
+ write back dirty data
+ punch out data extents
+ .....
+ 				<app reads data via mmap>
+				  read fault, clean page in cache!
+ 				<app writes data via mmap>
+ 				  write page fault
+				  page_mkwrite
+				    <page is locked just fine>
+				  page is dirtied.
+				<app writes new data to page>
+ .....
+ page cache invalidation
+   <app's dirty page thrown away>
+				.....
+				<app reads data via mmap>
+				  read page fault
+				    <maps punched hole, returns zeros>
+				app detects data corruption
+
+That can happen quite easily - just go put a "sparsify" script into
+cron so that runs of zeroes in files are converted into holes to
+free up disk space every night....
+
+> If fallocate(hole_punch) and mmaped
+> write are happening at the same time, then there is no guarantee
+> in what order they will execute.
+
+It's not "order of exceution" that is the problem here - it's
+guaranteeing *atomic execution* that is the problem. See the example
+above - by not locking out page faults, fallocate() does not execute
+atomically w.r.t. to mmap() access to the file, and hence we end up
+losing changes the to data made via mmap.
+
+That's precisely what the i_mmap_sem fixes. It *guarantees* the
+ordering of the fallocate() operation and the page fault based
+access to the underlying data by ensuring that the *operations
+execute atomically* with respect to each other. And, by definition,
+that atomicity of execution removes all the races that can lead to
+data loss, corruption and/or stale data exposure....
+
+> App might read back data it wrote
+> or might read back zeros depdening on order it was executed. (Even
+> with proper locking).
+
+That behaviour is what "proper locking" provides. If you don't
+have an i_mmap_sem to guarantee serialisation of page faults against
+fallocate (i.e. "unproper locking"), then you also can get stale
+data, the wrong data, data loss, access-after-free, overwrite of
+metadata or other people's data, etc.
+
+> > The application then refaults the page, reading stale data off
+> > disk instead of seeing what it had already written to the page....
+> > 
+> > And unlike truncated pages, the mm/ code cannot reliably detect
+> > invalidation races on lockless lookup of pages that are within EOF.
+> > They rely on truncate changing the file size before page
+> > invalidation to detect races as page->index then points beyond EOF.
+> > Hole punching does not change inode size, so the page cache lookups
+> > cannot tell the difference between a new page that just needs IO to
+> > initialise the data and a page that has just been invalidated....
+> > 
+> > IOWs, there are many ways things can go wrong with hole punch, and
+> > the only way to avoid them all is to do invalidate and lock out the
+> > page cache before starting the fallocate operation. i.e.:
+> > 
+> > 	1. lock up the entire IO path (vfs and page fault)
+> > 	2. drain the AIO+DIO path
+> > 	3. write back dirty pages
+> > 	4. invalidate the page cache
+> 
+> I see that this is definitely safe. Stop all read/write/faults/aio/dio
+> before proceeding with punching hole and invalidating page cache.
+> 
+> I think for my purpose, I need to take fi->i_mmap_sem in memory
+> range freeing path and need to exactly do all the above to make
+> sure that no I/O, fault or AIO/DIO is going on before I take
+> away the memory range I have allocated for that inode offset. This
+> is I think very similar to assigning blocks/extents and taking
+> these away. In that code path I am already taking care of
+> taking inode lock as well as i_mmap_sem. But I have not taken
+> care of AIO/DIO stuff. I will introduce that too.
+> 
+> For the time being I will handle this fallocate/ftruncate possible
+> races in a separate patch series. To me it makes sense to do what
+> ext4/xfs are doing. But there might be more to it when it comes
+> to remote filesystems... 
+
+Remote filesystems introduce a whole new range of data coherency
+problems that are outside the scope of mmap() vs fallocate()
+serialisation. That is, page fault vs fallocate serialisation is a
+local client serialisation condition, not a remote filesystem
+data coherency issue...
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
