@@ -2,112 +2,197 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F7AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 17:58:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69A9AC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 17:59:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72E2E2078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 17:58:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NICIimap"
+	by mail.kernel.org (Postfix) with ESMTP id 4994820829
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 17:59:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597341576;
+	bh=CFADI5K3ybqlcI8c32cfvSt3eSFxRcdgnW/IUHOEoBQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=bUzUvM2OM16Y+9W9ZzrKV8IdoDkp0n85WrPshO2npYI4xD45j5n32rNuJ52k7KRAK
+	 C+Te77er33ANKjvRetdYUriIguSrGUr75+QfufVyznC9xb31xUxP0AINULfaY1rTrv
+	 8vJrjE6OJvEVRAolktC0GtCyWUCaEP3M7DxUSlPI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726564AbgHMR66 (ORCPT
+        id S1726587AbgHMR7f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 13:58:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46522 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726167AbgHMR66 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 13:58:58 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E249C061757;
-        Thu, 13 Aug 2020 10:58:58 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id e11so5528554otk.4;
-        Thu, 13 Aug 2020 10:58:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=D4q+Wr31o49gOBLsJFiOWZgVO2qtVCG5nZzCULshtek=;
-        b=NICIimapC4xks9d1b1WGN9gFIbckG9/NSIarZxjqRA0Hk6P2HCPjk+f77hpXQrGn9q
-         taEeHKuYlsZQbt9+ko31tELfwtj30a807GI96Vvu9V6r+K4uDZgW0J3yr1lPmjyWIayx
-         HsSIR+xO+MX8O5wPWAUdxTy3GfbEtarqv0x2v08tMI5E4bM5l2e/C4L/1WtitHP4tC3U
-         dKQkRlOoAWbg4VGsXfVKn9Owfdn9ZsUOIoYVU567XvlT68f+hmA+4zLAdt7OhdHKf/zQ
-         ZAsa1uPeuAOvzm1lPs7CS/j+uQlj5ZQQLgy4GgwZbm3ZnfIPpWupaAPh81xQYx21rcG9
-         ifew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=D4q+Wr31o49gOBLsJFiOWZgVO2qtVCG5nZzCULshtek=;
-        b=opsZt2HLt/NCJBQxeSUku78nPcRcuJ7cPbV8opL/J57Yz4/W0nDgCElEFDAJIvDgh/
-         RxjdwQ3+RlNB+GflToQ6PTqw2TY3hHeKjSrjqtQEll1Jyh+8e2pFwmn4uPYxkUhan3gR
-         uw7qZVolODxJfk4IXpTUFt2/zjsxyDCrKr6uSCJp1ca5FcFEwh8SxjUWa3TzUjh1NCtO
-         ZIb+MbxnV2f2rUDyoLiSuASLDf0qEJGO8ni4AS157+uSrm8zP6Bff1hi/Ev/O07hKI1l
-         a5f/w5GWGLjON8bzgnn0iZC7dJTH8uX7b0VBW0Gtkk2HGZ7ZeRMxtUlSXtUMKkhpAI8w
-         S7dw==
-X-Gm-Message-State: AOAM533FIB66Sskj/JsaCNa0y6jm/9RaDhEgnUvLHIEchLF/vDYRbYZo
-        W8XgZchnwMZ65s5bo74xxUH/lzn+o+SecYmmuEk=
-X-Google-Smtp-Source: ABdhPJxB9IFGGJpCpA7o0FMlikVRIzRUmWUrrE6kAwcupxXeo+xO20t31/hfkgmbXGPY2ZeSxXOT7X3vjTGCp6vlk2U=
-X-Received: by 2002:a9d:67d3:: with SMTP id c19mr5500387otn.162.1597341537454;
- Thu, 13 Aug 2020 10:58:57 -0700 (PDT)
+        Thu, 13 Aug 2020 13:59:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56802 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726167AbgHMR7e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 13:59:34 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DF132078D;
+        Thu, 13 Aug 2020 17:59:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597341573;
+        bh=CFADI5K3ybqlcI8c32cfvSt3eSFxRcdgnW/IUHOEoBQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=A/rtatHY8zbxQCJNEvrAKDbUf6pObl+Ye84cXF2q7CRd0h6vC7MfxK+hMRgde2x7W
+         UxkKBq/1LN6WZ8eMxAG6QEd3N9jesHDIdJlY4sHd5+WVLvZdhE5S0nS3yR96dppNXu
+         gNNsCaG81ubAsaYs5P9khhRJ8Q2sez93yO/ydg4I=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1k6HVj-001yy9-UI; Thu, 13 Aug 2020 18:59:32 +0100
 MIME-Version: 1.0
-References: <20200813170707.2659-1-nramas@linux.microsoft.com>
- <20200813170707.2659-3-nramas@linux.microsoft.com> <5f738fd8-fe28-5358-b3d8-b671b45caa7f@gmail.com>
- <7315b7e8-2c53-2555-bc2e-aae42e16aaa2@linux.microsoft.com>
-In-Reply-To: <7315b7e8-2c53-2555-bc2e-aae42e16aaa2@linux.microsoft.com>
-From:   Stephen Smalley <stephen.smalley.work@gmail.com>
-Date:   Thu, 13 Aug 2020 13:58:46 -0400
-Message-ID: <CAEjxPJ6sZdm2w=bbkL0uJyEkHw0gCT_y812WQBZPtLCJzO6r3A@mail.gmail.com>
-Subject: Re: [PATCH 2/2] SELinux: Measure state and hash of policy using IMA
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Tyler Hicks <tyhicks@linux.microsoft.com>,
-        tusharsu@linux.microsoft.com, sashal@kernel.org,
-        James Morris <jmorris@namei.org>,
-        linux-integrity@vger.kernel.org,
-        SElinux list <selinux@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        paul Moore <paul@paul-moore.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 13 Aug 2020 18:59:31 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Andre Przywara <andre.przywara@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH] arm64: Add KRYO4XX gold CPU core to spectre-v2 safe list
+In-Reply-To: <368280026c8af5b5a58a52c1e19cfae9@codeaurora.org>
+References: <20200813081834.13576-1-saiprakash.ranjan@codeaurora.org>
+ <20200813090324.GB9829@willie-the-truck>
+ <89f0f41514e547533c3fa66364e5a2ac@codeaurora.org>
+ <20200813094041.GA9894@willie-the-truck>
+ <ff6fa7bd817d49e8ef9bee5c1e13d99c@kernel.org>
+ <368280026c8af5b5a58a52c1e19cfae9@codeaurora.org>
+User-Agent: Roundcube Webmail/1.4.7
+Message-ID: <8ffd22d5926aedda0c9fa6ea429fd84e@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: saiprakash.ranjan@codeaurora.org, will@kernel.org, catalin.marinas@arm.com, andre.przywara@arm.com, mark.rutland@arm.com, suzuki.poulose@arm.com, swboyd@chromium.org, dianders@chromium.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 1:52 PM Lakshmi Ramasubramanian
-<nramas@linux.microsoft.com> wrote:
->
-> On 8/13/20 10:42 AM, Stephen Smalley wrote:
->
-> >> diff --git a/security/selinux/measure.c b/security/selinux/measure.c
-> >> new file mode 100644
-> >> index 000000000000..f21b7de4e2ae
-> >> --- /dev/null
-> >> +++ b/security/selinux/measure.c
-> >> @@ -0,0 +1,204 @@
-> >> +static int selinux_hash_buffer(void *buf, size_t buf_len,
-> >> +                   void **buf_hash, int *buf_hash_len)
-> >> +{
-> >> +    struct crypto_shash *tfm;
-> >> +    struct shash_desc *desc = NULL;
-> >> +    void *digest = NULL;
-> >> +    int desc_size;
-> >> +    int digest_size;
-> >> +    int ret = 0;
-> >> +
-> >> +    tfm = crypto_alloc_shash("sha256", 0, 0);
-> >> +    if (IS_ERR(tfm))
-> >> +        return PTR_ERR(tfm);
-> > Can we make the algorithm selectable via kernel parameter and/or writing
-> > to a new selinuxfs node?
->
-> I can add a kernel parameter to select this hash algorithm.
+On 2020-08-13 13:33, Sai Prakash Ranjan wrote:
+> On 2020-08-13 16:09, Marc Zyngier wrote:
+>> On 2020-08-13 10:40, Will Deacon wrote:
+>>> On Thu, Aug 13, 2020 at 02:49:37PM +0530, Sai Prakash Ranjan wrote:
+>>>> On 2020-08-13 14:33, Will Deacon wrote:
+>>>> > On Thu, Aug 13, 2020 at 01:48:34PM +0530, Sai Prakash Ranjan wrote:
+>>>> > > KRYO4XX gold/big CPU cores are based on Cortex-A76 which has CSV2
+>>>> > > bits set and are spectre-v2 safe. But on big.LITTLE systems where
+>>>> > > they are coupled with other CPU cores such as the KRYO4XX silver
+>>>> > > based on Cortex-A55 which are spectre-v2 safe but do not have CSV2
+>>>> > > bits set, the system wide safe value will be set to the lowest value
+>>>> > > of CSV2 bits as per FTR_LOWER_SAFE defined for CSV2 bits of register
+>>>> > > ID_AA64PFR0_EL1.
+>>>> > >
+>>>> > > This is a problem when booting a guest kernel on gold CPU cores
+>>>> > > where it will incorrectly report ARM_SMCCC_ARCH_WORKAROUND_1 warning
+>>>> > > and consider them as vulnerable for Spectre variant 2 due to system
+>>>> > > wide safe value which is used in kvm emulation code when reading id
+>>>> > > registers. One wrong way of fixing this is to set the FTR_HIGHER_SAFE
+>>>> > > for CSV2 bits, so instead add the KRYO4XX gold CPU core to the safe
+>>>> > > list which will be consulted even when the sanitised read reports
+>>>> > > that CSV2 bits are not set for KRYO4XX gold cores.
+>>>> > >
+>>>> > > Reported-by: Stephen Boyd <swboyd@chromium.org>
+>>>> > > Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+>>>> > > ---
+>>>> > >  arch/arm64/kernel/cpu_errata.c | 1 +
+>>>> > >  1 file changed, 1 insertion(+)
+>>>> > >
+>>>> > > diff --git a/arch/arm64/kernel/cpu_errata.c
+>>>> > > b/arch/arm64/kernel/cpu_errata.c
+>>>> > > index 6bd1d3ad037a..6cbdd2d98a2a 100644
+>>>> > > --- a/arch/arm64/kernel/cpu_errata.c
+>>>> > > +++ b/arch/arm64/kernel/cpu_errata.c
+>>>> > > @@ -545,6 +545,7 @@ static const struct midr_range
+>>>> > > spectre_v2_safe_list[] = {
+>>>> > >  	MIDR_ALL_VERSIONS(MIDR_HISI_TSV110),
+>>>> > >  	MIDR_ALL_VERSIONS(MIDR_QCOM_KRYO_3XX_SILVER),
+>>>> > >  	MIDR_ALL_VERSIONS(MIDR_QCOM_KRYO_4XX_SILVER),
+>>>> > > +	MIDR_ALL_VERSIONS(MIDR_QCOM_KRYO_4XX_GOLD),
+>>>> >
+>>>> > We shouldn't be putting CPUs in the safe list when they have CSV2
+>>>> > reporting
+>>>> > that they are mitigated in hardware, so I don't think this is the right
+>>>> > approach.
+>>>> >
+>>>> 
+>>>> Ok but the only thing I find wrong in this approach is that it is a
+>>>> redundant
+>>>> information because CSV2 is already advertising the mitigation, but 
+>>>> again
+>>>> CSV2 check is done first so it doesn't really hurt to add it to the 
+>>>> safe
+>>>> list because we already know that it is safe.
+>>> 
+>>> It simply doesn't scale. That's why CSV2 exists in the first place, 
+>>> so we
+>>> don't have to modify the kernel everytime a new CPU is invented.
+>>> 
+>>>> > Sounds more like KVM should advertise CSV2 for the vCPUs if all of the
+>>>> > physical CPUs without CSV2 set are on the safe list. But then again, KVM
+>>>> > has always been slightly in denial about big.LITTLE because you can't
+>>>> > sensibly expose it to a guest if there are detectable differences...
+>>>> >
+>>>> 
+>>>> Sorry but I don't see how the guest kernel will see the CSV2 bits 
+>>>> set for
+>>>> gold CPU cores without actually adding them to the safe list or 
+>>>> reading the
+>>>> not sanitised value of ID_AA64PFR0_EL1 ?
+>>> 
+>>> Well that's for somebody to figure out in the patch. I'm just saying 
+>>> that
+>>> adding cores to the safe list when they already have a CSV2 field 
+>>> conveying
+>>> the same information is the wrong approach. The right appproach is 
+>>> for KVM
+>>> to expose CSV2 as set when the system is not affected by the erratum.
+>> 
+>> A sensible way to fix this would be with something like that:
+>> 
+>> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+>> index 077293b5115f..2735db21ff0d 100644
+>> --- a/arch/arm64/kvm/sys_regs.c
+>> +++ b/arch/arm64/kvm/sys_regs.c
+>> @@ -1131,6 +1131,9 @@ static u64 read_id_reg(const struct kvm_vcpu 
+>> *vcpu,
+>>  		if (!vcpu_has_sve(vcpu))
+>>  			val &= ~(0xfUL << ID_AA64PFR0_SVE_SHIFT);
+>>  		val &= ~(0xfUL << ID_AA64PFR0_AMU_SHIFT);
+>> +		if (!(val & (0xfUL << ID_AA64PFR0_CSV2_SHIFT)) &&
+>> +		    get_spectre_v2_workaround_state() == 
+>> ARM64_BP_HARDEN_NOT_REQUIRED)
+>> +			val |= (1UL << ID_AA64PFR0_CSV2_SHIFT);
+>>  	} else if (id == SYS_ID_AA64ISAR1_EL1 && !vcpu_has_ptrauth(vcpu)) {
+>>  		val &= ~((0xfUL << ID_AA64ISAR1_APA_SHIFT) |
+>>  			 (0xfUL << ID_AA64ISAR1_API_SHIFT) |
+>> 
+> 
+> Thanks Marc, I gave this a go on SC7180 where the issue was seen and
+> this fix is good.
+> 
+> Tested-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 
-Also can we provide a Kconfig option for the default value like IMA does?
+There is still a problem with this approach. A late CPU could
+come up after a guest has been started. If that CPU identified
+as vulnerable by the host kernel, get_spectre_v2_workaround_state()
+will return a different value, breaking the guest (or more
+likely, leaving it exposed to Spectre-v2 attacks).
+
+We'd need to disable the late onlining of CPUs that would change
+the mitigation state, and this is... ugly.
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
