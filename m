@@ -2,336 +2,181 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7234DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 662F6C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A46F20829
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:34:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32AAD20781
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:34:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NC956Qr7"
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="qDYeaWFL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726796AbgHMPd5 (ORCPT
+        id S1726841AbgHMPeF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 11:33:57 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:22783 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726531AbgHMPdz (ORCPT
+        Thu, 13 Aug 2020 11:34:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52386 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726576AbgHMPeA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 11:33:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597332833;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=zz3etVbVEOjvsPy3a1rmULc9GOmqKniLRh7neDKkaXw=;
-        b=NC956Qr7PaYw+FkpHVpruPftldYtAiMT3bME+PYswh12BrIPd5iW5//N+g4Ax3B5joGOMn
-        0hTq+0u4LxUr9zDBhqfrQA49ZEDsB9IIA46AQmdHK6iwaATAYsif6iToBlUYDw581w0BJX
-        SOZkcZvXoKdU5+7HW5/PHyF9o1m0hjg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-149-NF_LSg7jPDCoEHuwC5VjVA-1; Thu, 13 Aug 2020 11:33:51 -0400
-X-MC-Unique: NF_LSg7jPDCoEHuwC5VjVA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6C8E4183586C;
-        Thu, 13 Aug 2020 15:33:49 +0000 (UTC)
-Received: from steredhat.redhat.com (ovpn-113-140.ams2.redhat.com [10.36.113.140])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 26D7560C04;
-        Thu, 13 Aug 2020 15:33:23 +0000 (UTC)
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Jann Horn <jannh@google.com>, Jeff Moyer <jmoyer@redhat.com>,
-        linux-fsdevel@vger.kernel.org, Sargun Dhillon <sargun@sargun.me>,
-        Kees Cook <keescook@chromium.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        linux-kernel@vger.kernel.org, Aleksa Sarai <asarai@suse.de>,
-        io-uring@vger.kernel.org
-Subject: [PATCH v4 2/3] io_uring: add IOURING_REGISTER_RESTRICTIONS opcode
-Date:   Thu, 13 Aug 2020 17:32:53 +0200
-Message-Id: <20200813153254.93731-3-sgarzare@redhat.com>
-In-Reply-To: <20200813153254.93731-1-sgarzare@redhat.com>
-References: <20200813153254.93731-1-sgarzare@redhat.com>
+        Thu, 13 Aug 2020 11:34:00 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 170B4C061383
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 08:34:00 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id b2so2802813qvp.9
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 08:34:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+         :content-transfer-encoding;
+        bh=ezijkfx0Y5DorrGX8/YWq9ouXTyf+zW2VdpyaeIcFao=;
+        b=qDYeaWFLKTNgjRfAfZohibiECyItuS3oMZUnILoFBX8iTUtxUnigrWwfg2amqlh5KM
+         kyfL1zNnz0tm8K1XD90feWYeZFRXu09RcA4Glp56T2BpFM6rE75iB+p8z+kqC2IwHAA8
+         2+aDzbP6gT6ToL8EtuItNlng3DgdUF8kV3P8NoyU66zmJj6zXfQWZHJstKBRRMKYW8vj
+         xlDq2+7WStOHiOH6xR5/vGwSVl3oPItrOlGaHSxtTM/2IXQeheUoKld1ob/TBI8NpHAk
+         eZ5AZmTI4VK2tKpbC3SzihCLuKMJ2v2n+3JHvW+ofUbIjJxli3KGIHYQnWaOaJqWwpC1
+         xjgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ezijkfx0Y5DorrGX8/YWq9ouXTyf+zW2VdpyaeIcFao=;
+        b=QQOKXZ4gMmaM+8Ox8+vbnXekQ+xiPf9i8U+1TruMi6zDHP40ur2kzY0jAD3VhoJu8S
+         Qe0Bv/W3csLMd/M8wQc4E+Razovy92RASfZtLkokt1PEW14GTw0GNgrwdlwAWdno+nha
+         YLPsIomEeZPkbFBw9O0/e2qReRWc1wsSEYTBKhASWi/O4jLo7kcwENobB0TiIVjBZ6AI
+         Nsstl6rKOasV8vdimV12k4i12sF1c+kUcImCcmwJGyiRTuk21ax4yxFe9P/q6fq2Y81p
+         Keoh2+XkvkfALoS7GWHj+D3yjWQOehdeTQEK9eyCclZ5Ydqqd4fla7Xh94feglQsltH2
+         cZ8g==
+X-Gm-Message-State: AOAM530w2LtEKRYpQ301rmX7C/EeAq+yJb5LMctcb26yZ06rU+KpkOAk
+        7UxDhTV4vGdyd65Nm4RZ/DIPWQ==
+X-Google-Smtp-Source: ABdhPJzW2g4O8d3zoBeCYopEB+n7a4zLaABB0qlEdfWfB/LmLR6LYK/+D2eWkuiuFTTIausl+jr1Mw==
+X-Received: by 2002:ad4:4806:: with SMTP id g6mr5112072qvy.39.1597332839042;
+        Thu, 13 Aug 2020 08:33:59 -0700 (PDT)
+Received: from localhost (cpe-174-109-172-136.nc.res.rr.com. [174.109.172.136])
+        by smtp.gmail.com with ESMTPSA id l66sm6861647qte.48.2020.08.13.08.33.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Aug 2020 08:33:58 -0700 (PDT)
+From:   Josef Bacik <josef@toxicpanda.com>
+To:     hch@lst.de, viro@ZenIV.linux.org.uk, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, kernel-team@fb.com,
+        willy@infradead.org
+Subject: [PATCH][v2] proc: use vmalloc for our kernel buffer
+Date:   Thu, 13 Aug 2020 11:33:56 -0400
+Message-Id: <20200813153356.857625-1-josef@toxicpanda.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200813145305.805730-1-josef@toxicpanda.com>
+References: <20200813145305.805730-1-josef@toxicpanda.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The new io_uring_register(2) IOURING_REGISTER_RESTRICTIONS opcode
-permanently installs a feature allowlist on an io_ring_ctx.
-The io_ring_ctx can then be passed to untrusted code with the
-knowledge that only operations present in the allowlist can be
-executed.
+Since
 
-The allowlist approach ensures that new features added to io_uring
-do not accidentally become available when an existing application
-is launched on a newer kernel version.
+  sysctl: pass kernel pointers to ->proc_handler
 
-Currently is it possible to restrict sqe opcodes, sqe flags, and
-register opcodes.
+we have been pre-allocating a buffer to copy the data from the proc
+handlers into, and then copying that to userspace.  The problem is this
+just blind kmalloc()'s the buffer size passed in from the read, which in
+the case of our 'cat' binary was 64kib.  Order-4 allocations are not
+awesome, and since we can potentially allocate up to our maximum order,
+use vmalloc for these buffers.
 
-IOURING_REGISTER_RESTRICTIONS can only be made once. Afterwards
-it is not possible to change restrictions anymore.
-This prevents untrusted code from removing restrictions.
-
-Suggested-by: Stefan Hajnoczi <stefanha@redhat.com>
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+Fixes: 32927393dc1c ("sysctl: pass kernel pointers to ->proc_handler")
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
 ---
-v3:
- - added IORING_RESTRICTION_SQE_FLAGS_ALLOWED and
-   IORING_RESTRICTION_SQE_FLAGS_REQUIRED
- - removed IORING_RESTRICTION_FIXED_FILES_ONLY
+v1->v2:
+- Make vmemdup_user_nul actually do the right thing...sorry about that.
 
-RFC v2:
- - added 'restricted' flag in the ctx [Jens]
- - added IORING_MAX_RESTRICTIONS define
- - returned EBUSY instead of EINVAL when restrictions are already
-   registered
- - reset restrictions if an error happened during the registration
----
- fs/io_uring.c                 | 112 +++++++++++++++++++++++++++++++++-
- include/uapi/linux/io_uring.h |  31 ++++++++++
- 2 files changed, 142 insertions(+), 1 deletion(-)
+ fs/proc/proc_sysctl.c  |  6 +++---
+ include/linux/string.h |  1 +
+ mm/util.c              | 27 +++++++++++++++++++++++++++
+ 3 files changed, 31 insertions(+), 3 deletions(-)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 1ec25ee71372..cb365e6e0af7 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -98,6 +98,8 @@
- #define IORING_MAX_FILES_TABLE	(1U << IORING_FILE_TABLE_SHIFT)
- #define IORING_FILE_TABLE_MASK	(IORING_MAX_FILES_TABLE - 1)
- #define IORING_MAX_FIXED_FILES	(64 * IORING_MAX_FILES_TABLE)
-+#define IORING_MAX_RESTRICTIONS	(IORING_RESTRICTION_LAST + \
-+				 IORING_REGISTER_LAST + IORING_OP_LAST)
+diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
+index 6c1166ccdaea..207ac6e6e028 100644
+--- a/fs/proc/proc_sysctl.c
++++ b/fs/proc/proc_sysctl.c
+@@ -571,13 +571,13 @@ static ssize_t proc_sys_call_handler(struct file *filp, void __user *ubuf,
+ 		goto out;
  
- struct io_uring {
- 	u32 head ____cacheline_aligned_in_smp;
-@@ -219,6 +221,13 @@ struct io_buffer {
- 	__u16 bid;
- };
- 
-+struct io_restriction {
-+	DECLARE_BITMAP(register_op, IORING_REGISTER_LAST);
-+	DECLARE_BITMAP(sqe_op, IORING_OP_LAST);
-+	u8 sqe_flags_allowed;
-+	u8 sqe_flags_required;
-+};
-+
- struct io_ring_ctx {
- 	struct {
- 		struct percpu_ref	refs;
-@@ -231,6 +240,7 @@ struct io_ring_ctx {
- 		unsigned int		cq_overflow_flushed: 1;
- 		unsigned int		drain_next: 1;
- 		unsigned int		eventfd_async: 1;
-+		unsigned int		restricted: 1;
- 
- 		/*
- 		 * Ring buffer of indices into array of io_uring_sqe, which is
-@@ -338,6 +348,7 @@ struct io_ring_ctx {
- 	struct llist_head		file_put_llist;
- 
- 	struct work_struct		exit_work;
-+	struct io_restriction		restrictions;
- };
- 
- /*
-@@ -6353,6 +6364,19 @@ static int io_init_req(struct io_ring_ctx *ctx, struct io_kiocb *req,
- 	if (unlikely(sqe_flags & ~SQE_VALID_FLAGS))
- 		return -EINVAL;
- 
-+	if (unlikely(ctx->restricted)) {
-+		if (!test_bit(req->opcode, ctx->restrictions.sqe_op))
-+			return -EACCES;
-+
-+		if ((sqe_flags & ctx->restrictions.sqe_flags_required) !=
-+		    ctx->restrictions.sqe_flags_required)
-+			return -EACCES;
-+
-+		if (sqe_flags & ~(ctx->restrictions.sqe_flags_allowed |
-+				  ctx->restrictions.sqe_flags_required))
-+			return -EACCES;
-+	}
-+
- 	if ((sqe_flags & IOSQE_BUFFER_SELECT) &&
- 	    !io_op_defs[req->opcode].buffer_select)
- 		return -EOPNOTSUPP;
-@@ -8650,6 +8674,76 @@ static int io_unregister_personality(struct io_ring_ctx *ctx, unsigned id)
- 	return -EINVAL;
- }
- 
-+static int io_register_restrictions(struct io_ring_ctx *ctx, void __user *arg,
-+				    unsigned int nr_args)
-+{
-+	struct io_uring_restriction *res;
-+	size_t size;
-+	int i, ret;
-+
-+	/* We allow only a single restrictions registration */
-+	if (ctx->restricted)
-+		return -EBUSY;
-+
-+	if (!arg || nr_args > IORING_MAX_RESTRICTIONS)
-+		return -EINVAL;
-+
-+	size = array_size(nr_args, sizeof(*res));
-+	if (size == SIZE_MAX)
-+		return -EOVERFLOW;
-+
-+	res = kmalloc(size, GFP_KERNEL);
-+	if (!res)
-+		return -ENOMEM;
-+
-+	if (copy_from_user(res, arg, size)) {
-+		ret = -EFAULT;
-+		goto out;
-+	}
-+
-+	for (i = 0; i < nr_args; i++) {
-+		switch (res[i].opcode) {
-+		case IORING_RESTRICTION_REGISTER_OP:
-+			if (res[i].register_op >= IORING_REGISTER_LAST) {
-+				ret = -EINVAL;
-+				goto out;
-+			}
-+
-+			__set_bit(res[i].register_op,
-+				  ctx->restrictions.register_op);
-+			break;
-+		case IORING_RESTRICTION_SQE_OP:
-+			if (res[i].sqe_op >= IORING_OP_LAST) {
-+				ret = -EINVAL;
-+				goto out;
-+			}
-+
-+			__set_bit(res[i].sqe_op, ctx->restrictions.sqe_op);
-+			break;
-+		case IORING_RESTRICTION_SQE_FLAGS_ALLOWED:
-+			ctx->restrictions.sqe_flags_allowed = res[i].sqe_flags;
-+			break;
-+		case IORING_RESTRICTION_SQE_FLAGS_REQUIRED:
-+			ctx->restrictions.sqe_flags_required = res[i].sqe_flags;
-+			break;
-+		default:
-+			ret = -EINVAL;
-+			goto out;
-+		}
-+	}
-+
-+	ctx->restricted = 1;
-+
-+	ret = 0;
-+out:
-+	/* Reset all restrictions if an error happened */
-+	if (ret != 0)
-+		memset(&ctx->restrictions, 0, sizeof(ctx->restrictions));
-+
-+	kfree(res);
-+	return ret;
-+}
-+
- static bool io_register_op_must_quiesce(int op)
- {
- 	switch (op) {
-@@ -8696,6 +8790,18 @@ static int __io_uring_register(struct io_ring_ctx *ctx, unsigned opcode,
- 		if (ret) {
- 			percpu_ref_resurrect(&ctx->refs);
- 			ret = -EINTR;
-+			goto out_quiesce;
-+		}
-+	}
-+
-+	if (ctx->restricted) {
-+		if (opcode >= IORING_REGISTER_LAST) {
-+			ret = -EINVAL;
-+			goto out;
-+		}
-+
-+		if (!test_bit(opcode, ctx->restrictions.register_op)) {
-+			ret = -EACCES;
+ 	if (write) {
+-		kbuf = memdup_user_nul(ubuf, count);
++		kbuf = vmemdup_user_nul(ubuf, count);
+ 		if (IS_ERR(kbuf)) {
+ 			error = PTR_ERR(kbuf);
  			goto out;
  		}
+ 	} else {
+-		kbuf = kzalloc(count, GFP_KERNEL);
++		kbuf = kvzalloc(count, GFP_KERNEL);
+ 		if (!kbuf)
+ 			goto out;
  	}
-@@ -8759,15 +8865,19 @@ static int __io_uring_register(struct io_ring_ctx *ctx, unsigned opcode,
- 			break;
- 		ret = io_unregister_personality(ctx, nr_args);
- 		break;
-+	case IORING_REGISTER_RESTRICTIONS:
-+		ret = io_register_restrictions(ctx, arg, nr_args);
-+		break;
- 	default:
- 		ret = -EINVAL;
- 		break;
- 	}
+@@ -600,7 +600,7 @@ static ssize_t proc_sys_call_handler(struct file *filp, void __user *ubuf,
  
-+out:
- 	if (io_register_op_must_quiesce(opcode)) {
- 		/* bring the ctx back to life */
- 		percpu_ref_reinit(&ctx->refs);
--out:
-+out_quiesce:
- 		reinit_completion(&ctx->ref_comp);
- 	}
- 	return ret;
-diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
-index cdc98afbacc3..be54bc3cf173 100644
---- a/include/uapi/linux/io_uring.h
-+++ b/include/uapi/linux/io_uring.h
-@@ -267,6 +267,7 @@ enum {
- 	IORING_REGISTER_PROBE,
- 	IORING_REGISTER_PERSONALITY,
- 	IORING_UNREGISTER_PERSONALITY,
-+	IORING_REGISTER_RESTRICTIONS,
+ 	error = count;
+ out_free_buf:
+-	kfree(kbuf);
++	kvfree(kbuf);
+ out:
+ 	sysctl_head_finish(head);
  
- 	/* this goes last */
- 	IORING_REGISTER_LAST
-@@ -295,4 +296,34 @@ struct io_uring_probe {
- 	struct io_uring_probe_op ops[0];
- };
+diff --git a/include/linux/string.h b/include/linux/string.h
+index 9b7a0632e87a..aee3689fb865 100644
+--- a/include/linux/string.h
++++ b/include/linux/string.h
+@@ -12,6 +12,7 @@
+ extern char *strndup_user(const char __user *, long);
+ extern void *memdup_user(const void __user *, size_t);
+ extern void *vmemdup_user(const void __user *, size_t);
++extern void *vmemdup_user_nul(const void __user *, size_t);
+ extern void *memdup_user_nul(const void __user *, size_t);
  
-+struct io_uring_restriction {
-+	__u16 opcode;
-+	union {
-+		__u8 register_op; /* IORING_RESTRICTION_REGISTER_OP */
-+		__u8 sqe_op;      /* IORING_RESTRICTION_SQE_OP */
-+		__u8 sqe_flags;   /* IORING_RESTRICTION_SQE_FLAGS_* */
-+	};
-+	__u8 resv;
-+	__u32 resv2[3];
-+};
-+
-+/*
-+ * io_uring_restriction->opcode values
+ /*
+diff --git a/mm/util.c b/mm/util.c
+index 5ef378a2a038..9d0ad7aafc27 100644
+--- a/mm/util.c
++++ b/mm/util.c
+@@ -208,6 +208,33 @@ void *vmemdup_user(const void __user *src, size_t len)
+ }
+ EXPORT_SYMBOL(vmemdup_user);
+ 
++/**
++ * vmemdup_user_nul - duplicate memory region from user space and NUL-terminate
++ *
++ * @src: source address in user space
++ * @len: number of bytes to copy
++ *
++ * Return: an ERR_PTR() on failure.  Result may be not
++ * physically contiguous.  Use kvfree() to free.
 + */
-+enum {
-+	/* Allow an io_uring_register(2) opcode */
-+	IORING_RESTRICTION_REGISTER_OP,
++void *vmemdup_user_nul(const void __user *src, size_t len)
++{
++	char *p;
 +
-+	/* Allow an sqe opcode */
-+	IORING_RESTRICTION_SQE_OP,
++	p = kvmalloc(len + 1, GFP_USER);
++	if (!p)
++		return ERR_PTR(-ENOMEM);
 +
-+	/* Allow sqe flags */
-+	IORING_RESTRICTION_SQE_FLAGS_ALLOWED,
++	if (copy_from_user(p, src, len)) {
++		kvfree(p);
++		return ERR_PTR(-EFAULT);
++	}
++	p[len] = '\0';
 +
-+	/* Require sqe flags (these flags must be set on each submission) */
-+	IORING_RESTRICTION_SQE_FLAGS_REQUIRED,
++	return p;
++}
++EXPORT_SYMBOL(vmemdup_user_nul);
 +
-+	IORING_RESTRICTION_LAST
-+};
-+
- #endif
+ /**
+  * strndup_user - duplicate an existing string from user space
+  * @s: The string to duplicate
 -- 
-2.26.2
+2.24.1
 
