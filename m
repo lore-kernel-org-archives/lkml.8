@@ -8,65 +8,68 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66AA2C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 19:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED430C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 19:35:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47FB320791
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 19:35:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE5EC20791
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 19:35:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tBBT5t5o"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jKwXyBMT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726567AbgHMTfF (ORCPT
+        id S1726597AbgHMTfH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 15:35:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33072 "EHLO
+        Thu, 13 Aug 2020 15:35:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726419AbgHMTfE (ORCPT
+        with ESMTP id S1726419AbgHMTfF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 15:35:04 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 567BDC061757;
-        Thu, 13 Aug 2020 12:35:04 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id kq25so7433158ejb.3;
-        Thu, 13 Aug 2020 12:35:04 -0700 (PDT)
+        Thu, 13 Aug 2020 15:35:05 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14F18C061757;
+        Thu, 13 Aug 2020 12:35:05 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id l23so5052103edv.11;
+        Thu, 13 Aug 2020 12:35:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=12087FTp/9siWmAQYdka9CL+BX7dl2z7W64nVKUq+mY=;
-        b=tBBT5t5o2REJgDO4g+TrwhTLSetN55ivpIQFldh6ISQntwzdiBKYqnJxQH5O9o4+CR
-         DHui/QjNFZbzkEZQMxIvtUp+mrz3nMQCrLHivjoFbxWpf6W+OqMwXS17teRDeRA6u5kT
-         4e0RgfFQiCS1tuB7wXdr3iK9YKx7sT0jsODiIzf0GtKyemv+f7XpDkyxYQG9rN6/+7lS
-         egVZtnjLpyT0lvDRpHQVB6ONg7Ydnybksd21728Cw+WlQDTUHIKi4kAZhFp6Tlf6AdKH
-         E3cF0aDwhHoXp7FaDSnIf19s9m7aYOMnYJN6gBi+t4gjyfmvoIz6/6uT1azYh8XyQq0C
-         W64Q==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=WcafXLrIkW0gekBmKMIz/WZuLgKVGf9oTkGw44iFQAY=;
+        b=jKwXyBMTVbZIwxzdDbn4XzuY5kWxoEjoYdq44qxpBinPI8Lu1BRbXnTJnVD8BChmT0
+         /mYN/YwSOnd2eqZHkP7346RrvyWV3wxi4xUGFyRBdyQL6yn3yISjxVyrdTOmVv7JKhhL
+         fZWnuRfbC9Hke/lnF5RnztabNgLVm58WA491/2fh3FGHhsspy/f2HaoZAIEqgkzg5Zqp
+         p6EZk8zekcbsd7ftzRQO4HxyyEo9190CNX27eRNeUYZoij3Gw2fIcAytWP9asfAOFOhu
+         4zu5kC7Psrt7JOIxeZbE4nbeXavSjoLmybZ71aKZVkQQE/E0kRV81HQSjQ+xj5dDLMAe
+         yx5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=12087FTp/9siWmAQYdka9CL+BX7dl2z7W64nVKUq+mY=;
-        b=MR8EmkKrTj5IX4nSEJuZ7dsxtbfdfSw2nD6k4orA/CBfaCoSfbelAgDDDB5UFTeBTc
-         8TPlc0chRFi9qGb2JWjk8EqRL20XquQoPUUC7V6nRZEPippLhyjed+FHl/uXy4wV+h5S
-         n11/bwna3qv9nvLltZz+jAUSjsQW1DdhlMerFwAdSEx+zSEByAo1NolQD3SXnqrKbkBT
-         aYK4JFIYT4gavy9x4WKXjuxamcrTVs3O6vPevV07jTkxNIy9NRNslcDkEG+0iD/+C9uL
-         qGq/XkNTUj1W1N+8MrOg8rRoPuMKtAjWchCxfXQWdJiJ7hux7yPPpBsCZwxsh1bPz8j0
-         XXvA==
-X-Gm-Message-State: AOAM532JraNDtvq9ETp5WuyDnTpPwocQUwg9TkwhrNS0+SLASDAKQR5e
-        eZFAk0XfKtGKkQKX+2oF4gNHI2JiqHQ=
-X-Google-Smtp-Source: ABdhPJzxzJWAiaIXjEwIoz/ywgVFx1eH/wgrFrgxLMsQw0GYqiJify07ZgB3889gG5pzyXz6wyQ0/w==
-X-Received: by 2002:a17:906:1a54:: with SMTP id j20mr6601465ejf.102.1597347302920;
-        Thu, 13 Aug 2020 12:35:02 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=WcafXLrIkW0gekBmKMIz/WZuLgKVGf9oTkGw44iFQAY=;
+        b=MF6o6z3vp2S9AIA9CgFJbCCAeGVvWm2wFp6gfP/jnEP9357gbzB2eWq59L4FgrTMEl
+         R+keUnn1xbjEa/QpOosAiy/rozKJ2Xq5Ai6ewbwkOZ/LhEwzRrEHRoWqWxWd671OFZAb
+         8PrshTLJEfcGguHtXePLuJjgH3yNZBuYpONRSdiSZ7FTE1jBMVXd5J1FpSysU4mMK1SI
+         kT7NZtJQVC9tO6QOhIz6N0K3sW6HWejX6baTF4Jz790QKk6M3MYZX71P99CY5+icWUkA
+         kpjKcsrOn9ufg0Hferl4Wn2F2ReB5H8uhAu6GQmcdGjCPUKIiiVItWDrVGmLBEo2jsPK
+         dZqg==
+X-Gm-Message-State: AOAM533/DctiUlfCiZ2b/xEd8r3ZICqZ09obNm2FHUrcvUIS2hP/F39Y
+        MHlsU6P/ab+D7zMl9BK3G0w=
+X-Google-Smtp-Source: ABdhPJwOrP1UE4L64efXQ7WL1gPe1+nNlyRA7pxgg+eGvVs0QbKOxTAEzQ6DYpByvhQ64IcvTIk/eg==
+X-Received: by 2002:aa7:c74f:: with SMTP id c15mr1045294eds.331.1597347303796;
+        Thu, 13 Aug 2020 12:35:03 -0700 (PDT)
 Received: from debian.home (81-204-249-205.fixed.kpn.net. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id d9sm4120603edt.20.2020.08.13.12.35.01
+        by smtp.gmail.com with ESMTPSA id d9sm4120603edt.20.2020.08.13.12.35.02
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Aug 2020 12:35:02 -0700 (PDT)
+        Thu, 13 Aug 2020 12:35:03 -0700 (PDT)
 From:   Johan Jonker <jbx6244@gmail.com>
 To:     heiko@sntech.de
 Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v1 1/2] ARM: dts: rockchip: rename and label gpio-led subnodes part 3
-Date:   Thu, 13 Aug 2020 21:34:54 +0200
-Message-Id: <20200813193455.19772-1-jbx6244@gmail.com>
+Subject: [PATCH v1 2/2] arm64: dts: rockchip: rename and label gpio-led subnodes part 3
+Date:   Thu, 13 Aug 2020 21:34:55 +0200
+Message-Id: <20200813193455.19772-2-jbx6244@gmail.com>
 X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20200813193455.19772-1-jbx6244@gmail.com>
+References: <20200813193455.19772-1-jbx6244@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -94,20 +97,62 @@ patternProperties:
   # anywhere in the node name to at least catch some child nodes.
   "(^led-[0-9a-f]$|led)":
 
-make ARCH=arm dtbs_check
+make ARCH=arm64 dtbs_check
 DT_SCHEMA_FILES=Documentation/devicetree/bindings/leds/
 leds-gpio.yaml
 
 Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 ---
- arch/arm/boot/dts/rk3036-kylin.dts | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/rockchip/rk3368-orion-r68-meta.dts | 10 ++++------
+ arch/arm64/boot/dts/rockchip/rk3368-r88.dts            |  6 +++---
+ 2 files changed, 7 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm/boot/dts/rk3036-kylin.dts b/arch/arm/boot/dts/rk3036-kylin.dts
-index 7154b827e..bf808cda6 100644
---- a/arch/arm/boot/dts/rk3036-kylin.dts
-+++ b/arch/arm/boot/dts/rk3036-kylin.dts
-@@ -15,12 +15,12 @@
+diff --git a/arch/arm64/boot/dts/rockchip/rk3368-orion-r68-meta.dts b/arch/arm64/boot/dts/rockchip/rk3368-orion-r68-meta.dts
+index b058ce999..dd6be31f1 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3368-orion-r68-meta.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3368-orion-r68-meta.dts
+@@ -49,20 +49,18 @@
+ 
+ 	leds: gpio-leds {
+ 		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&red_led_pin>, <&blue_led_pin>;
+ 
+ 		red_led: led-0 {
+ 			gpios = <&gpio3 RK_PD5 GPIO_ACTIVE_HIGH>;
+ 			label = "orion:red:led";
+-			pinctrl-names = "default";
+-			pinctrl-0 = <&led_ctl>;
+ 			default-state = "on";
+ 		};
+ 
+ 		blue_led: led-1 {
+ 			gpios = <&gpio0 RK_PB4 GPIO_ACTIVE_HIGH>;
+ 			label = "orion:blue:led";
+-			pinctrl-names = "default";
+-			pinctrl-0 = <&stby_pwren>;
+ 			default-state = "off";
+ 		};
+ 	};
+@@ -256,11 +254,11 @@
+ 	};
+ 
+ 	leds {
+-		stby_pwren: stby-pwren {
++		blue_led_pin: blue-led-pin {
+ 			rockchip,pins = <0 RK_PB4 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+ 
+-		led_ctl: led-ctl {
++		red_led_pin: red-led-pin {
+ 			rockchip,pins = <3 RK_PD5 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+ 	};
+diff --git a/arch/arm64/boot/dts/rockchip/rk3368-r88.dts b/arch/arm64/boot/dts/rockchip/rk3368-r88.dts
+index 236ab0f1b..e29c8d172 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3368-r88.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3368-r88.dts
+@@ -42,12 +42,12 @@
  
  	leds: gpio-leds {
  		compatible = "gpio-leds";
@@ -115,20 +160,20 @@ index 7154b827e..bf808cda6 100644
 +		pinctrl-0 = <&work_led_pin>;
  
  		work_led: led-0 {
- 			gpios = <&gpio2 RK_PD6 GPIO_ACTIVE_HIGH>;
- 			label = "kylin:red:led";
+ 			gpios = <&gpio3 RK_PD5 GPIO_ACTIVE_HIGH>;
+ 			label = "r88:green:led";
 -			pinctrl-names = "default";
 -			pinctrl-0 = <&led_ctl>;
  		};
  	};
  
-@@ -367,7 +367,7 @@
+@@ -275,7 +275,7 @@
+ 			rockchip,pins = <0 RK_PB4 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
  
- &pinctrl {
- 	leds {
 -		led_ctl: led-ctl {
 +		work_led_pin: work-led-pin {
- 			rockchip,pins = <2 RK_PD6 RK_FUNC_GPIO &pcfg_pull_none>;
+ 			rockchip,pins = <3 RK_PD5 RK_FUNC_GPIO &pcfg_pull_none>;
  		};
  	};
 -- 
