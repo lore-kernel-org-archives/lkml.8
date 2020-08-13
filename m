@@ -2,86 +2,160 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77FC8C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 16:31:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 137A8C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 16:36:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5256920855
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 16:31:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEECC20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 16:36:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726621AbgHMQbx (ORCPT
+        id S1726526AbgHMQgU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 12:31:53 -0400
-Received: from 3.mo2.mail-out.ovh.net ([46.105.58.226]:33175 "EHLO
-        3.mo2.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726142AbgHMQbw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 12:31:52 -0400
-X-Greylist: delayed 353 seconds by postgrey-1.27 at vger.kernel.org; Thu, 13 Aug 2020 12:31:51 EDT
-Received: from player688.ha.ovh.net (unknown [10.110.208.202])
-        by mo2.mail-out.ovh.net (Postfix) with ESMTP id 7C94E1E2FCF
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 18:25:57 +0200 (CEST)
-Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
-        (Authenticated sender: steve@sk2.org)
-        by player688.ha.ovh.net (Postfix) with ESMTPSA id 1C07A1526A913;
-        Thu, 13 Aug 2020 16:25:52 +0000 (UTC)
-Authentication-Results: garm.ovh; auth=pass (GARM-103G005a681ebc9-4fce-49de-94fb-dc3a2d2e09ad,
-                    E10370F5499BCD549250CF93A1A6372B2A4BB833) smtp.auth=steve@sk2.org
-From:   Stephen Kitt <steve@sk2.org>
-To:     George Joseph <george.joseph@fairview5.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Stephen Kitt <steve@sk2.org>
-Subject: [PATCH] drivers/hwmon/asc7621.c: use simple i2c probe
-Date:   Thu, 13 Aug 2020 18:25:44 +0200
-Message-Id: <20200813162544.1516647-1-steve@sk2.org>
-X-Mailer: git-send-email 2.25.4
+        Thu, 13 Aug 2020 12:36:20 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49638 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726249AbgHMQgT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 12:36:19 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 53E3DAD78;
+        Thu, 13 Aug 2020 16:36:40 +0000 (UTC)
+Date:   Thu, 13 Aug 2020 18:36:17 +0200
+From:   Michal Hocko <mhocko@suse.com>
+To:     Uladzislau Rezki <urezki@gmail.com>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
+Message-ID: <20200813163617.GS9477@dhcp22.suse.cz>
+References: <874kp87mca.fsf@nanos.tec.linutronix.de>
+ <20200813075027.GD9477@dhcp22.suse.cz>
+ <20200813095840.GA25268@pc636>
+ <874kp6llzb.fsf@nanos.tec.linutronix.de>
+ <20200813133308.GK9477@dhcp22.suse.cz>
+ <87sgcqty0e.fsf@nanos.tec.linutronix.de>
+ <20200813145335.GN9477@dhcp22.suse.cz>
+ <20200813154159.GR4295@paulmck-ThinkPad-P72>
+ <20200813155412.GP9477@dhcp22.suse.cz>
+ <20200813162047.GA27774@pc636>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 7607987149653036303
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduiedrleehgdejiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepufhtvghphhgvnhcumfhithhtuceoshhtvghvvgesshhkvddrohhrgheqnecuggftrfgrthhtvghrnhepteegudfgleekieekteeggeetveefueefteeugfduieeitdfhhedtfeefkedvfeefnecukfhppedtrddtrddtrddtpdekvddrieehrddvhedrvddtudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehplhgrhigvrheikeekrdhhrgdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepshhtvghvvgesshhkvddrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200813162047.GA27774@pc636>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This driver doesn't use the id information provided by the old i2c
-probe function, so it can trivially be converted to the simple
-("probe_new") form.
+On Thu 13-08-20 18:20:47, Uladzislau Rezki wrote:
+> > On Thu 13-08-20 08:41:59, Paul E. McKenney wrote:
+> > > On Thu, Aug 13, 2020 at 04:53:35PM +0200, Michal Hocko wrote:
+> > > > On Thu 13-08-20 16:34:57, Thomas Gleixner wrote:
+> > > > > Michal Hocko <mhocko@suse.com> writes:
+> > > > > > On Thu 13-08-20 15:22:00, Thomas Gleixner wrote:
+> > > > > >> It basically requires to convert the wait queue to something else. Is
+> > > > > >> the waitqueue strict single waiter?
+> > > > > >
+> > > > > > I would have to double check. From what I remember only kswapd should
+> > > > > > ever sleep on it.
+> > > > > 
+> > > > > That would make it trivial as we could simply switch it over to rcu_wait.
+> > > > > 
+> > > > > >> So that should be:
+> > > > > >> 
+> > > > > >> 	if (!preemptible() && gfp == GFP_RT_NOWAIT)
+> > > > > >> 
+> > > > > >> which is limiting the damage to those callers which hand in
+> > > > > >> GFP_RT_NOWAIT.
+> > > > > >> 
+> > > > > >> lockdep will yell at invocations with gfp != GFP_RT_NOWAIT when it hits
+> > > > > >> zone->lock in the wrong context. And we want to know about that so we
+> > > > > >> can look at the caller and figure out how to solve it.
+> > > > > >
+> > > > > > Yes, that would have to somehow need to annotate the zone_lock to be ok
+> > > > > > in those paths so that lockdep doesn't complain.
+> > > > > 
+> > > > > That opens the worst of all cans of worms. If we start this here then
+> > > > > Joe programmer and his dog will use these lockdep annotation to evade
+> > > > > warnings and when exposed to RT it will fall apart in pieces. Just that
+> > > > > at that point Joe programmer moved on to something else and the usual
+> > > > > suspects can mop up the pieces. We've seen that all over the place and
+> > > > > some people even disable lockdep temporarily because annotations don't
+> > > > > help.
+> > > > 
+> > > > Hmm. I am likely missing something really important here. We have two
+> > > > problems at hand:
+> > > > 1) RT will become broken as soon as this new RCU functionality which
+> > > > requires an allocation from inside of raw_spinlock hits the RT tree
+> > > > 2) lockdep splats which are telling us that early because of the
+> > > > raw_spinlock-> spin_lock dependency.
+> > > 
+> > > That is a reasonable high-level summary.
+> > > 
+> > > > 1) can be handled by handled by the bailing out whenever we have to use
+> > > > zone->lock inside the buddy allocator - essentially even more strict
+> > > > NOWAIT semantic than we have for RT tree - proposed (pseudo) patch is
+> > > > trying to describe that.
+> > > 
+> > > Unless I am missing something subtle, the problem with this approach
+> > > is that in production-environment CONFIG_PREEMPT_NONE=y kernels, there
+> > > is no way at runtime to distinguish between holding a spinlock on the
+> > > one hand and holding a raw spinlock on the other.  Therefore, without
+> > > some sort of indication from the caller, this approach will not make
+> > > CONFIG_PREEMPT_NONE=y users happy.
+> > 
+> > If the whole bailout is guarded by CONFIG_PREEMPT_RT specific atomicity
+> > check then there is no functional problem - GFP_RT_SAFE would still be
+> > GFP_NOWAIT so functional wise the allocator will still do the right
+> > thing.
+> > 
+> > [...]
+> > 
+> > > > That would require changing NOWAIT/ATOMIC allocations semantic quite
+> > > > drastically for !RT kernels as well. I am not sure this is something we
+> > > > can do. Or maybe I am just missing your point.
+> > > 
+> > > Exactly, and avoiding changing this semantic for current users is
+> > > precisely why we are proposing some sort of indication to be passed
+> > > into the allocation request.  In Uladzislau's patch, this was the
+> > > __GFP_NO_LOCKS flag, but whatever works.
+> > 
+> > As I've tried to explain already, I would really hope we can do without
+> > any new gfp flags. We are running out of them and they tend to generate
+> > a lot of maintenance burden. There is a lot of abuse etc. We should also
+> > not expose such an implementation detail of the allocator to callers
+> > because that would make future changes even harder. The alias, on the
+> > othere hand already builds on top of existing NOWAIT semantic and it
+> > just helps the allocator to complain about a wrong usage while it
+> > doesn't expose any internals.
+> > 
+> I know that Matthew and me raised it. We do can handle it without
+> introducing any flag. I mean just use 0 as argument to the page_alloc(gfp_flags = 0) 
+> 
+> i.e. #define __GFP_NO_LOCKS 0
+> 
+> so it will be handled same way how it is done in the "mm: Add __GFP_NO_LOCKS flag"
+> I can re-spin the RFC patch and send it out for better understanding.
+> 
+> Does it work for you, Michal? Or it is better just to drop the patch here?
 
-Signed-off-by: Stephen Kitt <steve@sk2.org>
----
- drivers/hwmon/asc7621.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+That would change the semantic for GFP_NOWAIT users who decided to drop
+__GFP_KSWAPD_RECLAIM or even use 0 gfp mask right away, right? The point
+I am trying to make is that an alias is good for RT because it doesn't
+have any users (because there is no RT atomic user of the allocator)
+currently.
 
-diff --git a/drivers/hwmon/asc7621.c b/drivers/hwmon/asc7621.c
-index 9e14e2829ee9..600ffc7e1900 100644
---- a/drivers/hwmon/asc7621.c
-+++ b/drivers/hwmon/asc7621.c
-@@ -1087,7 +1087,7 @@ static void asc7621_init_client(struct i2c_client *client)
- }
- 
- static int
--asc7621_probe(struct i2c_client *client, const struct i2c_device_id *id)
-+asc7621_probe(struct i2c_client *client)
- {
- 	struct asc7621_data *data;
- 	int i, err;
-@@ -1193,7 +1193,7 @@ static struct i2c_driver asc7621_driver = {
- 	.driver = {
- 		.name = "asc7621",
- 	},
--	.probe = asc7621_probe,
-+	.probe_new = asc7621_probe,
- 	.remove = asc7621_remove,
- 	.id_table = asc7621_id,
- 	.detect = asc7621_detect,
 -- 
-2.25.4
-
+Michal Hocko
+SUSE Labs
