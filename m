@@ -2,123 +2,92 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7684C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 08:08:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07A4EC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 08:10:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACCFD20781
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 08:08:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D212E20781
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 08:10:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iCF8GCR+";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hGxrqA03"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aUOlKfKn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726611AbgHMIIt (ORCPT
+        id S1726612AbgHMIKX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 04:08:49 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:56930 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726048AbgHMIIt (ORCPT
+        Thu, 13 Aug 2020 04:10:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40446 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726044AbgHMIKW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 04:08:49 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597306127;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=okLOdd4hFigu3F8BJVOWQHTTv93/xVX4l7N8L/QNtPw=;
-        b=iCF8GCR+vz1Zr7a4sw4CrWOwg2Coe+3Atwa6XZPGJ0vulQKW6CQUFKKZP0YDkWp3PSMSuG
-        +zny4uqgT9R6l2B0v3H0EPq9l2OK/2Cs+PbGgr0SIIUkhZ0MkKpzFqPSqUtrSZienATRje
-        2YBCbWKWZSYRGyD2FlYbcTeuB7SQ0QTwnzf1qoRXklulR0d/ig/rY+XLyTnWFYoqzh9Ulk
-        TgAqGrzTn0cqmWI59vFs2ijjh1g2K+AsPgpGUzLECSM0d5E9rTDe9JkqrbGzlX71qo1wJy
-        f2EHkKUqrSl52F+CtofuBBJOU3dMAafSuNjw7OLbkNwfFgZj6hBi+nrOLNyunA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597306127;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=okLOdd4hFigu3F8BJVOWQHTTv93/xVX4l7N8L/QNtPw=;
-        b=hGxrqA03ITU7sVs4lNkl0pqnF8U5L9oMk/Y4jeyWjWhLA1NsXUyJNymgQNxPt7ncUOTsYB
-        88k+ATL2WPToHoCw==
-To:     Yunfeng Ye <yeyunfeng@huawei.com>
-Cc:     Shiyuan Hu <hushiyuan@huawei.com>,
-        Hewenliang <hewenliang4@huawei.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] genirq/affinity: show managed irq affinity correctly
-In-Reply-To: <b55d8b8c-8afc-0046-44b6-514ad012936f@huawei.com>
-References: <b55d8b8c-8afc-0046-44b6-514ad012936f@huawei.com>
-Date:   Thu, 13 Aug 2020 10:08:46 +0200
-Message-ID: <877du355o1.fsf@nanos.tec.linutronix.de>
+        Thu, 13 Aug 2020 04:10:22 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52438C061757
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 01:10:22 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id t6so5180172ljk.9
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 01:10:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eWfpK7kOep961U553Ob0abtIu10zqSqu+hl33W9w0r8=;
+        b=aUOlKfKn+grUFrxeu6XjIFchGrXEV2HHw6muKa4eBopMq8SE+G+Kit7fJKRiU6mgkG
+         5nmT0VPb400wV9pef15BMlgnl2BASE3WBNTrb9X1JmHS61lNpcR3FSaW9r60QiIIoJBM
+         aNnRVtkU4+9COuruzFoLd6Sl8PpuXHDwUIVvCXXiJR3yocBxLqQIZqg8f+JGPG+Mpzlt
+         AqbpmUDLJonmdI8gUxImZQ1WnmegtFqZv7KayHKIwWPMkzWB4NF52II/jNHhuU5xpluH
+         Nvdlfv3Mpz4bZ++7QkSd04+wp/G9nYtyIhymbuxPiFA7f3n4SgsFUlNW4s+Lj/thHO+4
+         p0jQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eWfpK7kOep961U553Ob0abtIu10zqSqu+hl33W9w0r8=;
+        b=mOxnn86A87o0YZEJrMnPmzS2yJ2OtFYgXcxkjHL+N71wPmOgWprxCWSH3188Z4OiQA
+         DmDSUkYCidiXLxEUXJJKuBMlU0cAxL4w6sOCm/Xfudu/0haKhIgcO5ytIJaJ3LG8rZWX
+         WSawWJOnLsDvjr5qjN/0MiXCBfLa5eeYSRLdA4ZlE/C+jg14nKFC/28WUXRmzCn9Btf3
+         hT081yWS1Jep8XTnKBagoNK2ptIlAD/e9eJPNrGupwNjou5jse2arp6jy7wv9s82iDG2
+         VRMMetLiJiyHJHzHz7vl/nNDOoz2A49qOBkIcBiJrU5wJZlIlnfabaEGV7fmh1XPy+Cv
+         GM9g==
+X-Gm-Message-State: AOAM532UbsRgmgLDAdJQdsT1tcsziJC6DqhGrssl+1uiZLVoD80Na9Vi
+        x6KBA2dZoJyosoQh4XxruvWhH5TRR5JdQlb2ZeJQ3A==
+X-Google-Smtp-Source: ABdhPJzjtNMiz4ncOKRG1mKwXggE8jWaEL1RoSHQGTbQB6kJXCPvWdLbpxyUtJOjdYptn6GlVL8tCjvfyQUUjbv/+Pw=
+X-Received: by 2002:a2e:4e09:: with SMTP id c9mr1510700ljb.283.1597306220097;
+ Thu, 13 Aug 2020 01:10:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200806181932.2253-1-krzk@kernel.org> <20200806182059.2431-3-krzk@kernel.org>
+In-Reply-To: <20200806182059.2431-3-krzk@kernel.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 13 Aug 2020 10:10:09 +0200
+Message-ID: <CACRpkdZNWtLwjqe0qpeyrGf-=9DJNLf8MdZ=BB67Lp9pqmq1+g@mail.gmail.com>
+Subject: Re: [PATCH v2 03/41] ARM: s3c24xx: fix mmc gpio lookup tables
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Yunfeng Ye <yeyunfeng@huawei.com> writes:
+On Thu, Aug 6, 2020 at 8:21 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
 
-> The "managed_irq" for isolcpus is supported after the commit
-> 11ea68f553e2 ("genirq, sched/isolation: Isolate from handling managed
-> interrupts"), but the interrupt affinity shown in proc directory is
-> still the original affinity.
+> From: Arnd Bergmann <arnd@arndb.de>
 >
-> So modify the interrupt affinity correctly for managed_irq.
+> The gpio controller names differ between s3c24xx and s3c64xx,
+> and it seems that these all got the wrong names, using GPx instead
+> of GPIOx.
+>
+> Fixes: d2951dfa070d ("mmc: s3cmci: Use the slot GPIO descriptor")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-I really have no idea what you are trying to achieve here.
+My mistake :( sorry.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-1) Why are you moving the !chip !chip->irq_set_affinity check out of
-   irq_do_set_affinity() ?
-
-   Just that the whole computation happens for nothing and then returns
-   an error late.
-
-2) Modifying irqdata->common->affinity is wrong to begin with. It's the
-   possible affinity mask. Your change causes the managed affinity mask
-   to become invalid in the worst case.
-
-      irq->affinity = 0x0C;        // CPU 2 - 3
-      hkmask   = 0x07;             // CPU 0 - 2
-
-   Invocation #1:
-      online_mask = 0xFF;          // CPU 0 - 7
-
-      cpumask_and(&tmp_mask, mask, hk_mask);
-         -->   tmp_mask == 0x04    // CPU 2
-
-      irq->affinity = tmp_mask;	   // CPU 2
-
-   CPU 2 goes offline
-
-   migrate_one_irq()
-
-      affinity = irq->affinity;	  // CPU 2
-      online_mask = 0xFB;         // CPU 0-1, 3-7
-
-      if (cpumask_any_and(affinity, cpu_online_mask) >= nr_cpu_ids) {
-		/*
-		 * If the interrupt is managed, then shut it down and leave
-		 * the affinity untouched.
-		 */
-		if (irqd_affinity_is_managed(d)) {
-			irqd_set_managed_shutdown(d);
-			irq_shutdown_and_deactivate(desc);
-			return false;
-		}
-
-  So the interrupt is shut down which is incorrect. The isolation
-  logic in irq_do_set_affinity() was clearly designed to prefer
-  housekeeping CPUs and not to remove them.
-    
-You are looking at the wrong file. /proc/irq/$IRQ/smp_affinity* is the
-possible mask. If you want to know to which CPU an interrupt is affine
-then look at /proc/irq/$IRQ/effective_affinity*
-
-If effective_affinity* is not showing the correct value, then the irq
-chip affinity setter is broken and needs to be fixed.
-
-Thanks,
-
-        tglx
+Yours,
+Linus Walleij
