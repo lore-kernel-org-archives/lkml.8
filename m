@@ -2,107 +2,131 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD972C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 05:02:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4000C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 05:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D3D120768
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 05:02:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FCF420768
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 05:06:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="nQIRT8+H"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jvW+5p9x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726117AbgHMFCh (ORCPT
+        id S1726244AbgHMFGd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 01:02:37 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:3853 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725829AbgHMFCh (ORCPT
+        Thu, 13 Aug 2020 01:06:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40582 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725949AbgHMFGc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 01:02:37 -0400
-X-UUID: 6e10a722735d46e29184642ae826d270-20200813
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=vc0/8bE6UotQMHbyr5S0xQjHvklXp5WypDibcqFMXHo=;
-        b=nQIRT8+HQ0fCRyWTUobaV1i5dmltDjpkPegt6WMx47+4xcaROz9Qo0leU+Fk6FsLqoMObf8bnARUmtk2XFN8XM4XYnxmQ+o7NF5Yn8ndkmV1wz7x2rjSGn6iASl6RvwLWIPfsKjWQbhGQzmzM0Ls5aMmAoriPP+oci/VCMAI7qY=;
-X-UUID: 6e10a722735d46e29184642ae826d270-20200813
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <yingjoe.chen@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1345128821; Thu, 13 Aug 2020 13:02:27 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- MTKMBS32DR.mediatek.inc (172.27.6.104) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 13 Aug 2020 13:02:21 +0800
-Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 13 Aug 2020 13:02:24 +0800
-Message-ID: <1597294944.31472.2.camel@mtksdaap41>
-Subject: Re: [PATCH v17 1/3] dt-bindings: Add bindings for Mediatek matrix
- keypad
-From:   Yingjoe Chen <yingjoe.chen@mediatek.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-CC:     Fengping Yu <fengping.yu@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        <linux-input@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Thu, 13 Aug 2020 13:02:24 +0800
-In-Reply-To: <20200812221357.GS1665100@dtor-ws>
-References: <20200810064058.6467-1-fengping.yu@mediatek.com>
-         <20200810064058.6467-2-fengping.yu@mediatek.com>
-         <1597110443.22273.5.camel@mtksdaap41> <20200812221357.GS1665100@dtor-ws>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Thu, 13 Aug 2020 01:06:32 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDB03C061757;
+        Wed, 12 Aug 2020 22:06:32 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id d22so2204614pfn.5;
+        Wed, 12 Aug 2020 22:06:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=l7Gd3m+l+WQZG6hx+TJ+/PJV8/ZKvFTo9d5/gMASdug=;
+        b=jvW+5p9xSWMOLmI2q5K1VeRNAcla5WpZdkSsOySFkmZkwU4xtNGjiFsfDxryGSDiFz
+         /bkUHqrBsr7/+cJiwQmXUv8pg8Ziph77TbwheglQaEgcS4s6tQz0POS0DF6CuAUkTnr1
+         7jeFYdOqq5mHJ2DrhcB6pBthTBPo/j7jBj2cxVn169zEWg/kzzFGh6FRDUW+G0d543Wo
+         6m92oIkIrqt1Klm8Y/s+vA6epCGke1g3FHHkNuAAZ0ab7MsrSG1D0ekCPIydUmP1gsO/
+         z3KvuAIF/h7/+oubCWHixYdk8Z1W/9fFao3/D7RFkzRaBMDeBB6lVN9HZphqanHy8I0C
+         FPXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=l7Gd3m+l+WQZG6hx+TJ+/PJV8/ZKvFTo9d5/gMASdug=;
+        b=Ji0HCdxqgImV45wxGwrWXaSMGxP8q16zN5I0fhf6exeJaooot9d5oWG3g2yWPXqqqu
+         AzcX9p4u6g/AyhKhN2Lxqzkj7KqZPGLpu+RoxQ+gT/NDfvJVPj8Yx356rx5IQUVVjuPD
+         fsY24nqKIMKeZf1qbtKx25TFwMPR30EbHsCNwquPaBo4Co5a8g5/rDkJuyubfIqSGmAt
+         sZIsGYqbENKUTJ3xJ9N8RQz3LvzrPFjnbQq+W9OQ5J/s+7wu04/pEFjseUdUVZ48zjg9
+         FJ3r1VyMWkLMWmCPpwBhWa+WTwT+W1WuNaWORzK+Y+dcCdLNmbCtyWSIlICIlUQxUuAZ
+         /NqA==
+X-Gm-Message-State: AOAM531xgUNRy4UpXZnJFwktcFp5/W+4SAKNNPkcTeiGPD1uYDY7gK0o
+        b1ku0iMcaeUDFVpxAyrYpWg=
+X-Google-Smtp-Source: ABdhPJwn8XLNWsyFJJI90LfEQmbYsg1NbcOao3/9lM5cvVg4Lb6UWgILt234JkAwNaKWO+PJUKPPsw==
+X-Received: by 2002:a65:620f:: with SMTP id d15mr2182119pgv.270.1597295191721;
+        Wed, 12 Aug 2020 22:06:31 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id j8sm4283364pfh.90.2020.08.12.22.06.30
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 12 Aug 2020 22:06:30 -0700 (PDT)
+Date:   Wed, 12 Aug 2020 22:06:29 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     gregkh@linuxfoundation.org
+Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: Recursive/circular locking in
+ serial8250_console_write/serial8250_do_startup
+Message-ID: <20200813050629.GA95559@roeck-us.net>
+References: <20200812154813.GA46894@roeck-us.net>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: BA401CDDF3393E80B94BDC4FC2C3180630F59DD1B08243174249AEA12A760DA12000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200812154813.GA46894@roeck-us.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTA4LTEyIGF0IDE1OjEzIC0wNzAwLCBEbWl0cnkgVG9yb2tob3Ygd3JvdGU6
-DQo+IEhpLA0KPiANCj4gT24gVHVlLCBBdWcgMTEsIDIwMjAgYXQgMDk6NDc6MjNBTSArMDgwMCwg
-WWluZ2pvZSBDaGVuIHdyb3RlOg0KPiA+IEhpLA0KPiA+IA0KPiA+IA0KPiA+IE9uIE1vbiwgMjAy
-MC0wOC0xMCBhdCAxNDo0MCArMDgwMCwgRmVuZ3BpbmcgWXUgd3JvdGU6DQo+ID4gPiBGcm9tOiAi
-ZmVuZ3BpbmcueXUiIDxmZW5ncGluZy55dUBtZWRpYXRlay5jb20+DQo+ID4gPiANCj4gPiA+IFRo
-aXMgcGF0Y2ggYWRkIGRldmljZXRyZWUgYmluZGluZ3MgZm9yIE1lZGlhdGVrIG1hdHJpeCBrZXlw
-YWQgZHJpdmVyLg0KPiA+ID4gDQo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBmZW5ncGluZy55dSA8ZmVu
-Z3BpbmcueXVAbWVkaWF0ZWsuY29tPg0KPiA+ID4gLS0tDQo+ID4gPiAgLi4uL2RldmljZXRyZWUv
-YmluZGluZ3MvaW5wdXQvbXRrLWtwZC55YW1sICAgIHwgODcgKysrKysrKysrKysrKysrKysrKw0K
-PiA+ID4gIDEgZmlsZSBjaGFuZ2VkLCA4NyBpbnNlcnRpb25zKCspDQo+ID4gPiAgY3JlYXRlIG1v
-ZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnB1dC9tdGsta3Bk
-LnlhbWwNCj4gPiA+IA0KPiA+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9pbnB1dC9tdGsta3BkLnlhbWwgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvaW5wdXQvbXRrLWtwZC55YW1sDQo+ID4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0K
-PiA+ID4gaW5kZXggMDAwMDAwMDAwMDAwLi5kNzRkZDhhNmZiZGUNCj4gPiANCj4gPiA8Li4uPg0K
-PiA+IA0KPiA+IA0KPiA+ID4gKyAga2V5cGFkLG51bS1jb2x1bW5zOg0KPiA+ID4gKyAgICBkZXNj
-cmlwdGlvbjogTnVtYmVyIG9mIGNvbHVtbiBsaW5lcyBjb25uZWN0ZWQgdG8gdGhlIGtleXBhZCBj
-b250cm9sbGVyLA0KPiA+ID4gKyAgICBpdCBpcyBub3QgZXF1YWwgdG8gUENCIGNvbHVtbnMgbnVt
-YmVyLCBpbnN0ZWFkIHlvdSBzaG91bGQgYWRkIHJlcXVpcmVkIHZhbHVlDQo+ID4gPiArICAgIGZv
-ciBlYWNoIElDLiBJZiBub3Qgc3BlY2lmaWVkLCB0aGUgZGVmYXVsdCB2YWx1ZSBpcyAxLg0KPiA+
-ID4gKw0KPiA+ID4gKyAga2V5cGFkLG51bS1yb3dzOg0KPiA+ID4gKyAgICBkZXNjcmlwdGlvbjog
-TnVtYmVyIG9mIHJvdyBsaW5lcyBjb25uZWN0ZWQgdG8gdGhlIGtleXBhZCBjb250cm9sbGVyLCBp
-dCBpcw0KPiA+ID4gKyAgICBub3QgZXF1YWwgdG8gUENCIHJvd3MgbnVtYmVyLCBpbnN0ZWFkIHlv
-dSBzaG91bGQgYWRkIHJlcXVpcmVkIHZhbHVlIGZvciBlYWNoIElDLg0KPiA+ID4gKyAgICBJZiBu
-b3Qgc3BlY2lmaWVkLCB0aGUgZGVmYXVsdCB2YWx1ZSBpcyAxLg0KPiA+IA0KPiA+IFlvdXIgc291
-cmNlIGNvZGUgY2FuJ3QgcmVhbGx5IGhhbmRsZSBkdHMgd2l0aG91dCByb3dzL2NvbHVtbnMNCj4g
-PiBwcm9wZXJ0aWVzLiBBbHNvLCB0aGUgZGVmYXVsdCB2YWx1ZSBkb2Vzbid0IG1ha2UgYW55IHNl
-bnNlLiBObyBJQyB3aWxsDQo+ID4gaGF2ZSByb3dzIG9yIGNvbHVtbnMgc2V0IHRvIDEuDQo+ID4g
-DQo+ID4gU2luY2UgdGhlc2UgYXJlIElDIHNwZWNpZmllZCwgbm90IGJvYXJkIHNwZWNpZmllZCwg
-SSB0aGluayB5b3Ugc2hvdWxkDQo+ID4ganVzdCBoYXZlIHRoZSBjb3JyZWN0IG51bWJlcnMgaW4g
-ZHJpdmVyLg0KPiANCj4gSXQgaXMgYWN0dWFsbHkgcHJvcGVydHkgb2YgYm9hcmQgdG8gZGVjaWRl
-IGhvdyBtYW55IGtleXMgaXQgd2FudHMgdG8NCj4gd2lyZSB1cC4gSW4gZXh0cmVtZSBjYXNlIGl0
-IHdpbGwgYmUgYSBzaW5nbGUga2V5LCBpLmUuIG51bWJlciBvZiByb3dzDQo+IGFuZCBjb2x1bW5z
-IHdpbGwgaW5kZWVkIGJlIDEuDQo+IA0KPiBUaGFua3MuDQo+IA0KDQpGcm9tIHRoZSBiaW5kaW5n
-ICJpdCBpcyBub3QgZXF1YWwgdG8gUENCIGNvbHVtbnMgbnVtYmVyLCBpbnN0ZWFkIHlvdQ0Kc2hv
-dWxkIGFkZCByZXF1aXJlZCB2YWx1ZSBmb3IgZWFjaCBJQy4iDQpEcml2ZXIgY29kZSB1c2UgdGhp
-cyB0byBjYWxjdWxhdGUgYml0IHBvc2l0aW9uIGluIHJlZ2lzdGVyLCB3aGljaCBpcyBJQw0KZGVw
-ZW5kZW50Lg0KDQpKb2UuQw0KDQo=
+On Wed, Aug 12, 2020 at 08:48:13AM -0700, Guenter Roeck wrote:
+> Hi,
+> 
+> crbug.com/1114800 reports a hard lockup due to circular locking in the
+> 8250 console driver. This is seen if CONFIG_PROVE_LOCKING is enabled.
+> 
+> Problem is as follows:
+> - serial8250_do_startup() locks the serial (console) port.
+> - serial8250_do_startup() then disables interrupts if interrupts are
+>   shared, by calling disable_irq_nosync().
+> - disable_irq_nosync() calls __irq_get_desc_lock() to lock the interrupt
+>   descriptor.
+> - __irq_get_desc_lock() calls lock_acquire()
+> - If CONFIG_PROVE_LOCKING is enabled, validate_chain() and check_noncircular()
+>   are called and identify a potential locking error.
+> - This locking error is reported via printk, which ultimately calls
+>   serial8250_console_write().
+> - serial8250_console_write() tries to lock the serial console port.
+>   Since it is already locked, the system hangs and ultimately reports
+>   a hard lockup.
+> 
+> I understand we'll need to figure out and fix what lockdep complains about,
+> and I am working on that. However, even if that is fixed, we'll need a
+> solution for the recursive lock: Fixing the lockdep problem doesn't
+> guarantee that a similar problem (or some other log message) won't be
+> detected and reported sometime in the future while serial8250_do_startup()
+> holds the console port lock.
+> 
+> Ideas, anyone ? Everything I came up with so far seems clumsy and hackish.
+> 
 
+Turns out the situation is a bit worse than I thought. disable_irq_nosync(),
+when called from serial8250_do_startup(), locks the interrupt descriptor.
+The order of locking is
+	serial port lock
+	  interrupt descriptor lock
+
+At the same time, __setup_irq() locks the interrupt descriptor as well.
+With the descriptor locked, it may report an error message using pr_err().
+This in turn may call serial8250_console_write(), which will try to lock
+the console serial port. The lock sequence is
+	interrupt descriptor lock
+	  serial port lock
+
+I added the lockdep splat to the bug log at crbug.com/1114800.
+
+Effectively, I think, this means we can't call disable_irq_nosync()
+while holding a serial port lock, or at least not while holding a
+serial port lock that is associated with a console.
+
+The problem was introduced (or, rather, exposed) with upstream commit
+7febbcbc48fc ("serial: 8250: Check UPF_IRQ_SHARED in advance").
+
+Guenter
