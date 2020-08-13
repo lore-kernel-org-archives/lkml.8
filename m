@@ -2,173 +2,103 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76B13C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 22:02:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0BFCC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 22:04:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EAEA20771
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 22:02:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A99D420829
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 22:04:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UolcndJs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726574AbgHMWCd (ORCPT
+        id S1726593AbgHMWEx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 18:02:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55734 "EHLO
+        Thu, 13 Aug 2020 18:04:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726205AbgHMWCd (ORCPT
+        with ESMTP id S1726205AbgHMWEw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 18:02:33 -0400
-Received: from hillosipuli.retiisi.org.uk (hillosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::81:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BD3EC061757;
-        Thu, 13 Aug 2020 15:02:33 -0700 (PDT)
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id DA3A9634C87;
-        Fri, 14 Aug 2020 01:01:47 +0300 (EEST)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1k6LIB-0001jd-Hd; Fri, 14 Aug 2020 01:01:47 +0300
-Date:   Fri, 14 Aug 2020 01:01:47 +0300
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, luca@lucaceresoli.net,
-        leonl@leopardimaging.com, robh+dt@kernel.org, lgirdwood@gmail.com,
-        broonie@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/3] media: i2c: imx274: Add IMX274 power on and off
- sequence
-Message-ID: <20200813220147.GJ840@valkosipuli.retiisi.org.uk>
-References: <1595264494-2400-1-git-send-email-skomatineni@nvidia.com>
- <1595264494-2400-3-git-send-email-skomatineni@nvidia.com>
- <20200731162611.GB6401@valkosipuli.retiisi.org.uk>
- <b8819080-6585-c953-e7ad-9b0a10f1d821@nvidia.com>
+        Thu, 13 Aug 2020 18:04:52 -0400
+Received: from mail-oo1-xc42.google.com (mail-oo1-xc42.google.com [IPv6:2607:f8b0:4864:20::c42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 520ADC061757
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 15:04:52 -0700 (PDT)
+Received: by mail-oo1-xc42.google.com with SMTP id x6so1530424ooe.8
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 15:04:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3xfqWmRtflhotperG6NWnIwC3g3Q247SCA9p41kwBGs=;
+        b=UolcndJsDVYSOyRpQ9JTr2zGfNCUwNjMdyqIq4GBD+js16X0QMFHU5pkdTbeMN4D3J
+         uwZsx83sUIAi5fU+Gbv5X5jO0+tv/noXUjIKV7uJOsz6DBylNxDXlnygKa+NedmkkH6d
+         qTEw+QDw3sG5vtR/zRjLg8lz8ckaz7kKb1JsiOEOYroIvUHv+ofhMZxfUi+xgv5arPwO
+         UvRKnfgaTxRKRU7o9D3LtRh/ubS9wF0j9Y88CIhCLROepZJfUBs77IHt62o8ek1hDQ8/
+         mNQPIZ4ViJW7nKvDYb/zMZHPeb8DTESKlnSV27oRfA8E5Jq7vDISu7SxEKObQ/gQCYMS
+         /TPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3xfqWmRtflhotperG6NWnIwC3g3Q247SCA9p41kwBGs=;
+        b=bMF0XHo4DSWoS0XpG4HbMNhvbw+L+kxBfSGoBx7H5wXY4y5g5MR9V0YoLWBkD2GXAv
+         H9OZ9mgG3PMB/AbbIhVGLp3+V5hwNlJLE0BrXvGkfU9pBrgEiO5b0CCh3CPZObhn8qH/
+         dF0lMbTAqzdFawujvQVNTp0VFkwHldznHhgGcAk9FPIxJJ0/9VQxxbY+1ZdBDd0zdgDy
+         L7OcfIXaMMNTbMwpa1zDZvjk0skQ6/whWP1RjHCp7X4mZYBt9nvzAhz79DepE8FgiM0N
+         /feCB5P1gOKk6W9iFqLRfRbQyUJCKVaDAVfFFPRrukeBPjghkCgXYfZbZA25hbTpngEW
+         nGHw==
+X-Gm-Message-State: AOAM533TbJIlV0zN7OD4p9itlEx+0MfxrksjbwacKn2UN5BkXVwyrvXK
+        NmlMgmHC7uBv4JkLIVNUL2S1yz5LIIwgTeEP+le9mA==
+X-Google-Smtp-Source: ABdhPJzyc0QUIbGQc/Raud6mkyJ1G5M3ZSdPSTn1QQLc40+ET2RlCL4akGxQ7ZSYtufsf1cTHSfN70KY25WQ15RXw0c=
+X-Received: by 2002:a4a:ca11:: with SMTP id w17mr6358838ooq.88.1597356291596;
+ Thu, 13 Aug 2020 15:04:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b8819080-6585-c953-e7ad-9b0a10f1d821@nvidia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200725032633.125006-1-john.stultz@linaro.org> <20200813100411.3gh2awfbmdjupbnw@DESKTOP-E1NTVVP.localdomain>
+In-Reply-To: <20200813100411.3gh2awfbmdjupbnw@DESKTOP-E1NTVVP.localdomain>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Thu, 13 Aug 2020 15:04:40 -0700
+Message-ID: <CALAqxLVyNtnXeCU1u=kV02k2wGYtBW1iRVLrOpNetRCnBvepvQ@mail.gmail.com>
+Subject: Re: [RFC][PATCH] dma-heap: Add proper kref handling on dma-buf heaps
+To:     Brian Starkey <brian.starkey@arm.com>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        "Andrew F . Davis" <afd@ti.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Laura Abbott <labbott@kernel.org>, linux-media@vger.kernel.org,
+        dri-devel <dri-devel@lists.freedesktop.org>, nd <nd@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sowjanya,
+On Thu, Aug 13, 2020 at 3:04 AM Brian Starkey <brian.starkey@arm.com> wrote:
+> On Sat, Jul 25, 2020 at 03:26:33AM +0000, John Stultz wrote:
+> > Add proper refcounting on the dma_heap structure.
+> > While existing heaps are built-in, we may eventually
+> > have heaps loaded from modules, and we'll need to be
+> > able to properly handle the references to the heaps
+>
+> I'm not 100% clear on the intention here. What would take/drop a
+> reference on a heap?
 
-On Fri, Jul 31, 2020 at 09:34:15AM -0700, Sowjanya Komatineni wrote:
-> 
-> On 7/31/20 9:26 AM, Sakari Ailus wrote:
-> > Hi Sowjanya,
-> > 
-> > Thanks for the patch.
-> > 
-> > On Mon, Jul 20, 2020 at 10:01:34AM -0700, Sowjanya Komatineni wrote:
-> > > IMX274 has VANA analog 2.8V supply, VDIG digital core 1.8V supply,
-> > > and VDDL digital io 1.2V supply which are optional based on camera
-> > > module design.
-> > > 
-> > > IMX274 also need external 24Mhz clock and is optional based on
-> > > camera module design.
-> > The sensor appears to be able to use other frequencies, too. Could you
-> > check in the driver the frequency is correct? This should be found in DT
-> > bindings, too.
-> 
-> External input clock is not in DT. So added it as part of this series.
-> 
-> We are mostly using 24Mhz I/P with IMX274 on designs we have and also on
-> leopard module which has onboard XTAL for 24Mhz
+Yea. At the moment nothing, but I did this cleanup as part of some
+other changes which would allow drivers that want to produce a dmabuf
+without having to create their own exporter to find an existing heap
+and allocate from that. Thus we needed to do proper reference counting
+on the handles to the heap. Those changes are stuck for now waiting
+for an user to be publicly submitted, but this change initially seemed
+like a reasonable correctness cleanup, so I went ahead and sent it,
+but as Daniel noted we can wait for real users to be submitted before
+adding any extra complexity upstream.
 
-Yes. This information still should be found in DT as the xtal isn't part of
-the sensor.
+> In the case of modules I think the bigger problem is how to prevent
+> the module getting removed while there's still something using it.
 
-> 
-> > > This patch adds support for IMX274 power on and off to enable and
-> > > disable these supplies and external clock.
-> > > 
-> > > Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> > > ---
-> > >   drivers/media/i2c/imx274.c | 132 +++++++++++++++++++++++++++++++++++++++++++--
-> > >   1 file changed, 129 insertions(+), 3 deletions(-)
-> > > 
-> > > diff --git a/drivers/media/i2c/imx274.c b/drivers/media/i2c/imx274.c
-> > > index 55869ff..7157b1d 100644
-> > > --- a/drivers/media/i2c/imx274.c
-> > > +++ b/drivers/media/i2c/imx274.c
-> > > @@ -19,6 +19,7 @@
-> > >   #include <linux/module.h>
-> > >   #include <linux/of_gpio.h>
-> > >   #include <linux/regmap.h>
-> > > +#include <linux/regulator/consumer.h>
-> > >   #include <linux/slab.h>
-> > >   #include <linux/v4l2-mediabus.h>
-> > >   #include <linux/videodev2.h>
-> > > @@ -131,6 +132,15 @@
-> > >   #define IMX274_TABLE_WAIT_MS			0
-> > >   #define IMX274_TABLE_END			1
-> > > +/* regulator supplies */
-> > > +static const char * const imx274_supply_names[] = {
-> > > +	"VDDL",  /* IF (1.2V) supply */
-> > > +	"VDIG",  /* Digital Core (1.8V) supply */
-> > > +	"VANA",  /* Analog (2.8V) supply */
-> > > +};
-> > > +
-> > > +#define IMX274_NUM_SUPPLIES ARRAY_SIZE(imx274_supply_names)
-> > Please use ARRAY_SIZE() directly.
-> > 
-> > > +
-> > >   /*
-> > >    * imx274 I2C operation related structure
-> > >    */
-> > > @@ -501,6 +511,8 @@ struct imx274_ctrls {
-> > >    * @frame_rate: V4L2 frame rate structure
-> > >    * @regmap: Pointer to regmap structure
-> > >    * @reset_gpio: Pointer to reset gpio
-> > > + * @supplies: imx274 analog and digital supplies
-> > > + * @inck: input clock to imx274
-> > >    * @lock: Mutex structure
-> > >    * @mode: Parameters for the selected readout mode
-> > >    */
-> > > @@ -514,6 +526,8 @@ struct stimx274 {
-> > >   	struct v4l2_fract frame_interval;
-> > >   	struct regmap *regmap;
-> > >   	struct gpio_desc *reset_gpio;
-> > > +	struct regulator *supplies[IMX274_NUM_SUPPLIES];
-> > > +	struct clk *inck;
-> > >   	struct mutex lock; /* mutex lock for operations */
-> > >   	const struct imx274_mode *mode;
-> > >   };
-> > > @@ -767,6 +781,99 @@ static void imx274_reset(struct stimx274 *priv, int rst)
-> > >   	usleep_range(IMX274_RESET_DELAY1, IMX274_RESET_DELAY2);
-> > >   }
-> > > +/*
-> > > + * imx274_power_on - Function called to power on the sensor
-> > > + * @imx274: Pointer to device structure
-> > > + */
-> > > +static int imx274_power_on(struct device *dev)
-> > > +{
-> > > +	struct i2c_client *client = to_i2c_client(dev);
-> > > +	struct v4l2_subdev *sd = i2c_get_clientdata(client);
-> > > +	struct stimx274 *imx274 = to_imx274(sd);
-> > > +	int i, ret;
-> > > +
-> > > +	ret = clk_prepare_enable(imx274->inck);
-> > > +	if (ret) {
-> > > +		dev_err(&imx274->client->dev,
-> > > +			"Failed to enable input clock: %d\n", ret);
-> > > +		return ret;
-> > > +	}
-> > > +
-> > Could you use regulator_bulk_enable() instead? Same for disable.
-> 
-> Using regulator_bulk_enable() makes these regulators mandatory.
+That's true. Probably need something like a kref on each buffer allocated.
 
-How? regulator_bulk_enable() simply does call regulator_enable() on all the
-regulators.
-
--- 
-Sakari Ailus
+thanks
+-john
