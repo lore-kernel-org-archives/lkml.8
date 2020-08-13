@@ -2,325 +2,169 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E982EC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 23:17:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 577AFC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 23:22:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE923207DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 23:17:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 287862078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 23:22:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="E+mt3Kkt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p/iFoWE1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbgHMXRe (ORCPT
+        id S1726605AbgHMXV7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 19:17:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38978 "EHLO
+        Thu, 13 Aug 2020 19:21:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726522AbgHMXRd (ORCPT
+        with ESMTP id S1726205AbgHMXV6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 19:17:33 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90B3BC061383
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 16:17:33 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id d4so3480457pjx.5
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 16:17:33 -0700 (PDT)
+        Thu, 13 Aug 2020 19:21:58 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00843C061757;
+        Thu, 13 Aug 2020 16:21:57 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id j187so6808745qke.11;
+        Thu, 13 Aug 2020 16:21:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=je3KSpIjI3wvANb9VcFMRGLZNy0cfgXLnoS5OnXYTBM=;
-        b=E+mt3KktBCuCw0CsI9AxdLJT/hulhgjpdJnXypAlW5gFncTk1SvR75YudGwrAml8XU
-         +NayG/nqwRGS7lRpZUIl0xKi01/jhBSRPNEaa5pd41voyn1oxGEzz4U/GNUno82VmaXd
-         uDyA8w1SCHMLF9JlBorNgMqgr9ILbbpM9eTEY=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+u0MmkCtPZTVBw/Lv9wsCBJsbHO7QuG+ZcgJP6PkL6g=;
+        b=p/iFoWE1neCsgtURO4UNUixxN+LxpI4pbMfkxCM3eupG4Z4wJUhTgTp3nrWlYcfLld
+         vyLwOGjHvPYzhLvXcVHcufoCqhMYmUk4PjSsKKNVcEvIsy03mvDmThWNK7vVBQYShUSh
+         EoukOvQpcUNSjK72JVMjS/pmULaR0CUfDNgRl+IFWbafIgO8a469NL8fwmFFE5nz4cy5
+         v18JCCuToQJoUq2B9kJzz/G9JBFmY2Gwx38+9iTRd9YPIpXjhjvJ7EhgUdaaf+G/8AqZ
+         JfVM2UdwclFGwKM3AlQYUADbjDPu3e3w1S388GDEUEaoJTBUPyfdTqAcbjQXbZcWEn2a
+         vgug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=je3KSpIjI3wvANb9VcFMRGLZNy0cfgXLnoS5OnXYTBM=;
-        b=L1MO5cQDpFHv+oGGDQh7kz7ONkxPvYblFSRBntdZXW8K1QpPrYW65ombw6rb2FC7SF
-         n4cG+wSBdrmr+JcPOIFmzSSHX06C11mJpLTTy4HG1y7dSYuVR477zyFPIsz2yqEypSxg
-         OAFD3R1UIUVhI6rLEF5RqBcYLeGhlHmwJc20+D6CUZylzhBUx+CqpgHegWEkbO7+Y3dU
-         DbZ2qaX74jVI36GgsQFQag9xWWuAcyQ5Wm02/VYI9LFM//yKL/zrUSoIJXRZBmjy1g/G
-         DwJTOwctXwSRNRSrnDsYBA2joGck4RHGS+ykrfwZuKPcRQIdn2J1kUoOs35PkjoTUPUh
-         IqKQ==
-X-Gm-Message-State: AOAM531B59bL4mMYVflekRcRSEVkS0lSIohwKe+vBfTTMK5mhycPJAVh
-        ZnCMhczL5CR5q9v+qDXzu9jcF2Qt8UA=
-X-Google-Smtp-Source: ABdhPJwZ++qumA7ue1MbY4n3tjkb6EbPUT2BCumPlbJqhbAx7/TTn5jEEoLTvAX8bjFpFkPYyLsO1w==
-X-Received: by 2002:a17:902:9787:: with SMTP id q7mr100868plp.0.1597360652861;
-        Thu, 13 Aug 2020 16:17:32 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id e20sm6259211pjr.28.2020.08.13.16.17.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Aug 2020 16:17:30 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Kees Cook <keescook@chromium.org>, Marc Zyngier <maz@kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: [PATCH 2/2] selftests/exec: Add file type errno tests
-Date:   Thu, 13 Aug 2020 16:17:23 -0700
-Message-Id: <20200813231723.2725102-3-keescook@chromium.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200813231723.2725102-1-keescook@chromium.org>
-References: <20200813231723.2725102-1-keescook@chromium.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+u0MmkCtPZTVBw/Lv9wsCBJsbHO7QuG+ZcgJP6PkL6g=;
+        b=IxDNcFtNPhvlNPWHIgwy2j3i4FmyhYwsdO6Dsn/IBL8vP4UHqAVkJvLxkN1yf4deC0
+         ZUEoqzFUt7dUnq+h4WXxhiUnN7Uv09fu6asXZOT+aVUMdSXr5IK33KIa0k2NMYG44fOR
+         DINsy6f5q8hER+aJ5S7D4+kGVH1t5kkaUXqO/YK4OlK3iyTFcUYn+fI42JOxtsIqp6Sw
+         j37xbYv00ap7GBQuCpm/pzIoeinuv9fJC5rEi+4KOYPk09oYi6INj740PTTBkCZ8VEdB
+         fZ37uvFjgrQ2YbDAc1F6c58uwuA8ag0+ntUx0Fhi9gvIucWzht0/sKQlS01McvKZzpFc
+         R67w==
+X-Gm-Message-State: AOAM532K6QOgNHnaOE5qradlFMDSeWMESlF+95ejO9nIHnaO0PKE4hV+
+        PaHoxdMKI/p81oCIv8zld93uXfkygSc=
+X-Google-Smtp-Source: ABdhPJxoM5fKcglwbuj3m8EtbrrvHQu7lJx0oEYZ14bXwpCN4ABHBJbjUmQuKCobrIBgeiBewdpo8w==
+X-Received: by 2002:a05:620a:1653:: with SMTP id c19mr6965009qko.501.1597360916877;
+        Thu, 13 Aug 2020 16:21:56 -0700 (PDT)
+Received: from ?IPv6:2601:282:803:7700:1557:417:a433:9b3f? ([2601:282:803:7700:1557:417:a433:9b3f])
+        by smtp.googlemail.com with ESMTPSA id o47sm8780873qtk.19.2020.08.13.16.21.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Aug 2020 16:21:56 -0700 (PDT)
+Subject: Re: [PATCH 3/3] ipv6/icmp: l3mdev: Perform icmp error route lookup on
+ source device routing table
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        David Ahern <dsahern@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Hideaki Yoshifuji <hideaki.yoshifuji@miraclelinux.com>
+References: <20200811195003.1812-1-mathieu.desnoyers@efficios.com>
+ <20200811195003.1812-4-mathieu.desnoyers@efficios.com>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <2adc1bd3-53aa-0f3e-d5e4-740d11098685@gmail.com>
+Date:   Thu, 13 Aug 2020 17:21:55 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200811195003.1812-4-mathieu.desnoyers@efficios.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make sure execve() returns the expected errno values for non-regular
-files.
+On 8/11/20 1:50 PM, Mathieu Desnoyers wrote:
+> As per RFC4443, the destination address field for ICMPv6 error messages
+> is copied from the source address field of the invoking packet.
+> 
+> In configurations with Virtual Routing and Forwarding tables, looking up
+> which routing table to use for sending ICMPv6 error messages is
+> currently done by using the destination net_device.
+> 
+> If the source and destination interfaces are within separate VRFs, or
+> one in the global routing table and the other in a VRF, looking up the
+> source address of the invoking packet in the destination interface's
+> routing table will fail if the destination interface's routing table
+> contains no route to the invoking packet's source address.
+> 
+> One observable effect of this issue is that traceroute6 does not work in
+> the following cases:
+> 
+> - Route leaking between global routing table and VRF
+> - Route leaking between VRFs
+> 
+> Preferably use the source device routing table when sending ICMPv6 error
+> messages. If no source device is set, fall-back on the destination
+> device routing table.
+> 
+> Link: https://tools.ietf.org/html/rfc4443
+> Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> Cc: David Ahern <dsahern@kernel.org>
+> Cc: David S. Miller <davem@davemloft.net>
+> Cc: netdev@vger.kernel.org
+> ---
+>  net/ipv6/icmp.c       | 15 +++++++++++++--
+>  net/ipv6/ip6_output.c |  2 --
+>  2 files changed, 13 insertions(+), 4 deletions(-)
+> 
+> diff --git a/net/ipv6/icmp.c b/net/ipv6/icmp.c
+> index a4e4912ad607..a971b58b0371 100644
+> --- a/net/ipv6/icmp.c
+> +++ b/net/ipv6/icmp.c
+> @@ -501,8 +501,19 @@ void icmp6_send(struct sk_buff *skb, u8 type, u8 code, __u32 info,
+>  	if (__ipv6_addr_needs_scope_id(addr_type)) {
+>  		iif = icmp6_iif(skb);
+>  	} else {
+> -		dst = skb_dst(skb);
+> -		iif = l3mdev_master_ifindex(dst ? dst->dev : skb->dev);
+> +		struct net_device *route_lookup_dev = NULL;
+> +
+> +		/*
+> +		 * The device used for looking up which routing table to use is
+> +		 * preferably the source whenever it is set, which should
+> +		 * ensure the icmp error can be sent to the source host, else
+> +		 * fallback on the destination device.
+> +		 */
+> +		if (skb->dev)
+> +			route_lookup_dev = skb->dev;
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- tools/testing/selftests/exec/.gitignore    |   1 +
- tools/testing/selftests/exec/Makefile      |   5 +-
- tools/testing/selftests/exec/non-regular.c | 196 +++++++++++++++++++++
- 3 files changed, 200 insertions(+), 2 deletions(-)
- create mode 100755 tools/testing/selftests/exec/non-regular.c
+top of icmp6_send there is a check that skb->dev is set.
 
-diff --git a/tools/testing/selftests/exec/.gitignore b/tools/testing/selftests/exec/.gitignore
-index 94b02a18f230..344a99c6da1b 100644
---- a/tools/testing/selftests/exec/.gitignore
-+++ b/tools/testing/selftests/exec/.gitignore
-@@ -10,3 +10,4 @@ execveat.denatured
- /recursion-depth
- xxxxxxxx*
- pipe
-+S_I*.test
-diff --git a/tools/testing/selftests/exec/Makefile b/tools/testing/selftests/exec/Makefile
-index 4453b8f8def3..0a13b110c1e6 100644
---- a/tools/testing/selftests/exec/Makefile
-+++ b/tools/testing/selftests/exec/Makefile
-@@ -3,7 +3,7 @@ CFLAGS = -Wall
- CFLAGS += -Wno-nonnull
- CFLAGS += -D_GNU_SOURCE
- 
--TEST_PROGS := binfmt_script
-+TEST_PROGS := binfmt_script non-regular
- TEST_GEN_PROGS := execveat
- TEST_GEN_FILES := execveat.symlink execveat.denatured script subdir pipe
- # Makefile is a run-time dependency, since it's accessed by the execveat test
-@@ -11,7 +11,8 @@ TEST_FILES := Makefile
- 
- TEST_GEN_PROGS += recursion-depth
- 
--EXTRA_CLEAN := $(OUTPUT)/subdir.moved $(OUTPUT)/execveat.moved $(OUTPUT)/xxxxx*
-+EXTRA_CLEAN := $(OUTPUT)/subdir.moved $(OUTPUT)/execveat.moved $(OUTPUT)/xxxxx*	\
-+	       $(OUTPUT)/S_I*.test
- 
- include ../lib.mk
- 
-diff --git a/tools/testing/selftests/exec/non-regular.c b/tools/testing/selftests/exec/non-regular.c
-new file mode 100755
-index 000000000000..cd3a34aca93e
---- /dev/null
-+++ b/tools/testing/selftests/exec/non-regular.c
-@@ -0,0 +1,196 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+#include <errno.h>
-+#include <fcntl.h>
-+#include <stdio.h>
-+#include <string.h>
-+#include <unistd.h>
-+#include <sys/socket.h>
-+#include <sys/stat.h>
-+#include <sys/sysmacros.h>
-+#include <sys/types.h>
-+
-+#include "../kselftest_harness.h"
-+
-+/* Remove a file, ignoring the result if it didn't exist. */
-+void rm(struct __test_metadata *_metadata, const char *pathname,
-+	int is_dir)
-+{
-+	int rc;
-+
-+	if (is_dir)
-+		rc = rmdir(pathname);
-+	else
-+		rc = unlink(pathname);
-+
-+	if (rc < 0) {
-+		ASSERT_EQ(errno, ENOENT) {
-+			TH_LOG("Not ENOENT: %s", pathname);
-+		}
-+	} else {
-+		ASSERT_EQ(rc, 0) {
-+			TH_LOG("Failed to remove: %s", pathname);
-+		}
-+	}
-+}
-+
-+FIXTURE(file) {
-+	char *pathname;
-+	int is_dir;
-+};
-+
-+FIXTURE_VARIANT(file)
-+{
-+	const char *name;
-+	int expected;
-+	int is_dir;
-+	void (*setup)(struct __test_metadata *_metadata,
-+		      FIXTURE_DATA(file) *self,
-+		      const FIXTURE_VARIANT(file) *variant);
-+	int major, minor, mode; /* for mknod() */
-+};
-+
-+void setup_link(struct __test_metadata *_metadata,
-+		FIXTURE_DATA(file) *self,
-+		const FIXTURE_VARIANT(file) *variant)
-+{
-+	const char * const paths[] = {
-+		"/bin/true",
-+		"/usr/bin/true",
-+	};
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(paths); i++) {
-+		if (access(paths[i], X_OK) == 0) {
-+			ASSERT_EQ(symlink(paths[i], self->pathname), 0);
-+			return;
-+		}
-+	}
-+	ASSERT_EQ(1, 0) {
-+		TH_LOG("Could not find viable 'true' binary");
-+	}
-+}
-+
-+FIXTURE_VARIANT_ADD(file, S_IFLNK)
-+{
-+	.name = "S_IFLNK",
-+	.expected = ELOOP,
-+	.setup = setup_link,
-+};
-+
-+void setup_dir(struct __test_metadata *_metadata,
-+	       FIXTURE_DATA(file) *self,
-+	       const FIXTURE_VARIANT(file) *variant)
-+{
-+	ASSERT_EQ(mkdir(self->pathname, 0755), 0);
-+}
-+
-+FIXTURE_VARIANT_ADD(file, S_IFDIR)
-+{
-+	.name = "S_IFDIR",
-+	.is_dir = 1,
-+	.expected = EACCES,
-+	.setup = setup_dir,
-+};
-+
-+void setup_node(struct __test_metadata *_metadata,
-+		FIXTURE_DATA(file) *self,
-+		const FIXTURE_VARIANT(file) *variant)
-+{
-+	dev_t dev;
-+	int rc;
-+
-+	dev = makedev(variant->major, variant->minor);
-+	rc = mknod(self->pathname, 0755 | variant->mode, dev);
-+	ASSERT_EQ(rc, 0) {
-+		if (errno == EPERM)
-+			SKIP(return, "Please run as root; cannot mknod(%s)",
-+				variant->name);
-+	}
-+}
-+
-+FIXTURE_VARIANT_ADD(file, S_IFBLK)
-+{
-+	.name = "S_IFBLK",
-+	.expected = EACCES,
-+	.setup = setup_node,
-+	/* /dev/loop0 */
-+	.major = 7,
-+	.minor = 0,
-+	.mode = S_IFBLK,
-+};
-+
-+FIXTURE_VARIANT_ADD(file, S_IFCHR)
-+{
-+	.name = "S_IFCHR",
-+	.expected = EACCES,
-+	.setup = setup_node,
-+	/* /dev/zero */
-+	.major = 1,
-+	.minor = 5,
-+	.mode = S_IFCHR,
-+};
-+
-+void setup_fifo(struct __test_metadata *_metadata,
-+		FIXTURE_DATA(file) *self,
-+		const FIXTURE_VARIANT(file) *variant)
-+{
-+	ASSERT_EQ(mkfifo(self->pathname, 0755), 0);
-+}
-+
-+FIXTURE_VARIANT_ADD(file, S_IFIFO)
-+{
-+	.name = "S_IFIFO",
-+	.expected = EACCES,
-+	.setup = setup_fifo,
-+};
-+
-+FIXTURE_SETUP(file)
-+{
-+	ASSERT_GT(asprintf(&self->pathname, "%s.test", variant->name), 6);
-+	self->is_dir = variant->is_dir;
-+
-+	rm(_metadata, self->pathname, variant->is_dir);
-+	variant->setup(_metadata, self, variant);
-+}
-+
-+FIXTURE_TEARDOWN(file)
-+{
-+	rm(_metadata, self->pathname, self->is_dir);
-+}
-+
-+TEST_F(file, exec_errno)
-+{
-+	char * const argv[2] = { (char * const)self->pathname, NULL };
-+
-+	EXPECT_LT(execv(argv[0], argv), 0);
-+	EXPECT_EQ(errno, variant->expected);
-+}
-+
-+/* S_IFSOCK */
-+FIXTURE(sock)
-+{
-+	int fd;
-+};
-+
-+FIXTURE_SETUP(sock)
-+{
-+	self->fd = socket(AF_INET, SOCK_STREAM, 0);
-+	ASSERT_GE(self->fd, 0);
-+}
-+
-+FIXTURE_TEARDOWN(sock)
-+{
-+	if (self->fd >= 0)
-+		ASSERT_EQ(close(self->fd), 0);
-+}
-+
-+TEST_F(sock, exec_errno)
-+{
-+	char * const argv[2] = { " magic socket ", NULL };
-+	char * const envp[1] = { NULL };
-+
-+	EXPECT_LT(fexecve(self->fd, argv, envp), 0);
-+	EXPECT_EQ(errno, EACCES);
-+}
-+
-+TEST_HARNESS_MAIN
--- 
-2.25.1
+
+> +		else if (skb_dst(skb))
+> +			route_lookup_dev = skb_dst(skb)->dev;
+> +		iif = l3mdev_master_ifindex(route_lookup_dev);
+>  	}
+>  
+>  	/*
+> diff --git a/net/ipv6/ip6_output.c b/net/ipv6/ip6_output.c
+> index c78e67d7747f..cd623068de53 100644
+> --- a/net/ipv6/ip6_output.c
+> +++ b/net/ipv6/ip6_output.c
+> @@ -468,8 +468,6 @@ int ip6_forward(struct sk_buff *skb)
+>  	 *	check and decrement ttl
+>  	 */
+>  	if (hdr->hop_limit <= 1) {
+> -		/* Force OUTPUT device used as source address */
+> -		skb->dev = dst->dev;
+
+I *think* this ok. Not clear to me why the forward path would change the
+skb->dev like that. Goes back to beginning of the git history.
+
+>  		icmpv6_send(skb, ICMPV6_TIME_EXCEED, ICMPV6_EXC_HOPLIMIT, 0);
+>  		__IP6_INC_STATS(net, idev, IPSTATS_MIB_INHDRERRORS);
+>  
+> 
 
