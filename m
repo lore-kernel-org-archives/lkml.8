@@ -2,469 +2,262 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 085BBC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41A80C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:58:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0DD1206A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:55:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WR1nN22y"
+	by mail.kernel.org (Postfix) with ESMTP id 1763720768
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:58:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597312716;
+	bh=9RgQzuhqlRmtPEcH71/uI/W3vda4Hj2yojosYlaMzQc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=O2snJ7N9jFx8vDtanmtTs3W2EhAfEGXtTYfTzSAgUc/9SY+RQjbHNLn+4Sz8eAavI
+	 C/esIrS3CYUyIeJKVHJn3IuwZYwB9kDi8FZGp7H7b3lFyjZhwQ8V4tMAyFLSLc6ZN1
+	 mfmrSYFN7ddE/3XJZCNi2yZlLWKpFp8nGgoY2kyU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726578AbgHMJz1 (ORCPT
+        id S1726249AbgHMJ6e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 05:55:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56542 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726048AbgHMJzZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 05:55:25 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 207F8C061757
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 02:55:25 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id p37so2567333pgl.3
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 02:55:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=QhQqGSG6azQ9d2GJ+2TCi8OhuKdXryXe8ria7u6IUMM=;
-        b=WR1nN22yhW0HKSBplFc4JiwLMNReJ5kkFzcCviPa+U0TdVpe5n+Avv60gNa35WCfIv
-         p8M54X0bmz+yQZVOrS0SHvNa1HhaQqDF0/RBgDTQ5GuO6zQGhpkhfvtwSHXHbOfLaOsB
-         Hu4iD5KCbqcOF933YF+N2Q1IqyjqDG0kljE1MKLjgK2oPOr1xmCuoyd9CcDHN5y3ygfZ
-         8KYGxJqPF42eUVhjVC/oX98jCzqgY/XfsERBcYDlBjB9SEN5hbRlx71jmGc9aRu3hCE4
-         1qlxASsgDo9lf+q2rqcJBh4geCB6cZjYi1hsL/KH09bbFuooXeQyb39G47Vx8A93VDXa
-         vIuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=QhQqGSG6azQ9d2GJ+2TCi8OhuKdXryXe8ria7u6IUMM=;
-        b=S6HTc3T8COLPw9SwflVi+YYQDBbcn38mdwwzYy/gZwgDBKT/xX1s1+Ln132J2DrmRB
-         rUXleA6sA/+STE2WsGLhY3deIZADLmokPA1xQUqKo3M8IJw0+ORjwUAww1GRD+3IyCwj
-         2/CXUJOIzYReGwswSeex+rp/EAPKtrp5KFxHiei4IA1g/zKOSuJH3wsgFw5P6Givpmt7
-         O7DpZNTwlAJl+liMJzb1M4pkru4qPqFW/aE13v4dPyEMteswYKbDWKUWgT7nvKFqv5mG
-         QgI5T5OVkSpO8jFsI2+cyu8IiShI3DhOtGFfkgO8ddrnN9oqdH4y3udpD6by49yfTW5o
-         cEBw==
-X-Gm-Message-State: AOAM532GqKAyqfcsYVjnlBGAvwh3W2HgPelnvBrX0/+vPkd2SORLSIBx
-        khaM1WgLW6vMysMCwrcGrug=
-X-Google-Smtp-Source: ABdhPJwSs2a+HpHeIq+QCKzQsv20gsg/PTRnjN46+Oy/KDEYWHdpaQgf3/XF1FLT4RvORHAs44VTcA==
-X-Received: by 2002:a63:2944:: with SMTP id p65mr3049343pgp.271.1597312524406;
-        Thu, 13 Aug 2020 02:55:24 -0700 (PDT)
-Received: from builder-PowerEdge-R730xd.mioffice.cn ([209.9.72.212])
-        by smtp.gmail.com with ESMTPSA id z3sm4742346pgk.49.2020.08.13.02.55.21
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Aug 2020 02:55:23 -0700 (PDT)
-From:   Qianli Zhao <zhaoqianligood@gmail.com>
-To:     tglx@linutronix.de, axboe@kernel.dk, akpm@linux-foundation.org,
-        Felix.Kuehling@amd.com
-Cc:     john.stultz@linaro.org, sboyd@kernel.org,
-        ben.dooks@codethink.co.uk, bfields@redhat.com, cl@rock-chips.com,
-        linux-kernel@vger.kernel.org, zhaoqianli@xiaomi.com
-Subject: [PATCH v3] kthread: add objectdebug support
-Date:   Thu, 13 Aug 2020 17:55:16 +0800
-Message-Id: <08985916e4bfc3835207ff87634392ae2eac698e.1597307180.git.zhaoqianli@xiaomi.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 13 Aug 2020 05:58:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35862 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726048AbgHMJ6d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 05:58:33 -0400
+Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8385206A4;
+        Thu, 13 Aug 2020 09:58:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597312712;
+        bh=9RgQzuhqlRmtPEcH71/uI/W3vda4Hj2yojosYlaMzQc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=XfTzQarbNsyDPeTzjsFu2xl1etxDXCqda8LvDEXpdjegidj0Xgsr2kj27WVGm6slM
+         o8qXDSNIz8t27fK7IrRxoLEY5xrWvi+vTNigaxxqamJKt4vRAGMO9Ag7XojLkptG8B
+         OIGlea/1wskhl5ANMK5MBT5wraJ2/dxIfgFnj16o=
+Date:   Thu, 13 Aug 2020 11:58:23 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linuxarm@huawei.com, mauro.chehab@huawei.com,
+        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Wei Xu <xuwei5@hisilicon.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        Rob Herring <robh@kernel.org>, devel@driverdev.osuosl.org,
+        linux-arm-msm@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH 00/44] SPMI patches needed by Hikey 970
+Message-ID: <20200813115823.70f9016a@coco.lan>
+In-Reply-To: <20200813075827.GH4354@dell>
+References: <cover.1597247164.git.mchehab+huawei@kernel.org>
+        <20200813075827.GH4354@dell>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qianli Zhao <zhaoqianli@xiaomi.com>
+Hi Lee,
 
-Add debugobject support to track the life time of kthread_work
-which is used to detect reinitialization/free active object problems
-Add kthread_init_work_onstack/kthread_init_delayed_work_onstack for
-kthread onstack support
+Em Thu, 13 Aug 2020 08:58:27 +0100
+Lee Jones <lee.jones@linaro.org> escreveu:
 
-If we reinitialize a kthread_work that has been activated,
-this will cause delayed_work_list/work_list corruption.
-enable this config,there is an chance to fixup these errors
-or WARNING the wrong use of kthread_work
+> On Wed, 12 Aug 2020, Mauro Carvalho Chehab wrote:
+>=20
+> > Hi Greg,
+> >=20
+> > This patch series is part of a work I'm doing in order to be able to su=
+pport
+> > a HiKey 970 board that I recently got on my hands.
+> >=20
+> > I received some freedback from Mark and from Jonathan on a first
+> > attempt I made to upstream this.
+> >=20
+> > I'm opting to submit it via staging, because I had to start from the
+> > patch that originally added this driver on a 4.9 Kernel tree:
+> >=20
+> > 	https://github.com/96boards-hikey/linux/tree/hikey970-v4.9
+> >=20
+> > In order to preserve the original SOB from the driver's author.
+> >=20
+> > The patches following it are on the standard way: one patch per
+> > logical change.
+> >=20
+> > This is part of a bigger work whose goal is to have upstream support
+> > for USB and DRM/KMS on such boards.=20
+> >=20
+> > I suspect that, maybe except for the DT part, those 3 specific drivers
+> > are more or less ready to be moved from staging, but the other
+> > drivers that are also part of this attempt aren't ready. Specially the
+> > DRM driver has some bugs that came from the OOT version.
+> >=20
+> > So, my current plan is to submit those drivers to staging for 5.9
+> > and move the ones that are ok out of staging on Kernel 5.10. =20
+>=20
+> What a mess.  This is no way to upstream a new driver.
+>=20
+> Firstly, could you please add versioning to your submissions.  I know
+> this at least version 2.  Were there previous submissions?  Is this
+> the latest?
 
-[30858.395766] list_del corruption. next->prev should be ffffffe388ebbf88, but was ffffffe388ebb588
-[30858.395788] WARNING: CPU: 2 PID: 387 at /home/work/data/codes/build_home/kernel/msm-4.19/lib/list_debug.c:56 __list_del_entry_valid+0xc8/0xd0
-...
-[30858.405951] list_add corruption. next->prev should be prev (ffffffe389392620), but was ffffffe388ebbf88. (next=ffffffe388ebbf88).
-[30858.405977] WARNING: CPU: 0 PID: 7721 at /home/work/data/codes/build_home/kernel/msm-4.19/lib/list_debug.c:25 __list_add_valid+0x7c/0xc8
+Yeah, that's the second attempt. The first one was:
 
-crash> struct kthread_worker.delayed_work_list 0xffffffe3893925f0
- [ffffffe389392620] delayed_work_list = {
-    next = 0xffffffe388ebbf88,
-    prev = 0xffffffe388ebb588
-  }
-crash> list 0xffffffe388ebbf88
-ffffffe388ebbf88
+	https://lore.kernel.org/lkml/176043f329dfa9889f014feec04e7e1553077873.1597=
+160086.git.mchehab+huawei@kernel.org/T/#u
 
-Signed-off-by: Qianli Zhao <zhaoqianli@xiaomi.com>
----
-Thanks for your suggestions,tglx,Stephen
-please review this patchset
+I was in doubt about adding a v2 in this specific case or not,=20
+since I ended submitting it to the staging tree.
 
-changes:
-V3:
-- changelog update
-- add fixup_assert_init support
-- move debug_kwork_activate/debug_kwork_deactivate before list operation
-- name the kconfig CONFIG_DEBUG_OBJECTS_KTHREAD_WORK
-- use kthread_init_work_onstack/destroy_kwork_on_stack when kthread_work used on stack
-- __init_kwork before clear kthread_work in kthread_init_work
----
- include/linux/kthread.h |  29 +++++++++-
- include/linux/poison.h  |   3 +
- kernel/kthread.c        | 142 +++++++++++++++++++++++++++++++++++++++++++++---
- lib/Kconfig.debug       |  10 ++++
- 4 files changed, 176 insertions(+), 8 deletions(-)
+> Secondly and more importantly, you have submitted what looks like a
+> new driver (bearing in mind that I'm only concerning myself with the
+> MFD related changes), then in the same submission you are adding and
+> removing large chunks.  Please just submit the new driver, on its own
+> as a single patch, complete with its associated Makefile and Kconfig
+> changes.
 
-diff --git a/include/linux/kthread.h b/include/linux/kthread.h
-index 65b81e0..d3481a3 100644
---- a/include/linux/kthread.h
-+++ b/include/linux/kthread.h
-@@ -108,6 +108,16 @@ struct kthread_delayed_work {
- 	struct timer_list timer;
- };
- 
-+#ifdef CONFIG_DEBUG_OBJECTS_KTHREAD_WORK
-+extern void __init_kwork(struct kthread_work *kwork, int onstack);
-+extern void destroy_kwork_on_stack(struct kthread_work *kwork);
-+extern void destroy_delayed_kwork_on_stack(struct kthread_delayed_work *kdwork);
-+#else
-+static inline void __init_kwork(struct kthread_work *kwork, int onstack) { }
-+static inline void destroy_kwork_on_stack(struct kthread_work *kwork) { }
-+static inline void destroy_delayed_kwork_on_stack(struct kthread_delayed_work *kdwork) { }
-+#endif
-+
- #define KTHREAD_WORKER_INIT(worker)	{				\
- 	.lock = __RAW_SPIN_LOCK_UNLOCKED((worker).lock),		\
- 	.work_list = LIST_HEAD_INIT((worker).work_list),		\
-@@ -115,7 +125,7 @@ struct kthread_delayed_work {
- 	}
- 
- #define KTHREAD_WORK_INIT(work, fn)	{				\
--	.node = LIST_HEAD_INIT((work).node),				\
-+	.node = { .next = KWORK_ENTRY_STATIC },				\
- 	.func = (fn),							\
- 	}
- 
-@@ -159,6 +169,15 @@ extern void __kthread_init_worker(struct kthread_worker *worker,
- 
- #define kthread_init_work(work, fn)					\
- 	do {								\
-+		__init_kwork(work, 0);						\
-+		memset((work), 0, sizeof(struct kthread_work));		\
-+		INIT_LIST_HEAD(&(work)->node);				\
-+		(work)->func = (fn);					\
-+	} while (0)
-+
-+#define kthread_init_work_onstack(work, fn)					\
-+	do {								\
-+		__init_kwork(work, 1);						\
- 		memset((work), 0, sizeof(struct kthread_work));		\
- 		INIT_LIST_HEAD(&(work)->node);				\
- 		(work)->func = (fn);					\
-@@ -172,6 +191,14 @@ extern void __kthread_init_worker(struct kthread_worker *worker,
- 			     TIMER_IRQSAFE);				\
- 	} while (0)
- 
-+#define kthread_init_delayed_work_onstack(dwork, fn)				\
-+	do {								\
-+		kthread_init_work_onstack(&(dwork)->work, (fn));		\
-+		__init_timer_on_stack(&(dwork)->timer,				\
-+			     kthread_delayed_work_timer_fn,		\
-+			     TIMER_IRQSAFE);				\
-+	} while (0)
-+
- int kthread_worker_fn(void *worker_ptr);
- 
- __printf(2, 3)
-diff --git a/include/linux/poison.h b/include/linux/poison.h
-index df34330..2e6a370 100644
---- a/include/linux/poison.h
-+++ b/include/linux/poison.h
-@@ -86,4 +86,7 @@
- /********** security/ **********/
- #define KEY_DESTROY		0xbd
- 
-+/********** kernel/kthread **********/
-+#define KWORK_ENTRY_STATIC	((void *) 0x600 + POISON_POINTER_DELTA)
-+
- #endif
-diff --git a/kernel/kthread.c b/kernel/kthread.c
-index 132f84a..68a16cc 100644
---- a/kernel/kthread.c
-+++ b/kernel/kthread.c
-@@ -67,6 +67,118 @@ enum KTHREAD_BITS {
- 	KTHREAD_SHOULD_PARK,
- };
- 
-+#ifdef CONFIG_DEBUG_OBJECTS_KTHREAD_WORK
-+static struct debug_obj_descr kwork_debug_descr;
-+
-+static void *kwork_debug_hint(void *addr)
-+{
-+	return ((struct kthread_work *) addr)->func;
-+}
-+
-+static bool kwork_is_static_object(void *addr)
-+{
-+	struct kthread_work *kwork = addr;
-+
-+	return (kwork->node.prev == NULL &&
-+		kwork->node.next == KWORK_ENTRY_STATIC);
-+}
-+
-+static bool kwork_fixup_init(void *addr, enum debug_obj_state state)
-+{
-+	struct kthread_work *kwork = addr;
-+
-+	switch (state) {
-+	case ODEBUG_STATE_ACTIVE:
-+		kthread_cancel_work_sync(kwork);
-+		debug_object_init(kwork, &kwork_debug_descr);
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
-+static bool kwork_fixup_free(void *addr, enum debug_obj_state state)
-+{
-+	struct kthread_work *kwork = addr;
-+
-+	switch (state) {
-+	case ODEBUG_STATE_ACTIVE:
-+		kthread_cancel_work_sync(kwork);
-+		debug_object_free(kwork, &kwork_debug_descr);
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
-+static void stub_kthread_work(struct kthread_work *unuse)
-+{
-+	WARN_ON(1);
-+}
-+
-+static bool kwork_fixup_assert_init(void *addr, enum debug_obj_state state)
-+{
-+	struct kthread_work *kwork = addr;
-+	switch (state) {
-+	case ODEBUG_STATE_NOTAVAILABLE:
-+		kthread_init_work(kwork, stub_kthread_work);
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
-+static struct debug_obj_descr kwork_debug_descr = {
-+		.name		= "kthread_work",
-+		.debug_hint	= kwork_debug_hint,
-+		.is_static_object = kwork_is_static_object,
-+		.fixup_init	= kwork_fixup_init,
-+		.fixup_free	= kwork_fixup_free,
-+		.fixup_assert_init = kwork_fixup_assert_init,
-+};
-+
-+static inline void debug_kwork_activate(struct kthread_work *kwork)
-+{
-+	debug_object_activate(kwork, &kwork_debug_descr);
-+}
-+
-+static inline void debug_kwork_deactivate(struct kthread_work *kwork)
-+{
-+	debug_object_deactivate(kwork, &kwork_debug_descr);
-+}
-+
-+static inline void debug_kwork_assert_init(struct kthread_work *kwork)
-+{
-+	debug_object_assert_init(kwork, &kwork_debug_descr);
-+}
-+
-+void __init_kwork(struct kthread_work *kwork, int onstack)
-+{
-+	if (onstack)
-+		debug_object_init_on_stack(kwork, &kwork_debug_descr);
-+	else
-+		debug_object_init(kwork, &kwork_debug_descr);
-+}
-+EXPORT_SYMBOL_GPL(__init_kwork);
-+
-+void destroy_kwork_on_stack(struct kthread_work *kwork)
-+{
-+	debug_object_free(kwork, &kwork_debug_descr);
-+}
-+EXPORT_SYMBOL_GPL(destroy_kwork_on_stack);
-+
-+void destroy_delayed_kwork_on_stack(struct kthread_delayed_work *kdwork)
-+{
-+	destroy_timer_on_stack(&kdwork->timer);
-+	debug_object_free(&kdwork->work, &kwork_debug_descr);
-+}
-+EXPORT_SYMBOL_GPL(destroy_delayed_kwork_on_stack);
-+#else
-+static inline void debug_kwork_activate(struct kthread_work *kwork) { }
-+static inline void debug_kwork_deactivate(struct kthread_work *kwork) { }
-+static inline void debug_kwork_assert_init(struct kthread_work *kwork) { }
-+#endif
-+
- static inline void set_kthread_struct(void *kthread)
- {
- 	/*
-@@ -697,6 +809,7 @@ int kthread_worker_fn(void *worker_ptr)
- 	if (!list_empty(&worker->work_list)) {
- 		work = list_first_entry(&worker->work_list,
- 					struct kthread_work, node);
-+		debug_kwork_deactivate(work);
- 		list_del_init(&work->node);
- 	}
- 	worker->current_work = work;
-@@ -833,8 +946,10 @@ static void kthread_insert_work(struct kthread_worker *worker,
- {
- 	kthread_insert_work_sanity_check(worker, work);
- 
-+	debug_kwork_activate(work);
- 	list_add_tail(&work->node, pos);
- 	work->worker = worker;
-+
- 	if (!worker->current_work && likely(worker->task))
- 		wake_up_process(worker->task);
- }
-@@ -857,6 +972,7 @@ bool kthread_queue_work(struct kthread_worker *worker,
- 	bool ret = false;
- 	unsigned long flags;
- 
-+	debug_kwork_assert_init(work);
- 	raw_spin_lock_irqsave(&worker->lock, flags);
- 	if (!queuing_blocked(worker, work)) {
- 		kthread_insert_work(worker, work, &worker->work_list);
-@@ -895,6 +1011,7 @@ void kthread_delayed_work_timer_fn(struct timer_list *t)
- 
- 	/* Move the work from worker->delayed_work_list. */
- 	WARN_ON_ONCE(list_empty(&work->node));
-+	debug_kwork_deactivate(work);
- 	list_del_init(&work->node);
- 	kthread_insert_work(worker, work, &worker->work_list);
- 
-@@ -924,7 +1041,7 @@ static void __kthread_queue_delayed_work(struct kthread_worker *worker,
- 
- 	/* Be paranoid and try to detect possible races already now. */
- 	kthread_insert_work_sanity_check(worker, work);
--
-+	debug_kwork_activate(work);
- 	list_add(&work->node, &worker->delayed_work_list);
- 	work->worker = worker;
- 	timer->expires = jiffies + delay;
-@@ -954,6 +1071,7 @@ bool kthread_queue_delayed_work(struct kthread_worker *worker,
- 	unsigned long flags;
- 	bool ret = false;
- 
-+	debug_kwork_assert_init(work);
- 	raw_spin_lock_irqsave(&worker->lock, flags);
- 
- 	if (!queuing_blocked(worker, work)) {
-@@ -987,15 +1105,16 @@ static void kthread_flush_work_fn(struct kthread_work *work)
- void kthread_flush_work(struct kthread_work *work)
- {
- 	struct kthread_flush_work fwork = {
--		KTHREAD_WORK_INIT(fwork.work, kthread_flush_work_fn),
--		COMPLETION_INITIALIZER_ONSTACK(fwork.done),
-+		.done = COMPLETION_INITIALIZER_ONSTACK(fwork.done),
- 	};
- 	struct kthread_worker *worker;
- 	bool noop = false;
- 
-+	kthread_init_work_onstack(&fwork.work, kthread_flush_work_fn);
-+	debug_kwork_assert_init(work);
- 	worker = work->worker;
- 	if (!worker)
--		return;
-+		goto out;
- 
- 	raw_spin_lock_irq(&worker->lock);
- 	/* Work must not be used with >1 worker, see kthread_queue_work(). */
-@@ -1013,6 +1132,9 @@ void kthread_flush_work(struct kthread_work *work)
- 
- 	if (!noop)
- 		wait_for_completion(&fwork.done);
-+
-+out:
-+	destroy_kwork_on_stack(&fwork.work);
- }
- EXPORT_SYMBOL_GPL(kthread_flush_work);
- 
-@@ -1053,6 +1175,7 @@ static bool __kthread_cancel_work(struct kthread_work *work, bool is_dwork,
- 	 * be from worker->work_list or from worker->delayed_work_list.
- 	 */
- 	if (!list_empty(&work->node)) {
-+		debug_kwork_deactivate(work);
- 		list_del_init(&work->node);
- 		return true;
- 	}
-@@ -1091,6 +1214,7 @@ bool kthread_mod_delayed_work(struct kthread_worker *worker,
- 	unsigned long flags;
- 	int ret = false;
- 
-+	debug_kwork_assert_init(work);
- 	raw_spin_lock_irqsave(&worker->lock, flags);
- 
- 	/* Do not bother with canceling when never queued. */
-@@ -1115,10 +1239,13 @@ EXPORT_SYMBOL_GPL(kthread_mod_delayed_work);
- 
- static bool __kthread_cancel_work_sync(struct kthread_work *work, bool is_dwork)
- {
--	struct kthread_worker *worker = work->worker;
-+	struct kthread_worker *worker;
- 	unsigned long flags;
- 	int ret = false;
- 
-+	debug_kwork_assert_init(work);
-+
-+	worker = work->worker;
- 	if (!worker)
- 		goto out;
- 
-@@ -1194,12 +1321,13 @@ EXPORT_SYMBOL_GPL(kthread_cancel_delayed_work_sync);
- void kthread_flush_worker(struct kthread_worker *worker)
- {
- 	struct kthread_flush_work fwork = {
--		KTHREAD_WORK_INIT(fwork.work, kthread_flush_work_fn),
--		COMPLETION_INITIALIZER_ONSTACK(fwork.done),
-+		.done = COMPLETION_INITIALIZER_ONSTACK(fwork.done),
- 	};
- 
-+	kthread_init_work_onstack(&fwork.work, kthread_flush_work_fn);
- 	kthread_queue_work(worker, &fwork.work);
- 	wait_for_completion(&fwork.done);
-+	destroy_kwork_on_stack(&fwork.work);
- }
- EXPORT_SYMBOL_GPL(kthread_flush_worker);
- 
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 9ad9210..71d6696 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -540,6 +540,16 @@ config DEBUG_OBJECTS_WORK
- 	  work queue routines to track the life time of work objects and
- 	  validate the work operations.
- 
-+config DEBUG_OBJECTS_KTHREAD_WORK
-+	bool "Debug kthread work objects"
-+	depends on DEBUG_OBJECTS
-+	help
-+	  If you say Y here, additional code will be inserted into the
-+	  kthread routines to track the life time of kthread_work objects
-+	  and validate the kthread_work operations.
-+
-+	  If unsure, say N.
-+
- config DEBUG_OBJECTS_RCU_HEAD
- 	bool "Debug RCU callbacks objects"
- 	depends on DEBUG_OBJECTS
--- 
-2.7.4
+I can't do like that because I'm not the author of the original patch that
+added the driver.
 
+The original patch came from the 96board's android-kernel based 4.9 tree:
+
+	https://github.com/96boards-hikey/linux/tree/hikey970-v4.9
+
+> What are your reasons for submitting this via Staging?=20
+
+The main reason is to preserve both the patch authorship and its
+history.
+
+After the original patch, I wrote several incremental changes cleaning
+up the original driver and stripping parts of it that aren't needed.
+
+By preserving the history, if someone wants to restore some removed
+functionality, it is just a matter of reverting a patch.
+
+For example, the original driver had its own sysfs interface for
+debugging the regulator driver.=20
+
+This is not needed for it to work. Also, the right interface for such=20
+things is via configfs. Yet, someone could think on restoring such=20
+feat and start from the existing code, instead of coming with=20
+something else from scratch.
+
+> Is it not ready yet?=20
+
+=46rom my side, I believe that, after my changes, the code now meets
+upstream requirements, maybe except for DT (and the parsing code).
+There are a few things at the DT properties on this driver that could=20
+be named on a different (more standard way).=20
+
+Yet, I'm not a regular contributor for mfd/regulator/spmi. So,
+I may have missed something.
+
+> Are the resultant components not at a high enough level of
+> quality or enablement to go straight into the subsystems, which is
+> more typical?  From an MFD perspective, I would be reviewing the
+> driver as a whole when (if) it moves from Staging into MFD anyway, so
+> why are you jumping through hoops with this additional, seemingly
+> superfluous step?
+
+I'm OK if this gets reviewed by MFD people only after moving it out of
+staging. Assuming that this would be merged for Kernel 5.10, I'll
+likely send a patch moving it out of staging for 5.11. Then,
+you can do a comprehensive review.
+
+> Finally, the subject of authorship is often a contentious one, but
+> this is a problem you need to work out with the original author, not
+> something that should require special handing by upstream.  You have a
+> couple of choices, but bear in mind that upstreaming a non-suitable
+> driver then bringing it up to standard is not one of them.
+>=20
+> 1. Keep the original author's authorship and SoB, make your changes
+>    and get them to review to ensure they are still happy about being
+>    associated with the resultant code.  Ensure you mention all of the
+>    changes you make in the commit message and follow-up by adding your
+>    own SoB.
+>=20
+> 2. This is the contentious bit.  If you've made enough changes, there
+>    is an argument for you to adopt authorship.  You should discuss
+>    with the original author whether they are happy for you to retain
+>    their SoB.  My suggestion is always try to keep the SoB as a bare
+>    minimum to preserve patch history and out of pure courtesy.
+
+It is not only the above. Both the original author and anyone
+touching the code should comply with applicable internal policies.
+
+=46rom my experience, dealing with such things takes a lot more of time
+then coding, as it require talking with legal departments on different
+continents, and with developers and with their bosses in order to be
+able to do things like that.=20
+
+This can also be a very frustrating process. During almost 20 years of
+being the media maintainer, I've seen several cases where trying to
+enforce a folded initial patch caused devs to receive NACKS, preventing=20
+them so submit otherwise good stuff.
+
+So, at the media subsystem, I'm perfectly fine if someone starts from=20
+the original OOT driver, preserving its original authorships. We're
+also dealing there with the patches sent to drivers/staging/media.
+
+I'm not saying that other subsystem maintainers should do the same.
+Dealing with staging is time consuming, and I completely understand
+that most maintainers prefer to stay out of it ;-)
+
+-=20
+
+Since when staging tree started, if someone has to start from the
+original patch, such things can be merged at staging. Then,
+incremental patches are applied at the top until it reaches what's
+required to be promoted.
+
+That's said, there's no hush to have those drivers out of staging.
+My end goal is to have DRM/KMS and USB support for Hikey 970.=20
+
+The patchsets I have so far are at:
+
+	https://github.com/mchehab/linux/commits/hikey970/to_upstream-2.0-v1.1
+
+(this branch has the v1 of my patchset)
+
+Porting this driver is part of such effort. While this driver is
+on a good situation, the other ones may require some time to
+mature.
+
+The DRM/KMS driver for example, is not ready to be merged outside=20
+staging, as it carries several bugs that came from the original
+driver and are present at the official tree at 96boards. For example,
+there is a a very dirty hack that enforces the HDMI chipset to
+only work with a limited set of resolutions that are known to work:
+
+	https://github.com/96boards-hikey/linux/blob/hikey970-v4.9/drivers/gpu/drm=
+/hisilicon/kirin9xx/hdmi/adv7535.c#L869
+
+It also has problems reading the frequencies via EDID interface.
+Due to that, the driver fakes an EDID table:
+
+	https://github.com/96boards-hikey/linux/blob/hikey970-v4.9/drivers/gpu/drm=
+/hisilicon/kirin9xx/hdmi/adv7535.c#L463
+
+It sounds to me that some clocks are not properly set for a random
+resolution, but fixing it is not trivial and requires deep knowledge
+about how the display registers should be tuned to better support
+resolutions. The current settings cause underflows with 1080p,
+which in turn makes the display driver to (silently) stop working.
+
+So, in summary, I believe that some drivers from my port will
+require being at staging for a while. While I was planning to
+do that on my next patch submission, placing the PM drivers
+there won't make much difference from my side, as I'll need to
+be submitting patches anyway moving drivers out of staging as
+they become ready.
+
+Thanks,
+Mauro
