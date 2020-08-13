@@ -2,88 +2,145 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B26C433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:17:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6260C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:19:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8B3920781
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:17:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC7CF2078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 09:19:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="on+DxrjV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726542AbgHMJRZ (ORCPT
+        id S1726292AbgHMJTx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 05:17:25 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:36258 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726048AbgHMJRY (ORCPT
+        Thu, 13 Aug 2020 05:19:53 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:55149 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726048AbgHMJTw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 05:17:24 -0400
-Received: by mail-ot1-f68.google.com with SMTP id x24so4264680otp.3;
-        Thu, 13 Aug 2020 02:17:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=V07KhpRlm+XyrUY9W/wqJIuuVTBiRrW7230tHoTMcI8=;
-        b=AL4EM9XTva3cC0oOZH+AcGBesvrDaIPewm9yN25ilgH6LV666WiuXPLdG4zIbe133l
-         Lk8fy4AHnKTRm1AQdVOCZHd/Y7WXmGNG7BFIlbPSNvc3hBgf2s1M7zs2ePRduCjkL+d+
-         Gcl5yzLZDGNQCzqEJ6AKb2HnMxc0aV4Q4xmJhOmfYBHz5DgnmEoUoKXxlA/2bNdFac60
-         r2gBvr7l+9w7pR43LRMVsMOuxVwMESRNsmniwC5yiRMvra9Qp93sZlx1y5rCIse7uX8e
-         7TGApwiNOVTDQNI3miakGuanPy+oBmsOeRjHSPZAf/ztLCwZ8yNeQPGpDPVfzRiF8x5f
-         l92w==
-X-Gm-Message-State: AOAM530BgxQRKaDwH6taCKLnZ1u0XnUJ+j2ClLlO3Bk+S+j4C4jlmKPV
-        ABkq1a3lMJg3nZrYAQvssaH4tVivWjPSZQoKrYY=
-X-Google-Smtp-Source: ABdhPJxdPkdRpPWiNCOIxmN2JxvlePZTVF3T8bGebJ7eRWYMeJA5GOIXNkf4wj0qjwTCLwg6p4yGtROhDO1jLcqkr3g=
-X-Received: by 2002:a9d:7d8c:: with SMTP id j12mr3428687otn.250.1597310243034;
- Thu, 13 Aug 2020 02:17:23 -0700 (PDT)
+        Thu, 13 Aug 2020 05:19:52 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597310392; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=rqTuz315PIl0OvWEUQPSIGL8Yokr6Ob5ozpoNbkalTU=;
+ b=on+DxrjVaXZxCu8jzKgd8udyK+A/rSdr6mmo9eNO/z/3aIF4o3s22m2UBIHs9K8gQwMxU6YV
+ 8v/TISuipSFGATG9nq/yVkAA654DEeIXqn8rxtQ6ZQzEvpe7Z3TamOe4YPCqJikYzYSxoo9e
+ ROw5zjBs3O9vh/V3w7O0D8nwE5I=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n10.prod.us-west-2.postgun.com with SMTP id
+ 5f3505aa46ed996674c77eaa (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 13 Aug 2020 09:19:38
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 1E961C433CA; Thu, 13 Aug 2020 09:19:38 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9B43BC433C9;
+        Thu, 13 Aug 2020 09:19:37 +0000 (UTC)
 MIME-Version: 1.0
-References: <20200812140217.24251-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200812140217.24251-9-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20200812140217.24251-9-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 13 Aug 2020 11:17:10 +0200
-Message-ID: <CAMuHMdX0L-TcdHbmvdVGmwQCNuteXnCFLyt=e9qaSYq7BTdFWA@mail.gmail.com>
-Subject: Re: [PATCH 8/9] arm64: dts: renesas: r8a774e1: Add LVDS device node
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 13 Aug 2020 14:49:37 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Andre Przywara <andre.przywara@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH] arm64: Add KRYO4XX gold CPU core to spectre-v2 safe list
+In-Reply-To: <20200813090324.GB9829@willie-the-truck>
+References: <20200813081834.13576-1-saiprakash.ranjan@codeaurora.org>
+ <20200813090324.GB9829@willie-the-truck>
+Message-ID: <89f0f41514e547533c3fa66364e5a2ac@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 4:03 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
->
-> Add the LVDS device node to R8A774E1 to SoC dtsi and connect it with
-> the DU node.
->
-> Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On 2020-08-13 14:33, Will Deacon wrote:
+> On Thu, Aug 13, 2020 at 01:48:34PM +0530, Sai Prakash Ranjan wrote:
+>> KRYO4XX gold/big CPU cores are based on Cortex-A76 which has CSV2
+>> bits set and are spectre-v2 safe. But on big.LITTLE systems where
+>> they are coupled with other CPU cores such as the KRYO4XX silver
+>> based on Cortex-A55 which are spectre-v2 safe but do not have CSV2
+>> bits set, the system wide safe value will be set to the lowest value
+>> of CSV2 bits as per FTR_LOWER_SAFE defined for CSV2 bits of register
+>> ID_AA64PFR0_EL1.
+>> 
+>> This is a problem when booting a guest kernel on gold CPU cores
+>> where it will incorrectly report ARM_SMCCC_ARCH_WORKAROUND_1 warning
+>> and consider them as vulnerable for Spectre variant 2 due to system
+>> wide safe value which is used in kvm emulation code when reading id
+>> registers. One wrong way of fixing this is to set the FTR_HIGHER_SAFE
+>> for CSV2 bits, so instead add the KRYO4XX gold CPU core to the safe
+>> list which will be consulted even when the sanitised read reports
+>> that CSV2 bits are not set for KRYO4XX gold cores.
+>> 
+>> Reported-by: Stephen Boyd <swboyd@chromium.org>
+>> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+>> ---
+>>  arch/arm64/kernel/cpu_errata.c | 1 +
+>>  1 file changed, 1 insertion(+)
+>> 
+>> diff --git a/arch/arm64/kernel/cpu_errata.c 
+>> b/arch/arm64/kernel/cpu_errata.c
+>> index 6bd1d3ad037a..6cbdd2d98a2a 100644
+>> --- a/arch/arm64/kernel/cpu_errata.c
+>> +++ b/arch/arm64/kernel/cpu_errata.c
+>> @@ -545,6 +545,7 @@ static const struct midr_range 
+>> spectre_v2_safe_list[] = {
+>>  	MIDR_ALL_VERSIONS(MIDR_HISI_TSV110),
+>>  	MIDR_ALL_VERSIONS(MIDR_QCOM_KRYO_3XX_SILVER),
+>>  	MIDR_ALL_VERSIONS(MIDR_QCOM_KRYO_4XX_SILVER),
+>> +	MIDR_ALL_VERSIONS(MIDR_QCOM_KRYO_4XX_GOLD),
+> 
+> We shouldn't be putting CPUs in the safe list when they have CSV2 
+> reporting
+> that they are mitigated in hardware, so I don't think this is the right
+> approach.
+> 
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v5.10 (after resolving the port numbering).
+Ok but the only thing I find wrong in this approach is that it is a 
+redundant
+information because CSV2 is already advertising the mitigation, but 
+again
+CSV2 check is done first so it doesn't really hurt to add it to the safe
+list because we already know that it is safe.
 
-Gr{oetje,eeting}s,
+> Sounds more like KVM should advertise CSV2 for the vCPUs if all of the
+> physical CPUs without CSV2 set are on the safe list. But then again, 
+> KVM
+> has always been slightly in denial about big.LITTLE because you can't
+> sensibly expose it to a guest if there are detectable differences...
+> 
 
-                        Geert
+Sorry but I don't see how the guest kernel will see the CSV2 bits set 
+for
+gold CPU cores without actually adding them to the safe list or reading 
+the
+not sanitised value of ID_AA64PFR0_EL1 ?
+
+Thanks,
+Sai
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
