@@ -2,137 +2,459 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DBDAC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 11:05:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C3ADC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 11:06:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F03620866
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 11:05:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5458D20866
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 11:06:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="bE4SRfIj";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="SmSIJ0kA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="coefxy7r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726664AbgHMLFf (ORCPT
+        id S1726673AbgHMLGc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 07:05:35 -0400
-Received: from esa4.hgst.iphmx.com ([216.71.154.42]:29785 "EHLO
-        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726072AbgHMLFe (ORCPT
+        Thu, 13 Aug 2020 07:06:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39188 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726072AbgHMLGY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 07:05:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1597316733; x=1628852733;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=0UxFL9WIAzXagBNqpgVTC03StQS7VzY7lXfivx9Gg8c=;
-  b=bE4SRfIjsiS8f8gW0miXArVInYgG8GWXKtT15s9kCRRP87P25gmqR3uT
-   iC405/rVf34M4jAIGmsu/Jzl6zjStNATG91W6fxJaRwAyzvoPbINYyIkb
-   Jzk4NDW3V9R/V1Fh0sqFSVORebrhbUuSJSUvg5/OKZDEvpfZ39Hz8PdGH
-   QOJjm4kjmb54k1kPKs4Eh6lBR5Y+5A7ZXA7AdDZ4m+n9szlD6aXPBa//y
-   uRZcdlqHWFiTZyM1gFB1+6cY3twF+TVz0rNpiFTmYmVyapnzIyjQMuOd3
-   B6KuncC28sEuCtreYm8oPUAF5z0cBrG5YZmH49GQ/U/zZYA5HBbUJZApi
-   A==;
-IronPort-SDR: c1HROgVzzNC+jexvljpL83IQv7lU5EFsdbisqt/K+/AXJwY/EkGKuwrpv3dmaXUqtFiH4G6Asu
- yJp2f5P1CQP/IVN84rGHj4xFY6wKQ0aXPGHTU3gG0N+/wlZ/AtKk6/yXeqHmPwulWT3hxK2c60
- oPs+fKxZ8eICofftdQkIDbTczLtbw9S2osaOA0LhCC2QEtL9ecy1PF9BFpDk6MKQjozV1Y+8Ed
- 3PQHQuGSXg1qn5VwcVbld7tBcQlhHa7B40AEFQ2p7MbIbVPufUeAuH9ZV+Z2XLChIoFXsjEZhR
- 58Y=
-X-IronPort-AV: E=Sophos;i="5.76,308,1592841600"; 
-   d="scan'208";a="144839911"
-Received: from mail-mw2nam10lp2108.outbound.protection.outlook.com (HELO NAM10-MW2-obe.outbound.protection.outlook.com) ([104.47.55.108])
-  by ob1.hgst.iphmx.com with ESMTP; 13 Aug 2020 19:05:31 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=L7IjWAJceg7jaEtPvae0e7vlZVsodTRWYEdtznB0idQNlvGRGzTVFwhffwBgcwe0erZV73rhybKjNc07sjc1ytApHLbsiszuC1VRB7i3gEdVACcUW4TPdySI1sp1NUETLi6uFFbfLGfsaxrvvizoqKSIiF6nuSjxMn4yEtc8+rMyP6Hnba96xK5As0/BpelJTLPT/UoI8U0b+heVved+hc4i2HetDyddSa6KHT/N31cbKlOOGujCz/g3eKtEDHtopx3kvmCsDjp060kbZ2yqTsLl+DCbCyfUmgq4klNBbpCP1pXaMdED2A+74KqqS8qwZ5ISB+mG4L3O/oKGgt5S0g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0UxFL9WIAzXagBNqpgVTC03StQS7VzY7lXfivx9Gg8c=;
- b=ivzyyqRMR/dnDeCGGQUtWJOVpTVytK6YHPWjF49M6qeOVHcptevfItxF5aeq02BeYYjk4kRyNpSvzbEPMXC5xbfG7YryP12sMJVjB7LyP4dRpm+6HmDmOjRgkI5Gs8jpImXqwcIJg4ZwCTDv4pfwZXLcMNrlNZkwfhN5BteURbyZtqnvteklj0g7hXvF3aprIsb621i50nxIoshal7yj/AFlkX86dnH+3qFMzHEdK+phxWBdFyuwVJCoy+nrEEEGvH2xQpbHLCj7UE/xmTuCuSeu3HdL7+VpR83+h4rBGeHn5wgF7gJQA0LVm0aiTyHAWIHWkpszj9zB9SzDqY9OGA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
+        Thu, 13 Aug 2020 07:06:24 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87CFAC061757;
+        Thu, 13 Aug 2020 04:06:24 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id mt12so2611588pjb.4;
+        Thu, 13 Aug 2020 04:06:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0UxFL9WIAzXagBNqpgVTC03StQS7VzY7lXfivx9Gg8c=;
- b=SmSIJ0kAUE9wpZQMGkOqwfoXAubf5Y8FGYi+gOxaVt7aqVAfirsP30li/wdvtLTaiWI2k7d7fvk1kXcIu/+A0wZQhjbyAmkpMW+wQSAmdsPLV5sNwHQ9/EhtrPPGf/R5+DynVMKejf5qWikDnpf/WmyzS/MkS8WpERXe6w6obkA=
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com (2603:10b6:805:a4::19)
- by SN6PR04MB4432.namprd04.prod.outlook.com (2603:10b6:805:33::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.15; Thu, 13 Aug
- 2020 11:05:30 +0000
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::c86c:8b99:3242:2c68]) by SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::c86c:8b99:3242:2c68%7]) with mapi id 15.20.3283.016; Thu, 13 Aug 2020
- 11:05:30 +0000
-From:   Avri Altman <Avri.Altman@wdc.com>
-To:     Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <huobean@gmail.com>
-CC:     "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2 1/2] scsi: ufs: Cleanup completed request without
- interrupt notification
-Thread-Topic: [PATCH v2 1/2] scsi: ufs: Cleanup completed request without
- interrupt notification
-Thread-Index: AQHWb+p2BNC50+YzfUqItX3ecFcBGKk0bcAAgAF1YJA=
-Date:   Thu, 13 Aug 2020 11:05:30 +0000
-Message-ID: <SN6PR04MB464021D667643DF688CB712DFC430@SN6PR04MB4640.namprd04.prod.outlook.com>
-References: <20200811141859.27399-1-huobean@gmail.com>
-         <20200811141859.27399-2-huobean@gmail.com>
- <1597236472.26065.9.camel@mtkswgap22>
-In-Reply-To: <1597236472.26065.9.camel@mtkswgap22>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: mediatek.com; dkim=none (message not signed)
- header.d=none;mediatek.com; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [212.25.79.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: c77ccb48-4860-4e9a-f441-08d83f78cae9
-x-ms-traffictypediagnostic: SN6PR04MB4432:
-x-microsoft-antispam-prvs: <SN6PR04MB4432BAA3A7FF711FE1EF637CFC430@SN6PR04MB4432.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:400;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ZJ3TFEcFL+qHNYnpjFWSt6HQEdRbq4lEiviWC1hnDNmS0AaBbxicmivNwa1KH+203UdNh6SYkY7HkQtOEs8bbc26zojpQZk2x/5F7iV/L40jm1go/Z5JUos0ZVrrmevvt2cRuRR7NT8APMoXn5cV4a6zYEpr15PdTvQ0/W8Pr9IX9FY6gbIXaab6OHX7KJfbpUD52gL3pIzng3Pxf/qv6AfyPEKGKgzRAz8DJOa0LYSeKVj6Ge6q0d9NN8Su7NBzTv5huHEY2RBeUBtJ2MJ0wWFqjzHrA11gXJCUxBJVSuo4QQCxFASZvBVPuNfdL2rs9JcWalv7i8Ug2TbLSs7pig==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR04MB4640.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(376002)(136003)(346002)(366004)(39860400002)(9686003)(478600001)(558084003)(4326008)(8936002)(316002)(6506007)(5660300002)(186003)(2906002)(8676002)(66446008)(66556008)(66476007)(52536014)(66946007)(76116006)(7416002)(71200400001)(86362001)(54906003)(7696005)(64756008)(55016002)(33656002)(26005)(110136005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: ByuuMVvxU9vUhDmDN0DuxV4JIiZX5SbO0aG2JnF+VRKhzxJ8Q/3uCtmZCgrX0JOGi6d1Xs3erL4HtpGguwjHeLN9Ss6Fx+X6Sgk7jgH2yWMAGTjIpmwHMDxCX+9j6S33FQkEHeqhpxgb5t2JBYkWPiUfPdqs8++V5gDb4eh+vQ6xUETmWYXkDZg2a5F/OaHKIiwAZ6gZnw/ioKG5lteBct6Hd256miw/wjumtzOzoFw+JEElEox8Mj4CNm+RotUtgtitXVEl1c+7AHb7mo8zvnS6zBROT7PaQMj2/HwKi3O7Xn7D7DM3Bf+NN3mhk3YcZJlbW2N0Dh6yQj+VHBbjRZ97cYRYBhqyMfmCgPqX0RqH0pUAW70hYC3i7IFgZCM9k0c+nNoxSe/+Ei0MF2j8gyD9GJWhLnZ+sbubQ6OYbfWbWkjpHRaJB9pcwVjRN0zyWSjBn86B6q/qmTcUqigaFd6N4rMGAe5SoXI7OwQHzr3hSP4sF+O5AZzXV3bNxIzuoyaRLOdzIuvH2mZacEJ+8MylgsUbRQFw4ZlR9s5hfjGQzbp9EofaCkyB4xOCjjiE5tqDc1FDPsIAGzTeirbKo/YbxQ4jXePSt5/UuyrZ1b6+82AAX0CG8x5YbwgJTFesz3NNXdd8PhC0Zj0cHxhnCQ==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iPhpd7luL94KzHRS86zkcCFc1rMkDrTRDbwwKaZlIr0=;
+        b=coefxy7rJiBGW9H3ndOX4j9Prx5AArQ8dEXN4sX1UWmvaeXpqNZZaCzY5qoRHvapSK
+         9279RQhioK0NNwjLnEhxjnW4jw6/Bt2BUQYXPlrIfyUwqzMJQeCccQjVf3MyeMfTOjfF
+         cT9DtQlu01l/T1Jn8afrhaOS3ym1TpZrABmACnQj/NOOeUc5u8Arcu7JAGMibXTvAudv
+         g1CB7qjdgpi2buHqqh6lEFXwVDwj8XcAs7UEeGk4olIxZP2FSR0tu9mBm7JCR9nD8Rmx
+         7icC5b3pfORncWTqEt0WRDcKjsDU3k99AdnHbB51KHchIBDBwSuiD/Z5x629+8w2TsPz
+         D6oA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iPhpd7luL94KzHRS86zkcCFc1rMkDrTRDbwwKaZlIr0=;
+        b=sP6rvkY8eZJvMKYInY7zfq9XUG59A4Iq4Rck/4Es12IzjQA3Lkn9yfqYizWe2llWA5
+         1blFt0EWOiTG/CwKKqf7yPB7oF1ouNUdEu4Y8ZcA0j3C2c7eiKb31a87OCrDDHQyhd/T
+         yO36fFRfH2iwMnhpoOnoHfwkUgOY7h6jdUsA50PFweN+7ZCGTDop8pmTfc/eS+As2ZVn
+         2C1Y8roqeZVNk3sfgdvJbqgmRq3tEHcpSURQ6WePM5BT5GhOVmRNI5Pmw8IrU50rf7XV
+         0NjQYoEuOx3UO4OjeUxY20P5hecfUkfrfRSnbG+vuewYVzTI1LqKwR2/nCS17jV8mrlY
+         jMyQ==
+X-Gm-Message-State: AOAM532hAUQqIibYDGFPCcNzAamynUjv3TKXieq7plEq1wLMHpvZ2IGk
+        xqp/1pvyLGjKNv1rUWXCPGhrXmubM7Wg/hyAG7dpDTMXsvQugg==
+X-Google-Smtp-Source: ABdhPJzUMtjNVZJJysKA0Y6XPA4W3zoRb2JjU3HQ0NN7jYAfUsyi7J46lVJv/j6QF/O+ehpRFyCWRb2iCU0YxOtP+ck=
+X-Received: by 2002:a17:90a:fa06:: with SMTP id cm6mr4657607pjb.129.1597316783993;
+ Thu, 13 Aug 2020 04:06:23 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR04MB4640.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c77ccb48-4860-4e9a-f441-08d83f78cae9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Aug 2020 11:05:30.4661
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 6ufbQ6XpTZtCBPvsHEKjGArQnaZIHNt64FKWJwVhnaSvUaHPm3zA6ap5Ij9VTTQCtBm3+laGn+eqfD/uul8wUg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4432
+References: <20200813075125.4949-1-cmo@melexis.com> <20200813075125.4949-5-cmo@melexis.com>
+In-Reply-To: <20200813075125.4949-5-cmo@melexis.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 13 Aug 2020 14:06:07 +0300
+Message-ID: <CAHp75VcTm_9_TGwz0LC-p3MU1UPSP_R-gL75P_p26tfMdOjtiA@mail.gmail.com>
+Subject: Re: [PATCH v5 4/5] iio:temperature:mlx90632: Adding extended
+ calibration option
+To:     Crt Mori <cmo@melexis.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFN0YW5sZXkgQ2h1IDxzdGFubGV5LmNodUBtZWRp
-YXRlay5jb20+DQo+ID4gUmV2aWV3ZWQtYnk6IENhbiBHdW8gPGNhbmdAY29kZWF1cm9yYS5vcmc+
-DQo+ID4gU2lnbmVkLW9mZi1ieTogQmVhbiBIdW8gPGJlYW5odW9AbWljcm9uLmNvbT4NCkFja2Vk
-LWJ5OiBBdnJpIEFsdG1hbiA8YXZyaS5hbHRtYW5Ad2RjLmNvbT4NCg==
+On Thu, Aug 13, 2020 at 10:53 AM Crt Mori <cmo@melexis.com> wrote:
+>
+> For some time the market wants medical grade accuracy in medical range,
+> while still retaining the declared accuracy outside of the medical range
+> within the same sensor. That is why we created extended calibration
+> which is automatically switched to when object temperature is too high.
+>
+> This patch also introduces the object_ambient_temperature variable which
+> is needed for more accurate calculation of the object infra-red
+> footprint as sensor's ambient temperature might be totally different
+> than what the ambient temperature is at object and that is why we can
+> have some more errors which can be eliminated. Currently this temperature
+> is fixed at 25, but the interface to adjust it by user (with external
+> sensor or just IR measurement of the other object which acts as ambient),
+> will be introduced in another commit.
+
+FWIW,
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+> Signed-off-by: Crt Mori <cmo@melexis.com>
+> ---
+>  drivers/iio/temperature/mlx90632.c | 224 ++++++++++++++++++++++++++++-
+>  1 file changed, 222 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/iio/temperature/mlx90632.c b/drivers/iio/temperature/mlx90632.c
+> index d87c792b7e72..9fa8c078c037 100644
+> --- a/drivers/iio/temperature/mlx90632.c
+> +++ b/drivers/iio/temperature/mlx90632.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/gpio/consumer.h>
+>  #include <linux/i2c.h>
+>  #include <linux/kernel.h>
+> +#include <linux/limits.h>
+>  #include <linux/module.h>
+>  #include <linux/math64.h>
+>  #include <linux/of.h>
+> @@ -58,6 +59,8 @@
+>  /* Control register address - volatile */
+>  #define MLX90632_REG_CONTROL   0x3001 /* Control Register address */
+>  #define   MLX90632_CFG_PWR_MASK                GENMASK(2, 1) /* PowerMode Mask */
+> +#define   MLX90632_CFG_MTYP_MASK               GENMASK(8, 4) /* Meas select Mask */
+> +
+>  /* PowerModes statuses */
+>  #define MLX90632_PWR_STATUS(ctrl_val) (ctrl_val << 1)
+>  #define MLX90632_PWR_STATUS_HALT MLX90632_PWR_STATUS(0) /* hold */
+> @@ -65,6 +68,18 @@
+>  #define MLX90632_PWR_STATUS_STEP MLX90632_PWR_STATUS(2) /* step */
+>  #define MLX90632_PWR_STATUS_CONTINUOUS MLX90632_PWR_STATUS(3) /* continuous*/
+>
+> +/* Measurement types */
+> +#define MLX90632_MTYP_MEDICAL 0
+> +#define MLX90632_MTYP_EXTENDED 17
+> +
+> +/* Measurement type select*/
+> +#define MLX90632_MTYP_STATUS(ctrl_val) (ctrl_val << 4)
+> +#define MLX90632_MTYP_STATUS_MEDICAL MLX90632_MTYP_STATUS(MLX90632_MTYP_MEDICAL)
+> +#define MLX90632_MTYP_STATUS_EXTENDED MLX90632_MTYP_STATUS(MLX90632_MTYP_EXTENDED)
+> +
+> +/* I2C command register - volatile */
+> +#define MLX90632_REG_I2C_CMD    0x3005 /* I2C command Register address */
+> +
+>  /* Device status register - volatile */
+>  #define MLX90632_REG_STATUS    0x3fff /* Device status register */
+>  #define   MLX90632_STAT_BUSY           BIT(10) /* Device busy indicator */
+> @@ -78,9 +93,21 @@
+>  #define MLX90632_RAM_2(meas_num)       (MLX90632_ADDR_RAM + 3 * meas_num + 1)
+>  #define MLX90632_RAM_3(meas_num)       (MLX90632_ADDR_RAM + 3 * meas_num + 2)
+>
+> +/* Name important RAM_MEAS channels */
+> +#define MLX90632_RAM_DSP5_EXTENDED_AMBIENT_1 MLX90632_RAM_3(17)
+> +#define MLX90632_RAM_DSP5_EXTENDED_AMBIENT_2 MLX90632_RAM_3(18)
+> +#define MLX90632_RAM_DSP5_EXTENDED_OBJECT_1 MLX90632_RAM_1(17)
+> +#define MLX90632_RAM_DSP5_EXTENDED_OBJECT_2 MLX90632_RAM_2(17)
+> +#define MLX90632_RAM_DSP5_EXTENDED_OBJECT_3 MLX90632_RAM_1(18)
+> +#define MLX90632_RAM_DSP5_EXTENDED_OBJECT_4 MLX90632_RAM_2(18)
+> +#define MLX90632_RAM_DSP5_EXTENDED_OBJECT_5 MLX90632_RAM_1(19)
+> +#define MLX90632_RAM_DSP5_EXTENDED_OBJECT_6 MLX90632_RAM_2(19)
+> +
+>  /* Magic constants */
+>  #define MLX90632_ID_MEDICAL    0x0105 /* EEPROM DSPv5 Medical device id */
+>  #define MLX90632_ID_CONSUMER   0x0205 /* EEPROM DSPv5 Consumer device id */
+> +#define MLX90632_ID_EXTENDED   0x0505 /* EEPROM DSPv5 Extended range device id */
+> +#define MLX90632_ID_MASK       GENMASK(14, 0) /* DSP version and device ID in EE_VERSION */
+>  #define MLX90632_DSP_VERSION   5 /* DSP version */
+>  #define MLX90632_DSP_MASK      GENMASK(7, 0) /* DSP version in EE_VERSION */
+>  #define MLX90632_RESET_CMD     0x0006 /* Reset sensor (address or global) */
+> @@ -88,6 +115,7 @@
+>  #define MLX90632_REF_3         12LL /**< ResCtrlRef value of Channel 3 */
+>  #define MLX90632_MAX_MEAS_NUM  31 /**< Maximum measurements in list */
+>  #define MLX90632_SLEEP_DELAY_MS 3000 /**< Autosleep delay */
+> +#define MLX90632_EXTENDED_LIMIT 27000 /* Extended mode raw value limit */
+>
+>  /**
+>   * struct mlx90632_data - private data for the MLX90632 device
+> @@ -95,16 +123,23 @@
+>   * @lock: Internal mutex for multiple reads for single measurement
+>   * @regmap: Regmap of the device
+>   * @emissivity: Object emissivity from 0 to 1000 where 1000 = 1.
+> + * @mtyp: Measurement type physical sensor configuration for extended range
+> + *        calculations
+> + * @object_ambient_temperature: Ambient temperature at object (might differ of
+> + *                              the ambient temperature of sensor.
+>   */
+>  struct mlx90632_data {
+>         struct i2c_client *client;
+>         struct mutex lock;
+>         struct regmap *regmap;
+>         u16 emissivity;
+> +       u8 mtyp;
+> +       u32 object_ambient_temperature;
+>  };
+>
+>  static const struct regmap_range mlx90632_volatile_reg_range[] = {
+>         regmap_reg_range(MLX90632_REG_I2C_ADDR, MLX90632_REG_CONTROL),
+> +       regmap_reg_range(MLX90632_REG_I2C_CMD, MLX90632_REG_I2C_CMD),
+>         regmap_reg_range(MLX90632_REG_STATUS, MLX90632_REG_STATUS),
+>         regmap_reg_range(MLX90632_RAM_1(0),
+>                          MLX90632_RAM_3(MLX90632_MAX_MEAS_NUM)),
+> @@ -120,6 +155,7 @@ static const struct regmap_range mlx90632_read_reg_range[] = {
+>         regmap_reg_range(MLX90632_EE_CTRL, MLX90632_EE_I2C_ADDR),
+>         regmap_reg_range(MLX90632_EE_Ha, MLX90632_EE_Hb),
+>         regmap_reg_range(MLX90632_REG_I2C_ADDR, MLX90632_REG_CONTROL),
+> +       regmap_reg_range(MLX90632_REG_I2C_CMD, MLX90632_REG_I2C_CMD),
+>         regmap_reg_range(MLX90632_REG_STATUS, MLX90632_REG_STATUS),
+>         regmap_reg_range(MLX90632_RAM_1(0),
+>                          MLX90632_RAM_3(MLX90632_MAX_MEAS_NUM)),
+> @@ -204,6 +240,26 @@ static int mlx90632_perform_measurement(struct mlx90632_data *data)
+>         return (reg_status & MLX90632_STAT_CYCLE_POS) >> 2;
+>  }
+>
+> +static int mlx90632_set_meas_type(struct regmap *regmap, u8 type)
+> +{
+> +       int ret;
+> +
+> +       if ((type != MLX90632_MTYP_MEDICAL) && (type != MLX90632_MTYP_EXTENDED))
+> +               return -EINVAL;
+> +
+> +       ret = regmap_write(regmap, MLX90632_REG_I2C_CMD, MLX90632_RESET_CMD);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       ret = regmap_write_bits(regmap, MLX90632_REG_CONTROL,
+> +                                (MLX90632_CFG_MTYP_MASK | MLX90632_CFG_PWR_MASK),
+> +                                (MLX90632_MTYP_STATUS(type) | MLX90632_PWR_STATUS_HALT));
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       return mlx90632_pwr_continuous(regmap);
+> +}
+> +
+>  static int mlx90632_channel_new_select(int perform_ret, uint8_t *channel_new,
+>                                        uint8_t *channel_old)
+>  {
+> @@ -305,6 +361,104 @@ static int mlx90632_read_all_channel(struct mlx90632_data *data,
+>         return ret;
+>  }
+>
+> +static int mlx90632_read_ambient_raw_extended(struct regmap *regmap,
+> +                                             s16 *ambient_new_raw, s16 *ambient_old_raw)
+> +{
+> +       unsigned int read_tmp;
+> +       int ret;
+> +
+> +       ret = regmap_read(regmap, MLX90632_RAM_DSP5_EXTENDED_AMBIENT_1, &read_tmp);
+> +       if (ret < 0)
+> +               return ret;
+> +       *ambient_new_raw = (s16)read_tmp;
+> +
+> +       ret = regmap_read(regmap, MLX90632_RAM_DSP5_EXTENDED_AMBIENT_2, &read_tmp);
+> +       if (ret < 0)
+> +               return ret;
+> +       *ambient_old_raw = (s16)read_tmp;
+> +
+> +       return 0;
+> +}
+> +
+> +static int mlx90632_read_object_raw_extended(struct regmap *regmap, s16 *object_new_raw)
+> +{
+> +       unsigned int read_tmp;
+> +       s32 read;
+> +       int ret;
+> +
+> +       ret = regmap_read(regmap, MLX90632_RAM_DSP5_EXTENDED_OBJECT_1, &read_tmp);
+> +       if (ret < 0)
+> +               return ret;
+> +       read = (s16)read_tmp;
+> +
+> +       ret = regmap_read(regmap, MLX90632_RAM_DSP5_EXTENDED_OBJECT_2, &read_tmp);
+> +       if (ret < 0)
+> +               return ret;
+> +       read = read - (s16)read_tmp;
+> +
+> +       ret = regmap_read(regmap, MLX90632_RAM_DSP5_EXTENDED_OBJECT_3, &read_tmp);
+> +       if (ret < 0)
+> +               return ret;
+> +       read = read - (s16)read_tmp;
+> +
+> +       ret = regmap_read(regmap, MLX90632_RAM_DSP5_EXTENDED_OBJECT_4, &read_tmp);
+> +       if (ret < 0)
+> +               return ret;
+> +       read = (read + (s16)read_tmp) / 2;
+> +
+> +       ret = regmap_read(regmap, MLX90632_RAM_DSP5_EXTENDED_OBJECT_5, &read_tmp);
+> +       if (ret < 0)
+> +               return ret;
+> +       read = read + (s16)read_tmp;
+> +
+> +       ret = regmap_read(regmap, MLX90632_RAM_DSP5_EXTENDED_OBJECT_6, &read_tmp);
+> +       if (ret < 0)
+> +               return ret;
+> +       read = read + (s16)read_tmp;
+> +
+> +       if (read > S16_MAX || read < S16_MIN)
+> +               return -ERANGE;
+> +
+> +       *object_new_raw = read;
+> +
+> +       return 0;
+> +}
+> +
+> +static int mlx90632_read_all_channel_extended(struct mlx90632_data *data, s16 *object_new_raw,
+> +                                             s16 *ambient_new_raw, s16 *ambient_old_raw)
+> +{
+> +       int tries = 4;
+> +       int ret;
+> +
+> +       mutex_lock(&data->lock);
+> +       ret = mlx90632_set_meas_type(data->regmap, MLX90632_MTYP_EXTENDED);
+> +       if (ret < 0)
+> +               goto read_unlock;
+> +
+> +       do {
+> +               ret = mlx90632_perform_measurement(data);
+> +               if (ret < 0)
+> +                       goto read_unlock;
+> +       } while ((ret != 19) && tries--);
+> +
+> +       if (tries < 0) {
+> +               ret = -ETIMEDOUT;
+> +               goto read_unlock;
+> +       }
+> +
+> +       ret = mlx90632_read_object_raw_extended(data->regmap, object_new_raw);
+> +       if (ret < 0)
+> +               goto read_unlock;
+> +
+> +       ret = mlx90632_read_ambient_raw_extended(data->regmap, ambient_new_raw, ambient_old_raw);
+> +
+> +read_unlock:
+> +       (void) mlx90632_set_meas_type(data->regmap, MLX90632_MTYP_MEDICAL);
+> +
+> +       mutex_unlock(&data->lock);
+> +       return ret;
+> +}
+> +
+>  static int mlx90632_read_ee_register(struct regmap *regmap, u16 reg_lsb,
+>                                      s32 *reg_value)
+>  {
+> @@ -359,9 +513,23 @@ static s64 mlx90632_preprocess_temp_obj(s16 object_new_raw, s16 object_old_raw,
+>         return div64_s64((tmp << 19ULL), 1000LL);
+>  }
+>
+> +static s64 mlx90632_preprocess_temp_obj_extended(s16 object_new_raw, s16 ambient_new_raw,
+> +                                                s16 ambient_old_raw, s16 Ka)
+> +{
+> +       s64 VR_IR, kKa, tmp;
+> +
+> +       kKa = ((s64)Ka * 1000LL) >> 10ULL;
+> +       VR_IR = (s64)ambient_old_raw * 1000000LL +
+> +               kKa * div64_s64((s64)ambient_new_raw * 1000LL,
+> +                               MLX90632_REF_3);
+> +       tmp = div64_s64(
+> +                       div64_s64((s64) object_new_raw * 1000000000000LL, MLX90632_REF_12),
+> +                       VR_IR);
+> +       return div64_s64(tmp << 19ULL, 1000LL);
+> +}
+> +
+>  static s32 mlx90632_calc_temp_ambient(s16 ambient_new_raw, s16 ambient_old_raw,
+> -                                     s32 P_T, s32 P_R, s32 P_G, s32 P_O,
+> -                                     s16 Gb)
+> +                                     s32 P_T, s32 P_R, s32 P_G, s32 P_O, s16 Gb)
+>  {
+>         s64 Asub, Bsub, Ablock, Bblock, Cblock, AMB, sum;
+>
+> @@ -433,6 +601,31 @@ static s32 mlx90632_calc_temp_object(s64 object, s64 ambient, s32 Ea, s32 Eb,
+>         return temp;
+>  }
+>
+> +static s32 mlx90632_calc_temp_object_extended(s64 object, s64 ambient, s64 reflected,
+> +                                             s32 Ea, s32 Eb, s32 Fa, s32 Fb, s32 Ga,
+> +                                             s16 Ha, s16 Hb, u16 tmp_emi)
+> +{
+> +       s64 kTA, kTA0, TAdut, TAdut4, Tr4, TaTr4;
+> +       s64 temp = 25000;
+> +       s8 i;
+> +
+> +       kTA = (Ea * 1000LL) >> 16LL;
+> +       kTA0 = (Eb * 1000LL) >> 8LL;
+> +       TAdut = div64_s64((ambient - kTA0) * 1000000LL, kTA) + 25 * 1000000LL;
+> +       Tr4 = mlx90632_calc_ta4(reflected, 10);
+> +       TAdut4 = mlx90632_calc_ta4(TAdut, 10000LL);
+> +       TaTr4 = Tr4 - div64_s64(Tr4 - TAdut4, tmp_emi) * 1000;
+> +
+> +       /* Iterations of calculation as described in datasheet */
+> +       for (i = 0; i < 5; ++i) {
+> +               temp = mlx90632_calc_temp_object_iteration(temp, object, TAdut, TaTr4,
+> +                                                          Fa / 2, Fb, Ga, Ha, Hb,
+> +                                                          tmp_emi);
+> +       }
+> +
+> +       return temp;
+> +}
+> +
+>  static int mlx90632_calc_object_dsp105(struct mlx90632_data *data, int *val)
+>  {
+>         s32 ret;
+> @@ -480,6 +673,26 @@ static int mlx90632_calc_object_dsp105(struct mlx90632_data *data, int *val)
+>         if (ret < 0)
+>                 return ret;
+>
+> +       if (object_new_raw > MLX90632_EXTENDED_LIMIT &&
+> +           data->mtyp == MLX90632_MTYP_EXTENDED) {
+> +               ret = mlx90632_read_all_channel_extended(data, &object_new_raw,
+> +                                                        &ambient_new_raw, &ambient_old_raw);
+> +               if (ret < 0)
+> +                       return ret;
+> +
+> +               /* Use extended mode calculations */
+> +               ambient = mlx90632_preprocess_temp_amb(ambient_new_raw,
+> +                                                      ambient_old_raw, Gb);
+> +               object = mlx90632_preprocess_temp_obj_extended(object_new_raw,
+> +                                                              ambient_new_raw,
+> +                                                              ambient_old_raw, Ka);
+> +               *val = mlx90632_calc_temp_object_extended(object, ambient,
+> +                                                         data->object_ambient_temperature,
+> +                                                         Ea, Eb, Fa, Fb, Ga,
+> +                                                         Ha, Hb, data->emissivity);
+> +               return 0;
+> +       }
+> +
+>         ambient = mlx90632_preprocess_temp_amb(ambient_new_raw,
+>                                                ambient_old_raw, Gb);
+>         object = mlx90632_preprocess_temp_obj(object_new_raw,
+> @@ -653,6 +866,7 @@ static int mlx90632_probe(struct i2c_client *client,
+>         i2c_set_clientdata(client, indio_dev);
+>         mlx90632->client = client;
+>         mlx90632->regmap = regmap;
+> +       mlx90632->mtyp = MLX90632_MTYP_MEDICAL;
+>
+>         mutex_init(&mlx90632->lock);
+>         indio_dev->name = id->name;
+> @@ -672,12 +886,17 @@ static int mlx90632_probe(struct i2c_client *client,
+>                 dev_err(&client->dev, "read of version failed: %d\n", ret);
+>                 return ret;
+>         }
+> +       read = read & MLX90632_ID_MASK;
+>         if (read == MLX90632_ID_MEDICAL) {
+>                 dev_dbg(&client->dev,
+>                         "Detected Medical EEPROM calibration %x\n", read);
+>         } else if (read == MLX90632_ID_CONSUMER) {
+>                 dev_dbg(&client->dev,
+>                         "Detected Consumer EEPROM calibration %x\n", read);
+> +       } else if (read == MLX90632_ID_EXTENDED) {
+> +               dev_dbg(&client->dev,
+> +                       "Detected Extended range EEPROM calibration %x\n", read);
+> +               mlx90632->mtyp = MLX90632_MTYP_EXTENDED;
+>         } else if ((read & MLX90632_DSP_MASK) == MLX90632_DSP_VERSION) {
+>                 dev_dbg(&client->dev,
+>                         "Detected Unknown EEPROM calibration %x\n", read);
+> @@ -689,6 +908,7 @@ static int mlx90632_probe(struct i2c_client *client,
+>         }
+>
+>         mlx90632->emissivity = 1000;
+> +       mlx90632->object_ambient_temperature = 25000; /* 25 degrees milliCelsius */
+>
+>         pm_runtime_disable(&client->dev);
+>         ret = pm_runtime_set_active(&client->dev);
+> --
+> 2.25.1
+>
+
+
+--
+With Best Regards,
+Andy Shevchenko
