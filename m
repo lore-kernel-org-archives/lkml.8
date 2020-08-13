@@ -3,163 +3,120 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05BABC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:50:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E25EEC433ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:51:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E015920716
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:50:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA0052078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 07:51:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbgHMHub (ORCPT
+        id S1726830AbgHMHvL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 03:50:31 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36444 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726112AbgHMHua (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 03:50:30 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 38EBAAF82;
-        Thu, 13 Aug 2020 07:50:50 +0000 (UTC)
-Date:   Thu, 13 Aug 2020 09:50:27 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     paulmck@kernel.org, Uladzislau Rezki <urezki@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
-Message-ID: <20200813075027.GD9477@dhcp22.suse.cz>
-References: <20200811210931.GZ4295@paulmck-ThinkPad-P72>
- <874kp87mca.fsf@nanos.tec.linutronix.de>
+        Thu, 13 Aug 2020 03:51:11 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:38760 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726106AbgHMHvJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 03:51:09 -0400
+Received: by mail-ot1-f65.google.com with SMTP id q9so4110499oth.5;
+        Thu, 13 Aug 2020 00:51:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eU62SrftExeZEPFtSlHLsBRzbUkLx1KNOgZc6VKFeBQ=;
+        b=RKVY0mqqakUrEXk4TORV8A5/ZSMY0dexhKfXyaOKBp8tYT6+lN9tMY1gCu59dMSnI/
+         6Av5sXCLtCtfska6KBUfoUvPLN8QSlHGcwX+BKv8ZNWhNtirhMGElzBnWp56J7vtBCeA
+         RTsTm+tpM0JqO6hs1Zx9oL0KiDPnHu2wr8nXIFBaGz9jqMUEyZCYMyj21d8ckpZmX8IH
+         sIyh51oPoVvqSR3qDoGMDZJhbXuz4s9KHdaT9j4oPeIaqxws0OL9u53GcL8uZhE7hrov
+         ikjJM0LMxR/OG4BC9tZAySXGXWwQpPbcG9j3oyJJCCrBhecUJhWEIB5ZPymwSBlP+imO
+         EXuw==
+X-Gm-Message-State: AOAM531KpbVTNZA6DQGhlLakjE36ZGk11NQSWXrXhgb2m/BrbDAUDZAN
+        GTNNlK5/qceLxjH+paJhJQLuqYhFPre+GsLWPoc=
+X-Google-Smtp-Source: ABdhPJzAAKS8g3t/W5mSJd2Vboc2FEvoNvVXoru7u4kNP7jabPCwVCki2JjTk/fEfMzVv8QAFC24k07bLAU2LYhSK+k=
+X-Received: by 2002:a05:6830:1b79:: with SMTP id d25mr2990956ote.107.1597305067462;
+ Thu, 13 Aug 2020 00:51:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <874kp87mca.fsf@nanos.tec.linutronix.de>
+References: <20200812203618.2656699-1-robh@kernel.org>
+In-Reply-To: <20200812203618.2656699-1-robh@kernel.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 13 Aug 2020 09:50:55 +0200
+Message-ID: <CAMuHMdVXvSRF-G_TYu4P+Bqa2FZJWsUCyzqFur3Rb-tBExfbsw@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: Whitespace clean-ups in schema files
+To:     Rob Herring <robh@kernel.org>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-hwmon@vger.kernel.org,
+        linux-rtc@vger.kernel.org,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        linux-iio@vger.kernel.org,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
+        <linux-remoteproc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        linux-input@vger.kernel.org, linux-clk <linux-clk@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 12-08-20 02:13:25, Thomas Gleixner wrote:
-[...]
-> I can understand your rationale and what you are trying to solve. So, if
-> we can actually have a distinct GFP variant:
-> 
->   GFP_I_ABSOLUTELY_HAVE_TO_DO_THAT_AND_I_KNOW_IT_CAN_FAIL_EARLY
+Hi Rob,
 
-Even if we cannot make the zone->lock raw I would prefer to not
-introduce a new gfp flag. Well we can do an alias for easier grepping
-#define GFP_RT_SAFE	0
+On Wed, Aug 12, 2020 at 10:36 PM Rob Herring <robh@kernel.org> wrote:
+> Clean-up incorrect indentation, extra spaces, long lines, and missing
+> EOF newline in schema files. Most of the clean-ups are for list
+> indentation which should always be 2 spaces more than the preceding
+> keyword.
+>
+> Found with yamllint (which I plan to integrate into the checks).
 
-that would imply nowait semantic and would exclude waking up kswapd as
-well. If we can make wake up safe under RT then the alias would reflect
-that without any code changes.
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-The second, and the more important part, would be to bail out anytime
-the page allocator is to take a lock which is not allowed in the current
-RT context. Something like 
-	
-diff --git a/include/linux/gfp.h b/include/linux/gfp.h
-index 67a0774e080b..3ef3ac82d110 100644
---- a/include/linux/gfp.h
-+++ b/include/linux/gfp.h
-@@ -237,6 +237,9 @@ struct vm_area_struct;
-  * that subsystems start with one of these combinations and then set/clear
-  * %__GFP_FOO flags as necessary.
-  *
-+ * %GFP_RT_SAFE users can not sleep and they are running under RT atomic context
-+ * e.g. under raw_spin_lock. Failure of an allocation is to be expected.
-+ *
-  * %GFP_ATOMIC users can not sleep and need the allocation to succeed. A lower
-  * watermark is applied to allow access to "atomic reserves"
-  *
-@@ -293,6 +296,7 @@ struct vm_area_struct;
-  * version does not attempt reclaim/compaction at all and is by default used
-  * in page fault path, while the non-light is used by khugepaged.
-  */
-+#define GFP_RT_SAFE	0
- #define GFP_ATOMIC	(__GFP_HIGH|__GFP_ATOMIC|__GFP_KSWAPD_RECLAIM)
- #define GFP_KERNEL	(__GFP_RECLAIM | __GFP_IO | __GFP_FS)
- #define GFP_KERNEL_ACCOUNT (GFP_KERNEL | __GFP_ACCOUNT)
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index e028b87ce294..268ae872cc2a 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -2824,6 +2824,13 @@ static int rmqueue_bulk(struct zone *zone, unsigned int order,
- {
- 	int i, alloced = 0;
- 
-+	/*
-+	 * Hard atomic contexts are not supported by the allocator for
-+	 * anything but pcp requests
-+	 */
-+	if (!preemtable())
-+		return 0;
-+
- 	spin_lock(&zone->lock);
- 	for (i = 0; i < count; ++i) {
- 		struct page *page = __rmqueue(zone, order, migratetype,
-@@ -3371,6 +3378,13 @@ struct page *rmqueue(struct zone *preferred_zone,
- 		goto out;
- 	}
- 
-+	/*
-+	 * Hard atomic contexts are not supported by the allocator for high
-+	 * order requests
-+	 */
-+	if (WARN_ON_ONCE(!preemtable()))
-+		reurn NULL;
-+
- 	/*
- 	 * We most definitely don't want callers attempting to
- 	 * allocate greater than order-1 page units with __GFP_NOFAIL.
-@@ -4523,6 +4537,12 @@ __alloc_pages_slowpath(gfp_t gfp_mask, unsigned int order,
- 				(__GFP_ATOMIC|__GFP_DIRECT_RECLAIM)))
- 		gfp_mask &= ~__GFP_ATOMIC;
- 
-+	/* Hard atomic contexts support is very limited to the fast path */
-+	if (!preemtable()) {
-+		WARN_ON_ONCE(gfp_mask != GFP_RT_SAFE);
-+		return NULL;
-+	}
-+
- retry_cpuset:
- 	compaction_retries = 0;
- 	no_progress_loops = 0;
+Thanks for your patch!
 
-What do you think?
- 
-> which is easy to grep for then having the page allocator go down to the
-> point where zone lock gets involved is not the end of the world for
-> RT in theory - unless that damned reality tells otherwise. :)
-> 
-> The page allocator allocations should also have a limit on the number of
-> pages and eventually also page order (need to stare at the code or let
-> Michal educate me that the order does not matter).
+> --- a/Documentation/devicetree/bindings/clock/renesas,cpg-clocks.yaml
+> +++ b/Documentation/devicetree/bindings/clock/renesas,cpg-clocks.yaml
+> @@ -24,9 +24,9 @@ properties:
+>        - const: renesas,r8a7778-cpg-clocks # R-Car M1
+>        - const: renesas,r8a7779-cpg-clocks # R-Car H1
+>        - items:
+> -        - enum:
+> -            - renesas,r7s72100-cpg-clocks # RZ/A1H
+> -        - const: renesas,rz-cpg-clocks    # RZ/A1
+> +          - enum:
+> +              - renesas,r7s72100-cpg-clocks # RZ/A1H
+> +          - const: renesas,rz-cpg-clocks    # RZ/A1
 
-In practice anything but order 0 is out of question because we need
-zone->lock for that currently. Maybe we can introduce pcp lists for
-higher orders in the future - I have a vague recollection Mel was
-playing with that some time ago.
+This change breaks alignment of the comments at the end of each line.
 
-> To make it consistent the same GFP_ variant should allow the slab
-> allocator go to the point where the slab cache is exhausted.
-> 
-> Having a distinct and clearly defined GFP_ variant is really key to
-> chase down offenders and to make reviewers double check upfront why this
-> is absolutely required.
+>        - const: renesas,sh73a0-cpg-clocks  # SH-Mobile AG5
 
-Having a high level and recognizable gfp mask is OK but I would really
-like not to introduce a dedicated flag. The page allocator should be
-able to recognize the context which cannot be handled. 
+(I only checked the files I care about)
+
+If you don't update commit  e0fe7fc6f2ca0781 ("dt-bindings: Whitespace
+clean-ups in schema files"), I can send a patch after v5.9-rc1.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-Michal Hocko
-SUSE Labs
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
