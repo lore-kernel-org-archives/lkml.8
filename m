@@ -2,113 +2,127 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34CA4C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:08:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62E09C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:10:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B8C720791
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:08:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D1FA20791
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 15:10:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="j5tFYd0C"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uHdjMt59"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726789AbgHMPIq (ORCPT
+        id S1726727AbgHMPKT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 11:08:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48494 "EHLO
+        Thu, 13 Aug 2020 11:10:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726606AbgHMPIp (ORCPT
+        with ESMTP id S1726334AbgHMPKS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 11:08:45 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA006C061383
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 08:08:44 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id 77so5452915qkm.5
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 08:08:44 -0700 (PDT)
+        Thu, 13 Aug 2020 11:10:18 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55B34C061757;
+        Thu, 13 Aug 2020 08:10:18 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id c80so4994682wme.0;
+        Thu, 13 Aug 2020 08:10:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=TpPqrvEx4xHNdepObOT++ZGuQdpdQDmnw4mMGhCoSdw=;
-        b=j5tFYd0Cke7wCpz/RBUl63TsW/KeW2sBcGKKKs1j8bP+N/s9pC1fv8BV43lOW57uMG
-         CvJhu6WdBQN2/XSUUsH7Wm9VNKmUDojnwtmCrMzhc0dgkJ+JAVtPvXJ/v1FA+B7K/SGp
-         8Y10Esl8wz78DqSl2csvd2i0dSJWBKP9TWZzJ0CgquXx7CNptlpoRXcnPEUQs40VL8az
-         zWH26MV4K1cOXN0/l0RYDBDQpeAxglL1uYdXd7TZ945NlNIVz2wy4caEZ99C+lNj+ybK
-         stnMeJXGeEDZlHHlxgIDqt2TvDUTRUvVyE18UNJ4erGruWeho93gWKaB8U8dMNVOByg9
-         b2hQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nuLP0ucN1jD0A5G/rbjKQ0IWTQZyFeBE7AA1MgUnySo=;
+        b=uHdjMt59zx0NWygGT00vboekxP3muBYPVwS1Set3BcG6z8f9Lx3CEiTDhCKPM9Fj7d
+         H7Zghzlo38jK3BNe6Q/V7mEVtBr96Qd6pWv5YN+FQsLmKLzb+BlOtjhpLdyO7zcNasUt
+         Py62w87WtnJ8ls6D/5boqyKOaxS1li243OWJHj/gZv6ssIWfKoSLql/plqXYDPQEamXA
+         kWGIOT1W3eFYxHLOeKNUv8Ys9xi9IEJYuFhvnN4Wt4dpfnAnzIzV6XdJXgAqHTT1liH2
+         vG81U09rx74e6TuMs+pYpJhfXRlGxsHZasQ6K4UUntka++VMsPreF97mb6jnlEVEK+lk
+         FnZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=TpPqrvEx4xHNdepObOT++ZGuQdpdQDmnw4mMGhCoSdw=;
-        b=KHuJZdaYPlO/5jgp8zoyDlT72GSHYUNPyucSkweqCEkzKMwwEs0xpVMRbjRbRKq023
-         VuSoL3KJyvba6Vcq4IY001xMFg0sEc0tArZno+LN3OIpbZTVlLJIXHC3YQOxH9gN30IK
-         0dDiRY0CUumnJWIyyAAqcw8oGTwiNTg+AEBr36e3/kXO6+Iolnt5Z+5ZRMeAKNTRqHo3
-         ukwYybP205Vc5TR6G1uXxUZcj8TtbxTUDs1pbhsQdntVxrgYyYIeTCFPGfwoiXBUhObu
-         lxzFiFZ2RJimJK00FDM96uPjlkOl1xcUzmCd7p+rALXMsr/e9cnFwWSkufOKJy18JeU7
-         6tKQ==
-X-Gm-Message-State: AOAM531TPA5HC5nHK6V8+WdtFGD7fyNsZS6EdD6xzBIs9ABFyWfj16xX
-        m2euuv77znAFMHcH4GoK4D79OA==
-X-Google-Smtp-Source: ABdhPJxU5xv81Z8slBsIXbEz9xC3rOMSBeqzbXHaZyURciBgvMTJxYo2+91SFZkPPcaeGCbCJMJ9dw==
-X-Received: by 2002:a37:a45:: with SMTP id 66mr5214506qkk.435.1597331323806;
-        Thu, 13 Aug 2020 08:08:43 -0700 (PDT)
-Received: from ?IPv6:2620:10d:c0a8:11d9::10a7? ([2620:10d:c091:480::1:8f88])
-        by smtp.gmail.com with ESMTPSA id l1sm6540036qtp.96.2020.08.13.08.08.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Aug 2020 08:08:43 -0700 (PDT)
-Subject: Re: [PATCH] proc: use vmalloc for our kernel buffer
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     hch@lst.de, viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com
-References: <20200813145305.805730-1-josef@toxicpanda.com>
- <20200813145941.GJ17456@casper.infradead.org>
-From:   Josef Bacik <josef@toxicpanda.com>
-Message-ID: <3fad71b2-eda1-aca4-f421-41d2097e4769@toxicpanda.com>
-Date:   Thu, 13 Aug 2020 11:08:41 -0400
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.11.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nuLP0ucN1jD0A5G/rbjKQ0IWTQZyFeBE7AA1MgUnySo=;
+        b=k22Ro+WzXPadftnW/cCISOX+LOpPAzEa51zAoV1LcN54Nw1x4tjy9Q1SBzUV2TqIcB
+         6LlGAZTMHVGXmhgDjK1R1f3VsB5qWG/hGjE6itlwbOtEK+/1yYKJ4YUM1LouaqPWLHyc
+         ff++mPoxmHcXssHZ77gL5uVT6vhfbh78xTFUb9D/viSJx2//aSzyDU22e1W2dq657rcL
+         F5keJJiBg4tFbxvywaPF7Pz4LAx+eFp4+PkI69ftUxbmQOWkZGKlyETBad4Kc54aaHaP
+         ka34KAmQPswvp3defauWXngZaDUJ1udIy73a/TKUVz1z8IKzNFkCSQFC8Phco+9frDil
+         +2Xg==
+X-Gm-Message-State: AOAM531cgzabqy1cAIAryDPUx5KXPugcoYVAw4OBUrMdNGoYvtOQ4Bc9
+        6LOlCCrh1x468VkKcr051mF/2DI7ErBtCdB0Bm4=
+X-Google-Smtp-Source: ABdhPJwyUB412yvyp91ddO2jHXQbWOlzquN4PZJB8fEibTvHbohj1VvNGz9vxVColKj4PFzWEixM2vzufgv+z0SGwwo=
+X-Received: by 2002:a1c:4c17:: with SMTP id z23mr5049269wmf.49.1597331416969;
+ Thu, 13 Aug 2020 08:10:16 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200813145941.GJ17456@casper.infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200810222657.1841322-1-jcrouse@codeaurora.org>
+ <20200810222657.1841322-5-jcrouse@codeaurora.org> <20200813131412.GB10256@willie-the-truck>
+In-Reply-To: <20200813131412.GB10256@willie-the-truck>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Thu, 13 Aug 2020 08:11:02 -0700
+Message-ID: <CAF6AEGuCubnXu7FKuCHPx0Bow4O7M8NSBThHDusev7xX6v2zQQ@mail.gmail.com>
+Subject: Re: [Freedreno] [PATCH v12 04/13] iommu: Add a domain attribute to
+ get/set a pagetable configuration
+To:     Will Deacon <will@kernel.org>
+Cc:     Jordan Crouse <jcrouse@codeaurora.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/13/20 10:59 AM, Matthew Wilcox wrote:
-> On Thu, Aug 13, 2020 at 10:53:05AM -0400, Josef Bacik wrote:
->> +/**
->> + * vmemdup_user - duplicate memory region from user space and NUL-terminate
-> 
-> vmemdup_user_nul()
-> 
->> +void *vmemdup_user_nul(const void __user *src, size_t len)
->> +{
->> +	void *p;
->> +
->> +	p = kvmalloc(len, GFP_USER);
-> 
-> len+1, shirley?
-> 
->> +	if (!p)
->> +		return ERR_PTR(-ENOMEM);
->> +
->> +	if (copy_from_user(p, src, len)) {
->> +		kvfree(p);
->> +		return ERR_PTR(-EFAULT);
->> +	}
-> 
-> I think you forgot
-> 
->          p[len] = '\0';
-> 
+On Thu, Aug 13, 2020 at 6:14 AM Will Deacon <will@kernel.org> wrote:
+>
+> On Mon, Aug 10, 2020 at 04:26:48PM -0600, Jordan Crouse wrote:
+> > Add domain attribute DOMAIN_ATTR_PGTABLE_CFG. This will be used by
+> > arm-smmu to share the current pagetable configuration with the
+> > leaf driver and to allow the leaf driver to set up a new pagetable
+> > configuration under certain circumstances.
+> >
+> > Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> > ---
+> >
+> >  include/linux/iommu.h | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+> > index fee209efb756..995ab8c47ef2 100644
+> > --- a/include/linux/iommu.h
+> > +++ b/include/linux/iommu.h
+> > @@ -118,6 +118,7 @@ enum iommu_attr {
+> >       DOMAIN_ATTR_FSL_PAMUV1,
+> >       DOMAIN_ATTR_NESTING,    /* two stages of translation */
+> >       DOMAIN_ATTR_DMA_USE_FLUSH_QUEUE,
+> > +     DOMAIN_ATTR_PGTABLE_CFG,
+> >       DOMAIN_ATTR_MAX,
+> >  };
+>
+> Nobody other than the adreno gpu uses this, so can we avoid exposing it
+> in the IOMMU API, please? Given that you have a reference to the adreno
+> GPU device in the SMMU implementation code thanks to .alloc_context_bank(),
+> can you squirrel some function pointers away in the driver data (i.e. with
+> dev_set_drvdata()) instead?
+>
 
-Sweet lord I need more sleep, my bad.  Thanks,
+Hmm, we are already using drvdata on the gpu side, and it looks like
+arm-smmu is also using it.  Could we get away with stashing an extra
+'void *' in iommu_domain itself?
 
-Josef
+Or alternatively, if we had a is_arm_smmu_domain(domain), then we
+could just directly call some exported private fxns with the domain
+ptr (which could then verify that the domain is actually an
+arm_smmu_domain, and then from there that the smmu is indeed
+qcom,adreno-smmu, to keep things sane)
+
+BR,
+-R
