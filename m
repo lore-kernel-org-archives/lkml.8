@@ -2,68 +2,93 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B142C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 14:31:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68940C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 14:32:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4422D20791
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 14:31:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3017E2078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 14:32:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="X/4/G4vZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726522AbgHMOb0 (ORCPT
+        id S1726533AbgHMOcd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 10:31:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42700 "EHLO
+        Thu, 13 Aug 2020 10:32:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42870 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726082AbgHMOb0 (ORCPT
+        with ESMTP id S1726082AbgHMOcc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 10:31:26 -0400
-Received: from sipsolutions.net (s3.sipsolutions.net [IPv6:2a01:4f8:191:4433::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 580BAC061757
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 07:31:26 -0700 (PDT)
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.94)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1k6EGH-003g8J-F9; Thu, 13 Aug 2020 16:31:21 +0200
-Message-ID: <fdee2bf96e207a45d0e88e4a5f05044a112d6ba5.camel@sipsolutions.net>
-Subject: Re: [Ksummit-discuss] Linux Foundation Technical Advisory Board
- Elections -- voting procedures
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Laura Abbott <laura@labbott.name>,
-        "tech-board-discuss@lists.linuxfoundation.org" 
-        <tech-board-discuss@lists.linuxfoundation.org>,
-        "ksummit-discuss@lists.linuxfoundation.org" 
-        <ksummit-discuss@lists.linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Date:   Thu, 13 Aug 2020 16:31:19 +0200
-In-Reply-To: <ade3420c-89fd-bed0-52e3-a0396eaeda2d@labbott.name>
-References: <ade3420c-89fd-bed0-52e3-a0396eaeda2d@labbott.name>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.4 (3.36.4-1.fc32) 
+        Thu, 13 Aug 2020 10:32:32 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20189C061757;
+        Thu, 13 Aug 2020 07:32:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=AZ4M8tKLPliGwtcQpOjdflP90B5wX1qQuYOyiE0uFF0=; b=X/4/G4vZU1JqV4cr8bq0T7Bilf
+        TrPRzkxZp1umwgwIqquTlLpJhKBkeGG2Uo9NZDvLNXS4b/EJ8JJ1vqqylnqZf1FFzHs31mRtFdc2I
+        mEFvyOYpohnq3rsTgzqnLY3I3jwslB/ECCQi+biR/VXAQ+wdUcxED7vhxkhUkeFeobLt9H5p+PZys
+        NiZk6EMIRTK2auuUv+lkIXC56G1axCflYSP+fdCVvB3XucJUkpaDRCcsLHKA/23QXlEcs8yeM9Xet
+        kFCCBkwD/ZTJbhK0q7jY5vA2NNEfotNo2u7h3tF5+n/Vf1ky7ktAjcy/ZFT7vYX8ecrjg9uJls6zd
+        8zSlI3lg==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k6EHF-0004HL-5Y; Thu, 13 Aug 2020 14:32:21 +0000
+Date:   Thu, 13 Aug 2020 15:32:21 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Michal Hocko <mhocko@suse.com>,
+        Uladzislau Rezki <urezki@gmail.com>, paulmck@kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
+Message-ID: <20200813143221.GI17456@casper.infradead.org>
+References: <20200811210931.GZ4295@paulmck-ThinkPad-P72>
+ <874kp87mca.fsf@nanos.tec.linutronix.de>
+ <20200813075027.GD9477@dhcp22.suse.cz>
+ <20200813095840.GA25268@pc636>
+ <20200813111505.GG9477@dhcp22.suse.cz>
+ <871rkallqk.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <871rkallqk.fsf@nanos.tec.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laura,
+On Thu, Aug 13, 2020 at 03:27:15PM +0200, Thomas Gleixner wrote:
+> And guarding it with RT is not working either because then you are back
+> to square one with the problem which triggered the discussion in the
+> first place:
+> 
+> raw_spin_lock()
+>   alloc()
+>     if (RT && !preemptible())  <- False because RT == false
+>     	goto bail;
+> 
+>     spin_lock(&zone->lock)  --> LOCKDEP complains
+> 
+> So either you convince Paul not to do that or you need to do something
+> like I suggested in my other reply.
 
-Seeing your reminder reminded me :)
+I'd like to throw in the possibility that we do something like:
 
-> We will be using the electronic voting method that we used in 2019. All
-> Linux Plumbers Attendees will automatically receive a ballot. Anyone
-> who is otherwise eligible to vote should e-mail 
-> tab-elections@lists.linuxfoundation.org to request a ballot. The deadline
-> for requesting a ballot is August 17, 00:00 UTC (one week before
-> Linux Plumbers)
+  raw_spin_lock()
+    alloc()
+      if (!spin_trylock(&zone->lock))
+        if (RT && !preemptible())
+          goto bail;
+        spin_lock(&zone->lock);
 
-Will you be sending out some kind of voting tokens for the ballot? And
-if so, when is that supposed to happen? I (believe I) have requested a
-ballot, but didn't get a response so far.
-
-Thanks,
-Johannes
-
+would that make us feel more comfortable about converting zone->lock to
+a raw spinlock?
