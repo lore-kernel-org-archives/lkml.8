@@ -2,158 +2,190 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B827C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 04:02:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 305E4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 04:03:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F5692076C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 04:02:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E77222076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 04:03:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c4tk2gd6"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="V9t5rsR5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbgHMECp (ORCPT
+        id S1726546AbgHMEDf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 00:02:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59084 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725298AbgHMECo (ORCPT
+        Thu, 13 Aug 2020 00:03:35 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:18301 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726486AbgHMEDf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 00:02:44 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F61AC061757;
-        Wed, 12 Aug 2020 21:02:44 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id 62so4151657qkj.7;
-        Wed, 12 Aug 2020 21:02:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:date:message-id:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=w5SvE1fHI6P73p4d/Ave7K8xWurioQmoju2x6tyh2NI=;
-        b=c4tk2gd6nfdYlP84ldnqXqtP9SL2coSrqYEmasUe0gQZjJ9C0qFxsRqvyD5YIjTIIy
-         xy++8GAuvZBRqgofWHFgrqTguHhoglS5fxYbhD3S3hvBiiusYCIulc73UJJpWoRXNx2H
-         naAhGT9cveMS7FMK01PpSjGi/n3QaC/mEfygXXhEM5Ry8Cm/3wlooFXW+una3QuRDRkO
-         mLIxbRvO8+xXgT5VxrkpJtiEL35TzuV2kQ8SfPbcM+nYBVtnVWPF1th3BoG4zc3dclcI
-         OjI3eBp5/pnZOyMFt7I5xh0/XNv+Sgy2qAVnFDvmydFQk9kFsCcJFfQhriOYNWzDDbvG
-         k18Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:date:message-id:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=w5SvE1fHI6P73p4d/Ave7K8xWurioQmoju2x6tyh2NI=;
-        b=YkFe31KF1tHdE1UkpdkO4LPVH4z5dGBVF0ST8Q+O4eJaDQ3GPimQ6RQO0f5ll4Q/dB
-         BoTKgTsHWthw/bsAZiRz48g8CutwkhzQ/N9jKMcAJMY0YYZ4btTJXkeI6Fdsy5Wsw3/O
-         /9i7svS0fcYTjAwQLUwlqd6vLx8vRPn+SuNJxfwiJMPr/RyuGnGtrwaX0TPm8MxU8660
-         AAJ10dmY9jqtUN1rwPCZiQGBjtNBJXovfZI8KU0uLXVDSjhGNmGnMHaFvmWKpQRgTyRB
-         Fg+9Nv+S0QN0N7fFjATN5Q9Sgg6ORqhABSTlr4QYKyOJmPmwll7d0eOlmdUuzWs3MIdg
-         Bomw==
-X-Gm-Message-State: AOAM532NPaTMKhw4OFrJHen+Z/90qWs3Mk0iaUR06JxSl2eUEw43SOqA
-        vKavwKkBdSiQFZwlI5Pm+rA=
-X-Google-Smtp-Source: ABdhPJyPijbO2JJyKyc4Hd9Lkz09TGdRjKGbofrL3sAQNVTDFk9hoq+hNTNwhwCNKnBbKpoyYYqOiQ==
-X-Received: by 2002:a37:8d0:: with SMTP id 199mr2876941qki.335.1597291363538;
-        Wed, 12 Aug 2020 21:02:43 -0700 (PDT)
-Received: from localhost.localdomain ([2001:470:b:9c3:9e5c:8eff:fe4f:f2d0])
-        by smtp.gmail.com with ESMTPSA id n128sm4396126qke.8.2020.08.12.21.02.41
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 12 Aug 2020 21:02:43 -0700 (PDT)
-Subject: [RFC PATCH 3/3] mm: Identify compound pages sooner in
- isolate_migratepages_block
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-To:     alex.shi@linux.alibaba.com
-Cc:     yang.shi@linux.alibaba.com, lkp@intel.com, rong.a.chen@intel.com,
-        khlebnikov@yandex-team.ru, kirill@shutemov.name, hughd@google.com,
-        linux-kernel@vger.kernel.org, alexander.duyck@gmail.com,
-        daniel.m.jordan@oracle.com, linux-mm@kvack.org,
-        shakeelb@google.com, willy@infradead.org, hannes@cmpxchg.org,
-        tj@kernel.org, cgroups@vger.kernel.org, akpm@linux-foundation.org,
-        richard.weiyang@gmail.com, mgorman@techsingularity.net,
-        iamjoonsoo.kim@lge.com
-Date:   Wed, 12 Aug 2020 21:02:40 -0700
-Message-ID: <20200813040240.13054.76770.stgit@localhost.localdomain>
-In-Reply-To: <20200813035100.13054.25671.stgit@localhost.localdomain>
-References: <20200813035100.13054.25671.stgit@localhost.localdomain>
-User-Agent: StGit/0.17.1-dirty
+        Thu, 13 Aug 2020 00:03:35 -0400
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200813040331epoutp049cfcefff66193c8a1b7d340d4a175922~quBOK0xH61071410714epoutp04g
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 04:03:31 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200813040331epoutp049cfcefff66193c8a1b7d340d4a175922~quBOK0xH61071410714epoutp04g
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1597291411;
+        bh=gB+8yUlFrkMvVf09surihHyhYTCjSfRF7gIP4ew9+og=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=V9t5rsR5eoslynQVzZ91PEpNf74mdqJSfcmZJ0a2faq+ux8sEHvx/1lCoEgRXOqa2
+         /y6lsu71fLEi/e2Yni9xf/Yh26WwXQRCQHu1KhGtzJoDhXHL3cJKQ5SAhQy/tWfCli
+         2mL/6l4xNbuA3XL0UH31u/MJUNKeBCFNC05JuHsM=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200813040331epcas1p15c253a9f0888ea029a451b7e5464c6a2~quBNlY8t30383703837epcas1p1k;
+        Thu, 13 Aug 2020 04:03:31 +0000 (GMT)
+Received: from epsmges1p1.samsung.com (unknown [182.195.40.162]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 4BRtGV1MKrzMqYkk; Thu, 13 Aug
+        2020 04:03:30 +0000 (GMT)
+Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
+        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        E4.EC.18978.19BB43F5; Thu, 13 Aug 2020 13:03:29 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
+        20200813040329epcas1p3019e96dba8ac8592dbb2dec1c7120a57~quBLohVhR2391823918epcas1p3J;
+        Thu, 13 Aug 2020 04:03:29 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200813040329epsmtrp27845189943a832cab6dac23a4aee1a6b~quBLizr7W3111331113epsmtrp20;
+        Thu, 13 Aug 2020 04:03:29 +0000 (GMT)
+X-AuditID: b6c32a35-5edff70000004a22-ba-5f34bb913685
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        DC.99.08303.09BB43F5; Thu, 13 Aug 2020 13:03:28 +0900 (KST)
+Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200813040328epsmtip2a6e865257b153c0d0200232f9df3ecaa~quBLW6E_i0336303363epsmtip2Z;
+        Thu, 13 Aug 2020 04:03:28 +0000 (GMT)
+From:   "Namjae Jeon" <namjae.jeon@samsung.com>
+To:     "'Tetsuhiro Kohada'" <kohada.t2@gmail.com>
+Cc:     <kohada.tetsuhiro@dc.mitsubishielectric.co.jp>,
+        <mori.takahiro@ab.mitsubishielectric.co.jp>,
+        <motai.hirotaka@aj.mitsubishielectric.co.jp>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "'Sungjong Seo'" <sj1557.seo@samsung.com>
+In-Reply-To: <490837eb-6765-c7be-bb80-b30fe34adb55@gmail.com>
+Subject: RE: [PATCH v3] exfat: remove EXFAT_SB_DIRTY flag
+Date:   Thu, 13 Aug 2020 13:03:28 +0900
+Message-ID: <001501d67126$b3976df0$1ac649d0$@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQF0BoMPlscPSpT3Th8lCwQKqdMbhQJGtMGMAcFEUC0CM27r7AJXiyRiAvP59PwCFflaTAKXbWa7qXiTdBA=
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFJsWRmVeSWpSXmKPExsWy7bCmge7E3SbxBm/2m1r8mHubxeLNyaks
+        Fnv2nmSxuLxrDpvF5f+fWCyWfZnMYrHl3xFWB3aPL3OOs3u0Tf7H7tF8bCWbx85Zd9k9+ras
+        YvT4vEkugC0qxyYjNTEltUghNS85PyUzL91WyTs43jne1MzAUNfQ0sJcSSEvMTfVVsnFJ0DX
+        LTMH6BYlhbLEnFKgUEBicbGSvp1NUX5pSapCRn5xia1SakFKToGhQYFecWJucWleul5yfq6V
+        oYGBkSlQZUJOxtljggUHhSsmr57A2MC4j7+LkZNDQsBE4vnO2yxdjFwcQgI7GCX2/jzMDuF8
+        YpRY/+sflPOZUWLj2bXsMC1rN1xnBbGFBHYxSsy4FAhR9JJR4vfb52wgCTYBXYl/f/aD2SIC
+        ehInT15nAyliFmhkkphwvQcswSlgKzH7xCOgSRwcwgKWEguvK4OEWQRUJRbMuQVWwgsUvt+3
+        jxXCFpQ4OfMJC4jNLCAvsf3tHGaIgxQkfj5dBjZGRCBJ4sSsLIgSEYnZnW3MIGslBBZySKzp
+        mQb1gItE4/zvbBC2sMSr41ug4lISn9/tZQOZIyFQLfFxP9T4DkaJF99tIWxjiZvrN4CtYhbQ
+        lFi/Sx8irCix8/dcRoi1fBLvvvawQkzhlehoE4IoUZXou3SYCcKWluhq/8A+gVFpFpK/ZiH5
+        axaSB2YhLFvAyLKKUSy1oDg3PbXYsMAQOaY3MYITqZbpDsaJbz/oHWJk4mA8xCjBwawkwst8
+        2TheiDclsbIqtSg/vqg0J7X4EKMpMKQnMkuJJucDU3leSbyhqZGxsbGFiZm5mamxkjjvw1sK
+        8UIC6YklqdmpqQWpRTB9TBycUg1MC1K/7AkLXGTF0RG0V/eks1Tu1vJw1XjfSP/FkV+zLp5r
+        Yrkk8UZ4t7hruEqAcM/itXEfHkdffH1r9sJgy08qbk2dhadl5TUaZAU3aB1dr/ThTe2M3Fl7
+        Yv9cKOAw7IiXKn6VEizHZqf7dqrpc6ejEr8eb5k0P1DO6+wps4STt1S8vrPuu/lgvZZL65vC
+        B10qy/gV/fp2rVIo8l5swqgZrC4iwfX9/wl3FV4XZ9eyg2sVS/fLyX9Sen7zvNRl35a5zZ/m
+        cE6unPKWJU1Q/fS2mwLP5yf8+OPlcPrHBvdNBmmVAtzXIn2ObBV7vNL6Wuju3f9tepdUT0gQ
+        EJ1gGb5pYvH2c52XudfmZhUzapYrsRRnJBpqMRcVJwIAUTPvXi0EAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmphkeLIzCtJLcpLzFFi42LZdlhJXnfibpN4g8PJFj/m3maxeHNyKovF
+        nr0nWSwu75rDZnH5/ycWi2VfJrNYbPl3hNWB3ePLnOPsHm2T/7F7NB9byeaxc9Zddo++LasY
+        PT5vkgtgi+KySUnNySxLLdK3S+DKOHtMsOCgcMXk1RMYGxj38XcxcnJICJhIrN1wnbWLkYtD
+        SGAHo0THy3ssEAlpiWMnzjB3MXIA2cIShw8Xg4SFBJ4zSnz4wwhiswnoSvz7s58NxBYR0JM4
+        efI6G8gcZoFmJonPe2+zQwxdxizRf/ITK0gVp4CtxOwTj1hBhgoLWEosvK4MEmYRUJVYMOcW
+        2CBeoPD9vn2sELagxMmZT8DuYRbQluh92MoIYctLbH87hxniTgWJn0+XgY0UEUiSODErC6JE
+        RGJ2ZxvzBEbhWUgmzUIyaRaSSbOQtCxgZFnFKJlaUJybnltsWGCUl1quV5yYW1yal66XnJ+7
+        iREcUVpaOxj3rPqgd4iRiYPxEKMEB7OSCC/zZeN4Id6UxMqq1KL8+KLSnNTiQ4zSHCxK4rxf
+        Zy2MExJITyxJzU5NLUgtgskycXBKNTBtuMPEeiEqtkiCQfGB06qXizgX8nMnKt6/XzPpmqnY
+        XOPfLnw72i9P+9Xt1r1y9fY/F9a5uUl+FgqsMnl7IHXmw41tjHu7dM6ZxaRkrS40nBfBkdQu
+        u68luMg032PxuyNN/WsePzVNllnVbl7yfbfgBs0+qxnK7tPMFR5L1EckFTAuPzc59Mzx3g+x
+        3/b3L47SOvTyUefhtQYzhHbEWX4LOft1stXmf826czK82oMmMe85uC+Nw0H/33KTI3OlPnQU
+        LLs35d/+CNa3ruotT+3S5xhIxMwOv8oc/ndbuvPMeLOvDQvO3Drl9kSNvUtr4+GbXE1flCPP
+        39FaIXVUW2rv489fn4i+2JYf1FHySqJWiaU4I9FQi7moOBEANTYHrxcDAAA=
+X-CMS-MailID: 20200813040329epcas1p3019e96dba8ac8592dbb2dec1c7120a57
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200616021816epcas1p2bb235df44c0b6f74cdec2f12072891e3
+References: <CGME20200616021816epcas1p2bb235df44c0b6f74cdec2f12072891e3@epcas1p2.samsung.com>
+        <20200616021808.5222-1-kohada.t2@gmail.com>
+        <414101d64477$ccb661f0$662325d0$@samsung.com>
+        <aac9d6c7-1d62-a85d-9bcb-d3c0ddc8fcd6@gmail.com>
+        <500801d64572$0bdd2940$23977bc0$@samsung.com>
+        <c635e965-6b78-436a-3959-e4777e1732c1@gmail.com>
+        <000301d66dac$07b9fc00$172df400$@samsung.com>
+        <490837eb-6765-c7be-bb80-b30fe34adb55@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> Thanks for thinking on this complicated issue.
+> 
+> 
+> > Most of the NAND flash devices and HDDs have wear leveling and bad sector replacement algorithms
+> applied.
+> > So I think that the life of the boot sector will not be exhausted first.
+> 
+> I'm not too worried about the life of the boot-sector.
+> I'm worried about write failures caused by external factors.
+> (power failure/system down/vibration/etc. during writing) They rarely occur on SD cards, but occur on
+> many HDDs, some SSDs and USB storages by 0.1% or more.
+Hard disk and SSD do not guarantee atomic write of a sector unit?
 
-Since we are holding a reference to the page much sooner in
-isolate_migratepages_block we could move the PageCompound check out of the
-LRU locked section and instead just place it after get_page_unless_zero. By
-doing this we can allow any of the items that might trigger a failure to
-trigger a failure for the compound page rather than the order 0 page and as
-a result we should be able to process the pageblock faster.
+> Especially with AFT-HDD, not only boot-sector but also the following multiple sectors become
+> unreadable.
+Other file systems will also be unstable on a such HW.
 
-In addition by testing for PageCompound sooner we can avoid having the LRU
-flag cleared and then reset in the exception case. As a result this should
-prevent any possible races where another thread might be attempting to pull
-the LRU pages from the list.
+> It is not possible to completely solve this problem, as long as writing to the boot-sector.
+> (I think it's a exFAT's specification defect) The only effective way to reduce this problem is to
+> reduce writes to the boot-sector.
+exFAT's specification defect... Well..
+Even though the boot sector is corrupted, It can be recovered using the backup boot sector
+through fsck.
+> 
+> 
+> > Currently the volume dirty/clean policy of exfat-fs is not perfect,
+> 
+> Thank you for sharing the problem with you.
+> 
+> 
+> > but I think it behaves similarly to the policy of MS Windows.
+> 
+> On Windows10, the dirty flag is cleared after more than 15 seconds after all write operations are
+> completed.
+> (dirty-flag is never updated during the write operation continues)
+> 
+> 
+> > Therefore,
+> > I think code improvements should be made to reduce volume flag records while maintaining the current
+> policy.
+> 
+> Current policy is inconsistent.
+> As I wrote last mail, the problem with the current implementation is that the dirty-flag may not be
+> cleared after the write operation.(even if sync is enabled or disabled) Because, some write operations
+> clear the dirty-flag but some don't clear.
+> Unmount or sync command is the only way to ensure that the dirty-flag is cleared.
+> This has no effect on clearing the dirty-flag after a write operations, it only increases risk of
+> destroying the boot-sector.
+>   - Clear the dirty-flag after every write operation.
+>   - Never clear the dirty-flag after every write operation.
+> Unless unified to either one,  I think that sync policy cannot be consistent.
+> 
+> How do you think?
+> 
+> 
+> BR
+> ---
+> etsuhiro Kohada <kohada.t2@gmail.com>
 
-Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
----
- mm/compaction.c |   33 ++++++++++++++++++---------------
- 1 file changed, 18 insertions(+), 15 deletions(-)
-
-diff --git a/mm/compaction.c b/mm/compaction.c
-index c1e9918f9dd4..3803f129fd6a 100644
---- a/mm/compaction.c
-+++ b/mm/compaction.c
-@@ -954,6 +954,24 @@ static bool too_many_isolated(pg_data_t *pgdat)
- 		if (unlikely(!get_page_unless_zero(page)))
- 			goto isolate_fail;
- 
-+		/*
-+		 * Page is compound. We know the order before we know if it is
-+		 * on the LRU so we cannot assume it is THP. However since the
-+		 * page will have the LRU validated shortly we can use the value
-+		 * to skip over this page for now or validate the LRU is set and
-+		 * then isolate the entire compound page if we are isolating to
-+		 * generate a CMA page.
-+		 */
-+		if (PageCompound(page)) {
-+			const unsigned int order = compound_order(page);
-+
-+			if (likely(order < MAX_ORDER))
-+				low_pfn += (1UL << order) - 1;
-+
-+			if (!cc->alloc_contig)
-+				goto isolate_fail_put;
-+		}
-+
- 		if (__isolate_lru_page_prepare(page, isolate_mode) != 0)
- 			goto isolate_fail_put;
- 
-@@ -978,23 +996,8 @@ static bool too_many_isolated(pg_data_t *pgdat)
- 			rcu_read_unlock();
- 
- 			lruvec_memcg_debug(lruvec, page);
--
--			/*
--			 * Page become compound since the non-locked check,
--			 * and it's on LRU. It can only be a THP so the order
--			 * is safe to read and it's 0 for tail pages.
--			 */
--			if (unlikely(PageCompound(page) && !cc->alloc_contig)) {
--				low_pfn += compound_nr(page) - 1;
--				SetPageLRU(page);
--				goto isolate_fail_put;
--			}
- 		}
- 
--		/* The whole page is taken off the LRU; skip the tail pages. */
--		if (PageCompound(page))
--			low_pfn += compound_nr(page) - 1;
--
- 		/* Successfully isolated */
- 		del_page_from_lru_list(page, lruvec, page_lru(page));
- 		mod_node_page_state(page_pgdat(page),
 
