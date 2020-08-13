@@ -2,123 +2,101 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4571C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 19:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D505C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 19:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5F652078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 19:05:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 361DC206B2
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 19:05:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qvaTnGMy"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="ObWFK6Bt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726627AbgHMTFH (ORCPT
+        id S1726663AbgHMTF1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 15:05:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56726 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726292AbgHMTFG (ORCPT
+        Thu, 13 Aug 2020 15:05:27 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:46012 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726174AbgHMTF0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 15:05:06 -0400
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B344BC061757
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 12:05:06 -0700 (PDT)
-Received: by mail-oi1-x244.google.com with SMTP id b22so5994749oic.8
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 12:05:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HuU3ViDe278lSw17ntg5nYTRmQsPcKzMV9Ui8nZNn08=;
-        b=qvaTnGMy76pjktYEEGGOjwXIxyF2kIjefRgdP+5JsqhJredrqmgG7skH2KAZVGTbvD
-         z5SdDkFCim3I4rnr+fbmjxB6H2bLvTgDt49fkIHsrxbfOq6GKLIjdbXBs41nBCA5Jknt
-         wy+JHUbBYqzKHlS0u96hvD22PQ8nVP/Ncx4R8r3KDyHp4OxyPLhcPcQCgSKIFFNkM9bX
-         g0KzOa6EiX7NGGUTrufTxlWTWED7H7KueZLP0PM6Qn8wi3okUzROr5WZfymEUO5g/+cD
-         XkFYwzcdwMnWaXq5nrtgY0ipfOE07HHR2L84EDV84QVFPRogQpzl+r0Tgis/jvszYiLQ
-         YAeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HuU3ViDe278lSw17ntg5nYTRmQsPcKzMV9Ui8nZNn08=;
-        b=dY3j8QHr3UfdyEqwXcaZAZEEpt1ajTCI7jR3eCPDUZygQ1uTEjSg7u8laE9nNQ7EI8
-         gNxc25LShcreaAEHEiWS8ImZnHsHJ6r8EFFb4HvftvzSPmD8v2XZeOazVmuoh0LwxfRo
-         9eo9LgqVYjTkN4qdx2udfurcoIibVCqkb5FBbuZkwrZRmMIHeEsGBLeyO6AnCmR8HeR7
-         MN45Da6Ykk2Hv9ubT1n9XTarH4+MSbVvZM0I9yX6fDONJACgFItb9lEBHRCAPxJtbH3c
-         I1vXMZXvQ+cfEuybzkj+BLBjlE4qmk3zetSKa8PRTj5/2M4XmAIxY7TVCNv6hoqkOWjh
-         zL4Q==
-X-Gm-Message-State: AOAM530ToOy2XCgKCv5sXCdzqmQrXOspRmPIatow5Pmp6XLuNtV/eo5H
-        by1PmZPykmtwDGAUm9xpdsujKAaG6nbTFqnG+fxK6Q==
-X-Google-Smtp-Source: ABdhPJw5GaSIUEoCWxPsJEVVeiZAPfCUlXhncfV64G1JdmV9HhjG2Do+1NwYTyMZ14oLQH/ODwFBeqECOj8WongeEVQ=
-X-Received: by 2002:aca:b942:: with SMTP id j63mr4518741oif.28.1597345505789;
- Thu, 13 Aug 2020 12:05:05 -0700 (PDT)
+        Thu, 13 Aug 2020 15:05:26 -0400
+Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07DJ5OMp013355
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 12:05:25 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=facebook; bh=GNih2j3ESRfeoRwPAnR3qqb1b7HSoqwKZbqqay1L3wk=;
+ b=ObWFK6Bt4aH+67+3l0KseY92Gs3MZMoiEMruq5dxbtMCBFFDbqXMTN8P/njQq8sysfhe
+ YRHTyOyUP/psFw3/xcmOq6ItEh2QqzBlT5tGSm54IYfJ7ArHVL/vi1ZcTGAbDAqzdlWl
+ 8H46mPuISzUw5RDpbUdTibBTpe2RotIGGys= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com with ESMTP id 32w2yejj73-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 12:05:25 -0700
+Received: from intmgw004.06.prn3.facebook.com (2620:10d:c085:208::f) by
+ mail.thefacebook.com (2620:10d:c085:21d::4) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Thu, 13 Aug 2020 12:04:46 -0700
+Received: by devvm4117.prn2.facebook.com (Postfix, from userid 167582)
+        id 0844D4EFB4C25; Thu, 13 Aug 2020 12:04:39 -0700 (PDT)
+Smtp-Origin-Hostprefix: devvm
+From:   Vijay Khemka <vijaykhemka@fb.com>
+Smtp-Origin-Hostname: devvm4117.prn2.facebook.com
+To:     Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>
+CC:     <vijaykhemka@fb.com>, Sai Dasari <sdasari@fb.com>
+Smtp-Origin-Cluster: prn2c23
+Subject: [PATCH] ARM: dts: aspeed: tiogapass: Remove vuart
+Date:   Thu, 13 Aug 2020 12:04:30 -0700
+Message-ID: <20200813190431.3331026-1-vijaykhemka@fb.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-References: <20200807084841.7112-1-chenyi.qiang@intel.com> <20200807084841.7112-7-chenyi.qiang@intel.com>
-In-Reply-To: <20200807084841.7112-7-chenyi.qiang@intel.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Thu, 13 Aug 2020 12:04:54 -0700
-Message-ID: <CALMp9eQ=QUZ04_26eXBGHqvQYnsN6JEgiV=ZSSrE395KLX-atA@mail.gmail.com>
-Subject: Re: [RFC 6/7] KVM: X86: Expose PKS to guest and userspace
-To:     Chenyi Qiang <chenyi.qiang@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-13_16:2020-08-13,2020-08-13 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 lowpriorityscore=0
+ mlxscore=0 mlxlogscore=718 spamscore=0 priorityscore=1501 adultscore=0
+ malwarescore=0 suspectscore=0 bulkscore=0 clxscore=1011 phishscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008130134
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 7, 2020 at 1:47 AM Chenyi Qiang <chenyi.qiang@intel.com> wrote:
->
-> Existence of PKS is enumerated via CPUID.(EAX=7H,ECX=0):ECX[31]. It is
-> enabled by setting CR4.PKS when long mode is active. PKS is only
-> implemented when EPT is enabled and requires the support of VM_{ENTRY,
-> EXIT}_LOAD_IA32_PKRS currently.
->
-> Signed-off-by: Chenyi Qiang <chenyi.qiang@intel.com>
+Removed vuart for facebook tiogapass platform as it uses uart2 and
+uart3 pin with aspeed uart routing feature.
 
-> @@ -967,7 +969,8 @@ int kvm_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
->  {
->         unsigned long old_cr4 = kvm_read_cr4(vcpu);
->         unsigned long pdptr_bits = X86_CR4_PGE | X86_CR4_PSE | X86_CR4_PAE |
-> -                                  X86_CR4_SMEP | X86_CR4_SMAP | X86_CR4_PKE;
-> +                                  X86_CR4_SMEP | X86_CR4_SMAP | X86_CR4_PKE |
-> +                                  X86_CR4_PKS;
+Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
+---
+ arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts | 5 -----
+ 1 file changed, 5 deletions(-)
 
-This list already seems overly long, but I don't think CR4.PKS belongs
-here. In volume 3 of the SDM, section 4.4.1, it says:
+diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts b/arch/a=
+rm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+index 2d44d9ad4e40..e6ad821a8635 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+@@ -82,11 +82,6 @@ &lpc_ctrl {
+ 	status =3D "okay";
+ };
+=20
+-&vuart {
+-	// VUART Host Console
+-	status =3D "okay";
+-};
+-
+ &uart1 {
+ 	// Host Console
+ 	status =3D "okay";
+--=20
+2.24.1
 
-- If PAE paging would be in use following an execution of MOV to CR0
-or MOV to CR4 (see Section 4.1.1) and the instruction is modifying any
-of CR0.CD, CR0.NW, CR0.PG, CR4.PAE, CR4.PGE, CR4.PSE, or CR4.SMEP;
-then the PDPTEs are loaded from the address in CR3.
-
-CR4.PKS is not in the list of CR4 bits that result in a PDPTE load.
-Since it has no effect on PAE paging, I would be surprised if it did
-result in a PDPTE load.
-
->         if (kvm_valid_cr4(vcpu, cr4))
->                 return 1;
-> @@ -1202,7 +1205,7 @@ static const u32 msrs_to_save_all[] = {
->         MSR_IA32_RTIT_ADDR1_A, MSR_IA32_RTIT_ADDR1_B,
->         MSR_IA32_RTIT_ADDR2_A, MSR_IA32_RTIT_ADDR2_B,
->         MSR_IA32_RTIT_ADDR3_A, MSR_IA32_RTIT_ADDR3_B,
-> -       MSR_IA32_UMWAIT_CONTROL,
-> +       MSR_IA32_UMWAIT_CONTROL, MSR_IA32_PKRS,
-
-Should MSR_IA32_PKRS be added to the switch statement in
-kvm_init_msr_list()? Something like...
-
-case MSR_IA32_PKRS:
-        if (!kvm_cpu_cap_has(X86_FEATURE_PKRS))
-                continue;
-        break;
