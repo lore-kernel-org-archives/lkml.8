@@ -2,94 +2,110 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 736CCC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 11:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4556AC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 11:33:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D5EC20771
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 11:33:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C83520885
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 11:33:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=jamieiles-com.20150623.gappssmtp.com header.i=@jamieiles-com.20150623.gappssmtp.com header.b="dFoQvBVB"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="ejivrTcN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbgHMLdJ (ORCPT
+        id S1726688AbgHMLdM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 07:33:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43330 "EHLO
+        Thu, 13 Aug 2020 07:33:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43340 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726102AbgHMLdH (ORCPT
+        with ESMTP id S1726102AbgHMLdJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 07:33:07 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6725DC061757
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 04:33:07 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id 184so4751545wmb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 04:33:07 -0700 (PDT)
+        Thu, 13 Aug 2020 07:33:09 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37EDDC061757
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 04:33:09 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id h19so5759662ljg.13
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 04:33:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jamieiles-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=kYtJ68n3b3uzgea01Es3VzWZKZP+bhIPZUv6EeRuPDE=;
-        b=dFoQvBVBesIbzR9acmuD3xtoORam4n0QxmYSqnUFM+wYNG0jV9vTDbK+dio2E50xyY
-         R1QNizSL+2X5Ci8q0MMbG7I8P2UUEnySxBgkF5qGQyJaUrZIGbcOAOdB6vu6RCSklLaF
-         30F7RYu/MpGdg2FKa+4TlBOH/VBMkjFg4DRkWzQnLcA57y/Ju78fMN3x5dK2BYsWnIVC
-         8RH8Mu32QEcxVp5T5Rnl9ClVQ6VQ8MOXYDphvwjtqtVFwZp6AABDs8L1+mr+fkWQzVLv
-         UVj2o6urI4DVDZn5LtkmVsLwcCA7qoW6k4twHiK10GvZ97CsEZOhW3plV26zYVu8dt7+
-         uRug==
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=CKBHpRq2gdYecMDnHVd5fZCbJkMkjf8ao+KHmXIXSMg=;
+        b=ejivrTcNuBz6f3oxo1Y3zzsM8DitmA3VJUE1qaeuEwlJPxUAvWFXytt/iywwB7qCGy
+         5MD82jHYBj5HiDAf7kqp4ks7+5ToBEqHq8nGc08BLB5vvo5QQS/eV3bJ4iGfykjfdDRM
+         rZvrV7fxjdhXqS6mmXipjtnrPgGvLYh5D2JQ4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=kYtJ68n3b3uzgea01Es3VzWZKZP+bhIPZUv6EeRuPDE=;
-        b=TtHHjAzF1JxQ5M+A6BAxp/UO1SuzvM7Myh5B8IOqeammJfqzuLR6UraBy7iTfS2Jwi
-         3U+3iRRuCSX7Iei+OT1XtkvKmScfkkwJJAEKZHUEDUHmEjOoO9WEy/3W6VblNAxZ0Ah3
-         FSlZdxeG0UVTN/Jck4bCFyjnPJ8tMUmrk5URlfqSD3dBcFmlKrELXusQ7JtH10Kfsaq+
-         4Wc0zd2mN+0ks8wYYgt0EZYigmWIjAoMe7Mw/mLi8DfviRbYnzglyv5tUoQG+r0l/XOl
-         /vAfWvEqsnRuYrmkNrCGD2X2IKmMdsZwoIrxu+sYt8TLlAQghgoTqP6STPFnB3+bXy5a
-         1bOQ==
-X-Gm-Message-State: AOAM533ApUwxC5jXKxpT36UTHPWl00TsOgQ8D63Ts3y3iyd1+KEiYqxv
-        CmehHvM2tOQXOND6UtEwbze83Q==
-X-Google-Smtp-Source: ABdhPJx3qlmoLdH7xdp1UXdN/PdrDuewfq/0p0PmA8z5X19IgLTNysAqKOY0MTSHPags08cR35erxA==
-X-Received: by 2002:a1c:818e:: with SMTP id c136mr4170502wmd.170.1597318386169;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=CKBHpRq2gdYecMDnHVd5fZCbJkMkjf8ao+KHmXIXSMg=;
+        b=lp4n89CPRSEE7Cafn5V1Wv53VhO+CvEGith/sYCpp081Vif+bZZuwy32BKIuJBDyPW
+         fFUhwqfhvW/BV8no/7ct2qHC/Lwui+x149VKRXRGS48h+tSRNrlUVqvT91dmK4v+5Kn7
+         hzSFW2RmCXpTfzRmMtK+m8DxfKZOqR5MYWoXLYXfLcKise1hZtBk2WH+1l2RvX4YX0SK
+         12kK9Z3W0e39EOVT8GGpLOZcA+DW2K+e1Tf/h4aMDnxgbVoJhxefnmg1AWrtdxipnmiX
+         hlSOfAd5C7tLJkqnz3LijRNryFQSf8usQzRvg6kGIAkuQv0BwE2fDOOkFAMceve1byNl
+         2jww==
+X-Gm-Message-State: AOAM533Uj68UbQ3NlcSmvQZJxHH8Wcit91OZZX5JDiLV2+Bu39Sxtmf2
+        guRR/rPQCJX8N4V021c64/V0Yw==
+X-Google-Smtp-Source: ABdhPJyoUHvy/tjrCSKGg//t2kcgYLKwm9obdrTFz24GkBvRPgwiMB83dvHU/dDl+wqiLNW3FXvczg==
+X-Received: by 2002:a05:651c:314:: with SMTP id a20mr1762778ljp.434.1597318387708;
+        Thu, 13 Aug 2020 04:33:07 -0700 (PDT)
+Received: from [172.16.11.132] ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id a1sm1138751lfb.10.2020.08.13.04.33.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
         Thu, 13 Aug 2020 04:33:06 -0700 (PDT)
-Received: from localhost ([82.38.213.95])
-        by smtp.gmail.com with ESMTPSA id o3sm9301662wru.64.2020.08.13.04.33.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Aug 2020 04:33:05 -0700 (PDT)
-Date:   Thu, 13 Aug 2020 12:33:04 +0100
-From:   Jamie Iles <jamie@jamieiles.com>
-To:     madhuparnabhowmik10@gmail.com
-Cc:     jamie@jamieiles.com, herbert@gondor.apana.org.au,
-        davem@davemloft.net, linux-arm-kernel@lists.infradead.org,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andrianov@ispras.ru, ldv-project@linuxtesting.org
-Subject: Re: [PATCH] drivers: crypto: picoxcell_crypto: Fix potential race
- condition bug
-Message-ID: <20200813113304.GA11888@willow>
-References: <20200811123024.14501-1-madhuparnabhowmik10@gmail.com>
+Subject: Re: [PATCH] overflow: Add __must_check attribute to check_*() helpers
+To:     Matthew Wilcox <willy@infradead.org>,
+        Kees Cook <keescook@chromium.org>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Leon Romanovsky <leon@kernel.org>,
+        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com
+References: <202008121450.405E4A3@keescook>
+ <20200813112327.GF17456@casper.infradead.org>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <3e498585-f22f-25b8-9385-feadd55fdc7b@rasmusvillemoes.dk>
+Date:   Thu, 13 Aug 2020 13:33:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200811123024.14501-1-madhuparnabhowmik10@gmail.com>
+In-Reply-To: <20200813112327.GF17456@casper.infradead.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 06:00:24PM +0530, madhuparnabhowmik10@gmail.com wrote:
-> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+On 13/08/2020 13.23, Matthew Wilcox wrote:
+> On Wed, Aug 12, 2020 at 02:51:52PM -0700, Kees Cook wrote:
+>> +/*
+>> + * Allows to effectively us apply __must_check to a macro so we can have
+>> + * both the type-agnostic benefits of the macros while also being able to
+>> + * enforce that the return value is, in fact, checked.
+>> + */
+>> +static inline bool __must_check __must_check_bool(bool condition)
+>> +{
+>> +	return unlikely(condition);
+>> +}
 > 
-> engine->stat_irq_thresh was initialized after device_create_file() in
-> the probe function, the initialization may race with call to
-> spacc_stat_irq_thresh_store() which updates engine->stat_irq_thresh,
-> therefore initialize it before creating the file in probe function.
-> 
-> Found by Linux Driver Verification project (linuxtesting.org).
-> 
-> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> I'm fine with the concept, but this is a weirdly-generically-named
+> function that has a very specific unlikely() in it.  So I'd call
+> this __must_check_overflow() and then it's obvious that overflow is
+> unlikely(), whereas it's not obvious that __must_check_bool() is going
+> to be unlikely().
 
-Acked-by: Jamie Iles <jamie@jamieiles.com>
+Incidentally, __must_check_overflow was what was actually Suggested-by
+me - though I didn't think too hard about that name, I certainly agree
+with your reasoning.
 
-Thanks!
+I still don't know if (un)likely annotations actually matter when used
+this way, but at least the same pattern is used in kernel/sched/, so
+probably.
+
+Rasmus
