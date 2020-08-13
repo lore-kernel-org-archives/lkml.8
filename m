@@ -2,119 +2,109 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C1EC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 18:43:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0338DC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 18:44:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85B8420829
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 18:43:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8A682078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 18:44:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="bwNfn8z8"
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="Zey1i9YK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726587AbgHMSnz (ORCPT
+        id S1726603AbgHMSoa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 14:43:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53396 "EHLO
+        Thu, 13 Aug 2020 14:44:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726174AbgHMSnx (ORCPT
+        with ESMTP id S1726249AbgHMSo2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 14:43:53 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 674E0C061757
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 11:43:53 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id 77so6412111ilc.5
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 11:43:53 -0700 (PDT)
+        Thu, 13 Aug 2020 14:44:28 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D687EC061383
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 11:44:26 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id s16so5139724qtn.7
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 11:44:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=qXipwEBN2Iz4fq1yjNq98iQvWOe5oSb3TwyPypfMNUc=;
-        b=bwNfn8z89yMMgws2NUQpBbcixw4kIhb1FMB5u8AC2FUvX9o+Xgl532AWbjVVlO7gik
-         /w8NRLA31JDA9JOy6SQAlyaJ6awX/TuZiBBSeEu66ji3lHC01ClFtIubX7080ZZ3pARL
-         bdRN2/4MRMuNZ/waHaQjO5UWWfrd51LDiDFolKA0D/3VlBA4NyCNdj9hIHplwm6UM2Qk
-         a+QlNvDpmpoeaPNLDQVoDpRs7i1kO6snz44Gg0pLd/7v/v3BM9OvFFT2N6jGcTAUm113
-         dpBScb1eYaI5LDf3mFn9y6RDcqlUClryYva6PHhLb1FpJHj3+XwU3Zb4WSRVF8BkQ9z9
-         TTDA==
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=i08DjFarJSioJFF+3BzXlzJrV3znYAwGrEz9J75FiX4=;
+        b=Zey1i9YKtQygbzUDBlnW/AKCXPLBGNuzu5QshFKXWVoQGiehGBZWCktZt7P3kmrpyp
+         etLXXJqJYrSLasI6L4DL57cfA+jq+WuaWJ/dPEgm2kOqm3bplNfFZIpdLzM7qO2fNPq7
+         SI5LUPLrMuHlHu1uf/aInNBO05dHYBMtKk/hlVAFeX3t786TTYiuZEzAx4LXnEkK7I0e
+         1p8k2gLsGsdxA6VIzuicHGDlI6A8b4Epw4DAlh/QfTuf/VfScE0xJyabJHg11CBxZeHE
+         H0gbHy7e4Q3PbTQZ4meSA/pFmvsFfvHNyNKZ3BFuZp2OZnw9nKiJwvbWyHbdD+hYFFnb
+         6FpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=qXipwEBN2Iz4fq1yjNq98iQvWOe5oSb3TwyPypfMNUc=;
-        b=mptUIW6V+8kIYIUluuJmlPgHmx7Lsc6xAbVVrSnOn+fYfjAS+In43BWC/nZDYX3YCp
-         H2HHMD7IVDQuKla3jqhyElWNWIBcRsDJzz+nnU8UYpSM3WCTNM3vG01wgF5Vuao06NGo
-         OvF9J/NiBr5E4jKDA9YqylFvSJx1UMgTb3yy6Lb3gWakRKjqAaeFI4SmBtXdE0/DSY5K
-         Ba7Yz4eX4MZECSeASNueiJjSgLe/yS/pIoX+30K6hI6oL+eHQxQ+I+vGQjD69u5kDySt
-         XbR4evRNkxBjHfcnL/LIuGWbTtsvjGoDSP0f+/PDcvAjryly/iaAI4IZwGFZbG5dDezg
-         KePQ==
-X-Gm-Message-State: AOAM5335M+82jruvEjHYPSghaxzVW44TFE1V/DaTDSyR5oNLskllG4Ty
-        UgTDtA5i6h2LUpb9T+4bW4/pYw==
-X-Google-Smtp-Source: ABdhPJxCVR0MCPzTXSciVQ2VgWYBklfxQCGn8azURYmwBBV2jRA//hVqc0OkDR9om36sUE4SAMl2jQ==
-X-Received: by 2002:a92:1b85:: with SMTP id f5mr5753195ill.308.1597344232236;
-        Thu, 13 Aug 2020 11:43:52 -0700 (PDT)
-Received: from [192.168.1.58] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id n3sm3118997ilj.29.2020.08.13.11.43.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Aug 2020 11:43:51 -0700 (PDT)
-Subject: Re: KASAN: use-after-free Read in idr_for_each
-To:     syzbot <syzbot+25d82ed5cc4b474f1df8@syzkaller.appspotmail.com>,
-        io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        viro@zeniv.linux.org.uk
-References: <00000000000093837f05acc5a11f@google.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <45954f2a-bd4a-7188-0013-a48efb2a3a50@kernel.dk>
-Date:   Thu, 13 Aug 2020 12:43:50 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        bh=i08DjFarJSioJFF+3BzXlzJrV3znYAwGrEz9J75FiX4=;
+        b=TaICjO97X06WQTCz82rHxMwq27khSLcmk0duN2xZleL0uemZO+lMeITUsE/rOdX3tm
+         ECNk0UqpFiMlANLJna4/18vve0d6f0UmSeY9ZeciJAX+z2hi3ztV7Qm2q1/v0lUSces/
+         Y8yziYwNihoq8ebffo4MGAkTtFiM5ZcJQNVBsRUBf4XZITNNmqgafTfRG2cDji5qa8Sl
+         n2ld9SLCz4Ox1y78VwKZzhZ7aJrJrKJMeNgSJjMgQOVdxNkURG9DIIzQwZXh5gMVv6xC
+         l7jTE27yCZHgitQ9AZIZqbhAA030EsnPVeg2f6spUSAefqTDRZiLcV1/NQ13qgEaeDu0
+         fp3Q==
+X-Gm-Message-State: AOAM5304m+8a52m0n9UMVnHe1ZGYdxIFWBPYcKpTqrglKB+mZgEv8+X3
+        nbmJLxM4hu4Kjw+bvhVMByVHug==
+X-Google-Smtp-Source: ABdhPJyZpBHtFpCwUCN1Y5bRe8UUWA5ZmNxEvgqLYBigYpnTpeGmXkwoWEtaaNHcAVUMDbL7wZ6m1A==
+X-Received: by 2002:aed:2946:: with SMTP id s64mr6816571qtd.204.1597344266044;
+        Thu, 13 Aug 2020 11:44:26 -0700 (PDT)
+Received: from localhost.localdomain ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id k5sm6415227qke.18.2020.08.13.11.44.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Aug 2020 11:44:25 -0700 (PDT)
+From:   Jonathan Marek <jonathan@marek.ca>
+To:     freedreno@lists.freedesktop.org
+Cc:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        Akhil P Oommen <akhilpo@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
+        dri-devel@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
+        GPU), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] drm/msm/a6xx: fix frequency not always being restored on GMU resume
+Date:   Thu, 13 Aug 2020 14:44:18 -0400
+Message-Id: <20200813184420.18448-1-jonathan@marek.ca>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-In-Reply-To: <00000000000093837f05acc5a11f@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/13/20 11:28 AM, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following issue on:
-> 
-> HEAD commit:    fb893de3 Merge tag 'tag-chrome-platform-for-v5.9' of git:/..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=167ed216900000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=f1fedc63022bf07e
-> dashboard link: https://syzkaller.appspot.com/bug?extid=25d82ed5cc4b474f1df8
-> compiler:       gcc (GCC) 10.1.0-syz 20200507
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=107bc222900000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17a09d06900000
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+25d82ed5cc4b474f1df8@syzkaller.appspotmail.com
-> 
-> ==================================================================
-> BUG: KASAN: use-after-free in radix_tree_next_slot include/linux/radix-tree.h:421 [inline]
-> BUG: KASAN: use-after-free in idr_for_each+0x206/0x220 lib/idr.c:202
-> Read of size 8 at addr ffff888082058c78 by task syz-executor999/3765
+The patch reorganizing the set_freq function made it so the gmu resume
+doesn't always set the frequency, because a6xx_gmu_set_freq() exits early
+when the frequency hasn't been changed. Note this always happens when
+resuming GMU after recovering from a hang.
 
-Should already be fixed by:
+Use a simple workaround to prevent this from happening.
 
-commit 6d816e088c359866f9867057e04f244c608c42fe
-Author: Jens Axboe <axboe@kernel.dk>
-Date:   Tue Aug 11 08:04:14 2020 -0600
+Fixes: 1f60d11423db ("drm: msm: a6xx: send opp instead of a frequency")
+---
+ drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-    io_uring: hold 'ctx' reference around task_work queue + execute
-
-which is going upstream soon.
-
-#syz dup: KASAN: use-after-free Read in io_async_task_func
-
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+index b67b38c8fadf..bbbd00020f92 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+@@ -845,6 +845,7 @@ static void a6xx_gmu_set_initial_freq(struct msm_gpu *gpu, struct a6xx_gmu *gmu)
+ 	if (IS_ERR_OR_NULL(gpu_opp))
+ 		return;
+ 
++	gmu->freq = 0; /* so a6xx_gmu_set_freq() doesn't exit early */
+ 	a6xx_gmu_set_freq(gpu, gpu_opp);
+ 	dev_pm_opp_put(gpu_opp);
+ }
 -- 
-Jens Axboe
+2.26.1
 
