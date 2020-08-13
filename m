@@ -2,100 +2,132 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB3AEC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 19:01:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE093C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 19:01:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6155420838
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 19:01:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD4E0206B2
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 19:01:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="GNrbWj8C"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="zl6FpC51"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726568AbgHMTBZ (ORCPT
+        id S1726593AbgHMTBs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 15:01:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56158 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726167AbgHMTBY (ORCPT
+        Thu, 13 Aug 2020 15:01:48 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:59010 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726167AbgHMTBs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 15:01:24 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99BE2C061757;
-        Thu, 13 Aug 2020 12:01:24 -0700 (PDT)
-Received: from [192.168.0.20] (cpc89244-aztw30-2-0-cust3082.18-1.cable.virginm.net [86.31.172.11])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id ACDE2B8F;
-        Thu, 13 Aug 2020 21:01:07 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1597345270;
-        bh=WEkPZuLQ3Yk3M0K2VRndc7Z3Rc4ZPMvM9CG/B6V3QvE=;
-        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=GNrbWj8CEq2RF15ZYjarEVZ+0nUuHnr13JaHoqNOi/NBqnS0rj6cYllXe8Vb9TfSg
-         z78freDQf3mVscR/eXfm3I/gXKEWC0PT0OfIZTpP8dEdDrVU5aSm44dEsRWcBGgtwv
-         3O9eOobdoPME8opm7chwdPMzp0HVEgCkZgMEgNYw=
-Reply-To: kieran.bingham+renesas@ideasonboard.com
-Subject: Re: linux-next: Tree for Aug 13 (drivers/media/i2c/max9286.c)
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        =?UTF-8?Q?Niklas_S=c3=b6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>
-References: <20200813165846.27887669@canb.auug.org.au>
- <17a1c5aa-2f38-c84d-bf2d-485862dc0615@infradead.org>
-From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Organization: Ideas on Board
-Message-ID: <3262a9fc-46e2-3109-3764-e7153edf486d@ideasonboard.com>
-Date:   Thu, 13 Aug 2020 20:01:01 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <17a1c5aa-2f38-c84d-bf2d-485862dc0615@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+        Thu, 13 Aug 2020 15:01:48 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07DIqExj071410;
+        Thu, 13 Aug 2020 19:01:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=P6H1cFDtGn5W0jqxyo/YwbLzXDMgG84xNn5LeUbzAt8=;
+ b=zl6FpC51lCOAZs0hyas4xMja14vQrDQYqMNtrdri1zJg8l6fE7eLMPtx94MoVuiquVJJ
+ q3RP4Yx3UNvEAiuv6z62yPROL/bb5fuOiMhc57n+oD5689doHmPpA6ZVfIXY0Tn7Bhsv
+ P+wUpMklzTwUEk/07mXEbP3VxkCsvDRBvNSOOFcCBi80h3OhaA9Owo1BuImeKc5AOkac
+ 0+IXIIUhMzhrBL8sFN9iYABNDsNB7sOBnCF9fzTXe1RmtvlFDE0wKHyQmsKX74ugXMoP
+ Ya1SyeEWhTkAUSchAhcOhV73n8My6kFk2NM/8ZIhgp5ESE8/KEKg44FkmW6D951Gc8Px PA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 32t2ye0uxc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 13 Aug 2020 19:01:39 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07DIrdII119021;
+        Thu, 13 Aug 2020 19:01:38 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 32t5ms5kq3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 13 Aug 2020 19:01:38 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 07DJ1ZuE024738;
+        Thu, 13 Aug 2020 19:01:37 GMT
+Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 13 Aug 2020 19:01:35 +0000
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH 1/2] nfsd: Remove unnecessary assignment in nfs4xdr.c
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <20200812203631.GA13358@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
+Date:   Thu, 13 Aug 2020 15:01:34 -0400
+Cc:     Alex Dewar <alex.dewar90@gmail.com>,
+        Frank van der Linden <fllinden@amazon.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <43C14B32-77C7-44E2-9051-0E80AF606CE0@oracle.com>
+References: <20200812141252.21059-1-alex.dewar90@gmail.com>
+ <20200812203631.GA13358@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
+To:     Bruce Fields <bfields@fieldses.org>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9712 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 mlxscore=0
+ adultscore=0 malwarescore=0 mlxlogscore=999 phishscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008130132
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9712 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 priorityscore=1501
+ malwarescore=0 impostorscore=0 lowpriorityscore=0 mlxscore=0 bulkscore=0
+ suspectscore=0 phishscore=0 adultscore=0 spamscore=0 clxscore=1011
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008130132
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Randy,
 
-On 13/08/2020 19:35, Randy Dunlap wrote:
-> On 8/12/20 11:58 PM, Stephen Rothwell wrote:
->> Hi all,
->>
->> News: The merge window has opened, so please do not add any v5.10
->> related material to your linux-next included branches until after the
->> merge window closes again.
->>
->> Changes since 20200812:
->>
-> 
-> on x86_64:
-> 
-> # CONFIG_GPIOLIB is not set
-> 
-> ../drivers/media/i2c/max9286.c: In function 'max9286_register_gpio':
-> ../drivers/media/i2c/max9286.c:1033:6: error: 'struct gpio_chip' has no member named 'of_node'
->   gpio->of_node = dev->of_node;
-> 
 
-Thanks for the report, Sakari has already submitted a fix [0] for this.
-I assume it just needs a nudge to get picked up via Mauro's tree.
+> On Aug 12, 2020, at 4:36 PM, Frank van der Linden =
+<fllinden@amazon.com> wrote:
+>=20
+> On Wed, Aug 12, 2020 at 03:12:51PM +0100, Alex Dewar wrote:
+>>=20
+>> In nfsd4_encode_listxattrs(), the variable p is assigned to at one =
+point
+>> but this value is never used before p is reassigned. Fix this.
+>>=20
+>> Addresses-Coverity: ("Unused value")
+>> Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
+>> ---
+>> fs/nfsd/nfs4xdr.c | 2 +-
+>> 1 file changed, 1 insertion(+), 1 deletion(-)
+>>=20
+>> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+>> index 259d5ad0e3f47..1a0341fd80f9a 100644
+>> --- a/fs/nfsd/nfs4xdr.c
+>> +++ b/fs/nfsd/nfs4xdr.c
+>> @@ -4859,7 +4859,7 @@ nfsd4_encode_listxattrs(struct =
+nfsd4_compoundres *resp, __be32 nfserr,
+>>                        goto out;
+>>                }
+>>=20
+>> -               p =3D xdr_encode_opaque(p, sp, slen);
+>> +               xdr_encode_opaque(p, sp, slen);
+>>=20
+>>                xdrleft -=3D xdrlen;
+>>                count++;
+>> --
+>> 2.28.0
+>>=20
+>=20
+> Yep, I guess my linting missed that, thanks for the fix.
 
-[0]
-https://lore.kernel.org/linux-media/20200803090935.23619-1-sakari.ailus@linux.intel.com/
+Bruce, these two don't appear to be urgent, so I'm deferring them
+to you for v5.10.
 
-Thanks
+
 --
-Kieran
+Chuck Lever
+
+
+
