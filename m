@@ -2,173 +2,127 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20F50C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 03:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3959C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 03:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB7D3206A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 03:45:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="KzEjKotH";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Y5xPbwpS"
+	by mail.kernel.org (Postfix) with ESMTP id CBE0C2053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 03:45:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726688AbgHMDpL (ORCPT
+        id S1726696AbgHMDpY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 23:45:11 -0400
-Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:56871 "EHLO
-        wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726334AbgHMDpK (ORCPT
+        Wed, 12 Aug 2020 23:45:24 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:38966 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726612AbgHMDpY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 23:45:10 -0400
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
-        by mailnew.west.internal (Postfix) with ESMTP id 14D72FC9;
-        Wed, 12 Aug 2020 23:45:08 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute2.internal (MEProxy); Wed, 12 Aug 2020 23:45:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
-        message-id:subject:from:to:cc:date:in-reply-to:references
-        :content-type:mime-version:content-transfer-encoding; s=fm3; bh=
-        riEkJBk9dtTCMdsd2KuRcCF6pt/EtfYew54yr6yCdJ0=; b=KzEjKotH5i2EDTcj
-        kvBpYZ5LOAFPB3zMvzFYCfj8QWTdLQM6ENrhOYMHVPnS/e1YFPtX5i0OPsSeL4ru
-        PvwvOAY2wvRAwmRget9I0dt/a1ke9rAouh2Wgi2a1F19YRdQe3xFr0skY7v9g6xp
-        YWkG5uEGTHHDSHw749P3caLQRxi2dSKsT9mKL9i2Lic5SF4/V2/qd6SyDloKKpzn
-        mC3Mz1GgSqOEtMZUFV4s6SCZeHuu0eWGZAhz+kwbNCNU4scom7ETFIfALUgxvfGB
-        4kPIYmLPdrtA1QtIDzQ87SzdCUe+OvdLZADloyG/TQvZRy86RDL6cxypjy6IGbit
-        yROLsQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=riEkJBk9dtTCMdsd2KuRcCF6pt/EtfYew54yr6yCd
-        J0=; b=Y5xPbwpSaJE7r6+Mg7K2AJQddMRP2uXhV5YS+cJGQmJF5qa1oXZGzN/k1
-        R+socj+BfnH/JFqfoZm4RiPdIMOgXWYE6bTDevZjmItShA7NGhZdEh9jJOoXfNqp
-        2yzFqbjNKqvPDhkbD3GePGpxGZSVtFCDuaclNV3rhg96gmwn8q8fWGShLUVdaCuS
-        uhmTKmhH948l8vmP+bRPZ02NjzV6Vql+G7EGt5vcxSLvxO16Ux/y16XqZvvCUfhD
-        N298oO9RFrzp6hhtvgm8BA6PUVN5RDvNlbJ9f7FFe9hgXO3p7ypNkJp4gXM/+jwH
-        0t2/59pboQs6CDp7CZCrcdb3IrctQ==
-X-ME-Sender: <xms:Qrc0X8Lc1yZIEPskEWLBeDxIuetSBLIxdPQ6GpEA1g7a2j3loMUpZg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrleefgdejjecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpefkrghnucfm
-    vghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqnecuggftrfgrthhtvghrnhepfe
-    efteetvdeguddvveefveeftedtffduudehueeihfeuvefgveehffeludeggfejnecukfhp
-    peehkedrjedrvddtfedruddugeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpehrrghvvghnsehthhgvmhgrfidrnhgvth
-X-ME-Proxy: <xmx:Qrc0X8JmDYFlSNcZKK2nszokJSpdOioE1XPHpaqoyty_dHf6SuSp7Q>
-    <xmx:Qrc0X8tkP-vChz8GV1z1A9ihiy8aqTa6b_5PBYaV7Fix_HUT3C6GRg>
-    <xmx:Qrc0X5a4k1gagaBZVNG52KO4BnXvOZwG_cOsYiNF5ppt2zi0xteFIA>
-    <xmx:Q7c0XwQsbzSGPz00inTTQlqYeTpp31KU-MhIhYYisLYqmKnYMTSOyrVk97A>
-Received: from mickey.themaw.net (58-7-203-114.dyn.iinet.net.au [58.7.203.114])
-        by mail.messagingengine.com (Postfix) with ESMTPA id BA4CC306005F;
-        Wed, 12 Aug 2020 23:44:58 -0400 (EDT)
-Message-ID: <20a60b5984a7f6e3e7d351b789c0b0beedfb2653.camel@themaw.net>
-Subject: Re: file metadata via fs API
-From:   Ian Kent <raven@themaw.net>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Steven Whitehouse <swhiteho@redhat.com>
-Cc:     David Howells <dhowells@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, Karel Zak <kzak@redhat.com>,
-        Jeff Layton <jlayton@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Christian Brauner <christian@brauner.io>,
-        Lennart Poettering <lennart@poettering.net>,
-        Linux API <linux-api@vger.kernel.org>,
-        LSM <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Thu, 13 Aug 2020 11:44:54 +0800
-In-Reply-To: <CAHk-=wgz5H-xYG4bOrHaEtY7rvFA1_6+mTSpjrgK8OsNbfF+Pw@mail.gmail.com>
-References: <1842689.1596468469@warthog.procyon.org.uk>
-         <1845353.1596469795@warthog.procyon.org.uk>
-         <CAJfpegunY3fuxh486x9ysKtXbhTE0745ZCVHcaqs9Gww9RV2CQ@mail.gmail.com>
-         <ac1f5e3406abc0af4cd08d818fe920a202a67586.camel@themaw.net>
-         <CAJfpegu8omNZ613tLgUY7ukLV131tt7owR+JJ346Kombt79N0A@mail.gmail.com>
-         <CAJfpegtNP8rQSS4Z14Ja4x-TOnejdhDRTsmmDD-Cccy2pkfVVw@mail.gmail.com>
-         <20200811135419.GA1263716@miu.piliscsaba.redhat.com>
-         <CAHk-=wjzLmMRf=QG-n+1HnxWCx4KTQn9+OhVvUSJ=ZCQd6Y1WA@mail.gmail.com>
-         <52483.1597190733@warthog.procyon.org.uk>
-         <CAHk-=wiPx0UJ6Q1X=azwz32xrSeKnTJcH8enySwuuwnGKkHoPA@mail.gmail.com>
-         <066f9aaf-ee97-46db-022f-5d007f9e6edb@redhat.com>
-         <CAHk-=wgz5H-xYG4bOrHaEtY7rvFA1_6+mTSpjrgK8OsNbfF+Pw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Wed, 12 Aug 2020 23:45:24 -0400
+Received: by mail-io1-f69.google.com with SMTP id v10so3171593iot.6
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Aug 2020 20:45:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=5fOerBOgtCPzRD6DaJSK75fAycF0jkD27NVs0k5zNK8=;
+        b=chuGYUImxmv0zlOn8bEqMFJRL5nD8VDobkzURqkKtkgJ9xIaLXyEKpnyyQUTrh7tDg
+         uVtEG5tIXaFKvXAXBCeEe/WArDhgQokPhbUtuz+CW1n09yBVvxosjSeW4+/6JmMxWAqk
+         1yhHelDxqQj8PQo1g/XPftff+r8Cww3PObpJ7f1sKCHGsvs0a4REGQWVVemh3hZOPgck
+         Sia2ofnnxTHQOm6HGabl/9h1F4S0/4O0ihSrc8YdmGcEh+hPVQY2nBE1vx4WOhW7xiRZ
+         NeuIMGJSqU5ntDifnyiYqZAaKIBFjdiQ8M1ANZk4G7CncCe074Tvm4Ps6BulVnTCKGMi
+         qZrg==
+X-Gm-Message-State: AOAM532rhF8fqTCcU9r7aGhVdupqu90f72umWQDBdoRTq6z/Cei7b1ik
+        BfL9Wa1Wv5uhM8m7xSk7zDtDppJg7ezWTxIfLr/gT3Qu4vzo
+X-Google-Smtp-Source: ABdhPJxz4SQu4A4rdaQz1JJUS90biGgjK7Mm9sZZE4NzvdVqRmeRD40WWpsBvRjHG3bQJOxi3NZRYHnot5kBb62meeUF8lLcp2uq
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:42:: with SMTP id i2mr2552973ilr.184.1597290323164;
+ Wed, 12 Aug 2020 20:45:23 -0700 (PDT)
+Date:   Wed, 12 Aug 2020 20:45:23 -0700
+In-Reply-To: <000000000000ece9db05ac4054e8@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000050c61e05acba22b6@google.com>
+Subject: Re: WARNING in compat_do_ebt_get_ctl
+From:   syzbot <syzbot+5accb5c62faa1d346480@syzkaller.appspotmail.com>
+To:     bridge@lists.linux-foundation.org, coreteam@netfilter.org,
+        davem@davemloft.net, fw@strlen.de, kadlec@netfilter.org,
+        kuba@kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        nikolay@cumulusnetworks.com, pablo@netfilter.org,
+        roopa@cumulusnetworks.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-08-12 at 12:50 -0700, Linus Torvalds wrote:
-> On Wed, Aug 12, 2020 at 12:34 PM Steven Whitehouse <
-> swhiteho@redhat.com> wrote:
-> > The point of this is to give us the ability to monitor mounts from
-> > userspace.
-> 
-> We haven't had that before, I don't see why it's suddenly such a big
-> deal.
+syzbot has found a reproducer for the following issue on:
 
-Because there's a trend occurring in user space where there are
-frequent and persistent mount changes that cause high overhead.
+HEAD commit:    fb893de3 Merge tag 'tag-chrome-platform-for-v5.9' of git:/..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1742b31c900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f1fedc63022bf07e
+dashboard link: https://syzkaller.appspot.com/bug?extid=5accb5c62faa1d346480
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+userspace arch: i386
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13280fd6900000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1409f4a6900000
 
-I've seen the number of problems building up over the last few months
-that are essentially the same problem that I wanted to resolve. And
-that's related to side effects of autofs using a large number of
-mounts.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+5accb5c62faa1d346480@syzkaller.appspotmail.com
 
-The problems are real.
-
-> 
-> The notification side I understand. Polling /proc files is not the
-> answer.
-
-Yep, that's one aspect, getting the information about a mount without
-reading the entire mount table seems like the sensible thing to do to
-allow for a more efficient notification mechanism.
-
-> 
-> But the whole "let's design this crazy subsystem for it" seems way
-> overkill. I don't see anybody caring that deeply.
-> 
-> It really smells like "do it because we can, not because we must".
-> 
-> Who the hell cares about monitoring mounts at a kHz frequencies? If
-> this is for MIS use, you want a nice GUI and not wasting CPU time
-> polling.
-
-That part of the problem still remains.
-
-The kernel sending a continuous stream of wake ups under load does
-also introduce a resource problem but that's probably something to
-handle in user space.
-
-> 
-> I'm starting to ignore the pull requests from David Howells, because
-> by now they have had the same pattern for a couple of years now:
-> esoteric new interfaces that seem overdesigned for corner-cases that
-> I'm not seeing people clamoring for.
-> 
-> I need (a) proof this is actualyl something real users care about and
-> (b) way more open discussion and implementation from multiple
-> parties.
-> 
-> Because right now it looks like a small in-cabal of a couple of
-> people
-> who have wild ideas but I'm not seeing the wider use of it.
-> 
-> Convince me otherwise. AGAIN. This is the exact same issue I had with
-> the notification queues that I really wanted actual use-cases for,
-> and
-> feedback from actual outside users.
-> 
-> I really think this is engineering for its own sake, rather than
-> responding to actual user concerns.
-> 
->                Linus
+------------[ cut here ]------------
+Buffer overflow detected (80 < 137)!
+WARNING: CPU: 0 PID: 6853 at include/linux/thread_info.h:134 copy_overflow include/linux/thread_info.h:134 [inline]
+WARNING: CPU: 0 PID: 6853 at include/linux/thread_info.h:134 check_copy_size include/linux/thread_info.h:143 [inline]
+WARNING: CPU: 0 PID: 6853 at include/linux/thread_info.h:134 copy_to_user include/linux/uaccess.h:151 [inline]
+WARNING: CPU: 0 PID: 6853 at include/linux/thread_info.h:134 compat_do_ebt_get_ctl+0x47e/0x500 net/bridge/netfilter/ebtables.c:2270
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 6853 Comm: syz-executor171 Not tainted 5.8.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ panic+0x2e3/0x75c kernel/panic.c:231
+ __warn.cold+0x20/0x45 kernel/panic.c:600
+ report_bug+0x1bd/0x210 lib/bug.c:198
+ handle_bug+0x38/0x90 arch/x86/kernel/traps.c:234
+ exc_invalid_op+0x14/0x40 arch/x86/kernel/traps.c:254
+ asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:536
+RIP: 0010:copy_overflow include/linux/thread_info.h:134 [inline]
+RIP: 0010:check_copy_size include/linux/thread_info.h:143 [inline]
+RIP: 0010:copy_to_user include/linux/uaccess.h:151 [inline]
+RIP: 0010:compat_do_ebt_get_ctl+0x47e/0x500 net/bridge/netfilter/ebtables.c:2270
+Code: ba fd ff ff 4c 89 f7 e8 60 07 a2 fa e9 ad fd ff ff e8 36 18 62 fa 4c 89 e2 be 50 00 00 00 48 c7 c7 40 b9 0e 89 e8 94 1f 33 fa <0f> 0b e9 dc fd ff ff 41 bc f2 ff ff ff e9 4f fe ff ff e8 3b 07 a2
+RSP: 0018:ffffc90005667ae8 EFLAGS: 00010282
+RAX: 0000000000000000 RBX: 1ffff92000accf5e RCX: 0000000000000000
+RDX: ffff88809458a280 RSI: ffffffff815dbce7 RDI: fffff52000accf4f
+RBP: ffffffff8a8faa60 R08: 0000000000000001 R09: ffff8880ae6318e7
+R10: 0000000000000000 R11: 0000000035383654 R12: 0000000000000089
+R13: 0000000020000000 R14: ffffc90005667d80 R15: ffffc90005667b20
+ do_ebt_get_ctl+0x2b4/0x790 net/bridge/netfilter/ebtables.c:2317
+ nf_getsockopt+0x72/0xd0 net/netfilter/nf_sockopt.c:116
+ ip_getsockopt net/ipv4/ip_sockglue.c:1778 [inline]
+ ip_getsockopt+0x164/0x1c0 net/ipv4/ip_sockglue.c:1757
+ tcp_getsockopt+0x86/0xd0 net/ipv4/tcp.c:3884
+ __sys_getsockopt+0x219/0x4c0 net/socket.c:2179
+ __do_sys_getsockopt net/socket.c:2194 [inline]
+ __se_sys_getsockopt net/socket.c:2191 [inline]
+ __ia32_sys_getsockopt+0xb9/0x150 net/socket.c:2191
+ do_syscall_32_irqs_on arch/x86/entry/common.c:84 [inline]
+ __do_fast_syscall_32+0x57/0x80 arch/x86/entry/common.c:126
+ do_fast_syscall_32+0x2f/0x70 arch/x86/entry/common.c:149
+ entry_SYSENTER_compat_after_hwframe+0x4d/0x5c
+RIP: 0023:0xf7f91569
+Code: 10 05 03 74 b8 01 10 06 03 74 b4 01 10 07 03 74 b0 01 10 08 03 74 d8 01 00 00 00 00 00 00 00 00 00 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
+RSP: 002b:00000000ffdae08c EFLAGS: 00000292 ORIG_RAX: 000000000000016d
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000000000
+RDX: 0000000000000082 RSI: 0000000020000000 RDI: 0000000020000100
+RBP: 0000000000000012 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
