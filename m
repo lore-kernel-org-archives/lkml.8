@@ -2,99 +2,151 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 967D6C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 19:58:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC8E4C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 20:01:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75FA720716
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 19:58:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A71A1205CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 20:01:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Sa29hv4n"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="weNETtUx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbgHMT6t (ORCPT
+        id S1726600AbgHMUBQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 15:58:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36674 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726312AbgHMT6t (ORCPT
+        Thu, 13 Aug 2020 16:01:16 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:51182 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726312AbgHMUBQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 15:58:49 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AA65C061757;
-        Thu, 13 Aug 2020 12:58:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:Date:Message-ID:Subject:Cc:From:To:Sender:Reply-To:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=nJ8XtxrvF6PfqLWB3lP2qE8CmRj4uuFVhReQWgn4JaA=; b=Sa29hv4nZ2Yn/5b5d3KvgO97mE
-        n6+plK6ybXlXKPZn8Gc/dbm1JOgkh0y7Ssx82Hf5ENZ1iCpHVK9U2TvObuV+QCmLYhVLLUe3CKiAY
-        htX+7L4aQumZ/c0tMSjI7M7qhZo/Q0HjhKURc17Ry6VrfOJV7Gjp2F2YYDfYQ3kUxDISNd70d6t+M
-        LnVZVm/SoTm391QP+ZPZmbKL7kxgB7QIZVIyv9rbB2Jwz4AxNPesb6yhyvWrWGck6oMjp5b4V7RED
-        fr7tIOexZgh2EdYMfEZt+6bu0NvcMo4ELiZrei5w0+jVxOMzXHD6zKmk/Kgac52xE7ShQa7SYM1C8
-        uaXoB1xg==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k6JN5-0006YD-3I; Thu, 13 Aug 2020 19:58:43 +0000
-To:     LKML <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, jsbarnes@google.com
-From:   Randy Dunlap <rdunlap@infradead.org>
-Cc:     Arjan van de Ven <arjan@linux.intel.com>,
-        Len Brown <lenb@kernel.org>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: [PATCH] x86/pci: fix intel_mid_pci.c build error when ACPI is not
- enabled
-Message-ID: <20952e3e-6b06-11e4-aff7-07dfbdc5ee18@infradead.org>
-Date:   Thu, 13 Aug 2020 12:58:38 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Thu, 13 Aug 2020 16:01:16 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597348875; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=UsZ9oa+Cd0gRFgLsFWWij3Ap/jvnyK+JkhohZUp+X94=; b=weNETtUxSrj98riWSz/iC2FgZb+vpTtrBnoyw5YN3LK0AZDeCbhjnyyVLQyO28RrwglKug3P
+ BjwdOJ8YjyKi+w0uU7IxDrfca2EQ0rIJXipnOERiByHX+240Dj1/nfNeSuuLdDoDJLRRz+a5
+ vLUxJMUew0LuDQ8eIXdTtoq/twg=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
+ 5f359bdd03528d4024d1bc11 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 13 Aug 2020 20:00:29
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id ABA77C433CB; Thu, 13 Aug 2020 20:00:28 +0000 (UTC)
+Received: from localhost (unknown [202.46.22.19])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: prsood)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 495D4C433C6;
+        Thu, 13 Aug 2020 20:00:27 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 495D4C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=prsood@codeaurora.org
+From:   Prateek Sood <prsood@codeaurora.org>
+To:     mcgrof@kernel.org, tiwai@suse.de, gregkh@linuxfoundation.org,
+        rafael@kernel.org
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Prateek Sood <prsood@codeaurora.org>
+Subject: [PATCH v2] firmware_loader: fix memory leak for paged buffer
+Date:   Fri, 14 Aug 2020 01:30:22 +0530
+Message-Id: <1597348822-17762-1-git-send-email-prsood@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <3f9dac61-1ba5-1a44-1d08-75666c9398bc@codeaurora.org>
+References: <3f9dac61-1ba5-1a44-1d08-75666c9398bc@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+vfree() is being called on paged buffer allocated
+using alloc_page() and mapped using vmap().
 
-Fix build error when CONFIG_ACPI is not set/enabled by adding
-the header file <asm/acpi.h> which contains a stub for the function
-in the build error.
+Freeing of pages in vfree() relies on nr_pages of
+struct vm_struct. vmap() does not update nr_pages.
+It can lead to memory leaks.
 
-../arch/x86/pci/intel_mid_pci.c: In function ‘intel_mid_pci_init’:
-../arch/x86/pci/intel_mid_pci.c:303:2: error: implicit declaration of function ‘acpi_noirq_set’; did you mean ‘acpi_irq_get’? [-Werror=implicit-function-declaration]
-  acpi_noirq_set();
-
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc: Len Brown <lenb@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Jesse Barnes <jsbarnes@google.com>
-Cc: Arjan van de Ven <arjan@linux.intel.com>
-Cc: linux-pci@vger.kernel.org
+Fixes: ddaf29fd9bb6 ("firmware: Free temporary page table after vmapping")
+Signed-off-by: Prateek Sood <prsood@codeaurora.org>
+Reviewed-by: Takashi Iwai <tiwai@suse.de>
 ---
-Found in linux-next, but applies to/exists in mainline also.
+ drivers/base/firmware_loader/firmware.h |  2 ++
+ drivers/base/firmware_loader/main.c     | 17 +++++++++++------
+ 2 files changed, 13 insertions(+), 6 deletions(-)
 
-Alternative.1: X86_INTEL_MID depends on ACPI
-Alternative.2: drop X86_INTEL_MID support
-
- arch/x86/pci/intel_mid_pci.c |    1 +
- 1 file changed, 1 insertion(+)
-
---- linux-next-20200813.orig/arch/x86/pci/intel_mid_pci.c
-+++ linux-next-20200813/arch/x86/pci/intel_mid_pci.c
-@@ -33,6 +33,7 @@
- #include <asm/hw_irq.h>
- #include <asm/io_apic.h>
- #include <asm/intel-mid.h>
-+#include <asm/acpi.h>
+diff --git a/drivers/base/firmware_loader/firmware.h b/drivers/base/firmware_loader/firmware.h
+index 933e2192..d08efc7 100644
+--- a/drivers/base/firmware_loader/firmware.h
++++ b/drivers/base/firmware_loader/firmware.h
+@@ -142,10 +142,12 @@ static inline void fw_state_done(struct fw_priv *fw_priv)
+ void fw_free_paged_buf(struct fw_priv *fw_priv);
+ int fw_grow_paged_buf(struct fw_priv *fw_priv, int pages_needed);
+ int fw_map_paged_buf(struct fw_priv *fw_priv);
++bool fw_is_paged_buf(struct fw_priv *fw_priv);
+ #else
+ static inline void fw_free_paged_buf(struct fw_priv *fw_priv) {}
+ static inline int fw_grow_paged_buf(struct fw_priv *fw_priv, int pages_needed) { return -ENXIO; }
+ static inline int fw_map_paged_buf(struct fw_priv *fw_priv) { return -ENXIO; }
++static inline bool fw_is_paged_buf(struct fw_priv *fw_priv) { return false; }
+ #endif
  
- #define PCIE_CAP_OFFSET	0x100
+ #endif /* __FIRMWARE_LOADER_H */
+diff --git a/drivers/base/firmware_loader/main.c b/drivers/base/firmware_loader/main.c
+index ca871b1..36bf455 100644
+--- a/drivers/base/firmware_loader/main.c
++++ b/drivers/base/firmware_loader/main.c
+@@ -252,9 +252,11 @@ static void __free_fw_priv(struct kref *ref)
+ 	list_del(&fw_priv->list);
+ 	spin_unlock(&fwc->lock);
  
+-	fw_free_paged_buf(fw_priv); /* free leftover pages */
+-	if (!fw_priv->allocated_size)
++	if (fw_is_paged_buf(fw_priv))
++		fw_free_paged_buf(fw_priv);
++	else if (!fw_priv->allocated_size)
+ 		vfree(fw_priv->data);
++
+ 	kfree_const(fw_priv->fw_name);
+ 	kfree(fw_priv);
+ }
+@@ -268,6 +270,11 @@ static void free_fw_priv(struct fw_priv *fw_priv)
+ }
+ 
+ #ifdef CONFIG_FW_LOADER_PAGED_BUF
++bool fw_is_paged_buf(struct fw_priv *fw_priv)
++{
++	return fw_priv->is_paged_buf;
++}
++
+ void fw_free_paged_buf(struct fw_priv *fw_priv)
+ {
+ 	int i;
+@@ -275,6 +282,8 @@ void fw_free_paged_buf(struct fw_priv *fw_priv)
+ 	if (!fw_priv->pages)
+ 		return;
+ 
++	vunmap(fw_priv->data);
++
+ 	for (i = 0; i < fw_priv->nr_pages; i++)
+ 		__free_page(fw_priv->pages[i]);
+ 	kvfree(fw_priv->pages);
+@@ -328,10 +337,6 @@ int fw_map_paged_buf(struct fw_priv *fw_priv)
+ 	if (!fw_priv->data)
+ 		return -ENOMEM;
+ 
+-	/* page table is no longer needed after mapping, let's free */
+-	kvfree(fw_priv->pages);
+-	fw_priv->pages = NULL;
+-
+ 	return 0;
+ }
+ #endif
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., 
+is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
 
