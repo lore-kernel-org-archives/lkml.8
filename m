@@ -2,151 +2,169 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC8E4C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 20:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A82C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 20:03:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A71A1205CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 20:01:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD13320774
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 20:03:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="weNETtUx"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IAr6fIww"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726600AbgHMUBQ (ORCPT
+        id S1726623AbgHMUDB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 16:01:16 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:51182 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726312AbgHMUBQ (ORCPT
+        Thu, 13 Aug 2020 16:03:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37342 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726384AbgHMUDB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 16:01:16 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597348875; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=UsZ9oa+Cd0gRFgLsFWWij3Ap/jvnyK+JkhohZUp+X94=; b=weNETtUxSrj98riWSz/iC2FgZb+vpTtrBnoyw5YN3LK0AZDeCbhjnyyVLQyO28RrwglKug3P
- BjwdOJ8YjyKi+w0uU7IxDrfca2EQ0rIJXipnOERiByHX+240Dj1/nfNeSuuLdDoDJLRRz+a5
- vLUxJMUew0LuDQ8eIXdTtoq/twg=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
- 5f359bdd03528d4024d1bc11 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 13 Aug 2020 20:00:29
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id ABA77C433CB; Thu, 13 Aug 2020 20:00:28 +0000 (UTC)
-Received: from localhost (unknown [202.46.22.19])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: prsood)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 495D4C433C6;
-        Thu, 13 Aug 2020 20:00:27 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 495D4C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=prsood@codeaurora.org
-From:   Prateek Sood <prsood@codeaurora.org>
-To:     mcgrof@kernel.org, tiwai@suse.de, gregkh@linuxfoundation.org,
-        rafael@kernel.org
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Prateek Sood <prsood@codeaurora.org>
-Subject: [PATCH v2] firmware_loader: fix memory leak for paged buffer
-Date:   Fri, 14 Aug 2020 01:30:22 +0530
-Message-Id: <1597348822-17762-1-git-send-email-prsood@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <3f9dac61-1ba5-1a44-1d08-75666c9398bc@codeaurora.org>
-References: <3f9dac61-1ba5-1a44-1d08-75666c9398bc@codeaurora.org>
+        Thu, 13 Aug 2020 16:03:01 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60B59C061757;
+        Thu, 13 Aug 2020 13:03:01 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id z20so3107929plo.6;
+        Thu, 13 Aug 2020 13:03:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=rVxj8isGcYg2kSrB/8odI4mBvo5lkZ3mbyPx7lehTCk=;
+        b=IAr6fIwwzTiZGKClZ9Pe3JtoUQo7mOnpW92ti6GtjfPYl8G85HlKzWg+9jyEKkzYmg
+         kxZZcTpnNA6KG9DrEJ6HSERqxUymq37PbGGSPsibYe8g4sw1dF5gBuyrpPIaHMLq1lWw
+         8fIWFd4IKC2ivK+pnnjqbX3+ullwDICSRbSSX/b6jQjwGiFlznQFhOtBn0x3GhkqgWO4
+         UNTagKuvGQqXo1D9KbX4Aw8+1BCdURdIEERU2yKlTfVrfEDNxF43hdVrMD30xCR2M87V
+         KRJ89cH0J9QAzUjm4si8yi2nxN4OrOLs1G+aMS51PUU9n3a5df0VdWvF5S3g9tnD90xl
+         RkOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=rVxj8isGcYg2kSrB/8odI4mBvo5lkZ3mbyPx7lehTCk=;
+        b=tR+9GZuZiMKckE55mUMAUCls/J1hZPjOn0NmSSjNbL0IHAKCyZUIJ7lAm0qHl/GJk9
+         rr6jHuNzTOgWf4PoPhJFc4dRnAo43xo0zgr0grz8hbmIu+w+wSCATdignPlPSKac5VS7
+         9k3Bq8CjDYFW/06pcZ6gDjlYBLfQ0fgdylbrT53C/TINRGlL6xmRg8tVkqiLfB5Fl3Bz
+         raV9onsweJbaQR3EYGnLPW0hFJA67AuBNE9VYeScUOMrv6Zv1I6JxU0zy+VH75ZYke9T
+         oL+20cjXoZswfd9S3CPW6T8XevFfMBy57Ff5QyPOJYvNP7BIzv0+TP8bDHp6z24/+5fA
+         YsPQ==
+X-Gm-Message-State: AOAM533zrbjTESWNAUvblyR7VlSgHHx+GsyKDAzxjyaOJ1hHHcsAyaUC
+        U4HhwTwiwdPZXoIu94+dgfFFWI5d
+X-Google-Smtp-Source: ABdhPJzT5s+nsEuvDNCSpqijl5yQ813fK1jGKafJsya9S2oQHL/1Q2WbdqxQ1G35qqtR8Zr6jWCUzA==
+X-Received: by 2002:a17:902:6b41:: with SMTP id g1mr5322293plt.108.1597348980886;
+        Thu, 13 Aug 2020 13:03:00 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id 8sm6127359pjx.14.2020.08.13.13.02.59
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 13 Aug 2020 13:03:00 -0700 (PDT)
+Date:   Thu, 13 Aug 2020 13:02:59 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@kernel.org>, Rich Felker <dalias@libc.org>,
+        linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] locking/seqlock, headers: Untangle the spaghetti monster
+Message-ID: <20200813200258.GA113946@roeck-us.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-vfree() is being called on paged buffer allocated
-using alloc_page() and mapped using vmap().
+On Thu, Aug 06, 2020 at 02:35:11PM +0200, Peter Zijlstra wrote:
+> By using lockdep_assert_*() from seqlock.h, the spaghetti monster
+> attacked.
+> 
+> Attack back by reducing seqlock.h dependencies from two key high level headers:
+> 
+>  - <linux/seqlock.h>:               -Remove <linux/ww_mutex.h>
+>  - <linux/time.h>:                  -Remove <linux/seqlock.h>
+>  - <linux/sched.h>:                 +Add    <linux/seqlock.h>
+> 
+> The price was to add it to sched.h ...
+> 
+> Core header fallout, we add direct header dependencies instead of gaining them
+> parasitically from higher level headers:
+> 
+>  - <linux/dynamic_queue_limits.h>:  +Add <asm/bug.h>
+>  - <linux/hrtimer.h>:               +Add <linux/seqlock.h>
+>  - <linux/ktime.h>:                 +Add <asm/bug.h>
+>  - <linux/lockdep.h>:               +Add <linux/smp.h>
+>  - <linux/sched.h>:                 +Add <linux/seqlock.h>
+>  - <linux/videodev2.h>:             +Add <linux/kernel.h>
+> 
+> Arch headers fallout:
+> 
+>  - PARISC: <asm/timex.h>:           +Add <asm/special_insns.h>
+>  - SH:     <asm/io.h>:              +Add <asm/page.h>
+>  - SPARC:  <asm/timer_64.h>:        +Add <uapi/asm/asi.h>
+>  - SPARC:  <asm/vvar.h>:            +Add <asm/processor.h>, <asm/barrier.h>
+>                                     -Remove <linux/seqlock.h>
+>  - X86:    <asm/fixmap.h>:          +Add <asm/pgtable_types.h>
+>                                     -Remove <asm/acpi.h>
+> 
+> There's also a bunch of parasitic header dependency fallout in .c files, not listed
+> separately.
+> 
+> [ mingo: Extended the changelog, split up & fixed the original patch. ]
+> 
+> Co-developed-by: Ingo Molnar <mingo@kernel.org>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Signed-off-by: Ingo Molnar <mingo@kernel.org>
 
-Freeing of pages in vfree() relies on nr_pages of
-struct vm_struct. vmap() does not update nr_pages.
-It can lead to memory leaks.
+Building sh:defconfig ... failed
+--------------
+Error log:
+<stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+In file included from include/linux/spinlock.h:318,
+                 from arch/sh/include/asm/smp.h:11,
+                 from include/linux/smp.h:82,
+                 from include/linux/lockdep.h:14,
+                 from include/linux/rcupdate.h:29,
+                 from include/linux/init_task.h:5,
+                 from init/init_task.c:2:
+include/linux/spinlock_api_smp.h: In function '__raw_spin_trylock':
+include/linux/spinlock_api_smp.h:90:3: error: implicit declaration of function 'spin_acquire'; did you mean 'xchg_acquire'? [-Werror=implicit-function-declaration]
+   90 |   spin_acquire(&lock->dep_map, 0, 1, _RET_IP_);
+      |   ^~~~~~~~~~~~
+      |   xchg_acquire
+include/linux/spinlock_api_smp.h:90:21: error: 'raw_spinlock_t' {aka 'struct raw_spinlock'} has no member named 'dep_map'
+   90 |   spin_acquire(&lock->dep_map, 0, 1, _RET_IP_);
 
-Fixes: ddaf29fd9bb6 ("firmware: Free temporary page table after vmapping")
-Signed-off-by: Prateek Sood <prsood@codeaurora.org>
-Reviewed-by: Takashi Iwai <tiwai@suse.de>
+and many more. Bisect log attached.
+
+Guenter
+
 ---
- drivers/base/firmware_loader/firmware.h |  2 ++
- drivers/base/firmware_loader/main.c     | 17 +++++++++++------
- 2 files changed, 13 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/base/firmware_loader/firmware.h b/drivers/base/firmware_loader/firmware.h
-index 933e2192..d08efc7 100644
---- a/drivers/base/firmware_loader/firmware.h
-+++ b/drivers/base/firmware_loader/firmware.h
-@@ -142,10 +142,12 @@ static inline void fw_state_done(struct fw_priv *fw_priv)
- void fw_free_paged_buf(struct fw_priv *fw_priv);
- int fw_grow_paged_buf(struct fw_priv *fw_priv, int pages_needed);
- int fw_map_paged_buf(struct fw_priv *fw_priv);
-+bool fw_is_paged_buf(struct fw_priv *fw_priv);
- #else
- static inline void fw_free_paged_buf(struct fw_priv *fw_priv) {}
- static inline int fw_grow_paged_buf(struct fw_priv *fw_priv, int pages_needed) { return -ENXIO; }
- static inline int fw_map_paged_buf(struct fw_priv *fw_priv) { return -ENXIO; }
-+static inline bool fw_is_paged_buf(struct fw_priv *fw_priv) { return false; }
- #endif
- 
- #endif /* __FIRMWARE_LOADER_H */
-diff --git a/drivers/base/firmware_loader/main.c b/drivers/base/firmware_loader/main.c
-index ca871b1..36bf455 100644
---- a/drivers/base/firmware_loader/main.c
-+++ b/drivers/base/firmware_loader/main.c
-@@ -252,9 +252,11 @@ static void __free_fw_priv(struct kref *ref)
- 	list_del(&fw_priv->list);
- 	spin_unlock(&fwc->lock);
- 
--	fw_free_paged_buf(fw_priv); /* free leftover pages */
--	if (!fw_priv->allocated_size)
-+	if (fw_is_paged_buf(fw_priv))
-+		fw_free_paged_buf(fw_priv);
-+	else if (!fw_priv->allocated_size)
- 		vfree(fw_priv->data);
-+
- 	kfree_const(fw_priv->fw_name);
- 	kfree(fw_priv);
- }
-@@ -268,6 +270,11 @@ static void free_fw_priv(struct fw_priv *fw_priv)
- }
- 
- #ifdef CONFIG_FW_LOADER_PAGED_BUF
-+bool fw_is_paged_buf(struct fw_priv *fw_priv)
-+{
-+	return fw_priv->is_paged_buf;
-+}
-+
- void fw_free_paged_buf(struct fw_priv *fw_priv)
- {
- 	int i;
-@@ -275,6 +282,8 @@ void fw_free_paged_buf(struct fw_priv *fw_priv)
- 	if (!fw_priv->pages)
- 		return;
- 
-+	vunmap(fw_priv->data);
-+
- 	for (i = 0; i < fw_priv->nr_pages; i++)
- 		__free_page(fw_priv->pages[i]);
- 	kvfree(fw_priv->pages);
-@@ -328,10 +337,6 @@ int fw_map_paged_buf(struct fw_priv *fw_priv)
- 	if (!fw_priv->data)
- 		return -ENOMEM;
- 
--	/* page table is no longer needed after mapping, let's free */
--	kvfree(fw_priv->pages);
--	fw_priv->pages = NULL;
--
- 	return 0;
- }
- #endif
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., 
-is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
-
+# bad: [dc06fe51d26efc100ac74121607c01a454867c91] Merge tag 'rtc-5.9' of git://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux
+# good: [96e3f3c16b7aedcd71502ccfc5778dddfc2e7b15] Merge tag 'thermal-v5.9-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/thermal/linux
+git bisect start 'HEAD' '96e3f3c16b7a'
+# good: [32663c78c10f80df90b832de0428a6cb98a64e9a] Merge tag 'trace-v5.9' of git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace
+git bisect good 32663c78c10f80df90b832de0428a6cb98a64e9a
+# bad: [3a5139f1c5bb76d69756fb8f13fffa173e261153] cma: don't quit at first error when activating reserved areas
+git bisect bad 3a5139f1c5bb76d69756fb8f13fffa173e261153
+# good: [8d3e09b43312991c503478bf0f5f99e92c23ccf1] Merge branch 'fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs
+git bisect good 8d3e09b43312991c503478bf0f5f99e92c23ccf1
+# bad: [97d052ea3fa853b9aabcc4baca1a605cb1188611] Merge tag 'locking-urgent-2020-08-10' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+git bisect bad 97d052ea3fa853b9aabcc4baca1a605cb1188611
+# good: [4bcf69e57063c9b1b15df1a293c969e80a1c97e6] Merge branch 'for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input
+git bisect good 4bcf69e57063c9b1b15df1a293c969e80a1c97e6
+# good: [1f0b067b6e4927f06f5ffaea8eccdf722e563819] f2fs: compress: disable compression mount option if compression is off
+git bisect good 1f0b067b6e4927f06f5ffaea8eccdf722e563819
+# good: [13c01139b17163c9b2aa543a9c39f8bbc875b625] x86/headers: Remove APIC headers from <asm/smp.h>
+git bisect good 13c01139b17163c9b2aa543a9c39f8bbc875b625
+# good: [e28c02b94f9e039beeb5c75198caf6e17b66c520] gfs2: When gfs2_dirty_inode gets a glock error, dump the glock
+git bisect good e28c02b94f9e039beeb5c75198caf6e17b66c520
+# good: [163c3e3dc0ddcea3edac51612fced13c597f37dc] Merge tag 'for-linus-5.9-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/rw/ubifs
+git bisect good 163c3e3dc0ddcea3edac51612fced13c597f37dc
+# good: [828add774f0d2bf930cdeca6c982c1fbcdd846bb] f2fs: prepare a waiter before entering io_schedule
+git bisect good 828add774f0d2bf930cdeca6c982c1fbcdd846bb
+# bad: [0cd39f4600ed4de859383018eb10f0f724900e1b] locking/seqlock, headers: Untangle the spaghetti monster
+git bisect bad 0cd39f4600ed4de859383018eb10f0f724900e1b
+# good: [b3545192e2b4647234254c5122f8cbfddbcbdaa0] locking, arch/ia64: Reduce <asm/smp.h> header dependencies by moving XTP bits into the new <asm/xtp.h> header
+git bisect good b3545192e2b4647234254c5122f8cbfddbcbdaa0
+# first bad commit: [0cd39f4600ed4de859383018eb10f0f724900e1b] locking/seqlock, headers: Untangle the spaghetti monster
