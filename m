@@ -2,109 +2,128 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A94CC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:10:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5728C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:11:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 014CB2080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:10:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597313445;
-	bh=8S6jKUx46BaOyd6AEOnq4IBcGElO3fsBbXuThZ9ef9Y=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=MiI+chMlrVu/usjxt7MqAYKOcB3UUxyriusbDEobNIlgG9sSZsvDtRNSOfKi7Io3B
-	 e42owTnm/Fn+pD45KYwxryKODiGuF05wtvc0PcgvFOxTYTQXRPRlYAgWe0UzeAHpn/
-	 fV5cBA+42qBkisNy5yYgoXcGC/NZp4nOnvcK2lG4=
+	by mail.kernel.org (Postfix) with ESMTP id A684720781
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 10:11:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="l5AbyYj6";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UjZfb0hO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726253AbgHMKKn (ORCPT
+        id S1726533AbgHMKLi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Aug 2020 06:10:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38912 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726048AbgHMKKn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Aug 2020 06:10:43 -0400
-Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D96E520781;
-        Thu, 13 Aug 2020 10:10:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597313442;
-        bh=8S6jKUx46BaOyd6AEOnq4IBcGElO3fsBbXuThZ9ef9Y=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=B/O/ZSqBYDBJzorx/2d7HlkU1ilrHm2wLKnb0Tq0ft8UhED82Fpxw1SNCHwYh01ML
-         Po/6cfpStrpfdUTWfs88AqPqQmiQ0YmuAF/abzvBdZNJxeM+xHCpuUICNvqymCze1u
-         rOq0O+poRpNHojmOg34CDYSTSI1vXxT+A1T2QV10=
-Date:   Thu, 13 Aug 2020 12:10:36 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org
-Subject: Re: [PATCH 35/44] staging: regulator: hi6421v600-regulator: add a
- driver-specific debug macro
-Message-ID: <20200813121036.126c4797@coco.lan>
-In-Reply-To: <6a424468eb61e2eb9b014817819dd4da61f2ada1.camel@perches.com>
-References: <cover.1597247164.git.mchehab+huawei@kernel.org>
-        <7cb10b3910e9fa3e52d36e4e416030175cc761ab.1597247164.git.mchehab+huawei@kernel.org>
-        <6a424468eb61e2eb9b014817819dd4da61f2ada1.camel@perches.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 13 Aug 2020 06:11:38 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:57594 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726048AbgHMKLi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Aug 2020 06:11:38 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1597313495;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Zt7T8B80Wzzn5EaRMNRRGT8rmn9Iua7ORS/7xToxj6A=;
+        b=l5AbyYj6UEG/LFRXmeb4lns4UZyb+zM5h1OSxoIRbdb643Nus4DzDfMC230BU3Yu8njADB
+        65Di6ehekqWR51FzApTqSbXYVr2AYbLztEv6yOMLJ2aOXetUwm8hiaoHC0lYHm+888lzlL
+        N0xCwpSrICer4U6mFyYN4A6tqSj/urnIMIig/5rwW+Pkdwd5URNTypVn7I1vKQkjQ+W270
+        xL93chWxDIP3sM5Ac87CvH9ilnLCss/tZKjCSFgHLYu1A4yhXrHHZWRUD7hWzGy4VoZJhp
+        24WuQjAMvS5PanfWnsEZFy6x4auYRYBISbuU+Bni92ECnJFDrP8wQ1YAAb3Hvg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1597313495;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Zt7T8B80Wzzn5EaRMNRRGT8rmn9Iua7ORS/7xToxj6A=;
+        b=UjZfb0hO5ibmSxHP4Zm0BPUJiWMT7lgw3ymYW16ppTslnHZnm2ShBEVKRQMQbdeuwEdNi4
+        GfjRNxsNVXQBEXCA==
+To:     Jonathan Adams <jwadams@google.com>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Cc:     netdev@vger.kernel.org, kvm@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Jim Mattson <jmattson@google.com>,
+        David Rientjes <rientjes@google.com>,
+        Jonathan Adams <jwadams@google.com>
+Subject: Re: [RFC PATCH 6/7] core/metricfs: expose x86-specific irq information through metricfs
+In-Reply-To: <20200807212916.2883031-7-jwadams@google.com>
+References: <20200807212916.2883031-1-jwadams@google.com> <20200807212916.2883031-7-jwadams@google.com>
+Date:   Thu, 13 Aug 2020 12:11:35 +0200
+Message-ID: <87mu2yluso.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, 12 Aug 2020 09:10:29 -0700
-Joe Perches <joe@perches.com> escreveu:
+Jonathan Adams <jwadams@google.com> writes:
 
-> On Wed, 2020-08-12 at 17:56 +0200, Mauro Carvalho Chehab wrote:
-> > Using dev_dbg() is not too nice, as, instead of printing the
-> > name of the regulator, it prints "regulator.<number>", making
-> > harder to associate what is happening with each ldo line.
-> > 
-> > So, add a debug-specific macro, which will print the rdev's
-> > name, just like the regulator core.  
-> 
-> Seems sensible, but trivially:
-> 
-> > diff --git a/drivers/staging/hikey9xx/hi6421v600-regulator.c b/drivers/staging/hikey9xx/hi6421v600-regulator.c  
-> []
-> > @@ -209,10 +212,10 @@ static unsigned int hi6421_spmi_regulator_get_optimum_mode(struct regulator_dev
-> >  	struct hi6421v600_regulator *sreg = rdev_get_drvdata(rdev);
-> >  
-> >  	if (load_uA || ((unsigned int)load_uA > sreg->eco_uA)) {
-> > -		dev_dbg(&rdev->dev, "%s: normal mode", __func__);
-> > +		rdev_dbg(rdev, "normal mode");
-> >  		return REGULATOR_MODE_NORMAL;
-> >  	} else {
-> > -		dev_dbg(&rdev->dev, "%s: idle mode", __func__);
-> > +		rdev_dbg(rdev, "idle mode");  
-> 
-> missing terminating newlines
+How is that related to core? The x86 subsys prefix is 'x86' and for this
+particular thing it's 'x86/irq:'. That applies to the rest of the series
+as well. 
 
-As per request from Jonathan, I ended dropping those rdev_dbg()
-on a followup patch.
+> Add metricfs support for displaying percpu irq counters for x86.
+> The top directory is /sys/kernel/debug/metricfs/irq_x86.
+> Then there is a subdirectory for each x86-specific irq counter.
+> For example:
+>
+>    cat /sys/kernel/debug/metricfs/irq_x86/TLB/values
 
-Btw, after this changeset:
+What is 'TLB'? I'm not aware of any vector which is named TLB.
 
-	commit 563873318d328d9bbab4b00dfd835ac7c7e28697
-	Merge: 24532f768121 bfd8d3f23b51
-	Author: Linus Torvalds <torvalds@linux-foundation.org>
-	Date:   Mon Oct 10 09:29:50 2016 -0700
+The changelog is pretty useless in providing any form of rationale for
+this. It tells the WHAT, but not the WHY.
 
-	    Merge branch 'printk-cleanups'
-    
-	    Merge my system logging cleanups, triggered by the broken '\n' patches.
+Also what is does this file contain? Aggregates, one line per CPU or the
+value of the random CPU of the day? I'm not going to dive into the macro
+zoo to figure that out.
 
-the printk lib will add a line feed if a "\n" is missing. I had
-to get rid of pr_cont() & friends on that time on media, due to that. 
+> jwadams@google.com: rebased to 5.8-pre6
+> 	This is work originally done by another engineer at
+> 	google, who would rather not have their name associated with
+> 	this patchset. They're okay with me sending it under my name.
+
+I can understand why they wont have their name associated with this.
+
+> +#ifdef CONFIG_METRICFS
+> +METRICFS_ITEM(NMI, __nmi_count, "Non-maskable interrupts");
+> +#ifdef CONFIG_X86_LOCAL_APIC
+> +METRICFS_ITEM(LOC, apic_timer_irqs, "Local timer interrupts");
+> +METRICFS_ITEM(SPU, irq_spurious_count, "Spurious interrupts");
+> +METRICFS_ITEM(PMI, apic_perf_irqs, "Performance monitoring interrupts");
+> +METRICFS_ITEM(IWI, apic_irq_work_irqs, "IRQ work interrupts");
+> +METRICFS_ITEM(RTR, icr_read_retry_count, "APIC ICR read retries");
+> +#endif
+....
+
+So you are adding NR_CPUS * NR_DIRECT_VECTORS debugfs files which show
+exactly the same information as /proc/interrupts, right? 
+
+Aside of that _all_ of this information is available via tracepoints as
+well.
+
+That's NR_CPUS * 15 and incomplete because x86 has 23 of those directly
+handled vectors which do not go through the irq core. So with just 15
+and 256 CPUs that's 3840 files.
+
+Impressive number especially without any information why this is useful
+and provides value over the existing mechanisms to retrieve exactly the
+same information.
+
+The cover letter talks a lot about who Google finds this useful, but
+that's not really a convincing argument for this metric failsystem
+addon.
 
 Thanks,
-Mauro
+
+        tglx
+
+
+
