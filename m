@@ -2,178 +2,179 @@ Return-Path: <SRS0=dFdc=BX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55733C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 02:25:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D1FC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 02:31:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33FC920829
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 02:25:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1AAC2053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Aug 2020 02:31:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="s9iB4hk7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qhdCfedf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbgHMCZJ (ORCPT
+        id S1726615AbgHMCbp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Aug 2020 22:25:09 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:20081 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726419AbgHMCZH (ORCPT
+        Wed, 12 Aug 2020 22:31:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45236 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726419AbgHMCbp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Aug 2020 22:25:07 -0400
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200813022504epoutp0420dc90287d97cc2f7b7dade922b75335~qsrQGNz2i2335623356epoutp04c
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Aug 2020 02:25:04 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200813022504epoutp0420dc90287d97cc2f7b7dade922b75335~qsrQGNz2i2335623356epoutp04c
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1597285504;
-        bh=bBoSIYfYUVBe91z7Hl3yBvlXhwhzlVC2LnJY5UtikfE=;
-        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-        b=s9iB4hk7yXizxTQtC9T5ImjEwFr9TW4T2/lS/JSMaBdzdD5eOBD9xlGIrt1BJ8zqV
-         p2Jfh2rCP8flZAu1TCPibyLeG4lxsl9S/DYn6o7UQ6lJTAONAldAFartLdm4zDKWZ4
-         fMuF2k11XzVUzUOxpfO1rkPVmVRlOvgAg1wv14PU=
-Received: from epcpadp1 (unknown [182.195.40.11]) by epcas1p1.samsung.com
-        (KnoxPortal) with ESMTP id
-        20200813022503epcas1p1d9386e2dfbde1e0d35e9c397f0670723~qsrPo9Klz3219232192epcas1p1K;
-        Thu, 13 Aug 2020 02:25:03 +0000 (GMT)
-Mime-Version: 1.0
-Subject: Re: [PATCH v8 2/4] scsi: ufs: Introduce HPB feature
-Reply-To: daejun7.park@samsung.com
-From:   Daejun Park <daejun7.park@samsung.com>
-To:     Bart Van Assche <bvanassche@acm.org>,
-        Daejun Park <daejun7.park@samsung.com>,
-        "avri.altman@wdc.com" <avri.altman@wdc.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
-        ALIM AKHTAR <alim.akhtar@samsung.com>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sang-yoon Oh <sangyoon.oh@samsung.com>,
-        Sung-Jun Park <sungjun07.park@samsung.com>,
-        yongmyung lee <ymhungry.lee@samsung.com>,
-        Jinyoung CHOI <j-young.choi@samsung.com>,
-        Adel Choi <adel.choi@samsung.com>,
-        BoRam Shin <boram.shin@samsung.com>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-In-Reply-To: <4a91d02c-488c-86cd-325c-5e0ad9addd0b@acm.org>
-X-CPGS-Detection: blocking_info_exchange
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <1239183618.61597285503620.JavaMail.epsvc@epcpadp1>
-Date:   Thu, 13 Aug 2020 11:13:09 +0900
-X-CMS-MailID: 20200813021309epcms2p3d87ce0c4c54389cc3d30b876684936d0
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-X-CPGSPASS: Y
-X-CPGSPASS: Y
-X-Hop-Count: 3
-X-CMS-RootMailID: 20200806073257epcms2p61564ed62e02fc42fc3c2b18fa92a038d
-References: <4a91d02c-488c-86cd-325c-5e0ad9addd0b@acm.org>
-        <231786897.01596705001840.JavaMail.epsvc@epcpadp1>
-        <231786897.01596704281715.JavaMail.epsvc@epcpadp2>
-        <231786897.01596705302142.JavaMail.epsvc@epcpadp1>
-        <CGME20200806073257epcms2p61564ed62e02fc42fc3c2b18fa92a038d@epcms2p3>
+        Wed, 12 Aug 2020 22:31:45 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9F71C061383;
+        Wed, 12 Aug 2020 19:31:44 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id k4so4257811ilr.12;
+        Wed, 12 Aug 2020 19:31:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=qNWYLoXZVMonMKBHLVmtYLhOlAGwJ6EBuGHChAsIpUo=;
+        b=qhdCfedfr/Ep9bZBLmhAKJeAwZhN0pMo6GUSitTaAQbtSuVYKoxD/0YKcoO24/2JP0
+         Nndmv39jDWxQWcGPmIkOGCsblGpa51/QHIbiFGsA2Ox/f9A23qiGqy+MmslFALRf0/do
+         4UddMMK+QndME3ZYl5nNVv4kbRnlJgfjDgHalzUtOfP7ooM7aeK8MLdx+NZX5TEPc5bR
+         1FCDbrWi//y3YbA2epAJeOgxnsnCDdhTxyjpc97A8XWRwV5xe2waWZmURHlXxrdWeoSI
+         z57vPWGcQRVzy8YiP/NMjBuSKftyKu4kSEKChHxmMeA4LIFRZC28QHFOMRseMPT1ujra
+         mRGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=qNWYLoXZVMonMKBHLVmtYLhOlAGwJ6EBuGHChAsIpUo=;
+        b=aXyqpg5TDUcwy2/hRo9GjUI9YUvi7qikxHmwJvIyzLpGwpWMOhVMLj8lgdwACRdoIL
+         UL8weJhObf7oncVpDUDSyGm30x8EaXAW8gOMqxkkKCWoUOC4tG6aQWhHF/T+mGitHkkI
+         HYelzhni/09kjTOfwIKtj8hTKgUX16318mI4BqyqDrroW1gMzQL/MHVDOPJHWjZfYrAV
+         vXdk9yNF0uSYNtDHFcvt8gHcUPNY+uU243hIQzpiSCR9bffwOP9pz/h2vYItQtEFXBMZ
+         tvuWEc4eqUHv8PqNIwbNrxVzzAgJC7Pt2+YF/i1swOwiRSjb+Bucd9J9v1x+G8Wm6Cpz
+         p+xg==
+X-Gm-Message-State: AOAM530fWc7a3JIvFphwY3yaw9jyQ9QJrhwk9QVYwY2dRmksaHvQUxdk
+        DswK3GU9+HVKV+qT/l4TazpGoyiWPv4VgcI98n6tYv2s9rJ1Vw==
+X-Google-Smtp-Source: ABdhPJylH3v+THRzQhBifdrCGGocqIQ2qtemdjHQ2VqrVR69VQbCYWZ4Su1ADSxdglVhaS2CyyO1m0ylSx1GTkqkISg=
+X-Received: by 2002:a92:9e48:: with SMTP id q69mr2671414ili.170.1597285903798;
+ Wed, 12 Aug 2020 19:31:43 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200812221518.2869003-1-daniel.diaz@linaro.org>
+In-Reply-To: <20200812221518.2869003-1-daniel.diaz@linaro.org>
+From:   Tom Hebb <tommyhebb@gmail.com>
+Date:   Wed, 12 Aug 2020 19:31:32 -0700
+Message-ID: <CAMcCCgRGpi+3D4479MLU2xQZJYBA1c6mzZ=bb1VLEwPg3VAgLg@mail.gmail.com>
+Subject: Re: [PATCH] tools build feature: Quote CC and CXX for their arguments
+To:     =?UTF-8?B?RGFuaWVsIETDrWF6?= <daniel.diaz@linaro.org>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:BPF (Safe dynamic programs and tools)" 
+        <netdev@vger.kernel.org>,
+        "open list:BPF (Safe dynamic programs and tools)" 
+        <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bart,
+On Wed, Aug 12, 2020 at 3:15 PM Daniel D=C3=ADaz <daniel.diaz@linaro.org> w=
+rote:
+>
+> When using a cross-compilation environment, such as OpenEmbedded,
+> the CC an CXX variables are set to something more than just a
+> command: there are arguments (such as --sysroot) that need to be
+> passed on to the compiler so that the right set of headers and
+> libraries are used.
+>
+> For the particular case that our systems detected, CC is set to
+> the following:
+>
+>   export CC=3D"aarch64-linaro-linux-gcc  --sysroot=3D/oe/build/tmp/work/m=
+achine/perf/1.0-r9/recipe-sysroot"
+>
+> Without quotes, detection is as follows:
+>
+>   Auto-detecting system features:
+>   ...                         dwarf: [ OFF ]
+>   ...            dwarf_getlocations: [ OFF ]
+>   ...                         glibc: [ OFF ]
+>   ...                          gtk2: [ OFF ]
+>   ...                        libbfd: [ OFF ]
+>   ...                        libcap: [ OFF ]
+>   ...                        libelf: [ OFF ]
+>   ...                       libnuma: [ OFF ]
+>   ...        numa_num_possible_cpus: [ OFF ]
+>   ...                       libperl: [ OFF ]
+>   ...                     libpython: [ OFF ]
+>   ...                     libcrypto: [ OFF ]
+>   ...                     libunwind: [ OFF ]
+>   ...            libdw-dwarf-unwind: [ OFF ]
+>   ...                          zlib: [ OFF ]
+>   ...                          lzma: [ OFF ]
+>   ...                     get_cpuid: [ OFF ]
+>   ...                           bpf: [ OFF ]
+>   ...                        libaio: [ OFF ]
+>   ...                       libzstd: [ OFF ]
+>   ...        disassembler-four-args: [ OFF ]
+>
+>   Makefile.config:414: *** No gnu/libc-version.h found, please install gl=
+ibc-dev[el].  Stop.
+>   Makefile.perf:230: recipe for target 'sub-make' failed
+>   make[1]: *** [sub-make] Error 2
+>   Makefile:69: recipe for target 'all' failed
+>   make: *** [all] Error 2
+>
+> With CC and CXX quoted, some of those features are now detected.
+>
+> Fixes: e3232c2f39ac ("tools build feature: Use CC and CXX from parent")
+>
+> Signed-off-by: Daniel D=C3=ADaz <daniel.diaz@linaro.org>
 
-On 2020-08-06 02:11, Daejun Park wrote:
-> > +static void ufshpb_issue_hpb_reset_query(struct ufs_hba *hba)
-> > +{
-> > +    int err;
-> > +    int retries;
-> > +
-> > +    for (retries = 0; retries < HPB_RESET_REQ_RETRIES; retries++) {
-> > +        err = ufshcd_query_flag(hba, UPIU_QUERY_OPCODE_SET_FLAG,
-> > +                QUERY_FLAG_IDN_HPB_RESET, 0, NULL);
-> > +        if (err)
-> > +            dev_dbg(hba->dev,
-> > +                "%s: failed with error %d, retries %d\n",
-> > +                __func__, err, retries);
-> > +        else
-> > +            break;
-> > +    }
-> > +
-> > +    if (err) {
-> > +        dev_err(hba->dev,
-> > +            "%s setting fHpbReset flag failed with error %d\n",
-> > +            __func__, err);
-> > +        return;
-> > +    }
-> > +}
-> 
-> Please change the "break" into an early return, remove the last
-> occurrence "if (err)" and remove the final return statement.
+Whoops, I'm the one who introduced this issue. Fix looks good, thanks!
 
-OK, I will.
+Reviewed-by: Thomas Hebb <tommyhebb@gmail.com>
+Fixes: e3232c2f39ac ("tools build feature: Use CC and CXX from parent")
 
-> 
-> > +static void ufshpb_check_hpb_reset_query(struct ufs_hba *hba)
-> > +{
-> > +    int err;
-> > +    bool flag_res = true;
-> > +    int try = 0;
-> > +
-> > +    /* wait for the device to complete HPB reset query */
-> > +    do {
-> > +        if (++try == HPB_RESET_REQ_RETRIES)
-> > +            break;
-> > +
-> > +        dev_info(hba->dev,
-> > +            "%s start flag reset polling %d times\n",
-> > +            __func__, try);
-> > +
-> > +        /* Poll fHpbReset flag to be cleared */
-> > +        err = ufshcd_query_flag(hba, UPIU_QUERY_OPCODE_READ_FLAG,
-> > +                QUERY_FLAG_IDN_HPB_RESET, 0, &flag_res);
-> > +        usleep_range(1000, 1100);
-> > +    } while (flag_res);
-> > +
-> > +    if (err) {
-> > +        dev_err(hba->dev,
-> > +            "%s reading fHpbReset flag failed with error %d\n",
-> > +            __func__, err);
-> > +        return;
-> > +    }
-> > +
-> > +    if (flag_res) {
-> > +        dev_err(hba->dev,
-> > +            "%s fHpbReset was not cleared by the device\n",
-> > +            __func__);
-> > +    }
-> > +}
-> 
-> Should "polling %d times" perhaps be changed into "attempt %d"?
+> ---
+>  tools/build/Makefile.feature | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+> index 774f0b0ca28a..e7818b44b48e 100644
+> --- a/tools/build/Makefile.feature
+> +++ b/tools/build/Makefile.feature
+> @@ -8,7 +8,7 @@ endif
+>
+>  feature_check =3D $(eval $(feature_check_code))
+>  define feature_check_code
+> -  feature-$(1) :=3D $(shell $(MAKE) OUTPUT=3D$(OUTPUT_FEATURES) CC=3D$(C=
+C) CXX=3D$(CXX) CFLAGS=3D"$(EXTRA_CFLAGS) $(FEATURE_CHECK_CFLAGS-$(1))" CXX=
+FLAGS=3D"$(EXTRA_CXXFLAGS) $(FEATURE_CHECK_CXXFLAGS-$(1))" LDFLAGS=3D"$(LDF=
+LAGS) $(FEATURE_CHECK_LDFLAGS-$(1))" -C $(feature_dir) $(OUTPUT_FEATURES)te=
+st-$1.bin >/dev/null 2>/dev/null && echo 1 || echo 0)
+> +  feature-$(1) :=3D $(shell $(MAKE) OUTPUT=3D$(OUTPUT_FEATURES) CC=3D"$(=
+CC)" CXX=3D"$(CXX)" CFLAGS=3D"$(EXTRA_CFLAGS) $(FEATURE_CHECK_CFLAGS-$(1))"=
+ CXXFLAGS=3D"$(EXTRA_CXXFLAGS) $(FEATURE_CHECK_CXXFLAGS-$(1))" LDFLAGS=3D"$=
+(LDFLAGS) $(FEATURE_CHECK_LDFLAGS-$(1))" -C $(feature_dir) $(OUTPUT_FEATURE=
+S)test-$1.bin >/dev/null 2>/dev/null && echo 1 || echo 0)
 
-I will change it.
+We should probably also be quoting the arguments that expand $(OUTPUT_FEATU=
+RES)
+too, although trying to handle path names with spaces is probably a
+lost cause anyway.
 
-> The "if (err)" statement may be reached without "err" having been
-> initialized. Please fix.
-
-OK, I will initialize err to 0.
-
-> Additionally, please change the do-while loop into a for-loop, e.g. as
-> follows:
-> 
->     for (try = 0; try < HPB_RESET_REQ_RETRIES; try++)
->         ...
-
-OK, I will change do-while to for-loop.
-
-Thanks,
-
-Daejun
+>  endef
+>
+>  feature_set =3D $(eval $(feature_set_code))
+> --
+> 2.25.1
+>
